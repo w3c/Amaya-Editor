@@ -120,6 +120,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
    pNextAb = pAb->AbPrevious;
    loop = TRUE;
    while (loop)
+     {
       if (pNextAb == NULL)
 	 /* Est-ce la derniere boite fille d'une boite eclatee */
 	 if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
@@ -134,7 +135,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
 	 pNextAb = pNextAb->AbPrevious;
       else if (pNextAb->AbBox == NULL)
 	 pNextAb = pNextAb->AbPrevious;
-   /* Est-ce un pave compose eclate ? */
+      /* Est-ce un pave compose eclate ? */
       else if (pNextAb->AbBox->BxType == BoGhost)
 	{
 	   /* descend la hierarchie */
@@ -152,13 +153,13 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
 	}
       else
 	 loop = FALSE;
-
+     }
    if (pNextAb == NULL)
       result = NULL;
    else
      {
        result = pNextAb->AbBox;
-       if (result->BxType == BoMulScript)
+       if (result->BxType == BoMulScript || result->BxType == BoSplit)
 	 /* return the last script box */
 	 while (result->BxNexChild)
 	   result = result->BxNexChild;
@@ -1515,7 +1516,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent;
 	  bottomL = floatL->BxYOrg + floatL->BxHeight;
 	}
-      else if (floatL && pLine->LiYOrg > floatL->BxYOrg + floatL->BxHeight)
+      else if (floatL && pLine->LiYOrg >= floatL->BxYOrg + floatL->BxHeight)
 	{
 	  /* look at all previous floating boxes */
 	  y = floatL->BxYOrg + floatL->BxHeight;
@@ -1543,7 +1544,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg;
 	  bottomR = floatR->BxYOrg + floatR->BxHeight;
 	}
-      else if (floatR && pLine->LiYOrg > floatR->BxYOrg + floatR->BxHeight)
+      else if (floatR && pLine->LiYOrg >= floatR->BxYOrg + floatR->BxHeight)
 	{
 	  /* update the line width */
 	  y = floatR->BxYOrg + floatR->BxHeight;
@@ -1855,6 +1856,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		pNextBox = GetNextBox (pNextBox->BxAbstractBox);
 	      if (!pBox->BxAbstractBox->AbElement->ElTerminal &&
 		  (pNextBox == NULL ||
+		   (pNextBox->BxAbstractBox->AbLeafType == LtText &&
+		    xi == maxX) ||
 		   (pNextBox->BxAbstractBox->AbLeafType != LtText &&
 		    pNextBox->BxWidth + xi > maxX)))
 		/* accept to cut the line here */ 
@@ -1885,54 +1888,62 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
     {
       /* Try to break the box pNextBox or a previous one */
       maxLength = maxX - xi;
-
       if (pNextBox == pLine->LiFirstBox)
-	/* There is only one box in the line */
-	if (!pNextBox->BxAbstractBox->AbAcceptLineBreak ||
-	    pNextBox->BxAbstractBox->AbLeafType != LtText)
-	  {
-	    /* cannot break the box */
-	    pBox = pNextBox;	/* it's also the last box */
-	    /* check if next boxes are set in lines */
-	    lastbox = pBox;
-	    still = (lastbox != NULL);
-	    while (still)
-	      {
-		if (lastbox->BxAbstractBox->AbLeafType == LtText &&
-		    lastbox->BxNexChild)
-		  /* get the next child */
-		  pBox = lastbox->BxNexChild;
-		else
-		  {
-		    lastbox = GetNextBox (lastbox->BxAbstractBox);
-		    if (lastbox == NULL)
-		      still = FALSE;
-		    else if (!lastbox->BxAbstractBox->AbNotInLine &&
-			     lastbox->BxAbstractBox->AbHorizEnclosing)
-		      still = FALSE;
-		    else
-		      pBox = lastbox;
-		  }
-	      }
-	  }
-	else
-	  {
-	    /* Break the box anywhere */
-	    BreakMainBox (pLine, pNextBox, maxLength, pRootAb, TRUE);
-	    pBox = pNextBox;
-	    if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
-	      {
-		/* we have a new box */
-		if (pBox->BxType != BoScript && pBox->BxNexChild)
-		  /* take the first child of a main box */
-		  pBox = pBox->BxNexChild;
-		pLine->LiFirstPiece = pBox;
-	      }
-	  }
+	{
+	  /* There is only one box in the line */
+	  if (!pNextBox->BxAbstractBox->AbAcceptLineBreak ||
+	      pNextBox->BxAbstractBox->AbLeafType != LtText)
+	    {
+	      /* cannot break the box */
+	      pBox = pNextBox;	/* it's also the last box */
+	      /* check if next boxes are set in lines */
+	      lastbox = pBox;
+	      still = (lastbox != NULL);
+	      while (still)
+		{
+		  if (lastbox->BxAbstractBox->AbLeafType == LtText &&
+		      lastbox->BxNexChild)
+		    /* get the next child */
+		    pBox = lastbox->BxNexChild;
+		  else
+		    {
+		      lastbox = GetNextBox (lastbox->BxAbstractBox);
+		      if (lastbox == NULL)
+			still = FALSE;
+		      else if (!lastbox->BxAbstractBox->AbNotInLine &&
+			       lastbox->BxAbstractBox->AbHorizEnclosing)
+			still = FALSE;
+		      else
+			pBox = lastbox;
+		    }
+		}
+	    }
+	  else
+	    {
+	      /* Break the box anywhere */
+	      BreakMainBox (pLine, pNextBox, maxLength, pRootAb, TRUE);
+	      pBox = pNextBox;
+	      if (pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNexChild)
+		{
+		  /* we have a new box */
+		  if (pBox->BxType != BoScript && pBox->BxNexChild)
+		    /* take the first child of a main box */
+		    pBox = pBox->BxNexChild;
+		  pLine->LiFirstPiece = pBox;
+		}
+	    }
+	}
       else
 	{
 	  /* There is a previous box in the line */
-	  if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
+	  if (!pNextBox->BxAbstractBox->AbElement->ElTerminal &&
+	      pNextBox->BxWidth == maxX)
+	    {
+	      /* cut before that box */
+	      toCut = FALSE;
+	      pBox = GetPreviousBox (pNextBox->BxAbstractBox);
+	    }
+	  else if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
 	      pNextBox->BxAbstractBox->AbAcceptLineBreak &&
 	      (CanHyphen (pNextBox) || pNextBox->BxNSpaces != 0))
 	    {
@@ -2031,15 +2042,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		      /*pBox = lastbox->BxPrevious;*/
 		      if (pBox == NULL)
 			pBox = lastbox;
-		      if (pBox == pLine->LiFirstBox && pLine->LiFirstPiece)
-			/* it's the first piece of box in the line */
-			pBox = pLine->LiFirstPiece;
-		      else if (pBox->BxType == BoMulScript)
-			{
-			  pBox = pBox->BxNexChild;
-			  while (pBox->BxNexChild)
-			    pBox = pBox->BxNexChild;
-			}
 		    }
 		}
 	      else
@@ -2174,6 +2176,34 @@ static void RemoveAdjustement (PtrBox pBox, int spaceWidth)
 }
 
 /*----------------------------------------------------------------------
+  InitFloats looks for previous floating boxes.
+  ----------------------------------------------------------------------*/
+void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL, PtrBox *floatR)
+{
+  PtrFloat            pfloat;
+  int                 y;
+
+  if (pLine)
+    y = pLine->LiYOrg;
+  else
+    y = 0;
+  pfloat = pBlock->BxLeftFloat;
+  while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
+    pfloat = pfloat->FlNext;
+  if (pfloat)
+    *floatL = pfloat->FlBox;
+  else
+    *floatL = NULL;
+  pfloat = pBlock->BxRightFloat;
+  while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
+    pfloat = pfloat->FlNext;
+  if (pfloat)
+    *floatR = pfloat->FlBox;
+  else
+    *floatR = NULL;
+}
+
+/*----------------------------------------------------------------------
   ChechBlockHeight updates the block of lines pBlock to take into
   account floating boxes.
   ----------------------------------------------------------------------*/
@@ -2265,7 +2295,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       else
 	{
 	  /* the box is set at the right of the parent box */
-	  x = pBlock->BxW;
+	  x = pBlock->BxW - box->BxWidth;
 	  if (boxPrev)
 	    /* the box is set at the bottom of the previous box */
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
@@ -2611,25 +2641,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  /* Partial building of the block */
 	  pPreviousLine = pBox->BxLastLine;
 	  pChildAb = pPreviousLine->LiLastBox->BxAbstractBox;
-	  pBoxToBreak = pPreviousLine->LiLastPiece;
 	  /* height of the block box */
 	  *height = pPreviousLine->LiYOrg + pPreviousLine->LiHeight - top;
-	  if (pBoxToBreak)
-	    {
-	      pBoxToBreak = pBoxToBreak->BxNexChild;
-	      /* special case of the last box */
-	      pNextBox = pPreviousLine->LiLastBox;
-	    }
-	  
-	  if (pNextBox == NULL)
-	    {
-	    if (pChildAb->AbBox->BxType == BoScript &&
-		pChildAb->AbBox->BxNexChild)
-	      /* get the next child */
-	      pNextBox = pChildAb->AbBox->BxNexChild;
-	    else
-	      pNextBox = GetNextBox (pChildAb);
-	    }
+	  pBoxToBreak = pPreviousLine->LiLastPiece;
+	  pNextBox = pPreviousLine->LiLastBox;
+	  if (pBoxToBreak && pBoxToBreak->BxNexChild)
+	    pBoxToBreak = pBoxToBreak->BxNexChild;
+	  else
+	    pNextBox = GetNextBox (pChildAb);
 	  
 	  if (pNextBox == NULL)
 	    /* nothing else */
@@ -2639,6 +2658,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      /* prepare the next line */
 	      GetLine (&pLine);
 	      pPreviousLine->LiNext = pLine;
+	      /* look for previous floating boxes */
+	      InitFloats (pBox, pLine, &floatL, &floatR);
 	    }
 	}
 

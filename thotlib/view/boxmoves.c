@@ -108,7 +108,7 @@ ThotBool            IsXPosComplete (PtrBox pBox)
   enclosing box is stretchable or depends on an out-of-strucure box
   (not included by its ancestor).
   ----------------------------------------------------------------------*/
-ThotBool            IsYPosComplete (PtrBox pBox)
+ThotBool IsYPosComplete (PtrBox pBox)
 {
   PtrBox              pParentBox;
   ThotBool            Ok;
@@ -132,7 +132,7 @@ ThotBool            IsYPosComplete (PtrBox pBox)
    IsParentBox returns TRUE when pAncestor is an ancestor of pChild or
    pChild itself.
   ----------------------------------------------------------------------*/
-ThotBool            IsParentBox (PtrBox pAncestor, PtrBox pChild)
+ThotBool IsParentBox (PtrBox pAncestor, PtrBox pChild)
 {
   PtrAbstractBox      pAb;
   ThotBool            equal;
@@ -158,7 +158,7 @@ ThotBool            IsParentBox (PtrBox pAncestor, PtrBox pChild)
   IsSiblingBox returns TRUE if pBox is a sibling (same parent but not
   pRefBox itself) of pRefBox.
   ----------------------------------------------------------------------*/
-static ThotBool     IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
+static ThotBool IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
 {
   if (pRefBox == pBox)
     return (FALSE);

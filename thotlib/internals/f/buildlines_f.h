@@ -14,6 +14,10 @@ extern void Align ( PtrBox pParentBox,
                     int frame,
                     ThotBool orgXComplete,
                     ThotBool orgYComplete );
+extern void InitFloats ( PtrBox pBlock,
+                         PtrLine pLine,
+                         PtrBox *floatL,
+                         PtrBox *floatR );
 extern void ChechBlockHeight ( PtrBox pBlock,
                                ThotBool orgYComplete,
                                int *height );
@@ -61,6 +65,10 @@ extern void Align (/* PtrBox pParentBox,
                       int frame,
                       ThotBool orgXComplete,
                       ThotBool orgYComplete */);
+extern void InitFloats (/* PtrBox pBlock,
+                           PtrLine pLine,
+                           PtrBox *floatL,
+                           PtrBox *floatR */);
 extern void ChechBlockHeight (/* PtrBox pBlock,
                                  ThotBool orgYComplete,
                                  int *height */);

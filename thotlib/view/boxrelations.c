@@ -198,12 +198,16 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 
 
 /*----------------------------------------------------------------------
-  InsertDimRelation etablit le lien entre les dimensions horizontales
-  ou verticales des deux boites (pOrginBox vers pTargetBox).
-  Si sameDimension est Faux, il faut inverser horizRef.
+  InsertDimRelation registers vertical or horizontal links between two
+  boxes (from pOrginBox to pTargetBox).
+  The parameter sameDimension is FALSE when the height depends on a width
+  or vise versa.
+  The parameter inLine is TRUE when the pOrginBox box is displayed within
+  a block of lines.
   ----------------------------------------------------------------------*/
 static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
-			       ThotBool sameDimension, ThotBool horizRef)
+			       ThotBool sameDimension, ThotBool horizRef,
+			       ThotBool inLine)
 {
   PtrDimRelations     pPreviousDimRel, pNext;
   PtrDimRelations     pDimRel;
@@ -213,7 +217,9 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 
   if (!sameDimension)
     horizRef = !horizRef;
-
+  if (inLine && IsParentBox (pTargetBox, pOrginBox))
+    /* dont register the relation in this case */
+    return;
   i = 0;
   /* add a relation from origin to target */
   if (horizRef)
@@ -229,7 +235,7 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   /* look for an empty entry */
   pPreviousDimRel = NULL;
   loop = TRUE;
-  while (loop && pDimRel != NULL)
+  while (loop && pDimRel)
     {
       i = 0;
       pPreviousDimRel = pDimRel;
@@ -1426,6 +1432,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   PtrAbstractBox      pParentAb;
   PtrAbstractBox      pChildAb, pAncestor;
   PtrElement          pEl;
+  PtrLine             pLine;
   OpRelation          op;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
@@ -1541,10 +1548,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 	}
 
-      /* Is it a stretchable box? */
       if ((horizRef && !pAb->AbWidth.DimIsPosition) ||
 	  (!horizRef && !pAb->AbHeight.DimIsPosition))
 	{
+	  /* It's not a stretchable box */
 	  if (horizRef)
 	    {
 	      pDimAb = &pAb->AbWidth;
@@ -1591,6 +1598,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  if (pParentAb == NULL)
 	    {
 	      /* It's the root box */
+	      inLine = FALSE;
 	      if (horizRef)
 		{
 		  if (pDimAb->DimValue == 0)
@@ -1642,7 +1650,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  else
 	    {
 	      /* it's not the root box */
-	      inLine = (pAb->AbFloat == 'N' && pAb->AbAcceptLineBreak &&
+	      inLine = (pAb->AbFloat == 'N' && !pAb->AbNotInLine &&
 			(pParentAb->AbBox->BxType == BoBlock ||
 			 pParentAb->AbBox->BxType == BoFloatBlock ||
 			 pParentAb->AbBox->BxType == BoGhost));
@@ -1676,14 +1684,18 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				    pParentAb = pParentAb->AbEnclosing;
 				}
 				/* inherited from the parent */
-			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
+			      val = PixelValue (pDimAb->DimValue, UnPercent,
+						(PtrAbstractBox) pParentAb->AbBox->BxW, 0);
 				/* the rule gives the outside value */
 			      val = val - dx;
-			      InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			      InsertDimRelation (pParentAb->AbBox, pBox,
+						 pDimAb->DimSameDimension, horizRef,
+						 inLine);
 			    }
 			  else
 			    /* explicit value */
-			    val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			    val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
+					      ViewFrameTable[frame - 1].FrMagnification);
 			  ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 			}
 		    }
@@ -1726,7 +1738,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  pDimAb->DimUnit = UnRelative;
 			}
 
-		      if (pDimAb->DimAbRef != NULL)
+		      if (pDimAb->DimAbRef)
 			{
 			  /* Inherit from a box */
 			  pRefBox = pDimAb->DimAbRef->AbBox;
@@ -1738,7 +1750,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimAbRef->AbBox = pRefBox;
 			  }
 			    
-			  if (pRefBox != NULL)
+			  if (pRefBox)
 			    {
 			      if (pDimAb->DimAbRef == pParentAb)
 				{
@@ -1751,15 +1763,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				  
 				  if (inLine && pDimAb->DimSameDimension)
 				    {
-				      /* remove the indentation value  */
-				      if (pParentAb->AbIndentUnit == UnPercent)
-					delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
-				      else
-					delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
-				      if (pParentAb->AbIndent > 0)
-					val -= delta;
-				      else if (pParentAb->AbIndent < 0)
-					val += delta;
+				      
+				      pLine = SearchLine (pBox);
+				      if (pLine)
+					val = pLine->LiXMax;
 				    }
 				}
 			      else
@@ -1773,9 +1780,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
 			      /* Convert the distance value */
 			      if (pDimAb->DimUnit == UnPercent)
-				val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+				val = PixelValue (pDimAb->DimValue, UnPercent,
+						  (PtrAbstractBox) val, 0);
 			      else
-				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
+						   ViewFrameTable[frame - 1].FrMagnification);
 			      /* the rule gives the outside value */
 			      val = val - dx;
 			      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
@@ -1785,7 +1794,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				pBox->BxWOutOfStruct = TRUE;
 			      
 			      /* Store dependencies */
-			      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						 pDimAb->DimSameDimension, horizRef, inLine);
 			    }
 			}
 		    }
@@ -1831,10 +1841,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				    pParentAb = pParentAb->AbEnclosing;
 				}
 			      /* inherited from the parent */
-			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxH, 0);
+			      val = PixelValue (pDimAb->DimValue, UnPercent,
+						(PtrAbstractBox) pParentAb->AbBox->BxH, 0);
 			      /* the rule gives the outside value */
 			      val = val - dy;
-			      InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			      InsertDimRelation (pParentAb->AbBox, pBox,
+						 pDimAb->DimSameDimension, horizRef, inLine);
 			    }
 			  else
 			    /* explicit value */
@@ -1861,7 +1873,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  /* the rule gives the outside value */
 			  val = val - dy;
 			  InsertDimRelation (pParentAb->AbBox, pBox,
-					     pDimAb->DimSameDimension, horizRef);
+					     pDimAb->DimSameDimension, horizRef, inLine);
 			}
 		      else
 			{
@@ -1959,7 +1971,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				    pBox->BxHOutOfStruct = TRUE;
 				  
 				  /* Store dependencies */
-				  if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
+				  if (pDimAb->DimAbRef == pAb &&
+				      pDimAb->DimSameDimension)
 				    {
 				      /* Check errors */
 				      if (horizRef)
@@ -1967,7 +1980,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				      else
 					fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb, TRUE));
 				    }
-				  InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+				  InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						     pDimAb->DimSameDimension, horizRef, inLine);
 				}
 			    }
 			}

@@ -1687,13 +1687,13 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
   - compute its real dimensions and choose between inherited and real values.
   - compute reference axis (baseline).           
   - get the position of the box origin (left top corner) relativelly to its   
-  enclosing when it's not set inLines.     
+  enclosing when it's not set inLine.     
   Terminal boxes are chained (forward and back) from the BxPrevious and the
   BxNext of the root box.
   Store the box address into the abstract box.
   Return the box address.
   ----------------------------------------------------------------------*/
-static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
+static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 			 int *carIndex)
 {
   PtrSSchema          pSS;
@@ -1714,6 +1714,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 
   if (pAb->AbDead)
     return (NULL);
+
   /* by default it's not a table element */
   tableType = BoComplete;
   pSS = pAb->AbElement->ElStructSchema;
@@ -1761,7 +1762,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       if (tableType == BoRow || tableType == BoColumn || tableType == BoCell)
 	{
 	  /* float and inlines are not allowed for rows and cells */
-	  inLines = FALSE;
+	  inLine = FALSE;
 	  pAb->AbFloat = 'N';
 	  inlineChildren = FALSE;
 	}
@@ -1773,9 +1774,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	    AddFloatingBox (pAb, FALSE);
 	  if (pAb->AbLeafType == LtCompound)
 	    {
-	      if (inLines && pAb->AbAcceptLineBreak && pAb->AbFloat == 'N')
+	      if (inLine && pAb->AbAcceptLineBreak && pAb->AbFloat == 'N')
 		{
-		  inlineChildren = inLines;
+		  inlineChildren = inLine;
 		  if (pAb->AbFirstEnclosed)
 		    /* that block will be skipped */
 		    pCurrentBox->BxType = BoGhost;
@@ -1801,7 +1802,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		inlineChildren = FALSE;
 	    }
 	  else
-	    inlineChildren = inLines;
+	    inlineChildren = inLine;
 	}
 
       /* Dimensionnement de la boite par contraintes */
@@ -1873,8 +1874,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	pCurrentBox->BxShadow = FALSE;
       else if (TypeHasException (ExcShadow, pAb->AbElement->ElTypeNumber, pSS))
 	pCurrentBox->BxShadow = TRUE;
-      else if (pCurrentBox->BxAbstractBox->AbEnclosing != NULL &&
-	       pCurrentBox->BxAbstractBox->AbEnclosing->AbBox != NULL &&
+      else if (pCurrentBox->BxAbstractBox->AbEnclosing &&
+	       pCurrentBox->BxAbstractBox->AbEnclosing->AbBox &&
 	       pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
 	pCurrentBox->BxShadow = TRUE;
       else
@@ -2111,7 +2112,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       
       /* Positionnement des origines de la boite construite */
       i = 0;
-      if (!inLines)
+      if (!inLine)
 	{
 	  ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
 	  ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
@@ -2691,7 +2692,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   int                 width, height;
   int                 nSpaces;
   int                 i, k, charDelta, adjustDelta;
-  ThotBool            condition, inLines;
+  ThotBool            condition, inLine;
   ThotBool            result, isCell;
   ThotBool            orgXComplete;
   ThotBool            orgYComplete;
@@ -2712,7 +2713,20 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   pBox = pAb->AbBox;		/* boite du pave */
   result = FALSE;
   condition = FALSE;
-  /* On prepare le reaffichage */
+  pParent = pAb->AbEnclosing;
+  if (pParent == NULL)
+    /* it's the root box */
+    inLine = FALSE;
+  else if (pParent->AbBox &&
+	   (pParent->AbBox->BxType == BoBlock ||
+	    pParent->AbBox->BxType == BoFloatBlock ||
+	    pParent->AbBox->BxType == BoGhost))
+    /* within a block */
+    inLine = TRUE;
+  else
+    inLine = FALSE;
+
+  /* Prepare the clipping */
   if (pAb->AbNew || pAb->AbDead || pAb->AbChange || pAb->AbMBPChange ||
       pAb->AbWidthChange || pAb->AbHeightChange ||
       pAb->AbHorizPosChange || pAb->AbVertPosChange ||
@@ -2723,38 +2737,33 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       if (pAb->AbNew || pAb->AbDead ||
 	  pAb->AbHorizPosChange || pAb->AbVertPosChange)
 	{
-	  pCurrentAb = pAb->AbEnclosing;	   
+	  pCurrentAb = pParent;	   
 	  while (pCurrentAb && pCurrentAb->AbPictBackground == NULL &&
 		 !pCurrentAb->AbFillBox)
 	    pCurrentAb = pCurrentAb->AbEnclosing;
+	  if (pCurrentAb == NULL || pCurrentAb->AbEnclosing == NULL)
+	    /* no background found: clip the current box */
+	    pCurrentAb = pAb;
 	}
       else
 	pCurrentAb = pAb;
       
-      if (pCurrentAb == NULL || pCurrentAb->AbEnclosing == NULL)
-	/* no background found: clip the current box */
-	pCurrentBox = pBox;
-      else
+      pCurrentBox = pCurrentAb->AbBox;
+      if (pCurrentBox && pCurrentBox->BxType == BoGhost)
 	{
-	  /* background found: clip the first box with background */
-	  pCurrentBox = pCurrentAb->AbBox;
-	  if (pCurrentBox && pCurrentBox->BxType == BoGhost)
-	    {
-	      /* move to the enclosing block */
-	      while (pCurrentAb && pCurrentAb->AbBox &&
+	  /* move to the enclosing block */
+	  while (pCurrentAb && pCurrentAb->AbBox &&
 		     pCurrentAb->AbBox->BxType == BoGhost)
 		pCurrentAb = pCurrentAb->AbEnclosing;
 	      if (pCurrentAb == NULL)
 		pCurrentBox = pBox;
 	      else
 		pCurrentBox = pCurrentAb->AbBox;
-	    }
 	}
-      /* Si la boite est coupee on prend la premiere boite de coupure */
       if (pCurrentBox)
 	{
-	  if (pCurrentBox->BxType == BoSplit ||
-	      pCurrentBox->BxType == BoMulScript)
+	  if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
+	    /* get the first displayed box */
 	    pCurrentBox = pCurrentBox->BxNexChild;
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
@@ -2785,14 +2794,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 #endif /* _GL */
     }
 
-  /* NOUVEAU AbstractBox */
+  /* NEW AbstractBox */
   if (pAb->AbNew)
     {
       AnyWidthUpdate = TRUE;
       /* Check the position of the new box in the list of terminal boxes */
       pCurrentAb = PreviousLeafAbstractBox (pAb);
       /* Get the box just before */
-      if (pCurrentAb != NULL)
+      if (pCurrentAb)
 	pCurrentBox = pCurrentAb->AbBox;
       else
 	pCurrentBox = NULL;
@@ -2815,50 +2824,35 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
 
       /* Get the box just after */
-      pParent = pAb->AbEnclosing;
-      if (pParent == NULL)
-	/* it's the root box */
-	inLines = FALSE;
-      else
+      if (inLine &&
+	  pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
+	  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
+	  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
+	   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+	   pParent->AbEnclosing->AbBox->BxType == BoGhost) )
+	/* the parent was not set ghost because it was empty */
+	pParent->AbBox->BxType = BoGhost;
+
+      if (pParent && pNextBox && pNextBox == pParent->AbBox)
+	/* the new box will replace the previous one */
+	pNextBox = pNextBox->BxNext;
+      /* On etablit le chainage pour inserer en fin les nouvelles boites */
+      /* Faut-il dechainer la boite englobante ? */
+      if (pMainBox)
 	{
-	  if (pParent->AbBox &&
-	      (pParent->AbBox->BxType == BoBlock ||
-	       pParent->AbBox->BxType == BoFloatBlock ||
-	       pParent->AbBox->BxType == BoGhost))
-	    {
-	      /* within a block */
-	      inLines = TRUE;
-	      if (pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
-		  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
-		  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
-		   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-		   pParent->AbEnclosing->AbBox->BxType == BoGhost) )
-		/* the parent was not set ghost because it was empty */
-		pParent->AbBox->BxType = BoGhost;
-	    }
-	  else
-	    inLines = FALSE;
-	  if (pNextBox != NULL && pNextBox == pParent->AbBox)
-	    /* the new box will replace the previous one */
-	    pNextBox = pNextBox->BxNext;
-	  /* On etablit le chainage pour inserer en fin les nouvelles boites */
-	  /* Faut-il dechainer la boite englobante ? */
-	  if (pMainBox)
-	    {
-	      if (pCurrentBox == NULL)
-		pMainBox->BxNext = NULL;	/* debut du chainage */
-	      pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
-	      pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
-	    }
-	  else
-	    pLastBox = NULL;	/* memorise la derniere boite*/
+	  if (pCurrentBox == NULL)
+	    pMainBox->BxNext = NULL;	/* debut du chainage */
+	  pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
+	  pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
 	}
+      else
+	pLastBox = NULL;	/* memorise la derniere boite*/
       
       /* Faut-il dechainer la boite englobante ? */
       ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
       savpropage = Propagate;
       Propagate = ToSiblings;	/* Limite la propagation sur le descendance */
-      pBox = CreateBox (pAb, frame, inLines, &i);
+      pBox = CreateBox (pAb, frame, inLine, &i);
       
       ReadyToDisplay = TRUE;	/* On retablit l'evaluation du reaffichage */      
       /* Mise a jour de la liste des boites terminales */
@@ -2895,10 +2889,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 
 	  /* On prepare le reaffichage */
-	  if (pParent == NULL || pParent->AbBox == NULL ||
-	      (pParent->AbBox->BxType != BoBlock &&
-	       pParent->AbBox->BxType != BoFloatBlock &&
-	       pParent->AbBox->BxType != BoGhost))
+	  if (!inLine)
 	    {
 #ifndef _GLTRANSFORMATION
 	      if (pBox->BxLMargin < 0)
@@ -2958,17 +2949,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  pCurrentBox = pCurrentAb->AbBox;
 	  /* Est-ce que la boite est coupee ? */
-	  if (pCurrentBox->BxType == BoSplit ||
-	      pCurrentBox->BxType == BoMulScript)
+	  if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
 	    while (pCurrentBox->BxNexChild)
 	      pCurrentBox = pCurrentBox->BxNexChild;
 	}
 
       /* Est-ce que la boite englobante devient terminale ? */
-      pCurrentAb = pAb->AbEnclosing;
-      if (IsAbstractBoxEmpty (pCurrentAb))
+      if (IsAbstractBoxEmpty (pParent))
 	{
-	  pNextBox = pCurrentAb->AbBox;
+	  pNextBox = pParent->AbBox;
 	  /* Si la boite etait eclatee, elle ne l'est plus */
 	  if (pNextBox->BxType == BoGhost)
 	    pNextBox->BxType = BoComplete;
@@ -3417,7 +3406,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pDimAb = &pAb->AbWidth;
 	      if (pDimAb->DimIsPosition)
 		width = 0;
-	      else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+	      else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
 		width = 0;
 	      else
 		width -= pBox->BxW;	/* ecart de largeur */
@@ -3429,7 +3418,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else
 		height -= pBox->BxH;	/* ecart de hauteur */
 	      pLine = NULL;
-	      if (width != 0 || height !=0)
+	      if (width || height)
 		{
 		  pCell = GetParentCell (pBox);
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
@@ -3441,7 +3430,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      if (pAb->AbLeafType == LtPicture)
 			{
 			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
-			  if (pBlock != NULL)
+			  if (pBlock)
 			    {
 			      RecomputeLines (pBlock, NULL, NULL, frame);
 				/* we will have to pack enclosing box */

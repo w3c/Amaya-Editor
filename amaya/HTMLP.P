@@ -5777,12 +5777,14 @@ ATTRIBUTES
 	CreateBefore(AttrNameAndValue);
 	HorizPos: Left = Enclosing . Left;
 	Adjust: Left;
+	Float: Left;
 	END;
  Alignment = Right_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
 	HorizPos: Right = Enclosing . Right;
 	Adjust: Left;
+	Float: Right;
 	IN Alternate_view BEGIN
 		HorizPos: Left = Enclosing . Left;
 		Adjust: Left;
