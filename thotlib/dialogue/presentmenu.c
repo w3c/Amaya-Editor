@@ -958,6 +958,8 @@ int                 applyDomain;
   ThotBool	      addPresRule;
 
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  pBlock = NULL;
+  LocLineWeightUnit = UnPoint;
   if (selectionOK && pSelDoc != NULL)
     if (pSelDoc->DocSSchema != NULL)
       /* il y a bien une selection et le document selectionne' n'a pas */

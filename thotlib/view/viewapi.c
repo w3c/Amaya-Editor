@@ -1684,6 +1684,7 @@ View                view;
 	      nbpoints = pBox->BxNChars;
 	      if (nbpoints == 0)
 		return;
+	      j = 0;
 	      for (i = 1; i < nbpoints; i++)
 		{
 		  if (j >= Bbuffer->BuLength)

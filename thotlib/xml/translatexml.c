@@ -343,6 +343,7 @@ SSchema sSchema;
 
   /* Gets all SchemasPaths */
   TtaGetSchemaPath(paths,1000);
+  file = NULL;
 #ifdef DEBUG_IV
   printf("Paths:%s.\n",paths);
 #endif
@@ -359,7 +360,7 @@ SSchema sSchema;
 	  if (TtaFileExist(filename))
 	    {
 	      file = TtaReadOpen (filename);
-	      ok=TRUE;
+	      ok = (file != NULL);
 	    }
 	  else {
 	    f=0;

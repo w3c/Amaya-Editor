@@ -424,7 +424,7 @@ int       attr_HREFText;
 void CreateHelpDlgWindow (HWND parent, STRING localname, STRING msg1, STRING msg2)
 #else  /* !__STDC__ */
 void CreateHelpDlgWindow (parent, localname, msg1, msg2)
-HWND      parent;
+HWND       parent;
 STRING     localname;
 STRING     msg1;
 STRING     msg2;
@@ -432,7 +432,7 @@ STRING     msg2;
 {  
     usprintf (currentPathName, localname);
     usprintf (message, msg1);
-	usprintf (message2, msg2);
+    usprintf (message2, msg2);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1456,34 +1456,24 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND messageWnd1;
-	HWND messageWnd2;
-	HWND messageWnd3;
-
     switch (msg) {
            case WM_INITDIALOG:
-				messageWnd1 = CreateWindow (TEXT("STATIC"), currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 70, 400, 20, hwnDlg, (HMENU) 9, 
-										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd2 = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 90, 400, 60, hwnDlg, (HMENU) 99, 
-										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd3 = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 110, 400, 60, hwnDlg, (HMENU) 999, 
-										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	         SetDlgItemText (hwnDlg, IDC_VERSION, currentPathName);
+	         SetDlgItemText (hwnDlg, IDC_ABOUT1, message);
+	         SetDlgItemText (hwnDlg, IDC_ABOUT2, message2);
 			    break;
 
            case WM_COMMAND:
 	            switch (LOWORD (wParam)) {
-				       case ID_CONFIRM:
-							EndDialog (hwnDlg, ID_CONFIRM);
-					        break;
+			case ID_CONFIRM:
+			   EndDialog (hwnDlg, ID_CONFIRM);
+			   break;
 
-				       case WM_CLOSE:
-				       case WM_DESTROY:
-							EndDialog (hwnDlg, ID_CONFIRM);
-					        break;
-				}
+			case WM_CLOSE:
+			case WM_DESTROY:
+			   EndDialog (hwnDlg, ID_CONFIRM);
+			   break;
+		     }
 				break;
 
            default: return (FALSE);

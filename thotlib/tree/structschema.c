@@ -865,7 +865,7 @@ int		   *nComp;
 
 {
    RConstruct          constr;
-   int                 typ;
+   int                 typ = 0;
 
    constr = CsNatureSchema;
    *nComp = 0;

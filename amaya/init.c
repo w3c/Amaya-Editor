@@ -4937,6 +4937,8 @@ View                view;
   ustrcpy (localname, HTAppName);
   ustrcat (localname, TEXT(" - "));
   ustrcat (localname, HTAppVersion);
+  ustrcat (localname, TEXT("     "));
+  ustrcat (localname, HTAppDate);
 # ifndef _WINDOWS
   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm, TtaGetMessage(AMAYA, AM_ABOUT1));

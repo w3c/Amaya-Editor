@@ -4507,7 +4507,7 @@ Element             parent;
 Element             element;
 #endif /* __STDC__ */
 {
-   PtrElement          pEl;
+   PtrElement          pEl = NULL;
    PtrElement          elementFound;
    ThotBool            ok;
 

@@ -1304,7 +1304,7 @@ ThotBool		removeExclusions;
    PtrReferredDescr      pRefD;
    SRule                *pSRule;
    DocumentIdentifier    docIdent;
-   ThotBool              ok;
+   ThotBool              ok = FALSE;
    int                   d, extDocNum;
    NotifyOnTarget	 notifyEl;
 

@@ -805,7 +805,7 @@ Restruct restruct;
 
   destType = restruct->RDestType;
   ptrTree =  restruct->RSrcPrint->STree;
-  
+  tfather = NULL;
 #ifdef DEBUG
   printf ("Application de la transformation :\n");
   printf (" source : %s\n", restruct->RSrcPrint->SPrint);

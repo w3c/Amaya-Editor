@@ -674,8 +674,6 @@ CHAR_T                c;
 	      XmlTextToDocument ();
 	      createdElement = NULL;
 	    }
-	  else if (!ustrcmp (inputBuffer, PRES_SCHEMA_TAG))
-	      ;
 	  createdElement = NULL;
 	}
       else if (DoCreateElement)
