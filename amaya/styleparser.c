@@ -5116,7 +5116,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   ThotBool            toParse, eof, quoted;
   ThotBool            ignoreMedia, media;
   ThotBool            noRule, ignoreImport;
-  CSSInfoPtr          refcss = NULL, tmpcss;
+  CSSInfoPtr          refcss = NULL;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
