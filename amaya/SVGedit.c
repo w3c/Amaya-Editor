@@ -1734,7 +1734,15 @@ void CreateGraphicElement (int entry)
       if (!sibling)
 	TtaInsertFirstChild (&newEl, parent, doc);
       else
-	TtaInsertSibling (newEl, sibling, FALSE, doc);
+	{
+	  elType = TtaGetElementType (sibling);
+	  if (elType.ElSSchema == SvgSchema &&
+	      elType.ElTypeNum == SVG_EL_GraphicsElement)
+	    /* the new element replaces the existing, empty element */
+	    TtaInsertFirstChild (&newEl, sibling, doc);
+	  else
+	    TtaInsertSibling (newEl, sibling, FALSE, doc);
+	}
 
       /* create attributes fill and stroke if they are not inherited */
       if (newType.ElTypeNum == SVG_EL_line_ ||
