@@ -549,7 +549,7 @@ void                PasteCommand ()
 		   /* on avait coupe' en deux un element de texte. On recolle les */
 		   /* deux morceaux */
 		  {
-		     MergeTextElements (firstSel, &pFree, pDoc, TRUE);
+		     MergeTextElements (firstSel, &pFree, pDoc, TRUE, FALSE);
 		     DeleteElement (&pFree);
 		     pFree = NULL;
 		  }

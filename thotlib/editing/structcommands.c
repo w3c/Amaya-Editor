@@ -1432,6 +1432,8 @@ boolean             save;
 				       pNext = pPrev;
 				       if (pFree != NULL)
 					  pFree->ElNext = NULL;
+                                       oneAtLeast = TRUE;
+                                       pSelDoc->DocModified = TRUE;
 				    }
 				  else
 				     /* il n'y a pas eu de fusion, l'element suivant */
