@@ -954,9 +954,9 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
   sprintf (txt, "background-image: url(%s); background-repeat: ", image);
   if (repeat == REPEAT)
     strcat (txt, "repeat");
-  else if (repeat == HREPEAT)
+  else if (repeat == XREPEAT)
     strcat (txt, "repeat-x");
-  else if (repeat == VREPEAT)
+  else if (repeat == YREPEAT)
     strcat (txt, "repeat-y");
   else
     strcat (txt, "no-repeat");

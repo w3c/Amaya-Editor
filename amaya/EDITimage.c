@@ -212,9 +212,9 @@ void CallbackImage (int ref, int typedata, char *data)
 		if (RepeatValue == 0)
 		  i = REPEAT;
 		else if (RepeatValue == 1)
-		  i = HREPEAT;
+		  i = XREPEAT;
 		else if (RepeatValue == 2)
-		  i = VREPEAT;
+		  i = YREPEAT;
 		else
 		  i = SCALE;
 

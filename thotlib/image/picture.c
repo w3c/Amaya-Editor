@@ -590,16 +590,18 @@ static void PrintPoscriptImage (PictInfo *img, int x, int y,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame, 
-				  int w, int h, int frame)
+static void GL_TexturePartialMap (PictInfo *desc, int dx, int dy,
+				  int x, int y, int w, int h, int frame)
 {
   float    texH, texW;
     
   texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
   texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
+  x -= dx;
+  y -= dy;
   GL_SetPicForeground ();
   if (PrintingGL)
-    PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
+    PrintPoscriptImage (desc, x, y, w, h, frame);
   else
     {
       if (GL_NotInFeedbackMode ())
@@ -614,18 +616,18 @@ static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame,
       /* Texture coordinates are unrelative 
 	 to the size of the square */ 
       /* lower left */
-      glTexCoord2f (0,  texH); 
-      glVertex2i (xFrame, yFrame + h);
+      glTexCoord2f (0., texH); 
+      glVertex2i (x, y + h);
       /* upper right*/
       glTexCoord2f (texW, texH); 
-      glVertex2i (xFrame + w, yFrame + h);
+      glVertex2i (x + w, y + h);
       /* lower right */
       glTexCoord2f (texW, (float)desc->TexCoordH); 
-      glVertex2i (xFrame + w, yFrame); 
+      glVertex2i (x + w, y); 
       /* upper left */
-      glTexCoord2f (0, (float)desc->TexCoordH); 
-      glVertex2i (xFrame,yFrame);     
-      glEnd ();	
+      glTexCoord2f (0., (float)desc->TexCoordH); 
+      glVertex2i (x, y);     
+      glEnd ();
 
       /* State disabling */
       if (GL_NotInFeedbackMode ())
@@ -638,13 +640,12 @@ static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-void GL_TextureMap (PictInfo *desc, int xFrame, int yFrame, 
-		    int w, int h, int frame)
+void GL_TextureMap (PictInfo *desc, int x, int y, int w, int h, int frame)
 {  
   GL_SetPicForeground (); 
 
   if (PrintingGL)
-    PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
+    PrintPoscriptImage (desc, x, y, w, h, frame);
   else
     {
 #ifdef _TRACE_GL_PICTURE
@@ -669,16 +670,16 @@ void GL_TextureMap (PictInfo *desc, int xFrame, int yFrame,
 	 to the size of the square */      
       /* lower left */
       glTexCoord2i (0, 0); 
-      glVertex2i (xFrame, yFrame + h);
+      glVertex2i (x, y + h);
       /* upper right*/
-      glTexCoord2f (desc->TexCoordW, 0.0); 
-      glVertex2i (xFrame + w, yFrame + h);
+      glTexCoord2f (desc->TexCoordW, 0.); 
+      glVertex2i (x + w, y + h);
       /* lower right */
       glTexCoord2f (desc->TexCoordW, desc->TexCoordH); 
-      glVertex2i (xFrame + w, yFrame); 
+      glVertex2i (x + w, y); 
       /* upper left */
-      glTexCoord2f (0.0, desc->TexCoordH); 
-      glVertex2i (xFrame, yFrame);      
+      glTexCoord2f (0., desc->TexCoordH); 
+      glVertex2i (x, y);      
       glEnd ();	
       /* State disabling */
       if (GL_NotInFeedbackMode ())
@@ -1328,10 +1329,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   int               x, y, ix, jy;
   int               clipWidth, clipHeight;
   int               delta, dx, dy;
-#ifdef _GL
   int               i, j, iw, jh;
-#else /* _GL */
-#ifdef _WINGUI
+#if !defined(_GL) && defined(_WINGUI)
   HDC               hMemDC;
   BITMAP            bm;
   HBITMAP           bitmap;
@@ -1339,21 +1338,15 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   HBITMAP           pBitmapTiled;
   HDC               hOrigDC;
   int               nbPalColors;
-  int               i, j, iw, jh;
   HRGN              hrgn;
-#endif /* _WINGUI */
-#if defined(_MOTIF) || defined(_GTK)
-  XRectangle        rect;
+#endif /* !GL && _WINGUI */
 #ifdef _MOTIF
+  XRectangle        rect;
   XGCValues         values;
   unsigned int      valuemask;
 #endif /* _MOTIF */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _GL
-#ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - LayoutPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (!glIsTexture (imageDesc->TextureBind))
     return;
 #else /* _GL */
@@ -1379,7 +1372,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       nbPalColors = RealizePalette (TtDisplay);
     }
 #endif /* _WINGUI */
-#endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
@@ -1402,11 +1394,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
       clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
       /* shift in the source image */
-      x = pFrame->FrClipXBegin - box->BxXOrg - l - box->BxLMargin;
-      y = pFrame->FrClipYBegin - box->BxYOrg - t - box->BxTMargin;
-#ifdef _GL
-      GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
-#else /*_GL*/
+      x = pFrame->FrClipXBegin - box->BxXOrg - l /*- box->BxLMargin*/;
+      y = pFrame->FrClipYBegin - box->BxYOrg - t /*- box->BxTMargin*/;
 #ifdef _MOTIF
       if (imageDesc->PicMask)
 	{
@@ -1421,6 +1410,9 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	}
 #endif /* _MOTIF */
+#ifdef _GL
+      GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
+#else /*_GL*/
 #ifdef _GTK
       if (imageDesc->PicMask)
 	{
@@ -1469,61 +1461,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   else
     {
       /* give origins in the concrete image */
-#ifdef Obsolate
-      /*#ifdef _GL*/
-      x = box->BxClipX + l - pFrame->FrXOrg;
-      y = box->BxClipY + t - pFrame->FrYOrg;
-      clipWidth  = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
-      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
-      if (pAb &&
-	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-			     pAb->AbElement->ElStructSchema))
-	{
-	  x += box->BxLMargin;
-	  y += box->BxTMargin;
-	}
-      if (picPresent == FillFrame || picPresent == XRepeat)
-	{
-	  if (clipWidth > w)
-	    w = clipWidth;
-	}
-      else 
-	w = imageDesc->PicWidth;
-      if (picPresent == FillFrame || picPresent == YRepeat)
-	{
-	  if (clipHeight > h)
-	    h = clipHeight;
-	}
-      else
-	h = imageDesc->PicHeight;
-printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w, h);
-      if (w > 0 && h > 0)
-	{
-	  j = 0;
-	  jy = imageDesc->PicHeight;
-	  do
-	    {	      
-	      i = 0;
-	      ix = imageDesc->PicWidth;
-	      do
-		{		  
-		  if ((x + i + ix) > w)
-		    ix += w - (x + i + ix);
-		  if ((y + j + jy) > h)
-		    jy += h - (y + j + jy);
-		  GL_TexturePartialMap (imageDesc, 
-					x + i, y + j,
-					ix, 
-					jy, frame);
-		  i += ix;
-		} 
-	      while (i < w && ix > 0);
-	      j += jy;
-	    } 
-	  while (j < h && jy > 0);
-	}
-      /*#else /* _GL */*/
-#endif /* Obsolate*/
       dx = pFrame->FrClipXBegin;
       dy = pFrame->FrClipYBegin;
       x = xFrame - picXOrg + pFrame->FrXOrg;
@@ -1534,6 +1471,7 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 	y = dy;
       clipWidth  = pFrame->FrClipXEnd - x;
       clipHeight = pFrame->FrClipYEnd - y;
+
       /* compute the shift in the source image */
       dx = x;
       dy = y;
@@ -1541,8 +1479,8 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
 	{
-	  dx = dx - box->BxXOrg - box->BxLMargin;
-	  dy = dy - box->BxYOrg - box->BxTMargin;
+	  dx = dx - box->BxXOrg - l/* - box->BxLMargin*/;
+	  dy = dy - box->BxYOrg - t/* - box->BxTMargin*/;
 	}
       if ((picPresent == FillFrame || picPresent == XRepeat) &&
 	  imageDesc->PicWArea)
@@ -1552,6 +1490,7 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 	  imageDesc->PicHArea)
 	while (dy >= imageDesc->PicHArea)
 	  dy -= imageDesc->PicHArea;
+
       /* compute the clipping in the drawing area */
       x -= pFrame->FrXOrg;
       y -= pFrame->FrYOrg;
@@ -1602,75 +1541,18 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 		w = delta;
 	    }
 	}
-      
-#ifdef _GL /*new*/
-      if (picPresent == YRepeat && w > imageDesc->PicWidth)
+      /* avoid to repeat a background image by error */
+      if (picPresent != XRepeat && w > imageDesc->PicWidth)
 	w = imageDesc->PicWidth;
-      if (picPresent == XRepeat && h > imageDesc->PicHeight)
+      if (picPresent != YRepeat && h > imageDesc->PicHeight)
 	h = imageDesc->PicHeight;
-/*printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w, h);*/
-      if (w > 0 && h > 0)
-	{
-	  j = 0;
-	  /* initial shift */
-	  jy = dy;
-	  do
-	    {
-	      i = 0;
-	      /* initial shift */
-	      ix = dx;
-	      do
-		{
-		  /* check if the limits of the copied zone */
-		  iw = imageDesc->PicWArea - ix;
-		  if (i + iw > w)
-		    iw = w - i;
-		  jh = imageDesc->PicHArea - jy;
-		  if (j + jh > h)
-		    jh = h - j;
-		  GL_TexturePartialMap (imageDesc, i, j, iw, jh, frame);
-		  i += iw;
-		  ix = 0;
-		} while (i < w);
-	      j += jh;
-	      jy = 0;
-	    }
-	  while (j < h);
-#ifdef IV
-      if (w > 0 && h > 0)
-	{
-	  j = 0;
-	  jy = imageDesc->PicHeight;
-	  do
-	    {	      
-	      i = 0;
-	      ix = imageDesc->PicWidth;
-	      do
-		{		  
-		  if (x + i + ix > w)
-		    ix += w - (x + i + ix);
-		  if (y + j + jy > h)
-		    jy += h - (y + j + jy);
-		  GL_TexturePartialMap (imageDesc, 
-					x + i, y + j,
-					ix, jy, frame);
-		  i += ix;
-		} 
-	      while (i < w && ix > 0);
-	      j += jy;
-	    } 
-	  while (j < h && jy > 0);
-#endif
-	}
-#else /* _GL */ /*new*/
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF)
       ix = -pFrame->FrXOrg;
       jy = -pFrame->FrYOrg;
       rect.x = x;
       rect.y = y;
       rect.width = clipWidth + dx;
       rect.height = clipHeight + dy;
-#ifdef _MOTIF
       valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
       values.tile = pixmap;
       values.ts_x_origin = ix;
@@ -1693,31 +1575,7 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 	  XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	}
 #endif /* _MOTIF */
-#ifdef _GTK
-      gdk_gc_set_fill (tiledGC, GDK_TILED);
-      gdk_gc_set_tile (tiledGC, (ThotPixmap) pixmap);
-      gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
-      if (h > 0 && w > 0)
-	{
-	  gdk_gc_set_ts_origin (tiledGC, ix, jy);
-	  gdk_gc_set_clip_origin (tiledGC, -dx, -dy);
-	  gdk_draw_rectangle ((GdkDrawable *)drawable,
-			      tiledGC, TRUE, x, y, w, h);
-	}
-      /* remove clipping */
-      rect.x = 0;
-      rect.y = 0;
-      rect.width = MAX_SIZE;
-      rect.height = MAX_SIZE;
-      gdk_gc_set_clip_rectangle (tiledGC, (GdkRectangle *) &rect);
-      if (imageDesc->PicMask)
-	{
-	  gdk_gc_set_clip_mask (tiledGC, None);
-	  gdk_gc_set_clip_origin (tiledGC, 0, 0);
-	}
-#endif /* _GTK */
-#endif /* #if defined(_MOTIF) || defined(_GTK) */      
-#ifdef _WINGUI
+#if !defined(_GL) && defined(_WINGUI)
       hMemDC  = CreateCompatibleDC (TtDisplay);
       bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
       hOrigDC = CreateCompatibleDC (TtDisplay);
@@ -1725,33 +1583,54 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
       SelectClipRgn(TtDisplay, hrgn);
       bitmap = SelectObject (hOrigDC, pixmap);
       pBitmapTiled = SelectObject (hMemDC, bitmapTiled);
+#endif /* !_GL && _WINGUI */
       if (w > 0 && h > 0)
 	{
-	  j = 0;
+	  j = y;
 	  /* initial shift */
 	  jy = dy;
 	  do
 	    {
-	      i = 0;
+	      i = x;
 	      /* initial shift */
 	      ix = dx;
 	      do
 		{
 		  /* check if the limits of the copied zone */
 		  iw = imageDesc->PicWArea - ix;
-		  if (i + iw > w)
-		    iw = w - i;
+		  if (i + iw > x + w)
+		    iw = x + w - i;
 		  jh = imageDesc->PicHArea - jy;
-		  if (j + jh > h)
-		    jh = h - j;
-		  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
+		  if (j + jh > y + h)
+		    jh = y + h - j;
+#ifdef _GL
+		  GL_TexturePartialMap (imageDesc, ix, jy, i, j, iw, jh, frame);
+#else /* _GL */
+#ifdef _GTK
+		  if (imageDesc->PicMask)
+		    {
+		      gdk_gc_set_clip_origin (TtGraphicGC, i-ix, j-jy);
+		      gdk_gc_set_clip_mask (TtGraphicGC, 
+					    (ThotPixmap) imageDesc->PicMask);
+		    }
+		  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+				   (ThotPixmap) imageDesc->PicPixmap, 
+				   ix, jy, i, j, iw, jh);
+#endif /* _GTK */
+#ifdef _WINGUI
+		  BitBlt (hMemDC, i, y + j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
+#endif /* _WINGUI */
+#endif /* _GL */
 		  i += iw;
 		  ix = 0;
-		} while (i < w);
+		} while (i < x + w);
 	      j += jh;
 	      jy = 0;
 	    }
-	  while (j < h);
+	  while (j < y + h);
+	}
+
+#if !defined(_GL) && defined(_WINGUI)
 	  /*if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)*/
 	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	  /*else
@@ -1770,8 +1649,7 @@ printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w,
 	DeleteObject (bitmapTiled);
       if (hrgn)
 	DeleteObject (hrgn);
-#endif /* _WINGUI */
-#endif /* _GL */
+#endif /* !_GL && _WINGUI */
     }
 }
 

@@ -3527,9 +3527,9 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   if (!strncasecmp (cssRule, "no-repeat", 9))
     repeat.typed_data.value = REALSIZE;
   else if (!strncasecmp (cssRule, "repeat-y", 8))
-    repeat.typed_data.value = VREPEAT;
+    repeat.typed_data.value = YREPEAT;
   else if (!strncasecmp (cssRule, "repeat-x", 8))
-    repeat.typed_data.value = HREPEAT;
+    repeat.typed_data.value = XREPEAT;
   else if (!strncasecmp (cssRule, "repeat", 6))
     repeat.typed_data.value = REPEAT;
   else

@@ -1972,10 +1972,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	    case REPEAT:
 	      rule->PrPresBox[0] = FillFrame;
 	      break;
-	    case HREPEAT:
+	    case XREPEAT:
 	      rule->PrPresBox[0] = XRepeat;
 	      break;
-	    case VREPEAT:
+	    case YREPEAT:
 	      rule->PrPresBox[0] = YRepeat;
 	      break;
 	    default:
@@ -2380,15 +2380,16 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	      value = REPEAT;
 	      break;
 	    case XRepeat:
-	      value = HREPEAT;
+	      value = XREPEAT;
 	      break;
 	    case YRepeat:
-	      value = VREPEAT;
+	      value = YREPEAT;
 	      break;
 	    default:
 	      unit = UNIT_INVALID;
 	      value = 0;
 	    }
+	  break;
 	case FnPage:
 	  value = PageAlways;
 	  unit = UNIT_REL;
@@ -3616,10 +3617,10 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	case REPEAT:
 	  sprintf (buffer, "background-repeat: repeat");
 	  break;
-	case VREPEAT:
+	case YREPEAT:
 	  sprintf (buffer, "background-repeat: repeat-y");
 	  break;
-	case HREPEAT:
+	case XREPEAT:
 	  sprintf (buffer, "background-repeat: repeat-x");
 	  break;
 	}

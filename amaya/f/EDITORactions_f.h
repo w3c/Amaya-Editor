@@ -245,6 +245,8 @@ extern void BookmarkFile ( Document document,
                            View view );
 extern void EditTopics ( Document document,
                          View view );
+extern void AddSeparator ( Document document,
+                           View view );
 extern void ViewBookmarks ( Document document,
                             View view );
 extern void ImportTopics ( Document document,
@@ -503,6 +505,8 @@ extern void BookmarkFile ( Document document,
                              View view );
 extern void EditTopics ( Document document,
                            View view );
+extern void AddSeparator ( Document document,
+                             View view );
 extern void ViewBookmarks ( Document document,
                               View view );
 extern void ImportTopics ( Document document,

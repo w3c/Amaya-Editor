@@ -157,8 +157,8 @@ typedef int        *PRule;
 #define REALSIZE		1
 #define SCALE			2
 #define REPEAT			3
-#define VREPEAT			4
-#define HREPEAT			5
+#define XREPEAT			4
+#define YREPEAT			5
 
 /* values for rule PRUnderline */
 #define NoUnderline 1
