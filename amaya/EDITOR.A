@@ -25,7 +25,9 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-	view:1 File button:BNew -> New;
+	view:1 File.New1 button:BBlank -> New;
+	view:1 File.New1 button:BTemplate -> NewTemplate;
+	view:1 File.New1 button:BCss -> NewCss;
 	view:1 File button:BOpenDoc -> OpenDoc;
 	view:1 File button:BOpenInNewWindow -> OpenDocInNewWindow;
 	view:1 File button:BReload -> Reload;

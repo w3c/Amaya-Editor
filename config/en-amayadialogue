@@ -13,183 +13,186 @@
 12 Attributes
 13 Help
 14 New
-15 Open document...
-16 Open in new window...
-17 Reload document
-18 Back
-19 Forward
-20 Save
-21 Save as...
-22 Setup and Print...
-23 Print
-24 Close document
-25 Exit
-26 Close view
-27 Undo
-28 Redo
-29 Cut
-30 Copy
-31 Paste
-32 Delete
-33 Editor Mode
-34 Find...
-35 Check spelling...
-36 Transform...
-37 BASE
-38 META
-39 LINK
-40 SCRIPT
-41 STYLE
-42 Comment
-43 ADDRESS
-44 AREA
-45 Circle
-46 Polygon
-47 Rectangle
-48 BLOCKQUOTE
-49 Break (BR)
-50 Division (DIV)
-51 Form
-52 FORM
-53 Button (INPUT)
-54 Checkbox (INPUT)
-55 File selector (INPUT)
-56 Hidden (INPUT)
-57 Password (INPUT)
-58 Radio (INPUT)
-59 Reset (INPUT)
-60 Submit (INPUT)
-61 Text (INPUT)
-62 FIELDSET 
-63 LABEL
-64 Menu (OPTION)
-65 Submenu (OPTGROUP)
-66 TEXTAREA
-67 Heading
-68 H1
-69 H2
-70 H3
-71 H4
-72 H5
-73 H6
-74 Horizontal rule (HR)
-75 Inline frame (IFRAME)
-76 Image (IMG)...
-77 List
-78 Bulleted list (UL)
-79 Numbered list (OL)
-80 Definition list (DL)
-81 Term (DT)
-82 Definition (DD)
-83 Math
-84 MATH
-85 Root (mroot)
-86 Square root (msqrt)
-87 Fraction (mfrac)
-88 Subscript and superscript (msubsup)
-89 Subscript (msub)
-90 Superscript (msup)
-91 Under and over (munderover)
-92 Under (munder)
-93 Over (mover)
-94 Parentheses (mf)
-95 Multiscripts (mmultiscripts)
-96 Matrix (mtable)
-97 Delete matrix column
-98 NOSCRIPT
-99 Object
-100 OBJECT
-101 Parameter (PARAM)
-102 Paragraph (P)
-103 Preformatted (PRE)
-104 Table
-105 TABLE
-106 CAPTION
-107 COLGROUP
-108 COL
-109 THEAD
-110 TBODY
-111 TFOOT
-112 Row (TR)
-113 Data cell (TD)
-114 Heading cell (TH)
-115 Delete table column
-116 Create or change link...
-117 Create target
-118 Delete anchor
-119 Show buttonbar
-120 Show address & title
-121 Show map areas
-122 Show targets
-123 Zoom in
-124 Zoom out
-125 Show structure
-126 Show alternate
-127 Show links
-128 Show table of contents
-129 Character style...
-130 Colors...
-131 Format...
-132 Background image...
-133 Create rule...
-134 Apply class...
-135 Style sheets
-136 Link...
-137 Open...
-138 Disable...
-139 Enable...
-140 Remove...
-141 Information type
-142 Emphasis
-143 Strong
-144 Cite
-145 Definition
-146 Code
-147 Variable
-148 Sample
-149 Keyboard
-150 Abbreviation
-151 Acronym
-152 Insertion
-153 Deletion
-154 Character element
-155 Italic
-156 Bold
-157 Teletype
-158 Big
-159 Small
-160 Subscript
-161 Superscript
-162 Quotation
-163 BiDi override
-164 Section numbering
-165 Make book
-166 Show log file
-167 Preferences
-168 General...
-169 Publishing...
-170 Cache...
-171 Proxy...
-172 Colors...
-173 Geometry...
-174 Language Negotiation...
-175 About Amaya
-176 About Amaya at W3C
-177 Browsing
-178 Selecting
-179 Searching
-180 Views
-181 Creating elements
-182 Links
-183 Restructuring
-184 Tables
-185 Math
-186 Image maps
-187 Style sheets
-188 Attributes
-189 Spell Checking
-190 Publishing
-191 Printing
-192 Numbering
-193 Making books
-194 Configuring Amaya
+15 Blank
+16 From template
+17 CSS
+18 Open document...
+19 Open in new window...
+20 Reload document
+21 Back
+22 Forward
+23 Save
+24 Save as...
+25 Setup and Print...
+26 Print
+27 Close document
+28 Exit
+29 Close view
+30 Undo
+31 Redo
+32 Cut
+33 Copy
+34 Paste
+35 Delete
+36 Editor Mode
+37 Find...
+38 Check spelling...
+39 Transform...
+40 BASE
+41 META
+42 LINK
+43 SCRIPT
+44 STYLE
+45 Comment
+46 ADDRESS
+47 AREA
+48 Circle
+49 Polygon
+50 Rectangle
+51 BLOCKQUOTE
+52 Break (BR)
+53 Division (DIV)
+54 Form
+55 FORM
+56 Button (INPUT)
+57 Checkbox (INPUT)
+58 File selector (INPUT)
+59 Hidden (INPUT)
+60 Password (INPUT)
+61 Radio (INPUT)
+62 Reset (INPUT)
+63 Submit (INPUT)
+64 Text (INPUT)
+65 FIELDSET 
+66 LABEL
+67 Menu (OPTION)
+68 Submenu (OPTGROUP)
+69 TEXTAREA
+70 Heading
+71 H1
+72 H2
+73 H3
+74 H4
+75 H5
+76 H6
+77 Horizontal rule (HR)
+78 Inline frame (IFRAME)
+79 Image (IMG)...
+80 List
+81 Bulleted list (UL)
+82 Numbered list (OL)
+83 Definition list (DL)
+84 Term (DT)
+85 Definition (DD)
+86 Math
+87 MATH
+88 Root (mroot)
+89 Square root (msqrt)
+90 Fraction (mfrac)
+91 Subscript and superscript (msubsup)
+92 Subscript (msub)
+93 Superscript (msup)
+94 Under and over (munderover)
+95 Under (munder)
+96 Over (mover)
+97 Parentheses (mf)
+98 Multiscripts (mmultiscripts)
+99 Matrix (mtable)
+100 Delete matrix column
+101 NOSCRIPT
+102 Object
+103 OBJECT
+104 Parameter (PARAM)
+105 Paragraph (P)
+106 Preformatted (PRE)
+107 Table
+108 TABLE
+109 CAPTION
+110 COLGROUP
+111 COL
+112 THEAD
+113 TBODY
+114 TFOOT
+115 Row (TR)
+116 Data cell (TD)
+117 Heading cell (TH)
+118 Delete table column
+119 Create or change link...
+120 Create target
+121 Delete anchor
+122 Show buttonbar
+123 Show address & title
+124 Show map areas
+125 Show targets
+126 Zoom in
+127 Zoom out
+128 Show structure
+129 Show alternate
+130 Show links
+131 Show table of contents
+132 Character style...
+133 Colors...
+134 Format...
+135 Background image...
+136 Create rule...
+137 Apply class...
+138 Style sheets
+139 Link...
+140 Open...
+141 Disable...
+142 Enable...
+143 Remove...
+144 Information type
+145 Emphasis
+146 Strong
+147 Cite
+148 Definition
+149 Code
+150 Variable
+151 Sample
+152 Keyboard
+153 Abbreviation
+154 Acronym
+155 Insertion
+156 Deletion
+157 Character element
+158 Italic
+159 Bold
+160 Teletype
+161 Big
+162 Small
+163 Subscript
+164 Superscript
+165 Quotation
+166 BiDi override
+167 Section numbering
+168 Make book
+169 Show log file
+170 Preferences
+171 General...
+172 Publishing...
+173 Cache...
+174 Proxy...
+175 Colors...
+176 Geometry...
+177 Language Negotiation...
+178 About Amaya
+179 About Amaya at W3C
+180 Browsing
+181 Selecting
+182 Searching
+183 Views
+184 Creating elements
+185 Links
+186 Restructuring
+187 Tables
+188 Math
+189 Image maps
+190 Style sheets
+191 Attributes
+192 Spell Checking
+193 Publishing
+194 Printing
+195 Numbering
+196 Making books
+197 Configuring Amaya

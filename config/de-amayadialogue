@@ -13,183 +13,186 @@
 12 Attribute
 13 Hilfe
 14 Neu
-15 Öffne Dokument...
-16 Öffne Dokument (neues Fenster)...
-17 Neu laden
-18 **Back
-19 **Forward
-20 Speichern
-21 Speichern unter...
-22 **Setup and Print...
-23 Drucken
-24 Schließen
-25 Beenden
-26 Schließe Fenster
-27 **Undo
-28 **Redo
-29 Ausschneiden
-30 Kopieren
-31 Einfügen
-32 Löschen
-33 **Editor Mode
-34 Suchen/Ersetzen...
-35 Rechtschreibung...
-36 Umformatieren...
-37 Basisadresse für rel. Verknüpfungen (BASE)
-38 Meta-Information (META)
-39 Verweis (LINK)
-40 Javascript (SCRIPT)
-41 Style-Sheet (STYLE)
-42 Kommentar (<>)
-43 Autorenadresse (ADDRESS)
-44 Aktiver Grafikbereich (AREA MAP)
-45 Kreis
-46 Polygon
-47 Rechteck
-48 Eingerücktes Zitat (BLOCKQUOTE)
-49 Zeilenumbruch (BR)
-50 logischer Textabschnitt (DIV)
-51 Formular (FORM)
-52 Formular
-53 Druckknopf (BUTTON)
-54 Ankreuzkästchen, mehrere von... (CHECKBOX)
-55 Feld für Dateiname (FILE)
-56 Verborgenes Feld (HIDDEN)
-57 Paßwortfeld (PASSWORD)
-58 Auswahlknopf, einer von... (RADIO)
-59 Knopf zum Zurücksetzen (RESET)
-60 OK-Knopf (SUBMIT)
-61 Eingabezeile (INPUT)
-62 Feldgruppe (FIELDSET)
-63 Feldbeschriftung (LABEL)
-64 Auswahlpunkt (OPTION)
-65 Unter-Auswahlliste (OPTGROUP)
-66 Texteingabe (TEXTAREA)
-67 Überschrift
-68 H1 (groß)
-69 H2
-70 H3
-71 H4
-72 H5
-73 H6 (klein)
-74 Waagerechte Linie (HR)
-75 Inline-Frame (IFRAME)
-76 Grafik (IMG)...
-77 Liste
-78 mit Punkten (LI)
-79 numeriert (OL)
-80 Definitionsliste (DL)
-81 Term (DT)
-82 Definition (DD)
-83 Formel
-84 Formel
-85 Wurzel (MROOT)
-86 Quadratwurzel (MSQRT)
-87 Quotient (MFRAC)
-88 Term mit Index und Exponent (MSUBSUP)
-89 Term mit Index (MSUB)
-90 Term mit Exponent (MSUP)
-91 Term mit Unter- und Überschrift (MUNDEROVER)
-92 Term mit Unterschrift (MUNDER)
-93 Term mit Überschrift (MOVER)
-94 Term in Klammern (MF)
-95 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
-96 Matrix (MTABLE)
-97 Matrixspalte löschen
-98 Alternative ohne Scripts (NOSCRIPT)
-99 Objekt
-100 Objekt
-101 Objekt-Parameter (PARAM)
-102 Absatz (P)
-103 Vorformatierter Text (PRE)
-104 Tabelle 
-105 Tabelle
-106 Überschrift (CAPTION)
-107 COLGROUP
-108 COL
-109 Tabellenkopf (THEAD)
-110 Tabellenkörper (TBODY)
-111 Fußzeile (TFOOT)
-112 Zeile (TR)
-113 Zelle (TD)
-114 Kopfzelle (TH)
-115 Tabellenspalte löschen
-116 Markierung als Verknüfung definieren...
-117 Markierung als Verknüpfungsziel definieren
-118 Verknüpfungsziel löschen
-119 Symbolleiste
-120 Dokumentadresse und -titel 
-121 Aktive Grafikbereiche markieren
-122 Verknüpfungsziele anzeigen
-123 Schrift vergrößern
-124 Schrift verkleinern
-125 Strukturfenster
-126 Textbrowserfenster
-127 Verknüpfungsfenster
-128 Inhaltsverzeichnisfenster
-129 Zeichen...
-130 Farben...
-131 Ausrichtung...
-132 Hintergrundbild...
-133 Format in Stylesheet übernehmen...
-134 Klasse anwenden...
-135 Stylesheets bearbeiten
-136 **Link a new one...
-137 **Open...
-138 **Disable...
-139 **Enable...
-140 **Remove...
-141 Logische Formate
-142 Betont (EM)
-143 Hervorgehoben (STRONG)
-144 Zitat (CITE)
-145 Definition (DFN)
-146 Programmtext (CODE)
-147 Variablenwert (VAR)
-148 Beispiel (SAMP)
-149 Tastatureingabe (KBD)
-150 Abkürzung (ABBR)
-151 Akronym (ACRONYM)
-152 Eingefügte Version (INS)
-153 Veraltete Version (DEL)
-154 Direkte Formate
-155 Kursiv (I)
-156 Fett (B)
-157 Schreibmaschinenschrift (TT)
-158 Größer (BIG)
-159 Kleiner (SMALL)
-160 Tiefgestellt (SUB)
-161 Hochgestellt (SUP)
-162 Zitat im Fließtext (Q)
-163 Textrichtung LTR/RTL (BDO)
-164 Abschnittsnummern
-165 Buch zusammenfügen
-166 Logdatei anzeigen
-167 **Preferences
-168 **General...
-169 **Publishing...
-170 **Cache...
-171 **Proxy...
-172 **Colors...
-173 **Geometry...
-174 **Language Negotiation...
-175 Info
-176 ** About Amaya at W3C
-177 Verknüpfungen folgen/Dokumente öffnen
-178 Auswählen
-179 Suchen
-180 Ansichten
-181 Einfügen von Elementen
-182 Verknüpfungen bearbeiten
-183 Umformatieren
-184 Tabellen
-185 Formeln
-186 Aktive Grafikbereiche
-187 Formate/Stylesheets
-188 Attribute
-189 Rechtschreibung
-190 Speichern/Publizieren
-191 Drucken
-192 Abschnittsnummern
-193 Buch zusammenfügen
-194 Konfiguration
+15 Leer
+16 Schablone
+17 CSS
+18 Öffne Dokument...
+19 Öffne Dokument (neues Fenster)...
+20 Neu laden
+21 **Back
+22 **Forward
+23 Speichern
+24 Speichern unter...
+25 **Setup and Print...
+26 Drucken
+27 Schließen
+28 Beenden
+29 Schließe Fenster
+30 **Undo
+31 **Redo
+32 Ausschneiden
+33 Kopieren
+34 Einfügen
+35 Löschen
+36 **Editor Mode
+37 Suchen/Ersetzen...
+38 Rechtschreibung...
+39 Umformatieren...
+40 Basisadresse für rel. Verknüpfungen (BASE)
+41 Meta-Information (META)
+42 Verweis (LINK)
+43 Javascript (SCRIPT)
+44 Style-Sheet (STYLE)
+45 Kommentar (<>)
+46 Autorenadresse (ADDRESS)
+47 Aktiver Grafikbereich (AREA MAP)
+48 Kreis
+49 Polygon
+50 Rechteck
+51 Eingerücktes Zitat (BLOCKQUOTE)
+52 Zeilenumbruch (BR)
+53 logischer Textabschnitt (DIV)
+54 Formular (FORM)
+55 Formular
+56 Druckknopf (BUTTON)
+57 Ankreuzkästchen, mehrere von... (CHECKBOX)
+58 Feld für Dateiname (FILE)
+59 Verborgenes Feld (HIDDEN)
+60 Paßwortfeld (PASSWORD)
+61 Auswahlknopf, einer von... (RADIO)
+62 Knopf zum Zurücksetzen (RESET)
+63 OK-Knopf (SUBMIT)
+64 Eingabezeile (INPUT)
+65 Feldgruppe (FIELDSET)
+66 Feldbeschriftung (LABEL)
+67 Auswahlpunkt (OPTION)
+68 Unter-Auswahlliste (OPTGROUP)
+69 Texteingabe (TEXTAREA)
+70 Überschrift
+71 H1 (groß)
+72 H2
+73 H3
+74 H4
+75 H5
+76 H6 (klein)
+77 Waagerechte Linie (HR)
+78 Inline-Frame (IFRAME)
+79 Grafik (IMG)...
+80 Liste
+81 mit Punkten (LI)
+82 numeriert (OL)
+83 Definitionsliste (DL)
+84 Term (DT)
+85 Definition (DD)
+86 Formel
+87 Formel
+88 Wurzel (MROOT)
+89 Quadratwurzel (MSQRT)
+90 Quotient (MFRAC)
+91 Term mit Index und Exponent (MSUBSUP)
+92 Term mit Index (MSUB)
+93 Term mit Exponent (MSUP)
+94 Term mit Unter- und Überschrift (MUNDEROVER)
+95 Term mit Unterschrift (MUNDER)
+96 Term mit Überschrift (MOVER)
+97 Term in Klammern (MF)
+98 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
+99 Matrix (MTABLE)
+100 Matrixspalte löschen
+101 Alternative ohne Scripts (NOSCRIPT)
+102 Objekt
+103 Objekt
+104 Objekt-Parameter (PARAM)
+105 Absatz (P)
+106 Vorformatierter Text (PRE)
+107 Tabelle 
+108 Tabelle
+109 Überschrift (CAPTION)
+110 COLGROUP
+111 COL
+112 Tabellenkopf (THEAD)
+113 Tabellenkörper (TBODY)
+114 Fußzeile (TFOOT)
+115 Zeile (TR)
+116 Zelle (TD)
+117 Kopfzelle (TH)
+118 Tabellenspalte löschen
+119 Markierung als Verknüfung definieren...
+120 Markierung als Verknüpfungsziel definieren
+121 Verknüpfungsziel löschen
+122 Symbolleiste
+123 Dokumentadresse und -titel 
+124 Aktive Grafikbereiche markieren
+125 Verknüpfungsziele anzeigen
+126 Schrift vergrößern
+127 Schrift verkleinern
+128 Strukturfenster
+129 Textbrowserfenster
+130 Verknüpfungsfenster
+131 Inhaltsverzeichnisfenster
+132 Zeichen...
+133 Farben...
+134 Ausrichtung...
+135 Hintergrundbild...
+136 Format in Stylesheet übernehmen...
+137 Klasse anwenden...
+138 Stylesheets bearbeiten
+139 **Link a new one...
+140 **Open...
+141 **Disable...
+142 **Enable...
+143 **Remove...
+144 Logische Formate
+145 Betont (EM)
+146 Hervorgehoben (STRONG)
+147 Zitat (CITE)
+148 Definition (DFN)
+149 Programmtext (CODE)
+150 Variablenwert (VAR)
+151 Beispiel (SAMP)
+152 Tastatureingabe (KBD)
+153 Abkürzung (ABBR)
+154 Akronym (ACRONYM)
+155 Eingefügte Version (INS)
+156 Veraltete Version (DEL)
+157 Direkte Formate
+158 Kursiv (I)
+159 Fett (B)
+160 Schreibmaschinenschrift (TT)
+161 Größer (BIG)
+162 Kleiner (SMALL)
+163 Tiefgestellt (SUB)
+164 Hochgestellt (SUP)
+165 Zitat im Fließtext (Q)
+166 Textrichtung LTR/RTL (BDO)
+167 Abschnittsnummern
+168 Buch zusammenfügen
+169 Logdatei anzeigen
+170 **Preferences
+171 **General...
+172 **Publishing...
+173 **Cache...
+174 **Proxy...
+175 **Colors...
+176 **Geometry...
+177 **Language Negotiation...
+178 Info
+179 ** About Amaya at W3C
+180 Verknüpfungen folgen/Dokumente öffnen
+181 Auswählen
+182 Suchen
+183 Ansichten
+184 Einfügen von Elementen
+185 Verknüpfungen bearbeiten
+186 Umformatieren
+187 Tabellen
+188 Formeln
+189 Aktive Grafikbereiche
+190 Formate/Stylesheets
+191 Attribute
+192 Rechtschreibung
+193 Speichern/Publizieren
+194 Drucken
+195 Abschnittsnummern
+196 Buch zusammenfügen
+197 Konfiguration

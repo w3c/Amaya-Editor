@@ -7564,6 +7564,7 @@ ThotBool	            plainText;
 	handleLinkHeaders (doc);
         #endif /* AMAYA_JAVA */
 	TtaFreeMemory (docURL);
+        OpenTemplateDocument (doc);
 	TtaSetDisplayMode (doc, DisplayImmediately);
 #endif /* STANDALONE */
 	/* check the Thot abstract tree against the structure schema. */

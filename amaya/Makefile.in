@@ -213,7 +213,8 @@ AMAYA_OBJ = \
 	trans.o \
 	transparse.o \
 	HTMLtable.o \
-	MENUconf.o
+	MENUconf.o \
+	templates.o
 
 #
 # Structure schema compilation.

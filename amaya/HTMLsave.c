@@ -1350,6 +1350,12 @@ View                view;
   SavingDocument = 0;
   if (ok)
     {
+      if (DocumentMeta[doc]->method == CE_TEMPLATE)
+	{
+	  DocumentMeta[doc]->method = CE_ABSOLUTE;
+	  TtaFreeMemory (DocumentMeta[doc]->form_data);
+	  DocumentMeta[doc]->form_data = NULL;
+	}
       TtaSetDocumentUnmodified (doc);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
     }
@@ -2061,6 +2067,12 @@ void                DoSaveAs ()
 	      TtaFreeMemory (DocumentURLs[doc]);
 	      DocumentURLs[doc] = TtaStrdup (documentFile);
 	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
+	      if (DocumentMeta[doc]->method == CE_TEMPLATE)
+		{
+		  DocumentMeta[doc]->method = CE_ABSOLUTE;
+		  TtaFreeMemory (DocumentMeta[doc]->form_data);
+		  DocumentMeta[doc]->form_data = NULL;
+		}
 	      TtaSetDocumentUnmodified (doc);
 	    }
 	  /* Sucess of the operation */

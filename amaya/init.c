@@ -257,6 +257,7 @@ int            iString;
 #include "MENUconf_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
+#include "templates_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -2298,6 +2299,9 @@ ThotBool	    history;
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
+        /* hide template entry if no template server is configured */
+      if (TtaGetEnvString ("URL_TEMPLATE") == NULL)
+ 	TtaSetItemOff (newdoc, 1, File, BTemplate);
     }
   TtaFreeMemory (tempdocument);
   return (newdoc);
@@ -2414,6 +2418,9 @@ View                view;
    /* reload the document */
    pathname = TtaGetMemory (MAX_LENGTH);
    documentname = TtaGetMemory (MAX_LENGTH);
+   /* if the document is a template, restore the template script URL */
+   if (DocumentMeta[doc]->method == CE_TEMPLATE)
+      ReloadTemplateParams (DocumentURLs[doc], &(DocumentMeta[doc]->method));
    NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
    if (DocumentMeta[doc]->form_data)
      form_data = TtaStrdup (DocumentMeta[doc]->form_data);
@@ -3275,7 +3282,7 @@ void               *ctx_cbf;
 		       /* help document has to be in read-only mode */
 		       TtcSwitchCommands (newdoc, 1); /* no command filed */
 		       
-		       TtaSetItemOff (newdoc, 1, File, BNew);
+		       TtaSetItemOff (newdoc, 1, File, New1);
 		       TtaSetItemOff (newdoc, 1, File, BOpenDoc);
 		       TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
 		       if (CE_event == CE_HELP)

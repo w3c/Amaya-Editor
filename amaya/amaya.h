@@ -68,7 +68,7 @@ typedef void  TTcbf (Document doc, int status, char *urlName,
 /* The different events to open a new document */
 typedef enum _ClickEvent {
   CE_ABSOLUTE, CE_RELATIVE, CE_FORM_POST, CE_FORM_GET,
-  CE_HELP, CE_MAKEBOOK, CE_LOG
+  CE_HELP, CE_MAKEBOOK, CE_LOG , CE_TEMPLATE
 } ClickEvent;
 
 #define NO               0
