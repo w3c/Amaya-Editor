@@ -1276,6 +1276,7 @@ void CleanUpParsingErrors ()
   CSSErrorsFound = FALSE;
   XMLErrorsFoundInProfile = FALSE;
   XMLNotWellFormed = FALSE;
+  XMLInvalidToken = FALSE;
   XMLUnknownEncoding = FALSE;
   XMLCharacterNotSupported = FALSE;
   /* close the error file */
@@ -1309,7 +1310,20 @@ void CheckParsingErrors (Document doc)
     {
       /* Active the menu entry */
       TtaSetItemOn (doc, 1, Views, BShowLogFile);
-      if (XMLNotWellFormed || XMLCharacterNotSupported)
+      if (XMLCharacterNotSupported || XMLInvalidToken)
+	{
+	  /* Invalid characters */
+	  if (XMLInvalidToken)
+	    ptr = TtaGetMessage (AMAYA, AM_XML_CHARACTER_RETRY);
+	  else
+	    ptr = TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR);
+	  InitConfirm3L (doc, 1, 
+			 TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR),
+			 TtaGetMessage (AMAYA, AM_XML_CHARACTER_RETRY),
+			 NULL, FALSE);
+	  CleanUpParsingErrors ();
+	}
+      else if (XMLNotWellFormed)
 	{
 	  /* Raise a popup message */
 	  if (DocumentTypes[doc] == docHTML)
@@ -1317,22 +1331,12 @@ void CheckParsingErrors (Document doc)
 	    reload = TtaGetMessage (AMAYA, AM_BUTTON_RELOAD);
 	  else
 	    reload = NULL;
-	  if (XMLCharacterNotSupported)
-	    {
-	      /* Some elements or attributes are not supported */
-	      if (reload)
-		ptr = TtaGetMessage (AMAYA, AM_XML_CHARACTER_RETRY);
-	      else
-		ptr = TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR);
-	    }
+
+	  /* The document is not well-formed */
+	  if (reload)
+	    ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
 	  else
-	    {
-	      /* The document is not well-formed */
-	      if (reload)
-		ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
-	      else
-		ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
-	    }
+	    ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
 	  ConfirmError (doc, 1, ptr, reload,
 			TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
 	  CleanUpParsingErrors ();
@@ -3189,7 +3193,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
   if (!asHTML &&
-      !XMLNotWellFormed && !XMLCharacterNotSupported &&
+      !XMLNotWellFormed && !XMLInvalidToken && !XMLCharacterNotSupported &&
       !XMLErrorsFoundInProfile && !XMLErrorsFound)
     {
       /* No error found -> Update the source of the document */

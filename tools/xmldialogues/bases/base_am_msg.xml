@@ -2388,14 +2388,8 @@
 	<message xml:lang="tr">XML belgesinde hata - Hataları göster?</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
-	<message xml:lang="en">Invalid characters - Reload as HTML or show parsing errors?</message>
-	<message xml:lang="fr">Caractères invalides - Recharger en HTML ou montrer les erreurs ?</message>
-	<message xml:lang="it">Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?</message>
-	<message xml:lang="de">Ungültige Zeichen - als HTML laden oder Parserfehler anzeigen?</message>
-	<message xml:lang="es">Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?</message>
-	<message xml:lang="pt">Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?</message>
-	<message xml:lang="fi">Virheellisiä merkkejä - Ladataanko HTML:nä vai näytetään virheellisenä?</message>
-	<message xml:lang="tr">Yanlış karakter - HTML olarak yükle veya hataları göster?</message>
+	<message xml:lang="en">Try the 'File/Force a Character Coding' entry</message>
+	<message xml:lang="fr">Essayer l'entrée "Fichier/Forcer un code caractère"</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>

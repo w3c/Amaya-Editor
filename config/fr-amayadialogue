@@ -239,87 +239,86 @@
 237 Ajouter le graphique sélectionné dans la librairie
 238 Commentaire
 239 Éléments XML...
-240 Insérer date e mise a jour
-241 &Lier la cible créée
-242 &Créer/changer lien...
-243 Créer ci&ble
-244 &Détruire ancre
-245 &Ajouter/Retirer des attributs ID...
-246 Montrer &boutons
-247 Montrer a&dresse
-248 Montrer les &zones actives
-249 Montrer les &cibles
-250 Grossir
-251 Réduire
-252 Montrer les &erreurs
-253 Montrer la &structure
-254 Montrer le s&ource
-255 Montrer les lie&ns
-256 Montrer la vue &alternée
-257 Montrer la table des &matières
-258 Style de &caractères...
-259 C&ouleurs...
-260 &Format...
-261 &Image de fond...
-262 Créer une &règle...
-263 A&ppliquer une classe...
-264 Montrer le style appliqué...
-265 &Ajouter...
-266 O&uvrir...
-267 &Désactiver...
-268 R&éactiver...
-269 Re&tirer...
-270 Annoter la sélection
-271 Annoter le document
-272 Déplacer sur la sélection
-273 Sauver la séléction comme &XPointer
-274 Déplacer sur le XPointer enregistré
-275 Répondre à l'annotation
-276 Enregister sur le serveur
-277 Détruire
-278 Charger annotations
-279 Personnaliser la requête...
-280 Filtrer local...
-281 Configuration...
-282 Nouveau signet
-283 Nouvelle rubrique
-284 **New Separator
-285 Visualiser les signets
-286 **Move Item
-287 **Import a topic hierarchy
-288 Verrouiller la ressource...
-289 Déverrouiller la ressource...
-290 Visualiser les propriétés de la ressource...
-291 Copier les informations du verrou...
-292 Verrouillé ?
-293 Préférences...
-294 À propos de Amaya
-295 À propos de Amaya au W3C
-296 Index
-297 Navigation
-298 Vues
-299 Sélection
-300 Document
-301 Création
-302 Attributs
-303 Caratères
-304 Transformer
-305 Liens
-306 Tables
-307 Zones actives
-308 Math
-309 Graphiques
-310 Support XML
-311 Feuilles de style
-312 Chercher
-313 Corriger
-314 Publier
-315 WebDAV
-316 Imprimer
-317 Numéroter
-318 Construire un livre
-319 Annotations
-320 &Signets
-321 Configurer Amaya
-322 Raccourcis clavier
-323 Accessibilité d'Amaya
+240 &Lier la cible créée
+241 &Créer/changer lien...
+242 Créer ci&ble
+243 &Détruire ancre
+244 &Ajouter/Retirer des attributs ID...
+245 Montrer &boutons
+246 Montrer a&dresse
+247 Montrer les &zones actives
+248 Montrer les &cibles
+249 Grossir
+250 Réduire
+251 Montrer les &erreurs
+252 Montrer la &structure
+253 Montrer le s&ource
+254 Montrer les lie&ns
+255 Montrer la vue &alternée
+256 Montrer la table des &matières
+257 Style de &caractères...
+258 C&ouleurs...
+259 &Format...
+260 &Image de fond...
+261 Créer une &règle...
+262 A&ppliquer une classe...
+263 Montrer le style appliqué...
+264 &Ajouter...
+265 O&uvrir...
+266 &Désactiver...
+267 R&éactiver...
+268 Re&tirer...
+269 Annoter la sélection
+270 Annoter le document
+271 Déplacer sur la sélection
+272 Sauver la séléction comme &XPointer
+273 Déplacer sur le XPointer enregistré
+274 Répondre à l'annotation
+275 Enregister sur le serveur
+276 Détruire
+277 Charger annotations
+278 Personnaliser la requête...
+279 Filtrer local...
+280 Configuration...
+281 Nouveau signet
+282 Nouvelle rubrique
+283 **New Separator
+284 Visualiser les signets
+285 **Move Item
+286 **Import a topic hierarchy
+287 Verrouiller la ressource...
+288 Déverrouiller la ressource...
+289 Visualiser les propriétés de la ressource...
+290 Copier les informations du verrou...
+291 Verrouillé ?
+292 Préférences...
+293 À propos de Amaya
+294 À propos de Amaya au W3C
+295 Index
+296 Navigation
+297 Vues
+298 Sélection
+299 Document
+300 Création
+301 Attributs
+302 Caratères
+303 Transformer
+304 Liens
+305 Tables
+306 Zones actives
+307 Math
+308 Graphiques
+309 Support XML
+310 Feuilles de style
+311 Chercher
+312 Corriger
+313 Publier
+314 WebDAV
+315 Imprimer
+316 Numéroter
+317 Construire un livre
+318 Annotations
+319 &Signets
+320 Configurer Amaya
+321 Raccourcis clavier
+322 Accessibilité d'Amaya

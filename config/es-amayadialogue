@@ -239,87 +239,86 @@
 237 &Añadir la selección a la Biblioteca SVG
 238 Comentario
 239 Elementos XML...
-240 **Insert time stamp
-241 Enlazar último destino &creado
-242 Crear o cambiar &enlace...
-243 Crear &destino (a / id)
-244 &Borrar ancla (a)
-245 &Crear/Borrar atributos id...
-246 &Barra de botones
-247 D&irección
-248 Áreas de &mapas
-249 &Destinos
-250 &Aumentar tamaño de texto
-251 &Reducir tamaño de texto
-252 Errores &sintácticos
-253 Es&tructura
-254 Código &fuente
-255 &Enlaces
-256 A&lternativo
-257 Tabla de &contenidos
-258 &Carácter...
-259 C&olores...
-260 &Párrafo...
-261 &Imagen de fondo...
-262 Crear &regla...
-263 A&plicar clase...
-264 &Mostrar estilo aplicado...
-265 &Enlazar hoja de estilo...
-266 &Abrir hoja de estilo enlazada...
-267 &Desactivar hoja de estilo enlazada...
-268 Acti&var hoja de estilo enlazada...
-269 &Borrar enlace a hoja de estilo...
-270 Anotar &selección
-271 Anotar &documento
-272 &Mover a selección
-273 Guardar selección como &XPointer
-274 Mover a &XPointer guardado
-275 &Responder a anotación
-276 &Enviar al servidor
-277 &Borrar
-278 &Cargar
-279 &Personalizar consulta...
-280 &Filtro local...
-281 Configurar...
-282 Nuevo marcador
-283 Nuevo tema
-284 **New Separator
-285 Ver marcadores
-286 **Move Item
-287 Importar una jerarquía de temas
-288 Bloquear recurso
-289 Desbloquear recurso...
-290 Ver propiedades del recurso...
-291 Copiar información de bloqueo
-292 ¿Bloqueado?
-293 Preferencias...
-294 Acerca de Amaya
-295 Página web de Amaya en el W3C
-296 Índice
-297 Navegar
-298 Vistas
-299 Seleccionar
-300 Documentos
-301 Crear elementos
-302 Atributos
-303 Caracteres
-304 Reestructurar
-305 Enlaces
-306 Tablas
-307 Mapas de imagen
-308 MathML
-309 Gráficos
-310 Soporte XML
-311 Hojas de estilo
-312 Buscar
-313 Verificar ortografía
-314 Publicar
-315 WebDAV
-316 Imprimir
-317 Numerar
-318 Hacer libros
-319 Anotaciones
-320 &Marcadores
-321 Configurar
-322 Atajos de teclado
-323 Accesibilidad
+240 Enlazar último destino &creado
+241 Crear o cambiar &enlace...
+242 Crear &destino (a / id)
+243 &Borrar ancla (a)
+244 &Crear/Borrar atributos id...
+245 &Barra de botones
+246 D&irección
+247 Áreas de &mapas
+248 &Destinos
+249 &Aumentar tamaño de texto
+250 &Reducir tamaño de texto
+251 Errores &sintácticos
+252 Es&tructura
+253 Código &fuente
+254 &Enlaces
+255 A&lternativo
+256 Tabla de &contenidos
+257 &Carácter...
+258 C&olores...
+259 &Párrafo...
+260 &Imagen de fondo...
+261 Crear &regla...
+262 A&plicar clase...
+263 &Mostrar estilo aplicado...
+264 &Enlazar hoja de estilo...
+265 &Abrir hoja de estilo enlazada...
+266 &Desactivar hoja de estilo enlazada...
+267 Acti&var hoja de estilo enlazada...
+268 &Borrar enlace a hoja de estilo...
+269 Anotar &selección
+270 Anotar &documento
+271 &Mover a selección
+272 Guardar selección como &XPointer
+273 Mover a &XPointer guardado
+274 &Responder a anotación
+275 &Enviar al servidor
+276 &Borrar
+277 &Cargar
+278 &Personalizar consulta...
+279 &Filtro local...
+280 Configurar...
+281 Nuevo marcador
+282 Nuevo tema
+283 **New Separator
+284 Ver marcadores
+285 **Move Item
+286 Importar una jerarquía de temas
+287 Bloquear recurso
+288 Desbloquear recurso...
+289 Ver propiedades del recurso...
+290 Copiar información de bloqueo
+291 ¿Bloqueado?
+292 Preferencias...
+293 Acerca de Amaya
+294 Página web de Amaya en el W3C
+295 Índice
+296 Navegar
+297 Vistas
+298 Seleccionar
+299 Documentos
+300 Crear elementos
+301 Atributos
+302 Caracteres
+303 Reestructurar
+304 Enlaces
+305 Tablas
+306 Mapas de imagen
+307 MathML
+308 Gráficos
+309 Soporte XML
+310 Hojas de estilo
+311 Buscar
+312 Verificar ortografía
+313 Publicar
+314 WebDAV
+315 Imprimir
+316 Numerar
+317 Hacer libros
+318 Anotaciones
+319 &Marcadores
+320 Configurar
+321 Atajos de teclado
+322 Accesibilidad

@@ -519,8 +519,11 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	    }
 	}
       else
-	fprintf (ErrFile, "@  line %d: %s\n", line, msg); 
-      XMLNotWellFormed = TRUE;
+	fprintf (ErrFile, "@  line %d: %s\n", line, msg);
+      if (strstr ((char *)msg, "invalid token"))
+	XMLInvalidToken = TRUE;
+      else
+	XMLNotWellFormed = TRUE;
       break;
     case errorCharacterNotSupported:
       if (line == 0)
@@ -5390,7 +5393,7 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
    bufferRead[COPY_BUFFER_SIZE] = EOS;
    beginning = TRUE;
 
-   while (!endOfFile && !XMLNotWellFormed)
+   while (!endOfFile && !XMLNotWellFormed && !XMLInvalidToken)
      {
        /* read the XML file */
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);

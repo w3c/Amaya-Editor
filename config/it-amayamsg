@@ -239,7 +239,7 @@
 237 Abilita FTP
 238 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
 239 XML non valido - Mostro gli errori di parsificazione?
-240 Caratteri non validi - Ricarico come HTML o mostro gli errori di parsificazione?
+240 **Try the 'File/Force a Character Coding' entry
 241 Caratteri non validi
 242 Profilo di documento:
 243 I tag/attributi sono ignorati - vedi Viste/Mostra le errore

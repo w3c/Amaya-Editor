@@ -239,7 +239,7 @@
 237 FTP zulassen
 238 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
 239 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
-240 Ungültige Zeichen - als HTML laden oder Parserfehler anzeigen?
+240 **Try the 'File/Force a Character Coding' entry
 241 Ungültige Zeichen
 242 Dokumenttyp:
 243 Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen

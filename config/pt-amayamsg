@@ -239,7 +239,7 @@
 237 Habilitar FTP
 238 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
 239 XML inválido - mostrar erros na leitura?
-240 Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?
+240 **Try the 'File/Force a Character Coding' entry
 241 Caracteres inválidos
 242 Perfil del documento:
 243 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)

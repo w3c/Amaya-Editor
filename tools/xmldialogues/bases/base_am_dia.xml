@@ -2291,10 +2291,6 @@
 	<message xml:lang="es">Elementos XML...</message>
 	<message xml:lang="tr">XML elementlerin</message>
 </label>
-<label define="BXDate">
-	<message xml:lang="en">Insert time stamp</message>
-	<message xml:lang="fr">Insérer date e mise a jour</message>
-</label>
 <label define="BLinkTarget">
 	<message xml:lang="en">&amp;Link to previous target</message>
 	<message xml:lang="fr">&amp;Lier la cible créée</message>

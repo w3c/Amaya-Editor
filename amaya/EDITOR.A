@@ -277,7 +277,6 @@ MENUS
 	XMLTypes Separator;
 	XMLTypes button:BXMLComment -> CreateComment;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
-	XMLTypes button:BXDate -> CreateDate;
 	XMLTypes Separator;
 
 	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;

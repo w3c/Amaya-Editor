@@ -239,7 +239,7 @@
 237 Enable FTP
 238 Not Well-Formed XML document - Reload as HTML or show parsing errors?
 239 Not Well-Formed XML document - Show parsing errors?
-240 Invalid characters - Reload as HTML or show parsing errors?
+240 Try the 'File/Force a Character Coding' entry
 241 Invalid characters
 242 Document profile:
 243 Some elements/attributes are ignored - see Views/Show parsing errors
