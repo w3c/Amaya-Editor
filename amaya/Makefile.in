@@ -45,7 +45,7 @@ bindir = @bindir@
 math_schema: $(amaya_math_schema)
 graph_schema: $(amaya_graph_schema)
 comp_plugin: $(amaya_comp_plugin)
-comp_libwww : amaya_comp_libwww
+comp_libwww : $(amaya_comp_libwww)
 
 #
 # specific entry point check the dependancies

@@ -736,13 +736,19 @@ LPARAM lParam;
 	case ID_APPLY:
 	  ValidateCacheConf ();
 	  SetCacheConf ();
+#ifdef AMAYA_JAVA
+#else      
 	  libwww_updateNetworkConf (CacheStatus);
+#endif
 	  CacheStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_FLUSHCACHE:
 	  StopAllRequests (1);
+#ifdef AMAYA_JAVA
+#else      
 	  libwww_CleanCache ();
+#endif
 	  break;
 	case ID_DONE:
 	  CacheHwnd = NULL;
@@ -1211,7 +1217,10 @@ LPARAM lParam;
 	  /* action buttons */
 	case ID_APPLY:
 	  SetProxyConf ();	  
+#ifdef AMAYA_JAVA
+#else      
 	  libwww_updateNetworkConf (ProxyStatus);
+#endif
 	  /* reset the status flag */
 	  ProxyStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -1761,7 +1770,10 @@ static void ValidateGeneralConf ()
 	{
 	  usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);		  
 	  TtaSetEnvString (TEXT("CACHE_DIR"), s, TRUE);
+#ifdef AMAYA_JAVA
+#else      
 	  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
+#endif
 	}
     }
   
@@ -3256,7 +3268,10 @@ static void SetLanNegConf ()
   TtaSaveAppRegistry ();
 
   /* change the current settings */
+#ifdef AMAYA_JAVA
+#else      
   libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+#endif
 }
 
 
@@ -3542,5 +3557,8 @@ static void SetProfileConf ()
   TtaSaveAppRegistry ();
 
   /* change the current settings */
+#ifdef AMAYA_JAVA
+#else      
   libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+#endif
 }
