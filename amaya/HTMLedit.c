@@ -396,7 +396,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
 	   if (!attrType.AttrSSchema)
 	     attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
-						  "XLink", "XLinkP");
+						  NULL, "XLink", "XLinkP");
 	   attrType.AttrTypeNum = XLink_ATTR_href_;
 	   if (TtaIsLeaf (elType))
 	     element = TtaGetParent (element);

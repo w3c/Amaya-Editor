@@ -869,8 +869,8 @@ typedef struct _DocumentDescr
 						      document */
   /* table of the structure schemas (natures) used in the document */
   int		  DocNNatures;	  /* number of natures */
-  Name		  DocNatureName[MAX_NATURES_DOC]; /* names of natures */
-  Name		  DocNaturePresName[MAX_NATURES_DOC]; /* names of the
+  char*		  DocNatureName[MAX_NATURES_DOC]; /* names of natures */
+  char*		  DocNaturePresName[MAX_NATURES_DOC]; /* names of the
                                      presentationschemas of these natures */
   PtrSSchema	  DocNatureSSchema[MAX_NATURES_DOC];/* structure schemas
 						       of these natures */

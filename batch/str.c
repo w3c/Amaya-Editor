@@ -1889,7 +1889,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       /* after the keyword 'STRUCTURE' */
 	       /* keep the structure name */
 	       {
-		 CopyWord (pSSchema->SsName, wi, wl);
+		 pSSchema->SsName = (char *)TtaGetMemory (wl + 1);
+		 strncpy (pSSchema->SsName, (char *)&inputLine[wi - 1], wl);
+		 pSSchema->SsName[wl] = '\0';
 		 /* compare this name with the file name */
 		 
 		 if (strcmp (pSSchema->SsName, srceFileName) != 0)

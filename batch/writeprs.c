@@ -1155,7 +1155,10 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    pPSch->PsStructCode = pSS->SsCode;
 
    /* ecrit la partie fixe */
-   WriteName (pPSch->PsStructName);
+   i = 0;
+   do
+     TtaWriteByte (outfile, pPSch->PsStructName[i++]);
+   while (pPSch->PsStructName[i - 1] != EOS);
    WriteShort (pPSch->PsStructCode);
    WriteShort (pPSch->PsNViews);
    for (i = 0; i < pPSch->PsNViews; i++)

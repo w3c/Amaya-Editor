@@ -23,7 +23,7 @@ typedef struct _AStructure
   {
      PtrSSchema      pStructSchema;    /* pointeur sur le schema */
      int             UsageCount;       /* nombre d'utilisations de ce schema */
-     Name            StructSchemaName; /* nom du schema de structure */
+     char           *StructSchemaName; /* nom du schema de structure */
   }
 AStructure;
 
@@ -32,7 +32,7 @@ typedef struct _APresentation
   {
      PtrPSchema      pPresSchema;    /* pointeur sur le schema */
      int             UsageCount;     /* nombre d'utilisations de ce schema */
-     Name            PresSchemaName; /* nom du schema de presentation */
+     char           *PresSchemaName; /* nom du schema de presentation */
   }
 APresentation;
 
@@ -50,13 +50,14 @@ APresentation;
 /* list of structure schemas used by saved elements (cut/past commands) */
 PtrDocSchemasDescr FirstSchemaUsedBySavedElements = NULL;
 
+/******* replace the next two tables by unlimited lists ******/
 /* table des schemas de presentation charges */
-#define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
+#define MAX_PSCHEMAS 50		/* max. number of loaded presentation schemas*/
 static APresentation LoadedPSchema[MAX_PSCHEMAS];
 #endif /* NODISPLAY */
 
 /* table des schemas de structure charge's */
-#define MAX_SSCHEMAS 10		/* max. number of loaded structure schemas */
+#define MAX_SSCHEMAS 50		/* max. number of loaded structure schemas */
 static AStructure LoadedSSchema[MAX_SSCHEMAS];
 
 #include "config_f.h"
@@ -82,7 +83,7 @@ void InitNatures ()
       {
       LoadedSSchema[i].pStructSchema = NULL;
       LoadedSSchema[i].UsageCount = 0;
-      LoadedSSchema[i].StructSchemaName[0] = EOS;
+      LoadedSSchema[i].StructSchemaName = NULL;
       }
 #ifndef NODISPLAY
    FirstSchemaUsedBySavedElements = NULL;
@@ -90,7 +91,7 @@ void InitNatures ()
       {
       LoadedPSchema[i].pPresSchema = NULL;
       LoadedPSchema[i].UsageCount = 0;
-      LoadedPSchema[i].PresSchemaName[0] = EOS;
+      LoadedPSchema[i].PresSchemaName = NULL;
       }
 #endif /* NODISPLAY */
 }
@@ -275,7 +276,8 @@ void ReleaseSSchemasForSavedElements ()
 	    /* This schema is no longer used by any document. Unload it */
 	    {
 	      pStr->pStructSchema = NULL;
-	      pStr->StructSchemaName[0] = EOS;
+	      TtaFreeMemory (pStr->StructSchemaName);
+	      pStr->StructSchemaName = NULL;
 	      ResetNatureRules (pSS);
 	      FreeSchStruc (pSS);
 	    }
@@ -327,11 +329,13 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
       /* this schema is in the table */
       pPres = &LoadedPSchema[i];
       pPres->UsageCount--;
-      if (pPres->UsageCount == 0)
-	/* c'etait la derniere utilisation, on le supprime de la table */
+      if (pPres->UsageCount <= 0)
+	/* This schema is no longer used by any document. Remove it from
+	   the table */
 	{
 	  pPres->pPresSchema = NULL;
-	  pPres->PresSchemaName[0] = EOS;
+	  TtaFreeMemory (pPres->PresSchemaName);
+	  pPres->PresSchemaName = NULL;
 	  force = TRUE;
 	}
     }
@@ -399,7 +403,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
    table of loaded schemas, and return a pointer to it.
    Return TRUE if schema has been successfully loaded.
   ----------------------------------------------------------------------*/
-ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
+ThotBool LoadPresentationSchema (char *schemaName, PtrSSchema pSS,
 				 PtrDocument pDoc)
 {
    PtrPSchema           pPSchema;
@@ -422,7 +426,8 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
    pPSchema = NULL;
    /* Look at the table of loaded schemas */
    for (i = 0; i < MAX_PSCHEMAS &&
-	       strcmp (schemaName, LoadedPSchema[i].PresSchemaName); i++);
+	       (LoadedPSchema[i].PresSchemaName == NULL ||
+		strcmp (schemaName, LoadedPSchema[i].PresSchemaName)); i++);
    if (i < MAX_PSCHEMAS)
       /* This schema is in the table, no need to load it */
       {
@@ -443,14 +448,18 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
 	    {
 	    LoadedPSchema[i].UsageCount = 1;
 	    LoadedPSchema[i].pPresSchema = pPSchema;
-	    strncpy (LoadedPSchema[i].PresSchemaName, schemaName,
-		     MAX_NAME_LENGTH);
+	    if (LoadedPSchema[i].PresSchemaName)
+	      TtaFreeMemory (LoadedPSchema[i].PresSchemaName);
+	    LoadedPSchema[i].PresSchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
+	    strcpy (LoadedPSchema[i].PresSchemaName, schemaName);
 	    }
 	 }
       }
    if (pPSchema)
      {
-     strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
+     if (pSS->SsDefaultPSchema)
+       TtaFreeMemory (pSS->SsDefaultPSchema);
+     pSS->SsDefaultPSchema = TtaStrdup (schemaName);
      /* associate the presentation schema with the structure schema
         for this document */
      if (!pPfS)
@@ -720,9 +729,13 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
    If structure schema called schemaName is already loaded, return a
    pointer to it, otherwise load it from its file, register it in the
    table of loaded schemas, and return a pointer to it.
+   If parameter schemaURI is not null, it is used as the namespace URI
+   for the schema, instead of the schemaName to check whether the schema
+   is already loaded.
    Return NULL if schema can't be loaded.
   ----------------------------------------------------------------------*/
-PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
+PtrSSchema LoadStructureSchema (char *schemaURI, Name schemaName,
+				PtrDocument pDoc)
 {
    PtrSSchema           pSSchema;
    PtrDocSchemasDescr   pPfS, pPrevPfS;
@@ -735,16 +748,31 @@ PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 
    /* is this schema already used by the document? */
    pPfS = pDoc->DocFirstSchDescr;
-   while (pPfS && pPfS->PfSSchema &&
-	  strcmp (schemaName, pPfS->PfSSchema->SsName))
-     pPfS = pPfS->PfNext;
+   if (schemaURI)
+     /* check with the namespace URI */
+     while (pPfS && pPfS->PfSSchema &&
+	    strcmp (schemaURI, pPfS->PfSSchema->SsUriName))
+       pPfS = pPfS->PfNext;
+   else
+     /* check with the schema name */
+     while (pPfS && pPfS->PfSSchema &&
+	    strcmp (schemaName, pPfS->PfSSchema->SsName))
+       pPfS = pPfS->PfNext;
    if (pPfS)
      /* this schema is already used by the document */
      return (pPfS->PfSSchema);
 
-   /* Look at the table of loaded schemas */
-   for (i = 0; i < MAX_SSCHEMAS &&
-	       strcmp (schemaName, LoadedSSchema[i].StructSchemaName); i++);
+   /* Look at the table of all loaded schemas */
+   if (schemaURI)
+     /* check with the namespace URI */
+     for (i = 0; i < MAX_SSCHEMAS &&
+	         (LoadedSSchema[i].pStructSchema == NULL ||
+		  strcmp (schemaURI, LoadedSSchema[i].pStructSchema->SsUriName)); i++);
+   else
+     /* check with the schema name */
+     for (i = 0; i < MAX_SSCHEMAS &&
+	         (LoadedSSchema[i].StructSchemaName == NULL ||
+	         strcmp (schemaName, LoadedSSchema[i].StructSchemaName)); i++);
    if (i < MAX_SSCHEMAS)
       /* This schema is in the table, no need to load it */
       {
@@ -773,9 +801,15 @@ PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 	    {
 	    LoadedSSchema[i].UsageCount = 1;
 	    LoadedSSchema[i].pStructSchema = pSSchema;
-	    strncpy (LoadedSSchema[i].StructSchemaName, schemaName,
-		      MAX_NAME_LENGTH);
+	    if (LoadedSSchema[i].StructSchemaName)
+	      TtaFreeMemory (LoadedSSchema[i].StructSchemaName);
+	    LoadedSSchema[i].StructSchemaName = (char *)TtaGetMemory (strlen (schemaName) + 1);
+	    strcpy (LoadedSSchema[i].StructSchemaName, schemaName);
 	    }
+	 else
+	   /* The schema table is full !!!! */
+	   fprintf (stderr, "Schema table full. %s not registered\n",
+		    schemaName);
 	 /* translate the structure schema in the user's language */
 	 ConfigTranslateSSchema (pSSchema);
 	 }
@@ -806,33 +840,31 @@ PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
    ReleaseStructureSchema
    Structure schema pSS is no longer used by document pDoc.
    If it's not used by any other document, unload it.
-   Return TRUE if the schema is no longer used by any document. It has
-   been unloaded.
   ----------------------------------------------------------------------*/
-ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
+void ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 {
   AStructure          *pStr;
   PtrDocSchemasDescr  pPfS, pPrevPfS;
   int                 i;
   ThotBool            result;
 
-  result = FALSE;
   /* look for this schema in the table */
   for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema != pSS; i++);
   if (i >= MAX_SSCHEMAS)
     /* error. This schema is not in the table */
-    return FALSE;
+    return;
   pStr = &LoadedSSchema[i];
   pStr->UsageCount--;
   if (pStr->UsageCount <= 0)
     /* This schema is no longer used by any document. Unload it */
     {
       pStr->pStructSchema = NULL;
-      pStr->StructSchemaName[0] = EOS;
+      TtaFreeMemory (pStr->StructSchemaName);
+      pStr->StructSchemaName = NULL;
       ResetNatureRules (pSS);
       FreeSchStruc (pSS);
-      result = TRUE;
     }
+
   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS)
     {
@@ -846,7 +878,6 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 	  FreeDocSchemasDescr (pPfS);
 	}
     }
-  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -856,20 +887,19 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
    de presentation par defaut defini dans le schema de structure, sinon on
    propose le schema de presentation de nom PSchName.
   ----------------------------------------------------------------------*/
-void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
+void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
 		       PtrDocument pDoc)
 {
-   Name          schName;
+   char          *schName;
    PtrSSchema    pNatureSS;
 #ifndef NODISPLAY
    ThotBool      loaded;
 #endif
 
+   schName = NULL;
    /* utilise le nom de la nature comme nom de fichier. */
-   /* copie le nom de nature dans schName */
-   strncpy (schName, pSS->SsRule->SrElem[rule-1]->SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
-   pNatureSS = LoadStructureSchema (schName, pDoc);
+   pNatureSS = LoadStructureSchema (schURI, pSS->SsRule->SrElem[rule-1]->SrOrigNat, pDoc);
    if (!pNatureSS)
       /* echec */
       pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
@@ -883,8 +913,8 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 /* l'appelant indique un schema de presentation, on essaie de le
 	    charger */
 	 {
-	 strncpy (schName, PSchName, MAX_NAME_LENGTH);
-	 loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
+	 schName = TtaStrdup (PSchName);
+	 loaded = LoadPresentationSchema (PSchName, pNatureSS, pDoc);
 	 }
       if (PSchName == NULL || PSchName[0] == EOS || !loaded)
 	 /* pas de schema de presentation particulier demande' par l'appelant*/
@@ -892,10 +922,10 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 {
 	 /* on consulte le fichier .conf */
 	 if (!ConfigGetPSchemaNature (pSS, pSS->SsRule->SrElem[rule - 1]->SrOrigNat,
-				      schName))
+				      &schName))
 	    /* le fichier .conf ne donne pas de schema de presentation pour */
-	    /* cette nature, on le demande a l'utilisateur */
-	    strncpy (schName, pNatureSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+	    /* cette nature, on prend le schema par defaut */
+	    schName = TtaStrdup (pNatureSS->SsDefaultPSchema);
 	 /* cree un nouveau schema de presentation et le charge depuis le
 	    fichier */
 	 loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
@@ -912,6 +942,8 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 (*(Proc1)ThotLocalActions[T_initevents]) (pNatureSS);
 #endif /* NODISPLAY */
       }
+   if (schName)
+     TtaFreeMemory (schName);
 }
 
 /*----------------------------------------------------------------------
@@ -1095,7 +1127,7 @@ static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
    le schema de presentation par defaut defini dans le schema de	
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
-int CreateNature (char *SSchName, char *PSchName,
+int CreateNature (char *SSchURI, char *SSchName, char *PSchName,
 		  PtrSSchema pSS, PtrDocument pDoc)
 {
 #ifndef NODISPLAY
@@ -1147,7 +1179,7 @@ int CreateNature (char *SSchName, char *PSchName,
 	 /* remplit la regle nature */
 	 {
 	 pRule = pSS->SsRule->SrElem[ret - 1];
-	 strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
+	 pRule->SrOrigNat = TtaStrdup (SSchName);
 	 pRule->SrName = TtaStrdup (SSchName);
 	 pRule->SrNDefAttrs = 0;
 	 pRule->SrConstruct = CsNatureSchema;
@@ -1170,10 +1202,10 @@ int CreateNature (char *SSchName, char *PSchName,
 	    /* charge les schemas de structure et de presentation */
 	    /* de la nouvelle nature */
 	    {
-	    LoadNatureSchema (pSS, PSchName, ret, pDoc);
-	    if (pRule->SrSSchemaNat == NULL)
-	       /* echec chargement */
-	       ret = 0;
+	      LoadNatureSchema (pSS, PSchName, ret, SSchURI, pDoc);
+	      if (pRule->SrSSchemaNat == NULL)
+		/* echec chargement */
+		ret = 0;
 	    }
       if (found)
 	/* the nature was already in the structure schema. This may come from
@@ -1183,7 +1215,7 @@ int CreateNature (char *SSchName, char *PSchName,
 	  if (!GetSSchemaForDoc (SSchName, pDoc))
 	    /* No. Add a descriptor to the document */
 	    {
-	      pSSch = LoadStructureSchema (SSchName, pDoc);
+	      pSSch = LoadStructureSchema (SSchURI, SSchName, pDoc);
 #ifndef NODISPLAY
 	      LoadPresentationSchema (PSchName, pSSch, pDoc);
 #endif   /* NODISPLAY */
@@ -1208,16 +1240,16 @@ int CreateNature (char *SSchName, char *PSchName,
 void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
 		  PtrDocument pDoc, PtrSSchema pLoadedSS, ThotBool extension)
 {
-  Name         schName;
+  char         *schName;
 #ifndef NODISPLAY
   ThotBool     loaded;
 #endif
 
-  strncpy (schName, SSchName, MAX_NAME_LENGTH);
+  schName = NULL;
   /* cree le schema de structure et charge le fichier dedans */
   if (pLoadedSS == NULL)
     {
-      *pSS = LoadStructureSchema (SSchName, pDoc);
+      *pSS = LoadStructureSchema (NULL, SSchName, pDoc);
       if (*pSS)
 	{
 	  if ((*pSS)->SsExtension != extension)
@@ -1246,7 +1278,7 @@ void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
 	  {
           /* l'appelant specifie le schema de presentation a prendre, on
 	     essaie de le charger */
-	  strncpy (schName, PSchName, MAX_NAME_LENGTH);
+	  schName = TtaStrdup (PSchName);
 	  loaded = LoadPresentationSchema (schName, *pSS, pDoc);
 	  }
       if (PSchName == NULL || PSchName[0] == EOS || !loaded)
@@ -1254,12 +1286,12 @@ void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
          /* pas de presentation specifiee par l'appelant, ou schema specifie'
 	    inaccessible */
 	 /* on consulte le fichier de configuration */
-	 if (!ConfigDefaultPSchema ((*pSS)->SsName, schName))
+	 if (!ConfigDefaultPSchema ((*pSS)->SsName, &schName))
             /* le fichier de configuration ne dit rien, on demande a
 	       l'utilisateur */
             /* propose la presentation par defaut definie dans le schema de
 	       structure */
-	    strncpy (schName, (*pSS)->SsDefaultPSchema, MAX_NAME_LENGTH);
+	    schName = TtaStrdup ((*pSS)->SsDefaultPSchema);
 	 /* charge le schema de presentation depuis le fichier */
 	 loaded = LoadPresentationSchema (schName, *pSS, pDoc);
 	 }
@@ -1273,6 +1305,8 @@ void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
 	 }
       }
 #endif  /* NODISPLAY */
+   if (schName)
+     TtaFreeMemory (schName);
 }
 
 /*----------------------------------------------------------------------
@@ -1305,7 +1339,7 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 	    /* pas de schema de presentation precise' */
 	    /* cherche le schema de presentation de l'extension prevu */
 	    /* dans le fichier .conf pour ce type de document */
-	    ConfigGetPSchemaNature (pDoc->DocSSchema, SSchName, PSchName);
+	    ConfigGetPSchemaNature (pDoc->DocSSchema, SSchName, &PSchName);
 #endif /* NODISPLAY */
 	 /* charge le schema d'extension demande' */
 	 LoadSchemas (SSchName, PSchName, &pExtens, pDoc, NULL, TRUE);
@@ -1333,12 +1367,9 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
   FreeNatureRules
   Looks for a rule Nature within the schema pSS that points to the schema
   pNatureSS. If found, cleans up the rule and returns TRUE.
-  If not found, checks within other referred Natures except if the current
-  Nature points to the initial schema pDocSS.
   Returns FALSE when no Nature was found.
   ----------------------------------------------------------------------*/
-static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS,
-				 PtrSSchema pDocSS)
+static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 {
    PtrSRule            pRule;
    int                 rule;
@@ -1360,11 +1391,6 @@ static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS,
 	       ret = TRUE;
 	       pRule->SrSSchemaNat = NULL;
 	       }
-	    else if (pRule->SrSSchemaNat != pDocSS)
-	       /* elle fait reference a une autre nature, on cherche */
-	       /* dans cette nature les regles qui font reference a la */
-	       /* nature supprimee. */
-	       FreeNatureRules (pRule->SrSSchemaNat, pNatureSS, pDocSS);
 	   }
 	 }
    return ret;
@@ -1387,7 +1413,7 @@ ThotBool FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS, PtrDocument pDoc)
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
-   if (FreeNatureRules (pSS, pNatureSS, pSS))
+   if (FreeNatureRules (pSS, pNatureSS))
       {
       ret = TRUE;
 #ifndef NODISPLAY
@@ -1424,16 +1450,7 @@ void FreeDocumentSchemas (PtrDocument pDoc)
 	   if (pPfS->PfPSchema)
 	     FreePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
 #endif
-	   if (ReleaseStructureSchema (pSS, pDoc))
-	     /* this structure schema has been unloaded */
-	     /* remove any reference to that schema from all Nature rules
-		of other S schemas */
-	     for (i = 0; i < MAX_SSCHEMAS; i++)
-	       {
-		 pDocSS = LoadedSSchema[i].pStructSchema;
-		 if (pDocSS)
-		   FreeNatureRules (pDocSS, pSS, pDocSS);
-	       }
+	   ReleaseStructureSchema (pSS, pDoc);
 	 }
      }
    pDoc->DocSSchema = NULL;
@@ -1549,20 +1566,25 @@ void                BuildDocNatureTable (PtrDocument pDoc)
 	  if (pSS)
 	    {
 	      pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
-	      strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
-		       MAX_NAME_LENGTH);
-	      strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-		       pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+	      if (pDoc->DocNatureName[pDoc->DocNNatures])
+		TtaFreeMemory (pDoc->DocNatureName[pDoc->DocNNatures]);
+	      pDoc->DocNatureName[pDoc->DocNNatures] = TtaStrdup (pSS->SsName);
+	      if (pDoc->DocNaturePresName[pDoc->DocNNatures])
+		TtaFreeMemory (pDoc->DocNaturePresName[pDoc->DocNNatures]);
+	      pDoc->DocNaturePresName[pDoc->DocNNatures] = TtaStrdup (pSS->SsDefaultPSchema);
 	      pDoc->DocNNatures++;
 	      /* met les extensions du schema dans la table */
 	      while (pSS->SsNextExtens && pDoc->DocNNatures < MAX_NATURES_DOC)
 		{
 		  pSS = pSS->SsNextExtens;
 		  pDoc->DocNatureSSchema[pDoc->DocNNatures] = pSS;
-		  strncpy (pDoc->DocNatureName[pDoc->DocNNatures], pSS->SsName,
-			   MAX_NAME_LENGTH);
-		  strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-			   pSS->SsDefaultPSchema, MAX_NAME_LENGTH);
+		  if (pDoc->DocNatureName[pDoc->DocNNatures])
+		    TtaFreeMemory (pDoc->DocNatureName[pDoc->DocNNatures]);
+		  pDoc->DocNatureName[pDoc->DocNNatures] = TtaStrdup (pSS->SsName);
+		  if (pDoc->DocNaturePresName[pDoc->DocNNatures])
+		    TtaFreeMemory (pDoc->DocNaturePresName[pDoc->DocNNatures]);
+		  pDoc->DocNaturePresName[pDoc->DocNNatures] =
+			   TtaStrdup (pSS->SsDefaultPSchema);
 		  pDoc->DocNNatures++;
 		}
 	    }
@@ -2499,15 +2521,22 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
       /* Modify the name of the structure schema */
       if (sSchemaUri && pSS->SsUriName == NULL)
 	  pSS->SsUriName = TtaStrdup (sSchemaUri);
+      if (pSS->SsName)
+	TtaFreeMemory (pSS->SsName);
       if (sSchemaName == NULL)
 	{
-	  pSS->SsName[0] = EOS;
-	  strcpy (pSS->SsDefaultPSchema, "Unknown");
-	  strcat (pSS->SsDefaultPSchema, "P");
+	  pSS->SsName = NULL;
+	  if (pSS->SsDefaultPSchema)
+	    TtaFreeMemory (pSS->SsDefaultPSchema);
+	  pSS->SsDefaultPSchema = TtaStrdup ("UnknownP");
 	}
       else
 	{
+	  pSS->SsName = (char *)TtaGetMemory (strlen (sSchemaName) + 1);
 	  strcpy (pSS->SsName, sSchemaName);
+	  if (pSS->SsDefaultPSchema)
+	    TtaFreeMemory (pSS->SsDefaultPSchema);
+	  pSS->SsDefaultPSchema = (char*)TtaGetMemory (strlen (sSchemaName) +2);
 	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
 	  strcat (pSS->SsDefaultPSchema, "P");
 	  /* Modify the rule element name */
@@ -2527,49 +2556,58 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   if (pPSch != NULL)
     {
       /* Modify the name of the presentation schema */
+      if (pPSch->PsPresentName)
+	TtaFreeMemory (pPSch->PsPresentName);
       if (sSchemaName == NULL)
-	{
-	  pPSch->PsPresentName[0] = EOS;
-	  strcpy (pPSch->PsPresentName, "Unknown");
-	  strcat (pPSch->PsPresentName, "P");
-	}
+	pPSch->PsPresentName = TtaStrdup ("UnknownP");
       else
 	{
+	  pPSch->PsPresentName = (char*)TtaGetMemory (strlen (sSchemaName) +2);
 	  strcpy (pPSch->PsPresentName, sSchemaName);
 	  strcat (pPSch->PsPresentName, "P");
-	  strcpy (pPSch->PsStructName, sSchemaName);
+	  if (pPSch->PsStructName)
+	    TtaFreeMemory (pPSch->PsStructName);
+	  pPSch->PsStructName = TtaStrdup (sSchemaName);
 	}
     }
-  
+
   /* Update the LoadedSSchema table */
   for (i = 0; i < MAX_SSCHEMAS &&
-	 strcmp ("XML", LoadedSSchema[i].StructSchemaName); i++);
+	      (LoadedSSchema[i].StructSchemaName == NULL ||
+	       strcmp ("XML", LoadedSSchema[i].StructSchemaName)); i++);
   if (i < MAX_SSCHEMAS)
     {
       /* The generic schema is found in the table, modify its name */
+      TtaFreeMemory (LoadedSSchema[i].StructSchemaName);
       if (sSchemaName != NULL)
+	{
+	  LoadedSSchema[i].StructSchemaName = (char *)TtaGetMemory (strlen (sSchemaName) + 1);
 	  strcpy (LoadedSSchema[i].StructSchemaName, sSchemaName);
+	}
       else
-	LoadedSSchema[i].StructSchemaName[0] = EOS;
+	LoadedSSchema[i].StructSchemaName = NULL;
     }
-  
+
   /* Update the LoadedPSchema table */
 #ifndef NODISPLAY
   for (i = 0; i < MAX_SSCHEMAS &&
-	 strcmp ("XMLP", LoadedPSchema[i].PresSchemaName); i++);
+	      (LoadedPSchema[i].PresSchemaName == NULL ||
+	       strcmp ("XMLP", LoadedPSchema[i].PresSchemaName)); i++);
   if (i < MAX_SSCHEMAS)
     {
       /* The generic schema is found in the table, modify its name */
+      TtaFreeMemory (LoadedPSchema[i].PresSchemaName);
       if (sSchemaName != NULL)
 	{
+	  LoadedPSchema[i].PresSchemaName = (char *)TtaGetMemory (strlen (sSchemaName) + 2);
 	  strcpy (LoadedPSchema[i].PresSchemaName, sSchemaName);
 	  strcat (LoadedPSchema[i].PresSchemaName, "P");
 	}
       else
-	LoadedPSchema[i].PresSchemaName[0] = EOS;
+	LoadedPSchema[i].PresSchemaName = NULL;
     }
 #endif
-  
+
   /* Update the XML Loaded nature */
   docSS= pDoc->DocSSchema;
   found = FALSE;
@@ -2578,13 +2616,14 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
     {
       pRule = docSS->SsRule->SrElem[i++];
       if (pRule->SrConstruct == CsNatureSchema)
-	if (strcmp (pRule->SrOrigNat, "XML") == 0)
+	if (pRule->SrOrigNat && strcmp (pRule->SrOrigNat, "XML") == 0)
 	  found = TRUE;
     }
   while (!found && i < docSS->SsNRules);
   if (found)
     {
-      strncpy (pRule->SrOrigNat, sSchemaName, MAX_NAME_LENGTH);
+      TtaFreeMemory (pRule->SrOrigNat);
+      pRule->SrOrigNat = TtaStrdup (sSchemaName);
       if (pRule->SrName)
 	TtaFreeMemory (pRule->SrName);
       pRule->SrName = TtaStrdup (sSchemaName);

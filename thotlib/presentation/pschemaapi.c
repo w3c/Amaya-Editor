@@ -151,7 +151,7 @@ PSchema TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
   ----------------------------------------------------------------------*/
 void TtaMoveDocumentExtensionsToElement (Document document, Element element)
 {
-  PtrDocSchemasDescr  pPfS;
+  PtrDocSchemasDescr  pPfS, pNextPfS;
 
   if (!LoadedDocument[document - 1] || element == NULL)
     return;
@@ -159,6 +159,14 @@ void TtaMoveDocumentExtensionsToElement (Document document, Element element)
     {
       /* link document descriptors to the hierarchy */
       pPfS = LoadedDocument[document - 1]->DocFirstSchDescr;
+      while (pPfS)
+	{
+	  pNextPfS = pPfS->PfNext;
+	  if (pPfS->PfSSchema)
+	    ReleaseStructureSchema (pPfS->PfSSchema,
+				    LoadedDocument[document - 1]);
+	  pPfS = pNextPfS;
+	}
       LoadedDocument[document - 1]->DocFirstSchDescr = NULL;
       SetElSchemasExtens ((PtrElement) element, pPfS);
     }
@@ -263,10 +271,12 @@ void TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before,
 	  /* number of documents using this schema */
 	  ((PtrPSchema) schema)->PsStructCode++;
 	  /* name of associated structure schema */
-	  strncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
-		   MAX_NAME_LENGTH);
-	  strncpy (((PtrPSchema) schema)->PsPresentName, name,
-		   MAX_NAME_LENGTH);
+	  if (((PtrPSchema) schema)->PsStructName)
+	    TtaFreeMemory (((PtrPSchema) schema)->PsStructName);
+	  ((PtrPSchema) schema)->PsStructName = TtaStrdup (pSchS->SsName);
+	  if (((PtrPSchema) schema)->PsPresentName)
+	    TtaFreeMemory (((PtrPSchema) schema)->PsPresentName);
+	  ((PtrPSchema) schema)->PsPresentName = TtaStrdup (name);
 	}
     }
 }

@@ -4995,7 +4995,8 @@ void ParseExternalDocument (char     *fileName,
 	  /* Add the corresponding nature to the main document */
 	  elType.ElSSchema = TtaGetSSchema (typeName, doc);
 	  if (elType.ElSSchema == NULL)
-	    TtaNewNature (doc, TtaGetDocumentSSchema (doc), typeName, type);
+	    TtaNewNature (doc, TtaGetDocumentSSchema (doc), NULL, typeName,
+			  type);
 
 	  /* Paste the external document */
 	  if (strcmp ((char *)typeName, "HTML") == 0)

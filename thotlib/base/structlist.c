@@ -508,8 +508,11 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	  pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
 	  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	  /* ecrit le nom du schema de structure de l'element */
-	  fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
-		   (unsigned int)pNode->ElStructSchema);
+	  if (pNode->ElStructSchema->SsName == NULL)
+	    fprintf (fileDescriptor, " Name=NULL");
+	  else
+	    fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
+		     (unsigned int)pNode->ElStructSchema);
 	}
       /* ecrit l'URI associee au schema de structure */
       if (pNode->ElStructSchema->SsUriName == NULL)
@@ -3508,7 +3511,10 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		 fprintf (fileDescriptor, "(%s) ", pSc1->PsPresentName);
 		 fprintf (fileDescriptor, " -----------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
-		 wrtext (pSchemaStr->SsName, fileDescriptor);
+		 if (pSchemaStr->SsName)
+		   wrtext (pSchemaStr->SsName, fileDescriptor);
+		 else
+		   fprintf (fileDescriptor, "???");
 		 fprintf (fileDescriptor, ";\n");
 
 		 /* les constantes */

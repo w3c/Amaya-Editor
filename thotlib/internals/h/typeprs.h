@@ -784,8 +784,8 @@ typedef struct _PresentSchema *PtrPSchema;
 typedef struct _PresentSchema
 {
   PtrPSchema    PsNext;    		/* for free blocks linking */
-  Name          PsStructName;    	/* name of the structure schema */
-  Name		PsPresentName;		/* name of this presentation schema */
+  char         *PsStructName;    	/* name of the structure schema */
+  char	       *PsPresentName;		/* name of this presentation schema */
   int	 	PsStructCode;    	/* code identifying the version of this
 					   structure schema */
   StyleSheetOrigin PsOrigin;            /* origin of this structure schema */

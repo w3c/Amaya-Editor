@@ -919,7 +919,7 @@ static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
 	       known in the target document */
 	    if (!GetSSchemaForDoc (pAttr1->AeAttrSSchema->SsName, pTargetDoc))
 	      {
-		nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
+		nR = CreateNature (NULL, pAttr1->AeAttrSSchema->SsName, NULL,
 				   pTargetDoc->DocSSchema, pTargetDoc);
 		if (nR == 0)
 		  /* can't create the schema for the target document. Don't
@@ -2439,7 +2439,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	   having the type of the root of the new nature */
 	{
 	  PSchName[0] = EOS;
-	  LoadNatureSchema (pSS, PSchName, typeNum, pDoc);
+	  LoadNatureSchema (pSS, PSchName, typeNum, NULL, pDoc);
 	  AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
 	  if (pSRule->SrSSchemaNat == NULL)
 	    /* could not load the scheme */
@@ -3240,8 +3240,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		  /* loads the structure and presentation schemes for the
 		     copy */
 		  /* no preference for the presentation scheme */
-		  nR = CreateNature (pSource->ElStructSchema->SsName, NULL,
-				     pSSchema, pDocCopy);
+		  nR = CreateNature (NULL, pSource->ElStructSchema->SsName,
+				     NULL, pSSchema, pDocCopy);
 		  if (nR == 0)
 		    /* could not load the schema */
 		    copyType = 0;

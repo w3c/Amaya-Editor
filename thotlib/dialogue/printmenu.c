@@ -820,15 +820,15 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    PtrDocument         pDoc;
    PathBuffer          dirName;
    Name                docName;
-   Name                savePres, newPres;
-   char               *tmpDirName, *tmpDocName;
+   Name                newPres;
+   char               *savePres, *tmpDirName, *tmpDocName;
    int                 orientation;
    ThotBool	       docReadOnly;
    ThotBool            ok;
 
    pDoc = LoadedDocument[document - 1];
    /* prepares the execution of the print command */
-   strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
+   savePres = TtaStrdup (pDoc->DocSSchema->SsDefaultPSchema);
    if (PresSchema[0] != EOS)
      strcpy (newPres, PresSchema);
    else
@@ -872,7 +872,9 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
      orientation = 0;
 
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   if (pDoc->DocSSchema->SsDefaultPSchema)
+     TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
+   pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (savePres);
 
    /* make an automatic backup */
    if (ok)
@@ -907,7 +909,10 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 		document);
      }
    /* restores the presentation scheme */
-   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
+   if (pDoc->DocSSchema->SsDefaultPSchema)
+     TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
+   pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (savePres);
+   TtaFreeMemory (savePres);
 }
 
 /*----------------------------------------------------------------------

@@ -207,7 +207,7 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
 
    TtaReadName (file, (unsigned char *)buffer);
    pSRule->SrName = TtaStrdup (buffer); 
-   pSRule->SrOrigName = TtaStrdup (buffer); 
+   pSRule->SrOrigName = TtaStrdup (buffer);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
@@ -261,7 +261,7 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       pSRule->SrOrigNat = TtaStrdup (pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -369,9 +369,21 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
      {
 	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	TtaReadName (file, (unsigned char *)pSS->SsName);
+	if (pSS->SsName)
+	  TtaFreeMemory (pSS->SsName);
+	TtaReadName (file, (unsigned char *)buf);
+        pSS->SsName = (char *)TtaGetMemory (strlen (buf) + 1);
+        strcpy (pSS->SsName, buf);
 	TtaReadShort (file, &pSS->SsCode);
-	TtaReadName (file, (unsigned char *)pSS->SsDefaultPSchema);
+	i = 0;
+	do
+	  {
+	    TtaReadByte (file, (unsigned char *)&buf[i++]);
+	    
+	  }
+	while (i < MAX_PATH && buf[i-1] != EOS);
+	buf[MAX_PATH -1] = EOS;
+	pSS->SsDefaultPSchema = TtaStrdup (buf);
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsUriName = NULL;
 	pSS->SsNExtensRules = 0;

@@ -45,7 +45,7 @@ SSchema GetXHTMLSSchema (Document doc)
 
    XHTMLSSchema = TtaGetSSchema ("HTML", doc);
    if (XHTMLSSchema == NULL)
-       XHTMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+     XHTMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
 				   "HTML", "HTMLP");
    return (XHTMLSSchema);
 }
@@ -60,7 +60,7 @@ SSchema GetMathMLSSchema (Document doc)
   MathMLSSchema = TtaGetSSchema ("MathML", doc);
   if (MathMLSSchema == NULL)
      MathMLSSchema = TtaNewNature(doc, 
-				  TtaGetDocumentSSchema(doc),
+				  TtaGetDocumentSSchema(doc), NULL,
 				  "MathML", "MathMLP");
   return (MathMLSSchema);
 }
@@ -75,9 +75,8 @@ SSchema GetSVGSSchema (Document doc)
 
   SVGSSchema = TtaGetSSchema ("SVG", doc);
   if (SVGSSchema == NULL)
-    SVGSSchema = TtaNewNature(doc,
-				  TtaGetDocumentSSchema(doc),
-				  "SVG", "SVGP");
+    SVGSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
+			      "SVG", "SVGP");
   return (SVGSSchema);
 }
 
@@ -91,7 +90,7 @@ SSchema GetXLinkSSchema (Document doc)
 
   XLinkSSchema = TtaGetSSchema ("XLink", doc);
   if (XLinkSSchema == NULL)
-    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
 				"XLink", "XLinkP");
   return (XLinkSSchema);
 }
@@ -107,7 +106,7 @@ SSchema GetTextSSchema (Document doc)
 
   XLinkSSchema = TtaGetSSchema ("TextFile", doc);
   if (XLinkSSchema == NULL)
-    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+    XLinkSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
 				"TextFile", "TextFileP");
   return (XLinkSSchema);
 }
@@ -123,8 +122,8 @@ SSchema GetGenericXMLSSchema (char *schemaName, Document doc)
 
   XMLSSchema = TtaGetSSchema (schemaName, doc);
   if (XMLSSchema == NULL)
-      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
-				"XML", "XMLP");
+    XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), NULL,
+			      "XML", "XMLP");
   return (XMLSSchema);
 }
 
@@ -140,7 +139,7 @@ SSchema GetGenericXMLSSchemaByUri (char *uriName, Document doc, ThotBool *isnew)
   XMLSSchema = TtaGetSSchemaByUri (uriName, doc);
   if (XMLSSchema == NULL)
     {
-      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc),
+      XMLSSchema = TtaNewNature(doc, TtaGetDocumentSSchema(doc), uriName,
 				"XML", "XMLP");
       *isnew = TRUE;
     }

@@ -496,8 +496,10 @@ char *CssToPrint (Document doc, char *printdir)
 			/* there is an internal style in the document */
 			length += strlen (printdir) + 10;
 		      else
-			/* that external or user style sheet concerns the document */
-			length += strlen (css->localName) + 3;
+			/* that external or user style sheet concerns the
+			   document */
+			if (css->localName)
+			  length += strlen (css->localName) + 3;
 		    }
 		  pInfo = pInfo->PiNext;
 		}
@@ -520,7 +522,9 @@ char *CssToPrint (Document doc, char *printdir)
 		  pInfo = css->infos[doc];
 		  while (pInfo)
 		    {
-		      if (pInfo->PiEnabled && pInfo->PiCategory == CSS_USER_STYLE)
+		      if (pInfo->PiEnabled &&
+			  pInfo->PiCategory == CSS_USER_STYLE &&
+			  css->localName)
 			{
 			  /* add that file name to the list */
 			  strcpy (&ptr[length], "u ");
@@ -545,6 +549,7 @@ char *CssToPrint (Document doc, char *printdir)
 		  while (pInfo)
 		    {
 		      if (pInfo->PiEnabled &&
+			  css->localName &&
 			  (pInfo->PiCategory == CSS_EXTERNAL_STYLE ||
 			   pInfo->PiCategory == CSS_IMPORT))
 			{
@@ -972,7 +977,7 @@ static void InitCSSDialog (Document doc, char *s)
 		  /* count the number of style element */ 
 		  sty++;
 		}
-	      else if (css->url == NULL)
+	      else if (css->url == NULL && css->localName)
 		 size += strlen (css->localName) + 12;
 	      else
 		 size += strlen (css->url) + 12;
@@ -1035,7 +1040,7 @@ static void InitCSSDialog (Document doc, char *s)
 			    }
 			}
 		    }
-		  else if (css->url == NULL)
+		  else if (css->url == NULL && css->localName)
 		    ptr = css->localName;
 		  else
 		    ptr = css->url;

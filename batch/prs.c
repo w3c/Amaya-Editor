@@ -4286,7 +4286,9 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  else
 	     {
 	     Initialize ();
-	     strncpy (pPSchema->PsStructName, n, MAX_NAME_LENGTH);
+	     if (pPSchema->PsStructName)
+	       TtaFreeMemory (pPSchema->PsStructName);
+	     pPSchema->PsStructName = TtaStrdup (n);
 	     }
 	  }
        else if (prevRule == RULE_ExtStruct)

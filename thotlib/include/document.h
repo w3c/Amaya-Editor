@@ -261,7 +261,8 @@ extern void TtaSetSchemaPath (char *path);
 
   ----------------------------------------------------------------------*/
 extern SSchema TtaNewNature (Document document, SSchema schema,
-			     char *natureName, char *presentationName);
+			     char *natureURI, char *natureName,
+			     char *presentationName);
 
 /*----------------------------------------------------------------------
    TtaNewSchemaExtension

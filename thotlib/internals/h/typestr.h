@@ -192,7 +192,7 @@ typedef struct _SRule
 	  struct			/* SrConstruct = CsNatureSchema */
 	  {
 	    PtrSSchema _SrSSchemaNat_;	/* structure schema of the nature */
-	    Name       _SrOrigNat_;	/* (translated) name of the nature */
+	    char      *_SrOrigNat_;	/* (translated) name of the nature */
 	  } s0;
 	  struct			/* SrConstruct = CsBasicElement */
 	  {
@@ -300,12 +300,12 @@ typedef struct _StructSchema
 					    extension */
    PtrSSchema       SsPrevExtens;        /* Pointer to the previous schema
 					    extension or NULL if no extens. */
-   Name             SsName;              /* generic structure name*/
+   char            *SsName;              /* generic structure name */
    char            *SsUriName;           /* Pointer to the URI associated with
 					    this schema */
    ThotBool         SsIsXml;             /* Indicates a generix XML schema */
    int              SsCode;              /* code to identify the version */
-   Name             SsDefaultPSchema;    /* name of the default presentation 
+   char            *SsDefaultPSchema;    /* name of the default presentation 
 					    schema associated with this
 					    structure */
    PtrEventsSet     SsActionList;        /* Pointer to the list of actions that

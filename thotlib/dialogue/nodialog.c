@@ -184,7 +184,7 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char* presNature)
+ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char **presNature)
 {
    return FALSE;
 }
@@ -192,7 +192,7 @@ ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char* presNatu
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool ConfigDefaultPSchema (char* schema, char* schpres)
+ThotBool ConfigDefaultPSchema (char* schema, char **schpres)
 {
    return FALSE;
 }

@@ -95,7 +95,7 @@
   ----------------------------------------------------------------------*/
 Document TtaInitDocument (char *structureSchema, char *documentName,
 			  Document document)
-{ 
+{
   PtrDocument         pDoc;
   PtrElement          pEl;
   int                 i;
@@ -115,7 +115,7 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
       else
 	{	  
 	  /* charge le schema de structure */
-	  pDoc->DocSSchema = LoadStructureSchema (structureSchema, pDoc);
+	  pDoc->DocSSchema = LoadStructureSchema (NULL, structureSchema, pDoc);
 	  if (pDoc->DocSSchema == NULL || pDoc->DocSSchema->SsExtension)
 	    /* failure while reading the structure schema or while loading
 	       a schema extension */

@@ -1069,7 +1069,7 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
    dans le fichier .conf correspondant.                            
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
-ThotBool ConfigDefaultPSchema (char *schstr, char *schpres)
+ThotBool ConfigDefaultPSchema (char *schstr, char **schpres)
 {
    ThotBool            ok, stop;
    FILE               *file;
@@ -1077,6 +1077,7 @@ ThotBool ConfigDefaultPSchema (char *schstr, char *schpres)
    char                word[MAX_TXT_LEN];
 
    ok = FALSE;
+   *schpres = NULL;
    /* ouvre le fichier .conf associe' au schema de structure */
    file = openConfigFile (schstr, FALSE);
    if (file != NULL)
@@ -1101,7 +1102,7 @@ ThotBool ConfigDefaultPSchema (char *schstr, char *schpres)
 		     if (word[0] != EOS)
 			/* il y a bien un 2eme mot : succes */
 		       {
-			  strcpy (schpres, word);
+			  *schpres = TtaStrdup (word);
 			  ok = TRUE;
 		       }
 		     stop = TRUE;
@@ -1521,7 +1522,7 @@ void  TtaGetViewGeometryMM (Document document, char *name, int *x,
    nameNature dans le contexte du schema de structure pSS   
   ----------------------------------------------------------------------*/
 ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
-				 char *presNature)
+				 char **presNature)
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
@@ -1530,7 +1531,7 @@ ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
    ThotBool            found;
    ThotBool            ok;
 
-   presNature[0] = EOS;
+   *presNature = NULL;
    ok = FALSE;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "presentation" */
    file = openConfFileAndReadUntil (pSS, "presentation");
@@ -1557,7 +1558,7 @@ ThotBool ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature,
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  strncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
+		  *presNature = TtaStrdup (seqLine);
 		  ok = TRUE;
 	       }
 	  }

@@ -1999,8 +1999,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 	      TtaCancelLastRegisteredSequence (destDoc);
 	      return NULL;
 	    }
-	  SvgSchema = TtaNewNature (destDoc, docSchema, "SVG",
-				      "SVGP");
+	  SvgSchema = TtaNewNature (destDoc, docSchema, NULL, "SVG", "SVGP");
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */

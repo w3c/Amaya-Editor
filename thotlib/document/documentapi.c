@@ -474,8 +474,8 @@ void TtaSetSchemaPath (char *path)
    the structure schema of the new nature; NULL if the structure schema
    has not been loaded.
   ----------------------------------------------------------------------*/
-SSchema TtaNewNature (Document document, SSchema schema, char *natureName,
-		      char *presentationName)
+SSchema TtaNewNature (Document document, SSchema schema, char *natureURI,
+		      char *natureName, char *presentationName)
 {
   int                 natureRule;
   PtrSSchema          natureSchema;
@@ -490,7 +490,7 @@ SSchema TtaNewNature (Document document, SSchema schema, char *natureName,
     TtaError (ERR_invalid_parameter);
   else
     {
-      natureRule = CreateNature (natureName, presentationName,
+      natureRule = CreateNature (natureURI, natureName, presentationName,
 				 (PtrSSchema) schema,
 				 LoadedDocument[document - 1]);
       if (natureRule == 0)
@@ -581,8 +581,11 @@ void TtaSetPSchema (Document document, char *presentationName)
       pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
       if (pDoc->DocSSchema != NULL)
-	 strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
-		   MAX_NAME_LENGTH - 1);
+	{
+	  if (pDoc->DocSSchema->SsDefaultPSchema)
+	    TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
+	  pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (presentationName);
+	}
 #else
       /* verifies that there is no open views */
       ok = TRUE;

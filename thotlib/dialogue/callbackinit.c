@@ -35,14 +35,12 @@
 void InitApplicationSchema (PtrSSchema pSS)
 {
   PtrEventsSet     schemaActions;
-  char             schemaName[MAX_NAME_LENGTH];
 
-  strcpy (schemaName, pSS->SsName);
   pSS->SsActionList = NULL;
-  if (pSS->SsName[0] != EOS)
+  if (pSS->SsName && pSS->SsName[0] != EOS)
     {
       schemaActions = SchemasEvents;
-      while (schemaActions && strcmp (schemaActions->EvSName, schemaName))
+      while (schemaActions && strcmp (schemaActions->EvSName, pSS->SsName))
 	schemaActions = schemaActions->EvSNext;
       if (schemaActions != NULL)
 	pSS->SsActionList = schemaActions;

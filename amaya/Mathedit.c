@@ -844,7 +844,8 @@ static void         CreateMathConstruct (int construct)
 	  /* get the MathML schema associated with the current SSchema or
 	     associate it with the current SSchema if it is not associated
 	     yet */
-	  mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML", "MathMLP");
+	  mathSchema = TtaNewNature (doc, elType.ElSSchema, NULL, "MathML",
+				     "MathMLP");
 	  newType.ElTypeNum = MathML_EL_MathML;
 	  newType.ElSSchema = mathSchema;
 	  if (emptySel)
@@ -980,7 +981,8 @@ static void         CreateMathConstruct (int construct)
 
       /* get the MathML schema associated with the current SSchema or
 	 associate it with the current SSchema if it is not associated yet */
-      mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML", "MathMLP");
+      mathSchema = TtaNewNature (doc, elType.ElSSchema, NULL,  "MathML",
+				 "MathMLP");
 
       if (before)
 	{

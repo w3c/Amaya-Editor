@@ -1184,8 +1184,8 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 	      /* structure qui definit le type reference' */
 	     {
 		/* pas de schema de presentation prefere' */
-		referredNature = CreateNature (pRule->SrRefTypeNat, NULL, *pSS,
-					       pDoc);
+		referredNature = CreateNature (NULL, pRule->SrRefTypeNat, NULL,
+					       *pSS, pDoc);
 		if (referredNature == 0)
 		   *pSS = NULL;
 		else
@@ -1219,8 +1219,8 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 	   /* structure qui definit le type reference' */
 	  {
 	     /* pas de schema de presentation prefere' */
-	     referredNature = CreateNature (pAtt->AttrTypeRefNature, NULL,
-					    *pSS, pDoc);
+	     referredNature = CreateNature (NULL, pAtt->AttrTypeRefNature,
+					    NULL, *pSS, pDoc);
 	     if (referredNature == 0)
 		*pSS = NULL;
 	     else
@@ -1987,7 +1987,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 	       break;
 	     case CsNatureSchema:
 	       N[0] = EOS; /* pas de schema de presentation prefere'*/
-	       LoadNatureSchema (pSS, N, typeNum, pDoc);
+	       LoadNatureSchema (pSS, N, typeNum, NULL, pDoc);
 	       AddSchemaGuestViews (pDoc, pRule1->SrSSchemaNat);
 	       if (pRule1->SrSSchemaNat != NULL)
 		 {

@@ -1205,6 +1205,15 @@ void FreeDocument (PtrDocument pDoc)
        pDoc->DocViewSubTree[i] = NULL;
        pDoc->DocViewModifiedAb[i] = NULL;
      }
+   for (i = 0; i < MAX_NATURES_DOC; i++)
+     {
+       if (pDoc->DocNatureName[i])
+	 TtaFreeMemory (pDoc->DocNatureName[i]);
+       pDoc->DocNatureName[i] = NULL;
+       if (pDoc->DocNaturePresName[i])
+	 TtaFreeMemory (pDoc->DocNaturePresName[i]);
+       pDoc->DocNaturePresName[i] = NULL;
+     }
    /* libere le 1er descripteur de reference (bidon) */
    FreeReferredDescr (pDoc->DocReferredEl);
    pDoc->DocReferredEl = NULL;
@@ -1281,6 +1290,12 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
   PtrHostView         pHostView, pNextHostView;
 
   pSP->PsNext = NULL;
+  if (pSP->PsStructName)
+    free(pSP->PsStructName);
+  pSP->PsStructName = NULL;
+  if (pSP->PsPresentName)
+    free (pSP->PsPresentName);
+  pSP->PsPresentName = NULL;
   pSP->PsFirstDefaultPRule = NULL;
   if (pSP->PsPresentBox)
     {
@@ -1604,10 +1619,20 @@ void FreeSchStruc (PtrSSchema pSS)
       FreeExternalBlock (pSS->SsExtensBlock);
       pSS->SsExtensBlock = NULL;
     }
+  if (pSS->SsName != NULL)
+    {
+      TtaFreeMemory (pSS->SsName);
+      pSS->SsName = NULL;
+    }
   if (pSS->SsUriName != NULL)
     {
       TtaFreeMemory (pSS->SsUriName);
       pSS->SsUriName = NULL;
+    }
+  if (pSS->SsDefaultPSchema)
+    {
+      TtaFreeMemory (pSS->SsDefaultPSchema);
+      pSS->SsDefaultPSchema = NULL;
     }
   pSS->SsPrevExtens = NULL;
   pSS->SsExtension = FALSE;

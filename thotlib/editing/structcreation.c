@@ -1455,7 +1455,7 @@ void ChoiceMenuCallback (int item, char *natureName)
 		/* prend tel quel */
 		strncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
 	     /* cree une nouvelle nature */
-	     ChosenTypeNum = CreateNature (SSchemaName, NULL,
+	     ChosenTypeNum = CreateNature (NULL, SSchemaName, NULL,
 					   ChoiceMenuSSchema[0],
 					   ChoiceMenuDocument);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];

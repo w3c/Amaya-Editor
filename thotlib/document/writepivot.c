@@ -1227,14 +1227,13 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 }
 
 /*----------------------------------------------------------------------
-   	PutName								
-  ----------------------------------------------------------------------*/
-static void PutName (BinFile pivFile, Name N)
+   	PutString								  ----------------------------------------------------------------------*/
+static void PutString (BinFile pivFile, char* s)
 {
    int                 j;
 
-   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
-      TtaWriteByte (pivFile, N[j]);
+   for (j = 0; s[j] != EOS; j++)
+      TtaWriteByte (pivFile, s[j]);
    TtaWriteByte (pivFile, EOS);
 }
 
@@ -1258,11 +1257,11 @@ void WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 	else
 	   TtaWriteByte (pivFile, (char) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
-	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
+	PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
 	/* ecrit le code du schema de structure */
 	PutShort (pivFile, pDoc->DocNatureSSchema[nat]->SsCode);
 	/* ecrit le nom du schema de presentation associe' */
-	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsDefaultPSchema);
+	PutString (pivFile, pDoc->DocNatureSSchema[nat]->SsDefaultPSchema);
      }
 #endif /* NODISPLAY */
 }
@@ -1306,7 +1305,7 @@ void WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
 	TtaWriteByte (pivFile, (char) C_PIV_LANG);
-	PutName (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
+	PutString (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
      }
 }
 

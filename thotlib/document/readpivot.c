@@ -827,7 +827,7 @@ static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *t
 	     if (!Extension)
 	       {
 		 /* pas de presentation preferentielle */
-		 rule = CreateNature (pDoc->DocNatureName[nat],
+		 rule = CreateNature (NULL, pDoc->DocNatureName[nat],
 				      pDoc->DocNaturePresName[nat], *pSS,pDoc);
 		 /* recupere le numero de la regle de nature */
 		 if (rule == 0)
@@ -2041,11 +2041,11 @@ static  LabelString         label;
 			i = 0;
 			do
 			  i++;
-			while (pDoc->DocNatureName[i - 1] !=
-			                        pSRule->SrNatExpContent &&
+			while (strcmp (pDoc->DocNatureName[i - 1],
+				       pSRule->SrNatExpContent) &&
 			       i != pDoc->DocNNatures);
-			if (pDoc->DocNatureName[i - 1] ==
-			                             pSRule->SrNatExpContent)
+			if (strcmp (pDoc->DocNatureName[i - 1],
+				    pSRule->SrNatExpContent) == 0)
 			  /* trouve' */
 			  *pContSS = pDoc->DocNatureSSchema[i - 1];
 			else
@@ -2952,18 +2952,18 @@ static void         SetLabel (PtrElement pEl, PtrDocument pDoc)
    figure deja dans la table, soit en creant une nouvelle entree   
    au rang desire'.                                                
   ----------------------------------------------------------------------*/
-static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
+static void PutNatureInTable (PtrDocument pDoc, char *SSName, int rank)
 {
    int                 i;
    ThotBool            found;
-   Name                N1, N2;
+   char                *N1, *N2;
    PtrSSchema          pSS;
 
    /* on cherche (par son nom) si la nature existe dans la table */
    i = 1;
    found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
-      if (strncmp (SSName, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
+      if (strcmp (SSName, pDoc->DocNatureName[i - 1]) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -2976,16 +2976,18 @@ static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 	   /* y est */
 	  {
 	     pSS = pDoc->DocNatureSSchema[rank - 1];
-	     strncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     strncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     N1 = TtaStrdup (pDoc->DocNatureName[rank - 1]);
+	     N2 = TtaStrdup (pDoc->DocNaturePresName[rank - 1]);
 	     pDoc->DocNatureSSchema[rank - 1] = pDoc->DocNatureSSchema[i - 1];
-	     strncpy (pDoc->DocNatureName[rank - 1],
-		       pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[rank - 1],
-		       pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
+	     if (pDoc->DocNatureName[rank - 1])
+	       TtaFreeMemory (pDoc->DocNatureName[rank - 1]);
+	     pDoc->DocNatureName[rank - 1] = TtaStrdup (pDoc->DocNatureName[i - 1]);
+	     if (pDoc->DocNaturePresName[rank - 1])
+	       TtaFreeMemory (pDoc->DocNaturePresName[rank - 1]);
+	     pDoc->DocNaturePresName[rank - 1] = TtaStrdup (pDoc->DocNaturePresName[i - 1]);
 	     pDoc->DocNatureSSchema[i - 1] = pSS;
-	     strncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
+	     pDoc->DocNatureName[i - 1] = N1;
+	     pDoc->DocNaturePresName[i - 1] = N2;
 	  }
      }
    else
@@ -2999,14 +3001,18 @@ static void PutNatureInTable (PtrDocument pDoc, Name SSName, int rank)
 	  {
 	     pDoc->DocNatureSSchema[pDoc->DocNNatures] =
 	                                    pDoc->DocNatureSSchema[rank - 1];
-	     strncpy (pDoc->DocNatureName[pDoc->DocNNatures],
-		       pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     strncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
-		       pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     if (pDoc->DocNatureName[pDoc->DocNNatures])
+	       TtaFreeMemory (pDoc->DocNatureName[pDoc->DocNNatures]);
+	     pDoc->DocNatureName[pDoc->DocNNatures] = TtaStrdup (pDoc->DocNatureName[rank - 1]);
+	     if (pDoc->DocNaturePresName[pDoc->DocNNatures])
+	       TtaFreeMemory (pDoc->DocNaturePresName[pDoc->DocNNatures]);
+	     pDoc->DocNaturePresName[pDoc->DocNNatures] = TtaStrdup (pDoc->DocNaturePresName[rank - 1]);
 	     pDoc->DocNNatures++;
 	  }
 	pDoc->DocNatureSSchema[rank - 1] = NULL;
-	strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+	if (pDoc->DocNatureName[rank - 1])
+	  TtaFreeMemory (pDoc->DocNatureName[rank - 1]);
+	pDoc->DocNatureName[rank - 1] = TtaStrdup (SSName);
      }
 }
 
@@ -3022,7 +3028,9 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 						  char *natSchema,
 						  char *presentSchema))
 {
-   Name                SSName, PSchemaName;
+#define BUFFER_LENGTH 500
+   char                SSName[BUFFER_LENGTH];
+   char                PSchemaName[BUFFER_LENGTH];
    PtrSSchema          pSS;
    int                 i, rank;
    ThotBool            ExtensionSch;
@@ -3034,7 +3042,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
    do
      if (!TtaReadByte (file, (unsigned char *)&SSName[i++]))
        PivotError (file, "PivotError: Schema");
-   while (!error && SSName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+   while (!error && SSName[i - 1] != EOS && i <= BUFFER_LENGTH);
+   SSName[BUFFER_LENGTH -1] = EOS;
    if (SSName[i - 1] != EOS)
      PivotError (file, "PivotError: Schema 1");
    else
@@ -3049,7 +3058,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        do
 	 if (!TtaReadByte (file, (unsigned char *)&PSchemaName[i++]))
 	   PivotError (file, "PivotError: Schema 3");
-       while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
+       while (!error && PSchemaName[i - 1] != EOS && i <= BUFFER_LENGTH);
+       PSchemaName[BUFFER_LENGTH -1] = EOS;
 
        if (!TtaReadByte (file, (unsigned char *)tag))
 	 PivotError (file, "PivotError: Schema 4");
@@ -3058,7 +3068,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 			     PSchemaName);
        PutNatureInTable (pDoc, SSName, rank);
        /* charge les schemas de structure et de presentation du document */
-       if (pDoc->DocSSchema == NULL) 
+       if (pDoc->DocSSchema == NULL)
 	 LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pDoc,
 		      pLoadedSS, FALSE);
 
@@ -3073,16 +3083,22 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
      {
        pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
-       strncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
-       strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
-		 MAX_NAME_LENGTH);
+       if (pDoc->DocNatureName[rank - 1])
+	 TtaFreeMemory (pDoc->DocNatureName[rank - 1]);
+       pDoc->DocNatureName[rank - 1] = TtaStrdup (SSName);
+       if (pDoc->DocNaturePresName[rank - 1])
+	 TtaFreeMemory (pDoc->DocNaturePresName[rank - 1]);
+       pDoc->DocNaturePresName[rank - 1] = TtaStrdup (PSchemaName);
        if (pDoc->DocSSchema != NULL)
 	 if (!PresentationSchema (pDoc->DocSSchema, pDoc))
 	   /* le schema de presentation n'a pas ete charge' (librairie  */
 	   /* Kernel, par exemple). On memorise dans le schema de */
 	   /* structure charge' le nom du schema P associe' */
-	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName,
-		    MAX_NAME_LENGTH);
+	   {
+	     if (pDoc->DocSSchema->SsDefaultPSchema)
+	       TtaFreeMemory (pDoc->DocSSchema->SsDefaultPSchema);
+	     pDoc->DocSSchema->SsDefaultPSchema = TtaStrdup (PSchemaName);
+	   }
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
@@ -3096,7 +3112,9 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
        do
 	 if (!TtaReadByte (file, (unsigned char *)&SSName[i++]))
 	   PivotError (file, "PivotError: Schema ext");
-       while (SSName[i - 1] != EOS && !error) ;
+       while (SSName[i - 1] != EOS && !error && i <= BUFFER_LENGTH);
+       SSName[BUFFER_LENGTH - 1] = EOS;
+
        if (pDoc->DocPivotVersion >= 4)
 	 /* Lit le code du schema de structure */
 	 if (!error)
@@ -3114,7 +3132,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	   do
 	     if (!TtaReadByte (file, (unsigned char *)&PSchemaName[i++]))
 	       PivotError (file, "PivotError: Schema 9");
-	   while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
+	   while (!error && PSchemaName[i - 1] != EOS && i != BUFFER_LENGTH);
+	   PSchemaName[BUFFER_LENGTH - 1] = EOS;
 
 	   if (!TtaReadByte (file, (unsigned char *)tag))
 	     PivotError (file, "PivotError: Schema 10");
@@ -3136,8 +3155,8 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 		 pSS = LoadExtension (SSName, PSchemaName, pDoc);
 	       else 
 		 {
-		   i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema,
-				     pDoc);
+		   i = CreateNature (NULL, SSName, PSchemaName,
+				     pDoc->DocSSchema, pDoc);
 		   if (i == 0)
 		     /* echec creation nature */
 		     PivotError (file, "PivotError: Schema 11");
@@ -3154,13 +3173,18 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 	     if (pSS->SsCode != versionSchema)
 	       pDoc->DocCheckingMode |= PIV_CHECK_MASK;
 	   pDoc->DocNatureSSchema[rank - 1] = pSS;
-	   strncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
-		     MAX_NAME_LENGTH);
+	   if (pDoc->DocNaturePresName[rank - 1])
+	     TtaFreeMemory (pDoc->DocNaturePresName[rank - 1]);
+	   pDoc->DocNaturePresName[rank - 1] = TtaStrdup (PSchemaName);
 	   if (!PresentationSchema (pSS, pDoc))
 	     /* le schema de presentation n'a pas ete charge' (librairie
 		Kernel, par exemple). On memorise dans le schema de structure
 		charge' le nom du schema P associe' */
-	     strncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+	     {
+	       if (pSS->SsDefaultPSchema)
+		 TtaFreeMemory (pSS->SsDefaultPSchema);
+	       pSS->SsDefaultPSchema = TtaStrdup (PSchemaName);
+	     }
 	 }
      }
 }

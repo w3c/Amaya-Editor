@@ -1295,7 +1295,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
    	Retourne un pointeur sur le schema de presentation en memoire	
    	chargement reussi, NULL si echec.				
   ----------------------------------------------------------------------*/
-PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
+PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
 {
   PtrPRule            pNextPRule;
   PtrPSchema          pPSch;
@@ -1326,15 +1326,14 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
   if (file == 0)
     {
       /* message 'Fichier inaccessible' */
-      strncpy (buf, fileName, MAX_NAME_LENGTH);
+      strncpy (buf, fileName, MAX_TXT_LEN - 5);
+      buf[MAX_TXT_LEN - 5] = EOS;
       strcat (buf, ".PRS");
       TtaDisplayMessage (INFO, TtaGetMessage (LIB,TMSG_INCORRECT_PRS_FILE ),
 			 buf);
     }
   else
     {
-      /* supprime le suffixe .PRS a la fin du nom de fichier */
-      buf[i - 4] = EOS;
       GetSchPres (&pPSch);
       /* this schema is considered as the User Agent default stylesheet */
       pPSch->PsOrigin = Agent;
@@ -1342,10 +1341,18 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
       GetPresentRule (&pNextPRule);
       pNextPRule->PrCond = NULL;
       /* met son nom dans le schema de presentation */
-      strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
+      if (pPSch->PsPresentName)
+	TtaFreeMemory (pPSch->PsPresentName);
+      pPSch->PsPresentName = TtaStrdup (fileName);
       /* lit la partie fixe du schema de presentation */
       /* lit le nom du schema de structure correspondant */
-      TtaReadName (file, (unsigned char *)pPSch->PsStructName);
+      i = 0;
+      do
+	if (!TtaReadByte (file, (unsigned char*)&buf[i++]))
+	  error = True;
+      while (buf[i - 1] != EOS && i < MAX_PATH && !error) ;
+      buf[MAX_PATH - 1] = EOS;
+      pPSch->PsStructName = TtaStrdup (buf);
       TtaReadShort (file, &pPSch->PsStructCode);
       /* read the name of all declared views */
       error = !TtaReadShort (file, &pPSch->PsNViews);

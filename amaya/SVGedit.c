@@ -1589,7 +1589,7 @@ void CreateGraphicElement (int entry)
 		  return;
 		}
 	    }
-	  SvgSchema = TtaNewNature (doc, docSchema, "SVG", "SVGP");
+	  SvgSchema = TtaNewNature (doc, docSchema, NULL, "SVG", "SVGP");
 	  if (TtaIsSelectionEmpty ())
 	    {
 	      /* try to create the SVG here */
@@ -1836,7 +1836,8 @@ void CreateGraphicElement (int entry)
 	  attrType.AttrTypeNum = SVG_ATTR_height_;
 	  UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
 	  /* the document is supposed to be HTML */
-	  childType.ElSSchema = TtaNewNature (doc, docSchema, "HTML", "HTMLP");
+	  childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
+					      "HTMLP");
 	  childType.ElTypeNum = HTML_EL_Division;
 	  child = TtaNewTree (doc, childType, "");
 	  /* do not check the Thot abstract tree against the structure */
