@@ -57,7 +57,9 @@
 #include "frame_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-/* #include "thotpalette_tv.h" */
+#ifndef WIN_PRINT
+#include "thotpalette_tv.h"
+#endif /* WIN_PRINT */
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
