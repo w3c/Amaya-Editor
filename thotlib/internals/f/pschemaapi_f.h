@@ -8,27 +8,35 @@
 
 extern PSchema TtaNewPSchema ( void );
 extern void TtaRemovePSchema ( PSchema schema,
-                               Document document );
+                               Document document,
+                               SSchema nature );
 extern void TtaAddPSchema ( PSchema schema,
                             PSchema oldSchema,
                             boolean before,
-                            Document document );
-extern PSchema TtaGetFirstPSchema ( Document document );
+                            Document document,
+                            SSchema nature );
+extern PSchema TtaGetFirstPSchema ( Document document,
+                                    SSchema nature );
 extern void TtaNextPSchema ( PSchema * schema,
-                             Document document );
+                             Document document,
+                             SSchema nature );
 
 #else /* __STDC__ */
 
 extern PSchema TtaNewPSchema (/* void */);
 extern void TtaRemovePSchema (/* PSchema schema,
-                                 Document document */);
+                                 Document document,
+                                 SSchema nature */);
 extern void TtaAddPSchema (/* PSchema schema,
                               PSchema oldSchema,
                               boolean before,
-                              Document document */);
-extern PSchema TtaGetFirstPSchema (/* Document document */);
+                              Document document,
+                              SSchema nature */);
+extern PSchema TtaGetFirstPSchema (/* Document document,
+                                      SSchema nature */);
 extern void TtaNextPSchema (/* PSchema * schema,
-                               Document document */);
+                               Document document,
+                               SSchema nature */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

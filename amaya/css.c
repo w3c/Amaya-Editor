@@ -917,13 +917,13 @@ boolean                rebuild;
       style->documents[doc] = TRUE;
       style->url = TtaStrdup (DocumentURLs[doc]);
       style->css_rule = TtaStrdup (attrstr);
-      cour = TtaGetFirstPSchema (doc);
+      cour = TtaGetFirstPSchema (doc, NULL);
       while (cour != NULL)
 	{
 	  prev = cour;
-	  TtaNextPSchema (&cour, doc);
+	  TtaNextPSchema (&cour, doc, NULL);
 	}
-      TtaAddPSchema (gPres, prev, FALSE, doc);
+      TtaAddPSchema (gPres, prev, FALSE, doc, NULL);
     }
   else
     {
@@ -1114,8 +1114,8 @@ Document            doc;
     * and free the buffer.
     */
    gPres = TtaNewPSchema ();
-   prev = TtaGetFirstPSchema (doc);
-   TtaAddPSchema (gPres, prev, TRUE, doc);
+   prev = TtaGetFirstPSchema (doc, NULL);
+   TtaAddPSchema (gPres, prev, TRUE, doc, NULL);
    css = NewCSS ();
    css->tempfile = TtaStrdup (tempfile);
    css->name = "External Style";
@@ -1296,12 +1296,12 @@ int                 merge;
 	 * styles sheet referenced, just after the user's preferences
 	 * if any. Enforce the recalculation of the image.
 	 */
-	first = TtaGetFirstPSchema (doc);
+	first = TtaGetFirstPSchema (doc, NULL);
 	user = GetUserGenericPresentation ();
 	if ((user != NULL) && (user->pschema == first))
-	     TtaAddPSchema (gPres, first, FALSE, doc);
+	     TtaAddPSchema (gPres, first, FALSE, doc, NULL);
 	else
-	     TtaAddPSchema (gPres, first, TRUE, doc);
+	     TtaAddPSchema (gPres, first, TRUE, doc, NULL);
      }
 #if 0
    DebugPresent (doc, gPres, "/tmp/external.styles");
@@ -1621,7 +1621,7 @@ Document            doc;
     * depending on the kind of document, remove it from the PSchema
     * chain associated to the current document.
     */
-   TtaRemovePSchema (css->pschema, doc);
+   TtaRemovePSchema (css->pschema, doc, NULL);
    css->documents[doc] = FALSE;
    if (css->category != CSS_USER_STYLE)
      {
@@ -2231,23 +2231,23 @@ boolean                copy;
 	switch (css->category)
 	      {
 		 case CSS_DOCUMENT_STYLE:
-		    cour = TtaGetFirstPSchema (doc);
+		    cour = TtaGetFirstPSchema (doc, NULL);
 		    while (cour != NULL)
 		      {
 			 prev = cour;
-			 TtaNextPSchema (&cour, doc);
+			 TtaNextPSchema (&cour, doc, NULL);
 		      }
-		    TtaAddPSchema (pschema, prev, FALSE, doc);
+		    TtaAddPSchema (pschema, prev, FALSE, doc, NULL);
 		    break;
 		 case CSS_Unknown:
 		 case CSS_EXTERNAL_STYLE:
 		 case CSS_BROWSED_STYLE:
-		    cour = TtaGetFirstPSchema (doc);
-		    TtaAddPSchema (pschema, cour, FALSE, doc);
+		    cour = TtaGetFirstPSchema (doc, NULL);
+		    TtaAddPSchema (pschema, cour, FALSE, doc, NULL);
 		    break;
 		 case CSS_USER_STYLE:
-		    cour = TtaGetFirstPSchema (doc);
-		    TtaAddPSchema (pschema, cour, TRUE, doc);
+		    cour = TtaGetFirstPSchema (doc, NULL);
+		    TtaAddPSchema (pschema, cour, TRUE, doc, NULL);
 		    break;
 	      }
 	css->pschema = pschema;

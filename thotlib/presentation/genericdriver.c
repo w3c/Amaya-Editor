@@ -1570,8 +1570,8 @@ PresentationValue   v;
    if ((tsch == NULL) || (ctxt == NULL)) return(-1);
 
    doc = ctxt->doc;
-   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
-
+/*    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc); */
+   pSS = (PtrSSchema) ctxt->schema;
    /*
     * select the good starting point depending on the context
     */
@@ -1602,6 +1602,7 @@ PresentationValue   v;
       return (-1);
 
    ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+
    return(0);
 }
 

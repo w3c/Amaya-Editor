@@ -1,0 +1,19 @@
+0   Document Style
+1   Invalid unit
+2   Invalid font
+3   Invalid font size
+4   Invalid variant
+5   Invalid style
+6   Invalid spacing
+7   Invalid text decoration
+8   Invalid color code
+9   Invalid top margin
+10  Invalid bottom margin
+11  Invalid repeat
+12  Invalid style header
+13  Invalid declaration
+14  Pseudoclasses not supported
+15  Out of memory
+16  Can't read file
+17  Unclosed comment in file
+18  File not found

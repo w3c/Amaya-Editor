@@ -27,22 +27,25 @@
 
 /*----------------------------------------------------------------------
    HandleOfPSchema      returns the handle that points the additional
-   presentation schema "schema" from document doc.
+   presentation schema "schema" of the nature "nature" from document doc.
+   If nature is NULL, the additional Pschema is associated to the main
+   structure schema of the document.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc)
+static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc, SSchema nature)
 
 #else  /* __STDC__ */
-static PtrHandlePSchema HandleOfPSchema (schema, doc)
+static PtrHandlePSchema HandleOfPSchema (schema, doc, nature)
 PSchema             schema;
 Document            doc;
-
+SSchema             nature;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema          pSS;
+   PtrSSchema          pSS = NULL;
    PtrHandlePSchema    result, pHd;
+   int i;
 
    result = NULL;
    /* check parameter doc */
@@ -53,18 +56,29 @@ Document            doc;
    else
       /* parameter doc is OK */
      {
-	pSS = LoadedDocument[doc - 1]->DocSSchema;
-	if (pSS != NULL)
-	  {
-	     pHd = pSS->SsFirstPSchemaExtens;
-	     while (result == NULL && pHd != NULL)
-		if (pHd->HdPSchema == (PtrPSchema) schema)
-		   result = pHd;
-		else
-		   pHd = pHd->HdNextPSchema;
-	  }
-	if (result == NULL)
-	   TtaError (ERR_invalid_parameter);
+       if (nature == NULL || 
+	   nature == LoadedDocument[doc - 1]->DocSSchema)
+	 pSS = LoadedDocument[doc - 1]->DocSSchema;
+       else
+	 {
+	   i = 0;
+	   while (pSS == NULL && i < LoadedDocument[doc - 1]->DocNNatures)
+	     if (LoadedDocument[doc - 1]->DocNatureSSchema[i] == (PtrSSchema) nature)
+	       pSS = (PtrSSchema) nature;
+	     else
+	       i++;
+	 }
+       if (pSS != NULL)
+	 {
+	   pHd = pSS->SsFirstPSchemaExtens;
+	   while (result == NULL && pHd != NULL)
+	     if (pHd->HdPSchema == (PtrPSchema) schema)
+	       result = pHd;
+	     else
+	       pHd = pHd->HdNextPSchema;
+	 }
+       if (result == NULL)
+	 TtaError (ERR_invalid_parameter);
      }
    return result;
 }
@@ -93,31 +107,40 @@ PSchema             TtaNewPSchema ()
 /*----------------------------------------------------------------------
    TtaRemovePSchema
 
-   Removes a presentation schema from a document and destroys that schema
-   if it is not used by other documents.
+   Removes a presentation schema from a document or a nature in a 
+   document and destroys that schema if it is not used by other documents.
 
    Parameters:
    schema: the presentation schema to be deleted.
    document: the document to which that presentation schema is related.
-
+   nature: the structure schema of a nature of the document, NULL if schema
+           is relative to the main structure schema of the document.
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-void                TtaRemovePSchema (PSchema schema, Document document)
+void                TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
 #else  /* __STDC__ */
-void                TtaRemovePSchema (schema, document)
+void                TtaRemovePSchema (schema, document, nature)
 PSchema             schema;
 Document            document;
+SSchema             nature;
 #endif /* __STDC__ */
 
 {
    PtrHandlePSchema    pHd;
    PtrPSchema          pSchP;
+   PtrSSchema	       pSchS;
 
-   pHd = HandleOfPSchema (schema, document);
+   
+   pHd = HandleOfPSchema (schema, document, nature);
    if (pHd != NULL)
      {
-	if (pHd->HdPrevPSchema == NULL)
-	   LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = pHd->HdNextPSchema;
+       if (nature == NULL)
+	 pSchS = LoadedDocument[document - 1]->DocSSchema;
+       else
+	 pSchS = (PtrSSchema) nature;
+       if (pHd->HdPrevPSchema == NULL)
+	   pSchS->SsFirstPSchemaExtens = pHd->HdNextPSchema;
 	else
 	   pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
 	if (pHd->HdNextPSchema != NULL)
@@ -126,7 +149,7 @@ Document            document;
 	pSchP->PsStructCode--;	/* number of documents using this schema */
 	if (pSchP->PsStructCode == 0)
 	   /* this presentation schema is no longer used */
-	   FreePresentationSchema (pSchP, LoadedDocument[document - 1]->DocSSchema);
+	   FreePresentationSchema (pSchP, pSchS);
 	FreeHandleSchPres (pHd);
      }
 }
@@ -153,24 +176,30 @@ Document            document;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document)
+void                TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document, SSchema nature)
 #else  /* __STDC__ */
-void                TtaAddPSchema (schema, oldSchema, before, document)
+void                TtaAddPSchema (schema, oldSchema, before, document, nature)
 PSchema             schema;
 PSchema             oldSchema;
 boolean             before;
 Document            document;
+SSchema		    nature;
 #endif /* __STDC__ */
 
 {
    PtrHandlePSchema    oldHd, newHd;
    boolean             ok;
+   PtrSSchema	       pSchS;
 
    ok = FALSE;
+   if (nature == NULL)
+     pSchS = LoadedDocument[document - 1]->DocSSchema;
+   else
+     pSchS = (PtrSSchema) nature;
    oldHd = NULL;
    if (oldSchema != NULL)
      {
-	oldHd = HandleOfPSchema (oldSchema, document);
+	oldHd = HandleOfPSchema (oldSchema, document, nature);
 	if (oldHd != NULL)
 	   ok = TRUE;
      }
@@ -180,7 +209,7 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter doc is OK */
-   if (LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
+   if (pSchS->SsFirstPSchemaExtens != NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -192,7 +221,7 @@ Document            document;
 	GetHandleSchPres (&newHd);
 	newHd->HdPSchema = (PtrPSchema) schema;
 	if (oldHd == NULL)
-	   LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
+	   pSchS->SsFirstPSchemaExtens = newHd;
 	else if (before)
 	  {
 	     newHd->HdNextPSchema = oldHd;
@@ -201,7 +230,7 @@ Document            document;
 	     if (newHd->HdPrevPSchema)
 		newHd->HdPrevPSchema->HdNextPSchema = newHd;
 	     else
-		LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens = newHd;
+		pSchS->SsFirstPSchemaExtens = newHd;
 	  }
 	else
 	  {
@@ -230,16 +259,18 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PSchema             TtaGetFirstPSchema (Document document)
+PSchema             TtaGetFirstPSchema (Document document, SSchema nature)
 
 #else  /* __STDC__ */
-PSchema             TtaGetFirstPSchema (document)
+PSchema             TtaGetFirstPSchema (document, nature)
 Document            document;
+SSchema		    nature;
 
 #endif /* __STDC__ */
 
 {
    PtrPSchema          pSchPres;
+   PtrSSchema	       pSchS;
 
    pSchPres = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
@@ -247,9 +278,15 @@ Document            document;
    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter doc is OK */
-   if (LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens != NULL)
-      pSchPres = LoadedDocument[document - 1]->DocSSchema->SsFirstPSchemaExtens->HdPSchema;
+     {
+       /* parameter doc is OK */
+       if (nature == NULL)
+	 pSchS = LoadedDocument[document - 1]->DocSSchema;
+       else
+	 pSchS = (PtrSSchema) nature;
+       if (pSchS->SsFirstPSchemaExtens != NULL)
+       pSchPres = pSchS->SsFirstPSchemaExtens->HdPSchema;
+     }
    return ((PSchema) pSchPres);
 }
 
@@ -270,12 +307,13 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaNextPSchema (PSchema * schema, Document document)
+void                TtaNextPSchema (PSchema * schema, Document document, SSchema nature)
 
 #else  /* __STDC__ */
-void                TtaNextPSchema (schema, document)
+void                TtaNextPSchema (schema, document, nature)
 PSchema            *schema;
 Document            document;
+SSchema		    nature;
 
 #endif /* __STDC__ */
 
@@ -284,7 +322,7 @@ Document            document;
    PtrHandlePSchema    pHd;
 
    pSchPres = NULL;
-   pHd = HandleOfPSchema (*schema, document);
+   pHd = HandleOfPSchema (*schema, document, nature);
    if (pHd != NULL)
       if (pHd->HdNextPSchema != NULL)
 	 pSchPres = pHd->HdNextPSchema->HdPSchema;

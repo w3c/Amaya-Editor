@@ -51,7 +51,7 @@ extern PSchema      TtaNewPSchema ();
    document: the document to which that presentation schema is related.
 
   ----------------------------------------------------------------------*/
-extern void         TtaRemovePSchema (PSchema schema, Document document);
+extern void         TtaRemovePSchema (PSchema schema, Document document, SSchema nature);
 
 /*----------------------------------------------------------------------
    TtaAddPSchema
@@ -73,7 +73,7 @@ extern void         TtaRemovePSchema (PSchema schema, Document document);
    document: the document to which the presentation schema is added.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document);
+extern void         TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document, SSchema nature);
 
 /*----------------------------------------------------------------------
    TtaGetFirstPSchema
@@ -86,7 +86,7 @@ extern void         TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean be
    document: the document of interest.
 
   ----------------------------------------------------------------------*/
-extern PSchema      TtaGetFirstPSchema (Document document);
+extern PSchema      TtaGetFirstPSchema (Document document, SSchema nature);
 
 /*----------------------------------------------------------------------
    TtaNextPSchema
@@ -102,7 +102,7 @@ extern PSchema      TtaGetFirstPSchema (Document document);
    schema: the next schema, or NULL if there is no next schema.
 
   ----------------------------------------------------------------------*/
-extern void         TtaNextPSchema ( /*INOUT*/ PSchema * schema, Document document);
+extern void         TtaNextPSchema ( /*INOUT*/ PSchema * schema, Document document, SSchema nature);
 
 #else  /* __STDC__ */
 

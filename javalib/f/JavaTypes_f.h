@@ -6,22 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern jlong FetchJLongFromJavaVM ( jlong *address );
-extern void StoreJLongInJavaVM ( jlong value,
-                                 jlong *address );
-extern void *FetchPtrFromJavaVM ( jlong *address );
-extern void StorePtrToJavaVM ( void *ptr,
-                               jlong *address );
-extern jint FetchIntFromJavaVM ( jint *address );
-extern void StoreIntToJavaVM ( jint value,
-                               jint *address );
-extern char FetchCharFromJavaVM ( jint *address );
-extern void StoreCharToJavaVM ( char value,
-                                jint *address );
-extern struct Hjava_lang_String* FetchStrFromJavaVM ( struct Hjava_lang_String** address );
-extern void StoreStrToJavaVM ( struct Hjava_lang_String* value,
-                               struct Hjava_lang_String** address );
-extern void *JavaLongPtr2CIntPtr ( jlong *in );
 extern void initJavaTypes ( void );
 extern void *JavaLong2CPtr ( jlong in );
 extern jlong CPtr2JavaLong ( void *in );
@@ -65,10 +49,6 @@ extern void JavaLanguage2CLanguagePtr ( struct Hthotlib_Language* in,
                                         Language **out );
 extern void CLanguagePtr2JavaLanguage ( Language *in,
                                         struct Hthotlib_Language** out );
-extern void JavaStringBuffer2CcharPtr ( struct Hjava_lang_StringBuffer* in,
-                                        char **out );
-extern void CcharPtr2JavaStringBuffer ( char *in,
-                                        struct Hjava_lang_StringBuffer** out );
 extern void CPixmap2Javalong ( Pixmap in,
                                jlong *out );
 extern void Javalong2CPixmap ( jlong in,
@@ -93,25 +73,13 @@ extern void CThotWidget2Javalong ( ThotWidget in,
                                    jlong *out );
 extern void Javalong2CThotWidget ( jlong in,
                                    ThotWidget *out );
+extern void JavaStringBuffer2CcharPtr ( struct Hjava_lang_StringBuffer* in,
+                                        char **out );
+extern void CcharPtr2JavaStringBuffer ( char *in,
+                                        struct Hjava_lang_StringBuffer** out );
 
 #else /* __STDC__ */
 
-extern jlong FetchJLongFromJavaVM (/* jlong *address */);
-extern void StoreJLongInJavaVM (/* jlong value,
-                                   jlong *address */);
-extern void *FetchPtrFromJavaVM (/* jlong *address */);
-extern void StorePtrToJavaVM (/* void *ptr,
-                                 jlong *address */);
-extern jint FetchIntFromJavaVM (/* jint *address */);
-extern void StoreIntToJavaVM (/* jint value,
-                                 jint *address */);
-extern char FetchCharFromJavaVM (/* jint *address */);
-extern void StoreCharToJavaVM (/* char value,
-                                  jint *address */);
-extern struct Hjava_lang_String* FetchStrFromJavaVM (/* struct Hjava_lang_String** address */);
-extern void StoreStrToJavaVM (/* struct Hjava_lang_String* value,
-                                 struct Hjava_lang_String** address */);
-extern void *JavaLongPtr2CIntPtr (/* jlong *in */);
 extern void initJavaTypes (/* void */);
 extern void *JavaLong2CPtr (/* jlong in */);
 extern jlong CPtr2JavaLong (/* void *in */);
@@ -155,10 +123,6 @@ extern void JavaLanguage2CLanguagePtr (/* struct Hthotlib_Language* in,
                                           Language **out */);
 extern void CLanguagePtr2JavaLanguage (/* Language *in,
                                           struct Hthotlib_Language** out */);
-extern void JavaStringBuffer2CcharPtr (/* struct Hjava_lang_StringBuffer* in,
-                                          char **out */);
-extern void CcharPtr2JavaStringBuffer (/* char *in,
-                                          struct Hjava_lang_StringBuffer** out */);
 extern void CPixmap2Javalong (/* Pixmap in,
                                  jlong *out */);
 extern void Javalong2CPixmap (/* jlong in,
@@ -183,6 +147,10 @@ extern void CThotWidget2Javalong (/* ThotWidget in,
                                      jlong *out */);
 extern void Javalong2CThotWidget (/* jlong in,
                                      ThotWidget *out */);
+extern void JavaStringBuffer2CcharPtr (/* struct Hjava_lang_StringBuffer* in,
+                                          char **out */);
+extern void CcharPtr2JavaStringBuffer (/* char *in,
+                                          struct Hjava_lang_StringBuffer** out */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -4299,6 +4299,7 @@ int                 type;
 	    case HTML_EL_LINK:
 	       father = CreateWWWElement (doc, HTML_EL_Links);
 	       break;
+
 	    default:
 #ifdef AMAYA_DEBUG
 	       fprintf (stderr, "Don't know how to create father of type %d\n", type);
