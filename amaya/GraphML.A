@@ -2,17 +2,14 @@ APPLICATION GraphML;
 
 DEFAULT
    BEGIN
-   ElemActivate.Pre -> DoubleClick;
-   ElemClick.Pre -> SimpleClick;
-   ElemPaste.Post -> GraphElemPasted;
-   PRuleCreate.Pre -> GraphicsPRuleChange;
-   PRuleModify.Pre -> GraphicsPRuleChange;
-   PRuleCreate.Post -> GraphicsPRuleChanged;
-   PRuleModify.Post -> GraphicsPRuleChanged;
-   ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
-   DocClose.Post -> DocumentClosed;
-   DocSave.Pre -> DocumentToSave;
-   ViewClose.Pre -> ViewToClose;
+	ElemActivate.Pre -> DoubleClick;
+	ElemClick.Pre -> SimpleClick;
+	ElemPaste.Post -> GraphElemPasted;
+	PRuleCreate.Pre -> GraphicsPRuleChange;
+	PRuleModify.Pre -> GraphicsPRuleChange;
+	PRuleCreate.Post -> GraphicsPRuleChanged;
+	PRuleModify.Post -> GraphicsPRuleChanged;
+	ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
    END;
 
 ELEMENTS
