@@ -388,177 +388,189 @@ void WIN_ReleaseDeviceContext ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BOOL parseAccelerator (STRING accelerator)
+static BOOL GetKey (STRING word, BYTE *fVirt, CHAR_T *key)
 #else  /* !__STDC */
-BOOL parseAccelerator (accelrator)
-STRING accelerator;
+static BOOL GetKey (word, fVirt, key)
+STRING      word;
+BYTE       *fVirt;
+CHAR_T     *key;
+#endif /* __STDC__ */
+{
+  if (!ustrcmp (word, "F1"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F1;
+    }
+  else if (!ustrcmp (word, "F2"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F2;
+    }
+  else if (!ustrcmp (word, "F3"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F3;
+    }
+  else if (!ustrcmp (word, "F4"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F4;
+    }
+  else if (!ustrcmp (word, "F5"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F5;
+    }
+  else if (!ustrcmp (word, "F6"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F6;
+    }
+  else if (!ustrcmp (word, "F7"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F7;
+    }
+  else if (!ustrcmp (word, "F8"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F8;
+    }
+  else if (!ustrcmp (word, "F9"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F9;
+    }
+  else if (!ustrcmp (word, "F10"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F10;
+    }
+  else if (!ustrcmp (word, "F11"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F11;
+    }
+  else if (!ustrcmp (word, "F12"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F12;
+    }
+  else if (!ustrcmp (word, "F13"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F13;
+    }
+  else if (!ustrcmp (word, "F14"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F14;
+    }
+  else if (!ustrcmp (word, "F15"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F15;
+    }
+  else if (!ustrcmp (word, "F16"))
+    {
+      *fVirt |= FVIRTKEY;
+      *key = VK_F16;
+    }
+  else if (ustrlen (word) == 1)
+    *key = word [0];
+  else
+    return FALSE;
+  return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static BOOL parseAccelerator (STRING accelerator, BYTE *fVirt, CHAR_T *key)
+#else  /* !__STDC */
+static BOOL parseAccelerator (accelrator, fVirt, key)
+STRING      accelerator;
+BYTE       *fVirt;
+CHAR_T     *key;
 #endif /* __STDC__ */
 {
    STRING   pc;
    STRING   pw;
-   CHAR_T    word [1024];
-   BOOL    getEquivChar = FALSE;
+   CHAR_T   word [1024];
+   BYTE     k;
+   BOOL     getEquivChar = FALSE;
 
-   fVirt = FNOINVERT;
+   *fVirt = FNOINVERT;
    if (!accelerator || accelerator [0] == EOS)
       return FALSE;
 
    pw = &word [0];
    pc = accelerator;
-   while (*pc) {
-         while (*pc == SPACE || *pc == TAB)
-               pc++;
-         while (*pc != SPACE && *pc != TAB)
-               *pw++ = *pc++;
-         *pw = EOS;
-
+   while (*pc)
+     {
+       while (*pc == SPACE || *pc == TAB)
+	 pc++;
+       while (*pc != SPACE && *pc != TAB)
+	 *pw++ = *pc++;
+       *pw = EOS;
+       
          if (!ustrcmp (word, "Ctrl")) 
-            return FALSE;
+	   return FALSE;
          else if (!ustrcmp (word, "Alt"))
-              fVirt |= FALT;
+	   *fVirt |= FALT;
          else if (!ustrcmp (word, "Shift"))
-              fVirt |= FSHIFT;
-
+	   *fVirt |= FSHIFT;
+	 
          while (*pc == SPACE || *pc == TAB)			  
-               pc++;
-
+	   pc++;
+	 
          pw = &word [0];
          while (*pc && *pc != SPACE && *pc != TAB)
-                    *pw++ = *pc++;
+	   *pw++ = *pc++;
          *pw = EOS;
-
+	 
          if (!ustrcmp (word, "Ctrl")) 
-            return FALSE;
-         else if (!ustrcmp (word, "Alt")) {
-              fVirt |= FALT;
-              getEquivChar = TRUE;
-         } else if (!ustrcmp (word, "Shift")) {
-                fVirt |= FSHIFT;
-                getEquivChar = TRUE;
-         } else {
-              if (!ustrcmp (word, "F1")) {
-                 fVirt |= FVIRTKEY;
-                 key = VK_F1;
-			  } else if (!ustrcmp (word, "F2")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F2;
-			  } else if (!ustrcmp (word, "F3")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F3;
-			  } else if (!ustrcmp (word, "F4")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F4;
-			  } else if (!ustrcmp (word, "F5")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F5;
-			  } else if (!ustrcmp (word, "F6")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F6;
-			  } else if (!ustrcmp (word, "F7")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F7;
-			  } else if (!ustrcmp (word, "F8")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F8;
-			  } else if (!ustrcmp (word, "F9")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F9;
-			  } else if (!ustrcmp (word, "F10")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F10;
-			  } else if (!ustrcmp (word, "F11")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F11;
-			  } else if (!ustrcmp (word, "F12")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F12;
-			  } else if (!ustrcmp (word, "F13")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F13;
-			  } else if (!ustrcmp (word, "F14")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F14;
-			  } else if (!ustrcmp (word, "F15")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F15;
-			  } else if (!ustrcmp (word, "F16")) {
-                     fVirt |= FVIRTKEY;
-                     key = VK_F16;
-			  } else if (ustrlen (word) == 1)
-                     key = word [0];
-              else 
-                  return FALSE;
-		 }
-
-         if (getEquivChar) {
-            while (*pc && *pc == SPACE || *pc == TAB)			  
-                  pc++;
-
-            pw = &word [0];
-            while ((*pc >= 'A' && *pc <= 'Z') || (*pc >= 'a' && *pc <= 'z') || (*pc >= '0' && *pc <= '9'))
-                  *pw++ = *pc++;
-            *pw = EOS;
-              	
-            if (!ustrcmp (word, "F1")) {
-               fVirt |= FVIRTKEY;
-               key = VK_F1;
-            } else if (!ustrcmp (word, "F2")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F2;
-            } else if (!ustrcmp (word, "F3")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F3;
-            } else if (!ustrcmp (word, "F4")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F4;
-            } else if (!ustrcmp (word, "F5")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F5;
-            } else if (!ustrcmp (word, "F6")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F6;
-			} else if (!ustrcmp (word, "F7")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F7;
-            } else if (!ustrcmp (word, "F8")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F8;
-            } else if (!ustrcmp (word, "F9")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F9;
-            } else if (!ustrcmp (word, "F10")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F10;
-            } else if (!ustrcmp (word, "F11")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F11;
-            } else if (!ustrcmp (word, "F12")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F12;
-            } else if (!ustrcmp (word, "F13")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F13;
-            } else if (!ustrcmp (word, "F14")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F14;
-            } else if (!ustrcmp (word, "F15")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F15;
-            } else if (!ustrcmp (word, "F16")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_F16;
-			} else if (!ustrcmp (word, "Return")) {
-                   fVirt |= FVIRTKEY;
-                   key = VK_RETURN;
-            } else if (ustrlen (word) == 1)
-                   key = word [0];
-            else
-                return FALSE;
-		 }
+	   return FALSE;
+         else if (!ustrcmp (word, "Alt"))
+	   {
+	     *fVirt |= FALT;
+	     getEquivChar = TRUE;
+	   }
+	 else if (!ustrcmp (word, "Shift"))
+	   {
+	     *fVirt |= FSHIFT;
+	     getEquivChar = TRUE;
+	   }
+	 else if (!GetKey (word, fVirt, key))
+	   return FALSE;
+	 
+         if (getEquivChar)
+	   {
+	     while (*pc && *pc == SPACE || *pc == TAB)			  
+	       pc++;
+	     
+	     pw = &word [0];
+	     /* accept specifics characters + = - etc., but without shift */
+	     if (*pc >= '!' && *pc <= '@')
+	       {
+			 k = ~FSHIFT;
+		 *fVirt &= k;
+		 *pw++ = *pc++;
+	       }
+	     else
+	       while ((*pc >= 'A' && *pc <= 'Z') ||
+		      (*pc >= 'a' && *pc <= 'z') ||
+		      (*pc >= '0' && *pc <= '9'))
+	       *pw++ = *pc++;
+	     *pw = EOS;
+	     if (!GetKey (word, fVirt, key))	
+	       return FALSE;
+	   }
 
          while (*pc) 
-               pc++;
-   }
+	   pc++;
+     }
    return TRUE;
 }
 
@@ -3016,7 +3028,7 @@ STRING              equiv;
 		       {
 #                         ifdef _WINDOWS
                           if (&equiv[eindex] != EOS) {
-                             if (parseAccelerator (&equiv[eindex]))
+                             if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                 addAccelerator (currentFrame, fVirt, key, ref + i);
                              usprintf (equiv_item, "%s", &equiv[eindex]); 
                           }
@@ -3546,7 +3558,7 @@ CHAR_T                button;
 		       {
 #                         ifdef _WINDOWS
                           if (&equiv[eindex] != EOS) {
-                             if (parseAccelerator (&equiv[eindex]))
+                             if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                 addAccelerator (1, fVirt, key, ref + i);
                           }
                           eindex += ustrlen (&equiv[eindex]) + 1;
@@ -4211,7 +4223,7 @@ ThotBool            react;
 			 {
 #                           ifdef _WINDOWS
                             if (&equiv[eindex] != EOS) {
-                               if (parseAccelerator (&equiv[eindex]))
+                               if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                   addAccelerator (1, fVirt, key, ref);
                             }
                             eindex += ustrlen (&equiv[eindex]) + 1;
@@ -4438,7 +4450,7 @@ ThotBool            react;
 			 {
 #                           ifdef _WINDOWS
                             if (&equiv[eindex] != EOS) {
-                               if (parseAccelerator (&equiv[eindex]))
+                               if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                   addAccelerator (currentFrame, fVirt, key, ref + i);
                                usprintf (equiv_item, "%s", &equiv[eindex]);
                             }
