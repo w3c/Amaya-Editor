@@ -4289,7 +4289,7 @@ RULES
 	   BEGIN
 	   Size: Enclosing * 70 %;
 	   HorizPos: VMiddle = rb . VMiddle;
-	   VertPos: Bottom = rb . Top;
+	   VertPos: Bottom = rb . Top + 0.2;
 	   END;
 	IN Structure_view BEGIN
 		Weight: Enclosing =;
@@ -4343,7 +4343,7 @@ RULES
 	CreateLast (ClosingParen);
 	Size: Enclosing * 70 %;
 	HorizPos: VMiddle = rbc . VMiddle;
-	VertPos: Bottom = rbc . Top;
+	VertPos: Bottom = rbc . Top + 0.2;
 	IN Structure_view BEGIN
 		Weight: Enclosing =;
 		Size: Enclosing =;
@@ -4365,7 +4365,7 @@ RULES
 	CreateLast (ClosingParen);
 	Size: Enclosing * 70 %;
 	HorizPos: VMiddle = rbc . VMiddle;
-	VertPos: Top = rbc . Bottom;
+	VertPos: Top = rbc . Bottom - 0.2;
 	IN Structure_view BEGIN
 		Weight: Enclosing =;
 		Size: Enclosing =;
