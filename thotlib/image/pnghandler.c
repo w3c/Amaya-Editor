@@ -662,7 +662,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  Pixmap           pixmap = (Pixmap) NULL, mask = (Pixmap) NULL;
+  Pixmap           pixmap = (Pixmap) NULL;
   ThotColorStruct *colrs = NULL;
 #if defined (_WINDOWS) && !defined (_GL)
   unsigned short   red, green, blue;
@@ -749,12 +749,12 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       imageDesc->PicBgMask = bg;
 #else  /* _WINDOWS */
       /* register the transparent mask */
-      mask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
+      imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
 #endif /* _WINDOWS */
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   if (withAlpha)
-    mask = buffer;
+    imageDesc->PicMask = buffer;
   else
     TtaFreeMemory (buffer);
 #else /*_GL*/
@@ -770,7 +770,6 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       *hif = h;      
       *xif = 0;
       *yif = 0;
-      imageDesc->PicMask = mask;
     }
   return (Drawable) pixmap;
 }
