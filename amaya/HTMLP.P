@@ -3762,7 +3762,7 @@ RULES
 	LineBreak: No;
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
-	HorizRef: * . HMiddle;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: 0;
