@@ -37,7 +37,7 @@ force :
 
 tools: rebuild force
 	@(if test -d tools ; then cd tools ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="-O" all ; fi)
 
 thotlib: rebuild force
 	@(if test -d thotlib ; then cd thotlib ; \
@@ -46,6 +46,10 @@ thotlib: rebuild force
 thot: rebuild force
 	@(if test -d thot ; then cd thot ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" thot ; fi)
+
+html2piv: rebuild force
+	@(if test -d amaya ; then cd amaya ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" html2piv ; fi)
 
 amaya: rebuild force
 	@(if test -d amaya ; then cd amaya ; \
@@ -107,7 +111,7 @@ zips: force
 # 	  cd $(THOTDIR)/classes ; $(MAKE) zips)
 
 tools/mkdep/mkdep :
-	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" mkdep)
+	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="-O" mkdep)
 
 depend depends : rebuild tools/mkdep/mkdep
 	@(for dir in $(SUBDIRS) ;\
@@ -116,7 +120,7 @@ depend depends : rebuild tools/mkdep/mkdep
 	  cd .. ; fi ;done )
 
 bin/cextract :
-	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" cextract)
+	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="-O" CFLAGS="$(CFLAGS)" cextract)
 
 proto : rebuild bin/cextract
 	@(for dir in $(SUBDIRS) ;\
@@ -169,7 +173,7 @@ libwww libwww.a :
 
 libjpeg libjpeg.a : force
 	@($(RM) $(THOTDIR)/libjpeg/*.o)
-	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
 #
 # Rules to rebuild the libpng package
@@ -177,7 +181,7 @@ libjpeg libjpeg.a : force
 
 libpng libpng.a : force
 	@($(RM) $(THOTDIR)/libpng/*.o)
-	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
 #
 # Rules to rebuild the libpng package
@@ -185,7 +189,7 @@ libpng libpng.a : force
 
 libz libz.a : force
 	@($(RM) $(THOTDIR)/libpng/libz/*.o)
-	@(cd libpng/libz ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd libpng/libz ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
 #
 # Rules to rebuild the Kaffe package

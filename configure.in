@@ -297,6 +297,11 @@ else
   fi
   if test "$motif_libraries" != "/usr/lib" ; then
     MOTIF_LIBRARIES="-L$motif_libraries"
+    case "${host}" in
+        *-*sun-solaris* )
+         MOTIF_LIBRARIES="${MOTIF_LIBRARIES} -R$motif_libraries"
+        ;;
+    esac    
   fi
 fi
 AC_SUBST(MOTIF_INCLUDES)
@@ -336,8 +341,6 @@ dnl
 dnl Adjust the some variables depending on the host and compiler
 dnl Thot NEED signed chars !!!
 dnl
-
-default_www_access="libwww"
 
 KAFFE_ENGINE=""
 if test "${CC}" = "gcc" ; then
@@ -449,20 +452,8 @@ dnl
 dnl java is disabled by default
 dnl
 
-if test "$with_java" = "" ; then
-    if test "default_www_access" = "libwww" ; then
-	if test "$enable_java" = "yes" ; then
-	    with_java="yes"
-	else
-	    with_java="no"
-	fi
-    else
-	if test "$enable_java" = "yes" ; then
-	    with_java="yes"
-	else
-	    with_java="no"
-	fi
-    fi
+if test "$enable_java" = "yes" ; then
+    with_java="yes"
 fi
 
 dnl
@@ -499,7 +490,8 @@ if test "$with_ilu" = "" ; then
     fi
 fi
 
-if test "$build_amaya" = "yes" ; then 
+if test "$build_amaya" = "yes" ; then
+
     if test ! -f $srcdir/kaffe-$KAFFE_VER/Makefile.in ; then
 	if test "$with_java" = "yes" ; then
 	    AC_MSG_WARN(kaffe-$KAFFE_VER sources not found, disabling Java !)
@@ -705,34 +697,32 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
 
 if test "$build_amaya" = "yes" ; then
 
-    make_output="$make_output amaya/Makefile \
-tools/javastub/Makefile tools/dns_daemon/Makefile javalib/Makefile \
-pluginlib/Makefile"
-
+    make_output="$make_output amaya/Makefile pluginlib/Makefile"
     EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
 $srcdir/amaya/Makefile.libwww \
-$srcdir/tools/javastub/Makefile.in \
-$srcdir/tools/dns_daemon/Makefile.in \
-$srcdir/javalib/Makefile.in \
 $srcdir/pluginlib/Makefile.in \
 $srcdir/pluginlib/Makefile.plugin"
 
-if test "$with_ilu" = "yes" ; then
+    if test "$with_java" = "yes" ; then
+       make_output="$make_output tools/javastub/Makefile \
+tools/dns_daemon/Makefile javalib/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/tools/javastub/Makefile.in \
+$srcdir/tools/dns_daemon/Makefile.in \
+$srcdir/javalib/Makefile.in"
+    fi
 
-    make_output="$make_output ilulib/Makefile tools/ilustub/Makefile"
-
-    EXTRA_MAKEFILE_IN="$srcdir/ilulib/Makefile.in \
+    if test "$with_ilu" = "yes" ; then
+       make_output="$make_output ilulib/Makefile tools/ilustub/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/ilulib/Makefile.in \
 $srcdir/ilulib/Makefile.ilu \
 $srcdir/tools/ilustub/Makefile.in"
-
-fi
+    fi
 fi
 
 if test "$build_thot" = "yes" ; then
 
     make_output="$make_output thot/Makefile \
 drawlib/Makefile indexlib/Makefile"
-
     EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
 $srcdir/thot/Makefile.in \
 $srcdir/drawlib/Makefile.in \
@@ -745,12 +735,11 @@ $srcdir/indexlib/Makefile.in"
 $srcdir/misc/Makefile.in"
 
 	if test "$build_annotations" = "yes" ; then
-
 	    make_output="$make_output misc/annotations/Makefile"
 	    EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN \
 $srcdir/misc/annotations/Makefile.in"
-
 	fi
+
 	if test "$build_util" = "yes" ; then
 
 	    make_output="$make_output misc/util/Makefile"
