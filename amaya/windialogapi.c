@@ -3454,7 +3454,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DIDTYPE_VAL, content);
 
       /* MIME type */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, "MIME TYPE");
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, "MIME Type");
       if (DocumentMeta[doc] && DocumentMeta[doc]->content_type != NULL)
 	content  = DocumentMeta[doc]->content_type;
       else
@@ -3462,7 +3462,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, content);
 
       /* charset */
-      SetDlgItemText (hwnDlg, IDC_DICHARSET, "CHARSET");
+      SetDlgItemText (hwnDlg, IDC_DICHARSET, "Charset");
       if (DocumentMeta[doc] && DocumentMeta[doc]->charset != NULL)
 	content = DocumentMeta[doc]->charset;
       else
@@ -3470,7 +3470,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, content);
 
       /* content length */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, "CONTENT LENGTH");
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, "Content Length");
       if (DocumentMeta[doc] && DocumentMeta[doc]->content_length != NULL)
 	content = DocumentMeta[doc]->content_length;
       else
@@ -3478,7 +3478,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, content);
 
 	  /* content location */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLOC, "CONTENT LOCATION");
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLOC, "Content Location");
       if (DocumentMeta[doc] && DocumentMeta[doc]->content_location != NULL)
 	     content = DocumentMeta[doc]->content_location;
       else
