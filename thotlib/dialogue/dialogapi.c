@@ -595,7 +595,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
 #ifdef _GTK
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    
-   /* initialize local before gtk, order is important */
+   /* initialize local before gtk_init_* , order is important */
    gtk_set_locale ();
    
    /* init gtk */
