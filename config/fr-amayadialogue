@@ -89,7 +89,7 @@
 88 Terme (dt)
 89 Définition (dd)
 90 Math
-91 math
+91 Nouvelle formule (math)
 92 Racine (mroot)
 93 Racine carrée (msqrt)
 94 Fraction (mfrac)
@@ -99,10 +99,10 @@
 98 Dessous et dessus (munderover)
 99 Dessous (munder)
 100 Dessus (mover)
-101 Parenthèses (mf)
+101 Parenthèses (mrow)
 102 Multiscripts (mmultiscripts)
 103 Matrice (mtable)
-104 Détruire colonne de matrice
+104 Détruire une colonne de matrice
 105 noscript
 106 Objet
 107 Objet (object)

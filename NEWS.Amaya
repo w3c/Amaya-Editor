@@ -20,6 +20,10 @@ Extensions 2.5:
   - The "media" attribute attached to a link to a style sheet is now
     interpreted by Amaya.
 
+* MathML
+  - When the user creates or modifies an expression, the MathML editor
+    recognize function names and generates separate MI elements for them.
+
 Fixed bugs 2.5:
 ---------------
 

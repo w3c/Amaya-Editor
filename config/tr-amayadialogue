@@ -89,7 +89,7 @@
 88 Terim (dt)
 89 Taným (dd)
 90 Matematik
-91 math
+91 Matematik (math)
 92 Kök (mroot)
 93 Karekök (msqrt)
 94 Kesir (mfrac)
@@ -99,7 +99,7 @@
 98 altýnda veya üstünde (munderover)
 99 altýnda (munder)
 100 üstünde (mover)
-101 Parantezler (mf)
+101 Parantezler (mrow)
 102 Multiscripts (mmultiscripts)
 103 Matris (mtable)
 104 **Delete matrix column

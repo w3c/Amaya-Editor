@@ -99,7 +99,7 @@
 98 Term mit Unter- und Überschrift (munderover)
 99 Term mit Unterschrift (munder)
 100 Term mit Überschrift (mover)
-101 Term in Klammern (mf)
+101 Term in Klammern (mrow)
 102 Term mit Indices links/rechts oben/unten (mmultiscripts)
 103 Matrix (mtable)
 104 Matrixspalte löschen

@@ -89,7 +89,7 @@
 88 Termine (dt)
 89 Definizione (dd)
 90 Math
-91 math
+91 math (math)
 92 Radice (mroot)
 93 Radice quadrata (msqrt)
 94 Frazione (mfrac)
@@ -99,7 +99,7 @@
 98 Sotto e sopra (munderover)
 99 Sotto (munder)
 100 Sopra (mover)
-101 Parentesi (mf)
+101 Parentesi (mrow)
 102 Multiscripts (mmultiscripts)
 103 Matrice (mtable)
 104 Cancella colonna della matrice

@@ -89,7 +89,7 @@
 88 Term (dt)
 89 Definition (dd)
 90 Math
-91 Formula (math)
+91 New formula (math)
 92 Root (mroot)
 93 Square root (msqrt)
 94 Fraction (mfrac)
@@ -99,7 +99,7 @@
 98 Under and over (munderover)
 99 Under (munder)
 100 Over (mover)
-101 Parentheses (mf)
+101 Parentheses (mrow)
 102 Multiscripts (mmultiscripts)
 103 Matrix (mtable)
 104 Delete matrix column
