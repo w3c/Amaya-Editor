@@ -1368,22 +1368,19 @@ void                TtaMainLoop ()
 	  NewMainLoop ();
 	  continue;
 	}
-#ifndef _WINDOWS
+#     ifndef _WINDOWS
       TtaFetchOneEvent (&ev);
       TtaHandleOneEvent (&ev);
-#else  /* !_WINDOWS */
-      if (GetMessage (&msg, NULL, 0, 0))
-	{			
-	  frame = GetFrameNumber (msg.hwnd);
-	  if (frame != -1)
-	    {
-	      if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg))
-		TtaHandleOneWindowEvent (&msg);
-            }
-	  else
-	    TtaHandleOneWindowEvent (&msg);
+#     else  /* !_WINDOWS */
+      if (GetMessage (&msg, NULL, 0, 0)) {			
+         frame = GetFrameNumber (msg.hwnd);
+         if (frame != -1) {
+            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg))
+               TtaHandleOneWindowEvent (&msg);
+		 } else
+               TtaHandleOneWindowEvent (&msg);
 	}
-#endif /* _WINDOWS */
+#     endif /* _WINDOWS */
     }
 }
 

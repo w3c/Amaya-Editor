@@ -371,7 +371,7 @@ int                 y;
 	  return;
    } 
    li = (y - 60) / 15;
-   co = x / 35;
+   co = x / 39;
    color = co + li * COLORS_COL;
 #  endif /* _WINDOWS */
    if (button == Button1)
@@ -659,6 +659,7 @@ int                 y;
 #  else  /* _WINDOWS */
    WNDCLASSEX  wndThotPaletteClass ;
    HWND  HwndColorPal;
+   int   frame;
    static char szAppName[] = "ThotColorPalette" ;
    MSG         msg;
 
@@ -688,15 +689,23 @@ int                 y;
                                DS_MODALFRAME | WS_POPUP | 
                                WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                ClickX, ClickY,
-                               280, 400,
+                               320, 400,
                                NULL, NULL, hInstance, NULL) ;
 
    ShowWindow (HwndColorPal, SW_SHOWNORMAL) ;
    UpdateWindow (HwndColorPal) ;
 
    while (GetMessage (&msg, NULL, 0, 0)) {
-         TranslateMessage (&msg) ;
-         DispatchMessage (&msg) ;
+         frame = GetFrameNumber (msg.hwnd);
+         if (frame != -1) {
+            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
+               TranslateMessage (&msg) ;
+               DispatchMessage (&msg) ;
+			}
+		 } else {
+                TranslateMessage (&msg) ;
+                DispatchMessage (&msg) ;
+		 }
    }
    return TRUE;
 #  endif /* _WINDOWS */
@@ -731,24 +740,24 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
      switch (iMsg) {
 	      case WM_CREATE:
-			   cxBlock = 35 ;
+			   cxBlock = 39 ;
 			   cyBlock = 15 ;
 
 			   hwnLButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_1), 
-				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 274, 20,
+				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
 										  hwnd, (HMENU) 99, hInstance, NULL) ;
                ShowWindow (hwnLButton, SW_SHOWNORMAL);
                UpdateWindow (hwnLButton);
 
 			   hwnRButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_2), 
-				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 274, 20,
+				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
 										  hwnd, (HMENU) 101, hInstance, NULL) ;
                ShowWindow (hwnRButton, SW_SHOWNORMAL);
                UpdateWindow (hwnRButton);
 
 			   hwnDefaultColors = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_STD_COLORS), 
-				                                WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 274, 20,
-										        hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL) ;
+				                                WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
+										        hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL) ; 
                ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
                UpdateWindow (hwnDefaultColors);
 
@@ -768,13 +777,13 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
                   /* Switch off last FG color */
                   if (WIN_LastFg >= 0 && WIN_LastFg != WIN_CurrentFg) {
-                     x = (WIN_LastFg % COLORS_COL) * 35;
+                     x = (WIN_LastFg % COLORS_COL) * 39;
                      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
 
                      hdc = GetDC (hwnd) ;
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
                      hOldBrush = SelectObject (hdc, hBrush);
-                     if (!Rectangle (hdc, x, y, x + 35, y + 15))
+                     if (!Rectangle (hdc, x, y, x + 39, y + 15))
                         WinErrorBox (NULL);;
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
@@ -785,7 +794,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                   /* Switch on last FG color */
                   if (WIN_LastFg != WIN_CurrentFg) {
                      WIN_LastFg = WIN_CurrentFg;
-                     x = (WIN_LastFg % COLORS_COL) * 35;
+                     x = (WIN_LastFg % COLORS_COL) * 39;
                      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
                      x += 1;
                      y += 1;
@@ -798,7 +807,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
                      hOldPen = SelectObject (hdc, hPen);
                      hOldBrush = SelectObject (hdc, hBrush);
-                     Rectangle (hdc, x, y, x + 33, y + 13);
+                     Rectangle (hdc, x, y, x + 37, y + 13);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
                      SelectObject (hdc, hOldPen);
@@ -815,13 +824,13 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
                   /* Switch off last BG color */
                   if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg) {
-                     x = (WIN_LastBg % COLORS_COL) * 35;
+                     x = (WIN_LastBg % COLORS_COL) * 39;
                      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
 
                      hdc = GetDC (hwnd) ;
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
                      hOldBrush = SelectObject (hdc, hBrush);
-                     Rectangle (hdc, x, y, x + 35, y + 15);
+                     Rectangle (hdc, x, y, x + 39, y + 15);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
                      SelectObject (hdc, hOldPen);
@@ -832,7 +841,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                   /* Switch on last FG color */
                   if (WIN_LastBg != WIN_CurrentBg) {
                      WIN_LastBg = WIN_CurrentBg;
-                     x = (WIN_LastBg % COLORS_COL) * 35;
+                     x = (WIN_LastBg % COLORS_COL) * 39;
                      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
                      x += 1;
                      y += 1;
@@ -845,7 +854,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
                      hOldPen = SelectObject (hdc, hPen);
                      hOldBrush = SelectObject (hdc, hBrush);
-                     Rectangle (hdc, x, y, x + 33, y + 13);
+                     Rectangle (hdc, x, y, x + 37, y + 13);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
                      SelectObject (hdc, hOldPen);
@@ -861,13 +870,13 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
                   /* Switch off last BG color */
                   if (WIN_LastBg >= 0 && WIN_LastBg != WIN_CurrentBg) {
-                     x = (WIN_LastBg % COLORS_COL) * 35;
+                     x = (WIN_LastBg % COLORS_COL) * 39;
                      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
 
                      hdc = GetDC (hwnd) ;
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
                      hOldBrush = SelectObject (hdc, hBrush);
-                     Rectangle (hdc, x, y, x + 35, y + 15);
+                     Rectangle (hdc, x, y, x + 39, y + 15);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
                      SelectObject (hdc, hOldPen);
@@ -878,7 +887,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                   /* Switch on last FG color */
                   if (WIN_LastBg != WIN_CurrentBg) {
                      WIN_LastBg = WIN_CurrentBg;
-                     x = (WIN_LastBg % COLORS_COL) * 35;
+                     x = (WIN_LastBg % COLORS_COL) * 39;
                      y = (WIN_LastBg / COLORS_COL) * 15 + 60;
                      x += 1;
                      y += 1;
@@ -891,7 +900,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
                      hOldPen = SelectObject (hdc, hPen);
                      hOldBrush = SelectObject (hdc, hBrush);
-                     Rectangle (hdc, x, y, x + 33, y + 13);
+                     Rectangle (hdc, x, y, x + 37, y + 13);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
                      SelectObject (hdc, hOldPen);
@@ -943,7 +952,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                   /* Switch on last FG color */
                if (WIN_CurrentFg >= 0) {
                   WIN_LastFg = WIN_CurrentFg;
-                  x = (WIN_LastFg % COLORS_COL) * 35;
+                  x = (WIN_LastFg % COLORS_COL) * 39;
                   y = (WIN_LastFg / COLORS_COL) * 15 + 60;
                   x += 1;
                   y += 1;
@@ -955,7 +964,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                   hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
                   hOldPen = SelectObject (hdc, hPen);
                   hOldBrush = SelectObject (hdc, hBrush);
-                  Rectangle (hdc, x, y, x + 33, y + 13);
+                  Rectangle (hdc, x, y, x + 37, y + 13);
                   SelectObject (hdc, hOldBrush);
                   DeleteObject (hBrush);
                   SelectObject (hdc, hOldPen);
@@ -967,7 +976,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
               /* Switch on last BG color */
               if (WIN_CurrentBg >= 0 && WIN_CurrentBg != WIN_LastFg) {
                  WIN_LastBg = WIN_CurrentBg;
-                 x = (WIN_LastBg % COLORS_COL) * 35;
+                 x = (WIN_LastBg % COLORS_COL) * 39;
                  y = (WIN_LastBg / COLORS_COL) * 15 + 60;
                  x += 1;
                  y += 1;
@@ -980,7 +989,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                  hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastBg].red, RGB_Table [WIN_LastBg].green, RGB_Table [WIN_LastBg].blue));
                  hOldPen = SelectObject (hdc, hPen);
                  hOldBrush = SelectObject (hdc, hBrush);
-                 Rectangle (hdc, x, y, x + 33, y + 13);
+                 Rectangle (hdc, x, y, x + 37, y + 13);
                  SelectObject (hdc, hOldBrush);
                  DeleteObject (hBrush);
                  SelectObject (hdc, hOldPen);

@@ -2070,6 +2070,7 @@ PtrAbstractBox     *pave;
 #else  /* _WINDOWS */
    MSG                 event;
    HCURSOR             cursor;          
+   int                 curFrame;
 #endif /* _WINDOWS */
    int                 i;
 
@@ -2106,7 +2107,12 @@ PtrAbstractBox     *pave;
          TtaHandleOneEvent (&event);
 #        else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
-         TtaHandleOneWindowEvent (&event);
+         curFrame = GetFrameNumber (event.hwnd);
+         if (curFrame != -1) {
+            if (!hAccel[curFrame] || !TranslateAccelerator (FrMainRef[curFrame], hAccel[curFrame], &event))
+               TtaHandleOneWindowEvent (&event);
+		 } else
+               TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
 #        endif /* !_WINDOWS */
      }

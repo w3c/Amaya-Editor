@@ -3365,7 +3365,7 @@ char                button;
 	  {
 	     /* Creation du Popup Shell pour contenir le menu */
 #            ifdef _WINDOWS
-         menu = parent;
+         /* menu = parent; */
 #            else  /* _WINDOWS */
 	     n = 0;
 	     /*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
@@ -3578,7 +3578,7 @@ char                button;
 		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 #                         ifdef _WINDOWS
-			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
+			  AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #                         else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -4968,11 +4968,30 @@ boolean             on;
 #endif /* _WINDOWS */
 {
 #  ifdef _WINDOWS 
-   HMENU hMenu = GetMenu (owner);
-   if (on)
-      CheckMenuItem (hMenu, ref + val, MF_CHECKED); 
-   else 
-       CheckMenuItem (hMenu, ref + val, MF_UNCHECKED); 
+   struct Cat_Context *catalogue;
+   HMENU              hMenu;
+
+   catalogue = CatEntry (ref);
+   if (catalogue == NULL)
+      TtaError (ERR_invalid_reference);
+   else if (catalogue->Cat_Widget == 0)
+      TtaError (ERR_invalid_reference);
+   else {
+        hMenu = catalogue->Cat_Widget;
+        if (on) {
+			if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
+               hMenu = GetMenu (owner);
+               if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF)
+                  WinErrorBox (NULL);
+			}
+        } else {
+               if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
+                  hMenu = GetMenu (owner);
+                  if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
+                     WinErrorBox (NULL);
+			}
+		}
+   }
 #  else  /* !_WINDOWS  */
    ThotWidget          w;
    Arg                 args[MAX_ARGS];
@@ -6030,24 +6049,16 @@ LPARAM lParam;
    if (frame != - 1) {
       currentParent = FrMainRef [frame];
       catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
-      if (catalogue != NULL)
-         no = LOWORD (wParam) - catalogue->Cat_Ref;
-
       if (catalogue == NULL)
          return;
+
+      no = LOWORD (wParam) - catalogue->Cat_Ref;
 
      switch (catalogue->Cat_Type) {
              case CAT_PULL:
              case CAT_MENU:
              case CAT_POPUP:
                   CallMenu (no, catalogue, NULL);
-                  if (ReturnOption >= 0) {
-                     el = opOption[ReturnOption];
-                     modified = TtaIsDocumentModified (opDoc);
-                     OnlyOneOptionSelected (el, opDoc, FALSE);
-                     if (!modified)
-                        TtaSetDocumentUnmodified (opDoc);
-				  }
                   break;
 
              case CAT_TMENU:
@@ -7690,12 +7701,26 @@ boolean             remanent;
   ----------------------------------------------------------------------*/
 void                TtaWaitShowDialogue ()
 {
-#  ifndef _WINDOWS
    ThotEvent              event;
+#  ifdef _WINDOWS
+   int frame;
+#  endif /* _WINDOWS */
 
    /* Un TtaWaitShowDialogue en cours */
    CurrentWait = 1;
 
+#  ifdef _WINDOWS
+   while (ShowReturn == 1) {
+         if (GetMessage (&event, NULL, 0, 0)) {			
+            frame = GetFrameNumber (event.hwnd);
+            if (frame != -1) {
+               if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &event))
+                  TtaHandleOneWindowEvent (&event);
+			} else
+                   TtaHandleOneWindowEvent (&event);
+	}
+   }
+#  else  /* !_WINDOWS */
    TtaLockMainLoop();
    while (ShowReturn == 1)
      {
@@ -7703,10 +7728,10 @@ void                TtaWaitShowDialogue ()
 	TtaHandleOneEvent (&event);
      }
    TtaUnlockMainLoop();
+#  endif /* _WINDOWS */
 
    /* Fin de l'attente */
    CurrentWait = 0;
-#  endif /* _WINDOWS */
 }
 
 

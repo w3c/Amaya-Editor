@@ -50,6 +50,8 @@ static char         WIN_Lab [1024];
 static int          WIN_nbItem;
 static char         WIN_title [MAX_NAME_LENGTH + 2];
 
+extern int          currentFrame;
+
 int                 WIN_MenuAlphabet;
 char                WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */
@@ -315,6 +317,7 @@ char* title	;
    static char szAppName[] = "FormClass" ;
    HWND        hwnFromDialog;
    MSG         msg;
+   int         frame;
 
    if (!wndRegistered) {
 	  wndRegistered = TRUE;
@@ -347,8 +350,20 @@ char* title	;
    UpdateWindow (hwnFromDialog) ;
 
    while (GetMessage (&msg, NULL, 0, 0)) {
+#        if 0
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
+#        endif /* 0 */
+         frame = GetFrameNumber (msg.hwnd);
+         if (frame != -1) {
+            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
+               TranslateMessage (&msg) ;
+               DispatchMessage (&msg) ;
+			}
+		 } else {
+                TranslateMessage (&msg) ;
+                DispatchMessage (&msg) ;
+		 }
    }
    return TRUE;
 }
@@ -459,6 +474,7 @@ char* title	;
    static char szAppName[] = "SheetClass" ;
    HWND        hwnSheetDialog;
    MSG         msg;
+   int         frame;
 
    if (!wndSheetRegistered) {
 	  wndSheetRegistered = TRUE;
@@ -483,15 +499,27 @@ char* title	;
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                  ClickX, ClickY,
-                                 335, 200,
+                                 335, 230,
                                  parent, NULL, hInstance, NULL) ;
 
    ShowWindow (hwnSheetDialog, SW_SHOWNORMAL) ;
    UpdateWindow (hwnSheetDialog) ;
 
    while (GetMessage (&msg, NULL, 0, 0)) {
+#        if 0
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
+#        endif /* 0 */
+         frame = GetFrameNumber (msg.hwnd);
+         if (frame != -1) {
+            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
+               TranslateMessage (&msg) ;
+               DispatchMessage (&msg) ;
+			}
+		 } else {
+                TranslateMessage (&msg) ;
+                DispatchMessage (&msg) ;
+		 }
    }
    return TRUE;
 }
@@ -528,7 +556,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 			    /* Create static window for the title */
 			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 10, 100, 15, hwnd, (HMENU) 99, 
+										 10, 10, 100, 20, hwnd, (HMENU) 99, 
 										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
 
 			    /* Create Edit Window autoscrolled */
@@ -536,23 +564,23 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 					                    WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
 										WS_BORDER | ES_LEFT | ES_MULTILINE |
 										ES_AUTOHSCROLL | ES_AUTOVSCROLL,
-										10, 30, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+										10, 40, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 				/* Create Apply button */
                 applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
                                             WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            30, 150, 85, 20, hwnd, 
+                                            30, 170, 85, 30, hwnd, 
                                             (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Delete Button */
 				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           120, 150, 85, 20, hwnd, 
+                                           120, 170, 85, 30, hwnd, 
                                            (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
 				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           210, 150, 85, 20, hwnd, 
+                                           210, 170, 85, 30, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 				break;
 
@@ -602,6 +630,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 
 							ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
 							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+                            DestroyWindow (hwnd);
 						    break;
 
 					   case ID_DONE:
@@ -630,6 +659,7 @@ char* title	;
    static char szAppName[] = "NumAttrClass" ;
    HWND        hwnNumAttrDialog;
    MSG         msg;
+   int         frame;
 
    if (!wndNumAttrRegistered) {
 	  wndNumAttrRegistered = TRUE;
@@ -654,15 +684,27 @@ char* title	;
                                     DS_MODALFRAME | WS_POPUP | 
                                     WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                     ClickX, ClickY,
-                                    275, 150,
+                                    275, 180,
                                     parent, NULL, hInstance, NULL) ;
 
    ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL) ;
    UpdateWindow (hwnNumAttrDialog) ;
 
    while (GetMessage (&msg, NULL, 0, 0)) {
+#        if 0
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
+#        endif /* 0 */
+         frame = GetFrameNumber (msg.hwnd);
+         if (frame != -1) {
+            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
+               TranslateMessage (&msg) ;
+               DispatchMessage (&msg) ;
+			}
+		 } else {
+                TranslateMessage (&msg) ;
+                DispatchMessage (&msg) ;
+		 }
    }
    return TRUE;
 }
@@ -692,36 +734,36 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 			    /* Create static window for the title */
 			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 10, 160, 15, hwnd, (HMENU) 1,
+										 10, 10, 160, 25, hwnd, (HMENU) 1,
 										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
 
 			    hwnRange = CreateWindow ("STATIC", formRange, 
 					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
-										 10, 35, 160, 15, hwnd, (HMENU) 2, 
+										 10, 45, 160, 25, hwnd, (HMENU) 2, 
 										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
 
 			    /* Create Edit Window autoscrolled */
 				hwnEdit = CreateWindow ("EDIT", NULL, 
 					                    WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT,
-										10, 60, 250, 20, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+										10, 80, 250, 30, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 				SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
 
 				/* Create Apply button */
                 applyButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_APPLY), 
                                             WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                            10, 90, 80, 20, hwnd, 
+                                            10, 120, 80, 25, hwnd, 
                                             (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Delete Button */
 				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL), 
                                              WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                             95, 90, 80, 20, hwnd, 
+                                             95, 120, 80, 25, hwnd, 
                                              (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
 				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           180, 90, 80, 20, hwnd, 
+                                           180, 120, 80, 25, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 				break;
 
@@ -744,6 +786,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 							if (ok) {
 						       ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (char*) val);
 						       ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+                               DestroyWindow (hwnd);
 							}
 						    break;
 
@@ -1663,3 +1706,4 @@ void                AttributeMenuLoadResources ()
 	TteConnectAction (T_rattrreq, (Proc) CallbackReqAttrMenu);
      }
 }
+

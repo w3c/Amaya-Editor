@@ -78,9 +78,9 @@ POINT ptEnd;
   DrawOutpolygon :                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
+void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
 #else  /* __STDC__ */
-static void DrawOutpolygon (hwnd, pt, nb)
+void DrawOutpolygon (hwnd, pt, nb)
 HWND  hwnd; 
 POINT pt; 
 int   nb;
