@@ -50,6 +50,7 @@ STRING              data;
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
+  Element             el;
   int                 val, length;
   boolean             found;
 
@@ -98,8 +99,9 @@ STRING              data;
 			    pInfo = pInfo->PiNext;
 			  if (pInfo != NULL && pInfo->PiLink != NULL)
 			    {
-			      RemoveLink (pInfo->PiLink, CSSdocument);
-			      TtaDeleteTree (pInfo->PiLink, CSSdocument);
+			      el = pInfo->PiLink;
+			      RemoveLink (el, CSSdocument);
+			      TtaDeleteTree (el, CSSdocument);
 			    }
 			}
 		    }

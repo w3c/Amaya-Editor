@@ -90,12 +90,12 @@ CSSInfoPtr      css;
   /* chain the presentation schema at the right position */
   prevS = NULL;
   before = FALSE;
-  if (css->category == CSS_DOCUMENT_STYLE)
-    /* add in first position */
+  if (css->category == CSS_USER_STYLE)
+    /* add in first position and last priority */
     before = TRUE;
-  else if (css->category == CSS_USER_STYLE)
+  else if (css->category == CSS_DOCUMENT_STYLE)
     {
-      /* add in last position */
+      /* add in last position and first priority */
       while (pSchema != NULL)
 	{
 	  prevS = pSchema;
