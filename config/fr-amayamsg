@@ -15,7 +15,7 @@
 14 C'est fini !
 15 Sélectionner la destination
 16 Destination invalide
-17 Adresse
+17 URL
 18 Titre
 19 Document modifié. Voulez-vous continuer ?
 20 Recherche de %s
@@ -64,12 +64,12 @@
 63 Sauvegarder sur le disque ?
 64 Copier images
 65 Transformer les URL
-66 Adresse du document
+66 URL
 67 Répertoire des images
 68 Adresse de l'objet
 69 Fichier CSS                                         
-70 Amaya, un navigateur et éditeur pour le Web
-71 développé par le W3C (http://www.w3.org/)
+70 Amaya, le navigateur/éditeur du W3C
+71 (envoyez vos questions à www-amaya@w3.org)
 72 Erreur interne : URL de longueur supérieure à  %s caractères
 73 Seul le type par défaut est autorisé
 74 Mise à jour des liens : %s%% a été traité
@@ -195,3 +195,4 @@
 194 Repertoire témporaire
 195 Par palette
 196 Négotiation de langues
+197 Une erreur XML a été detectée - vérifiez votre document

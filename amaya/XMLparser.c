@@ -101,6 +101,7 @@ static ThotBool	    XMLrootClosed = FALSE;
 static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
+static ThotBool     XMLabort = FALSE;
 
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
@@ -396,13 +397,13 @@ STRING              DTDname;
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               GetXMLElementType (STRING XMLname, ElementType *elType, USTRING* mappedName, STRING content, Document doc)
+void               GetXMLElementType (STRING XMLname, ElementType *elType, STRING *mappedName, CHAR_T *content, Document doc)
 #else
 void               GetXMLElementType (XMLname, elType, mappedName, content, doc)
 STRING              XMLname;
 ElementType        *elType;
-USTRING            *mappedName;
-STRING              content;
+STRING             *mappedName;
+CHAR_T             *content;
 Document            doc;
 #endif
 {
@@ -580,7 +581,7 @@ CHAR_T                c;
    Element		newElement;
    ElementType		elType;
    int			i;
-   USTRING              mappedName;
+   STRING               mappedName;
    UCHAR_T              msgBuffer[MAX_BUFFER_LENGTH];
 
    /* close the input buffer */
@@ -588,6 +589,12 @@ CHAR_T                c;
 
    if (currentElement == NULL)
        ParseHTMLError (currentDocument, TEXT("XML parser error 1"));
+   else if (stackLevel == MAX_STACK_HEIGHT)
+     {
+       ParseHTMLError (currentDocument, TEXT("**FATAL** Too many XML levels"));
+       normalTransition = FALSE;
+       XMLabort = TRUE;
+     }
    else
      {
        /* look for a colon in the element name (namespaces) and ignore the
@@ -1176,7 +1183,7 @@ CHAR_T                c;
 {
    ElementType	elType;
    Element	commentEl, commentLineEl;
-   USTRING      mappedName;
+   STRING       mappedName;
    CHAR_T       cont;
    UCHAR_T      msgBuffer[MAX_BUFFER_LENGTH];
 
@@ -1632,11 +1639,12 @@ void                FreeXMLParser ()
    el: the previous sibling (if isclosed) or parent of the tree to be built
    lang: current language
    closingTag: name of the tag that should terminate the tree to be parsed.
+   Return TRUE if the parsing is complete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, CHAR_T* closingTag)
+ThotBool  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, CHAR_T* closingTag)
 #else
-void	  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
+ThotBool  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
 FILE     *infile;
 int      *index;
 STRING    DTDname;
@@ -1865,7 +1873,7 @@ CHAR_T*   closingTag;
 	    }
 	}
     }
-  while (!endOfFile && !XMLrootClosed);
+  while (!endOfFile && !XMLrootClosed && !XMLabort);
 
   /* end of the XML root element */
   if (!isclosed)
@@ -1885,6 +1893,7 @@ CHAR_T*   closingTag;
   XMLrootLevel = oldXMLrootLevel;
   lastTagRead = oldlastTagRead;
   stackLevel = oldStackLevel;
+  return (!XMLabort);
 }
 
 /* end of module */

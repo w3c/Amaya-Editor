@@ -15,7 +15,7 @@
 14 Finito!
 15 Seleziona l'obiettivo
 16 Obiettivo non valido
-17 Indirizzo
+17 URL
 18 Titolo
 19 Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?
 20 Redirezione durante il caricamento di %s
@@ -63,13 +63,13 @@
 62 Il salvataggio sull'URL è fallito
 63 Salvo su disco ?
 64 Copia immagini
-65 Trasforma URL
+65 URL
 66 Collocazione del documento
 67 Directory delle immagini
 68 Collocazione dell'oggetto
 69 CSS file
-70 Amaya - un editor/browser per il Web
-71 sviluppato da W3C (http://www.w3.org/)
+70 Amaya - W3C editor/browser per il Web
+71 ** (mail issues to www-amaya@w3.org)
 72 Impossibile gestire URL composti da piú di %s caratteri
 73 È consentito il solo tipo di default
 74 Aggiornamento dei collegamenti: %s%% è stato fatto
@@ -195,3 +195,4 @@
 194 **Temporary directory
 195 **Use palette
 196 **Language Negotiation
+197 **The XML parsing failed - please check your document

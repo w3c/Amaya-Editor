@@ -3252,6 +3252,16 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
+   StopParsing stops the document parsingwhen an unrecoverable error .
+  ----------------------------------------------------------------------*/
+static void         StopParsing ()
+{
+  NormalTransition = FALSE;
+  HTMLrootClosed = TRUE;
+  InitConfirm (theDocument, 1, TtaGetMessage (AMAYA, AM_XML_ERROR));
+}
+
+/*----------------------------------------------------------------------
    EndOfStartTag   a ">" has been read. It indicates the end
    of a start tag.
   ----------------------------------------------------------------------*/
@@ -3299,24 +3309,28 @@ CHAR_T                c;
 	{
 #ifndef STANDALONE
 	  /* Parse the MathML structure */
-	  XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
-		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
+	  if (XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI))
 #endif /* STANDALONE */
-	  /* when returning from the XML parser, the end tag has already
-	     been read */
-	  (void) CloseElement (lastElemEntry, -1, FALSE);
+	    /* when returning from the XML parser, the end tag has already
+	       been read */
+	    (void) CloseElement (lastElemEntry, -1, FALSE);
+	  else
+	    StopParsing ();
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")))
 	/* a <XMLGRAPHICS> tag has been read */
         {
 	  /* Parse the GraphML structure */
 #ifndef STANDALONE
-	  XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
-		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI);
+	  if (XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI))
 #endif /* STANDALONE */
-	  /* when returning from the XML parser, the end tag has already
-	     been read */
-	  (void) CloseElement (lastElemEntry, -1, FALSE);	   
+	    /* when returning from the XML parser, the end tag has already
+	       been read */
+	    (void) CloseElement (lastElemEntry, -1, FALSE);
+	  else
+	    StopParsing ();
 	}
       else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre"))   ||
                !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
@@ -7307,8 +7321,9 @@ Document   doc;
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
 #ifndef STANDALONE
-       XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem, isclosed,
-		 TtaGetDefaultLanguage(), NULL);
+       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem, isclosed,
+		 TtaGetDefaultLanguage(), NULL))
+	 StopParsing ();
 #endif
       }
 }

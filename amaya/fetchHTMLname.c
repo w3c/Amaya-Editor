@@ -387,7 +387,7 @@ Document            doc;
   CHAR_T          c;
   int             i;
   int             entry;
-  ThotBool	      isHTML;
+  ThotBool	  isHTML;
 
   /* TODO: use NameSpaces to search in the right table */
   entry = -1;

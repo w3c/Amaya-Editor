@@ -15,7 +15,7 @@
 14 Bitti!
 15 Hedefi seçin
 16 Geçersiz hedef
-17 Adres
+17 URL
 18 Baþlýk
 19 Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?
 20 Redirection fetching of %s
@@ -63,13 +63,13 @@
 62 URL kaydedilemedi
 63 Diske kayýt?
 64 Görüntüleri kopyala
-65 URL\'leri dönüþtür
+65 URL
 66 Belgenin adresi
 67 Görüntü dizini
 68 Nesne konumu
 69 CSS dosyasý 1
 70 Amaya - WWW için tarayýcý ve belge düzenleyici
-71 W3C tarafýndan deneme tarayýcýsý olarak geliþtirildi (http://www.w3.org/)
+71 ** (mail issues to www-amaya@w3.org)
 72 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
 73 Sadece öntanýmlý tip kullanýlabilir
 74 Baðlantý güncellemesi: %s%% tamamlandý
@@ -195,3 +195,4 @@
 194 **Temporary directory
 195 **Use palette
 196 **Language Negotiation
+197 **The XML parsing failed - please check your document

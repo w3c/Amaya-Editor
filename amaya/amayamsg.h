@@ -206,4 +206,5 @@ int                 AMAYA;
 #define AM_TMP_DIR		      194 
 #define AM_COLOR_PALETTE	      195
 #define AM_LANNEG_MENU		      196
-#define AMAYA_MSG_MAX                 197
+#define AM_XML_ERROR		      197
+#define AMAYA_MSG_MAX                 198

@@ -161,14 +161,14 @@ int                XMLtype;
     - content 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (int XMLtype, CHAR_T* XMLname, ElementType *elType, CHAR_T** mappedName, CHAR_T* content, Document doc)
+void               MapXMLElementType (int XMLtype, STRING XMLname, ElementType *elType, STRING *mappedName, CHAR_T *content, Document doc)
 #else
 void               MapXMLElementType (XMLtype, XMLname, elType, mappedName, content, doc)
 int                XMLtype;
-CHAR_T*            XMLname;
-ElementType*       elType;
-CHAR_T**           mappedName;
-CHAR_T* 	       content;
+STRING             XMLname;
+ElementType       *elType;
+STRING            *mappedName;
+CHAR_T  	  *content;
 Document           doc;
 #endif
 {

@@ -12,18 +12,18 @@ extern void XMLElementComplete ( Element el,
 extern void XMLTextToDocument ( void );
 extern void GetXMLElementType ( STRING XMLname,
                                 ElementType *elType,
-                                USTRING* mappedName,
-                                STRING content,
+                                STRING *mappedName,
+                                CHAR_T *content,
                                 Document doc );
 extern void FreeXMLParser ( void );
-extern void XMLparse ( FILE *infile,
-                       int *index,
-                       STRING DTDname,
-                       Document doc,
-                       Element el,
-                       ThotBool isclosed,
-                       Language lang,
-                       CHAR_T* closingTag );
+extern ThotBool XMLparse ( FILE *infile,
+                           int *index,
+                           STRING DTDname,
+                           Document doc,
+                           Element el,
+                           ThotBool isclosed,
+                           Language lang,
+                           CHAR_T* closingTag );
 
 #else /* __STDC__ */
 
@@ -33,18 +33,18 @@ extern void XMLElementComplete (/* Element el,
 extern void XMLTextToDocument (/* void */);
 extern void GetXMLElementType (/* STRING XMLname,
                                   ElementType *elType,
-                                  USTRING* mappedName,
-                                  STRING content,
+                                  STRING *mappedName,
+                                  CHAR_T *content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);
-extern void XMLparse (/* FILE *infile,
-                         int *index,
-                         STRING DTDname,
-                         Document doc,
-                         Element el,
-                         ThotBool isclosed,
-                         Language lang,
-                         CHAR_T* closingTag */);
+extern ThotBool XMLparse (/* FILE *infile,
+                             int *index,
+                             STRING DTDname,
+                             Document doc,
+                             Element el,
+                             ThotBool isclosed,
+                             Language lang,
+                             CHAR_T* closingTag */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

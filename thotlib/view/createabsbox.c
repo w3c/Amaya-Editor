@@ -4943,33 +4943,35 @@ ThotBool           *complete;
 	       while (pRule != NULL);
 	     /* applique toutes les regles en retard des descendants */
 	     if (descent)
-	       do
-		 {
-		   pAbb = pEl->ElAbstractBox[viewNb - 1];
-		   /* saute les paves de presentation crees par FnCreateBefore */
-		   stop = FALSE;
-		   do
-		     if (pAbb == NULL)
-		       stop = TRUE;
-		     else if (!pAbb->AbPresentationBox)
-		       stop = TRUE;
-		     else if (pAbb->AbFirstEnclosed != NULL &&
-			      pAbb->AbFirstEnclosed->AbElement == pEl)
-		       /* pave cree' par la regle FnCreateEnclosing */
-		       stop = TRUE;
-		     else
-		       pAbb = pAbb->AbNext;
-		   while (!stop);
-		   pPRP = pAbb;
-		   GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
-		   if (pRule != NULL)
-		     if (!ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
-		       /* cette regle n'a pas pu etre appliquee. C'est  */
-		       /* une regle correspondant a un attribut, on */
-		       /* l'appliquera lorsque l'englobant sera complete */
-		       Delay (pRule, pSPres, pAbb, pAttr, pPRP);
-		 }
-		while (pRule != NULL);
+	       {
+		 pAbb = pEl->ElAbstractBox[viewNb - 1];
+		 /* saute les paves de presentation crees par FnCreateBefore */
+		 stop = FALSE;
+		 do
+		   if (pAbb == NULL)
+		     stop = TRUE;
+		   else if (!pAbb->AbPresentationBox)
+		     stop = TRUE;
+		   else if (pAbb->AbFirstEnclosed != NULL &&
+			    pAbb->AbFirstEnclosed->AbElement == pEl)
+		     /* pave cree' par la regle FnCreateEnclosing */
+		     stop = TRUE;
+		   else
+		     pAbb = pAbb->AbNext;
+		 while (!stop);
+		 do
+		   {
+		     pPRP = pAbb;
+		     GetDelayedRule (&pRule, &pSPres, &pPRP, &pAttr);
+		     if (pRule != NULL)
+		       if (!ApplyRule (pRule, pSPres, pPRP, pDoc, pAttr))
+			 /* cette regle n'a pas pu etre appliquee. C'est  */
+			 /* une regle correspondant a un attribut, on */
+			 /* l'appliquera lorsque l'englobant sera complete */
+			 Delay (pRule, pSPres, pPRP, pAttr, pAbb);
+		   }
+		 while (pRule != NULL);
+	       }
 	  }
 	/* fin de !ignoreDescent */
 	if (pAbbParentAssoc != NULL)
