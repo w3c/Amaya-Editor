@@ -31,6 +31,7 @@
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
 #define DC_NS "http://purl.org/dc/elements/1.0/"
+#define DC1_NS "http://purl.org/dc/elements/1.1/"
 #define HTTP_NS "http://www.w3.org/1999/xx/http#"
 
 #ifdef ANNOT_ON_ANNOT

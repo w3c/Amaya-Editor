@@ -197,7 +197,8 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
       else
 	annot->source_url = TtaStrdup ((char *) object);
     }
-  else if (contains (predicate, DC_NS, DC_CREATOR))
+  else if (contains (predicate, DC_NS, DC_CREATOR) ||
+	   contains (predicate, DC1_NS, DC_CREATOR))
     {
 
 #ifdef NOTDEF /* RAPTOR_RDF_PARSER */
@@ -223,9 +224,11 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
     }
   else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
       annot->cdate = TtaStrdup ((char *) object);
-  else if (contains (predicate, DC_NS, DC_DATE))
+  else if (contains (predicate, DC_NS, DC_DATE) ||
+	   contains (predicate, DC1_NS, DC_DATE))
       annot->mdate = TtaStrdup ((char *) object);
-  else if (contains (predicate, DC_NS, DC_TITLE))
+  else if (contains (predicate, DC_NS, DC_TITLE) ||
+	   contains (predicate, DC1_NS, DC_TITLE))
     {
 #ifdef _I18N_
       annot->title = TtaStrdup ((char *) object);
