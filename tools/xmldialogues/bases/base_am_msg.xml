@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Sep 20 09:55:31 CEST 2004" version="76">
+<base last_update="Thu Oct 21 12:12:56 CEST 2004" version="77">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1008,7 +1008,7 @@
 	<message xml:lang="de">Der W3C Browser und Editor für das Web</message>
 	<message xml:lang="it">il editor/browser del W3C</message>
 	<message xml:lang="tr">W3C için tarayıcı ve belge düzenleyici</message>
-	<message xml:lang="es">Editor/Navegador del W3C para la Web</message>
+	<message xml:lang="es">Editor/Navegador web del W3C</message>
 	<message xml:lang="pt">Editor/navegador do W3C para a Web</message>
 	<message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
 	<message xml:lang="ru">W3C's редактор/броузер для Web</message>
@@ -3422,7 +3422,7 @@
 	<message xml:lang="de">Persönliche Benutzerreferenzen (URL)</message>
 	<message xml:lang="fi">Käyttäjän henkilökohtainen linkki (URL)</message>
 	<message xml:lang="it">Riferimento personale utente (URL)</message>
-	<message xml:lang="es">Referencia Personal del Usuario (URL)</message>
+	<message xml:lang="es">Referencia Personal del Usuario (URL):</message>
 	<message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
 	<message xml:lang="ru">Персональная пользовательская ссылка (URL)</message>
 </label>
@@ -3433,7 +3433,7 @@
 	<message xml:lang="de">WebDAV Resourcenliste des Benutzers (URL)</message>
 	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL URL)</message>
 	<message xml:lang="it">Resource List WebDAV per l'utente(URL URL)</message>
-	<message xml:lang="es">Lista de Recursos WebDAV del Usuario</message>
+	<message xml:lang="es">Lista de Recursos WebDAV del Usuario:</message>
 	<message xml:lang="tr">Kullanıyıcının referans listesi (URL URL)</message>
 	<message xml:lang="ru">Пользовательский список ресурсов WebDAV (URL URL)</message>
 </label>
@@ -3532,7 +3532,7 @@
 	<message xml:lang="de">Benachrichtigung</message>
 	<message xml:lang="fi">Valvetila</message>
 	<message xml:lang="it">Awarenees</message>
-	<message xml:lang="es">Conocimiento</message>
+	<message xml:lang="es">Conocimiento:</message>
 	<message xml:lang="tr">Bildiri</message>
 	<message xml:lang="ru">Оповещение</message>
 </label>
@@ -3970,33 +3970,39 @@
 <label define="AM_NO_INSERT_POINT">
 	<message xml:lang="en">No insert position defined. Please select first</message>
 	<message xml:lang="fr">Pas de position d'insertion définie. Sélectionnez d'abord</message>
-	<message xml:lang="es">>No insert position defined.</message>
+	<message xml:lang="es">El punto de inserción no está definido. Por favor, seleccionelo antes.</message>
 	<message xml:lang="ru">Не определена</message>
 	<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst auswählen</message>
 </label>
 <label define="AM_DOCINFO_TITLE">
 	<message xml:lang="en">Document information</message>
 	<message xml:lang="fr">Informations du document</message>
+	<message xml:lang="es">Propiedades del documento</message>
 </label>
 <label define="AM_DOCINFO_TYPE">
 	<message xml:lang="en">Document Type</message>
 	<message xml:lang="fr">Type du document</message>
+	<message xml:lang="es">Tipo de documento:</message>
 </label>
 <label define="AM_DOCINFO_TYPEMIME">
 	<message xml:lang="en">MIME Type</message>
 	<message xml:lang="fr">Type MIME</message>
+	<message xml:lang="es">Tipo MIME:</message>
 </label>
 <label define="AM_DOCINFO_CHARSET">
 	<message xml:lang="en">Charset</message>
 	<message xml:lang="fr">Code de caractère</message>
+	<message xml:lang="es">Juego de caracteres:</message>
 </label>
 <label define="AM_DOCINFO_CLENGTH">
 	<message xml:lang="en">Content Length</message>
 	<message xml:lang="fr">Taille du contenu</message>
+	<message xml:lang="es">Longitud del contenido:</message>
 </label>
 <label define="AM_DOCINFO_CLOCATION">
 	<message xml:lang="en">Content Location</message>
 	<message xml:lang="fr">Provenance</message>
+	<message xml:lang="es">Ubicación del contenido:</message>
 </label>
 <label define="AM_DLGPREFERENCE_TITLE">
 	<message xml:lang="en">Preferences</message>

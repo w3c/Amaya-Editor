@@ -84,7 +84,7 @@
 82 &Insertar
 83 &Añadir
 84 &Buscar...
-85 &Verificar ortografía...
+85 &Revisar ortografía...
 86 &Transformar...
 87 No hay transformación aplicable a la selección
 88 &Transformar...
@@ -100,7 +100,7 @@
 98 Anotaciones
 99 &Cooperación
 100 Título (title) ...
-101 Cabecera (heading)
+101 Encabezado (heading)
 102 h1
 103 h2
 104 h3
@@ -110,31 +110,31 @@
 108 Lista
 109 Lista no numerada (ul)
 110 Lista numerada (ol)
-111 Lista de Definición (dl)
+111 Lista de definición (dl)
 112 Término (dt)
 113 Definición (dd)
 114 Formulario
-115 Formulario (form)
-116 Botón (input)
-117 Casilla de verificación (input)
-118 Selector de Archivo (input)
-119 Oculto (Hidden input)
-120 Imagen (input)...
-121 Contraseña (input)
-122 Radio (input)
-123 Reset (input)
-124 Enviar (input)
-125 Texto (input)
+115 Insertar formulario (form)
+116 Botón (button)
+117 Casilla de verificación (checkbox input)
+118 Selector de archivo (file input)
+119 Oculto (hidden input)
+120 Imagen (image input)...
+121 Contraseña (password input)
+122 Radio (radio input)
+123 Reset (reset input)
+124 Enviar (submit input)
+125 Texto (text input)
 126 Campos (fieldset)
 127 Etiqueta (label)
-128 Menú (option)
+128 Menú (select)
 129 Submenú (optgroup)
 130 Área de texto (textarea)
 131 Objeto
 132 Objeto (objet)
 133 Parámetro (param)
 134 Tabla
-135 Tabla (table)
+135 Insertar tabla (table)
 136 Leyenda (caption)
 137 Grupo de columnas (colgroup)
 138 Columna (col)
@@ -178,9 +178,9 @@
 176 blockquote
 177 Inline frame (iframe)
 178 ruby
-179 &Numeración de sección
+179 &Numerar encabezados
 180 &Generar índice de materias
-181 Insertar marca de tiempo
+181 Insertar fecha y hora actual
 182 &Hacer libro
 183 Tipo de Información
 184 Énfasis (em)
@@ -203,7 +203,7 @@
 201 Pequeña (small)
 202 Subíndice (sub)
 203 Superíndice (sup)
-204 Remarcado (Quotation q)
+204 Cita (q)
 205 BiDi override (bdo)
 206 &Nueva fórmula (math)
 207 &Elementos básicos
@@ -251,8 +251,8 @@
 249 Crear &destino (a / id)
 250 &Borrar ancla (a)
 251 &Crear/Borrar atributos id...
-252 **Show &panel
-253 **&Fullscreen
+252 &Mostrar ventana de diálogo
+253 &Pantalla completa
 254 &Barra de botones
 255 D&irección
 256 Áreas de &mapas
@@ -265,7 +265,7 @@
 263 A&lternativo
 264 Tabla de &contenidos
 265 Planificación
-266 **&Split view
+266 &Dividir vista
 267 &Carácter...
 268 C&olores...
 269 &Párrafo...
@@ -318,7 +318,7 @@
 316 Soporte XML
 317 Hojas de estilo
 318 Buscar
-319 Verificar ortografía
+319 Revisar ortografía
 320 Publicar
 321 WebDAV
 322 Imprimir

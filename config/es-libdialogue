@@ -58,8 +58,8 @@
 56 Subrayado
 57 Tachado
 58 Tamaño del cuerpo (pt)
-59 Sangría (pt)
-60 Interlineado (pt)
+59 Sangría (pt):
+60 Interlineado (pt):
 61 Interlineado
 62 Guardar documento
 63 Cerrar, no guardar
@@ -132,7 +132,7 @@
 130 Error en traducción PostScript
 131 Orden rechazada por el spooler "%s"
 132 No puedo crear "%s"
-133 Overline
+133 Suprarayado
 134 Formato de documento
 135 Eventos
 136 Eliminar atributo
@@ -153,7 +153,7 @@
 151 Otro idioma
 152 Saltar (+ dic)
 153 Palabras que contengan:
-154 Verificar ortografía
+154 Revisar ortografía:
 155 Números romanos
 156 Ignorar
 157 Palabras en mayúsculas
@@ -167,8 +167,8 @@
 165 Corrección ortográfica abortada
 166 Por favor, seleccione un documento
 167 Diccionario del documento guardado: %s
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Auto refresh
+168 No disponible en esta versión
+169 Activar/Desactivar paleta
+170 Herramientas
+171 Actualizar automáticamente
 172 **Mandatory attribute, it can't be removed

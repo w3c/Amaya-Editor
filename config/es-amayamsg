@@ -90,7 +90,7 @@
 88 Desactivar hoja de estilo enlazada
 89 Activar hoja de estilo enlazada
 90 Borrar enlace a hoja de estilo
-91 Editor/Navegador del W3C para la Web
+91 Editor/Navegador web del W3C
 92 (enviar sugerencias a www-amaya@w3.org)
 93 No puedo gestionar URL con más de %s caracteres
 94 Sólo se permite el tipo por omisión
@@ -312,8 +312,8 @@
 310 ¡Solicitud suspendida! Razón: %s
 311 ¿Intentar de nuevo?
 312 WebDAV
-313 Referencia Personal del Usuario (URL)
-314 Lista de Recursos WebDAV del Usuario
+313 Referencia Personal del Usuario (URL):
+314 Lista de Recursos WebDAV del Usuario:
 315 Profundidad de bloqueo
 316 infinita
 317 Bloqueo terminado
@@ -322,7 +322,7 @@
 320 Alcance del bloqueo
 321 exclusivo
 322 compartido
-323 Conocimiento
+323 Conocimiento:
 324 Conocimiento general
 325 Conocimiento al salir
 326 Animación
@@ -370,12 +370,12 @@
 368 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 369 Cargar objetos (object, embed, iframe)
 370 No hay regla de estilo para este elemento
-371 >No insert position defined.
-372 **Document information
-373 **Document Type
-374 **MIME Type
-375 **Charset
-376 **Content Length
-377 **Content Location
+371 El punto de inserción no está definido. Por favor, seleccionelo antes.
+372 Propiedades del documento
+373 Tipo de documento:
+374 Tipo MIME:
+375 Juego de caracteres:
+376 Longitud del contenido:
+377 Ubicación del contenido:
 378 Preferencias
 379 Carácter (&xxx;)

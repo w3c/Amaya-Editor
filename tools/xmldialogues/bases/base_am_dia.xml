@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Sep 20 09:55:08 CEST 2004" version="84">
+<base last_update="Thu Oct 21 12:12:29 CEST 2004" version="85">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -935,7 +935,7 @@
 	<message xml:lang="de">Rechtschreibprüfung...</message>
 	<message xml:lang="it">Controllo ortografico...</message>
 	<message xml:lang="tr">Yazım hataları ara...</message>
-	<message xml:lang="es">&amp;Verificar ortografía...</message>
+	<message xml:lang="es">&amp;Revisar ortografía...</message>
 	<message xml:lang="pt">Verificar ortografia...</message>
 	<message xml:lang="fi">Tarkista oikeinkirjoitus...</message>
 	<message xml:lang="ru">Проверка правописания...</message>
@@ -1110,7 +1110,7 @@
 	<message xml:lang="de">Überschrift</message>
 	<message xml:lang="it">Intestazione</message>
 	<message xml:lang="tr">Başlık</message>
-	<message xml:lang="es">Cabecera (heading)</message>
+	<message xml:lang="es">Encabezado (heading)</message>
 	<message xml:lang="pt">Cabeçalho</message>
 	<message xml:lang="fi">Otsakke koolla</message>
 	<message xml:lang="ru">Заголовок</message>
@@ -1220,7 +1220,7 @@
 	<message xml:lang="de">Definitionsliste (dl)</message>
 	<message xml:lang="it">Lista di definizioni (dl)</message>
 	<message xml:lang="tr">Tanım listesi (dl)</message>
-	<message xml:lang="es">Lista de Definición (dl)</message>
+	<message xml:lang="es">Lista de definición (dl)</message>
 	<message xml:lang="pt">Lista de Definição (dl)</message>
 	<message xml:lang="fi">Määrittelyluettelo (dl)</message>
 	<message xml:lang="ru">Список определения (dl)</message>
@@ -1264,7 +1264,7 @@
 	<message xml:lang="de">Neues Formular (form)</message>
 	<message xml:lang="it">form</message>
 	<message xml:lang="tr">Form (form)</message>
-	<message xml:lang="es">Formulario (form)</message>
+	<message xml:lang="es">Insertar formulario (form)</message>
 	<message xml:lang="pt">Formulário</message>
 	<message xml:lang="fi">lomake</message>
 	<message xml:lang="ru">Вставить форму</message>
@@ -1274,7 +1274,7 @@
 	<message xml:lang="fr">Bouton (input)</message>
 	<message xml:lang="de">Knopf (button)</message>
 	<message xml:lang="it">Pulsante (input)</message>
-	<message xml:lang="es">Botón (input)</message>
+	<message xml:lang="es">Botón (button)</message>
 	<message xml:lang="pt">Botão (input)</message>
 	<message xml:lang="fi">Painike (input)</message>
 	<message xml:lang="tr">Düğme (giriş = input)</message>
@@ -1286,7 +1286,7 @@
 	<message xml:lang="de">Ankreuzkästchen (checkbox)</message>
 	<message xml:lang="it">Checkbox (input)</message>
 	<message xml:lang="tr">Değiştir (input)</message>
-	<message xml:lang="es">Casilla de verificación (input)</message>
+	<message xml:lang="es">Casilla de verificación (checkbox input)</message>
 	<message xml:lang="pt">Caixa de verificação (Checkbox) (input)</message>
 	<message xml:lang="fi">Valintalaatikko (input)</message>
 	<message xml:lang="ru">Переключатель-Checkbox (input)</message>
@@ -1296,7 +1296,7 @@
 	<message xml:lang="fr">Sélecteur fichier (input)</message>
 	<message xml:lang="de">Feld für Dateiname (file)</message>
 	<message xml:lang="it">Selettore di file (input)</message>
-	<message xml:lang="es">Selector de Archivo (input)</message>
+	<message xml:lang="es">Selector de archivo (file input)</message>
 	<message xml:lang="pt">Seletor de arquivo (input)</message>
 	<message xml:lang="fi">Tiedosto valikko (input)</message>
 	<message xml:lang="tr">Dosya seçili (input)</message>
@@ -1307,7 +1307,7 @@
 	<message xml:lang="fr">Contrôle caché (input)</message>
 	<message xml:lang="de">Verborgenes Feld (hidden)</message>
 	<message xml:lang="it">Controllo nascosto (input)</message>
-	<message xml:lang="es">Oculto (Hidden input)</message>
+	<message xml:lang="es">Oculto (hidden input)</message>
 	<message xml:lang="pt">Oculto (input)</message>
 	<message xml:lang="fi">Piilotettu (input)</message>
 	<message xml:lang="tr">Gizli (input)</message>
@@ -1319,7 +1319,7 @@
 	<message xml:lang="de">Bild (image)</message>
 	<message xml:lang="it">Immagine (input)...</message>
 	<message xml:lang="tr">Görüntü (input)...</message>
-	<message xml:lang="es">Imagen (input)...</message>
+	<message xml:lang="es">Imagen (image input)...</message>
 	<message xml:lang="pt">Imagem (input)...</message>
 	<message xml:lang="fi">Kuva (input)...</message>
 	<message xml:lang="ru">Изображение (input)...</message>
@@ -1329,7 +1329,7 @@
 	<message xml:lang="fr">Mot de passe (input)</message>
 	<message xml:lang="de">Kennwortfeld (password)</message>
 	<message xml:lang="it">Password (input)</message>
-	<message xml:lang="es">Contraseña (input)</message>
+	<message xml:lang="es">Contraseña (password input)</message>
 	<message xml:lang="pt">Senha (password) (input)</message>
 	<message xml:lang="fi">Salasana (input)</message>
 	<message xml:lang="tr">şifre(input)(sifre)</message>
@@ -1341,7 +1341,7 @@
 	<message xml:lang="de">Auswahlknopf (radio)</message>
 	<message xml:lang="it">Pulsante radio (input)</message>
 	<message xml:lang="tr">Radio düğmesi (input)</message>
-	<message xml:lang="es">Radio (input)</message>
+	<message xml:lang="es">Radio (radio input)</message>
 	<message xml:lang="pt">Botão Rádio (input)</message>
 	<message xml:lang="fi">Pyöreä valintalaatikko (input)</message>
 	<message xml:lang="ru">Переключатель-Radio (input)</message>
@@ -1352,7 +1352,7 @@
 	<message xml:lang="de">Zurücksetzen (reset)</message>
 	<message xml:lang="it">Reset (input)</message>
 	<message xml:lang="tr">Sıfırlamak (input)</message>
-	<message xml:lang="es">Reset (input)</message>
+	<message xml:lang="es">Reset (reset input)</message>
 	<message xml:lang="pt">Reinicialização (reset) (input)</message>
 	<message xml:lang="fi">Tyhjennä (input)</message>
 	<message xml:lang="ru">Сбросить-Reset (input)</message>
@@ -1363,7 +1363,7 @@
 	<message xml:lang="de">Absenden (submit)</message>
 	<message xml:lang="it">Invia (input)</message>
 	<message xml:lang="tr">Onayla (input)</message>
-	<message xml:lang="es">Enviar (input)</message>
+	<message xml:lang="es">Enviar (submit input)</message>
 	<message xml:lang="pt">Submeter (input)</message>
 	<message xml:lang="fi">Lähetä (input)</message>
 	<message xml:lang="ru">Подтвердить-Submit (input)</message>
@@ -1374,7 +1374,7 @@
 	<message xml:lang="de">Eingabezeile (input)</message>
 	<message xml:lang="it">Testo (input)</message>
 	<message xml:lang="tr">Metin girişi (input)</message>
-	<message xml:lang="es">Texto (input)</message>
+	<message xml:lang="es">Texto (text input)</message>
 	<message xml:lang="pt">Texto (input)</message>
 	<message xml:lang="fi">Teksti (input)</message>
 	<message xml:lang="ru">Текст (input)</message>
@@ -1407,7 +1407,7 @@
 	<message xml:lang="de">Menü (option)</message>
 	<message xml:lang="it">Menu (option)</message>
 	<message xml:lang="tr">Seçenek (option)</message>
-	<message xml:lang="es">Menú (option)</message>
+	<message xml:lang="es">Menú (select)</message>
 	<message xml:lang="pt">Menu (option)</message>
 	<message xml:lang="fi">Valikko (option)</message>
 	<message xml:lang="ru">Меню (option)</message>
@@ -1484,7 +1484,7 @@
 	<message xml:lang="de">Neue Tabelle (table)</message>
 	<message xml:lang="it">Tabella (table)</message>
 	<message xml:lang="tr">table</message>
-	<message xml:lang="es">Tabla (table)</message>
+	<message xml:lang="es">Insertar tabla (table)</message>
 	<message xml:lang="pt">tabela</message>
 	<message xml:lang="fi">taulukko</message>
 	<message xml:lang="ru">таблица (table)</message>
@@ -1920,7 +1920,7 @@
 	<message xml:lang="de">Abschnitte numerieren</message>
 	<message xml:lang="it">Numerazione delle sezioni</message>
 	<message xml:lang="tr">Bölüm numaralandırması</message>
-	<message xml:lang="es">&amp;Numeración de sección</message>
+	<message xml:lang="es">&amp;Numerar encabezados</message>
 	<message xml:lang="pt">Numeração de seção</message>
 	<message xml:lang="fi">Osien numerointi</message>
 	<message xml:lang="ru">Нумеровать раздел&amp;ы</message>
@@ -1935,7 +1935,7 @@
 <label define="BDate">
 	<message xml:lang="en">Insert time stamp</message>
 	<message xml:lang="fr">Insérer date de mise à jour</message>
-	<message xml:lang="es">Insertar marca de tiempo</message>
+	<message xml:lang="es">Insertar fecha y hora actual</message>
 	<message xml:lang="de">Zeitstempel einfügen</message>
 	<message xml:lang="it">Inserisci timestamp</message>
 	<message xml:lang="ru">Вставить метку времени</message>
@@ -2187,7 +2187,7 @@
 	<message xml:lang="fr">Citation (q)</message>
 	<message xml:lang="de">Zitat (q)</message>
 	<message xml:lang="it">Citazione (q)</message>
-	<message xml:lang="es">Remarcado (Quotation q)</message>
+	<message xml:lang="es">Cita (q)</message>
 	<message xml:lang="pt">Citação (q)</message>
 	<message xml:lang="fi">Lainaus/Siteeraus (q)</message>
 	<message xml:lang="tr">Alıntılama (q)</message>
@@ -2664,10 +2664,12 @@
 <label define="TShowPanel">
 	<message xml:lang="en">Show &amp;panel</message>
 	<message xml:lang="fr">&amp;Montrer panel</message>
+	<message xml:lang="es">&amp;Mostrar ventana de diálogo</message>
 </label>
 <label define="TFullScreen">
 	<message xml:lang="en">&amp;Fullscreen</message>
 	<message xml:lang="fr">&amp;Plein écran</message>
+	<message xml:lang="es">&amp;Pantalla completa</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>
@@ -2803,6 +2805,7 @@
 <label define="TSplitUnsplitPage">
 	<message xml:lang="en">&amp;Split view</message>
 	<message xml:lang="fr">P&amp;artager la vue</message>
+	<message xml:lang="es">&amp;Dividir vista</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>
@@ -3363,7 +3366,7 @@
 	<message xml:lang="de">Rechtschreibprüfung</message>
 	<message xml:lang="it">Controllo ortografico</message>
 	<message xml:lang="tr">Yazı hataları düzeltmek</message>
-	<message xml:lang="es">Verificar ortografía</message>
+	<message xml:lang="es">Revisar ortografía</message>
 	<message xml:lang="pt">Verificar ortografia</message>
 	<message xml:lang="fi">Oikeinkirjoituksen tarkastus</message>
 	<message xml:lang="ru">Проверка правописания</message>

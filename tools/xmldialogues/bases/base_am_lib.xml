@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Sep 20 09:55:48 CEST 2004" version="39">
+<base last_update="Thu Oct 21 12:13:16 CEST 2004" version="40">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -663,7 +663,7 @@
 	<message xml:lang="de">Einrücken (pt)</message>
 	<message xml:lang="it">Indentazione (pt)</message>
 	<message xml:lang="tr">İçeriden (pt)</message>
-	<message xml:lang="es">Sangría (pt)</message>
+	<message xml:lang="es">Sangría (pt):</message>
 	<message xml:lang="pt">Indentação (pt)</message>
 	<message xml:lang="fi">Sisennä (pt)</message>
 	<message xml:lang="ru">Межстрочный интервал (pt)</message>
@@ -674,7 +674,7 @@
 	<message xml:lang="de">Zeilenabstand (pt)</message>
 	<message xml:lang="it">Interlinea (pt)</message>
 	<message xml:lang="tr">Satır aralığı (pt)</message>
-	<message xml:lang="es">Interlineado (pt)</message>
+	<message xml:lang="es">Interlineado (pt):</message>
 	<message xml:lang="pt">Espaçamento entre linhas (pt)</message>
 	<message xml:lang="fi">Riviväli (pt)</message>
 	<message xml:lang="ru">Межстрочный интервал</message>
@@ -1477,7 +1477,7 @@
 	<message xml:lang="de">Überstrichen</message>
 	<message xml:lang="it">Soprassegnato</message>
 	<message xml:lang="tr">Üstçizgi</message>
-	<message xml:lang="es">Overline</message>
+	<message xml:lang="es">Suprarayado</message>
 	<message xml:lang="pt">Sobrelinhado (Overline)</message>
 	<message xml:lang="fi">Yliviivaa</message>
 	<message xml:lang="ru">Формат документа</message>
@@ -1683,7 +1683,7 @@
 	<message xml:lang="fr">Corriger...</message>
 	<message xml:lang="it">Controllo ortografico...</message>
 	<message xml:lang="tr">Yazım hataları düzelt...</message>
-	<message xml:lang="es">Verificar ortografía</message>
+	<message xml:lang="es">Revisar ortografía:</message>
 	<message xml:lang="pt">Verificar ortografia...</message>
 	<message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
 	<message xml:lang="ru">Проверка правописания...</message>
@@ -1834,18 +1834,22 @@
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
 	<message xml:lang="fr">Pas disponible dans cette version</message>
+	<message xml:lang="es">No disponible en esta versión</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
 	<message xml:lang="en">Enable/Disable palette</message>
 	<message xml:lang="fr">Activer/Desactiver palette</message>
+	<message xml:lang="es">Activar/Desactivar paleta</message>
 </label>
 <label define="TMSG_TOOLS">
 	<message xml:lang="en">Tools</message>
 	<message xml:lang="fr">Outils</message>
+	<message xml:lang="es">Herramientas</message>
 </label>
 <label define="TMSG_AUTOREFRESH">
 	<message xml:lang="en">Auto refresh</message>
 	<message xml:lang="fr">Auto mise à jour</message>
+	<message xml:lang="es">Actualizar automáticamente</message>
 </label>
 <label define="TMSG_ATTR_MANDATORY">
 	<message xml:lang="en">Mandatory attribute, it can't be removed</message>
