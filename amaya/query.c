@@ -33,7 +33,7 @@
 #include <fcntl.h>
 #include "HTEvtLst.h"
 
-#if defined(__svr4__)
+#if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
 #endif
 
