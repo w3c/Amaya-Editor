@@ -42,6 +42,12 @@
 #define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
+#ifdef _WINDOWS
+extern int bgRed ;
+extern int bgGreen;
+extern int bgBlue ;
+#endif /* _WINDOWS */
+
 int Magic256[256] =    /* for halftoning */
 {
     0, 223, 48, 207, 14, 237, 62, 221, 3, 226, 51, 210, 13, 236, 61, 220,
@@ -199,13 +205,13 @@ int *bg;
 
     rewind (infile);
 
-    png_ptr = (png_struct*) malloc (sizeof (png_struct));
+    png_ptr = (png_struct*) TtaGetMemory (sizeof (png_struct));
     if (!png_ptr)
        return NULL;
 
-    info_ptr = (png_info*) malloc (sizeof (png_info));
+    info_ptr = (png_info*) TtaGetMemory (sizeof (png_info));
     if (!info_ptr) {
-       free(png_ptr);
+       TtaFreeMemory(png_ptr);
        return NULL;
     }
 
@@ -217,15 +223,15 @@ int *bg;
         if (png_ptr != NULL)
    	   png_read_destroy (png_ptr, info_ptr, (png_info*)0);
 	if (png_ptr != NULL)
-           free (png_ptr);
+           TtaFreeMemory (png_ptr);
 	if (info_ptr != NULL)
-           free (info_ptr);
+           TtaFreeMemory (info_ptr);
 	if (row_pointers != NULL)
-	   free (row_pointers);
+	   TtaFreeMemory (row_pointers);
 	if (pixels != NULL)
-	   free (pixels);
+	   TtaFreeMemory (pixels);
 	if (png_pixels != NULL)
-	   free (png_pixels);
+	   TtaFreeMemory (png_pixels);
 	
 	return NULL;
     }
@@ -325,12 +331,12 @@ int *bg;
         
     bytesPerExpandedLine = (*width) * info_ptr->channels;
     
-    png_pixels = (png_byte*) malloc (bytesPerExpandedLine * (*height) * sizeof (png_byte));
+    png_pixels = (png_byte*) TtaGetMemory (bytesPerExpandedLine * (*height) * sizeof (png_byte));
 
     if (png_pixels == NULL) 
        png_error (png_ptr,"not enough memory ");
     
-    row_pointers = (png_bytep*) malloc ((*height) * sizeof(png_bytep /**/));
+    row_pointers = (png_bytep*) TtaGetMemory ((*height) * sizeof(png_bytep /**/));
     
     if (row_pointers == NULL) png_error (png_ptr, "not enough memory ");
 
@@ -396,7 +402,7 @@ int *bg;
 	for (j = 0; j < *height; j++)
 	    png_read_row (png_ptr, NULL, row_pointers[j]);
 
-    pixels = (char*) malloc ((*width) * (*height));
+    pixels = (char*) TtaGetMemory ((*width) * (*height));
 
     if (pixels == NULL) png_error (png_ptr, "not enough memory ");
     
@@ -521,12 +527,12 @@ int *bg;
 
     /* free the structures */
     if (row_pointers != (unsigned char**) NULL)
-       free((char *) row_pointers);
+       TtaFreeMemory((char *) row_pointers);
     if (png_pixels!= (unsigned char*) NULL)
-       free ((char*) png_pixels);
+       TtaFreeMemory ((char*) png_pixels);
 
-    free ((char*) png_ptr);
-    free ((char*) info_ptr);
+    TtaFreeMemory ((char*) png_ptr);
+    TtaFreeMemory ((char*) info_ptr);
     
     return pixels;
 }
@@ -594,6 +600,12 @@ Drawable*      mask1;
     unsigned char   *buffer, *buffer2;
     int             ncolors, cpp, bg = -1;
 
+#   ifdef _WINDOWS
+    bgRed   = -1;
+	bgGreen = -1;
+	bgBlue  = -1;
+#   endif /* _WINDOWS */
+
     buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
     if (*xif == 0 && *yif != 0)
        *xif = w;
@@ -602,7 +614,7 @@ Drawable*      mask1;
     if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
        /* xif and yif contain width and height of the box */
        buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       free(buffer);
+       TtaFreeMemory(buffer);
        buffer = buffer2;
        buffer2 = NULL;
        w = *xif;
@@ -612,11 +624,17 @@ Drawable*      mask1;
     if (buffer == NULL)
        return (Drawable) ThotBitmapNone;
     if (bg >= 0) {
+#      ifndef _WINDOWS
        *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
+#      else  /* _WINDOWS */
+       bgRed   = colrs[bg].red;
+	   bgGreen = colrs[bg].green;
+	   bgBlue  = colrs[bg].blue;
+#      endif /* _WINDOWS */
     }
 
     pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
-    free (buffer);
+    TtaFreeMemory (buffer);
     if (pixmap == None)
        return (ThotBitmap) ThotBitmapNone; 
     else { 
@@ -748,7 +766,7 @@ unsigned long  BackGroundPixel;
   fprintf((FILE *)fd, "\n");
   fprintf((FILE *)fd, "grestore\n");
   fprintf((FILE *)fd, "\n");   
-  free(buffer);
+  TtaFreeMemory(buffer);
 #endif /* !_WINDOWS */
 }
 

@@ -90,7 +90,9 @@ int                 fground;
 {
    int                 x, y;
    int                 wcase, hcase;
+#  ifndef _WINDOWS 
    int                 w, h;
+#  endif /* !_WINDOWS */
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
@@ -221,11 +223,14 @@ caddr_t             call_d;
   ----------------------------------------------------------------------*/
 static void         ColorsExpose ()
 {
+   int                 max, y, w, h;
+#  ifndef _WINDOWS 
    register int        i;
-   int                 max, x, y, w, h;
-   int                 wcase, hcase;
+   int                 x;
    char               *ptr;
    int                 fground, bground;
+#  endif /* !_WINDOWS */
+   int                 wcase, hcase;
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
@@ -304,7 +309,9 @@ int                 y;
 #endif /* __STDC__ */
 {
    int                 color, li, co;
+#  ifndef _WINDOWS
    int                 wcase, hcase;
+#  endif /* !_WINDOWS */
 
 #  ifndef _WINDOWS
    if (TtWDepth == 1)
@@ -681,7 +688,6 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	 static BOOL inColorArea = FALSE;
      HDC         hdc ;
      PAINTSTRUCT ps ;
-     RECT        rect ;
 	 HBRUSH      hBrush;
      int         x, y ;
 	 HWND        hwnLButton;

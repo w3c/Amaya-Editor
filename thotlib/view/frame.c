@@ -29,7 +29,7 @@
 #include "appli_f.h"
 #include "boxlocate_f.h"
 #include "boxmoves_f.h"
-#include "displaybox_f.h"
+/* #include "displaybox_f.h" */
 #include "displayselect_f.h"
 #include "font_f.h"
 #include "frame_f.h"
@@ -1010,7 +1010,6 @@ int                 scroll;
 	RemoveClipping (frame);
      }
    FirstCreation = FALSE;
-
    return toadd;
 }
 

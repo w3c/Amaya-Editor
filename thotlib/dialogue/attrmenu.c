@@ -598,8 +598,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 	HWND        deleteButton;
 	HWND        doneButton;
 	BOOL        ok;
-	char*       pBuffer;
-	int         val, i, index;
+	int         val;
 	static PSTR pWinBuffer;
 	static int  txtLength;
 	static HWND hwnEdit ;

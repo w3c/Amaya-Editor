@@ -72,7 +72,7 @@ int             currentExtraHandler;
 boolean         Printing;
 ThotGC          GCpicture;
 THOT_VInfo      THOT_vInfo;
-Pixmap          EpsfPictureLogo;
+Pixmap          EpsfPictureLogo ;
 
 static char    *PictureMenu;
 static Pixmap   PictureLogo;
@@ -120,6 +120,102 @@ static unsigned char MirrorBytes[0x100] = {
    0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
+
+#ifdef _WINDOWS
+#if defined (WIN32)
+#   define IS_WIN32 TRUE
+#else
+#   define IS_WIN32 FALSE
+#endif
+
+#define IS_NT      IS_WIN32 && (BOOL)(GetVersion () < 0x80000000)
+#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE (LOWORD (GetVersion ())) < 4))
+#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
+
+int bgRed ;
+int bgGreen;
+int bgBlue ;
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_LayoutTransparentPicture (HBITMAP pixmap, int x, int y, int width, int height, COLORREF crColor)
+#else  /* !__STDC__ */
+void WIN_LayoutTransparentPicture (pixmap, x, y, width, height, crColor)
+HBITMAP  pixmap; 
+int      x;
+int      y;
+int      width; 
+int      height; 
+COLORREF crColor;
+#endif /* __STDC__ */
+{
+   HDC      hImageDC;
+   HDC      hOrDC;
+   HDC      hAndDC;
+   HDC      hInvAndDC;
+   HDC      hDestDC;
+   HBITMAP  bitmap;
+   HBITMAP  bitmapOr;
+   HBITMAP  pOldBitmapOr;
+   HBITMAP  bitmapAnd;
+   HBITMAP  pOldBitmapAnd;
+   HBITMAP  bitmapInvAnd;
+   HBITMAP  pOldBitmapInvAnd;
+   HBITMAP  bitmapDest;
+   HBITMAP  pOldBitmapDest;
+   COLORREF crOldBkColor ;
+
+   hImageDC = CreateCompatibleDC (TtDisplay);
+   bitmap = SelectObject (hImageDC, pixmap);
+   SetMapMode (hImageDC, GetMapMode (TtDisplay));
+   
+   hOrDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hOrDC, GetMapMode (TtDisplay));
+   bitmapOr = CreateCompatibleBitmap (hImageDC, width, height);
+   pOldBitmapOr = SelectObject (hOrDC, bitmapOr);
+   BitBlt (hOrDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+
+   hAndDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hAndDC, GetMapMode (TtDisplay));
+   bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
+   pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
+
+   crOldBkColor = SetBkColor (hImageDC, GetNearestColor (hImageDC, crColor));
+   BitBlt (hAndDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
+
+   SetBkColor (hImageDC, crOldBkColor);
+
+   hInvAndDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hInvAndDC, GetMapMode (TtDisplay));
+   bitmapInvAnd = CreateBitmap (width, height, 1, 1, NULL);
+   pOldBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
+   BitBlt (hInvAndDC, 0, 0, width, height, hAndDC, 0, 0, NOTSRCCOPY);
+
+   BitBlt (hOrDC, 0, 0, width, height, hInvAndDC, 0, 0, SRCAND);
+
+   hDestDC = CreateCompatibleDC (TtDisplay);
+   SetMapMode (hDestDC, GetMapMode (TtDisplay));
+   bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
+   pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
+   BitBlt (hDestDC, 0, 0, width, height, TtDisplay, x, y, SRCCOPY);
+   BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
+   BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
+   BitBlt (TtDisplay, x, y, width, height, hDestDC, 0, 0, SRCCOPY);
+
+   SelectObject (hDestDC, pOldBitmapDest);
+   SelectObject (hInvAndDC, pOldBitmapInvAnd);
+   SelectObject (hAndDC, pOldBitmapAnd);
+   SelectObject (hOrDC, pOldBitmapOr);
+   SelectObject (hImageDC, bitmap);
+
+   DeleteDC (hDestDC);
+   DeleteDC (hInvAndDC);
+   DeleteDC (hAndDC);
+   DeleteDC (hOrDC);
+   DeleteDC (hImageDC);
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    Match_Format returns TRUE if the considered header file matches   
@@ -299,16 +395,21 @@ int                 frame;
 PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
-  ViewFrame          *pFrame;
+
 # ifndef _WINDOWS
+  ViewFrame          *pFrame;
   XRectangle        rect;
   XGCValues         values;
   unsigned int      valuemask;
+  int               delta;
 # endif /* _WINDOWS */
+
 # ifdef _WINDOWS
   HDC     hMemDC;
+  HBRUSH  hBrush;
+  int     x, y;
 # endif /* _WINDOWS */
-  int               delta;
+
 
   if (picXOrg < 0)
     {
@@ -330,12 +431,15 @@ PictInfo           *imageDesc;
 #            ifndef _WINDOWS
 	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #            else /* _WINDOWS */
-
-	     hMemDC = CreateCompatibleDC (TtDisplay);
-	     SelectObject (hMemDC, pixmap);
+		 if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
+	        hMemDC = CreateCompatibleDC (TtDisplay);
+	        SelectObject (hMemDC, pixmap);
 	     
-	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-	     DeleteDC (hMemDC);
+	        BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	        DeleteDC (hMemDC);
+         } else {
+               WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, PALETTERGB (imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue));
+         }
 #            endif /* _WINDOWS */
 	     break;
 	  
@@ -343,72 +447,82 @@ PictInfo           *imageDesc;
 	case XRepeat:
 	case YRepeat:
 #         ifndef _WINDOWS
-	  pFrame = &ViewFrameTable[frame - 1];
-	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-	  values.fill_style = FillTiled;
-	  values.tile = pixmap;
-	  values.ts_x_origin = xFrame;
-	  values.ts_y_origin = yFrame;
-	  XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+          pFrame = &ViewFrameTable[frame - 1];
+          valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
+          values.fill_style = FillTiled;
+          values.tile = pixmap;
+          values.ts_x_origin = xFrame;
+          values.ts_y_origin = yFrame;
+          XChangeGC (TtDisplay, tiledGC, valuemask, &values);
 	  
-	  rect.x = pFrame->FrClipXBegin;
-	  rect.y = pFrame->FrClipYBegin;
-	  rect.width = pFrame->FrClipXEnd - rect.x;
-	  rect.height = pFrame->FrClipYEnd - rect.y;
-	  rect.x -= pFrame->FrXOrg;
-	  rect.y -= pFrame->FrYOrg;
-	  if (imageDesc->PicPresent != XRepeat)
-	    {
-	      /* clipping height is done by the box height */
-	      if (rect.y < yFrame)
-		{
-		  /* reduce the height in delta value */
-		  rect.height = rect.height + rect.y - yFrame;
-		  rect.y = yFrame;
-		}
-	      if (rect.height > h)
-		rect.height = h;
-	    }
-	  else
-	    {
-	      /* clipping height is done by the image height */
-	      delta = yFrame + imageDesc->PicHArea - rect.y;
-	      if (delta <= 0)
-		rect.height = 0;
-	      else
-		rect.height = delta;
-	    }
+          rect.x = pFrame->FrClipXBegin;
+          rect.y = pFrame->FrClipYBegin;
+          rect.width = pFrame->FrClipXEnd - rect.x;
+          rect.height = pFrame->FrClipYEnd - rect.y;
+          rect.x -= pFrame->FrXOrg;
+          rect.y -= pFrame->FrYOrg;
+          if (imageDesc->PicPresent != XRepeat) {
+            /* clipping height is done by the box height */
+            if (rect.y < yFrame) {
+               /* reduce the height in delta value */
+               rect.height = rect.height + rect.y - yFrame;
+               rect.y = yFrame;
+            }
+           if (rect.height > h)
+              rect.height = h;
+          } else {
+               /* clipping height is done by the image height */
+               delta = yFrame + imageDesc->PicHArea - rect.y;
+               if (delta <= 0)
+                  rect.height = 0;
+               else
+                  rect.height = delta;
+          }
 	  
-	  if (imageDesc->PicPresent != YRepeat)
-	    {
-	      /* clipping width is done by the box width */
-	      if (rect.x < xFrame)
-		{
-		  /* reduce the width in delta value */
-		  rect.width = rect.width +rect.x - xFrame;
-		  rect.x = xFrame;
-		}
-	      if (rect.width > w)
-		rect.width = w;
-	    }
-	  else
-	    {
-	      /* clipping width is done by the image width */
-	      delta = xFrame + imageDesc->PicWArea - rect.x;
-	      if (delta <= 0)
-		rect.width = 0;
-	      else
-		rect.width = delta;
-	    }
+          if (imageDesc->PicPresent != YRepeat) {
+             /* clipping width is done by the box width */
+             if (rect.x < xFrame) {
+                /* reduce the width in delta value */
+                rect.width = rect.width +rect.x - xFrame;
+                rect.x = xFrame;
+             }
+            if (rect.width > w)
+               rect.width = w;
+          } else {
+               /* clipping width is done by the image width */
+               delta = xFrame + imageDesc->PicWArea - rect.x;
+               if (delta <= 0)
+                  rect.width = 0;
+               else
+                  rect.width = delta;
+          }
 	  
-	  XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-	  XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
-	  /* remove clipping */
-	  rect.x = 0;
-	  rect.y = 0;
-	  rect.width = MAX_SIZE;
-	  rect.height = MAX_SIZE;
-	  XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+          XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+          XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+          /* remove clipping */
+          rect.x = 0;
+          rect.y = 0;
+          rect.width = MAX_SIZE;
+          rect.height = MAX_SIZE;
+          XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+#         else  /* _WINDOWS */
+          if (IS_WIN95) {
+             HBITMAP hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
+			 int     x, y;
+			 hMemDC = CreateCompatibleDC (TtDisplay);
+			 SelectObject (hMemDC, pixmap);
+
+             for (y = 0; y < h; y += imageDesc->PicHArea)
+                 for (x = 0; x < w; x += imageDesc->PicWArea)
+                     BitBlt (TtDisplay, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hMemDC, 0, 0, SRCCOPY);
+			 DeleteDC (hMemDC);
+          } else {
+                hBrush = CreatePatternBrush (pixmap);
+                hBrush = SelectObject (TtDisplay, hBrush);
+                PatBlt (TtDisplay, xFrame, yFrame, w, h, PATCOPY);
+                hBrush = SelectObject (TtDisplay, hBrush);
+                DeleteObject (hBrush);
+          }
 #         endif /* _WINDOWS */
 	  break;
 	}
@@ -719,19 +833,25 @@ char               *simplename;
 #endif /* __STDC__ */
 {
    register char      *from, *to;
+   char                URL_DIR_SEP;
+
+   if (filename && strchr (filename, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
  
    to = simplename;
    *to = '\0';
    for (from = filename; *from++;) ;
    for (--from; --from > filename;)
      {
-        if (*from == DIR_SEP)
+        if (*from == URL_DIR_SEP)
           {
              ++from;
              break;
           }
      }
-   if (*from == DIR_SEP)
+   if (*from == URL_DIR_SEP)
       ++from;
  
    for (; *from;)
@@ -756,9 +876,11 @@ int                 hlogo;
 {
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
+#  ifndef _WINDOWS
    int                 fileNameWidth;
    int                 fnposx, fnposy;
    char                filename[255];
+#  endif /* !_WINDOWS */
    Drawable            drawable;
    Pixmap              pixmap;
    float               scaleX, scaleY;
@@ -768,8 +890,8 @@ int                 hlogo;
    POINT lPt [2];
 #  endif /* _WINDOWS */
    /* Create the temporary picture */
-   scaleX = 0;
-   scaleY = 0;
+   scaleX = 0.0;
+   scaleY = 0.0;
    x = 0;
    y = 0;
    w = 0;
@@ -889,6 +1011,9 @@ int                 hlogo;
    x += xFrame;
    y += yFrame;
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
+   DeleteDC (hDc);
+   DeleteDC (hMemDc);
+   DeleteObject (pixmap);
 #  ifndef _WINDOWS
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
@@ -931,16 +1056,15 @@ int                 frame;
    Drawable            drawable;
    int                 x, y;
    ThotColor           BackGroundPixel;
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (frame);
+#  endif /* _WINDOWS */
 
    xTranslate = 0;
    yTranslate = 0;
    picXOrg = 0;
    picYOrg = 0;
 
-#  ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
-   
    if (imageDesc->PicFileName == NULL)
      return;
    else if (imageDesc->PicFileName[0] == '\0')
@@ -974,8 +1098,11 @@ int                 frame;
    SetPictureClipping (&picWArea, &picHArea, wFrame, hFrame, imageDesc);
    if (!Printing)
      {
+#      ifndef _WINDOWS
        SetCursorWatch (frame);
-       if (imageDesc->PicPixmap == EpsfPictureLogo)
+#      endif /* !_WINDOWS */
+       /* if (imageDesc->PicPixmap == EpsfPictureLogo) */
+       if (imageDesc->PicType == EPS_FORMAT) 
 	 DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
        else
 	 {
@@ -1002,9 +1129,10 @@ int                 frame;
 	       if (PictureHandlerTable[typeImage].DrawPicture != NULL)
 		 (*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
-	   else
+	   else {
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
+	   }
 	   
 	   if (imageDesc->PicMask)
 	     {
@@ -1014,7 +1142,9 @@ int                 frame;
 #              endif /* _WINDOWS */
 	     }
 	 }
+#      ifndef _WINDOWS
        ResetCursorWatch (frame);
+#      endif /* _WINDOWS */
      }
    else if (typeImage < InlineHandlers && typeImage > -1)
      /* for the moment we didn't consider plugin printing */
@@ -1087,10 +1217,10 @@ int           bperpix;
     {
       /* run the rescaling algorithm */
       /* create a new pic of the appropriate size */
-      epic = (char *) malloc((size_t) (eWIDE * eHIGH * bperpix));
+      epic = (char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
       if (!epic)
-	printf(" unable to malloc memory for zoomed image \n");
-      cxarr = (int *) malloc(eWIDE * sizeof(int));
+	printf(" unable to TtaGetMemory memory for zoomed image \n");
+      cxarr = (int *) TtaGetMemory(eWIDE * sizeof(int));
       if (!cxarr)
 	printf("unable to allocate cxarr for zoomed image \n");
       for (ex=0; ex<eWIDE; ex++) 
@@ -1119,7 +1249,7 @@ int           bperpix;
 		}
 	    }
 	}
-      free(cxarr);
+      TtaFreeMemory (cxarr);
     }
   
   return (char *) epic;
@@ -1150,7 +1280,8 @@ PictInfo           *imageDesc;
    unsigned long       Bgcolor;
 
 #  ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
+   if (TtDisplay == 0)
+      WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
 
    if (imageDesc->PicFileName == NULL)
@@ -1259,6 +1390,11 @@ PictInfo           *imageDesc;
 		 }
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
+#          ifdef _WINDOWS
+           imageDesc->bgRed   = bgRed;
+		   imageDesc->bgGreen = bgGreen;
+		   imageDesc->bgBlue  = bgBlue;
+#          endif /* _WINDOWS */
 	     }
 	 }
        
@@ -1316,9 +1452,6 @@ PictInfo           *imageDesc;
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
       UpdatePictInfo (imageDesc, myDrawable, picMask);
 
-#  ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
-#  endif /* _WINDOWS */
 }
 
 

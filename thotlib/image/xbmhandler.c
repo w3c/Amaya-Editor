@@ -76,6 +76,8 @@ Drawable           *mask1;
 	return pixmap;
    }
 #  else /* _WINDOWS */
+   pixmap = (HBITMAP) 0;
+#  if 0
    HANDLE           hBmFileName ;
    BITMAPFILEHEADER bmFileHeader ;
    BITMAPINFOHEADER bmInfoHeader ;
@@ -148,7 +150,7 @@ Drawable           *mask1;
    *yif = 0; 
    *wif = bmp.bmWidth;
    *hif = bmp.bmHeight;
- 
+#  endif /* 0 */
    return pixmap;
 #  endif /* !_WINDOWS */
 }

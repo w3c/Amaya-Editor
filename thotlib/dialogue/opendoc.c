@@ -335,12 +335,18 @@ char               *data;
    PtrDocument         pDoc;
    int                 i;
    char                bufDir[MAX_PATH];
+   char                URL_DIR_SEP;
+
+   if (data && strchr (data, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
    val = (int) data;
    switch (ref)
 	 {
 	    case NumZoneDocNameToOpen:
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryName, data);
 		    DefaultDocumentName[0] = '\0';
@@ -487,6 +493,7 @@ View                view;
    char                bufDir[MAX_PATH];
    PathBuffer          docName;
    int                 length, nbItems, entry;
+   char                URL_DIR_SEP;
 
    if (ThotLocalActions[T_opendoc] == NULL)
      {
@@ -514,12 +521,18 @@ View                view;
      }
    else if (DirectoryName[0] != '\0')
      {
+       if (DirectoryName && strchr (DirectoryName, '/'))
+          URL_DIR_SEP = '/';
+       else 
+           URL_DIR_SEP = DIR_SEP;
+
+
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
        if(entry != -1)
 	 TtaSetSelector (NumZoneDirOpenDoc,entry,NULL);
        strcpy (docName, DirectoryName);
        length = strlen (docName);
-       docName[length] = DIR_SEP;
+       docName[length] = URL_DIR_SEP;
        docName[length + 1] = '\0';
        strcpy (DefaultDocumentName, docName);
      }

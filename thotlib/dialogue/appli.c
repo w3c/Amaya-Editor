@@ -56,7 +56,7 @@ static XmString     null_string;
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
 #define TITLE_TXTZONE   1
-#define ID_TOOLBAR    165
+#define IDR_TOOLBAR    165
 
 #define MENU_VIEWS            551
 #define SHOW_STRUCTURE        553
@@ -88,6 +88,7 @@ extern HWND      hwndClient ;
 extern HWND      ToolBar    ;
 extern HWND      StatusBar  ;
 extern HWND      currentWindow;
+extern HWND      WIN_curWin;
 extern HINSTANCE hInstance  ;
 extern BOOL      WIN_UserGeometry; 
 
@@ -100,7 +101,9 @@ static char      doc_title [500];
 
 int         cyToolBar ;
 int         CommandToString [MAX_BUTTON];
-char        szTbStrings [MAX_FRAME] [4096];
+char        szTbStrings [4096];
+
+boolean viewClosed = FALSE;
 #ifdef AMAYA_TOOLTIPS
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
 #else  /* !AMAYA_TOOLTIPS */
@@ -131,10 +134,9 @@ HWND hwndToolBar;
 }
 
 #ifdef __STDC__
-void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
+static void CopyToolTipText (LPTOOLTIPTEXT lpttt)
 #else  /* __STDC__ */
-void CopyToolTipText (frame, lpttt)
-int           frame;
+static void CopyToolTipText (lpttt)
 LPTOOLTIPTEXT lpttt;
 #endif /* __STDC__ */
 {
@@ -154,7 +156,7 @@ LPTOOLTIPTEXT lpttt;
    }
 
    /* To be safe, count number of strings in text */
-   pString = &szTbStrings [frame][0] ;
+   pString = &szTbStrings [0] ;
    cMax = 0 ;
    while (*pString != '\0') {
          cMax++ ;
@@ -167,7 +169,7 @@ LPTOOLTIPTEXT lpttt;
       pString = "Invalid Button Index" ;
    else {
        /* Cycle through to requested string */
-       pString = &szTbStrings[frame] [0] ;
+       pString = &szTbStrings [0] ;
        for (i = 0 ; i < iButton ; i++) {
            cb = lstrlen (pString) ;
            pString += (cb + 1) ;
@@ -290,14 +292,14 @@ LPARAM     lParam;
    if (frame > 0 && frame <= MAX_FRAME) {
       /* Do not redraw if the document is in NoComputedDisplay mode. */
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
-	 TtDisplay = BeginPaint (w, &ps);
-	 GetClientRect (w, &rect);
-	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-	 SwitchSelection (frame, FALSE);
-	 RedrawFrameBottom (frame, 0);
-	 SwitchSelection (frame, TRUE);
-	 EndPaint (w, &ps);
-	 WIN_ReleaseDeviceContext ();
+         TtDisplay = BeginPaint (w, &ps);
+         GetClientRect (w, &rect);
+         DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
+         SwitchSelection (frame, FALSE);
+         RedrawFrameBottom (frame, 0);
+         SwitchSelection (frame, TRUE);
+         EndPaint (w, &ps);
+         WIN_ReleaseDeviceContext ();
       }
    }
 }
@@ -380,7 +382,7 @@ int bottom_delta;
    RebuildConcreteImage (frame);
 
    /* recompute the scroll bars */
-   UpdateScrollbars (frame);
+    UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
 
@@ -497,12 +499,12 @@ int                 value;
                break;
 
           case SB_LINEUP:
-	       delta = -13;
+	       delta = -15;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
 
           case SB_LINEDOWN:
-	       delta = 13;
+	       delta = 15;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
 
@@ -517,6 +519,8 @@ int                 value;
 	       break;
 
 	  case SB_THUMBPOSITION:
+	       JumpIntoView (frame, value);
+	       break;
 	  case SB_THUMBTRACK:
 	       JumpIntoView (frame, value);
 	       break;
@@ -524,7 +528,7 @@ int                 value;
 
    /* get some information on the position of the displayed part
     * for this document. */
-   /* UpdateScrollbars (frame); */
+    /* UpdateScrollbars (frame); */
 }
 
 /*----------------------------------------------------------------------
@@ -547,11 +551,11 @@ int                 value;
 
    switch (reason) {
    case SB_LINERIGHT:
-        delta = 13;
+        delta = 15;
         break;
 
    case SB_LINELEFT:
-        delta = -13;
+        delta = -15;
         break;
    }
 
@@ -782,17 +786,24 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
-   XmScrollBarCallbackStruct infos;
    int                 frame;
+#  ifndef _WINDOWS
+   XmScrollBarCallbackStruct infos;
+#  else   /* _WINDOWS */
+   int delta;
+#  endif  /* _WINDOWS */
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
+#  ifndef _WINDOWS
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   delta = -FrameTable[frame].FrHeight;
+   VerticalScroll (frame, delta, TRUE);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -807,17 +818,25 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
-   XmScrollBarCallbackStruct infos;
    int                 frame;
+
+#  ifndef _WINDOWS
+   XmScrollBarCallbackStruct infos;
+#  else   /* _WINDOWS */
+   int delta;
+#  endif  /* !_WINDOWS */
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
+#  ifndef _WINDOWS
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   delta = FrameTable[frame].FrHeight;
+   VerticalScroll (frame, delta, TRUE);
+#  endif /* _WINDOWS */
 }
 
 
@@ -919,9 +938,11 @@ View                view;
    if (idwindow != 0)
      {
 	w = FrameTable[idwindow].WdFrame;
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+#   else  /* _WINDOWS */
+    SetActiveWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
      }
 }
@@ -1040,7 +1061,7 @@ CONST char         *name;
 
 #            ifdef _WINDOWS
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
-		 /*SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);*/
+		 SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #            else  /* !_WINDOWS */
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
@@ -1089,20 +1110,21 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-	HWND hwndTextEdit;
-    HWND hwndToolTip ;
-	int  doc, view ;
+	HWND  hwndTextEdit;
+    HWND  hwndToolTip ;
+	int   doc, view ;
+	char* viewName ;
 	int  frame = GetMainFrameNumber (hwnd);
 
      switch (mMsg) {
             case WM_CREATE:
-	         /* Create toolbar  */
-		 AmayaTBBitmap.hInst = hInstance;
-		 AmayaTBBitmap.nID   = ID_TOOLBAR;
+                /* Create toolbar  */
+                 AmayaTBBitmap.hInst = hInstance;
+                 AmayaTBBitmap.nID   = IDR_TOOLBAR;
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
 #                ifdef AMAYA_TOOLTIPS
-                 ToolBar_AddString (ToolBar, 0, &szTbStrings[frame][0]);
+                 ToolBar_AddString (ToolBar, 0, &szTbStrings [0]);
                  hwndToolTip = ToolBar_GetToolTips (ToolBar);
 				 
                  if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
@@ -1128,7 +1150,7 @@ LPARAM      lParam;
 	         return (0);
 
 	    case WM_HSCROLL:
-		 WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
+             WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	         return (0);
 
 		case WM_ENTER:
@@ -1156,7 +1178,7 @@ LPARAM      lParam;
 		     /* Fetch tooltip text */
 		     if (pnmh->code == TTN_NEEDTEXT) {
 		        LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
-		        CopyToolTipText (frame, lpttt) ;
+		        CopyToolTipText (lpttt) ;
 		     }
 		 
 		     return 0 ;
@@ -1166,24 +1188,22 @@ LPARAM      lParam;
             case WM_COMMAND:
 			     if (LOWORD (wParam) >= TBBUTTONS_BASE)
 					   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-				 else {
-					  if (wParam >= SHOW_STRUCTURE && wParam <= SHOW_TAB_OF_CONTENTS) {
-				 	     HMENU hmenu = GetMenu(hwnd); 
-				 	     DWORD fdwMenu;
-                         fdwMenu = GetMenuState(hmenu, LOWORD (wParam), MF_BYCOMMAND); 
-                         if (!(fdwMenu & MF_CHECKED)) 
-                            CheckMenuItem(hmenu, (UINT) LOWORD (wParam), MF_BYCOMMAND | MF_CHECKED); 
-                         else  
-                             CheckMenuItem(hmenu, (UINT) LOWORD (wParam), MF_BYCOMMAND | MF_UNCHECKED); 
-					  } 
-					  
-	                  WIN_ThotCallBack (hwnd, wParam, lParam);
-				 }
+				 else 
+					 WIN_ThotCallBack (hwnd, wParam, lParam);
 	             return (0);
 
             case WM_DESTROY:
-                 SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
-                 PostQuitMessage (0) ;
+				 if (!viewClosed) {
+                    FrameToView (frame, &doc, &view);
+					viewName = TtaGetViewName (doc, view);
+					if (!strcmp (viewName, "Formatted_view"))
+                       TtcCloseDocument (doc, view);
+                    else
+					    TtcCloseView (doc, view);
+                 }
+
+                 viewClosed = FALSE;
+                 PostQuitMessage (0);
                  return 0 ;
 
             case WM_SIZE: {
@@ -1306,12 +1326,12 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
-          case WM_PAINT: /* Some part of the Client Area has to be repaint. */
+          case WM_PAINT: 
+		      /* Some part of the Client Area has to be repaint. */
 	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
 	       TtDisplay = saveHdc;
 	       return 0;
-
           case WM_SIZE: {
                HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
                int  cx         = LOWORD (lParam) ;
@@ -1415,7 +1435,8 @@ LPARAM lParam;
 	       return (0);
 
           case WM_DESTROY: 
-               DestroyWindow (hwnd);
+			   WIN_ReleaseDeviceContext ();
+               PostQuitMessage (0);
                return 0;
 	       
           default:
@@ -1848,10 +1869,10 @@ int                *pave;
 	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
 #   else  /* _WINDOWS */
-	/*
+	
 	GetMessage (&event, NULL, 0, 0);
 	TtaHandleOneWindowEvent (&event);
-	*/
+	
 #   endif /* _WINDOWS */
      }				/*while */
 

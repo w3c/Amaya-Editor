@@ -121,6 +121,12 @@ char               *data;
    PathBuffer          docName;
    int                 i;
    char                BufDir[MAX_PATH];
+   char                URL_DIR_SEP;
+
+   if (data && strchr (data, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
    switch (ref)
 	 {
@@ -168,7 +174,7 @@ char               *data;
 	       break;
 	    case NumZoneDocNameToCreate:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != DIR_SEP)
+	       if (TtaCheckDirectory (data) && data[strlen (data) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (DirectoryDocToCreate, data);
 		    NameDocToCreate[0] = '\0';

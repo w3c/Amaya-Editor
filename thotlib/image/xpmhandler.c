@@ -65,9 +65,6 @@ Drawable           *mask1;
    Pixmap              pixmap;
    XpmAttributes       att;
    unsigned long       valuemask = 0;
-#  ifdef _WINDOWS
-   BYTE* data;
-#  endif /* _WINDOWS */
 
    /* pixmap loading parameters passed to the library */
 
@@ -151,13 +148,15 @@ unsigned long       BackGroundPixel;
    unsigned char       pt1;
    int                 x, y;
    int                 wim ;
+#  ifndef _WINDOWS 
    XpmAttributes       att;
+   XpmInfo             info;
+   ThotColorStruct     exactcolor;
+#  endif /* !_WINDOWS */
    int                 status;
    unsigned long       valuemask = 0;
    ThotColorStruct     colorTab[256];
-   ThotColorStruct     exactcolor;
    XpmImage            image;
-   XpmInfo             info;
    unsigned int        NbCharPerLine;
    unsigned short      red, green, blue;
 

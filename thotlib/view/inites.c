@@ -169,12 +169,12 @@ int                 i;
 
 #endif /* __STDC__ */
 {
-   ThotColorStruct     col;
 
 #  ifdef _WINDOWS
    /* Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue); */
    Pix_Color[i] = GetNearestColor (TtDisplay, PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
 #  else  /* _WINDOWS */
+   ThotColorStruct     col;
    if (Color_Table[i] != NULL)
      {
 	/* load the color */
@@ -867,5 +867,5 @@ int                 motif;
 	 }
    WIN_LastBitmap = hBitmap;
 #endif
-   return ((unsigned long) pixmap);
+   return ((unsigned long) hBitmap);
 }

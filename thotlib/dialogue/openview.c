@@ -37,6 +37,10 @@ static DocViewNumber ReferenceView;
 #include "appdialogue_f.h"
 #include "viewapi_f.h"
 
+#ifdef _WINDOWS
+extern boolean viewClosed ;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    CallbackOpenView
    updates the openview form
@@ -139,6 +143,10 @@ View                viewIn;
    PtrDocument         pDoc;
    int                 view;
    boolean             assoc;
+
+#  ifdef _WINDOWS
+   viewClosed = TRUE;
+#  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)

@@ -79,7 +79,7 @@ C_points           *cp;
 {
    float               s, theta, r;
 
-   r = 1 - 0.45;
+   r = 1.0 - 0.45;
    /* 0 <= theta1, theta2 < 2PI */
    theta = (theta1 + theta2) / 2;
 

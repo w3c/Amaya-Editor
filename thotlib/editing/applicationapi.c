@@ -189,6 +189,11 @@ char               *applicationName;
 void                TtaQuit ()
 {
    TtaSaveAppRegistry ();
+
+#  ifdef _WINDOWS 
+   DeleteObject (TtCmap);
+#  endif /* _WINDOWS */
+
    exit (0);
 }
 
@@ -398,15 +403,15 @@ char               *aName;
 {
    int                 lg, i, j;
    char               *ptr, *oldptr;
-   char                my_dir_sep;
+   char                URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
    if (text && strchr (text, '/'))
-	  my_dir_sep = '/';
+	  URL_DIR_SEP = '/';
    else 
-	   my_dir_sep = DIR_SEP;
+	   URL_DIR_SEP = DIR_SEP;
    
    aDirectory[0] = '\0';
    aName[0] = '\0';
@@ -421,7 +426,7 @@ char               *aName;
 #        ifndef _WINDOWS
 	     ptr = strrchr (oldptr, DIR_SEP);
 #        else  /* _WINDOWS */
-	     ptr = strrchr (oldptr, my_dir_sep);
+	     ptr = strrchr (oldptr, URL_DIR_SEP);
 #        endif /* _WINDOWS */
 		 if (ptr != NULL)
 		oldptr = &ptr[1];
@@ -434,7 +439,7 @@ char               *aName;
 	     strncpy (aDirectory, text, i);
 	     j = i - 1;
 	     /* Suppresses the / characters at the end of the path */
-	     while (aDirectory[j] == DIR_SEP)
+	     while (aDirectory[j] == URL_DIR_SEP)
 		aDirectory[j--] = '\0';
 	  }
 	if (i != lg)

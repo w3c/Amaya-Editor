@@ -27,7 +27,7 @@ THOT_EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 THOT_EXPORT ThotAppContext	app_cont;
 #ifdef _WINDOWS
 
-THOT_EXPORT WNDCLASSEX       RootShell;
+THOT_EXPORT WNDCLASS      RootShell;
 
 #else /* _WINDOWS */
 

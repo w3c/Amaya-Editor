@@ -87,6 +87,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 
 extern TBADDBITMAP AmayaTBBitmap;
+extern boolean     viewClosed;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static int     currentFrame;
@@ -98,10 +99,10 @@ HWND StatusBar;
 int  nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
-static int  tipIndex = 0;
-static int  strIndex = 0;
-extern int  CommandToString [MAX_BUTTON];
-extern char szTbStrings [MAX_FRAME][4096];
+static int   tipIndex = 0;
+static int   strIndex = 0;
+extern int   CommandToString [MAX_BUTTON];
+extern char  szTbStrings [MAX_FRAME][4096];
 #endif /* AMAYA_TOOLTIPS */
 
 #define ToolBar_ButtonStructSize(hwnd) \
@@ -113,6 +114,8 @@ extern char szTbStrings [MAX_FRAME][4096];
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
+HMENU hmenu;
+int   menu_item ;
 #ifdef AMAYA_TOOLTIPS
 #ifdef __STDC__
 LPSTR GetString (int frame, int iString)
@@ -1313,9 +1316,9 @@ ThotWidget          toplevel;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info)
+int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info)
 #else  /* __STDC__ */
-int TtaAddButton (document, view, picture, procedure, info)
+int WIN_TtaAddButton (document, view, picture, procedure, info)
 Document document;
 View     view;
 int      picture;
@@ -1335,9 +1338,10 @@ char               *info;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
-   int                 frame, i, n, index;
+   int                 frame, i, index;
 
 #  ifndef _WINDOWS
+   int                 n;
    XmString            title_string;
    Arg                 args[MAX_ARGS];
    ThotWidget          w, row;
@@ -1414,14 +1418,15 @@ char               *info;
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
 #                 else  /* _WINDOWS */
+		  index = i;
                   if (procedure) {
-                     w = (TBBUTTON*) malloc (sizeof (TBBUTTON));
+                     w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                      w->iBitmap   = picture;
                      w->idCommand = TBBUTTONS_BASE + i; 
                      w->fsState   = TBSTATE_ENABLED;
                      w->fsStyle   = TBSTYLE_BUTTON;
                      w->dwData    = 0;
-                     w->iString   = 0;
+                     w->iString   = i;
 #                    ifdef AMAYA_TOOLTIPS
                      CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
                      CommandToString[tipIndex]   = -1;
@@ -1430,10 +1435,10 @@ char               *info;
                      FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
                      ToolBar_ButtonStructSize (WinToolBar[frame]);
-                     ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
+                     ToolBar_AddBitmap (WinToolBar[frame], i+1, &AmayaTBBitmap);
                      ToolBar_InsertButton (WinToolBar[frame], i, w);
                   } else {
-                        w = (TBBUTTON*) malloc (sizeof (TBBUTTON));
+                        w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                         w->iBitmap   = 0;
                         w->idCommand = 0; 
                         w->fsState   = TBSTATE_ENABLED;
@@ -1443,7 +1448,7 @@ char               *info;
                         FrameTable[frame].Button[i] = w;
                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
                         ToolBar_ButtonStructSize (WinToolBar[frame]);
-                        ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
+                        ToolBar_AddBitmap (WinToolBar[frame], i+1, &AmayaTBBitmap);
                         ToolBar_InsertButton (WinToolBar[frame], i, w);
                   }
 #                 endif /* _WINDOWS */
@@ -1663,10 +1668,15 @@ View                view;
 	XtManageChild (XtParent (XtParent (row)));
      }
 #  else  /* _WINDOWS */
-   if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
+   if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
+      hmenu = GetMenu (FrMainRef[frame]); 
+      CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
       ShowWindow (WinToolBar[frame], SW_HIDE);
-   else
-       ShowWindow (WinToolBar[frame], SW_SHOW);
+   } else {
+        hmenu = GetMenu (FrMainRef[frame]); 
+        CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+        ShowWindow (WinToolBar[frame], SW_SHOW);
+   }
    /* Resize other windows */
    GetClientRect (FrMainRef [frame], &r);
    PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
@@ -1704,7 +1714,7 @@ XmTextVerifyCallbackStruct *call_d;
 #  ifndef _WINDOWS
    char               *text;
 #  else  /* _WINDOWS */
-   char                text [1024];
+   static char text [1024];
 #  endif /* _WINDOWS */
 
    CloseInsertion ();
@@ -1748,13 +1758,15 @@ void                (*procedure) ();
 
 #endif /* __STDC__ */
 {
-   int                 frame, i, n;
-   ThotWidget          w, row, rowh;
+   int                 frame, i;
+   ThotWidget          w, row;
 #  ifndef _WINDOWS
+   int                 n;
+   ThotWidget          rowh;
+   ThotWidget         *brother;
    XmString            title_string;
    Arg                 args[MAX_ARGS];
 #  endif /* _WINDOWS */
-   ThotWidget         *brother;
 #  ifdef _WINDOWS
    RECT       rect;
    ThotWidget wLabel;
@@ -2001,13 +2013,14 @@ View                view;
 #  ifndef _WINDOWS
    Dimension           y, dy;
    Arg                 args[MAX_ARGS];
+   ThotWidget          row, w;
 #  endif
 
 #  ifdef _WINDOWS
-   int  index;
-   RECT r;
+   int     index;
+   boolean itemChecked = FALSE;
+   RECT    r;
 #  endif /* _WINDOWS */
-   ThotWidget          row, w;
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -2050,9 +2063,20 @@ View                view;
 #         else  /* _WINDOWS */
 	     for (index = 0; index <  MAX_TEXTZONE; index++) {
 		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
+            if (!itemChecked) {
+               hmenu = GetMenu (FrMainRef[frame]); 
+               CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+               itemChecked = TRUE ;
+            }
+
 		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
 		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
 		 } else {
+              if (!itemChecked) {
+                 hmenu = GetMenu (FrMainRef[frame]); 
+                 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+              }
+
 		      ShowWindow (FrameTable[frame].Label [index], SW_SHOW);
 		      ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW);
 		 }
@@ -2117,17 +2141,17 @@ int                 doc;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
    Dimension           dx, dy;
-#  endif /* _WINDOWS */
-   ThotWidget          Main_Wd = (ThotWidget) 0;
+   int                 start, end, total;
+   char                string[700];
+   struct Cat_Context *catalogue;
    ThotWidget          Wframe;
    ThotWidget          shell;
+#  endif /* _WINDOWS */
+
+   ThotWidget          Main_Wd = (ThotWidget) 0;
+
 #  ifdef _WINDOWS
-   int                 indexTxtZone;
    HMENU               menu_bar, w;
-   MSG                 msg;
-   RECT                rect;
-   struct Cat_Context *catalogue;
-   int                 start, end, total;
 #  else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
@@ -2137,7 +2161,6 @@ int                 doc;
    ThotWidget          vscrl;
    int                 i, n;
    int                 ref;
-   char                string[700];
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
    boolean             found;
@@ -2228,13 +2251,15 @@ int                 doc;
 	     if (Main_Wd == 0)
 		WinErrorBox (WIN_Main_Wd);
 	     else {
-		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
-		  /* store everything. */
+#                 ifdef AMAYA_DEBUG
+                  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
+#                 endif /* AMAYA_DEBUG */
+                  /* store everything. */
                   FrMainRef[frame]           = Main_Wd;
                   FrRef[frame]               = hwndClient;
                   WinToolBar[frame]          = ToolBar;
                   FrameTable[frame].WdStatus = StatusBar;
-		  /* and show it up. */
+                  /* and show it up. */
                   
                   menu_bar = CreateMenu ();
                   if (!menu_bar) 
@@ -2709,10 +2734,6 @@ int                 frame;
    int                 item;
    Menu_Ctl           *ptrmenu;
    Item_Ctl           *ptr;
-
-#  ifdef _WINDOWS 
-   int catIndex;
-#  endif /* _WINDOWS */
 
    if (ThotLocalActions[T_stopinsert] != NULL)
      (*ThotLocalActions[T_stopinsert]) ();
@@ -3323,6 +3344,9 @@ char               *data;
    PtrCallbackCTX      ctxCallback;
 
    /* Termine l'insertion courante s'il y en a une */
+#  ifdef _WINDOWS
+   menu_item = ref + (int) data;
+#  endif /* _WINDOWS */
    CloseInsertion ();
 
    if (ref >= MAX_ThotMenu)

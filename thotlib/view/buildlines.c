@@ -301,9 +301,9 @@ float               e;
    int                 value;
 
    if (e < 0.0)
-      value = e - 0.5;
+      value = (int) (e - 0.5);
    else
-      value = e + 0.5;
+      value = (int) (e + 0.5);
    return value;
 }
 

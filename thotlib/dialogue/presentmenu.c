@@ -1180,16 +1180,18 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS 
    int                 i, nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
+   char               *s;
+   char                string[MAX_TXT_LEN];
+#  endif /* !_WINDOWS */
    PtrDocument         pSelDoc;
    PtrElement          pFirstSel, pLastSel;
    int                 firstChar, lastChar;
    boolean             selectionOK;
    PtrAbstractBox      pAb;
    PtrElement          pEl;
-   char                string[MAX_TXT_LEN];
-   char               *s;
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -1518,13 +1520,15 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   int                 i;
    PtrDocument         pSelDoc;
    PtrElement          pFirstSel, pLastSel;
    int                 firstChar, lastChar;
    boolean             selectionOK;
    PtrAbstractBox      pAb;
+#  ifndef _WINDOWS 
+   int                 i;
    char                string[MAX_TXT_LEN];
+#  endif /* !_WINDOWS */
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];

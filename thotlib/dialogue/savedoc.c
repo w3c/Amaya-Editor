@@ -156,13 +156,19 @@ char               *txt;
    PathBuffer          BufDir;
    int                 i, nbitem;
    int                 val;
+   char                URL_DIR_SEP;
+
+   if (txt && strchr (txt, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
    val = (int) txt;
    switch (ref)
 	 {
 	    case NumZoneDocNameTooSave:
 	       /* zone de saisie du nom du document a creer */
-	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != DIR_SEP)
+	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != URL_DIR_SEP)
 		 {
 		    strcpy (SaveDirectoryName, txt);
 		    SaveFileName[0] = '\0';

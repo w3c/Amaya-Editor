@@ -271,6 +271,18 @@ ThotWindow win;
 }
 
 #ifdef _WINDOWS
+#if defined (WIN32)
+#   define IS_WIN32 TRUE
+#else
+#   define IS_WIN32 FALSE
+#endif
+
+#define IS_NT      IS_WIN32 && (BOOL)(GetVersion () < 0x80000000)
+#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE (LOWORD (GetVersion ())) < 4))
+#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean isOnlyBlank (CONST char* text)
 #else  /* __STDC__ */
@@ -284,6 +296,34 @@ CONST char* text;
     if (*pText == '\0')
        return TRUE;
     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+BOOL RegisterWin95 (CONST WNDCLASS* lpwc)
+#else  /* !__STDC__ */
+BOOL RegisterWin95 (lpwc)
+CONST WNDCLASS lpwc ;
+#endif /* __STDC__ */
+{
+   WNDCLASSEX wcex;
+
+   wcex.style         = lpwc->style;
+   wcex.lpfnWndProc   = lpwc->lpfnWndProc;
+   wcex.cbClsExtra    = lpwc->cbClsExtra;
+   wcex.cbWndExtra    = lpwc->cbWndExtra;
+   wcex.hInstance     = lpwc->hInstance;
+   wcex.hIcon         = lpwc->hIcon;
+   wcex.hCursor       = lpwc->hCursor;
+   wcex.hbrBackground = lpwc->hbrBackground;
+   wcex.lpszMenuName  = lpwc->lpszMenuName;
+   wcex.lpszClassName = lpwc->lpszClassName;
+
+   /* Added elements for Windows 95. */
+   wcex.cbSize = sizeof(WNDCLASSEX);
+   wcex.hIconSm  = LoadIcon (hInstance, IDI_APPLICATION) ;
+   return RegisterClassEx( &wcex );
 }
 
 /*----------------------------------------------------------------------
@@ -381,13 +421,12 @@ ThotWindow hScroll ;
    return -1;
 }
 
+ThotWindow WIN_curWin = (ThotWindow)(-1);
+
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
   ----------------------------------------------------------------------*/
-
-ThotWindow          WIN_curWin = (ThotWindow)(-1);
-
 #ifdef __STDC__
 void WIN_GetDeviceContext (int frame)
 #else  /* !__STDC__ */
@@ -395,11 +434,10 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-   HWND win;
-
-   if (frame == -1) {
+  HWND win;
+  if (frame == -1) {
       if (TtDisplay != 0)
-	 return;
+         return;
       for (frame = 0; frame <= MAX_FRAME; frame++)
 	  if (FrRef[frame] != 0)
 	     break;
@@ -442,41 +480,6 @@ int frame;
 }
 
 /*----------------------------------------------------------------------
-   WIN_GetWinDeviceContext :  select a Device Context for a given    
-   MS-Windows window.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WIN_GetWinDeviceContext (ThotWindow win)
-#else  /* !__STDC__ */
-void WIN_GetWinDeviceContext (ThotWindow win)
-ThotWindow win;
-#endif /* __STDC__ */
-{
-   if (win == 0)
-      return;
-
-   /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == win) && (TtDisplay != 0))
-      return;
-
-   /* release the previous Device Context. */
-   if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1)))
-      ReleaseDC (WIN_curWin, TtDisplay);
-
-   WIN_curWin = (ThotWindow) (-1);
-   TtDisplay = 0;
-
-   /* load the new Context. */
-   TtDisplay = GetDC (win);
-#  ifdef AMAYA_DEBUG
-   if (TtDisplay == 0)
-      fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-#  endif /* AMAYA_DEBUG */
-   if (TtDisplay != 0)
-      WIN_curWin = win;
-}
-
-/*----------------------------------------------------------------------
    WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -494,6 +497,9 @@ void WIN_ReleaseDeviceContext ()
 }
 
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
 #else  /* !__STDC__ */
@@ -646,6 +652,8 @@ HWND hWnd;
    MessageBox (hWnd, str, tszAppName, MB_OK);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* commandLine)
 #else  /* __STDC__ */
@@ -1129,9 +1137,9 @@ caddr_t             call_d;
 	XtManageChild (XtParent (w));
 #       else  /* _WINDOWS */
         ShowWindow (w, SW_SHOWNORMAL);
-	UpdateWindow (w);
-	ShowWindow (GetParent (w), SW_SHOWNORMAL);
-	UpdateWindow (GetParent (w));
+        UpdateWindow (w);
+        ShowWindow (GetParent (w), SW_SHOWNORMAL);
+        UpdateWindow (GetParent (w));
 #       endif /* _WINDOWS */
      }
 }
@@ -1515,9 +1523,9 @@ void                MyWarningHandler ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+boolean             WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
 #else  /* !__STDC__ */
-void                WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
+boolean             WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
 char* server; 
 char* txtOK; 
 char* txtRAZ; 
@@ -1545,48 +1553,57 @@ Display           **Dp;
 
 #  ifdef _WINDOWS
 
-   RootShell.cbSize        = sizeof (RootShell) ;
-   RootShell.lpszClassName = tszAppName;
-   RootShell.hInstance     = hInstance ;
+   RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.cbClsExtra    = 0 ;
+   RootShell.cbWndExtra    = 0 ;
+   RootShell.hInstance     = hInstance ;
    RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.lpszMenuName  = "AmayaMain" ;
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-   RootShell.style         = 0 ;
-   RootShell.cbClsExtra    = 0 ;
-   RootShell.cbWndExtra    = 0 ;
-   RootShell.hIconSm       = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.lpszClassName = tszAppName;
 
-   RegisterClassEx (&RootShell) ;
+   if (IS_WIN95) {
+      if (!RegisterWin95 (&RootShell))
+         return (FALSE);
+   } else if (!RegisterClass (&RootShell))
+          return (FALSE);
 
-   RootShell.lpszClassName = "ClientWndProc" ;
-   RootShell.hInstance     = hInstance ;
-   RootShell.lpfnWndProc   = ClientWndProc ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-   RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
-   RootShell.lpszMenuName  = NULL ;
-   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
    RootShell.style         = CS_DBLCLKS ;
+   RootShell.lpfnWndProc   = ClientWndProc ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
-   RootShell.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
-
-   RegisterClassEx (&RootShell) ;
-
-   RootShell.lpszClassName = "WNDIALOGBOX" ;
    RootShell.hInstance     = hInstance ;
-   RootShell.lpfnWndProc   = ThotDlgProc ;
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
+   RootShell.lpszClassName = "ClientWndProc" ;
+   RootShell.lpszMenuName  = NULL ;
+
+   if (IS_WIN95) {
+      if (!RegisterWin95 (&RootShell))
+         return (FALSE);
+   } else if (!RegisterClass (&RootShell))
+          return (FALSE);
+
+   RootShell.style         = 0 ;
+   RootShell.lpfnWndProc   = ThotDlgProc ;
+   RootShell.cbClsExtra    = 0 ;
+   RootShell.cbWndExtra    = 0 ;
+   RootShell.hInstance     = hInstance ;
+   RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+   RootShell.lpszClassName = "WNDIALOGBOX" ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-   RootShell.style         = 0 ;
-   RootShell.cbClsExtra    = 0 ;
-   RootShell.cbWndExtra    = 0 ;
-   RootShell.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
+   
+   if (IS_WIN95) {
+      if (!RegisterWin95 (&RootShell))
+         return (FALSE);
+   } else if (!RegisterClass (&RootShell))
+          return (FALSE);
 
-   RegisterClassEx (&RootShell) ;
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS

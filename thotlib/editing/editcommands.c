@@ -326,7 +326,9 @@ static boolean CloseTextInsertionWithControl ()
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
+#  ifndef _WINDOWS
    ThotEvent              event;
+#  endif /* !_WINDOWS */
    int                 nChars;
    int                 i, j;
    int                 ind;
@@ -3322,7 +3324,7 @@ View                view;
 #endif
 
    if (document == 0)
-      frame = FrRef[0];
+      frame = (int) FrRef[0];
    else
       frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS

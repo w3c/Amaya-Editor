@@ -225,8 +225,8 @@ int                 y2;
       return FALSE;
    cs = dX / ra;
    ss = dY / ra;
-   nX = x * cs + y * ss;
-   nY = y * cs - x * ss;
+   nX = (int) (x * cs + y * ss);
+   nY = (int) (y * cs - x * ss);
    /* test */
    return (nY <= DELTA_SEL
 	   && nY >= -DELTA_SEL
@@ -502,7 +502,7 @@ int                 y;
 	       break;
 	    case 'C':
 	    case 'P':		/* rectangles aux bords arrondis */
-	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+	       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 	       point[0][0] = 0;
 	       point[0][1] = arc;
 	       point[1][0] = 0;
@@ -724,7 +724,7 @@ int                 y;
 	       break;
 	    case 'C':
 	    case 'P':
-	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+	       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 	       if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
 		   IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
 		   IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc, pBox->BxHeight) ||

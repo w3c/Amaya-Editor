@@ -614,7 +614,7 @@ PtrBox              pBox;
 	pBox->BxBuffer->BuPoints[0].XCoord = val;
      }
    else
-      xRatio = 1;
+      xRatio = 1.0;
 
    /* Compute ratio for axis Y */
    val = PixelToPoint (height * 1000);
@@ -629,7 +629,7 @@ PtrBox              pBox;
 	pBox->BxBuffer->BuPoints[0].YCoord = val;
      }
    else
-      yRatio = 1;
+      yRatio = 1.0;
 
    if (xRatio != 1 || yRatio != 1)
      {
@@ -813,7 +813,7 @@ PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
-{
+ {
    PtrTextBuffer       adbuff;
    PtrTextBuffer       newbuff;
    PtrAbstractBox      pAbbox1;
@@ -1081,38 +1081,30 @@ PtrBox              pBox;
 int                 frame;
 #endif /* __STDC__ */
 {
-
    /* Empty */
-   if (pBox->BxAbstractBox->AbVolume == 0)
-     {
-       if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
-	 DisplayEmptyBox (pBox, frame, '2');
-       else if (ThotLocalActions[T_emptybox] != NULL)
-	 (*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
-     }
-   /* Text */
-   else if (pBox->BxAbstractBox->AbLeafType == LtText)
-      /* Display a Text box */
-      DisplayJustifiedText (pBox, frame);
-   /* Picture */
-   else if (pBox->BxType == BoPicture)
-      DisplayImage (pBox, frame);
-   /* Symbol */
-   else if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
-      if (pBox->BxAbstractBox->AbShape == '\0')
-	 DisplayEmptyBox (pBox, frame, '2');
-      else
-	 DisplaySymbol (pBox, frame);
-   /* Graphics */
-   else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
-      if (pBox->BxAbstractBox->AbShape == '\0')
-	 DisplayEmptyBox (pBox, frame, '2');
-      else
-	 DisplayGraph (pBox, frame);
-   /* Polyline */
-   else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine)
-      if (pBox->BxNChars == 1)
-	 DisplayEmptyBox (pBox, frame, '2');
-      else
-	 DrawPolyLine (pBox, frame);
+   if (pBox->BxAbstractBox->AbVolume == 0) {
+      if (pBox->BxAbstractBox->AbLeafType == LtSymbol)
+         DisplayEmptyBox (pBox, frame, '2');
+      else if (ThotLocalActions[T_emptybox] != NULL)
+           (*ThotLocalActions[T_emptybox]) (pBox, frame, '2');
+   } else if (pBox->BxAbstractBox->AbLeafType == LtText) /* Text */
+          /* Display a Text box */
+          DisplayJustifiedText (pBox, frame);
+   else if (pBox->BxType == BoPicture) /* Picture */
+        DisplayImage (pBox, frame);
+   else if (pBox->BxAbstractBox->AbLeafType == LtSymbol) /* Symbol */
+        if (pBox->BxAbstractBox->AbShape == '\0')
+           DisplayEmptyBox (pBox, frame, '2');
+        else
+           DisplaySymbol (pBox, frame);
+   else if (pBox->BxAbstractBox->AbLeafType == LtGraphics) /* Graphics */
+        if (pBox->BxAbstractBox->AbShape == '\0')
+           DisplayEmptyBox (pBox, frame, '2');
+        else
+           DisplayGraph (pBox, frame);
+   else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine) /* Polyline */
+        if (pBox->BxNChars == 1)
+           DisplayEmptyBox (pBox, frame, '2');
+        else
+            DrawPolyLine (pBox, frame);
 }
