@@ -105,6 +105,7 @@ local gzFile gz_open (path, mode, fd)
     gz_stream *s = (gz_stream *)ALLOC(sizeof(gz_stream));
 
     if (!s) return Z_NULL;
+    memset(s, 0, sizeof(gz_stream));
 
     s->stream.zalloc = (alloc_func)0;
     s->stream.zfree = (free_func)0;

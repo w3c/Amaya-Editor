@@ -18,6 +18,8 @@
 /* Without this option, it creates a function StartHTMLParser that parses */
 /* a HTML file and creates the internal representation of a Thot document. */
 
+#define HANDLE_COMPRESSED_FILES
+
 /* Amaya includes  */
 #ifdef STANDALONE
 #include "HTML.h"
@@ -26,6 +28,9 @@
 #include "amaya.h"
 #endif
 #include "css.h"
+#ifdef HANDLE_COMPRESSED_FILES
+#include "zlib.h"
+#endif
 
 
 #include "css_f.h"
@@ -5075,6 +5080,57 @@ Document            doc;
    curChar = 0;
 }
 
+/*----------------------------------------------------------------------
+   ReadCompressedFile
+   load and uncompress a file in memory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *ReadCompressedFile (char *filename)
+#else
+char               *ReadCompressedFile (filename)
+char              *filename;
+
+#endif
+{
+    int   bufsize = 2000;
+    int   index = 0;
+    char *buffer = NULL;
+    gzFile stream = NULL;
+    int res;
+
+    stream = gzopen(filename, "r");
+    if (stream == NULL) return(NULL);
+    buffer = TtaGetMemory(bufsize + 1);
+    if (buffer == NULL) return(NULL);
+    while (1) {
+        res = gzread(stream, buffer + index, bufsize - index);
+	if (res < 0) {
+	    TtaFreeMemory(buffer);
+	    gzclose(stream);
+	    return(NULL);
+	}
+	if (res == 0) {
+	    /* end of file */
+	    buffer[index] = '\0';
+	    break;
+	}
+	index += res;
+	if (index >= bufsize) {
+	    char *new;
+
+	    bufsize *= 2;
+	    new = TtaRealloc(buffer, bufsize + 1);
+	    if (new == NULL) {
+	       TtaFreeMemory(buffer);
+	       gzclose(stream);
+	       return(NULL);
+	    }
+	    buffer = new;
+	}
+    }
+    gzclose(stream);
+    return(buffer);
+}
 
 #ifdef STANDALONE
 /*----------------------------------------------------------------------
@@ -5176,11 +5232,17 @@ char               *pathURL;
    char               *s;
    char                tempname[MAX_LENGTH];
    char                temppath[MAX_LENGTH];
+#ifdef HANDLE_COMPRESSED_FILES
+   char               *cbuf = NULL;
+#endif
 
    theDocument = doc;
    infile = fopen (htmlFileName, "r");
    if (infile != 0)
      {
+#ifdef HANDLE_COMPRESSED_FILES
+        cbuf = ReadCompressedFile(htmlFileName);
+#endif
 
 	if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	  {
@@ -5231,7 +5293,15 @@ char               *pathURL;
 	   /* initialize parsing environment */
 	   InitializeParser (NULL, FALSE, 0);
 	   /* parse the input file and build the Thot document */
+#ifdef HANDLE_COMPRESSED_FILES
+           if (cbuf != NULL) {
+	      HTMLparse (NULL, cbuf);
+	      TtaFreeMemory(cbuf);
+	   } else
+	      HTMLparse (infile, NULL);
+#else
 	   HTMLparse (infile, NULL);
+#endif
 	   /* completes all unclosed elements */
 	   el = lastElement;
 	   while (el != NULL)

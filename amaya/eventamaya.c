@@ -25,6 +25,7 @@
 #include "eventamaya.h"
 
 #include "AHTURLTools_f.h"
+#include "eventloop_f.h"
 
 static AmayaNetRequestPtr NetRequestList = NULL; /* linked list of Request */
 
@@ -40,9 +41,9 @@ static int          object_counter = 0;	/* loaded objects counter */
   ----------------------------------------------------------------------*/
  
 #ifdef __STDC__
-void                CheckNetRequest (AmayaNetRequestPtr cur)
+static void                CheckNetRequest (AmayaNetRequestPtr cur)
 #else
-void                CheckNetRequest (cur)
+static void                CheckNetRequest (cur)
 AmayaNetRequestPtr  cur;
 #endif
 {
@@ -118,9 +119,9 @@ AmayaNetRequestPtr  cur;
   ----------------------------------------------------------------------*/
  
 #ifdef __STDC__
-AmayaNetRequestPtr  NewNetRequest (void)
+static AmayaNetRequestPtr  NewNetRequest (void)
 #else
-AmayaNetRequestPtr  NewNetRequest ()
+static AmayaNetRequestPtr  NewNetRequest ()
 #endif
 {
     AmayaNetRequestPtr cur = TtaGetMemory(sizeof(AmayaNetRequest));
@@ -146,9 +147,9 @@ AmayaNetRequestPtr  NewNetRequest ()
   ----------------------------------------------------------------------*/
  
 #ifdef __STDC__
-void  FreeNetRequest (AmayaNetRequestPtr cur)
+static void  FreeNetRequest (AmayaNetRequestPtr cur)
 #else
-void  FreeNetRequest (cur)
+static void  FreeNetRequest (cur)
 AmayaNetRequestPtr cur;
 #endif
 {
@@ -167,9 +168,9 @@ AmayaNetRequestPtr cur;
   ----------------------------------------------------------------------*/
  
 #ifdef __STDC__
-void                AddNetRequest (AmayaNetRequestPtr cur)
+static void                AddNetRequest (AmayaNetRequestPtr cur)
 #else
-void                AddNetRequest (cur)
+static void                AddNetRequest (cur)
 AmayaNetRequestPtr  cur;
 #endif
 {
@@ -200,9 +201,9 @@ AmayaNetRequestPtr  cur;
   ----------------------------------------------------------------------*/
  
 #ifdef __STDC__
-void                RemoveNetRequest (AmayaNetRequestPtr cur)
+static void                RemoveNetRequest (AmayaNetRequestPtr cur)
 #else
-void                RemoveNetRequest (cur)
+static void                RemoveNetRequest (cur)
 AmayaNetRequestPtr  cur;
 #endif
 {
@@ -366,8 +367,6 @@ boolean             error_html;
    FILE               *tmp_fp;
    char               *tmp_dir;
    char               *ref;
-   int                 status;
-   HTList             *cur, *pending;
 
    /*
     * check parameters.
@@ -508,7 +507,7 @@ boolean             error_html;
    AddNetRequest (request);
    HandleQueuedNetRequests ();
 
-   return (status);
+   return (AMAYA_NET_STATUS_OK);
 }
 
 /*----------------------------------------------------------------------
@@ -578,13 +577,10 @@ void               *context_tcbf;
    /*
     * check parameters.
     */
-   if ((urlName == NULL) || (doc <= 0) || (outputfile == NULL) ||
-       (!TtaFileExist (fileName)))
+   if ((urlName == NULL) || (doc <= 0) || (!TtaFileExist (fileName)))
      {
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
-	if (error_html)
-	   FilesLoading[doc] = 2;	/* so we can show the error message */
 	return(AMAYA_NET_STATUS_FAILED);
      }
 
@@ -606,7 +602,7 @@ void               *context_tcbf;
    if (request == NULL) {
       return (AMAYA_NET_STATUS_FAILED);
    }
-   request->blk.outputfile = TtaStrdup(outputfile);
+   request->blk.outputfile = TtaStrdup(fileName);
    strcpy(request->blk.url, urlName);
 
    /*
@@ -644,23 +640,10 @@ void               *context_tcbf;
 
    close (fd);
 
-   status = UploadMemWWW (doc, METHOD_PUT, urlName, mem_ptr,
-			  block_size, mode, terminate_cbf,
-			  context_tcbf, (char *) NULL);
-   /* Specific initializations for POST and GET */
-   if (mode & AMAYA_FORM_POST)
-     {
-	request->type = AMAYA_NET_TYPE_FORM_POST;
-	if (postString)
-	  {
-	    request->blk.data = TtaStrdup(postString);
-	    request->blk.size = strlen (postString);
-	  }
-     }
-   else
-     {
-	request->type = AMAYA_NET_TYPE_FORM_GET;
-     }
+   /* Specific initializations for PUT */
+   request->type = AMAYA_NET_TYPE_PUT;
+   request->blk.data = mem_ptr;
+   request->blk.size = block_size;
 
 
    /*
@@ -671,6 +654,5 @@ void               *context_tcbf;
    HandleQueuedNetRequests ();
 
    return (status);
-}
 }
 
