@@ -30,6 +30,7 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 #include "application.h"
+#include "dialog.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -39,6 +40,7 @@
 #include "page_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
+#include "print_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
@@ -53,6 +55,7 @@
 #include "createabsbox_f.h"
 #include "createpages_f.h"
 #include "structlist_f.h"
+#include "savedoc_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
 
@@ -74,6 +77,11 @@
 #include "docs_f.h"
 #include "frame_f.h"
 #include "fileaccess_f.h"
+
+static PtrDocument      pDocChangeSchPresent;
+static PtrSSchema       TableNaturesSchPresent[NbMaxMenuPresNature];
+static int              nbNatures;
+
 
 /*----------------------------------------------------------------------
    CloseDocument ferme toutes les vue d'un document et decharge ce	
@@ -702,10 +710,10 @@ PtrElement          pRoot;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName)
+static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName)
 
 #else  /* __STDC__ */
-void                ChangeDocumentPSchema (pDoc, newPSchemaName)
+static void          ChangeDocumentPSchema (pDoc, newPSchemaName)
 PtrDocument         pDoc;
 Name                newPSchemaName;
 
@@ -917,9 +925,9 @@ PtrSSchema          pNatSSchema;
    le schema de structure est pointe' par pNatSSchema.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName)
+static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName)
 #else  /* __STDC__ */
-void                ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName)
+static void         ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName)
 PtrDocument         pDoc;
 PtrSSchema          pNatSSchema;
 Name                newPSchemaName;
@@ -979,4 +987,252 @@ Name                newPSchemaName;
    /* restaure le path courant des schemas */
    strncpy (SchemaPath, schemaPath, MAX_PATH);
 }
+
+
+/*----------------------------------------------------------------------
+    ChangePresMenuInput traite les retours du menu des schemas de     
+            presentation                                           
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ChangePresMenuInput (int ref, int val)
+
+#else  /* __STDC__ */
+static void         ChangePresMenuInput (ref, val)
+int                 ref;
+int                 val;
+
+#endif /* __STDC__ */
+
+{
+   PtrDocument         pDoc;
+   Name                newpres;
+   int                 nbPres;
+   int                 nat;
+
+   if (PrintingDoc == 0)
+     pDoc = NULL;
+   else
+     pDoc = LoadedDocument[PrintingDoc - 1];
+
+   nat = ref - (NumMenuPresNature) - 1;
+   val++;
+   if (val > 0 && nat >= 0)
+      if (pDocChangeSchPresent != NULL)
+         if (pDocChangeSchPresent->DocSSchema != NULL)
+            /* le document est toujours present */
+           {
+              nbPres = ConfigMakeMenuPres (TableNaturesSchPresent[nat]->SsName, NULL);
+              if (nbPres > 0)
+                {
+                   if (pDoc == pDocChangeSchPresent)
+                     {
+                        /* le document pour lequel a ete construit le formulaire
+ */
+                        /* d'impression change au moins un de ses schemas de */
+                        /* presentation. Ce formulaire n'est donc plus valide. */
+                        /* On ferme le formulaire s'il est present sur l'ecran */
+                        /* et on indique qu'il faudra reconstruire ce formulaire. */
+                        TtaDestroyDialogue (NumFormPrint);
+                        TtaDestroyDialogue (NumPrintingFormat);
+                     }
+                   /* recupere le nom du schema de presentation choisi */
+                   ConfigGetPSchemaName (val, newpres);
+                   if (nat == 0)
+                      /* c'est le schema de presentation du doocument */
+                      ChangeDocumentPSchema (pDocChangeSchPresent, newpres);
+                   else
+                      /* c'est une nature dans le document */
+                      ChangeNaturePSchema (pDocChangeSchPresent,
+                                      TableNaturesSchPresent[nat], newpres);
+                }
+           }
+}
+
+/*----------------------------------------------------------------------
+  TtcChangePresentation affiche le menu de changement de schema de 
+  presentation d'un document et de ses natures.
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcChangePresentation (Document document, View view)
+#else  /* __STDC__ */
+void                TtcChangePresentation (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+#define LgMaxTableNature 20
+   PtrSSchema        TableNatures[LgMaxTableNature];
+   int                 entreeDesact[LgMaxTableNature];
+   int                 LgTableNatures;
+   int                 nbPres;
+   char                BufMenuNatures[MAX_TXT_LEN];
+   char                BufMenu[MAX_TXT_LEN];
+   char                BufMenuB[MAX_TXT_LEN];
+   char               *ptrBufNat;
+   char               *src;
+   char               *dest;
+   int                 nat;
+   int                 NumSousMenu;
+   int                 MenuAActiver;
+   int                 i, k, l;
+   Name                 NomPres;
+   char                NomUtilisateur[50];
+   PtrDocument         pDoc;
+
+   if (ThotLocalActions[T_rchangepres] == NULL)
+     TteConnectAction (T_rchangepres, ChangePresMenuInput);
+
+   pDoc = LoadedDocument[document - 1];
+   MenuAActiver = 0;
+   /* conserve un pointeur sur le contexte du document dont on veut */
+   /* changer le schema de presentation */
+   pDocChangeSchPresent = pDoc;
+   /* met d'abord le schema de structure du document dans la table */
+   /* des natures du document */
+   TableNatures[0] = pDoc->DocSSchema;
+   LgTableNatures = 1;
+   /* met ensuite la liste des natures utilisees dans le document */
+   SearchNatures (pDoc->DocSSchema, TableNatures, &LgTableNatures, True);
+   /* construit un pop-up menu pour la liste des natures dont on */
+   /* peut changer le schema de presentation */
+   ptrBufNat = &BufMenuNatures[0];
+   nbNatures = 0;
+   for (nat = 0; nat < LgTableNatures; nat++)
+     {
+        entreeDesact[nat] = 0;
+        /* demande la liste des schemas de presentation definis */
+        /* pour cette nature dans la configuration de l'utilisateur */
+        nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName, NULL);
+        if (nbPres == 0)
+           /* pas de schema de presentation defini */
+           TableNatures[nat] = NULL;
+        else
+           /* il y a des schemas de presentation definis pour cette nature */
+          {
+             /* on cherche dans cette liste le schema de presentation utilise' */
+             /* actuellement dans le document */
+             for (k = 1; k <= nbPres && entreeDesact[nat] == 0; k++)
+               {
+                  /* demande le nom reel du schema de presentation */
+                  ConfigGetPSchemaName (k, NomPres);
+                  if (strcmp (TableNatures[nat]->SsPSchema->PsPresentName,
+                              NomPres) == 0)
+                     /* c'est le nom du schema de presentation actuel */
+                     /* on desactivera l'entree correspondante dans le sous-menu */
+                     /* des schemas de presentation de cette nature */
+                     entreeDesact[nat] = k;
+               }
+             if (nbPres == 1 && entreeDesact[nat] != 0)
+                /* il n'y a qu'un schema de presentation prevu par la */
+                /* configuration et c'est celui qui est utilise' actuellement. */
+                /* On ne peut donc pas changer de schema pour cette nature */
+                TableNatures[nat] = NULL;
+             else if (nbNatures >= NbMaxMenuPresNature)
+                /* saturation, on arrete */
+                nat = LgTableNatures;
+             else
+                /* on ajoute cette nature dans le menu en construction */
+               {
+                  nbNatures++;
+                  *ptrBufNat = 'M';     /* il y aura un sous-menu */
+                  ptrBufNat++;
+                  if (TableNatures[nat] == pDoc->DocSSchema)
+                     i = CONFIG_DOCUMENT_STRUCT; /* schema du document */
+                  else if (TableNatures[nat]->SsExtension)
+                     i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
+                  else
+                     i = CONFIG_NATURE_STRUCT; /* schema de nature */
+                  TtaConfigSSchemaExternalName (NomUtilisateur,
+                                           TableNatures[nat]->SsName,
+                                                i);
+                  if (NomUtilisateur[0] == '\0')
+                     strcpy (ptrBufNat, TableNatures[nat]->SsName);
+                  else
+                     strcpy (ptrBufNat, NomUtilisateur);
+                  l = strlen (ptrBufNat) + 1;
+                  ptrBufNat += l;
+               }
+          }
+     }
+   if (nbNatures > 0)
+      /* il y a au moins une nature dont on peut changer le schema de */
+      /* presentation */
+     {
+        /* on cree le menu de ces natures s'il y en a plus d'une */
+        if (nbNatures > 1)
+          {
+             TtaNewPopup (NumMenuPresNature, 0, TtaGetMessage (LIB, TMSG_GLOBAL_LAYOUT),
+                          nbNatures, BufMenuNatures, NULL, 'L');
+             MenuAActiver = NumMenuPresNature;
+          }
+        /* pour chacune de ces natures, on cree les sous-menus des */
+        /* presentation prevues dans la configuration de l'utilisateur */
+        NumSousMenu = 0;
+        for (nat = 0; nat < LgTableNatures; nat++)
+           if (TableNatures[nat] != NULL)
+              /* cette entree de la table des natures n'a pas ete invalidee */
+             {
+                /* demande la liste des presentations prevues dans la */
+                /* configuration de l'utilisateur */
+                nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName,
+                                             BufMenu);
+                /* compose un sous-menu a partir de cette liste */
+                if (nbPres > 0)
+                  {
+                     dest = &BufMenuB[0];
+                     src = &BufMenu[0];
+                     for (k = 1; k <= nbPres; k++)
+                       {
+                          /* ajoute 'B' au debut de chaque entree */
+                          strcpy (dest, "B");
+                          dest++;
+                          l = strlen (src);
+                          strcpy (dest, src);
+                          dest += l + 1;
+                          src += l + 1;
+                       }
+                     /* cree le sous-menu des presentations proposees pour cette
+ */
+                     /* nature */
+                     NumSousMenu++;
+                     if (TableNatures[nat] == pDoc->DocSSchema)
+                        i = CONFIG_DOCUMENT_STRUCT; /* schema du document */
+                     else if (TableNatures[nat]->SsExtension)
+                        i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
+                     else
+                        i = CONFIG_NATURE_STRUCT; /* schema de nature */
+                     TtaConfigSSchemaExternalName (NomUtilisateur,
+                                           TableNatures[nat]->SsName,
+                                                   i);
+                     if (NomUtilisateur[0] == '\0')
+                        strcpy (NomUtilisateur, TableNatures[nat]->SsName);
+                     if (nbNatures == 1)
+                       {
+                          /* il n'y a qu'une nature, c'est un pop-up menu */
+                          MenuAActiver = NumMenuPresNature + NumSousMenu;
+                          TtaNewPopup (MenuAActiver, 0, NomUtilisateur, nbPres,
+                                       BufMenuB, NULL, 'L');
+                       }
+                     else
+                        /* il y a plusieurs natures, c'est un sous-menu du menu */
+                        /* des natures */
+                        TtaNewSubmenu (NumMenuPresNature + NumSousMenu,
+                                       NumMenuPresNature, NumSousMenu - 1,
+                             NomUtilisateur, nbPres, BufMenuB, NULL, False);
+                     /* met a jour la table qui servira au retour du sous-menu */
+                     TableNaturesSchPresent[NumSousMenu - 1] = TableNatures[nat];
+                     /* desactive l'entree de ce sous-menu qui correspond a la */
+                     /* presentation actuelle */
+                     if (entreeDesact[nat] > 0)
+                        UnsetEntryMenu (NumMenuPresNature + NumSousMenu,
+                                         entreeDesact[nat] - 1);
+                  }
+             }
+        /* active le pop-up menu */
+        TtaSetDialoguePosition ();
+        TtaShowDialogue (MenuAActiver, False);
+     }
+}
+
 
