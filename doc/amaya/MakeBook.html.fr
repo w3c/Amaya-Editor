@@ -41,12 +41,12 @@ séparés qui peuvent aussi avoir le même type de structure.</p>
 nombre d'inconvénients lorsque la totalité de la documentation doit être
 imprimée. <strong>Amaya</strong> règle ce problème à l'aide de la fonction
 "construire un livre". Il vous suffit d'utiliser les liens tapés pour lier les
-chapitres: associez un attribut <code>rel="chapter"</code> ou
+chapitres : associez un attribut <code>rel="chapter"</code> ou
 <code>rel="subdocument</code>" à l'ancre lien (sélectionnez l'élément
 <code>A</code> et utilisez le menu <strong><a
 href="Attributes.html.fr#L1073">Attributs</a></strong>).</p>
 
-<p>Chaque chapitre ou sous-document référé peut être:</p>
+<p>Chaque chapitre ou sous-document référé peut être :</p>
 <ul>
   <li>soit un document entier externe.</li>
   <li>soit une sous-partie d'un document entier externe.</li>
@@ -61,7 +61,7 @@ href="Links.html.fr#target1">élément cible.</a></p>
 blocs (éléments <code>LI</code> dans l'exemple plus haut) contenant un lien
 vers un chapitre seront remplacés par les pages Web correspondantes (ou
 sous-parties de pages Web). Vous obtiendrez ainsi un unique document contenant
-la totalité de la collection:</p>
+la totalité de la collection :</p>
 <ul>
   <li><p>Quand un lien référence une page Web, tout le contenu BODY du
     document cible est inclus.</p>
@@ -69,8 +69,8 @@ la totalité de la collection:</p>
   <li><p>Si le lien référence un élément cible, cet élément et son contenu
     sont inclus.</p>
   </li>
-  <li><p>Si le lien référence une ancre cible, le contenu de l'ancre cible 
-    est incluse, mais l'ancre elle-même ne l'est pas.</p>
+  <li><p>Si le lien référence une ancre cible, le contenu de l'ancre cible est
+    incluse, mais l'ancre elle-même ne l'est pas.</p>
   </li>
 </ul>
 

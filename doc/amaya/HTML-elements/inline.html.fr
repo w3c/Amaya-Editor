@@ -18,11 +18,11 @@
       </td>
       <td><p align="right"><a href="../Manual.html.fr"></a></p>
 
-        <p align="right"><a href="address.html.fr"><img alt="previous" border="0"
-        src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
-        alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-        href="40styling.html.fr"><img alt="next" border="0"
-        src="../../Icons/right.gif" /></a></p>
+        <p align="right"><a href="address.html.fr"><img alt="previous"
+        border="0" src="../../Icons/left.gif" /></a> <a
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../Icons/up.gif" /></a> <a href="40styling.html.fr"><img
+        alt="next" border="0" src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -131,7 +131,7 @@ utilisées pour changer la présentation des insertions et des suppressions.</p>
 <div>
 <h2><a name="Emphasis">Les éléments de mise en évidence</a></h2>
 
-<p>HTML a des éléments pour définir deux niveaux de mise en évidence:</p>
+<p>HTML a des éléments pour définir deux niveaux de mise en évidence :</p>
 <ol>
   <li><em>La mise en évidence ordinaire</em>, utilisez l'élément <a
     href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">EM</a></li>
@@ -169,8 +169,8 @@ utilisées pour changer la présentation des deux types de mise en évidence.</p>
 <p align="right"><a href="address.html.fr"><img alt="previous" border="0"
 src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-href="40styling.html.fr"><img alt="next" border="0" src="../../Icons/right.gif"
-/></a></p>
+href="40styling.html.fr"><img alt="next" border="0"
+src="../../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="SpellChecking.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Printing.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Printing.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -74,7 +74,7 @@ la place.</p>
 le document courant à une adresse différente, un serveur Web lointain ou un
 fichier local.</p>
 
-<p>Vous pouvez:</p>
+<p>Vous pouvez :</p>
 <ul>
   <li>sauver le document sur un disque local,</li>
   <li>sauver le document sur un URI lointain,</li>
@@ -86,7 +86,7 @@ fichier local.</p>
 <p><img src="../Icons/SaveAs.gif" alt="SaveAs" /></p>
 
 <p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
-sont utilisés comme suit:</p>
+sont utilisés comme suit :</p>
 <ul>
   <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
     contenus dans le répertoire courant. Il devrait être utilisé pour sauver
@@ -140,7 +140,7 @@ sont utilisés comme suit:</p>
         l'adresse des images est "Images", une image "W3C.png" contenue dans
         le document est stockée à l'URI
         "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML est
-        modifiée le référant à:
+        modifiée le référant à :
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>C'est la même chose dans le cas d'une adresse dans le fichier
         système local.</p>
@@ -150,14 +150,14 @@ sont utilisés comme suit:</p>
         l'exemple précédent, si l'adresse des images spécifiée est
         "http://pub/WWW/Images", l'image est stockée à l'adresse
         "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML
-        correspondant est modifié de la manière suivante:
+        correspondant est modifié de la manière suivante :
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
     </ul>
   </li>
   <li>Le fait de cliquer sur <strong>OK</strong> débute le processus de
     transformation du document et un événement demande confirmation dans les
-    deux cas suivants:
+    deux cas suivants :
     <ol>
       <li>Le document a été sauvé sur un serveur lointain. L'URI complet qui
         doit être écrit est visualisé pour vérification.</li>
@@ -188,10 +188,11 @@ texte, dans un fichier local. La liste de tous les URIs utilisés dans le
 document est listées dans ce fichier.</p>
 </div>
 
-<p align="right"><a href="SpellChecking.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Printing.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+<p align="right"><a href="SpellChecking.html.fr"><img alt="previous"
+border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
+alt="top" border="0" src="../Icons/up.gif" /></a> <a
+href="Printing.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
+/></a></p>
 <hr />
 </body>
 </html>

@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Creating.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Changing.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Changing.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -44,7 +44,7 @@ src="../Icons/target.gif" alt=" target " /></a>. Dans la vue liens, les icônes
 cibles qui identifient les ancres cibles sont toujours visualisées (il
 n'existe pas d'option pour montrer ou cacher les icônes cibles). Quand une
 ancre cible est créée, Amaya génère automatiquement la valeur NAME à
-l'attribut:</p>
+l'attribut :</p>
 <ul>
   <li><p>En extrayant un mot de plus de 3 caractères depuis le contenu de
     l'ancre</p>
@@ -89,7 +89,7 @@ document.</p>
 
 <h4>Liens externes</h4>
 
-<p>Pour créér une ancre qui est un lien vers un autre document:</p>
+<p>Pour créér une ancre qui est un lien vers un autre document :</p>
 <ol>
   <li><a href="Selecting.html.fr#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>
@@ -97,26 +97,26 @@ document.</p>
     align="middle" /> , ou choisir <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong>, ou encore utiliser le raccourci clavier (par
     défaut Ctrl Shift L)</li>
-  <li>A partir de là, s'offre à vous plusieurs solutions:
+  <li>A partir de là, s'offre à vous plusieurs solutions :
     <ul>
       <li>Si le document cible est visualisé par <strong>Amaya</strong>
         <ul>
           <li>Cliquez n'importe où dessus. Le lien est créé.</li>
         </ul>
       </li>
-      <li>Si vous n'êtes pas à l'aise avec la souris:
+      <li>Si vous n'êtes pas à l'aise avec la souris :
         <ul>
           <li>Tapez sur n'importe quelle touche. Cela fera surgir une boîte de
-            dialogue: entrez l'URI du document cible et taper sur la touche
+            dialogue : entrez l'URI du document cible et taper sur la touche
             <strong>Enter ou Return</strong> pour confirmer. Le lien est
           créé.</li>
         </ul>
       </li>
-      <li>Si l'élément cible n'est pas visualisé:
+      <li>Si l'élément cible n'est pas visualisé :
         <ul>
           <li>Cliquez n'importe où sur le document courant, excepté sur une
             icône cible locale.</li>
-          <li>Une boîte de dialogue surgit: entrez l'URL du document cible et
+          <li>Une boîte de dialogue surgit : entrez l'URL du document cible et
             cliquez sur le bouton <strong>Confirmer</strong>. Le lien est
             créé.</li>
         </ul>
@@ -129,7 +129,7 @@ document.</p>
 
 <p>Pour créer un lien vers une ancre cible particulière ou vers un élément
 cible particulier dans le même document ou dans un autre, remplacez l'étape 3
-par celle ci:</p>
+par celle ci :</p>
 <ol>
   <li value="3">Dans ce cas, vous pouvez cliquer sur<span
     style="color: #000000"><a href="Browsing.html.fr#target"> l'icône
@@ -140,7 +140,7 @@ par celle ci:</p>
 <h3><a name="Removing">Supprimer un lien ou une ancre cible</a></h3>
 
 <p>Le menu <strong>Liens</strong> contient une commande qui inverse les deux
-commandes énoncées plus haut: <strong>Détruire ancre</strong>. Mettre la
+commandes énoncées plus haut : <strong>Détruire ancre</strong>. Mettre la
 sélection ou le point d'insertion n'importe où à l'intérieur de l'ancre à
 détruire (vous n'avez pas besoin de sélectionner toute l'ancre, mais vous
 pouvez) et activer la commande <strong>Détruire ancre</strong>. L'ancre est
@@ -163,9 +163,9 @@ href="Attributes.html.fr#Attributes"><strong>Attributs</strong></a>.</p>
 </div>
 
 <p align="right"><a href="Creating.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Changing.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Changing.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

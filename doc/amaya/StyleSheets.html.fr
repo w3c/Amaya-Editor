@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="ImageMaps.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Attributes.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Attributes.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -30,7 +30,7 @@
 <h2><a name="L1023">Les feuilles de style</a></h2>
 
 <p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
-documents de deux façons différentes:</p>
+documents de deux façons différentes :</p>
 <ul>
   <li>en utilisant les cascades des feuilles de style (CSS).</li>
   <li>en utilisant les éléments et les attributs HTML.</li>
@@ -43,7 +43,7 @@ CSS et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
 
 <p>Chacune des quatre entrées du menu <strong>Style</strong> appelle une boîte
 de dialogue qui permet l'association d'un attribut de <code>style</code> aux
-éléments courants sélectionnés:<strong> </strong><strong></strong></p>
+éléments courants sélectionnés :<strong> </strong><strong></strong></p>
 <ul>
   <li><h3><span style="font-size: 12pt"><span
     style="font-weight: normal">L'option</span> Style de caractères<span
@@ -77,11 +77,11 @@ structure.</p>
 
 <p>La largeur et la hauteur de n'importe quel élément dans un document peuvent
 être changées de façon intéractive, de la même façon que les <a
-href="ImageMaps.html.fr#L1171">zones actives</a>. En tapant sur la touche Control
-sur le clavier et en cliquant sur le bouton du milieu de la souris, vous
-pouvez redimensionner la boîte associée à l'élément situé sous le curseur.
-Quand vous lâchez le bouton de la souris, la taille de l'élément est changée
-et un attribut <code>style</code> est associé à l'élément.</p>
+href="ImageMaps.html.fr#L1171">zones actives</a>. En tapant sur la touche
+Control sur le clavier et en cliquant sur le bouton du milieu de la souris,
+vous pouvez redimensionner la boîte associée à l'élément situé sous le
+curseur. Quand vous lâchez le bouton de la souris, la taille de l'élément est
+changée et un attribut <code>style</code> est associé à l'élément.</p>
 
 <p>Quand l'élément redimensionné est une image, cette image est retaillée pour
 remplir sa nouvelle boîte.</p>
@@ -113,14 +113,14 @@ sont désormais visualisés avec le style associé à la classe choisie.</p>
 
 <p>Pour associer une classe à un élément, vous pouvez également utiliser le <a
 href="Attributes.html.fr#L1073">menu <strong>Attributs</strong></a>. Ce menu
-permet aussi d'effacer un attribut de classe pour un élément ou de le changer:
-l'attribut de classe se manipule comme un autre attribut.</p>
+permet aussi d'effacer un attribut de classe pour un élément ou de le changer
+: l'attribut de classe se manipule comme un autre attribut.</p>
 
 <h3><a name="Managing">Gérer des feuilles de style CSS externes</a></h3>
 
 <p>L'entrée de feuilles de style donne accès à une série de commandes qui
 permettent de contrôler les feuilles de style CSS externes et celles qui
-donnent les préférences de l'utilisateur:</p>
+donnent les préférences de l'utilisateur :</p>
 <ul>
   <li>La commande <strong>Ajouter</strong> permet de lier une nouvelle feuille
     de style CSS à un document courant. On peut cliquer directement sur la
@@ -168,7 +168,7 @@ d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
 caractères dans votre page et ensuite choisissez une commande dans ce menu. La
 chaîne de caractères sélectionnée reçoit le style correspondant. Trois de ces
-styles sont également disponibles par l'intermédiaire des boutons:
+styles sont également disponibles par l'intermédiaire des boutons :
 <em>emphasis</em> (<img src="../Icons/Em.gif" alt="Emphasis button" />),
 <strong>strong</strong> (<img src="../Icons/Strong.gif" alt="Strong button"
 />) and <code>code</code> (<img src="../Icons/Cour.gif" alt="Code button"
@@ -191,9 +191,9 @@ appliquées de nouveau.</p>
 </div>
 
 <p align="right"><a href="ImageMaps.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Attributes.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Attributes.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

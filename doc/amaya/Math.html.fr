@@ -60,10 +60,10 @@ MathML).</p>
 
 <p>Dans le menu <strong>Math</strong>, les éléments suivants vous donnent la
 possibilité de créer de nouveaux éléments de base (non disponibles dans la
-palette): Texte (<code>mtext</code>), Identificateur (<code>mi</code>), Nombre
-(<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également utiliser
-ces commandes pour changer le type d'un élément seul ou d'une séquence
-d'éléments.</p>
+palette) : Texte (<code>mtext</code>), Identificateur (<code>mi</code>),
+Nombre (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
+utiliser ces commandes pour changer le type d'un élément seul ou d'une
+séquence d'éléments.</p>
 
 <p>Ces items du menu <strong>Math</strong> sont suivis par l'item Caractère
 (<code>mchar</code>). Cette commande vous permet d'entrer un caractère qui
@@ -75,9 +75,9 @@ pour le caractère grec &alpha;).</p>
 permettent de créer de nouvelles constructions à l'intérieur d'une formule. Si
 le point d'insertion n'est pas dans une formule, un élément Math est d'abord
 créé pour accepter la nouvelle construction. Les constructions disponibles
-sont:</p>
+sont :</p>
 <ul>
-  <li>Racine ( <code>mroot dans</code> MathML): <math
+  <li>Racine ( <code>mroot dans</code> MathML) : <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -278,11 +278,11 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 </math>
 </p>
 
-<p>il suffit de taper cette séquence de 6 caractères: <code>x=2a+b</code>
+<p>il suffit de taper cette séquence de 6 caractères : <code>x=2a+b</code>
 (n'oubliez pas de cliquer d'abord sur l'entrée Math du menu
 <strong>Math</strong> si vous n'êtes pas dans une expression mathématique), et
 vous obtiendrez la structure suivante (vous pouvez vérifier dans le <a
-href="#Math_Struc">vue Math_Structure </a>):</p>
+href="#Math_Struc">vue Math_Structure </a>) :</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
 <p>Si le résultat ne correspond pas exactement à ce que vous vouliez, il
@@ -313,7 +313,7 @@ possibles.</p>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
 de l'article <a href="Views.html.fr#Structure">Montrer la structure </a>du
-menu <strong>Vues </strong> ouvre en fait <em>deux vues</em>:</p>
+menu <strong>Vues </strong> ouvre en fait <em>deux vues</em> :</p>
 <ul>
   <li>La Structure vue montre la structure principale du document HTML. Dans
     cette vue, les éléments MathML sont seulement représentés par une
@@ -325,8 +325,8 @@ menu <strong>Vues </strong> ouvre en fait <em>deux vues</em>:</p>
 
 <p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
 pricipale que dans la vue Math_Structure. La vue Math_Structure est
-particulièrement utile pour éviter l'ambiguïté. Observez l'exemple
-suivant:</p>
+particulièrement utile pour éviter l'ambiguïté. Observez l'exemple suivant
+:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
   <mrow>
     <mi>x</mi>
@@ -357,7 +357,7 @@ Ces liens sont représentés en utilisant une version détachée du <a
 href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Seuls
 les liens simples unidirectionnels sont utilisables, mais vous pouvez associer
 un lien à n'importe quelle partie d'une formule. Par exemple, la fraction dans
-la formule ci-dessous est un lien vers la page d'accueil W3C:</p>
+la formule ci-dessous est un lien vers la page d'accueil W3C :</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
@@ -382,7 +382,7 @@ la formule ci-dessous est un lien vers la page d'accueil W3C:</p>
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
 apparaître la page d'accueil W3C. Dans le fichier XML, la fraction est
-représentée par:</p>
+représentée par :</p>
 <pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
 <p>(Vous pouvez trouver cela seulement dans la vue structure. Ce n'est pas
@@ -410,14 +410,14 @@ attributs sont restitués à l'écran (<code>alttext</code>,
 <code>depth</code> (<code>mspace</code> only)).</p>
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
-sont utilisables, avec la même sémantique que dans HTML: vous pouvez <a
+sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a
 href="StyleSheets.html.fr">associer le style CSS </a> aux éléments MathML
 (attribut<code> class</code> et <code>style</code>) et un élément MathML peut
 être la cible d'un lien (attribut<code> id</code>).</p>
 
 <p>A cause du manque de polices de caractères mathématiques, seule une série
 limitée d'entités représentant des symboles mathématiques est reconnue, la
-plupart disponible dans la police Symbole. La version courante contient:
+plupart disponible dans la police Symbole. La version courante contient :
 Therefore, SuchThat, DownTee, Or, And, Not, Exists, ForAll, Element,
 NotElement, NotSubset, Subset, SubsetEqual, Superset, SupersetEqual,
 DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow, LeftArrow,

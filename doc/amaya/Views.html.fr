@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Searching.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Creating.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Creating.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -35,7 +35,7 @@ qui vous permet de voir clairement ce qui se passe quand vous rédigez des
 documents complexes. C'est également une aide pour se déplacer à travers un
 document.</p>
 
-<p>Six vues sont disponibles:</p>
+<p>Six vues sont disponibles :</p>
 <dl>
   <dt>Vue formatée</dt>
     <dd>Ici vous voyez le document comme présenté dans les navigateurs
@@ -92,7 +92,7 @@ toutes les vues visualisant le même document.</p>
 <h3><a name="Using">Utiliser les vues</a></h3>
 
 <p>Toutes les vues (exceptée la vue source) sont automatiquement
-<em>synchronisées</em>: chaque fois que vous sélectionnez quelques caractères
+<em>synchronisées</em> : chaque fois que vous sélectionnez quelques caractères
 ou éléments dans une vue, les autres vues du même document défilent
 automatiquement de telle sorte qu'on voit la même partie du document.</p>
 
@@ -102,7 +102,7 @@ uniquement dans la vue où vous avez cliqué. Dès que vous activez une commande
 ou cliquez ailleurs, ces caractères sont également visualisés dans les autres
 vues.</p>
 
-<p>La vue source se comporte différemment: vous devez demander la
+<p>La vue source se comporte différemment : vous devez demander la
 synchronisation explicitement, en utilisant la commande
 <strong>Synchroniser</strong> du menu <strong>Fichier</strong>. Quand vous
 avez effectué une série d'éditions dans la vue source, vous devez entrer la
@@ -120,7 +120,7 @@ attendiez.</p>
 
 <p>Chaque fois que vous <a href="Publishing.html.fr#L1104">sauvez</a> un
 document, localement ou à distance, depuis la vue source ou depuis la vue
-formatée, une synchronisation s'effectue automatiquement: toutes les vues
+formatée, une synchronisation s'effectue automatiquement : toutes les vues
 reflètent l'état du document au moment où il est sauvé.</p>
 </div>
 

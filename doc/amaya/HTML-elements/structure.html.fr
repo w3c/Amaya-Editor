@@ -29,7 +29,7 @@
 <div>
 <h1>Structure du document HTML</h1>
 
-<p>Les documents HTML ont une structure assez uniforme . S'il y a des sections
+<p>Les documents HTML ont une structure assez uniforme. S'il y a des sections
 qui contiennent des sous-sections, la division du texte est ordinairement
 marquée par des<a href="headings.html.fr"> éléments en-têtes </a>de différents
 niveaux, qui se trouvent sur le bord des paragraphes et autres blocs

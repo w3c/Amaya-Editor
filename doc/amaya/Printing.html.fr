@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Publishing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Numbering.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Numbering.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -35,7 +35,7 @@ possible de générer une description Postscript, donc vous avez besoin d'une
 imprimante PostScript ou d'utiliser une application capable de traduire le
 PostScript en votre langage d'imprimante spécifique.</p>
 
-<p>Il y a trois manières d'imprimer un document avec Amaya:</p>
+<p>Il y a trois manières d'imprimer un document avec Amaya :</p>
 <ul>
   <li>la commande <strong>Paramétrer et imprimer </strong>
     (<code>Fichier/Paramétrer et imprimer)</code>, qui vous permet de fixer
@@ -59,22 +59,22 @@ station.</p>
 
 <h4>Stations Unix</h4>
 
-<p>Sous Unix, vous pouvez fixer les paramètres suivant:</p>
+<p>Sous Unix, vous pouvez fixer les paramètres suivant :</p>
 <ul>
-  <li>le format du papier: A4. US</li>
-  <li>l'orientation: Portrait, Paysage</li>
+  <li>le format du papier : A4. US</li>
+  <li>l'orientation : Portrait, Paysage</li>
   <li>la disposition (le nombre de pages imprimées sur la même feuille de
-    papier): 1, 2, 4 pages par feuille</li>
-  <li>la destination: fichier, ou imprimer</li>
+    papier) : 1, 2, 4 pages par feuille</li>
+  <li>la destination : fichier, ou imprimer</li>
 </ul>
 
-<p>En plus, vous pouvez sélectionner les options suivantes:</p>
+<p>En plus, vous pouvez sélectionner les options suivantes :</p>
 <ul>
   <li>Alimentation manuelle</li>
   <li>Table des matières</li>
-  <li>Table des liens: un numéro est généré après chaque lien dans le document
-    qui réfère un entrée à l'intérieur de la table de liens; chaque entrée de
-    la table liste l'URL correspondant</li>
+  <li>Table des liens : un numéro est généré après chaque lien dans le
+    document qui réfère un entrée à l'intérieur de la table de liens; chaque
+    entrée de la table liste l'URL correspondant</li>
   <li>Imprimer l'URL</li>
   <li>Sans feuilles de style</li>
 </ul>
@@ -82,7 +82,7 @@ station.</p>
 <h4>Stations Windows</h4>
 
 <p>Sur les stations Windows, une boîte de dialogue vous proposera en premier
-lieu les options suivantes:</p>
+lieu les options suivantes :</p>
 <ul>
   <li>Table des matières</li>
   <li>Table des liens</li>
@@ -105,8 +105,8 @@ vous laissera vérifier que l'imprimante par défaut est correcte. Les commandes
 
 <h3>Contrôler les ruptures de page avec CSS</h3>
 
-<p>Amaya soutient les propriétés de rupture de page CSS: "<strong>rupture de
-page-avant: toujours</strong>". Quand cette propriété est attachée à un
+<p>Amaya soutient les propriétés de rupture de page CSS : "<strong>rupture de
+page-avant : toujours</strong>". Quand cette propriété est attachée à un
 élément spécifique par un attribut <strong>style</strong>, elle génère une
 rupture de page avant l'élément spécifique. Quand cette propriété est attachée
 à un type d'élément à l'intérieur de l'élément style du document ou à
@@ -115,9 +115,9 @@ page avant chaque cas de cet élément.</p>
 </div>
 
 <p align="right"><a href="Publishing.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Numbering.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Numbering.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

@@ -27,26 +27,25 @@
 </table>
 
 <div>
-<h1>Éléments de  liste</h1>
+<h1>Éléments de liste</h1>
 
-<p>Il y a trois types de liste dans HTML. Les deux types simples sont: liste
+<p>Il y a trois types de liste dans HTML. Les deux types simples sont : liste
 ordonnée et liste non ordonnée. Il y a aussi une liste de définitions. Les
 listes sont des structures de type bloc, mais elles peuvent être créées à
 l'intérieur d'autres listes.</p>
 
-<p>Par exemple:</p>
+<p>Par exemple :</p>
 <dl>
   <dt>Liste de définitions</dt>
     <dd>C'est une liste de définitions. Elle contient des termes de définition
       (<code><a
       href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">DT</a></code>)
       et des textes explicatifs (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>).
-       </dd>
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>).</dd>
     <dd>Un terme de définition peut être suivi par un nombre ou par des
       définitions.</dd>
   <dt>Liste ordonnée</dt>
-    <dd>Il y a trois types de liste:
+    <dd>Il y a trois types de liste :
       <ol>
         <li>Liste ordonnée(<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">OL</a></code>)</li>
@@ -59,9 +58,9 @@ l'intérieur d'autres listes.</p>
     </dd>
   <dt>Liste  non ordonnée</dt>
     <dd>Les listes ordonnées et les listes non ordonnées partagent quelques
-      caractéristiques:
+      caractéristiques :
       <ul>
-        <li>Ce sont des listes simples. </li>
+        <li>Ce sont des listes simples.</li>
         <li>Les deux types de liste ont des fils  qui sont des items de liste
           (éléments <code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">LI</a></code>)</li>

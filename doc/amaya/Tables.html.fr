@@ -44,7 +44,7 @@ colonnes pour la nouvelle table, ainsi que sa bordure. Si vous avez fait ça
 par erreur, cliquez simplement sur le bouton <strong>Annuler</strong>. Pour
 créer une nouvelle table à la position courante, cliquez sur le bouton
 <strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
-suivante (3 colonnes et 2 lignes dans ce cas):</p>
+suivante (3 colonnes et 2 lignes dans ce cas) :</p>
 
 <table border="1" summary="table">
   <caption>I</caption>
@@ -79,8 +79,8 @@ href="Creating.html.fr#L906">Enter</a>. Déplacez le point d'insertion à la fin
 ou au début de la cellule (par exemple à la fin de la cellule 1.1 dans la
 table ci dessous). En tapant deux fois sur la touche Enter (la première
 pression de la touche crée un paragraphe dans la cellule courante) vous créez
-une nouvelle cellule et sa colonne correspondante, comme montré ci
-dessous:</p>
+une nouvelle cellule et sa colonne correspondante, comme montré ci dessous
+:</p>
 
 <table border="1" summary="table">
   <caption>Légende</caption>

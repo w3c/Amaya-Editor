@@ -86,7 +86,7 @@ utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
 <h3><a name="Using">Utiliser des zones actives</a></h3>
 
 <p><strong>Amaya</strong> vous donne la possibilité d'utiliser des zones
-actives:</p>
+actives :</p>
 <ul>
   <li>Pour activer une zone dans un plan, double-cliquez sur la zone avec le
     bouton gauche de la souris. L'URI attaché à cette zone est alors
@@ -127,7 +127,7 @@ href="Links.html.fr#L245">créer des liens</a>.</p>
 
 <h3>Déplacer des zones actives<strong></strong></h3>
 
-<p>Quand une zone a été définie, vous pouvez la déplacer:</p>
+<p>Quand une zone a été définie, vous pouvez la déplacer :</p>
 <ul>
   <li><p>Par manipulation directe - en combinant la <strong>touche
     Control</strong> et le <strong>bouton gauche</strong> de la souris dans la

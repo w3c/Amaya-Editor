@@ -36,7 +36,7 @@ d'éléments structuraux ou par des feuilles de style quand cela est
 possible.</p>
 
 <p>Tous les éléments en question, à l'exeption de PRE, se trouvent dans le
-sous menu Eléments caractères du menu <strong>Eléments</strong>:</p>
+sous menu Eléments caractères du menu <strong>Eléments</strong> :</p>
 <dl>
   <dt><code>B</code> et <code>I</code></dt>
     <dd>Ceux-ci devraient être remplacés par les  <a

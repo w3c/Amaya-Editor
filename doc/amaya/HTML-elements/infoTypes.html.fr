@@ -33,12 +33,12 @@
 d'élément, il est possible d'utiliser les <a
 href="../StyleSheets.html">Feuilles de style</a> pour changer la présentation
 de n'importe quel élément. Les types information qui peuvent être représentés
-par les éléments HTML sont:</p>
+par les éléments HTML sont :</p>
 <dl>
   <dt><a href="headings.html.fr">En-têtes</a></dt>
     <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés pour
       marquer les en-têtes de page ou de sujet selon leur importance.</dd>
-    <dd>HTML fournit deux types de listes simples:
+    <dd>HTML fournit deux types de listes simples :
       <ol>
         <li>Listes numérotées ( comme celle-ci)</li>
         <li>Listes non ordonnées.</li>
@@ -76,7 +76,7 @@ par les éléments HTML sont:</p>
       devrait être supprimé. <ins>(Cela est utile pour l'édition collabo
       )</ins></dd>
   <dt><a href="inline.html.fr#Emphasis">Mises en évidence</a></dt>
-  <dt>HTML fournit deux niveaux de mise en évidence:<em> mise en évidence
+  <dt>HTML fournit deux niveaux de mise en évidence :<em> mise en évidence
   ordinaire</em> et <strong>mise en évidence forte.</strong></dt>
   <dt></dt>
 </dl>

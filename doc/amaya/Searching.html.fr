@@ -17,10 +17,10 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Selecting.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Views.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
-        /></a></p>
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Views.html.fr"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -37,7 +37,7 @@ alt="find " />, ou encore en utilisant le raccourci clavier (control-shift-%
 sur Unix, control-f sur Windows)</p>
 
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
-différents critères:</p>
+différents critères :</p>
 <ul>
   <li>La chaîne de caractères cherchée doit être écrite dans la zone d'entrée
     <strong>Texte à chercher</strong>.</li>
@@ -48,15 +48,15 @@ différents critères:</p>
     opération similaire. Le texte de remplacement est écrit dans la zone
     d'entrée <strong>Texte de remplacement </strong>et le mode de remplacement
     est sélectionné depuis le menu <strong>Remplacement</strong>. Les modes de
-    remplacements sont les suivants:
+    remplacements sont les suivants :
     <ul>
-      <li><strong>Sans remplacement</strong>: même si la zone d'entrée "Texte
+      <li><strong>Sans remplacement</strong> : même si la zone d'entrée "Texte
         de remplacement" contient une chaîne de caractères, rien ne sera
         remplacé. On se trouve dans la configuration d'une simple
       recherche.</li>
-      <li><strong>Remplacement à la demande</strong>: quand la chaîne est
+      <li><strong>Remplacement à la demande</strong> : quand la chaîne est
         trouvée, elle est sélectionnée. L'utilisateur peut alors sélectionner
-        l'un des boutons suivants:
+        l'un des boutons suivants :
         <ul>
           <li><strong>Confirmer</strong> pour remplacer et effectuer la
             recherche de nouveau.</li>
@@ -64,23 +64,23 @@ différents critères:</p>
             recherche sans remplacer la chaîne qui a été trouvée.</li>
         </ul>
       </li>
-      <li><strong>Remplacement automatique</strong>: tous les résultats de la
+      <li><strong>Remplacement automatique</strong> : tous les résultats de la
         recherche de la chaîne sont remplacés automatiquement dans la partie
         concernée du document, définie dans le menu "Où rechercher".</li>
     </ul>
   </li>
   <li>Le menu <strong>Où rechercher</strong> vous permet de spécifier la
-    partie du document dans laquelle la recherche s'effectue:
+    partie du document dans laquelle la recherche s'effectue :
     <ul>
-      <li><strong>Avant la sélection</strong>: la recherche commence au début
+      <li><strong>Avant la sélection</strong> : la recherche commence au début
         de la partie sélectionnée et remonte jusqu'au début du document.</li>
-      <li><strong>Dans la sélection</strong>: la recherche s'effectue
+      <li><strong>Dans la sélection</strong> : la recherche s'effectue
         uniquement dans la partie sélectionnée, depuis son début jusqu'à sa
         fin.</li>
-      <li><strong>Après la sélection</strong>: la recherche commence à la fin
+      <li><strong>Après la sélection</strong> : la recherche commence à la fin
         de la partie sélectionnée et redescend jusqu'à la fin du
       document.</li>
-      <li><strong>Dans tout le document</strong>: la recherche est effectuée
+      <li><strong>Dans tout le document</strong> : la recherche est effectuée
         dans tout le document du début jusqu'à la fin, sans tenir compte des
         parties éventuellement sélectionnées.</li>
     </ul>
@@ -104,9 +104,9 @@ control-z).</p>
 </div>
 
 <p align="right"><a href="Selecting.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Views.html.fr"><img alt="next" border="0"
-src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Views.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

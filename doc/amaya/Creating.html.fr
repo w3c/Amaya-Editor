@@ -54,7 +54,7 @@ menu), l'item de liste et sa liste incluse sont automatiquement divisés afin
 de créer l'en-tête demandé et de se conformer au HTML DTD.</p>
 
 <p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
-<em> point d'insertion</em>, et non du texte ou un caractère unique: si la
+<em> point d'insertion</em>, et non du texte ou un caractère unique : si la
 sélection courante n'est pas vide, <strong>Amaya</strong> tente de <a
 href="Changing.html.fr#L631"><em>transformer</em></a> la partie sélectionnée
 dans le type de l'élément choisi.</p>
@@ -69,7 +69,7 @@ de la <a href="HTML.html.fr">liste de tous les éléments HTML 4.0.</a></p>
 éléments qui font partie du document BODY. Pour créer des éléments dans la
 partie HEAD du document, utilisez le menu <strong>Structure</strong> à partir
 de la <a href="Views.html.fr#Structure">vue structure</a>. Ce menu fonctionne
-de la même manière que le menu <strong>Eléments</strong>: mettez le point
+de la même manière que le menu <strong>Eléments</strong> : mettez le point
 d'insertion dans la position désirée et choisissez le type d'élément à partir
 du menu <strong>Structure.</strong></p>
 
@@ -116,7 +116,7 @@ touche "Entrée" <em>remplace </em> cet élément dans un autre élément vide au
 niveau supérieur de la structure du document. Cette caractéristique vous
 permet de créer trés rapidement des structures complexes emboitées.</p>
 
-<p>Considérez par exemple la structure suivante:</p>
+<p>Considérez par exemple la structure suivante :</p>
 <ol>
   <li>Le premier item dans le plus haut niveau de la liste.
     <p>Un paragraphe dans le premier item.</p>
@@ -133,15 +133,15 @@ permet de créer trés rapidement des structures complexes emboitées.</p>
 <p>Pour créer cette structure, créez d'abord une liste numérotée avec un
 premier item (par exemple en cliquant sur le bouton <img alt="Numbered List "
 border="0" src="../Icons/NumList.gif" align="middle" /> ) et tapez sur la
-première ligne. A la fin de cette première ligne, pressez la touche "Enter":
+première ligne. A la fin de cette première ligne, pressez la touche "Enter" :
 cela crée un nouveau paragraphe dans la liste. A la fin de ce paragraphe,
-pressez la touche "Enter": cela crée encore un nouveau paragraphe. Par contre,
-en pressant encore la même touche, vous remplacez ce paragraphe dans un item
-vide 2. A la fin de la première ligne de l'article 2, créez une nouvelle liste
-avec son premier item (cliquez par exemple sur le bouton <img border="0"
-alt="Numbered List " src="../Icons/NumList.gif" align="middle" /> ). La
-nouvelle liste sera automatiquement emboitée. L'item b. est créé en appuyant
-deux fois sur la touche "Enter" à la fin de l'item a. Quand le point
+pressez la touche "Enter" : cela crée encore un nouveau paragraphe. Par
+contre, en pressant encore la même touche, vous remplacez ce paragraphe dans
+un item vide 2. A la fin de la première ligne de l'article 2, créez une
+nouvelle liste avec son premier item (cliquez par exemple sur le bouton <img
+border="0" alt="Numbered List " src="../Icons/NumList.gif" align="middle" />
+). La nouvelle liste sera automatiquement emboitée. L'item b. est créé en
+appuyant deux fois sur la touche "Enter" à la fin de l'item a. Quand le point
 d'insertion est à la fin de l'item b., créez l'item 3 en appuyant quatre fois
 sur la touche "Enter". Pour créer le paragraphe qui suit ces listes, pressez
 la touche "Enter" trois fois lorsque le point d'insertion est à la fin de
@@ -179,7 +179,7 @@ début d'un bloc commençant par une ancre ou par des éléments de style.</p>
 <h4>Editer les listes de définitions (dl/dt/dd)</h4>
 
 <p>La touche "Entrée" est également utile pour éditer des listes de
-définitions. Considérez l'exemple suivant:</p>
+définitions. Considérez l'exemple suivant :</p>
 
 <blockquote>
   <dl>
@@ -202,8 +202,8 @@ nouvelle définition (<code>dd</code>).</p>
 <p>Si vous voulez créer un nouveau terme avec sa définition <em> avant</em> le
 Terme 1, mettez le point d'insertion au début du terme 1 et appuyez sur
 "Enter". Tapez le nouveau terme (<code>dt</code>), puis pressez "Enter" deux
-fois: une nouvelle définition (<code>dd</code>) est créée directement aprés le
-nouveau terme.</p>
+fois : une nouvelle définition (<code>dd</code>) est créée directement aprés
+le nouveau terme.</p>
 
 <h4><a name="Changing">Changer le titre du document</a></h4>
 

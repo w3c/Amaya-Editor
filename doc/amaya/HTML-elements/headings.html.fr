@@ -29,7 +29,7 @@
 <div>
 <h1>Éléments d'entête</h1>
 
-<p>HTML fournit 6 niveaux d'entête: <a
+<p>HTML fournit 6 niveaux d'entête : <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>H1,
 H2, H3, H4, H5, and H6</code></a>. Ils devraient être utilisés pour marquer
 les entêtes selon leur importance, <code>H1</code> étant le plus important.

@@ -51,12 +51,12 @@ Accessibility Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web
 Accessibility Initiative</a> du W3C publie également "<a
 href="http://www.w3.org/WAI/References/QuickTips/#Introduction">De brefs
 renseignements pour faire des sites Web accessibles</a>", dix rappels
-pratiques qui sont:</p>
+pratiques qui sont :</p>
 <ul>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
   <li><strong>Zones actives.</strong> Utilisez le <code>MAP</code> côté-client
-    et le texte pour les zones sensibles.   </li>
+    et le texte pour les zones sensibles.</li>
   <li><strong>Multimedia.</strong> Fournissez des légendes et des
     transcriptions audio, et des descriptions vidéo.</li>
   <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens même
@@ -76,7 +76,8 @@ pratiques qui sont:</p>
     Récapitulez.</li>
   <li><strong>Vérifier votre travail.</strong> Validez. Utilisez les outils,
     la liste de vérification, et les aides en ligne à <a
-    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
+    href="http://www.w3.org/TR/WAI-WEBCONTENT">http
+    ://www.w3.org/TR/WAI-WEBCONTENT</a>.</li>
 </ul>
 
 <p></p>
@@ -88,7 +89,8 @@ chaque version. Il est maintenant possible d'exécuter un grand nombre de
 fonctions sans utiliser une souris, et d'exécuter des fonctions d'édition (à
 l'exception la saisie de texte) sans utiliser le clavier.</p>
 
-<p>Les caractéristiques d'accessibilité dans la version courante incluent:</p>
+<p>Les caractéristiques d'accessibilité dans la version courante incluent
+:</p>
 <ul>
   <li>Les Vues alternée, liens, structure et table des matières peuvent être
     naviguées et éditées, et sont en synchronisation avec la vue

@@ -6,7 +6,7 @@
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
 BODY { background-color :  #FFFFFF }
-.name { background-color: #FFF6C1}</style>
+.name { background-color : #FFF6C1}</style>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -19,12 +19,13 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version:</strong> 3.2 - Juillet 2000</p>
+<p><strong>Version :</strong> 3.2 - Juillet 2000</p>
 <dl>
-  <dt><strong>Auteurs:</strong></dt>
+  <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
-  <dt><strong>Collaborateurs:</strong></dt>
-    <dd>Charles McCathieNevile, John Russell</dd>
+  <dt><strong>Collaborateurs :</strong></dt>
+    <dd>Charles McCathieNevile, John Russell, Valentine Giordani, Magali
+      Vatton</dd>
 </dl>
 
 <p>Ce manuel présente l'interface utilisateur d'Amaya pour les stations Unix.
@@ -49,9 +50,8 @@ décrits.</p>
       <li><a href="Browsing.html.fr#Browsing">Naviguer avec Amaya</a>
         <ul>
           <li><a href="Browsing.html.fr#Activating">Activer un lien</a></li>
-          <li><a href="Browsing.html.fr#Opening">Ancres cibles</a>
-            <p><a href="Browsing.html.fr#Opening">Ouvrir des documents</a></p>
-          </li>
+          <li><a href="Browsing.html.fr#Opening">Ancres cibles</a></li>
+          <li><a href="Browsing.html.fr#Opening">Ouvrir des documents</a></li>
           <li><a href="Browsing.html.fr#Moving">Reculer et avancer</a></li>
           <li><a href="Browsing.html.fr#Reloading">Recharger une page</a></li>
           <li><a href="Browsing.html.fr#Keyboard">Contrôle clavier</a></li>
@@ -147,10 +147,9 @@ décrits.</p>
         <ul>
           <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
           <li><a href="ImageMaps.html.fr#Using">Texte de remplacement et
-            Descriptions longues</a>
-            <p><a href="ImageMaps.html.fr#Using">Utiliser des zones
-            actives</a></p>
-          </li>
+            Descriptions longues</a></li>
+          <li><a href="ImageMaps.html.fr#Using">Utiliser des zones
+          actives</a></li>
           <li><a href="ImageMaps.html.fr#Creating">Créer des zones
           actives</a></li>
           <li><a href="ImageMaps.html.fr#L11711">Déplacer des zones
@@ -220,7 +219,7 @@ décrits.</p>
 
 <h2><a name="L920" id="L920">Démarrer Amaya</a></h2>
 
-<p>Pour démarrer <strong>Amaya</strong> sur une station Unix:</p>
+<p>Pour démarrer <strong>Amaya</strong> sur une station Unix :</p>
 <pre>    amaya [-display host] [document]</pre>
 
 <p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
@@ -248,7 +247,7 @@ l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des fichiers
 de sauvegarde est automatiquement proposée.</p>
 
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
-spécifique d'Amaya:</p>
+spécifique d'Amaya :</p>
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
     Amaya</a></li>

@@ -34,7 +34,7 @@ href="#L311">activer les liens</a>. Lors d'une opération normale,
 <strong>Amaya</strong> vous permet de naviguer et d´éditer des documents
 simultanément, mais vous pouvez changer ce comportement standard pour chaque
 fenêtre de document indépendamment. Le bouton <img src="../Icons/Editor.gif"
-alt="editor-mode" /> indique que la fenêtre est en mode éditeur: vous pouvez
+alt="editor-mode" /> indique que la fenêtre est en mode éditeur : vous pouvez
 éditer le document courant et naviguer dans cette fenêtre. En cliquant sur ce
 bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
@@ -53,7 +53,7 @@ vous devrez effectuer un <em>double clic</em> dessus. Ce comportement peut
 Spécial/Préférences/Générales. En modifiant "cliquer deux fois pour suivre un
 lien", vous pourrez naviguer de document en document à l'aide d'un
 simple-clic. Dans ce cas, vous ne pouvez pas mettre aisément le point
-d'insertion à l'intérieur des liens: vous devez soit utiliser une sélection
+d'insertion à l'intérieur des liens : vous devez soit utiliser une sélection
 étendue soit déplacer le point d'insertion à l'intérieur des liens à l'aide
 des flèches. Il est également possible d'utiliser le clavier pour activer les
 liens, ainsi que les formulaires de contrôles. La commande au clavier est
@@ -83,8 +83,8 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
 
 <h3><a name="Opening">Ouverture de documents</a></h3>
 
-<p>Vous pouvez ouvrir des documents locaux ou distants de différentes
-façons:</p>
+<p>Vous pouvez ouvrir des documents locaux ou distants de différentes façons
+:</p>
 
 <p>Menu Fichier</p>
 <dl>
@@ -112,7 +112,7 @@ façons:</p>
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
 
 <p>Il existe différentes manières de se déplacer dans l'historique des pages
-chargées:</p>
+chargées :</p>
 <dl>
   <dt>Menu Fichier</dt>
     <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer.</dd>
@@ -120,7 +120,7 @@ chargées:</p>
     <dd>Les raccourcis clavier sont, par défaut, Alt-f et Alt-b pour
     Linux.</dd>
   <dt>Barre des boutons</dt>
-    <dd>Deux boutons: <img alt="Back " border="0" src="../Icons/Back.gif"
+    <dd>Deux boutons : <img alt="Back " border="0" src="../Icons/Back.gif"
       align="middle" /> et <img alt="Forward " border="0"
       src="../Icons/Forward.gif" align="middle" /> vous permettent de
       retourner à la page précédente ou d'aller à la page suivante.</dd>

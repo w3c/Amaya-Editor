@@ -29,7 +29,7 @@
 <div id="Attributes">
 <h2>Editer des attributs</h2>
 
-<p>Il y a deux manières d'éditer des attributs:</p>
+<p>Il y a deux manières d'éditer des attributs :</p>
 <ul>
   <li>Le menu <strong>Attributs</strong></li>
   <li>La Vue structure</li>
@@ -49,8 +49,8 @@ l'intérieur de l'élément. Pour cela, utilisez <a
 href="Selecting.html.fr#Selecting1"> la touche ESC (sur les stations Unix) ou
 la touche F2 (sur les stations Windows)</a> . Quand l'élément a été
 sélectionné, choisissez dans le menu <strong>Attributs </strong>l'attribut à
-éditer. <strong>Amaya</strong> agit alors en fonction de l'attribut
-choisi:</p>
+éditer. <strong>Amaya</strong> agit alors en fonction de l'attribut choisi
+:</p>
 <ul>
   <li>Si c'est un attribut bouléen ( comme <code>ismap </code> pour une image)
     la commande est achevée. Choisir cet attribut dans le menu supprime

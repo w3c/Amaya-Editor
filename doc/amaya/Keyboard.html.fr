@@ -5,7 +5,7 @@
 <head>
   <title>Entrer des caracteres ISO-Latin-1 dans Amaya</title>
   <style type="text/css">
-.name { background-color: #FFF6C1}</style>
+.name { background-color : #FFF6C1}</style>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -39,7 +39,7 @@ touche et la deuxième.</p>
 
 <p>Si la touche <strong>Composer </strong>n'existe pas vous pouvez l'attacher
 à une touche existante comme <strong>Alt-Gr</strong> par la commande
-<code>xmodmap</code> suivante:</p>
+<code>xmodmap</code> suivante :</p>
 <pre>keycode 113 = Multi_key</pre>
 
 <p>Cette commande peut être rangée dans le fichier $HOME/.Xmodmap , ainsi elle
@@ -698,7 +698,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
 commençant par "l'accent" suivi de la "lettre". Par exemple pour obtenir un
 'ã', taper d'abord sur '~' puis sur 'a'. Pour obtenir un '~' vous devez taper
 deux fois sur '~'. Le tableau suivant donne les séquences de touches
-disponibles:</p>
+disponibles :</p>
 
 <table border="1" summary="Latin-1 sequences">
   <tbody style="background-color: #EFFFC1">

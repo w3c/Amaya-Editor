@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Browsing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Searching.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Searching.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -77,7 +77,7 @@ structure dans n'importe quelle vue. Pressez la touche Esc (F2 sur Windows)
 pour sélectionner l'élément "parent" dans la structure du document. Pressez la
 touche ESC (F2 sur Windows) plusieurs fois pour augmenter d'un niveau la
 structure sélectionnée jusqu'à sélectionner la racine du document. Il est
-encore possible de sélectionner des éléments "fils": la touche "raccourci
+encore possible de sélectionner des éléments "fils" : la touche "raccourci
 clavier par défaut" est control-moins ("-"). Pour sélectionner l'élément
 suivant ou l'élément précédent au même niveau, utilisez control-k (pour le
 suivant) et control-j (pour le précédent).</p>
@@ -103,9 +103,9 @@ avec tous ses attributs.</p>
 </div>
 
 <p align="right"><a href="Browsing.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Searching.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Searching.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>
