@@ -2030,10 +2030,10 @@ boolean             link;
    pour les attributs de l'element pEl qui vient d'etre lu 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
+void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         SendEventAttrRead (pEl, pDoc)
+void         SendEventAttrRead (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 

@@ -506,6 +506,9 @@ Element            *elementRead;
 			       LoadedDocument[document - 1], byte, NumAssoc,
 			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
 			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
+	if (*elementRead != NULL)
+         SendEventAttrRead ((PtrElement)(*elementRead), 
+                            LoadedDocument[document - 1]);
      }
 }
 
