@@ -116,6 +116,24 @@ void        MapGenericXmlAttribute (char *attrName,
     }
 }
 
+/*----------------------------------------------------------------------
+   CreateXmlLinePRule
+   Create a generic 'Line' presentation rule for each element that
+   has at least one Text child
+  ----------------------------------------------------------------------*/
+void  CreateXmlLinePRule (Element elText, Document doc)
+  
+{
+   ElementType  parentType;
+   Element      parent;
+
+   parent = TtaGetParent (elText);
+   if (parent != NULL)
+     {
+       parentType = TtaGetElementType (parent);
+       TtaSetXmlTypeInLine (parentType, doc);
+     }
+}
 
 /*----------------------------------------------------------------------
   MapGenericXmlType

@@ -1979,25 +1979,6 @@ static ThotBool  IsLeadingSpaceUseless ()
 }
 
 /*----------------------------------------------------------------------
-   CreateXmlLinePRule
-   Create a generic 'Line' presentation rule for each element that
-   has at least one Text child
-  ----------------------------------------------------------------------*/
-void  CreateXmlLinePRule (Element elText, Document doc)
-  
-{
-   ElementType  parentType;
-   Element      parent;
-
-   parent = TtaGetParent (elText);
-   if (parent != NULL)
-     {
-       parentType = TtaGetElementType (parent);
-       TtaSetXmlTypeInLine (parentType, doc);
-     }
-}
-
-/*----------------------------------------------------------------------
    PutInXmlElement
   ----------------------------------------------------------------------*/
 void PutInXmlElement (char *data, int length)
@@ -2121,8 +2102,10 @@ void PutInXmlElement (char *data, int length)
 				    XMLcontext.language, XMLcontext.doc);
 	       /* associate a specific 'Line' presentation rule to the 
 		  parent element if we are parsing a generic-XML element */
+#ifdef XML_GENERIC
 	       if (strcmp (currentParserCtxt->SSchemaName, "XML") == 0)
-		   CreateXmlLinePRule (elText, XMLcontext.doc);
+		 CreateXmlLinePRule (elText, XMLcontext.doc);
+#endif /* XML_GENERIC */
 	     }
 	   TtaFreeMemory (buffer);
 	 }

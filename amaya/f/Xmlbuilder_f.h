@@ -19,14 +19,14 @@ extern void CreateXmlAttribute ( Element el,
                                  Document doc,
                                  Attribute *lastAttribute,
                                  Element *lastAttrElement );
-extern void CreateXmlLinePRule ( Element elText,
-                                 Document doc );
 extern void MapXmlAttributeValue ( char *AttrVal,
                                    AttributeType attrType,
                                    int *value );
 extern void MapGenericXmlAttribute ( char *attrName,
                                      AttributeType *attrType,
                                      Document doc );
+extern void CreateXmlLinePRule ( Element elText,
+                                 Document doc );
 extern void MapGenericXmlElement ( char *XMLName,
                                    ElementType *elType,
                                    char **mappedName,
@@ -47,14 +47,14 @@ extern void CreateXmlAttribute (/* Element el,
                                    Document doc,
                                    Attribute *lastAttribute,
                                    Element *lastAttrElement */);
-extern void CreateXmlLinePRule (/* Element elText,
-                                   Document doc */);
 extern void MapXmlAttributeValue (/* char *AttrVal,
                                      AttributeType attrType,
                                      int *value */);
 extern void MapGenericXmlAttribute (/* char *attrName,
                                        AttributeType *attrType,
                                        Document doc */);
+extern void CreateXmlLinePRule (/* Element elText,
+                                   Document doc */);
 extern void MapGenericXmlElement (/* char *XMLName,
                                      ElementType *elType,
                                      char **mappedName,
