@@ -1559,7 +1559,7 @@ void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_BUTTONS", &(GProp_General.S_Buttons));
   TtaGetEnvBoolean ("SHOW_ADDRESS", &(GProp_General.S_Address));
   TtaGetEnvBoolean ("FONT_ALIASING", &(GProp_General.S_NoAliasing));
-  TtaGetEnvBoolean ("GTM_TIME", &(GProp_General.S_GTM));
+  TtaGetEnvBoolean ("ISO_DATE", &(GProp_General.S_DATE));
   TtaGetEnvBoolean ("SHOW_TARGET", &(GProp_General.S_Targets));
   TtaGetEnvBoolean ("SAVE_GEOMETRY", &(GProp_General.S_Geometry));
   GetEnvString ("HOME_PAGE", GProp_General.HomePage);
@@ -1836,7 +1836,7 @@ void SetGeneralConf (void)
     UpdateShowTargets ();
 
   TtaSetEnvBoolean ("FONT_ALIASING", GProp_General.S_NoAliasing, TRUE);
-  TtaSetEnvBoolean ("GTM_TIME", GProp_General.S_GTM, TRUE);
+  TtaSetEnvBoolean ("ISO_DATE", GProp_General.S_DATE, TRUE);
 
   /* Save view geometry on exit */
   TtaSetEnvBoolean ("SAVE_GEOMETRY", GProp_General.S_Geometry, TRUE);
@@ -1885,7 +1885,7 @@ void GetDefaultGeneralConf ()
   GetDefEnvToggle ("SHOW_TARGET", &(GProp_General.S_Targets),
 		   GeneralBase + mToggleGeneral, 5);
 #ifdef _WX
-  GetDefEnvToggle ("GTM_TIME", &(GProp_General.S_GTM),
+  GetDefEnvToggle ("ISO_DATE", &(GProp_General.S_DATE),
 		   GeneralBase + mToggleGeneral, 6);
   GetDefEnvToggle ("FONT_ALIASING", &(GProp_General.S_NoAliasing),
 		   GeneralBase + mToggleGeneral, 7);
@@ -2076,7 +2076,7 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, GProp_General.S_Address);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, GProp_General.S_Targets);
 #ifdef _WX
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 6, GProp_General.S_GTM);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 6, GProp_General.S_DATE);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 7, GProp_General.S_NoAliasing);
 #endif /* _WX */
   TtaSetTextForm (GeneralBase + mHomePage, GProp_General.HomePage);
@@ -2163,7 +2163,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	      GProp_General.S_Targets = !(GProp_General.S_Targets);
 	      break;
 	    case 6:
-	      GProp_General.S_GTM = !(GProp_General.S_GTM);
+	      GProp_General.S_DATE = !(GProp_General.S_DATE);
 	      break;
 	    case 7:
 	      GProp_General.S_NoAliasing = !(GProp_General.S_NoAliasing);

@@ -94,7 +94,7 @@ typedef struct Prop_General_t
   ThotBool S_Buttons;
   ThotBool S_Address;
   ThotBool S_NoAliasing;
-  ThotBool S_GTM;
+  ThotBool S_DATE;
   ThotBool S_Targets;
   ThotBool S_AutoSave;
   ThotBool S_Geometry;

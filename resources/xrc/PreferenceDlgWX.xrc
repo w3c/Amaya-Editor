@@ -161,8 +161,8 @@
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxCheckBox" name="wxID_CHECK_GTM">
-                            <label>Universal time</label>
+                          <object class="wxCheckBox" name="wxID_CHECK_DATE">
+                            <label>ISO format</label>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>

@@ -219,7 +219,7 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_AUTO_SAVE)) );
   XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY_ON_EXIT)) );
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NOALIASING)) );
-  XRCCTRL(*this, "wxID_CHECK_GTM", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GTM)) );
+  XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DATE)) );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_TARGETS)) );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
@@ -251,7 +251,7 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
   XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetValue( prop.S_Geometry );
   XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->SetValue( prop.S_NoAliasing );
-  XRCCTRL(*this, "wxID_CHECK_GTM", wxCheckBox)->SetValue( prop.S_GTM );
+  XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->SetValue( prop.S_DATE );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetValue( prop.S_Targets );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->SetSelection( prop.AccesskeyMod );
@@ -281,7 +281,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
   prop.S_Geometry = XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->GetValue();
   prop.S_NoAliasing = XRCCTRL(*this, "wxID_CHECK_NOALIASING", wxCheckBox)->GetValue();
-  prop.S_GTM = XRCCTRL(*this, "wxID_CHECK_GTM", wxCheckBox)->GetValue();
+  prop.S_DATE = XRCCTRL(*this, "wxID_CHECK_DATE", wxCheckBox)->GetValue();
   prop.S_Targets = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
 
   prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();

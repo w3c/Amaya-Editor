@@ -365,5 +365,5 @@
 #define AM_INNEWTAB		362
 #define AM_INNEWWINDOW		363
 #define AM_NOALIASING		364
-#define AM_GTM		365
+#define AM_DATE		365
 #define AMAYA_MSG_MAX		366
