@@ -321,8 +321,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    else
      isHTML = FALSE;
 
-   /* It isn't a link to an xml stylesheet */
    if (!LinkAsXmlCSS)
+     /* It isn't a link to an xml stylesheet */
      {
        if (isHTML)
 	 {
@@ -340,7 +340,6 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
        else
 	 {
 	   /* the origin of the link is not a HTML element */
-	   
 	   /* create a XLink link */
 	   attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
 	   if (!attrType.AttrSSchema)
@@ -366,9 +365,12 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   TtaSetStructureChecking (0, doc);
 	   TtaAttachAttribute (element, attr, doc);
 	   TtaSetStructureChecking (oldStructureChecking, doc);
-	   /* Set the XLink namespace declaration */
-	   TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
-	   TtaSetANamespaceDeclaration (doc, element, XLink_PREFIX, XLink_URI);
+	   if (!isHTML)
+	     {
+	       /* Attach the XLink namespace declaration */
+	       TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
+	       TtaSetANamespaceDeclaration (doc, element, XLink_PREFIX, XLink_URI);
+	     }
 	   new = TRUE;
 	 }
        else
