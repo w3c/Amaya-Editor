@@ -1,4 +1,4 @@
-		{ I. Vatton 	 Novembre 1994-1995  }
+	{ I. Vatton 	 Novembre 1994-1995  }
 
 { Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, SECTION_NUMBER,
 			    LINK_NUMBER }
@@ -60,6 +60,8 @@ COUNTERS
    ItemCounter : Rank of List_Item init Start Reinit ItemValue;
 #ifdef PAGE
    CptPage : Rank of Page(Formatted_view);
+   CptLinksPage : Rank of Page(Links_view);
+   CptToCPage : Rank of Page(Table_of_contents);
 #endif
 #ifdef LINK_NUMBER
    AnchorCounter : Set 0 on BODY add 1 on Anchor;
@@ -129,10 +131,9 @@ BOXES
 		Font: Creator =;
 		Style: Creator =;
 		Size: Creator =;
-		VertPos: HRef = Creator . HRef;
 		END;
 	END;
-
+{******
  TargetPageNumber:
 	BEGIN
 	Content: (Text ' (cf. p. ' Value(PageNumber(Formatted_view), Arabic) Text ')');
@@ -157,7 +158,7 @@ BOXES
 	IN Links_view
 		Visibility: 0;
 	END;
-
+*********}
 #endif
 
 #ifdef SECTION_NUMBER
@@ -3452,6 +3453,34 @@ BOXES
 	Style: Roman;
 	END;
 
+  LinksPageNum:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Content: (Value (CptLinksPage, lroman));
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+	Height:   1.6 cm;
+	Size : 11 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
+  ToCPageNum:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Content: (Value (CptToCPage, Uroman));
+	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
+	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
+	Height:   1.6 cm;
+	Size : 11 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
   BottomSpace:
 	BEGIN
 	Height: 1.4 cm;
@@ -3481,6 +3510,44 @@ BOXES
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	END;
 
+  LinksPage:
+	BEGIN
+#ifdef US_PAPER
+	Width: 16.2 cm;
+	Height: 23.8 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else
+	Width: 15.6 cm;
+	Height: 25.9 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#endif /* US_PAPER */
+	CreateAfter (TitleHead);
+	CreateAfter (URLhead);
+	if NOT One(CptLinksPage) CreateBefore (LinksPageNum);
+	IF Not One(CptLinksPage) CreateBefore (BottomSpace);
+	END;
+
+  ToCPage:
+	BEGIN
+#ifdef US_PAPER
+	Width: 16.2 cm;
+	Height: 23.8 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#else
+	Width: 15.6 cm;
+	Height: 25.9 cm;
+	VertPos: Top = Enclosing . Top + 1.7 cm;
+	HorizPos: Left = Enclosing . Left + 2.7 cm;
+#endif /* US_PAPER */
+	CreateAfter (TitleHead);
+	CreateAfter (URLhead);
+	if NOT One(CptToCPage) CreateBefore (ToCPageNum);
+	IF Not One(CptToCPage) CreateBefore (BottomSpace);
+	END;
+
   HeadingPageNumber:
 	BEGIN
 	Visibility: 0;
@@ -3499,7 +3566,7 @@ BOXES
 	IN Links_view
 	   BEGIN
 	   Visibility: Creator =;
-	   VertPos: HRef = Creator . HRef;
+	   VertPos: Bottom = Creator . Bottom;
 	   HorizPos: Right = Enclosing . Right;
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
 	   END;
@@ -3535,15 +3602,15 @@ RULES
 		END;
 	IN Links_view BEGIN
 #ifdef PAGE
-		Page(ThePage);
+		Page(LinksPage);
 #endif
 		Width: Enclosing . Width - 2;
 		HorizPos: Left = Enclosing . Left + 1;
-		Visibility: 7;
+		Visibility: 10;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
-		Page(ThePage);
+		Page(ToCPage);
 #endif
 		Width: Enclosing . Width - 2;
 		HorizPos: Left = Enclosing . Left + 1;
@@ -3816,8 +3883,16 @@ RULES
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		HorizPos: Left = Enclosing . Left;
 		END;
-	IN Links_view
-		Visibility: 0;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Adjust: VMiddle;
+#endif
+		Size: Enclosing +2;
+		Visibility: 10;
+		Height: 1.7 min;
+		VertPos: Top = Previous . Bottom + VSpaceInToC;
+		HorizPos: Left = Enclosing . Left;
+		END;
 	END;
 
  H2:	BEGIN
@@ -4837,6 +4912,8 @@ RULES
 	CreateAfter(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
+	In Structure_view
+		Visibility: Enclosing =;
 	END;
 
  Radio_Input: BEGIN
@@ -4846,6 +4923,8 @@ RULES
 	CreateAfter(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
+	In Structure_view
+		Visibility: Enclosing =;
 	END;
 
  Text_Input: BEGIN
@@ -4860,7 +4939,6 @@ RULES
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
-	{Size: Enclosing - 5;}
 	IN Structure_view BEGIN
 		Width: 1 pt;
 		Height: 1 pt;
@@ -5005,29 +5083,16 @@ RULES
 		Underline: Underlined;
 		END;
 	IN Links_view BEGIN
+		VertPos : Top = Previous . Bottom;
+		Line;
+		Indent: -2;
 #ifdef PAGE
 		Visibility: 0;	{ attribute HREF_ changes visibility }
 		Adjust: LeftWithDots;
+		Width: Enclosing . Width - 28 pt;
 #else
 		Visibility: 7;
-#endif
-		Line;
-		VertPos : Top = Previous Anchor . Bottom + 0.2;
-#ifdef LINK_NUMBER
-		HorizPos: Left = Previous AnchorNumInLinkView . Right;
-#ifdef PAGE
-		Width: Right = Enclosing . Right - 28 pt;
-#else
-		Width: Right = Enclosing . Right;
-#endif
-#else
-		HorizPos: Left = Enclosing . Left;
-		Indent: -2;
-#ifdef PAGE
-		Width: Right = Enclosing . Right - 28 pt;
-#else
-		Width : Enclosing . Width;
-#endif
+		Width: Enclosing . Width;
 #endif
 		END;
 	END;
@@ -5393,7 +5458,7 @@ ATTRIBUTES
 #ifdef LINK_NUMBER
 	IF Anchor and not InternalLink
 	   BEGIN
-	   CreateBefore(AnchorNumInLinkView);
+	   CreateFirst(AnchorNumInLinkView);
 	   CreateAfter(AnchorNumInFormattedView);
 	   END;
 #endif
@@ -5425,7 +5490,8 @@ ATTRIBUTES
  InternalLink:
 	BEGIN
 #ifdef LINK_NUMBER
-	CreateAfter(SeeTargetPage);
+{****	CreateAfter(SeeTargetPage);
+*****}
 #endif
 #ifdef PAGE
 	IN Links_view
@@ -5503,7 +5569,8 @@ ATTRIBUTES
 	CreateLast(ATTR_NAME_ANCH);
 	CreateLast(VALUE_NAME_ANCH);
 #ifdef LINK_NUMBER
-	CreateAfter(TargetPageNumber);
+{*****	CreateAfter(TargetPageNumber);
+*****}
 #endif
 #ifndef PAGE
 #ifdef BLACK_WHITE

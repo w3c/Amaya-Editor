@@ -881,7 +881,7 @@ View                view;
 #ifdef __STDC__
 void                ShowAlternate (Document document, View view)
 #else
-void                ShowAltername (document, view)
+void                ShowAlternate (document, view)
 Document            document;
 View                view;
 
@@ -1925,8 +1925,12 @@ Document            document;
 	      /* the link */
 	      {
 	        attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-		IntLinkAttr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (link, IntLinkAttr, document);
+		IntLinkAttr = TtaGetAttribute (link, attrType);
+		if (IntLinkAttr == NULL)
+		   {
+		     IntLinkAttr = TtaNewAttribute (attrType);
+		     TtaAttachAttribute (link, IntLinkAttr, document);
+		   }
 		/* looks for the target element */
 		target = SearchNAMEattribute (document, &text[1], NULL);
 		if (target != NULL)
@@ -1951,21 +1955,21 @@ View                view;
 #endif
 {
 #ifdef PRINTBOOK
-   Element	    root, el;
+   Element	    root, body, el;
    ElementType	    elType;
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
-   root = TtaSearchTypedElement (elType, SearchForward, root);
-   el = root;
+   body = TtaSearchTypedElement (elType, SearchForward, root);
    TtaSetDocumentModified (document);
+   el = body;
    while (el != NULL)
-     el = GetIncludedDocuments (el, document);
-   SetInternaLinks (root, document);		
+      el = GetIncludedDocuments (el, document);
+   SetInternaLinks (body, document);		
    /********
-     TtaPrint (document, "Formatted_view Table_of_contents Links_view");
-     *********/
+   TtaPrint (document, "Formatted_view Table_of_contents Links_view");
+   *********/
 #endif /* PRINTBOOK */
 }
 

@@ -101,8 +101,7 @@ STRUCT
 
   Paragraph (ATTR Align) = Basic_Set;
   Preformatted (ATTR WidthElement = integer) = LIST OF (Pre_Line)
-	     - (PICTURE, Big_text, Small_text, Subscript, Superscript);
-	     {* add Font_ to the exclusion list *}
+	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
   Pre_Line = Basic_Set;
 
   Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
