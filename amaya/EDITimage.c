@@ -20,12 +20,13 @@
 #include "css.h"
 #include "SVG.h"
 
-static Document     BgDocument;
-static int          RepeatValue;
+static Document   BgDocument;
+static int        RepeatValue;
 static char       DirectoryImage[MAX_LENGTH];
 static char       LastURLImage[MAX_LENGTH];
 static char       ImageName[MAX_LENGTH];
 static char       ImgAlt[MAX_LENGTH];
+static ThotBool   CreateNewImage;
 
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
@@ -107,9 +108,9 @@ void CallbackImage (int ref, int typedata, char *data)
       if (val == 2)
 	{ 
 	  /* Clear button */
-	LastURLImage[0] = EOS;
+	  LastURLImage[0] = EOS;
 #ifndef _WINDOWS
-	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+	  TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #endif /* !_WINDOWS */
 	}
       else if (val == 3)
@@ -124,148 +125,152 @@ void CallbackImage (int ref, int typedata, char *data)
 			    BaseImage + ImageSel);
 	}
       else if (val == 0)
-	{ /* Cancel button */ 
+	/* Cancel button */ 
+	{ 
 	  LastURLImage[0] = EOS;
 	  TtaDestroyDialogue (ref);
 	  BgDocument = 0;
-	  /* Confirm button */
 	}
-      else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
-	{
-	  /* IMG element without ALT attribute: error message */
+      else 
+	/* Confirm button */
+	if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
+	  {
+	    /* IMG element without ALT attribute: error message */
 #ifndef _WINDOWS
-	  TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
-		       TtaGetMessage (AMAYA, AM_ALT_MISSING));
+	    TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
+			 TtaGetMessage (AMAYA, AM_ALT_MISSING));
 #endif /* !_WINDOWS */
-	}
-      else if (ref == BaseImage + FormBackground && BgDocument != 0)
-	{
-	  TtaDestroyDialogue (ref);
-	  /* save BgDocument because operation can be too long */
-	  document = BgDocument;
-	  /* get the first and last selected element */
-	  TtaGiveFirstSelectedElement (document, &first, &c1, &i);
-	  TtaGiveLastSelectedElement (document, &last, &i, &cN);
-	  TtaOpenUndoSequence (document, first, last, c1, cN);
-	  HTMLschema = TtaGetSSchema ("HTML", document);
-	  el = NULL;
-	  if (first)
-	    {
-	      el = first;
-	      elType = TtaGetElementType (el);
-	      if (HTMLschema)
-		isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
-	      else
-		isHTML = FALSE;
-	      if (isHTML && elType.ElTypeNum == HTML_EL_HTML)
-		{
-		  elType.ElTypeNum = HTML_EL_BODY;
-		  el = TtaSearchTypedElement (elType, SearchInTree, el);
-		}
-	      /* style is not allowed in Head section */
-	      last = el;
-	      if (isHTML)
-		{
-		  if (elType.ElTypeNum == HTML_EL_HEAD)
-		    parent = el;
-		  else
-		    {
-		      parentType.ElSSchema = elType.ElSSchema;
-		      parentType.ElTypeNum = HTML_EL_HEAD;
-		      parent = TtaGetTypedAncestor (el, parentType);
-		    } 
-		  if (parent == NULL)
-		    { 
-		      /* style is not allowed in MAP */
-		      if (elType.ElTypeNum == HTML_EL_MAP)
-			parent = el;
-		      else
-			{
-			  parentType.ElTypeNum = HTML_EL_MAP;
-			  parent = TtaGetTypedAncestor (el, parentType);
-			}
-		    }
-		  if (parent == NULL)
-		    {
-		      elType = TtaGetElementType (last);
-		      if (elType.ElTypeNum == HTML_EL_MAP)
-			parent = el;
-		      else
-			{
-			  parentType.ElTypeNum = HTML_EL_MAP;
-			  parent = TtaGetTypedAncestor (el, parentType);
-			}
-		    }  
-		  if (parent)
-		    el = NULL;
-		}
-	    }
-	  if (el == NULL)
-	    TtaSetStatus (document, 1,
-			  TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
-	  else
-	    {
-	      if (RepeatValue == 0)
-		i = REPEAT;
-	      else if (RepeatValue == 1)
-		i = HREPEAT;
-	      else if (RepeatValue == 2)
-		i = VREPEAT;
-	      else
-		i = SCALE;
-	      if (IsHTTPPath (DocumentURLs[document]) &&
-		  !IsHTTPPath (LastURLImage))
-		{
-		/* load a local image into a remote document copy image file
-		   into the temporary directory of the document */
-		TtaExtractName (LastURLImage, tempfile, tempname);
-		NormalizeURL (tempname, document, tempfile, tempname, NULL);
-		AddLoadedImage (tempname, tempfile, document, &desc);
-		if (desc)
+	  }
+	else if (ref == BaseImage + FormBackground && BgDocument != 0)
+	  {
+	    TtaDestroyDialogue (ref);
+	    /* save BgDocument because operation can be too long */
+	    document = BgDocument;
+	    /* get the first and last selected element */
+	    TtaGiveFirstSelectedElement (document, &first, &c1, &i);
+	    TtaGiveLastSelectedElement (document, &last, &i, &cN);
+	    TtaOpenUndoSequence (document, first, last, c1, cN);
+	    HTMLschema = TtaGetSSchema ("HTML", document);
+	    el = NULL;
+	    if (first)
+	      {
+		el = first;
+		elType = TtaGetElementType (el);
+		if (HTMLschema)
+		  isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+		else
+		  isHTML = FALSE;
+		if (isHTML && elType.ElTypeNum == HTML_EL_HTML)
 		  {
-		    desc->status = IMAGE_MODIFIED;
-		    TtaFileCopy (LastURLImage, desc->localName);
+		    elType.ElTypeNum = HTML_EL_BODY;
+		    el = TtaSearchTypedElement (elType, SearchInTree, el);
 		  }
-		} 
-	      do
-		{
-		  elType = TtaGetElementType (el);
-		  /* if the PRule is on a text string or picture, move it to
-		     the enclosing element */
-		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-		      elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		    {
-		      el = TtaGetParent (el);
-		      if (TtaIsAncestor (last, el))
-			last = el;
-		      elType = TtaGetElementType (el);
-		    } 
-		  /* if the PRule is on a Pseudo-Paragraph, move it to the
-		     enclosing element */
-		  if (isHTML && elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-		    {
-		      el = TtaGetParent (el);
-		      if (TtaIsAncestor (last, el))
-			last = el;
-		    } 
-		  if (LastURLImage[0] == EOS)
-		    HTMLResetBackgroundImage (document, el);
-		  else if (IsHTTPPath (DocumentURLs[document]) &&
-			   !IsHTTPPath (LastURLImage))
-		    HTMLSetBackgroundImage (document, el, i, tempname, TRUE);
-		  else
-		    HTMLSetBackgroundImage (document, el, i, LastURLImage, TRUE);
-		  if (last == NULL || el == last)
-		    el = NULL;
-		  else
-		    TtaGiveNextSelectedElement (document, &el, &c1,&cN);
-		} while (el);
-	    } 
-	  TtaCloseUndoSequence (document);
-	  TtaSetDocumentModified (document);
-	}
-      else
-	TtaDestroyDialogue (ref);
+		/* style is not allowed in Head section */
+		last = el;
+		if (isHTML)
+		  {
+		    if (elType.ElTypeNum == HTML_EL_HEAD)
+		      parent = el;
+		    else
+		      {
+			parentType.ElSSchema = elType.ElSSchema;
+			parentType.ElTypeNum = HTML_EL_HEAD;
+			parent = TtaGetTypedAncestor (el, parentType);
+		      } 
+		    if (parent == NULL)
+		      { 
+			/* style is not allowed in MAP */
+			if (elType.ElTypeNum == HTML_EL_MAP)
+			  parent = el;
+			else
+			  {
+			    parentType.ElTypeNum = HTML_EL_MAP;
+			    parent = TtaGetTypedAncestor (el, parentType);
+			  }
+		      }
+		    if (parent == NULL)
+		      {
+			elType = TtaGetElementType (last);
+			if (elType.ElTypeNum == HTML_EL_MAP)
+			  parent = el;
+			else
+			  {
+			    parentType.ElTypeNum = HTML_EL_MAP;
+			    parent = TtaGetTypedAncestor (el, parentType);
+			  }
+		      }  
+		    if (parent)
+		      el = NULL;
+		  }
+	      }
+	    if (el == NULL)
+	      TtaSetStatus (document, 1,
+			    TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED),
+			    NULL);
+	    else
+	      {
+		if (RepeatValue == 0)
+		  i = REPEAT;
+		else if (RepeatValue == 1)
+		  i = HREPEAT;
+		else if (RepeatValue == 2)
+		  i = VREPEAT;
+		else
+		  i = SCALE;
+		if (IsHTTPPath (DocumentURLs[document]) &&
+		    !IsHTTPPath (LastURLImage))
+		  {
+		    /* load a local image into a remote document copy image
+		       file into the temporary directory of the document */
+		    TtaExtractName (LastURLImage, tempfile, tempname);
+		    NormalizeURL (tempname, document, tempfile, tempname,NULL);
+		    AddLoadedImage (tempname, tempfile, document, &desc);
+		    if (desc)
+		      {
+			desc->status = IMAGE_MODIFIED;
+			TtaFileCopy (LastURLImage, desc->localName);
+		      }
+		  } 
+		do
+		  {
+		    elType = TtaGetElementType (el);
+		    /* if the PRule is on a text string or picture, move it to
+		       the enclosing element */
+		    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+			elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		      {
+			el = TtaGetParent (el);
+			if (TtaIsAncestor (last, el))
+			  last = el;
+			elType = TtaGetElementType (el);
+		      } 
+		    /* if the PRule is on a Pseudo-Paragraph, move it to the
+		       enclosing element */
+		    if (isHTML && elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		      {
+			el = TtaGetParent (el);
+			if (TtaIsAncestor (last, el))
+			  last = el;
+		      } 
+		    if (LastURLImage[0] == EOS)
+		      HTMLResetBackgroundImage (document, el);
+		    else if (IsHTTPPath (DocumentURLs[document]) &&
+			     !IsHTTPPath (LastURLImage))
+		      HTMLSetBackgroundImage (document, el, i, tempname, TRUE);
+		    else
+		      HTMLSetBackgroundImage (document, el, i, LastURLImage,
+					      TRUE);
+		    if (last == NULL || el == last)
+		      el = NULL;
+		    else
+		      TtaGiveNextSelectedElement (document, &el, &c1,&cN);
+		  } while (el);
+	      } 
+	    TtaCloseUndoSequence (document);
+	    TtaSetDocumentModified (document);
+	  }
+	else
+	  TtaDestroyDialogue (ref);
       break;
     case RepeatImage:
       RepeatValue = val;
@@ -920,13 +925,14 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
   ----------------------------------------------------------------------*/
 void UpdateSRCattribute (NotifyElement *event)
 {
-  AttributeType      attrType;
-  Attribute          attr;
-  Element            elSRC, el;
-  Document           doc;
+  AttributeType    attrType;
+  Attribute        attr;
+  Element          elSRC, el;
+  Document         doc;
   char*            text;
   char*            pathimage;
   char*            tmp;
+  ThotBool         newAttr;
 
    el = event->element;
    doc = event->document;
@@ -939,10 +945,12 @@ void UpdateSRCattribute (NotifyElement *event)
    /* Select an image name */
    text = GetImageURL (doc, 1);
    if (text == NULL || text[0] == EOS)
+     /* The user has cancelled */
      {
-	/* delete the empty PICTURE element */
-	TtaDeleteTree (el, doc);
-	return;
+       if (CreateNewImage)
+	 /* We were creating a new image. Delete the empty PICTURE element */
+	 TtaDeleteTree (el, doc);
+       return;
      }
    elSRC = TtaGetParent (el);
    if (elSRC != NULL)
@@ -953,8 +961,16 @@ void UpdateSRCattribute (NotifyElement *event)
    attr = TtaGetAttribute (elSRC, attrType);
    if (attr == 0)
      {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elSRC, attr, doc);
+       newAttr = TRUE;
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (elSRC, attr, doc);
+     }
+   else
+     {
+       newAttr = FALSE;
+       if (!CreateNewImage)
+	 /* we are just updating attributes. Register the change */
+	 TtaRegisterAttributeReplace (attr, elSRC, doc);
      }
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
@@ -979,17 +995,30 @@ void UpdateSRCattribute (NotifyElement *event)
 #endif /* _I18N_ */
        ImgAlt[0] = EOS;
      }
+   if (!CreateNewImage && newAttr)
+     TtaRegisterAttributeCreate (attr, elSRC, doc);
+
    /* search the SRC attribute */
    attrType.AttrTypeNum = HTML_ATTR_SRC;
    attr = TtaGetAttribute (elSRC, attrType);
    if (attr == 0)
      {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elSRC, attr, doc);
+       newAttr = TRUE;
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (elSRC, attr, doc);
+     }
+   else
+     {
+       newAttr = FALSE;
+       if (!CreateNewImage)
+	 /* we are just updating attributes. Register the change */
+	 TtaRegisterAttributeReplace (attr, elSRC, doc);
      }
    ComputeSRCattribute (elSRC, doc, 0, attr, text);
-}
 
+   if (!CreateNewImage && newAttr)
+     TtaRegisterAttributeCreate (attr, elSRC, doc);
+}
 
 /*----------------------------------------------------------------------
    SvgImageCreated
@@ -1129,25 +1158,62 @@ void                SRCattrModified (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void CreateImage (Document doc, View view)
 {
-  Element            sibling;
+  Element            firstSelEl, lastSelEl;
   ElementType        elType;
+  Attribute          attr;
+  AttributeType      attrType;
   char              *name;
-  int                c1, i;
+  int                c1, i, j, cN, length;
+  NotifyElement      event;
 
-  TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
-  if (sibling)
+  TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
+  if (firstSelEl)
+    /* some element is selected */
     {
+      TtaGiveLastSelectedElement (doc, &lastSelEl, &j, &cN);
       /* Get the type of the first selected element */
-      elType = TtaGetElementType (sibling);
+      elType = TtaGetElementType (firstSelEl);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      if (!strcmp (name, "SVG"))
-	elType.ElTypeNum = SVG_EL_image;
-      else
+      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_PICTURE_UNIT &&
+	  c1 == 0 && i == 0 && lastSelEl == firstSelEl)
+	/* the first selected element is an HTML <img>, it is fully selected
+	   and only this element is selected */
+	/* The user wants to replace an existing <img> */
 	{
-	  elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	  /* get the value of the current src attribute for this image
+	     to initialize the image dialogue box */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_SRC;
+	  attr = TtaGetAttribute (firstSelEl, attrType);
+	  if (attr)
+	    {
+	      length = TtaGetTextAttributeLength (attr) + 1;
+	      if (length < MAX_LENGTH)
+		TtaGiveTextAttributeValue (attr, LastURLImage, &length);
+	    }
+	  /* display the image dialogue box */
+	  event.element = firstSelEl;
+	  event.document = doc;
+	  event.elementType.ElSSchema = elType.ElSSchema;
+	  event.elementType.ElTypeNum = elType.ElTypeNum;
+	  CreateNewImage = FALSE;
+	  TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
+	  UpdateSRCattribute (&event);
+	  TtaCloseUndoSequence(doc);
 	}
-      TtaCreateElement (elType, doc);
+      else
+	/* the user want to insert a new image */
+	{
+	  if (!strcmp (name, "SVG"))
+	    elType.ElTypeNum = SVG_EL_image;
+	  else
+	    {
+	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+	      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	    }
+	  CreateNewImage = TRUE;
+	  TtaCreateElement (elType, doc);
+	}
     }
 }
 
