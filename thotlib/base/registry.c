@@ -1667,7 +1667,7 @@ void                TtaFreeAppRegistry ()
     TtaFreeMemory (cour);
     cour = next;
   }
-  TtaFreeMemory (appName);
+  TtaFreeMemory (AppRegistryEntryAppli);
   AppRegistryInitialized = 0;
 }
 
