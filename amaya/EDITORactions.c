@@ -262,7 +262,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   char                *pathname, *documentname;
   char                *s;
   char                 tempfile[MAX_LENGTH];
-  char                 charsetName[MAX_LENGTH];
+  char                *charsetName;
+  CHARSET              charset;
 
   pathname = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
@@ -305,10 +306,19 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (doc);
-  /* Set the document charset */
-  TtaSetDocumentCharset (doc, ISO_8859_1, FALSE);
-  strcpy (charsetName , "iso-8859-1");
-  DocumentMeta[doc]->charset = TtaStrdup (charsetName);
+  /* Set the document charset with the default charset */
+  charsetName = TtaGetEnvString ("DOCUMENT_CHARSET");
+  charset = TtaGetCharset (charsetName);
+  if (charset != UNDEFINED_CHARSET)
+    {
+      TtaSetDocumentCharset (doc, charset, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup (charsetName);
+    }
+  else
+    {
+      TtaSetDocumentCharset (doc, UTF_8, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup ("utf_8");
+    }
 
   elType = TtaGetElementType (docEl);
   attrType.AttrSSchema = elType.ElSSchema;

@@ -161,6 +161,7 @@ static ThotBool S_Numbers;
 #define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
 static ThotBool S_AutoSave;
+static ThotBool S_Geometry;
 
 /* Browse menu options */
 #ifdef _WINGUI
@@ -1596,6 +1597,7 @@ static void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
   TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &S_Geometry);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
@@ -1886,6 +1888,10 @@ static void SetGeneralConf (void)
   TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
   if (old != S_Numbers)
     UpdateSectionNumbering ();
+
+  /* Save view geometry */
+  TtaSetEnvBoolean ("SAVE_GEOMETRY", S_Geometry, TRUE);
+
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   if (AccesskeyMod == 0)
@@ -1921,14 +1927,16 @@ static void GetDefaultGeneralConf ()
   S_AutoSave = (AutoSave_Interval > 0);
   GetDefEnvToggle ("AUTO_SAVE", &S_AutoSave,
 		   GeneralBase + mToggleGeneral, 1);
-  GetDefEnvToggle ("SHOW_BUTTONS", &S_Buttons,
+  GetDefEnvToggle ("SAVE_GEOMETRY", &S_Geometry,
 		   GeneralBase + mToggleGeneral, 2);
-  GetDefEnvToggle ("SHOW_ADDRESS", &S_Address,
+  GetDefEnvToggle ("SHOW_BUTTONS", &S_Buttons,
 		   GeneralBase + mToggleGeneral, 3);
-  GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
+  GetDefEnvToggle ("SHOW_ADDRESS", &S_Address,
 		   GeneralBase + mToggleGeneral, 4);
-  GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
+  GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
 		   GeneralBase + mToggleGeneral, 5);
+  GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
+		   GeneralBase + mToggleGeneral, 6);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
@@ -2111,10 +2119,11 @@ static void RefreshGeneralMenu ()
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, PasteLineByLine);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, S_AutoSave);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Buttons);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Address);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Targets);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Numbers);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Geometry);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Buttons);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Address);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Targets);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 6, S_Numbers);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
@@ -2184,15 +2193,18 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 		AutoSave_Interval = 0;	      
 	      break;
 	    case 2:
-	      S_Buttons = !S_Buttons;
+	      S_Geometry = !S_Geometry;
 	      break;
 	    case 3:
-	      S_Address = !S_Address;
+	      S_Buttons = !S_Buttons;
 	      break;
 	    case 4:
-	      S_Targets = !S_Targets;
+	      S_Address = !S_Address;
 	      break;
 	    case 5:
+	      S_Targets = !S_Targets;
+	      break;
+	    case 6:
 	      S_Numbers = !S_Numbers;
 	      break;
 	    }
@@ -2273,9 +2285,10 @@ void GeneralConfMenu (Document document, View view)
    TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
    /*TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");*/
    /* second line */
-   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
+   sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_PASTE_LINE_BY_LINE), EOS, 
 	     TtaGetMessage (AMAYA, AM_AUTO_SAVE), EOS, 
+	     TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY_ON_EXIT), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS,
@@ -2284,7 +2297,7 @@ void GeneralConfMenu (Document document, View view)
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
 		     NULL,
-		     6,
+		     7,
 		     s,
 		     NULL,
 		     FALSE);
@@ -3490,7 +3503,7 @@ static void SetEnvCurrentGeometry ()
   SetGeometryConf
   Updates the registry Geometry values and redraws the windows
   ----------------------------------------------------------------------*/
-static void SetGeometryConf (void)
+void SetGeometryConf (void)
 {
   /* read the current values and save them into the registry */
   SetEnvCurrentGeometry ();

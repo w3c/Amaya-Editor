@@ -180,196 +180,197 @@
 178 Langue des dialogues
 179 Activer le coller ligne à ligne
 180 Produire des fichiers de sauvegarde
-181 Montrer les images de fond
-182 Montrer boutons
-183 Montrer adresse
-184 Montrer les cibles
-185 Numéroter les sections
-186 Exporter CR/LF
-187 Configuration de navigation
-188 Charger les images (img)
-189 Cliquer deux fois pour suivre un lien
-190 Configuration de la publication
-191 Utiliser les ETAGS et les pré-conditions
-192 Vérifier chaque PUT avec un GET
-193 Nom par défaut pour les URLs finissant par un '/'
-194 Configuration de la géométrie
-195 Sauver la géométrie courante
-196 Restaurer la géométrie défaut
-197 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
-198 Configuration des couleurs
-199 Couleur du texte
-200 Couleur de fond
-201 Couleur des menus
-202 Couleur de fond des menus
-203 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
-204 Page personnelle
-205 Liste des langues préférées comme "fr, en" :
-206 Emplacement du fichier de définition de profils
-207 Sélection du profil
-208 Ces changements seront effectifs lors du prochain démarrage.
-209 Configuration du profil
-210 Entrez l'URL du serveur de modèles
-211 Configuration des modèles de pages
-212 Autoriser la redirection automatique du PUT vers ces domaines
-213 Sans feuilles de style
-214 Transformer en
-215 (séparer chaque entrée avec un espace)
-216 Ne pas utiliser le proxy dans ces domaines
-217 Utiliser le proxy uniquement dans ces domaines
-218 Nom du caractère
-219 Repertoire utilisateur
-220 Repertoire témporaire
-221 Par palette
-222 Négociation de langues
-223 Configurer les annotations
-224 Nom de l'utilisateur
-225 Serveur de publication
-226 Serveur d'annotations
-227 Charger automatiquement les annotations locales
-228 Charger automatiquement les annotations distantes
-229 Désactiver le chargement automatique des annotations distantes au démarrage
-230 Couleur de sélection
-231 Couleur de fond de sélection
-232 Orientation
-233 Portrait
-234 Paysage
-235 Support FTP
-236 Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?
-237 Document XML mal formé - Montrer les erreurs ?
-238 Caractères invalides - Recharger en HTML ou montrer les erreurs ?
-239 Caractères invalides
-240 Profil du document :
-241 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
-242 Le codage de ce document n'est pas supporté par Amaya
-243 Editer et sauver ce document changera son type
-244 Non disponible
-245 Butiner
-246 Sélecteur de fichiers
-247 Sélection
-248 Filtre local des annotations
-249 Montrer
-250 Cacher
-251 Montrer tout
-252 Cacher tout
-253 * signifie caché, - signifie partiellement caché
-254 Options de filtrage
-255 Par auteur
-256 Par type
-257 Par serveur
-258 Accés rapides
-259 Ignorer
-260 Elément Style
-261 Impossible de créer un XPointer
-262 Impossible de débuter un XPointer sur un élément ajouté par Amaya
-263 Impossible de terminer un XPointer sur un élément ajouté par Amaya
-264 Je ne peux pas déplacer l'annotation là
-265 Je ne peux pas bouger l'annotation vers un autre document
-266 Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.
-267 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
-268 Impossible de construire un XPointer pour cette annotation
-269 Faire une nouvelle annotation
-270 La publication de l'annotation a échoué
-271 La destruction de l'annotation a échoué
-272 Annotation détruite!
-273 Impossible de charger l'index des annotations
-274 Erreur
-275 Sélectionner un Charset
-276 Sélectionner un type MIME
-277 Changer Charset
-278 Changer le type MIME
-279 Changer
-280 Ce type de document n'a pas de charset
-281 L'URL doit être de type HTTP pour utiliser
-282 Erreur: type MIME incorrect
-283 Inconnu
-284 Styles ignorés - voir Vues/Montrer les erreurs
-285 Ce document est déjà affiché dans une autre fenêtre.
-286 Sauver cette instance peut provoquer des problèmes de mise à jour.
-287 Le document sera réanalysé pour prendre en compte le doctype.
-288 Les modifications en cours ne pourront être défaites.
-289 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
-290 Verrou réussit!
-291 Verrou a échué!
-292 En attente d'un verrou sur %s...
-293 Document %s est verrouillé!
-294 Document %s a été verrouillé par %s (temps d'expiration %s)
-295 Surpasser le verrou?
-296 Copier les informations du verrou??
-297 Essayez déverrouillé le document...
-298 Déverrouillage a réussit!
-299 Dérrouillage a échoué!
-300 En attente d'une libération du verrou...
-301 Document %s est déverrouillé!
-302 Déverrouillé le document?
-303 Propriétes du document
-304 Propriétes du document ne sont pas disponibles
-305 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
-306 En attente des propriétes du document...
-307 Désolé, WebDAV ne support pas URLs comme %s
-308 Sauvegarde du verrou dans la base local a échué
-309 Impossible éffacer verrou de la base local
-310 Désolé, cette opération est interdit pour %s
-311 Opération a échué! Cause: Faute de dépendence
-312 Opération a échué! Cause: %s
-313 Ressayez?
-314 Configuration WebDAV
-315 Référence Personnelle de l'utilisateur (URL)
-316 List des Ressources de l'utilisateur (URL URL)
-317 Profondeur du Verrou
-318 infini
-319 Expiration du verrou
-320 Infini
-321 Autre
-322 Secondes
-323 Type du Verrou
-324 exclusif
-325 partagée
-326 Notification
-327 Notification général
-328 Notification àla sortie
-329 Ligne de temps
-330 Bibliotheque SVG
-331 Option de copie
-332 Copier
-333 Réferencer
-334 Ajouter un modèle dans la librairie
-335 URL du nouveau fichier SVG ...
-336 Titre de la librairie
-337 URL de la librairie
-338 Créer une librairie
-339 Butiner librairies
-340 Créer ou chercher une librairie
-341 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
-342 Le titre de la librairie est obligatoire
-343 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
-344 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-345 Sélectionner la couleur de départ de l'élément...
-346 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-347 Sélectionner la couleur de fin...
-348 Animation définie.
-349 Attribut animé
-350 Elément sans ID
-351 Ajouter ID
-352 Supprimer ID
-353 Ajouter/Supprimer IDs
-354 Appliquer opération
-355 Entrer le nom d'un élément
-356 Appliquer CSS
-357 Type d'écran courant
-358 Nouvelle Rubrique
-359 Propriétés du signet
-360 Propriétés de la rubrique
-361 Hiérarchie des rubriques:
-362 Titre:
-363 Rappele:
-364 Auteur:
-365 Crée:
-366 Dernière modification:
-367 Description:
-368 Sélectionnez un élément
-369 Toutes les CSS
-370 Règles de style CSS appliqué l'élément <%s> \n
-371 Les lignes bleues sont des liens activés par un double (ou simple) click\n
-372 Charger les objets (object, embed)
-373 Pas de règle de style pour cet élément
+181 Sauver la géométrie en quittant
+182 Montrer les images de fond
+183 Montrer boutons
+184 Montrer adresse
+185 Montrer les cibles
+186 Numéroter les sections
+187 Exporter CR/LF
+188 Configuration de navigation
+189 Charger les images (img)
+190 Cliquer deux fois pour suivre un lien
+191 Configuration de la publication
+192 Utiliser les ETAGS et les pré-conditions
+193 Vérifier chaque PUT avec un GET
+194 Nom par défaut pour les URLs finissant par un '/'
+195 Configuration de la géométrie
+196 Sauver la géométrie courante
+197 Restaurer la géométrie défaut
+198 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
+199 Configuration des couleurs
+200 Couleur du texte
+201 Couleur de fond
+202 Couleur des menus
+203 Couleur de fond des menus
+204 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
+205 Page personnelle
+206 Liste des langues préférées comme "fr, en" :
+207 Emplacement du fichier de définition de profils
+208 Sélection du profil
+209 Ces changements seront effectifs lors du prochain démarrage.
+210 Configuration du profil
+211 Entrez l'URL du serveur de modèles
+212 Configuration des modèles de pages
+213 Autoriser la redirection automatique du PUT vers ces domaines
+214 Sans feuilles de style
+215 Transformer en
+216 (séparer chaque entrée avec un espace)
+217 Ne pas utiliser le proxy dans ces domaines
+218 Utiliser le proxy uniquement dans ces domaines
+219 Nom du caractère
+220 Repertoire utilisateur
+221 Repertoire témporaire
+222 Par palette
+223 Négociation de langues
+224 Configurer les annotations
+225 Nom de l'utilisateur
+226 Serveur de publication
+227 Serveur d'annotations
+228 Charger automatiquement les annotations locales
+229 Charger automatiquement les annotations distantes
+230 Désactiver le chargement automatique des annotations distantes au démarrage
+231 Couleur de sélection
+232 Couleur de fond de sélection
+233 Orientation
+234 Portrait
+235 Paysage
+236 Support FTP
+237 Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?
+238 Document XML mal formé - Montrer les erreurs ?
+239 Caractères invalides - Recharger en HTML ou montrer les erreurs ?
+240 Caractères invalides
+241 Profil du document :
+242 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+243 Le codage de ce document n'est pas supporté par Amaya
+244 Editer et sauver ce document changera son type
+245 Non disponible
+246 Butiner
+247 Sélecteur de fichiers
+248 Sélection
+249 Filtre local des annotations
+250 Montrer
+251 Cacher
+252 Montrer tout
+253 Cacher tout
+254 * signifie caché, - signifie partiellement caché
+255 Options de filtrage
+256 Par auteur
+257 Par type
+258 Par serveur
+259 Accés rapides
+260 Ignorer
+261 Elément Style
+262 Impossible de créer un XPointer
+263 Impossible de débuter un XPointer sur un élément ajouté par Amaya
+264 Impossible de terminer un XPointer sur un élément ajouté par Amaya
+265 Je ne peux pas déplacer l'annotation là
+266 Je ne peux pas bouger l'annotation vers un autre document
+267 Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.
+268 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
+269 Impossible de construire un XPointer pour cette annotation
+270 Faire une nouvelle annotation
+271 La publication de l'annotation a échoué
+272 La destruction de l'annotation a échoué
+273 Annotation détruite!
+274 Impossible de charger l'index des annotations
+275 Erreur
+276 Sélectionner un Charset
+277 Sélectionner un type MIME
+278 Changer Charset
+279 Changer le type MIME
+280 Changer
+281 Ce type de document n'a pas de charset
+282 L'URL doit être de type HTTP pour utiliser
+283 Erreur: type MIME incorrect
+284 Inconnu
+285 Styles ignorés - voir Vues/Montrer les erreurs
+286 Ce document est déjà affiché dans une autre fenêtre.
+287 Sauver cette instance peut provoquer des problèmes de mise à jour.
+288 Le document sera réanalysé pour prendre en compte le doctype.
+289 Les modifications en cours ne pourront être défaites.
+290 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
+291 Verrou réussit!
+292 Verrou a échué!
+293 En attente d'un verrou sur %s...
+294 Document %s est verrouillé!
+295 Document %s a été verrouillé par %s (temps d'expiration %s)
+296 Surpasser le verrou?
+297 Copier les informations du verrou??
+298 Essayez déverrouillé le document...
+299 Déverrouillage a réussit!
+300 Dérrouillage a échoué!
+301 En attente d'une libération du verrou...
+302 Document %s est déverrouillé!
+303 Déverrouillé le document?
+304 Propriétes du document
+305 Propriétes du document ne sont pas disponibles
+306 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+307 En attente des propriétes du document...
+308 Désolé, WebDAV ne support pas URLs comme %s
+309 Sauvegarde du verrou dans la base local a échué
+310 Impossible éffacer verrou de la base local
+311 Désolé, cette opération est interdit pour %s
+312 Opération a échué! Cause: Faute de dépendence
+313 Opération a échué! Cause: %s
+314 Ressayez?
+315 Configuration WebDAV
+316 Référence Personnelle de l'utilisateur (URL)
+317 List des Ressources de l'utilisateur (URL URL)
+318 Profondeur du Verrou
+319 infini
+320 Expiration du verrou
+321 Infini
+322 Autre
+323 Secondes
+324 Type du Verrou
+325 exclusif
+326 partagée
+327 Notification
+328 Notification général
+329 Notification àla sortie
+330 Ligne de temps
+331 Bibliotheque SVG
+332 Option de copie
+333 Copier
+334 Réferencer
+335 Ajouter un modèle dans la librairie
+336 URL du nouveau fichier SVG ...
+337 Titre de la librairie
+338 URL de la librairie
+339 Créer une librairie
+340 Butiner librairies
+341 Créer ou chercher une librairie
+342 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
+343 Le titre de la librairie est obligatoire
+344 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
+345 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+346 Sélectionner la couleur de départ de l'élément...
+347 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
+348 Sélectionner la couleur de fin...
+349 Animation définie.
+350 Attribut animé
+351 Elément sans ID
+352 Ajouter ID
+353 Supprimer ID
+354 Ajouter/Supprimer IDs
+355 Appliquer opération
+356 Entrer le nom d'un élément
+357 Appliquer CSS
+358 Type d'écran courant
+359 Nouvelle Rubrique
+360 Propriétés du signet
+361 Propriétés de la rubrique
+362 Hiérarchie des rubriques:
+363 Titre:
+364 Rappele:
+365 Auteur:
+366 Crée:
+367 Dernière modification:
+368 Description:
+369 Sélectionnez un élément
+370 Toutes les CSS
+371 Règles de style CSS appliqué l'élément <%s> \n
+372 Les lignes bleues sont des liens activés par un double (ou simple) click\n
+373 Charger les objets (object, embed)
+374 Pas de règle de style pour cet élément

@@ -7893,11 +7893,17 @@ void AmayaClose (Document document, View view)
 {
    int          i;
    ThotBool     documentClosed;
+   ThotBool     saveGeometry = FALSE;
 
    /* invalid current loading */
    W3Loading = 0;
 
    documentClosed = TRUE;
+
+   /* Save the current windows geometry */
+   TtaGetEnvBoolean ("SAVE_GEOMETRY", &saveGeometry);
+   if (saveGeometry)
+     SetGeometryConf ();
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)

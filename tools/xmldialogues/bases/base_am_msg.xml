@@ -1810,6 +1810,10 @@
 	<message xml:lang="it">Crea copie di salvataggio</message>
 	<message xml:lang="es">Generar copias de seguridad</message>
 </label>
+<label define="AM_SAVE_GEOMETRY_ON_EXIT">
+	<message xml:lang="en">Save geometry on exit</message>
+	<message xml:lang="fr">Sauver la géométrie en quittant</message>
+</label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
 	<message xml:lang="fr">Montrer les images de fond</message>
