@@ -2498,7 +2498,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   AbPosition         *pPosAb;
   int                 width, height;
   int                 nSpaces;
-  int                 i, charDelta, adjustDelta;
+  int                 i, k, charDelta, adjustDelta;
   ThotBool            condition;
   ThotBool            result, isCell;
   ThotBool            orgXComplete;
@@ -2563,15 +2563,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
 	    {
+		  k = EXTRA_GRAPH;
 	      if (pCurrentBox->BxLMargin)
-		DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
-			 pCurrentBox->BxYOrg,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
-			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin - k,
+			 pCurrentBox->BxYOrg - k,
+			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin + k,
+			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 	      else
-		DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
-			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
+			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
+			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 	    }
 	}
     }
