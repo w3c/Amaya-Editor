@@ -432,11 +432,10 @@ HTRequest * request;
 	   if (WWWTRACE)
 	     HTTrace ("IsHTTP09Error..... Detected 0.9 backward compatibility\n");
 	   /* we set up a more explicit message, as I don't know what may be
-	      before this error */
-	   HTRequest_addError (request, ERR_FATAL, NO, HTERR_HTTP09,
-			       "Error: Server or network forced libwww to downgrade to HTTP/0.9 for this host.\nPlease quite Amaya.", 0, NULL);
-	   /* how do we switch back to 1.x? */
-	   /* HTNet_setHost ??? */
+	      before this error. */
+	   HTRequest_addError (request, ERR_FATAL, NO, HTERR_BAD_REPLY,
+			       "Error: Server sent an unexpected reply.", 0,
+			       NULL);
 	   break;
 	 }
      }
@@ -643,7 +642,8 @@ int status;
   HTErrorElement      errorElement;
   HTList              *cur;
   CHAR_T              msg_status[10];
-  char*               server_status = (char*) NULL;
+  char                *server_status = NULL;
+  CHAR_T              *wc_tmp;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
@@ -797,6 +797,8 @@ int status;
 	    }
 	  status = -500; 
 	}
+      /* JK: not used anymore, but left here for debugging reasons */
+#if 0
       else if (errorElement == HTERR_HTTP09)
 	{
 	  TtaSetStatus (me->docid, 1,
@@ -805,12 +807,22 @@ int status;
 	  usprintf (AmayaLastHTTPErrorMsg,
 		    TEXT("Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit."));
 	}
+#endif
+      else if (server_status)
+	{
+	  wc_tmp = TtaISO2WCdup (server_status);
+	  /* let's output whatever the server or libwww reports as an error */
+	  TtaSetStatus (me->docid, 1, wc_tmp, (STRING) NULL);
+	  ustrcpy (AmayaLastHTTPErrorMsg, wc_tmp);
+	  TtaFreeMemory (wc_tmp);
+	}
       else
 	{
+	  /* we don't have anything else, except for the status code */
 	  usprintf (msg_status, TEXT("%d"), status); 
 	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	  usprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
-		    msg_status);
+	  usprintf (AmayaLastHTTPErrorMsg, 
+		    TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	}
     }
 }
