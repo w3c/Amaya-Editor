@@ -3643,11 +3643,11 @@
 	<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
-	<message xml:lang="en">Load objects (object, embed)</message>
-	<message xml:lang="fr">Charger les objets (object, embed)</message>
-	<message xml:lang="it">Carica oggetti (object, embed)</message>
-	<message xml:lang="es">Cargar objetos (object, embed)</message>
-	<message xml:lang="de">Objekte laden (Objekt, eingebunden)</message>
+	<message xml:lang="en">Load objects (object, embed, iframe)</message>
+	<message xml:lang="fr">Charger les objets (object, embed, iframe)</message>
+	<message xml:lang="it">Carica oggetti (object, embed, iframe)</message>
+	<message xml:lang="es">Cargar objetos (object, embed, iframe)</message>
+	<message xml:lang="de">Objekte laden (object, embed, iframe)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
 	<message xml:lang="en">No style rule for this element</message>

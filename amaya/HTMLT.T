@@ -2714,13 +2714,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- FrameName: BEGIN
-        create SAN;
-	Create 'name="';
-	Create FrameName;
-	Create DoubleQuote;
-	END;
-
  FrameSrc: BEGIN
         create SAN;
 	Create 'src="';

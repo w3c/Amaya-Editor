@@ -587,29 +587,6 @@ BOXES
 		END;
 	END;
 
- ATTR_FRAMENAME: BEGIN
-	Content: Text ' name= ';
-	Style: Bold;
-	IN Links_view BEGIN
-		Style: Enclosing =;
-#ifndef PAGE
-		Foreground: ATTR_Color;
-#endif
-		END;
-	IN Structure_view
-		Visibility: 0;
-	IN Table_of_contents
-	        Visibility: 0;
-	END;
-
- VALUE_FRAMENAME: BEGIN
-	Content: (FrameName);
-	IN Structure_view
-		Visibility: 0;
-	IN Table_of_contents
-	        Visibility: 0;
-	END;
-
  ATTR_FRAMESRC: BEGIN
 	Content: Text ' src=';
 	Style: Bold;
@@ -5207,7 +5184,7 @@ RULES
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
 	HorizRef: * . Bottom;
-	Width: Enclosing . Width;
+	Width: 10 cm;
 	Line;
 	LineBreak: No;
 	MarginLeft: 3 px;
@@ -5270,7 +5247,7 @@ RULES
 
  Iframe_Content: BEGIN
 	Width: Enclosing . Width;
-	Height: Enclosing . Height;
+	Height: Enclosed . Height;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left;
 	Visibility: 0;
@@ -5292,7 +5269,7 @@ RULES
 	LineBreak: No;
 	PageBreak: No;
 	Width: Enclosing . Width;
-	Height: Enclosing . Height;
+	Height: Enclosed . Height;
 	VertPos: Top = Enclosing . Top;
 	IN Structure_view
 		Visibility: 0;
@@ -5520,6 +5497,16 @@ ATTRIBUTES
 	    Visibility: 0;
 	END;
  NoObjects(Object_Content):
+	BEGIN
+ 	  if not within HEAD
+	    Visibility: Enclosing =;
+	END;
+ NoObjects(Iframe_Src_Content):
+	BEGIN
+ 	  if not within HEAD
+	    Visibility: 0;
+	END;
+ NoObjects(Iframe_Content):
 	BEGIN
  	  if not within HEAD
 	    Visibility: Enclosing =;
@@ -5809,6 +5796,10 @@ ATTRIBUTES
 	if map and not ID
 	 	CreateFirst(Target_gif);
 	if MAP and not ID
+		CreateFirst(Target_gif);
+	if FRAME and not ID
+		CreateFirst(Target_gif);
+	if IFRAME and not ID
 		CreateFirst(Target_gif);
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
@@ -8064,14 +8055,6 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
-  FrameName:
-	BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-	CreateLast (ATTR_FRAMENAME);
-	CreateLast (VALUE_FRAMENAME);
-	END;
-
   FrameSrc:
 	BEGIN
 	CreateBefore(AttrName);
@@ -8085,17 +8068,34 @@ ATTRIBUTES
 
   frameborder:
 	CreateBefore(AttrNameAndValue);
+  frameborder = Border0:
+	BEGIN
+	BorderTopWidth: 0;
+	BorderLeftWidth: 0;
+	BorderBottomWidth: 0;
+	BorderRightWidth: 0;
+	END;
 
   marginwidth:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;
+  marginwidth(Iframe_Src_Content):
+	BEGIN
+	MarginLeft: marginwidth px;
+	MarginRight: marginwidth px;
+	END;
 
   marginheight:
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	END;
+  marginheight(Iframe_Src_Content):
+	BEGIN
+	MarginTop: marginheight px;
+	MarginBottom: marginheight px;
 	END;
 
   no_resize:

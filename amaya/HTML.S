@@ -804,8 +804,8 @@ STRUCT
 	END;
 
   FRAME								{ FRAME }
-     (ATTR longdesc; FrameName = Text; FrameSrc = Text;
-	 { longdesc  name	       src }
+     (ATTR longdesc; NAME; FrameSrc = Text;
+	 { longdesc  name  src }
 	   frameborder = Border1, Border0;
 	 { frameborder   1        0 }
 	   marginwidth = Integer; marginheight = Integer;
@@ -815,16 +815,15 @@ STRUCT
 	CONSTANT C_Empty;
 
   IFRAME							{ IFRAME }
-     (ATTR longdesc; FrameName; FrameSrc; frameborder;
-	 { longdesc  name       src       frameborder }
+     (ATTR longdesc; NAME; FrameSrc; frameborder;
+	 { longdesc  name  src       frameborder }
 	   marginwidth; marginheight; scrolling;
 	 { marginwidth  marginheight  scrolling }
 	   Alignment; Width__; Height_) =
 	 { align      width    height }
 	BEGIN
 	Iframe_Src_Content= NATURE;
-	Iframe_Content = LIST OF (ElemOrParam_2 = CASE OF
-	                          Element; Parameter; END);   { PARAM }
+	Iframe_Content = LIST OF (Element);                     { flow }
 	END;
 
   ruby =                                                        { ruby }

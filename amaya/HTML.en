@@ -250,7 +250,6 @@ x_coord: x
 y_coord: y
 RowHeight: rows
 ColWidth: cols
-FrameName: name
 FrameSrc: src
 Border1: 1
 Border0: 0

@@ -253,8 +253,8 @@ AttributeMapping XHTMLAttributeMappingTable[] =
 
    {"name", "applet", 'A', HTML_ATTR_applet_name, L_TransitionalValue},
    {"name", "embed", 'A', HTML_ATTR_EmbedName, L_TransitionalValue},
-   {"name", "frame", 'A', HTML_ATTR_FrameName, L_TransitionalValue},
-   {"name", "iframe", 'A', HTML_ATTR_FrameName, L_TransitionalValue},
+   {"name", "frame", 'A', HTML_ATTR_NAME, L_TransitionalValue},
+   {"name", "iframe", 'A', HTML_ATTR_NAME, L_TransitionalValue},
    {"name", "meta", 'A', HTML_ATTR_meta_name, L_BasicValue},
    {"name", "param", 'A', HTML_ATTR_Param_name, L_BasicValue},
    {"name", "", 'A', HTML_ATTR_NAME, L_BasicValue},

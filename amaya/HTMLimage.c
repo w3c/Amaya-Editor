@@ -587,8 +587,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
-  if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
-      ((elType.ElTypeNum == HTML_EL_Object || elType.ElTypeNum == HTML_EL_IFRAME ||
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+      ((elType.ElTypeNum == HTML_EL_Object ||
+	elType.ElTypeNum == HTML_EL_IFRAME ||
 	elType.ElTypeNum == HTML_EL_Embed_) &&
        (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)))
     {
@@ -658,6 +659,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	      parentType.ElTypeNum == HTML_EL_Embed_)
 	     /* it's an image into an object -> display object content */
 	    SetAttrOnElement (doc, parent, HTML_ATTR_NoObjects, 1);
+	  else if (elType.ElTypeNum == HTML_EL_IFRAME)
+	    SetAttrOnElement (doc, el, HTML_ATTR_NoObjects, 1);
 	  else
 	    /* it's an image -> display image alt text */
 	    SetAttrOnElement (doc, el, HTML_ATTR_NoImages, 1);

@@ -1211,9 +1211,6 @@ ATTRIBUTES
  ColWidth:
 		BEGIN
 		END;
- FrameName:
-		BEGIN
-		END;
  FrameSrc:
 		BEGIN
 		END;

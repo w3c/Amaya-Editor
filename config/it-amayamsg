@@ -374,5 +374,5 @@
 372 Tutti i CSS
 373 Regole di stile CSS applicate all'elemento <%s>\n
 374 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
-375 Carica oggetti (object, embed)
+375 Carica oggetti (object, embed, iframe)
 376 Nessuna regola di stile per questo elemento
