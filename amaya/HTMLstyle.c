@@ -4492,6 +4492,7 @@ char               *color;
 
    sprintf (css_command, "background: %s", color);
    ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4523,6 +4524,7 @@ char               *image;
    else
      strcat (css_command, "no-repeat");
    ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4541,6 +4543,7 @@ char               *color;
 
    sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4560,6 +4563,7 @@ Element             elem;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLSpecificStyle (elem, css_command, doc);
    SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4579,6 +4583,7 @@ Element             elem;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLSpecificStyle (elem, css_command, doc);
    SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4592,11 +4597,14 @@ Document            doc;
 Element             elem;
 #endif
 {
-   PRule               rule;
+   char                css_command[100];
 
-   rule = TtaGetPRule (elem, PRForeground);
-   if (rule)
-      TtaRemovePRule (elem, rule, doc);
+   sprintf (css_command, "color: xx");
+   SetHTMLStyleParserDestructiveMode (True);
+   ParseHTMLSpecificStyle (elem, css_command, doc);
+   SetStyleAttribute (doc, elem);
+   SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4614,6 +4622,7 @@ char               *color;
 
    sprintf (css_command, "A:link { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4631,6 +4640,7 @@ char               *color;
 
    sprintf (css_command, "A:active { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4648,6 +4658,7 @@ char               *color;
 
    sprintf (css_command, "A:visited { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
+   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4666,6 +4677,7 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4684,6 +4696,7 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4702,4 +4715,5 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
+   SetStyleAttribute (doc, 0);
 }

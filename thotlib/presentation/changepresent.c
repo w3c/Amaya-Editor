@@ -2519,14 +2519,20 @@ boolean            remove;
   PtrPRule        pCurrentRule, pRP;
   PtrPSchema      pSPR;
   PtrAttribute    pAttr;
-  PtrDocument     pDoc;
+  PtrDocument     pDoc, pSelDoc;
+  PtrElement      pFirstSel, pLastSel;
   PtrAbstractBox  pAb;
   PRuleType       ruleType;
+  int             firstChar, lastChar;
   int             viewSch;
   int             view;
+  boolean         selectionOK;
   boolean         found;
 
   pDoc = LoadedDocument[doc - 1];
+  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  /* eteint la selection courante */
+  TtaClearViewSelections ();
   /* do nothing if the document no longer exists */
   if (pDoc != NULL)
     /* examine all abstract boxes of elements */
@@ -2615,6 +2621,9 @@ boolean            remove;
 	      pAb = NextAbstractBox (pAb);
 	}
     }
+  /* tente de fusionner les elements voisins et reaffiche les paves */
+  /* modifie's et la selection */
+  MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 /*----------------------------------------------------------------------

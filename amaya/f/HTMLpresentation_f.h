@@ -11,6 +11,7 @@ extern void DeleteSpanIfNoAttr ( Element el,
                                  Document doc );
 extern void AttrStyleDeleted ( NotifyAttribute * event );
 extern void AttrClassChanged ( NotifyAttribute * event );
+extern void SetStyleAttribute (Document doc, Element elem);
 extern void ChangePRule ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
@@ -22,6 +23,7 @@ extern void DeleteSpanIfNoAttr (/* Element el,
                                    Document doc */);
 extern void AttrStyleDeleted (/* NotifyAttribute * event */);
 extern void AttrClassChanged (/* NotifyAttribute * event */);
+extern void SetStyleAttribute (/*Document doc, Element elem*/);
 extern void ChangePRule (/* NotifyPresentation * event */);
 extern void AttrLangDeleted (/* NotifyAttribute *event */);
 extern void AttrLangCreated (/* NotifyAttribute *event */);

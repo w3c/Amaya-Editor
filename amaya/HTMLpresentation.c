@@ -248,6 +248,55 @@ Document doc;
 
 
 /*----------------------------------------------------------------------
+  SetStyleAttribute.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetStyleAttribute (Document doc, Element elem)
+#else  /* __STDC__ */
+void                SetStyleAttribute (doc, elem)
+Document            doc;
+Element             elem;
+int                 presType;
+PRule               presRule;
+int                 event;
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           styleAttr;
+#define STYLELEN 1000
+   char                style[STYLELEN];
+   int                 len;
+
+   /* does the element have a Style_ attribute ? */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrTypeNum = HTML_ATTR_Style_;
+   styleAttr = TtaGetAttribute (elem, attrType);
+   /* keep the new style string */
+   len = STYLELEN;
+   GetHTML3StyleString (elem, doc, style, &len);
+   if (len == 0)
+     {
+	/* delete the style attribute */
+	if (styleAttr != 0)
+	   {
+	   TtaRemoveAttribute (elem, styleAttr, doc);
+	   DeleteSpanIfNoAttr (elem, doc);
+	   }
+     }
+   else
+     {
+	if (styleAttr == 0)
+	  {
+	     styleAttr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (elem, styleAttr, doc);
+	  }
+	/* copy the style string into the style attribute */
+	TtaSetAttributeText (styleAttr, style, elem, doc);
+     }
+}
+
+
+/*----------------------------------------------------------------------
   ChangePRule
   A specific PRule has been created, modified or deleted by the user for
   a given element.
@@ -260,15 +309,13 @@ NotifyPresentation *event;
 
 #endif /* __STDC__ */
 {
-   AttributeType       attrType;
-   Attribute           styleAttr;
    ElementType	       elType;
    Element	       elem, span, body, root;
    PRule	       presRule;
    Document	       doc;
 #define STYLELEN 1000
    char                style[STYLELEN];
-   int                 presType, len;
+   int                 presType;
 
    elem = event->element;
    doc = event->document;
@@ -331,32 +378,8 @@ NotifyPresentation *event;
         }
      }
 
-   /* does the element have a Style_ attribute ? */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
-   styleAttr = TtaGetAttribute (elem, attrType);
-   /* keep the new style string */
-   len = STYLELEN;
-   GetHTML3StyleString (elem, doc, style, &len);
-   if (len == 0)
-     {
-	/* delete the style attribute */
-	if (styleAttr != 0)
-	   {
-	   TtaRemoveAttribute (elem, styleAttr, doc);
-	   DeleteSpanIfNoAttr (elem, doc);
-	   }
-     }
-   else
-     {
-	if (styleAttr == 0)
-	  {
-	     styleAttr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (elem, styleAttr, doc);
-	  }
-	/* copy the style string into the style attribute */
-	TtaSetAttributeText (styleAttr, style, elem, doc);
-     }
+   /* set the Style_ attribute ? */
+   SetStyleAttribute (doc, elem);
 }
 
 

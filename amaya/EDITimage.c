@@ -290,7 +290,7 @@ void ChangeBackgroundImage (document, view)
    sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_NO_REPEAT));
    TtaNewSubmenu (BaseImage + RepeatImage, BaseImage + FormImage, 0,
 		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, FALSE);
-   TtaSetMenuForm (BaseImage + RepeatImage, 0);
+   TtaSetMenuForm (BaseImage + RepeatImage, RepeatValue);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
