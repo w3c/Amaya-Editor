@@ -41,8 +41,8 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
-#ifdef _WX
 static int FormVal = 0;
+#ifdef _WX
 #include "wxdialogapi_f.h"
 #endif /* _WX */
 /*
