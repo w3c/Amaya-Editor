@@ -1906,7 +1906,7 @@ static PtrElement  AscentChildOfParagraph (PtrElement pEl)
    NextSiblingNotPage retourne l'element frere suivant pEl qui     
    n'est pas un saut de page.                              
   ----------------------------------------------------------------------*/
-static PtrElement   NextSiblingNotPage (PtrElement pEl)
+static PtrElement NextSiblingNotPage (PtrElement pEl)
 {
    PtrElement          pNext;
    ThotBool            stop;
@@ -1975,6 +1975,12 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	 {
 	   pElem = pParent;
 	   pParent = pElem->ElParent;
+	   if (pParent &&
+	       TypeHasException (ExcIsCell,
+				pParent->ElTypeNumber,
+				 pParent->ElStructSchema));
+	   /* DeleteNextChar cannot cross a cell limit */
+	   pParent = NULL;
 	 }
      }
    while (pParent != NULL && pSibling == NULL);

@@ -1111,7 +1111,7 @@ void CutCommand (ThotBool save)
 		      pAncestor[MAX_ANCESTOR],
 		      pAncestorPrev[MAX_ANCESTOR],
 		      pAncestorNext[MAX_ANCESTOR];
-  PtrElement          enclosingCell;
+  PtrElement          enclosingCell, cellCleared;
   DisplayMode         dispMode;
   Document            doc;
   PtrDocument         pSelDoc;
@@ -1124,6 +1124,7 @@ void CutCommand (ThotBool save)
   pPrevPage = NULL;
   last = 0;
   lock = TRUE;
+  cellCleared = NULL;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			    &lastChar))
@@ -1270,6 +1271,10 @@ void CutCommand (ThotBool save)
 		    else
 		      {
 			/* remove the content */
+			if (TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+					      firstSel->ElStructSchema))
+			/* note that a cell is cleared for the future selection */
+			  cellCleared = firstSel;
 			firstSel = firstSel->ElFirstChild;
 			lastSel = firstSel;
 			while (lastSel->ElNext != NULL)
@@ -1744,7 +1749,9 @@ void CutCommand (ThotBool save)
 		      nextDepth++;
 		      pE = pE->ElParent;
 		    }
-		  if (pNext != NULL && nextDepth >= prevDepth)
+		  if (cellCleared)
+		    SelectElementWithEvent (pSelDoc, cellCleared, TRUE, TRUE);
+		  else if (pNext && nextDepth >= prevDepth)
 		    {
 		      /* there is a next element and it's deeper in
 			 the abstract tree. Select its beginning */
@@ -1761,7 +1768,7 @@ void CutCommand (ThotBool save)
 		      else
 			SelectPositionWithEvent (pSelDoc, pNext, nextChar);
 		    }
-		  else if (pPrev != NULL)
+		  else if (pPrev)
 		    /* no following element, select the previous */
 		    {
 		      pSel = LastLeaf (pPrev);
