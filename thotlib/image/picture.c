@@ -84,7 +84,9 @@ static ThotGC   tiledGC;
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
 Visual*         theVisual;
-#endif
+#else   /* _WINDOWS */
+char LostPicturePath [512];
+#endif  /* _WINDOWS */
 
 char* FileExtension[] = {
       ".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"
@@ -494,7 +496,7 @@ PictInfo           *imageDesc;
 	     }
 #         else /* _WINDOWS */
 	case RealSize:
-	  if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
+	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
 	    hMemDC = CreateCompatibleDC (TtDisplay);
 	    SelectObject (hMemDC, pixmap);
 	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
@@ -1457,7 +1459,14 @@ PictInfo           *imageDesc;
    h = 0;
    if (status != Supported_Format)
      {
+#      ifdef _WINDOWS
+       imageDesc->PicType = 3;
+       pres = RealSize;
+       myDrawable = (*(PictureHandlerTable [3].
+			       Produce_Picture)) (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
+#      else  /* !_WINDOWS */
        myDrawable = PictureLogo;
+#      endif /* _WINDOWS */
        imageDesc->PicType = -1;
        wFrame = w = 40;
        hFrame = h = 40;
