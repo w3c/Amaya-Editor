@@ -9,7 +9,7 @@
  * Xmlbuilder.c
  * Builds the corresponding abstract tree for a Thot document of type XML.
  *
- * Authors: L. Carcone
+ * Authors: L. Carcone 
  */
 
 #define THOT_EXPORT extern
