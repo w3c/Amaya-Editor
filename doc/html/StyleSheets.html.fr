@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -189,6 +190,20 @@ actuellement appliquée à un document, une boîte de dialogue expliquera
 
 <p></p>
 
+<h3>Visualiser le style appliqué</h3>
+
+<p>S'il y a beaucoup de feuilles de style attachées à un document, il est
+difficile de comprendre pourquoi un élément est visualisé avec cette couleur
+ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
+<strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
+externe les propriétés CSS appliquées au premier élément de la sélection
+courante. L'utilisateur peut afficher le source CSS qui engendre chaque
+propriété en double (ou simple) cliquant sur la propriété. Aussi longtemps
+que la fenêtre est ouverte, Amaya met à jour le contenu de la fenêtre quand
+la sélection change. En appuyant sur la touche <code>F2</code> (ou
+<code>Esc</code> sur les plates-formes Linux), l'utilisateur peut voir les
+propriétés CSS appliquées aux éléments englobants.</p>
+
 <h3><a name="L1371">Mettre du style en utilisant des éléments HTML</a></h3>
 
 <p>HTML fournit certains éléments de niveau de caractère qui permettent
@@ -205,7 +220,7 @@ La chaîne de caractères sélectionnée reçoit le style correspondant. Trois de
 ces styles sont également disponibles par l'intermédiaire des boutons :
 <em>emphasis</em> (<img src="../images/Em.gif" alt="Emphasis button" />),
 <strong>strong</strong> (<img src="../images/Strong.gif" alt="Strong button"
-/>) and <code>code</code> (<img src="../images/Cour.gif" alt="Code button"
+/>) and <code>code</code> (<img src="../images/code.gif" alt="Code button"
 />).</p>
 
 <p>La commande<strong>Éléments caractères</strong> du menu

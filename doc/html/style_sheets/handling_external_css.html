@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <title>Handling External CSS Style Sheet</title>
   <style type="text/css">
   </style>
@@ -39,21 +40,21 @@ enable you to control external and user's CSS style sheets.</p>
     sheet. If the style sheet is not displayed, click the current document to
     display a dialog and type the target style sheet's URI. The
     <strong>Link</strong> command adds an element link with its attributes
-    into the head of the document. 
+    into the head of the document.
     <p></p>
   </li>
   <li>Select <strong>Open</strong> to open a CSS style sheet applied to the
-    current document. 
+    current document.
     <p></p>
   </li>
   <li>Select <strong>Disable</strong> to remove the effect of an enabled CSS
     style sheet from the current document. This command does not affect the
-    CSS link in the document. 
+    CSS link in the document.
     <p></p>
   </li>
   <li>Select <strong>Enable</strong> to reapply the effects of a disabled CSS
     style sheet to the current document. This command does not affect the CSS
-    link in the document. 
+    link in the document.
     <p></p>
   </li>
   <li>Select <strong>Remove</strong> to remove an external CSS style sheet.
@@ -69,6 +70,18 @@ sheets.</p>
 <p>A dialog shows the list of CSS style sheets proposed for the
 <strong>Open</strong> command. If no CSS style sheet is currently applied to
 a document, the dialog indicates that there is no CSS file available.</p>
+
+<h2>Showing applied style</h2>
+
+<p>If there are a lot of style sheets attached to a document, it's difficult
+to understand why an element is displayed with that color or these margins,
+etc. To help the user, Amaya provides a <strong>Show applied style</strong>
+command that displays into an external window CSS style properties applied to
+the first current selected element. The user can then display the CSS source
+that generates each property by double (or simple) click on the property. As
+long as the window is open, Amaya updates the window content when the
+selection changes. Hitting <code>F2</code> (or <code>Esc</code> on Linux
+platforms), the user can see CSS properties applied to enclosing elements.</p>
 </div>
 </body>
 </html>
