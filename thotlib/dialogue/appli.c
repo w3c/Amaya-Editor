@@ -1437,8 +1437,8 @@ LPARAM      lParam;
     if (!viewClosed) {
       if (frame <= MAX_FRAME)
 	{
-	  GetDocAndView (frame, &pDoc, &vue, &assoc);
-	  CloseView (pDoc, vue, assoc);
+	  GetDocAndView (frame, &pDoc, &view, &assoc);
+	  CloseView (pDoc, view, assoc);
 	}
       for (frame = 0; frame <= MAX_FRAME; frame++)
 	if (FrRef[frame] != 0)
