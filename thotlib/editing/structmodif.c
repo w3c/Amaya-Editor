@@ -875,6 +875,8 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   int             firstChar, lastChar, NSiblings, nextChar, view;
   int             nbEl, i, j;
   ThotBool        ret, ok;
+  DisplayMode     dispMode;
+  Document        doc;
 
   ret = FALSE;
   NSiblings = 0;
@@ -885,6 +887,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
     return ret;
   else if (!pDoc->DocReadOnly)
     {
+      doc = IdentDocument (pDoc);
       if (pSplitEl != NULL)
 	{
 	  firstSel = pSplitEl;
@@ -921,7 +924,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	{
 	  /* demande a l'application si on peut creer ce type d'element */
 	  notifyEl.event = TteElemNew;
-	  notifyEl.document = (Document) IdentDocument (pDoc);
+	  notifyEl.document = doc;
 	  notifyEl.element = (Element) (pElReplicate->ElParent);
 	  notifyEl.info = 0; /* not sent by undo */
 	  notifyEl.elementType.ElTypeNum = pElReplicate->ElTypeNumber;
@@ -1023,7 +1026,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	      if (j < nbEl)
 		{
 		  notifyEl.event = TteElemDelete;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.document = doc;
 		  notifyEl.element = (Element) pE;
 		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
@@ -1075,7 +1078,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		{
 		  /* signale a l'application qu'on va creer un element */
 		  notifyEl.event = TteElemNew;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.document = doc;
 		  notifyEl.element = (Element) (pE->ElParent);
 		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
@@ -1110,7 +1113,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 			  pNextEl = pClose->ElNext;
 			  /* signale a l'appli qu'on va retirer l'element */
 			  notifyEl.event = TteElemDelete;
-			  notifyEl.document = (Document) IdentDocument (pDoc);
+			  notifyEl.document = doc;
 			  notifyEl.element = (Element) pClose;
 			  notifyEl.info = 0; /* not sent by undo */
 			  notifyEl.elementType.ElTypeNum =pClose->ElTypeNumber;
@@ -1187,7 +1190,12 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	      /* on met a jour les copies de cet element.          */
 	      RedisplayCopies (pEl2, pDoc, TRUE);
 	      RedisplayCopies (pElReplicate, pDoc, TRUE);
+	      dispMode = TtaGetDisplayMode (doc);
+	      if ( dispMode == DisplayImmediately )
+		TtaSetDisplayMode (doc, DeferredDisplay);
 	      UpdateNumbers (NextElement (pChild), pEl2, pDoc, TRUE);
+	      if ( dispMode == DisplayImmediately )
+		TtaSetDisplayMode (doc, DisplayImmediately);		
 	      /* indiquer que le document est modifie' */
 	      SetDocumentModified (pDoc, TRUE, 30);
 	      if (select && pNext != NULL)

@@ -405,6 +405,8 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 
   int frame = m_pAmayaFrame->GetFrameId();
 
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnMouseDown : frame=%d"), frame );
+  
   int thot_mod_mask = THOT_NO_MOD;
   if (event.ControlDown())
     thot_mod_mask |= THOT_MOD_CTRL;
