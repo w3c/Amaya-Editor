@@ -1713,7 +1713,7 @@ RULES
 	Font: Times;
 	Style: Roman;
 	Weight: Normal;
-	LineWeight: 1 px;
+	LineWeight: 0;
 	Width: Enclosing . Width;
 #ifdef PAGE
 	Size: 11 pt;
