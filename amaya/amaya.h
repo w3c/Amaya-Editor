@@ -151,7 +151,22 @@ typedef enum _ClickEvent {
 #define FileBrowserText 45
 #define FileBrowserFilter 46
 #define FileBrowserLocalName 47
-#define OptionMenu	48
+#define MimeTypeForm    48
+#define MimeTypeSel     49
+#define MimeTypeFormL1  50
+#define MimeTypeFormL2  51
+#define MimeTypeSaveL   52
+#define MimeTypeSave    53
+#define CharsetSaveL    54
+#define CharsetSave     55
+#define CharsetForm     56
+#define CharsetSel      57
+#define Label5          58
+#define Label6          59
+#define MimeFormStatus  60
+#define SaveFormStatus  61
+#define OptionMenu	62
+
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
@@ -302,6 +317,14 @@ THOT_EXPORT char      *SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT char      *SavedDocumentURL;/* URL of the document that contained
 					   the elements that are now in the
 					   Cut and Paste buffer */
+THOT_EXPORT char      UserMimeType[MAX_LENGTH];
+                                        /* Used to pass the user's MIME type 
+					   choice when doing a Save As of a
+					   local object to a server */
+THOT_EXPORT char      UserCharset[MAX_LENGTH];
+                                        /* Used to pass the user's charset
+					   choice when doing a Save As of a
+					   local object to a server */
 THOT_EXPORT int        Lg_password;
 THOT_EXPORT int        BaseDialog;
 THOT_EXPORT int        BasePrint;
@@ -470,6 +493,7 @@ typedef struct _LoadedImageDesc
   {
      char               *originalName;  /* complete URL of the image                */
      char               *localName;     /* local name (without path) of the image   */
+     char               *content_type;  /* the MIME type as sent by the server      */
      struct _LoadedImageDesc *prevImage;/* double linked list                       */
      struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
      Document            document;	/* document concerned                       */
