@@ -115,13 +115,13 @@ void CloseInsertion ()
 #ifndef NODISPLAY
 
 /*----------------------------------------------------------------------
-   GetWindowNumber returns the window corresponding to the view of 
+   GetWindowNumber returns the frame corresponding to the view of 
    the document.                                           
    Parameters:                                                     
-   document: the document.                                 
-   view: the view.                                         
-   Return value:                                                   
-   corresponding window.                                   
+     document: the document.                                 
+     view: the view.                                         
+   Return value:
+     the corresponding frame id                                                   
   ----------------------------------------------------------------------*/
 int GetWindowNumber (Document document, View view)
 {
@@ -433,7 +433,7 @@ void TtaQuit ()
      gtk_exit (1);
 #endif /* _GTK && !NODISPLAY */	
 #if defined(_WX) && !defined(NODISPLAY)
-     wxExit();
+     /*     wxExit();*/
 #else /* _WX && !defined(NODISPLAY) */     
      exit (1);
 #endif /* _WX && !defined(NODISPLAY) */     
