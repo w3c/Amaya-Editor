@@ -4002,7 +4002,6 @@ void CheckScrollingWidth (int frame)
 	  FrameTable[frame].FrScrollOrg = 0;
 	  FrameTable[frame].FrScrollWidth = w;
 	}
-	FrameTable[frame].FrScrollWidth);
       AnyWidthUpdate = FALSE;
     }
 }
