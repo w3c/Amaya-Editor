@@ -3839,6 +3839,14 @@
 	<message xml:lang="en">ISO format for date</message>
 	<message xml:lang="fr">Date au format ISO</message>
 </label>
+<label define="AM_NEWDOCLOC">
+	<message xml:lang="en">New documents location</message>
+	<message xml:lang="fr">Ouvrir les nouveaux documents dans</message>
+</label>
+<label define="AM_OPENLOC">
+	<message xml:lang="en">Opening location</message>
+	<message xml:lang="fr">Endroit d'ouverture</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

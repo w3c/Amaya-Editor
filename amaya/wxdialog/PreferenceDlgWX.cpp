@@ -211,7 +211,6 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   // update dialog General tab labels with given ones
   XRCCTRL(*this, "wxID_LABEL_HOMEPAGE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_HOME_PAGE)) );
-  XRCCTRL(*this, "wxID_LABEL_CHARMENUSIZE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_MENU_FONT_SIZE)) );
   XRCCTRL(*this, "wxID_LABEL_CHARZOOM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ZOOM)) );
   XRCCTRL(*this, "wxID_LABEL_LG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DIALOGUE_LANGUAGE)) );
 
@@ -227,8 +226,6 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   // setup range of zoom
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetRange( 10, 1000 );
-  // setup menu font size range
-  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->SetRange( 8, 20 );
 
   // fill the combobox with url list
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
@@ -245,7 +242,6 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
 
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSpinCtrl)->SetValue( prop.Zoom );
-  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->SetValue( prop.FontMenuSize );
 
   XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
   XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
@@ -275,7 +271,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
-  prop.FontMenuSize = XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSpinCtrl)->GetValue();
+  prop.FontMenuSize = 0 /* TODO ? */;
 
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
   prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
@@ -311,6 +307,9 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BROWSE_MENU)) );
 
   // update dialog General tab labels with given ones
+  XRCCTRL(*this, "wxID_RADIO_OPENLOC", wxRadioBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_OPENLOC)) );
+  XRCCTRL(*this, "wxID_RADIO_OPENLOC", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_INNEWTAB)));
+  XRCCTRL(*this, "wxID_RADIO_OPENLOC", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_INNEWWINDOW)));
   XRCCTRL(*this, "wxID_LABEL_SCREEN", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SCREEN_TYPE)) );
   XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_IMAGES)) );
   XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_OBJECTS)) );
@@ -329,6 +328,7 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
 {
+  XRCCTRL(*this, "wxID_RADIO_OPENLOC", wxRadioBox)->SetSelection( prop.OpeningLocation );
   XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->SetValue( prop.LoadImages );
   XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->SetValue( prop.LoadObjects );
   XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetValue( prop.BgImages );
@@ -352,6 +352,7 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   Prop_Browse     prop;
   memset( &prop, 0, sizeof(Prop_Browse) );
 
+  prop.OpeningLocation = XRCCTRL(*this, "wxID_RADIO_OPENLOC", wxRadioBox)->GetSelection();
   prop.LoadImages  = XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->GetValue();
   prop.LoadObjects = XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->GetValue();
   prop.BgImages = XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->GetValue();

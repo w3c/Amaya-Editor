@@ -9,6 +9,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "init_f.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
@@ -78,6 +79,7 @@ void ListDlgWX::OnOkButton( wxCommandEvent& event )
       int i = XRCCTRL(*this, "wxID_LIST", wxListBox)->GetSelection();
       ThotCallback (m_SubRef+1, INTEGER_DATA, (char*) i);
     }
+  LoadDefaultOpeningLocation();
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
 

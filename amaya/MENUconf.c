@@ -160,6 +160,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 static int         BrowseBase;
 static Prop_Browse GProp_Browse;
 static int         CurrentScreen;
+static int         InitOpeningLocation;
 static ThotBool    InitLoadImages;
 static ThotBool    InitLoadObjects;
 static ThotBool    InitLoadCss;
@@ -2739,6 +2740,7 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetBrowseConf (void)
 {
+  TtaGetEnvInt ("OPENING_LOCATION", &(GProp_Browse.OpeningLocation));
   TtaGetEnvBoolean ("LOAD_IMAGES", &(GProp_Browse.LoadImages));
   TtaGetEnvBoolean ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects));
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &(GProp_Browse.BgImages));
@@ -2758,6 +2760,7 @@ void GetBrowseConf (void)
   ----------------------------------------------------------------------*/
 void SetBrowseConf (void)
 {
+  TtaSetEnvInt ("OPENING_LOCATION", GProp_Browse.OpeningLocation, TRUE);
   TtaSetEnvBoolean ("LOAD_IMAGES", GProp_Browse.LoadImages, TRUE);
   TtaSetEnvBoolean ("LOAD_OBJECTS", GProp_Browse.LoadObjects, TRUE);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", GProp_Browse.BgImages, TRUE);
@@ -2928,6 +2931,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* action buttons */
 	case ID_APPLY:
 	  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+	      InitOpeningLocation != GProp_Browse.OpeningLocation ||
 	      InitLoadImages != GProp_Browse.LoadImages ||
 	      InitLoadObjects != GProp_Browse.LoadObjects ||	      
 	      InitLoadCss != GProp_Browse.LoadCss)
@@ -2935,6 +2939,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      strcpy (GProp_Browse.ScreenType, NewScreen);
 	      SetBrowseConf ();
 	      ApplyConfigurationChanges ();
+	      InitOpeningLocation = GProp_Browse.OpeningLocation;
 	      InitLoadImages = GProp_Browse.LoadImages;
 	      InitLoadObjects = GProp_Browse.LoadObjects;	      
 	      InitLoadCss = GProp_Browse.LoadCss;
@@ -3048,6 +3053,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      strcpy (NewScreen, GProp_Browse.ScreenType);
 #endif /* _WX */
 	      if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+		  InitOpeningLocation != GProp_Browse.OpeningLocation ||
 		  InitLoadImages != GProp_Browse.LoadImages ||
 		  InitLoadObjects != GProp_Browse.LoadObjects ||
 		  InitBgImages != GProp_Browse.BgImages ||
@@ -3056,6 +3062,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		  strcpy (GProp_Browse.ScreenType, NewScreen);
 		  SetBrowseConf ();
 		  ApplyConfigurationChanges ();
+		  InitOpeningLocation = GProp_Browse.OpeningLocation;
 		  InitLoadImages = GProp_Browse.LoadImages;
 		  InitLoadObjects = GProp_Browse.LoadObjects;
 		  InitBgImages = GProp_Browse.BgImages;
@@ -3101,7 +3108,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	  break;
 	case mScreenSelector:
 	  /* Get the desired screen type from the item number */
-      strcpy (NewScreen, data);
+	  strcpy (NewScreen, data);
 	  break;
 
 	case mLanNeg:
@@ -3134,6 +3141,7 @@ void BrowseConfMenu (Document document, View view)
   /* load the current values */
   GetBrowseConf ();
   /* keep initial values to detect an change */
+  InitOpeningLocation = GProp_Browse.OpeningLocation;
   InitLoadImages = GProp_Browse.LoadImages;
   InitLoadObjects = GProp_Browse.LoadObjects;
   InitBgImages = GProp_Browse.BgImages;
@@ -4436,6 +4444,7 @@ void PreferenceMenu (Document document, View view)
   SafePutStatus = 0; /* reset the modified flag */
   GetBrowseConf (); /* load the current values => Browse tab */
   /* keep initial values to detect an change */
+  InitOpeningLocation = GProp_Browse.OpeningLocation;
   InitLoadImages = GProp_Browse.LoadImages;
   InitLoadObjects =GProp_Browse. LoadObjects;
   InitBgImages = GProp_Browse.BgImages;

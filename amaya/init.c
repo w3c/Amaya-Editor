@@ -2206,9 +2206,7 @@ void OpenDocInNewWindow (Document document, View view)
 void OpenNew (Document document, View view, int docType, int docProfile)
 {
   /* create a new document */
-#ifndef _WX
   DontReplaceOldDoc = TRUE;
-#endif /* _WX */
   NewFile = TRUE;
   NewDocType = docType;
   NewDocProfile = docProfile;
@@ -2535,6 +2533,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   /* if it is a source document, reload its corresponding document */
   if (DocumentTypes[oldDoc] == docSource)
     oldDoc = GetDocFromSource (oldDoc);
+
+  /* if the old doc doesn't exist it's not possible to create a new tab,
+   * just open it in a new window */
+  if (oldDoc == 0 && inNewWindow == 0)
+    inNewWindow = TRUE;
 #endif /* _WX */
 
   /* previous document */
@@ -5346,8 +5349,8 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 #ifdef _WX
 	  /* need to create a new window for the document */
 	  newdoc = InitDocAndView (baseDoc,
-                                   FALSE /* replaceOldDoc */,
-                                   FALSE /* inNewWindow */,
+                                   !DontReplaceOldDoc /* replaceOldDoc */,
+                                   InNewWindow /* inNewWindow */,
 	                           documentname, (DocumentType)docType, 0, TRUE,
 				   L_Other, (ClickEvent)method);
 #else /* _WX */
@@ -5739,8 +5742,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      /* load an URL */ 
 	      else if (DontReplaceOldDoc)
 #ifdef _WX
-		GetAmayaDoc (LastURLName, NULL, CurrentDocument /* it was 0 */, CurrentDocument /* it was 0 */, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL);
+		{
+		  /* get the current document (CurrentDocument global variable is not usable) */
+		  Document document;
+		  View     view;
+		  TtaGiveActiveView (&document,&view);
+		  document = DocumentSource[document] ? DocumentSource[document] : document;
+
+		  GetAmayaDoc (LastURLName, NULL, document /* it was 0 */, document /* it was 0 */, (ClickEvent)Loading_method,
+			       FALSE, NULL, NULL);
+		}
 #else /* _WX */
 		GetAmayaDoc (LastURLName, NULL, 0 , 0, (ClickEvent)Loading_method,
 			     FALSE, NULL, NULL);
@@ -7598,6 +7609,11 @@ void OpenNewDocFromArgv( char * url )
   char ptr[MAX_LENGTH];
   char * s = url;
   
+#ifdef _WX
+  /* load the document in the default location */
+  LoadDefaultOpeningLocation();
+#endif /* _WX */
+
   if (s == NULL || s[0] == EOS)
     /* no argument: display the Home Page */
     s = TtaGetEnvString ("HOME_PAGE");
@@ -8431,4 +8447,19 @@ void SaveGeometryOnExit (int document, const char * view_name)
   if (saveGeometry)
     /* Save the current windows geometry */
     SetGeometryConf ( document, view_name );
+}
+
+/*----------------------------------------------------------------------
+  SaveGeometryOnExit
+  save the current document geometry only if "Save geometry on exit" is enable
+  ----------------------------------------------------------------------*/
+void LoadDefaultOpeningLocation()
+{
+  int where_id;
+
+  /* get the default location in thotrc */
+  TtaGetEnvInt ("OPENING_LOCATION", &where_id);
+  where_id++; /* zero based in the config file */
+
+  ThotCallback(BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
 }

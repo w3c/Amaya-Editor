@@ -888,6 +888,7 @@ void HelpLocal (Document doc, View view)
 	sprintf (localname, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
 #ifdef _WX
+  LoadDefaultOpeningLocation();
   document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
 #else /* _WX */
@@ -920,6 +921,7 @@ static void DisplayHelp (int doc, int index)
 		  DIR_SEP, Manual[index]);
     }
 #ifdef _WX
+  LoadDefaultOpeningLocation();
   document = GetAmayaDoc (localname, NULL, doc, doc, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
 #else /* _WX */

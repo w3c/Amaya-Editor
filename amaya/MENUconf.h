@@ -102,6 +102,7 @@ typedef struct Prop_General_t
 
 typedef struct Prop_Browse_t
 {
+  int      OpeningLocation;
   ThotBool LoadImages;
   ThotBool LoadObjects;
   ThotBool LoadCss;

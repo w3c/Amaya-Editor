@@ -832,14 +832,6 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	       if (IsUndisplayedName (pathname))
 		 /* it's not necessary to open a new window */
 		 DontReplaceOldDoc = FALSE;
-#ifdef _WX
-	       /* by default the new document is open
-		  in the same window (new page)
-		  TODO : rendre ceci configurable
-		  par l'utilisateur */
-	       /* this should be configured by user with a contextual menu */
-	       InNewWindow = FALSE;
-#endif /* _WX */
 
 	       /* Load the new document */
 	       targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
@@ -1473,10 +1465,13 @@ ThotBool DoubleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
+
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
-    /* don't let Thot perform normal operation */
-    return (ActivateElement (event->element, event->document));
+    {
+      /* don't let Thot perform normal operation */
+      return (ActivateElement (event->element, event->document));
+    }
   else
     return FALSE;
 }
@@ -1495,8 +1490,10 @@ ThotBool SimpleClick (NotifyElement *event)
       return TRUE;
     }
   else
-    /* don't let Thot perform normal operation if there is an activation */
-    return (ActivateElement (event->element, event->document));
+    {
+      /* don't let Thot perform normal operation if there is an activation */
+      return (ActivateElement (event->element, event->document));
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1543,10 +1540,15 @@ ThotBool SimpleLClick (NotifyElement *event)
 ThotBool SimpleRClick (NotifyElement *event)
 {
   ThotBool done;
-
+  
+#ifdef _WX
+  LoadDefaultOpeningLocation();
+  done = ActivateElement (event->element, event->document);
+#else /* _WX */
   DontReplaceOldDoc = TRUE;
   done = ActivateElement (event->element, event->document);
   DontReplaceOldDoc = FALSE;
+#endif /* _WX*/
   /* don't let Thot perform normal operation if there is an activation */
   return done;
 }
@@ -2887,11 +2889,13 @@ static ThotBool ShowTextLine (Element el, Document doc)
 		   if (css)
 		     {
 #ifdef _WX
-		       /* do not open the css into the same window as log errors */
-		       InNewWindow = TRUE;
-#endif /* _WX */
+		       LoadDefaultOpeningLocation();
+		       otherDoc = GetAmayaDoc (s, NULL, DocumentSource[doc], DocumentSource[doc], CE_CSS,
+					       FALSE, NULL, NULL);
+#else /* _WX */
 		       otherDoc = GetAmayaDoc (s, NULL, 0, 0, CE_CSS,
 					       FALSE, NULL, NULL);
+#endif /* _WX */
 		     }
 		 }
 	     }
