@@ -1025,12 +1025,14 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 {
   if (unit == UnPixel)
     {
-#ifndef _WIN_PRINT
+#ifdef _WIN_PRINT
+      size = (size * PrinterDPI + ScreenDPI/ 2) / ScreenDPI;
+#else /* _WIN_PRINT */
      if (Printing)
 	  /* adjust the font size to the printer definition */
 	  size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
-     else
 #endif /* _WIN_PRINT */
+     else
 	size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }

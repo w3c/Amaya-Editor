@@ -1672,6 +1672,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
   PtrElement          oldFirstEl, oldLastEl, pElP;
   int                 oldFirstChar, oldLastChar;
   ThotBool            change, done, sel;
+  ThotBool            updateFixed;
 
   sel = TRUE;
   if (pEl != NULL &&ThotLocalActions[T_selecttable] != NULL)
@@ -1751,8 +1752,19 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    {
 	      FirstSelectedElement = pEl;
 	      FirstSelectedChar = rank;
+	      while (FixedChar == 1 && ElemIsBefore (pEl, FixedElement))
+		{
+		  /* move the end selection to the end of the previous element */
+		  FixedElement = LastLeaf (PreviousLeaf (FixedElement));
+		  if (FixedElement && FixedElement->ElTerminal &&
+		     FixedElement->ElLeafType == LtText)
+		    FixedChar =  FixedElement->ElVolume;
+		}
 	      LastSelectedElement = FixedElement;
-	      LastSelectedChar = FixedChar - 1;
+	      if (FixedChar == 0)
+		LastSelectedChar = FixedChar;
+	      else
+		LastSelectedChar = FixedChar - 1;
 	    }
 	  else
 	    /* pEl is after the fixed point */
@@ -1774,12 +1786,23 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    /* end. Set the beginning of selection to the beginning of */
 	    /* next element */
 	    {
+	      updateFixed = (FirstSelectedElement == FixedElement);
 	      FirstSelectedElement = FirstLeaf (NextElement (FirstSelectedElement));
+	      if (updateFixed)
+		FixedElement = FirstSelectedElement;
 	      if (FirstSelectedElement->ElTerminal &&
 		  FirstSelectedElement->ElLeafType == LtText)
-		FirstSelectedChar = 1;
+		{
+		  if (updateFixed && FirstSelectedChar == FixedChar) 
+		    FixedChar = 1;
+		  FirstSelectedChar = 1;
+		}
 	      else
-		FirstSelectedChar = 0;
+		{
+		  if (updateFixed && FirstSelectedChar == FixedChar) 
+		    FixedChar = 0;
+		  FirstSelectedChar = 0;
+		}
 	    }
 	  if (StructSelectionMode)
 	    /* selection is structured mode */
