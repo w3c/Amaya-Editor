@@ -16,6 +16,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "picture.h"
 #include "libmsg.h"
 #include "message.h"
 
@@ -24,30 +25,27 @@
 #include "boxes_tv.h"
 #include "platform_tv.h"
 
-#include "displaybox_f.h"
-#include "appli_f.h"
-#include "windowdisplay_f.h"
-#include "boxlocate_f.h"
-#include "frame_f.h"
-#include "font_f.h"
 #include "absboxes_f.h"
+#include "appli_f.h"
+#include "boxlocate_f.h"
+#include "displaybox_f.h"
 #include "displayselect_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "picture_f.h"
+#include "windowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    GetXYOrg : do a coordinate shift related to current frame.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetXYOrg (int frame, int *XOrg, int *YOrg)
-
 #else  /* __STDC__ */
 void                GetXYOrg (frame, XOrg, YOrg)
 int                 frame;
 int                *XOrg;
 int                *YOrg;
-
 #endif /* __STDC__ */
-
 {
    ViewFrame          *pFrame;
 
@@ -59,10 +57,8 @@ int                *YOrg;
 /*----------------------------------------------------------------------
    DefClip defines the area of the frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DefClip (int frame, int xd, int yd, int xf, int yf)
-
 #else  /* __STDC__ */
 void                DefClip (frame, xd, yd, xf, yf)
 int                 frame;
@@ -70,9 +66,7 @@ int                 xd;
 int                 yd;
 int                 xf;
 int                 yf;
-
 #endif /* __STDC__ */
-
 {
    int                 width, height;
    ViewFrame          *pFrame;
@@ -182,7 +176,7 @@ void                TtaRefresh ()
 
 /*----------------------------------------------------------------------
    RedrawFrameTop redraw from bottom to top a frame.
-   The delta parameter indicates the height of a scroll
+   The scroll parameter indicates the height of a scroll
    back which may take place before recomputing the abstract
    image.
    The area is cleaned before redrawing.
@@ -192,17 +186,17 @@ void                TtaRefresh ()
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RedrawFrameTop (int frame, int delta)
+boolean             RedrawFrameTop (int frame, int scroll)
 #else  /* __STDC__ */
-boolean             RedrawFrameTop (frame, delta)
+boolean             RedrawFrameTop (frame, scroll)
 int                 frame;
-int                 delta;
+int                 scroll;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrBox              pTopBox, pBottomBox;
    PtrBox              pFirstBox;
-   PtrBox              pCurrentBox;
+   PtrBox              pRootBox;
    ViewFrame          *pFrame;
    int                 y, x, vol, h, l;
    int                 height, bottom;
@@ -210,7 +204,7 @@ int                 delta;
    int                 framexmax;
    int                 frameymin;
    int                 frameymax;
-   int                 plane;
+   int                 plane, delta;
    int                 nextplane;
    boolean             isbelow;
    boolean             toadd;
@@ -223,7 +217,7 @@ int                 delta;
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
        && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
      {
-	pFrame->FrYOrg -= delta;
+	pFrame->FrYOrg -= scroll;
 	framexmin = pFrame->FrClipXBegin;
 	framexmax = pFrame->FrClipXEnd;
 	frameymin = pFrame->FrClipYBegin;
@@ -247,14 +241,14 @@ int                 delta;
 	     pBottomBox = NULL;
 	     vol = 0;
 	     /* half a frame under the bottom of the window */
-	     x = bottom + h / 2;
+	     delta = bottom + h / 2;
 	     while (isbelow)
 	       {
 		  if (pBox->BxYOrg < bottom)
 		     isbelow = FALSE;
 		  else
 		    {
-		       if (pBox->BxYOrg > x)
+		       if (pBox->BxYOrg > delta)
 			  if (pBox->BxType != BoPiece && pBox->BxType != BoDotted)
 			     /* this is not a breaking box */
 			     vol += pBox->BxAbstractBox->AbVolume;
@@ -265,14 +259,15 @@ int                 delta;
 			  isbelow = FALSE;
                        else
 			 {
+			   y = pBox->BxYOrg + pBox->BxHeight;
+			   /* add the filling of the end of the block */
+			   x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
 			   if ((pBox->BxType == BoPicture) &&
-                               !((y >= pFrame->FrYOrg)     &&
-                                 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-                                 (x >= pFrame->FrXOrg)                  &&
-                                 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-			     UnmapImage (pBox->BxPictInfo);
-			   else
-			     DisplayBox (pBox, frame);
+			       !((y >= pFrame->FrYOrg)     &&
+				 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+				 (x >= pFrame->FrXOrg)                  &&
+				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
+			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
 			 }
 		       if (pBox->BxPrevious == pBox)
 			 /* detect cycles */
@@ -300,8 +295,7 @@ int                 delta;
 			  /* The box is drawn in the current plane */
 			 {
 			    y = pBox->BxYOrg + pBox->BxHeight;
-
-			    /* take into account the filling of the end of the block */
+			    /* add the filling of the end of the block */
 			    x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
 
 			    /* Save the box on top or the first not visible */
@@ -317,7 +311,7 @@ int                 delta;
 				      (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
 				      (x >= pFrame->FrXOrg) &&
 				      (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-				  UnmapImage (pBox->BxPictInfo);
+				  UnmapImage ((PictInfo *)pBox->BxPictInfo);
 				else
 				  DisplayBox (pBox, frame);
 			      }
@@ -360,36 +354,34 @@ int                 delta;
 	     RemoveClipping (frame);
 
 	     /* If needed complete the partial existing image */
-	     pBox = pFrame->FrAbstractBox->AbBox;
+	     pRootBox = pFrame->FrAbstractBox->AbBox;
 	     if (!FrameUpdating && !TextInserting)
 	       {
-		  pCurrentBox = pBox;
-
 		  /* The concrete image is being filled */
 		  FrameUpdating = TRUE;
 
 		  /* Abstract image overflow of half a frame both on top and bottom */
-		  y = height - pCurrentBox->BxYOrg;
-		  x = h / 2;
+		  y = height - pRootBox->BxYOrg;
+		  delta = h / 2;
 
-		  if (vol > 0 && y > x)
+		  if (vol > 0 && y > delta)
 		     /* Compute the volume to remove */
 		    {
-		       pBox = pCurrentBox->BxNext;
-		       height -= x;
+		       pBox = pRootBox->BxNext;
+		       height -= delta;
 		       y = 0;
 		       while (pBox != NULL)
 			 {
-			    pCurrentBox = pBox;
-			    if (pCurrentBox->BxYOrg + pCurrentBox->BxHeight > height)
+			    pBottomBox = pBox;
+			    if (pBottomBox->BxYOrg + pBottomBox->BxHeight > height)
 			       pBox = NULL;
 			    else
 			      {
-				 pBox = pCurrentBox->BxNext;
-				 if (pCurrentBox->BxType != BoPiece && pCurrentBox->BxType != BoDotted)
-				    y += pCurrentBox->BxAbstractBox->AbVolume;
-				 else if (pCurrentBox->BxNexChild == NULL)
-				    y += pCurrentBox->BxAbstractBox->AbVolume;
+				 pBox = pBox->BxNext;
+				 if (pBottomBox->BxType != BoPiece && pBottomBox->BxType != BoDotted)
+				    y += pBottomBox->BxAbstractBox->AbVolume;
+				 else if (pBottomBox->BxNexChild == NULL)
+				    y += pBottomBox->BxAbstractBox->AbVolume;
 			      }
 			 }
 		       pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
@@ -416,11 +408,11 @@ int                 delta;
 			  vol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 
 		       /* Height to add */
-		       x -= y;
+		       delta -= y;
 		       if (vol <= 0)
 			 {
 			    /* volume of the area to add */
-			    vol = x * l;
+			    vol = delta * l;
 			    /* convert in number of chars */
 			    vol = GetCharsCapacity (vol);
 			 }
@@ -429,7 +421,7 @@ int                 delta;
 			    y = pTopBox->BxYOrg;
 
 			    /* previous frame limit */
-			    x = y + pTopBox->BxHeight;
+			    delta = y + pTopBox->BxHeight;
 			 }
 		       IncreaseVolume (TRUE, vol, frame);
 
@@ -446,12 +438,12 @@ int                 delta;
 			    /* previous first box location */
 			    pFrame->FrYOrg += y;
 
-			    /* x equal the limit of redrawing after shifting */
+			    /* delta equal the limit of redrawing after shifting */
 			    if (y > 0)
-			       x = pTopBox->BxYOrg + pTopBox->BxHeight;
+			       delta = pTopBox->BxYOrg + pTopBox->BxHeight;
 
 			    /* new limit */
-			    pFrame->FrClipYEnd = x;
+			    pFrame->FrClipYEnd = delta;
 			 }
 		       else
 			  /* No previous box. The frame is drawn */
@@ -464,9 +456,13 @@ int                 delta;
 		    }
 
 		  /* A piece of the concrete image lack at the bottom */
-		  else if (pFrame->FrAbstractBox->AbTruncatedTail && bottom > pCurrentBox->BxYOrg + pCurrentBox->BxHeight)
+		  else if (pFrame->FrAbstractBox->AbTruncatedTail &&
+			   (bottom > pRootBox->BxYOrg + pRootBox->BxHeight ||
+			    (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+			     pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+			     !pRootBox->BxContentHeight)))
 		    {
-		       y = pCurrentBox->BxYOrg + pCurrentBox->BxHeight;
+		       y = pRootBox->BxYOrg + pRootBox->BxHeight;
 
 		       /* volume of the area to add */
 		       vol = (bottom - y) * l;
@@ -503,7 +499,6 @@ int                 delta;
 	else
 	   /* The nodified area is not visible */
 	   DefClip (frame, 0, 0, 0, 0);
-
      }
    else if (pFrame->FrReady)
      {
@@ -511,7 +506,6 @@ int                 delta;
 	DefClip (frame, 0, 0, 0, 0);
 	RemoveClipping (frame);
      }
-
    return toadd;
 }
 
@@ -567,7 +561,7 @@ int                 frame;
 
 /*----------------------------------------------------------------------
    RedrawFrameBottom redraw from top to bottom a frame.
-   The delta parameter indicates the height of a scroll
+   The scroll parameter indicates the height of a scroll
    which may take place before recomputing the abstract
    image.
    The area is cleaned before redrawing.
@@ -577,23 +571,23 @@ int                 frame;
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RedrawFrameBottom (int frame, int delta)
+boolean             RedrawFrameBottom (int frame, int scroll)
 #else  /* __STDC__ */
-boolean             RedrawFrameBottom (frame, delta)
+boolean             RedrawFrameBottom (frame, scroll)
 int                 frame;
-int                 delta;
+int                 scroll;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrBox              pTopBox;
-   PtrBox              pCurrentBox;
+   PtrBox              pRootBox;
    PtrBox              ToCreate;
    PtrBox              pFirstBox;
    ViewFrame          *pFrame;
    PtrAbstractBox      pAbbox1;
    int                 plane;
    int                 nextplane;
-   int                 i;
+   int                 i, delta;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
@@ -613,7 +607,7 @@ int                 delta;
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
        && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
      {
-	pFrame->FrYOrg += delta;
+	pFrame->FrYOrg += scroll;
 	framexmin = pFrame->FrClipXBegin;
 	framexmax = pFrame->FrClipXEnd;
 	frameymin = pFrame->FrClipYBegin;
@@ -632,7 +626,7 @@ int                 delta;
 	ontop = TRUE;
 	pTopBox = NULL;
 	vol = 0;
-	x = height - h / 2;
+	delta = height - h / 2;
 
 	/* Display planes in reverse order from biggest to lowest */
 	plane = 65536;
@@ -720,7 +714,7 @@ int                 delta;
 				 (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
 				 (x >= pFrame->FrXOrg) &&
 				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
-			     UnmapImage (pBox->BxPictInfo);
+			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
 			 }
 		       /* Skip to next box */
 		       pBox = pBox->BxNext;
@@ -768,14 +762,13 @@ int                 delta;
 	RemoveClipping (frame);
 
 	/* If needed complete the partial existing image */
-	pBox = pFrame->FrAbstractBox->AbBox;
-	if (!FrameUpdating && (!TextInserting || delta > 0))
+	pRootBox = pFrame->FrAbstractBox->AbBox;
+	if (!FrameUpdating && (!TextInserting || scroll > 0))
 	  {
-	     pCurrentBox = pBox;
 	     FrameUpdating = TRUE;
 
 	     /* The concrete image is being filled */
-	     y = height - pCurrentBox->BxYOrg;
+	     y = height - pRootBox->BxYOrg;
 
 	     if (pFrame->FrAbstractBox->AbInLine)
 		FrameUpdating = FALSE;
@@ -794,7 +787,7 @@ int                 delta;
 		    {
 		      /* register previous location */
 		       y = pTopBox->BxYOrg;
-		       x = y + pTopBox->BxHeight;
+		       delta = y + pTopBox->BxHeight;
 		    }
 		  IncreaseVolume (TRUE, GetCharsCapacity (height), frame);
 		  toadd = TRUE;
@@ -810,44 +803,48 @@ int                 delta;
 		       /* previous first box location */
 		       pFrame->FrYOrg += y;
 
-		       /* x equal the limit of redrawing after shifting */
+		       /* delta equal the limit of redrawing after shifting */
 		       if (y > 0)
-			  x = pTopBox->BxYOrg + pTopBox->BxHeight;
+			  delta = pTopBox->BxYOrg + pTopBox->BxHeight;
 
 		       /* new limit */
-		       pFrame->FrClipYEnd = x;
+		       pFrame->FrClipYEnd = delta;
 		    }
 		  ontop = RedrawFrameTop (frame, 0);
 	       }
-	     y = pFrame->FrYOrg + h - pCurrentBox->BxYOrg - pCurrentBox->BxHeight;
-	     x = h / 2;
+	     y = pFrame->FrYOrg + h - pRootBox->BxYOrg - pRootBox->BxHeight;
+	     delta = h / 2;
 
 	     /* Abstract image overflow of half a frame both on top and bottom */
-	     if (vol > 0 && -y > x)
+	     if (vol > 0 && -y > delta)
 		/* compute the volume to substract */
 	       {
-		  pBox = pCurrentBox->BxPrevious;
-		  bottom += x;
+		  pBox = pRootBox->BxPrevious;
+		  bottom += delta;
 		  y = 0;
 		  while (pBox != NULL)
 		    {
-		       pCurrentBox = pBox;
-		       if (pCurrentBox->BxYOrg < bottom)
+		       pTopBox = pBox;
+		       if (pTopBox->BxYOrg < bottom)
 			  pBox = NULL;
 		       else
 			 {
-			    pBox = pCurrentBox->BxPrevious;
-			    if (pCurrentBox->BxType != BoPiece && pCurrentBox->BxType != BoDotted)
-			       y += pCurrentBox->BxAbstractBox->AbVolume;
-			    else if (pCurrentBox->BxAbstractBox->AbBox->BxNexChild == pBox)
-			       y += pCurrentBox->BxAbstractBox->AbVolume;
+			    pBox = pBox->BxPrevious;
+			    if (pTopBox->BxType != BoPiece && pTopBox->BxType != BoDotted)
+			       y += pTopBox->BxAbstractBox->AbVolume;
+			    else if (pTopBox->BxAbstractBox->AbBox->BxNexChild == pBox)
+			       y += pTopBox->BxAbstractBox->AbVolume;
 			 }
 		    }
 		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume - vol - y;
 	       }
 
 	     /* It still lack a some abtract image area at the bottom of the frame */
-	     else if (pFrame->FrAbstractBox->AbTruncatedTail && y > 0)
+	     else if (pFrame->FrAbstractBox->AbTruncatedTail &&
+		      (y > 0 ||
+		       (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+			pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+			!pRootBox->BxContentHeight)))
 		/* free abstract boxes on top of the frame */
 	       {
 		  if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
@@ -873,12 +870,12 @@ int                 delta;
 		  if (vol <= 0)
 		    {
 		       /* volume of the area to add */
-		       vol = (y + x) * l;
+		       vol = (y + delta) * l;
 		       /* convert in number of chars */
 		       vol = GetCharsCapacity (vol);
 		    }
 
-		  y = pCurrentBox->BxYOrg + pCurrentBox->BxHeight;
+		  y = pRootBox->BxYOrg + pRootBox->BxHeight;
 
 		  /* cleanup the bottom of the frame */
 		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
@@ -950,7 +947,6 @@ int                 frame;
 
 	/* recompute scrolls */
 	UpdateScrollbars (frame);
-
      }
    else
      {
