@@ -40,15 +40,12 @@
   #include "gtkdialogapi.h"
   extern char      LostPicturePath [512];
 #endif /* _GTK */
-
 #ifdef _WINDOWS
 	#include <commctrl.h>
 #endif /* _WINDOWS */
-
 #ifdef _WINGUI
   #include "resource.h"
 #endif /* _WINGUI */
-
 #ifdef _WX
   #include "wxdialogapi_f.h"
 #endif /* _WX */
@@ -94,13 +91,6 @@
 #include "home.xpm"
 #endif /* #if defined(_MOTIF) || defned(_GTK) || defined(_WX) */
 
-#ifdef AMAYA_PLUGIN
-  #include "plugin.h"
-  #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
-    #include "Plugin.xpm"
-  #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-#endif /* AMAYA_PLUGIN */
-
 #include "XPointer_f.h"
 #include "anim_f.h"
 #include "animbuilder_f.h"
@@ -125,7 +115,6 @@ int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
 #endif /* _WINGUI */
 
-#include "helpmenu.h"
 
 static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
@@ -220,9 +209,6 @@ static ThotIcon       iconTableNo;
 static ThotIcon       iconBrowser;
 static ThotIcon       iconEditor;
 static ThotIcon       iconHome;
-#ifdef AMAYA_PLUGIN
-static ThotIcon       iconPlugin;
-#endif /* AMAYA_PLUGIN */
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI
@@ -261,9 +247,6 @@ static ThotIcon       iconPlugin;
 #define iconLinkNo    18
 #define iconTable     19
 #define iconTableNo   19
-#ifdef AMAYA_PLUGIN
-#define iconPlugin    20
-#endif /* AMAYA_PLUGIN */
 #define iconBrowser   23
 #define iconEditor    26
 #define iconHome      10
@@ -348,7 +331,6 @@ typedef enum
   HrefAttrBrowser,
   DocSaveBrowser
 } TypeBrowserFile;
-
 TypeBrowserFile WidgetParent;
 
 
@@ -1004,7 +986,6 @@ static void UpdateBrowserMenus (Document doc)
 	  TtaSetItemOff (doc, 1, Views, BShowToC);
 #endif /* XML_GENERIC */
 	}
-
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
       TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
       TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
@@ -1018,15 +999,13 @@ static void UpdateBrowserMenus (Document doc)
       TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
       TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
       SwitchIconMath (doc, 1, FALSE);
-
 #ifdef _SVG
       SwitchIconGraph (doc, 1, FALSE);
       SwitchIconLibrary (doc, 1, FALSE);
 #ifdef _GL
       SwitchIconAnim (doc, 1, FALSE);
 #endif /*_GL*/
-#endif /* _SVG */
-      
+#endif /* _SVG */   
       TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
       TtaSetItemOff (doc, 1, Edit_, BTransform);
       TtaSetMenuOff (doc, 1, Types);
@@ -1111,7 +1090,7 @@ static void UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Edit_, BTransform);
       TtaSetMenuOn (doc, 1, Links);
       TtaSetMenuOn (doc, 1, Style);
-      TtaSetMenuOn (doc, 1, Attributes_);
+      /*TtaSetMenuOn (doc, 1, Attributes_);*/
       if (DocumentTypes[doc] != docMath &&
 	  DocumentTypes[doc] != docXml)
 	{
@@ -2445,7 +2424,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
   Document      old_doc;
   Element       root, comment, leaf;
   ElementType   elType;
-  char         *tmp, buffer[MAX_LENGTH], *string = NULL;
+  char         *tmp, buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc;
   Language	lang;
@@ -2711,7 +2690,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
        TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 
-       if (docType == docSource)
+       if (docType == docSource || docType == docLog ||
+	   docType == docLibrary || docType == docBookmark)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
@@ -2728,33 +2708,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetMenuOff (doc, 1, Types);
-	   TtaSetMenuOff (doc, 1, XMLTypes);
-	   TtaSetMenuOff (doc, 1, Links);
-	   TtaSetMenuOff (doc, 1, Views);
-	   TtaSetMenuOff (doc, 1, Style);
-	   TtaSetMenuOff (doc, 1, Special);
-	   TtaSetMenuOff (doc, 1, Attributes_);
-	 }
-       else if (docType == docLog || docType == docLibrary)
-	 {
-	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
-	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
-	   TtaSetItemOff (doc, 1, File, BHtml11);
-	   TtaSetItemOff (doc, 1, File, BHtmlTransitional);
-	   TtaSetItemOff (doc, 1, File, BMathml);
-	   TtaSetItemOff (doc, 1, File, BSvg);
-	   TtaSetItemOff (doc, 1, File, BTemplate);
-	   TtaSetItemOff (doc, 1, File, BCss);
-	   TtaSetItemOff (doc, 1, File, BOpenDoc);
-	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
-	   TtaSetItemOff (doc, 1, File, BReload);
-	   TtaSetItemOff (doc, 1, File, BBack);
-	   TtaSetItemOff (doc, 1, File, BForward);
-	   TtaSetItemOff (doc, 1, File, BSave);
-	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetItemOff (doc, 1, File, BExit);
-	   TtaSetMenuOff (doc, 1, Edit_);
+	   TtaSetItemOff (doc, 1, File, BDocInfo);
+	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
+	   TtaSetItemOff (doc, 1, File, BPrint);
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, XMLTypes);
 	   TtaSetMenuOff (doc, 1, Links);
@@ -2766,75 +2722,41 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
 #ifdef BOOKMARKS
-	   TtaSetMenuOff (doc, 1, Bookmarks_);
+	   if (docType == docBookmark)
+	     {
+	       TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
+	       TtaSetMenuOff (doc, 1, Edit_);
+	     }
+	   else
+	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	   TtaSetMenuOff (doc, 1, Help_);
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
-	   /* change the document status */
-	   ReadOnlyDocument[doc] = FALSE;
-	   TtaSetDocumentAccessMode (doc, 1);
-	   if (docType == docLibrary)
+	   if (docType == docLog || docType == docLibrary)
 	     {
-#ifdef _SVG
-	       if (InNewWindow == TRUE)
+	       TtaSetItemOff (doc, 1, File, BExit);
+	       TtaSetMenuOff (doc, 1, Edit_);
+	       /* change the document status */
+	       ReadOnlyDocument[doc] = FALSE;
+	       TtaSetDocumentAccessMode (doc, 1);
+	       if (docType == docLibrary)
 		 {
-		   /* Initialize SVG Library Buffer string */
-		   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-				   FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
-		 }
+#ifdef _SVG
+		   if (InNewWindow == TRUE)
+		     {
+		       /* Initialize SVG Library Buffer string */
+		       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+				       FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+		     }
 #endif /* _SVG */
-	       if (string)
-		 TtaFreeMemory (string);
+		 }
 	     }
-	   else
+	   if (docType != docLibrary)
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	 }
-#ifdef BOOKMARKS
-       else if (docType == docBookmark)
-	 {
-#if 1
-	   TtaSetItemOff (doc, 1, File, New1);
-	   TtaSetItemOff (doc, 1, File, BOpenDoc);
-	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
-	   TtaSetItemOff (doc, 1, File, BReload);
-	   TtaSetItemOff (doc, 1, File, BBack);
-	   TtaSetItemOff (doc, 1, File, BForward);
-	   TtaSetItemOff (doc, 1, File, BSave);
-#endif
-	   TtaSetItemOff (doc, 1, File, BSaveAs);
-	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetItemOff (doc, 1, File, Doctype1);
-#if 1
-	   TtaSetItemOff (doc, 1, File, BDocInfo);
-#endif
-	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
-	   TtaSetItemOff (doc, 1, File, BPrint);
-#if 1 
-	   TtaSetMenuOff (doc, 1, Edit_);
-#endif
-	   TtaSetMenuOff (doc, 1, Types);
-	   TtaSetMenuOff (doc, 1, XMLTypes);
-	   TtaSetMenuOff (doc, 1, Links);
-	   TtaSetMenuOff (doc, 1, Views);
-	   TtaSetMenuOff (doc, 1, Style);
-	   TtaSetMenuOff (doc, 1, Special);
-	   TtaSetMenuOff (doc, 1, Attributes_);
-#ifdef ANNOTATIONS
-	   TtaSetMenuOff (doc, 1, Annotations_);
-#endif /* ANNOTATIONS */
-	   TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
-#if 1
-	   TtcSwitchButtonBar (doc, 1); /* no button bar */
-	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			   TRUE, (Proc) TextURL, NULL);
-	   TtcSwitchCommands (doc, 1); /* no command open */
-#endif
-	 }
-#endif /* BOOKMARKS */
        else if (!isOpen)
-	 /* use a new window */
 	 {
-	   /* Create all buttons */
+	   /* use a new window: Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
 				TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
 				TBSTYLE_BUTTON, FALSE);
@@ -2932,17 +2854,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 				  "CreateTable",
 				  TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
 				  TBSTYLE_BUTTON, TRUE);
-	   
-#ifdef AMAYA_PLUGIN 
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
-	   TtaAddButton (doc, 1, iconPlugin, (Proc)TtaCreateFormPlugin,
-			 "TtaCreateFormPlugin",
-			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
-			 TBSTYLE_BUTTON, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-     
-#endif /* AMAYA_PLUGIN */
 	   AddMathButton (doc, 1);
 #ifdef _SVG
 	   AddGraphicsButton (doc, 1);
@@ -2983,13 +2894,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   /*TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);*/
 	   if (SButtons[doc])
 	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   else
 	     /* hide buttons */
 	     TtcSwitchButtonBar (doc, 1);
-	   /*TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);*/
 	   if (SAddress[doc])
 	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   else
@@ -3003,6 +2912,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	   else
 	     TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 	   TtaSetMenuOff (doc, 1, Attributes_);
+#ifndef DAV    /* after all, we active the WebDAV menu in the main view */
+	   TtaSetMenuOff (doc, 1, Cooperation_);
+#endif  /* DAV */
 
 	   /* if we open the new document in a new view, control */
 	   /* is transferred from previous document to new document */
@@ -3013,155 +2925,77 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 	       TtaSetStatus (old_doc, 1, " ", NULL);
 	       ActiveTransfer (doc);
 	     }
-	 }
 #ifdef BOOKMARKS
-       /* if there are multiple instances of Amaya, disable the bookmark menu */
-       if (!GetBookmarksEnabled ())
-	 TtaSetMenuOff (doc, 1, Bookmarks_);
+	   /* if there are multiple instances of Amaya, disable the bookmark menu */
+	   if (!GetBookmarksEnabled ())
+	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
+	 }
      }
 
    /* do we have to redraw buttons and menus? */
    if (!reinitialized)
-     {
-       if ((docType == docHTML || docType == docImage ||
-	    docType == docSVG || docType == docLibrary ) &&
-	   DocumentTypes[doc] != docHTML &&
-	   DocumentTypes[doc] != docImage &&
-	   DocumentTypes[doc] != docSVG &&
-	   DocumentTypes[doc] != docLibrary)
-	 /* we need to update menus and buttons */
-	 reinitialized = TRUE;
-       else if ((docType == docCSS || docType == docText) &&
-		DocumentTypes[doc] != docCSS &&
-		DocumentTypes[doc] != docText)
-	 /* we need to update menus and buttons */
-	 reinitialized = TRUE;
-       else if (docType == docMath || docType == docAnnot || docType == docBookmark ||
-	        docType == docXml || docType == docSource)
-	 reinitialized = TRUE;
-     }
-
+     reinitialized = docType != DocumentTypes[doc];
    /* store the new document type */
    DocumentTypes[doc] = docType;
+   if (reinitialized || !isOpen)
+     {
+       /* now update menus and buttons according to the document status */
+       if (DocumentTypes[doc] == docText ||
+	   DocumentTypes[doc] == docCSS ||
+	   DocumentTypes[doc] == docMath)
+	 {
+	   TtaChangeButton (doc, 1, iI, iconINo, FALSE);
+	   TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
+	   TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
+	   TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
+	   TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
+	   TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
+	   TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
+	   TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
+	   TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
+	   TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+	   TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+	   TtaSetItemOff (doc, 1, Special, BMakeBook);
+	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	   TtaSetItemOff (doc, 1, Views, TShowTargets);
+	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	   TtaSetItemOff (doc, 1, Views, BShowLinks);
+	   TtaSetItemOff (doc, 1, Views, BShowToC);
+	   TtaSetMenuOff (doc, 1, Doctype1);
+	   TtaSetMenuOff (doc, 1, Types);
+	   if (DocumentTypes[doc] != docMath)
+	     {
+	       TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+	       SwitchIconMath (doc, 1, FALSE);
+	       TtaSetMenuOff (doc, 1, XMLTypes);
+	       TtaSetMenuOff (doc, 1, Links);
+	       TtaSetMenuOff (doc, 1, Views);
+	       TtaSetMenuOff (doc, 1, Style);
+	       TtaSetMenuOff (doc, 1, Attributes_);
+	     }
+#ifdef _SVG
+	   SwitchIconGraph (doc, 1, FALSE);
+	   SwitchIconLibrary (doc, 1, FALSE);
+	   SwitchIconAnim (doc, 1, FALSE);
+#endif /* _SVG */
+	 }
+       else
+	 {
+	   TtaSetMenuOn (doc, 1, Views);
+	   if (DocumentTypes[doc] == docHTML &&
+	       TtaGetDocumentProfile (doc) == L_Strict)
+	     TtaSetMenuOff (doc, 1, XMLTypes);
+	 }
+     }
 
    /* set the document in Read-Only mode */
    if (readOnly)
      ReadOnlyDocument[doc] = TRUE;
-   
-   if (reinitialized || !isOpen)
-     {
-     /* now update menus and buttons according to the document status */
-     if (DocumentTypes[doc] == docText ||
-	 DocumentTypes[doc] == docCSS ||
-	 DocumentTypes[doc] == docMath ||
-	 DocumentTypes[doc] == docXml ||
-	 DocumentTypes[doc] == docSource ||
-	 ReadOnlyDocument[doc])
-       {
-	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-	 TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-	 TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-	 TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-	 TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-	 TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-	 TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
-	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
-	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
-	 if ((DocumentTypes[doc] != docXml &&
-	      DocumentTypes[doc] != docMath) ||
-	     ReadOnlyDocument[doc])
-	   {
-	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
-	     SwitchIconMath (doc, 1, FALSE);
-	   }
-	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-	 TtaSetItemOff (doc, 1, Special, BMakeBook);
-	 TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	 TtaSetItemOff (doc, 1, Views, TShowTargets);
-	 TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	 TtaSetItemOff (doc, 1, Views, BShowLinks);
-	 TtaSetItemOff (doc, 1, Views, BShowToC);
-	 TtaSetMenuOff (doc, 1, Doctype1);
-	 if (DocumentTypes[doc] != docXml || ReadOnlyDocument[doc])
-	   {
-#ifdef _SVG
-	     SwitchIconGraph (doc, 1, FALSE);
-	     SwitchIconLibrary (doc, 1, FALSE);
-	     SwitchIconAnim (doc, 1, FALSE);
-#ifdef _GL
-      SwitchIconAnim (doc, 1, FALSE);
-#endif /*_GL*/
-#endif /* _SVG */
-	   }
-	 if (ReadOnlyDocument[doc])
-	   {
-	     /* the document is in ReadOnly mode */
-	     SwitchIconMath (doc, 1, FALSE);
-	     TtaSetItemOff (doc, 1, Edit_, BTransform);
-	     TtaSetMenuOff (doc, 1, Links);
-	     TtaSetMenuOff (doc, 1, Style);
-	     TtaSetMenuOff (doc, 1, Types);
-	     TtaSetMenuOff (doc, 1, XMLTypes);
-	     TtaSetMenuOff (doc, 1, Attributes_);
-	     TtaSetItemOff (doc, 1, Edit_, BUndo);
-	     TtaSetItemOff (doc, 1, Edit_, BRedo);
-	     TtaSetItemOff (doc, 1, Edit_, BCut);
-	     TtaSetItemOff (doc, 1, Edit_, BPaste);
-	     TtaSetItemOff (doc, 1, Edit_, BClear);
-	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
-	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
-	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
-	     TtaSetItemOff (doc, 1, Special, BMakeID);
-	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
-	     TtaSetMenuOff (doc, 1, Doctype1);
-	     TtaSetItemOff (doc, 1, Views, BShowStructure);
-	     TtaSetItemOff (doc, 1, Views, BShowSource);
-	   }
-	 else
-	   {
-	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
-	     TtaSetMenuOff (doc, 1, Types);
-	     if (DocumentTypes[doc] != docMath &&
-		 DocumentTypes[doc] != docXml)
-	       TtaSetMenuOff (doc, 1, XMLTypes);
-	     else if (DocumentTypes[doc] == docMath)
-	       TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
-	   }
-       }
-     else if (DocumentTypes[doc] == docHTML ||
-	      DocumentTypes[doc] == docImage ||
-	      DocumentTypes[doc] == docSVG ||
-	      DocumentTypes[doc] == docXml ||
-	      DocumentTypes[doc] == docLibrary ||
-	      DocumentTypes[doc] == docMath)
-       {
-	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
-	 if (DocumentTypes[doc] == docHTML &&
-	     TtaGetDocumentProfile (doc) == L_Strict)
-	   TtaSetMenuOff (doc, 1, XMLTypes);
-	 if (reinitialized)
-	   /* the document is in ReadWrite mode */
-	   UpdateEditorMenus (doc);
-       }
-     }
-
-
-#ifdef DAV    /* after all, we active the WebDAV menu in the main view */
-     TtaSetMenuOn (doc, DAV_VIEW, Cooperation_);     
-#else
-     TtaSetMenuOff (doc, 1, Cooperation_);
-#endif  /* DAV */
-
-#ifdef _SVG
-     TtaSetItemOn (doc, 1, XML, BShowLibrary);
-     TtaSetItemOn (doc, 1, XML, BAddNewModel);
-#else /* !_SVG */
-     TtaSetItemOff (doc, 1, XML, BShowLibrary);
-     TtaSetItemOff (doc, 1, XML, BAddNewModel); 
-#endif /* _SVG */
-   
+   if (ReadOnlyDocument[doc])
+     UpdateBrowserMenus (doc);
+   else
+     UpdateEditorMenus (doc);
    return (doc);
 }
 
@@ -3949,9 +3783,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 #ifdef _SVG
 	  if (DocumentTypes[newdoc] == docLibrary)
-	    SelectLibraryFromPath (DocumentURLs[newdoc]);
+	    {
+	      SelectLibraryFromPath (DocumentURLs[newdoc]);
+              TtaSetTextZone (newdoc, 1, SVGlib_list);
+	    }
+	  else
 #endif /* _SVG */
-	  TtaSetTextZone (newdoc, 1, URL_list);
+	    TtaSetTextZone (newdoc, 1, URL_list);
 	}
 
       tempdir = (char *)TtaGetMemory (MAX_LENGTH);
@@ -6985,19 +6823,6 @@ void InitAmaya (NotifyEvent * event)
    iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
 #endif /* !_MOTIF */
     
-#ifdef AMAYA_PLUGIN
-
-  #ifdef _GTK
-     iconPlugin = (ThotIcon) TtaCreatePixmapLogo (Plugin_xpm);
-  #endif /* _GTK */
-
-  #ifdef _MOTIF     
-     iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
-  #endif /* _MOTIF */
-     
-#endif /* AMAYA_PLUGIN */
-
-
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
@@ -7023,11 +6848,9 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WINGUI
 	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
 #endif /* _WINGUI */
-     
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   fprintf (stderr, TempFileDirectory);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-     
 	   exit (1);
 	 }
      }
@@ -7035,7 +6858,6 @@ void InitAmaya (NotifyEvent * event)
    /* add the temporary directory in document path */
    strcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
- 
 #ifdef _WINGUI
    s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
@@ -7519,421 +7341,6 @@ void MakeIDMenu (Document doc, View view)
   CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINGUI */
 }
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void HelpAmaya (Document document, View view)
-{
-   char                  localname[MAX_LENGTH];
-#ifdef AMAYA_DEBUG
-   Element             el;
-   View                structView, altView, linksView, tocView;
-   int                 n;
-   FILE               *list;
-
-  /* get the root element */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "tree.debug");
-   list = fopen (localname, "w");
-   el = TtaGetMainRoot (document);
-   TtaListAbstractTree (el, list);
-   fclose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "view.debug");
-   list = fopen (localname, "w");
-   TtaListView (document, view, list);
-   fclose (list);
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "boxes.debug");
-   list = fopen (localname, "w");
-   TtaListBoxes (document, view, list);
-   fclose (list);
-   structView = TtaGetViewFromName (document, "Structure_view");
-   if (structView != 0 && TtaIsViewOpen (document, structView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "structview.debug");
-       list = fopen (localname, "w");
-       TtaListView (document, structView, list);
-       fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "structboxes.debug");
-       list = fopen (localname, "w");
-       TtaListBoxes (document, structView, list);
-       fclose (list);
-     }
-   altView = TtaGetViewFromName (document, "Alternate_view");
-   if (altView != 0 && TtaIsViewOpen (document, altView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "altview.debug");
-       list = fopen (localname, "w");
-       TtaListView (document, altView, list);
-       fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "altboxes.debug");
-       list = fopen (localname, "w");
-       TtaListBoxes (document, altView, list);
-       fclose (list);
-     }
-   linksView = TtaGetViewFromName (document, "Links_view");
-   if (linksView != 0 && TtaIsViewOpen (document, linksView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "linksview.debug");
-       list = fopen (localname, "w");
-       TtaListView (document, linksView, list);
-       fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "linksboxes.debug");
-       list = fopen (localname, "w");
-       TtaListBoxes (document, linksView, list);
-       fclose (list);
-     }
-   tocView = TtaGetViewFromName (document, "Table_of_contents");
-   if (tocView != 0 && TtaIsViewOpen (document, tocView))
-     {
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "tocview.debug");
-       list = fopen (localname, "w");
-       TtaListView (document, tocView, list);
-       fclose (list);
-       strcpy (localname, TempFileDirectory);
-       strcat (localname, DIR_STR);
-       strcat (localname, "tocboxes.debug");
-       list = fopen (localname, "w");
-       TtaListBoxes (document, tocView, list);
-       fclose (list);
-     }
-   /* list now CSS rules */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "style.debug");
-   list = fopen (localname, "w");
-   TtaListStyleSchemas (document, list);
-   fclose (list);
-   /* list CSS rules applied to the current selection */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "style_element.debug");
-   list = fopen (localname, "w");
-   n = TtaListStyleOfCurrentElement (document, list);
-   if (n == 0)
-     {
-       fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
-       fprintf (list, "\n");
-     }
-   fclose (list);
-   /* list now shortcuts */
-   strcpy (localname, TempFileDirectory);
-   strcat (localname, DIR_STR);
-   strcat (localname, "shortcuts.debug");
-   list = fopen (localname, "w");
-   TtaListShortcuts (document, list);
-   fclose (list);
-#endif /* AMAYA_DEBUG */
-
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
-   TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
-		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
-#endif  /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-   
-   strcpy (localname, HTAppName);
-   strcat (localname, " - ");
-   strcat (localname, HTAppVersion);
-   strcat (localname, "     ");
-   strcat (localname, HTAppDate);
-   
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
-   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
-   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
-	       TtaGetMessage(AMAYA, AM_ABOUT1));
-   TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
-	       TtaGetMessage(AMAYA, AM_ABOUT2));
-   TtaShowDialogue (BaseDialog + AboutForm, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-   
-#ifdef _WINGUI
-   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
-			TtaGetMessage(AMAYA, AM_ABOUT1),
-			TtaGetMessage(AMAYA, AM_ABOUT2));
-#endif /* _WINGUI */
-   
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void HelpAtW3C (Document document, View view)
-{
-  char      localname[MAX_LENGTH];
-
-#ifdef LC
-  TtaShowNamespaceDeclarations (document);
-#endif /* LC */
-  strcpy (localname, AMAYA_PAGE_DOC);
-  strcat (localname, "BinDist.html");
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
-  InitDocHistory (document);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-static void DisplayHelp (int doc, int index)
-{
-  Document    document;
-  char        localname[MAX_LENGTH];
-  char       *s, *lang;
-
-  lang = TtaGetVarLANG ();
-  s = TtaGetEnvString ("THOTDIR");
-  if (s != NULL)
-    {
-      /* get the documentation in the current language */
-      sprintf (localname, "%s%cdoc%chtml%c%s.%s", s, DIR_SEP, DIR_SEP,
-		DIR_SEP, Manual[index], lang);
-
-      if (!TtaFileExist (localname))
-      /* get the standard english documentation */
-	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
-		  DIR_SEP, Manual[index]);
-    }
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
-			  FALSE, NULL, NULL);
-  InitDocHistory (document);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpIndex (Document document, View view)
-{
-  DisplayHelp (document, INDEX);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpBrowsing (Document document, View view)
-{
-  DisplayHelp (document, BROWSING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpSelecting (Document document, View view)
-{
-  DisplayHelp (document, SELECTING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpSearching (Document document, View view)
-{
-  DisplayHelp (document, SEARCHING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpViews (Document document, View view)
-{
-  DisplayHelp (document, VIEWS);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpDocument (Document document, View view)
-{
-  DisplayHelp (document, DOCUMENT);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpCreating (Document document, View view)
-{
-  DisplayHelp (document, CREATING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpLinks (Document document, View view)
-{
-  DisplayHelp (document, LINKS);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpChanging (Document document, View view)
-{
-  DisplayHelp (document, CHANGING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpTables (Document document, View view)
-{
-  DisplayHelp (document, TABLES);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpMath (Document document, View view)
-{
-  DisplayHelp (document, MATH);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpSVG (Document document, View view)
-{
-  DisplayHelp (document, SVG);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpEditChar (Document document, View view)
-{
-  DisplayHelp (document, EDITCHAR);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpXml (Document document, View view)
-{
-  DisplayHelp (document, XML);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpImageMaps (Document document, View view)
-{
-  DisplayHelp (document, IMAGEMAPS);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpStyleSheets (Document document, View view)
-{
-  DisplayHelp (document, CSS);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpAttributes (Document document, View view)
-{
-  DisplayHelp (document, ATTRIBUTES);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpSpellChecking (Document document, View view)
-{
-  DisplayHelp (document, SPELLCHECKING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpPublishing (Document document, View view)
-{
-  DisplayHelp (document, PUBLISHING);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpWebDAV (Document document, View view)
-{
-  DisplayHelp (document, WEBDAV);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpPrinting (Document document, View view)
-{
-  DisplayHelp (document, PRINTING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpNumbering (Document document, View view)
-{
-  DisplayHelp (document, NUMBERING);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpMakeBook (Document document, View view)
-{
-  DisplayHelp (document, MAKEBOOK);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpAnnotation (Document document, View view)
-{
-  DisplayHelp (document, ANNOTATE);
-}
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpBookmarks (Document document, View view)
-{
-  DisplayHelp (document, BOOK_MARKS);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpConfigure (Document document, View view)
-{
-  DisplayHelp (document, CONFIGURE);
-}
-
-
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void HelpShortCuts (Document document, View view)
-{
-  DisplayHelp (document, SHORTCUTS);
-}
-
-/*----------------------------------------------------------------------
-Accessibility help page. Added by Charles McCN oct 99
- -----------------------------------------------------------------------*/
-void HelpAccess (Document document, View view)
-{
-  DisplayHelp (document, ACCESS);
-}
-
 
 /*----------------------------------------------------------------------
    CheckAmayaClosed closes the application when there is any more

@@ -13,6 +13,8 @@
  
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "helpmenu.h"
+#include "css.h"
 
 #include "HTMLhistory_f.h"
 #include "init_f.h"
@@ -667,5 +669,415 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void HelpAmaya (Document document, View view)
+{
+   char                  localname[MAX_LENGTH];
+#ifdef AMAYA_DEBUG
+   Element             el;
+   View                structView, altView, linksView, tocView;
+   int                 n;
+   FILE               *list;
+
+  /* get the root element */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "tree.debug");
+   list = fopen (localname, "w");
+   el = TtaGetMainRoot (document);
+   TtaListAbstractTree (el, list);
+   fclose (list);
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "view.debug");
+   list = fopen (localname, "w");
+   TtaListView (document, view, list);
+   fclose (list);
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "boxes.debug");
+   list = fopen (localname, "w");
+   TtaListBoxes (document, view, list);
+   fclose (list);
+   structView = TtaGetViewFromName (document, "Structure_view");
+   if (structView != 0 && TtaIsViewOpen (document, structView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "structview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, structView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "structboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, structView, list);
+       fclose (list);
+     }
+   altView = TtaGetViewFromName (document, "Alternate_view");
+   if (altView != 0 && TtaIsViewOpen (document, altView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "altview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, altView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "altboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, altView, list);
+       fclose (list);
+     }
+   linksView = TtaGetViewFromName (document, "Links_view");
+   if (linksView != 0 && TtaIsViewOpen (document, linksView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "linksview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, linksView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "linksboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, linksView, list);
+       fclose (list);
+     }
+   tocView = TtaGetViewFromName (document, "Table_of_contents");
+   if (tocView != 0 && TtaIsViewOpen (document, tocView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "tocview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, tocView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, DIR_STR);
+       strcat (localname, "tocboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, tocView, list);
+       fclose (list);
+     }
+   /* list now CSS rules */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "style.debug");
+   list = fopen (localname, "w");
+   TtaListStyleSchemas (document, list);
+   fclose (list);
+   /* list CSS rules applied to the current selection */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "style_element.debug");
+   list = fopen (localname, "w");
+   n = TtaListStyleOfCurrentElement (document, list);
+   if (n == 0)
+     {
+       fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+       fprintf (list, "\n");
+     }
+   fclose (list);
+   /* list now shortcuts */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "shortcuts.debug");
+   list = fopen (localname, "w");
+   TtaListShortcuts (document, list);
+   fclose (list);
+#endif /* AMAYA_DEBUG */
+
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+   TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
+		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+#endif  /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+   
+   strcpy (localname, HTAppName);
+   strcat (localname, " - ");
+   strcat (localname, HTAppVersion);
+   strcat (localname, "     ");
+   strcat (localname, HTAppDate);
+   
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
+   TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
+   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
+	       TtaGetMessage(AMAYA, AM_ABOUT1));
+   TtaNewLabel(BaseDialog + About2, BaseDialog + AboutForm,
+	       TtaGetMessage(AMAYA, AM_ABOUT2));
+   TtaShowDialogue (BaseDialog + AboutForm, FALSE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+   
+#ifdef _WINGUI
+   CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
+			TtaGetMessage(AMAYA, AM_ABOUT1),
+			TtaGetMessage(AMAYA, AM_ABOUT2));
+#endif /* _WINGUI */
+   
+}
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void HelpAtW3C (Document document, View view)
+{
+  char      localname[MAX_LENGTH];
+
+#ifdef LC
+  TtaShowNamespaceDeclarations (document);
+#endif /* LC */
+  strcpy (localname, AMAYA_PAGE_DOC);
+  strcat (localname, "BinDist.html");
+  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+  InitDocHistory (document);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+static void DisplayHelp (int doc, int index)
+{
+  Document    document;
+  char        localname[MAX_LENGTH];
+  char       *s, *lang;
+
+  lang = TtaGetVarLANG ();
+  s = TtaGetEnvString ("THOTDIR");
+  if (s != NULL)
+    {
+      /* get the documentation in the current language */
+      sprintf (localname, "%s%cdoc%chtml%c%s.%s", s, DIR_SEP, DIR_SEP,
+		DIR_SEP, Manual[index], lang);
+
+      if (!TtaFileExist (localname))
+      /* get the standard english documentation */
+	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
+		  DIR_SEP, Manual[index]);
+    }
+  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
+  InitDocHistory (document);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpIndex (Document document, View view)
+{
+  DisplayHelp (document, INDEX);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpBrowsing (Document document, View view)
+{
+  DisplayHelp (document, BROWSING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpSelecting (Document document, View view)
+{
+  DisplayHelp (document, SELECTING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpSearching (Document document, View view)
+{
+  DisplayHelp (document, SEARCHING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpViews (Document document, View view)
+{
+  DisplayHelp (document, VIEWS);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpDocument (Document document, View view)
+{
+  DisplayHelp (document, DOCUMENT);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpCreating (Document document, View view)
+{
+  DisplayHelp (document, CREATING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpLinks (Document document, View view)
+{
+  DisplayHelp (document, LINKS);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpChanging (Document document, View view)
+{
+  DisplayHelp (document, CHANGING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpTables (Document document, View view)
+{
+  DisplayHelp (document, TABLES);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpMath (Document document, View view)
+{
+  DisplayHelp (document, MATH);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpSVG (Document document, View view)
+{
+  DisplayHelp (document, SVG);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpEditChar (Document document, View view)
+{
+  DisplayHelp (document, EDITCHAR);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpXml (Document document, View view)
+{
+  DisplayHelp (document, XML);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpImageMaps (Document document, View view)
+{
+  DisplayHelp (document, IMAGEMAPS);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpStyleSheets (Document document, View view)
+{
+  DisplayHelp (document, CSS);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpAttributes (Document document, View view)
+{
+  DisplayHelp (document, ATTRIBUTES);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpSpellChecking (Document document, View view)
+{
+  DisplayHelp (document, SPELLCHECKING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpPublishing (Document document, View view)
+{
+  DisplayHelp (document, PUBLISHING);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpWebDAV (Document document, View view)
+{
+  DisplayHelp (document, WEBDAV);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpPrinting (Document document, View view)
+{
+  DisplayHelp (document, PRINTING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpNumbering (Document document, View view)
+{
+  DisplayHelp (document, NUMBERING);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpMakeBook (Document document, View view)
+{
+  DisplayHelp (document, MAKEBOOK);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpAnnotation (Document document, View view)
+{
+  DisplayHelp (document, ANNOTATE);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpBookmarks (Document document, View view)
+{
+  DisplayHelp (document, BOOK_MARKS);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpConfigure (Document document, View view)
+{
+  DisplayHelp (document, CONFIGURE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+void HelpShortCuts (Document document, View view)
+{
+  DisplayHelp (document, SHORTCUTS);
+}
+
+/*----------------------------------------------------------------------
+Accessibility help page. Added by Charles McCN oct 99
+ -----------------------------------------------------------------------*/
+void HelpAccess (Document document, View view)
+{
+  DisplayHelp (document, ACCESS);
+}

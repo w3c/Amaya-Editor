@@ -58,21 +58,21 @@ extern PtrElement FwdSearchElem2Types ( PtrElement pEl,
                                         int typeNum2,
                                         PtrSSchema pSS1,
                                         PtrSSchema pSS2,
-					PtrElement pAncestor );
+                                        PtrElement pAncestor );
 extern PtrElement FwdSearchTypedElem ( PtrElement pEl,
                                        int typeNum,
                                        PtrSSchema pSS,
-				       PtrElement pAncestor );
+                                       PtrElement pAncestor );
 extern PtrElement BackSearchElem2Types ( PtrElement pEl,
                                          int typeNum1,
                                          int typeNum2,
                                          PtrSSchema pSS1,
                                          PtrSSchema pSS2,
-					 PtrElement pAncestor );
+                                         PtrElement pAncestor );
 extern PtrElement BackSearchTypedElem ( PtrElement pEl,
                                         int typeNum,
                                         PtrSSchema pSS,
-					PtrElement pAncestor );
+                                        PtrElement pAncestor );
 extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
                                           PtrElement pEl,
                                           int view );
@@ -271,22 +271,22 @@ extern PtrElement FwdSearchElem2Types ( PtrElement pEl,
                                           int typeNum1,
                                           int typeNum2,
                                           PtrSSchema pSS1,
-					  PtrSSchema pSS2,
-					  PtrElement pAncestor );
+                                          PtrSSchema pSS2,
+                                          PtrElement pAncestor );
 extern PtrElement FwdSearchTypedElem ( PtrElement pEl,
                                          int typeNum,
                                          PtrSSchema pSS,
-				         PtrElement pAncestor );
+                                         PtrElement pAncestor );
 extern PtrElement BackSearchElem2Types ( PtrElement pEl,
                                            int typeNum1,
                                            int typeNum2,
                                            PtrSSchema pSS1,
                                            PtrSSchema pSS2,
-					   PtrElement pAncestor );
+                                           PtrElement pAncestor );
 extern PtrElement BackSearchTypedElem ( PtrElement pEl,
                                           int typeNum,
                                           PtrSSchema pSS,
-					  PtrElement pAncestor );
+                                          PtrElement pAncestor );
 extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
                                             PtrElement pEl,
                                             int view );

@@ -33,6 +33,66 @@ extern void AddDocHistory ( Document doc,
                             char *initial_url,
                             char *form_data,
                             ClickEvent method );
+extern void HelpAmaya ( Document document,
+                        View view );
+extern void HelpAtW3C ( Document document,
+                        View view );
+extern void HelpIndex ( Document document,
+                        View view );
+extern void HelpBrowsing ( Document document,
+                           View view );
+extern void HelpSelecting ( Document document,
+                            View view );
+extern void HelpSearching ( Document document,
+                            View view );
+extern void HelpViews ( Document document,
+                        View view );
+extern void HelpDocument ( Document document,
+                           View view );
+extern void HelpCreating ( Document document,
+                           View view );
+extern void HelpLinks ( Document document,
+                        View view );
+extern void HelpChanging ( Document document,
+                           View view );
+extern void HelpTables ( Document document,
+                         View view );
+extern void HelpMath ( Document document,
+                       View view );
+extern void HelpSVG ( Document document,
+                      View view );
+extern void HelpEditChar ( Document document,
+                           View view );
+extern void HelpXml ( Document document,
+                      View view );
+extern void HelpImageMaps ( Document document,
+                            View view );
+extern void HelpStyleSheets ( Document document,
+                              View view );
+extern void HelpAttributes ( Document document,
+                             View view );
+extern void HelpSpellChecking ( Document document,
+                                View view );
+extern void HelpPublishing ( Document document,
+                             View view );
+extern void HelpWebDAV ( Document document,
+                         View view );
+extern void HelpPrinting ( Document document,
+                           View view );
+extern void HelpNumbering ( Document document,
+                            View view );
+extern void HelpMakeBook ( Document document,
+                           View view );
+extern void HelpAnnotation ( Document document,
+                             View view );
+extern void HelpBookmarks ( Document document,
+                            View view );
+extern void HelpConfigure ( Document document,
+                            View view );
+extern void HelpShortCuts ( Document document,
+                            View view );
+extern void HelpAccess ( Document document,
+                         View view );
 
 #else /* __STDC__ */
 
@@ -63,6 +123,66 @@ extern void AddDocHistory ( Document doc,
                               char *initial_url,
                               char *form_data,
                               ClickEvent method );
+extern void HelpAmaya ( Document document,
+                          View view );
+extern void HelpAtW3C ( Document document,
+                          View view );
+extern void HelpIndex ( Document document,
+                          View view );
+extern void HelpBrowsing ( Document document,
+                             View view );
+extern void HelpSelecting ( Document document,
+                              View view );
+extern void HelpSearching ( Document document,
+                              View view );
+extern void HelpViews ( Document document,
+                          View view );
+extern void HelpDocument ( Document document,
+                             View view );
+extern void HelpCreating ( Document document,
+                             View view );
+extern void HelpLinks ( Document document,
+                          View view );
+extern void HelpChanging ( Document document,
+                             View view );
+extern void HelpTables ( Document document,
+                           View view );
+extern void HelpMath ( Document document,
+                         View view );
+extern void HelpSVG ( Document document,
+                        View view );
+extern void HelpEditChar ( Document document,
+                             View view );
+extern void HelpXml ( Document document,
+                        View view );
+extern void HelpImageMaps ( Document document,
+                              View view );
+extern void HelpStyleSheets ( Document document,
+                                View view );
+extern void HelpAttributes ( Document document,
+                               View view );
+extern void HelpSpellChecking ( Document document,
+                                  View view );
+extern void HelpPublishing ( Document document,
+                               View view );
+extern void HelpWebDAV ( Document document,
+                           View view );
+extern void HelpPrinting ( Document document,
+                             View view );
+extern void HelpNumbering ( Document document,
+                              View view );
+extern void HelpMakeBook ( Document document,
+                             View view );
+extern void HelpAnnotation ( Document document,
+                               View view );
+extern void HelpBookmarks ( Document document,
+                              View view );
+extern void HelpConfigure ( Document document,
+                              View view );
+extern void HelpShortCuts ( Document document,
+                              View view );
+extern void HelpAccess ( Document document,
+                           View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
