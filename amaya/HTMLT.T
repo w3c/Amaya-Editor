@@ -14,23 +14,11 @@ RULES
 
  HTML : BEGIN
 #ifdef XML
-	Use MathMLTX for MathML;
-	Use GraphMLTX for GraphML;
-	if HtmlDTD = Frameset
-	   BEGIN
-	   Create '<?xml version="1.0" ?>\12';
-	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
-	   Create '                      "xhtml1-frameset.dtd">\12';
-	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-frameset"';
-	   END;
-	if not HtmlDTD = Frameset
-	   BEGIN
-	   Create '<?xml version="1.0" ?>\12';
-	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
-	   Create '                      "xhtml1-transitional.dtd">\12';
-	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-transitional"';
-	   END;
-	Create Namespaces;
+	Use MathMLT for MathML;
+	Use GraphMLT for GraphML;
+	Create '<?xml version="1.0" ?>\12';
+	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
+	{*** Create Namespaces; ***}
 #else
 	Use MathMLT for MathML;
 	Use GraphMLT for GraphML;
@@ -474,7 +462,7 @@ RULES
 
  Math: BEGIN
 #ifdef XML
-	Create '<m:math';
+	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
 #else
 	Create '<math';
 #endif
@@ -482,16 +470,12 @@ RULES
 	Create '>\12';
 	indent +2;
 	indent -2 after;
-#ifdef XML
-	Create '</m:math>\12' After;
-#else
 	Create '</math>\12' After;
-#endif
 	END;
 
  XMLGraphics: BEGIN
 #ifdef XML
-	Create '<g:xmlgraphics';
+	Create '<xmlgraphics xmlns="http://www.w3.org/Graphics/SVG/Amaya2D"';
 #else
 	Create '<xmlgraphics';
 #endif
@@ -499,11 +483,7 @@ RULES
 	Create '>\12';
 	indent +2;
 	indent -2 after;
-#ifdef XML
-	Create '</g:xmlgraphics>\12' After;
-#else
 	Create '</xmlgraphics>\12' After;
-#endif
 	END;
 
  Paragraph: BEGIN
