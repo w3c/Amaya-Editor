@@ -4391,7 +4391,7 @@ CHAR_T                c;
    AttributeType       attrType, attrType1;
    Attribute	       attr;
    ElementType	       elType;
-   Element             child, parent;
+   Element             child;
    Language	       lang;
    CHAR_T              translation;
    CHAR_T              shape;
