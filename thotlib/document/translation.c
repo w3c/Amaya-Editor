@@ -517,7 +517,7 @@ void TtaGetTime (char *s, CHARSET charset)
   if (set_gmtime)
     {
       tmptr = gmtime (&tp);
-      strftime (s, DATESTRLEN, "%Y-%m-%dZ%H:%M:%S", tmptr);
+      strftime (s, DATESTRLEN, "%Y-%m-%d - %H:%M", tmptr);
     }
   else
     {
