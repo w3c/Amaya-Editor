@@ -585,7 +585,11 @@ void TtaRemoveFinalSpaces (Element element, Document document,
 	{
 	  i = pBuf->BuLength - 1;
 	  if (pBuf->BuContent[i] == __CR__ || pBuf->BuContent[i] == EOL)
-	    delta++;
+	    {
+	      delta++;
+	      pBuf->BuContent[i] = EOS;
+	      pBuf->BuLength = i;
+	    }
 	}
       else
 	{
