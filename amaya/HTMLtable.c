@@ -1588,7 +1588,7 @@ static Element SpannedCellForRow (Element row, Element colhead,
 				  ThotBool addRow, int *colspan)
 {
   Element             cell;
-  ElementType         elType, rowType;
+  ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
   int                 rowspan, pos;
@@ -1602,17 +1602,11 @@ static Element SpannedCellForRow (Element row, Element colhead,
   while (!cell && row)
     {
       /* no cell related to this column in this row */
-      TtaPreviousSibling (&row);
+      row = GetSiblingRow (row, TRUE, inMath);
       if (row)
 	{
-	  rowType = TtaGetElementType (row);
-	  if (rowType.ElSSchema == elType.ElSSchema)
-	    if ((inMath && rowType.ElTypeNum == MathML_EL_TableRow) ||
-		(!inMath && rowType.ElTypeNum == HTML_EL_Table_row))
-	      {
-		cell = GetCellFromColumnHead (row, colhead, inMath);
-		pos++;
-	      }
+	  cell = GetCellFromColumnHead (row, colhead, inMath);
+	  pos++;
 	}
     }
 
@@ -1674,6 +1668,11 @@ static Element SpannedCellForRow (Element row, Element colhead,
 
 /*----------------------------------------------------------------------
    UpdateRowspanForRow
+   A new row has been created by the user (if addRow) or will be deleted
+   (if not addRow). Take care of the rowspan attribute of the previous rows
+   for creating cells in the row if it's a new row,
+   or create empty cells in the next rows according of the rowspan attribute
+   of the deleted row.
   ----------------------------------------------------------------------*/
 static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
 				 ThotBool addRow)
@@ -1718,9 +1717,12 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
   ----------------------------------------------------------------------*/
 ThotBool DeleteRow (NotifyElement *event)
 {
-  Element             row;
-  ElementType         elType;
+  Element             row, cell;
+  ElementType         elType, cellType;
+  Attribute           attr;
+  AttributeType       rowspanType;
   Document            doc;
+  int                 rowspan;
   ThotBool            inMath;
 
   row = event->element;
@@ -1728,9 +1730,36 @@ ThotBool DeleteRow (NotifyElement *event)
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
   UpdateRowspanForRow (row, doc, inMath, FALSE);
+  /* create empty cells in the following rows, where cells of the deleted
+     row span over several rows */
+  rowspanType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
+  else
+    rowspanType.AttrTypeNum = HTML_ATTR_rowspan_;
+  cell = TtaGetFirstChild (row);
+  while (cell)
+    {
+      cellType = TtaGetElementType (cell);
+      if (cellType.ElSSchema == elType.ElSSchema &&
+	  ((inMath && cellType.ElTypeNum == MathML_EL_MTD) ||
+	   (!inMath && (cellType.ElTypeNum == HTML_EL_Data_cell ||
+			cellType.ElTypeNum == HTML_EL_Heading_cell))))
+	/* it's really a cell */
+	{
+	  /* check its rowspan attribute */
+          rowspan = 1;
+	  attr = TtaGetAttribute (cell, rowspanType);
+	  if (attr)
+	    /* this cell has an attribute rowspan */
+	    rowspan = TtaGetAttributeValue (attr);
+	  if (rowspan > 1)
+	    ChangeRowspan (cell, rowspan, 1, doc);
+	}
+      TtaNextSibling (&cell);
+    }
   return FALSE;		/* let Thot perform normal operation */
 }
-
 
 /*----------------------------------------------------------------------
    RowDeleted
