@@ -223,9 +223,13 @@ typedef unsigned int JDIMENSION;
  * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
  */
 
+#ifdef _WINDOWS
+#include <windows.h>
+#else /* !_WINDOWS */
 #ifndef HAVE_BOOLEAN
 typedef int boolean;
 #endif
+#endif /* _WINDOWS */
 #ifndef FALSE			/* in case these macros already exist */
 #define FALSE	0		/* values of boolean */
 #endif
