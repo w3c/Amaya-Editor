@@ -2135,6 +2135,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       *intRule = PtFunction;
       *func = FnPage;
       break;
+    case PRPageInside:
+      *intRule = PtPageBreak;
+      break;
     default:
       *intRule = PtFunction;
     }
