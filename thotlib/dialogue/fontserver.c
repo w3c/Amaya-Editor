@@ -398,10 +398,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
 	       ok = 0;
-#ifdef _FONTCONFIG
+#ifdef _PCLFONTDEBUG
 	 g_print ("\n %s \t[script : %c (%i) family : %i] \t=> %i", 
 		  filename, script, script, family, ok);
-#endif /*_FONTCONFIG*/
+#endif /*_PCLFONTDEBUG*/
        }
      XftPatternDestroy (match);
     }
