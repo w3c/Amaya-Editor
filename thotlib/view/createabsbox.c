@@ -322,7 +322,6 @@ int                 Visib;
    pAb->AbWidth.DimMinimum = FALSE;
 
    pAb->AbVolume = 0;
-   pAb->AbBox = NULL;
    pAb->AbIndent = 0;
    pAb->AbDepth = 0;
    pAb->AbNum = 0;

@@ -2429,6 +2429,7 @@ boolean            *changeSelectEnd;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
 
+   pFrame = &ViewFrameTable[frame - 1];
    if (pBox != NULL)
      {
 	pAb = pBox->BxAbstractBox;
@@ -2436,7 +2437,6 @@ boolean            *changeSelectEnd;
 	  {
 	     x = CharacterWidth (_SPACE_, pBox->BxFont);
 	     /* met a jour les marques de selection */
-	     pFrame = &ViewFrameTable[frame - 1];
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
 	       {
 		  /* Box entiere */
@@ -2469,7 +2469,7 @@ boolean            *changeSelectEnd;
 		       if (pBox->BxPrevious != NULL)
 			  pBox->BxPrevious->BxNext = pBox;
 		       else
-			  ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxNext = pBox;
+			  pFrame->FrAbstractBox->AbBox->BxNext = pBox;
 
 		       width = 0;
 		       number = 0;
@@ -2520,7 +2520,6 @@ boolean            *changeSelectEnd;
 			    pRemainBox = FreeBox (pFirstBox);
 
 			    /* Prepare la mise a jour des marques de selection */
-			    pFrame = &ViewFrameTable[frame - 1];
 			    pViewSel = &pFrame->FrSelectionBegin;
 			    if (pViewSel->VsBox == pFirstBox)
 			      {
@@ -2558,14 +2557,13 @@ boolean            *changeSelectEnd;
 		       if (pNextBox != NULL)
 			  pNextBox->BxPrevious = pBox;
 		       else
-			  ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxPrevious = pBox;
+			  pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
 		    }
 	       }
 	  }
 	/* Pour les autres natures */
 	else
 	  {
-	     pFrame = &ViewFrameTable[frame - 1];
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
 		*changeSelectBegin = TRUE;
 	     if (pFrame->FrSelectionEnd.VsBox == pBox)
@@ -2599,21 +2597,19 @@ boolean            *changeSelectEnd;
   PtrLine             pNextLine;
   PtrLine             pLine;
   PtrAbstractBox      pAb;
-  boolean             dead;
 
   *changeSelectBegin = FALSE;
   *changeSelectEnd = FALSE;
-  dead = pBox->BxAbstractBox->AbDead;
 
   pLine = pFirstLine;
   if (pLine != NULL && pBox->BxType == BoBlock)
     {
-      /* Mise a jour du chainage des lignes */
       pFirstBox = NULL;
+      /* Mise a jour du chainage des lignes */
       if (pLine->LiPrevious != NULL)
 	{
-	  pLine->LiPrevious->LiNext = NULL;
 	  pFirstBox = pLine->LiFirstBox;
+	  pLine->LiPrevious->LiNext = NULL;
 	  /* Est-ce que la premiere boite est une boite suite ? */
 	  if (pLine->LiPrevious->LiLastBox == pFirstBox)
 	    RemoveBreaks (pLine->LiFirstPiece, frame, changeSelectBegin, changeSelectEnd);
@@ -2643,17 +2639,8 @@ boolean            *changeSelectEnd;
 	  /* recherche la premiere boite mise en ligne */
 	  pAb = pBox->BxAbstractBox->AbFirstEnclosed;
 	  while (pFirstBox == NULL && pAb != NULL)
-	    /* Est-ce que le pave est mort ? */
-	    if (dead || pAb->AbDead)
-	      {
-		pFirstBox = GetNextBox (pAb);
-		if (pFirstBox != NULL)
-		  pAb = pFirstBox->BxAbstractBox;
-		else
-		  pAb = NULL;
-	      }
-	    else if (pAb->AbBox->BxType == BoGhost)
-	  /* c'est un pave fantome -> descend la hierarchie */
+	    if (pAb->AbBox->BxType == BoGhost)
+	      /* c'est un pave fantome -> descend la hierarchie */
 	      pAb = pAb->AbFirstEnclosed;
 	    else
 	      /* Sinon c'est la boite du pave */

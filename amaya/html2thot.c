@@ -605,7 +605,6 @@ static int          CharLevelElement[] =
    HTML_EL_Text_Input_Line, HTML_EL_Text_Input,
    HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
    HTML_EL_BR,
-   HTML_EL_Comment_,
    0};
 
 /* block level elements */
@@ -2779,11 +2778,11 @@ Element             el;
 #endif
    int                 length;
 
-   /* is this an block-level element in a character-level element? */
-   if (!IsCharacterLevelElement (el))
+    elType = TtaGetElementType (el);
+  /* is this an block-level element in a character-level element? */
+   if (!IsCharacterLevelElement (el) && elType.ElTypeNum != HTML_EL_Comment_)
       BlockInCharLevelElem (el);
 
-   elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
 	 {
@@ -7408,7 +7407,8 @@ Document            doc;
 	       next = elem;
 	       TtaNextSibling (&next);
 	       }
-	     if (!IsCharacterLevelElement (elem))
+	     if (!IsCharacterLevelElement (elem) &&
+		 elType.ElTypeNum != HTML_EL_Comment_)
 	       /* This is not a character level element */
 	       /* create copies of element parent for all decendants of child*/
 	       {
