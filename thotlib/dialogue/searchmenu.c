@@ -25,13 +25,14 @@
 #include "appdialogue.h"
 
 #ifdef _WINGUI
-  #include "resource.h"
-  #include "wininclude.h"
+#include "resource.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "wxinclude.h"
-#endif /*# _WX */
+#include "wxinclude.h"
+#include "wx/msgdlg.h" // wxMessageDialog
+#endif /* _WX */
 
 #define THOT_EXPORT extern
 #include "platform_tv.h"
@@ -100,6 +101,11 @@ static int           LastCharTextOK;
 #include "undo_f.h"
 #include "views_f.h"
 #include "word_f.h"
+
+#ifdef _WX
+#include "appdialogue_wx.h"
+static char         wxCaption[200];
+#endif /* _WX */
 
 #ifdef _WINGUI
 static int          iLocation;
@@ -412,9 +418,6 @@ void TtcSearchText (Document document, View view)
   int                 firstChar;
   int                 lastChar, i;
   ThotBool            ok;
-#ifdef _WX
-static char           wxCaption[200];
-#endif /* _WX */
 
   pDoc = LoadedDocument[document - 1];
   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
@@ -894,23 +897,27 @@ void CallbackTextReplace (int ref, int val, char *txt)
 				   NULL);
 #endif /* _GTK */
 #ifdef _WX
-	      printf ("\nCallbackTextReplace - TODO : MessageBox");
-	      /*
-	      if (!searchEnd)
+	      if (WithReplace && ReplaceDone)
 		{
-		  searchEnd = TRUE;
-		  if (WithReplace && ReplaceDone)
+		  if (!AutoReplace)
 		    {
-		    if (!AutoReplace)
-		      MessageBox (NULL,
-				  TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
-				  msgCaption, MB_OK | MB_ICONEXCLAMATION);
+		      wxMessageDialog 
+			search_messagedialog( (wxWindow*) NULL,
+					      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
+					      TtaConvMessageToWX (wxCaption),
+					      (long) wxOK | wxICON_EXCLAMATION);
+		      search_messagedialog.ShowModal(); 
 		    }
-		  else
-		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
-				msgCaption, MB_OK | MB_ICONEXCLAMATION);
 		}
-	      */
+	      else
+		{
+		  wxMessageDialog 
+		    search_messagedialog( (wxWindow*) NULL,
+					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
+					  TtaConvMessageToWX (wxCaption),
+					  (long) wxOK | wxICON_EXCLAMATION);
+		  search_messagedialog.ShowModal();
+		}
 #endif /* _WX */
 	      StartSearch = TRUE;
 	    }
