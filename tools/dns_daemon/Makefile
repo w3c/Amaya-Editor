@@ -10,7 +10,12 @@ CFLAGS=-g -Wall
 all : dns_daemon
 
 dns_daemon : dns_daemon.o
-	$(CC) $(CFLAGS) -o $@ dns_daemon.o -lsocket
+	@(if [ "`../../batch/MachineType`" = "solaris2" ] ;\
+	then \
+	    $(CC) $(CFLAGS) -o $@ dns_daemon.o -lsocket ;\
+	else \
+	    $(CC) $(CFLAGS) -o $@ dns_daemon.o ;\
+	fi)
 
 dns_daemon.o : dns_daemon.c
 	$(CC) $(CFLAGS) -c $<
@@ -22,6 +27,4 @@ install : all
 	-@(mkdir ../../`../../batch/MachineType`/bin)
 	cp dns_daemon ../../`../../batch/MachineType`/bin
 
-test: all
-	./dns_daemon -T types.lst -M $(CLASSTEST) ../../thotlib/include/interface.h 
 
