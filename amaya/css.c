@@ -101,6 +101,7 @@ static char        *last_message = NULL;
 #include "query_f.h"
 #include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
+#include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
 #ifdef linux
