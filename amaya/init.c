@@ -2039,20 +2039,26 @@ boolean		    history;
     }
   else if (pathname[0] != EOS)
     {
-      if (DocumentURLs[doc])
+      if (method != CE_MAKEBOOK)
 	{
-	  /* save the URL of the old document in the history, if the same
-	     window is reused, i.e. if the old document has not been
-	     modified */
-	  if (history && !TtaIsDocumentModified (doc))
-	    AddDocHistory (doc, DocumentURLs[doc], 
-			   DocumentMeta[doc]->form_data,
-			   DocumentMeta[doc]->method);
+	  /* do not register and open the document view */
+	  if (DocumentURLs[doc])
+	    {
+	      /* save the URL of the old document in the history, if the same
+		 window is reused, i.e. if the old document has not been
+		 modified */
+	      if (history && !TtaIsDocumentModified (doc))
+		AddDocHistory (doc, DocumentURLs[doc], 
+			       DocumentMeta[doc]->form_data,
+			       DocumentMeta[doc]->method);
+	    }
+
+	  /* free the previous document and prepare the window for the new one */
+	  newdoc = InitDocView (doc, documentname, docType, FALSE);
 	}
-
-      /* free the previous document and prepare the window for the new one */
-      newdoc = InitDocView (doc, documentname, docType, FALSE);
-
+      else
+	newdoc = doc;
+	
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
 	{
