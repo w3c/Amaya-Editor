@@ -567,14 +567,24 @@ void *context;
    if (status == HT_OK
        && DocumentURLs[source_doc] 
        && !ustrcmp (DocumentURLs[source_doc], source_doc_url))
-     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
-
+     {
+       LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
+       /* clear the status line if there was no error*/
+       TtaSetStatus (doc, 1,  TEXT(""), NULL);
+     }
+   else
+     {
+       CHAR_T *ptr;
+       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
+       if (ptr)
+	 TtaSetStatus (doc, 1, TEXT("Failed to load the annotation index: %s"), ptr);
+       else
+	 TtaSetStatus (doc, 1, TEXT("Failed to load the annotation index"), NULL);
+     }
+   
    TtaFreeMemory (source_doc_url);
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
-   /* clear the status line if there was no error*/
-   if (!status)
-     TtaSetStatus (doc, 1,  TEXT(""), NULL);
 }
 
 /*-----------------------------------------------------------------------
@@ -910,6 +920,15 @@ void *context;
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
+   else /* there was error */
+     {
+       CHAR_T *ptr;
+       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
+       if (ptr)
+	 TtaSetStatus (doc, 1, TEXT("Failed to post the annotation: %s"), ptr);
+       else
+	 TtaSetStatus (doc, 1, TEXT("Failed to post the annotation"), NULL);
+     }
 
    /* erase the rdf container */
    TtaFileUnlink (ctx->rdf_file);
@@ -1021,7 +1040,7 @@ View view;
   /* @@ JK: here we should delete the context or call the callback in case of
      error */
   if (res)
-    fprintf (stderr, "ANNOT_Post: Failed to post the annotation!\n");
+    TtaSetStatus (doc, 1, TEXT("Failed to post the annotation"), NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1346,6 +1365,15 @@ void *context;
 	LINK_SaveLink (source_doc);
       else
 	LINK_DeleteLink (source_doc);
+    }
+  else 
+    {
+      CHAR_T *ptr;
+      ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
+      if (ptr)
+	TtaSetStatus (doc, 1, TEXT("Failed to delete the annotation: %s"), ptr);
+      else
+	TtaSetStatus (doc, 1, TEXT("Failed to delete the annotation"), NULL);
     }
 
   if (output_file)
