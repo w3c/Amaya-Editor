@@ -1164,7 +1164,7 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
   Replace all links in a document which have an attribute REL="chapter"
   or REL="subdocument" by the corresponding target document.
   ----------------------------------------------------------------------*/
-void                MakeBook (Document document, View view)
+void MakeBook (Document document, View view)
 {
   Element	    root, body;
   ElementType	    elType;

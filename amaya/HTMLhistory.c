@@ -1,13 +1,13 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
  *
- * Author: V. Quint
+ * Authors: V. Quint, J. Kahan, I. Vatton
  *
  */
  
@@ -51,19 +51,20 @@ typedef struct _GotoHistory_context
 static anHistory    DocHistory[DocumentTableLength];
 /* current position in the history of each window */
 static int          DocHistoryIndex[DocumentTableLength];
+static ThotBool     Back_Forward = FALSE;
 
 /*----------------------------------------------------------------------
    InitDocHistory
    Reset history for document doc
   ----------------------------------------------------------------------*/
-void                InitDocHistory (Document doc)
+void InitDocHistory (Document doc)
 {
    DocHistoryIndex[doc] = -1;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                FreeDocHistory ()
+void FreeDocHistory ()
 {
   int               doc, i;
 
@@ -83,7 +84,7 @@ void                FreeDocHistory ()
   ElementAtPosition
   Returns the element that is at position pos in document doc.
   ----------------------------------------------------------------------*/
-Element       	ElementAtPosition (Document doc, int pos)
+Element ElementAtPosition (Document doc, int pos)
 {
    Element	el, result, child, next;
    int		sum, vol;
@@ -146,7 +147,7 @@ Element       	ElementAtPosition (Document doc, int pos)
   Returns the position of the first visible element in the main view of
   document doc.
   ----------------------------------------------------------------------*/
-int             RelativePosition (Document doc, int *distance)
+int RelativePosition (Document doc, int *distance)
 {
    int		sum;
    Element	el, sibling, ancestor;
@@ -246,7 +247,11 @@ void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
   int                  prev;
 
   if (ctx == NULL)
-    return;
+    {
+      /* out of the critic section */
+      Back_Forward = FALSE;
+      return;
+    }
 
   prev = ctx->prevnext;
   doc = ctx->doc;
@@ -266,139 +271,157 @@ void GotoPreviousHTML_callback (int newdoc, int status, char *urlName,
   else
     TtaFreeMemory (ctx->initial_url);
   TtaFreeMemory (ctx);
+  /* out of the critic section */
+  Back_Forward = FALSE;
 }
 
 /*----------------------------------------------------------------------
    GotoPreviousHTML
    This function is called when the user presses the Previous button
   ----------------------------------------------------------------------*/
-void  GotoPreviousHTML (Document doc, View view)
+void GotoPreviousHTML (Document doc, View view)
 {
-   GotoHistory_context *ctx;
-   char                *url = NULL;
-   char                *initial_url = NULL;
-   char                *form_data = NULL;
-   int                  prev, i;
-   int                  method;
-   ThotBool	        last = FALSE;
-   ThotBool             hist = FALSE;
-   ThotBool             same_form_data;
-   ThotBool             next_doc_loaded = FALSE;
+  GotoHistory_context *ctx;
+  char                *url = NULL;
+  char                *initial_url = NULL;
+  char                *form_data = NULL;
+  int                  prev, i;
+  int                  method;
+  ThotBool	        last = FALSE;
+  ThotBool             hist = FALSE;
+  ThotBool             same_form_data;
+  ThotBool             next_doc_loaded = FALSE;
 
-   if (doc < 0 || doc >= DocumentTableLength)
-      return;
-   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
-      return;
+  if (doc < 0 || doc >= DocumentTableLength)
+    return;
+  if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
+    return;
+  if (Back_Forward)
+    /* a back/forward is already active */
+    return;
+  else
+    /* enter the critic section */
+    Back_Forward = TRUE;
 
-   /* previous document in history */
-   prev = DocHistoryIndex[doc];
-   if (prev ==  0)
-      prev = DOC_HISTORY_SIZE - 1;
-   else
-      prev--;
+  /* previous document in history */
+  prev = DocHistoryIndex[doc];
+  if (prev ==  0)
+    prev = DOC_HISTORY_SIZE - 1;
+  else
+    prev--;
  
-   /* nothing to do if there is no previous document */
-   if (DocHistory[doc][prev].HistUrl == NULL)
+  /* nothing to do if there is no previous document */
+  if (DocHistory[doc][prev].HistUrl == NULL)
+    {
+      /* out of the critic section */
+      Back_Forward = FALSE;
       return;
+    }
+  
+  /* get the previous document information*/
+  url = DocHistory[doc][prev].HistUrl;
+  initial_url = DocHistory[doc][prev].HistInitialUrl;
+  form_data = DocHistory[doc][prev].form_data;
+  method = DocHistory[doc][prev].method;
 
-   /* get the previous document information*/
-   url = DocHistory[doc][prev].HistUrl;
-   initial_url = DocHistory[doc][prev].HistInitialUrl;
-   form_data = DocHistory[doc][prev].form_data;
-   method = DocHistory[doc][prev].method;
+  /* is it the same form_data? */
+  if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
+    same_form_data = TRUE;
+  else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
+	   && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+    same_form_data = TRUE;
+  else
+    same_form_data = FALSE;
+  
+  /* if the document has been edited, ask the user to confirm, except
+     if it's simply a jump in the same document */
+  if (DocumentURLs[doc] &&
+      (strcmp(DocumentURLs[doc], url) || !same_form_data))
+    {
+      /* is the next document already loaded? */
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+      if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
+	{
+	  /* out of the critic section */
+	  Back_Forward = FALSE;
+	  return;
+	}
+    }
 
-   /* is it the same form_data? */
-   if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
-     same_form_data = TRUE;
-   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
-     same_form_data = TRUE;
-   else
-     same_form_data = FALSE;
+  if (!next_doc_loaded)
+    {
+      /* the current document must be put in the history if it's the last
+	 one */
+      if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
+	{
+	  if (DocumentURLs[doc] &&
+	      !IsW3Path (DocumentURLs[doc]) && !TtaFileExist (DocumentURLs[doc]))
+	    {
+	      /* cannot store the current document in the history */
+	      last = FALSE;
+	      hist = FALSE;
+	    }
+	  else
+	    {
+	      last = TRUE;
+	      hist = TRUE;
+	    }
+	}
+      else
+	{
+	  i = DocHistoryIndex[doc];
+	  i++;
+	  i %= DOC_HISTORY_SIZE;
+	  if (DocHistory[doc][i].HistUrl == NULL)
+	    last = TRUE;
+	}
+      
+      /* set the Back button off if there is no previous document in history */
+      i = prev;
+      if (i ==  0)
+	i = DOC_HISTORY_SIZE - 1;
+      else
+	i--;
+      if (DocHistory[doc][i].HistUrl == NULL)
+	/* there is no previous document, set the Back button OFF */
+	SetArrowButton (doc, TRUE, FALSE);
+    }
 
-   /* if the document has been edited, ask the user to confirm, except
-      if it's simply a jump in the same document */
-   if (DocumentURLs[doc] &&
-       (strcmp(DocumentURLs[doc], url) || !same_form_data))
-     {
-       /* is the next document already loaded? */
-       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
-       if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
-	 return;
-     }
+  /* save the context */
+  ctx = TtaGetMemory (sizeof (GotoHistory_context));
+  ctx->prevnext = prev;
+  ctx->last = last;
+  ctx->doc = doc;
+  ctx->next_doc_loaded = next_doc_loaded;
+  ctx->initial_url = TtaStrdup (initial_url);
 
-
-   if (!next_doc_loaded)
-     {
-       /* the current document must be put in the history if it's the last
-	  one */
-       if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
-	 {
-	   if (DocumentURLs[doc] &&
-	       !IsW3Path (DocumentURLs[doc]) && !TtaFileExist (DocumentURLs[doc]))
-	     {
-	       /* cannot store the current document in the history */
-	       last = FALSE;
-	       hist = FALSE;
-	     }
-	   else
-	     {
-	       last = TRUE;
-	       hist = TRUE;
-	     }
-	 }
-       else
-	 {
-	   i = DocHistoryIndex[doc];
-	   i++;
-	   i %= DOC_HISTORY_SIZE;
-	   if (DocHistory[doc][i].HistUrl == NULL)
-	     last = TRUE;
-	 }
-
-   /* set the Back button off if there is no previous document in history */
-       i = prev;
-       if (i ==  0)
-	 i = DOC_HISTORY_SIZE - 1;
-       else
-	 i--;
-       if (DocHistory[doc][i].HistUrl == NULL)
-	 /* there is no previous document, set the Back button OFF */
-	 SetArrowButton (doc, TRUE, FALSE);
-     }
-
-   /* save the context */
-   ctx = TtaGetMemory (sizeof (GotoHistory_context));
-   ctx->prevnext = prev;
-   ctx->last = last;
-   ctx->doc = doc;
-   ctx->next_doc_loaded = next_doc_loaded;
-   ctx->initial_url = TtaStrdup (initial_url);
-
-   /* 
-   ** load (or jump to) the previous document 
-   */
-   if (!next_doc_loaded)
-     {
-     if (hist)
-       /* record the current position in the history */
-       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->initial_url,
-		      DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
-     
-     DocHistoryIndex[doc] = prev;
-     }
-
-   /* is it the current document ? */     
-   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
-     {
-       /* it's just a move in the same document */
-       GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
-     }
-   else
-     {
-       StopTransfer (doc, 1);
-       (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoPreviousHTML_callback, (void *) ctx);
-     }
+  /* 
+  ** load (or jump to) the previous document 
+  */
+  if (!next_doc_loaded)
+    {
+      if (hist)
+	/* record the current position in the history */
+	AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->initial_url,
+		       DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
+      
+      DocHistoryIndex[doc] = prev;
+    }
+  
+  /* is it the current document ? */     
+  if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
+    {
+      /* it's just a move in the same document */
+      GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
+    }
+  else
+    {
+      StopTransfer (doc, 1);
+      (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE,
+			      (void *) GotoPreviousHTML_callback, (void *) ctx);
+      /* out of the critic section */
+      Back_Forward = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -417,7 +440,11 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
   /* retrieve the context */
 
   if (ctx == NULL)
-    return;
+    {
+      /* out of the critic section */
+      Back_Forward = FALSE;
+      return;
+    }
 
   next = ctx->prevnext;
   doc = ctx->doc;
@@ -433,6 +460,8 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
   else
     TtaFreeMemory (ctx->initial_url);
   TtaFreeMemory (ctx);
+  /* out of the critic section */
+  Back_Forward = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -441,102 +470,117 @@ void GotoNextHTML_callback (int newdoc, int status, char *urlName,
   ----------------------------------------------------------------------*/
 void                GotoNextHTML (Document doc, View view)
 {
-   GotoHistory_context  *ctx;
-   char                 *url = NULL;
-   char                 *initial_url = NULL;
-   char                 *form_data = NULL;
-   int                   method;
-   int		         next, i;
-   ThotBool              same_form_data;
-   ThotBool              next_doc_loaded = FALSE;
+  GotoHistory_context  *ctx;
+  char                 *url = NULL;
+  char                 *initial_url = NULL;
+  char                 *form_data = NULL;
+  int                   method;
+  int		         next, i;
+  ThotBool              same_form_data;
+  ThotBool              next_doc_loaded = FALSE;
 
-   if (doc < 0 || doc >= DocumentTableLength)
+  if (doc < 0 || doc >= DocumentTableLength)
+    return;
+  if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
+    return;
+  if (Back_Forward)
+    /* a back/forward is already active */
+    return;
+  else
+    /* enter the critic section */
+    Back_Forward = TRUE;
+
+  /* next entry in history */
+  next = DocHistoryIndex[doc] + 1;
+  next %= DOC_HISTORY_SIZE;
+  
+  /* nothing to do if there is no next document */
+  if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL ||
+      DocHistory[doc][next].HistUrl == NULL)
+    {
+      /* out of the critic section */
+      Back_Forward = FALSE;
       return;
-   if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
-      return;
+    }
 
-   /* next entry in history */
-   next = DocHistoryIndex[doc] + 1;
-   next %= DOC_HISTORY_SIZE;
+  /* Get the next document information */
+  url = DocHistory[doc][next].HistUrl;
+  initial_url = DocHistory[doc][next].HistInitialUrl;
+  form_data = DocHistory[doc][next].form_data;
+  method = DocHistory[doc][next].method;
 
-   /* nothing to do if there is no next document */
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
-      return;
-   if (DocHistory[doc][next].HistUrl == NULL)
-      return;
+  /* is the form_data the same? */
+  if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
+    same_form_data = TRUE;
+  else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
+	   && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+    same_form_data = TRUE;
+  else
+    same_form_data = FALSE;
 
-   /* Get the next document information */
-   url = DocHistory[doc][next].HistUrl;
-   initial_url = DocHistory[doc][next].HistInitialUrl;
-   form_data = DocHistory[doc][next].form_data;
-   method = DocHistory[doc][next].method;
+  /* if the document has been edited, ask the user to confirm, except
+     if it's simply a jump in the same document */
+  if (DocumentURLs[doc] != NULL &&
+      (strcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl) ||
+       !same_form_data))
+    {
+      /* is the next document already loaded? */
+      next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+      if (!CanReplaceCurrentDocument (doc, view))
+	{
+	  /* out of the critic section */
+	  Back_Forward = FALSE;
+	  return;
+	}
+    }
 
-   /* is the form_data the same? */
-   if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
-     same_form_data = TRUE;
-   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
-	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
-     same_form_data = TRUE;
-   else
-     same_form_data = FALSE;
+  if (!next_doc_loaded)
+    {
+      /* set the Back button on if it's off */
+      i = DocHistoryIndex[doc];
+      if (i ==  0)
+	i = DOC_HISTORY_SIZE - 1;
+      else
+	i--;
+      if (DocHistory[doc][i].HistUrl == NULL)
+	/* there is no document before the current one. The Back button is
+	   normally OFF */
+	/* set the Back button ON */
+	SetArrowButton (doc, TRUE, TRUE);
 
-   /* if the document has been edited, ask the user to confirm, except
-      if it's simply a jump in the same document */
-   if (DocumentURLs[doc] != NULL &&
-       (strcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl) ||
-	!same_form_data))
-     {
-       /* is the next document already loaded? */
-       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
-       if (!CanReplaceCurrentDocument (doc, view))
-	 return;
-     }
-
-   if (!next_doc_loaded)
-     {
-       /* set the Back button on if it's off */
-       i = DocHistoryIndex[doc];
-       if (i ==  0)
-	 i = DOC_HISTORY_SIZE - 1;
-       else
-	 i--;
-       if (DocHistory[doc][i].HistUrl == NULL)
-	 /* there is no document before the current one. The Back button is
-	    normally OFF */
-	 /* set the Back button ON */
-	 SetArrowButton (doc, TRUE, TRUE);
-
-       /* set the Forward button off if the next document is the last one
-	  in the history */
-       i = next;
-       i++;
-       i %= DOC_HISTORY_SIZE;
-       if (DocHistory[doc][i].HistUrl == NULL)
-	 SetArrowButton (doc, FALSE, FALSE);
-     }
+      /* set the Forward button off if the next document is the last one
+	 in the history */
+      i = next;
+      i++;
+      i %= DOC_HISTORY_SIZE;
+      if (DocHistory[doc][i].HistUrl == NULL)
+	SetArrowButton (doc, FALSE, FALSE);
+    }
    
-   /*
-   ** load the next document
-   */
-   if (!next_doc_loaded)
-     DocHistoryIndex[doc] = next;
+  /*
+  ** load the next document
+  */
+  if (!next_doc_loaded)
+    DocHistoryIndex[doc] = next;
 
-   /* save the context */
-   ctx = TtaGetMemory (sizeof (GotoHistory_context));
-   ctx->prevnext = next;
-   ctx->doc = doc;
-   ctx->next_doc_loaded = next_doc_loaded;
-   ctx->initial_url = TtaStrdup (initial_url);
+  /* save the context */
+  ctx = TtaGetMemory (sizeof (GotoHistory_context));
+  ctx->prevnext = next;
+  ctx->doc = doc;
+  ctx->next_doc_loaded = next_doc_loaded;
+  ctx->initial_url = TtaStrdup (initial_url);
 
-   /* is it the current document ? */
-   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
-     /* it's just a move in the same document */
-     GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
-   else
-     {
-       StopTransfer (doc, 1);
-       (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
-     }
+  /* is it the current document ? */
+  if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
+    /* it's just a move in the same document */
+    GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
+  else
+    {
+      StopTransfer (doc, 1);
+      (void) GetHTMLDocument (url, form_data, doc, doc, method, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
+      /* out of the critic section */
+      Back_Forward = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------

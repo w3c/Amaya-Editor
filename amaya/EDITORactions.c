@@ -2744,10 +2744,3 @@ void CustomQuery (Document document, View view)
   CustomQueryMenuInit (document, view);
 #endif /* ANNOTATIONS */
 }
-
-
-
-
-
-
-
