@@ -3877,6 +3877,7 @@ RULES
 
  C_Empty: BEGIN
 	Width: 0;
+	FillPattern: nopattern;
 	if within ISINDEX
 	   Height: 1 pt;
 	IN Structure_view
@@ -5318,6 +5319,7 @@ RULES
 	BEGIN
 	VertPos : Top = Enclosing . Top;
 	Height: TableSimpleVSpace;
+	FillPattern: nopattern;
 	END;
 
  thead:
@@ -5447,6 +5449,7 @@ RULES
  C_Foot:
 	BEGIN
 	Height : TableSimpleHSpace;
+	FillPattern: nopattern;
 	END;
 
  Division:

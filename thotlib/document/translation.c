@@ -2345,7 +2345,6 @@ boolean            *removeEl;
 {
    PtrElement          pElGet, pRefEl;
    PtrDocument         pDocGet;
-   Name                fname;
    PtrSSchema          pSS;
    Name                n;
    DocumentIdentifier  docIdent;
@@ -2359,6 +2358,7 @@ boolean            *removeEl;
    int                 i, j;
    char                secondaryFileName[MAX_PATH];
    char               *nameBuffer;
+   char                fname[MAX_PATH];
    char                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
    PathBuffer          directoryName;
    FILE               *newFile;
@@ -2981,34 +2981,25 @@ boolean            *removeEl;
 	       break;
 	    case TInclude:
 	       /* inclusion d'un fichier */
-	       /* compose le nom du fichier a ouvrir avec le nom du directory */
-	       /* des schemas... */
 	       if (pTRule->TrBufOrConst == ToConst)
 		 {
-		    j = 0;
 		    i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
-		    while (pTSch->TsConstant[i] != '\0' && j < MAX_TXT_LEN - 1)
-		       fname[j++] = pTSch->TsConstant[i++];
-		    fname[j] = '\0';
+		    strncpy(fname, &pTSch->TsConstant[i], MAX_PATH - 1);
 		 }
 	       else if (pTRule->TrBufOrConst == ToBuffer)
-		 {
-		    /* le nom du fichier est dans un buffer */
-		    i = 0;
-		    while (pTSch->TsBuffer[pTRule->TrInclFile - 1][i] != '\0' &&
-			   i < MAX_TXT_LEN - 1)
-		      {
-			 fname[i] = pTSch->TsBuffer[pTRule->TrInclFile - 1][i];
-			 i++;
-		      }
-		    fname[i] = '\0';
-		 }
+		  /* le nom du fichier est dans un buffer */
+		  strncpy (fname, &pTSch->TsBuffer[pTRule->TrInclFile - 1],
+			   MAX_PATH - 1);
 	       if (fname[0] == '\0')
 		  /* pas de nom de fichier */
 		  fullName[0] = '\0';
+	       else if (fname[0] == '/')
+		  /* nom de fichier absolu */
+	          strcpy (fullName, fname);
 	       else
 		 {
-		    /* construit le nom de fichier */
+	           /* compose le nom du fichier a ouvrir avec le nom du
+		      directory des schemas... */
 		    strncpy (directoryName, SchemaPath, MAX_PATH);
 		    MakeCompleteName (fname, "", directoryName, fullName, &i);
 		 }

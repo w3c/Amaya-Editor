@@ -12,7 +12,7 @@
 
 <H4>Translated from French by Ethan Munson</H4>
 
-<H4>Version of March 10, 1997</H4>
+<H4>Version of March 26, 1997</H4>
 
 <P>&copy; 1996 INRIA
 
@@ -5207,8 +5207,8 @@ When a box can be cut by a page break, it is possible that a page break will
 fall an inappropriate spot, creating, for example, a widow or orphan, or
 separating the title of a section from the first paragraph of the section. The
 <TT>NoBreak1</TT> and <TT>NoBreak2</TT> rules are used to avoid this. They
-specify that the box of the element type to which they apply cannot be cut
-within a certain zone above (<TT>NoBreak1</TT> rule) or below
+specify that the box of the element to which they apply cannot be cut within
+a certain zone at the top (<TT>NoBreak1</TT> rule) or at the bottom
 (<TT>NoBreak2</TT> rule).  These two rules specify the height of the zones in
 which page breaks are prohibited.</P>
 <P>
@@ -5642,9 +5642,10 @@ transmitted by inheritance to the graphic elements.  As with the other rules
 specific to graphics, only identical inheritance is allowed.</P>
 <P>
 The <TT>FillPattern</TT> rule can also be used to determine whether or not
-text characters, symbols and graphics should be colored.  For these element
-types (text, symbols, and graphics), the only valid values are nopattern,
-foregroundcolor, and backgroundcolor.  When <TT>FillPattern</TT> has the value
+text characters, symbols and pictures should be colored.  For these element
+types (text, symbols, and pictures), the only valid values are
+<TT>nopattern</TT>, <TT>foregroundcolor</TT>, and
+<TT>backgroundcolor</TT>.  When <TT>FillPattern</TT> has the value
 <TT>backgroundcolor</TT>, text characters, symbols, and bitmaps are given the
 color specified by the <A href="#sectc4230"><TT>Background</TT> rule</A> which
 applies to these elements.  When <TT>FillPattern</TT> has the value
@@ -7372,7 +7373,8 @@ schema are modified.</P>
 During translation, the file to be included is searched for along the schema
 directory path (indicated by the environment variable <TT>THOTSCH</TT>).  The
 file name is normally only composed of a simple name, without specification of
-a complete file path.</P>
+a complete file path.  However, if the filename starts with a '/', it is
+considered as an absolute path.</P>
 <PRE>
                 'Include' File [ Position ] ';'
      File     = FileName / BufferID .
