@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -242,7 +242,6 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
  *                                                                        *
  *  RETURNS : TRUE  - if successful.                                      *
  *            FALSE - otherwise.                                          *
- *                                                                        *
  * ---------------------------------------------------------------------- */
 BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 {
@@ -363,28 +362,26 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   pFrame->FrClipYEnd = PixelValue (32000, UnPoint, NULL, 0);
   y = 0;
   h = 32000;
-  /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
-  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
-
+  /* set the clipping to the frame size before generating postscript */
+  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin,
+		  &y, &framexmax, &h, 1);
   /* Look for the first terminal box of the current page */
   pAb = pPage->AbFirstEnclosed;
-  while (pAb != NULL && pAb->AbFirstEnclosed != NULL)
+  while (pAb && pAb->AbFirstEnclosed)
       pAb = pAb->AbFirstEnclosed;
   pBox = pAb->AbBox;
-
   /* print all boxes of the current page*/
-  while (pBox != NULL && IsParentBox (pPage->AbBox, pBox))
+  while (pBox && IsParentBox (pPage->AbBox, pBox))
     {
       DisplayBox (pBox, frame, framexmin, framexmax, y, h);
       pBox = pBox->BxNext;
     }
 
   /* Set the top margin to the page body position on the paper */
-  FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0) + pPage->AbBox->BxHeight;
-
+  FrameTable[frame].FrTopMargin += pPage->AbBox->BxHeight;
   /* Remove all boxes within the page element except the line */
   pAb = pPage->AbFirstEnclosed;
-  while (pAb != NULL)
+  while (pAb)
     {
       if (pAb->AbPresentationBox)
 	{
@@ -1447,15 +1444,13 @@ static void ClipOnPage (int frame, int org, int width, int height)
     {
       pFrame = &ViewFrameTable[frame - 1];
       /* On convertit suivant l'unite donnee */
-      /* y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
-	 h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0); */
-      y = org;
-      h = y + height;
       pFrame->FrClipXBegin = 0;
       pFrame->FrClipXEnd = width;
-      pFrame->FrClipYBegin = y;
-      pFrame->FrYOrg = y;
-      pFrame->FrClipYEnd = h;
+      pFrame->FrClipYBegin = org;
+      pFrame->FrYOrg = org;
+      pFrame->FrClipYEnd = org + height;
+      y = org;
+      h = height;
       /* set the clipping to the frame size before generating postscript */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin,
 		      &y, &framexmax, &h, 1);
@@ -2383,10 +2378,10 @@ int main (int argc, char **argv)
   /* Initialisation de la gestion memoire */
   InitKernelMemory ();
   InitEditorMemory ();
+  ShowOnePage = TRUE;
 
   if (argc < 4)
     usage (argv[0]);
-
   TtaInitializeAppRegistry (argv[0]);
   argCounter = 1;
 

@@ -1225,10 +1225,7 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
 		if (!possibleCut)
 		  /* if any other cut box found, we'll use that */
 		  possibleCut = pAb;
-		/*if (pAb->AbNext)*/
-		  pAb = pAb->AbNext;
-		  /*else if (!possibleCut)
-		    SearchNextAbsBox (pAb, NULL);*/
+		pAb = pAb->AbNext;
 	      }
 	    else
 	      /* insert the page-break before that abstract box */

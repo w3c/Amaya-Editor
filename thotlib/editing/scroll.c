@@ -501,10 +501,11 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 	     while (pBoxFirst->BxAbstractBox->AbPresentationBox &&
 		    pBoxFirst != pBoxLast)
 		pBoxFirst = pBoxFirst->BxNext;
-	     while (pBoxLast->BxAbstractBox->AbPresentationBox &&
-		    pBoxLast->BxPrevious->BxAbstractBox &&
-		    pBoxFirst != pBoxLast)
-		pBoxLast = pBoxLast->BxPrevious;
+	     if (pBoxFirst != pBoxLast)
+	       while (pBoxLast->BxAbstractBox->AbPresentationBox &&
+		      pBoxLast->BxPrevious->BxAbstractBox &&
+		      pBoxFirst != pBoxLast)
+		 pBoxLast = pBoxLast->BxPrevious;
 
 	     /* Evalue la hauteur et la position Y par rapport a l'image
 		abstraite */

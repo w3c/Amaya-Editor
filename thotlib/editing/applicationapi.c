@@ -267,6 +267,7 @@ void TtaInitialize (char *applicationName)
    InitEditorMemory ();	      /* Initializes the memory managment of the editor */
    InitNatures ();	      /* Initializes the table of Natures */
    FullStructureChecking = FALSE;
+   ShowOnePage = FALSE;
    /* Initializes the table of documents */
    for (i = 0; i < MAX_DOCUMENTS; i++)
       LoadedDocument[i] = NULL;

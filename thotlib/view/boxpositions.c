@@ -321,12 +321,12 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
 		      pAb->AbOnPageBreak = TRUE;
 		      pAb->AbAfterPageBreak = FALSE;
 		    }
-		} else
-		  { /*if != BoGhost */
-		    pAb->AbOnPageBreak = FALSE;
-		    pAb->AbAfterPageBreak = FALSE;
-		  }
-	      
+		}
+	      else
+		{ /*if != BoGhost */
+		  pAb->AbOnPageBreak = FALSE;
+		  pAb->AbAfterPageBreak = FALSE;
+		}
 	      /* traite les paves fils */
 	      pChildAb = pAb->AbFirstEnclosed;
 	      if (pAb->AbBox->BxType == BoTable)
