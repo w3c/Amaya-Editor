@@ -1853,35 +1853,37 @@ View                view;
    designe.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GiveClickedAbsBox (int *frame, int *pave)
+void                GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 
 #else  /* __STDC__ */
 void                GiveClickedAbsBox (frame, pave)
 int                *frame;
-int                *pave;
+PtrAbstractBox     *pave;
 
 #endif /* __STDC__ */
 
 {
-#  ifndef _WINDOWS
-   ThotEvent              event;
-#  else  /* _WINDOWS */
-   MSG     event;
-   HCURSOR cursor;          
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+   ThotEvent           event;
    Drawable            drawable;
+#else  /* _WINDOWS */
+   MSG                 event;
+   HCURSOR             cursor;          
+#endif /* _WINDOWS */
    int                 i;
 
-   if (ClickIsDone == 1) {
+   if (ClickIsDone == 1)
+     {
        *frame = 0;
-       *pave = 0;
-   }
+       *pave = NULL;
+     }
 
    /* Changement du curseur */
 #  ifdef _WINDOWS
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
 #  else  /* !_WINDOWS */
-   for (i = 1; i <= MAX_FRAME; i++) {
+   for (i = 1; i <= MAX_FRAME; i++)
+     {
        drawable = TtaGetThotWindow (i);
        if (drawable != 0)
           XDefineCursor (TtDisplay, drawable, WindowCurs);
@@ -1893,34 +1895,34 @@ int                *pave;
    ClickFrame = 0;
    ClickX = 0;
    ClickY = 0;
-
-   while (ClickIsDone == 1) {
-#        ifndef _WINDOWS 
+   while (ClickIsDone == 1)
+     {
+#ifndef _WINDOWS 
          TtaFetchOneEvent (&event);
          TtaHandleOneEvent (&event);
-#        else /* _WINDOWS */
+#else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
          TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
-#        endif /* !_WINDOWS */
-     }				/*while */
+#endif /* !_WINDOWS */
+     }
 
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#   ifndef _WINDOWS
-	drawable = TtaGetThotWindow (i);
-	if (drawable != 0)
-	   XUndefineCursor (TtDisplay, drawable);
-#   endif /* _WINDOWS */
+#ifndef _WINDOWS
+       drawable = TtaGetThotWindow (i);
+       if (drawable != 0)
+	 XUndefineCursor (TtDisplay, drawable);
+#endif /* _WINDOWS */
      }
 
    *frame = ClickFrame;
    if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
-      *pave = (int) GetClickedAbsBox (ClickFrame, ClickX, ClickY);
+     *pave = GetClickedAbsBox (ClickFrame, ClickX, ClickY);
    else
-      *pave = 0;
-}				/*GiveClickedAbsBox */
+     *pave = NULL;
+}
 
 
 /*----------------------------------------------------------------------

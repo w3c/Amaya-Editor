@@ -1393,7 +1393,7 @@ Element            *element;
 	*element = (Element) None;
 	*document = (Document) None;
 
-	GiveClickedAbsBox (&frame, (int *) &absBox);
+	GiveClickedAbsBox (&frame, &absBox);
 	if (frame == 0 || absBox == 0)
 	   return;
 	else
