@@ -1,0 +1,42 @@
+This file lists the bugs that have been fixed and the extensions that
+have been introduced in Amaya and Thot since version 1.4 of Amaya.
+ 
+=============================================================
+1.5
+=============================================================
+
+Extensions 1.5:
+---------------
+
+* First implementation of Undo.
+
+* WAI comments on Image and Maps.
+
+* COLGROUP and COL elements are accepted and can be created within TABLE elements,
+  but the rendering is not implemented yet.
+
+* CSS left margin and top margin are now interpreted as positionning into 
+  enclosing element.
+
+* Publication thru the net now uses the HTTP/1.1 etags and conditional
+  headers to avoid the lost updates problem.
+
+Fixed bugs 1.5:
+---------------
+
+* Scripts can now be created within the document Body and are no longer
+  moved into the Head at the parsing time.
+
+* When creating a new polyline in an area map there was a bug which
+  generated wrong coords values on Windows platforms.
+
+* Comments in files amaya.keyboard and amaya.kb are now allowed.
+
+* When a document included the sequence <form>..<table>..</form>..</table>
+  Amaya closed the table at the end of the form. Now it reports a parsing error
+  on the end tag </form> and avoids to split the table.
+
+* Copy of an image from a remote document to a local document didn't work.
+
+* When following a link which had a "?foo" ending, Amaya treated that
+  ending as a query string

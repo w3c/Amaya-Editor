@@ -4082,7 +4082,7 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	Foreground: Black;
+	Foreground: Creator =;
 	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view
@@ -7329,6 +7329,7 @@ RULES
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = Previous . Bottom + 0.2;
 	LineWeight: 1 px;
+	Foreground: Black;
 	IN Alternate_view
 		BEGIN
 		Height: 1;
