@@ -11,7 +11,8 @@ extern int GetDistance ( int value,
 extern int GetBoxDistance ( PtrBox pBox,
                             int xRef,
                             int yRef,
-                            int ratio );
+                            int ratio,
+                            int frame );
 extern void GetClickedBox ( PtrBox *result,
                             PtrAbstractBox pRootAb,
                             int frame,
@@ -27,7 +28,8 @@ extern int GetDistance (/* int value,
 extern int GetBoxDistance (/* PtrBox pBox,
                               int xRef,
                               int yRef,
-                              int ratio */);
+                              int ratio,
+                              int frame */);
 extern void GetClickedBox (/* PtrBox *result,
                               PtrAbstractBox pRootAb,
                               int frame,

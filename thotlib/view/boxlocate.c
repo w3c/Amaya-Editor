@@ -1825,7 +1825,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 			   pBox->BxType == BoBlock || pBox->BxNChars == 0)
 #endif /* _GL */
 		       )
-		d = GetBoxDistance (pBox, xRef, yRef, Y_RATIO);
+		d = GetBoxDistance (pBox, xRef, yRef, Y_RATIO, frame);
 	      else
 		d = max + 1;
 

@@ -237,15 +237,15 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 {
   PtrBox              from;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
+  PtrDocument         pDoc;
   ViewFrame          *pFrame;
   PictInfo           *imageDesc;
   PictureScaling      pres;
-  int                 x, y;
-  int                 xd, yd;
+  int                 x, y, xd, yd;
   int                 xbg, ybg;
   int                 width, height;
   int                 wbg, hbg;
-  int                 w, h;
+  int                 w, h, view;
   int                 t, b, l, r;
   ThotBool            setWindow, isLast;
 
@@ -341,12 +341,16 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   if (!setWindow &&
       TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			pAb->AbElement->ElStructSchema))
-    /* paint the whole window background when the fill applies to the document */
-    setWindow = (pAb->AbDocView == 1 &&
-		 (pAb->AbEnclosing == NULL || /* document */
-		  pAb->AbEnclosing->AbEnclosing == NULL || /* html */
-		  (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
-		   pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
+    {
+      /* paint the whole window background when the fill applies to the document */
+      pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+      view = pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView;
+      setWindow = (view == 1 &&
+		   (pAb->AbEnclosing == NULL || /* document */
+		    pAb->AbEnclosing->AbEnclosing == NULL || /* html */
+		    (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
+		     pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
+    }
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */

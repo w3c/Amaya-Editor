@@ -24,6 +24,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
+#include "edit_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 
@@ -63,14 +64,24 @@ int GetDistance (int value, int delta)
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio)
+int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio, int frame)
 {
   PtrAbstractBox      pCell;
+  PtrDocument         pDoc;
   int                 value, x, y, width, height;
-  int                 xcell, ycell, wcell, hcell;
+  int                 xcell, ycell, wcell, hcell, view;
 
+  if (pBox == NULL || pBox->BxAbstractBox == NULL ||
+      FrameTable[frame].FrDoc == 0)
+    return MAX_DISTANCE;
   /* check limits given by an enclosing cell */
-  pCell = GetParentCell (pBox);
+  pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+  view = pDoc->DocView[pBox->BxAbstractBox->AbDocView - 1].DvPSchemaView;
+  if (view == 1)
+    pCell = GetParentCell (pBox);
+  else
+    pCell = NULL;
+
   if (pCell && pCell->AbPrevious && pCell->AbPrevious->AbPresentationBox)
     /* use the pesentation box limits */
     pCell = pCell->AbPrevious;
@@ -200,7 +211,7 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 			  if (x > d)
 			    pointIndex = 1;
 			}
-		      d = GetBoxDistance (pBox, x, y, ratio);
+		      d = GetBoxDistance (pBox, x, y, ratio, frame);
 		      if (d > dist && dist == MAX_DISTANCE)
 			/* it's the first box selected */
 			dist = d;
