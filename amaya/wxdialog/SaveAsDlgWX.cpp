@@ -80,7 +80,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
   
   // Charset  
-  wxString wx_label = TtaConvMessageToWX( "Charset : " );
+  wxString wx_label = TtaConvMessageToWX( "Charset :" );
   wxString wx_ascii = TtaConvMessageToWX( "us-ascii" );
   wxString wx_iso_8859_1 = TtaConvMessageToWX( "iso-8859-1" );
   wxString wx_utf8 = TtaConvMessageToWX( "UTF-8" );
@@ -113,11 +113,11 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
       XRCCTRL(*this, "wxID_CHARSET_CB",
 	      wxComboBox)->Append ( TtaConvMessageToWX( "iso-8859-1" ) );
     }
-      XRCCTRL(*this, "wxID_CHARSET_CB",
-	      wxComboBox)->SetSelection (0);
+  XRCCTRL(*this, "wxID_CHARSET_CB",
+	  wxComboBox)->SetSelection (0);
 
   // Mime Type
-  wx_label = TtaConvMessageToWX( "   Mime Type : " );
+  wx_label = TtaConvMessageToWX( " Mime Type :" );
   XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_label );
 
   doc_type = DocumentTypes[doc];
