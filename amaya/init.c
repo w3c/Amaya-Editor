@@ -2021,10 +2021,9 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
 #ifdef _WX
   {
     ThotBool created;
-    /* !! be carfull: here we pass 'URL_list',
-       not 's' as above because we want generate a combobox choice list */
+    /* here we pass also 'URL_list', because we want generate a combobox choice list */
     created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
-				  TtaGetViewFrame (doc, view), title, URL_list, name,
+				  TtaGetViewFrame (doc, view), title, URL_list, s, name,
 				  DocSelect, DirSelect, docType );
     if (created)
       {

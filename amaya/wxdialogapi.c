@@ -108,6 +108,7 @@ ThotBool CreateOpenDocDlgWX ( int ref,
 			      ThotWindow parent,
 			      const char *title,
 			      const char *urlList,
+			      const char *urlToOpen,
 			      const char *docName,
 			      int doc_select,
 			      int dir_select,
@@ -166,8 +167,9 @@ ThotBool CreateOpenDocDlgWX ( int ref,
     }
 
   /* the first url in the list is the used one for the current frame */
-  wxString firsturl = TtaConvMessageToWX( urlList );
-  p_dlg->SetCurrentURL( firsturl );
+  wxString firsturl  = TtaConvMessageToWX( urlList );
+  wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
+  p_dlg->SetCurrentURL( wx_urlToOpen/*firsturl*/ );
   /* ---------------------------------------------------------- */
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
