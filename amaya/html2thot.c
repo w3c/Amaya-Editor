@@ -228,7 +228,7 @@ MathEntity        MathEntityTable[] =
    {"delta", 100, 'G'},
    {"ee", 101, 'L'},
    {"gt", 62, 'L'},
-   {"inf", 165, 'G'},		/* infinity */
+   {"infin", 165, 'G'},		/* infinity */
    {"int", 242, 'G'},
    {"it", 242, 'G'},
    {"lt", 62, 'L'},
@@ -761,7 +761,7 @@ static int          LgBuffer = 0;	  /* actual length of text in input
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
 static Language     documentLanguage;	  /* language used in the document */
-static SSchema      HTMLSSchema;	  /* the HTML structure schema */
+static SSchema      HTMLSSchema = NULL;	  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
 static boolean      lastElementClosed = FALSE;/* last element is complete */
@@ -980,7 +980,12 @@ SSchema		   *schema;
       if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
          {
 	 entry = i;
-	 *schema = HTMLSSchema;
+/******
+	 if (HTMLSSchema == NULL)
+	    *schema = TtaGetSSchema ("HTML", doc);
+	 else
+*****/
+	    *schema = HTMLSSchema;
 	 }
       else
 	 i++;
@@ -995,7 +1000,12 @@ SSchema		   *schema;
          if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
 	    {
 	    entry = i;
-	    *schema = MathMLSSchema;
+/*****
+	    if (MathMLSSchema == NULL)
+	       *schema = TtaGetSSchema ("MathML", doc);
+	    else
+******/
+	       *schema = MathMLSSchema;
 	    }
          else
 	    i++;
@@ -1027,7 +1037,12 @@ ElementType        *elType;
      {
 	if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	  {
-	    elType->ElSSchema = HTMLSSchema;
+/******
+	    if (HTMLSSchema == NULL)
+	       elType->ElSSchema = TtaGetSSchema ("HTML", doc);
+	    else
+******/
+	       elType->ElSSchema = HTMLSSchema;
 	    elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	    return;
 	  }
@@ -1040,7 +1055,12 @@ ElementType        *elType;
      {
 	if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
 	  {
-	    elType->ElSSchema = MathMLSSchema;
+/******
+	    if (MathMLSSchema == NULL)
+	       elType->ElSSchema = TtaGetSSchema ("MathML", doc);
+	    else
+******/
+	       elType->ElSSchema = MathMLSSchema;
 	    elType->ElTypeNum = MathMLGIMappingTable[i].ThotType;
 	    return;
 	  }
@@ -1048,45 +1068,6 @@ ElementType        *elType;
      }
    while (MathMLGIMappingTable[i].htmlGI[0] != EOS);
 #endif /* MATHML */
-}
-
-/*----------------------------------------------------------------------
-   GITagName search in GIMappingTable the name for a given element
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char               *GITagName (Element elem)
-#else
-char               *GITagName (elem)
-Element             elem;
-
-#endif
-{
-   int                 i;
-   ElementType         elType;
-
-   elType = TtaGetElementType (elem);
-   i = 0;
-   do
-     {
-	if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
-	    strcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))
-	   return (char *) HTMLGIMappingTable[i].htmlGI;
-	i++;
-     }
-   while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
-#ifdef MATHML
-   /* tag name not found in HTMLGIMappingTable */
-   /* search in MathMLGIMappingTable */
-   i = 0;
-   do
-     {
-	if (MathMLGIMappingTable[i].ThotType == elType.ElTypeNum)
-	   return (char *) MathMLGIMappingTable[i].htmlGI;
-	i++;
-     }
-   while (MathMLGIMappingTable[i].htmlGI[0] != EOS);
-#endif /* MATHML */
-   return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1105,7 +1086,7 @@ ElementType elType;
    if (elType.ElTypeNum > 0)
      {
 	i = 0;
-	if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+	if (strcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  do
 	    {
 	     if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
@@ -1115,7 +1096,7 @@ ElementType elType;
 	    }
 	  while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
 #ifdef MATHML
-	else if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
+	else if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  do
 	    {
 	     if (MathMLGIMappingTable[i].ThotType == elType.ElTypeNum)
@@ -1126,6 +1107,23 @@ ElementType elType;
 #endif /* MATHML */
      }
    return "???";
+}
+
+/*----------------------------------------------------------------------
+   GITagName search in GIMappingTable the name for a given element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char               *GITagName (Element elem)
+#else
+char               *GITagName (elem)
+Element             elem;
+
+#endif
+{
+   ElementType         elType;
+
+   elType = TtaGetElementType (elem);
+   return (GITagNameByType (elType));
 }
 
 /*----------------------------------------------------------------------
@@ -7065,6 +7063,8 @@ char               *pathURL;
 	   TtaSetStructureChecking (1, theDocument);
 	   /* allow the user to edit the document */
 	   /***** TtaSetDocumentAccessMode(theDocument, 1); ****/
+	   MathMLSSchema = NULL;
+	   HTMLSSchema = NULL;
 	}
 	/* close the HTML file */
 	fclose (infile);
