@@ -99,10 +99,6 @@ SOURCE=..\..\batch\str.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\batch\writestr.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\LibThotKernel.lib
 # End Source File
 # End Target

@@ -1518,7 +1518,7 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
 {
   ThotBool   doit;
   char       TmpTextAttrValue[LgMaxAttrText];
-  int        TmpNumCurrentAttr, lang;
+  int        TmpNumCurrentAttr;
 
   doit = FALSE;
   switch (ref)

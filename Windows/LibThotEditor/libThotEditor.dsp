@@ -582,6 +582,14 @@ SOURCE=..\..\thotlib\document\writepivot.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\document\writeprs.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\document\writestr.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\image\xpmhandler.c
 # End Source File
 # End Target

@@ -98,9 +98,5 @@ SOURCE=..\..\batch\parser.c
 
 SOURCE=..\..\batch\prs.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\batch\writeprs.c
-# End Source File
 # End Target
 # End Project
