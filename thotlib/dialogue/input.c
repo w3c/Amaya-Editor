@@ -784,9 +784,11 @@ int                 key;
 	      {
 		if (ptr != NULL)
 		  {
-		    if (ptr->K_EntryCode == key
 #ifdef _WINDOWS
-			  && ptr->K_Special == specialKey)
+		    if (ptr->K_EntryCode == key
+			&& ptr->K_Special == specialKey)
+#else /* _WINDOWS */
+		    if (ptr->K_EntryCode == key)
 #endif /* _WINDOWS */
 		      {
 			    /* On entre dans un automate */
