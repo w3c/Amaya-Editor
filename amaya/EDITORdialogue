@@ -123,7 +123,6 @@
 122  BFont
 123  BTransform
 124  TSectionNumber
-125  TLinkNumber
-126  BMakeBook
-127  BRtimeHTML
-128  BInformation
+125  BMakeBook
+126  BRtimeHTML
+127  BInformation

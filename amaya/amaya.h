@@ -249,6 +249,8 @@ THOT_EXPORT char        *DocumentName;	/* document name                    */
 THOT_EXPORT char        *ObjectName;		/* document name                    */
 THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char        *TargetName;
+THOT_EXPORT boolean	 SaveAsHTML;
+THOT_EXPORT boolean	 SaveAsText;
 THOT_EXPORT int          CopyImages;		/* should we copy images in Save As */
 THOT_EXPORT int          UpdateURLs;		/* should we update URLs in Save As */
 THOT_EXPORT boolean      UserAnswer;

@@ -1906,6 +1906,31 @@ boolean             parsing;
 }
 
 /*----------------------------------------------------------------------
+   LastLeafInElement
+   return the last leaf element in element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element      LastLeafInElement (Element el)
+#else
+static Element      LastLeafInElement (el)
+Element             el;
+
+#endif
+{
+   Element             child, lastLeaf;
+
+   child = el;
+   lastLeaf = NULL;
+   while (child != NULL)
+     {
+       child = TtaGetLastChild (child);
+       if (child != NULL)
+	 lastLeaf = child;
+     }
+   return lastLeaf;
+}
+
+/*----------------------------------------------------------------------
    ElementComplete
    Element el is complete. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
@@ -1923,6 +1948,7 @@ Element             el;
    AttributeType       attrType;
    int                 length;
    char               *text;
+   char                lastChar[2];
    Language            lang;
 
 #ifdef STANDALONE
@@ -2031,6 +2057,35 @@ Element             el;
 		     }
 		   TtaFreeMemory (text);
 		   }
+	       break;
+
+            case HTML_EL_Preformatted:          /* it's a preformatted */
+               /* if the last line of the Preformatted is empty, remove it */
+	       leaf = LastLeafInElement (el);
+	       if (leaf != NULL)
+		  {
+		    elType = TtaGetElementType (leaf);
+		    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		      /* the last leaf is a TEXT element */
+		      {
+			length = TtaGetTextLength (leaf);
+			if (length > 0)
+			  {
+			     TtaGiveSubString (leaf, lastChar, length, 1);
+			     if (lastChar[0] == (char) 138)
+				/* last character is new line, delete it */
+				{
+			        if (length == 1)
+			          /* empty TEXT element */
+			          TtaDeleteTree (leaf, theDocument);
+			        else
+			          /* remove the last character */
+			          TtaDeleteTextContent (leaf, length, 1,
+						        theDocument);
+				}
+			  }
+		      }
+		  }
 	       break;
 
 	    case HTML_EL_Text_Area:	/* it's a Text_Area */
@@ -2184,7 +2239,7 @@ int                 start;
 {
    int                 i, length, nbspaces;
    ElementType         elType, parentType;
-   Element             el, parent, lastLeaf, child;
+   Element             el, parent, lastLeaf;
    char                lastChar[2];
    boolean             ret, stop, lastSpacesDeleted;
 
@@ -2311,14 +2366,7 @@ int                 start;
 	       if (!lastSpacesDeleted && IsBlockElement (el))
 		 {
 		   /* it's a block element. Search its last leaf */
-		   child = el;
-		   lastLeaf = NULL;
-		   while (child != NULL)
-		     {
-		       child = TtaGetLastChild (child);
-		       if (child != NULL)
-			 lastLeaf = child;
-		     }
+		   lastLeaf = LastLeafInElement (el);
 		   if (lastLeaf != NULL)
 		     {
 		       elType = TtaGetElementType (lastLeaf);
@@ -4180,7 +4228,12 @@ char               *HTMLbuf;
 		      if (Within (HTML_EL_Preformatted) &&
 			  !Within (HTML_EL_Option_Menu))
 			/* within preformatted text */
-			charRead = (unsigned char) 138; /* new line for Thot */
+			if (AfterTagPRE)
+			   /* ignore NL after a <PRE> tag */
+			   charRead = '\0';
+			else
+			   /* generate a Thor new line character */
+			   charRead = (unsigned char) 138;
 		      else
 			/* new line in ordinary text */
 		        {
@@ -4218,8 +4271,8 @@ char               *HTMLbuf;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
-		       if (!Within (HTML_EL_Preformatted))
-			  charRead = SPACE;
+		          if (!Within (HTML_EL_Preformatted))
+			     charRead = SPACE;
 		    }
 		  if (charRead == SPACE)
 		     /* space character */

@@ -611,7 +611,6 @@ char               *pathname;
 	     }
 	TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
-	TtaSetToggleItem (doc, 1, Special, TLinkNumber, FALSE);
 	/* remove the current selection */
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
@@ -1568,10 +1567,28 @@ char               *data;
 	    case ToggleSave:
 	       switch (val)
 		     {
-			case 0:
+			case 0:	/* "Save as HTML" button */
+			   SaveAsHTML = !SaveAsHTML;
+			   SaveAsText = !SaveAsHTML;
+			   TtaSetToggleMenu (BaseDialog + ToggleSave, 1,
+					     SaveAsText);
+			   break;
+			case 1:	/* "Save as Text" button */
+			   SaveAsText = !SaveAsText;
+			   SaveAsHTML = !SaveAsText;
+			   TtaSetToggleMenu (BaseDialog + ToggleSave, 0,
+					     SaveAsHTML);
+			   CopyImages = FALSE;
+			   TtaSetToggleMenu (BaseDialog + ToggleSave, 3,
+					     CopyImages);
+			   UpdateURLs = FALSE;
+			   TtaSetToggleMenu (BaseDialog + ToggleSave, 4,
+					     UpdateURLs);
+			   break;
+			case 3:	/* "Copy Images" button */
 			   CopyImages = !CopyImages;
 			   break;
-			case 1:
+			case 4:	/* "Transform URLs" button */
 			   UpdateURLs = !UpdateURLs;
 			   break;
 		     }
@@ -1801,6 +1818,8 @@ NotifyEvent        *event;
    ObjectName[0] = EOS;
    SaveImgsURL = TtaGetMemory (MAX_LENGTH);
    SaveImgsURL[0] = EOS;
+   SaveAsHTML = TRUE;
+   SaveAsText = FALSE;
    CopyImages = 1;
    UpdateURLs = 1;
    SavingFile = TtaGetMemory (MAX_LENGTH);
@@ -1923,45 +1942,6 @@ View                view;
    if (!docModified)
 	TtaSetDocumentUnmodified (document);
 }
-
-
-/*----------------------------------------------------------------------
-  LinkNumbering
-  The user wants to number links if they are not currently numbered,
-  or to stop numbering if links are numbered.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LinkNumbering (Document document, View view)
-#else
-void                LinkNumbering (document, view)
-Document            document;
-View                view;
-#endif
-{
-   Element	    root;
-   AttributeType    attrType;
-   Attribute	    attr;
-   boolean	    docModified;
-
-   docModified = TtaIsDocumentModified (document);
-   root = TtaGetMainRoot (document);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_LinkNumbering;
-   attr = TtaGetAttribute (root, attrType);
-   if (attr != NULL)
-      /* the root element has a LinkNumbering attribute. Remove it */
-      TtaRemoveAttribute (root, attr, document);
-   else
-      /* the root element has no LinkNumbering attribute. Create one */
-      {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (root, attr, document);
-        TtaSetAttributeValue (attr, 1, root, document);
-      }
-   if (!docModified)
-	TtaSetDocumentUnmodified (document);
-}
-
 
 /*----------------------------------------------------------------------
   UpdateURLsInSubtree
@@ -2264,9 +2244,9 @@ View                view;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
    SetInternalLinks (body, document);		
-   /********
-   TtaPrint (document, "Formatted_view Links_view");
-   *********/
+   /********/
+   TtaPrint (document, "Formatted_view Table_of_contents");
+   /*********/
 }
 
 

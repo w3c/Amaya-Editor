@@ -136,9 +136,8 @@
 #define BFont  122
 #define BTransform  123
 #define TSectionNumber  124
-#define TLinkNumber  125
-#define BMakeBook  126
-#define BRtimeHTML  127
-#define BInformation  128
+#define BMakeBook  125
+#define BRtimeHTML  126
+#define BInformation  127
 
-#define MAX_EDITOR_LABEL       130
+#define MAX_EDITOR_LABEL       129

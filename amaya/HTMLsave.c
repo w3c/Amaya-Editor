@@ -143,8 +143,57 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  InitSaveForm
+  Draw the Save As Dialog and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         InitSaveForm (Document document, View view, char *pathname)
+#else
+static void         InitSaveForm (document, view, pathname)
+Document            document;
+View                view;
+char               *pathname;
+
+#endif
+{
+   char                buffer[3000];
+
+   /* Dialogue form for saving in local */
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
+   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
+   sprintf (buffer, "%s%c%s%c%s%c%s%c%s", "BHTML", EOS, "BText", EOS, "S", EOS,
+	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
+	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
+   TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
+		     "Output format", 5, buffer, NULL, TRUE);
+   SaveAsHTML = TRUE;
+   SaveAsText = FALSE;
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
+   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),	    /* std thot msg */
+		     BaseDialog + DirSave, "",
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
+		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
+   TtaSetTextForm (BaseDialog + NameSave, pathname);
+   TtaNewLabel (BaseDialog + Lbl1Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Lbl2Save, BaseDialog + SaveForm, "");
+   TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
+		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
+   TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+   TtaNewLabel (BaseDialog + Lbl3Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Lbl4Save, BaseDialog + SaveForm, "");
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+}
+
+/*----------------------------------------------------------------------
    SaveHTMLDocumentAs                                              
-   Entry point called whenether the user select the SaveAs function
+   Entry point called when the user selects the SaveAs function
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocumentAs (Document document, View view)
@@ -201,12 +250,12 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   SaveinHTML save the local document in HTML format               
+   SaveDocumentLocally save the document in a local file.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SaveInHTML (char *directoryName, char *documentName)
+static void         SaveDocumentLocally (char *directoryName, char *documentName)
 #else
-void                SaveInHTML (directoryName, documentName)
+static void         SaveDocumentLocally (directoryName, documentName)
 char               *directoryName;
 char               *documentName;
 
@@ -218,57 +267,19 @@ char               *documentName;
    strcpy (tempname, directoryName);
    strcat (tempname, DIR_STR);
    strcat (tempname, documentName);
-   TtaExportDocument (SavingDocument, tempname, "HTMLT");
-   TtaSetDocumentDirectory (SavingDocument, directoryName);
-   strcpy (docname, documentName);
-   ExtractSuffix (docname, tempname);
-   /* Change the document name in all views */
-   TtaSetDocumentName (SavingDocument, docname);
-   TtaSetDocumentUnmodified (SavingDocument);
-}
-
-/*----------------------------------------------------------------------
-  InitSaveForm
-  Draw the Save As Dialog and prepare for input.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitSaveForm (Document document, View view, char *pathname)
-#else
-void                InitSaveForm (document, view, pathname)
-Document            document;
-View                view;
-char               *pathname;
-
-#endif
-{
-   char                buffer[3000];
-
-   /* Dialogue form for saving in local */
-   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
-   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
-   sprintf (buffer, "%s%c%s", TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
-	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-   TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-		     NULL, 2, buffer, NULL, TRUE);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, UpdateURLs);
-   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
-		     BaseDialog + DirSave, "",
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
-   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + NameSave, pathname);
-   TtaNewLabel (BaseDialog + Lbl1Save, BaseDialog + SaveForm, "");
-   TtaNewLabel (BaseDialog + Lbl2Save, BaseDialog + SaveForm, "");
-   TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-   TtaNewLabel (BaseDialog + Lbl3Save, BaseDialog + SaveForm, "");
-   TtaNewLabel (BaseDialog + Lbl4Save, BaseDialog + SaveForm, "");
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+   if (SaveAsText)
+      TtaExportDocument (SavingDocument, tempname, "HTMLTT");
+   else
+      {
+      TtaExportDocument (SavingDocument, tempname, "HTMLT");
+      TtaSetDocumentDirectory (SavingDocument, directoryName);
+      strcpy (docname, documentName);
+      ExtractSuffix (docname, tempname);
+      /* Change the document name in all views */
+      TtaSetDocumentName (SavingDocument, docname);
+      TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
+      TtaSetDocumentUnmodified (SavingDocument);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -1017,10 +1028,9 @@ void                DoSaveAs ()
 	 */
 	UpdateImages (imgbase, dst_is_local, tempfile);
 	/* save the local document */
-	SaveInHTML (DirectoryName, DocumentName);
-	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-	TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-	SavingDocument = (Document) None;
+	SaveDocumentLocally (DirectoryName, DocumentName);
+        TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
+        SavingDocument = (Document) None;
      }
    else if ((!src_is_local) && dst_is_local)
      {
@@ -1069,10 +1079,9 @@ void                DoSaveAs ()
 	/*
 	 * now save the file as-if
 	 */
-	SaveInHTML (DirectoryName, DocumentName);
-	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-	TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
-	SavingDocument = (Document) None;
+	SaveDocumentLocally (DirectoryName, DocumentName);
+        TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
+        SavingDocument = (Document) None;
      }
    else if (src_is_local && (!dst_is_local))
      {
