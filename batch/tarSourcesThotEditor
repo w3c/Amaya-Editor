@@ -14,8 +14,9 @@ COMPRESS="gzip -9"
 
 cd $THOTDIR
 
+cp thot/INSTALL INSTALL.thoteditor
 $TAR - \
-INSTALL \
+INSTALL.thoteditor \
 thot/COPYRIGHT \
 thot/COPYRIGHT.html \
 thot/NEWS.Thoteditor.2.0b \
@@ -131,3 +132,4 @@ config/unix-thot.rc \
 config/unix-thot.rc \
 config/thot.* \
  | $COMPRESS  > $DEST/thoteditor-src-$THOTVERSION.tar.gz
+rm -f INSTALL.thoteditor
