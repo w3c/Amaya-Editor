@@ -198,7 +198,7 @@ BOXES
         Content: (EntityName);
         Visibility: 0;
         IN Structure_view BEGIN
-                Visibility: ATTR_Visibility;	
+                Visibility: Enclosing =;	
 		Size: DOC_FONTSIZE;
 		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
