@@ -982,7 +982,8 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
   char                txt[400];
   int                 len;
 
-  /******* check buffer overflow ********/
+  /* First remove a previous value */
+  HTMLResetBackgroundImage (doc, el);
   sprintf (txt, "background-image: url(%s); background-repeat: ", image);
   if (repeat == REPEAT)
     strcat (txt, "repeat");

@@ -218,7 +218,8 @@ void CallbackImage (int ref, int typedata, char *data)
 		else
 		  i = SCALE;
 		if (IsHTTPPath (DocumentURLs[document]) &&
-		    !IsHTTPPath (LastURLImage))
+		    !IsHTTPPath (LastURLImage) &&
+		    TtaFileExist (LastURLImage))
 		  {
 		    /* load a local image into a remote document copy image
 		       file into the temporary directory of the document */
@@ -229,6 +230,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		      {
 			desc->status = IMAGE_MODIFIED;
 			TtaFileCopy (LastURLImage, desc->localName);
+			desc->tempfile = TtaStrdup (desc->localName);
 		      }
 		  } 
 		do
@@ -263,7 +265,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		    if (last == NULL || el == last)
 		      el = NULL;
 		    else
-		      TtaGiveNextSelectedElement (document, &el, &c1,&cN);
+		      TtaGiveNextSelectedElement (document, &el, &c1, &cN);
 		  } while (el);
 	      } 
 	    TtaCloseUndoSequence (document);
