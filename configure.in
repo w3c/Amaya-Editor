@@ -348,18 +348,24 @@ if test "$with_mesa" = "yes" ; then
   echo "---> Compiling Mesa library."
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
-    make linux
+    # compile only .a libraries because Amaya is linked staticaly with mesa
+    make linux-static    
+    if test $? != 0 ; then
+      AC_MSG_ERROR(A problem occurs durring Mesa library compilation. Please fix the problem and try again.)
+    fi
   fi
   echo "---> Compiling Mesa library. - DONE"
 
 
-  echo "---> Install Mesa library into Amaya."
+  echo "---> Install Mesa library into Amaya/Mesa/"
   mkdir -p $OLDDIR/../Mesa
   mkdir -p $OLDDIR/../Mesa/include
   mkdir -p $OLDDIR/../Mesa/lib
+  # copy includes
   cp -r include/GL $OLDDIR/../Mesa/include/
-  cp -r lib/* $OLDDIR/../Mesa/lib/
-  echo "---> Install Mesa library into Amaya. - DONE"
+  # copy libraries (only .a because we dont want to share)
+  cp lib/*.a $OLDDIR/../Mesa/lib/
+  echo "---> Install Mesa library into Amaya/Mesa/ - DONE"
 
 
   cd $OLDDIR
@@ -392,11 +398,18 @@ if test "$with_wx" = "yes" ; then
   # setup configure options
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
-    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode"
+    #   --enable-gtk2           use GTK+ 2.0 if available (EXPERIMENTAL)
+    #   --enable-shared         create shared library code
+    #   --enable-unicode        compile wxString with Unicode support
+    #   --with-gtk              use GTK+
+    #   --with-opengl           use OpenGL (or Mesa)
+    WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-shared=no"
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
     AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
+    # --with-mac              use Mac OS X
+    # --with-cocoa            use Cocoa
     # WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode"
   fi
   if test $with_wxdebug = yes ; then
@@ -404,12 +417,17 @@ if test "$with_wx" = "yes" ; then
     # SG: I've disabled other debug options because the lib has bugs when using these flags \
     # (maybe because these flags are not often used by wxWidgets developpers)
     # WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug --enable-debug_cntxt --enable-debug_gdb --enable-debug_info --enable-debug_flag --enable-mem_tracing"
+  else
+    WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-optimise"
   fi
 
   # launch the configure
   if test "$with_mesa" = "yes" ; then
     # use internal OpenGL (mesa) libraries
     ../configure CFLAGS="-I../../Mesa/include" CXXFLAGS="-I../../Mesa/include" CPPFLAGS="-I../../Mesa/include" LDFLAGS_GL="-Wl,-rpath,../../Mesa/lib -L../../Mesa/lib" OPENGL_LIBS="-lGL -lGLU" $WXCONFIGURE_OPTION
+    if test $? != 0 ; then
+      AC_MSG_ERROR(A problem occurs durring wxWidgets library configuration. Please fix the problem and try again.)
+    fi
   else
     # use OpenGL system libraries
     ../configure $WXCONFIGURE_OPTION    
@@ -419,6 +437,9 @@ if test "$with_wx" = "yes" ; then
   echo "---> Compiling wxWidgets library."
   # compile the lib
   make
+  if test $? != 0 ; then
+    AC_MSG_ERROR(A problem occurs durring wxWidgets library compilation. Please fix the problem and try again.)
+  fi
   echo "---> Compiling wxWidgets contrib xrc library."
   cd contrib/src/xrc
   # compile xrc lib (xml resource lib)
@@ -437,9 +458,13 @@ if test "$with_wx" = "yes" ; then
   mkdir -p $OLDDIR/../wxWidgets/contrib
   mkdir -p $OLDDIR/../wxWidgets/contrib/include
   mkdir -p $OLDDIR/../wxWidgets/lib
+  # copy includes
   cp -r include/* $OLDDIR/../wxWidgets/include/
   cp -r contrib/include/* $OLDDIR/../wxWidgets/contrib/include/
-  cp -r AMAYABUILD/lib/* $OLDDIR/../wxWidgets/lib/
+  cp -r AMAYABUILD/lib/wx $OLDDIR/../wxWidgets/lib/
+  # copy libraries (only .a because we dont want to share)
+  cp -pd AMAYABUILD/lib/*.a $OLDDIR/../wxWidgets/lib/
+  # copy autoconfig script (needed to setup 'Option' file)
   cp -pd AMAYABUILD/*-config $OLDDIR/../wxWidgets/
   cd $OLDDIR
   echo "---> Install wxWidgets library into Amaya. - DONE"
