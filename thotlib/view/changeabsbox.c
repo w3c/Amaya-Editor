@@ -368,8 +368,12 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		  pA = pEl->ElFirstAttr; /* first attribute of element */
 		  while (pA != NULL)
 		    {
-		      /* Take the schema associated with the attribute S schema */
-		      pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
+		      if (pHd == NULL)
+			/* main presentation schema. Take the schema associated
+			   with the attribute's S schema */
+			pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
+		      else 
+			pSPattr = pSP;
 		      /* process all values of the attribute, in case of a
 			 text attribute with multiple values */
 		      valNum = 1;
@@ -3589,7 +3593,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			{
 			  pRNA = SearchRulepAb (pDoc, pAb, &pSPR, typeRule,
 						func, TRUE, &pAttrib);
-			  if (pR != pRNA || remove) /* 12/07/02 set attr didn't work */
+			  if (pR == pRNA || remove)
 			    appl = ApplyPresRuleAb (pRNA, pSPR, pAb, pDoc,
 						    pAttrib);
 			}
