@@ -3354,10 +3354,12 @@ void RemoveClipping (int frame)
 #ifdef _GTK
 void gtk_window_resize (GtkWidget *widget, gint width, gint height)
 {
+#ifndef _GL
   GtkWindow *window = GTK_WINDOW(widget);
   
   gtk_window_set_default_size(window, width, height);
   gdk_window_resize(GTK_WIDGET(window)->window, width, height);
+#endif /* _GL */
 }
 #endif /*_GTK*/
 
@@ -3415,7 +3417,7 @@ void UpdateScrollbars (int frame)
     }
 #else /*_GTK*/
   main_window = gtk_object_get_data (GTK_OBJECT (FrameTable[frame].WdFrame),
-    "Main_Wd");
+				     "Main_Wd");
 
   new_width = main_window->allocation.width;
   new_height =  main_window->allocation.height;
@@ -3449,10 +3451,10 @@ void UpdateScrollbars (int frame)
 	  }  
       }
   
-  if ((height + hscroll->allocation.height) >= h && 
+  if (height >= h && 
       y == 0)
     {
-      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
+      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
 	{
 	  gtk_widget_hide (GTK_WIDGET (vscroll));
 	  new_width += hscroll->allocation.width;
