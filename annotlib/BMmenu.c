@@ -28,6 +28,7 @@
 #include "f/BMevent_f.h"
 #include "f/BMtools_f.h"
 #include "f/BMview_f.h"
+#include "f/BMmenu_f.h"
 
 /* amaya includes */
 #include "AHTURLTools_f.h"
@@ -308,18 +309,13 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
 		      TtaCloseDocument (BTopicTree);
 		      BTopicTree = 0;
 		      TtaDestroyDialogue (ref);
+		      /* refresh the view */
 		      BM_refreshBookmarkView ();
 		    }
 		}
 	      break;
-	    case 2: /* browse */
-	      Bookmark_free (aBookmark);
-	      aBookmark = NULL;
-	      TtaCloseDocument (BTopicTree);
-	      BTopicTree = 0;
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 3:
+	    case 2: /* new topic */
+	      BM_TopicMenu (1, 1, NULL);
 	      break;
 
 	    default:
@@ -391,6 +387,8 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i = strlen (&s[i]) + 1;
+   strcpy (&s[i], "New Topic");
 
    TtaNewSheet (BookmarkBase + BookmarkMenu, 
 		TtaGetViewFrame (doc, view),
@@ -566,7 +564,10 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
 		  TtaCloseDocument (TTopicTree);
 		  TTopicTree = 0;
 		  TtaDestroyDialogue (ref);
+		  /* refresh the topic view */
 		  BM_refreshBookmarkView ();
+		  /* and the open widgets */
+		  BM_RefreshTopicTree ();
 		}
 	      break;
 
@@ -890,4 +891,24 @@ char *GetTopicURL (Document document, View view)
 #endif /* _WINDOWS */
    return (LastURLTopic);
 
+}
+
+/*----------------------------------------------------------------------
+  BM_RefreshTopicTree
+  Redisplays the topic tree in the topic and bookmark widgets, if they
+  are open.
+  ----------------------------------------------------------------------*/
+void BM_RefreshTopicTree ()
+{
+  ThotWidget tree;
+
+  if (aBookmark)
+    {
+      tree = TtaCatWidget (BookmarkBase + mBMTopicTree);
+      tree = TtaClearTree (tree);
+      if (BTopicTree)
+	TtaCloseDocument (BTopicTree);
+      BTopicTree = BM_GetTopicTree ();
+      BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
+    }
 }

@@ -17,6 +17,7 @@ extern void BM_TopicMenu ( Document doc,
 extern void InitTopicURL ( void );
 extern char *GetTopicURL ( Document document,
                            View view );
+extern void BM_RefreshTopicTree ( void );
 
 #else /* __STDC__ */
 
@@ -31,6 +32,7 @@ extern void BM_TopicMenu (/* Document doc,
 extern void InitTopicURL (/* void */);
 extern char *GetTopicURL (/* Document document,
                              View view */);
+extern void BM_RefreshTopicTree (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
