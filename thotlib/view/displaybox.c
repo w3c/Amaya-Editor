@@ -2173,11 +2173,11 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	      glCallList (box->DisplayList);
 	      return;
 	    }
-	  else
+	  else if (GL_NotInFeedbackMode ())
 	    {      
 	      if (glIsList (box->DisplayList))
 		glDeleteLists (box->DisplayList, 1);
-	      box->DisplayList = glGenLists (1);
+	        box->DisplayList = glGenLists (1);
 	      glNewList (box->DisplayList, GL_COMPILE_AND_EXECUTE);
 	    }
 	}

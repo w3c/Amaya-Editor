@@ -637,7 +637,8 @@ int CharacterWidth (int c, PtrFont font)
       else if (c == HAIR_SPACE)
 	l = (l + 3) / 4;
 #endif  /* _MOTIF */
-      
+
+#ifndef _WINDOWS
       if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
@@ -652,6 +653,7 @@ int CharacterWidth (int c, PtrFont font)
 	  else if (TtPatchedFont[i] == 24)
 	    l = 4;
 	}
+#endif /* _WINDOWS*/
       
 #else /* _GL */
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||

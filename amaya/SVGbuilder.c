@@ -1183,12 +1183,13 @@ void               UnknownSVGNameSpace (ParserData *context,
 static char* GetFloat (char *ptr, float* number)
 {
   int      i;
-  char     *start;
+  char     *start, c;
   ThotBool negative, decimal, exponent;
 
   negative = FALSE;
   decimal = FALSE;
   exponent = FALSE;
+  *number = 0.;
   /* read the sign */
   if (*ptr == '+')
     ptr++;
@@ -1222,6 +1223,10 @@ static char* GetFloat (char *ptr, float* number)
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
 	  ptr++;
     }
+  /* remove possible extra characters */
+  c = *ptr;
+	if (c != EOS)
+	 *ptr = EOS;
   if (exponent)
     sscanf (start, "%e", number);
   else if (decimal)
@@ -1233,6 +1238,9 @@ static char* GetFloat (char *ptr, float* number)
     }
   if (negative)
     *number = - *number;
+
+  /* restore extra characters */
+  *ptr = c;
 
   /* skip the following spaces */
   while (*ptr != EOS &&

@@ -88,8 +88,8 @@ typedef POINT          ThotPoint;
 typedef unsigned char* Drawable;
 typedef struct GL_point 
 {
-  float x;
-  float y;
+  double x;
+  double y;
 } ThotPoint;
 #endif /*_GL*/
 
@@ -114,14 +114,6 @@ typedef int            ThotIcon;
 typedef XColor    ThotColorStruct;
 
 #endif /* _WINDOWS */
-
-#ifdef _GL  
-  typedef struct GL_point 
-  {
-    float x;
-    float y;
-  } ThotPoint;
-#endif /*_GL*/
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
 /************************************************************************

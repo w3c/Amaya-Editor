@@ -759,8 +759,8 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
 ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
 				       int* npoints, int **subpathStart)
 {
-  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
-  int                 ix1, ix2, iy1, iy2;
+  double               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  double               ix1, ix2, iy1, iy2;
   ThotPoint           *points;
   int                 *tmp;
   int                 maxpoints, maxsubpaths, nbsubpaths;
@@ -810,52 +810,52 @@ ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
 	  break;
 
 	case PtCubicBezier:
-	  x1 = (float) (PixelValue (pPa->XStart, UnPixel, NULL,
+	  x1 = (double) (PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  y1 = (float) (PixelValue (pPa->YStart, UnPixel, NULL,
+	  y1 = (double) (PixelValue (pPa->YStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cx1 = (float) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+	  cx1 = (double) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cy1 = (float) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+	  cy1 = (double) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+	  x2 = (double) (PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+	  y2 = (double) (PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cx2 = (float) (PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+	  cx2 = (double) (PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cy2 = (float) (PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+	  cy2 = (double) (PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, npoints,
 		     &maxpoints);
-	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
+	  PolyNewPoint (x2, y2, &points, npoints, &maxpoints);
 	  break;
 
 	case PtQuadraticBezier:
-	  x1 = (float) (PixelValue (pPa->XStart, UnPixel, NULL,
+	  x1 = (double) (PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  y1 = (float) (PixelValue (pPa->YStart, UnPixel, NULL,
+	  y1 = (double) (PixelValue (pPa->YStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cx1 = (float) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+	  cx1 = (double) (PixelValue (pPa->XCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  cy1 = (float) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+	  cy1 = (double) (PixelValue (pPa->YCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+	  x2 = (double) (PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+	  y2 = (double) (PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	  QuadraticSplit (x1, y1, cx1, cy1, x2, y2, &points, npoints,
 			  &maxpoints);
-	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
+	  PolyNewPoint (x2, y2, &points, npoints, &maxpoints);
 	  break;
 
 	case PtEllipticalArc:
-	  x1 = (float) pPa->XStart;
-	  y1 = (float) pPa->YStart;
-	  x2 = (float) pPa->XEnd;
-	  y2 = (float) pPa->YEnd;
-	  cx1 = (float) pPa->XRadius; 
-	  cy1 = (float) pPa->YRadius; 	  
+	  x1 = (double) pPa->XStart;
+	  y1 = (double) pPa->YStart;
+	  x2 = (double) pPa->XEnd;
+	  y2 = (double) pPa->YEnd;
+	  cx1 = (double) pPa->XRadius; 
+	  cy1 = (double) pPa->YRadius; 	  
 	  EllipticSplit ( frame, 0, 0,
 			  (double) x1, (double) y1, 
 			  (double) x2, (double) y2, 
@@ -863,11 +863,11 @@ ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
 			  (int) fmod(pPa->XAxisRotation, 360), 
 			  pPa->LargeArc, pPa->Sweep,
 			  &points, npoints, &maxpoints);
-	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,
+	  x2 = (double) (PixelValue (pPa->XEnd, UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (PixelValue (pPa->YEnd, UnPixel, NULL,
+	  y2 = (double) (PixelValue (pPa->YEnd, UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  PolyNewPoint ((int) x2, (int) y2, &points, npoints, &maxpoints);
+	  PolyNewPoint (x2, y2, &points, npoints, &maxpoints);
 	  break;
 	}
       pPa = pPa->PaNext;
@@ -886,7 +886,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   int                 prevX, prevY;
   int                 nextX, nextY;
   int                 arc;
-  float               value1, value2;
+  double               value1, value2;
   PtrBox              box;
   ThotBool            ok;
   int                 width, height;
@@ -957,11 +957,11 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
     case 'a':		/* circles */
     case 'c':		/* ovals */
     case 'Q':		/* ellipses */
-      value1 = x - ((float) width / 2);
-      value2 = (y - ((float) height / 2)) *
-                ((float) width / (float) height);
+      value1 = x - ((double) width / 2);
+      value2 = (y - ((double) height / 2)) *
+                ((double) width / (double) height);
       value1 = value1 * value1 + value2 * value2;
-      value2 = (float) width / 2;
+      value2 = (double) width / 2;
       value2 = value2 * value2;
       if (value1 <= value2)
 	return (TRUE);	/* within the circle */
@@ -1053,7 +1053,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   PtrBox              pBox;
   int                 controlPoint;
   int                 arc, xm, xp;
-  float               value1, value2, value3;
+  double               value1, value2, value3;
   int                 width, height;
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
@@ -1162,13 +1162,13 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'c': /* ellipse */
     case 'Q': /* ellipse with a bar */
       /* ellipse or circle */
-      value1 = x - ((float) width / 2);
-      value2 = (y - ((float) height / 2)) *
-                ((float) width / (float) height);
+      value1 = x - ((double) width / 2);
+      value2 = (y - ((double) height / 2)) *
+                ((double) width / (double) height);
       /* value1 = square of (distance from center to point) */
       value1 = value1 * value1 + value2 * value2;
       /* value2 = square of (radius - DELTA_SEL) */
-      value2 = (float) width / 2;
+      value2 = (double) width / 2;
       value3 = value2;
       value2 -= DELTA_SEL;
       value2 = value2 * value2;

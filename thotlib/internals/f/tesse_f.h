@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void *GetNewMesh ( void );
-extern void MeshNewPoint ( float x,
-                           float y,
+extern void MeshNewPoint ( double x,
+                           double y,
                            void *v_path );
 extern void CountourCountAdd ( void *v_path );
 extern void FreeMesh ( void *v_path );
@@ -20,8 +20,8 @@ extern void MakefloatMesh ( ThotPoint *points,
 #else /* __STDC__ */
 
 extern void *GetNewMesh (/* void */);
-extern void MeshNewPoint (/* float x,
-                             float y,
+extern void MeshNewPoint (/* double x,
+                             doble y,
                              void *v_path */);
 extern void CountourCountAdd (/* void *v_path */);
 extern void FreeMesh (/* void *v_path */);

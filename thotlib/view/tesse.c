@@ -55,6 +55,7 @@
 #include "thot_gui.h"
 #include "typeint.h"
 
+#ifdef IV
 #ifdef _NOWAY
 /*Structure describing points 
 comming from the thotlib*/
@@ -71,6 +72,7 @@ typedef struct _ThotDblePoint {
   double         y; 
   double         z;
 } ThotDblePoint;
+#endif /* IV */
 
 /*Structure describing points 
 resulting of tesselation
@@ -163,10 +165,11 @@ void *GetNewMesh ()
   return NULL;
 #endif /* _GL */
 }
+
 /*----------------------------------------------------------------------
   MeshNewPoint : Add a point in the allocated struct
   ----------------------------------------------------------------------*/
-void MeshNewPoint (float x, float y, void *v_path)
+void MeshNewPoint (double x, double y, void *v_path)
 {
 #ifdef _GL
   ThotDblePoint       *tmp;
@@ -177,8 +180,8 @@ void MeshNewPoint (float x, float y, void *v_path)
   tmp = NULL;
   path = (ThotPath *) v_path;  
   /* ignore identical points */
-  xd = (double) x;
-  yd = (double) y;
+  xd = x;
+  yd = y;
 
   if (path->nsize >= (path->maxpoints-1))
     {

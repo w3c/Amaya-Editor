@@ -818,17 +818,17 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
 			  int thick, int fg)
 {
-   float               x, y, xb, yb, dx, dy, l, sina, cosa;
+   double               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
-   float               width, height;
+   double               width, height;
    Pixmap              pattern;
    ThotPoint           point[3];
 
-   width = (float) (5 + thick);
+   width = (double) (5 + thick);
    height = 10;
-   dx = (float) (x2 - x1);
-   dy = (float) (y1 - y2);
-   l = (float) sqrt ((double) (dx * dx + dy * dy));
+   dx = (double) (x2 - x1);
+   dy = (double) (y1 - y2);
+   l = (double) sqrt ((double) (dx * dx + dy * dy));
    if (l == 0) 
       return;
    sina = dy / l;
@@ -837,11 +837,11 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    yb = x2 * sina + y2 * cosa;
    x = xb - height;
    y = yb - width / 2;
-   xc = FloatToInt ((float)(x * cosa + y * sina + .5));
-   yc = FloatToInt ((float)(-x * sina + y * cosa + .5));
+   xc = (double)(x * cosa + y * sina + .5);
+   yc = (double)(-x * sina + y * cosa + .5);
    y = yb + width / 2;
-   xd = FloatToInt ((float)(x * cosa + y * sina + .5));
-   yd = FloatToInt ((float)(-x * sina + y * cosa + .5));
+   xd = (double)(x * cosa + y * sina + .5);
+   yd = (double)(-x * sina + y * cosa + .5);
 
    /* draw */
    point[0].x = x2;
@@ -1546,8 +1546,8 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   int                 npoints, maxpoints;
   PtrTextBuffer       adbuff;
   int                 i, j;
-  float               x1, y1, x2, y2;
-  float               cx1, cy1, cx2, cy2;
+  double               x1, y1, x2, y2;
+  double               cx1, cy1, cx2, cy2;
 
   if (thick == 0 || fg < 0)
     return;
@@ -1560,19 +1560,19 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+  y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   j++;
   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
@@ -1581,7 +1581,7 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
     ArrowDrawing (frame,
-		  FloatToInt (cx1), FloatToInt (cy1),
+		  FloatToInt ((float)cx1), FloatToInt ((float)cy1),
 		  (int) x1, (int) y1,
 		  thick, fg);
   
@@ -1605,10 +1605,10 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+	  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+	  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  if (i == nb - 2)
@@ -1625,7 +1625,7 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	    }
 	}
     }
-   PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+   PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 
    /* Draw the border */
    InitDrawing (style, thick, fg);
@@ -1641,7 +1641,7 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
       ArrowDrawing (frame,
-		   FloatToInt (cx2), FloatToInt (cy2),
+		   FloatToInt ((float)cx2), FloatToInt ((float)cy2),
 		   (int) x2, (int) y2,
 		   thick, fg);
 
@@ -1666,8 +1666,8 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   int                 npoints, maxpoints;
   PtrTextBuffer       adbuff;
   int                 i, j;
-  float               x1, y1, x2, y2;
-  float               cx1, cy1, cx2, cy2;
+  double               x1, y1, x2, y2;
+  double               cx1, cy1, cx2, cy2;
   Pixmap              pat;
 
   /* allocate the list of points */
@@ -1677,19 +1677,19 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+  y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx1 = controls[j].rx + x;
   cy1 = controls[j].ry + y;
   j++;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx2 = controls[j].lx + x;
@@ -1715,10 +1715,10 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+	  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+	  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[i + 1].lx + x;
@@ -1727,10 +1727,10 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
       else
 	{
 	  /* loop around the origin point */
-	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord,
+	  x2 = (double) (x + PixelValue (buffer->BuPoints[1].XCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord,
+	  y2 = (double) (y + PixelValue (buffer->BuPoints[1].YCoord,
 					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[1].lx + x;
@@ -1740,7 +1740,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 
   /* close the polyline */
   PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints, &maxpoints);
-  PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+  PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 
   /* Fill in the polygone */
   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
@@ -1818,7 +1818,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
   ThotPoint           *points;
   int                 npoints, maxpoints;
   PtrPathSeg          pPa;
-  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  double               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
 
   if (thick > 0 || fg >= 0)
     {
@@ -1847,56 +1847,56 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+	      x1 = (double) (x + PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+	      y1 = (double) (y + PixelValue (pPa->YStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+	      x2 = (double) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+	      y2 = (double) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x1, (int) y1, &points, &npoints, &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      PolyNewPoint (x1, y1, &points, &npoints, &maxpoints);
+	      PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 	      break;
 
 	    case PtCubicBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+	      x1 = (double) (x + PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+	      y1 = (double) (y + PixelValue (pPa->YStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+	      cx1 = (double) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+	      cy1 = (double) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+	      x2 = (double) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+	      y2 = (double) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx2 = (float) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
+	      cx2 = (double) (x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy2 = (float) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
+	      cy2 = (double) (y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
 			 &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 	      break;
 
 	    case PtQuadraticBezier:
-	      x1 = (float) (x + PixelValue (pPa->XStart, UnPixel, NULL,
+	      x1 = (double) (x + PixelValue (pPa->XStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y1 = (float) (y + PixelValue (pPa->YStart, UnPixel, NULL,
+	      y1 = (double) (y + PixelValue (pPa->YStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cx1 = (float) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
+	      cx1 = (double) (x + PixelValue (pPa->XCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      cy1 = (float) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
+	      cy1 = (double) (y + PixelValue (pPa->YCtrlStart, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+	      x2 = (double) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+	      y2 = (double) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification));
 	      QuadraticSplit (x1, y1, cx1, cy1, x2, y2, &points, &npoints,
 			      &maxpoints);
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+	      PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 	      break;
 
 	    case PtEllipticalArc:
@@ -1913,12 +1913,11 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 			     fmod(pPa->XAxisRotation, 360), 
 			     pPa->LargeArc, pPa->Sweep,
 			     &points, &npoints, &maxpoints);
-	      x2 = (float) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
+	      x2 = (double) (x + PixelValue (pPa->XEnd, UnPixel, NULL,
 					    ViewFrameTable[frame - 1].FrMagnification));
-	      y2 = (float) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
+	      y2 = (double) (y + PixelValue (pPa->YEnd, UnPixel, NULL,
 					    ViewFrameTable[frame - 1].FrMagnification));
-	      PolyNewPoint ((int) x2, (int) y2, &points, &npoints, 
- 			    &maxpoints);
+	      PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 	      break;
 	    }
 	  pPa = pPa->PaNext;

@@ -467,7 +467,10 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 #else /*_GL*/
      hDC = BeginPaint (w, &ps);
      if (GetBadCard())
+	 {
        DefClip (frame, -1, -1, -1, -1);
+	   DisplayFrame (frame);
+	 }
      WinGL_Swap (hDC);
      EndPaint (w, &ps);
      ReleaseDC (w, hDC);

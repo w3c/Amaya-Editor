@@ -945,9 +945,9 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
       Trans = Trans->Next;
     }
   if (is_scaled)
-    glScaled (w_scale, h_scale, (double) 1.0f);
+    glScaled (w_scale, h_scale, (double) 1);
   if (is_translated)
-    glTranslatef (-x_trans, -y_trans, (float) 0.0f);
+    glTranslatef (-x_trans, -y_trans, (float) 0);
 }
 
 /*---------------------------------------------------
@@ -996,9 +996,7 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 	  switch (Trans->TransType)
 	    {
 	    case  PtElScale:
-	      glScalef (Trans->XScale,  
-			Trans->YScale,  
- 			1.0); 
+	      glScalef (Trans->XScale, Trans->YScale, (GLfloat)1); 
 	      break;
 	    case PtElAnimTranslate:
 	    case PtElTranslate:
@@ -1010,13 +1008,9 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 	      break;
 	    case PtElAnimRotate:
 	    case PtElRotate:
-	      glTranslatef (Trans->XRotate, 
-			    Trans->YRotate, 
-			    0);
+	      glTranslatef (Trans->XRotate, Trans->YRotate, 0);
 	      glRotatef (Trans->TrAngle, 0, 0, 1);
-	      glTranslatef (-Trans->XRotate, 
-			    -Trans->YRotate, 
-			    0);
+	      glTranslatef (-Trans->XRotate, -Trans->YRotate, 0);
 	      break;
 	    case PtElMatrix:
 	      /* Matrix 

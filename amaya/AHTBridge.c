@@ -85,11 +85,11 @@ static const HTEventType ExceptBits = HTEvent_OOB;
     int write;
     int except;
   } SocketStatus;
-#endif /* #ifdef _NOGUI */
 
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static SocketStatus persSockets[SOCK_TABLE_SIZE];
+#endif /* #ifdef _NOGUI */
 
 /*--------------------------------------------------------------------
   AHTCallback_bridge

@@ -80,14 +80,14 @@
 #define M_PI_DOUBLE (6.2831853718027492)
 
 /* ((A)*(M_PI/180.0)) */
-#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
-#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+#define DEG_TO_RAD(A)   ((double)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((double)A)*57.29577957795135
 
 /*If we should use a static table instead for
   performance bottleneck...*/
-#define DCOS(A) ((float)cos (A))
-#define DSIN(A) ((float)sin (A))
-#define DACOS(A) ((float)acos (A))
+#define DCOS(A) ((double)cos (A))
+#define DSIN(A) ((double)sin (A))
+#define DACOS(A) ((double)acos (A))
 #define A_DEGREE 0.017453293
 
 /* Precision of a degree/1 
@@ -106,7 +106,7 @@
 
 /* Must find better one... 
    Bits methods...*/
-/*for float => ( pow (N, 2))*/
+/*for double => ( pow (N, 2))*/
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 
@@ -118,7 +118,7 @@
 
 typedef struct stack_point
   {
-     float               x1, y1, x2, y2, x3, y3, x4, y4;
+     double         x1, y1, x2, y2, x3, y3, x4, y4;
   }
 StackPoint;
 static StackPoint   stack[MAX_STACK];
@@ -127,7 +127,7 @@ static int          stack_deep;
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
-ThotBool PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
+ThotBool PolyNewPoint (double x, double y, ThotPoint **points, int *npoints,
 		       int *maxpoints)
 {
    ThotPoint          *tmp;
@@ -161,8 +161,8 @@ ThotBool PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
 /*----------------------------------------------------------------------
   PushStack : push a spline on the stack.
   ----------------------------------------------------------------------*/
-static void  PushStack (float x1, float y1, float x2, float y2, float x3,
-			float y3, float x4, float y4)
+static void  PushStack (double x1, double y1, double x2, double y2, double x3,
+			double y3, double x4, double y4)
 {
    StackPoint         *stack_ptr;
 
@@ -184,8 +184,8 @@ static void  PushStack (float x1, float y1, float x2, float y2, float x3,
 /*----------------------------------------------------------------------
   PopStack : pop a spline from the stack.
   ----------------------------------------------------------------------*/
-static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
-			  float *x3, float *y3, float *x4, float *y4)
+static ThotBool PopStack (double *x1, double *y1, double *x2, double *y2,
+			  double *x3, double *y3, double *x4, double *y4)
 {
    StackPoint         *stack_ptr;
 
@@ -209,15 +209,15 @@ static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
 /*----------------------------------------------------------------------
   PolySplit2 : split a polyline and push the results on the stack.
   ----------------------------------------------------------------------*/
-void PolySplit2 (float a1, float b1, float a2, float b2,
-		float a3, float b3, float a4, float b4,
+void PolySplit2 (double a1, double b1, double a2, double b2,
+		double a3, double b3, double a4, double b4,
 		void *mesh)
 {
 #ifdef _GL
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, x4, y4;
-   float               sx1, sy1, sx2, sy2;
-   float               tx1, ty1, tx2, ty2, xmid, ymid;
+   register double      tx, ty;
+   double               x1, y1, x2, y2, x3, y3, x4, y4;
+   double               sx1, sy1, sx2, sy2;
+   double               tx1, ty1, tx2, ty2, xmid, ymid;
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
@@ -228,18 +228,18 @@ void PolySplit2 (float a1, float b1, float a2, float b2,
 	   MeshNewPoint (x1, y1, mesh);
 	else
 	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx1  = (float) MIDDLE_OF (x1, x2);
-	     sy1  = (float) MIDDLE_OF (y1, y2);
-	     sx2  = (float) MIDDLE_OF (sx1, tx);
-	     sy2  = (float) MIDDLE_OF (sy1, ty);
-	     tx2  = (float) MIDDLE_OF (x3, x4);
-	     ty2  = (float) MIDDLE_OF (y3, y4);
-	     tx1  = (float) MIDDLE_OF (tx2, tx);
-	     ty1  = (float) MIDDLE_OF (ty2, ty);
-	     xmid = (float) MIDDLE_OF (sx2, tx1);
-	     ymid = (float) MIDDLE_OF (sy2, ty1);
+	     tx   = (double) MIDDLE_OF (x2, x3);
+	     ty   = (double) MIDDLE_OF (y2, y3);
+	     sx1  = (double) MIDDLE_OF (x1, x2);
+	     sy1  = (double) MIDDLE_OF (y1, y2);
+	     sx2  = (double) MIDDLE_OF (sx1, tx);
+	     sy2  = (double) MIDDLE_OF (sy1, ty);
+	     tx2  = (double) MIDDLE_OF (x3, x4);
+	     ty2  = (double) MIDDLE_OF (y3, y4);
+	     tx1  = (double) MIDDLE_OF (tx2, tx);
+	     ty1  = (double) MIDDLE_OF (ty2, ty);
+	     xmid = (double) MIDDLE_OF (sx2, tx1);
+	     ymid = (double) MIDDLE_OF (sy2, ty1);
 
 	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
 	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
@@ -368,7 +368,7 @@ void  EllipticSplit2 (int frame, int x, int y,
       Rysin = yradius * sin (thetabegin + theta);
       x3 = Phicos*Rxcos - Phisin*Rysin + cX;
       y3 = Phisin*Rxcos + Phicos*Rysin + cY; 
-      MeshNewPoint ((float) x3, (float) y3, mesh); 
+      MeshNewPoint ((double) x3, (double) y3, mesh); 
       theta += cprim;
     }  
 #endif /* _GL */
@@ -377,15 +377,15 @@ void  EllipticSplit2 (int frame, int x, int y,
 /*----------------------------------------------------------------------
   QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
   ----------------------------------------------------------------------*/
-void QuadraticSplit2 (float a1, float b1, float a2, float b2,
-		     float a3, float b3,
+void QuadraticSplit2 (double a1, double b1, double a2, double b2,
+		     double a3, double b3,
 		     void *mesh)
 {
 #ifdef _GL
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, i, j;
-   float               sx, sy;
-   float               xmid, ymid;
+   register double      tx, ty;
+   double               x1, y1, x2, y2, x3, y3, i, j;
+   double               sx, sy;
+   double               xmid, ymid;
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
@@ -396,12 +396,12 @@ void QuadraticSplit2 (float a1, float b1, float a2, float b2,
 	   MeshNewPoint (x1, y1, mesh);
 	else
 	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx   = (float) MIDDLE_OF (x1, x2);
-	     sy   = (float) MIDDLE_OF (y1, y2);
-	     xmid = (float) MIDDLE_OF (sx, tx);
-	     ymid = (float) MIDDLE_OF (sy, ty);
+	     tx   = (double) MIDDLE_OF (x2, x3);
+	     ty   = (double) MIDDLE_OF (y2, y3);
+	     sx   = (double) MIDDLE_OF (x1, x2);
+	     sy   = (double) MIDDLE_OF (y1, y2);
+	     xmid = (double) MIDDLE_OF (sx, tx);
+	     ymid = (double) MIDDLE_OF (sy, ty);
 
 	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
 	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
@@ -412,16 +412,16 @@ void QuadraticSplit2 (float a1, float b1, float a2, float b2,
 
 
 /*----------------------------------------------------------------------
-  PolySplit : split a polyline and push the results on the stack.
+  PolySplit: split a polyline and push the results on the stack.
   ----------------------------------------------------------------------*/
-void PolySplit (float a1, float b1, float a2, float b2,
-		float a3, float b3, float a4, float b4,
+void PolySplit (double a1, double b1, double a2, double b2,
+		double a3, double b3, double a4, double b4,
 		ThotPoint **points, int *npoints, int *maxpoints)
 {
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, x4, y4;
-   float               sx1, sy1, sx2, sy2;
-   float               tx1, ty1, tx2, ty2, xmid, ymid;
+   register double      tx, ty;
+   double               x1, y1, x2, y2, x3, y3, x4, y4;
+   double               sx1, sy1, sx2, sy2;
+   double               tx1, ty1, tx2, ty2, xmid, ymid;
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
@@ -429,22 +429,22 @@ void PolySplit (float a1, float b1, float a2, float b2,
    while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
 	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
+	   PolyNewPoint (x1, y1, points, npoints,
 			 maxpoints);
 	else
 	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx1  = (float) MIDDLE_OF (x1, x2);
-	     sy1  = (float) MIDDLE_OF (y1, y2);
-	     sx2  = (float) MIDDLE_OF (sx1, tx);
-	     sy2  = (float) MIDDLE_OF (sy1, ty);
-	     tx2  = (float) MIDDLE_OF (x3, x4);
-	     ty2  = (float) MIDDLE_OF (y3, y4);
-	     tx1  = (float) MIDDLE_OF (tx2, tx);
-	     ty1  = (float) MIDDLE_OF (ty2, ty);
-	     xmid = (float) MIDDLE_OF (sx2, tx1);
-	     ymid = (float) MIDDLE_OF (sy2, ty1);
+	     tx   = (double) MIDDLE_OF (x2, x3);
+	     ty   = (double) MIDDLE_OF (y2, y3);
+	     sx1  = (double) MIDDLE_OF (x1, x2);
+	     sy1  = (double) MIDDLE_OF (y1, y2);
+	     sx2  = (double) MIDDLE_OF (sx1, tx);
+	     sy2  = (double) MIDDLE_OF (sy1, ty);
+	     tx2  = (double) MIDDLE_OF (x3, x4);
+	     ty2  = (double) MIDDLE_OF (y3, y4);
+	     tx1  = (double) MIDDLE_OF (tx2, tx);
+	     ty1  = (double) MIDDLE_OF (ty2, ty);
+	     xmid = (double) MIDDLE_OF (sx2, tx1);
+	     ymid = (double) MIDDLE_OF (sy2, ty1);
 
 	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
 	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
@@ -581,22 +581,23 @@ void  EllipticSplit (int frame, int x, int y,
 			    ViewFrameTable[frame - 1].FrMagnification));
       y3 = (double) (y + PixelValue ((int) y3, UnPixel, NULL,
 			    ViewFrameTable[frame - 1].FrMagnification));
-      PolyNewPoint ((int) x3, (int) y3, points, npoints, maxpoints); 
+      PolyNewPoint (x3, y3, points, npoints, maxpoints); 
       theta += cprim;
     }  
 }
 /*----------------------------------------------------------------------
-  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  QuadraticSplit: split a quadratic Bezier and pushes the result on
+  the stack.
   ----------------------------------------------------------------------*/
-void QuadraticSplit (float a1, float b1, float a2, float b2,
-		     float a3, float b3,
+void QuadraticSplit (double a1, double b1, double a2, double b2,
+		     double a3, double b3,
 		     ThotPoint **points, int *npoints,
 		     int *maxpoints)
 {
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, i, j;
-   float               sx, sy;
-   float               xmid, ymid;
+   register double      tx, ty;
+   double               x1, y1, x2, y2, x3, y3, i, j;
+   double               sx, sy;
+   double               xmid, ymid;
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
@@ -604,16 +605,15 @@ void QuadraticSplit (float a1, float b1, float a2, float b2,
    while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
      {
 	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
-			 maxpoints);
+	   PolyNewPoint (x1, y1, points, npoints, maxpoints);
 	else
 	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx   = (float) MIDDLE_OF (x1, x2);
-	     sy   = (float) MIDDLE_OF (y1, y2);
-	     xmid = (float) MIDDLE_OF (sx, tx);
-	     ymid = (float) MIDDLE_OF (sy, ty);
+	     tx   = (double) MIDDLE_OF (x2, x3);
+	     ty   = (double) MIDDLE_OF (y2, y3);
+	     sx   = (double) MIDDLE_OF (x1, x2);
+	     sy   = (double) MIDDLE_OF (y1, y2);
+	     xmid = (double) MIDDLE_OF (sx, tx);
+	     ymid = (double) MIDDLE_OF (sy, ty);
 
 	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
 	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
