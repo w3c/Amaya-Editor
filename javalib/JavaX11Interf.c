@@ -37,11 +37,11 @@ int BreakJavaSelectPoll = 0;
 
 ThotAppContext CurrentAppContext = NULL;
 
-/*----------------------------------------------------------------------
-  JavaHandleOneEvent
-
-  This routine handle one event fetched from the X-Window socket.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaHandleOneEvent
+ *
+ * This routine handle one event fetched from the X-Window socket.
+ */
 #ifdef __STDC__
 void                JavaHandleOneEvent (ThotEvent *ev)
 #else
@@ -52,14 +52,14 @@ ThotEvent *ev;
     TtaHandleOneEvent(ev);
 }
 
-/*----------------------------------------------------------------------
-  JavaFetchEvent
-
-  This routine poll both the socket used by the Network interface and
-  the X-Windows event queue. As long as no X-Window event is available,
-  it has to handle network traffic. If an X-Window event is available,
-  the routine should fetch it from the queue in the ev argument and return.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaFetchEvent
+ *
+ * This routine poll both the socket used by the Network interface and
+ * the X-Windows event queue. As long as no X-Window event is available,
+ * it has to handle network traffic. If an X-Window event is available,
+ * the routine should fetch it from the queue in the ev argument and return.
+ */
 
 #ifdef __STDC__
 int                 JavaFetchEvent (ThotEvent *ev)
@@ -130,15 +130,15 @@ ThotEvent *ev;
   return(0);
 }
 
-/*----------------------------------------------------------------------
-  JavaFetchAvailableEvent
-
-  This routine look at the socket used by the Network interface and
-  the X-Windows event queue. It first handle changes in the network
-  socket status, and handle them (atomic operations). Once done,
-  if an X-Window event is available, the routine should fetch it from
-  the queue in the ev argument and return TRUE, it returns FALSE otherwise.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaFetchAvailableEvent
+ *
+ * This routine look at the socket used by the Network interface and
+ * the X-Windows event queue. It first handle changes in the network
+ * socket status, and handle them (atomic operations). Once done,
+ * if an X-Window event is available, the routine should fetch it from
+ * the queue in the ev argument and return TRUE, it returns FALSE otherwise.
+ */
 #ifdef __STDC__
 boolean             JavaFetchAvailableEvent (ThotEvent *ev)
 #else
@@ -159,12 +159,12 @@ ThotEvent *ev;
 #endif /* _WINDOWS */
 }
 
-/*----------------------------------------------------------------------
-  JavaHandleAvailableEvents
-
-  This routine check wether some XtEvent are to be fetched.
-  If yes, get it and handle it, and return once all have been consumed.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaHandleAvailableEvents
+ *
+ * This routine check wether some XtEvent are to be fetched.
+ * If yes, get it and handle it, and return once all have been consumed.
+ */
 #ifdef __STDC__
 void             JavaHandleAvailableEvents (void)
 #else
@@ -203,12 +203,12 @@ void             JavaHandleAvailableEvents ()
 #endif /* _WINDOWS */
 }
 
-/*----------------------------------------------------------------------
-  InitJavaEventLoop
-
-  Initialize the JavaEventLoop environment, including the network
-  interface, Java, etc...
-  ----------------------------------------------------------------------*/
+/*
+ * InitJavaEventLoop
+ *
+ * Initialize the JavaEventLoop environment, including the network
+ * interface, Java, etc...
+ */
 #ifdef __STDC__
 void                InitJavaEventLoop (ThotAppContext app_ctx)
 #else
@@ -267,11 +267,11 @@ ThotAppContext app_ctx;
 
 }
 
-/*----------------------------------------------------------------------
-  JavaStopPoll
-
-  Stop the poll loop (below).
-  ----------------------------------------------------------------------*/
+/*
+ * JavaStopPoll
+ *
+ * Stop the poll loop (below).
+ */
 #ifdef __STDC__
 int                 JavaStopPoll ()
 #else
@@ -283,12 +283,12 @@ int                 JavaStopPoll ()
    return(0);
 }
 
-/*----------------------------------------------------------------------
-  JavaPollLoop
-
-  This is the equivalent of the basic event loop except that it will
-  return after any interraction on the extra file descriptors.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaPollLoop
+ *
+ * This is the equivalent of the basic event loop except that it will
+ * return after any interraction on the extra file descriptors.
+ */
 #ifdef __STDC__
 int                 JavaPollLoop ()
 #else
@@ -391,15 +391,25 @@ int                 JavaPollLoop ()
    return(0);
 }
 
-/*----------------------------------------------------------------------
-  JavaEventLoop
+/*
+ *  JavaEventLoop
+ *
+ *  The point where events arriving from the X-Windows socket as well as
+ *  the network sockets are fetched and dispatched to the correct handlers.
+ *  The loop may be called recursively (introduced for ILU), and the current
+ *  level must break as soon as *stop is set to 0.
+ *
+ *  The stack frame mechanism (and pieces of code) are borowed from Xerox ILU.
+ *
+ */
 
-  The point where events arriving from the X-Windows socket as well as
-  the network sockets are fetched and dispatched to the correct handlers.
-  The loop may be called recursively (introduced for ILU), and the current
-  level must break as soon as *stop is set to 0.
+typedef struct stack_s {
+    int *stop;
+    struct stack_s *next;
+} StackFrame;
 
-  ----------------------------------------------------------------------*/
+static StackFrame *run_stack = NULL;
+
 #ifdef __STDC__
 void                JavaEventLoop (int *stop)
 #else
@@ -408,6 +418,7 @@ int *stop;
 #endif
 {
    int status;
+   StackFrame ours;
 #ifndef _WINDOWS
    ThotEvent           ev;
 #endif /* _WINDOWS */
@@ -420,6 +431,14 @@ int *stop;
     */
    if (!JavaEventLoopInitialized) 
       return;
+
+   /*
+    * push our "frame" onto the "stack"
+    */
+   ours.next = run_stack;
+   ours.stop = stop;
+   run_stack = &ours;
+   *stop = 1;
 
    /*
     * We don't want to jump off the loop if transfers did occurs
@@ -454,14 +473,38 @@ int *stop;
         JavaHandleOneEvent (&ev);
         JavaThotlibRelease();
     }
+
+    /*
+     * pop our "frame" from the stack
+     */
+    run_stack = ours.next;
+
+
 }
 
-/*----------------------------------------------------------------------
-  JavaStartEventLoop
+/*
+ * JavaExitEventLoop
+ *
+ * stop one level of cascaded event loops.
+ */
 
-  the lowest Event loop (May be cascading them).
+void JavaExitEventLoop(int *stop)
+{
+    StackFrame *f;
 
-  ----------------------------------------------------------------------*/
+    for (f = run_stack; f != NULL; f = f->next) {
+        if (f->stop == stop) *stop = 0;
+	return;
+    }
+    fprintf(stderr, "JavaExitEventLoop : stop pointer 0x%X not found\n",
+            (unsigned) stop);
+}
+
+/*
+ * JavaStartEventLoop
+ *
+ * the lowest Event loop (May be cascading them).
+ */
 
 int JavaEventLoopStop;
 
@@ -472,16 +515,15 @@ void                JavaStartEventLoop ()
 #endif
 {
     while (1) {
-        JavaEventLoopStop = 1;
 	JavaEventLoop(&JavaEventLoopStop);
     }
 }
 
-/*----------------------------------------------------------------------
-   JavaLoadResources 
-
-   link in the Java stuff and initialize it.
-  ----------------------------------------------------------------------*/
+/*
+ * JavaLoadResources 
+ *
+ * link in the Java stuff and initialize it.
+ */
 void                JavaLoadResources ()
 {
    TtaSetMainLoop (InitJavaEventLoop, JavaStartEventLoop,

@@ -17,6 +17,10 @@
 
 #include "events_f.h"
 
+#ifdef WITH_ILU
+#define DEBUG_TIMERS
+#define DEBUG_CHANNELS
+#endif
 #ifdef STANDALONE
 #define DEBUG_TIMERS
 #define DEBUG_TIMERS_LISTS
@@ -513,7 +517,7 @@ static channelPtr unlinkChannel(int chan, channelPtr *list) {
  *                        free list). Initialize it and add it to the
  *                        inputChannelList, if not already present.
  */
-void registerInputChannel(channelValue chan, channelCallback callback,
+int registerInputChannel(channelValue chan, channelCallback callback,
                           userBlock data) {
     channelPtr ret = NULL, prev;
     int found = 0;
@@ -524,7 +528,7 @@ void registerInputChannel(channelValue chan, channelCallback callback,
 
     if ((chan < 0) || (chan >= 1024)) {
         printf("registerInputChannel : invalid channel #%d\n", chan);
-	return;
+	return(0);
     }
 
     ret = searchChannel(chan, inputChannelList);
@@ -573,13 +577,15 @@ void registerInputChannel(channelValue chan, channelCallback callback,
 #ifdef DEBUG_CHANNELS_LISTS
     showChannels();
 #endif
+
+    return(1);
 }
 
 /*
  * unregisterInputChannel : search and clean an existing block, and
  *                          add it to the freeChannelList.
  */
-void unregisterInputChannel(channelValue chan, channelCallback *callback,
+int unregisterInputChannel(channelValue chan, channelCallback *callback,
                             userBlock *data) {
     channelPtr channel;
 
@@ -591,14 +597,14 @@ void unregisterInputChannel(channelValue chan, channelCallback *callback,
         printf("unregisterInputChannel : invalid channel #%d\n", chan);
         if (callback != NULL) *callback = NULL;
         if (data != NULL) *data = NULL;
-	return;
+	return(0);
     }
 
     channel = unlinkChannel(chan, &inputChannelList);
     if (channel == NULL) {
         if (callback != NULL) *callback = NULL;
         if (data != NULL) *data = NULL;
-	return;
+	return(0);
     }
 
 #ifdef DEBUG_CHANNELS
@@ -614,6 +620,8 @@ void unregisterInputChannel(channelValue chan, channelCallback *callback,
 #ifdef DEBUG_CHANNELS_LISTS
     showChannels();
 #endif
+
+    return(1);
 }
 
 /*
@@ -621,7 +629,7 @@ void unregisterInputChannel(channelValue chan, channelCallback *callback,
  *                         free list). Initialize it and add it to the
  *                         outputChannelList.
  */
-void registerOutputChannel(channelValue chan, channelCallback callback,
+int registerOutputChannel(channelValue chan, channelCallback callback,
                            userBlock data) {
     channelPtr ret = NULL, prev;
     int found = 0;
@@ -632,7 +640,7 @@ void registerOutputChannel(channelValue chan, channelCallback callback,
 
     if ((chan < 0) || (chan >= 1024)) {
         printf("registerOutputChannel : invalid channel #%d\n", chan);
-	return;
+	return(0);
     }
 
     ret = searchChannel(chan, outputChannelList);
@@ -681,13 +689,15 @@ void registerOutputChannel(channelValue chan, channelCallback callback,
 #ifdef DEBUG_CHANNELS_LISTS
     showChannels();
 #endif
+
+    return(1);
 }
 
 /*
  * unregisterOutputChannel : search and clean an existing block, and
  *                           add it to the freeChannelList.
  */
-void unregisterOutputChannel(channelValue chan, channelCallback *callback,
+int unregisterOutputChannel(channelValue chan, channelCallback *callback,
                              userBlock *data) {
     channelPtr channel;
 
@@ -699,14 +709,14 @@ void unregisterOutputChannel(channelValue chan, channelCallback *callback,
         printf("unregisterOutputChannel : invalid channel #%d\n", chan);
         if (callback != NULL) *callback = NULL;
         if (data != NULL) *data = NULL;
-	return;
+	return(0);
     }
 
     channel = unlinkChannel(chan, &outputChannelList);
     if (channel == NULL) {
         if (callback != NULL) *callback = NULL;
         if (data != NULL) *data = NULL;
-	return;
+	return(0);
     }
 
 #ifdef DEBUG_CHANNELS
@@ -722,6 +732,8 @@ void unregisterOutputChannel(channelValue chan, channelCallback *callback,
 #ifdef DEBUG_CHANNELS_LISTS
     showChannels();
 #endif
+
+    return(1);
 }
 
 /***

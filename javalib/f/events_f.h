@@ -19,18 +19,18 @@ extern void unsetTimer ( timerPtr timer );
 extern timerValue *nextTimer ( void );
 extern void checkTimers ( void );
 extern void showChannels ( void );
-extern void registerInputChannel ( channelValue chan,
+extern int registerInputChannel ( channelValue chan,
+                                  channelCallback callback,
+                                  userBlock data );
+extern int unregisterInputChannel ( channelValue chan,
+                                    channelCallback *callback,
+                                    userBlock *data );
+extern int registerOutputChannel ( channelValue chan,
                                    channelCallback callback,
                                    userBlock data );
-extern void unregisterInputChannel ( channelValue chan,
+extern int unregisterOutputChannel ( channelValue chan,
                                      channelCallback *callback,
                                      userBlock *data );
-extern void registerOutputChannel ( channelValue chan,
-                                    channelCallback callback,
-                                    userBlock data );
-extern void unregisterOutputChannel ( channelValue chan,
-                                      channelCallback *callback,
-                                      userBlock *data );
 extern void createChannelMasks ( int *n,
                                  fd_set *readfds,
                                  fd_set *writefds );
@@ -54,18 +54,18 @@ extern void unsetTimer (/* timerPtr timer */);
 extern timerValue *nextTimer (/* void */);
 extern void checkTimers (/* void */);
 extern void showChannels (/* void */);
-extern void registerInputChannel (/* channelValue chan,
+extern int registerInputChannel (/* channelValue chan,
+                                    channelCallback callback,
+                                    userBlock data */);
+extern int unregisterInputChannel (/* channelValue chan,
+                                      channelCallback *callback,
+                                      userBlock *data */);
+extern int registerOutputChannel (/* channelValue chan,
                                      channelCallback callback,
                                      userBlock data */);
-extern void unregisterInputChannel (/* channelValue chan,
+extern int unregisterOutputChannel (/* channelValue chan,
                                        channelCallback *callback,
                                        userBlock *data */);
-extern void registerOutputChannel (/* channelValue chan,
-                                      channelCallback callback,
-                                      userBlock data */);
-extern void unregisterOutputChannel (/* channelValue chan,
-                                        channelCallback *callback,
-                                        userBlock *data */);
 extern void createChannelMasks (/* int *n,
                                    fd_set *readfds,
                                    fd_set *writefds */);

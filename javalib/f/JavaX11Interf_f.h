@@ -14,7 +14,9 @@ extern void JavaHandleAvailableEvents ( void );
 extern void InitJavaEventLoop ( ThotAppContext app_ctx );
 extern int JavaStopPoll ( void );
 extern int JavaPollLoop ( void );
-extern void JavaEventLoop ( void );
+extern void JavaEventLoop ( int *stop );
+extern void JavaExitEventLoop ( int *stop );
+extern void JavaStartEventLoop ( void );
 extern void JavaLoadResources ( void );
 
 #else /* __STDC__ */
@@ -27,7 +29,9 @@ extern void JavaHandleAvailableEvents (/* void */);
 extern void InitJavaEventLoop (/* ThotAppContext app_ctx */);
 extern int JavaStopPoll (/* void */);
 extern int JavaPollLoop (/* void */);
-extern void JavaEventLoop (/* void */);
+extern void JavaEventLoop (/* int *stop */);
+extern void JavaExitEventLoop (/* int *stop */);
+extern void JavaStartEventLoop (/* void */);
 extern void JavaLoadResources (/* void */);
 
 #endif /* __STDC__ */

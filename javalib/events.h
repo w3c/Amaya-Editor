@@ -125,13 +125,13 @@ typedef struct channelBlock {
  * unregisterOutputChannel : remove it from the list.
  */
 
-extern void registerInputChannel(channelValue chan, channelCallback callback,
+extern int registerInputChannel(channelValue chan, channelCallback callback,
                                  userBlock data);
-extern void unregisterInputChannel(channelValue chan, channelCallback *callback,
+extern int unregisterInputChannel(channelValue chan, channelCallback *callback,
                                    userBlock *data);
-extern void registerOutputChannel(channelValue chan, channelCallback callback,
+extern int registerOutputChannel(channelValue chan, channelCallback callback,
                                  userBlock data);
-extern void unregisterOutputChannel(channelValue chan, channelCallback *callback,
+extern int unregisterOutputChannel(channelValue chan, channelCallback *callback,
                                    userBlock *data);
 
 /*
