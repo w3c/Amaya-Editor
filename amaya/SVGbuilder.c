@@ -2040,6 +2040,7 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 {
    Element		leaf;
    TypeUnit		unit;
+   DisplayMode          dispMode;
    char		       *text, *ptr;
    int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    ThotBool		closed, error;
@@ -2048,6 +2049,10 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
    leaf = CreateGraphicLeaf (el, doc, &closed);
    if (leaf == NULL)
       return;
+
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
 
    /* text attribute. Get its value */
    length = TtaGetTextAttributeLength (attr) + 2;
@@ -2098,6 +2103,8 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
       UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
       TtaFreeMemory (text);
       }
+
+  TtaSetDisplayMode (doc, dispMode);
 }
 /*----------------------------------------------------------------------
    ParseviewBoxAttribute
