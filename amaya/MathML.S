@@ -36,7 +36,7 @@ STRUCT
 	        overflow = scroll, elide, truncate, scale_;
 	        altimg = TEXT;
 	        alttext = TEXT)
-	  = MROW + (XMLcomment);
+	  = MROW + (XMLcomment, XMLPI);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -314,7 +314,7 @@ STRUCT
 	    MTable_body = LIST OF (TableRow); 
 	    END;
 
-      MCHAR
+      MCHAR     {*** obsolete ***}
 	  (ATTR !name = TEXT)
 	  = TEXT;
 	

@@ -27,7 +27,7 @@ STRUCT
               y = text;
 	      !height_ = Text;
 	      !width_ = Text)
-        = LIST OF (GraphicsElement) + (XMLcomment)
+        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI)
           with height_ ?= '6cm', width_ ?= '10cm';
 
    g
