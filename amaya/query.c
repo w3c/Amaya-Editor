@@ -296,7 +296,7 @@ static  HTAtom *AHTGuessAtom_for (char *urlName, char *contentType)
 void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context, int status)
 {
   AHTReqContext  *me;
-  HTAtom         *tmp_atom;
+  HTAtom         *tmp_atom = NULL;
   char           *tmp_char;
   char            tmp_wchar[MAX_LENGTH];
   HTParentAnchor *anchor;
