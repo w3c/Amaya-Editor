@@ -94,10 +94,11 @@ void InitializeNewDoc (char *url, int docType, Document doc)
   pathname = TtaGetMemory (MAX_LENGTH);
   documentname = TtaGetMemory (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
-  if (doc == 0)
+  if (doc == 0 || InNewWindow)
     {
-      doc = InitDocView (doc, documentname, docType, 0, FALSE);
+      doc = InitDocView (0, documentname, docType, 0, FALSE);
       InitDocHistory (doc);
+      InNewWindow = FALSE;
     }
   else
     {
