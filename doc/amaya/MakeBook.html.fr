@@ -29,13 +29,13 @@
 <div id="Assembling">
 <h2><a name="L1065">Assembler des collections de document</a></h2>
 
-<p>Amaya vous permet de manipuler des collections de document.  Une telle
+<p>Amaya vous permet de manipuler des collections de document. Une telle
 collection peut, par exemple, représenter une documentation technique
 constituée de plusieurs pages web. Une de ces pages contient le titre de toute
- la documentation  (un élément  <code>H1</code>), une introduction (d'autres
-éléments), et une liste  (<code>OL</code> ou <code>UL</code>) dont les
-articles contiennent les liens vers chaque chapitre. Les chapitres sont des
-documents séparés qui peuvent aussi avoir le même type de structure. </p>
+la documentation  (un élément  <code>H1</code>), une introduction (d'autres
+éléments), et une liste  (<code>OL</code> ou <code>UL</code>) dont les items
+contiennent les liens vers chaque chapitre. Les chapitres sont des documents
+séparés qui peuvent aussi avoir le même type de structure.</p>
 
 <p>Une telle organisation est utile pour naviguer, mais elle a un certain
 nombre d'inconvénients lorsque la totalité de la documentation doit être
@@ -46,31 +46,31 @@ chapitres: associez un attribut <code> rel="chapitre"</code> ou
 (sélectionnez l'élément <code>A</code> et utilisez le menu  <strong><a
 href="Attributes.html#L1073">Attributs</a></strong>).</p>
 
-<p>Chaque chapitre ou sous-document référé peut être: </p>
+<p>Chaque chapitre ou sous-document référé peut être:</p>
 <ul>
   <li>soit un document entier externe.</li>
-  <li>soit une  sous-partie  d'un document entier externe.  </li>
+  <li>soit une  sous-partie  d'un document entier externe.</li>
 </ul>
 
 <p>Pour se référer à une sous-partie d'un document, la méthode habituelle est
 de définir un élément DIV qui délimite la partie du document cible que vous
-voulez inclure et qui la lie à cet  <a href="Links.html#target1">élément
-cible. </a></p>
+voulez inclure et lier <span xml:lang="fr" lang="fr"></span>à cet  <a
+href="Links.html#target1">élément cible.</a></p>
 
 <p>Ensuite, lorsque vous activez la fonction "construire un livre", tous les
 blocs (éléments <code>LI</code> dans l'exemple plus haut) contenant un lien
 tapé vers un chapitre seront remlacés par les pages web correspondantes (ou
 sous-parties de pages web). Vous obtiendrez ainsi un unique document contenant
-la totalité de la collection: </p>
+la totalité de la collection:</p>
 <ul>
-  <li><p>Quand un lien se réfère à une page web, tout le contenu BODY  du
-    document cible est inclus. </p>
+  <li><p>Quand un lien se réfère à une page web, tout le contenu BODY du
+    document cible est inclus.</p>
   </li>
   <li><p>Si le lien se réfère à un élément cible, cet élément et son contenu
-    sont inclus. </p>
+    sont inclus.</p>
   </li>
   <li><p>Si le lien se réfère à une ancre cible, le contenu de l'ancre est
-    inclus, mais l'ancre  ne l'est pas. </p>
+    inclus, mais l'ancre elle-même ne l'est pas.</p>
   </li>
 </ul>
 
@@ -78,22 +78,22 @@ la totalité de la collection: </p>
 nouvel élément  DIV avec un attribut  ID. Ainsi, toutes les parties ajoutées
 sont clairement séparées.</p>
 
-<p>Les parties antérieures du nouveau document engendré pouvaient contenir des
+<p>Les parties précédentes  du nouveau document engendré peuvent  contenir des
 liens normaux, des ancres cibles et des éléments cibles. Pendant cette
-opération, Amaya garantie que chaque  valeur des attributs  NAME et  ID  reste
-unique dans le nouveau document. S'il y a besoin, Amaya change ces valeurs et
+opération, Amaya vérifie que chaque  valeur des attributs  NAME et  ID  reste
+unique dans le nouveau document. Si besoin est, Amaya change ces valeurs et
 met à jour les liens relatifs. Au même moment, les liens externes sont
-automatiquement mis à jour quand ils se réfèrent à un document externe ou à
-une partie de document nouvellement incluse. Par exemple, si un lien est
-indiqué dans un document entier externe, ce lien se réfèrera à l'élément
-incluant  DIV aprés l'opération. Ainsi, le nouveau document unique contenant
-la totalité de la collection est toujours cohérent. </p>
+automatiquement mis à jour quand ils se réfèrent à un document externe ou à un
+sous-document  nouvellement inclus. Par exemple, si un lien pointe vers un 
+document entier externe, ce lien se réfèrera à l'élément incluant  DIV aprés
+l'opération. Ainsi, le nouveau document unique contenant la totalité de la
+collection reste cohérent.</p>
 
-<p>Ce long document peut être  <a href="Numbering.html#L1064">numéroté</a> et
-<a href="Printing.html#L1062">imprimé </a>avec un tableau complet des contenus
-et une liste de tous les liens. </p>
+<p>Ce gros document peut être  <a href="Numbering.html#L1064">numéroté</a> et
+<a href="Printing.html#L1062">imprimé </a>avec une  table complète des
+contenus et une liste de tous les liens.</p>
 
-<p>Pour activer cet outil, choisissez l'article <strong>Construire un
+<p>Pour activer cet outil, choisissez l'item <strong>Construire un
 livre</strong> du menu  <strong>Spécial</strong>.</p>
 </div>
 
