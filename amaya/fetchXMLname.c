@@ -299,7 +299,7 @@ int                XMLtype;
   else if (XMLtype == GRAPH_TYPE)
     return GetGraphMLSSchema (doc);
   else if (XMLtype == XLINK_TYPE)
-    return GetGraphMLSSchema (doc);
+    return GetXLinkSSchema (doc);
   else
     return NULL;
 }

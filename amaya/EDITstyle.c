@@ -1311,7 +1311,6 @@ View                view;
   int                 firstSelectedChar, lastSelectedChar;
 #ifndef _WINDOWS
    CHAR_T              bufMenu[MAX_TXT_LEN];
-   int                 i;
 #endif /* _WINDOWS */
 
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
