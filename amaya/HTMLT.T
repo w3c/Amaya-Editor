@@ -22,7 +22,8 @@ RULES
 	   END;
 	if not HtmlDTD = Frameset
 	   BEGIN
-	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12                      "xhtml1-transitional.dtd">\12';
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
+	   Create '                      "xhtml1-transitional.dtd">\12';
 	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-transitional"';
 	   END;
 	Create Namespaces;
