@@ -320,7 +320,7 @@
 	<message xml:lang="tr">Başlığı değiştir</message>
 </label>
 <label define="AM_DOC_MODIFIED">
-	<message xml:lang="en">Document modified - Would you save it?</message>
+	<message xml:lang="en">Document modified - Do you want to save it?</message>
 	<message xml:lang="fr">Document modifié - Voulez-vous le sauver ?</message>
 	<message xml:lang="de">Alle Änderungen gehen verloren -</message>
 	<message xml:lang="it">Il documento è stato modificato -</message>
@@ -490,7 +490,7 @@
 	<message xml:lang="fi">Tiedonsiirto keskeytetty!</message>
 </label>
 <label define="AM_NOT_AVAILABLE_RETRY">
-	<message xml:lang="en">%s is not available at the moment. Please retry at some other time</message>
+	<message xml:lang="en">%s is not available at the moment. Please retry later</message>
 	<message xml:lang="fr">Indisponibilité momentanée de %s. Réessayez plus tard</message>
 	<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!</message>
 	<message xml:lang="it">%s è indisponibile al momento. Riprova piú tardi</message>
