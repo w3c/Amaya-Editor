@@ -1680,6 +1680,10 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
   ThotBool            updateFixed;
 
   sel = TRUE;
+#ifdef _GTK
+   gtk_claim_selection();
+#endif /*_GTK*/
+
   if (pEl != NULL &&ThotLocalActions[T_selecttable] != NULL)
     /* call procedure handling selection in tables, if it is present */
     (*ThotLocalActions[T_selecttable]) (pEl, SelectedDocument, TRUE, &sel);
