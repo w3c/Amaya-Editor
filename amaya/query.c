@@ -2958,7 +2958,7 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
    - docid  Document identifier for the set of objects being
    retrieved.
    - refdoc Document identifier to refer.
-   - urlName The URL to be retrieved (MAX_URL_LENGTH chars length)
+   - urlName The utf8-coded URL to be retrieved (MAX_URL_LENGTH chars length)
    - outputfile A pointer to an empty string of MAX_URL_LENGTH.
    - mode The retrieval mode.
    - incremental_cbf 

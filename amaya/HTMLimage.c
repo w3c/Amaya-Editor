@@ -974,7 +974,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
   AttributeType       attrType, attrType2;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char               *imageName, *utf8value;
+  char               *imageName, *utf8value, *utf8pathname;
   char                pathname[MAX_LENGTH];
   char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
@@ -1086,7 +1086,10 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 	      else
 		newflags = flags | AMAYA_ASYNC;
 	      
-	      i = GetObjectWWW (doc, doc, pathname, NULL, tempfile,
+	      /* Convert uri into utf8 */
+	      utf8pathname = (char *)TtaConvertByteToMbs ((unsigned char *)pathname,
+							  TtaGetDefaultCharset ());
+	      i = GetObjectWWW (doc, doc, utf8pathname, NULL, tempfile,
 	                        newflags, NULL, NULL,
 				(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
 				(void *) FetchImage_ctx, NO, NULL);
@@ -1097,6 +1100,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 		  update = TRUE;
 		  desc->status = IMAGE_NOT_LOADED;
 		}
+	      TtaFreeMemory (utf8pathname);
 	    }
 	  
 	  /* display the image within the document */
