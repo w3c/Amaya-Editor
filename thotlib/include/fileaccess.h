@@ -15,7 +15,7 @@
 typedef FILE *BinFile;
 
 typedef struct { /* fill in with more elements as they are needed */
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
     FILETIME atime; /* don't know yet what format will be used most */
     DWORD size;
 #else /* _WINDOWS */
@@ -24,26 +24,8 @@ typedef struct { /* fill in with more elements as they are needed */
 #endif /* !_WINDOWS */
 } ThotFileInfo;
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
 
-#ifdef __GNUC__
-typedef int ThotFileHandle;
-#define ThotFile_BADHANDLE -1
-
-typedef int ThotFileMode;
-#define ThotFile_CREATE O_CREAT
-#define ThotFile_READWRITE O_RDWR
-#define ThotFile_TRUNCATE O_TRUNC
-#define ThotFile_EXCLUSIVE O_EXCL
-
-typedef int ThotFileOrigin;
-#define ThotFile_SEEKSET SEEK_SET
-#define ThotFile_SEEKCUR SEEK_CUR
-#define ThotFile_SEEKEND SEEK_END
-
-typedef long ThotFileOffset;
-#define ThotFile_BADOFFSET -1L
-#else /* __GNUC__ */
 typedef HANDLE ThotFileHandle;
 #define ThotFile_BADHANDLE INVALID_HANDLE_VALUE
 
@@ -58,7 +40,6 @@ typedef DWORD ThotFileOrigin;
 
 typedef long ThotFileOffset;
 #define ThotFile_BADOFFSET 0xFFFFFFFF
-#endif /* __GNUC__ */
 
 #else /* ! _WINDOWS */
 
