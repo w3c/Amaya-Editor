@@ -6402,6 +6402,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
    TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
    TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
+   TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
    /* get current value */
    TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
    TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);

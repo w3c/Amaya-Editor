@@ -991,164 +991,167 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
   ----------------------------------------------------------------------*/
 ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 {
-   AttributeType       attrType;
-   Attribute           attr, attrFound;
-   ElementType         elType;
-   Element             el, elFound, pic, elNext;
-   char               *currentURL, *imageURI;
-   int                 length;
-   ThotBool            stopped_flag;
+  AttributeType       attrType;
+  Attribute           attr, attrFound;
+  ElementType         elType;
+  Element             el, elFound, pic, elNext;
+  char               *currentURL, *imageURI;
+  int                 length;
+  ThotBool            stopped_flag, loadImages;
 
-   /* JK: verify if StopTransfer was previously called */
-   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-     {
-       /* transfer interrupted */
-       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
-       DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-       return FALSE;
-     }
-   else if (DocumentTypes[doc] == docText ||
-	    DocumentTypes[doc] == docCSS)
-     return FALSE;
+  TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
+  if (!loadImages)
+    return FALSE;
+  /* JK: verify if StopTransfer was previously called */
+  if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+    {
+      /* transfer interrupted */
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
+      DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+      return FALSE;
+    }
+  else if (DocumentTypes[doc] == docText ||
+	   DocumentTypes[doc] == docCSS)
+    return FALSE;
 
-   /* register the current URL */
-   currentURL = TtaStrdup (DocumentURLs[doc]);
+  /* register the current URL */
+  currentURL = TtaStrdup (DocumentURLs[doc]);
 
-   /* We are currently fetching images for this document */
-   /* during this time LoadImage has not to stop transfer */
-   /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-   if (attrType.AttrSSchema)
-     /* there are some HTML elements in this documents. 
-	Get all 'img' or 'object' or 'embed' elements */
-     {
-       /* search all elements having an attribute SRC */
-       attrType.AttrTypeNum = HTML_ATTR_SRC;
-       /* Start from the root element */
-       if (elSubTree == NULL)
-	 {
-	   el = TtaGetMainRoot (doc);
-	   TtaSearchAttribute (attrType, SearchForward,
-			       el, &elFound, &attr);
-	 }
-       else
-	 TtaSearchAttribute (attrType, SearchInTree,
-			     elSubTree, &elFound, &attr);
-       el = elFound;
-       do
-	 {
-	   TtaHandlePendingEvents ();
-	   /* verify if StopTransfer was called */
-	   if (DocumentURLs[doc] == NULL ||
-	       strcmp (currentURL, DocumentURLs[doc]))
-	     /* the document has been removed */
-	     break;
-	   
-	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	     break;
+  /* We are currently fetching images for this document */
+  /* during this time LoadImage has not to stop transfer */
+  /* prepare the attribute to be searched */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  if (attrType.AttrSSchema)
+    /* there are some HTML elements in this documents. 
+       Get all 'img' or 'object' or 'embed' elements */
+    {
+      /* search all elements having an attribute SRC */
+      attrType.AttrTypeNum = HTML_ATTR_SRC;
+      /* Start from the root element */
+      if (elSubTree == NULL)
+	{
+	  el = TtaGetMainRoot (doc);
+	  TtaSearchAttribute (attrType, SearchForward,
+			      el, &elFound, &attr);
+	}
+      else
+	TtaSearchAttribute (attrType, SearchInTree,
+			    elSubTree, &elFound, &attr);
+      el = elFound;
+      do
+	{
+	  TtaHandlePendingEvents ();
+	  /* verify if StopTransfer was called */
+	  if (DocumentURLs[doc] == NULL ||
+	      strcmp (currentURL, DocumentURLs[doc]))
+	    /* the document has been removed */
+	    break;
+	  
+	  if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	    break;
 
-	   /* FetchImage increments FilesLoading[doc] for
-	      each new get request */
-	   if (el != NULL)
-	     {
-	       /* search the next element having an attribute SRC */
-	       elNext = el;
-	       if (elSubTree == NULL)
-		 TtaSearchAttribute (attrType, SearchForward,
-				     elNext, &elFound, &attr);
-	       if (elSubTree != NULL && elFound != NULL &&
-		   !TtaIsAncestor (elFound, elSubTree))
-		 elFound = NULL;
-	       FetchImage (doc, el, NULL, flags, NULL, NULL);
-	       el = elFound;
-	     }
-	 }
-       while (el);
-     }
+	  /* FetchImage increments FilesLoading[doc] for
+	     each new get request */
+	  if (el != NULL)
+	    {
+	      /* search the next element having an attribute SRC */
+	      elNext = el;
+	      if (elSubTree == NULL)
+		TtaSearchAttribute (attrType, SearchForward,
+				    elNext, &elFound, &attr);
+	      if (elSubTree != NULL && elFound != NULL &&
+		  !TtaIsAncestor (elFound, elSubTree))
+		elFound = NULL;
+	      FetchImage (doc, el, NULL, flags, NULL, NULL);
+	      el = elFound;
+	    }
+	}
+      while (el);
+    }
 
-   /* Now, load all SVG images */
-   /* prepare the attribute to be searched */
-   attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
-   if (attrType.AttrSSchema)
-     {
-       attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-       /* Search the next element having an attribute xlink_href */
-       /* Start from the root element */
-       if (elSubTree == NULL)
-	 {
-	   el = TtaGetMainRoot (doc);
-	   TtaSearchAttribute (attrType, SearchForward,
-			       el, &elFound, &attrFound);
-	 }
-       else
-	 TtaSearchAttribute (attrType, SearchInTree,
-			     elSubTree, &elFound, &attrFound);
-       attr = attrFound;
-       el = elFound;
-       do
-	 {
-	   TtaHandlePendingEvents ();
-	   /* verify if StopTransfer was called */
-	   if (DocumentURLs[doc] == NULL ||
-	       strcmp (currentURL, DocumentURLs[doc]))
-	     /* the document has been removed */
-	     break;
-	   
-	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	     break;
-	   
-	   /* FetchImage increments FilesLoading[doc] for each new get request */
-	   if (el != NULL)
-	     {
-	       /* search the next element having an attribute xlink_href */
-	       TtaSearchAttribute (attrType, SearchForward,
-				   el, &elFound, &attrFound);
-	       if (elSubTree != NULL && elFound != NULL &&
-		   !TtaIsAncestor (elFound, elSubTree))
-		 elFound = NULL;
-
-	       /* get the PICTURE_UNIT or use_ element within the image element */
-	       elType = TtaGetElementType (el);
-	       if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
-		   (elType.ElTypeNum == SVG_EL_use_ ||
-		    elType.ElTypeNum == SVG_EL_tref))
-		 pic = el;
-	       else
-		 {
-		   elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
-		   pic = TtaSearchTypedElement (elType, SearchInTree, el);
-		 }
-	       if (pic)
-		 {
-		   /* get the attribute value */
-		   length = TtaGetTextAttributeLength (attr);
-		   if (length > 0)
-		     {
-		       /* allocate some memory */
-		       imageURI = TtaGetMemory (length + 7);
-		       TtaGiveTextAttributeValue (attr, imageURI, &length);
-		       if (!( (imageURI[0] == '#')))
-			 /* don't handle internal links for a use element */
-			 FetchImage (doc, pic, imageURI, flags, NULL, NULL);
-		       TtaFreeMemory (imageURI);
-		     }
-		 }
-	       el = elFound;
-	       attr = attrFound;
-	     }
-	 }
-       while (el);
-     }
-   
-   if (W3Loading != doc)
-       stopped_flag = FALSE;
-   else
-     stopped_flag = TRUE;
-
-   /* Images fetching is now finished */
-   TtaFreeMemory (currentURL);
-
-   return (stopped_flag);
+  /* Now, load all SVG images */
+  /* prepare the attribute to be searched */
+  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
+  if (attrType.AttrSSchema)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+      /* Search the next element having an attribute xlink_href */
+      /* Start from the root element */
+      if (elSubTree == NULL)
+	{
+	  el = TtaGetMainRoot (doc);
+	  TtaSearchAttribute (attrType, SearchForward,
+			      el, &elFound, &attrFound);
+	}
+      else
+	TtaSearchAttribute (attrType, SearchInTree,
+			    elSubTree, &elFound, &attrFound);
+      attr = attrFound;
+      el = elFound;
+      do
+	{
+	  TtaHandlePendingEvents ();
+	  /* verify if StopTransfer was called */
+	  if (DocumentURLs[doc] == NULL ||
+	      strcmp (currentURL, DocumentURLs[doc]))
+	    /* the document has been removed */
+	    break;
+	  
+	  if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	    break;
+	  
+	  /* FetchImage increments FilesLoading[doc] for each new get request */
+	  if (el != NULL)
+	    {
+	      /* search the next element having an attribute xlink_href */
+	      TtaSearchAttribute (attrType, SearchForward,
+				  el, &elFound, &attrFound);
+	      if (elSubTree != NULL && elFound != NULL &&
+		  !TtaIsAncestor (elFound, elSubTree))
+		elFound = NULL;
+	      
+	      /* get the PICTURE_UNIT or use_ element within the image element */
+	      elType = TtaGetElementType (el);
+	      if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
+		  (elType.ElTypeNum == SVG_EL_use_ ||
+		   elType.ElTypeNum == SVG_EL_tref))
+		pic = el;
+	      else
+		{
+		  elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+		  pic = TtaSearchTypedElement (elType, SearchInTree, el);
+		}
+	      if (pic)
+		{
+		  /* get the attribute value */
+		  length = TtaGetTextAttributeLength (attr);
+		  if (length > 0)
+		    {
+		      /* allocate some memory */
+		      imageURI = TtaGetMemory (length + 7);
+		      TtaGiveTextAttributeValue (attr, imageURI, &length);
+		      if (!( (imageURI[0] == '#')))
+			/* don't handle internal links for a use element */
+			FetchImage (doc, pic, imageURI, flags, NULL, NULL);
+		      TtaFreeMemory (imageURI);
+		    }
+		}
+	      el = elFound;
+	      attr = attrFound;
+	    }
+	}
+      while (el);
+    }
+  
+  if (W3Loading != doc)
+    stopped_flag = FALSE;
+  else
+    stopped_flag = TRUE;
+  
+  /* Images fetching is now finished */
+  TtaFreeMemory (currentURL);
+  
+  return (stopped_flag);
 }
 
 /*----------------------------------------------------------------------
