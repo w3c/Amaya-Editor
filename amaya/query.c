@@ -2219,13 +2219,13 @@ static void         AHTProfile_delete ()
   if (acceptLanguages)
     HTLanguage_deleteAll (acceptLanguages);
 
+  StopAllRequests (1);
   HTList_delete (Amaya->docid_status);
   HTList_delete (Amaya->reqlist);
   TtaFreeMemory (Amaya);
 
-  if (HTLib_isInitialized ())
-      
 #ifdef _WINDOWS
+  if (HTLib_isInitialized ())      
     HTEventTerminate ();
 #endif /* _WINDOWS; */		
     
