@@ -249,10 +249,10 @@ char*               name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST pCharUnit filename)
+BinFile             TtaReadOpen (CONST CharUnit* filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST pCharUnit     filename;
+CONST CharUnit*     filename;
 
 #endif /* __STDC__ */
 {
@@ -579,13 +579,13 @@ char*               aName;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (pCharUnit fname, pCharUnit fext, pCharUnit directory_list, pCharUnit completeName, int *length)
+void                MakeCompleteName (CharUnit* fname, CharUnit* fext, CharUnit* directory_list, CharUnit* completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-pCharUnit           fname;
-pCharUnit           fext;
-pCharUnit           directory_list;
-pCharUnit           completeName;
+CharUnit*           fname;
+CharUnit*           fext;
+CharUnit*           directory_list;
+CharUnit*           completeName;
 int*                length;
 
 #endif /* __STDC__ */
@@ -1125,11 +1125,11 @@ STRING              directory;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaCheckDirectory (pCharUnit directory)
+ThotBool            TtaCheckDirectory (CharUnit* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaCheckDirectory (directory)
-pCharUnit           directory;
+CharUnit*           directory;
 
 #endif /* __STDC__ */
 

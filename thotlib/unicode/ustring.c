@@ -148,6 +148,27 @@ const char* src;
 }
 
 /*-------------------------------------------------------------
+  wc2iso_strcpy: copies src (16-bit) into dest (8-bit). This 
+  function suposes that momery has been already allocated in the 
+  same way that strcpy does.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* wc2iso_strcpy (char* dest, const STRING src)
+#else  /* __STDC__ */
+char* wc2iso_strcpy (dest, src)
+char*         dest;
+const CHAR_T* src;
+#endif /* __STDC__ */
+{
+    int i, len = ustrlen (src);
+    for (i = 0; i < len; i++)
+        dest[i] = (char)src[i];
+    dest[i] = (char)0;
+    return dest;
+}
+
+/*-------------------------------------------------------------
   ustrdup: duplicate strings.
   -------------------------------------------------------------*/
  
@@ -159,8 +180,48 @@ const STRING str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) _wcsdup ((wchar_t*)str);
+    return (STRING) _wcsdup (str);
 #   else  /* !_WINDOWS */
+#   endif /* _WINDOWS */
+}
+
+/*-------------------------------------------------------------
+  iso2wc_strdup: duplicate strings.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+STRING iso2wc_strdup (const char* str)
+#else  /* __STDC__ */
+STRING iso2wc_strdup (str)
+const char* str;
+#endif /* __STDC__ */
+{
+    STRING  res;
+    CHAR_T* tmp = (CHAR_T*) malloc ((strlen (str) + 1) * sizeof (CHAR_T));
+    iso2wc_strcpy (tmp, str);
+#   ifdef _WINDOWS
+    res = _wcsdup ((wchar_t*)tmp);
+#   else  /* !_WINDOWS */
+#   endif /* _WINDOWS */
+    free (tmp);
+    return (STRING) res;
+}
+
+/*-------------------------------------------------------------
+  wc2iso_strdup: duplicate strings.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* wc2iso_strdup (const STRING str)
+#else  /* __STDC__ */
+char* wc2iso_strdup (str)
+const char* str;
+#endif /* __STDC__ */
+{
+#   ifdef _WINDOWS
+    return (char*) _strdup ((char*)str);
+#   else  /* !_WINDOWS */
+    return (char*) strdup ((char*)str);
 #   endif /* _WINDOWS */
 }
 
@@ -456,6 +517,23 @@ const char* src;
 }
 
 /*-------------------------------------------------------------
+  wc2iso_strcpy: copies src (16-bit) into dest (8-bit). This 
+  function suposes that momery has been already allocated in the 
+  same way that strcpy does.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* wc2iso_strcpy (char* dest, const CHAR_T* src)
+#else  /* __STDC__ */
+char* wc2iso_strcpy (dest, src)
+char*         dest;
+const CHAR_T* src;
+#endif /* __STDC__ */
+{
+    return (char*) strcpy ((char*)dest, (char*)src);
+}
+
+/*-------------------------------------------------------------
   ustrdup: duplicate strings.
   -------------------------------------------------------------*/
  
@@ -471,6 +549,46 @@ const STRING str;
 #   else  /* !_WINDOWS */
     return (STRING) strdup ((char*)str);
 #   endif /* _WINDOWS */
+}
+
+/*-------------------------------------------------------------
+  iso2wc_strdup: duplicate strings.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+STRING iso2wc_strdup (const char* str)
+#else  /* __STDC__ */
+STRING iso2wc_strdup (str)
+const char* str;
+#endif /* __STDC__ */
+{
+#   ifdef _WINDOWS
+    return (STRING) _strdup (str);
+#   else  /* !_WINDOWS */
+    return (STRING) strdup (str);
+#   endif /* _WINDOWS */
+}
+
+/*-------------------------------------------------------------
+  wc2iso_strdup: duplicate strings.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* wc2iso_strdup (const STRING str)
+#else  /* __STDC__ */
+char* wc2iso_strdup (str)
+const char* str;
+#endif /* __STDC__ */
+{
+    char*  res;
+    char* tmp = (char*) malloc (ustrlen (str) + 1);
+    wc2iso_strcpy (tmp, str);
+#   ifdef _WINDOWS
+    res = _strdup (tmp);
+#   else  /* !_WINDOWS */
+#   endif /* _WINDOWS */
+    free (tmp);
+    return res;
 }
 
 /*-------------------------------------------------------------

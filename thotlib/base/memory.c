@@ -141,6 +141,7 @@ PtrDict             PtFree_Dict;
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
+#include "ustring_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -175,15 +176,15 @@ unsigned int       n;
   TtaAllocCUString
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-pCharUnit          TtaAllocCUString (unsigned int n)
+CharUnit*          TtaAllocCUString (unsigned int n)
 #else  /* !__STDC__ */
-pCharUnit          TtaAllocCUString (n)
+CharUnit*          TtaAllocCUString (n)
 unsigned int       n;
 #endif /* !__STDC__ */
 {
      if (n == 0)
         n++;
-     return ((pCharUnit) malloc ((size_t) n * sizeof (CharUnit)));
+     return ((CharUnit*) malloc ((size_t) n * sizeof (CharUnit)));
 }
 
 /*----------------------------------------------------------------------
@@ -466,13 +467,42 @@ void                FreeAll ()
    TtaGetMemory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING              TtaStrdup (STRING str)
+char*              TtaStrdup (char* str)
 #else  /* __STDC__ */
-STRING              TtaStrdup (str)
-STRING              str;
+char*              TtaStrdup (str)
+char*              str;
 #endif /* __STDC__ */
 {
-   STRING              res;
+   char*              res;
+
+   if (str == NULL)
+      return (NULL);
+   res = TtaGetMemory (ustrlen (str) + 1);
+   if (res == NULL)
+      return (res);
+   strcpy (res, str);
+   return (res);
+}
+
+/*----------------------------------------------------------------------
+   TtaWCSdup
+
+   Copy the WC string given in argument to a newly allocated piece of memory.
+
+   Parameters:
+   str: a zero terminated string.
+
+   See also:
+   TtaGetMemory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T*              TtaWCSdup (CHAR_T* str)
+#else  /* __STDC__ */
+CHAR_T*              TtaWCSdup (str)
+CHAR_T*              str;
+#endif /* __STDC__ */
+{
+   CHAR_T*              res;
 
    if (str == NULL)
       return (NULL);
@@ -480,6 +510,36 @@ STRING              str;
    if (res == NULL)
       return (res);
    ustrcpy (res, str);
+   return (res);
+}
+
+/*----------------------------------------------------------------------
+   TtaCUSdup
+
+   Copy the string (CharUnit*) given in argument to a newly allocated piece 
+   of memory.
+
+   Parameters:
+   str: a zero terminated string.
+
+   See also:
+   TtaGetMemory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CharUnit*            TtaCUSdup (CharUnit* str)
+#else  /* __STDC__ */
+CharUnit*            TtaCUSdup (str)
+CharUnit*            str;
+#endif /* __STDC__ */
+{
+   CharUnit*         res;
+
+   if (str == NULL)
+      return (NULL);
+   res = TtaGetMemory ((ustrlen (str) + 1) * sizeof (CharUnit));
+   if (res == NULL)
+      return (res);
+   StringCopy (res, str);
    return (res);
 }
 

@@ -33,10 +33,10 @@
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileExist (CONST pCharUnit filename)
+int                 TtaFileExist (CONST CharUnit* filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-CONST pCharUnit     filename;
+CONST CharUnit*     filename;
 
 #endif /* __STDC__ */
 {
@@ -173,13 +173,13 @@ ThotDirBrowse      *me;
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotDirBrowse_first (ThotDirBrowse * me, pCharUnit dir, pCharUnit name, pCharUnit ext)
+int                 ThotDirBrowse_first (ThotDirBrowse * me, CharUnit* dir, CharUnit* name, CharUnit* ext)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_first (me, dir, name, ext)
 ThotDirBrowse      *me;
-pCharUnit           dir;
-pCharUnit           name;
-pCharUnit           ext;
+CharUnit*           dir;
+CharUnit*           name;
+CharUnit*           ext;
 
 #endif /* __STDC__ */
 {

@@ -528,9 +528,9 @@ char              *name;
   ----------------------------------------------------------------------*/
 void Prof_InitTable ()
 {
-  FILE               *profFile;
-  char               *ptr;
-  char                buffer[200];
+  FILE*     profFile;
+  CharUnit* ptr;
+  char      buffer[MAX_LENGTH];
 
   /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
   /* Retreive thot.rc variables and open the profile file */
@@ -641,8 +641,8 @@ void     TtaGetProfileFileName (name, length)
 STRING   name;
 #endif /* !__STDC__ */
 {
-  char               *ptr;
-  char                buffer[200];
+  CharUnit* ptr;
+  char      buffer[MAX_LENGTH];
 
   name[0] = EOS;
   ptr = TtaGetEnvString ("Profiles_File");

@@ -44,6 +44,7 @@ UCHAR_T       Code[256];	/* Alphabet characters */
 #include "fileaccess_f.h"
 #include "thotmsg_f.h"
 #include "platform_f.h"
+#include "ustring_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -56,17 +57,17 @@ static void           LoadAlphabet ()
   int        i;
   
   if (dictPath != NULL)
-    ustrcpy (alphaName, dictPath);
+    StringCopy (alphaName, dictPath);
   else
-    ustrcpy (alphaName, _EMPTYSTR_);
+    StringCopy (alphaName, CUSTEXT(""));
 
-  ustrcat (alphaName, DIR_STR);
-  ustrcat (alphaName, TEXT("alphabet"));
+  StringConcat (alphaName, CUS_DIR_STR);
+  StringConcat (alphaName, CUSTEXT("alphabet"));
   
-  if ((falpha = ufopen (alphaName, TEXT("r"))) != NULL)
+  if ((falpha = cus_fopen (alphaName, CUSTEXT("r"))) != NULL)
     {
       for (i = 0; i < 256; i++)
-	Code[i] = (UCHAR_T) 100;
+          Code[i] = (UCHAR_T) 100;
       i = 1;
       while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
 	{
@@ -250,11 +251,11 @@ STRING              dictDirectory;
    returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TestDictionary (pCharUnit dictName, pCharUnit dictDirectory)
+static int          TestDictionary (CharUnit* dictName, CharUnit* dictDirectory)
 #else  /* __STDC__ */
 static int          TestDictionary (dictName, dictDirectory)
-pCharUnit           dictName;
-pCharUnit           dictDirectory;
+CharUnit*           dictName;
+CharUnit*           dictDirectory;
 
 #endif /* __STDC__ */
 {
@@ -588,14 +589,14 @@ ThotBool            toTreat;
   toCreate = TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, pCharUnit dictName, pCharUnit dictDirectory, ThotBool readonly, ThotBool toCreate)
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, CharUnit* dictName, CharUnit* dictDirectory, ThotBool readonly, ThotBool toCreate)
 #else  /* __STDC__ */
 int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
-pCharUnit           dictName;
-pCharUnit           dictDirectory;
+CharUnit*           dictName;
+CharUnit*           dictDirectory;
 ThotBool            readonly;
 ThotBool            toCreate;
 #endif /* __STDC__ */

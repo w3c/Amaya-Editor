@@ -19,7 +19,10 @@ extern int ustrcoll ( const STRING str1,
 extern STRING ustrcpy ( STRING dest,
                         const STRING src );
 extern STRING iso2wc_strcpy (STRING, const char*);
+extern char* wc2iso_strcpy (char*, const CHAR_T*);
 extern STRING ustrdup ( const STRING str );
+extern STRING iso2wc_strdup (const char*);
+extern char* wc2iso_strdup (const STRING);
 extern size_t ustrlen ( const STRING str );
 extern int ustrncasecmp ( STRING str1,
                           const STRING str2,
@@ -41,21 +44,21 @@ extern STRING ustrtok ( STRING str,
                         const STRING delemiter );
 extern STRING ustrstr ( const STRING str,
                         const STRING strCharSet );
-extern int StringCaseCompare (pCharUnit, const pCharUnit);
-extern pCharUnit StringConcat (pCharUnit, const pCharUnit);
-extern pCharUnit StrChr (const pCharUnit, CharUnit);
-extern int StringCompare (const pCharUnit, const pCharUnit);
-extern int StrColl (const pCharUnit, const pCharUnit);
-extern pCharUnit StringCopy (pCharUnit, const pCharUnit);
-extern pCharUnit StringDuplicate (const pCharUnit);
-extern size_t StringLength (const pCharUnit);
-extern int StringNCaseCompare (pCharUnit, const pCharUnit, unsigned int);
-extern pCharUnit StringNConcat (pCharUnit, const pCharUnit, unsigned int);
-extern pCharUnit StringNCompare (const pCharUnit, const pCharUnit, unsigned int);
-extern pCharUnit StringNCopy (pCharUnit, const pCharUnit, unsigned int);
-extern pCharUnit StrRChr (const pCharUnit, CharUnit);
-extern pCharUnit StringToken (pCharUnit, const pCharUnit);
-extern pCharUnit StringSubstring (const pCharUnit, const pCharUnit);
+extern int StringCaseCompare (CharUnit*, const CharUnit*);
+extern CharUnit* StringConcat (CharUnit*, const CharUnit*);
+extern CharUnit* StrChr (const CharUnit*, CharUnit);
+extern int StringCompare (const CharUnit*, const CharUnit*);
+extern int StrColl (const CharUnit*, const CharUnit*);
+extern CharUnit* StringCopy (CharUnit*, const CharUnit*);
+extern CharUnit* StringDuplicate (const CharUnit*);
+extern size_t StringLength (const CharUnit*);
+extern int StringNCaseCompare (CharUnit*, const CharUnit*, unsigned int);
+extern CharUnit* StringNConcat (CharUnit*, const CharUnit*, unsigned int);
+extern CharUnit* StringNCompare (const CharUnit*, const CharUnit*, unsigned int);
+extern CharUnit* StringNCopy (CharUnit*, const CharUnit*, unsigned int);
+extern CharUnit* StrRChr (const CharUnit*, CharUnit);
+extern CharUnit* StringToken (CharUnit*, const CharUnit*);
+extern CharUnit* StringSubstring (const CharUnit*, const CharUnit*);
 
 #else /* __STDC__ */
 
@@ -73,6 +76,8 @@ extern STRING ustrcpy (/* STRING dest,
                           const STRING src */);
 extern STRING iso2wc_strcpy (/* STRING, const char* */);
 extern STRING ustrdup (/* const STRING str */);
+extern STRING iso2wc_strdup (/* const char* */);
+extern char* wc2iso_strdup (/* const STRING */);
 extern size_t ustrlen (/* const STRING str */);
 extern int ustrncasecmp (/* STRING str1,
                             const STRING str2,
@@ -94,20 +99,20 @@ extern STRING ustrtok (/* STRING str,
 extern STRING ustrstr (/* const STRING str,
                           const STRING strCharSet */);
 extern int StringCaseCompare ();
-extern pCharUnit StringConcat ();
-extern pCharUnit StrChr ();
+extern CharUnit* StringConcat ();
+extern CharUnit* StrChr ();
 extern int StringCompare ();
 extern int ustrcoll ();
-extern pCharUnit StringCopy ();
-extern pCharUnit StringDuplicate ();
+extern CharUnit* StringCopy ();
+extern CharUnit* StringDuplicate ();
 extern size_t StringLength ();
 extern int StringNCaseCompare ();
-extern pCharUnit StringNConcat ();
-extern pCharUnit StringNCompare ();
-extern pCharUnit StringNCopy ();
-extern pCharUnit StrRChr ();
-extern pCharUnit StringToken ();
-extern pCharUnit StringSubstring ();
+extern CharUnit* StringNConcat ();
+extern CharUnit* StringNCompare ();
+extern CharUnit* StringNCopy ();
+extern CharUnit* StrRChr ();
+extern CharUnit* StringToken ();
+extern CharUnit* StringSubstring ();
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

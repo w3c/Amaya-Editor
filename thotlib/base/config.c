@@ -290,12 +290,12 @@ char*               word2;
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         namesOfDocType (pCharUnit fname, pCharUnit* doctypeOrig, pCharUnit* doctypeTrans, int *typ, ThotBool * import)
+static void         namesOfDocType (CharUnit* fname, CharUnit** doctypeOrig, CharUnit** doctypeTrans, int *typ, ThotBool * import)
 #else  /* __STDC__ */
 static void         namesOfDocType (fname, doctypeOrig, doctypeTrans, typ, import)
-pCharUnit           fname;
-pCharUnit*          doctypeOrig;
-pCharUnit*          doctypeTrans;
+CharUnit*           fname;
+CharUnit**          doctypeOrig;
+CharUnit**          doctypeTrans;
 int*                typ;
 ThotBool*           import;
 
@@ -447,17 +447,17 @@ ThotBool*           import;
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaConfigReadConfigFiles (pCharUnit aSchemaPath)
+void                TtaConfigReadConfigFiles (CharUnit* aSchemaPath)
 #else                        /* __STDC__ */
 void                TtaConfigReadConfigFiles (aSchemaPath)
-pCharUnit           aSchemaPath;
+CharUnit*           aSchemaPath;
 #endif                       /* __STDC__ */
 {
    int                 nbitemdoc, nbitemnat, nbitemext;
    int                 beginning, i;
    int                 typ;
    ThotBool            import;
-   pCharUnit           Dir;
+   CharUnit*           Dir;
    PathBuffer          DirBuffer;
    ThotDirBrowse       thotDir;
 
@@ -465,9 +465,9 @@ pCharUnit           aSchemaPath;
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
    PathBuffer          fname;
-   pCharUnit           suffix;
-   pCharUnit           nameOrig;
-   pCharUnit           nameTrans;
+   CharUnit*           suffix;
+   CharUnit*           nameOrig;
+   CharUnit*           nameTrans;
    ThotBool            stop;
 
    suffix = TtaGetVarLANG ();
@@ -790,11 +790,11 @@ ThotBool            Doc;
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FILE        *openConfigFile (pCharUnit name, ThotBool lang)
+static FILE        *openConfigFile (CharUnit* name, ThotBool lang)
 
 #else  /* __STDC__ */
 static FILE        *openConfigFile (name, lang)
-pCharUnit           name;
+CharUnit*           name;
 ThotBool            lang;
 
 #endif /* __STDC__ */
@@ -802,7 +802,7 @@ ThotBool            lang;
 {
 
    CharUnit            suffix[MAX_EXT];
-   pCharUnit           ptr;
+   CharUnit*           ptr;
    int                 i;
    PathBuffer          DirBuffer, filename;
    FILE               *file;
@@ -837,11 +837,11 @@ ThotBool            lang;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuPres (pCharUnit schema, char* BufMenu)
+int                 ConfigMakeMenuPres (CharUnit* schema, char* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuPres (schema, BufMenu)
-pCharUnit           schema;
+CharUnit*           schema;
 char*               BufMenu;
 
 #endif /* __STDC__ */
@@ -989,11 +989,11 @@ char*               BufMenu;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuExport (pCharUnit schema, char* BufMenu)
+int                 ConfigMakeMenuExport (CharUnit* schema, char* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuExport (schema, BufMenu)
-pCharUnit           schema;
+CharUnit*           schema;
 char*               BufMenu;
 
 #endif /* __STDC__ */
@@ -1238,11 +1238,11 @@ PtrSSchema          pSS;
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigDefaultPSchema (pCharUnit schstr, char* schpres)
+ThotBool            ConfigDefaultPSchema (CharUnit* schstr, char* schpres)
 
 #else  /* __STDC__ */
 ThotBool            ConfigDefaultPSchema (schstr, schpres)
-pCharUnit           schstr;
+CharUnit*           schstr;
 char*               schpres;
 
 #endif /* __STDC__ */

@@ -1524,7 +1524,7 @@ int                 zoom;
   *height = h;
   if (buffer == NULL) {
 #    ifdef _WINDOWS
-     WinErrorBox (NULL, "GifCreate: buffer == 0x00000000");
+     WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
 #    endif /* _WINDOWS */
      return (ThotBitmapNone);
   }
@@ -1589,7 +1589,7 @@ int                 zoom;
    TtaFreeMemory (buffer);
    if (pixmap == None) {
 #     ifdef _WINDOWS
-      WinErrorBox (NULL, "GifCreate: pixmap == 0x00000000");
+      WinErrorBox (NULL, TEXT("GifCreate(2): pixmap == 0x00000000"));
 #     endif /* _WINDOWS */
      return (ThotBitmapNone);
    } else

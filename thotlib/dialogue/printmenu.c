@@ -112,7 +112,7 @@ STRING              cssToPrint;
 Document            document;
 #endif /* __STDC__ */
 { 
-   char*                   ptr;
+   CharUnit*               ptr;
 #ifdef _WINDOWS
    static LPPRINTER_INFO_5 pInfo5;
    STRING                  printArgv [100];

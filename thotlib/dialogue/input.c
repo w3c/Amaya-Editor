@@ -1104,7 +1104,7 @@ STRING              appliname;
 
 #endif /* __STDC__ */
 {
-   char*               text;	   /* fichier de translation transmis a motif */
+   CharUnit*           text;	   /* fichier de translation transmis a motif */
    char                line[200];  /* ligne en construction pour motif */
    char                home[200], name[80]; 
    char                ch[80]; 

@@ -31,6 +31,7 @@
 #include "memory_f.h"
 #include "inites_f.h"
 #include "registry_f.h"
+#include "ustring_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOW S*/
@@ -265,7 +266,7 @@ void         FreeDocColors ()
 #ifdef _WINDOWS
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
-    WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
+    WinErrorBox (WIN_Main_Wd, TEXT("FreeDocColors (1)"));
   TtCmap = 0;
 #else /* _WINDOWS */
   int        i;
@@ -313,7 +314,7 @@ STRING              name;
 {
 #ifndef _WIN_PRINT
    int                 i, j, k;
-   char*               value;
+   CharUnit*           value;
    ThotBool            reducecolor;
    ThotBool            colormap_full;
 #ifdef _GTK
@@ -329,7 +330,7 @@ STRING              name;
    value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!ustrcasecmp (value, TEXT("yes")))
+   else if (!StringCaseCompare (value, CUSTEXT("yes")))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;
@@ -806,7 +807,7 @@ int         motif;
      {
 	if (!DeleteObject (WIN_LastBitmap))
 #ifndef _WIN_PRINT
-	  WinErrorBox (WIN_Main_Wd, "CreatePattern (1)");
+	  WinErrorBox (WIN_Main_Wd, TEXT("CreatePattern (1)"));
 #endif /* _WIN_PRINT */
 	;
 	WIN_LastBitmap = 0;

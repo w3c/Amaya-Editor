@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern char* AsciiTranslate ( char* pBuffer );
-extern int TtaGetMessageTable ( CONST STRING msgName,
+extern int TtaGetMessageTable ( CONST CharUnit* msgName,
                                 int msgNumber );
 extern void FreeAllMessages ( void );
 extern STRING TtaGetMessage ( int origin,
@@ -23,7 +23,7 @@ extern void DisplayPivotMessage ( STRING code );
 #else /* __STDC__ */
 
 extern char* AsciiTranslate (/* char* pBuffer */);
-extern int TtaGetMessageTable (/* CONST STRING msgName,
+extern int TtaGetMessageTable (/* CONST CharUnit* msgName,
                                   int msgNumber */);
 extern void FreeAllMessages (/* void */);
 extern STRING TtaGetMessage (/* int origin,

@@ -87,10 +87,20 @@ and must be removed at the end of the debug */
 #endif
 
 /* Constants for PATHs */
-#define DIR_SEP  TEXT('/')
-#define PATH_SEP TEXT(':')
-#define DIR_STR  TEXT("/")
-#define PATH_STR TEXT(":")
+#define DIR_SEP  '/'
+#define PATH_SEP ':'
+#define DIR_STR  "/"
+#define PATH_STR ":"
+
+#define WC_DIR_SEP  TEXT('/')
+#define WC_PATH_SEP TEXT(':')
+#define WC_DIR_STR  TEXT("/")
+#define WC_PATH_STR TEXT(":")
+
+#define CUS_DIR_SEP  CUSTEXT('/')
+#define CUS_PATH_SEP CUSTEXT(':')
+#define CUS_DIR_STR  CUSTEXT("/")
+#define CUS_PATH_STR CUSTEXT(":")
 #else /* __GNUC__ */ /*---------------------------------GNUC--*/
 /* Ugly patches to cope with Visual C++ */
 /* preproccessor flags */
@@ -111,10 +121,20 @@ int                 _getpid (void);
 #define unlink(f) _unlink((f))
 
 /* Constants for PATHs */
-#define DIR_SEP  TEXT('\\')
-#define PATH_SEP TEXT(';')
-#define DIR_STR  TEXT("\\")
-#define PATH_STR TEXT(";")
+#define DIR_SEP  '\\'
+#define PATH_SEP ';'
+#define DIR_STR  "\\"
+#define PATH_STR ";"
+
+#define WC_DIR_SEP  TEXT('\\')
+#define WC_PATH_SEP TEXT(';')
+#define WC_DIR_STR  TEXT("\\")
+#define WC_PATH_STR TEXT(";")
+
+#define CUS_DIR_SEP  CUSTEXT('\\')
+#define CUS_PATH_SEP CUSTEXT(';')
+#define CUS_DIR_STR  CUSTEXT("\\")
+#define CUS_PATH_STR CUSTEXT(";")
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
 
@@ -180,22 +200,25 @@ typedef unsigned char   ThotBool;
 #endif
 
 #define _EMPTYSTR_ TEXT("")
-#define __CR__  TEXT('\r')
-#define EOS     TEXT('\0')
-#define EOL     TEXT('\n')
-#define TAB     TEXT('\t')
-#define SPACE   TEXT(' ')
-#define BSPACE  TEXT('\b')
+#define __CR__  '\r'
+#define EOS     '\0'
+#define EOL     '\n'
+#define TAB     '\t'
+#define SPACE   ' '
+#define BSPACE  '\b'
 
-#if defined(_WINDOWS) && defined(_I18N_)
+#define WC_CR     TEXT('\r')
+#define WC_EOS    TEXT('\0')
+#define WC_EOL    TEXT('\n')
+#define WC_TAB    TEXT('\t')
+#define WC_SPACE  TEXT(' ')
+#define WC_BSPACE TEXT('\b')
 
-typedef unsigned short CharUnit;
-
-#else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
-
-typedef char CharUnit;
-
-#endif /* defined(_WINDOWS) && defined(_I18N_) */
-typedef CharUnit* pCharUnit;
+#define CUS_CR     CUSTEXT('\r')
+#define CUS_EOS    CUSTEXT('\0')
+#define CUS_EOL    CUSTEXT('\n')
+#define CUS_TAB    CUSTEXT('\t')
+#define CUS_SPACE  CUSTEXT(' ')
+#define CUS_BSPACE CUSTEXT('\b')
 
 #endif /* THOT_SYS_H */

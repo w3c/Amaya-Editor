@@ -279,7 +279,7 @@ int                 zoom;
   *height = h;
   if (!buffer) {
 #    ifdef _WINDOWS 
-     WinErrorBox (NULL, "JpegCreate: buffer == 0x00000000");
+     WinErrorBox (NULL, TEXT("JpegCreate(1): buffer == 0x00000000"));
 #    endif /* _WINDOWS */
     return (ThotBitmapNone);
   }
@@ -320,7 +320,7 @@ int                 zoom;
   TtaFreeMemory (buffer);  
   if (pixmap == None) {
 #    ifdef _WINDOWS
-     WinErrorBox (NULL, "JpegCreate: pixmap == 0x00000000");
+     WinErrorBox (NULL, TEXT("JpegCreate(2): pixmap == 0x00000000"));
 #    endif /* _WINDOWS */
     return (ThotBitmapNone);
   }

@@ -64,7 +64,7 @@ ThotBool		    origName;
 
 {
    PtrElement          pEl;
-   pCharUnit           text;
+   CharUnit*           text;
 
    text = TtaGetMemory (MAX_TXT_LEN);
 

@@ -46,7 +46,7 @@
 #define _MENU_IMAGE_TYPE    6
 #define MAX_IMAGE_MENU      7
 extern PathBuffer   DocumentPath;
-extern pCharUnit    SchemaPath;
+extern CharUnit*    SchemaPath;
 extern STRING       FileExtension[];
 
 #undef THOT_EXPORT

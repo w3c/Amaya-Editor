@@ -716,7 +716,7 @@ char*               languageName;
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-pCharUnit               TtaGetVarLANG ()
+CharUnit*               TtaGetVarLANG ()
 {
    CharUnit* name;
 

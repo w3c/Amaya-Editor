@@ -444,11 +444,11 @@ STRING              fileName;
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDocument (PtrDocument * pDoc, PtrBuffer SSchemaName, char* docName, PathBuffer directory)
+void                NewDocument (PtrDocument * pDoc, char* SSchemaName, char* docName, PathBuffer directory)
 #else  /* __STDC__ */
 void                NewDocument (pDoc, SSchemaName, docName, directory)
 PtrDocument        *pDoc;
-PtrBuffer           SSchemaName;
+char*               SSchemaName;
 char*               docName;
 PathBuffer          directory;
 
@@ -480,11 +480,11 @@ PathBuffer          directory;
 	   (*pDoc)->DocDirectory[i] = EOS;
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
-	   ConfigSSchemaInternalName ((STRING) SSchemaName, docType, TRUE);
+	   ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
 	   if (docType[0] == EOS)
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
-	      ustrncpy (docType, (STRING) SSchemaName, MAX_NAME_LENGTH);
+	      ustrncpy (docType, SSchemaName, MAX_NAME_LENGTH);
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);

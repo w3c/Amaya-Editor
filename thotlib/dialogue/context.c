@@ -208,7 +208,7 @@ ThotColor*  colorpixel;
 #endif /* __STDC__ */
 {
    int                 col;
-   char*               value;
+   CharUnit*           value;
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
@@ -263,8 +263,8 @@ void TtaUpdateEditorColors (void)
 void TtaUpdateEditorColors ()
 #endif /* __STDC__ */
 {
-  char*    app_name;
-  ThotBool found;
+  CharUnit* app_name;
+  ThotBool  found;
 
   app_name =  TtaGetEnvString ("appname");
 

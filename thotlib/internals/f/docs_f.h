@@ -13,7 +13,7 @@ extern void LoadDocument ( PtrDocument * pDoc,
 extern void LoadXmlDocument ( PtrDocument * pDoc,
                               STRING fileName );
 extern void NewDocument ( PtrDocument * pDoc,
-                          PtrBuffer SSchemaName,
+                          char* SSchemaName,
                           char* docName,
                           PathBuffer directory );
 extern void PaginateDocument ( PtrDocument pDoc );
@@ -36,7 +36,7 @@ extern void LoadDocument (/* PtrDocument * pDoc,
 extern void LoadXmlDocument (/* PtrDocument * pDoc,
                                 STRING fileName */);
 extern void NewDocument (/* PtrDocument * pDoc,
-                            PtrBuffer SSchemaName,
+                            char* SSchemaName,
                             char* docName,
                             PathBuffer directory */);
 extern void PaginateDocument (/* PtrDocument pDoc */);

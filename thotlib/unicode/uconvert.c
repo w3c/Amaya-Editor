@@ -309,6 +309,31 @@ CHAR_T c;
 
 #endif /* _I18N_ */
 
+#ifdef __STDC__
+CharUnit ToLower (CharUnit c) 
+#else  /* !__STDC__ */
+CharUnit ToLower (c)
+CharUnut c;
+#endif /* __STDC__ */
+{
+#   if defined(_WINDOWS) && defined(_I18N_)
+    return (CHAR_T) towlower((wint_t ) c);
+#   else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
+    return ((char) tolower ((int)c));
+#   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
+}
 
-
+#ifdef __STDC__
+int cus_atoi (const CharUnit* string)
+#else  /* !__STDC__ */
+int cus_atoi (string)
+const CharUnit* string;
+#endif /* !__STDC__ */
+{
+#   if defined(_WINDOWS) && defined(_I18N_)
+    return _wtoi (string);
+#   else  /* !_WINDOWS */
+    return atoi (string);
+#   endif /* !_WINDOWS */
+}
 

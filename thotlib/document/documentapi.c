@@ -1266,12 +1266,12 @@ SSchema             schema;
    nature schema and extension schema used by pSS. It returns a pointer
    which references this schema or NULL if not found. */
 #ifdef __STDC__
-static SSchema      ChSchStruct (PtrSSchema pSS, pCharUnit name)
+static SSchema      ChSchStruct (PtrSSchema pSS, CharUnit* name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
-pCharUnit           name;
+CharUnit*           name;
 
 #endif /* __STDC__ */
 

@@ -52,6 +52,7 @@ static CHAR_T       result[MAX_TXT_LEN];
 #include "memory_f.h"
 #include "message_f.h"
 #include "registry_f.h"
+#include "ustring_f.h"
 
 #ifdef _WINDOWS
 #define isascii(c) __isascii(c)
@@ -143,10 +144,10 @@ char*               pBuffer;
    La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetMessageTable (CONST pCharUnit msgName, int msgNumber)
+int                 TtaGetMessageTable (CONST CharUnit* msgName, int msgNumber)
 #else  /* __STDC__ */
 int                 TtaGetMessageTable (msgName, msgNumber)
-CONST pCharUnit     msgName;
+CONST CharUnit*     msgName;
 int                 msgNumber;
 
 #endif /* __STDC__ */
@@ -167,7 +168,7 @@ int                 msgNumber;
    s = TtaGetVarLANG ();
    ustrcpy (fileName, s);
    fileName[2] = CUSTEXT('-');
-   ustrcpy (&fileName[3], msgName);
+   StringCopy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
    file = fopen (pBuffer, "r");
    if (file == NULL)

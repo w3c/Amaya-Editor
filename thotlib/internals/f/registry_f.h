@@ -6,31 +6,32 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern STRING TtaSkipBlanks ( STRING ptr );
-extern ThotBool TtaIsBlank ( STRING ptr );
+extern char* TtaSkipBlanks ( char* ptr );
+extern ThotBool TtaIsBlank ( char* ptr );
+extern ThotBool TtaIsCUSBlank (CharUnit*);
 extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
-extern pCharUnit TtaGetEnvString ( char* name );
-extern void TtaClearEnvString ( STRING name );
-extern void TtaSetEnvInt ( STRING name,
+extern CharUnit* TtaGetEnvString ( char* name );
+extern void TtaClearEnvString ( char* name );
+extern void TtaSetEnvInt ( char* name,
                            int value,
                            int overwrite );
 extern void TtaSetEnvBoolean ( char *name,
                                ThotBool value,
                                int overwrite );
 extern void TtaSetEnvString ( char *name,
-                              STRING value,
+                              CharUnit* value,
                               int overwrite );
 extern void TtaSetDefEnvString ( char *name,
-                                 STRING value,
+                                 CharUnit* value,
                                  int overwrite );
-extern ThotBool TtaGetDefEnvInt ( STRING name,
+extern ThotBool TtaGetDefEnvInt ( char* name,
                                   int *value );
-extern ThotBool TtaGetDefEnvBoolean ( STRING name,
+extern ThotBool TtaGetDefEnvBoolean ( char* name,
                                       ThotBool *value );
-extern STRING TtaGetDefEnvString ( STRING name );
+extern CharUnit* TtaGetDefEnvString ( char* name );
 extern void TtaSaveAppRegistry ( void );
 extern void TtaInitializeAppRegistry ( CharUnit* appArgv0 );
 extern void TtaFreeAppRegistry ( void );
@@ -40,37 +41,32 @@ extern int SearchFile ( STRING fileName,
 
 #else /* __STDC__ */
 
-extern STRING TtaSkipBlanks (/* STRING ptr */);
-extern ThotBool TtaIsBlank (/* STRING ptr */);
+extern char* TtaSkipBlanks (/* char* ptr */);
+extern ThotBool TtaIsBlank (/* char* ptr */);
+extern ThotBool    TtaIsCUSBlank (/* CharUnit* */);
 extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
 extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
-<<<<<<< registry_f.h
-extern pCharUnit TtaGetEnvString (/* char* name */);
-extern void TtaClearEnvString (/* STRING name */);
-extern void TtaSetEnvInt (/* STRING name,
-=======
 extern char* TtaGetEnvString (/* char* name */);
 extern void TtaClearEnvString (/* char *name */);
 extern void TtaSetEnvInt (/* char *name,
->>>>>>> 1.17
                              int value,
                              int overwrite */);
 extern void TtaSetEnvBoolean (/* char *name,
                                  ThotBool value,
                                  int overwrite */);
 extern void TtaSetEnvString (/* char *name,
-                                STRING value,
+                                CharUnit* value,
                                 int overwrite */);
 extern void TtaSetDefEnvString (/* char *name,
-                                   STRING value,
+                                   CharUnit* value,
                                    int overwrite */);
-extern ThotBool TtaGetDefEnvInt (/* STRING name,
+extern ThotBool TtaGetDefEnvInt (/* char* name,
                                     int *value */);
-extern ThotBool TtaGetDefEnvBoolean (/* STRING name,
+extern ThotBool TtaGetDefEnvBoolean (/* char* name,
                                         ThotBool *value */);
-extern STRING TtaGetDefEnvString (/* STRING name */);
+extern CharUnit* TtaGetDefEnvString (/* char* name */);
 extern void TtaSaveAppRegistry (/* void */);
 extern void TtaInitializeAppRegistry (/* CharUnit* appArgv0 */);
 extern void TtaFreeAppRegistry (/* void */);

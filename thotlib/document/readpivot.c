@@ -143,7 +143,7 @@ BinFile             file;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR_T                c;
+   char                c;
    ThotBool            stop;
 
    stop = FALSE;
@@ -157,7 +157,7 @@ BinFile             file;
 	     if (c < SPACE)
 	       {
 		  printf ("^");
-		  c = (CHAR_T) ((int) c + (int) TEXT('@'));
+		  c = ((int) c + (int) '@');
 		  i++;
 	       }
 	     printf ("%c", c);
@@ -469,7 +469,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -494,7 +494,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -529,7 +529,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -556,7 +556,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -583,8 +583,8 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
-   BAlignment          align;
+   char       c;
+   BAlignment align;
 
    if (!TtaReadByte (file, &c))
      {
@@ -629,8 +629,8 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
-   PageType            typ;
+   char     c;
+   PageType typ;
 
    if (!TtaReadByte (file, &c))
      {
@@ -705,9 +705,9 @@ ThotBool            oldformat;
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer       firstBuf, pBuf;
-   int                 n, len;
-   CHAR_T                c;
+   PtrTextBuffer firstBuf, pBuf;
+   int           n, len;
+   char          c;
 
    len = 0;
    /* lit l'octet qui suit le tag commentaire */
@@ -716,7 +716,7 @@ ThotBool            oldformat;
 	c = EOS;
 	PivotError (file);
      }
-   if (oldformat && c != (CHAR_T) C_PIV_BEGIN)
+   if (oldformat && c != C_PIV_BEGIN)
      {
 	PivotError (file);
 	/* tag debut de commentaire ancien format absente */
@@ -807,7 +807,7 @@ ThotBool            oldformat;
 	     /* lit le tag de fin */
 	     if (!TtaReadByte (file, &c))
 		c = EOS;
-	     if (c != (CHAR_T) C_PIV_END)
+	     if (c != C_PIV_END)
 	       {
 		  PivotError (file);
 		  DisplayPivotMessage (TEXT("c"));
@@ -827,8 +827,8 @@ static PictureScaling ReadPicturePresentation (pivFile)
 BinFile             pivFile;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
-   PictureScaling      scaling;
+   char           c;
+   PictureScaling scaling;
 
    if (!TtaReadByte (pivFile, &c))
      {
@@ -924,8 +924,8 @@ DocumentIdentifier *docIdent;
 BinFile             file;
 #endif /* __STDC__ */
 {
-   int                 j;
-   CHAR_T                c;
+   int  j;
+   char c;
 
    ClearDocIdent (docIdent);
    /* lit un octet */
@@ -1157,13 +1157,13 @@ PtrDocument         pDoc;
    de cette nature.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, STRING tag)
+static int          ReadType (PtrDocument pDoc, PtrSSchema * pSS, BinFile pivFile, char* tag)
 #else  /* __STDC__ */
 static int          ReadType (pDoc, pSS, pivFile, tag)
 PtrDocument         pDoc;
 PtrSSchema         *pSS;
 BinFile             pivFile;
-STRING              tag;
+char*               tag;
 #endif /* __STDC__ */
 {
    int                 nat, rule;
@@ -1445,7 +1445,7 @@ PtrAttribute       *pAttr;
    DocumentIdentifier  I;
    LabelString         label;
    PtrTextBuffer       pBT, pPremBuff;
-   CHAR_T                c;
+   char                c;
    PtrAttribute        pA;
    PtrReference        pRef;
    ThotBool            found;
@@ -1717,7 +1717,7 @@ ThotBool            link;
   int                 pictureType, val, view, box;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue;
-  CHAR_T              ch;
+  char                ch;
   ThotBool            absolute, sign, just;
   
   pres = (PictureScaling) 0;
@@ -2164,7 +2164,8 @@ ThotBool            createDesc;
   NotifyElement       notifyEl;
   PictInfo           *image;
   int                 i, j, n, view, pictureType, elType, rule;
-  CHAR_T                ch, c, alphabet;
+  CHAR_T              alphabet;
+  char                c, ch;
   ThotBool            create, inclusion, modif, parameter;
   ThotBool            findtype, refExt, found, withReferences;
   
@@ -2184,7 +2185,7 @@ ThotBool            createDesc;
 	      if (c < SPACE)
 		{
 		  printf ("^");
-		  c = (CHAR_T) (((int) c) + ((int) TEXT('@')));
+		  c = (((int) c) + ((int) '@'));
 		  i++;
 		}
 	      printf ("%c", c);
@@ -3111,12 +3112,12 @@ int                 rank;
    	schemas								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, STRING tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, STRING natSchema, STRING presentSchema))
+void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char* tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, STRING natSchema, STRING presentSchema))
 #else  /* __STDC__ */
 void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS, withThisPSchema)
 BinFile             file;
 PtrDocument         pDoc;
-STRING              tag;
+char*               tag;
 PtrSSchema          pLoadedSS;
 void (*withThisPSchema) ();
 
@@ -3274,12 +3275,12 @@ void (*withThisPSchema) ();
 	lit la table des langues qui se trouve en tete du fichier pivot.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, STRING tag)
+void                ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char* tag)
 #else  /* __STDC__ */
 void                ReadLanguageTablePiv (file, pDoc, tag)
 BinFile             file;
 PtrDocument         pDoc;
-STRING              tag;
+char*               tag;
 #endif /* __STDC__ */
 
 {
@@ -3328,18 +3329,18 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char                c;
    int                 ret;
 
    ret = 0;
    pDoc->DocPivotVersion = 1;
    if (!TtaReadByte (file, &c))
       ret = 10;
-   else if (c != (CHAR_T) C_PIV_VERSION)
+   else if (c != C_PIV_VERSION)
       ret = 10;
    else if (!TtaReadByte (file, &c))
       ret = 10;
-   else if (c != (CHAR_T) C_PIV_VERSION)
+   else if (c != C_PIV_VERSION)
       ret = 10;
    else if (!TtaReadByte (file, &c))
       ret = 10;
@@ -3353,20 +3354,20 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReadPivotHeader (BinFile file, PtrDocument pDoc, STRING tag)
+void                ReadPivotHeader (BinFile file, PtrDocument pDoc, char* tag)
 
 #else  /* __STDC__ */
 void                ReadPivotHeader (file, pDoc, tag)
 BinFile             file;
 PtrDocument         pDoc;
-STRING              tag;
+char*               tag;
 
 #endif /* __STDC__ */
 
 {
    LabelString         label;
    int                 i;
-   CHAR_T                c;
+   char                c;
 
    /* lit le numero de version s'il est present */
    if (!TtaReadByte (file, tag))
@@ -3439,7 +3440,7 @@ ThotBool		    removeExclusions
    BinFile             EXTfile;
    int                 i, j, assoc, rule, typeRead;
    CHAR_T                buffer[MAX_TXT_LEN];
-   CHAR_T                tag;
+   char                tag;
    ThotBool            structureOK, createPages, found, ok;
 
 /*    pDoc->DocToBeChecked = FALSE; */

@@ -26,13 +26,14 @@
  * TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
  * beginning of the string and returns the pointer to the new position. 
  */
-extern STRING      TtaSkipBlanks (STRING ptr);
+extern char*      TtaSkipBlanks (char* ptr);
 
 /*
  * TtaIsBlank returns True if the first character is a space, a tab, a
  * linefeed or a newline.
  */
-extern ThotBool    TtaIsBlank (STRING ptr);
+extern ThotBool    TtaIsBlank (char* ptr);
+extern ThotBool    TtaIsCUSBlank (CharUnit*);
 
 /*
  * TtaInitializeAppRegistry : initialize the Registry, the only argument
@@ -56,7 +57,7 @@ extern void         TtaFreeAppRegistry (void);
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern ThotBool     TtaGetEnvInt (STRING name, int *value);
+extern ThotBool     TtaGetEnvInt (char* name, int *value);
 
 /*
  *  TtaGetEnvBoolean : read the ThotBool value associated to an 
@@ -69,57 +70,57 @@ extern ThotBool     TtaGetEnvBoolean (char* name, ThotBool *value);
  * TtaGetEnvString : read the value associated to an environment string
  *                  if not present return NULL.
  */
-extern pCharUnit       TtaGetEnvString (char* name);
+extern CharUnit*       TtaGetEnvString (char* name);
 
 /*
  * TtaClearEnvString : clears the value associated with an environment
  *                     string, in the user registry.
  */
-extern void         TtaClearEnvString (STRING name);
+extern void         TtaClearEnvString (char* name);
 
 /*
  * TtaSetEnvInt : set the value associated to an environment string,
  *                  for the current application.
  */
-extern void         TtaSetEnvInt (STRING name, int value, int overwrite);
+extern void         TtaSetEnvInt (char* name, int value, int overwrite);
 
 /*
  * TtaSetEnvBoolean : set the value associated to an environment string,
  *                  for the current application.
  */
-extern void         TtaSetEnvBoolean (STRING name, ThotBool value, int overwrite);
+extern void         TtaSetEnvBoolean (char* name, ThotBool value, int overwrite);
 
 /*
  * TtaSetEnvString : set the value associated to an environment string,
  *                  for the current application.
  */
-extern void         TtaSetEnvString (STRING name, STRING value, int overwrite);
+extern void         TtaSetEnvString (char* name, CharUnit* value, int overwrite);
 
 /*
  * TtaSetDefEnvString : set the defaul value associated to an environment 
  *                      string, for the current application.
  */
-extern void         TtaSetDefEnvString (STRING name, STRING value, int overwrite);
+extern void         TtaSetDefEnvString (char* name, CharUnit* value, int overwrite);
 
 /*
  * TtaGetDefEnvInt : read the default integer value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern ThotBool     TtaGetDefEnvInt (STRING name, int *value);
+extern ThotBool     TtaGetDefEnvInt (char* name, int *value);
 
 /*
  *  TtaGetDefEnvBoolean : read the default ThotBool value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern ThotBool     TtaGetDefEnvBoolean (STRING name, ThotBool *value);
+extern ThotBool     TtaGetDefEnvBoolean (char* name, ThotBool *value);
 
 /*
  * TtaGetDefEnvString : read the default value associated to an environment 
  *                   string. If not present, return NULL.
  */
-extern STRING        TtaGetDefEnvString (STRING name);
+extern CharUnit*    TtaGetDefEnvString (char* name);
 
 /*
  * TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
@@ -128,22 +129,23 @@ extern STRING        TtaGetDefEnvString (STRING name);
 extern void         TtaSaveAppRegistry (void);
 
 #else  /* __STDC__ */
-extern STRING       TtaSkipBlanks (/* STRING ptr */);
-extern ThotBool     TtaIsBlank (/* STRING ptr */);
+extern char*        TtaSkipBlanks (/* char* ptr */);
+extern ThotBool     TtaIsBlank (/* char* ptr */);
+extern ThotBool     TtaIsCUSBlank (/* CharUnit* */);
 extern void         TtaInitializeAppRegistry ( /* CharUnit* appArgv0 */ );
 extern void         TtaFreeAppRegistry ( /* void */ );
 extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
-extern ThotBool     TtaGetEnvInt ( /* STRING name, int *value */ );
-extern pCharUnit    TtaGetEnvString ( /* STRING name */ );
-extern void         TtaClearEnvString ( /* STRING name */ );
-extern void         TtaSetEnvInt ( /* STRING name, int value, int overwrite */ );
-extern void         TtaSetEnvBoolean ( /* STRING name, ThotBool value, int overwrite */ );
-extern void         TtaSetEnvString ( /* STRING name, STRING value, int overwrite */ );
-extern void         TtaSetDefEnvString ( /* STRING name, STRING value, int overwrite */ );
+extern ThotBool     TtaGetEnvInt ( /* char* name, int *value */ );
+extern CharUnit*    TtaGetEnvString ( /* STRING name */ );
+extern void         TtaClearEnvString ( /* char* name */ );
+extern void         TtaSetEnvInt ( /* char* name, int value, int overwrite */ );
+extern void         TtaSetEnvBoolean ( /* char* name, ThotBool value, int overwrite */ );
+extern void         TtaSetEnvString ( /* char* name, CharUnit* value, int overwrite */ );
+extern void         TtaSetDefEnvString ( /* char* name, CharUnit* value, int overwrite */ );
 
-extern ThotBool     TtaGetDefEnvBoolean ( /* STRING name, ThotBool *value */ );
-extern ThotBool     TtaGetDefEnvInt ( /* STRING name, int *value */ );
-extern STRING       TtaGetDefEnvString ( /* STRING name */ );
+extern ThotBool     TtaGetDefEnvBoolean ( /* char* name, ThotBool *value */ );
+extern ThotBool     TtaGetDefEnvInt ( /* char* name, int *value */ );
+extern CharUnit*    TtaGetDefEnvString ( /* char* name */ );
 extern void         TtaSaveAppRegistry ( /* void */ );
 
 #endif /* __STDC__ */

@@ -99,11 +99,11 @@ STRING              word;
    suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsSuffixFileIn (pCharUnit aDirectory, pCharUnit suffix)
+ThotBool            TtaIsSuffixFileIn (CharUnit* aDirectory, CharUnit* suffix)
 #else  /* __STDC__ */
 ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
-pCharUnit           aDirectory;
-pCharUnit           suffix;
+CharUnit*           aDirectory;
+CharUnit*           suffix;
 
 #endif /* __STDC__ */
 {

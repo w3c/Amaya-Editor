@@ -141,7 +141,9 @@ extern void*     TtaGetMemory (unsigned int size);
 extern void      TtaFreeMemory (void *buffer);
 extern STRING    TtaAllocString ( unsigned int n );
 extern void*     TtaRealloc (void *ptr, unsigned int n);
-extern STRING    TtaStrdup (STRING str);
+extern char*     TtaStrdup (char* str);
+extern CHAR_T*   TtaWCSdup (CHAR_T*);
+extern CharUnit* TtaCUSdup (CharUnit*);
 #else  /* __STDC__ */
 extern void      TtaInitialize ( /* STRING applicationName */ );
 extern void      TtaQuit ( /* void */ );
@@ -155,7 +157,9 @@ extern void*     TtaGetMemory ( /* int size */ );
 extern void      TtaFreeMemory ( /* STRING buffer */ );
 extern STRING    TtaAllocString ( /* unsigned int n */ );
 extern void*     TtaRealloc ( /* void *ptr, unsigned int n */ );
-extern STRING    TtaStrdup ( /* char *str */ );
+extern char*    TtaStrdup ( /* char *str */ );
+extern CHAR_T*   TtaWCSdup (/* CHAR_T* */);
+extern CharUnit* TtaCUSdup (/* CharUnit* */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

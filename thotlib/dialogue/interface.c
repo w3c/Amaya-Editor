@@ -63,6 +63,7 @@
 #include "keyboards_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
+#include "ustring_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 
@@ -678,11 +679,11 @@ int                 keycode;
  */
 void                TtaInstallMultiKey ()
 {
-  char*  ptr;
+  CharUnit* ptr;
 
 # ifdef _WINDOWS 
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, TEXT("yes")))
+  if (ptr != NULL && !StringCaseCompare (ptr, CUSTEXT("yes")))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;

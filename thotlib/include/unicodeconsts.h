@@ -88,7 +88,7 @@
 #   define _A4PaperFormat_                 L"A4"
 #   define _A3PaperFormat_                 L"A3"
 
-#   define  WIN_DEF_TMPDIR                 L"c:\\temp"
+/* #   define  WIN_DEF_TMPDIR                 L"c:\\temp" */
 
 #else  /* !_I18N_ */
 
@@ -166,7 +166,7 @@
 #      define _A3PaperFormat_                  "A3"
 
 #      ifdef _WINDOWS
-#      define  WIN_DEF_TMPDIR           "c:\\temp"
+/* #      define  WIN_DEF_TMPDIR           "c:\\temp" */
 #      else  /* !_WINDOWS */
 #      endif /* ! _WINDOWS */
 

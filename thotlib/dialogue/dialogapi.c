@@ -641,7 +641,7 @@ HINSTANCE   hInst;
 CharUnit*** pArgv; 
 char*       cmdLine;
 #endif /* __STDC__ */
-{
+{ 
     int            argc;
     static CHAR_T* argv[20];
     static CHAR_T  argv0[MAX_TXT_LEN];
@@ -654,7 +654,11 @@ char*       cmdLine;
          nowAt_text
     } nowAt;
 
+#   if defined(_WINDOWS) && defined(_I18N_)
     iso2wc_strcpy (commandLine, cmdLine);
+#   else /* !(defined(_WINDOWS) && defined(_I18N_)) */
+    strcpy (commandLine, cmdLine);
+#   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
 
     ptr    = commandLine;
     *pArgv = argv;
@@ -677,7 +681,7 @@ char*       cmdLine;
 	   ptr++;
 	   continue;
         }
-        if (*ptr == SPACE || *ptr == TAB) {
+        if (*ptr == WC_SPACE || *ptr == WC_TAB) {
            *ptr = 0;
 	   ptr++;
 	   nowAt = nowAt_start;
@@ -1806,7 +1810,7 @@ STRING              textmenu;
 #endif /* !_WINDOWS */
 
    int                 n;
-   char*               value;
+   CharUnit*           value;
 
 #  ifndef _WINDOWS
    Pixmap              lthot;
