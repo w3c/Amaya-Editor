@@ -2037,7 +2037,7 @@ static void SafePut_init ()
 {
   CharUnit* strptr;
   CharUnit* str = NULL;
-  char*     ptr, *strptrA;
+  char*     ptr, *strptrA, *ptr2;
   char*     domain;
 
   /* get the proxy settings from the thot.ini file */
@@ -2048,6 +2048,7 @@ static void SafePut_init ()
       str = StringDuplicate (strptr);
       strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
       cus2iso_strcpy (strptrA, strptr);
+      ptr2 = strptrA;
       /* convert to lowercase */
       ptr = strptrA;
       while (*ptr) 
@@ -2063,7 +2064,7 @@ static void SafePut_init ()
 	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
 
       TtaFreeMemory (str);
-      TtaFreeMemory (strptrA);
+      TtaFreeMemory (ptr2);
     }
 }
 
