@@ -2,12 +2,12 @@
 #
 # This script builds all the binary tar files for Amaya
 #
-#       amaya-$MACH-$AMAYAVERSION.tar.gz
+#       amaya-$MACH-$AMAYAVERSION.tgz
 # 
 AMAYAVERSION=2.1
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF RS6000 SGI osf1"
+PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
 #PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
@@ -25,7 +25,7 @@ cd ..
 
 for MACH in $PLATFORMS
 do
- $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz \
+ $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.kb \
@@ -115,7 +115,7 @@ do
 done
 
 #sepecific tar for solaris2.6
-tar cvzf $DEST/amaya-solaris2.6-$AMAYAVERSION.tar.gz  \
+tar cvzf $DEST/amaya-solaris2.6-$AMAYAVERSION.tgz  \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.keyboard \
