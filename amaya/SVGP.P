@@ -962,6 +962,9 @@ RULES
   CDATA:
 	BEGIN
 	Visibility: Enclosing =;
+	if NOT immediately within tspan and NOT immediately within a and
+           NOT immediately within text_
+	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width;
@@ -1001,7 +1004,21 @@ RULES
         VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
+	if NOT immediately within tspan and NOT immediately within a and
+           NOT immediately within text_ and NOT immediately within CDATA_line
+	Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		if NOT immediately within tspan and NOT immediately within a and
+        	   NOT immediately within text_ and NOT immediately within desc and
+        	   NOT immediately within title and NOT immediately within metadata and
+        	   NOT immediately within style__ and NOT immediately within script_ and
+		   NOT immediately within CDATA_line and
+		   NOT immediately within XMLPI_line and	
+		   NOT immediately within XMLcomment_line and	
+		   NOT immediately within DOCTYPE_line and
+		   NOT immediately within Unknown_namespace
+		Visibility: 0;		
 		if NOT within XMLcomment_line AND NOT within XMLPI_line AND
                    NOT within DOCTYPE_line AND NOT within CDATA_line
 		   BEGIN
@@ -1024,8 +1041,6 @@ RULES
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
                    END;
-		if immediately within tref
-		   Visibility: 0;
 		END;
 	IN Alternate_view BEGIN
 	        Width: Enclosed . Width;
