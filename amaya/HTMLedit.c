@@ -88,7 +88,7 @@ Document            targetDoc;
    AttributeType       attrType;
    Attribute           attr;
    char               *value, *base;
-   char*               tempURL = (char*) malloc (sizeof (char) * MAX_LENGTH);
+   char*               tempURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -204,7 +204,7 @@ Element             el;
    Element             elText;
    Language            lang;
    char               *text;
-   char*               url = (char*) malloc (sizeof (char) * MAX_LENGTH);
+   char*               url = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
    int                 length, i, space;
    boolean             found;
    boolean             withinHTML;
@@ -533,7 +533,7 @@ Document     doc;
   AttributeType     attrType;
   Attribute         attr;
   char             *value;
-  char*             url = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*             url = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
   int               length, i;
   boolean           change;
 
@@ -704,9 +704,9 @@ NotifyElement      *event;
   SSchema             docSchema;
   int                 length, i, iName;
   char               *value, *base;
-  char*               documentURL = (char*) malloc (sizeof (char) * MAX_LENGTH);
-  char*               tempURL     = (char*) malloc (sizeof (char) * MAX_LENGTH);
-  char*               path        = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*               documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char*               tempURL     = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char*               path        = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 
   el = event->element;
   doc = event->document;
@@ -937,7 +937,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char*               buffer = (char*) malloc (sizeof (char) * buflen);
+   char*               buffer = (char*) TtaGetMemory (sizeof (char) * buflen);
    int                 length;
 
    length = buflen - 1;
@@ -1004,7 +1004,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char*               buffer = (char*) malloc (sizeof (char) * buflen);
+   char*               buffer = (char*) TtaGetMemory (sizeof (char) * buflen);
    int                 length;
    DisplayMode         dispMode;
 
@@ -1064,7 +1064,7 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   char*               value = (char*) malloc (sizeof (char) * buflen);
+   char*               value = (char*) TtaGetMemory (sizeof (char) * buflen);
    int                 length;
 
    value[0] = EOS;

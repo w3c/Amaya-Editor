@@ -140,7 +140,7 @@ unsigned char      *element;
 
    if (buffer == (char *) NULL)
      {
-	buffer = (char *) malloc (PARAM_INCREMENT);
+	buffer = (char *) TtaGetMemory (PARAM_INCREMENT);
 	lgbuffer = PARAM_INCREMENT;
 	buffer[0] = EOS;
      }

@@ -125,28 +125,28 @@ static Pixmap       iconJava;
 #define stopR        0
 #define stopN        0
 #define iconBack     1
-#define iconBackNo   2
-#define iconForward  3
-#define iconForwardNo 4
-#define inconReload  5
-#define inconSave    6
-#define iconPrint    7
-#define iconFind     8
-#define inconI       9
-#define inconB       10
-#define iconT        11
-#define iconCSS     12
-#define inconImage  13
-#define iconH1      14
-#define iconH2      15
-#define iconH3      16
-#define iconBullet  17
-#define iconNum     18
-#define	iconDL      19
-#define iconLink    20
-#define iconTable   21
+#define iconBackNo   1
+#define iconForward  2
+#define iconForwardNo 2
+#define inconReload  3
+#define inconSave    4
+#define iconPrint    5
+#define iconFind     6
+#define inconI       7
+#define inconB       8
+#define iconT        9
+#define iconCSS     10
+#define inconImage  11
+#define iconH1      12
+#define iconH2      13
+#define iconH3      14
+#define iconBullet  15
+#define iconNum     16
+#define	iconDL      17
+#define iconLink    18
+#define iconTable   19
 #ifdef AMAYA_PLUGIN
-#define iconPlugin  22
+#define iconPlugin  20
 #endif AMAYA_PLUGIN
 #endif /* _WINDOWS */
 
@@ -198,6 +198,12 @@ char               *documentURL;
    int                 i;
    boolean             found;
    char               *otherURL;
+   char                URL_DIR_STR[2];
+
+   if (documentURL && strchr (documentURL, '/'))
+	  sprintf (URL_DIR_STR, "/");
+   else 
+	   sprintf (URL_DIR_STR, DIR_STR);
 
    if (!documentURL)
       return ((Document) None);
@@ -206,7 +212,7 @@ char               *documentURL;
    found = FALSE;
    otherURL = TtaGetMemory (MAX_LENGTH);
    strcpy (otherURL, documentURL);
-   strcat (otherURL, DIR_STR);
+   strcat (otherURL, URL_DIR_STR);
    while (!found && i < DocumentTableLength)
      {
 	if (!DocumentURLs[i])
@@ -2548,14 +2554,20 @@ View                view;
      }
 #endif /* AMAYA_DEBUG */
 
+# ifndef _WINDOWS
   TtaNewDialogSheet (BaseDialog + FormAbout, TtaGetViewFrame (document, view), HTAppName, 1,TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+# endif  /* _WINDOWS */
   strcpy (localname, HTAppName);
   strcat (localname, " - ");
   strcat (localname, HTAppVersion);
+# ifndef _WINDOWS */
   TtaNewLabel(BaseDialog + Version, BaseDialog + FormAbout, localname);
   TtaNewLabel(BaseDialog + About1, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT1));
   TtaNewLabel(BaseDialog + About2, BaseDialog + FormAbout, TtaGetMessage(AMAYA, AM_ABOUT2));
   TtaShowDialogue (BaseDialog + FormAbout, FALSE);
+# else  /* _WINDOWS */
+  CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname, TtaGetMessage(AMAYA, AM_ABOUT1), TtaGetMessage(AMAYA, AM_ABOUT2));
+# endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2834,9 +2846,9 @@ View                view;
 	    return;
 	}
 
-#ifdef AMAYA_JAVA
+#  ifdef AMAYA_JAVA
    CloseJava();
-#endif
+#  endif
 #  ifndef _WINDOWS
    exit(0);
 #  endif /* !_WINDOWS */

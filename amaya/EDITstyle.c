@@ -314,7 +314,7 @@ NotifyElement      *event;
   Document            doc;
   Language            lang;
   int                 len, base;
-  char*               stylestring = (char*) malloc (1000 * sizeof (char));
+  char*               stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
 
   elClass = event->element;
   doc = event->document;
@@ -500,7 +500,7 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  char*               stylestring = (char*) malloc (1000 * sizeof (char));
+  char*               stylestring = (char*) TtaGetMemory (1000 * sizeof (char));
   char               *a_class;
   int                 len, base;
 

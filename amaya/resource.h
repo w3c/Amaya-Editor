@@ -25,6 +25,23 @@
 #define SAVEASDIALOG                    174
 #define AUTHENTIFICATIONDIALOG          175
 #define ALIGN1DIALOG                    176
+#define HELPDIALOG                      181
+#define IDB_AMAYALOGO                   182
+#define IDB_MATH                        183
+#define IDB_MATHD                       184
+#define IDB_ROOT                        185
+#define IDB_SROOT                       186
+#define IDB_DIV                         187
+#define IDB_POWIND                      188
+#define IDB_POW                         189
+#define IDB_IND                         190
+#define IDB_UPDN                        191
+#define IDB_UP                          192
+#define IDB_DOWN                        193
+#define IDB_PAREXP                      194
+#define IDB_UDLR                        195
+#define IDB_SYM                         196
+#define MATHDIALOG                      199
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -159,6 +176,21 @@
 #define IDC_PASSWD                      1185
 #define IDC_PASSWDEDIT                  1186
 #define IDC_ALIGN2                      1188
+#define IDC_LOGO                        1192
+#define IDC_MATH                        1193
+#define IDC_MATHD                       1194
+#define IDC_ROOT                        1195
+#define IDC_SROOT                       1196
+#define IDC_DIV                         1197
+#define IDC_POWIND                      1198
+#define IDC_POW                         1199
+#define IDC_IND                         1200
+#define IDC_UPDN                        1201
+#define IDC_UP                          1202
+#define IDC_DOWN                        1203
+#define IDC_PAREXP                      1204
+#define IDC_UDLR                        1205
+#define IDC_SYM                         1206
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -190,9 +222,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        178
+#define _APS_NEXT_RESOURCE_VALUE        200
 #define _APS_NEXT_COMMAND_VALUE         40042
-#define _APS_NEXT_CONTROL_VALUE         1192
+#define _APS_NEXT_CONTROL_VALUE         1207
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -572,6 +572,132 @@ END
 /////////////////////////////////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////////////////////////////////
+// French (France) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+HELPDIALOG DIALOG DISCARDABLE  0, 0, 288, 130
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Amaya"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,120,109,50,14
+    CONTROL         182,IDC_LOGO,"Static",SS_BITMAP,7,7,38,30
+END
+
+MATHDIALOG DIALOGEX 0, 0, 97, 354
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CLIENTEDGE
+CAPTION "Math"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Done",ID_DONE,22,324,48,17
+    CONTROL         183,IDC_MATH,"Static",SS_BITMAP | SS_NOTIFY | 
+                    SS_CENTERIMAGE,30,13,33,22,WS_EX_DLGMODALFRAME | 
+                    WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
+    CONTROL         184,IDC_MATHD,"Static",SS_BITMAP | SS_NOTIFY | 
+                    SS_CENTERIMAGE,30,33,33,22,WS_EX_DLGMODALFRAME | 
+                    WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
+    CONTROL         185,IDC_ROOT,"Static",SS_BITMAP | SS_NOTIFY,30,55,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         186,IDC_SROOT,"Static",SS_BITMAP | SS_NOTIFY,30,76,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         187,IDC_DIV,"Static",SS_BITMAP | SS_NOTIFY,30,98,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         188,IDC_POWIND,"Static",SS_BITMAP | SS_NOTIFY,30,120,33,
+                    22,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         189,IDC_POW,"Static",SS_BITMAP | SS_NOTIFY,30,141,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         190,IDC_IND,"Static",SS_BITMAP | SS_NOTIFY,30,163,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         191,IDC_UPDN,"Static",SS_BITMAP | SS_NOTIFY,30,185,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         192,IDC_UP,"Static",SS_BITMAP | SS_NOTIFY,30,207,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         193,IDC_DOWN,"Static",SS_BITMAP | SS_NOTIFY,30,228,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         194,IDC_PAREXP,"Static",SS_BITMAP | SS_NOTIFY,30,251,33,
+                    22,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         195,IDC_UDLR,"Static",SS_BITMAP | SS_NOTIFY,30,274,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    CONTROL         196,IDC_SYM,"Static",SS_BITMAP | SS_NOTIFY,30,296,33,22,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    HELPDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+
+    MATHDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 90
+        VERTGUIDE, 30
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 347
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_AMAYALOGO           BITMAP  DISCARDABLE     "amaya.bmp"
+IDB_MATH                BITMAP  DISCARDABLE     "math.bmp"
+IDB_MATHD               BITMAP  DISCARDABLE     "mathd.bmp"
+IDB_ROOT                BITMAP  DISCARDABLE     "root.bmp"
+IDB_SROOT               BITMAP  DISCARDABLE     "sroot.bmp"
+IDB_DIV                 BITMAP  DISCARDABLE     "div.bmp"
+IDB_POWIND              BITMAP  DISCARDABLE     "powind.bmp"
+IDB_POW                 BITMAP  DISCARDABLE     "pow.bmp"
+IDB_IND                 BITMAP  DISCARDABLE     "ind.bmp"
+IDB_UPDN                BITMAP  DISCARDABLE     "updn.bmp"
+IDB_UP                  BITMAP  DISCARDABLE     "up.bmp"
+IDB_DOWN                BITMAP  DISCARDABLE     "down.bmp"
+IDB_PAREXP              BITMAP  DISCARDABLE     "parexp.bmp"
+IDB_UDLR                BITMAP  DISCARDABLE     "udlr.bmp"
+IDB_SYM                 BITMAP  DISCARDABLE     "sym.bmp"
+#endif    // French (France) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////

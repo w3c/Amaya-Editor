@@ -41,6 +41,8 @@
 #define IDC_EDITRULE   20001
 #define IDC_LANGEDIT   20002
 
+#define MenuMaths          1
+
 extern HINSTANCE hInstance;
 extern char*     AttrHREFvalue;
 extern char      ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
@@ -82,6 +84,7 @@ static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
 static TCHAR        szFilter[] = APPFILENAMEFILTER;
 static TCHAR        szFileName[256];
+static HWND         currentFrame;
 
 
 HWND wordButton;
@@ -89,6 +92,8 @@ HWND hwnListWords;
 
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align1DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -106,6 +111,8 @@ LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
+LRESULT CALLBACK HelpDlgProc ();
+LRESULT CALLBACK MathDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
 LRESULT CALLBACK Align1DlgProc ();
 LRESULT CALLBACK Align2DlgProc ();
@@ -137,6 +144,42 @@ int       ref;
 	currentRef = ref;
 
 	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateLinkDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateHelpDlgWindow (HWND parent, char* localname, char* msg1, char* msg2)
+#else  /* !__STDC__ */
+void CreateHelpDlgWindow (parent, localname, msg1, msg2)
+HWND      parent;
+char*     localname;
+char*     msg1;
+char*     msg2;
+#endif /* __STDC__ */
+{  
+    sprintf (currentPathName, localname);
+    sprintf (message, msg1);
+	sprintf (message2, msg2);
+	DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateLinkDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathDlgWindow (HWND parent, int mathRef, HWND frame)
+#else  /* !__STDC__ */
+void CreateMathDlgWindow (parent, mathRef, frame)
+HWND      parent;
+int       mathRef;
+HWND      frame;
+#endif /* __STDC__ */
+{  
+	baseDlg = mathRef;
+	currentFrame = frame	;
+	DialogBox (hInstance, MAKEINTRESOURCE (MATHDIALOG), NULL, (DLGPROC) MathDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -443,6 +486,137 @@ LPARAM lParam;
 				       case ID_DONE:
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
+				}
+				break;
+
+           default: return (FALSE) ;
+    }
+	return TRUE;
+}
+	
+/*-----------------------------------------------------------------------
+ LinkDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK HelpDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK HelpDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND messageWnd1;
+	HWND messageWnd2;
+	HWND messageWnd3;
+
+    switch (msg) {
+           case WM_INITDIALOG:
+				messageWnd1 = CreateWindow ("STATIC", currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                       15, 70, 400, 20, hwnDlg, (HMENU) 9, 
+										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				messageWnd2 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                       15, 90, 400, 60, hwnDlg, (HMENU) 99, 
+										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				messageWnd3 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                       15, 110, 400, 60, hwnDlg, (HMENU) 999, 
+										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+			    break;
+
+           case WM_COMMAND:
+	            switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+							EndDialog (hwnDlg, ID_CONFIRM);
+					        break;
+				}
+				break;
+
+           default: return (FALSE) ;
+    }
+	return TRUE;
+}
+	
+/*-----------------------------------------------------------------------
+ LinkDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK MathDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK MathDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND messageWnd1;
+	HWND messageWnd2;
+	HWND messageWnd3;
+
+    switch (msg) {
+           case WM_COMMAND:
+                SetFocus (currentFrame);
+	            switch (LOWORD (wParam)) {
+				       case ID_DONE:
+							EndDialog (hwnDlg, ID_DONE);
+					        break;
+
+                       case IDC_MATH:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)0);
+                            break;
+
+                       case IDC_MATHD:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)1);
+                            break;
+
+                       case IDC_ROOT:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)2);
+                            break;
+
+                       case IDC_SROOT:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)3);
+                            break;
+
+                       case IDC_DIV:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)4);
+                            break;
+
+                       case IDC_POWIND:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)5);
+                            break;
+
+                       case IDC_POW:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)6);
+                            break;
+
+                       case IDC_IND:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)7);
+                            break;
+
+                       case IDC_UPDN:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)8);
+                            break;
+
+                       case IDC_UP:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)9);
+                            break;
+
+                       case IDC_DOWN:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)10);
+                            break;
+
+                       case IDC_PAREXP:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)11);
+                            break;
+
+                       case IDC_UDLR:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)12);
+                            break;
+
+                       case IDC_SYM:
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (char*)13);
+                            break;
 				}
 				break;
 

@@ -329,7 +329,7 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char*               s = (char*) malloc (MAX_LENGTH * sizeof (char)); /* s[MAX_LENGTH]; */
+   char*               s = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)); 
    int                 i;
 
    /* there is a selection */
@@ -402,9 +402,9 @@ char               *text;
 #endif /* __STDC__ */
 {
   char              *value, *base;
-  char*              pathimage = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* pathimage[MAX_LENGTH]; */
-  char*              localname = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* localname[MAX_LENGTH]; */
-  char*              imagename = (char*) malloc (sizeof (char) * MAX_LENGTH) ; /* imagename[MAX_LENGTH]; */
+  char*              pathimage = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* pathimage[MAX_LENGTH]; */
+  char*              localname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* localname[MAX_LENGTH]; */
+  char*              imagename = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH) ; /* imagename[MAX_LENGTH]; */
   LoadedImageDesc   *desc;
 
   /* get the absolute URL of the image */
@@ -489,8 +489,8 @@ NotifyElement      *event;
   Element            elSRC, el;
   Document           doc;
   char              *text;
-  char*              pathimage = (char*) malloc (MAX_LENGTH * sizeof (char)) ; /* pathimage[MAX_LENGTH]; */
-  char*              imagename = (char*) malloc (MAX_LENGTH * sizeof (char)) ; /* imagename[MAX_LENGTH]; */
+  char*              pathimage = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)) ; /* pathimage[MAX_LENGTH]; */
+  char*              imagename = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)) ; /* imagename[MAX_LENGTH]; */
 
    /* Select an image name */
    el = event->element;
@@ -613,7 +613,7 @@ LoadedImageDesc   **desc;
 #endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous;
-   char*                localname = (char*) malloc (MAX_LENGTH * sizeof (char));
+   char*                localname = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
 
    if (!TtaFileExist (fullname))
       return (FALSE);

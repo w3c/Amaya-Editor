@@ -21,6 +21,7 @@
 #include "html2thot_f.h"
 
 #include "MathML.h"
+#ifndef _WINDOWS
 #include "Math.xpm"
 #include "math.xpm"
 #include "mathdisp.xpm"
@@ -36,6 +37,7 @@
 #include "fence.xpm"
 #include "mscript.xpm"
 #include "greek.xpm"
+#endif /* _WINDOWS */
 #define FormMaths 0
 #define MenuMaths 1
 #define MAX_MATHS  2
@@ -44,6 +46,11 @@ static Pixmap       iconMath;
 static Pixmap       mIcons[14];
 static int          MathsDialogue;
 static boolean      InitMaths;
+
+#ifdef _WINDOWS
+#define iconMath 21 
+#endif /* _WINDOWS */
+
 
 
 /*----------------------------------------------------------------------
@@ -634,6 +641,7 @@ Document            doc;
 View                view;
 #endif
 {
+# ifndef _WINDOWS
   if (!InitMaths)
     {
       InitMaths = TRUE;
@@ -648,6 +656,9 @@ View                view;
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
+# else /* _WINDOWS */
+  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue, TtaGetThotWindow (GetWindowNumber (doc, view)));
+# endif /* _WINDOWS */
 }
 
 
@@ -662,7 +673,11 @@ Document            doc;
 View                view;
 #endif
 {
+# ifndef _WINDOWS
   TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+# else  /* _WINDOWS */
+  WIN_TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+# endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
 }
@@ -673,6 +688,7 @@ View                view;
   ----------------------------------------------------------------------*/
 void                InitMathML ()
 {
+#  ifndef _WINDOWS 
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    TtaRegisterPixmap("Math", iconMath);
    mIcons[0] = TtaCreatePixmapLogo (math_xpm);
@@ -689,6 +705,7 @@ void                InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (fence_xpm);
    mIcons[12] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -57,7 +57,7 @@ LoadedImageDesc   **desc;
       return (FALSE);
    else if (IsHTTPPath (pathname))
      {
-	   localname = (char*) malloc (sizeof (char) * MAX_LENGTH);
+	   localname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 	/* It is an image loaded from the Web */
 	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
 	strcat (localname, name);
@@ -225,7 +225,7 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-    tempfile = (char*) malloc (sizeof (char) * MAX_LENGTH);
+    tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 	/* rename the local file of the image */
 	strcpy (tempfile, desc->localName);
 	TtaFileUnlink (tempfile);
@@ -314,8 +314,8 @@ void               *extra;
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char*               pathname = (char*) malloc (sizeof (char) * MAX_LENGTH);
-  char*               tempfile = (char*) malloc (sizeof (char) * MAX_LENGTH);
+  char*               pathname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char*               tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
   boolean             update;
   boolean             newImage;
   ElemImage          *ctxEl;

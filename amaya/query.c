@@ -441,7 +441,7 @@ static void         Thread_deleteAll ()
 #              ifndef _WINDOWS 
 		  RequestKillAllXtevents (me);
 #              endif /* !_WINDOWS */
-		  HTRequest_kill (me->request);
+	      HTRequest_kill (me->request);
 		  AHTReqContext_delete (me);
 		}
 	    }		/* while */
@@ -1297,7 +1297,7 @@ void                QueryClose ()
    HTAlert_setGlobal ((HTList *) NULL);
    HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
    HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
-
+    HTHost_setActivateRequestCallback (NULL);
    Thread_deleteAll ();
  
    HTProxy_deleteAll ();

@@ -4202,7 +4202,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+  char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
   boolean             sameLevel;
 
   /* search the MathML element name in the mapping table */
@@ -4274,7 +4274,7 @@ char               *GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+  char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
   PtrClosedElement    pClose;
   boolean             sameLevel;
   SSchema	      schema;
@@ -4422,7 +4422,7 @@ static void         EndOfEndMathTag ()
 #endif
 {
    int                 entry;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 
    /* seach the HTML tag in the mapping table */
    entry = MapMathGI (inputBuffer);
@@ -4458,7 +4458,7 @@ char                c;
    int                 entry;
    int                 i;
    boolean             ok;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
    SSchema	       schema;
 
    CloseBuffer ();
@@ -4596,7 +4596,7 @@ char                c;
    Element             child;
    Attribute           attr;
    char                translation;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 
    CloseBuffer ();
 #ifdef MATHML
@@ -5126,7 +5126,7 @@ char                c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 
    EntityName[LgEntityName] = EOS;
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -5162,7 +5162,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
    boolean	       OK;
 
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
@@ -5299,7 +5299,7 @@ char                c;
 #endif
 {
    int                 i;
-   char*               msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+   char*               msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 
 #ifdef MATHML
    if (WithinMathML && !ReadingHTMLentity)
@@ -5402,7 +5402,7 @@ unsigned char       c;
 	        /* print an error message */
 	        EntityName[LgEntityName++] = c;
 	        EntityName[LgEntityName++] = EOS;
-			msgBuffer = (char*) malloc (sizeof (char) * MaxBufferLength);
+			msgBuffer = (char*) TtaGetMemory (sizeof (char) * MaxBufferLength);
 	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
 			TtaFreeMemory (msgBuffer);

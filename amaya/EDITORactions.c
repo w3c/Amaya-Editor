@@ -36,8 +36,8 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
-   char*               tempfile = (char*) malloc (MAX_LENGTH * sizeof (char));
-   char*               suffix = (char*) malloc (MAX_LENGTH * sizeof (char));
+   char*               tempfile = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
+   char*               suffix = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
    int                 val, i, j;
    Document            doc;
    boolean             exist;
@@ -1264,7 +1264,7 @@ int                 attrNum;
    int                 w, h;
    int                 length, shape, i;
 
-   buffer = (char*) malloc (100 * sizeof (char));
+   buffer = (char*) TtaGetMemory (100 * sizeof (char));
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
    if (elType.ElTypeNum != HTML_EL_AREA)
@@ -1405,7 +1405,7 @@ char               *shape;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape;
-   char*                url = (char*) malloc (MAX_LENGTH * sizeof (char));
+   char*                url = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char));
    int                 length, w, h;
    int                 firstchar, lastchar;
    DisplayMode         dispMode;

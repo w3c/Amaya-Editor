@@ -162,7 +162,7 @@ static void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-		  oldValue = (char*) malloc (sizeof (char) * ATTRLEN);
+		  oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
 	  TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (span, newAttr, doc);
@@ -288,7 +288,7 @@ Element             elem;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
-   style = (char*) malloc (sizeof (char) * STYLELEN);
+   style = (char*) TtaGetMemory (sizeof (char) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -476,8 +476,8 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  char*	value    = (char*) malloc (sizeof (char) * ATTRLEN); 
-  char* oldValue = (char*) malloc (sizeof (char) * ATTRLEN);
+  char*	value    = (char*) TtaGetMemory (sizeof (char) * ATTRLEN); 
+  char* oldValue = (char*) TtaGetMemory (sizeof (char) * ATTRLEN);
   boolean	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
