@@ -2678,7 +2678,9 @@ boolean         remove;
 		pAb = pAb->AbNext;
 	     if (pAb == NULL && pParent)
 		{
-		pAb = pParent;
+		pAb = pParent->AbNext;
+		if (pAb && pAb->AbElement != pEl)
+		   pAb = NULL;
 		enclosed = FALSE;
 		}
 	     }
