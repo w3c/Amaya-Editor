@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern char *LINK_GetAnnotationIndexFile ( char *source_url );
-extern void LINK_AddLinkToSource ( Document source_doc,
-                                   AnnotMeta *annot );
+extern ThotBool LINK_AddLinkToSource ( Document source_doc,
+                                       AnnotMeta *annot );
 extern void LINK_RemoveLinkFromSource ( Document source_doc,
                                         Element el );
 extern void LINK_SaveLink ( Document source_doc );
@@ -27,8 +27,8 @@ extern Element LINK_SelectSourceDoc ( Document doc,
 #else /* __STDC__ */
 
 extern char *LINK_GetAnnotationIndexFile (/* char *source_url */);
-extern void LINK_AddLinkToSource (/* Document source_doc,
-                                     AnnotMeta *annot */);
+extern ThotBool LINK_AddLinkToSource (/* Document source_doc,
+                                         AnnotMeta *annot */);
 extern void LINK_RemoveLinkFromSource (/* Document source_doc,
                                           Element el */);
 extern void LINK_SaveLink (/* Document source_doc */);

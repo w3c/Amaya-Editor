@@ -159,12 +159,14 @@ char *index_file;
 /*-----------------------------------------------------------------------
   LINK_AddLinkToSource
   Adds to a source document, an annotation link pointing to the annotation.
+  Returns TRUE if the annotation could be attached and FALSE if the
+  annotation became orphan.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
+ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 #else /* __STDC__*/
-void LINK_AddLinkToSource (source_doc, annot)
+ThotBool LINK_AddLinkToSource (source_doc, annot)
 Document source_doc; 
 AnnotMeta *annot;
 #endif /* __STDC__*/
@@ -365,6 +367,8 @@ AnnotMeta *annot;
   usprintf (tmp, "%s@%s", annot->author, server);
   AnnotFilter_add (&AnnotMetaData[source_doc], BY_AUTHOR, tmp, annot);
   TtaFreeMemory (tmp);
+
+  return (!(annot->is_orphan));
 }
 
 /*-----------------------------------------------------------------------
@@ -615,6 +619,8 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
   AnnotMeta *annot;
   AnnotMeta *old_annot;
   DisplayMode dispMode;
+  /* counts the number of orphan annotations in the document */
+  int orphan_count = 0;
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */
@@ -640,47 +646,46 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
   while (list_ptr)
     {
       annot = (AnnotMeta *) list_ptr->object;
-      /* @@ JK: we need to do this operation,  but with the xptr */
-#if 0
-      if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
+      /* don't add an annotation if it's already on the list */
+      /* @@ JK: later, Ralph will add code to delete the old one.
+	 We should remove the old annotations and preserve the newer
+	 ones. Take into account that an anotation window may be open
+	 and that we'll have to close it without saving... or just update
+	 the metadata... */
+      
+      old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
+					 annot->annot_url, AM_ANNOT_URL);
+      if (!old_annot)
 	{
-	  fprintf (stderr, "This annotation has lost its parent!\n");
-	  Annot_free (annot);
-	}
-      else 
-#endif
-	{
-	  /* don't add an annotation if it's already on the list */
-	  /* @@ JK: later, Ralph will add code to delete the old one.
-	   We should remove the old annotations and preserve the newer
-	   ones. Take into account that an anotation window may be open
-	   and that we'll have to close it without saving... or just update
-	   the metadata... */
-	  
-	  old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-					     annot->annot_url, AM_ANNOT_URL);
-	  if (!old_annot)
+	  if (mark_visible)
 	    {
-	      if (mark_visible)
-		{
-		  /* create the reverse link name */
-		  LINK_CreateAName (annot);
-		  LINK_AddLinkToSource (doc, annot);
-		  annot->is_visible = TRUE;
-		}
-	      else
-		annot->is_visible = FALSE;
-	      List_add (&AnnotMetaData[doc].annotations, (void*) annot);
+	      /* create the reverse link name */
+	      LINK_CreateAName (annot);
+	      if (! LINK_AddLinkToSource (doc, annot))
+		orphan_count++;
+	      annot->is_visible = TRUE;
 	    }
 	  else
-	    Annot_free (annot);
+	    annot->is_visible = FALSE;
+	  List_add (&AnnotMetaData[doc].annotations, (void*) annot);
 	}
-       List_delFirst (&list_ptr);
+      else
+	Annot_free (annot);
+
+      List_delFirst (&list_ptr);
     }
 
   /* show the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+  
+  if (orphan_count)
+    {
+      /* warn the user there were some orphan annotations */
+      InitInfo (TEXT("Annotation load"), 
+		TEXT("There were some orphan annotations. You may See them with the Links view."));
+    }
+
 }
 
 /*-----------------------------------------------------------------------
