@@ -3378,10 +3378,10 @@ void               *ctx_cbf;
 	    memory dynamically (note: this can generate some MAX_LENGTH
 	    problems) */
 	 if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
-	     || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK
 #ifdef ANNOTATIONS
-	     || CE_event == CE_ANNOT)
+	     || CE_event == CE_ANNOT
 #endif /*ANNOTATIONS */
+		 || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
 	   /* we're following a link, so do all the convertions on
 	      the URL */
 	   NormalizeFile (pathname, tempfile, TRUE);
