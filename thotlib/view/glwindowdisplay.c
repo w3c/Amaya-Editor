@@ -1183,16 +1183,18 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    {
 	      /* Call the function in any case to let Postscript justify the
 		text of the box.  */
+	      if (charleft < 0)
+		{
+		  bl = 0;
+		  nbcar = 0;
+		}
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += GL_UnicodeDrawString (fg, bbuffer,
 					  x, REALY(y1), 
-					  hyphen, prevfont, nbcar);	      
+					  hyphen, prevfont, 0);	      
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
-	      /* Next char lookup */
-	      /*if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
-		GL_DrawUnicodeChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);*/
 	      nbcar = 0;
 	    }
 	} 

@@ -2143,7 +2143,7 @@ void                ResetHighlightedElement ()
    A new element has been selected. If the Source view is open,
    synchronize it with the new selection.      
   ----------------------------------------------------------------------*/
-void SynchronizeSourceView (NotifyElement * event)
+void SynchronizeSourceView (NotifyElement *event)
 {
    Element             firstSel, el, child, otherEl;
    int                 firstChar, lastChar, line, i, view;

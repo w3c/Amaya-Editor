@@ -1231,19 +1231,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (!Printing)
 #endif /* _WINDOWS */
 		    {
-		  if (car == SPACE)
-		    {
-		      if (restbl > 0)
+		      if (car == SPACE)
 			{
-			  /* Pixel space splitting */
-			  x = x + lgspace + 1;
-			  restbl--;
+			  if (restbl > 0)
+			    {
+			      /* Pixel space splitting */
+			      x = x + lgspace + 1;
+			      restbl--;
+			    }
+			  else
+			    x += lgspace;
 			}
 		      else
-			x += lgspace;
-		    }
-		  else
-		    x += CharacterWidth (car, nextfont);
+			x += CharacterWidth (car, nextfont);
 		    }
 		  /* a new space is handled */
 		  bl++;
@@ -1333,15 +1333,17 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		call the function in any case to let Postscript justify the
 		text of the box.
 	      */
+	      if (charleft < 0)
+		{
+		  bl = 0;
+		  nbcar = 0;
+		}
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
-	      /* Next char lookup */
-	      /*if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
-		DrawChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);*/
 	      nbcar = 0;
 	    }
 	} 
