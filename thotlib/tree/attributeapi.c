@@ -149,6 +149,7 @@ PtrSSchema          pSS;
 		      /* l'application laisse l'editeur saisir la valeur de */
 		      /* l'attribut requis */
 		     {
+#ifndef NODISPLAY
 			MandatoryAttrOK = FALSE;
 			do
 			  {
@@ -186,7 +187,7 @@ PtrSSchema          pSS;
 			       }
 			  }
 			while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
-
+#endif /* NODISPLAY */
 			if (MandatoryAttrOK && pDoc->DocSSchema != NULL)
 			  {
 			     /* envoie l'evenement AttrModify.Post */

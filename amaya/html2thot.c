@@ -1684,9 +1684,9 @@ static int          StackLevel = 0;	     /* first free element on the
 #define INPUT_FILE_BUFFER_SIZE 2000
 static CHAR_T	    FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
-static int	    LastCharInFileBuffer = 0;
-static int          CurrentBufChar;
-static CHAR_T	    PreviousBufChar = EOS;	  /* last character read */
+static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
+static int          CurrentBufChar;           /* current character read */
+static CHAR_T	    PreviousBufChar = EOS;    /* previous character read */
 static STRING       InputText;
 static gzFile       stream = 0;
 static int          NumberOfLinesRead = 0;/* number of lines read in the
@@ -7811,8 +7811,9 @@ STRING	        closingTag;
    oldLastElemEntry = lastElemEntry;
    lastElemEntry = 0;
    HTMLrootClosingTag = closingTag;
-
-   HTMLparse (NULL, NULL);
+   /* TODO: the XML parser must call that function with two new parameters:
+      the current infile and current index */
+   HTMLparse (stream, NULL);
 
    lastElement = oldLastElement;
    lastElementClosed = oldLastElementClosed;

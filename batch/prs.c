@@ -36,7 +36,6 @@
 #include "typegrm.h"
 #include "fileaccess.h"
 #include "prsdef.h"
-#include "thotpattern.h"
 #include "fileaccess.h"
 #include "thotdir.h"
 
@@ -44,12 +43,13 @@
 #include "compil_tv.h"
 #include "thotcolor.h"
 #include "thotcolor_tv.h"
-#include "thotpalette_tv.h"
+#include "thotpattern.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "analsynt_tv.h"
 #include "compil_tv.h"
+
 
 #ifdef _WINDOWS
 #      define FATAL_EXIT_CODE 33

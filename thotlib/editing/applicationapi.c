@@ -26,7 +26,9 @@
 #include "appaction.h"
 #include "appstruct.h"
 #include "dialog.h"
+#ifndef NODISPLAY
 #include "thotpattern.h"
+#endif /* NODISPLAY */
 #include "appdialogue.h"
 #include "dictionary.h"
 
@@ -338,13 +340,13 @@ STRING              applicationName;
 #  else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
 #  endif /* _WINDOWS */
-#endif /* NODISPLAY */
 
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (STRING);
 
    Patterns = Name_patterns;
+#endif /* NODISPLAY */
    /* load the message table of the Thot Library */
    i = TtaGetMessageTable (_LibdialogueCST_, TMSG_LIB_MSG_MAX);
    switch (i)
