@@ -2666,7 +2666,7 @@ int      length;
      {
        /* Unknown entity */
        lang = -1;
-       usprintf (msgBuffer, TEXT("Unknown entity %s;"), buffer);
+       usprintf (msgBuffer, TEXT("Unknown entity %s"), buffer);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
