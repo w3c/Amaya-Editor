@@ -1612,7 +1612,7 @@
 </label>
 <label define="AM_XML_ERROR">
 	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
-	<message xml:lang="fr">Des balises/attributs sont ignorées - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="fr">Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen</message>
 	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log</message>
