@@ -503,9 +503,9 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len, int mo
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode mode, ThotBool firstF)
+static char *XPointer_ThotEl2XPath (Element start, int firstCh, int len, selMode mode, ThotBool firstF)
 #else
-char *XPointer_ThotEl2XPath (start, firstCh, selMode mode, len, firstF)
+static char *XPointer_ThotEl2XPath (start, firstCh, selMode mode, len, firstF)
 Element start;
 int firstCh;
 int len;
