@@ -719,41 +719,29 @@ BOXES
  CHECKBOX_ALT: BEGIN
 	Content: Text '[ ]';
 	Visibility: 0;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		Visibility: Creator =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
 	END;
 
  CHECKBOXCHECKED_ALT: BEGIN
 	Content: Text '[X]';
 	Visibility: 0;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		Visibility: Creator =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
 	END;
 
  RADIO_ALT: BEGIN
 	Content: Text '( )';
 	Visibility: 0;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		Visibility: Creator =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
 	END;
 
  RADIOCHECKED_ALT: BEGIN
 	Content: Text '(*)';
 	Visibility: 0;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		Visibility: Creator =;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		END;
 	END;
 
  INSERTED_ALT: BEGIN
@@ -3798,13 +3786,12 @@ RULES
 	MarginLeft: 3 px;
 	MarginRight: 3 px;
 	LineBreak: No;
-	Width: 0;
-        Height: 0;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
 		MarginLeft: 0;
 		MarginRight: 0;
+		Width: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
@@ -3819,13 +3806,12 @@ RULES
 	MarginLeft: 3 px;
 	MarginRight: 3 px;
 	LineBreak: No;
-	Width: 0;
-        Height: 0;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
 		MarginLeft: 0;
 		MarginRight: 0;
+		Width: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
@@ -6442,24 +6428,24 @@ ATTRIBUTES
  Checked = Yes_:
 	BEGIN
 	if Checkbox_Input BEGIN
-	   CreateBefore(CHECKBOXCHECKED_ALT);
-	   CreateBefore(ToggleS_gif);
+	   CreateFirst(CHECKBOXCHECKED_ALT);
+	   CreateFirst(ToggleS_gif);
 	   end;
 	if Radio_Input BEGIN
-	   CreateBefore(RADIOCHECKED_ALT);
-	   CreateBefore(RadioS_gif);
+	   CreateFirst(RADIOCHECKED_ALT);
+	   CreateFirst(RadioS_gif);
 	   END;
 	CreateBefore(AttrNameOnly);
 	END;
  Checked = No_:
 	BEGIN
 	if Checkbox_Input BEGIN
-	   CreateBefore(CHECKBOX_ALT);
-	   CreateBefore(Toggle_gif);
+	   CreateFirst(CHECKBOX_ALT);
+	   CreateFirst(Toggle_gif);
 	   END;
 	if Radio_Input BEGIN
-	   CreateBefore(RADIO_ALT);
-	   CreateBefore(Radio_gif);
+	   CreateFirst(RADIO_ALT);
+	   CreateFirst(Radio_gif);
 	   END;
 	END;
 
