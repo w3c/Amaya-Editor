@@ -773,9 +773,15 @@ static void         CreateMathConstruct (int construct)
 	      elType.ElTypeNum = MathML_EL_MathML;
 	      el = TtaGetTypedAncestor (el, elType);
 	    }
-	  /* associate an attribute IntDisplaystyle with the new <math> elem */
 	  if (el)
-	    SetDisplaystyleMathElement (el, doc);
+	    {
+	      /* associate an attribute IntDisplaystyle with the new <math> elem */
+	      SetDisplaystyleMathElement (el, doc);
+	      /* Set the MathML namespace declaration */
+	      elType = TtaGetElementType (el);
+	      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
+	      TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
+	    }
 	}
       return;
     }
