@@ -49,9 +49,9 @@ Amaya/amaya/Makefile.graph \
 Amaya/amaya/AmayaPage.html \
 Amaya/amaya/*.c \
 Amaya/amaya/*.h \
+Amaya/amaya/*.conf \
 Amaya/amaya/HTML.A \
 Amaya/amaya/HTML.S \
-Amaya/amaya/HTML.conf \
 Amaya/amaya/*.en \
 Amaya/amaya/*.fr \
 Amaya/amaya/EDITOR.A \

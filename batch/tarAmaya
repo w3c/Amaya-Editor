@@ -73,8 +73,8 @@ echo "Plarform ------->" $MACH
    Amaya/annotlib/AnnotT.TRA \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
+   Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
-   Amaya/amaya/HTML.conf \
    Amaya/amaya/HTML.trans \
    Amaya/amaya/HTML*.PRS \
    Amaya/amaya/HTML*.TRA \
