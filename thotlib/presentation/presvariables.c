@@ -1081,7 +1081,7 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	   if (digit >= 17)
 	     digit++;
 	   i -= 2;
-	   (unsigned char**) ptr = &string[i];
+	   ptr = (unsigned char*) (&string[i]);
 	   if (style == CntUGreek)
 	     TtaWCToMBstring ((wchar_t) (digit + 0x0391), &ptr);
 	   else

@@ -438,7 +438,6 @@ static void WrPath (PtrPathSeg pPE, int length, FILE *fileDescriptor)
 static void wrRef (PtrReference pRef, FILE *fileDescriptor)
 {
   PtrReferredDescr pDe1;
-  Name             N;
 
   switch (pRef->RdTypeRef)
     {
