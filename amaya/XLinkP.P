@@ -159,6 +159,32 @@ BOXES
                 END;
         END;
 
+ Annot_gif1: BEGIN
+#ifndef PAGE
+	Content: Picture 'annot.gif';
+	HorizPos: Left = Enclosing . Left;
+        HorizRef: * . Bottom;	
+	VertPos: Top = Enclosing . Top;
+#endif
+	END;
+
+ Annot_gif2: BEGIN
+#ifndef PAGE
+	Content: Picture 'annot2.gif';
+	HorizPos: Left = Enclosing . Left;
+        HorizRef: * . Bottom;	
+	VertPos: Top = Enclosing . Top;
+#endif
+	END;
+
+RULES
+
+ XLink:	BEGIN
+	IN Structure_view BEGIN
+		Visibility: 0;
+		END;
+	END;
+
 ATTRIBUTES
 
   type = simple:
@@ -192,9 +218,18 @@ ATTRIBUTES
 
   href_ :
 	BEGIN
-	CreateBefore(ATTR_href);
-	CreateBefore(VALUE_href);
+	if not AnnotIsHidden
+           BEGIN
+	   CreateBefore(ATTR_href);
+  	   CreateBefore(VALUE_href);
+           END;
+        if not AnnotIsHidden and AnnotIcon1
+           CreateFirst(Annot_gif1);
+        if not AnnotIsHidden and AnnotIcon2
+           CreateFirst(Annot_gif2);
 	END;
+
+
 {****
    role = TEXT;
 

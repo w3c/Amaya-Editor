@@ -155,6 +155,7 @@ STRUCT
 	MathML;						        { MATH }
         GraphML;		                                { SVG }
 	MAP;							{ MAP }
+	XLink;							{ Annotations }
 	END;
 
 	HTMLfragment = LIST OF (Element);
@@ -250,6 +251,7 @@ STRUCT
 	Object;							{ OBJECT }
 	IFRAME;							{ IFRAME }
 	MathML;							{ MATH }
+	XLink;							{ Annotations }
 	END;
 
   BaseFont							{ BASEFONT }

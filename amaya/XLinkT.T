@@ -12,45 +12,91 @@ ATTRIBUTES
 
    type = simple:
 	begin
-        create nsdcl;
-	create ' xlink:type="simple"';
-	end;
+        if XLink begin
+	   remove;
+	   end;
+	if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="simple"';
+	   end;
+        end;
+
    type = extended:
 	begin
-        create nsdcl;
-	create ' xlink:type="extended"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="extended"';
+           end;
 	end;
+
    type = locator:
 	begin
-        create nsdcl;
-	create ' xlink:type="locator"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="locator"';
+           end;
 	end;
+
    type = arc:
 	begin
-        create nsdcl;
-	create ' xlink:type="arc"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="arc"';
+           end;
 	end;
+
    type = resource:
 	begin
-        create nsdcl;
-	create ' xlink:type="resource"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="resource"';
+           end;
 	end;
+
    type = title_:
 	begin
-        create nsdcl;
-	create ' xlink:type="title"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="title"';
+           end;
 	end;
+
    type = none_:
 	begin
-        create nsdcl;
-	create ' xlink:type="none"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:type="none"';
+	   end;
 	end;
 
    href_:
 	begin
-	create ' xlink:href="';
-	create href_;
-	create '"';
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+	   create ' xlink:href="';
+	   create href_;
+	   create '"';
+	   end;
 	end;
 
 {****
@@ -68,3 +114,4 @@ ATTRIBUTES
 ****}
 
 END
+
