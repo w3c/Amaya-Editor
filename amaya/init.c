@@ -8102,7 +8102,6 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 
   name = TtaConvertMbsToByte (save_name, TtaGetDefaultCharset ());
   url = TtaConvertMbsToByte (initial_url, TtaGetDefaultCharset ());
-  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
 
   /* keep the previous list */
   ptr = AutoSave_list;
@@ -8116,6 +8115,7 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 
   /* open the file AutoSave.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
 
   if (TtaFileExist (urlstring))
@@ -8140,9 +8140,9 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 		      if (ptr_beg)
 			{
 			  ptr_beg++;
-			  if ((end != len) || (strcmp (url, ptr_beg)))
+			  if (strcmp (url, ptr_beg))
 			    {
-			      /* copy the url */
+			      /* keep this entry */
 			      *ptr_end = '\"';
 			      strcpy (&AutoSave_list[j], &ptr[i]);
 			      AutoSave_list_len += end;
