@@ -1,5 +1,0 @@
-{
-if ($0 != "EndThot") print $0;
-if ($1 == "%%Page") p++;
-}
-END { if ( p%2 == 1) printf("\n0 0 0 nwpage\n\n"); }

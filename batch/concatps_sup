@@ -1,0 +1,51 @@
+{ 
+#premier document lu
+# p : nombre total de pages genere pour le document global
+# q : nombre de page courant du document courant
+	if (a==0)
+		{
+		if ($0 != "EndThot")
+			{
+			print $0;
+			if ($1 == "%%Page") p++;
+			}
+  		else
+			{
+			if ( p%2 == 1) printf("\n0 0 0 nwpage\n\n");
+			a=1;
+			}
+		}
+	else
+		{
+# documents suivants
+		if ($0 == "frstpage")
+                        {
+  			i = 1;
+                        q = 1;
+                        }
+		else
+  			if ($0 == "EndThot")
+				{
+    				i = 0;
+				{ if ( q%2 == 1) printf("\n0 0 0 nwpage\n\n"); }
+#on rajoute une page blanche si q est impair
+#pour que le document suivant commence sur une page verso
+				}
+  			else
+    				if (i == 1)
+      					{
+      					if ($1 == "%%Page:") 
+        					{
+          					p++;
+                                                q++;
+          					print "%%Page:", p, p;
+# commentaire necessaire pour ghostview avec le compteur p
+        					}
+      					else
+        					{
+          					print $0;
+        					}
+      					} 
+		}
+}
+END{print "%%fin du document";}

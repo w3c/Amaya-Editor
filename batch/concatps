@@ -9,10 +9,9 @@
 # Les en-tetes PostScript ne sont pas repetees.
 # Chaque fichier commence sur une page impaire.
 #
-# ATTENTION : ce fichier utilise concatps_sup1 et concatps_sup2 dont les
-#             contenus sont ci-dessous (en cas d'accident) :
+# ATTENTION : ce fichier utilise concatps_sup 
 #
-thotlibdir=/usr/local/applis/thot/Current/bin
+thotlibdir=/perles/roisin/opera/batch
 
 if [ "$#" -eq "0" ]
 then
@@ -23,14 +22,7 @@ then
 fi
 
 
-awk -f $thotlibdir/concatps_sup1 $1
-shift
-
-while [ "$#" -ne "0" ]
-do
-	awk -f $thotlibdir/concatps_sup2 $1
-	shift
-done
+awk -f $thotlibdir/concatps_sup $*
 
 echo ""
 echo "EndThot"
