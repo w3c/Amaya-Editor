@@ -55,7 +55,7 @@ BEGIN {
 	my @list_handles = (); #to record the names of the handles
 	my %handle_names_ref = ();	#to have the handle ref of each languages when output	
 									
-	my %record_verification = (); 	#To remember what kind of languages are already
+	my %record_verification = (); 	#To remember what kind of languages are allready
 										#read for the same label, it can be some lake
 	my $english_text_reference; #somes languages don't have text for a label
 	
@@ -65,12 +65,15 @@ BEGIN {
 										#some needs encoding utf-8 to iso-latin1
 	my $codage ; 	#because the codage is an attribute of <language> and the
 						#coresspondig language is nown after as a char
+	my $label_ending = "";
+	
 sub export {
 	$base = shift ; #complete name of the base
 	$where = shift ; # where out put files ares 
 	$sufix = shift ; # sufix of messages files
 	$head_name = shift; # name of the ".h"
-	
+	$label_ending = shift; #name of the last label
+		
 	$reference_value = 0;# to avoid problem when many calls
 
 # declaration of the parser
@@ -269,10 +272,10 @@ sub end_hndl { #	do the modification if necessary
 #			print $prefix . "\n";
 			if ($record_verification {$prefix } == 0) {
 				$fh = $handle_names_ref { $prefix};
-#				print $fh . "\n";			
 		      $fh = $list_handles [$fh];
-#				print $fh . "\n";
-				print_in_a_file ( $fh ,"$english_text_reference\n" );
+				if ( $current_label ne $label_ending ) {		
+					print_in_a_file ( $fh ,"$english_text_reference\n" );
+				}
 			}
 		}
 		$reference_value++ ; # to increment the reference number

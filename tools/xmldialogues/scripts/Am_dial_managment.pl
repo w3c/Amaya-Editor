@@ -29,6 +29,11 @@ my %index =qw ( 	1	dia
 						2	msg
 						3	lib
 						4	corrd);
+# to store the particulary labels that ends the label files
+my %ending_label = qw (	dia MAX_EDITOR_LABEL
+								msg AMAYA_MSG_MAX
+								lib TMSG_LIB_MSG_MAX
+								corrd MSG_MAX_CHECK);
 
 #### 	for Amaya dialogue => dia or $index {1}
   $head_dir{'dia'} = "$home/$rep_amaya/Amaya/$rep_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
@@ -163,7 +168,7 @@ do { # to continue to treat the same type of dialogue
 	while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 	print "\n";
 
-# treats the answer
+##|||||||||||||||||||||||||||||||| treats the answer\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	if ($choice == 1) { #Init the XML base
 		$_ = verify ();
 		if ( /^y/i || /^yes/i ) {
@@ -182,37 +187,58 @@ do { # to continue to treat the same type of dialogue
 		}
 
 	}
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 2) { #Adding/Updating a language	
 		print "What language do you want to treat? (in two letters like the
 		standard ISO-638-1988 i.e.: en or fr)\n";
 		$lang = <STDIN>;
 		chomp $lang;
-		{	
+		do {
+		 	print "Are files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
+					"Our choice [0] : ";
+			$choice = <STDIN>;
+			chomp ($choice);if ( $choice eq "") { $choice = 0;}
+		} 
+		while ($choice != /^[0-1]/);
+		$_ = $choice;
+		if (/0/)
+			{	
 		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
 		$Import_am_msg::basefile = $BASE_directory  . $base_name { $index{ $last_choice}};
 		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
-		Import_am_msg::import_a_language ($lang) ;
-		}
-		
+			}
+		else #if (/1/)
+			{
+		$Import_am_msg::in_labelfile = "$home/$rep_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $index{ $last_choice}};
+		$Import_am_msg::basefile = $BASE_directory  . $base_name { $index{ $last_choice}};
+		$Import_am_msg::in_textdirectory = "$home/$rep_amaya/Amaya/tools/xmldialogues/in/";
+		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};				
+			}
+		Import_am_msg::import_a_language ($lang) ;		
 	}	
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 3) { # Export all dialogues files
 		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
 										$OUT_MSG_directory,
 										$lang_sufix { $index{ $last_choice}},
-										$head_name{ $index{ $last_choice}}
+										$head_name{ $index{ $last_choice}},
+										$ending_label { $index{ $last_choice}}
 										);
 	}
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 4) { # Add a label
 		Dial_tool_box::add_label ( $BASE_directory,
 											$base_name{ $index{ $last_choice}} 
 											);						
 	}
-	elsif ($choice == 5) { # Delete a labe
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	elsif ($choice == 5) { # Delete a label
 		Dial_tool_box::delete_label ( $BASE_directory,
 												$base_name{ $index{ $last_choice}} 
 												);
 	}
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 6) { # n'arrive que si last_choice = 1
 		#en principe ne reprend que EDITOR.h		
 		$_ = verify ();
@@ -230,7 +256,8 @@ do { # to continue to treat the same type of dialogue
 		Export_am_msg::export (	$BASE_directory . $base_name{ $index{ $last_choice}},
 										$OUT_MSG_directory,
 										$lang_sufix { $index{ $last_choice}},
-										$head_name{ $index{ $last_choice}}
+										$head_name{ $index{ $last_choice}},
+										$ending_label { $index{ $last_choice}}
 										);
 
 }
@@ -241,7 +268,7 @@ do { # to continue to treat the same type of dialogue
 #################################################################################
 sub verify {
 	do {
-			print "\tAre you certain to want erase the old base (Yes ,No )?\n";
+			print "\tAre you certain to want to erase the old base (Yes ,No )?\n";
 			print " \tOur choice [n]:\t";
 			$_ = <STDIN>;
 			chomp;
