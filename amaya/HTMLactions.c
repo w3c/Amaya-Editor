@@ -788,16 +788,21 @@ static ThotBool ActivateElement (Element element, Document document)
    Element             anchor, elFound, ancestor;
    ElementType         elType, elType1;
    SSchema             HTMLschema, SvgSchema, XLinkSchema;
-   ThotBool	       ok, isHTML, isXLink;
+   ThotBool	       ok, isHTML, isXLink, isSVG;
 
    elType = TtaGetElementType (element);
    HTMLschema = TtaGetSSchema ("HTML", document);
+   isSVG = FALSE;
+   isXLink = FALSE;
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
    if (!isHTML)
+     {
        isXLink = TtaSameSSchemas (elType.ElSSchema, 
 				  TtaGetSSchema ("XLink", document));
-   else
-     isXLink = 0;
+       if (!isXLink)
+	 isSVG = TtaSameSSchemas (elType.ElSSchema, 
+				  TtaGetSSchema ("GraphML", document));
+     }
 
    /* Check if the current element is interested in double clicks */
    ok = FALSE;
@@ -807,21 +812,25 @@ static ThotBool ActivateElement (Element element, Document document)
        elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
      /* it's a basic element. It is interested whatever its namespace */
      ok = TRUE;
-   else if (isHTML
-	    && (elType.ElTypeNum == HTML_EL_LINK ||
-		elType.ElTypeNum == HTML_EL_C_Empty ||
-		elType.ElTypeNum == HTML_EL_Radio_Input ||
-		elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-		elType.ElTypeNum == HTML_EL_Frame ||
-		elType.ElTypeNum == HTML_EL_Option_Menu ||
-		elType.ElTypeNum == HTML_EL_Submit_Input ||
-		elType.ElTypeNum == HTML_EL_Reset_Input ||
-		elType.ElTypeNum == HTML_EL_BUTTON_ ||
-		elType.ElTypeNum == HTML_EL_File_Input ||
-		elType.ElTypeNum == HTML_EL_FRAME ||
-		elType.ElTypeNum == HTML_EL_Anchor))
+   else if (isHTML &&
+	    (elType.ElTypeNum == HTML_EL_LINK ||
+	     elType.ElTypeNum == HTML_EL_C_Empty ||
+	     elType.ElTypeNum == HTML_EL_Radio_Input ||
+	     elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+	     elType.ElTypeNum == HTML_EL_Frame ||
+	     elType.ElTypeNum == HTML_EL_Option_Menu ||
+	     elType.ElTypeNum == HTML_EL_Submit_Input ||
+	     elType.ElTypeNum == HTML_EL_Reset_Input ||
+	     elType.ElTypeNum == HTML_EL_BUTTON_ ||
+	     elType.ElTypeNum == HTML_EL_File_Input ||
+	     elType.ElTypeNum == HTML_EL_FRAME ||
+	     elType.ElTypeNum == HTML_EL_Anchor))
      ok = TRUE;
    else if (isXLink)
+     ok = TRUE;
+   else if (isSVG &&
+	    (elType.ElTypeNum == GraphML_EL_use_ ||
+	     elType.ElTypeNum == GraphML_EL_a))
      ok = TRUE;
 
    if (!ok)
@@ -929,6 +938,9 @@ static ThotBool ActivateElement (Element element, Document document)
 	 {
 	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
 			  elType.ElTypeNum == HTML_EL_FRAME))
+	     anchor = element;
+	   else if (isSVG && (elType.ElTypeNum == GraphML_EL_use_ ||
+			      elType.ElTypeNum == GraphML_EL_a))
 	     anchor = element;
 	   else
 	     {
