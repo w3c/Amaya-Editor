@@ -2737,10 +2737,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
 	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
 
+	   /* horibble hack cause windowsmaker and gtk don't give correct first y*/
 	   gtk_object_set_data (GTK_OBJECT(Main_Wd), "Yorigin", (gpointer) Y);
 	   gtk_object_set_data (GTK_OBJECT(Main_Wd), "Yboolean", (gpointer) 1);
 
 	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
+
 	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
 			     "delete_event",
 			     GTK_SIGNAL_FUNC(KillFrameGTK),

@@ -12,7 +12,7 @@
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
  *          R. Guetari (W3C/INRIA) - Previous Windows version
- *
+ *          P. Cheyrou-Lagreze (INRIA) - gtk input
  */
 
 #include "thot_gui.h"
@@ -665,22 +665,26 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 
   frame = (int) data; 
   FrameToView (frame, &doc, &view);
-  
+
+  /* horibble hack cause windowsmaker and gtk don't give correct first y*/
   firstycheck = (int) gtk_object_get_data  (GTK_OBJECT(w->parent->parent->parent), 
 					   "Yboolean");
   if (firstycheck)
     {
+      /*gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
+       but it's buggy with window maker*/
       y = (int) gtk_object_get_data (GTK_OBJECT(w->parent->parent->parent),
 				     "Yorigin");
+      w->parent->parent->parent->allocation.y = y;
       gtk_object_set_data (GTK_OBJECT(w->parent->parent->parent),
 			   "Yboolean", (gpointer) 0);
     }
   else
-    gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
-  /*  if (w->parent->parent->parent->allocation.y > y)
-      y = w->parent->parent->parent->allocation.y;*/
-
-
+    {
+      /*gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
+       but it's buggy with window maker*/
+      y = w->parent->parent->parent->allocation.y;
+    }
   if (timer != None)
     {
       gtk_timeout_remove (timer);
