@@ -889,10 +889,8 @@ boolean             before;
    RedisplayNewContent	redisplays element pEl in all views, except in	
    	view skipView.							
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol, int skipView, PtrAbstractBox pAbEl)
-
 #else  /* __STDC__ */
 void                RedisplayNewContent (pEl, pDoc, dVol, skipView, pAbEl)
 PtrElement          pEl;
@@ -900,142 +898,114 @@ PtrDocument         pDoc;
 int                 dVol;
 int                 skipView;
 PtrAbstractBox      pAbEl;
-
 #endif /* __STDC__ */
 
 {
    PtrAbstractBox      pAb;
-   int                 view, frame, h;
-   boolean             modif, assoc;
    PictInfo           *picture1, *picture2;
+   int                 view, frame, h;
+   boolean             assoc;
 
-   modif = FALSE;
    assoc = AssocView (pEl);
    for (view = 0; view < MAX_VIEW_DOC; view++)
-      if (pEl->ElAbstractBox[view] != NULL)
-	 /* un pave correspondant existe dans la vue view */
-	 /* met a jour le volume dans les paves englobants */
-	{
-	   pAb = pEl->ElAbstractBox[view]->AbEnclosing;
-	   while (pAb != NULL)
-	     {
-		pAb->AbVolume += dVol;
-		pAb = pAb->AbEnclosing;
-	     }
-	   if (assoc)
-	      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = NULL;
-	   else
-	      pDoc->DocViewModifiedAb[view] = NULL;
-	   if (view + 1 != skipView)
-	      /* met a jour le contenu et le volume et demande le */
-	      /* reaffichage du pave sauf pour la vue ou la saisie a ete */
-	      /* faite par le mediateur */
-	     {
-		pAb = pEl->ElAbstractBox[view];
-		/* on saute les paves de pre'sentation, pour trouver le pave' */
-		/* principal de l'element, celui qui doit recevoir le nouveau */
-		/* contenu. */
-		while (pAb->AbPresentationBox && pAb->AbElement == pEl)
-		   pAb = pAb->AbNext;
-		/* s'il n'y a pas de pave' principal, il n'y rien a faire */
-		if (pAb->AbElement == pEl && !pAb->AbPresentationBox)
-		  {
-		     pAb->AbVolume += dVol;
-		     pAb->AbChange = TRUE;
-		     switch (pEl->ElLeafType)
+     if (pEl->ElAbstractBox[view] != NULL)
+       /* un pave correspondant existe dans la vue view */
+       /* met a jour le volume dans les paves englobants */
+       {
+	 pAb = pEl->ElAbstractBox[view]->AbEnclosing;
+	 while (pAb != NULL)
+	   {
+	     pAb->AbVolume += dVol;
+	     pAb = pAb->AbEnclosing;
+	   }
+
+	 if (view + 1 != skipView)
+	   /* met a jour le contenu et le volume et demande le */
+	   /* reaffichage du pave sauf pour la vue ou la saisie a ete */
+	   /* faite par le mediateur */
+	   {
+	     pAb = pEl->ElAbstractBox[view];
+	     /* on saute les paves de pre'sentation, pour trouver le pave' */
+	     /* principal de l'element, celui qui doit recevoir le nouveau */
+	     /* contenu. */
+	     while (pAb->AbPresentationBox && pAb->AbElement == pEl)
+	       pAb = pAb->AbNext;
+	     /* s'il n'y a pas de pave' principal, il n'y rien a faire */
+	     if (pAb->AbElement == pEl && !pAb->AbPresentationBox)
+	       {
+		 pAb->AbVolume += dVol;
+		 pAb->AbChange = TRUE;
+		 switch (pEl->ElLeafType)
+		   {
+		   case LtPicture:
+		     if (pAbEl != NULL)
+		       {
+			 picture1 = (PictInfo *) pAbEl->AbPictInfo;
+			 picture2 = (PictInfo *) pAb->AbPictInfo;
+			 /* on fait une maj de pAb->AbPictInfo */
+			 if (picture2 != NULL)
 			   {
-			      case LtPicture:
-				 if (pAbEl != NULL)
-				   {
-				      picture1 = (PictInfo *) pAbEl->AbPictInfo;
-				      picture2 = (PictInfo *) pAb->AbPictInfo;
-				      /* on fait une maj de pAb->AbPictInfo */
-				      if (picture2 != NULL)
-					{
-					   picture2->PicType = picture1->PicType;
-					   picture2->PicPresent = picture1->PicPresent;
-					   picture2->PicPixmap = picture1->PicPixmap;
-					   picture2->PicXArea = picture1->PicXArea;
-					   picture2->PicYArea = picture1->PicYArea;
-					   picture2->PicWArea = picture1->PicWArea;
-					   picture2->PicHArea = picture1->PicHArea;
-					   picture2->PicWidth = picture1->PicWidth;
-					   picture2->PicHeight = picture1->PicHeight;
-					}
-
-				   }
-				 break;
-			      case LtText:
-				 pAb->AbText = pEl->ElText;
-				 pAb->AbLanguage = pEl->ElLanguage;
-				 break;
-			      case LtPolyLine:
-				 pAb->AbLeafType = LtPolyLine;
-				 pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
-				 pAb->AbPolyLineShape = pEl->ElPolyLineType;
-				 pAb->AbVolume = pEl->ElNPoints;
-				 break;
-			      case LtSymbol:
-			      case LtGraphics:
-				 pAb->AbLeafType = LtGraphics;
-				 pAb->AbShape = pEl->ElGraph;
-				 pAb->AbGraphAlphabet = 'G';
-				 break;
-			      default:
-				 break;
+			     picture2->PicType = picture1->PicType;
+			     picture2->PicPresent = picture1->PicPresent;
+			     picture2->PicPixmap = picture1->PicPixmap;
+			     picture2->PicXArea = picture1->PicXArea;
+			     picture2->PicYArea = picture1->PicYArea;
+			     picture2->PicWArea = picture1->PicWArea;
+			     picture2->PicHArea = picture1->PicHArea;
+			     picture2->PicWidth = picture1->PicWidth;
+			     picture2->PicHeight = picture1->PicHeight;
 			   }
-		     /* memorise le pave a reafficher */
-		     if (assoc)
-			pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = pAb;
-		     else
-			pDoc->DocViewModifiedAb[view] = pAb;
-		     modif = TRUE;
-		  }
-	     }			/* fin mise a jour du contenu pour la vue */
-	}			/* fin boucle de parcours des vues */
-   if (modif)
-      /* ajuste le volume dans toutes les vues, ce qui peut modifier */
-      /* le sous-arbre a reafficher */
-     {
-	/* reaffiche les vues modifiees */
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	   if (pEl->ElAbstractBox[view] != NULL)
-	     {
-		/* un pave correspondant existe dans la vue view */
-		if (assoc)
-		  {
-		     /* vue d'element associe */
-		     frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		     pAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
-		  }
-		else
-		  {
-		     frame = pDoc->DocViewFrame[view];
-		     pAb = pDoc->DocViewModifiedAb[view];
-		  }
+		       }
+		     break;
+		   case LtText:
+		     pAb->AbText = pEl->ElText;
+		     pAb->AbLanguage = pEl->ElLanguage;
+		     break;
+		   case LtPolyLine:
+		     pAb->AbLeafType = LtPolyLine;
+		     pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
+		     pAb->AbPolyLineShape = pEl->ElPolyLineType;
+		     pAb->AbVolume = pEl->ElNPoints;
+		     break;
+		   case LtSymbol:
+		   case LtGraphics:
+		     pAb->AbLeafType = LtGraphics;
+		     pAb->AbShape = pEl->ElGraph;
+		     pAb->AbGraphAlphabet = 'G';
+		     break;
+		   default:
+		     break;
+		   }
 
-		if (pAb != NULL)
-		  {
+		 /* memorise le pave a reafficher */
+		 if (assoc)
+		   frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+		 else
+		   frame = pDoc->DocViewFrame[view];
+		 if (pAb != NULL)
+		   {
 		     ClearViewSelection (frame);
 		     h = 0;
 		     /* on ne s'occupe pas de la hauteur de page */
 		     ChangeConcreteImage (frame, &h, pAb);
 		     DisplayFrame (frame);
-		  }
-	     }
-     }
+		   }
+	       }
+	   }	/* fin mise a jour du contenu pour la vue */
+       } /* fin boucle de parcours des vues */
+
    /* si l'element modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
    RedisplayCopies (pEl, pDoc, TRUE);
    /* effectue eventuellement une sauvegarde automatique */
    if (pDoc->DocBackUpInterval > 0)
-      /* DocBackUpInterval =0   signifie pas de sauvegarde automatique */
-      if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
-	{
-	   (*ThotLocalActions[T_writedocument]) (pDoc, 1);
-	   pDoc->DocNTypedChars = 0;
-	}
+     /* DocBackUpInterval =0   signifie pas de sauvegarde automatique */
+     if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
+       {
+	 (*ThotLocalActions[T_writedocument]) (pDoc, 1);
+	 pDoc->DocNTypedChars = 0;
+       }
 }
 
 /*----------------------------------------------------------------------
@@ -1046,14 +1016,11 @@ PtrAbstractBox      pAbEl;
    Ce pave contient deja les nouvelles valeurs du volume et du     
    pointeur sur le 1er buffer texte.                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                NewContent (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 void                NewContent (pAb)
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 
 {
@@ -1196,7 +1163,6 @@ PtrElement          pEl;
 PtrAttribute        pAttr;
 boolean            *stop;
 PtrReference       *pRef;
-
 #endif /* __STDC__ */
 
 {
@@ -1206,50 +1172,50 @@ PtrReference       *pRef;
 
    *pRef = NULL;
    if (pEl == NULL)
-      *stop = TRUE;
+     *stop = TRUE;
    else
      {
-	if (pAttr == NULL)
-	   /* pEl est un element de type Reference */
-	   *pRef = pEl->ElReference;
-	else
-	   /* cherche l'attribut reference de l'element pEl qui soit de meme */
-	   /* type que pAttr */
-	  {
-	     pAttrEl = pEl->ElFirstAttr;
-	     found = FALSE;
-	     if (pAttrEl != NULL)
-		do
-		   if (pAttrEl->AeAttrNum == pAttr->AeAttrNum &&
-		       pAttrEl->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
-		      found = TRUE;
-		   else
-		      pAttrEl = pAttrEl->AeNext;
-		while (!found && pAttrEl != NULL);
-	     if (pAttrEl == NULL)
-		*pRef = NULL;
-	     else
-		*pRef = pAttrEl->AeAttrReference;
-	  }
-	if (*pRef != NULL)
-	   /* on a trouve' un descripteur de reference */
-	   /* on ne tient pas compte des references nulles */
-	   if ((*pRef)->RdReferred != NULL)
-	      /* on ignore les references qui sortent du document */
-	      if (!(*pRef)->RdReferred->ReExternalRef)
-		{
-		   first = TRUE;
-		   while ((*pRef)->RdPrevious != NULL && first)
-		     {
-			*pRef = (*pRef)->RdPrevious;
-			if ((*pRef)->RdElement != NULL)
-			   if ((*pRef)->RdElement->ElAssocNum == 0)
-			      /* il y a une reference precedente qui n'est */
-			      /* pas dans un element associe' */
-			      first = FALSE;
-		     }
-		   if (first)
-		      *stop = TRUE;
+       if (pAttr == NULL)
+	 /* pEl est un element de type Reference */
+	 *pRef = pEl->ElReference;
+       else
+	 /* cherche l'attribut reference de l'element pEl qui soit de meme */
+	 /* type que pAttr */
+	 {
+	   pAttrEl = pEl->ElFirstAttr;
+	   found = FALSE;
+	   if (pAttrEl != NULL)
+	     do
+	       if (pAttrEl->AeAttrNum == pAttr->AeAttrNum &&
+		   pAttrEl->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
+		 found = TRUE;
+	       else
+		 pAttrEl = pAttrEl->AeNext;
+	     while (!found && pAttrEl != NULL);
+	   if (pAttrEl == NULL)
+	     *pRef = NULL;
+	   else
+	     *pRef = pAttrEl->AeAttrReference;
+	 }
+       if (*pRef != NULL)
+	 /* on a trouve' un descripteur de reference */
+	 /* on ne tient pas compte des references nulles */
+	 if ((*pRef)->RdReferred != NULL)
+	   /* on ignore les references qui sortent du document */
+	   if (!(*pRef)->RdReferred->ReExternalRef)
+	     {
+	       first = TRUE;
+	       while ((*pRef)->RdPrevious != NULL && first)
+		 {
+		   *pRef = (*pRef)->RdPrevious;
+		   if ((*pRef)->RdElement != NULL)
+		     if ((*pRef)->RdElement->ElAssocNum == 0)
+		       /* il y a une reference precedente qui n'est */
+		       /* pas dans un element associe' */
+		       first = FALSE;
+		 }
+	       if (first)
+		 *stop = TRUE;
 		}
      }
 }
@@ -1265,7 +1231,6 @@ PtrReference       *pRef;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   CreateReferredAssocElem (PtrDocument pDoc, PtrElement pEl, PtrAttribute pAttr, int TypeEl, PtrSSchema StructEl)
-
 #else  /* __STDC__ */
 static PtrElement   CreateReferredAssocElem (pDoc, pEl, pAttr, TypeEl, StructEl)
 PtrDocument         pDoc;
@@ -1273,9 +1238,7 @@ PtrElement          pEl;
 PtrAttribute        pAttr;
 int                 TypeEl;
 PtrSSchema          StructEl;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pF, pNewEl;
    int                 referredType;
@@ -1383,15 +1346,12 @@ PtrSSchema          StructEl;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrElement          CreateFirstAssocElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 PtrElement          CreateFirstAssocElement (pDoc, typeNum, pSS)
 PtrDocument         pDoc;
 int                 typeNum;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl, pChild;
    PtrSSchema          pSSassoc;

@@ -1229,377 +1229,375 @@ boolean             display;
   boolean             complete;
   int                 nR;
 	  
-	  pAbbLastEmptyCr = NULL;
-	  if (pEl != NULL)
-	    if (pEl->ElAbstractBox[view - 1] == NULL)
-	      {
-		nAssoc = pEl->ElAssocNum;
-		/* verifie si la vue a ete creee */
-		if (AssocView (pEl))
-		  /* element associe */
-		  openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
-		else
-		  openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-		/* est-ce l'element racine d'un arbre d'elements associes ? */
-		pEl1 = pEl;
-		if (pEl1->ElParent == NULL)
-		  /* c'est une racine */
-		  if (nAssoc != 0)
-		    /* c'est un element associe */
-		    /* nR: type des elements associes */
+  pAbbLastEmptyCr = NULL;
+  if (pEl != NULL)
+    if (pEl->ElAbstractBox[view - 1] == NULL)
+      {
+	nAssoc = pEl->ElAssocNum;
+	/* verifie si la vue a ete creee */
+	if (AssocView (pEl))
+	  /* element associe */
+	  openedView = pDoc->DocAssocFrame[nAssoc - 1] != 0 && view == 1;
+	else
+	  openedView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+	/* est-ce l'element racine d'un arbre d'elements associes ? */
+	pEl1 = pEl;
+	if (pEl1->ElParent == NULL)
+	  /* c'est une racine */
+	  if (nAssoc != 0)
+	    /* c'est un element associe */
+	    /* nR: type des elements associes */
+	    {
+	      nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
+	      /* si les elements associes s'affichent en haut ou en bas de */
+	      /* page, la racine n'a jamais de pave */
+	      openedView = !pEl1->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
+	      /* si la vue n'est pas creee, il n'y a rien a faire */
+	    }
+	if (openedView)
+	  {
+	    /* cherche les elements ascendants qui n'ont pas de pave dans */
+	    /* cette vue */
+	    NumAsc = 0;
+	    /* niveau dans la pile des elements dont il faut */
+	    /* creer un pave */
+	    pElAscent = pEl;
+	    stop = FALSE;
+	    do
+	      if (pElAscent == NULL)
+		stop = TRUE;
+	      else if (pElAscent->ElAbstractBox[view - 1] != NULL)
+		stop = TRUE;
+	    /* met un element dans la pile */
+	      else
+		{
+		  if (NumAsc < MaxAsc)
+		    NumAsc++;
+		  pAsc[NumAsc - 1] = pElAscent;
+		  /* passe a l'ascendant */
+		  pEl1 = pElAscent;
+		  if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
+		    /* on vient de traiter un element associe' */
+		    /* Serait-ce un element qui s'affiche dans une boite de */
+		    /* haut ou de bas de page ? */
 		    {
-		      nR = pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrListItem;
-		      /* si les elements associes s'affichent en haut ou en bas de */
-		      /* page, la racine n'a jamais de pave */
-		      openedView = !pEl1->ElStructSchema->SsPSchema->PsInPageHeaderOrFooter[nR - 1];
-		      /* si la vue n'est pas creee, il n'y a rien a faire */
-		    }
-		if (openedView)
-		  {
-		    /* cherche les elements ascendants qui n'ont pas de pave dans */
-		    /* cette vue */
-		    NumAsc = 0;
-		    /* niveau dans la pile des elements dont il faut */
-		    /* creer un pave */
-		    pElAscent = pEl;
-		    stop = FALSE;
-		    do
-		      if (pElAscent == NULL)
-			stop = TRUE;
-		      else if (pElAscent->ElAbstractBox[view - 1] != NULL)
-			stop = TRUE;
-		    /* met un element dans la pile */
-		      else
+		      pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].
+						      DvPSchemaView, &boxType);
+		      if (pElPage != NULL)
+			
+			/* Il s'affiche dans une haut ou bas de page, c'est la */
+			/* marque de page a laquelle il est associe qu'il faut */
+			/* creer */
 			{
-			  if (NumAsc < MaxAsc)
-			    NumAsc++;
-			   pAsc[NumAsc - 1] = pElAscent;
-			   /* passe a l'ascendant */
-			   pEl1 = pElAscent;
-			   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
-			      /* on vient de traiter un element associe' */
-			      /* Serait-ce un element qui s'affiche dans une boite de */
-			      /* haut ou de bas de page ? */
-			     {
-				pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].
-						   DvPSchemaView, &boxType);
-				if (pElPage != NULL)
-
-				   /* Il s'affiche dans une haut ou bas de page, c'est la */
-				   /* marque de page a laquelle il est associe qu'il faut */
-				   /* creer */
-				  {
-				     NumAsc = 1;
-				     pAsc[NumAsc - 1] = pElPage;
-				     pElAscent = pElPage->ElParent;
-				     /* ce n'est pas une vue d'elements associes */
-				     nAssoc = 0;
-				  }
-				else if (boxType == 0)
-
-				   /* il ne s'affiche pas dans une boite de haut ou de */
-				   /* bas de page */
-				   if (view == 1)
-				      pElAscent = pEl1->ElParent;
-				   else
-				      /* ce n'est pas la vue 1, l'element (associe') */
-				      /* n'a pas d'image dans cette vue */
-				     {
-					stop = TRUE;
-					openedView = FALSE;
-				     }
-				else
-				   /* il devrait s'afficher dans une boite de haut ou */
-				   /* de bas de page, mais il n'y a pas de page */
-				  {
-				     stop = TRUE;
-				     openedView = FALSE;
-				  }
-			     }
-			   else
-			      pElAscent = pEl1->ElParent;
+			  NumAsc = 1;
+			  pAsc[NumAsc - 1] = pElPage;
+			  pElAscent = pElPage->ElParent;
+			  /* ce n'est pas une vue d'elements associes */
+			  nAssoc = 0;
 			}
-		   while (!stop);
-		   if (pAsc[NumAsc - 1]->ElParent == NULL)
-		      /* la racine de l'arbre n'a pas de pave dans cette vue */
-		      creation = TRUE;
-		   /* c'est une creation de vue */
-		   else
-		      creation = FALSE;
-		   /* essaie de creer les paves de ces elements, en commencant par */
-		   /* celui qui contient tous les autres. Il s'agit seulement de */
-		   /* trouver s'il y a un pave ascendant non encore cree et visible */
-		   pAbbFirstEmptyCr = NULL;
-		   if (openedView)
-		     {
-			i = NumAsc;
-			do
-			  {
-			     pEl1 = pAsc[i - 1];
-
-			     /* cree juste le pave, sans sa descendance et sans */
-			     /* lui appliquer les regles de presentation. */
-			     pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, FALSE, &complete);
-			     if (pEl1->ElAbstractBox[view - 1] != NULL)
-				pPrevious = pEl1->ElAbstractBox[view - 1];
-			     if (pPrevious != NULL)
-
-				/* marque sur le pave cree qu'il faudra lui appliquer ses */
-				/* regles de presentation (ce sera fait par AbsBoxesCreate) */
-				pPrevious->AbSize = -1;
-
-			     if (pPrevious != NULL)
-				/* on a cree un pave */
-			       {
-				  pAbbLastEmptyCr = pPrevious;
-				  /* dernier pave cree' */
-				  if (pAbbFirstEmptyCr == NULL)
-				     pAbbFirstEmptyCr = pPrevious;
-				  /* 1er pave cree' */
-			       }
-			     i--;
-			  }
-			while (i != 0);
-		     }
-		   /* si aucun pave n'a ete cree', il n'y a rien d'autre a faire */
-		   if (pAbbFirstEmptyCr != NULL)
-		     {
-			if (creation)
-			   /* initialise le pointeur sur la racine de la vue si */
-			   /* c'est une creation de vue */
-			  {
-			     if (nAssoc > 0)
-				/* vue d'elements associes */
-				/* le premier pave que l'on vient de creer est */
-				/* la racine de l'image */
-			       {
-				  pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0] = pAbbFirstEmptyCr;
-				  pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
-				  frame = pDoc->DocAssocFrame[nAssoc - 1];
-			       }
-			     else
-				/* vue de l'arbre principal */
-			       {
-				  pDoc->DocViewRootAb[view - 1] = pAbbFirstEmptyCr;
-				  pAbbRoot = pDoc->DocViewRootAb[view - 1];
-				  frame = pDoc->DocViewFrame[view - 1];
-			       }
-			  }
+		      else if (boxType == 0)
+			
+			/* il ne s'affiche pas dans une boite de haut ou de */
+			/* bas de page */
+			if (view == 1)
+			  pElAscent = pEl1->ElParent;
 			else
-			   /* ce n'est pas une creation de vue */
-			   /* detruit l'ancien contenu de la vue */
+			  /* ce n'est pas la vue 1, l'element (associe') */
+			  /* n'a pas d'image dans cette vue */
 			  {
-			     pAbbRemain = pAbbFirstEmptyCr;
-			     /* tue les paves de presentation des elements englobants */
-			     pAbbReDisp = NULL;
-			     KillPresEnclosing (pAbbRemain, TRUE, pDoc, &pAbbReDisp, &volsupp, TRUE);
-			     pAbbReDisp = NULL;
-			     KillPresEnclosing (pAbbRemain, FALSE, pDoc, &pAbbReDisp, &volsupp, TRUE);
-			     /* detruit les paves qui precedent et qui suivent le pave */
-			     /* cree de plus haut niveau et ses paves englobants */
-			     while (pAbbRemain != NULL)
-			       {
-				  pAbbDestroyed = pAbbRemain->AbPrevious;
-				  while (pAbbDestroyed != NULL)
-				    {
-				       if (!pAbbDestroyed->AbDead)
-					  /* on ne detruit pas les paves des elements restant */
-					  if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
-					    {
-					       SetDeadAbsBox (pAbbDestroyed);
-					       pAbbReDisp = NULL;
-					       ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
-					    }
-				       pAbbDestroyed = pAbbDestroyed->AbPrevious;
-				    }
-				  pAbbDestroyed = pAbbRemain->AbNext;
-				  while (pAbbDestroyed != NULL)
-				    {
-				       if (!pAbbDestroyed->AbDead)
-					  /* on ne detruit pas les paves des elements restant */
-					  if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
-					    {
-					       SetDeadAbsBox (pAbbDestroyed);
-					       pAbbReDisp = NULL;
-					       ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
-					    }
-				       pAbbDestroyed = pAbbDestroyed->AbNext;
-				    }
-				  pAbbRemain = pAbbRemain->AbEnclosing;
-				  /* passe a l'englobant */
-			       }
-			     /* fait effacer tout le contenu de la vue par le Mediateur */
-			     h = 0;
-			     /* on ne s'occupe pas de la hauteur de page */
-			     if (nAssoc > 0)
-				/* vue d'elements associes */
-			       {
-				  pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
-				  frame = pDoc->DocAssocFrame[nAssoc - 1];
-				  if (frame != 0)
-				    {
-				       pAbbRoot->AbDead = TRUE;
-				       /* marque mort le pave racine */
-				       /* le signale au Mediateur */
-				       ChangeConcreteImage (frame, &h, pAbbRoot);
-				       pAbbRoot->AbDead = FALSE;
-				       /* resucite le pave racine */
-				       FreeDeadAbstractBoxes (pAbbRoot);
-				       /* libere tous les pave detruits */
-				       pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
-				    }
-			       }
-			     else
-				/* meme traitement pour une vue de l'arbre principal */
-			       {
-				  pAbbRoot = pDoc->DocViewRootAb[view - 1];
-				  frame = pDoc->DocViewFrame[view - 1];
-				  if (frame != 0)
-				    {
-				       pAbbRoot->AbDead = TRUE;
-				       ChangeConcreteImage (frame, &h, pAbbRoot);
-				       pAbbRoot->AbDead = FALSE;
-				       FreeDeadAbstractBoxes (pAbbRoot);
-				       pDoc->DocViewModifiedAb[view - 1] = NULL;
-				    }
-			       }
+			    stop = TRUE;
+			    openedView = FALSE;
 			  }
-			if (nAssoc > 0)
-			   /* vue d'elements associes */
-			   if (begin)
-			      /* on creera tout le volume de la vue d'un coup */
-			      pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1];
-			   else
-			      /* on creera la moitie du volume max. derriere les */
-			      /* nouveaux paves, et une autre moitie devant */
-			      pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
-			/* vue de l'arbre principal */
-			else if (begin)
-			   pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-			else
-			   pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
-			/* marque comme anciens tous les paves conserves (pour */
-			/* que AjoutePave travaille correctement) */
-			pAbbRemain = pAbbLastEmptyCr;
-			while (pAbbRemain != NULL)
-			  {
-			     pAbbox1 = pAbbRemain;
-			     pAbbox1->AbNew = FALSE;
-			     if (creation)
-				/* a priori les paves ne sont pas complets */
-				if (pAbbox1->AbLeafType == LtCompound
-				    && !pAbbox1->AbInLine)
-				  {
-				     pAbbox1->AbTruncatedHead = TRUE;
-				     pAbbox1->AbTruncatedTail = TRUE;
-				  }
-			     pAbbRemain = pAbbox1->AbEnclosing;
-			     /* passe a l'englobant */
-			  }
-			/* applique les regles des paves nouvellement crees et cree */
-			/* d'autres paves derriere */
-			AddAbsBoxes (pAbbRoot, pDoc, FALSE);
-			/* complete les boites qui doivent etre completes */
-			i = NumAsc;
-			do
-			  {
-			     pEl1 = pAsc[i - 1];
-			     if (pEl1->ElStructSchema->SsPSchema->PsBuildAll[pEl1->ElTypeNumber - 1])
-				/* cet element a la regle Gather */
-				/* cree le pave avec toute sa descendance, si */
-				/* ce n'est pas encore fait */
-			       {
-				  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, TRUE, &complete);
-				  i = 1;
-			       }
-			     i--;
-			  }
-			while (i != 0);
-			if (!begin)
+		      else
+			/* il devrait s'afficher dans une boite de haut ou */
+			/* de bas de page, mais il n'y a pas de page */
+			{
+			  stop = TRUE;
+			  openedView = FALSE;
+			}
+		    }
+		  else
+		    pElAscent = pEl1->ElParent;
+		}
+	    while (!stop);
 
-			   /* cree d'autres paves devant, jusqu'a remplir le volume de */
-			   /* la fenetre */
+	    if (pAsc[NumAsc - 1]->ElParent == NULL)
+	      /* la racine de l'arbre n'a pas de pave dans cette vue */
+	      creation = TRUE;
+	    /* c'est une creation de vue */
+	    else
+	      creation = FALSE;
+	    /* essaie de creer les paves de ces elements, en commencant par */
+	    /* celui qui contient tous les autres. Il s'agit seulement de */
+	    /* trouver s'il y a un pave ascendant non encore cree et visible */
+	    pAbbFirstEmptyCr = NULL;
+	    if (openedView)
+	      {
+		i = NumAsc;
+		do
+		  {
+		    pEl1 = pAsc[i - 1];
+		    /* cree juste le pave, sans sa descendance et sans */
+		    /* lui appliquer les regles de presentation. */
+		    pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, FALSE, &complete);
+		    if (pEl1->ElAbstractBox[view - 1] != NULL)
+		      pPrevious = pEl1->ElAbstractBox[view - 1];
+		    if (pPrevious != NULL)
+		      /* marque sur le pave cree qu'il faudra lui appliquer ses */
+		      /* regles de presentation (ce sera fait par AbsBoxesCreate) */
+		      pPrevious->AbSize = -1;
+		    
+		    if (pPrevious != NULL)
+		      /* on a cree un pave */
+		      {
+			pAbbLastEmptyCr = pPrevious;
+			/* dernier pave cree' */
+			if (pAbbFirstEmptyCr == NULL)
+			  pAbbFirstEmptyCr = pPrevious; /* 1er pave cree' */
+		      }
+		    i--;
+		  }
+		while (i != 0);
+	      }
+	    /* si aucun pave n'a ete cree', il n'y a rien d'autre a faire */
+	    if (pAbbFirstEmptyCr != NULL)
+	      {
+		if (creation)
+		  /* initialise le pointeur sur la racine de la vue si */
+		  /* c'est une creation de vue */
+		  {
+		    if (nAssoc > 0)
+		      /* vue d'elements associes */
+		      /* le premier pave que l'on vient de creer est */
+		      /* la racine de l'image */
+		      {
+			pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0] = pAbbFirstEmptyCr;
+			pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
+			frame = pDoc->DocAssocFrame[nAssoc - 1];
+		      }
+		    else
+		      /* vue de l'arbre principal */
+		      {
+			pDoc->DocViewRootAb[view - 1] = pAbbFirstEmptyCr;
+			pAbbRoot = pDoc->DocViewRootAb[view - 1];
+			frame = pDoc->DocViewFrame[view - 1];
+		      }
+		  }
+		else
+		  /* ce n'est pas une creation de vue */
+		  /* detruit l'ancien contenu de la vue */
+		  {
+		    pAbbRemain = pAbbFirstEmptyCr;
+		    /* tue les paves de presentation des elements englobants */
+		    pAbbReDisp = NULL;
+		    KillPresEnclosing (pAbbRemain, TRUE, pDoc, &pAbbReDisp, &volsupp, TRUE);
+		    pAbbReDisp = NULL;
+		    KillPresEnclosing (pAbbRemain, FALSE, pDoc, &pAbbReDisp, &volsupp, TRUE);
+		    /* detruit les paves qui precedent et qui suivent le pave */
+		    /* cree de plus haut niveau et ses paves englobants */
+		    while (pAbbRemain != NULL)
+		      {
+			pAbbDestroyed = pAbbRemain->AbPrevious;
+			while (pAbbDestroyed != NULL)
 			  {
-			     if (nAssoc > 0)
-				pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
-			     else
-				pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
-			     /* marque comme anciens tous les paves de presentation qui */
-			     /* viennent d'etre crees par AddAbsBoxes devant les paves */
-			     /* conserves. Ces paves de presentation seront ainsi traites */
-			     /* correctement lors du prochain appel de AddAbsBoxes. */
-			     pAbbRemain = pAbbLastEmptyCr;
-			     while (pAbbRemain != NULL)
-			       {
-				  pPrevious = pAbbRemain->AbPrevious;
-				  stop = FALSE;
-				  do
-				     if (pPrevious == NULL)
-					stop = TRUE;
-				     else if (pPrevious->AbElement != pAbbRemain->AbElement)
-					stop = TRUE;
-				     else
-				       {
-					  pPrevious->AbNew = FALSE;
-					  pPrevious = pPrevious->AbPrevious;
-				       }
-				  while (!stop);
-				  pAbbRemain = pAbbRemain->AbEnclosing;
-				  /* passe a l'englobant */
-			       }
-			     /* cree de nouveaux paves */
-			     AddAbsBoxes (pAbbRoot, pDoc, TRUE);
-			     /* marque comme nouveaux tous les paves de presentation qui */
-			     /* viennent d'etre marques anciens. Ces paves de presentation */
-			     /* seront ainsi traites correctement par le Mediateur. */
-			     pAbbRemain = pAbbLastEmptyCr;
-			     while (pAbbRemain != NULL)
-			       {
-				  pPrevious = pAbbRemain->AbPrevious;
-				  stop = FALSE;
-				  do
-				     if (pPrevious == NULL)
-					stop = TRUE;
-				     else if (pPrevious->AbElement != pAbbRemain->AbElement)
-					stop = TRUE;
-				     else
-				       {
-					  pPrevious->AbNew = TRUE;
-					  pPrevious = pPrevious->AbPrevious;
-				       }
-				  while (!stop);
-				  pAbbRemain = pAbbRemain->AbEnclosing;
-				  /* passe a l'englobant */
-			       }
+			    if (!pAbbDestroyed->AbDead)
+			      /* on ne detruit pas les paves des elements restant */
+			      if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
+				{
+				  SetDeadAbsBox (pAbbDestroyed);
+				  pAbbReDisp = NULL;
+				  ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
+				}
+			    pAbbDestroyed = pAbbDestroyed->AbPrevious;
 			  }
-			/* marque comme nouveaux tous les paves conserves (pour qu'ils */
-			/* soient traites correctement par le Mediateur) */
-			pAbbRemain = pAbbLastEmptyCr;
-			while (pAbbRemain != NULL)
+			pAbbDestroyed = pAbbRemain->AbNext;
+			while (pAbbDestroyed != NULL)
 			  {
-			     pAbbox1 = pAbbRemain;
-			     pAbbox1->AbNew = TRUE;
-			     pAbbRemain = pAbbox1->AbEnclosing;
-			     /* passe a l'englobant */
+			    if (!pAbbDestroyed->AbDead)
+			      /* on ne detruit pas les paves des elements restant */
+			      if (pAbbDestroyed->AbElement != pAbbRemain->AbElement)
+				{
+				  SetDeadAbsBox (pAbbDestroyed);
+				  pAbbReDisp = NULL;
+				  ApplyRefAbsBoxSupp (pAbbDestroyed, &pAbbReDisp, pDoc);
+				}
+			    pAbbDestroyed = pAbbDestroyed->AbNext;
 			  }
-			/* indique les nouvelles modifications au Mediateur et */
-			/*  lui fait reafficher toute la vue */
+			pAbbRemain = pAbbRemain->AbEnclosing;
+			/* passe a l'englobant */
+		      }
+		    /* fait effacer tout le contenu de la vue par le Mediateur */
+		    h = 0;
+		    /* on ne s'occupe pas de la hauteur de page */
+		    if (nAssoc > 0)
+		      /* vue d'elements associes */
+		      {
+			pAbbRoot = pDoc->DocAssocRoot[nAssoc - 1]->ElAbstractBox[0];
+			frame = pDoc->DocAssocFrame[nAssoc - 1];
 			if (frame != 0)
 			  {
-			     h = 0;
-			     ChangeConcreteImage (frame, &h, pAbbRoot);
-			     if (display)
-				DisplayFrame (frame);
-			     /* il n'y a plus rien a reafficher dans cette vue */
-			     if (nAssoc > 0)
-				pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
-			     else
-				pDoc->DocViewModifiedAb[view - 1] = NULL;
+			    pAbbRoot->AbDead = TRUE;
+			    /* marque mort le pave racine */
+			    /* le signale au Mediateur */
+			    ChangeConcreteImage (frame, &h, pAbbRoot);
+			    pAbbRoot->AbDead = FALSE;
+			    /* resucite le pave racine */
+			    FreeDeadAbstractBoxes (pAbbRoot);
+			    /* libere tous les pave detruits */
+			    pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
 			  }
-		     }
-		}		/* V4 : fin cas vue non paginee , V3 fin Vue existe */
-	   }			/* V4 : fin pEl != NULL , V3 : fin pEl->ElAbstractBox[] == NULL */
-   }
+		      }
+		    else
+		      /* meme traitement pour une vue de l'arbre principal */
+		      {
+			pAbbRoot = pDoc->DocViewRootAb[view - 1];
+			frame = pDoc->DocViewFrame[view - 1];
+			if (frame != 0)
+			  {
+			    pAbbRoot->AbDead = TRUE;
+			    ChangeConcreteImage (frame, &h, pAbbRoot);
+			    pAbbRoot->AbDead = FALSE;
+			    FreeDeadAbstractBoxes (pAbbRoot);
+			    pDoc->DocViewModifiedAb[view - 1] = NULL;
+			  }
+		      }
+		  }
+		if (nAssoc > 0)
+		  /* vue d'elements associes */
+		  if (begin)
+		    /* on creera tout le volume de la vue d'un coup */
+		    pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1];
+		  else
+		    /* on creera la moitie du volume max. derriere les */
+		    /* nouveaux paves, et une autre moitie devant */
+		    pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
+		/* vue de l'arbre principal */
+		else if (begin)
+		  pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
+		else
+		  pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
+		/* marque comme anciens tous les paves conserves (pour */
+		/* que AjoutePave travaille correctement) */
+		pAbbRemain = pAbbLastEmptyCr;
+		while (pAbbRemain != NULL)
+		  {
+		    pAbbox1 = pAbbRemain;
+		    pAbbox1->AbNew = FALSE;
+		    if (creation)
+		      /* a priori les paves ne sont pas complets */
+		      if (pAbbox1->AbLeafType == LtCompound
+			  && !pAbbox1->AbInLine)
+			{
+			  pAbbox1->AbTruncatedHead = TRUE;
+			  pAbbox1->AbTruncatedTail = TRUE;
+			}
+		    pAbbRemain = pAbbox1->AbEnclosing;
+		    /* passe a l'englobant */
+		  }
+		/* applique les regles des paves nouvellement crees et cree */
+		/* d'autres paves derriere */
+		AddAbsBoxes (pAbbRoot, pDoc, FALSE);
+		/* complete les boites qui doivent etre completes */
+		i = NumAsc;
+		do
+		  {
+		    pEl1 = pAsc[i - 1];
+		    if (pEl1->ElStructSchema->SsPSchema->PsBuildAll[pEl1->ElTypeNumber - 1])
+		      /* cet element a la regle Gather */
+		      /* cree le pave avec toute sa descendance, si */
+		      /* ce n'est pas encore fait */
+		      {
+			pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view, TRUE, TRUE, &complete);
+			i = 1;
+		      }
+		    i--;
+		  }
+		while (i != 0);
+		if (!begin)
+		  
+		  /* cree d'autres paves devant, jusqu'a remplir le volume de */
+		  /* la fenetre */
+		  {
+		    if (nAssoc > 0)
+		      pDoc->DocAssocFreeVolume[nAssoc - 1] = pDoc->DocAssocVolume[nAssoc - 1] / 2;
+		    else
+		      pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
+		    /* marque comme anciens tous les paves de presentation qui */
+		    /* viennent d'etre crees par AddAbsBoxes devant les paves */
+		    /* conserves. Ces paves de presentation seront ainsi traites */
+		    /* correctement lors du prochain appel de AddAbsBoxes. */
+		    pAbbRemain = pAbbLastEmptyCr;
+		    while (pAbbRemain != NULL)
+		      {
+			pPrevious = pAbbRemain->AbPrevious;
+			stop = FALSE;
+			do
+			  if (pPrevious == NULL)
+			    stop = TRUE;
+			  else if (pPrevious->AbElement != pAbbRemain->AbElement)
+			    stop = TRUE;
+			  else
+			    {
+			      pPrevious->AbNew = FALSE;
+			      pPrevious = pPrevious->AbPrevious;
+			    }
+			while (!stop);
+			pAbbRemain = pAbbRemain->AbEnclosing;
+			/* passe a l'englobant */
+		      }
+		    /* cree de nouveaux paves */
+		    AddAbsBoxes (pAbbRoot, pDoc, TRUE);
+		    /* marque comme nouveaux tous les paves de presentation qui */
+		    /* viennent d'etre marques anciens. Ces paves de presentation */
+		    /* seront ainsi traites correctement par le Mediateur. */
+		    pAbbRemain = pAbbLastEmptyCr;
+		    while (pAbbRemain != NULL)
+		      {
+			pPrevious = pAbbRemain->AbPrevious;
+			stop = FALSE;
+			do
+			  if (pPrevious == NULL)
+			    stop = TRUE;
+			  else if (pPrevious->AbElement != pAbbRemain->AbElement)
+			    stop = TRUE;
+			  else
+			    {
+			      pPrevious->AbNew = TRUE;
+			      pPrevious = pPrevious->AbPrevious;
+			    }
+			while (!stop);
+			pAbbRemain = pAbbRemain->AbEnclosing;
+			/* passe a l'englobant */
+		      }
+		  }
+		/* marque comme nouveaux tous les paves conserves (pour qu'ils */
+		/* soient traites correctement par le Mediateur) */
+		pAbbRemain = pAbbLastEmptyCr;
+		while (pAbbRemain != NULL)
+		  {
+		    pAbbox1 = pAbbRemain;
+		    pAbbox1->AbNew = TRUE;
+		    pAbbRemain = pAbbox1->AbEnclosing;
+		    /* passe a l'englobant */
+		  }
+		/* indique les nouvelles modifications au Mediateur et */
+		/*  lui fait reafficher toute la vue */
+		if (frame != 0)
+		  {
+		    h = 0;
+		    ChangeConcreteImage (frame, &h, pAbbRoot);
+		    if (display)
+		      DisplayFrame (frame);
+		    /* il n'y a plus rien a reafficher dans cette vue */
+		    if (nAssoc > 0)
+		      pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
+		    else
+		      pDoc->DocViewModifiedAb[view - 1] = NULL;
+		  }
+	      }
+	  }
+      }
+}
 
 
 /*----------------------------------------------------------------------

@@ -2081,7 +2081,7 @@ int                 delta;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   int                 v, frame, h;
+   int                 view, frame, h;
    PtrAbstractBox      pAbb;
    PtrAbstractBox      pAbbox1;
 
@@ -2094,16 +2094,16 @@ int                 delta;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   for (v = 1; v <= MAX_VIEW_DOC; v++)
-      if (element->ElAbstractBox[v - 1] != NULL
-	  && !element->ElAbstractBox[v - 1]->AbNew
-	  && !element->ElAbstractBox[v - 1]->AbDead)
-	 /* un pave correspondant existe dans la vue v */
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+      if (element->ElAbstractBox[view] != NULL
+	  && !element->ElAbstractBox[view]->AbNew
+	  && !element->ElAbstractBox[view]->AbDead)
+	 /* un pave correspondant existe dans la vue view */
 	 /* met a jour le volume dans les paves englobants */
 	{
 	   if (delta != 0)
 	     {
-		pAbb = element->ElAbstractBox[v - 1]->AbEnclosing;
+		pAbb = element->ElAbstractBox[view]->AbEnclosing;
 		while (pAbb != NULL)
 		  {
 		     pAbb->AbVolume += delta;
@@ -2112,7 +2112,7 @@ int                 delta;
 	     }
 	   /* met a jour le contenu et le volume et demande le */
 	   /* reaffichage du pave */
-	   pAbbox1 = element->ElAbstractBox[v - 1];
+	   pAbbox1 = element->ElAbstractBox[view];
 	   /* saute les paves de presentation */
 	   while (pAbbox1->AbElement == element && pAbbox1->AbPresentationBox &&
 		  pAbbox1->AbNext != NULL)
@@ -2158,12 +2158,12 @@ int                 delta;
 	     default:
 	       break;
 	     }
-	   /* un pave correspondant existe dans la vue v */
+	   /* un pave correspondant existe dans la vue view */
 	   if (AssocView (element))
 	     /* vue d'element associe */
 	     frame = pDoc->DocAssocFrame[element->ElAssocNum - 1];
 	   else
-	     frame = pDoc->DocViewFrame[v - 1];
+	     frame = pDoc->DocViewFrame[view];
 	   
 	   if (pAbbox1 != NULL)
 	     {
@@ -2264,49 +2264,48 @@ Document            document;
    pENeighbour = pEl->ElNext;
    stop = FALSE;
    do
-      if (pENeighbour == NULL)
-	 /* pEl devient le dernier fils de son pere */
-	{
-	   ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
-	   stop = TRUE;
-	}
-      else if (!pENeighbour->ElTerminal || pENeighbour->ElLeafType != LtPageColBreak)
+     if (pENeighbour == NULL)
+       /* pEl devient le dernier fils de son pere */
+       {
+	 ChangeFirstLast (pEl, pDoc, FALSE, FALSE);
 	 stop = TRUE;
-      else
-	 pENeighbour = pENeighbour->ElNext;
+       }
+     else if (!pENeighbour->ElTerminal || pENeighbour->ElLeafType != LtPageColBreak)
+       stop = TRUE;
+     else
+       pENeighbour = pENeighbour->ElNext;
    while (!(stop));
+
    /* met a jour le volume des paves correspondants */
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
+   for (view = 0; view < MAX_VIEW_DOC; view++)
      {
-	pAb = pEl->ElAbstractBox[view - 1];
-	if (pAb != NULL)
-	  {
-	     dvol = pEl->ElTextLength - pAb->AbVolume;
-	     pAb->AbVolume += dvol;
-	     pAb->AbChange = TRUE;
-	     if (!AssocView (pEl))
-	       {
-		  pDoc->DocViewModifiedAb[view - 1] =
-		     Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
-		  frame = pDoc->DocViewFrame[view - 1];
-	       }
-	     else
-	       {
-		  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		     Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-		  frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-	       }
-	     h = 0;		/* on ne s'occupe pas de la hauteur de page */
-	     ChangeConcreteImage (frame, &h, pAb->AbEnclosing);
-	     if (pAb->AbDead && pAb->AbNext != NULL)
-		pAb->AbNext->AbVolume += dvol;
-	     do
-	       {
-		  pAb->AbVolume += dvol;
-		  pAb = pAb->AbEnclosing;
-	       }
-	     while (!(pAb == NULL));
-	  }
+       pAb = pEl->ElAbstractBox[view];
+       if (pAb != NULL)
+	 {
+	   dvol = pEl->ElTextLength - pAb->AbVolume;
+	   pAb->AbVolume += dvol;
+	   pAb->AbChange = TRUE;
+	   if (!AssocView (pEl))
+	     {
+	       pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
+	       frame = pDoc->DocViewFrame[view];
+	     }
+	   else
+	     {
+	       pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+	       frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+	     }
+	   h = 0;		/* on ne s'occupe pas de la hauteur de page */
+	   ChangeConcreteImage (frame, &h, pAb->AbEnclosing);
+	   if (pAb->AbDead && pAb->AbNext != NULL)
+	     pAb->AbNext->AbVolume += dvol;
+	   do
+	     {
+	       pAb->AbVolume += dvol;
+	       pAb = pAb->AbEnclosing;
+	     }
+	   while (!(pAb == NULL));
+	 }
      }
    RedisplayCommand (document);
 }
@@ -2752,6 +2751,7 @@ DisplayMode         newDisplayMode;
 #endif /* __STDC__ */
 {
   DisplayMode       oldDisplayMode;
+  PtrDocument       pDoc;
 
   UserErrorCode = 0;
   /* Checks the parameter document */
@@ -2762,8 +2762,9 @@ DisplayMode         newDisplayMode;
   else
     /* parameter document is ok */
     {
+      pDoc = LoadedDocument[document - 1];
       /* si le document n'a pas de schema de presentation, on ne fait rien */
-      if (LoadedDocument[document - 1]->DocSSchema->SsPSchema == NULL)
+      if (pDoc->DocSSchema->SsPSchema == NULL)
 	return;
 
       oldDisplayMode = documentDisplayMode[document - 1];
@@ -2776,10 +2777,10 @@ DisplayMode         newDisplayMode;
 	    /* le document passe en mode affichage differe' ou sans calcul d'image */
 	    {
 	      /* eteint la selection */
-	      ExtinguishOrLightSelection (LoadedDocument[document - 1], FALSE);
+	      ExtinguishOrLightSelection (pDoc, FALSE);
 	      /* si on passe au mode sans calcul d'image il faut detruire l'image */
 	      if (newDisplayMode == NoComputedDisplay)
-		  DestroyImage (LoadedDocument[document - 1]);
+		  DestroyImage (pDoc);
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
@@ -2800,36 +2801,36 @@ DisplayMode         newDisplayMode;
               if (oldDisplayMode == NoComputedDisplay)
 		{
 		  /* il faut recalculer l'image */
-		  RebuildImage (LoadedDocument[document - 1]);
+		  RebuildImage (pDoc);
 		  /* update tables if necessary */
 		  if (ThotLocalActions[T_colupdates])
 		    (*ThotLocalActions[T_colupdates]) (document);
 		}
 
               /* reaffiche ce qui a deja ete prepare' */
-              RedisplayDocViews (LoadedDocument[document - 1]);
+              RedisplayDocViews (pDoc);
 
 	      if (!documentNewSelection[document - 1].SDSelActive)
 		/* la selection n'a pas change', on la rallume */
-		ExtinguishOrLightSelection (LoadedDocument[document - 1], TRUE);
+		ExtinguishOrLightSelection (pDoc, TRUE);
 	      else
 		/* la selection a change', on etablit la selection */
 		/* enregistree */
 		{
 		  if (documentNewSelection[document - 1].SDElemSel == NULL)
 		    /* c'est une annulation de selection */
-		    ResetSelection (LoadedDocument[document - 1]);
+		    ResetSelection (pDoc);
 		  else
 		    {
 		      /* il y a effectivement une selection a etablir */
 		      if (documentNewSelection[document - 1].SDPremCar == 0 &&
 			  documentNewSelection[document - 1].SDDerCar == 0)
 			/* selection d'un element complet */
-			SelectElement (LoadedDocument[document - 1],
+			SelectElement (pDoc,
 				       (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
 		      else
 			/* selection d'une chaine */
-			SelectString (LoadedDocument[document - 1],
+			SelectString (pDoc,
 				      (PtrElement) (documentNewSelection[document - 1].SDElemSel),
 				      documentNewSelection[document - 1].SDPremCar,
 				      documentNewSelection[document - 1].SDDerCar);
@@ -2855,7 +2856,7 @@ DisplayMode         newDisplayMode;
 	    {
 	      /* le document passe du mode affichage differe'  */
 	      /* au mode d'affichage sans calcul d'image  */
-	      DestroyImage (LoadedDocument[document - 1]);
+	      DestroyImage (pDoc);
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
@@ -2866,7 +2867,7 @@ DisplayMode         newDisplayMode;
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	      /* le document passe du mode affichage sans calcul d'image   */
 	      /* au mode d'affichage differe'  */
-	      RebuildImage (LoadedDocument[document - 1]);
+	      RebuildImage (pDoc);
 	    }
 	}
     }

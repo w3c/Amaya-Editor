@@ -295,6 +295,13 @@ int              elementT;
 	 }
        /* now insert the new element after el */
        elType.ElTypeNum = elementT;
+       if (elementT == HTML_EL_BASE)
+	 {
+	   /* look at if this element already exists */
+	   new = TtaSearchTypedElement (elType, SearchInTree, head);
+	   if (new != NULL)
+	     return (NULL);
+	 }
        new = TtaNewTree (document, elType, "");
        TtaInsertSibling (new, el, FALSE, document);
        return (new);

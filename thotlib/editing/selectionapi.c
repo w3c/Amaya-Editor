@@ -83,7 +83,7 @@ Element             selectedElement;
    else
      {
        dispMode = TtaGetDisplayMode (document);
-       if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+       if (dispMode == DisplayImmediately)
 	 if (selectedElement == NULL)
 	   /* Abort the selection */
 	   ResetSelection (LoadedDocument[document - 1]);
@@ -178,7 +178,7 @@ int                 lastCharacter;
    else
      {
        dispMode = TtaGetDisplayMode (document);
-       if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+       if (dispMode == DisplayImmediately)
 	 SelectString (LoadedDocument[document - 1],
 		       (PtrElement) textElement, firstCharacter, lastCharacter);
        else
@@ -246,10 +246,13 @@ int                 lastCharacter;
 	if (!ok)
 	   /* Error: no selection */
 	   TtaError (ERR_no_selection_in_document);
-	else if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
-	   ExtendSelection ((PtrElement) element, lastCharacter, FALSE, FALSE, FALSE);
 	else
-	   NewSelectionExtension (document, element, lastCharacter);
+	  {
+	    if (dispMode == DisplayImmediately)
+	      ExtendSelection ((PtrElement) element, lastCharacter, FALSE, FALSE, FALSE);
+	    else
+	      NewSelectionExtension (document, element, lastCharacter);
+	  }
      }
 }
 
