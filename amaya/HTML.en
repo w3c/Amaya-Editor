@@ -14,7 +14,7 @@ export
 translation
 
 TEXT_UNIT: Text
-GRAPHICS_UNIT: Graphics
+GRAPHICS_UNIT: \240
 SYMBOL_UNIT: Symbol
 PICTURE_UNIT: img
 REFERENCE_UNIT: Reference

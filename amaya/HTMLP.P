@@ -4172,6 +4172,7 @@ RULES
 	InLine: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+	        Gather: No;
 		Font: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4199,6 +4200,7 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
+	        Gather: No;
 		Font: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

@@ -910,7 +910,7 @@ EXCEPT
 	Address:	ParagraphBreak;
 	Term:		ParagraphBreak;
 	MAP:		IsDraw;
-	AREA:		MoveResize, ClickableSurface;
+	AREA:		MoveResize, ClickableSurface, HighlightChildren;
 	Password_Input: Shadow;
 	Preformatted:	ReturnCreateNL, NoReplicate;
 	STYLE_:		ReturnCreateNL, NoReplicate;
