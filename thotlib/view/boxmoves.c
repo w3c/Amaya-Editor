@@ -1886,7 +1886,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
 
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
-  
   if (!pCurrentAb->AbMBPChange && delta)
     {
       extraL += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
@@ -2213,7 +2212,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				/* refer the outside width */
 				val = pBox->BxWidth;
 			      val = val * pAb->AbWidth.DimValue / 100;
-			      val = val - box->BxWidth;
+			      val = val - box->BxW;
 			    }
 			  else
 			    {
@@ -2237,7 +2236,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				/* refer the outside width */
 				val = pBox->BxWidth;
 			      val = val * pAb->AbHeight.DimValue / 100;
-			      val = val - box->BxHeight;
+			      val = val - box->BxH;
 			    }
 			  else
 			    {

@@ -30,37 +30,46 @@ p {
  margin-top: 0;
  margin-bottom: 2em;
 }
+
 div p, div ul, div ol {
  margin-left: 170px;
  margin-bottom: 0;
 }
+
 div {
  margin-top: 0;
  margin-bottom: 2em;
  margin-right: 0.5em;
 }
+
 div div {
  margin-top: 0;
  margin-right: 0;
 }
+
 strong {
  color: #488B9B
 }
+
 .button {
  border: solid 1px #488B9B;
  padding: 4px
 ;}
+
 .buttonbar {
  text-align: center;
  margin-top: 1.5em;
 }
+
 .pink {
  color: #dc5b53;
 }
+
 a:link {
  color:#dc5b53;
  font-weight: bold;
 }
+
 a:visited {
  color: #9820c8;
  font-weight: bold;
@@ -68,23 +77,33 @@ a:visited {
 
 div.body {
   margin-top: 0;
-  margin-left: 220px;
+  width:70%;
+  margin-left:auto;
 }
+
+div.body p {
+  margin: 0;
+  margin-left: -30%;
+}
+
 dl {
   margin: 0;
 }
+
 dt {
   color: #488B9B;
   clear: left;
   margin-top: 20px;
   text-align: left;
 }
+
 dd {
   margin-top: 0;
   padding-left: 40px;
   font-size: 80%;
 }
+
 .bottom {
-  font-size: 80%;
+  font-size: 8pt;
   clear: both:
 }

@@ -682,8 +682,12 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	   pAb->AbLeftBorderUnit == UnPercent ||
 	   pAb->AbRightBorderUnit == UnPercent))
 	dim = GetGhostSize (pBox, horizRef, pBlock);
+      else if (pAb->AbWidth.DimUnit == UnPercent && pParent)
+	dim = PixelValue (pAb->AbWidth.DimValue, UnPercent,
+			  (PtrAbstractBox)pParent->BxW , 0);
       else
 	dim = pBox->BxW;
+
       /* left margin */
       if (pAb->AbLeftMarginUnit == UnPercent)
 	pBox->BxLMargin = PixelValue (pAb->AbLeftMargin, UnPercent,
@@ -741,12 +745,11 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	      pParent->BxType != BoFloatGhost &&
 	      pParent->BxW >= dim)
 	    {
-	      if ( !pAb->AbWidth.DimIsPosition &&
-		   (pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
-		    pAb->AbWidth.DimUnit == UnPercent))
+	      if (!pAb->AbWidth.DimIsPosition &&
+		  (pAb->AbWidth.DimAbRef == pAb->AbEnclosing ||
+		   (pAb->AbWidth.DimUnit == UnPercent && pAb->AbWidth.DimValue == 100)))
 		/* the box size depends on its parent */
-	        dim = - dim + pBox->BxWidth - pBox->BxLPadding - pBox->BxRPadding
-		  - pBox->BxLBorder - pBox->BxRBorder;
+	        dim = 0;
 	      else
 		   /* box size depends on its contents */
 	        dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding
@@ -793,8 +796,12 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	   pAb->AbTopBorderUnit == UnPercent ||
 	   pAb->AbBottomBorderUnit == UnPercent))
 	dim = GetGhostSize (pBox, horizRef, pBlock);
+      else if (pAb->AbHeight.DimUnit == UnPercent && pParent)
+	dim = PixelValue (pAb->AbHeight.DimValue, UnPercent,
+			  (PtrAbstractBox) pParent->BxH, 0);
       else
 	dim = pBox->BxH;
+
       /* top margin */
       if (pAb->AbTopMarginUnit == UnPercent)
 	pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent,
