@@ -38,6 +38,7 @@
 #ifdef _GTK
   /* Font Server */
   #include <gdk/gdkx.h>
+  #include <ft2build.h>
   #include "Xft.h"
 #endif  /* _GTK */
 
