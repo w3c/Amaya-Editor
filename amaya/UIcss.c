@@ -151,7 +151,7 @@ Document            doc;
 #endif
 {
   CSSInfoPtr          css;
-  CHAR                buf[400];
+  CHAR_T              buf[400];
   STRING              ptr;
   int                 i, select;
   int                 len, nb;
