@@ -3800,7 +3800,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        }
 
    /* check if the user is already browsing the document in another window */
-   if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
+   if (CE_event == CE_FORM_GET)
      {
        newdoc = IsDocumentLoaded (pathname, form_data);
        /* we don't concatenate the new parameters as we give preference
@@ -3814,7 +3814,12 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	   strcat (pathname, "?");
 	   strcat (pathname, parameters);
 	 }
-       newdoc = IsDocumentLoaded (pathname, NULL);
+       /* if it's a POST form, we search the document using the
+	  form_data */
+       if (CE_event == CE_FORM_POST)
+	 newdoc = IsDocumentLoaded (pathname, form_data);
+       else
+	 newdoc = IsDocumentLoaded (pathname, NULL);
      }
 
    if (newdoc != 0)
