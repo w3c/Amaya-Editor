@@ -51,6 +51,11 @@
 ! Transformation rules 
 !!!!!!!!!!!!!!!!!!!!!!
 
+Address:(P{*+})+;
+	{
+	* > ADDRESS:*;
+	}
+
 !between lists
 !!!!!!!!!!!!!!
 
@@ -63,13 +68,13 @@ Definition list:*{(LI{(P|list:*{(li2:LI)+})+})+};
 
 Bulleted list:(DL{(DT|DD{(*)+})+})+;
 	{
-	DT > UL:LI.P;
+	DT > UL:LI;
 	* > UL.LI.UL:LI.*;
 	}
 
 Numbered list:(DL{(DT|DD{(*)+})+})+;
 	{
-	DT > OL:LI.P;
+	DT > OL:LI;
 	* > OL.LI.OL:LI.*;
 	}
 
@@ -127,7 +132,7 @@ Table: DL{(DT|DD)+};
 	DD > TABLE.TBODY.TR:TD;
 	}
 
-Numbered list:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},(TBODY{(TR{TD,?(TD2:TD)+})+})+,?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
+Numbered List:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},(TBODY{(TR{TD,?(TD2:TD)+})+})+,?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
   	{
 	CAPTION > :OL.LI.STRONG;
 	chead > OL:LI;
@@ -141,7 +146,7 @@ Numbered list:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},(TBODY{(TR{T
 	cfoot2 > OL:LI;
 	}
 
-Bulleted list:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},TBODY{(TR{TD,?(TD2:TD)+})+},?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
+Bulleted List:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},TBODY{(TR{TD,?(TD2:TD)+})+},?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
 	{
 	CAPTION > :UL.LI.STRONG;
 	chead > UL:LI;
@@ -212,22 +217,20 @@ Remove Form: FORM{*+};
 ! Lists to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Bulleted list: (P|UL|OL|MENU|DIR|PRE|FORM)+;
+Bulleted list: (P|OL|MENU|DIR|PRE|FORM)+;
    	{
-        P > UL:LI.P;
-        UL> UL.LI:UL;
-        OL> UL.LI:OL;
+        P > UL:LI;
+        OL> UL;
         MENU> UL:LI.MENU;
         DIR> UL:LI.DIR;
         PRE> UL:LI.PRE;
         FORM> UL:LI.FORM;
         }
 
-Numbered list:(P|UL|OL|MENU|DIR|PRE|FORM)+;
+Numbered list:(P|UL|MENU|DIR|PRE|FORM)+;
 	   {
-        P > OL:LI.P;
-        UL> OL.LI:UL;
-        OL> OL.LI:OL;
+        P > OL:LI;
+        UL> OL;
         MENU> OL:LI.MENU;
         DIR> OL:LI.DIR;
         PRE> OL:LI.PRE;
@@ -270,6 +273,19 @@ Transpose Table:TABLE{TBODY{TR{(TD)+}|(TR{td2:TD})+}};
 
 !headings to/from definitions
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Definition list:((H1|H2|H3|H4|H5|H6),*+)+;
+	{
+	H1 > DL:DT;
+	H2 > DL:DT;
+	H2 > DL:DT;
+	H3 > DL:DT;
+	H4 > DL:DT;
+	H5 > DL:DT;
+	H6 > DL:DT;
+	* > DL.DD:*;
+	}
+
 
 Definition list:(H1,?HR,?(level1:*)+,?(H2,?(level2:*)+,?((H3|H4|H5|H6),(level3:*)+)+)+)+;
 	{
@@ -318,62 +334,6 @@ Multi level Definition list:(H4,?HR,?(level1:*)+,(H5,?(level2:*)+,((H6)+,(level3
 	H6 > DL.DD.DL.DD:DL.DT ;
 	level3 > DL.DD.DL.DD.DL.DD:*;
 	}
-
-Definition list:((H1|H2|H3|H4|H5|H6),*+)+;
-	{
-	H1 > DL:DT;
-	H2 > DL:DT;
-	H2 > DL:DT;
-	H3 > DL:DT;
-	H4 > DL:DT;
-	H5 > DL:DT;
-	H6 > DL:DT;
-	* > DL.DD:*;
-	}
-
-
-
-
-Headings H1:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
-	{
-	dt1 > :H1;
-	dt2 > :H2;
-	dt3 > :H3;
-	content > :*;
-	}
-
-Headings H2:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
-	{
-	dt1 > :H2;
-	dt2 > :H3;
-	dt3 > :H4;
-	content > :*;
-	}
-
-
-Headings H3:(DL{(dt1:DT|DD{(DL{(dt2:DT|DD{(DL{(dt3:DT|DD{content:*})+}|content:*)+})+}|content:*)+})+}|HR)+;
-	{
-	dt1 > :H3;
-	dt2 > :H4;
-	dt3 > :H5;
-	content > :*;
-	}
-
-Definition list: P,*+;
-	{
-	P > DL:DT;
-	* > DL.DD:*;
-	}
-
-Remove Div: (DIV{*+})+;
-	{
-	H3 >
-	H4 > 
-	H5 > 
-	H6 > 
-	level2 > DL.DD.DL.DD:*;
-	}
-
 
 
 
@@ -428,4 +388,21 @@ Remove tag FONT: FONT{*+};
 	* > :*;
 	}
 
+Remove SPAN: SPAN{*+};
+	{
+	*>:*;
+	}
+	
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Global Document transformation tests !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+DistrThot: BODY{*+}
+	{
+	BODY > 	<TABLE border=0 with="100%">.TBODY.TR.<TD with="30%">.<A href="http://opera.inrialpes.fr/OPERA/Thot.en.html"><IMG src="thot.gif" alt="Thot Editor" border=0 align="middle">;
+	BODY > TABLE.TBODY.TR.TD:<A href = "http://opera.inrialpes.fr">.<IMG src="opera.gif" alt="Opera project" border=0 align="middle">;
+	BODY > TABLE.TBODY.TR:TD.<IMG src="guide.gif" alt="Documentation" border=0 align="middle">;
+	BODY > TABLE.TBODY.TR.TD:H1."Title of the page";
+	BODY > :<TABLE border=0 with="100%">.TBODY.TR.<TD with="30%">.H2.<A href="Index.html">."Home";
+	* > TABLE.TBODY.TR:TD.*;
+	}

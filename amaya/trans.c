@@ -1559,7 +1559,9 @@ static void PutEndTag (ND)
 strGenStack *ND;
 #endif
 {
-   if (strcmp (ND->Tag, "HR") && strcmp (ND->Tag, "BR"))
+   if (strcmp (ND->Tag, "HR") && 
+       strcmp (ND->Tag, "BR") &&
+       strcmp (ND->Tag, "IMG"))
      {
 	PutInHtmlBuffer ("</");
 	PutInHtmlBuffer (ND->Tag);
@@ -1589,7 +1591,8 @@ strNode            *node;
 	  {/* if the element is empty: no transfert */
 	     generationStack[topGenerStack]->Nbc++;
 	     elType = TtaGetElementType (child->Elem);
-	     if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	     if (FALSE)
+		 /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
 	       /*if (TransferMode == ByAttribute)*/
 	       AddListSubTree (child->Elem,
 			       generationStack[topGenerStack]->Idf,
@@ -1629,7 +1632,8 @@ boolean             inplace;
 	  }
       elType = TtaGetElementType (node->Elem); 
       generationStack[topGenerStack]->Nbc++;
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) 
+      if (FALSE)
+/* 	strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)  */
 	/* if (TransferMode == ByAttribute) */
 	AddListSubTree (node->Elem,
 			generationStack[topGenerStack]->Idf,
@@ -1717,6 +1721,7 @@ strMatchChildren   *sm;
    strNodeDesc        *RNodeCour;
    strRuleDesc	      *currentRule;
    boolean             stop, sonsMatch;
+   boolean             transChildDone = FALSE;
 
    sm2 = sm->MatchNode->Matches;
    sonsMatch = FALSE;
@@ -1729,7 +1734,7 @@ strMatchChildren   *sm;
    /* sonsMatch is true if there is at least one matched node in the children of source node */
    sm->MatchNode->MatchSymb = sm->MatchSymb;
    currentRule = sm->MatchSymb->Rule;
-   while (currentRule!=NULL)
+   while (currentRule != NULL)
      {
        courNode = 1;
        RNodeCour = currentRule->OptionNodes;
@@ -1769,7 +1774,8 @@ strMatchChildren   *sm;
 
        while (RNodeCour != NULL && 
 	      RNodeCour->Tag[0] != '"' &&
-	      strcmp (RNodeCour->Tag, "*") != 0 )
+	      strcmp (RNodeCour->Tag, "*") != 0 &&
+	      strcmp (RNodeCour->Tag, "#") != 0)
 	 { /* generates the new nodes */
 	   PutBeginTag (RNodeCour, sm->MatchNode);
 	   courNode++;
@@ -1782,20 +1788,28 @@ strMatchChildren   *sm;
 	   szHTML += l;
 	   bufHTML[szHTML]='\0';
 	 }
-       else if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "*"))
+       if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
 	 {
 	   TransfertNode (sm->MatchNode, TRUE);
+	   transChildDone = TRUE;
 	 }
-       else if (RNodeCour == NULL || !strcmp (RNodeCour->Tag, "#"))
+       if ((RNodeCour != NULL && RNodeCour->Tag[0] == '#') ||
+	   (currentRule->NextRule == NULL))
 	 {
+	   /* it is the last rule of the node or the explicit children */
+	   /* transformation place */
 	   /* process the children */
-	   if (sonsMatch)
-	     {			
-	       ApplyTransChild (sm2->MatchChildren);
-	     }
-	   else
-	     {			
-	       TransfertChildren (sm->MatchNode);
+	   if (transChildDone == FALSE)
+	     {
+	       if (sonsMatch)
+		 {
+		   ApplyTransChild (sm2->MatchChildren);
+		 }
+	       else
+		 {			
+		   TransfertChildren (sm->MatchNode);
+		 }
+	       transChildDone = TRUE;
 	     }
 	 }
        currentRule = currentRule->NextRule;
@@ -1971,7 +1985,7 @@ Document            doc;
 	while (prevFirst != NULL && GITagName (prevFirst) == NULL);
 	while (parentFirst != NULL &&
 	       ((strcmp (TtaGetSSchemaName (TtaGetElementType (parentFirst).ElSSchema), "HTML") != 0) ||
-		TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_BODY) &&
+		TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_HTML) &&
 	       nextLast == NULL && prevFirst == NULL)
 	  {
 	     maxSelDepth++;
@@ -2283,7 +2297,10 @@ char               *data;
    int                 val;
    DisplayMode         oldDisplayMode;
    SSchema	       sch;
-   Element	       elParent;
+   Element	       elParent, elFound;
+   Attribute	       attr;
+   AttributeType       attrType;
+   
 
    val = (int) data;
    switch (ref - TransBaseDialog)
@@ -2314,10 +2331,11 @@ char               *data;
 	       else
 		 {
 
-		    /* transformation was succesful, checking the thot tree */
+		    /* transformation was succesful */ 
 		   sch = TtaGetElementType (myFirstSelect).ElSSchema;
 		   if (strcmp (TtaGetSSchemaName (sch), "MathML") == 0)
 		     {
+		       /* checking the MathML thot tree */
 		       if (isClosed)
 			 elParent = TtaGetParent (myFirstSelect);
 		       else
@@ -2336,28 +2354,53 @@ char               *data;
 		     }
 		   else
 		     {
+		       /* checking the HTML thot tree */
 		       InitializeParser (TtaGetMainRoot (TransDoc), TRUE, TransDoc);
 		       TtaSetStructureChecking (0, TransDoc);
 		       CheckAbstractTree (NULL);
+		       if (TtaIsViewOpened (TransDoc, 1))
+			 ApplyFinalStyle (TransDoc);
 		       TtaSetStructureChecking (1, TransDoc);
 		     }
-
-		    /* selecting the new elements */
-		    if (myLastSelect == NULL)
-		       if (!isClosed)
-			  myLastSelect = TtaGetLastChild (myFirstSelect);
-		       else
-			  myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
-		    else
-		       TtaPreviousSibling (&myLastSelect);
-		    if (isClosed)
-		       TtaNextSibling (&myFirstSelect);
-		    else
-		       myFirstSelect = TtaGetFirstChild (myFirstSelect);
-	            TtaSetDisplayMode (TransDoc, DisplayImmediately);
-		    TtaSelectElement (TransDoc, myFirstSelect);
-		    if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
-		       TtaExtendSelection (TransDoc, myLastSelect, 0);
+		   
+		   if (myLastSelect == NULL)
+		     if (!isClosed)
+		       myLastSelect = TtaGetLastChild (myFirstSelect);
+		     else
+		       myLastSelect = TtaGetLastChild (TtaGetParent (myFirstSelect));
+		   else
+		     TtaPreviousSibling (&myLastSelect);
+		   if (isClosed)
+		     TtaNextSibling (&myFirstSelect);
+		   else
+		     myFirstSelect = TtaGetFirstChild (myFirstSelect);
+		   if (strcmp (TtaGetSSchemaName (sch), "HTML") == 0)
+		     {
+		       /* displaying the images */
+		       attrType.AttrSSchema = sch;
+		       attrType.AttrTypeNum = HTML_ATTR_SRC;
+		       elFound = NULL;
+		       attr = NULL;
+		       TtaSearchAttribute (attrType, SearchInTree, myFirstSelect, &elFound, &attr);
+		       if (elFound == NULL)
+			 TtaSearchAttribute (attrType, SearchForward, myFirstSelect, &elFound, &attr);
+		       while (elFound != NULL && 
+			      (myLastSelect == NULL || 
+			       TtaIsBefore (elFound, myLastSelect) ||
+			       TtaIsAncestor (elFound, myLastSelect)))
+			 {
+#ifdef DEBUG
+			   printf ("Fetching Image...\n");
+#endif
+			   FetchImage (TransDoc, elFound, NULL, 0, NULL, NULL);
+			   TtaSearchAttribute (attrType, SearchForward, elFound, &elFound, &attr);
+			 }
+		     }
+		   /* selecting the new elements */
+		   TtaSetDisplayMode (TransDoc, DisplayImmediately);
+		   TtaSelectElement (TransDoc, myFirstSelect);
+		   if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
+		     TtaExtendSelection (TransDoc, myLastSelect, 0);
 		 }
 	       FreeMatchEnv ();
 	       break;
@@ -2453,7 +2496,21 @@ View                view;
 		   if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
 		     {		/* if it is matching a pattern root : insert the transformation name */
 		       /* in the menu buffer */
-		       strcpy (tag, "");
+		       if (mySelect != NULL)
+			 elemSelect = mySelect;
+		       else
+			 elemSelect = myFirstSelect;
+		       TtaPreviousSibling (&elemSelect);
+		       if (elemSelect != NULL)
+			 strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+		       while (elemSelect != NULL && (!strcmp (tag, "???") || !strcmp (tag, "NONE")))
+			 {
+			    TtaPreviousSibling (&elemSelect);
+			    if (elemSelect != NULL)
+			      strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+			 }
+		       if (elemSelect == NULL)
+			 strcpy (tag, "");
 		       if (CheckValidTransRoot (sm,
 						TtaGetElementType (sm->MatchNode->Elem),
 						tag))

@@ -12,7 +12,7 @@
      Stephane Bonhomme Apr 96   
   ----------------------------------------------------------------------*/
 #define MAX_STACK 100       /* size of html generation and pattern matching stacks */
-#define BUFFER_LEN 5000     /* size of html buffer */
+#define BUFFER_LEN 10000     /* size of html buffer */
 
 #ifndef PPSTANDALONE
 

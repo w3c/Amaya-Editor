@@ -1428,6 +1428,8 @@ unsigned char       c;
 
 #endif
 {
+  if (c == '\"' || c == '\'')
+    ppPutInBuffer ('\"');
 }
 
 /*----------------------------------------------------------------------
@@ -1475,8 +1477,10 @@ unsigned char       c;
 	     else
 	       {
 		  ppAttr->TextVal = (char *) TtaGetMemory (sizeof (char) * (ppLgBuffer + 2));
-
-		  strcpy (ppAttr->TextVal, inputBuffer);
+		  if (inputBuffer [0] == '\"')
+		    strcpy (ppAttr->TextVal, &(inputBuffer[1]));
+		  else
+		    strcpy (ppAttr->TextVal, inputBuffer);
 		  ppAttr->IsInt = FALSE;
 	       }
 	  }
@@ -1644,7 +1648,8 @@ unsigned char       c;
       strcpy (ppNode->Tag, inputBuffer);
       ppLgBuffer = 0;
       if (strcmp (ppNode->Tag, "*") && 
-	  ppNode->Tag[0] != '"' &&
+	  strcmp (ppNode->Tag, "#") &&
+	  ppNode->Tag[0] != '\"' &&
 	  (MapGI (ppNode->Tag, &schema) == -1))
 	{
 	  ppError = TRUE;
@@ -1653,7 +1658,7 @@ unsigned char       c;
 	}
     }
   if (ppRule->OptionNodes && !strcmp (ppRule->OptionNodes->Tag, ""))
-    {				/* free the last node if it is empty */
+    {				/* free the last Option node if it is empty */
       ad = ppRule->OptionNodes->Attributes;
       while (ad)
 	{
@@ -1675,7 +1680,7 @@ unsigned char       c;
     }
 
   if (ppRule->NewNodes && !strcmp (ppRule->NewNodes->Tag, ""))
-    {				/* free the last node if it is empty */
+    {				/* free the last New node if it is empty */
       ad = ppRule->NewNodes->Attributes;
       while (ad)
 	{
@@ -1811,13 +1816,13 @@ unsigned char       c;
 {
    int                 len;
 
-   if (inputBuffer[0] != '"' &&
+   if ((ppLgBuffer == 0 || inputBuffer[0] != '\"') &&
        (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
 	c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
 	c == '<' || c == '.' || c == '!' || c == '?'))
      {
-	ppError = TRUE;
-	ErrorMessage ("Invalid char");
+       ppError = TRUE;
+       ErrorMessage ("Invalid char");
      }
    else
      {
@@ -1984,7 +1989,7 @@ static sourceTransition ppsourceAutomaton[] =
    {13, 'S', (Proc) Do_nothing, 13},
    {13, '<', (Proc) BeginRuleTag, -16},
    {13, ';', (Proc) EndRule, 14},
-   {13, '"', (Proc) ppPutInBuffer, 15},
+   {13, '\"', (Proc) ppPutInBuffer, 15},
    {13, '.', (Proc) EndNode, 13},
    {13, '*', (Proc) ppPutInBuffer, 13},
 /* state 14: waiting for the next rule or the end of rules */
@@ -1992,7 +1997,7 @@ static sourceTransition ppsourceAutomaton[] =
    {14, '}', (Proc) EndTransformation, 0},
    {14, '*', (Proc) ppPutInBuffer, 11},
    /* state 23: reading a content string */
-   {15, '"', (Proc) ppPutInBuffer, 13},
+   {15, '\"', (Proc) ppPutInBuffer, 13},
    {15, '*', (Proc) ppPutInBuffer, 15},
 
   /*sub automaton for tags  in transformation rules */
