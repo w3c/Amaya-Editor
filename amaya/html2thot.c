@@ -3731,7 +3731,7 @@ STRING              GIname;
 {
   ElementType         elType;
   Element             el;
-  int                 entry;
+  int                 entry, i;
   UCHAR_T             msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel;
@@ -3749,16 +3749,31 @@ STRING              GIname;
   if (entry < 0)
     /* not found in the HTML DTD */
     {
-      if (ustrlen (GIname) > MaxMsgLength - 20)
-	 GIname[MaxMsgLength - 20] = EOS;
-      usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
-      ParseHTMLError (theDocument, msgBuffer);
-      UnknownTag = TRUE;
-      /* create an Invalid_element */
-      usprintf (msgBuffer, TEXT("<%s"), GIname);
-      InsertInvalidEl (msgBuffer, FALSE);
+      /* check if it's the math or svg tag with a namespace prefix */
+      /* So, look for a colon in the element name */
+      for (i = 0; GIname[i] != ':' && GIname[i] != EOS; i++);
+      if (GIname[i] == ':' &&
+	      (ustrcasecmp (&GIname[i+1], TEXT("math")) == 0 ||
+	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0))
+	/* it's a math or svg tag with a namespace prefix. OK */
+	{
+         entry = MapGI (&GIname[i+1], &schema, theDocument);
+	 lastElemEntry = entry;
+	}
+      else
+	/* unknown tag */
+	{
+	  if (ustrlen (GIname) > MaxMsgLength - 20)
+	    GIname[MaxMsgLength - 20] = EOS;
+	  usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
+	  ParseHTMLError (theDocument, msgBuffer);
+	  UnknownTag = TRUE;
+	  /* create an Invalid_element */
+	  usprintf (msgBuffer, TEXT("<%s"), GIname);
+	  InsertInvalidEl (msgBuffer, FALSE);
+	}
     }
-  else
+  if (entry >= 0)
     {
       /* does this start tag also imply the end tag of some current elements? */
       pClose = pHTMLGIMapping[entry].firstClosedElem;

@@ -705,7 +705,7 @@ Document     doc;
       buffer[0] = '\0';
       if (useMathML)
 	 {
-	 ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/TR/REC-MathML/\""));
+	 ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
 	 }
       if (useGraphML)
 	 {

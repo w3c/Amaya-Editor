@@ -14,6 +14,8 @@ RULES
 
  HTML : BEGIN
 #ifdef XML
+	Use MathMLTX for MathML;
+	Use GraphMLTX for GraphML;
 	if HtmlDTD = Frameset
 	   BEGIN
 	   Create '<?xml version="1.0" ?>\12';
@@ -30,6 +32,8 @@ RULES
 	   END;
 	Create Namespaces;
 #else
+	Use MathMLT for MathML;
+	Use GraphMLT for GraphML;
 	if HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12';
@@ -469,33 +473,22 @@ RULES
 	END;
 
  Math: BEGIN
-	Create '<math';
+	Create '<m:math';
 	Create Attributes;
 	Create '>\12';
-        indent +2;
-        indent -2 after;
-	Create '</math>\12' After;	
+	indent +2;
+	indent -2 after;
+	Create '</m:math>\12' After;
 	END;
- MathML:
-#ifdef XML
-	Use MathMLTX;
-#else	
-	Use MathMLT;
-#endif
+
  XMLGraphics: BEGIN
-	Create '<xmlgraphics';
+	Create '<g:xmlgraphics';
 	Create Attributes;
 	Create '>\12';
-        indent +2;
-        indent -2 after;
-	Create '</xmlgraphics>\12' After;	
+	indent +2;
+	indent -2 after;
+	Create '</g:xmlgraphics>\12' After;
 	END;
- GraphML:
-#ifdef XML
-	Use GraphMLTX;
-#else
-	Use GraphMLT;
-#endif
 
  Paragraph: BEGIN
 	if not within List_Item and not within Definition and not first

@@ -20,6 +20,10 @@ CONST
 
 RULES
 
+   GraphML:
+	BEGIN
+	END;
+
    XMLcomment:
 	BEGIN
 	NoLineBreak;

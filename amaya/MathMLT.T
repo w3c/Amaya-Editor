@@ -1,4 +1,4 @@
-	{ Translation Schema de structure for MathML.
+	{ Translation Schema for MathML.
 
 	  I. Vatton			June 1997	}
 
