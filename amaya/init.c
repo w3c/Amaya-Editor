@@ -4551,6 +4551,10 @@ CHAR_T*             data;
 	       ustrcat (DirectoryName, DIR_STR);
 	       ustrcat (DirectoryName, data);
 	     }
+
+	   if (WidgetParent == OpenDocBrowser)
+	     LastURLName[0] = WC_EOS;
+
 	   TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
 	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR),
@@ -4570,8 +4574,6 @@ CHAR_T*             data;
 
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
-       if (WidgetParent == OpenDocBrowser)
-	 LastURLName[0] = WC_EOS;
 
        /* construct the document full name */
        tempfile = TtaAllocString (MAX_LENGTH);
