@@ -15,6 +15,7 @@
  */
 
 #include "annotlib.h"
+#include "AHTURLTools_f.h"
 
 /*-----------------------------------------------------------------------
    Procedure ANNOT_SetPath (document)
