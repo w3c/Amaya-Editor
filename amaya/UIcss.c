@@ -249,7 +249,7 @@ void                AttrMediaChanged (NotifyAttribute *event)
        NormalizeURL (name2, doc, completeURL, tempname, NULL);
        TtaFreeMemory (name2);
        css = SearchCSS (0, completeURL);
-       if (css->media[doc] != media)
+       if (css && css->media[doc] != media)
 	 {
 	   /* something changed and we are not printing */
 	   if ((media == CSS_ALL || media == CSS_SCREEN) &&
