@@ -1287,13 +1287,8 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, 2);
-   if (docToOpen && docToOpen [0] != 0) {
-      if (InNewWindow)
-         GetHTMLDocument (docToOpen, NULL, 0, 0, CE_ABSOLUTE, NULL, 0, FALSE);
-      else 
-          GetHTMLDocument (docToOpen, NULL, document, document, CE_ABSOLUTE, NULL, 0, TRUE);
-   }
+   CurrentDocument = document;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
 #  endif /* _WINDOWS */
 }
 

@@ -155,6 +155,7 @@ static int      	tabBorder;
 static int      	numCols;
 static int      	numRows;
 static int      	tBorder;
+static int          urlName;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -529,15 +530,16 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, STRING doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int doc_type)
+void CreateOpenDocDlgWindow (HWND parent, STRING doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int url_name, int doc_type)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select, doc_type)
+void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select, url_name, doc_type)
 HWND  parent;
 STRING doc_to_open;
 int   base_doc;
 int   for_doc;
 int   doc_select;
 int   dir_select;
+int   url_name;
 int   doc_type;
 #endif /* __STDC__ */
 {  
@@ -545,6 +547,7 @@ int   doc_type;
 	formDoc   = form_doc;
 	docSelect = doc_select;
 	dirSelect = dir_select;
+	urlName   = url_name;
     
     if (doc_type == TEXT_FILE)
        szFilter = APPFILENAMEFILTER;
@@ -2039,9 +2042,16 @@ LPARAM lParam;
 				break;
 
 		   case WM_COMMAND:
+                if (HIWORD (wParam) == EN_UPDATE) {
+                   if (LOWORD (wParam) == IDC_GETURL) {
+                      GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+					  if (urlToOpen[0] != 0)
+                         ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
+				   }
+				}
 			    switch (LOWORD (wParam)) {
-				       case ID_CONFIRM:
-						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+                       case ID_CONFIRM:
+                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
@@ -2068,7 +2078,10 @@ LPARAM lParam;
 	                        }
 
                             SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+                            if (urlToOpen[0] != 0)
+                               ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
                             EndDialog (hwnDlg, ID_CONFIRM);
+                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
 							break;
 
 				       case IDCANCEL:
