@@ -26,7 +26,7 @@ extern HDC          TtDisplay;
 #define EN_LANG 2
 #define DE_LANG 3
 
-int app_lang;
+extern int app_lang;
 
 typedef struct struct_ThotGC {
         int capabilities;

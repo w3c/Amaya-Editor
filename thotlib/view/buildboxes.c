@@ -11,6 +11,7 @@
  * Author: I. Vatton (INRIA)
  */
 
+#include "thot_gui.h"
 #include "math.h"
 #include "thot_sys.h"
 #include "constmedia.h"

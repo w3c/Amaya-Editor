@@ -125,6 +125,10 @@ static char         listTitle [MAX_BUFF];
 #endif /* _WINGUI */
 #endif /* _SVG */
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
+
 #ifdef _SVG
 /*----------------------------------------------------------------------
   AddLibraryDataIntoStructure

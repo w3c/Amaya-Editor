@@ -13,21 +13,11 @@
  *
  */
 
-#ifdef _GL
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
-#else /*WINDOWS*/
-#ifdef _WINGUI
-#include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif /* _WINGUI */
-#endif /*_GTK*/
-#endif /*  _GL */
-
+#include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -62,6 +52,21 @@
 #include "frame_f.h"
 #include "animbox_f.h"
 #include "picture_f.h"
+
+#ifdef _GL
+	#ifdef _GTK
+		#include <gtkgl/gtkglarea.h>
+		#include <GL/gl.h>
+		#include <GL/glu.h>
+	#else /* _GTK */
+		#ifdef _WINGUI
+			#include <windows.h>
+			#include <GL/gl.h>
+			#include <GL/glu.h>
+		#endif /* _WINGUI */
+	#endif /* _GTK */
+#endif /*  _GL */
+
 
 #define EPSILON 1e-10
 

@@ -3,12 +3,8 @@
 #ifndef __AMAYACALLBACK_H__
 #define __AMAYACALLBACK_H__
 
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/hashmap.h"
-#endif
+#include "wx/wx.h"
+#include "wx/hashmap.h"
 
 // a callback prototype
 typedef void        (*Proc) ();

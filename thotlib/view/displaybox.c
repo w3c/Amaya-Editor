@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          P. Cheyrou-lagreze (INRIA)
  */
- 
+#include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"

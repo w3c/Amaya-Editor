@@ -15,13 +15,21 @@
 #include <string.h>
 
 #ifdef _WINGUI
-#include <windows.h>
-#endif /*_WINGUI*/
+  #include <windows.h>
+#endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/glcanvas.h"
+#else
+	#ifdef _GL
+	  #include <GL/gl.h>
+	#endif /* _GL */
+#endif /* _WX */
 
 #ifdef _GL
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif /* _GL */
+    #include <GL/glu.h>
+#endif
 
 /*win32 GLU special*/
 #ifndef CALLBACK

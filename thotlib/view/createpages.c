@@ -13,7 +13,7 @@
  * Author: C. Roisin (INRIA)
  *
  */
-
+#include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"

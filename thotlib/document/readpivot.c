@@ -146,12 +146,12 @@ static void PivotError (BinFile file, char *code)
   }
   buffer[j++] = '\n';
   buffer[j++] = EOS;
-#ifdef _WIN_PRINT
+#if defined(_WIN_PRINT) && defined(_WINGUI)
   WinErrorBox (WIN_Main_Wd, code);
-#else /* _WIN_PRINT */
+#else /* _WIN_PRINT && defined(_WINGUI) */
   printf (buffer);
   printf (code);
-#endif /* _WIN_PRINT*/
+#endif /* _WIN_PRINT && defined(_WINGUI) */
   error = TRUE;
 }
 

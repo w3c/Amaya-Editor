@@ -12,7 +12,7 @@
  *         Ph. Louarn (IRISA) - multilingual hyphenation
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "ustring.h"
 #include "constmedia.h"

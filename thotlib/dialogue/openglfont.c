@@ -16,8 +16,13 @@
  */
  
 #ifdef _GL
- 
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #define THOT_EXPORT extern
+#include "thot_gui.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "typebase.h"

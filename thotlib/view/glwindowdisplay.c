@@ -13,6 +13,12 @@
  *
  */
 #ifdef _GL
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
+#include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -60,11 +66,14 @@
   #include <gtkgl/gtkglarea.h>
 #endif /* #if defined(_GTK) */
 
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
   /* Unix timer */
   #include <unistd.h>
+#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+
+#if defined(_GTK) || defined(_WX)
   #include <sys/timeb.h>
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX)*/
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -740,7 +749,7 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
 	/* draw the hyphen */
-	GL_DrawUnicodeChar ('\255', x + width, y, GL_font, fg);
+	GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
       width = 0;
       TransText = FALSE;
     }
@@ -750,7 +759,7 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
 	/* draw the hyphen */
-	GL_DrawUnicodeChar ('\255', x + width, y, GL_font, fg);
+	GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
     }
   return width;
 }

@@ -10,7 +10,7 @@
    It travels the abstract trees of a document and produces an
    external representation according to a set of translation schemas.
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "message.h"
 #include "constmedia.h"

@@ -3,16 +3,13 @@
 #ifndef __AMAYACANVAS_H__
 #define __AMAYACANVAS_H__
 
-#include "wx/wxprec.h"
+#include "wx/wx.h"
+#ifdef _GL
+  #include "wx/glcanvas.h"
+#else // #ifdef _GL
+  #include "wx/panel.h"
+#endif // #ifdef _GL
 
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #ifdef _GL
-      #include "wx/glcanvas.h"
-    #else // #ifdef _GL
-      #include "wx/panel.h"
-    #endif // #ifdef _GL
-#endif
 
 class AmayaFrame;
 

@@ -36,6 +36,9 @@
 #include "SVGedit_f.h"
 #include "anim_f.h"
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
 
 #ifdef _GL
 static ThotIcon   iconAnim;

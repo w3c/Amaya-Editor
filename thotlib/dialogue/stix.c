@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"

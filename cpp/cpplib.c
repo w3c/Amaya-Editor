@@ -219,7 +219,7 @@ struct assertion_hashnode {
   /* List of token-sequences.  */
   struct tokenlist_list *value;
 };
-
+
 #define SKIP_WHITE_SPACE(p) do { while (is_hor_space[*p]) p++; } while (0)
 #define SKIP_ALL_WHITE_SPACE(p) do { while (is_space[*p]) p++; } while (0)
 

@@ -12,6 +12,9 @@
  *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

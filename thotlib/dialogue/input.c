@@ -14,6 +14,9 @@
  *          R. Guetari (W3C/INRIA) - Previous Windows version
  *          P. Cheyrou-Lagreze (INRIA) - gtk input
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

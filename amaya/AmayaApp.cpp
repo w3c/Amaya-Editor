@@ -101,17 +101,17 @@ void AmayaApp::InitAmayaArgs()
 {
   // convert argc and argv in order to be compatible with amaya
   amaya_argc = wxApp::argc;
-  amaya_argv = new (char*)[amaya_argc];
+  amaya_argv = new char*[amaya_argc];
 
-  wxCSConv toascii(_T("ISO-8859-1")); // to convert string in ASCII (ISO-8859-1)
+  wxCSConv conv_ascii(_T("ISO-8859-1")); // to convert string in ASCII (ISO-8859-1)
   for ( int i = 0; i < amaya_argc; i++ )
   {
     // unicode to ascii convertion of every arguments
-    wxString     argument( wxApp::argv[i] );
-    wxASSERT_MSG( argument.IsAscii(), _("arguments (argv) must contain only ascii char in order to be converted in ascii") );
-    amaya_argv[i] = new char[argument.Length()+1];
-    sprintf(amaya_argv[i],"%s", (const char*) argument.mb_str(toascii));
-  }  
+    wxString     amaya_arg( wxApp::argv[i] );
+    wxASSERT_MSG( amaya_arg.IsAscii(), _("arguments (argv) must contain only ascii char in order to be converted in ascii") );
+    amaya_argv[i] = new char[amaya_arg.Length()+1];
+    sprintf(amaya_argv[i],"%s", (const char*) amaya_arg.mb_str(conv_ascii));
+  }
 }
 
 /*

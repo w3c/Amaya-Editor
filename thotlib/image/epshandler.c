@@ -11,7 +11,7 @@
  * Authors: I. Vatton, N. Layaida (INRIA)
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "libmsg.h"

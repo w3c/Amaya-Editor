@@ -3,13 +3,10 @@
 #ifndef __AMAYAPAGE_H__
 #define __AMAYAPAGE_H__
 
-#include "wx/wxprec.h"
+#include "wx/wx.h"
+#include "wx/panel.h"
+#include "wx/splitter.h"
 
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/panel.h"
-    #include "wx/splitter.h"
-#endif
 
 class AmayaFrame;
 

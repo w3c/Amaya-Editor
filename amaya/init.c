@@ -37,6 +37,9 @@
   extern char      LostPicturePath [512];
 #endif /* _GTK */
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
 
 #ifdef _WINGUI
   #include "resource.h"

@@ -12,7 +12,7 @@
  *          S. Bonhomme (INRIA) - Separation between structured and
  *                                unstructured editing modes
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constmenu.h"

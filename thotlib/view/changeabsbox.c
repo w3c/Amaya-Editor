@@ -13,7 +13,7 @@
  * Author: V. Quint (INRIA)
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

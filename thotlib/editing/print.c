@@ -17,7 +17,7 @@
  *           which could confuse programs such as gv (by Brian Campbell).
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -1992,7 +1992,11 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   else
       return (-1); /** The .ps file was not generated for any raison **/
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-  
+
+#ifdef _WX
+  // TODO
+  return (-1);
+#endif /* _WX */
 }
 
 
@@ -2427,7 +2431,7 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
       Pdlg.lStructSize = sizeof(PRINTDLG);
       Pdlg.nCopies = 1;
       Pdlg.Flags       = PD_RETURNDC;
-      Pdlg.hInstance   = (HANDLE) NULL;
+      Pdlg.hInstance   = (HINSTANCE) NULL;
       LpInitialized = TRUE;
     }
   else if (reuse && Pdlg.hDevNames)
@@ -2442,7 +2446,7 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
 	  if (!lpDevMode)
 		  return FALSE;
-		  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
+		  TtPrinterDC = CreateDC ((const unsigned short *)lpDriverName, (const unsigned short *)lpDeviceName, (const unsigned short *)lpPortName, lpDevMode);
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
 	    *orientation = 1;
@@ -2459,8 +2463,11 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 	  return TRUE;
 	}
     }
-
+#ifdef _WX
+  // TODO
+#else
   Pdlg.hwndOwner   = FrRef[0];
+#endif
   if (PrintDlg (&Pdlg))
     {
       if (Pdlg.hDevMode)
@@ -3086,4 +3093,5 @@ int main (int argc, char **argv)
 
 #endif /*_WINDOWS_DLL*/
 #endif /* _WINGUI */
+   return 0;
 }

@@ -1,6 +1,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT /* implementation of every globals */
 
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constcorr.h"

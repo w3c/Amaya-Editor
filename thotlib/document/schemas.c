@@ -8,7 +8,7 @@
 /*
    Chargement et liberation des schemas de structure et de presentation
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

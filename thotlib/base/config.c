@@ -26,6 +26,7 @@
 
 #ifdef _WINGUI
   #include "wininclude.h"
+  int app_lang;
 #endif /* _WINGUI */
 
 #undef THOT_EXPORT

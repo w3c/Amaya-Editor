@@ -24,8 +24,14 @@
   #include <gtkgl/gtkglarea.h>
 #endif /* _GTK */
 
-#include <GL/gl.h>
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/glcanvas.h"
+#else
+  #include <GL/gl.h>
+#endif /* _WX */
 
+#include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"

@@ -10,12 +10,13 @@
  * Authors: I. Vatton (INRIA)
  * Changed: S. Bonhomme (INRIA) 
  */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "appstruct.h"
 #include "constmedia.h"
 #include "appdialogue.h"
+
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 

@@ -11,7 +11,7 @@
  * Author: I. Vatton (INRIA)
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "compilmsg.h"
 #include "appmsg.h"
@@ -150,12 +150,12 @@ char               *RegisteredAppEvents[] =
    "Exit"
 };
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 #include "compilers_f.h"
-#ifndef DLLEXPORT
-#define DLLEXPORT __declspec (dllexport)
+#ifndef DLLEXPORT 
+#define DLLEXPORT __declspec(dllexport)
 #endif  /* DLLEXPORT */ 
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   MenuActionList adds into the list ActionsUsed actions        
@@ -1445,11 +1445,11 @@ static void         WriteDefineFile (char *fname)
 /*----------------------------------------------------------------------
    Main pour le compilateur A.                                     
   ----------------------------------------------------------------------*/
-#ifdef _WINGUI
+#ifdef _WINDOWS
 int       APPmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 int       main (int argc, char **argv)
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 {
    FILE               *filedesc;
    ThotBool            fileOK;
@@ -1466,7 +1466,7 @@ int       main (int argc, char **argv)
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
    int                 nb;
    int                 param;
-#ifdef _WINGUI
+#ifdef _WINDOWS
    char               *cmd [100];
    int                 ndx, pIndex = 0;
    char                msg [800];
@@ -1474,11 +1474,11 @@ int       main (int argc, char **argv)
    /* FARPROC             ptrMainProc; */
    typedef int (*MYPROC) (HWND, int, char **, int *);
    MYPROC              ptrMainProc; 
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
    char                cmd[800];
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
-#  ifdef _WINGUI
+#  ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
@@ -1492,7 +1492,7 @@ int       main (int argc, char **argv)
    TtaDisplayMessage (INFO, msg);
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#  endif /* _WINGUI */
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
@@ -1506,23 +1506,23 @@ int       main (int argc, char **argv)
    if (!error)
      {
       /* prepare the cpp command */
-#ifdef _WINGUI
-      cmd [pIndex] = TtaGetMemory (4);
+#ifdef _WINDOWS
+      cmd [pIndex] = (char *) TtaGetMemory (4);
       strcpy (cmd [pIndex++], "cpp");
-#else  /* !_WINGUI */
+#else  /* _WINDOWS */
       strcpy (cmd, CPP " ");
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-')
 	{
 	  /* keep cpp params */
-#ifdef _WINGUI
-	  cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
+#ifdef _WINDOWS
+	  cmd [pIndex] = (char *) TtaGetMemory (strlen (argv[param]) + 1);
 	  strcpy (cmd [pIndex++], argv[param]);
-#else  /* !_WINGUI */
+#else  /* _WINDOWS */
 	  strcat (cmd, argv[param]);
 	  strcat (cmd, " ");
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	  param++;
 	}
       /* keep the name of the schema to be compile */
@@ -1577,50 +1577,50 @@ int       main (int argc, char **argv)
 	    {
 	      /* provide the real source file */
 	      TtaFileUnlink (fileName);
-#ifndef _WINGUI
+#ifndef _WINDOWS
 	      i = strlen (cmd);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	      if (pwd != NULL)
 		{
-#ifdef _WINGUI
-		  cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
+#ifdef _WINDOWS
+		  cmd [pIndex] = (char *) TtaGetMemory (3 + strlen (pwd));
 		  sprintf (cmd [pIndex++], "-I%s", pwd);
-		  cmd [pIndex] = TtaGetMemory (3);
+		  cmd [pIndex] = (char *) TtaGetMemory (3);
 		  strcpy (cmd [pIndex++], "-C");
-		  cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+		  cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
 		  strcpy (cmd [pIndex++], srceFileName);
-		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
+		  cmd [pIndex] = (char *) TtaGetMemory (strlen (fileName) + 1);
 		  strcpy (cmd [pIndex++], fileName);
-#else  /* !_WINGUI */
+#else  /* _WINDOWS */
 		  sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 		}
 	      else
 		{
-#ifdef _WINGUI
-		  cmd [pIndex] = TtaGetMemory (3);
+#ifdef _WINDOWS
+		  cmd [pIndex] = (char *) TtaGetMemory (3);
 		  strcpy (cmd [pIndex++], "-C");
-		  cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+		  cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
 		  strcpy (cmd [pIndex++], srceFileName);
-		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
+		  cmd [pIndex] = (char *) TtaGetMemory (strlen (fileName) + 1);
 		  strcpy (cmd [pIndex++], fileName);
-#else  /* !_WINGUI */
+#else  /* _WINDOWS */
 		  sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 		}
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	      cppLib = LoadLibrary ("cpp");
-	      ptrMainProc = (MYPROC) GetProcAddress (cppLib, "CPPmain");
+	      ptrMainProc = (MYPROC) GetProcAddress ((HMODULE)cppLib, "CPPmain");
 	      i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
-	      FreeLibrary (cppLib);
+	      FreeLibrary ((HMODULE)cppLib);
 	      for (ndx = 0; ndx < pIndex; ndx++)
 		{
 		  free (cmd [ndx]);
 		  cmd [ndx] = (char*) 0;
 		}
-#else  /* !_WINGUI */
+#else  /* _WINDOWS */
 	      i = system (cmd);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	      if (i == FATAL_EXIT_CODE)
 		{
 		  /* cpp is not available, copy directely the file */
@@ -1700,9 +1700,9 @@ int       main (int argc, char **argv)
 		      MakeMenusAndActionList ();
 		      /* ecrit le schema compile' dans le fichier de sortie     */
 		      /* le directory des schemas est le directory courant      */
-#ifndef _WINGUI 
+#ifndef _WINDOWS 
 		      SchemaPath[0] = '\0';
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 		      strcpy (srceFileName, fileName);
 		      GenerateApplication (srceFileName, pAppli);
 		      strcpy (srceFileName, fileName);

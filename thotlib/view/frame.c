@@ -12,7 +12,7 @@
  *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
  *
  */
-
+#include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"

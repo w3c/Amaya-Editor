@@ -56,6 +56,9 @@ static int      AnimButton;
 #define max(A,B) ((B>A)?B:A)
 #endif /* _WINGUI */
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
 
 
 /* code convention : 

@@ -82,6 +82,10 @@ static Element	LastDeletedElement = NULL;
   #include "wininclude.h"
 #endif /* _WINGUI */
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
+
 #include "XLinkedit_f.h"
 
 #ifdef _GTK

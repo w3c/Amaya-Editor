@@ -3,11 +3,9 @@
 #ifndef __AMAYAAPP_H__
 #define __AMAYAAPP_H__
 
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-#endif
+#include "wx/wx.h"
+#include "wx/app.h"
+#include "wx/strconv.h"
 
 //class AmayaFrame;
 

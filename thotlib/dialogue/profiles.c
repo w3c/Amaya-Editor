@@ -16,6 +16,7 @@
  */
 
 /* Included headerfiles */
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "string.h"
 #include "constmedia.h"

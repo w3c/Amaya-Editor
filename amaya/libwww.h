@@ -23,7 +23,7 @@ Things to put in sysdep.h???
 typedef unsigned long ms_t;
 /************/
 
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
   #if !defined(BOOL)
     typedef char BOOL;
   #endif

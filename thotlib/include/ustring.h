@@ -6,9 +6,9 @@
 #include <windows.h>
 #endif /* _WINGUI */
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 #define strncasecmp _strnicmp
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 typedef enum {
    UNDEFINED_CHARSET,

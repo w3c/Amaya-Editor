@@ -452,7 +452,7 @@ PUBLIC HTList *processLockFile (const char *filename, const char *reqUri)
 #endif
         /* open the file "filename" for read purposes */
         if ((fp = fopen (path,"r")) == NULL) 
-            return NO;
+            return (HTList *)NO;
 
         list  = HTList_new(); 
         /* read all file to found all matches */

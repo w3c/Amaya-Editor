@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA), H. Richy (INRIA)
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

@@ -622,6 +622,7 @@ static void         WriteActionList (char *fname)
       fprintf (AppFile, "#if !defined(_WX)\n");
       fprintf (AppFile, "  exit(0);\n");
       fprintf (AppFile, "#endif /* _WX */\n");
+      fprintf (AppFile, "  return 0;\n\n"); 
       fprintf (AppFile, "}\n\n"); 
     }
 

@@ -77,6 +77,11 @@ typedef struct _typeSelector
   RDFResourceP type;
 } TypeSelector;
 
+#if defined(_WX) && !defined(__STDC__)
+/* SG compilation fix under wxWindows */
+#define __STDC__
+#endif /* #if defined(_WX) && !defined(__STDC__) */
+
 #ifndef _WINGUI
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog

@@ -9,7 +9,7 @@
  * This module loads a presentation schema from a .PRS file
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constpiv.h"

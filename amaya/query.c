@@ -30,9 +30,9 @@
 #include "init_f.h"
 #include <sys/types.h>
 
-#ifndef _WINGUI
+#ifndef _WINDOWS
   #include <unistd.h>
-#endif
+#endif /* #ifndef _WINDOWS */
 
 #include <fcntl.h>
 #include "HTEvtLst.h"
@@ -158,11 +158,11 @@ int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, H
 static int set_cachelock (char *filename)
 {
   int status = 0;
-#ifdef _WINGUI
+#ifdef _WINDOWS
 
   status = TtaFileExist (filename);
   return ((status) ? 0 : -1);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   struct flock lock;
@@ -217,7 +217,7 @@ static int clear_cachelock (void)
   ----------------------------------------------------------------------*/
 static int test_cachelock (char *filename)
 {
-#ifdef _WINGUI
+#ifdef _WINDOWS
   /* if the lock is set, we can't unlink the file under Windows */
   if (!TtaFileUnlink (filename))
     return 0;
@@ -3859,6 +3859,11 @@ ThotBool CheckSingleInstance (char *pid_dir)
     return FALSE;
 
 #endif /* _WINGUI */
+
+#ifdef _WX
+  /* TODO */
+  return TRUE;
+#endif /* _WX */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   int instances;

@@ -31,7 +31,7 @@ typedef struct _HTURI
     char *fragment;
 } HTURI;
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 #define TMPDIR "TMP"
 #ifndef PATH_MAX
 #define PATH_MAX MAX_PATH
@@ -39,12 +39,12 @@ typedef struct _HTURI
 #define stat _stat
 #define uint64_t unsigned __int64
 #define getpid _getpid
-#else /* _WINGUI */
+#else /* _WINDOWS */
 #define TMPDIR "TMPDIR"
 #if HAVE_STDINT_H
 #include <stdint.h>
 #endif /* HAVE_STDINT_H */
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   ConvertToLowerCase

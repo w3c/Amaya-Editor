@@ -157,7 +157,7 @@ AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
  */
 AmayaFrame * AmayaPage::DetachTopFrame( AmayaFrame * p_frame )
 {
-  
+  return NULL;
 }
 
 /*
@@ -169,7 +169,7 @@ AmayaFrame * AmayaPage::DetachTopFrame( AmayaFrame * p_frame )
  */
 AmayaFrame * AmayaPage::DetachBottomFrame( AmayaFrame * p_frame )
 {
-
+  return NULL;
 }
 
 

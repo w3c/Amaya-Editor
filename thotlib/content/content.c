@@ -12,7 +12,7 @@
  *          I. Vatton (INRIA) - Polylines
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

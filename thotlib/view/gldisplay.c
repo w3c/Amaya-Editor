@@ -16,15 +16,19 @@
  */
 #ifdef _GL
 
-#ifdef _WINGUI
-  #include <windows.h>
-#endif /* _WINGUI*/
-
 #ifdef _GTK
   #include <gtkgl/gtkglarea.h>
 #endif /* #ifdef _GTK */
 
-#include <GL/gl.h>
+#ifdef _WINGUI
+  #include <windows.h>
+#endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#else /* _WX */
+  #include <GL/gl.h>
+#endif /* _WX */
 
 #include "ustring.h"
 #include "math.h"
@@ -445,7 +449,7 @@ void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
    if (0 && h < fh * 2 && l <= CharacterWidth (213, font))
      {
 	/* Only one glyph needed */
-	DrawMonoSymb ('\325', frame, x, y, l, h, font, fg);
+	DrawMonoSymb ((CHAR_T)'\325', frame, x, y, l, h, font, fg);
      }
    else
      {

@@ -14,7 +14,7 @@
  * Authors: I. Vatton (INRIA), D. Decouchant
  * 
  */
-
+#include "thot_gui.h"
 #include "libmsg.h"
 #include "thot_sys.h"
 #include "message.h"

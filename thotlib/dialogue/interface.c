@@ -14,6 +14,9 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -42,10 +45,6 @@
 #if defined(_MOTIF) || defined(_GTK) 
   #include <X11/Intrinsic.h>
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#ifdef _WX
-  #include <wx/wx.h>
-#endif /* #ifdef _WX */
 
 #include <locale.h>
 

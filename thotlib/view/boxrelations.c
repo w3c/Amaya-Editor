@@ -11,9 +11,8 @@
  * Author: I. Vatton (INRIA)
  *
  */
-
-#include "thot_sys.h"
 #include "thot_gui.h"
+#include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
 #include "constmedia.h"

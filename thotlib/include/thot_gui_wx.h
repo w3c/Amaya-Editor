@@ -3,16 +3,23 @@
  */
 #ifdef _WX
 
-#include "wx/wxprec.h"
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/toolbar.h"
-    #include "wx/colour.h"
-    #include "wx/event.h"
-    #include "wx/font.h"
-#endif
-
+/* don't include wx.h to optimize compilation */
+/* only declare that these classes are used */
+class wxObject;
+class wxScrollBar;
 class AmayaFrame;
+class wxStatusBar;
+class wxWindow;
+class wxButton;
+class wxMenuBar;
+class wxMenu;
+class wxToolBar;
+class wxControl;
+class wxColour;
+class wxFont;
+class wxEvent;
+class wxBitmap;
+class wxEvent;
 
 typedef wxObject *	ThotWidget;
 typedef wxScrollBar * 	ThotScrollBar;

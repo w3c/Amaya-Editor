@@ -133,7 +133,6 @@ fatal (str, arg)
   return (FATAL_EXIT_CODE);
 }
 
-
 void
 cpp_pfatal_with_name (pfile, name)
      cpp_reader *pfile;

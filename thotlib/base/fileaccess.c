@@ -13,6 +13,7 @@
  *
  */
 
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -1112,7 +1113,7 @@ ThotBool TtaMakeDirectory (char *directory)
   ----------------------------------------------------------------------*/
 ThotBool TtaCheckDirectory (char *directory)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    DWORD               attribs;
 
    /* NEW_WINDOWS - mark for furthur security stuff - EGP
@@ -1124,7 +1125,7 @@ ThotBool TtaCheckDirectory (char *directory)
    if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
       return FALSE;
    return TRUE;
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    struct stat         fileStat;
 
    /* does the directory exist ? */
@@ -1132,11 +1133,15 @@ ThotBool TtaCheckDirectory (char *directory)
       return (FALSE);
    else if (stat (directory, &fileStat) != 0)
       return (FALSE);
+#ifdef _WINDOWS /* SG : only used into wxWindows version (TODO: a valider)*/
+   else if (((fileStat.st_mode)&S_IFMT) == S_IFDIR)
+#else /* _WINDOWS */
    else if (S_ISDIR (fileStat.st_mode))
+#endif /* _WINDOWS */
       return (TRUE);
    else
       return (FALSE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 

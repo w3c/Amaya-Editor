@@ -18,7 +18,7 @@
  *         I. Vatton: new exceptions
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "strdef.h"
 #include "constmedia.h"
@@ -44,12 +44,12 @@ ContStrExt;
 #include "platform_tv.h"
 #include "analsynt_tv.h"
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 #define FATAL_EXIT_CODE 33
 #define COMP_SUCCESS     0
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 #define FATAL_EXIT_CODE -1
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 int                 LineNum;	   /* lines counter in source file */
 static Name         srceFileName;  /* file name of the schema cpp processed */
@@ -125,12 +125,12 @@ static ThotBool     ImportExcept;  /* we met exception ImportLine or
 #include "compilmsg_f.h"
 #include "registry_f.h"
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 #include "compilers_f.h"
 #ifndef DLLEXPORT
 #define DLLEXPORT __declspec (dllexport)
 #endif  /* DLLEXPORT */
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    InitBasicType                                                  
@@ -2888,11 +2888,11 @@ static void         ListAliasesAndNotCreated ()
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
-#ifdef _WINGUI 
+#ifdef _WINDOWS 
 int STRmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 int main (int argc, char **argv)
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 {
    FILE               *inputFile;
    char                buffer[200], fname[200];
@@ -2909,7 +2909,7 @@ int main (int argc, char **argv)
 				   an indentifier */
    int                 param;
    unsigned char       car;
-#ifdef _WINGUI 
+#ifdef _WINDOWS 
    char               *CMD;
    char               *cmd [100];
    char                msg [800];
@@ -2919,11 +2919,11 @@ int main (int argc, char **argv)
    typedef int (*MYPROC) (HWND, int, char **, int *);
    MYPROC              ptrMainProc; 
 
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
    char                cmd[800];
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
@@ -2938,7 +2938,7 @@ int main (int argc, char **argv)
 
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    (void) TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -2951,35 +2951,35 @@ int main (int argc, char **argv)
    if (!error)
      {
        /* prepare the cpp command */
-#ifdef _WINGUI 
-       cmd [pIndex] = TtaGetMemory (4);
+#ifdef _WINDOWS 
+       cmd [pIndex] = (char *) TtaGetMemory (4);
        strcpy (cmd [pIndex++], "cpp");
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
        strcpy (cmd, CPP " ");
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
        param = 1;
        while (param < argc && argv[param][0] == '-')
 	 {
 	   /* keep cpp params */
-#ifdef _WINGUI
-	   cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
+#ifdef _WINDOWS
+	   cmd [pIndex] = (char *) TtaGetMemory (strlen (argv[param]) + 1);
 	   strcpy (cmd [pIndex++], argv[param]);
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 	   strcat (cmd, argv[param]);
 	   strcat (cmd, " ");
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	   param++;
 	 }
        /* keep the name of the schema to be compile */
        if (param >= argc)
 	 {
 	   TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
-#ifdef _WINGUI 
+#ifdef _WINDOWS 
 	   ReleaseDC (hwnd, compilersDC);
 	   return FATAL_EXIT_CODE;
-#else  /* _WINGUI */
+#else  /* _WINDOWS */
 	   exit (1);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	 } 
        
        /* get the name of the file to be compiled */
@@ -2997,12 +2997,12 @@ int main (int argc, char **argv)
 	   /* it's not the valid suffix */
 	   TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE),
 			      srceFileName);
-#ifdef _WINGUI 
+#ifdef _WINDOWS 
 	   ReleaseDC (hwnd, compilersDC);
 	   return FATAL_EXIT_CODE;
-#else  /* _WINGUI */
+#else  /* _WINDOWS */
 	   exit (1);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	 }
        else
 	 {
@@ -3021,54 +3021,54 @@ int main (int argc, char **argv)
            /* provide the real source file */
            TtaFileUnlink (fname);
            pwd = TtaGetEnvString ("PWD");
-#ifndef _WINGUI
+#ifndef _WINDOWS
            i = strlen (cmd);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
            if (pwd != NULL)
 	     {
-#ifdef _WINGUI
-	       CMD = TtaGetMemory (3 + strlen (pwd));
+#ifdef _WINDOWS
+	       CMD = (char *) TtaGetMemory (3 + strlen (pwd));
 	       sprintf (CMD, "-I%s", pwd);
-	       cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
+	       cmd [pIndex] = (char *) TtaGetMemory (3 + strlen (pwd));
 	       strcpy (cmd [pIndex++], CMD);
-	       cmd [pIndex] = TtaGetMemory (3);
+	       cmd [pIndex] = (char *) TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
 	       strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (fname) + 1);
 	       strcpy (cmd [pIndex++], fname);
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	     }
 	   else
 	     {
-#ifdef _WINGUI
-	       cmd [pIndex] = TtaGetMemory (3);
+#ifdef _WINDOWS
+	       cmd [pIndex] = (char *) TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
 	       strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (2);
+	       cmd [pIndex] = (char *) TtaGetMemory (2);
 	       strcpy (cmd [pIndex++], ">");
-	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (fname) + 1);
 	       strcpy (cmd [pIndex++], fname);
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
 	       sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	     } 
-#ifdef _WINGUI
+#ifdef _WINDOWS
            cppLib = LoadLibrary ("cpp");
-           ptrMainProc = (MYPROC) GetProcAddress (cppLib, "CPPmain");
+           ptrMainProc = (MYPROC) GetProcAddress ((HMODULE)cppLib, "CPPmain");
            i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
-           FreeLibrary (cppLib);
+           FreeLibrary ((HMODULE)cppLib);
            for (ndx = 0; ndx < pIndex; ndx++)
 	     {
 	       free (cmd [ndx]);
                cmd [ndx] = (char*) 0;
 	     }
-#else  /* !_WINGUI */
+#else  /* !_WINDOWS */
            i = system (cmd);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
            if (i == FATAL_EXIT_CODE)
 	     {
 	       /* cpp is not available, copy directely the file */
@@ -3183,13 +3183,13 @@ int main (int argc, char **argv)
 	   FreeSchStruc (pExternSSchema);
       } 
    } 
-   fflush (stdout);
+//   fflush (stdout);
    TtaSaveAppRegistry ();
-#ifdef _WINGUI
+#ifdef _WINDOWS
    *Y = _CY_ ;
    ReleaseDC (hwnd, compilersDC);
    return COMP_SUCCESS;
-#else  /* _WINGUI */
+#else  /* _WINDOWS */
    exit (0);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 }

@@ -8,7 +8,7 @@
 /*
    Ce module charge un schema de traduction depuis un fichier .TRA
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"

@@ -22,7 +22,7 @@
  * Extensions: J. KAHAN (INRIA/W3C)
  *
  */
-
+#include "thot_gui.h"
 #include "thotkey.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -101,8 +101,17 @@ PathBuffer path;
 
 #ifdef _WINDOWS
 /* @@why do we need this here? */
-int errno;
+/*#undef errno
+int errno = 0;
+int * __cdecl _errno(void)
+{
+	return & errno;
+}*/
 #endif
+
+#ifdef _WX
+  #include "wx/utils.h"
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -889,7 +898,7 @@ static int          IsThotDir (CONST char *path)
     }
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifndef __GNUC__
 /*----------------------------------------------------------------------
   WINReg_get - simulates getenv in the WIN32 registry
@@ -958,7 +967,7 @@ static char *WINIni_get (CONST char *env)
   return res ? EnVar : NULL;
 }
 #endif
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -1192,19 +1201,19 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char       *dir_end = NULL;
   char       *appName;
   char       *ptr;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* name in Windows NT 4 is 20 chars */
   char        username[MAX_LENGTH];
   char        windir[MAX_PATH+1];
   DWORD       dwSize;
   ThotBool    status;
   char       *ptr2, *ptr3;
-#else /*  _WINDOWS */
+#else /*  _WINGUI */
   struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
   char        c_filename[MAX_LENGTH];
   char       *c_end;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   int         execname_len;
   int         len, round;
   ThotBool    found, ok;
@@ -1490,7 +1499,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 
    if (app_home[0] == EOS)
      {
-#ifdef _WINDOWS
+#ifdef _WINGUI
        /* compute the default app_home value from the username and thotdir */
        dwSize = sizeof (username);
        status = GetUserName (username, &dwSize);
@@ -1570,10 +1579,16 @@ void TtaInitializeAppRegistry (char *appArgv0)
        else
 	 /* win95: apphome is  thotdir\users\username */
 	 sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
-#else /* _WINDOWS */
+#else /* _WINGUI */
+#if defined(_WX) /* SG TODO : a valider */
+	   wxString homedir = wxGetHomeDir();
+	   wxCSConv conv_ascii(_T("ISO-8859-1"));
+	   sprintf (app_home, "%s%c.%s", homedir.mb_str(conv_ascii) , DIR_SEP, AppNameW);
+#else /* _WX */
        ptr = getenv ("HOME");
        sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
-#endif /*_WINDOWS*/
+#endif /* _WX */
+#endif /*_WINGUI */
      }
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,

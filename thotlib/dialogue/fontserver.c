@@ -15,11 +15,21 @@
 
 #ifdef _GL
 
-#ifdef _WX
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "application.h"
+#include "fontconfig.h"
+
+
+#if defined(_WX) && !defined(_WINDOWS)
 //  #include "wx/gdicmn.h"
 //  #include "wx/font.h"
   #include "Xft.h"
-#endif /* _WX */
+#endif /* defined(_WX) && !defined(_WINDOWS) */
+
+#if defined(_WX) && defined(_WINDOWS)
+  #include "wx/filename.h"
+#endif /* #if defined(_WX) && defined(_WINDOWS) */
 
 #ifdef _GTK
   /* Font Server */
@@ -31,9 +41,6 @@
   #include <windows.h>
 #endif    /* _WINGUI */
 
-#include "thot_sys.h"
-#include "application.h"
-#include "fontconfig.h"
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -60,7 +67,7 @@ static int GetFontFilenameFromConfig (char script, int family, int highlight,
 int GetFontFilename (char script, int family, int highlight, int size, 
 		     char *filename)
 {
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
   XftPattern	*match, *pat;
   XftResult     result;
   char	        *s;
@@ -369,14 +376,26 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   XftPatternDestroy (pat); 
   return ok;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
   
 
-#ifdef _WINGUI  
+#ifdef _WINDOWS
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
+#ifdef _WX
+  /* convert ascii in unicode
+     extract the windows home directory
+     and convert unicode to ascii */
+  wxCSConv conv_ascii(_T("ISO-8859-1"));
   
-  GetWindowsDirectory (filename , 1024);  
+  wxChar buff[MAX_PATH];
+  GetWindowsDirectory (buff , MAX_PATH);
+
+  wxString winpath = buff;
+  sprintf( filename, "%s", winpath.mb_str(conv_ascii) );
+#else /* _WX */
+  GetWindowsDirectory (filename , 1024);
+#endif /* _WX */
   strcat (filename, "\\fonts\\"); 
   if (script == 'G' || family == 0)
       strcat (filename, "Symbol");
@@ -444,7 +463,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   strcat (filename, ".ttf\0");
   return 1;
-#endif /* #ifdef _WINGUI */
+#endif /* #ifdef _WINDOWS */
 
 }
 #endif /* _GL */

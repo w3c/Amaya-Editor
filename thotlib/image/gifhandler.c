@@ -10,6 +10,7 @@
  * Authors: I. Vatton, N. Layaida (INRIA)
  *          R. Guetari (W3C/INRIA) - Previous Windows version
  */
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

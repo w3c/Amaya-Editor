@@ -12,6 +12,11 @@
  *
  */	
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -186,10 +191,10 @@ ThotWidget TtaGetViewFrame (Document document, View view)
   ----------------------------------------------------------------------*/
 static void ErrorHandler ()
 {
-#  ifndef _WINGUI
+#  ifndef _WINDOWS
    signal (SIGBUS, SIG_DFL);
    signal (SIGPIPE, SIG_IGN);
-#  endif /* _WINGUI */
+#  endif /* _WINDOWS */
    signal (SIGSEGV, SIG_DFL);
 #ifdef SIGABRT
    signal (SIGABRT, SIG_DFL);
@@ -218,9 +223,9 @@ static void ErrorHandler ()
 static void QuitHandler ()
 {
    signal (SIGINT, (void (*)(int))ErrorHandler);
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGQUIT, SIG_DFL);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
    signal (SIGTERM, (void (*)(int))ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
@@ -234,11 +239,11 @@ static void QuitHandler ()
      exit (1);
 #endif /* _WX && !defined(NODISPLAY) */     
    }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGINT, (void (*)(int))QuitHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
    signal (SIGTERM, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
 }
 
 /*----------------------------------------------------------------------
@@ -246,11 +251,11 @@ static void QuitHandler ()
   ----------------------------------------------------------------------*/
 void InitErrorHandler ()
 {
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
    signal (SIGBUS, (void (*)(int))ErrorHandler);
    signal (SIGHUP, (void (*)(int))ErrorHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
 
    signal (SIGSEGV, (void (*)(int))ErrorHandler);
 #  ifdef SIGABRT

@@ -11,6 +11,7 @@
  */
 #ifdef _GL
 
+#include "thot_gui.h"
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -972,7 +973,7 @@ void GL_SwapEnable (int frame)
 }
 
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WinGL_Swap : specific to windows
   ----------------------------------------------------------------------*/
@@ -997,7 +998,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   return 1;
 }
 #endif /*_WIN_PRINT*/
-#endif /*_WINGUI*/
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   SetBadCard :  handle video cards that flush backbuffer after each

@@ -12,6 +12,11 @@
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -47,21 +52,21 @@ ThotPixmap TtaCreateBitmap( const char * filename, int type )
    wxCSConv conv_ascii(_T("ISO-8859-1"));
 
    /* convert thot picture type to wxwindows picture type */
-   long wx_type = -1;
+   wxBitmapType wx_type = wxBITMAP_TYPE_INVALID;
    switch ( type )
     {
-     	case XBM_FORMAT:	/* X11 BitmapFile format */
-	  wx_type = wxBITMAP_TYPE_XBM;
-	case XPM_FORMAT:	/* Xpm XReadFileToPixmap format */
-	  wx_type = wxBITMAP_TYPE_XPM;
-	case GIF_FORMAT:	/* gif */
-	  wx_type = wxBITMAP_TYPE_GIF;
-	case PNG_FORMAT:	/* Png */
-	  wx_type = wxBITMAP_TYPE_PNG;
-	case JPEG_FORMAT:	/* Jpeg */
-	  wx_type = wxBITMAP_TYPE_JPEG;
-	default :
-	  return NULL;
+		case XBM_FORMAT:	/* X11 BitmapFile format */
+		  wx_type = wxBITMAP_TYPE_XBM;
+		case XPM_FORMAT:	/* Xpm XReadFileToPixmap format */
+		  wx_type = wxBITMAP_TYPE_XPM;
+		case GIF_FORMAT:	/* gif */
+		  wx_type = wxBITMAP_TYPE_GIF;
+		case PNG_FORMAT:	/* Png */
+		  wx_type = wxBITMAP_TYPE_PNG;
+		case JPEG_FORMAT:	/* Jpeg */
+		  wx_type = wxBITMAP_TYPE_JPEG;
+		default :
+		  return NULL;
     }
 
    /* create the picture form file */

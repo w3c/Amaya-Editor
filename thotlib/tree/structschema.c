@@ -12,7 +12,7 @@
  *          C. Roisin (INRIA) - Columns and pages
  *
  */
-
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -66,7 +66,7 @@ void CreateDocument (PtrDocument *pDoc, Document *document)
   *pDoc = LoadedDocument[doc];
   /* initialise le mode d'affichage */
   documentDisplayMode[doc] = DisplayImmediately;
-  (*pDoc)->DocCheckingMode = DEFAULT_CHECK_MASK;
+  (*pDoc)->DocCheckingMode = (unsigned char)DEFAULT_CHECK_MASK;
   (*pDoc)->DocCharset = ISO_8859_1;
   (*pDoc)->DocDefaultCharset = TRUE;
 }

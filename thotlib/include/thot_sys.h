@@ -119,8 +119,12 @@ and must be removed at the end of the debug */
 typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
 /* added functions */
 void bzero (void *s, size_t n);
+#ifndef _WX /* SG there is warnings if I define this function */
 int _getpid (void);
+#endif /* _WX */
+#ifdef __STDC__ // allready defined if __STDC__ is not defined
 #define isascii(c) __isascii(c)
+#endif /* #ifdef __STDC__ */
 #define strcasecmp(a, b) _stricmp(a, b)
 #define index(str, ch) strchr(str, ch)
 /* function mappings */
@@ -178,7 +182,7 @@ typedef BOOL        ThotBool;
 
 #endif /* _WINDOWS *//***********************************WINDOWS**/
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_UNIX) || defined(MOTIF) || defined(_GTK) || defined(_NOGUI)
 
 /* Unix definitions */
 #define None	    0L	/* X11/X.h */
@@ -197,7 +201,7 @@ typedef unsigned char   ThotBool;
 #define WC_DIR_STR  "/"
 #define WC_PATH_STR ":"
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_UNIX) || defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _I18N_
 #define ___TEXT___(str) L##str

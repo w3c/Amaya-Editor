@@ -16,16 +16,16 @@ typedef FILE *BinFile;
 
 typedef struct
 { /* fill in with more elements as they are needed */
-#if defined(_WINDOWS) && !defined(__GNUC__)
+#if defined(_WINGUI) && !defined(__GNUC__)
     FILETIME atime; /* don't know yet what format will be used most */
     DWORD size;
-#else /* _WINDOWS */
+#else /* _WINGUI */
     time_t atime;
     off_t size;
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 } ThotFileInfo;
 
-#if defined(_WINDOWS) && !defined(__GNUC__)
+#if defined(_WINGUI) && !defined(__GNUC__)
 
 typedef HANDLE ThotFileHandle;
 #define ThotFile_BADHANDLE INVALID_HANDLE_VALUE
@@ -42,7 +42,7 @@ typedef DWORD ThotFileOrigin;
 typedef long ThotFileOffset;
 #define ThotFile_BADOFFSET 0xFFFFFFFF
 
-#else /* ! _WINDOWS */
+#else /* ! _WINGUI */
 
 typedef int ThotFileHandle;
 #define ThotFile_BADHANDLE -1
@@ -61,7 +61,7 @@ typedef int ThotFileOrigin;
 typedef long ThotFileOffset;
 #define ThotFile_BADOFFSET -1L
 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifndef __CEXTRACT__
 extern int TtaDirExists ( CONST char *dirpath );

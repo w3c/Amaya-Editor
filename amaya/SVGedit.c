@@ -76,6 +76,10 @@ static ThotBool InCreation = FALSE;
   ThotWidget CatWidget(int ref);
 #endif/*  _GTK */
 
+#ifdef _WINDOWS
+	#include <commctrl.h>
+#endif /* _WINDOWS */
+
 #ifdef _SVG
 /*----------------------------------------------------------------------
  StyleElemPasted

@@ -37,6 +37,11 @@
  */
 
 /* Included headerfiles */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "MENUconf.h"
@@ -354,7 +359,24 @@ static ThotBool _GetSysUserName (char *username)
   if (!status || *username == EOS)
     return FALSE;
   /* in principle, username is returned in Unicode */
-#else 
+#endif
+
+#ifdef _WX
+  /* TODO : a valider */
+  wxString loginname = wxGetUserId();
+  if (loginname.Length()>0)
+  {
+	  wxCSConv conv_ascii(_T("ISO-8859-1"));
+	  sprintf(username,"%s", loginname.mb_str(conv_ascii));
+	  return TRUE;
+  }
+  else
+  {
+	  return FALSE;
+  }
+#endif /* _WX */
+
+#if defined(_GTK) || defined(_MOTIF) 
   uid_t           uid;
   struct passwd  *pwd;
   char           *pw_name;
@@ -369,7 +391,7 @@ static ThotBool _GetSysUserName (char *username)
     return FALSE;
   strncpy (username, pw_name, MAX_LENGTH - 1);
   username[MAX_LENGTH - 1] = EOS;
-#endif /* _WINGUI */
+#endif /* #if defined(_GTK) || defined(_MOTIF)  */
 
   return TRUE;
 }

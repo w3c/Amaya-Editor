@@ -3399,7 +3399,7 @@ int main (int argc, char **argv)
      {
        /* prepare the cpp command */
 #ifdef _WINGUI
-       cmd [pIndex] = TtaGetMemory (4);
+       cmd [pIndex] = (char *) TtaGetMemory (4);
        strcpy (cmd [pIndex++], "cpp");
 #else  /* !_WINGUI */
        strcpy (cmd, CPP " ");
@@ -3409,7 +3409,7 @@ int main (int argc, char **argv)
 	 {
 	   /* keep cpp params */
 #ifdef _WINGUI
-	   cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
+	   cmd [pIndex] = (char *) TtaGetMemory (strlen (argv[param]) + 1);
 	   strcpy (cmd [pIndex++], argv[param]);
 #else  /* !_WINGUI */
 	   strcat (cmd, argv[param]);
@@ -3474,15 +3474,15 @@ int main (int argc, char **argv)
 	   if (pwd != NULL)
 	     {
 #ifdef _WINGUI
-	       CMD = TtaGetMemory (3 + strlen (pwd));
+	       CMD = (char *) TtaGetMemory (3 + strlen (pwd));
 	       sprintf (CMD, "-I%s", pwd);
-	       cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
+	       cmd [pIndex] = (char *) TtaGetMemory (3 + strlen (pwd));
 	       strcpy (cmd [pIndex++], CMD);
-	       cmd [pIndex] = TtaGetMemory (3);
+	       cmd [pIndex] = (char *) TtaGetMemory (3);
 	       strcpy (cmd [pIndex++], "-C");
-	       cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
 	       strcpy (cmd [pIndex++], srceFileName);
-	       cmd [pIndex] = TtaGetMemory (strlen (fname) + 1);
+	       cmd [pIndex] = (char *) TtaGetMemory (strlen (fname) + 1);
 	       strcpy (cmd [pIndex++], fname);
 #else  /* !_WINGUI */
 	       sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
@@ -3491,11 +3491,11 @@ int main (int argc, char **argv)
 	   else
 	     {
 #ifdef _WINGUI
-               cmd [pIndex] = TtaGetMemory (3);
+               cmd [pIndex] = (char *) TtaGetMemory (3);
                strcpy (cmd [pIndex++], "-C");
-               cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
+               cmd [pIndex] = (char *) TtaGetMemory (strlen (srceFileName) + 1);
                strcpy (cmd [pIndex++], srceFileName);
-               cmd [pIndex] = TtaGetMemory (strlen (fname) + 2);
+               cmd [pIndex] = (char *) TtaGetMemory (strlen (fname) + 2);
                strcpy (cmd [pIndex++], fname);
 #else  /* !_WINGUI */
                sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
@@ -3503,9 +3503,9 @@ int main (int argc, char **argv)
 	     } 
 #ifdef _WINGUI
 	   cppLib = LoadLibrary ("cpp");
-	   ptrMainProc = (MYPROC) GetProcAddress (cppLib, "CPPmain");
+	   ptrMainProc = (MYPROC) GetProcAddress ((HMODULE)cppLib, "CPPmain");
 	   i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
-	   FreeLibrary (cppLib);
+	   FreeLibrary ((HMODULE)cppLib);
 	   for (ndx = 0; ndx < pIndex; ndx++) {
 	     free (cmd [ndx]);
 	     cmd [ndx] = (char*) 0;

@@ -12,7 +12,7 @@
  *
  */
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 
 #include <windows.h>
 #include <windowsx.h>
@@ -312,7 +312,7 @@ int Makefile (HWND hwnd, char *fileName)
 
 		   /* @@@@@ if (command != ERROR_CMD) { @@@@@ */
 		   index = 0;
-		   args [index] = TtaGetMemory (strlen (cmdLine) + 1);
+		   args [index] = (char *) TtaGetMemory (strlen (cmdLine) + 1);
 		   strcpy (args [index++], cmdLine);
 		   while ((token = strtok (NULL, seps)) != NULL)
 		     {
@@ -322,16 +322,16 @@ int Makefile (HWND hwnd, char *fileName)
 			 {
 			   if (!currentFile)
 			     {
-			       currentFile = TtaGetMemory (strlen (token) + 1);
+			       currentFile = (char *) TtaGetMemory (strlen (token) + 1);
 			       strcpy (currentFile, token);
 			     }
 			   else
 			     {
-			       currentDestFile = TtaGetMemory (strlen (token) + 1);
+			       currentDestFile = (char *) TtaGetMemory (strlen (token) + 1);
 			       strcpy (currentDestFile, token);
 			     }
 			 } 
-		       args [index] = TtaGetMemory (strlen (token) + 1);
+		       args [index] = (char *) TtaGetMemory (strlen (token) + 1);
 		       strcpy (args [index++], token);
  		     }
 		   if (SrcFileName)
@@ -356,13 +356,13 @@ int Makefile (HWND hwnd, char *fileName)
 			 {
 			   if (index > 2)
 			     {
-			       SrcPath = TtaGetMemory (strlen (ThotPath) + strlen (args [2]) + 1);
+			       SrcPath = (char *) TtaGetMemory (strlen (ThotPath) + strlen (args [2]) + 1);
 			       strcpy (SrcPath, ThotPath);
 			       strcat (SrcPath, args [2]);
 			     }
 			   else
 			     {
-			       SrcPath = TtaGetMemory (strlen (ThotPath) + 1);
+			       SrcPath = (char *) TtaGetMemory (strlen (ThotPath) + 1);
 			       strcpy (SrcPath, ThotPath);
 			     }
 			 }
@@ -383,13 +383,13 @@ int Makefile (HWND hwnd, char *fileName)
 			 {
 			   if (index > 2)
 			     {
-			       DestPath = TtaGetMemory (strlen (ThotPath) + strlen (args [2]) + 1);
+			       DestPath = (char *) TtaGetMemory (strlen (ThotPath) + strlen (args [2]) + 1);
 			       strcpy (DestPath, ThotPath);
 			       strcat (DestPath, args [2]);
 			     }
 			   else
 			     {
-			       DestPath = TtaGetMemory (strlen (ThotPath) + 1);
+			       DestPath = (char *) TtaGetMemory (strlen (ThotPath) + 1);
 			       strcpy (DestPath, ThotPath);
 			     }
 			 }
@@ -401,38 +401,42 @@ int Makefile (HWND hwnd, char *fileName)
 		       break;
 
 		     case APP: 
-		       hLib = LoadLibrary ("app");
+			   hLib = LoadLibrary ("app");
+
 		       if (!hLib)
-			 return FATAL_EXIT_CODE;
-		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "APPmain");
+			     return FATAL_EXIT_CODE;
+			   /* 0x001 is the first exported function in app.dll : APPmain */
+			   /* "APPmain" does not work with 'c++' because exported prototype is not same as 'c' one */
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, (LPCSTR)0x0001);
 		       if (!ptrMainProc)
-			 {
-			   FreeLibrary (hLib);
-			   return FATAL_EXIT_CODE;
-			 }
+			   {
+			     FreeLibrary (hLib);
+			     return FATAL_EXIT_CODE;
+			   }
+			   
 		       ptr = strrchr (currentFile, '.');
 		       if (ptr)
 			 {
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 			     } 
 			 }
@@ -441,23 +445,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (SrcFileName, "%s%s.A", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (SrcFileName, "%s\\%s.A", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (WorkFileName, "%s%s.A", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (WorkFileName, "%s\\%s.A", WorkPath, currentFile);
 			     }  
 			 } 
@@ -489,14 +493,18 @@ int Makefile (HWND hwnd, char *fileName)
 			     }
 			 }
 		       if (result == FATAL_EXIT_CODE)
-			 return result;
+			     return result;
 		       break;
 
 		     case PRS: 
 		       hLib = LoadLibrary ("prs");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "PRSmain");
+
+  			   /* 0x001 is the first exported function in prs.dll : PRSmain */
+			   /* "PRSmain" does not work with 'c++' because exported prototype is not same as 'c' one */
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, (LPCSTR)0x0001);
+
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -509,23 +517,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 			     } 
 			 }
@@ -534,23 +542,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (SrcFileName, "%s%s.P", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (SrcFileName, "%s\\%s.P", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (WorkFileName, "%s%s.P", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (WorkFileName, "%s\\%s.P", WorkPath, currentFile);
 			     }  
 			 } 
@@ -560,23 +568,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   ptr = strrchr (currentDestFile, '.');
 			   if (ptr)
 			     {
-			       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 1);
+			       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 1);
 			       strcpy (BinFiles [indexBinFiles], currentDestFile);
 			     }
 			   else
 			     {
-			       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 5);
+			       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 5);
 			       sprintf (BinFiles [indexBinFiles], "%s.PRS", currentDestFile);
 			     }
 			 }
 		       else
 			 {
-			   currentFileName = TtaGetMemory (strlen (currentFile) + 1);
+			   currentFileName = (char *) TtaGetMemory (strlen (currentFile) + 1);
 			   strcpy (currentFileName, currentFile);
 			   ptr = strrchr (currentFileName, '.');
 			   if (ptr)
 			     ptr [0] = 0;
-			   BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentFile) + 5);
+			   BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentFile) + 5);
 			   sprintf (BinFiles [indexBinFiles], "%s.PRS", currentFile);
 			 }
 
@@ -611,23 +619,23 @@ int Makefile (HWND hwnd, char *fileName)
 		       len = strlen (WorkPath);
 		       if (len > 0 && WorkPath [len - 1] == '\\')
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 			 }  
 		       len = strlen (SrcPath);
 		       if (len > 0 && SrcPath [len - 1] == '\\')
 			 {
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 { 
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 			 } 
 		       Copy_File (hwnd, SrcFileName, WorkFileName);
@@ -638,7 +646,9 @@ int Makefile (HWND hwnd, char *fileName)
 		       hLib = LoadLibrary ("str");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "STRmain");
+  			   /* 0x001 is the first exported function in str.dll : STRmain */
+			   /* "STRmain" does not work with 'c++' because exported prototype is not same as 'c' one */
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, (LPCSTR)0x0001);
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -651,23 +661,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 			       sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 			       sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 			     } 
 			 }
@@ -676,23 +686,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (SrcFileName, "%s%s.S", SrcPath, currentFile);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (SrcFileName, "%s\\%s.S", SrcPath, currentFile);
 			     }
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 			       sprintf (WorkFileName, "%s%s.S", WorkPath, currentFile);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+			       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 			       sprintf (WorkFileName, "%s\\%s.S", WorkPath, currentFile);
 			     }  
 			 } 
@@ -702,23 +712,23 @@ int Makefile (HWND hwnd, char *fileName)
 			   ptr = strrchr (currentDestFile, '.');
 			   if (ptr)
 			     {
-			       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 1);
+			       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 1);
 			       strcpy (BinFiles [indexBinFiles], currentDestFile);
 			     }
 			   else
 			     {
-			       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 5);
+			       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 5);
 			       sprintf (BinFiles [indexBinFiles], "%s.STR", currentDestFile);
 			     }
 			 }
 		       else
 			 {
-			   currentFileName = TtaGetMemory (strlen (currentFile) + 1);
+			   currentFileName = (char *) TtaGetMemory (strlen (currentFile) + 1);
 			   strcpy (currentFileName, currentFile);
 			   ptr = strrchr (currentFileName, '.');
 			   if (ptr)
 			     ptr [0] = 0;
-			   BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentFile) + 5);
+			   BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentFile) + 5);
 			   sprintf (BinFiles [indexBinFiles], "%s.STR", currentFile);
 			 }
 
@@ -753,23 +763,23 @@ int Makefile (HWND hwnd, char *fileName)
 		       len = strlen (WorkPath);
 		       if (len > 0 && WorkPath [len - 1] == '\\')
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 			 }  
 		       len = strlen (SrcPath);
 		       if (len > 0 && SrcPath [len - 1] == '\\')
 			 {
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 { 
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 			 } 
 		       Copy_File (hwnd, SrcFileName, WorkFileName);
@@ -780,8 +790,9 @@ int Makefile (HWND hwnd, char *fileName)
 		       hLib = LoadLibrary ("tra");
 		       if (!hLib)
 			 return FATAL_EXIT_CODE;
-		       
-		       ptrMainProc = (MYPROC) GetProcAddress (hLib, "TRAmain");
+  			   /* 0x001 is the first exported function in tra.dll : TRAmain */
+			   /* "TRAmain" does not work with 'c++' because exported prototype is not same as 'c' one */
+		       ptrMainProc = (MYPROC) GetProcAddress (hLib, (LPCSTR)0x0001);		       
 		       if (!ptrMainProc)
 			 {
 			   FreeLibrary (hLib);
@@ -791,24 +802,24 @@ int Makefile (HWND hwnd, char *fileName)
 		       len = strlen (SrcPath);
 		       if (len > 0 && SrcPath [len - 1] == '\\')
 			 {
-			   SrcFileName = TtaGetMemory (len + 12);
+			   SrcFileName = (char *) TtaGetMemory (len + 12);
 			   sprintf (SrcFileName, "%sgreek.sgml", SrcPath);
 			 }
 		       else
 			 {
-			   SrcFileName = TtaGetMemory (len + 13);
+			   SrcFileName = (char *) TtaGetMemory (len + 13);
 			   sprintf (SrcFileName, "%s\\greek.sgml", SrcPath);
 			 }
 
 		       len = strlen (WorkPath);
 		       if (len > 0 && WorkPath [len - 1] == '\\')
 			 {
-			   WorkFileName = TtaGetMemory (len + 12);
+			   WorkFileName = (char *) TtaGetMemory (len + 12);
 			   sprintf (WorkFileName, "%sgreek.sgml", WorkPath);
 			 }
 		       else
 			 {
-			   WorkFileName = TtaGetMemory (len + 13);
+			   WorkFileName = (char *) TtaGetMemory (len + 13);
 			   sprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
 			 }
 		       /* 2000/10/09 JK: we make an expection here so that we can
@@ -837,24 +848,24 @@ int Makefile (HWND hwnd, char *fileName)
 			   len = strlen (SrcPath);
 			   if (len > 0 && SrcPath [len - 1] == '\\')
 			     {
-			       SrcFileName = TtaGetMemory (len + 14);
+			       SrcFileName = (char *) TtaGetMemory (len + 14);
 			       sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
 			     }
 			   else
 			     {
-			       SrcFileName = TtaGetMemory (len + 15);
+			       SrcFileName = (char *) TtaGetMemory (len + 15);
 			       sprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
 			     }
 
 			   len = strlen (WorkPath);
 			   if (len > 0 && WorkPath [len - 1] == '\\')
 			     {
-			       WorkFileName = TtaGetMemory (len + 14);
+			       WorkFileName = (char *) TtaGetMemory (len + 14);
 			       sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
 			     }
 			   else
 			     {
-			       WorkFileName = TtaGetMemory (len + 15);
+			       WorkFileName = (char *) TtaGetMemory (len + 15);
 			       sprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
 			     }
 			   /* JK: same exception as when compiling the greek inclusion */
@@ -880,23 +891,23 @@ int Makefile (HWND hwnd, char *fileName)
 				   len = strlen (SrcPath);
 				   if (len > 0 && SrcPath [len - 1] == '\\')
 				     {
-				       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+				       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 				       sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
 				     }
 				   else
 				     {
-				       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+				       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 				       sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
 				     } 
 				   len = strlen (WorkPath);
 				   if (len > 0 && WorkPath [len - 1] == '\\')
 				     {
-				       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 1);
+				       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 1);
 				       sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
 				     }
 				   else
 				     {
-				       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 2);
+				       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 2);
 				       sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
 				     } 
 				 }
@@ -905,23 +916,23 @@ int Makefile (HWND hwnd, char *fileName)
 				   len = strlen (SrcPath);
 				   if (len > 0 && SrcPath [len - 1] == '\\')
 				     {
-				       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+				       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 				       sprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
 				     }
 				   else
 				     {
-				       SrcFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+				       SrcFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 				       sprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
 				     }
 				   len = strlen (WorkPath);
 				   if (len > 0 && WorkPath [len - 1] == '\\')
 				     {
-				       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 3);
+				       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 3);
 				       sprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
 				     }
 				   else
 				     {
-				       WorkFileName = TtaGetMemory (len + strlen (currentFile) + 4);
+				       WorkFileName = (char *) TtaGetMemory (len + strlen (currentFile) + 4);
 				       sprintf (WorkFileName, "%s\\%s.T", WorkPath, currentFile);
 				     }  
 				 } 
@@ -931,23 +942,23 @@ int Makefile (HWND hwnd, char *fileName)
 				   ptr = strrchr (currentDestFile, '.');
 				   if (ptr)
 				     {
-				       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 1);
+				       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 1);
 				       strcpy (BinFiles [indexBinFiles], currentDestFile);
 				     }
 				   else
 				     {
-				       BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentDestFile) + 5);
+				       BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentDestFile) + 5);
 				       sprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
 				     }
 				 }
 			       else
 				 {
-				   currentFileName = TtaGetMemory (strlen (currentFile) + 1);
+				   currentFileName = (char *) TtaGetMemory (strlen (currentFile) + 1);
 				   strcpy (currentFileName, currentFile);
 				   ptr = strrchr (currentFileName, '.');
 				   if (ptr)
 				     ptr [0] = 0;
-				   BinFiles [indexBinFiles] = TtaGetMemory (strlen (currentFile) + 5);
+				   BinFiles [indexBinFiles] = (char *) TtaGetMemory (strlen (currentFile) + 5);
 				   sprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
 				 }
 
@@ -986,23 +997,23 @@ int Makefile (HWND hwnd, char *fileName)
 		       len = strlen (WorkPath);
 		       if (len > 0 && WorkPath [len - 1] == '\\')
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 {
-			   SrcFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
 			 }  
 		       len = strlen (SrcPath);
 		       if (len > 0 && SrcPath [len - 1] == '\\')
 			 {
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 1);
 			   sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
 			 }
 		       else
 			 { 
-			   WorkFileName = TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
+			   WorkFileName = (char *) TtaGetMemory (len + strlen (BinFiles [indexBinFiles]) + 2);
 			   sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
 			 } 
 		       Copy_File (hwnd, SrcFileName, WorkFileName);
@@ -1038,12 +1049,12 @@ int Makefile (HWND hwnd, char *fileName)
 	       len = strlen (WorkPath);
 	       if (len > 0 && WorkPath [len - 1] == '\\')
 		 {
-		   SrcFileName = TtaGetMemory (len + strlen (BinFiles[i]) + 1);
+		   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles[i]) + 1);
 		   sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [i]);
 		 }
 	       else
 		 {
-		   SrcFileName = TtaGetMemory (len + strlen (BinFiles [i]) + 2);
+		   SrcFileName = (char *) TtaGetMemory (len + strlen (BinFiles [i]) + 2);
 		   sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [i]);
 		 }
 	       _unlink (SrcFileName);
@@ -1331,7 +1342,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
   InitCommonControls ();
   strcpy (CMDLine, szCmdLine);
   argc = makeArgcArgv (hInstance, &argv, CMDLine);
-  cmdLine = TtaGetMemory (strlen (argv[0]) + 1);
+  cmdLine = (char *) TtaGetMemory (strlen (argv[0]) + 1);
   strcpy (cmdLine, argv [0]);
   TtaInitializeAppRegistry (argv [0]);
   BinPath = TtaGetEnvString ("PWD");
@@ -1353,7 +1364,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
       *dir_end = EOS;
       /* save the binary directory in BinariesDirectory */
     }
-  WorkPath = TtaGetMemory (strlen (BinPath) + 7);
+  WorkPath = (char *) TtaGetMemory (strlen (BinPath) + 7);
   strcpy (WorkPath, BinPath);
   strcat (WorkPath, "\\amaya");
   /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
@@ -1365,13 +1376,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
   wndClass.cbClsExtra    = 0;
   wndClass.cbWndExtra    = 0;
   wndClass.hInstance     = hInstance;
-  wndClass.hIcon         = LoadIcon (NULL, COMP_ICON);
+  wndClass.hIcon         = LoadIcon (NULL, (char *)COMP_ICON);
   wndClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
   wndClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
   wndClass.lpszMenuName  = NULL;
   wndClass.lpszClassName = szAppName;
   wndClass.cbSize        = sizeof(WNDCLASSEX);
-  wndClass.hIconSm       = LoadIcon (hInstance, COMP_ICON);
+  wndClass.hIconSm       = LoadIcon (hInstance, (char *)COMP_ICON);
   if (!RegisterClassEx (&wndClass))
     return FALSE;
   
@@ -1396,4 +1407,4 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
     } 
   return TRUE;
 }
-#endif /* _WINGUI */
+#endif /* _WINDOWS */

@@ -23,8 +23,8 @@
 
 THOT_EXPORT int      DOT_PER_INCH;  /* screen resolution */
 
-#ifdef _WINGUI 
+#ifdef _WINDOWS 
 THOT_EXPORT int      ScreenDPI;
 THOT_EXPORT int      PrinterDPI;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 #endif

@@ -20,14 +20,14 @@
 #define MAX_EXT         10
 
 /* strange constants .. to remove if possible */
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+#if defined(_UNIX)/* || defined(_WX)*/
 /* button states */
 #define TBSTYLE_BUTTON  0
 #define TBSTYLE_CHECK   1
 #define TBSTYLE_SEP     2
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI) */
+#endif /* defined(_UNIX) */
 
 /*
  * Specific types fore each GUI toolkit

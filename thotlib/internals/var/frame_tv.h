@@ -55,7 +55,7 @@ THOT_EXPORT ThotColor RO_Color;         /* Read Only color                */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Disabled button color          */
 THOT_EXPORT ThotBool  TtIsTrueColor;
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
 THOT_EXPORT WNDCLASSEX   RootShell;
 THOT_EXPORT HFONT        DefaultFont;  /* default Font                 */
@@ -64,7 +64,7 @@ THOT_EXPORT HDC          TtPrinterDC;
 THOT_EXPORT HPALETTE     TtCmap;       /* Color palette                */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 
 #ifdef _GTK
 /*THOT_EXPORT ThotWidget   RootShell;*/

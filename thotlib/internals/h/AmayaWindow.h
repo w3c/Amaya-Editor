@@ -3,18 +3,15 @@
 #ifndef __AMAYAWINDOW_H__
 #define __AMAYAWINDOW_H__
 
-#include "wx/wxprec.h"
+#include "wx/wx.h"
+#include "wx/frame.h"
+#include "wx/tooltip.h"
+#include "wx/fontmap.h"
+#include "wx/strconv.h"
+#include "wx/wfstream.h"
+#include "wx/menu.h"
+#include "wx/splitter.h"
 
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/frame.h"
-    #include "wx/tooltip.h"
-    #include "wx/fontmap.h"
-    #include "wx/strconv.h"
-    #include "wx/wfstream.h"
-    #include "wx/menu.h"
-    #include "wx/splitter.h"
-#endif
 
 #include "AmayaCallback.h"
 class AmayaPanel;

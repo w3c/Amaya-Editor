@@ -12,6 +12,7 @@
 
  */
 
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"

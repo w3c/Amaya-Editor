@@ -23,8 +23,8 @@ THOT_EXPORT lineBuffer 	inputLine;
 /* an error has been detected */
 THOT_EXPORT ThotBool 	error;
 
-#ifdef _WINGUI
+#ifdef _WINDOWS
 THOT_EXPORT HDC compilersDC;
 THOT_EXPORT HWND COMPWnd;
 THOT_EXPORT int    _CY_;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
