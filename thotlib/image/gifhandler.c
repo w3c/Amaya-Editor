@@ -818,7 +818,8 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 #ifndef _GTK
 static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 			  int height, int depth, ThotColorStruct *colrs,
-			  int ncolors, ThotBool withAlpha)
+			  int ncolors, ThotBool withAlpha,
+			  ThotBool grayScale)
 {
   XImage             *newimage = NULL;
   unsigned char      *bit_data, *bitp;
@@ -935,8 +936,13 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 	    {
 	      /* read the RGB from the data descriptor */
 	      r = data[ind++];
-	      g = data[ind++];
-	      b = data[ind++];
+	      if (grayScale)
+		g = b = r;
+	      else
+		{
+		  g = data[ind++];
+		  b = data[ind++];
+		}
 	      if (withAlpha)
 		/* skip the alpha channel */
 		ind++;
@@ -991,8 +997,13 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 	    {
 	      /* read the RGB from the data descriptor */
 	      r = data[ind++];
-	      g = data[ind++];
-	      b = data[ind++];
+	      if (grayScale)
+		g = b = r;
+	      else
+		{
+		  g = data[ind++];
+		  b = data[ind++];
+		}
 	      if (withAlpha)
 		/* skip the alpha channel */
 		ind++;
@@ -1038,7 +1049,7 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
   ----------------------------------------------------------------------*/
 HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		       int depth, ThotColorStruct *colrs, int ncolors,
-		       ThotBool withAlpha)
+		       ThotBool withAlpha, ThotBool grayScale)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
@@ -1094,8 +1105,13 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	    {
 	      /* read the RGB from the data descriptor */
 	      r = data[ind++];
-	      g = data[ind++];
-	      b = data[ind++];
+	      if (grayScale)
+		g = b = r;
+	      else
+		{
+		  g = data[ind++];
+		  b = data[ind++];
+		}
 	      if (withAlpha)
 		/* skip the alpha channel */
 		ind++;
@@ -1137,8 +1153,13 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		{
 		  /* read the RGB from the data descriptor */
 		  r = data[ind++];
-		  g = data[ind++];
-		  b = data[ind++];
+		  if (grayScale)
+		    g = b = r;
+		  else
+		    {
+		      g = data[ind++];
+		      b = data[ind++];
+		    }
 		  if (withAlpha)
 		    /* skip the alpha channel */
 		    ind++;
@@ -1172,8 +1193,13 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		{
 		  /* read the RGB from the data descriptor */
 		  r = data[ind++];
-		  g = data[ind++];
-		  b = data[ind++];
+		  if (grayScale)
+		    g = b = r;
+		  else
+		    {
+		      g = data[ind++];
+		      b = data[ind++];
+		    }
 		  if (withAlpha)
 		    /* skip the alpha channel */
 		    ind++;
@@ -1191,7 +1217,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		}
 	      *bitp++ = 0;
 	    }
-	}
+	
       break;
     }
 
@@ -1212,7 +1238,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   ----------------------------------------------------------------------*/
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 		     int ncolors, ThotColorStruct *colrs,
-		     ThotBool withAlpha)
+		     ThotBool withAlpha, ThotBool grayScale)
 {
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -1225,7 +1251,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   if (size == 0)
     return ((Pixmap)NULL); 
   image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,
-		     ncolors, withAlpha); 
+		     ncolors, withAlpha, grayScale); 
   img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
   XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);
   XDestroyImage (image);
@@ -1247,7 +1273,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   return (img);
 #else /* _WINDOWS */
   return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
-	  colrs, ncolors, withAlpha);
+	  colrs, ncolors, withAlpha, grayScale);
 #endif /* _WINDOWS */
 }
 
@@ -1371,7 +1397,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
 #endif /* _WINDOWS */
     }
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   TtaFreeMemory (buffer);
   if (pixmap == None)
     {
@@ -1397,7 +1423,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 		  int wif, int hif, int picW, int picH, FILE *fd, int ncolors,
 		  int transparent, int bgColor, ThotColorStruct *colrs,
-		  ThotBool withAlpha)
+		  ThotBool withAlpha, ThotBool grayScale)
 {
   int              delta;
   int              xtmp, ytmp;
@@ -1435,7 +1461,7 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
       delta = (hif - picH)/2;
       if (delta > 0)
 	{
-	  yif += delta ;
+	  yif += delta;
 	  hif = picH;
 	}
       else
@@ -1445,16 +1471,12 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 	  picH = hif;
 	} 
 
-      fprintf(fd, "gsave %d -%d translate\n", xif,
-	      yif + hif);
-      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH,
-	       wif, hif);
+      fprintf(fd, "gsave %d -%d translate\n", xif, yif + hif);
+      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH, wif, hif);
       break;
     case ReScale:
-      fprintf (fd, "gsave %d -%d translate\n", xif,
-	       yif + hif);
-      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH,
-	       wif, hif);
+      fprintf (fd, "gsave %d -%d translate\n", xif, yif + hif);
+      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH, wif, hif);
       wif = picW;
       hif = picH;
       break;
@@ -1465,7 +1487,19 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
   fprintf(fd, "\n");
   if (ncolors == 0)
     {
-      if (withAlpha)
+      if (withAlpha && grayScale)
+	{
+	  /* using 2 bytes per pixel */
+	  xtmp = xtmp * 2;
+	  picW = picW * 2;
+	}
+      else if (grayScale)
+	{
+	  /* using 1 bytes per pixel */
+	  xtmp = xtmp;
+	  picW = picW;
+	}
+      else if (withAlpha)
 	{
 	  /* using 4 bytes per pixel */
 	  xtmp = xtmp * 4;
@@ -1487,8 +1521,13 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
 	    {
 	      /* read the RGB from the data descriptor */
 	      r = data[ind++];
-	      g = data[ind++];
-	      b = data[ind++];
+	      if (grayScale)
+		g = b = r;
+	      else
+		{
+		  g = data[ind++];
+		  b = data[ind++];
+		}
 	      if (withAlpha)
 		ind++;
 	      fprintf (fd, "%02x%02x%02x", r, g, b);
@@ -1526,7 +1565,7 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   data = ReadGifToData (fn, &picW, &picH, &ncolors, &cpp, colrs);
   if (data)
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
-		 GifTransparent, bgColor, colrs, FALSE);
+		 GifTransparent, bgColor, colrs, FALSE, FALSE);
   TtaFreeMemory (data);
 #endif /* _WINDOWS */
 }

@@ -37,7 +37,8 @@ extern Pixmap DataToPixmap ( unsigned char *image_data,
                              int height,
                              int ncolors,
                              ThotColorStruct *colrs,
-                             ThotBool withAlpha );
+                             ThotBool withAlpha,
+                             ThotBool grayScale );
 extern unsigned char *ReadGifToData ( char *datafile,
                                       int *w,
                                       int *h,
@@ -67,7 +68,8 @@ extern void DataToPrint ( unsigned char *data,
                           int transparent,
                           int bgColor,
                           ThotColorStruct *colrs,
-                          ThotBool withAlpha );
+                          ThotBool withAlpha,
+                          ThotBool grayScale );
 extern void GifPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -111,7 +113,8 @@ extern Pixmap DataToPixmap (/* unsigned char *image_data,
                                int height,
                                int ncolors,
                                ThotColorStruct *colrs,
-                               ThotBool withAlpha */);
+                               ThotBool withAlpha,
+                               ThotBool grayScale */);
 extern unsigned char *ReadGifToData (/* char *datafile,
                                         int *w,
                                         int *h,
@@ -141,7 +144,8 @@ extern void DataToPrint (/* unsigned char *data,
                             int transparent,
                             int bgColor,
                             ThotColorStruct *colrs,
-                            ThotBool withAlpha */);
+                            ThotBool withAlpha,
+                            ThotBool grayScale */);
 extern void GifPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

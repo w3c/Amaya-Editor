@@ -156,7 +156,7 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
      }
    DataToPrint ((unsigned char *)image.data, pres, xif, yif, wif, hif, picW,
 		picH, fd, image.ncolors, -1, bgColor,
-		(ThotColorStruct *)image.colorTable, FALSE);
+		(ThotColorStruct *)image.colorTable, FALSE, FALSE);
    XpmFreeXpmInfo (&info);
    XpmFreeXpmImage (&image);
    att.valuemask = valuemask;

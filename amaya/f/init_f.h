@@ -48,7 +48,7 @@ extern void InitInfo ( char *label,
 extern void ConfirmError ( Document document,
                            View view,
                            char *label,
-                           char *what );
+                           char *extrabutton );
 extern void InitConfirm3L ( Document document,
                             View view,
                             char *label1,
@@ -235,7 +235,7 @@ extern void InitInfo (/* char *label,
 extern void ConfirmError (/* Document document,
                              View view,
                              char *label,
-                             char *what */);
+                             char *extrabutton */);
 extern void InitConfirm3L (/* Document document,
                               View view,
                               char *label1,

@@ -130,7 +130,7 @@ static void PWarning (png_struct *png_ptr, char *message)
   ----------------------------------------------------------------------*/
 static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 			       int *ncolors, int *cpp, ThotColorStruct **colrs,
-			       int *bg, ThotBool *withAlpha)
+			       int *bg, ThotBool *withAlpha, ThotBool *grayScale)
 {
   png_byte        *pp;
   png_byte         buf[8];
@@ -145,7 +145,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   unsigned int     bytesPerExpandedLine;
   int              alpha;
   int              color_type;
-  int              ret, gr, isgrey;
+  int              ret, gr;
   int              i, j, passes;
   int              xpos, ypos, ind;
   int              xr, xg, xb;
@@ -153,8 +153,10 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   int              bit_depth, interlace_type;
   int              cr, cg, cb, cgr;
   int              row, col;
+  ThotBool         isgrey;
 
   *withAlpha = FALSE;
+  *grayScale = FALSE;
   *colrs = NULL;
   *ncolors = 0;
   ret = fread (buf, 1, 8, infile);
@@ -181,7 +183,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   row_pointers = NULL;
   colors = NULL;
   pixels = NULL;
-  isgrey = 0;
+  isgrey = FALSE;
   cr = cg = cb = 0;
   if (setjmp (png_ptr->jmpbuf))
     {
@@ -308,10 +310,12 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
     }
   else if (color_type == PNG_COLOR_TYPE_GRAY)
     {
+      isgrey = TRUE;
      if (TtWDepth > 8)
 	{
 	  /* Generate the image palette */
 	  colors = TtaGetMemory (512 * sizeof (ThotColorStruct));
+	  *grayScale = TRUE;
 	  *ncolors = 0;
 	}
       else
@@ -371,6 +375,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
       break;
 
     case PNG_COLOR_TYPE_RGB:
+    case  PNG_COLOR_TYPE_GRAY:
       if (TtWDepth > 8)
 	{
 	  /* True color -> Keep the image descriptor as it is */
@@ -380,85 +385,82 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  TtaFreeMemory (colors);
 	  colors = NULL;
 	  *withAlpha = (alpha != 0);
-	  break;
 	}
-    case  PNG_COLOR_TYPE_GRAY:
-      ind = 0; /* pixel index */
-      for (ypos = 0; ypos < *height; ypos ++)
+      else
 	{
-	  col = ypos & 0x0f;
-	  pp = row_pointers[ypos];
-	  for (xpos = 0; xpos < *width; xpos ++)
+	  ind = 0; /* pixel index */
+	  for (ypos = 0; ypos < *height; ypos ++)
 	    {
-	      cgr = 0;
-	      a = 0;
-	      row = xpos & 0x0f;
-	      if (color_type == PNG_COLOR_TYPE_GRAY)
+	      col = ypos & 0x0f;
+	      pp = row_pointers[ypos];
+	      for (xpos = 0; xpos < *width; xpos ++)
 		{
-		  cr = cg = cb = cgr = (*pp++);
-		  isgrey = 1;
-		}
-	      else if (color_type == PNG_COLOR_TYPE_RGB)
-		{		
-		  cr = (*pp++);
-		  cg = (*pp++);
-		  cb = (*pp++);
-		  isgrey = 0;
-		}
+		  cgr = 0;
+		  a = 0;
+		  row = xpos & 0x0f;
+		  if (isgrey)
+		    cr = cg = cb = cgr = (*pp++);
+		  else if (color_type == PNG_COLOR_TYPE_RGB)
+		    {		
+		      cr = (*pp++);
+		      cg = (*pp++);
+		      cb = (*pp++);
+		    }
 	      
-	      /* the alpha channel is not yet handled :) */
-	      if (alpha)
-		{
-		  a = (*pp++);
-		  cr  = (int) ((a/255.0) * cr  + ((255.0-a)/255.0) * 211.0);
-		  cg  = (int) ((a/255.0) * cg  + ((255.0-a)/255.0) * 211.0);
-		  cb  = (int) ((a/255.0) * cb  + ((255.0-a)/255.0) * 211.0);
-		  cgr = (int) ((a/255.0) * cgr + ((255.0-a)/255.0) * 211.0);
-		}
+		  /* the alpha channel is not yet handled :) */
+		  if (alpha)
+		    {
+		      a = (*pp++);
+		      cr  = (int) ((a/255.0) * cr  + ((255.0-a)/255.0) * 211.0);
+		      cg  = (int) ((a/255.0) * cg  + ((255.0-a)/255.0) * 211.0);
+		      cb  = (int) ((a/255.0) * cb  + ((255.0-a)/255.0) * 211.0);
+		      cgr = (int) ((a/255.0) * cgr + ((255.0-a)/255.0) * 211.0);
+		    }
    
-	      if (isgrey)
-		{
-		  /* Use the palette of 16 colors */
-		  gr = cgr & 0xF0;
-		  if (cgr - gr > Magic16[(row << 4) + col])
-		    gr += 16;
-		  gr = min(gr, 0xF0);
-		  pixels[ind++] = gr >> 4;
-		}
-	      else
-		{
-		  /* Use the palette of 128 colors */
-		  r = cr & 0xC0;
-		  g = cg & 0xE0;
-		  b = cb & 0xC0;
-		  v = (row << 4) + col;
-		  if (cr - r > Magic64[v])
-		    r += 64;
-		  if (cg - g > Magic32[v])
-		    g += 32;
-		  if (cb - b > Magic64[v])
-		    b += 64;
-		  r = min(r, 255) & 0xC0;
-		  g = min(g, 255) & 0xE0;
-		  b = min(b, 255) & 0xC0;
-		  pixels[ind++] = (unsigned char) ((r >> 6) | (g >> 3) | (b >> 1));
+		  if (isgrey)
+		    {
+		      /* Use the palette of 16 colors */
+		      gr = cgr & 0xF0;
+		      if (cgr - gr > Magic16[(row << 4) + col])
+			gr += 16;
+		      gr = min(gr, 0xF0);
+		      pixels[ind++] = gr >> 4;
+		    }
+		  else
+		    {
+		      /* Use the palette of 128 colors */
+		      r = cr & 0xC0;
+		      g = cg & 0xE0;
+		      b = cb & 0xC0;
+		      v = (row << 4) + col;
+		      if (cr - r > Magic64[v])
+			r += 64;
+		      if (cg - g > Magic32[v])
+			g += 32;
+		      if (cb - b > Magic64[v])
+			b += 64;
+		      r = min(r, 255) & 0xC0;
+		      g = min(g, 255) & 0xE0;
+		      b = min(b, 255) & 0xC0;
+		      pixels[ind++] = (unsigned char) ((r >> 6) | (g >> 3) | (b >> 1));
+		    }
 		}
 	    }
-	}
-      if (info_ptr->valid & PNG_INFO_tRNS)
-	{
-	  if (isgrey)
-	    *bg = ((info_ptr->trans_values.gray) & 0xff) >> 4;
-	  else
+	  if (info_ptr->valid & PNG_INFO_tRNS)
 	    {
-	      xr = info_ptr->trans_values.red;
-	      xg = info_ptr->trans_values.green;
-	      xb = info_ptr->trans_values.blue;
-	      xr = xr & 0xff; xg = xg & 0xff; xb = xb & 0xff;
-	      xr = min(xr, 255) & 0xC0;
-	      xg = min(xg, 255) & 0xE0;
-	      xb = min(xb, 255) & 0xC0;
-	      *bg = (unsigned char) ((xr >> 6) | (xg >> 3) | (xb >> 1));
+	      if (isgrey)
+		*bg = ((info_ptr->trans_values.gray) & 0xff) >> 4;
+	      else
+		{
+		  xr = info_ptr->trans_values.red;
+		  xg = info_ptr->trans_values.green;
+		  xb = info_ptr->trans_values.blue;
+		  xr = xr & 0xff; xg = xg & 0xff; xb = xb & 0xff;
+		  xr = min(xr, 255) & 0xC0;
+		  xg = min(xg, 255) & 0xE0;
+		  xb = min(xb, 255) & 0xC0;
+		  *bg = (unsigned char) ((xr >> 6) | (xg >> 3) | (xb >> 1));
+		}
 	    }
 	}
       break;
@@ -507,7 +509,7 @@ void InitPngColors ()
 static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 				     int *ncolors, int *cpp,
 				     ThotColorStruct **colrs, int *bg,
-				     ThotBool *withAlpha)
+				     ThotBool *withAlpha, ThotBool *grayScale)
 {
   unsigned char *bit_data;
   FILE           *fp;
@@ -519,7 +521,8 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 #endif /* _WINDOWS */
   if (fp != NULL)
     {
-      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha);
+      bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg, withAlpha,
+			  grayScale);
       if (bit_data != NULL)
 	{
 	  if (fp != stdin) 
@@ -548,9 +551,10 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   unsigned char   *buffer2 = NULL;
   int              ncolors, cpp, bg = -1;
   int              w, h, bperpix;
-  ThotBool         withAlpha;
+  ThotBool         withAlpha, grayScale;
 
-  buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, &colrs, &bg, &withAlpha);
+  buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, &colrs, &bg,
+			  &withAlpha, &grayScale);
   if (ncolors == 0)
     {
       /* one byte per component RGB */
@@ -625,7 +629,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
     }
 
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   TtaFreeMemory (buffer);
   /* free the table of colors */
   TtaFreeMemory (colrs);
@@ -657,14 +661,14 @@ void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   unsigned char   *data;
   int              picW, picH;
   int              ncolors, cpp, transparent;
-  ThotBool         withAlpha;
+  ThotBool         withAlpha, grayScale;
 
   transparent = -1;
   data = ReadPngToData (fn, &picW, &picH, &ncolors, &cpp, &colrs, &transparent,
-			&withAlpha);
+			&withAlpha, &grayScale);
   if (data)
     DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
-		 transparent, bgColor, colrs, withAlpha);
+		 transparent, bgColor, colrs, withAlpha, grayScale);
   TtaFreeMemory (data);
   /* free the table of colors */
   TtaFreeMemory (colrs);
