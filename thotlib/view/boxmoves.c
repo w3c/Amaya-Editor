@@ -934,20 +934,21 @@ ThotBool            horizRef;
 		pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
 	    }
 
-	  if (delta < 0 && -delta > pBox->BxW)
+	  if (delta < 0 && -delta > pBox->BxWidth)
 	    {
 	      /* Invert box edges */
 	      XEdgesExchange (pBox, op);
 	      
 	      /* Translate the box origin */
-	      delta = -delta - 2 * pBox->BxW;
+	      delta = -delta - 2 * pBox->BxWidth;
 	      if (pBox->BxHorizEdge == Right)
-		translation = -pBox->BxW;
+		translation = -pBox->BxWidth;
 	      else if (pBox->BxHorizEdge == Left)
-		translation = pBox->BxW;
+		translation = pBox->BxWidth;
 	      XMove (pBox, pSourceBox, translation, frame);
 	    }
 	  /* Resize the box */
+	  delta = delta + pBox->BxWidth - pBox->BxW - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
 	  ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
 	  /* restore the fixed edge */
 	  pBox->BxHorizEdge = NoEdge;
