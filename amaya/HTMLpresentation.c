@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -35,14 +35,7 @@
  Span element, create a span element that contains that text string
  and return TRUE; span contains then the created Span element.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool MakeASpan (Element elem, Element *span, Document doc)
-#else /* __STDC__*/
-ThotBool MakeASpan (elem, span, doc)
-     Element elem;
-     Element *span;
-     Document doc;
-#endif /* __STDC__*/
 {
   ElementType	elType;
   Element	parent, sibling;
@@ -54,7 +47,8 @@ ThotBool MakeASpan (elem, span, doc)
   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ||
       !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
     /* it's an HTML or GraphML element */
-    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+	elType.ElTypeNum == HTML_EL_Basic_Elem)
       /* it's a text leaf */
       {
       parent = TtaGetParent (elem);
@@ -112,15 +106,8 @@ ThotBool MakeASpan (elem, span, doc)
  last child of the former SPAN element.
  Otherwise, firstChild and lastChild are NULL.
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild, Element *lastChild)
-#else /* __STDC__*/
-void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
-     Element el;
-     Document doc;
-     Element *firstChild;
-     Element *lastChild;
-#endif /* __STDC__*/
+void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
+			 Element *lastChild)
 {
   ElementType	elType;
   Element	span, child, next;
@@ -167,14 +154,7 @@ void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
   If attribute attr is on a text string (elem), create a SPAN element
   enclosing this text string and move the attribute to that SPAN element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void  AttrToSpan (Element elem, Attribute attr, Document doc)
-#else /* __STDC__*/
-void  AttrToSpan (elem, attr, doc)
-     Element elem;
-     Attribute attr;
-     Document doc;
-#endif /* __STDC__*/
 {
   Element	span, parent;
   Attribute	newAttr;
@@ -185,7 +165,8 @@ void  AttrToSpan (elem, attr, doc)
   STRING	oldValue; /* [ATTRLEN]; */
 
   elType = TtaGetElementType (elem);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == HTML_EL_Basic_Elem)
     /* it's a character string */
     {
       parent = TtaGetParent (elem);
@@ -224,13 +205,7 @@ void  AttrToSpan (elem, attr, doc)
 /*----------------------------------------------------------------------
   GlobalAttrCreated: the user has created a global attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GlobalAttrCreated (NotifyAttribute * event)
-#else
-void                GlobalAttrCreated (event)
-NotifyAttribute    *event;
- 
-#endif
 {
    /* if the attribute is on a text string, create a SPAN element that encloses
       this text string and move the attribute to that SPAN element */
@@ -240,13 +215,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   GlobalAttrDeleted: the user has removed a global attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GlobalAttrDeleted (NotifyAttribute * event)
-#else
-void                GlobalAttrDeleted (event)
-NotifyAttribute    *event;
- 
-#endif
 {
    Element	firstChild, lastChild;
 
@@ -259,13 +228,7 @@ NotifyAttribute    *event;
   AttrClassChanged: the user has created removed or modified a Class
   attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrClassChanged (NotifyAttribute * event)
-#else
-void                AttrClassChanged (event)
-NotifyAttribute    *event;
- 
-#endif
 {
    Element	firstChild, lastChild;
 
@@ -288,16 +251,8 @@ NotifyAttribute    *event;
   of that rule with element toEl, for the main view.
   showBoxAllowed is TRUE if the ShowBox rule could be generated
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool showBoxAllowed)
-#else  /* __STDC__ */
-void MovePRule (presRule, fromEl, toEl, doc, showBoxAllowed)
-PRule       presRule;
-Element     fromEl;
-Element     toEl;
-Document    doc;
-ThotBool    showBoxAllowed;
-#endif /* __STDC__ */
+void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
+		ThotBool showBoxAllowed)
 {
    int         presRuleType;
    PRule       newPRule, oldPRule;
@@ -336,13 +291,7 @@ ThotBool    showBoxAllowed;
 /*----------------------------------------------------------------------
   SetStyleAttribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetStyleAttribute (Document doc, Element elem)
-#else  /* __STDC__ */
-void                SetStyleAttribute (doc, elem)
-Document            doc;
-Element             elem;
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           styleAttr;
@@ -416,13 +365,7 @@ Element             elem;
   A specific PRule will be created or modified by the user for
   a given element. (pre-event)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ChangePRule (NotifyPresentation * event)
-#else  /* __STDC__ */
-ThotBool            ChangePRule (event)
-NotifyPresentation *event;
-
-#endif /* __STDC__ */
 {
   ElementType	     elType, parentType;
   Element	     el, span, body, root, parent;
@@ -657,12 +600,7 @@ NotifyPresentation *event;
   A specific PRule has been deleted by the user for a given element
   (post-event)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                PRuleDeleted (NotifyPresentation * event)
-#else  /* __STDC__ */
-void                PRuleDeleted (event)
-NotifyPresentation *event;
-#endif /* __STDC__ */
 {
   /* set the Style_ attribute ? */
   SetStyleAttribute (event->document, event->element);
@@ -673,12 +611,7 @@ NotifyPresentation *event;
  AttrLangDeleted
  A Lang attribute has been deleted
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrLangDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrLangDeleted(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
    Element	 firstChild, lastChild;
    AttributeType attrType;
@@ -686,7 +619,7 @@ void AttrLangDeleted(event)
 
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
-  DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
+  DeleteSpanIfNoAttr (event->element, event->document, &firstChild,&lastChild);
   /* if it's the root (HTML) element, delete the RealLang attribute */
   if (!TtaGetParent (event->element))
      /* it's the root element */
@@ -704,14 +637,7 @@ void AttrLangDeleted(event)
  MoveAttrLang
  
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
-#else /* __STDC__*/
-static void MoveAttrLang (oldAttr, el, doc)
-     Attribute oldAttr;
-     Element *el;
-     Document doc;
-#endif /* __STDC__*/
 {
   Element	first, parent, sibling, next, firstChild, lastChild;
   Attribute	newAttr, attr;
@@ -789,12 +715,7 @@ static void MoveAttrLang (oldAttr, el, doc)
  AttrLangCreated
  A Lang attribute has been created
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrLangCreated (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrLangCreated(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   Element	elem;
   int		len;
@@ -840,12 +761,7 @@ void AttrLangCreated(event)
  AttrLangModified
  A Lang attribute has been modified
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AttrLangModified (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrLangModified(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   Element	elem;
   AttributeType attrType;
@@ -873,12 +789,7 @@ void AttrLangModified(event)
  AttrLangShouldBeDeleted
  The user wants to remove a Lang attribute
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AttrLangShouldBeDeleted (NotifyAttribute *event)
-#else /* __STDC__*/
-ThotBool AttrLangShouldBeDeleted(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
 {
   Element	elem;
   AttributeType attrType;

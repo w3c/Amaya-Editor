@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -11,7 +11,6 @@
  *          R. Guetari (W3C/INRIA) Unicode and Windows version
  *
  */
-
  
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -50,14 +49,8 @@ static Document	    ApplyClassDoc;
   RemoveElementStyle cleans all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void       RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
-#else
-static void       RemoveElementStyle (el, doc, removeSpan)
-Element           el;
-Document          doc;
-ThotBool          removeSpan;
-#endif
+static void       RemoveElementStyle (Element el, Document doc,
+				      ThotBool removeSpan)
 {
    ElementType		elType;
    Attribute            attr;
@@ -115,15 +108,9 @@ ThotBool          removeSpan;
    image url is obtained by concatenation of imgpath and the image name.
    Returns NULL or a new allocated styleString.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath, STRING imgpath, STRING styleString)
-#else
-STRING              UpdateCSSBackgroundImage (oldpath, newpath, imgpath, styleString)
-STRING              oldpath;
-STRING              newpath;
-STRING              imgpath;
-STRING              styleString;
-#endif
+STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath,
+					      STRING imgpath,
+					      STRING styleString)
 {
   STRING              b, e, ptr, oldptr, sString;
   CHAR_T              old_url[MAX_LENGTH];
@@ -218,12 +205,7 @@ STRING              styleString;
    UpdateStyleDelete : attribute Style will be deleted.            
    remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            UpdateStyleDelete (NotifyAttribute * event)
-#else
-ThotBool            UpdateStyleDelete (event)
-NotifyAttribute    *event;
-#endif
 {
    ElementType         elType;
    Element             el;
@@ -262,13 +244,7 @@ NotifyAttribute    *event;
   ChangeStyle
   the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ChangeStyle (NotifyElement * event)
-#else  /* __STDC__ */
-ThotBool            ChangeStyle (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   OldBuffer = GetStyleContents (event->element);
   return FALSE;  /* let Thot perform normal operation */
@@ -279,13 +255,7 @@ NotifyElement      *event;
   DeleteStyle
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteStyle (NotifyElement * event)
-#else  /* __STDC__ */
-ThotBool            DeleteStyle (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   RemoveStyleSheet (NULL, event->document, TRUE, TRUE);
   return FALSE;  /* let Thot perform normal operation */
@@ -296,12 +266,7 @@ NotifyElement      *event;
    StyleChanged
    A STYLE element has been changed in the HEAD
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StyleChanged (NotifyAttribute * event)
-#else
-void                StyleChanged (event)
-NotifyAttribute    *event;
-#endif
 {
   STRING              buffer, ptr1, ptr2;
   STRING              pEnd, nEnd;
@@ -431,12 +396,7 @@ NotifyAttribute    *event;
    UpdateStylePost : attribute Style has been updated or created.  
    reflect the new style presentation.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateStylePost (NotifyAttribute * event)
-#else
-void                UpdateStylePost (event)
-NotifyAttribute    *event;
-#endif
 {
    Element             el, firstChild, lastChild, oldParent, newParent;
    ElementType	       elType;
@@ -520,13 +480,7 @@ NotifyAttribute    *event;
    DoApplyClass
    Put a class attribute on all selected elements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DoApplyClass (Document doc)
-#else  /* __STDC__ */
-static void         DoApplyClass (doc)
-Document            doc;
-
-#endif /* __STDC__ */
 {
   Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
 		      firstChild, lastChild, parent;
@@ -665,7 +619,8 @@ Document            doc;
       else
 	 {
 	  elType = TtaGetElementType (curEl);
-	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+	      elType.ElTypeNum == HTML_EL_Basic_Elem)
 	    {
 	      /* that's a text element */
 	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
@@ -740,15 +695,8 @@ Document            doc;
    SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
        enrich the CSS string.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void  SpecificSettingsToCSS (Element el, Document doc, PresentationSetting settings, void *param)
-#else
-static void  SpecificSettingsToCSS (el, doc, settings, param)
-Element              el;
-Document             doc;
-PresentationSetting  settings;
-void                *param;
-#endif
+static void  SpecificSettingsToCSS (Element el, Document doc,
+				    PresentationSetting settings, void *param)
 {
   LoadedImageDesc    *imgInfo;
   CHAR_T*             css_rules = param;
@@ -783,15 +731,7 @@ void                *param;
   For stupid reasons, if the target element is HTML or BODY,
   one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
-#else
-void        GetHTMLStyleString (el, doc, buf, len)
-Element     el;
-Document    doc;
-STRING      buf;
-int        *len;
-#endif
 {
   ElementType        elType;
   STRING             name;
@@ -845,12 +785,7 @@ int        *len;
    Change or create a class attribute to reflect the Style attribute
    of the selected element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         UpdateClass (Document doc)
-#else  /* __STDC__ */
-static void         UpdateClass (doc)
-Document            doc;
-#endif /* __STDC__ */
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -1129,18 +1064,8 @@ Document            doc;
    Put the value of attribute attr at the end of the buff buffer if
    it's not there already.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PutClassName (Attribute attr, STRING buf, int* index, int* free,
 			  int* nb)
-#else  /* __STDC__ */
-static void PutClassName (attr, buf, index, free, nb)
-Attribute	attr;
-STRING		buf;
-int*		index;
-int*		free;
-int*		nb;
-
-#endif /* __STDC__ */
 {
   int		len, cur, i;
   CHAR_T        selector[100];
@@ -1178,16 +1103,8 @@ int*		nb;
    BuildClassList
    Build the whole list of class names in use after the first name.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          BuildClassList (Document doc, STRING buf, int size, STRING first)
-#else  /* __STDC__ */
-static int          BuildClassList (doc, buf, size, first)
-Document            doc;
-STRING              buf;
-int                 size;
-STRING              first;
-
-#endif /* __STDC__ */
+static int          BuildClassList (Document doc, STRING buf, int size,
+				    STRING first)
 {
   Element             el;
   Attribute           attr;
@@ -1263,13 +1180,7 @@ STRING              first;
    CreateClass
    creates a class from the Style attribute of the selected element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateClass (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateClass (doc, view)
-Document            doc;
-View                view;
-#endif /* __STDC__ */
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -1387,14 +1298,7 @@ View                view;
    ApplyClass
    Initialize and activate the Apply Class dialogue box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ApplyClass (Document doc, View view)
-#else  /* __STDC__ */
-void                ApplyClass (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -1479,15 +1383,7 @@ View                view;
 /*----------------------------------------------------------------------
    StyleCallbackDialogue : procedure for style dialogue events        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StyleCallbackDialogue (int ref, int typedata, CHAR_T* data)
-#else  /* __STDC__ */
-void                StyleCallbackDialogue (ref, typedata, data)
-int                 ref;
-int                 typedata;
-CHAR_T*             data;
-
-#endif /* __STDC__ */
 {
   int               val;
 
