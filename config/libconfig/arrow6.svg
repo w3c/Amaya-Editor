@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no"?>
+<!-- <!DOCTYPE svg SYSTEM "svg-19991203.dtd" > -->
+<svg width="500" height="500">
+	<g id="Arrow6">
+		<polygon points="227,170,275,210,147,249,162,234,59,234,108,185,212,185" />
+		<polygon style="fill:#000000" points="59,234,162,234,147,249,275,210,275,239,147,274,147,264,59,264" />
+	        <desc> un autre type de fleche </desc>
+	</g>
+</svg>

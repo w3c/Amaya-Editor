@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- <!DOCTYPE svg SYSTEM "svg-19991203.dtd" > -->
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+  <g id="Arrow2">
+    <polygon points="18,0 41,51 18,102 18,71 0,71 0,30 18,30"
+             />
+  </g>
+</svg>

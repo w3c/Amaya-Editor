@@ -70,6 +70,7 @@ Ctrl <Key>-:        TtcChildElement()
 Ctrl <Key>Home:     TtcPageTop() 
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction()
+Alt <Key>l:         CopySvgInformationTree()
 Alt <Key>Home:      GoToHome()
 Ctrl <Key><:                                TtcInsertChar("\253")
 Shift Ctrl <Key><:                          TtcInsertChar("\253")
@@ -110,7 +111,7 @@ Shift Alt <Key>%:                  TtcSearchText()
 Ctrl <Key>c:                       TtcCopySelection() 
 Ctrl <Key>d:                       TtcDeleteSelection() 
 Shift Ctrl <Key>*:                 SetBrowserEditor() 
-Ctrl <Key>t , Ctrl <Key>x:         TransformType()
+ctrl <Key>t , Ctrl <Key>x:         TransformType()
 Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
  
 #Types 
@@ -254,7 +255,10 @@ Ctrl <Key>n , Ctrl <Key>l:	   LoadAnnotations()
 Ctrl <Key>n , Ctrl <Key>f:	   FilterAnnot()
 Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
 
-
 #Try to override bizzare behaviour
 Shift <Key>End:     TtcSelEndOfLine()
 Shift <Key>Home:    TtcSelStartOfLine()
+
+#SVGLibrary
+Ctrl <Key>l , Ctrl <Key>s:         ShowLibrary()
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="no"?>
+<!-- <!DOCTYPE svg SYSTEM "svg-19991203.dtd" > -->
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+ <g id="Arrow3">
+  <path d="M 225 150 293 199.749 225 250 V 219.347 H 189 V 179.648 h 36 z M 183 179.648 v 39.699 H 165.5 V 179.648 z M 160 179.648 v 39.699 H 146 V 179.648 z M 140.5 179.648 v 39.699 H 130 V 179.648 z M 125 179.648 v 39.699 h -7.5 V 179.648 z M 113.5 179.648 v 39.699 H 109 V 179.648 z" />
+ </g>
+</svg>

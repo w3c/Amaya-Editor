@@ -1,0 +1,9 @@
+/*h2 {margin-left: 10pt}
+h3 {margin-left: 20pt}
+h4 {margin-left: 30pt}
+h5 {margin-left: 40pt}*/
+div {margin-left: 10px}
+.titre-graph { color: #0000B2; font-family: helvetica; font-weight: bold; vertical-align: middle; }
+.commentaire {font-size: 12pt; font-weight: normal; color: #B2005A; vertical-align: middle; }
+.url { font-size: 12pt; font-weight: normal; font-family: helvetica; color: #B200B2; vertical-align: middle}
+

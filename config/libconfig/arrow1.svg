@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no"?>
+<!-- <!DOCTYPE svg SYSTEM "svg-19991203.dtd" > -->
+<svg width="50" height="50">
+ <g id="Arrow1">
+  <polygon transform="translate(-50,-150)" points="202,150,270,201,202,252,202,221,61,221,61,180,202,180" />
+ </g>
+  <desc>fleche de type 1</desc>
+  <text id="fle" x="125" y="125">Fleche de type 1</text>
+</svg>
