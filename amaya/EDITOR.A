@@ -39,6 +39,7 @@ MENUS
 	view:1 File button:BSave -> SaveDocument;
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File button:BSynchro -> Synchronize;
+	view:1 File button:BLatinReading -> LatinReading;
 	view:1 File button:BDocInfo -> DocumentInfo;
 	view:1 File Separator;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;

@@ -62,6 +62,8 @@ extern Document InitDocView ( Document doc,
                               DocumentType docType,
                               Document sourceOfDoc,
                               ThotBool readOnly );
+extern void LatinReading ( Document document,
+                           View view );
 extern void Reload_callback ( int doc,
                               int status,
                               char *urlName,
@@ -228,6 +230,8 @@ extern Document InitDocView (/* Document doc,
                                 DocumentType docType,
                                 Document sourceOfDoc,
                                 ThotBool readOnly */);
+extern void LatinReading (/* Document document,
+                             View view */);
 extern void Reload_callback (/* int doc,
                                 int status,
                                 char *urlName,

@@ -3601,12 +3601,19 @@ static void  InitializeExpatParser (CHARSET charset)
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
+  /* Disable "Read as Iso-Latin1" entry */
+  TtaSetItemOff (XMLcontext.doc, 1, File, BLatinReading);
+
   /* Construct a new parser with namespace processing */
   /* accordingly to the document encoding */
   /* If that encoding is unknown, we don''t parse the document */
   if (charset == UNDEFINED_CHARSET)
-    /* Defalut encoding for XML documents */
-    parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+    {
+      /* Defalut encoding for XML documents */
+      parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+      /* Enable "Read as Iso-Latin1 entry" */
+      TtaSetItemOn (XMLcontext.doc, 1, File, BLatinReading);
+    }
   else if (charset == UTF_8 || charset == UTF_16)
     /* These encoding are automatically recognized by Expat */
     parser = XML_ParserCreateNS (NULL, NS_SEP);

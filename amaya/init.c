@@ -2076,6 +2076,73 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
 }
 
 /*----------------------------------------------------------------------
+   LatinReading
+   Load current document considering it's encoding to ISO-8859-1     
+  ----------------------------------------------------------------------*/
+void               LatinReading (Document document, View view)
+{
+   CHAR_T*         tempdocument = NULL;
+   CHAR_T          documentname[MAX_LENGTH];
+   CHAR_T          tempdir[MAX_LENGTH];
+   CHARSET         charset;
+   CHAR_T          htmlErrFile [80];
+   CHAR_T          charsetname[MAX_LENGTH];
+   int             parsingLevel;
+   ThotBool        xmlDec, withDoctype, isXML;
+   DocumentType    thotType;
+
+   if (!DocumentURLs[document])
+     /* the document is not loaded yet */
+     return;
+
+   if (!DocumentMeta[document]->xmlformat)
+     /* the document is not concerned by this option */
+     return;
+
+   if (!CanReplaceCurrentDocument (document, view))
+      /* abort the command */
+      return;
+
+   tempdocument = GetLocalPath (document, DocumentURLs[document]);
+   TtaExtractName (tempdocument, tempdir, documentname);
+
+   /* clean up previous log file */
+   HTMLErrorsFound = FALSE;
+   XMLErrorsFound = FALSE;
+   /* remove the log file */
+   usprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
+	     TempFileDirectory, DIR_SEP, document, DIR_SEP);
+   if (TtaFileExist (htmlErrFile))
+     TtaFileUnlink (htmlErrFile);
+  
+   /* check if there is an XML declaration or a DOCTYPE declararion */
+   CheckDocHeader (tempdocument, &xmlDec, &withDoctype, &isXML,
+		   &parsingLevel, &charset, charsetname, &thotType);
+   
+   /* force the charset to ISO Latin1 */
+   TtaSetDocumentCharset (document, ISO_8859_1);
+   DocumentMeta[document]->charset = TtaWCSdup ("iso-8859-1");
+
+   StartXmlParser (document, tempdocument, documentname, tempdir,
+		   tempdocument, xmlDec, withDoctype);
+
+   /* check parsing errors */
+   if (HTMLErrorsFound || XMLErrorsFound)
+     TtaSetItemOn (document, 1, Views, BShowLogFile);
+   else
+     TtaSetItemOff (document, 1, Views, BShowLogFile);
+   
+   /* fetch and display all images referred by the document */
+   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+   FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE);
+   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+   
+   /* disable the Synchronize command for both documents */
+   TtaSetItemOff (document, 1, File, BLatinReading);
+   TtaFreeMemory (tempdocument);
+}
+
+/*----------------------------------------------------------------------
   LoadDocument parses the new document and stores its path (or
   URL) into the document table.
   For a local loading, the parameter tempfile must be an empty string.
