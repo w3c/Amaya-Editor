@@ -998,10 +998,23 @@ CHAR_T                c;
 #endif
 {
    int                 code;
+   CHAR_T              buffer[MAX_ENTITY_LENGTH+2];
+   UCHAR_T	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
    usscanf (entityName, TEXT("%d"), &code);
-   PutInBuffer ((CHAR_T) code);
+   if (code < 255)
+      /* that's an ISO Latin character */
+      PutInBuffer ((CHAR_T) code);
+   else
+      /* code of a Unicode character */
+      {
+      ustrcpy (buffer, TEXT ("#"));
+      ustrcat (buffer, entityName);
+      entityValue[0] = EOS;
+      (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+					     currentDocument);
+      }
    entityNameLength = 0;
 }
 
@@ -1057,10 +1070,23 @@ CHAR_T                c;
 #endif
 {
    int                 code;
+   CHAR_T              buffer[MAX_ENTITY_LENGTH+2];
+   UCHAR_T	       entityValue[MAX_ENTITY_LENGTH];	
 
    entityName[entityNameLength] = EOS;
    usscanf (entityName, TEXT("%x"), &code);
-   PutInBuffer ((CHAR_T) code);
+   if (code < 255)
+      /* that's an ISO Latin character */
+      PutInBuffer ((CHAR_T) code);
+   else
+      /* code of a Unicode character */
+      {
+      ustrcpy (buffer, TEXT ("#x"));
+      ustrcat (buffer, entityName);
+      entityValue[0] = EOS;
+      (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+					     currentDocument);
+      }
    entityNameLength = 0;
 }
 

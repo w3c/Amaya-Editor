@@ -475,16 +475,29 @@ Document doc;
    Element	 elText;
    AttributeType attrType;
    Attribute	 attr;
-   int		 len;
+   int		 len, code;
 #define MAX_ENTITY_LENGTH 80
    CHAR_T	 buffer[MAX_ENTITY_LENGTH];
 
    if (lang < 0)
      /* unknown entity */
      {
+       /* by default display a question mark */
        entityValue[0] = '?';
        entityValue[1] = EOS;
        lang = TtaGetLanguageIdFromAlphabet('L');
+       /* let's see if we can do more */
+       if (entityName[0] == '#')
+	  /* it's a number */
+	  {
+	  if (entityName[1] == 'x')
+	     /* it's a hexadecimal number */
+	     usscanf (&entityName[2], TEXT("%x"), &code);
+	  else
+	     /* it's a decimal number */
+	     usscanf (&entityName[1], TEXT("%d"), &code);
+	  GetFallbackCharacter (code, entityValue, &lang);
+	  }
      }
    XMLTextToDocument ();
    elType.ElTypeNum = MathML_EL_TEXT_UNIT;
@@ -507,7 +520,6 @@ Document doc;
    buffer[len+2] = EOS;
    TtaSetAttributeText (attr, buffer, elText, doc);
 }
-
 
 /*----------------------------------------------------------------------
   CheckTextElement  Put the content of input buffer into the document.

@@ -4470,6 +4470,72 @@ CHAR_T                c;
 }
 
 /*----------------------------------------------------------------------
+   GetFallbackCharacter
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetFallbackCharacter (int code, USTRING fallback, Language* lang)
+#else
+void                GetFallbackCharacter (code, fallback, lang)
+int                 code;
+USTRING             fallback;
+Language*           lang;
+#endif
+{
+   int		 i;
+
+   fallback[0] = EOS;
+   fallback[1] = EOS;
+   /* look for that code in the fallback table */
+   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
+	       UnicodeFallbackTable[i].unicodeVal > 0;  i++);
+   if (UnicodeFallbackTable[i].unicodeVal != code)
+      /* character is not in the fallback table */
+      {
+      /* display a question mark instead */
+      *lang = TtaGetLanguageIdFromAlphabet('L');
+      fallback[0]= '?';
+      }
+   else
+      /* this character is on the fallback table */
+      {
+      if (UnicodeFallbackTable[i].EightbitCode < 255)
+	 {
+	 /* Symbol character */
+	 *lang = TtaGetLanguageIdFromAlphabet('G');
+	 fallback[0] = UnicodeFallbackTable[i].EightbitCode;
+	 }
+      else if (UnicodeFallbackTable[i].EightbitCode < 2000)
+	 {
+	 /* ISO latin-1 fallback */
+	 *lang = TtaGetLanguageIdFromAlphabet('L');
+	 fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
+	 }
+      else
+	 {
+	 /* Symbol fallback */
+	 *lang = TtaGetLanguageIdFromAlphabet('G');
+	 fallback[0]= UnicodeFallbackTable[i].EightbitCode - 2000;
+	 }
+      /* some special cases: add a second character */
+      if (code == 338)		/* OE ligature */
+	fallback[1] = 'E';
+      else if (code == 339)	/* oe ligature */
+	fallback[1] = 'e';
+      else if (code == 8195)	/* em space, U+2003 ISOpub */
+	fallback[1] = '\240';
+      else if (code == 8220)	/* left double quotation mark */
+	fallback[1] = '\140';
+      else if (code == 8221)	/* right double quotation mark */
+	fallback[1] = '\47';
+      else if (code == 8222)	/* double low-9 quotation mark */
+	fallback[1] = ',';
+      else if (code == 8240)	/* per mille sign */
+	fallback[1] = '\260';
+      fallback[2] = EOS;
+      }
+}
+
+/*----------------------------------------------------------------------
    PutNonISOlatin1Char     put a Unicode character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -4480,7 +4546,7 @@ int                 code;
 STRING              prefix;
 #endif
 {
-   int		 i, len, c = 0;
+   int		 len, c = 0;
    Language	 lang, l;
    ElementType	 elType;
    Element	 elText;
@@ -4488,39 +4554,6 @@ STRING              prefix;
    Attribute	 attr;
 #define MAX_ENTITY_LENGTH 80
    CHAR_T	 buffer[MAX_ENTITY_LENGTH];
-
-   /* look for that code in the fallback table */
-   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
-	       UnicodeFallbackTable[i].unicodeVal > 0;  i++);
-   if (UnicodeFallbackTable[i].unicodeVal == code)
-      /* this character is on the fallback table */
-      {
-      if (UnicodeFallbackTable[i].EightbitCode < 255)
-	 {
-	 /* Symbol character */
-	 lang = TtaGetLanguageIdFromAlphabet('G');
-	 c = UnicodeFallbackTable[i].EightbitCode;
-	 }
-      else if (UnicodeFallbackTable[i].EightbitCode < 2000)
-	 {
-	 /* ISO latin-1 fallback */
-	 lang = TtaGetLanguageIdFromAlphabet('L');
-	 c = UnicodeFallbackTable[i].EightbitCode - 1000;
-	 }
-      else
-	 {
-	 /* Symbol fallback */
-	 lang = TtaGetLanguageIdFromAlphabet('G');
-	 c = UnicodeFallbackTable[i].EightbitCode - 2000;
-	 }
-      }
-   else
-      /* character is not in the fallback table */
-      {
-      /* display a question mark instead */
-      lang = TtaGetLanguageIdFromAlphabet('L');
-      c = '?';
-      }
 
    if (lang == currentLanguage)
       PutInBuffer ((char)c);
@@ -4546,24 +4579,7 @@ STRING              prefix;
 	 TtaSetElementLineNumber (elText, NumberOfLinesRead);
 	 InsertElement (&elText);
 	 lastElementClosed = TRUE;
-	 buffer[0] = (CHAR_T) c;
-         buffer[1] = EOS;
-	 /* some special cases: insert a second character */
-	 if (code == 338)		/* OE ligature */
-	    buffer[1] = 'E';
-	 else if (code == 339)	/* oe ligature */
-	    buffer[1] = 'e';
-	 else if (code == 8195)	/* em space, U+2003 ISOpub */
-	    buffer[1] = '\240';
-	 else if (code == 8220)	/* left double quotation mark */
-	    buffer[1] = '\140';
-	 else if (code == 8221)	/* right double quotation mark */
-	    buffer[1] = '\47';
-	 else if (code == 8222)	/* double low-9 quotation mark */
-	    buffer[1] = ',';
-	 else if (code == 8240)	/* per mille sign */
-	    buffer[1] = '\260';
-         buffer[2] = EOS;
+	 GetFallbackCharacter (code, buffer, &lang);
 	 TtaSetTextContent (elText, buffer, lang, theDocument);
 	 TtaSetAccessRight (elText, ReadOnly, theDocument);
 	 attrType.AttrSSchema = DocumentSSchema;
