@@ -258,8 +258,8 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
    else
      {
 #ifdef _GL
-       x -= pFrame->FrXOrg;
-       y -= pFrame->FrYOrg;
+       /*x -= pFrame->FrXOrg;
+	 y -= pFrame->FrYOrg;*/
 #endif /* _GL */
      pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
      }
