@@ -146,7 +146,7 @@ Document doc;
 	  URLname++;
 	  URLdir = buffer;
 	  TtaSetDocumentDirectory (doc, URLdir);
-	  TtaSetDocumentName (doc,URLname);
+	  TtaSetDocumentName (doc, URLname);
 	  /* SetBrowserEditor(doc); */ 
 	}
       else
@@ -154,6 +154,7 @@ Document doc;
 	  TtaSetDocumentDirectory (doc, "");
 	  TtaSetDocumentName (doc, buffer);
 	}
+      SetWindowTitle (doc, doc, 0);
     }
     
 }
