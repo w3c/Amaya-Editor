@@ -95,7 +95,6 @@ static CHAR_T         fileExtension[MAX_PATH];
    If open is True, the file is opened if it not open yet.
    Otherwise, the function returns 0 when the file is not open.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
 
@@ -104,7 +103,6 @@ static int          GetSecondaryFile (fName, pDoc, open)
 STRING              fName;
 PtrDocument         pDoc;
 ThotBool	    open;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -349,7 +347,6 @@ ThotBool            lineBreak;
    PutColor        sort dans fichier le nom de la couleur qui se	
    trouve au rang n dans la table des couleurs.                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */

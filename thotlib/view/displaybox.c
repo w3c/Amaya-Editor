@@ -1092,7 +1092,7 @@ ThotBool            selected;
 		 /* Finished */
 		 x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, width, bl, withline, blockbegin, RO, op, fg, shadow);
 		 if (pBox->BxUnderline != 0)
-		   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxThickness, pBox->BxWidth, RO, op, fg);
+		   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline, pBox->BxWidth, fg);
 		 /* Next char lookup */
 		 if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
 		      (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) &&

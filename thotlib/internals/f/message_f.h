@@ -19,7 +19,6 @@ extern void TtaDisplayMessage ( int msgType,
 extern void TtaDisplaySimpleMessage ( int msgType,
                                       int origin,
                                       int number );
-extern void DisplayPivotMessage ( STRING code );
 
 #else /* __STDC__ */
 
@@ -36,7 +35,6 @@ extern void TtaDisplayMessage (/* int msgType,
 extern void TtaDisplaySimpleMessage (/* int msgType,
                                         int origin,
                                         int number */);
-extern void DisplayPivotMessage (/* STRING code */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

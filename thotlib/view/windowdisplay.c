@@ -622,11 +622,8 @@ int                 shadow;
   DisplayUnderline draw the underline, overline or cross line
   added to some text of lenght lg, using font and located
   at (x, y) in frame. 
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
-  parameter fg indicates the drawing color
-  thick indicates thickness : thin (0) thick (1)
-  Type indicates the kind of drawing :
+  The parameter fg indicates the drawing color and type indicates the
+  kind of drawing:
   - 0 = none
   - 1 = underlined
   - 2 = overlined
@@ -646,20 +643,16 @@ int                 shadow;
 	      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int active, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
 #else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, active, fg)
+void                DisplayUnderline (frame, x, y, font, type, lg, fg)
 int                 frame;
 int                 x;
 int                 y;
 ptrfont             font;
 int                 type;
-int                 thick;
 int                 lg;
-int                 RO;
-int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
 {
   int                 fheight;	/* font height           */
@@ -679,7 +672,7 @@ int                 fg;
   if (lg > 0)
     {
       fheight = FontHeight (font);
-      thickness = ((fheight / 20) + 1) * (thick + 1);
+      thickness = (fheight / 20) + 1;
       bottom = fheight - thickness;
       middle = fheight / 2;
       /*

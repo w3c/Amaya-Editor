@@ -67,6 +67,7 @@ extern void DeleteMColumn ( Document document,
 extern void MathElementDeleted ( NotifyElement *event );
 extern void FenceModified ( NotifyOnValue *event );
 extern void MathAttrOtherCreated ( NotifyAttribute *event );
+extern ThotBool MathStyleAttrInMenu ( NotifyAttribute * event );
 extern void MathPresentAttrCreated ( NotifyAttribute *event );
 extern ThotBool MathAttrFontsizeDelete ( NotifyAttribute *event );
 extern ThotBool MathAttrLspaceDelete ( NotifyAttribute *event );
@@ -154,6 +155,7 @@ extern void DeleteMColumn (/* Document document,
 extern void MathElementDeleted (/* NotifyElement *event */);
 extern void FenceModified (/* NotifyOnValue *event */);
 extern void MathAttrOtherCreated (/* NotifyAttribute *event */);
+extern ThotBool MathStyleAttrInMenu (/* NotifyAttribute * event */);
 extern void MathPresentAttrCreated (/* NotifyAttribute *event */);
 extern ThotBool MathAttrFontsizeDelete (/* NotifyAttribute *event */);
 extern ThotBool MathAttrLspaceDelete (/* NotifyAttribute *event */);

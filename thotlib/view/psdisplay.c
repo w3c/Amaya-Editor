@@ -454,28 +454,22 @@ int                 shadow;
    DisplayUnderline draw the underline, overline or cross line
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int func, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
 #else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, func, fg)
+void                DisplayUnderline (frame, x, y, font, type, lg, fg)
 int                 frame;
 int                 x;
 int                 y;
 ptrfont             font;
 int                 type;
-int                 thick;
 int                 lg;
-int                 RO;
-int                 func;
 int                 fg;
 #endif /* __STDC__ */
 {
   int                 fheight;	/* font height           */
-  int                 ascent;	/* font ascent           */
   int                 bottom;	/* underline position    */
   int                 middle;	/* cross-over position   */
-  int                 height;	/* overline position     */
   int                 thickness;	/* thickness of drawing */
-  int                 shift;	/* shifting of drawing   */
   int                 l_start;	/* start of the line     */
   int                 l_end;	/* end of the line       */
   FILE               *fout;
@@ -489,12 +483,9 @@ int                 fg;
   if (SameBox == 0)
     {
       fheight = FontHeight (font);
-      ascent = FontAscent (font);
-      thickness = ((fheight / 20) + 1) * (thick + 1);
-      shift = thick * thickness;
-      height = y + shift;
-      bottom = y + ascent + 2 + shift;
-      middle = y + fheight / 2 - shift;
+      thickness = (fheight / 20) + 1;
+      bottom = y + fheight - thickness;
+      middle = y + fheight / 2;
       l_start = X;		/* get current X value (cf DrawString) */
       l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
       
@@ -517,7 +508,7 @@ int                 fg;
 	  
 	case 2:	/* overlined */
 	  fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-		   l_end, PixelToPoint (height), l_start, PixelToPoint (height), 5, thickness, 2);
+		   l_end, PixelToPoint (y), l_start, PixelToPoint (y), 5, thickness, 2);
 	  break;
 	  
 	case 3:	/* cross-over */

@@ -31,7 +31,6 @@
 #include "thotcolor_tv.h"
 
 static ThotColorStruct cblack;
-static ThotColorStruct  cwhite;
 
 
 #define	MAX_STACK	50
@@ -56,7 +55,7 @@ static int          stack_deep;
 #include "inites_f.h"
 #include "memory_f.h"
 #include "units_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -81,62 +80,25 @@ int          *pY;
 
 /*----------------------------------------------------------------------
   LoadColor load the given color in the drawing Graphic Context.
-  RO indicates whether it's a read-only box active
-  indicates if the box is active parameter fg indicates the drawing color
+  The parameter fg gives the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadColor (int disp, int RO, int active, int fg)
+static void         LoadColor (int fg)
 #else  /* __STDC__ */
-static void         LoadColor (disp, RO, active, fg)
-int                 disp;
-int                 RO;
-int                 active;
+static void         LoadColor (fg)
 int                 fg;
-
 #endif /* __STDC__ */
 {
 #ifdef _GTK
-ThotColor           gc_fg;
+  ThotColor           gc_fg;
 #endif /* _GTK */
-   if (active)
-     {
-       if (TtWDepth == 1)
-	 {
+
 #ifdef _GTK
-	   /* Modify the fill style of the characters */
-	   gdk_gc_set_fill (TtLineGC, GDK_TILED);
+  /* Color of the box */
+  gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
 #else /* _GTK */
-	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
+  XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
 #endif /* _GTK */
-	 }
-       else
-	 {
-#ifdef _GTK
-	   /* Modify the color of the active boxes */
-	   gdk_rgb_gc_set_foreground (TtLineGC, Box_Color);
-#else /* _GTK */
-	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
-#endif /* _GTK */
-	 }
-     }
-   else if (RO && ColorPixel (fg) == cblack.pixel)
-     {
-#ifdef _GTK
-       /* Color of ReadOnly parts */
-       gdk_rgb_gc_set_foreground (TtLineGC, RO_Color);
-#else /* _GTK */
-       XSetForeground (TtDisplay, TtLineGC, RO_Color);
-#endif /* _GTK */
-     }
-   else
-     {
-#ifdef _GTK
-       /* Color of the box */
-       gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
-#else /* _GTK */
-       XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
-#endif /* _GTK */
-     }
 }
 
 
@@ -146,16 +108,15 @@ ThotColor           gc_fg;
   indicates if the box is active parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitDrawing (int disp, int style, int thick, int RO, int active, int fg)
+static void         InitDrawing (int style, int thick, int fg)
 #else  /* __STDC__ */
-static void         InitDrawing (disp, style, thick, RO, active, fg)
+static void         InitDrawing (style, thick, fg)
 int                 disp;
 int                 style;
 int                 thick;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
 {
   char              dash[2];
@@ -187,31 +148,7 @@ int                 fg;
 #endif /* _GTK */
     }
   /* Load the correct color */
-  LoadColor (disp, RO, active, fg);
-}
-
-
-/*----------------------------------------------------------------------
-      FinishDrawing update the Graphic Context accordingly to parameters.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         FinishDrawing (int disp, int RO, int active)
-#else  /* __STDC__ */
-static void         FinishDrawing (disp, RO, active)
-int                 disp;
-int                 RO;
-int                 active;
-
-#endif /* __STDC__ */
-{
-  if (TtWDepth == 1 && (active || RO))
-    {
-#ifdef _GTK
-     gdk_gc_set_fill (TtLineGC, GDK_SOLID);
-#else /* _GTK */
-      XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
-#endif /* _GTK */
-    }
+  LoadColor (fg);
 }
 
 
@@ -306,7 +243,7 @@ int                 fg;
    if (w == None)
       return;
 
-   LoadColor (0, RO, active, fg);
+   LoadColor (fg);
 
 #ifdef _GTK
    gdk_draw_string (w, font, TtLineGC, 
@@ -318,8 +255,6 @@ int                 fg;
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid); 
    XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
 #endif /* _GTK */
-
-   FinishDrawing (0, RO, active);
 }
 
 /*----------------------------------------------------------------------
@@ -383,7 +318,7 @@ int                 shadow;
 
       if (fg >= 0)
 	{
-	LoadColor (0, RO, active, fg);
+	LoadColor (fg);
 
 	if (!ShowSpace || shadow)
 	  {
@@ -446,7 +381,6 @@ int                 shadow;
 		       y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #endif /* _GTK */
 	  }
-	FinishDrawing (0, RO, active);
 	}
       return (width);
      }
@@ -458,11 +392,8 @@ int                 shadow;
   DisplayUnderline draw the underline, overline or cross line
   added to some text of lenght lg, using font and located
   at (x, y) in frame. 
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
-  parameter fg indicates the drawing color
-  thick indicates thickness : thin (0) thick (1)
-  Type indicates the kind of drawing :
+  The parameter fg indicates the drawing color ad type indicates the kind
+  of drawing:
   - 0 = none
   - 1 = underlined
   - 2 = overlined
@@ -482,30 +413,23 @@ int                 shadow;
 	      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int active, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
 #else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, active, fg)
+void                DisplayUnderline (frame, x, y, font, type, lg, fg)
 int                 frame;
 int                 x;
 int                 y;
 ptrfont             font;
 int                 type;
-int                 thick;
 int                 lg;
-int                 RO;
-int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
 {
    ThotWindow          w;
    int                 fheight;	/* font height           */
-   int                 ascent;	/* font ascent           */
    int                 bottom;	/* underline position    */
    int                 middle;	/* cross-over position   */
-   int                 top;	/* overline position     */
    int                 thickness;	/* thickness of drawing */
-   int                 shift;	/* shifting of drawing   */
 
    if (fg < 0)
      return;
@@ -516,13 +440,10 @@ int                 fg;
 	if (w == None)
 	   return;
 	fheight = FontHeight (font);
-	ascent = FontAscent (font);
-	thickness = ((fheight / 20) + 1) * (thick + 1);
-	shift = thick * thickness;
+	thickness = (fheight / 20) + 1;
 	y += FrameTable[frame].FrTopMargin;
-	top = y + shift;
-	bottom = y + ascent + 2 + shift;
-	middle = y + fheight / 2 - shift;
+	bottom = y + fheight - thickness;
+	middle = y + fheight / 2;
 
 	/*
 	 * for an underline independant of the font add
@@ -531,7 +452,7 @@ int                 fg;
 	 *         top = y + 2 * thickness;
 	 *         bottom = y + ascent + 3;
 	 */
-	InitDrawing (0, 5, thickness, RO, active, fg);
+	InitDrawing (5, thickness, fg);
 	switch (type)
 	  {
 	  case 1:
@@ -541,7 +462,7 @@ int                 fg;
 	    
 	  case 2:
 	    /* overlined */
-	    DoDrawOneLine (frame, x - lg, top, x, top);
+	    DoDrawOneLine (frame, x - lg, y, x, y);
 	    break;
 	    
 	  case 3:
@@ -553,7 +474,6 @@ int                 fg;
 	    /* not underlined */
 	    break;
 	  }
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -595,7 +515,7 @@ int                 fg;
 	xcour = x + (lgboite % width);
 	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-	LoadColor (0, RO, active, fg);
+	LoadColor (fg);
 
 	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
@@ -609,7 +529,6 @@ int                 fg;
 	     xcour += width;
 	     nb--;
 	  }
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -643,16 +562,15 @@ int                 fg;
    xm = x + (fh / 2);
    xp = x + (fh / 4);
    y += FrameTable[frame].FrTopMargin;
-   InitDrawing (0, 5, 0, RO, active, fg);
+   InitDrawing (5, 0, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
-   InitDrawing (0, 5, thick, RO, active, fg);
+   InitDrawing (5, thick, fg);
    /* Acending part */
    DoDrawOneLine (frame, xp, y + h, xm, y);
    /* Upper part */
    DoDrawOneLine (frame, xm, y, x + l, y);
-   FinishDrawing (0, RO, active);
 }
 
 /*----------------------------------------------------------------------
@@ -797,16 +715,15 @@ int                 fg;
         y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
-	InitDrawing (0, 5, 0, RO, active, fg);
+	InitDrawing (5, 0, fg);
 	/* Center */
 	DoDrawOneLine (frame, x, y + 1, xm, ym);
 	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
 
-	InitDrawing (0, 5, 2, RO, active, fg);
+	InitDrawing (5, 2, fg);
 	/* Borders */
 	DoDrawOneLine (frame, x, y, x + l, y);
 	DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -844,15 +761,14 @@ int                 fg;
    else
      {
         y += FrameTable[frame].FrTopMargin;
-	InitDrawing (0, 5, 0, RO, active, fg);
+	InitDrawing (5, 0, fg);
 	/* Vertical part */
 	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
 	DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
 
-	InitDrawing (0, 5, 2, RO, active, fg);
+	InitDrawing (5, 2, fg);
 	/* Upper part */
 	DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -892,7 +808,7 @@ int                 fg;
         y += FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 6mm */
 	arc = h / 4;
-	InitDrawing (0, 5, 2, RO, active, fg);
+	InitDrawing (5, 2, fg);
 	/* vertical part */
 	DoDrawOneLine (frame, x + 1, y + arc, x + 1, y + h);
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
@@ -903,7 +819,6 @@ int                 fg;
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
 #endif /* _GTK */
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -943,7 +858,7 @@ int                 fg;
         y += FrameTable[frame].FrTopMargin;
 	/* radius of arcs is 3mm */
 	arc = h / 4;
-	InitDrawing (0, 5, 2, RO, active, fg);
+	InitDrawing (5, 2, fg);
 	/* two vertical lines */
 	DoDrawOneLine (frame, x + 1, y, x + 1, y + h - arc);
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
@@ -957,7 +872,6 @@ int                 fg;
 #else /* _GTK */
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 #endif /* _GTK */
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -1063,7 +977,7 @@ int                 fg;
    ym = y + ((h - thick) / 2);
    yf = y + h - 1;
 
-   InitDrawing (0, style, thick, RO, active, fg);
+   InitDrawing (style, thick, fg);
    if (orientation == 0)
      {
 	/* draw a right arrow */
@@ -1108,7 +1022,6 @@ int                 fg;
 	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
 	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, RO, active, fg);
      }
-   FinishDrawing (0, RO, active);
 }
 
 /*----------------------------------------------------------------------
@@ -1220,7 +1133,7 @@ int                 active;
 int                 fg;
 #endif /* __STDC__ */
 {
-   int                 xm, yf, yend;
+   int                 xm, yf;
 
    if (fg < 0)
      return;
@@ -1248,7 +1161,7 @@ int                 fg;
      {
 	/* Need more than one glyph */
        y += FrameTable[frame].FrTopMargin;
-       InitDrawing (0, 5, 0, RO, active, fg);
+       InitDrawing (5, 0, fg);
        if (direction == 0)
 	 {
 	   /* Draw a opening bracket */
@@ -1261,7 +1174,6 @@ int                 fg;
 	   DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
 	   DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
 	 }
-       FinishDrawing (0, RO, active);
      }
 }
 
@@ -1574,14 +1486,13 @@ int                 pattern;
       x = x + thick / 2;
       y = y + thick / 2;
 
-      InitDrawing (0, style, thick, RO, active, fg); 
+      InitDrawing (style, thick, fg); 
 #ifdef _GTK
       gdk_draw_rectangle ( FrRef[frame],TtLineGC,FALSE, x, y, width, height);
 
 #else /* _GTK */
       XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height);
 #endif /* _GTK */
-      FinishDrawing (0, RO, active);
     }
 }
 
@@ -1653,13 +1564,12 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-	InitDrawing (0, style, thick, RO, active, fg);
+	InitDrawing (style, thick, fg);
 #ifdef _GTK
 	gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, point, 5);
 #else /* _GTK */
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 5, CoordModeOrigin);
 #endif /* _GTK */
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -1740,7 +1650,7 @@ int                 pattern;
 		  thick, RO, active, fg);
   
   /* Draw the border */
-  InitDrawing (0, style, thick, RO, active, fg);
+  InitDrawing (style, thick, fg);
 #ifdef _GTK
   for (k=0; k< nb-2; k++)
     gdk_draw_line (FrRef[frame], TtLineGC,
@@ -1751,7 +1661,6 @@ int                 pattern;
   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	      points, nb - 1, CoordModeOrigin);
 #endif /* _GTK */
-  FinishDrawing (0, RO, active);
 
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
@@ -1845,13 +1754,12 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
 #ifdef _GTK
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, nb); 
 #else /* _GTK */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
 #endif /* _GTK */
-      FinishDrawing (0, RO, active);
      }
    /* free the table of points */
    free (points);
@@ -2112,7 +2020,7 @@ C_points           *controls;
    PolyNewPoint ((int) x2, (int) y2);
 
    /* Draw the border */
-   InitDrawing (0, style, thick, RO, active, fg);
+   InitDrawing (style, thick, fg);
 #ifdef _GTK
   gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints);
 #else /* _GTK */
@@ -2125,7 +2033,6 @@ C_points           *controls;
 		   (int) x2, (int) y2,
 		   thick, RO, active, fg);
 
-   FinishDrawing (0, RO, active);
    /* free the table of points */
    free (points);
 }
@@ -2257,13 +2164,12 @@ C_points           *controls;
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
 #ifdef _GTK
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints);
 #else /* _GTK */
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* _GTK */
-      FinishDrawing (0, RO, active);
     }
 
   /* free the table of points */
@@ -2450,7 +2356,7 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-	InitDrawing (0, style, thick, RO, active, fg);
+	InitDrawing (style, thick, fg);
 #ifdef _GTK
 	for (i=0;i<4;i++){
 	  gdk_draw_arc (FrRef[frame], TtLineGC, FALSE, 
@@ -2463,7 +2369,6 @@ int                 pattern;
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 #endif /* _GTK */
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -2521,13 +2426,12 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
 #ifdef _GTK
       gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
 #else /* _GTK */
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
-      FinishDrawing (0, RO, active);
      }
 }
 
@@ -2569,9 +2473,8 @@ int                 fg;
     Y = y + thick / 2;
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
-      FinishDrawing (0, RO, active);
     }
 }
 
@@ -2608,7 +2511,7 @@ int                 fg;
     {
       y += FrameTable[frame].FrTopMargin;
       Y = y + (h - thick) / 2;
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
       if (align == 0)
 	/* Over brace */
@@ -2624,7 +2527,6 @@ int                 fg;
 	  DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
 	  DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
 	}
-      FinishDrawing (0, RO, active);
     }
 }
 
@@ -2667,9 +2569,8 @@ int                 fg;
   y += FrameTable[frame].FrTopMargin;
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, X, y, X, y + h);
-      FinishDrawing (0, RO, active);
     }
 }
 
@@ -2712,10 +2613,9 @@ int                 fg;
   y += FrameTable[frame].FrTopMargin;
   if (thick > 0 && fg >= 0)
     {
-      InitDrawing (0, style, thick, RO, active, fg);
+      InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, X, y, X, y + h);
       DoDrawOneLine (frame, X + (3 * thick), y, X + (3 * thick), y + h);
-      FinishDrawing (0, RO, active);
     }
 }
 
@@ -2752,12 +2652,11 @@ int                 fg;
    yf = y + h;
    if (thick > 0 && fg >= 0)
      {
-	InitDrawing (0, style, thick, RO, active, fg);
+	InitDrawing (style, thick, fg);
 	if (direction == 0)
 	   DoDrawOneLine (frame, x, yf, xf, y);
 	else
 	   DoDrawOneLine (frame, x, y, xf, yf);
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -2796,7 +2695,7 @@ int                 fg;
    y += FrameTable[frame].FrTopMargin;
    xf = x + l - thick;
    yf = y + h - thick;
-   InitDrawing (0, style, thick, RO, active, fg);
+   InitDrawing (style, thick, fg);
    switch (corner)
 	 {
 	    case 0:
@@ -2837,7 +2736,6 @@ int                 fg;
 #else /* _GTK */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, point, 3, CoordModeOrigin);
 #endif /* _GTK */
-   FinishDrawing (0, RO, active);
 }
 
 /*----------------------------------------------------------------------
@@ -3015,7 +2913,7 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-	InitDrawing (0, style, thick, RO, active, fg);
+	InitDrawing (style, thick, fg);
 #ifdef _GTK
 	for (i = 0 ; i < 4; i++)
 	  {  
@@ -3043,7 +2941,6 @@ int                 pattern;
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 #endif /* _GTK */
 	  }
-	FinishDrawing (0, RO, active);
      }
 }
 
@@ -3106,7 +3003,7 @@ int                 pattern;
    /* Draw the border */
    if (thick > 0 && fg >= 0)
      {
-	InitDrawing (0, style, thick, RO, active, fg);
+	InitDrawing (style, thick, fg);
 #ifdef _GTK
 	gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,
 		      x, y, width, height, 0, 360 * 64); 
@@ -3130,7 +3027,6 @@ int                 pattern;
 		      x + shiftX, y + px7mm, x + width - shiftX, y + px7mm);
 #endif /* _GTK */
 	  }
-	FinishDrawing (0, RO, active);
      }
 }
 
