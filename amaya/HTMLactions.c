@@ -2638,8 +2638,8 @@ void SynchronizeSourceView (NotifyElement *event)
 			 TtaShowElement (otherDoc, view, otherEl, 25);
 		     }
 	       }
+	     done = TRUE;
 	   }
-	 done = TRUE;
 	 }
     }
   if (!done)
