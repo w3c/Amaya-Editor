@@ -28,7 +28,7 @@
 
 #ifdef _GL
 void FreeGlTexture (PictInfo  *imageDesc);
-#endif /*_GL*
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
    NewPictInfo cree un descripteur par element image.       
