@@ -57,7 +57,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  *--------------------------------------------------------------------------------------
  */
 AmayaPage::AmayaPage( wxWindow * p_parent_window )
-  :  wxPanel( wxDynamicCast(p_parent_window, wxWindow), -1 )
+  :  wxPanel( p_parent_window, -1 )
      ,m_SlashRatio( 0.5 )
      ,m_IsClosed( FALSE )
      ,m_pNoteBookParent( NULL )
