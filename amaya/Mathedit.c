@@ -3935,13 +3935,13 @@ void CreateMathEntity (Document document, View view)
 #ifdef _WX
   CreateTextDlgWX (BaseDialog + MathEntityForm, BaseDialog + MathEntityText,
 		   TtaGetViewFrame (document, view),
-		   TtaGetMessage (1, BMEntity),
+		   TtaGetMessage (AMAYA, AM_MEntity),
 		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
 		   "");
 #endif /* _WX */
 #if defined(_GTK)
   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
-	      TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
+	      TtaGetMessage (AMAYA, AM_MEntity), TRUE, 1, 'L', D_CANCEL);
   TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
 		  TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
 		  FALSE);

@@ -2240,7 +2240,7 @@ LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (1, BMEntity));
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_MEntity));
       SetWindowText (GetDlgItem (hwnDlg, IDC_ENTITY_NAME),
 		  TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),

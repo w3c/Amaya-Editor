@@ -4009,6 +4009,17 @@
 	<message xml:lang="tr">Tercih</message>
 	<message xml:lang="ru">Настройки</message>
 </label>
+<label define="AM_MEntity">
+	<message xml:lang="en">Character (&amp;xxx;)</message>
+	<message xml:lang="fr">Caractère (&amp;xxx;)</message>
+	<message xml:lang="de">Zeichen (&amp;xxx;)</message>
+	<message xml:lang="it">Carattere (&amp;xxx;)</message>
+	<message xml:lang="es">Carácter (&amp;xxx;)</message>
+	<message xml:lang="pt">Carácter (&amp;xxx;)</message>
+	<message xml:lang="fi">Merkki (&amp;xxx;)</message>
+	<message xml:lang="tr">Karakter (&amp;xxx;)</message>
+	<message xml:lang="ru">Символ (&amp;xxx;)</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
