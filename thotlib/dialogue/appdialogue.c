@@ -235,6 +235,9 @@ void TteInitMenus (char *name, int number)
 	/* Connection au serveur X impossible */
 	printf ("*** Not initialized\n");
 	printf ("*** Fatal Error: X connexion refused\n");
+#ifdef _GTK
+	gtk_exit (1);
+#endif /* _GTK */	
 	exit (1);
      }
    TtDisplay = Dp;
@@ -1148,6 +1151,9 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
      {
 	/* Connexion au serveur X impossible */
 	TtaError (ERR_cannot_open_main_window);
+#ifdef _GTK
+	gtk_exit (1);
+#endif /* _GTK */	
 	exit (1);
      }
    else
@@ -1322,7 +1328,7 @@ void InitClue (ThotWidget toplevel)
   ----------------------------------------------------------------------*/
 int TtaAddButton (Document document, View view, ThotIcon picture,
 		  void (*procedure) (), char *functionName, char *info,
-		  BYTE type, ThotBool state)
+		  unsigned char type, ThotBool state)
 {
   int                 frame, i, index;
 #ifndef _WINDOWS
@@ -1366,7 +1372,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  if (picture == None)
 		    {
 		      gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
-		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);
+		      /*		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);*/
+		      row = NULL;
 		    }
 		  else
 		    {
@@ -1853,7 +1860,9 @@ int TtaAddTextZone (Document document, View view, char *label,
   int            n;
   ThotWidget     rowh;
   ThotWidget    *brother;
+#ifndef _GTK
   XmString       title_string;
+#endif
   Arg            args[MAX_ARGS];
 #else /* _WINDOWS */
   HFONT          newFont;
@@ -3681,9 +3690,10 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 #endif /* !_WINDOWS */
 
 #ifndef _WINDOWS
+#ifndef _GTK
    XmFontList          font;
    Arg                 args[MAX_ARGS];
-
+#endif
 #endif
 
    if (document == 0 && view == 0)

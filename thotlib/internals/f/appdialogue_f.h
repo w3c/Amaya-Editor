@@ -45,7 +45,7 @@ extern int TtaAddButton ( Document document,
                           void (*procedure) (),
                           char *functionName,
                           char *info,
-                          BYTE type,
+                          unsigned char type,
                           ThotBool state );
 extern void *TtaGetButtonCallback ( Document document,
                                     View view,

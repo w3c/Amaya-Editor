@@ -1160,8 +1160,14 @@ void TtaFetchOneEvent (ThotEvent *ev)
 #ifndef _GTK
   XtAppNextEvent (app_cont, ev);
 #else /* _GTK */
+  /* do nothing in gtk because we do not need to know event 
+     on the queue */
+
+
+  /*
   while (!gtk_events_pending());
   ev = gtk_get_current_event ();
+  */
 
 #if 0
   /* free the precedent event */
@@ -1346,8 +1352,10 @@ void TtaHandleOneEvent (ThotEvent *ev)
     }
 #endif /* !_WINDOWS */
 #else /* _GTK */
+  gtk_main_iteration_do (TRUE);
+			 /*if (ev) gtk_main_do_event (ev);*/
   /* a main loop iteration , not blocking */
-  gtk_main_iteration_do (FALSE);
+  /*  gtk_main_iteration_do (FALSE);*/
 #endif /* !_GTK */
 }
 
@@ -1391,8 +1399,13 @@ void TtaMainLoop ()
   /* Sends the message Init.Pre */
   notifyEvt.event = TteInit;
   if (CallEventType (&notifyEvt, TRUE))
+    {
+#ifdef _GTK
+      gtk_exit (0);
+#endif /* _GTK */
     /* The application is not able to start the editor => quit */
-    exit (0);
+      exit (0);
+    }
   /* Sends the message Init.Post */
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
@@ -1407,8 +1420,11 @@ void TtaMainLoop ()
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
     }
+
 #ifndef _GTK
 #else /* _GTK */
+     while (gtk_events_pending ())
+       gtk_main_iteration ();
   /* gdk_set_show_events(TRUE);*/
   gtk_main ();
 #endif /* !_GTK */

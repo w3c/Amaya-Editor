@@ -467,6 +467,9 @@ static void usage (char *processName)
        fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
        fprintf (stderr, "       [-wn]\t\t /* n: window number */\n");
        fprintf (stderr, "       [-removedir]\t /* remove directory after printing */\n\n\n");
+#ifdef _GTK
+       gtk_exit (1);
+#endif /* _GTK */	
        exit (1);
 }
 
@@ -2138,6 +2141,9 @@ void DisplayMessage (char *text, int msgType)
 	  if ((unlink (tempDir)) == -1)
 	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 	}
+#ifdef _GTK
+      gtk_exit (1);
+#endif /* _GTK */	
       exit (1);
     }
 }
@@ -2609,6 +2615,9 @@ int main (int argc, char **argv)
     }
    TtaFreeMemory (realName);
 #ifndef _WINDOWS
+#ifdef _GTK
+   gtk_exit (0);
+#endif /* _GTK */	
    exit (0);
 #endif /* !_WINDOWS */
 }

@@ -33,7 +33,11 @@
 #else /* _WINDOWS */
 #define MAX_ARGS 20
 static Time         T1, T2, T3;
+#ifndef _GTK
 static XmString  null_string;
+#else /* _GTK */
+static gchar * null_string;
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
 static char         OldMsgSelect[MAX_TXT_LEN];

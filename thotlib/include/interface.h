@@ -71,7 +71,7 @@ extern void TtaRemoveAccessKey (Document doc, unsigned int key);
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-extern int TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, char *info, BYTE type, ThotBool state);
+extern int TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), char* functionName, char *info, unsigned char type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback

@@ -463,13 +463,13 @@ void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 
 
 #ifndef _WINDOWS
+#ifndef _GTK
 /*----------------------------------------------------------------------
    ExposeKbd
    displays the keyboard keys
   ----------------------------------------------------------------------*/
 static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStruct * infos)
 {
-#ifndef _GTK
    int                 y;
    int                 i, kb;
    ITEM               *it;
@@ -502,8 +502,8 @@ static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStr
 	y = FontHeight (KbFonts[kb]);
 	WChaine (infos->window, it->legend, 4, y, FontDialogue, GCkey);
      }
-#endif /* _GTK */
 }
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------

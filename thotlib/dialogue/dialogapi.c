@@ -1558,8 +1558,12 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    char               *arg;
 #endif /* !_WINDOWS */
 #ifdef _GTK
+   /* Sets the current locale according to the program environment */
+   /*   printf("LOCAL: %s\n", gtk_set_locale ());*/
+   /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
      printf ("GUI can't be initialized\n");
+   /* initilize the imlib */
    gdk_imlib_init();
 #endif /* _GTK */
 

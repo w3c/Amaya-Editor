@@ -126,6 +126,7 @@ typedef XColor    ThotColorStruct;
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <X11/Intrinsic.h>
+#ifndef _GTK
 #include <Xm/MwmUtil.h>
 #include <Xm/BulletinB.h>
 #include <Xm/CascadeB.h>
@@ -150,7 +151,7 @@ typedef XColor    ThotColorStruct;
 #include <Xm/ToggleB.h>
 #include <Xm/Xm.h>
 #include <Xm/PushBG.h>
-
+#endif /* !_GTK */
 /*
  * OWN_XLOOKUPSTRING means we redefine XLookupString function
  * (in api/interface.c) and we need internal informations on
@@ -216,3 +217,8 @@ typedef Pixmap         ThotIcon;
 #endif /* ! _WINDOWS */
 
 #endif /* THOT_GUI_H */
+
+
+
+
+

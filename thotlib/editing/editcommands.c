@@ -3652,7 +3652,7 @@ void                TtcPasteFromClipboard (Document document, View view)
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0, wind, CurrentTime);
 #else /* _GTK */
    if (Xbuffer)
-     PasteXClipboard (Xbuffer, i);
+     PasteXClipboard (Xbuffer, strlen(Xbuffer));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 
