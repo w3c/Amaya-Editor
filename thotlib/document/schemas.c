@@ -1684,16 +1684,14 @@ static void      InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
 #endif
 
 /*----------------------------------------------------------------------
-   TtaAppendXMLAttribute
-   Add a new XML-generic global attribute
+   AppendXmlAttribute
+   Add a new xml global attribute
   ----------------------------------------------------------------------*/
-void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
-			       Document document)
+void AppendXmlAttribute (char *xmlName, AttributeType *attrType, PtrDocument pDoc)
 {
+  PtrDocSchemasDescr   pPfS;
   PtrSSchema           pSS;
   PtrPSchema           pPSch;
-  PtrDocument          pDoc;
-  PtrDocSchemasDescr   pPfS;
 #ifndef NODISPLAY
   PtrPSchema           pPSchExt;
   PtrHandlePSchema     pHSP, pHSPNext;
@@ -1705,7 +1703,6 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   if (pSS == NULL)
     return;
 
-  pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
   /* Search the associated presentation schema */
   pPSch = NULL;
@@ -1824,8 +1821,8 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
       return;
     }
-  strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, XMLName, MAX_NAME_LENGTH);
-  strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, XMLName, MAX_NAME_LENGTH);
+  strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, xmlName, MAX_NAME_LENGTH);
+  strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, xmlName, MAX_NAME_LENGTH);
   pSS->SsAttribute->TtAttr[i]->AttrGlobal = TRUE;
   pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
@@ -1898,7 +1895,7 @@ static PtrPRule InsertAXmlPRule (PRuleType type, int view, PresMode mode,
    InsertXmlPRules
    Add the presentation rules associated to the new element type
   ----------------------------------------------------------------------*/
-static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
+static void InsertXmlPRules (PtrPSchema pPSch, int nSRules)
 {
 
   PtrPRule     pRule;
@@ -1997,11 +1994,11 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
     pRule->PrBoolValue = TRUE;
 }
 
-/*----------------------------------------------------------------------
-   TtaAddEmptyBox
-   Add a specific presentation rule Createlast(EmptyBox) to an empty element
-  ----------------------------------------------------------------------*/
-void    TtaAddEmptyBox (Element el, Document document)
+/*-----------------------------------------------------------------------------
+   AddEmptyBox
+   Add the specific presentation rule Createlast(EmptyBox) to an empty element
+  -----------------------------------------------------------------------------*/
+void AddEmptyBox (PtrElement element)
 
 {
   PtrPRule            pRule;
@@ -2026,20 +2023,20 @@ void    TtaAddEmptyBox (Element el, Document document)
       pRule->PrNPresBoxes = 1;
       pRule->PrPresBox[0] = EMPTY_PBOX;
       pRule->PrPresBoxName[0] = EOS;
-      LinkNewPRule (pRule, &(((PtrElement)el)->ElFirstPRule));
+      LinkNewPRule (pRule, &(element->ElFirstPRule));
     }
 }
 
 /*----------------------------------------------------------------------
-   TtaGetXmlPRule
+   GetXmlPRule
    Returns a presentation rule of a given type associated
    with a given element type.
    Return value:
    the presentation rule found, or NULL if the element type
    hasn't this type of presentation rule.
   ----------------------------------------------------------------------*/
-PtrPRule    TtaGetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
-			    FunctionType FcType, int view)
+PtrPRule GetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
+		      FunctionType FcType, int view)
 
 {
   PtrPRule   pRule;
@@ -2062,22 +2059,20 @@ PtrPRule    TtaGetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
 }
 
 /*----------------------------------------------------------------------
-   TtaIsXmlTypeInLine
+   HasXmlInLineRule
    Retuns TRUE if the element type has a 'Line' presentation rule
   ----------------------------------------------------------------------*/
-ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
+ThotBool HasXmlInLineRule (ElementType elType, PtrDocument pDoc)
 
 {
+  PtrDocSchemasDescr  pPfS;
   PtrSSchema          pSS;
   PtrPSchema          pPSch;
-  PtrDocument         pDoc;
-  PtrDocSchemasDescr  pPfS;
   PtrPRule            pRule;
   int                 nSRule;
 
   pSS = NULL;
   pPSch = NULL;
-  pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
   pSS = (PtrSSchema) elType.ElSSchema;
 
@@ -2095,7 +2090,7 @@ ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
 
   nSRule = elType.ElTypeNum - 1;
   /* Does this rule exist ? */
-  pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
+  pRule = GetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
   if (pRule != NULL)
     return TRUE;
   else
@@ -2104,22 +2099,19 @@ ThotBool    TtaIsXmlTypeInLine (ElementType elType, Document document)
 }
 
 /*----------------------------------------------------------------------
-   TtaSetXmlTypeInLine
-   Add a generic rule to an element type
+   SetXmlInLineRule
+   Add an InLine generic rule to an element type
   ----------------------------------------------------------------------*/
-void    TtaSetXmlTypeInLine (ElementType elType, Document document)
-
+void SetXmlInLineRule (ElementType elType, PtrDocument pDoc)
 {
+  PtrDocSchemasDescr  pPfS;
   PtrSSchema          pSS;
   PtrPSchema          pPSch;
-  PtrDocument         pDoc;
-  PtrDocSchemasDescr  pPfS;
   PtrPRule            pRule;
   int                 nSRule;
 
   pSS = NULL;
   pPSch = NULL;
-  pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
   pSS = (PtrSSchema) elType.ElSSchema;
 
@@ -2137,7 +2129,7 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
 
   nSRule = elType.ElTypeNum - 1;
   /* Does this rule already exist ? */
-  pRule = TtaGetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
+  pRule = GetXmlPRule (pPSch, nSRule, PtFunction, FnLine, FORMATTED_VIEW);
   if (pRule != NULL)
     return;
 
@@ -2181,27 +2173,24 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
       /* Add the new rule into the chain */
       LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
     }
-
 }
 #endif
 
 /*----------------------------------------------------------------------
-   TtaAppendXMLElement
-   Add a new rule at the end of the rule table
+   AppendXmlElement
+   Add a new element to the schema
   ----------------------------------------------------------------------*/
-void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
-			     char **mappedName, Document document)
+void AppendXmlElement (char *xmlName, ElementType *elType,
+		       char **mappedName, PtrDocument pDoc)
 {
+  PtrDocSchemasDescr  pPfS;
   PtrSSchema          pSS;
   PtrPSchema          pPSch;
-  PtrDocument         pDoc;
-  PtrDocSchemasDescr  pPfS;
   PtrSRule            pRule;
   int                 rule;
 
   pSS = NULL;
   pPSch = NULL;
-  pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
 
   pSS = (PtrSSchema) elType->ElSSchema;
@@ -2226,10 +2215,10 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
     *mappedName = NULL;
   else
     {
-      /* Initializes a new structure rule */
+      /* Initializes a new rule structure */
       pRule = pSS->SsRule->SrElem[rule -1];
-      strncpy (pRule->SrName, XMLName, MAX_NAME_LENGTH);
-      strncpy (pRule->SrOrigName, XMLName, MAX_NAME_LENGTH);
+      strncpy (pRule->SrName, xmlName, MAX_NAME_LENGTH);
+      strncpy (pRule->SrOrigName, xmlName, MAX_NAME_LENGTH);
       pRule->SrNDefAttrs = 0;
       pRule->SrNLocalAttrs = 0;
       pRule->SrLocalAttr = NULL;
@@ -2259,28 +2248,79 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 }
 
 /*----------------------------------------------------------------------
-  TtaGetXMLElementType
-  If elType->ElSSchema is not NULL, search in that specific schema,
-  otherwise search in different schemas added to the document.
+  GetXmlAttributeType
+  Search in attrType->AttrSSchema if not NULL otherwise,
+  search in the different loaded natures.
   ----------------------------------------------------------------------*/
-void TtaGetXmlElementType (char *XMLName, ElementType *elType,
-			   char **mappedName, Document doc)
+void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pDoc)
 {
-  PtrSSchema          pSS;
-  int                 rule;
-  ThotBool            found;
-  PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
+  PtrSSchema          pSS;
+  ThotBool            found;
+  int                 att;
+
+   found = FALSE;
+   attrType->AttrTypeNum = 0;
+   if (attrType->AttrSSchema)
+     {
+       /* search in that schema */
+       pSS = (PtrSSchema) attrType->AttrSSchema;
+       for (att = 0; !found && att < pSS->SsNAttributes; att++)
+	 {
+ 	   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+	     {
+	       attrType->AttrTypeNum = att + 1;
+	       found = TRUE;
+	     }
+	 }
+     }
+   else
+     {
+       pSS = NULL;
+       /* search into the loaded natures */
+       pPfS = pDoc->DocFirstSchDescr;
+       while (pPfS && !found)
+	 {
+	   if (pPfS->PfSSchema)
+	     {
+	       pSS = (PtrSSchema) pPfS->PfSSchema;
+	       for (att = 0; !found && att < pSS->SsNAttributes; att++)
+		 {
+		   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+		     {
+		       attrType->AttrTypeNum = att + 1;
+		       attrType->AttrSSchema = (SSchema) pSS;
+		       found = TRUE;
+		     }
+		 }
+	     }
+	   pPfS = pPfS->PfNext;
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+  GetXmlElementType
+  Search in elType->ElSSchema if not NULL otherwise,
+  search in the different loaded natures.
+  ----------------------------------------------------------------------*/
+void GetXmlElementType (char *xmlName, ElementType *elType,
+			char **mappedName, PtrDocument pDoc)
+{
+  PtrDocSchemasDescr  pPfS;
+  PtrSSchema          pSS;
+  ThotBool            found;
+  int                 rule;
 
    found = FALSE;
    elType->ElTypeNum = 0;
    if (elType->ElSSchema)
      {
-       /* search in that specific schema */
+       /* search into that schema */
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
- 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, XMLName) == 0)
+ 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
 	       if (mappedName)
@@ -2292,8 +2332,7 @@ void TtaGetXmlElementType (char *XMLName, ElementType *elType,
    else
      {
        pSS = NULL;
-       pDoc = LoadedDocument[doc - 1];
-       /* look at all schemas of loaded natures */
+       /* search into the loaded natures */
        pPfS = pDoc->DocFirstSchDescr;
        while (pPfS && !found)
 	 {
@@ -2302,7 +2341,7 @@ void TtaGetXmlElementType (char *XMLName, ElementType *elType,
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, XMLName) == 0)
+		   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;
 		       if (mappedName)
@@ -2318,90 +2357,25 @@ void TtaGetXmlElementType (char *XMLName, ElementType *elType,
 }
 
 /*----------------------------------------------------------------------
-  TtaGetXMLAttributeType
-  If attrType->AttrSSchema is not NULL, search in that specific schema,
-  otherwise search in different schemas added to the document.
+  SetUriSSchema
+  Set the namespace uri associated with that schema
   ----------------------------------------------------------------------*/
-void TtaGetXmlAttributeType (char* XMLName, AttributeType *attrType,
-			     Document doc)
+void SetUriSSchema (PtrSSchema pSSchema, char *sSchemaUri)
 {
-  PtrSSchema          pSS;
-  int                 att;
-  ThotBool            found;
-  PtrDocument         pDoc;
-  PtrDocSchemasDescr  pPfS;
-
-   found = FALSE;
-   attrType->AttrTypeNum = 0;
-   if (attrType->AttrSSchema)
-     {
-       /* search in that specific schema */
-       pSS = (PtrSSchema) attrType->AttrSSchema;
-       for (att = 0; !found && att < pSS->SsNAttributes; att++)
-	 {
- 	   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, XMLName) == 0)
-	     {
-	       attrType->AttrTypeNum = att + 1;
-	       found = TRUE;
-	     }
-	 }
-     }
-   else
-     {
-       pSS = NULL;
-       pDoc = LoadedDocument[doc - 1];
-       /* look at all schemas of loaded natures */
-       pPfS = pDoc->DocFirstSchDescr;
-       while (pPfS && !found)
-	 {
-	   if (pPfS->PfSSchema)
-	     {
-	       pSS = (PtrSSchema) pPfS->PfSSchema;
-	       for (att = 0; !found && att < pSS->SsNAttributes; att++)
-		 {
-		   if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, XMLName) == 0)
-		     {
-		       attrType->AttrTypeNum = att + 1;
-		       attrType->AttrSSchema = (SSchema) pSS;
-		       found = TRUE;
-		     }
-		 }
-	     }
-	   pPfS = pPfS->PfNext;
-	 }
-     }
-}
-
-/*----------------------------------------------------------------------
-  TtaSetUriSSchema
-  Set the schema namespace declaration uri
-  ----------------------------------------------------------------------*/
-void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
-{
-  PtrSSchema          pSS;
-
-  pSS = (PtrSSchema) sSchema;
-  if (pSS == NULL)
-    return;
-
-  /* Set the schema uri */
-  if (sSchemaUri != NULL && pSS->SsUriName == NULL)
+  if (sSchemaUri != NULL && pSSchema->SsUriName == NULL)
     {
-      pSS->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
-      strcpy (pSS->SsUriName, sSchemaUri);
+      pSSchema->SsUriName = TtaGetMemory (strlen (sSchemaUri) + 1);
+      strcpy (pSSchema->SsUriName, sSchemaUri);
     }
-
 }
 
 /*----------------------------------------------------------------------
-  TtaChangeGenericSchemaNames
+  ChangeGenericSchemaNames
+  Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
-void TtaChangeGenericSchemaNames (char *sSchemaUri,
-				  char *sSchemaName,
-				  Document document)
+void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument pDoc)
 
 {
-  PtrDocument         pDoc;
   PtrSSchema          pSS, docSS;
   PtrPSchema          pPSch;
   PtrDocSchemasDescr  pPfS;
@@ -2409,7 +2383,6 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri,
   ThotBool            found;
   int                 i;
 
-  pDoc = LoadedDocument[document - 1];
   pSS = NULL;
   pPSch = NULL;
   pPfS = pDoc->DocFirstSchDescr;

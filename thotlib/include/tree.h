@@ -1125,14 +1125,16 @@ extern ThotBool TtaHasReturnCreateNLException (ElementType elType);
    ---------------------------------------------------------------------- */
 /* extern ThotBool TtaHasInvisibleException (AttributeType attrType); */
 
+
 /*----------------------------------------------------------------------
-  TtaAppendXMLAttribute
+  TtaAppendXmlAttribute
+  Add a new xml global attribute
   ----------------------------------------------------------------------*/
 extern void TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 				   Document document);
 
 /*----------------------------------------------------------------------
-  TtaGetXMLAttributeType
+  TtaGetXmlAttributeType
   If attrType->AttrSSchema is not NULL, search in that specific schema,
   otherwise search in different schemas added to the document.
   ----------------------------------------------------------------------*/
@@ -1141,35 +1143,40 @@ extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType,
 
 /*----------------------------------------------------------------------
    TtaAddEmptyBox
+   Add the specific presentation rule Createlast(EmptyBox) to an empty element
   ----------------------------------------------------------------------*/
-extern void TtaAddEmptyBox (Element el, Document document);
+extern void TtaAddEmptyBox (Element el);
 
 /*----------------------------------------------------------------------
    TtaIsXmlTypeInLine
    Retuns TRUE if the element type has a 'Line' presentation rule
   ----------------------------------------------------------------------*/
-extern ThotBool TtaIsXmlTypeInLine (ElementType elType, Document document);
+extern ThotBool TtaHasXmlInLineRule (ElementType elType, Document document);
 
 /*----------------------------------------------------------------------
-   TtaSetXmlTypeInLine
+   TtaSetXmlInLineRule
    Add a generic rule to an element type
   ----------------------------------------------------------------------*/
-extern void TtaSetXmlTypeInLine (ElementType elType, Document document);
+extern void TtaSetXmlInLineRule (ElementType elType, Document document);
 
 /*----------------------------------------------------------------------
-  TtaAppendXMLElement
+  TtaAppendXmlElement
+  Add a new element to the schema
   ----------------------------------------------------------------------*/
 extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,
 				 char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
-  TtaGetXMLElementType
-  ----------------------------------------------------------------------*/
+  TtaGetXmlElementType
+  Search in elType->ElSSchema if not NULL otherwise,
+  search in the different loaded natures.
+   ----------------------------------------------------------------------*/
 extern void TtaGetXmlElementType (char *XMLElementName, ElementType *elType,
 				  char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
   TtaChangeGenericSSchemaName
+  Change the name of a generic xml schema
   ----------------------------------------------------------------------*/
 extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName,
 					 Document doc);

@@ -817,6 +817,7 @@ void TtaSetNamespaceDeclaration (Document document, Element element,
  ----------------------------------------------------------------------*/
 void TtaFreeNamespaceDeclaration (Document document);
 
+
 /*----------------------------------------------------------------------
   TtaSetUriSSchema
   Set the schema namespace declaration uri

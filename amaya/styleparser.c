@@ -20,6 +20,7 @@
 #include "fetchHTMLname.h"
 #include "SVG.h"
 #include "XML.h"
+#include "document.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {

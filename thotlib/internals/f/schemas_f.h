@@ -64,36 +64,35 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
                             PtrSSchema natureTable[10 ],
                             int *natureTableLen );
-extern void TtaAppendXmlAttribute ( char *XMLName,
-                                    AttributeType *attrType,
-                                    Document document );
-extern void TtaAddEmptyBox ( Element el,
-                             Document document );
-extern PtrPRule TtaGetXmlPRule ( PtrPSchema pPSch,
-                                 int nSRule,
-                                 PRuleType PrType,
-                                 FunctionType FcType,
-                                 int view );
-extern ThotBool TtaIsXmlTypeInLine ( ElementType elType,
-                                     Document document );
-extern void TtaSetXmlTypeInLine ( ElementType elType,
-                                  Document document );
-extern void TtaAppendXmlElement ( char *XMLName,
-                                  ElementType *elType,
-                                  char **mappedName,
-                                  Document document );
-extern void TtaGetXmlElementType ( char *XMLName,
-                                   ElementType *elType,
-                                   char **mappedName,
-                                   Document doc );
-extern void TtaGetXmlAttributeType ( char* XMLName,
-                                     AttributeType *attrType,
-                                     Document doc );
-extern void TtaSetUriSSchema ( SSchema sSchema,
-                               char *sSchemaUri );
-extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
-                                          char *sSchemaName,
-                                          Document document );
+extern void AppendXmlAttribute ( char *xmlName,
+                                 AttributeType *attrType,
+                                 PtrDocument pDoc );
+extern void AddEmptyBox ( PtrElement element );
+extern PtrPRule GetXmlPRule ( PtrPSchema pPSch,
+                              int nSRule,
+                              PRuleType PrType,
+                              FunctionType FcType,
+                              int view );
+extern ThotBool HasXmlInLineRule ( ElementType elType,
+                                   PtrDocument pDoc );
+extern void SetXmlInLineRule ( ElementType elType,
+                               PtrDocument pDoc );
+extern void AppendXmlElement ( char *xmlName,
+                               ElementType *elType,
+                               char **mappedName,
+                               PtrDocument pDoc );
+extern void GetXmlAttributeType ( char* xmlName,
+                                  AttributeType *attrType,
+                                  PtrDocument pDoc );
+extern void GetXmlElementType ( char *xmlName,
+                                ElementType *elType,
+                                char **mappedName,
+                                PtrDocument pDoc );
+extern void SetUriSSchema ( PtrSSchema pSSchema,
+                            char *sSchemaUri );
+extern void ChangeGenericSchemaNames ( char *sSchemaUri,
+                                       char *sSchemaName,
+                                       PtrDocument pDoc );
 extern void UpdateNamespaceDeclaration ( PtrDocument pDoc,
                                          PtrElement element,
                                          char *NsPrefix,
@@ -161,36 +160,35 @@ extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void SearchNatures (/* PtrDocument pDoc,
                               PtrSSchema natureTable[10 ],
                               int *natureTableLen */);
-extern void TtaAppendXmlAttribute (/* char *XMLName,
-                                      AttributeType *attrType,
-                                      Document document */);
-extern void TtaAddEmptyBox (/* Element el,
-                               Document document */);
-extern PtrPRule TtaGetXmlPRule (/* PtrPSchema pPSch,
-                                   int nSRule,
-                                   PRuleType PrType,
-                                   FunctionType FcType,
-                                   int view */);
-extern ThotBool TtaIsXmlTypeInLine (/* ElementType elType,
-                                       Document document */);
-extern void TtaSetXmlTypeInLine (/* ElementType elType,
-                                    Document document */);
-extern void TtaAppendXmlElement (/* char *XMLName,
-                                    ElementType *elType,
-                                    char **mappedName,
-                                    Document document */);
-extern void TtaGetXmlElementType (/* char *XMLName,
-                                     ElementType *elType,
-                                     char **mappedName,
-                                     Document doc */);
-extern void TtaGetXmlAttributeType (/* char* XMLName,
-                                       AttributeType *attrType,
-                                       Document doc */);
-extern void TtaSetUriSSchema (/* SSchema sSchema,
-                                 char *sSchemaUri */);
-extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
-                                            char *sSchemaName,
-                                            Document document */);
+extern void AppendXmlAttribute (/* char *xmlName,
+                                   AttributeType *attrType,
+                                   PtrDocument pDoc */);
+extern void AddEmptyBox (/* PtrElement element */);
+extern PtrPRule GetXmlPRule (/* PtrPSchema pPSch,
+                                int nSRule,
+                                PRuleType PrType,
+                                FunctionType FcType,
+                                int view */);
+extern ThotBool HasXmlInLineRule (/* ElementType elType,
+                                     PtrDocument pDoc */);
+extern void SetXmlInLineRule (/* ElementType elType,
+                                 PtrDocument pDoc */);
+extern void AppendXmlElement (/* char *xmlName,
+                                 ElementType *elType,
+                                 char **mappedName,
+                                 PtrDocument pDoc */);
+extern void GetXmlAttributeType (/* char* xmlName,
+                                    AttributeType *attrType,
+                                    PtrDocument pDoc */);
+extern void GetXmlElementType (/* char *xmlName,
+                                  ElementType *elType,
+                                  char **mappedName,
+                                  PtrDocument pDoc */);
+extern void SetUriSSchema (/* PtrSSchema pSSchema,
+                              char *sSchemaUri */);
+extern void ChangeGenericSchemaNames (/* char *sSchemaUri,
+                                         char *sSchemaName,
+                                         PtrDocument pDoc */);
 extern void UpdateNamespaceDeclaration (/* PtrDocument pDoc,
                                            PtrElement element,
                                            char *NsPrefix,

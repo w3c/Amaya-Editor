@@ -18,7 +18,7 @@
 #include "parser.h"
 #include "XML.h"
 #include "fetchHTMLname.h"
-#include "tree.h"
+#include "document.h"
 
 #include "css_f.h"
 #include "fetchXMLname_f.h"
@@ -122,7 +122,7 @@ void XmlElementComplete (Element el, Document doc, int *error)
       if (lastChild == NULL)
 	/* This is an empty element */
 	/* Add a specific presentation rule */
-	TtaAddEmptyBox (el, doc);
+	TtaAddEmptyBox (el);
     }
   return;
 }
@@ -142,7 +142,7 @@ void  CreateXmlLinePRule (Element elText, Document doc)
    if (parent != NULL)
      {
        parentType = TtaGetElementType (parent);
-       TtaSetXmlTypeInLine (parentType, doc);
+       TtaSetXmlInLineRule (parentType, doc);
      }
 }
 

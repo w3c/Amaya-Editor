@@ -1565,3 +1565,186 @@ void TtaFreeNamespaceDeclaration (Document document)
       FreeNamespaceDeclarations (pDoc);
     }
 }
+
+/*----------------------------------------------------------------------
+   TtaAppendXmlAttribute
+   Add a new xml global attribute
+  ----------------------------------------------------------------------*/
+void TtaAppendXmlAttribute (char *xmlName, AttributeType *attrType, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      AppendXmlAttribute (xmlName, attrType, pDoc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetXmlAttributeType
+  Search in attrType->AttrSSchema if not NULL otherwise,
+  search in the different loaded natures.
+  ----------------------------------------------------------------------*/
+void TtaGetXmlAttributeType (char* xmlName, AttributeType *attrType, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      GetXmlAttributeType (xmlName, attrType, pDoc);
+    }
+}
+
+#ifndef NODISPLAY
+/*-----------------------------------------------------------------------------
+   TtaAddEmptyBox
+   Add the specific presentation rule Createlast(EmptyBox) to an empty element
+ -----------------------------------------------------------------------------*/
+void TtaAddEmptyBox (Element element)
+{
+  AddEmptyBox ((PtrElement) element);
+}
+
+/*----------------------------------------------------------------------
+   TtaHasXmlInLineRule
+   Retuns TRUE if the element type has a 'Line' presentation rule
+  ----------------------------------------------------------------------*/
+ThotBool TtaHasXmlInLineRule (ElementType elType, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      HasXmlInLineRule (elType, pDoc);
+    }
+}
+
+/*----------------------------------------------------------------------
+   TtaSetXmlInLineRule
+   Add an InLine generic rule to an element type
+  ----------------------------------------------------------------------*/
+void TtaSetXmlInLineRule (ElementType elType, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      SetXmlInLineRule (elType, pDoc);
+    }
+}
+#endif 
+
+/*----------------------------------------------------------------------
+   TtaAppendXmlElement
+   Add a new element to the schema
+  ----------------------------------------------------------------------*/
+void TtaAppendXmlElement (char *xmlName, ElementType *elType,
+			  char **mappedName, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      AppendXmlElement (xmlName, elType, mappedName, pDoc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetXmlElementType
+  Search in elType->ElSSchema if not NULL otherwise,
+  search in the different loaded natures.
+  ----------------------------------------------------------------------*/
+void TtaGetXmlElementType (char *xmlName, ElementType *elType,
+			   char **mappedName, Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      GetXmlElementType (xmlName, elType, mappedName, pDoc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaSetUriSSchema
+  Set the namespace uri associated with that schema
+  ----------------------------------------------------------------------*/
+void TtaSetUriSSchema (SSchema sSchema, char *sSchemaUri)
+{
+  UserErrorCode = 0;
+  if (sSchema == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    SetUriSSchema ((PtrSSchema) sSchema, sSchemaUri);
+}
+
+/*----------------------------------------------------------------------
+  TtaChangeGenericSchemaNames
+  Change the name of a generic xml schema
+  ----------------------------------------------------------------------*/
+void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
+				  Document document)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      ChangeGenericSchemaNames (sSchemaUri, sSchemaName, pDoc);
+    }
+}

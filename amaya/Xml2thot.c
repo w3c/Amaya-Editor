@@ -22,7 +22,7 @@
 #include "zlib.h"
 #include "MathML.h"
 #include "fetchHTMLname.h"
-#include "tree.h"
+#include "document.h"
 
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -2108,7 +2108,7 @@ static ThotBool  IsLeadingSpaceUseless ()
        if (strcmp (currentParserCtxt->SSchemaName, "XML") == 0)
 	 {
 	   /* Does the parent element contain a 'Line' presentation rule ? */
-	   if (TtaIsXmlTypeInLine (elType, XMLcontext.doc))
+	   if (TtaHasXmlInLineRule (elType, XMLcontext.doc))
 	     removeLeadingSpaces = FALSE;
 	 }
        else

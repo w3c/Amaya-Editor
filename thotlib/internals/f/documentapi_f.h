@@ -84,6 +84,30 @@ extern void TtaSetNamespaceDeclaration ( Document document,
                                          char *NsPrefix,
                                          char *NsUri );
 extern void TtaFreeNamespaceDeclaration ( Document document );
+extern void TtaAppendXmlAttribute ( char *xmlName,
+                                    AttributeType *attrType,
+                                    Document document );
+extern void TtaGetXmlAttributeType ( char* xmlName,
+                                     AttributeType *attrType,
+                                     Document document );
+extern void TtaAddEmptyBox ( Element element );
+extern ThotBool TtaHasXmlInLineRule ( ElementType elType,
+                                      Document document );
+extern void TtaSetXmlInLineRule ( ElementType elType,
+                                  Document document );
+extern void TtaAppendXmlElement ( char *xmlName,
+                                  ElementType *elType,
+                                  char **mappedName,
+                                  Document document );
+extern void TtaGetXmlElementType ( char *xmlName,
+                                   ElementType *elType,
+                                   char **mappedName,
+                                   Document document );
+extern void TtaSetUriSSchema ( SSchema sSchema,
+                               char *sSchemaUri );
+extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
+                                          char *sSchemaName,
+                                          Document document );
 
 #else /* __STDC__ */
 
@@ -165,6 +189,30 @@ extern void TtaSetNamespaceDeclaration (/* Document document,
                                            char *NsPrefix,
                                            char *NsUri */);
 extern void TtaFreeNamespaceDeclaration (/* Document document */);
+extern void TtaAppendXmlAttribute (/* char *xmlName,
+                                      AttributeType *attrType,
+                                      Document document */);
+extern void TtaGetXmlAttributeType (/* char* xmlName,
+                                       AttributeType *attrType,
+                                       Document document */);
+extern void TtaAddEmptyBox (/* Element element */);
+extern ThotBool TtaHasXmlInLineRule (/* ElementType elType,
+                                        Document document */);
+extern void TtaSetXmlInLineRule (/* ElementType elType,
+                                    Document document */);
+extern void TtaAppendXmlElement (/* char *xmlName,
+                                    ElementType *elType,
+                                    char **mappedName,
+                                    Document document */);
+extern void TtaGetXmlElementType (/* char *xmlName,
+                                     ElementType *elType,
+                                     char **mappedName,
+                                     Document document */);
+extern void TtaSetUriSSchema (/* SSchema sSchema,
+                                 char *sSchemaUri */);
+extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
+                                            char *sSchemaName,
+                                            Document document */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
