@@ -1860,7 +1860,7 @@ ThotBool            string;
 		   firstChar = i;
 		}
 	     }
-	   /* Is the new selection in the same tree as the former seelction */
+	   /* Is the new selection in the same tree as the former selection */
 	   FirstSelectedElement = pEl;
 	   if (pDoc != SelectedDocument)
 	     {

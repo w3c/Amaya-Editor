@@ -711,7 +711,23 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  else if (modtype == THOT_MOD_CTRL)
 	    ptr = Automata_ctrl;
 	  else if (modtype == THOT_MOD_S_ALT)
-	    ptr = Automata_ALT;
+	    {
+	      /* check if it's an access key */
+	      if (AccessKeyFunction && document && DocAccessKey[document - 1])
+		{
+		  ptr = DocAccessKey[document - 1];
+		  while (ptr != NULL && ptr->K_EntryCode != key)
+		    ptr = ptr->K_Other;
+		  if (ptr)
+		    {
+		      /* close the current insertion */
+		      CloseInsertion ();
+		      (*AccessKeyFunction) (document, ptr->K_Param);
+		      return;
+		    }
+		}
+	      ptr = Automata_ALT;
+	    }
 	  else if (modtype == THOT_MOD_ALT)
 	    {
 	      /* check if it's an access key */
@@ -722,6 +738,8 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 		    ptr = ptr->K_Other;
 		  if (ptr)
 		    {
+		      /* close the current insertion */
+		      CloseInsertion ();
 		      (*AccessKeyFunction) (document, ptr->K_Param);
 		      return;
 		    }
@@ -910,9 +928,8 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
       mainframe = GetWindowNumber (document, 1);
       if (command > 0)
 	{
-	  /* Termine l'insertion eventuellement en cours */
 	  if (command != CMD_DeletePrevChar)
-	    /* Ce n'est pas un delete, il faut terminer l'insertion courante */
+	    /* It's not a delete, close the current insertion */
 	    CloseInsertion ();
       
 	  /* Call action if it's active */

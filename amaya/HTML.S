@@ -1,4 +1,4 @@
-		{ I. Vatton 	 November 1994  }
+		{ I. Vatton 	 November 1994-2001  }
 
 STRUCTURE HTML;
 

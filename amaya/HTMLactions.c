@@ -1121,15 +1121,47 @@ void            DoAction (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  AccessKeyHandler handles 
+  AccessKeyHandler handles links or select elements
   ----------------------------------------------------------------------*/
 void            AccessKeyHandler (Document doc, void * param)
 {
-  Element  el;
+  Element             el, child, next;
+  ElementType         elType;
+  SSchema             HTMLschema;
+  int                 i;
 
   el = (Element)param;
   if (el)
-    ActivateElement (el, doc);
+    {
+      elType = TtaGetElementType (el);
+      HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
+      if (TtaSameSSchemas (elType.ElSSchema, HTMLschema) &&
+	  (elType.ElTypeNum == HTML_EL_LEGEND ||
+	   elType.ElTypeNum == HTML_EL_LABEL))
+	TtaNextSibling (&el);
+      /* activate or select the element */
+      if (!ActivateElement (el, doc))
+	{
+	  /* look for the last included text */
+	  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	  child = TtaSearchTypedElement (elType, SearchForward, el);
+	  if (child)
+	    {
+	      next = child;
+	      do
+		{
+		  child = next;
+		  next = TtaSearchTypedElementInTree (elType, SearchForward, el, child);
+		}
+	      while (next);
+	      i = TtaGetTextLength (child);
+	      TtaSelectString (doc, child, i+1, i);
+	    }
+	  else
+	    /* no included text: select the element itself */
+	    TtaSelectElement (doc, el);
+	}
+    }
 }
 
 
