@@ -467,7 +467,7 @@ STRUCT
 
   Definition_Item = BEGIN
 	Term_List = LIST OF (Term = Basic_Set);			{ DT }
-      ? Definition = LIST OF (Block);				{ DD }
+      ? Definitions = LIST OF (Definition = LIST OF (Block));	{ DD }
 	END;
 
   Form								{ FORM }
@@ -874,8 +874,9 @@ EXCEPT
 					  document from creating a FRAMESET }
 	Inserted_Text:	Hidden, NoCut;
 	Basic_Set:	Hidden;
-	Term_List:	Hidden;
 	Definition_Item:Hidden;
+	Term_List:	Hidden;
+	Definitions:	Hidden;
 	Comment_line:	Hidden;
 	PI_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;

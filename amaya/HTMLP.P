@@ -2780,7 +2780,7 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item BEGIN
+	if NOT within List_Item BEGIN
 	    MarginTop: 0.2;
 	    MarginBottom: 0.4;
 	    END;
@@ -2858,6 +2858,10 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		NoLine;
 		END;
+	END;
+
+ Definitions: BEGIN
+	Width: Enclosing . Width;
 	END;
 
  Definition: BEGIN
