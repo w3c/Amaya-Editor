@@ -48,9 +48,9 @@ extern void UpdatePositionOfPoly ( Element el,
                                    int minY,
                                    int maxX,
                                    int maxY );
-extern void CreatePoints ( Attribute attr,
-                           Element el,
-                           Document doc );
+extern void ParsePointsAttribute ( Attribute attr,
+                                   Element el,
+                                   Document doc );
 extern void ParseCoordAttribute ( Attribute attr,
                                   Element el,
                                   Document doc );
@@ -113,9 +113,9 @@ extern void UpdatePositionOfPoly (/* Element el,
                                      int minY,
                                      int maxX,
                                      int maxY */);
-extern void CreatePoints (/* Attribute attr,
-                             Element el,
-                             Document doc */);
+extern void ParsePointsAttribute (/* Attribute attr,
+                                     Element el,
+                                     Document doc */);
 extern void ParseCoordAttribute (/* Attribute attr,
                                     Element el,
                                     Document doc */);

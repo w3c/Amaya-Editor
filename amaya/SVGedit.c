@@ -772,7 +772,7 @@ ThotBool         DeleteAttrPoints (NotifyAttribute *event)
  -----------------------------------------------------------------------*/
 void             AttrPointsModified (NotifyAttribute *event)
 {
-  CreatePoints (event->attribute, event->element, event->document);
+  ParsePointsAttribute (event->attribute, event->element, event->document);
 }
 
 /*----------------------------------------------------------------------

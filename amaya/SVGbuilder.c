@@ -636,65 +636,6 @@ void   UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int m
 }
 
 /*----------------------------------------------------------------------
-   CreatePoints
-   Process the points attribute
-  ----------------------------------------------------------------------*/
-void CreatePoints (Attribute attr, Element el, Document doc)
-{
-   Element		leaf;
-   TypeUnit		unit;
-   char		       *text, *ptr;
-   int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
-   ThotBool		closed;
-
-   /* create (or get) the Graphics leaf according to the element type */
-   leaf = CreateGraphicLeaf (el, doc, &closed);
-   if (leaf == NULL)
-      return;
-
-   /* text attribute. Get its value */
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
-   if (text != NULL)
-      {
-      /* first, delete all points in the polyline */
-      nbPoints = TtaGetPolylineLength (leaf);
-      for (i = 1; i <= nbPoints; i++)
-	  TtaDeletePointInPolyline (leaf, i, doc);
-
-      TtaGiveTextAttributeValue (attr, text, &length);
-      ptr = text;
-      nbPoints = 0;
-      minX = minY = 32000;
-      maxX = maxY = 0;
-      unit = UnPixel;
-      while (*ptr != EOS)
-         {
-         x = y = 0;
-         sscanf (ptr, "%d", &x);
-         if (x > maxX)
-            maxX = x;
-         if (x < minX)
-   	    minX = x;
-         ptr = SkipInt (ptr);
-         ptr = SkipSep (ptr);
-         if (ptr)
-            sscanf (ptr, "%d", &y);
-         if (y > maxY)
-            maxY = y;
-         if (y < minY)
-   	    minY = y;
-         ptr = SkipInt (ptr);
-         ptr = SkipSep (ptr);
-         nbPoints++;
-         TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
-         }
-      UpdatePositionOfPoly (el, doc, 0, 0, maxX, maxY);
-      TtaFreeMemory (text);
-      }
-}
-
-/*----------------------------------------------------------------------
    ParseCoordAttribute
    Create or update a specific presentation rule for element el that reflects
    the value of the x, y, cx, cy, x1, x2, y1, y2, dx, or dy attribute attr.
@@ -882,8 +823,8 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 
 /*----------------------------------------------------------------------
    GetNumber
-   Parse an integer or floating point number and skip to next token
-   return the value of that number in param number and moves ptr
+   Parse an integer or floating point number and skip to next token.
+   Return the value of that number in param number and moves ptr
    to the next token to be parsed.
   ----------------------------------------------------------------------*/
 static char *     GetNumber (char *ptr, int* number)
@@ -990,6 +931,74 @@ static char *     GetNumber (char *ptr, int* number)
 }
 
 /*----------------------------------------------------------------------
+   ParsePointsAttribute
+   Process the points attribute
+  ----------------------------------------------------------------------*/
+void ParsePointsAttribute (Attribute attr, Element el, Document doc)
+{
+   Element		leaf;
+   TypeUnit		unit;
+   char		       *text, *ptr;
+   int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
+   ThotBool		closed, error;
+
+   /* create (or get) the Graphics leaf according to the element type */
+   leaf = CreateGraphicLeaf (el, doc, &closed);
+   if (leaf == NULL)
+      return;
+
+   /* text attribute. Get its value */
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaGetMemory (length);
+   if (text)
+      {
+      /* first, delete all points in the polyline */
+      nbPoints = TtaGetPolylineLength (leaf);
+      for (i = 1; i <= nbPoints; i++)
+	  TtaDeletePointInPolyline (leaf, i, doc);
+      /* get the content of the points attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      ptr = text;
+      error = FALSE;
+      ptr = TtaSkipBlanks (ptr);
+      nbPoints = 0;
+      minX = minY = 32000;
+      maxX = maxY = 0;
+      unit = UnPixel;
+      while (*ptr != EOS)
+         {
+         x = y = 0;
+	 ptr = GetNumber (ptr, &x);
+         if (x > maxX)
+            maxX = x;
+         if (x < minX)
+   	    minX = x;
+	 if (*ptr == EOS)
+	   error = TRUE;
+         if (*ptr == ',')
+	   {
+	     ptr++;
+	     ptr = TtaSkipBlanks (ptr);
+	   }
+	 ptr = GetNumber (ptr, &y);
+         if (y > maxY)
+            maxY = y;
+         if (y < minY)
+   	    minY = y;
+         nbPoints++;
+         TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
+         if (*ptr == ',')
+	   {
+	     ptr++;
+	     ptr = TtaSkipBlanks (ptr);
+	   }	 
+         }
+      UpdatePositionOfPoly (el, doc, 0, 0, maxX, maxY);
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    ParseTransformAttribute
    Parse the value of a transform attribute
   ----------------------------------------------------------------------*/
@@ -1009,7 +1018,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
        /* get the content of the transform attribute */
        TtaGiveTextAttributeValue (attr, text, &length);
        /* parse the attribute content */
-       ptr = &text[0];
+       ptr = text;
        error = FALSE;
        while (*ptr != EOS && !error)
 	 {
@@ -1075,7 +1084,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			   TtaSetStylePresentation (PRHorizPos, el, NULL,
 						    ctxt, pval);
 			 }
-		       /* value f specifies an vertical translation */
+		       /* value f specifies a vertical translation */
 		       if (f != 0)
 			 {
 			   pval.typed_data.value = f;
@@ -1618,7 +1627,7 @@ void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
         ParseTransformAttribute (attr, el, doc, FALSE);
 	break;
      case SVG_ATTR_points:
-	CreatePoints (attr, el, doc);
+	ParsePointsAttribute (attr, el, doc);
 	break;
      case SVG_ATTR_x:
      case SVG_ATTR_y:
