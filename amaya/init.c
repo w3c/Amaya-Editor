@@ -3368,6 +3368,7 @@ void               *ctx_cbf;
    CHAR_T*             target;
    CHAR_T*             pathname;
    CHAR_T*             documentname;
+   CHAR_T*             content_type = NULL;
    int                 toparse;
    int                 slash;
    int                 mode;
@@ -3508,7 +3509,10 @@ void               *ctx_cbf;
 		   newdoc = InitDocView (doc, documentname, docHTMLRO, 0, FALSE);
 #ifdef ANNOTATIONS
 	       else if (CE_event == CE_ANNOT)
-		 newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+		 {
+		   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+		   content_type = TEXT("application/rdf");
+		 }
 #endif /* ANNOTATIONS */
 	       else
 		   newdoc = InitDocView (doc, documentname, docHTML, 0, FALSE);
@@ -3571,7 +3575,7 @@ void               *ctx_cbf;
 		       }
 		     css = SearchCSS (0, pathname);
 		     if (css == NULL)
-		       toparse =  GetObjectWWW (newdoc, pathname, form_data, tempfile, mode, NULL, NULL, (void *) GetHTMLDocument_callback, (void *) ctx, YES, NULL);
+		       toparse =  GetObjectWWW (newdoc, pathname, form_data, tempfile, mode, NULL, NULL, (void *) GetHTMLDocument_callback, (void *) ctx, YES, content_type);
 		     else
 		       {
 			 /* it was already loaded, we need to open it */
