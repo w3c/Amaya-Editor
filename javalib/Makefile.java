@@ -9,8 +9,7 @@ AMAYA_JAVA_OPTIONS= -DAMAYA_JAVA
 
 AMAYA_JAVA_INCLUDES= -I$(THOTDIR)/javalib -I$(THOTDIR)/javalib/f
 
-AMAYA_JAVA_OBJ= \
-	javaamaya.o 
+AMAYA_JAVA_OBJ=
 
 AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
     ../libkaffe_vm.a ../libkaffe_bissawt.a ../libkaffe_agent.a \

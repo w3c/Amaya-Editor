@@ -184,6 +184,7 @@ AMAYA_OBJ = \
 	p2css.o \
 	UIcss.o \
 	css.o \
+	javaamaya.o \
 	HTMLhistory.o \
 	AHTURLTools.o \
 	trans.o \

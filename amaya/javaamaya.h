@@ -162,4 +162,13 @@ extern void SetElementStyle(/* char *style, Element el, int document */);
 extern void AddElementStyle(/* char *style, Element el, int document */);
 #endif
 
+/*
+ * Part of the interface for Document loading.
+ */
+#ifdef __STDC__
+extern int LoadHTMLDocument (char *URL, int document);
+#else
+extern int LoadHTMLDocument (/* char *URL, int document */);
+#endif
+
 #endif /* __AMAYA_API_H__ */

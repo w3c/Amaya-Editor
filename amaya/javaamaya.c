@@ -4,8 +4,6 @@
  * Daniel Veillard, 1997
  */
 
-#ifdef AMAYA_JAVA
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "javaamaya.h"
@@ -293,5 +291,21 @@ int document;
     ParseHTMLSpecificStyle (el, style, document);
 }
 
-#endif /* AMAYA_JAVA */
+/*----------------------------------------------------------------------
+  LoadHTMLDocument : Load an HTML Document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int LoadHTMLDocument (char *URL, int document)
+#else
+int LoadHTMLDocument (URL, document)
+char *URL;
+int document;
+#endif
+{
+    Document res;
+    
+    res = GetHTMLDocument(URL, NULL, document, document, DC_FALSE);
+
+    return((int) res);
+}
 
