@@ -889,6 +889,14 @@ ThotBool RemoveNewLines (char *text)
 
   src = text;
   dest = text;
+
+  /* remove any preceding whitespace */
+  while (*src && *src == ' ')
+    {
+      src++;
+      change = 1;
+    }
+  
   while (*src)
     {
       switch (*src)
