@@ -644,14 +644,13 @@ static void  NsDeclarationProcessing (char *ns_prefix, char *ns_uri)
   CurNs_Uri[CurNs_Level] = TtaStrdup (ns_uri);
   CurNs_Level ++;
 
-  /* Filling up the table of namespaces declared in the document */
+  /* Filling up the table of namespaces declared for the whole document */
   if (ns_uri == NULL)
     return;
   for (i = 0; i < Ns_Level; i++)
     /* Namespace already loaded */
     if (strcmp (ns_uri, Ns_Uri[i]) == 0)
       return;
-
   Ns_Uri[Ns_Level] = TtaStrdup (ns_uri);
   if (ns_prefix != NULL)
     Ns_Prefix[Ns_Level] = TtaStrdup (ns_prefix);
@@ -3133,25 +3132,36 @@ static void       ParseCdataElement (char *data, int length)
   buffer = TtaGetMemory (length + 1);
   i = 0, j = 0;
 
-  /* get the last CDATA_line element */
+  /* get the last cdata_line element */
   cdataLine = TtaGetLastChild (XMLcontext.lastElement);
   if (cdataLine == NULL)
     return;
 
+  /* Remove the leading spaces */
+  if (RemoveLeadingSpace)
+    {
+      while (data[i] == TAB || data[i] == SPACE)
+	i++;
+    }
+  
   while (i < length)
     {
       /* Look for line breaks in the content and create as many */
-      /* CDATA_line elements as needed */
+      /* cdata_line elements as needed */
       if (data[i] != EOL && data[i] != __CR__)
 	{
-	  buffer[j] = data[i];
+	  /* Collapse contiguous spaces */
+	  if (!RemoveContiguousSpace ||
+	      !((data[i] == TAB || data[i] == SPACE) &&
+		(buffer[j-1] == TAB || buffer[j-1] == SPACE)))
+	    buffer[j] = data[i];
 	  j++;
 	}
       else if (data[i] == __CR__ && i < length-1 && data[i+1] == EOL)
-	  {
-        /* ignoring CR in a CR/LF sequence */
-	  }
-	  else
+	{
+	  /* ignoring CR in a CR/LF sequence */
+	}
+      else
 	{
 	  buffer[j] = EOS;
 	  j = 0;
@@ -3163,7 +3173,7 @@ static void       ParseCdataElement (char *data, int length)
 	      if (cdataLeaf != NULL)
 		{
 		  XmlSetElemLineNumber (cdataLeaf);
-		  /* get the position of the CDATA text */
+		  /* get the position of the cdata text */
 		  lastChild = TtaGetLastChild (cdataLine);
 		  if (lastChild == NULL)
 		    TtaInsertFirstChild (&cdataLeaf, cdataLine, XMLcontext.doc);
@@ -3174,7 +3184,7 @@ static void       ParseCdataElement (char *data, int length)
 				     XMLcontext.language, XMLcontext.doc);
 		}
 	    }
-	  /* Create a new CDATA_line element */
+	  /* Create a new cdata_line element */
 	  elType.ElSSchema = NULL;
 	  elType.ElTypeNum = 0;
 	  GetXmlElType (NULL, "cdata_line", &elType, &mappedName, &cont, &level);
@@ -3198,7 +3208,7 @@ static void       ParseCdataElement (char *data, int length)
       if (cdataLeaf != NULL)
 	{
 	  XmlSetElemLineNumber (cdataLeaf);
-	  /* get the position of the CDATA text */
+	  /* get the position of the cdata text */
 	  lastChild = TtaGetLastChild (cdataLine);
 	  if (lastChild == NULL)
 	    TtaInsertFirstChild (&cdataLeaf, cdataLine, XMLcontext.doc);
@@ -3234,7 +3244,7 @@ static void       CreateCdataElement ()
       cdataEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (cdataEl);
       InsertXmlElement (&cdataEl);
-      /* Create a CDATA_line element as first child */
+      /* Create a cdata_line element as first child */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
       GetXmlElType (NULL, "cdata_line", &elType, &mappedName, &cont, &level);
