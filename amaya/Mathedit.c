@@ -3453,7 +3453,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
       else if (i == totLen)
 	/* end of string. Create an element anyway */
 	separate = TRUE;
-      else if (mathType[i-1] == (char)MathML_EL_MO &&
+      else if (mathType[i-1] == (char)MathML_EL_MO && text[i-1] != ' ' &&
 	       text[i] != ' ')
 	/* an operator */
 	{
