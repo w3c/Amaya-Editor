@@ -782,6 +782,10 @@
 #define IDC_MESSAGE1                    1492
 #define IDC_MESSAGE2                    1493
 #define IDC_MESSAGE3                    1494
+#define IDC_CLOSEMSG                    1495
+#define IDC_LANGELEM                    1496
+#define IDC_INHERITEDLANG               1497
+#define IDC_LNGEDIT                     1498
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -819,6 +823,7 @@
 #define IDC_TTEMPLATESURL               65535
 #define IDC_URL_TEXT                    -1
 #define IDC_WHEREGROUP                  65535
+#define IDC_OUTPUTGROUP                 65535
 
 // Next default values for new objects
 // 
@@ -826,7 +831,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        537
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1495
+#define _APS_NEXT_CONTROL_VALUE         1499
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

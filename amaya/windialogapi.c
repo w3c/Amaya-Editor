@@ -587,17 +587,7 @@ int   toggle_save;
   currentParentRef = baseDlg + saveForm;
   ustrcpy (currentPathName, path_name);
 
-  switch (app_lang) {
-  case FR_LANG:
-    DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-    break;
-  case DE_LANG:
-    DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-    break;
-  default:
-    DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-    break;
-  }
+  DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -634,18 +624,7 @@ int    doc_type;
   else 
     szFilter = APPALLFILESFILTER;
 
-  switch (app_lang)
-    {
-    case FR_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-      break;
-    case DE_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-      break;
-    default:
-      DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-      break;
-    }
+  DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -679,18 +658,7 @@ int   doc_type;
   else 
     szFilter = APPALLFILESFILTER;
   
-  switch (app_lang)
-    {
-    case FR_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-      break;
-    case DE_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-      break;
-    default:
-      DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-      break;
-    }
+  DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -710,17 +678,7 @@ HWND frame;
     formGraph    = form_graph;
     menuGraph    = menu_graph;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (GRAPHICSDIALOG), NULL, (DLGPROC) GraphicsDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -742,17 +700,7 @@ int    confirm_save;
 	baseDlg     = base_dialog;
 	confirmSave = confirm_save;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
-				break;
-	}
+	DialogBox (hInstance, MAKEINTRESOURCE (SAVELISTDIALOG), parent, (DLGPROC) SaveListDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -774,17 +722,7 @@ ThotBool* close_dont_save;
   ustrcpy (wndTitle, title);
   numFormClose = num_form_close;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
-				break;
-	}
+  DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
 
 	*save_befor = saveBeforeClose;
 	*close_dont_save = closeDontSave;
@@ -816,18 +754,7 @@ STRING curLang;
   nbItem                  = (UINT)nb_item;
   LangValue               = lang_value;
   
-  switch (app_lang)
-    {
-    case FR_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (FR_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-      break;
-    case DE_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (DE_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-      break;
-    default:
-      DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-      break;
-    }
+  DialogBox (hInstance, MAKEINTRESOURCE (LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -2376,7 +2303,20 @@ LPARAM lParam;
    switch (msg) {
           case WM_INITDIALOG:
                currentDlg = hwnDlg;
-               /* SetWindowPos (currentDlg, HWND_TOP, ClickX, ClickY, 294, 97, SWP_DRAWFRAME);*/
+			   SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP), TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), TEXT("HTML"));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_XML), TEXT("XHTML"));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), TEXT("Text"));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG), TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL), TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_DOCLOCATION), TtaGetMessage (AMAYA, AM_DOC_LOCATION));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_IMGLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+			   SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+			   SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
+			   SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+			   SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
                transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
                copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
                SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
@@ -2491,6 +2431,12 @@ LPARAM lParam;
   
   switch (msg) {
   case WM_INITDIALOG:
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_OPEN_URL));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TEXT("Type the URI or push the button Browse"));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
     EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
     SetWindowText (hwnDlg, wndTitle);
     SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
@@ -2570,6 +2516,13 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TEXT("Type the URI of the image or push the button Browse"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
 			    SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
 				urlToOpen [0] = 0;
 			    SetDlgItemText (hwnDlg, IDC_GETALT, TEXT(""));
@@ -2644,6 +2597,9 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
     switch (msg) {
+           case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS));
+                SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
            case WM_COMMAND:
                 SetFocus (FrRef[currentFrame]);
 	            switch (LOWORD (wParam)) {
@@ -2733,6 +2689,11 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_MSG), TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
 				wndSaveList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 30, 260, 180, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
@@ -2784,14 +2745,15 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND messageWnd;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
-				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, 
-										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				SetWindowText (GetDlgItem (hwnDlg, IDC_CLOSEMSG), message);
+				SetWindowText (GetDlgItem (hwnDlg, ID_SAVEDOC), TtaGetMessage (LIB, TMSG_SAVE_DOC));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DONTSAVE), TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 				break;
+
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case IDCANCEL:
@@ -2840,20 +2802,19 @@ LPARAM lParam;
 {
   int  index = 0;
   UINT  i = 0; 
-  HWND wndLangEdit;
-  HWND wndMessage1;
-  HWND wndMessage2;
     
   switch (msg)
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, wndTitle);
-      wndMessage1 = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-				  10, 10, 200, 20, hwnDlg, (HMENU) 99, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), message);
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), message2);
       
       wndLangList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 40, 240, 200, hwnDlg, (HMENU) 1, 
+				  10, 40, 310, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
@@ -2863,14 +2824,7 @@ LPARAM lParam;
 	  index += ustrlen (&langList[index]) + 1;/* Longueur de l'intitule */
 	  i++;
       }
-      
-      wndLangEdit = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-				  10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-      SetWindowText (wndLangEdit, winCurLang);
-      wndMessage2 = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
-				  10, 280, 200, 20, hwnDlg, (HMENU) 99, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), winCurLang);
       break;
       
     case WM_COMMAND:
