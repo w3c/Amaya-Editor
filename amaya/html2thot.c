@@ -5998,9 +5998,13 @@ Document            doc;
 	   TtaDeleteTree (parent, doc);
 
 	   /* if, among the elements that have just been moved, there are
-	      pseudo-paragraphs which are now children of block elements,
+	      pseudo-paragraphs which are now children of a block element,
 	      remove these pseudo-paragraphs */
 	   elem = firstNotCharElem;
+	   parent = TtaGetParent (firstNotCharElem);
+	   if (parent != NULL)
+	      if (!IsBlockElement (parent))
+	         elem = NULL;
 	   while (elem != NULL)
 	     {
 	     if (elem == last)
