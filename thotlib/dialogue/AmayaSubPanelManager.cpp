@@ -476,6 +476,9 @@ void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
     case WXAMAYA_PANEL_XML:
       TtaSetEnvBoolean("OPEN_PANEL_XML", value, TRUE);
       break;
+    case WXAMAYA_PANEL_SPECHAR:
+      TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", value, TRUE);
+      break;
     }
 }
 

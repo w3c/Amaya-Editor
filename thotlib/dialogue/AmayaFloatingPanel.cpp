@@ -14,6 +14,7 @@
 #include "AmayaMathMLPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaXMLPanel.h"
+#include "AmayaSpeCharPanel.h"
 
 /*
  *--------------------------------------------------------------------------------------
@@ -69,6 +70,10 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
     case WXAMAYA_PANEL_XML:
       wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XML"));
       m_pPanel = new AmayaXMLPanel( this );
+      break;
+    case WXAMAYA_PANEL_SPECHAR:
+      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_SPECHAR"));
+      m_pPanel = new AmayaSpeCharPanel( this );
       break;
     }
 

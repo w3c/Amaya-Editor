@@ -189,6 +189,7 @@
 #define TMSG_OPERATOR		184
 #define TMSG_GREEK_CAP		185
 #define TMSG_ARROW		186
-#define TMSG_LIB_MSG_MAX		187
+#define TMSG_SPECHAR		187
+#define TMSG_LIB_MSG_MAX		188
 
 #endif

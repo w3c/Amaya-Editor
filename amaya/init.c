@@ -7387,7 +7387,7 @@ void InitAmaya (NotifyEvent * event)
    AmayaParams p;
    p.param1 = (void*)1; /* init action */
    p.param2 = (void*)pMathEntityTable;
-   TtaSendDataToPanel( WXAMAYA_PANEL_MATHML, p );
+   TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
 #endif /* _WX */
 }
 

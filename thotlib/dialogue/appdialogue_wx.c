@@ -167,6 +167,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", TRUE, FALSE);
       
       /* open or close panels */
       ThotBool value;
@@ -215,6 +216,11 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 	p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );
       else
 	p_panel->CloseSubPanel( WXAMAYA_PANEL_APPLYCLASS );
+      TtaGetEnvBoolean ("OPEN_PANEL_SPECHAR", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_SPECHAR );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_SPECHAR );
     }
 
   // show the window if not already show

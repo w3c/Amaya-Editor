@@ -1985,6 +1985,10 @@
 	<message xml:lang="de">Pfeile</message>
 	<message xml:lang="ru">яРПЕКЙХ</message>
 </label>
+<label define="TMSG_SPECHAR">
+	<message xml:lang="en">Special characters</message>
+	<message xml:lang="fr">Caractères spéciaux</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
