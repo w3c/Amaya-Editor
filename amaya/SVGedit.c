@@ -1371,6 +1371,7 @@ void         CreateGraphicElement (int entry)
 
   /* look for the element (sibling) in front of which the new element will be
      created */
+  sibling = NULL;
   if (first == SvgRoot)
     parent = NULL;
   else

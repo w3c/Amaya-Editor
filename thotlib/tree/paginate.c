@@ -1580,6 +1580,7 @@ void PaginateView (PtrDocument pDoc, int view)
 	  else
 	    pPage = pP->AbElement;
 
+	  volprec = 0;
 	  if (pPage == NULL && !shorter)
 	    {
 	      volprec = rootAbsBox->AbVolume;
@@ -1616,19 +1617,19 @@ void PaginateView (PtrDocument pDoc, int view)
 		  PageHeaderFooter (pPage, pDoc, schView, &b, &pSchPage);
 		 }
 	      /* print the new page */
-	       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],
-			     rootAbsBox, clipOrg);
+	      PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],
+			    rootAbsBox, clipOrg);
 #endif /* PAGINEETIMPRIME */
-	       /* kill previous abstract boxes before the page break */
-	       shorter = KillAbsBoxBeforePage (pPage->ElAbstractBox[iview],
-						frame, pDoc, view, &clipOrg);
-	       /* previousPageAbBox points to the current page */
-	       previousPageAbBox = pPage->ElAbstractBox[iview];
-	       /* get the removed volume for the new generation */
-	       if (rootAbsBox->AbVolume < 0)
-		 rootAbsBox->AbVolume = 0;
-	       volume = volume + volprec - rootAbsBox->AbVolume;
-	     }
+	      /* kill previous abstract boxes before the page break */
+	      shorter = KillAbsBoxBeforePage (pPage->ElAbstractBox[iview],
+					      frame, pDoc, view, &clipOrg);
+	      /* previousPageAbBox points to the current page */
+	      previousPageAbBox = pPage->ElAbstractBox[iview];
+	      /* get the removed volume for the new generation */
+	      if (rootAbsBox->AbVolume < 0)
+		rootAbsBox->AbVolume = 0;
+	      volume = volume + volprec - rootAbsBox->AbVolume;
+	    }
 	  else
 	    /* no page found */
 	    shorter = TRUE;
