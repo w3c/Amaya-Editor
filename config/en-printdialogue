@@ -1,6 +1,0 @@
-0 Missing file: %s\n
-1 Unable to create file %s\n
-2 The document does not begin with a page break\n
-3 Page is too long, format the document\n
-4 Error: destination is already given\n
-5 Error: bad option (%s). Program aborted\n
