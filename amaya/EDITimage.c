@@ -925,7 +925,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
    UpdateSRCattribute  creates or updates the SRC attribute value	
    		when the contents of element IMG is set.		
   ----------------------------------------------------------------------*/
-void UpdateSRCattribute (NotifyOnTarget *event)
+void UpdateSRCattribute (NotifyElement *event)
 {
   AttributeType    attrType;
   Attribute        attr;
@@ -1167,7 +1167,7 @@ void CreateImage (Document doc, View view)
   AttributeType      attrType;
   char              *name, *shortURL, *docname;
   int                c1, i, j, cN, length;
-  NotifyElement      event;
+  NotifyElement     event;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl)

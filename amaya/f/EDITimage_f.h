@@ -26,7 +26,7 @@ extern void ComputeSRCattribute ( Element el,
                                   Document sourceDocument,
                                   Attribute attr,
                                   char *text );
-extern void UpdateSRCattribute ( NotifyOnTarget *event );
+extern void UpdateSRCattribute ( NotifyElement *event );
 extern void SvgImageCreated ( NotifyElement *event );
 extern void SRCattrModified ( NotifyAttribute *event );
 extern void CreateImage ( Document doc,
@@ -62,7 +62,7 @@ extern void ComputeSRCattribute (/* Element el,
                                     Document sourceDocument,
                                     Attribute attr,
                                     char *text */);
-extern void UpdateSRCattribute (/* NotifyOnTarget *event */);
+extern void UpdateSRCattribute (/* NotifyElement *event */);
 extern void SvgImageCreated (/* NotifyElement *event */);
 extern void SRCattrModified (/* NotifyAttribute *event */);
 extern void CreateImage (/* Document doc,

@@ -4004,6 +4004,16 @@ void Reload_callback (int doc, int status, char *urlName,
   form_data = ctx->form_data;
   method = ctx->method;
 
+  if (!DocumentURLs[doc])
+    /* the user has closed the corresponding document. Just free resources */
+    {
+      TtaFreeMemory (documentname);
+      if (form_data)
+	TtaFreeMemory (form_data);
+      TtaFreeMemory (ctx);
+      return;
+    }
+
   tempfile = outputfile;
 
   pathname = TtaGetMemory (MAX_LENGTH);
@@ -4101,7 +4111,7 @@ void Reload_callback (int doc, int status, char *urlName,
     }
 #endif  /* DAV */
 
-   DocStatusUpdate (newdoc, FALSE);
+  DocStatusUpdate (newdoc, FALSE);
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)

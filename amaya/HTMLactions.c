@@ -35,6 +35,7 @@
 #include "HTMLform_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLsave_f.h"
 #include "html2thot_f.h"
 #include "libmanag_f.h"
 #include "selection.h"
