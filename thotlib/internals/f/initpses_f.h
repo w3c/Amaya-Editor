@@ -20,7 +20,7 @@ extern unsigned long CreatePattern ( int disp,
                                      int active,
                                      int fg,
                                      int bg,
-                                     int motif );
+                                     int pattern );
 
 #else /* __STDC__ */
 
@@ -38,7 +38,7 @@ extern unsigned long CreatePattern (/* int disp,
                                        int active,
                                        int fg,
                                        int bg,
-                                       int motif */);
+                                       int pattern */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

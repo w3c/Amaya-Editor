@@ -19,10 +19,10 @@ extern void ListAbsBoxes ( PtrAbstractBox pAb,
                            int Indent,
                            FILE * fileDescriptor );
 extern void ListBoxes ( int frame,
-                        FILE * fileDescriptor );
+                        FILE *fileDescriptor );
 extern void TtaListBoxes ( Document document,
-			   View view,
-			   FILE * fileDescriptor );
+                           View view,
+                           FILE *fileDescriptor );
 
 #else /* __STDC__ */
 
@@ -39,10 +39,10 @@ extern void ListAbsBoxes (/* PtrAbstractBox pAb,
                              int Indent,
                              FILE * fileDescriptor */);
 extern void ListBoxes (/* int frame,
-                          FILE * fileDescriptor */);
+                          FILE *fileDescriptor */);
 extern void TtaListBoxes (/* Document document,
-			     View view,
-			     FILE * fileDescriptor */);
+                             View view,
+                             FILE *fileDescriptor */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -35,6 +35,7 @@ extern void TteAddMenuItem ( WindowType windowtype,
 extern void TteOpenMainWindow ( char *name,
                                 Pixmap logo,
                                 Pixmap icon );
+extern void InitClue ( ThotWidget toplevel );
 extern int TtaAddButton ( Document document,
                           View view,
                           Pixmap picture,
@@ -132,6 +133,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
 extern void TteOpenMainWindow (/* char *name,
                                   Pixmap logo,
                                   Pixmap icon */);
+extern void InitClue (/* ThotWidget toplevel */);
 extern int TtaAddButton (/* Document document,
                             View view,
                             Pixmap picture,

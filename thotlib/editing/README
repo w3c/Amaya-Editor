@@ -1,0 +1,73 @@
+IRISA - Janvier 1996 - Hélène Richy - Projet Opéra -
+NOUVEAUTES DES INDEX DE THOT
+----------------------------------------------------
+Les nouveautés des index de Thot sont les suivantes :
+
+- création d'une table d'index par défaut, de nom Index général ou
+Master Index  - dans la vue "Options"
+
+- les descripteurs peuvent être partagés entre plusieurs
+paires de marques d'Index. En conséquence :
+	* la création de marques d'index propose maintenant 
+	soit de désigner un descripteur existant,
+	soit de créer un nouveau descripteur (avec une clé par défaut)
+	* il est possible de supprimer des descripteurs	
+	* il est possible de modifier le descripteur référencé 
+	depuis une marque (l'attribut A_Vers_descripteur porté
+	par les marques d'index est visible et modifiable)
+	* le copier-coller conserve les marques et les liens avec
+	les descripteurs,
+	* le copier-coller entre documents différents ne recopie que
+	les marques (pas les descripteurs associés)
+
+- il est possible de créer un descripteur sans lui associer de marque.
+Dans ce cas le contenu de la clé de ce descripteur n'est pas initialisé.
+
+- le contenu du formulaire de construction des index a changé :
+	* possibilité de supprimer TOUS les descripteurs 
+	et TOUTES les marques inutilisés.
+
+- l'attribut reference Vers_marque1 (de Descripteur vers Marque_Index) 
+est supprimé. Il reste dans les anciens documents, mais n'est plus
+créé par le mouveau contructeur d'index.
+
+- lorsque la vue des "Descripteurs" s'ouvre, seul les descripteurs
+dont le numéro est en bleu sont référencés depuis une marque d'index. 
+Les autres descripteurs (numéro en noir) sont "flottants" : ils ne seront 
+pas utilisés pour construire les index. Ils peuvent être détruits 
+"à la main" (un par un) ou en choisissant l'option ad hoc dans le formulaire
+de construction des index.
+
+Questions
+---------
+1) Si vous avez une procedure automatique permettant d'oter des attributs
+dans un document,, alors vous pouvez supprimer cet attribut du nouveau
+ExtIndex.S (et les regles de présentation correspondantes). Son 
+numero d'exception (1229) est maintenant inutilisé. 
+
+2) Le changement de couleur des numéros des descripteurs référencés
+n'est pas effectué comme il le devrait par Thot. Il faut refermer
+la vue des Descripteurs, puis l'ouvrir à nouveau, pour les voir dans
+la "bonne" couleur. Bug ?
+
+Corrections restant à faire dans Thot
+------------------------------------
+Le resultat de la copie d'un texte entouré de marques d'un document 
+dans un autre n'est pas visible. Il suffit de reafficher la vue (ou scroller)
+pour voir apparaître le texte copié : le problème de raffraichissement
+vient du module creation.c... mais je ne vois pas comment y remédier.
+
+Descripteur et marque associée doivent toujours être dans le même document.
+J'ai donc besoin de pouvoir verifier au moment de la création / modification
+de l'attribut A_Vers_descripteur que la référence est interne (à moins
+que cela ne puisse être défini dans le schéma de structure ExtIndex ?).
+
+Pouvez-vous m'indiquer où et comment faire ce contrôle (le greffer
+dans creation.c ?). Merci.
+
+---------------------------------------------------------------	
+CORRECTIONS FEVRIER 1996
+------------------------
+Allocation dynamique des tables de tri
+----------------------------------------------------------------	
+

@@ -37,6 +37,7 @@ extern void ShowStructure ( Document document,
 extern void ShowAlternate ( Document document,
                             View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
+extern boolean ViewToClose ( NotifyDialog * event );
 extern void ShowMapAreas ( Document document,
                            View view );
 extern Document GetHTMLDocument ( char *documentPath,
@@ -87,6 +88,7 @@ extern void ShowStructure (/* Document document,
 extern void ShowAlternate (/* Document document,
                               View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
+extern boolean ViewToClose (/* NotifyDialog * event */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
 extern Document GetHTMLDocument (/* char *documentPath,
