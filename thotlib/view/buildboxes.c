@@ -364,14 +364,13 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
   nChars returns the number of characters not handled.
   width returns the width of the text.
   ----------------------------------------------------------------------*/
-
 char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		     SpecFont font, int *width, int *nSpaces,
-		     char dir, char bidi, int * em, char Precscript)
+		     char dir, char bidi, int *em, char prevscript)
 {
   char                script,sc;
 #ifdef _I18N_
-  char                newscript, prevscript = '*',embed;
+  char                newscript, embed;
   int                 oldind = 0;
   int                 oldpos = 0;
   int                 oldspaces = 0;
@@ -415,24 +414,16 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	{
 	  /* the text must be analysed and may be split */
 	  newscript = TtaGetCharacterScript (car);
-	  if (newscript == 'A')
-	    newscript = TtaGetCharacterScript (car);
-	
 	  if (newscript == ' ')
 	    {
-	     
-	      /* if (script == 'L'&& Precscript != 'L' && (*em) == 0)
-		{
-		  *nChars = max - pos ; 
-		  return script; 
-		}
-	      */
-      if (script == '*' && (*ind == 0))
+	      if (script == '*' && *ind == 0)
 		{
 		  if (*em == 0)
-		  script = Precscript;
-		  else if (Precscript == 'A') script = 'L';
-		  else script = 'A';
+		    script = prevscript;
+		  else if (prevscript == 'A')
+		    script = 'L';
+		  else
+		    script = 'A';
 		}
 	      if (script == 'A')
 		{
@@ -441,56 +432,53 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  else
 		    charWidth = BoxCharacterWidth (car, font);
 		  *width += charWidth;
-		  if (car == 0x28 || car == 0x29 ) *em = 1;
+		  if (car == 0x28 || car == 0x29 )
+		    *em = 1;
 		  if (car != EOS)
 		    pos++;
 		  /* next character */
 		  (*ind)++;
-		  
-		  continue;
 		}
-	      if (script == 'L')
+	      else if (script == 'L')
 		{
 		  if (*em == 1)  /* embedded script compute the next*/
 		    {
-		      if ((*ind == *nChars)&&((*pBuffer)->BuNext))
-			ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]);
+		      if (*ind == *nChars && (*pBuffer)->BuNext)
+			ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]);
 		      else if (*ind == *nChars -1)
 			{
-			  if (dir == 'R' ) ss = 'A';
-			  else ss = 'L';
+			  if (dir == 'R' )
+			    ss = 'A';
+			  else
+			    ss = 'L';
 			}
-		      else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]);
-		    
-						      		
-						      
-		  if ( ss  !='L'){
-		    newscript = 'A';
-		     oldpos = pos;
-		     oldind = *ind;
-		     oldspaces = *nSpaces;
-		     oldwidth = *width;
-		     oldbuff = *pBuffer;
-		  }}
-		}		    
-              prevscript = newscript;
-	      if (script == '*' && (*em == 1))
+		      else
+			ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]);
+		      
+		      if ( ss  !='L')
+			{
+			  newscript = 'A';
+			  oldpos = pos;
+			  oldind = *ind;
+			  oldspaces = *nSpaces;
+			  oldwidth = *width;
+			  oldbuff = *pBuffer;
+			}
+		    }
+		}
+	      if (script == '*' && *em == 1)
 		{
-		  script=prevscript=newscript = 'A';
+		  script = newscript = 'A';
 		  *em = 0;
 		}
- 
-		
 	    }
   
-  if (newscript == 'D')
+	  if (newscript == 'D')
 	    {
 	      if (script!='*' && embed !='*')
 		embed= 'E';
 
-	      prevscript = newscript;
-	  
-	      if (oldbuff==NULL && pos)
+	      if (oldbuff == NULL && pos)
 		{
 		  /* keep in memory a possible splitting position */
 		  oldpos = pos;
@@ -499,21 +487,22 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  oldwidth = *width;
 		  oldbuff = *pBuffer;
 		}
-	     
 	    
-	         if ((*ind == *nChars)&&((*pBuffer)->BuNext))
-		   ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]); 
-		 else if (*ind == *nChars -1) 
-		   {
-		     if (dir == 'R' ) ss = 'A'; 
-		     else ss = 'L';  
-		   }
-		 else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
-		
-		  
-		 if (ss == 'D' && script == '*')
-		   script =newscript= 'L';
-		 if (ss == 'D' && (script == 'A')) 
+	      if (*ind == *nChars && (*pBuffer)->BuNext)
+		ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
+	      else if (*ind == *nChars -1) 
+		{
+		  if (dir == 'R' )
+		    ss = 'A'; 
+		  else
+		    ss = 'L';  
+		}
+	      else
+		ss = TtaGetCharacterScript ((*pBuffer)->BuContent[*ind +1]); 
+
+	      if (ss == 'D' && script == '*')
+		script = newscript = 'L';
+	      if (ss == 'D' && script == 'A') 
 		{
 		  *nChars = max - oldpos;
 		  *ind = oldind;
@@ -522,47 +511,46 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  *pBuffer = oldbuff;
 		  return script; 
 		}
-	      
-	       
-	      
 	    }
- 
-  
-  if (newscript == 'A')
-    {
-      if ((*ind == *nChars)&&((*pBuffer)->BuNext))
-       	ss = TtaGetCharacterScript((*pBuffer)->BuNext->BuContent[0]); 
-      else if (*ind == *nChars -1) 
-	{
-	  if (dir == 'R' ) ss = 'A'; 
-	  else ss = 'L';  
-	}
-      else ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
-      
-      if (ss != 'D' && newscript == 'D')
-	{
-	  if (Precscript == 'A')
+
+	  if (newscript == 'A')
 	    {
-	      oldpos = pos;
-	      oldind = *ind;
-	      oldspaces = *nSpaces;
-	      oldwidth = *width;
-	      oldbuff = *pBuffer;
-	      if (script == '*') script = 'L';
+	      if (*ind == *nChars && (*pBuffer)->BuNext)
+		ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
+	      else if (*ind == *nChars -1) 
+		{
+		  if (dir == 'R' )
+		    ss = 'A'; 
+		  else
+		    ss = 'L';  
+		}
+	      else
+		ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
+
+	      if (ss != 'D' && newscript == 'D')
+		{
+		  if (prevscript == 'A')
+		    {
+		      oldpos = pos;
+		      oldind = *ind;
+		      oldspaces = *nSpaces;
+		      oldwidth = *width;
+		      oldbuff = *pBuffer;
+		      if (script == '*') script = 'L';
+		    }
+		  return script;
+		}
+	      if ( ss == 'D' )
+		{
+		  oldpos = pos;
+		  oldind = *ind;
+		  oldspaces = *nSpaces;
+		  oldwidth = *width;
+		  oldbuff = *pBuffer;
+		}
 	    }
-	  return script;
-	}
-      if ( ss == 'D' )
-	{
-	  oldpos = pos;
-	  oldind = *ind;
-	  oldspaces = *nSpaces;
-	  oldwidth = *width;
-	  oldbuff = *pBuffer;
-	}
-    }
-      
-  if (script == '*' && newscript != ' ' && newscript != 'D')
+
+	  if (script == '*' && newscript != ' ' && newscript != 'D')
 	    {
 	      /* no script detected */
 	      if (oldbuff && bidi == 'E')
@@ -570,7 +558,6 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  /* neutral characters found before and direction requested */
 		  if (dir == 'R' && newscript != 'A' && newscript != 'H')
 		    script = embed = 'A';
-		  
 		  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
 		    script = embed = 'L';
 		  else
@@ -595,7 +582,6 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	      /* keep in memory the current position */
 	      oldbuff = NULL;
 	      /* other scripts are enclosed */
-	      prevscript = newscript;
 	    }
 	  else if (newscript != script &&
 		   (newscript == 'A' || newscript == 'H' ||
@@ -1102,8 +1088,8 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
   int                 ind, nChars;
   int                 l, pos;
   int                 lg, spaces, bwidth;
-  char                Precscript='*';
-  // char                *car;
+  char                prevscript = '*';
+
   box = pAb->AbBox;
   font = box->BxFont;
   *height = BoxFontHeight (font);
@@ -1132,23 +1118,17 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 	  bwidth = 0;
 	  spaces = 0; /* format with the standard space width */
 	  lg = nChars;
-	    if (box->BxPrevious)
-	    {
-	      Precscript = box->BxPrevious->BxScript;
-	       script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-	  		   dir, pAb->AbUnicodeBidi,&em,Precscript);
-	  
-	   }
-	   else
-	    script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-				   dir, pAb->AbUnicodeBidi,&em,'*');
+	  if (box->BxPrevious && box->BxPrevious->BxScript != EOS)
+	    prevscript = box->BxPrevious->BxScript;
+	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
+				   dir, pAb->AbUnicodeBidi,&em, prevscript);
 	  box->BxScript = script;
 	  *width += bwidth;
 	  *nSpaces += spaces;
 	  lg -= nChars;
 	  if (nChars > 0)
-	      box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
-				    ind, pBuffer, pMainBox);
+	    box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
+				  ind, pBuffer, pMainBox);
 	  else if (box->BxType == BoScript)
 	    {
 	      box->BxW = bwidth;
@@ -3115,8 +3095,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		   curr->AbBottomBorder > 0) ||
 		  (curr->AbRightStyle > 2 && curr->AbRightBColor != -2 &&
 		   curr->AbRightBorder > 0))
-		pCurrentAb = curr;
-	      curr = curr->AbEnclosing;
+		{
+		  pCurrentAb = curr;
+		  curr = NULL;
+		}
+	      else
+		curr = curr->AbEnclosing;
 	    }
 	  if (pCurrentAb == NULL)
 	    /* no background and not parent: clip the current box */

@@ -1960,10 +1960,14 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 				   nSpaces, newIndex, pNewBuff, pRootAb);
 		  if (pNextBox->BxNexChild)
 		    {
-		      pBox = pNextBox;
-		      /* Est-ce la boite unique de la ligne ? */
 		      if (pNextBox == pLine->LiFirstBox)
-			pLine->LiFirstPiece = pBox->BxNexChild;
+			{
+			  /* a complete box is split */
+			  pBox = pNextBox->BxNexChild;
+			  pLine->LiFirstPiece = pBox;
+			}
+		      else
+			pBox = pNextBox;
 		    }
 		  else
 		    pBox = pNextBox;
