@@ -2496,12 +2496,19 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   PtrSRule            pRule;
   ThotBool            found;
   int                 i;
+  char                *sSName;
+  char                num[10];
 
   pSS = NULL;
   pPSch = NULL;
-  pPfS = pDoc->DocFirstSchDescr;
+  /* copy the new schema name, as it may be changed to make it unique */
+  if (sSchemaName)
+    sSName = TtaStrdup (sSchemaName);
+  else
+    sSName = NULL;
 
   /* Search the appropriate schemas */
+  pPfS = pDoc->DocFirstSchDescr;
   while (pPfS && !pSS)
     {
       if (pPfS->PfSSchema &&
@@ -2522,21 +2529,49 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 	  pSS->SsUriName = TtaStrdup (sSchemaUri);
       if (pSS->SsName)
 	TtaFreeMemory (pSS->SsName);
-      if (sSchemaName == NULL)
+      pSS->SsName = NULL;
+      if (sSName == NULL)
 	{
-	  pSS->SsName = NULL;
 	  if (pSS->SsDefaultPSchema)
 	    TtaFreeMemory (pSS->SsDefaultPSchema);
 	  pSS->SsDefaultPSchema = TtaStrdup ("UnknownP");
 	}
       else
 	{
-	  pSS->SsName = (char *)TtaGetMemory (strlen (sSchemaName) + 1);
-	  strcpy (pSS->SsName, sSchemaName);
+	  /* make sure the new name is not already used in this document */
+	  i = 1;
+	  do
+	    {
+	      found = FALSE;
+	      pPfS = pDoc->DocFirstSchDescr;
+	      while (pPfS && !found)
+		{
+		  if (pPfS->PfSSchema && pPfS->PfSSchema->SsName &&
+		      (strcmp (sSName, pPfS->PfSSchema->SsName) == 0))
+		    found = TRUE;
+		  else
+		    pPfS = pPfS->PfNext;
+		}
+	      if (found)
+		/* this name is already used. Change it by appending a number*/
+		{
+		  sprintf (num, "%d", i++);
+		  TtaFreeMemory (sSName);
+		  sSName = (char *)TtaGetMemory (strlen (sSchemaName) +
+						 strlen (num) + 1);
+		  strcpy (sSName, sSchemaName);
+		  strcat (sSName, num);
+		  /* and check again */
+		}
+	    }
+	  while (found);
+
+	  pSS->SsName = (char *)TtaGetMemory (strlen (sSName) + 1);
+	  strcpy (pSS->SsName, sSName);
 	  if (pSS->SsDefaultPSchema)
 	    TtaFreeMemory (pSS->SsDefaultPSchema);
-	  pSS->SsDefaultPSchema = (char*)TtaGetMemory (strlen (sSchemaName) +2);
-	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
+	  pSS->SsDefaultPSchema = (char*)TtaGetMemory (strlen (sSName) +2);
+	  strcpy (pSS->SsDefaultPSchema, sSName);
 	  strcat (pSS->SsDefaultPSchema, "P");
 	  /* Modify the rule element name */
 	  for (i = 0; i < pSS->SsNRules; i++)
@@ -2544,9 +2579,9 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
 		strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
 		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrName);
-		pSS->SsRule->SrElem[i]->SrName = TtaStrdup (sSchemaName);
+		pSS->SsRule->SrElem[i]->SrName = TtaStrdup (sSName);
 		TtaFreeMemory (pSS->SsRule->SrElem[i]->SrOrigName);
-		pSS->SsRule->SrElem[i]->SrOrigName = TtaStrdup (sSchemaName);
+		pSS->SsRule->SrElem[i]->SrOrigName = TtaStrdup (sSName);
 		i = pSS->SsNRules;
 	      }
 	}
@@ -2557,16 +2592,16 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
       /* Modify the name of the presentation schema */
       if (pPSch->PsPresentName)
 	TtaFreeMemory (pPSch->PsPresentName);
-      if (sSchemaName == NULL)
+      if (sSName == NULL)
 	pPSch->PsPresentName = TtaStrdup ("UnknownP");
       else
 	{
-	  pPSch->PsPresentName = (char*)TtaGetMemory (strlen (sSchemaName) +2);
-	  strcpy (pPSch->PsPresentName, sSchemaName);
+	  pPSch->PsPresentName = (char*)TtaGetMemory (strlen (sSName) +2);
+	  strcpy (pPSch->PsPresentName, sSName);
 	  strcat (pPSch->PsPresentName, "P");
 	  if (pPSch->PsStructName)
 	    TtaFreeMemory (pPSch->PsStructName);
-	  pPSch->PsStructName = TtaStrdup (sSchemaName);
+	  pPSch->PsStructName = TtaStrdup (sSName);
 	}
     }
 
@@ -2578,10 +2613,10 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
     {
       /* The generic schema is found in the table, modify its name */
       TtaFreeMemory (LoadedSSchema[i].StructSchemaName);
-      if (sSchemaName != NULL)
+      if (sSName != NULL)
 	{
-	  LoadedSSchema[i].StructSchemaName = (char *)TtaGetMemory (strlen (sSchemaName) + 1);
-	  strcpy (LoadedSSchema[i].StructSchemaName, sSchemaName);
+	  LoadedSSchema[i].StructSchemaName = (char *)TtaGetMemory (strlen (sSName) + 1);
+	  strcpy (LoadedSSchema[i].StructSchemaName, sSName);
 	}
       else
 	LoadedSSchema[i].StructSchemaName = NULL;
@@ -2596,10 +2631,10 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
     {
       /* The generic schema is found in the table, modify its name */
       TtaFreeMemory (LoadedPSchema[i].PresSchemaName);
-      if (sSchemaName != NULL)
+      if (sSName != NULL)
 	{
-	  LoadedPSchema[i].PresSchemaName = (char *)TtaGetMemory (strlen (sSchemaName) + 2);
-	  strcpy (LoadedPSchema[i].PresSchemaName, sSchemaName);
+	  LoadedPSchema[i].PresSchemaName = (char *)TtaGetMemory (strlen (sSName) + 2);
+	  strcpy (LoadedPSchema[i].PresSchemaName, sSName);
 	  strcat (LoadedPSchema[i].PresSchemaName, "P");
 	}
       else
@@ -2622,14 +2657,16 @@ void ChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName, PtrDocument 
   if (found)
     {
       TtaFreeMemory (pRule->SrOrigNat);
-      pRule->SrOrigNat = TtaStrdup (sSchemaName);
+      pRule->SrOrigNat = TtaStrdup (sSName);
       if (pRule->SrName)
 	TtaFreeMemory (pRule->SrName);
-      pRule->SrName = TtaStrdup (sSchemaName);
+      pRule->SrName = TtaStrdup (sSName);
       if (pRule->SrOrigName)
 	TtaFreeMemory (pRule->SrOrigName);
-      pRule->SrOrigName = TtaStrdup (sSchemaName);
-    } 
+      pRule->SrOrigName = TtaStrdup (sSName);
+    }
+  if (sSName)
+    TtaFreeMemory (sSName);
 }
 
 /*----------------------------------------------------------------------

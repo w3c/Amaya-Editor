@@ -2867,7 +2867,8 @@ static void PutNatureInTable (PtrDocument pDoc, char *SSName, int rank)
    i = 1;
    found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
-      if (strcmp (SSName, pDoc->DocNatureName[i - 1]) == 0)
+      if (pDoc->DocNatureName[i - 1] &&
+	  strcmp (SSName, pDoc->DocNatureName[i - 1]) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -2889,9 +2890,12 @@ static void PutNatureInTable (PtrDocument pDoc, char *SSName, int rank)
 	     if (pDoc->DocNaturePresName[rank - 1])
 	       TtaFreeMemory (pDoc->DocNaturePresName[rank - 1]);
 	     pDoc->DocNaturePresName[rank - 1] = TtaStrdup (pDoc->DocNaturePresName[i - 1]);
-	     pDoc->DocNatureSSchema[i - 1] = pSS;
-	     pDoc->DocNatureName[i - 1] = N1;
-	     pDoc->DocNaturePresName[i - 1] = N2;
+	     if (pSS != NULL)
+	       {
+		 pDoc->DocNatureSSchema[i - 1] = pSS;
+		 pDoc->DocNatureName[i - 1] = N1;
+		 pDoc->DocNaturePresName[i - 1] = N2;
+	       }
 	  }
      }
    else

@@ -161,9 +161,12 @@ static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
 {
    AttribType          attrType;
    int                 j;
-   Name                buffer;
+   PathBuffer          buffer;
 
-   TtaReadName (file, (unsigned char *)buffer);
+   j = 0;
+   do
+     TtaReadByte (file, (unsigned char *)&buffer[j++]);
+   while (buffer[j - 1] != EOS && j < MAX_PATH);
    pAttr->AttrName = TtaStrdup (buffer);
    pAttr->AttrOrigName = TtaStrdup (buffer);
    TtaReadBool (file, &pAttr->AttrGlobal);
@@ -203,9 +206,12 @@ static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
 {
    RConstruct          constr;
    int                 j;
-   Name                buffer;
+   PathBuffer          buffer;
 
-   TtaReadName (file, (unsigned char *)buffer);
+   j = 0;
+   do
+     TtaReadByte (file, (unsigned char *)&buffer[j++]);
+   while (buffer[j - 1] != EOS && j < MAX_PATH);
    pSRule->SrName = TtaStrdup (buffer); 
    pSRule->SrOrigName = TtaStrdup (buffer);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
@@ -371,17 +377,17 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	/* lit la partie fixe du schema de structure */
 	if (pSS->SsName)
 	  TtaFreeMemory (pSS->SsName);
-	TtaReadName (file, (unsigned char *)buf);
-        pSS->SsName = (char *)TtaGetMemory (strlen (buf) + 1);
-        strcpy (pSS->SsName, buf);
+	i = 0;
+	do
+	  TtaReadByte (file, (unsigned char *)&buf[i++]);
+	while (buf[i - 1] != EOS && i < MAX_PATH);
+	buf[MAX_PATH -1] = EOS;
+	pSS->SsName = TtaStrdup (buf);
 	TtaReadShort (file, &pSS->SsCode);
 	i = 0;
 	do
-	  {
-	    TtaReadByte (file, (unsigned char *)&buf[i++]);
-	    
-	  }
-	while (i < MAX_PATH && buf[i-1] != EOS);
+	  TtaReadByte (file, (unsigned char *)&buf[i++]);
+	while (buf[i - 1] != EOS && i < MAX_PATH);
 	buf[MAX_PATH -1] = EOS;
 	pSS->SsDefaultPSchema = TtaStrdup (buf);
 	TtaReadBool (file, &pSS->SsExtension);
