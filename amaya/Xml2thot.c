@@ -1645,6 +1645,9 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 	      /* This is the document root */
 	      s = TtaGetSSchemaName (DocumentSSchema);
 	      elType->ElSSchema = GetGenericXMLSSchema (s, XMLcontext.doc);
+	      /* Initialize the current context schema */
+	      if (currentParserCtxt->XMLSSchema == NULL)
+		currentParserCtxt->XMLSSchema = elType->ElSSchema;
 	      /* We instanciate the XML schema with the element name */
 	      /* (except for the elements 'comment', doctype and 'pi') */
 	      if (strcmp (elementName, "xmlcomment") &&
