@@ -2338,7 +2338,9 @@ NotifyAttribute    *event;
 	   return TRUE;
        /* xml:space attribute */
        if (event->attributeType.AttrTypeNum == HTML_ATTR_xml_space)
-	 if (DocumentMeta[event->document]->xmlformat == FALSE)
+	 /* be careful here -- document may not have been received yet */
+	 if (DocumentMeta[event->document] == NULL
+	     || DocumentMeta[event->document]->xmlformat == FALSE)
 	   return TRUE;	 
 
        return FALSE;
