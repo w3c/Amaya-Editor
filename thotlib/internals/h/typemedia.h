@@ -159,37 +159,37 @@ typedef struct _Box
   {
     struct
     {
-      PtrBox   _BtSuiv_;	/* Box coupee suivante    */
-      int	 _BtNbBl_;	/* Nombre blancs dans texte */
-      int	 _BtPixel_;	/* Nombre pixels a repartir */
-      int	 _BtBlanc_;	/* >0 si la boite justifiee */
-      int	 _BtICar_;	/* 1er car dans buf.	    */
+      PtrBox   _BxNexChild_;	/* Box coupee suivante    */
+      int	 _BxNSpaces_;	/* Nombre blancs dans texte */
+      int	 _BxNPixels_;	/* Nombre pixels a repartir */
+      int	 _BxSpaceWidth_;	/* >0 si la boite justifiee */
+      int	 _BxFirstChar_;	/* 1er car dans buf.	    */
     } s0;
     struct
     {
-      int	 *_BtImageDescriptor_;/* Pointeur image en memoire*/
+      int	 *_BxImageDescriptor_;/* Pointeur image en memoire*/
       /* liste des points de controles d'une courbe */
       /* + rapports de deformation des points de controle */
-      float 	 _BtRapportX_;
-      float 	 _BtRapportY_;
+      float 	 _BxXRatio_;
+      float 	 _BxYRation_;
     } s1;
     struct
     {
-      PtrLine 	 _BtLigne1_;	/* 1ere ligne s'il y en a   */
-      PtrLine 	 _BtLigneN_;	/* Derniere ligne           */
+      PtrLine 	 _BxFirstLine_;	/* 1ere ligne s'il y en a   */
+      PtrLine 	 _BxLastLine_;	/* Derniere ligne           */
     } s2;
   } u;
 } Box;
-#define BxNexChild u.s0._BtSuiv_
-#define BxNSpaces u.s0._BtNbBl_
-#define BxNPixels u.s0._BtPixel_
-#define BxSpaceWidth u.s0._BtBlanc_
-#define BxFirstChar u.s0._BtICar_
-#define BxImageDescriptor u.s1._BtImageDescriptor_
-#define BxXRatio u.s1._BtRapportX_
-#define BxYRation u.s1._BtRapportY_
-#define BxFirstLine u.s2._BtLigne1_
-#define BxLastLine u.s2._BtLigneN_
+#define BxNexChild u.s0._BxNexChild_
+#define BxNSpaces u.s0._BxNSpaces_
+#define BxNPixels u.s0._BxNPixels_
+#define BxSpaceWidth u.s0._BxSpaceWidth_
+#define BxFirstChar u.s0._BxFirstChar_
+#define BxImageDescriptor u.s1._BxImageDescriptor_
+#define BxXRatio u.s1._BxXRatio_
+#define BxYRation u.s1._BxYRation_
+#define BxFirstLine u.s2._BxFirstLine_
+#define BxLastLine u.s2._BxLastLine_
 
 typedef struct C_points_
 {
@@ -214,32 +214,32 @@ typedef struct _AbDimension
   {
     struct
     {
-      AbPosition     _PDimP_;
+      AbPosition     _DimPosition_;
     } s0;
     struct
     {
-      PtrAbstractBox 	 _PavDimRef_;	/* AbstractBox de reference        	*/
-      int 	 _PavDim_;	/* Dimension imposee du pave	*/
+      PtrAbstractBox 	 _DimAbRef_;	/* AbstractBox de reference        	*/
+      int 	 _DimValue_;	/* Dimension imposee du pave	*/
 				/* -1: dim definie par le contenu
 				    0 : taille nulle 		*/
-      TypeUnit	 _PavDimUnit_;	/* Dimension en %, points, etc.	*/
-      boolean	 _PavMemeDim_;	/* Sur la meme dimension	*/
-      boolean	 _PavDimUser_;	/* Dimension fournie par 	*/
+      TypeUnit	 _DimUnit_;	/* Dimension en %, points, etc.	*/
+      boolean	 _DimSameDimension_;	/* Sur la meme dimension	*/
+      boolean	 _DimUserSpecified_;	/* Dimension fournie par 	*/
 				/* l'utilisateur 		*/
-      boolean	 _PavDimMin_;	/* la dimension donne est la valeur 
+      boolean	 _DimMinimum_;	/* la dimension donne est la valeur 
 				   minimum (possible uniquement 
 				   si DimAbRef=null et DimValue=-1*/
     } s1;
   } u;
 } AbDimension;
 
-#define DimPosition u.s0._PDimP_
-#define DimAbRef u.s1._PavDimRef_
-#define DimValue u.s1._PavDim_
-#define DimUnit u.s1._PavDimUnit_
-#define DimSameDimension u.s1._PavMemeDim_
-#define DimUserSpecified u.s1._PavDimUser_
-#define DimMinimum u.s1._PavDimMin_
+#define DimPosition u.s0._DimPosition_
+#define DimAbRef u.s1._DimAbRef_
+#define DimValue u.s1._DimValue_
+#define DimUnit u.s1._DimUnit_
+#define DimSameDimension u.s1._DimSameDimension_
+#define DimUserSpecified u.s1._DimUserSpecified_
+#define DimMinimum u.s1._DimMinimum_
 
 /* Element decrivant une regle presentation  en attente d'application */
 typedef struct _DelayedPRule *PtrDelayedPRule;
@@ -339,46 +339,46 @@ typedef struct _AbstractBox
   {
     struct 			/* AbLeafType = LtCompound */
     {
-      boolean	 _PavMiseEnLigne_;
+      boolean	 _AbInLine_;
 				/* Les deux champs suivants n'ont de
 				 * sens que si AbInLine=False */
-      boolean	 _PavCoupTete_; /* Manque debut du contenu pave     */
-      boolean	 _PavCoupQueue_;/* Manque fin du contenu pave       */
+      boolean	 _AbTruncatedHead_; /* Manque debut du contenu pave     */
+      boolean	 _AbTruncatedTail_;/* Manque fin du contenu pave       */
     } s0;
     struct			/* AbLeafType = LtText 	    */
     {
-      PtrTextBuffer _PavTexte_;/* Sur premier buffer texte	    */
-      unsigned char  _PavCLangue_;   /* Langue utilisee             */
+      PtrTextBuffer _AbText_;/* Sur premier buffer texte	    */
+      unsigned char  _AbLanguage_;   /* Langue utilisee             */
     } s1;
     struct  /* AbLeafType = LtGraphics ou LtSymbol               */
     {
-      char       _PavTrace_;    /* Code du graphique                */
-      char       _PavGAlphabet_;/* Alphabet utilise                 */
-      char       _PavTraceReel_;/* Code trace effectif              */
+      char       _AbShape_;    /* Code du graphique                */
+      char       _AbGraphAlphabet_;/* Alphabet utilise                 */
+      char       _AbRealShape_;/* Code trace effectif              */
     } s2;
     struct			/* AbLeafType = LtPicture 	    */
     {
-      int *_PavImageDescriptor_;
+      int *_AbImageDescriptor_;
     } s3;
     struct			/* AbLeafType = NatPolyline	    */
     {
-      PtrTextBuffer _PavBufPolyLine_; /* premier buffert	    */
-      char           _PavTypePolyLine_;/* Type du trace		    */
+      PtrTextBuffer _AbPolyLineBuffer_; /* premier buffert	    */
+      char           _AbPolyLineShape_;/* Type du trace		    */
     } s4;
   } u;
 } AbstractBox;
 
-#define AbInLine u.s0._PavMiseEnLigne_
-#define AbTruncatedHead u.s0._PavCoupTete_
-#define AbTruncatedTail u.s0._PavCoupQueue_
-#define AbText u.s1._PavTexte_
-#define AbLanguage u.s1._PavCLangue_
-#define AbShape u.s2._PavTrace_
-#define AbGraphAlphabet u.s2._PavGAlphabet_
-#define AbRealShape u.s2._PavTraceReel_
-#define AbImageDescriptor u.s3._PavImageDescriptor_
-#define AbPolyLineBuffer u.s4._PavBufPolyLine_
-#define AbPolyLineShape u.s4._PavTypePolyLine_
+#define AbInLine u.s0._AbInLine_
+#define AbTruncatedHead u.s0._AbTruncatedHead_
+#define AbTruncatedTail u.s0._AbTruncatedTail_
+#define AbText u.s1._AbText_
+#define AbLanguage u.s1._AbLanguage_
+#define AbShape u.s2._AbShape_
+#define AbGraphAlphabet u.s2._AbGraphAlphabet_
+#define AbRealShape u.s2._AbRealShape_
+#define AbImageDescriptor u.s3._AbImageDescriptor_
+#define AbPolyLineBuffer u.s4._AbPolyLineBuffer_
+#define AbPolyLineShape u.s4._AbPolyLineShape_
 
 typedef struct _ViewFrame
 {

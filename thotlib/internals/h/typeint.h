@@ -85,11 +85,11 @@ typedef struct _ReferredElemDescriptor
   {
     struct /* ReExternalRef = False */
     {
-      PtrElement	_DRObjet_;	/* l'elem qui est reference' */
+      PtrElement	_ReReferredElem_;	/* l'elem qui est reference' */
     } s0;
     struct /* ReExternalRef = True */
     {
-      DocumentIdentifier	_DRDocumentExt_;
+      DocumentIdentifier	_ReExtDocument_;
       /* identification du document qui contient l'elem reference'.
 	 Cet element est identifie' a l'interieur de son document par
 	 ReReferredLabel. */
@@ -97,8 +97,8 @@ typedef struct _ReferredElemDescriptor
   } u;
 } ReferredElemDescriptor;
 
-#define ReReferredElem u.s0._DRObjet_
-#define ReExtDocument u.s1._DRDocumentExt_
+#define ReReferredElem u.s0._ReReferredElem_
+#define ReExtDocument u.s1._ReExtDocument_
 
 /* une reference, attachee a un element de type LtReference ou a un attribut de */
 /* type reference. */
@@ -139,24 +139,24 @@ typedef struct _AttributeBlock
     {
       struct	/* AeAttrType = AtNumAttr ou AtEnumAttr */
       {
-	int	       _ElValAttr_;	/* valeur ou numero de la valeur de
+	int	       _AeAttrValue_;	/* valeur ou numero de la valeur de
 					l'attribut */
       } s0;
       struct	/* AeAttrType = AtReferenceAttr */
       {
-	PtrReference   _ElValAttrRef_;	/* reference vers l'elt reference' par
+	PtrReference   _AeAttrReference_;	/* reference vers l'elt reference' par
 					l'attribut */
       } s1;
       struct	/* AeAttrType = AtTextAttr */
       {
-	PtrTextBuffer _ElValAttrTxt_;	/* valeur (textuelle) de l'attribut */
+	PtrTextBuffer _AeAttrText_;	/* valeur (textuelle) de l'attribut */
       } s2;
     } u;
 } AttributeBlock;
 
-#define AeAttrValue u.s0._ElValAttr_
-#define AeAttrReference u.s1._ElValAttrRef_
-#define AeAttrText u.s2._ElValAttrTxt_
+#define AeAttrValue u.s0._AeAttrValue_
+#define AeAttrReference u.s1._AeAttrReference_
+#define AeAttrText u.s2._AeAttrText_
 
 /* origine d'une marque de page */
 typedef enum
@@ -210,7 +210,7 @@ typedef struct _TextBuffer
     {
 	struct
 	{
-	    Buffer      _Buff_;		/* Tableau de caracteres */
+	    Buffer      _BuContent_;		/* Tableau de caracteres */
 	} s0;
 	struct
 	{
@@ -219,7 +219,7 @@ typedef struct _TextBuffer
     } u;
 } TextBuffer;
 
-#define BuContent u.s0._Buff_
+#define BuContent u.s0._BuContent_
 #define BuPoints u.s1._BuPoints_
 
 /* Descripteur representant un element qui est conserve' a la suite */
@@ -300,58 +300,58 @@ typedef struct _ElementDescr
     {
 	struct		/* ElTerminal = False */
 	{
-	    PtrElement _ElPremFils_;	/* premier fils */
+	    PtrElement _ElFirstChild_;	/* premier fils */
 	} s0;
 	struct		/* ElTerminal = True */
 	{
-	    LeafType _TypeFeuille_;
+	    LeafType _ElLeafType_;
 	    union
 	    {
 		struct	/* ElLeafType = LtText */
 		{
-		    PtrTextBuffer  _ElContenu_;  /* pointeur sur le buffer
+		    PtrTextBuffer  _ElText_;  /* pointeur sur le buffer
 						  contenant le debut du texte*/
-		    int             _ElNbCaract_; /* longueur du texte */
-		    Language        _ElLangue_;   /* langue du texte */
+		    int             _ElTextLength_; /* longueur du texte */
+		    Language        _ElLanguage_;   /* langue du texte */
 		} s0;
 		struct	/* ElLeafType = LtGraphics ou LtSymbol */
 		{
-		    char            _ElCContenu_; /* code du contenu */
+		    char            _ElGraph_; /* code du contenu */
 		} s1;
 		struct	/* ElLeafType = LtPageColBreak */
 		{
-		    boolean         _ElAssocHautPage_; /* il faut creer les
+		    boolean         _ElAssocHeader_; /* il faut creer les
 				           elements associes de haut de page */
-		    boolean         _ElPageModif_; /* la page a ete modifiee */
-		    PageType        _ElTypePage_;  /* origine de la page */
-		    int             _ElNumPage_;   /* numero de la page */
-		    int          _ElVuePage_;   /* numero de vue dans le
+		    boolean         _ElPageModified_; /* la page a ete modifiee */
+		    PageType        _ElPageType_;  /* origine de la page */
+		    int             _ElPageNumber_;   /* numero de la page */
+		    int          _ElViewPSchema_;   /* numero de vue dans le
 						   schema de presentation */
 		} s2;
 		struct	/* ElLeafType = LtReference */
 		{
-		    PtrReference    _ElRefPtr_;	   /* pointeur sur l'element
+		    PtrReference    _ElReference_;	   /* pointeur sur l'element
 						   reference */
 		} s3;
 		struct	/* ElLeafType = LtPairedElem */
 		{
-		    int		    _ElIdentPaire_;  /* identificateur unique
+		    int		    _ElPairIdent_;  /* identificateur unique
 						de la paire dans le document */
-		    PtrElement	    _ElAutreMarque_; /* pointeur sur l'autre
+		    PtrElement	    _ElOtherPairedEl_; /* pointeur sur l'autre
 						     element de la meme paire*/
 		} s4;
 		struct	/* ElLeafType = LtPlyLine */
 		{
-		    PtrTextBuffer  _ElBufPolyLine_; /* buffer contenant les
+		    PtrTextBuffer  _ElPolyLineBuffer_; /* buffer contenant les
 					     points qui definissent la ligne */
-		    int		    _ElNbPointsPolyLine_; /* nombre de points*/
-		    char	    _ElTypePolyLine_; /* type de ligne */
+		    int		    _ElNPoints_; /* nombre de points*/
+		    char	    _ElPolyLineType_; /* type de ligne */
 		} s5;
 		struct	/* TypeImage = LtPicture */
 		{
-		    PtrTextBuffer  _ElImageName_;  /* pointeur sur le buffer
+		    PtrTextBuffer  _ElPictureName_;  /* pointeur sur le buffer
 						 contenant le nom de l'image */
-		    int             _ElLgName_; /*longueur du nom de l'image */
+		    int             _ElNameLength_; /*longueur du nom de l'image */
 		    int            *_ElImageDescriptor_;/* Descripteur image */
 		} s6;
 	    } u;
@@ -359,25 +359,25 @@ typedef struct _ElementDescr
     } u;
 } ElementDescr;
 
-#define ElFirstChild u.s0._ElPremFils_
-#define ElLeafType u.s1._TypeFeuille_
-#define ElText u.s1.u.s0._ElContenu_
-#define ElTextLength u.s1.u.s0._ElNbCaract_
-#define ElLanguage u.s1.u.s0._ElLangue_
-#define ElGraph u.s1.u.s1._ElCContenu_
-#define ElAssocHeader u.s1.u.s2._ElAssocHautPage_
-#define ElPageModified u.s1.u.s2._ElPageModif_
-#define ElPageType u.s1.u.s2._ElTypePage_
-#define ElPageNumber u.s1.u.s2._ElNumPage_
-#define ElViewPSchema u.s1.u.s2._ElVuePage_
-#define ElReference u.s1.u.s3._ElRefPtr_
-#define ElPairIdent u.s1.u.s4._ElIdentPaire_
-#define ElOtherPairedEl u.s1.u.s4._ElAutreMarque_
-#define ElPolyLineBuffer u.s1.u.s5._ElBufPolyLine_
-#define ElNPoints u.s1.u.s5._ElNbPointsPolyLine_
-#define ElPolyLineType u.s1.u.s5._ElTypePolyLine_
-#define ElPictureName u.s1.u.s6._ElImageName_
-#define ElNameLength u.s1.u.s6._ElLgName_
+#define ElFirstChild u.s0._ElFirstChild_
+#define ElLeafType u.s1._ElLeafType_
+#define ElText u.s1.u.s0._ElText_
+#define ElTextLength u.s1.u.s0._ElTextLength_
+#define ElLanguage u.s1.u.s0._ElLanguage_
+#define ElGraph u.s1.u.s1._ElGraph_
+#define ElAssocHeader u.s1.u.s2._ElAssocHeader_
+#define ElPageModified u.s1.u.s2._ElPageModified_
+#define ElPageType u.s1.u.s2._ElPageType_
+#define ElPageNumber u.s1.u.s2._ElPageNumber_
+#define ElViewPSchema u.s1.u.s2._ElViewPSchema_
+#define ElReference u.s1.u.s3._ElReference_
+#define ElPairIdent u.s1.u.s4._ElPairIdent_
+#define ElOtherPairedEl u.s1.u.s4._ElOtherPairedEl_
+#define ElPolyLineBuffer u.s1.u.s5._ElPolyLineBuffer_
+#define ElNPoints u.s1.u.s5._ElNPoints_
+#define ElPolyLineType u.s1.u.s5._ElPolyLineType_
+#define ElPictureName u.s1.u.s6._ElPictureName_
+#define ElNameLength u.s1.u.s6._ElNameLength_
 #define ElImageDescriptor u.s1.u.s6._ElImageDescriptor_
 
     /* Le pointeur ElFirstChild est interprete suivant le constructeur de la

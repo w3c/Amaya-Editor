@@ -112,45 +112,45 @@ typedef struct _TranslCondition
 	  {
 	  struct	/* TcCondition = TcondAlphabet */
 	    {
-	    char        _BlCondAlphabet_;  /* l'alphabet sur lequel porte la
+	    char        _TcAlphabet_;  /* l'alphabet sur lequel porte la
 					   condition */
 	    } s0;
 	  struct	/* TcCondition = TcondWithin, TcondFirstWithin */
 	    {
-	    int		_BlCondTypeElem_; /* type de l'ascendant */
-	    Name		_BlCondNatureElem_;/* nom de la nature ou est defini
+	    int		_TcElemType_; /* type de l'ascendant */
+	    Name		_TcElemNature_;/* nom de la nature ou est defini
 					 TcElemType, 0 si meme schema */
-	    boolean	_BlCondNivAncetreImmediat_; /* Immediately within */
-	    RelatNAscend	_BlCondNivAncetreSupInfEgal_;
-	    int		_BlCondNivAncetreNiveau_;   /* RelLevel */
+	    boolean	_TcImmediatelyWithin_; /* Immediately within */
+	    RelatNAscend	_TcAscendRel_;
+	    int		_TcAscendLevel_;   /* RelLevel */
 	    } s1;
 	  struct	/* TcCondition = TcondAttr || TcCondition = TcondPRule */
 	    {
-	    int		_BlCondAttr_;    /*  numero de l'attribut ou type de
+	    int		_TcAttr_;    /*  numero de l'attribut ou type de
 					 la regle de presentation */
 	    union
 	      {
 	      struct	/* AttribType = AtNumAttr */
 	        {
-	        int	_BlCBorneInf_;	/*valeur minimum de l'attribut pour que
+	        int	_TcLowerBound_;	/*valeur minimum de l'attribut pour que
 					les regles du bloc soient appliquees */
-	        int	_BlCBorneSup_;	/*valeur maximum de l'attribut pour que
+	        int	_TcUpperBound_;	/*valeur maximum de l'attribut pour que
 					les regles du bloc soient appliquees */
 	        } s0;
 	      struct	/* AttribType = AtTextAttr */
 	        {
-	        Name	_BlCTxtVal_;	/* la valeur qui declanche
+	        Name	_TcTextValue_;	/* la valeur qui declanche
 					l'application des regles du bloc */
 	        } s1;
 	      struct	/* AttribType = AtEnumAttr */
 	        {
-	        int	 _BlCAttrVal_;	/* Valeur de l'attribut pour laquelle
+	        int	 _TcAttrValue_;	/* Valeur de l'attribut pour laquelle
 				        on applique les regles du bloc,
 				        0 si on applique pour toute valeur */
 	        } s2;
 	      struct	/* dans le cas TcondPRule seulement */
 	        {
-	        char	_BlCCarVal_;    /* Valeur de la presentation pour
+	        char	_TcPresValue_;    /* Valeur de la presentation pour
 				       laquelle on applique les regles du bloc,
 				        0 si on applique pour toute valeur */
 	        } s3;
@@ -160,18 +160,18 @@ typedef struct _TranslCondition
 
 } TranslCondition;
 
-#define TcAlphabet u.s0._BlCondAlphabet_
-#define TcImmediatelyWithin u.s1._BlCondNivAncetreImmediat_
-#define TcAscendRel u.s1._BlCondNivAncetreSupInfEgal_
-#define TcAscendLevel u.s1._BlCondNivAncetreNiveau_
-#define TcElemType u.s1._BlCondTypeElem_
-#define TcElemNature u.s1._BlCondNatureElem_
-#define TcAttr u.s2._BlCondAttr_
-#define TcLowerBound u.s2.u.s0._BlCBorneInf_
-#define TcUpperBound u.s2.u.s0._BlCBorneSup_
-#define TcTextValue u.s2.u.s1._BlCTxtVal_
-#define TcAttrValue u.s2.u.s2._BlCAttrVal_
-#define TcPresValue u.s2.u.s3._BlCCarVal_
+#define TcAlphabet u.s0._TcAlphabet_
+#define TcImmediatelyWithin u.s1._TcImmediatelyWithin_
+#define TcAscendRel u.s1._TcAscendRel_
+#define TcAscendLevel u.s1._TcAscendLevel_
+#define TcElemType u.s1._TcElemType_
+#define TcElemNature u.s1._TcElemNature_
+#define TcAttr u.s2._TcAttr_
+#define TcLowerBound u.s2.u.s0._TcLowerBound_
+#define TcUpperBound u.s2.u.s0._TcUpperBound_
+#define TcTextValue u.s2.u.s1._TcTextValue_
+#define TcAttrValue u.s2.u.s2._TcAttrValue_
+#define TcPresValue u.s2.u.s3._TcPresValue_
 
 /* un bloc de regles de traduction */
 typedef struct _TRuleBlock
@@ -228,72 +228,72 @@ typedef struct _TranslRule
     {
       struct	/* TrType = TCreate, TWrite */
 	{
-	  CreatedObject 	_RTToken_;	/*type de chose a creer dans le fichier
+	  CreatedObject 	_TrObject_;	/*type de chose a creer dans le fichier
 					   de sortie ou a ecrire au terminal */
-	  int	 	_RTNumToken_;	/* numero de la chose a creer ou a
+	  int	 	_TrObjectNum_;	/* numero de la chose a creer ou a
 					   ecrire */
-	  Name		_RTNatureCr_;	/* Schema ou l'element est defini, */
+	  Name		_TrObjectNature_;	/* Schema ou l'element est defini, */
 					/* 0 si meme schema de structure */
-	  boolean	_RTRef_;	/* la variable a creer doit etre
+	  boolean	_TrReferredObj_;	/* la variable a creer doit etre
 					   calculee pour l'element reference',
 					   et non pour l'element lui-meme */
-	  int		_RTVarFichier_;	/* variable definissant le nom du
+	  int		_TrFileNameVar_;	/* variable definissant le nom du
 					   fichier de sortie */
 	} s0;
       struct	/* TrType = TGet, TCopy */
 	{
-	  int		_RTTypeGet_;	/* type de l'element a prendre */
-	  Name	 	_RTNatureGet_;	/* Schema ou l'element est defini, 
+	  int		_TrElemType_;	/* type de l'element a prendre */
+	  Name	 	_TrElemNature_;	/* Schema ou l'element est defini, 
 					   0 si meme schema de structure */
-	  TRelatPosition 	_RTRelPos_;	/* position relative dans l'arbre
+	  TRelatPosition 	_TrRelPosition_;	/* position relative dans l'arbre
 					   abstrait de l'element a prendre */
 	} s1;
       struct	/* TrType = TUse */
 	{
-	  Name	 _RTNomNature_;		/* nom de la nature */
-	  Name	 _RTNomSchTrad_;	/* nom du schema de trad. a appliquer*/
+	  Name	 _TrNature_;		/* nom de la nature */
+	  Name	 _TrTranslSchemaName_;	/* nom du schema de trad. a appliquer*/
 	} s2;
       struct	/* TrType = TRead */
 	{
-	  int	_RTBuffer_; 		/* numero du buffer de lecture */
+	  int	_TrBuffer_; 		/* numero du buffer de lecture */
 	} s4;
       struct	/* TrType = TInclude */
 	{
-	  CreatedObject  _RTTkFile_;		/* le nom du fichier a inclure est 
+	  CreatedObject  _TrBufOrConst_;		/* le nom du fichier a inclure est 
 					   dans un buffer ou une constante */
-	  int	  _RTNFile_; 		/* numero de la constante ou du
+	  int	  _TrInclFile_; 		/* numero de la constante ou du
 					   buffer qui contient le nom du
 					   fichier a inclure */
 	} s5;
       struct	/* TrType = TChangeMainFile */
 	{
-	  int	_RTVarNouvFichier_;	 /* variable definissant le nouveau
+	  int	_TrNewFileVar_;	 /* variable definissant le nouveau
 					    nom de fichier */
 	} s6;
      struct	/* TrType = TSetCounter, TAddCounter */
 	{
-	  int	_RTNumCompteur_;	 /*numero du compteur a mettre a jour*/
-	  int	_RTValCompteur_;	 /* valeur de la mise a jour */
+	  int	_TrCounterNum_;	 /*numero du compteur a mettre a jour*/
+	  int	_TrCounterParam_;	 /* valeur de la mise a jour */
 	} s7;
     } u;
 } TranslRule;
 
-#define TrObject u.s0._RTToken_
-#define TrObjectNum u.s0._RTNumToken_
-#define TrObjectNature u.s0._RTNatureCr_
-#define TrReferredObj u.s0._RTRef_
-#define TrFileNameVar u.s0._RTVarFichier_
-#define TrElemType u.s1._RTTypeGet_
-#define TrElemNature u.s1._RTNatureGet_
-#define TrRelPosition u.s1._RTRelPos_
-#define TrNature u.s2._RTNomNature_
-#define TrTranslSchemaName u.s2._RTNomSchTrad_
-#define TrBuffer u.s4._RTBuffer_
-#define TrBufOrConst u.s5._RTTkFile_
-#define TrInclFile u.s5._RTNFile_
-#define TrNewFileVar u.s6._RTVarNouvFichier_
-#define TrCounterNum u.s7._RTNumCompteur_
-#define TrCounterParam u.s7._RTValCompteur_
+#define TrObject u.s0._TrObject_
+#define TrObjectNum u.s0._TrObjectNum_
+#define TrObjectNature u.s0._TrObjectNature_
+#define TrReferredObj u.s0._TrReferredObj_
+#define TrFileNameVar u.s0._TrFileNameVar_
+#define TrElemType u.s1._TrElemType_
+#define TrElemNature u.s1._TrElemNature_
+#define TrRelPosition u.s1._TrRelPosition_
+#define TrNature u.s2._TrNature_
+#define TrTranslSchemaName u.s2._TrTranslSchemaName_
+#define TrBuffer u.s4._TrBuffer_
+#define TrBufOrConst u.s5._TrBufOrConst_
+#define TrInclFile u.s5._TrInclFile_
+#define TrNewFileVar u.s6._TrNewFileVar_
+#define TrCounterNum u.s7._TrCounterNum_
+#define TrCounterParam u.s7._TrCounterParam_
 
 /* type d'une operation sur un compteur */
 typedef enum
@@ -386,20 +386,20 @@ typedef struct _AttributeTransl
       struct	/* AttribType = AtNumAttr */
 	{
 	  /* nombre de cas d'application de regles de traduction*/ 
-	  int _RTANbCas_;
+	  int _AtrNCases_;
 	  /* les cas d'application de regles de traduction */
-	  TranslNumAttrCase     _RTACas_[MAX_TRANSL_ATTR_CASE];
+	  TranslNumAttrCase     _AtrCase_[MAX_TRANSL_ATTR_CASE];
 	} s0;
       struct	/* AttribType = AtReferenceAttr */
 	{
-	  PtrTRuleBlock   _RTARefPremRegle_; /* bloc de regles a appliquer
+	  PtrTRuleBlock   _AtrRefTRuleBlock_; /* bloc de regles a appliquer
 						pour l'attribut */
 	} s1;
       struct	/* AttribType = AtTextAttr */
 	{
-	  Name             _RTATxtVal_;	/*la valeur qui declanche l'application
+	  Name             _AtrTextValue_;	/*la valeur qui declanche l'application
 					   des regles de traduction */
-	  PtrTRuleBlock   _RTATxt_;	/* bloc de regles a appliquer pour
+	  PtrTRuleBlock   _AtrTxtTRuleBlock_;	/* bloc de regles a appliquer pour
 					   cette valeur */
 	} s2;
       struct	/* AttribType = AtEnumAttr */
@@ -407,17 +407,17 @@ typedef struct _AttributeTransl
 	  /* Pour chaque valeur de l'attribut, dans l'ordre de
 	     la table AttrEnumValue, adresse du premier bloc de regles
 	     de traduction associe a cette valeur. */
-	  PtrTRuleBlock   _RTAValEnum_[MAX_ATTR_VAL + 1];
+	  PtrTRuleBlock   _AtrEnuTRuleBlock_[MAX_ATTR_VAL + 1];
 	} s3;
     } u;
 } AttributeTransl;
 
-#define AtrNCases u.s0._RTANbCas_
-#define AtrCase u.s0._RTACas_
-#define AtrRefTRuleBlock u.s1._RTARefPremRegle_
-#define AtrTextValue u.s2._RTATxtVal_
-#define AtrTxtTRuleBlock u.s2._RTATxt_
-#define AtrEnuTRuleBlock u.s3._RTAValEnum_
+#define AtrNCases u.s0._AtrNCases_
+#define AtrCase u.s0._AtrCase_
+#define AtrRefTRuleBlock u.s1._AtrRefTRuleBlock_
+#define AtrTextValue u.s2._AtrTextValue_
+#define AtrTxtTRuleBlock u.s2._AtrTxtTRuleBlock_
+#define AtrEnuTRuleBlock u.s3._AtrEnuTRuleBlock_
 
 /* traduction d'une presentation specifique */
 typedef struct _PRuleTransl
@@ -428,16 +428,16 @@ typedef struct _PRuleTransl
     {
       struct	/* presentation a valeur numerique */
 	{
-	  int		_RTPNbCas_; 	/* nombre de cas d'application de
+	  int		_RtNCase_; 	/* nombre de cas d'application de
 					   regles de traduction */ 
-	  TranslNumAttrCase	_RTPCas_[MAX_TRANSL_PRES_CASE]; /* les cas d'application de
+	  TranslNumAttrCase	_RtCase_[MAX_TRANSL_PRES_CASE]; /* les cas d'application de
 					   regles de traduction */
 	} s0;
       struct	/* autres presentation */
 	{
-	  char		_RTPVal_[MAX_TRANSL_PRES_VAL + 1]; /* les valeurs possibles de
+	  char		_RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; /* les valeurs possibles de
 						     la presentation */
-	  PtrTRuleBlock	_RTPValRegle_[MAX_TRANSL_PRES_VAL + 1]; /* Pour chaque valeur
+	  PtrTRuleBlock	_RtPRuleValueBlock_[MAX_TRANSL_PRES_VAL + 1]; /* Pour chaque valeur
 					de la presentation, dans l'ordre de la
 					table RtPRuleValue, adresse du premier bloc
 					de regles de traduction associe a
@@ -446,10 +446,10 @@ typedef struct _PRuleTransl
     } u;
 } PRuleTransl;
 
-#define RtNCase u.s0._RTPNbCas_
-#define RtCase u.s0._RTPCas_
-#define RtPRuleValue u.s1._RTPVal_
-#define RtPRuleValueBlock u.s1._RTPValRegle_
+#define RtNCase u.s0._RtNCase_
+#define RtCase u.s0._RtCase_
+#define RtPRuleValue u.s1._RtPRuleValue_
+#define RtPRuleValueBlock u.s1._RtPRuleValueBlock_
 
 /* chaines pour une regle de traduction de caracteres */
 typedef char    SourceString[MAX_SRCE_LEN + 1];	/* chaine source */

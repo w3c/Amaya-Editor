@@ -69,20 +69,20 @@ typedef struct _PosRule
   {
     struct			/* PoRefElem = True */
     {
-      int	 _RPosElemRef_;	 /* le type de l'element par rapport
+      int	 _PoTypeRefElem_;	 /* le type de l'element par rapport
 					    auquel on definit la position */
     } s0;
     struct			/* PoRefElem = False */
     {
-      int _RPosBoiteRef_; /* le type de la boite par rapport a
+      int _PoRefPresBox_; /* le type de la boite par rapport a
 				      laquelle on definit la position.
 				      Zero si type quelconque */
     } s1;
   } u;
 } PosRule;
 
-#define PoTypeRefElem u.s0._RPosElemRef_
-#define PoRefPresBox u.s1._RPosBoiteRef_
+#define PoTypeRefElem u.s0._PoTypeRefElem_
+#define PoRefPresBox u.s1._PoRefPresBox_
 
 /* SRule de dimensionnement de boites */
 typedef struct _DimensionRule
@@ -93,42 +93,42 @@ typedef struct _DimensionRule
   {
     struct			/* DrPosition = True */
     {
-      PosRule	_RDimPos_;     /* la regle de position  qui definit la
+      PosRule	_DrPosRule_;     /* la regle de position  qui definit la
 				  dimension */
     }   s0;
     struct			/* DrPosition = False */
     {
-      boolean	_RDimAbs_;     /* Valeur absolue,sinon relative */
-      boolean	_RDimMemeDim_; /* On definit la dimension par rapport a
+      boolean	_DrAbsolute_;     /* Valeur absolue,sinon relative */
+      boolean	_DrSameDimens_; /* On definit la dimension par rapport a
 				  la meme dimension d'une autre boite*/
-      TypeUnit	_RDimUnit_;    /* DrValue est exprime' en points
+      TypeUnit	_DrUnit_;    /* DrValue est exprime' en points
 				  typo, en 1/10 de caracteres, etc. */
-      boolean	_RDimAttr_;    /* DrValue est un numero d'attribut
+      boolean	_DrAttr_;    /* DrValue est un numero d'attribut
 				  numerique ou une valeur numerique */
-      boolean	_RDimMinimum_; /* dimension minimum */
-      boolean	_RDimUserSpec_;/* la distance peut etre choisie par
+      boolean	_DrMin_; /* dimension minimum */
+      boolean	_DrUserSpecified_;/* la distance peut etre choisie par
 				  l'utilisateur */
-      int	_RDimValeur_;  /* valeur du pourcentage, de l'increment
+      int	_DrValue_;  /* valeur du pourcentage, de l'increment
 				  ou de la valeur absolue */
-      Level	_RDimNiveau_;  /* niveau relatif de l'element de
+      Level	_DrRelation_;  /* niveau relatif de l'element de
 				  reference */
-      boolean	_RDimNotNiv_;  /* si False, DrTypeRefElem ou DrRefPresBox
+      boolean	_DrNotRelat_;  /* si False, DrTypeRefElem ou DrRefPresBox
 				  indique le type de l'elem. de ref.,
 				  si False, le type exclus. */
-      boolean	_RefElement_;  /* la reference est la boite d'un
+      boolean	_DrRefElement_;  /* la reference est la boite d'un
 				  element structure, sinon une boite
 				  de presentation */
       union
       {
 	struct			/* DrRefElement = True */
 	{
-	  int	_RDimElemRef_;	/* le type de l'element par
+	  int	_DrTypeRefElem_;	/* le type de l'element par
 					   rapport auquel on definit
 					   la dimension  */
 	} s0;
 	struct			/* DrRefElement = False */
 	{
-	  int _RDimBoiteRef_;/* le type de la boite par
+	  int _DrRefPresBox_;/* le type de la boite par
 					 rapport a laquelle on definit la
 					 dimension. Zero si type quelconque */
 	} s1;
@@ -137,19 +137,19 @@ typedef struct _DimensionRule
   } u;
 } DimensionRule;
 
-#define DrPosRule u.s0._RDimPos_
-#define DrAbsolute u.s1._RDimAbs_
-#define DrSameDimens u.s1._RDimMemeDim_
-#define DrUnit u.s1._RDimUnit_
-#define DrAttr u.s1._RDimAttr_
-#define DrMin u.s1._RDimMinimum_
-#define DrUserSpecified u.s1._RDimUserSpec_
-#define DrValue u.s1._RDimValeur_
-#define DrRelation u.s1._RDimNiveau_
-#define DrNotRelat u.s1._RDimNotNiv_
-#define DrRefElement u.s1._RefElement_
-#define DrTypeRefElem u.s1.u.s0._RDimElemRef_
-#define DrRefPresBox u.s1.u.s1._RDimBoiteRef_
+#define DrPosRule u.s0._DrPosRule_
+#define DrAbsolute u.s1._DrAbsolute_
+#define DrSameDimens u.s1._DrSameDimens_
+#define DrUnit u.s1._DrUnit_
+#define DrAttr u.s1._DrAttr_
+#define DrMin u.s1._DrMin_
+#define DrUserSpecified u.s1._DrUserSpecified_
+#define DrValue u.s1._DrValue_
+#define DrRelation u.s1._DrRelation_
+#define DrNotRelat u.s1._DrNotRelat_
+#define DrRefElement u.s1._DrRefElement_
+#define DrTypeRefElem u.s1.u.s0._DrTypeRefElem_
+#define DrRefPresBox u.s1.u.s1._DrRefPresBox_
 
 /* type du contenu d'une boite de presentation */
 typedef enum
@@ -186,29 +186,29 @@ typedef struct _PresentationBox
   {
     struct			/* PbContent = ContVariable */
     {
-      int	  _BContVar_;	/* numero de la variable */
+      int	  _PbContVariable_;	/* numero de la variable */
     }   s0;
     struct			/* PbContent = ContConst */
     {
-      int	  _BContConst_;	/* numero de la constante */
+      int	  _PbContConstant_;	/* numero de la constante */
     } s1;
     struct			/* PbContent = ContElement */
     {
-      int	  _BContElem_;	/* numero du type d'elem */
-      int	  _BContRef_;	/* numero de type de la reference a cet elem */
+      int	  _PbContElem_;	/* numero du type d'elem */
+      int	  _PbContRefElem_;	/* numero de type de la reference a cet elem */
     } s2;
     struct			/* PbContent = FreeContent */
     {
-      char  _BContLibre_; /* pour faire plaisir au compilateur */
+      char  _PbContFree_; /* pour faire plaisir au compilateur */
     } s3;
   } u;
 } PresentationBox;
 
-#define PbContVariable u.s0._BContVar_
-#define PbContConstant u.s1._BContConst_
-#define PbContElem u.s2._BContElem_
-#define PbContRefElem u.s2._BContRef_
-#define PbContFree u.s3._BContLibre_
+#define PbContVariable u.s0._PbContVariable_
+#define PbContConstant u.s1._PbContConstant_
+#define PbContElem u.s2._PbContElem_
+#define PbContRefElem u.s2._PbContRefElem_
+#define PbContFree u.s3._PbContFree_
 
 /* BAlignment des lignes dans un pave mis en ligne */
 typedef enum
@@ -274,36 +274,36 @@ typedef struct _PresVarItem
   {
     struct
     {
-      int	     _VEConst_;	 /* numero de la constante */
+      int	     _ViConstant_;	 /* numero de la constante */
     } s0;
     struct
     {
-      int	     _VENumCompt_;   /* numero du compteur */
-      CounterValue _VENatValCmpt_; /* indique si on s'interesse a la
+      int	     _ViCounter_;   /* numero du compteur */
+      CounterValue _ViCounterVal_; /* indique si on s'interesse a la
 				        valeur maximale, minimale ou courante du compteur */
     } s1;
     struct
     {
-      int  _VENumAttr_;  /* numero de l'attribut */
+      int  _ViAttr_;  /* numero de l'attribut */
     } s2;
     struct
     {
-      int            _VEDate_;      /* pour le compilateur */
+      int            _ViDate_;      /* pour le compilateur */
     } s3;
     struct			    /* ViType = VarPageNumber */
     {
-      int	     _VENumVuePage_;/* numero de la vue  ou on compte
+      int	     _ViView_;/* numero de la vue  ou on compte
 				       les pages */
     } s4;
   } u;
 } PresVarItem;
 
-#define ViConstant u.s0._VEConst_
-#define ViCounter u.s1._VENumCompt_
-#define ViCounterVal u.s1._VENatValCmpt_
-#define ViAttr u.s2._VENumAttr_
-#define ViDate u.s3._VEDate_
-#define ViView u.s4._VENumVuePage_
+#define ViConstant u.s0._ViConstant_
+#define ViCounter u.s1._ViCounter_
+#define ViCounterVal u.s1._ViCounterVal_
+#define ViAttr u.s2._ViAttr_
+#define ViDate u.s3._ViDate_
+#define ViView u.s4._ViView_
 
 /* Un type de condition de creation de boite */
 typedef enum
@@ -336,33 +336,33 @@ typedef struct _Condition
     struct				/* CoCondition = PcInterval, PcEven,
 					   PcOdd, PcOne */
     {
-      int	  _CondCompteur_; /* numero du compteur sur lequel porte
+      int	  _CoCounter_; /* numero du compteur sur lequel porte
 					   la condition */
-      int	  _CondBorneInf_; /* valeur minimum du compteur pour que
+      int	  _CoMinCounter_; /* valeur minimum du compteur pour que
 					   la regle de presentation soit
 					   appliquee */
-      int	  _CondBorneSup_; /* valeur maximum du compteur pour que
+      int	  _CoMaxCounter_; /* valeur maximum du compteur pour que
 					   la regle de presentation soit
 					   appliquee */
-      CounterValue _CondNatValCmpt_; /* Indique si on prend la valeur
+      CounterValue _CoValCounter_; /* Indique si on prend la valeur
 					   courante du compteur, sa valeur
 					   mini ou sa valeur maxi */
     } s0;
     struct				/* CoCondition = PcWithin */
     {
-      int	  _CondNivAncetreNiveau_;		/* RelLevel */
-      int	  _CondTypeAncetre_;		/* type de l'ancetre */
-      boolean	  _CondNivAncetreImmediat_;	/* Immediately */
-      ArithRel  _CondNivAncetreSupInfEgal_;
-      Name	  _CondNomTypeAncetre_;	/* nom du type de l'ancetre, si
+      int	  _CoRelation_;		/* RelLevel */
+      int	  _CoTypeAncestor_;		/* type de l'ancetre */
+      boolean	  _CoImmediate_;	/* Immediately */
+      ArithRel  _CoAncestorRel_;
+      Name	  _CoAncestorName_;	/* nom du type de l'ancetre, si
 					   defini dans un autre schema */
-      Name	  _CondNomSchExt_;	/* nom du schema ou est defini
+      Name	  _CoSSchemaName_;	/* nom du schema ou est defini
 					   l'ancetre si CoTypeAncestor=0*/
     } s1;
     struct				/* CoCondition = PcElemType or
 					   PcAttribute */
     {
-      int	  _CondTypeElement_;	/* PcElemType: type de l'elem
+      int	  _CoTypeElAttr_;	/* PcElemType: type de l'elem
 					   auquel l'attribut est attache'.
 					   PcAttribute: attribut porte' par
 					   l'element. */
@@ -370,17 +370,17 @@ typedef struct _Condition
   } u;
 } Condition;
 
-#define CoCounter u.s0._CondCompteur_
-#define CoMinCounter u.s0._CondBorneInf_
-#define CoMaxCounter u.s0._CondBorneSup_
-#define CoValCounter u.s0._CondNatValCmpt_
-#define CoRelation u.s1._CondNivAncetreNiveau_
-#define CoTypeAncestor u.s1._CondTypeAncetre_
-#define CoImmediate u.s1._CondNivAncetreImmediat_
-#define CoAncestorRel u.s1._CondNivAncetreSupInfEgal_
-#define CoAncestorName u.s1._CondNomTypeAncetre_
-#define CoSSchemaName u.s1._CondNomSchExt_
-#define CoTypeElAttr u.s2._CondTypeElement_
+#define CoCounter u.s0._CoCounter_
+#define CoMinCounter u.s0._CoMinCounter_
+#define CoMaxCounter u.s0._CoMaxCounter_
+#define CoValCounter u.s0._CoValCounter_
+#define CoRelation u.s1._CoRelation_
+#define CoTypeAncestor u.s1._CoTypeAncestor_
+#define CoImmediate u.s1._CoImmediate_
+#define CoAncestorRel u.s1._CoAncestorRel_
+#define CoAncestorName u.s1._CoAncestorName_
+#define CoSSchemaName u.s1._CoSSchemaName_
+#define CoTypeElAttr u.s2._CoTypeElAttr_
 
 /* Les regles de presentation relatives a un objet sont chainees entre
    elles par le pointeur PrNextPRule. Ainsi les regles de presentation
@@ -410,34 +410,34 @@ typedef struct _PresRule
   {
     struct				/* PrPresMode = PresInherit */
     {
-      InheritMode _ModeHerit_;
-      boolean      _ValHAttr_;	  /* PrInhDelta est un numero d'attribut
+      InheritMode _PrInheritMode_;
+      boolean      _PrInhAttr_;	  /* PrInhDelta est un numero d'attribut
 				     numerique et si faux une valeur */
-      int      _ValHerit_;	  /* positif: increment, nul: egalite,
+      int      _PrInhDelta_;	  /* positif: increment, nul: egalite,
 				     negatif: decrement */
-      boolean      _MinMaxHAttr_; /* PrInhMinOrMax est un numero
+      boolean      _PrMinMaxAttr_; /* PrInhMinOrMax est un numero
 				     d'attribut numerique ou une valeur*/
-      int      _MinMaxHerit_; /* valeur min ou max de l'heritage*/
-      TypeUnit     _ValHeritUnit_;/* PrInhDelta et PrInhMinOrMax sont
+      int      _PrInhMinOrMax_; /* valeur min ou max de l'heritage*/
+      TypeUnit     _PrInhUnit_;/* PrInhDelta et PrInhMinOrMax sont
 				     exprimes en points typo, pixel,
 				     valeur relative, etc. */
     } s0;
     struct			  /* PrPresMode = PresFunction */
     {
-      FunctionType    _RPFonct_;
-      boolean      _RPRep_;	/* boite de presentation repetee sur
+      FunctionType    _PrPresFunction_;
+      boolean      _PrPresBoxRepeat_;	/* boite de presentation repetee sur
 				   tous les paves de l'element */
-      boolean	   _RPElStrExt_;/* si PrElement est vrai, PrExternal
+      boolean	   _PrExternal_;/* si PrElement est vrai, PrExternal
 				   indique que le type dont le nom est
 				   dans PrPresBoxName est externe */
-      boolean      _RPElStr_;	/* PrPresBox[1] ou PrPresBoxName est un
+      boolean      _PrElement_;	/* PrPresBox[1] ou PrPresBoxName est un
 				   numero de type d'element et non de
 				   boite de presentation */
-      int	   _RPNbBoite_;	/* nombre de boites de presentation
+      int	   _PrNPresBoxes_;	/* nombre de boites de presentation
 				   (utile seulement pour la regle
 				   Colonne) */
-	    int          _RPBoite_[MAX_COLUMN_PAGE];	/* numero des boites de pres.*/
-	    Name          _RPNomBoite_;	/* Name de la 1ere (ou seule) boite de
+	    int          _PrPresBox_[MAX_COLUMN_PAGE];	/* numero des boites de pres.*/
+	    Name          _PrPresBoxName_;	/* Name de la 1ere (ou seule) boite de
 					   presentation concernee par la
 					   fonction */
     } s1;
@@ -448,40 +448,40 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern, */
 	        /* PtBackground, PtForeground */
 	{
-	  boolean  _RPValIAttr_; /* PrIntValue est un numero d'attribut
+	  boolean  _PrAttrValue_; /* PrIntValue est un numero d'attribut
 				    numerique ou une valeur numerique */
-	  int  _RPValI_;
+	  int  _PrIntValue_;
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtUnderline, PtThickness,*/
 	        /* PtLineStyle */
 	{
-	  char     _RPFonteStyle_;
+	  char     _PrChrValue_;
 	}  s1;
 	struct	/* PRuleType = PtBreak1, PtBreak2, */
 		/* PtIndent, PtSize, PtLineSpacing, PtLineWeight */
 	{
-	  TypeUnit _RPHMinIndUnit_;/* La hauteur min est exprimee en
+	  TypeUnit _PrMinUnit_;/* La hauteur min est exprimee en
 				     points typo, en 1/10 de
 				     caracteres, etc. */
-	  boolean  _RPHMinIndAttr_;/* Le champ suivant est un numero
+	  boolean  _PrMinAttr_;/* Le champ suivant est un numero
 				      d'attribut ou une valeur */
-	  int  _RPHMinInd_;    /* Valeur de la hauteur minimum */
+	  int  _PrMinValue_;    /* Valeur de la hauteur minimum */
 	} s2;
 	struct	/* PRuleType = PtVertRef, PtHorizRef, PtVertPos, PtHorizPos*/
 	{
-	  PosRule _RPValPos_;
+	  PosRule _PrPosRule_;
 	} s3;
 	struct	/* PRuleType = PtHeight, PtWidth */
 	{
-	  DimensionRule _RPDim_;
+	  DimensionRule _PrDimRule_;
 	} s4;
 	struct	/* PRuleType = PtJustify */
 	{
-	  boolean _RPJustif_;
+	  boolean _PrJustify_;
 	} s5;
 	struct	/* PRuleType = PtAdjust */
 	{
-	  BAlignment _RPAjuste_;
+	  BAlignment _PrAdjust_;
 	} s6;
 	/* synchroniser cette structure avec ImageDescriptor */
 	struct	/* PRuleType = PtImDescr */
@@ -495,29 +495,29 @@ typedef struct _PresRule
   } u;
 } PresRule;
 
-#define PrInheritMode u.s0._ModeHerit_
-#define PrInhAttr u.s0._ValHAttr_
-#define PrInhDelta u.s0._ValHerit_
-#define PrMinMaxAttr u.s0._MinMaxHAttr_
-#define PrInhMinOrMax u.s0._MinMaxHerit_
-#define PrInhUnit u.s0._ValHeritUnit_
-#define PrPresFunction u.s1._RPFonct_
-#define PrPresBoxRepeat u.s1._RPRep_
-#define PrExternal u.s1._RPElStrExt_
-#define PrElement u.s1._RPElStr_
-#define PrNPresBoxes u.s1._RPNbBoite_
-#define PrPresBox u.s1._RPBoite_
-#define PrPresBoxName u.s1._RPNomBoite_
-#define PrAttrValue u.s2.u.s0._RPValIAttr_
-#define PrIntValue u.s2.u.s0._RPValI_
-#define PrChrValue u.s2.u.s1._RPFonteStyle_
-#define PrMinUnit u.s2.u.s2._RPHMinIndUnit_
-#define PrMinAttr u.s2.u.s2._RPHMinIndAttr_
-#define PrMinValue u.s2.u.s2._RPHMinInd_
-#define PrPosRule u.s2.u.s3._RPValPos_
-#define PrDimRule u.s2.u.s4._RPDim_
-#define PrJustify u.s2.u.s5._RPJustif_
-#define PrAdjust u.s2.u.s6._RPAjuste_
+#define PrInheritMode u.s0._PrInheritMode_
+#define PrInhAttr u.s0._PrInhAttr_
+#define PrInhDelta u.s0._PrInhDelta_
+#define PrMinMaxAttr u.s0._PrMinMaxAttr_
+#define PrInhMinOrMax u.s0._PrInhMinOrMax_
+#define PrInhUnit u.s0._PrInhUnit_
+#define PrPresFunction u.s1._PrPresFunction_
+#define PrPresBoxRepeat u.s1._PrPresBoxRepeat_
+#define PrExternal u.s1._PrExternal_
+#define PrElement u.s1._PrElement_
+#define PrNPresBoxes u.s1._PrNPresBoxes_
+#define PrPresBox u.s1._PrPresBox_
+#define PrPresBoxName u.s1._PrPresBoxName_
+#define PrAttrValue u.s2.u.s0._PrAttrValue_
+#define PrIntValue u.s2.u.s0._PrIntValue_
+#define PrChrValue u.s2.u.s1._PrChrValue_
+#define PrMinUnit u.s2.u.s2._PrMinUnit_
+#define PrMinAttr u.s2.u.s2._PrMinAttr_
+#define PrMinValue u.s2.u.s2._PrMinValue_
+#define PrPosRule u.s2.u.s3._PrPosRule_
+#define PrDimRule u.s2.u.s4._PrDimRule_
+#define PrJustify u.s2.u.s5._PrJustify_
+#define PrAdjust u.s2.u.s6._PrAdjust_
 #define PrImageDescr u.s2.u.s7
 
 /* operation sur compteur */
@@ -628,26 +628,26 @@ typedef struct _AttributePres
   {
     struct
     {
-      int	  _RPANbCas_;	/* nombre de cas d'application de
+      int	  _ApNCases_;	/* nombre de cas d'application de
 				   regles de presentation */
-      NumAttrCase  _RPACas_[MAX_PRES_ATTR_CASE]; /* les cas d'application de
+      NumAttrCase  _ApCase_[MAX_PRES_ATTR_CASE]; /* les cas d'application de
 					      regles de presentation */
     } s0;
     struct
     {
-      PtrPRule _RPARefPremRegle_; /* premiere regle de la chaine des
+      PtrPRule _ApRefFirstPRule_; /* premiere regle de la chaine des
 					 regles a appliquer pour l'attribut*/
     } s1;
     struct
     {
-      Name	   _RPATxtVal_;	/*la valeur qui declenche l'application
+      Name	   _ApString_;	/*la valeur qui declenche l'application
 				  des regles de presentation */
-      PtrPRule _RPATxt_;	/* premiere regle de la chaine des
+      PtrPRule _ApTextFirstPRule_;	/* premiere regle de la chaine des
 				   regles a appliquer pour cette val */
     } s2;
     struct
     {
-      PtrPRule _RPAValEnum_[MAX_ATTR_VAL + 1]; /* pour chaque valeur de
+      PtrPRule _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* pour chaque valeur de
 					   l'attribut, dans l'ordre de la table
 					   AttrEnumValue, adresse de la premiere
 					   regle de presentation associee a
@@ -656,12 +656,12 @@ typedef struct _AttributePres
   } u;
 } AttributePres;
 
-#define ApNCases u.s0._RPANbCas_
-#define ApCase u.s0._RPACas_
-#define ApRefFirstPRule u.s1._RPARefPremRegle_
-#define ApString u.s2._RPATxtVal_
-#define ApTextFirstPRule u.s2._RPATxt_
-#define ApEnumFirstPRule u.s3._RPAValEnum_
+#define ApNCases u.s0._ApNCases_
+#define ApCase u.s0._ApCase_
+#define ApRefFirstPRule u.s1._ApRefFirstPRule_
+#define ApString u.s2._ApString_
+#define ApTextFirstPRule u.s2._ApTextFirstPRule_
+#define ApEnumFirstPRule u.s3._ApEnumFirstPRule_
 
 /* table de noms de vues */
 typedef Name     ViewTable[MAX_VIEW];

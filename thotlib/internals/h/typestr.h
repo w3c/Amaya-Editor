@@ -91,22 +91,22 @@ typedef struct _TtAttribute
 	    int     _AttrTypeRef_;	
 	    /* schema de struct ou est defini le type d'elt reference', 0 si
 	       meme schema */	
-	    Name             _AttrNatTypeRef_;
+	    Name             _AttrTypeRefNature_;
 	  } s2;
 	  struct			/* AttribType = AtEnumAttr */
 	  {
 	    /* nombre de valeurs possibles: (taille effective de la table
 	       AttrEnumValue) */
-	    int   _NbValAttr_;
-	    Name             _ValeurAttr_[MAX_ATTR_VAL]; /* noms de ces valeurs */
+	    int   _AttrNEnumValues_;
+	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* noms de ces valeurs */
 	  } s3;
 	} u;
 } TtAttribute;
 
 #define AttrTypeRef u.s2._AttrTypeRef_
-#define AttrTypeRefNature u.s2._AttrNatTypeRef_
-#define AttrNEnumValues u.s3._NbValAttr_
-#define AttrEnumValue u.s3._ValeurAttr_
+#define AttrTypeRefNature u.s2._AttrTypeRefNature_
+#define AttrNEnumValues u.s3._AttrNEnumValues_
+#define AttrEnumValue u.s3._AttrEnumValue_
 
 
 typedef struct _StructSchema *PtrSSchema;
@@ -159,80 +159,80 @@ typedef struct _SRule
 	{
 	  struct			/* SrConstruct = CsNatureSchema */
 	  {
-	    	PtrSSchema    _PtSchStrNat_;	/* schema de str de la nature*/
-		Name             _RealName_;	/* nom (traduit) de la nature*/
+	    	PtrSSchema    _SrSSchemaNat_;	/* schema de str de la nature*/
+		Name             _SrOrigNat_;	/* nom (traduit) de la nature*/
 	  } s0;
 	  struct			/* SrConstruct = CsBasicElement */
 	  {
-		BasicType      _TypeB_;
+		BasicType      _SrBasicType_;
 	  } s1;
 	  struct			/* SrConstruct = CsReference */
 	  {
 	    	/*numero de la regle definissant le type d'element reference'*/
-	    	int     _TypeRef_;
+	    	int     _SrReferredType_;
 		/*schema de structure ou est defini le type d'element
 		  reference', octet nul si meme schema */
-		Name             _NatTypeRef_;	
+		Name             _SrRefTypeNat_;	
 	  } s2;
 	  struct			/* SrConstruct = CsIdentity */
 	  {
-		int     _RegleIdent_; /* numero de la regle definissant
+		int     _SrIdentRule_; /* numero de la regle definissant
 						 le symbole droit */
 	  } s3;
 	  struct			/* SrConstruct = CsList */
 	  {
-		int     _ElementListe_;/*numero de la regle definissant 
+		int     _SrListItem_;/*numero de la regle definissant 
 						 les elements de la liste */
-		int             _NbMinElem_;   /* nombre minimum d'elts */
-		int             _NbMaxElem_;   /* nombre maximum d'elts */
+		int             _SrMinItems_;   /* nombre minimum d'elts */
+		int             _SrMaxItems_;   /* nombre maximum d'elts */
 	  } s4;
 	  struct			/* SrConstruct = CsChoice */
 	  {
-	    	int 		_NbPossibles_; /* -1..MAX_OPTION_CASE, nombre
+	    	int 		_SrNChoices_; /* -1..MAX_OPTION_CASE, nombre
 						d'elements du choix, ou  0 si
 						unite quelconque (UNIT), ou -1
 						si nature quelconque (NATURE)*/
-		int	_Possibles_[MAX_OPTION_CASE];	/* numeros des
+		int	_SrChoice_[MAX_OPTION_CASE];	/* numeros des
 				regles definissant chaque element du choix */
 	  } s5;
 	  struct			/* SrConstruct = CsAggregate | CsUnorderedAggregate */
 	  {
-	    	int		_NbComposants_; /* 0..MAX_COMP_AGG, nombre de 
+	    	int		_SrNComponents_; /* 0..MAX_COMP_AGG, nombre de 
 						   composants de l'agregat */
-		int	_Composants_[MAX_COMP_AGG]; /* numeros des regles
+		int	_SrComponent_[MAX_COMP_AGG]; /* numeros des regles
 						definissant chaque composant */
-		boolean         _CompOptionnel_[MAX_COMP_AGG]; /* table des
+		boolean         _SrOptComponent_[MAX_COMP_AGG]; /* table des
 						composants optionnels */
 	  } s6;
 	  struct			/* SrConstruct = CsConstant */
 	  {
-	    	int 		_PtConst_;	/* 1..MAX_LEN_ALL_CONST, Indice dans 
+	    	int 		_SrIndexConst_;	/* 1..MAX_LEN_ALL_CONST, Indice dans 
 						SsConstBuffer du debut de la
 						chaine constante */
 	  } s7;
 	  struct			/* SrConstruct = CsPairedElement */
 	  {
-		boolean		_DebutPaire_;	/* marque de debut ou de fin */
+		boolean		_SrFirstOfPair_;	/* marque de debut ou de fin */
 	  } s8;
 	} u;
 } SRule;
 
-#define SrSSchemaNat u.s0._PtSchStrNat_
-#define SrOrigNat u.s0._RealName_
-#define SrBasicType u.s1._TypeB_
-#define SrReferredType u.s2._TypeRef_
-#define SrRefTypeNat u.s2._NatTypeRef_
-#define SrIdentRule u.s3._RegleIdent_
-#define SrListItem u.s4._ElementListe_
-#define SrMinItems u.s4._NbMinElem_
-#define SrMaxItems u.s4._NbMaxElem_
-#define SrNChoices u.s5._NbPossibles_
-#define SrChoice u.s5._Possibles_
-#define SrNComponents u.s6._NbComposants_
-#define SrComponent u.s6._Composants_
-#define SrOptComponent u.s6._CompOptionnel_
-#define SrIndexConst u.s7._PtConst_
-#define SrFirstOfPair u.s8._DebutPaire_
+#define SrSSchemaNat u.s0._SrSSchemaNat_
+#define SrOrigNat u.s0._SrOrigNat_
+#define SrBasicType u.s1._SrBasicType_
+#define SrReferredType u.s2._SrReferredType_
+#define SrRefTypeNat u.s2._SrRefTypeNat_
+#define SrIdentRule u.s3._SrIdentRule_
+#define SrListItem u.s4._SrListItem_
+#define SrMinItems u.s4._SrMinItems_
+#define SrMaxItems u.s4._SrMaxItems_
+#define SrNChoices u.s5._SrNChoices_
+#define SrChoice u.s5._SrChoice_
+#define SrNComponents u.s6._SrNComponents_
+#define SrComponent u.s6._SrComponent_
+#define SrOptComponent u.s6._SrOptComponent_
+#define SrIndexConst u.s7._SrIndexConst_
+#define SrFirstOfPair u.s8._SrFirstOfPair_
 
 typedef struct _PresentSchema *PtrPSchema;
 typedef struct _HandlePSchema *PtrHandlePSchema;
