@@ -229,20 +229,13 @@ typedef enum _ClickEvent {
 #define NewSVGLibraryTitle      12
 #define NewSVGLibrary           13
 #define SVGLibraryURL           14
-#define SVGFileDir              15
-#define SVGFileSel              16
-#define SVGFilter               17
-#define SVGLibraryDir           18
-#define SVGLibrarySel           19
-#define LibraryFilter           20
-#define SVGFileBrowser          21
-#define SVGFileBrowserText      22
-#define SVGLibFileBrowser       23
-#define SVGLibFileBrowserText   24
-#define LibraryCopyOption       25
-#define SVGLibStaticCopy        26
-#define SVGLibDynamicCopy       27
-#define LIBRARY_MAX_REF         28
+#define SVGLibraryDir           15
+#define SVGLibrarySel           16
+#define LibraryFilter           17
+#define SVGLibFileBrowser       18
+#define SVGLibFileBrowserText   19
+#define LibraryCopyOption       20
+#define LIBRARY_MAX_REF         21
 
 #define ImageURL	1
 #define ImageLabel	2

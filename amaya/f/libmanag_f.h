@@ -13,9 +13,9 @@ extern void CopySvgInformationTree ( Document doc,
 extern void CallbackLibrary ( int ref,
                               int typedata,
                               char *data );
-extern void CreateNewCatalogueDialogue ( Document doc,
-                                         View view );
-extern void ShowLibraryBrowser ( int FileSuffix );
+extern void CreateNewLibraryDialog ( Document doc,
+                                     View view );
+extern void ShowLibraryBrowser ( void );
 extern int SVGLibraryListItemNumber ( char *buffer );
 extern char *IsSVGCatalogueExist ( char *data );
 extern void AddGraphicalObjectIntoCatalogue ( Document doc,
@@ -65,6 +65,9 @@ extern void MakeStaticCopy ( Element copiedEl,
                              Document selDoc,
                              Document destDoc,
                              char *newurl );
+extern void CopyUseElementAttribute ( Element useEl,
+                                      Element destElement,
+                                      Document doc );
 extern void AddSVGModelIntoLibrary ( Document libraryDoc,
                                      ThotBool newLib,
                                      char *libraryTitle );
@@ -96,9 +99,9 @@ extern void CopySvgInformationTree (/* Document doc,
 extern void CallbackLibrary (/* int ref,
                                 int typedata,
                                 char *data */);
-extern void CreateNewCatalogueDialogue (/* Document doc,
-                                           View view */);
-extern void ShowLibraryBrowser (/* int FileSuffix */);
+extern void CreateNewLibraryDialog (/* Document doc,
+                                       View view */);
+extern void ShowLibraryBrowser (/* void */);
 extern int SVGLibraryListItemNumber (/* char *buffer */);
 extern char *IsSVGCatalogueExist (/* char *data */);
 extern void AddGraphicalObjectIntoCatalogue (/* Document doc,
@@ -148,6 +151,9 @@ extern void MakeStaticCopy (/* Element copiedEl,
                                Document selDoc,
                                Document destDoc,
                                char *newurl */);
+extern void CopyUseElementAttribute (/* Element useEl,
+                                        Element destElement,
+                                        Document doc */);
 extern void AddSVGModelIntoLibrary (/* Document libraryDoc,
                                        ThotBool newLib,
                                        char *libraryTitle */);

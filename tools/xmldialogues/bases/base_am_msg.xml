@@ -2914,18 +2914,6 @@
 	<message xml:lang="de">Der Titel der Bibliothek muss angegeben werden</message>
 	<message xml:lang="fi">Kirjaston otsikko on pakollinen</message>
 </label>
-<label define="AM_SVGLIB_COPY_STATIC">
-	<message xml:lang="en">Static copy</message>
-	<message xml:lang="fr">Copie statique</message>
-	<message xml:lang="de">Statisch kopieren</message>
-	<message xml:lang="fi">Staattinen kopio</message>
-</label>
-<label define="AM_SVGLIB_COPY_DYNAMIC">
-	<message xml:lang="en">Dynamic copy</message>
-	<message xml:lang="fr">Copie dynamique</message>
-	<message xml:lang="de">Dynamisch kopieren</message>
-	<message xml:lang="fi">Dynaaminen kopio</message>
-</label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a new key position...</message>
 	<message xml:lang="fr">Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...</message>
