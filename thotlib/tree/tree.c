@@ -1438,7 +1438,7 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement          FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
+PtrElement FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
    return FwdSearchElem2Types (pEl, typeNum, 0, pSS, NULL);
 }
@@ -1487,7 +1487,7 @@ static PtrElement   BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2, int
    stringsm symbols, graphic elements, ...
    The function returns a pointed to the found element or NULL.
   ----------------------------------------------------------------------*/
-PtrElement          BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
+PtrElement BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2, PtrSSchema pSS1, PtrSSchema pSS2)
 {
    PtrElement          pRet, pCur;
 
@@ -2287,9 +2287,9 @@ ThotBool          IsConstantConstructor (PtrElement pEl)
    the function does not create them (case of a pivot read).
    withLabel tells if one must give the element a new label.
   ----------------------------------------------------------------------*/
-PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
-				int assocNum, ThotBool Desc, ThotBool Root,
-				ThotBool withAttr, ThotBool withLabel)
+PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
+		       int assocNum, ThotBool Desc, ThotBool Root,
+		       ThotBool withAttr, ThotBool withLabel)
 {  
   PtrElement          pEl, t1, t2;
   int                 i;
@@ -3629,7 +3629,7 @@ void                CheckLanguageAttr (PtrDocument pDoc, PtrElement pEl)
    Return value:
    the document element of the abstract tree.
    ---------------------------------------------------------------------- */
-Element             TtaGetMainRoot (Document document)
+Element TtaGetMainRoot (Document document)
 {
    PtrElement          element;
 

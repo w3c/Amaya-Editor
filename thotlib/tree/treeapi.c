@@ -88,7 +88,7 @@ void             ChangeElementType (Element element, int typeNum)
    the created element.
 
    ---------------------------------------------------------------------- */
-Element             TtaNewElement (Document document, ElementType elementType)
+Element TtaNewElement (Document document, ElementType elementType)
 {
    PtrElement          element;
 
@@ -942,7 +942,7 @@ void                TtaInsertSibling (Element newElement, Element sibling,
 
    Asks interactive creation for "UserSpecified" elements
    ---------------------------------------------------------------------- */
-void                TtaAskFirstCreation ()
+void TtaAskFirstCreation ()
 {
    FirstCreation = TRUE;
 }
@@ -963,8 +963,8 @@ void                TtaAskFirstCreation ()
    If newElement is an option that replaces the choice, newElement takes
    the value of parent.
    ---------------------------------------------------------------------- */
-void                TtaInsertFirstChild (Element * newElement, Element parent,
-					 Document document)
+void TtaInsertFirstChild (Element * newElement, Element parent,
+			  Document document)
 {
 #ifndef NODISPLAY
    PtrElement          pNeighbour;
@@ -1477,7 +1477,7 @@ void                TtaNextAssociatedRoot (Document document, Element * root)
    Return value:
    the first child element of parent; NULL if parent has no child.
    ---------------------------------------------------------------------- */
-Element             TtaGetFirstChild (Element parent)
+Element TtaGetFirstChild (Element parent)
 {
    PtrElement          child;
 

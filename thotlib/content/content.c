@@ -1040,7 +1040,7 @@ int                 TtaGetTextLength (Element element)
    language: language of the text.
 
   ----------------------------------------------------------------------*/
-void                TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
+void TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
 {
    PtrTextBuffer       pBuf;
    STRING              ptr;
@@ -1076,3 +1076,5 @@ void                TtaGiveTextContent (Element element, STRING buffer, int *len
 	*language = ((PtrElement) element)->ElLanguage;
      }
 }
+
+

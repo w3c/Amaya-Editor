@@ -846,7 +846,7 @@ CHAR_T*             TtaGetDocumentName (Document document)
    Return value:
    the document having that name.
   ----------------------------------------------------------------------*/
-Document            TtaGetDocumentFromName (STRING documentName)
+Document TtaGetDocumentFromName (STRING documentName)
 {
    int                 document;
    ThotBool            found;
@@ -906,7 +906,7 @@ void TtaGetDocumentDirectory (Document document, STRING buffer, int bufferLength
    Return value:
    the structure schema of that document.
   ----------------------------------------------------------------------*/
-SSchema             TtaGetDocumentSSchema (Document document)
+SSchema  TtaGetDocumentSSchema (Document document)
 {
   SSchema             schema;
 
@@ -1325,7 +1325,7 @@ int                 TtaIsDocumentUpdated (Document document)
    Return value:
    0 if access mode is read only, 1 if access mode is read-write.
   ----------------------------------------------------------------------*/
-int                 TtaGetDocumentAccessMode (Document document)
+int TtaGetDocumentAccessMode (Document document)
 {
   int                 result;
 

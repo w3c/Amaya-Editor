@@ -378,7 +378,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    ChangeTitle
    Update the TITLE for the document.
   ----------------------------------------------------------------------*/
-void                ChangeTitle (Document doc, View view)
+void ChangeTitle (Document doc, View view)
 {
    ElementType         elType;
    Element             el, child;
@@ -427,7 +427,7 @@ void                ChangeTitle (Document doc, View view)
    SetNewTitle
    Update the TITLE for the document.
   ----------------------------------------------------------------------*/
-void                SetNewTitle (Document doc)
+void SetNewTitle (Document doc)
 {
    ElementType         elType;
    Element             el, child;
