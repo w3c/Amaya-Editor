@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ApplyInherit ( PRuleType ruleType,
+			   PtrAbstractBox pAb,
+			   PtrDocument pDoc,
+			   ThotBool display);
 extern int NumTypePRuleAPI ( PtrPRule pRule );
 extern int RuleSetIn ( int num,
                        RuleSet RuleS1 );
@@ -47,6 +51,10 @@ extern void TtaNextPRule ( Element element,
 
 #else /* __STDC__ */
 
+extern void ApplyInherit (/* PRuleType ruleType,
+			     PtrAbstractBox pAb,
+			     PtrDocument pDoc,
+			     ThotBool display */);
 extern int NumTypePRuleAPI (/* PtrPRule pRule */);
 extern int RuleSetIn (/* int num,
                          RuleSet RuleS1 */);

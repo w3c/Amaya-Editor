@@ -3964,17 +3964,15 @@ PtrSSchema          pSS;
    ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS, TRUE);
 }
 
-
-
 /*----------------------------------------------------------------------
    SetChange marque dans le pave pAbb que la regle de type typeRule a 
    change'.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetChange (PtrAbstractBox pAb, PRuleType typeRule)
+void         SetChange (PtrAbstractBox pAb, PRuleType typeRule)
 
 #else  /* __STDC__ */
-static void         SetChange (pAb, typeRule)
+void         SetChange (pAb, typeRule)
 PtrAbstractBox      pAb;
 PRuleType           typeRule;
 #endif /* __STDC__ */
@@ -4036,7 +4034,6 @@ PRuleType           typeRule;
       pAb->AbChange = TRUE;
       break;
     }
-
 }
 
 
@@ -4174,23 +4171,22 @@ PtrAttribute        pAttr;
 		    /* reapplique la regle complementaire */
 		    if (pRule->PrType == PtVertPos)
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight, FnAny,
-						  TRUE, &pAttr2);
+			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
+						  FnAny, TRUE, &pAttr2);
 			 if (pRegle2 != NULL)
 			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
 			       pAb->AbHeightChange = TRUE;
 		      }
 		    else
 		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos, FnAny,
-						  TRUE, &pAttr2);
-			 if (pRegle2 != NULL)
-			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			       pAb->AbVertPosChange = TRUE;
+			pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
+						 FnAny, TRUE, &pAttr2);
+			if (pRegle2 != NULL)
+			  if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+			    pAb->AbVertPosChange = TRUE;
 		      }
 	}
       else if (pRule->PrType == PtHorizPos || pRule->PrType == PtWidth)
-
 	 /* c'est une regle de dimension ou de position horiz. */
 	{
 	   if (pAb->AbWidth.DimIsPosition)
@@ -4198,28 +4194,27 @@ PtrAttribute        pAttr;
 	      if (pAb->AbBox != NULL)
 		 /* le pave possede une boite dans l'image concrete */
 		 if (pAb->AbBox->BxHorizInverted)
-		    /* la boite a ete inverse'e horizontalement, on */
-		    /* reapplique la regle complementaire */
-		    if (pRule->PrType == PtHorizPos)
-		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth, FnAny,
-						  TRUE, &pAttr2);
-			 if (pRegle2 != NULL)
-			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			       pAb->AbWidthChange = TRUE;
-		      }
-		    else
-		      {
-			 pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos, FnAny,
-						  TRUE, &pAttr2);
-			 if (pRegle2 != NULL)
-			    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
-			       pAb->AbHorizPosChange = TRUE;
-		      }
+		   /* la boite a ete inverse'e horizontalement, on */
+		   /* reapplique la regle complementaire */
+		   if (pRule->PrType == PtHorizPos)
+		     {
+		       pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
+						FnAny, TRUE, &pAttr2);
+		       if (pRegle2 != NULL)
+			 if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+			   pAb->AbWidthChange = TRUE;
+		     }
+		   else
+		     {
+		       pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
+						FnAny, TRUE, &pAttr2);
+		       if (pRegle2 != NULL)
+			 if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+			   pAb->AbHorizPosChange = TRUE;
+		     }
 	}
    return ret;
 }
-
 
 /*----------------------------------------------------------------------
    ElemWithinImage  checks if abstract boxes of the element pEl 
@@ -4354,7 +4349,6 @@ PtrDocument         pDoc;
    return (result);
 }
 
-
 /*----------------------------------------------------------------------
    UpdatePresAttr
    Pour l'element pEl dans le document pDoc, supprime 
@@ -4423,8 +4417,9 @@ PtrAttribute        pAttrComp;
 		TFonct = pR->PrPresFunction;
 	     pRuleView1 = NULL;
 	     if (pR->PrViewNum == 1)
-		/* regle pour la vue 1 */
-		pRuleView1 = pR;	/* on la garde pour le cas ou on ne trouve pas mieux */
+	       /* regle pour la vue 1 */
+	       /* on la garde pour le cas ou on ne trouve pas mieux */
+	       pRuleView1 = pR;
 
 	     for (view = 1; view <= MAX_VIEW_DOC; view++)
 	       {
@@ -4438,8 +4433,8 @@ PtrAttribute        pAttrComp;
 		  if (existingView)
 		    {
 		       viewSch = AppliedView (pEl, pAttr, pDoc, view);
-		       /* on ne considere les schemas de presentation additionnels que */
-		       /* pour la vue principale */
+		       /* on ne considere les schemas de presentation
+			  additionnels que pour la vue principale */
 		       existingView = (pHd == NULL || viewSch == 1);
 		    }
 		  if (existingView)
@@ -4485,7 +4480,7 @@ PtrAttribute        pAttrComp;
 			    pR = NULL;
 		    }
 		  else
-		    pR = NULL;/********/
+		    pR = NULL;
 		  if (pR != NULL)
 		    {
 		       pReaff = NULL;

@@ -49,6 +49,7 @@
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "changeabsbox_f.h"
+#include "changepresent_f.h"
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
@@ -2634,17 +2635,26 @@ PtrDocument         pDoc;
 			    &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbTopMargin != 0)
-        result = TRUE;
+       {
+	 ApplyInherit (PtMarginTop, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderTopWidth, FnAny, TRUE,
 			    &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbTopBorder != 0)
-        result = TRUE;
+       {
+	 ApplyInherit (PtBorderTopWidth, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingTop, FnAny, TRUE,
 			    &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbTopPadding != 0)
-        result = TRUE;
+       {
+	 ApplyInherit (PtPaddingTop, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
      }
    else
      /* generate space at the bottom of the abstract box */
@@ -2653,18 +2663,27 @@ PtrDocument         pDoc;
 			    &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbBottomMargin != 0)
-        result = TRUE;
+       {
+	 ApplyInherit (PtMarginBottom, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderBottomWidth, FnAny,
 			    TRUE, &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbBottomBorder != 0)
-        result = TRUE;
+       {
+	 ApplyInherit (PtBorderBottomWidth, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingBottom, FnAny, TRUE,
 			    &pAttr);
      ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
      if (pAb->AbBottomPadding != 0)
-        result = TRUE;
-     }
+       {
+	 ApplyInherit (PtPaddingBottom, pAb, pDoc, FALSE);
+	 result = TRUE;
+       }
+    }
    if (result && !pAb->AbNew)
       pAb->AbMBPChange = TRUE;
 }
@@ -3850,7 +3869,7 @@ PtrAbstractBox      pNewAbbox;
      }
    while (pRule != NULL);
 
-   /* ApplyRule les regles de presentation pour ce type d'element contenues */
+   /* Applique les regles de presentation pour ce type d'element contenues */
    /* dans les schemas de presentation additionnels du document */
    /* On n'applique les schemas additionnels que pour la vue principale d'un */
    /* document */
@@ -3883,10 +3902,9 @@ PtrAbstractBox      pNewAbbox;
 	  }
      }
 
-   /* ApplyRule les regles de presentation heritees des attributs  */
+   /* Applique les regles de presentation heritees des attributs  */
    /* poses sur les elements englobants s'il y a heritage, */
    /* alors la table a deja ete calcule precedemment */
-   /* on remet l'affectation pour decouper le code */
    inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
    if (pNewAbbox != NULL)
       if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
@@ -3901,7 +3919,7 @@ PtrAbstractBox      pNewAbbox;
 				      pEl, forward, lqueue, queuePR,
 				      queuePP, queuePS, queuePA,
 				      pNewAbbox, TRUE);
-   /* ApplyRule les regles de presentation des attributs de l'element. */
+   /* Applique les regles de presentation des attributs de l'element. */
    pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
    if (pNewAbbox != NULL)
       while (pAttr != NULL)	/* boucle sur les attributs de l'element */
@@ -3914,7 +3932,7 @@ PtrAbstractBox      pNewAbbox;
 	   pAttr = pAttr->AeNext;
 	}
 
-   /* ApplyRule les regles de presentation specifiques associees a cet */
+   /* Applique les regles de presentation specifiques associees a cet */
    /* element */
    pR = pEl->ElFirstPRule;
    while (pR != NULL)
@@ -3928,8 +3946,8 @@ PtrAbstractBox      pNewAbbox;
 	       && DoesViewExist (pEl, pDoc, viewNb))
 	     {
 		if (pR->PrSpecifAttr == 0)
+		   /* cette regle ne depend pas d'un attribut */
 		   pAttr = NULL;
-		/* cette regle ne depend pas d'un attribut */
 		else
 		   /* cherche l'attribut dont depend la regle */
 		  {

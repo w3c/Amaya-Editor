@@ -446,6 +446,7 @@ STRING              pathname;
 
 
 /*----------------------------------------------------------------------
+  InitSaveObjectForm
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitSaveObjectForm (Document document, View view, STRING object, STRING pathname)
@@ -487,6 +488,7 @@ STRING              pathname;
 }
 
 /*----------------------------------------------------------------------
+  DeleteTempObjectFile
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeleteTempObjectFile (void)
@@ -499,6 +501,7 @@ void                DeleteTempObjectFile ()
 
 
 /*----------------------------------------------------------------------
+  DoSaveObjectAs
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DoSaveObjectAs (void)

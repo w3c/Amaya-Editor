@@ -479,7 +479,6 @@ Document            doc;
 {
    ElementType         elType;
    Element             el, child;
-   Language            lang;
 
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */

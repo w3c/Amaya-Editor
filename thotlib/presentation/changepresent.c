@@ -66,31 +66,22 @@
 #include "undo_f.h"
 #include "unstructchange_f.h"
 
-#ifdef __STDC__
-static void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc);
-
-#else  /* __STDC__ */
-static void         ApplyInherit ();
-
-#endif /* __STDC__ */
-
-
 /*----------------------------------------------------------------------
   ApplyRuleSubTree
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyRuleSubTree (PtrElement pE, PRuleType ruleType, PtrDocument pDoc, PtrPRule * pPRule, int view)
+static void         ApplyRuleSubTree (PtrElement pE, PRuleType ruleType, PtrDocument pDoc, PtrPRule * pPRule, int view, ThotBool display)
 #else  /* __STDC__ */
-static void         ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view)
+static void         ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view, display)
 PtrElement          pE;
 PRuleType           ruleType;
 PtrDocument         pDoc;
 PtrPRule           *pPRule;
 int                 view;
+ThotBool            display;
 
 #endif /* __STDC__ */
 {
-   ThotBool            stop;
    PtrAbstractBox      pAbb, pAbbF;
    PtrPSchema          pSPR;
    PtrAttribute        pAttr;
@@ -98,44 +89,42 @@ int                 view;
    if (pE->ElTerminal)
       pE = NULL;
    else
-      pE = pE->ElFirstChild;	/* on passe au premier fils */
-   while (pE != NULL)
+      /* on passe au premier fils */
+      pE = pE->ElFirstChild;
+   /* traite tous les fils */
+   while (pE)
      {
-	pAbb = pE->ElAbstractBox[view - 1];	/* 1er pave de l'element dans la view */
-	if (pAbb != NULL)
+	/* 1er pave de l'element dans la view */
+	pAbb = pE->ElAbstractBox[view - 1];
+	if (pAbb)
 	   if (pAbb->AbDead)
 	      pAbb = NULL;	/* on ne traite pas les paves morts */
 	if (pAbb == NULL)
 	   /* cet element n'a pas de pave, mais ses descendants en */
 	   /* ont peut etre... */
-	   ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view);
+	   ApplyRuleSubTree (pE, ruleType, pDoc, pPRule, view, display);
 	else
 	  {
-	     /* il y a un element descendant dont les paves peuvent heriter de pAb. 
-	        On parcourt ses paves dans la view */
-	     stop = FALSE;
-	     while (!stop)
+	     /* il y a un element descendant dont les paves peuvent heriter
+		de pAb. On parcourt ses paves dans la vue */
+	     do
 	       {
-		  *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, FnAny, TRUE, &pAttr);
-		  if (*pPRule != NULL)
+		  *pPRule = SearchRulepAb (pDoc, pAbb, &pSPR, ruleType, FnAny,
+					   TRUE, &pAttr);
+		  if (*pPRule)
 		    {
-		       if ((*pPRule)->PrPresMode == PresInherit && ((*pPRule)->PrInheritMode == InheritParent ||
+		       if ((*pPRule)->PrPresMode == PresInherit &&
+			   ((*pPRule)->PrInheritMode == InheritParent ||
 			    (*pPRule)->PrInheritMode == InheritGrandFather))
 			  /* la regle de ce pave herite de l'ascendant, */
 			  /* on applique la regle */
 			  if (ApplyRule (*pPRule, pSPR, pAbb, pDoc, pAttr))
 			    {
-			       if (ruleType == PtSize)
-				  pAbb->AbSizeChange = TRUE;
-			       else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-					ruleType == PtLineWeight || ruleType == PtFillPattern ||
-					ruleType == PtBackground || ruleType == PtForeground)
-				  pAbb->AbAspectChange = TRUE;
-			       else
-				  pAbb->AbChange = TRUE;
-			       RedispAbsBox (pAbb, pDoc);
+			       SetChange (pAbb, ruleType);
+			       if (display)
+				 RedispAbsBox (pAbb, pDoc);
 			       if (!pAbb->AbPresentationBox)
-				  ApplyInherit (ruleType, pAbb, pDoc);
+				 ApplyInherit (ruleType, pAbb, pDoc, display);
 			    }
 		    }
 		  if (!pAbb->AbPresentationBox)
@@ -143,29 +132,22 @@ int                 view;
 		     /* les paves crees par l'element au niveau inferieur */
 		    {
 		       pAbbF = pAbb->AbFirstEnclosed;
-		       while (pAbbF != NULL)
+		       while (pAbbF)
 			 {
 			    if (pAbbF->AbElement == pE)
 			      {
-				 *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR, ruleType, FnAny, TRUE, &pAttr);
-				 if (*pPRule != NULL)
+				 *pPRule = SearchRulepAb (pDoc, pAbbF, &pSPR,
+						ruleType, FnAny, TRUE, &pAttr);
+				 if (*pPRule)
 				   {
 				      if ((*pPRule)->PrPresMode == PresInherit
 					  && (*pPRule)->PrInheritMode == InheritParent)
-					 if (ApplyRule (*pPRule, pSPR, pAbbF, pDoc, pAttr))
+					 if (ApplyRule (*pPRule, pSPR, pAbbF,
+							pDoc, pAttr))
 					   {
-					      if (ruleType == PtSize)
-						 pAbbF->AbSizeChange = TRUE;
-					      else if (ruleType == PtDepth ||
-						  ruleType == PtLineStyle ||
-						 ruleType == PtLineWeight ||
-						 ruleType == PtFillPattern ||
-						 ruleType == PtBackground ||
-						   ruleType == PtForeground)
-						 pAbb->AbAspectChange = TRUE;
-					      else
-						 pAbbF->AbChange = TRUE;
-					      RedispAbsBox (pAbbF, pDoc);
+					     SetChange (pAbbF, ruleType);
+					     if (display)
+					       RedispAbsBox (pAbbF, pDoc);
 					   }
 				   }
 			      }
@@ -173,33 +155,30 @@ int                 view;
 			 }
 		    }
 		  pAbb = pAbb->AbNext;	/* passe au pave suivant */
-		  if (pAbb == NULL)
-		     stop = TRUE;	/* pas de pave suivant, on arrete */
-		  else
-		     /* on arrete si le pave suivant n'appartient pas a */
-		     /* l'element */
-		     stop = pAbb->AbElement != pE;
 	       }
+	       /* on arrete s'il n'y a pas de pave suivant ou si le pave
+		  suivant n'appartient pas a l'element */
+	     while (pAbb && pAbb->AbElement == pE);
 	  }
 	pE = pE->ElNext;	/* on traite l'element suivant */
      }
 }
 
-
 /*----------------------------------------------------------------------
-   	ApplyInherit on vient d'appliquer la regle de presentation de type	
+  ApplyInherit  On vient d'appliquer la regle de presentation de type	
    		ruleType au pave pAb. Verifie si les paves environnants	
    		heritent de cette regle et si oui leur applique		
-   		l'heritage.						
+   		l'heritage et on les r'eaffiche si display est TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
+void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc, ThotBool display)
 
 #else  /* __STDC__ */
-static void         ApplyInherit (ruleType, pAb, pDoc)
+void         ApplyInherit (ruleType, pAb, pDoc, display)
 PRuleType           ruleType;
 PtrAbstractBox      pAb;
 PtrDocument         pDoc;
+ThotBool            display;
 
 #endif /* __STDC__ */
 
@@ -216,47 +195,38 @@ PtrDocument         pDoc;
    view = pAb->AbDocView;
    if (pEl->ElNext != NULL)
      {
-	/* l'element a un suivant. Celui-ci herite-t-il de son precedent ? */
+	/* l'element a un frere suivant. Celui-ci herite-t-il de son
+	   precedent ? */
 	pAbbCur = NULL;
 	while (pEl->ElNext != NULL && pAbbCur == NULL)
 	  {
 	     pEl = pEl->ElNext;
-	     pAbbCur = pEl->ElAbstractBox[view - 1];	/* saute les paves de presentation */
-	     stop = FALSE;
-	     do
-		if (pAbbCur == NULL)
-		   stop = TRUE;
-		else if (!pAbbCur->AbPresentationBox)
-		   stop = TRUE;
-		else
-		   pAbbCur = pAbbCur->AbNext;
-	     while (!stop);
-	     if (pAbbCur != NULL)
+	     pAbbCur = pEl->ElAbstractBox[view - 1];
+	     /* saute les paves de presentation */
+	     while (pAbbCur && pAbbCur->AbPresentationBox)
+	        pAbbCur = pAbbCur->AbNext;
+	     if (pAbbCur)
 		if (pAbbCur->AbDead)
 		   pAbbCur = NULL;
 	  }
-	if (pAbbCur != NULL)
+	if (pAbbCur)
 	  {
-	     /* il y a un element suivant dont le pave pAbbCur pourrait heriter de pAb */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
-	     if (pPRule != NULL)
+	     /* il y a un element suivant dont le pave pAbbCur pourrait
+		heriter de pAb. Cherche sa regle de presentation */
+	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
+				     TRUE, &pAttrib);
+	     if (pPRule)
 	       {
 		  if (pPRule->PrPresMode == PresInherit &&
 		      pPRule->PrInheritMode == InheritPrevious)
-		     /* la regle de cet element herite du precedent, on applique */
-		     /* la regle */
+		     /* la regle de cet element herite du precedent,
+			on applique la regle */
 		     if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 		       {
-			  if (ruleType == PtSize)
-			     pAbbCur->AbSizeChange = TRUE;
-			  else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-				   ruleType == PtLineWeight || ruleType == PtFillPattern ||
-				   ruleType == PtBackground || ruleType == PtForeground)
-			     pAbbCur->AbAspectChange = TRUE;
-			  else
-			     pAbbCur->AbChange = TRUE;
-			  ApplyInherit (ruleType, pAbbCur, pDoc);
-			  RedispAbsBox (pAbbCur, pDoc);
+			  SetChange (pAbbCur, ruleType);
+			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  if (display)
+			    RedispAbsBox (pAbbCur, pDoc);
 		       }
 	       }
 	  }
@@ -265,34 +235,29 @@ PtrDocument         pDoc;
    if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
       /* l'element a des descendants. Ceux-ci heritent-t-il de leur */
       /* ascendant ? */
-      ApplyRuleSubTree (pEl, ruleType, pDoc, &pPRule, view);
-   if (pEl->ElParent != NULL)
+      ApplyRuleSubTree (pEl, ruleType, pDoc, &pPRule, view, display);
+   if (pEl->ElParent)
      {
 	/* l'element a un ascendant. Celui-ci herite-t-il de son premier */
 	/* descendant ? */
 	pAbbCur = NULL;
-	while (pEl->ElParent != NULL && pAbbCur == NULL)
+	while (pEl->ElParent && !pAbbCur)
 	  {
 	     pEl = pEl->ElParent;
-	     pAbbCur = pEl->ElAbstractBox[view - 1];	/* saute les paves de presentation */
-	     stop = FALSE;
-	     do
-		if (pAbbCur == NULL)
-		   stop = TRUE;
-		else if (!pAbbCur->AbPresentationBox)
-		   stop = TRUE;
-		else
-		   pAbbCur = pAbbCur->AbNext;
-	     while (!(stop));
-	     if (pAbbCur != NULL)
+	     /* saute les paves de presentation */
+	     pAbbCur = pEl->ElAbstractBox[view - 1];
+	     while (pAbbCur && pAbbCur->AbPresentationBox)
+	        pAbbCur = pAbbCur->AbNext;
+	     if (pAbbCur)
 		if (pAbbCur->AbDead)
 		   pAbbCur = NULL;
 	  }
-	if (pAbbCur != NULL)
+	if (pAbbCur)
 	  {
-	     /* il y a un element ascendant dont le pave pAbbCur pourrait heriter */
-	     /* de pAb */
-	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
+	     /* il y a un element ascendant dont le pave pAbbCur pourrait
+		heriter de pAb */
+	     pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
+				     TRUE, &pAttrib);
 	     if (pPRule != NULL)
 		if (pPRule->PrPresMode == PresInherit &&
 		    pPRule->PrInheritMode == InheritChild)
@@ -300,16 +265,10 @@ PtrDocument         pDoc;
 		   /* applique la regle */
 		   if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 		     {
-			if (ruleType == PtSize)
-			   pAbbCur->AbSizeChange = TRUE;
-			else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-				 ruleType == PtLineWeight || ruleType == PtFillPattern ||
-			ruleType == PtBackground || ruleType == PtForeground)
-			   pAbbCur->AbAspectChange = TRUE;
-			else
-			   pAbbCur->AbChange = TRUE;
-			ApplyInherit (ruleType, pAbbCur, pDoc);
-			RedispAbsBox (pAbbCur, pDoc);
+		       SetChange (pAbbCur, ruleType);
+		       ApplyInherit (ruleType, pAbbCur, pDoc, display);
+		       if (display)
+			 RedispAbsBox (pAbbCur, pDoc);
 		     }
 	  }
      }
@@ -323,26 +282,23 @@ PtrDocument         pDoc;
 	pAbbCur = pAb->AbPrevious;
 	while (pAbbCur != NULL)
 	   if (!pAbbCur->AbPresentationBox || pAbbCur->AbElement != pEl)
-	      /* ce n'est pas un pave de presentation de l'element, on arrete */
+	      /* ce n'est pas un pave de presentation de l'element, on arrete*/
 	      pAbbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
+		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttrib);
 		if (pPRule != NULL)
-		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
-		      /* la regle de ce pave herite de son createur, on l'applique */
+		   if (pPRule->PrPresMode == PresInherit &&
+		       pPRule->PrInheritMode == InheritCreator)
+		      /* la regle de ce pave herite de son createur,
+			 on l'applique */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 			{
-			   if (ruleType == PtSize)
-			      pAbbCur->AbSizeChange = TRUE;
-			   else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-				    ruleType == PtLineWeight || ruleType == PtFillPattern ||
-				    ruleType == PtBackground || ruleType == PtForeground)
-			      pAbbCur->AbAspectChange = TRUE;
-			   else
-			      pAbbCur->AbChange = TRUE;
-			   ApplyInherit (ruleType, pAbbCur, pDoc);
-			   RedispAbsBox (pAbbCur, pDoc);
+			  SetChange (pAbbCur, ruleType);
+			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  if (display)
+			    RedispAbsBox (pAbbCur, pDoc);
 			}
 		/* examine le pave precedent */
 		pAbbCur = pAbbCur->AbPrevious;
@@ -351,61 +307,55 @@ PtrDocument         pDoc;
 	pAbbCur = pAb->AbNext;
 	while (pAbbCur != NULL)
 	   if (!pAbbCur->AbPresentationBox || pAbbCur->AbElement != pEl)
-	      /* ce n'est pas un pave de presentation de l'element, on arrete */
+	      /* ce n'est pas un pave de presentation de l'element, on arrete*/
 	      pAbbCur = NULL;
 	   else
 	     {
-		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
+		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttrib);
 		if (pPRule != NULL)
-		   if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
-		      /* la regle de ce pave herite de son createur, on l'applique */
+		   if (pPRule->PrPresMode == PresInherit &&
+		       pPRule->PrInheritMode == InheritCreator)
+		      /* la regle de ce pave herite de son createur,
+			 on l'applique */
 		      if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
 			{
-			   if (ruleType == PtSize)
-			      pAbbCur->AbSizeChange = TRUE;
-			   else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-				    ruleType == PtLineWeight || ruleType == PtFillPattern ||
-				    ruleType == PtBackground || ruleType == PtForeground)
-			      pAbbCur->AbAspectChange = TRUE;
-			   else
-			      pAbbCur->AbChange = TRUE;
-			   ApplyInherit (ruleType, pAbbCur, pDoc);
-			   RedispAbsBox (pAbbCur, pDoc);
+			  SetChange (pAbbCur, ruleType);
+			  ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			  if (display)
+			    RedispAbsBox (pAbbCur, pDoc);
 			}
 		/* examine le pave suivant */
 		pAbbCur = pAbbCur->AbNext;
 	     }
-	/* on regarde les paves crees au niveau inferieur (par Create et CreateLast) */
+	/* on regarde les paves crees au niveau inferieur (par CreateFirst et
+	   CreateLast) */
 	pAbbCur = pAb->AbFirstEnclosed;
-	while (pAbbCur != NULL)
+	while (pAbbCur)
 	  {
-	     if (pAbbCur->AbPresentationBox && pAbbCur->AbElement == pEl)
-		/* c'est un pave de presentation de l'element, on le traite */
-	       {
-		  pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny, TRUE, &pAttrib);
-		  if (pPRule != NULL)
-		     if (pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritCreator)
-			/* la regle de ce pave herite de son createur, on l'applique */
-			if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
-			  {
-			     if (ruleType == PtSize)
-				pAbbCur->AbSizeChange = TRUE;
-			     else if (ruleType == PtDepth || ruleType == PtLineStyle ||
-				      ruleType == PtLineWeight || ruleType == PtFillPattern ||
-				      ruleType == PtBackground || ruleType == PtForeground)
-				pAbbCur->AbAspectChange = TRUE;
-			     else
-				pAbbCur->AbChange = TRUE;
-			     ApplyInherit (ruleType, pAbbCur, pDoc);
-			     RedispAbsBox (pAbbCur, pDoc);
-			  }
-	       }
-	     /* examine le pave suivant */
-	     pAbbCur = pAbbCur->AbNext;
+	    if (pAbbCur->AbPresentationBox && pAbbCur->AbElement == pEl)
+	      /* c'est un pave de presentation de l'element, on le traite */
+	      {
+		pPRule = SearchRulepAb (pDoc, pAbbCur, &pSchP, ruleType, FnAny,
+					TRUE, &pAttrib);
+		if (pPRule)
+		  if (pPRule->PrPresMode == PresInherit &&
+		      pPRule->PrInheritMode == InheritCreator)
+		    /* la regle de ce pave herite de son createur,
+		       on l'applique */
+		    if (ApplyRule (pPRule, pSchP, pAbbCur, pDoc, pAttrib))
+		      {
+			SetChange (pAbbCur, ruleType);
+			ApplyInherit (ruleType, pAbbCur, pDoc, display);
+			if (display)
+			  RedispAbsBox (pAbbCur, pDoc);
+		      }
+	      }
+	    /* examine le pave suivant */
+	    pAbbCur = pAbbCur->AbNext;
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -727,66 +677,18 @@ PtrElement          pEl;
 		/* applique la regle de presentation specifique a ce pave' */
 		  if (ApplyRule (pPRule, NULL, pAb, pDoc, NULL))
 		    {
-		      switch (pPRule->PrType)
+		      if (pPRule->PrType == PtFunction)
 			{
-			case PtHeight:
-			  pAb->AbHeightChange = TRUE;
-			  break;
-			case PtWidth:
-			  pAb->AbWidthChange = TRUE;
-			  break;
-			case PtMarginTop:
-			case PtMarginBottom:
-			case PtPaddingTop:
-			case PtPaddingBottom:
-			case PtBorderTopWidth:
-			case PtBorderBottomWidth:
-			case PtMarginRight:
-			case PtMarginLeft:
-			case PtPaddingRight:
-			case PtPaddingLeft:
-			case PtBorderRightWidth:
-			case PtBorderLeftWidth:
-			  pAb->AbMBPChange = TRUE;
-			  break;
-			case PtVertPos:
-			  pAb->AbVertPosChange = TRUE;
-			  break;
-			case PtHorizPos:
-			  pAb->AbHorizPosChange = TRUE;
-			  break;
-			case PtSize:
-			  pAb->AbSizeChange = TRUE;
-			  break;
-			case PtDepth:
-			case PtLineStyle:
-			case PtLineWeight:
-			case PtFillPattern:
-			case PtBackground:
-			case PtForeground:
-			case PtBorderTopColor:
-			case PtBorderRightColor:
-			case PtBorderBottomColor:
-			case PtBorderLeftColor:
-			case PtBorderTopStyle:
-			case PtBorderRightStyle:
-			case PtBorderBottomStyle:
-			case PtBorderLeftStyle:
-			  pAb->AbAspectChange = TRUE;
-			  break;
-			case PtFunction:
 			  if (pPRule->PrPresFunction == FnPictureMode
 			      || pPRule->PrPresFunction == FnBackgroundPicture
 			      || pPRule->PrPresFunction == FnShowBox)
 			    pAb->AbAspectChange = TRUE;
 			  else
 			    pAb->AbChange = TRUE;
-			  break;
-			default:
-			  pAb->AbChange = TRUE;
-			  break;
 			}
-		      ApplyInherit (pPRule->PrType, pAb, pDoc);
+		      else
+			SetChange (pAb, pPRule->PrType);
+		      ApplyInherit (pPRule->PrType, pAb, pDoc, TRUE);
 		      /* indique le pave a faire reafficher */
 		      RedispAbsBox (pAb, pDoc);
 		    }
@@ -904,76 +806,21 @@ PtrPSchema          pSPR;
 
   ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
   /* marque que le pave a change' et doit etre reaffiche' */
-  switch (pRP->PrType)
+  if (pRP->PrType == PtFunction)
     {
-    case PtVertRef:
-      pAb->AbVertRefChange = TRUE;
-      break;
-    case PtHorizRef:
-      pAb->AbHorizRefChange = TRUE;
-      break;
-    case PtHeight:
-      pAb->AbHeightChange = TRUE;
-      break;
-    case PtMarginTop:
-    case PtMarginBottom:
-    case PtPaddingTop:
-    case PtPaddingBottom:
-    case PtBorderTopWidth:
-    case PtBorderBottomWidth:
-    case PtMarginRight:
-    case PtMarginLeft:
-    case PtPaddingRight:
-    case PtPaddingLeft:
-    case PtBorderRightWidth:
-    case PtBorderLeftWidth:
-      pAb->AbMBPChange = TRUE;
-      break;
-    case PtWidth:
-      pAb->AbWidthChange = TRUE;
-      break;
-    case PtVertPos:
-      pAb->AbVertPosChange = TRUE;
-      break;
-    case PtHorizPos:
-      pAb->AbHorizPosChange = TRUE;
-      break;
-    case PtSize:
-      pAb->AbSizeChange = TRUE;
-      break;
-    case PtDepth:
-    case PtLineStyle:
-    case PtLineWeight:
-    case PtFillPattern:
-    case PtBackground:
-    case PtForeground:
-    case PtBorderTopColor:
-    case PtBorderRightColor:
-    case PtBorderBottomColor:
-    case PtBorderLeftColor:
-    case PtBorderTopStyle:
-    case PtBorderRightStyle:
-    case PtBorderBottomStyle:
-    case PtBorderLeftStyle:
-      pAb->AbAspectChange = TRUE;
-      break;
-    case PtFunction:
       if (pRP->PrPresFunction == FnPictureMode
 	  || pRP->PrPresFunction == FnBackgroundPicture
 	  || pRP->PrPresFunction == FnShowBox)
 	pAb->AbAspectChange = TRUE;
       else
 	pAb->AbChange = TRUE;
-      break;
-    default:
-      pAb->AbChange = TRUE;
-      break;
     }
-  
+  else
+    SetChange (pAb, pRP->PrType);
   RedispAbsBox (pAb, pDoc);
   /* applique la regle de meme type aux paves environnants */
   /* s'ils heritent de ce parametre de presentation */
-  ApplyInherit (pRP->PrType, pAb, pDoc);
+  ApplyInherit (pRP->PrType, pAb, pDoc, TRUE);
 }
 
 /*----------------------------------------------------------------------

@@ -1183,7 +1183,8 @@ ThotBool            save;
   last = 0;
   lock = TRUE;
   /* y-a-t'il une selection courante ? */
-  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
   else
     {
@@ -1225,12 +1226,17 @@ ThotBool            save;
 		/* traitement special pour les pages dans les structures
 		   qui le demandent */
 		if (ThotLocalActions[T_cutpage] != NULL)
-		  (*ThotLocalActions[T_cutpage]) (&firstSel, &lastSel, pSelDoc, &save, &cutPage);
+		  (*ThotLocalActions[T_cutpage]) (&firstSel, &lastSel, pSelDoc,
+						  &save, &cutPage);
+		/* "remonte" la selection au niveau des freres si c'est
+		   possible */
+		if (ThotLocalActions[T_selectsiblings] != NULL)
+		  (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
+							&firstChar, &lastChar);
+/******************/
 		/* Si tout le contenu d'un element est selectionne', on
 		   detruit l'element englobant la selection, sauf s'il
 		   est indestructible. */
-		if (ThotLocalActions[T_selectsiblings] != NULL)
-		  (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel, &firstChar, &lastChar);
 		if (firstChar <= 1 &&
 		    (lastChar == 0 || lastChar > lastSel->ElTextLength))
 		  /* le premier et le dernier element de la selection
@@ -1286,7 +1292,7 @@ ThotBool            save;
 			lastChar = 0;
 		      }
 		  }
-
+/**************/
 		doc = IdentDocument (pSelDoc);
 		/* lock tables formatting */
 		if (ThotLocalActions[T_islock])
