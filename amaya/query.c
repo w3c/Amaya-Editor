@@ -690,6 +690,10 @@ int                 status;
 
    if (HTRequest_doRetry (request))
      {
+       /*
+       ** Start request with new credentials 
+       */
+
        /* only do a redirect using a network protocol understood by Amaya */
    	if (IsValidProtocol (new_anchor->parent->address))
 	  {
@@ -724,14 +728,9 @@ int                 status;
 		     MAX_LENGTH - 1);
 	    me->urlName[MAX_LENGTH - 1] = EOS;
 	  }
-
 	ChopURL (me->status_urlName, me->urlName);
 
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
-		      me->status_urlName);
-
-	/* @@ verify if this is important */
-	/* Start request with new credentials */
+	/* clean the output stream */
 	if (HTRequest_outputStream (me->request) != NULL) {
 	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
 	  if (me->output != stdout) { /* Are we writing to a file? */
@@ -744,15 +743,22 @@ int                 status;
 	  }
 	}
 
+	/* tell the user what we're doing */
+	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
+		      me->status_urlName);
+
+
 	/*
 	** launch the request
 	*/
-	/* reset the status */
+	/* reset the request status */
 	me->reqStatus = HT_NEW; 
 	/* clear the errors */
 	HTError_deleteAll (HTRequest_error (request));
 	HTRequest_setError (request, NULL);
-
+	/* clear the authentication credentials */
+	HTRequest_deleteCredentialsAll (request);
+	
 	if (me->method == METHOD_POST 
 	  || me->method == METHOD_PUT) 	/* PUT, POST etc. */
        status = HTLoadAbsolute (me->urlName, request);
@@ -822,6 +828,8 @@ int                 status;
       /* clear the errors */
       HTError_deleteAll (HTRequest_error (request));
       HTRequest_setError (request, NULL);
+      /* clear the authentication credentials */
+      HTRequest_deleteCredentialsAll (request);
       /* the method has to be GET in order to download the source file */
       HTRequest_setMethod (me->request, METHOD_GET);
       /* turn off preconditions */
@@ -886,6 +894,8 @@ static int check_handler (HTRequest * request, HTResponse * response,
       /* clear the errors */
       HTError_deleteAll (HTRequest_error (request));
       HTRequest_setError (request, NULL);
+      /* clear the authentication credentials */
+      HTRequest_deleteCredentialsAll (request);
       /* the method has to be GET in order to download the source file */
       HTRequest_setMethod (me->request, METHOD_GET);
       HTRequest_setPreconditions(me->request, HT_DONT_MATCH_ANY);
@@ -907,6 +917,8 @@ static int check_handler (HTRequest * request, HTResponse * response,
 	  /* clear the errors */
 	  HTError_deleteAll (HTRequest_error (request));
 	  HTRequest_setError (request, NULL);
+	  /* clear the authentication credentials */
+	  HTRequest_deleteCredentialsAll (request);
 	  /* the method has to be GET in order to download the source file */
 	  HTRequest_setMethod (me->request, METHOD_GET);
 	  /* Start a new PUT request without preconditions */
