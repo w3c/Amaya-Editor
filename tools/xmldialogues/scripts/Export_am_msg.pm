@@ -70,6 +70,8 @@ sub export {
 	$where = shift ;
 	$sufix = shift ;
 	$head_name = shift;
+	
+	$reference_value = 0;# to avoid problem when many calls
 
 # declaration of the parser
 	my $parser = new XML::Parser (
@@ -193,13 +195,20 @@ sub open_file {
   my $fh;
   
   $fh = IO::File->new( ">$filename" ) || die "pb with creating $filename: &!";
+  
   return $fh;
 }
 #--------------------------------------------------------------------
 sub print_in_a_file { 	#as is name, and take the good codage if it's specified
 	my $fhs = shift;
 	my $string = Unicode::String->new( shift ) ;
- 
+ 			
+			
+		#	if ($fh->open("< file")) {
+       #        print <$fh>;
+       #        $fh->close;
+       #    }
+
 	if (defined ( $language_out_codages{$current_language} ) ) {
 		if ( $language_out_codages{$current_language} eq "latin1" ) {
 			print $fhs $string->latin1 ;
@@ -244,7 +253,12 @@ sub end_hndl { #	do the modification if necessary
 			push (@list_of_dialogues_files ,$file_name);
 
 			$handle_names_ref {$prefix} = $handle_count++ ;
-			push ( @list_handles , open_file ($file_name) );	
+			push ( @list_handles , open_file ($file_name) );
+			# to indicate in the head line the encoding
+			$current_language = $prefix ; #to avoid small problem 
+			print_in_a_file (  $list_handles [ $handle_names_ref{$prefix}], 
+									"# encoding= " . $language_out_codages { $prefix } .	"\n");
+				
 		}
 		init_record_verification ();		
 	}
@@ -308,7 +322,7 @@ sub comment_hndl { # it's just the comment that is automaticaly copied
 	my ($p, $data) = @_;
 	my $line = $p->current_line;
 	
-	print  "Comment line $line:\t$data\n";
+	#print  "Comment line $line:\t$data\n";
 }	#End comment_hndl
 
 #--------------------------------------------------------------------
@@ -318,7 +332,7 @@ sub default_hndl {	#for all the cases of an invalid xml document
    my $line = $p->current_line;
 
 	if ( $data =~ /^<\?xml/ ) { 	# it' the head
-		print "Head-line $line:\t$data\n";
+		#print "Head-line $line:\t$data\n";
 	
 	}
 	elsif ( $data ne "\n" ) {

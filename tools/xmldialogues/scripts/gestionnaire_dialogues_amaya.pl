@@ -13,7 +13,7 @@ my $rep_obj = rep_obj (); #name of the object direcitriy for Amaya
 
 #### 	for all the bases
 # directory for bases , label and translated NEW  files
-my $OUT_PUT_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/docs";
+my $OUT_PUT_directory = "$home/$rep_amaya/Amaya/tools/xmldialogues/docs/";
 
 
 my %base_name ;	# table for the name of the bases 
@@ -58,10 +58,10 @@ my %index =qw ( 	1	dia
  $lang_sufix {'corrd'} = '-corrdialogue' ;
  $base_name {'corrd'} = 'base_am_corrd.xml';
 
-
-
 ################################################################################
-
+################################################################################
+#################################MAIN###########################################
+{
 #load the different modules needed
 use Initialisation qw(	&create_base );
 
@@ -75,12 +75,12 @@ use Export_am_msg qw ( &export );
 use Forcer qw ( &forcer);
 
 
-#################################MAIN###########################################
-{
+
 
 menu () ;
 
-}#############################END MAIN###########################################
+}
+#############################END MAIN###########################################
 sub menu {
 	my @list = ( 	"Rien",
 						"Amaya dialogue",
@@ -91,7 +91,7 @@ sub menu {
 	my $choice = 0;
 
 	`clear`; # ne veux pas marcher
-	print "=======================================================================",
+	print "=======================================================================\n",
 			"\t\tGestionnaire des dialogues d'Amaya\n";
 	do {
 		do {
@@ -104,7 +104,7 @@ sub menu {
 			$choice = <STDIN> ;
 			chomp ($choice);
 		}
-		while ( $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
+		while ( $choice eq "" ||$choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 		
 		if ( $choice == 1 || $choice == 2 || $choice == 3 || $choice == 4) {
 			menu1 ( $choice );
@@ -141,7 +141,7 @@ sub menu1 {
 		$choice = <STDIN> ;
 		chomp ($choice); 
 	}
-	while ( $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
+	while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 	print "\n";
 	
 	if ($choice == 1) {
@@ -152,7 +152,7 @@ sub menu1 {
 		# to initialise with english
 		print "Remplissage de la base avec l'anglais par default\n";
 		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $OUT_PUT_directory . "/" . $base_name { $index{ $last_choice}};
+		$Import_am_msg::basefile = $OUT_PUT_directory . $base_name { $index{ $last_choice}};
 		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 		Import_am_msg::import_a_language ("en") ;
@@ -165,7 +165,7 @@ sub menu1 {
 		chomp $lang;
 		{	
 		$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
-		$Import_am_msg::basefile = $OUT_PUT_directory . "/" . $base_name { $index{ $last_choice}};
+		$Import_am_msg::basefile = $OUT_PUT_directory  . $base_name { $index{ $last_choice}};
 		$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 		$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 		Import_am_msg::import_a_language ($lang) ;
