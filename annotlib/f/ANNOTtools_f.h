@@ -12,6 +12,9 @@ extern void List_del ( List **me );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotList_free ( List *annot_list );
 extern void AnnotList_print ( List *annot_list );
+extern void AnnotList_writeIndex ( CHAR_T *indexFile,
+                                   List *annot_list );
+extern void ANNOT_PreparePostBody ( Document doc );
 extern Element SearchAnnotation ( Document doc,
                                   STRING annotDoc );
 extern Element SearchElementInDoc ( Document doc,
@@ -24,6 +27,7 @@ extern void SubstituteCharInString ( char *buffer,
                                      char new );
 extern char *GetTempName ( const char *dir,
                            const char *prefix );
+extern long GetFileSize ( CHAR_T *filename );
 extern ThotBool IsAnnotationDocument ( Document document );
 extern ThotBool IsAnnotationLink ( Document document,
                                    Element element );
@@ -38,6 +42,9 @@ extern void List_del (/* List **me */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void AnnotList_print (/* List *annot_list */);
+extern void AnnotList_writeIndex (/* CHAR_T *indexFile,
+                                     List *annot_list */);
+extern void ANNOT_PreparePostBody (/* Document doc */);
 extern Element SearchAnnotation (/* Document doc,
                                     STRING annotDoc */);
 extern Element SearchElementInDoc (/* Document doc,
@@ -50,6 +57,7 @@ extern void SubstituteCharInString (/* char *buffer,
                                        char new */);
 extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
+extern long GetFileSize (/* CHAR_T *filename */);
 extern ThotBool IsAnnotationDocument (/* Document document */);
 extern ThotBool IsAnnotationLink (/* Document document,
                                      Element element */);

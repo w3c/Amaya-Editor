@@ -24,13 +24,13 @@ extern void LINK_SaveLink ( Document source_doc,
                             CHAR_T *labf,
                             int c1,
                             CHAR_T *labl,
-                            int cN );
+                            int cl );
 extern void LINK_DelMetaFromMemory ( Document doc );
 extern void LINK_AddMetaToMemory ( Document doc,
                                    CHAR_T *annotUser,
                                    CHAR_T *annotDate,
                                    CHAR_T *annotType,
-                                   CHAR_T *annotFile );
+                                   CHAR_T *body_url );
 extern void LINK_LoadAnnotations ( Document doc,
                                    CHAR_T *annotIndex );
 extern void LINK_Remove ( Document document,
@@ -61,13 +61,13 @@ extern void LINK_SaveLink (/* Document source_doc,
                               CHAR_T *labf,
                               int c1,
                               CHAR_T *labl,
-                              int cN */);
+                              int cl */);
 extern void LINK_DelMetaFromMemory (/* Document doc */);
 extern void LINK_AddMetaToMemory (/* Document doc,
                                      CHAR_T *annotUser,
                                      CHAR_T *annotDate,
                                      CHAR_T *annotType,
-                                     CHAR_T *annotFile */);
+                                     CHAR_T *body_url */);
 extern void LINK_LoadAnnotations (/* Document doc,
                                      CHAR_T *annotIndex */);
 extern void LINK_Remove (/* Document document,
