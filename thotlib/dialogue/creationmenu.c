@@ -1,14 +1,9 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* ====================================================================== */
 /* |                                                                    | */
 /* |                           THOT                                     | */
 /* |                                                                    | */
 /* |            Ce module traite les commandes de creation              | */
 /* |            appelees par le mediateur.                              | */
-/* |                                                                    | */
-/* |                    V. Quint        Octobre 1985                    | */
 /* |                                                                    | */
 /* ====================================================================== */
 
@@ -19,7 +14,6 @@
 #include "constmedia.h"
 #include"constmenu.h"
 #define MAX_ENTRIES 20
-#define LgMaxMenu 20
 #include "typemedia.h"
 
 typedef enum
@@ -35,8 +29,8 @@ TypeAction;
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-static boolean      RetourAskForNew;	/* reponse valide au menu creer/designer */
-static boolean      CreerAskForNew;	/* reponse Creer au menu creer/designer */
+static boolean      AnswerMenuAskForNew;	/* reponse valide au menu creer/designer */
+static boolean      AnswerCreateAskForNew;	/* reponse Creer au menu creer/designer */
 
 #include "structcreation_f.h"
 
@@ -57,29 +51,29 @@ extern int          ConfigMakeDocTypeMenu ();
 /* l'element reference', Faux s'il veut simplement le designer. */
 /* --------------------------------------------------------------------  */
 #ifdef __STDC__
-boolean             AskForNew_RemplRefer (boolean * Creer, Name NomType)
+boolean             AskForNew_RemplRefer (boolean * generate, Name typeName)
 #else  /* __STDC__ */
-boolean             AskForNew_RemplRefer (Creer, NomType)
-boolean            *Creer;
-Name                 NomType;
+boolean             AskForNew_RemplRefer (generate, typeName)
+boolean            *generate;
+Name                typeName;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   char                BufMenu[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
 
    /* cree et active le menu */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, CREATE_EL_REF));
-   i += strlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, SHOW_EL_REF));
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, CREATE_EL_REF));
+   i += strlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
-		TtaGetMessage (LIB, MODE_INSERT), 2, BufMenu, NULL, 'L');
+		TtaGetMessage (LIB, MODE_INSERT), 2, bufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
    /* attend que l'utilisateur aie repondu au menu */
    TtaWaitShowDialogue ();
-   *Creer = CreerAskForNew;
-   return RetourAskForNew;
+   *generate = AnswerCreateAskForNew;
+   return AnswerMenuAskForNew;
 }
 
 /* --------------------------------------------------------------------  */
@@ -97,13 +91,13 @@ int                 Val;
 {
    if (Val == 0)
      {
-	RetourAskForNew = TRUE;
-	CreerAskForNew = TRUE;
+	AnswerMenuAskForNew = TRUE;
+	AnswerCreateAskForNew = TRUE;
      }
    if (Val == 1)
      {
-	RetourAskForNew = TRUE;
-	CreerAskForNew = FALSE;
+	AnswerMenuAskForNew = TRUE;
+	AnswerCreateAskForNew = FALSE;
      }
 }
 
@@ -111,41 +105,41 @@ int                 Val;
 /*  --------------------------------------------------------------------  */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                BuildChoiceMenu (char *BufMenu, Name TitreMenu, int nbentree, boolean NatureChoice)
+void                BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
 #else  /* __STDC__ */
-void                BuildChoiceMenu (BufMenu, TitreMenu, nbentree, NatureChoice)
-char               *BufMenu;
-Name                 TitreMenu;
-int                 nbentree;
-boolean             NatureChoice;
+void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
+char               *bufMenu;
+Name                 menuTitle;
+int                 nbEntries;
+boolean             natureChoice;
 
 #endif /* __STDC__ */
 {
    int                 menu;
-   char                BufMenuB[MAX_TXT_LEN];
+   char                bufMenuB[MAX_TXT_LEN];
    char               *src;
    char               *dest;
-   int                 k, l, nbitem, longueur;
+   int                 k, l, nbitem, length;
 
-   if (NatureChoice)
+   if (natureChoice)
      {
 	menu = NumFormNature;
 	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
 	/* s'il n'y a pas de natures definies dans les fichiers de config.). */
 	TtaNewForm (NumFormNature, 0, 0, 0,
 		TtaGetMessage (LIB, OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
-	nbitem = ConfigMakeDocTypeMenu (BufMenuB, &longueur, FALSE);
+	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
 	   /* le fichier Start Up definit des natures */
 	  {
 	     /* calcule la hauteur de la partie menu du selecteur */
 	     if (nbitem < 5)
-		longueur = nbitem;
+		length = nbitem;
 	     else
-		longueur = 5;
+		length = 5;
 	     /* cree le selecteur */
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
-			     TtaGetMessage (LIB, OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, TRUE, FALSE);
+			     TtaGetMessage (LIB, OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* initialise le selecteur sur sa premiere entree */
 	     TtaSetSelector (NumSelectNatureName, 0, "");
 	  }
@@ -159,9 +153,9 @@ boolean             NatureChoice;
      {
 	menu = NumMenuElChoice;
 	/* ajoute 'B' au debut de chaque entree */
-	dest = &BufMenuB[0];
-	src = &BufMenu[0];
-	for (k = 1; k <= nbentree; k++)
+	dest = &bufMenuB[0];
+	src = &bufMenu[0];
+	for (k = 1; k <= nbEntries; k++)
 	  {
 	     strcpy (dest, "B");
 	     dest++;
@@ -170,7 +164,7 @@ boolean             NatureChoice;
 	     dest += l + 1;
 	     src += l + 1;
 	  }
-	TtaNewPopup (NumMenuElChoice, 0, TitreMenu, nbentree, BufMenuB, NULL, 'L');
+	TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, bufMenuB, NULL, 'L');
      }
    TtaShowDialogue (menu, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
@@ -184,48 +178,48 @@ boolean             NatureChoice;
 /* |                            Coller / Inclure                        | */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                InsertSeparatorInMenu (int *prevmenuind, int *nbentree, int *menuind, char *BufMenu)
+void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, char *bufMenu)
 #else  /* __STDC__ */
-void                InsertSeparatorInMenu (prevmenuind, nbentree, menuind, BufMenu)
-int                *prevmenuind;
-int                *nbentree;
-int                *menuind;
-char               *BufMenu;
+void                InsertSeparatorInMenu (prevMenuInd, nbEntries, menuInd, bufMenu)
+int                *prevMenuInd;
+int                *nbEntries;
+int                *menuInd;
+char               *bufMenu;
 
 #endif /* __STDC__ */
 {
-   *prevmenuind = *menuind;
+   *prevMenuInd = *menuInd;
    /* indique qu'il s'agit d'un separateur */
-   BufMenu[*menuind] = 'S';
-   (*menuind)++;
-   BufMenu[*menuind] = '\0';
-   (*menuind)++;
-   (*nbentree)++;
+   bufMenu[*menuInd] = 'S';
+   (*menuInd)++;
+   bufMenu[*menuInd] = '\0';
+   (*menuInd)++;
+   (*nbEntries)++;
 }
 
 /*  --------------------------------------------------------------------  */
 /*  --------------------------------------------------------------------  */
 #ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, char *BufMenu, Name titre, int nbentree, char bouton)
+void                BuildPasteMenu (int RefMenu, char *bufMenu, Name title, int nbEntries, char button)
 #else  /* __STDC__ */
-void                BuildPasteMenu (RefMenu, BufMenu, titre, nbentree, bouton)
+void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
-char               *BufMenu;
-Name                 titre;
-int                 nbentree;
-char                bouton;
+char               *bufMenu;
+Name                 title;
+int                 nbEntries;
+char                button;
 
 #endif /* __STDC__ */
 {
-   char                BufMenuB[MAX_TXT_LEN];
+   char                bufMenuB[MAX_TXT_LEN];
    char               *src;
    char               *dest;
    int                 k, l;
 
    /* ajoute 'B' au debut de chaque entree du menu */
-   dest = &BufMenuB[0];
-   src = &BufMenu[0];
-   for (k = 1; k <= nbentree; k++)
+   dest = &bufMenuB[0];
+   src = &bufMenu[0];
+   for (k = 1; k <= nbEntries; k++)
      {
 	l = strlen (src);
 	/* on ne met pas de 'B' devant les separateurs */
@@ -238,8 +232,12 @@ char                bouton;
 	dest += l + 1;
 	src += l + 1;
      }
-   TtaNewPopup (RefMenu, 0, titre, nbentree, BufMenuB, NULL, bouton);
+   TtaNewPopup (RefMenu, 0, title, nbEntries, bufMenuB, NULL, button);
    TtaShowDialogue (RefMenu, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
 }
+
+
+
+
