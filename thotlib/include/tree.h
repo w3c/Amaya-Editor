@@ -1216,6 +1216,13 @@ extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType,
   ----------------------------------------------------------------------*/
 extern void TtaAddEmptyBox (Element el);
 
+/* ----------------------------------------------------------------------
+   TtaIsElementWithSpacePreserve
+
+   Returns TRUE if element white spaces should be preserved.
+   ---------------------------------------------------------------------- */
+extern ThotBool TtIsaElementWithSpacePreserve (Element el);
+
 /*----------------------------------------------------------------------
    TtaHasXmlInLineRule
    Retuns TRUE if the element type has a 'Line' presentation rule

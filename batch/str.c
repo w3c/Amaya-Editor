@@ -1717,34 +1717,34 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_NoVResize:
 	 ExceptionNum (ExcNoVResize, True, False, False, wi);
 	 break;
-       case KWD_EventAttr:
+       case KWD_EventAttr: /* on attribute */
 	 ExceptionNum (ExcEventAttr, False, True, False, wi);
 	 break;
-       case KWD_NewWidth:
+       case KWD_NewWidth: /* on attribute */
 	 ExceptionNum (ExcNewWidth, False, True, True, wi);
 	 break;
-       case KWD_NewPercentWidth:
+       case KWD_NewPercentWidth: /* on attribute */
 	 ExceptionNum (ExcNewPercentWidth, False, True, True, wi);
 	 break;
-       case KWD_ColRef:
+       case KWD_ColRef: /* on attribute */
 	 ExceptionNum (ExcColRef, False, True, False, wi);
 	 break;
-       case KWD_ColSpan:
+       case KWD_ColSpan: /* on attribute */
 	 ExceptionNum (ExcColSpan, False, True, True, wi);
 	 break;
-       case KWD_RowSpan:
+       case KWD_RowSpan: /* on attribute */
 	 ExceptionNum (ExcRowSpan, False, True, True, wi);
 	 break;
-       case KWD_NewHeight:
+       case KWD_NewHeight: /* on attribute */
 	 ExceptionNum (ExcNewHeight, False, True, True, wi);
 	 break;
-       case KWD_NewHPos:
+       case KWD_NewHPos: /* on attribute */
 	 ExceptionNum (ExcNewHPos, False, True, True, wi);
 	 break;
-       case KWD_NewVPos:
+       case KWD_NewVPos: /* on attribute */
 	 ExceptionNum (ExcNewVPos, False, True, True, wi);
 	 break;
-       case KWD_Invisible:
+       case KWD_Invisible: /* on attribute */
 	 ExceptionNum (ExcInvisible, False, True, False, wi);
 	 break;
        case KWD_NoMove:
@@ -1794,7 +1794,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_PageBreakRepBefore:
 	 ExceptionNum (ExcPageBreakRepBefore, True, False, False, wi);
 	 break;
-       case KWD_ActiveRef:
+       case KWD_ActiveRef: /* on attribute */
 	 ExceptionNum (ExcActiveRef, False, True, False, wi);
 	 break;
        case KWD_NoPaginate:
@@ -1841,13 +1841,13 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_CssBackground:
 	 ExceptionNum (ExcCssBackground, True, False, False, wi);
 	 break;
-       case KWD_CssClass:
+       case KWD_CssClass: /* on attribute */
 	 ExceptionNum (ExcCssClass, False, True, False, wi);
 	 break;
-       case KWD_CssId:
+       case KWD_CssId: /* on attribute */
 	 ExceptionNum (ExcCssId, False, True, False, wi);
 	 break;
-       case KWD_CssPseudoClass:
+       case KWD_CssPseudoClass: /* on attribute */
 	 ExceptionNum (ExcCssPseudoClass, False, True, False, wi);
 	 break;
        case KWD_SetWindowBackground:
@@ -1859,7 +1859,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_EmptyGraphic:
 	 ExceptionNum (ExcEmptyGraphic, True, False, False, wi);
 	 break;
-
+       case KWD_SpacePreserve: /* on attribute */
+	 ExceptionNum (ExcSpacePreserve, False, True, False, wi);
+	 break;
        case KWD_Root:
 	 CurExtensRule = NewExtensionRule (wi, 0);
 	 CurExtensRule->SrName[0] = '\0';

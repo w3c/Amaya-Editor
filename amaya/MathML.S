@@ -524,4 +524,5 @@ EXCEPT
    MLineOnTheRight:	Invisible;
    MLineBelowExt:	Invisible;
    MLineOnTheRightExt:	Invisible;
+   xml_space:           SpacePreserve;
 END

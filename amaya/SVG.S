@@ -2525,7 +2525,6 @@ EXCEPT
    { the following attributes are made invisible to prevent the Attributes
      menu from becoming too long }
    xml_base:		Invisible;
-   xml_space:		Invisible;
    requiredFeatures:	Invisible;
    requiredExtensions:	Invisible;
    baseProfile:		Invisible;
@@ -2662,5 +2661,5 @@ EXCEPT
    strikethrough_thickness:	Invisible;
    overline_position:	Invisible;
    overline_thickness:	Invisible;
-	
+   xml_space:      SpacePreserve;
 END

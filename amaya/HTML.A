@@ -343,6 +343,12 @@ ATTRIBUTES
 	AttrDelete.Post -> GlobalAttrDeleted;
 	END;
 
+   xml_space:
+	BEGIN
+	AttrCreate.Post -> GlobalAttrCreated;
+	AttrDelete.Post -> GlobalAttrDeleted;
+	END;
+
    onclick:
 	BEGIN
 	AttrCreate.Post -> GlobalAttrCreated;

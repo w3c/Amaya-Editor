@@ -26,8 +26,8 @@
 #include "structschema_f.h"
 
 /*----------------------------------------------------------------------
-   TypeHasException retourne Vrai si le numero d'exception exceptNum 
-   est associe' au type typeNum du schema de structure pSS	
+   TypeHasException returns TRUE if the exception exceptNum is associated
+   to the element typeNum in the structure schema pSS.
   ----------------------------------------------------------------------*/
 ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 {
@@ -84,9 +84,8 @@ ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 
 
 /*----------------------------------------------------------------------
-   AttrHasException retourne Vrai si le numero d'exception exceptNum est 
-   associe' a` l'attribut attr defini dans le schema de    
-   structure pSS.						
+   AttrHasException returns TRUE if the exception exceptNum is associated
+   to the attribute attr in the structure schema pSS.
   ----------------------------------------------------------------------*/
 ThotBool AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 {
@@ -116,10 +115,30 @@ ThotBool AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 }
 
 /*----------------------------------------------------------------------
-   GetAttrWithException recherche dans le schema de structure pSS		
-   l'attribut auquel est associe' le numero d'exception	
-   exceptNum et retourne son numero d'attribut.		
-   Retourne 0 en cas d'echec.				
+  GetAttrElementWithException returns the attribute attached to the
+  element pEl with the exception exceptNum.
+  Return NULL if not found.
+  ----------------------------------------------------------------------*/
+PtrAttribute GetAttrElementWithException (int exceptNum, PtrElement pEl)
+{
+  PtrAttribute        pAttr;
+
+  if (pEl)
+    {
+      pAttr = pEl->ElFirstAttr;
+      while (pAttr)
+	if (AttrHasException (exceptNum, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	  return pAttr;
+	else
+	  pAttr = pAttr->AeNext;
+    }
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
+  GetAttrWithException looks for an attribute with the exception
+  exceptNum within the structure schema pSS.
+  Return 0 if the attribute number or 0 if not found.		
   ----------------------------------------------------------------------*/
 int GetAttrWithException (int exceptNum, PtrSSchema pSS)
 {
@@ -139,11 +158,11 @@ int GetAttrWithException (int exceptNum, PtrSSchema pSS)
    return ret;
 }
 
+
 /*----------------------------------------------------------------------
-   GetElemWithException recherche dans le schema de structure pSS	le	
-   type d'element auquel est associe' le numero		
-   d'exception exceptNum et retourne son numero de type.	
-   Retourne 0 en cas d'echec.				
+  GetElemWithException looks for an element with the exception
+  exceptNum within the structure schema pSS.
+  Return 0 if the element number or 0 if not found.
   ----------------------------------------------------------------------*/
 int GetElemWithException (int exceptNum, PtrSSchema pSS)
 {

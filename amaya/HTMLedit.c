@@ -2388,6 +2388,9 @@ void CheckNewLines (NotifyOnTarget *event)
               prevCharEOL;
   ThotBool    PasteLineByLine;
 
+  TtaGetEnvBoolean ("PREVERVE_SPACE", &pre);
+  if (pre)
+    return;
   if (!event->target)
     return;
   leaf = event->target;
@@ -2406,22 +2409,27 @@ void CheckNewLines (NotifyOnTarget *event)
   ancestor = TtaGetParent (leaf);
   while (ancestor && !pre && !para)
     {
-      elType = TtaGetElementType (ancestor);
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-	ancestor = NULL;  /* not an HTML element */
-      else if (elType.ElTypeNum == HTML_EL_STYLE_ ||
-	       elType.ElTypeNum == HTML_EL_SCRIPT_ ||
-	       elType.ElTypeNum == HTML_EL_Preformatted ||
-	       elType.ElTypeNum == HTML_EL_Text_Area)
+      if (TtaIsElementWithSpacePreserve (ancestor))
 	pre = TRUE;
-      else if (elType.ElTypeNum == HTML_EL_Paragraph ||
-	       elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-	{
-	  para = TRUE;
-	  firstParag = ancestor;
-	}
       else
-	ancestor = TtaGetParent (ancestor);
+	{
+	  elType = TtaGetElementType (ancestor);
+	  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+	    ancestor = NULL;  /* not an HTML element */
+	  else if (elType.ElTypeNum == HTML_EL_STYLE_ ||
+		   elType.ElTypeNum == HTML_EL_SCRIPT_ ||
+		   elType.ElTypeNum == HTML_EL_Preformatted ||
+		   elType.ElTypeNum == HTML_EL_Text_Area)
+	    pre = TRUE;
+	  else if (elType.ElTypeNum == HTML_EL_Paragraph ||
+		   elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	    {
+	      para = TRUE;
+	      firstParag = ancestor;
+	    }
+	  else
+	    ancestor = TtaGetParent (ancestor);
+	}
     }
   if (pre)
     /* there is a <PRE> ancestor. Don't change anything */

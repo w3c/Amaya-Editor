@@ -54,5 +54,5 @@ EXCEPT
    cdata_line:          Hidden;
    XML_Embed:           Hidden, NoSelect;
    XML_Elements:        Hidden, NoSpellCheck;
-
+   xml_space:           SpacePreserve;
 END

@@ -387,43 +387,32 @@ static void BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   The parameter percent returns the value of the attribute which has
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
-static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom,
-			       int *width, int *percent)
+static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width,
+			       int *percent)
 {
-  PtrSSchema          pSS;
   PtrAttribute        pAttr;
-  int                 attrWidth, attrPercent;
-  ThotBool             found;
+  ThotBool            found;
 
   *width = 0;
   *percent = 0;
   found = FALSE;
-  /* look for ExcNewWidth attribute */
-  pSS = pAb->AbElement->ElStructSchema;
-  attrWidth = GetAttrWithException (ExcNewWidth, pSS);
-  attrPercent = GetAttrWithException (ExcNewPercentWidth, pSS);
-  if (attrWidth != 0 || attrPercent != 0)
+  pAttr = GetAttrElementWithException (ExcNewWidth, pAb->AbElement);
+  if (pAttr)
     {
-      pAttr = pAb->AbElement->ElFirstAttr;
-      found = FALSE;
-      while (!found && pAttr != NULL)
-	if (pAttr->AeAttrNum == attrWidth &&
-	    pAttr->AeAttrSSchema == pSS &&
-	    (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
-	  {
-	    found = TRUE;
-            *width = PixelValue (pAttr->AeAttrValue, UnPixel, NULL, zoom);
-	  }
-	else if (pAttr->AeAttrNum == attrPercent &&
-	    pAttr->AeAttrSSchema == pSS &&
-	    (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
-	  {
-	    found = TRUE;
-	    *percent = pAttr->AeAttrValue;
-	  }
-	else
-	  pAttr = pAttr->AeNext;
+      *width = PixelValue (pAttr->AeAttrValue, UnPixel, NULL, zoom);
+      found = TRUE;
     }
+  else
+    {
+      pAttr = GetAttrElementWithException (ExcNewPercentWidth, pAb->AbElement);
+      if (pAttr)
+	{
+	  *percent = pAttr->AeAttrValue;
+	  found = TRUE;
+	}
+    }
+
+  /* these values can be overwritten by CSS rules */
   if (!pAb->AbWidth.DimIsPosition &&
       pAb->AbWidth.DimUnit == UnPercent)
     {

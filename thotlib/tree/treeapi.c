@@ -2998,7 +2998,6 @@ Element TtaSearchNoPageBreak (Element element, ThotBool forward)
    Returns TRUE if the elType is defined by the document schema's
    DTD. For example, elements with the hidden and exception
    attributes are not included in the DTD.
-
    ---------------------------------------------------------------------- */
 ThotBool TtaHasHiddenException (ElementType elType)
 {
@@ -3012,7 +3011,6 @@ ThotBool TtaHasHiddenException (ElementType elType)
    Returns TRUE if the elType is defined by the document schema's
    DTD. For example, elements with the hidden and exception
    attributes are not included in the DTD.
-
    ---------------------------------------------------------------------- */
 ThotBool TtaHasInvisibleException (AttributeType attrType)
 {
@@ -3021,7 +3019,7 @@ ThotBool TtaHasInvisibleException (AttributeType attrType)
 }
 
 /* ----------------------------------------------------------------------
-   TtaHasInvisibleException
+   TtaHasReturnCreateNLException
 
    Returns TRUE if the elType has the CreateNL exception
    (Preformatted, STYLE_, SCRIPT_ andText_Area HTML elements

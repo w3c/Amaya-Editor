@@ -203,6 +203,7 @@ extern Element TtaSearchElementAmong5Types ( ElementType type1,
                                              ElementType type5,
                                              SearchDomain scope,
                                              Element element );
+extern ThotBool TtaIsElementWithSpacePreserve ( Element el );
 
 #else /* __STDC__ */
 
@@ -403,6 +404,7 @@ extern Element TtaSearchElementAmong5Types (/* ElementType type1,
                                                ElementType type5,
                                                SearchDomain scope,
                                                Element element */);
+extern ThotBool TtaIsElementWithSpacePreserve (/* Element el */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -4320,5 +4320,22 @@ Element TtaSearchElementAmong5Types (ElementType type1, ElementType type2,
    return ((Element) elementFound);
 }
 
+/* ----------------------------------------------------------------------
+   TtaIsElementWithSpacePreserve
 
+   Returns TRUE if element white spaces should be preserved.
+   ---------------------------------------------------------------------- */
+ThotBool TtaIsElementWithSpacePreserve (Element el)
+{
+  PtrAttribute        pAttr;
+
+  if (el)
+    {
+      /* test the exception xml:space="preserve" */
+      pAttr = GetAttrElementWithException (ExcSpacePreserve, (PtrElement) el);
+      if (pAttr && pAttr->AeAttrValue > 1)
+	return TRUE;
+    }
+  return FALSE;
+}
 

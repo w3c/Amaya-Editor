@@ -106,7 +106,8 @@
 #define KWD_SetWindowBackground 	1185
 #define KWD_IsGroup 	1186
 #define KWD_EmptyGraphic 	1187
-#define KWD_Root 	1188
+#define KWD_SpacePreserve 	1188
+#define KWD_Root 	1189
 
 /*  RULES  */
 

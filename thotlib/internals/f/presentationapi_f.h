@@ -49,6 +49,11 @@ extern void TtaSetPRuleValueWithUnit ( Element element,
                                        int value,
                                        TypeUnit unit,
                                        Document document );
+extern void TtaSetPositionPRuleDelta ( Element element,
+                                       PRule pRule,
+                                       int delta,
+                                       TypeUnit unit,
+                                       Document document );
 extern void TtaSetPRuleView ( PRule pRule,
                               int view );
 extern void TtaChangeBoxSize ( Element element,
@@ -93,6 +98,7 @@ extern PRule TtaGetPRule ( Element element,
                            int presentationType );
 extern int TtaGetPRuleType ( PRule pRule );
 extern int TtaGetPRuleValue ( PRule pRule );
+extern int TtaGetPositionPRuleDelta ( PRule pRule );
 extern int TtaGetPRuleUnit ( PRule pRule );
 extern int TtaGetPRuleView ( PRule pRule );
 extern int TtaSamePRules ( PRule pRule1,
@@ -143,6 +149,11 @@ extern void TtaSetPRuleValueWithUnit (/* Element element,
                                          int value,
                                          TypeUnit unit,
                                          Document document */);
+extern void TtaSetPositionPRuleDelta (/* Element element,
+                                         PRule pRule,
+                                         int delta,
+                                         TypeUnit unit,
+                                         Document document */);
 extern void TtaSetPRuleView (/* PRule pRule,
                                 int view */);
 extern void TtaChangeBoxSize (/* Element element,
@@ -187,6 +198,7 @@ extern PRule TtaGetPRule (/* Element element,
                              int presentationType */);
 extern int TtaGetPRuleType (/* PRule pRule */);
 extern int TtaGetPRuleValue (/* PRule pRule */);
+extern int TtaGetPositionPRuleDelta (/* PRule pRule */);
 extern int TtaGetPRuleUnit (/* PRule pRule */);
 extern int TtaGetPRuleView (/* PRule pRule */);
 extern int TtaSamePRules (/* PRule pRule1,

@@ -994,5 +994,5 @@ EXCEPT
 	SVG_ImageContent: Hidden;
 	Embed_Content:  Hidden, NoSelect;
 	is_css:	Invisible;
-
+	xml_space:      SpacePreserve;
 END

@@ -12,6 +12,8 @@ extern ThotBool TypeHasException ( int exceptNum,
 extern ThotBool AttrHasException ( int exceptNum,
                                    int attr,
                                    PtrSSchema pSS );
+extern PtrAttribute GetAttrElementWithException ( int exceptNum,
+                                                  PtrElement pEl );
 extern int GetAttrWithException ( int exceptNum,
                                   PtrSSchema pSS );
 extern int GetElemWithException ( int exceptNum,
@@ -25,6 +27,8 @@ extern ThotBool TypeHasException (/* int exceptNum,
 extern ThotBool AttrHasException (/* int exceptNum,
                                      int attr,
                                      PtrSSchema pSS */);
+extern PtrAttribute GetAttrElementWithException (/* int exceptNum,
+                                                    PtrElement pEl */);
 extern int GetAttrWithException (/* int exceptNum,
                                     PtrSSchema pSS */);
 extern int GetElemWithException (/* int exceptNum,

@@ -132,7 +132,7 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' / 'NoHMove' / 'NoVMove' /
 		 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 		 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
 		 'EventAttr' / 'NoShowBox' / 'SetWindowBackground' /
-		 'IsGroup' / 'EmptyGraphic' /
+		 'IsGroup' / 'EmptyGraphic' / 'SpacePreserve' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

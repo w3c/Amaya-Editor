@@ -179,6 +179,7 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   PutChar writes the character c on the terminal or into the file buffer
   if fnum is not null.
   The file buffer is written when the line limit is reatched.
+  If the parameter lineBreak is FALSE the pretty printing is desactivated.
   If the parameter translate is FALSE the character is written as this,
   in other case it will be translated according to the document encoding.
   If the parameter entityName is TRUE
@@ -2495,31 +2496,36 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	case VtFileDir:	/* le nom du directory de sortie */
 	  i = 0;
 	  while (fileDirectory[i] != EOS)
-	    PutChar ((wchar_t) fileDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileDirectory[i++], fnum, outBuf, pDoc, lineBreak,
+		     TRUE, FALSE);
 	  break;
 	  
 	case VtFileName:	/* le nom du fichier de sortie */
 	  i = 0;
 	  while (fileName[i] != EOS)
-	    PutChar ((wchar_t) fileName[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileName[i++], fnum, outBuf, pDoc, lineBreak,
+		     TRUE, FALSE);
 	  break;
 	 
 	case VtExtension:	/* le nom de l'extension de fichier */
 	  i = 0;
 	  while (fileExtension[i] != EOS)
-	    PutChar ((wchar_t) fileExtension[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) fileExtension[i++], fnum, outBuf, pDoc, lineBreak,
+		     TRUE, FALSE);
 	  break;
 
 	case VtDocumentName:	/* le nom du document */
 	  i = 0;
 	  while (pDoc->DocDName[i] != EOS)
-	    PutChar ((wchar_t) pDoc->DocDName[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) pDoc->DocDName[i++], fnum, outBuf, pDoc, lineBreak,
+		     TRUE, FALSE);
 	  break;
 
 	case VtDocumentDir:	/* le repertoire du document */
 	  i = 0;
 	  while (pDoc->DocDirectory[i] != EOS)
-	    PutChar ((wchar_t) pDoc->DocDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
+	    PutChar ((wchar_t) pDoc->DocDirectory[i++], fnum, outBuf, pDoc,
+		     lineBreak, TRUE, FALSE);
 	  break;
 	  
 	default:
@@ -2910,7 +2916,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      if (nameBuffer != NULL)
 		while (*nameBuffer != EOS)
 		  {
-		    PutChar ((wchar_t) (*nameBuffer), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+		    PutChar ((wchar_t) (*nameBuffer), fnum, NULL, pDoc,
+			     *lineBreak, TRUE, FALSE);
 		    nameBuffer++;
 		  }
 	    }
@@ -3090,7 +3097,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    {
 	      i = 0;
 	      while (pElGet->ElLabel[i] != EOS)
-		PutChar ((wchar_t) pElGet->ElLabel[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
+		PutChar ((wchar_t) pElGet->ElLabel[i++], fnum, NULL, pDoc,
+			 *lineBreak, TRUE, FALSE);
 	    }
 	  break;
 	  
@@ -3333,6 +3341,11 @@ static void ApplyElTypeRules (TOrder position, ThotBool *transChar,
 
    if (*ignoreEl)
       return;
+
+   /* test the exception xml:space="preserve" */
+   if (TtaIsElementWithSpacePreserve ((Element) pEl))
+     *lineBreak = FALSE;
+
    /* premier bloc de regles correspondant au type de l'element */
    pBlock = pTSch->TsElemTRule->TsElemTransl[TypeEl - 1];
    /* parcourt les blocs de regles du type de l'element */
