@@ -2012,7 +2012,8 @@ PtrSSchema         *pSchS;
 		     }
 		   while (!found && i < pSc1->SsNRules);
 		   if (found)
-		      if (pSc1->SsPSchema->PsElemPRule[i - 1] != NULL)
+		      if (pSc1->SsPSchema &&
+			  pSc1->SsPSchema->PsElemPRule[i - 1] != NULL)
 			 /* il y a des regles de presentation specifiques */
 			{
 			   *pSchP = pSc1->SsPSchema;
