@@ -284,7 +284,7 @@ TypeBrowserFile WidgetParent;
    Creates a DocumentMeta element and initializes it to its default
    values.
   ----------------------------------------------------------------------*/
-DocumentMetaDataElement *   DocumentMetaDataAlloc (void)
+DocumentMetaDataElement *DocumentMetaDataAlloc (void)
 {
   DocumentMetaDataElement *me;
 
@@ -301,7 +301,7 @@ DocumentMetaDataElement *   DocumentMetaDataAlloc (void)
    Clears the dynamically allocated memory associated to a metadata
    element. Doesn't free the element or clears any of its other elements.
   ----------------------------------------------------------------------*/
-void                DocumentMetaClear (DocumentMetaDataElement *me)
+void DocumentMetaClear (DocumentMetaDataElement *me)
 {
   if (me->form_data)
     {
@@ -427,7 +427,7 @@ void DocumentInfo (Document document, View view)
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
-Document            IsDocumentLoaded (char *documentURL, char *form_data)
+Document IsDocumentLoaded (char *documentURL, char *form_data)
 {
   int               i;
   ThotBool          found;
@@ -468,7 +468,7 @@ Document            IsDocumentLoaded (char *documentURL, char *form_data)
   Return TRUE if the document has not been modified of if the user
   agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
-ThotBool       CanReplaceCurrentDocument (Document doc, View view)
+ThotBool CanReplaceCurrentDocument (Document doc, View view)
 {
    ThotBool	ret;
 
@@ -5571,7 +5571,7 @@ void ShowLogFile (Document doc, View view)
 
   sprintf (localname, "%s%c%d%cPARSING.ERR", TempFileDirectory, DIR_SEP,
 	    doc, DIR_SEP);
-  newdoc = GetHTMLDocument (localname, NULL, doc, 0, CE_LOG, FALSE, NULL, NULL);
+  newdoc = GetHTMLDocument (localname, NULL, 0, doc, CE_LOG, FALSE, NULL, NULL);
   /* store the relation with the original document */
   if (newdoc)
     DocumentSource[newdoc] = doc;
