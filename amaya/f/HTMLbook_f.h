@@ -6,32 +6,37 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void PrintAs ( Document document,
+                      View view );
 extern void CallbackPrint ( int ref,
-			    int typedata,
-			    char *data );
-extern void InitPrint (void);
+                            int typedata,
+                            char *data );
+extern void InitPrint ( void );
+extern void SetupAndPrint ( Document document,
+                            View view );
 extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,
                        View view );
 extern void RealTimeHTML ( Document document,
-			   View view );
-extern void SetupAndPrint (Document document,
-			   View view);
+                           View view );
 
 #else /* __STDC__ */
+
+extern void PrintAs (/* Document document,
+                        View view */);
 extern void CallbackPrint (/* int ref,
-			      int typedata,
-			      char *data */);
+                              int typedata,
+                              char *data */);
 extern void InitPrint (/* void */);
+extern void SetupAndPrint (/* Document document,
+                              View view */);
 extern void SectionNumbering (/* Document document,
                                  View view */);
 extern void MakeBook (/* Document document,
                          View view */);
 extern void RealTimeHTML (/* Document document,
                              View view */);
-extern void SetupAndPrint (/* Document document,
-			      View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

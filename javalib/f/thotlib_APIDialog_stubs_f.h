@@ -89,8 +89,7 @@ extern void thotlib_APIDialog_TtaNewDialogSheet ( struct Hthotlib_APIDialog* non
                                                   struct Hjava_lang_String* jtext,
                                                   jint horizontal,
                                                   jint packet,
-                                                  int button,
-                                                  jint dbutton );
+                                                  int button );
 extern void thotlib_APIDialog_TtaChangeFormTitle ( struct Hthotlib_APIDialog* none,
                                                    jint ref,
                                                    struct Hjava_lang_String* jtitle );
@@ -232,8 +231,7 @@ extern void thotlib_APIDialog_TtaNewDialogSheet (/* struct Hthotlib_APIDialog* n
                                                     struct Hjava_lang_String* jtext,
                                                     jint horizontal,
                                                     jint packet,
-                                                    int button,
-                                                    jint dbutton */);
+                                                    int button */);
 extern void thotlib_APIDialog_TtaChangeFormTitle (/* struct Hthotlib_APIDialog* none,
                                                      jint ref,
                                                      struct Hjava_lang_String* jtitle */);

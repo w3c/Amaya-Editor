@@ -108,7 +108,7 @@ extern void TtaNewDialogSheet ( int ref,
                                 char *text,
                                 boolean horizontal,
                                 int package,
-                                char button);
+                                char button );
 extern void TtaAttachForm ( int ref );
 extern void TtaDetachForm ( int ref );
 extern void TtaNewSelector ( int ref,

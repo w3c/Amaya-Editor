@@ -13,6 +13,8 @@ extern void thotlib_Extra_Java2CCallback ( struct Hthotlib_Extra* none,
                                            jlong callback,
                                            struct _object * arg );
 extern void thotlib_Extra_JavaPollLoop ( struct Hthotlib_Extra* none );
+extern void thotlib_Extra_JavaStopPoll ( struct Hthotlib_Extra* none );
+extern void thotlib_Extra_JavaXFlush ( struct Hthotlib_Extra* none );
 extern void register_thotlib_Extra_stubs ( void );
 
 #else /* __STDC__ */
@@ -24,6 +26,8 @@ extern void thotlib_Extra_Java2CCallback (/* struct Hthotlib_Extra* none,
                                              jlong callback,
                                              struct _object * arg */);
 extern void thotlib_Extra_JavaPollLoop (/* struct Hthotlib_Extra* none */);
+extern void thotlib_Extra_JavaStopPoll (/* struct Hthotlib_Extra* none */);
+extern void thotlib_Extra_JavaXFlush (/* struct Hthotlib_Extra* none */);
 extern void register_thotlib_Extra_stubs (/* void */);
 
 #endif /* __STDC__ */

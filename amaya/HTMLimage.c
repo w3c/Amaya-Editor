@@ -213,17 +213,18 @@ void *context;
    LoadedImageDesc    *desc = (LoadedImageDesc *) context;
    ElemImage          *ctxEl, *ctxPrev;
 
+   FilesLoading[doc]--;
+#ifdef AMAYA_JAVA
+fprintf(stderr,"JavaImageLoaded(%d) called : %d\n",
+        doc, FilesLoading[doc]);
+#endif
    if (DocumentURLs[doc] != NULL)
      {
 	/* an image of the document is now loaded */
 
 	/* update the stop button status */
-	FilesLoading[doc]--;
-	if (FilesLoading[doc] == 1)
-	   ResetStop (doc);
-
 	/* the image could not be loaded */
-	if (status != 200)
+	if ((status != 200) && (status != 0))
 	   return;
 
 	/* rename the local file of the image */
@@ -383,6 +384,8 @@ int                 flags;
 	      update = FALSE;	/* the image is not loaded yet */
 	      FilesLoading[doc]++;
 #ifdef AMAYA_JAVA
+fprintf(stderr,"FetchImage(%d) transfer started : %d\n",
+        doc, FilesLoading[doc]);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) JavaImageLoaded,
@@ -452,15 +455,17 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
 
-#ifndef AMAYA_JAVA
    /* JK: verify if StopTransfer was previously called */
    if (FilesLoading[doc] == 0)
      {
+#ifndef AMAYA_JAVA
+fprintf(stderr,"FetchAndDisplayImages(%d) transfer interrupted : %d\n",
+        doc, FilesLoading[doc]);
 	/* transfer interrupted */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
+#endif
 	return;
      }
-#endif
 
    /* get the root element */
    el = TtaGetMainRoot (doc);
@@ -469,16 +474,20 @@ int                 flags;
    /* prepare the attribute to be searched */
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_SRC;
+#ifndef AMAYA_JAVA
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
    FilesLoading[doc]++;
+#endif
    /* search all elements having an attribute SRC */
    do
      {
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer is called */
+#ifndef AMAYA_JAVA
 	if (FilesLoading[doc] == 0)
 	   return;
+#endif
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
@@ -488,8 +497,10 @@ int                 flags;
    while (el != NULL);
 
    /* Images fetching is now finished */
+#ifndef AMAYA_JAVA
    FilesLoading[doc]--;
    if (FilesLoading[doc] < 2)
       /* all images are loaded in the current document */
       ResetStop (doc);
+#endif
 }

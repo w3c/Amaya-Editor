@@ -506,7 +506,6 @@ int dns_daemonResultChannel[2];
 FILE *dns_daemonRequest;
 FILE *dns_daemonResult;
 int dns_daemon_pid;
-int JavaDnsInitialized = 0;
 extern char BinariesDirectory[];
 
 static void JavaInitDns(void) {
@@ -589,15 +588,17 @@ struct hostent *gethostbyname(const char *name) {
     int addrtype;
     int addrlength;
     int res;
+    int retries = 0;
     int ip[4];
 
+retry:
     /*
      * Send request to the DNS server.
      */
     if (name == NULL) name = "";
     if (fprintf(dns_daemonRequest, "%s\n", name) < 0) {
 	perror("JavaDns : gethostbyname() write to RequestChannel failed");
-	goto dns_failed;
+	goto io_failed;
     }
     fflush(dns_daemonRequest); /* needed !!! */
 
@@ -614,7 +615,7 @@ struct hostent *gethostbyname(const char *name) {
      */
     if (!fgets(msg, sizeof(msg), dns_daemonResult)) {
 	perror("JavaDns : gethostbyname() read from ResultChannel failed");
-	goto dns_failed;
+	goto io_failed;
     }
     res = sscanf(msg, "%s %d %d %s", host, &addrtype, &addrlength, address);
     if (res < 4) goto dns_failed;
@@ -645,6 +646,17 @@ struct hostent *gethostbyname(const char *name) {
 
 dns_failed:
     
+    return(NULL);
+
+io_failed:
+    if (!retries) {
+	retries++;
+	fprintf(stderr,"restaring dns_daemon\n");
+	fclose(dns_daemonRequest);
+	fclose(dns_daemonResult);
+	JavaInitDns();
+	goto retry;
+    }
     return(NULL);
 }
 
@@ -918,6 +930,21 @@ ThotAppContext app_ctx;
      */
     InitJava();
 
+}
+
+/*----------------------------------------------------------------------
+  JavaStopPoll
+
+  Stop the poll loop (below).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 JavaStopPoll ()
+#else
+int                 JavaStopPoll ()
+#endif
+{
+   if (DoJavaSelectPoll)
+       BreakJavaSelectPoll++;
 }
 
 /*----------------------------------------------------------------------

@@ -137,6 +137,9 @@ void *arg;
     context = (void *) unhand(request)->callback_arg;
     javaString2CString(unhand(request)->urlName, urlName, sizeof(urlName));
     javaString2CString(unhand(request)->filename, outputfile, sizeof(outputfile));
+
+fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status);
+
     if (callback != NULL)
         callback(doc, status, &urlName[0], &outputfile[0], context);
     FreeHTTPRequest(request);

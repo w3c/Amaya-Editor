@@ -14,7 +14,12 @@ extern void TtaPrint ( Document document,
 extern void TtaSetPrintExportFunc ( Func exportFunc );
 extern void TtaSetPrintParameter ( PrintParameter parameter,
                                    int value );
+extern int TtaGetPrintParameter ( PrintParameter parameter );
 extern void TtaSetPrintCommand ( char *command );
+extern void TtaGetPrintCommand ( char *command );
+extern void TtaSetPrintSchema ( char *name );
+extern void TtaSetPsFile ( char *path );
+extern void TtaGetPsFile ( char *path );
 extern void CallbackPrintmenu ( int ref,
                                 int val,
                                 char *txt );
@@ -31,7 +36,12 @@ extern void TtaPrint (/* Document document,
 extern void TtaSetPrintExportFunc (/* Func exportFunc */);
 extern void TtaSetPrintParameter (/* PrintParameter parameter,
                                      int value */);
+extern int TtaGetPrintParameter (/* PrintParameter parameter */);
 extern void TtaSetPrintCommand (/* char *command */);
+extern void TtaGetPrintCommand (/* char *command */);
+extern void TtaSetPrintSchema (/* char *name */);
+extern void TtaSetPsFile (/* char *path */);
+extern void TtaGetPsFile (/* char *path */);
 extern void CallbackPrintmenu (/* int ref,
                                   int val,
                                   char *txt */);

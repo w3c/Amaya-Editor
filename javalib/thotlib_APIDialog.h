@@ -29,7 +29,7 @@ extern void thotlib_APIDialog_TtaRedrawMenuEntry(struct Hthotlib_APIDialog*, jin
 extern void thotlib_APIDialog_TtaDestroyDialogue(struct Hthotlib_APIDialog*, jint);
 extern void thotlib_APIDialog_TtaNewForm(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
 extern void thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
-extern void thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
+extern void thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */);
 extern void thotlib_APIDialog_TtaChangeFormTitle(struct Hthotlib_APIDialog*, jint, struct Hjava_lang_String*);
 extern void thotlib_APIDialog_TtaAttachForm(struct Hthotlib_APIDialog*, jint);
 extern void thotlib_APIDialog_TtaDetachForm(struct Hthotlib_APIDialog*, jint);

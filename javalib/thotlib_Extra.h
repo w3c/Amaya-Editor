@@ -17,6 +17,7 @@ HandleTo(thotlib_Extra);
 extern void thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra*, jint, jint);
 extern void thotlib_Extra_Java2CCallback(struct Hthotlib_Extra*, jlong, struct Hjava_lang_Object*);
 extern void thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra*);
+extern void thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra*);
 extern void thotlib_Extra_JavaXFlush(struct Hthotlib_Extra*);
 
 #ifdef __cplusplus

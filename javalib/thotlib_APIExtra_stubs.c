@@ -43,7 +43,18 @@ thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
 void
 thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra* none)
 {
+    JavaThotlibLock();
     JavaPollLoop();
+    JavaThotlibRelease();
+}
+
+/*
+ * Stop a poll loop.
+ */
+void
+thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra* none)
+{
+    JavaStopPoll();
 }
 
 /*
@@ -55,7 +66,9 @@ thotlib_Extra_JavaXFlush(struct Hthotlib_Extra* none)
 #ifndef _WINDOWS
     XFlush(TtaGetCurrentDisplay());
 #endif
+    JavaThotlibLock();
     TtaHandlePendingEvents();
+    JavaThotlibRelease();
 }
 
 /*
@@ -77,6 +90,8 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_Java2CCallback);
 	addNativeMethod("thotlib_Extra_JavaPollLoop",
 	                thotlib_Extra_JavaPollLoop);
+	addNativeMethod("thotlib_Extra_JavaStopPoll",
+	                thotlib_Extra_JavaStopPoll);
 	addNativeMethod("thotlib_Extra_JavaXFlush",
 	                thotlib_Extra_JavaXFlush);
 /*

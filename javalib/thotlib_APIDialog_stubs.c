@@ -323,7 +323,7 @@ thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog* none, jint ref, jint pa
  * Java to C function TtaNewDialogSheet stub.
  */
 void
-thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, jint horizontal, jint packet, int button, jint dbutton)
+thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, jint horizontal, jint packet, int button)
 {
 	char title[1024];
 	char *title_ptr = &title[0];
@@ -341,7 +341,7 @@ thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog* none, jint ref, j
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewDialogSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
+	TtaNewDialogSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button);
 
 	thotlib_APIDialog_UNLOCK();
 }
