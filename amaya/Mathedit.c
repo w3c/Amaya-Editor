@@ -4335,6 +4335,15 @@ void MathElementDeleted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  MathMLElementTypeInMenu
+ -----------------------------------------------------------------------*/
+ThotBool MathMLElementTypeInMenu (NotifyElement *event)
+{
+  return TRUE; /* prevent Thot from putting this element name in the
+		  element creation menu */
+}
+
+/*----------------------------------------------------------------------
  FenceModified
  The opening or closing fence element in a MFENCED element has been modified
  by the user. Update the corresponding open or close attribute.

@@ -31,6 +31,49 @@ ELEMENTS
    TEXT_UNIT:
 	ElemTextModify.Post -> CheckNewLines;
 
+   DOCTYPE:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Element:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Heading:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Font:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Phrase:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   ElemOrParam:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Block:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   List_:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Form_Element:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Option_item:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Input:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Input_Text:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Col_elem:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   Table_cell:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   ElemOrArea:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   FrameElem:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   ruby:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   RtOrRtWithPar:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   RtWithPar:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   AnyLink:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+   XLink:
+	ElemMenu.Pre -> HTMLElementTypeInMenu;
+
    LINK:
 	BEGIN
 	ElemDelete.Pre -> DeleteLink;

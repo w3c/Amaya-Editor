@@ -29,13 +29,11 @@ font_face_uri: font-face-uri
 font_face_format: font-face-format
 font_face_name: font-face-name
 definition_src: definition-src
-DOCTYPE: doctype
 DOCTYPE_line: \240
-XMLcomment: comment
+XMLcomment: Comment
 XMLcomment_line: \240
-XMLPI: pi
+XMLPI: PI
 XMLPI_line: \240
-CDATA: cdata
 
 Language: xml:lang
 xml_base: xml:base

@@ -18,6 +18,15 @@ DEFAULT
 
 ELEMENTS
 
+   DOCTYPE:
+	ElemMenu.Pre -> MathMLElementTypeInMenu;
+   BevelledMFRAC:
+	ElemMenu.Pre -> MathMLElementTypeInMenu;
+   SemanticsContent:
+	ElemMenu.Pre -> MathMLElementTypeInMenu;
+   TableRow:
+	ElemMenu.Pre -> MathMLElementTypeInMenu;
+
    OpeningFence:
 	ElemGraphModify.Post -> FenceModified;
    ClosingFence:

@@ -911,7 +911,7 @@ STRUCT
 		      a;
 		      animate; set_; animateColor;
 		      END);
-	
+
    tref  { not in SVG Tiny }
 	(ATTR xlink_type; xlink_role; xlink_arcrole;   {xlinkRefAttrs}
 	      xlink_title; xlink_show; xlink_actuate;  {xlinkRefAttrs}

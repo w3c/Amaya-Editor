@@ -19,9 +19,8 @@ PAGE_BREAK: Page_break
 
 C_Empty: \0
 MathML: math
-XMLcomment: comment
-DOCTYPE: doctype
-CDATA: cdata
+XMLcomment: Comment
+XMLPI: PI
 MTEXT: mtext
 MI: mi
 MN: mn
@@ -39,7 +38,7 @@ MERROR: merror
 MPADDED: mpadded
 MPHANTOM: mphantom
 MFENCED: mfenced
-MF: mo
+MF: mo(fence)
 MSUB: msub
 MSUP: msup
 MSUBSUP: msubsup
@@ -50,7 +49,7 @@ MMULTISCRIPTS: mmultiscripts
 MTABLE: mtable
 MTR: mtr
 MLABELEDTR: mlabeledtr
-LabelCell: mtd
+LabelCell: mtd(label)
 MGLYPH: mglyph
 MACTION: maction
 SEMANTICS: semantics

@@ -16,6 +16,15 @@ DEFAULT
 
 ELEMENTS
 
+   DOCTYPE:
+	ElemMenu.Pre -> SVGElementTypeInMenu;
+   SpanElement:
+	ElemMenu.Pre -> SVGElementTypeInMenu;
+   Timeline_cross:
+	ElemMenu.Pre -> SVGElementTypeInMenu;
+   GraphicsElement:
+	ElemMenu.Pre -> SVGElementTypeInMenu;
+
    SVG:
 	BEGIN
 	ElemNew.Post ->         SVGCreated;

@@ -46,13 +46,13 @@ STRUCT
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 
-   CDATA = LIST OF (CDATA_line = TEXT);
+   Unknown_namespace = TEXT;
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT) - (XMLcomment);
 
    XMLPI = LIST OF (XMLPI_line = TEXT) ; 
 
-   Unknown_namespace = TEXT;
+   CDATA = LIST OF (CDATA_line = TEXT);
 
    { Presentation: all presentation constructs }
    Construct (ATTR IntPlaceholder = yes_) = CASE OF
@@ -345,7 +345,18 @@ STRUCT
 		minlabelspacing = TEXT)
 	  = BEGIN
 	    MTable_head = LIST OF (MColumn_head = CONSTANT MC_Head);
-	    MTable_body = LIST OF (TableRow); 
+	    MTable_body = LIST OF (TableRow = CASE OF
+		MTR (ATTR rowalign_mtr = top_, bottom_, center, baseline, axis;
+		          IntRowAlign = IntTop, IntBottom, IntCenter,
+	                                IntBaseline, IntAxis; 
+		          columnalign;
+		          groupalign) =
+	             LIST OF (MTD); 
+		MLABELEDTR (ATTR rowalign_mtr; IntRowAlign;
+		                 columnalign;
+		                 groupalign) =
+	             LIST OF (MTD) + (RowLabel, LabelCell);
+		END); 
 	    END with IntDisplaystyle = false;
 
       MGLYPH
@@ -363,7 +374,11 @@ STRUCT
       SEMANTICS  { this element is part of the content markup }
 	  (ATTR definitionURL = TEXT;
 	        encoding = TEXT)
-	  = LIST OF (SemanticsContent); 
+	  = LIST OF (SemanticsContent = CASE OF
+		Construct;
+		ANNOTATION (ATTR encoding) = TEXT;
+		ANNOTATION_XML (ATTR encoding) = Any;
+		END); 
 	
       XLink;     { for annotations }
 
@@ -381,34 +396,9 @@ STRUCT
 
       END;	 { End of Construct definition }
 
-   SemanticsContent = CASE OF
-		Construct;
-		ANNOTATION (ATTR encoding) = TEXT;
-		ANNOTATION_XML (ATTR encoding) = Any;
-		END;
-
-   TableRow = CASE OF
-		MTR;
-		MLABELEDTR;
-		END; 
-   MTR
-	  (ATTR rowalign_mtr = top_, bottom_, center, baseline, axis;
-		IntRowAlign = IntTop, IntBottom, IntCenter, IntBaseline,
-		              IntAxis; 
-		columnalign;
-		groupalign)
-	  = LIST OF (MTD);
-
-   MLABELEDTR
-	  (ATTR rowalign_mtr; IntRowAlign;
-		columnalign;
-		groupalign)
-	  = LIST OF (MTD) + (RowLabel, LabelCell);
-
    RowLabel = BEGIN Construct; END;     { a label within a mlabeledtr }
    LabelCell = LIST OF (Construct);	{ a MTD element used as a label in
                                           a mlabeledtr element }
-
    MTD
 	  (ATTR rowalign_mtr; IntRowAlign;
 		columnalign_mtd = left\240, center\240, right\240;
@@ -426,7 +416,7 @@ STRUCT
 	  = BEGIN
 	    CellWrapper = LIST OF (Construct);
 	    END + (MALIGNGROUP, MALIGNMARK);
-
+	
    { peschema }
    MALIGNMARK
 	  (ATTR edge)

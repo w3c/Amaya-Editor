@@ -2229,6 +2229,15 @@ void SwitchIconGraph (Document doc, View view, ThotBool state)
 }
 
 /*----------------------------------------------------------------------
+  SVGElementTypeInMenu
+ -----------------------------------------------------------------------*/
+ThotBool SVGElementTypeInMenu (NotifyElement *event)
+{
+  return TRUE; /* prevent Thot from putting this element name in the
+		  element creation menu */
+}
+
+/*----------------------------------------------------------------------
    SVGCreated
    An svg element has been created.
    It has at least two attributes (width and height) that are made

@@ -55,17 +55,8 @@ STRUCT
       ? FRAMESET;
 	END + (Invalid_element, Unknown_namespace, XHTML_Unknown_namespace, Comment\240, XMLPI, CDATA);
 	
-  BODY								{ BODY }
-     (ATTR onload = Text; onunload = Text;
-	 { onload         onunload }
-	   background_ = Text; BackgroundColor = Text;
-	 { background          bgcolor }
-	   TextColor = Text; LinkColor = Text;
-         { text              link }
-	   VisitedLinkColor = Text; ActiveLinkColor = Text) =
-         { vlink                    alink }
-	LIST OF (Element) + (INS, DEL);
-
+  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+	
   Invalid_element = TEXT;
 
   Unknown_namespace = TEXT;
@@ -78,8 +69,6 @@ STRUCT
 	
   CDATA = LIST OF (CDATA_line = TEXT);
 
-  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
-	
   HEAD								{ HEAD }
      (ATTR profile = Text) =
 	AGGREGATE
@@ -126,6 +115,17 @@ STRUCT
      (ATTR !HREF_; target_) =
 	  { href   target }
 	CONSTANT C_Empty;
+
+  BODY								{ BODY }
+     (ATTR onload = Text; onunload = Text;
+	 { onload         onunload }
+	   background_ = Text; BackgroundColor = Text;
+	 { background          bgcolor }
+	   TextColor = Text; LinkColor = Text;
+         { text              link }
+	   VisitedLinkColor = Text; ActiveLinkColor = Text) =
+         { vlink                    alink }
+	LIST OF (Element) + (INS, DEL);
 
   Element = CASE OF						{ block }
 	Paragraph;						{ P }
@@ -460,11 +460,6 @@ STRUCT
 	 { compact }
 	LIST OF (List_Item);
 
-  Definition_List						{ DL }
-     (ATTR COMPACT) =
-	 { compact }
-	LIST OF (Definition_Item);
-
   List_Item							{ LI }
      (ATTR ItemStyle = disc, circle, square, Arabic_,
 	 { type        disc  circle  square  1 }
@@ -475,6 +470,11 @@ STRUCT
 	   ItemValue = Integer) =
 	 { value }
 	LIST OF (Block);
+
+  Definition_List						{ DL }
+     (ATTR COMPACT) =
+	 { compact }
+	LIST OF (Definition_Item);
 
   Definition_Item = BEGIN
 	Term_List = LIST OF (Term = Basic_Set);			{ DT }
@@ -626,6 +626,15 @@ STRUCT
 		CONSTANT C_Empty;
 		END;
 
+	Hidden_Input					{ INPUT / HIDDEN }
+	   (ATTR !NAME; Value_; disabled;
+		{ name  value   disabled }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur) =
+		{ onfocus  onblur }
+		CONSTANT C_Empty;
+
         BUTTON_						{ BUTTON }
 	   (ATTR !NAME; Value_;
 		{ name  value }
@@ -642,14 +651,6 @@ STRUCT
 		  accesskey; onfocus; onblur) =
 		{ accesskey  onfocus  onblur }
 		Basic_Set;
-	Hidden_Input					{ INPUT / HIDDEN }
-	   (ATTR !NAME; Value_; disabled;
-		{ name  value   disabled }
-		  tabindex; accesskey;
-		{ tabindex  accesskey }
-		  onfocus; onblur) =
-		{ onfocus  onblur }
-		CONSTANT C_Empty;
 	Option_Menu;					{ SELECT }
 	Text_Area;					{ TEXTAREA }
 	END;
@@ -657,19 +658,6 @@ STRUCT
   Input_Text = BEGIN
 	Inserted_Text = TEXT;
 	END;
-
-  Table_row							{ TR }
-     (ATTR Cell_align = Cell_left, Cell_center, Cell_right,
-	 { align        left       center       right }
-			Cell_justify, Cell_char;
-	 {		justify       char }
-	   char = Text; charoff = Text;
-	 { char	        charoff }
-	   Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
-	 { valign       top      middle      bottom      baseline }
-	   BackgroundColor; IntHeightPxl) =
-	 { bgcolor          Special attribute to control row span }
-	LIST OF (Table_cell);
 
   Table								{ TABLE }
      (ATTR summary = Text; Width__; Border = Integer;
@@ -706,11 +694,29 @@ STRUCT
 	 { left           right }
 	Basic_Set;
 
+  COLGROUP							{ COLGROUP }
+    (ATTR Cell_align = Cell_left, Cell_center, Cell_right,
+	{ align        left       center       right }
+		       Cell_justify, Cell_char;
+	{	       justify       char }
+	  Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
+	{ valign        top       middle       bottom       baseline }
+	  Width__; span_ = Integer)
+	{ width    span }
+	 = LIST OF (COL);
+
+  COL								{ COL }
+    (ATTR Cell_align; Cell_valign; Width__; span_)
+	{ align       valign       width    span }
+	 = CONSTANT C_Empty;
+
   Column_head (ATTR IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Head;
 
   thead								{ THEAD }
-     (ATTR Cell_align; char; charoff; Row_valign) =
+     (ATTR Cell_align; char = Text; charoff = Text; 
+	   Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline) =
+	 { valign       top      middle      bottom      baseline }
 	LIST OF (Table_row);
 
   tbody								 { TBODY }
@@ -720,6 +726,13 @@ STRUCT
   tfoot								{ TFOOT }
      (ATTR Cell_align; char; charoff; Row_valign) =
 	LIST OF (Table_row);
+
+  Table_row							{ TR }
+     (ATTR Cell_align; char; charoff; Row_valign;
+	 { align       char  charoff  valign }
+	   BackgroundColor; IntHeightPxl) =
+	 { bgcolor          Special attribute to control row span }
+	LIST OF (Table_cell);
 
   Table_cell = CASE OF
 	Data_cell;						{ TD }
@@ -734,10 +747,8 @@ STRUCT
 	 { abbr         axis         headers         scope }
            rowspan_ = INTEGER; colspan_ = INTEGER;
 	 { rowspan             colspan }
-           Cell_align; char; charoff;
-	 { align       char  charoff }
-           Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
-	 { valign        top       middle       bottom       baseline }
+           Cell_align; char; charoff; Cell_valign;
+	 { align       char  charoff  valign }
            No_wrap = no_wrap; BackgroundColor;
 	 { nowrap             bgcolor }
 	   Width__; IntWidthPxl; IntWidthPercent;
@@ -759,16 +770,6 @@ STRUCT
 	   Height_;  IntHeightPercent; IntHeightPxl) =
 	 { width    height }
 	LIST OF (Element);
-
-  COLGROUP							{ COLGROUP }
-    (ATTR Cell_align; Cell_valign; Width__; span_ = Integer)
-	{ align       valign       width    span }
-	 = LIST OF (COL);
-
-  COL								{ COL }
-    (ATTR Cell_align; Cell_valign; Width__; span_)
-	{ align       valign       width    span }
-	 = CONSTANT C_Empty;
 
   MAP								{ MAP }
      (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
@@ -968,6 +969,9 @@ EXCEPT
 	IFRAME:	        NoBreakByReturn;
 	Iframe_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	Iframe_Src_Content: Hidden;
+        rbc:	        Hidden;
+        rtc1:	        Hidden;
+        rtc2:	        Hidden;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	ColRef, Invisible;
@@ -999,6 +1003,7 @@ EXCEPT
 	External_Object_Content: Hidden;
 	Embed_Content:  Hidden, NoSelect;
 	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
+	Applet_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	is_css:	Invisible;
 	xml_space:      SpacePreserve;
 END

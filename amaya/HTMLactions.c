@@ -2924,6 +2924,14 @@ void SelectionChanged (NotifyElement *event)
   SynchronizeAppliedStyle (event);
 }
 
+/*----------------------------------------------------------------------
+  HTMLElementTypeInMenu
+ -----------------------------------------------------------------------*/
+ThotBool HTMLElementTypeInMenu (NotifyElement *event)
+{
+  return TRUE; /* prevent Thot from putting this element name in the
+		  element creation menu */
+}
 
 /*----------------------------------------------------------------------
   SetCharFontOrPhrase

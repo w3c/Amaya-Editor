@@ -45,21 +45,30 @@ static char     NameOfElementToBeCreated[MAX_TXT_LEN];
 static int BuildElementSelector (PtrDocument pDoc)
 {
 #ifdef _GTK
+  PtrDocument    pSelDoc;
+  PtrElement     firstSel, lastSel;
   char           menuBuf[MAX_TXT_LEN];
   int            menuInd;
   PtrSSchema     pSS;
-  int            nbItem, len, typeNum, height;
+  int            nbItem, len, typeNum, height, firstChar, lastChar;
   NotifyElement  notifyEl;
 
+  nbItem = 0;
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
+    return 0;
+  if (pSelDoc != pDoc)
+    return 0;
   /* make the list of all possible element types */
   menuBuf[0] = EOS;
   menuInd = 0;
-  nbItem = 0;
   len = 0;
-  pSS = pDoc->DocSSchema;
+  pSS = firstSel->ElStructSchema;
   for (typeNum = pSS->SsRootElem + 1; typeNum <= pSS->SsNRules; typeNum++)
     if (!TypeHasException (ExcIsPlaceholder, typeNum, pSS) &&
-	!TypeHasException (ExcHidden, typeNum, pSS))
+	!TypeHasException (ExcNoCreate, typeNum, pSS) &&
+	!TypeHasException (ExcHidden, typeNum, pSS) &&
+	pSS->SsRule->SrElem[typeNum - 1]->SrName[0] != EOS)
       {
 	/* send event ElemMenu.Pre to ask the application whether this
 	   element type should appear or not */
