@@ -683,10 +683,11 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
 	  pBox->BxRPadding = 0;
 	  
 	  /* update the chain of leaf boxes */
-	  pBox->BxNexChild = ibox2;
-	  pBox->BxNext = ibox2;
+	  ibox2->BxNexChild = pBox->BxNexChild;
 	  ibox2->BxPrevious = pBox;
 	  ibox2->BxNext = pNextBox;
+	  pBox->BxNexChild = ibox2;
+	  pBox->BxNext = ibox2;
 	  if (pNextBox != NULL)
 	    pNextBox->BxPrevious = ibox2;
 	  else
