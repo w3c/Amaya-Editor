@@ -73,14 +73,13 @@
 static ThotBool      Enable_Multikey;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
-static unsigned int  previous_state = 0;
 
 #ifdef _WINDOWS
 static CHAR_T        previous_keysym;
-static UCHAR_T       previous_value = 0;
 #else  /* !_WINDOWS */
 static KeySym        previous_keysym;
 static KeySym        previous_value = 0;
+static unsigned int  previous_state = 0;
 #endif /* !_WINDOWS */
 
 #ifndef _WINDOWS
@@ -820,9 +819,7 @@ int*   k;
 #endif /* __STDC__ */
 {
    int          index;
-   int          keycode;
    CHAR_T         KS;
-   unsigned int state;
 
    if (!Enable_Multikey) /* no multi-key allowed */
       return 1;
@@ -851,8 +848,6 @@ int*   k;
       /* start of a compose sequence */
        mk_state = 1;
        previous_keysym = KS;
-       previous_value  = keycode;
-       previous_state  = state;
        return (0);
    }
    return (1);
@@ -1605,8 +1600,10 @@ ThotBool value;
 {
   Enable_Multikey = value;
   mk_state = 0;
+#ifndef _WINDOWS
   previous_state = 0;
   previous_value = 0;
+#endif /* _WINDOWS */
 }
 /* End Of Module */
 

@@ -1112,10 +1112,10 @@ ThotBool            increase;
 	{
 	  /* initialize a new cache entry */
 	  TtFonts[i] = ptfont;
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
 	  if (alphabet == 'G' && size == 8 && (size < 16 || size == 24))
 	    TtPatchedFont[i] = size;
-#endif /* _GTK */
+#endif /* !_WINDOWS && !_GTK */
 	  TtFontFrames[i] = 0;
 	}
     }
