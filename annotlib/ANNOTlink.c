@@ -84,7 +84,10 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
   char buffer[MAX_LENGTH];
   char *index_file;
   FILE *fp;
-  
+
+  if (!source_url)
+    return NULL;
+
   annot_dir = GetAnnotDir ();
   annot_main_index = GetAnnotMainIndex ();
   annot_main_index_file = TtaGetMemory (strlen (annot_dir) 
@@ -95,7 +98,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 	    DIR_SEP,  
 	    annot_main_index);
   local_source_url = TtaStrdup (source_url);
-  WWWToLocal (local_source_url); /* @@ JK: remove this */
+  WWWToLocal (local_source_url);
 
   if (TtaFileExist (annot_main_index_file))
     {
@@ -657,7 +660,8 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 	{
 	  rootDoc = AnnotThread_searchRoot (thread->rootOfThread);
 	  annot_list = AnnotMetaData[rootDoc].annotations;  
-	  doc_url = DocumentURLs[rootDoc];
+	  doc_url = AnnotMetaData[rootDoc].annot_url;
+	  /* doc_url = DocumentURLs[rootDoc]; */
 	}
       /* JK: what shall we do if there is no thread, return. signal an error? */
       else
@@ -732,6 +736,8 @@ void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 
   /* get the annotation index */
   doc_index = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
+  if (!doc_index)
+    doc_index = LINK_GetAnnotationIndexFile (AnnotMetaData[source_doc].annot_url);
   if (!doc_index)
     return;
 
@@ -834,13 +840,13 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
 
   /* download the local annotations, if they do exist, but mark them
      invisible */
-  if (!IsW3Path (DocumentURLs[annot_doc]) && 
+  if (!IsW3Path (DocumentURLs[source_doc]) && 
       (!AnnotMetaData[source_doc].annotations 
        && !AnnotMetaData[source_doc].local_annot_loaded))
     {
       char *annotIndex;
 
-      annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
+      annotIndex = LINK_GetAnnotationIndexFile (source_doc_url);
       LINK_LoadAnnotationIndex (source_doc, annotIndex, FALSE);
       TtaFreeMemory (annotIndex);
       AnnotMetaData[source_doc].local_annot_loaded = TRUE;

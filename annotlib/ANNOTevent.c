@@ -77,6 +77,7 @@ typedef struct _REMOTELOAD_context {
   char *localfile;
   Document source_doc;
   char *source_doc_url;
+  char *source_body_url;
   char *annot_url;
   ThotBool isReplyTo;
 } REMOTELOAD_context;
@@ -526,6 +527,7 @@ void RemoteLoad_callback (int doc, int status,
    REMOTELOAD_context *ctx;
    Document source_doc;
    char *source_doc_url;
+   char *source_body_url;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
@@ -537,12 +539,13 @@ void RemoteLoad_callback (int doc, int status,
 
    source_doc = ctx->source_doc;
    source_doc_url = ctx->source_doc_url;
+   source_body_url = ctx->source_body_url;
 
    /* only load the annotation if the download was succesful and if
       the source document hasn't disappeared in the meantime */
    if (status == HT_OK
        && DocumentURLs[source_doc] 
-       && ( Annot_isSameURL (DocumentURLs[source_doc], source_doc_url)
+       && ( Annot_isSameURL (DocumentURLs[source_doc], source_body_url)
 	   || (AnnotMetaData[source_doc].annot_url 
 	       &&  Annot_isSameURL (AnnotMetaData[source_doc].annot_url, source_doc_url))))
      {
@@ -564,6 +567,7 @@ void RemoteLoad_callback (int doc, int status,
 	 TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE), NULL);
      }
    
+   TtaFreeMemory (source_body_url);
    TtaFreeMemory (source_doc_url);
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
@@ -580,11 +584,15 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   char *annotURL;
   char *tmp_url;
   char *doc_url;
+  char *tmp_doc_url;
+  char *body_url;
+  char *tmp_body_url;
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
   char *server;
   ThotBool is_active = FALSE;
+
 
   if (mode == AM_LOAD_NONE)
     return;
@@ -611,13 +619,17 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
    * Parsing test!
   */
 
+
 #ifdef ANNOT_ON_ANNOT
   if (DocumentTypes[doc] == docAnnot)
     doc_url = AnnotMetaData[doc].annot_url;
   else
 #endif /* ANNOT_ON_ANNOT */
     doc_url = DocumentURLs[doc];
+  tmp_doc_url = TestLocalToWWW (doc_url);
 
+  body_url = DocumentURLs[doc];
+  tmp_body_url = TestLocalToWWW (body_url);
 
   /*
    * load the local annotations if there's no annotserver or if
@@ -626,7 +638,13 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   if ((mode & AM_LOAD_LOCAL)
       && (!annotServers || AnnotList_search (annotServers, "localhost")))
     {
-      annotIndex = LINK_GetAnnotationIndexFile (doc_url);
+      /* for annotation documents, we store the index using the annot_url, not the
+	 body_url */
+      if (DocumentTypes[doc] == docAnnot)
+	tmp_url = doc_url;
+      else
+	tmp_url = body_url;
+      annotIndex = LINK_GetAnnotationIndexFile (tmp_url);
       LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
       TtaFreeMemory (annotIndex);
       AnnotMetaData[doc].local_annot_loaded = TRUE;
@@ -653,47 +671,45 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
 	  /* store the source document infos */
 	  ctx->source_doc = doc;
-	  ctx->source_doc_url = TtaStrdup (doc_url);
-	  /* "compute" the url we're looking up in the annotation server */
-	  if (!IsW3Path (doc_url) &&
-	      !IsFilePath (doc_url))
-	    tmp_url = LocalToWWW (doc_url);
-	  else
-	    tmp_url = doc_url;
+	  ctx->source_doc_url = TtaStrdup (tmp_doc_url);
+	  ctx->source_body_url = TtaStrdup (tmp_body_url);
+
 	  if (!annotCustomQuery || !annotAlgaeText || 
 	      annotAlgaeText[0] == EOS)
 	    {
 #ifdef ANNOT_ON_ANNOT
 	      if (DocumentTypes[doc] == docAnnot)
 		{
-		  annotURL = TtaGetMemory (2 * strlen (tmp_url)
+		  annotURL = TtaGetMemory (strlen (tmp_doc_url)
+					   + strlen (tmp_body_url)
 					   + sizeof ("w3c_annotates=&w3c_replyTree=")
 					   + 50);
-		  sprintf (annotURL, "w3c_annotates=%s&w3c_replyTree=%s", tmp_url, tmp_url);
+		  /* we annotate the body, but reply to the annotation */
+		  sprintf (annotURL, "w3c_annotates=%s&w3c_replyTree=%s", 
+			   tmp_body_url, tmp_doc_url);
 		}
 	      else
 #endif /* ANNOT_ON_ANNOT */
 		{
-		  annotURL = TtaGetMemory (strlen (tmp_url)
+		  annotURL = TtaGetMemory (strlen (tmp_body_url)
 					   + sizeof ("w3c_annotates=")
 					   + 50);
-		  sprintf (annotURL, "w3c_annotates=%s", tmp_url);
+		  sprintf (annotURL, "w3c_annotates=%s", tmp_body_url);
 		}
 	    }
 	  else
 	    /* substitute the %u for DocumentURLs[doc] and go for it! */
 	    /* @@ we have a potential mem bug here as I'm not computing
 	       the exact size */
-	    CopyAlgaeTemplateURL (&annotURL, tmp_url);
+	    /* @@ what shall we do with annotations and replies? */
+	    CopyAlgaeTemplateURL (&annotURL, tmp_doc_url);
+	  
+	  if (tmp_body_url != body_url)
+	    TtaFreeMemory (tmp_body_url);
 
-	  if (tmp_url != doc_url)
-	    TtaFreeMemory (tmp_url);
+	  if (tmp_doc_url != doc_url)
+	    TtaFreeMemory (tmp_doc_url);
 
-	  if (IsFilePath (annotURL))
-	    {
-	      /* @@JK: normalize the URL to a local one */
-	      
-	    }
 	  /* launch the request */
 	  if (!is_active)
 	    {
@@ -1642,7 +1658,7 @@ void ANNOT_Delete_callback (int doc, int status,
 #ifdef ANNOT_ON_ANNOT
 	  if (annot->inReplyTo)
 	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].thread->annotations),
-				  annot_url, FALSE);      
+				  annot_url, annot_is_remote);      
 	  else
 #endif /* ANNOT_ON_ANNOT */
 	    {
@@ -1651,7 +1667,7 @@ void ANNOT_Delete_callback (int doc, int status,
 	      /* remove the annotation from the document's annotation list and 
 		 update it */
 	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-				  annot_url, FALSE);
+				  annot_url, annot_is_remote);
 	    }
 	}
 
@@ -1747,7 +1763,7 @@ void ANNOT_Delete (Document doc, View view)
 				       + strlen (DocumentMeta[doc]->form_data)
 					+ sizeof ("?")
 					+ 1);
-	      sprintf (annot_url, "%s?%s", DocumentURLs[doc], 
+	      sprintf (annot_url, "%s?%s", DocumentURLs[doc],
 			DocumentMeta[doc]->form_data);
 	    }
 	  else
