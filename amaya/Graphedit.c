@@ -1304,6 +1304,10 @@ Document            doc;
 View                view;
 #endif
 {
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+
 # ifndef _WINDOWS
   if (!PaletteDisplayed)
     {

@@ -969,15 +969,19 @@ Document       doc;
          TtaFileUnlink (htmlErrFile);
 	}
       else 
-	if (DocumentTypes[doc] == docImage) 
+	if (DocumentTypes[doc] == docImage || DocumentTypes[doc] == docImageRO) 
 	  {
 	    /* remove the HTML container for the local images */
 	    tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	    TtaFileUnlink (tempdocument); 
 	    TtaFreeMemory (tempdocument);
 	  }
+
       if (DocumentTypes[doc] == docImage)
 	DocumentTypes[doc] = docHTML;
+      else if (DocumentTypes[doc] == docImageRO)
+	DocumentTypes[doc] = docReadOnly;
+
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
       if (DocumentMeta[doc]->form_data)

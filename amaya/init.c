@@ -41,6 +41,8 @@
 #include "DL.xpm"
 #include "Link.xpm"
 #include "Table.xpm"
+#include "Browser.xpm"
+#include "Editor.xpm"
 #endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
@@ -119,6 +121,8 @@ static Pixmap       iconNum;
 static Pixmap       iconDL;
 static Pixmap       iconLink;
 static Pixmap       iconTable;
+static Pixmap       iconBrowser;
+static Pixmap       iconEditor;
 #ifdef AMAYA_PLUGIN
 static Pixmap       iconPlugin;
 #endif /* AMAYA_PLUGIN */
@@ -154,6 +158,8 @@ static Pixmap       iconJava;
 #define stopN         21
 #define iconBackNo    22
 #define iconForwardNo 23
+#define iconBrowser   24
+#define iconEditor    25
 
 static BOOL itemChecked = FALSE;
 extern int  currentFrame;
@@ -609,8 +615,304 @@ Document            doc;
 #endif /* _WINDOWS */
 #endif
 }
+
+
 /*----------------------------------------------------------------------
-   ActiveMakeBook initialize the current transfer                     
+   SetFormReadWrite
+   Set ReadWrite access to input elements
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	SetFormReadWrite (Element el, Document doc)
+#else
+static void	SetFormReadWrite (el, doc)
+Element         el;
+Document        doc;
+#endif
+{
+   ElementType         elType;
+   Element             child, next;
+
+   while (el != NULL)
+     {
+       /* look at all elements within this form */
+       elType = TtaGetElementType (el);
+       child = TtaGetFirstChild (el);
+       next = el;
+       TtaNextSibling (&next);
+       switch (elType.ElTypeNum)
+	 {
+	 case HTML_EL_Input:
+	 case HTML_EL_Text_Input:
+	 case HTML_EL_Password_Input:
+	 case HTML_EL_File_Input:
+	 case HTML_EL_Text_Area:	/* it's a Text_Area */
+	   TtaSetAccessRight (child, ReadWrite, doc);
+	   child = NULL;
+	   break;
+	 default:
+	   break;
+	 }
+       if (child != NULL)
+	 SetFormReadWrite (child, doc);
+       el = next;
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   SetHTMLReadOnly
+   Set the whole document in ReadOnly mode except input elements
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	SetHTMLReadOnly (Document doc)
+#else
+static void	SetHTMLReadOnly (doc)
+Document        doc;
+#endif
+{
+   ElementType         elType;
+   Element             el, elForm;
+
+  TtaSetDocumentAccessMode (doc, 0);
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = HTML_EL_Form;
+  elForm = TtaSearchTypedElement (elType, SearchForward, el);
+  while (elForm != NULL)
+    {
+      /* there is a form */
+      el = TtaGetFirstChild (elForm);
+      if (el != NULL)
+	SetFormReadWrite (el, doc);
+      elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+   Change the Broser/Editor mode                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetBrowserEditor (Document document)
+#else
+void                SetBrowserEditor (document)
+Document            doc;
+#endif
+{
+   View                view;
+
+   if (TtaGetDocumentAccessMode (document))
+     {
+       /* the document is in ReadWrite mode */
+#ifdef _WINDOWS 
+       WIN_TtaChangeButton (document, 1, 4, iconBrowser, TRUE);
+#else  /* _WINDOWS */
+       TtaChangeButton (document, 1, 4, iconBrowser);
+#endif /* _WINDOWS */
+       /* change the document status */
+       if (DocumentTypes[document] == docHTML)
+	 DocumentTypes[document] = docReadOnly;
+       else if (DocumentTypes[document] == docImage)
+	 DocumentTypes[document] = docImageRO;
+       SetHTMLReadOnly (document);
+
+       /* update windows menus */
+       view = 1;
+       TtaSetItemOff (document, 1, File, BNew);
+       TtaSetItemOff (document, 1, File, BOpenDoc);
+       TtaSetItemOff (document, 1, File, BOpenInNewWindow);
+       TtaSetItemOff (document, 1, File, BSave);
+       TtaSetItemOff (document, 1, Edit_, BCut);
+       TtaSetItemOff (document, 1, Edit_, BPaste);
+       TtaSetItemOff (document, 1, Edit_, BClear);
+       TtaSetItemOff (document, 1, Edit_, BSpellCheck);
+       TtaSetItemOff (document, 1, Edit_, BTransform);
+       TtaSetMenuOff (document, 1, Types);
+       TtaSetMenuOff (document, 1, Links);
+       TtaSetMenuOff (document, 1, Style);
+       TtaSetMenuOff (document, 1, Special);
+       TtaSetMenuOff (document, 1, Attributes_);
+       TtaSetMenuOff (document, 1, Help_);
+       view = TtaGetViewFromName (document, "Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, view, Edit_, BTransform);
+	    TtaSetMenuOff (document, view, StructTypes);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+#ifdef MATHML
+       view = TtaGetViewFromName (document, "Math_Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, view, Edit_, BTransform);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+#endif /* MATHML */
+#ifdef GRAPHML
+       view = TtaGetViewFromName (document, "Graph_Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, view, Edit_, BTransform);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+#endif /* GRAPHML */
+       view = TtaGetViewFromName (document, "Alternate_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetMenuOff (document, view, StructTypes);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+       view = TtaGetViewFromName (document, "Links_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, view, Edit_, BTransform);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+       view = TtaGetViewFromName (document, "Table_of_contents");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOff (document, view, Edit_, BCut);
+	    TtaSetItemOff (document, view, Edit_, BPaste);
+	    TtaSetItemOff (document, view, Edit_, BClear);
+	    TtaSetItemOff (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, view, Edit_, BTransform);
+	    TtaSetMenuOff (document, view, Types);
+	    TtaSetMenuOff (document, view, Attributes_);
+	 }
+     }
+   else
+     {
+       /* the document is in ReadWrite mode */
+#ifdef _WINDOWS 
+       WIN_TtaChangeButton (document, 1, 4, iconEditor, TRUE);
+#else  /* _WINDOWS */
+       TtaChangeButton (document, 1, 4, iconEditor);
+#endif /* _WINDOWS */
+       /* change the document status */
+       if (DocumentTypes[document] == docHTML)
+	 DocumentTypes[document] = docReadOnly;
+       else if (DocumentTypes[document] == docImage)
+	 DocumentTypes[document] = docImageRO;
+       TtaSetDocumentAccessMode (document, 1);
+       /* update windows menus */
+
+       /* update windows menus */
+       view = 1;
+       TtaSetItemOn (document, 1, File, BNew);
+       TtaSetItemOn (document, 1, File, BOpenDoc);
+       TtaSetItemOn (document, 1, File, BOpenInNewWindow);
+       TtaSetItemOn (document, 1, File, BSave);
+       TtaSetItemOn (document, 1, Edit_, BCut);
+       TtaSetItemOn (document, 1, Edit_, BPaste);
+       TtaSetItemOn (document, 1, Edit_, BClear);
+       TtaSetItemOn (document, 1, Edit_, BSpellCheck);
+       TtaSetItemOn (document, 1, Edit_, BTransform);
+       TtaSetMenuOn (document, 1, Types);
+       TtaSetMenuOn (document, 1, Links);
+       TtaSetMenuOn (document, 1, Style);
+       TtaSetMenuOn (document, 1, Special);
+       TtaSetMenuOn (document, 1, Attributes_);
+       TtaSetMenuOn (document, 1, Help_);
+       view = TtaGetViewFromName (document, "Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOn (document, view, Edit_, BTransform);
+	    TtaSetMenuOn (document, view, StructTypes);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+#ifdef MATHML
+       view = TtaGetViewFromName (document, "Math_Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOn (document, view, Edit_, BTransform);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+#endif /* MATHML */
+#ifdef GRAPHML
+       view = TtaGetViewFromName (document, "Graph_Structure_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOn (document, view, Edit_, BTransform);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+#endif /* GRAPHML */
+       view = TtaGetViewFromName (document, "Alternate_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetMenuOn (document, view, StructTypes);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+       view = TtaGetViewFromName (document, "Links_view");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOn (document, view, Edit_, BTransform);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+       view = TtaGetViewFromName (document, "Table_of_contents");
+       if (view != 0 && TtaIsViewOpened (document, view))
+	 {
+	    TtaSetItemOn (document, view, Edit_, BCut);
+	    TtaSetItemOn (document, view, Edit_, BPaste);
+	    TtaSetItemOn (document, view, Edit_, BClear);
+	    TtaSetItemOn (document, view, Edit_, BSpellCheck);
+	    TtaSetItemOn (document, view, Edit_, BTransform);
+	    TtaSetMenuOn (document, view, Types);
+	    TtaSetMenuOn (document, view, Attributes_);
+	 }
+     }
+}
+/*----------------------------------------------------------------------
+   ActiveMakeBook initialize the current transfer
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ActiveMakeBook (Document document)
@@ -623,12 +925,13 @@ Document            doc;
   IncludedDocument = 0;
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-#ifdef _WINDOWS 
+#ifdef _WINDOWS
     WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
 #else  /* _WINDOWS */
     TtaChangeButton (document, 1, 1, stopR);
 #endif /* _WINDOWS */
 }
+
 
 /*----------------------------------------------------------------------
    UpdateTransfer updates the status of the current transfer
@@ -707,7 +1010,9 @@ View                view;
 
 #endif
 {
-   SetCharFontOrPhrase (document, HTML_EL_Emphasis);
+   if (TtaGetDocumentAccessMode (document))
+     /* the document is in ReadWrite mode */
+     SetCharFontOrPhrase (document, HTML_EL_Emphasis);
 }
 
 /*----------------------------------------------------------------------
@@ -722,7 +1027,9 @@ View                view;
 
 #endif
 {
-   SetCharFontOrPhrase (document, HTML_EL_Strong);
+   if (TtaGetDocumentAccessMode (document))
+     /* the document is in ReadWrite mode */
+     SetCharFontOrPhrase (document, HTML_EL_Strong);
 }
 
 /*----------------------------------------------------------------------
@@ -737,7 +1044,9 @@ View                view;
 
 #endif
 {
-   SetCharFontOrPhrase (document, HTML_EL_Code);
+   if (TtaGetDocumentAccessMode (document))
+     /* the document is in ReadWrite mode */
+     SetCharFontOrPhrase (document, HTML_EL_Code);
 }
 
 /*----------------------------------------------------------------------
@@ -822,16 +1131,22 @@ char               *text;
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_TITLE;
    el = TtaSearchTypedElement (elType, SearchForward, el);
-   child = TtaGetFirstChild (el);
-   if (child == NULL)
+   if (!TtaGetDocumentAccessMode (document))
+     /* the document is in ReadOnly mode */
+     UpdateTitle (el, document);
+   else
      {
-       /* insert the text element */
-       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-       child = TtaNewElement (document, elType);
-       TtaInsertFirstChild  (&child, el, document);
+       child = TtaGetFirstChild (el);
+       if (child == NULL)
+	 {
+	   /* insert the text element */
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   child = TtaNewElement (document, elType);
+	   TtaInsertFirstChild  (&child, el, document);
+	 }
+       TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
+       TtaSetDocumentModified (document);
      }
-   TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
-   TtaSetDocumentModified (document);
 }
 
 /*----------------------------------------------------------------------
@@ -1119,6 +1434,8 @@ boolean             logFile;
 			   TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
 	     TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
 			   TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
+			   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit));
 	     TtaAddButton (doc, 1, iconReload, Reload,
 			   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
@@ -1159,12 +1476,13 @@ boolean             logFile;
 			   TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 
 #        else /* _WINDOWS */
-		 tipIndex = 0;
-		 iString  = 0;
+	     tipIndex = 0;
+	     iString  = 0;
 
-		 WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
+	     WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, FALSE);
+	     WIN_TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit), TBSTYLE_BUTTON, FALSE);
 
 	     WIN_TtaAddButton (doc, 1, inconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED); /* SEPARATOR */
@@ -1445,7 +1763,14 @@ boolean		    history;
 	  newdoc = doc;
 
       if (IMAGEfile)
-	DocumentTypes[newdoc] = docImage;
+	{
+	  if (DocumentTypes[newdoc] == docReadOnly)
+	    /* document in ReadOnly mode */
+	    DocumentTypes[newdoc] = docImageRO;
+	  else
+	    /* document in ReadWrite mode */
+	    DocumentTypes[newdoc] = docImage;
+	}
 
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
@@ -1533,78 +1858,6 @@ boolean		    history;
 
 
 /*----------------------------------------------------------------------
-   SetFormReadWrite
-   Set ReadWrite access to input elements
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void	SetFormReadWrite (Element el, Document doc)
-#else
-static void	SetFormReadWrite (el, doc)
-Element         el;
-Document        doc;
-#endif
-{
-   ElementType         elType;
-   Element             child, next;
-
-   while (el != NULL)
-     {
-       /* look at all elements within this form */
-       elType = TtaGetElementType (el);
-       child = TtaGetFirstChild (el);
-       next = el;
-       TtaNextSibling (&next);
-       switch (elType.ElTypeNum)
-	 {
-	 case HTML_EL_Input:
-	 case HTML_EL_Text_Input:
-	 case HTML_EL_Password_Input:
-	 case HTML_EL_File_Input:
-	 case HTML_EL_Text_Area:	/* it's a Text_Area */
-	   TtaSetAccessRight (child, ReadWrite, doc);
-	   child = NULL;
-	   break;
-	 default:
-	   break;
-	 }
-       if (child != NULL)
-	 SetFormReadWrite (child, doc);
-       el = next;
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   SetHTMLReadOnly
-   Set the whole document in ReadOnly mode except input elements
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void	SetHTMLReadOnly (Document doc)
-#else
-static void	SetHTMLReadOnly (doc)
-Document        doc;
-#endif
-{
-   ElementType         elType;
-   Element             el, elForm;
-
-  TtaSetDocumentAccessMode (doc, 0);
-  el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
-  elType.ElTypeNum = HTML_EL_Form;
-  elForm = TtaSearchTypedElement (elType, SearchForward, el);
-  while (elForm != NULL)
-    {
-      /* there is a form */
-      el = TtaGetFirstChild (elForm);
-      if (el != NULL)
-	SetFormReadWrite (el, doc);
-      elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
-    }
-}
-
-
-/*----------------------------------------------------------------------
   Reload_callback
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1652,7 +1905,7 @@ void *context;
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
 			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
-	if (DocumentTypes[res] == docHelp)
+	if (DocumentTypes[res] == docReadOnly)
 	  SetHTMLReadOnly (res);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -1929,12 +2182,14 @@ View                view;
        structView = TtaOpenView (document, "Structure_view", x, y, w, h);
        TtcSwitchButtonBar (document, structView);
        TtcSwitchCommands (document, structView);
-       if (DocumentTypes[document] == docHelp)
+       if (DocumentTypes[document] == docReadOnly ||
+	   DocumentTypes[document] == docImageRO)
 	 {
 	   TtaSetItemOff (document, structView, Edit_, BCut);
 	   TtaSetItemOff (document, structView, Edit_, BPaste);
 	   TtaSetItemOff (document, structView, Edit_, BClear);
 	   TtaSetItemOff (document, structView, Edit_, BSpellCheck);
+	   TtaSetItemOff (document, structView, Edit_, BTransform);
 	   TtaSetMenuOff (document, structView, StructTypes);
 	   TtaSetMenuOff (document, structView, Types);
 	   TtaSetMenuOff (document, structView, Attributes_);
@@ -1952,6 +2207,17 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, mathView);
 	   TtcSwitchCommands (document, mathView);
+	   if (DocumentTypes[document] == docReadOnly ||
+	       DocumentTypes[document] == docImageRO)
+	     {
+	       TtaSetItemOff (document, mathView, Edit_, BCut);
+	       TtaSetItemOff (document, mathView, Edit_, BPaste);
+	       TtaSetItemOff (document, mathView, Edit_, BClear);
+	       TtaSetItemOff (document, mathView, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, mathView, Edit_, BTransform);
+	       TtaSetMenuOff (document, mathView, Types);
+	       TtaSetMenuOff (document, mathView, Attributes_);
+	     }
 	 }
      }
 #endif /* MATHML */
@@ -1967,6 +2233,17 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, graphView);
 	   TtcSwitchCommands (document, graphView);
+	   if (DocumentTypes[document] == docReadOnly ||
+	       DocumentTypes[document] == docImageRO)
+	     {
+	       TtaSetItemOff (document, graphView, Edit_, BCut);
+	       TtaSetItemOff (document, graphView, Edit_, BPaste);
+	       TtaSetItemOff (document, graphView, Edit_, BClear);
+	       TtaSetItemOff (document, graphView, Edit_, BSpellCheck);
+	       TtaSetItemOff (document, graphView, Edit_, BTransform);
+	       TtaSetMenuOff (document, graphView, Types);
+	       TtaSetMenuOff (document, graphView, Attributes_);
+	     }
 	 }
      }
 #endif /* GRAPHML */
@@ -1997,6 +2274,17 @@ View                view;
 	altView = TtaOpenView (document, "Alternate_view", x, y, w, h);
 	TtcSwitchButtonBar (document, altView);
 	TtcSwitchCommands (document, altView);
+	if (DocumentTypes[document] == docReadOnly ||
+	    DocumentTypes[document] == docImageRO)
+	  {
+	    TtaSetItemOff (document, altView, Edit_, BCut);
+	    TtaSetItemOff (document, altView, Edit_, BPaste);
+	    TtaSetItemOff (document, altView, Edit_, BClear);
+	    TtaSetItemOff (document, altView, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, altView, Edit_, BTransform);
+	    TtaSetMenuOff (document, altView, Types);
+	    TtaSetMenuOff (document, altView, Attributes_);
+	  }
      }
 }
 
@@ -2026,6 +2314,17 @@ View                view;
 	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
 	TtcSwitchButtonBar (document, linksView);
 	TtcSwitchCommands (document, linksView);
+	if (DocumentTypes[document] == docReadOnly ||
+	    DocumentTypes[document] == docImageRO)
+	  {
+	    TtaSetItemOff (document, linksView, Edit_, BCut);
+	    TtaSetItemOff (document, linksView, Edit_, BPaste);
+	    TtaSetItemOff (document, linksView, Edit_, BClear);
+	    TtaSetItemOff (document, linksView, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, linksView, Edit_, BTransform);
+	    TtaSetMenuOff (document, linksView, Types);
+	    TtaSetMenuOff (document, linksView, Attributes_);
+	  }
      }
 }
 
@@ -2055,73 +2354,17 @@ View                view;
 	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
 	TtcSwitchButtonBar (document, tocView);
 	TtcSwitchCommands (document, tocView);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   ViewToOpen                                                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             ViewToOpen (NotifyDialog * event)
-#else
-boolean             ViewToOpen (event)
-NotifyDialog       *event;
-
-#endif
-{
-   View                view, sview;
-   int                 x, y, w, h;
-
-   view = event->view;
-   if (view == 1)
-     return FALSE;		/* let Thot perform normal operation */
-   else
-     {
-     sview = TtaGetViewFromName (event->document, "Structure_view");
-     if (view == sview)
-       {
-       TtaGetViewGeometry (event->document, "Structure_view", &x, &y, &w, &h);
-       view = TtaOpenView (event->document, "Structure_view", x, y, w, h);
-       TtcSwitchButtonBar (event->document, view);
-       TtcSwitchCommands (event->document, view);
-       }
-     else
-       {
-       sview = TtaGetViewFromName (event->document, "Alternate_view");
-       if (view == sview)
-         {
-	 TtaGetViewGeometry (event->document, "Alternate_view", &x, &y, &w, &h);
-	 view = TtaOpenView (event->document, "Alternate_view", x, y, w, h);
-	 TtcSwitchButtonBar (event->document, view);
-	 TtcSwitchCommands (event->document, view);
-	 }
-       else
-	 {
-	 sview = TtaGetViewFromName (event->document, "Links_view");
-	 if (view == sview)
-	   {
-	   TtaGetViewGeometry (event->document, "Links_view", &x, &y, &w, &h);
-	   view = TtaOpenView (event->document, "Links_view", x, y, w, h);
-	   TtcSwitchButtonBar (event->document, view);
-	   TtcSwitchCommands (event->document, view);
-	   }
-	 else
-	   {
-	   sview = TtaGetViewFromName (event->document, "Table_of_contents");
-	   if (view == sview)
-	     {
-	     TtaGetViewGeometry (event->document, "Table_of_contents", &x, &y,
-				 &w, &h);
-	     view = TtaOpenView (event->document, "Table_of_contents", x, y, w,
-				 h);
-	     TtcSwitchButtonBar (event->document, view);
-	     TtcSwitchCommands (event->document, view);
-	     }
-	   }
-	 }
-       }
-       return TRUE;		/* don't let Thot perform normal operation */
+	if (DocumentTypes[document] == docReadOnly ||
+	    DocumentTypes[document] == docImageRO)
+	  {
+	    TtaSetItemOff (document, tocView, Edit_, BCut);
+	    TtaSetItemOff (document, tocView, Edit_, BPaste);
+	    TtaSetItemOff (document, tocView, Edit_, BClear);
+	    TtaSetItemOff (document, tocView, Edit_, BSpellCheck);
+	    TtaSetItemOff (document, tocView, Edit_, BTransform);
+	    TtaSetMenuOff (document, tocView, Types);
+	    TtaSetMenuOff (document, tocView, Attributes_);
+	  }
      }
 }
 
@@ -2346,7 +2589,7 @@ void *context;
    if (form_data)
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
-   if (DocumentTypes[newdoc] == docHelp)
+   if (DocumentTypes[newdoc] == docReadOnly)
      SetHTMLReadOnly (newdoc);
 }
 
@@ -2483,7 +2726,7 @@ void               *ctx_cbf;
 		 ok = FALSE;
 	       else if (CE_event == CE_HELP || CE_event == CE_LOG)
 		 {
-		   DocumentTypes[newdoc] = docHelp;
+		   DocumentTypes[newdoc] = docReadOnly;
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1); /* no command filed */
 		   TtcSwitchButtonBar (newdoc, 1); /* no button bar */
@@ -2514,7 +2757,6 @@ void               *ctx_cbf;
 		   TtaSetMenuOff (newdoc, 1, Special);
 		   TtaSetMenuOff (newdoc, 1, Attributes_);
 		   TtaSetMenuOff (newdoc, 1, Help_);
-
 		 }
 	       else
 		 /* it's a simple HTML document */
@@ -3353,6 +3595,8 @@ NotifyEvent        *event;
    iconBackNo = TtaCreatePixmapLogo (BackNo_xpm);
    iconForward = TtaCreatePixmapLogo (Forward_xpm);
    iconForwardNo = TtaCreatePixmapLogo (ForwardNo_xpm);
+   iconBrowser = TtaCreatePixmapLogo (Browser_xpm);
+   iconEditor = TtaCreatePixmapLogo (Editor_xpm);
    iconH1 = TtaCreatePixmapLogo (H1_xpm);
    iconH2 = TtaCreatePixmapLogo (H2_xpm);
    iconH3 = TtaCreatePixmapLogo (H3_xpm);

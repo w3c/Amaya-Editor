@@ -11,7 +11,6 @@ DEFAULT
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
 	PRuleDelete.Post -> SetStyle;
-	ViewOpen.Pre -> ViewToOpen;
 	ViewClose.Pre -> ViewToClose;
 	ElemSelect.Post -> SelectionChanged;
 	ElemExtendSelect.Post -> SelectionChanged;

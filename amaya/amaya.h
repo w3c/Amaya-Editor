@@ -227,9 +227,10 @@ THOT_EXPORT boolean      SelectionInSMALL;
 typedef enum
 {
   docHTML,
-  docHelp,
+  docReadOnly,
   docText,
-  docImage
+  docImage,
+  docImageRO
 } DocumentType;
 
 

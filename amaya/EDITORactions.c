@@ -2224,6 +2224,10 @@ View                view;
    Element             el;
    int                 firstSelectedChar, i;
 
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    if (el != NULL)
      {

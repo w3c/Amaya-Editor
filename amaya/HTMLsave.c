@@ -952,6 +952,10 @@ View                view;
    int                 i;
    boolean             ok;
 
+   if (!TtaGetDocumentAccessMode (document))
+     /* the document is in ReadOnly mode */
+     return;
+
    if (SavingDocument != 0)
       return;
    else if (!TtaIsDocumentModified (document))
