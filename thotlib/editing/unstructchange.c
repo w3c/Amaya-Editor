@@ -1579,13 +1579,19 @@ void     TtcCreateElement (Document doc, View view)
 		  /* envoie un evenement ElemNew.Post a l'application */
 		  NotifySubTree (TteElemNew, pDoc, pNew, 0);
 		  if (!lock)
-		    /* unlock table formatting */
-		    (*ThotLocalActions[T_unlock]) ();
+		    {
+		      /* unlock table formatting */
+		      (*ThotLocalActions[T_unlock]) ();
+		      lock = TRUE; /* unlock is done */
+		    }
 		  /* Replace la selection */
 		  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
 		}
 	    }
 	}
+      if (!lock)
+	/* handle the remaining unlock of table formatting */
+	(*ThotLocalActions[T_unlock]) ();
       if (histSeq)
 	CloseHistorySequence (pDoc);
     }

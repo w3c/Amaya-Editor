@@ -384,7 +384,7 @@ static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
 static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int zoom,
-								int *width, int *percent)
+				int *width, int *percent)
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -572,7 +572,7 @@ static void     CheckRowHeights (PtrAbstractBox table, int frame)
   width.
   The parameter freely lets know that the width can be increased.
   ----------------------------------------------------------------------*/
-static void     CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
+static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 {
   PtrAbstractBox      pCell;
   PtrAbstractBox     *colBox;
@@ -898,7 +898,7 @@ printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
 
   The table width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void     ChangeTableWidth (PtrAbstractBox table, int frame)
+static void ChangeTableWidth (PtrAbstractBox table, int frame)
 {
   if (Lock)
     /* the table formatting is locked */
@@ -919,7 +919,7 @@ static void     ChangeTableWidth (PtrAbstractBox table, int frame)
   constrained width and the percent width of a specific cell.
   ----------------------------------------------------------------------*/
 static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
-							int *width, int *percent)
+			    int *width, int *percent)
 {
   PtrAbstractBox      pAb;
   PtrBox              box;
@@ -1438,7 +1438,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
 
   The cell height changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void      UpdateCellHeight (PtrAbstractBox cell, int frame)
+static void UpdateCellHeight (PtrAbstractBox cell, int frame)
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1512,7 +1512,7 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
    - a row (table == NULL && row != NULL)
   ----------------------------------------------------------------------*/
 static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
-						 PtrAbstractBox row, int frame)
+			 PtrAbstractBox row, int frame)
 {
   PtrAbstractBox      pAb;
 
@@ -1775,7 +1775,7 @@ static void    UnlockTableFormatting ()
   TtaUnlockTableFormatting reformats all locked tables
   Redisplay the selection and update scrolling bars
   ----------------------------------------------------------------------*/
-void    TtaUnlockTableFormatting ()
+void TtaUnlockTableFormatting ()
 {
   UnlockTableFormatting ();
 }
@@ -1784,7 +1784,7 @@ void    TtaUnlockTableFormatting ()
 /*----------------------------------------------------------------------
   TtaGiveTableFormattingLock gives the status of the table formatting lock.
   ----------------------------------------------------------------------*/
-void      TtaGiveTableFormattingLock (ThotBool *lock)
+void TtaGiveTableFormattingLock (ThotBool *lock)
 {
   /* check if we're not processing a TtaUnlockTableFormatting */
   if (DifferedChecks != NULL)
@@ -1797,7 +1797,7 @@ void      TtaGiveTableFormattingLock (ThotBool *lock)
 /*----------------------------------------------------------------------
    TableHLoadResources : connect resources for managing HTML tables
   ----------------------------------------------------------------------*/
-void                TableHLoadResources ()
+void TableHLoadResources ()
 {
 
    if (ThotLocalActions[T_checktable] == NULL)
