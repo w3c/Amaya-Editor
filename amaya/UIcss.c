@@ -733,17 +733,65 @@ static void CallbackCSS (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
+  GenerateStyleListFileForElem
+  Create a file (named fileName) containing all the CSS style rules
+  that have been applied to element el.
+ -----------------------------------------------------------------------*/
+static void GenerateStyleListFileForElem (Element el, Document doc,
+					  char *fileName)
+{
+  ElementType         elType;
+  FILE               *list;
+  int                 n;
+
+  /* There is no style on terminal elements. If el is a terminal element,
+     take its parent instead.  */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+      elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+    {
+      el = TtaGetParent (el);
+      if (el)
+	elType = TtaGetElementType (el);	  
+    }
+  /* If the element is not supposed to be seen by the user, take its
+     parent instead */
+  while (el && TtaHasHiddenException (elType))
+    {
+      el = TtaGetParent (el);
+      if (el)
+	elType = TtaGetElementType (el);
+    }
+  /* open the file */
+  list = fopen (fileName, "w");
+  /* generate its contents */
+  fprintf (list, "\n\n");      
+  fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
+	   GetXMLElementName (elType, doc));      
+  fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));
+  if (el)
+    n = TtaListStyleOfCurrentElement (doc, list);
+  else
+    n = 0;
+  if (n == 0)
+    {
+      fprintf (list, "\n     ");
+      fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+    }
+  fclose (list);
+}
+
+/*----------------------------------------------------------------------
   ShowAppliedStyle shows style applied to the current selected
   element.
  -----------------------------------------------------------------------*/
 void ShowAppliedStyle (Document doc, View view)
 {
   Element             el;
-  ElementType         elType;
   Document            newdoc;
-  FILE               *list;
   char                fileName[100];
-  int                 f, l, n;
+  int                 f, l;
 
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
   if (el == NULL)
@@ -751,39 +799,12 @@ void ShowAppliedStyle (Document doc, View view)
 		TtaGetMessage (AMAYA, AM_NO_SELECTION));
   else
     {
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-	  elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
-	  elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
-	{
-	  /* there is no style on terminal elements */
-	  el = TtaGetParent (el);
-	  if (el)
-	    elType = TtaGetElementType (el);	  
-	}
-      while (el && TtaHasHiddenException (elType))
-	{
-	  el = TtaGetParent (el);
-	  if (el)
-	    elType = TtaGetElementType (el);
-	}
       /* list CSS rules applied to the current selection */
       sprintf (fileName, "%s%c%d%cSTYLE.LST",
 	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
       if (TtaFileExist (fileName))
 	TtaFileUnlink (fileName);
-      list = fopen (fileName, "w");
-      fprintf (list, "\n\n");      
-      fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
-	       GetXMLElementName (elType, doc));      
-      fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
-      n = TtaListStyleOfCurrentElement (doc, list);
-      if (n == 0)
-	{
-	  fprintf (list, "\n     ");
-	  fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
-	}
-      fclose (list);
+      GenerateStyleListFileForElem (el, doc, fileName);
       newdoc = GetAmayaDoc (fileName, "STYLE.LST", 0, doc, CE_LOG, FALSE, NULL,
 			    NULL, TtaGetDefaultCharset ());
       /* store the relation with the original document */
@@ -802,14 +823,13 @@ void ShowAppliedStyle (Document doc, View view)
  -----------------------------------------------------------------------*/
 void SynchronizeAppliedStyle (NotifyElement *event)
 {
-  ElementType         elType;
   Element             el;
   Document            doc;
-  FILE               *list;
   char                fileName[100], dirName[100];
-  int                 i, n;
+  int                 i;
 
-  /* is there log documents linked to this document? */
+  /* look for the log document that displays the STYLE.LST file associated
+     with the document */
   doc = event->document;
   el = event->element;
   for (i = 1; i < DocumentTableLength; i++)
@@ -817,22 +837,6 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 	DocumentTypes[i] == docLog &&
 	strstr (DocumentURLs[i], "STYLE.LST"))
       {
-	elType = TtaGetElementType (el);
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-	    elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
-	    elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
-	  {
-	  /* there is no style on terminal elements */
-	    el = TtaGetParent (el);
-	    if (el)
-	      elType = TtaGetElementType (el);	  
-	  }
-	while (el && TtaHasHiddenException (elType))
-	  {
-	    el = TtaGetParent (el);
-	    if (el)
-	      elType = TtaGetElementType (el);
-	  }
 	/* list CSS rules applied to the current selection */
 	sprintf (dirName, "%s%c%d",
 		 TempFileDirectory, DIR_SEP, doc);
@@ -840,18 +844,7 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 		 TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	if (TtaFileExist (fileName))
 	  TtaFileUnlink (fileName);
-	list = fopen (fileName, "w");
-	fprintf (list, "\n\n");      
-	fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
-		 GetXMLElementName (elType, doc));      
-	fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
-	n = TtaListStyleOfCurrentElement (doc, list);
-	if (n == 0)
-	  {
-	    fprintf (list, "\n     ");
-	    fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
-	  }
-	fclose (list);
+	GenerateStyleListFileForElem (el, doc, fileName);
 	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE);
         /* set the STYLE.LST document in read-only mode */
         TtaSetDocumentAccessMode (i, 0);
