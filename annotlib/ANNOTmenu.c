@@ -261,6 +261,7 @@ View         view;
 		 2,
 		 s,
 		 NULL,
+		 0,
 		 TRUE);
 #endif
 
@@ -1021,6 +1022,7 @@ View                view;
 		 3,
 		 s,
 		 NULL,
+		 0,
 		 TRUE);
 
   /* display the selectors */

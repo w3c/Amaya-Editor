@@ -444,7 +444,7 @@ void TtcSpellCheck (Document doc, View view)
    indx += strlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    TtaNewSubmenu (SpellingBase + ChkrMenuOR, SpellingBase + ChkrFormCorrect, 0,
-		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, FALSE);
+		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, 0, FALSE);
    TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);     /* apres la selection */
    /* Initialiser le formulaire CORRIGER */
    /* Document selectionne */

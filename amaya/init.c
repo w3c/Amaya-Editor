@@ -2576,14 +2576,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   w = 580;
 	   profile = L_MathML;
 	 }
-       else if (method == CE_HELP )
+       else if (method == CE_HELP  || docType == docBookmark)
 	 {
 	   x += 500;
 	   y += 200;
 	   h = 500;
 	   w = 800;
 	 }
-       else if (docType == docLibrary || docType == docBookmark)
+       else if (docType == docLibrary)
 	 {
 	   x += 500;
 	   y += 200;
@@ -3030,6 +3030,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     {
 	       TtaSetItemOff (doc, 1, XMLTypes, BShowLibrary);
 	       TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
+	       TtaSetMenuOn (doc, 1, XMLTypes);
+	       TtaSetMenuOn (doc, 1, Views);
+	       TtaSetMenuOn (doc, 1, Style);
+	       TtaSetMenuOn (doc, 1, Attributes_);
 	     }
 	   else
 	     {
@@ -7487,7 +7491,7 @@ void MakeIDMenu (Document doc, View view)
 		 BaseDialog + MakeIdMenu, 0,
 		 TtaGetMessage (AMAYA, APPLY_OPERATION),
 		 2, s,
-		 NULL, FALSE);
+		 NULL, 0 /* no max length */, FALSE);
   /* status label */
   TtaNewLabel (BaseDialog + mIdStatus,
 	       BaseDialog + MakeIdMenu,

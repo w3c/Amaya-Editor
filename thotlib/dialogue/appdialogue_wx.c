@@ -119,18 +119,17 @@ int TtaMakeWindow( int x, int y, int w, int h )
 #endif /* #ifdef _WX */
 }
 
+/*----------------------------------------------------------------------
+  TtaMakeMenuBar creates the frame
+  ----------------------------------------------------------------------*/
 static void TtaMakeMenuBar( int frame_id, const char * schema_name )
 {
 #ifdef _WX
-  /* --------------------------------------------------- */
-  /* create the menu for this frame */
-  /* --------------------------------------------------- */
   SchemaMenu_Ctl     *SCHmenu;
   Menu_Ctl           *ptrmenu;
   int                 i = 0;
-  /* reference du menu construit */
+  /* reference of the buildbing menu */
   int                 ref = frame_id + MAX_LocalMenu;
-
   int doc_id = FrameTable[frame_id].FrDoc;
   int schView = FrameTable[frame_id].FrView;
 
@@ -198,8 +197,6 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
       FrameTable[frame_id].EnabledMenus[i] = FALSE;
       i++;
     }
-
-  /* --------------------------------------------------- */
 #endif /* _WX */
 }
 

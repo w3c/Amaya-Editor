@@ -23,7 +23,8 @@ extern void TtaNewPulldown ( int ref,
                              char *title,
                              int number,
                              char *text,
-                             char* equiv );
+                             char* equiv,
+                             int max_length );
 extern void TtaNewPopup ( int ref,
                           ThotWidget parent,
                           char *title,
@@ -53,6 +54,7 @@ extern void TtaNewSubmenu ( int ref,
                             int number,
                             char *text,
                             char* equiv,
+                            int max_length,
                             ThotBool react );
 extern void TtaSetMenuForm ( int ref,
                              int val );
@@ -204,7 +206,8 @@ extern void TtaNewPulldown ( int ref,
                                char *title,
                                int number,
                                char *text,
-                               char* equiv );
+                               char* equiv,
+                               int max_length );
 extern void TtaNewPopup ( int ref,
                             ThotWidget parent,
                             char *title,
@@ -234,6 +237,7 @@ extern void TtaNewSubmenu ( int ref,
                               int number,
                               char *text,
                               char* equiv,
+                              int max_length,
                               ThotBool react );
 extern void TtaSetMenuForm ( int ref,
                                int val );

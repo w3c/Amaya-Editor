@@ -1079,13 +1079,13 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		  EventMenu[frame - 1] = 0;
 		}
 	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-			      nbItemAttr, bufMenuAttr, NULL);
+			      nbItemAttr, bufMenuAttr, 0, NULL);
 	      if (nbEvent != 0)
 		{
 		  /* there is a submenu of event attributes */
 		  EventMenu[frame - 1] = (nbItemAttr * MAX_MENU * MAX_ITEM) + ref;
 		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1,
-				 NULL, nbEvent, bufEventAttr, NULL, FALSE);
+				 NULL, nbEvent, bufEventAttr, NULL, 0, FALSE);
 		  
 		  /* post active attributes */
 #ifdef _WINGUI

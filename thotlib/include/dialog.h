@@ -53,7 +53,7 @@ extern gint ExposeEvent (ThotWidget widget, GdkEventExpose *event, gpointer data
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
 extern void TtaNewPulldown (int ref, ThotMenu parent, char *title,
-			    int number, char *text, char* equiv);
+			    int number, char *text, char* equiv, int max_length);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
@@ -100,7 +100,8 @@ extern void TtaNewScrollPopup (int ref, ThotWidget parent, char *title,
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 extern void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
-			   int number, char *text, char* equiv, ThotBool react);
+			   int number, char *text, char* equiv, int max_length,
+			   ThotBool react);
 
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        

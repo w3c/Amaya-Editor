@@ -70,6 +70,7 @@
 #include "font_f.h"
 #include "inites_f.h"
 
+#define MENU_VAL_LENGTH 1000
 #ifdef _GTK
 #include "gtk-functions.h"
 static GdkAtom Utf8_Type = GDK_SELECTION_TYPE_STRING; /* info=1 */
@@ -1056,13 +1057,13 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 			  int frame, Document doc, ThotBool update,
 			  ThotBool RO)
 {
-  char                string[700];
+  char                string[MENU_VAL_LENGTH];
   char                equiv[MaxEquivLen];
   Item_Ctl           *ptritem;
   char               *ptr;
   char                LastItemType = 'S';
   int                 i, j, state;
-  int                 lg, sref;
+  int                 lg, sref, max_lg;
   int                 item, profile;
   int                 action, entries, index;
   ThotBool            withEquiv, hidden;
@@ -1096,9 +1097,12 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
       /* Regarde si le texte des commandes ne deborde pas */
       ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
       lg = strlen (ptr) + 1;
+      /* get the larger entry */
+      if (max_lg < lg)
+	max_lg = lg;
       hidden = FALSE;
       action = ptritem[item].ItemAction;
-      if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+      if (ptritem[item].ItemType == 'S' && i + 2 < MENU_VAL_LENGTH)
 	{
 	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
 	    {
@@ -1182,14 +1186,13 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   else if (update)
     TtaRedrawMenuEntry (ref, entry, NULL, (ThotColor)-1, 1);
   else if (withEquiv)
-	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, FALSE);
+    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, max_lg, FALSE);
   else
-	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, FALSE);
+    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, max_lg, FALSE);
 }
 
-
 /*----------------------------------------------------------------------
-  BuildSubmenu builds or updates a pulldown menu ref attached to the
+  BuildPopdown builds or updates a pulldown menu ref attached to the
   document doc.
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
@@ -1197,12 +1200,12 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		    int frame, int doc, ThotBool update, ThotBool RO)
 {
   Item_Ctl           *ptritem;
-  char                string[700];
+  char                string[MENU_VAL_LENGTH];
   char                equiv[MaxEquivLen];
   char               *ptr;
   char                LastItemType = 'S';
   int                 i, j;
-  int                 lg, profile;
+  int                 lg, profile, max_lg;
   int                 item, entries;
   int                 action, state;
   ThotBool            withEquiv, emptyMenu;
@@ -1216,6 +1219,7 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
   entries = 0;
   i = 0;
   j = 0;
+  max_lg = 0;
   withEquiv = FALSE;
   equiv[0] = EOS;
   removedsep = FALSE;
@@ -1236,8 +1240,11 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
       /* Regarde si le texte des commandes ne deborde pas */
       ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
       lg = strlen (ptr) + 1;
+      /* get the larger entry */
+      if (max_lg < lg)
+	max_lg = lg;
       action = ptritem[item].ItemAction;
-      if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+      if (ptritem[item].ItemType == 'S' && i + 2 < MENU_VAL_LENGTH)
 	{
 	  /* a separator */
 	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
@@ -1352,9 +1359,9 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
     {
       /* Creation of the corresponding Pulldown with or without equiv */
       if (withEquiv)
-	TtaNewPulldown (ref, button, NULL, entries, string, equiv);
+	TtaNewPulldown (ref, button, NULL, entries, string, equiv, max_lg);
       else
-    TtaNewPulldown (ref, button, NULL, entries, string, NULL);
+    TtaNewPulldown (ref, button, NULL, entries, string, NULL, max_lg);
     }
 
   /* Create or update submenus */
@@ -1398,7 +1405,7 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
    int                 i, n;
    int                 ref;
    int                 lg;
-   char                string[700];
+   char                string[MENU_VAL_LENGTH];
    Menu_Ctl           *ptrmenu;
    char               *ptr;
 
@@ -1432,7 +1439,7 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
 	      */
 	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
 	     lg = strlen (ptr) + 1;
-	     if (i + lg < 700)
+	     if (i + lg < MENU_VAL_LENGTH)
 	       {
 		  strcpy (&string[i], ptr);
 		  i += lg;

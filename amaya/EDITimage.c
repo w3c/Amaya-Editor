@@ -803,7 +803,7 @@ void ChangeBackgroundImage (Document document, View view)
    i += strlen (&s[i]) + 1;
    sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_NO_REPEAT));
    TtaNewSubmenu (BaseImage + RepeatImage, BaseImage + FormBackground, 0,
-		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, FALSE);
+		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, 0, FALSE);
    TtaSetMenuForm (BaseImage + RepeatImage, RepeatValue);
    /* save the document concerned */
    ImgDocument = document;

@@ -442,6 +442,7 @@ THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
 typedef enum
 {
+  docFree,
   docHTML,
   docText,
   docImage,

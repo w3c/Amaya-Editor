@@ -2213,7 +2213,9 @@ void TtcChangeGraphics (Document document, View view)
 	     sprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
 	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
+	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0,
+			    TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string,
+			    NULL, 0, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
 #ifdef _GTK
 	     for (i = 0; i < 3; i++)

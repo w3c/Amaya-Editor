@@ -1553,6 +1553,7 @@ void         ProxyConfMenu (Document document, View view)
 		  2,
 		  s,
 		  NULL,
+		  0 /* no maxlength */,
 		  TRUE);
 #endif /* !_WINGUI */
 
@@ -2322,6 +2323,7 @@ void GeneralConfMenu (Document document, View view)
 		  3,
 		  s,
 		  NULL,
+		  0 /* no maxlength */,
 		  FALSE);
 
 #endif /* !_WINGUI */

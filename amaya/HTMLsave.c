@@ -485,7 +485,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		"BText");
        TtaNewSubmenu (BaseDialog + RadioSave, BaseDialog + SaveForm, 0,
 			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 3, buffer,
-			 NULL, TRUE);
+			 NULL, 0, TRUE);
        if (SaveAsHTML)
 	 TtaSetMenuForm (BaseDialog + RadioSave, 0);
        else if (SaveAsXML)

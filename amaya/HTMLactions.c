@@ -1659,7 +1659,7 @@ void CloseLogs (Document doc)
 	TtaSetItemOff (doc, 1, File, BShowLogFile);
 	DocumentSource[i] = 0;
 	/* restore the default document type */
-	DocumentTypes[i] = docHTML;
+	DocumentTypes[i] = docFree;
       }
 }
 
@@ -1746,7 +1746,7 @@ void FreeDocumentResource (Document doc)
 	    RemoveDocumentImages (doc);
 	}
       /* restore the default document type */
-      DocumentTypes[doc] = docHTML;
+      DocumentTypes[doc] = docFree;
     }
 }
  

@@ -977,7 +977,7 @@ int DestContenuMenu (struct Cat_Context *catalogue)
    Retourne un code d'erreur.
   ----------------------------------------------------------------------*/
 void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
-		     char *text, char* equiv)
+		     char *text, char* equiv, int max_length)
 {
   ThotMenu            menu;
   ThotWidget          w;
@@ -986,19 +986,16 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   register int        count;
   register int        index;
   register int        ent;
-  int                 eindex;
-  register int        i;
+  int                 eindex, i;
   ThotBool            rebuilded;
 #if defined (_WINGUI) || defined (_GTK) || defined(_WX)
   char                menu_item [1024];
   char                equiv_item [255];
-#endif /* _WINGUI || _GTK  || defined(_WX) */
 #ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
 #endif /* _GTK */
 
-#if defined (_WINGUI) || defined (_GTK) || defined(_WX)
   equiv_item[0] = 0;
 #endif /* _WINGUI || _GTK || defined(_WX) */
   if (ref == 0)
@@ -1154,18 +1151,18 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		/* Note l'accelerateur */
 		if (equiv)
 		  {
-#ifdef _WINGUI
 		    if (&equiv[eindex] != EOS)
-		      strcpy (equiv_item, &equiv[eindex]); 
-#endif  /* _WINGUI */
-#ifdef _GTK
-		    if (&equiv[eindex] != EOS)
-		      strcpy (equiv_item, &equiv[eindex]); 
-#endif /* _GTK */
+		      {
 #ifdef _WX
-		    if (&equiv[eindex] != EOS)
-		      strcpy (equiv_item, &equiv[eindex]); 
+			int k = max_length - strlen (&text[index + 1]);
+			equiv_item[k--] = EOS;
+			while (k >= 0)
+			  equiv_item[k--] = SPACE;
+#else /* _WX */
+			equiv_item[0] = EOS;
 #endif /* _WX */
+			strcat (equiv_item, &equiv[eindex]);
+		      }
 		    eindex += strlen (&equiv[eindex]) + 1;
 		  }
 		if (text[index] == 'B')
@@ -1189,7 +1186,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			menu,					/* parent */
 			ref + i,				/* id */
 			TtaConvMessageToWX( menu_item ) +
-			_T("  " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
+			_T("") + TtaConvMessageToWX( equiv_item ), /* label */
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaContext(catalogue) );		/* callback context */
@@ -1242,7 +1239,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			menu,					/* parent */
 			ref + i,				/* id */
 			TtaConvMessageToWX( menu_item ) +
-			_T("  " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
+			_T("") + TtaConvMessageToWX( equiv_item ), /* label */
 			_T(""),					/* help */
 			wxITEM_CHECK,				/* item kind */
 			AmayaContext(catalogue) );		/* callback */
@@ -2325,7 +2322,8 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
    dans le sous-menu est immediatement signale a l'application.    
   ----------------------------------------------------------------------*/
 void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
-		    int number, char *text, char* equiv, ThotBool react)
+		    int number, char *text, char* equiv, int max_length,
+		    ThotBool react)
 {
   ThotWidget          w;
   ThotWidget          row;
@@ -2343,7 +2341,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #if defined (_WINGUI) || defined (_GTK) || defined(_WX)
   char                menu_item [1024];
   char                equiv_item [255];
-#endif /* _WINGUI || _GTK || defined(_WX) */
 #ifdef _GTK
   GtkWidget          *table;
   ThotWidget          wlabel;
@@ -2352,7 +2349,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   GtkStyle *current_style;
 #endif /* _GTK */
 
-#if defined (_WINGUI) || defined (_GTK) || defined(_WX)
   equiv_item[0] = EOS;
 #endif /* _WINGUI || _GTK || defined(_WX) */
   if (ref == 0)
@@ -2681,14 +2677,18 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  /* Note l'accelerateur */
 		  if (equiv)
 		    {
-#ifdef _WINGUI
 		      if (&equiv[eindex] != EOS)
-			strcpy (equiv_item, &equiv[eindex]); 
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
-		      if (&equiv[eindex] != EOS)
-			strcpy (equiv_item, &equiv[eindex]); 
-#endif /* _GTK || _WX */
+			{
+#ifdef _WX
+			  int k = max_length - strlen (&text[index + 1]);
+			  equiv_item[k--] = EOS;
+			  while (k >= 0)
+			    equiv_item[k--] = SPACE;
+#else /* _WX */
+			  equiv_item[0] = EOS;
+#endif /* _WX */
+			  strcat (equiv_item, &equiv[eindex]);
+			}
 		      eindex += strlen (&equiv[eindex]) + 1;
 		    }
 		  if (text[index] == 'B')
@@ -2697,13 +2697,14 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WX
 		      sprintf (menu_item, "%s", &text[index + 1]);
 
-		      w = (ThotWidget) AmayaFrame::AppendMenuItem( menu,
-								   ref + i,
-								   TtaConvMessageToWX( menu_item ) +
-								   _T("   " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
-								   _T(""),
-								   wxITEM_NORMAL,
-								   AmayaContext(catalogue) );
+		      w = (ThotWidget) AmayaFrame::AppendMenuItem(
+			  menu,
+			  ref + i,
+			  TtaConvMessageToWX( menu_item ) +
+			  _T("") + TtaConvMessageToWX( equiv_item ),  /* label */
+			  _T(""),
+			  wxITEM_NORMAL,
+			  AmayaContext(catalogue) );
 
 		      adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
 #endif /* _WX */
@@ -2762,14 +2763,15 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 				  TtaConvMessageToWX( menu_item ) +
 				  _T("\tref=%d\tparent=%x"), ref, menu );
 
-		      w = (ThotWidget) AmayaFrame::AppendMenuItem( menu,
-								   ref + i,
-								   TtaConvMessageToWX( menu_item ) +
-								   _T("   " ) + TtaConvMessageToWX( equiv_item ), 	/* label */
-								   _T(""),
-								   wxITEM_CHECK,
-								   AmayaContext(catalogue) );
-
+		      w = (ThotWidget) AmayaFrame::AppendMenuItem(
+                          menu,
+			  ref + i,
+			  TtaConvMessageToWX( menu_item ) +
+			  _T("") + TtaConvMessageToWX( equiv_item ), /* label */
+			  _T(""),
+			  wxITEM_CHECK,
+			  AmayaContext(catalogue) );
+		      
 		      adbloc->E_ThotWidget[ent] = (ThotWidget) w; //p_menu_item;
 #endif /* _WX */
 #ifdef _WINGUI
