@@ -163,7 +163,7 @@
 </label>
 <label define="Bookmarks_">
 	<message xml:lang="en">&amp;Bookmarks</message>
-	<message xml:lang="fr">F&amp;avorits</message>
+	<message xml:lang="fr">MF&amp;rque-feuilles</message>
 	<message xml:lang="de">&amp;Lesezeichen</message>
 	<message xml:lang="it">F&amp;avorites</message>
 	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
@@ -2327,24 +2327,16 @@
 	<message xml:lang="pt">Configurar...</message>
 </label>
 <label define="BBookmarkFile">
-	<message xml:lang="en">Bookmark File</message>
-	<message xml:lang="fr">Fichier des favorits</message>
-	<message xml:lang="de">Lesezeichendatei</message>
-	<message xml:lang="it">Favorites file</message>
-	<message xml:lang="tr">Tekrar okumayı kilidi aç</message>
-	<message xml:lang="es">Archivo de Favoritos</message>
+	<message xml:lang="en">New Bookmark</message>
+	<message xml:lang="fr">Nouveau marque-feuille</message>
 </label>
 <label define="BEditTopics">
-	<message xml:lang="en">Edit Topics</message>
-	<message xml:lang="fr">Edition thêmes</message>
-	<message xml:lang="it">Edita argomenti</message>
-	<message xml:lang="de">Themen bearbeiten</message>
-	<message xml:lang="tr">Tekrar okuma ayarlarını göster</message>
-	<message xml:lang="es">Editar Tema</message>
+	<message xml:lang="en">New Topic</message>
+	<message xml:lang="fr">Nouveau topique</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
-	<message xml:lang="fr">Visualiser les favorits</message>
+	<message xml:lang="fr">Visualiser les marque-feuilles</message>
 	<message xml:lang="it">Visualizza favorites</message>
 	<message xml:lang="de">Lesezeichen ansehen</message>
 	<message xml:lang="tr">kilitli bilgileri kopyala</message>
