@@ -650,16 +650,19 @@ GLint GLText (const char *str,
   int i, width;
 
   width = 0;
-  GL_SetPrintForeground (fg); 
-  GetPostscriptNameFromFont ((PtrFont) font, fontname);
-  fprintf (FILE_STREAM, fontname);
-  fprintf (FILE_STREAM, "(");
-  for (i = 0; i < length; i++)
+  if (length > 0)
     {
-      fprintf (FILE_STREAM, "%c", str[i]); 
-      width += CharacterWidth (42, (PtrFont) font);     
+      GL_SetPrintForeground (fg); 
+      GetPostscriptNameFromFont ((PtrFont) font, fontname);
+      fprintf (FILE_STREAM, fontname);
+      fprintf (FILE_STREAM, "(");
+      for (i = 0; i < length; i++)
+	{
+	  fprintf (FILE_STREAM, "%c", str[i]); 
+	  width += CharacterWidth (42, (PtrFont) font);     
+	}
+      fprintf (FILE_STREAM, ") %d %d %d s\n", width, x, -y);
     }
-  fprintf (FILE_STREAM, ") %d %d %d s\n", width, x, -y);
   return width;
 }
 

@@ -307,7 +307,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  fprintf (fout, "(");
 	}
     }
-      
+  
   buff[lg] = EOS;
   /* Add the justified white space */
   if (bl > 0)
@@ -1476,9 +1476,11 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 		    {
 		    if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
 			(!pPa->Sweep && pPa->YEnd < pPa->YStart))
-		      cx1 = (float) (x + PixelValue (pPa->XStart + 1.36 * pPa->XRadius, UnPixel, NULL, 0));
+		      cx1 = (float) (x + PixelValue ((int)(pPa->XStart + 1.36 * pPa->XRadius)
+						     , UnPixel, NULL, 0));
 		    else
-		      cx1 = (float) (x + PixelValue (pPa->XStart - 1.36 * pPa->XRadius, UnPixel, NULL, 0));
+		      cx1 = (float) (x + PixelValue ((int)(pPa->XStart - 1.36 * pPa->XRadius),
+						     UnPixel, NULL, 0));
 		    cy1 = y1;
 		    cx2 = cx1;
 		    cy2 = y2;
@@ -1491,9 +1493,11 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 		    {
 		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
 			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
-		      cy1 = (float) (y + PixelValue (pPa->YStart + 1.36 * pPa->YRadius, UnPixel, NULL, 0));
+		      cy1 = (float) (y + PixelValue ((int)(pPa->YStart + 1.36 * pPa->YRadius)
+						     , UnPixel, NULL, 0));
 		    else
-		      cy1 = (float) (y + PixelValue (pPa->YStart - 1.36 * pPa->YRadius, UnPixel, NULL, 0));
+		      cy1 = (float) (y + PixelValue ((int)(pPa->YStart - 1.36 * pPa->YRadius)
+						     , UnPixel, NULL, 0));
 		    cy2 = cy1;
 		    cx1 = x1;
 		    cx2 = x2;
@@ -1770,7 +1774,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
    if (thick > 0)
       CurrentColor (fout, fg);
 
-   arc = 3 * 72 / 25.4;
+   arc = (int)(3 * 72 / 25.4);
    xf = x + width - 1;
    yf = y + height - 1;
    x = x;
@@ -1829,12 +1833,12 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 	fprintf (fout, "%d %d %d %d %d %d ellipse\n",
 		 style, thick, xm, -ym, width, height);
      }
-   px7mm = 7 * 72 / 25.4 + 0.5;
+   px7mm = (int)(7 * 72 / 25.4 + 0.5);
    if (height > px7mm)
      {
 	y = (ym - height + px7mm);
 	A = ((double) height - px7mm) / height;
-	shiftX = width * sqrt (1 - A * A) + 0.5;
+	shiftX = (int)(width * sqrt (1 - A * A) + 0.5);
 	fprintf (fout, "%d %d  %d %d %d %d %d Seg\n",
 		 xm - shiftX, -y, xm + shiftX, -y, style, thick, 2);
      }

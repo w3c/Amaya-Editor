@@ -180,20 +180,17 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin; 
-  if (Printing)
-    width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
-		      startABlock, fg);
-  else
+  /* compute the width of the string */
+  width = 0;
+  if (lg > 0 && w && fg >= 0)
     {
-      /* compute the width of the string */
-      width = 0;
-      if (lg > 0 && w)
-	{
-	  /* Dealing with BR tag for windows */
-	  if (fg >= 0)
-	    width = GL_DrawString (fg, (CHAR_T *) buff, 
-				   (float) x, (float) y, hyphen, font, lg);
-	}
+      /* Dealing with BR tag for windows */
+      if (Printing)
+	width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
+			  startABlock, fg);
+      else
+	width = GL_DrawString (fg, (CHAR_T *) buff, 
+			       (float) x, (float) y, hyphen, font, lg);
     }
   return (width);
 }
