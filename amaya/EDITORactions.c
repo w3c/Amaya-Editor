@@ -1877,6 +1877,7 @@ void DeleteColumn (Document document, View view)
   AttributeType       attrType;
   Attribute           attr;
   Document            refDoc;
+  DisplayMode         dispMode;
   SSchema	      HTMLSSchema;
   char                name[50];
   int                 firstchar, lastchar, len;
@@ -1915,6 +1916,12 @@ void DeleteColumn (Document document, View view)
 	     TtaPreviousSibling (&selCell);
 	     selBefore = TRUE;
 	     }
+
+	  /* stop displaying changes that will be made */
+	  dispMode = TtaGetDisplayMode (document);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (document, DeferredDisplay);
+
 	  /* get current column */
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
@@ -1944,6 +1951,8 @@ void DeleteColumn (Document document, View view)
 	      TtaCloseUndoSequence (document);
 	      TtaSetDocumentModified (document);
 	    }
+	  /* ask Thot to display changes made in the document */
+	  TtaSetDisplayMode (document, dispMode);
 	}
     }
 }

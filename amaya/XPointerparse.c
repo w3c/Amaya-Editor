@@ -375,7 +375,10 @@ static int LexAn (XPointerContextPtr ctx)
 		      || *(ctx->cur+1) == '^')
 		    INC_CUR;
 		  else
-		    CtxAddError (ctx, "LexAn: syntax error in expression");
+		    {
+		      CtxAddError (ctx, "LexAn: syntax error in expression");
+		      return DONE;
+		    }
 		}
 	      else if (!IsValidChar (VAL_CUR))
 		break;
@@ -389,7 +392,7 @@ static int LexAn (XPointerContextPtr ctx)
 	      if (b >= BSIZE)
 		{
 		CtxAddError (ctx, "LexAn: temp buffer out of space");
-		return DONE;
+		return NONE;
 		}
 	    }
 	  lexbuf[b] = EOS;
