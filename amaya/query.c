@@ -1294,7 +1294,7 @@ void                QueryInit ()
    /* Maximum number of simultaneous open sockets */
    HTNet_setMaxSocket (8);
    /* different network services timeouts */
-   HTDNS_setTimeout (1800);
+   HTDNS_setTimeout (60);
 #ifdef _WINDOWS
    /* under windows, the libwww persistent socket handling has
    ** some bugs. The following line inhibits idle socket reusal.
