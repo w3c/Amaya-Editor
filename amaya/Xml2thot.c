@@ -502,7 +502,7 @@ void  XmlParseError (ErrorType type, CHAR_T *msg, int line)
 
    if (docURL != NULL)
      {
-       fprintf (ErrFile, "*** Errors in %s\n", docURL);
+       fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
        TtaFreeMemory (docURL);
        docURL = NULL;
      }

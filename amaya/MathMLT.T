@@ -18,11 +18,12 @@ CONST
    SCT = '</';          { Start of closing tag }
    SAN = ' ';           { Start of attribute name }
 #endif
-	
+
 RULES
 
    MathML:
 	begin
+	Use XLinkT for XLink;
         if Charset
            Create '<?xml version="1.0"';
         if Charset and not Charset = 'unknown'
