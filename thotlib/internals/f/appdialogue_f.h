@@ -77,6 +77,9 @@ extern void TtcSwitchCommands ( Document doc,
 extern void DrawingInput ( int *w,
                            int frame,
                            int *infos );
+extern void TtaUpdateMenus ( Document doc,
+                             View view,
+                             ThotBool RO );
 extern int MakeFrame ( char *schema,
                        int view,
                        char *name,
@@ -194,6 +197,9 @@ extern void TtcSwitchCommands (/* Document doc,
 extern void DrawingInput (/* int *w,
                              int frame,
                              int *infos */);
+extern void TtaUpdateMenus (/* Document doc,
+                               View view,
+                               ThotBool RO */);
 extern int MakeFrame (/* char *schema,
                          int view,
                          char *name,

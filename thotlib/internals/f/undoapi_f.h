@@ -37,7 +37,7 @@ extern void TtaChangeLastRegisteredAttr ( Element oldEl,
                                           Document document );
 extern void TtaReplaceLastRegisteredAttr ( Document document );
 extern void TtaCancelLastRegisteredOperation ( Document document );
-extern Element  TtaGetLastCreatedElemInHistory ( Document document );
+extern Element TtaGetLastCreatedElemInHistory ( Document document );
 extern void TtaUndoNoRedo ( Document document );
 
 #else /* __STDC__ */
@@ -73,7 +73,7 @@ extern void TtaChangeLastRegisteredAttr (/* Element oldEl,
                                             Document document */);
 extern void TtaReplaceLastRegisteredAttr (/* Document document */);
 extern void TtaCancelLastRegisteredOperation (/* Document document */);
-extern Element  TtaGetLastCreatedElemInHistory (/* Document document */);
+extern Element TtaGetLastCreatedElemInHistory (/* Document document */);
 extern void TtaUndoNoRedo (/* Document document */);
 
 #endif /* __STDC__ */

@@ -300,4 +300,10 @@ extern void TtaSetMultikey ( ThotBool value );
 extern ThotBool TtaGetMultikey();
 #endif /* __CEXTRACT__ */
 
+/*----------------------------------------------------------------------
+  BuildMenus builds or rebuilds frame menus.
+  The parameter RO is TRUE when only ReadOnly functions are accepted
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
+
 #endif

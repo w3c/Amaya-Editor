@@ -31,7 +31,7 @@
 /* ----------------------------------------------------------------------
    TtaPrepareUndo returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
-ThotBool      TtaPrepareUndo (Document document)
+ThotBool TtaPrepareUndo (Document document)
 {
 
   if (document < 1 || document > MAX_DOCUMENTS)
@@ -59,8 +59,8 @@ ThotBool      TtaPrepareUndo (Document document)
    lastSelChar: indicate the selection that must be set when the operation 
    will be undone.
   ----------------------------------------------------------------------*/
-void          TtaOpenUndoSequence (Document document, Element firstSel,
-				   Element lastSel, int firstSelChar,
+void TtaOpenUndoSequence (Document document, Element firstSel,
+			  Element lastSel, int firstSelChar,
 				   int lastSelChar)
 {
   int i;
@@ -339,7 +339,7 @@ void         TtaReplaceLastRegisteredAttr (Document document)
 
    Cancel the latest operation registered in the editing history of document.
   ----------------------------------------------------------------------*/
-void         TtaCancelLastRegisteredOperation (Document document)
+void TtaCancelLastRegisteredOperation (Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -355,7 +355,7 @@ void         TtaCancelLastRegisteredOperation (Document document)
    If the last operation recorded in the history is the creation of an
    element, return that element, otherwise return NULL.
   ----------------------------------------------------------------------*/
-Element  TtaGetLastCreatedElemInHistory (Document document)
+Element TtaGetLastCreatedElemInHistory (Document document)
 {
   Element   el;
 
@@ -376,7 +376,7 @@ Element  TtaGetLastCreatedElemInHistory (Document document)
    of document and forget about this sequence: it won't be redone by
    the next Redo command issued by the user.
   ----------------------------------------------------------------------*/
-void         TtaUndoNoRedo (Document document)
+void TtaUndoNoRedo (Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);

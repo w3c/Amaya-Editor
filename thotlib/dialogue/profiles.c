@@ -69,6 +69,7 @@ static PtrProCtl            FunctionTable = NULL;
 static int                  NbFunctions = 0;
 static char               **SortedFunctionTable = NULL;
 static int                 *FunctionMask = NULL;
+static ThotBool            *FunctionRO = NULL;
 
 /* The first context of the current module or profile in progress */
 static PtrProCtl            CurrentModule;
@@ -445,26 +446,31 @@ static void AddFunctions (PtrProCtl ctxt, PtrProCtl functionTable)
   The parameter checkEdit will return TRUE if alomst one editing function
   is available in the generated table.
   ----------------------------------------------------------------------*/
-static char **SortFunctionTable (PtrProCtl ctxt, ThotBool *checkEdit)
+static void SortFunctionTable (PtrProCtl ctxt)
 {
-  char        **sortedTable;
   char         *ptr;
   int           i, j, index;
+  ThotBool      RO;
 
   /* copy the list of contexts in a large table */
-  sortedTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
+  SortedFunctionTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
+  FunctionRO = (ThotBool *) TtaGetMemory (NbFunctions * sizeof (ThotBool));
   index = 0;
-  if (checkEdit)
-  *checkEdit = FALSE;
+  EnableEdit = FALSE;
   while (ctxt && index < NbFunctions)
     {
       i = 0;
       while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
 	{
-	  if (!*checkEdit && ctxt->ProEntries[i].ProEdit)
-	    /* there is almost one editing function */
-	    *checkEdit = TRUE;
-	  sortedTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
+	  if (ctxt->ProEntries[i].ProEdit)
+	    {
+	      /* there is almost one editing function */
+	      EnableEdit = TRUE;
+	      FunctionRO[index] = FALSE;
+	    }
+	  else
+	    FunctionRO[index] = TRUE;
+	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
 	  index++;
 	  /* next entry */
 	  i++;
@@ -478,13 +484,15 @@ static char **SortFunctionTable (PtrProCtl ctxt, ThotBool *checkEdit)
     {
       index = i;
       for (j = i+1; j < NbFunctions; j++)
-        if (strcmp (sortedTable[j], sortedTable[index]) <= 0)
+        if (strcmp (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
 	  index = j;
-      ptr = sortedTable[index];
-      sortedTable[index] = sortedTable[i];
-      sortedTable[i] = ptr;
+      ptr = SortedFunctionTable[index];
+      SortedFunctionTable[index] = SortedFunctionTable[i];
+      SortedFunctionTable[i] = ptr;
+      RO =  FunctionRO[index];
+      FunctionRO[index] =  FunctionRO[i];
+      FunctionRO[i] = RO;
     }
-  return sortedTable;
 }
 
 
@@ -556,8 +564,10 @@ ThotBool Prof_BelongTable (char *name)
 /*----------------------------------------------------------------------
   Prof_BelongDoctype searchs a function in the function table and returns
   TRUE if the function is accepted in that document profile.
+  Returns FALSE when the parameter RO is TRUE and the function is declared
+  as an editing function.
   ----------------------------------------------------------------------*/
-ThotBool Prof_BelongDoctype (char *name, int docProfile)
+ThotBool Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 {
   int              left, right, middle, i;
 
@@ -577,9 +587,19 @@ ThotBool Prof_BelongDoctype (char *name, int docProfile)
 	{
 	  /* check the profile value */
 	  if (FunctionMask[middle] == 0)
-	    return TRUE;
+	    {
+	      if (RO && !FunctionRO[middle])
+		return FALSE;
+	      else
+		return TRUE;
+	    }
 	  else if (FunctionMask[middle] & docProfile)
-	    return TRUE;
+	    {
+	      if (RO && !FunctionRO[middle])
+		return FALSE;
+	      else
+		return TRUE;
+	    }
 	  else
 	    return FALSE;
 	}
@@ -650,7 +670,7 @@ void Prof_InitTable (char *prof_file)
 	  memset (FunctionTable, 0, sizeof (Profile_Ctl));
 	  AddFunctions (UserProfContext, FunctionTable);
 	  /* generate a sorted list of available functions */
-	  SortedFunctionTable = SortFunctionTable (FunctionTable, &EnableEdit);
+	  SortFunctionTable (FunctionTable);
 	  /* delete the function table */
 	  if (FunctionTable)
 	    {
@@ -711,6 +731,8 @@ void Prof_FreeTable ()
   SortedFunctionTable = NULL;
   TtaFreeMemory (FunctionMask);
   FunctionMask = NULL;
+  TtaFreeMemory (FunctionRO);
+  FunctionRO = NULL;
   NbFunctions = 0;
 }
 

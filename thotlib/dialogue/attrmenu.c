@@ -1271,6 +1271,9 @@ void UpdateAttrMenu (PtrDocument pDoc)
   int                 view, menu, menuID;
   int                 frame, ref, nbEvent;
   int                 nbItemAttr, i, max;
+#ifdef _WINDOWS
+  int                 nbOldItems;
+#endif /* _WINDOWS */
 
   /* Compose le menu des attributs */
   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
@@ -1307,7 +1310,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 	  else
 	    {
 #ifdef _WINDOWS
-	      int nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
+	      nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
 	      for (i = 0; i < nbOldItems; i ++)
 		{
 		  if (!DeleteMenu (FrameTable[frame].WdMenus[menu], ref + i,

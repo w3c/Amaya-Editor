@@ -152,7 +152,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   
   /* update the menus according to the profile of the new document */
   if (profile != L_Other)
-    TtaUpdateMenus (doc, 1);
+    TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();

@@ -888,11 +888,13 @@ void TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID,
 
 
 /*----------------------------------------------------------------------
-   BuildSubmenu construit un sous-menu attache' a l'item item     
-   du menu ref.                                            
+  BuildSubmenu builds or updates a submenu attached to the item in a
+  pulldown menu ref.
+  The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
-			  int frame, Document doc)
+			  int frame, Document doc, ThotBool update,
+			  ThotBool RO)
 {
   char                string[700];
   char                equiv[MaxEquivLen];
@@ -917,7 +919,17 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   string[0] = EOS;
   entries = 0;
   ptritem = ptrmenu->ItemsList;
-  profile = TtaGetDocumentProfile (doc);
+  /*
+    In the previous version hidden entries were removed,
+    now all entries are generated and we just invalid
+    hidden entries.
+  */
+  if (update)
+    profile = TtaGetDocumentProfile (doc);
+  else
+    profile = 0; /* no check */
+  /* reference of this menu */
+  sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
   while (item < ptrmenu->ItemsNb)
     {
       /* Regarde si le texte des commandes ne deborde pas */
@@ -940,9 +952,16 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	}
       else if (i + lg < 699)
 	{
-	  if (Prof_BelongDoctype (MenuActionList[action].ActionName, profile))
+	  if (Prof_BelongDoctype (MenuActionList[action].ActionName,
+				  profile, RO))
 	    {
 	      /* this entry can be displayed */
+	      if (update)
+		{
+		  /* activate the entry */
+		  TtaRedrawMenuEntry (sref, entries, NULL, -1, 1);
+		  MenuActionList[action].ActionActive[frame] = TRUE;
+		}
 	      if (ptritem[item].ItemType == 'D')
 		string[i] = 'B';
 	      else
@@ -952,6 +971,14 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	    }
 	  else
 	    {
+	      /* this entry is hidden */
+	      if (update)
+		{
+		  /* desactivate the entry */
+		  TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
+		  MenuActionList[action].ActionActive[frame] = FALSE;
+		}
+	      /* doesn't count this entry */
 	      hidden = TRUE;
 	      action = -1;
 	    }
@@ -965,9 +992,9 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	}
       
       /* traite le contenu de l'item de menu */
-      if (action != -1)
+      if (!update && action != -1)
 	{
-	  /* Active l'action correspondante pour cette fenetre */
+	  /* a new entry is generated */
 	  if (MenuActionList[action].ActionEquiv != NULL)
 	    {
 	      withEquiv = TRUE;
@@ -978,6 +1005,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 		  j += lg;
 		}
 	    }
+	  /* activate this entry */
 	  MenuActionList[action].ActionActive[frame] = TRUE;
 	}
       if (!hidden)
@@ -988,23 +1016,27 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	}
       item++;
     }
-  sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
-  /* Creation du Pulldown avec ou sans equiv */
+
+  /* Creation of the submenu with or whithout equiv */
   if (entries == 0)
     TtaRedrawMenuEntry (ref, entry, NULL, InactiveB_Color, 0);
-  else if (withEquiv)
-    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, FALSE);
-  else
-    TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, FALSE);
+  else if (!update)
+    {
+      if (withEquiv)
+	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, FALSE);
+      else
+	TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, FALSE);
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   BuildPopdown construit un menu popdown attache' au bouton      
-   de menu.                                                
+  BuildSubmenu builds or updates a pulldown menu ref attached to the
+  document doc.
+  The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
-static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
-			  int frame, int doc)
+static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
+			  int frame, int doc, ThotBool update, ThotBool RO)
 {
   Item_Ctl           *ptritem;
   char                string[700];
@@ -1030,7 +1062,15 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
   equiv[0] = EOS;
   removedsep = FALSE;
   ptritem = ptrmenu->ItemsList;
-  profile = TtaGetDocumentProfile (doc);
+  /*
+    In the previous version hidden entries were removed,
+    now all entries are generated and we just invalid
+    hidden entries.
+  */
+  if (update)
+    profile = TtaGetDocumentProfile (doc);
+  else
+    profile = 0; /* no check */    
   while (item < ptrmenu->ItemsNb)
     {
       emptyMenu = FALSE;
@@ -1042,7 +1082,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
       if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	{
 	  /* a separator */
-	  if ( Prof_ShowSeparator(ptrmenu, item, LastItemType))
+	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
 	    {
 	      strcpy (&string[i], "S");
 	      i += 2;
@@ -1065,9 +1105,17 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 		 }
 	       action = -1;
 	    }
-	  else if (Prof_BelongDoctype (MenuActionList[action].ActionName, profile))
+	  else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
+				       profile, RO))
 	    {
-	      /* a button */
+	      /* this entry is shown */
+	      if (update)
+		{
+		  /* activate the entry */
+		  TtaRedrawMenuEntry (ref, entries, NULL, -1, 1);
+		  MenuActionList[action].ActionActive[frame] = TRUE;
+		}
+	      /* generate a button */
 	      if (ptritem[item].ItemType == 'D')
 		string[i] = 'B';
 	      else
@@ -1077,23 +1125,37 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 	    }
 	  else
 	    {
-	      hidden = TRUE;
+	      /* this entry is hidden */
+	      if (update)
+		{
+		  /* desactivate the entry */
+		  TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
+		  MenuActionList[action].ActionActive[frame] = FALSE;
+		  /* generate a button */
+		  if (ptritem[item].ItemType == 'D')
+		    string[i] = 'B';
+		  else
+		    string[i] = ptritem[item].ItemType;
+		  strcpy (&string[i + 1], ptr);
+		  i += lg + 1;
+		}
+	      else
+		hidden = TRUE;
 	      action = -1;
 	    }
 	}
       else
 	{
-	  /* sinon on reduit le nombre d'items */
+	  /* reduce the number of items */
 	  ptrmenu->ItemsNb = item - 1;
 	  action = -1;
 	}
       
-      /* traite le contenu de l'item de menu */
-      if (action != -1)
+      if (!update && action != -1)
 	{
+	  /* a new entry is generated */
 	  if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
 	    {
-	      /* Active l'action correspondante pour cette fenetre */
 	      if (MenuActionList[action].ActionEquiv)
 		{
 		  withEquiv = TRUE;
@@ -1122,6 +1184,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 		  FrameTable[frame].MenuRedo = ref;
 		  FrameTable[frame].EntryRedo = entries;
 		}
+	      /* activate this entry */
 	      MenuActionList[action].ActionActive[frame] = TRUE;
 	    }
 	}
@@ -1134,14 +1197,17 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 	}
       item++;
     }
-   
-  /* Creation du Pulldown avec ou sans equiv */
-  if (withEquiv)
-    TtaNewPulldown (ref, button, NULL, entries, string, equiv);
-  else
+
+  if (!update)
+    {
+      /* Creation of the corresponding Pulldown with or without equiv */
+      if (withEquiv)
+	TtaNewPulldown (ref, button, NULL, entries, string, equiv);
+      else
     TtaNewPulldown (ref, button, NULL, entries, string, NULL);
-  
-  /* Create submenus */
+    }
+
+  /* Create or update submenus */
   item = 0;
   i = 0;
   j = 0;
@@ -1160,7 +1226,8 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 	    item++;
 	  if (item < ptrmenu->ItemsNb)
 	      /* creation of the sub-menu */
-	      BuildSubMenu (ptritem[item].SubMenu, ref, j, frame, doc);
+	      BuildSubMenu (ptritem[item].SubMenu, ref, j, frame, doc,
+			    update, RO);
 	}
       i = i + strlen (&string[i]) + 1;
       item++;
@@ -1265,7 +1332,8 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 	  {
 	     /* Enregistre le widget du menu */
 	     FrameTable[0].EnabledMenus[i] = TRUE;
-	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0, 0);
+	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0, 0,
+			   FALSE, FALSE);
 	     ptrmenu = ptrmenu->NextMenu;
 	     ref += MAX_ITEM;
 	     i++;
@@ -2445,8 +2513,9 @@ void selection_handle (GtkWidget        *widget,
 
 /*----------------------------------------------------------------------
   BuildMenus builds or rebuilds frame menus.
+  The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
-void TtaUpdateMenus (Document doc, View view)
+void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
   Menu_Ctl           *ptrmenu;
   int                 frame;
@@ -2465,15 +2534,9 @@ void TtaUpdateMenus (Document doc, View view)
 		   Prof_ShowMenu (ptrmenu))
 	    {
 	      if (!ptrmenu->MenuAttr)
-		{
-		  TtaDestroyDialogue (ref);
-#ifdef _WINDOWS
-		  /* Remove that reference in the window list of catalogues */
-		  CleanFrameCatList (frame, ref);
-#endif /* _WINDOWS */
-		  BuildPopdown (ptrmenu, ref,
-				FrameTable[frame].WdMenus[i], frame, doc);
-		}
+		BuildPopdown (ptrmenu, ref,
+			      FrameTable[frame].WdMenus[i], frame, doc,
+			      TRUE, RO);
 	    }
 	  ptrmenu = ptrmenu->NextMenu;
 	  ref += MAX_ITEM;
@@ -2797,7 +2860,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   else if (ptrmenu->MenuSelect) 
 		     FrameTable[frame].MenuSelect = ptrmenu->MenuID;
 		   else 
-		     BuildPopdown (ptrmenu, ref, w, frame, doc);
+		     BuildPopdown (ptrmenu, ref, w, frame, doc,
+				   FALSE, FALSE);
 #ifdef _WINDOWS
 		   AppendMenu (menu_bar, MF_POPUP, (UINT) w,
 			       TtaGetMessage (THOT, ptrmenu->MenuID));
@@ -4310,7 +4374,12 @@ void ThotCallback (int ref, int typedata, char *data)
       /* Call the right action */
       ptrmenu = GetMenu_Ctl (frame, menu);
       action = 0;
-      profile = TtaGetDocumentProfile (document);
+      /*
+	In the previous version hidden entries were removed,
+	now all entries are generated and we just invalid
+	hidden entries.
+      */
+      profile = 0; /* no check */    
       if (ptrmenu)
 	{
 	  if (item != 0)
@@ -4327,7 +4396,7 @@ void ThotCallback (int ref, int typedata, char *data)
 		      else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
 			       action > 0 &&
 			       !Prof_BelongDoctype (MenuActionList[action].ActionName,
-						    profile))
+						    profile, FALSE))
 			item++;
 		    }
 		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
@@ -4349,7 +4418,7 @@ void ThotCallback (int ref, int typedata, char *data)
 		  else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
 			   action > 0 &&
 			   !Prof_BelongDoctype (MenuActionList[action].ActionName,
-						profile))
+						profile, FALSE))
 		    item++;
 		}
 	    }

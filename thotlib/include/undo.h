@@ -12,7 +12,7 @@
 /* ----------------------------------------------------------------------
    TtaPrepareUndo returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
-extern ThotBool      TtaPrepareUndo (Document document);
+extern ThotBool TtaPrepareUndo (Document document);
 
 /* ----------------------------------------------------------------------
    TtaOpenUndoSequence
@@ -30,7 +30,8 @@ extern ThotBool      TtaPrepareUndo (Document document);
    lastSelChar: indicate the selection that must be set when the operation 
    will be undone.
   ----------------------------------------------------------------------*/
-extern void          TtaOpenUndoSequence (Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar);
+extern void TtaOpenUndoSequence (Document document, Element firstSel,
+				 Element lastSel, int firstSelChar, int lastSelChar);
 
 /* ----------------------------------------------------------------------
    TtaCloseUndoSequence
@@ -43,7 +44,7 @@ extern void          TtaOpenUndoSequence (Document document, Element firstSel,El
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaCloseUndoSequence (Document document);
+extern ThotBool TtaCloseUndoSequence (Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementCreate
@@ -55,7 +56,7 @@ extern ThotBool     TtaCloseUndoSequence (Document document);
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void        TtaRegisterElementCreate (Element element, Document document);
+extern void TtaRegisterElementCreate (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementDelete
@@ -69,7 +70,7 @@ extern void        TtaRegisterElementCreate (Element element, Document document)
    element: the element to be deleted
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterElementDelete (Element element, Document document);
+extern void TtaRegisterElementDelete (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementReplace
@@ -82,7 +83,7 @@ extern void         TtaRegisterElementDelete (Element element, Document document
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void        TtaRegisterElementReplace (Element element, Document document);
+extern void TtaRegisterElementReplace (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterAttributeCreate
@@ -95,7 +96,8 @@ extern void        TtaRegisterElementReplace (Element element, Document document
    element: the element to which the attribute has been attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void        TtaRegisterAttributeCreate (Attribute attribute, Element element, Document document);
+extern void TtaRegisterAttributeCreate (Attribute attribute,
+					Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterAttributeDelete
@@ -109,7 +111,8 @@ extern void        TtaRegisterAttributeCreate (Attribute attribute, Element elem
    element: the element to which this attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterAttributeDelete (Attribute attribute, Element element, Document document);
+extern void TtaRegisterAttributeDelete (Attribute attribute,
+					Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterAttributeReplace
@@ -123,14 +126,15 @@ extern void         TtaRegisterAttributeDelete (Attribute attribute, Element ele
    element: the element to which the attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterAttributeReplace (Attribute attribute, Element element, Document document);
+extern void TtaRegisterAttributeReplace (Attribute attribute,
+					 Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaClearUndoHistory
 
    Clears all editing operations registered in the editing history of document.
   ----------------------------------------------------------------------*/
-extern void         TtaClearUndoHistory (Document document);
+extern void TtaClearUndoHistory (Document document);
 
 /* ----------------------------------------------------------------------
    TtaCancelLastRegisteredSequence
@@ -138,7 +142,7 @@ extern void         TtaClearUndoHistory (Document document);
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-extern void         TtaCancelLastRegisteredSequence (Document document);
+extern void TtaCancelLastRegisteredSequence (Document document);
 
 /* ----------------------------------------------------------------------
    TtaChangeLastRegisteredAttr
@@ -147,7 +151,9 @@ extern void         TtaCancelLastRegisteredSequence (Document document);
    of document, only if it's an attribute operation for element oldEl.
    In that case, make it related to element newEl and attribute newAttr.
   ----------------------------------------------------------------------*/
-extern void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document);
+extern void TtaChangeLastRegisteredAttr (Element oldEl, Element newEl,
+					 Attribute oldAttr, Attribute newAttr,
+					 Document document);
 
 /* ----------------------------------------------------------------------
    TtaReplaceLastRegisteredAttr
@@ -155,14 +161,22 @@ extern void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, A
    Replace the latest operation registered in the editing history of document
    from an attribute value modification to an attribute value deletion.
   ----------------------------------------------------------------------*/
-extern void         TtaReplaceLastRegisteredAttr (Document document);
+extern void TtaReplaceLastRegisteredAttr (Document document);
 
 /* ----------------------------------------------------------------------
    TtaCancelLastRegisteredOperation
  
    Cancel the latest operation registered in the editing history of document.
   ----------------------------------------------------------------------*/
-extern void         TtaCancelLastRegisteredOperation (Document document);
+extern void TtaCancelLastRegisteredOperation (Document document);
+
+/* ----------------------------------------------------------------------
+   TtaGetLastCreatedElemInHistory
+
+   If the last operation recorded in the history is the creation of an
+   element, return that element, otherwise return NULL.
+  ----------------------------------------------------------------------*/
+extern Element TtaGetLastCreatedElemInHistory (Document document);
 
 /* ----------------------------------------------------------------------
    TtaUndoNoRedo
@@ -171,8 +185,10 @@ extern void         TtaCancelLastRegisteredOperation (Document document);
    of document and forget about this sequence: it won't be redone by
    the next Redo command issued by the user.
   ----------------------------------------------------------------------*/
-extern void         TtaUndoNoRedo (Document document);
+extern void TtaUndoNoRedo (Document document);
 
 #endif /* __CEXTRACT__ */
 
 #endif
+
+

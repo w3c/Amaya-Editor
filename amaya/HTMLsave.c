@@ -1190,7 +1190,7 @@ static void RestartParser (Document doc, char *localFile,
   if (profile != parsingLevel)
     {
       TtaSetDocumentProfile (doc, parsingLevel);
-      TtaUpdateMenus (doc, 1);
+      TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
     }
 
   /* Calls the corresponding parser */
