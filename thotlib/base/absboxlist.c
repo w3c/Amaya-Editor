@@ -1,9 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    liste.c : module de trace des e'tats du Mediateur.
-   I. Vatton - Mai 86   
+   I. Vatton
  */
 
 #include "thot_sys.h"
@@ -128,8 +125,8 @@ FILE               *outfile;
    int                 i, j;
    PtrAbstractBox             pAbEnclosed;
    PtrTextBuffer      adbuff;
-   PtrPosRelations      adpos;
-   PtrDimRelations      addim;
+   PtrPosRelations      pPosRel;
+   PtrDimRelations      pDimRel;
    PtrBox            pBox;
    PtrBox            box1;
    boolean             boucle;
@@ -352,10 +349,10 @@ FILE               *outfile;
 	       }
 
 	     /* CsList des relations de position de la boite */
-	     adpos = pBox->BxPosRelations;
-	     while (adpos != NULL)
+	     pPosRel = pBox->BxPosRelations;
+	     while (pPosRel != NULL)
 	       {
-		  pTa1 = adpos;
+		  pTa1 = pPosRel;
 		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
@@ -403,15 +400,15 @@ FILE               *outfile;
 			       i++;
 			 }
 		    }
-		  adpos = pTa1->PosRNext;
+		  pPosRel = pTa1->PosRNext;
 		  /* Bloc suivant */
 	       }
 	     fprintf (outfile, "\n");
 	     /* CsList des dependances de largeur */
-	     addim = pBox->BxWidthRelations;
-	     while (addim != NULL)
+	     pDimRel = pBox->BxWidthRelations;
+	     while (pDimRel != NULL)
 	       {
-		  pTabD1 = addim;
+		  pTabD1 = pDimRel;
 		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
@@ -436,13 +433,13 @@ FILE               *outfile;
 			  else
 			     i++;
 		       }
-		  addim = pTabD1->DimRNext;
+		  pDimRel = pTabD1->DimRNext;
 	       }
 	     /* CsList des dependances de hauteur */
-	     addim = pBox->BxHeightRelations;
-	     while (addim != NULL)
+	     pDimRel = pBox->BxHeightRelations;
+	     while (pDimRel != NULL)
 	       {
-		  pTabD1 = addim;
+		  pTabD1 = pDimRel;
 		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
@@ -465,7 +462,7 @@ FILE               *outfile;
 			  else
 			     i++;
 		       }
-		  addim = pTabD1->DimRNext;
+		  pDimRel = pTabD1->DimRNext;
 		  /* Bloc suivant */
 	       }
 	     fprintf (outfile, "\n");
@@ -542,8 +539,8 @@ L_Relations         TabDimV;
 {
    PtrAbstractBox             pAbEnclosed;
    int                 i, j;
-   PtrPosRelations      adpos;
-   PtrDimRelations      addim;
+   PtrPosRelations      pPosRel;
+   PtrDimRelations      pDimRel;
    boolean             boucle;
    PtrBox            pBo1;
    PtrPosRelations      pTa1;
@@ -553,11 +550,11 @@ L_Relations         TabDimV;
      {
 	pBo1 = pAb->AbBox;
 	/* On note le nombre de relations de position de la boite */
-	adpos = pBo1->BxPosRelations;
+	pPosRel = pBo1->BxPosRelations;
 	j = 0;
-	while (adpos != NULL)
+	while (pPosRel != NULL)
 	  {
-	     pTa1 = adpos;
+	     pTa1 = pPosRel;
 	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
@@ -571,7 +568,7 @@ L_Relations         TabDimV;
 		else
 		   i++;
 	     j += i;
-	     adpos = pTa1->PosRNext;
+	     pPosRel = pTa1->PosRNext;
 	     /* Bloc suivant */
 	  }
 	if (j > 30)
@@ -579,11 +576,11 @@ L_Relations         TabDimV;
 	if (j > 0)
 	   TabPos[j - 1]++;
 	/* On note le nombre de relations de dimension horizontale de la boite */
-	addim = pBo1->BxWidthRelations;
+	pDimRel = pBo1->BxWidthRelations;
 	j = 0;
-	while (addim != NULL)
+	while (pDimRel != NULL)
 	  {
-	     pTabD1 = addim;
+	     pTabD1 = pDimRel;
 	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
@@ -597,7 +594,7 @@ L_Relations         TabDimV;
 		else
 		   i++;
 	     j += i;
-	     addim = pTabD1->DimRNext;
+	     pDimRel = pTabD1->DimRNext;
 	     /* Bloc suivant */
 	  }
 	if (j > 30)
@@ -605,11 +602,11 @@ L_Relations         TabDimV;
 	if (j > 0)
 	   TabDimH[j - 1]++;
 	/* On note le nombre de relations de dimension verticale de la boite */
-	addim = pBo1->BxHeightRelations;
+	pDimRel = pBo1->BxHeightRelations;
 	j = 0;
-	while (addim != NULL)
+	while (pDimRel != NULL)
 	  {
-	     pTabD1 = addim;
+	     pTabD1 = pDimRel;
 	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
@@ -623,7 +620,7 @@ L_Relations         TabDimV;
 		else
 		   i++;
 	     j += i;
-	     addim = pTabD1->DimRNext;
+	     pDimRel = pTabD1->DimRNext;
 	     /* Bloc suivant */
 	  }
 	if (j > 30)

@@ -1,10 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    pos.c : gestion des placements absolus des boites.
-   Major changes:
-   I. Vatton - Mai 87
+   I. Vatton
  */
 
 #include "thot_sys.h"
@@ -26,55 +22,52 @@
 #include "boxpositions_f.h"
 #include "font_f.h"
 
+
 /* ---------------------------------------------------------------------- */
 /* |    VoirXHorsStruct regarde si des boites ont des relations         | */
 /* |            hors-structure avec la boite passee en parametre et     | */
 /* |            doivent etre placees en X absolu.                       | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         VoirXHorsStruct (PtrBox pBox, int SeuilVisu, int frame)
-
 #else  /* __STDC__ */
 static void         VoirXHorsStruct (pBox, SeuilVisu, frame)
 PtrBox            pBox;
 int                 SeuilVisu;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
-   PtrPosRelations      adpos;
+   PtrPosRelations      pPosRel;
    int                 i;
    boolean             nonnul;
-   BoxRelation           *pRe1;
+   BoxRelation           *pRelation;
 
 
-   adpos = pBox->BxPosRelations;
-   while (adpos != NULL)
+   pPosRel = pBox->BxPosRelations;
+   while (pPosRel != NULL)
      {
 	i = 1;
-	nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+	nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 	while (i <= MAX_RELAT_POS && nonnul)
 	  {
-	     pRe1 = &adpos->PosRTable[i - 1];
-	     if (pRe1->ReBox->BxAbstractBox != NULL)
+	     pRelation = &pPosRel->PosRTable[i - 1];
+	     if (pRelation->ReBox->BxAbstractBox != NULL)
 		/* Relation hors-struture sur l'origine de la boite */
-		if (pRe1->ReOp == OpHorizDep
-		    && pRe1->ReBox->BxXOutOfStruct
-		    && pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox
-		    && pRe1->ReBox->BxXToCompute)
+		if (pRelation->ReOp == OpHorizDep
+		    && pRelation->ReBox->BxXOutOfStruct
+		    && pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox
+		    && pRelation->ReBox->BxXToCompute)
 		  {
 		     /* La boite distante va etre placee */
-		     pRe1->ReBox->BxXToCompute = FALSE;
-		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, TRUE, FALSE);
-		     VoirXHorsStruct (pRe1->ReBox, SeuilVisu, frame);
+		     pRelation->ReBox->BxXToCompute = FALSE;
+		     Placer (pRelation->ReBox->BxAbstractBox, SeuilVisu, frame, TRUE, FALSE);
+		     VoirXHorsStruct (pRelation->ReBox, SeuilVisu, frame);
 		  }
 	     i++;
 	     if (i <= MAX_RELAT_POS)
-		nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+		nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 	  }
-	adpos = adpos->PosRNext;
+	pPosRel = pPosRel->PosRNext;
      }
 }				/* VoirXHorsStruct */
 
@@ -96,37 +89,37 @@ int                 frame;
 #endif /* __STDC__ */
 
 {
-   PtrPosRelations      adpos;
+   PtrPosRelations      pPosRel;
    int                 i;
    boolean             nonnul;
-   BoxRelation           *pRe1;
+   BoxRelation           *pRelation;
 
 
-   adpos = pBox->BxPosRelations;
-   while (adpos != NULL)
+   pPosRel = pBox->BxPosRelations;
+   while (pPosRel != NULL)
      {
 	i = 1;
-	nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+	nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 	while (i <= MAX_RELAT_POS && nonnul)
 	  {
-	     pRe1 = &adpos->PosRTable[i - 1];
-	     if (pRe1->ReBox->BxAbstractBox != NULL)
+	     pRelation = &pPosRel->PosRTable[i - 1];
+	     if (pRelation->ReBox->BxAbstractBox != NULL)
 		/* Relation hors-struture sur l'origine de la boite */
-		if (pRe1->ReOp == OpVertDep
-		    && pRe1->ReBox->BxYOutOfStruct
-		    && pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pBox->BxAbstractBox
-		    && pRe1->ReBox->BxYToCompute)
+		if (pRelation->ReOp == OpVertDep
+		    && pRelation->ReBox->BxYOutOfStruct
+		    && pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pBox->BxAbstractBox
+		    && pRelation->ReBox->BxYToCompute)
 		  {
 		     /* La boite distante va etre placee */
-		     pRe1->ReBox->BxYToCompute = FALSE;
-		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, FALSE, TRUE);
-		     VoirYHorsStruct (pRe1->ReBox, SeuilVisu, frame);
+		     pRelation->ReBox->BxYToCompute = FALSE;
+		     Placer (pRelation->ReBox->BxAbstractBox, SeuilVisu, frame, FALSE, TRUE);
+		     VoirYHorsStruct (pRelation->ReBox, SeuilVisu, frame);
 		  }
 	     i++;
 	     if (i <= MAX_RELAT_POS)
-		nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+		nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 	  }
-	adpos = adpos->PosRNext;
+	pPosRel = pPosRel->PosRNext;
 	/* Bloc suivant */
      }
 }				/* VoirYHorsStruct */
@@ -162,7 +155,7 @@ boolean             EnY;
    boolean             eclate;
    boolean             Peclate;
    boolean             nonnul;
-   PtrPosRelations      adpos;
+   PtrPosRelations      pPosRel;
    boolean             newX;
    boolean             newY;
    boolean             placeenX;
@@ -171,7 +164,7 @@ boolean             EnY;
    boolean             reengloby;
    PtrBox            pBo1;
    PtrBox            pBox;
-   BoxRelation           *pRe1;
+   BoxRelation           *pRelation;
 
    /* Origine de la boite du pave le plus englobant */
    pBox = pAb->AbBox;
@@ -389,46 +382,46 @@ boolean             EnY;
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
 			  /* des boites liees a la boite deplacee.                       */
-			  adpos = pBo1->BxPosRelations;
-			  while (adpos != NULL)
+			  pPosRel = pBo1->BxPosRelations;
+			  while (pPosRel != NULL)
 			    {
 			       i = 1;
-			       nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+			       nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 			       /* Si la boite est elastique, les relations */
 			       /* hors-structure sont deja traitees.       */
 			       if (!pBo1->BxHorizFlex)
 				  while (i <= MAX_RELAT_POS && nonnul)
 				    {
-				       pRe1 = &adpos->PosRTable[i - 1];
-				       if (pRe1->ReBox->BxAbstractBox != NULL)
+				       pRelation = &pPosRel->PosRTable[i - 1];
+				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* Initialise la file des boites deplacees */
 					    pBo1->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
-					    if (pRe1->ReOp == OpHorizDep
-					     && pRe1->ReBox->BxXOutOfStruct
-						&& pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pavefils)
+					    if (pRelation->ReOp == OpHorizDep
+					     && pRelation->ReBox->BxXOutOfStruct
+						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pavefils)
 					      {
-						 if (pRe1->ReBox->BxHorizFlex)
-						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, TRUE);
+						 if (pRelation->ReBox->BxHorizFlex)
+						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
 						 else
-						    DepOrgX (pRe1->ReBox, pBo1, x, frame);
+						    DepOrgX (pRelation->ReBox, pBo1, x, frame);
 						 /* La boite distante est placee */
-						 pRe1->ReBox->BxXToCompute = FALSE;
+						 pRelation->ReBox->BxXToCompute = FALSE;
 					      }
 					    /* Relation sur la largeur elastique de la boite */
-					    else if (pRe1->ReOp == OpWidth)
+					    else if (pRelation->ReOp == OpWidth)
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, TRUE);
+						 ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
 					      }
 					 }
 				       i++;
 				       if (i <= MAX_RELAT_POS)
-					  nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+					  nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 				    }
-			       adpos = adpos->PosRNext;
+			       pPosRel = pPosRel->PosRNext;
 			    }
 		       }
 		     /* On ne decale pas la boite, mais le fait de deplacer */
@@ -486,46 +479,46 @@ boolean             EnY;
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
 			  /* des boites liees a la boite deplacee.                       */
-			  adpos = pBo1->BxPosRelations;
-			  while (adpos != NULL)
+			  pPosRel = pBo1->BxPosRelations;
+			  while (pPosRel != NULL)
 			    {
 			       i = 1;
-			       nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+			       nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 			       /* Si la boite est elastique, les relations */
 			       /* hors-structure sont deja traitees.       */
 			       if (!pBo1->BxVertFlex)
 				  while (i <= MAX_RELAT_POS && nonnul)
 				    {
-				       pRe1 = &adpos->PosRTable[i - 1];
-				       if (pRe1->ReBox->BxAbstractBox != NULL)
+				       pRelation = &pPosRel->PosRTable[i - 1];
+				       if (pRelation->ReBox->BxAbstractBox != NULL)
 					 {
 					    /* Initialise la file des boites deplacees */
 					    pBo1->BxMoved = NULL;
 					    /* Relation hors-struture sur l'origine de la boite */
-					    if (pRe1->ReOp == OpVertDep
-					     && pRe1->ReBox->BxYOutOfStruct
-						&& pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pavefils)
+					    if (pRelation->ReOp == OpVertDep
+					     && pRelation->ReBox->BxYOutOfStruct
+						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pavefils)
 					      {
-						 if (pRe1->ReBox->BxVertFlex)
-						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, FALSE);
+						 if (pRelation->ReBox->BxVertFlex)
+						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
 						 else
-						    DepOrgY (pRe1->ReBox, pBo1, y, frame);
+						    DepOrgY (pRelation->ReBox, pBo1, y, frame);
 						 /* La boite distante est placee */
-						 pRe1->ReBox->BxYToCompute = FALSE;
+						 pRelation->ReBox->BxYToCompute = FALSE;
 					      }
 					    /* Relation sur la hauteur elastique de la boite */
-					    else if (pRe1->ReOp == OpHeight)
+					    else if (pRelation->ReOp == OpHeight)
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, FALSE);
+						 ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
 					      }
 					 }
 				       i++;
 				       if (i <= MAX_RELAT_POS)
-					  nonnul = adpos->PosRTable[i - 1].ReBox != NULL;
+					  nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
 				    }
-			       adpos = adpos->PosRNext;
+			       pPosRel = pPosRel->PosRNext;
 			    }
 		       }
 		     /* On ne decale pas la boite, mais le fait de deplacer */

@@ -1,18 +1,10 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    memory.c : gestion des free-lists et de l'allocation memoire.
    Module de gestion memoire de l'editeur 
-   V. Quint     Avril 1986      
-   France Logiciel no de depot 88-39-001-00
-   Module de gestion de l'espace memoire        
-   I. Vatton    Aout 86
+   V. Quint    I. Vatton
  */
 
 #include "thot_sys.h"
-#ifdef SYSV
-#endif
 #include "constmedia.h"
 #include "typemedia.h"
 #include "typecorr.h"
@@ -2026,9 +2018,9 @@ PtrBox            adboite;
 #endif /* __STDC__ */
 
 {
-   PtrPosRelations      adpos;
+   PtrPosRelations      pPosRel;
    PtrPosRelations      nepos;
-   PtrDimRelations      addim;
+   PtrDimRelations      pDimRel;
    PtrDimRelations      nedim;
    PtrBox            pBo1;
    PtrBox            NextBox;
@@ -2047,28 +2039,28 @@ PtrBox            adboite;
    NbLibBox++;
    NbOccBox--;
    /* On libere les differents blocs attaches a la boite */
-   adpos = pBo1->BxPosRelations;
-   while (adpos != NULL)
+   pPosRel = pBo1->BxPosRelations;
+   while (pPosRel != NULL)
      {
-	nepos = adpos->PosRNext;
-	FreeBPos (&adpos);
-	adpos = nepos;
+	nepos = pPosRel->PosRNext;
+	FreeBPos (&pPosRel);
+	pPosRel = nepos;
      }
 
-   addim = pBo1->BxWidthRelations;
-   while (addim != NULL)
+   pDimRel = pBo1->BxWidthRelations;
+   while (pDimRel != NULL)
      {
-	nedim = addim->DimRNext;
-	FreeBDim (&addim);
-	addim = nedim;
+	nedim = pDimRel->DimRNext;
+	FreeBDim (&pDimRel);
+	pDimRel = nedim;
      }
 
-   addim = pBo1->BxHeightRelations;
-   while (addim != NULL)
+   pDimRel = pBo1->BxHeightRelations;
+   while (pDimRel != NULL)
      {
-	nedim = addim->DimRNext;
-	FreeBDim (&addim);
-	addim = nedim;
+	nedim = pDimRel->DimRNext;
+	FreeBDim (&pDimRel);
+	pDimRel = nedim;
      }
    return NextBox;
 }
