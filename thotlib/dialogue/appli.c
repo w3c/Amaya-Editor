@@ -888,6 +888,8 @@ char               *text;
 	  /****frame = LoadedDocument[doc-1]->DocView[view - 1].DvPSchemaView;
 	  if (frame != 0)****/
 	     TtaSetStatus ((Document) doc, view, text, NULL);
+	     if (view < MAX_ASSOC_DOC)
+               TtaSetStatus ((Document) doc, view + 100, text, NULL);
 	  }
      }
 }				/*DisplaySelMessage */

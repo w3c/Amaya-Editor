@@ -1146,19 +1146,22 @@ ThotEvent             *ev;
 	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	     if (!strcmp (s, "WM_DELETE_WINDOW"))
 	       {
-		  for (frame = 0; frame <= MAX_FRAME; frame++)
-		    {
-		       if (FrRef[frame] != 0 && XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
-			  break;
-		    }
-		  if (frame == 0)
-		     TtcQuit (0, 0);
-		  else if (frame <= MAX_FRAME)
-		    {
-		       GetDocAndView (frame, &pDoc, &vue, &assoc);
-		       CloseView (pDoc, vue, assoc);
-		    }
-		  return;
+                  if (FrRef[0] != 0 && XtWindowOfObject (XtParent (FrameTable[frame].WdFrame)) == w)
+                     TtcQuit (0, 0);
+                  else
+                    {
+		      for (frame = 1; frame <= MAX_FRAME; frame++)
+		        {
+		           if (FrRef[frame] != 0 && XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
+			      break;
+		        }
+		      if (frame <= MAX_FRAME)
+		        {
+		           GetDocAndView (frame, &pDoc, &vue, &assoc);
+		           CloseView (pDoc, vue, assoc);
+		        }
+		      return;
+                    }
 	       }
 	  }
 	else if (!strcmp (s, "THOT_MESSAGES"))
