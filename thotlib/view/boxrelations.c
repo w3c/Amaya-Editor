@@ -1446,7 +1446,7 @@ PtrBox              pPreviousBox;
   ComputeDimRelation applies the vertical/horizontal sizing rule of pAb
   according to the parameter horizRef. 
   Return TRUE when the dimension depends on the contents.
-  There are 4 different case:
+  There are 4 different cases:
   - if the dim depends on the parent the rule concerns the outside
     dim and is related to the inside dim of the parent.
   - if it's the default dim the rule concerns the inside dim and is 
@@ -1611,7 +1611,7 @@ ThotBool            horizRef;
 	    {
 	      fprintf (stderr, "Dimension refers a dead box");
 	      pDimAb->DimAbRef = NULL;
-	      pDimAb->DimValue = 0;
+	      pDimAb->DimValue = -1;
 	    }
 	  else if (pDimAb->DimAbRef == pAb && !pDimAb->DimSameDimension)
 	    {
@@ -1690,7 +1690,8 @@ ThotBool            horizRef;
 		  /* inherited from the contents */
 		  pBox->BxContentWidth = TRUE;
 		else if (pAb->AbWidth.DimAbRef == NULL)
-		  if (pAb->AbWidth.DimValue <= 0)
+		  {
+		  if (pAb->AbWidth.DimValue < 0)
 		    /* inherited from the contents */
 		    pBox->BxContentWidth = TRUE;
 		  else
@@ -1708,6 +1709,7 @@ ThotBool            horizRef;
 			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 		    }
+		  }
 		else
 		  {
 		    pPosAb = &pAb->AbHorizPos;
@@ -1731,7 +1733,7 @@ ThotBool            horizRef;
 			    /* inherited from the contents */
 			    pBox->BxContentWidth = TRUE;
 			    pDimAb->DimAbRef = NULL;
-			    pDimAb->DimValue = 0;
+			    pDimAb->DimValue = -1;
 			    pDimAb->DimUnit = UnRelative;
 			  }
 			else
@@ -1743,7 +1745,7 @@ ThotBool            horizRef;
 			/* inherited from the contents */
 			pBox->BxContentWidth = TRUE;
 			pDimAb->DimAbRef = NULL;
-			pDimAb->DimValue = 0;
+			pDimAb->DimValue = -1;
 			pDimAb->DimUnit = UnRelative;
 		      }
 
@@ -1818,7 +1820,7 @@ ThotBool            horizRef;
 		    pBox->BxContentHeight = TRUE;
 		  else if (pDimAb->DimAbRef == NULL)
 		    {
-		      if (pDimAb->DimValue == 0)
+		      if (pDimAb->DimValue < 0)
 			/* inherited from the contents */
 			pBox->BxContentHeight = TRUE;
 		      else
@@ -1843,7 +1845,7 @@ ThotBool            horizRef;
 		      /* inherited from the contents */
 		      pBox->BxContentHeight = TRUE;
 		      pDimAb->DimAbRef = NULL;
-		      pDimAb->DimValue = 0;
+		      pDimAb->DimValue = -1;
 		      pDimAb->DimUnit = UnRelative;
 		    }
 		  else
@@ -1858,7 +1860,7 @@ ThotBool            horizRef;
 			  /* inherited from the contents */
 			  pBox->BxContentHeight = TRUE;
 			  pDimAb->DimAbRef = NULL;
-			  pDimAb->DimValue = 0;
+			  pDimAb->DimValue = -1;
 			  pDimAb->DimUnit = UnRelative;
 			}
 		      else
@@ -1869,7 +1871,7 @@ ThotBool            horizRef;
 			      /* inherited from the contents */
 			      pBox->BxContentHeight = TRUE;
 			      pDimAb->DimAbRef = NULL;
-			      pDimAb->DimValue = 0;
+			      pDimAb->DimValue = -1;
 			      pDimAb->DimUnit = UnRelative;
 			    }
 			  else

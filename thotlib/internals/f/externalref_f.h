@@ -11,6 +11,7 @@ extern void ConvertIntToLabel ( int num,
 extern void ReadLabel ( char labelType,
                         LabelString label,
                         BinFile file );
+
 #else /* __STDC__ */
 
 extern void ConvertIntToLabel (/* int num,
@@ -18,5 +19,6 @@ extern void ConvertIntToLabel (/* int num,
 extern void ReadLabel (/* char labelType,
                           LabelString label,
                           BinFile file */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

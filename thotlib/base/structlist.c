@@ -1134,7 +1134,7 @@ FILE               *fileDescriptor;
 {
 
    fprintf (fileDescriptor, " ");
-   if (pDim->DimAbRef == NULL && pDim->DimValue == 0)
+   if (pDim->DimAbRef == NULL && pDim->DimValue == -1)
       fprintf (fileDescriptor, "default");
    else
      {

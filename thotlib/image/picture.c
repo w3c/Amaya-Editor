@@ -1961,8 +1961,6 @@ PictInfo           *imageDesc;
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
 	  else
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxRMargin + box->BxRBorder + box->BxRPadding + w, box->BxYOrg + box->BxBMargin + box->BxBBorder + box->BxBPadding + h);
-	  if (!pAb->AbPresentationBox)
-	    NewDimPicture (pAb);
 	  if (pAb->AbLeafType == LtPicture)
 	    {
 	      /* transmit picture dimensions */

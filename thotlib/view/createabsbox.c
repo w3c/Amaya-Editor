@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -394,7 +394,7 @@ ThotBool            ro;
    pAb->AbHorizPos.PosUserSpecified = FALSE;
 
    pAb->AbHeight.DimIsPosition = FALSE;
-   pAb->AbHeight.DimValue = 0;
+   pAb->AbHeight.DimValue = -1;
    pAb->AbHeight.DimAbRef = NULL;
    pAb->AbHeight.DimUnit = UnRelative;
    pAb->AbHeight.DimSameDimension = TRUE;
@@ -402,7 +402,7 @@ ThotBool            ro;
    pAb->AbHeight.DimMinimum = FALSE;
 
    pAb->AbWidth.DimIsPosition = FALSE;
-   pAb->AbWidth.DimValue = 0;
+   pAb->AbWidth.DimValue = -1;
    pAb->AbWidth.DimAbRef = NULL;
    pAb->AbWidth.DimUnit = UnRelative;
    pAb->AbWidth.DimSameDimension = TRUE;
@@ -2343,10 +2343,10 @@ ThotBool            completeCreator;
 		   /* a priori l'image prendra les dimensions de son pave' */
 		   ((PictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = ReScale;
 		   if (!pAbbCreated->AbWidth.DimIsPosition
-		       && pAbbCreated->AbWidth.DimValue == 0
+		       && pAbbCreated->AbWidth.DimValue < 0
 		       && pAbbCreated->AbWidth.DimAbRef == NULL
 		       && !pAbbCreated->AbHeight.DimIsPosition
-		       && pAbbCreated->AbHeight.DimValue == 0
+		       && pAbbCreated->AbHeight.DimValue < 0
 		       && pAbbCreated->AbHeight.DimAbRef == NULL)
 		     /* le pave prend la hauteur et la largeur de son
 			contenu */

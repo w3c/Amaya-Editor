@@ -2042,7 +2042,7 @@ int                 frame;
 	  /* Moving included boxes or reevalution of the block of lines? */
 	  if (absoluteMove ||
 	      pCurrentAb->AbWidth.DimAbRef != NULL ||
-	      pCurrentAb->AbWidth.DimValue != 0)
+	      pCurrentAb->AbWidth.DimValue >= 0)
 	    /* the box is already built */
 	    /* or it's within a stretchable box */
 	    /* or it's within a unnested box */
@@ -2546,7 +2546,7 @@ int                 frame;
 	    }
 	  else if (absoluteMove
 		   || pCurrentAb->AbHeight.DimAbRef != NULL
-		   || pCurrentAb->AbHeight.DimValue != 0)
+		   || pCurrentAb->AbHeight.DimValue >= 0)
 	    {
 	      /* the box is already built */
 	      /* or it's within a stretchable box */
@@ -3319,7 +3319,7 @@ int                 frame;
 			/* which itself inherits form the enclosing? */
 			if (IsParentBox (pRefAb->AbBox, pBox)
 			    && pRefAb->AbWidth.DimAbRef == NULL
-			    && pRefAb->AbWidth.DimValue == 0
+			    && pRefAb->AbWidth.DimValue < 0
 			    && pRefAb->AbBox->BxWidth == pBox->BxWidth)
 			  i = x;
 			else if (pChildBox->BxXOrg < x)
@@ -3556,7 +3556,7 @@ int                 frame;
 			/* which itself inherits form the enclosing? */
 			if (IsParentBox (pRefAb->AbBox, pBox)
 			    && pRefAb->AbHeight.DimAbRef == NULL
-			    && pRefAb->AbHeight.DimValue == 0
+			    && pRefAb->AbHeight.DimValue < 0
 			    && pRefAb->AbBox->BxHeight == pBox->BxHeight)
 			  i = y;
 			else if (pChildBox->BxYOrg < y)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2786,7 +2786,7 @@ int                 frame;
 	    pDimAb = &pAb->AbWidth;
 	    if (!pDimAb->DimIsPosition)
 	      {
-		if (pDimAb->DimAbRef != NULL || pDimAb->DimValue != 0)
+		if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		  pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
 		if (pAb->AbHorizPos.PosAbRef != NULL)
 		  pAb->AbHorizPosChange =
@@ -2796,7 +2796,7 @@ int                 frame;
 	    pDimAb = &pAb->AbHeight;
 	    if (!pDimAb->DimIsPosition)
 	      {
-		if (pDimAb->DimAbRef != NULL || pDimAb->DimValue != 0)
+		if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		  pAb->AbHeightChange = (pDimAb->DimUnit == UnRelative);
 		if (pAb->AbVertPos.PosAbRef != NULL)
 		  pAb->AbVertPosChange =
@@ -2982,14 +2982,14 @@ int                 frame;
 		  pDimAb = &pAb->AbWidth;
 		  if (pDimAb->DimIsPosition)
 		     width = 0;
-		  else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue > 0)
+		  else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		     width = 0;
 		  else
 		     width -= pBox->BxWidth;	/* ecart de largeur */
 		  pDimAb = &pAb->AbHeight;
 		  if (pDimAb->DimIsPosition)
 		     height = 0;
-		  else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue > 0)
+		  else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		     height = 0;
 		  else
 		     height -= pBox->BxH;	/* ecart de hauteur */

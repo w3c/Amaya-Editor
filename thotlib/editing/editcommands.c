@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2469,7 +2469,7 @@ int                 editType;
 	      if (pPavD1->DimIsPosition)
 		/* Boite elastique */
 		defaultWidth = FALSE;
-	      else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
+	      else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue < 0)
 		defaultWidth = TRUE;
 	      else
 		defaultWidth = FALSE;
@@ -2478,7 +2478,7 @@ int                 editType;
 	      if (pPavD1->DimIsPosition)
 		/* Boite elastique */
 		defaultHeight = FALSE;
-	      else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue == 0)
+	      else if (pPavD1->DimAbRef == NULL && pPavD1->DimValue < 0)
 		defaultHeight = TRUE;
 	      else
 		/* Dimensions d'une boite terminale vide */

@@ -44,7 +44,6 @@ extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  int view );
 extern void RedispAbsBox ( PtrAbstractBox pAb,
                            PtrDocument pDoc );
-extern void NewDimPicture ( PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
@@ -86,7 +85,6 @@ extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    int view */);
 extern void RedispAbsBox (/* PtrAbstractBox pAb,
                              PtrDocument pDoc */);
-extern void NewDimPicture (/* PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

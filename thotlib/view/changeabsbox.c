@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1061,7 +1061,7 @@ PtrDocument         pDoc;
    else if (pAbbox1->AbHeight.DimAbRef == pRef)
      {
 	pDimAb = &pAbbox1->AbHeight;
-	pDimAb->DimValue = 0;
+	pDimAb->DimValue = -1;
 	pDimAb->DimAbRef = NULL;
 	pDimAb->DimUnit = UnRelative;
 	pDimAb->DimSameDimension = TRUE;
@@ -1094,7 +1094,7 @@ PtrDocument         pDoc;
    else if (pAbbox1->AbWidth.DimAbRef == pRef)
      {
 	pDimAb = &pAbbox1->AbWidth;
-	pDimAb->DimValue = 0;
+	pDimAb->DimValue = -1;
 	pDimAb->DimAbRef = NULL;
 	pDimAb->DimUnit = UnRelative;
 	pDimAb->DimSameDimension = TRUE;

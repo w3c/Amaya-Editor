@@ -56,7 +56,7 @@
 54 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
 55 Domaine: %s
 56 Serveur: %s
-57 Éditeur/Navigateur
+57 Editeur/Navigateur
 58 Délai expiré - le serveur n'a pas répondu
 59 %s existe déjà. Forcer l'écriture ?
 60 %s a changé. Forcer l'écriture ?
@@ -84,13 +84,13 @@
 82 Il y a %d requêtes en cours
 83 Pas de fichier CSS possible
 84 Interrompre le chargement
-85 Document précédent
+85 Document precedent
 86 Document suivant
 87 Recharger
 88 Sauver
 89 Imprimer
 90 Chercher
-91 Mise en évidence
+91 Mise en evidence
 92 Important
 93 Fonte fixe
 94 no-repeat
@@ -99,8 +99,8 @@
 97 Titre niveau 2
 98 Titre niveau 3
 99 Liste
-100 Liste numérotée
-101 Liste de définitions
+100 Liste numerotee
+101 Liste de definitions
 102 Lien
 103 Table
 104 Le document n'a pas de nom. Sauvé en :

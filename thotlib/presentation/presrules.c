@@ -2389,7 +2389,7 @@ PtrDocument         pDoc;
    /* on met a priori les valeurs correspondant a une dimension */
    /* egale a celle du contenu. */
    pdimAb->DimIsPosition = FALSE;
-   pdimAb->DimValue = 0;
+   pdimAb->DimValue = -1;
    pdimAb->DimAbRef = NULL;
    pdimAb->DimUnit = pPRule->PrDimRule.DrUnit;
    pdimAb->DimSameDimension = TRUE;
@@ -2438,7 +2438,7 @@ PtrDocument         pDoc;
 	/* dimension du contenu */
 	*appl = TRUE;
 	/* les valeurs mises a priori conviennent */
-	pdimAb->DimValue = pDRule->DrValue;
+	pdimAb->DimValue = -1;
      }
    else
      {
@@ -4182,169 +4182,4 @@ PtrDocument         pDoc;
     pDoc->DocViewModifiedAb[pAb->AbDocView - 1] = Enclosing (pAb, pDoc->DocViewModifiedAb[pAb->AbDocView - 1]);
   else
     pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1]);
-}
-
-
-
-/*----------------------------------------------------------------------
-   	NewDimPicture fixe les dimensions d'un pave-image  lorsque	
-   		le driver d'image ne sait pas donner une dimension a	
-   		cette image. C'est le cas lorsqu'on ne tient pas compte	
-   		de la cropping frame  (pour le CGM, par exemple.)	
-   		Cette fonction fait le meme travail que NewDimension	
-   		sans reafficher le document a la fin, laissant ce	
-   		travail au driver d'images.				
-   		On traite le cas ou une IMAGE est dimensionnee par son	
-   		contenu comme si c'etait une dimension fixe.		
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewDimPicture (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                NewDimPicture (pAb)
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
-{
-   ThotBool            IsNew, ok;
-   PtrPRule            pPRuleDimH, pPRuleDimV, pR, pRStd;
-   PtrPSchema          pSPR;
-   PtrSSchema          pSSR;
-   PtrDocument         pDoc;
-   PtrElement          pEl;
-   PtrAttribute        pAttr;
-   int                 height, width;
-   int                 frame[MAX_VIEW_DOC];
-   int                 viewSch;
-   PtrAbstractBox      pAbb;
-   int                 viewDoc;
-   ThotBool            stop;
-   int                 view;
-
-   pPRuleDimH = NULL;
-   pPRuleDimV = NULL;
-   /* nettoie la table des frames a reafficher */
-   for (viewDoc = 1; viewDoc <= MAX_VIEW_DOC; viewDoc++)
-      frame[viewDoc - 1] = 0;
-   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
-   pDoc = DocumentOfElement (pEl);	/* le document auquel appartient le pave */
-   view = pAb->AbDocView;	/* la vue concernee */
-   viewSch = AppliedView (pEl, NULL, pDoc, view);	/* type de cette vue dans le schema P */
-
-   /* les deltas de dimension que l'on va appliquer sont ceux 
-      de la boite par defaut avec laquelle on a cree l'image */
-   height = pAb->AbBox->BxH;
-   width = pAb->AbBox->BxW;
-
-   /* traite le changement de largeur */
-
-   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
-   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
-   ok = FALSE;
-   if (!pRStd->PrDimRule.DrPosition)
-      if (pRStd->PrDimRule.DrRelation == RlEnclosed)
-	 /* largeur du contenu */
-	 if (pAb->AbLeafType == LtPicture)
-	    ok = TRUE;
-
-   if (ok)
-     {
-	/* cherche si l'element a deja une regle de largeur specifique */
-	pPRuleDimH = SearchPresRule (pEl, PtWidth, 0, &IsNew, pDoc, view);
-	if (IsNew)
-	   /* on a cree' une regle de largeur pour l'element */
-	  {
-	     pR = pPRuleDimH->PrNextPRule;	/* on recopie la regle standard */
-	     *pPRuleDimH = *pRStd;
-	     pPRuleDimH->PrNextPRule = pR;
-	     pPRuleDimH->PrCond = NULL;
-	     pPRuleDimH->PrViewNum = viewSch;
-	  }
-	pPRuleDimH->PrDimRule.DrAbsolute = TRUE;
-	pPRuleDimH->PrDimRule.DrSameDimens = FALSE;
-	pPRuleDimH->PrDimRule.DrMin = FALSE;
-	pPRuleDimH->PrDimRule.DrUnit = UnPoint;
-	pPRuleDimH->PrDimRule.DrAttr = FALSE;
-
-	/* change la longueur dans la regle specifique */
-	pPRuleDimH->PrDimRule.DrValue = width;
-     }
-
-   /* traite le changement de hauteur de la boite */
-
-   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-   pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
-   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
-   ok = FALSE;
-   if (!pRStd->PrDimRule.DrPosition)
-      if (pRStd->PrDimRule.DrRelation == RlEnclosed)
-	 /* largeur du contenu */
-	 if (pAb->AbLeafType == LtPicture)
-	    ok = TRUE;
-
-   if (ok)
-     {
-	/* cherche si l'element a deja une regle de hauteur specifique */
-	pPRuleDimV = SearchPresRule (pEl, PtHeight, 0, &IsNew, pDoc, view);
-	if (IsNew)
-	   /* on a cree' une regle de hauteur pour l'element */
-	  {
-	     pR = pPRuleDimV->PrNextPRule;	/* on recopie la regle standard */
-	     *pPRuleDimV = *pRStd;
-	     pPRuleDimV->PrNextPRule = pR;
-	     pPRuleDimV->PrCond = NULL;
-	     pPRuleDimV->PrViewNum = viewSch;
-	  }
-	pPRuleDimV->PrDimRule.DrAbsolute = TRUE;
-	pPRuleDimV->PrDimRule.DrSameDimens = FALSE;
-	pPRuleDimV->PrDimRule.DrMin = FALSE;
-	pPRuleDimV->PrDimRule.DrUnit = UnPoint;
-	pPRuleDimV->PrDimRule.DrAttr = FALSE;
-
-	/* change le parametre de la regle */
-	pPRuleDimV->PrDimRule.DrValue = height;
-     }
-
-   /* applique les nouvelles regles de presentation */
-
-   if (pPRuleDimV != NULL || pPRuleDimH != NULL)
-     {
-	for (viewDoc = 1; viewDoc <= MAX_VIEW_DOC; viewDoc++)
-	   if (pEl->ElAbstractBox[viewDoc - 1] != NULL)
-	      /* l'element traite' a un pave dans cette vue */
-	      if (pDoc->DocView[viewDoc - 1].DvSSchema == pDoc->DocView[view - 1].DvSSchema &&
-		  pDoc->DocView[viewDoc - 1].DvPSchemaView == pDoc->DocView[view - 1].DvPSchemaView)
-		 /* c'est une vue de meme type que la vue traitee, on */
-		 /* traite le pave de l'element dans cette vue */
-		{
-		   pAbb = pEl->ElAbstractBox[viewDoc - 1];
-		   /* saute les paves de presentation */
-		   stop = FALSE;
-		   do
-		      if (pAbb == NULL)
-			 stop = TRUE;
-		      else if (!pAbb->AbPresentationBox)
-			 stop = TRUE;
-		      else
-			 pAbb = pAbb->AbNext;
-		   while (!stop);
-
-		   if (pAbb != NULL)
-		     {
-			/* applique la nouvelle regle specifique Horizontale */
-			if (pPRuleDimH != NULL)
-			   if (ApplyRule (pPRuleDimH, pSPR, pAbb, pDoc, pAttr))
-			      pAbb->AbWidthChange = TRUE;
-			/* applique la nouvelle regle specifique Verticale */
-			if (pPRuleDimV != NULL)
-			   if (ApplyRule (pPRuleDimV, pSPR, pAbb, pDoc, pAttr))
-			      pAbb->AbHeightChange = TRUE;
-
-			RedispAbsBox (pAbb, pDoc);	/* indique le pave a reafficherv */
-			if (!AssocView (pEl))
-			   frame[viewDoc - 1] = pDoc->DocViewFrame[viewDoc - 1];
-			else
-			   frame[viewDoc - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		     }
-		}
-     }
 }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2000,8 +2000,8 @@ int              *max;
        if (!found && ok && pParentAb != NULL)
 	 {
 	   /* it's not the root box */
-	   if ((horizRef && pAb->AbWidth.DimValue == 0)
-	       || (!horizRef && pAb->AbHeight.DimValue == 0))
+	   if ((horizRef && pAb->AbWidth.DimValue < 0)
+	       || (!horizRef && pAb->AbHeight.DimValue < 0))
 	     ok = FALSE;
 	 }
      }
