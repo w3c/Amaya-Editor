@@ -377,7 +377,7 @@ ThotBool            extendSel;
 	       case 2:	/* Forward one character (^F) */
 		 if (pBox != NULL)
 		   {
-		     if (extendSel && !LeftExtended)
+		     if (!extendSel || !LeftExtended)
 		       {
 			 pBox = pViewSelEnd->VsBox;
 			 x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
@@ -434,14 +434,16 @@ ThotBool            extendSel;
 	       case 7:	/* Next line (^N) */
 		 if (pBox != NULL)
 		   {
+		     /*******/
 		     if (extendSel)
 		       {
 			 RightExtended = TRUE;
-			 pBox = pViewSelEnd->VsBox;
 		       }
+		     pBox = pViewSelEnd->VsBox;
+		     x = pViewSelEnd->VsXPos + pBox->BxXOrg - pFrame->FrXOrg;
 		     y = pBox->BxYOrg + pBox->BxHeight;
 		     yDelta = 10;
-		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
+		     LocateLeafBox (frame, x, y, 0, yDelta, NULL, extendSel);
 		     ok = FALSE;
 		   }
 		 else

@@ -38,9 +38,9 @@ Extensions 2.2:
     asking a user to confirm each redirection.
   - It's now possible to define a shortcut to follow a link or activate a
     form element (menu, submit, reset): the name of the function is DoAction
-    and the default shortcut is Alt Return.
+    and the default shortcut is "Alt Return".
   - A new command "Link previous target" allows one to create a link to the
-    latest created target.
+    latest created target. The default shortcut is "Ctrl Shif L".
 
 * A mechanism of templates allows you to experiment templates provided by
   the W3C server or to install your own template server.
@@ -54,6 +54,10 @@ Fixed bugs 2.2:
     that button is pressed, the action is cancelled.
   - Improvement of attribute menus.
   - There was a confusion in the button updates.
+  - With an extended selection the right arrow and the bottom arrow moved
+    the selection relatively to the beginning of the selection instead of
+    the end.
+  - Empty Math boxes were not displayed on Windows platforms.
 
 * CSS:
   - When the color was invalid Amaya used the black. Now the CSS rule is
