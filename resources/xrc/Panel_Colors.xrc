@@ -23,7 +23,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_LABEL_TITLE">
-                          <label>_Colors_</label>
+                          <label>*Colors*</label>
                           <style>wxALIGN_CENTRE</style>
                         </object>
                         <option>1</option>
@@ -63,7 +63,7 @@
                                       <pos>0,26</pos>
                                       <size>24,24</size>
                                       <style>wxNO_BORDER</style>
-                                      <tooltip>_Black and white_</tooltip>
+                                      <tooltip>*Deault colors*</tooltip>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">
                                       <bitmap>../icons/black_white.png</bitmap>
@@ -75,7 +75,7 @@
                                       <pos>40,0</pos>
                                       <size>24,24</size>
                                       <style>wxNO_BORDER</style>
-                                      <tooltip>_Switch colors_</tooltip>
+                                      <tooltip>*Switch colors*</tooltip>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BMP_SWITCHCOLORS">
                                       <bitmap>../icons/switch_colors.png</bitmap>
@@ -85,17 +85,17 @@
                                     <object class="wxBitmapButton" name="wxID_BUTTON_BGCOLOR">
                                       <pos>24,20</pos>
                                       <size>40,30</size>
-                                      <tooltip>_Background_</tooltip>
+                                      <tooltip>*Background*</tooltip>
                                       <bitmap>../icons/empty.gif</bitmap>
                                     </object>
                                     <object class="wxBitmapButton" name="wxID_BUTTON_FGCOLOR">
                                       <pos>0,0</pos>
                                       <size>40,30</size>
-                                      <tooltip>_Foreground_</tooltip>
+                                      <tooltip>*Foreground*</tooltip>
                                       <bitmap>../icons/empty.gif</bitmap>
                                     </object>
                                   </object>
-                                  <flag>wxALL|wxEXPAND</flag>
+                                  <flag>wxTOP|wxBOTTOM|wxLEFT|wxEXPAND</flag>
                                   <border>4</border>
                                 </object>
                                 <object class="sizeritem">
@@ -103,20 +103,20 @@
                                     <orient>wxVERTICAL</orient>
                                     <object class="sizeritem">
                                       <object class="wxButton" name="wxID_MODIFYCOLOR">
-                                        <label>_Modi_</label>
+                                        <label>*Apply*</label>
                                         <style></style>
                                       </object>
                                       <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
                                       <object class="wxButton" name="wxID_GETCOLOR">
-                                        <label>_Get_</label>
+                                        <label>*Get*</label>
                                       </object>
                                       <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                   </object>
                                   <option>1</option>
-                                  <flag>wxALL|wxEXPAND</flag>
+                                  <flag>wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND</flag>
                                   <border>4</border>
                                 </object>
                               </object>

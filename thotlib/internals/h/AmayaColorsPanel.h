@@ -31,12 +31,16 @@ public:
   virtual void SendDataToPanel( AmayaPanelParams& params );
   virtual void DoUpdate();
 
+  int ChooseCustomColor( const wxColour & start_colour );
+
  protected:
   DECLARE_EVENT_TABLE()
   void OnModifyColor( wxCommandEvent& event );
   void OnGetColor( wxCommandEvent& event );
   void OnDefaultColors( wxCommandEvent& event );
   void OnSwitchColors( wxCommandEvent& event );
+  void OnChooseBGColor( wxCommandEvent& event );
+  void OnChooseFGColor( wxCommandEvent& event );
 
   int m_ThotBGColor;
   int m_ThotFGColor;
@@ -44,6 +48,9 @@ public:
   wxBitmap m_Bitmap_Empty;
   wxBitmap m_Bitmap_DefaultColor;
   wxColour m_Color_ButtonBG;
+
+  // custom color palette
+  wxColourData m_ColourData;
 };
 
 #endif // __AMAYACOLORSPANEL_H__

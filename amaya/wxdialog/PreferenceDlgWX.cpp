@@ -752,7 +752,7 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
 	p_combo->Append( TtaConvMessageToWX(color_string) );
 	p_combo->SetValue( TtaConvMessageToWX(color_string) );
 #ifdef _WINDOWS
-	// on windows, the TextChanged event is note generated automaticaly when SetValue is called
+	// on windows, the TextChanged event is not generated automaticaly when SetValue is called
 	// just simulate it.
 	wxCommandEvent event;
 	OnColorTextChanged(event);

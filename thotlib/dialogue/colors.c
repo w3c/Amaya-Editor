@@ -68,7 +68,7 @@ static ThotGC       GCkey;
 #endif /* _WINGUI */
 static int          LastBg;
 static int          LastFg;
-static int          FgColor, BgColor;
+static int          FgColor = -1, BgColor = -1; /* init fg/bg colors with default color */
 static ThotBool     applyToSelection = TRUE;
 
 #ifdef _WINGUI
@@ -1359,6 +1359,10 @@ void TtcChangeColors (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
 { 
+#ifdef _WX
+  wxASSERT_MSG(false, _T("TODO: implementer TtcGetPaletteColors"));
+#endif /* _WX */
+
 #ifdef _WINGUI
     PalMessageSet1 = palType;
     FgColor = BgColor = -1;

@@ -2,7 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
-#include "wx/tglbtn.h"
+#include "wx/colordlg.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -60,6 +60,9 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
   m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
   m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
+
+  // on windows, the color selector dialog must be complete.
+  m_ColourData.SetChooseFull(true);
 
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
@@ -205,7 +208,6 @@ void AmayaColorsPanel::DoUpdate()
   ThotUpdatePalette();
 }
 
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaColorsPanel
@@ -218,6 +220,66 @@ bool AmayaColorsPanel::IsActive()
   return AmayaSubPanel::IsActive();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  OnChooseFGColor
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaColorsPanel::OnChooseFGColor( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaColorsPanel::OnChooseFGColor") );
+
+  wxColour * p_fg_colour   = ColorPixel(m_ThotFGColor);
+  wxColour   start_colour  = p_fg_colour ? *p_fg_colour : wxColour();
+  int thot_col = ChooseCustomColor( start_colour );
+  if (thot_col >= 0)
+    ThotSelectPalette (m_ThotBGColor, thot_col);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  OnChooseBGColor
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaColorsPanel::OnChooseBGColor( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaColorsPanel::OnChooseBGColor") );
+  
+  wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
+  wxColour start_colour  = p_bg_colour ? *p_bg_colour : wxColour();
+  int thot_col = ChooseCustomColor( start_colour );
+  if (thot_col >= 0)
+    ThotSelectPalette (thot_col, m_ThotFGColor);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  ChooseCustomColor
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaColorsPanel::ChooseCustomColor( const wxColour & start_colour )
+{
+  wxLogDebug( _T("AmayaColorsPanel::ChooseCustomColor") );
+  m_ColourData.SetColour( start_colour );
+
+  // open the color dialog and ask user to select a color.
+  wxColourDialog dialog(this, &m_ColourData);
+  if (dialog.ShowModal() == wxID_OK)
+  {
+    m_ColourData = dialog.GetColourData();
+    wxColour col = m_ColourData.GetColour();
+    return TtaGetThotColor (col.Red(), col.Green(), col.Blue());
+  }
+  else
+    return -1;
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -227,6 +289,8 @@ BEGIN_EVENT_TABLE(AmayaColorsPanel, AmayaSubPanel)
   EVT_BUTTON( XRCID("wxID_GETCOLOR"),    AmayaColorsPanel::OnGetColor ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_DEFAULTCOLORS"), AmayaColorsPanel::OnDefaultColors ) 
   EVT_BUTTON( XRCID("wxID_BUTTON_SWITCHCOLORS"),  AmayaColorsPanel::OnSwitchColors ) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_FGCOLOR"),  AmayaColorsPanel::OnChooseFGColor ) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_BGCOLOR"),  AmayaColorsPanel::OnChooseBGColor ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
