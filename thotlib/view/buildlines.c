@@ -3201,9 +3201,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* space added at the top and bottom of the paragraph */
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
   standard = (spacing >= 0);
-  /*if (spacing > 0)
-    spacing /= 2;
-    else*/
   spacing = 0;
   width = pBox->BxW;
   if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
@@ -3247,8 +3244,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  *height = prevLine->LiYOrg + prevLine->LiHeight - top;
 	  pBoxToBreak = prevLine->LiLastPiece;
 	  pNextBox = prevLine->LiLastBox;
-	  if (pBoxToBreak && pBoxToBreak->BxNexChild &&
-	      pBoxToBreak->BxNexChild->BxNChars > 0)
+	  if (pBoxToBreak && pBoxToBreak->BxNexChild)
 	    pBoxToBreak = pBoxToBreak->BxNexChild;
 	  else
 	    {
@@ -3426,17 +3422,13 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    pNextBox = NULL;
 	  
 	  /* is there a breaked box */
-	  if (pBoxToBreak != NULL)
+	  if (pBoxToBreak)
 	    {
 	    /* is it empty ? */
 	    if (pBoxToBreak->BxNChars > 0)
 	      pNextBox = pLine->LiLastBox;
-	    else
-	      {
-		 if (pNextBox == NULL)
-		   pNextBox = pLine->LiLastBox;
-		pBoxToBreak = NULL;
-	      }
+	    else if (pNextBox == NULL)
+	      pNextBox = pLine->LiLastBox;
 	    }
 
 	  if (full)
