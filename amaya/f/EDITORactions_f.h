@@ -201,6 +201,8 @@ extern void DeleteAnchor ( Document doc,
                            View view );
 extern void FlushCache ( Document doc,
                          View view );
+extern void ConfigAmaya ( Document doc,
+                          View view );
 extern void ConfigColor ( Document doc,
                           View view );
 extern void ConfigGeometry ( Document doc,
@@ -465,6 +467,8 @@ extern void DeleteAnchor ( Document doc,
                              View view );
 extern void FlushCache ( Document doc,
                            View view );
+extern void ConfigAmaya ( Document doc,
+                            View view );
 extern void ConfigColor ( Document doc,
                             View view );
 extern void ConfigGeometry ( Document doc,

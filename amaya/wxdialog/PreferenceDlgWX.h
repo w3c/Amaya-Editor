@@ -62,10 +62,15 @@ private:
   void OnColorChanged( wxCommandEvent& event );
   void OnColorTextChanged( wxCommandEvent& event );
 
-  // "Geometryr" tab
+  // "Geometry" tab
   void SetupLabelDialog_Geometry();
   void OnGeomSave( wxCommandEvent& event );
   void OnGeomRestor( wxCommandEvent& event );
+
+  // "LanNeg" tab 
+  void SetupLabelDialog_LanNeg();
+  void SetupDialog_LanNeg( const Prop_LanNeg & prop );
+  Prop_LanNeg GetValueDialog_LanNeg();
 
   int GetPagePosFromXMLID( const wxString & xml_id );
 

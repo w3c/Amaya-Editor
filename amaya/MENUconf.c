@@ -370,7 +370,14 @@ static AM_WIN_MenuText WIN_LanNegMenuText[] =
 };
 #endif /* _WINGUI */
 static int      LanNegBase;
+
+#ifndef _WINGUI
+static Prop_LanNeg GProp_LanNeg;
+static char *    LanNeg = GProp_LanNeg.LanNeg;
+#else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
 static char     LanNeg[MAX_LENGTH];
+#endif /* _WINGUI*/
 
 /* Profile menu options */
 #ifdef _WINGUI
@@ -5254,6 +5261,31 @@ Prop_Color GetProp_Color()
   return prop;
 #endif /* _WX */
 }
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (LanNeg preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_LanNeg( const Prop_LanNeg * prop )
+{
+#ifdef _WX
+  GProp_LanNeg = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (LanNeg preferences)
+  ----------------------------------------------------------------------*/
+Prop_LanNeg GetProp_LanNeg()
+{
+#ifdef _WX
+  return GProp_LanNeg;
+#else /* _WX */
+  Prop_LanNeg prop;
+  memset(&prop, 0, sizeof(Prop_LanNeg) );
+  return prop;
+#endif /* _WX */
+}
+
 /*----------------------------------------------------------------------
   PreferenceMenu
   Build and display the preference dialog
@@ -5290,6 +5322,9 @@ void PreferenceMenu (Document document, View view)
 
   /* ---> Geometry Tab */   
   GeometryDoc = document;
+
+  /* ---> LanNeg Tab */
+  GetLanNegConf ();
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),

@@ -163,5 +163,9 @@ typedef struct Prop_Color_t
   char     MenuBgColor[MAX_LENGTH];
 } Prop_Color;
 
+typedef struct Prop_LanNeg_t
+{
+  char     LanNeg[MAX_LENGTH];
+} Prop_LanNeg;
 
 #endif /* _MENUCONF.h */

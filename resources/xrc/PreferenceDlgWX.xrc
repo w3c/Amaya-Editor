@@ -770,6 +770,34 @@
           <size>750,350</size>
           <style>wxNB_LEFT</style>
           <focused>1</focused>
+          <object class="notebookpage">
+            <label>Negociation de langues</label>
+            <object class="wxPanel" name="wxID_PAGE_LANNEG">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
+                        <label>Liste des langues preferees comme fr en   :</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_LANNEGLISTLG"/>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+              </object>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>

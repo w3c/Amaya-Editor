@@ -63,6 +63,8 @@ extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
 extern void SetProp_Color ( const Prop_Color * prop );
 extern Prop_Color GetProp_Color ( void );
+extern void SetProp_LanNeg ( const Prop_LanNeg * prop );
+extern Prop_LanNeg GetProp_LanNeg ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -126,6 +128,8 @@ extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
 extern void SetProp_Color ( const Prop_Color * prop );
 extern Prop_Color GetProp_Color ( void );
+extern void SetProp_LanNeg ( const Prop_LanNeg * prop );
+extern Prop_LanNeg GetProp_LanNeg ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

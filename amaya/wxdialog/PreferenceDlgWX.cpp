@@ -84,6 +84,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Proxy();
   SetupLabelDialog_Color();
   SetupLabelDialog_Geometry();
+  SetupLabelDialog_LanNeg();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -96,9 +97,10 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_Cache( GetProp_Cache() );
   SetupDialog_Proxy( GetProp_Proxy() );
   SetupDialog_Color( GetProp_Color() );
+  SetupDialog_LanNeg( GetProp_LanNeg() );
 
   // give focus to ...
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+  //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
 
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
@@ -856,6 +858,63 @@ void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 2);
 }
 
+
+/************************************************************************/
+/* LanNeg tab                                                           */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_LanNeg init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_LanNeg()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_LanNeg") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_LANNEG") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_LANNEG_MENU)) );
+
+  XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_LanNeg send init value to dialog 
+  params:
+    + const Prop_LanNeg & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_LanNeg( const Prop_LanNeg & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_LanNeg") );
+
+  XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_LanNeg get dialog values
+  params:
+  returns:
+    + Prop_LanNeg prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_LanNeg PreferenceDlgWX::GetValueDialog_LanNeg()
+{
+  wxString        value;
+  Prop_LanNeg     prop;
+  memset( &prop, 0, sizeof(Prop_LanNeg) );
+
+  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_LanNeg") );
+
+  value = XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG",  wxTextCtrl)->GetValue();
+  strcpy( prop.LanNeg, (const char*)value.mb_str(wxConvUTF8) );
+
+  return prop;
+}
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -886,6 +945,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   Prop_Color prop_color = GetValueDialog_Color();
   SetProp_Color( &prop_color );
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 1);
+
+  Prop_LanNeg prop_lan = GetValueDialog_LanNeg();
+  SetProp_LanNeg( &prop_lan );
+  ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -937,6 +1000,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY")) )
     {
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_LANNEG")) )
+    {
+      ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_LanNeg( GetProp_LanNeg() );
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -955,6 +1023,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
