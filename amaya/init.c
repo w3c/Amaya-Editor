@@ -1903,6 +1903,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
    
    if (reinitialized || !isOpen)
      {
+     TtaSetItemOff (doc, 1, File, BLatinReading);
      /* now update menus and buttons according to the document status */
      if ((DocumentTypes[doc] == docText ||
 	  DocumentTypes[doc] == docCSS ||
