@@ -107,7 +107,7 @@ extern LPCTSTR   iconID;
 extern UINT      subMenuID [MAX_FRAME];
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
-extern void CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, int, STRING);
+extern void CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, STRING);
 extern void CreateAlign1DlgWindow (HWND, int);
 extern void CreateAlign2DlgWindow (HWND, int);
 
@@ -274,22 +274,6 @@ PtrAttribute        currAttr;
    }
 #  ifndef _WINDOWS 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
-#ifdef 0  /* a supprimer */
-   /* construction du menu alphabet */
-   ptr = &bufMenu[0];
-   nbItem = 0;
-   nbLanguages = TtaGetFirstUserLanguage ();
-   for (language = 0; language < nbLanguages; language++)
-     {
-	ustrcpy (string, TtaGetLanguageName (language));
-	length = ustrlen (string);
-	if (length > 0)
-	  {
-	    nbItem++;
-	    usprintf(ptr, "T%s", string);
-	    ptr += length + 2;
-	  }
-     }
    TtaNewSubmenu (NumMenuAlphaLanguage, NumFormLanguage, 0 ,TtaGetMessage (LIB, TMSG_CHAR_ENCODING), nbItem, bufMenu, NULL, TRUE);
    TtaSetMenuForm (NumMenuAlphaLanguage, MenuAlphaLangValue);	      
 #endif /* a supprimer */

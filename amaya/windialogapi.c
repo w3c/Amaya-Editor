@@ -128,7 +128,6 @@ static int          fontNum;
 static int          fontStyle;
 static int          fontUnderline;
 static int          fontSize;
-static int          NumMenuAlphabetLanguage;
 static int          baseDoc;
 static int          formDoc;
 static int          docSelect;
@@ -857,9 +856,9 @@ BOOL* close_dont_save;
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLanguageDlgWindow (HWND parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int nmenuLanguage, int lang_value, STRING curLang)
+void CreateLanguageDlgWindow (HWND parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int lang_value, STRING curLang)
 #else  /* !__STDC__ */
-void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, nmenuLanguage, lang_value, curLang)
+void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, lang_value, curLang)
 HWND  parent;
 STRING title;
 STRING msg1;
@@ -877,7 +876,6 @@ STRING curLang;
   sprintf (winCurLang, curLang);
   langList                = lang_list;
   nbItem                  = (UINT)nb_item;
-  NumMenuAlphabetLanguage = nmenuLanguage;
   LangValue               = lang_value;
   
   switch (app_lang)
@@ -2861,22 +2859,6 @@ LPARAM lParam;
       
       switch (LOWORD (wParam))
 	{
-	case IDC_ISO_LATIN_1:
-	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)0);
-	  break;
-	  
-	case IDC_ISO_LATIN_2:
-	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)1);
-	  break;
-	  
-	case IDC_ISO_LATIN_9:
-	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)2);
-	  break;
-	  
-	case IDC_SYMBOL_ENCOD:
-	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)3);
-	  break;
-	  
 	case ID_APPLY:
 	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
 	  EndDialog (hwnDlg, ID_APPLY);
