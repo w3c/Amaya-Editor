@@ -323,6 +323,20 @@ if test "$with_insure" = "yes" ; then
 fi
 
 dnl
+dnl Adjust the CFLAGS depending on the host and compiler
+dnl Thot NEED unsigned chars !!!
+dnl
+
+if test "${CC}" = "gcc" ; then
+  CFLAGS="${CFLAGS} -Wall "
+  case "${host}" in
+      *-*-irix5* | *-*irix6* )
+         CFLAGS="${CFLAGS} -fsigned-char"
+      ;;
+  esac
+fi
+
+dnl
 dnl Check for availability of amaya and thot editor sources
 dnl
 

@@ -6082,6 +6082,16 @@ if test "$with_insure" = "yes" ; then
 fi
 
 
+if test "${CC}" = "gcc" ; then
+  CFLAGS="${CFLAGS} -Wall "
+  case "${host}" in
+      *-*-irix5* | *-*irix6* )
+         CFLAGS="${CFLAGS} -fsigned-char"
+      ;;
+  esac
+fi
+
+
 # Check whether --with-thot or --without-thot was given.
 if test "${with_thot+set}" = set; then
   withval="$with_thot"
