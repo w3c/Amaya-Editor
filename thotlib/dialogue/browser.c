@@ -278,6 +278,6 @@ int                 fileRef;
 	  }
      }
 #  else /*_WINDOWS */
-   WIN_ListDirectory (dirRef, formRef, aDirectory, suffix);
+  /* WIN_ListDirectory (dirRef, formRef, aDirectory, suffix);	   */
 #  endif /* _WINDOWS */
 }

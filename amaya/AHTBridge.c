@@ -29,32 +29,6 @@
 extern ThotAppContext app_cont;
 #endif
 
-#if 0
-#ifdef _WINDOWS
-static HWND HTSocketWin;
-static unsigned long HTwinMsg;
-
-#ifdef __GNUC__
-#define WSADESCRIPTION_LEN      256
-#define WSASYS_STATUS_LEN       128
-#define DESIRED_WINSOCK_VERSION 0x0101  /* we'd like winsock ver 1.1... */
-#define MINIMUM_WINSOCK_VERSION 0x0101  /* ...but we'll take ver 1.1 :) */
-
-typedef struct WSAData {
-        WORD                    wVersion;
-        WORD                    wHighVersion;
-        char                    szDescription[WSADESCRIPTION_LEN+1];
-        char                    szSystemStatus[WSASYS_STATUS_LEN+1];
-        unsigned short          iMaxSockets;
-        unsigned short          iMaxUdpDg;
-        char FAR *              lpVendorInfo;
-} WSADATA;
-
-typedef WSADATA FAR *LPWSADATA;
-#endif /* __GNUC__ */
-#endif /* _WINDOWS */
-#endif /* 0 */
-
 /*
  * Private functions
  */
@@ -66,7 +40,7 @@ static void         RequestKillWriteXtevent (AHTReqContext *);
 static void         RequestRegisterExceptXtevent (AHTReqContext *, SOCKET);
 static void         RequestKillExceptXtevent (AHTReqContext *);
 
-#else
+#else /* __STDC__ */
 static void         RequesAddReadXtevent ();
 static void         RequestKillReadXtevent ();
 static void         RequesAddWriteXtevent ();
@@ -74,7 +48,7 @@ static void         RequestKillWriteXtevent ();
 static void         RequestRegisterExceptXtevent ();
 static void         RequestKillExceptXtevent ();
 
-#endif
+#endif /* __STDC__ */
 
 #ifdef _WINDOWS
 static void         WIN_ResetMaxSock (void);

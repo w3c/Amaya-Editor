@@ -121,6 +121,7 @@ char               *pathname;
 
 #endif
 {
+#  ifndef _WINDOWS
    char             buffer[3000];
    char             s[MAX_LENGTH];
    int              i;
@@ -163,6 +164,9 @@ char               *pathname;
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#  else /* _WINDOWS */
+   WIN_ListSaveDirectory (BaseDialog + DirSave, BaseDialog + SaveForm, DirectoryName, ScanFilter);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

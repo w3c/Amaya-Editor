@@ -201,7 +201,7 @@ int                 msgNumber;
 	  }
 
 	/* Charge les messages */
-	while (((fscanf (file, "%d %[^#\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
+	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
 	  {
 	     s = (char *) TtaGetMemory (strlen (pBuffer) + 1);
 	     strcpy (s, AsciiTranslate (pBuffer));

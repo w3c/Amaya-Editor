@@ -2278,7 +2278,7 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #            else  /* _WINDOWS */
              vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
-                                   0, 0, 0, 0, Main_Wd, (HMENU) frame + 1, hInstance, NULL) ;
+                                   0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL) ;
 
              SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
              SetScrollPos (vscrl, SB_CTL, 0, FALSE) ;

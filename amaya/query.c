@@ -1570,7 +1570,9 @@ boolean error_html;
 	else
 	  status = HT_OK;
 
+#   ifndef _WINDOWS
 	AHTReqContext_delete (me);
+#   endif /* _WINDOWS */
      }
    else
      {

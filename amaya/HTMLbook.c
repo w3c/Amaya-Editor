@@ -377,6 +377,7 @@ Document            document;
 View                view;
 #endif
 {
+#  ifndef _WINDOWS
    char             bufMenu[MAX_LENGTH];
    int              i;
 
@@ -435,7 +436,10 @@ View                view;
      }
 
    /* activates the Print form */
-   TtaShowDialogue (basePrint+NumFormPrint, FALSE);
+    TtaShowDialogue (basePrint+NumFormPrint, FALSE);
+#   else  /* _WINDOWS */
+    MessageBox(NULL, "Not yet supported.", "Setup and print", MB_ICONINFORMATION); 
+#   endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

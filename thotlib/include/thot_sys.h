@@ -28,7 +28,8 @@
 #include "sysdep.h"
 
 #if defined(_WINDOWS) || defined(_CONSOLE)
-
+#include <errno.h>
+#include <limits.h>
 /*
  * MS-Windows platform.
  */

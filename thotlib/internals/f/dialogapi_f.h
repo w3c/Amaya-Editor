@@ -6,7 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+#ifndef _WINDOWS
 extern void DebugBreak ( void );
+#endif /* _WINDOWS */
 extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
 extern void TtaInitDialogue ( char *server,

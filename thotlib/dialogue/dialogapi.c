@@ -236,6 +236,14 @@ int                 WIN_DesY;	/* Position Y of the selection      */
 int                 WIN_DesReturn;	/* Selection indicator              */
 unsigned char*      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
+extern char         docToOpen [256];
+
+#ifdef  APPFILENAMEFILTER
+#       undef  APPFILENAMEFILTER
+#endif  /* APPFILENAMEFILTER */
+
+#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
+
 
 void terminate__Fv (void) {
 }
@@ -286,28 +294,6 @@ const char* text;
     if (*pText == '\0')
        return TRUE;
     return FALSE;
-}
-
-#ifdef __STDC__
-void WIN_ListDirectory (int ref, int parentRef, char* directory, char* suffix)
-#else  /* __STDC__ */
-void WIN_ListDirectory (ref, parentRef, directory, suffix)
-int   ref; 
-int   parentRef; 
-char* directory; 
-char* suffix;
-#endif /* __STDC__ */
-{
-   struct Cat_Context *parentCatalogue = CatEntry (parentRef);
-   char*               dirPath = (char*) TtaGetMemory (strlen (directory) + strlen (suffix) + 2) ;
-   HWND                hWnd;
-
-   hWnd = CreateWindow ("listbox", NULL, WS_CHILDWINDOW | WS_VISIBLE | LBS_STANDARD,
-			10, cyValue, 140, 100, parentCatalogue->Cat_Widget, (HMENU) 1, hInstance, NULL);
-   cyValue += 110;
-   sprintf (dirPath, "*%s", suffix);
-   /* sprintf (dirPath, "%s%c*.*", directory, DIR_SEP); */
-   SendMessage (hWnd, LB_DIR, 0x37, (LPARAM) suffix);
 }
 
 /*----------------------------------------------------------------------
@@ -2325,6 +2311,113 @@ int                 ref;
    else
       return (catval);
 }
+
+/*----------------------------------------------------------------------
+  WIN_ListOpenDirectory
+  ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+void WIN_ListOpenDirectory (int ref, int parentRef, char* directory, char* suffix)
+#else  /* __STDC__ */
+void WIN_ListOpenDirectory (ref, parentRef, directory, suffix)
+int   ref; 
+int   parentRef; 
+char* directory; 
+char* suffix;
+#endif /* __STDC__ */
+{
+    static OPENFILENAME OpenFileName;
+
+    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
+    char*               dirPath = (char*) TtaGetMemory (strlen (directory) + strlen (suffix) + 2) ;
+ 	char                szFilter[] = APPFILENAMEFILTER;
+	char                szFileName[256];
+
+    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
+    OpenFileName.hInstance         = hInstance ; 
+    OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+    OpenFileName.nMaxCustFilter    = 0L; 
+    OpenFileName.nFilterIndex      = 1L; 
+    OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+    OpenFileName.nMaxFile          = 256; 
+/*    OpenFileName.lpstrFileTitle    = szFileTitle; 	 
+    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); */
+    OpenFileName.lpstrInitialDir   = NULL; 
+    OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+    OpenFileName.nFileOffset       = 0; 
+    OpenFileName.nFileExtension    = 0; 
+    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+    OpenFileName.lCustData         = 0; 
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_PATHMUSTEXIST
+                                     | OFN_FILEMUSTEXIST 
+                                     | OFN_HIDEREADONLY; 
+ 
+    if (GetOpenFileName (&OpenFileName)) { 
+	   sprintf (docToOpen, "%s", OpenFileName.lpstrFile);
+    } 
+
+#if 0
+   hWnd = CreateWindow ("listbox", NULL, WS_CHILDWINDOW | WS_VISIBLE | LBS_STANDARD,
+			10, cyValue, 140, 100, parentCatalogue->Cat_Widget, (HMENU) 1, hInstance, NULL);
+   cyValue += 110;
+   sprintf (dirPath, "*%s", suffix);
+   /* sprintf (dirPath, "%s%c*.*", directory, DIR_SEP); */
+   SendMessage (hWnd, LB_DIR, 0x37, (LPARAM) suffix);
+#endif 
+}
+
+/*----------------------------------------------------------------------
+  WIN_ListSaveDirectory
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ListSaveDirectory (int ref, int parentRef, char* directory, char* suffix)
+#else  /* __STDC__ */
+void WIN_ListSaveDirectory (ref, parentRef, directory, suffix)
+int   ref; 
+int   parentRef; 
+char* directory; 
+char* suffix;
+#endif /* __STDC__ */
+{
+	static OPENFILENAME OpenFileName;
+
+    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
+ 	TCHAR               szFilter[] = APPFILENAMEFILTER;
+	TCHAR               szFileName[256];
+	TCHAR               szFileTitle[256];
+
+	szFileName[0] = '\0';
+
+    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
+    OpenFileName.lpstrFilter       = (LPSTR) szFilter;
+    OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+    OpenFileName.nMaxFile          = sizeof (szFileName); 
+    OpenFileName.lpstrFileTitle    = szFileTitle; 
+	OpenFileName.lpstrTitle        = TEXT ("Save File as"); 
+    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
+    OpenFileName.lpstrInitialDir   = NULL; 
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
+
+	/*
+    OpenFileName.hInstance         = hInstance ; 
+    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+    OpenFileName.nMaxCustFilter    = 0L; 
+    OpenFileName.nFilterIndex      = 1L; 
+
+    OpenFileName.nFileOffset       = 0; 
+    OpenFileName.nFileExtension    = 0; 
+    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+    OpenFileName.lCustData         = 0; 
+	*/
+
+    if (GetSaveFileName (&OpenFileName)) { 
+          MessageBox (parentCatalogue->Cat_Widget, TEXT ("Save File as."), OpenFileName.lpstrFile, MB_OK ); 
+    } 
+}
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -5463,7 +5556,7 @@ int                 cattype;
              formulary.Buttons[bIndex] = CreateWindow ("BUTTON", ptr, 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
-                                                       (HMENU) ref + bIndex, hInstance, NULL) ;
+                                                       (HMENU) (ref + bIndex), hInstance, NULL) ;
              bAbsBase += (strSize + 10);
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) bIndex;
 	  } 
@@ -5495,10 +5588,61 @@ int                 cattype;
      }
 }
 
+#ifdef _WINDOWS
+ /*----------------------------------------------------------------------
+   Callback pour un bouton du menu                                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+void WIN_ThotCallBack (hWnd, wParam, lParam)
+HWND   hWnd; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+   struct Cat_Context *catalogue;
+   int                 no = 0;
+   int frame = GetMainFrameNumber (hWnd);
+
+   fprintf (stderr, "Got WIN_ThotCallBack(%X, %X(%d:%d), %X(%d))\n",
+	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
+
+   if (frame != - 1) {
+      catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
+      if (catalogue != NULL)
+	 no = LOWORD (wParam) - catalogue->Cat_Ref;
+      fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
+
+      if (catalogue == NULL)
+	 return;
+
+      switch (catalogue->Cat_Type) {
+             case CAT_PULL:
+	     case CAT_MENU:
+	          CallMenu (no, catalogue, NULL);
+	          break;
+	     case CAT_TMENU:
+	          CallToggle (no, catalogue, NULL);
+	          break;
+	     case CAT_SHEET:
+	          /*
+		   CallSheet (no, catalogue, NULL);
+                   break;
+	           */
+             case CAT_FMENU:
+	          CallRadio (no, catalogue, NULL);
+             default:
+	          fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
+	          break;
+      }
+   }
+
+}
+
 /*-----------------------------------------------------------------------
  ThotDlgProc
  ------------------------------------------------------------------------*/
-#ifdef _WINDOWS
 #ifdef __STDC__
 LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
@@ -7168,56 +7312,3 @@ void                TtaAbortShowDialogue ()
 	  }
      }
 }
-
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-   Callback pour un bouton du menu                                    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-void WIN_ThotCallBack (hWnd, wParam, lParam)
-HWND   hWnd; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-   struct Cat_Context *catalogue;
-   int                 no = 0;
-   int frame = GetMainFrameNumber (hWnd);
-
-   fprintf (stderr, "Got WIN_ThotCallBack(%X, %X(%d:%d), %X(%d))\n",
-	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
-
-   if (frame != - 1) {
-      catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
-      if (catalogue != NULL)
-	 no = LOWORD (wParam) - catalogue->Cat_Ref;
-      fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);
-
-      if (catalogue == NULL)
-	 return;
-
-      switch (catalogue->Cat_Type) {
-             case CAT_PULL:
-	     case CAT_MENU:
-	          CallMenu (no, catalogue, NULL);
-	          break;
-	     case CAT_TMENU:
-	          CallToggle (no, catalogue, NULL);
-	          break;
-	     case CAT_SHEET:
-	          /*
-		   CallSheet (no, catalogue, NULL);
-                   break;
-	           */
-             case CAT_FMENU:
-	          CallRadio (no, catalogue, NULL);
-             default:
-	          fprintf (stderr, "unknown Cat_Type %d\n", catalogue->Cat_Type);
-	          break;
-      }
-   }
-
-}
-#endif
