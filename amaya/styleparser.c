@@ -3730,7 +3730,7 @@ static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
     {
       /* force no-repeat for that background image */
       ptr = "no-repeat";
-      cssRule = ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
+      ParseCSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       /* force realsize for the background image */
       repeat.typed_data.value = REALSIZE;
       repeat.typed_data.unit = UNIT_REL;
