@@ -2524,6 +2524,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
   Menu_Ctl           *ptrmenu;
   int                 frame;
   int                 ref, i;
+  ThotBool            skip = TRUE;
 
   if (doc)
     {
@@ -2538,9 +2539,15 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 		   Prof_ShowMenu (ptrmenu))
 	    {
 	      if (!ptrmenu->MenuAttr)
-		BuildPopdown (ptrmenu, ref,
-			      FrameTable[frame].WdMenus[i], frame, doc,
-			      TRUE, RO);
+		{
+		  /* an horrible patch that skip the menu file */
+		  if (skip)
+		    skip = FALSE;
+		  else
+		    BuildPopdown (ptrmenu, ref,
+				  FrameTable[frame].WdMenus[i], frame, doc,
+				  TRUE, RO);
+		}
 	    }
 	  ptrmenu = ptrmenu->NextMenu;
 	  ref += MAX_ITEM;

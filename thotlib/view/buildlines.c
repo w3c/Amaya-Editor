@@ -1941,7 +1941,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
   extensibleBox = (pBox->BxContentWidth ||
-		   !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum);
+		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
   pNextBox = NULL;
   full = TRUE;
   top = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;

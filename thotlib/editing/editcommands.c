@@ -1494,7 +1494,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 			     ThotBool defaultHeight, ThotBool defaultWidth,
 			     PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
-			     int frame)
+			     int frame, ThotBool notify)
 {
   PtrTextBuffer       pTargetBuffer;
   PtrTextBuffer       pSourceBuffer;
@@ -1648,7 +1648,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	pAb->AbVolume -= charsDelta;
 	BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta,
 		   -adjust, 0, frame, FALSE);
-	CloseTextInsertion ();
+	if (notify)
+	  CloseTextInsertion ();
 	break;
 	
       case LtPicture:
@@ -1704,7 +1705,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   ----------------------------------------------------------------------*/
 static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 			     PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
-			     int frame)
+			     int frame, ThotBool notify)
 {
   PtrTextBuffer       pTargetBuffer;
   ViewFrame          *pFrame;
@@ -1741,7 +1742,7 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
   /* remove the contents of the current selection */
   if (charsDelta > 0)
     RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight,
-		     defaultWidth, pLine, pBox, pAb, frame);
+		     defaultWidth, pLine, pBox, pAb, frame, notify);
 }
 
 
@@ -2304,7 +2305,7 @@ static void         ContentEditing (int editType)
 		    }
 		  else
 		    RemoveSelection (charsDelta, spacesDelta, x, defaultHeight,
-				     defaultWidth, pLine, pBox, pAb, frame);
+				     defaultWidth, pLine, pBox, pAb, frame, TRUE);
 		}
 	      else if ((editType == TEXT_DEL || editType == TEXT_SUP) &&
 		       !FromKeyboard)
@@ -2325,7 +2326,7 @@ static void         ContentEditing (int editType)
 		  }
 		else
 		  DeleteSelection (defaultHeight, defaultWidth, pLine, pBox,
-				   pAb, frame);
+				   pAb, frame, editType != TEXT_SUP);
 	      else if (editType == TEXT_PASTE && !FromKeyboard)
 		{
 		  /* Verifie que l'alphabet du clipboard correspond a celui
@@ -2439,7 +2440,8 @@ static void         ContentEditing (int editType)
 	    /* le pave a disparu entre temps */
 	    return;
 	  
-	  NewContent (pAb);
+	  if (editType != TEXT_SUP)
+	    NewContent (pAb);
 	  if (textPasted)
 	    /* send event TteElemTextModify.Post */
 	    APPtextModify (pAb->AbElement, frame, FALSE);
