@@ -33,8 +33,11 @@ echo "Platform ------->" $MACH
    Amaya/config/*-corrdialogue \
    Amaya/config/*rdf \
    Amaya/config/annot.schemas \
-   Amaya/config/thread.rdf \
-   Amaya/config/replytypes.rdf \
+   Amaya/config/lib_files.dat \
+   Amaya/config/config/libconfig/*.svg \
+   Amaya/config/config/libconfig/*.css \
+   Amaya/config/config/libconfig/*.png \
+   Amaya/config/config/libconfig/*.lhtml \
    Amaya/dicopar/*.dic \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
@@ -56,31 +59,21 @@ echo "Platform ------->" $MACH
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html* \
    Amaya/amaya/*.conf \
-   Amaya/amaya/HTML.STR \
-   Amaya/amaya/HTML.trans \
-   Amaya/amaya/HTML*.PRS \
-   Amaya/amaya/HTML*.TRA \
+   Amaya/amaya/*.STR \
+   Amaya/amaya/*.trans \
+   Amaya/amaya/*.PRS \
+   Amaya/amaya/*.TRA \
    Amaya/amaya/*.en \
    Amaya/amaya/*.gif \
    Amaya/amaya/*.png \
-   Amaya/amaya/XLink.STR \
-   Amaya/amaya/XLink*.PRS \
-   Amaya/amaya/XLink*.TRA \
-   Amaya/amaya/MathML.STR \
-   Amaya/amaya/MathML*.PRS \
-   Amaya/amaya/MathML*.TRA \
-   Amaya/amaya/MathML.trans \
-   Amaya/amaya/SVG.STR \
-   Amaya/amaya/SVG*.PRS \
-   Amaya/amaya/SVG*.TRA \
-   Amaya/amaya/XML.STR \
-   Amaya/amaya/XML*.PRS \
-   Amaya/amaya/XML*.TRA \
-   Amaya/amaya/TextFile.STR \
-   Amaya/amaya/TextFile*.PRS \
-   Amaya/amaya/TextFile*.TRA \
    Amaya/fonts/Families.list \
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
 done
+
+
+
+
+
+
 
