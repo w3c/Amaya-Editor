@@ -45,6 +45,8 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Fri Apr 23 2003 Irene Vatton <Irene.Vatton@w3.org> 
+  Adaptation to redhat 8.0
 * Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
   Adaptation to rpmbuild
 * Mon Sep 16 2002 Irene Vatton <Irene.Vatton@w3.org>
@@ -76,7 +78,7 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-gl --prefix=/usr/share --exec-prefix=/usr 
+../configure --with-gl --prefix=/usr/share --exec=/usr/share 
 #cp Options.orig Options
 make all
 %install
@@ -87,9 +89,8 @@ cd linux
 make install prefix=$RPM_BUILD_ROOT/usr/share
 #cd ..
 %files
-%doc COPYRIGHT README.amaya
-/usr/bin/amaya
-/usr/share/Amaya
+%doc README.amaya
+/usr/share/Amaya/
 %post
 /bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
 %postun
