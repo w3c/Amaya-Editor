@@ -2494,10 +2494,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
    /* install the presentation style */
    cssRule = CheckImportantRule (cssRule, context);
    if (!check && DoApply)
-     {
-       cssRule = CSSCheckEndValue (ptr1, cssRule, "Invalid font-size value");
-       TtaSetStylePresentation (PRSize, element, tsch, context, pval);
-     }
+     TtaSetStylePresentation (PRSize, element, tsch, context, pval);
     if (!check && ptr)
      cssRule = ParseCSSLineHeight (element, tsch, context, &ptr[1], css, isHTML);
    if (linespace)
@@ -2516,8 +2513,10 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 			       PresentationContext context, char *cssRule,
 			       CSSInfoPtr css, ThotBool isHTML)
 {
+  char               *ptr = cssRule;
   cssRule = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
   cssRule = CheckImportantRule (cssRule, context);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid font-size value");
   return cssRule;
 }
 
