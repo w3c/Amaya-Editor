@@ -3702,9 +3702,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
 	      }
 	    else if (!selectedRule[pRule->PrType] ||
-		     RuleHasHigherPriority (pRule, NULL,
-					  selectedRule[pRule->PrType],
-					  schemaOfSelectedRule[pRule->PrType]))
+		     RuleHasHigherPriority (pRule, pSchP,
+					    selectedRule[pRule->PrType],
+					    schemaOfSelectedRule[pRule->PrType]))
 	      {
 		if (pRule->PrSpecifAttr == 0)
 		  /* this rule does not depend on an attribute */
