@@ -899,6 +899,8 @@ ThotBool IsWithParameters (const char *url)
   ----------------------------------------------------------------------*/
 ThotBool IsW3Path (const char *path)
 {
+  if (path == NULL)
+    return FALSE;
   if (strncmp (path, "http:", 5)   && 
       strncmp (path, "ftp:", 4)    &&
       strncmp (path, "telnet:", 7) && 

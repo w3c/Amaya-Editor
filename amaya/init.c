@@ -2038,7 +2038,12 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
       else
 #endif /* _WINDOWS */
       if (name[0] == EOS)
-	strcpy (s, DocumentURLs[doc]);
+	{
+	  if (DocumentURLs[doc])
+	    strcpy (s, DocumentURLs[doc]);
+	  else
+	    s[0] = EOS;
+	}
       else
 	{
 	  strcpy (DirectoryName, s);
