@@ -578,7 +578,7 @@ wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
 
 
 /*----------------------------------------------------------------------
-  TtaWCToMBstring converts a wide character into a multibyte string.
+  TtaWCToMBstring converts a Unicode wide character into a UTF-8 multibyte string.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the dest multibyte string is updated.
   ----------------------------------------------------------------------*/
@@ -603,20 +603,10 @@ int TtaWCToMBstring (wchar_t src, unsigned char **dest)
       nbBytes      = 3;
       leadByteMark = 0xE0;
     }
-  else if (src < 0x200000)
+  else if (src < 0x200000) /* fix this to have the exact top value of plane 16 */
     {
       nbBytes      = 4;
       leadByteMark = 0xF0;
-    }
-  else if (src < 0x4000000)
-    {
-      nbBytes      = 5;
-      leadByteMark = 0xF8;
-    }
-  else if (src < 0x7FFFFFFF)
-    {
-      nbBytes      = 6;
-      leadByteMark = 0xFC;
     }
   else
     {
@@ -628,12 +618,6 @@ int TtaWCToMBstring (wchar_t src, unsigned char **dest)
   *dest = mbcptr;
   switch (nbBytes)
     {
-    case 6:
-      *--mbcptr = (src | 0x80) & 0xBF;
-      src >>= 6;
-    case 5:
-      *--mbcptr = (src | 0x80) & 0xBF;
-      src >>= 6;
     case 4:
       *--mbcptr = (src | 0x80) & 0xBF;
       src >>= 6;
@@ -651,7 +635,7 @@ int TtaWCToMBstring (wchar_t src, unsigned char **dest)
 
 
 /*----------------------------------------------------------------------
-  TtaMBstringToWCS converts a multibyte string into a wide character.
+  TtaMBstringToWCS converts a UTF-8 multibyte string into a Unicode wide character.
   Returns the number of bytes in the multibyte character or -1
   The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
@@ -662,29 +646,23 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
   int            nbBytesConverted = 0;
   int            nbBytesToConvert, i;
 
-  if (*ptrSrc < 0xC0)
+  if (*ptrSrc < 0x80)
     nbBytesToConvert = 1;
+  else if (*ptrSrc < 0xC0)
+	/* add some error processing here */ ;
   else if (*ptrSrc < 0xE0)
     nbBytesToConvert = 2;
   else if (*ptrSrc < 0xF0)
     nbBytesToConvert = 3;
   else if (*ptrSrc < 0xF8)
     nbBytesToConvert = 4;
-  else if (*ptrSrc < 0xFC)
-    nbBytesToConvert = 5;
-  else if (*ptrSrc <= 0xFF)
-    nbBytesToConvert = 6;
+  else
+	/* add some error processing here */ ;
                  
   nbBytesConverted += nbBytesToConvert;
   res = 0;
   switch (nbBytesToConvert)
     {
-    case 6:
-      res += *ptrSrc++;
-      res <<= 6;
-    case 5:
-      res += *ptrSrc++;
-      res <<= 6;
     case 4:
       res += *ptrSrc++;
       res <<= 6;
@@ -698,6 +676,9 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
       res += *ptrSrc++;
     }
 
+  /* Leading bits in each byte are not masked or checked, but
+     accounted for by subtracting the appropriate offset value.
+     This assumes that the input is correct :-(. */
   i = offset[nbBytesToConvert - 1];
   res -= (wchar_t) i;
   if (res <= 0xFFFF)
@@ -724,30 +705,24 @@ int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 
   if (encoding ==  UTF_8)
     {
-      if (*start < 0xC0)
+      if (*start < 0x80)
 	nbBytesToRead = 1;
+      else if (*start < 0xC0)
+    	/* add some error processing here */ ;
       else if (*start < 0xE0)
 	nbBytesToRead = 2;
       else if (*start < 0xF0)
 	nbBytesToRead = 3;
       else if (*start < 0xF8)
 	nbBytesToRead = 4;
-      else if (*start < 0xFC)
-	nbBytesToRead = 5;
-      else if (*start <= 0xFF)
-	nbBytesToRead = 6;
+      else
+		/* add some error processing here */ ;
       
       res = 0;
       /* See how many bytes to read to build a wide character */
       switch (nbBytesToRead)
 	{
 	  /** WARNING: There is not break statement between cases */
-	case 6:
-	  res += *start++;
-	  res <<= 6;
-	case 5:
-	  res += *start++;
-	  res <<= 6;
 	case 4:
 	  res += *start++;
 	  res <<= 6;
@@ -784,18 +759,18 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 
   if (encoding ==  UTF_8)
     {
-      if (*start < 0xC0)
+      if (*start < 0x80)
 	nbBytesToRead = 1;
+      else if (*start < 0xC0)
+	/* add some error processing here */ ;
       else if (*start < 0xE0)
 	nbBytesToRead = 2;
       else if (*start < 0xF0)
 	nbBytesToRead = 3;
       else if (*start < 0xF8)
 	nbBytesToRead = 4;
-      else if (*start < 0xFC)
-	nbBytesToRead = 5;
-      else if (*start <= 0xFF)
-	nbBytesToRead = 6;
+      else
+	/* add some error processing here */ ;
     }
 
   return nbBytesToRead;
@@ -873,7 +848,7 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
       /* generate the WC string */
       tmp = TtaConvertIsoToWC(src, encoding);
       /* now generate the Multi Byte string */
-      dest = TtaGetMemory (6*strlen (src) + 1);
+      dest = TtaGetMemory (4*strlen (src) + 1);
       i = 0;
       l = 0;
       while (tmp[i] != 0)
