@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -33,14 +33,7 @@
   the document doc and the structure sSchema
   At the same time, this funciton updates the css context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
-#else
-PSchema         GetPExtension (doc, sSchema, css)
-Document        doc;
-SSchema         sSchema;
-CSSInfoPtr      css;
-#endif
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
@@ -326,16 +319,7 @@ CSSInfoPtr      css;
 /*----------------------------------------------------------------------
    AddCSS adds a new CSS context in the list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STRING url, STRING localName)
-#else
-CSSInfoPtr      AddCSS (doc, docRef, category, url, localName)
-Document        doc;
-Document        docRef;
-CSSCategory     category;
-STRING          url;
-STRING          localName;
-#endif
 {
   CSSInfoPtr          css, prev;
   int                 i;
@@ -379,13 +363,7 @@ STRING          localName;
    SearchCSS searchs the css corresponding to the specific url (doc == 0)
    or the CSS_DOCUMENT_STYLE css of the document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CSSInfoPtr          SearchCSS (Document doc, STRING url)
-#else
-CSSInfoPtr          SearchCSS (doc, url)
-Document            doc;
-STRING               url;
-#endif
 {
   CSSInfoPtr          css = CSSList;
  
@@ -411,15 +389,7 @@ STRING               url;
    If this CSS is no longer used the context and attached information
    are freed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled, ThotBool removed)
-#else
-static void     UnlinkCSS (css, doc, disabled, removed)
-CSSInfoPtr      css;
-Document        doc;
-ThotBool        disabled;
-ThotBool        removed;
-#endif
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -507,12 +477,7 @@ ThotBool        removed;
 /*----------------------------------------------------------------------
    RemoveDocCSSs removes all CSS information linked with the document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveDocCSSs (Document doc)
-#else
-void                RemoveDocCSSs (doc)
-Document            doc;
-#endif
 {
   CSSInfoPtr          css, next;
  
@@ -538,15 +503,7 @@ Document            doc;
    It could be an external CSS file linked with the document (url not NULL)
    or the document Style element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void            RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool removed)
-#else
-void            RemoveStyleSheet (url, doc, disabled, removed)
-STRING          url;
-Document        doc;
-ThotBool        disabled;
-ThotBool        removed;
-#endif
+void   RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool removed)
 {
   CSSInfoPtr          css;
   ThotBool            found;
@@ -576,12 +533,7 @@ ThotBool        removed;
   style element el. It returns NULL if the element is empty.
   The buffer should be freed by the caller.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING              GetStyleContents (Element el)
-#else
-STRING              GetStyleContents (el)
-Element             el;
-#endif
 {
   ElementType         elType;
   Element             text;
@@ -619,16 +571,7 @@ Element             el;
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, CSSmedia media)
-#else
-void        LoadStyleSheet (url, doc, el, css, media)
-STRING      url;
-Document    doc;
-Element     el;
-CSSInfoPtr  css;
-CSSmedia    media;
-#endif
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;

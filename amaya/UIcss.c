@@ -25,8 +25,10 @@
 static int         CSScase;
 static CHAR_T*     CSSpath;
 static Document    CSSdocument;
+#define LOCAL_STYLE TEXT("DOC-STYLE")
 
 #include "AHTURLTools_f.h"
+#include "EDITstyle_f.h"
 #include "EDITORactions_f.h"
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
@@ -41,15 +43,9 @@ static Document    CSSdocument;
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, STRING completeURL, STRING localfile)
-#else
-ThotBool        LoadRemoteStyleSheet (url, doc, el, css, completeURL, localfile)
-STRING          url;
-Document        doc;
-Element         el;
-CSSInfoPtr      css;
-#endif
+ThotBool  LoadRemoteStyleSheet (STRING url, Document doc, Element el,
+				CSSInfoPtr css, STRING completeURL,
+				STRING localfile)
 {
   CSSInfoPtr          oldcss;
   CHAR_T              tempname[MAX_LENGTH];
@@ -114,12 +110,7 @@ CSSInfoPtr      css;
    LoadUserStyleSheet : Load the user Style Sheet found in it's    
    home directory or the default one in THOTDIR.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LoadUserStyleSheet (Document doc)
-#else
-void                LoadUserStyleSheet (doc)
-Document            doc;
-#endif
 {
   CSSInfoPtr          css;
   struct stat         buf;
@@ -208,12 +199,7 @@ Document            doc;
   AttrMediaChanged: the user has created removed or modified a Media
   attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrMediaChanged (NotifyAttribute * event)
-#else
-void                AttrMediaChanged (event)
-NotifyAttribute    *event;
-#endif
 {
    ElementType         elType;
    Element             el;
@@ -295,13 +281,7 @@ NotifyAttribute    *event;
   - the the Document style sheet
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING              CssToPrint (Document doc, STRING printdir)
-#else
-STRING              CssToPrint (doc, temdir)
-Document            doc;
-STRING              printdir;
-#endif
 {
   Element             el, head;
   ElementType         elType;
@@ -434,14 +414,7 @@ STRING              printdir;
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CallbackCSS (int ref, int typedata, STRING data)
-#else
-static void         CallbackCSS (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-#endif
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
@@ -465,18 +438,30 @@ STRING              data;
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
-	      RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE);
+	      if (!ustrcmp (CSSpath, LOCAL_STYLE))
+		RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE);
+	      else
+		RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE);
       	      break;
 	    case 3:
 	      /* enable the CSS file */
-	      css = SearchCSS (0, CSSpath);
-	      css ->enabled[CSSdocument] = TRUE;
-	      /* apply CSS rules */
-	      if (!ustrcmp (CSSpath, UserCSS))
-		LoadUserStyleSheet (CSSdocument);
+	      if (!ustrcmp (CSSpath, LOCAL_STYLE))
+		{
+		  css = SearchCSS (CSSdocument, NULL);
+		  css ->enabled[CSSdocument] = TRUE;
+		  EnableStyleElement (CSSdocument);
+		}
 	      else
-		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
-				css->media[CSSdocument]);
+		{
+		  css = SearchCSS (0, CSSpath);
+		  css ->enabled[CSSdocument] = TRUE;
+		  /* apply CSS rules */
+		  if (!ustrcmp (CSSpath, UserCSS))
+		    LoadUserStyleSheet (CSSdocument);
+		  else
+		    LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
+				    css->media[CSSdocument]);
+		}
       	      break;
 	    case 4:
 	      /* remove the link to this file */
@@ -484,10 +469,11 @@ STRING              data;
 	      found = FALSE;
 	      while (css != NULL && !found)
 		{
-		  if (css->category != CSS_DOCUMENT_STYLE &&
-		      css->documents[CSSdocument] &&
-		      ((css->url && !ustrcmp (CSSpath, css->url)) ||
-		       (css->localName && !ustrcmp (CSSpath, css->localName))))
+		  if (css->category == CSS_DOCUMENT_STYLE)
+		    DeleteStyleElement (CSSdocument);
+		  else if (css->documents[CSSdocument] &&
+			   ((css->url && !ustrcmp (CSSpath, css->url)) ||
+			    (css->localName && !ustrcmp (CSSpath, css->localName))))
 		    {
 		      /* we found out the CSS */
 		      found = TRUE;
@@ -532,11 +518,7 @@ STRING              data;
 /*----------------------------------------------------------------------
    InitCSS                                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitCSS (void)
-#else
-void                InitCSS ()
-#endif
 {
    /* initialize the dialogs */
    BaseCSS = TtaSetCallback (CallbackCSS, MAX_CSS_REF);
@@ -546,13 +528,7 @@ void                InitCSS ()
 /*----------------------------------------------------------------------
    InitCSSDialog list downloaded CSS files
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitCSSDialog (Document doc, STRING s)
-#else
-static void         InitCSSDialog (doc, s)
-Document            doc;
-STRING              s;
-#endif
 {
   CSSInfoPtr          css;
   CHAR_T              buf[400];
@@ -576,18 +552,20 @@ STRING              s;
   i = 0;
   while (css != NULL)
     {
-      if (css->category != CSS_DOCUMENT_STYLE &&
-	  css->documents[doc] &&
-	  /* it's impossible to remove the User style sheet */
-	  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
+      if (css->documents[doc] &&
+	       /* it's impossible to remove the User style sheet */
+	       (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 	{
 	  if ((CSScase == 3 && !css->enabled[doc]) ||
 	      (CSScase == 2 && css->enabled[doc]) ||
-	      CSScase == 1 || CSScase == 4)
+	      (CSScase == 1 && css->category != CSS_DOCUMENT_STYLE) ||
+	      CSScase == 4)
 	    {
 	      /* filter enabled and disabled entries */
 	      /* build the CSS list */
-	      if (css->url == NULL)
+	      if (css->category == CSS_DOCUMENT_STYLE)
+		ptr = LOCAL_STYLE;
+	      else if (css->url == NULL)
 		ptr = css->localName;
 	      else
 		ptr = css->url;
@@ -605,18 +583,12 @@ STRING              s;
 		{
 		  if (CSSpath != NULL)
 		    TtaFreeMemory (CSSpath);
-		  if (css->url)
-		    {
-		      len = ustrlen (css->url);
-		      CSSpath = TtaAllocString (len + 1);
-		      ustrcpy (CSSpath, css->url);
-		    }
+		  if (css->category == CSS_DOCUMENT_STYLE)
+		    CSSpath = TtaStrdup (LOCAL_STYLE);
+		  else if (css->url)
+		    CSSpath = TtaStrdup (css->url);
 		  else
-		    {
-		      len = ustrlen (css->localName);
-		      CSSpath = TtaAllocString (len + 1);
-		      ustrcpy (CSSpath, css->localName);
-		    }
+		    CSSpath = TtaStrdup (css->localName);
 		  select = i;
 		}
 	      i++;
@@ -646,13 +618,7 @@ STRING              s;
 /*----------------------------------------------------------------------
    LinkCSS
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LinkCSS (Document doc, View view)
-#else
-void                LinkCSS (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   /* add a new link to a CSS file */
   LinkAsCSS = TRUE;
@@ -663,13 +629,7 @@ View                view;
 /*----------------------------------------------------------------------
    OpenCSS lists downloaded CSS files
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                OpenCSS (Document doc, View view)
-#else
-void                OpenCSS (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   CSScase = 1;
   InitCSSDialog (doc, TtaGetMessage (1, BOpenCSS));
@@ -678,13 +638,7 @@ View                view;
 /*----------------------------------------------------------------------
    DisableCSS list downloaded CSS files
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisableCSS (Document doc, View view)
-#else
-void                DisableCSS (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   CSScase = 2;
   InitCSSDialog (doc, TtaGetMessage (1, BDisableCSS));
@@ -693,13 +647,7 @@ View                view;
 /*----------------------------------------------------------------------
   EnableCSS list downloaded CSS files
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                EnableCSS (Document doc, View view)
-#else
-void                EnableCSS (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   CSScase = 3;
   InitCSSDialog (doc, TtaGetMessage (1, BEnableCSS));
@@ -708,13 +656,7 @@ View                view;
 /*----------------------------------------------------------------------
    RemoveCSS lists downloaded CSS files
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveCSS (Document doc, View view)
-#else
-void                RemoveCSS (doc, view)
-Document            doc;
-View                view;
-#endif
 {
   CSScase = 4;
   InitCSSDialog (doc, TtaGetMessage (1, BRemoveCSS));

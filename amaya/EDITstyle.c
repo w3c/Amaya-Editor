@@ -49,20 +49,21 @@ static Document	    ApplyClassDoc;
   RemoveElementStyle cleans all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
-static void       RemoveElementStyle (Element el, Document doc,
-				      ThotBool removeSpan)
+static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 {
    ElementType		elType;
    Attribute            attr;
    AttributeType        attrType;
    Element		firstChild, lastChild;
+   STRING               name;
 
    if (el == NULL)
       return;
    elType = TtaGetElementType (el);
    /* if it's a MathML element, remove the style attribute defined in the
       MathML DTD */
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+   name = TtaGetSSchemaName (elType.ElSSchema);
+   if (!ustrcmp (name, TEXT("MathML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
@@ -71,7 +72,7 @@ static void       RemoveElementStyle (Element el, Document doc,
 #ifdef GRAPHML
    /* if it's a GraphML element, remove the style attribute defined in the
       GraphML DTD */
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+   if (!ustrcmp (name, TEXT("GraphML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -259,6 +260,69 @@ ThotBool            DeleteStyle (NotifyElement * event)
 {
   RemoveStyleSheet (NULL, event->document, TRUE, TRUE);
   return FALSE;  /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
+  EnableStyleElement
+  the STYLE element must be reparsed.
+  ----------------------------------------------------------------------*/
+void           EnableStyleElement (Document doc)
+{
+  Element               el;
+  ElementType		elType;
+  STRING                name;
+  STRING                buffer;
+
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+#ifdef GRAPHML
+   /* if it's a SVG document, remove the style defined in the GraphML DTD */
+   if (!ustrcmp (name, TEXT("GraphML")))
+     elType.ElTypeNum = GraphML_EL_style__;
+   else
+#endif
+     elType.ElTypeNum = HTML_EL_STYLE_;
+   el = TtaSearchTypedElement (elType, SearchForward, el);
+   if (el)
+     {
+       /* get the style element in the document head */
+       buffer = GetStyleContents (el);
+       ApplyCSSRules (el, buffer, doc, FALSE);
+     }
+}
+
+/*----------------------------------------------------------------------
+  DeleteStyleElement
+  the STYLE element will be deleted in the document HEAD.
+  ----------------------------------------------------------------------*/
+void           DeleteStyleElement (Document doc)
+{
+  Element               el;
+  ElementType		elType;
+  STRING                name;
+
+  RemoveStyleSheet (NULL, doc, TRUE, TRUE);
+  /* get the style element in the document head */
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+#ifdef GRAPHML
+   /* if it's a SVG document, remove the style defined in the GraphML DTD */
+   if (!ustrcmp (name, TEXT("GraphML")))
+     elType.ElTypeNum = GraphML_EL_style__;
+   else
+#endif
+     elType.ElTypeNum = HTML_EL_STYLE_;
+   el = TtaSearchTypedElement (elType, SearchForward, el);
+   if (el)
+     {
+       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+       TtaRegisterElementDelete (el, doc);
+       TtaDeleteTree (el, doc);
+       TtaCloseUndoSequence (doc);
+     }
 }
 
 
