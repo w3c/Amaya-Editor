@@ -87,6 +87,12 @@
 +views
 ShowMapAreas
 
+################# AMAYA DISPLAY
+<Display>
+HelpAmaya
+HelpAtW3C
+
+
 ################# AMAYA MINI-BROWSER
 <Mini-browser>
 +amayabase
