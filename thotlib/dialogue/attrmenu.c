@@ -1173,7 +1173,7 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
       
       /* met la nouvelle valeur de l'attribut dans l'element et */
       /* applique les regles de presentation de l'attribut a l'element */
-      AttachAttrWithValue (pEl, pDoc, pAttr);
+      AttachAttrWithValue (pEl, pDoc, pAttr, TRUE);
     }
 }
 

@@ -2786,7 +2786,7 @@ static void AttachCounterValue (PtrElement pEl, PtrElement pElIncluded,
 	   pAttr->AeAttrNum = att;
 	   pAttr->AeAttrType = AtNumAttr;
 	   pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1);
-	   AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr);
+	   AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr, FALSE);
 	   DeleteAttribute (NULL, pAttr);
 	 }
      }

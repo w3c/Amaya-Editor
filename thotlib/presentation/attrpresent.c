@@ -276,7 +276,7 @@ void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
 					     pAttr->AeAttrText, &len);
 			     /* associate the attribute with the */
 			     /* of the included document */
-			     AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr);
+			     AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr, TRUE);
 			   }
 			 DeleteAttribute (NULL, pAttr);
 		       }

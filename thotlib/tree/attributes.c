@@ -876,7 +876,7 @@ PtrAttribute AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr,
    regles de presentation correspondantes.
   ----------------------------------------------------------------------*/
 void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
-			  PtrAttribute pNewAttr)
+			  PtrAttribute pNewAttr, ThotBool history)
 {
   PtrAttribute        pAttr, pAttrAsc, pAttrNext;
   PtrElement          pChild, pElAttr;
@@ -999,7 +999,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
       if (pAttr)
 	{
 	  /* register the attribute in history */
-	  if (ThotLocalActions[T_attraddhistory] != NULL)
+	  if (history && ThotLocalActions[T_attraddhistory] != NULL)
 	    (*(Proc5)ThotLocalActions[T_attraddhistory]) (
 		(void *)pAttr,
 	       	(void *)pEl,
@@ -1060,7 +1060,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
 	  /* add a copy of the new attribute before pAttrNext */
 	  pAttr = AddAttrToElem (pEl, pNewAttr, pAttrNext);
 	  /* register the attribute in history */
-	  if (ThotLocalActions[T_attraddhistory] != NULL)
+	  if (history && ThotLocalActions[T_attraddhistory] != NULL)
 	    (*(Proc5)ThotLocalActions[T_attraddhistory]) (
 		(void *)pAttr,
 	       	(void *)pEl,

@@ -932,7 +932,7 @@ void NewContent (PtrAbstractBox pAb)
 	      break;
 	    }
 	  /* redisplay the attribute */
-	  AttachAttrWithValue (pEl, pDoc, pNewAttr);
+	  AttachAttrWithValue (pEl, pDoc, pNewAttr, TRUE);
 	  CloseHistorySequence (pDoc);
 	  pAttr = AttributeValue (pEl, pNewAttr);
 	  DeleteAttribute (NULL, pNewAttr);

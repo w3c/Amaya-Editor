@@ -571,7 +571,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
 		      pAttr->AeAttrType = AtNumAttr;
 		      pAttr->AeAttrValue = LogicalValue (row->AbBox->BxHeight + sum,
 							 UnPixel, NULL, ViewFrameTable[frame - 1].FrMagnification);
-		      AttachAttrWithValue (row->AbElement, pDoc, pAttr);
+		      AttachAttrWithValue (row->AbElement, pDoc, pAttr, FALSE);
 		      DeleteAttribute (NULL, pAttr);
 		      /* update the row box */
 		      ComputeUpdates (row, frame);

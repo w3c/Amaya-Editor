@@ -54,7 +54,8 @@ extern PtrAttribute AddAttrToElem ( PtrElement pEl,
                                     PtrAttribute pAttrNext );
 extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  PtrAttribute pNewAttr );
+                                  PtrAttribute pNewAttr,
+                                  ThotBool history );
 extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
                                          int ExceptNum );
 extern Attribute TtaGetAttribute ( Element element,
@@ -115,7 +116,8 @@ extern PtrAttribute AddAttrToElem (/* PtrElement pEl,
                                       PtrAttribute pAttrNext */);
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
-                                    PtrAttribute pNewAttr */);
+                                    PtrAttribute pNewAttr,
+                                    ThotBool history */);
 extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,
                                            int ExceptNum */);
 extern Attribute TtaGetAttribute (/* Element element,
