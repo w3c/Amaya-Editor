@@ -26,6 +26,7 @@
 #include "zlib.h"
 #include "profiles.h"
 #include "SVG.h"
+#include "MENUconf.h"
 
 #include "fileaccess.h"
 #include "AHTURLTools_f.h"

@@ -13,6 +13,12 @@ extern void CacheConfMenu ( Document document,
                             View view );
 extern void ProxyConfMenu ( Document document,
                             View view );
+extern void GetGeneralConf ( void );
+extern void ValidateGeneralConf ( void );
+extern void SetGeneralConf ( void );
+extern void GetDefaultGeneralConf ( void );
+extern void SetProp_General ( const Prop_General & prop );
+extern Prop_General GetProp_General ( void );
 extern void GeneralConfMenu ( Document document,
                               View view );
 extern void PublishConfMenu ( Document document,
@@ -44,6 +50,12 @@ extern void CacheConfMenu ( Document document,
                               View view );
 extern void ProxyConfMenu ( Document document,
                               View view );
+extern void GetGeneralConf ( void );
+extern void ValidateGeneralConf ( void );
+extern void SetGeneralConf ( void );
+extern void GetDefaultGeneralConf ( void );
+extern void SetProp_General ( const Prop_General & prop );
+extern Prop_General GetProp_General ( void );
 extern void GeneralConfMenu ( Document document,
                                 View view );
 extern void PublishConfMenu ( Document document,

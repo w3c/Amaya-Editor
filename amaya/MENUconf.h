@@ -96,4 +96,21 @@ static void BuildProfileSelector();
 #define mAnnotRAutoLoadRst      8
 #define MAX_ANNOTMENU_DLG       9
 
+typedef struct Prop_General_t
+{
+  int      Zoom;
+  char     DefaultName[MAX_LENGTH];
+  char     DialogueLang[MAX_LENGTH];
+  int      AccesskeyMod;
+  int      FontMenuSize;
+  char     HomePage[MAX_LENGTH];
+  ThotBool PasteLineByLine;
+  ThotBool S_Buttons;
+  ThotBool S_Address;
+  ThotBool S_Targets;
+  ThotBool S_Numbers;
+  ThotBool S_AutoSave;
+  ThotBool S_Geometry;
+} Prop_General;
+
 #endif /* _MENUCONF.h */

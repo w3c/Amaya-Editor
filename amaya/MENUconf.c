@@ -49,6 +49,10 @@
 #include "fileaccess.h"
 #include "profiles.h"
 
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
+
 #ifdef _WINGUI
 #include "resource.h"
 #include "wininclude.h"
@@ -146,22 +150,23 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
+static Prop_General GProp_General;
 static int      GeneralBase;
-static int      Zoom;
-static char     DefaultName[MAX_LENGTH];
-static char     DialogueLang[MAX_LENGTH];
-static int      AccesskeyMod;
-static int      FontMenuSize;
-static char     HomePage[MAX_LENGTH];
-static ThotBool PasteLineByLine;
-static ThotBool S_Buttons;
-static ThotBool S_Address;
-static ThotBool S_Targets;
-static ThotBool S_Numbers;
+static int &    Zoom = GProp_General.Zoom;
+static char *   DefaultName = GProp_General.DefaultName;
+static char *   DialogueLang = GProp_General.DialogueLang;
+static int &    AccesskeyMod = GProp_General.AccesskeyMod;
+static int &    FontMenuSize = GProp_General.FontMenuSize;
+static char *   HomePage = GProp_General.HomePage;
+static ThotBool & PasteLineByLine = GProp_General.PasteLineByLine;
+static ThotBool & S_Buttons = GProp_General.S_Buttons;
+static ThotBool & S_Address = GProp_General.S_Address;
+static ThotBool & S_Targets = GProp_General.S_Targets;
+static ThotBool & S_Numbers = GProp_General.S_Numbers;
 #define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
-static ThotBool S_AutoSave;
-static ThotBool S_Geometry;
+static ThotBool & S_AutoSave = GProp_General.S_AutoSave;
+static ThotBool & S_Geometry = GProp_General.S_Geometry;
 
 /* Browse menu options */
 #ifdef _WINGUI
@@ -1582,7 +1587,7 @@ void         ProxyConfMenu (Document document, View view)
   GetGeneralConf
   Makes a copy of the current registry General values
   ----------------------------------------------------------------------*/
-static void GetGeneralConf (void)
+void GetGeneralConf (void)
 {
   char       ptr[MAX_LENGTH];
   int        oldzoom;
@@ -1628,7 +1633,7 @@ static void GetGeneralConf (void)
   the Windows interface isn't rich enough to do it (e.g., negative numbers
   in the integer entries)
   ----------------------------------------------------------------------*/
-static void ValidateGeneralConf (void)
+void ValidateGeneralConf (void)
 {
   int         change;
   char        lang[3];
@@ -1857,7 +1862,7 @@ static void UpdateSectionNumbering ()
   Updates the registry General values and calls the General functions
   to take into account the changes
   ----------------------------------------------------------------------*/
-static void SetGeneralConf (void)
+void SetGeneralConf (void)
 {
   int         oldVal;
   ThotBool    old;
@@ -1871,6 +1876,13 @@ static void SetGeneralConf (void)
       RecalibrateZoom ();
     }
   TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", PasteLineByLine, TRUE);
+#ifdef _WX
+  /* wx use its own callbacks and use only the boolean value : S_AutoSave */
+  if (S_AutoSave)
+    AutoSave_Interval = DEF_SAVE_INTVL;
+  else
+    AutoSave_Interval = 0;
+#endif /* _WX */
   TtaGetEnvInt ("AUTO_SAVE", &oldVal);
   if (oldVal != AutoSave_Interval)
     {
@@ -1921,7 +1933,7 @@ static void SetGeneralConf (void)
   GetDefaultGeneralConf
   Loads the default registry General values
   ----------------------------------------------------------------------*/
-static void GetDefaultGeneralConf ()
+void GetDefaultGeneralConf ()
 {
   char       ptr[MAX_LENGTH];
 
@@ -1958,6 +1970,20 @@ static void GetDefaultGeneralConf ()
   GetDefEnvString ("APP_TMPDIR", AppTmpDir);
   GetDefEnvString ("APP_HOME", AppHome);
 #endif /* _WINGUI */
+}
+
+void SetProp_General( const Prop_General & prop )
+{
+#ifdef _WX
+  GProp_General = prop;
+#endif /* _WX */
+}
+
+Prop_General GetProp_General()
+{
+#ifdef _WX
+  return GProp_General;
+#endif /* _WX */
 }
 
 #ifdef _WINGUI
@@ -2251,7 +2277,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void GeneralConfMenu (Document document, View view)
 {
-#ifndef _WINGUI 
+#ifdef _GTK
    int              i;
 
    /* Create the dialogue form */
@@ -2325,16 +2351,29 @@ void GeneralConfMenu (Document document, View view)
 		  0 /* no maxlength */,
 		  FALSE);
 
-#endif /* !_WINGUI */
    /* load the current values */
    GetGeneralConf ();
 
-#ifndef _WINGUI
    RefreshGeneralMenu ();
    /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
-#else /* !_WINGUI */
+#endif /* _GTK */
+
+#ifdef _WX
+   ThotBool created = CreatePreferenceDlgWX ( GeneralBase + GeneralMenu, 
+					      TtaGetViewFrame (document, view),
+					      URL_list );
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
+    }
+#endif /* _WX */
+
+#ifdef _WINGUI
+   /* load the current values */
+   GetGeneralConf ();
 
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */

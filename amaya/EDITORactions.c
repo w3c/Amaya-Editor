@@ -18,6 +18,7 @@
 #include "css.h"
 #include "undo.h"
 #include "document.h"
+#include "MENUconf.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"

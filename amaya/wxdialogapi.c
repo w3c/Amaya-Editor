@@ -3,6 +3,12 @@
   #include "wx/wx.h"
 #endif /* _WX */
 
+#define THOT_EXPORT extern
+#include "amaya.h"
+
+#include "appdialogue_wx.h"
+#include "message_wx.h"
+
 #ifdef _WX
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
@@ -13,13 +19,25 @@
   #include "wxdialog/CSSDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
+  #include "wxdialog/PreferenceDlgWX.h"
 #endif /* _WX */
 
-#define THOT_EXPORT extern
-#include "amaya.h"
 
-#include "appdialogue_wx.h"
-#include "message_wx.h"
+#ifdef _WX
+wxArrayString BuildWX_URL_List( const char * url_list )
+{
+  /* Create the url list array */
+  /* will stop on double EOS */
+  wxArrayString wx_items;
+  int index = 0;
+  while (url_list[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &url_list[index] ) );
+      index += strlen (&url_list[index]) + 1; /* one entry length */
+    }
+  return wx_items;
+}
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes (save/not save) comfirmation.
@@ -434,18 +452,7 @@ ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
   else 
     wx_filter = APPFILENAMEFILTER;
 
-
-  /* ------------------------- */
-  /* Create the url list array */
-  /* function will stop on double EOS */
-  wxArrayString wx_items;
-  int index = 0;
-  while (url_list[index] != EOS)
-    {
-      wx_items.Add( TtaConvMessageToWX( &url_list[index] ) );
-      index += strlen (&url_list[index]) + 1; /* one entry length */
-    }
-  /* ------------------------- */
+  wxArrayString wx_items = BuildWX_URL_List(url_list);
 
   wxLogDebug( _T("CreateHRefDlgWX - title=")+wx_title+
 	      _T("\tfilter=")+wx_filter );
@@ -456,6 +463,39 @@ ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
 				     wx_init_value,
 				     wx_title,
 				     wx_filter );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*-----------------------------------------------------------------------
+ CreatePreferenceDlgWX
+ Used to :
+  - Change Amaya configuration options
+ ------------------------------------------------------------------------*/
+ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
+				 const char *url_list )
+{
+#ifdef _WX
+  wxArrayString wx_items = BuildWX_URL_List(url_list);
+
+  wxLogDebug( _T("CreatePreferenceDlgWX") );
+
+  PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
+						 parent,
+						 wx_items );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

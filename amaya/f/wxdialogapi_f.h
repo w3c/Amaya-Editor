@@ -49,6 +49,9 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                   int doc_select,
                                   int dir_select,
                                   int doc_type );
+extern ThotBool CreatePreferenceDlgWX ( int ref,
+                                        ThotWindow parent,
+                                        const char *url_list );
 
 #else /* __STDC__ */
 
@@ -95,6 +98,9 @@ extern ThotBool CreateHRefDlgWX ( int ref,
                                     int doc_select,
                                     int dir_select,
                                     int doc_type );
+extern ThotBool CreatePreferenceDlgWX ( int ref,
+                                          ThotWindow parent,
+                                          const char *url_list );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

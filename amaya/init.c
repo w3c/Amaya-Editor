@@ -29,6 +29,7 @@
 #include "trans.h"
 #include "zlib.h"
 #include "profiles.h"
+#include "MENUconf.h"
 
 /*
 * A VIRER SUREMENT PAR LA SUITE
