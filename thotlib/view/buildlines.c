@@ -1475,7 +1475,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   PtrFloat            pfloatL, pfloatR;
   PtrBox              pBox;
   PtrAbstractBox      pAb;
-  int                 bottomL, bottomR, left, y, h;
+  int                 bottomL, bottomR, left, y;
   ThotBool            breakable;
 
   if (pLine == NULL)
