@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -348,7 +348,7 @@ Document            document;
 	  }
 	pBuf->BuContent[lengthBefore] = EOS;
 	pBuf->BuLength = lengthBefore;
-	/* If there is enough space in the buffer, one add a string at its end */
+	/* If there is enough space in the buffer, add a string at its end */
 	ptr = content;
 	while (stringLength > 0)
 	  {
@@ -384,13 +384,16 @@ Document            document;
 	       {
 		  if (firstChar > 0)
 		     if (lastSelection == firstSelection)
-			TtaSelectString (document, (Element) firstSelection, firstChar, lastChar);
+			TtaSelectString (document, (Element) firstSelection,
+					 firstChar, lastChar);
 		     else
-			TtaSelectString (document, (Element) firstSelection, firstChar, 0);
+			TtaSelectString (document, (Element) firstSelection,
+					 firstChar, 0);
 		  else
 		     TtaSelectElement (document, (Element) firstSelection);
 		  if (lastSelection != firstSelection)
-		     TtaExtendSelection (document, (Element) lastSelection, lastChar);
+		     TtaExtendSelection (document, (Element) lastSelection,
+					 lastChar);
 	       }
 	  }
 #endif
@@ -438,7 +441,8 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parameter document is correct */
-      InsertText ((PtrElement) element, ((PtrElement) element)->ElTextLength, content, document);
+      InsertText ((PtrElement) element, ((PtrElement) element)->ElTextLength,
+		  content, document);
 }
 
 
@@ -554,11 +558,13 @@ Document            document;
 	   length = ((PtrElement) element)->ElTextLength - position + 1;
 #ifndef NODISPLAY
 	/* modifies the selection if the element belongs to it */
-	selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection,
+				     &firstChar, &lastChar);
 	changeSelection = FALSE;
 	if (selOk)
 	   if (selDoc == LoadedDocument[document - 1])
-	      if ((PtrElement) element == firstSelection || (PtrElement) element == lastSelection)
+	      if ((PtrElement) element == firstSelection ||
+		  (PtrElement) element == lastSelection)
 		 /* The selection starts and/or stops in the element */
 		 /* First, we abort the selection */
 		{
@@ -591,7 +597,8 @@ Document            document;
 	delta = length;
 	((PtrElement) element)->ElTextLength -= delta;
 	((PtrElement) element)->ElVolume -= delta;
-	/* Looks for the buffer pBufFirst where starts the string to suppress */
+	/* Looks for the buffer pBufFirst where the string to be suppressed
+	   starts*/
 	pBufFirst = ((PtrElement) element)->ElText;
 	lengthBefore = 0;
 	while (pBufFirst->BuNext != NULL &&
@@ -600,11 +607,13 @@ Document            document;
 	     lengthBefore += pBufFirst->BuLength;
 	     pBufFirst = pBufFirst->BuNext;
 	  }
-	/* Length of the buffer containing the begenning of the string to suppress */
+	/* Length of the buffer containing the beginning of the string to be
+	   suppress */
 	firstDeleted = position - lengthBefore;
-	/* Looks for the buffer pBufLast containing the end of the string to suppress 
-	   and releases the intermediate buffers. The buffers containing the begenning 
-	   of the string to suppress and its end are not released */
+	/* Looks for the buffer pBufLast containing the end of the string to
+	   be suppressed and releases the intermediate buffers. The buffers
+	   containing the begenning of the string to be suppressed and its
+	   end are not released */
 	pBufLast = pBufFirst;
 	lastDeleted = firstDeleted + length - 1;
 	while (pBufLast->BuNext != NULL &&
@@ -612,7 +621,8 @@ Document            document;
 	  {
 	     lastDeleted -= pBufLast->BuLength;
 	     if (pBufLast != pBufFirst)
-		/* This is not the buffer containing the begenning of the string. It is released */
+		/* This is not the buffer containing the begenning of the 
+		   tring. It is released */
 	       {
 		  pBufNext = pBufLast->BuNext;
 		  pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
@@ -708,13 +718,16 @@ Document            document;
 	  {
 	     if (firstChar > 0)
 		if (lastSelection == firstSelection)
-		   TtaSelectString (document, (Element) firstSelection, firstChar, lastChar);
+		   TtaSelectString (document, (Element) firstSelection,
+				    firstChar, lastChar);
 		else
-		   TtaSelectString (document, (Element) firstSelection, firstChar, 0);
+		   TtaSelectString (document, (Element) firstSelection,
+				    firstChar, 0);
 	     else
 		TtaSelectElement (document, (Element) firstSelection);
 	     if (lastSelection != firstSelection)
-		TtaExtendSelection (document, (Element) lastSelection, lastChar);
+		TtaExtendSelection (document, (Element) lastSelection,
+				    lastChar);
 	  }
 #endif
      }
@@ -820,17 +833,20 @@ Document            document;
 	     if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
 	       if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
 		 if (SameAttributes ((PtrElement) element, pEl2))
-		   if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
+		   if (((PtrElement) element)->ElSource == NULL &&
+		       pEl2->ElSource == NULL)
 		     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
 		       {
 			 /* destroy the second element of the text */
-			 DestroyAbsBoxes (pEl2, LoadedDocument[document - 1], FALSE);
-			 MergeTextElements ((PtrElement) element, &FreeElement,
-					    LoadedDocument[document - 1], FALSE, FALSE);
+			 DestroyAbsBoxes (pEl2, LoadedDocument[document - 1],
+					  FALSE);
+			 ok = MergeTextElements ((PtrElement) element,
+				    &FreeElement, LoadedDocument[document - 1],
+				    FALSE, FALSE);
 			 RedisplayMergedText ((PtrElement) element, document);
 			 if (FreeElement != NULL)
-			   DeleteElement (&FreeElement, LoadedDocument[document - 1]);
-			 ok = TRUE;
+			   DeleteElement (&FreeElement,
+					  LoadedDocument[document - 1]);
 		       }
      }
 #endif
@@ -897,7 +913,8 @@ Document            document;
 			      shape == 'F' || shape == 'D' || shape == 'p' ||
 			      shape == 's' || shape == 'w' || shape == 'x' ||
 			      shape == 'y' || shape == 'z');
-		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
+		  if (polyline &&
+		      ((PtrElement) element)->ElLeafType == LtGraphics)
 		     /* changing simple graphic --> polyline */
 		    {
 		       ((PtrElement) element)->ElLeafType = LtPolyLine;
@@ -907,7 +924,8 @@ Document            document;
 		       ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
 		       ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
 		    }
-		  else if (!polyline && ((PtrElement) element)->ElLeafType == LtPolyLine)
+		  else if (!polyline &&
+			   ((PtrElement) element)->ElLeafType == LtPolyLine)
 		     /* changing polyline --> simple graphic */
 		    {
 		       delta = -((PtrElement) element)->ElNPoints;
@@ -1079,7 +1097,8 @@ Document            document;
       else
 	{
 	   /* Suppresses the point from the polyline */
-	   DeletePointInPolyline (&(((PtrElement) element)->ElPolyLineBuffer), rank);
+	   DeletePointInPolyline (&(((PtrElement) element)->ElPolyLineBuffer),
+				  rank);
 	   /* There is a point less in the element */
 	   ((PtrElement) element)->ElNPoints--;
 	   /* Updates the volumes of ancestors */
@@ -1145,7 +1164,8 @@ Document            document;
 		x = PixelToPoint (x);
 		y = PixelToPoint (y);
 	     }
-	   ModifyPointInPolyline (((PtrElement) element)->ElPolyLineBuffer, rank, x, y);
+	   ModifyPointInPolyline (((PtrElement) element)->ElPolyLineBuffer,
+				  rank, x, y);
 #ifndef NODISPLAY
 	   RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
@@ -1202,8 +1222,8 @@ Document            document;
 		y = PixelToPoint (y);
 	     }
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
-	   /* verifies that the new point coordinates are greatest than all the coordinates of
-	      the other points of the polyline */
+	   /* verifies that the new point coordinates are greatest than all
+	      the coordinates of the other points of the polyline */
 	   rank = 1;
 	   pBuff = firstBuffer;
 	   while (pBuff != NULL)
