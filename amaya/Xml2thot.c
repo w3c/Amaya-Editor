@@ -3244,6 +3244,7 @@ int              length;
 	     }
 	   /* Try to find a fallback character */
 	   XmlGetFallbackCharacter (wcharRead);
+	   ImmediatelyAfterTag = FALSE;
 	 }
      }
 
