@@ -6074,7 +6074,6 @@ RULES
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Line;
 		FillPattern: nopattern;
 		Visibility: Enclosing =;
 		END;

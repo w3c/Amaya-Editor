@@ -678,6 +678,9 @@ ElementType         elType;
    Inserts an element Pseudo_paragraph in the abstract tree of
    the Thot document if el is a leaf and is not allowed to be
    a child of element parent.
+   If element *el is not a character level element and parent is
+   a Pseudo_paragraph, insert *el as a sibling of element parent.
+
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -755,29 +758,42 @@ Element           parent;
      	      }
 	  }
      }
-   
-   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-       (elType.ElTypeNum != HTML_EL_Inserted_Text &&
-	IsCharacterLevelElement (*el)))
-     {
-       /* it is a character level element */
-       parentType = TtaGetElementType (parent);
-       if (parentType.ElTypeNum == HTML_EL_Text_Area)
-	 {
-	   /* A basic element cannot be a child of a Text_Area */
-	   /* create a Inserted_Text element as a child of Text_Area */
-	   newElType.ElSSchema = DocumentSSchema;
-	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	   newEl = TtaNewElement (currentDocument, newElType);
-	   XmlSetElemLineNumber (newEl);
-	   InsertElement (&newEl);
-	   if (newEl != NULL)
-	     {
-	       TtaInsertFirstChild (el, newEl, currentDocument);
-	       ret = TRUE;
-	     }
-	 }
-     }
+   else
+     if (!IsCharacterLevelElement (*el))
+       /* it is not a character level element */
+       /* don't insert it as a child of a Pseudo_paragraph, but as a sibling */
+       {
+	 parentType = TtaGetElementType (parent);
+	 if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	   {
+	     TtaInsertSibling (*el, parent, FALSE, currentDocument);
+	     ret = TRUE;
+	   }
+       }
+
+   if (!ret)
+     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+         (elType.ElTypeNum != HTML_EL_Inserted_Text &&
+	  IsCharacterLevelElement (*el)))
+       {
+         /* it is a character level element */
+	 parentType = TtaGetElementType (parent);
+	 if (parentType.ElTypeNum == HTML_EL_Text_Area)
+	   {
+	     /* A basic element cannot be a child of a Text_Area */
+	     /* create a Inserted_Text element as a child of Text_Area */
+	     newElType.ElSSchema = DocumentSSchema;
+	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
+	     newEl = TtaNewElement (currentDocument, newElType);
+	     XmlSetElemLineNumber (newEl);
+	     InsertElement (&newEl);
+	     if (newEl != NULL)
+	       {
+		 TtaInsertFirstChild (el, newEl, currentDocument);
+		 ret = TRUE;
+	       }
+	   }
+       }
 
    return ret;
 }
@@ -795,13 +811,12 @@ Element    *el;
 #endif
 {
    Element   parent;
-   ElementType elType;
 
-   elType = TtaGetElementType (*el);
 #ifdef LC
+   ElementType elType;
+   elType = TtaGetElementType (*el);
    printf ("\nXhtmlInsertElement : elType.ElTypeNum %d \n", elType.ElTypeNum);
 #endif /* LC */
-
    if (InsertSibling ())
      {
        if (lastElement == NULL)
@@ -1273,7 +1288,7 @@ CHAR_T*             GIname;
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
-      XmlParseError (currentDocument, TEXT("**FATAL** Too many XML levels"), 0);
+      XmlParseError (currentDocument, TEXT("**FATAL** Too many XML levels"),0);
       XMLabort = TRUE;
     }
   else
@@ -2614,7 +2629,7 @@ STRING       entityName;
    printf ("\n CreateXmlEntity - Name : %s", entityName);
 #endif /* LC */
 
-   buffer = TtaAllocString ((ustrlen (entityName)) - 1);
+   buffer = TtaAllocString (ustrlen (entityName));
    ustrcpy (buffer, &entityName[1]);
    if (ptr = ustrrchr (buffer, TEXT(';')))
        ustrcpy (ptr, TEXT("\0"));
@@ -3143,7 +3158,7 @@ const XML_Char  *name
      }
    else
      {
-       bufName = TtaGetMemory (strlen (buffer));
+       bufName = TtaGetMemory (strlen (buffer) + 1);
        ustrcpy (bufName, buffer);
      }
 
@@ -3613,7 +3628,7 @@ ThotBool            isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
-   CHAR_T           tag[20];
+   CHAR_T           tag[32];
    Element          elem;
    int              i;
    SSchema          schema;

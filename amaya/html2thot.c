@@ -557,12 +557,13 @@ static int          CharLevelElement[] =
    HTML_EL_BR,
    0};
 
-/* block level elements */
+/* block level elements, i.e. elements having a Line rule in the presentation
+   schema fo the main view */
 static int          BlockLevelElement[] =
 {
-   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
    HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
-   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_CAPTION, HTML_EL_LEGEND,
+   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
+   HTML_EL_Term, HTML_EL_Address, HTML_EL_LEGEND, HTML_EL_CAPTION,
    0};
 
 /* start tags that imply the end of a current element */
