@@ -37,7 +37,7 @@ TEXT("Numbering.html"),
 TEXT("MakeBook.html"),
 TEXT("Annotations.html"),
 TEXT("Configure.html"),
-TEXT("ShorCuts.html"),
+TEXT("ShortCuts.html"),
 TEXT("Access.html")
 };
 
