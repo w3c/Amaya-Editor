@@ -525,7 +525,7 @@ STRUCT
 	   onfocus; onblur; onselect = Text; onchange;
 	 { onfocus  onblur  onselect         onchange }
 	   Default_Value = Text) =
-	Input_Text - (Input) with Rows ?= 4, Columns ?= 20;
+	Input_Text - (Input) {with Rows ?= 4, Columns ?= 20};
 
   FIELDSET =							{ FIELDSET }
 	BEGIN

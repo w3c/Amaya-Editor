@@ -9,6 +9,8 @@
 extern void ParseCharsetAndContentType ( Element el,
                                          Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
+extern void AddRowsColumns ( Element el,
+                             Document doc );
 extern void XhtmlElementComplete ( ParserData *context,
                                    Element el,
                                    int *error );
@@ -54,7 +56,7 @@ extern void EndOfHTMLAttributeValue ( char *attrValue,
                                       ParserData *context,
                                       ThotBool isXML );
 extern void MapHTMLAttributeValue ( char *attVal,
-                                    const AttributeType * attrType,
+                                    const AttributeType *attrType,
                                     int *value );
 
 #else /* __STDC__ */
@@ -62,6 +64,8 @@ extern void MapHTMLAttributeValue ( char *attVal,
 extern void ParseCharsetAndContentType ( Element el,
                                            Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
+extern void AddRowsColumns ( Element el,
+                               Document doc );
 extern void XhtmlElementComplete ( ParserData *context,
                                      Element el,
                                      int *error );
@@ -107,7 +111,7 @@ extern void EndOfHTMLAttributeValue ( char *attrValue,
                                         ParserData *context,
                                         ThotBool isXML );
 extern void MapHTMLAttributeValue ( char *attVal,
-                                      const AttributeType * attrType,
+                                      const AttributeType *attrType,
                                       int *value );
 
 #endif /* __STDC__ */

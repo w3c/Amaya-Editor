@@ -1355,7 +1355,7 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   if (ok)
     {
       /* Remove the previous doctype if it exists */
-      docEl = TtaGetMainRoot (doc);
+      docEl = TtaGetMainRoot (ext_doc);
       elType = TtaGetElementType (docEl);
       /* Search the doctype declaration according to the main schema */
       if (new_doctype == L_Basic || new_doctype == L_Strict ||
@@ -1367,18 +1367,27 @@ ThotBool ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
 	elType.ElTypeNum = SVG_EL_DOCTYPE;
       eltype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       /* Add the new doctype */
-      CreateDoctype (doc, eltype, new_doctype, useMathML, useSVG);
-      /* link the source view to this new document */
+      CreateDoctype (ext_doc, eltype, new_doctype, useMathML, useSVG);
+
+      /* Save this new document state */
+      if (DocumentTypes[doc] == docSVG)
+	TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "SVGT");
+      else if (DocumentTypes[doc] == docMath)
+	TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "MathMLT");
+      else if (new_doctype == L_Xhtml11)
+	TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT11");
+      else if (xml_doctype)
+	TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLTX");
+      else
+	TtaExportDocumentWithNewLineNumbers (ext_doc, localFile, "HTMLT");
+
+      /* reparse the document */
       DocumentMeta[doc]->xmlformat = xml_doctype;
-      /*DocumentSource[ext_doc] = DocumentSource[doc];*/
-      DocumentSource[ext_doc] = 0;
+      RestartParser (doc, localFile, tempdir, documentname, FALSE);
       /* Notify the document as modified */
       TtaSetDocumentModified (doc);
-      TtaFileCopy (tempdoc2, localFile);
-     /* Synchronize the document */
+      /* Synchronize the document */
       Synchronize (doc, 1);
-      /*DocumentSource[doc] = DocumentSource[ext_doc];
-	DocumentSource[ext_doc] = 0;*/
     }
 
   /* Delete the external document */

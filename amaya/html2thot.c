@@ -2499,7 +2499,7 @@ static void     EndOfStartGI (char c)
          HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored", 0);
          return;
          }
-      if (!strcmp (theGI, "math") || !strcmp (theGI, "svg"))
+       if (!strcmp (theGI, "math") || !strcmp (theGI, "svg"))
 	/* a <math> or <svg> tag has been read */
 	{
 	  /* get back to the beginning of the tag in the input buffer */
@@ -2519,11 +2519,11 @@ static void     EndOfStartGI (char c)
 	    }
 	  else
 	    CurrentBufChar = StartOfTagIndx;
-
+	  
 	  if (!strcmp ((char *)theGI, (char *)"math"))
-	     strcpy ((char *)schemaName, (char *)"MathML");
+	    strcpy ((char *)schemaName, (char *)"MathML");
 	  else
-	     strcpy ((char *)schemaName, (char *)"SVG");
+	    strcpy ((char *)schemaName, (char *)"SVG");
 	  /* Parse the corresponding element with the XML parser */
 	  if (!ParseIncludedXml ((FILE *)stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
 				 &EndOfHtmlFile, &NotToReadFile,
@@ -2657,7 +2657,7 @@ static void EndOfEndTag (char c)
    SSchema	   schema;
    char            msgBuffer[MaxMsgLength];
    int             entry;
-   int             i;
+   int             i, profile;
    ThotBool        ok, removed;
 
    CloseBuffer ();
@@ -2700,6 +2700,7 @@ static void EndOfEndTag (char c)
 	     }
 	 }
 
+       profile = TtaGetDocumentProfile(HTMLcontext.doc);
        if (!ok)
 	 {
 	   /* search the HTML tag in the mapping table */
@@ -2727,9 +2728,8 @@ static void EndOfEndTag (char c)
 	       InsertInvalidEl (msgBuffer, removed);
 	     }
 	   else if (entry >= 0 &&
-		    TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
-		    !(pHTMLGIMapping[entry].Level &
-		      TtaGetDocumentProfile (HTMLcontext.doc))) 
+		    profile != L_Other &&
+		    !(pHTMLGIMapping[entry].Level & profile)) 
 	     {
 	       /* Invalid element for the document profile */
 	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 20)

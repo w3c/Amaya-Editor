@@ -136,10 +136,10 @@ void NewCss (Document document, View view)
 void CreateDoctype (Document doc, Element doctype, int profile,
 		    ThotBool useMathML, ThotBool useSVG)
 {
-  ElementType     elType, lineType;
-  Element         docEl, doctypeLine, text, child;
+  ElementType     elType, lineType, piType;
+  Element         docEl, doctypeLine, text, child, prev;
   Language        language;
-  char		  buffer[400];
+  char		  buffer[400], *name;
   
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (FALSE, doc);
@@ -149,30 +149,60 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   language = Latin_Script;
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
-  
+  lineType.ElSSchema = elType.ElSSchema;
+  piType.ElSSchema = elType.ElSSchema;
+  name = TtaGetSSchemaName (elType.ElSSchema);
   /* Add the new doctype */
   if (profile == L_Basic || profile == L_Strict ||
       profile == L_Xhtml11 || profile == L_Transitional)
     {
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       lineType.ElTypeNum = HTML_EL_DOCTYPE_line;
+      piType.ElTypeNum = HTML_EL_XMLPI;
     }
+#ifdef _SVG
   else if (profile == L_SVG) 
     {
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       lineType.ElTypeNum = SVG_EL_DOCTYPE_line;
+      piType.ElTypeNum = HTML_EL_XMLPI;
     }
+#endif /* _SVG */
   else if (profile == L_MathML) 
     {
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       lineType.ElTypeNum = MathML_EL_DOCTYPE_line;
+      piType.ElTypeNum = MathML_EL_XMLPI;
     }
 
   if (doctype == NULL)
     {
       /* no DOCTYPE already declared */
       doctype = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&doctype, docEl, doc);
+      /* skip PI */
+      child = TtaGetFirstChild (docEl);
+      if (child == NULL)
+	TtaInsertFirstChild (&doctype, docEl, doc);
+      else
+	while (child)
+	  {
+	    elType = TtaGetElementType (child);
+	    if (piType.ElTypeNum == elType.ElTypeNum &&
+		piType.ElSSchema == elType.ElSSchema)
+	      {
+		/* it's a PI */
+		prev = child;
+		TtaNextSibling (&child);
+		if (child == NULL)
+		  TtaInsertSibling (doctype, prev, FALSE, doc);
+	      }
+	    else
+	      {
+		/* insert before this child */
+		TtaInsertSibling (doctype, child, TRUE, doc);
+		child = NULL;
+	      }
+	  }
       /* Make the DOCTYPE element read-only */
       TtaSetAccessRight (doctype, ReadOnly, doc);
     }
@@ -3276,7 +3306,7 @@ static void CreateInputElement (Document doc, View view, int elInput)
    Element             el, input, parent;
    Attribute           attr;
    int                 firstchar, lastchar;
-   ThotBool            withinP;
+   ThotBool            withinP, oldStructureChecking;
 
    /* create the form if necessary */
    el = PrepareFormControl (doc, &withinP);
@@ -3296,6 +3326,8 @@ static void CreateInputElement (Document doc, View view, int elInput)
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
 	   input = TtaNewTree (doc, elType, "");
+	   if (elInput == HTML_EL_Text_Area)
+	     AddRowsColumns (input, doc);
 	   TtaInsertFirstChild (&input, parent, doc);	   
 	   /* Insert a text element before */
 	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
@@ -3306,11 +3338,19 @@ static void CreateInputElement (Document doc, View view, int elInput)
 	 {
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
+	   oldStructureChecking = TtaGetStructureChecking (doc);
+	   if (elInput == HTML_EL_Text_Area)
+	     TtaSetStructureChecking (FALSE, doc);
 	   TtaInsertElement (elType, doc);
 	   TtaGiveFirstSelectedElement (doc, &input, &firstchar, &lastchar);
 	   if (input)
 	     {
 	       elType = TtaGetElementType (input);
+	       if (elInput == HTML_EL_Text_Area)
+		 {
+		   AddRowsColumns (input, doc);
+		   TtaSetStructureChecking (oldStructureChecking, doc);
+		 }
 	       while (input && elType.ElTypeNum != elInput)
 		 {
 		   input = TtaGetParent (input);

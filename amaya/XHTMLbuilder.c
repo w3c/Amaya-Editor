@@ -207,6 +207,39 @@ static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
      }
 }
 
+
+
+/*----------------------------------------------------------------------
+  AddRowsColumns
+  Add default rows and columns attributes to a TEXTAREA element.
+  ----------------------------------------------------------------------*/
+void AddRowsColumns (Element el, Document doc)
+{
+  ElementType    elType;
+  Attribute      attr;
+  AttributeType  attrType;
+
+  /* Add defaults rows and columns to display the textarea */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Rows;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeValue (attr, 4, el, doc);
+    }
+  attrType.AttrTypeNum = HTML_ATTR_Columns;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeValue (attr, 20, el, doc);
+    }
+}
+
 /*----------------------------------------------------------------------
   XhtmlElementComplete
   Complete Xhtml elements.
@@ -752,6 +785,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        CheckMandatoryAttribute (el, doc, HTML_ATTR_Rows);
        /* Check the mandatory columns attribute */
        CheckMandatoryAttribute (el, doc, HTML_ATTR_Columns);
+       /* Add default rows and columns attributes */
+       AddRowsColumns (el, doc);
        break;
 
      case HTML_EL_Radio_Input:
@@ -1759,7 +1794,8 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value attVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void MapHTMLAttributeValue (char *attVal, const AttributeType * attrType, int *value)
+void MapHTMLAttributeValue (char *attVal, const AttributeType *attrType,
+			    int *value)
 {
   MapXMLAttributeValue (XHTML_TYPE, attVal, attrType, value);
 }
