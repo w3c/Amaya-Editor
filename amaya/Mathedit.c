@@ -1939,6 +1939,7 @@ void NewMathString(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
+   RemoveAttribute (event->element, event->document, MathML_ATTR_EntityName);
    if (TtaGetTextLength (event->element) > 0)
       ParseMathString (event->element, TtaGetParent (event->element),
 		       event->document);

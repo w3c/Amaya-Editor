@@ -2515,9 +2515,11 @@ RULES
 	Style: Italics;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
+		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosed . Width;
 		Style: Enclosing =;
 		END;
 	END;
@@ -2527,9 +2529,11 @@ RULES
 	CreateBefore(MO_S);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
+		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -2538,9 +2542,11 @@ RULES
 	CreateBefore(MN_S);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
+		Line;
 		Size: DOC_FONTSIZE;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -2551,9 +2557,11 @@ RULES
 	CreateLast (ClosingQuote);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
+		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -2562,9 +2570,11 @@ RULES
 	CreateBefore(MTEXT_S);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
+		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -3226,13 +3236,13 @@ ATTRIBUTES
 	BEGIN
 	HorizPos: Left = Previous . Right;
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
   IntAddSpace = spacebefore:
 	BEGIN
 	HorizPos: Left = Previous . Right + OPERATOR_SPACE;
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
   IntAddSpace = spaceafter:
 	BEGIN
@@ -3240,7 +3250,7 @@ ATTRIBUTES
 {***	Width: Enclosed . Width + OPERATOR_SPACE;
 ****}	CreateAfter(MOspace);
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
   IntAddSpace = both:
 	BEGIN
@@ -3248,7 +3258,7 @@ ATTRIBUTES
 {***	Width: Enclosed . Width + OPERATOR_SPACE;
 ****}	CreateAfter(MOspace);	
 	IN Math_Structure_view
-		HorizPos: Left = Enclosing . Left;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
   IntHorizStretch:

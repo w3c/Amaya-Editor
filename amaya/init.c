@@ -4747,7 +4747,7 @@ View                view;
    CHAR_T                localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
-   View                structView, tocView;
+   View                structView, tocView, mathView;
    FILE               *list;
 
    /* get the root element */
@@ -4779,6 +4779,20 @@ View                view;
        ustrcat (localname, "/structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
+       fclose (list);
+     }
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
+   if (mathView != 0 && TtaIsViewOpened (document, mathView))
+     {
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/mathview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, mathView, list);
+       fclose (list);
+       ustrcpy (localname, TempFileDirectory);
+       ustrcat (localname, "/mathboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, mathView, list);
        fclose (list);
      }
    tocView = TtaGetViewFromName (document, "Table_of_contents");

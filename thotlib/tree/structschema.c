@@ -1053,7 +1053,19 @@ ThotBool           *optional;
 		ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
 		pEquivEl = pEl;
 	     }
-	   if (*typeNum > 0)
+	   if (*typeNum <= 0)
+	     /* l'element parent n'est ni une liste ni un agregat */
+	     /* s'il est de la forme X = TEXT, on accepte de creer une
+		autre feuille de texte */
+	     {
+	       if ((pEl->ElParent->ElStructSchema)->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsIdentity)
+	          if (pEl->ElTypeNumber == CharString + 1)
+		    {
+		      *pSS = pEl->ElParent->ElStructSchema;
+		      *typeNum = pEl->ElTypeNumber;
+		    }
+	     }
+	   else
 	      /* c'est un element de liste ou d'agregat */
 	      if ((*pSS)->SsRule[*typeNum - 1].SrConstruct == CsList)
 		 /* c'est un element de liste */

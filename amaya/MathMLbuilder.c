@@ -639,7 +639,7 @@ STRING alphabet;
 /*----------------------------------------------------------------------
    MathMLEntityCreated
    A MathML entity has been created by the XML parser.
-   Create a text element containing the entity name.
+   Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void        MathMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
@@ -674,6 +674,7 @@ Document doc;
    SetElemLineNumber (elText);
    XMLInsertElement (elText);
    TtaSetTextContent (elText, entityValue, lang, doc);
+   TtaSetAccessRight (elText, ReadOnly, doc);
    attrType.AttrSSchema = GetMathMLSSchema (doc);
    attrType.AttrTypeNum = MathML_ATTR_EntityName;
    attr = TtaNewAttribute (attrType);

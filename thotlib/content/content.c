@@ -181,7 +181,7 @@ PtrElement	    *pSecondPart;
 	     if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		/* l'application refuse */
 		dontCut = TRUE;
-	     else if (rank <= pEl->ElTextLength)
+	     else if (rank <= pEl->ElTextLength && rank > 1)
 		/* on va couper le texte */
 	       {
 		  /* envoie l'evenement ElemTextModify.Pre a qui le demande */
@@ -205,8 +205,15 @@ PtrElement	    *pSecondPart;
 	/* acquiert un buffer de texte pour la 2eme partie */
 	CreateTextBuffer (pEl2);
 	/* chaine le nouvel element */
-	InsertElementAfter (pEl, pEl2);
-	if (rank <= pEl->ElTextLength)
+	if (rank == 1)
+	  {
+	   InsertElementBefore (pEl, pEl2);
+	   pEl2->ElTextLength = 0;
+	   pEl2->ElVolume = 0;
+	  }
+	else
+	   InsertElementAfter (pEl, pEl2);
+	if (rank <= pEl->ElTextLength && rank > 1)
 	   /* le nouvel element n'a pas une longueur nulle */
 	  {
 	     /* longueur du nouvel element */
@@ -298,7 +305,7 @@ PtrElement	    *pSecondPart;
 }
 
 
-/***--------------------------------------------------------------------
+/*--------------------------------------------------------------------
    	MergeTextElements   si l'element pEl est une feuille de texte et si	
    	son suivant est egalement une feuille de texte dans le meme	
    	alphabet, reunit les deux elements sucessifs en un seul.	
