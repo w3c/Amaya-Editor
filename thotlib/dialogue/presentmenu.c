@@ -1183,11 +1183,14 @@ View                view;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS 
-   int                 i, nbItems;
+   int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
    char               *s;
    char                string[MAX_TXT_LEN];
+#  else  /* _WINDOWS */
+   int                 fontNum;
 #  endif /* !_WINDOWS */
+   int                 i;
    PtrDocument         pSelDoc;
    PtrElement          pFirstSel, pLastSel;
    int                 firstChar, lastChar;
@@ -1303,6 +1306,7 @@ View                view;
 	     nbItems++;
 	     TtaNewSubmenu (NumMenuCharFontSize, NumFormPresChar, 0,
 			    TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS), nbItems, string, NULL, TRUE);
+#        endif /* !_WINDOWS */
 	     /* initialise la zone 'Famille de caracteres' */
 	     ChngFontFamily = TRUE;
 	     StdFontFamily = FALSE;
@@ -1326,19 +1330,26 @@ View                view;
 		 i = 0;
 		 break;
 	       }
+#        ifdef _WINDOWS 
+         fontNum = i;
+#        else /* !_WINDOWS */
 	     TtaSetMenuForm (NumMenuCharFamily, i - 1);
-
+#        endif /* !_WINDOWS */
 	     /* initialise le catalogue 'Style des caracteres' */
 	     ChngStyle = TRUE;
 	     StdStyle = FALSE;
 	     Style = pAb->AbHighlight;
+#        ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuStyleChar, Style);
+#        endif /* !_WINDOWS */
 
 	     /* initialise le catalogue 'Epaisseur du souligne' */
 	     ChngUnderline = TRUE;
 	     StdUnderline = FALSE;
 	     UnderlineStyle = pAb->AbUnderline;
+#        ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuUnderlineType, UnderlineStyle);
+#        endif /* !_WINDOWS */
 	     ChngLineWeight = TRUE;
 	     StdLineWeight = FALSE;
 	     UnderlineWeight = pAb->AbThickness;
@@ -1353,10 +1364,10 @@ View                view;
 		i = FontRelSize (BodySize);
 	     else
 		i = pAb->AbSize;
+#        ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
-
 #       else  /* _WINDOWS */
-		CreateCharacterDlgWindow (TtaGetViewFrame (document, view));
+		CreateCharacterDlgWindow (TtaGetViewFrame (document, view), fontNum, Style, UnderlineStyle, BodySize);
 #       endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;

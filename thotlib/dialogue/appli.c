@@ -1184,6 +1184,7 @@ LPARAM      lParam;
            case WM_ENTER:
                 hwndTextEdit = GetFocus ();
                 WIN_APP_TextCallback (hwndTextEdit, frame);
+				SetFocus (FrRef [frame]);
                 return 0;
 
            case WM_KEYDOWN:

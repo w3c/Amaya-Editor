@@ -612,6 +612,19 @@ ThotWindow WIN_curWin = (ThotWindow)(-1);
    thot window.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+HMENU WIN_GetMenu (int frame)
+#else  /* !__STDC__ */
+HMENU WIN_GetMenu (int frame)
+#endif /* __STDC__ */
+{
+    HMENU menu = GetMenu (FrMainRef [frame]);
+    return menu;
+}
+/*----------------------------------------------------------------------
+   WIN_GetDeviceContext :  select a Device Context for a given       
+   thot window.                                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void WIN_GetDeviceContext (int frame)
 #else  /* !__STDC__ */
 void WIN_GetDeviceContext (frame)
