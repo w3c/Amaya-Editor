@@ -67,16 +67,6 @@ ELEMENTS
 	ElemReturn.Pre -> HandleReturn;
 	END;
 
-   STYLE_:
-	BEGIN
-	ElemTab.Pre -> AcceptTab;
-	END;
-
-   SCRIPT_:
-	BEGIN
-	ElemTab.Pre -> AcceptTab;
-	END;
-
    Frame:
 	ElemSelect.Pre -> SelectInsertedText;
 
@@ -113,8 +103,12 @@ ELEMENTS
 	ElemDelete.Post -> RowDeleted;
 	END;
 
+   SCRIPT_:
+	ElemTab.Pre -> AcceptTab;
+
    STYLE_:
 	BEGIN
+	ElemTab.Pre -> AcceptTab;
 	ElemTextModify.Pre -> ChangeStyle;
 	ElemTextModify.Post -> StyleChanged;
 	ElemDelete.Pre -> DeleteStyle;
