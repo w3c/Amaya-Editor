@@ -20,6 +20,7 @@
  
 #ifdef ANNOTATIONS
 #include "ANNOTevent_f.h"
+#include "ANNOTmenu_f.h"
 #endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
@@ -2321,7 +2322,7 @@ View                view;
 #ifdef __STDC__
 void FlushCache (Document doc, View view)
 #else 
-void FlushCache (doc, view);
+void FlushCache (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2337,7 +2338,7 @@ View view;
 #ifdef __STDC__
 void ConfigColor (Document doc, View view)
 #else 
-void ConfigColor (doc, view);
+void ConfigColor (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2352,7 +2353,7 @@ View view;
 #ifdef __STDC__
 void ConfigGeometry (Document doc, View view)
 #else 
-void ConfigGeometry (doc, view);
+void ConfigGeometry (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2367,7 +2368,7 @@ View view;
 #ifdef __STDC__
 void ConfigGeneral (Document doc, View view)
 #else 
-void ConfigGeneral (doc, view);
+void ConfigGeneral (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2382,7 +2383,7 @@ View view;
 #ifdef __STDC__
 void ConfigPublish (Document doc, View view)
 #else 
-void ConfigPublish (doc, view);
+void ConfigPublish (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2397,7 +2398,7 @@ View view;
 #ifdef __STDC__
 void ConfigCache (Document doc, View view)
 #else 
-void ConfigCache (doc, view);
+void ConfigCache (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2412,7 +2413,7 @@ View view;
 #ifdef __STDC__
 void ConfigProxy (Document doc, View view)
 #else 
-void ConfigProxy (doc, view);
+void ConfigProxy (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2427,7 +2428,7 @@ View view;
 #ifdef __STDC__
 void ConfigLanNeg (Document doc, View view)
 #else 
-void ConfigLanNeg (doc, view);
+void ConfigLanNeg (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2442,7 +2443,7 @@ View view;
 #ifdef __STDC__
 void ConfigProfile (Document doc, View view)
 #else
-void ConfigProfile (doc, view);
+void ConfigProfile (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2457,7 +2458,7 @@ View view;
 #ifdef __STDC__
 void ConfigTemplates (Document doc, View view)
 #else 
-void ConfigTemplates (doc, view);
+void ConfigTemplates (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2472,7 +2473,7 @@ View view;
 #ifdef __STDC__
 void SaveOptions (Document doc, View view)
 #else 
-void SaveOptions (doc, view);
+void SaveOptions (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2487,7 +2488,7 @@ View view;
 #ifdef __STDC__
 void AnnotateDocument (Document doc, View view)
 #else 
-void AnnotateDocument (doc, view);
+void AnnotateDocument (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2504,7 +2505,7 @@ View view;
 #ifdef __STDC__
 void LoadAnnotations (Document doc, View view)
 #else 
-void LoadAnnotations (doc, view);
+void LoadAnnotations (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2521,7 +2522,7 @@ View view;
 #ifdef __STDC__
 void PostAnnotation (Document doc, View view)
 #else 
-void PostAnnotation (doc, view);
+void PostAnnotation (doc, view)
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2535,12 +2536,30 @@ View view;
    Show/Hide the annotations
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ShowAnnotations (Document document)
+void                ShowAnnotations (Document document, View view)
 #else
-void                ShowAnnotations (document)
+void                ShowAnnotations (document, view)
 Document            doc;
+View                view;
 #endif
 {
 #ifdef ANNOTATIONS
 #endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+   Show/Hide the annotations
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CustomQuery (Document document, View view)
+#else
+void                CustomQuery (document, view)
+Document            doc;
+View                view;
+#endif
+{
+#ifdef ANNOTATIONS
+#endif /* ANNOTATIONS */
+
+  CustomQueryMenuInit (document, view);
 }

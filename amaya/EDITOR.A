@@ -236,6 +236,8 @@ MENUS
 	view:1 Annotations_ button:BLoadAnnots -> LoadAnnotations;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
+	Annotations_ Separator;
+	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;
