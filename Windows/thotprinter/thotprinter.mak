@@ -238,13 +238,13 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libThotTable - Win32 Release" : 
-   cd "\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Release" 
    cd "..\thotprinter"
 
 "libThotTable - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Release" RECURSE=1 
    cd "..\thotprinter"
@@ -252,13 +252,13 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libThotTable - Win32 Debug" : 
-   cd "\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug"\
  
    cd "..\thotprinter"
 
 "libThotTable - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Debug" RECURSE=1 
    cd "..\thotprinter"
@@ -268,12 +268,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "printlib - Win32 Release" : 
-   cd "\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Release" 
    cd "..\thotprinter"
 
 "printlib - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\printlib.mak CFG="printlib - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -281,12 +281,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "printlib - Win32 Debug" : 
-   cd "\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Debug" 
    cd "..\thotprinter"
 
 "printlib - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\printlib.mak CFG="printlib - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -296,12 +296,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\thotprinter"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -309,12 +309,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\thotprinter"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -324,12 +324,12 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\thotprinter"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Release"\
  RECURSE=1 
    cd "..\thotprinter"
@@ -337,12 +337,12 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\thotprinter"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Debug"\
  RECURSE=1 
    cd "..\thotprinter"
