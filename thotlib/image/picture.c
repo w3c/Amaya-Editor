@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1930,35 +1930,43 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
 #else /* _GTK */
-	      /* load the picture using ImLib */
-	      im = gdk_imlib_load_image (fileName);	      
-	      if (pres == RealSize)
-		{
-		  /* if it's a background, dont rescale the picture */
-		  wBox = im->rgb_width;
-		  hBox = im->rgb_height;
-		}
+	      if (typeImage == EPS_FORMAT)
+		drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
+		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
+		   Bgcolor, &width, &height,
+		   ViewFrameTable[frame - 1].FrMagnification);
 	      else
 		{
-		  if (wBox == 0)
-		    wBox = im->rgb_width;
-		  if (hBox == 0)
-		    hBox = im->rgb_height;
-		}
+		  /* load the picture using ImLib */
+		  im = gdk_imlib_load_image (fileName);	      
+		  if (pres == RealSize)
+		    {
+		      /* if it's a background, dont rescale the picture */
+		      wBox = im->rgb_width;
+		      hBox = im->rgb_height;
+		    }
+		  else
+		    {
+		      if (wBox == 0)
+			wBox = im->rgb_width;
+		      if (hBox == 0)
+			hBox = im->rgb_height;
+		    }
 #ifndef _GL
-	      gdk_imlib_render(im, (gint)wBox, (gint)hBox);
-	      drw = (GdkPixmap *) gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+		  gdk_imlib_render(im, (gint)wBox, (gint)hBox);
+		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
+		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GL */
-	      /* opengl draw in the other way...*/
-	      gdk_imlib_flip_image_vertical (im);
+		  /* opengl draw in the other way...*/
+		  gdk_imlib_flip_image_vertical (im);
 #ifndef MESA
-	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture (im, (gint)wBox ,(gint)hBox);
+		  /* opengl texture have size that is a power of 2*/
+		  drw = GL_MakeTexture (im, (gint)wBox ,(gint)hBox);
 #else /* MESA*/
-	      drw = GL_MakeTransparentRGB(im, (gint)wBox, (gint)hBox);
+		  drw = GL_MakeTransparentRGB(im, (gint)wBox, (gint)hBox);
 #endif/*  MESA */
 #endif /* _GL */
+		}
 	      width = (gint) wBox;
 	      height = (gint) hBox;
 #endif /* _GTK */

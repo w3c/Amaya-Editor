@@ -539,6 +539,8 @@ ThotBool IsUndisplayedName (const char *path)
 
    if (!strcasecmp (suffix, "exe") ||
        !strcasecmp (suffix, "pdf") ||
+       !strcasecmp (suffix, "ps") ||
+       !strcasecmp (suffix, "eps") ||
        !strcasecmp (suffix, "tar") ||
        !strcasecmp (suffix, "tgz") ||
        !strcasecmp (suffix, "ddl") ||
@@ -550,6 +552,8 @@ ThotBool IsUndisplayedName (const char *path)
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "exe") ||
 	   !strcasecmp (suffix, "pdf") ||
+	   !strcasecmp (suffix, "ps") ||
+	   !strcasecmp (suffix, "eps") ||
 	   !strcasecmp (suffix, "tar") ||
 	   !strcasecmp (suffix, "ddl") ||
 	   !strcasecmp (suffix, "o"))

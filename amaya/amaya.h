@@ -234,11 +234,13 @@ typedef enum _ClickEvent {
 
 #define FormMaths 0
 #define MenuMaths 1
-#define MAX_MATHS  2
+#define MenuMaths1 2
+#define MAX_MATHS  3
 
 #define FormGraph 0
 #define MenuGraph 1
-#define MAX_GRAPH 2
+#define MenuGraph1 2
+#define MAX_GRAPH 3
 
 /* The possible GET/POST/PUT request modes */
 /*synchronous request*/

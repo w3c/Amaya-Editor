@@ -1319,8 +1319,15 @@ static void         CreateMathConstruct (int construct)
 static void CallbackMaths (int ref, int typedata, char *data)
 {
   Document           doc;
+  int                val = (int) data;
 
-  switch (ref - MathsDialogue)
+  ref -= MathsDialogue;
+  if (ref == MenuMaths1)
+    {
+      ref = MenuMaths;
+      val += 6;
+    }
+  switch (ref)
     {
     case FormMaths:
       /* the user has clicked the DONE button in the Math dialog box */
@@ -1332,7 +1339,7 @@ static void CallbackMaths (int ref, int typedata, char *data)
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
 
-      if ((int) data == 13)
+      if (val == 13)
 	/* the user asks for the Symbol palette */
 	{
 	  TtcDisplayGreekKeyboard (doc, 1);
@@ -1342,14 +1349,17 @@ static void CallbackMaths (int ref, int typedata, char *data)
 	/* there is a selection */
         if (TtaGetDocumentAccessMode (doc))
 	   /* the document is in not in ReadOnly mode */
-           CreateMathConstruct (((int) data) +1);
+           CreateMathConstruct (val + 1);
       break;
 
     default:
       break;
     }
 }
+
 #ifdef _GTK
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 gboolean CloseMathMenu (GtkWidget *widget,
 			 GdkEvent  *event,
 			 gpointer   data )
@@ -1363,7 +1373,7 @@ gboolean CloseMathMenu (GtkWidget *widget,
 /*----------------------------------------------------------------------
    CreateMathMenu creates the maths menus.           
   ----------------------------------------------------------------------*/
-static void         CreateMathMenu (Document doc, View view)
+static void CreateMathMenu (Document doc, View view)
 {
 #ifdef _GTK
   GtkWidget *w;
@@ -1380,9 +1390,11 @@ static void         CreateMathMenu (Document doc, View view)
       /* Dialogue box for the Math palette */
       TtaNewSheet (MathsDialogue + FormMaths, TtaGetViewFrame (doc, view), 
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
-		   0, NULL, TRUE, 1, 'L', D_DONE);
+		   0, NULL, TRUE, 2, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 14, mIcons, FALSE);
+		   NULL, 7, mIcons, FALSE);
+      TtaNewIconMenu (MathsDialogue + MenuMaths1, MathsDialogue + FormMaths, 0,
+		   NULL, 7, &mIcons[6], FALSE);
       /* do not need to initialise the selection into the palette */
       /*TtaSetMenuForm (MathsDialogue + MenuMaths, 0);*/
       TtaSetDialoguePosition ();
@@ -2212,7 +2224,7 @@ static ThotBool MathMoveBackward ()
 /*----------------------------------------------------------------------
    InitMathML initializes MathML context.           
   ----------------------------------------------------------------------*/
-void                InitMathML ()
+void InitMathML ()
 {
 #ifndef _WINDOWS 
    iconMath = (ThotIcon) TtaCreatePixmapLogo (Math_xpm);

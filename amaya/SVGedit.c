@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2002.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1816,8 +1816,15 @@ static void         CreateGroup ()
 static void         CallbackGraph (int ref, int typedata, char *data)
 {
   Document           doc;
- 
-  switch (ref - GraphDialogue)
+  int                val = (int) data;
+
+  ref -= GraphDialogue;
+  if (ref == MenuGraph1)
+    {
+      ref = MenuGraph;
+      val += 5;
+    }
+  switch (ref)
     {
     case FormGraph:
       /* the user has clicked the DONE button in the Graphics dialog box */
@@ -1831,10 +1838,10 @@ static void         CallbackGraph (int ref, int typedata, char *data)
       if (doc > 0)
 	{
 	  /* there is a selection */
-	  if ((int) data == 11)
+	  if (val == 11)
 	    CreateGroup ();
 	  else
-	    CreateGraphicElement ((int) data);
+	    CreateGraphicElement (val);
 	}
       break;
  
@@ -1873,9 +1880,11 @@ static void         ShowGraphicsPalette (Document doc, View view)
       /* Dialogue box for the graphics palette */
       TtaNewSheet (GraphDialogue + FormGraph, TtaGetViewFrame (doc, view),
                    TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
-                   0, NULL, TRUE, 1, 'L', D_DONE);
+                   0, NULL, TRUE, 2, 'L', D_DONE);
       TtaNewIconMenu (GraphDialogue + MenuGraph, GraphDialogue + FormGraph, 0,
-		      NULL, 12, mIcons, FALSE);
+		      NULL, 6, mIcons, FALSE);
+      TtaNewIconMenu (GraphDialogue + MenuGraph1, GraphDialogue + FormGraph, 0,
+		      NULL, 6, &mIcons[5], FALSE);
       /* do not select the entry because it's not necessary */
       /*TtaSetMenuForm (GraphDialogue + MenuGraph, 0);*/
       TtaSetDialoguePosition ();

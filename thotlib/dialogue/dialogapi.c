@@ -7221,7 +7221,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_CANCEL));
 	       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	       gtk_widget_show_all (w);
-	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
+	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
 #endif /* _GTK */
 	       break;
 	     case D_DONE:
@@ -7232,7 +7232,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	       w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DONE));
 	       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	       gtk_widget_show_all (w);
-	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
+	       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
 #endif /* _GTK */
 	       break;
 	     }
@@ -7247,7 +7247,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	  w = gtk_button_new_with_label(ptr);
 	  GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
 	  gtk_widget_show_all (GTK_WIDGET (w));
-	  gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
+	  gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 5);
 	}
 	gtk_widget_show_all (GTK_WIDGET (w));
 	ConnectSignalGTK (GTK_OBJECT (w), "clicked",

@@ -741,7 +741,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
       /* Un clavier sans legende */
       for (i = 0; i < nbitem; i++, it++)
 	{
-	  if (i == 10*j)
+	  if (i == 10 * j)
 	    {
 	      /* vbox witch contain one color column */
 	      vbox5 = gtk_vbox_new (TRUE, 5);
@@ -771,7 +771,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
       /* Un clavier avec legende */
       for (i = 0; i < nbitem; i++, it++)
 	{
-	  if (i == 10*j)
+	  if (i == 10 * j)
 	    {
 	      /* vbox witch contain one color column */
 	      vbox5 = gtk_vbox_new (TRUE, 5);
