@@ -5,7 +5,7 @@
 Welcome to Amaya</title>
 <meta name="GENERATOR" content="amaya V1.1a Beta">
 </head>
-<body bgcolor="white">
+<body bgcolor="white" lang="fr">
 
 <h1>Gestion des langues et des jeux de caract&egrave;res dans la Thotlib</h1>
 <p>
@@ -20,19 +20,20 @@ Le dialogue de l'attribut langue &agrave; chang&eacute;.</p>
 <li>
 Il est maintenant r&eacute;actif, c'est a dire que la s&eacute;lection d'une
 langue ou d'un jeu de caract&egrave;res est imm&eacute;diatement
-repercut&eacute; sur la selection active.
+r&eacute;percut&eacute; sur la s&eacute;lection active.
 <li>
 Les langues et les jeux de caract&egrave;res ont &eacute;t&eacute;
 diff&eacute;renci&eacute;s : la langue est pr&eacute;sent&eacute;e dans un
-s&eacute;cteur, les jeux de caract&egrave;res disponibles sont
-pr&eacute;sent&eacute;s sous forme de buttons radio (Toggles).
+s&eacute;lecteur, les jeux de caract&egrave;res disponibles sont
+pr&eacute;sent&eacute;s sous forme de boutons radio (Toggles).
 <p>
 Lorsqu'une langue est s&eacute;lectionn&eacute;, l'entr&eacute;e du menu
-correpondant au jeu de caract&egrave;re associ&eacute; (par exemple Latin-1
+correspondant au jeu de caract&egrave;re associ&eacute; (par exemple Latin-1
 pour l'anglais, Latin-2 pour le polonais ou symbol pour le grec) est
-activ&eacute;e. Lorsqu'un jeu de caract&egrave;re est selectionn&eacute;, la
-langue utilis&eacute;e n'est pas d&eacute;termin&eacute;e, et le message
-&laquo; aucun &raquo; s'affiche dans la zone de saisie de la langue.  </p>
+activ&eacute;e. Lorsqu'un jeu de caract&egrave;re est
+s&eacute;lectionn&eacute;, la langue utilis&eacute;e n'est pas
+d&eacute;termin&eacute;e, et le message &laquo; aucun &raquo; s'affiche dans
+la zone de saisie de la langue.  </p>
 <li>
 Lorsque des caract&egrave;res sont saisis dans les dialogues &laquo; alphabet
 &raquo;, les &eacute;l&eacute;ments texte cr&eacute;es n'ont pas de langue,
@@ -45,23 +46,23 @@ mais sont associ&eacute;s au jeu de caract&egrave;re de la palette.
 <p>
 Les modifications concernent principalement le fichier language.c.</p>
 <p>
-Les premires entr&eacute;es de la table LangTable contient maintenat les
-langues du syst&egrave;me correspondant aux jeux de caract&egrave;res
+Les premi&egrave;res entr&eacute;es de la table LangTable contient maintenant
+les langues du syst&egrave;me correspondant aux jeux de caract&egrave;res
 utilis&eacute;s. Ces langues sont associ&eacute;es aux atomes de texte saisis
-&agrave; l'aide des palettes de carct&egrave;res et aux &eacute;l&eacute;ments
-auquels on &agrave; explicitement associ&eacute; un jeu de caract&egrave;re
-&agrave; l'aide du menu du formulaire langue.</p>
+&agrave; l'aide des palettes de caract&egrave;res et aux
+&eacute;l&eacute;ments auxquels on &agrave; explicitement associ&eacute; un
+jeu de caract&egrave;re &agrave; l'aide du menu du formulaire langue.</p>
 <p>
 Les entr&eacute;es suivantes contiennent les langues visibles pour
-l'utilisateur. L'identificateur de la premi&egrave;re langue utilisateur est
+l'utilisateur. L'quantificateur de la premi&egrave;re langue utilisateur est
 contenue dans la variable FirstUserLang, accessible depuis les autres modules
 par la fonction TtaGetFirstUserLanguage. </p>
 <p>
 Polices de caract&egrave;res : les polices ISO-Latin-2 sont disponible sur :
 http://www.biz.net.pl/iso/x-fonts/index.html (pour les membre du projet
 op&eacute;ra : /opera/fonts-latin-2). Il faut mettre &agrave; jour le champ
-THOTFONT dans la base de registres .thotrc pour acceder au repertoire ou sont
-install&eacute;es les polices.</p>
+THOTFONT dans la base de registres .thotrc pour acc&eacute;der au
+r&eacute;pertoire ou sont install&eacute;es les polices.</p>
 <p>
 Ajout d'un jeu de caract&egrave;re : pour ajouter un jeu de caract&egrave;re
 il faut d'abord s'assurer de disposer de la police correspondante, ensuite, il
@@ -69,14 +70,15 @@ suffit :</p>
 <ul>
 <li>
 d'ajouter le chargement de la police dans font.c (fonction FontIdentifier, le
-parametre alphabet est associ&eacute; &agrave; un nom de police : l pour
-iso8859-1, e pour iso8859-2),
+param&egrave;tre alphabet est associ&eacute; &agrave; un nom de police : l
+pour iso8859-1, e pour iso8859-2),
 <li>
-de d&eacute;clarer le langage systeme pour le nouveau jeu de caract&egrave;re
-dans language.c (fonction InitLanguage) et les langages utilisateur utilisant
-ce jeu de caract&egrave;re, meme fonction ou utiliser TtaNewLanguage,
+de d&eacute;clarer le langage syst&egrave;me pour le nouveau jeu de
+caract&egrave;re dans language.c (fonction InitLanguage) et les langages
+utilisateur utilisant ce jeu de caract&egrave;re, m&ecirc;me fonction ou
+utiliser TtaNewLanguage,
 <li>
-mettre a jour l'entree THOTFONT dans la base de registres,
+mettre a jour l'entr&eacute;e THOTFONT dans la base de registres,
 <li>
 le tour est jou&eacute;.
 </ul>
@@ -86,7 +88,7 @@ le tour est jou&eacute;.
 La fen&ecirc;tre de dialogue Langue n'est pas mise a jour si elle est
 affich&eacute;e lors du changement de s&eacute;lection.</p>
 <p>
-Si des caract&egrave;res romains sont m&eacute;l&eacute;s avec des
+Si des caract&egrave;res romains sont m&ecirc;l&eacute;s avec des
 caract&egrave;res symbol, l'alignement sur la ligne de base n'est pas
 correct.</p>
 <p>
