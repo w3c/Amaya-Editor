@@ -301,13 +301,19 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   char           *tmp_char2;
   char           tmp_string[20];
   HTParentAnchor *anchor;
-#if 0
-  ThotBool        use_anchor = FALSE;
-#endif
+  ThotBool        use_anchor;
 
   me =  (AHTReqContext *) HTRequest_context (request);
 
   anchor = HTRequest_anchor (request);
+
+  /* if we get a cached answer, we should get all the header information
+     from the anchor, instead of from the response object */
+  tmp_char = HTAnchor_physical (anchor);
+  if (tmp_char && !strncmp (tmp_char, "cache:", sizeof ("cache:") - 1))
+    use_anchor = TRUE;
+  else
+    use_anchor = FALSE;
 
   /* @@@ JK: we need a function here to specify which headers we
      want to copy */
@@ -319,7 +325,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	 Seems it's more recent */
 
       /* @@ JK: trying to use the content type stored in the response object */
-      if (response)
+      if (!use_anchor && response)
 	tmp_atom = HTResponse_format (response);
       if (!tmp_atom)
 	tmp_atom = HTAnchor_format (anchor);
