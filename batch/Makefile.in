@@ -20,7 +20,7 @@ bindir = @bindir@
 datadir = @datadir@
 
 COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/tra ../bin/app \
-          ../bin/printstr
+          ../bin/printstr ../bin/rescandialogue
 
 GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 
@@ -156,6 +156,19 @@ app : APP.GRM ../thotlib/libThotKernel.a ../bin ../bin/app
 	@$(ECHO) "====>" app is done
 
 #
+# rescandialogue : renumbering of message list
+#
+RESCAN_OBJ = \
+	rescandialogue.o
+
+rescandialogue : ../bin ../bin/rescandialogue
+	
+
+../bin/rescandialogue : $(RESCAN_OBJ)
+	$(CC) -o $@ $(RESCAN_OBJ)
+	@$(ECHO) "====>" rescandialogue is done
+
+#
 # printstr : decompiler
 #
 PRINTSTR_OBJ = \
@@ -201,20 +214,7 @@ printtyp : ../thotlib/libThotKernel.a ../bin ../bin/printtyp
 clean :
 	$(RM) -f *.o dns_daemon
 
-install : all
-	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
-	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
-	@(if test ! -d $(datadir)/thot/batch ; then $(MKDIR) $(datadir)/thot/batch ; fi)
-	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
-	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
-	@(for i in $(COMPILERS) ; do \
-	  $(INSTALL_BIN) $$i $(datadir)/thot/applis/bin ; \
-	  $(LN_S) $(datadir)/thot/applis/bin/$$i $(bindir)/ ; \
-	  done)
-	(for i in $(LANGUAGES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/batch/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/thot/batch ; \
-	  done ; done)
+install :
 
 uninstall :
 	(for i in $(COMPILERS) ; do \

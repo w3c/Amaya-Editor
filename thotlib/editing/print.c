@@ -3144,7 +3144,11 @@ char              **argv;
            {
 #            ifdef _WINDOWS
 #            else  /* _WINDOWS */
-             sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+	     if (NCopies > 1)
+	       sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
+	     else
+	       sprintf (cmd, "%s %s/%s.ps\n", printer, tempDir, name);
+
              result = system (cmd);
              if (result != 0)
                 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);

@@ -74,9 +74,8 @@ a simple clic allows you to install Amaya.
 Set up the environment and start Amaya
 --------------------------------------
 
-The file Thot/$platform/bin/amaya is executable file Amaya, the
-best thing is to add the path to the Thot/$platform/bin directory to your PATH
-environment variable:
+The file Thot/$platform/bin/amaya is the executable file Amaya, the
+best thing is to add this path to your PATH environment variable:
 
 On Unix platforms, when using sh, bash or another variant of the
 Bourne shell
@@ -86,8 +85,8 @@ one can lauch amaya simply by typing "amaya" to the shell prompt. The Amaya
 main window should open and display the first page of the Amaya
 documentation.
  
-On Windows platforms, you can create an Amaya shortcup on your screen.
-The executable file Amaya is at Thot/Windows/bin/amaya.
+On Windows platforms, you can create an Amaya shortcut from your screen.
+By default, the executable file Amaya is located at c:\Program Files\Thot\windows\bin\amaya.exe
 
 How to Compile Amaya Source Release
 ===================================

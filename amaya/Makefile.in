@@ -286,8 +286,7 @@ html2piv: ../bin/html2piv
 	$(CC) $(LDFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -o ../bin/html2piv  @srcdir@/html2thot.c $(HTML2THOT_LIBS)
 	@$(ECHO) "====>" html2piv is done
 
-install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
-	   $(AMAYA_LIBWWW_INSTALL)
+install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
 	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
 	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
 	@(if test ! -d $(datadir)/thot/amaya ; then $(MKDIR) $(datadir)/thot/amaya ; fi)
