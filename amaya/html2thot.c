@@ -5565,8 +5565,9 @@ Document            doc;
 #endif
 {
    Element             el, parent, child, first, last, next, copy, newparent,
-		       elem, prev, firstNotCharElem, blockParent;
+		       elem, prev, firstNotCharElem;
    PtrElemToBeChecked  elTBC, nextElTBC;
+   ElementType	       elType;
 
    /* check all block-level elements whose parent was a character-level
       element */
@@ -5646,8 +5647,8 @@ Document            doc;
 	   TtaDeleteTree (parent, doc);
 
 	   /* if, among the elements that have just been moved, there are
-	      block elements which are now children of block elements, move
-	      these elements as siblings of their parent */
+	      pseudo-paragraphs which are now children of block elements,
+	      remove these pseudo-paragraphs */
 	   elem = firstNotCharElem;
 	   while (elem != NULL)
 	     {
@@ -5658,34 +5659,29 @@ Document            doc;
 		next = elem;
 		TtaNextSibling (&next);
 		}
-	     if (IsBlockElement (elem))
+	     elType = TtaGetElementType (elem);
+	     if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		{
-		blockParent = TtaGetParent (elem);
-		if (blockParent != NULL && IsBlockElement (blockParent))
-		   {
-		   prev = blockParent;
+		   child = TtaGetFirstChild (elem);
 		   do
 		     {
-		     TtaRemoveTree (elem, doc);
-		     TtaInsertSibling (elem, prev, TRUE, doc); /**** FALSE? ****/
-		     prev = elem;
-		     elem = next;
-		     if (elem == last)
-			next = NULL;
-		     else
-		        if (next != NULL)
-			   TtaNextSibling (&next);
+		     next = child;
+		     TtaNextSibling (&next);
+		     TtaRemoveTree (child, doc);
+		     TtaInsertSibling (child, elem, TRUE, doc);
+		     child = next;
 		     }
-		   while (elem != NULL);
-		   next = NULL;
-		   }
+		   while (child != NULL);
+		   if (elem == el)
+		      el = NULL;
+		   TtaDeleteTree (elem, doc);
 		}
-
 	     elem = next;	     
 	     }
 	   /* if el is a Pseudo-paragraph, merge it with its next or previous
 	      siblings if they also are Pseudo-paragraphs */
-	   MergePseudoParagraph (el, doc);
+	   if (el != NULL)
+	      MergePseudoParagraph (el, doc);
 	   }
        }
      nextElTBC = elTBC->nextElemToBeChecked;
