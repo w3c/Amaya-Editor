@@ -10,6 +10,9 @@
   !define VERSION "9.0"
   Name "Amaya WX ${VERSION}"
   OutFile "Amaya-WX-${VERSION}.exe"
+  
+  ;Use lzma to compress (better than zip)
+  SetCompressor lzma
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\Amaya"
