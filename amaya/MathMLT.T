@@ -589,6 +589,62 @@ ATTRIBUTES
 	create '"';
 	end;
   
+   macros:
+	begin
+	create SAN;
+	create 'macros="';
+	create macros;
+	create '"';
+	end;
+
+   display = block:
+	begin
+	create SAN;
+	create 'display="block"';
+	end;
+   display = inline_:
+	begin
+	create SAN;
+	create 'display="inline"';
+	end;
+
+   overflow = scroll:
+	begin
+	create SAN;
+	create 'overflow="scroll"';
+	end;
+   overflow = elide:
+	begin
+	create SAN;
+	create 'overflow="elide"';
+	end;
+   overflow = truncate:
+	begin
+	create SAN;
+	create 'overflow="truncate"';
+	end;
+   overflow = scale_:
+	begin
+	create SAN;
+	create 'overflow="scale"';
+	end;
+
+   altimg:
+	begin
+	create SAN;
+	create 'altimg="';
+	create altimg;
+	create '"';
+	end;
+	
+   alttext:
+	begin
+	create SAN;
+	create 'alttext="';
+	create alttext;
+	create '"';
+	end;
+
    fontsize:
 	begin
 	create SAN;

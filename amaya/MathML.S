@@ -18,8 +18,8 @@ ATTR
 
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
-   EntityName = TEXT;		{ the content of the element is the name of
-				  an entity }
+   EntityName = TEXT;		{ the content of the Thot element is the name
+				  of an entity }
    Ghost_restruct = TEXT;	{ to help structure transformation }
 
 CONST
@@ -29,7 +29,13 @@ CONST
 
 STRUCT
 
-   MathML = MROW + (XMLcomment);
+   MathML					{ the top-level math element }
+	  (ATTR macros = TEXT;
+	        display = block, inline_;
+	        overflow = scroll, elide, truncate, scale_;
+	        altimg = TEXT;
+	        alttext = TEXT)
+	  = MROW + (XMLcomment);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 

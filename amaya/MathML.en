@@ -56,5 +56,7 @@ MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
 
 Langue: lang
+inline_: inline
+scale_: scale
 normal_: normal
 bold_: bold

@@ -28,7 +28,7 @@
 <h2>Editer des mathématiques</h2>
 
 <p>Amaya vous permet d'inclure des expressions mathématiques dans des pages
-web,  suivant la spécification du  <a
+web, suivant la spécification du <a
 href="http://www.w3.org/TR/REC-MathML/">Balisage du langage mathématique</a>
 (MathML). Les expressions mathématiques y sont traitées comme des composants
 structurés, de la même manière que les éléments HTML. Vous pouvez donc
@@ -43,41 +43,41 @@ constructions mathématiques.</p>
 <h4>La palette Math et le menu Eléments/Math</h4>
 
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
-href="Selecting.html#Selecting">déplacer le point d'insertion</a>  à l'endroit
+href="Selecting.html#Selecting">déplacer le point d'insertion</a> à l'endroit
 où vous voulez insérer l'expression, puis de cliquer sur le bouton
-<strong>Math</strong>  (le bouton  à droite de la barre des boutons) ou de
-sélectionner l'entrée  <strong>Math</strong> du menu
+<strong>Math</strong> (le bouton à droite de la barre des boutons) ou de
+sélectionner l'entrée <strong>Math</strong> du menu
 <strong>Eléments</strong>. Le bouton <strong>Math</strong> affiche une palette
 qui reste à l'écran jusqu´à ce que vous cliquiez sur le bouton "terminer".
 L'entrée <strong>Math</strong> du menu <strong>Eléments</strong> affiche un
-menu. Choisissez l'outil  qui vous est le plus commode. Les deux vous
+menu. Choisissez l'outil qui vous est le plus commode. Les deux vous
 permettent de sélectionner la construction mathématique à insérer.</p>
 
-<p>Dans la palette  Math (ou le menu), le premier item vous permet de créer
-une nouvelle formule lorsque le point d'insertion est dans un élément HTML   (
+<p>Dans la palette Math (ou le menu), le premier item vous permet de créer
+une nouvelle formule lorsque le point d'insertion est dans un élément HTML  (
 mais le point d'insertion ne devrait pas être à l'intérieur d'un élément
 MathML).</p>
 
-<p>Dans le menu  <strong>Math</strong>, les éléments suivants vous donnent la
+<p>Dans le menu <strong>Math</strong>, les éléments suivants vous donnent la
 possibilité de créer de nouveaux éléments de base (non disponibles dans la
-palette): Texte (<code>mtext</code>), Identificateur  (<code>mi</code>),
-Nombre  (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
-utiliser ces commandes pour changer le type d'un élément  seul ou d'une
+palette): Texte (<code>mtext</code>), Identificateur (<code>mi</code>),
+Nombre (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
+utiliser ces commandes pour changer le type d'un élément seul ou d'une
 séquence d'éléments.</p>
 
-<p>Ces items  du menu  <strong>Math</strong> sont suivis par l'item  Caractère
+<p>Ces items du menu <strong>Math</strong> sont suivis par l'item Caractère
 (<code>mchar</code>). Cette commande vous permet d'entrer un caractère qui
 n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue dans
 laquelle vous devez entrer le nom du caractère (par exemple <em>alpha </em>
 pour le caractère grec &alpha;).</p>
 
-<p>Les élements suivants du menu  <strong>Math</strong> (ou de la palette)
+<p>Les élements suivants du menu <strong>Math</strong> (ou de la palette)
 vous permettent de créer de nouvelles constructions à l'intérieur d'une
 formule. Si le point d'insertion n'est pas dans une formule, un élément Math
 est d'abord créé pour accepter la nouvelle construction. Les constructions
 disponibles sont:</p>
 <ul>
-  <li>Racine ( <code>mroot dans</code> MathML):  <math
+  <li>Racine ( <code>mroot dans</code> MathML): <math
     xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -241,7 +241,7 @@ disponibles sont:</p>
   </li>
 </ul>
 
-<p>Le dernier item  de la palette  <strong>Math</strong> (<math
+<p>Le dernier item de la palette <strong>Math</strong> (<math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -250,13 +250,13 @@ symboles mathématiques et des caractères grecs.</p>
 
 <h4><a name="Entering">Entrer des constructions à partir du clavier.</a></h4>
 
-<p>Vous n'êtes pas obligé d'utiliser le menu ou la palette  pour créer et
+<p>Vous n'êtes pas obligé d'utiliser le menu ou la palette pour créer et
 éditer des expressions mathématiques. Vous pouvez entrer des constructions
 mathématiques directement à partir du clavier étant donné que chaque article
 du menu <strong>Math</strong> a un équivalent sur le clavier (tous les
 raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite.
 Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les touches
-de direction du  clavier pour  faire passer  le point d'insertion d'une
+de direction du clavier pour faire passer le point d'insertion d'une
 construction à une autre.</p>
 
 <h3><a name="Entering1">Entrer des caractères</a></h3>
@@ -279,9 +279,9 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 </p>
 
 <p>il suffit de taper cette séquence de 6 caractères: <code>x=2a+b</code>
-(n'oubliez pas de cliquer d'abord sur l'entrée  Math du menu
-<strong>Math</strong>  si vous n'êtes pas dans une expression mathématique),
-et vous obtiendrez la structure suivante (vous pouvez vérifier dans le  <a
+(n'oubliez pas de cliquer d'abord sur l'entrée Math du menu
+<strong>Math</strong> si vous n'êtes pas dans une expression mathématique),
+et vous obtiendrez la structure suivante (vous pouvez vérifier dans le <a
 href="#Math_Struc">vue Math_Structure </a>):</p>
 <pre>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</pre>
 
@@ -293,10 +293,10 @@ Opérateur (mo) du menu Eléments/Math.</p>
 <h3><a name="Structure">Editer la structure</a></h3>
 
 <p>Amaya prévoit la même méthode pour créer et éditer des matrices que pour <a
-href="Tables.html#Editing">éditer des tables  HTML</a>. Comme pour les tables,
+href="Tables.html#Editing">éditer des tables HTML</a>. Comme pour les tables,
 il y a une commande spécifique (Détruire une colonne de matrice) pour détruire
 une colonne dans une matrice, même si elle n'est pas vide. Cette commande est
-située à la fin du sous-menu  <strong>Math</strong> du menu
+située à la fin du sous-menu <strong>Math</strong> du menu
 <strong>Eléments.</strong></p>
 
 <p>Si vous voulez changer la structure d'une expression existante, pour
@@ -304,7 +304,7 @@ ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
 expression avec la palette, le menu <strong>Math</strong> ou le <a
 href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
-<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionnez
+<strong>Transformer </strong>du menu <strong>Edition</strong>. Sélectionnez
 l'expression que vous voulez transformer et la commande<strong>
 Transformer</strong> affichera un menu avec tous les changements
 possibles.</p>
@@ -312,19 +312,19 @@ possibles.</p>
 <h3><a name="Math_Struc">Vue Math_Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
-de  l'article  <a href="Views.html#Structure">Montrer la structure </a>du menu
+de l'article <a href="Views.html#Structure">Montrer la structure </a>du menu
 <strong>Vues </strong> ouvre en fait <em>deux vues</em>:</p>
 <ul>
-  <li>La  Structure vue montre la structure principale du document  HTML. Dans
-    cette vue, les éléments  MathML sont seulement représentés par une
-    étiquette mathématique.  Leurs contenus effectifs ne sont pas
-  indiqués.</li>
-  <li>La  Math_Structure vue montre seulement les éléments MathML, mais là,
+  <li>La Structure vue montre la structure principale du document HTML. Dans
+    cette vue, les éléments MathML sont seulement représentés par une
+    étiquette mathématique. Leurs contenus effectifs ne sont pas
+    indiqués.</li>
+  <li>La Math_Structure vue montre seulement les éléments MathML, mais là,
     tous leurs composants sont visibles.</li>
 </ul>
 
 <p>Vous pouvez éditer des expressions mathématiques aussi bien dans la vue
-pricipale que dans la  vue Math_Structure. La vue  Math_Structure  est
+pricipale que dans la vue Math_Structure. La vue Math_Structure est
 particulièrement utile pour éviter l'ambiguïté. Observez l'exemple
 suivant:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
@@ -344,16 +344,16 @@ suivant:</p>
 </math>
 
 <p>Lorsque vous déplacez le point d'insertion aprés le caractère<em> b</em>,
-il n'est pas évident de distinguer  si vous voulez ajouter quelquechose <em>à
-l'intérieur </em>de la racine carrée ou  <em>aprés</em> elle.  Sélectionner
-(ou vérifier ) dans la  vue Math_Structure  évite toute ambiguïté. Vous pouvez
+il n'est pas évident de distinguer si vous voulez ajouter quelquechose <em>à
+l'intérieur </em>de la racine carrée ou <em>aprés</em> elle. Sélectionner
+(ou vérifier ) dans la vue Math_Structure évite toute ambiguïté. Vous pouvez
 également vérifier la position de la ligne, en bas de la fenêtre
 pricipale.</p>
 
 <h3><a name="Links">Les liens dans MathML</a></h3>
 
 <p>Vous pouvez créer et utiliser des liens dans des expressions mathématiques.
-Ces liens sont représentés en utilisant une version détachée du  <a
+Ces liens sont représentés en utilisant une version détachée du <a
 href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Seuls
 les liens simples unidirectionnels sont utilisables, mais vous pouvez associer
 un lien à n'importe quelle partie d'une formule. Par exemple, la fraction dans
@@ -386,38 +386,38 @@ représentée par:</p>
 <pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
 <p>(Vous pouvez trouver cela seulement dans la vue structure. Ce n'est pas
-actuellement  indiqué dans la vue liens).  Pour créer un tel lien, il suffit
-de sélectionner une expression (la fraction dans la démonstration  ci-dessus
+actuellement indiqué dans la vue liens). Pour créer un tel lien, il suffit
+de sélectionner une expression (la fraction dans la démonstration ci-dessus
 par exemple), de cliquer sur le bouton Lien ( ou de sélectionner le "créer
 lien" du menu Liens), et de cliquer sur la cible désirée. Si la cible est une
 expression dans une formule, vous devez d'abord transformer cette expression
 en cible. Il suffit de sélectionner l'expression ainsi que le "créer cible" du
 menu Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
-<h3><a name="Current">Limites  courantes</a></h3>
+<h3><a name="Current">Limites courantes</a></h3>
 
 <p>Amaya implémente seulement les <em>Balises de Présentation</em> à partir du
-MathML 2.0, et non  le  <em>Balisage du Contenu</em>. Tous les éléments de
+MathML 2.0, et non le <em>Balisage du Contenu</em>. Tous les éléments de
 présentation et les attributs sont utilisables, mais seulement quelques
-attributs sont restitués dans la vue formatée. (<code>fontsize</code>,
-<code>fontweight</code>, <code>fontstyle</code>, <code>fontfamily</code>,
-<code>color</code>, <code>numalign</code>, <code>denomalign</code>,
-<code>bevelled</code>, <code>notation</code>, <code>lquote</code>,
-<code>rquote</code>, <code>lspace</code>, <code>rspace</code>,
-<code>subscriptshift</code>, <code>superscriptshift</code>, <code>form</code>,
-<code>width</code> (<code>mspace</code> only), <code>height</code>
-(<code>mspace</code> only), <code>depth</code> (<code>mspace</code>
-only)).</p>
+attributs sont restitués à l'écran (<code>alttext</code>,
+<code>fontsize</code>, <code>fontweight</code>, <code>fontstyle</code>,
+<code>fontfamily</code>, <code>color</code>, <code>numalign</code>,
+<code>denomalign</code>, <code>bevelled</code>, <code>notation</code>,
+<code>lquote</code>, <code>rquote</code>, <code>lspace</code>,
+<code>rspace</code>, <code>subscriptshift</code>,
+<code>superscriptshift</code>, <code>form</code>, <code>width</code>
+(<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
+<code>depth</code> (<code>mspace</code> only)).</p>
 
-<p>Les attributs  <code>class</code>, <code>id</code> et  <code>style</code>
+<p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML: vous pouvez <a
-href="StyleSheets.html">associer le style  CSS </a> aux éléments MathML
-(attribut<code> class</code> et  <code>style</code>) et un élément  MathML
+href="StyleSheets.html">associer le style CSS </a> aux éléments MathML
+(attribut<code> class</code> et <code>style</code>) et un élément MathML
 peut être la cible d'un lien (attribut<code> id</code>).</p>
 
-<p>A cause du manque de polices de caractères  mathématiques, seule une série
+<p>A cause du manque de polices de caractères mathématiques, seule une série
 limitée d'entités représentant des symboles mathématiques est reconnue, la
-plupart disponible dans la police  Symbole. La version courante contient:
+plupart disponible dans la police Symbole. La version courante contient:
 Therefore, SuchThat, DownTee, Or, And, Not, Exists, ForAll, Element,
 NotElement, NotSubset, Subset, SubsetEqual, Superset, SupersetEqual,
 DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow, LeftArrow,

@@ -8,7 +8,8 @@ PRESENTATION MathML;
 VIEWS
    Formatted_view,
    Math_Structure_view merge with Structure_view
-                                  Graph_Structure_view;
+                                  Graph_Structure_view,
+   Math_Alternate_view merge with Alternate_view;
 
 #define SCRIPTSIZEMULTIPLIER 70 %
 #define OPERATOR_SPACE 0.27
@@ -67,6 +68,8 @@ DEFAULT
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	END;
+   IN Math_Alternate_view
+	Visibility: 0;
    END;
 
 BOXES
@@ -582,6 +585,149 @@ BOXES
                 Style: ATTR_Style; Weight: ATTR_Weight;
                 Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
                 END;
+        END;
+
+  ATTR_macros: BEGIN
+        Content: Text ' macros=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_macros: BEGIN
+        Content: (macros);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_display_block: BEGIN
+        Content: Text ' display=block';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_display_inline: BEGIN
+        Content: Text ' display=inline';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_overflow_scroll: BEGIN
+        Content: Text ' overflow=scroll';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_overflow_elide: BEGIN
+        Content: Text ' overflow=elide';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_overflow_truncate: BEGIN
+        Content: Text ' overflow=truncate';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_overflow_scale: BEGIN
+        Content: Text ' overflow=scale';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+  ATTR_altimg: BEGIN
+        Content: Text ' altimg=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_altimg: BEGIN
+        Content: (altimg);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+  ATTR_alttext: BEGIN
+        Content: Text ' alttext=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_alttext: BEGIN
+        Content: (alttext);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+	IN Math_Alternate_view
+		BEGIN
+		Visibility: Enclosing =;
+		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom;
+		END;
         END;
 
  ATTR_fontsize: BEGIN
@@ -2281,6 +2427,11 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: 10;
 		END;
+	IN Math_Alternate_view
+		BEGIN
+		Visibility: Enclosing =;
+		Height: 1 px;	{**** should be 0 ****}
+		END;
 	END;
 
    XMLcomment:
@@ -3258,6 +3409,38 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_other);
 	CreateBefore(VALUE_other);
+	END;
+
+  macros:
+	BEGIN
+	CreateBefore(ATTR_macros);
+	CreateBefore(VALUE_macros);
+	END;
+
+  display = block:
+	CreateBefore(ATTR_display_block);
+  display = inline_ :
+	CreateBefore(ATTR_display_inline);
+
+  overflow = scroll:
+	CreateBefore(ATTR_overflow_scroll);
+  overflow = elide:
+	CreateBefore(ATTR_overflow_elide);
+  overflow = truncate:
+	CreateBefore(ATTR_overflow_truncate);
+  overflow = scale_:
+	CreateBefore(ATTR_overflow_scale);
+
+  altimg:
+	BEGIN
+	CreateBefore(ATTR_altimg);
+	CreateBefore(VALUE_altimg);
+	END;
+
+  alttext:
+	BEGIN
+	CreateBefore(ATTR_alttext);
+	CreateBefore(VALUE_alttext);
 	END;
 
   fontsize:

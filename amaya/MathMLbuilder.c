@@ -294,6 +294,9 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_denomalign, TEXT("left"), MathML_ATTR_denomalign_VAL_left_},
  {MathML_ATTR_denomalign, TEXT("right"), MathML_ATTR_denomalign_VAL_right_},
 
+ {MathML_ATTR_display, TEXT("block"), MathML_ATTR_display_VAL_block},
+ {MathML_ATTR_display, TEXT("inline"), MathML_ATTR_display_VAL_inline_},
+
  {MathML_ATTR_displaystyle, TEXT("true"), MathML_ATTR_displaystyle_VAL_true},
  {MathML_ATTR_displaystyle, TEXT("false"), MathML_ATTR_displaystyle_VAL_false},
 
@@ -330,6 +333,11 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_numalign, TEXT("center"), MathML_ATTR_numalign_VAL_center_},
  {MathML_ATTR_numalign, TEXT("left"), MathML_ATTR_numalign_VAL_left_},
  {MathML_ATTR_numalign, TEXT("right"), MathML_ATTR_numalign_VAL_right_},
+
+ {MathML_ATTR_overflow, TEXT("scroll"), MathML_ATTR_overflow_VAL_scroll},
+ {MathML_ATTR_overflow, TEXT("elide"), MathML_ATTR_overflow_VAL_elide},
+ {MathML_ATTR_overflow, TEXT("truncate"), MathML_ATTR_overflow_VAL_truncate},
+ {MathML_ATTR_overflow, TEXT("scale"), MathML_ATTR_overflow_VAL_scale_},
 
  {MathML_ATTR_separator, TEXT("true"), MathML_ATTR_separator_VAL_true},
  {MathML_ATTR_separator, TEXT("false"), MathML_ATTR_separator_VAL_false},
