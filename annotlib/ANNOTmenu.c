@@ -20,6 +20,9 @@
 #include "annotlib.h"
 #include "ANNOTmenu.h"
 
+/*************
+ ** Annot Filter menu
+ *************/
 /* the selector type used to show/hide annotations */
 typedef enum _SelType {
   BY_AUTHOR = 0,
@@ -31,8 +34,13 @@ typedef enum _SelType {
 CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
 static int      CustomQueryBase;
-static int      AnnotShowHideBase;
-
+static int      AnnotFilterBase;
+/* copies of the doc and view from which the menu was invoked */
+static Document AnnotFilterDoc;
+static View     AnnotFilterView;
+static CHAR_T   AnnotSelItem[MAX_LENGTH];
+static SelType  AnnotSelType;
+ 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
@@ -116,9 +124,6 @@ View         view;
 #ifndef _WINDOWS
    int              i;
 
-   AnnotShowHide (document, view);
-   return;
-
    /* initialize the base if it hasn't yet been done */
    if (!CustomQueryBase)
      CustomQueryBase = TtaSetCallback (CustomQueryCallbackDialog, 
@@ -189,29 +194,32 @@ View         view;
 #endif /* !_WINDOWS */
 }
 
+/**************************************************
+ ** 
+ ** AnnotFilter menu
+ **
+ *************************************************/
+
+
 /*----------------------------------------------------------------------
-  Annot_ShowHideAnnotations
-  Shows or hides the annotations in a given document
-  @@ we need a table of the show/hide status per document, so that
-  @@ we can reset it when closing that document
+  DocAnnotVisibility
+  Shows or hides the annotations in a given document according to the
+  value of the show variable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ANNOT_ShowHideAnnotations (Document document, View view)
+static void DocAnnotVisibility (Document document, View view, ThotBool show)
 #else
-void ANNOT_ShowHideAnnotations (document, view)
+static void DocAnnotVisibility (document, view, show)
 Document document;
 View view;
+ThotBool show;
 #endif /* __STDC__ */
 {
-  static ThotBool show = TRUE;
   ElementType elType;
   Element     el;
   Attribute           attr;
   AttributeType       attrType;
 
-  /* toggle the last status */
-  show = !show;
- 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (document, NoComputedDisplay);
 
@@ -252,19 +260,13 @@ View view;
   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
-/**************************************************
- ** 
- ** AnnotShowHide Filter menu
- **
- *************************************************/
-
 /*---------------------------------------------------------------
-  BuildAnnotShowHideSelector builds the list allowing to select a profile
+  BuildAnnotFilterSelector builds the list allowing to select a profile
 ------------------------------------------------------------------*/
 #ifdef __STDC__
-static void BuildAnnotShowHideSelector (Document doc, SelType selector)
+static void BuildAnnotFilterSelector (Document doc, SelType selector)
 #else
-static void BuildAnnotShowHideSelector (doc)
+static void BuildAnnotFilterSelector (doc)
 Document doc;
 #endif /* __STDC__ */
 {
@@ -315,24 +317,27 @@ Document doc;
      }
 
    /* Fill in the form  */
-   TtaNewSelector (AnnotShowHideBase + mShowHideSelector, 
-		   AnnotShowHideBase + AnnotShowHideMenu,
-		   TEXT(""),
+   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
+		   AnnotFilterBase + AnnotFilterMenu,
+		   NULL,
 		   nb_entries,
 		   s,
-		   (nb_entries < 5) ? nb_entries : 5,
-		   TEXT(""),
-		   FALSE, 
-		   FALSE);
+		   5,
+		   NULL,
+		   TRUE,
+		   TRUE);
+
+   /* remove the selector */
+   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
 }
 
 /*----------------------------------------------------------------------
-   callback of the AnnotShowHide menu
+   callback of the AnnotFilter menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AnnotShowHideCallbackDialog (int ref, int typedata, CHAR_T * data)
+static void         AnnotFilterCallbackDialog (int ref, int typedata, CHAR_T * data)
 #else
-static void         AnnotShowHideCallbackDialog (ref, typedata, data)
+static void         AnnotFilterCallbackDialog (ref, typedata, data)
 int                 ref;
 int                 typedata;
 CHAR_T             *data;
@@ -342,39 +347,46 @@ CHAR_T             *data;
 
   if (ref == -1)
     {
-      /* removes the AnnotShowHide conf menu */
-      TtaDestroyDialogue (AnnotShowHideBase + AnnotShowHideMenu);
+      /* removes the AnnotFilter conf menu */
+      TtaDestroyDialogue (AnnotFilterBase + AnnotFilterMenu);
     }
   else
     {
       /* has the user changed the options? */
       val = (int) data;
-      switch (ref - AnnotShowHideBase)
+      switch (ref - AnnotFilterBase)
 	{
-	case AnnotShowHideMenu:
+	case AnnotFilterMenu:
 	  switch (val) 
 	    {
 	    case 0:
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	      TtaDestroyDialogue (ref);
+#if 0
+	      ToggleAnnotVisibility (AnnotSel, AnnotSelType);
+#endif
+	      /* maybe refresh the dialogue */
 	      break;
 	    case 2:
+	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
+	      /* maybe refresh the dialogue and reset the selection */
+	      break;
+	    case 3:
+	      DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
+	      /* maybe refresh the dialogue and reset the selection */
 	      break;
 	    default:
 	      break;
 	    }
 	  break;
 
-	case mShowHideSelector:
+	case mFilterSelector:
 	  /* copy what was selected */
-#if 0 
 	  if (data)
-	    ustrcpy (TemplatesUrl, data);
+	    ustrcpy (AnnotSelItem, data);
 	  else
-	    TemplatesUrl [0] = EOS;
-#endif
+	    AnnotSelItem[0] = WC_EOS;
 	  break;
 	  
 	case mSelectFilter:
@@ -382,7 +394,8 @@ CHAR_T             *data;
 	  /* @@ here I need to have a pointer in memory to the
 	     annotation document... means I'll only be able to have
 	     one such annotation dialogue at the time */
-	  BuildAnnotShowHideSelector (1, val);
+	  AnnotSelType = val;
+	  BuildAnnotFilterSelector (1, val);
 	  break;
 
 	default:
@@ -392,13 +405,13 @@ CHAR_T             *data;
 }
 
 /*----------------------------------------------------------------------
-  AnnotShowHide
-  Build and display the AnnotShowHide Menu dialog box and prepare for input.
+  AnnotFilter
+  Build and display the AnnotFilter Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         AnnotShowHide (Document document, View view)
+void         AnnotFilter (Document document, View view)
 #else
-void         AnnotShowHide (document, view)
+void         AnnotFilter (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__*/
@@ -406,24 +419,27 @@ View                view;
   int              i;
 
   /* initialize the base if it hasn't yet been done */
-  if (AnnotShowHideBase == 0)
-    AnnotShowHideBase =  TtaSetCallback (AnnotShowHideCallbackDialog,
-					 MAX_ANNOTSHOWHIDE_DLG);
+  if (AnnotFilterBase == 0)
+    AnnotFilterBase =  TtaSetCallback (AnnotFilterCallbackDialog,
+					 MAX_ANNOTFILTER_DLG);
+
+  /* make a copy of the current document and view, so that we can
+     find this info in the callback */
+  AnnotFilterDoc = document;
+  AnnotFilterView = view;
+
   /* Create the dialogue form */
   i = 0;
-  strcpy (&s[i], TEXT("Show/Hide selection"));
-  i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Select all"));
+  strcpy (&s[i], TEXT("Toggle selection"));
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Show all"));
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Hide all"));
 
-  TtaNewSheet (AnnotShowHideBase + AnnotShowHideMenu, 
+  TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
-	       TEXT("Show/Hide annotations"), 2, s, TRUE, 1, 'L', 
+	       TEXT("Show/Hide annotations"), 3, s, TRUE, 1, 'L', 
 	       D_DONE);
-
   
   /* create the radio buttons for choosing a selector */
   i = 0;
@@ -433,8 +449,8 @@ View                view;
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("BBy server"));
 
-  TtaNewSubmenu (AnnotShowHideBase + mSelectFilter, 
-		 AnnotShowHideBase + AnnotShowHideMenu,
+  TtaNewSubmenu (AnnotFilterBase + mSelectFilter, 
+		 AnnotFilterBase + AnnotFilterMenu,
 		 0,
 		 TEXT("Filter options"),
 		 3,
@@ -443,11 +459,11 @@ View                view;
 		 TRUE);
 
   /* @@ we should save the last selector type */
-  BuildAnnotShowHideSelector (document, BY_AUTHOR);
+  BuildAnnotFilterSelector (document, BY_AUTHOR);
 
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (AnnotShowHideBase + AnnotShowHideMenu, TRUE);
+  TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
 }
 
 

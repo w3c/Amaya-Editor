@@ -26,10 +26,10 @@
 #define mFreeText              9
 #define MAX_QUERYCONFMENU_DLG  10
 
-#define AnnotShowHideMenu      1
+#define AnnotFilterMenu      1
 #define mSelectFilter          2
-#define mShowHideSelector      3
-#define MAX_ANNOTSHOWHIDE_DLG  4
+#define mFilterSelector      3
+#define MAX_ANNOTFILTER_DLG  4
 
 #endif /*_ANNOTquery.h */
 

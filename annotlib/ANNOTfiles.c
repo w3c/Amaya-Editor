@@ -125,10 +125,12 @@ Document doc;
   while (ptr)
     {
       annot = (AnnotMeta *) ptr->object;
-      if ((annot->annot_url && !ustrcasecmp (DocumentURLs[doc_annot],
-					     annot->annot_url)) ||
-	  !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) ||
-	  !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 5))
+      /* @@ maybe we could add calls to NormalizeFile here */
+      if ((annot->annot_url 
+	   && (!ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url)
+	       || !ustrcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
+	   || !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url) 
+	   || !ustrcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))
 	break;
       ptr = ptr->next;
     }
