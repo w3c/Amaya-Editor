@@ -32,7 +32,7 @@
 #include "wininclude.h"
 #else /* _WINDOWS */
 #define MAX_ARGS 20
-static Time         T1;
+static Time         T1, T2, T3;
 static XmString  null_string;
 #endif /* _WINDOWS */
 
@@ -1790,7 +1790,7 @@ void FrameCallback (int frame, void *evnt)
 	    {
 	      /* moving a box */
 	      ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
-	      T1 = 0;
+	      T1 = T2 = T3 = 0;
 	    }
 	  else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
 	    {
@@ -1799,7 +1799,7 @@ void FrameCallback (int frame, void *evnt)
 	      LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
 	      FrameToView (frame, &document, &view);
 	      TtcCopyToClipboard (document, view);
-	      T1 = 0;
+	      T1 = T2 = T3 = 0;
 	    }
 	  else if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
 	    {
@@ -1885,11 +1885,11 @@ void FrameCallback (int frame, void *evnt)
 	    {
 	      /* resizing a box */
 	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
-	      T1 = 0;
+	      T1 = T2 = T3 = 0;
 	    }
 	  else
 	    {
-	      if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
+	      if (T2 + (Time) DoubleClickDelay > ev->xbutton.time)
 		{
 		  /* double click */
 		  TtaFetchOneEvent (&event);
@@ -1908,7 +1908,7 @@ void FrameCallback (int frame, void *evnt)
 		    return;
 		}
 	      /* handle a simple selection */
-	      T1 = ev->xbutton.time;
+	      T2 = ev->xbutton.time;
 	      ClickFrame = frame;
 	      ClickX = ev->xbutton.x;
 	      ClickY = ev->xbutton.y;
@@ -1921,11 +1921,11 @@ void FrameCallback (int frame, void *evnt)
 	    {
 	      /* resize a box */
 	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
-	      T1 = 0;
+	      T1 = T2 = T3 = 0;
 	    }
 	  else
 	    {
-	      if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
+	      if (T3 + (Time) DoubleClickDelay > ev->xbutton.time)
 		{
 		  /* double click */
 		  TtaFetchOneEvent (&event);
@@ -1944,7 +1944,7 @@ void FrameCallback (int frame, void *evnt)
 		    return;
 		}
 	      /* handle a simple selection */
-	      T1 = ev->xbutton.time;
+	      T3 = ev->xbutton.time;
 	      ClickFrame = frame;
 	      ClickX = ev->xbutton.x;
 	      ClickY = ev->xbutton.y;
@@ -1956,7 +1956,7 @@ void FrameCallback (int frame, void *evnt)
       break;
 
     case KeyPress:
-      T1 = 0;
+      T1 = T2 = T3 = 0;
       TtaAbortShowDialogue ();
 #ifndef _GTK
       CharTranslation ((ThotKeyEvent *)ev);
@@ -1964,7 +1964,7 @@ void FrameCallback (int frame, void *evnt)
       break;
     case EnterNotify:
     case LeaveNotify:
-      T1 = 0;
+      T1 = T2 = T3 = 0;
       break;
     default:
       break;
