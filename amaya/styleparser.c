@@ -232,6 +232,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
   c = *ptr;
   *ptr = EOS;
   if (reportError && *deb != EOS &&
+      strncasecmp (deb, "border-collapse", 15) &&
       strncasecmp (deb, "border-spacing", 14) &&
       strncasecmp (deb, "caption-side", 12) &&
       strncasecmp (deb, "clip", 4) &&
@@ -239,6 +240,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "counter-reset", 13) &&
       strncasecmp (deb, "cursor", 6) &&
       strncasecmp (deb, "empty-cells", 11) &&
+      strncasecmp (deb, "font-strech", 11) &&
       strncasecmp (deb, "letter-spacing", 14) &&
       strncasecmp (deb, "marker-offset", 12) &&
       strncasecmp (deb, "max-height", 10) &&
@@ -253,6 +255,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "overflow", 8) &&
       strncasecmp (deb, "quotes", 6) &&
       strncasecmp (deb, "table-layout", 12) &&
+      strncasecmp (deb, "text-shadow", 11) &&
       strncasecmp (deb, "visibility", 10) &&
       strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
@@ -3345,6 +3348,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
        quoteChar = *cssRule;
        cssRule++;
        cssRule = SkipQuotedString (cssRule, quoteChar);
+       cssRule = SkipBlanksAndComments (cssRule);
        if (*cssRule != EOS && *cssRule !=';')
 	 cssRule = SkipValue ("Invalid content value", cssRule);
      }
