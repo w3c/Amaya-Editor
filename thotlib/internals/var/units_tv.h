@@ -22,4 +22,9 @@
 #define THOT_UNITS_VAR
 
 THOT_EXPORT int      DOT_PER_INCHE;  /* screen resolution */
+
+#ifdef _WINDOWS 
+THOT_EXPORT int      ScreenDPI;
+THOT_EXPORT int      PrinterDPI;
+#endif /* _WINDOWS */
 #endif
