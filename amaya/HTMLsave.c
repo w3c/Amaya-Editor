@@ -1158,7 +1158,9 @@ void RestartParser (Document doc, char *localFile,
   /* Removes all CSS informations linked with the document */
   TtaSetDisplayMode (doc, DeferredDisplay);
   RemoveDocCSSs (doc);  
-
+  /* free access keys table */
+  TtaRemoveDocAccessKeys (doc);
+  
   /* store the document profile if it has been modified */
   profile = TtaGetDocumentProfile (doc);
   if (profile != parsingLevel)

@@ -2061,6 +2061,12 @@ static ThotBool  IsLeadingSpaceUseless ()
 			 removeLeadingSpaces = TRUE;
 		     }
 		 }
+	       else if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+		 {
+		   if (elType.ElTypeNum == SVG_EL_text_ ||
+		       elType.ElTypeNum == SVG_EL_tspan )
+		     removeLeadingSpaces = FALSE;
+		 }
 	     }
 	   else
 	     {
