@@ -201,8 +201,8 @@ void             ParseCharset (Element el, Document doc)
    Attribute     attr;
    SSchema       docSSchema;
    CHARSET       charset;
-   char       *text, *text2, *ptrText, *str;
-   char        charsetname[MAX_LENGTH];
+   char         *text, *text2, *ptrText, *str;
+   char          charsetname[MAX_LENGTH];
    int           length;
    int           pos, index = 0;
 
@@ -267,7 +267,7 @@ void             ParseCharset (Element el, Document doc)
    A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
 void             XhtmlEntityCreated (int         entityValue,
-				     STRING      entityName,
+				     char       *entityName,
 				     ThotBool    entityFound,
 				     ParserData *context)
 
@@ -279,9 +279,9 @@ void             XhtmlEntityCreated (int         entityValue,
   Language	 lang;
   int		 len;
 #define MAX_ENTITY_LENGTH 80
-  char	 buffer[MAX_ENTITY_LENGTH];
-  char	 bufName[MAX_ENTITY_LENGTH];
-  char         msgBuffer[MAX_ENTITY_LENGTH + 50];
+  char	         buffer[MAX_ENTITY_LENGTH];
+  char	         bufName[MAX_ENTITY_LENGTH];
+  char           msgBuffer[MAX_ENTITY_LENGTH + 50];
   
   if (entityValue <= 255 && entityFound)
     {
@@ -355,9 +355,9 @@ void              XhtmlElementComplete (Element el, Document doc, int *error)
    Attribute      attr;
    AttributeType  attrType;
    Language       lang;
-   STRING         text;
-   char         lastChar[2];
-   STRING         name1;
+   char          *text;
+   char           lastChar[2];
+   char           *name1;
    int            length;
    SSchema        docSSchema;
 
@@ -712,7 +712,7 @@ void              XhtmlElementComplete (Element el, Document doc, int *error)
    PutInContent    
    Put the string ChrString in the leaf of current element.
   ----------------------------------------------------------------------*/
-Element         PutInContent (STRING ChrString, ParserData *context)
+Element         PutInContent (char *ChrString, ParserData *context)
 
 {
    Element      el, child;
@@ -758,7 +758,7 @@ void           CreateHTMLAttribute (Element       el,
 {
    int         attrKind;
    int         length;
-   char*     buffer;
+   char       *buffer;
    Attribute   attr, oldAttr;
 
    if (attrType.AttrTypeNum != 0)
@@ -816,7 +816,7 @@ void               HTMLTypeAttrValue (char     *val,
   Element          newChild;
   AttributeType    attrType;
   Attribute        attr;
-  char           msgBuffer[MaxMsgLength];
+  char             msgBuffer[MaxMsgLength];
   int              value;
   int              numberOfLinesRead;
 
@@ -877,7 +877,7 @@ void              XhtmlTypeAttrValue (char     *val,
   Element         newChild;
   AttributeType   attrType;
   Attribute       attr;
-  char          msgBuffer[MaxMsgLength];
+  char            msgBuffer[MaxMsgLength];
   int             value;
   int             attrKind;
   ThotBool        level;
@@ -928,14 +928,14 @@ void              XhtmlTypeAttrValue (char     *val,
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
    oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
-void              CreateAttrWidthPercentPxl (STRING buffer, Element el,
+void              CreateAttrWidthPercentPxl (char *buffer, Element el,
 					     Document doc, int oldWidth)
 
 {
   AttributeType   attrTypePxl, attrTypePercent;
   Attribute       attrOld, attrNew;
   int             length, val;
-  char          msgBuffer[MaxMsgLength];
+  char            msgBuffer[MaxMsgLength];
   ElementType	  elType;
   int             w, h;
   ThotBool        isImage;
@@ -1016,7 +1016,7 @@ void              CreateAttrWidthPercentPxl (STRING buffer, Element el,
    an HTML attribute "size" has been created for a Font element.
    Create the corresponding internal attribute.
   ----------------------------------------------------------------------*/
-void              CreateAttrIntSize (STRING buffer,
+void              CreateAttrIntSize (char *buffer,
 				     Element el,
 				     Document doc)
 
@@ -1087,18 +1087,18 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
    AttributeType   attrType, attrType1;
    Attribute       attr;
    ElementType	   elType;
-   Element         child;
+   Element         child, root;
    Language        lang;
-   char          translation;
+   char            translation;
    char            shape;
-   STRING          buffer;
-   STRING          attrName;
+   char           *buffer;
+   char           *attrName;
    int             val;
    int             length;
    int             attrKind;
    ThotBool        done = FALSE;
    ThotBool        level;
-   char          msgBuffer[MaxMsgLength];
+   char            msgBuffer[MaxMsgLength];
 
    /* treatments of some particular HTML attributes */
    if (!strcmp (lastMappedAttr->XMLattribute, "style"))
@@ -1233,7 +1233,8 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
 			       else
 				 SetLanguagInHTMLStack (lang);
 			     }
-			   if (!TtaGetParent (lastAttrElement))
+			   root = TtaGetRootElement (context->doc);
+			   if (lastAttrElement == root)
 			     /* it's a LANG attribute on the root element */
 			     /* set the RealLang attribute */
 			     {
@@ -1373,7 +1374,7 @@ void               EndOfHTMLAttributeValue (char     *attrValue,
    Search in the Attribute Value Mapping Table the entry for the attribute
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
-void    MapHTMLAttributeValue (char        *AttrVal,
+void    MapHTMLAttributeValue (char          *AttrVal,
 			       AttributeType  attrType,
 			       int           *value)
 
