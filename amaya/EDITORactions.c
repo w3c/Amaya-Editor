@@ -1350,6 +1350,9 @@ int                 elInput;
 	   {
 	   el = TtaNewElement (doc, elType);
 	   TtaInsertSibling (el, input, FALSE, doc);
+	   /* if it's not a HTML_EL_BUTTON or a SELECT
+	      select the following text element */
+	   if (elInput != HTML_EL_BUTTON && elInput != HTML_EL_Option_Menu)
 	   TtaSelectElement (doc, el);
 	   }
 	 }
@@ -1467,30 +1470,24 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             el;
+   Element             el, new;
    int                 firstchar, lastchar;
-   boolean             withinP;
 
    /* create the form if necessary */
-   el = InsertForm (doc, view, &withinP);
+   CreateInputElement (doc, view, HTML_EL_Option_Menu);
+   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
    if (el != NULL)
      {
+       /* create the option */
        elType = TtaGetElementType (el);
-       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	 {
-	   el = TtaGetParent (el);
-	   elType = TtaGetElementType (el);
-	 }
-       /*el = GetEnclosingForm (doc, view);*/
-       if (elType.ElTypeNum != HTML_EL_Option)
-	 {
-	   elType.ElTypeNum = HTML_EL_Option_Menu;
-	   TtaInsertElement (elType, doc);
- 	 }
        elType.ElTypeNum = HTML_EL_Option;
-       TtaInsertElement (elType, doc);
-       TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-       OnlyOneOptionSelected (el, doc, FALSE);
+       new = TtaNewTree (doc, elType, "");
+       TtaInsertFirstChild (&new, el, doc);
+       OnlyOneOptionSelected (new, doc, FALSE);
+       /* Select the text element within the option */
+       el = TtaGetFirstChild (new);
+       TtaSelectElement (doc, el);
+       TtaSelectView (doc, TtaGetViewFromName (doc, "Structure_view"));
      }
 }
 
@@ -1561,27 +1558,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
-   Element             el, input;
-   boolean             withinP;
-
-   /* create the form if necessary */
-   el = InsertForm (doc, view, &withinP);
-   if (el != NULL)
-     {
-       /* the element can be created */
-       elType = TtaGetElementType (el);
-       elType.ElTypeNum = HTML_EL_Text_Area;
-       TtaInsertElement (elType, doc);
-       if (withinP)
-	 {
-	   /* Insert a text element after */
-	   input = TtaSearchTypedElement (elType, SearchForward, el);
-	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	   el = TtaNewElement (doc, elType);
-	   TtaInsertSibling (el, input, FALSE, doc);
-	 }
-     }
+   CreateInputElement (doc, view, HTML_EL_Text_Area);
 }
 
 

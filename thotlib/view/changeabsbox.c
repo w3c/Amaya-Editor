@@ -4419,6 +4419,8 @@ PtrAttribute        pAttrComp;
 				sont pas satisfaites, on n'applique pas la regle */
 			     pR = NULL;
 		    }
+		  else
+		    pR = NULL;/********/
 		  if (pR != NULL)
 		    {
 		       pReaff = NULL;
