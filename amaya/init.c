@@ -3327,7 +3327,14 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	       if (method == CE_MAKEBOOK)
 		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE);
 	       else
-		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+		 {
+		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+#ifdef ANNOTATIONS
+		   /* if it's an annotation, add the existing metadata */
+		   if (DocumentTypes[newdoc] == docAnnot)
+		     ANNOT_LoadAnnotation (baseDoc, newdoc);
+		 }
+#endif /* ANNOTATIONS */
 	     }
 	 }
        else
@@ -3356,16 +3363,11 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	     }
 	   W3Loading = 0;	/* loading is complete now */
 	 }
- 
+
        if (ok && !stopped_flag)
 	 ResetStop(newdoc);
      }
 
-#ifdef ANNOTATIONS
-   /* if it's an annotation, add the existing metadata */
-   if (DocumentTypes[newdoc] == docAnnot)
-     ANNOT_LoadAnnotation (baseDoc, newdoc);
-#endif /* ANNOTATIONS */
    /* select the target if present */
    if (ok && !stopped_flag && target != NULL && target[0] != EOS &&
        newdoc != 0)
