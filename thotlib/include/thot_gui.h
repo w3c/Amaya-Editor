@@ -182,7 +182,15 @@ typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
 typedef GdkFont       *PtrFont;
 typedef GdkCursor     *ThotCursor;
+#ifndef _GL
 typedef GdkPoint       ThotPoint;
+#else /* _GL */
+typedef struct GL_point 
+{
+  float x;
+  float y;
+} ThotPoint;
+#endif /*_GL*/
 typedef GdkEvent       ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
