@@ -2042,7 +2042,7 @@ static int       n = 1;
 	    if (pNextPageAb)
 	      {
 		box = pNextPageAb->AbBox;
-	      ClipOnPage (CurrentFrame, clipOrg,
+ 	      ClipOnPage (CurrentFrame, clipOrg,
 			   FrameTable[CurrentFrame].FrWidth,
 			  box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
 	      }
@@ -2599,7 +2599,7 @@ int main (int argc, char **argv)
 	  /* remove CSS files in the temporary directory */
 	  for (i = 0; i < cssCounter; i++)
 	    if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		strcmp(CSSName[i], tmpDir, length);
+		strncmp(CSSName[i], tmpDir, length));
 	      DeleteFile (CSSName[i]); 
 	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
