@@ -26,32 +26,34 @@
 </table>
 
 <div id="Changing">
-<h2>Editing the document structure</h2>
+<h2>Editer la structure du document</h2>
 
-<h3><a name="L653">Changing element type</a></h3>
+<h3><a name="L653">Changer l'élément type</a></h3>
 
-<p>To change the type of an existing element, select it and choose the new
-type in the <strong>Types</strong> menu or by clicking on a button.  You can
-thus change a numbered list into an itemized list, for example, or a paragraph
-into a heading or a list. To remove a type that is selected from the
-<strong>Style</strong> menu (<a href="HTML-elements/inline.html">inline
-types</a> - those that can be a phrase in a paragraph or list use the relevant
-option in the submenus of the <strong>Style</strong> menu as a toggle. Most
-other types can be removed as a transformation of the element when it has been
-selected (see below).<strong></strong></p>
+<p>Pour changer le type d'un élément, sélectionnez-le et choisissez le nouveau
+type soit dans le menu  <strong>Eléments </strong> soit en cliquant sur un
+bouton.  Vous pouvez ainsi  par exemple changer une liste numérotée en une
+liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour supprimer
+un type sélectionné dans le menu <strong>Eléments</strong> (<a
+href="HTML-elements/inline.html">inline types</a> - cela peut être une phrase
+dans un paragraphe ou une liste), utilisez l'option appropriée dans les
+sous-menus du menu <strong>Eléments....</strong>Beaucoup d'autres types
+peuvent être supprimés,  comme une transformation de l'élément lorsqu'il a été
+sélectionné ( voir plus loin). </p>
 
-<p>To select an entire element, place the insertion point anywhere within it
-and press the <a href="Selecting.html#Selecting1">Esc (F2 on Windows)
-key</a>.</p>
+<p>Pour sélectionner un élément entier, plcez le point d'insertion n'importe
+où à l'intérieur et appuyez sur  <a href="Selecting.html#Selecting1">la touche
+Esc (F2 sur Windows).</a></p>
 
-<p>More complex <a href="#L631">structure transformations</a> are also
-possible.</p>
+<p>Il est également possible d'effectuer des <a href="#L631"> transformations
+de structures </a>plus complexes.</p>
 
-<h3><a name="L631">Changing the document structure</a></h3>
+<h3><a name="L631">Changer la structure du document</a></h3>
 
-<p>Simple structure transformations can be achieved using the
-<strong>Types</strong> menu (see <a href="#L653">above</a>). More complex
-transformations can be obtained by other means.</p>
+<p>Des transformations de structure simples peuvents êtreSimple structure
+transformations can be achieved using the <strong>Types</strong> menu (see <a
+href="#L653">above</a>). More complex transformations can be obtained by other
+means.</p>
 
 <h3><a name="L141">The <strong>Transform</strong> command</a></h3>
 
