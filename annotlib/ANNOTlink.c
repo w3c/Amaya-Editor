@@ -550,11 +550,11 @@ void LINK_DelMetaFromMemory (Document doc)
 
   AnnotList_free (AnnotMetaData[doc].annotations);
   AnnotMetaData[doc].annotations = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].authors);
+  AnnotFilter_free (AnnotMetaData[doc].authors, List_delCharObj);
   AnnotMetaData[doc].authors = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].types);
+  AnnotFilter_free (AnnotMetaData[doc].types, NULL);
   AnnotMetaData[doc].types = NULL;
-  AnnotFilter_free (AnnotMetaData[doc].servers);
+  AnnotFilter_free (AnnotMetaData[doc].servers, List_delCharObj);
   AnnotMetaData[doc].servers = NULL;
 }
 

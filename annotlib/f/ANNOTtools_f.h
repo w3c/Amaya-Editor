@@ -41,7 +41,8 @@ extern ThotBool AnnotList_delAnnot ( List **list,
                                      CHAR_T *url,
                                      ThotBool useAnnotUrl );
 extern AnnotMeta *AnnotMeta_new ( void );
-extern void AnnotFilter_free ( List *annot_list );
+extern void AnnotFilter_free ( List *annot_list,
+			       ThotBool (*del_function)(void *));
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
@@ -110,7 +111,8 @@ extern ThotBool AnnotList_delAnnot (/* List **list,
                                        CHAR_T *url,
                                        ThotBool useAnnotUrl */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
-extern void AnnotFilter_free (/* List *annot_list */);
+extern void AnnotFilter_free (/* List *annot_list,
+				 ThotBool (*del_function)(void *) */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);

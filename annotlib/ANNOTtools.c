@@ -508,7 +508,7 @@ AnnotMeta *AnnotMeta_new (void)
    AnnotFilter_free
    Frees a linked list of annotation filters.
    ------------------------------------------------------------*/
-void AnnotFilter_free (List *annot_list)
+void AnnotFilter_free (List *annot_list, ThotBool (*del_function)(void *))
 {
   List *list_ptr, *next;
   AnnotFilterData *filter;
@@ -517,8 +517,8 @@ void AnnotFilter_free (List *annot_list)
   while (list_ptr)
     {
       filter = (AnnotFilterData *) list_ptr->object;
-      
-      TtaFreeMemory (filter->object);
+      if (del_function && filter->object)
+	(*del_function) (filter->object);
       TtaFreeMemory (filter);
       next = list_ptr->next;
       TtaFreeMemory (list_ptr);
@@ -592,6 +592,10 @@ void AnnotList_print (List *annot_list)
       printf("\n=====annotation meta data =========\n");  
       if (annot->source_url)
 	printf ("annot source URL = %s\n", annot->source_url);
+      if (annot->type)
+	printf ("annot type = %s\n", annot->type->name);
+      if (annot->xptr)
+	printf ("annot context = %s\n", annot->xptr);
       if (annot->labf)
 	printf ("annot labf = %s, c1 = %d\n", annot->labf, annot->c1);
       if (annot->labl)
