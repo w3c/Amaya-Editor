@@ -30,8 +30,10 @@ and must be removed at the end of the debug */
 #include <signal.h>
 #include <math.h>
 
+#ifndef M_PI
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
+#endif
 /*
   A charater that starts an entity that Amaya cannot convert.
   It should be displayed as a & and should be exported as &
