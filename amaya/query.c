@@ -1978,38 +1978,45 @@ static void RecCleanCache (char *dirname)
 
 #if defined(_WX)
   char buftmp[256];
-  wxString wx_dir_name = wxString(dirname, AmayaApp::conv_ascii);
 
-    /* try to delete the current directory */
+#ifdef _WINDOWS
+  wxString separator = _T("\\");
+#else /* _WINDOWS */
+  wxString separator = _T("/");
+#endif /* _WINDOWS */
+
+  wxString wx_dir_name = wxString(dirname, AmayaApp::conv_ascii);
+  
+  /* try to delete the current directory */
   wxRmdir(wx_dir_name);
   
   if (!wxDirExists(wx_dir_name))
-	  return;
-
+    return;
+  
   /* try to delete the files & directorys inside */
   {
-	  wxDir wx_dir(wx_dir_name);	
-	  wxString name;
-	  ThotBool cont = wx_dir.GetFirst(&name);
-	  while (cont)
+    wxDir wx_dir(wx_dir_name);	
+    wxString name;
+    ThotBool cont = wx_dir.GetFirst(&name);
+    while (cont)
+      {
+	name = wx_dir.GetName()+separator+name;
+	if (wxDirExists(name))
 	  {
-		name = wx_dir.GetName()+_T("\\")+name;
-		sprintf(buftmp, "%s\\", name.mb_str(AmayaApp::conv_ascii) );
-		if (wxDirExists(name))
-		{
-			/* it's a sub-directory */
-			sprintf(buftmp, "%s\\", name.mb_str(AmayaApp::conv_ascii) );
-			/* delete it recursively */
-			RecCleanCache(buftmp);
-		}
-		else
-		{
-			/* it's a file */
-			wxRemoveFile(name);
-		}
-
-		cont = wx_dir.GetNext(&name);
+	    name = name+separator;
+	    /* it's a sub-directory */
+	    sprintf(buftmp, "%s", (const char *)name.mb_str(AmayaApp::conv_ascii) );
+	    /* delete it recursively */
+	    RecCleanCache(buftmp);
 	  }
+	else
+	  {
+	    /* it's a file */
+	    wxRemoveFile(name);
+	  }
+	
+	cont = wx_dir.GetNext(&name);
+      }
   }
   /* try to delete the current directory */
   wxRmdir(wx_dir_name);
