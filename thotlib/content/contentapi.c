@@ -285,6 +285,9 @@ static void SetContent (Element element, unsigned char *content,
 	  /* Releases the  pixmap */
 	  image = (PictInfo *)pEl->ElPictInfo;
 	  CleanPictInfo (image);
+	  /* the new image may be in a different format */
+	  image->PicType = -1;
+	  /* change the filename of the image */
 	  TtaFreeMemory (image->PicFileName);
 	  image->PicFileName = TtaStrdup (content);
 	}
