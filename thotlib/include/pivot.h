@@ -24,7 +24,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document     TtaAllocateDocument (char *documentName, char *documentIdentifier);
+extern Document     TtaAllocateDocument (char *documentName, char *documentIdentifier, char *documentSchemasPath);
 extern void         TtaWritePivotHeader (BinFile pivotFile, Document document);
 extern void         TtaReadPivotHeader (BinFile pivotFile, Document document, char *nextChar);
 extern void         TtaWriteLanguageTable (BinFile pivotFile, Document document);
@@ -46,7 +46,7 @@ extern void         TtaSetLabelMax (Document document, int label);
 
 #else  /* __STDC__ */
 
-extern Document     TtaAllocateDocument ( /* char *documentName, char *documentIdentifier */ );
+extern Document     TtaAllocateDocument ( /* char *documentName, char *documentIdentifier, char *documentSchemasPath */ );
 extern void         TtaWritePivotHeader ( /* BinFile pivotFile, Document document */ );
 extern void         TtaReadPivotHeader ( /* BinFile pivotFile, Document document, char *nextChar */ );
 extern void         TtaWriteLanguageTable ( /* BinFile pivotFile, Document document */ );
