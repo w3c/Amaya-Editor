@@ -749,7 +749,7 @@ int                 overwrite;
   
   if (!tmp)
     tmp = "";
-
+ 
    AddRegisterEntry (AppRegistryEntryAppli, name, value,
 		     REGISTRY_USER, overwrite);
 }
@@ -981,47 +981,69 @@ static int          IsThotDir (CONST STRING path)
      }
 }
 
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
 #ifndef __GNUC__
 /*----------------------------------------------------------------------
-   WINReg_ge - simulates getenv in the WIN32 registry              
+   WINReg_get - simulates getenv in the WIN32 registry              
    
    looks for <env> in                                                 
-   HKEY_CURRENT_USER\Software\OPERA\Amaya\<var>                       
-   HKEY_LOCAL_MACHINE\Software\OPERA\Amaya\<var>                      
+   HKEY_CURRENT_USER\Software\Amaya\<var>                                      
   ----------------------------------------------------------------------*/
 static STRING          WINReg_get (CONST STRING env)
 {
-   static CONST CHAR   userBase[] = "Software\\OPERA\\Amaya";
+  static CONST CHAR   userBase[] = "Software\\Amaya";
+  CHAR                textKey[MAX_PATH];
+  HKEY                hKey;
+  DWORD               type;
+  LONG                success;
+  static CHAR         ret[MAX_PATH];	/* thread unsafe! */
+  DWORD               retLen = sizeof (ret);
+  
+  sprintf (textKey, "%s\\%s", userBase, env);	                    
+  success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS,
+			  &hKey);
+  if (success == ERROR_SUCCESS)
+    {
+      success = RegQueryValueEx (hKey, NULL, NULL, &type, ret, &retLen);
+      RegCloseKey (hKey);
+    }
+  return (success == ERROR_SUCCESS) ? ret : NULL;
+}
+
+/*----------------------------------------------------------------------
+   WINReg_set - stores a value in the WIN32 registry           
+   
+   stores <key, value> in                                                 
+   HKEY_CURRENT_USER\Software\Amaya\<key>                                      
+  ----------------------------------------------------------------------*/
+static boolean WINReg_set (CONST STRING key, CONST STRING value)
+{
+  static CONST CHAR    userBase[] = "Software\\Amaya";
    CHAR                textKey[MAX_PATH];
    HKEY                hKey;
-   DWORD               type;
-   int                 success;
-   static CHAR         ret[MAX_PATH];	/* thread unsafe! */
-   DWORD               retLen = sizeof (ret);
+   LONG                success;
+   CHAR                protValue[MAX_PATH];
+   DWORD               protValueLen = sizeof (protValue);
+   DWORD               dwDisposition;
+ 
+   /* protect against values bigger than what we can write in
+      the registry */
+   strncpy (protValue, value, protValueLen - 1);
+   protValue[protValueLen-1] = EOS;
 
-   /* not used but RegEnumValue fails if insufficient length */
-   CHAR                name[MAX_PATH];
-   DWORD               nameLen = sizeof (name);
-
-   sprintf (textKey, "%s\\%s", userBase, env);
-   if (RegOpenKey (HKEY_CURRENT_USER, textKey, &hKey) == ERROR_SUCCESS)
-     {
-	RegCloseKey (HKEY_CURRENT_USER);
-	success = RegEnumValue (hKey, 0,	/* we use only 1 value per entry */
-			 name, &nameLen, NULL, &type, (BYTE *) ret, &retLen)
-	   == ERROR_SUCCESS;
-	RegCloseKey (hKey);
-	return success ? ret : NULL;
-     }
-   if (RegOpenKey (HKEY_LOCAL_MACHINE, textKey, &hKey) != ERROR_SUCCESS)
-      return NULL;
-   RegCloseKey (HKEY_LOCAL_MACHINE);
-   success = RegEnumValue (hKey, 0,	/* we use only 1 value per entry */
-			 name, &nameLen, NULL, &type, (BYTE *) ret, &retLen)
-      == ERROR_SUCCESS;
-   RegCloseKey (hKey);
-   return success ? ret : NULL;
+   sprintf (textKey, "%s\\%s", userBase, key);	                    
+   success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
+	                         "", REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
+		                     NULL, &hKey, &dwDisposition);  
+   if (success == ERROR_SUCCESS)
+   /* create the userBase entry */
+   {
+	 success = RegSetValueEx (hKey, NULL, 0, REG_SZ, protValue,
+				  protValueLen);
+	 RegCloseKey (hKey);
+   }
+   
+   return (success == ERROR_SUCCESS) ? TRUE : FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1036,7 +1058,7 @@ static STRING          WINIni_get (CONST STRING env)
    return res ? ret : NULL;
 }
 #endif
-#endif /* WWW_MSWINDOWS */
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -1046,7 +1068,7 @@ static STRING          WINIni_get (CONST STRING env)
 void                TtaSaveAppRegistry ()
 {
 
-   STRING home_dir;
+   STRING              app_home;
    CHAR                filename[MAX_PATH];
    FILE               *output;
 
@@ -1055,13 +1077,9 @@ void                TtaSaveAppRegistry ()
    if (!AppRegistryModified)
       return;
 
-   home_dir = TtaGetEnvString ("APP_HOME");
-   if (home_dir != NULL)
-     {
-	ustrcpy (filename, home_dir);
-	ustrcat (filename, DIR_STR);
-	ustrcat (filename, THOT_RC_FILENAME);
-     }
+   app_home = (STRING) TtaGetEnvString ("APP_HOME");
+   if (app_home != NULL)
+   	sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
    else
      {
 	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
@@ -1076,8 +1094,14 @@ void                TtaSaveAppRegistry ()
    SortEnv ();
    PrintEnv (output);
    AppRegistryModified = 0;
-
+   
    fclose (output);
+
+#ifdef _WINDOWS
+   /* APP_HOME and TMPDIR are also stored in the registry */
+   WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
+   WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
+#endif /* _WINDOWS */
 }
 
 
@@ -1232,20 +1256,22 @@ static void         InitEnviron ()
 
 #ifndef _WINDOWS
    TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
-   pT = TtaGetEnvString ("TMPDIR");
+   pT = (STRING) TtaGetEnvString ("TMPDIR");
    if (!pT || *pT == EOS)
      {
-       TtaSetDefEnvString ("TMPDIR", "/tmp", FALSE);
        pT = "/tmp";
+       TtaSetDefEnvString ("TMPDIR", pT, FALSE);
      }
 #else
    TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
-   pT = TtaGetEnvString ("TMPDIR");
+   /* get the tmpdir from the registry or create it if it doesn't exist */
+   pT = WINReg_get ("TmpDir");
    if (!pT || *pT == EOS)
      {
-       TtaSetDefEnvString ("TMPDIR", "c:\\temp", FALSE);
        pT = "c:\\temp";
+       WINReg_set ("TmpDir", pT);
      }
+   TtaSetDefEnvString ("TMPDIR", pT, TRUE);
 #endif /* _WINDOWS */
 
    /* create the TMPDIR dir if it doesn't exist */
@@ -1256,12 +1282,12 @@ static void         InitEnviron ()
 #else /* _WINDOWS */
        i = mkdir (pT, S_IRWXU);
 #endif /* _WINDOWS */
-   if (i != 0 && errno != EEXIST)
-     {
-       fprintf (stderr, "Couldn't create directory %s\n", pT);
-       exit (1);
+       if (i != 0 && errno != EEXIST)
+	 {
+	   fprintf (stderr, "Couldn't create directory %s\n", pT);
+	   exit (1);
+	 }
      }
-   }
 }
 
 /*----------------------------------------------------------------------
@@ -1280,53 +1306,45 @@ void                TtaInitializeAppRegistry (appArgv0)
 STRING appArgv0;
 #endif
 {
-   PathBuffer execname;
-   PathBuffer path;
-   STRING     home_dir;
-   CHAR       app_home[MAX_PATH];
-   CHAR       filename[MAX_PATH];
-   STRING     my_path;
-   STRING     dir_end = NULL;
-   STRING appName;
+  PathBuffer execname;
+  PathBuffer path;
+  STRING     home_dir;
+  CHAR       app_home[MAX_PATH];
+  CHAR       filename[MAX_PATH];
+  STRING     my_path;
+  STRING     dir_end = NULL;
+  STRING appName;
 #  ifdef _WINDOWS
-   CHAR      *ptr;
+  CHAR      *ptr;
 #  ifndef __CYGWIN32__
-   extern int _fmode;
+  extern int _fmode;
 #  endif
 #  else /* ! _WINDOWS */
-   struct stat         stat_buf;
+  struct stat         stat_buf;
 #  endif /* _WINDOWS */
-   int                 execname_len;
-   int                 len, round;
-   boolean             found, ok;			  
-
+  int                 execname_len;
+  int                 len, round;
+  boolean             found, ok;			  
+  
 #  ifdef _WINDOWS
 #  ifndef __CYGWIN32__
    _fmode = _O_BINARY;
 #  endif  /* __CYGWIN32__ */
 #  endif  /* _WINDOWS */
 
-  if (AppRegistryInitialized != 0)
-    return;
-  AppRegistryInitialized++;
-  /*
-   * Sanity check on the argument given. An error here should be
+   if (AppRegistryInitialized != 0)
+     return;
+   AppRegistryInitialized++;
+   /*
+    * Sanity check on the argument given. An error here should be
    * detected by programmers, since it's a application coding error.
    */
-  if ((appArgv0 == NULL) || (*appArgv0 == EOS))
-    {
-      fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-      exit (1);
-    }
+   if ((appArgv0 == NULL) || (*appArgv0 == EOS))
+     {
+       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
+       exit (1);
+     }
 
-  /* No this should NOT be a call to TtaGetEnvString */
-# ifdef _WINDOWS
-  /* @@@ put her*ge the registry call to see what's the user dir,
-     and also create here the 1/2/3 dirs */
-  home_dir = "c:\\temp";
-# else /* _WINDOWS */
-  home_dir = getenv ("HOME");
-# endif /* _WINDOWS */
   /*
    * We are looking for the absolute pathname to the binary of the
    * application.
@@ -1559,52 +1577,61 @@ STRING appArgv0;
    else
      fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME, &filename[0]);
 
-   /* find (or create) the APP_HOME directory:
+   /* find the APP_HOME directory name:
       $HOME/.appname or $HOME\appname */
-   ustrcpy (app_home, home_dir);
-   ustrcat (app_home , DIR_STR);
-#ifndef _WINDOWS
-   ustrcat (app_home, ".");
+   /* No this should NOT be a call to TtaGetEnvString */
+# ifdef _WINDOWS
+   /* get app home from the registry. If it doesn't exist, create it */
+   ptr = WINReg_get ("AppHome");
+   if (!ptr || *ptr == EOS)
+     {
+       ptr = WINReg_get ("TmpDir");
+       if (!ptr || *ptr == EOS)
+	 ptr = "c:\\temp";
+       sprintf (app_home, "%s%c%s", ptr, DIR_SEP, AppRegistryEntryAppli);
+       WINReg_set ("AppHome", app_home);
+     }
+   else
+     ustrcpy (app_home, ptr);
+# else /* !_WINDOWS */
+   home_dir = getenv ("HOME");
+   sprintf (app_home, "%s%c.%s", home_dir, DIR_SEP, AppRegistryEntryAppli); 
 #endif _WINDOWS
-   ustrcat (app_home, AppRegistryEntryAppli);
-
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry ("System", "APP_HOME", app_home, REGISTRY_INSTALL, TRUE);
    
    /* read the user's preferences (if they exist) */
    if (app_home != NULL)
      {
-    ustrcpy (filename, app_home);
-	ustrcat (filename, DIR_STR);
-	ustrcat (filename, THOT_RC_FILENAME);
-	if (TtaFileExist (&filename[0]))
-	  {
+       sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+       if (TtaFileExist (&filename[0]))
+	 {
 #ifdef DEBUG_REGISTRY
-	     fprintf (stderr, "reading user's %s from %s\n",
-		      THOT_RC_FILENAME, filename);
+	   fprintf (stderr, "reading user's %s from %s\n",
+		    THOT_RC_FILENAME, filename);
 #endif
-	     ImportRegistryFile (filename, REGISTRY_USER);
-	  }
-	else {
-	   CHAR old_filename[MAX_PATH];
-	   ustrcpy (old_filename, home_dir);
-	   ustrcat (old_filename, DIR_STR);
-	   ustrcat (old_filename, THOT_INI_FILENAME);
-	   if (TtaFileExist (old_filename)) {
+	   ImportRegistryFile (filename, REGISTRY_USER);
+	 }
+       else {
+	 CHAR old_filename[MAX_PATH];
+	 ustrcpy (old_filename, home_dir);
+	 ustrcat (old_filename, DIR_STR);
+	 ustrcat (old_filename, THOT_INI_FILENAME);
+	 if (TtaFileExist (old_filename)) {
 #ifdef DEBUG_REGISTRY
-		fprintf (stderr, "reading user's %s from %s\n",
-			 THOT_INI_FILENAME, old_filename);
+	   fprintf (stderr, "reading user's %s from %s\n",
+		    THOT_INI_FILENAME, old_filename);
 #endif
-		ImportRegistryFile (old_filename, REGISTRY_USER);
-		TtaFileUnlink(old_filename);
-		TtaSaveAppRegistry();
-		fprintf (stderr, "user's preferences moved from %s to %s\n",
-			 old_filename, filename);
-	   }
-	}
+	   ImportRegistryFile (old_filename, REGISTRY_USER);
+	   TtaFileUnlink(old_filename);
+	   TtaSaveAppRegistry();
+	   fprintf (stderr, "user's preferences moved from %s to %s\n",
+		    old_filename, filename);
+	 }
+       }
      }
    else
-      fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
+     fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
    
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
