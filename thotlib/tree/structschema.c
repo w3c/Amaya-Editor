@@ -700,6 +700,8 @@ void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
 		       *typeNum = pSRule->SrIdentRule;
 		       ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
 		       break;
+		    case CsAny:
+		       break;
 		    default:
 		       *typeNum = 0;
 		       *pSS = NULL;
@@ -831,9 +833,9 @@ ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
    Test if an element of type Any has a parent of the same type
    Return that parent or NULL				
   ----------------------------------------------------------------------*/
-PtrElement          ParentAny (PtrElement pEl)
+PtrElement      ParentAny (PtrElement pEl)
 {
-   int	            nComp;
+   int	        nComp;
 
    if (pEl != NULL)
      {
@@ -1420,7 +1422,12 @@ ThotBool AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 		  /* c'est un element de liste ou d'agregat */
 		  {
 		    pRule = pAscSS->SsRule->SrElem[ascTypeNum - 1];
-		    if (pRule->SrConstruct == CsList)
+		    if (pRule->SrConstruct == CsAny)
+		      /* It's a generic xml element */
+		      {
+			ok = TRUE;
+		      }
+		    else if (pRule->SrConstruct == CsList)
 		      /* c'est un element de liste */
 		      {
 			ok = TRUE;
