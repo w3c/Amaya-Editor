@@ -592,7 +592,14 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       /* deja prete */
       /* on ne s'occupe pas de la hauteur de page */
       h = 0;
-      /* vue de l'arbre principal */
+      if (schView == 1)
+	/* it's a main view. Set a minimum volume for this view, to make sure
+	   that the whole abstract image get generated for relatively small
+	   documents. This allows these small documents to scroll smoothly */
+	{
+	  if (volume < 10000)
+	    volume = 10000;
+	}
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
       ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);

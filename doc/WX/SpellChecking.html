@@ -34,12 +34,12 @@
 <h2>Checking Spelling in Amaya</h2>
 
 <p>Amaya provides a multilingual spell checker, and selects the appropriate
-language according to the <code>LANG</code> attribute. The <code>LANG</code>
+language according to the <code>lang</code> attribute. The <code>lang</code>
 attribute can be associated with any element in a document, even with a
-single word, by choosing <strong>Language</strong> from the
-<strong>Attributes</strong> menu.</p>
+single word, using the <a
+href="Attributes.html"><strong>Attributes</strong></a> tool.</p>
 
-<p>To spell check a document, choose <strong>Spell Check</strong> from the
+<p>To spell check a document, choose <strong>Check spelling</strong> from the
 <strong>Edit</strong> menu.</p>
 
 <h3>The Personal Dictionary</h3>
@@ -48,33 +48,17 @@ single word, by choosing <strong>Language</strong> from the
 <b>user's personal dictionary</b>. A user's personal dictionary is located in
 the <code>AmayaHome/dictionary.DCT</code> file. In read-write mode, the spell
 checker employs the user dictionary when reviewing all documents, in addition
-to the language-specific dictionary. When you click the <strong>Skip
+to the language-specific dictionaries. When you click the <strong>Skip
 (+dic)</strong> and <strong>Replace (+dic)</strong> buttons in the
-<strong>Spell Checking</strong> dialog, the user dictionary is created and
-automatically updated by the spelling checker.</p>
+<strong>Spell checking</strong> dialog, the user dictionary is created if
+does not exists and automatically updated by the spelling checker.</p>
 
 <h3>The Spell Check Dialog</h3>
 
-<p>The <strong>Spell Check</strong> option on the <strong>Edit</strong> menu
-displays a dialog that enables you to choose parameters and interact with the
-spell checker. These parameters are defined below.</p>
+<p>The <strong>Check spelling</strong> option on the <strong>Edit</strong>
+menu displays a dialog that enables you to choose parameters and interact
+with the spell checker. These parameters are defined below.</p>
 <ul>
-  <li><strong>Number of proposals</strong> field defines the maximum number
-    of proposed corrections: any value between 1 and 10, the default value is
-    3. When an error is detected, any change made to this value immediately
-    displays a new list of corrections.
-    <p></p>
-  </li>
-  <li>The <strong>Ignore</strong> section tells the spell checker to ignore
-    certain words, for example, words that contain capital letters, digits,
-    Roman numerals or special characters.
-    <p></p>
-  </li>
-  <li>The <strong>Checking</strong> section, similar to that in the Search
-    dialog, enables you to specify the part of document on which the checker
-    will work.
-    <p></p>
-  </li>
   <li>The <strong>Spell Checking</strong> field displays incorrect words. The
     list of proposed corrections is displayed in the selector field located
     below the incorrect word. By default, Amaya selects the first proposed
@@ -82,53 +66,60 @@ spell checker. These parameters are defined below.</p>
     correction is displayed below the selector field. This correction can be
     directly edited on the form. The correction is made when you click the
     <strong>Replace and next</strong> or <strong>Replace (+dic)</strong>
-    buttons.
+    buttons.<br />
+    Note that you can perform the correction by double-clicking a proposed
+    correction.
     <p></p>
   </li>
   <li>The <strong>language</strong> in which the correction is made is
-    specified in the top left corner of the form. To change the language,
-    apply a Language attribute to the text with the
-    <strong>Attributes</strong> menu, and restart the spell-check
+    specified in the bottom left corner of the form. To change the language,
+    apply a <code>lang</code> attribute to the text with the
+    <strong>Attributes</strong> tool, and restart the spell-check
   procedure.</li>
+  <li>The <strong>Ignore</strong> section tells the spell checker to ignore
+    certain words, for example, words that contain only capital letters,
+    words that contain digits, Roman numerals or words with special
+    characters (you can choose the special characters).
+    <p></p>
+  </li>
+  <li>The <strong>Checking</strong> section, similar to that in the <a
+    href="Searching.html">Search dialog</a>, enables you to specify the part
+    of document on which the checker will work.
+    <p></p>
+  </li>
 </ul>
 
 <h3>Running the Spell Checker</h3>
 
 <p>To start the checker, click the <strong>Search/Skip</strong> button at the
 bottom of the form. If an error is found, the incorrect word is selected and
-highlighted in the document. If no error was detected, Amaya displays the
-<b>Not found</b> message in the bottom right corner of the form.</p>
+highlighted in the document. If no error was detected, Amaya displays a
+pop-up "End of spell checking".</p>
 
 <p>When an incorrect word is detected, you can use a button on the form to
 perform the following operations:</p>
 <ul>
-  <li><strong>Done</strong>: Amaya closes the form and stops spell checking.
-    Previous corrections are not canceled.
-    <p></p>
-  </li>
   <li><strong>Search/Skip</strong>: Amaya considers the incorrect word as
     acceptable. No change is made in the text or in the dictionaries. The
     checker searches for the next error.
     <p></p>
   </li>
-  <li><strong>Skip+Next</strong>: Amaya considers the incorrect word as
-    acceptable, and the checker moves on to the next word.
-    <p></p>
-  </li>
   <li><strong>Skip (+dic)</strong>: Performs the same action as the
-    <strong>Skip+Next</strong> button, except that the word considered
+    <strong>Skip/Skip</strong> button, except that the word considered
     incorrect is added to the document dictionary, and the checker will
     ignore any subsequent occurrence of this word.
     <p></p>
   </li>
-  <li><strong>Replace and Next</strong>: Amaya replaces the incorrect word
+  <li><strong>Replace and next</strong>: Amaya replaces the incorrect word
     with the correct word (optionally edited by the user) and the checker
     searches for the next error.
     <p></p>
   </li>
   <li><strong>Replace (+dic):</strong> Performs the same action as the
-    <strong>Replace and Next</strong> button, except that the replacement
+    <strong>Replace and next</strong> button, except that the replacement
     word is added to the document dictionary.</li>
+  <li><strong>Cancel</strong>: Amaya closes the form and stops spell
+    checking. Previous corrections are not canceled.</li>
 </ul>
 </div>
 </body>
