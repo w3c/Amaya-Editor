@@ -1243,7 +1243,9 @@ void       InitInfo (char *label, char *info)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void      InitConfirm3L (Document document, View view, char   *label1, char   *label2, char   *label3, ThotBool withCancel)
+void      InitConfirm3L (Document document, View view,
+			 char *label1, char *label2,
+			 char *label3, ThotBool withCancel)
 {
 #ifndef _WINDOWS
   /* Confirm form */
@@ -2110,12 +2112,12 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
   ----------------------------------------------------------------------*/
 void LatinReading (Document document, View view)
 {
-   char*         tempdocument = NULL;
-   char          documentname[MAX_LENGTH];
-   char          tempdir[MAX_LENGTH];
+   char           *tempdocument = NULL;
+   char            documentname[MAX_LENGTH];
+   char            tempdir[MAX_LENGTH];
    CHARSET         charset;
-   char          htmlErrFile [80];
-   char          charsetname[MAX_LENGTH];
+   char            htmlErrFile [80];
+   char            charsetname[MAX_LENGTH];
    int             parsingLevel;
    ThotBool        xmlDec, withDoctype, isXML;
    DocumentType    thotType;
@@ -2192,7 +2194,7 @@ static Document LoadDocument (Document doc, char *pathname,
   DocumentType        docType;
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
-  char              charsetname[MAX_LENGTH];
+  char                charsetname[MAX_LENGTH];
   char               *charEncoding;
   char               *tempdocument;
   char               *tempdir;
@@ -2651,9 +2653,6 @@ static Document LoadDocument (Document doc, char *pathname,
 	ParsingLevel[newdoc] = parsingLevel;
       else
 	{
-	  if (!strncmp (profile, "XHTML", 5))
-	    /* force the XML parsing */
-	    DocumentMeta[newdoc]->xmlformat = TRUE;
 	  if (!strncmp (profile, "XHTML-basic", 10))
 	    ParsingLevel[newdoc] = L_Basic;
 	  else if (!strncmp (profile, "XHTML-1.1", 10))
@@ -3007,12 +3006,12 @@ void ZoomOut (Document document, View view)
   ----------------------------------------------------------------------*/
 void ShowSource (Document document, View view)
 {
-   char *       tempdocument;
-   char *      s;
-   char  	     documentname[MAX_LENGTH];
-   char  	     tempdir[MAX_LENGTH];
-   Document	     sourceDoc;
-   NotifyElement event;
+   char            *tempdocument;
+   char            *s;
+   char  	    documentname[MAX_LENGTH];
+   char  	    tempdir[MAX_LENGTH];
+   Document         sourceDoc;
+   NotifyElement    event;
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */

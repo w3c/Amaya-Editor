@@ -504,6 +504,9 @@ static int          CharRank = 0;	  /* rank of the last matching
 static void         ProcessStartGI (char* GIname);
 static void         EndOfAttrValue (char c);
 
+/* Information for errors related to the current profile */
+static ThotBool     HTMLErrorsFoundInProfile;
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -2701,6 +2704,7 @@ static void           ProcessStartGI (char* GIname)
   schema = DocumentSSchema;
   entry = MapGI (GIname, &schema, HTMLcontext.doc);
   lastElemEntry = entry;
+
   if (entry < 0)
     /* not found in the HTML DTD */
     {
@@ -2729,72 +2733,90 @@ static void           ProcessStartGI (char* GIname)
 	  InsertInvalidEl (msgBuffer, FALSE);
 	}
     }
+
   if (entry >= 0)
     {
-      /* does this start tag also imply the end tag of some current elements?*/
-      pClose = FirstClosedElem[entry];
-      while (pClose != NULL)
+      if (ParsingLevel[HTMLcontext.doc] != L_Other &&
+	  pHTMLGIMapping[entry].Level > ParsingLevel[HTMLcontext.doc])
 	{
-	  CloseElement (pClose->tagNum, entry, TRUE);
-	  pClose = pClose->nextClosedElem;
-	}
-      /* process some special cases... */
-      SpecialImplicitEnd (entry);
-      if (!ContextOK (entry))
-	/* element not allowed in the current structural context */
-	{
-	  sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	  /* Invalid element for the current profile */
+	  /* doesn't process that element */
+	  if (strlen (GIname) > MaxMsgLength - 20)
+	    GIname[MaxMsgLength - 20] = EOS;
+	  sprintf (msgBuffer,
+		   "Invalid start element <%s> for the current profile",
+		   GIname);
 	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	  HTMLErrorsFoundInProfile = TRUE;
 	  UnknownTag = TRUE;
-	  /* create an Invalid_element */
-	  sprintf (msgBuffer, "<%s", GIname);
-	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
 	{
-	  el = NULL;
-	  sameLevel = TRUE;
-	  if (pHTMLGIMapping[entry].ThotType > 0)
+	  /* does this start tag also imply the end tag of some current elements?*/
+	  pClose = FirstClosedElem[entry];
+	  while (pClose != NULL)
 	    {
-	      if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
-		/* the corresponding Thot element is the root of the
-		   abstract tree, which has been created at initialization */
-		el = rootElement;
-	      else
-	        /* create a Thot element */
+	      CloseElement (pClose->tagNum, entry, TRUE);
+	      pClose = pClose->nextClosedElem;
+	    }
+	  /* process some special cases... */
+	  SpecialImplicitEnd (entry);
+	  if (!ContextOK (entry))
+	    /* element not allowed in the current structural context */
+	    {
+	      sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	      ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	      UnknownTag = TRUE;
+	      /* create an Invalid_element */
+	      sprintf (msgBuffer, "<%s", GIname);
+	      InsertInvalidEl (msgBuffer, TRUE);
+	    }
+	  else
+	    {
+	      el = NULL;
+	      sameLevel = TRUE;
+	      if (pHTMLGIMapping[entry].ThotType > 0)
 		{
-		  elType.ElSSchema = DocumentSSchema;
-		  elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-		  if (pHTMLGIMapping[entry].XMLcontents == 'E')
-		    /* empty HTML element. Create all children specified */
-		    /* in the Thot structure schema */
-		    el = TtaNewTree (HTMLcontext.doc, elType, "");
+		  if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
+		    /* the corresponding Thot element is the root of the
+		       abstract tree, which has been created at initialization */
+		    el = rootElement;
 		  else
-		    /* the HTML element may have children. Create only */
-		    /* the corresponding Thot element, without any child */
-		    el = TtaNewElement (HTMLcontext.doc, elType);
-		  TtaSetElementLineNumber (el, NumberOfLinesRead);
-		  sameLevel = InsertElement (&el);
-		  if (el != NULL)
+		    /* create a Thot element */
 		    {
+		      elType.ElSSchema = DocumentSSchema;
+		      elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
 		      if (pHTMLGIMapping[entry].XMLcontents == 'E')
-			HTMLcontext.lastElementClosed = TRUE;
-		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			/* an empty Text element has been created. The */
-			/* following character data must go to that elem. */
-			HTMLcontext.mergeText = TRUE;
+			/* empty HTML element. Create all children specified */
+			/* in the Thot structure schema */
+			el = TtaNewTree (HTMLcontext.doc, elType, "");
+		      else
+			/* the HTML element may have children. Create only */
+			/* the corresponding Thot element, without any child */
+			el = TtaNewElement (HTMLcontext.doc, elType);
+		      TtaSetElementLineNumber (el, NumberOfLinesRead);
+		      sameLevel = InsertElement (&el);
+		      if (el != NULL)
+			{
+			  if (pHTMLGIMapping[entry].XMLcontents == 'E')
+			    HTMLcontext.lastElementClosed = TRUE;
+			  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			    /* an empty Text element has been created. The */
+			    /* following character data must go to that elem. */
+			    HTMLcontext.mergeText = TRUE;
+			}
 		    }
 		}
-	    }
-	  if (pHTMLGIMapping[entry].XMLcontents != 'E')
-	    {
-	      ElementStack[StackLevel] = el;
-	      if (sameLevel)
-		ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
-	      else
-		ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
-	      LanguageStack[StackLevel] = HTMLcontext.language;
-	      GINumberStack[StackLevel++] = entry;
+	      if (pHTMLGIMapping[entry].XMLcontents != 'E')
+		{
+		  ElementStack[StackLevel] = el;
+		  if (sameLevel)
+		    ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
+		  else
+		    ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+		  LanguageStack[StackLevel] = HTMLcontext.language;
+		  GINumberStack[StackLevel++] = entry;
+		}
 	    }
 	}
     }
@@ -2921,7 +2943,7 @@ static void        EndOfStartGIandTag (char c)
 static void        EndOfEndTag (char c)
 {
    SSchema	   schema;
-   char          msgBuffer[MaxMsgLength];
+   char            msgBuffer[MaxMsgLength];
    int             entry;
    int             i;
    ThotBool        ok;
@@ -2982,6 +3004,19 @@ static void        EndOfEndTag (char c)
 	sprintf (msgBuffer, "</%s", inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
         }
+      else if (entry >= 0 &&
+	       ParsingLevel[HTMLcontext.doc] != L_Other &&
+	       pHTMLGIMapping[entry].Level > ParsingLevel[HTMLcontext.doc])
+	{
+	  /* Invalid element for the current profile */
+	  if (strlen (inputBuffer) > MaxMsgLength - 20)
+	    inputBuffer[MaxMsgLength - 20] = EOS;
+	  sprintf (msgBuffer,
+		   "Invalid end element <%s> for the current profile",
+		   inputBuffer);
+	  ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	  HTMLErrorsFoundInProfile = TRUE;
+	}
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
@@ -3048,9 +3083,9 @@ static void            EndOfAttrName (char c)
    ElementType         elType;
    Attribute           attr;
    SSchema             schema;
-   char              translation;
-   char              msgBuffer[MaxMsgLength];
-   ThotBool            level;
+   char                translation;
+   char                msgBuffer[MaxMsgLength];
+   ThotBool            highEnoughLevel;
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -3064,6 +3099,7 @@ static void            EndOfAttrName (char c)
       return;
       }
 
+   highEnoughLevel = TRUE;
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
    if (UnknownTag)
@@ -3071,7 +3107,7 @@ static void            EndOfAttrName (char c)
       tableEntry = NULL;
    else
       tableEntry = MapAttr (inputBuffer, &schema,
-			    lastElemEntry, &level, HTMLcontext.doc);
+			    lastElemEntry, &highEnoughLevel, HTMLcontext.doc);
 
    if (tableEntry)
      /* this is a known attribute. Can it be associated with the current
@@ -3085,34 +3121,52 @@ static void            EndOfAttrName (char c)
 	     tableEntry = NULL;
 	 }
      }
+   
    if (!tableEntry)
-      /* this attribute is not in the HTML mapping table */
      {
-	if (strcasecmp (inputBuffer, "xmlns") == 0 ||
-	    strncasecmp (inputBuffer, "xmlns:", 6) == 0)
-	   /* this is a namespace declaration */
-	   {
-	   lastAttrEntry = NULL;
-	   /**** register this namespace ****/;
-	   }
-	else if (strcasecmp (inputBuffer, "xml:lang") == 0)
-	   /* attribute xml:lang is not considered as invalid, but it is
-	      ignored */
-	   lastAttrEntry = NULL;
-	else
-	   {
-           if (strlen (inputBuffer) > MaxMsgLength - 30)
-	      inputBuffer[MaxMsgLength - 30] = EOS;
-	   sprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
+       if (highEnoughLevel)
+	 {
+	   /* this attribute is not in the HTML mapping table */
+	   if (strcasecmp (inputBuffer, "xmlns") == 0 ||
+	       strncasecmp (inputBuffer, "xmlns:", 6) == 0)
+	     /* this is a namespace declaration */
+	     {
+	       lastAttrEntry = NULL;
+	       /**** register this namespace ****/;
+	     }
+	   else if (strcasecmp (inputBuffer, "xml:lang") == 0)
+	     /* attribute xml:lang is not considered as invalid, but it is
+		ignored */
+	     lastAttrEntry = NULL;
+	   else
+	     {
+	       if (strlen (inputBuffer) > MaxMsgLength - 30)
+		 inputBuffer[MaxMsgLength - 30] = EOS;
+	       sprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
+	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
+	       /* attach an Invalid_attribute to the current element */
+	       tableEntry = &pHTMLAttributeMapping[0];
+	       schema = DocumentSSchema;
+	       UnknownAttr = TRUE;
+	     }
+	 }
+       else
+	 {
+	   /* attribute invalid for the current profile */
+	   if (strlen (inputBuffer) > MaxMsgLength - 30)
+	     inputBuffer[MaxMsgLength - 30] = EOS;
+	   sprintf (msgBuffer,
+		    "Invalid attribut \"%s\" for the current profile",
+		    inputBuffer);
 	   ParseHTMLError (HTMLcontext.doc, msgBuffer);
-	   /* attach an Invalid_attribute to the current element */
-	   tableEntry = &pHTMLAttributeMapping[0];
-	   schema = DocumentSSchema;
+	   HTMLErrorsFoundInProfile = TRUE;
 	   UnknownAttr = TRUE;
-	   }
+	   lastAttrEntry = NULL;
+	 }
      }
    else
-      UnknownAttr = FALSE;
+     UnknownAttr = FALSE;
+
    if (tableEntry != NULL && HTMLcontext.lastElement != NULL &&
        (!HTMLcontext.lastElementClosed ||
 	(HTMLcontext.lastElement != rootElement)))
@@ -3552,7 +3606,8 @@ static void      EntityChar (unsigned char c)
 	       }
 	 }
        while (!stop);     
-       if (!OK)
+       if (!OK &&
+	   (c == SPACE || c == EOL || c == TAB || c == __CR__))
 	 {
 	   /* If we are not reading an attribute value, assume that semicolon is
 	      missing and put the corresponding char in the document content */
@@ -4978,16 +5033,14 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			ptr = strstr (&FileBuffer[i], "html");
 		      if (ptr && ptr < end)
 			{
+			  *thotType = docHTML;
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
 			  ptr = strstr (&FileBuffer[i], "XHTML");
 			  if (!ptr || (ptr && ptr > end))
 			  ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
-			    {
-			      *isXML = TRUE;
-			      *thotType = docHTML;
-			    }
+			    *isXML = TRUE;
 			  ptr = strstr (&FileBuffer[i], "Basic");
 			  if (!ptr || (ptr && ptr > end))
 			    ptr = strstr (&FileBuffer[i], "basic");
@@ -6374,6 +6427,7 @@ void              StartParser (Document doc, char* htmlFileName,
   int             length;
   ThotBool        isHTML;
   char            www_file_name[MAX_LENGTH];
+  char           *profile;
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;
@@ -6392,6 +6446,7 @@ void              StartParser (Document doc, char* htmlFileName,
   LgEntityName = 0;
   EntityTableEntry = 0;
   CharRank = 0;
+  HTMLErrorsFoundInProfile = FALSE;
 
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
   wc2iso_strcpy (www_file_name, htmlFileName);
@@ -6540,8 +6595,10 @@ void              StartParser (Document doc, char* htmlFileName,
 	    /* check the Thot abstract tree */
 	    CheckAbstractTree (pathURL, HTMLcontext.doc);
 	  }
+
 	gzclose (stream);
 	TtaFreeMemory (docURL);
+
 	/* an HTML document could be a template */
 	if (!plainText)
 	  OpenTemplateDocument (doc);
@@ -6551,6 +6608,7 @@ void              StartParser (Document doc, char* htmlFileName,
 	DocumentSSchema = NULL;
       }
     }
+
    TtaSetDocumentUnmodified (doc);
 
    if (!plainText)
@@ -6564,6 +6622,17 @@ void              StartParser (Document doc, char* htmlFileName,
        }
      else if (XMLErrorsFound)
 	 InitInfo ("", TtaGetMessage (AMAYA, AM_XML_ERROR));
+     else if (HTMLErrorsFoundInProfile)
+       {
+	 /* Some elements or attributes have been removed from the document */
+	 /* accordingly to the current profile */
+	 profile = TtaGetEnvString ("Profile");
+	 if (!profile)
+	   profile = "";
+	 InitConfirm3L (HTMLcontext.doc, 1,
+			TtaGetMessage (AMAYA, AM_XML_PROFILE),
+			profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
+       }
      }
    HTMLcontext.doc = 0;
 }

@@ -432,19 +432,22 @@ static void InitSaveForm (Document document, View view, char *pathname)
        SaveAsXML = FALSE;
        SaveAsText = TRUE;
      }
-   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
-     {
-       SaveAsHTML = FALSE;
-       SaveAsXML = TRUE;
-       SaveAsText = FALSE;
-     }
-   else
-     {
-       SaveAsHTML = TRUE;
-       SaveAsXML = FALSE;
-       SaveAsText = FALSE;
-     }
-
+  else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat ||
+	   (!DocumentMeta[document]->xmlformat && 
+	    (ParsingLevel[document] == L_Basic ||
+	     ParsingLevel[document] == L_Strict)))
+    {
+      SaveAsHTML = FALSE;
+      SaveAsXML = TRUE;
+      SaveAsText = FALSE;
+    }
+  else
+    {
+      SaveAsHTML = TRUE;
+      SaveAsXML = FALSE;
+      SaveAsText = FALSE;
+    }
+  
 #ifndef _WINDOWS
    /* Dialogue form for saving a document */
    i = 0;
@@ -1637,7 +1640,7 @@ void                SaveDocument (Document doc, View view)
   char                localFile[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
-  char*               ptr;
+  char               *ptr;
   int                 i, res;
   Document	      xmlDoc;
   DisplayMode         dispMode;
@@ -1708,6 +1711,14 @@ void                SaveDocument (Document doc, View view)
 
   /* the suffix determines the output format */
   SaveAsXML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
+
+  /* We automatically save a HTML document as a XML one 
+     when we have a xhtml profile */
+    if (!SaveAsXML &&
+	(ParsingLevel[doc] == L_Basic ||
+	 ParsingLevel[doc] == L_Strict))
+      SaveAsXML = TRUE;
+
   if (IsW3Path (tempname))
     /* it's a remote document */
     {
