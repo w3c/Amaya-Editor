@@ -55,7 +55,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"html", SPACE, HTML_EL_HTML, L_BasicValue, FALSE},
    {"i", SPACE, HTML_EL_Italic_text, L_StrictValue, TRUE},
    {"iframe", SPACE, HTML_EL_IFRAME, L_TransitionalValue, TRUE},
-   {"image", 'E', HTML_EL_PICTURE_UNIT, L_StrictValue, TRUE},
+   /*{"image", 'E', HTML_EL_PICTURE_UNIT, L_StrictValue, TRUE},*/
    {"img", 'E', HTML_EL_PICTURE_UNIT, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Input, L_BasicValue, TRUE},
    {"input", 'E', HTML_EL_Text_Input, L_BasicValue, TRUE},
@@ -157,7 +157,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"align", "h6", 'A', HTML_ATTR_TextAlign, L_TransitionalValue},
    {"align", "hr", 'A', HTML_ATTR_Align, L_TransitionalValue},
    {"align", "iframe", 'A', HTML_ATTR_Alignment, L_TransitionalValue},
-   {"align", "image", 'A', HTML_ATTR_Alignment, L_TransitionalValue},
+   /*{"align", "image", 'A', HTML_ATTR_Alignment, L_TransitionalValue},*/
    {"align", "img", 'A', HTML_ATTR_Alignment, L_TransitionalValue},
    {"align", "input", 'A', HTML_ATTR_Alignment, L_TransitionalValue},
    {"align", "legend", 'A', HTML_ATTR_LAlign, L_TransitionalValue},
@@ -178,7 +178,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"background", "", 'A', HTML_ATTR_background_, L_TransitionalValue},
    {"bgcolor", "", 'A', HTML_ATTR_BackgroundColor, L_TransitionalValue},
    {"border", "embed", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
-   {"border", "image", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
+   /*{"border", "image", 'A', HTML_ATTR_Img_border, L_TransitionalValue},*/
    {"border", "img", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
    {"border", "object", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
    {"border", "table", 'A', HTML_ATTR_Border, L_StrictValue},
@@ -225,7 +225,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"frameborder", "", 'A', HTML_ATTR_frameborder, L_TransitionalValue},
 
    {"headers", "", 'A', HTML_ATTR_headers, L_BasicValue},
-   {"height", "image", 'A', HTML_ATTR_Height_, L_BasicValue},
+   /*{"height", "image", 'A', HTML_ATTR_Height_, L_BasicValue},*/
    {"height", "img", 'A', HTML_ATTR_Height_, L_BasicValue},
    {"height", "object", 'A', HTML_ATTR_Height_, L_BasicValue},
    {"height", "", 'A', HTML_ATTR_Height_, L_TransitionalValue},
@@ -356,7 +356,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"width", "embed", 'A', HTML_ATTR_Width__, L_TransitionalValue},
    {"width", "hr", 'A', HTML_ATTR_Width__, L_TransitionalValue},
    {"width", "iframe", 'A', HTML_ATTR_Width__, L_TransitionalValue},
-   {"width", "image", 'A', HTML_ATTR_Width__, L_BasicValue},
+   /*{"width", "image", 'A', HTML_ATTR_Width__, L_BasicValue},*/
    {"width", "img", 'A', HTML_ATTR_Width__, L_BasicValue},
    {"width", "object", 'A', HTML_ATTR_Width__, L_BasicValue},
    {"width", "pre", 'A', HTML_ATTR_Width__, L_TransitionalValue},
@@ -487,7 +487,7 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {DummyAttribute, "checkbox", HTML_EL_Checkbox_Input},
    {DummyAttribute, "file", HTML_EL_File_Input},
    {DummyAttribute, "hidden", HTML_EL_Hidden_Input},
-   {DummyAttribute, "image", HTML_EL_PICTURE_UNIT},
+   /*{DummyAttribute, "image", HTML_EL_PICTURE_UNIT},*/
    {DummyAttribute, "password", HTML_EL_Password_Input},
    {DummyAttribute, "radio", HTML_EL_Radio_Input},
    {DummyAttribute, "reset", HTML_EL_Reset_Input},

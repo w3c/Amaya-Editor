@@ -665,7 +665,8 @@ void CreateAreaPoly (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   GetImageURL initializes the Picture form                             
+   GetImageURL initializes the Picture form.
+   Returns the url (encoded with the Default charset).
   ----------------------------------------------------------------------*/
 char *GetImageURL (Document document, View view)
 {
@@ -697,7 +698,7 @@ char *GetImageURL (Document document, View view)
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
    if (LastURLImage[0] != EOS)
-      TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
 	strcpy (LastURLImage, DirectoryImage);
@@ -705,7 +706,6 @@ char *GetImageURL (Document document, View view)
 	strcat (LastURLImage, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
-   ImgAlt[0] = EOS;
    TtaSetTextForm (BaseImage + ImageAlt, ImgAlt);
    TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
@@ -821,7 +821,7 @@ void ChangeBackgroundImage (Document document, View view)
    doc the document to which el belongs.
    sourceDocument is the document where the image comes from.
    attr is the src or xlink:href attribute that has to be updated.
-   text is the image name (relative or not).
+   text is the image name (relative or not) and utf-8 encoded.
   ----------------------------------------------------------------------*/
 void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 			  Attribute attr, char *text)
@@ -936,7 +936,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   elType = TtaGetElementType (el);
   /* if it's not an HTML picture (it could be an SVG image for instance),
      ignore */
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     return;
 
   /* Select an image name */
@@ -1010,8 +1010,11 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 	 /* we are just updating attributes. Register the change */
 	 TtaRegisterAttributeReplace (attr, elSRC, doc);
      }
-   ComputeSRCattribute (elSRC, doc, 0, attr, text);
 
+   utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)text,
+					    TtaGetDefaultCharset ());
+   ComputeSRCattribute (elSRC, doc, 0, attr, utf8value);
+   TtaFreeMemory (utf8value);
    if (!CreateNewImage && newAttr)
      TtaRegisterAttributeCreate (attr, elSRC, doc);
 
@@ -1095,7 +1098,7 @@ void  SRCattrModified (NotifyAttribute *event)
    Attribute        attr;
    Document         doc;
    int              length;
-   char            *buf1, *buf2;
+   char            *value, *buf2;
    char            *localname, *imageName;
    LoadedImageDesc *desc;
 
@@ -1104,17 +1107,17 @@ void  SRCattrModified (NotifyAttribute *event)
    attr = event->attribute;
    /* get a buffer for the attribute value */
    length = MAX_LENGTH;
-   buf1 = (char *)TtaGetMemory (length);
+   value = (char *)TtaGetMemory (length);
    buf2 = (char *)TtaGetMemory (length);
    imageName = (char *)TtaGetMemory (length);
    /* copy the SRC attribute into the buffer */
-   TtaGiveTextAttributeValue (attr, buf1, &length);
-   NormalizeURL (buf1, doc, buf2, imageName, NULL);
+   TtaGiveTextAttributeValue (attr, value, &length);
+   NormalizeURL (value, doc, buf2, imageName, NULL);
    /* extract image name from full name */
-   TtaExtractName (buf2, buf1, imageName);
+   TtaExtractName (buf2, value, imageName);
    if (strlen (imageName) != 0)
      {
-       if (IsHTTPPath(buf2))
+       if (IsHTTPPath (buf2))
 	 {
 	   /* remote image */
 	   localname = GetLocalPath (doc, buf2);
@@ -1130,21 +1133,19 @@ void  SRCattrModified (NotifyAttribute *event)
 	   /* local image */
 	   if (IsHTTPPath (DocumentURLs[doc]))
 	     {
-	       NormalizeURL (imageName, doc, buf1, imageName, NULL);
+	       NormalizeURL (imageName, doc, value, imageName, NULL);
 	       /* load a local image into a remote document */
-	       AddLoadedImage (imageName, buf1, doc, &desc);
+	       AddLoadedImage (imageName, value, doc, &desc);
 	       desc->status = IMAGE_MODIFIED;
 	       TtaFileCopy (buf2, desc->localName);
 	       TtaSetTextContent (el, (unsigned char *)desc->localName, SPACE, doc);
 	     }
 	   else
-	     {
-	       /* load a local image into a local document */
-	       TtaSetTextContent (el, (unsigned char *)buf2, SPACE, doc);
-	     }
+	     /* load a local image into a local document */
+	     TtaSetTextContent (el, (unsigned char *)buf2, SPACE, doc);
 	 }
      }
-   TtaFreeMemory (buf1);
+   TtaFreeMemory (value);
    TtaFreeMemory (buf2);
    TtaFreeMemory (imageName);
 }
@@ -1159,7 +1160,7 @@ void CreateImage (Document doc, View view)
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
-  char              *name, *shortURL, *docname;
+  char              *name, *value, *docname;
   int                c1, i, j, cN, length;
   NotifyOnTarget     event;
 
@@ -1185,17 +1186,49 @@ void CreateImage (Document doc, View view)
 	  if (attr)
 	    {
 	      length = TtaGetTextAttributeLength (attr) + 1;
-	      if (length < MAX_LENGTH)
+	      if (length <= MAX_LENGTH)
+		{
+		  /* not too large URI: initialize the default URI */
+		  length = MAX_LENGTH;
+		  /* get a buffer for the attribute value */
+		  value = (char *)TtaGetMemory (length);
+		  /* copy the SRC attribute into the buffer */
+		  TtaGiveTextAttributeValue (attr, value, &length);
+		  name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
+						      TtaGetDefaultCharset ());
+		  TtaFreeMemory (value);
+		  value = name;
+		  name = (char *)TtaGetMemory (MAX_LENGTH);
+		  NormalizeURL (value, doc, LastURLImage, name, NULL);
+		  TtaFreeMemory (value);
+		  TtaFreeMemory (name);
+		  if (!IsHTTPPath (LastURLImage))
+		    {
+		      /* extract directory and file names */
+		      TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+		      LastURLImage[0] = EOS;
+		    }
+		}
+	    }
+
+	  /* get the value of the current ALT attribute for this image
+	     to initialize the image dialogue box */
+	  attrType.AttrTypeNum = HTML_ATTR_ALT;
+	  attr = TtaGetAttribute (firstSelEl, attrType);
+	  ImgAlt[0] = EOS;
+	  if (attr)
+	    {
+	      length = TtaGetTextAttributeLength (attr) + 1;
+	      if (length <= MAX_LENGTH)
 		{
 		  /* get a buffer for the attribute value */
-		  length = MAX_LENGTH;
-		  shortURL = (char *)TtaGetMemory (length);
-		  docname = (char *)TtaGetMemory (length);
-		  /* copy the SRC attribute into the buffer */
-		  TtaGiveTextAttributeValue (attr, shortURL, &length);
-		  NormalizeURL (shortURL, doc, LastURLImage, docname, NULL);
-		  TtaFreeMemory (shortURL);
-		  TtaFreeMemory (docname);
+		  value = (char *)TtaGetMemory (length);
+		  /* copy the ALT attribute into the buffer */
+		  TtaGiveTextAttributeValue (attr, value, &length);
+		  name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
+						      TtaGetDefaultCharset ());
+		  strncpy (ImgAlt, name, MAX_LENGTH-1);
+		  TtaFreeMemory (name);
 		}
 	    }
 	  /* display the image dialogue box */
@@ -1205,6 +1238,7 @@ void CreateImage (Document doc, View view)
 	  TtaOpenUndoSequence (doc, firstSelEl, lastSelEl, c1, cN);
 	  UpdateSRCattribute (&event);
 	  TtaCloseUndoSequence(doc);
+	  TtaSetDocumentModified (doc);
 	}
       else
 	/* the user want to insert a new image */

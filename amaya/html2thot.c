@@ -29,7 +29,6 @@
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
-#include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
