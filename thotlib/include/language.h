@@ -68,7 +68,8 @@ extern void TtaRemoveLanguage (Language language);
    Returns the identifier of a language that matches a language name.
    languageName: name of the language.
    Return value:
-   identifier of that language or 0 if the language is unknown.
+   identifier of that language, 0 if the language is not supported, 
+   -1 for an unknown language.
   ----------------------------------------------------------------------*/
 extern Language TtaGetLanguageIdFromName (char *languageName);
 

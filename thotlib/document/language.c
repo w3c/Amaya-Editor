@@ -219,7 +219,7 @@ char *TtaGetLanguageNameFromCode (char *code)
 	strcpy (Langbuffer, ISO639table[i].fullName);
     }
   if (Langbuffer[0] == EOS)
-    for (i = 0; Langbuffer[0] == EOS && OldLangTable[i].code != EOS; i++)
+    for (i = 0; Langbuffer[0] == EOS && OldLangTable[i].code[0] != EOS; i++)
       {
 	if (!strcasecmp (code, OldLangTable[i].code))
 	  strcpy (Langbuffer, OldLangTable[i].fullName);
@@ -530,11 +530,12 @@ void TtaRemoveLanguage (Language language)
    Returns the identifier of a language that matches a language name.
    name: name of the language.
    Return value:
-   identifier of that language or 0 if the language is unknown.
+   identifier of that language, 0 if the language is not supported, 
+   -1 for an unknown language.
   ----------------------------------------------------------------------*/
 Language TtaGetLanguageIdFromName (char *name)
 { 
-  char                code[MAX_LENGTH];
+  char                code[MAX_LENGTH], *ptr;
   int                 i;
   ThotBool            again;
 
@@ -579,7 +580,13 @@ Language TtaGetLanguageIdFromName (char *name)
 	    }
 	}
       if (again)
-	return Latin_Script;
+	{
+	  ptr = TtaGetLanguageNameFromCode (name);
+	  if (*ptr == EOS)
+	    return -1;
+	  else
+	    return Latin_Script;
+	}
     }
   /* returned value */
   return (Language) (i + FirstUserLang);

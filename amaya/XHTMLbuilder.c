@@ -1272,7 +1272,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			{
 			  /* it's a LANG attribute value */
 			  lang = TtaGetLanguageIdFromName (attrValue);
-			  if (lang == 0)
+			  if (lang < 0)
 			    {
 			      sprintf (msgBuffer,
 				       "warning - unsupported language: %s",
