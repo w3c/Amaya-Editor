@@ -142,7 +142,7 @@ char* processName;
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
        fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
-       fprintf (stderr, "       [-name <real name>]\n");
+       fprintf (stderr, "       [-name <document name>]\n");
        fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
        fprintf (stderr, "       [-bw]\t\t /* for black & white output */\n");
        fprintf (stderr, "       [-paginate]\t /* to repaginate */\n");
@@ -150,12 +150,12 @@ char* processName;
        fprintf (stderr, "       [-Fn1]\t\t /* n1: number of first page to print */\n");
        fprintf (stderr, "       [-Ln2]\t\t /* n2: number of last page to print */\n");
        fprintf (stderr, "       [-#n]\t\t /* n: number of copies to print */\n");
-       fprintf (stderr, "       [-Hn]\t\t /* n: Horizental shift */\n");
-       fprintf (stderr, "       [-Vn]\t\t /* n: Vertical shift */\n");
+       fprintf (stderr, "       [-Hn]\t\t /* n: left margin */\n");
+       fprintf (stderr, "       [-Vn]\t\t /* n: top margin */\n");
        fprintf (stderr, "       [-%%n]\t\t /* n: zoom in percent */\n");
        fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
        fprintf (stderr, "       [-wn]\t\t /* n: window number */\n");
-       fprintf (stderr, "       [-removedir] /* remove directory after printing */\n\n\n");
+       fprintf (stderr, "       [-removedir]\t /* remove directory after printing */\n\n\n");
        exit (1);
 }
 
