@@ -2540,7 +2540,7 @@ CHARSET encoding;
 }
 
 
-#ifdef _I18N_
+
 /*--------------------------------------------------------------------------------*\
  * TtaMBS2WCS: converts a multibyte string into a wide character string according *
  * to the charset.                                                                *
@@ -3034,4 +3034,4 @@ CHARSET         encoding;
        return nbBytesConverted;
     return -1;
 }
-#endif /* _I18N_ */
+
