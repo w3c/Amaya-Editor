@@ -2691,6 +2691,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxYOrg;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxHeight;
+		      DefClip (frame, xx, topY, xx, bottomY);
 #else /* _GL */
 		      /* prepare le reaffichage */
 		      /* point d'insertion en x */
@@ -2699,8 +2700,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxClipY;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxClipH;
+		      DefRegion (frame, xx, topY, xx, bottomY);
+
 #endif /*  _GL */
-		      DefClip (frame, xx, topY, xx, bottomY);
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
 		      if ((pBox == NULL || pSelBox == pBox) &&
