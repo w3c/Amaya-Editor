@@ -245,15 +245,36 @@ int          docType;
       /*-------------  New MathML document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
-    }
+
+      /* Search the first element to set initial selection */
+      elType.ElTypeNum = MathML_EL_Construct;
+      el = TtaSearchTypedElement (elType, SearchInTree, root);
+      /* set the initial selection */
+      TtaSelectElement (doc, el);
+      if (SelectionDoc != 0)
+	UpdateContextSensitiveMenus (SelectionDoc);
+      SelectionDoc = doc;
+      UpdateContextSensitiveMenus (doc);
+     }
   else if (docType == docSVG)
     {
       /*-------------  New SVG document ------------*/
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
-    }
+
+      /* Search the first element to set initial selection */
+      elType.ElTypeNum = GraphML_EL_GraphicsElement;
+      el = TtaSearchTypedElement (elType, SearchInTree, root);
+      /* set the initial selection */
+      TtaSelectElement (doc, el);
+      if (SelectionDoc != 0)
+	UpdateContextSensitiveMenus (SelectionDoc);
+      SelectionDoc = doc;
+      UpdateContextSensitiveMenus (doc);
+     }
   else
     {
+      /*-------------  Other documents ------------*/
       /* attach the default attribute PrintURL to the document root */
       attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
       attr = TtaNewAttribute (attrType);
