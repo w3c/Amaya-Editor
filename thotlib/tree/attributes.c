@@ -414,7 +414,7 @@ int                *lastChar;
 }
 
 /*----------------------------------------------------------------------
-   ApplyRule a l'element pointe' par pEl du document pDoc les       
+   applique a l'element pointe' par pEl du document pDoc les       
    regles de presentation correspondant a l'attribut decrit dans   
    le bloc pointe' par pAttr.                                      
   ----------------------------------------------------------------------*/
@@ -493,7 +493,7 @@ boolean             inherit;
 
 
 /*----------------------------------------------------------------------
-   ApplyRule au sous arbre pointe' par pEl du document pDoc les     
+   Applique au sous arbre nte' par pEl du document pDoc les     
    regles de presentation heritees de l'attribut pAttr		
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
@@ -550,7 +550,7 @@ PtrAttribute        pAttr;
 }
 
 /*----------------------------------------------------------------------
-   ApplyRule au sous arbre pointe' par pEl du document pDoc les     
+   Applique au sous arbre pointe' par pEl du document pDoc les     
    regles de presentation des attributs dont les valeurs se	
    	comparent a pAttr.						
   ----------------------------------------------------------------------*/

@@ -3454,7 +3454,7 @@ PtrAttribute        pAttr;
   AbPosition         *pPavP1;
 #endif /* __COLPAGE__ */
 
-  appl = TRUE;
+  appl = FALSE;
   if (pPRule != NULL && pAb != NULL)
     if (pAb->AbElement != NULL)
       {

@@ -5412,7 +5412,8 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   UpdatePresAttr Pour l'element pEl dans le document pDoc, supprime 
+   UpdatePresAttr
+  Pour l'element pEl dans le document pDoc, supprime 
    ou applique (selon remove) la presentation attachee a    
    l'attribut pointe par pAttr.                            
    Ce changement de la presentation a lieu egalement sur   
@@ -5461,7 +5462,7 @@ PtrAttribute        pAttrComp;
    /* plus prioritaires */
    pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
    if (pHd == NULL)
-      /* pas de schema additionnel. Prend le schema de presentation principal */
+      /* pas de schema additionnel. Prend le schema de presentation principal*/
       pSchP = pAttr->AeAttrSSchema->SsPSchema;
    else
      {
@@ -5630,7 +5631,7 @@ PtrAttribute        pAttrComp;
 				       /* regle specifique de la vue traitee */
 				       if (remove)
 					 {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, FnAny, TRUE, &pAttrib);
+					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
 					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
 					 }
 				       else
@@ -5640,13 +5641,21 @@ PtrAttribute        pAttrComp;
 				    if (pRuleView1 != NULL)
 				       if (remove)
 					 {
-					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, FnAny, TRUE, &pAttrib);
+					    pRNA = SearchRulepAb (pDoc, pAbb, &pSPR, typeRule, TFonct, TRUE, &pAttrib);
 					    appl = ApplyPresRuleAb (pRNA, pSPR, pAbb, pDoc, pAttrib);
 					 }
 				       else
 					  appl = ApplyPresRuleAb (pRuleView1, pSchP, pAbb, pDoc, pAttr);
 				    else
 				       appl = FALSE;
+				 if (!appl)
+				    if (remove)
+				       if (pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
+					  /* on desapplique une regle NotInLine */
+                                          {
+                                          pAbb->AbNotInLine = FALSE;
+                                          appl = TRUE;
+                                          }
 				 if (appl)
 				    /* on a change' la presentation du pave */
 				   {
