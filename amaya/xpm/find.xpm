@@ -2,7 +2,7 @@
 static char * find_xpm[] = {
 "16 16 4 1",
 " 	c #BFBFBFBFBFBF",
-".	c #FFFFCFCF1818",
+".	c #FFFFCB2B69A6",
 "X	c #000000000000",
 "o	c #FFFFFFFFFFFF",
 "                ",

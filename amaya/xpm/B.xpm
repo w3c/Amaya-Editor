@@ -2,8 +2,8 @@
 static char * B_xpm[] = {
 "16 16 4 1",
 " 	c #BFBFBFBFBFBF",
-".	c #6C6CDFDFB3B3",
-"X	c #1818FFFFA6A6",
+".	c #0000E79D9E79",
+"X	c #0000FFFFAEBA",
 "o	c #000000000000",
 "    .XXXXX. X   ",
 "   XXXX..XXXX   ",

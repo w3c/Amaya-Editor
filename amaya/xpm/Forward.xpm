@@ -2,7 +2,7 @@
 static char * Forward_xpm[] = {
 "16 16 3 1",
 " 	c #BFBFBFBFBFBF",
-".	c #60606060FFFF",
+".	c #69A669A6FFFF",
 "X	c #000000000000",
 "                ",
 "                ",

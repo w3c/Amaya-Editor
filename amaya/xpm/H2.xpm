@@ -2,10 +2,10 @@
 static char * H2_xpm[] = {
 "16 16 5 1",
 " 	c #BFBFBFBFBFBF",
-".	c #D7D7DFDFABAB",
-"X	c #EFEFFFFF9696",
+".	c #DF7DFFFFC71B",
+"X	c #E79DFFFF9658",
 "o	c #000000000000",
-"O	c #5F5F5F5F5F5F",
+"O	c #71C675D671C6",
 "                ",
 "                ",
 ".XX. .XXX.      ",

@@ -2,10 +2,10 @@
 static char * Num_xpm[] = {
 "16 16 5 1",
 " 	c #BFBFBFBFBFBF",
-".	c #DFDFCDCDB7B7",
-"X	c #FFFFDBDBAEAE",
+".	c #D75CC30BFFFF",
+"X	c #FFFFC30BC71B",
 "o	c #000000000000",
-"O	c #5F5F5F5F5F5F",
+"O	c #71C675D671C6",
 " .X             ",
 " XXo  XXXXXXXXX ",
 "  Xo   ooooooooo",
