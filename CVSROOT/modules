@@ -43,7 +43,7 @@ amaya_java              -a classes javalib kaffe-cvs.tar.gz
 
 amaya_plugins           -a pluginlib
 
-amaya_doc               -a doc documents dDocuments
+amaya_doc               -a doc/Amaya doc/Icons
 
 amaya_thotlib           -a thotlib amaya_graphics amaya_tablelib
 
