@@ -103,13 +103,13 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentMeta[annotDoc]->xmlformat = TRUE;
       DocumentSource[annotDoc] = 0;
-
       /* set the charset to be UTF-8 by default */
       TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"), FALSE);
       DocumentMeta[annotDoc]->charset = TtaStrdup ("UTF-8");
       DocumentMeta[annotDoc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
       
       /* activate, remove buttons from the annot view */
+      ResetStop (annotDoc);
       ANNOT_PrepareAnnotView (annotDoc);
     }  
   return annotDoc;
