@@ -839,6 +839,18 @@ void *context;
 		   /* update the anchor in the source doc */
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
 					    returned_annot->body_url);
+
+		   if (IsFilePath (annot->body_url))
+		     {
+		       /* local annot was just made a shared annot;
+			  update the annotation index or delete it
+			  if it's now empty */
+		       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
+			 LINK_SaveLink (source_doc);
+		       else
+			 LINK_DeleteLink (source_doc);
+		     }
+
 		   /* update the annotation body_url */
 		   /* TtaFileUnlink (annot->body_url); */
 		   TtaFreeMemory (annot->body_url);
