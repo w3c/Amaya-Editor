@@ -714,7 +714,7 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
 	}
     }
 #ifndef _WX
-  TtaChangeButton (document, -1, index, picture, state);
+  TtaChangeButton (document, 1, index, picture, state);
 #endif /* _WX */
 }
 
@@ -739,7 +739,7 @@ void ResetStop (Document document)
 		TtaSetStatus (document, 1,
 			      TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 #ifndef _WX
-	      TtaChangeButton (document, -1, iStop, stopN, FALSE);
+	      TtaChangeButton (document, 1, iStop, stopN, FALSE);
 #else /* _WX */
 	      TtaEnableAction(document, "StopTransfer", FALSE);
 #endif /* _WX */
@@ -761,7 +761,7 @@ void ActiveTransfer (Document document)
       if (TtaGetViewFrame (document, 1) != 0)
 	/* this document is displayed */
 #ifndef _WX
-	TtaChangeButton (document, -1, iStop, stopR, TRUE);
+	TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #else /* _WX */
         TtaEnableAction(document, "StopTransfer", TRUE);
 #endif /* _WX */
@@ -786,7 +786,7 @@ void SetStopButton (Document document)
       if (TtaGetViewFrame (document, 1) != 0)
 #ifndef _WX
 	/* this document is displayed */
-	TtaChangeButton (document, -1, iStop, stopR, TRUE);
+	TtaChangeButton (document, 1, iStop, stopR, TRUE);
 #else /* _WX */
         TtaEnableAction(document, "StopTransfer", TRUE);
 #endif /* _WX */
@@ -844,7 +844,7 @@ void DocStatusUpdate (Document doc, ThotBool modified)
     {
        TtaSetItemOn (doc, 1, File, BSave);
 #ifndef _WX
-       TtaChangeButton (doc, -1, iSave, iconSave, TRUE);
+       TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
 #endif /* _WX */
        /* if we have a pair source/structured document allow synchronization */
        otherDoc = DocumentSource[doc];
@@ -863,7 +863,7 @@ void DocStatusUpdate (Document doc, ThotBool modified)
     {
       TtaSetItemOff (doc, 1, File, BSave);
 #ifndef _WX
-      TtaChangeButton (doc, -1, iSave, iconSaveNo, FALSE);
+      TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
 #endif /* _WX */
       if (TtaIsDocumentUpdated (doc))
 	{
@@ -1110,18 +1110,18 @@ void UpdateEditorMenus (Document doc)
 	  TtaSetMenuOn (doc, 1, Links);
 
 #ifndef _WX
-	  TtaChangeButton (doc, -1, iI, iconI, TRUE);
-	  TtaChangeButton (doc, -1, iB, iconB, TRUE);
-	  TtaChangeButton (doc, -1, iT, iconT, TRUE);
-	  TtaChangeButton (doc, -1, iImage, iconImage, TRUE);
-	  TtaChangeButton (doc, -1, iH1, iconH1, TRUE);
-	  TtaChangeButton (doc, -1, iH2, iconH2, TRUE);
-	  TtaChangeButton (doc, -1, iH3, iconH3, TRUE);
-	  TtaChangeButton (doc, -1, iBullet, iconBullet, TRUE);
-	  TtaChangeButton (doc, -1, iNum, iconNum, TRUE);
-	  TtaChangeButton (doc, -1, iDL, iconDL, TRUE);
-	  TtaChangeButton (doc, -1, iTable, iconTable, TRUE);
-	  TtaChangeButton (doc, -1, iLink, iconLink, TRUE);
+	  TtaChangeButton (doc, 1, iI, iconI, TRUE);
+	  TtaChangeButton (doc, 1, iB, iconB, TRUE);
+	  TtaChangeButton (doc, 1, iT, iconT, TRUE);
+	  TtaChangeButton (doc, 1, iImage, iconImage, TRUE);
+	  TtaChangeButton (doc, 1, iH1, iconH1, TRUE);
+	  TtaChangeButton (doc, 1, iH2, iconH2, TRUE);
+	  TtaChangeButton (doc, 1, iH3, iconH3, TRUE);
+	  TtaChangeButton (doc, 1, iBullet, iconBullet, TRUE);
+	  TtaChangeButton (doc, 1, iNum, iconNum, TRUE);
+	  TtaChangeButton (doc, 1, iDL, iconDL, TRUE);
+	  TtaChangeButton (doc, 1, iTable, iconTable, TRUE);
+	  TtaChangeButton (doc, 1, iLink, iconLink, TRUE);
 #endif /* _WX */
 
 	  SwitchIconMath (doc, 1, TRUE);
@@ -1491,7 +1491,7 @@ void StopTransfer (Document document, View view)
     {
       if (TtaGetViewFrame (document, 1) != 0)
 #ifndef _WX
-	TtaChangeButton (document, -1, iStop, stopN, FALSE);
+	TtaChangeButton (document, 1, iStop, stopN, FALSE);
 #else /* _WX */
         TtaEnableAction(document, "StopTransfer", FALSE);
 #endif /* _WX */
@@ -3056,14 +3056,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   if (!replaceOldDoc)
     {
       /* initialize the enable/disable buttons states */
-      TtaChangeButton (doc, -1, iBack,    iconBackNo,    FALSE);
-      TtaChangeButton (doc, -1, iForward, iconForwardNo, FALSE);
-      TtaChangeButton (doc, -1, iReload,  iconReload,    TRUE);
-      TtaChangeButton (doc, -1, iStop,    stopN,         FALSE);
-      TtaChangeButton (doc, -1, iHome,    iconHome,      TRUE);
-      TtaChangeButton (doc, -1, iSave,    iconSaveNo,    FALSE);
-      TtaChangeButton (doc, -1, iPrint,   iconPrint,     TRUE);
-      TtaChangeButton (doc, -1, iFind,    iconFind,      TRUE);
+      TtaChangeButton (doc, 1, iBack,    iconBackNo,    FALSE);
+      TtaChangeButton (doc, 1, iForward, iconForwardNo, FALSE);
+      TtaChangeButton (doc, 1, iReload,  iconReload,    TRUE);
+      TtaChangeButton (doc, 1, iStop,    stopN,         FALSE);
+      TtaChangeButton (doc, 1, iHome,    iconHome,      TRUE);
+      TtaChangeButton (doc, 1, iSave,    iconSaveNo,    FALSE);
+      TtaChangeButton (doc, 1, iPrint,   iconPrint,     TRUE);
+      TtaChangeButton (doc, 1, iFind,    iconFind,      TRUE);
     }
 #endif /* 0 */
   
@@ -3081,7 +3081,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 				   "HelpLocal", (Proc)HelpLocal, TRUE );
     }
   /* force the logo to be enable */
-  TtaChangeButton (doc, -1, iLogo, iconLogo, TRUE);
+  TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
 #endif /* 0 */
 
 #endif /* _WX */
@@ -3162,18 +3162,18 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   DocumentTypes[doc] == docMath)
 	 {
 #ifndef _WX
-	   TtaChangeButton (doc, -1, iI, iconINo, FALSE);
-	   TtaChangeButton (doc, -1, iB, iconBNo, FALSE);
-	   TtaChangeButton (doc, -1, iT, iconTNo, FALSE);
-	   TtaChangeButton (doc, -1, iImage, iconImageNo, FALSE);
-	   TtaChangeButton (doc, -1, iH1, iconH1No, FALSE);
-	   TtaChangeButton (doc, -1, iH2, iconH2No, FALSE);
-	   TtaChangeButton (doc, -1, iH3, iconH3No, FALSE);
-	   TtaChangeButton (doc, -1, iBullet, iconBulletNo, FALSE);
-	   TtaChangeButton (doc, -1, iNum, iconNumNo, FALSE);
-	   TtaChangeButton (doc, -1, iDL, iconDLNo, FALSE);
-	   TtaChangeButton (doc, -1, iTable, iconTableNo, FALSE);
-	   TtaChangeButton (doc, -1, iLink, iconLinkNo, FALSE);
+	   TtaChangeButton (doc, 1, iI, iconINo, FALSE);
+	   TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
+	   TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
+	   TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
+	   TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
+	   TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
+	   TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
+	   TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
+	   TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
+	   TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+	   TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+	   TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 #endif /* _WX */
 	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	   TtaSetItemOff (doc, 1, Views, TShowTargets);
