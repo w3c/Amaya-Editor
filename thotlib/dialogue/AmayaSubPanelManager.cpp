@@ -1,6 +1,5 @@
 #ifdef _WX
 
-#include "paneltypes_wx.h"
 #include "AmayaSubPanelManager.h"
 
 // the only requirement for the rest is to be AFTER the full declaration of
@@ -226,12 +225,13 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
 
   p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
   p_panel->UnExpand();
+  p_panel->DoUpdate();
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
- *      Method:  UnExpand
+ *      Method:  Expand
  * Description:  
  *--------------------------------------------------------------------------------------
  */
@@ -245,6 +245,7 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
 
   p_panel->ChangeState( p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
   p_panel->Expand();
+  p_panel->DoUpdate();
 }
 
 /*
@@ -279,6 +280,7 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
 
   // ok now float the panel
   p_panel->DoFloat();
+  p_panel->DoUpdate();
 }
 
 /*
@@ -318,6 +320,7 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
 	    current->UnExpand();
 	}
     }  
+  p_panel->DoUpdate();
 }
 
 /*
@@ -373,6 +376,25 @@ void AmayaSubPanelManager::ShouldBeUpdated( int panel_type, bool should_update )
       AmayaSubPanel * current = node->GetData();
       if ( current->GetPanelType() == panel_type )
 	current->ShouldBeUpdated( should_update );
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  CheckForDoUpdate
+ * Description:  verify if panels should be updated or not, update it if necessary
+ *               if pannel_type == WXAMAYA_PANEL_UNKNOWN then check for every panels
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::CheckForDoUpdate( int panel_type )
+{
+  // warn each panel to update its content when it can
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == panel_type || panel_type == WXAMAYA_PANEL_UNKNOWN )
+	current->DoUpdate();
     }
 }
 

@@ -43,6 +43,7 @@
 #include "AmayaURLBar.h"
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
+#include "AmayaSubPanelManager.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
 
@@ -798,6 +799,9 @@ void AmayaNormalWindow::OpenPanel()
 					  m_pNotebookPanel,
 					  m_SlashPos ); 
       m_pPanel->ShowWhenUnsplit( true );
+
+      // now check panels to know if a refresh is needed
+      AmayaSubPanelManager::GetInstance()->CheckForDoUpdate();
     }
 }
 

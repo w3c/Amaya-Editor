@@ -120,10 +120,6 @@ void AmayaSubPanel::UnExpand()
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
   p_sizer->Show(m_pPanelContent,false);
   GetParent()->Layout();
-
-  // call the update callback only if it has been requested
-  if (m_ShouldBeUpdated)
-    DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -139,10 +135,6 @@ void AmayaSubPanel::Expand()
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
   p_sizer->Show(m_pPanelContent,true);
   GetParent()->Layout();
-
-  // call the update callback only if it has been requested
-  if (m_ShouldBeUpdated)
-    DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -162,10 +154,6 @@ void AmayaSubPanel::DoFloat()
 
   Refresh();
   GetParent()->Layout();
-
-  // call the update callback only if it has been requested
-  if (m_ShouldBeUpdated)
-    DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -184,10 +172,6 @@ void AmayaSubPanel::DoUnfloat()
 
   GetParent()->Layout();
   Refresh();
-
-  // call the update callback only if it has been requested
-  if (m_ShouldBeUpdated)
-    DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -388,8 +372,11 @@ void AmayaSubPanel::ShouldBeUpdated( bool should_update )
  */
 void AmayaSubPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaSubPanel::DoUpdate") );
-  m_ShouldBeUpdated = false;
+  if (m_ShouldBeUpdated)
+    {
+      wxLogDebug( _T("AmayaSubPanel::DoUpdate") );
+      m_ShouldBeUpdated = false;
+    }
 }
 
 /*

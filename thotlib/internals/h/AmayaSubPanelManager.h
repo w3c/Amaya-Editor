@@ -3,8 +3,7 @@
 #ifndef __AMAYASUBPANELMANAGER_H__
 #define __AMAYASUBPANELMANAGER_H__
 
-#include "wx/wx.h"
-
+// this class is used to pass multipl parameters to SendDataToPanel
 class AmayaPanelParams
 {
  public:
@@ -21,8 +20,11 @@ class AmayaPanelParams
 
 // declare our list class: this macro declares and partly implements MyList
 // class (which derives from wxListBase)
+#include "wx/wx.h"
 #include "AmayaSubPanel.h"
 WX_DECLARE_LIST(AmayaSubPanel, SubPanelList);
+
+#include "paneltypes_wx.h"
 
 /*
  *  Description:  - AmayaSubPanelManager manage the global behaviour between every sub panels
@@ -48,6 +50,7 @@ class AmayaSubPanelManager
 
   bool IsActive( int panel_type );
   void ShouldBeUpdated( int panel_type, bool should_update = true );
+  void AmayaSubPanelManager::CheckForDoUpdate( int panel_type = WXAMAYA_PANEL_UNKNOWN );
 
  protected:
   bool CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state );
