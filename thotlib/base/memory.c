@@ -200,7 +200,7 @@ unsigned int        n;
 
   if (!res)
 #ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY),_AmayaFatalErrorMSG_, MB_ICONERROR);
+    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY),"Amaya: fatal error", MB_ICONERROR);
 #else  /* _WINDOWS */
   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 #endif /* _WINDOWS */
