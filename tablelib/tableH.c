@@ -1029,6 +1029,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	    }
 	  else
 	    delta = 0;
+
 	  if (pAb->AbBox->BxType == BoBlock ||
 	      pAb->AbBox->BxType == BoFloatBlock ||
 	      pAb->AbBox->BxType == BoTable)
@@ -1052,6 +1053,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	    }
 	  else if (!pAb->AbWidth.DimIsPosition &&
 		   pAb->AbHorizEnclosing &&
+		   pAb->AbWidth.DimUnit != UnPercent &&
 		   (pAb->AbWidth.DimAbRef == NULL ||
 		    !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox)))
 	    {
@@ -1529,7 +1531,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
     max = width;
   reformat = (box->BxWidth < min ||
 	      (box->BxRuleWidth != width && box->BxWidth == box->BxRuleWidth) ||
-	      (box->BxMinWidth != min && box->BxWidth == box->BxMinWidth) ||
+	      (box->BxWidth < min) ||
 	      (box->BxMaxWidth != max && (box->BxWidth == box->BxMaxWidth ||
 					  (box->BxWidth != box->BxRuleWidth &&
 					   box->BxWidth != box->BxMinWidth))));
