@@ -5,7 +5,7 @@
 Making Book</title>
 <meta name="GENERATOR" content="amaya V1.0a Beta">
 </head>
-<body>
+<body lang="en">
 
 <h2><a name="L1065">Assembling large document collections</a></h2>
 <p>
@@ -25,35 +25,46 @@ typed links for linking chapters: associate a <code>rel="chapter"</code> or
 chapter (select the <code>A</code> element and use the <strong><a
 href="Attributes.html#L1073">Attributes</a></strong> menu).</p>
 <p>
-A chapter or a sub-document can be:</p>
+Each referred chapter or  sub-document can be:</p>
 <ul>
 <li>
 either a whole external document, 
 <li>
-or just a subset of a large external document.
+or just a subset of a larger external document. 
 </ul>
 <p>
-In the last case, you need to refer to a <a href="Links.html#target1">target
-element</a> (usually a DIV element.) which delimits the part of the document
-which will be included.</p>
+To refer to a document subset, the usual manner is to define a DIV element.
+which delimits the part of the target document you want to include and to link
+to this <a href="Links.html#target1">target element</a>.</p>
 <p>
 Then, when activating the "make book" function, all blocks (<code>LI</code>
 elements in the above example) containing a typed link to a chapter will be
-replaced by the corresponding actual web pages (or subset of web pages), and
-you will get a unique document containing the whole collection:</p>
+replaced by the corresponding actual web pages (or web page subsets), and you
+will get a unique document containing the whole collection:</p>
 <ul>
 <li><p>
-when the link refers to a web page, the BODY content is included.</p>
+when the link refers to a web page, all the BODY content of the target
+document is included.</p>
 <li><p>
 if the link refers to a target element, this element with its content is
 included.</p>
 <li><p>
 if the link refers to a target anchor, the content of the anchor is included,
-but not the anchor.</p>
+but not the anchor itself.</p>
 </ul>
 <p>
-Before each replacement, the Make book function generates a new created DIV
-element with an ID attribute.</p>
+Before each replacement, the "make book" function generates a new DIV element
+with an ID attribute. So each added pieces are clearly separated.</p>
+<p>
+Previous pieces of the new generated document could contain normal links,
+target anchors and target elements. During this operation, Amaya needs to
+check that each NAME and ID attribute values are still unique in the new
+document. If needed, Amaya change this values and update relative links. At
+the same time, external  links are automatically updated when they referred an
+external document or document subset which is included now. For example, if
+the link pointed to a whole external document, this link will refer the DIV
+enclosing element after the operation. So the new unique document containing
+the whole collection is still coherent.</p>
 <p>
 This large document can then be <a href="Numbering.html#L1064">numbered</a>
 and <a href="Printing.html#L1062">printed</a> with a complete table of
