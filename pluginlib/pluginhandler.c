@@ -50,12 +50,10 @@ extern int            pluginCounter ;
 extern PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
 extern int            PictureIdType[MAX_PICT_FORMATS];
 extern int            PictureMenuType[MAX_PICT_FORMATS];
-extern Pixmap         EpsfPictureLogo;
 extern char*          pluginPath;
 
 int                   pluginIndex;
 extern int            currentExtraHandler;
-static Pixmap         PictureLogo;
 
 #ifdef __STDC__
 int Ap_OpenPluginDriver (boolean model, int indexHandler)

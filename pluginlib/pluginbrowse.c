@@ -22,6 +22,7 @@
 #include "pluginbrowse.h"
 #include "pluginbrowse_f.h"
 #include "pluginapi_f.h"
+#include "pluginhandler_f.h"
 
 #ifdef _WINDOWS
 #define PSuffix ".DLL"

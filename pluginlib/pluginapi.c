@@ -369,7 +369,20 @@ NPError   reason;
     if (instance == NULL)
        return NPERR_INVALID_INSTANCE_ERROR;
 
-    printf ("Destroy Stream\n");
+    if (stream->url)
+       free (stream->url);
+
+    if (stream->pdata)
+       free (stream->pdata);
+
+    if (stream->ndata)
+       free (stream->ndata);
+
+    if (stream->notifyData)
+       free (stream->notifyData);
+
+    free (stream);
+
     return NPERR_NO_ERROR;
 }
 
@@ -421,35 +434,16 @@ void*       notifyData;
 }
 
 /*----------------------------------------------------------------------
-  Ap_GetURLNotify
-  A faire: remplacer le 1 dans Getxxx par doc
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-NPError Ap_GetURLNotify (NPP instance, const char* url, const char* target, void* notifyData)
-#else  /* !__STDC__ */
-NPError Ap_GetURLNotify (instance, url, target, notifyData)
-NPP         instance; 
-const char* url; 
-const char* target; 
-void*       notifyData;
-#endif /* __STDC__ */
-{
-    printf ("*** Ap_Ap_GetURLNotify ***\n") ;
-    Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
-    return NPERR_NO_ERROR;
-}
-
-/*----------------------------------------------------------------------
   Ap_GetURL
   A faire: remplacer le 1 dans Getxxx par doc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-NPError Ap_GetURL (NPP instance, const char* url, const char* window)
+NPError Ap_GetURL (NPP instance, const char* url, const char* target)
 #else  /* __STDC__ */
-NPError Ap_GetURL (instance, url, window)
+NPError Ap_GetURL (instance, url, target)
 NPP         instance;
 const char* url;
-const char* window;
+const char* target;
 #endif /* __STDC__ */
 {
     int         result;
@@ -464,12 +458,12 @@ const char* window;
 #   endif
     if (IsValidProtocol (url)) {
 
-       if (window) { /* pass the stream to AMAYA */
+       if (target) { /* pass the stream to AMAYA */
 #         ifdef PLUGIN_DEBUG
           printf ("AM_geturl: Passing the stream to AMAYA\n");
 #         endif
           GetHTMLDocument (url, NULL, 0, 0, DC_FALSE);
-       } else {/* pass the stream to the plug-in */
+       } else { /* pass the stream to the plug-in */
 #             ifdef PLUGIN_DEBUG
 	      printf ("AM_geturl: Passing stream to the plug-in\n");
 #             endif
@@ -502,7 +496,6 @@ const char* window;
                              Ap_AsFile ((NPP) (instance), stream, url);
                              break;
                         case NP_SEEK: 
-			    /* Ap_RequestRead ()*/
                              break;
                         default:
                              printf ("Error unknown mode %d\n", stype);
@@ -517,6 +510,26 @@ const char* window;
     else /* java? */
          printf ("AM_geturl: Passing the stream to Java Interpreter\n");
 #   endif
+    return NPERR_NO_ERROR;
+}
+
+/*----------------------------------------------------------------------
+  Ap_GetURLNotify
+  A faire: remplacer le 1 dans Getxxx par doc
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+NPError Ap_GetURLNotify (NPP instance, const char* url, const char* target, void* notifyData)
+#else  /* !__STDC__ */
+NPError Ap_GetURLNotify (instance, url, target, notifyData)
+NPP         instance; 
+const char* url; 
+const char* target; 
+void*       notifyData;
+#endif /* __STDC__ */
+{
+    printf ("*** Ap_GetURLNotify ***\n") ;
+    Ap_GetURL (instance, url, target);
+    Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
     return NPERR_NO_ERROR;
 }
 
@@ -539,6 +552,55 @@ NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStrea
 }
 
 /*----------------------------------------------------------------------
+  Ap_PostURL
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+NPError Ap_PostURL (NPP instance, const char* url, const char* target, uint32 len, const char* buf, NPBool file)
+#else  /* __STDC__ */
+NPError Ap_PostURL (instance, url, target, len, buf, file)
+NPP         instance;
+const char* url;
+const char* target;
+uint32      len;
+const char* buf;
+NPBool      file;
+#endif /* __STDC__ */
+{
+#   ifdef PLUGIN_DEBUG
+    printf ("***** Ap_PostURL *****\n");
+#   endif
+    if (file) { /* Posting data from a file */
+              int         count;
+              char*       bufToPost ;
+              char*       fileToPost;
+              FILE*       fPtr;
+              struct stat sBuff ;
+
+              if (!strncasecmp (buf, "file://", 7))
+                 fileToPost = &buf[7];
+              else
+                 fileToPost = buf;
+
+              stat (fileToPost, &sBuff) ;
+
+              if ((fPtr = fopen (fileToPost, "rb")) == NULL) {
+                 printf ("error: file %s does not exist\n", fileToPost);
+                 return NPERR_FILE_NOT_FOUND;
+	      } else {
+                    count = fread (bufToPost, sizeof (char), sBuff.st_size, fPtr);
+                    if (count != sBuff.st_size) {
+                       printf ("error occured while reading file: %s\n", fileToPost);
+                       return NPERR_GENERIC_ERROR;
+		    }
+                    GetObjectWWW (1, url, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
+	      }
+    } else      /* Posting data from memory */
+           GetObjectWWW (1, url, buf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
+    
+   return NPERR_NO_ERROR;
+}
+
+/*----------------------------------------------------------------------
   Ap_PostURLNotify
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -555,31 +617,11 @@ void*       notifyData;
 #endif /* __STDC__ */
 {
     printf ("*** Ap_PostURLNotify ***\n") ;
+
+    Ap_PostURL (instance, url, target, len, buf, file); 
     Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
 
     return NPERR_NO_ERROR;
-}
-
-/*----------------------------------------------------------------------
-  Ap_PostURL
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-NPError Ap_PostURL (NPP instance, const char* url, const char* window, uint32 len, const char* buf, NPBool file)
-#else  /* __STDC__ */
-NPError Ap_PostURL (instance, url, window, len, buf, file)
-NPP         instance;
-const char* url;
-const char* window;
-uint32      len;
-const char* buf;
-NPBool      file;
-#endif /* __STDC__ */
-{
-#   ifdef PLUGIN_DEBUG
-    printf ("***** Ap_PostURL *****\n");
-#   endif
-
-   return NPERR_NO_ERROR;
 }
 
 /*----------------------------------------------------------------------
@@ -597,9 +639,7 @@ NPByteRange* rangeList;
 
     FILE*        fptr;
     char*        buffer;
-    char*        buffToWrite ;
-    int          count = 0, ret = 0, ready_to_read;
-    int          indexBuff = 0, i;
+    int          count;
     long         offset;
     NPByteRange* currentRangeList = rangeList;
 
@@ -911,7 +951,6 @@ Display* display;
 #endif /* __STDC__ */
 {
     NPStream*   stream;
-    NPByteRange range;
     NPWindow*   pwindow;
     char        widthText[10], heightText[10];
     char*       argn[6], *argv[6];
