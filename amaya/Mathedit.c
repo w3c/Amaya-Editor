@@ -634,15 +634,17 @@ static void         CreateMathConstruct (int construct)
     /* Math button and selection is not in a SVG element */
 #else /* _SVG */
   if (construct == 1)
-#endif /* _SVG */
     /* Math button */
+#endif /* _SVG */
     {
       if (strcmp (name, "MathML"))
 	/* selection is not in a MathML element */
 	{
-	  /* get the MathML schema for this document or associate it to the
-	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (doc, docSchema, "MathML", "MathMLP");
+	  /* get the MathML schema associated with the current SSchema or
+	     associate it with the current SSchema if it is not associated
+	     yet */
+	  mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML",
+				     "MathMLP");
 	  newType.ElTypeNum = MathML_EL_MathML;
 	  newType.ElSSchema = mathSchema;
 	  if (emptySel)
@@ -723,10 +725,6 @@ static void         CreateMathConstruct (int construct)
     /* the selection is not in a MathML element */
     {
       ok = FALSE;
-      /* get the MathML schema for this document or associate it to the
-	 document if it is not associated yet */
-      mathSchema = TtaNewNature (doc, docSchema, "MathML",
-				 "MathMLP");
       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 	{
 	  len = TtaGetTextLength (sibling);
@@ -759,7 +757,11 @@ static void         CreateMathConstruct (int construct)
 	      TtaRegisterElementCreate (sibling, doc);
 	    }
 	}
-	  
+
+      /* get the MathML schema associated with the current SSchema or
+	 associate it with the current SSchema if it is not associated yet */
+      mathSchema = TtaNewNature (doc, elType.ElSSchema, "MathML", "MathMLP");
+
       if (before)
 	{
 	  el = sibling;
