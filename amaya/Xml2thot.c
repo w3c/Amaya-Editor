@@ -4564,7 +4564,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   gzFile        infile;
   char          bufferRead[COPY_BUFFER_SIZE];
   int           res, i, j, parsingLevel, tmpLineRead = 0;
-  ThotBool      beginning;
+  ThotBool      beginning = TRUE;
   ThotBool      endOfFile = FALSE;
   ThotBool      xmlDec, docType, isXML, isKnown;
   ThotBool      savParsingError;
