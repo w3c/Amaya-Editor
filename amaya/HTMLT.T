@@ -481,12 +481,6 @@ RULES
 	Create '</bdo>' After;
 	END;
 
- Math: BEGIN
-	END;
-
- XMLGraphics: BEGIN
-	END;
-
  Paragraph: BEGIN
 	if not within List_Item and not within Definition and not first
 		Create '\12';

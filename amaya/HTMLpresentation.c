@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -525,9 +525,6 @@ NotifyPresentation *event;
 		 elType.ElTypeNum == HTML_EL_Data_cell ||
 		 elType.ElTypeNum == HTML_EL_Heading_cell ||
 		 elType.ElTypeNum == HTML_EL_Object ||
-#ifdef GRAPHML
-		 elType.ElTypeNum == HTML_EL_XMLGraphics ||
-#endif /* GRAPHML */
 		 elType.ElTypeNum == HTML_EL_Applet))
 	      {
 		/* store information in Width or Height attribute */

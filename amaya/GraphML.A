@@ -11,7 +11,10 @@ DEFAULT
 ELEMENTS
 
    GraphML:
-	ElemExport.Pre -> SetEmptyShapeAttribute;
+	BEGIN
+	ElemNew.Post ->         SVGCreated;
+	ElemExport.Pre ->       SetEmptyShapeAttribute;
+	END;
    Line_:
 	ElemGraphModify.Post -> ControlPointChanged;
    Polyline:
@@ -23,7 +26,7 @@ ELEMENTS
    ClosedSpline:
 	ElemGraphModify.Post -> ControlPointChanged;
    GRAPHICS_UNIT:
-	ElemDelete.Post -> GraphLeafDeleted;
+	ElemDelete.Post ->      GraphLeafDeleted;
 
 ATTRIBUTES
 

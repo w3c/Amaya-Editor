@@ -1362,9 +1362,7 @@ CHAR_T*             GIname;
       
       currentAttribute = NULL;
       HTMLStyleAttribute = FALSE;
-      
     }
-  
 }
 /*----------------------  StartElement  (end)  -----------------------*/
 
@@ -1817,14 +1815,14 @@ CHAR_T         *attrName;
        if (ustrcasecmp (attrName, TEXT("style")) == 0)
 	   HTMLStyleAttribute = TRUE;
        oldAttr = TtaGetAttribute (XMLcontext.lastElement, attrType);
-       if (oldAttr != NULL)
-	 {
+       if (oldAttr)
            /* this attribute already exists for the current element */
-           usprintf (msgBuffer,
-		     TEXT("Duplicate attribute %s"),
-		     attrName);
-           XmlParseError (XMLcontext.doc, msgBuffer, 0);	
-	 }
+	   /* Expat detects this kind of error if it happens in the source
+              file.  So, that's not the case here. The attribute was set
+              when the element was created by the Thot library. Thot does
+              that when the structure schema has a "with" clause in the
+	      element definition */
+	   currentAttribute = oldAttr;
        else
 	 {
 	   attr = TtaNewAttribute (attrType);
@@ -1832,7 +1830,6 @@ CHAR_T         *attrName;
 	   currentAttribute = attr;
 	 }
      }
-   
 }
 
 /*----------------------------------------------------------------------
@@ -1852,9 +1849,6 @@ CHAR_T         *attrName;
    CHAR_T         *bufName;
    CHAR_T         *ptr;
    PtrParserCtxt   oldParserCtxt = NULL;
-
-   currentAttribute = NULL;
-   HTMLStyleAttribute = FALSE;
 
    if (/*nameElementStack[stackLevel-1] == NULL*/currentMappedName[0] == WC_EOS)
        return;

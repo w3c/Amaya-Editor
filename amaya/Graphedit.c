@@ -888,17 +888,17 @@ int                 construct;
  
 #endif
 {
-   Document	        doc;
-   Element	        last, first, graphRoot, newEl, sibling, selEl;
+   Document	    doc;
+   Element	    last, first, graphRoot, newEl, sibling, selEl;
    Element          child, parent, elem;
-   ElementType      elType, wrapperType, newType, childType;
-   AttributeType	attrType;
+   ElementType      elType, selType, newType, childType;
+   AttributeType    attrType;
    Attribute        attr;
-   SSchema	        docSchema, GraphMLSSchema;
+   SSchema	    docSchema, GraphMLSSchema;
    DisplayMode      dispMode;
-   char		        shape;
-   int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   ThotBool	        found, automaticPlacement;
+   char		    shape;
+   int		    c1, c2, i, j, w, h, minX, minY, maxX, maxY;
+   ThotBool	    found, automaticPlacement;
    int	            oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
@@ -921,12 +921,11 @@ int                 construct;
    if (graphRoot == NULL)
       /* the current selection is not in a GraphML element, create one */
       {
-      wrapperType = TtaGetElementType (first);
-      if (ustrcmp (TtaGetSSchemaName (wrapperType.ElSSchema), TEXT("HTML")))
+      selType = TtaGetElementType (first);
+      if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), TEXT("HTML")))
 	 /* selection is not in an HTML element. */
          return;
-      wrapperType.ElTypeNum = HTML_EL_XMLGraphics;
-      TtaCreateElement (wrapperType, doc);
+      TtaCreateElement (elType, doc);
       TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
       }
 
@@ -1418,6 +1417,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  SwitchIconGraph
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              SwitchIconGraph (Document doc, View view, ThotBool state)
@@ -1434,4 +1434,36 @@ ThotBool          state;
   else
     TtaChangeButton (doc, view, GraphButton, iconGraphNo, state);
 #endif /* GRAPHML */
+}
+
+/*----------------------------------------------------------------------
+   SVGCreated
+   An svg element has been created.
+   It has at least two attributes (width and height) that are made
+   mandatory by the S schema. Parse the value of these attributes.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SVGCreated (NotifyElement * event)
+#else  /* __STDC__ */
+void                SVGCreated (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  SSchema	GraphMLSchema;
+
+  elType = TtaGetElementType (event->element);
+  GraphMLSchema = elType.ElSSchema;
+  attrType.AttrSSchema = GraphMLSchema;
+  attrType.AttrTypeNum = GraphML_ATTR_width_;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr)
+     ParseWidthHeightAttribute (attr, event->element, event->document);
+  attrType.AttrTypeNum = GraphML_ATTR_height_;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr)
+     ParseWidthHeightAttribute (attr, event->element, event->document);
 }

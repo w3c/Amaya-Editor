@@ -151,8 +151,8 @@ STRUCT
 		{ hspace            vspace }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
-	Math = MathML;					        { MATH }
-        XMLGraphics =  GraphML;                                 { SVG }
+	MathML;						        { MATH }
+        GraphML;		                                { SVG }
 	MAP;							{ MAP }
 	END;
 
@@ -248,7 +248,7 @@ STRUCT
 	BDO = Basic_Set;					{ BDO }
 	Object;							{ OBJECT }
 	IFRAME;							{ IFRAME }
-	Math;							{ MATH }
+	MathML;							{ MATH }
 	END;
 
   BaseFont							{ BASEFONT }
@@ -823,8 +823,6 @@ EXCEPT
 	SCRIPT:		ReturnCreateNL;
 	Text_Area:	ReturnCreateNL;
 	HTMLfragment:	NoMove, NoResize, Hidden;
-        Math:	        Hidden; 
-	XMLGraphics:    NoResize, NoMove, Hidden;
 
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;

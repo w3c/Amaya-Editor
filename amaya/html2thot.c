@@ -241,9 +241,6 @@ static int          NoTextChild[] =
    HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
-#ifdef GRAPHML
-   HTML_EL_XMLGraphics,
-#endif
    0};
 
 /* empty elements */
@@ -277,7 +274,6 @@ static int          CharLevelElement[] =
    HTML_EL_ACRONYM,
    HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
    HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
-   HTML_EL_Math,
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
    HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,

@@ -34,7 +34,6 @@ LINK: link
 BASE: base
 NOSCRIPT: noscript
 Address: address
-Math: math
 Block_Quote: blockquote
 Horizontal_Rule: hr
 Basic_Set: Element

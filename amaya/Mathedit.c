@@ -641,23 +641,17 @@ int                 construct;
       if (construct == 1)
 	/* Math button */
 	{
-	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-	   /* selection is in an HTML element */
+	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	   /* selection is not in a MathML element */
 	   {
-           newType.ElTypeNum = HTML_EL_Math;
-           newType.ElSSchema = elType.ElSSchema;
+	   /* get the MathML schema for this document or associate it to the
+	      document if it is not associated yet */
+	   mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
+				     TEXT("MathMLP"));
+           newType.ElTypeNum = MathML_EL_MathML;
+           newType.ElSSchema = mathSchema;
            TtaCreateElement (newType, doc);
 	   }
-#ifdef GRAPHML
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
-	   /* selection is in a GraphML element */
-	   {
-           newType.ElTypeNum = GraphML_EL_Math;
-           newType.ElSSchema = elType.ElSSchema;
-	   TtaAskFirstCreation ();
-           TtaCreateElement (newType, doc);
-	   }
-#endif /* GRAPHML */
 	return;
 	}
 
@@ -701,108 +695,110 @@ int                 construct;
       else
 	  /* the selection is not in a MathML element */
 	{
+	  ok = FALSE;
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
 	  mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
 				     TEXT("MathMLP"));
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
-	      elType.ElTypeNum != HTML_EL_Math)
-	    /* the current selection is in an HTML element, but it's not
-	       a Math element */
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 	    {
-	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
+	      len = TtaGetTextLength (sibling);
+	      if (c1 > len)
+		/* the caret is at the end of that character string */
 		{
-		  len = TtaGetTextLength (sibling);
-		  if (c1 > len)
-		      /* the caret is at the end of that character string */
-		      {
-		      /* the new element has to be created after the character
-			 string */
-		      before = FALSE;
-		      el = sibling;
-		      TtaNextSibling (&el);
-		      if (el == NULL)
-			/* the character string is the last child of its
-			   parent */
-			/* create an empty character string after the
-			   Math element to come */
-			{
-		        el = TtaNewElement (doc, elType);
-		        TtaInsertSibling (el, sibling, FALSE, doc);
-			TtaRegisterElementCreate (el, doc);
-			}
-		      }
-		  else
-		    {
-		      /* split the text to insert the Math element */
-		      TtaRegisterElementReplace (sibling, doc);
-		      TtaSplitText (sibling, c1-1, doc);
-		      /* take the second part of the split text element */
-		      TtaNextSibling (&sibling);
-		      TtaRegisterElementCreate (sibling, doc);
-		    }
-		}
-
-	      if (before)
-		{
+		  /* the new element has to be created after the character
+		     string */
+		  before = FALSE;
 		  el = sibling;
-		  TtaPreviousSibling (&el);
-		  if (el != NULL)
+		  TtaNextSibling (&el);
+		  if (el == NULL)
+		    /* the character string is the last child of its
+		       parent */
+		    /* create an empty character string after the
+		       Math element to come */
 		    {
-		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_Math)
-			{
-			  /* insert at the end of the previous MathML element*/
-			  before = FALSE;
-			  sibling = TtaGetLastChild (el);		      
-			}
+		      el = TtaNewElement (doc, elType);
+		      TtaInsertSibling (el, sibling, FALSE, doc);
+		      TtaRegisterElementCreate (el, doc);
 		    }
 		}
 	      else
 		{
-		  el = sibling;
-		  TtaNextSibling (&el);
-		  if (el != NULL)
+		  /* split the text to insert the Math element */
+		  TtaRegisterElementReplace (sibling, doc);
+		  TtaSplitText (sibling, c1-1, doc);
+		  /* take the second part of the split text element */
+		  TtaNextSibling (&sibling);
+		  TtaRegisterElementCreate (sibling, doc);
+		}
+	    }
+	  
+	  if (before)
+	    {
+	      el = sibling;
+	      TtaPreviousSibling (&el);
+	      if (el != NULL)
+		{
+		  newType = TtaGetElementType (el);
+		  if (newType.ElTypeNum == MathML_EL_MathML &&
+		      newType.ElSSchema == mathSchema)
 		    {
-		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_Math)
-			{
-			  /* insert at the beginning of the next MathML element */
-			  before = TRUE;
-			  sibling = TtaGetFirstChild (el);		      
-			}
+		      /* insert at the end of the previous MathML element*/
+		      before = FALSE;
+		      sibling = TtaGetLastChild (el);
+		      emptySel = FALSE;
+		      ok = TRUE;
 		    }
 		}
 	    }
-
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) &&
-	      elType.ElTypeNum == HTML_EL_Math)
-	    /* the current selection is in an HTML element, and it's a
-	       Math element */
+	  else
 	    {
-	      /* search the first MathML element */
-		sibling = TtaGetFirstChild (sibling);
+	      el = sibling;
+	      TtaNextSibling (&el);
+	      if (el != NULL)
+		{
+		  newType = TtaGetElementType (el);
+		  if (newType.ElTypeNum == MathML_EL_MathML &&
+		      newType.ElSSchema == mathSchema)
+		    {
+		      /* insert at the beginning of the next MathML element */
+		      before = TRUE;
+		      sibling = TtaGetFirstChild (el);
+		      emptySel = FALSE;
+		      ok = TRUE;
+		    }
+		}
+	    }
+	  
+	  if (elType.ElSSchema == mathSchema &&
+	      elType.ElTypeNum == MathML_EL_MathML)
+	    /* the current selection is the MathML root element */
+	    {
+	      /* search the first or last child of the MathML root element */
 	      if (before)
 		el = TtaGetFirstChild (sibling);
 	      else
 		el = TtaGetLastChild (sibling);		
 	      if (el != NULL)
 		sibling = el;
+              ok = TRUE;
 	    }
-	  else
+
+	  if (!ok)
 	    {
 	      insertSibling = TRUE;
 	      ok = TRUE;
-	      /* try to create a Math element at the current position */
-	      elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	      elType.ElTypeNum = HTML_EL_Math;
-              if (emptySel)
-		/* selection is empty */
+	      /* try to create a MathML root element at the current position */
+	      elType.ElSSchema = mathSchema;
+	      elType.ElTypeNum = MathML_EL_MathML;
+              if (emptySel && !TtaIsLeaf (TtaGetElementType(sibling)))
+		/* selection is empty and it's not a basic element */
 		{
-		  /* try first to create a new Math element as a child */
+		  /* try first to create a new MathML element as a child */
 		  if (TtaCanInsertFirstChild (elType, sibling, doc))
 		    insertSibling = FALSE;
-		  /* if it fails, try to create a new Math element as a sibling */
+		  /* if it fails, try to create a new MathML element as a
+		     sibling */
 		  else if (TtaCanInsertSibling (elType, sibling, before, doc))
 		    insertSibling = TRUE;
 		  else
@@ -812,10 +808,11 @@ int                 construct;
 	      else
 		/* some non empty element is selected */
 		{
-		  /* try first to create a new Math element as a sibling */
+		  /* try first to create a new MathML element as a sibling */
 		  if (TtaCanInsertSibling (elType, sibling, before, doc))
 		    insertSibling = TRUE;
-		  /* if it fails, try to create a new Math element as a child*/
+		  /* if it fails, try to create a new MathML element as a
+		     child*/
 		  else if (TtaCanInsertFirstChild (elType, sibling, doc))
 		    insertSibling = FALSE;
 		  else

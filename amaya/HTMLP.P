@@ -6861,39 +6861,6 @@ RULES
 		END;
 	END;
 
- Math: BEGIN
-	VertPos: Top = Previous NOT MAP . Bottom;
-	IF Immediately within Center
-		HorizPos: VMiddle = Enclosing . VMiddle;
-	LineBreak: No;
-        IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-                VertPos: Top = Previous . Bottom;
-                END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
- XMLGraphics: BEGIN
-	VertPos: Top = Previous NOT MAP . Bottom;
-	Gather: Yes;
-	MarginTop: 0.4;
-	LineBreak: No;
-	LineWeight: 0;
-	Justify: No;
-	Hyphenate: No;
-        IN Structure_view BEGIN
-		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
-                VertPos: Top = Previous . Bottom;
-                END;
-	IN Alternate_view BEGIN
-		Width: Enclosing . Width;
-                VertPos: Top = Previous . Bottom;
-		END;
-	END;
-
  HTMLfragment:
 	BEGIN
 	Width: Enclosing . Width;
@@ -6909,7 +6876,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 	if NOT within Table
-	   and NOT within XMLGraphics
+	   and NOT within GraphML
 	   Justify: Yes;
 #endif
 	Adjust: Enclosing =;
@@ -6940,7 +6907,7 @@ RULES
 	NoBreak2 : 2;
 	if NOT within Table
 #ifdef GRAPHML
-	   and NOT within XMLGraphics
+	   and NOT within GraphML
 #endif
 	   Justify: Yes;
 #endif
@@ -7002,7 +6969,7 @@ RULES
 	HorizPos: Left = Enclosing . Left + LIST_INDENT;
 #ifdef PAGE
 #ifdef GRAPHML
-	if NOT within XMLGraphics
+	if NOT within GraphML
 #endif
 	Justify: Yes;
 #endif
@@ -7020,7 +6987,7 @@ RULES
 #ifdef PAGE
 	if NOT within Table
 #ifdef GRAPHML
-	   and NOT within XMLGraphics
+	   and NOT within GraphML
 #endif
 	   Justify: Yes;
 #endif
@@ -7045,7 +7012,7 @@ RULES
 #ifdef PAGE
 	if NOT within Table
 #ifdef GRAPHML
-	   and NOT within XMLGraphics
+	   and NOT within GraphML
 #endif
 	   Justify: Yes;
 #endif
@@ -9091,20 +9058,6 @@ ATTRIBUTES
 	Justify: Yes;
 	In Structure_view
 	   Justify: Enclosing =;
-	END;
- TextAlign (Math) = center_:
-	BEGIN
-	CreateBefore(ALIGN_CENTER);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
- TextAlign (Math) = right_:
-	BEGIN
-	CreateBefore(ALIGN_RIGHT);
-	HorizPos: Right = Enclosing . Right;
-	In Structure_view
-	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
  TextAlign (Table) = center_:
 	BEGIN

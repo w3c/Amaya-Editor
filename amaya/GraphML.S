@@ -22,7 +22,7 @@ STRUCT
 	    (ATTR !height_ = Text; !width_ = Text)
                 {  height           width }
 	        = LIST OF (GraphicsElement) + (XMLcomment)
-	            with height_ ?= '5cm', width_ ?= '10cm';
+	          with height_ ?= '6cm', width_ ?= '10cm';
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 

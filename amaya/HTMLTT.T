@@ -276,7 +276,7 @@ RULES
  BDO:	BEGIN
 	END;
 
- Math:  BEGIN
+ MathML:  BEGIN
         Create '[math]';
 	Remove;
 	END;
