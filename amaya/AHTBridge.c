@@ -293,7 +293,7 @@ AHTReqContext *me;
   if ((me->mode & AMAYA_ASYNC) ||
       (me->mode & AMAYA_IASYNC)) {
     me->reqStatus = HT_END;
-    /** AHTReqContext_delete (me); **/
+    AHTReqContext_delete (me);
   }
 #endif /* _WINDOWS */
 
