@@ -3541,6 +3541,7 @@ void MathElementPasted (NotifyElement *event)
 	     TtaAttachAttribute (prev, attr, event->document);
 	     TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
 				   prev, event->document);
+	     TtaRegisterElementReplace (prev, event->document);
 	     ChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
 	   }
        }
@@ -3753,6 +3754,8 @@ void MathElementDeleted (NotifyElement *event)
 				    to operate correctly. */
 				 TtaRemoveAttribute (sibling, attr,
 						     event->document);
+				 TtaRegisterElementReplace (sibling,
+							    event->document);
 				 ChangeTypeOfElement (sibling, event->document,
 						      MathML_EL_Construct1);
 			       }
@@ -3841,8 +3844,11 @@ void MathElementDeleted (NotifyElement *event)
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
    if (newTypeNum > 0)
-      /* transform the parent element */
-      ChangeTypeOfElement (parent, event->document, newTypeNum);
+     /* transform the parent element */
+     {
+       TtaRegisterElementReplace (parent, event->document);
+       ChangeTypeOfElement (parent, event->document, newTypeNum);
+     }
    else if (newTypeNum < 0)
       /* put the content of the single sibling of the deleted element
 	 instead of the parent element */
