@@ -16,10 +16,7 @@ STRUCT
    TextFile (ATTR PrintURL = Yes_; Source = Yes_) =
 	AGGREGATE
 	Document_URL = TEXT;
-	BODY = List of (Line\240 =
-				BEGIN
-				TEXT;
-				END);
+	BODY = List of (Line\240 = TEXT);
 	END;
 
 EXCEPT

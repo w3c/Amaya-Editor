@@ -1405,6 +1405,8 @@ void RestartParser (Document doc, char *localFile,
   int           profile, parsingLevel;
   ThotBool      xmlDec, withDoctype, isXML, isKnown;
 
+  if (doc == 0)
+    return;
   /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
   /* Remove the Parsing errors file */
@@ -2219,7 +2221,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
    else if (DocumentTypes[doc] == docSource)
      /* it's a source document */
      {
-       if (saveBefore)
+       if (saveBefore && otherDoc)
 	 {
 	   /* get the current position in the document */
 	   position = RelativePosition (otherDoc, &distance);

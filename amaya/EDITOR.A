@@ -393,5 +393,6 @@ FUNCTIONS
   AddNewModelIntoLibraryForm,
   DoLeftAlign,
   DoCenter,
-  DoRightAlign;
+  DoRightAlign,
+  DoJustify;
 END
