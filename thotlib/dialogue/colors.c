@@ -287,7 +287,7 @@ gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
       FgColor = color;
       if (applyToSelection)
 	{
-	  ModifyColor (color, FALSE);
+	  /*ModifyColor (color, FALSE);*/
 	  ThotSelectPalette (BgColor, color);
 	}
     }
@@ -298,7 +298,7 @@ gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
       BgColor = color;
       if (applyToSelection)
 	{
-	  ModifyColor (color, TRUE);
+	  /*ModifyColor (color, TRUE);*/
 	  ThotSelectPalette (color, FgColor);
 	}
       

@@ -351,7 +351,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
   de fond ou de trace' (selon Background) pour tous les elements de la	
   selection courante.						
   ----------------------------------------------------------------------*/
-void         ModifyColor (int colorNum, ThotBool Background)
+void ModifyColor (int colorNum, ThotBool Background)
 {
    PtrDocument         SelDoc;
    PtrElement          pElFirstSel, pElLastSel, oldFirstSel, oldLastSel, pEl;
@@ -1572,7 +1572,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  FontFamily = 1;
 	  break;
 	}
-      ApplyPresentMod (Apply_FontFamily);
+      /*ApplyPresentMod (Apply_FontFamily);*/
       break;
 
     case NumMenuCharFontStyle:	/* style des caracteres */
@@ -1587,7 +1587,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdFontStyle = FALSE;
 	  FontStyle = val;
 	}
-      ApplyPresentMod (Apply_FontStyle);
+      /*ApplyPresentMod (Apply_FontStyle);*/
       break;
 
     case NumMenuCharFontWeight:	/* graisse des caracteres */
@@ -1602,7 +1602,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdFontWeight = FALSE;
 	  FontWeight = val;
 	}
-      ApplyPresentMod (Apply_FontWeight);
+      /*ApplyPresentMod (Apply_FontWeight);*/
       break;
     case NumMenuUnderlineType:		/* style du souligne */
       /* l'entree 2 est supprimee dans cette version */
@@ -1631,7 +1631,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdUnderline = FALSE;
 	  UnderlineStyle = val;
 	}
-      ApplyPresentMod (Apply_Underline);
+      /*ApplyPresentMod (Apply_Underline);*/
       break;
     case NumMenuUnderlineWeight:	/* epaisseur du souligne */
       if (val == 2)	/* entree 2: Standard */
@@ -1645,7 +1645,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdLineWeight = FALSE;
 	  UnderlineWeight = val;
 	}
-      ApplyPresentMod (Apply_UlWeight);
+      /*ApplyPresentMod (Apply_UlWeight);*/
       break;
     case NumMenuCharFontSize:	/* menu des corps en points typo */
       if (val >= 0 && val < NumberOfFonts ())
@@ -1659,7 +1659,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  ChngFontSize = FALSE;
 	  StdFontSize = TRUE;
 	}
-      ApplyPresentMod (Apply_FontSize);
+      /*ApplyPresentMod (Apply_FontSize);*/
       break;
     case NumMenuAlignment:	/* alignement des lignes */
       if (val == 4)	/* entree 4: Standard */
@@ -1673,7 +1673,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdAlign = FALSE;
 	  Align = val + 1;
 	}
-      ApplyPresentMod (Apply_Align);
+      /*ApplyPresentMod (Apply_Align);*/
       break;
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
@@ -1695,7 +1695,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  TtaSetMenuForm (NumMenuRecessSense, 0);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 	}
-      ApplyPresentMod (Apply_Indent);
+      /*ApplyPresentMod (Apply_Indent);*/
       break;
     case NumMenuRecessSense:	/* sens du renfoncement de la premiere ligne */
       if (val == 2)	/* entree 2: Standard */
@@ -1714,30 +1714,25 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  if (IndentSign != 0 && IndentValue == 0)
 	    {
 	      IndentValue = 15;
-        
 #ifdef _WINGUI
-          WIN_IndentValue = 15;
+	      WIN_IndentValue = 15;
 #endif /* _WINGUI */
-          
 #if defined(_GTK) || defined(_MOTIF)          
 	      TtaSetNumberForm (NumZoneRecess, 15);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-        
 	    }
 	  else if (IndentSign == 0 && IndentValue != 0)
 	    {
 	      IndentValue = 0;
-        
 #ifdef _WINGUI 
-          WIN_IndentValue = 0;
+	      WIN_IndentValue = 0;
 #endif  /* _WINGUI */
-          
 #if defined(_GTK) || defined(_MOTIF)          
 	      TtaSetNumberForm (NumZoneRecess, 0);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 	    }
 	}
-      ApplyPresentMod (Apply_Indent);
+      /*ApplyPresentMod (Apply_Indent);*/
       break;
     case NumZoneLineSpacing:	/* interligne */
       ChngLineSp = TRUE;
@@ -1757,7 +1752,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  TtaSetMenuForm (NumMenuLineSpacing, i);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 	}
-      ApplyPresentMod (Apply_LineSp);
+      /*ApplyPresentMod (Apply_LineSp);*/
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
       if (val == 3)	/* entree 3: Standard */
@@ -1771,17 +1766,15 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdLineSp = FALSE;
 	  /* l'utilisateur demande a changer l'interligne */
 	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
-
 #ifdef _WINGUI
-      WIN_OldLineSp = OldLineSp;
+	  WIN_OldLineSp = OldLineSp;
 #endif  /* _WINGUI */
-      
 #if defined(_GTK) || defined(_MOTIF)      
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
     
 	}
-      ApplyPresentMod (Apply_LineSp);
+      /*ApplyPresentMod (Apply_LineSp);*/
       break;
     case NumMenuStrokeStyle:
       switch (val)
@@ -1813,13 +1806,13 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdLineStyle = FALSE;
 	  LineStyle = c;
 	}
-      ApplyPresentMod (Apply_LineStyle);
+      /*ApplyPresentMod (Apply_LineStyle);*/
       break;
     case NumZoneStrokeWeight:
       ChngLineWeight = TRUE;
       StdLineWeight = FALSE;
       LineWeight = val;
-      ApplyPresentMod (Apply_LineWeight);
+      /*ApplyPresentMod (Apply_LineWeight);*/
       break;
     case NumToggleWidthUnchanged:
       ChngLineWeight = FALSE;
@@ -1833,12 +1826,13 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  StdTrame = FALSE;
 	  PaintWithPattern = i;
 	}
-      ApplyPresentMod (Apply_Trame);
+      /*ApplyPresentMod (Apply_Trame);*/
       break;
     case NumTogglePatternUnchanged:
       ChngTrame = FALSE;
       StdTrame = TRUE;
       break;
+
     case NumFormPresGraphics:
       /* le formulaire Format lui-meme */
       if (val > 0)
