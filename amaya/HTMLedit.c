@@ -2056,7 +2056,6 @@ static void CheckDescendants (Element el, Document doc)
    ElementPasted
    This function is called for each element pasted by the user, and for
    each element within the pasted element.
-   An element has been pasted in a HTML document.
    Check Pseudo paragraphs.
    If the pasted element has a NAME attribute, change its value if this
    NAME is already used in the document.
@@ -2067,7 +2066,8 @@ void ElementPasted (NotifyElement * event)
 {
   Document            originDocument, doc;
   Language            lang;
-  Element             el, anchor, child, previous, nextchild, parent;
+  Element             el, anchor, child, previous, nextchild, parent, ancestor,
+                      sibling;
   ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
@@ -2075,13 +2075,17 @@ void ElementPasted (NotifyElement * event)
   CSSInfoPtr          css;
   char               *value;
   int                 length, oldStructureChecking;
+  ThotBool            ok;
 
   el = event->element;
   doc = event->document;
   if (!ElementOKforProfile (el, doc))
     return;
   HTMLschema = TtaGetSSchema ("HTML", doc);
+
+  /* Check pseudo-paragraphs */
   CheckPseudoParagraph (el, doc);
+
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (el, doc);
@@ -2160,38 +2164,73 @@ void ElementPasted (NotifyElement * event)
 	    }
 	}
     }
-  
-  if (anchor != NULL)
+
+  if (anchor)
+    /* an anchor element has been pasted. Nested anchors are forbidden in HTML.
+       Check if there is an anchor among the ancestors of the pasted element */
     {
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
-      /* Is there a parent anchor? */
-      parent = TtaGetTypedAncestor (el, elType);
-      if (parent != NULL)
+      /* Is there an anchor ancestor? */
+      ancestor = TtaGetTypedAncestor (el, elType);
+      if (ancestor)
+	/* nested anchors */
 	{
-	  /* Move anchor children and delete the anchor element */
-	  child = TtaGetFirstChild (anchor);
-	  previous = child;
-	  TtaPreviousSibling (&previous);
-	  
-	  while (child != NULL)
+	  ok = FALSE;
+	  if (ancestor == TtaGetParent (el))
+	    /* the enclosing anchor is the parent of the pasted element */
 	    {
-	      nextchild = child;
-	      TtaNextSibling (&nextchild);
-	      TtaRemoveTree (child, doc);
-	      TtaInsertSibling (child, anchor, TRUE, doc);
-	      /* if anchor is the pasted element, it has been registered
-		 in the editing history for the Undo command.  It will be
-		 deleted, so its children have to be registered too. */
-	      if (anchor == el)
-		TtaRegisterElementCreate (child, doc);
-	      child = nextchild;
+	      sibling = el; TtaNextSibling (&sibling);
+	      if (!sibling)
+		/* the pasted anchor is the last child of its parent */
+		{
+		  /* move the pasted anchor as the next sibling of its
+		     parent */
+		  TtaRemoveTree (el, doc);
+		  TtaInsertSibling (el, ancestor, FALSE, doc);
+		  ok = TRUE;
+		}
+	      else
+		{
+		  sibling = el; TtaPreviousSibling (&sibling);
+		  if (!sibling)
+		    /* the pasted anchor is the first child of its parent */
+		    {
+		      /* move the pasted anchor as the previous sibling of its
+			 parent */
+		      TtaRemoveTree (el, doc);
+		      TtaInsertSibling (el, ancestor, TRUE, doc);
+		      ok = TRUE;
+		    }
+		}
 	    }
-	  TtaDeleteTree (anchor, doc);
+	  if (!ok)
+	    {
+	      /* Move anchor children and delete the anchor element */
+	      child = TtaGetFirstChild (anchor);
+	      previous = child;
+	      TtaPreviousSibling (&previous);
+	      while (child)
+		{
+		  nextchild = child;
+		  TtaNextSibling (&nextchild);
+		  TtaRemoveTree (child, doc);
+		  TtaInsertSibling (child, anchor, TRUE, doc);
+		  /* if anchor is the pasted element, it has been registered
+		     in the editing history for the Undo command.  It will be
+		     deleted, so its children have to be registered too. */
+		  if (anchor == el)
+		    TtaRegisterElementCreate (child, doc);
+		  child = nextchild;
+		}
+	      TtaDeleteTree (anchor, doc);
+	      anchor = NULL;
+	    }
 	}
-      else
+      if (anchor)
 	{
+	  /* the anchor element is allowed here */
 	  /* Change attributes HREF if the element comes from another */
 	  /* document */
 	  originDocument = (Document) event->position;
