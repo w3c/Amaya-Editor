@@ -745,7 +745,6 @@ fi
 dnl
 dnl Annotation thread support enabled by default
 dnl
-<<<<<<< configure.in
 dnl if test "$with_annot_threads" = "" ; then
 dnl     if test "$enable_annot_threads" = "no" ; then
 dnl 	with_annot_threads="no"
@@ -755,17 +754,6 @@ dnl 	with_annot_threads="yes"
 dnl 	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
 dnl     fi
 dnl fi
-=======
-if test "$with_annot_threads" = "" ; then
-    if test "$enable_annot_threads" = "no" ; then
-	with_annot_threads="no"
-	ANNOT_THREAD_OPTIONS=
-    else
-	with_annot_threads="yes"
-	ANNOT_THREAD_OPTIONS=
-    fi
-fi
->>>>>>> 1.89
 
 AC_ARG_WITH(dav,            [  --with-dav             enable WebDAV support (experimental) ])
 dnl
