@@ -671,7 +671,7 @@ Language            lang;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl, pNextEl, pSecond;
+   PtrElement          pEl, pNextEl, pSecond, pNext;
    PtrDocument         pDoc;
    PtrAttribute        pAttr;
    int                 len;
@@ -683,25 +683,19 @@ Language            lang;
 	pDoc = DocumentOfElement (pEl);
 	if (pEl->ElTextLength > 0)
 	  {
-	     DestroyAbsBoxes (pEl, pDoc, TRUE);
-	     AbstractImageUpdated (pDoc);
+	     pNext = pEl->ElNext;
 	     SplitTextElement (pEl, charIndex, pDoc, TRUE, &pNextEl);
-	     CreateAllAbsBoxesOfEl (pEl, pDoc);
-	     AbstractImageUpdated (pDoc);
+	     BuildAbsBoxSpliText (pEl, pNextEl, pNext, pDoc);
 	     if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
 	       {
+	          pNext = pNextEl->ElNext;
 		  SplitTextElement (pNextEl, 1, pDoc, TRUE, &pSecond);
-		  CreateAllAbsBoxesOfEl (pSecond, pDoc);
-		  AbstractImageUpdated (pDoc);
+		  BuildAbsBoxSpliText (pNextEl, pSecond, pNext, pDoc);
 		  pEl = pNextEl;
 	       }
 	     else if (pEl->ElTextLength > 0)
 		pEl = pNextEl;
-	     if (pNextEl != NULL && pNextEl->ElStructSchema != NULL)
-	       {
-		 CreateAllAbsBoxesOfEl (pNextEl, pDoc);
-		 AbstractImageUpdated (pDoc);
-	       }
+	     AbstractImageUpdated (pDoc);
 	  }
 	if (pEl != NULL && pEl->ElStructSchema != NULL)
 	  {
@@ -1084,7 +1078,7 @@ boolean             block;
 {
    PtrElement          firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl,
                        pPrev, pNext, pChild, pEl2, pEl, pCompleteElem,
-                       pSibling, pClose, pSecond;
+                       pSibling, pClose;
    PtrDocument         pDoc;
    PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
@@ -1166,34 +1160,16 @@ boolean             block;
 		     else
 		       {
 			  SplitTextElement (pEl, firstChar, pDoc, TRUE, &pNext);
-			  if (pEl->ElParent == NULL)
+			  if (pEl == NULL || pEl->ElStructSchema == NULL)
 			     /* pEl has been deleted by the application.
 				we are lost! */
-			     return;
+			     return ret;
 			  else
-			    /* modifie le volume des paves contenant la 1ere partie du texte */
+			    /* modifie le volume des paves contenant la 1ere
+			       partie du texte */
 			    for (view = 0; view < MAX_VIEW_DOC; view++)
 			       if (pNext->ElTextLength > 0)
-			         {
-				  pAb = pEl->ElAbstractBox[view];
-				  if (pAb != NULL)
-				    {
-				       pAb->AbChange = TRUE;
-				       if (!AssocView (pEl))
-					  pDoc->DocViewModifiedAb[view] = Enclosing (pAb, pDoc->
-						   DocViewModifiedAb[view]);
-				       else
-					  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-					     Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-				       dvol = pAb->AbVolume - pEl->ElTextLength;
-				       do
-					 {
-					    pAb->AbVolume -= dvol;
-					    pAb = pAb->AbEnclosing;
-					 }
-				       while (pAb != NULL);
-				    }
-			         }
+				  UpdateAbsBoxVolume (pEl, view, pDoc);
 			  pPrev = pEl;
 			  nextChar = 1;
 		       }

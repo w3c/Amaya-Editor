@@ -37,8 +37,24 @@ releases.</p>
 To create a math expression in a document, move the insertion point to the
 position where you want to insert that expression, and click the
 <strong>Math</strong> button (the rightmost button). It displays a menu that
-allows you to choose the construct to be inserted. In this version, the
-available constructs are, from top to bottom:</p>
+allows you to choose the mathematical construct to be inserted.</p>
+<p>
+The first two items of this menu (Math and MathDisp) allow you to create a new
+formula, when the caret is in some HTML element (but the caret should not be
+within an existing MathML element):</p>
+<ul>
+<li>
+The <strong>Math</strong> button creates an inline formula. 
+<li>
+The <strong>MathDisp</strong> button creates a display (block level) formula.
+If the caret is in a block element, such as a paragraph or a heading, this
+block element is split and the new formula is created between the two parts. 
+</ul>
+<p>
+The next items of the Math menu allow you to create new constructs within a
+formula. If the caret is not within a formula, a Math element is created to
+accept the new construct. In this version of Amaya, the available constructs
+are, from top to bottom:</p>
 <ul>
 <li>
 Root with index, MROOT in MathML:  <math>
@@ -162,9 +178,10 @@ Expression with prescripts and tensor indices, MMULTISCRIPTS: <math>
   </mmultiscripts>
 </math>
 
-<li>
-A greek character or a mathematical symbol from the Symbol character set.
 </ul>
+<p>
+The last item of the Math menu displays a palette from which you can insert
+greek characters and symbols in mathematical expressions.</p>
 
 <h3>Math_Structure view</h3>
 <p>
@@ -191,10 +208,9 @@ insertion point</a> to the desired position, with the mouse or with the arrow
 keys, and type some characters or select a construct from the
 <strong>Math</strong> menu.</p>
 <p>
-You don't need to enter each element with the math menu. When you type a
-character string in a MathML element, Amaya parses that string and generates
-the MO (operator), MN (number), MI (identifier), MTEXT elements automatically.
-For instance, to enter</p>
+When you type a character string in a MathML element, Amaya parses that string
+and generates the MO (operator), MN (number), MI (identifier), MTEXT elements
+automatically. For instance, to enter</p>
 <p>
 <math>
   <mrow>
@@ -208,15 +224,17 @@ For instance, to enter</p>
 </math>
 </p>
 <p>
-just type <code>x=2a+b</code>, and you will get the following structure:</p>
+just type <code>x=2a+b</code>, (don't forget to first click on the Math or
+MathDisp item of the Math menu, if you are not in a mathematical expression)
+and you will get the following structure:</p>
 <pre>&lt;MI>x&lt;/MI>&lt;MO>=&lt;/MO>&lt;MN>2&lt;/MN>&lt;MI>a&lt;/MI>&lt;MO>+&lt;/MO>&lt;MI>b&lt;/MI></pre>
 
 <h3>Current limitations</h3>
 <p>
 The current version of Amaya only implements the <em>Presentation Tags</em>
 from MathML, not the <em>Content Markup</em>. All presentation elements are
-available, except tables and matrices (MTABLE, MTR, MTD), but attributes are
-not implemented.</p>
+available, except tables and matrices (MTABLE, MTR, MTD). Attributes are not
+implemented.</p>
 <p>
 </p>
 <hr>

@@ -22,6 +22,8 @@
 
 #include "MathML.h"
 #include "Math.xpm"
+#include "math.xpm"
+#include "mathdisp.xpm"
 #include "root.xpm"
 #include "sqrt.xpm"
 #include "frac.xpm"
@@ -39,7 +41,7 @@
 #define MAX_MATHS  2
 
 static Pixmap       iconMath;
-static Pixmap       mIcons[12];
+static Pixmap       mIcons[14];
 static int          MathsDialogue;
 static boolean      InitMaths;
 
@@ -239,7 +241,7 @@ char               *data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if (val == 11)
+      if (val == 13)
 	{
 	  TtcDisplayGreekKeyboard (doc, 1);
 	  return;
@@ -247,23 +249,42 @@ char               *data;
       else if (doc == 0)
 	/* no document selected */
 	return;
-      /* the new element will be inserted before the selected element */
-      before = TRUE;
+
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
     
-      /* Check whether the selected element is a text element */
+      /* Get the type of the first selected element */
       elType = TtaGetElementType (sibling);
+      docSchema = TtaGetDocumentSSchema (doc);
+
+      if (val == 0 || val == 1)
+	/* button Math or MathDisp */
+	{
+	/* cannot create a Math or MathDisp element within a MathML element */
+	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+	   /* not within a MathML element */
+	   {
+	   if (val == 0)
+              newType.ElTypeNum = HTML_EL_Math;
+	   else
+	      newType.ElTypeNum = HTML_EL_MathDisp;
+           newType.ElSSchema = docSchema;
+           TtaCreateElement (newType, doc);
+	   }
+	return;
+	}
+
       surround = (last != sibling || 
 		  (c1 < i) || 
 		  (c1 == 0 && i == 0 && (TtaGetElementVolume (sibling) != 0))
 		 );
-
       
       TtaSetDisplayMode (doc, DeferredDisplay);
 
+      /* the new element will be inserted before the selected element */
+      before = TRUE;
+
       /* Check whether the selected element is a MathML element */
-      docSchema = TtaGetDocumentSSchema (doc);
       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	  /* the selection concerns a MathML element */
@@ -413,38 +434,46 @@ char               *data;
       newType.ElSSchema = mathSchema;
       switch (val)
 	{
-	case 0:
-	  newType.ElTypeNum = MathML_EL_MROOT;
+	case 0:	/* create a Math element */
+	  /* handled above */
+	  return;
 	  break;
-	case 1:
-	  newType.ElTypeNum = MathML_EL_MSQRT;
+	case 1:	/* create a MathDisp element */
+	  /* handled above */
+	  return;
 	  break;
 	case 2:
-	  newType.ElTypeNum = MathML_EL_MFRAC;
+	  newType.ElTypeNum = MathML_EL_MROOT;
 	  break;
 	case 3:
-	  newType.ElTypeNum = MathML_EL_MSUBSUP;
+	  newType.ElTypeNum = MathML_EL_MSQRT;
 	  break;
 	case 4:
-	  newType.ElTypeNum = MathML_EL_MSUP;
+	  newType.ElTypeNum = MathML_EL_MFRAC;
 	  break;
 	case 5:
-	  newType.ElTypeNum = MathML_EL_MSUB;
+	  newType.ElTypeNum = MathML_EL_MSUBSUP;
 	  break;
 	case 6:
-	  newType.ElTypeNum = MathML_EL_MUNDEROVER;
+	  newType.ElTypeNum = MathML_EL_MSUP;
 	  break;
 	case 7:
-	  newType.ElTypeNum = MathML_EL_MOVER;
+	  newType.ElTypeNum = MathML_EL_MSUB;
 	  break;
 	case 8:
-	  newType.ElTypeNum = MathML_EL_MUNDER;
+	  newType.ElTypeNum = MathML_EL_MUNDEROVER;
 	  break;
 	case 9:
+	  newType.ElTypeNum = MathML_EL_MOVER;
+	  break;
+	case 10:
+	  newType.ElTypeNum = MathML_EL_MUNDER;
+	  break;
+	case 11:
 	  newType.ElTypeNum = MathML_EL_MROW;
 	  ParBlock = TRUE;
 	  break;
-	case 10:
+	case 12:
 	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
 	  break;
 	default:
@@ -564,7 +593,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 12, mIcons, FALSE);
+		   NULL, 14, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
@@ -596,18 +625,20 @@ void                InitMathML ()
 {
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    TtaRegisterPixmap("Math", iconMath);
-   mIcons[0] = TtaCreatePixmapLogo (root_xpm);
-   mIcons[1] = TtaCreatePixmapLogo (sqrt_xpm);
-   mIcons[2] = TtaCreatePixmapLogo (frac_xpm);
-   mIcons[3] = TtaCreatePixmapLogo (subsup_xpm);
-   mIcons[4] = TtaCreatePixmapLogo (sup_xpm);
-   mIcons[5] = TtaCreatePixmapLogo (sub_xpm);
-   mIcons[6] = TtaCreatePixmapLogo (overunder_xpm);
-   mIcons[7] = TtaCreatePixmapLogo (over_xpm);
-   mIcons[8] = TtaCreatePixmapLogo (under_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (fence_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (mscript_xpm);
-   mIcons[11] = TtaCreatePixmapLogo (greek_xpm);
+   mIcons[0] = TtaCreatePixmapLogo (math_xpm);
+   mIcons[1] = TtaCreatePixmapLogo (mathdisp_xpm);
+   mIcons[2] = TtaCreatePixmapLogo (root_xpm);
+   mIcons[3] = TtaCreatePixmapLogo (sqrt_xpm);
+   mIcons[4] = TtaCreatePixmapLogo (frac_xpm);
+   mIcons[5] = TtaCreatePixmapLogo (subsup_xpm);
+   mIcons[6] = TtaCreatePixmapLogo (sup_xpm);
+   mIcons[7] = TtaCreatePixmapLogo (sub_xpm);
+   mIcons[8] = TtaCreatePixmapLogo (overunder_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (over_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (under_xpm);
+   mIcons[11] = TtaCreatePixmapLogo (fence_xpm);
+   mIcons[12] = TtaCreatePixmapLogo (mscript_xpm);
+   mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
 }
 
 /*----------------------------------------------------------------------
@@ -669,7 +700,7 @@ static int GetCharType (c, alphabet)
      {
      if (c >= '0' && c <= '9')
         ret = MathML_EL_MN;
-     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')
         ret = MathML_EL_MI;
      else if (((int) c) >= 192 && ((int) c) <= 255 &&
 	      ((int) c) != 215 && ((int) c) != 247)
@@ -877,19 +908,22 @@ static Element ClosestLeaf (el, pos)
 
 /*----------------------------------------------------------------------
    ParseMathString
-   The content of an element MTEXT, MI, MO, MN, or MS has been modified.
+   The content of an element MTEXT, MI, MO, or MN, has been modified
+   or created.
    Parse the new content and create the appropriate MI, MO, MN elements.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ParseMathString (NotifyOnTarget *event)
+static void ParseMathString (Element theText, Element theElem, Document doc)
 #else /* __STDC__*/
-void ParseMathString (event)
-     NotifyOnTarget *event;
+static void ParseMathString (theText, theElem, doc)
+     Element theText;
+     Element theElem;
+     Document doc;
 #endif /* __STDC__*/
+
 {
-  Element	el, selEl, theElem, prevEl, nextEl, textEl, newEl, lastEl,
-		firstEl, newSelEl, firstTextEl, prev, next, parent;
-  Document	doc;
+  Element	el, selEl, prevEl, nextEl, textEl, newEl, lastEl,
+		firstEl, newSelEl, prev, next, parent;
   ElementType	elType, elType2;
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j, start;
@@ -900,8 +934,6 @@ void ParseMathString (event)
   char		language[TXTBUFLEN];
   unsigned char	mathType[TXTBUFLEN];
 
-  doc = event->document;
-  theElem = event->element;  /* the element whose content has been changed */
   /* get the current selection */
   TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
   newSelEl = NULL;
@@ -940,9 +972,8 @@ void ParseMathString (event)
   i = 0;
   totLen = 0;
   elType = TtaGetElementType (theElem);
-  firstTextEl = TtaGetFirstChild (theElem);
-  textEl = firstTextEl;
-  while (textEl != NULL)
+  textEl = theText;
+  if (textEl != NULL)
        {
        len = TtaGetTextLength (textEl);
        /* selection */
@@ -966,7 +997,6 @@ void ParseMathString (event)
 	  i+= len;
 	  totLen += len;
 	  }
-       TtaNextSibling (&textEl);
        }
 
   /* try to identify numbers like: 0.123  1,000,000  2.1e10 */
@@ -990,13 +1020,13 @@ void ParseMathString (event)
   lastEl = NULL;
   if (totLen == 0)
     /* the character string is empty. Remove the parent element (MI, MN, MO...)
-       if it does not contain any other element */
+       if the parent does not contain any other element */
     {
-    el = firstTextEl;
+    el = theText;
     TtaPreviousSibling (&el);
     if (el == NULL)
        {
-       el = firstTextEl;
+       el = theText;
        TtaNextSibling (&el);
        if (el == NULL)
 	  /* the text element has no sibling */
@@ -1055,17 +1085,7 @@ void ParseMathString (event)
 	        TtaInsertFirstChild (&theElem, parent, doc);
 	     
 	     }
-	  textEl = TtaGetFirstChild (theElem);
-	  while (textEl != NULL)
-	     /* delete all text elements except the modified element */
-	     {
-	     next = textEl;
-	     TtaNextSibling (&next);
-	     if (textEl != event->target)
-		TtaDeleteTree (textEl, doc);
-	     textEl = next;
-	     }
-	  textEl = event->target;
+	  textEl = theText;
 	  firstEl = theElem;
 	  }
        else
@@ -1087,7 +1107,6 @@ void ParseMathString (event)
        text[j] = '\0';
        TtaSetTextContent (textEl, &text[start], language[start], doc);
        text[j] = c;
-       start = i;
        lastEl = newEl;
        MathSetAttributes (newEl, doc);
        if (newSelEl != NULL)
@@ -1099,6 +1118,7 @@ void ParseMathString (event)
 	     else
 		newSelChar -= start;
 	  }
+       start = i;
        }
 
   /* try to merge the first element processed with its previous sibling */
@@ -1149,6 +1169,38 @@ void ParseMathString (event)
      else
 	TtaSelectElement (doc, newSelEl);
      }
+}
+
+/*----------------------------------------------------------------------
+   MathStringModified
+   The content of an element MTEXT, MI, MO, MN, or MS has been modified.
+   Parse the new content and create the appropriate MI, MO, MN elements.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathStringModified (NotifyOnTarget *event)
+#else /* __STDC__*/
+void MathStringModified (event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  ParseMathString (event->target, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+ NewMathString
+ An new text string has been created in a MathML element.
+ Parse its contents.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void NewMathString (NotifyElement *event)
+#else /* __STDC__*/
+void NewMathString(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+   if (TtaGetTextLength (event->element) > 0)
+      ParseMathString (event->element, TtaGetParent (event->element),
+		       event->document);
 }
 
 /*----------------------------------------------------------------------

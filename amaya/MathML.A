@@ -9,14 +9,13 @@ DEFAULT
 ELEMENTS
 
    MTEXT:
-	ElemTextModify.Post -> ParseMathString;
+	ElemTextModify.Post -> MathStringModified;
    MI:
-	ElemTextModify.Post -> ParseMathString;
+	ElemTextModify.Post -> MathStringModified;
    MO:
-	ElemTextModify.Post -> ParseMathString;
+	ElemTextModify.Post -> MathStringModified;
    MN:
-	ElemTextModify.Post -> ParseMathString;
-   MS:
-	ElemTextModify.Post -> ParseMathString;
-
+	ElemTextModify.Post -> MathStringModified;
+   TEXT_UNIT:
+	ElemNew.Post -> NewMathString;
 END

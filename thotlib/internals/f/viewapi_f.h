@@ -94,6 +94,8 @@ extern void RedisplayLeaf ( PtrElement element,
                             int delta );
 extern void RedisplaySplittedText ( PtrElement element,
                                     int position,
+				    PtrElement pNewEl,
+				    PtrElement pNextEl,
                                     Document document );
 extern void RedisplayMergedText ( PtrElement element,
                                   Document document );
@@ -218,6 +220,8 @@ extern void RedisplayLeaf (/* PtrElement element,
                               int delta */);
 extern void RedisplaySplittedText (/* PtrElement element,
                                       int position,
+				      PtrElement pNewEl,
+				      PtrElement pNextEl,
                                       Document document */);
 extern void RedisplayMergedText (/* PtrElement element,
                                     Document document */);

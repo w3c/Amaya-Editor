@@ -2157,18 +2157,18 @@ int                 delta;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RedisplaySplittedText (PtrElement element, int position, Document document)
+void                RedisplaySplittedText (PtrElement element, int position, PtrElement pNewEl, PtrElement  pNextEl, Document document)
 #else  /* __STDC__ */
-void                RedisplaySplittedText (element, position, document)
+void                RedisplaySplittedText (element, position, pNewEl, pNextEl, document)
 PtrElement          element;
 int                 position;
+PtrElement	    pNewEl;
+PtrElement	    pNextEl;
 Document            document;
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
-   int                 view, dvol;
-   PtrAbstractBox      pAb;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
@@ -2184,39 +2184,20 @@ Document            document;
 	if (pEl == LastSelectedElement)
 	   if (position < LastSelectedChar)
 	     {
-		LastSelectedElement = ((PtrElement) element)->ElNext;
+		LastSelectedElement = pNewEl;
 		LastSelectedChar -= position;
 	     }
 	if ((PtrElement) element == FirstSelectedElement)
 	   if (position < FirstSelectedChar)
 	     {
-		FirstSelectedElement = ((PtrElement) element)->ElNext;
+		FirstSelectedElement = pNewEl;
 		FirstSelectedChar -= position;
 	     }
      }
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   if (pEl->ElNext != NULL)
-      /* cree les paves du nouvel element de texte */
-      CreateAllAbsBoxesOfEl (pEl->ElNext, pDoc);
-   /* met a jour le volume des paves du premier element de texte */
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
-     {
-	pAb = pEl->ElAbstractBox[view - 1];
-	if (pAb != NULL)
-	  {
-	     dvol = pEl->ElTextLength - pAb->AbVolume;
-	     pAb->AbVolume += dvol;
-	     pAb->AbChange = TRUE;
-	     if (!AssocView (pEl))
-		pDoc->DocViewModifiedAb[view - 1] =
-		   Enclosing (pAb, pDoc->DocViewModifiedAb[view - 1]);
-	     else
-		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		   Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	  }
-     }
+   BuildAbsBoxSpliText ((PtrElement) element, pNewEl, pNextEl, pDoc);
    AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
 }

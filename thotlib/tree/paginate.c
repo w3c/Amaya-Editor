@@ -692,33 +692,13 @@ int                 nbView;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox      pAb;
    PtrElement	       pSecond;
-   int                 dvol;
 
    SplitTextElement (pEl, cutChar + 1, pDoc, TRUE, &pSecond);
    /* reduit le volume du pave de l'element precedant le point de */
    /* coupure et de ses paves englobants, si ces paves existent dans la */
    /* vue traitee. */
-   pAb = pEl->ElAbstractBox[nbView - 1];
-   if (pAb != NULL)
-     {
-	/* le pave a change' : il est plus petit */
-	pAb->AbChange = TRUE;
-	if (!AssocView (pEl))
-	   pDoc->DocViewModifiedAb[nbView - 1] = Enclosing (pAb, pDoc->DocViewModifiedAb[nbView - 1]);
-	else
-	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-	      Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	dvol = pAb->AbVolume - pEl->ElTextLength;
-	/* repercute la difference de volume sur les paves englobants */
-	do
-	  {
-	     pAb->AbVolume -= dvol;
-	     pAb = pAb->AbEnclosing;
-	  }
-	while (!(pAb == NULL));
-     }
+   UpdateAbsBoxVolume (pEl, nbView - 1, pDoc);
    /* prepare la creation des paves de la 2eme partie */
    if (!AssocView (pEl))
       if (pDoc->DocView[nbView - 1].DvPSchemaView > 0)

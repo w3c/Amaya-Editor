@@ -3187,14 +3187,12 @@ void SetFontslantAttr (el, doc)
   Document	doc;
 #endif /* __STDC__*/
 {
-  Element	textEl;
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
   int		len;
 
-  textEl = TtaGetFirstChild (el);
-  if (textEl != NULL)
+  if (el != NULL)
      {
      /* search the fontslant attribute */
      elType = TtaGetElementType (el);
@@ -3202,7 +3200,7 @@ void SetFontslantAttr (el, doc)
      attrType.AttrTypeNum = MathML_ATTR_fontslant;
      attr = TtaGetAttribute (el, attrType);
      /* get content length */
-     len = TtaGetTextLength (textEl);
+     len = TtaGetElementVolume (el);
      if (len > 1)
         /* put an attribute fontslant = plain */
 	{

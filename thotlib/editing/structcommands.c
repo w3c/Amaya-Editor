@@ -2459,7 +2459,7 @@ boolean             Before;
 
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
-  PtrElement          pElem, pElSplit, pSplitEl;
+  PtrElement          pElem, pElSplit, pSplitEl, pNextEl;
   ElementType	      elType, selType;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
@@ -2773,13 +2773,10 @@ boolean             Before;
 			firstChar > 1 &&
 			firstChar <= firstSel->ElTextLength && !splitElem)
 		      {
-			DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
-			AbstractImageUpdated (pSelDoc);
+			pNextEl = firstSel->ElNext;
 			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE,
 					  &pSecond);
-			CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
-			if (pSecond != NULL)
-			  CreateAllAbsBoxesOfEl (pSecond, pSelDoc);
+			BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pSelDoc);
 		      }
 		  if (pNew == NULL)
 		    pNew = NewSubtree (typeNum, pSS, pSelDoc,

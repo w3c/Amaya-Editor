@@ -740,7 +740,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrElement	secondPart;
+   PtrElement	secondPart, pNextEl;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -756,7 +756,7 @@ Document            document;
 	TtaError (ERR_invalid_element_type);
      }
    else
-      /* verification of the parameter document */
+      /* checking the document parameter */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -774,10 +774,12 @@ Document            document;
      }
    else
      {
+	pNextEl = ((PtrElement) element)->ElNext;
 	SplitTextElement ((PtrElement) element, position + 1,
 			  LoadedDocument[document - 1], FALSE, &secondPart);
 #ifndef NODISPLAY
-	RedisplaySplittedText ((PtrElement) element, position, document);
+	RedisplaySplittedText ((PtrElement) element, position, secondPart,
+				pNextEl, document);
 #endif
      }
 }

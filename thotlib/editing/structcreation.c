@@ -107,6 +107,8 @@ int                 origDoc;
    NotifyElement       notifyEl;
    PtrElement          pChild;
 
+   if (pEl == NULL || pEl->ElStructSchema == NULL)
+      return;
    /* send event appEvent.Post to element pEl */
    notifyEl.event = appEvent;
    notifyEl.document = (Document) IdentDocument (pDoc);
@@ -313,6 +315,45 @@ Name                typeName;
 }
 
 
+
+/*----------------------------------------------------------------------
+   UpdateAbsBoxVolume
+   update the volume of the abstract box of element pEl in view view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
+#else
+void                UpdateAbsBoxVolume (pEl, view, pDoc)
+   PtrElement pEl;
+   int view;
+   PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   int		       dVol;
+   PtrAbstractBox      pAb;
+
+   pAb = pEl->ElAbstractBox[view];
+   if (pAb != NULL)
+      {
+	pAb->AbChange = TRUE;
+	if (!AssocView (pEl))
+	   if (pDoc->DocView[view].DvPSchemaView > 0)
+	      pDoc->DocViewModifiedAb[view] =
+		Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
+	   else
+	      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+		Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+	dVol = pAb->AbVolume - pEl->ElTextLength;
+	do
+	   {
+	   pAb->AbVolume -= dVol;
+	   pAb = pAb->AbEnclosing;
+	   }
+	while (pAb != NULL);
+      }
+}
+
 /*----------------------------------------------------------------------
    BuildAbsBoxSpliText On a coupe' en deux la feuille de texte pEl.	
    construit les paves de la 2eme partie (pNewEl) et	
@@ -332,40 +373,18 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 view, dVol;
-   PtrAbstractBox      pAb;
-   boolean             assoc;
+   int                 view;
 
    if (pNextEl == NULL)
       /* L'element divise' etait le dernier parmi ses freres. */
       /* La premiere partie n'est plus le dernier parmi ses freres */
       ChangeFirstLast (pEl, pDoc, FALSE, TRUE);
-   /* cree dans toutes les views les paves de la deuxieme partie */
-   CreateAllAbsBoxesOfEl (pNewEl, pDoc);
+   if (pNewEl != NULL && pNewEl->ElStructSchema != NULL)
+      /* cree dans toutes les views les paves de la deuxieme partie */
+      CreateAllAbsBoxesOfEl (pNewEl, pDoc);
    /* change le volume de tous les paves de la 1e partie de texte */
-   assoc = AssocView (pEl);
    for (view = 0; view < MAX_VIEW_DOC; view++)
-     {
-	pAb = pEl->ElAbstractBox[view];
-	if (pAb != NULL)
-	  {
-	     pAb->AbChange = TRUE;
-	     dVol = pAb->AbVolume - pEl->ElTextLength;
-	     if (!assoc)
-		if (pDoc->DocView[view].DvPSchemaView > 0)
-		   pDoc->DocViewModifiedAb[view] =
-		      Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
-		else
-		   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		      Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	     do
-	       {
-		  pAb->AbVolume -= dVol;
-		  pAb = pAb->AbEnclosing;
-	       }
-	     while (pAb != NULL);
-	  }
-     }
+      UpdateAbsBoxVolume (pEl, view, pDoc);
 }
 
 
@@ -388,10 +407,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pEl, pSecond;
-   int                 view, dVol;
-   PtrAbstractBox      pAb;
-   boolean             assoc;
+   PtrElement          pSecond, pNext;
 
    if ((*firstSel)->ElTerminal && (*firstSel)->ElLeafType == LtText &&
        *firstChar > 1)
@@ -400,52 +416,20 @@ PtrDocument         pDoc;
 	/* on coupe en deux l'element feuille dans l'arbre abstrait */
 	/* ce qui cree un deuxieme element feuille juste apres l'element */
 	/* initial */
+	pNext = (*firstSel)->ElNext;
 	SplitTextElement (*firstSel, *firstChar, pDoc, FALSE, &pSecond);
-	if (pSecond->ElNext == NULL)
-	   /* l'element qui a ete coupe etait le dernier et ne l'est plus */
-	   ChangeFirstLast (*firstSel, pDoc, FALSE, TRUE);
-	/* on met a jour le pave' de l'element dans toutes les vues ou */
-	/* il apparait */
-	assoc = AssocView (*firstSel);
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	  {
-	     pAb = (*firstSel)->ElAbstractBox[view];
-	     if (pAb != NULL)
-	       {
-		  /* calcule la difference de volume du premier element */
-		  dVol = pAb->AbVolume - (*firstSel)->ElTextLength;
-		  /* indique que ce pave a ete modifie' */
-		  pAb->AbChange = TRUE;
-		  if (!assoc)
-		     pDoc->DocViewModifiedAb[view] =
-			Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
-		  else
-		    {
-		       pEl = *firstSel;
-		       pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			  Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->
-							   ElAssocNum - 1]);
-		    }
-		  /* met a jour le volume de tous les paves englobants */
-		  do
-		    {
-		       pAb->AbVolume -= dVol;
-		       pAb = pAb->AbEnclosing;
-		    }
-		  while (pAb != NULL);
-	       }
-	  }
+        BuildAbsBoxSpliText (*firstSel, pSecond, pNext, pDoc);
 	if (*firstSel == *lastSel)
 	   /* la fin de la selection est dans le nouvel element cree */
 	  {
 	     /* met a jour les variables representant la fin de la selection */
-	     *lastSel = (*firstSel)->ElNext;
+	     *lastSel = pSecond;
 	     if (*lastChar > 0)
 		*lastChar = *lastChar - *firstChar + 1;
 	  }
 	/* on fait comme si la selection demarrait au debut de la feuille */
 	/* de texte qui vient d'etre creee */
-	*firstSel = (*firstSel)->ElNext;
+	*firstSel = pSecond;
 	*firstChar = 1;
      }
 }
@@ -477,8 +461,7 @@ PtrDocument         pDoc;
 	SplitTextElement (lastSel, lastChar, pDoc, FALSE, &pSecond);
 	/* construit les paves de la 2eme partie et met a jours ceux de */
 	/* la premiere partie */
-	if (pSecond != NULL && pSecond->ElStructSchema != NULL)
-	  BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
+	BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
      }
 }
 
