@@ -14,13 +14,13 @@ ac_default_prefix=/usr/local
 ac_help="$ac_help
   --with-x                use the X Window System"
 ac_help="$ac_help
+  --with-gl               enable Opengl canvas (experimental) "
+ac_help="$ac_help
   --with-gtk              use GTK instead of Motif"
 ac_help="$ac_help
   --without-graphic-libs    doesn't use provided libjpeg, libpng."
 ac_help="$ac_help
   --without-i18n          disable internationalization support "
-ac_help="$ac_help
-  --with-gl               enable Opengl canvas (experimental) "
 ac_help="$ac_help
   --disable-svg           remove SVG support "
 ac_help="$ac_help
@@ -6138,6 +6138,21 @@ done
 
 
 
+
+# Check whether --with-GL or --without-GL was given.
+if test "${with_GL+set}" = set; then
+  withval="$with_GL"
+  :
+fi
+
+if test "$with_gl" = "" ; then
+ if test "$enable_gl" = "yes" ; then
+    with_gl="yes"
+  else
+    with_gl="no"
+  fi
+fi  
+
 GTK_OPTIONS=
 # Check whether --with-gtk or --without-gtk was given.
 if test "${with_gtk+set}" = set; then
@@ -6146,6 +6161,14 @@ if test "${with_gtk+set}" = set; then
 fi
 
 if test "$withval" = "yes" ; then
+  with_gtk="yes"
+else
+  if test "$with_gl" = "yes" ; then
+    with_gtk="yes"
+  fi
+fi
+
+if test "$with_gtk" = "yes" ; then
   for ac_dir in               \
     /usr/lib/glib/include     \
     /usr/X11R6/include        \
@@ -6193,7 +6216,7 @@ motif_includes=NONE
 motif_libraries=NONE
 
 echo $ac_n "checking for Motif""... $ac_c" 1>&6
-echo "configure:6197: checking for Motif" >&5
+echo "configure:6220: checking for Motif" >&5
 if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
 else
@@ -6368,9 +6391,9 @@ fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6372: checking for libjpeg version = 6b" >&5
+echo "configure:6395: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6374 "configure"
+#line 6397 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6389,9 +6412,9 @@ fi
 rm -f conftest*
 
     echo $ac_n "checking for libpng version = 1.0.x""... $ac_c" 1>&6
-echo "configure:6393: checking for libpng version = 1.0.x" >&5
+echo "configure:6416: checking for libpng version = 1.0.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6395 "configure"
+#line 6418 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
@@ -6477,22 +6500,9 @@ else
    I18N_OPTIONS=""
 fi
 
-# Check whether --with-GL or --without-GL was given.
-if test "${with_GL+set}" = set; then
-  withval="$with_GL"
-  :
-fi
-
-if test "$with_gl" = "" ; then
- if test "$enable_gl" = "yes" ; then
-    with_gl="yes"
-  else
-    with_gl="no"
-  fi
-fi  
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6496: checking OpenGL" >&5
+echo "configure:6506: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6508,7 +6518,7 @@ echo "configure:6496: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6512: checking GLU" >&5	
+echo "configure:6522: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6529,7 +6539,7 @@ echo "configure:6512: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6533: checking GTKGLAREA" >&5	
+echo "configure:6543: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6551,7 +6561,7 @@ echo "configure:6533: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6555: checking freetype" >&5	
+echo "configure:6565: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
