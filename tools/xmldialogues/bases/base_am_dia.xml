@@ -1563,6 +1563,10 @@
 	<message xml:lang="de">Dokument kommentieren</message>
 	<message xml:lang="es">Anotar documento</message>
 </label>
+<label define="BReplyToAnnotation">
+	<message xml:lang="en">Reply to annotation</message>
+	<message xml:lang="fr">Répondre à l'annotation</message>
+</label>
 <label define="BMoveAnnotSel">
 	<message xml:lang="en">Move to selection</message>
 	<message xml:lang="fr">Déplacer sur la séléction</message>
