@@ -1800,14 +1800,6 @@
 	<message xml:lang="es">Anotar documento</message>
 	<message xml:lang="pt">Anotar documento</message>
 </label>
-<label define="BReplyToAnnotation">
-	<message xml:lang="en">Reply to annotation</message>
-	<message xml:lang="fr">Répondre à l'annotation</message>
-	<message xml:lang="de">Anmerkung erwidern</message>
-	<message xml:lang="it">Rispondi all'annotazione</message>
-	<message xml:lang="es">Responder a anotación</message>
-	<message xml:lang="pt">Responder à anotação</message>
-</label>
 <label define="BMoveAnnotSel">
 	<message xml:lang="en">Move to selection</message>
 	<message xml:lang="fr">Déplacer sur la séléction</message>
@@ -1824,29 +1816,37 @@
 	<message xml:lang="it">Muovi sull'Xpointer memorizzato</message>
 	<message xml:lang="pt">Mover para o XPointer memorizado</message>
 </label>
+<label define="BReplyToAnnotation">
+	<message xml:lang="en">Reply to annotation</message>
+	<message xml:lang="fr">Répondre à l'annotation</message>
+	<message xml:lang="de">Anmerkung erwidern</message>
+	<message xml:lang="it">Rispondi all'annotazione</message>
+	<message xml:lang="es">Responder a anotación</message>
+	<message xml:lang="pt">Responder à anotação</message>
+</label>
 <label define="BPostAnnot">
-	<message xml:lang="en">Post annotation</message>
-	<message xml:lang="fr">Enregister une annotation</message>
-	<message xml:lang="de">Anmerkung veröffentlichen</message>
-	<message xml:lang="it">Registra annotazione</message>
-	<message xml:lang="es">Post anotacion</message>
-	<message xml:lang="pt">Registrar anotação</message>
+	<message xml:lang="en">Post</message>
+	<message xml:lang="fr">Enregister</message>
+	<message xml:lang="de">Anmerkung</message>
+	<message xml:lang="it">Registra</message>
+	<message xml:lang="es">Post</message>
+	<message xml:lang="pt">Registrar</message>
 </label>
 <label define="BDeleteAnnot">
-	<message xml:lang="en">Delete annotation</message>
-	<message xml:lang="fr">Détruire l'annotation</message>
-	<message xml:lang="it">Elimina l'annotazione</message>
-	<message xml:lang="de">Kommentierung entfernen</message>
-	<message xml:lang="es">Borrar anotación</message>
-	<message xml:lang="pt">Apagar anotação</message>
+	<message xml:lang="en">Delete</message>
+	<message xml:lang="fr">Détruire</message>
+	<message xml:lang="it">Elimina</message>
+	<message xml:lang="de">Kommentierung</message>
+	<message xml:lang="es">Borrar</message>
+	<message xml:lang="pt">Apagar</message>
 </label>
 <label define="BLoadAnnotations">
-	<message xml:lang="en">Load annotations</message>
-	<message xml:lang="fr">Charger les annotations</message>
-	<message xml:lang="de">Anmerkungen laden</message>
-	<message xml:lang="it">Carica annotazioni</message>
-	<message xml:lang="es">Cargar anotaciones</message>
-	<message xml:lang="pt">Carregar anotações</message>
+	<message xml:lang="en">Load</message>
+	<message xml:lang="fr">Charger annotations</message>
+	<message xml:lang="de">Anmerkungen</message>
+	<message xml:lang="it">Carica</message>
+	<message xml:lang="es">Cargar</message>
+	<message xml:lang="pt">Carregar</message>
 </label>
 <label define="BCustomQuery">
 	<message xml:lang="en">Customize query...</message>

@@ -205,12 +205,12 @@
 203 **Templates...
 204 **Annotate selection
 205 **Annotate document
-206 **Reply to annotation
-207 **Move to selection
-208 **Move to stored XPointer
-209 **Post annotation
-210 **Delete annotation
-211 **Load annotations
+206 **Move to selection
+207 **Move to stored XPointer
+208 **Reply to annotation
+209 **Post
+210 **Delete
+211 **Load
 212 **Customize query...
 213 **Local filter...
 214 **Configure...
