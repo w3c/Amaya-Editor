@@ -203,16 +203,19 @@ void Clear (int frame, int width, int height, int x, int y)
   if (GL_prepare (frame))
     {
       bottom = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin;
-      GL_SetClipping (x, bottom - (y + height), width, height);
+      if (bottom > y+height)
+	{
+	  GL_SetClipping (x, bottom - (y + height), width, height);
 #ifdef _GL_COLOR_DEBUG
-      {
-	float tmp[4];
-	glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-	TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
-      }
+	  {
+	    float tmp[4];
+	    glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+	    TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
+	  }
 #endif /* _GL_COLOR_DEBUG */
-      glClear( GL_COLOR_BUFFER_BIT );
-      /*GL_UnsetClippingRestore (TRUE);*/
+	  glClear( GL_COLOR_BUFFER_BIT );
+	  /*GL_UnsetClippingRestore (TRUE);*/
+	}
     }
 }
 
