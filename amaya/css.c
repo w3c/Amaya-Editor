@@ -373,7 +373,11 @@ CSSInfoPtr          css;
 	    TtaFileUnlink (tempfile);
 	  return;
 	}
+#     ifdef _WINDOWS
+      if (fstat (_fileno (res), &buf))
+#     else  /* !_WINDOWS */
       if (fstat (fileno (res), &buf))
+#     endif /* _WINDOWS */
 	{
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	  fclose (res);

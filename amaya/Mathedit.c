@@ -56,6 +56,7 @@ static Element	LastDeletedElement = NULL;
 static Element	CurrentMatrixColumn = NULL;
 
 #ifdef _WINDOWS
+#include "windialogapi_f.h"
 #define iconMath 21 
 #endif /* _WINDOWS */
 

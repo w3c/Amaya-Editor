@@ -26,6 +26,7 @@
 
 #ifdef _WINDOWS
 #include "win_f.h"
+#include "windialogapi_f.h"
 #endif /* _WINDOWS */
  
 /*----------------------------------------------------------------------

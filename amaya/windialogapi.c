@@ -55,6 +55,10 @@
 
 #define MenuMaths             1
 
+int                WIN_IndentValue;
+int                WIN_OldLineSp;
+int                WIN_NormalLineSpacing;
+
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
 extern char*        AttrHREFvalue;
@@ -124,6 +128,14 @@ static int          formCss;
 static int          graphDialog; 
 static int          formGraph; 
 static int          menuGraph;
+static int          Num_zoneRecess;
+static int          Num_zoneLineSpacing;
+static int          Align_num; 
+static int          Indent_value; 
+static int          Indent_num; 
+static int          Justification_num; 
+static int          Old_lineSp; 
+static int          Line_spacingNum;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -719,13 +731,30 @@ char* msg;
  CreateChangeFormatDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateChangeFormatDlgWindow (HWND parent)
+void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing, int align_num, int indent_value, int indent_num, int justification_num, int old_lineSp, int line_spacingNum)
 #else  /* !__STDC__ */
-void CreateChangeFormatDlgWindow (parent)
+void CreateChangeFormatDlgWindow (num_zone_recess, num_zone_line_spacing, align_num, indent_value, indent_num, justification_num, old_lineSp, line_spacingNum)
+int num_zone_recess;
+int num_zone_line_spacing;
+int align_num; 
+int indent_value; 
+int indent_num; 
+int justification_num; 
+int old_lineSp; 
+int line_spacingNum;
 HWND  parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), parent, (DLGPROC) ChangeFormatDlgProc);
+    Num_zoneRecess      = num_zone_recess;
+    Num_zoneLineSpacing = num_zone_line_spacing;
+    Align_num           = align_num;  
+    Indent_value        = indent_value; 
+    Indent_num          = indent_num; 
+    Justification_num   = justification_num; 
+    Old_lineSp          = old_lineSp; 
+    Line_spacingNum     = line_spacingNum;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -1500,12 +1529,10 @@ LPARAM lParam;
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
 				if (SaveAsHTML)
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
-
-				if (SaveAsXML)
-				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
-
-				if (SaveAsText)
-				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
+				else if (SaveAsXML)
+				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
+				else if (SaveAsText)
+				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
 
 				if (CopyImages)
 				   CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
@@ -1538,11 +1565,11 @@ LPARAM lParam;
 						    break;
 
 					   case IDC_COPYIMG:
-						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 3);
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 4);
 						    break;
 
 					   case IDC_TRANSFORMURL:
-						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 4);
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 5);
 						    break;
 
 				       case ID_CLEAR:
@@ -1558,15 +1585,15 @@ LPARAM lParam;
 							break;
 
 					   case IDCANCEL:
+ 					        EndDialog (hwnDlg, IDCANCEL);
 						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 0);
                             currentDlg = (HWND) 0;
- 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 
 				       case ID_CONFIRM:
+					        EndDialog (hwnDlg, ID_CONFIRM);
 						    ThotCallback (baseDlg + saveForm, INTEGER_DATA, (char*) 1);
                             currentDlg = (HWND) 0;
-					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 				}
 				break;
@@ -2216,15 +2243,13 @@ LPARAM lParam;
 				   itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
 				   itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 			       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
-				   ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
 				} else if (HIWORD (wParam) == EN_UPDATE) {
-					   char text [100];
-                       GetDlgItemText (hwnDlg, IDC_EDITRULE, text, sizeof (text) - 1);
-					   ThotCallback (baseDlg + classForm, STRING_DATA, text);
+                       GetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer, sizeof (szBuffer) - 1);
 				}
 
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
+                            ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
 						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (char*) 1);
 						    EndDialog (hwnDlg, ID_CONFIRM);
 							break;
@@ -2522,11 +2547,51 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+	BOOL ok;	  
+	int  val;
+
     switch (msg) {
 	       case WM_INITDIALOG:
+                if (Align_num  == 0)
+                   CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_LEFT);
+                else if (Align_num  == 1)
+                     CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_RIGHT);
+                else if (Align_num  == 2)
+                     CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_CENTER);
+
+                if (Indent_num == 0)
+                   CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT1);
+                else if (Indent_num == 1)
+                   CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT2);
+					
+                if (Justification_num == 0)
+                   CheckRadioButton (hwnDlg, IDC_JUSTIFYES, IDC_JUSTIFDEFAULT, IDC_JUSTIFYES);
+                else if (Justification_num == 1)
+                   CheckRadioButton (hwnDlg, IDC_JUSTIFYES, IDC_JUSTIFDEFAULT, IDC_JUSTIFNO);
+					
+                if (Line_spacingNum == 0)
+                   CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SSMALL);
+                else if (Line_spacingNum == 1)
+                   CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SMEDIUM);
+                else if (Line_spacingNum == 1)
+                   CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SLARGE);
+					
+			    SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, Indent_value, FALSE);
+			    SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, Old_lineSp, FALSE);
 			    break;
 
 		   case WM_COMMAND:
+                if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_INDENTPTEDIT) {
+					  val = GetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, &ok, TRUE);
+                      if (ok)
+                         ThotCallback (Num_zoneRecess, INTEGER_DATA, (char*) val);
+				   } else if (LOWORD (wParam) == IDC_LINESPACINGEDIT) {
+					  val = GetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, &ok, TRUE);
+                      if (ok)
+                         ThotCallback (Num_zoneLineSpacing, INTEGER_DATA, (char*) val);
+				   }
+                }
 			    switch (LOWORD (wParam)) {
 					   /* Alignement menu */
 				       case ID_APPLY:
@@ -2542,12 +2607,27 @@ LPARAM lParam;
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
+                       case IDC_BLEFT:
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
+                            CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_LEFT);
+							break;
+
 					   case IDC_LEFT:
 						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
 							break;
 
+                       case IDC_BRIGHT:
+                            CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_RIGHT);
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
+							break;
+
 					   case IDC_RIGHT:
 						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
+							break;
+
+                       case IDC_BCENTER:
+                            CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_CENTER);
+						    ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 2);
 							break;
 
 					   case IDC_CENTER:
@@ -2574,31 +2654,68 @@ LPARAM lParam;
 					   /* Indent Menu */ 
 					   case IDC_INDENT1:
 						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 0);
+                            SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
+							break;
+
+                       case IDC_BINDENT1:
+                            CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT1);
+						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 0);
+                            SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
 							break;
 
 					   case IDC_INDENT2:
 						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 1);
+                            SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
+							break;
+
+                       case IDC_BINDENT2:
+                            CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT2);
+						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 1);
+                            SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
 							break;
 
 					   case IDC_INDENTDEFAULT:
 						    ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 2);
+                            SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, 0, FALSE);
 							break;
 
 					   /* Line spacing menu */
 					   case IDC_SSMALL:
 						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 0);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
+							break;
+
+                       case IDC_BSSMALL:
+                            CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SSMALL);
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 0);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
 							break;
 
 					   case IDC_SMEDIUM:
 						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 1);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
+							break;
+
+                       case IDC_BSMEDIUM:
+                            CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SMEDIUM);
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 1);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
 							break;
 
 					   case IDC_SLARGE:
 						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 2);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
+							break;
+
+                       case IDC_BSLARGE:
+                            CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SLARGE);
+						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 2);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
 							break;
 
 					   case IDC_SPACINGDEFAULT:
 						    ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 3);
+                            SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_NormalLineSpacing, FALSE);
 							break;
 				}
 				break;

@@ -51,6 +51,7 @@ static boolean  PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
 #ifdef _WINDOWS
+#include "windialogapi_f.h"
 #define iconGraphics 22
 #endif /* _WINDOWS */
 
