@@ -329,7 +329,9 @@ PtrAttribute       *pAttr;
 		       stop = FALSE;
 		       while (pR != NULL && !stop)
 			 {
-			    if (pR->PrType == typeRule && pR->PrViewNum == view)
+			    if (pR->PrType == typeRule
+				&& (typeRule != PtFunction || typeFunc == FnAny || pR->PrPresFunction == typeFunc)
+				&& pR->PrViewNum == view)
 			       /* regle du type cherche' pour la vue voulue */
 			       if (pR->PrCond == NULL ||
 				   CondPresentation (pR->PrCond, pEl, pA, view, pA->AeAttrSSchema))

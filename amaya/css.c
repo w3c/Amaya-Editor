@@ -1698,7 +1698,7 @@ char               *value;
 	 {
 	    case 'L':
 	       /* unselect the Right selector entry */
-	       currentRRPI[0] = 0;
+	       currentRRPI[0] = EOS;
 	       TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
 	       RListRPIIndex = -1;
 
@@ -1710,13 +1710,13 @@ char               *value;
 		     /* !!!! check overflow !!!! */
 		     sprintf (currentBRPI, "%s { %s }", rpi->selector, rpi->css_rule);
 		   else
-		     currentBRPI[0] = 0;
+		     currentBRPI[0] = EOS;
 		   strcpy (currentLRPI, value);
 		 }
 	       else
 		 {
-		   currentBRPI[0] = 0;
-		   currentLRPI[0] = 0;
+		   currentBRPI[0] = EOS;
+		   currentLRPI[0] = EOS;
 		 }
 	       if (index >= 0)
 		 {
@@ -1735,7 +1735,7 @@ char               *value;
 	       break;
 	    case 'R':
 	       /* unselect the Left selector entry */
-	       currentLRPI[0] = 0;
+	       currentLRPI[0] = EOS;
 	       TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
 	       LListRPIIndex = -1;
 
@@ -1751,14 +1751,14 @@ char               *value;
 		      }
 		    else
 		      {
-			 currentBRPI[0] = 0;
+			 currentBRPI[0] = EOS;
 		      }
 		    strcpy (currentRRPI, value);
 		 }
 	       else
 		 {
-		    currentBRPI[0] = 0;
-		    currentRRPI[0] = 0;
+		    currentBRPI[0] = EOS;
+		    currentRRPI[0] = EOS;
 		 }
 	       if (index >= 0)
 		 {
@@ -1777,10 +1777,10 @@ char               *value;
 	       break;
 	    case 'B':
 	       /* unselect the Left and Right selector entry */
-	       currentLRPI[0] = 0;
+	       currentLRPI[0] = EOS;
 	       TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
 	       LListRPIIndex = -1;
-	       currentRRPI[0] = 0;
+	       currentRRPI[0] = EOS;
 	       TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
 	       RListRPIIndex = -1;
 
@@ -2005,9 +2005,7 @@ char               *name;
 				LCSS->view_background_color);
      }
    else
-     {
-	nb_rpi = 0;
-     }
+     nb_rpi = 0;
    if (!name)
       TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS,
 		      TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1), nb_rpi,
@@ -2139,8 +2137,9 @@ char               *name;
 	nb_rpi = 0;
      }
    if (!name)
-      TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS, TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), nb_rpi,
-		      &buffer[0], 6, NULL, FALSE, TRUE);
+      TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS,
+		      TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), nb_rpi,
+		      buffer, 6, NULL, FALSE, TRUE);
 
    if (name)
      {
@@ -2182,25 +2181,25 @@ boolean                copy;
     * store the current state of the style menu.
     * and do a few sanity checkings.
     */
-   if (currentBRPI[0] == 0)
+   if (currentBRPI[0] == EOS)
       return;
    if (LListRPIIndex != -1)
      {
 	from = 'L';
 	index = LListRPIIndex;
-	strcpy (&value[0], &currentLRPI[0]);
+	strcpy (value, currentLRPI);
      }
    else if (RListRPIIndex != -1)
      {
 	from = 'R';
 	index = RListRPIIndex;
-	strcpy (&value[0], &currentRRPI[0]);
+	strcpy (value, currentRRPI);
      }
    else
      {
 	from = 'B';
 	index = -1;
-	strcpy (&value[0], &currentBRPI[0]);
+	strcpy (value, currentBRPI);
      }
    if (from == which)
       return;
@@ -2259,14 +2258,14 @@ boolean                copy;
    if (copy)
      {
 	SetHTMLStyleParserDestructiveMode (TRUE);
-	MergeNewCSS (&currentBRPI[0], doc, pschema);
+	MergeNewCSS (currentBRPI, doc, pschema);
 	SetHTMLStyleParserDestructiveMode (FALSE);
      }
    /*
     * build the internal structures corresponding to the
     * new rules.
     */
-   MergeNewCSS (&currentBRPI[0], doc, pschema);
+   MergeNewCSS (currentBRPI, doc, pschema);
    css->state = CSS_STATE_Modified;
 
    /*
@@ -2282,11 +2281,11 @@ boolean                copy;
 		     {
 			case 'R':
 			   /* keep the previously selected element */
-			   SelectRPIEntry ('R', index, &value[0]);
+			   SelectRPIEntry ('R', index, value);
 			   break;
 			case 'B':
 			   /* maintain the rule as inserted */
-			   SelectRPIEntry ('B', -1, &value[0]);
+			   SelectRPIEntry ('B', -1, value);
 			   break;
 		     }
 	       break;
@@ -2297,11 +2296,11 @@ boolean                copy;
 		     {
 			case 'L':
 			   /* keep the previously selected element */
-			   SelectRPIEntry ('L', index, &value[0]);
+			   SelectRPIEntry ('L', index, value);
 			   break;
 			case 'B':
 			   /* maintain the rule as inserted */
-			   SelectRPIEntry ('B', -1, &value[0]);
+			   SelectRPIEntry ('B', -1, value);
 			   break;
 		     }
 	       break;
@@ -2362,7 +2361,7 @@ CSSInfoPtr          css;
    strcpy (URL, css->url);
    if (IsW3Path (URL))
      {
-	ExplodeURL (&URL[0], &proto, &host, &dir, &file);
+	ExplodeURL (URL, &proto, &host, &dir, &file);
 	sprintf (filename, "%s/%d/%s", TempFileDirectory, doc, file);
 	if (DumpCSSToFile (currentDocument, css, filename))
 	   return (-1);
@@ -2416,13 +2415,13 @@ void                InitCSS ()
 	       {
 		  for (i = 0; i < CSS_HISTORY_SIZE; i++)
 		    {
-		       tempfile[0] = 0;
-		       res = fscanf (css_history_file, "%s\n", &tempfile[0]);
+		       tempfile[0] = EOS;
+		       res = fscanf (css_history_file, "%s\n", tempfile);
 		       if (res < 1)
 			  break;
-		       if (tempfile[0] == 0)
+		       if (tempfile[0] == EOS)
 			  break;
-		       CSSHistory[i] = TtaStrdup (&tempfile[0]);
+		       CSSHistory[i] = TtaStrdup (tempfile);
 		    }
 		  CSSHistoryIndex = i % CSS_HISTORY_SIZE;
 		  fclose (css_history_file);
@@ -2448,13 +2447,13 @@ void                InitCSS ()
 	       {
 		  for (i = 0; i < HTML_HISTORY_SIZE; i++)
 		    {
-		       tempfile[0] = 0;
-		       res = fscanf (html_history_file, "%s\n", &tempfile[0]);
+		       tempfile[0] = EOS;
+		       res = fscanf (html_history_file, "%s\n", tempfile);
 		       if (res < 1)
 			  break;
-		       if (tempfile[0] == 0)
+		       if (tempfile[0] == EOS)
 			  break;
-		       HTMLHistory[i] = TtaStrdup (&tempfile[0]);
+		       HTMLHistory[i] = TtaStrdup (tempfile);
 		    }
 		  HTMLHistoryIndex = i % HTML_HISTORY_SIZE;
 		  fclose (html_history_file);

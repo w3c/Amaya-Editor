@@ -25,7 +25,7 @@
 static CSSBrowseStatus CSSBrowseState = CSS_BROWSE_None;
 static char         currentExternalCSS[500] = "";
 static char         currentDeleteCSS[500] = "";
-static boolean         CSSUserAnswer = FALSE;
+static boolean      CSSUserAnswer = FALSE;
 static CSSInfoPtr   sauve_css = NULL;
 
 
@@ -68,8 +68,7 @@ View                view;
 
 #endif
 {
-   static Pixmap       opIcons[5] =
-   {0, 0, 0, 0, 0};
+   static Pixmap       opIcons[5] = {0, 0, 0, 0, 0};
    char                menu[3000];
 
    if (currentDocument != -1)
@@ -93,17 +92,26 @@ View                view;
 	    TtaGetMessage (AMAYA, AM_DELETE));
    TtaNewSheet (BaseCSSDialog + FormCSS, TtaGetViewFrame (doc, 1), 
 	      TtaGetMessage (AMAYA, AM_CSS), 5, menu, TRUE, 3, 'L', D_DONE);
+   TtaNewSelector (BaseCSSDialog + CSSLName, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_CSS_FILE_1), 1, " ", 3, NULL, FALSE, TRUE);
+   TtaNewLabel (BaseCSSDialog + CSSLabel, BaseCSSDialog + FormCSS, " CSS ");
+   TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_CSS_FILE_2), 1, " ", 3, NULL, FALSE, TRUE);
+   TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), 1,
+		   " ", 5, NULL, FALSE, TRUE);
+   TtaNewIconMenu (BaseCSSDialog + RPIActions, BaseCSSDialog + FormCSS, 0,
+		   NULL, 5, opIcons, FALSE);
+   TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1), 1,
+		   " ", 5, NULL, FALSE, TRUE);
+   TtaNewTextForm (BaseCSSDialog + RPIText, BaseCSSDialog + FormCSS,
+		   "CSS Rule", 70, 3, TRUE);
 
    RedrawLCSS (TtaGetMessage (AMAYA, AM_DOC_STYLE));
-   TtaNewLabel (BaseCSSDialog + CSSLabel, BaseCSSDialog + FormCSS, " CSS ");
    RedrawRCSS (NULL);
-
    RedrawLRPI (NULL);
-   TtaNewIconMenu (BaseCSSDialog + RPIActions, BaseCSSDialog + FormCSS, 0,
-		   NULL, 5, &opIcons[0], FALSE);
    RedrawRRPI (NULL);
-   TtaNewTextForm (BaseCSSDialog + RPIText, BaseCSSDialog + FormCSS, "CSS Rule",
-		   70, 3, TRUE);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormCSS, TRUE);
 }
@@ -132,9 +140,9 @@ View                view;
 		TtaGetMessage (AMAYA, AM_DELETE_CSS), 1, TtaGetMessage (AMAYA, AM_DELETE), TRUE, 3, 'L', D_DONE);
 
    /* rebuild the list and redraw the CSS selector */
-   nb_css = BuildCSSList (doc, &buffer[0], 3000, NULL);
+   nb_css = BuildCSSList (doc, buffer, 3000, NULL);
    TtaNewSelector (BaseCSSDialog + ListDeleteCSS, BaseCSSDialog + FormDeleteCSS,
-		   TtaGetMessage (AMAYA, AM_DELETE_STYLE_SHEET), nb_css, &buffer[0], 6, NULL, FALSE, TRUE);
+		   TtaGetMessage (AMAYA, AM_DELETE_STYLE_SHEET), nb_css, buffer, 6, NULL, FALSE, TRUE);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormDeleteCSS, TRUE);
@@ -168,9 +176,9 @@ View                view;
      TtaGetMessage (AMAYA, AM_EXTERNAL_CSS), 3, menu, TRUE, 3, 'L', D_DONE);
 
    /* rebuild the list and redraw the CSS selector */
-   nb_css = BuildCSSHistoryList (doc, &buffer[0], 3000, NULL);
+   nb_css = BuildCSSHistoryList (doc, buffer, 3000, NULL);
    TtaNewSelector (BaseCSSDialog + ListExternalCSS, BaseCSSDialog + FormExternalCSS,
-		   TtaGetMessage (AMAYA, AM_SELECT_EXTERNAL_STYLE_SHEET), nb_css, &buffer[0], 6, NULL, TRUE, TRUE);
+		   TtaGetMessage (AMAYA, AM_SELECT_EXTERNAL_STYLE_SHEET), nb_css, buffer, 6, NULL, TRUE, TRUE);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormExternalCSS, TRUE);
@@ -311,7 +319,7 @@ char               *url;
    static char         URL[500];
 
    strcpy (URL, url);
-   ExplodeURL (&URL[0], &proto, &host, &dir, &file);
+   ExplodeURL (URL, &proto, &host, &dir, &file);
 
    if (file == NULL)
       file = "noname.css";
@@ -320,26 +328,26 @@ char               *url;
      {
 	if (dir != NULL)
 	  {
-	     sprintf (&CSSDirectoryName[0], amaya_save_dir, host);
+	     sprintf (CSSDirectoryName, amaya_save_dir, host);
 	     strcat (CSSDirectoryName, DIR_STR);
 	     strcat (CSSDirectoryName, dir);
 	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
 	  }
 	if (!dir_ok)
 	  {
-	     sprintf (&CSSDirectoryName[0], amaya_save_dir, host);
+	     sprintf (CSSDirectoryName, amaya_save_dir, host);
 	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
 	  }
 	if ((dir != NULL) && (!dir_ok))
 	  {
-	     sprintf (&CSSDirectoryName[0], amaya_save_dir, "");
+	     sprintf (CSSDirectoryName, amaya_save_dir, "");
 	     strcat (CSSDirectoryName, DIR_STR);
 	     strcat (CSSDirectoryName, dir);
 	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
 	  }
 	if (!dir_ok)
 	  {
-	     sprintf (&CSSDirectoryName[0], amaya_save_dir, "");
+	     sprintf (CSSDirectoryName, amaya_save_dir, "");
 	     dir_ok = TtaCheckDirectory (CSSDirectoryName);
 	  }
      }
@@ -479,7 +487,7 @@ char               *data;
 			   break;
 			case 2:
 			   /* Delete the RPI currently selected */
-			   if (currentLRPI[0] != 0)
+			   if (currentLRPI[0] != EOS)
 			     {
 				rpi = SearchRPISel (currentLRPI, LListRPI);
 				if (rpi == NULL)
@@ -491,7 +499,7 @@ char               *data;
 				RebuildHTMLStyleHeader (currentDocument);
 				RedisplayDocument (currentDocument);
 			     }
-			   else if (currentRRPI[0] != 0)
+			   else if (currentRRPI[0] != EOS)
 			     {
 				rpi = SearchRPISel (currentRRPI, RListRPI);
 				if (rpi == NULL)
@@ -516,13 +524,13 @@ char               *data;
 	       SelectRPIEntry ('B', -1, data);
 	       break;
 	    case ListExternalCSS:
-	       strcpy (&currentExternalCSS[0], data);
+	       strcpy (currentExternalCSS, data);
 	       break;
 	    case FormExternalCSS:
 	       switch (val)
 		     {
 			case 0:
-			   currentExternalCSS[0] = 0;
+			   currentExternalCSS[0] = EOS;
 			   break;
 			case 1:
 			   /*
@@ -578,13 +586,13 @@ char               *data;
 		     }
 	       break;
 	    case ListDeleteCSS:
-	       strcpy (&currentDeleteCSS[0], data);
+	       strcpy (currentDeleteCSS, data);
 	       break;
 	    case FormDeleteCSS:
 	       switch (val)
 		     {
 			case 0:
-			   currentDeleteCSS[0] = 0;
+			   currentDeleteCSS[0] = EOS;
 			   break;
 			case 1:
 			   /*
@@ -592,7 +600,7 @@ char               *data;
 			    * style sheets of the document.
 			    */
 			   RemoveCSS (currentDeleteCSS, currentDocument);
-			   currentDeleteCSS[0] = 0;
+			   currentDeleteCSS[0] = EOS;
 			   TtaDestroyDialogue (BaseCSSDialog + FormDeleteCSS);
 			   break;
 		     }

@@ -6143,12 +6143,7 @@ char               *text;
    wt = 0;
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
-   else if (catalogue->Cat_Widget == 0)
-     {
-	if (entry != -1)
-	   TtaError (ERR_invalid_reference);
-     }
-   else
+   else if (catalogue->Cat_Widget != 0)
      {
 	/* Recupere le widget du selecteur */
 	select = (ThotWidget) catalogue->Cat_Entries;

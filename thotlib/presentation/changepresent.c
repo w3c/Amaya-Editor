@@ -29,6 +29,7 @@
 #include "appaction.h"
 #include "presentation.h"
 #include "message.h"
+#include "picture.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -37,23 +38,24 @@
 #include "edit_tv.h"
 
 
-#include "tree_f.h"
+#include "abspictures_f.h"
+#include "appli_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
-#include "structcreation_f.h"
+#include "boxselection_f.h"
 #include "createabsbox_f.h"
 #include "callback_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "memory_f.h"
-#include "structmodif_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "boxpositions_f.h"
 #include "presrules_f.h"
-#include "boxselection_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structselect_f.h"
-#include "applicationapi_f.h"
-#include "appli_f.h"
+#include "tree_f.h"
 
 #ifdef __STDC__
 static void         ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc);
@@ -2528,7 +2530,23 @@ boolean            remove;
 			{
 			  /* apply a new rule */
 			  found = TRUE;
-			  ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+			  if (pRP != NULL)
+			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+			  else if (remove && ruleType == PtFunction)
+			    {
+			      /* remove a PtFunction rule */
+			      if (pRP->PrPresFunction == FnBackgroundPicture
+				  && pAb->AbPictInfo != NULL)
+				{
+				  TtaFreeMemory ((((PictInfo *) (pAb->AbPictInfo))->PicFileName));
+				  FreePictInfo ((PictInfo *) (pAb->AbPictInfo));
+				  pAb->AbPictInfo = NULL;
+				}
+			      else if (pRP->PrPresFunction == FnPictureMode
+				       && pAb->AbPictInfo != NULL)
+				((PictInfo *) (pAb->AbPictInfo))->PicPresent = FillFrame;
+			      pAb->AbAspectChange = TRUE;
+			    }
 			}
 		    }
 		  pCurrentRule = pCurrentRule->PrNextPRule;
