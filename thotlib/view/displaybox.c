@@ -866,6 +866,9 @@ int                 frame;
 
    indmax = 0;
    buffleft = 0;
+   adbuff = NULL;
+   indbuff = 0;
+   restbl = 0;
    /* Search for the enclosing box defining the size constraints */
    if (pBox->BxAbstractBox->AbEnclosing == NULL)
       mbox = pBox;

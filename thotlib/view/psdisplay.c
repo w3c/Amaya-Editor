@@ -85,8 +85,9 @@ extern int PrinterDPI;
 
 #include "buildlines_f.h"
 #include "font_f.h"
-#include "units_f.h"
 #include "initpses_f.h"
+#include "memory_f.h"
+#include "units_f.h"
 
 #ifdef _WINDOWS
 
@@ -2954,7 +2955,7 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 xcour, ycour;	/*encoding */
-   FILE               *fout;
+   FILE               *fout = NULL;
 #  ifdef _WINDOWS
    HPEN  hPen, hOldPen;
    POINT ptArray [2];

@@ -1541,7 +1541,7 @@ char	 *name;
   boolean	      EmptyLine = TRUE;
   char                tempDocName[200];
   int                 i;
-  int                 firstNameChar;
+  int                 firstNameChar = 0;
   
 #ifdef DEBUG
   TtaSetErrorMessages(TRUE);

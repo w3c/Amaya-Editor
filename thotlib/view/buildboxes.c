@@ -2043,7 +2043,7 @@ int                 frame;
    PtrLine             pLine;
    PtrAbstractBox      pCurrentAb, pCell, pBlock;
    PtrBox              pNextBox;
-   PtrBox              pCurrentBox;
+   PtrBox              pCurrentBox = NULL;
    PtrBox              pMainBox;
    PtrBox              pLastBox;
    PtrBox              pBox;
@@ -2885,7 +2885,7 @@ int                 frame;
    PtrAbstractBox      pAb, pVisibleAb;
    PtrBox              pBox;
    int                 width, height;
-   int                 position;
+   int                 position = 0;
    boolean             condition;
    boolean             status;
 

@@ -1701,7 +1701,7 @@ void               *event;
 	       ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
 	   /* Est-ce que la touche modifieur d'extension est active ? */
-	   if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
+	   else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
 	     {
 	       TtaAbortShowDialogue ();
 	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);

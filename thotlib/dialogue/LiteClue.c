@@ -30,13 +30,11 @@ J Satchell, Eric Marttila
 */
 
 #ifndef _WINDOWS
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "LiteClueP.h"
 
 #include "inites_f.h"
-
 #define CheckWidgetClass(routine) \
 	if (XtClass(w) != xcgLiteClueWidgetClass) \
 		wrong_widget(routine)
@@ -428,8 +426,8 @@ static void timeout_event( XtPointer client_data, XtIntervalId *id)
 
 #if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)
 	{
-	int direction_return;
-	int font_ascent_return, font_descent_return; 
+	int direction_return = 0;
+	int font_ascent_return = 0, font_descent_return = 0; 
 	XCharStruct oret;
 	XTextExtents( cw->liteClue.fontset ,obj->text , obj->text_size,
 		&direction_return,

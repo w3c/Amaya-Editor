@@ -259,7 +259,7 @@ int                 frame;
 {
    PtrTextBuffer       pNextBuffer;
    PtrTextBuffer       pPreviousBuffer;
-   int                 length;
+   int                 length = 0;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;

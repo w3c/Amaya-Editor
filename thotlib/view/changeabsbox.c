@@ -4334,6 +4334,7 @@ PtrAttribute        pAttrComp;
    boolean             createBox, complete;
 
    viewSch = 0;
+   pAbbNext = NULL;
    typeRule = (PRuleType) 0;
    TFonct = (FunctionType) 0;
    /* on applique successivement tous les schemas de presentation en commencant
