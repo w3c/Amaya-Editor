@@ -892,7 +892,7 @@ Document            doc;
 	InitializeParser (myFirstSelect, isClosed, doc);
 	HTMLparse (NULL, bufHTML);
 	TtaSetStructureChecking (1, doc);
-	typeEl = TtaGetElementType (myFirstSelect);
+	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
 	typeEl.ElTypeNum = HTML_EL_Invalid_element;
 	invEl = NULL;
 	if (isClosed)
@@ -1453,7 +1453,7 @@ strNode            *TN;
     }
   /* closing the tag */
   PutInHtmlBuffer (">");
-  if (withZZGhost)
+  if (TransferMode == ByAttribute)
     {
       /*free the ZZGHOST attribute */
       TtaFreeMemory ((char *) NS->Attributes->NameAttr);
@@ -1495,17 +1495,17 @@ strNode            *node;
 #endif
 {
    strNode            *child;
-/*    ElementType	       elType; */
+   ElementType	       elType; 
 
    child = node->Child;
    while (child != NULL)
      {
 	if (TtaGetElementVolume (child->Elem) != 0)
-	  {			/* if the element is empty: no transfert */
+	  {/* if the element is empty: no transfert */
 	     generationStack[topGenerStack]->Nbc++;
-/* 	     elType = TtaGetElementType (child->Elem); */
-	     /* if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) */
-	     if (TransferMode == ByAttribute)
+	     elType = TtaGetElementType (child->Elem);
+	     if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	       /*if (TransferMode == ByAttribute)*/
 	       AddListSubTree (child->Elem,
 			       generationStack[topGenerStack]->Idf,
 			       generationStack[topGenerStack]->Nbc);
@@ -1529,7 +1529,7 @@ boolean             inplace;
 
 #endif
 {
-/*   ElementType elType; */
+  ElementType elType; 
 
   if (TtaGetElementVolume (node->Elem) != 0)
     {	/* if the element is empty: no transfert */
@@ -1542,10 +1542,10 @@ boolean             inplace;
 	    TtaFreeMemory ((char *) generationStack[topGenerStack]);
 	    topGenerStack--;
 	  }
-/*       elType = TtaGetElementType (node->Elem); */
+      elType = TtaGetElementType (node->Elem); 
       generationStack[topGenerStack]->Nbc++;
-/*       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) */
-	if (TransferMode == ByAttribute)
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) 
+	/* if (TransferMode == ByAttribute) */
 	AddListSubTree (node->Elem,
 			generationStack[topGenerStack]->Idf,
 			generationStack[topGenerStack]->Nbc);
@@ -1695,12 +1695,13 @@ strMatchChildren   *sm;
 	   l = strlen (RNodeCour->Tag) - 2;
 	   strncpy (&bufHTML[szHTML], &RNodeCour->Tag[1], l);
 	   szHTML += l;
+	   bufHTML[szHTML]='\0';
 	 }
        else if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "*"))
 	 {
 	   TransfertNode (sm->MatchNode, TRUE);
 	 }
-       else if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "#"))
+       else if (RNodeCour == NULL || !strcmp (RNodeCour->Tag, "#"))
 	 {
 	   /* process the children */
 	   if (sonsMatch)
@@ -1712,8 +1713,6 @@ strMatchChildren   *sm;
 	       TransfertChildren (sm->MatchNode);
 	     }
 	 }
-       else if (RNodeCour == NULL)
-	 TransfertChildren (sm->MatchNode);
        currentRule = currentRule->NextRule;
      }
 }
@@ -1972,7 +1971,7 @@ char               *prevtag;
   subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
   TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
   constOfType = TtaGetConstructOfType (elemType);
-  GIType (tag, &tagElType, (Document)0);
+  GIType (tag, &tagElType, TransDoc);
   if (tagElType.ElTypeNum == 0)
     return FALSE;
   switch (constOfType)
@@ -2106,7 +2105,7 @@ char               *prevTag;
   if (strcmp (prevTag,"") == 0)
     printf ("Check if %s is a valid as successor for %s under %s\n", sm->MatchSymb->SymbolName, prevTag, GITagNameByType(elemTypeRoot));
   else
-    ("Check if %s is valid  under %s\n", sm->MatchSymb->SymbolName, GITagNameByType(elemTypeRoot));
+    printf ("Check if %s is valid  under %s\n", sm->MatchSymb->SymbolName, GITagNameByType(elemTypeRoot));
 #endif
 
 
@@ -2202,8 +2201,11 @@ char               *data;
 	    case TransMenu:
                TtaSelectElement (TransDoc, NULL);
 	       oldDisplayMode = TtaGetDisplayMode (TransDoc);
-	       TtaSetDisplayMode (TransDoc, DeferredDisplay);
-               TtaClearViewSelections ();
+	       if (oldDisplayMode != DeferredDisplay)
+		 {
+		   TtaSetDisplayMode (TransDoc, DeferredDisplay);
+		   TtaClearViewSelections ();
+		 }
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
 	       if (!resultTrans)
 		 {
@@ -2242,6 +2244,7 @@ char               *data;
 		       TtaExtendSelection (TransDoc, myLastSelect, 0);
 		 }
 	       FreeMatchEnv ();
+	       TtaRefresh();
 	       break;
 	 }
 }
@@ -2459,7 +2462,7 @@ Document            doc;
 	     TtaFreeMemory (tag);
 	     if (i > 0)
 		/* if at least one transformation have been matched, apply the first one */
-		TransCallbackDialog (TransBaseDialog + TransMenu, 1 + i, (char *) 0);
+		TransCallbackDialog (TransBaseDialog + TransMenu, 0, (char *) (i-1));
 
 	  }
      }

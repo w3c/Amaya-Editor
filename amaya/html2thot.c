@@ -6889,6 +6889,8 @@ Document            doc;
 	    MathMLSSchema = elType.ElSSchema;
 	    WithinMathML = TRUE;
 	  }
+	else 
+	  WithinMathML = FALSE;
 	rootElement = TtaGetMainRoot (theDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);

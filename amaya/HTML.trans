@@ -419,6 +419,13 @@ Remove tag FONT: FONT{*+};
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Transformation for maths
 
+!surround an element with a root
+root : *;
+	{
+	*>MROOT:*;
+	*>MROOT:MTEXT." ";
+	}
+
 !surround an element with a square root
 square root: *;
         {
@@ -433,12 +440,6 @@ square root: *+;
 
 ! removes a square root
 remove sqrt: MSQRT{*+};
-        {
-        *> :*;
-        }
-
-! removes a Row level
-remove row: MROW{*+};
         {
         *> :*;
         }
@@ -459,6 +460,7 @@ remove frac: MFRAC{(num:*,den:*)|numalone:*};
         den > MROW:*;
         numalone > :*;
         }
+
 
 !changes MSUB in MSUP
 superscript:MSUB;
@@ -482,8 +484,37 @@ subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 	sub > MSUBSUP:MTEXT." ";
 	}
 
+!surroud element with a subsup
+add subsup:*;
+	{
+	* > MSUBSUP:*;
+	* > MSUBSUP:MTEXT." ";
+	* > MSUBSUP:MTEXT." ";
+	}
+
+!surroud element with a sub
+add subscript:*;
+	{
+	* > MSUB:*;
+	* > MSUB:MTEXT." ";
+	}
+
+!surroud element with a sup
+add superscript:*;
+	{
+	* > MSUP:*;
+	* > MSUP:MTEXT." ";
+	}
+
+! removes a Row level
+remove row: MROW{*+};
+        {
+        *> :*;
+        }
+
+
 !does not work!!!
-!parenthesise: *;
+!parenthesise: row:MROW | *;
 !        {
 !        *>:MF."(";
 !        *>:*;

@@ -221,11 +221,11 @@ char               *data;
 #endif
 {
   Document           doc;
-  Element            sibling, el, row, fence, child;
+  Element            sibling, last, el, row, fence, child;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
-  int                val, c1, i, len;
-  boolean	     before, ParBlock;
+  int                val, c1, c2, i, j, len;
+  boolean	     before, ParBlock, surround;
 
   val = (int) data;
   ParBlock = FALSE;
@@ -244,11 +244,23 @@ char               *data;
 	return;
       /* the new element will be inserted before the selected element */
       before = TRUE;
-      TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
+      TtaGiveLastSelectedElement (doc, &last, &c2, &j);
+      TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
+#ifdef DEBUG
+      printf("first selected %s :%d ,%d  \n",TtaGetElementLabel(sibling),c1,i);
+      printf("last  selected %s :%d ,%d\n\n",TtaGetElementLabel(last),c2,j);
+#endif
+    
       /* Check whether the selected element is a text element */
       elType = TtaGetElementType (sibling);
+      surround = (last != sibling || 
+		  (c1 < i) || 
+		  (c1 == 0 && i == 0 && (TtaGetElementVolume (sibling) != 0))
+		 );
 
+      
       TtaSetDisplayMode (doc, DeferredDisplay);
+
       /* Check whether the selected element is a MathML element */
       docSchema = TtaGetDocumentSSchema (doc);
       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
@@ -337,6 +349,7 @@ char               *data;
 	    }
 	  else
 	    {
+	      surround = FALSE;
 	      /* create the XML element before or after the sibling element */
 	      elType.ElTypeNum = HTML_EL_Math;
 	      el = TtaNewTree (doc, elType, "");
@@ -390,84 +403,92 @@ char               *data;
 	default:
 	  return;
 	}
-      el = TtaNewTree (doc, newType, "");
-
-      /* do not check the Thot abstract tree against the structure */
-      /* schema while changing the structure */
-      TtaSetStructureChecking (0, doc);
-
-      if (elType.ElTypeNum == MathML_EL_MROW ||
-	  elType.ElTypeNum == MathML_EL_MathML)
+      if (!surround || !TransformIntoType (newType, doc))
 	{
-	/* the selected element is a MROW or the MathML element */
-	  row = sibling;
-	  if (before)
-	    sibling = TtaGetFirstChild (row);
-	  else
-	    sibling = TtaGetLastChild (row);
-	  if (sibling == NULL)
+          el = TtaNewTree (doc, newType, "");
+
+	  /* do not check the Thot abstract tree against the structure */
+	  /* schema while changing the structure */
+	  TtaSetStructureChecking (0, doc);
+	  
+	  if (elType.ElTypeNum == MathML_EL_MROW ||
+	      elType.ElTypeNum == MathML_EL_MathML)
 	    {
-	      /* replace the empty MROW by the new element*/
-	      TtaInsertSibling (el, row, TRUE, doc);
-	      TtaRemoveTree (row, doc);
-	    }
-	  else
-	    {
-	      /* check whether the element is a construction */
-	      elType = TtaGetElementType (sibling);
-	      if (elType.ElTypeNum == MathML_EL_Construct)
-		TtaInsertFirstChild (&el, sibling, doc);
+	      /* the selected element is a MROW or the MathML element */
+	      row = sibling;
+	      if (before)
+		sibling = TtaGetFirstChild (row);
 	      else
-		TtaInsertSibling (el, sibling, before, doc);
+		sibling = TtaGetLastChild (row);
+	      if (sibling == NULL)
+		{
+		  /* replace the empty MROW by the new element*/
+		  TtaInsertSibling (el, row, TRUE, doc);
+		  TtaRemoveTree (row, doc);
+		}
+	      else
+		{
+		  /* check whether the element is a construction */
+		  elType = TtaGetElementType (sibling);
+		  if (elType.ElTypeNum == MathML_EL_Construct)
+		    TtaInsertFirstChild (&el, sibling, doc);
+		  else
+		    TtaInsertSibling (el, sibling, before, doc);
+		}
 	    }
-	}
-      else if (elType.ElTypeNum == MathML_EL_Construct)
-	{
-	  /* replace the construction choice */
-	  TtaInsertFirstChild (&el, sibling, doc);
-	}
-      else
-	{
-	  /* the selected element is not a MROW */
-	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	    /* go up to the MN, MI, MO or M_TEXT element */
-	    sibling = TtaGetParent (sibling);
-	  /* insert the new element */
-	  TtaInsertSibling (el, sibling, before, doc);
-	}
-
-      if (ParBlock)
-	 /* user wants to create a parenthesized block */
-	 /* create two MF elements, as the first and last child of the new
-	    MROW */
-	 {
-	 child = TtaGetFirstChild (el);
-	 if (child != NULL)
+	  else if (elType.ElTypeNum == MathML_EL_Construct)
 	    {
-	    newType.ElTypeNum = MathML_EL_MF;
-	    fence = TtaNewTree (doc, newType, "");
-	    TtaInsertSibling (fence, child, TRUE, doc);
-	    fence = TtaNewTree (doc, newType, "");
-	    TtaInsertSibling (fence, child, FALSE, doc);
+	      /* replace the construction choice */
+	      TtaInsertFirstChild (&el, sibling, doc);
 	    }
-	 }
+	  else
+	    {
+	      /* the selected element is not a MROW */
+	      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+		/* go up to the MN, MI, MO or M_TEXT element */
+		sibling = TtaGetParent (sibling);
+	      /* insert the new element */
+	      TtaInsertSibling (el, sibling, before, doc);
+	    }
+	  
+	  if (ParBlock)
+	    /* user wants to create a parenthesized block */
+	    /* create two MF elements, as the first and last child of the new
+	       MROW */
+	    {
+	      child = TtaGetFirstChild (el);
+	      if (child != NULL)
+		{
+		  newType.ElTypeNum = MathML_EL_MF;
+		  fence = TtaNewTree (doc, newType, "");
+		  TtaInsertSibling (fence, child, TRUE, doc);
+		  fence = TtaNewTree (doc, newType, "");
+		  TtaInsertSibling (fence, child, FALSE, doc);
+		}
+	    }
+	  
+	  CreateParentMROW (el, doc);
+	  
+	  InsertPlaceholder (el, TRUE, doc);
+	  InsertPlaceholder (el, FALSE, doc);
 
-      CreateParentMROW (el, doc);
-
-      InsertPlaceholder (el, TRUE, doc);
-      InsertPlaceholder (el, FALSE, doc);
-
-      TtaSetDisplayMode (doc, DisplayImmediately);
-      /* check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (1, doc);
-
-      /* selected the first child of the new element */
-      while (el != NULL)
-	{
-	  sibling = el;
-	  el = TtaGetFirstChild (sibling);
+	  TtaSetDisplayMode (doc, DisplayImmediately);
+	  /* check the Thot abstract tree against the structure schema. */
+	  TtaSetStructureChecking (1, doc);
+	  
+	  /* selected the first child of the new element */
+	  while (el != NULL)
+	    {
+	      sibling = el;
+	      el = TtaGetFirstChild (sibling);
+	    }
+	  TtaSelectElement (doc, sibling);
 	}
-      TtaSelectElement (doc, sibling);
+      else if (surround)
+	{
+	  /* une transformation a marche */
+	  TtaSetDisplayMode (doc, DisplayImmediately);
+	}
       break;
     default:
       break;
