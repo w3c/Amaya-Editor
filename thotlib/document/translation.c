@@ -205,29 +205,29 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	  nb_bytes2write = 1;
 	}
      else if (entityName &&
-	       (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	       (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0))
 	{
-	  if (c == 0X22) /* &quot; */
+	  if (c == 0x22) /* &quot; */
 	    {
 	      strcpy (&mbc[0], "&quot;");
 	      nb_bytes2write = 6;
 	    }
-	  else if (c == 0X26) /* &amp; */
+	  else if (c == 0x26) /* &amp; */
 	    {
 	      strcpy (&mbc[0], "&amp;");
 	      nb_bytes2write = 5;
 	    }
-	  else if (c == 0X3C) /* &lt; */
+	  else if (c == 0x3C) /* &lt; */
 	    {
 	      strcpy (&mbc[0], "&lt;");
 	      nb_bytes2write = 4;
 	    }
-	  else if (c == 0X3E) /* &gt; */
+	  else if (c == 0x3E) /* &gt; */
 	    {
 	      strcpy (&mbc[0], "&gt;");
 	      nb_bytes2write = 4;
 	    }
-	  else if (c == 0XA0) /* &nbsp; */
+	  else if (c == 0xA0) /* &nbsp; */
 	    {
 	      strcpy (&mbc[0], "&nbsp;");
 	      nb_bytes2write = 6;
@@ -754,7 +754,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	{
 	  ft = textTransBegin;
 	  if (attrVal &&
-	      (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	      (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0))
 	    entityName = TRUE;
 	  if (c != EOS)
 	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
@@ -782,7 +782,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	    {
 	      cs = (CHAR_T) pBufT->BuContent[i - 1];
 	      if (attrVal &&
-		  (cs == 0X22 || cs == 0X26 || cs == 0X3C || cs == 0X3E || cs == 0XA0))
+		  (cs == 0x22 || cs == 0x26 || cs == 0x3C || cs == 0x3E || cs == 0xA0))
 		entityName = TRUE;
 	      PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE,
 		       entityName);
@@ -812,7 +812,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
      {
        c = (CHAR_T) pTSch->TsCharTransl[ft - 1].StSource[i];
        if (attrVal &&
-	   (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
+	   (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0))
 	 entityName = TRUE;
        PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE, entityName);
      }
@@ -2650,8 +2650,24 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      PutChar ((wchar_t) c, fnum, NULL, pDoc,
-				       FALSE, encode, entityName);
+			      if (c == 0x22)
+				{
+				  /* write a numeric entity */
+				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
+					   FALSE, FALSE, FALSE);
+				  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
+					   FALSE, FALSE, FALSE);
+				  PutInt (0x22, fnum, NULL, pDoc, FALSE);
+				  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
+					   FALSE, FALSE, FALSE);
+				}
+			      else
+				{
+				  if (c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0)
+				    entityName = TRUE;
+				  PutChar ((wchar_t) c, fnum, NULL, pDoc,
+					   FALSE, encode, entityName);
+				}
 			    }
 			  pBuf = pBuf->BuNext;
 			}
