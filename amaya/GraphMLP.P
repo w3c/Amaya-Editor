@@ -36,7 +36,7 @@ VIEWS
 DEFAULT
 
    BEGIN
-   HorizRef: Enclosed . HRef;
+   HorizRef: * . Top;
    VertRef: * . Left;
    HorizPos: Left = Enclosing . Left;
    VertPos:  Top = Enclosing . Top;
@@ -1009,6 +1009,7 @@ RULES
 	BEGIN
 	CreateBefore(SVG_S);
         CreateWith(VerticalLine);
+	HorizRef: *.Bottom;
         Width: 10 cm;
         Height: 5 cm;
         if NOT within GraphML
@@ -1412,7 +1413,6 @@ RULES
 
    GRAPHICS_UNIT:
 	BEGIN
-	HorizRef: * . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Depth: Enclosing + 2;
@@ -1424,7 +1424,6 @@ RULES
 
    PICTURE_UNIT:
 	BEGIN
-	HorizRef: * . Top;
 	Width: Enclosing . Width;
         Height: Enclosing . Height;
 	Depth: Enclosing + 2;
@@ -1433,6 +1432,9 @@ RULES
 	IN Graph_Alternate_view
 		Visibility: 0;
 	END;
+
+   TEXT_UNIT:
+	HorizRef: Enclosed . HRef;
 
 ATTRIBUTES
 

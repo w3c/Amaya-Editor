@@ -1442,12 +1442,12 @@ int          construct;
       shape = 'p';
       break;
     case 7:	/* spline */
-      newType.ElTypeNum = GraphML_EL_Spline;
-      shape = 'B';
+      /* newType.ElTypeNum = GraphML_EL_Spline;
+	 shape = 'B'; */
       break;
     case 8:	/* closed spline */
-      newType.ElTypeNum = GraphML_EL_ClosedSpline;
-      shape = 's';
+      /* newType.ElTypeNum = GraphML_EL_ClosedSpline;
+	 shape = 's'; */
       break;
     case 9:	/* foreignObject with some HTML code */
       newType.ElTypeNum = GraphML_EL_foreignObject;
@@ -1578,6 +1578,8 @@ int          construct;
   SetGraphicDepths (doc, graphRoot);
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
+  if (newType.ElTypeNum == 0)
+    InitInfo (TEXT("      "), TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
 }
 
 /*----------------------------------------------------------------------

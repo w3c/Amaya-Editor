@@ -1594,6 +1594,9 @@
 	<message xml:lang="en">Tags/attributes are ignored - see the log file</message>
 	<message xml:lang="fr">Des balises/attributs sont ignorées - voir le fichier log</message>
 </label>
+<label define="AM_NOT_AVAILABLE">
+	<message xml:lang="en">Not available</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

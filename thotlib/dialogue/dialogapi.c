@@ -2569,11 +2569,11 @@ return 0; /*rajouté pour tester gtk */
 
 /*----------------------------------------------------------------------
    TtaNewPulldown cre'e un pull-down menu :                           
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre parent identifie le widget pe`re du pull-down menu.  
-   Le parame`tre title donne le titre du catalogue.                   
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre text contient la liste des intitule's du catalogue.  
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter parent identifie le widget pe`re du pull-down menu.  
+   The parameter title donne le titre du catalogue.                   
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter text contient la liste des intitule's du catalogue.  
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
    S'il n'est pas nul, le parame`tre ] donne les acce'le'rateurs  
@@ -3173,15 +3173,15 @@ ThotWidget          parent;
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre title donne le titre du catalogue.                   
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre text contient la liste des intitule's du catalogue.  
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter title donne le titre du catalogue.                   
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter text contient la liste des intitule's du catalogue.  
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
    S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
    des entre'es du menu.                                              
-   Le parame`tre button indique le bouton de la souris qui active le  
+   The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3656,12 +3656,12 @@ return (NULL);
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter ref_parent identifie le formulaire pe`re.            
    Le parametre entry de'signe l'entre'e correspondante dans le menu  
-   pe`re. Le parame`tre title donne le titre du catalogue.            
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre icons contient la liste des icones du catalogue.     
+   pe`re. The parameter title donne le titre du catalogue.            
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter icons contient la liste des icones du catalogue.     
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
@@ -3842,12 +3842,12 @@ ThotBool            horizontal;
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre ref_parent identifie le formulaire pe`re.            
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter ref_parent identifie le formulaire pe`re.            
    Le parametre entry de'signe l'entre'e correspondante dans le menu  
-   pe`re. Le parame`tre title donne le titre du catalogue.            
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre text contient la liste des intitule's du catalogue.  
+   pe`re. The parameter title donne le titre du catalogue.            
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter text contient la liste des intitule's du catalogue.  
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
    S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
@@ -4513,8 +4513,8 @@ ThotBool            react;
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre val de'signe l'entre'e se'lectionne'e.               
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter val de'signe l'entre'e se'lectionne'e.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetMenuForm (int ref, int val)
@@ -4602,11 +4602,11 @@ int                 val;
 
 /*----------------------------------------------------------------------
    TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre ref_parent identifie le formulaire pe`re.            
-   Le parame`tre title donne le titre du catalogue.                   
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre text contient la liste des intitule's du catalogue.  
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter ref_parent identifie le formulaire pe`re.            
+   The parameter title donne le titre du catalogue.                   
+   The parameter number indique le nombre d'entre'es dans le menu.    
+   The parameter text contient la liste des intitule's du catalogue.  
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
    S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
@@ -4872,9 +4872,9 @@ ThotBool            react;
 
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre val de'signe l'entre'e se'lectionne'e (-1 pour       
-   toutes les entre'es). Le parame`tre on indique que le bouton       
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter val de'signe l'entre'e se'lectionne'e (-1 pour       
+   toutes les entre'es). The parameter on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
@@ -5253,7 +5253,7 @@ int                 activate;
 
 /*----------------------------------------------------------------------
    DestForm de'truit un formulaire ou une feuille de saisie:          
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   The parameter ref donne la re'fe'rence du catalogue.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          DestForm (int ref)
@@ -5570,7 +5570,7 @@ int                 ref;
 /*----------------------------------------------------------------------
    TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
    de dialogue :                                                   
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   The parameter ref donne la re'fe'rence du catalogue.               
    Le parame'tre title donne le titre du catalogue.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -5986,12 +5986,12 @@ LPARAM lParam;
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
-   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   The parameter ref donne la reference et parent le ThotWidget pe're 
    Si parent est nul, le menu est attache a la fenetre MainWindow.          
    Le parame'tre title donne le titre du catalogue.            
-   Le parame`tre horizontal indique que le formulaire est compose' en 
+   The parameter horizontal indique que le formulaire est compose' en 
    lignes (TRUE) ou en colonnes (FALSE).                              
-   Le parame`tre package donne le facteur de blocage du formulaire    
+   The parameter package donne le facteur de blocage du formulaire    
    (nombre d'entre'es par ligne ou par colonne).                      
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
@@ -6018,19 +6018,19 @@ int                 dbutton;
 
 /*----------------------------------------------------------------------
    TtaNewSheet cre'e un feuillet de commande :                        
-   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   The parameter ref donne la reference et parent le ThotWidget pe're 
    Si parent est nul, le menu est attache a la fenetre MainWindow.          
-   Le parame`tre title donne le titre du catalogue.            
-   Le parame`tre number indique le nombre de boutons ajoute's au      
+   The parameter title donne le titre du catalogue.            
+   The parameter number indique le nombre de boutons ajoute's au      
    bouton 'QUIT' mis par de'faut.                                     
-   Le parame`tre text contient la liste des intitule's des boutons    
+   The parameter text contient la liste des intitule's des boutons    
    ajoute's au bouton 'QUIT'.                                         
    Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
-   Le parame`tre horizontal indique que le formulaire est compose' en 
+   The parameter horizontal indique que le formulaire est compose' en 
    lignes (TRUE) ou en colonnes (FALSE).                              
-   Le parame`tre package donne le facteur de blocage du formulaire    
+   The parameter package donne le facteur de blocage du formulaire    
    (nombre d'entre'es par ligne ou par colonne).                      
-   Le parame`tre button indique le bouton de la souris qui active le  
+   The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -6057,19 +6057,19 @@ int                 dbutton;
 
 /*----------------------------------------------------------------------
    TtaNewDialogSheet cre'e un feuillet de dialogue :                  
-   Le parame`tre ref donne la reference et parent le ThotWidget pe're 
+   The parameter ref donne la reference et parent le ThotWidget pe're 
    Si parent est nul, le menu est attache a la fenetre MainWindow.          
-   Le parame`tre title donne le titre du catalogue.            
-   Le parame`tre number indique le nombre de boutons ajoute's au      
+   The parameter title donne le titre du catalogue.            
+   The parameter number indique le nombre de boutons ajoute's au      
    bouton 'QUIT' mis par de'faut.                                     
-   Le parame`tre text contient la liste des intitule's des boutons    
+   The parameter text contient la liste des intitule's des boutons    
    ajoute's au bouton 'QUIT'.                                         
    Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
-   Le parame`tre horizontal indique que le formulaire est compose' en 
+   The parameter horizontal indique que le formulaire est compose' en 
    lignes (TRUE) ou en colonnes (FALSE).                              
-   Le parame`tre package donne le facteur de blocage du formulaire    
+   The parameter package donne le facteur de blocage du formulaire    
    (nombre d'entre'es par ligne ou par colonne).                      
-   Le parame`tre button indique le bouton de la souris qui active le  
+   The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -6245,24 +6245,24 @@ int                 ref;
 }
 
 /*----------------------------------------------------------------------
-   TtaNewSelector cre'e un se'lecteur dans un formulaire :            
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre title donne le titre du catalogue.                   
-   Le parame`tre number donne le nombre d'intitule's.                 
-   Le parame`tre text contient la liste des intitule's.               
-   Le parame`tre height donne le nombre d'intitule's visibles a` la   
-   fois (hauteur de la fenetree^tre de visualisation).                        
-   Le parame`tre label ajoute un choix supple'mentaire a` la liste    
-   des choix possibles. Ce choix est affiche' se'pare'ment et donc    
-   mis en e'vidence.                                                  
-   Le parame`tre withText indique s'il faut creer une zone texte.     
-   Quand le parame`tre react est vrai, tout changement de se'lection  
-   dans le se'lecteur est imme'diatement signale' a` l'application.   
+   TtaNewSizedSelector creates a selector of a given width in a dialogue form:
+   The parameter ref donne la re'fe'rence pour l'application.
+   The parameter title donne le titre du catalogue.             
+   The parameter number donne le nombre d'intitule's.          
+   The parameter text contient la liste des intitule's.   
+   The parameter height donne le nombre d'intitule's visibles a` la
+   fois (hauteur de la fenetree^tre de visualisation).
+   The parameter label ajoute un choix supple'mentaire a` la liste
+   des choix possibles. Ce choix est affiche' se'pare'ment et donc
+   mis en e'vidence. 
+   The parameter withText indique s'il faut creer une zone texte.
+   Quand le parame`tre react est vrai, tout changement de se'lection
+   dans le se'lecteur est imme'diatement signale' a` l'application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react)
+void                TtaNewSizedSelector (int ref, int ref_parent, STRING title, int number, STRING text, int width, int height, STRING label, ThotBool withText, ThotBool react)
 #else  /* __STDC__ */
-void                TtaNewSelector (ref, ref_parent, title, number, text, height, label, withText, react)
+void                TtaNewSizedSelector (ref, ref_parent, title, number, text, width, height, label, withText, react)
 int                 ref;
 int                 ref_parent;
 STRING              title;
@@ -6290,7 +6290,6 @@ ThotBool            react;
    struct E_List      *adbloc;
    XmString            title_string;
    XmString           *item;
-
    ThotBool            rebuilded;
 
    if (ref == 0)
@@ -6591,6 +6590,39 @@ ThotBool            react;
 }
 
 /*----------------------------------------------------------------------
+   TtaNewSelector creates a selector in a dialogue form:
+   The parameter ref donne la re'fe'rence pour l'application.
+   The parameter title donne le titre du catalogue.             
+   The parameter number donne le nombre d'intitule's.          
+   The parameter text contient la liste des intitule's.   
+   The parameter height donne le nombre d'intitule's visibles a` la
+   fois (hauteur de la fenetree^tre de visualisation).
+   The parameter label ajoute un choix supple'mentaire a` la liste
+   des choix possibles. Ce choix est affiche' se'pare'ment et donc
+   mis en e'vidence. 
+   The parameter withText indique s'il faut creer une zone texte.
+   Quand le parame`tre react est vrai, tout changement de se'lection
+   dans le se'lecteur est imme'diatement signale' a` l'application.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react)
+#else  /* __STDC__ */
+void                TtaNewSelector (ref, ref_parent, title, number, text, height, label, withText, react)
+int                 ref;
+int                 ref_parent;
+STRING              title;
+int                 number;
+STRING              text;
+int                 height;
+STRING              label;
+ThotBool            withText;
+ThotBool            react;
+#endif /* __STDC__ */
+{
+  TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height, label, withText, react);
+}
+
+/*----------------------------------------------------------------------
    TtaActiveSelector rend actif le  se'lecteur.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -6598,7 +6630,6 @@ void                TtaActiveSelector (int ref)
 #else  /* __STDC__ */
 void                TtaActiveSelector (ref)
 int                 ref;
-
 #endif /* __STDC__ */
 {
 #ifndef _GTK
@@ -6660,10 +6691,10 @@ int                 ref;
 
 /*----------------------------------------------------------------------
    TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre entry positif ou nul donne l'index de l'entre'e      
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter entry positif ou nul donne l'index de l'entre'e      
    se'lectionne'e.                                                    
-   Le parame`tre text donne le texte si entry vaut -1.                
+   The parameter text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetSelector (int ref, int entry, STRING text)
@@ -6747,8 +6778,8 @@ STRING              text;
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre text donne l'intitule'.                              
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewLabel (int ref, int ref_parent, STRING text)
@@ -7026,8 +7057,8 @@ ThotBool            react;
 
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre text donne la valeur initiale.                       
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetTextForm (int ref, STRING text)
@@ -7072,9 +7103,9 @@ STRING              text;
 
 /*----------------------------------------------------------------------
    TtaNewNumberForm cre'e une feuille de saisie de nombre :           
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre ref_parent identifie le formulaire pe`re.            
-   Le parame`tre title donne le titre du catalogue.                   
+   The parameter ref donne la re'fe'rence pour l'application.         
+   The parameter ref_parent identifie le formulaire pe`re.            
+   The parameter title donne le titre du catalogue.                   
    Les parame`tres min et max fixent les bornes valides du nombre.    
    Quand le parame`tre react est vrai, tout changement dans           
    la feuille de saisie est imme'diatement signale' a` l'application. 
@@ -7276,8 +7307,8 @@ ThotBool            react;
 
 /*----------------------------------------------------------------------
    TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre val donne la valeur initiale.                        
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter val donne la valeur initiale.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetNumberForm (int ref, int val)

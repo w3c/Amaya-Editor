@@ -1136,12 +1136,11 @@ CHAR_T             *server;
   Displays a message box with the given info text
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitInfo (CHAR_T* label, CHAR_T* info)
+void       InitInfo (CHAR_T* label, CHAR_T* info)
 #else
-void                InitInfo (label, info)
-CHAR_T*              label;
-CHAR_T*              info;
-
+void       InitInfo (label, info)
+CHAR_T    *label;
+CHAR_T    *info;
 #endif
 {
   if (!info || *info == WC_EOS)

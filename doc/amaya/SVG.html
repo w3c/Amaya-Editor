@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Graphics</title>
@@ -13,12 +11,12 @@
 <table width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /><img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></td>
+      <td><img border="0" src="../../Icons/WWW/w3c_home" /><img border="0"
+        alt="Amaya" src="../Icons/amaya.gif" /></td>
       <td><p align="right"><a href="Math.html"><img alt="previous" border="0"
         src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top"
         border="0" src="../Icons/up.gif" /></a><a href="ImageMaps.html"><img
-        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+        border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -28,7 +26,90 @@
 <h2>Editing graphics</h2>
 
 <p>Amaya allows you to include vector graphics in Web pages, foolowing the
-Scalable Vector Graphics (SVG) specification.</p>
+Scalable Vector Graphics (SVG) specification. SVG elements are handled as
+structured components, in the same way as HTML elements. Therefore, you can
+manipulate SVG graphics in the same way you manipulate other parts of HTML
+documents. All editing commands provided by Amaya for handling text are also
+available, and there are some additional controls for entering SVG
+constructs.</p>
+
+<h2>Creating graphics with the palette</h2>
+
+<p>To create a new SVG element in a document, just move the insertion point
+(the caret) to the position where you want to insert it, and then click the
+<strong>Graphics</strong> button <img
+src="/local_home/vatton/Amaya/doc/Icons/Graph.gif" alt="Graph" />. The
+Graphics button displays a palette that stays on the screen until you click
+the Done button. Just choose the graphical element you want to create. The
+available graphics are:</p>
+<ul>
+  <li>A line, <code>line</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"/>
+    </svg>
+  </li>
+  <li>A simple rectangle, <code>rect</code> in SVG with no <code>rx</code> and
+    <code>ry</code> attributes, <svg xmlns="http://www.w3.org/2000/svg"
+    width="2cm" height="0.6cm">
+      <rect x="6px" width="22px" height="18px" style="fill: #FFCB69"/>
+    </svg>
+  </li>
+  <li>A rectangle with round corners, <code>rect</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <rect rx="5px" width="23px" height="18px" style="fill: #E5E500"/>
+    </svg>
+  </li>
+  <li>A circle <code>circle</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <circle cy="10px" cx="12px" r="10px" style="fill: #C1FFE9"/>
+    </svg>
+  </li>
+  <li>An ellipse, <code>ellipse</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"/>
+    </svg>
+  </li>
+  <li>A polyline, in SVG,<svg xmlns="http://www.w3.org/2000/svg" width="2cm"
+    height="0.6cm">
+      <polyline points="4,16 23,0 37,16 55,6" style="stroke: #0000B2"/>
+    </svg>
+  </li>
+  <li>A polygon, in SVG, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
+    height="0.6cm">
+      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
+               style="fill: #C8FF95"/>
+    </svg>
+  </li>
+  <li>Splines and curves are not implemented yet. <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
+    </svg>
+  </li>
+  <li>A SVG text, in SVG<svg xmlns="http://www.w3.org/2000/svg" width="4.5cm"
+    height="0.6cm">
+      <text y="11px" x="11px" style="stroke: #FF5F00">A simple text in SVG
+      </text>
+    </svg>
+  </li>
+  <li>Enclosing HTML, foreignObject in SVG,<svg
+    xmlns="http://www.w3.org/2000/svg" width="6cm" height="2cm">
+      <rect y="7px" x="27px" width="83px" height="45px"
+            style="fill: #C1FFFF"/>
+      <foreignObject width="100px" y="9px" x="39px">
+
+        <div xmlns="http://www.w3.org/1999/xhtml">
+        <p style="color: #FF5F00">A paragraph</p>
+        <p>fgfg</p>
+        </div>
+      </foreignObject>
+    </svg>
+  </li>
+</ul>
+
+<p>By default Amaya generates a SVG construction out of paragraphs. Today, if
+you wish to display the drawing in a line you have to edit the source
+code.</p>
+
+<p></p>
 </div>
 
 <p align="right"><a href="Math.html"><img alt="previous" border="0"
