@@ -197,16 +197,28 @@ unsigned char      *element;
 	/* for valid standard ASCII chars */
 	if (*element >= 0x20 && *element <= 0x7e)
 	  {
-	     /* verify whether the char must be escaped */
+	     /* verify whether the char must be escaped, according to  the
+	      URL BNF document */
 	     switch (*element)
 		   {
-		      case SPACE:
+		      case ';':
+		      case '/':
+		      case '#':
+		      case '?':
+		      case ':':
 		      case '+':
 		      case '&':
                       case '>':
                       case '<':
+		      case '=':
+		      case '%':
 			 EscapeChar (&tmp[1], *element);
 			 AddToBuffer (tmp);
+			 break;
+
+		      case SPACE:
+			 tmp2[0] = '+';
+			 AddToBuffer (tmp2);
 			 break;
 
 		      default:
@@ -224,6 +236,42 @@ unsigned char      *element;
 
 	element++;
      }
+}
+
+/*----------------------------------------------------------------------
+  TrimSpaces
+  Removes beginning and ending spaces in a char string
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         TrimSpaces (char *string)
+#else
+static void         TrimSpaces (string)
+char               *string;
+#endif
+{
+  char *start;
+  char *end;
+  char *ptr;
+
+  if (!string || *string == EOS)
+    return;
+
+  start = string;
+
+  while (*start && *start == ' ')
+    start++;
+
+  end = &string[strlen (string) - 1];
+
+  while (end > start && *end == ' ')
+    end--;
+
+  for (ptr = string; start < end; start++, ptr++)
+    *ptr = *start;
+  *ptr = *start;
+
+  if (*ptr++)
+    *ptr = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -322,6 +370,9 @@ int                 mode;
 						TtaGiveTextContent (elForm, value, &length, &lang);
 						elForm = TtaGetParent (elForm);
 					      }
+					    /* remove extra spaces */
+					    TrimSpaces ((char *) &name);
+					    TrimSpaces ((char *) &value);
 					    /* save the name/value pair of the element */
 					    AddNameValue (name, value);
 					  }
