@@ -74,6 +74,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"li", SPACE, HTML_EL_List_Item, L_BasicValue, FALSE},
    {"link", 'E', HTML_EL_LINK, L_BasicValue, FALSE},
    {"listing", SPACE, HTML_EL_Preformatted, L_TransitionalValue, FALSE}, /*converted to PRE */
+   {"map", SPACE, HTML_EL_map, L_StrictValue, FALSE},
    {"map", SPACE, HTML_EL_MAP, L_StrictValue, FALSE},
    {"menu", SPACE, HTML_EL_Menu, L_TransitionalValue, FALSE},
    {"meta", 'E', HTML_EL_META, L_BasicValue, FALSE},

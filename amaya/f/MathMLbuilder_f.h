@@ -40,9 +40,6 @@ extern void SetFontstyleAttr ( Element el,
                                Document doc );
 extern void SetIntAddSpaceAttr ( Element el,
                                  Document doc );
-extern void ChangeTypeOfElement ( Element elem,
-                                  Document doc,
-                                  int newTypeNum );
 extern ThotBool ChildOfMRowOrInferred ( Element el );
 extern void CheckFence ( Element el,
                          Document doc );
@@ -115,9 +112,6 @@ extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
 extern void SetIntAddSpaceAttr (/* Element el,
                                    Document doc */);
-extern void ChangeTypeOfElement (/* Element elem,
-                                    Document doc,
-                                    int newTypeNum */);
 extern ThotBool ChildOfMRowOrInferred (/* Element el */);
 extern void CheckFence (/* Element el,
                            Document doc */);

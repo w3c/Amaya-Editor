@@ -158,7 +158,7 @@ STRUCT
 	Applet;							{ APPLET }
 	MathML;						        { MATH }
         GraphML;		                                { SVG }
-	MAP;							{ MAP }
+	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
 	SVG_Image						{ GRAPHIC }
 	    (ATTR SRC; ALT; longdesc;
@@ -257,7 +257,6 @@ STRUCT
 	BaseFont;						{ BASEFONT }
 	BR;							{ BR }
 	SCRIPT;							{ SCRIPT }
-	MAP;							{ MAP }
 	Quotation;						{ Q }
 	Subscript = Basic_Set;					{ SUB }
 	Superscript = Basic_Set;				{ SUP }
@@ -746,8 +745,13 @@ STRUCT
 
   MAP								{ MAP }
      (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
+	 { name linked to an image}
+	LIST OF (CASE OF Element; AREA; END);
+
+  map								{ MAP }
+     (ATTR NAME) =
 	 { name }
-	LIST OF (AREA);
+	LIST OF (CASE OF Element; AREA; END);
 
   AREA								{ AREA }
      (ATTR shape; coords; HREF_; target_; nohref = Yes_; ALT;

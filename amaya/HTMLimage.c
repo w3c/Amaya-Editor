@@ -344,6 +344,7 @@ void SetAreaCoords (Document document, Element element, int attrNum)
    TtaFreeMemory (text);
 }
 
+
 /*----------------------------------------------------------------------
   UpdateImageMap sets or updates Ref_IMG MAP attributes for the current
   image.
@@ -351,19 +352,21 @@ void SetAreaCoords (Document document, Element element, int attrNum)
   oldWidth is -1 or the old image width.
   oldHeight is -1 or the old image height.
   ----------------------------------------------------------------------*/
-void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeight)
+void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 {
    AttributeType       attrType;
    Attribute           attr;
    Element             el, child;
+   Element             prev, next, parent;
    char               *text;
    int                 shape, w, h, length;
    int                 deltax, deltay, val;
    DisplayMode         dispMode;
+   ThotBool            newMap;
 
-   dispMode = TtaGetDisplayMode (document);
+   dispMode = TtaGetDisplayMode (doc);
    /* Search the USEMAP attribute */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attrType.AttrTypeNum = HTML_ATTR_USEMAP;
    attr = TtaGetAttribute (image, attrType);
    if (attr != NULL)
@@ -374,7 +377,7 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 	text = TtaGetMemory (length);
 	TtaGiveTextAttributeValue (attr, text, &length);
 	if (text[0] == '#')
-	   el = SearchNAMEattribute (document, &text[1], NULL);
+	   el = SearchNAMEattribute (doc, &text[1], NULL);
 	else
 	   el = NULL;
 	TtaFreeMemory (text);
@@ -383,22 +386,44 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 
 	/* ask Thot to stop displaying changes made in the document */
         if (dispMode == DisplayImmediately)
-	  TtaSetDisplayMode (document, DeferredDisplay);
+	  TtaSetDisplayMode (doc, DeferredDisplay);
 
 	/* Update MAP attribute */
 	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
 	attr = TtaGetAttribute (el, attrType);
-	if (attr == NULL)
+	parent = NULL;
+	prev = el;
+	newMap = (attr == NULL);
+	if (newMap)
 	  {
-	     /* create it */
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attr, document);
+	    /* change the type of the map */
+	    TtaPreviousSibling (&prev);
+	    if (prev == NULL)
+	      {
+		next = el;
+		TtaNextSibling (&next);
+		if (next == NULL)
+		  parent = TtaGetParent (el);
+	      }
+	    
+	    TtaRemoveTree (el, doc);
+	    ChangeElementType (el, HTML_EL_MAP);
+	    /* create the attribute */
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (el, attr, doc);
+	    /* now reinsert the element new map */
+	    if (prev != NULL)
+	      TtaInsertSibling (el, prev, FALSE, doc);
+	    else if (next != NULL)
+	      TtaInsertSibling (el, next, TRUE, doc);
+	    else
+	      TtaInsertFirstChild (&el, parent, doc);
 	  }
-	TtaSetAttributeReference (attr, el, document, image, document);
+	TtaSetAttributeReference (attr, el, doc, image, doc);
 
 	/* Update AREAs attribute */
 	el = TtaGetFirstChild (el);
-	TtaGiveBoxSize (image, document, 1, UnPixel, &w, &h);
+	TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
 	while (el != NULL)
 	  {
 	     /* Search the shape attribute */
@@ -415,14 +440,14 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 			 {
 			    /* create it */
 			    attr = TtaNewAttribute (attrType);
-			    TtaAttachAttribute (el, attr, document);
+			    TtaAttachAttribute (el, attr, doc);
 			 }
-		       TtaSetAttributeReference (attr, el, document, image, document);
+		       TtaSetAttributeReference (attr, el, doc, image, doc);
 		       /* do we need to initialize the polyline limits */
 		       if (oldWidth == -1 && oldHeight == -1)
 			 {
                             child = TtaGetFirstChild (el);
-                            TtaChangeLimitOfPolyline (child, UnPixel, w, h, document);
+                            TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
 			 }
 		    }
 		  else if (oldWidth != -1 || oldHeight != -1)
@@ -439,13 +464,13 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 			      attr = TtaGetAttribute (el, attrType);
 			      val = TtaGetAttributeValue (attr);
 			      val = val + (val * deltax / 100);
-			      TtaSetAttributeValue (attr, val, el, document);    
+			      TtaSetAttributeValue (attr, val, el, doc);    
 			      /* Search the width attribute */
 			      attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
 			      attr = TtaGetAttribute (el, attrType);
 			      val = TtaGetAttributeValue (attr);
 			      val = val + (val * deltax / 100);
-			      TtaSetAttributeValue (attr, val, el, document);
+			      TtaSetAttributeValue (attr, val, el, doc);
 			    }
 			}
 		      if (oldHeight != -1 && h != 0)
@@ -458,26 +483,26 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 			      attr = TtaGetAttribute (el, attrType);
 			      val = TtaGetAttributeValue (attr);
 			      val = val + (val * deltay / 100);
-			      TtaSetAttributeValue (attr, val, el, document);
+			      TtaSetAttributeValue (attr, val, el, doc);
 			      /* Search the height attribute */
 			      attrType.AttrTypeNum = HTML_ATTR_height_;
 			      attr = TtaGetAttribute (el, attrType);
 			      val = TtaGetAttributeValue (attr);
 			      val = val + (val * deltay / 100);
-			      TtaSetAttributeValue (attr, val, el, document);
+			      TtaSetAttributeValue (attr, val, el, doc);
 			    }
 			}
 
 		      /* update area coords */
 		      if (deltax && deltay)
 			/* both width and height */
-			SetAreaCoords (document, el, 0);
+			SetAreaCoords (doc, el, 0);
 		      else if (deltax)
 			/* only width */
-			SetAreaCoords (document, el, HTML_ATTR_IntWidthPxl);
+			SetAreaCoords (doc, el, HTML_ATTR_IntWidthPxl);
 		      else
 			/* only height */
-			SetAreaCoords (document, el, HTML_ATTR_height_);
+			SetAreaCoords (doc, el, HTML_ATTR_height_);
 		    }
 	       }
 	     TtaNextSibling (&el);
@@ -485,13 +510,13 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
      }
 
    /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (document, dispMode);
+   TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
-void                DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
+void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 {
   ElementType         elType;
   int                 modified, i;

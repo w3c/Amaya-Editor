@@ -47,7 +47,7 @@ extern ptrfont ThotLoadFont ( char alphabet,
                               TypeUnit unit,
                               int frame );
 extern void TtaSetFontZoom ( int zoom );
-extern void InitDialogueFonts ( char* name );
+extern void InitDialogueFonts ( char *name );
 extern void ThotFreeFont ( int frame );
 extern void ThotFreeAllFonts ( void );
 
@@ -94,7 +94,7 @@ extern ptrfont ThotLoadFont (/* char alphabet,
                                 TypeUnit unit,
                                 int frame */);
 extern void TtaSetFontZoom (/* int zoom */);
-extern void InitDialogueFonts (/* char* name */);
+extern void InitDialogueFonts (/* char *name */);
 extern void ThotFreeFont (/* int frame */);
 extern void ThotFreeAllFonts (/* void */);
 

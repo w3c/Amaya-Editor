@@ -139,12 +139,21 @@ extern void TtaSetSelector ( int ref,
 extern void TtaNewLabel ( int ref,
                           int ref_parent,
                           char *text );
+extern void TtaNewButton ( int ref,
+                           int ref_parent,
+                           char *text );
 extern void TtaNewTextForm ( int ref,
                              int ref_parent,
                              char *title,
                              int width,
                              int height,
                              ThotBool react );
+extern void TtaNewPwdForm ( int ref,
+                            int ref_parent,
+                            char *title,
+                            int width,
+                            int height,
+                            ThotBool react );
 extern void TtaSetTextForm ( int ref,
                              char *text );
 extern void TtaNewNumberForm ( int ref,
@@ -298,12 +307,21 @@ extern void TtaSetSelector (/* int ref,
 extern void TtaNewLabel (/* int ref,
                             int ref_parent,
                             char *text */);
+extern void TtaNewButton (/* int ref,
+                             int ref_parent,
+                             char *text */);
 extern void TtaNewTextForm (/* int ref,
                                int ref_parent,
                                char *title,
                                int width,
                                int height,
                                ThotBool react */);
+extern void TtaNewPwdForm (/* int ref,
+                              int ref_parent,
+                              char *title,
+                              int width,
+                              int height,
+                              ThotBool react */);
 extern void TtaSetTextForm (/* int ref,
                                char *text */);
 extern void TtaNewNumberForm (/* int ref,

@@ -480,11 +480,12 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     parent = image;
 	     do
 	       {
-		  el = parent;
-		  parent = TtaGetParent (el);
-		  elType = TtaGetElementType (parent);
+		 el = parent;
+		 parent = TtaGetParent (el);
+		 if (parent)
+		   elType = TtaGetElementType (parent);
 	       }
-	     while (elType.ElTypeNum != HTML_EL_BODY &&
+	     while (parent && elType.ElTypeNum != HTML_EL_BODY &&
 		    elType.ElTypeNum != HTML_EL_Division );
 	     TtaInsertSibling (map, el, FALSE, doc);
 	     CreateTargetAnchor (doc, map, FALSE, FALSE);
@@ -603,7 +604,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
 				   el, doc);
 	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
-	     /*TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);*/
+	     TtaChangeBoxSize (child, doc, 1, w, h, UnPixel);
 	  }
 	/* ask Thot to display changes made in the document */
 	TtaSetDisplayMode (doc, dispMode);

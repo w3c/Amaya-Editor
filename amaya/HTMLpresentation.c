@@ -551,7 +551,7 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 		    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		      UpdateImageMap (el, doc, -1, h);
 		  }
-		return (TRUE);
+		return TRUE; /* don't let Thot perform normal operation */
 	      }
 	    else if (IsCharacterLevelElement (el)
 		&& (presType == PRIndent || presType == PRLineSpacing

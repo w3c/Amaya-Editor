@@ -828,6 +828,16 @@ RULES
 	Create '</map>\12' After;
 	END;
 
+ map:
+	BEGIN
+	Create '<map';
+	Create Attributes;
+	Create '>\12';
+	Indent +2;
+	Indent -2 After;
+	Create '</map>\12' After;
+	END;
+
  AREA:
 	BEGIN
 	Create '<area';

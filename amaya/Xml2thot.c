@@ -62,7 +62,7 @@ static int          NoTextChild[] =
    HTML_EL_Form, HTML_EL_Menu, HTML_EL_FIELDSET,
    HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
-   HTML_EL_MAP, HTML_EL_Applet,
+   HTML_EL_MAP, HTML_EL_map, HTML_EL_Applet,
    HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,

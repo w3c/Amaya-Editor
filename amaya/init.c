@@ -5706,7 +5706,7 @@ void                HelpAmaya (Document document, View view)
    char                  localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
-   View                structView, tocView;
+   View                structView, altView, tocView;
    FILE               *list;
 
    /* get the root element */
@@ -5738,6 +5738,20 @@ void                HelpAmaya (Document document, View view)
        strcat (localname, "/structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
+       fclose (list);
+     }
+   altView = TtaGetViewFromName (document, "Alternate_view");
+   if (altView != 0 && TtaIsViewOpen (document, altView))
+     {
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/altview.debug");
+       list = fopen (localname, "w");
+       TtaListView (document, altView, list);
+       fclose (list);
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/altboxes.debug");
+       list = fopen (localname, "w");
+       TtaListBoxes (document, altView, list);
        fclose (list);
      }
    tocView = TtaGetViewFromName (document, "Table_of_contents");

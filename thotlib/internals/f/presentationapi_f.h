@@ -25,7 +25,7 @@ extern void NewDimension ( PtrAbstractBox pAb,
                            int width,
                            int height,
                            int frame,
-                           ThotBool display );
+                           ThotBool fromUI );
 extern PRule TtaNewPRule ( int presentationType,
                            View view,
                            Document document );
@@ -118,7 +118,7 @@ extern void NewDimension (/* PtrAbstractBox pAb,
                              int width,
                              int height,
                              int frame,
-                             ThotBool display */);
+                             ThotBool fromUI */);
 extern PRule TtaNewPRule (/* int presentationType,
                              View view,
                              Document document */);

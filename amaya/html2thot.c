@@ -278,7 +278,7 @@ static int          NoTextChild[] =
    HTML_EL_Form, HTML_EL_Menu, HTML_EL_FIELDSET,
    HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
-   HTML_EL_MAP, HTML_EL_Applet,
+   HTML_EL_MAP, HTML_EL_map, HTML_EL_Applet,
    HTML_EL_Object, HTML_EL_IFRAME, HTML_EL_NOFRAMES,
    HTML_EL_Division, HTML_EL_Center, HTML_EL_NOSCRIPT,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
@@ -6273,7 +6273,7 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	/* move them up in the structure */
 	el = elRoot;
 	elType = TtaGetElementType (el);
-	elType.ElTypeNum = HTML_EL_MAP;
+	elType.ElTypeNum = HTML_EL_map;
 	/* search all MAP elements in the document */
 	while (el != NULL)
 	  {
@@ -6282,13 +6282,13 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 	     if (el != NULL)
 		/* a MAP element has been found. */
 		{
-		parent = TtaGetParent(el);
-		if (IsBlockElement (parent))
-		  /* its parent is a block element */
-		  {
-		  TtaRemoveTree (el, doc);
-		  TtaInsertSibling (el, parent, TRUE, doc);
-		  }
+		  parent = TtaGetParent(el);
+		  if (IsBlockElement (parent))
+		    /* its parent is a block element */
+		    {
+		      TtaRemoveTree (el, doc);
+		      TtaInsertSibling (el, parent, TRUE, doc);
+		    }
 		}
 	  }
 

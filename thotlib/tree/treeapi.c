@@ -857,75 +857,64 @@ void TtaInsertSibling (Element newElement, Element sibling,
 
    UserErrorCode = 0;
    if (newElement == NULL || sibling == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (((PtrElement) newElement)->ElParent != NULL)
-      TtaError (ERR_element_already_inserted);
+     TtaError (ERR_element_already_inserted);
    else if (((PtrElement) sibling)->ElParent == NULL)
-      /* cannot insert an element as a sibling of a root */
-      TtaError (ERR_element_already_inserted);
-   else
-      /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     /* cannot insert an element as a sibling of a root */
+     TtaError (ERR_element_already_inserted);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     /* Checks the parameter document */
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* Parameter document is ok */
-      if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-	  && !AllowedSibling ((PtrElement) sibling,
-			      LoadedDocument[document - 1],
-			      ((PtrElement) newElement)->ElTypeNumber,
-			      ((PtrElement) newElement)->ElStructSchema,
-			      before, FALSE, FALSE))
-     {
-	TtaError (ERR_element_does_not_match_DTD);
-     }
+     TtaError (ERR_invalid_document_parameter);
+   else if (((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
+	    && !AllowedSibling ((PtrElement) sibling,
+				LoadedDocument[document - 1],
+				((PtrElement) newElement)->ElTypeNumber,
+				((PtrElement) newElement)->ElStructSchema,
+				before, FALSE, FALSE))
+     TtaError (ERR_element_does_not_match_DTD);
    else
      {
-	if (before)
-	  {
+       if (before)
+	 {
 #ifndef NODISPLAY
-	     pNeighbour = ((PtrElement) sibling)->ElPrevious;
-	     BackSkipPageBreak (&pNeighbour);
+	   pNeighbour = ((PtrElement) sibling)->ElPrevious;
+	   BackSkipPageBreak (&pNeighbour);
 #endif
-	     InsertElementBefore ((PtrElement) sibling, (PtrElement) newElement);
-	  }
-	else
-	  {
+	   InsertElementBefore ((PtrElement) sibling, (PtrElement) newElement);
+	 }
+       else
+	 {
 #ifndef NODISPLAY
-	     pNeighbour = ((PtrElement) sibling)->ElNext;
-	     FwdSkipPageBreak (&pNeighbour);
+	   pNeighbour = ((PtrElement) sibling)->ElNext;
+	   FwdSkipPageBreak (&pNeighbour);
 #endif
-	     InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
-	  }
-	/* treats the exclusions of the created element */
-	pEl = (PtrElement) newElement;
-	if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-	   RemoveExcludedElem (&pEl, LoadedDocument[document - 1]);
-	if (pEl != NULL)
-	  {
-	     /* Dealing with exceptions */
-	     CreateWithException (pEl, LoadedDocument[document - 1]);
-	     /* If element pair, chain it with its homologue */
-	     if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-		GetOtherPairedElement ((PtrElement) newElement);
+	   InsertElementAfter ((PtrElement) sibling, (PtrElement) newElement);
+	 }
+       /* treats the exclusions of the created element */
+       pEl = (PtrElement) newElement;
+       if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
+	 RemoveExcludedElem (&pEl, LoadedDocument[document - 1]);
+       if (pEl != NULL)
+	 {
+	   /* Dealing with exceptions */
+	   CreateWithException (pEl, LoadedDocument[document - 1]);
+	   /* If element pair, chain it with its homologue */
+	   if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	     GetOtherPairedElement ((PtrElement) newElement);
 #ifndef NODISPLAY
-	     /* treats the required attributs of created elements */
-	     if ((LoadedDocument[document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
-		AttachMandatoryAttributes (pEl, LoadedDocument[document - 1]);
-	     if (pNeighbour != NULL)
-		/* The inserted element is not the first nor the last between its brothers */
-		sibling = NULL;
-	     RedisplayNewElement (document, pEl,
-			       (PtrElement) sibling, before, TRUE);
-#endif
-	  }
+	   /* treats the required attributs of created elements */
+	   if ((LoadedDocument[document - 1])->DocCheckingMode & ATTR_MANDATORY_MASK)
+	     AttachMandatoryAttributes (pEl, LoadedDocument[document - 1]);
+	   if (pNeighbour != NULL)
+	     /* The inserted element is not the first nor the last between its brothers */
+	     sibling = NULL;
+	   RedisplayNewElement (document, pEl,
+				(PtrElement) sibling, before, TRUE);
+#endif /* NODISPLAY */
+	 }
      }
 }
 

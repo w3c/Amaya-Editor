@@ -758,6 +758,8 @@ BOXES
 		END;
 	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
+		VertPos: Top = Previous . Top;
+		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Links_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1010,6 +1012,8 @@ BOXES
 #else
 		Foreground: ATTR_Color;
 #endif
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Visibility: 5;
 		END;
 	END;
@@ -1995,6 +1999,7 @@ RULES
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		Adjust: VMiddle;
+		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -2040,6 +2045,7 @@ RULES
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
 		Weight: Enclosing =;
+		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -2087,6 +2093,7 @@ RULES
 		MarginTop: 0;
 		Size: Enclosing =;
 		Weight: Enclosing =;
+		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -2134,6 +2141,7 @@ RULES
 		MarginTop: 0;
 		Weight: Enclosing =;
 		Size: Enclosing =;
+		VertPos: Top = Previous . Bottom;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -2175,8 +2183,10 @@ RULES
 		Size: Enclosing =;
 		NoLine;
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Size: Enclosing =;
+		VertPos: Top = Previous . Bottom;
+		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -2216,8 +2226,10 @@ RULES
 		Size: Enclosing =;
 		NoLine;
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
 		Size: Enclosing =;
+		VertPos: Top = Previous . Bottom;
+		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
 		Adjust: LeftWithDots;
@@ -2586,6 +2598,8 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Applet: BEGIN
@@ -2601,6 +2615,8 @@ RULES
 		END;	
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Parameter: BEGIN
@@ -2632,8 +2648,10 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;	
-	IN Alternate_view
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
+		END;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -2760,6 +2778,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Pseudo_paragraph: BEGIN
@@ -2778,6 +2798,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Definition_List: BEGIN
@@ -2794,6 +2816,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Definition_Item: BEGIN
@@ -2846,6 +2870,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Numbered_List:	BEGIN
@@ -2863,6 +2889,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Address: BEGIN
@@ -2883,6 +2911,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Menu:	BEGIN
@@ -2899,6 +2929,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Directory: BEGIN
@@ -2915,6 +2947,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  List_Item: BEGIN
@@ -2954,6 +2988,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Horizontal_Rule: BEGIN
@@ -2998,6 +3034,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Option_Menu: BEGIN
@@ -3141,6 +3179,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  LEGEND: BEGIN
@@ -3673,7 +3713,27 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Depth: 0;
 		END;
+	END;
+
+ map:	BEGIN
+	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
+	LineBreak: No;
+	MarginTop: VSpaceBeforeH2;
+	Gather: Yes;
+	Width: Enclosing . Width;
+	VertPos: Top = Previous NOT MAP . Bottom;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Font: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;	
+		END;
 	IN Links_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	END;
 
@@ -3692,6 +3752,13 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Depth: 0;
 		END;
+	IN Alternate_view BEGIN
+		Height: 0;
+		Width: 0;
+		VertPos: Top = Previous . Top;
+		HorizPos: Left = Enclosing . Left;
+		Visibility: 1;
+		END;
 	END;
 
  GRAPHICS_UNIT : BEGIN
@@ -3699,6 +3766,8 @@ RULES
 	Height: Enclosing . Height;
 	Width: Enclosing . Width;	
 	IN Structure_view
+	   Visibility: 0;
+	IN Alternate_view
 	   Visibility: 0;
 	END;
 
@@ -3728,8 +3797,10 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom;
 		Gather: No;
+		END;
         IN Table_of_contents
 		Gather: No;
 	IN Links_view BEGIN
@@ -4068,6 +4139,8 @@ RULES
 		END;
 	IN Links_view
 		Visibility: 0;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
   Center:
@@ -4083,8 +4156,10 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Adjust: Enclosing =;	
 		END;
-	IN Alternate_view
+	IN Alternate_view BEGIN
+		VertPos: Top = Previous . Bottom;
 		Adjust: Left;
+		END;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -4103,6 +4178,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Links_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	END;
 

@@ -1484,35 +1484,6 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 
 
 /*----------------------------------------------------------------------
-   ChangeTypeOfElement
-   Change the type of element elem into newTypeNum
- -----------------------------------------------------------------------*/
-void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
-{
-     Element    prev, next, parent;
-
-     parent = NULL;
-     prev = elem;
-     TtaPreviousSibling (&prev);
-     if (prev == NULL)
-        {
-        next = elem;
-        TtaNextSibling (&next);
-        if (next == NULL)
-           parent = TtaGetParent (elem);
-        }
-     TtaRemoveTree (elem, doc);
-     ChangeElementType (elem, newTypeNum);
-     if (prev != NULL)
-        TtaInsertSibling (elem, prev, FALSE, doc);
-     else if (next != NULL)
-        TtaInsertSibling (elem, next, TRUE, doc);
-     else
-        TtaInsertFirstChild (&elem, parent, doc);
-}
-
-
-/*----------------------------------------------------------------------
    ChildOfMRowOrInferred
    Return TRUE if element el is a child of a MROW element or an
    inferred MROW element
