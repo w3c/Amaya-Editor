@@ -55,7 +55,6 @@ Document ANNOT_NewDocument (doc)
 {
   Document annotDoc;
   char     *annot_dir;
-  char     *urlname;
   char     *fname;
   char     *docname;
   char     *tmpname;
@@ -64,10 +63,9 @@ Document ANNOT_NewDocument (doc)
   annot_dir = GetAnnotDir ();
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
-  urlname = TtaGetMemory (strlen (tmpname) + 20);
-  sprintf (urlname, "file://%s.html", tmpname);
+  fname = TtaGetMemory (strlen (tmpname) + 20);
+  sprintf (fname, "%s.html", tmpname);
   TtaFreeMemory (tmpname);
-  fname = urlname + 7;
 
   /* "annot is the title of the window */
   annotDoc = InitDocView (0, "annotation", docAnnot, 0);
@@ -75,7 +73,7 @@ Document ANNOT_NewDocument (doc)
   if (annotDoc == 0) 
     {
       fprintf (stderr, "(ANNOT_NewDocument) ERROR : couldn't create the annotation file\n");
-      TtaFreeMemory (urlname);
+      TtaFreeMemory (fname);
     }
   else
     {
@@ -87,7 +85,7 @@ Document ANNOT_NewDocument (doc)
       /* intialize the (amaya) metadata related to a document */
       if (DocumentURLs[annotDoc])
 	TtaFreeMemory (DocumentURLs[annotDoc]);
-      DocumentURLs[annotDoc] = urlname;
+      DocumentURLs[annotDoc] = fname;
       DocumentMeta[annotDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[annotDoc]->form_data = NULL;
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
@@ -265,12 +263,21 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   attrType.AttrTypeNum = Annot_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (el, attr, docAnnot);
+#if 0
+    {
+      doc_anchor = TtaGetMemory (ustrlen (DocumentURLs[doc])
+				 + ustrlen (user)
+				 + ustrlen (DocumentURLs[docAnnot])
+				 + 20);
+      sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[doc],
+	       ANNOT_ANAME, user, DocumentURLs[docAnnot]);
+      annot->name = doc_anchor;
+    }
+#endif
   doc_anchor = TtaGetMemory (ustrlen (DocumentURLs[doc])
-			     + ustrlen (user)
-			     + ustrlen (DocumentURLs[docAnnot])
+			     + ustrlen (annot->name) 
 			     + 20);
-  sprintf (doc_anchor, "%s#%s_%s_%s", DocumentURLs[doc],
-	   ANNOT_ANAME, user, DocumentURLs[docAnnot]);
+  sprintf (doc_anchor, "%s#%s", DocumentURLs[doc], annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
   /* use the title parameter as the value of the source document field */
