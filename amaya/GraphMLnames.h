@@ -29,7 +29,7 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("style"), SPACE, GraphML_EL_style__, L_Other, FALSE},
    {TEXT("svg"), SPACE, GraphML_EL_GraphML, L_Other, FALSE},
    {TEXT("symbol"), SPACE, GraphML_EL_symbol_, L_Other, FALSE},
-   {TEXT("text"), SPACE, GraphML_EL_text_, L_Other, TRUE},
+   {TEXT("text"), SPACE, GraphML_EL_text_, L_Other, FALSE},
    {TEXT("title"), SPACE, GraphML_EL_title, L_Other, FALSE},
    {TEXT("tspan"), SPACE, GraphML_EL_tspan, L_Other, FALSE},
    {TEXT("use"), SPACE, GraphML_EL_use_, L_Other, FALSE},

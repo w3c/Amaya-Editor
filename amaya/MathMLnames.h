@@ -37,7 +37,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("msup"), SPACE, MathML_EL_MSUP, L_Other, FALSE},
    {TEXT("mtable"), SPACE, MathML_EL_MTABLE, L_Other, FALSE},
    {TEXT("mtd"), SPACE, MathML_EL_MTD, L_Other, FALSE},
-   {TEXT("mtext"), SPACE, MathML_EL_MTEXT, L_Other, TRUE},
+   {TEXT("mtext"), SPACE, MathML_EL_MTEXT, L_Other, FALSE},
    {TEXT("mtr"), SPACE, MathML_EL_MTR, L_Other, FALSE},
    {TEXT("munder"), SPACE, MathML_EL_MUNDER, L_Other, FALSE},
    {TEXT("munderover"), SPACE, MathML_EL_MUNDEROVER, L_Other, FALSE},
