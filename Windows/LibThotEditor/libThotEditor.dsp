@@ -102,6 +102,10 @@ SOURCE=..\..\thotlib\dialogue\appdialogue.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\appdialogue_wx.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\appli.c
 # End Source File
 # Begin Source File

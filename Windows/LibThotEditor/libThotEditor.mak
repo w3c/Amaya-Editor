@@ -42,6 +42,7 @@ CLEAN :
 	-@erase "$(INTDIR)\actions.obj"
 	-@erase "$(INTDIR)\animbox.obj"
 	-@erase "$(INTDIR)\appdialogue.obj"
+	-@erase "$(INTDIR)\appdialogue_wx.obj"
 	-@erase "$(INTDIR)\appli.obj"
 	-@erase "$(INTDIR)\applicationapi.obj"
 	-@erase "$(INTDIR)\attributeapi.obj"
@@ -340,7 +341,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\appdialogue_wx.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -369,6 +371,8 @@ CLEAN :
 	-@erase "$(INTDIR)\animbox.sbr"
 	-@erase "$(INTDIR)\appdialogue.obj"
 	-@erase "$(INTDIR)\appdialogue.sbr"
+	-@erase "$(INTDIR)\appdialogue_wx.obj"
+	-@erase "$(INTDIR)\appdialogue_wx.sbr"
 	-@erase "$(INTDIR)\appli.obj"
 	-@erase "$(INTDIR)\appli.sbr"
 	-@erase "$(INTDIR)\applicationapi.obj"
@@ -786,7 +790,8 @@ BSC32_SBRS= \
 	"$(INTDIR)\writedoc.sbr" \
 	"$(INTDIR)\writepivot.sbr" \
 	"$(INTDIR)\xbmhandler.sbr" \
-	"$(INTDIR)\xpmhandler.sbr"
+	"$(INTDIR)\xpmhandler.sbr" \
+	"$(INTDIR)\appdialogue_wx.sbr"
 
 "$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -922,7 +927,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\appdialogue_wx.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -1027,6 +1033,24 @@ SOURCE=..\..\thotlib\dialogue\appdialogue.c
 
 
 "$(INTDIR)\appdialogue.obj"	"$(INTDIR)\appdialogue.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\thotlib\dialogue\appdialogue_wx.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\appdialogue_wx.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\appdialogue_wx.obj"	"$(INTDIR)\appdialogue_wx.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
