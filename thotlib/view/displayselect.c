@@ -73,17 +73,20 @@ int                 pointselect;
 	  {
 	     /* -> La boite est eclatee (boite fantome) */
 	     /* On visualise toutes les boites filles */
-	     pChildBox = pAb->AbFirstEnclosed->AbBox;
-	     while (pChildBox != NULL)
-	       {
-		  DisplayBoxSelection (frame, pChildBox, 0);
-		  pAb = pChildBox->BxAbstractBox;
-		  if (pAb->AbNext != NULL)
-		     pChildBox = pAb->AbNext->AbBox;
-		  else
-		     pChildBox = NULL;
-	       }
-	  }
+             if (pAb->AbFirstEnclosed != NULL)
+               {
+	         pChildBox = pAb->AbFirstEnclosed->AbBox;
+	         while (pChildBox != NULL)
+	           {
+		      DisplayBoxSelection (frame, pChildBox, 0);
+		      pAb = pChildBox->BxAbstractBox;
+		      if (pAb->AbNext != NULL)
+		         pChildBox = pAb->AbNext->AbBox;
+		      else
+		         pChildBox = NULL;
+	           }
+	      }
+          }
 	else if (pBox->BxType != BoSplit)
 	  {
 	     /* La boite est entiere */
