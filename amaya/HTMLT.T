@@ -338,6 +338,8 @@ RULES
 	Create '>\12';
 	Create '</xml>\12' After;	
 	END;
+ MathML:
+	Use MathMLT;	
 #endif
 
  Paragraph: BEGIN
