@@ -850,7 +850,8 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
   ----------------------------------------------------------------------*/
-static void         DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame, ThotBool selected)
+static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
+				  ThotBool selected)
 {
   PtrTextBuffer       adbuff;
   PtrTextBuffer       newbuff;
@@ -919,7 +920,7 @@ static void         DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame, T
     {
     fg = pAb->AbForeground;
     bg = pAb->AbBackground;
-    withbackground = (pBox->BxFill && pBox->BxDisplay);
+    withbackground = (pAb->AbBox->BxFill && pAb->AbBox->BxDisplay);
     }
   pFrame = &ViewFrameTable[frame - 1];
   left = 0;

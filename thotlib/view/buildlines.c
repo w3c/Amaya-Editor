@@ -40,13 +40,7 @@
    GetNextBox rend l'adresse de la boite associee au pave vivant qui  
    suit pAb.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox              GetNextBox (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-PtrBox              GetNextBox (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;
@@ -103,13 +97,7 @@ PtrAbstractBox      pAb;
    GetPreviousBox rend l'adresse de la boite associee au pave vivant 
    qui precede pAb.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrBox       GetPreviousBox (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static PtrBox       GetPreviousBox (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;
@@ -163,17 +151,8 @@ PtrAbstractBox      pAb;
   Adjust computes the space width in the adjusted line.
   Move and update the width of all included boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Adjust (PtrBox pParentBox, PtrLine pLine, int frame, ThotBool orgXComplete, ThotBool orgYComplete)
-#else  /* __STDC__ */
-static void         Adjust (pParentBox, pLine, frame, orgXComplete, orgYComplete)
-PtrBox              pParentBox;
-PtrLine             pLine;
-int                 frame;
-ThotBool            orgXComplete;
-ThotBool            orgYComplete;
-
-#endif /* __STDC__ */
+static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
+		    ThotBool orgXComplete, ThotBool orgYComplete)
 {
   PtrBox              pBox, pBoxInLine;
   int                 width, baseline;
@@ -285,13 +264,7 @@ ThotBool            orgYComplete;
 /*----------------------------------------------------------------------
    FloatToInt fait un arrondi float -> int.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 FloatToInt (float e)
-#else  /* __STDC__ */
-int                 FloatToInt (e)
-float               e;
-
-#endif /* __STDC__ */
 {
   int                 value;
 
@@ -307,18 +280,8 @@ float               e;
   Align aligns included boxes in the line.
   Move all included boxes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame, ThotBool orgXComplete, ThotBool orgYComplete)
-#else  /* __STDC__ */
-void                Align (pParentBox, pLine, delta, frame, orgXComplete, orgYComplete)
-PtrBox              pParentBox;
-PtrLine             pLine;
-int                 delta;
-int                 frame;
-ThotBool            orgXComplete;
-ThotBool            orgYComplete;
-
-#endif /* __STDC__ */
+void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
+	    ThotBool orgXComplete, ThotBool orgYComplete)
 {
   PtrBox              pBox, pBoxInLine;
   int                 baseline, x;
@@ -368,20 +331,9 @@ ThotBool            orgYComplete;
   newIndex = the index the next character after the break in that buffer.
   pRootAb = the root abstract box for updating the chain of leaf boxes.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ManageBreakLine (PtrBox pBox, int width, int breakWidth, int boxLength, int nSpaces, int newIndex, PtrTextBuffer pNewBuff, PtrAbstractBox pRootAb)
-#else  /* __STDC__ */
-static void         ManageBreakLine (pBox, width, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, pRootAb)
-PtrBox              pBox;
-int                 width;
-int                 breakWidth;
-int                 boxLength;
-int                 nSpaces;
-int                 newIndex;
-PtrTextBuffer       pNewBuff;
-PtrAbstractBox      pRootAb;
-
-#endif /* __STDC__ */
+static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
+			     int boxLength, int nSpaces, int newIndex,
+			     PtrTextBuffer pNewBuff, PtrAbstractBox pRootAb)
 {
   PtrBox              ibox1, ibox2;
   PtrBox              pPreviousBox, pNextBox;
@@ -543,19 +495,9 @@ PtrAbstractBox      pRootAb;
   - newIndex = the index the next character after the break in that buffer.
   - wordWidth = the width of the larger word in the string.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth, int *boxLength, int *nSpaces, int *newIndex, PtrTextBuffer *pNewBuff, int *wordWidth)
-#else  /* __STDC__ */
-static ThotBool     FindBreakLine (pBox, boxWidth, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, wordWidth)
-PtrBox              pBox;
-int                *boxWidth;
-int                *breakWidth;
-int                *boxLength;
-int                *nSpaces;
-int                *newIndex;
-PtrTextBuffer      *pNewBuff;
-int                *wordWidth;
-#endif /* __STDC__ */
+static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
+			       int *boxLength, int *nSpaces, int *newIndex,
+			       PtrTextBuffer *pNewBuff, int *wordWidth)
 {
   PtrTextBuffer       pBuffer;
   ptrfont             font;
@@ -675,21 +617,9 @@ int                *wordWidth;
   - pNewBuff = the buffer that contains the next character after the break.
   - newIndex = the index the next character after the break in that buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font, int *boxLength, int *boxWidth, int *nSpaces, int *newIndex, PtrTextBuffer *pNewBuff)
-#else  /* __STDC__ */
-static int          SearchBreak (pLine, pBox, max, font, boxLength, boxWidth, nSpaces, newIndex, pNewBuff)
-PtrLine             pLine;
-PtrBox              pBox;
-int                 max;
-ptrfont             font;
-int                *boxLength;
-int                *boxWidth;
-int                *nSpaces;
-int                *newIndex;
-PtrTextBuffer      *pNewBuff;
-
-#endif /* __STDC__ */
+static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
+			int *boxLength, int *boxWidth, int *nSpaces,
+			int *newIndex, PtrTextBuffer *pNewBuff)
 {
   PtrLine             pPreviousLine;
   PtrTextBuffer       pBuffer;
@@ -1101,16 +1031,8 @@ PtrTextBuffer      *pNewBuff;
   max = the maximum width of the first piece.
   pRootAb = the root abstract box for updating the chain of leaf boxes.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BreakMainBox (PtrLine pLine, PtrBox pBox, int max, PtrAbstractBox pRootAb, ThotBool force)
-#else  /* __STDC__ */
-static void         BreakMainBox (pLine, pBox, max, pRootAb, force)
-PtrLine             pLine;
-PtrBox              pBox;
-int                 max;
-PtrAbstractBox      pRootAb;
-ThotBool            force;
-#endif /* __STDC__ */
+static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
+			  PtrAbstractBox pRootAb, ThotBool force)
 {
   PtrBox              ibox1, ibox2;
   PtrBox              pPreviousBox, pNextBox;
@@ -1271,16 +1193,8 @@ ThotBool            force;
   max = the maximum width of the first piece.
   pRootAb = the root abstract box for updating the chain of leaf boxes.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max, PtrAbstractBox pRootAb)
-#else  /* __STDC__ */
-static void         BreakPieceOfBox (pLine, pBox, max, pRootAb)
-PtrLine             pLine;
-PtrBox              pBox;
-int                 max;
-PtrAbstractBox      pRootAb;
-
-#endif /* __STDC__ */
+static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
+			     PtrAbstractBox pRootAb)
 {
   PtrBox              ibox2, pNextBox;
   PtrTextBuffer       pNewBuff;
@@ -1408,16 +1322,8 @@ PtrAbstractBox      pRootAb;
 /*----------------------------------------------------------------------
    AddBoxInLine adds a box in a line.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddBoxInLine (PtrBox pBox, int *descent, int *ascent, PtrLine pLine)
-#else  /* __STDC__ */
-static void         AddBoxInLine (pBox, descent, ascent, pLine)
-PtrBox              pBox;
-int                *descent;
-int                *ascent;
-PtrLine             pLine;
-
-#endif /* __STDC__ */
+static void AddBoxInLine (PtrBox pBox, int *descent, int *ascent,
+			  PtrLine pLine)
 {
    pLine->LiRealLength += pBox->BxWidth;
    /* Compute the current line height */
@@ -1439,18 +1345,9 @@ PtrLine             pLine;
   - notComplete = TRUE if all enclosed boxes are not managed yet.
   - breakLine = TRUE if the end of the line correspond to a break element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          FillLine (PtrLine pLine, PtrAbstractBox pRootAb, ThotBool notComplete, ThotBool *full, ThotBool *adjust, ThotBool *breakLine, int frame)
-#else  /* __STDC__ */
-static int          FillLine (pLine, pRootAb, notComplete, full, adjust, breakLine, frame)
-PtrLine             pLine;
-PtrAbstractBox      pRootAb;
-ThotBool            notComplete;
-ThotBool           *full;
-ThotBool           *adjust;
-ThotBool           *breakLine
-int                 frame;
-#endif /* __STDC__ */
+static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
+		     ThotBool notComplete, ThotBool *full, ThotBool *adjust,
+		     ThotBool *breakLine, int frame)
 {
    PtrTextBuffer       pNewBuff;
    PtrBox              pBox;
@@ -1806,14 +1703,7 @@ int                 frame;
    de la justification. Met a jour les marques de selection
    que la boite soit justifiee ou non.                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RemoveAdjustement (PtrBox pBox, int spaceWidth)
-#else  /* __STDC__ */
-static void         RemoveAdjustement (pBox, spaceWidth)
-PtrBox              pBox;
-int                 spaceWidth;
-
-#endif /* __STDC__ */
 {
    int                 x;
    int                 l;
@@ -1838,16 +1728,8 @@ int                 spaceWidth;
   changeSelectBegin and changeSelectEnd are TRUE when the box
   is concerned by the box selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin, ThotBool *changeSelectEnd)
-#else  /* __STDC__ */
-static void         RemoveBreaks (pBox, frame, changeSelectBegin, changeSelectEnd)
-PtrBox              pBox;
-int                 frame;
-ThotBool           *changeSelectBegin;
-ThotBool           *changeSelectEnd;
-
-#endif /* __STDC__ */
+static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
+			  ThotBool *changeSelectEnd)
 {
    PtrBox              ibox1;
    PtrBox              ibox2;
@@ -2015,14 +1897,7 @@ ThotBool           *changeSelectEnd;
   building) or relativelly to the root box.
   Returns the box height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ComputeLines (PtrBox pBox, int frame, int *height)
-#else  /* __STDC__ */
-void                ComputeLines (pBox, frame, height)
-PtrBox              pBox;
-int                 frame;
-int                *height;
-#endif /* __STDC__ */
 {
   PtrLine             pPreviousLine;
   PtrLine             pLine;
@@ -2410,16 +2285,8 @@ int                *height;
 /*----------------------------------------------------------------------
   ShiftLine moves the line contents of x pixels.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox, int x, int frame)
-#else  /* __STDC__ */
-static void         ShiftLine (pLine, pAb, pBox, x, frame)
-PtrLine             pLine;
-PtrAbstractBox      pAb;
-PtrBox              pBox;
-int                 x;
-int                 frame;
-#endif /* __STDC__ */
+static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
+		       int x, int frame)
 {
    PtrBox              ibox1, pSaveBox;
    PtrBox              pLastBox;
@@ -2531,16 +2398,7 @@ int                 frame;
    CompressLine compresse ou e'tend la ligne justifiee suite a`    
    l'ajout d'espaces et un ecart de xDelta pixels.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
-#else  /* __STDC__ */
-static void         CompressLine (pLine, xDelta, frame, spaceDelta)
-PtrLine             pLine;
-int                 xDelta;
-int                 frame;
-int                 spaceDelta;
-
-#endif /* __STDC__ */
+static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 {
    PtrBox              ibox1, pBox;
    ViewSelection      *pViewSel;
@@ -2664,16 +2522,8 @@ int                 spaceDelta;
    la boite referencee par la marque Debut ou Fin de       
    Selection est liberee.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine, ThotBool * changeSelectBegin, ThotBool * changeSelectEnd)
-#else  /* __STDC__ */
-void                RemoveLines (pBox, frame, pFirstLine, changeSelectBegin, changeSelectEnd)
-PtrBox              pBox;
-int                 frame;
-PtrLine             pFirstLine;
-ThotBool           *changeSelectBegin;
-ThotBool           *changeSelectEnd;
-#endif /* __STDC__ */
+void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
+		  ThotBool *changeSelectBegin, ThotBool *changeSelectEnd)
 {
   PtrBox              ibox1;
   PtrLine             pNextLine;
@@ -2745,16 +2595,8 @@ ThotBool           *changeSelectEnd;
   RecomputeLines recomputes a part or the whole block of lines after
   a change in the box ibox.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox, int frame)
-#else  /* __STDC__ */
-void                RecomputeLines (pAb, pFirstLine, ibox, frame)
-PtrAbstractBox      pAb;
-PtrLine             pFirstLine;
-PtrBox              ibox;
-int                 frame;
-
-#endif /* __STDC__ */
+void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
+		     int frame)
 {
    Propagation         propagateStatus;
    UCHAR_T             charIndex;
@@ -2922,17 +2764,8 @@ int                 frame;
   the included box pBox.
   The parameter xDelta gives the value of the width change.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox, int xDelta, int spaceDelta, int frame)
-#else  /* __STDC__ */
-void                UpdateLineBlock (pAb, pLine, pBox, xDelta, spaceDelta, frame)
-PtrAbstractBox      pAb;
-PtrLine             pLine;
-PtrBox              pBox;
-int                 xDelta;
-int                 spaceDelta;
-int                 frame;
-#endif /* __STDC__ */
+void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
+		      int xDelta, int spaceDelta, int frame)
 {
    PtrTextBuffer       pNewBuff;
    PtrBox              ibox1;
@@ -3119,15 +2952,7 @@ int                 frame;
   current line of pAb.
   Update the block of lines if necessary.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                EncloseInLine (pBox, frame, pAb)
-PtrBox              pBox;
-int                 frame;
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
+void      EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 {
   PtrBox              ibox1;
   PtrBox              pPieceBox;
