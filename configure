@@ -938,7 +938,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -6163,7 +6163,7 @@ if test "$withval" = "yes" ; then
     /usr/X386/include         \
     /usr/x386/include         \
     /usr/XFree86/include/X11  \
-                              \
+    /usr/lib/glib/include     \
     /usr/dt/include           \
     /usr/include              \
     /usr/local/include        \
@@ -6178,7 +6178,7 @@ if test "$withval" = "yes" ; then
 
 GTK_INCLUDES="-I$ac_gtk_includes"
 
-GTK_LIBRARIES="-lgtk -lgdk -rdynamic -lgmodule -lglib"
+GTK_LIBRARIES="-lgtk -lgdk_imlib -ljpeg -lpng -ltiff -lz -lgif -lgdk -rdynamic -lgmodule -lglib"
 
 GTK_OPTIONS=-DGTK
   no_motif=yes
@@ -6331,7 +6331,7 @@ else
     MOTIF_INCLUDES="-I$motif_includes"
   fi
   if test "$motif_libraries" != "/usr/lib" ; then
-    MOTIF_LIBRARIES="-L$motif_libraries"
+    MOTIF_LIBRARIES="-L$motif_libraries -lXm"
     case "${host}" in
         *-*sun-solaris* )
          MOTIF_LIBRARIES="${MOTIF_LIBRARIES} -R$motif_libraries"
