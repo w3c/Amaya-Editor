@@ -736,17 +736,18 @@ Document doc;
   if (!annot)
     return FALSE;
 
-  if (IsFilePath(DocumentURLs[doc]))
-    /* skip "file://" */
-    AM_GetFileSize (DocumentURLs[doc] + 7, &content_length);
-  else
-    AM_GetFileSize (DocumentURLs[doc], &content_length);
-
+  /* compute the temporary file names */
   ptr = TtaGetEnvString ("APP_TMPDIR");
   rdf_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("rdf.tmp") + 2);
   usprintf (rdf_tmpfile, "%s%c%s", ptr, DIR_SEP, "rdf.tmp");
   html_tmpfile = TtaGetMemory (strlen (ptr) + sizeof ("html.tmp") + 2);
   usprintf (html_tmpfile, "%s%c%s", ptr, DIR_SEP, "html.tmp");
+
+  /* output the HTML body */
+  ANNOT_LocalSave (doc, html_tmpfile);
+
+  /* find the size of the html fragment */
+  AM_GetFileSize (html_tmpfile, &content_length);
 
   fp = fopen (rdf_tmpfile, "w");
   /* write the prologue */
@@ -804,8 +805,6 @@ Document doc;
  ** insert the HTML body 
  */
 
-  /* output the HTML body */
-  ANNOT_LocalSave (doc, html_tmpfile);
   fp2 = fopen (html_tmpfile, "r");
   if (fp2)
     {
@@ -823,6 +822,7 @@ Document doc;
       }
       fclose (fp2);
     }
+
   TtaFileUnlink (html_tmpfile);
   TtaFreeMemory (html_tmpfile);
 

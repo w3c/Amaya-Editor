@@ -53,6 +53,9 @@ typedef struct _REMOTELOAD_context {
   CHAR_T *rdf_file;
   char *remoteAnnotIndex;
   char *localfile;
+  Document source_doc;
+  CHAR_T *source_doc_url;
+  CHAR_T *annot_url;
 } REMOTELOAD_context;
 
 /* the structure used for storing the context of the 
@@ -436,15 +439,15 @@ View view;
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               RemoteLoad_callback (int doc, int status, 
-					 CHAR_T *urlName,
-					 CHAR_T *outputfile, 
-					 AHTHeaders *http_headers,
-					 void * context)
+void RemoteLoad_callback (int doc, int status, 
+			  CHAR_T *urlName,
+			  CHAR_T *outputfile, 
+			  AHTHeaders *http_headers,
+			  void * context)
 #else  /* __STDC__ */
-void               RemoteLoad_callback (doc, status, urlName,
-					outputfile, http_headers,
-					context)
+void RemoteLoad_callback (doc, status, urlName,
+			  outputfile, http_headers,
+			  context)
 int doc;
 int status;
 CHAR_T *urlName;
@@ -455,16 +458,26 @@ void *context;
 #endif
 {
    REMOTELOAD_context *ctx;
+   Document source_doc;
+   CHAR_T *source_doc_url;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
 
    if (!ctx)
      return;
+   
+   source_doc = ctx->source_doc;
+   source_doc_url = ctx->source_doc_url;
 
-   if (status == HT_OK)
+   /* only load the annotation if the download was succesful and if
+      the source document hasn't disappeared in the meantime */
+   if (status == HT_OK
+       && DocumentURLs[source_doc] 
+       && !ustrcmp (DocumentURLs[source_doc], source_doc_url))
      LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
 
+   TtaFreeMemory (source_doc_url);
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
    /* clear the status line if there was no error*/
@@ -473,8 +486,7 @@ void *context;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Load
-  -----------------------------------------------------------------------
+  ANNOT_Load
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -488,11 +500,12 @@ View view;
   char *annotIndex;
   char *annotURL;
   char *proto;
+  char *tmp;
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
   CHAR_T *server;
-
+  
   if (!schema_init)
     {
       /* @@ RRS unfinished; this is temporary while the code is raw
@@ -550,6 +563,9 @@ View view;
 	  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
 	  /* make some space to store the remote file name */
 	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+	  /* store the source document infos */
+	  ctx->source_doc = doc;
+	  ctx->source_doc_url = TtaStrdup (DocumentURLs[doc]);
 	  /* "compute" the url we're looking up in the annotation server */
 	  if (!IsW3Path (DocumentURLs[doc]) &&
 	      !IsFilePath (DocumentURLs[doc]))
@@ -572,6 +588,11 @@ View view;
 	       the exact size */
 	    CopyAlgaeTemplateURL (&annotURL, proto, DocumentURLs[doc]);
 
+	  if (IsFilePath (annotURL))
+	    {
+	      /* @@JK: normalize the URL to a local one */
+	      
+	    }
 	  /* launch the request */
 	  res = GetObjectWWW (doc,
 			      server,
@@ -591,9 +612,8 @@ View view;
 
 /*-----------------------------------------------------------------------
   ANNOT_Create
-  -----------------------------------------------------------------------
-   Creates an annotation on the selected text. If there's no selected
-   text, it doesn't do anything.
+  Creates an annotation on the selected text. If there's no selected
+  text, it doesn't do anything.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -655,19 +675,18 @@ void ANNOT_Create (doc, view)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Post_callback
-  -----------------------------------------------------------------------
+   ANNOT_Post_callback
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ANNOT_Post_callback (int doc, int status, 
-					 CHAR_T *urlName,
-					 CHAR_T *outputfile, 
-					 AHTHeaders *http_headers,
-					 void * context)
+void ANNOT_Post_callback (int doc, int status, 
+			  CHAR_T *urlName,
+			  CHAR_T *outputfile, 
+			  AHTHeaders *http_headers,
+			  void * context)
 #else  /* __STDC__ */
-void               ANNOT_Post_callback (doc, status, urlName,
-					outputfile, http_headers,
-					context)
+void ANNOT_Post_callback (doc, status, urlName,
+			  outputfile, http_headers,
+			  context)
 int doc;
 int status;
 CHAR_T *urlName;
@@ -684,34 +703,33 @@ void *context;
      document ... */
 
    REMOTELOAD_context *ctx;
-
+   int source_doc;
+   
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
 
    if (!ctx)
      return;
 
-   if (status == HT_OK)
+   /*
+     int source_doc = DocumentMeta[doc]->source_doc;
+   */
+   source_doc = ctx->source_doc;
+
+   /* only update the metadata if the POST was succesful and if
+      the source and annot documents haven't disappeared in the meantime */
+   if (status == HT_OK
+       && DocumentURLs[source_doc] 
+       && !ustrcmp (DocumentURLs[source_doc], ctx->source_doc_url)
+       && DocumentURLs[doc]
+       && !ustrcmp (DocumentURLs[doc], ctx->annot_url))
      {
-       int source_doc = DocumentMeta[doc]->source_doc;
        AnnotMeta *annot = GetMetaData (source_doc, doc);
 
        TtaSetDocumentUnmodified (doc);
        DocStatusUpdate (doc, TRUE);
 
-#if 0 /* @@ RRS - interim idea for updating the annotation.  Doesn't work
-	 unless the POST reply returns all the properties */
-       if (annot)
-	 {
-	   LINK_RemoveLinkFromSource (source_doc, annot);
-	   List_rem (AnnotMetaDataList[source_doc], annot);
-	   Annot_free (annot);
-	 }
-       LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
-       ANNOT_LoadAnnotation (source_doc, doc);
-#endif /*0*/
-       
-       /* Using the server's metadata answer to update our local metadata
+       /* Use the server's metadata answer to update our local metadata
 	  and the reverse links that point to the annotation */
        /* @@ needs more work to handle error return codes */
        if (annot)
@@ -719,28 +737,29 @@ void *context;
 	   List *listP = RDF_parseFile (ctx->remoteAnnotIndex, ANNOT_LIST);
 	   if (listP)
 	     {
-	       AnnotMeta *returned_annot = (AnnotMeta *)listP->object;
+	       AnnotMeta *returned_annot = (AnnotMeta *) listP->object;
 	       if (returned_annot->source_url
-		   && strcmp(returned_annot->source_url, annot->source_url))
+		   && strcmp (returned_annot->source_url, annot->source_url))
 		 fprintf (stderr, "PostCallback: POST returned an annotation for a different source: %s vs %s\n",
 			  returned_annot->source_url, annot->source_url);
 	       if (returned_annot->annot_url)
 		 {
-		   TtaFreeMemory(annot->annot_url);
+		   TtaFreeMemory (annot->annot_url);
 		   annot->annot_url = returned_annot->annot_url;
 		   returned_annot->annot_url = NULL;
 		 }
-	       /* @@ we should unlink the previous file only if we posted a 
-		  local file to a server, and if it was a success. Should we
-		  close the annotation window and open it up again? */
-	       if (returned_annot->body_url) 
+
+	       /* replace the body only if it changed */
+	       if (returned_annot->body_url
+		   && !annot->body_url 
+		   && ustrcmp (annot->body_url, returned_annot->body_url))
 		 {
 		   /* update the anchor in the source doc */
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
 					    returned_annot->body_url);
-		   /* unlink the previous body */
-		   TtaFileUnlink (annot->body_url);
-		   TtaFreeMemory(annot->body_url);
+		   /* update the annotation body_url */
+		   /* TtaFileUnlink (annot->body_url); */
+		   TtaFreeMemory (annot->body_url);
 		   /* update the metadata of the annotation */
 		   annot->body_url = returned_annot->body_url;
 		   returned_annot->body_url = NULL;
@@ -749,17 +768,18 @@ void *context;
 		   TtaFreeMemory (DocumentURLs[doc]);
 		   DocumentURLs[doc] = TtaStrdup (annot->body_url);
 		 }
+
 	       if (listP->next)
 		 fprintf (stderr, "PostCallback: POST returned more than one annotation\n");
 	       AnnotList_free (listP);
+	       /* if we were posting a localfile, remove this file
+		  (and update the indexes */
+	       if (ctx->localfile)
+		 {
+		   TtaFileUnlink (ctx->localfile);
+		   TtaFreeMemory (ctx->localfile);
+		 }
 	     }
-	 }
-       /* if we were posting a localfile, remove this file (and update the
-	indexes */
-       if (ctx->localfile)
-	 {
-	   TtaFileUnlink (ctx->localfile);
-	   TtaFreeMemory (ctx->localfile);
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
@@ -768,14 +788,15 @@ void *context;
    TtaFileUnlink (ctx->rdf_file);
 
    /* free all memory associated with the context */
+   TtaFreeMemory (ctx->source_doc_url);
+   TtaFreeMemory (ctx->annot_url);
    TtaFreeMemory (ctx->rdf_file);
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Post
-  -----------------------------------------------------------------------
+   ANNOT_Post
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -799,8 +820,7 @@ View view;
   if (ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), TEXT("Annot")))
     return;
 
-  if (!annotPostServer 
-      || *annotPostServer == EOS)
+  if (!annotPostServer || *annotPostServer == EOS)
     return;
   
   /* create the RDF container */
@@ -819,17 +839,21 @@ View view;
       ctx->localfile = TtaStrdup (DocumentURLs[doc]);
   else
     ctx->localfile = NULL;
+  /* memorize the source and annotation document info */
+  source_doc = DocumentMeta[doc]->source_doc;
+  ctx->source_doc = source_doc;
+  ctx->source_doc_url = TtaStrdup (DocumentURLs[source_doc]);
+  ctx->annot_url = TtaStrdup (DocumentURLs[doc]);
 
   /* compute the URL */
   if (IsW3Path (DocumentURLs[doc]))
     {
       /* find the annotation metadata that corresponds to this annotation */
-      source_doc = DocumentMeta[doc]->source_doc;
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     DocumentURLs[doc], AM_BODY_URL);
 
       if (!annot)
-	/* @@ JK: give some error message */
+	/* @@ JK: give some error message, free the ctx */
 	return;
 
       /* we're saving a modification to an existing annotation */
@@ -866,7 +890,7 @@ View view;
 		      NULL);
   if (free_url)
     TtaFreeMemory (url);
-  /* @@ here we should delete the context or call the callback in case of
+  /* @@ JK: here we should delete the context or call the callback in case of
      error */
   if (res)
     fprintf (stderr, "ANNOT_Post: Failed to post the annotation!\n");
@@ -879,11 +903,11 @@ View view;
   function to do this operation.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ANNOT_SaveDocument (Document doc_annot, View view)
+void ANNOT_SaveDocument (Document doc_annot, View view)
 #else  /* __STDC__ */
-void                ANNOT_SaveDocument (doc_annot, view)
-Document            doc_annot;
-View                view;
+void ANNOT_SaveDocument (doc_annot, view)
+Document doc_annot;
+View view;
 
 #endif /* __STDC__ */
 {
@@ -915,13 +939,13 @@ View                view;
   it highlights the annotated text.
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ANNOT_SelectSourceDoc (int doc, Element el)
+void ANNOT_SelectSourceDoc (int doc, Element el)
 #else  /* __STDC__ */
-void               ANNOT_SelectSourceDoc (doc, el)
+void ANNOT_SelectSourceDoc (doc, el)
 int doc;
 Element el;
 
-#endif
+#endif /* __STDC__ */
 {
   ElementType      elType;
   AttributeType    attrType;
@@ -965,15 +989,15 @@ Element el;
   RaiseSourceDoc_callback
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               Annot_RaiseSourceDoc_callback (int doc, int status, 
-						 CHAR_T *urlName,
-						 CHAR_T *outputfile, 
-						 AHTHeaders *http_headers,
-						 void * context)
+void Annot_RaiseSourceDoc_callback (int doc, int status, 
+				    CHAR_T *urlName,
+				    CHAR_T *outputfile, 
+				    AHTHeaders *http_headers,
+				    void * context)
 #else  /* __STDC__ */
-void               Annot_RaiseSourceDoc_callback (doc, status, urlName,
-						 outputfile, http_headers,
-						 context)
+void Annot_RaiseSourceDoc_callback (doc, status, urlName,
+				    outputfile, http_headers,
+				    context)
 int doc;
 int status;
 CHAR_T *urlName;
@@ -981,22 +1005,22 @@ CHAR_T *outputfile;
 AHTHeaders *http_headers;
 void *context;
 
-#endif
+#endif /* __STDC__ */
 {
-   RAISESOURCEDOC_context *ctx;
+  RAISESOURCEDOC_context *ctx;
 
-   /* restore REMOTELOAD contextext's */  
-   ctx = (RAISESOURCEDOC_context *) context;
+  /* restore REMOTELOAD contextext's */  
+  ctx = (RAISESOURCEDOC_context *) context;
 
-   if (!ctx)
+  if (!ctx)
      return;
+  
+  /* select the source of the annotation */
+  if (ctx->doc_annot)
+    LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot]);
 
-   /* select the source of the annotation */
-   if (ctx->doc_annot)
-     LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot]);
-
-   TtaFreeMemory (ctx->url);
-   TtaFreeMemory (ctx);
+  TtaFreeMemory (ctx->url);
+  TtaFreeMemory (ctx);
 }
 
 /*-----------------------------------------------------------------------
@@ -1065,9 +1089,9 @@ NotifyElement *event;
   Annot_ShowTypes
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool     Annot_Types (NotifyElement *event)
+ThotBool Annot_Types (NotifyElement *event)
 #else
-ThotBool     Annot_Types (event)
+ThotBool Annot_Types (event)
 NotifyElement *event;
 #endif /* __STDC__*/
 {
@@ -1107,18 +1131,17 @@ NotifyElement *event;
 
 /*-----------------------------------------------------------------------
   ANNOT_Delete_callback
-  -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ANNOT_Delete_callback (int doc, int status, 
-					 CHAR_T *urlName,
-					 CHAR_T *outputfile, 
-					 AHTHeaders *http_headers,
-					 void * context)
+void ANNOT_Delete_callback (int doc, int status, 
+			    CHAR_T *urlName,
+			    CHAR_T *outputfile, 
+			    AHTHeaders *http_headers,
+			    void * context)
 #else  /* __STDC__ */
-void               ANNOT_Delete_callback (doc, status, urlName,
-					  outputfile, http_headers,
-					  context)
+void ANNOT_Delete_callback (doc, status, urlName,
+			    outputfile, http_headers,
+			    context)
 int doc;
 int status;
 CHAR_T *urlName;
@@ -1128,70 +1151,70 @@ void *context;
 
 #endif
 {
-   DELETE_context *ctx;
-   Document source_doc;
-   Document annot_doc;
-   CHAR_T  *annot_url;
-   CHAR_T  *output_file;
-   Element  annotEl;
-   AnnotMeta *annot;
-   ThotBool annot_is_remote;
+  DELETE_context *ctx;
+  Document source_doc;
+  Document annot_doc;
+  CHAR_T  *annot_url;
+  CHAR_T  *output_file;
+  Element  annotEl;
+  AnnotMeta *annot;
+  ThotBool annot_is_remote;
+  
+  /* restore REMOTELOAD contextext's */  
+  ctx = (DELETE_context *) context;
 
-   /* restore REMOTELOAD contextext's */  
-   ctx = (DELETE_context *) context;
-
-   if (!ctx)
-     return;
+  if (!ctx)
+    return;
+  
+  source_doc = ctx->source_doc;
+  annot_doc = ctx->annot_doc;
+  annot_url = ctx->annot_url;
+  annotEl = ctx->annotEl;
+  annot_is_remote = ctx->annot_is_remote;
+  output_file = ctx->output_file;
+  annot = ctx->annot;
+  
+  if (status == HT_OK)
+    {
+      /* remove the annotation link in the source document */
+      LINK_RemoveLinkFromSource (source_doc, annotEl);
+      /* remove the annotation from the filters */
+      AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot);
+      AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot);
+      AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot);
+      
+      /* remove the annotation from the document's annotation list and 
+	 update it */
+      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+			  annot_url, FALSE);
+      
+      /* update the annotation index or delete it if it's empty */
+      if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
+	LINK_SaveLink (source_doc);
+      else
+	LINK_DeleteLink (source_doc);
+      
+      /* close the annotation window if it was open */
+      /* @@ JK: check if the user didn't close it in the meantime */
+      if (annot_doc)
+	{
+	  TtaSetDocumentUnmodified (annot_doc);
+	  /* we should add all the views */
+	  TtaCloseDocument (annot_doc);
+	}
+    }
    
-   source_doc = ctx->source_doc;
-   annot_doc = ctx->annot_doc;
-   annot_url = ctx->annot_url;
-   annotEl = ctx->annotEl;
-   annot_is_remote = ctx->annot_is_remote;
-   output_file = ctx->output_file;
-   annot = ctx->annot;
-
-   if (status == HT_OK)
-     {
-       /* remove the annotation link in the source document */
-       LINK_RemoveLinkFromSource (source_doc, annotEl);
-       /* remove the annotation from the filters */
-       AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot);
-       AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot);
-       AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot);
-       
-       /* remove the annotation from the document's annotation list and 
-	  update it */
-       AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-			   annot_url, FALSE);
-
-       /* update the annotation index or delete it if it's empty */
-       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
-	 LINK_SaveLink (source_doc);
-       else
-	 LINK_DeleteLink (source_doc);
-
-       /* close the annotation window if it was open */
-       /* @@ JK: check if the user didn't close it in the meantime */
-       if (annot_doc)
-	 {
-	   TtaSetDocumentUnmodified (annot_doc);
-	   /* we should add all the views */
-	   TtaCloseDocument (annot_doc);
-	 }
-     }
-   
-   TtaFreeMemory (annot_url);
-   if (output_file)
-     {
-       if (*output_file != EOS)
-	 TtaFileUnlink (output_file);
-       TtaFreeMemory (output_file);
-     }
-   TtaFreeMemory (ctx);
-   /* clear the status line if there was no error*/
-   if (status == HT_OK && doc == source_doc)
-     TtaSetStatus (doc, 1,  TEXT("Annotation deleted!"), NULL);
+  TtaFreeMemory (annot_url);
+  if (output_file)
+    {
+      if (*output_file != EOS)
+	TtaFileUnlink (output_file);
+      TtaFreeMemory (output_file);
+    }
+  TtaFreeMemory (ctx);
+  /* clear the status line if there was no error*/
+  if (status == HT_OK && doc == source_doc)
+    TtaSetStatus (doc, 1,  TEXT("Annotation deleted!"), NULL);
 }
 
 /*----------------------------------------------------------------------
