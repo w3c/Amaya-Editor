@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -425,9 +425,7 @@ Document            doc;
   ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
-	      DocumentTypes[doc] == docTextRO ||
-	      DocumentTypes[doc] == docCSS ||
-	      DocumentTypes[doc] == docCSSRO);
+	      DocumentTypes[doc] == docCSS);
 
    CheckPrintingDocument (doc);
    ustrcpy (viewsToPrint, TEXT("Formatted_view "));
@@ -728,9 +726,7 @@ View                view;
    ThotBool           textFile;
 
    textFile = (DocumentTypes[doc] == docText ||
-	       DocumentTypes[doc] == docTextRO ||
-	       DocumentTypes[doc] == docCSS ||
-	       DocumentTypes[doc] == docCSSRO);
+	       DocumentTypes[doc] == docCSS);
 
    /* Print form */
    CheckPrintingDocument (doc);

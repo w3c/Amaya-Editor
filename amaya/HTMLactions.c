@@ -1133,8 +1133,6 @@ Document       doc;
 
 	  if (DocumentTypes[doc] == docImage)
 	    DocumentTypes[doc] = docHTML;
-	  else if (DocumentTypes[doc] == docImageRO)
-	    DocumentTypes[doc] = docHTMLRO;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
@@ -1153,12 +1151,9 @@ Document       doc;
 	{
 	  if (DocumentSource[doc])
 	    {
-	      if (DocumentTypes[doc] != docLog)
-		{
-		  sourceDoc = DocumentSource[doc];
-		  TtcCloseDocument (sourceDoc, 1);
-		  FreeDocumentResource (sourceDoc);
-		}
+	      sourceDoc = DocumentSource[doc];
+	      TtcCloseDocument (sourceDoc, 1);
+	      FreeDocumentResource (sourceDoc);
 	      DocumentSource[doc] = 0;
 	    }
 	  /* is this document the source of another document? */
@@ -1169,7 +1164,8 @@ Document       doc;
 		  DocumentSource[i] = 0;
 		  if (DocumentTypes[i] == docLog)
 		    {
-		      /* close the window of the log file attached to the current document */
+		      /* close the window of the log file attached to the
+			 current document */
 		      TtaCloseDocument (i);
 		      TtaFreeMemory (DocumentURLs[i]);
 		      DocumentURLs[i] = NULL;
@@ -1789,20 +1785,18 @@ NotifyElement* event;
       user has just clicked */
    otherDoc = 0;
    otherDocIsHTML = FALSE;
-   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
+   if (DocumentTypes[doc] == docHTML)
       /* the user clicked on a HTML document, the other doc is the
          corresponding source document */
       otherDoc = DocumentSource[doc];
-   else if (DocumentTypes[doc] == docSource ||
-	    DocumentTypes[doc] == docSourceRO)
+   else if (DocumentTypes[doc] == docSource)
       /* the user clicked on a source document, the other doc is the
          corresponding HTML document */
       {
       otherDocIsHTML = TRUE;
       for (i = 1; i < DocumentTableLength; i++)
          if (DocumentURLs[i] != NULL)
-	    if (DocumentTypes[i] == docHTML ||
-		DocumentTypes[i] == docHTMLRO)
+	    if (DocumentTypes[i] == docHTML)
 	       if (DocumentSource[i] == doc)
 		  {
 	          otherDoc = i;

@@ -691,15 +691,12 @@ View                view;
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
-   else if (DocumentTypes[doc] == docSource ||
-	    DocumentTypes[doc] == docSourceRO)
+   else if (DocumentTypes[doc] == docSource)
       /* it's a source "view". Don't save it */
       return;
 
    TextFormat = (DocumentTypes[doc] == docText ||
-		 DocumentTypes[doc] == docTextRO ||
-		 DocumentTypes[doc] == docCSS ||
-		 DocumentTypes[doc] == docCSSRO);
+		 DocumentTypes[doc] == docCSS);
 
    /* memorize the current document */
    if (SavingDocument == 0)
@@ -1024,7 +1021,8 @@ CHAR_T           *documentname;
   ThotBool            xmlDec, withDoctype, isXML;
   DocumentType        thotType;
 
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel,
+		  &charset, &thotType);
   /* clean up previous log file */
   HTMLErrorsFound = FALSE;
   /* remove the log file */
@@ -1083,7 +1081,7 @@ Document          doc;
   CHAR_T	      tempdir[MAX_LENGTH];
   NotifyElement       event;
 
-  if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
+  if (DocumentTypes[doc] == docHTML)
     /* It's a HTML document */
     {
     if (DocumentSource[doc])
@@ -1134,21 +1132,33 @@ STRING            documentName;
   if (SaveAsText) 
     {
       SetInternalLinks (doc);
-      ok = TtaExportDocument (doc, tempname, TEXT("HTMLTT"));
+      if (DocumentTypes[doc] == docHTML)
+         ok = TtaExportDocument (doc, tempname, TEXT("HTMLTT"));
+      else if (DocumentTypes[doc] == docSVG)
+         ok = TtaExportDocument (doc, tempname, TEXT("GraphMLT"));
+      if (DocumentTypes[doc] == docMath)
+         ok = TtaExportDocument (doc, tempname, TEXT("MathMLT"));
     }
   else
     {
-      SetNamespacesAndDTD (doc);
-      if (SaveAsXHTML)
+      if (DocumentTypes[doc] == docHTML)
 	{
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
-	DocumentMeta[doc]->xmlformat = TRUE;
+	SetNamespacesAndDTD (doc);
+        if (SaveAsXHTML)
+	  {
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
+	  DocumentMeta[doc]->xmlformat = TRUE;
+	  }
+        else
+	  {
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
+	  DocumentMeta[doc]->xmlformat = FALSE;
+	  }
 	}
-      else
-	{
-	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
-	DocumentMeta[doc]->xmlformat = FALSE;
-	}
+      else if (DocumentTypes[doc] == docSVG)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("GraphMLT"));
+      else if (DocumentTypes[doc] == docMath)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("MathMLT"));
       if (ok)
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
@@ -1340,8 +1350,7 @@ ThotBool            use_preconditions;
   tempname = GetLocalPath (document, url);
 
   /* build the output */
-  if (DocumentTypes[document] == docSource ||
-      DocumentTypes[document] == docSourceRO)
+  if (DocumentTypes[document] == docSource)
       /* it's a source file, renumber lines */
       TtaExportDocumentWithNewLineNumbers (document, tempname,
 					   TEXT("TextFileT"));
@@ -1422,17 +1431,24 @@ ThotBool         use_preconditions;
   tempname = GetLocalPath (doc, url);
 
   /* First step : generate the output file and ask for confirmation */
-  SetNamespacesAndDTD (doc);
-  if (SaveAsXHTML)
+  if (DocumentTypes[doc] == docHTML)
     {
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
-    DocumentMeta[doc]->xmlformat = TRUE;
+    SetNamespacesAndDTD (doc);
+    if (SaveAsXHTML)
+      {
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
+      DocumentMeta[doc]->xmlformat = TRUE;
+      }
+    else
+      {
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
+      DocumentMeta[doc]->xmlformat = FALSE;
+      }
     }
-  else
-    {
-    TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLT"));
-    DocumentMeta[doc]->xmlformat = FALSE;
-    }
+  else if (DocumentTypes[doc] == docSVG)
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("GraphMLT"));
+  else if (DocumentTypes[doc] == docMath)
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("MathMLT"));
 
   res = 0;
   if (confirm && with_images)
@@ -1574,13 +1590,14 @@ ThotBool         use_preconditions;
 }
 
 /*----------------------------------------------------------------------
-   GetHTMLdocFromSource
-   If sourceDoc is a source file, return the corresponding HTML document.
+   GetDocFromSource
+   If sourceDoc is a source document, return the corresponding
+   structured document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document       GetHTMLdocFromSource (Document sourceDoc)
+Document       GetDocFromSource (Document sourceDoc)
 #else
-Document       GetHTMLdocFromSource (sourceDoc)
+Document       GetDocFromSource (sourceDoc)
 Document       sourceDoc;
 
 #endif
@@ -1589,11 +1606,13 @@ Document       sourceDoc;
   int		i;
 
   htmlDoc = 0;
-  if (DocumentTypes[sourceDoc] == docSource ||
-      DocumentTypes[sourceDoc] == docSourceRO)
-     /* It's a source file */
+  if (DocumentTypes[sourceDoc] == docSource)
+     /* It's a source document */
      for (i = 1; i < DocumentTableLength && htmlDoc == 0; i++)
-        if (DocumentTypes[i] == docHTML)
+        if (DocumentTypes[i] == docHTML ||
+	    DocumentTypes[i] == docAnnot ||
+	    DocumentTypes[i] == docSVG ||
+	    DocumentTypes[i] == docMath)
            if (DocumentSource[i] == sourceDoc)
 	      htmlDoc = i;
   return htmlDoc;
@@ -1601,8 +1620,8 @@ Document       sourceDoc;
 
 /*----------------------------------------------------------------------
    Synchronize
-   save the current view (source/html) in a temporary file and update
-   the other view (html/source).      
+   save the current view (source/structure) in a temporary file and update
+   the other view (structure/source).      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Synchronize (Document document, View view)
@@ -1628,12 +1647,12 @@ View                view;
         the other view has been modified */
      {
        if (DocumentTypes[document] == docHTML ||
-           DocumentTypes[document] == docHTMLRO)
-           /* it's an HTML document */
+	   DocumentTypes[document] == docSVG ||
+	   DocumentTypes[document] == docMath)
+           /* it's a structured document */
 	  otherDoc = DocumentSource[document];
-       else if (DocumentTypes[document] == docSource ||
-                DocumentTypes[document] == docSourceRO)
-          otherDoc = GetHTMLdocFromSource (document);
+       else if (DocumentTypes[document] == docSource)
+          otherDoc = GetDocFromSource (document);
        else
 	  return;
        if (!TtaIsDocumentUpdated (otherDoc))
@@ -1651,29 +1670,38 @@ View                view;
      TtaSetDisplayMode (document, DeferredDisplay);
 
    if (DocumentTypes[document] == docHTML ||
-       DocumentTypes[document] == docHTMLRO)
-     /* it's an HTML document */
+       DocumentTypes[document] == docSVG ||
+       DocumentTypes[document] == docMath)
+     /* it's the structured form of the document */
      {
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
-       SetNamespacesAndDTD (document);
-       if (DocumentMeta[document]->xmlformat)
+       if (DocumentTypes[document] == docHTML)
+	 {
+         SetNamespacesAndDTD (document);
+	 if (DocumentMeta[document]->xmlformat)
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						TEXT("HTMLTX"));
+	 else
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						TEXT("HTMLT"));
+	 }
+       else if (DocumentTypes[document] == docSVG)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-					      TEXT("HTMLTX"));
-       else
+					      TEXT("GraphMLT"));
+       else if (DocumentTypes[document] == docMath)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-					      TEXT("HTMLT"));
+					      TEXT("MathMLT"));
        RedisplaySourceFile (document);
        otherDoc = DocumentSource[document];
        /* the other document is now different from the original file. It can
 	  be saved */
        TtaSetItemOn (otherDoc, 1, File, BSave);
      }
-   else if (DocumentTypes[document] == docSource ||
-       DocumentTypes[document] == docSourceRO)
+   else if (DocumentTypes[document] == docSource)
      /* it's a source document */
      {
-       htmlDoc = GetHTMLdocFromSource (document);
+       htmlDoc = GetDocFromSource (document);
        otherDoc = htmlDoc;
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (htmlDoc, DocumentURLs[htmlDoc]);
@@ -1750,16 +1778,12 @@ View                view;
     }
 
   TextFormat = (DocumentTypes[doc] == docText ||
-		DocumentTypes[doc] == docTextRO ||
 		DocumentTypes[doc] == docCSS ||
-		DocumentTypes[doc] == docCSSRO ||
-		DocumentTypes[doc] == docSource ||
-		DocumentTypes[doc] == docSourceRO);
+		DocumentTypes[doc] == docSource);
 
   /* if it's a source document, get the corresponding HTML document */
-  if (DocumentTypes[doc] == docSource ||
-      DocumentTypes[doc] == docSourceRO)
-     htmlDoc = GetHTMLdocFromSource (doc);
+  if (DocumentTypes[doc] == docSource)
+     htmlDoc = GetDocFromSource (doc);
   else
      htmlDoc = 0;
 
@@ -1812,8 +1836,7 @@ View                view;
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = TtaWCSdup (tempname);
 	  DocumentMeta[doc]->put_default_name = TRUE; 
-	  if (DocumentTypes[doc] == docHTML ||
-	      DocumentTypes[doc] == docHTMLRO)	
+	  if (DocumentTypes[doc] == docHTML)
 	      /* it's an HTML document. It could have a source doc */
 	      /* change the URL of the source document if it exists */
 	     {
@@ -1824,8 +1847,7 @@ View                view;
 		DocumentURLs[DocumentSource[doc]] = TtaWCSdup (tempname);
 		}
 	      }
-	  else if (DocumentTypes[doc] == docSource ||
-		   DocumentTypes[doc] == docSourceRO)
+	  else if (DocumentTypes[doc] == docSource)
 	      {
 	      /* it's a source document. Change the URL of the corresponding
 		 HTML document */
@@ -1849,8 +1871,7 @@ View                view;
 	  {
 	  ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
 				     FALSE, TRUE);
-	  if (DocumentTypes[doc] == docSource ||
-	      DocumentTypes[doc] == docSourceRO)
+	  if (DocumentTypes[doc] == docSource)
 	     /* it's a source file. lines have been renumbered */
 	     newLineNumbers = TRUE;
 	  }
@@ -1866,8 +1887,7 @@ View                view;
     {
       ustrcpy (localFile, tempname);
       if (TextFormat)
-	if (DocumentTypes[doc] == docSource ||
-	    DocumentTypes[doc] == docSourceRO)
+	if (DocumentTypes[doc] == docSource)
 	   /* it's a source file. renumber lines */
 	   {
 	   ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
@@ -1880,6 +1900,8 @@ View                view;
 	  }
       else
 	{
+	if (DocumentTypes[doc] == docHTML)
+	  {
 	  SetNamespacesAndDTD (doc);
 	  if (SaveAsXHTML)
 	    {
@@ -1893,7 +1915,14 @@ View                view;
 						      TEXT("HTMLT"));
 	    DocumentMeta[doc]->xmlformat = FALSE;
 	    }
-	  newLineNumbers = TRUE;
+	  }
+	else if (DocumentTypes[doc] == docSVG)
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						    TEXT("GraphMLT"));
+	else if (DocumentTypes[doc] == docMath)
+	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						    TEXT("MathMLT"));
+	newLineNumbers = TRUE;
 	}
       /* save a local copy of the current document */
       if (htmlDoc)
@@ -1910,12 +1939,11 @@ View                view;
   SavingDocument = 0;
   if (newLineNumbers)
      /* line numbers have been changed in the saved document */
-     if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
+     if (DocumentTypes[doc] == docHTML)
         /* It's a HTML document. If the source view is open, redisplay the
 	   source. */
        RedisplaySourceFile (doc);
-     else if (DocumentTypes[doc] == docSource ||
-	      DocumentTypes[doc] == docSourceRO)
+     else if (DocumentTypes[doc] == docSource)
 	/* It's a source document. Reparse the corresponding HTML document */
 	if (htmlDoc)
 	   {

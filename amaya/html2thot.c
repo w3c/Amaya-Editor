@@ -6257,8 +6257,7 @@ Document            doc;
    elNoframes = NULL;
 
 #ifdef ANNOTATIONS
-   if (DocumentTypes[doc] == docAnnot
-       || DocumentTypes[doc] == docAnnotRO)
+   if (DocumentTypes[doc] == docAnnot)
      {
        /* we search the start of HTML document in the annotation struct */
        elRoot = TtaGetMainRoot (doc);
@@ -7090,8 +7089,7 @@ ThotBool            plainText;
 #endif /* _I18N_ */
 	/* is the current document a HTML document */
 #ifdef ANNOTATIONS
-	if (DocumentTypes[doc] == docAnnot
-	    || DocumentTypes[doc] == docAnnotRO)
+	if (DocumentTypes[doc] == docAnnot)
 	  {
 	    /* @@@ we know this is true, but we should try to protect */
 	    isHTML = 1;
@@ -7104,8 +7102,7 @@ ThotBool            plainText;
 	if (plainText)
 	  {
 	    rootElement = TtaGetMainRoot (doc);
-	    if (DocumentTypes[doc] == docSource ||
-		DocumentTypes[doc] == docSourceRO)
+	    if (DocumentTypes[doc] == docSource)
 	      {
 		/* add the attribute Source */
 		attrType.AttrSSchema = DocumentSSchema;
@@ -7157,8 +7154,7 @@ ThotBool            plainText;
 
 	TtaSetDisplayMode (doc, NoComputedDisplay);
 #ifdef ANNOTATIONS
-	if (DocumentTypes[doc] == docAnnot
-	    || DocumentTypes[doc] == docAnnotRO)
+	if (DocumentTypes[doc] == docAnnot)
 	  {
 	    ElementType elType;
 

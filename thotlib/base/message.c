@@ -396,7 +396,8 @@ STRING              fmt;
            fmt [i] = SPACE;
 #  endif /* _WINDOWS */
 
-   if (fmt) {
+   if (fmt)
+     {
       /* construct the final message */
 #     ifdef STDC_HEADERS
       va_start (pa, fmt);
@@ -404,49 +405,57 @@ STRING              fmt;
       va_start (pa);
 #     endif /* STDC_HEADERS */
       i = 0;
-      for (p = fmt; *p && i + 1 < MAX_PATH; p++) {
+      for (p = fmt; *p && i + 1 < MAX_PATH; p++)
+	{
           if (*p != TEXT('%')) 
              pBuffer[i++] = *p;
           else {
                p++;
-               switch (*p) {
+               switch (*p)
+		 {
                       case TEXT('d'):
                            /* it is a value */
                            vald = va_arg (pa, int);
 
-                           if (i + 10 < MAX_PATH) {
+                           if (i + 10 < MAX_PATH)
+			     {
                               usprintf (&pBuffer[i], TEXT("%d"), vald);
                               i += ustrlen (&pBuffer[i]);
-						   } else
-                                  i = MAX_PATH;
-			               break;
+			     }
+			   else
+			     i = MAX_PATH;
+			   break;
 
                       case TEXT('s'):
                            /* it is a string */
                            /* vals = va_arg (pa, char*); */
                            vals = va_arg (pa, STRING);
-
-                           lg = ustrlen (vals);
-                           if (i + lg < MAX_PATH) {
-                              ustrcpy (&pBuffer[i], vals);
-                              i += lg;
-						   } else
-                                  i = MAX_PATH;
+			   if (vals)
+			     {
+			       lg = ustrlen (vals);
+			       if (i + lg < MAX_PATH)
+				 {
+				   ustrcpy (&pBuffer[i], vals);
+				   i += lg;
+				 }
+			       else
+				 i = MAX_PATH;
+			     }
                            break;
 
                       default:
                               /* other value not allowed */
                               pBuffer[i++] = *p;
                               break;
-			   } 
-		  } 
+		 } 
 	  } 
+	} 
       /* Display the final message */
       pBuffer[i] = EOS;
       if (msgType == CONFIRM)
-         DisplayConfirmMessage (pBuffer);
+	DisplayConfirmMessage (pBuffer);
       else
-	       DisplayMessage (pBuffer, msgType);
+	DisplayMessage (pBuffer, msgType);
    }
 }
 

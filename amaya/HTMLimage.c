@@ -918,9 +918,7 @@ int                 flags;
        return FALSE;
      }
    else if (DocumentTypes[doc] == docText ||
-	    DocumentTypes[doc] == docTextRO ||
-	    DocumentTypes[doc] == docCSS ||
-	    DocumentTypes[doc] == docCSSRO)
+	    DocumentTypes[doc] == docCSS)
      return FALSE;
 
    /* register the current URL */

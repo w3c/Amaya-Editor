@@ -661,13 +661,14 @@ ThotBool            modified;
   Document    otherDoc;
 
   if (modified && TtaGetDocumentAccessMode (document))
+    /* the document has been modified and is not in Read-Only mode */
     {
        TtaSetItemOn (document, 1, File, BSave);
        TtaChangeButton (document, 1, iSave, iconSave, TRUE);
-       /* if we have a couple source/html documents allow synchronization */
+       /* if we have a pair source/structured document allow synchronization */
        otherDoc = DocumentSource[document];
        if (!otherDoc)
-	 otherDoc = GetHTMLdocFromSource (document);
+	 otherDoc = GetDocFromSource (document);
        if (otherDoc)
 	 {
 	   TtaSetItemOn (document, 1, File, BSynchro);
@@ -678,10 +679,10 @@ ThotBool            modified;
     {
        TtaSetItemOff (document, 1, File, BSave);
        TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       /* if we have a couple source/html documents allow synchronization */
+       /* if we have a pair source/structured document allow synchronization */
        otherDoc = DocumentSource[document];
        if (!otherDoc)
-	 otherDoc = GetHTMLdocFromSource (document);
+	 otherDoc = GetDocFromSource (document);
        if (otherDoc)
 	 {
 	   TtaSetItemOff (document, 1, File, BSynchro);
@@ -691,7 +692,7 @@ ThotBool            modified;
 }
 
 /*----------------------------------------------------------------------
-   Change the Broser/Editor mode                    
+   Change the Browser/Editor mode                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetBrowserEditor (Document document)
@@ -717,16 +718,7 @@ Document            doc;
        TtaChangeButton (document, 1, iEditor, iconBrowser, TRUE);
 #endif /* _WINDOWS */
        /* change the document status */
-       if (DocumentTypes[document] == docHTML)
-	 DocumentTypes[document] = docHTMLRO;
-       else if (DocumentTypes[document] == docImage)
-	 DocumentTypes[document] = docImageRO;
-       else if (DocumentTypes[document] == docCSS)
-	 DocumentTypes[document] = docCSSRO;
-       else if (DocumentTypes[document] == docText)
-	 DocumentTypes[document] = docTextRO;
-       else if (DocumentTypes[document] == docSource)
-	 DocumentTypes[document] = docSourceRO;
+       ReadOnlyDocument[document] = TRUE;
        SetDocumentReadOnly (document);
 
        /* update windows menus */
@@ -739,8 +731,10 @@ Document            doc;
        TtaSetItemOff (document, 1, Edit_, BClear);
 
        TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       if (DocumentTypes[document] == docHTMLRO ||
-	   DocumentTypes[document] == docImageRO)
+       if (DocumentTypes[document] == docHTML ||
+	   DocumentTypes[document] == docSVG ||
+	   DocumentTypes[document] == docMath ||
+	   DocumentTypes[document] == docImage)
 	 {
 	   TtaChangeButton (document, 1, iI, iconINo, FALSE);
 	   TtaChangeButton (document, 1, iB, iconBNo, FALSE);
@@ -825,16 +819,7 @@ Document            doc;
 #endif /* _WINDOWS */
 
        /* change the document status */
-       if (DocumentTypes[document] == docHTMLRO)
-	 DocumentTypes[document] = docHTML;
-       else if (DocumentTypes[document] == docImageRO)
-	 DocumentTypes[document] = docImage;
-       else if (DocumentTypes[document] == docCSSRO)
-	 DocumentTypes[document] = docCSS;
-       else if (DocumentTypes[document] == docTextRO)
-	 DocumentTypes[document] = docText;
-       else if (DocumentTypes[document] == docSourceRO)
-	 DocumentTypes[document] = docSource;
+       ReadOnlyDocument[document] = FALSE;
        TtaSetDocumentAccessMode (document, 1);
        /* update windows menus */
        TtaSetItemOn (document, 1, Edit_, BUndo);
@@ -844,6 +829,7 @@ Document            doc;
        TtaSetItemOn (document, 1, Edit_, BClear);
        
        if (DocumentTypes[document] == docHTML ||
+	   DocumentTypes[document] == docSVG ||
 	   DocumentTypes[document] == docImage)
 	 {
 	   TtaChangeButton (document, 1, iI, iconI, TRUE);
@@ -1447,13 +1433,14 @@ View            view;
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc)
+Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, Document sourceOfDoc, ThotBool readOnly)
 #else
-Document     InitDocView (doc, docname, docType, sourceOfDoc)
+Document     InitDocView (doc, docname, docType, sourceOfDoc, readOnly)
 Document     doc;
 CHAR_T*      docname;
 DocumentType docType;
 Document     sourceOfDoc;
+ThotBool     readOnly;
 #endif
 {
   View                mainView, structView, altView, linksView, tocView;
@@ -1468,27 +1455,14 @@ Document     sourceOfDoc;
 
   /* is there any editing function available */
   if (!TtaCanEdit ())
-    {
-      /* change the document status */
-      if (docType == docHTML)
-	docType = docHTMLRO;
-      else if (docType == docImage)
-	docType = docImageRO;
-      else if (docType == docCSS)
-	docType = docCSSRO;
-      else if (docType == docText)
-	docType = docTextRO;
-      else if (docType == docSource)
-	docType = docSourceRO;
-      else if (docType == docAnnot)
-	docType = docAnnotRO;
-    }
+    /* change the document status */
+    readOnly = TRUE;
 
   old_doc = doc;		/* previous document */
   if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
     {
-      if (DocumentTypes[doc] == docHTMLRO || DocumentTypes[doc] == docHTML)
+      if (DocumentTypes[doc] == docHTML)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
@@ -1509,7 +1483,7 @@ Document     sourceOfDoc;
 	  if (tocView != 0 && TtaIsViewOpened (doc, tocView))
 	    TtaCloseView (doc, tocView);
 	}
-	/* remove the current selection */
+        /* remove the current selection */
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
 	TtaFreeView (doc, 1);
@@ -1523,16 +1497,16 @@ Document     sourceOfDoc;
       opened = FALSE;
 
    /* open the document */
-   if (docType == docText || docType == docTextRO ||
-       docType == docCSS || docType == docCSSRO ||
-       docType == docSource || docType == docSourceRO ||
+   if (docType == docText ||
+       docType == docCSS ||
+       docType == docSource ||
        docType == docLog)
      doc = TtaNewDocument (TEXT("TextFile"), docname);
-   else if (docType == docAnnot || docType == docAnnotRO)
+   else if (docType == docAnnot)
      doc = TtaNewDocument (TEXT("Annot"), docname);
-   else if (docType == docSVG || docType == docSVGRO)
+   else if (docType == docSVG)
      doc = TtaNewDocument (TEXT("GraphML"), docname);
-   else if (docType == docMath || docType == docMathRO)
+   else if (docType == docMath)
      doc = TtaNewDocument (TEXT("MathML"), docname);
    else
      doc = TtaNewDocument (TEXT("HTML"), docname);
@@ -1544,16 +1518,16 @@ Document     sourceOfDoc;
    else if (doc > 0)
      {
        /* assign a presentation model to the document */
-       if (docType == docText || docType == docTextRO||
-	   docType == docCSS || docType == docCSSRO ||
-           docType == docSource || docType == docSourceRO ||
+       if (docType == docText ||
+	   docType == docCSS ||
+           docType == docSource ||
 	   docType == docLog)
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
-       else if (docType == docAnnot || docType == docAnnotRO)
+       else if (docType == docAnnot)
 	   TtaSetPSchema (doc, TEXT("AnnotP"));
-       else if (docType == docSVG || docType == docSVGRO)
+       else if (docType == docSVG)
 	   TtaSetPSchema (doc, TEXT("GraphMLP"));
-       else if (docType == docMath || docType == docMathRO)
+       else if (docType == docMath)
 	   TtaSetPSchema (doc, TEXT("MathMLP"));
        /* @@ shouldn't we have a Color and BW case for annots too? */
        else
@@ -1566,10 +1540,9 @@ Document     sourceOfDoc;
 
        TtaSetNotificationMode (doc, 1);
        /* get the geometry of the main view */
-       if (docType == docAnnot || docType == docAnnotRO)
+       if (docType == docAnnot)
 	 tmp = "Annot_Formatted_view";
-       else if (sourceOfDoc &&
-		(docType == docSource || docType == docSourceRO))
+       else if (sourceOfDoc && docType == docSource)
 	 tmp = "Source_view";
        else
 	 tmp = "Formatted_view";
@@ -1731,7 +1704,7 @@ Document     sourceOfDoc;
 #ifdef GRAPHML
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
-	   if (docType == docAnnot || docType == docAnnotRO)
+	   if (docType == docAnnot)
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	   else
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL), TRUE,
@@ -1766,166 +1739,112 @@ Document     sourceOfDoc;
      DocumentTypes[doc] = docLog;
    else if (docType == docImage)    /* -------->loading an image */
      {
-       if (DocumentTypes[doc] == docHTMLRO ||
-	   DocumentTypes[doc] == docTextRO ||
-	   DocumentTypes[doc] == docCSSRO  ||
-	   DocumentTypes[doc] == docSourceRO)
+       if (readOnly)                /* -------->loading an image in ReadOnly */
+	 ReadOnlyDocument[doc] = TRUE;
+       else
 	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docImageRO;
+	   if (ReadOnlyDocument[doc])
+	     {
+	       /* we need to update menus and buttons */
+	       reinitialized = TRUE;
+	       /* document in ReadOnly mode */
+	       ReadOnlyDocument[doc] = TRUE;
+	     }
+	   else
+	     {
+	       /* we need to update menus and buttons */
+	       reinitialized = TRUE;
+	       /* document in ReadWrite mode */
+	       ReadOnlyDocument[doc] = FALSE;
+	     }
 	 }
-       else if (DocumentTypes[doc] == docHTML ||
-		DocumentTypes[doc] == docText ||
-		DocumentTypes[doc] == docCSS  ||
-		DocumentTypes[doc] == docSource)
-	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* document in ReadWrite mode */
-	   DocumentTypes[doc] = docImage;
-	 }
-     }
-   else if (docType == docImageRO)  /* -------->loading an image in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       DocumentTypes[doc] = docImageRO;
+       DocumentTypes[doc] = docImage;
      }
    else if (docType == docCSS)      /* -------->loading a CSS file */
      {
-       if (DocumentTypes[doc] == docHTMLRO ||
-	   DocumentTypes[doc] == docImageRO)
+       if (readOnly)                /* -------->loading CSS in ReadOnly */
 	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docCSSRO;
-	 }
-       else if (DocumentTypes[doc] == docHTML ||
-		DocumentTypes[doc] == docImage)
-	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* document in ReadWrite mode */
 	   DocumentTypes[doc] = docCSS;
+	   ReadOnlyDocument[doc] = TRUE;
 	 }
-       else if (DocumentTypes[doc] == docTextRO)
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docCSSRO;
-       else if (DocumentTypes[doc] == docText)
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docCSS;	 
-     }
-   else if (docType == docCSSRO)     /* -------->loading CSS in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       DocumentTypes[doc] = docCSSRO;
+       else
+	 {
+	   if (DocumentTypes[doc] == docText)
+	     DocumentTypes[doc] = docCSS;
+	   else if (DocumentTypes[doc] == docHTML ||
+		    DocumentTypes[doc] == docImage)
+	     {
+	       /* we need to update menus and buttons */
+	       reinitialized = TRUE;
+	       /* document in ReadOnly mode */
+	       DocumentTypes[doc] = docCSS;
+	     }
+	 }
      }
    else if (docType == docText)      /* -------->loading a Text file */
      {
-       if (DocumentTypes[doc] == docHTMLRO ||
-	   DocumentTypes[doc] == docImageRO)
+       if (readOnly)                 /* -------->loading TEXT in ReadOnly */
 	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
 	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docTextRO;
+	   DocumentTypes[doc] = docText;
+	   ReadOnlyDocument[doc] = TRUE;
 	 }
-       else if (DocumentTypes[doc] == docHTML ||
-		DocumentTypes[doc] == docImage)
+       else
 	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* document in ReadWrite mode */
+	 if (DocumentTypes[doc] == docHTML ||
+	     DocumentTypes[doc] == docImage)
+	   {
+	     /* we need to update menus and buttons */
+	     reinitialized = TRUE;
+	     DocumentTypes[doc] = docText;
+	   }
+	 else if (DocumentTypes[doc] == docCSS)
 	   DocumentTypes[doc] = docText;
 	 }
-       else if (DocumentTypes[doc] == docCSSRO)
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docTextRO;
-       else if (DocumentTypes[doc] == docCSS)
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docText;	 
      }
-   else if (docType == docTextRO) /* -------->loading TEXT in ReadOnly */
+   else if (docType == docHTML && readOnly) /* -------->loading HTML in ReadOnly */
      {
        /* document in ReadOnly mode */
-       DocumentTypes[doc] = docTextRO;
+       DocumentTypes[doc] = docType;
+       ReadOnlyDocument[doc] = readOnly;
      }
-   else if (docType == docSource)
-     {
-       reinitialized = TRUE;
-       DocumentTypes[doc] = docSource;
-     }
-   else if (docType == docSourceRO)
-     DocumentTypes[doc] = docSourceRO;
-   else if (docType == docHTMLRO) /* -------->loading HTML in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       DocumentTypes[doc] = docHTMLRO;
-     }
+   else if (docType == docSVG   ||   /* -------->loading a SVG document */
+	    docType == docMath  ||   /* -------->loading a MathML document */
 #ifdef ANNOTATIONS
-   else if (docType == docAnnot) /* -------->loading an Annotation */
-       DocumentTypes[doc] = docAnnot;
-   else if (docType == docAnnotRO) /* ---->loading an Annotation in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       reinitialized = TRUE;
-       DocumentTypes[doc] = docAnnotRO;
-     }
+	    docType == docAnnot ||   /* -------->loading an annotation */
 #endif /* ANNOTATIONS */
-   else if (docType == docSVG) /* -------->loading a SVG document */
-       DocumentTypes[doc] = docSVG;
-   else if (docType == docSVGRO) /* ---->loading a SVG document in ReadOnly */
+	    docType == docSource)    /* -------->loading a source document */
      {
-       /* document in ReadOnly mode */
-       reinitialized = TRUE;
-       DocumentTypes[doc] = docSVGRO;
-     }
-   else if (docType == docMath) /* -------->loading a Math document */
-       DocumentTypes[doc] = docMath;
-   else if (docType == docMathRO) /* ---->loading a Math document in ReadOnly */
-     {
-       /* document in ReadOnly mode */
-       reinitialized = TRUE;
-       DocumentTypes[doc] = docMathRO;
+       if (readOnly)
+         reinitialized = TRUE;
+       DocumentTypes[doc] = docType;
+       ReadOnlyDocument[doc] = readOnly;
      }
    else 			/* -------->loading a HTML file */
      {
-       if (DocumentTypes[doc] == docTextRO ||
-	   DocumentTypes[doc] == docImageRO ||
-	   DocumentTypes[doc] == docSourceRO ||
-	   DocumentTypes[doc] == docCSSRO)
+       if (DocumentTypes[doc] == docText ||
+	   DocumentTypes[doc] == docImage ||
+	   DocumentTypes[doc] == docSource ||
+	   DocumentTypes[doc] == docCSS)
 	 {
 	   /* we need to update menus and buttons */
 	   reinitialized = TRUE;
-	   /* document in ReadOnly mode */
-	   DocumentTypes[doc] = docHTMLRO;
-	 }
-       else if (DocumentTypes[doc] == docText ||
-		DocumentTypes[doc] == docImage ||
-		DocumentTypes[doc] == docSource ||
-		DocumentTypes[doc] == docCSS)
-	 {
-	   /* we need to update menus and buttons */
-	   reinitialized = TRUE;
-	   /* document in ReadWrite mode */
+	   /* Keep ReadOnlyDocument[doc] unchanged */
 	   DocumentTypes[doc] = docHTML;
 	 }
      }
    
-   if ((reinitialized || !opened))
+   if (reinitialized || !opened)
      /* now update menus and buttons according to the document status */
-     if (DocumentTypes[doc] == docHTMLRO ||
-	 DocumentTypes[doc] == docImageRO ||
-	 DocumentTypes[doc] == docText ||
-	 DocumentTypes[doc] == docTextRO ||
-	 DocumentTypes[doc] == docCSS ||
-	 DocumentTypes[doc] == docCSSRO ||
-	 DocumentTypes[doc] == docSource ||
-	 DocumentTypes[doc] == docSourceRO ||
-	 DocumentTypes[doc] == docSVGRO ||
-	 DocumentTypes[doc] == docMathRO)
+     if ((DocumentTypes[doc] == docText ||
+	  DocumentTypes[doc] == docCSS ||
+	  DocumentTypes[doc] == docSource) ||
+	 (ReadOnlyDocument[doc] &&
+	  (DocumentTypes[doc] == docHTML ||
+	   DocumentTypes[doc] == docImage ||
+	   DocumentTypes[doc] == docSVG ||
+	   DocumentTypes[doc] == docMath)))
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -1939,10 +1858,9 @@ Document     sourceOfDoc;
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
 	 TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+
 	 SwitchIconMath (doc, 1, FALSE);
-#ifdef GRAPHML
 	 SwitchIconGraph (doc, 1, FALSE);
-#endif /* GRAPHML */
 
 	 TtaSetItemOff (doc, 1, Edit_, BTransform);
 	 TtaSetMenuOff (doc, 1, Types);
@@ -1951,9 +1869,7 @@ Document     sourceOfDoc;
 	 TtaSetItemOff (doc, 1, Special, BMakeBook);
 	 TtaSetMenuOff (doc, 1, Attributes_);
 
-	 if (DocumentTypes[doc] != docText &&
-	     DocumentTypes[doc] != docCSS &&
-	     DocumentTypes[doc] != docSource)
+	 if (ReadOnlyDocument[doc])
 	   {
 	     /* the document is in ReadOnly mode */
 	     TtaSetItemOff (doc, 1, Edit_, BUndo);
@@ -1977,14 +1893,12 @@ Document     sourceOfDoc;
 	 else
 	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
-	 if (DocumentTypes[doc] == docText ||
-	     DocumentTypes[doc] == docTextRO ||
-	     DocumentTypes[doc] == docCSS ||
-	     DocumentTypes[doc] == docCSSRO ||
-	     DocumentTypes[doc] == docSource ||
-	     DocumentTypes[doc] == docSourceRO ||
-	     DocumentTypes[doc] == docSVGRO ||
-	     DocumentTypes[doc] == docMathRO)
+	 if ((DocumentTypes[doc] == docText ||
+	      DocumentTypes[doc] == docCSS ||
+	      DocumentTypes[doc] == docSource) ||
+	     (ReadOnlyDocument[doc] &&
+	      (DocumentTypes[doc] == docSVG ||
+	       DocumentTypes[doc] == docMath)))
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOff (doc, 1, Views, TShowTargets);
@@ -2402,20 +2316,16 @@ ThotBool            history;
 	  if (method == CE_RELATIVE && docType == docCSS)
 	    {
 	      /* display the CSS in a new window */
-	      newdoc = InitDocView (0, documentname, docType, 0);
+	      newdoc = InitDocView (0, documentname, docType, 0, FALSE);
 	      ResetStop (doc);
 	      /* clear the status line of previous document */
 	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
 	      ActiveTransfer (newdoc);
 	    }
 #ifdef ANNOTATIONS
-	  else if (method == CE_ANNOT
-		   && (docType == docHTML || docType == docHTMLRO))
+	  else if (method == CE_ANNOT && docType == docHTML)
 	    {
-	      if (docType == docHTMLRO)
-		docType = docAnnotRO;
-	      else
-		docType = docAnnot;
+	      docType = docAnnot;
 	      method = CE_RELATIVE;
 	      newdoc = doc;
 	      /* @@ IV: we are not currently able to use the XML parser for 
@@ -2428,9 +2338,8 @@ ThotBool            history;
 	      docType = docLog;
 	      newdoc = doc;
 	    }
-	  else if (method != CE_INIT ||
-		   (docType != docHTML && docType != docHTMLRO))
-	    newdoc = InitDocView (doc, documentname, docType, 0);
+	  else if (method != CE_INIT || docType != docHTML)
+	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
 	    newdoc = doc;
 	}
@@ -2472,12 +2381,10 @@ ThotBool            history;
 	      TtaFileCopy (tempfile, tempdocument);
 	      TtaFileUnlink (tempfile);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
-	      if (DocumentTypes[newdoc] == docImage ||
-		  DocumentTypes[newdoc] == docImageRO) 
+	      if (DocumentTypes[newdoc] == docImage)
 		MoveImageFile (doc, newdoc, documentname);
 	    }
-	  else if (DocumentTypes[newdoc] == docCSS ||
-		   DocumentTypes[newdoc] == docCSSRO)
+	  else if (DocumentTypes[newdoc] == docCSS)
 	      TtaFileCopy (tempfile, tempdocument);
 	    /* now we can rename the local name of a remote document */
 	  else
@@ -2493,8 +2400,7 @@ ThotBool            history;
 	}
 
       /* store a copy of CSS files in the directory 0 */
-      if (DocumentTypes[newdoc] == docCSS ||
-	  DocumentTypes[newdoc] == docCSSRO)
+      if (DocumentTypes[newdoc] == docCSS)
 	{ 
 	  css = SearchCSS (0, pathname);
 	  if (css == NULL)
@@ -2524,7 +2430,7 @@ ThotBool            history;
 
       /* save the document's formdata into the document table */
       if (DocumentMeta[newdoc] != NULL)
-	  DocumentMetaClear (DocumentMeta[newdoc]);
+	DocumentMetaClear (DocumentMeta[newdoc]);
       else
 	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
@@ -2586,8 +2492,7 @@ ThotBool            history;
 	    ParsingLevel[newdoc] = L_Transitional;
 	}
 
-      if (docType == docSVG || docType == docSVGRO ||
-	   docType == docMath || docType == docMathRO)
+      if (docType == docSVG || docType == docMath)
 	plainText = FALSE;
       else
 	plainText = (parsingLevel == L_Other);
@@ -2609,15 +2514,7 @@ ThotBool            history;
       TtaFreeMemory (tempdir);
 
       /* Set the document read-only when needed */
-      if (DocumentTypes[newdoc] == docHTMLRO
-	  || DocumentTypes[newdoc] == docImageRO
-	  || DocumentTypes[newdoc] == docCSSRO
-	  || DocumentTypes[newdoc] == docTextRO
-	  || DocumentTypes[newdoc] == docSourceRO
-#ifdef ANNOTATIONS
-	  || DocumentTypes[newdoc] == docAnnotRO	  
-#endif /* ANNOTATIONS */
-	  )
+      if (ReadOnlyDocument[newdoc])
 	SetDocumentReadOnly (newdoc);
 
       if (!plainText)
@@ -2636,9 +2533,7 @@ ThotBool            history;
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
-      if (!plainText 
-	  && DocumentTypes[newdoc] != docAnnot
-	  && DocumentTypes[newdoc] != docAnnotRO)
+      if (!plainText && DocumentTypes[newdoc] != docAnnot)
 	ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
     }
@@ -2755,8 +2650,7 @@ View                view;
       /* the document has not been loaded yet */
       return;
 
-   if (DocumentTypes[doc] == docSource ||
-       DocumentTypes[doc] == docSourceRO)
+   if (DocumentTypes[doc] == docSource)
       /* don't reload a source document */
       return;
 
@@ -2966,11 +2860,8 @@ View                view;
      /* the document is not loaded yet */
      return;
    if (DocumentTypes[document] != docHTML &&
-       DocumentTypes[document] != docHTMLRO &&
        DocumentTypes[document] != docSVG &&
-       DocumentTypes[document] != docSVGRO &&
-       DocumentTypes[document] != docMath &&
-       DocumentTypes[document] != docMathRO)
+       DocumentTypes[document] != docMath)
      /* it's not an HTML or an XML document */
      return;
    if (DocumentSource[document])
@@ -2983,17 +2874,26 @@ View                view;
      tempdocument = GetLocalPath (document, DocumentURLs[document]);
      if (TtaIsDocumentModified (document))
        {
-	  SetNamespacesAndDTD (document);
-	  if (DocumentMeta[document]->xmlformat)
-	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  TEXT("HTMLTX"));
-	  else
-	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  TEXT("HTMLT"));
+	 if (DocumentTypes[document] == docHTML)
+	   {
+	     SetNamespacesAndDTD (document);
+	     if (DocumentMeta[document]->xmlformat)
+	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						    TEXT("HTMLTX"));
+	     else
+	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						    TEXT("HTMLT"));
+	   }
+	 else if (DocumentTypes[document] == docSVG)
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						TEXT("GraphMLT"));
+	 else if (DocumentTypes[document] == docMath)
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						TEXT("MathMLT"));
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocView (0, documentname, docSource, document);   
+     sourceDoc = InitDocView (0, documentname, docSource, document, FALSE);   
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
@@ -3012,9 +2912,9 @@ View                view;
 		      tempdocument, TRUE);
 	 SetWindowTitle (document, sourceDoc, 0);
 	 /* Set the document read-only when needed */
-	 if (DocumentTypes[document] == docHTMLRO)
+	 if (ReadOnlyDocument[document])
 	   {
-	     DocumentTypes[sourceDoc] = docSourceRO;
+	     ReadOnlyDocument[sourceDoc] = TRUE;
 	     SetDocumentReadOnly (sourceDoc);
 	   }
 	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */
@@ -3061,12 +2961,10 @@ View                view;
    int                 x, y, w, h;
    CHAR_T              structureName[30];
 
-   if (DocumentTypes[document] == docSVG ||
-       DocumentTypes[document] == docSVGRO)
+   if (DocumentTypes[document] == docSVG)
      ustrcpy (structureName, TEXT("Graph_Structure_view"));
    else
-     if (DocumentTypes[document] == docMath ||
-	 DocumentTypes[document] == docMathRO)
+     if (DocumentTypes[document] == docMath)
        ustrcpy (structureName, TEXT("Math_Structure_view"));
      else
        ustrcpy (structureName, TEXT("Structure_view"));
@@ -3083,8 +2981,7 @@ View                view;
 	 {
 	   TtcSwitchButtonBar (document, structView); /* no button bar */
 	   TtcSwitchCommands (document, structView); /* no command open */
-	   if (DocumentTypes[document] == docHTMLRO ||
-	       DocumentTypes[document] == docImageRO)
+	   if (ReadOnlyDocument[document])
 	     {
 	       TtaSetItemOff (document, structView, Edit_, BCut);
 	       TtaSetItemOff (document, structView, Edit_, BPaste);
@@ -3130,8 +3027,7 @@ View                view;
 	    SetWindowTitle (document, document, altView);
 	    TtcSwitchButtonBar (document, altView); /* no button bar */
 	    TtcSwitchCommands (document, altView); /* no command open */
-	    if (DocumentTypes[document] == docHTMLRO ||
-		DocumentTypes[document] == docImageRO)
+	    if (ReadOnlyDocument[document])
 	      {
 		TtaSetItemOff (document, altView, Edit_, BCut);
 		TtaSetItemOff (document, altView, Edit_, BPaste);
@@ -3176,8 +3072,7 @@ View                view;
 	    SetWindowTitle (document, document, linksView);
 	    TtcSwitchButtonBar (document, linksView); /* no button bar */
 	    TtcSwitchCommands (document, linksView); /* no command open */
-	    if (DocumentTypes[document] == docHTMLRO ||
-		DocumentTypes[document] == docImageRO)
+	    if (ReadOnlyDocument[document])
 	      {
 		TtaSetItemOff (document, linksView, Edit_, BCut);
 		TtaSetItemOff (document, linksView, Edit_, BPaste);
@@ -3222,8 +3117,7 @@ View                view;
 	    SetWindowTitle (document, document, tocView);
 	    TtcSwitchButtonBar (document, tocView); /* no button bar */
 	    TtcSwitchCommands (document, tocView); /* no command open */
-	    if (DocumentTypes[document] == docHTMLRO ||
-		DocumentTypes[document] == docImageRO)
+	    if (ReadOnlyDocument[document])
 	      {
 		TtaSetItemOff (document, tocView, Edit_, BCut);
 		TtaSetItemOff (document, tocView, Edit_, BPaste);
@@ -3410,11 +3304,8 @@ void*     context;
 
 #ifdef ANNOTATIONS
    /* if it's an annotation, add the existing metadata */
-   if (DocumentTypes[newdoc] == docAnnot
-       || DocumentTypes[newdoc] == docAnnotRO)
-     {
-       ANNOT_LoadAnnotation (baseDoc, newdoc);
-     }
+   if (DocumentTypes[newdoc] == docAnnot)
+     ANNOT_LoadAnnotation (baseDoc, newdoc);
 #endif /* ANNOTATIONS */
    /* select the target if present */
    if (ok && !stopped_flag && target != NULL && target[0] != EOS &&
@@ -3624,11 +3515,11 @@ void               *ctx_cbf;
 	 }
        else if (CE_event == CE_LOG)
 	   /* need to create a new window for the document */
-	     newdoc = InitDocView (doc, documentname, docLog, 0);
+	     newdoc = InitDocView (doc, documentname, docLog, 0, FALSE);
        else if (CE_event == CE_HELP)
 	 {
 	   /* need to create a new window for the document */
-	   newdoc = InitDocView (doc, documentname, docHTMLRO, 0);
+	   newdoc = InitDocView (doc, documentname, docHTML, 0, TRUE);
 	   if (newdoc)
 	     {
 	       /* help document has to be in read-only mode */
@@ -3642,7 +3533,7 @@ void               *ctx_cbf;
 	 {
 	   if (newdoc == 0)
 	     /* need to create a new window for the document */
-	     newdoc = InitDocView (doc, documentname, docAnnot, 0);
+	     newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
 	   content_type = TEXT("application/rdf");
@@ -3650,7 +3541,7 @@ void               *ctx_cbf;
 #endif /* ANNOTATIONS */
        else if (doc == 0)
 	 /* In case of initial document, open the view before loading */
-	 newdoc = InitDocView (doc, documentname, docHTML, 0);
+	 newdoc = InitDocView (doc, documentname, docHTML, 0, FALSE);
        else
 	 {
 	   newdoc = doc;
@@ -4423,7 +4314,7 @@ DocumentType     docType;
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocView (doc, DocumentName, docType, 0);
+  newdoc = InitDocView (doc, DocumentName, docType, 0, FALSE);
   if (newdoc != 0)
     {
       /* load the saved file */
@@ -4796,6 +4687,7 @@ NotifyEvent        *event;
        DocumentTypes[i] = docHTML;
        DocumentSource[i] = 0;
        DocumentMeta[i] = NULL;
+       ReadOnlyDocument[i] = FALSE;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and

@@ -328,22 +328,14 @@ THOT_EXPORT CHAR_T       ErrFileName [80];
 typedef enum
 {
   docHTML,
-  docHTMLRO,
   docText,
-  docTextRO,
   docImage,
-  docImageRO,
   docCSS,
-  docCSSRO,
   docSource,
-  docSourceRO,
   docAnnot,
-  docAnnotRO,
   docLog,
   docSVG,
-  docSVGRO,
   docMath,
-  docMathRO
 } DocumentType;
 
 
@@ -353,10 +345,11 @@ typedef struct _DocumentMetaDataElement
   CHAR_T*    initial_url;      /* if the server returns a different URL name
 				  after a redirection, we store here the one
 				  that the browser first asked */
-  CHAR_T*    form_data;        /* form data associated with a URL               */
-  ClickEvent method;           /* method used to send this data                 */
-  ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME   */
+  CHAR_T*    form_data;        /* form data associated with a URL */
+  ClickEvent method;           /* method used to send this data */
+  ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME*/
   ThotBool   xmlformat;        /* the document should be exported in xml format */
+  
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document
@@ -371,6 +364,8 @@ THOT_EXPORT CHAR_T* DocumentURLs[DocumentTableLength];
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */
 THOT_EXPORT DocumentType DocumentTypes[DocumentTableLength];
+/* Document is in read only mode */
+THOT_EXPORT ThotBool ReadOnlyDocument[DocumentTableLength];
 /* identifier of the document displaying the source code */
 THOT_EXPORT Document DocumentSource[DocumentTableLength];
 /* The whole document is loaded when the corresponding entry in FilesLoading is 0 */

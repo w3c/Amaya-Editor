@@ -289,6 +289,8 @@ STRING              TSchemaName;
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
+  else if (fileName == NULL)
+    TtaError (ERR_invalid_parameter);
   else
     /* parameter document is correct */
     ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName,

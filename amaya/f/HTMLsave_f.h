@@ -21,7 +21,7 @@ extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                              View view );
 extern void SetNamespacesAndDTD ( Document doc );
-extern Document GetHTMLdocFromSource ( Document sourceDoc );
+extern Document GetDocFromSource ( Document sourceDoc );
 extern void Synchronize ( Document document,
                           View view );
 extern void SaveDocument ( Document doc,
@@ -47,7 +47,7 @@ extern void DoSaveObjectAs (/* void */);
 extern void SaveDocumentAs (/* Document doc,
                                View view */);
 extern void SetNamespacesAndDTD (/* Document doc */);
-extern Document GetHTMLdocFromSource (/* Document sourceDoc */);
+extern Document GetDocFromSource (/* Document sourceDoc */);
 extern void Synchronize (/* Document document,
                             View view */);
 extern void SaveDocument (/* Document doc,
