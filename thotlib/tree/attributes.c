@@ -312,14 +312,14 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int view, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
+static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int frame, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 
 #else  /* __STDC__ */
-static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, view, pEl, pDoc, pAttr)
+static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, frame, pEl, pDoc, pAttr)
 PtrAbstractBox      pAbsBox;
 int                 boxNum;
 PtrPSchema          pPSchema;
-int                 view;
+int                 frame;
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
@@ -327,45 +327,37 @@ PtrAttribute        pAttr;
 #endif /* __STDC__ */
 
 {
-   int                 frame, height;
-   PtrAbstractBox      pAbChild;
+  int                 height;
+  PtrAbstractBox      pAbChild;
 
-   if (pAbsBox->AbPresentationBox)
-     {
-	/* c'est un pave de presentation */
-	if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
-	   /* c'est bien un pave du type cherche' */
-	   /* recalcule la valeur de la variable de presentation */
-	    if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
-			     pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
-	      {
-
-		/* la variable de presentation a change' de valeur */
-		pAbsBox->AbChange = TRUE;
-		if (AssocView (pEl))
-		  frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
-		else
-		  frame = (pDoc)->DocViewFrame[view - 1];
-		height = PageHeight;
-		ChangeConcreteImage (frame, &height, pAbsBox);
-		/* on ne reaffiche pas si on est en train de calculer les pages */
-		if (PageHeight == 0)
-		  DisplayFrame (frame);
-	      }
-     }
-   else
-      /* ce n'est pas un pave' de pre'sentation */
-      /* cherche parmi les fils les paves de presentation */
-      /* de l'element et de ses descendants */
-     {
-	pAbChild = pAbsBox->AbFirstEnclosed;
-	while (pAbChild != NULL)
+  if (pAbsBox->AbPresentationBox)
+    {
+      /* c'est un pave de presentation */
+      if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
+	/* c'est bien un pave du type cherche' */
+	/* recalcule la valeur de la variable de presentation */
+	if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
+			 pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
 	  {
-	     RedisplayAbsBox (pAbChild, boxNum, pPSchema, view, pEl, pDoc, pAttr);
-	     /* next child abstract box */
-	     pAbChild = pAbChild->AbNext;
+	    /* la variable de presentation a change' de valeur */
+	    pAbsBox->AbChange = TRUE;
+	    height = PageHeight;
+	    ChangeConcreteImage (frame, &height, pAbsBox);
 	  }
-     }
+    }
+  else
+    /* ce n'est pas un pave' de pre'sentation */
+    /* cherche parmi les fils les paves de presentation */
+    /* de l'element et de ses descendants */
+    {
+      pAbChild = pAbsBox->AbFirstEnclosed;
+      while (pAbChild != NULL)
+	{
+	  RedisplayAbsBox (pAbChild, boxNum, pPSchema, frame, pEl, pDoc, pAttr);
+	  /* next child abstract box */
+	  pAbChild = pAbChild->AbNext;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -388,10 +380,11 @@ PtrDocument         pDoc;
 
 {
    PtrPSchema          pPSchema;
-   int                 varNum, item, presBox, view;
    ThotBool            found;
    PtrAbstractBox      pAbsBox;
    PresVariable       *pPresVar;
+   int                 varNum, item, presBox;
+   int                 frame, view;
 
    /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
    /* variable de presentation ? */
@@ -424,15 +417,19 @@ PtrDocument         pDoc;
 		      for (view = 0; view < MAX_VIEW_DOC; view++)
 			{
 			   pAbsBox = pEl->ElAbstractBox[view];
+			   frame = pDoc->DocViewFrame[view];
 			   while (pAbsBox != NULL)	/* parcourt les paves de l'element */
 			      if (pAbsBox->AbElement != pEl)
 				 pAbsBox = NULL;	/* on a traite' tous les paves de l'element */
 			      else
 				 /* c'est un pave' de l'element */
 				{
-				   RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, view + 1, pEl, pDoc, pAttr);
+				   RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, frame, pEl, pDoc, pAttr);
 				   pAbsBox = pAbsBox->AbNext;
 				}
+			   /* on ne reaffiche pas si on est en train de calculer les pages */
+			   if (PageHeight == 0)
+			     DisplayFrame (frame);
 			}
 	     }
 	}

@@ -48,9 +48,12 @@ extern int TtaWC2MB ( CHAR_T wchar,
 extern int TtaMB2WC ( char* mbchar,
                       CHAR_T* wchar,
                       CHARSET encoding );
-extern int TtaMBS2WCS (unsigned char** src,
-                      CHAR_T** target,
-                      CHARSET encoding );
+extern int TtaMBS2WCS ( unsigned char** src,
+                        CHAR_T** target,
+                        CHARSET encoding );
+extern int TtaWCS2MBS ( CHAR_T** src,
+                        unsigned char** target,
+                        CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -97,8 +100,11 @@ extern int TtaMB2WC (/* char* mbchar,
                         CHAR_T* wchar,
                         CHARSET encoding */);
 extern int TtaMBS2WCS (/* unsigned char** src,
-			  CHAR_T** target,
-			  CHARSET encoding */);
+                          CHAR_T** target,
+                          CHARSET encoding */);
+extern int TtaWCS2MBS (/* CHAR_T** src,
+                          unsigned char** target,
+                          CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
