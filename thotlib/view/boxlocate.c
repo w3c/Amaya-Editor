@@ -210,30 +210,27 @@ int                 y2;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DansLaPolyLine indique si le point x,y se trouve a`             | */
+/* |    InPolyline indique si le point x,y se trouve a`                 | */
 /* |     l'inte'rieur de la polyline ou non.                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DansLaPolyLine (PtrAbstractBox pave, int x, int y)
-
+static boolean      InPolyline (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static boolean      DansLaPolyLine (pave, x, y)
-PtrAbstractBox             pave;
+static boolean      InPolyline (pAb, x, y)
+PtrAbstractBox      pAb;
 int                 x;
 int                 y;
-
 #endif /* __STDC__ */
 {
+   PtrTextBuffer      buff, pLastBuffer;
+   int                cross;
+   int                i, max;
+   int                prevX, prevY;
+   int                nextX, nextY;
+   PtrBox             box;
+   boolean            OK;
 
-   PtrTextBuffer      buff, maxbuff;
-   int                 croise;
-   int                 i, max;
-   int                 prevX, prevY;
-   int                 nextX, nextY;
-   PtrBox            box;
-   boolean             OK;
-
-   box = pave->AbBox;
+   box = pAb->AbBox;
    x -= box->BxXOrg;
    y -= box->BxYOrg;
    max = box->BxNChars;
@@ -242,17 +239,17 @@ int                 y;
       return (FALSE);
 
    /* premier et dernier point de la polyline */
-   maxbuff = buff = box->BxBuffer;
+   pLastBuffer = buff = box->BxBuffer;
    i = 1;
-   while (maxbuff->BuNext != NULL)
-      maxbuff = maxbuff->BuNext;
-   max = maxbuff->BuLength - 1;
+   while (pLastBuffer->BuNext != NULL)
+      pLastBuffer = pLastBuffer->BuNext;
+   max = pLastBuffer->BuLength - 1;
 
-   croise = 0;
+   cross = 0;
    nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
    nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
-   prevX = PointToPixel (maxbuff->BuPoints[max].XCoord / 1000);
-   prevY = PointToPixel (maxbuff->BuPoints[max].YCoord / 1000);
+   prevX = PointToPixel (pLastBuffer->BuPoints[max].XCoord / 1000);
+   prevY = PointToPixel (pLastBuffer->BuPoints[max].YCoord / 1000);
    if ((prevY >= y) != (nextY >= y))
      {
 	/* y entre nextY et prevY */
@@ -261,15 +258,15 @@ int                 y;
 	     /* x du meme cote des deux extremites */
 	     if (OK)
 		/* nextX et prevX >= x */
-		croise++;
+		cross++;
 	  }
 	else
 	   /* x entre deux extremites */
-	   croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+	   cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
      }
 
    i++;
-   while (i <= max || buff != maxbuff)
+   while (i <= max || buff != pLastBuffer)
      {
 	prevX = nextX;
 	prevY = nextY;
@@ -277,10 +274,10 @@ int                 y;
 	nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	if (prevY >= y)
 	  {
-	     while ((i <= max || buff != maxbuff) && (nextY >= y))
+	     while ((i <= max || buff != pLastBuffer) && (nextY >= y))
 	       {
 		  i++;		/* changement de point */
-		  if (i >= buff->BuLength && buff != maxbuff)
+		  if (i >= buff->BuLength && buff != pLastBuffer)
 		    {
 		       buff = buff->BuNext;	/* passe au buffer suivant */
 		       i = 0;
@@ -291,23 +288,23 @@ int                 y;
 		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	       }
 
-	     if (i > max && buff == maxbuff)
+	     if (i > max && buff == pLastBuffer)
 		break;
 
 	     if ((OK = (prevX >= x)) == (nextX >= x))
 	       {
 		  if (OK)
-		     croise++;
+		     cross++;
 	       }
 	     else
-		croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
 	else
 	  {
-	     while ((i <= max || buff != maxbuff) && (nextY < y))
+	     while ((i <= max || buff != pLastBuffer) && (nextY < y))
 	       {
 		  i++;		/* changement de point */
-		  if (i >= buff->BuLength && buff != maxbuff)
+		  if (i >= buff->BuLength && buff != pLastBuffer)
 		    {
 		       buff = buff->BuNext;	/* passe au buffer suivant */
 		       i = 0;
@@ -318,19 +315,19 @@ int                 y;
 		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	       }
 
-	     if (i > max && buff == maxbuff)
+	     if (i > max && buff == pLastBuffer)
 		break;
 
 	     if ((OK = (prevX >= x)) == (nextX >= x))
 	       {
 		  if (OK)
-		     croise++;
+		     cross++;
 	       }
 	     else
-		croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
      }
-   OK = (boolean) (croise & 0x01);
+   OK = (boolean) (cross & 0x01);
    return (OK);
 }
 
@@ -343,10 +340,10 @@ int                 y;
 /* |    sinon, la valeur NULL.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrBox     SurLaPolyLine (PtrAbstractBox pave, int x, int y, int *pointselect)
+static PtrBox     SurLaPolyLine (PtrAbstractBox pAb, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-static PtrBox     SurLaPolyLine (pave, x, y, pointselect)
-PtrAbstractBox             pave;
+static PtrBox     SurLaPolyLine (pAb, x, y, pointselect)
+PtrAbstractBox             pAb;
 int                 x;
 int                 y;
 int                *pointselect;
@@ -361,7 +358,7 @@ int                *pointselect;
    boolean             OK;
 
    Y1 = 0;
-   box = pave->AbBox;
+   box = pAb->AbBox;
    nb = box->BxNChars;
    if (nb < 3)
       /* il n'y a pas au moins un segment defini */
@@ -412,7 +409,7 @@ int                *pointselect;
 	  }
      }
    /* traite le cas particulier des polylines fermees */
-   if (pave->AbPolyLineShape == 'p' || pave->AbPolyLineShape == 's')
+   if (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
      {
 	X2 = PointToPixel (box->BxBuffer->BuPoints[1].XCoord / 1000);
 	Y2 = PointToPixel (box->BxBuffer->BuPoints[1].YCoord / 1000);
@@ -428,17 +425,17 @@ int                *pointselect;
 /* |     l'inte'rieur du graphique ou non.                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DansLeGraphique (PtrAbstractBox pave, int x, int y)
+static boolean      DansLeGraphique (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static boolean      DansLeGraphique (pave, x, y)
-PtrAbstractBox             pave;
+static boolean      DansLeGraphique (pAb, x, y)
+PtrAbstractBox             pAb;
 int                 x;
 int                 y;
 
 #endif /* __STDC__ */
 {
    int                 point[8][2];
-   int                 croise;
+   int                 cross;
    int                 i, max;
    int                 prevX, prevY;
    int                 nextX, nextY;
@@ -447,13 +444,13 @@ int                 y;
    PtrBox            box;
    boolean             OK;
 
-   box = pave->AbBox;
+   box = pAb->AbBox;
    x -= box->BxXOrg;
    y -= box->BxYOrg;
    max = 0;
 
    /* Est-ce un point caracteristique specifique du graphique ? */
-   switch (pave->AbRealShape)
+   switch (pAb->AbRealShape)
 	 {
 	    case ' ':
 	    case 'R':
@@ -529,7 +526,7 @@ int                 y;
 
    /* premier et dernier point de la polyline */
    i = 0;
-   croise = 0;
+   cross = 0;
    nextX = point[0][0];
    nextY = point[0][1];
    prevX = point[max][0];
@@ -542,11 +539,11 @@ int                 y;
 	     /* x du meme cote des deux extremites */
 	     if (OK)
 		/* nextX et prevX >= x */
-		croise++;
+		cross++;
 	  }
 	else
 	   /* x entre deux extremites */
-	   croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+	   cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
      }
 
    i++;
@@ -573,10 +570,10 @@ int                 y;
 	     if ((OK = (prevX >= x)) == (nextX >= x))
 	       {
 		  if (OK)
-		     croise++;
+		     cross++;
 	       }
 	     else
-		croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
 	else
 	  {
@@ -595,41 +592,41 @@ int                 y;
 	     if ((OK = (prevX >= x)) == (nextX >= x))
 	       {
 		  if (OK)
-		     croise++;
+		     cross++;
 	       }
 	     else
-		croise += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
+		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
      }
-   OK = (boolean) (croise & 0x01);
+   OK = (boolean) (cross & 0x01);
    return (OK);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    SurLeGraphique teste si le point x,y appartient au pave'        | */
-/* |    graphique pave.                                                 | */
+/* |    IsOnShape teste si le point x,y appartient au pave'        | */
+/* |    graphique pAb.                                                  | */
 /* |    Si oui, retourne l'adresse de la boi^te correspondante          | */
 /* |    sinon, la valeur NULL.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrBox     SurLeGraphique (PtrAbstractBox pave, int x, int y)
+static PtrBox     IsOnShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static PtrBox     SurLeGraphique (pave, x, y)
-PtrAbstractBox             pave;
+static PtrBox     IsOnShape (pAb, x, y)
+PtrAbstractBox      pAb;
 int                 x;
 int                 y;
 
 #endif /* __STDC__ */
 {
-   PtrBox            box;
-   int                 ptc;
-   int                 arc;
+   PtrBox            pBox;
+   int               controlPoint;
+   int               arc;
 
    /* coordonnees relatives a la boite (calculs plus simples) */
-   box = pave->AbBox;
-   x -= box->BxXOrg;
-   y -= box->BxYOrg;
+   pBox = pAb->AbBox;
+   x -= pBox->BxXOrg;
+   y -= pBox->BxYOrg;
 
    /* On note eventuellement le point caracteristique selectionne */
    /*            1-------------2-------------3                  */
@@ -642,37 +639,37 @@ int                 y;
 
    if (x < DELTA_SEL)
       if (y < DELTA_SEL)
-	 ptc = 1;
-      else if (y > box->BxHeight / 2 - DELTA_SEL &&
-	       y < box->BxHeight / 2 + DELTA_SEL)
-	 ptc = 8;
-      else if (y > box->BxHeight - 10)
-	 ptc = 7;
+	 controlPoint = 1;
+      else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
+	       y < pBox->BxHeight / 2 + DELTA_SEL)
+	 controlPoint = 8;
+      else if (y > pBox->BxHeight - 10)
+	 controlPoint = 7;
       else
-	 ptc = 0;
-   else if (x > box->BxWidth / 2 - DELTA_SEL &&
-	    x < box->BxWidth / 2 + DELTA_SEL)
+	 controlPoint = 0;
+   else if (x > pBox->BxWidth / 2 - DELTA_SEL &&
+	    x < pBox->BxWidth / 2 + DELTA_SEL)
       if (y < DELTA_SEL)
-	 ptc = 2;
-      else if (y > box->BxHeight - DELTA_SEL)
-	 ptc = 6;
+	 controlPoint = 2;
+      else if (y > pBox->BxHeight - DELTA_SEL)
+	 controlPoint = 6;
       else
-	 ptc = 0;
-   else if (x > box->BxWidth - DELTA_SEL)
+	 controlPoint = 0;
+   else if (x > pBox->BxWidth - DELTA_SEL)
       if (y < DELTA_SEL)
-	 ptc = 3;
-      else if (y > box->BxHeight / 2 - DELTA_SEL &&
-	       y < box->BxHeight / 2 + DELTA_SEL)
-	 ptc = 4;
-      else if (y > box->BxHeight - 10)
-	 ptc = 5;
+	 controlPoint = 3;
+      else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
+	       y < pBox->BxHeight / 2 + DELTA_SEL)
+	 controlPoint = 4;
+      else if (y > pBox->BxHeight - 10)
+	 controlPoint = 5;
       else
-	 ptc = 0;
+	 controlPoint = 0;
    else
-      ptc = 0;
+      controlPoint = 0;
 
    /* Est-ce un point caracteristique specifique du graphique ? */
-   switch (pave->AbRealShape)
+   switch (pAb->AbRealShape)
 	 {
 	    case ' ':
 	    case 'R':
@@ -685,104 +682,104 @@ int                 y;
 	    case '6':
 	    case '7':
 	    case '8':
-	       if (IsOnPolyline (x, y, 0, 0, box->BxWidth, 0) ||
-		   IsOnPolyline (x, y, 0, box->BxHeight, box->BxWidth, box->BxHeight) ||
-		   IsOnPolyline (x, y, 0, 0, 0, box->BxHeight) ||
-		   IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
-		  return (box);
+	       if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, pBox->BxHeight) ||
+		   IsOnPolyline (x, y, 0, 0, 0, pBox->BxHeight) ||
+		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'L':
-	       if (IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, 0) ||
-		   IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight) ||
-		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, 0) ||
-		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight))
-		  return (box);
+	       if (IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight) ||
+		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
+		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'C':
 	    case 'P':
 	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
-	       if (IsOnPolyline (x, y, arc, 0, box->BxWidth - arc, 0) ||
-		   IsOnPolyline (x, y, 0, arc, 0, box->BxHeight - arc) ||
-		   IsOnPolyline (x, y, arc, box->BxHeight, box->BxWidth - arc, box->BxHeight) ||
-		   IsOnPolyline (x, y, box->BxWidth, arc, box->BxWidth, box->BxHeight - arc))
-		  return (box);
+	       if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
+		   IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
+		   IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc, pBox->BxHeight) ||
+		   IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth, pBox->BxHeight - arc))
+		  return (pBox);
 	       break;
 	    case 'c':
 	    case 'Q':
-	       if (ptc == 2 || ptc == 4 || ptc == 6 || ptc == 8)
-		  return (box);
+	       if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 || controlPoint == 8)
+		  return (pBox);
 	       break;
 	    case 'W':
-	       if (ptc == 1 || ptc == 3 || ptc == 5 ||
-		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0) ||
-	       IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
+		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
+	       IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'X':
-	       if (ptc == 3 || ptc == 5 || ptc == 7 ||
-		   IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight) ||
-	       IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
+		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight) ||
+	       IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'Y':
-	       if (ptc == 1 || ptc == 5 || ptc == 7 ||
-		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight) ||
-		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
+		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight) ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+		  return (pBox);
 	       break;
 	    case 'Z':
-	       if (ptc == 1 || ptc == 3 || ptc == 7 ||
-		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0) ||
-		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0) ||
+		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+		  return (pBox);
 	       break;
 	    case 'h':
 	    case '<':
 	    case '>':
-	       if (ptc == 4 || ptc == 8 ||
-		   IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth, box->BxHeight / 2))
-		  return (box);
+	       if (controlPoint == 4 || controlPoint == 8 ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth, pBox->BxHeight / 2))
+		  return (pBox);
 	       break;
 	    case 't':
-	       if (ptc == 1 || ptc == 2 || ptc == 3 ||
-		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
+		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+		  return (pBox);
 	       break;
 	    case 'b':
-	       if (ptc == 5 || ptc == 6 || ptc == 7 ||
-	       IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
+	       IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'v':
 	    case '^':
 	    case 'V':
-	       if (ptc == 2 || ptc == 6 ||
-		   IsOnPolyline (x, y, box->BxWidth / 2, 0, box->BxWidth / 2, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 2 || controlPoint == 6 ||
+		   IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case 'l':
-	       if (ptc == 1 || ptc == 7 || ptc == 8 ||
-		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+		  return (pBox);
 	       break;
 	    case 'r':
-	       if (ptc == 3 || ptc == 4 || ptc == 5 ||
-	       IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
+	       IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case '\\':
 	    case 'O':
 	    case 'e':
-	       if (ptc == 1 || ptc == 5 ||
-		   IsOnPolyline (x, y, 0, 0, box->BxWidth, box->BxHeight))
-		  return (box);
+	       if (controlPoint == 1 || controlPoint == 5 ||
+		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+		  return (pBox);
 	       break;
 	    case '/':
 	    case 'o':
 	    case 'E':
-	       if (ptc == 3 || ptc == 7 ||
-		   IsOnPolyline (x, y, 0, box->BxHeight, box->BxWidth, 0))
-		  return (box);
+	       if (controlPoint == 3 || controlPoint == 7 ||
+		   IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+		  return (pBox);
 	       break;
 	    default:
 	       break;
@@ -790,22 +787,55 @@ int                 y;
    return (NULL);
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    DansLaBoite teste si le point x, y appartient au pave'          | */
-/* |    pAb.                                                         | */
+/* | GetClickedAbsBox recherche le pave englobant le point designe' par | */
+/* |            xRef,yRef de la fenetre frame.                          | */
+/* |            La fonction rend le pointeur sur le plus elementaire    | */
+/* |            des paves qui englobe le point designe ou NULL.         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrAbstractBox             DesPave (int frame, int xRef, int yRef)
+#else  /* __STDC__ */
+PtrAbstractBox             DesPave (frame, xRef, yRef)
+int                 frame;
+int                 xRef;
+int                 yRef;
+
+#endif /* __STDC__ */
+{
+   ViewFrame        *pFrame;
+   PtrBox            pBox;
+   int               pointselect;
+
+   pFrame = &FntrTable[frame - 1];
+   pBox = NULL;
+   if (pFrame->FrAbstractBox != NULL)
+      if (ThotLocalActions[T_selecbox] != NULL)
+	 (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
+				       yRef + pFrame->FrYOrg, &pointselect);
+   if (pBox == NULL)
+      return (NULL);
+   else
+      return (pBox->BxAbstractBox);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |  GetClickedBox teste si le point x, y appartient au pave'          | */
+/* |    pAb.                                                            | */
 /* |    Si oui, retourne l'adresse du pave' correspondant               | */
 /* |    sinon, la valeur NULL.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            DansLaBoite (PtrAbstractBox pAb, int Xmin, int Xmax, int y, int *pointselect)
+PtrBox            DansLaBoite (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
 #else  /* __STDC__ */
-PtrBox            DansLaBoite (pAb, Xmin, Xmax, y, pointselect)
-PtrAbstractBox             pAb;
-int                 Xmin;
-int                 Xmax;
+PtrBox            DansLaBoite (pAb, higherX, lowerX, y, pointselect)
+PtrAbstractBox      pAb;
+int                 higherX;
+int                 lowerX;
 int                 y;
 int                *pointselect;
-
 #endif /* __STDC__ */
 {
    PtrBox            pBox;
@@ -823,8 +853,8 @@ int                *pointselect;
 	     for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	       {
 		  if (pBox->BxNChars > 0 &&
-		      pBox->BxXOrg <= Xmax &&
-		      pBox->BxXOrg + pBox->BxWidth >= Xmin &&
+		      pBox->BxXOrg <= lowerX &&
+		      pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		      pBox->BxYOrg <= y &&
 		      pBox->BxYOrg + pBox->BxHeight >= y)
 		     return (pBox);
@@ -835,18 +865,18 @@ int                *pointselect;
 	else if (pBox->BxType == BoGhost)
 	   return (NULL);
 	/* Si le pave englobe le point designe */
-	else if (pBox->BxXOrg <= Xmax
-		 && pBox->BxXOrg + pBox->BxWidth >= Xmin
+	else if (pBox->BxXOrg <= lowerX
+		 && pBox->BxXOrg + pBox->BxWidth >= higherX
 		 && pBox->BxYOrg <= y
 		 && pBox->BxYOrg + pBox->BxHeight >= y)
 	   /* Si c'est un pave graphique */
 	   if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 	     {
-		pBox = SurLeGraphique (pAb, Xmax, y);
+		pBox = IsOnShape (pAb, lowerX, y);
 		if (pBox != NULL)
 		   return (pBox);
 		/* le point n'est pas sur un des segments */
-		if (DansLeGraphique (pAb, Xmax, y))
+		if (DansLeGraphique (pAb, lowerX, y))
 		   return (pAb->AbBox);
 		else
 		   return (pBox);
@@ -854,12 +884,12 @@ int                *pointselect;
 	   else if (pAb->AbLeafType == LtPlyLine && pAb->AbVolume > 2)
 	     {
 		/* La polyline contient au moins un segment */
-		pBox = SurLaPolyLine (pAb, Xmax, y, pointselect);
+		pBox = SurLaPolyLine (pAb, lowerX, y, pointselect);
 		if (pBox != NULL)
 		   return (pBox);
 		/* le point n'est pas sur un des segments */
 		if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
-		    && DansLaPolyLine (pAb, Xmax, y))
+		    && InPolyline (pAb, lowerX, y))
 		   return (pAb->AbBox);
 		else
 		   return (pBox);
@@ -869,39 +899,6 @@ int                *pointselect;
 	else
 	   return (NULL);
      }
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    DesPave recherche le pave englobant le point designe' par x,y   | */
-/* |            de la fenetre frame.                                    | */
-/* |            La fonction rend le pointeur sur le plus elementaire    | */
-/* |            des paves qui englobe le point designe ou NULL.         | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-PtrAbstractBox             DesPave (int frame, int x, int y)
-#else  /* __STDC__ */
-PtrAbstractBox             DesPave (frame, x, y)
-int                 frame;
-int                 x;
-int                 y;
-
-#endif /* __STDC__ */
-{
-   ViewFrame            *pFrame;
-   PtrBox            pBox;
-   int                 pointselect;
-
-   pFrame = &FntrTable[frame - 1];
-   pBox = NULL;
-   if (pFrame->FrAbstractBox != NULL)
-      if (ThotLocalActions[T_selecbox] != NULL)
-	 (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox, frame, x + pFrame->FrXOrg,
-				       y + pFrame->FrYOrg, &pointselect);
-   if (pBox == NULL)
-      return (NULL);
-   else
-      return (pBox->BxAbstractBox);
 }
 
 
@@ -918,9 +915,11 @@ PtrAbstractBox             pAb;
 #endif /* __STDC__ */
 {
    if (pAb->AbFirstEnclosed != NULL)
-      return (pAb->AbFirstEnclosed);	/*le premier fils */
+     /*le premier fils */
+     return (pAb->AbFirstEnclosed);
    else if (pAb->AbNext != NULL)
-      return (pAb->AbNext);	/*le suivant */
+     /*le suivant */
+     return (pAb->AbNext);
    else if (pAb->AbEnclosing != NULL)
      {
 	/* Le suivant d'un pere */
@@ -963,7 +962,7 @@ int                 dist;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    DistGraphique calcule la distance d'un point xRef,yRef a`       | */
+/* |   GetShapeDistance calcule la distance d'un point xRef,yRef a`     | */
 /* |            un point de la boite graphique (min des distances aux   | */
 /* |            ancres).                                                | */
 /* |            Cette selection est limitee aux boites terminale.       | */
@@ -977,7 +976,6 @@ int                 xRef;
 int                 yRef;
 PtrBox            pBox;
 int                 value;
-
 #endif /* __STDC__ */
 {
    int                 distance;
@@ -1092,31 +1090,31 @@ int                 value;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  DesBoiteTerm recherche la boite terminale situee au point x,y     | */
-/* |    dans l'image concrete.                                          | */
+/* |  GetClickedLeafBox recherche la boite terminale situee au point    | */
+/* |    xRef,yRef dans l'image concrete.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrBox            DesBoiteTerm (int frame, int x, int y)
+PtrBox            DesBoiteTerm (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
-PtrBox            DesBoiteTerm (frame, x, y)
+PtrBox            DesBoiteTerm (frame, xRef, yRef)
 int                 frame;
-int                 x;
-int                 y;
+int                 xRef;
+int                 yRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pav;
-   PtrBox            sbox, pBox;
-   PtrBox            testbox;
-   int                 distmax;
+   PtrAbstractBox             pAb;
+   PtrBox            pSelBox, pBox;
+   PtrBox            pCurrentBox;
+   int                 max;
    int                 pointIndex;
    int                 d;
    ViewFrame            *pFrame;
 
    pBox = NULL;
-   sbox = NULL;
-   /* au-dela de distmax, on n'accepte pas la selection */
-   distmax = 2000;
+   pSelBox = NULL;
+   /* au-dela de max, on n'accepte pas la selection */
+   max = 2000;
    pFrame = &FntrTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
@@ -1126,115 +1124,115 @@ int                 y;
 	pBox = pBox->BxNext;
 	while (pBox != NULL)
 	  {
-	     pav = pBox->BxAbstractBox;
-	     if (pav->AbVisibility >= pFrame->FrVisibility
-		 && (!pav->AbPresentationBox || pav->AbCanBeModified))
+	     pAb = pBox->BxAbstractBox;
+	     if (pAb->AbVisibility >= pFrame->FrVisibility
+		 && (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
-		  if (pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
+		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
 		    {
-		       testbox = DansLaBoite (pav, x, x, y, &pointIndex);
-		       if (testbox == NULL)
-			  d = distmax + 1;
+		       pCurrentBox = DansLaBoite (pAb, xRef, xRef, yRef, &pointIndex);
+		       if (pCurrentBox == NULL)
+			  d = max + 1;
 		       else
 			  d = 0;
 		    }
-		  else if (pav->AbLeafType == LtSymbol && pav->AbShape == 'r')
+		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		     /* glitch pour le symbole racine */
-		     d = DistGraphique (x, y, pBox, 1);
-		  else if (pav->AbLeafType == LtText
-			   || pav->AbLeafType == LtSymbol
-			   || pav->AbLeafType == LtPicture
+		     d = DistGraphique (xRef, yRef, pBox, 1);
+		  else if (pAb->AbLeafType == LtText
+			   || pAb->AbLeafType == LtSymbol
+			   || pAb->AbLeafType == LtPicture
 		     /* ou une boite composee vide */
-		   || (pav->AbLeafType == LtCompound && pav->AbVolume == 0))
-		     d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
+		   || (pAb->AbLeafType == LtCompound && pAb->AbVolume == 0))
+		     d = GetBoxDistance (xRef, yRef, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
 		  else
-		     d = distmax + 1;
+		     d = max + 1;
 
 		  /* Prend l'element le plus proche */
-		  if (d < distmax)
+		  if (d < max)
 		    {
-		       distmax = d;
-		       sbox = pBox;
+		       max = d;
+		       pSelBox = pBox;
 		    }
-		  else if (d == distmax)
+		  else if (d == max)
 		    {
 		       /* Si c'est la premiere boite trouvee */
-		       if (sbox == NULL)
+		       if (pSelBox == NULL)
 			 {
-			    distmax = d;
-			    sbox = pBox;
+			    max = d;
+			    pSelBox = pBox;
 			 }
 		       /* Si la boite est sur un plan au dessus de la precedente */
-		       else if (sbox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
+		       else if (pSelBox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
-			    distmax = d;
-			    sbox = pBox;
+			    max = d;
+			    pSelBox = pBox;
 			 }
 		    }
 	       }
 	     pBox = pBox->BxNext;
 	  }
      }
-   return sbox;
+   return pSelBox;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |  DepZone de'termine les limites de de'placement de la boite en X ou| */
-/* |            en Y.                                                   | */
+/* |  GiveMovingArea de'termine les limites de de'placement de la boite | */
+/* |            horizontalement/verticalement.                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         DepZone (PtrAbstractBox pave, int frame, boolean EnX, int *min, int *max)
+static void         GiveMovingArea (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static void         DepZone (pave, frame, EnX, min, max)
-PtrAbstractBox             pave;
+static void         GiveMovingArea (pAb, frame, horizRef, min, max)
+PtrAbstractBox             pAb;
 int                 frame;
-boolean             EnX;
+boolean             horizRef;
 int                *min;
 int                *max;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             englobant;
+   PtrAbstractBox             pParentAb;
 
    /* Valeurs par defaut */
    *min = 0;
    *max = 100000;
 
    /* C'est la boite racine */
-   if (pave == FntrTable[frame - 1].FrAbstractBox)
+   if (pAb == FntrTable[frame - 1].FrAbstractBox)
      {
-	if (EnX)
+	if (horizRef)
 	  {
 	     /* Est-ce que la boite depend de la fenetre */
-	     if ((pave->AbWidth.DimValue == 0)
-		 || (pave->AbBox->BxHorizEdge == Right))
-		*max = pave->AbBox->BxWidth;
+	     if ((pAb->AbWidth.DimValue == 0)
+		 || (pAb->AbBox->BxHorizEdge == Right))
+		*max = pAb->AbBox->BxWidth;
 	  }
 	else
 	  {
-	     if ((pave->AbHeight.DimValue == 0)
-		 || (pave->AbBox->BxVertEdge == Bottom))
-		*max = pave->AbBox->BxHeight;
+	     if ((pAb->AbHeight.DimValue == 0)
+		 || (pAb->AbBox->BxVertEdge == Bottom))
+		*max = pAb->AbBox->BxHeight;
 	  }
      }
    /* Dans les autres cas */
-   else if (EnX)
+   else if (horizRef)
      {
 	/* Si le pave est englobe depend de son englobant direct */
-	if (pave->AbHorizEnclosing)
-	   englobant = pave->AbEnclosing;
+	if (pAb->AbHorizEnclosing)
+	   pParentAb = pAb->AbEnclosing;
 	else
-	   englobant = FntrTable[frame - 1].FrAbstractBox;
+	   pParentAb = FntrTable[frame - 1].FrAbstractBox;
 
 	/* A priori limite dans l'espace de la boite englobante */
-	*min = englobant->AbBox->BxXOrg;
-	*max = *min + englobant->AbBox->BxWidth;
+	*min = pParentAb->AbBox->BxXOrg;
+	*max = *min + pParentAb->AbBox->BxWidth;
 
 	/* Si la boite englobante prend la taille de son contenu */
 	/* et que le pave n'est pas attache a l'englobante       */
-	if (englobant->AbBox->BxContentWidth)
-	   switch (englobant->AbBox->BxHorizEdge)
+	if (pParentAb->AbBox->BxContentWidth)
+	   switch (pParentAb->AbBox->BxHorizEdge)
 		 {
 		    case Left:
 		       *max = 100000;
@@ -1251,18 +1249,18 @@ int                *max;
    else
      {
 	/* Si le pave est englobe depend de son englobant direct */
-	if (pave->AbVertEnclosing)
-	   englobant = pave->AbEnclosing;
+	if (pAb->AbVertEnclosing)
+	   pParentAb = pAb->AbEnclosing;
 	else
-	   englobant = FntrTable[frame - 1].FrAbstractBox;
+	   pParentAb = FntrTable[frame - 1].FrAbstractBox;
 
 	/* A priori limite dans l'espace de la boite englobante */
-	*min = englobant->AbBox->BxYOrg;
-	*max = *min + englobant->AbBox->BxHeight;
+	*min = pParentAb->AbBox->BxYOrg;
+	*max = *min + pParentAb->AbBox->BxHeight;
 
 	/* Si la boite englobante prend la taille de son contenu */
-	if (englobant->AbBox->BxContentHeight)
-	   switch (englobant->AbBox->BxVertEdge)
+	if (pParentAb->AbBox->BxContentHeight)
+	   switch (pParentAb->AbBox->BxVertEdge)
 		 {
 		    case Top:
 		       *max = 100000;
@@ -1280,104 +1278,104 @@ int                *max;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PModifiable teste si un pave est modifiable en position         | */
+/* |    CanBeTranslated teste si un pave est modifiable en position     | */
 /* |            (X ou Y), et si oui, rend les positions extremes        | */
 /* |            de la boite.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      PModifiable (PtrAbstractBox pave, int frame, boolean EnX, int *min, int *max)
+static boolean      CanBeTranslated (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static boolean      PModifiable (pave, frame, EnX, min, max)
-PtrAbstractBox             pave;
+static boolean      CanBeTranslated (pAb, frame, horizRef, min, max)
+PtrAbstractBox             pAb;
 int                 frame;
-boolean             EnX;
+boolean             horizRef;
 int                *min;
 int                *max;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pere;
-   PtrBox            box;
+   PtrAbstractBox             pParentAb;
+   PtrBox            pBox;
    boolean             ok;
 
-   box = pave->AbBox;
-   pere = pave->AbEnclosing;
+   pBox = pAb->AbBox;
+   pParentAb = pAb->AbEnclosing;
    /* Deplacement nul si ok est faux */
-   if (EnX)
-      *min = box->BxXOrg;
+   if (horizRef)
+      *min = pBox->BxXOrg;
    else
-      *min = box->BxYOrg;
+      *min = pBox->BxYOrg;
    *max = *min;
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElSructSchema))
       ok = FALSE;
    else
 #endif
       /* Box non deplacable */
-   if (!PavMovable (pave, EnX))
+   if (!PavMovable (pAb, horizRef))
       ok = FALSE;
    /* Box de presentation */
-   else if (pave->AbPresentationBox)
+   else if (pAb->AbPresentationBox)
       ok = FALSE;
    /* Box elastique */
-   else if (EnX && pave->AbWidth.DimIsPosition)
+   else if (horizRef && pAb->AbWidth.DimIsPosition)
       ok = FALSE;
-   else if (!EnX && pave->AbHeight.DimIsPosition)
+   else if (!horizRef && pAb->AbHeight.DimIsPosition)
       ok = FALSE;
    /* Box flottante */
-   else if (EnX && pave->AbHorizPos.PosAbRef == NULL)
+   else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
       ok = FALSE;
-   else if (!EnX && pave->AbVertPos.PosAbRef == NULL)
+   else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
       ok = FALSE;
    /* Box racine */
-   else if (pere == NULL)
+   else if (pParentAb == NULL)
       ok = TRUE;
    /* Box mise en lignes */
-   else if (pere->AbInLine || pere->AbBox->BxType == BoGhost)
+   else if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
       ok = FALSE;
-   else if (EnX
-      /* et le pere ne depend pas de son contenu */
-	    && (pere->AbBox->BxContentWidth
-		|| (!pere->AbWidth.DimIsPosition && pere->AbWidth.DimMinimum))
-	    && pave->AbHorizPos.PosAbRef == pere
-	    && pave->AbHorizPos.PosRefEdge != Left)
+   else if (horizRef
+      /* et le pParentAb ne depend pas de son contenu */
+	    && (pParentAb->AbBox->BxContentWidth
+		|| (!pParentAb->AbWidth.DimIsPosition && pParentAb->AbWidth.DimMinimum))
+	    && pAb->AbHorizPos.PosAbRef == pParentAb
+	    && pAb->AbHorizPos.PosRefEdge != Left)
       ok = FALSE;
-   else if (!EnX
-      /* et le pere ne depend pas de son contenu */
-	    && (pere->AbBox->BxContentHeight
-		|| (!pere->AbHeight.DimIsPosition && pere->AbHeight.DimMinimum))
-	    && pave->AbVertPos.PosAbRef == pere
-	    && pave->AbVertPos.PosRefEdge != Top)
+   else if (!horizRef
+      /* et le pParentAb ne depend pas de son contenu */
+	    && (pParentAb->AbBox->BxContentHeight
+		|| (!pParentAb->AbHeight.DimIsPosition && pParentAb->AbHeight.DimMinimum))
+	    && pAb->AbVertPos.PosAbRef == pParentAb
+	    && pAb->AbVertPos.PosRefEdge != Top)
       ok = FALSE;
    else
       ok = TRUE;
 
-   if (EnX)
+   if (horizRef)
       if (ok)
 	{
-	   DepZone (pave, frame, EnX, min, max);
+	   GiveMovingArea (pAb, frame, horizRef, min, max);
 	   /* La boite est-elle bloquee dans l'englobante ? */
-	   if (*min == box->BxXOrg && *max == *min + box->BxWidth)
+	   if (*min == pBox->BxXOrg && *max == *min + pBox->BxWidth)
 	      ok = FALSE;
 	}
       else
 	{
-	   *min = box->BxXOrg;
-	   *max = *min + box->BxWidth;
+	   *min = pBox->BxXOrg;
+	   *max = *min + pBox->BxWidth;
 	}
    else if (ok)
      {
-	DepZone (pave, frame, EnX, min, max);
+	GiveMovingArea (pAb, frame, horizRef, min, max);
 	/* La boite est-elle bloquee dans l'englobante ? */
-	if (*min == box->BxYOrg && *max == *min + box->BxHeight)
+	if (*min == pBox->BxYOrg && *max == *min + pBox->BxHeight)
 	   ok = FALSE;
      }
    else
      {
-	*min = box->BxYOrg;
-	*max = *min + box->BxHeight;
+	*min = pBox->BxYOrg;
+	*max = *min + pBox->BxHeight;
      }
 
    return ok;
@@ -1455,7 +1453,8 @@ int                 ym;
    int                 pointselect;
 
    pFrame = &FntrTable[frame - 1];
-   pointselect = 0;		/* pas de point selectionne */
+   /* pas de point selectionne */
+   pointselect = 0;
    if (pFrame->FrAbstractBox != NULL)
      {
 	/* On note les coordonnees par rapport a l'image concrete */
@@ -1490,8 +1489,8 @@ int                 ym;
 	     /* On regarde si le deplacement est autorise */
 	     else
 	       {
-		  okH = PModifiable (pAb, frame, TRUE, &Xmin, &Xmax);
-		  okV = PModifiable (pAb, frame, FALSE, &ymin, &ymax);
+		  okH = CanBeTranslated (pAb, frame, TRUE, &Xmin, &Xmax);
+		  okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
 		     encore = FALSE;
 	       }
@@ -1609,87 +1608,87 @@ int                 ym;
 /* |    DModifiable teste si un pave est modifiable en Dimension.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      DModifiable (PtrAbstractBox pave, int frame, boolean EnX, int *min, int *max)
+static boolean      DModifiable (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static boolean      DModifiable (pave, frame, EnX, min, max)
-PtrAbstractBox             pave;
+static boolean      DModifiable (pAb, frame, horizRef, min, max)
+PtrAbstractBox             pAb;
 int                 frame;
-boolean             EnX;
+boolean             horizRef;
 int                *min;
 int                *max;
 
 #endif /* __STDC__ */
 {
    boolean             ok;
-   PtrBox            box;
-   PtrAbstractBox             pere;
+   PtrBox            pBox;
+   PtrAbstractBox             pParentAb;
 
-   box = pave->AbBox;
-   pere = pave->AbEnclosing;
+   pBox = pAb->AbBox;
+   pParentAb = pAb->AbEnclosing;
    /* Modification nulle si ok est faux */
-   if (EnX)
-      *min = box->BxXOrg;
+   if (horizRef)
+      *min = pBox->BxXOrg;
    else
-      *min = box->BxYOrg;
+      *min = pBox->BxYOrg;
    *max = *min;
 
 
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
+   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElSructSchema))
       ok = FALSE;
    else
 #endif
       /* Box non retaillable */
-   if (!PavResizable (pave, EnX))
+   if (!PavResizable (pAb, horizRef))
       ok = FALSE;
    /* Box de presentation */
-   else if (pave->AbPresentationBox)
+   else if (pAb->AbPresentationBox)
       ok = FALSE;
    /* Box elastique */
-   else if (EnX && pave->AbWidth.DimIsPosition)
+   else if (horizRef && pAb->AbWidth.DimIsPosition)
       ok = FALSE;
-   else if (!EnX && pave->AbHeight.DimIsPosition)
+   else if (!horizRef && pAb->AbHeight.DimIsPosition)
       ok = FALSE;
    /* Box racine */
-   else if (pere == NULL)
+   else if (pParentAb == NULL)
      {
-	if ((EnX && pave->AbWidth.DimValue == 0)
-	    || (!EnX && pave->AbHeight.DimValue == 0))
+	if ((horizRef && pAb->AbWidth.DimValue == 0)
+	    || (!horizRef && pAb->AbHeight.DimValue == 0))
 	   ok = FALSE;
 	else
 	   ok = TRUE;
      }
    /* Texte mise en lignes */
-   else if (pave->AbLeafType == LtText
-	    && (pere->AbInLine || pere->AbBox->BxType == BoGhost))
+   else if (pAb->AbLeafType == LtText
+	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
       ok = FALSE;
    /* Il est impossible de modifier si la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
-   else if (pave->AbLeafType == LtCompound || pave->AbLeafType == LtText)
-      if (EnX && (box->BxContentWidth || (!pave->AbWidth.DimIsPosition && pave->AbWidth.DimMinimum)))
+   else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
+      if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
 	 ok = FALSE;
-      else if (!EnX && (box->BxContentHeight || (!pave->AbHeight.DimIsPosition && pave->AbHeight.DimMinimum)))
+      else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
 	 ok = FALSE;
       else
 	 ok = TRUE;
    else
       ok = TRUE;
 
-   if (EnX)
+   if (horizRef)
       if (ok)
-	 DepZone (pave, frame, EnX, min, max);
+	 GiveMovingArea (pAb, frame, horizRef, min, max);
       else
 	{
-	   *min = box->BxXOrg;
-	   *max = *min + box->BxWidth;
+	   *min = pBox->BxXOrg;
+	   *max = *min + pBox->BxWidth;
 	}
    else if (ok)
-      DepZone (pave, frame, EnX, min, max);
+      GiveMovingArea (pAb, frame, horizRef, min, max);
    else
      {
-	*min = box->BxYOrg;
-	*max = *min + box->BxHeight;
+	*min = pBox->BxYOrg;
+	*max = *min + pBox->BxHeight;
      }
 
    return ok;
@@ -1940,8 +1939,8 @@ int                 frame;
 	       break;
 	 }
 
-   modPosition = (PModifiable (pAb, frame, TRUE, &Xmin, &Xmax)
-		  || PModifiable (pAb, frame, FALSE, &Ymin, &Ymax));
+   modPosition = (CanBeTranslated (pAb, frame, TRUE, &Xmin, &Xmax)
+		  || CanBeTranslated (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modPosition)
      {
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
@@ -1957,8 +1956,8 @@ int                 frame;
    if (modPosition || modDimension)
      {
 	/* Determine les limites de deplacement de la boite */
-	DepZone (pAb, frame, TRUE, &Xmin, &Xmax);
-	DepZone (pAb, frame, FALSE, &Ymin, &Ymax);
+	GiveMovingArea (pAb, frame, TRUE, &Xmin, &Xmax);
+	GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, CREATING_BOX), AbsBoxType (pAb));
 	/* On retablit les positions par rapport a la fenetre */
 	Xmin -= pFrame->FrXOrg;
