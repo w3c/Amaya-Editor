@@ -216,7 +216,7 @@ ThotBool       translate;
     {
       /* write directly into the file */
       for (index = 0; index < nb_bytes2write; index++)
-	putc (mbc[index], fileDesc);
+	putchar (mbc[index]);
     }
   else if (fileNum > 0)
     {
