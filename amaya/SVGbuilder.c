@@ -2635,10 +2635,17 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
 	 {
 	   ptr = TtaSkipBlanks (ptr);
 	   ptr = GetNumber (ptr, &x);
-	   ptr = GetNumber (ptr, &y);
-	   TtaFreeMemory (text);
+	   ptr = TtaSkipBlanks (ptr);
+	   if (*ptr == ',')
+	     ptr++;
+	   else if (*ptr == ';')
+	     {
+	       ptr++;
+	       y = x;
+	     }
 	   TtaAnimPathAddPoint (anim_seg, x, y);
 	 }
+       TtaFreeMemory (text);
      }
    return anim_seg;
 }
@@ -2666,8 +2673,8 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
        ptr = TtaSkipBlanks (ptr);
        ptr = GetNumber (ptr, &x);
        ptr = GetNumber (ptr, &y);
-       TtaFreeMemory (text);
        TtaAnimPathAddPoint (anim_seg, x, y);
+       TtaFreeMemory (text);
      }
 
    /* get a buffer for reading the attribute value */

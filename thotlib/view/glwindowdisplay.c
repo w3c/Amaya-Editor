@@ -60,8 +60,8 @@
 #else /*WINDOWS*/
 #include <windows.h>
 /* Win32 opengl context based on frame number*/
-static HDC   GL_Windows[50];	
-static HGLRC GL_Context[50];
+static HDC   GL_Windows[MAX_FRAME];	
+static HGLRC GL_Context[MAX_FRAME];
 #endif /*_GTK*/
 
 #include <GL/gl.h>
@@ -150,7 +150,7 @@ static HGLRC GL_Context[50];
 static int      S_thick;
 
 /* background color*/
-static int      GL_Background[50];
+static int      GL_Background[MAX_FRAME];
 
 /*if no 3d card available*/
 static ThotBool Software_Mode = TRUE;
@@ -159,8 +159,10 @@ static ThotBool Software_Mode = TRUE;
 static ThotBool NotFeedBackMode = TRUE;
 
 /*One Timer to rule them all */
-static int AnimTimer = 0; 
+static int      AnimTimer = 0; 
 
+/*Control When swapping applies*/
+static ThotBool SwapOK[MAX_FRAME];
 
 ThotBool GL_Err() 
 {
@@ -1673,7 +1675,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	      glTranslatef (Trans->XRotate, 
 			    Trans->YRotate, 
 			    0);
-	      glRotatef (Trans->Angle, 0, 0, 1);
+	      glRotatef (Trans->TrAngle, 0, 0, 1);
 	      glTranslatef (-Trans->XRotate, 
 			    -Trans->YRotate, 
 			    0);
@@ -1712,7 +1714,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	      trans_matrix[2] = 0;
 	      trans_matrix[3] = 0;
 
-	      trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->Factor));
+	      trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->TrFactor));
 	      trans_matrix[5] = 1;
 	      trans_matrix[6] = 0;
 	      trans_matrix[7] = 0;
@@ -1732,7 +1734,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	    case PtElSkewY:
 	      /* SkewY */
 	      trans_matrix[0] = 1;
-	      trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->Factor));
+	      trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->TrFactor));
 	      trans_matrix[2] = 0;
 	      trans_matrix[3] = 0;
 
@@ -1998,11 +2000,25 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
     }
 }
 /*----------------------------------------------------------------------
+  GL_SwapStop : Prevent savage swapping (causes flickering)
+  ----------------------------------------------------------------------*/
+void GL_SwapStop (int frame)
+{
+  SwapOK[frame] = FALSE;
+}
+/*----------------------------------------------------------------------
+  GL_SwapEnable : 
+  ----------------------------------------------------------------------*/
+void GL_SwapEnable (int frame)
+{
+  SwapOK[frame] = TRUE;
+}
+/*----------------------------------------------------------------------
   GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
-  if (frame < MAX_FRAME)
+  if (frame < MAX_FRAME && SwapOK[frame])
     {
       /* gl_synchronize ();  */
       glFinish ();
@@ -2018,6 +2034,7 @@ void GL_Swap (int frame)
 	}
 #endif /*_WINDOWS*/
       glEnable (GL_SCISSOR_TEST); 
+      FrameTable[frame].DblBuffNeedSwap = FALSE;
 	  }
 }
 
@@ -2636,19 +2653,11 @@ void gl_window_resize (int frame, int width, int height)
 #ifdef _GTK
   GtkWidget *widget;
 
+  GL_SwapStop (frame);
   widget = FrameTable[frame].WdFrame;
-
-  gtk_widget_queue_resize  (widget->parent->parent);
-
-  FrameTable[frame].DblBuffNeedSwap = TRUE;
-
-
-/*   gdk_gl_wait_gdk ();  */
-/*   gdk_gl_wait_gl ( ); */
-
   while (gtk_events_pending ())
     gtk_main_iteration ();
-
+  gtk_widget_queue_resize  (widget->parent->parent);
   return;
 #endif /*_GTK*/
 

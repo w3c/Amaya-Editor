@@ -135,6 +135,7 @@ void populate_path_proportion (void *anim_info)
   pop_path->length = totallength;
   pop_path->npoints = npoints;
   pop_path->Path = points;
+  pop_path->Tangent_angle = angle;
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
@@ -350,7 +351,9 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
     {   
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
-      if (pAb->AbElement->ElSystemOrigin)
+      if (pAb->AbElement->ElSystemOrigin
+	  /* || isgroup () */
+	  )
 	{
 	  El = pAb->AbElement;
 	  if (El->ElTransform)
@@ -386,7 +389,9 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
     {   
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
-      if (pAb->AbElement->ElSystemOrigin)
+      if (pAb->AbElement->ElSystemOrigin
+	  /* || isgroup () */
+	  )
 	{
 	  El = pAb->AbElement;
 	  if (El->ElTransform)
@@ -884,7 +889,7 @@ static void animate_box_transformation (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
-	    Trans->Angle = rott;
+	    Trans->TrAngle = rott;
 	    Trans->XRotate = tx;
 	    Trans->YRotate = ty;
 	  }
@@ -910,7 +915,7 @@ static void animate_box_transformation (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
-	    Trans->Factor = result;
+	    Trans->TrFactor = result;
 	  }      
       break;
      
@@ -933,7 +938,7 @@ static void animate_box_transformation (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {
 	    UpdateClipping (pAb->AbFirstEnclosed);
-	    Trans->Factor = result;
+	    Trans->TrFactor = result;
 	  }
       
       break;
@@ -947,12 +952,13 @@ static void animate_box_motion (PtrElement El,
 			       Animated_Element *animated,
 			       AnimTime current_time)
 {
-  AnimPath         *pop_path;
+ AnimPath         *pop_path;
   float            *proportion;
   float            result;
   float            x,y,x1,y1,x2,y2;
   int              doc, view,i;
   PtrAbstractBox   pAb = NULL;
+  PtrTransform     Trans;
 
   pop_path = (AnimPath *) animated->from;
   proportion = pop_path->Proportion;
@@ -981,11 +987,32 @@ static void animate_box_motion (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {	    
 	    UpdateClipping (pAb->AbFirstEnclosed);	    
-	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) x);
-	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) y);	   
+	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, 0);
+	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, 0); 
+
+	    if (El->ElTransform)
+	      Trans = GetTransformation (El->ElTransform, 
+					 PtElAnimTranslate); 	  
+	    if (Trans == NULL)
+	      {
+		Trans = TtaNewTransformAnimTranslate (x, y);	    
+		TtaReplaceTransform ((Element) El, Trans, doc); 
+	      }
+	    Trans->XScale = x;
+	    Trans->YScale = y;
 	  }
-      /*calculate normals to the path and rotate accordingly*/      
-      /*TtaNewTransformAnimRotate (angle, x_scale, y_scale); */
+      /*calculate normals to the path and rotate accordingly*/ 
+      if (El->ElTransform)
+	Trans = GetTransformation (El->ElTransform, 
+				   PtElAnimRotate);
+      if (Trans == NULL)
+	{
+	  Trans = TtaNewTransformAnimRotate (pop_path->Tangent_angle[i], 0, 0); 
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	}
+      Trans->TrAngle = pop_path->Tangent_angle[i];
+      Trans->XRotate = 0;
+      Trans->YRotate = 0;
     }      
 }
 

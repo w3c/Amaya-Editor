@@ -343,7 +343,7 @@ typedef struct _AnimPath
   float           length;       /* total length */  
   ThotPoint       *Path;        /*The Path*/
   float           *Proportion;  /*per segment % of total length*/
-  float           *Angle;  /*per segment tangent angle for automatic rotating or text path*/
+  float           *Tangent_angle;  /*per segment tangent angle for automatic rotating or text path*/
   int             npoints;
   int             maxpoints;
  } AnimPath;
@@ -419,8 +419,8 @@ typedef struct _Transform
 
 #define XScale u.s0._XS
 #define YScale u.s0._YS
-#define Factor u.s1._Factor
-#define Matrix u.s2.M
+#define TrFactor u.s1._Factor
+#define TrMatrix u.s2.M
 #define AMatrix u.s2.M[0]
 #define BMatrix u.s2.M[1]
 #define CMatrix u.s2.M[2]
@@ -429,7 +429,7 @@ typedef struct _Transform
 #define FMatrix u.s2.M[5]
 #define XRotate u.s3._XA
 #define YRotate u.s3._YA
-#define Angle u.s3._Angle
+#define TrAngle u.s3._Angle
 
 /* Animation structures */
 typedef enum

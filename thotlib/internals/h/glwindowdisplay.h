@@ -134,6 +134,9 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y);
 
 void gl_synchronize ();
 
+void GL_SwapStop (int frame);
+void GL_SwapEnable (int frame);
+
 /* Picture */
 void GL_TextureMap (void *Image, 
 		    int xFrame, int yFrame, 

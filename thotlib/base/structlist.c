@@ -1675,7 +1675,7 @@ static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
 
 	case PtElRotate:
 	  fprintf (fileDescriptor, "Rotate: ");
-	  fprintf (fileDescriptor, "Angle %2e X=%2e, Y=%2e ", Trans->Angle, Trans->XRotate, Trans->YRotate);
+	  fprintf (fileDescriptor, "Angle %2e X=%2e, Y=%2e ", Trans->TrAngle, Trans->XRotate, Trans->YRotate);
 	  break;
 
 	case PtElMatrix:
@@ -1686,12 +1686,12 @@ static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
 	  break;
 	case PtElSkewX:
 	  fprintf (fileDescriptor, "SkewX : ");
-	  fprintf (fileDescriptor, " %2e ", Trans->Factor);
+	  fprintf (fileDescriptor, " %2e ", Trans->TrFactor);
 	  break;
 
 	case PtElSkewY: 
 	  fprintf (fileDescriptor, "SkewY : ");
-	  fprintf (fileDescriptor, " %2e ", Trans->Factor);
+	  fprintf (fileDescriptor, " %2e ", Trans->TrFactor);
 	  break;
 
 	default:

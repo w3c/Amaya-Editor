@@ -1741,7 +1741,7 @@ void *TtaNewTransformAnimRotate (float angle, float x_scale,
 
    pPa = TtaNewTransform ();
    pPa->TransType = PtElAnimRotate;
-   pPa->Angle = angle;
+   pPa->TrAngle = angle;
    pPa->XRotate = x_scale;
    pPa->YRotate = y_scale;
    return (pPa);
@@ -1757,7 +1757,7 @@ void *TtaNewTransformRotate (float angle, float x_scale,
 
    pPa = TtaNewTransform ();
    pPa->TransType = PtElRotate;
-   pPa->Angle = angle;
+   pPa->TrAngle = angle;
    pPa->XRotate = x_scale;
    pPa->YRotate = y_scale;
    return (pPa);
@@ -1773,7 +1773,7 @@ void *TtaNewTransformSkewX (float factor)
 
    pPa = TtaNewTransform ();
    pPa->TransType = PtElSkewX;
-   pPa->Factor = factor;
+   pPa->TrFactor = factor;
    return (pPa);
 }
 
@@ -1786,7 +1786,7 @@ void *TtaNewTransformSkewY (float factor)
 
    pPa = TtaNewTransform ();
    pPa->TransType = PtElSkewY;
-   pPa->Factor = factor;
+   pPa->TrFactor = factor;
    return (pPa);
 }
 
@@ -2002,7 +2002,7 @@ void *TtaCopyTransform(void *void_pPa)
 	case PtElRotate:
 	  current->XRotate = pPa->XRotate;	  
 	  current->YRotate = pPa->YRotate;	  
-	  current->Angle = pPa->Angle;
+	  current->TrAngle = pPa->TrAngle;
 	  break;  
 	case PtElMatrix:
 	  current->AMatrix = pPa->AMatrix;
@@ -2014,7 +2014,7 @@ void *TtaCopyTransform(void *void_pPa)
 	  break;	  
 	case PtElSkewX:
 	case PtElSkewY:
-	  current->Factor = pPa->Factor;
+	  current->TrFactor = pPa->TrFactor;
 	  break;	  
 	default:
 	  current->XScale = pPa->XScale;	  
@@ -2149,7 +2149,7 @@ static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
       Trans1->YScale += Trans2->YScale;
       break;
     case PtElRotate:
-      Trans1->Angle += Trans2->Angle;	  
+      Trans1->TrAngle += Trans2->TrAngle;	  
       Trans1->XRotate += Trans2->XRotate;	  
       Trans1->YRotate += Trans2->YRotate;	  
       break;
@@ -2163,7 +2163,7 @@ static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
       break;
     case PtElSkewX:
     case PtElSkewY: 
-      Trans1->Factor = Trans2->Factor;	  
+      Trans1->TrFactor = Trans2->TrFactor;	  
       break;
 
     default:
@@ -2368,8 +2368,7 @@ void *TtaNewAnimPath (Document doc)
   AnimPath *anim_seg;
   
   anim_seg = TtaGetMemory (sizeof (AnimPath));
-  anim_seg->length = 0;
-  anim_seg->FirstPathSeg = NULL;
+  memset (anim_seg, 0, sizeof (AnimPath));
   return ((void *) anim_seg);
 #else /* _GL */
   return NULL;
@@ -2449,23 +2448,29 @@ void TtaAnimPathAddPoint (void *anim, float x, float y)
   ----------------------------------------------------------------------*/
 void TtaAddAnimMotionPath (void *info, void *anim)
 {    
+#ifdef _GL
   ((Animated_Element *) anim)->from = info;
   populate_path_proportion ((Animated_Element *) anim);
+#endif /* _GL */
 }
 /*----------------------------------------------------------------------
   TtaAddAnimMotionFromTo
   ----------------------------------------------------------------------*/
 void TtaAddAnimMotionFromTo (void *info, void *anim)
 {    
-  populate_fromto_proportion (anim);   
+#ifdef _GL
+  populate_fromto_proportion (anim);  
+#endif /* _GL */ 
 }
 /*----------------------------------------------------------------------
   TtaAddAnimMotionValues
   ----------------------------------------------------------------------*/
 void TtaAddAnimMotionValues (void *info, void *anim)
 {    
+#ifdef _GL
   ((Animated_Element *) anim)->from = info;
   populate_values_proportion (anim);  
+#endif /* _GL */  
 }
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoTransform

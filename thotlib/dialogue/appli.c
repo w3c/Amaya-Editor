@@ -639,10 +639,10 @@ gboolean GL_DrawCallback (ThotWidget widget,
 			  GdkEventExpose *event, 
 			  gpointer data)
 {
-  int frame;
+  /*   int frame; */
 
-  frame = (int ) data;
-  GL_Swap (frame);
+  /*   frame = (int ) data; */
+  /*   GL_Swap (frame); */
   /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
   return TRUE;
 }
@@ -682,9 +682,6 @@ gboolean  GL_Init (ThotWidget widget,
     } 
   return TRUE;   
 }
-
-static ThotBool SwapStop = FALSE;
-
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
   When a part of the canvas is hidden by a window or menu 
@@ -713,10 +710,6 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
      They will see the Speed problem...*/
   /*if (event->count > 0)*/
   /*    return TRUE; */
-
-  /*THIS works*/
-  if (SwapStop)
-    return TRUE;
 
   GL_Swap (frame);
   return TRUE;
@@ -752,10 +745,9 @@ gboolean FrameResizedGTK (GtkWidget *widget,
   if (widget)
     if (GL_prepare (frame))
       {
-	SwapStop = TRUE;
+	GL_SwapStop (frame);
 	while (gtk_events_pending ()) 
-	  gtk_main_iteration ();
-	SwapStop = FALSE;
+	  gtk_main_iteration ();	
 	GLResize (width, 
 		  height, 
 		  0, 0);
@@ -763,6 +755,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
  		   0, 0,
  		   width, height);	
 	FrameRedraw (frame, width, height);
+	GL_SwapEnable (frame);
 	GL_Swap (frame);
 	/* FrameTable[frame].DblBuffNeedSwap = TRUE; */
 	/* gl_synchronize (); */
