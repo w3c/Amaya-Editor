@@ -509,11 +509,6 @@ RULES
 	Create '</p>\12' After;
 	END;
 
- Command_Line: BEGIN
-	Create '<!--command_line-->\12<p>\12';
-	Create '</p>\12' After;
-	END;
-
  Text_Area: BEGIN
 	Create '<textarea';
 	Create Attributes;

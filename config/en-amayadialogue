@@ -71,86 +71,89 @@
 70 Option
 71 Text input
 72 Text area
-73 Command line
-74 Area map
-75 Rectangle
-76 Circle
-77 Polygon
-78 Division
-79 Object
-80 Applet
+73 Submit
+74 Reset
+75 Area map
+76 Rectangle
+77 Circle
+78 Polygon
+79 Division
+80 Object
 81 Applet
-82 Parameter
-83 Math
-84 Inline math
-85 Equation (display)
-86 Root
-87 sQuare root
-88 Fraction
-89 Subscript and superscript
-90 Subscript
-91 suPerscript
-92 Under and over
-93 Under
-94 Over
-95 Parentheses
-96 Multiscripts
-97 Matrix
-98 create Link...
-99 create Target
-100 Change link...
-101 Delete anchor
-102 Show buttonbar
-103 Show address & title
-104 Show map areas
-105 Show structure
-106 Show alternate
-107 Show links
-108 Show table of contents
-109 Character style...
-110 Colors...
-111 Format...
-112 Background image...
-113 Create rule...
-114 Apply class...
-115 Style sheets
-116 Information type
-117 Emphasis
-118 Strong
-119 Cite
-120 Definition
-121 Code
-122 Variable
-123 Sample
-124 Keyboard
-125 Character element
-126 Italic
-127 Bold
-128 Teletype
-129 Underline
-130 Strike out
-131 Big
-132 Small
-133 Sub
-134 Sup
-135 Font
-136 Transform...
-137 Section numbering
-138 Make book
-139 About Amaya
-140 Browsing
-141 Selecting
-142 Searching
-143 Views
-144 Creating elements
-145 Links
-146 Restructuring
-147 Tables
-148 Math
-149 Image maps
-150 Style sheets
-151 Attributes
-152 Publishing
-153 Printing
-154 Making books
-155 Configuring Amaya
+82 Applet
+83 Parameter
+84 Math
+85 Inline math
+86 Equation (display)
+87 Root
+88 sQuare root
+89 Fraction
+90 Subscript and superscript
+91 Subscript
+92 suPerscript
+93 Under and over
+94 Under
+95 Over
+96 Parentheses
+97 Multiscripts
+98 Matrix
+99 create Link...
+100 create Target
+101 Change link...
+102 Delete anchor
+103 Show buttonbar
+104 Show address & title
+105 Show map areas
+106 Zoom In
+107 Zoom Out
+108 Show structure
+109 Show alternate
+110 Show links
+111 Show table of contents
+112 Character style...
+113 Colors...
+114 Format...
+115 Background image...
+116 Create rule...
+117 Apply class...
+118 Style sheets
+119 Information type
+120 Emphasis
+121 Strong
+122 Cite
+123 Definition
+124 Code
+125 Variable
+126 Sample
+127 Keyboard
+128 Character element
+129 Italic
+130 Bold
+131 Teletype
+132 Underline
+133 Strike out
+134 Big
+135 Small
+136 Sub
+137 Sup
+138 Font
+139 Transform...
+140 Section numbering
+141 Make book
+142 About Amaya
+143 Browsing
+144 Selecting
+145 Searching
+146 Views
+147 Creating elements
+148 Links
+149 Restructuring
+150 Tables
+151 Math
+152 Image maps
+153 Style sheets
+154 Attributes
+155 Publishing
+156 Printing
+157 Making books
+158 Configuring Amaya

@@ -49,7 +49,8 @@ main(argc, argv)
 		{
 		  /* the end of new line */
 		  s[len] = '\0';
-		  fprintf(file2, "%d%s\n", i, ptr);
+		  if (ptr != NULL)
+		    fprintf(file2, "%d%s\n", i, ptr);
 		  len = 0;
 		  ptr = NULL;
 		  i++;

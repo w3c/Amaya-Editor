@@ -98,7 +98,8 @@ MENUS
 	Types.Form button:BOption -> CreateOption;
 	Types.Form button:BTextInput -> CreateTextInput;
 	Types.Form button:BTextArea -> CreateTextArea;
-	Types.Form button:BCommandLine -> CreateCommandLine;
+	Types.Form button:BSubmit -> CreateSubmit;
+	Types.Form button:BReset -> CreateReset;
 
 	Types.AreaMap button:BRectangle -> CreateAreaRect;
 	Types.AreaMap button:BCircle -> CreateAreaCircle;
@@ -132,6 +133,8 @@ MENUS
 	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;
 	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
 	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
+	view:1 Views toggle:TZoomIn -> ZoomIn;
+	view:1 Views toggle:TZoomOut -> ZoomOut;
 	view:1 Views Separator;
 	view:1 Views button:BShowStructure -> ShowStructure;
 	view:1 Views button:BShowAlternate -> ShowAlternate;

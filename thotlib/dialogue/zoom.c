@@ -43,14 +43,8 @@ static int          Fenzoomview;
 #include "appdialogue_f.h"
 #include "actions_f.h"
 #include "boxparams_f.h"
+#include "viewapi_f.h"
 
-#ifdef __STDC__
-extern int          GetWindowNumber (Document, View);
-
-#else  /* __STDC__ */
-extern int          GetWindowNumber ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    changezoomview met a jour le formulaire de zoom.                   

@@ -958,11 +958,11 @@ PtrAttribute        pAttrNext;
 
   GetAttribute (&pAttr);
   /* on chaine cet attribut apres le dernier attribut de  l'element */
-  if (pEl->ElFirstAttr == NULL)
+  if (pEl->ElFirstAttr == NULL || pEl->ElFirstAttr == pAttrNext)
     {
       /* c'est le 1er attribut de l'element */
+      pAttrNext = pEl->ElFirstAttr;
       pEl->ElFirstAttr = pAttr;
-      pAttrNext = NULL;
     }
   else
     {

@@ -340,7 +340,6 @@ Element             el;
    return firstcolhead;
 }
 
-
 /*----------------------------------------------------------------------
    MaximumRowSpan                                                  
   ----------------------------------------------------------------------*/
@@ -1230,7 +1229,6 @@ void                CellDeleted (event)
 NotifyElement      *event;
 #endif
 {
-  Element             colhead;
   Element             table;
   ElementType         elType;
   Document            doc;
@@ -1240,8 +1238,7 @@ NotifyElement      *event;
   doc = event->document;
   span = CurrentSpan;
   CurrentSpan = 0;
-  colhead = GetFirstColumnHead (event->element);
-  removed = RemoveEmptyColumn (colhead, doc);
+  removed = RemoveEmptyColumn (CurrentColumn, doc);
   if (removed)
     span--;
   else

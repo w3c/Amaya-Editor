@@ -1601,7 +1601,8 @@ int              frame;
       if (row != NULL  && row->AbBox != NULL)
 	table = (PtrAbstractBox) row->AbBox->BxTable;
 
-      if (table != NULL && !table->AbNew && !table->AbDead)
+      if (table != NULL && !table->AbNew && !table->AbDead &&
+	  table->AbBox != NULL && table->AbBox->BxCycles == 0)
 	{
 	  pEl = cell->AbElement;
 	  pSS = pEl->ElStructSchema;
@@ -1650,6 +1651,7 @@ int              frame;
     }
  
   if (table != NULL && !table->AbNew && !table->AbDead &&
+      table->AbBox != NULL && table->AbBox->BxCycles == 0 &&
       (col != NULL || span > 1))
     {
       /* the table exists, compute the column width */

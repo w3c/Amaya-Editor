@@ -71,86 +71,89 @@
 70 Option (OPTION)
 71 Eingabezeile (TEXT)
 72 Texteingabe (TEXTAREA)
-73 OK/Abbrechen (SUBMIT/RESET)
-74 Aktiver Grafikbereich (AREA MAP)
-75 Rechteck
-76 Kreis
-77 Polygon
-78 Gruppierung (DIV)
-79 Objekt (OBJECT)
-80 Java-Applet
-81 Applet (APPLET)
-82 Parameter (PARAM)
-83 Formel
-84 Formel im Text (MATH)
-85 Formel abgesetzt (MATH)
-86 Wurzel
-87 Quadratwurzel
-88 Quotient
-89 Term mit Index und Exponent
-90 Term mit Index
-91 Term mit Exponent
-92 Term mit Unter- und Überschrift
-93 Term mit Unterschrift
-94 Term mit Überschrift
-95 Term in Klammern
-96 Term mit Indices links/rechts oben/unten
-97 Tabelle
-98 Markierung als Verknüfung definieren...
-99 Markierung als Verknüpfungsziel definieren
-100 Verknüpfungsziel ändern...
-101 Verknüpfungsziel löschen
-102 Symbolleiste
-103 Dokumentadresse und -titel 
-104 Aktive Grafikbereiche markieren
-105 Strukturfenster
-106 Textbrowserfenster
-107 Verknüpfungsfenster
-108 Inhaltsverzeichnisfenster
-109 Zeichen...
-110 Farben...
-111 Ausrichtung...
-112 Hintergrundbild...
-113 Format in Stylesheet übernehmen...
-114 Klasse anwenden...
-115 Stylesheets bearbeiten
-116 logische Formate
-117 Betont (EM)
-118 Hervorgehoben (STRONG)
-119 Zitat (CITE)
-120 Definition (DFN)
-121 Programmtext (CODE)
-122 Variablenwert (VAR)
-123 Beispiel (SAMP)
-124 Tastatureingabe (KBD)
-125 direkte Zeichenformate
-126 kursiv (I)
-127 fett (B)
-128 Schreibmaschinenschrift (TT)
-129 unterstrichen (U)
-130 durchgestrichen (STRIKE)
-131 größer (BIG)
-132 kleiner (SMALL)
-133 tiefgestellt (SUB)
-134 hochgestellt (SUP)
-135 Schriftgröße
-136 Umformatieren...
-137 Abschnittsnummern
-138 Buch zusammenfügen
-139 Info
-140 Verknüpfungen folgen/Dokumente öffnen
-141 Auswählen
-142 Suchen
-143 Ansichten
-144 Einfügen von Elementen
-145 Verknüpfungen bearbeiten
-146 Umformatieren
-147 Tabellen
-148 Formeln
-149 Aktive Grafikbereiche
-150 Formate/Stylesheets
-151 Attribute
-152 Speichern/Publizieren
-153 Drucken
-154 Buch zusammenfügen
-155 Konfiguration
+73 SUBMIT
+74 RESET
+75 Aktiver Grafikbereich (AREA MAP)
+76 Rechteck
+77 Kreis
+78 Polygon
+79 Gruppierung (DIV)
+80 Objekt (OBJECT)
+81 Java-Applet
+82 Applet (APPLET)
+83 Parameter (PARAM)
+84 Formel
+85 Formel im Text (MATH)
+86 Formel abgesetzt (MATH)
+87 Wurzel
+88 Quadratwurzel
+89 Quotient
+90 Term mit Index und Exponent
+91 Term mit Index
+92 Term mit Exponent
+93 Term mit Unter- und Überschrift
+94 Term mit Unterschrift
+95 Term mit Überschrift
+96 Term in Klammern
+97 Term mit Indices links/rechts oben/unten
+98 Tabelle
+99 Markierung als Verknüfung definieren...
+100 Markierung als Verknüpfungsziel definieren
+101 Verknüpfungsziel ändern...
+102 Verknüpfungsziel löschen
+103 Symbolleiste
+104 Dokumentadresse und -titel 
+105 Aktive Grafikbereiche markieren
+106 **Zoom In
+107 **Zoom Out
+108 Strukturfenster
+109 Textbrowserfenster
+110 Verknüpfungsfenster
+111 Inhaltsverzeichnisfenster
+112 Zeichen...
+113 Farben...
+114 Ausrichtung...
+115 Hintergrundbild...
+116 Format in Stylesheet übernehmen...
+117 Klasse anwenden...
+118 Stylesheets bearbeiten
+119 logische Formate
+120 Betont (EM)
+121 Hervorgehoben (STRONG)
+122 Zitat (CITE)
+123 Definition (DFN)
+124 Programmtext (CODE)
+125 Variablenwert (VAR)
+126 Beispiel (SAMP)
+127 Tastatureingabe (KBD)
+128 direkte Zeichenformate
+129 kursiv (I)
+130 fett (B)
+131 Schreibmaschinenschrift (TT)
+132 unterstrichen (U)
+133 durchgestrichen (STRIKE)
+134 größer (BIG)
+135 kleiner (SMALL)
+136 tiefgestellt (SUB)
+137 hochgestellt (SUP)
+138 Schriftgröße
+139 Umformatieren...
+140 Abschnittsnummern
+141 Buch zusammenfügen
+142 Info
+143 Verknüpfungen folgen/Dokumente öffnen
+144 Auswählen
+145 Suchen
+146 Ansichten
+147 Einfügen von Elementen
+148 Verknüpfungen bearbeiten
+149 Umformatieren
+150 Tabellen
+151 Formeln
+152 Aktive Grafikbereiche
+153 Formate/Stylesheets
+154 Attribute
+155 Speichern/Publizieren
+156 Drucken
+157 Buch zusammenfügen
+158 Konfiguration

@@ -242,7 +242,6 @@ STRUCT
 	Radio_Menu;
 	Option_Menu;
 	Text_Input_Line;
-	Command_Line;
 	Text_Area (ATTR !NAME; Rows = Integer; Columns = Integer;
 			Default_Value = Text) =
 		Text_With_Frame with Rows ?= 4, Columns ?= 20;
@@ -252,6 +251,7 @@ STRUCT
 	Block_Quote;
 	Preformatted;
 	Division;
+	Table;
 	Center;
 	ISINDEX;
 	END;
@@ -262,7 +262,7 @@ STRUCT
 	TEXT;
 
   Toggle_Menu = LIST OF (Toggle_Item)
-	- (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
+	- (Text_Input_Line, Toggle_Menu, Radio_Menu);
   Toggle_Item = BEGIN
 	Basic_Set;
 	Checkbox_Input (ATTR !NAME; 
@@ -273,7 +273,7 @@ STRUCT
 	END;
 
   Radio_Menu (ATTR !NAME) = LIST OF (Radio_Item)
-	- (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
+	- (Text_Input_Line, Toggle_Menu, Radio_Menu);
   Radio_Item = BEGIN
 	Basic_Set;
 	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Value_) =
@@ -286,17 +286,7 @@ STRUCT
 	Text_Input (ATTR !NAME; Area_Size = Integer; MaxLength = Integer; Value_) =
 		Text_With_Frame with Area_Size ?= 20;
 	Basic_Set;
-	END - (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
-
-  Command_Line = BEGIN
-	Reset_Input (ATTR NAME; Value_) = BEGIN
-		Frame;
-		END with NAME ?= 'Reset', Value_ ?= 'Reset';
-	Space = CONSTANT C_Empty;
-	Submit_Input (ATTR NAME; Value_) = BEGIN
-		Frame;
-		END with Value_ ?= 'Submit';
-	END - (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
+	END - (Text_Input_Line, Toggle_Menu, Radio_Menu);
 
   Input = CASE OF
 	Checkbox_Input;
@@ -305,8 +295,12 @@ STRUCT
 	Hidden_Input (ATTR !NAME; Value_) = CONSTANT C_Empty;
 	Password_Input (ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
 	File_Input (ATTR !NAME) = CONSTANT C_Empty;
-	Reset_Input;
-	Submit_Input;
+	Reset_Input (ATTR NAME; Value_) = BEGIN
+		Frame;
+		END with NAME ?= 'Reset', Value_ ?= 'Reset';
+	Submit_Input (ATTR NAME; Value_) = BEGIN
+		Frame;
+		END with Value_ ?= 'Submit';
 	Option_Menu;
 	Text_Area;
 	END;

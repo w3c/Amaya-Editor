@@ -5167,21 +5167,6 @@ RULES
 		END;
 	END;
 
- Command_Line: BEGIN
-	Line;
-	LineBreak: No;
-	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	CreateBefore(P_S);
-	CreateWith(VerticalLine);
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		NoLine;
-		END;
-	END;
-
  Text_Area: BEGIN
 	CreateBefore(TEXTAREA_S);
 	{CreateBefore(Text_Space);}

@@ -1844,6 +1844,7 @@ int                 frame;
 
 		  if (pCurrentBox->BxVertFlex && pCurrentBox->BxVertInverted)
 		     YEdgesExchange (pCurrentBox, OpVertDep);
+		  pAb->AbDead = FALSE;
 	       }
 
 	     /* Liberation des boites des paves inclus */

@@ -2866,33 +2866,36 @@ boolean             Before;
 			   son pere */
 			ChangeFirstLast (pEl, pSelDoc, TRUE, TRUE);
 		    }
-		  /* traite les exclusions des elements crees */
-		  RemoveExcludedElem (&pNew);
-		  /* traite les attributs requis des elements crees */
-		  AttachMandatoryAttributes (pNew, pSelDoc);
-		  if (pSelDoc->DocSSchema != NULL)
-		    /* le document n'a pas ete ferme' entre temps */
+		  if (pNew != NULL)
 		    {
-		      /* traitement des exceptions */
-		      CreationExceptions (pNew, pSelDoc);
-		      /* cree les paves du nouvel element et */
-		      /* met a jour ses voisins */
-		      CreateAllAbsBoxesOfEl (pNew, pSelDoc);
-		      /* Mise a jour des images abstraites */
-		      AbstractImageUpdated (pSelDoc);
-		      /* indique au Mediateur les modifications */
-		      RedisplayDocViews (pSelDoc);
-		      /* si on est dans un element copie' par inclusion,
-			 on met a jour les copies de cet element. */
-		      RedisplayCopies (pNew, pSelDoc, TRUE);
-		      UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
-		      /* Indiquer que le document est modifie' */
-		      pSelDoc->DocModified = TRUE;
-		      pSelDoc->DocNTypedChars += 30;
-		      /* envoie un evenement ElemNew.Post a l'application */
-		      NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
-		      /* Replace la selection */
-		      SelectElementWithEvent (pSelDoc, FirstLeaf (pNew), TRUE, TRUE);
+		      /* traite les exclusions des elements crees */
+		      RemoveExcludedElem (&pNew);
+		      /* traite les attributs requis des elements crees */
+		      AttachMandatoryAttributes (pNew, pSelDoc);
+		      if (pSelDoc->DocSSchema != NULL)
+			/* le document n'a pas ete ferme' entre temps */
+			{
+			  /* traitement des exceptions */
+			  CreationExceptions (pNew, pSelDoc);
+			  /* cree les paves du nouvel element et */
+			  /* met a jour ses voisins */
+			  CreateAllAbsBoxesOfEl (pNew, pSelDoc);
+			  /* Mise a jour des images abstraites */
+			  AbstractImageUpdated (pSelDoc);
+			  /* indique au Mediateur les modifications */
+			  RedisplayDocViews (pSelDoc);
+			  /* si on est dans un element copie' par inclusion,
+			     on met a jour les copies de cet element. */
+			  RedisplayCopies (pNew, pSelDoc, TRUE);
+			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
+			  /* Indiquer que le document est modifie' */
+			  pSelDoc->DocModified = TRUE;
+			  pSelDoc->DocNTypedChars += 30;
+			  /* envoie un evenement ElemNew.Post a l'application */
+			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
+			  /* Replace la selection */
+			  SelectElementWithEvent (pSelDoc, FirstLeaf (pNew), TRUE, TRUE);
+			}
 		    }
 		}
 	    }
