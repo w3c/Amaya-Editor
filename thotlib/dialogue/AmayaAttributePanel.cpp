@@ -187,6 +187,9 @@ void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SelectAttribute( int position )
 {
+  // force the selection in the attribute list
+  m_pAttrList->SetSelection(position);
+
   // call the callback to show the right attribute value panel
   int item_num = 0;
   if ( position >= m_NbAttr )
@@ -226,6 +229,12 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
       else
 	CallbackValAttrMenu (NumMenuAttr, 2, NULL);
     }
+  else
+  {
+	/* creation of a new attribut */
+    /* force the item selection */
+    SelectAttribute( event.GetSelection() );
+  }
   event.Skip();
 }
 
