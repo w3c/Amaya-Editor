@@ -318,6 +318,23 @@ extern void         TtaSetAccessRight (Element element, AccessRight right, Docum
 extern void         TtaHolophrastElement (Element element, boolean holophrast, Document document);
 
 /* ----------------------------------------------------------------------
+   TtaSetMandatoryInsertion
+
+   Activate or disable element and attributes insertion. When a
+   modification of the abstract tree is performed, mandatory elements
+   and attributes are not inserted. 
+   
+
+   By default, insertion is activated.
+
+   Parameter:
+   on: 0 disables the insertion. All other values activates it.
+   document: the document for which insertion is changed.
+
+   ---------------------------------------------------------------------- */
+extern void         TtaSetMandatoryInsertion (boolean on, Document document);
+
+/* ----------------------------------------------------------------------
    TtaSetStructureChecking
 
    Activate or disable structure checking. When structure checking is
@@ -1147,6 +1164,7 @@ extern void         TtaInsertElement ( /* ElementType elementType, Document docu
 extern void         TtaRemoveTree ( /* Element element, Document document */ );
 extern void         TtaSetAccessRight ( /* Element element, AccessRight right, Document document */ );
 extern void         TtaHolophrastElement ( /* Element element, boolean holophrast, Document document */ );
+extern void         TtaSetMandatoryInsertion ( /* boolean on, Document document */ );
 extern void         TtaSetStructureChecking ( /* boolean on, Document document */ );
 extern int          TtaGetStructureChecking ( /* Document document */ );
 extern void         TtaSetCheckingMode ( /* boolean strict */ );

@@ -534,8 +534,10 @@ Document dstDoc;
   TypeTree target, targetParent;
   boolean result = FALSE;
 # ifndef _WINDOWS
+#ifdef THIS_IS_GARBAGE
   Element elChild;
   TypeTree treeChild;
+# endif /* THIS_IS_GARBAGE */
 # endif /* _WINDOWS */
   
 #ifdef DEBUG
@@ -656,7 +658,7 @@ Document dstDoc;
   return result;
 }
 
-#ifdef THIS_IS_GARBISH
+#ifdef THIS_IS_GARBAGE
 
     /* l'element n'a pas de type marque comme effectif, */
     /* c'est donc un choix ou une liste uniquement instanciee */
@@ -706,7 +708,9 @@ Document dstDoc;
   boolean result = TRUE;
   TypeTree childTree;
 # ifndef _WINDOWS 
+#ifdef THIS_IS_GARBAGE
   Element elCopy, prev;
+#endif /* THIS_IS_GARBAGE */
 # endif /* _WINDOWS */
 
   /* traite succesivement chacun des fils de oldElem */
@@ -741,7 +745,7 @@ Document dstDoc;
   return result;
 } 
   
-#ifdef THIS_IS_GARBISH
+#ifdef THIS_IS_GARBAGE
 {    while (childTree != NULL && 
 	     (!IsNodeOfType (childTree, elType) &&
 	      !(childTree->TPrintSymb == '[' &&

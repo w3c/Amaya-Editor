@@ -15,23 +15,32 @@
 #include "constxml.h"
 #include "typexml.h"
 #include "parsexml_f.h"
+#include "xmlmodule_f.h"
+#ifndef NODISPLAY
+#include "changeabsbox_f.h"
+#else
+#include "nodisplay_f.h"
+#endif
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
 #include "edit_tv.h"
+
 
 typedef struct _XmlPresentationType{
   Element  El;
   char    *ViewName;
   int      PRuleNum;
   int      PRuleValue;
+  TypeUnit PRuleUnit;
+  boolean  PRuleAbs;
   struct  _XmlPresentationType *Next;
 }XmlPresentationType;
 
 static char     PPrefixName[9] = "";
 static char     PSchemaName[30] = "";
 static int      XmlMaxID = 0;
-static PrefixType     *ParserPrefixs;
+/*static PrefixType     *ParserPrefixs;*/
 static XmlPresentationType *XmlPresentation=NULL;
 static int PBnumber = 0;
 static int PBview = 0;
@@ -186,38 +195,109 @@ char *value;
 {
 
   XmlPresentationType  *newPres;
-  int     begin=0;
-  int     end=0;
-  int     length=0;
-  
+  int     begin  = 0;
+  int     end    = 0;
+  int     length = 0;
+  boolean sign   = FALSE;
+
   if (el != NULL)
     {
-      length = strlen (value)-1;
-      while(begin<length)
+      length = strlen (value) - 1;
+      while (begin < length)
 	{
 	  newPres = (XmlPresentationType *)TtaGetMemory(sizeof(XmlPresentationType));
 	  newPres->Next = XmlPresentation;
 	  XmlPresentation = newPres;
-
+	  
 	  XmlPresentation->El = el;
-      
-	  while(end<length&&value[end]!=':') end++;
-	  value[end]=EOS;
-	  newPres->ViewName = TtaStrdup(&value[begin]);
+	  /* reading view name */
+	  while (end<length && value[end] != ':') end++;
+	  value[end] = EOS;
+	  newPres->ViewName = TtaStrdup (&value[begin]);
+	  begin = end + 1;
+	  /* reading Prule type */
+	  while (end<length && value[end] != ':') end++;
+	  value[end] = EOS;
+	  newPres->PRuleNum = atoi (&value[begin]);
 	  begin = end + 1;
 
-	  while(end<length&&value[end]!=':') end++;
-	  value[end]=EOS;
-	  newPres->PRuleNum = atoi(&value[begin]);
+	  if (newPres->PRuleNum == PtHeight ||
+	      newPres->PRuleNum == PtWidth ||
+	      newPres->PRuleNum == PtVertPos ||
+	      newPres->PRuleNum == PtHorizPos || 
+	      newPres->PRuleNum == PtBreak1 || 
+	      newPres->PRuleNum == PtBreak2 || 
+	      newPres->PRuleNum == PtIndent || 
+	      newPres->PRuleNum == PtSize || 
+	      newPres->PRuleNum == PtLineSpacing || 
+	      newPres->PRuleNum == PtLineWeight)
+	    {
+	      /* reading unit */
+	      while(end < length && value[end] != ':') end++;
+	      value[end] = EOS;
+	      newPres->PRuleUnit = (TypeUnit) atoi (&value[begin]);
+	      begin = end + 1;
+	    }
+
+	  if (newPres->PRuleNum == PtHeight ||
+	      newPres->PRuleNum == PtWidth) 
+	    {
+	      /* reading the 'R' for relative or 'A' for absolute */
+	      newPres->PRuleAbs = ((value[begin] == 'R')? FALSE : TRUE);
+	      begin = begin + 2;
+	    }
+
+	  /* reading the sign */
+	  if (newPres->PRuleNum == PtHeight ||
+	      newPres->PRuleNum == PtWidth ||
+	      newPres->PRuleNum == PtVertPos ||
+	      newPres->PRuleNum == PtHorizPos ||
+	      newPres->PRuleNum == PtIndent)
+	    {
+	      if (value[begin] == '+') 
+		{
+		  sign = FALSE;
+		  begin++;
+		}
+	      if (value[begin] == '-') 
+		{
+		  sign = TRUE;
+		  begin++;
+		}
+	    }
+	  /* reading the absolute value */
+	  while(end < length && value[end] != ';') end++;
+	  value[end] = EOS;
+	  newPres->PRuleValue = atoi (&value[begin]);
 	  begin = end + 1;
 
-	  while(end<length&&value[end]!=';') end++;
-	  value[end]=EOS;
-	  newPres->PRuleValue = atoi(&value[begin]);
-	  begin = end + 1;
+	  /* signing the value */
+	  if (sign)
+	    newPres->PRuleValue = -newPres->PRuleValue;
 	}
     }
 }
+
+
+/*----------------------------------------------------------------------
+   XmlFreePresentationList
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  XmlFreePresentationList ()
+#else
+void  XmlFreePresentationList ()
+#endif
+{
+  XmlPresentationType  *newPres;
+  while (XmlPresentation != NULL)
+    {
+      newPres = XmlPresentation;
+      XmlPresentation = XmlPresentation->Next;
+      TtaFreeMemory (newPres->ViewName);
+      TtaFreeMemory (newPres);
+    }
+}
+    
 /*----------------------------------------------------------------------
    XmlSetPresentation
   ----------------------------------------------------------------------*/
@@ -228,59 +308,110 @@ void  XmlSetPresentation (doc)
 Document doc;
 #endif
 {
-  PRule   newPRule;
+  PRule                newPRule;
   XmlPresentationType *inter;
-  
+  View                 view;
+  DimensionRule       *pDimRule;
+  PosRule             *pPosRule;
+  PtrPRule             pR1;
+  PtrPSchema           pSPR;
+  PtrSSchema           pSSR;
+  PtrAttribute         pAttr;
+
   while (XmlPresentation != NULL)
     {
-      switch (XmlPresentation->PRuleNum)
-	  /* Manage the different PRule types */
+      newPRule = TtaGetPRule (XmlPresentation->El,
+			      XmlPresentation->PRuleNum);
+      if (newPRule == NULL)
+	/* PRule doesn't exist yet */
 	{
-	case 4: /* case heigth */
-	  TtaChangeBoxSize (XmlPresentation->El, doc,
-			    TtaGetViewFromName (doc,
-						XmlPresentation->ViewName),
-			    0,XmlPresentation->PRuleValue,UnPoint);
+	  newPRule = TtaNewPRule (XmlPresentation->PRuleNum,
+				  TtaGetViewFromName (doc,
+						      XmlPresentation->ViewName),
+				  doc);
+
+	}
+      switch (XmlPresentation->PRuleNum)
+	/* Manage the different PRule types */
+	{
+	case 4: /* case heigh */
+	case 5: /* case width */
+	  view = TtaGetViewFromName (doc, XmlPresentation->ViewName);
+	  pDimRule = &(((PtrPRule)newPRule)->PrDimRule);
+	  pDimRule->DrAbsolute = XmlPresentation->PRuleAbs;
+	  pDimRule->DrPosition = FALSE;
+	  if (!pDimRule->DrAbsolute)
+	    {
+	      pR1 = GlobalSearchRulepEl ((PtrElement)XmlPresentation->El, 
+					 &pSPR, &pSSR, 
+					 0, NULL, view,
+					 XmlPresentation->PRuleNum, FnAny, 
+					 FALSE, TRUE, &pAttr);
+	      if (pR1 != NULL)
+		{
+		  *((PtrPRule)newPRule) = *pR1;
+		  ((PtrPRule)newPRule)->PrViewNum = view;
+		  ((PtrPRule)newPRule)->PrNextPRule = NULL;
+		  ((PtrPRule)newPRule)->PrCond = NULL;
+		}
+	    }
+	  pDimRule->DrAttr = FALSE;
+	  pDimRule->DrValue = XmlPresentation->PRuleValue;
+	  pDimRule->DrUnit = XmlPresentation->PRuleUnit;
+	  pDimRule->DrMin = FALSE;
+	  TtaAttachPRule (XmlPresentation->El,
+			  newPRule,
+			  doc);
 	  break;
-        case 5: /* case width */
-	  TtaChangeBoxSize (XmlPresentation->El, doc,
-			    TtaGetViewFromName (doc, 
-						XmlPresentation->ViewName),
-			    XmlPresentation->PRuleValue,0,UnPoint); 
+	case 6: /* case y offset */
+	case 7: /* case x offset */
+	  view = TtaGetViewFromName (doc, XmlPresentation->ViewName);
+	  pPosRule = &(((PtrPRule)newPRule)->PrPosRule);
+	  pR1 = GlobalSearchRulepEl ((PtrElement)XmlPresentation->El, 
+				     &pSPR, &pSSR, 0, NULL, view,
+				     XmlPresentation->PRuleNum, 
+				     FnAny, FALSE, TRUE, &pAttr);
+	  if (pR1 != NULL)
+	    *((PtrPRule)newPRule) = *pR1;
+	  ((PtrPRule)newPRule)->PrViewNum = view;
+	  ((PtrPRule)newPRule)->PrNextPRule = NULL;
+	  ((PtrPRule)newPRule)->PrCond = NULL;
+	  pPosRule->PoDistAttr = FALSE;
+	  pPosRule->PoDistance = XmlPresentation->PRuleValue;
+	  pPosRule->PoDistUnit = XmlPresentation->PRuleUnit;	 
+	  TtaAttachPRule (XmlPresentation->El,
+			  newPRule,
+			  doc);
 	  break;
-        case 6: /* case y offset */
-	  TtaChangeBoxPosition (XmlPresentation->El, doc,
-				TtaGetViewFromName (doc, 
-						    XmlPresentation->ViewName),
-				0,XmlPresentation->PRuleValue,UnPoint);
-	  break;
-        case 7: /* case x offset */
-	  TtaChangeBoxPosition (XmlPresentation->El, doc,
-	                   TtaGetViewFromName (doc,
-					       XmlPresentation->ViewName),
-			   XmlPresentation->PRuleValue,0,UnPoint);
+	case PtBreak1:
+	case PtBreak2:
+	case PtIndent:
+	case PtSize:
+	case PtLineSpacing:
+	case PtLineWeight:
+	  ((PtrPRule) newPRule)->PrMinAttr = FALSE;
+	  ((PtrPRule) newPRule)->PrMinValue = XmlPresentation->PRuleValue;
+	  ((PtrPRule) newPRule)->PrMinUnit = XmlPresentation->PRuleUnit;
+	  TtaAttachPRule (XmlPresentation->El,
+			  newPRule,
+			  doc);
 	  break;
 	default: /* Other PRules */
-	  newPRule = TtaGetPRule (XmlPresentation->El,
-				  XmlPresentation->PRuleNum);
-	  if (newPRule==NULL)
-	    /* PRule doesn't exist yet */
-	    {
-	      newPRule = TtaNewPRule (XmlPresentation->PRuleNum,
-				      TtaGetViewFromName (doc,
-							  XmlPresentation->ViewName),
-				      doc);
-	      TtaAttachPRule (XmlPresentation->El,
-			      newPRule,
-			      doc);
-	    }
-	  TtaSetPRuleValue(XmlPresentation->El,newPRule,XmlPresentation->PRuleValue,doc);
+	  TtaAttachPRule (XmlPresentation->El,
+			  newPRule,
+			  doc);
+	  TtaSetPRuleValue (XmlPresentation->El,
+			    newPRule,
+			    XmlPresentation->PRuleValue,
+			    doc);
 	}
       inter = XmlPresentation->Next;
       TtaFreeMemory (XmlPresentation->ViewName);
       TtaFreeMemory (XmlPresentation);
       XmlPresentation = inter;
     }
+  XmlFreePresentationList ();
+
 }
 
 /*----------------------------------------------------------------------

@@ -85,15 +85,16 @@
 #define TEXT_ATTR_TYPE        2
 #define REF_ATTR_TYPE         3
 
+
 /* ---------------------------------------------------------------------
    Basic element types: Warning: Pobably already defined ...
    ------------------------------------------------------------------- */
-#define TEXT_UNIT             1
-#define GRAPHICS_UNIT         2
-#define SYMBOL_UNIT           3
-#define PICTURE_UNIT          4
-#define REFERENCE_UNIT        5
-#define PAGE_BREAK            6
+#define TEXT_UNIT             ((int)CharString)+1
+#define GRAPHICS_UNIT         ((int)GraphicElem)+1
+#define SYMBOL_UNIT           ((int)Symbol)+1
+#define PICTURE_UNIT          ((int)Picture)+1
+#define REFERENCE_UNIT        ((int)Refer)+1
+#define PAGE_BREAK            ((int)PageBreak)+1
 
 /* ---------------------------------------------------------------------
    Tables constants 

@@ -280,6 +280,22 @@ extern char         *TtaGetAttributeValueName (AttributeType attributeType, int 
    ---------------------------------------------------------------------- */
 extern int         TtaGetAttributeValueFromName (char *name, AttributeType attributeType);
 
+/* ----------------------------------------------------------------------
+   TtaGetAttributeValueFromOriginalName
+
+   Retrieves the int value of an attribute of type enumerate from its 
+   original name (as it is defined in the S schema).
+
+   Parameter:
+   name: original name of the value.
+   attrType: type of the attribute
+
+   Return value:
+   the corresponding int value, or 0 if error.
+
+   ---------------------------------------------------------------------- */
+extern int                TtaGetAttributeValueFromOriginalName (char *name, AttributeType attributeType);
+
 
 /* ----------------------------------------------------------------------
    TtaGetTextAttributeLength
@@ -351,6 +367,8 @@ extern int          TtaSameAttributeTypes ( /* AttributeType type1, AttributeTyp
 extern int          TtaGetAttributeValue ( /* Attribute attribute */ );
 extern char         *TtaGetAttributeValueName ( /* AttributeType attributeType, int value */ );
 extern int          TtaGetAttributeValueFromName ( /* char *name, AttributeType attributeType */ );
+extern int          TtaGetAttributeValueFromOriginalName (/* char *name, AttributeType attributeType */ );
+
 extern int          TtaGetTextAttributeLength ( /* Attribute attribute */ );
 extern void         TtaGiveTextAttributeValue ( /* Attribute attribute, char *buffer, int *length */ );
 extern void         TtaSearchAttribute ( /* AttributeType searchedAttribute, SearchDomain scope, Element element, Element *elementFound, Attribute *attributeFound */ );

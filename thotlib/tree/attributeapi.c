@@ -872,6 +872,59 @@ Attribute           attribute;
      value = ((PtrAttribute) attribute)->AeAttrValue;
    return value;
 }
+/* ----------------------------------------------------------------------
+   TtaGetAttributeValueOriginalName
+
+   Returns the original name of a value of an attribute of type enumerate.
+   (as it is defined in the S schema)
+   Parameter:
+   attributeType: type of the attribute.
+   value: the value
+
+   Return value:
+   name of that value or empty string if error.
+
+   ---------------------------------------------------------------------- */
+
+
+#ifdef __STDC__
+char               *TtaGetAttributeValueOriginalName (AttributeType attributeType, int value)
+
+#else  /* __STDC__ */
+char               *TtaGetAttributeValueOriginalName (attributeType, value)
+AttributeType       attributeType;
+int		    value;
+
+#endif /* __STDC__ */
+
+{
+
+   UserErrorCode = 0;
+   bufferName[0] = EOS;
+   if (attributeType.AttrSSchema == NULL)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (attributeType.AttrTypeNum < 1 ||
+	    attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (value < 1 || value > ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrNEnumValues)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else
+     {
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
+     }
+   return bufferName;
+}
+
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeValueName
@@ -923,6 +976,65 @@ int		    value;
 	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
      }
    return bufferName;
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaGetAttributeValueFromOriginalName
+
+   Retrieves the int value of an attribute of type enumerate from its 
+   original name (as it is defined in the S schema).
+
+   Parameter:
+   name: original name of the value.
+   attrType: type of the attribute
+
+   Return value:
+   the corresponding int value, or 0 if error.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+int                TtaGetAttributeValueFromOriginalName (char *name, AttributeType attributeType)
+
+#else  /* __STDC__ */
+int                TtaGetAttributeValueFromOriginalName (name, attributeType)
+char               *name;
+AttributeType      attributeType;
+
+#endif /* __STDC__ */
+
+{
+   TtAttribute	      *attr;
+   int		       value, i;
+
+   UserErrorCode = 0;
+   value = 0;
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH)
+     {
+        TtaError (ERR_invalid_parameter);
+     }
+   if (attributeType.AttrSSchema == NULL)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (attributeType.AttrTypeNum < 1 ||
+	    attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrType != AtEnumAttr )
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else
+     {
+        attr = & ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1];
+        for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
+	    if (strncmp(attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
+		value = i+1;
+     }
+   return value;
 }
 
 /* ----------------------------------------------------------------------

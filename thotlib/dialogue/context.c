@@ -748,17 +748,49 @@ void               *ev;
 		      }
 		    else
 		      {
-			 /* receive the data */
-			 r = XGetWindowProperty (event->display, event->requestor,
-			       event->property, (long) 0, (long) 256, FALSE,
-				  AnyPropertyType, &type, &format, &nbitems,
-						 &bytes_after, &buffer);
-			 if (r == Success && type != None && format == 8)
-			   {
-			      /* paste the content of the selection */
-			      if (ThotLocalActions[T_pasteclipboard] != NULL)
-				 (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
-			   }
+			unsigned char *partbuffer;
+			/* receive the data */
+			r = XGetWindowProperty (event->display, 
+						event->requestor,
+						event->property, 
+						(long) 0, 
+						(long) 256, 
+						FALSE,
+						AnyPropertyType, 
+						&type, 
+						&format, 
+						&nbitems,
+						&bytes_after, 
+						&partbuffer);
+			if (r == Success && type != None && format == 8)
+			  {
+			    if (bytes_after > 0)
+			      {
+				buffer = TtaGetMemory (nbitems + bytes_after);
+				strcpy (buffer, partbuffer);
+				r = XGetWindowProperty (event->display, 
+							event->requestor,
+							event->property, 
+							(long) 256, 
+							(long) bytes_after, 
+							FALSE,
+							AnyPropertyType, 
+							&type, 
+							&format, 
+							&nbitems,
+							&bytes_after, 
+							&partbuffer);
+				strcpy (&buffer[256 * 4], partbuffer);
+				nbitems = (256 * 4) + nbitems;
+			      }
+			    else
+			      buffer = partbuffer;
+			    /* paste the content of the selection */
+			    if (ThotLocalActions[T_pasteclipboard] != NULL)
+			      (*ThotLocalActions[T_pasteclipboard]) (buffer, (int) nbitems);
+			    if (buffer != partbuffer)
+			      TtaFreeMemory (buffer);
+			  }
 		      }
 		 }
 	       break;

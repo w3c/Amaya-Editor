@@ -5,9 +5,9 @@
 #       thoteditor-$MACH-$THOTVERSION.tar.gz
 #
 
-THOTVERSION=2.1e
-THOTDIR=/tahiti/diffusion/opera
-DEST=/tahiti/thottape
+THOTVERSION=2.2
+THOTDIR=/local_home/opera
+DEST=/local_home/opera/diffusion
 #PLATFORMS="solaris2 LINUX-ELF RS6000 osf1 SGI"
 PLATFORMS="LINUX-ELF"
 
@@ -16,14 +16,14 @@ COMPRESS="gzip -9"
 
 cd $THOTDIR
 
-cd ..
+#cd ..
 
 for MACH in $PLATFORMS
 do
    $TAR - \
    Thot/README \
-   Thot/NEWS.Thot.2.1 \
-   Thot/NEWS.Thoteditor.2.1 \
+   Thot/NEWS.Thot.2.2 \
+   Thot/NEWS.Thoteditor.2.2 \
    Thot/AboutThot \
    Thot/README.thoteditor \
    Thot/thot/COPYRIGHT* \
@@ -122,7 +122,6 @@ do
    Thot/schemas/Makefile \
    Thot/schemas/Text_ASCII.inc \
    Thot/schemas/Text_SGML.inc \
-   Thot/schemas/Text_Latex.inc \
    Thot/schemas/exc_matrix.h \
    Thot/schemas/exc_Table.h \
    Thot/schemas/Math.h \
@@ -363,3 +362,4 @@ do
    | $COMPRESS  > $DEST/thoteditor-$MACH-$THOTVERSION.tar.gz
 done
 
+#   Thot/schemas/Text_Latex.inc \

@@ -114,8 +114,9 @@ this
 	    /* number of possible values (effective size of the table
 	       AttrEnumValue) */
 	    int   _AttrNEnumValues_;
-	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values 
-*/
+	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values (may be translated */
+	    Name             _AttrEnumOrigValue_[MAX_ATTR_VAL]; /* original nameS */
+	    
 	  } s3;
 	} u;
 } TtAttribute;
@@ -124,6 +125,7 @@ this
 #define AttrTypeRefNature u.s2._AttrTypeRefNature_
 #define AttrNEnumValues u.s3._AttrNEnumValues_
 #define AttrEnumValue u.s3._AttrEnumValue_
+#define AttrEnumOrigValue u.s3._AttrEnumOrigValue_
 
 
 typedef struct _StructSchema *PtrSSchema;

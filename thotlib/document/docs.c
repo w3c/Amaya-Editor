@@ -271,17 +271,28 @@ char               *fileName;
 
 #endif  /* __STDC__ */
 {
+  DisplayMode          dispMode;
+  Document             doc = 0;
+  
   *pDoc = NULL;
   if (ThotLocalActions[T_xmlparsedoc] != NULL)
-    *pDoc = LoadedDocument[(int)((*(Func)ThotLocalActions [T_xmlparsedoc]) (fileName)) - 1];
+    {
+      doc = (int)((*(Func)ThotLocalActions [T_xmlparsedoc]) (fileName));
+      *pDoc = LoadedDocument[doc - 1];
+    }
   if (*pDoc != NULL)
      {
+       
        /* conserve le path actuel des schemas dans le contexte du document */
        strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
        /* ouvre les vues a ouvrir */
        OpenDefaultViews (*pDoc);
+       dispMode = TtaGetDisplayMode (doc);
+       TtaSetDisplayMode (doc, NoComputedDisplay);
        XmlSetPresentation((Document) IdentDocument (*pDoc)); 
        XmlSetRef((Document) IdentDocument (*pDoc)); 
+       TtaSetDisplayMode (doc, dispMode);
+       
        if ((*pDoc)->DocRootElement != NULL)
          /* Pour tous les elements du document que l'on vient de */
          /* charger qui sont designe's par des references, cherche */
@@ -290,6 +301,7 @@ char               *fileName;
          /* deja affichees */
          RedisplayExternalRefs (*pDoc);
      }
+
 }
 
 

@@ -82,7 +82,6 @@ int    size;
                  The index of Schema used is always NbSchema-1
 ----------------------------------------------------------------------- */
 #ifdef __STDC__
-
 static void InsertInTable (PtrTranslationSchema TSchema, char *ThotName,char *XmlName)
 #else /*__STDC__*/
 static void InsertInTable (TSchema, ThotName, XmlName)
@@ -240,7 +239,7 @@ char *XmlName;
 		  n = 0;
 		  while (!found && n < CURRENT_ATTR_DEF.AttrNEnumValues)
 		    {
-		      found = !strcmp (CURRENT_ATTR_DEF.AttrEnumValue[n], ThotName);
+		      found = !strcmp (CURRENT_ATTR_DEF.AttrEnumOrigValue[n], ThotName);
 		      if (!found) n++;
 		    }
 		}
@@ -339,7 +338,7 @@ SSchema sSchema;
 
   /* Gets all SchemasPaths */
   TtaGetSchemaPath(paths,1000);
-#ifdef DEBUG
+#ifdef DEBUG_IV
   printf("Paths:%s.\n",paths);
 #endif
   while ((paths[i]!='\0')&&(!ok))
@@ -351,7 +350,7 @@ SSchema sSchema;
 	  filename[f++]='/';
 	  filename[f++]='\0';
 	  strcat(filename,TtaGetSSchemaName(sSchema));
-	  strcat(filename,".xml");
+	  strcat(filename,".X");
 	  if (TtaFileExist(filename))
 	    {
 	      file=TtaReadOpen(filename);
@@ -444,15 +443,17 @@ int attrTypeNum;
   PtrTranslationSchema curTS;
   TYPETABLE            i = 0;
   TYPETABLE            index, first, end;
-  int                  result;
+  int                  result, j;
   ElementType          elType;
   AttributeType        attrType;
   boolean              found = FALSE;
-  
+  SRule               *pRule;
+
   result = 0;
   CurrentSSchema = schema;
   elType.ElSSchema = schema;
   attrType.AttrSSchema = schema;
+  attrType.AttrTypeNum = attrTypeNum;
   /* searches the translation schema */
   curTS = TranslationSchemas;
   while (curTS != NULL && strcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
@@ -515,29 +516,39 @@ int attrTypeNum;
 	if (elTypeNum == 0)
 	  {
 	    /* searching an element type Number */
-	    TtaGiveTypeFromOriginalName(&elType,xmlName);
+	    TtaGiveTypeFromOriginalName(&elType, xmlName);
 	    result = elType.ElTypeNum;
 	  }
 	else
 	  {
 	    result = 0;
+	    pRule = &(((PtrSSchema)schema)->SsRule[elTypeNum-1]);
 	    /* Searching manualy the attribute */
 	    while (result < (((PtrSSchema)schema)->SsNAttributes+1) && !found)
 	      {
 		result++;
-		/* The local attributes are not considered */
+		/* Checking if it is a local or global attribute */
 		if (((PtrSSchema)schema)->SsAttribute[result - 1].AttrGlobal)
-		  {
-		    if (!strcmp (xmlName,
-			 ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName))
-		      found = TRUE;
+		  /* Global attribute */
+		  found = (!strcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
+
+		else
+		  {/* Local Attribute */
+		    /* checking if the attribute is legal for the elem type */
+		    for (j = 0; j < pRule->SrNLocalAttrs && pRule->SrLocalAttr[j]!=result; j++);
+		    if (j < pRule->SrNLocalAttrs)
+		      /* the attribute is legal : checking the name */
+		      found = (!strcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
+		    
 		  }
 	      }
-	    if (!found) result=0;
+	    if (!found) result = 0;
 	  }
       else
-	result = 0;
-/* 	result = TtaGetAttributeValueFromName(xmlName); */
+	{
+	  /* searching the attribute value */
+	  result = TtaGetAttributeValueFromOriginalName (xmlName, attrType);
+	}
       return result;
     }
 }

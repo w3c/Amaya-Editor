@@ -88,6 +88,9 @@ static boolean      immAfterTag = FALSE;  /* A tag has just been read */
 static unsigned char inputBuffer[MAX_BUFFER_LENGTH];
 static int          bufferLength = 0;	  /* actual length of text in input
 					     buffer */
+static int          nbLineRead;            /* number of line read */
+static int          nbCharRead;            /* number of char read since the */
+                                           /* begin of the line */
 
 /* information about the Thot document under construction */
 static Document     currentDocument;              /* the current Thot document */
@@ -246,16 +249,18 @@ Element newElement;
   Element	lastElement;
   Element	tempElement;
   Element	descendElement;
+  Element	elemParent ;
+  Element	elemSibling ;
   ElementType	elType;
-  Attribute	currentAttribute, tempAttribute;
+  int		parentStackLevel;
   boolean	isChild = FALSE;
   boolean	success = FALSE;
-  int		val;
-  int		parentStackLevel;
-  char		buf[255];
-  Element	elemParent ;
   boolean	insertAsSibling ;
-  Element	elemSibling ;
+#ifdef IV
+  char		buf[255];
+  int		val;
+  Attribute	currentAttribute, tempAttribute;
+#endif
 	
 #ifdef DEBUG
   ElementType elt2;
@@ -278,6 +283,7 @@ Element newElement;
   elType = TtaGetElementType (newElement);
   if (stackLevel == 0)
     {
+#ifdef IV
       /* the root is already inserted : setting the attributes */
       tempElement = TtaGetMainRoot (currentDocument);
       currentAttribute = NULL;
@@ -297,7 +303,8 @@ Element newElement;
 	  TtaAttachAttribute (tempElement, currentAttribute, currentDocument);
 	  TtaNextAttribute (tempElement, &currentAttribute);	   
 	}  
-      newElement = tempElement;
+#endif
+      newElement = TtaGetMainRoot (currentDocument);
       success = TRUE;
     }
   else if (ReadingAssocRoot)
@@ -322,7 +329,7 @@ Element newElement;
       else
 	insertAsSibling = FALSE;
       
-      if (elType.ElTypeNum == PAGE_BREAK) 
+      if (elType.ElTypeNum == PageBreak) 
 	/* page break are special element*/
 	{
 	  XmlSetPageBreakProperties (newElement);
@@ -437,7 +444,6 @@ Element newElement;
   ----------------------------------------------------------------------*/
 void         XmlTextToDocument ()
 {
-  int		i, firstChar, lastChar;
   ElementType	elType;
   Element       elNew;
 
@@ -449,18 +455,9 @@ void         XmlTextToDocument ()
 
   if (DoCreateElement)
     {
-      /* suppress leading spaces */
-      for (firstChar = 0; 
-	   inputBuffer[firstChar] <= SPACE && inputBuffer[firstChar] != EOS;
-	   firstChar++);
-      if (inputBuffer[firstChar] != EOS)
+      if (inputBuffer[0] != EOS)
 	/* We don't write empty text */
 	{
-	  /* suppress trailing spaces */
-	  lastChar = strlen (inputBuffer) - 1;
-	  for (i = lastChar; inputBuffer[i] <= SPACE && i > 0; i--);     
-	  inputBuffer[i+1] = EOS;
-	  
 	  if (currentElementClosed || TtaGetElementType (elementStack[stackLevel-1]).ElTypeNum != 1)
 	    /* There hasn't been the Text tag so the element is not created */
 	    {
@@ -471,11 +468,14 @@ void         XmlTextToDocument ()
 	      currentElementClosed = TRUE;
 	      if (elNew == NULL)
 		TtaDeleteTree (elNew, currentDocument);
-	      elementStack[stackLevel] = elNew;
+	      elementStack[stackLevel] = elNew;	
+	      TtaSetTextContent (elNew, inputBuffer, currentLanguage, currentDocument);
 	    }
 	  else
-	    elNew = elementStack[stackLevel-1];
-	  TtaSetTextContent (elNew, &inputBuffer[firstChar], currentLanguage, currentDocument);
+	    {
+	      elNew = elementStack[stackLevel-1];
+	      TtaAppendTextContent (elNew, inputBuffer, currentDocument);
+	    }
 	}  
     }
   /* the input buffer is now empty */
@@ -590,8 +590,8 @@ unsigned char                c;
 	}
       if (stackLevel > 0)
 	{
-	  currentLanguage = languageStack[stackLevel-1];
 	  stackLevel --;
+	  currentLanguage = languageStack[stackLevel-1];
 	}
     }
   immAfterTag = TRUE;
@@ -856,11 +856,12 @@ unsigned char                c;
 
 #endif
 {
-  Attribute	attr, oldAttr;
-  AttributeType	attrType;
-  int           attrKind;
-  unsigned char msgBuffer[MAX_BUFFER_LENGTH];
+  Attribute	      attr, oldAttr;
+  AttributeType	      attrType;
+  int                 attrKind;
+  unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
   NotifyAttribute     notifyAttr;
+  ElementType         elType;
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
@@ -882,10 +883,11 @@ unsigned char                c;
     ;
   else if (createdElement != NULL)
     {
+      elType = TtaGetElementType (createdElement);
       attrType.AttrSSchema = currentAttrSSchema;
       attrType.AttrTypeNum = NameXmlToThot(currentAttrSSchema,
 					   inputBuffer,
-					   1,
+					   elType.ElTypeNum,
 					   0);
      
       if (attrType.AttrTypeNum == 0 )
@@ -1538,7 +1540,6 @@ char	 *name;
   PtrTransition       trans;
   boolean	      endOfFile;
   boolean	      error;
-  boolean	      EmptyLine = TRUE;
   char                tempDocName[200];
   int                 i;
   int                 firstNameChar = 0;
@@ -1576,7 +1577,9 @@ char	 *name;
   DoCreateElement = TRUE;       /* flag for NotifyElement */
   DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
   IgnoreElemLevel = 0;              /* stack level from where */
-                  
+  nbLineRead = 0;
+  nbCharRead = 0;
+
   /* read the Xml file sequentially */
   do
     {
@@ -1592,73 +1595,46 @@ char	 *name;
 	  /* Replace HT by space, except in preformatted text. */
 	  /* Ignore spaces at the beginning and at the end of input lines */
 	  /* Ignore non printable characters except HT, LF, FF. */
+	  if ((int) charRead == 9)
+	    /* HT = Horizontal tabulation */
+	    {
+	      charRead = SPACE;
+	    }
 	  if ((int) charRead == 10)
 	    /* LF = end of input line */
 	    {
+	      
 	      if (currentState != 12)
 		/* don't change characters in comments */
 		if (currentState != 0)
-		  /* not within a text element */
+		  /* not within ordinary text */
 		  {
-		    immAfterTag = FALSE;
-		    if (charRead != EOS)
-		      /* Replace new line by a space, except if an entity is
-			 being read */
-		      if (currentState == 20) 
-			charRead = '\n'; /* new line */
-		      else
-			charRead = SPACE;
+		    /* Replace new line by a space, except if an entity is
+		       being read */
+		    if (currentState == 20) 
+		      charRead = '\n'; /* new line */
+		    else
+		      charRead = SPACE;
 		  }
 		else
-		  /* new line in ordinary text */
-		  {
-		    /* suppress all spaces preceding the end of line */
-		    while (bufferLength > 0 && inputBuffer[bufferLength - 1] == SPACE)
-		      bufferLength--;
-		    /* ignore newlines immediately after end of tag */
-		    if (immAfterTag)
-		      charRead = EOS;
-		    else
-		      {
-			/* new line is equivalent to space */
-			charRead = SPACE;
-			if (bufferLength > 0)
-			  XmlTextToDocument ();
-		      }
-		  }
-	      else
-		immAfterTag = FALSE;	
-	      /* beginning of a new input line */
-	      EmptyLine = TRUE;
+		  /* ignore line breaks in PCDATA  */
+		  /* (this is quite Thot specific) */
+		  /* line breaks are encoded as <thot:br/> */
+		  charRead = EOS;
+		    
+	      nbCharRead = 0;
+	      nbLineRead++;
 	    }
-	  else
-	    /* it's not an end of line */
+	  else 
 	    {
-	      immAfterTag = FALSE;
-	      if ((int) charRead == 9)
-		/* HT = Horizontal tabulation */
-		{
-		  charRead = SPACE;
-		}
-	      if (charRead == SPACE)
-		/* space character */
-		{
-		  if (currentState == 0 || currentState == 12)
-		    /* in a text element or in a comment */
-		    /* ignore spaces at the beginning of an input line */
-		    if (EmptyLine)
-		      charRead = EOS;
-		}
-	      else if ((charRead < SPACE || (int) charRead >= 254 ||
-			((int) charRead >= 127 && (int) charRead <= 159))
-		       && (int) charRead != 9)
+	      nbCharRead++;
+	      if ((charRead < SPACE || (int) charRead >= 254 ||
+		   ((int) charRead >= 127 && (int) charRead <= 159))
+		  && (int) charRead != 9)
 		/* it's not a printable character, ignore it */
 		charRead = EOS;
-	      else
-		/* it's a printable character. Keep it as it is and */
-		/* stop ignoring spaces */
-		EmptyLine = FALSE;
 	    }
+	  
 	  if (charRead != EOS)
 	    /* a valid character has been read */
 	    {

@@ -226,7 +226,10 @@ TtAttribute        *pAttr;
 		 case AtEnumAttr:
 		    TtaReadShort (file, &pAttr->AttrNEnumValues);
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
-		       TtaReadName (file, pAttr->AttrEnumValue[j]);
+		      {
+			TtaReadName (file, pAttr->AttrEnumValue[j]);
+			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
+		      }
 		    break;
 	      }
      }

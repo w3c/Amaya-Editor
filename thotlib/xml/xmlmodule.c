@@ -200,16 +200,15 @@ void  XmlSetTarget (Document doc, Element el, unsigned char *value)
 	    {
 	      while (value[i]!='#')
 		{
-	      docName[i] = value[i];
-	      i++;
+		  docName[i] = value[i];
+		  i++;
 		}
 	      if (i!=0)
 		/* Warning: Reference from another document */
 		{/* To Complete */}
-	      i++;
-	  strcpy(label,&value[i]);
-	  tempRef->TargetLabel = TtaStrdup(label);
-	  break;
+	      strcpy(label,&value[i]);
+	      tempRef->TargetLabel = TtaStrdup(label);
+	      break;
 	    }
 	  tempRef = tempRef->Next;
 	}
@@ -351,4 +350,6 @@ boolean ParseXmlAttribute (Document doc,Element el, unsigned char *attrName, uns
     }
   else
     return (FALSE);
+
+  return TRUE;
 }

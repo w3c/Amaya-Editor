@@ -52,38 +52,34 @@ static int        XmlDepth = 0;     /* Tree depth */
 static Document   OpenedRefDoc[10] = {0,0,0,0,0,0,0,0,0,0};
 static int        NbOpenedRefDoc = 0;/* structures for extern references */
 static StrAtomPair *ListAtomPair;    /* list of first paired elements */
-static int        LabelCounter;      /* counter for generating labels */
+
 
 /*----------------------------------------------------------------------
   XmlGetElementLabel : gets a label for the element el
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XmlGetElementLabel (char *label, Element el)
+static void XmlGetElementLabel (char *buffer, Element el)
 #else /* __STDC__ */
-static void XmlGetElementLabel (label, el)
-char *label;
+static void XmlGetElementLabel (buffer, el)
+char *buffer;
 Element el;
 #endif /* __STDC__ */
 {
-  char buf[MAX_LABEL_LEN];
-  
-  strcpy (buf, TtaGetElementLabel(el));
-  if (buf[3] != '_')
-    /* it's a thot generated label, change it in XmlId */
+  buffer[0] = '\0';
+  strcpy (buffer, TtaGetElementLabel (el));
+  if (buffer[0] != '#')
     {
-      label[0]='\0';
-      strncat (label,
-	       NameThotToXml (TtaGetElementType(el).ElSSchema, 
-			      TtaGetElementType(el).ElTypeNum, 0, 0),
-	       3);
-      strcat (label, "_");
-      strcat (label, &buf[1]);
-    }
-  else
-    {
-     strcpy (label, buf);
-    }
+      buffer[0] = '#';
+      buffer[1] = '\0';
+      strncat(buffer, NameThotToXml
+	      (TtaGetElementType(el).ElSSchema, 
+	       TtaGetElementType(el).ElTypeNum, 0, 0),3);
+      
+      strcat(buffer,"_");
+      strcat(buffer,TtaGetElementLabel(el)+1);
+    } 
 }
+
 /*----------------------------------------------------------------------
   XmlWriteString:
 	Writes a string in the xmlFile WITHOUT the trailing \0
@@ -557,7 +553,8 @@ Attribute attr;
   char       refDocName[50];
   char       tempName[100];
   boolean    ok=TRUE;
-  
+  int        l;
+
   bzero(refDocName,50);
 
   if (el!=NULL)
@@ -599,31 +596,22 @@ Attribute attr;
 	  ok = ok && XmlWriteAttrName(xmlFile, XML_LINK_ATTR);
 	  ok = ok && XmlWriteAttrStrValue (xmlFile,XML_SIMPLE_LINK);
 	  /* Href attribute */
-	  ok = XmlWriteString(xmlFile, XML_SPACE);	  ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
+	  ok = XmlWriteString(xmlFile, XML_SPACE);	  
+	  ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
 	  ok = ok && XmlWriteAttrName(xmlFile, XML_HREF_ATTR);
 	}
-      if (tempName[0]=='\0')
-	/* internal reference */
+
+      l = 0;
+      if (tempName[0]!='\0')
 	{
-	  tempName[0] = '#';
-	  tempName[1] = '\0';
-	  strncat(tempName,NameThotToXml 
-		  (TtaGetElementType(refEl).ElSSchema, 
-		   TtaGetElementType(refEl).ElTypeNum, 0, 0),3);
-	  strcat(tempName,"_");
-	  strcat(tempName,TtaGetElementLabel(refEl)+1);
-	  ok = ok && XmlWriteAttrStrValue (xmlFile,tempName);
-	}
-      else
-	/* external reference */
-	{
+	/* external reference */	  
 	  TtaGetDocumentDirectory(refDoc,tempName,100);
 	  strcat(tempName,"/");
 	  strcat(tempName,TtaGetDocumentName(refDoc));
-	  strcat(tempName,"#");
-	  strcat(tempName,TtaGetElementLabel(refEl));
-	  ok = ok && XmlWriteAttrStrValue (xmlFile,tempName);
+	  l = strlen (tempName);
 	}
+      XmlGetElementLabel (&tempName[l], refEl);
+      ok = ok && XmlWriteAttrStrValue (xmlFile,tempName);
     }
   return ok;
 }
@@ -696,12 +684,10 @@ Document       doc;
 	}
       else
 	{
-#ifdef NAMESPACE
 	  /* Write the attribute Name and its prefix     */
 	  if (!TtaSameSSchemas (sSchema, TtaGetDocumentSSchema (doc)))
 	    /* If schema isn't default schema, prefix is added */
 	    ok = ok && XmlWritePrefix (xmlFile,sSchema);
-#endif
 	  ok = ok && XmlWriteAttrName (xmlFile,
 				       NameThotToXml (sSchema, 0, attrType.AttrTypeNum, 0));
 	}
@@ -750,7 +736,7 @@ boolean         taggedText;
   int             x, y;
   SSchema         sSchema;
   char           *tempChar;
-  char            s;
+  char            s[2];
   Language        tempLanguage;
   int             tempLength;
   int             i;
@@ -785,10 +771,7 @@ boolean         taggedText;
 		  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
 		  ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
 		  ok = ok && XmlWriteAttrName (xmlFile, XML_ID_ATTR);
-		  buf[0]='\0';
-		  strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(el)),3);
-		  strcat(buf,"_");
-		  strcat(buf,TtaGetElementLabel(el)+1);
+		  XmlGetElementLabel (buf, el);
 		  ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
 		}
 	    }
@@ -810,10 +793,7 @@ boolean         taggedText;
 		      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
 		      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);     
 		      ok = ok && XmlWriteAttrName(xmlFile, FPAIR_ATTR);
-		      buf[0]='\0';
-		      strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(tempElem)),3);
-		      strcat(buf,"_");
-		      strcat(buf,TtaGetElementLabel(tempElem)+1);
+		      XmlGetElementLabel (buf, tempElem);
 		      ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
 		      if (prevAtomPair == NULL)
 			ListAtomPair = atomPair->next;
@@ -883,21 +863,22 @@ boolean         taggedText;
 	case SYMBOL_UNIT:
 	case GRAPHICS_UNIT:
 	  /* write graphic code and polyline points */
-	  s = TtaGetGraphicsShape (el);
+	  s[0] = TtaGetGraphicsShape (el);
+	  s[1] = '\0';
 	  ok = ok && XmlWriteString(xmlFile, XML_SPACE);
 	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
 	  ok = ok && XmlWriteAttrName (xmlFile, GRAPH_CODE_ATTR);
-	  ok = ok && XmlWriteAttrStrValue (xmlFile, &s);
+	  ok = ok && XmlWriteAttrStrValue (xmlFile, s);
 	  if (elType.ElTypeNum ==  GRAPHICS_UNIT &&
-	      (s=='p'||s=='S'||s=='N'||s=='U'||s=='M'||
-	       s=='s'||s=='B'||s=='F'||s=='A'||s=='D'))
+	      (s[0]=='p'||s[0]=='S'||s[0]=='N'||s[0]=='U'||s[0]=='M'||
+	       s[0]=='s'||s[0]=='B'||s[0]=='F'||s[0]=='A'||s[0]=='D'))
 	    /* polylines types: write points  */
 	    { 
 	      ok = ok && XmlWriteString(xmlFile, XML_SPACE);
 	      ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
 	      ok = ok && XmlWriteAttrName (xmlFile,LINE_POINTS_ATTR );
 	      ok = ok && TtaWriteByte (xmlFile,'"');
-	      for (i = 0; i < TtaGetPolylineLength (el); i++)
+	      for (i = 1; i <= TtaGetPolylineLength (el); i++)
 		{
 		  TtaGivePolylinePoint (el, i, UnPoint, &x, &y);
 		  ok = ok && XmlWriteInteger (xmlFile, x);
@@ -969,15 +950,10 @@ boolean         withEvent;
   if (TtaIsElementReferred(el))
     /* Write the element's label if he is referred */
     {
-      /* An element label is formed by his first 3 letter of
-	 its type and the original Label number without 'L' */
       ok = ok && XmlWriteString(xmlFile, XML_SPACE);
       ok = ok && XmlWriteString(xmlFile, XML_SCHEMA);
       ok = ok && XmlWriteAttrName (xmlFile, XML_ID_ATTR);
-      buf[0]='\0';
-      strncat(buf,TtaGetElementTypeOriginalName(TtaGetElementType(el)),3);
-      strcat(buf,"_");
-      strcat(buf,TtaGetElementLabel(el)+1);
+      XmlGetElementLabel (buf, el);
       ok = ok && XmlWriteAttrStrValue (xmlFile, buf);
     }
   if (TtaIsHolophrasted(el))
@@ -1032,18 +1008,64 @@ boolean         withEvent;
   /* Write the element's presentation rules */
   if (pRule!=NULL)
     {
+      int typerule;
+      int value;
+
       ok = ok && XmlWriteString(xmlFile, XML_SPACE);
       ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
       ok = XmlWriteAttrName(xmlFile, STYLE_ATTR);
       ok = ok && XmlWriteString(xmlFile, "\"");
       while (pRule!=NULL)
-	{
-	  ok = ok && XmlWriteString(xmlFile, TtaGetViewName(doc,TtaGetPRuleView(pRule)));
-	  ok = ok && XmlWriteString(xmlFile, ":");
-	  ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleType(pRule));
-	  ok = ok && XmlWriteString(xmlFile, ":");
-	  ok = ok && XmlWriteInteger(xmlFile,TtaGetPRuleValue(pRule));
-	  ok = ok && XmlWriteString(xmlFile, ";");
+	{	
+	  typerule = TtaGetPRuleType(pRule);
+	  if (typerule != PtPictInfo && ((PtrPRule) pRule)->PrType != PtFunction)
+	    {
+	      ok = ok && XmlWriteString(xmlFile, TtaGetViewName(doc,TtaGetPRuleView(pRule)));
+	      ok = ok && XmlWriteString(xmlFile, ":");
+	      ok = ok && XmlWriteInteger(xmlFile, typerule);
+	      ok = ok && XmlWriteString(xmlFile, ":");
+	      
+	      value = TtaGetPRuleValue(pRule);
+	      if ( typerule == PtHeight ||
+		   typerule == PtWidth ||
+		   typerule == PtVertPos ||
+		   typerule == PtHorizPos || 
+		   typerule == PtBreak1 || 
+		   typerule == PtBreak2 || 
+		   typerule == PtIndent || 
+		   typerule == PtSize || 
+		   typerule == PtLineSpacing || 
+		   typerule == PtLineWeight)
+		{ 
+		  /* write the unit */
+		  ok = ok && XmlWriteInteger(xmlFile, TtaGetPRuleUnit(pRule));
+		  ok = ok && XmlWriteString(xmlFile, ":");
+		}
+	  
+	      if ((typerule == PtHeight || typerule == PtWidth))
+		{
+		  /* write the flag indicating if it is */
+		  /* absolute or relative value */
+		  if(((PtrPRule) pRule)->PrDimRule.DrAbsolute)
+		    ok = ok && XmlWriteString(xmlFile, "A");
+		  else
+		    ok = ok && XmlWriteString(xmlFile, "R");
+		  ok = ok && XmlWriteString(xmlFile, ":");
+		}
+
+	      /* write the sign */
+	      if (typerule == PtHeight ||
+		  typerule == PtWidth ||
+		  typerule == PtVertPos ||
+		  typerule == PtHorizPos || 
+		  typerule == PtIndent)
+		if (value < 0)
+		  ok = ok && XmlWriteString(xmlFile, "-");
+	      
+	      /* write the value */
+	      ok = ok && XmlWriteInteger(xmlFile, abs (value));
+	      ok = ok && XmlWriteString(xmlFile, ";");
+	    }
 	  TtaNextPRule (el, &pRule);
 	}
       ok = ok && XmlWriteString(xmlFile, "\"");
@@ -1235,7 +1257,6 @@ boolean         withEvent;
   NotifyElement   notifyEl;
   boolean         ok = TRUE;
   boolean         doit = TRUE;
-  int             i;
   
   rootEl = NULL;
   TtaNextAssociatedRoot (doc, &rootEl);
@@ -1377,9 +1398,8 @@ boolean         withEvent;
   Element         el, elChild;
   NotifyElement   notifyEl;
   boolean         ok;
-  boolean         doit;
+  boolean         doit = TRUE;
   SSchema         schema;
-  int             i;
   StrAtomPair     *atomPair;
 
   ListAtomPair = NULL;
