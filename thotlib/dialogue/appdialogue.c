@@ -1262,6 +1262,12 @@ void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
       CloseInsertion ();
       FrameToView (frame, &document, &view);
       (*FrameTable[frame].Call_Button[i]) (document, view);
+	  /* check the button status */
+	  if (FrameTable[frame].EnabledButton[i])
+        SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
+			     (WPARAM) FrameTable[frame].ButtonId[i],
+			     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
+
     }
 }
 
@@ -1372,7 +1378,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 	    {
 	      /* Avoid to have two consecutive separators
 		 and test if the function is available in the current profile */
-	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_ShowButton(functionName)))
+	      if ((procedure == NULL && LastProcedure != NULL)  ||
+			  (procedure != NULL &&  Prof_ShowButton(functionName)))
 		{
 		  LastProcedure = procedure;
 		  /* Insere le nouveau bouton */
@@ -1459,22 +1466,18 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 			{
 			  w = XmCreatePushButton (row, "dialogue", args, n);
 			  XtManageChild (w);
-			  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
+			  XtAddCallback (w, XmNactivateCallback,
+                             (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
 			  FrameTable[frame].Call_Button[i] = (Proc) procedure;
 			}
 		    }
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
                   FrameTable[frame].Button[i] = w;
-#endif /* _GTK */
-		  FrameTable[frame].EnabledButton[i] = state;
-		  index = i;
-#ifndef _GTK
 		  if (info != NULL && procedure != NULL)
 		    XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #endif /* _GTK */
 #else  /* _WINDOWS */
-		  index = i;
 		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
@@ -1513,6 +1516,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  if (info != NULL && procedure != NULL)
 		    FrameTable[frame].TbStrings[i] = info;
 #endif /* _WINDOWS */
+		  FrameTable[frame].EnabledButton[i] = state;
+		  index = i;
 		}
 	    }
 	}
@@ -1595,11 +1600,11 @@ void TtaSwitchButton (Document doc, View view, int index)
 #ifdef _WINDOWS
 	      status = SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED,
 				    (WPARAM) FrameTable[frame].ButtonId[index],
-				    (LPARAM) 0)
+				    (LPARAM) 0);
 	      if (status != FrameTable[frame].CheckedButton[index])
 		SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
 			     (WPARAM) FrameTable[frame].ButtonId[index],
-			     (LPARAM) MAKELONG (status, 0));
+			     (LPARAM) MAKELONG (!status, 0));
 #else  /* !_WINDOWS */
 #ifndef _GTK
 	      n = 0;
@@ -1678,7 +1683,7 @@ void TtaChangeButton (Document doc, View view, int index,
 	      else if (state = FALSE &&
 		       FrameTable[frame].CheckedButton[index] == FALSE)
 		{
-		  FrameTable[frame].CheckedButton[index] == TRUE;
+		  FrameTable[frame].CheckedButton[index] = TRUE;
 		  SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
 			       (WPARAM) FrameTable[frame].ButtonId[index],
 			       (LPARAM) MAKELONG (TRUE, 0));
