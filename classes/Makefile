@@ -4,6 +4,8 @@
 	javac $*.java
 
 ZIP=zip -0
+COMPRESS=zip -9
+
 SUBDIRS=thotlib amaya new_amaya thot test
 
 all : http subdir
@@ -12,10 +14,13 @@ http :
 	@(if [ -d w3c ] ; then cd w3c ; make MAKEDIR=`pwd` ; fi)
 
 zips :
-	rm -f jigsaw.zip thotlib.zip amaya.zip
+	rm -f jigsaw.zip thotlib.zip amaya.zip sources.zip
 	$(ZIP) jigsaw.zip `find w3c -name \*.class`
 	$(ZIP) thotlib.zip `find thotlib -name \*.class`
 	$(ZIP) amaya.zip `find amaya -name \*.class`
+	$(COMPRESS) sources.zip `find thotlib amaya w3c -name \*.java` \
+	       `find thotlib amaya w3c -name Makefile` \
+	       w3c/file.make w3c/package.make Makefile
 
 subdir :
 	@(for subdir in $(SUBDIRS) ; do \
