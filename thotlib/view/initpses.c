@@ -154,6 +154,7 @@ unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
    BgPixel = ColorPixel (bg);
 
 #ifndef _WINDOWS
+#ifndef _GTK
    switch (pattern)
 	 {
 	    case 1:
@@ -276,6 +277,15 @@ unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
 	       pat = None;
 	       break;
 	 }
-#endif
+#endif /* !_GTK */
+#endif /* !_WINDOW */
    return pat;
 }
+
+
+
+
+
+
+
+

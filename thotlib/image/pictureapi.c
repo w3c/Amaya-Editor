@@ -37,7 +37,7 @@
    Return value:
    The created pixmap for the logo.
   ----------------------------------------------------------------------*/
-Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
+Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 {
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -46,7 +46,17 @@ Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
    else
       return (0);
 #else /* _GTK */
-   return 0;
+   /*   if (bits !=NULL)
+     return gdk_pixmap_create_from_data (DefaultWindow->window,
+					 bits,
+					 width,
+					 height,
+					 1,
+					 ColorPixel(TtaGetThotColor(0,0,0)),
+					 ColorPixel(TtaGetThotColor(255,255,255))); 
+					 else*/
+
+     return 0;
 #endif /* !_GTK */
 #else  /* _WINDOWS */
    return CreateBitmap (width, height, 16, 4, bits);
@@ -56,20 +66,20 @@ Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
 /*----------------------------------------------------------------------
    TtaCreatePixmapLogo create a pixmap from an XPM file.           
   ----------------------------------------------------------------------*/
-Pixmap              TtaCreatePixmapLogo (char **d)
+Pixmap TtaCreatePixmapLogo (char **d)
 {
 #ifdef _WINDOWS
    return (Pixmap) NULL;
 #else  /* _WINDOWS */
    Pixmap              pixmap;
 #ifdef _GTK
-   ThotWidget          icon;
-   GdkBitmap          *mask;
+   ThotIcon            icon;
+   ThotBitmap          mask;
 
    if (d != NULL)
      {
        pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &mask ,
-					    &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,(gchar **) d); 
+					      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,(gchar **) d); 
        icon = gtk_pixmap_new (pixmap, mask);
        gdk_pixmap_unref (pixmap);
        gdk_bitmap_unref (mask);	

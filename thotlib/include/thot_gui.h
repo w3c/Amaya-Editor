@@ -104,11 +104,9 @@ typedef int            ThotIcon;
 #define PIXEL_ALREADY_TYPEDEFED /* for XPM stuff ! */
 
 #include "simx.h"
-#ifndef _GTK
 typedef XColor    ThotColorStruct;
-#endif
 
-#else  /* _WINDOWS */
+#else  /* !_WINDOWS */
 /************************************************************************
  *									*
  * standard Unix interface : based on Motif + Intrinsics + X-Window	*
@@ -172,14 +170,14 @@ typedef XColor    ThotColorStruct;
 #include <gdk/gdkkeysyms.h> /* for keycode */
 #include <gdk_imlib.h>      /* for load image (jpg, gif, tiff...) */
 typedef GtkWidget     *ThotWidget;
-typedef Window         ThotWindow;
+typedef GdkWindow     *ThotWindow;
 typedef ThotWidget     ThotButton;
 typedef ThotWidget     ThotMenu;
-typedef Drawable       ThotBitmap;
-typedef GC             ThotGC;
+typedef GdkBitmap     *ThotBitmap;
+typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
-typedef GdkColor       ThotColorStruct;
-typedef GdkFont        *ptrfont;
+typedef XColor         ThotColorStruct;
+typedef GdkFont       *ptrfont;
 typedef Cursor         ThotCursor;
 typedef XPoint         ThotPoint;
 typedef GdkEvent      *ThotEvent;
