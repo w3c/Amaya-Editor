@@ -3275,85 +3275,95 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
 	    checkParent = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
 			   pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
-
-	  /* Move remaining dependent boxes */
-	  pPosRel = pBox->BxPosRelations;
-	  while (pPosRel != NULL)
+	  if (pCurrentAb->AbNotInLine)
 	    {
-	      i = 0;
-	      notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
-	      while (i < MAX_RELAT_POS && notEmpty)
+	      if (pCurrentAb->AbEnclosing->AbBox->BxType == BoGhost ||
+		  pCurrentAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
+		  pCurrentAb->AbEnclosing->AbBox->BxType == BoBlock ||
+		  pCurrentAb->AbEnclosing->AbBox->BxType == BoFloatBlock)
+		checkParent = FALSE;
+	    }
+	  else
+	    {
+	      /* Move remaining dependent boxes */
+	      pPosRel = pBox->BxPosRelations;
+	      while (pPosRel != NULL)
 		{
-		  pRelation = &pPosRel->PosRTable[i];
-		  if (pRelation->ReBox->BxAbstractBox &&
-		      pRelation->ReBox->BxType != BoGhost &&
-		      pRelation->ReBox->BxType != BoFloatGhost)
+		  i = 0;
+		  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+		  while (i < MAX_RELAT_POS && notEmpty)
 		    {
-		      /* Top, Bottom, Middle, and Baseline */
-		      if (pRelation->ReOp == OpVertRef)
+		      pRelation = &pPosRel->PosRTable[i];
+		      if (pRelation->ReBox->BxAbstractBox &&
+			  pRelation->ReBox->BxType != BoGhost &&
+			  pRelation->ReBox->BxType != BoFloatGhost)
 			{
-			  /* except its baseline */
-			  if (pRelation->ReBox != pBox)
+			  /* Top, Bottom, Middle, and Baseline */
+			  if (pRelation->ReOp == OpVertRef)
 			    {
-			      pAb = pCurrentAb->AbEnclosing;
-			      if (pAb != NULL)
-				box = pAb->AbBox;
-			      else
-				box = NULL;
-			      if (pRelation->ReBox != box || Propagate == ToAll)
-				MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
-			    }
-			}
-		      /* Ignore the back relation of a stretchable box */
-		      else if (pBox->BxVertFlex &&
-			       pCurrentAb != pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
-			;
-		      /*
-		       * Don't move boxes which have unnested relations
-		       * with the moved box.
-		       * Don't update dimensions of stretchable boxes
-		       * if they are already managed by YMoveAllEnclosed.
-		       */
-		      else if (absoluteMove)
-			{
-			  if (!pBox->BxVertFlex || toComplete)
-			    {
-			      /* Managed by YMoveAllEnclosed */
-			      if (pRelation->ReOp == OpVertDep &&
-				  !pRelation->ReBox->BxYOutOfStruct)
+			      /* except its baseline */
+			      if (pRelation->ReBox != pBox)
 				{
-				  /* Valid relation with the box origin */
-				  if (pRelation->ReBox->BxVertFlex &&
-				      /* if it's not a child */
-				      pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing &&
-				      pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
-				    MoveBoxEdge (pRelation->ReBox, pBox,
-						 pRelation->ReOp, delta,
-						 frame, FALSE);
+				  pAb = pCurrentAb->AbEnclosing;
+				  if (pAb != NULL)
+				    box = pAb->AbBox;
 				  else
-				    YMove (pRelation->ReBox, pBox, delta, frame);
+				    box = NULL;
+				  if (pRelation->ReBox != box || Propagate == ToAll)
+				    MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
 				}
 			    }
+			  /* Ignore the back relation of a stretchable box */
+			  else if (pBox->BxVertFlex &&
+				   pCurrentAb != pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+			    ;
+			  /*
+			   * Don't move boxes which have unnested relations
+			   * with the moved box.
+			   * Don't update dimensions of stretchable boxes
+			   * if they are already managed by YMoveAllEnclosed.
+			   */
+			  else if (absoluteMove)
+			    {
+			      if (!pBox->BxVertFlex || toComplete)
+				{
+				  /* Managed by YMoveAllEnclosed */
+				  if (pRelation->ReOp == OpVertDep &&
+				      !pRelation->ReBox->BxYOutOfStruct)
+				    {
+				      /* Valid relation with the box origin */
+				      if (pRelation->ReBox->BxVertFlex &&
+					  /* if it's not a child */
+					  pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing &&
+					  pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+					MoveBoxEdge (pRelation->ReBox, pBox,
+						     pRelation->ReOp, delta,
+						     frame, FALSE);
+				      else
+					YMove (pRelation->ReBox, pBox, delta, frame);
+				    }
+				}
+			    }
+			  else if (pRelation->ReOp == OpVertDep &&
+				   !pRelation->ReBox->BxVertFlex)
+			    YMove (pRelation->ReBox, pBox, delta, frame);
+			  else if ((pRelation->ReOp == OpVertDep &&
+				    pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+				   || pRelation->ReOp == OpHeight)
+			    MoveBoxEdge (pRelation->ReBox,
+					 pBox, pRelation->ReOp, delta,
+					 frame, FALSE);
 			}
-		      else if (pRelation->ReOp == OpVertDep &&
-			       !pRelation->ReBox->BxVertFlex)
-			YMove (pRelation->ReBox, pBox, delta, frame);
-		      else if ((pRelation->ReOp == OpVertDep &&
-				pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
-			       || pRelation->ReOp == OpHeight)
-			MoveBoxEdge (pRelation->ReBox,
-				     pBox, pRelation->ReOp, delta,
-				     frame, FALSE);
+		      
+		      /* we could clean up the history -> restore it */
+		      pBox->BxMoved = pFromBox;
+		      i++;
+		      if (i < MAX_RELAT_POS)
+			notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
 		    }
-		  
-		  /* we could clean up the history -> restore it */
-		  pBox->BxMoved = pFromBox;
-		  i++;
-		  if (i < MAX_RELAT_POS)
-		    notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		  /* next relation block */
+		  pPosRel = pPosRel->PosRNext;
 		}
-	      /* next relation block */
-	      pPosRel = pPosRel->PosRNext;
 	    }
 	  
 	  /* Do we have to recompute the height of the enclosing box */

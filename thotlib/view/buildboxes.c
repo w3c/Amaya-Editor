@@ -2390,7 +2390,7 @@ PtrLine SearchLine (PtrBox pBox)
    if (pBox)
      {
        pAb = pBox->BxAbstractBox;
-      if (pAb && pAb->AbNotInLine)
+      if (pAb == NULL || pAb->AbNotInLine)
 	pAb = NULL;
       else
        pAb = pAb->AbEnclosing;

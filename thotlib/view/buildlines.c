@@ -2243,7 +2243,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	pBox = pBox->BxNexChild;
       still = TRUE;
-      while (still)
+      while (pNextBox && still)
 	{
 	  if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
 	    pNextBox = pNextBox->BxNexChild;
@@ -2807,10 +2807,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	/* Is the abstract box dead? */
 	else if (pChildAb->AbDead || pChildAb->AbNew)
 	  pChildAb = pChildAb->AbNext;
-      /*else if  (pChildAb->AbNotInLine &&
-		  pChildAb->AbDisplay == 'U' &&
-		  pChildAb->AbFloat == 'N')
-		  pChildAb = pChildAb->AbNext;*/
+        else if  (pChildAb->AbNotInLine &&
+		  pChildAb->AbDisplay == 'U'/* &&
+		  pChildAb->AbFloat == 'N'*/)
+		  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost ||
 		 pChildAb->AbBox->BxType == BoFloatGhost)
 	  /* go down into the hierarchy */
