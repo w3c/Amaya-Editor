@@ -34,6 +34,7 @@
 #include "thotcolor.h"
 #include "picture.h"
 #include "logdebug.h"
+#include "appversion.h"
 
 #ifdef _GTK
   #include <gdk/gdkx.h>

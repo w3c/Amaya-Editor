@@ -590,16 +590,41 @@ dnl
   AC_SUBST(MAKEPNG)
 fi # with_wx = no
 
+# the wx version
+AMAYAWX_MAJVER=9
+AMAYAWX_MINVER=0
+AMAYAWX_SUBVER=1
+
+#the old version (to remove when switching on wx)
+AMAYA_MAJVER=8
+AMAYA_MINVER=7
+AMAYA_SUBVER=2
+
 if test "$with_wx" = "yes" ; then
-  AMAYA_MAJVER=9
-  AMAYA_MINVER=0
-  AMAYA_SUBVER=1
+  APP_MAJVER=$AMAYAWX_MAJVER
+  APP_MINVER=$AMAYAWX_MINVER
+  APP_SUBVER=$AMAYAWX_SUBVER
 else
-  AMAYA_MAJVER=8
-  AMAYA_MINVER=7
-  AMAYA_SUBVER=2
+  APP_MAJVER=$AMAYA_MAJVER
+  APP_MINVER=$AMAYA_MINVER
+  APP_SUBVER=$AMAYA_SUBVER
 fi
-AMAYA_VER=$AMAYA_MAJVER.$AMAYA_MINVER.$AMAYA_SUBVER
+APP_VER=$APP_MAJVER.$APP_MINVER.$APP_SUBVER
+
+# generate a header file with the right version number, so it can be used on windows AND on unix
+APPVERSION_H=../thotlib/internals/h/appversion.h
+echo "#ifndef __APPVERSION_H__" > $APPVERSION_H
+echo "#define __APPVERSION_H__" >> $APPVERSION_H
+echo "#ifdef _WX" >> $APPVERSION_H
+echo "#define APP_MAJVER $AMAYAWX_MAJVER" >> $APPVERSION_H
+echo "#define APP_MINVER $AMAYAWX_MINVER" >> $APPVERSION_H
+echo "#define APP_SUBVER $AMAYAWX_SUBVER" >> $APPVERSION_H
+echo "#else /* _WX */" >> $APPVERSION_H
+echo "#define APP_MAJVER $AMAYA_MAJVER" >> $APPVERSION_H
+echo "#define APP_MINVER $AMAYA_MINVER" >> $APPVERSION_H
+echo "#define APP_SUBVER $AMAYA_SUBVER" >> $APPVERSION_H
+echo "#endif /* _WX */" >> $APPVERSION_H
+echo "#endif /* __APPVERSION_H__ */" >> $APPVERSION_H
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -1234,10 +1259,10 @@ dnl
 dnl Exports the current values of the variables.
 dnl
 
-AC_SUBST(AMAYA_MAJVER)
-AC_SUBST(AMAYA_MINVER)
-AC_SUBST(AMAYA_SUBVER)
-AC_SUBST(AMAYA_VER)
+AC_SUBST(APP_MAJVER)
+AC_SUBST(APP_MINVER)
+AC_SUBST(APP_SUBVER)
+AC_SUBST(APP_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
 
