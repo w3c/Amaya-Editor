@@ -167,6 +167,12 @@ Thot/libpng tree.
 make without argument rebuild evrything. 
 <li>
 make <strong>amaya</strong> rebuild <strong>Amaya</strong> binary. 
+<li>
+make <strong>classes</strong> rebuild <strong>Java</strong>
+<code>.class</code> files from their <code>.java</code> sources. With some
+versions of kaffe it may be a good idea to increase the maximum size of a Java
+V.M. while compiling by adding " <code>-mx 64000000</code> " before
+<code>sun.tools.javac.Main</code> in <code>bin/javac</code> file.
 </ul>
 <p>
 One can also go to a specific sub-directory in the object tree and launch make
