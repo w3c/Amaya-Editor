@@ -791,7 +791,7 @@ View                view;
 #  else /* _WINDOWS */
    CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
-      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, TRUE);
+      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, FALSE);
    else 
       GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, TRUE);
 #  endif /* _WINDOWS */
@@ -1098,9 +1098,14 @@ boolean		    history;
      }
    else if (pathname[0] != EOS)
      {
-	if (DocumentURLs[(int) doc])
+	if (DocumentURLs[doc])
+	   {
+	   /* save the URL of the old document in the history */
+	   if (history)
+	      AddDocHistory (doc, DocumentURLs[doc]);
 	   /* free the previous document */
 	   newdoc = InitDocView (doc, pathname);
+	   }
 	else
 	   newdoc = doc;
 
@@ -1123,11 +1128,11 @@ boolean		    history;
 	     if (doc != newdoc)
 	       {
                  if (!TtaCheckDirectory (tempdir))
-		   /*directory did not exist */
-		   mkdir (tempdir, S_IRWXU);
-		  /* now we can rename the local name of a remote document */
-		  TtaFileCopy (tempfile, tempdocument);
-		  TtaFileUnlink (tempfile);
+		    /* directory did not exist */
+		    mkdir (tempdir, S_IRWXU);
+		 /* now we can rename the local name of a remote document */
+		 TtaFileCopy (tempfile, tempdocument);
+		 TtaFileUnlink (tempfile);
 	       }
 	     else
 	       {
@@ -1147,6 +1152,8 @@ boolean		    history;
 	i = strlen (pathname) + 1;
 	s = TtaGetMemory (i);
 	strcpy (s, pathname);
+	if (DocumentURLs[(int) newdoc] != NULL)
+	   TtaFreeMemory (DocumentURLs[(int) newdoc]);
 	DocumentURLs[(int) newdoc] = s;
 	if (TtaGetViewFrame (newdoc, 1) != 0)
 	   /* this document is displayed */
@@ -1154,11 +1161,8 @@ boolean		    history;
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
 	if (newdoc != doc)
 	   /* the document is displayed in a different window */
-	   /* reset the history of the window */
-           DocHistoryIndex[newdoc] = -1;
-	if (history)
-	   /* add this URL in history */
-	   AddDocHistory (newdoc, DocumentURLs[newdoc]);
+	   /* reset the history of the new window */
+           InitDocHistory (newdoc);
 	TtaFreeMemory (tempdir);
      }
    TtaFreeMemory (tempdocument);
@@ -1878,7 +1882,7 @@ char               *data;
 		 {
 		   /* load an URL */
 		   if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, TRUE);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, FALSE);
 		   else
 		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
 		 }
@@ -1892,7 +1896,7 @@ char               *data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, TRUE);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE);
 		       else
 			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
 		     }
@@ -2356,7 +2360,7 @@ NotifyEvent        *event;
        DocumentURLs[i] = NULL;
        HelpDocuments[i] = FALSE;
        /* initialize history */
-       DocHistoryIndex[i] = -1;
+       InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and
 	  image files */
        tempname = TtaGetMemory (MAX_LENGTH);
@@ -2620,6 +2624,7 @@ int         index;
       strcat (localname, Manual[index]);
     }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE);
+  InitDocHistory (document);
 }
 
 /*----------------------------------------------------------------------

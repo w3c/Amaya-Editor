@@ -17,6 +17,136 @@
 #include "HTMLhistory_f.h"
 #include "init_f.h"
 
+#define DOC_HISTORY_SIZE 32
+
+/* a record in an history */
+typedef struct _HistElement
+{
+	char*	HistUrl;	/* document URL */
+	int	HistPosition;	/* volume preceding the first element to be
+				made visible in the main window */
+	int	HistDistance;	/* distance from the  top of the window to the
+				top of this element (% of the window height) */
+} HistElement;
+
+/* the history of a window */
+typedef HistElement   anHistory[DOC_HISTORY_SIZE];
+
+/* the history of all windows */
+static anHistory    DocHistory[DocumentTableLength];
+
+/* current position in the history of each window */
+static int          DocHistoryIndex[DocumentTableLength];
+
+/*----------------------------------------------------------------------
+   InitDocHistory
+   Reset history for document doc
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                InitDocHistory (Document doc)
+#else
+void                InitDocHistory (doc)
+Document            document;
+
+#endif
+{
+   DocHistoryIndex[(int) doc] = -1;
+}
+
+/*----------------------------------------------------------------------
+  ElementAtPosition
+  Returns the element that is at position pos in document doc.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element	ElementAtPosition (Document doc, int pos)
+#else  /* __STDC__ */
+static Element	ElementAtPosition (doc, pos)
+   Document	doc;
+   int		pos;
+#endif /* __STDC__ */
+{
+   Element	el, result, child, next;
+   int		sum, vol;
+   boolean	stop;
+
+   sum = 0;
+   result = NULL;
+   el = TtaGetMainRoot (doc);
+   while (el != NULL && !result)
+      {
+      if (sum >= pos)
+	result = el;
+      else
+	{
+        child = TtaGetFirstChild (el);
+	if (child == NULL)
+	   result = el;
+	else
+	   {
+	   el = child;
+	   stop = FALSE;
+	   do
+	     {
+	     vol = TtaGetElementVolume (el);
+	     if (sum + vol <= pos)
+	        {
+		next = el;
+	        TtaNextSibling (&next);
+		if (next == NULL)
+		  stop = TRUE;
+		else
+		  {
+		  el = next;
+	          sum += vol;
+		  }
+	        }
+	     else
+	        stop = TRUE;
+	     }
+           while (el != NULL && !stop);
+	  }
+        }
+      }
+   return result;
+}
+
+/*----------------------------------------------------------------------
+  RelativePosition
+  Returns the position of the first visible element in the main view of
+  document doc.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int      RelativePosition (Document doc, int *distance)
+#else  /* __STDC__ */
+static int      RelativePosition (doc, distance)
+   Document	doc;
+   int		*distance;
+#endif /* __STDC__ */
+{
+   int		sum;
+   Element	el, sibling, ancestor;
+
+   sum = 0;
+   *distance = 0;
+   /*****/ el = NULL; /*****/
+   /******* el = TtaGetFirstElementShown (doc, 1, distance);  ****/
+   ancestor = el;
+   while (ancestor != NULL)
+      {
+      sibling = ancestor;
+      do
+	 {
+         TtaPreviousSibling (&sibling);
+	 if (sibling != NULL)
+	    sum += TtaGetElementVolume (sibling);
+	 }
+      while (sibling != NULL);
+      ancestor = TtaGetParent (ancestor);
+      }
+   return sum;
+}
+
 /*----------------------------------------------------------------------
    GotoPreviousHTML
    This function is called when the user presses the Previous button
@@ -31,8 +161,10 @@ View                view;
 
 #endif
 {
+   Element	       el;
    int                 prev, i;
    char               *url = NULL;
+   boolean	       last, hist;
 
    if (DocHistoryIndex[doc] < 0)
       return;
@@ -49,34 +181,51 @@ View                view;
       prev = DOC_HISTORY_SIZE - 1;
    else
       prev--;
-
+ 
    /* nothing to do if there is no previous document */
-   if (DocHistory[doc][prev] == NULL)
+   if (DocHistory[doc][prev].HistUrl == NULL)
       return;
 
-   /* set the Forward button on if the next document is the last one
-      in the history */
-   i = DocHistoryIndex[doc];
-   i++;
-   i %= DOC_HISTORY_SIZE;
-   if (DocHistory[doc][i] == NULL)
-      SetArrowButton (doc, FALSE, TRUE);
+   /* the current document must be put in the history if it's the last one */
+   hist = FALSE;
+   last = FALSE;
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
+      {
+      last = TRUE;
+      hist = TRUE;
+      }
+   else
+      {
+      i = DocHistoryIndex[doc];
+      i++;
+      i %= DOC_HISTORY_SIZE;
+      if (DocHistory[doc][i].HistUrl == NULL)
+	 last = TRUE;
+      }
 
-   /* set the Back button off if there is no document before the previous one*/
+   /* set the Back button off if there is no previous document in history */
    i = prev;
    if (i ==  0)
       i = DOC_HISTORY_SIZE - 1;
    else
       i--;
-   if (DocHistory[doc][i] == NULL)
-      /* there is no document before the previous one */
+   if (DocHistory[doc][i].HistUrl == NULL)
+      /* there is no previous document */
       /* set the Back button OFF */
       SetArrowButton (doc, TRUE, FALSE);
 
    /* load the previous document */
+   url = DocHistory[doc][prev].HistUrl;
+   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, hist);
+   /* show the document at the position stored in the history */
+   el = ElementAtPosition (doc, DocHistory[doc][prev].HistPosition);
+   TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
+
    DocHistoryIndex[doc] = prev;
-   url = DocHistory[doc][prev];
-   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE);
+
+   /* set the Forward button on if it was the last document in the history */
+   if (last)
+      SetArrowButton (doc, FALSE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -93,8 +242,9 @@ View                view;
 
 #endif
 {
-   char               *url = NULL;
-   int		       next, i;
+   Element	el;
+   char         *url = NULL;
+   int		next, i;
 
    if (DocHistoryIndex[doc] < 0)
       return;
@@ -110,7 +260,9 @@ View                view;
    next %= DOC_HISTORY_SIZE;
 
    /* nothing to do if there is no next document */
-   if (DocHistory[doc][next] == NULL)
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
+      return;
+   if (DocHistory[doc][next].HistUrl == NULL)
       return;
 
    /* set the Back button on if it's off */
@@ -119,7 +271,7 @@ View                view;
       i = DOC_HISTORY_SIZE - 1;
    else
       i--;
-   if (DocHistory[doc][i] == NULL)
+   if (DocHistory[doc][i].HistUrl == NULL)
       /* there is no document before the current one. The Back button is
          normally OFF */
       /* set the Back button ON */
@@ -130,13 +282,16 @@ View                view;
    i = next;
    i++;
    i %= DOC_HISTORY_SIZE;
-   if (DocHistory[doc][i] == NULL)
+   if (DocHistory[doc][i].HistUrl == NULL)
       SetArrowButton (doc, FALSE, FALSE);
 
    /* load the next document */
    DocHistoryIndex[doc] = next;
-   url = DocHistory[doc][DocHistoryIndex[doc]];
+   url = DocHistory[doc][next].HistUrl;
    (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE);
+   /* show the document at the position stored in the history */
+   el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
+   TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
 }
 
 /*----------------------------------------------------------------------
@@ -153,55 +308,49 @@ char               *url;
 
 #endif /* __STDC__ */
 {
-   int                 i;
+   int                 i, position, distance;
 
    if (!url)
       return;
    if (*url == '\0')
       return;
 
-   /* initialize the history if necessary */
+   /* initialize the history if it has not been done yet */
    if ((DocHistoryIndex[doc] < 0) || (DocHistoryIndex[doc] >= DOC_HISTORY_SIZE))
      {
 	for (i = 0; i < DOC_HISTORY_SIZE; i++)
-	   DocHistory[doc][i] = NULL;
-	DocHistoryIndex[doc] = DOC_HISTORY_SIZE - 1;
+	   DocHistory[doc][i].HistUrl = NULL;
+	DocHistoryIndex[doc] = 0;
      }
-   /* first check for reinstalling an existing URL */
-   if ((DocHistory[doc][DocHistoryIndex[doc]]) &&
-       (!strcmp (DocHistory[doc][DocHistoryIndex[doc]], url)))
-      return;
 
    /* set the Back button on if necessary */
-   if (DocHistory[doc][DocHistoryIndex[doc]] != NULL)
-      /* there is a previous document */
-      {
-      i = DocHistoryIndex[doc];
-      if (i ==  0)
-         i = DOC_HISTORY_SIZE - 1;
-      else
-         i--;
-      if (DocHistory[doc][i] == NULL)
-	 /* there is no document before the previous one */
-	 /* The Back button is normally OFF */
-	 /* set the Back button ON */
-         SetArrowButton (doc, TRUE, TRUE);
-      }
+   i = DocHistoryIndex[doc];
+   if (i ==  0)
+      i = DOC_HISTORY_SIZE - 1;
+   else
+      i--;
+   if (DocHistory[doc][i].HistUrl == NULL)
+      /* there is no document before in the history */
+      /* The Back button is normally OFF set it ON */
+      SetArrowButton (doc, TRUE, TRUE);
 
    /* store the URL */
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
+      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
+
+   position = RelativePosition (doc, &distance);
+   DocHistory[doc][DocHistoryIndex[doc]].HistDistance = distance;
+   DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
+   /*******/ printf ("Position: %d, distance: %d\n", position, distance);
+
    DocHistoryIndex[doc]++;
    DocHistoryIndex[doc] %= DOC_HISTORY_SIZE;
-   if (DocHistory[doc][DocHistoryIndex[doc]])
-      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]]);
-   DocHistory[doc][DocHistoryIndex[doc]] = TtaStrdup (url);
 
    /* delete the next entry in the history */
-   i = DocHistoryIndex[doc];
-   i++;
-   i %= DOC_HISTORY_SIZE;
-   if (DocHistory[doc][i])
-      TtaFreeMemory (DocHistory[doc][i]);
-   DocHistory[doc][i] = NULL;
+   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)
+      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].HistUrl);
+   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = NULL;
 
    /* set the Forward button off */
    SetArrowButton (doc, FALSE, FALSE);

@@ -46,8 +46,6 @@ extern int          RListRPIIndex;
 extern PRuleInfoPtr LListRPI;
 extern PRuleInfoPtr RListRPI;
 extern boolean      LListRPIModified;
-extern char        *CSSHistory[CSS_HISTORY_SIZE];
-extern int          CSSHistoryIndex;
 
 static boolean         RListRPIModified;
 
@@ -162,66 +160,6 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   BuildCSSHistoryList : Build the whole list of CSS in the history  
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          BuildCSSHistoryList (Document doc, char *buf, int size, char *first)
-#else  /* __STDC__ */
-static int          BuildCSSHistoryList (doc, buf, size, first)
-Document            doc;
-char               *buf;
-int                 size;
-char               *first;
-
-#endif /* __STDC__ */
-{
-   int                 free = size;
-   int                 len;
-   int                 nb = 0;
-   int                 index = 0;
-   int                 i;
-   char               *url;
-
-   /*
-    * ad the first element if specified.
-    */
-   buf[0] = 0;
-   if (first)
-     {
-	strcpy (&buf[index], first);
-	len = strlen (first);
-	len++;
-	free -= len;
-	index += len;
-	nb++;
-     }
-
-   for (i = 0; i < CSS_HISTORY_SIZE; i++)
-     {
-	url = CSSHistory[i];
-	if (!url)
-	   break;
-	len = strlen (url);
-	len++;
-	if (len >= free)
-	  {
-	     MSG ("BuildCSSHistoryList : Too many styles\n");
-	     break;
-	  }
-	strcpy (&buf[index], url);
-	free -= len;
-	index += len;
-	nb++;
-     }
-
-#ifdef DEBUG_CSS
-   fprintf (stderr, "BuildCSSHistoryList : found %d CSS\n", nb);
-#endif
-   return (nb);
-}
-
-/*----------------------------------------------------------------------
    SelectExternalCSS : dialog used to select and load an external   
    CSS file.                                    
   ----------------------------------------------------------------------*/
@@ -249,7 +187,8 @@ View                view;
      TtaGetMessage (AMAYA, AM_EXTERNAL_CSS), 3, menu, TRUE, 3, 'L', D_DONE);
 
    /* rebuild the list and redraw the CSS selector */
-   nb_css = BuildCSSHistoryList (doc, buffer, 3000, NULL);
+   nb_css = 0;
+   buffer[0] = '\0';
    TtaNewSelector (BaseCSSDialog + ListExternalCSS, BaseCSSDialog + FormExternalCSS,
 		   TtaGetMessage (AMAYA, AM_SELECT_EXTERNAL_STYLE_SHEET), nb_css, buffer, 6, NULL, TRUE, TRUE);
 

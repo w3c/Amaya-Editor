@@ -65,7 +65,6 @@ extern int SaveCSSThroughNet ( Document doc,
                                View view,
                                CSSInfoPtr css );
 extern void InitCSS ( void );
-extern void CloseCSS ( void );
 
 #else /* __STDC__ */
 
@@ -128,7 +127,6 @@ extern int SaveCSSThroughNet (/* Document doc,
                                  View view,
                                  CSSInfoPtr css */);
 extern void InitCSS (/* void */);
-extern void CloseCSS (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

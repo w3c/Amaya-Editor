@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InitDocHistory ( Document doc );
 extern void GotoPreviousHTML ( Document doc,
                                View view );
 extern void GotoNextHTML ( Document doc,
@@ -15,6 +16,7 @@ extern void AddDocHistory ( Document doc,
 
 #else /* __STDC__ */
 
+extern void InitDocHistory (/* Document doc */);
 extern void GotoPreviousHTML (/* Document doc,
                                  View view */);
 extern void GotoNextHTML (/* Document doc,

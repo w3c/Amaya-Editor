@@ -170,6 +170,7 @@ Attribute           ignore;
    else
       return (NULL);
 }
+
 /*----------------------------------------------------------------------
   FollowTheLink follows the link given by the anchor element for a
   double click on the elSource element.
@@ -265,8 +266,7 @@ Document            doc;
 
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
-				   doc, doc, CE_TRUE, FALSE);
-		  AddDocHistory (targetDocument, DocumentURLs[targetDocument]);
+				   doc, doc, CE_TRUE, TRUE);
 		  if (HelpDocuments[targetDocument] == TRUE)
 		    /* help document are displayed in read-only mode */
 		    TtaSetDocumentAccessMode (targetDocument, 0);
@@ -488,7 +488,6 @@ Document       doc;
 	     QueryClose ();
 #endif
 #endif
-	     CloseCSS ();
 	     TtaQuit ();
 	  }
      }

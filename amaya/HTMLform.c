@@ -589,7 +589,7 @@ char               *action;
 		 }
 	       break;
 	    case HTML_ATTR_METHOD_VAL_Post_:
-	       GetHTMLDocument (action, buffer, doc, doc, CE_FORM_POST, FALSE);
+	       GetHTMLDocument (action, buffer, doc, doc, CE_FORM_POST, TRUE);
 	       break;
 	    default:
 	       break;

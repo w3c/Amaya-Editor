@@ -50,8 +50,6 @@
  *
  *  [X] Use the new ButtonList Widgets.
  *
- *  [X] save and reload history of CSS files to / from file
- *
  *  [ ] Give feedback on Parsing errors ... Gasp !
  *
  */
@@ -83,9 +81,6 @@ char               *CSSDirectoryName = NULL;
 char               *amaya_save_dir = NULL;
 boolean             NonPPresentChanged = FALSE;
 int                 BaseCSSDialog = -1;
-
-char               *CSSHistory[CSS_HISTORY_SIZE];
-int                 CSSHistoryIndex = -1;
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
@@ -424,39 +419,10 @@ void                AddCSS (css)
 CSSInfoPtr          css;
 #endif
 {
-   int                 i;
-
    if (css == NULL)
       return;
    css->NextCSS = ListCSS;
    ListCSS = css;
-   if (!css->url)
-      return;
-   if (css->category == CSS_DOCUMENT_STYLE)
-      return;
-
-   /* initialize the history if necessary */
-   if (CSSHistoryIndex == -1)
-     {
-	for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	   CSSHistory[i] = NULL;
-	CSSHistoryIndex = 0;
-     }
-   /* history lookup to store unique URL's */
-   for (i = 0; i < CSS_HISTORY_SIZE; i++)
-     {
-	if (!CSSHistory[i])
-	   break;
-	if (strcmp (CSSHistory[i], css->url) != 0)
-	   return;
-     }
-   /* store the CSS url */
-   if (CSSHistory[CSSHistoryIndex])
-      TtaFreeMemory (CSSHistory[CSSHistoryIndex]);
-   CSSHistory[CSSHistoryIndex] = TtaStrdup (css->url);
-   CSSHistoryIndex++;
-   CSSHistoryIndex %= CSS_HISTORY_SIZE;
-
 }
 
 /*----------------------------------------------------------------------
@@ -2399,48 +2365,6 @@ void                InitCSS (void)
 void                InitCSS ()
 #endif
 {
-   int                 i, j;
-   int                 res;
-   FILE               *css_history_file;
-   char               *home;
-   char                tempfile[3000];
-
-   /* initialize the CSS history if necessary */
-   if (CSSHistoryIndex == -1)
-     {
-	for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	   CSSHistory[i] = NULL;
-	CSSHistoryIndex = 0;
-
-	/*
-	 * Restore the history from the CSS_HISTORY_FILE
-	 */
-	home = TtaGetEnvString ("HOME");
-	if (home != NULL)
-	  {
-	     sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
-	     css_history_file = fopen (tempfile, "r");
-	     if (css_history_file != NULL)
-	       {
-		  for (i = 0; i < CSS_HISTORY_SIZE;)
-		    {
-		       tempfile[0] = EOS;
-		       res = fscanf (css_history_file, "%s\n", tempfile);
-		       if (res < 1)
-			  break;
-		       if (tempfile[0] == EOS)
-			  break;
-		       for (j = 0;j < i;j++)
-		          if (!strcmp(tempfile, CSSHistory[j])) break;
-		       if (j >= i)
-			   CSSHistory[i++] = TtaStrdup (tempfile);
-		    }
-		  CSSHistoryIndex = i % CSS_HISTORY_SIZE;
-		  fclose (css_history_file);
-	       }
-	  }
-     }
-
    /* Read the AMAYA_SAVE_DIR environment variable for publishing */
    amaya_save_dir = TtaGetEnvString (AMAYA_SAVE_DIR);
 #ifdef DEBUG_CSS
@@ -2465,38 +2389,4 @@ It is used for publishing when saving through the network is unavailable\n\
    BaseCSSDialog = TtaSetCallback (CSSCallbackDialogue, NB_CSS_DIALOGS);
    CSSDirectoryName = TtaGetMemory (MAX_LENGTH);
    CSSDocumentName = TtaGetMemory (MAX_LENGTH);
-}
-
-/*----------------------------------------------------------------------
-   CloseCSS                                                        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseCSS (void)
-#else
-void                CloseCSS ()
-#endif
-{
-   int                 i;
-   FILE               *css_history_file;
-   char               *home;
-   char                tempfile[MAX_LENGTH];
-
-   /*
-    * Save the history in the CSS_HISTORY_FILE
-    */
-   home = TtaGetEnvString ("HOME");
-   if (home != NULL)
-     {
-	sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
-	css_history_file = fopen (tempfile, "w");
-	if (css_history_file != NULL)
-	  {
-	     for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	       {
-		  if (CSSHistory[i] != NULL)
-		     fprintf (css_history_file, "%s\n", CSSHistory[i]);
-	       }
-	     fclose (css_history_file);
-	  }
-     }
 }
