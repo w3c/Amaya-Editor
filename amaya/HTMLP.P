@@ -2907,8 +2907,9 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop:  0.4;
+	MarginTop: 0.4;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3112,6 +3113,7 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3170,6 +3172,7 @@ RULES
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3189,6 +3192,7 @@ RULES
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3209,6 +3213,7 @@ RULES
 	MarginTop: 0.5;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Style: Enclosing =;
@@ -3229,6 +3234,7 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3247,6 +3253,7 @@ RULES
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -3287,6 +3294,7 @@ RULES
 	Size: Enclosing - 1;
 #endif
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		NoLine;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -3323,7 +3331,10 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Structure_view
+		BEGIN
+		MarginTop: 0;
 		Height: 0;
+		END;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -3448,6 +3459,10 @@ RULES
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginLeft: 0;
+		MarginBottom: 0;
+		MarginRight: 0;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
 		Width: Enclosed . Width;
@@ -3481,6 +3496,7 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;
 		PaddingTop: 0;
 		PaddingLeft: 0;
 		BorderTopWidth: 0;
@@ -3813,6 +3829,7 @@ RULES
 	MarginTop: 0.4;
 	Width: Enclosing . Width - 4;
 	IN Structure_view BEGIN
+		MarginTop: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -5376,6 +5393,10 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	MarginLeft: hspace pt;
 	MarginRight: hspace pt;
+	IN Structure_view BEGIN
+		MarginLeft: 0;
+		MarginRight: 0;
+		END;
 	END;
 
  vspace:
@@ -5384,8 +5405,11 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	MarginTop: vspace pt;
 	MarginBottom: vspace pt;
-	In Structure_view
-	   VertPos: Top = Previous . Bottom;
+	In Structure_view BEGIN
+		MarginTop: 0;
+		MarginBottom: 0;
+		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  declare:
@@ -6127,10 +6151,14 @@ ATTRIBUTES
  Border (Table_head)> 0:
 	BEGIN
 	MarginLeft: Border px;
+	IN Structure_view 
+		MarginLeft: 0;
 	END;
  Border (Column_head)> 0:
 	BEGIN
 	MarginRight: Border px;
+	IN Structure_view 
+		MarginRight: 0;
 	END;
  Border (thead)> 0:
 	BEGIN
