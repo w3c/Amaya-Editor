@@ -94,6 +94,10 @@ SOURCE=..\..\thotlib\base\actions.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\animbox.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\appdialogue.c
 # End Source File
 # Begin Source File

@@ -119,6 +119,10 @@ SOURCE=..\amaya\anim.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\animbuilder.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\answer.c
 # End Source File
 # Begin Source File

@@ -492,20 +492,19 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-<<<<<<< appli.c
+/*
    GL_MakeCurrent (frame);	
    GLResize (width, height, 0 ,0);
-   /*Clear (frame, width, height, 0, 0);*/
+   Clear (frame, width, height, 0, 0);
    GL_ActivateDrawing (frame);
-   /* need to recompute the content of the window */
    RebuildConcreteImage (frame);    
    GL_DrawAll ();
    GL_Swap (frame);
    glFinish();
-=======
+*/
+     GLResize (width, height, 0 ,0);
    if (GL_prepare (frame))
    {
-     GLResize (width, height, 0 ,0);
      /* need to recompute the content of the window */
      DefRegion (frame, 0, 
  		0, width,
@@ -513,7 +512,6 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
       RedrawFrameBottom (frame, 0, NULL);
 	  GL_realize (frame);
    }
->>>>>>> 1.367
 #endif/*_GL*/
    /* recompute the scroll bars */
    UpdateScrollbars (frame);

@@ -152,7 +152,11 @@ ThotBool GL_Err()
 
   if((errCode = glGetError()) != GL_NO_ERROR)
     {
+#ifdef _GTK
       g_print ("\n%s :", (char*) gluErrorString(errCode));
+#else /*_GTK*/
+      WinErrorBox (NULL, (char*) gluErrorString(errCode));;
+#endif /*_GTK*/
       return TRUE;
     }
   else 
@@ -182,7 +186,7 @@ void ClearAll (int frame)
     {
       color = GL_Background[frame];
       TtaGiveThotRGB (color, &red, &green, &blue);
-      glClearColor (red/255, green/255, blue/255, 0.0);
+      glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
       glClear (GL_COLOR_BUFFER_BIT); 
     }
 }
@@ -225,15 +229,13 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor (red/255, green/255, blue/255, 0.0);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
-void Clear (int frame,
-	    int width, int height,
-	    int x, int y)
+void Clear (int frame, int width, int height, int x, int y)
 {
   if (GL_prepare (frame))
     {
@@ -534,10 +536,11 @@ void  GL_DestroyFrame (int frame)
   ----------------------------------------------------------------------*/
 void GL_SetForeground (int fg)
 {
-    unsigned short red, green, blue;
+    GLushort red, green, blue, opacity;
 
+	opacity = (GLushort) Opacity;
     TtaGiveThotRGB (fg, &red, &green, &blue);
-    glColor4ub (red, green, blue, Opacity);
+    glColor4us (red, green, blue, opacity);
     
 }
 /*----------------------------------------------------------------------
@@ -602,10 +605,10 @@ void GL_VideoInvert (int width, int height, int x, int y)
     (GL_ONE_MINUS_DST_COLOR,GL_ZERO) */
   glColor4ub (127, 127, 127, 80);
   glBegin (GL_QUADS);
-  glVertex2f (x, y);
-  glVertex2f (x + width, y);
-  glVertex2f (x +  width, y + height);
-  glVertex2f (x, y + height);
+  glVertex2i (x, y);
+  glVertex2i (x + width, y);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x, y + height);
   glEnd (); 
 }
 
@@ -618,19 +621,19 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
   if (S_thick > 1)
     {
       glBegin (GL_POINTS);/*joining angles*/
-      glVertex2f (  x, y );
-      glVertex2f (  x, y + height);
-      glVertex2f (  x +  width, y + height);
-      glVertex2f (  x + width, y);
-      glVertex2f (  x, y );
+      glVertex2i (x, y );
+      glVertex2i (x, y + height);
+      glVertex2i (x + width, y + height);
+      glVertex2i (x + width, y);
+      glVertex2i (x, y );
       glEnd ();
     }  
   glBegin (GL_LINE_LOOP);
-  glVertex2f (  x, y );
-  glVertex2f (  x, y + height);
-  glVertex2f (  x +  width, y + height);
-  glVertex2f (  x + width, y);
-  glVertex2f (  x, y );
+  glVertex2i (x, y );
+  glVertex2i (x, y + height);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x + width, y);
+  glVertex2i (x, y );
   glEnd (); 
   
 }
@@ -642,10 +645,10 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
 {
   GL_SetForeground (fg);
   glBegin (GL_QUADS);
-  glVertex2f (  x, y );
-  glVertex2f (  x + width, y);
-  glVertex2f (  x +  width, y + height);
-  glVertex2f (  x, y + height);
+  glVertex2i (  x, y );
+  glVertex2i (  x + width, y);
+  glVertex2i (  x +  width, y + height);
+  glVertex2i (  x, y + height);
   glEnd ();
 }
 /*----------------------------------------------------------------------
@@ -657,17 +660,13 @@ void GL_DrawLine (int x1, int y1, int x2, int y2)
     {
       /* round line join*/ 
       glBegin (GL_POINTS);
-      glVertex2f ((GLdouble) x1, 
-		  (GLdouble) y1);
-      glVertex2f ((GLdouble) x2, 
-		  (GLdouble) y2);
+      glVertex2i (x1, y1);
+      glVertex2i (x2, y2);
       glEnd ();
     }
    glBegin (GL_LINES) ;
-   glVertex2f ((GLdouble) x1, 
-	       (GLdouble) y1);
-   glVertex2f ((GLdouble) x2, 
-		(GLdouble) y2);
+   glVertex2i (x1, y1);
+   glVertex2i (x2, y2);
     glEnd ();
     
 }
@@ -838,6 +837,10 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 #define SLICES_SIZE 361
 
 
+
+/*----------------------------------------------------------------------
+ GL_DrawArc : Draw an arc
+  ----------------------------------------------------------------------*/
 void GL_DrawArc (int x, int y, 
 		 int w, int h, 
 		 int startAngle, int sweepAngle, 
@@ -862,7 +865,7 @@ void GL_DrawArc (int x, int y,
 
   if (w < 10 && h < 10)
     {
-      glPointSize (0.1);
+      glPointSize ((float)0.1);
       slices = 36;
     }
   else
@@ -872,12 +875,12 @@ void GL_DrawArc (int x, int y,
   sweepAngle = sweepAngle;
  
   /* Cache is the vertex locations cache */
-  angleOffset = startAngle / 180.0 * M_PI;
+  angleOffset = (PRECISION) (startAngle / 180.0 * M_PI);
   for (i = 0; i <= slices; i++) 
     {
-      angle = angleOffset + ((M_PI * sweepAngle) / 180.0) * i / slices;
-      cosCache[i] = DCOS(angle);
-      sinCache[i] = DSIN(angle);
+      angle = angleOffset + (PRECISION) ((M_PI * sweepAngle) / 180.0) * i / slices;
+      cosCache[i] = (PRECISION) DCOS(angle);
+      sinCache[i] = (PRECISION) DSIN(angle);
     }
 
   if (sweepAngle == 360.0) 
@@ -923,237 +926,8 @@ void GL_DrawArc (int x, int y,
     }
   
 }
-/*----------------------------------------------------------------------
- GL_DrawArc : receive angle at 64* their values...
- but
-  ----------------------------------------------------------------------*/
-void GL_DrawArc3 (int x, int y, 
-		 int w, int h, 
-		 int angle_int1, int angle_int2, 
-		 ThotBool filled)
-{  
-  PRECISION angle, anglefinal, angle1, angle2;
-  PRECISION fastx, fasty, width, height;
-
-  /*The formula is simple :
-    y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
-    x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
-    But if we put all those calculation in the while
-    Cpu will overheat with 5 *,  2 / and 2 +!!!
-    That's why there is those preliminary steps */
-  angle1 = (PRECISION) angle_int1;
-  angle2 = (PRECISION) angle_int2;
-  angle2 = angle1 + angle2;
-  angle1 = angle1 / 64;
-  angle2 = angle2 / 64;
-  
-  angle =  (PRECISION) DEG_TO_RAD (angle2);
-  anglefinal = (PRECISION) DEG_TO_RAD (angle1);
-
-  if (filled)
-    {
-      glBegin (GL_TRIANGLE_FAN);
-      /* The center */
-      glVertex2d (fastx, fasty);
-    }
-  else
-    {
-      glPolygonMode (GL_FRONT_AND_BACK, GL_LINE);
-      glBegin (GL_POLYGON); 
-    }
-  
-  if (w == h)
-    {
-      width  = ((PRECISION)w) / 2;
-      height = ((PRECISION)h) / 2;
-
-      fastx  = ((PRECISION)x);
-      fasty  = ((PRECISION)y);
-      
-      while (anglefinal <= angle)
-	{
-	  glVertex2d (fastx + (width * DSIN(angle)),
-		      fasty +  (height * DCOS(angle)));
-	  angle -= A_DEGREE;
-	}
-      glVertex2d (fastx + (width * DSIN(angle)),
-		  fasty +  (height * DCOS(angle)));
-    }
-  else
-    {
-      
-      width  = ((PRECISION)w) / 2;
-      height = ((PRECISION)h) / 2;
-      fastx  = ((PRECISION)x) + width;
-      fasty  = ((PRECISION)y) + height;
-      
-      while (anglefinal <= angle)
-	{
-	  glVertex2d (fastx + (width * DCOS(angle)),
-		      fasty - (height* DSIN(angle)));
-	  angle -= A_DEGREE;
-	}
-      glVertex2d (fastx + (width * DCOS(angle)),
-		  fasty - (height* DSIN(angle)));
-      
-    }  
-  
-  glEnd();
-
-  if (!filled)
-    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-}
 
 
-/*----------------------------------------------------------------------
- GL_DrawArc : receive angle at 64* their values...
- but
-  ----------------------------------------------------------------------*/
-void GL_DrawArc4 (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled)
-
-
-
-{  
-  float angle, anglefinal, fastx, fasty;
-
-
-  /*The formula is simple :
-       y + (h/2)*(1 - sin (DEG_TO_RAD (Angle/64)))
-       x + (w/2)*(1 + cos (DEG_TO_RAD (Angle/64)))
-    But if we put all those calculation in the while
-    Cpu will overheat with 5 *,  2 / and 2 +!!!
-    That's why there is those preliminary steps */
-
-
-  angle2 = angle1 + angle2;
-  angle1 = angle1;
-  angle2 = angle2;
-  w =  w / 2;
-  h =  h / 2;
-  fastx = x + w;
-  fasty = y + h;
-  
-  angle =  DEG_TO_RAD (angle2);
-  anglefinal = DEG_TO_RAD (angle1);
-  /* A good optimization is that
-   cos(A)*cos(B)=(cos(A+B)+cos(A-B))/2 
-   based on trigo decomposition
-   sin(A+B)=sin A cos B + cos A sin B
-   sin(A-B)=sin A cos B - cos A sin B
-   cos(A+B)=cos A cos B - sin A sin B
-   cos(A-B)=cos A cos B + sin A sin B
-  it could eliminate MULs... 
-  but need to calculate cos and sin more times
-  perhaps precalculated tables...*/  
-  if (!filled && 0)
-    {
-      angle =  DEG_TO_RAD (angle2);
-      glBegin (GL_POINTS);
-      /* another one is to extend the use of Vertex array...
-	 but not only for here... for all computations*/
-      while (angle1 <= angle2)
-	{
-	  glVertex2f ( fastx + w * DCOS(angle),
-		       fasty - h * DSIN(angle));
-	  angle -= A_DEGREE;
-	  angle2--;
-	}
-      glVertex2f ( fastx + w * DCOS (angle),
-		   fasty - h * DSIN (angle));
-      glEnd();
-    }
-  angle = DEG_TO_RAD (angle2);
-  if (filled)
-    {
-      glBegin (GL_TRIANGLE_FAN);
-      /* The center */
-      glVertex2f (fastx, fasty);
-    }
-  else
-    {
-      glDisable (GL_BLEND);
-      /* glDisable (GL_LINE_SMOOTH);  */
-      /* glPolygonMode (GL_FRONT, GL_LINE); */
-      /* glBegin (GL_POLYGON);   */
-      glBegin (GL_LINE_STRIP); 
-    }
-  while (angle1 <= angle2)
-
-    {
-      glVertex2f ( fastx + w * DCOS(angle),
-		   fasty - h * DSIN(angle));
-      angle -= A_DEGREE;
-      angle2--;
-    }
-  glVertex2f ( fastx + w * DCOS (angle),
-	       fasty - h * DSIN (angle));
-  glEnd();
-  if (!filled)
-    {
-      glEnable (GL_BLEND); 
-      /* glEnable (GL_LINE_SMOOTH);  */
-      /*     glPolygonMode (GL_FRONT, GL_FILL);  */
-    }
-  
-}
-
-
-void GL_DrawArc5 (int originX, int originY, 
-		 int w, int h, 
-		 int angle1, int angle2, 
-		 ThotBool filled)
-{
-  double vectorX, vectorY;
-  double vectorY1, vectorX1;
-  double radiusw, radiush, angle;
-  double anglefinal;
-  
-  radiusw = (double)w/2;
-  radiush = (double)h/2;
-
-  angle = DEG_TO_RAD(angle1);
-  anglefinal = angle + DEG_TO_RAD(angle2);
-
-  if (filled)
-    {
-      /* The center */
-      vectorX1 = originX + radiusw;
-      vectorY1 = originY + radiush;
-  
-      glBegin (GL_TRIANGLE_FAN);
-      for (;anglefinal <= angle; angle -= 0.01f)
-	{	
-	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
-	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
-	  glVertex2d (vectorX1,vectorY1);
-	  vectorY1 = vectorY;
-	  vectorX1 = vectorX;			
-	}
-      glVertex2d (vectorX1, vectorY1);
-    }
-  else
-    {
-      vectorX1 = originX + radiusw*2;
-      vectorY1 = originY + radiush;
-
-      if (radiusw < 20.0f && radiush < 20.0f)
-	glBegin(GL_POINTS);
-      else
-	glBegin(GL_LINE_STRIP);
-
-      for (; anglefinal <= angle; angle-=0.01f)
-	{	
-	  vectorX = originX + radiusw + (radiusw*(float)cos((double)angle));
-	  vectorY = originY + radiush - (radiush*(float)sin((double)angle));		
-	  glVertex2d (vectorX1,vectorY1);
-	  vectorY1 = vectorY;
-	  vectorX1 = vectorX;			
-	}
-      glVertex2d (vectorX1, vectorY1);
-    }
-  
-  glEnd();
-}
 
 /*----------------------------------------------------------------------
    GL_DrawLines
@@ -1666,7 +1440,7 @@ void printBuffer(GLint size, GLfloat *buffer)
    
    while (count) 
      {
-       token = buffer[size-count]; 
+       token = (GLint) buffer[size-count]; 
        count--;
        /*
 	 GL_POLYGON_TOKEN
@@ -1701,7 +1475,7 @@ void printBuffer(GLint size, GLfloat *buffer)
 	   {
 	     /*pour les lignes*/
 	     printf ("GL_POLYGON_TOKEN\n");
-	     vertex_count = buffer[size - count];
+	     vertex_count = (GLint) buffer[size - count];
 	     count--;	     
 	     while (vertex_count--)
 		 print2DVertex (size, &count, buffer);
@@ -1741,7 +1515,7 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   count = size;
   while (count) 
      {
-       token = buffer[size-count]; 
+       token = (GLint) buffer[size-count]; 
        count--;
        switch (token)
 	 {
@@ -1762,7 +1536,7 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 	   break;
 	 case GL_POLYGON_TOKEN:
 	   {
-	     vertex_count = buffer[size - count];
+	     vertex_count = (GLint) buffer[size - count];
 	     count--;	     
 	     while (vertex_count--)
 	       {
@@ -1822,9 +1596,6 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
-#ifdef _WINDOWS
- PAINTSTRUCT         ps;
-#endif /*_WINDOWS*/
   if (frame < MAX_FRAME)
     {
       glFinish ();
@@ -1832,14 +1603,10 @@ void GL_Swap (int frame)
      
 #ifdef _WINDOWS
 
-	 GetDC (FrRef[frame]);
-     /*BeginPaint (FrRef[frame], &ps);*/
-
+	 /*GetDC (FrRef[frame]);*/
 	  if (GL_Windows[frame])
 		SwapBuffers (GL_Windows[frame]);
-
-	  /*EndPaint (FrRef[frame], &ps);*/
-	  ReleaseDC (FrRef[frame], GL_Windows[frame]);
+	  /*ReleaseDC (FrRef[frame], GL_Windows[frame]);*/
 #else
   if (FrameTable[frame].WdFrame)
     gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
@@ -1892,7 +1659,9 @@ void GL_ActivateDrawing(int frame)
     FrameTable[frame].DblBuffNeedSwap = TRUE;
 }
 
-
+/*----------------------------------------------------------------------
+   TtaPlay : Activate Animation
+  ----------------------------------------------------------------------*/
 void TtaPlay (Document doc, View view)
 {
   int frame = 0;
@@ -1902,6 +1671,7 @@ void TtaPlay (Document doc, View view)
 	FrameTable[frame].Animated_Boxes)
       {
 	FrameTable[frame].Anim_play = !FrameTable[frame].Anim_play;
+#ifdef _GTK
 	if (FrameTable[frame].Anim_play)
 	  {
 	     if (FrameTable[frame].Timer == 0)
@@ -1916,6 +1686,7 @@ void TtaPlay (Document doc, View view)
 	      gtk_timeout_remove (FrameTable[frame].Timer);
 	      FrameTable[frame].Timer = 0;
 	    }	
+#endif /*_GTK*/
       }  
 }
 

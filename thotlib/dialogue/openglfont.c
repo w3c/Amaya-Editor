@@ -924,7 +924,7 @@ int UnicodeFontRender (void *gl_font,
 	  previous = glyph_index;
         }
 	/* Position of the glyph in the texture*/
-	bitmap_pos[n].x = pen_x + glyph->pos.x;
+	bitmap_pos[n].x = (float) pen_x + (float) glyph->pos.x;
 	bitmap_pos[n].y = (float) ( - glyph->pos.y );
 	bitmaps[n] = glyph;
 	
@@ -993,8 +993,8 @@ int UnicodeFontRender (void *gl_font,
 		 FontBind);
   
   GL_TextureInit (data,
-		  (GLfloat) Width,
-		  (GLfloat) Height);
+		  Width,
+		  Height);
   if (data)
     TtaFreeMemory (data);
   
