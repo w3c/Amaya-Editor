@@ -475,24 +475,3 @@ int                 number;
 {
    TtaDisplayMessage (msgType, TtaGetMessage (origin, number));
 }
-
-
-/*----------------------------------------------------------------------
-   DisplayPivotMessage traite les erreurs survenues a` la lecture  
-   d'un fichier pivot.                                     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DisplayPivotMessage (STRING code)
-#else  /* __STDC__ */
-void                DisplayPivotMessage (code)
-STRING              code;
-
-#endif /* __STDC__ */
-{
-#ifndef _WINDOWS
-   CHAR_T                pBuffer[THOT_MAX_CHAR];
-
-   ustrncpy (pBuffer, code, THOT_MAX_CHAR);
-   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);
-#endif /* _WINDOWS */
-}

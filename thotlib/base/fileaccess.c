@@ -516,10 +516,9 @@ ThotBool            TtaWriteByte (BinFile file, char bval)
 ThotBool            TtaWriteByte (file, bval)
 BinFile             file;
 char                bval;
-
 #endif /* __STDC__ */
 {
-   if (fwrite ((char*) &bval, sizeof (char), 1, file) == 0)
+   if (fwrite ((char *) &bval, sizeof (char), 1, file) == 0)
       return FALSE;
    return TRUE;
 }
@@ -544,12 +543,12 @@ CHARSET             encoding;
    nbBytes = TtaWC2MB (val, mbc, encoding);
    if (nbBytes == -1)
       return FALSE;
-   if (fwrite ((char*) mbc, sizeof (char), nbBytes, file) == 0)
+   if (fwrite ((char *) mbc, sizeof (char), nbBytes, file) == 0)
       return FALSE;
    return TRUE;
    
 #  else  /* !_I18N_ */
-   if (fwrite ((char*) &val, sizeof (char), 1, file) == 0)
+   if (fwrite ((char *) &val, sizeof (char), 1, file) == 0)
       return FALSE;
    return TRUE;
 #  endif /* !_I18N_ */

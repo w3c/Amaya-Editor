@@ -139,17 +139,11 @@ static int          LastPrinted;
 
 #ifdef _WINDOWS
 #define PRINTPROGRESSDLG 389
-ThotWindow       WIN_curWin = (ThotWindow)(-1);
-ThotWindow       WIN_Main_Wd = (ThotWindow)(-1);
 HBITMAP          WIN_LastBitmap = 0;
 
-BOOL             bError;
-BOOL             gbAbort;
-HWND             hDlgPrint     = NULL;
-HWND             ghwndMain     = NULL;
-HWND             currentWindow;
-HWND             ghwndAbort;
-static HINSTANCE hCurrentInstance ;
+static BOOL      gbAbort;
+static HWND      GHwnAbort;
+static HINSTANCE hCurrentInstance;
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
@@ -203,19 +197,21 @@ LPARAM lParam;
 {
    switch (msg)
      {
-     case WM_INITDIALOG: ghwndAbort = hwnd;
+     case WM_INITDIALOG:
+       GHwnAbort = hwnd;
        EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
        break;
 
      case WM_COMMAND:
        switch (LOWORD (wParam))
-	 {
-	 case IDCANCEL: gbAbort = TRUE;
+	   {
+	   case IDCANCEL:
+       gbAbort = TRUE;
 	   AbortDoc (TtPrinterDC);
-	   EnableWindow  (ghwndMain, TRUE);
+	   EnableWindow  (WIN_Main_Wd, TRUE);
 	   DestroyWindow (hwnd);
 	   return TRUE;
-	 }
+	   }
        break;
      }
    return 0;
@@ -239,7 +235,7 @@ int error;
    MSG msg;
 
    while (!gbAbort && PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-       if (!ghwndAbort || !IsDialogMessage (ghwndAbort, &msg))
+       if (!GHwnAbort || !IsDialogMessage (GHwnAbort, &msg))
 	  {
           TranslateMessage (&msg);
           DispatchMessage (&msg);
@@ -267,33 +263,25 @@ HANDLE hInst;
 LPSTR  msg;
 #endif /* __STDC__ */
 {
-    DOCINFO         DocInfo;
+  DOCINFO         DocInfo;
 
-    bError     = FALSE;     /* no errors yet */
-    gbAbort    = FALSE;     /* user hasn't aborted */
-
-
-   if (!(ghwndAbort = CreateDialog (hInst, TEXT("Printinprogress"), ghwndMain,
+  gbAbort    = FALSE;     /* user hasn't aborted */
+  if (!(GHwnAbort = CreateDialog (hInst, TEXT("Printinprogress"), WIN_Main_Wd,
 				    (DLGPROC) AbortDlgProc)))
-      WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
+    WinErrorBox (WIN_Main_Wd, TEXT("InitPrinting: DE_LANG"));
 
-    EnableWindow (ghwndMain, FALSE);
-    SetAbortProc (TtPrinterDC, AbortProc);
+  EnableWindow (WIN_Main_Wd, FALSE);
+  SetAbortProc (TtPrinterDC, AbortProc);
+  memset(&DocInfo, 0, sizeof(DOCINFO));
+  DocInfo.cbSize      = sizeof(DOCINFO);
+  DocInfo.lpszDocName = (LPTSTR) msg;
+  DocInfo.lpszOutput  = NULL;
 
-    memset(&DocInfo, 0, sizeof(DOCINFO));
-    DocInfo.cbSize      = sizeof(DOCINFO);
-    DocInfo.lpszDocName = (LPTSTR) msg;
-    DocInfo.lpszOutput  = NULL;
-
-    if (StartDoc (hDC, &DocInfo) <= 0)
-      {
-        bError = TRUE;
-        return FALSE;
-      }
-
-    /* might want to call the abort proc here to allow the user to
-     * abort just before printing begins */
-    return TRUE;
+  if (StartDoc (hDC, &DocInfo) <= 0)
+      return FALSE;
+ /* might want to call the abort proc here to allow the user to
+   * abort just before printing begins */
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -307,8 +295,7 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-  WIN_curWin = NULL;
-  TtDisplay = GetDC (WIN_curWin);
+  TtDisplay = GetDC (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -321,13 +308,10 @@ void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
   /* release the previous Device Context. */
-  /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
-  if (TtDisplay != 0)
-    if (!ReleaseDC (WIN_curWin, TtDisplay))
+  if (TtDisplay != NULL)
+    if (!ReleaseDC (NULL, TtDisplay))
       WinErrorBox (NULL, TEXT("PRINT: WIN_ReleaseDeviceContext"));
-  
-  WIN_curWin = (ThotWindow) (-1);
-  TtDisplay = 0;
+  TtDisplay = NULL;
 }
 #endif /* _WINDOWS */
 
@@ -2023,7 +2007,7 @@ int                viewsCounter;
     /* ... and inform the driver */
     Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
     
-    if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))
+    if (!InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, NULL))
       WinErrorBox (NULL, TEXT("PrintDocument (1)"));
     }
 #endif /* _WINDOWS */
@@ -2195,8 +2179,8 @@ int                viewsCounter;
     
     if (!gbAbort)
       {
-      EnableWindow  (ghwndMain, TRUE);
-      DestroyWindow (ghwndAbort);
+      EnableWindow  (WIN_Main_Wd, TRUE);
+      DestroyWindow (GHwnAbort);
       }
     return 0;
     }
@@ -2607,26 +2591,24 @@ char              **argv;
   ThotBool            realNameFound = FALSE;
   ThotBool            viewFound = FALSE;
   ThotBool            done;
-#ifndef _WINDOWS
-  int                 result;
-#endif /* _WINDOWS */
 
 #ifdef _WINDOWS 
-  TtPrinterDC      = PrinterDC;
-  TtIsTrueColor    = isTrueColors;
-  TtWDepth         = depth;
-  TtWPrinterDepth  = GetDeviceCaps (TtPrinterDC, PLANES);
+  TtPrinterDC = PrinterDC;
+  TtIsTrueColor = isTrueColors;
+  TtWDepth = depth;
+  TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
-  WIN_GetDeviceContext (-1);
-  ScreenDPI        = GetDeviceCaps (TtDisplay, LOGPIXELSY);
-  if (buttonCmd == FALSE && TtPrinterDC == 0)
+  TtDisplay = GetDC (NULL);
+  ScreenDPI = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+  ReleaseDC (NULL, TtDisplay);
+  TtDisplay = NULL;
+  if (buttonCmd == FALSE && TtPrinterDC == NULL)
      DOT_PER_INCHE = 72;
   else 
-      DOT_PER_INCHE    = ScreenDPI;
-  WIN_ReleaseDeviceContext ();
-  PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-  ghwndMain        = hWnd;
-  buttonCommand    = buttonCmd;
+     DOT_PER_INCHE = ScreenDPI;
+  PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+  WIN_Main_Wd = hWnd;
+  buttonCommand = buttonCmd;
 #endif /* _WINDOWS */
 
   thotWindow       = 0;
@@ -2647,7 +2629,7 @@ char              **argv;
   Orientation    = TEXT("Portrait");
   PoscriptFont = NULL;
   ColorPs = -1;
-
+  
   ShowSpace = 1;  /* Restitution des espaces */
   InitLanguage ();
   Dict_Init ();
@@ -2914,12 +2896,12 @@ char              **argv;
        /* add its directory into the DocumentPath */
        l = ustrlen (DocumentDir);
        if (l == 0)
-	 ustrcpy (DocumentPath, tempDir);
+         ustrcpy (DocumentPath, tempDir);
        else
-	 usprintf (DocumentPath, TEXT("%s%c%s"), tempDir, PATH_SEP, DocumentDir);
-       
+         usprintf (DocumentPath, TEXT("%s%c%s"), tempDir, PATH_SEP, DocumentDir);
+
        if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
-	 TheDoc = NULL;
+         TheDoc = NULL;
      }
    if (TheDoc != NULL)
      {
@@ -2946,8 +2928,7 @@ char              **argv;
 	       CopyFile (cmd, printer, FALSE);
 #else  /* !_WINDOWS */
 	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
-	       result = system (cmd);
-	       if (result != 0)
+	       if (system (cmd) != 0)
 	         ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
 	       else
 	         ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
@@ -2961,8 +2942,7 @@ char              **argv;
 	       else
 		 sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
 	       
-	       result = system (cmd);
-	       if (result != 0)
+	       if (system (cmd) != 0)
 		 ClientSend (thotWindow, cmd, TMSG_UNKNOWN_PRINTER);
 	       else
 		 ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);

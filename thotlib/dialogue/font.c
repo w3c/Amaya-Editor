@@ -159,10 +159,9 @@ TypeUnit unit;
        return NULL;
    }
 
-   if (unit == UnPixel)
+   /*if (unit == UnPixel)*/
      WIN_nHeight = size;
-   else
-     WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
+   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
    iso2wc_strcpy (lpszFace, WIN_lpszFace);
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
                        WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
@@ -540,22 +539,15 @@ int                 zoom;
 	 dist += (dist * zoom / 10);
        break;
      case UnPixel:
-#ifdef _WINDOWS
-       if (TtPrinterDC)
-	 {
-	   if (PrinterDPI == 0)
-             PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);
-	   if (ScreenDPI == 0)
-             ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-	   dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-	 }
-       else
-#endif /* _WINDOWS */
 	 dist = val;
        /* take zoom into account */
        if (zoom != 0)
 	 dist += (dist * zoom / 10);
-       break;
+#ifdef _WIN_PRINT
+     if (TtPrinterDC && ScreenDPI)
+	   dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+#endif /* _WIN_PRINT */
+        break;
      case UnPercent:
        i = val * (int) pAb;
        dist = i / 100;
@@ -564,7 +556,7 @@ int                 zoom;
        /* should not occur: reserved for margins */
        break;
      }
-   return (dist);
+  return (dist);
 }
 
 /*----------------------------------------------------------------------
@@ -606,16 +598,15 @@ int                 zoom;
        dist = PixelToPoint (val);
        break;
      case UnPixel:
+	   dist = val;
        /* take zoom into account */
        if (zoom != 0)
-	 val -= (val * zoom / 10);
-#ifdef _WINDOWS 
-       if (TtPrinterDC)
-	 dist = (val * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
-       else 
-#endif /* _WINDOWS */
-	 dist = val;
-       break;
+	     dist -= (dist * zoom / 10);
+#ifdef _WIN_PRINT
+       if (TtPrinterDC && PrinterDPI)
+	     dist = (dist * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
+#endif /* _WIN_PRINT */
+        break;
      case UnPercent:
        if (pAb == NULL)
 	 dist = 0;

@@ -412,17 +412,12 @@ LPBITMAPINFO* lpBmpInfo;
    /*******/
    bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
    pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
-   /* BitBlt (hDestDC, 0, 0, width, height, hDC, x * ScreenDPI / PrinterDPI, y * ScreenDPI / PrinterDPI, SRCCOPY); */
    BitBlt (hDestDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
-
    BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
-
    BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
 
    /* Getting DIBits */
-
    *lpBmpInfo = CreateBitmapInfoStruct (FrRef[frame], bitmapDest);
-
    lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, (*lpBmpInfo)->bmiHeader.biSizeImage);
    if (!lpBits)
       WinErrorBox (NULL, TEXT("GetTransparentDIBits (1)"));

@@ -2811,10 +2811,10 @@ int           fg;
    if (align == 1)
       Y = y + h / 2;
    else if (align == 2)
-      Y = y + h;
+      Y = y + h - (thick + 1) / 2;
    else
-      Y = y;
-   DrawOneLine (frame, thick, style, x, Y, x + l, Y, fg);
+      Y = y + thick / 2;
+   DrawOneLine (frame, thick, style, x + thick / 2, Y, x + l - (thick + 1) / 2, Y, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -2842,22 +2842,31 @@ int           active;
 int           fg;
 #endif /* __STDC__ */
 {
-   int        Y;
+  int        Y;
 
-   if (thick <= 0 || fg < 0)
-     return;
+  if (thick <= 0 || fg < 0)
+    return;
 #ifdef _WIN_PRINT 
-   if (y < 0)
-     return;
+  if (y < 0)
+    return;
 #endif /* _WIN_PRINT */
-   y += FrameTable[frame].FrTopMargin;
-   if (align == 1)
-      Y = y + h / 2;
-   else if (align == 2)
-      Y = y + h;
-   else
-      Y = y;
-   DrawOneLine (frame, thick, style, x, Y, x + l, Y, fg);
+  y += FrameTable[frame].FrTopMargin;
+  Y = y + (h - thick) / 2;
+  DrawOneLine (frame, thick, style, x, Y, x + l, Y, fg);
+  if (align == 0)
+	/* Over brace */
+	{
+	  DrawOneLine (frame, thick, style, x, Y, x, y + h, fg);
+	  DrawOneLine (frame, thick, style, x + (l / 2), Y, x + (l / 2), y, fg);
+	  DrawOneLine (frame, thick, style, x + l - thick, Y, x + l - thick, y + h, fg);
+	}
+  else
+	/* Underbrace */
+	{
+	  DrawOneLine (frame, thick, style, x, Y, x, y, fg);
+	  DrawOneLine (frame, thick, style, x + (l / 2), Y, x + (l / 2), y + h, fg);
+	  DrawOneLine (frame, thick, style, x + l - thick, Y, x + l - thick, y, fg);
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -2888,20 +2897,20 @@ int           fg;
   int        X;
 
   if (thick <= 0 || fg < 0)
-      return;
+    return;
 #ifdef _WIN_PRINT
-   if (y < 0)
-      return;
+  if (y < 0)
+    return;
 #endif /* _WIN_PRINT */
 
   y += FrameTable[frame].FrTopMargin;
-   if (align == 1)
-      X = x + l / 2;
-   else if (align == 2)
-      X = x + l;
-   else
-      X = x;
-   DrawOneLine (frame, thick, style, X, y, X, y + h, fg);
+  if (align == 1)
+    X = x + thick / 2;
+  else if (align == 2)
+    X = x + l - (thick + 1) / 2;
+  else
+    X = x + thick / 2;
+  DrawOneLine (frame, thick, style, X, y + thick / 2, X, y + h - (thick + 1) / 2, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -2945,6 +2954,8 @@ int           fg;
       X = x + l;
    else
       X = x;
+   DrawOneLine (frame, thick, style, X, y, X, y + h, fg);
+   X = X + (3 * thick);
    DrawOneLine (frame, thick, style, X, y, X, y + h, fg);
 }
 

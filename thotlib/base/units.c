@@ -23,12 +23,6 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 
-#ifdef _WINDOWS
-#include "wininclude.h"
-
-extern int ScreenDPI;
-extern int PrinterDPI;
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
  *      PointToPixel convert from points to pixels.
@@ -41,10 +35,8 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
    if (DOT_PER_INCHE == 0)
       DOT_PER_INCHE = 72;
-#  endif /* _WINDOWS */
    return (int)(((float)(value * DOT_PER_INCHE)) / 72.);
 }
 
@@ -60,10 +52,8 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
    if (DOT_PER_INCHE == 0)
       DOT_PER_INCHE = 72;
-#  endif /* _WINDOWS */
    return (int)(((float)(value * 72)) / (float)DOT_PER_INCHE);
 }
 

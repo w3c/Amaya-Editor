@@ -364,7 +364,7 @@ PtrDocument         pDoc;
    int                 n;
    ThotBool            stop;
 
-   TtaWriteByte (pivFile, (CHAR_T) C_PIV_NATURE);
+   TtaWriteByte (pivFile, C_PIV_NATURE);
    /* cherche le schema de structure */
    n = 0;
    stop = FALSE;
@@ -521,7 +521,7 @@ PtrDocument         pDoc;
 		stop = TRUE;
 	     }
 	while (!stop);
-	TtaWriteByte (pivFile, (CHAR_T) C_PIV_ATTR);
+	TtaWriteByte (pivFile, C_PIV_ATTR);
 	PutShort (pivFile, n);
 	/* numero de la nature de l'attribut */
 	PutShort (pivFile, pAttr->AeAttrNum);
