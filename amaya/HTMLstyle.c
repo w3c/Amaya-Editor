@@ -10,7 +10,7 @@
  * be contained in this module.
  *
  * Author: I. Vatton
- *         Previous version done by D. Veillard
+ *         Previous version by D. Veillard
  *
  */
 
@@ -126,6 +126,7 @@ static struct unit_def CSSUnitNames[] =
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
+
 /*----------------------------------------------------------------------
    SkipBlanks:                                                  
   ----------------------------------------------------------------------*/
@@ -141,6 +142,7 @@ char               *ptr;
     ptr++;
   return (ptr);
 }
+
 /*----------------------------------------------------------------------
    IsBlank:                                                  
   ----------------------------------------------------------------------*/
@@ -171,6 +173,51 @@ char               *ptr;
     ptr++;
   return (ptr);
 }
+
+/*----------------------------------------------------------------------
+   SkipQuotedString:                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *SkipQuotedString (char *ptr, char quote)
+#else
+static char        *SkipQuotedString (ptr, quote)
+char               *ptr;
+char		   quote;
+#endif
+{
+  boolean	stop;
+
+  stop = FALSE;
+  while (!stop)
+    {
+    if (*ptr == quote)
+       {
+       ptr++;
+       stop = TRUE;
+       }
+    else if (*ptr == EOS)
+       stop = TRUE;
+    else if (*ptr == '\\')
+       /* escape character */
+       {
+       ptr++;
+       if ((*ptr >= '0' && *ptr <= '9') || (*ptr >= 'A' && *ptr <= 'F') ||
+	   (*ptr >= 'a' && *ptr <= 'f'))
+	  {
+	  ptr++;
+          if ((*ptr >= '0' && *ptr <= '9') || (*ptr >= 'A' && *ptr <= 'F') ||
+	      (*ptr >= 'a' && *ptr <= 'f'))
+	     ptr++;
+	  }
+       else
+	  ptr++;
+       }
+    else
+       ptr++;
+    }
+  return (ptr);
+}
+
 /*----------------------------------------------------------------------
    SkipProperty:                                                  
   ----------------------------------------------------------------------*/
@@ -1844,54 +1891,54 @@ char               *cssRule;
 #endif
 {
   PresentationValue   font;
-  unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
+  char		      quoteChar;
 
   font.typed_data.value = 0;
   font.typed_data.unit = 1;
   cssRule = SkipBlanks (cssRule);
+  if (*cssRule == '"' || *cssRule == '\'')
+     {
+     quoteChar = *cssRule;
+     cssRule++;
+     }
+  else
+     quoteChar = '\0';
+
   if (!strncasecmp (cssRule, "times", 5))
-    {
       font.typed_data.value = DRIVERP_FONT_TIMES;
-      cssRule = SkipProperty (cssRule);
-    }
   else if (!strncasecmp (cssRule, "serif", 5))
-    {
       font.typed_data.value = DRIVERP_FONT_TIMES;
-      cssRule = SkipProperty (cssRule);
-    }
   else if (!strncasecmp (cssRule, "helvetica", 9) ||
 	   !strncasecmp (cssRule, "verdana", 7))
-    {
       font.typed_data.value = DRIVERP_FONT_HELVETICA;
-      cssRule = SkipProperty (cssRule);
-    }
   else if (!strncasecmp (cssRule, "sans-serif", 10))
-    {
       font.typed_data.value = DRIVERP_FONT_HELVETICA;
-      cssRule = SkipProperty (cssRule);
-    }
   else if (!strncasecmp (cssRule, "courier", 7))
-    {
       font.typed_data.value = DRIVERP_FONT_COURIER;
-      cssRule = SkipProperty (cssRule);
-    }
   else if (!strncasecmp (cssRule, "monospace", 9))
-    {
       font.typed_data.value = DRIVERP_FONT_COURIER;
-      cssRule = SkipProperty (cssRule);
-    }
   else
+    /* unknown font name.  Skip it */
     {
-      cssRule = SkipWord (cssRule);
+      if (quoteChar)
+	 cssRule = SkipQuotedString (cssRule, quoteChar);
+      else
+         cssRule = SkipWord (cssRule);
       cssRule = SkipBlanks (cssRule);
       if (*cssRule == ',')
+	{
 	cssRule++;
-      return (ParseCSSFontFamily (target, context, cssRule));
+        return (ParseCSSFontFamily (target, context, cssRule));
+	}
     }
 
-  /* install the new presentation */
-  if (context->drv->SetFontFamily)
-    context->drv->SetFontFamily (target, context, font);
+  if (font.typed_data.value != 0)
+     {
+     cssRule = SkipProperty (cssRule);
+     /* install the new presentation */
+     if (context->drv->SetFontFamily)
+	context->drv->SetFontFamily (target, context, font);
+     }
   return (cssRule);
 }
 
@@ -1911,58 +1958,65 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   weight;
-   int                 val;
+   PresentationValue   weight, previous_style;
 
    weight.typed_data.value = 0;
    weight.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "extra-light", 11))
+   if (!strncasecmp (cssRule, "100", 3))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "light", 5))
+   else if (!strncasecmp (cssRule, "200", 3))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "demi-light", 10))
+   else if (!strncasecmp (cssRule, "300", 3))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "normal", 6))
+   else if (!strncasecmp (cssRule, "normal", 6) ||
+	    !strncasecmp (cssRule, "400", 3))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "medium", 6))
-     {
-	weight.typed_data.value = 0;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "extra-bold", 10))
-     {
-	weight.typed_data.value = +3;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "bold", 4))
-     {
-	weight.typed_data.value = +2;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "demi-bold", 9))
+   else if (!strncasecmp (cssRule, "500", 3))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (isdigit(*cssRule))
+   else if (!strncasecmp (cssRule, "600", 3))
      {
-       sscanf (cssRule, "%d", &val);
-       weight.typed_data.value = val;
-       while (isdigit(*cssRule))
-	 cssRule++;
+	weight.typed_data.value = +2;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "bold", 4) ||
+	    !strncasecmp (cssRule, "700", 3))
+     {
+	weight.typed_data.value = +3;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "800", 3))
+     {
+	weight.typed_data.value = +4;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "900", 3))
+     {
+	weight.typed_data.value = +5;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "inherit", 7) ||
+	    !strncasecmp (cssRule, "bolder", 6) ||
+	    !strncasecmp (cssRule, "lighter", 7))
+     {
+     /* not implemented */
+     cssRule = SkipWord (cssRule);
+     return (cssRule);
      }
    else
      return (cssRule);
@@ -1971,10 +2025,33 @@ char               *cssRule;
     * Here we have to reduce since font weight is not well supported
     * by the Thot presentation API.
     */
-   if (weight.typed_data.value < 0)
-     weight.typed_data.value = DRIVERP_FONT_BOLD;
-   else if (weight.typed_data.value > 0)
-     weight.typed_data.value = DRIVERP_FONT_ITALICS;
+    if ((context->drv->GetFontStyle) &&
+        (!context->drv->GetFontStyle (target, context, &previous_style)))
+       {
+       if (previous_style.typed_data.value == DRIVERP_FONT_ITALICS ||
+	   previous_style.typed_data.value == DRIVERP_FONT_BOLDITALICS)
+	  if (weight.typed_data.value > 0)
+	     weight.typed_data.value = DRIVERP_FONT_BOLDITALICS;
+	  else
+	     weight.typed_data.value = DRIVERP_FONT_ITALICS;
+       else if (previous_style.typed_data.value == DRIVERP_FONT_OBLIQUE ||
+	        previous_style.typed_data.value == DRIVERP_FONT_BOLDOBLIQUE)
+	  if (weight.typed_data.value > 0)
+	    weight.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
+	  else
+	    weight.typed_data.value = DRIVERP_FONT_OBLIQUE;
+       else if (previous_style.typed_data.value == DRIVERP_FONT_ROMAN ||
+	        previous_style.typed_data.value == DRIVERP_FONT_BOLD)
+	  if (weight.typed_data.value > 0)
+	    weight.typed_data.value = DRIVERP_FONT_BOLD;
+	  else
+	    weight.typed_data.value = DRIVERP_FONT_ROMAN;
+       }
+   else
+       if (weight.typed_data.value > 0)
+         weight.typed_data.value = DRIVERP_FONT_BOLD;
+       else
+         weight.typed_data.value = DRIVERP_FONT_ROMAN;
 
    /* install the new presentation */
    if (context->drv->SetFontStyle)
@@ -1997,73 +2074,29 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   style, pval;
-   PresentationValue   previous_style;
+   PresentationValue   style;
 
    style.typed_data.value = 0;
    style.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
    if (!strncasecmp (cssRule, "small-caps", 10))
      {
-       pval.typed_data.unit = DRIVERP_UNIT_REL;
-       pval.typed_data.value = -1;
-       if (context->drv->SetFontSize)
-	 context->drv->SetFontSize (target, context, pval);
-        /* Not supported yet, so we use bold for rendering */
-	style.typed_data.value = DRIVERP_FONT_BOLD;
-	cssRule = SkipWord (cssRule);
+       /* Not supported yet */
+       cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "normal", 6) ||
-	    !strncasecmp (cssRule, "100", 3) ||
-	    !strncasecmp (cssRule, "200", 3) ||
-	    !strncasecmp (cssRule, "300", 3) ||
-	    !strncasecmp (cssRule, "400", 3) ||
-	    !strncasecmp (cssRule, "500", 3))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
-	style.typed_data.value = DRIVERP_FONT_HELVETICA;
-	cssRule = SkipWord (cssRule);
+       /* Not supported yet */
+       cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "bold", 4) ||
-	    !strncasecmp (cssRule, "600", 3) ||
-	    !strncasecmp (cssRule, "700", 3) ||
-	    !strncasecmp (cssRule, "800", 3) ||
-	    !strncasecmp (cssRule, "900", 3))
+   else if (!strncasecmp (cssRule, "inherit", 7))
      {
-	style.typed_data.value = DRIVERP_FONT_ROMAN;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "bolder", 6))
-     {
-	style.typed_data.value = DRIVERP_FONT_BOLD;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "lighter", 7))
-     {
-	style.typed_data.value = DRIVERP_FONT_ROMAN;
-	cssRule = SkipWord (cssRule);
+       /* Not supported yet */
+       cssRule = SkipWord (cssRule);
      }
    else
-	return (cssRule);
+       return (cssRule);
 
-   /* install the new presentation */
-   if (style.typed_data.value != 0)
-     {
-	if ((context->drv->GetFontStyle) &&
-	    (!context->drv->GetFontStyle (target, context, &previous_style)))
-	  {
-	     if (previous_style.typed_data.value == DRIVERP_FONT_BOLD)
-	       {
-		  if (style.typed_data.value == DRIVERP_FONT_ITALICS)
-		     style.typed_data.value = DRIVERP_FONT_BOLDITALICS;
-		  if (style.typed_data.value == DRIVERP_FONT_OBLIQUE)
-		     style.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
-	       }
-	     if (context->drv->SetFontStyle)
-		context->drv->SetFontStyle (target, context, style);
-	  }
-	else if (context->drv->SetFontStyle)
-	  context->drv->SetFontStyle (target, context, style);
-     }
    return (cssRule);
 }
 
@@ -2771,6 +2804,9 @@ char               *styleString;
 	{
 	  b++;
 	  b = SkipBlanks (b);
+	  /*** Caution: Strings can either be written with double quotes or
+	       with single quotes. Only double quotes are handled here.
+	       Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*b == '"')
 	    {
 	      /* search the url end */
@@ -2864,6 +2900,9 @@ char               *styleString;
 	{
 	  b++;
 	  b = SkipBlanks (b);
+	  /*** Caution: Strings can either be written with double quotes or
+	       with single quotes. Only double quotes are handled here.
+	       Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*b == '"')
 	    {
 	      b++;
@@ -2927,6 +2966,9 @@ char               *cssRule;
 	{
 	  cssRule++;
 	  cssRule = SkipBlanks (cssRule);
+	  /*** Caution: Strings can either be written with double quotes or
+	       with single quotes. Only double quotes are handled here.
+	       Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*cssRule == '"')
 	    {
 	      cssRule++;
@@ -4081,6 +4123,9 @@ char               *buffer;
 			  LoadHTMLStyleSheet (base, docRef, css);
 			}
 		    }
+		  /*** Caution: Strings can either be written with double quotes or
+		       with single quotes. Only double quotes are handled here.
+		       Escaped quotes are not handled. See function SkipQuotedString */
 		  else if (*cssRule == '"')
 		    {
 		      cssRule++;
