@@ -2147,6 +2147,8 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y, int *wid
       pAb = pAb->AbNext;
     }
 }
+
+#ifdef _GLTRANSFORMATION
 /*----------------------------------------------------------------------
   LimitBoundingBoxToClip : prevent accessing out of screen memory
   ----------------------------------------------------------------------*/
@@ -2176,6 +2178,7 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
   else
     return FALSE;  
 }
+#endif
 
 /*----------------------------------------------------------------------
   GetBoundingBox : Get Bounding box of a group in absolute coord

@@ -165,7 +165,8 @@ void  TtaSelectString (Document document, Element textElement,
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) textElement)->ElTerminal)
       TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) textElement)->ElLeafType != LtText)
+   else if (((PtrElement) textElement)->ElLeafType != LtText &&
+	    ((PtrElement) textElement)->ElLeafType != LtSymbol)
       TtaError (ERR_invalid_element_type);
    /* Checks the parameter document */
    else if (document < 1 || document > MAX_DOCUMENTS)

@@ -493,7 +493,6 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
   PtrAbstractBox      pAb;  
   PtrBox              box;
   int                 x, y, w, h;
-  int                 xbox, ybox, wbox, hbox;
    
   box = pInitAb->AbBox;
   box->BxClipX = box->BxXOrg - FrXOrg;

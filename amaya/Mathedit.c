@@ -804,7 +804,8 @@ static void         CreateMathConstruct (int construct)
     {
       /* current selection is within a MathML element */
       mathSchema = elType.ElSSchema;
-      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
 	/* the first selected element is a character string */
 	{
 	  len = TtaGetElementVolume (sibling);
@@ -1288,7 +1289,8 @@ static void         CreateMathConstruct (int construct)
       else
 	{
 	  /* the selected element is not a MROW */
-	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	      elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
 	    /* go up to the MN, MI, MO or M_TEXT element */
 	    sibling = TtaGetParent (sibling);
 	  /* insert the new element */
@@ -3414,7 +3416,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   if (newSelEl != NULL)
      {
      elType = TtaGetElementType (newSelEl);
-     if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+     if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	 elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
         TtaSelectString (doc, newSelEl, newSelChar, newSelChar-1);
      else
 	TtaSelectElement (doc, newSelEl);
