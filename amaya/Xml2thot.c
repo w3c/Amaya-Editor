@@ -4262,9 +4262,9 @@ ThotBool    xmlDoctype;
       if (charset != UNDEFINED_CHARSET && charset != ISO_8859_1)
 	{
 	  unknownCharset = TRUE;
-	  XmlParseError (XMLcontext.doc, TEXT("The encoding of this document is not supported by Amaya. If you edit it, you may loose some information "), -1);
+	  XmlParseError (XMLcontext.doc,
+			 TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
 	}
-
       /* Specific initialization for expat */
       InitializeExpatParser ();
 	
