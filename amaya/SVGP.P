@@ -757,6 +757,7 @@ RULES
 	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
+	        Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: TAG_Font;
 		END;
