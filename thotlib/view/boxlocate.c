@@ -822,7 +822,7 @@ int                 yRef;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  GetClickedBox teste si le point x, y appartient au pave'          | */
+/* |  GetEnclosingClickedBox teste si le point x, y appartient au pave' | */
 /* |    pAb.                                                            | */
 /* |    Si oui, retourne l'adresse du pave' correspondant               | */
 /* |    sinon, la valeur NULL.                                          | */
