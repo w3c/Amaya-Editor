@@ -950,7 +950,7 @@ static void InitCSSDialog (Document doc, char *s)
   /* display the form */
 #  ifdef _WINDOWS
   CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
-		      TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
+		      TtaGetMessage (AMAYA, AM_NO_CSS));
 #  else  /* !_WINDOWS */
   if (nb > 0)
     {
