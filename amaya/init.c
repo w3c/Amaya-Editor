@@ -715,7 +715,6 @@ Document            doc;
 	   TtaSetMenuOff (document, 1, Types);
 	   TtaSetMenuOff (document, 1, Links);
 	   TtaSetMenuOff (document, 1, Style);
-	   TtaSetItemOff (document, 1, Special, TSectionNumber);
 	   TtaSetItemOff (document, 1, Special, BMakeBook);
 #ifdef ANNOTATIONS
 	   TtaSetMenuOff (document, 1, Annotations_);
@@ -840,7 +839,6 @@ Document            doc;
 	   TtaSetMenuOn (document, 1, Types);
 	   TtaSetMenuOn (document, 1, Links);
 	   TtaSetMenuOn (document, 1, Style);
-	   TtaSetItemOn (document, 1, Special, TSectionNumber);
 	   TtaSetItemOn (document, 1, Special, BMakeBook);
 #ifdef ANNOTATIONS
 	   TtaSetMenuOn (document, 1, Annotations_);
@@ -1853,12 +1851,10 @@ ThotBool     logFile;
 	 SwitchIconGraph (doc, 1, FALSE);
 #endif /* GRAPHML */
 
-	 TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	 TtaSetItemOff (doc, 1, Edit_, BTransform);
 	 TtaSetMenuOff (doc, 1, Types);
 	 TtaSetMenuOff (doc, 1, Links);
 	 TtaSetMenuOff (doc, 1, Style);
-	 TtaSetItemOff (doc, 1, Special, TSectionNumber);
 	 TtaSetItemOff (doc, 1, Special, BMakeBook);
 	 TtaSetMenuOff (doc, 1, Attributes_);
 
@@ -1872,7 +1868,9 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Edit_, BCut);
 	     TtaSetItemOff (doc, 1, Edit_, BPaste);
 	     TtaSetItemOff (doc, 1, Edit_, BClear);
+	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
+	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
 #ifdef ANNOTATIONS
              TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
@@ -1883,7 +1881,7 @@ ThotBool     logFile;
 #endif /* _WINDOWS */
 	   }
 	 else
-	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
 	 if (DocumentTypes[doc] == docText ||
 	     DocumentTypes[doc] == docTextRO ||
@@ -1930,6 +1928,14 @@ ThotBool     logFile;
 	     SwitchIconGraph (doc, 1, TRUE);
 #endif /* GRAPHML */
 
+	     TtaSetItemOn (doc, 1, Edit_, BTransform);
+	     TtaSetMenuOn (doc, 1, Types);
+	     TtaSetMenuOn (doc, 1, Links);
+	     TtaSetMenuOn (doc, 1, Style);
+	     TtaSetItemOn (doc, 1, Special, TSectionNumber);
+	     TtaSetItemOn (doc, 1, Special, BMakeBook);
+	     TtaSetMenuOn (doc, 1, Attributes_);
+
  	     TtaSetItemOn (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOn (doc, 1, Views, TShowTargets);
 	     TtaSetItemOn (doc, 1, Views, BShowStructure);
@@ -1937,13 +1943,6 @@ ThotBool     logFile;
 	     TtaSetItemOn (doc, 1, Views, BShowLinks);
 	     TtaSetItemOn (doc, 1, Views, BShowToC);
 	     TtaSetItemOn (doc, 1, Views, BShowSource);
-
-	     TtaSetMenuOn (doc, 1, Types);
-	     TtaSetMenuOn (doc, 1, Links);
-	     TtaSetMenuOn (doc, 1, Style);
-	     TtaSetItemOn (doc, 1, Special, TSectionNumber);
-	     TtaSetItemOn (doc, 1, Special, BMakeBook);
-	     TtaSetMenuOn (doc, 1, Attributes_);
 	   }
 	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
        }
