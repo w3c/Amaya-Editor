@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -45,7 +46,7 @@ sous menu Eléments caractères du menu <strong>Eléments</strong> :</p>
       éléments sont simplement utilisés pour obtenir une police de caractère
       plus grasse, les <a href="../StyleSheets.html.fr">Feuilles de style</a>
       devraient être utilisées à la place.</dd>
-  <dt><code>big </code>et <code>small</code></dt>
+  <dt><code>big</code> et <code>small</code></dt>
     <dd>En général, ces résultats devraient être obtenus avec les <a
       href="../StyleSheets.html.fr">Feuilles de style</a>. Quand ils sont
       utilisés pour marquer des types spécifiques d'information, comme la

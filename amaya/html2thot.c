@@ -2452,6 +2452,8 @@ static void ProcessStartGI (char* GIname)
 	       (!strcmp (pHTMLGIMapping[entry].XMLname, "td") ||
 		!strcmp (pHTMLGIMapping[entry].XMLname, "th")))
 	    {
+	      sprintf (msgBuffer, "Tags <table>, <tbody> and <tr> added", GIname);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      /* generate mandatory parent elements */ 
 	      ProcessStartGI ("table");
 	      HTMLcontext.withinTable = 1;
@@ -2459,8 +2461,12 @@ static void ProcessStartGI (char* GIname)
 	    }
 	  else if (HTMLcontext.withinTable == 0 &&
 		   !strcmp (pHTMLGIMapping[entry].XMLname, "tr"))
+	    {
 	      /* generate mandatory parent elements */ 
-	    ProcessStartGI ("table");
+	      sprintf (msgBuffer, "Tags <table> and <tbody> added", GIname);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      ProcessStartGI ("table");
+	    }
 	  /* does this start tag also imply the end tag of some current elements?*/
 	  pClose = FirstClosedElem[entry];
 	  while (pClose != NULL)

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Types en ligne</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -43,7 +44,7 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>dfn</code
 est utilisé pour marquer une <dfn>définition en ligne</dfn> (un mot qui est
 donné comme un exemple de définition)</p>
 
-<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utiliser pour changer la présentation des définitions en ligne.</p>
 </div>
 
@@ -58,7 +59,7 @@ caractères</strong> du menu <strong>Xhtml</strong>, ou sur linux avec le
 raccourci clavier Alt-t, Alt-q. Il est possible de donner l'URI de la source
 pour la citation, utilisant l'attribut <code>cite</code>.</p>
 
-<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des citations en ligne. Les
 spécifications HTML précisent que les citations en ligne devraient être
 rendues avec des guillemets appropriés à la langue courante.</p>
@@ -83,7 +84,7 @@ information</strong> du menu <strong>Xhtml</strong>, et il existe des
 raccourcis clavier pour tous - Alt-t suivi de Alt-c pour code, Alt-v pour
 variables, Alt-k pour user input et Alt-s pour sample output.</p>
 
-<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation de ces éléments.</p>
 </div>
 
@@ -121,7 +122,7 @@ sont disponibles dans le sous-menu <strong>types information</strong> du menu
 <strong>Xhtml</strong> pour marquer le texte qui devra être effacé ou qui a
 <ins>déjà</ins> été inséré.</p>
 
-<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des insertions et des suppressions.</p>
 </div>
 
@@ -158,8 +159,22 @@ ensuite utilisez le raccourci clavier, menu item, ou le bouton <img
 src="../../images/Strong.gif" alt="Strong" /> - l'élément <code>strong</code>
 sera désactivé.</p>
 
-<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+<p><a href="../StyleSheets.html.fr">Les feuilles de style</a> peuvent être
 utilisées pour changer la présentation des deux types de mise en évidence.</p>
+
+<h2 id="L260">L'élément span</h2>
+
+<p>L'élément <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-SPAN">span</a>
+associé à un attribut <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#adef-id"
+name="id">id</a> (<a href="../StyleSheets.html.fr#Creating"
+name="style">style</a> ou <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#adef-class"
+name="class">class</a>) permet d'enrichir la structure du document. Cet
+élément est créé automatiquement par Amaya quand l'utilisateur applique un
+attribut sur une portion de texte. Il est détruit quand l'attribut
+correspondant est supprimé.</p>
 </div>
 </div>
 
