@@ -23,9 +23,7 @@ H1{
   font-style : normal;
   font-variant : normal;
   font-weight : normal;
-  padding-bottom : -4px;
-  padding-top : -4px;
-}
+  }
 
 .level2{
   font-family : Arial, Helvetica, sans-serif;
@@ -33,9 +31,7 @@ H1{
   font-variant : normal;
   font-weight : normal;
   text-indent : 15px;
-  padding-bottom : -4px;
-  padding-top : -4px;
-}
+  }
 
 .backtotop{
   font-family : Arial, Helvetica, sans-serif;
