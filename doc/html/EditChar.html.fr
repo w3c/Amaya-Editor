@@ -35,11 +35,16 @@ depuis le clavier, Amaya utilise le support standard fournit par le
 système.</p>
 
 <p>Amaya fournit <a href="ShortCuts.html.fr">des raccourcis clavier</a> pour
-certains caractères non disponibles au clavier comme&nbsp;:</p>
+certains caractères non disponibles au clavier comme :</p>
 <ul>
   <li>Pour obtenir un espace non sécable, vous devez taper <code>Control -
-    espace</code>. Ce caractère sera <a href="Browsing.html.fr#entite">sauvé
-    comme une entité</a> (<code>&amp;nbsp;</code>).</li>
+    espace</code>. 
+    <p>Ce caractère sera <a
+    href="http://jigedit.w3.org/ivatton/WWW/Amaya/User/Browsing.html.fr#entite">sauvé
+    comme une entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la
+    vue source avec le caractère coloré suivant : <span
+    style="color: #008BB2">~</span></p>
+  </li>
   <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -
   e</code>.</li>
   <li>Pour obtenir un &#x153; (oelig), vous devez taper <code>Control -
@@ -388,7 +393,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>176</td>
       <td>accent circonflexe</td>
       <td>0 (zéro)</td>
-      <td>&deg;</td>
+      <td>°</td>
     </tr>
     <tr>
       <td class="name">eacute</td>
@@ -521,7 +526,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>160</td>
       <td>&lt;Ctrl&gt; space</td>
       <td>(aucun)</td>
-      <td>&nbsp;</td>
+      <td> </td>
     </tr>
     <tr>
       <td class="name">not</td>
