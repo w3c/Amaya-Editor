@@ -32,8 +32,6 @@
 #endif /* _WINDOWS */
 
 #define THOT_MAX_CHAR 100	/* max. number of character in a text buffer */
-#define DEF_SAVE_INTVL 500	/* number of typed characters triggering 
-				   automatic saving */
 #define MAX_LABEL_LEN 12       	/* max. length of labels */
 #define MAX_DOC_IDENT_LEN 32	/* max. length of a document identifier */
 

@@ -25,9 +25,6 @@ THOT_EXPORT ThotBool HighlightBoxErrors;
 schema */
 THOT_EXPORT ThotBool	FullStructureChecking;
 
-/* number of typed characters that triggers an automatic save */
-THOT_EXPORT int     	CurSaveInterval;
-
 /* maximum delay between 2 click to detect a double-click */
 THOT_EXPORT int         DoubleClickDelay;
 

@@ -290,8 +290,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (doc);
-  /* Auto save (0 if desabled) */
-  TtaSetDocumentBackUpInterval (doc, AutoSave_Interval);
   /* Set the document charset */
   TtaSetDocumentCharset (doc, ISO_8859_1, FALSE);
   strcpy (charsetName , "iso-8859-1");

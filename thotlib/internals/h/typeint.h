@@ -868,7 +868,6 @@ typedef struct _DocumentDescr
   int		  DocMaxPairIdent;/* higher document pair id. value */
   ThotBool        DocModified;	  /* the document was modified */
   ThotBool        DocUpdated;	  /* any change occurs since the last reset */
-  int		  DocBackUpInterval; /* interval between automatic backup */
   int             DocNTypedChars; /* number of characters typed since the last
 				     time the document was saved */
   int		  DocNLanguages;  /* number of languages actually used */

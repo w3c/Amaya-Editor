@@ -137,12 +137,12 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_ACCESSKEY, AM_ACCESSKEY},
 	{IDC_ANONE, AM_NONE},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
-	{IDC_MULTIKEY, AM_PASTE_LINE_BY_LINE},
+	{IDC_LINES, AM_PASTE_LINE_BY_LINE},
+	{IDC_AUTOSAVE, AM_AUTO_SAVE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
 static int      GeneralBase;
-static int      DoubleClickDelay;
 static int      Zoom;
 static char     DefaultName[MAX_LENGTH];
 static char     DialogueLang[MAX_LENGTH];
@@ -150,11 +150,13 @@ static int      AccesskeyMod;
 static int      FontMenuSize;
 static char     HomePage[MAX_LENGTH];
 static ThotBool PasteLineByLine;
-static ThotBool BgImages;
 static ThotBool S_Buttons;
 static ThotBool S_Address;
 static ThotBool S_Targets;
 static ThotBool S_Numbers;
+#define DEF_SAVE_INTVL 500	/* number of typed characters triggering 
+				   automatic saving */
+static ThotBool S_AutoSave;
 
 /* Browse menu options */
 #ifdef _WINDOWS
@@ -174,11 +176,13 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 #endif /* _WINDOWS */
 static int      BrowseBase;
 static int      CurrentScreen;
+static int      DoubleClickDelay;
 static ThotBool LoadImages, InitLoadImages;
 static ThotBool LoadObjects, InitLoadObjects;
 static ThotBool LoadCss, InitLoadCss;
 static ThotBool DoubleClick;
 static ThotBool EnableFTP;
+static ThotBool InitBgImages, BgImages;
 static char     ScreenType[MAX_LENGTH];
 static char     NewScreen[MAX_LENGTH];
 static char    *ScreensTxt[]={
@@ -1553,7 +1557,6 @@ static void GetGeneralConf (void)
   char       ptr[MAX_LENGTH];
   int        oldzoom;
 
-  TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetEnvInt ("FontZoom", &Zoom);
   if (Zoom == 0)
     {
@@ -1565,7 +1568,8 @@ static void GetGeneralConf (void)
 	Zoom = 100 + (oldzoom * 10);
     }
   TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
-  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
+  TtaGetEnvInt ("AUTO_SAVE", &AutoSave_Interval);
+  S_AutoSave = (AutoSave_Interval > 0);
   TtaGetEnvBoolean ("SHOW_BUTTONS", &S_Buttons);
   TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
@@ -1824,12 +1828,11 @@ static void UpdateSectionNumbering ()
   ----------------------------------------------------------------------*/
 static void SetGeneralConf (void)
 {
-  int         oldZoom;
+  int         oldVal;
   ThotBool    old;
 
-  TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
-  TtaGetEnvInt ("FontZoom", &oldZoom);
-  if (oldZoom != Zoom)
+  TtaGetEnvInt ("FontZoom", &oldVal);
+  if (oldVal != Zoom)
     {
       TtaSetEnvInt ("FontZoom", Zoom, TRUE);
       TtaSetFontZoom (Zoom);
@@ -1837,7 +1840,13 @@ static void SetGeneralConf (void)
       RecalibrateZoom ();
     }
   TtaSetEnvBoolean ("PASTE_LINE_BY_LINE", PasteLineByLine, TRUE);
-  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
+  TtaGetEnvInt ("AUTO_SAVE", &oldVal);
+  if (oldVal != AutoSave_Interval)
+    {
+      TtaSetEnvInt ("AUTO_SAVE", AutoSave_Interval, TRUE);
+      TtaSetDocumentBackUpInterval (AutoSave_Interval);
+      S_AutoSave = (AutoSave_Interval > 0);
+    }
   /* handling show buttons, address, targets and section numbering */
   TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
   TtaSetEnvBoolean ("SHOW_BUTTONS", S_Buttons, TRUE);
@@ -1881,13 +1890,14 @@ static void GetDefaultGeneralConf ()
 {
   char       ptr[MAX_LENGTH];
 
-  TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetDefEnvInt ("FontZoom", &Zoom);
   if (Zoom == 0)
     Zoom = 100;
   GetDefEnvToggle ("PASTE_LINE_BY_LINE", &PasteLineByLine, 
 		   GeneralBase + mToggleGeneral, 0);
-  GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
+  TtaGetDefEnvInt ("AUTO_SAVE", &AutoSave_Interval);
+  S_AutoSave = (AutoSave_Interval > 0);
+  GetDefEnvToggle ("AUTO_SAVE", &S_AutoSave,
 		   GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle ("SHOW_BUTTONS", &S_Buttons,
 		   GeneralBase + mToggleGeneral, 2);
@@ -1921,9 +1931,9 @@ static void GetDefaultGeneralConf ()
 void WIN_RefreshGeneralMenu (HWND hwnDlg)
 {
   SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
-  CheckDlgButton (hwnDlg, IDC_MULTIKEY, (PasteLineByLine) 
+  CheckDlgButton (hwnDlg, IDC_LINES, (PasteLineByLine) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
+  CheckDlgButton (hwnDlg, IDC_AUTOSAVE, (S_AutoSave) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWBUTTONS, (S_Buttons) 
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -1932,6 +1942,8 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_NUMBER, (S_Numbers) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_AUTOSAVE, (S_AutoSave) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
@@ -1950,29 +1962,7 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
-#else /* _WINDOWS */
-/*----------------------------------------------------------------------
-  RefreshGeneralMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshGeneralMenu ()
-{
-  TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
-  TtaSetNumberForm (GeneralBase + mZoom, Zoom);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, PasteLineByLine);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Buttons);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Address);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Targets);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Numbers);
-  TtaSetTextForm (GeneralBase + mHomePage, HomePage);
-  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
-  TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
-  TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
-}
-#endif /* !_WINDOWS */
 
-#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WIN_GeneralDlgProc
   Windows callback for the general menu
@@ -1986,6 +1976,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeneralHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOSAVE),
+		     TtaGetMessage (AMAYA, AM_AUTO_SAVE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWBUTTONS),
 		     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDRESS),
@@ -2042,11 +2034,15 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
    	 case IDC_ANONE:
 	   AccesskeyMod = 2;
 	   break;
-	case IDC_MULTIKEY:
+	case IDC_LINES:
 	  PasteLineByLine = !PasteLineByLine;
 	  break;
-	case IDC_BGIMAGES:
-	  BgImages = !BgImages;
+	case IDC_AUTOSAVE:
+	  S_AutoSave = !S_AutoSave;
+	  if (S_AutoSave)
+	    AutoSave_Interval = DEF_SAVE_INTVL;
+	  else
+	    AutoSave_Interval = 0;
 	  break;
 	case IDC_SHOWBUTTONS:
 	  S_Buttons = !S_Buttons;
@@ -2082,7 +2078,27 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
+
 #else /* _WINDOWS */
+/*----------------------------------------------------------------------
+  RefreshGeneralMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+static void RefreshGeneralMenu ()
+{
+  TtaSetNumberForm (GeneralBase + mZoom, Zoom);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, PasteLineByLine);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, S_AutoSave);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Buttons);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Address);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Targets);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Numbers);
+  TtaSetTextForm (GeneralBase + mHomePage, HomePage);
+  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
+  TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
+  TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
+}
+
 /*----------------------------------------------------------------------
    callback of the general menu
   ----------------------------------------------------------------------*/
@@ -2121,10 +2137,6 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	    }
 	  break;
 
-	case mDoubleClickDelay:
-	  DoubleClickDelay = val;
-	  break;
-
 	case mZoom:
 	  Zoom = val;
 	  break;
@@ -2143,7 +2155,11 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	      PasteLineByLine = !PasteLineByLine;
 	      break;
 	    case 1:
-	      BgImages = !BgImages;
+	      S_AutoSave = !S_AutoSave;
+	      if (S_AutoSave)
+		AutoSave_Interval = DEF_SAVE_INTVL;
+	      else
+		AutoSave_Interval = 0;	      
 	      break;
 	    case 2:
 	      S_Buttons = !S_Buttons;
@@ -2201,7 +2217,7 @@ void GeneralConfMenu (Document document, View view)
    TtaNewSheet (GeneralBase + GeneralMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_GENERAL_MENU),
-		2, s, TRUE, 3, 'L', D_DONE);
+		2, s, TRUE, 2, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (GeneralBase + mHomePage,
 		   GeneralBase + GeneralMenu,
@@ -2210,7 +2226,7 @@ void GeneralConfMenu (Document document, View view)
 		   1,
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
-   TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");
+   /*TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");*/
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
@@ -2225,12 +2241,6 @@ void GeneralConfMenu (Document document, View view)
 		     10,
 		     1000,
 		     FALSE);   
-   TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
-		     GeneralBase + GeneralMenu,
-		     TtaGetMessage (AMAYA, AM_DOUBLECLICK_DELAY),
-		     0,
-		     65000,
-		     FALSE);   
    /* fourth line */
    TtaNewTextForm (GeneralBase + mDialogueLang,
 		   GeneralBase + GeneralMenu,
@@ -2239,11 +2249,11 @@ void GeneralConfMenu (Document document, View view)
 		   1,
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
-   TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
+   /*TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");*/
    /* second line */
    sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_PASTE_LINE_BY_LINE), EOS, 
-	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
+	     TtaGetMessage (AMAYA, AM_AUTO_SAVE), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BUTTONBAR), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TEXTZONE), EOS,
 	     TtaGetMessage (AMAYA, AM_SHOW_TARGETS), EOS,
@@ -2610,11 +2620,13 @@ static void GetBrowseConf (void)
 {
   TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
   TtaGetEnvBoolean ("LOAD_OBJECTS", &LoadObjects);
+  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("LOAD_CSS", &LoadCss);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   AHTFTPURL_flag_set (EnableFTP);
   GetEnvString ("SCREEN_TYPE", ScreenType);
+  TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
 }
 
 /*----------------------------------------------------------------------
@@ -2626,6 +2638,7 @@ static void SetBrowseConf (void)
 {
   TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
   TtaSetEnvBoolean ("LOAD_OBJECTS", LoadObjects, TRUE);
+  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
   TtaSetEnvBoolean ("LOAD_CSS", LoadCss, TRUE);
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   /* @@@ */
@@ -2647,13 +2660,16 @@ static void GetDefaultBrowseConf ()
 		   BrowseBase + mToggleBrowse, 0);
   GetDefEnvToggle ("LOAD_OBJECTS", &LoadObjects,
 		   BrowseBase + mToggleBrowse, 1);
+  GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
+		   GeneralBase + mToggleBrowse, 2);
   GetDefEnvToggle ("LOAD_CSS", &LoadCss,
-		   BrowseBase + mToggleBrowse, 2);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		   BrowseBase + mToggleBrowse, 3);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		   BrowseBase + mToggleBrowse, 4);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		   BrowseBase + mToggleBrowse, 5);
   GetDefEnvString ("SCEEN_TYPE", ScreenType);
+  TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
 }
 
 #ifdef _WINDOWS
@@ -2688,6 +2704,8 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_LOADIMG, (LoadImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_LOADOBJ, (LoadObjects) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_LOADCSS, (LoadCss) 
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -2734,6 +2752,9 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_LOADOBJ:
 	  LoadObjects = !LoadObjects;
+	  break;
+	case IDC_BGIMAGES:
+	  BgImages = !BgImages;
 	  break;
 	case IDC_LOADCSS:
 	  LoadCss = !LoadCss;
@@ -2839,9 +2860,10 @@ static void RefreshBrowseMenu ()
 {
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, LoadObjects);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, LoadCss);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, DoubleClick);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, EnableFTP);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, BgImages);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, LoadCss);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, DoubleClick);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, EnableFTP);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
 }
@@ -2872,6 +2894,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      if (strcmp (ScreenType, NewScreen) ||
 		  InitLoadImages != LoadImages ||
 		  InitLoadObjects != LoadObjects ||
+		  InitBgImages != BgImages ||
 		  InitLoadCss != LoadCss)
 		{
 		  strcpy (ScreenType, NewScreen);
@@ -2885,6 +2908,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		    }
 		  InitLoadImages = LoadImages;
 		  InitLoadObjects = LoadObjects;
+		  InitBgImages = BgImages;
 		  InitLoadCss = LoadCss;
 		}
 	      else
@@ -2910,12 +2934,15 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      LoadObjects = !LoadObjects;
 	      break;
 	    case 2:
-	      LoadCss = !LoadCss;
+	      BgImages = !BgImages;
 	      break;
 	    case 3:
-	      DoubleClick = !DoubleClick;
+	      LoadCss = !LoadCss;
 	      break;
 	    case 4:
+	      DoubleClick = !DoubleClick;
+	      break;
+	    case 5:
 	      EnableFTP = !EnableFTP;
 	      break;
 	    }
@@ -2950,6 +2977,7 @@ void BrowseConfMenu (Document document, View view)
   /* keep initial values to detect an change */
   InitLoadImages = LoadImages;
   InitLoadObjects = LoadObjects;
+  InitBgImages = BgImages;
   InitLoadCss = LoadCss;
 #ifndef _WINDOWS
   /* Create the dialogue form */
@@ -2962,16 +2990,17 @@ void BrowseConfMenu (Document document, View view)
 	       TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_BROWSE_MENU),
 	       2, s, FALSE, 11, 'L', D_DONE);
-  sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s", 
+  sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
 	   TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
 	   TtaGetMessage (AMAYA, AM_LOAD_OBJECTS), EOS,
+	   TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
 	   TtaGetMessage (AMAYA, AM_LOAD_CSS), EOS,
 	   TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
 	   TtaGetMessage (AMAYA, AM_ENABLE_FTP));
   TtaNewToggleMenu (BrowseBase + mToggleBrowse,
 		    BrowseBase + BrowseMenu,
 		    NULL,
-		    4, s,
+		    5, s,
 		    NULL,
 		    FALSE);
   BuildScreenSelector ();

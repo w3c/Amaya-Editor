@@ -7063,6 +7063,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetAutoSave (GenerateAutoSavedDoc);
    /* Define the auto-save interval */
    TtaGetEnvInt ("AUTO_SAVE", &AutoSave_Interval);
+   TtaSetDocumentBackUpInterval (AutoSave_Interval);
 
    TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
@@ -8129,12 +8130,8 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 {
   char     *urlstring, *app_home, *ptr, *name, *url, *list_item;
   char     *ptr_end, *ptr_beg;
-  int       i, j, len, nb, end, interval = 0;
+  int       i, j, len, nb, end;
   FILE     *file = NULL;
-
-  TtaGetEnvInt ("AUTO_SAVE", &interval);
-  if (interval == 0)
-    return;
 
   if (save_name == NULL || save_name[0] == EOS)
     return;
@@ -8235,13 +8232,11 @@ void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
 {
   char     *urlstring, *app_home, *ptr, *name, *url;
   char     *ptr_end, *ptr_beg;
-  int       i, j, len, nb, end, interval = 0;
+  int       i, j, len, nb, end;
   FILE     *file = NULL;
 
-  TtaGetEnvInt ("AUTO_SAVE", &interval);
-  if (interval == 0)
+  if (AutoSave_Interval == 0)
     return;
-
   if (save_name == NULL || save_name[0] == EOS)
     return;
   if (initial_url == NULL || initial_url[0] == EOS)
@@ -8325,11 +8320,7 @@ void InitAutoSave ()
   unsigned char     *urlstring, c;
   char              *app_home;
   FILE              *file;
-  int                i, nb, len, interval = 0;
-
-  TtaGetEnvInt ("AUTO_SAVE", &interval);
-  if (interval == 0)
-    return;
+  int                i, nb, len;
 
   /* remove the previous list */
   TtaFreeMemory (AutoSave_list);

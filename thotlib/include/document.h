@@ -354,11 +354,9 @@ extern void TtaSetDocumentDirectory (Document document, char *directory);
    Parameters:
    document: the document.
    extension: the structure schema extension to be removed.
-
    Return parameters:
    removedElements: number of elements actually removed.
    removedAttributes: number of attributes actually removed.
-
   ----------------------------------------------------------------------*/
 extern void TtaSetDocumentName (Document document, char *documentName);
 
@@ -366,28 +364,21 @@ extern void TtaSetDocumentName (Document document, char *documentName);
    TtaSetDocumentAccessMode
 
    Sets the access mode for a document.
-
    Parameters:
    document: the document whose access mode is changed.
    accessMode: 0 = read only, 1 = read-write.
-
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentAccessMode (Document document, int accessMode);
+extern void TtaSetDocumentAccessMode (Document document, int accessMode);
 
 /*----------------------------------------------------------------------
    TtaSetDocumentBackUpInterval
 
-   Sets the backup interval for a document.
-
-   Parameters:
-   document: the document whose backup interval is changed.
-   interval:
-   0 : the backup mechanism must be disabled
-   positive integer : number of characters typed which triggers
-   automatic save of the document into a .BAK file.
-
+   Sets the backup interval of documents.
+   Parameter:
+   interval: 0 if the backup mechanism is disabled, or gives the number
+   of characters which triggers an automatic save into a .BAK file.
   ----------------------------------------------------------------------*/
-extern void TtaSetDocumentBackUpInterval (Document document, int interval);
+extern void TtaSetDocumentBackUpInterval (int interval);
 
 /*----------------------------------------------------------------------
    TtaSetNotificationMode
@@ -407,10 +398,8 @@ extern void TtaSetNotificationMode (Document document, int notificationMode);
 
    Notifies the tool kit that a document has been modified by the application.
    As a consequence, the user will be asked to save the document when closing it.
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
 extern void TtaSetDocumentModified (Document document);
 
@@ -421,10 +410,8 @@ extern void TtaSetDocumentModified (Document document);
    by the application or by the user. As a consequence, if no further modification
    is made to that document, the user will not be asked to save the document
    when closing it.
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
 extern void TtaSetDocumentUnmodified (Document document);
 
@@ -435,10 +422,8 @@ extern void TtaSetDocumentUnmodified (Document document);
    by the application or by the user. That will allow the application to
    detect if any change will be made on the document
    (see TtaIsDocumentUpdated).
-
    Parameter:
    document: the document.
-
   ----------------------------------------------------------------------*/
 extern void TtaSetDocumentUnupdated (Document document);
 
@@ -446,13 +431,10 @@ extern void TtaSetDocumentUnupdated (Document document);
    TtaGetDocumentName
 
    Returns the name of a document.
-
    Parameter:
    document: the document whose name is asked.
-
    Return value:
    name of that document.
-
   ----------------------------------------------------------------------*/
 extern char *TtaGetDocumentName (Document document);
 
@@ -460,13 +442,10 @@ extern char *TtaGetDocumentName (Document document);
    TtaGetDocumentFromName
 
    Returns the document having a given name.
-
    Parameter:
    documentName: the document name.
-
    Return value:
    the document having that name.
-
   ----------------------------------------------------------------------*/
 extern Document TtaGetDocumentFromName (char *documentName);
 
@@ -474,15 +453,12 @@ extern Document TtaGetDocumentFromName (char *documentName);
    TtaGetDocumentDirectory
 
    Returns the directory to which the document is supposed to be saved.
-
    Parameters:
    document: the document whose directory is asked.
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the document directory.
-
   ----------------------------------------------------------------------*/
 extern void TtaGetDocumentDirectory (Document document, char *buffer,
 				     int bufferLength);
@@ -491,13 +467,10 @@ extern void TtaGetDocumentDirectory (Document document, char *buffer,
    TtaGetDocumentSSchema
 
    Returns the main structure schema of a document.
-
    Parameter:
    document: the document for which the structure schema is asked.
-
    Return value:
    the structure schema of that document.
-
   ----------------------------------------------------------------------*/
 extern SSchema TtaGetDocumentSSchema (Document document);
 
@@ -505,13 +478,10 @@ extern SSchema TtaGetDocumentSSchema (Document document);
    TtaGetSSchemaName
 
    Returns the name of a structure schema.
-
    Parameter:
    schema: the structure schema of interest.
-
    Return value:
    name of that structure schema.
-
   ----------------------------------------------------------------------*/
 extern char *TtaGetSSchemaName (SSchema schema);
 
@@ -520,13 +490,10 @@ extern char *TtaGetSSchemaName (SSchema schema);
 
    Returns the name of the presentation schema currently associated
    with a given structure schema.
-
    Parameter:
    schema: the structure schema of interest.
-
    Return value:
    name of the associated presentation schema.
-
   ----------------------------------------------------------------------*/
 extern char *TtaGetPSchemaName (SSchema schema);
 
@@ -535,15 +502,12 @@ extern char *TtaGetPSchemaName (SSchema schema);
 
    Returns a structure schema whose name is known and that is used in a
    given document.
-
    Parameters:
    name: the name of the structure schema of interest.
    document: the document that uses this structure schema.
-
    Return value:
    the structure schema having this name, or NULL if this structure
    schema is not loaded or not used by the document.
-
   ----------------------------------------------------------------------*/
 extern SSchema TtaGetSSchema (char *name, Document document);
 
@@ -552,15 +516,12 @@ extern SSchema TtaGetSSchema (char *name, Document document);
 
    Returns a structure schema whose URI is known and that is used in a
    given document.
-
    Parameters:
    uriName: the URI of the structure schema of interest.
    document: the document that uses this structure schema.
-
    Return value:
    the structure schema having this URI, or NULL if this structure
    schema is not loaded or not used by the document.
-
   ----------------------------------------------------------------------*/
 SSchema TtaGetSSchemaByUri (char *uriName, Document document);
 
@@ -568,14 +529,11 @@ SSchema TtaGetSSchemaByUri (char *uriName, Document document);
    TtaSameSSchemas
 
    Compares two structure schemas.
-
    Parameters:
    schema1: first structure schema.
    schema2: second structure schema.
-
    Return value:
    0 if both schemas are different, 1 if they are identical.
-
   ----------------------------------------------------------------------*/
 extern int TtaSameSSchemas (SSchema schema1, SSchema schema2);
 
@@ -585,17 +543,14 @@ extern int TtaSameSSchemas (SSchema schema1, SSchema schema2);
    Returns the names of the main structure schema and presentation schema
    associated with a given document. The document does not need to be open
    and the schemas are not loaded by this function.
-
    Parameters:
    documentName: Name of the document to be checked (maximum length
    19 characters).
    structureName: buffer.
    presentationName: buffer.
-
    Return value:
    structureName: Name of the document structure schema.
    presentationName: Name of the document presentation schema.
-
   ----------------------------------------------------------------------*/
 extern void TtaGiveSchemasOfDocument (char *documentName,
 				      /*OUT*/ char* structureName,
@@ -605,7 +560,6 @@ extern void TtaGiveSchemasOfDocument (char *documentName,
    TtaNextSchemaExtension
 
    Returns a structure schema extension associated with a given document.
-
    Parameters:
    document: the document of interest.
    extension: a schema extension of that document. NULL for accessing
@@ -614,7 +568,6 @@ extern void TtaGiveSchemasOfDocument (char *documentName,
    extension: the schema extension that follows or the first schema
    extension of the document if parameter extension is NULL.
    NULL if there is no more schema extension.
-
   ----------------------------------------------------------------------*/
 extern void TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema * extension);
 
@@ -622,7 +575,6 @@ extern void TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema * exten
    TtaNextNature
 
    Returns the structure schema of a nature used in a given document.
-
    Parameters:
    document: the document of interest.
    nature: the structure schema of a nature for that document. NULL for
@@ -632,7 +584,6 @@ extern void TtaNextSchemaExtension (Document document, /*INOUT*/ SSchema * exten
    of the first nature of the document if parameter nature was NULL
    when calling.
    NULL if there is no more nature for the document.
-
   ----------------------------------------------------------------------*/
 extern void TtaNextNature (Document document, /*INOUT*/ SSchema *nature);
 
@@ -642,14 +593,11 @@ extern void TtaNextNature (Document document, /*INOUT*/ SSchema *nature);
    Indicates whether a document has been modified by the user or not.
    Modifications made by the application program are not considered,
    except when explicitely notified by TtaDocumentModified.
-
    Parameter:
    document: the document.
-
    Return value:
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
-
   ----------------------------------------------------------------------*/
 extern int TtaIsDocumentModified (Document document);
 
@@ -660,14 +608,11 @@ extern int TtaIsDocumentModified (Document document);
    since the last TtaSetDocumentUnupdated or TtaSetDocumentUnmodified.
    Modifications made by the application program are not considered,
    except when explicitely notified by TtaDocumentModified.
-
    Parameter:
    document: the document.
-
    Return value:
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
-
   ----------------------------------------------------------------------*/
 extern int TtaIsDocumentUpdated (Document document);
 
@@ -675,41 +620,32 @@ extern int TtaIsDocumentUpdated (Document document);
    TtaGetDocumentAccessMode
 
    Returns the access mode for a document.
-
    Parameter:
    document: the document whose access mode is asked.
    Return value:
    0 if access mode is read only, 1 if access mode is read-write.
-
   ----------------------------------------------------------------------*/
 extern int TtaGetDocumentAccessMode (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentBackUpInterval
 
-   Returns backup interval for a document.
-
-   Parameters:
-   document: the document whose backup interval is asked.
+   Returns backup interval of documents.
    Return value:
-   0 : the backup mechanism is disabled
-   positive integer : number of typed characters which trigger an autamatic
-   save of the document into a .BAK file.
-
+   0 if the backup mechanism is disabled or the number of characters
+   which trigger an automatic save into a .BAK file.
   ----------------------------------------------------------------------*/
-extern int TtaGetDocumentBackUpInterval (Document document);
+extern int TtaGetDocumentBackUpInterval ();
 
 /*----------------------------------------------------------------------
    TtaGetNotificationMode
 
    Returns the ECF notification mode for a document.
-
    Parameters:
    document: the document whose notification mode is asked.
    Return value:
    0 = if only roots of created and deleted subtrees must be notified,
    1 = all elements of created and deleted subtrees must be notified.
-
   ----------------------------------------------------------------------*/
 extern int TtaGetNotificationMode (Document document);
 
@@ -718,15 +654,12 @@ extern int TtaGetNotificationMode (Document document);
 
    Returns the current list of the directories used when a document is open
    (see TtaOpenDocument).
-
    Parameters:
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
 extern void TtaGetDocumentPath (/*OUT*/ char *buffer, int bufferLength);
 
@@ -734,15 +667,12 @@ extern void TtaGetDocumentPath (/*OUT*/ char *buffer, int bufferLength);
    TtaGetSchemaPath
 
    Returns the current list of directories used for accessing schemas.
-
    Parameters:
    buffer: a buffer provided by the caller.
    bufferLength: the length of that buffer.
-
    Return parameter:
    buffer: the list of directories. Directory names are separated by
    the character PATH_SEP.
-
   ----------------------------------------------------------------------*/
 extern void TtaGetSchemaPath (/*OUT*/ char *buffer, int bufferLength);
 
@@ -751,14 +681,11 @@ extern void TtaGetSchemaPath (/*OUT*/ char *buffer, int bufferLength);
 
    Returns the document for which the last Copy or Cut command has been
    issued.
-
    Parameters:
    no parameter.
-
    Return value:
    the document for which the last Copy or Cut command has been issued.
    0 if the clipboard is empty.
-
   ----------------------------------------------------------------------*/
 extern Document TtaGetDocumentOfSavedElements ();
 

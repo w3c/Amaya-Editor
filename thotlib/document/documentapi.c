@@ -694,27 +694,15 @@ void TtaSetDocumentAccessMode (Document document, int accessMode)
 /*----------------------------------------------------------------------
    TtaSetDocumentBackUpInterval
 
-   Sets the backup interval for a document.
-   Parameters:
-   document: the document whose backup interval is changed.
-   interval:
-   0 : the backup mechanism must be disabled
-   positive integer : number of characters typed which triggers
-   automatic save of the document into a .BAK file.
+   Sets the backup interval of documents.
+   Parameter:
+   interval: 0 if the backup mechanism is disabled, or gives the number
+   of characters which triggers an automatic save into a .BAK file.
   ----------------------------------------------------------------------*/
-void TtaSetDocumentBackUpInterval (Document document, int interval)
+void TtaSetDocumentBackUpInterval (int interval)
 {
   UserErrorCode = 0;
-  /* verifies the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
-    TtaError (ERR_invalid_document_parameter);
-  else if (interval < 0)
-    /* parameter document is correct */
-    TtaError (ERR_invalid_parameter);
-  else
-    LoadedDocument[document - 1]->DocBackUpInterval = interval;
+  DocBackUpInterval = interval;
 }
 
 /*----------------------------------------------------------------------
@@ -1402,29 +1390,15 @@ int TtaGetDocumentAccessMode (Document document)
 /*----------------------------------------------------------------------
    TtaGetDocumentBackUpInterval
 
-   Returns backup interval for a document.
-   Parameters:
-   document: the document whose backup interval is asked.
+   Returns backup interval of documents.
    Return value:
-   0 : the backup mechanism is disabled
-   positive integer : number of typed characters which trigger an autamatic
-   save of the document into a .BAK file.
+   0 if the backup mechanism is disabled or the number of characters
+   which trigger an automatic save into a .BAK file.
   ----------------------------------------------------------------------*/
-int TtaGetDocumentBackUpInterval (Document document)
+int TtaGetDocumentBackUpInterval ()
 {
-  int                 result;
-
   UserErrorCode = 0;
-  result = 0;
-  /* verifies the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
-    TtaError (ERR_invalid_document_parameter);
-  else
-    /* parameter document is correct */
-    result = LoadedDocument[document - 1]->DocBackUpInterval;
-  return result;
+  return DocBackUpInterval;
 }
 
 

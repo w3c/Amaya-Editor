@@ -30,7 +30,7 @@
 #define MAX_PROXYMENU_DLG 6
 
 #define GeneralMenu          1
-#define mDoubleClickDelay    2
+#define mToggleGeneral       2
 #define mZoom                3
 #define mHomePage            4
 #define mDialogueLang        5
@@ -40,8 +40,7 @@
 #define mGeneralEmpty3       9
 #define mGeneralEmpty4       10
 #define mGeneralAccessKey    11
-#define mToggleGeneral       12
-#define MAX_GENERALMENU_DLG  13
+#define MAX_GENERALMENU_DLG  12
 
 #define BrowseMenu          1
 #define mToggleBrowse       2

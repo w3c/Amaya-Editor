@@ -38,8 +38,7 @@ extern void TtaSetDocumentDirectory ( Document document,
                                       char *directory );
 extern void TtaSetDocumentAccessMode ( Document document,
                                        int accessMode );
-extern void TtaSetDocumentBackUpInterval ( Document document,
-                                           int interval );
+extern void TtaSetDocumentBackUpInterval ( int interval );
 extern void TtaSetNotificationMode ( Document document,
                                      int notificationMode );
 extern void SetDocumentModified ( PtrDocument pDoc,
@@ -72,7 +71,7 @@ extern void TtaNextNature ( Document document,
 extern int TtaIsDocumentModified ( Document document );
 extern int TtaIsDocumentUpdated ( Document document );
 extern int TtaGetDocumentAccessMode ( Document document );
-extern int TtaGetDocumentBackUpInterval ( Document document );
+extern int TtaGetDocumentBackUpInterval ( void );
 extern int TtaGetNotificationMode ( Document document );
 extern void TtaGetDocumentPath ( char *buffer,
                                  int bufferLength );
@@ -148,8 +147,7 @@ extern void TtaSetDocumentDirectory (/* Document document,
                                         char *directory */);
 extern void TtaSetDocumentAccessMode (/* Document document,
                                          int accessMode */);
-extern void TtaSetDocumentBackUpInterval (/* Document document,
-                                             int interval */);
+extern void TtaSetDocumentBackUpInterval (/* int interval */);
 extern void TtaSetNotificationMode (/* Document document,
                                        int notificationMode */);
 extern void SetDocumentModified (/* PtrDocument pDoc,
@@ -182,7 +180,7 @@ extern void TtaNextNature (/* Document document,
 extern int TtaIsDocumentModified (/* Document document */);
 extern int TtaIsDocumentUpdated (/* Document document */);
 extern int TtaGetDocumentAccessMode (/* Document document */);
-extern int TtaGetDocumentBackUpInterval (/* Document document */);
+extern int TtaGetDocumentBackUpInterval (/* void */);
 extern int TtaGetNotificationMode (/* Document document */);
 extern void TtaGetDocumentPath (/* char *buffer,
                                    int bufferLength */);

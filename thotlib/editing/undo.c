@@ -838,10 +838,10 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
 	  pDoc->DocEditSequence = FALSE;
 	  /* Trigger the autosave procedure if the number of modifications has been reached */
 	  /* DocBackUpInterval = 0 means no automatic save */
-	  if (pDoc->DocBackUpInterval > 0)
+	  if (DocBackUpInterval > 0)
 	    {
 	      pDoc->DocNTypedChars += 1;
-	      if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
+	      if (pDoc->DocNTypedChars >= DocBackUpInterval)
 		if (ThotLocalActions[T_autosave] != NULL)
 		  {
 		    (*ThotLocalActions[T_autosave]) ((Document) IdentDocument (pDoc));

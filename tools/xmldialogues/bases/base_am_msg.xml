@@ -1769,7 +1769,7 @@
 </label>
 <label define="AM_MENU_FONT_SIZE">
 	<message xml:lang="en">Menu font size</message>
-	<message xml:lang="fr">Taille de la police dialogue</message>
+	<message xml:lang="fr">Taille caractères des menus</message>
 	<message xml:lang="de">Schriftgröße der Menüs</message>
 	<message xml:lang="it">Dimensione dei caratteri dei menu</message>
 	<message xml:lang="es">Tamaño fuente de menú</message>
@@ -1803,6 +1803,10 @@
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 	<message xml:lang="es">Activar pegado línea a línea</message>
+</label>
+<label define="AM_AUTO_SAVE">
+	<message xml:lang="en">Generate backup files</message>
+	<message xml:lang="fr">Produire des fichiers de sauvegarde</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>

@@ -29,8 +29,13 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "application.h"
+
 #define THOT_EXPORT
 #include "platform_tv.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "edit_tv.h"
+
 #include "applicationapi_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
@@ -1067,7 +1072,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
   InitEnviron : initialize the standard environment (i.e global	
   variables) with values stored in the registry.			
   ----------------------------------------------------------------------*/
-static void         InitEnviron ()
+static void InitEnviron ()
 {
    char *pT;
    char *Thot_Sys_Sch;
@@ -1075,12 +1080,14 @@ static void         InitEnviron ()
 
    /* default values for various global variables */
    FirstCreation = FALSE;
-   CurSaveInterval = 0;
-   pT = TtaGetEnvString ("AUTOSAVE");
+   DocBackUpInterval = 0;
+   pT = TtaGetEnvString ("AUTO_SAVE");
    if (pT != NULL)
-     CurSaveInterval = atoi (pT);
-   if (CurSaveInterval <= 0)
-     CurSaveInterval = DEF_SAVE_INTVL;
+     {
+       DocBackUpInterval = atoi (pT);
+       if (DocBackUpInterval <= 0)
+	 DocBackUpInterval = 0;
+     }
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
 #ifndef _WINDOWS

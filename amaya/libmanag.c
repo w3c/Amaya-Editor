@@ -1141,8 +1141,6 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   ResetStop (newLibraryDoc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (newLibraryDoc);
-  /* disable auto save */
-  TtaSetDocumentBackUpInterval (newLibraryDoc, 0);
   /* Set the document charset */
   TtaSetDocumentCharset (newLibraryDoc, ISO_8859_1, FALSE);
   strcpy (charsetName , "iso-8859-1");
