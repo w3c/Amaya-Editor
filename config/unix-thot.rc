@@ -22,7 +22,7 @@ LANG=en
 [amaya]
 HOME_PAGE=
 ENABLE_CACHE=Yes
-THOTSYSSCH=$(THOTDIR)/amaya
+THOTSYSSCH=$(THOTDIR)/amaya:$(THOTDIR)/annotlib
 LANG=en_US
 # AMAYA_PLUGIN_DIR=$(THOTDIR)/plugintest/$(MACHINE)
 AMAYA_APPLET_DIR=$(THOTDIR)/classes/org/w3c/amaya/applets
