@@ -61,3 +61,8 @@ Shift Ctrl <Key>P:	CreateMROW()
 Shift Ctrl <Key>S:	CreateMSUBSUP()
 Shift Ctrl <Key>U:	CreateMUNDEROVER()
 
+Alt <Key>+:	ZoomIn()
+Alt <Key>-:	ZoomOut()
+Alt <Key>r:	Reload()
+Alt <Key>x:     AmayaClose()
+

@@ -121,6 +121,7 @@ Multi_Key;
  */
 static Multi_Key    mk_tab[] =
 {
+#ifdef IV
 /* Remaining ISO-latin-1 sequences */
    {XK_O, XK_e, XK_multiply},	/* Oelig */
    {XK_O, XK_E, XK_multiply},	/* Oelig */
@@ -339,6 +340,79 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
    {0, 0, 0},
 };
+#else /* IV */
+   {XK_A, XK_grave, XK_Agrave},	/* Agrave */
+   {XK_A, XK_acute, XK_Agrave},	/* Aacute */
+   {XK_A, XK_apostrophe, XK_Aacute},	/* Aacute */
+   {XK_A, XK_asciicircum, XK_Acircumflex},	/* Acircumflex */
+   {XK_A, XK_asciitilde, XK_Atilde},	/* Atilde */
+   {XK_A, XK_quotedbl, XK_Adiaeresis},	/* Adiaeresis */
+   {XK_A, XK_asterisk, XK_Aring},	/* Aring */
+   {XK_a, XK_grave, XK_agrave},	/* agrave */
+   {XK_a, XK_acute, XK_agrave},	/* aacute */
+   {XK_a, XK_apostrophe, XK_aacute},	/* aacute */
+   {XK_a, XK_asciicircum, XK_acircumflex},	/* acircumflex */
+   {XK_a, XK_asciitilde, XK_atilde},	/* atilde */
+   {XK_a, XK_quotedbl, XK_adiaeresis},	/* adiaeresis */
+   {XK_a, XK_asterisk, XK_aring},	/* aring */
+   {XK_C, XK_grave, XK_Ccedilla},	/* Ccedilla */
+   {XK_C, XK_acute, XK_Ccedilla},	/* Ccedilla */
+   {XK_c, XK_grave, XK_ccedilla},	/* ccedilla */
+   {XK_c, XK_acute, XK_ccedilla},	/* ccedilla */
+   {XK_E, XK_grave, XK_Egrave},	/* Egrave */
+   {XK_E, XK_acute, XK_Eacute},	/* Eacute */
+   {XK_E, XK_apostrophe, XK_Eacute},	/* Eacute */
+   {XK_E, XK_asciicircum, XK_Ecircumflex},	/* Ecircumflex */
+   {XK_E, XK_quotedbl, XK_Ediaeresis},	/* Ediaeresis */
+   {XK_e, XK_grave, XK_egrave},	/* egrave */
+   {XK_e, XK_acute, XK_eacute},	/* eacute */
+   {XK_e, XK_apostrophe, XK_eacute},	/* eacute */
+   {XK_e, XK_asciicircum, XK_ecircumflex},	/* ecircumflex */
+   {XK_e, XK_quotedbl, XK_ediaeresis},	/* ediaeresis */
+   {XK_I, XK_grave, XK_Igrave},	/* Igrave */
+   {XK_I, XK_acute, XK_Iacute},	/* Iacute */
+   {XK_I, XK_apostrophe, XK_Iacute},	/* Iacute */
+   {XK_I, XK_asciicircum, XK_Icircumflex},	/* Icircumflex */
+   {XK_I, XK_quotedbl, XK_Idiaeresis},	/* Idiaeresis */
+   {XK_i, XK_grave, XK_igrave},	/* igrave */
+   {XK_i, XK_acute, XK_iacute},	/* iacute */
+   {XK_i, XK_apostrophe, XK_iacute},	/* iacute */
+   {XK_i, XK_asciicircum, XK_icircumflex},	/* icircumflex */
+   {XK_i, XK_quotedbl, XK_idiaeresis},	/* idiaeresis */
+   {XK_N, XK_asciitilde, XK_Ntilde},	/* Ntilde */
+   {XK_n, XK_asciitilde, XK_ntilde},	/* ntilde */
+   {XK_O, XK_grave, XK_Ograve},	/* Ograve */
+   {XK_O, XK_acute, XK_Oacute},	/* Oacute */
+   {XK_O, XK_apostrophe, XK_Ooblique},	/* Ooblique */
+   {XK_O, XK_asciicircum, XK_Ocircumflex},	/* Ocircumflex */
+   {XK_O, XK_asciitilde, XK_Otilde},	/* Otilde */
+   {XK_O, XK_quotedbl, XK_Odiaeresis},	/* Odiaeresis */
+   {XK_o, XK_grave, XK_ograve},	/* ograve */
+   {XK_o, XK_acute, XK_oacute},	/* oacute */
+   {XK_o, XK_apostrophe, XK_oslash},	/* oslash */
+   {XK_o, XK_asciicircum, XK_ocircumflex},	/* ocircumflex */
+   {XK_o, XK_asciitilde, XK_otilde},	/* otilde */
+   {XK_o, XK_minus, XK_otilde},	/* otilde */
+   {XK_o, XK_quotedbl, XK_odiaeresis},	/* odiaeresis */
+   {XK_U, XK_grave, XK_Ugrave},	/* Ugrave */
+   {XK_U, XK_acute, XK_Uacute},	/* Uacute */
+   {XK_U, XK_apostrophe, XK_Uacute},	/* Uacute */
+   {XK_U, XK_asciicircum, XK_Ucircumflex},	/* Ucircumflex */
+   {XK_U, XK_quotedbl, XK_Udiaeresis},	/* Udiaeresis */
+   {XK_u, XK_grave, XK_ugrave},	/* ugrave */
+   {XK_u, XK_acute, XK_uacute},	/* uacute */
+   {XK_u, XK_apostrophe, XK_uacute},	/* uacute */
+   {XK_u, XK_asciicircum, XK_ucircumflex},	/* ucircumflex */
+   {XK_u, XK_quotedbl, XK_udiaeresis},	/* udiaeresis */
+   {XK_Y, XK_acute, XK_Yacute},	/* Yacute */
+   {XK_Y, XK_apostrophe, XK_Yacute},	/* Yacute */
+   {XK_y, XK_acute, XK_yacute},	/* yacute */
+   {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
+   {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
+   {0, 0, 0},
+};
+#endif /* IV */
+
 
 #define NB_MK (sizeof(mk_tab) / sizeof(Multi_Key))
 
@@ -404,15 +478,14 @@ ThotComposeStatus  *status;	/* not implemented */
     }
   else if (state == LockMask)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
-  else if (state == Mod1Mask)
+  else if (state == Mod3Mask)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-  else if (state == (ShiftMask | Mod1Mask))
+  else if (state == (ShiftMask | Mod3Mask))
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
   else if ((state & (dpy->mode_switch | ShiftMask)) == (dpy->mode_switch | ShiftMask))
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 3];
   else if ((state & dpy->mode_switch) == (state & dpy->mode_switch))
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
-
   if (keysym != NULL)
     *keysym = sym;
   if (sym != NoSymbol)
@@ -554,7 +627,8 @@ void                TtaInstallMultiKey ()
   /* load the current keyboard mapping */
   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
   keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
-				(TtaMaxKeyCode - TtaMinKeyCode + 1), &keysymperkeycode);
+				TtaMaxKeyCode - TtaMinKeyCode + 1,
+				&keysymperkeycode);
   if ((int) keymap == BadValue)
     {
       fprintf (stderr, "XGetKeyboardMapping failed : BadValue\n");
@@ -600,7 +674,7 @@ void                TtaInstallMultiKey ()
    * WARNING, SunOS and Solaris rule :-( :
    * a keysym placed next to a Keypad key will be ignored , exemple :
    *    KP_7 Home KP_7 adiaresis
-   * sending an event with this keycode and the <Mod1> + <Shift> state
+   * sending an event with this keycode and the <Mod3> + <Shift> state
    * won't generate the expected adiaresis !
    * We also need to avoid putting new keysyms on key mapped to a modifier
    */
@@ -714,12 +788,12 @@ KeySym              keysym;
 	    case 2:
 	      /* Modified key, standard */
 	      ev->keycode = keycode;
-	      ev->state = Mod1Mask;
+	      ev->state = Mod3Mask;
 	      break;
 	    case 3:
 	      /* Here comes the trouble, Modified key, non-standard */
 	      ev->keycode = keycode;
-	      ev->state = Mod1Mask | ShiftMask;
+	      ev->state = Mod3Mask | ShiftMask;
 	      break;
 	    default:
 	      fprintf (stderr, "TtaGetIsoKeysym :internal error, index too big\n");
@@ -735,9 +809,10 @@ KeySym              keysym;
  * a multiple sequence of event to produce the corresponding
  * keysym.
  */
-static int          mk_state = 0;
-static KeySym       previous_keysym;
-static unsigned char previous_value = 0;
+static int                 mk_state = 0;
+static KeySym              previous_keysym;
+static unsigned char       previous_value = 0;
+static unsigned int        previous_state = 0;
 
 /*----------------------------------------------------------------------
    TtaHandleMultiKeyEvent
@@ -771,24 +846,25 @@ ThotEvent             *event;
    int                 index;
    int                 ret;
 
-   /* save the current values, mouse status bits of the state are ignored */
-   state = event->xkey.state & (ShiftMask | LockMask | ControlMask | Mod1Mask);
+   /* control, alt and mouse status bits of the state are ignored */
+   state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
+   if (event->xkey.state != state)
+     {
+       /* control, alt and mouse status bits of the state are not Multikeys */
+       mk_state = 0;
+       return (1);
+     }
    keycode = event->xkey.keycode;
-
    ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
    if (ret == 0)
-     {
-	state2 = event->xkey.state;
-	event->xkey.state &= ShiftMask;
-	ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
-	event->xkey.state = state2;
-     }
+      return (1);
 
 #ifdef DEBUG_MULTIKEY
    fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n", keycode, ret, state, KS);
 #endif
 
-   /* Deal with Keysym definition by typing <Alt_R>#number_of_iso_char */
+#ifdef IV
+   /* Deal with Keysym definition by typing <AltGraph>#number_of_iso_char */
    if ((mk_state == 1 && KS >= XK_0 && KS <= XK_9) ||
        mk_state == 3 || mk_state == 4)
      {
@@ -796,22 +872,13 @@ ThotEvent             *event;
 	  {
 	     if (mk_state == 1)
 		mk_state = 2;
-	     /*
-	      * It's a char of the octal string.
-	      */
-#ifdef DEBUG_MULTIKEY
-	     fprintf (stderr, "      inserting by code\n");
-#endif
+	     /* It's a char of the octal string */
 	     previous_value *= 8;
 	     previous_value += KS - XK_0;
 
 	     /* Octal number cannot be encoded on more than 3 char */
 	     if (mk_state == 4)
 	       {
-#ifdef DEBUG_MULTIKEY
-		  fprintf (stderr, "      inserting code \\%03o : '%c'\n",
-			   previous_value, previous_value);
-#endif
 		  mk_state = 0;
 		  TtaGetIsoKeysym (event, previous_value);
 		  return (1);
@@ -827,10 +894,6 @@ ThotEvent             *event;
 	      * Simulate an intermediate event for previous char
 	      * and continue.
 	      */
-#ifdef DEBUG_MULTIKEY
-	     fprintf (stderr, "      inserting code \\%03o : '%c'\n",
-		      previous_value, previous_value);
-#endif
 	     TtaGetIsoKeysym (event, previous_value);
 	     XtDispatchEvent (event);
 	     event->xkey.state = state;
@@ -841,31 +904,19 @@ ThotEvent             *event;
    else
       previous_value = 0;
 
-   if (KS == XK_Multi_key || KS == XK_Alt_R || KS == XK_Mode_switch)
+   if (KS == XK_Multi_key || KS == XK_Mode_switch)
      {
 	/* start of a compose sequence using the Compose key */
-#ifdef DEBUG_MULTIKEY
-	fprintf (stderr, "Start of compose sequence\n");
-#endif
 	mk_state = 1;
 	return (0);
      }
 
-   if (ret == 0)
-      return (1);
    if (mk_state == 2)
      {
-
 	/*
 	 * The have already read the character modified by compose. 
 	 * We look for the result in the list. 
 	 */
-
-#ifdef DEBUG_MULTIKEY
-	fprintf (stderr, "      Multikey : <Alt>%c %c\n",
-		 previous_keysym, KS);
-#endif
-
 	mk_state = 0;
 	for (index = 0; index < NB_MK; index++)
 	   if ((mk_tab[index].c == previous_keysym) && (mk_tab[index].m == KS))
@@ -874,11 +925,6 @@ ThotEvent             *event;
 		 * The corresponding sequence is found. 
 		 * Generation of the corresponding character
 		 */
-
-#ifdef DEBUG_MULTIKEY
-		fprintf (stderr, "      mapped to %c\n", mk_tab[index].r);
-#endif
-
 		TtaGetIsoKeysym (event, mk_tab[index].r);
 		return (1);
 	     }
@@ -887,11 +933,6 @@ ThotEvent             *event;
 	 * The corresponding sequence does not exist.
 	 * Generation of the character gotten (dead keys).
 	 */
-
-#ifdef DEBUG_MULTIKEY
-	fprintf (stderr, "      not mapped !\n");
-#endif
-
 	TtaGetIsoKeysym (event, previous_value);
 	XtDispatchEvent (event);
 	event->xkey.state = state;
@@ -902,15 +943,63 @@ ThotEvent             *event;
    if (mk_state == 1)
      {
 	/* First key of a compose sequence ... */
-#ifdef DEBUG_MULTIKEY
-	fprintf (stderr, "      first of the sequence: '%c'\n", KS);
-#endif
 	/* Memorize the first element and the fact that the state was changed */
 	previous_keysym = KS;
+	previous_state = state;
 	mk_state++;
 	return (0);
      }
    return (1);
+
+#else /* IV */
+
+   if (mk_state == 1)
+     {
+       /* we have already read the stressed character */ 
+       /* We look for the result in the list */
+#ifdef DEBUG_MULTIKEY
+       fprintf (stderr, " Multikey : %c %c", previous_keysym, KS);
+#endif
+       mk_state = 0;
+       for (index = 0; index < NB_MK; index++)
+	 if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == KS))
+	   {
+	     /*
+	      * The corresponding sequence is found. 
+	      * Generation of the corresponding character
+	      */
+	     
+#ifdef DEBUG_MULTIKEY
+	     fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
+#endif
+	     
+	     TtaGetIsoKeysym (event, mk_tab[index].r);
+	     return (1);
+	   }
+       /* in other cases keep the first character */
+       event->xkey.keycode = previous_value;
+       event->xkey.state = previous_state;
+       return (1);
+     }
+   else if (KS == XK_grave ||
+	    KS == XK_acute ||
+	    KS == XK_apostrophe ||
+	    KS == XK_asciicircum ||
+	    KS == XK_asciitilde ||
+	    KS == XK_quotedbl ||
+	    KS == XK_asterisk)
+     {
+       /* start of a compose sequence */
+       mk_state = 1;
+       previous_keysym = KS;
+       previous_value = keycode;
+       previous_state = state;
+       return (0);
+     }
+   else
+     return (1);
+   
+#endif /* IV */
 }
 #endif /* !_WINDOWS */
 

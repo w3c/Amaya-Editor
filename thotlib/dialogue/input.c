@@ -542,44 +542,39 @@ ThotEvent             *event;
 
 #endif /* __STDC__ */
 {
-   int                 i, status;
+   int                 status;
    int                 PicMask;
    int                 frame;
+   unsigned int        state, save;
    unsigned char       string[2];
    ThotComposeStatus      ComS;
-   KeySym              KS, KS1;
+   KeySym              KS;
 
    frame = GetWindowFrame (event->xany.window);
    if (frame > MAX_FRAME)
       frame = 0;
 
-   i = event->xkey.state;
-   if (Automata_current == NULL)
-     {
-	status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
-	if (!status)
-	  {
-	     event->xkey.state = i & (ShiftMask);
-	     status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS1, &ComS);
-	     if (status || KS == 0)
-		KS = KS1;
-	  }
-     }
+   status = 0;
+   /* control, alt and mouse status bits of the state are ignored */
+   state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
+   if (event->xkey.state == state)
+     status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
    else
      {
-	/* On est entre dans l'automate, pas d'interpretation des modifieurs */
-	event->xkey.state = i & ShiftMask;
-	status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
+       save = event->xkey.state;
+       event->xkey.state = state;
+       state = save;
+       status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
      }
 
    PicMask = 0;
-   if (i & ShiftMask)
+   if (state & ShiftMask)
       PicMask |= THOT_MOD_SHIFT;
-   if (i & LockMask)
+   if (state & LockMask)
       PicMask |= THOT_MOD_SHIFT;
-   if (i & ControlMask)
+   if (state & ControlMask)
       PicMask |= THOT_MOD_CTRL;
-   if (i & Mod1Mask || i & Mod2Mask || i & Mod4Mask)
+   if (state & Mod1Mask || state & Mod4Mask)
       PicMask |= THOT_MOD_ALT;
 
    ThotInput (frame, &string[0], status, PicMask, KS);
@@ -603,16 +598,17 @@ int                 key;
 
 #endif /* __STDC__ */
 {
+   KEY                *ptr;
+   Document            document;
+   View                view;
    int                 value;
    int                 modtype;
    int                 command;
-   KEY                *ptr;
-   boolean             found;
-   Document            document;
-   View                view;
 #  ifdef _WINDOWS
    BOOL                endOfSearch = FALSE;
 #  endif /* _WINDOWS */
+   boolean             found, UPPERlower;
+
    if (frame > MAX_FRAME)
       frame = 0;
 
@@ -699,18 +695,38 @@ int                 key;
                          ptr = ptr->K_Other;
              }
 #            else  /* !_WINDOWS */
-             while (!found && ptr != NULL)
-                   if (ptr->K_EntryCode == key) {
-                      /* On entre dans un automate */
-                      found = TRUE;
-                      Automata_current = ptr->K_Next;
-                      if (Automata_current == NULL) {
+	     UPPERlower = FALSE;
+             while (!found && (ptr != NULL || !UPPERlower))
+	       {
+		 if (ptr == NULL && !UPPERlower)
+		   {
+		     /* try other upper/lower list */
+		     UPPERlower = TRUE;
+		     if (ptr == Automata_CTRL)
+		       ptr = Automata_ctrl;
+		     else if (ptr == Automata_ctrl)
+		       ptr = Automata_CTRL;
+		     else if (ptr == Automata_ALT)
+		       ptr = Automata_alt;
+		     else if (ptr == Automata_alt)
+		       ptr = Automata_ALT;
+		   }
+
+		 if (ptr->K_EntryCode == key)
+		   {
+		     /* On entre dans un automate */
+		     found = TRUE;
+		     Automata_current = ptr->K_Next;
+		     if (Automata_current == NULL)
+		       {
                          /* il s'agit d'une valeur definie a premier niveau */
                          value = (unsigned char) ptr->K_Value;
                          command = ptr->K_Command;
-                      }
-                   } else
-                         ptr = ptr->K_Other;
+		       }
+                   }
+		 else
+		   ptr = ptr->K_Other;
+	       }
 #            endif /* _WINDOWS */
         }
    }
@@ -1043,7 +1059,7 @@ char               *appliname;
 		      mod1 = THOT_MOD_SHIFT;
 		      /* copie 1er modifieur */
 		      strcpy (equiv, "Shift");
-		      strcat (equiv, "+");
+		      strcat (equiv, " ");
 		      strcat (line, "Shift");
 		      strcat (line, " ");
 		      /* Lecture enventuelle d'un deuxieme modifieur */
@@ -1061,7 +1077,7 @@ char               *appliname;
 		      mod1 += THOT_MOD_CTRL;
 		      /* copie 2eme modifieur */
 		      strcat (equiv, "Ctrl");
-		      strcat (equiv, "+");
+		      strcat (equiv, " ");
 		      strcat (line, "Ctrl");
 		      strcat (line, " ");
 		      /* Lecture de la cle */
@@ -1073,7 +1089,7 @@ char               *appliname;
 		      mod1 += THOT_MOD_ALT;
 		      /* copie 2eme modifieur */
 		      strcat (equiv, "Alt");
-		      strcat (equiv, "+");
+		      strcat (equiv, " ");
 		      strcat (line, "Alt");
 		      strcat (line, " ");
 		      /* Lecture de la cle */
@@ -1125,7 +1141,7 @@ char               *appliname;
 			  mod2 = THOT_MOD_SHIFT;
 			  /* copie du 2eme modifieur */
 			  strcat (equiv, "Shift");
-			  strcat (equiv, "+");
+			  strcat (equiv, " ");
 			  strcat (line, "Shift");
 			  strcat (line, " ");
 			  /* Lecture enventuelle d'un deuxieme modifieur */
@@ -1143,7 +1159,7 @@ char               *appliname;
 			  mod2 += THOT_MOD_CTRL;
 			  /* copie 2eme modifieur */
 			  strcat (equiv, "Ctrl");
-			  strcat (equiv, "+");
+			  strcat (equiv, " ");
 			  strcat (line, "Ctrl");
 			  strcat (line, " ");
 			  /* copie de la cle */
@@ -1157,7 +1173,7 @@ char               *appliname;
 			  mod2 += THOT_MOD_ALT;
 			  /* copie 2eme modifieur */
 			  strcat (equiv, "Alt");
-			  strcat (equiv, "+");
+			  strcat (equiv, " ");
 			  strcat (line, "Alt");
 			  strcat (line, " ");
 			  /* copie de la cle */
