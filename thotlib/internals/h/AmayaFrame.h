@@ -124,23 +124,18 @@ public:
   void SwapBuffers();
 #endif // #ifdef _GL
 
+  void OnClose(wxCloseEvent& event);
+
+protected:
+  DECLARE_EVENT_TABLE()
   void OnScrollLineUp( wxScrollEvent& event );
   void OnScrollLineDown( wxScrollEvent& event );
   void OnScroll( wxScrollEvent& event );
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
-  void OnClose(wxCloseEvent& event);
   void OnIdle( wxIdleEvent& event );
   void OnContextMenu( wxContextMenuEvent & event );
-
-#if 0
-  void OnText( wxCommandEvent& event );
-  void OnKeyDown( wxKeyEvent& event );
-  void OnKeyUp( wxKeyEvent& event );
-#endif /* 0 */
-
-protected:
-  DECLARE_EVENT_TABLE()
+  void OnKeyDown(wxKeyEvent& event);
   
   int          m_FrameId;        // amaya frame id
   bool         m_IsActive;

@@ -15,6 +15,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+  #include "wx/panel.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -55,6 +56,7 @@
   #include "AmayaCallback.h"
   #include "appdialogue_wx.h"
   #include "message_wx.h"
+  #include "AmayaPopupList.h"
 #endif /* _WX */
 
 #define THOT_EXPORT
@@ -1760,11 +1762,12 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
    des entre'es du menu.                                              
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
+   ----
+   This dialog is used when the user click on a <select> element (HTML formulary)
   ----------------------------------------------------------------------*/
 void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 			char *text, char *equiv, ThotBool multipleOptions, char button)
 {
-#if defined (_WINGUI) || defined (_GTK)
   register int        count;
   register int        index;
   register int        ent;
@@ -1791,6 +1794,11 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   ThotWidget          wlabel;  
   ThotWidget          menu;  
 #endif  /* _GTK */
+
+#ifdef _WX
+  char                menu_item [1024];
+  ThotWidget          menu = NULL;
+#endif /* _WX */
 
   equiv_item[0] = 0;
   if (ref == 0)
@@ -1864,6 +1872,10 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       else
 	listBox = NULL;
 #endif /* _WINGUI */
+#ifdef _WX
+      menu = (ThotWindow)new AmayaPopupList( parent, parent->ScreenToClient(wxGetMousePosition()));
+      ((AmayaPopupList*)menu)->SetSize( -1, height * 20 );
+#endif /* _WX */
 #ifdef _GTK      
       menu =  gtk_window_new (GTK_WINDOW_POPUP);
       /* signals */
@@ -1975,6 +1987,11 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 		    SendMessage (listBox, LB_INSERTSTRING, i, (LPARAM) &text[index]);
 		    w = (ThotWidget) i;
 #endif /* _WINGUI */
+#ifdef _WX
+		    sprintf (menu_item, "%s", &text[index + 1]);
+		    ((AmayaPopupList *)menu)->Append(TtaConvMessageToWX(menu_item));
+		    w = (ThotWidget) i;
+#endif /* _WX */
 #ifdef _GTK        
 		    sprintf (menu_item, "%s", &text[index + 1]);
 		    /* \t doesn't mean anything to gtk... to we align ourself*/
@@ -2102,7 +2119,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	  gtk_widget_show (GTK_WIDGET (gtklist)); 
 	}
 #endif /* _GTK */
-#endif /* _WINGUI || GTK*/
 }
 
 /*----------------------------------------------------------------------
@@ -3903,7 +3919,7 @@ void TtaDestroyDialogue (int ref)
 #endif /* _GTK */
 
 #ifdef _WX
-	if (catalogue->Cat_Type == CAT_DIALOG)
+	if (catalogue->Cat_Type == CAT_DIALOG || catalogue->Cat_Type == CAT_SCRPOPUP)
 	  if (catalogue->Cat_Widget)
 	    catalogue->Cat_Widget->Destroy();
 #endif /* #ifdef _WX */
@@ -5912,6 +5928,11 @@ void TtaSetDialoguePosition ()
    gdk_window_get_pointer ((GdkWindow *)(gdk_window_get_toplevels()->data),
 			  &ShowX,  &ShowY, &flag_tmp);
 #endif /* _GTK */
+#ifdef _WX
+   wxPoint p = wxGetMousePosition();
+   ShowX = p.x;
+   ShowY = p.y;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -5922,10 +5943,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifdef _WINGUI
   POINT               curPoint;
 #endif  /* _WINGUI */
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
   int                 n;  
   ThotBool            usedoubleclick;  
-#endif /* _GTK */
+#endif /* _GTK || _WX */
   ThotWidget          w;
   struct Cat_Context *catalogue;
 
@@ -5952,21 +5973,50 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 
 #ifdef _WX
   if (catalogue->Cat_Type == CAT_DIALOG)
-    if (catalogue->Cat_Widget)
-      {
-	/* Faut-il invalider un TtaShowDialogue precedent */
-	TtaAbortShowDialogue ();
-	/* Memorise qu'un retour sur le catalogue est attendu et */
-	/* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
-	if (!remanent)
-	  {
-	    ShowReturn = 1;
-	    ShowCat = catalogue;
-	  }
-	
-	catalogue->Cat_Widget->Show();
-	catalogue->Cat_Widget->Raise();
-      }
+    {
+      if (catalogue->Cat_Widget)
+	{
+	  /* Faut-il invalider un TtaShowDialogue precedent */
+	  TtaAbortShowDialogue ();
+	  /* Memorise qu'un retour sur le catalogue est attendu et */
+	  /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
+	  if (!remanent)
+	    {
+	      ShowReturn = 1;
+	      ShowCat = catalogue;
+	    }
+	  
+	  catalogue->Cat_Widget->Show();
+	  catalogue->Cat_Widget->Raise();
+	}
+    }
+  else if (catalogue->Cat_Type == CAT_SCRPOPUP)
+    {
+      /* Faut-il invalider un TtaShowDialogue precedent */
+      TtaAbortShowDialogue ();
+      /* Memorise qu'un retour sur le catalogue est attendu et */
+      /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
+      if (!remanent)
+	{
+	  ShowReturn = 1;
+	  ShowCat = catalogue;
+	}
+
+      TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedoubleclick);
+      if (catalogue->Cat_Button == 'L')
+	{
+	  if (usedoubleclick)
+	    /* prevent to close immediately the popup menu */
+	    n = 3;
+	  else
+	    n = 1;
+	}
+      else
+	n = 3;
+
+      catalogue->Cat_Widget->Show();
+      catalogue->Cat_Widget->Raise();      
+    }      
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -6079,9 +6129,9 @@ void TtaWaitShowProcDialogue ()
 	DispatchMessage (&event);
       }
 #endif  /* _WINGUI */
-#if defined(_GTK)
+#if defined(_GTK) || defined(_WX)
    TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) */
+#endif /* #if defined(_GTK) | _WX */
 }
 
 /*----------------------------------------------------------------------

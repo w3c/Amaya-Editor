@@ -2877,8 +2877,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 	  event->type != GDK_2BUTTON_PRESS ||
 	  event->type != GDK_MOTION_NOTIFY || 
 	  (event->state & GDK_CONTROL_MASK ) == 0))
-    /* a TtaWaitShowDialogue in progress, don't change the selection */
-    return FALSE;
+    {
+      /* a TtaWaitShowDialogue in progress, don't change the selection */
+      return FALSE;
+    }
+  
   /* 
      Set the drawing area Focused
      By setting the focus on the text zone

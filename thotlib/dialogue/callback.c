@@ -960,7 +960,9 @@ ThotBool scr_popup_key_press (GtkWidget *w, GdkEventKey *ev,
       return TRUE;
     }
   else if (ev->keyval == GDK_Return || ev->keyval == GDK_space)
-    return (CallPopGTK (w, catalogue));
+    {
+      return (CallPopGTK (w, catalogue));
+    }
   else
     return FALSE;
 }

@@ -33,8 +33,8 @@
 
 BEGIN_EVENT_TABLE(AmayaTextGraber, wxTextCtrl)
     EVT_KEY_DOWN( AmayaTextGraber::OnKeyDown)
-    EVT_KEY_UP(   AmayaTextGraber::OnKeyUp)
-    EVT_CHAR(     AmayaTextGraber::OnChar)
+  //    EVT_KEY_UP(   AmayaTextGraber::OnKeyUp)
+  //    EVT_CHAR(     AmayaTextGraber::OnChar)
     EVT_TEXT(-1,  AmayaTextGraber::OnText)
 END_EVENT_TABLE()
 
@@ -96,7 +96,7 @@ void AmayaTextGraber::OnKeyUp(wxKeyEvent& event)
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaTextGraber
- *      Method:  OnText
+ *      Method:  OnKeyDown
  * Description:  manage special characteres : arrow keys, ESC ...
  *--------------------------------------------------------------------------------------
  */
@@ -139,6 +139,27 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
 	   )
     {
       wxLogDebug( _T("AmayaTextGraber::SpecialKey thot_keysym=%x"), thot_keysym );
+      // Call the generic function for key events management
+      ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
+    }
+  else if ( event.ControlDown() || event.AltDown() )
+    {      
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+      if (!event.ShiftDown())
+	{
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s((wxChar)thot_keysym);
+	  if (s.IsAscii())
+	    {
+	      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+	      s.MakeLower();
+	      wxChar c = s.GetChar(0);
+	      thot_keysym = (int)c;
+	    }
+	}
       // Call the generic function for key events management
       ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
     }

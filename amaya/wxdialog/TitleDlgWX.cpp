@@ -69,7 +69,6 @@ TitleDlgWX::~TitleDlgWX()
 void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
   wxString new_title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
-  wxLogDebug( _T("TitleDlgWX::OnConfirmButton - new_title=")+new_title );
 
   // allocate a temporary buffer to copy the 'const char *' new_title buffer 
   char buffer[512];

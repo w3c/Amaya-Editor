@@ -1373,10 +1373,10 @@ void SelectOneOption (Document doc, Element el)
 	   else
 	     {
 	       /* create the main menu */
-#if defined (_WINGUI) || defined (_GTK)
+#if defined (_WINGUI) || defined (_GTK) || defined(_WX)
 	       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 				  NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
-#endif /* WINDOWS || _GTK */
+#endif /* _WINGUI || _GTK || _WX */
 	       TtaFreeMemory (FormBuf);
 #ifdef _WINGUI
 	       if (multipleOptions)
@@ -1385,18 +1385,18 @@ void SelectOneOption (Document doc, Element el)
 		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu,
 					   i, TRUE, FrMainRef [ActiveFrame]);
 #endif /* _WINGUI */
-#if defined(_GTK)
+#if defined(_GTK) || defined(_WX)
 	       if (multipleOptions)
 		 for (i = 0; i < nbitems; i++)
 		   if (selected[i])         
 		     TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#endif /* #if defined(_GTK) */
+#endif /* #if defined(_GTK) || _WX */
 
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
-#if defined(_GTK)
+#if defined(_GTK)  || defined(_WX)
 	       TtaSetDialoguePosition ();
-#endif /* #if defined(_GTK) */
+#endif /* #if defined(_GTK) || _WX */
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
 	       TtaWaitShowProcDialogue ();
