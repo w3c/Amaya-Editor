@@ -720,7 +720,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	refcss = css;
     }
   else
-    refcss = css;
+    refcss = oldcss;
 
   if (tempfile[0] == EOS)
     /* cannot do more */
