@@ -1533,14 +1533,12 @@ int                 pattern;
 
    /* SelectClipRgn(TtDisplay, clipRgn); */
    if (pat == 0 && thick <= 0)
-	 if (pattern > 2)
-	 {
-	   /* draw an empty box instead of nothing */
-	   thick = 1;
-	   style = 0;
-	 }
-	 else
-      return;
+      if (pattern > 2) {
+         /* draw an empty box instead of nothing */
+         thick = 1;
+         style = 0;
+	  } else
+            return;
 
    if (width > thick + 1)
      width = width - thick - 1;
@@ -1551,8 +1549,13 @@ int                 pattern;
 
    WinLoadGC (TtDisplay, fg, RO);
    if (pat != 0) {
-      hBrush = CreateSolidBrush (ColorPixel (bg));
-      hOldBrush = SelectObject (TtDisplay, hBrush);
+      if (pattern != 2) {
+         hBrush = CreatePatternBrush (pat);
+         SelectObject (TtDisplay, hBrush);
+	  } else {
+             hBrush = CreateSolidBrush (ColorPixel (bg));
+             SelectObject (TtDisplay, hBrush);
+	  }
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
 		 hBrush = (HBRUSH) 0;
