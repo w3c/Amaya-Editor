@@ -1269,6 +1269,8 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
 			  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
 			}
+		      lastx = newx;
+		      lasty = newy;		      
 #else /* _GL */
 		      
 #ifdef _TRACE_GL_MOVEAPOINT
