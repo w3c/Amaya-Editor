@@ -3544,27 +3544,34 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
   ----------------------------------------------------------------------*/
 void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 {
-   PtrDocument         pDoc;
-   PtrHandlePSchema    pHd;
-   PresConstant       *pPr1;
-   PtrTtAttribute      pAt1;
-   AttributePres      *pRP1;
-   NumAttrCase        *pCa1;
-   int                 i, j;
-   int                 el, attr, val;
+  PtrDocument         pDoc;
+  PtrDocSchemasDescr  pPfS;
+  PtrHandlePSchema    pHd;
+  PresConstant       *pPr1;
+  PtrTtAttribute      pAt1;
+  AttributePres      *pRP1;
+  NumAttrCase        *pCa1;
+  int                 i, j;
+  int                 el, attr, val;
    
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parametre document correct */
-     {
-	pDoc = LoadedDocument[document - 1];
-	pSchemaStr = pDoc->DocSSchema;
-	pHd = FirstPSchemaExtension (pSchemaStr, pDoc, NULL);
-	while (pHd != NULL)
-	  {
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parametre document correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS)
+	{
+         pSchemaStr = (PtrSSchema) pPfS->PfSSchema;
+	 if (pSchemaStr)
+	   pHd = FirstPSchemaExtension (pSchemaStr, pDoc, NULL);
+	 else
+	   pHd = NULL;
+         while (pHd != NULL)
+	   {
 	     pSc1 = pHd->HdPSchema;
 	     if (pSc1 != NULL)
 	       {
@@ -3804,5 +3811,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 	       }
 	     pHd = pHd->HdNextPSchema;
 	  }
+          pPfS = pPfS->PfNext;
+	}
      }
 }
