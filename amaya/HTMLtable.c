@@ -1657,9 +1657,10 @@ static Element SpanningCellForRow (Element row, Element colhead,
 void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	      ThotBool generateEmptyCells, ThotBool check)
 {
-  Element             newcell, row, colhead, lastColhead, chead, pcell;
+  Element             newcell, row, colhead, lastColhead, chead, pcell,
+                      spannedCell;
   ElementType         elType;
-  AttributeType       attrTypeCspan, attrTypeRefC;
+  AttributeType       attrTypeCspan, attrTypeRspan, attrTypeRefC;
   Attribute           attr;
   DisplayMode         dispMode;
   char                ptr[100];
@@ -1672,6 +1673,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 
   elType = TtaGetElementType (cell);
   attrTypeCspan.AttrSSchema = elType.ElSSchema;
+  attrTypeRspan.AttrSSchema = elType.ElSSchema;
   attrTypeRefC.AttrSSchema = elType.ElSSchema;
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
@@ -1689,12 +1691,14 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
       elType.ElTypeNum = MathML_EL_TableRow;
       attrTypeRefC.AttrTypeNum = MathML_ATTR_MRef_column;
       attrTypeCspan.AttrTypeNum = MathML_ATTR_columnspan;
+      attrTypeRspan.AttrTypeNum = MathML_ATTR_rowspan_;
     }
   else
     {
       elType.ElTypeNum = HTML_EL_Table_row;
       attrTypeRefC.AttrTypeNum = HTML_ATTR_Ref_column;
       attrTypeCspan.AttrTypeNum = HTML_ATTR_colspan_;
+      attrTypeRspan.AttrTypeNum = HTML_ATTR_rowspan_;
     }
   /* get the enclosing row element */
   row = TtaGetTypedAncestor (cell, elType);
@@ -1854,8 +1858,8 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
       CurrentColumn = colhead;
       pcell = NULL;
       if (check)
-        /* is a cell already linked to this column head? */
 	{
+	  /* is a cell already linked to this column head? */
 	  attr = TtaGetAttribute (newcell, attrTypeRefC);
 	  if (attr)
 	    TtaRemoveAttribute (newcell, attr, doc);
@@ -1869,9 +1873,30 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	}
       /* link the new cell to the new colhead */
       LinkCellToColumnHead (newcell, colhead, doc, inMath);
-      if (check && pcell)
-	/* link the cell that was there before to its right column */
-	NewCell (pcell, doc, FALSE, FALSE, TRUE);
+      if (check)
+	{
+	  if (pcell)
+	    /* link the cell that was there before to its right column */
+	    NewCell (pcell, doc, FALSE, FALSE, TRUE);
+	  /* do the cell span vertically? */
+	  attr = TtaGetAttribute (newcell, attrTypeRspan);
+	  if (attr)
+	    {
+	      span = TtaGetAttributeValue (attr);
+	      while ((span > 1 || span == 0) && row)
+		{
+		  row = GetSiblingRow (row, FALSE, inMath);
+		  if (row)
+		    {
+		      spannedCell = GetCellFromColumnHead (row, colhead, inMath);
+		      if (spannedCell)
+			NewCell (spannedCell, doc, FALSE, FALSE, TRUE);
+		      if (span > 1)
+			span--;
+		    }
+		} 
+	    } 
+	}
     }
    TtaSetDisplayMode (doc, dispMode);
 }
