@@ -153,10 +153,11 @@ int                 fg;
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
-#  endif /* _WINDOWS */
-   /* Load the correct color */
+#  else  /* _WINDOWS */
     TtLineGC.thick = thick;
     TtLineGC.style = style;
+#  endif /* _WINDOWS */
+   /* Load the correct color */
     LoadColor (disp, RO, active, fg);
 }
 
