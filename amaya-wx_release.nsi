@@ -7,7 +7,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.0"
+  !define VERSION "9.0-pre"
   Name "Amaya WX ${VERSION}"
   OutFile "Amaya-WX-${VERSION}.exe"
   
@@ -15,10 +15,10 @@
   SetCompressor lzma
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\Amaya"
+  InstallDir "$PROGRAMFILES\AmayaWX"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\Amaya" ""
+  InstallDirRegKey HKCU "Software\AmayaWX" ""
 
 
 ;--------------------------------
@@ -37,7 +37,7 @@
 
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\Amaya" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\AmayaWX" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
 ;--------------------------------
@@ -49,7 +49,7 @@
 
   ;Start Menu Folder Page Configuration
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
-  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Amaya" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\AmayaWX" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
   !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
 
@@ -244,7 +244,7 @@ Section "Amaya" SecAmaya
   File fonts\*
 
   ;Store installation folder
-  WriteRegStr HKCU "Software\Amaya" "" $INSTDIR
+  WriteRegStr HKCU "Software\AmayaWX" "" $INSTDIR
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -302,7 +302,7 @@ Section "Uninstall"
   startMenuDeleteLoopDone:
 
 
-  DeleteRegKey /ifempty HKCU "Software\Amaya"
+  DeleteRegKey /ifempty HKCU "Software\AmayaWX"
 
 SectionEnd
 
