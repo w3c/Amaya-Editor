@@ -131,6 +131,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
 /* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
 /* thinsp   */ {8201, 1129}, /* thin space, U+2009 ISOpub */
+/*InvisibleComa*/ {8203, 1129}, /* thin space, U+2009 ISOpub */
 /* zwnj     */ {8204, 1063}, /* zero width non-joiner, U+200C NEW RFC 2070 */
 /* zwj      */ {8205, 1063}, /* zero width joiner, U+200D NEW RFC 2070 */
 /* lrm      */ {8206, 1063}, /* left-to-right mark, U+200E NEW RFC 2070 */
@@ -156,6 +157,8 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* rsaquo   */ {8250, 1062}, /* single right-pointing angle quotation mark, U+203A ISO proposed */
 /* oline    */ {8254, 1175}, /* overline = spacing overscore,  U+203E NEW */
 /* frasl    */ {8260, 164},  /* fraction slash, U+2044 NEW */
+/*ApplyFunction*/ {8289, 1129}, /* thin space, U+2009 ISOpub */
+/*InvisibleTimes*/ {8290, 1129}, /* thin space, U+2009 ISOpub */
 /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
 /*TripleDot */ {8411, 188},  /* tdot, U+20DB ISOtech */
 /* image    */ {8465, 193},  /* blackletter capital I = imaginary part,  U+2111 ISOamso */
@@ -3364,59 +3367,74 @@ void         GetFallbackCharacter (int code, USTRING fallback, Language* lang)
 }
 
 /*----------------------------------------------------------------------
-   PutNonISOlatin1Char     put a Unicode character in the input buffer.
+   PutNonISOlatin1Char     
+   Put a Unicode character belonging to an element in the input buffer.
   ----------------------------------------------------------------------*/
 static void      PutNonISOlatin1Char (int code, STRING prefix)
 {
    Language	 lang, l;
    ElementType	 elType;
-   Element	 elText;
+   Element	 elLeaf;
    AttributeType attrType;
    Attribute	 attr;
    CHAR_T	 buffer[MaxEntityLength+10];
 
-   if (ReadingAnAttrValue)
-     /* this entity belongs to an attribute value */
+   /* put the current content of the input buffer into the document */
+   TextToDocument ();
+   HTMLcontext.mergeText = FALSE;
+
+   /* try to find a fallback character */
+   l = HTMLcontext.language;
+   GetFallbackCharacter (code, buffer, &lang);
+
+   if (buffer[0] == '?' && prefix != EOS)
      {
-       /* Thot can't mix different languages in the same attribute value */
-       /* just discard that character */
-       ;
+       /* Numeric entity not found in the fallback table */
+       /* Create a symbol leaf */
+       elType.ElSSchema = DocumentSSchema;
+       elType.ElTypeNum = HTML_EL_SYMBOL_UNIT;
+       elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+       TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+       InsertElement (&elLeaf);
+       HTMLcontext.lastElementClosed = TRUE;
+       /* Put the symbol '?' into the new symbol leaf */
+       TtaSetGraphicsShape (elLeaf, buffer[0], HTMLcontext.doc);
+       /* Changes the wide char code associated with that symbol */
+       TtaSetSymbolCode (elLeaf, code, HTMLcontext.doc);
+       /* Make that leaf read-only */
+       TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
+       HTMLcontext.mergeText = FALSE;
      }
    else
-     /* this entity belongs to the element contents */
      {
-       /* put the current content of the input buffer into the document */
-       TextToDocument ();
-       HTMLcontext.mergeText = FALSE;
-       /* create a new text leaf */
+       /* Character found in the fallback table */
+       /* Create a new text leaf */
        elType.ElSSchema = DocumentSSchema;
        elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-       elText = TtaNewElement (HTMLcontext.doc, elType);
-       TtaSetElementLineNumber (elText, NumberOfLinesRead);
-       InsertElement (&elText);
+       elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+       TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+       InsertElement (&elLeaf);
        HTMLcontext.lastElementClosed = TRUE;
-       /* try to find a fallback character */
-       l = HTMLcontext.language;
-       GetFallbackCharacter (code, buffer, &lang);
        /* put that fallback character in the new text leaf */
-       TtaSetTextContent (elText, buffer, lang, HTMLcontext.doc);
+       TtaSetTextContent (elLeaf, buffer, lang, HTMLcontext.doc);
        HTMLcontext.language = l;
        /* make that text leaf read-only */
-       TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
+       TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
        /* associate an attribute EntityName with the new text leaf */
        attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_EntityName;
        attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elText, attr, HTMLcontext.doc);
+       TtaAttachAttribute (elLeaf, attr, HTMLcontext.doc);
        buffer[0] = '&';
        ustrcpy (&buffer[1], prefix);
        ustrcat (buffer, EntityName);
        ustrcat (buffer, TEXT(";"));
-       TtaSetAttributeText (attr, buffer, elText, HTMLcontext.doc);
+       TtaSetAttributeText (attr, buffer, elLeaf, HTMLcontext.doc);
        HTMLcontext.mergeText = FALSE;
      }
 }
 
+#ifdef LC
 /*----------------------------------------------------------------------
    PutAmpersandInDoc
    Put an '&' character in the document tree with an attribute
@@ -3424,10 +3442,10 @@ static void      PutNonISOlatin1Char (int code, STRING prefix)
   ----------------------------------------------------------------------*/
 static void         PutAmpersandInDoc ()
 {
-   ElementType         elType;
-   Element             elText;
-   AttributeType       attrType;
-   Attribute           attr;
+   ElementType      elType;
+   Element          elText;
+   AttributeType    attrType;
+   Attribute        attr;
 
    TextToDocument ();
    /* create a TEXT element for '&'*/
@@ -3445,45 +3463,46 @@ static void         PutAmpersandInDoc ()
    TtaAttachAttribute (elText, attr, HTMLcontext.doc);
    TtaSetAttributeValue (attr, HTML_ATTR_IntEntity_VAL_Yes_, elText, HTMLcontext.doc);
 }
+#endif /* LC */
 
 /*----------------------------------------------------------------------
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
-static void         EndOfEntity (CHAR_T c)
+static void      EndOfEntity (CHAR_T c)
 {
 
-   int           i, len;
-   Language	 lang;
-   ElementType	 elType;
-   Element	 elText;
-   AttributeType attrType;
-   Attribute	 attr;
-   CHAR_T	 buffer[MaxEntityLength+10];
+   int           i;
    CHAR_T        msgBuffer[MaxMsgLength];
-#define MAX_ENTITY_LENGTH 80
 
    EntityName[LgEntityName] = WC_EOS;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
      {
        /* the entity read matches the current entry of entity table */
        if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT(""));
+	 {
+	   if (ReadingAnAttrValue)
+	     {
+	       PutInBuffer ((char) 128);
+	       for (i = 0; i < LgEntityName; i++)
+		 PutInBuffer (EntityName[i]);
+	       PutInBuffer (';');
+	     }
+	   else
+	     PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT(""));
+	 }
        else
 	 PutInBuffer ((CHAR_T)XhtmlEntityTable[EntityTableEntry].charCode);
      }
    else
-      /* entity not in the table. Print an error message */
      {
-       if (ReadingAnAttrValue)
-	  PutInBuffer ('&');
-       else
-          PutAmpersandInDoc ();
+       /* entity not in the table. Print an error message */
+       PutInBuffer ((char) 128);
        for (i = 0; i < LgEntityName; i++)
-	  PutInBuffer (EntityName[i]);
+	 PutInBuffer (EntityName[i]);
        PutInBuffer (';');
        /* print an error message */
-       usprintf (msgBuffer, TEXT("Entity not supported\"&%s;\""), EntityName);
+       usprintf (msgBuffer, "Entity not supported\"&%s;\"", EntityName);
        ParseHTMLError (HTMLcontext.doc, msgBuffer);
      }
    LgEntityName = 0;
@@ -3493,94 +3512,97 @@ static void         EndOfEntity (CHAR_T c)
    EntityChar      A character belonging to a HTML entity has been
    read.
   ----------------------------------------------------------------------*/
-static void         EntityChar (unsigned char c)
+static void      EntityChar (unsigned char c)
 {
-   int           i, len;
+   int           i;
    ThotBool      OK, done, stop;
-   Language	 lang;
-   ElementType	 elType;
-   Element	 elText;
-   AttributeType attrType;
-   Attribute	 attr;
-   CHAR_T	 buffer[MaxEntityLength+10];
    CHAR_T        msgBuffer[MaxMsgLength];
-#define MAX_ENTITY_LENGTH 80
 
    done = FALSE;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
-      /* the entity name read so far matches the current entry of */
-      /* entity table */
+     /* the entity name read so far matches the current entry of */
+     /* entity table */
       /* does it also match the next entry? */
      {
-     OK = FALSE;
-     i = EntityTableEntry+1;
-     stop = FALSE;
-     do
-	{
-	if (ustrncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
-	   stop = TRUE;
-	else
-	   if (XhtmlEntityTable[i].charName[CharRank] < c)
-	      i++;
+       OK = FALSE;
+       i = EntityTableEntry+1;
+       stop = FALSE;
+       do
+	 {
+	   if (ustrncmp (EntityName, XhtmlEntityTable[i].charName, LgEntityName) != 0)
+	     stop = TRUE;
 	   else
-	      {
-	      stop = TRUE;
-	      if (XhtmlEntityTable[i].charName[CharRank] == c)
-		 OK = TRUE;
-	      }
-	}
-     while (!stop);     
-     if (!OK && !ReadingAnAttrValue)
-       {
-	 /* If we are not reading an attribute value, assume that semicolon is
-	    missing and put the corresponding char in the document content */
-	 EntityName[LgEntityName] = WC_EOS;
-	 if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	   PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT (""));
-	 else
-	   PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
-	 if (c != SPACE)
-	   /* print an error message */
-	   ParseHTMLError (HTMLcontext.doc, TEXT("Missing semicolon"));
-	 /* next state is the return state from the entity subautomaton, not
-	    the state computed by the automaton. In addition the character read
-	    has not been processed yet */
-	 NormalTransition = FALSE;
-	 currentState = returnState;
-	 /* end of entity */
-	 LgEntityName = 0;
-	 done = TRUE;
-       }
+	     if (XhtmlEntityTable[i].charName[CharRank] < c)
+	       i++;
+	     else
+	       {
+		 stop = TRUE;
+		 if (XhtmlEntityTable[i].charName[CharRank] == c)
+		   OK = TRUE;
+	       }
+	 }
+       while (!stop);     
+       if (!OK)
+	 {
+	   /* If we are not reading an attribute value, assume that semicolon is
+	      missing and put the corresponding char in the document content */
+	   EntityName[LgEntityName] = WC_EOS;
+	   if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
+	     {
+	       if (ReadingAnAttrValue)
+		 {
+		   PutInBuffer ((char) 128);
+		   for (i = 0; i < LgEntityName; i++)
+		     PutInBuffer (EntityName[i]);
+		   PutInBuffer (';');
+		 }
+	       else
+		 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT (""));
+	     }
+	   else
+	     PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
+	   if (c != SPACE)
+	     /* print an error message */
+	     ParseHTMLError (HTMLcontext.doc, "Missing semicolon");
+	   /* next state is the return state from the entity subautomaton, not
+	      the state computed by the automaton. In addition the character read
+	      has not been processed yet */
+	   NormalTransition = FALSE;
+	   currentState = returnState;
+	   /* end of entity */
+	   LgEntityName = 0;
+	   done = TRUE;
+	 }
      }
+
    if (!done)
      {
        while (XhtmlEntityTable[EntityTableEntry].charName[CharRank] < c
-	       && XhtmlEntityTable[EntityTableEntry].charCode != 0)
+	      && XhtmlEntityTable[EntityTableEntry].charCode != 0)
 	 EntityTableEntry++;
        if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] != c)
 	 OK = FALSE;
        else
-	 if (LgEntityName > 0 &&
-	     ustrncmp (EntityName,
-		       XhtmlEntityTable[EntityTableEntry].charName,
-		       LgEntityName) != 0)
-	   OK = FALSE;
-	 else
-	   {
-	     OK = TRUE;
-	     CharRank++;
-	     if (LgEntityName < MaxEntityLength - 1)
-	       EntityName[LgEntityName++] = c;
-	   }
+	 {
+	   if (LgEntityName > 0 &&
+	       ustrncmp (EntityName,
+			 XhtmlEntityTable[EntityTableEntry].charName,
+			 LgEntityName) != 0)
+	     OK = FALSE;
+	   else
+	     {
+	       OK = TRUE;
+	       CharRank++;
+	       if (LgEntityName < MaxEntityLength - 1)
+		 EntityName[LgEntityName++] = c;
+	     }
+	 }
        if (!OK)
 	 {
 	   /* the entity name read so far is not in the table */
 	   /* invalid entity */
 	   /* put the entity name in the buffer */
-	   if (ReadingAnAttrValue)
-	     PutInBuffer ('&');
-	   else
-	     PutAmpersandInDoc ();
+	   PutInBuffer ((char) 128);
 	   for (i = 0; i < LgEntityName; i++)
 	     PutInBuffer (EntityName[i]);
 	   /* print an error message only if it's not the first character
@@ -3591,7 +3613,7 @@ static void         EntityChar (unsigned char c)
 	       /* print an error message */
 	       EntityName[LgEntityName++] = c;
 	       EntityName[LgEntityName++] = WC_EOS;
-	       usprintf (msgBuffer, TEXT("Invalid entity \"&%s\""), EntityName);
+	       usprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
 	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	     }
 	   /* next state is the return state from the entity subautomaton,
@@ -3610,16 +3632,28 @@ static void         EntityChar (unsigned char c)
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-static void         EndOfDecEntity (CHAR_T c)
+static void      EndOfDecEntity (CHAR_T c)
 {
-   int              code;
+   int           code;
+   int           i;
 
    EntityName[LgEntityName] = WC_EOS;
    usscanf (EntityName, TEXT("%d"), &code);
    if (code > 255)
-      PutNonISOlatin1Char (code, TEXT ("#"));
+     {
+       if (ReadingAnAttrValue)
+	 {
+	   PutInBuffer ((char) 128);
+	   PutInBuffer ('#');
+	   for (i = 0; i < LgEntityName; i++)
+	     PutInBuffer (EntityName[i]);
+	   PutInBuffer (';');
+	 }
+       else
+	 PutNonISOlatin1Char (code, "#");
+     }
    else
-      PutInBuffer ((char)code);
+     PutInBuffer ((char)code);
    LgEntityName = 0;
 }
 
@@ -3635,29 +3669,29 @@ static void     DecEntityChar (char c)
     {
       /* the entity buffer is not full */
       if (c >= '0' && c <= '9')
-	 /* the character is a decimal digit */
-	 EntityName[LgEntityName++] = c;
+	/* the character is a decimal digit */
+	EntityName[LgEntityName++] = c;
       else
-	 /* not a decimal digit. assume end of entity */
-	 {
-	 if (c == '<')
+	/* not a decimal digit. assume end of entity */
+	{
+	  if (c == '<')
 	    /* accept start of tag as an end of entity */
 	    EndOfDecEntity (c);
-         else
+	  else
 	    {
-            PutInBuffer ('&');
-	    PutInBuffer ('#');
-	    for (i = 0; i < LgEntityName; i++)
-	       PutInBuffer (EntityName[i]);
-	    LgEntityName = 0;
-	    /* error message */
-	    ParseHTMLError (HTMLcontext.doc, TEXT("Invalid decimal entity"));
+	      PutInBuffer ('&');
+	      PutInBuffer ('#');
+	      for (i = 0; i < LgEntityName; i++)
+		PutInBuffer (EntityName[i]);
+	      LgEntityName = 0;
+	      /* error message */
+	      ParseHTMLError (HTMLcontext.doc, TEXT("Invalid decimal entity"));
 	    }
-	 /* next state is state 0, not the state computed by the automaton */
-	 /* and the character read has not been processed yet */
-	 NormalTransition = FALSE;
-	 currentState = 0;
-	 }
+	  /* next state is state 0, not the state computed by the automaton */
+	  /* and the character read has not been processed yet */
+	  NormalTransition = FALSE;
+	  currentState = 0;
+	}
     }
 }
 
@@ -3669,11 +3703,24 @@ static void     DecEntityChar (char c)
 static void         EndOfHexEntity (CHAR_T c)
 {
    int              code;
+   int              i;
 
    EntityName[LgEntityName] = WC_EOS;
    usscanf (EntityName, TEXT("%x"), &code);
    if (code > 255)
-      PutNonISOlatin1Char (code, TEXT ("#x"));
+     {
+       if (ReadingAnAttrValue)
+	 {
+	   PutInBuffer ((char) 128);
+	   PutInBuffer ('#');
+	   PutInBuffer ('x');
+	   for (i = 0; i < LgEntityName; i++)
+	     PutInBuffer (EntityName[i]);
+	   PutInBuffer (';');
+	 }
+       else
+	 PutNonISOlatin1Char (code, TEXT ("#x"));
+     }
    else
       PutInBuffer ((char) code);
    LgEntityName = 0;
@@ -3693,31 +3740,31 @@ static void     HexEntityChar (char c)
       if ((c >= '0' && c <= '9') ||
 	  (c >= 'a' && c <= 'f') ||
 	  (c >= 'A' && c <= 'F'))
-	 /* the character is a valid hexadecimal digit */
-	 EntityName[LgEntityName++] = c;
+	/* the character is a valid hexadecimal digit */
+	EntityName[LgEntityName++] = c;
       else
-	 {
-	 /* not an hexadecimal digit. Assume end of entity */
-	 if (c == '<')
+	{
+	  /* not an hexadecimal digit. Assume end of entity */
+	  if (c == '<')
 	    /* accept start of tag as the end of the entity */
 	    EndOfHexEntity (c);
-	 else
+	  else
 	    /* error */
 	    {
-            PutInBuffer ('&');
-	    PutInBuffer ('#');
-	    PutInBuffer ('x');
-	    for (i = 0; i < LgEntityName; i++)
-	       PutInBuffer (EntityName[i]);
-	    LgEntityName = 0;
-	    /* error message */
+	      PutInBuffer ('&');
+	      PutInBuffer ('#');
+	      PutInBuffer ('x');
+	      for (i = 0; i < LgEntityName; i++)
+		PutInBuffer (EntityName[i]);
+	      LgEntityName = 0;
+	      /* error message */
 	    ParseHTMLError (HTMLcontext.doc, TEXT("Invalid hexadecimal entity"));
 	    }
-	 /* next state is state 0, not the state computed by the automaton */
-	 /* and the character read has not been processed yet */
-	 NormalTransition = FALSE;
-	 currentState = 0;
-	 }
+	  /* next state is state 0, not the state computed by the automaton */
+	  /* and the character read has not been processed yet */
+	  NormalTransition = FALSE;
+	  currentState = 0;
+	}
     }
 }
 

@@ -8,8 +8,8 @@
 /*
  * Xml2thot.c
  *
- * Initializes and launches the Expat parser and processes all events sent
- * by Expat. It builds the Thot abstract tree corresponding to an XML file.
+ * Initializes and launches Expat parser and processes all the events it sent
+ * Builds the Thot abstract tree corresponding to the XML document.
  *
  * Authors: L. Carcone
  *          V. Quint 
@@ -749,13 +749,18 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
 {
    Language       lang;
    char           fallback[5];
+   char           bufName[10];
+   char           buffer[10];
    ElementType    elType;
    Element        elLeaf;
+   AttributeType  attrType;
+   Attribute	  attr;
+   int            len, i, j;
 
    GetFallbackCharacter ((int) wcharRead, fallback, &lang);
    if (fallback[0] == '?')
      {
-       /* The character is not found in the fallback table */
+       /* Character not found in the fallback table */
        /* Create a symbol leaf */
        elType = TtaGetElementType (XMLcontext.lastElement);
        elType.ElTypeNum = 3;
@@ -773,7 +778,7 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
      }
    else
      {
-       /* The character is found in the fallback table */
+       /* Character found in the fallback table */
        /* Create a new text leaf */
        elType = TtaGetElementType (XMLcontext.lastElement);
        elType.ElTypeNum = 1;
@@ -784,6 +789,25 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
        /* Put the fallback character into the new text leaf */
        TtaSetTextContent (elLeaf, fallback, lang, XMLcontext.doc);
        XMLcontext.mergeText = FALSE;
+       /* Associate an attribute EntityName with the new text leaf */
+       attrType.AttrSSchema = elType.ElSSchema;
+       if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	 attrType.AttrTypeNum = MathML_ATTR_EntityName;
+       else if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
+       else
+	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
+       attr = TtaNewAttribute (attrType);
+       TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
+       len = usprintf (buffer, "%d", (int) wcharRead);
+       i = 0;
+       bufName[i++] = (char) 128;
+       bufName[i++] = '#';
+       for (j = 0; j < len; j++)
+	 bufName[i++] = buffer[j];
+       buffer[i++] = ';';
+       buffer[i] = WC_EOS;
+       TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
      }
 }
 
@@ -2326,7 +2350,7 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 								    &srcbuf,
 								    UTF_8);
 	       i += nbBytesRead;
-	       if (wcharRead < 0x100)
+	       if (wcharRead <= 255)
 		 {
 		   /* It's an ISO-Latin1 character */
 		   charRead = (char) wcharRead;
