@@ -27,30 +27,30 @@ src="../Icons/up.gif"></a></p>
 <h2>Configuring Amaya</h2>
 <p>
 <strong>Amaya</strong> uses different configuration files to get initial
-values for global parameters, dialogue strings, shortcuts, windows size and
-windows position, user CSS. You can change the default values by creating or
+values for global parameters, dialogs, shortcuts, window size and position,
+user's style sheet, etc. You can change the default values by creating or
 updating the following configuration files:</p>
 <ul>
 <li>
 The <a name="registry">registry file</a> <strong>$HOME/.thotrc</strong> (Unix)
 or <strong>Thot/config/thot.rc</strong> (Windows)
 <p>
-This file  is used to define global parameters of Thot applications (Amaya is
-a Thot application). Inside this file, there's a section called
-<code>[amaya]</code> where are specified the configuration options concerning:
-<a href="#L138">the default home page</a>, <a href="#Specifying">the proxies
-</a><a>, </a><a href="#Network">the network timeouts</a>, <a href="#Cache">the
-cache</a>, <a href="#Multi-key"> the multi-key support</a>, <a
-href="#L139">default colors</a>, <a href="#Default">the default
-zoom-factor</a>,<a href="#L140"> the colors palette</a>, <a href="#L141">the
-dialogue language</a>, <a href="#Personnal">the personal dictionary</a>, and
-<a href="#L242"> the default printer command</a>.</p>
+This file  is used to define global parameters for Thot applications (Amaya is
+a Thot application). In this file, there's a section called
+<code>[amaya]</code> where the configuration options are specified for <a
+href="#L138">the default home page</a>, <a href="#Specifying">proxies</a><a>,
+</a><a href="#Network">network timeouts</a>, <a href="#Cache">cacheing</a>, <a
+href="#Multi-key"> multi-key support</a>, <a href="#L139">default colors</a>,
+<a href="#Default">default zoom-factor</a>,<a href="#L140"> colors
+palette</a>, <a href="#L141">dialogue language</a>, <a
+href="#Personnal">personal dictionary</a>, and <a href="#L242"> default
+printer command</a>.</p>
 </li>
 <li>
 The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
 (this file is specific to a Unix user) or
 <strong>Thot/config/amaya.keyboard</strong> (this file is the default for Unix
-users). or <strong>Thot/config/amaya.kb</strong> (this file is the default for
+users) or <strong>Thot/config/amaya.kb</strong> (this file is the default for
 Windows users).
 <p>
 This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
@@ -59,17 +59,17 @@ This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
 The <a name="HTML1">HTML configuration file</a>
 <strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
 <strong>Thot/amaya/HTMLconf</strong> (this file is the default for Unix or
-Windows users). This file defines <a href="#HTML">position</a> and the <a
-href="#HTML">size</a> of the Amaya document windows.
+Windows users). This file defines the <a href="#HTML">position</a> and the <a
+href="#HTML">size</a> of Amaya document windows.
 </li>
 <li>
-The standard User's Preference Styles are defined in the file
+The user's style sheet are defined in the file
 <strong>$HOME/.amaya.css</strong> (Unix) or
 <strong>Thot/amaya/amaya.css</strong> (Windows).
 </li>
 </ul>
 <p>
-N.B. These configuration files are loaded at runtime. If you change them,
+Note: These configuration files are loaded at runtime. If you change them,
 you'll need to quit and restart Amaya to take them into account.</p>
 
 <h3><a name="L138">Home Page</a></h3>
