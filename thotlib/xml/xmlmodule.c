@@ -49,6 +49,7 @@
 #include "constxml.h"
 #include "typexml.h"
 #include "parsexml_f.h"
+#include "xmlmodule_f.h"
 
 
 /* temporary pointer to parser prefixlist */

@@ -3391,6 +3391,9 @@ int                 itemID;
    int                 menu, submenu;
    int                 item;
    int                 action;
+#  ifdef _WINDOWS
+   HMENU               hMenu;
+#  endif /* _WINDOWS */
 
    /* Si les parametres sont invalides */
    if (document == 0 && view == 0)
@@ -3414,7 +3417,12 @@ int                 itemID;
 	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
 	      ref += submenu * MAX_MENU * MAX_ITEM;
+#      ifdef _WINDOWS
+       hMenu = GetMenu (TtaGetViewFrame (document, view));
+	   EnableMenuItem (hMenu, ref + item, MF_ENABLED);
+#      else  /* !_WINDOWS */
 	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
+#      endif /* _WINDOWS */
 	}
 }
 
