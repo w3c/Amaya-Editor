@@ -384,12 +384,14 @@ void TtaQuit ()
   TteFreeAllEventsList ();
   TtaFreeAllCatalogs ();
   ConfigFree ();
+#ifdef _GTK
 #ifdef _GL
   FreeAllPicCache ();
-  if ( DefaultGLFont ) gl_font_delete ( DefaultGLFont );
+  if (DefaultGLFont)
+	  gl_font_delete (DefaultGLFont);
 #endif /*_GL*/
-#ifdef _GTK
-  if ( DefaultFont ) gdk_font_unref ( DefaultFont );
+  if (DefaultFont)
+	  gdk_font_unref (DefaultFont);
 #endif /* _GTK */
 #endif /* NODISPLAY */
   FreeAll ();

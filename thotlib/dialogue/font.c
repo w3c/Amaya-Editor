@@ -672,7 +672,7 @@ int CharacterWidth (int c, PtrFont font)
 	    l = gl_font_char_width ((void *) font, 32);
 	}
       else
-	l = gl_font_char_width ((void *) font, c);
+	l = gl_font_char_width ((void *) font, (CHAR_T) c);
 #endif /* _GL */
     }
   return l;

@@ -257,7 +257,7 @@ void  EllipticSplit2 (int frame, int x, int y,
 		      double x1, double y1, 
 		     double x2, double y2, 
 		     double xradius, double yradius, 
-		     int Phi, int large, int sweep, void *mesh)
+		     double Phi, int large, int sweep, void *mesh)
 {
 #ifdef _GL
   double   xmid, ymid, Phicos, Phisin; 
