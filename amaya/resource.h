@@ -263,6 +263,9 @@
 #define CREATELIBRARYDIALOG             559
 #define IDD_DIALOG5                     560
 #define CREATEHREF                      561
+#define NUMATTRDIALOG                   566
+#define TEXTATTRDIALOG                  567
+#define IDC_CURSOR2                     568
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -744,6 +747,8 @@
 #define IDC_PROFILELIST                 1589
 #define IDC_CSSLIST                     1590
 #define IDC_LANGLIST                    1591
+#define IDC_ATTRNAME                    1595
+#define ID_EDITVALUE                    1596
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -788,9 +793,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        562
+#define _APS_NEXT_RESOURCE_VALUE        569
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1592
+#define _APS_NEXT_CONTROL_VALUE         1599
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
