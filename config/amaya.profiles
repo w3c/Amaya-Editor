@@ -419,12 +419,18 @@ HelpImageMaps
 &CreateTBody
 &ChangeToDataCell
 &ChangeToHeadingCell
+&CellVertExtend
+&CellHorizExtend
+&CellVertShrink
+&CellHorizShrink
 SelectRow
-&CreateRow
-&DeleteRow
+&CreateRowBefore
+&CreateRowAfter
 SelectColumn
-&CreateColumn
-&DeleteColumn
+&CreateColumnBefore
+&CreateColumnAfter
+&PasteBefore
+&PasteAfter
 HelpTables
 
 [tables]

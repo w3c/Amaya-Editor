@@ -1847,85 +1847,6 @@ void CreateTFoot (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  SelectRow
-  ----------------------------------------------------------------------*/
-void SelectRow (Document doc, View view)
-{
-  Element             el;
-  ElementType         elType;
-  char               *s;
-  int                 firstchar, lastchar;
-
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el)
-    {
-      elType = TtaGetElementType (el);
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      while (el &&
-	     (strcmp (s, "HTML") ||
-	      elType.ElTypeNum != HTML_EL_Table_row) &&
-	     (strcmp (s, "MathML") ||
-	      elType.ElTypeNum != MathML_EL_MTR))
-	{
-	  el = TtaGetParent (el);
-	  if (el)
-	    {
-	      elType = TtaGetElementType (el);
-	      s = TtaGetSSchemaName (elType.ElSSchema);
-	    }
-	  TtaGetSSchemaName (elType.ElSSchema);
-	}
-      if (el)
-	TtaSelectElement (doc, el);
-    }
-}
-
-/*----------------------------------------------------------------------
-  CreateRow
-  ----------------------------------------------------------------------*/
-void CreateRow (Document doc, View view)
-{
-   CreateHTMLelement (HTML_EL_Table_row, doc);
-}
-
-/*----------------------------------------------------------------------
-  DeleteRow
-  ----------------------------------------------------------------------*/
-void DeleteRow (Document doc, View view)
-{
-  Element             el;
-  ElementType         elType;
-  char               *s;
-  int                 firstchar, lastchar;
-
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el)
-    {
-      elType = TtaGetElementType (el);
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      while (el &&
-	     (strcmp (s, "HTML") ||
-	      elType.ElTypeNum != HTML_EL_Table_row) &&
-	     (strcmp (s, "MathML") ||
-	      elType.ElTypeNum != MathML_EL_MTR))
-	{
-	  el = TtaGetParent (el);
-	  if (el)
-	    {
-	      elType = TtaGetElementType (el);
-	      s = TtaGetSSchemaName (elType.ElSSchema);
-	    }
-	  TtaGetSSchemaName (elType.ElSSchema);
-	}
-      if (el)
-	TtaSelectElement (doc, el);
-      /* todo: remove the element */
-    }
-}
-
-/*----------------------------------------------------------------------
   ChangeCell creates or transforms a cell
   ----------------------------------------------------------------------*/
 static void ChangeCell (Document doc, View view, int typeCell)
@@ -2052,6 +1973,138 @@ void ChangeToHeadingCell (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CellVertExtend
+  ----------------------------------------------------------------------*/
+void CellVertExtend (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  CellHorizExtend
+  ----------------------------------------------------------------------*/
+void CellHorizExtend (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  CellVertShrink
+  ----------------------------------------------------------------------*/
+void CellVertShrink (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  CellHorizExtend
+  ----------------------------------------------------------------------*/
+void CellHorizShrink (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  SelectRow
+  ----------------------------------------------------------------------*/
+void SelectRow (Document doc, View view)
+{
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      while (el &&
+	     (strcmp (s, "HTML") ||
+	      elType.ElTypeNum != HTML_EL_Table_row) &&
+	     (strcmp (s, "MathML") ||
+	      elType.ElTypeNum != MathML_EL_MTR))
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    {
+	      elType = TtaGetElementType (el);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	    }
+	  TtaGetSSchemaName (elType.ElSSchema);
+	}
+      if (el)
+	TtaSelectElement (doc, el);
+    }
+}
+
+/*----------------------------------------------------------------------
+  CreateRow
+  ----------------------------------------------------------------------*/
+static void CreateRow (Document doc, View view, ThotBool before)
+{
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      while (el &&
+	     (strcmp (s, "HTML") ||
+	      elType.ElTypeNum != HTML_EL_Table_row) &&
+	     (strcmp (s, "MathML") ||
+	      elType.ElTypeNum != MathML_EL_MTR))
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    {
+	      elType = TtaGetElementType (el);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	    }
+	  TtaGetSSchemaName (elType.ElSSchema);
+	}
+      if (el)
+	{
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  if (before)
+	    {
+	      /* move the cursor to the beginning */
+	      el = TtaGetFirstChild (el);
+	      if (el)
+		{
+		  TtaSelectElement (doc, el);
+		  CreateHTMLelement (HTML_EL_Table_row, doc);
+		}
+	    }
+	  else
+	    {
+	      /* insert after */
+	      TtaSelectElement (doc, el);
+	      TtcCreateElement (doc, view);
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  CreateRowBefore
+  ----------------------------------------------------------------------*/
+void CreateRowBefore (Document doc, View view)
+{
+  CreateRow (doc, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  CreateRowAfter
+  ----------------------------------------------------------------------*/
+void CreateRowAfter (Document doc, View view)
+{
+  CreateRow (doc, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
   SelectColumn
   ----------------------------------------------------------------------*/
 void SelectColumn (Document doc, View view)
@@ -2062,110 +2115,42 @@ void SelectColumn (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateColumn
   ----------------------------------------------------------------------*/
-void CreateColumn (Document doc, View view)
+static void CreateColumn (Document doc, View view, ThotBool before)
 {
   /* try to create the data cell close to the current position */
   CreateHTMLelement (HTML_EL_Data_cell, doc);
 }
 
 /*----------------------------------------------------------------------
-  DeleteColumn
-  Delete a column in a table.
+  CreateColumnBefore
   ----------------------------------------------------------------------*/
-void DeleteColumn (Document document, View view)
+void CreateColumnBefore (Document doc, View view)
 {
-  Element             el, cell, colHead, selCell, leaf;
-  ElementType         elType;
-  AttributeType       attrType;
-  Attribute           attr;
-  Document            refDoc;
-  DisplayMode         dispMode;
-  char                name[50];
-  char               *s;
-  int                 firstchar, lastchar, len;
-  ThotBool            selBefore, inMath;
+  CreateColumn (doc, view, TRUE);
+}
 
-  if (!TtaGetDocumentAccessMode (document))
-    /* the document is in ReadOnly mode */
-    return;
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-  if (el != NULL)
-    {
-      if (TtaIsReadOnly (el))
-	/* the selected element is read-only */
-	return;
-      elType = TtaGetElementType (el);
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      cell = el;
-      while (cell &&
-	     (strcmp (s, "MathML") ||
-	      elType.ElTypeNum != MathML_EL_MTD) &&
-	     (strcmp (s, "HTML") ||
-	      (elType.ElTypeNum != HTML_EL_Data_cell &&
-	       elType.ElTypeNum != HTML_EL_Heading_cell)))
-	{
-	  cell = TtaGetParent (cell);
-	  if (cell)
-	    {
-	      elType = TtaGetElementType (cell);
-	      s = TtaGetSSchemaName (elType.ElSSchema);
-	    }
-	}
+/*----------------------------------------------------------------------
+  CreateColumnAfter
+  ----------------------------------------------------------------------*/
+void CreateColumnAfter (Document doc, View view)
+{
+  CreateColumn (doc, view, FALSE);
+}
 
-      if (cell != NULL)
-	{
-	  /* prepare the new selection */
-	  selCell = cell;
-	  inMath = !strcmp (s, "MathML");
-	  TtaNextSibling (&selCell);
-	  if (selCell)
-	     selBefore = FALSE;
-	  else
-	     {
-	     selCell = cell;
-	     TtaPreviousSibling (&selCell);
-	     selBefore = TRUE;
-	     }
+/*----------------------------------------------------------------------
+  PasteBefore
+  ----------------------------------------------------------------------*/
+void PasteBefore (Document doc, View view)
+{
+  CreateRow (doc, view, TRUE);
+}
 
-	  /* stop displaying changes that will be made */
-	  dispMode = TtaGetDisplayMode (document);
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (document, DeferredDisplay);
-
-	  /* get current column */
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr != NULL)
-	    {
-	      TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
-	      TtaOpenUndoSequence (document, el, el, firstchar, lastchar);
-	      /* remove column */
-	      RemoveColumn (colHead, document, FALSE, inMath);
-	      /* set new selection */
-	      if (selBefore)
-	         leaf = TtaGetLastLeaf (selCell);
-	      else
-	         leaf = TtaGetFirstLeaf (selCell);
-	      elType = TtaGetElementType (leaf);
-	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	        if (selBefore)
-	           {
-	           len = TtaGetTextLength (leaf);
-		   TtaSelectString (document, leaf, len+1, len);
-		   }
-	        else
-		   TtaSelectString (document, leaf, 1, 0);
-	      else
-		TtaSelectElement (document, leaf);
-	      TtaCloseUndoSequence (document);
-	      TtaSetDocumentModified (document);
-	    }
-	  /* ask Thot to display changes made in the document */
-	  TtaSetDisplayMode (document, dispMode);
-	}
-    }
+/*----------------------------------------------------------------------
+  PasteAfter
+  ----------------------------------------------------------------------*/
+void PasteAfter (Document doc, View view)
+{
+  CreateRow (doc, view, FALSE);
 }
 
 /*----------------------------------------------------------------------

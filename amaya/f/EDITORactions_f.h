@@ -112,14 +112,34 @@ extern void CreateTBody ( Document document,
                           View view );
 extern void CreateTFoot ( Document document,
                           View view );
-extern void CreateRow ( Document document,
-                        View view );
-extern void CreateDataCell ( Document doc,
+extern void ChangeToDataCell ( Document doc,
+                               View view );
+extern void ChangeToHeadingCell ( Document doc,
+                                  View view );
+extern void CellVertExtend ( Document doc,
                              View view );
-extern void CreateHeadingCell ( Document doc,
-                                View view );
-extern void DeleteColumn ( Document document,
+extern void CellHorizExtend ( Document doc,
+                              View view );
+extern void CellVertShrink ( Document doc,
+                             View view );
+extern void CellHorizShrink ( Document doc,
+                              View view );
+extern void SelectRow ( Document doc,
+                        View view );
+extern void CreateRowBefore ( Document doc,
+                              View view );
+extern void CreateRowAfter ( Document doc,
+                             View view );
+extern void SelectColumn ( Document doc,
                            View view );
+extern void CreateColumnBefore ( Document doc,
+                                 View view );
+extern void CreateColumnAfter ( Document doc,
+                                View view );
+extern void PasteBefore ( Document doc,
+                          View view );
+extern void PasteAfter ( Document doc,
+                         View view );
 extern Element GetEnclosingForm ( Document document,
                                   View view );
 extern void CreateForm ( Document doc,
@@ -346,14 +366,34 @@ extern void CreateTBody (/* Document document,
                             View view */);
 extern void CreateTFoot (/* Document document,
                             View view */);
-extern void CreateRow (/* Document document,
-                          View view */);
-extern void CreateDataCell (/* Document doc,
+extern void ChangeToDataCell (/* Document doc,
+                                 View view */);
+extern void ChangeToHeadingCell (/* Document doc,
+                                    View view */);
+extern void CellVertExtend (/* Document doc,
                                View view */);
-extern void CreateHeadingCell (/* Document doc,
-                                  View view */);
-extern void DeleteColumn (/* Document document,
+extern void CellHorizExtend (/* Document doc,
+                                View view */);
+extern void CellVertShrink (/* Document doc,
+                               View view */);
+extern void CellHorizShrink (/* Document doc,
+                                View view */);
+extern void SelectRow (/* Document doc,
+                          View view */);
+extern void CreateRowBefore (/* Document doc,
+                                View view */);
+extern void CreateRowAfter (/* Document doc,
+                               View view */);
+extern void SelectColumn (/* Document doc,
                              View view */);
+extern void CreateColumnBefore (/* Document doc,
+                                   View view */);
+extern void CreateColumnAfter (/* Document doc,
+                                  View view */);
+extern void PasteBefore (/* Document doc,
+                            View view */);
+extern void PasteAfter (/* Document doc,
+                           View view */);
 extern Element GetEnclosingForm (/* Document document,
                                     View view */);
 extern void CreateForm (/* Document doc,

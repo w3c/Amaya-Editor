@@ -117,6 +117,7 @@ extern void         TtcCloseDocument (Document document, View view);
 extern void         TtcCloseView (Document document, View view);
 extern void         TtcCopySelection (Document document, View view);
 extern void         TtcCopyToClipboard (Document document, View view);
+extern void         TtcCreateElement (Document doc, View view);
 extern void         TtcCutSelection (Document document, View view);
 extern void         TtcDeletePreviousChar (Document document, View view);
 extern void         TtcDeleteSelection (Document document, View view);

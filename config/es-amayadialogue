@@ -126,154 +126,160 @@
 124 tfoot
 125 **Change to Data cell (td)
 126 **Change to Heading cell (th)
-127 **Select a row
-128 **Create a row (tr)
-129 **Delete a row
-130 **Select a column
-131 **Create a column
-132 Borrar columna de tabla
-133 Tipo de Información
-134 Énfasis (em)
-135 Enérgico (strong)
-136 Cita (cite)
-137 Definición (dfn)
-138 Código (code)
-139 Variable (var)
-140 Ejemplo (samp)
-141 Teclado (kbd)
-142 Abreviatura (abbr)
-143 Acrónimo (acronym)
-144 Inserción (ins)
-145 Borrado (del)
-146 Elemento carácter
-147 Itálica (i)
-148 Negrita (b)
-149 Teletipo (tt)
-150 Grande (big)
-151 Pequeña (small)
-152 Subíndice (sub)
-153 Superíndice (sup)
-154 Remarcado (Quotation q)
-155 BiDi override (bdo)
-156 &MathML
-157 Nueva fórmula (math)
-158 Texto simple (mtext)
-159 Identificador (mi)
-160 Número (mn)
-161 Operador (mo)
-162 Espacio (mspace)
-163 Carácter (&xxx;)
-164 InvisibleTimes
-165 ApplyFunction
-166 Raíz (mroot)
-167 Raíz cuadrada (msqrt)
-168 Enclose (menclose)
-169 Fracción (mfrac)
-170 Subíndice y superíndice (msubsup)
-171 Subíndice (msub)
-172 Superíndice (msup)
-173 Bajo y sobre (munderover)
-174 Bajo (munder)
-175 Sobre (mover)
-176 Paréntesis (mrow)
-177 Multiscripts (mmultiscripts)
-178 Matriz (mtable)
-179 Borrar columna de matriz
-180 &SVG
-181 &Ver Biblioteca SVG
-182 &Añadir la selección a la Biblioteca SVG
-183 Elementos XML...
-184 Enlazar el destino &previo
-185 Crear o cambiar &enlace...
-186 Crear &destino
-187 &Borrar ancla
-188 Guardar selección como &XPointer
-189 &Barra de botones
-190 D&irección
-191 Áreas de &mapas
-192 &Destinos
-193 &Aumentar tamaño de texto
-194 &Reducir tamaño de texto
-195 Errores &sintácticos
-196 Es&tructura
-197 A&lternativo
-198 &Enlaces
-199 Tabla de &contenidos
-200 Código &fuente
-201 &Carácter...
-202 C&olores...
-203 &Párrafo...
-204 &Imagen de fondo...
-205 Crear &regla...
-206 A&plicar clase...
-207 &Mostrar estilo aplicado...
-208 &Enlazar hoja de estilo...
-209 &Abrir hoja de estilo...
-210 &Desactivar hoja de estilo...
-211 Acti&var hoja de estilo...
-212 &Borrar enlace a hoja de estilo...
-213 &Numeración de sección
-214 &Hacer libro
-215 &Crear/Borrar atributos id...
-216 &Preferencias
-217 &Generales...
-218 &Navegación...
-219 P&ublicación...
-220 C&aché...
-221 P&roxy...
-222 &Colores...
-223 Geometría de la &ventana...
-224 Negociación de &idioma...
-225 P&erfiles...
-226 P&lantillas...
-227 Anotar &selección
-228 Anotar &documento
-229 &Mover a selección
-230 Mover a &XPointer guardado
-231 &Responder a anotación
-232 &Enviar al servidor
-233 &Borrar
-234 &Cargar
-235 &Personalizar consulta...
-236 &Filtro local...
-237 Configurar...
-238 Nuevo marcador
-239 Nuevo tema
-240 Ver marcadores
-241 Importar una jerarquía de temas
-242 Bloquear recurso
-243 Desbloquear recurso...
-244 Ver propiedades del recurso...
-245 Copiar información de bloqueo
-246 ¿Bloqueado?
-247 Preferencias...
-248 Acerca de Amaya
-249 Página web de Amaya en el W3C
-250 Índice
-251 Navegar
-252 Vistas
-253 Seleccionar
-254 Documentos
-255 Crear elementos
-256 Atributos
-257 Caracteres
-258 Reestructurar
-259 Enlaces
-260 Tablas
-261 Mapas de imagen
-262 MathML
-263 Gráficos
-264 Soporte XML
-265 Hojas de estilo
-266 Buscar
-267 Verificar ortografía
-268 Publicar
-269 WebDAV
-270 Imprimir
-271 Numerar
-272 Hacer libros
-273 Anotaciones
-274 &Marcadores
-275 Configurar
-276 Atajos de teclado
-277 Accesibilidad
+127 **Extend cell to the right
+128 **Extend cell to the bottom
+129 **Shrink cell to the left
+130 **Shrink cell to the top
+131 **Select a row
+132 **Insert a row before
+133 **Insert a row after
+134 **Select a column
+135 **Insert a column before
+136 **Insert a column after
+137 **Paste before
+138 **Paste after
+139 Tipo de Información
+140 Énfasis (em)
+141 Enérgico (strong)
+142 Cita (cite)
+143 Definición (dfn)
+144 Código (code)
+145 Variable (var)
+146 Ejemplo (samp)
+147 Teclado (kbd)
+148 Abreviatura (abbr)
+149 Acrónimo (acronym)
+150 Inserción (ins)
+151 Borrado (del)
+152 Elemento carácter
+153 Itálica (i)
+154 Negrita (b)
+155 Teletipo (tt)
+156 Grande (big)
+157 Pequeña (small)
+158 Subíndice (sub)
+159 Superíndice (sup)
+160 Remarcado (Quotation q)
+161 BiDi override (bdo)
+162 &MathML
+163 Nueva fórmula (math)
+164 Texto simple (mtext)
+165 Identificador (mi)
+166 Número (mn)
+167 Operador (mo)
+168 Espacio (mspace)
+169 Carácter (&xxx;)
+170 InvisibleTimes
+171 ApplyFunction
+172 Raíz (mroot)
+173 Raíz cuadrada (msqrt)
+174 Enclose (menclose)
+175 Fracción (mfrac)
+176 Subíndice y superíndice (msubsup)
+177 Subíndice (msub)
+178 Superíndice (msup)
+179 Bajo y sobre (munderover)
+180 Bajo (munder)
+181 Sobre (mover)
+182 Paréntesis (mrow)
+183 Multiscripts (mmultiscripts)
+184 Matriz (mtable)
+185 Borrar columna de matriz
+186 &SVG
+187 &Ver Biblioteca SVG
+188 &Añadir la selección a la Biblioteca SVG
+189 Elementos XML...
+190 Enlazar el destino &previo
+191 Crear o cambiar &enlace...
+192 Crear &destino
+193 &Borrar ancla
+194 Guardar selección como &XPointer
+195 &Barra de botones
+196 D&irección
+197 Áreas de &mapas
+198 &Destinos
+199 &Aumentar tamaño de texto
+200 &Reducir tamaño de texto
+201 Errores &sintácticos
+202 Es&tructura
+203 A&lternativo
+204 &Enlaces
+205 Tabla de &contenidos
+206 Código &fuente
+207 &Carácter...
+208 C&olores...
+209 &Párrafo...
+210 &Imagen de fondo...
+211 Crear &regla...
+212 A&plicar clase...
+213 &Mostrar estilo aplicado...
+214 &Enlazar hoja de estilo...
+215 &Abrir hoja de estilo...
+216 &Desactivar hoja de estilo...
+217 Acti&var hoja de estilo...
+218 &Borrar enlace a hoja de estilo...
+219 &Numeración de sección
+220 &Hacer libro
+221 &Crear/Borrar atributos id...
+222 &Preferencias
+223 &Generales...
+224 &Navegación...
+225 P&ublicación...
+226 C&aché...
+227 P&roxy...
+228 &Colores...
+229 Geometría de la &ventana...
+230 Negociación de &idioma...
+231 P&erfiles...
+232 P&lantillas...
+233 Anotar &selección
+234 Anotar &documento
+235 &Mover a selección
+236 Mover a &XPointer guardado
+237 &Responder a anotación
+238 &Enviar al servidor
+239 &Borrar
+240 &Cargar
+241 &Personalizar consulta...
+242 &Filtro local...
+243 Configurar...
+244 Nuevo marcador
+245 Nuevo tema
+246 Ver marcadores
+247 Importar una jerarquía de temas
+248 Bloquear recurso
+249 Desbloquear recurso...
+250 Ver propiedades del recurso...
+251 Copiar información de bloqueo
+252 ¿Bloqueado?
+253 Preferencias...
+254 Acerca de Amaya
+255 Página web de Amaya en el W3C
+256 Índice
+257 Navegar
+258 Vistas
+259 Seleccionar
+260 Documentos
+261 Crear elementos
+262 Atributos
+263 Caracteres
+264 Reestructurar
+265 Enlaces
+266 Tablas
+267 Mapas de imagen
+268 MathML
+269 Gráficos
+270 Soporte XML
+271 Hojas de estilo
+272 Buscar
+273 Verificar ortografía
+274 Publicar
+275 WebDAV
+276 Imprimir
+277 Numerar
+278 Hacer libros
+279 Anotaciones
+280 &Marcadores
+281 Configurar
+282 Atajos de teclado
+283 Accesibilidad

@@ -171,6 +171,10 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	     {
 	       /* paste children of the cell instead of the cell itself */
 	       pOrig = pOrig->ElFirstChild;
+	       if (pOrig->ElStructSchema &&
+		   !strcmp (pOrig->ElStructSchema->SsName, "MathML"))
+		 /* go down one mor step */
+		 pOrig = pOrig->ElFirstChild;
 	       *cellChild = pOrig;
 	       isCell = FALSE;
 	     }
