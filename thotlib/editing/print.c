@@ -1641,6 +1641,7 @@ static void PrintView (PtrDocument pDoc)
    pPageAb = NULL;
    pNextPageAb = NULL;
    pHeaderAb = NULL;
+   pBox = NULL;
    /* cree le debut de l'image du document (le volume libre a ete
       initialise' apres la creation de la fenetre) */
    pEl = pDoc->DocDocElement;

@@ -126,13 +126,14 @@ static unsigned char MirrorBytes[0x100] = {
 };
 #ifdef _GL
 
+static ThotBool PrintingGL = FALSE;
+
 #include "glwindowdisplay.h"
 
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
 #include <GL/gl.h>
-
 
 #ifdef GL_MESA_window_pos
 #define MESA
@@ -478,7 +479,7 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 			   Image->PicWidth, Image->PicHeight, 
 			   Mode, GL_UNSIGNED_BYTE,
 			   (GLvoid *) Image->PicPixmap);    
-	  if (Image->PicPixmap != PictureLogo)
+	  if (Image->PicPixmap != PictureLogo && !Printing)
 	    TtaFreeMemory (Image->PicPixmap);
 
 #else/*  POWER2TEXSUBIMAGE */
@@ -497,7 +498,8 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 			GL_UNSIGNED_BYTE, 
 			NULL);
 	}
-      Image->PicPixmap = None;
+      if (!Printing)
+	Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
       Image->TexCoordH = GL_h;
     }  
@@ -509,32 +511,40 @@ static void PrintPoscriptImage (PictInfo *Image,
 				int frame)
 {
   unsigned char *pixels;  
-  int           xBox,yBox,wBox,hBox,width, height;
   GLenum        Mode;
+  int           xBox,yBox,wBox,hBox,width, height;
   
   if (Image->PicFileName)
   {
-    xBox = yBox = wBox = hBox = width = height = 0;
     pixels = NULL;
-    pixels = (unsigned char *) (*(PictureHandlerTable[Image->PicType].Produce_Picture))
-      (Image->PicFileName, Image, &xBox, &yBox, &wBox, &hBox,
-       0, &width, &height, 0);
+    if (Image->PicPixmap == NULL)
+      {
+	xBox = yBox = wBox = hBox = width = height = 0;
+	Image->PicPixmap = (unsigned char *) 
+		  (*(PictureHandlerTable[Image->PicType].Produce_Picture))
+		  (Image->PicFileName, Image, &xBox, &yBox, &wBox, &hBox,
+		   0, &width, &height, 0);
+      }
+    if (w != Image->PicWidth || h != Image->PicHeight)
+      pixels = ZoomPicture (Image->PicPixmap, 
+			    Image->PicWidth, 
+			    Image->PicHeight, 
+			    w, h, (Image->RGBA?4:3));
+    else
+      pixels = Image->PicPixmap;
     if (pixels)
       {
 
-	/* if (w != width || height != h) */
-	  /*try reloading with a magnification factor*/;
-
 	Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
-
 	GLDrawPixelsPoscript (w, h,
-			      x, FrameTable[frame].FrHeight - y - height,
+			      x, y,
 			      Mode, Mode, 
 			      pixels, 
 			      0.0f, 
 			      0.0f);
-
-	TtaFreeMemory (pixels);
+	if (w != Image->PicWidth || h != Image->PicHeight)
+	  TtaFreeMemory (pixels);
+	TtaFreeMemory (Image->PicPixmap);
 	Image->PicPixmap = NULL;
       }
   }
@@ -556,7 +566,7 @@ static void GL_TexturePartialMap (void *ImagePt,
   texH = Image->TexCoordH * ((float)(Image->PicHeight - h) / Image->PicHeight);
   texW = Image->TexCoordW * ((float)(w) / Image->PicWidth);
   GL_SetPicForeground ();
-  if (GL_Printing ())
+  if (PrintingGL)
     {
       PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
     }
@@ -609,7 +619,7 @@ void GL_TextureMap (void *ImagePt,
   Image = ImagePt;  
   GL_SetPicForeground (); 
 
-  if (GL_Printing ())
+  if (PrintingGL)
     {
       PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
     }
@@ -1802,6 +1812,14 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
   WORD                cClrBits;
 #endif /* _WIN_PRINT */
   
+#ifdef _GL
+  if (Printing)
+    {
+      PrintingGL = TRUE;
+      Printing = FALSE;
+    }
+#endif /* _GL */
+
   if (w == 0 && h == 0)
     /* the picture is not visible */
     return;
@@ -1989,6 +2007,13 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 							  (FILE *) drawable,
 							  bgColor);
 #endif /* _WINDOWS*/
+#ifdef _GL
+if (PrintingGL)
+{
+PrintingGL = FALSE;
+Printing = TRUE;
+}
+#endif /* _GL */
 }
 
 /*----------------------------------------------------------------------

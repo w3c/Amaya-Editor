@@ -267,49 +267,9 @@ void ComputeBoundingBox (PtrBox box, int frame,
 			 int xmin, int xmax, 
 			 int ymin, int ymax)
 {
-  GLfloat feedBuffer[FEEDBUFFERSIZE];
-  GLint   size;
   
-  if (NotFeedBackMode)
-    {
-      CompBoundingBox = TRUE;
-      /* gdk_gl_pixmap_make_current (glpixmap, context); */
+  return;
 
-      glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
-      NotFeedBackMode = FALSE;  
-      glRenderMode (GL_FEEDBACK);
-
-      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-
-      size = glRenderMode (GL_RENDER);
-      NotFeedBackMode = TRUE;
-      CompBoundingBox = FALSE;
-      if (size > 0)
-	{
-	  if (size > FEEDBUFFERSIZE)
-	    size = FEEDBUFFERSIZE;
-
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);    
-  
-	  /* printBuffer (size, feedBuffer); */ 
-	  
-	  box->BxBoundinBoxComputed = TRUE; 
-	}
-      else
-	{
-	  box->BxClipX = box->BxXOrg;
-	  box->BxClipY = box->BxYOrg;
-	  box->BxClipW = box->BxW;
-	  box->BxClipH = box->BxH;
-	  box->BxBoundinBoxComputed = FALSE; 
-	}   
-    }
 }
 
 /*---------------------------------------------------
@@ -319,31 +279,9 @@ void ComputeBoundingBox (PtrBox box, int frame,
   ----------------------------------------------------*/
 void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
-  GLfloat feedBuffer[4096];
-  GLint size;
   
-  if (NotFeedBackMode)
-    {
-      box->BxBoundinBoxComputed = TRUE; 
-      glFeedbackBuffer (2048, GL_2D, feedBuffer);
-      NotFeedBackMode = FALSE;
-      glRenderMode (GL_FEEDBACK);
-      DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
-      size = glRenderMode (GL_RENDER);
-      NotFeedBackMode = TRUE;
-      if (size > 0)
-	{
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);     
-	  box->BxBoundinBoxComputed = TRUE; 
-	  /* printBuffer (size, feedBuffer); */
-	}
-    }
+  return;
+
 }
 
 /*----------------------------------------------------------------------
@@ -763,21 +701,17 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
   int Mode;
   unsigned char *current;
 
-  stream = FILE_STREAM;
-  x = x + xorig;
-  y = y + yorig;
-
   if((width <= 0) || (height <= 0))
     return 0;
-
-  fprintf (stream, "gsave\n");
-  fprintf (stream, "%.2f %.2f translate\n", x, y); 
-  fprintf (stream, "%d %d scale\n", width, height); 
-  
+  stream = FILE_STREAM;
+  x = x + xorig;
+  y = y + yorig; 
   Mode = (format == GL_RGBA)?1:0;
-
+  fprintf (stream, "gsave\n");
+  fprintf (stream, "%.2f %.2f translate\n", x, -(y+height)); 
+  fprintf (stream, "%d %d scale\n", width, height);
   /* 8 bit for r and g and b */
-  fprintf (stream, "/rgbstr %d string def\n", width * 3);
+  fprintf (stream, "/rgbstr %d string def\n", width * 3); 
   fprintf (stream, "%d %d %d\n", width, height, 8);
   fprintf (stream, "[ %d 0 0 -%d 0 %d ]\n", width, height, height); 
   fprintf (stream, "{ currentfile rgbstr readhexstring pop }\n");
@@ -785,25 +719,28 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
   fprintf (stream, "colorimage\n");
 
   colwidth = width*((Mode)?4:3);
-  pixels += (height-1)*colwidth;
-  current = pixels;
+  current = pixels + (height-1)*colwidth;
+  colwidth += colwidth;
   /* inverts pixels upside-down*/
   for (row = 0; row < height; row++)
     {
       col = 0;
       while (col < width)
 	{
-	  GLWriteByte (stream, *current++);/*R*/
-	  GLWriteByte (stream, *current++);/*G*/
-	  GLWriteByte (stream, *current++);/*B*/
-	  
-	  col ++;
+	  GLWriteByte (stream, *current);/*R*/
+	  current ++;
+	  GLWriteByte (stream, *current);/*G*/
+	  current ++;
+	  GLWriteByte (stream, *current);/*B*/
+	  current ++;
 	  if (Mode)
-	    current++;
+	    current ++;
+	  col ++;
 	}
-      current -= colwidth + colwidth;
+      current -= colwidth;      
       fprintf (stream, "\n");
     }
+
   fprintf (stream, "grestore\n");
   return 1;
 }
