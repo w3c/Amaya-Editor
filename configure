@@ -13475,23 +13475,7 @@ if test "$with_wx" = "yes" ; then
 fi
 
 if test "$with_gtk" = "yes" ; then
-  # SG : lookingfor gtkimlib includes
-  #      because not found with gtk-config on macosx
   gdkimlib_h_found="no"
-  for ac_dir in               \
-    /sw/include/              \
-    /sw/local/include         \
-    /usr/include              \
-    /usr/local/include        \
-    ; \
-  do
-    if test -r "$ac_dir/gdk_imlib.h"; then
-      echo "found gdk_imlib.h"
-      gdkimlib_h_found="yes"
-      GTK_INCLUDES="${GTK_INCLUDES} -I$ac_dir"
-      break
-    fi
-  done
 
   # check that gtk-config exists
   # Extract the first word of "gtk-config", so it can be a program name with args.
@@ -13549,6 +13533,26 @@ echo "$as_me: error: Cannot find gtk-config. Please install gtk development libr
 
   GTK_OPTIONS="-D_GTK"
   no_graphic=yes
+
+  # SG : lookingfor gtkimlib includes
+  #      because not found with gtk-config on macosx
+  gtk_path_for_gdkimlib_h="`gtk-config --prefix`"
+  for ac_dir in               \
+    /sw/include/              \
+    /sw/local/include         \
+    /usr/include              \
+    /usr/local/include        \
+    "$gtk_path_for_gdkimlib_h/include" \
+    "$gtk_path_for_gdkimlib_h/local/include" \
+    ; \
+  do
+    if test -r "$ac_dir/gdk_imlib.h"; then
+      echo "found gdk_imlib.h"
+      gdkimlib_h_found="yes"
+      GTK_INCLUDES="${GTK_INCLUDES} -I$ac_dir"
+      break
+    fi
+  done
 
   if test "$gdkimlib_h_found" = "no" ; then
     echo
