@@ -4715,7 +4715,7 @@ void                InitAmaya (NotifyEvent * event)
    /* init transformation callback */
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
-   /*TtaSetAccessKeyFunction ((Proc) );*/
+   TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
    /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))

@@ -1108,7 +1108,7 @@ static void     DisplayUrlAnchor (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
-  DoAction         
+  DoAction activates the current element from the keyborad
   ----------------------------------------------------------------------*/
 void            DoAction (Document doc, View view)
 {
@@ -1119,6 +1119,19 @@ void            DoAction (Document doc, View view)
    if (firstSel)
      ActivateElement (firstSel, doc);
 }
+
+/*----------------------------------------------------------------------
+  AccessKeyHandler handles 
+  ----------------------------------------------------------------------*/
+void            AccessKeyHandler (Document doc, void * param)
+{
+  Element  el;
+
+  el = (Element)param;
+  if (el)
+    ActivateElement (el, doc);
+}
+
 
 /*----------------------------------------------------------------------
   IgnoreEvent       An empty function to be able to ignore events.

@@ -17,6 +17,8 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      void * context );
 extern void DoAction ( Document doc,
                        View view );
+extern void AccessKeyHandler ( Document doc,
+                               void * param );
 extern ThotBool IgnoreEvent ( NotifyElement *event );
 extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
@@ -45,6 +47,8 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        void * context */);
 extern void DoAction (/* Document doc,
                          View view */);
+extern void AccessKeyHandler (/* Document doc,
+                                 void * param */);
 extern ThotBool IgnoreEvent (/* NotifyElement *event */);
 extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);

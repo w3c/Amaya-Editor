@@ -991,7 +991,7 @@ void FreeTranslations ()
 
    /* free all document access keys */
    for (i = 0; i < MAX_DOCUMENTS; i++)
-     TtaRemoveDocAccessKeys (i);
+     TtaRemoveDocAccessKeys (i + 1);
 
    while (Automata_current != NULL)
      {
@@ -1094,29 +1094,32 @@ void      TtaAddAccessKey (Document doc, int key, void *param)
 {
   KEY                *ptr, *next;
 
-  /* looks for the current access key in the table */
-  next = DocAccessKey[doc];
-  ptr = NULL;
-  while (next != NULL && next->K_EntryCode != key)
+  if (doc)
     {
-      ptr = next;
-      next = next->K_Other;
-    }
-  if (next = NULL)
-    {
-      /* not found: add a new entry */
-      next = (KEY *) TtaGetMemory (sizeof (KEY));
-      if (ptr)
-	ptr->K_Other = next;
-      else
-	/* the first entry */
-	DocAccessKey[doc] = next;
-      next->K_EntryCode = key;
-      next->K_Special = FALSE;
-      next->K_Other = NULL;
-      next->K_Param = param;
-      next->K_Command = -1;
-      next->K_Value = key;
+      /* looks for the current access key in the table */
+      next = DocAccessKey[doc];
+      ptr = NULL;
+      while (next != NULL && next->K_EntryCode != key)
+	{
+	  ptr = next;
+	  next = next->K_Other;
+	}
+      if (next == NULL)
+	{
+	  /* not found: add a new entry */
+	  next = (KEY *) TtaGetMemory (sizeof (KEY));
+	  if (ptr)
+	    ptr->K_Other = next;
+	  else
+	    /* the first entry */
+	    DocAccessKey[doc] = next;
+	  next->K_EntryCode = key;
+	  next->K_Special = FALSE;
+	  next->K_Other = NULL;
+	  next->K_Param = param;
+	  next->K_Command = -1;
+	  next->K_Value = key;
+	}
     }
 }
 
@@ -1128,14 +1131,17 @@ void      TtaRemoveDocAccessKeys (Document doc)
 {
   KEY                *ptr, *next;
 
-  next = DocAccessKey[doc];
-  while (next != NULL)
+  if (doc)
     {
-      ptr = next;
-      next = ptr->K_Other;
-      TtaFreeMemory (ptr);
+      next = DocAccessKey[doc - 1];
+      while (next != NULL)
+	{
+	  ptr = next;
+	  next = ptr->K_Other;
+	  TtaFreeMemory (ptr);
+	}
+      DocAccessKey[doc] = NULL;
     }
-  DocAccessKey[doc] = NULL;
 }
 
 
@@ -1146,23 +1152,26 @@ void      TtaRemoveAccessKey (Document doc, int key)
 {
   KEY                *ptr, *next;
 
-  /* looks for the current access key in the table */
-  next = DocAccessKey[doc];
-  ptr = NULL;
-  while (next != NULL && next->K_EntryCode != key)
+  if (doc)
     {
-      ptr = next;
-      next = next->K_Other;
-    }
-  if (next)
-    {
-      /* found: remove it */
-      if (ptr)
-	ptr->K_Other = next->K_Other;
-      else
-	/* the first entry */
-	DocAccessKey[doc] = next->K_Other;
-      TtaFreeMemory (next);
+      /* looks for the current access key in the table */
+      next = DocAccessKey[doc];
+      ptr = NULL;
+      while (next != NULL && next->K_EntryCode != key)
+	{
+	  ptr = next;
+	  next = next->K_Other;
+	}
+      if (next)
+	{
+	  /* found: remove it */
+	  if (ptr)
+	    ptr->K_Other = next->K_Other;
+	  else
+	    /* the first entry */
+	    DocAccessKey[doc] = next->K_Other;
+	  TtaFreeMemory (next);
+	}
     }
 }
 
