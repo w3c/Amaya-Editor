@@ -1582,8 +1582,8 @@ ThotBool     logFile;
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
-       x += (((int) doc) - 1) * 5;
-       y += (((int) doc) - 1) * 5;
+       x = x + (doc - 1) * 5;
+       y = y + (doc - 1) * 5;
        /* open the main view */
        if (logFile)
 	 mainView = TtaOpenMainView (doc, x, y, w, 60);

@@ -2743,7 +2743,7 @@ int                 doc;
 #ifdef _WINDOWS
 	   /*** Build the document window ***/
 	   if (X < 0)
-	     X = 92;
+	     X = 2;
 	   else
 	     X = mmtopixel (X, 1);
 	   if (Y < 0)
@@ -2787,11 +2787,11 @@ int                 doc;
 	     dy = (Dimension) MIN_HEIGHT;
 	   else
 	     dy = (Dimension) height;
-	   if (X <= 0)
-	     X = 92;
+	   if (X < 0)
+	     X = 2;
 	   else
 	     X = mmtopixel (X, 1);
-	   if (Y <= 0)
+	   if (Y < 0)
 	     Y = 2;
 	   else
 	     Y = mmtopixel (Y, 0);

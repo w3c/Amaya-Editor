@@ -7311,97 +7311,107 @@ void                TtaShowDialogue (int ref, ThotBool remanent)
 void                TtaShowDialogue (ref, remanent)
 int                 ref;
 ThotBool            remanent;
-
 #endif /* __STDC__ */
 {
 #ifndef _GTK
-#  ifndef _WINDOWS
-   int                 n;
-   Arg                 args[MAX_ARGS];
-#  else  /* _WINDOWS */
-   POINT               curPoint;
-#  endif /* _WINDOWS */
+#ifdef _WINDOWS
+  POINT               curPoint;
+#else  /* _WINDOWS */
+  int                 n;
+  Arg                 args[MAX_ARGS];
+#endif /* _WINDOWS */
+  ThotWidget          w;
+  struct Cat_Context *catalogue;
 
-   ThotWidget          w;
-   struct Cat_Context *catalogue;
-
-   if (ref == 0) {
+  if (ref == 0)
+    {
       TtaError (ERR_invalid_reference);
       return;
-   } 
-
-   catalogue = CatEntry (ref);
-   if (catalogue == NULL) {
+    } 
+  catalogue = CatEntry (ref);
+  if (catalogue == NULL)
+    {
       TtaError (ERR_invalid_reference);
       return;
-   } else
-          w = catalogue->Cat_Widget;
-
-   if (w == 0) {
-      TtaError (ERR_invalid_reference);
-      return;
-   } 
-
-#  ifdef _WINDOWS
-   if (catalogue->Cat_Type == CAT_POPUP) {
+    }
+  else
+    {
+      w = catalogue->Cat_Widget;
+      if (w == 0)
+	{
+	  TtaError (ERR_invalid_reference);
+	  return;
+	} 
+    }
+  
+#ifdef _WINDOWS
+  if (catalogue->Cat_Type == CAT_POPUP)
+    {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-         WinErrorBox (WIN_Main_Wd, TEXT("TtaShowDialogue (1)"));
-	} else {
-          ShowWindow (w, SW_SHOWNORMAL);
-          UpdateWindow (w);
+	WinErrorBox (WIN_Main_Wd, TEXT("TtaShowDialogue (1)"));
+    }
+  else
+    {
+      ShowWindow (w, SW_SHOWNORMAL);
+      UpdateWindow (w);
+    }
+#else  /* !_WINDOWS */
+  if (XtIsManaged (w))
+    XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
+  /*===========> Active un pop-up menu */
+  else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL)
+    {
+      /* Faut-il invalider un TtaShowDialogue precedent */
+      TtaAbortShowDialogue ();
+      
+      /* Memorise qu'un retour sur le catalogue est attendu et */
+      /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
+      if (!remanent)
+	{
+	  ShowReturn = 1;
+	  ShowCat = catalogue;
 	}
-#  else  /* !_WINDOWS */
-   else if (XtIsManaged (w))
-        XMapRaised (GDp, XtWindowOfObject (XtParent (w)));
-   /*===========> Active un pop-up menu */
-   else if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_PULL) {
-        /* Faut-il invalider un TtaShowDialogue precedent */
-        TtaAbortShowDialogue ();
-
-        /* Memorise qu'un retour sur le catalogue est attendu et */
-        /* qu'il peut etre aborte' si et seulement s'il n'est pas remanent */
-        if (!remanent) {
-           ShowReturn = 1;
-           ShowCat = catalogue;
-		}
-
-        /*** Positionne le pop-up a la position courante du show ***/
-        n = 0;
-
-        XtSetArg (args[n], XmNx, (Position) ShowX);
-        n++;
-        XtSetArg (args[n], XmNy, (Position) ShowY);
-        n++;
-        XtSetValues (w, args, n);
-        XtManageChild (w);
-   } 
-   /*===========> Active un formulaire */
-   else if (((catalogue->Cat_Type == CAT_FORM) || 
+      
+      /*** Positionne le pop-up a la position courante du show ***/
+      n = 0;
+      XtSetArg (args[n], XmNx, (Position) ShowX);
+      n++;
+      XtSetArg (args[n], XmNy, (Position) ShowY);
+      n++;
+      XtSetValues (w, args, n);
+      XtManageChild (w);
+    } 
+  /*===========> Active un formulaire */
+  else if (((catalogue->Cat_Type == CAT_FORM) || 
             (catalogue->Cat_Type == CAT_SHEET) || 
             (catalogue->Cat_Type == CAT_DIALOG)) && 
-            (catalogue->Cat_PtParent == NULL)) {
-           /* Faut-il invalider un TtaShowDialogue precedent */
-           TtaAbortShowDialogue ();
-           /* Memorise qu'un retour sur le catalogue est attendu et */
-           /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
-           if (!remanent) {
-              ShowReturn = 1;
-              ShowCat = catalogue;
-		   }
-
-           /* Pour les feuilles de dialogue force le bouton par defaut */
-           if (catalogue->Cat_Type == CAT_SHEET  || 
-               catalogue->Cat_Type == CAT_DIALOG || 
-               catalogue->Cat_Type == CAT_FORM) {
-              XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
-              XtSetValues (w, args, 1);
-		   }
-           INITform (w, catalogue, NULL);
-     }
-   else
-      TtaError (ERR_invalid_reference);
-#endif /* _GTK */
+	   (catalogue->Cat_PtParent == NULL))
+    {
+      /* Faut-il invalider un TtaShowDialogue precedent */
+      TtaAbortShowDialogue ();
+      /* Memorise qu'un retour sur le catalogue est attendu et */
+      /* qu'il peut etre aborter si et seulement s'il n'est pas remanent */
+      if (!remanent)
+	{
+	  ShowReturn = 1;
+	  ShowCat = catalogue;
+	}
+      
+      /* Pour les feuilles de dialogue force le bouton par defaut */
+      if ((catalogue->Cat_Type == CAT_SHEET  || 
+	  catalogue->Cat_Type == CAT_DIALOG || 
+	  catalogue->Cat_Type == CAT_FORM) &&
+	  catalogue->Cat_Entries != NULL)
+	{
+	  XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
+	  XtSetValues (w, args, 1);
+	}
+      INITform (w, catalogue, NULL);
+    }
+  else
+    TtaError (ERR_invalid_reference);
+#endif /* !_WINDOWS */
 #endif /* _GTK */
 }
 

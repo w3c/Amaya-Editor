@@ -55,10 +55,10 @@
 53 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
 54 Editor/Browser
 55 Timeout - server antwortet nicht
-56 **%s already exists. Overwrite it?
-57 **%s has changed. Overwrite it?
-58 **Background image
-59 **Background image not allowed here
+56 %s besteht bereits. Überschreiben?
+57 %s wurde geändert. Überschreiben?
+58 Hintergrundbild
+59 Hintergrundbild hier nicht zulässig
 60 CSS
 61 Speichern überschreibt die folgenden URL:
 62 Speichern der URL fehlerhaft
@@ -70,7 +70,7 @@
 68 Objektadresse
 69 Stylesheetdatei wählen
 70 der W3C Web-Browser und -Editor
-71 **(mail issues to www-amaya@w3.org)
+71 (Probleme senden an www-amaya@w3.org)
 72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
 73 Nur Standardtyp erlaubt
 74 Aktualisierung der Verknüpfung : %s%% erfolgreich
@@ -79,7 +79,7 @@
 77 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
 78 Bitte Usernamen eingeben:
 79 %d offene Anfrage(n)
-80 **No CSS file available
+80 Keine CSS-Datei vorhanden
 81 Übertragung unterbrechen
 82 Vorheriges Dokument
 83 Nachfolgendes Dokument
@@ -138,71 +138,71 @@
 136 Alternativer Text
 137 Alternativer Text ist erforderlich!
 138 mit URLpply
-139 **Apply
-140 **Defaults
-141 **Flush cache
-142 **Cache Preferences
-143 **Enable cache
-144 **Cache protected documents
-145 **Disconnected mode
-146 **Ignore Expires: header
-147 **Cache directory
-148 **Cache size (Mb)
-149 **Cache entry size limit (Mb)
-150 **Proxy Preferences
-151 **HTTP proxy (e.g., www.w3.org:1234)
-152 **Proxy domain list (e.g., lists.w3.org)
-153 **General Preferences
-154 **Home Page
-155 **ToolTip delay (ms)
-156 **Double click delay (ms)
-157 **Menu font size
-158 **Font zoom
-159 **Dialogue language
-160 **Enable multi-key (`+a=à)
-161 **Show background images
-162 **Double click activates link
-163 **Publishing Preferences
-164 **Use ETAGS and preconditions
-165 **Verify each PUT with a GET
-166 **Default name for URLs finishing in '/'
-167 **Geometry Preferences
-168 **Save current geometry
-169 **Restore default geometry
-170 **The change will be effective when you open a new window.
-171 **Color Preferences
-172 **Document foreground color
-173 **Document background color
-174 **Menu foreground color
-175 **Menu background color
-176 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-177 **Home
-178 **List of preferred languages like "en, fr":
-179 **Location of profiles definition file
-180 **Profile Selection
-181 **These changes won't be effective until Amaya is restarted
-182 **Profiles Preferences
-183 **Enter the URL of the templates server
-184 **Templates Preferences
-185 **Allow automatic PUT redirections on these domains
-186 **Ignore style sheets
+139 Übernehmen
+140 Zurücksetzen
+141 Cache leeren
+142 Cache Einstellungen
+143 Cache aktivieren
+144 Cache geschützte Dokumente
+145 Offline-Modus
+146 Ignoriere Expires(Gültig bis): header
+147 Cache Verzeichnis
+148 Cachegröße (Mb)
+149 Max. Größe von Cacheeinträgen (Mb)
+150 Proxy Einstellungen
+151 HTTP proxy (e.g., www.w3.org:1234)
+152 Proxy domain list (e.g., lists.w3.org)
+153 Allgemeine Einstellungen
+154 Startseite
+155 Quickinfo Verzögerung (ms)
+156 Doppelklickintervall (ms)
+157 Größe Menüschriftart
+158 Schriftzoom
+159 Dialogsprache
+160 Mehrfachtasten aktivieren (`+a=à)
+161 Hintergrundbilder anzeigen
+162 Doppelklick aktiviert Link
+163 Einstellungen veröffentlichen
+164 ETAGS und preconditions verwenden
+165 PUT durch GET verifizieren
+166 Dateiname, falls URL mit '/' endet
+167 Einstellungen Fenstergeometrie
+168 Aktuelle Geometrie speichern
+169 Standardgeometrie einstellen
+170 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
+171 Farbeinstellungen
+172 Schriftfarbe (Dokument)
+173 Hintergrundfarbe (Dokument)
+174 Schriftfarbe (Menüs)
+175 Hintergrundfarbe (Menüs)
+176 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+177 Anfang
+178 Liste der bevorzugten Sprachen wie "en, fr":
+179 Verzeichnis der Profildefinitionen
+180 Profilauswahl
+181 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
+182 Profileinstellungen
+183 URL des Vorlagen-Servers angeben
+184 Vorlagen-Einstellungen
+185 Automatische PUT-Umleitung bei diesen Domänen erlauben
+186 Stilvorlagen ignorieren
 187 Umformatieren
-188 **(separate each entry with a space)
-189 **No proxy on these domains
-190 **Only proxy these domains
-191 **Character name
-192 **Amaya user directory
-193 **Temporary directory
-194 **Use palette
-195 **Language Negotiation
-196 **The XML parsing failed - please check your document
-197 **Configuration for annotations
-198 **Annotation user
-199 **Annotation post server
-200 **Annotation servers
-201 **Autoload annotations
-202 **Selection color
-203 **Caret color
-204 **Orientation
-205 **Portrait
-206 **Landscape
+188 (Einträge durch Leerzeichen trennen)
+189 Keinen Proxy für folgende Domänen verwenden
+190 Proxy nur für folgende Domänen verwenden
+191 Zeichenname
+192 Amaya Benutzerverzeichnis
+193 Lokaler filter...
+194 Palette benutzen
+195 Sprachauswahl
+196 Fehler beim XML parsen - bitte Dokument überprüfen
+197 Konfiguration für Anmerkungen
+198 Anmerkungsbenutzer
+199 Anmerkungs-Veröffentlichungs-Server
+200 Anmerkungsserver
+201 Anmerkungen automatisch laden
+202 Farbe Auswahl
+203 Farbe Cursor
+204 Ausrichtung
+205 Hochformat
+206 Querformat

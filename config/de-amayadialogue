@@ -11,7 +11,7 @@
 10 Format
 11 Extras
 12 Attribute
-13 **Annotations
+13 Anmerkung
 14 Hilfe
 15 Neu
 16 Leer...
@@ -20,23 +20,23 @@
 19 Öffne Dokument...
 20 Öffne Dokument (neues Fenster)...
 21 Neu laden
-22 **Back
-23 **Forward
+22 Zurück
+23 Vorwärts
 24 Speichern
 25 Speichern unter...
-26 **Synchronize
-27 **Setup and Print...
+26 Synchronisieren
+27 Einstellungen und Druck...
 28 Drucken
 29 Schließen
 30 Beenden
 31 Schließe Fenster
-32 **Undo
-33 **Redo
+32 Rückgängig
+33 Wiederherstellen
 34 Ausschneiden
 35 Kopieren
 36 Einfügen
 37 Löschen
-38 **Editor Mode
+38 Editormodus
 39 Suchen/Ersetzen...
 40 Rechtschreibung...
 41 Umformatieren...
@@ -46,7 +46,7 @@
 45 Javascript (script)
 46 Style-Sheet (style)
 47 Kommentar (<!--  -->)
-48 **Change Title...
+48 Titel ändern...
 49 Autorenadresse (address)
 50 Aktiver Grafikbereich (area)
 51 Kreis
@@ -90,14 +90,14 @@
 89 Definition (dd)
 90 Formel
 91 Formel (math)
-92 **Plain text (mtext)
-93 **Identifier (mi)
-94 **Number (mn)
-95 **Operator (mo)
-96 **Character (mchar)
+92 Nur text (mtext)
+93 Identifizierer (mi)
+94 Zahl (mn)
+95 Operator (mo)
+96 Zeichen (mchar)
 97 Wurzel (mroot)
 98 Quadratwurzel (msqrt)
-99 **Enclose (menclose)
+99 Beilegen (menclose)
 100 Quotient (mfrac)
 101 Term mit Index und Exponent (msubsup)
 102 Term mit Index (msub)
@@ -180,24 +180,24 @@
 179 Abschnittsnummern
 180 Buch zusammenfügen
 181 Logdatei anzeigen
-182 **Preferences
-183 **General...
-184 **Publishing...
-185 **Cache...
-186 **Proxy...
-187 **Colors...
-188 **Window Geometry...
-189 **Language Negotiation...
-190 **Profiles...
-191 **Templates...
-192 **Annotate
-193 **Local filter...
-194 **Load annotations
-195 **Customize query...
-196 **Post annotation
-197 **Configure...
+182 Einstellungen
+183 Allgemein...
+184 Veröffentlichen...
+185 Cache...
+186 Proxy...
+187 Farben...
+188 Fenstergeometrie...
+189 Akzeptierte sprachen...
+190 Profiles...
+191 Seitenvorlagen...
+192 Anmerken
+193 Lokaler filter...
+194 Anmerkungen laden
+195 Abfrage anpassen...
+196 Anmerkung veröffentlichen
+197 Konfigurieren...
 198 Info
-199 ** About Amaya at W3C
+199 Über Amaya beim W3C
 200 Verknüpfungen folgen/Dokumente öffnen
 201 Auswählen
 202 Suchen
@@ -216,4 +216,4 @@
 215 Abschnittsnummern
 216 Buch zusammenfügen
 217 Konfiguration
-218 **Accessiblity
+218 Benutzerfreundlichkeit
