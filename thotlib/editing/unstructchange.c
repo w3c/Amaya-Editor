@@ -937,7 +937,7 @@ void PasteCommand ()
 		      before = FALSE;
 		      pRealCol = pColHead;
 		    }
-		  else if (WholeColumnSaved)
+		  else if (WholeColumnSaved && pNextRow)
 		    {
 		      /* get the last row of the pasted cell */
 		      GetCellSpans (pPasted, &colspan, &rowspan);

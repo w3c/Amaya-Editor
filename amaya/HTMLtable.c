@@ -2470,7 +2470,9 @@ void CopyRow (Element copyRow, Element origRow, Document doc)
 
 /*----------------------------------------------------------------------
   CopyCell:
-  a cell of a row or of a column has been copied.
+  A cell has been copied while copying a row or a column.
+  Remove the rowspan and RowExt attributes (if copying a row)
+  or the colspan and ColExt attributes (if copying a column).
   ----------------------------------------------------------------------*/
 void CopyCell (Element cell, Document doc, ThotBool inRow)
 {

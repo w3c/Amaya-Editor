@@ -740,7 +740,7 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
   ----------------------------------------------------------------------*/
 PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 {
-   PtrElement          pCell, pRow, pEl1;
+   PtrElement          pCell, pRow, pEl1, pTable;
    int                 i, back;
    ThotBool            found;
 
@@ -809,7 +809,14 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 		/* We are in column selection mode and we have not found yet */
 		/* get the cell belonging to the column in the next row */
 		{
-		  /* first, get the row that contains pEl */
+		  /* get the table that contains our column */
+		  pTable = SelectedColumn;
+		  while (pTable &&
+			 !TypeHasException (ExcIsTable,
+					    pTable->ElTypeNumber,
+					    pTable->ElStructSchema))
+		    pTable = pTable->ElParent;
+		  /* get the row that contains pEl */
 		  pRow = pEl1->ElParent;
 		  while (pRow && !TypeHasException (ExcIsRow,
 						    pRow->ElTypeNumber,
@@ -820,8 +827,7 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 		     have "eaten" the cell in this column */
 		  while (pRow && !pEl)
 		    {
-		      pRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
-						 pRow->ElStructSchema, NULL);
+		      pRow = NextRowInTable (pRow, pTable);
 		      if (pRow)
 			{
 			  pCell = GetCellInRow (pRow, SelectedColumn, FALSE, &back);
