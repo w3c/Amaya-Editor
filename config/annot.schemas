@@ -21,4 +21,4 @@
 http://www.w3.org/2000/10/annotation-ns#  $THOTDIR/config/annotschema.rdf
 
 #some Annotation subclasses that we think will be useful
-http://www.w3.org/2000/10/annotationTypes# $THOTDIR/config/annottypes.rdf
+http://www.w3.org/2000/10/annotationType# $THOTDIR/config/annottypes.rdf
