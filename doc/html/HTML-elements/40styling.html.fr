@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -34,7 +34,8 @@ d'éléments structuraux ou par des feuilles de style quand cela est
 possible.</p>
 
 <p>Tous les éléments en question, à l'exeption de PRE, se trouvent dans le
-sous menu Eléments caractères du menu <strong>Eléments</strong> :</p>
+sous menu <strong>Eléments caractères</strong> du menu <strong>XHTML</strong>
+:</p>
 <dl>
   <dt><code>b</code> et <code>i</code></dt>
     <dd>Ceux-ci devraient être remplacés par les <a

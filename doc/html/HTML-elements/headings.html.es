@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Elementos de encabezado</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -42,10 +43,9 @@ botones mediante los botones <img src="../../images/H1.gif" alt="Botón h1"
 />, <img src="../../images/H2.gif" alt="Botón h2" />, <img
 src="../../images/H3.gif" alt="Botón h3" />. Desde el menú
 <strong>XHTML</strong>, o mediante atajos de teclado, puede crearse cualquier
-nivel de encabezado. Los atajos de teclado por omisión son
-<kbd>control-1</kbd> para <code>h1</code>, <kbd>control-2</kbd> para
-<code>h2</code>, y así sucesivamente hasta <kbd>control-6</kbd> para
-<code>h6</code>.</p>
+nivel de encabezado. Los atajos de teclado por omisión son <kbd>Ctrl 1</kbd>
+para <code>h1</code>, <kbd>Ctrl 2</kbd> para <code>h2</code>, y así
+sucesivamente hasta <kbd>Ctrl 6</kbd> para <code>h6</code>.</p>
 
 <p>La mayoría de navegadores utilizan estilos por omisión para distinguir los
 diferentes encabezamientos, pero el autor puede también utilizar <a

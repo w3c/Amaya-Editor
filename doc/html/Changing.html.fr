@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -32,19 +32,19 @@
 <h3><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, sélectionnez-le et choisissez
-le nouveau type soit dans les menus <strong>Xhtml</strong> ou
-<strong>Xml</strong>, soit en cliquant sur un bouton. Vous pouvez ainsi par
+le nouveau type soit dans les menus <strong>XHTML</strong> ou
+<strong>XML</strong>, soit en cliquant sur un bouton. Vous pouvez ainsi par
 exemple changer une liste numérotée en une liste d'articles, ou un paragraphe
 en une en-tête ou une liste. Pour supprimer un type sélectionné dans les
 sous-menus (<a href="HTML-elements/inline.html.fr">types en ligne</a> - cela
 peut être une phrase dans un paragraphe ou une liste), utilisez l'option
-appropriée comme bascule dans les sous-menus du menu <strong>Xhtml.</strong>
+appropriée comme bascule dans les sous-menus du menu <strong>XHTML.</strong>
 Beaucoup d'autres types peuvent être supprimés, comme une transformation de
 l'élément lorsqu'il a été sélectionné ( voir plus loin).</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
 où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la
-touche Esc (F2 sur Windows).</a></p>
+touche <kbd>Esc</kbd> (<kbd>F2</kbd> sur Windows).</a></p>
 
 <p>Il est également possible d'effectuer des <a href="#L631">transformations
 de structure</a> plus complexes.</p>
@@ -52,7 +52,7 @@ de structure</a> plus complexes.</p>
 <h3><a name="L631">Changer la structure du document</a></h3>
 
 <p>Des transformations de structure simples peuvent être effectuées en
-utilisant le menu <strong>Eléments</strong> (voir <a href="#L653">plus
+utilisant le menu <strong>XHTML</strong> (voir <a href="#L653">plus
 haut</a>). Des transformations de structure plus complexes s'obtiendront à
 l'aide d'autres moyens.</p>
 
@@ -89,11 +89,11 @@ les éléments à grouper puis on active l'entrée Division dans du menu
 
 <p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
-touches <code>Back Space</code> et <code>Delete</code>. Quand le point
-d'insertion est à la fin d'un élément, utilisez la touche
-<code>Delete</code>. Quand il est au début, utilisez la touche <code>Back
-Space</code>. Dans les deux cas, ces touches n'effacent aucun caractère.
-Elles fusionnent des éléments séparés par une limite de structure.</p>
+touches <kbd>Back Space</kbd> et <kbd>Delete</kbd>. Quand le point
+d'insertion est à la fin d'un élément, utilisez la touche <kbd>Delete</kbd>.
+Quand il est au début, utilisez la touche <code>Back Space</code>. Dans les
+deux cas, ces touches n'effacent aucun caractère. Elles fusionnent des
+éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
 touches effacent comme d'habitude le caractère suivant ou le caractère

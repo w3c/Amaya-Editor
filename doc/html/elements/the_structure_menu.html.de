@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Das Menü Struktur</title>
   <style type="text/css">
   </style>
@@ -32,7 +31,7 @@
 <div id="page_body">
 <h1>Das Menü Struktur</h1>
 
-<p>Mit dem Menü <strong>Elemente</strong> ist man nur in der Lage Elemente
+<p>Mit dem Menü <strong>XHTML</strong> ist man nur in der Lage Elemente
 innerhalb des Dokumentenkörpers einzufügen. Um Elemente im Dokumentenkopf
 einzufügen, muss man das Menü <strong>Struktur</strong> der Strukturansicht
 benutzen.</p>
@@ -40,7 +39,7 @@ benutzen.</p>
 <p>Dieses Menü steht nur in der Strukturansicht zur Verfügung.</p>
 
 <p>Das Menü <strong>Struktur</strong> arbeitet genau so wie das Menü
-<strong>Elemente</strong>: den Cursor positionieren und ein Element
+<strong>XHTML</strong>: den Cursor positionieren und ein Element
 auswählen.</p>
 
 <p>Über das Menü <strong>Struktur</strong> kann man auch

@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Abrir documentos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -46,8 +46,7 @@ formas.</p>
 <ol>
   <li>Elige la opción de menú <strong>Archivo &gt; Abrir documento</strong>.
     <p class="Note"><strong>Nota:</strong> También puedes utilizar un atajo
-    de teclado para abrir un documento. En Windows, teclea
-    <kbd>Control-o</kbd>. En Unix, teclea <kbd>Control-x Control-f</kbd>.</p>
+    de teclado para abrir un documento, teclea <kbd>Ctrl o Ctrl o</kbd>.</p>
   </li>
   <li>En el diálogo <strong>Abrir documento</strong>, escribe el camino
     completo o el URI del archivo que quieres abrir, o haz clic en
@@ -62,9 +61,7 @@ formas.</p>
   <li>Elige la opción de menú <strong>Archivo &gt; Abrir en ventana
     nueva</strong>.
     <p class="Note"><strong>Nota:</strong> También puedes utilizar un atajo
-    de teclado para abrir un documento. En Windows, teclea
-    <kbd>Control-Shift-o</kbd>. En Unix, teclea <kbd>Control-x
-    Control-f</kbd>.<br />
+    de teclado para abrir un documento, teclea <kbd>Ctrl o Ctrl w</kbd>.<br />
     </p>
   </li>
   <li>En el diálogo de selección de archivo, escribe el camino completo o el

@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Acerca de las Teclas de Acceso</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -42,11 +42,11 @@ los siguientes elementos: <code>AREA</code>, <code>BUTTON</code>,
 
 <p>Por ejemplo, si asocias el atributo <code>accesskey</code> con un enlace
 en un documento definiendo <code>accesskey="n"</code> o
-<code>accesskey="N"</code>, al pulsar <kbd>Alt-accesskey</kbd>
-(<kbd>Alt-n</kbd> o <kbd>Alt-N</kbd>) se activará dicho enlace. Si asocias el
-atributo <code>accesskey</code> a un elemento de un formulario, al pulsar
-<kbd>Alt-accesskey</kbd> el foco se desplaza a dicho elemento (o al siguiente
-si se asocia con el elemento <code>LABEL</code> y <code>LEGEND</code> ).</p>
+<code>accesskey="N"</code>, al pulsar <kbd>Alt accesskey</kbd> (<kbd>Alt
+n</kbd> o <kbd>Alt N</kbd>) se activará dicho enlace. Si asocias el atributo
+<code>accesskey</code> a un elemento de un formulario, al pulsar <kbd>Alt
+accesskey</kbd> el foco se desplaza a dicho elemento (o al siguiente si se
+asocia con el elemento <code>LABEL</code> y <code>LEGEND</code> ).</p>
 
 <p>Las teclas de acceso tiene prioridad sobre los atajos de Amaya. Por
 ejemplo, en las páginas de ayuda de Amaya están definidas las siguientes

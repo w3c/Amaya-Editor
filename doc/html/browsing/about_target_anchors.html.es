@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Acerca de Destinos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -38,11 +38,11 @@ visualización de los iconos de destino <img src="../../images/target.gif"
 alt="Icono destino" />. Estos iconos no forman parte del documento y se
 pueden mostrar u ocultar de dos maneras:</p>
 <ul>
-  <li>Eligiendo el comando de menú <strong>Ver &gt;  Destinos</strong>
+  <li>Eligiendo el comando de menú <strong>Ver &gt; Destinos</strong>
     <p></p>
   </li>
-  <li>Utilizando atajos de teclado (por omisión, <kbd>Control-v
-    Control-t</kbd> en Unix, <kbd>Alt-v Alt-l</kbd> en Windows).</li>
+  <li>Utilizando atajos de teclado (por omisión, <kbd>Ctrl v Ctrl t</kbd> en
+    Unix, <kbd>Ctrl u Ctrl t</kbd> en Windows).</li>
 </ul>
 
 <p>Para obtener información sobre la forma de trabajar con Destinos,

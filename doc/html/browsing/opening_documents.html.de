@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Ein Dokument öffnen</title>
   <style type="text/css">
  </style>
@@ -23,8 +22,8 @@
         accesskey="p"><img alt="vorherige Seite" src="../../images/left.gif"
         /></a> <a href="../Browsing.html.de" accesskey="t"><img
         alt="erste Seite" src="../../images/up.gif" /></a> <a
-        href="activating_a_link.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../../images/right.gif" /></a></td>
+        href="activating_a_link.html.de" accesskey="n"><img
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
@@ -44,9 +43,9 @@ auf einem entfernten Server befinden, auf verschiedene Arten öffnen:</p>
 öffnen:</p>
 <ol>
   <li><strong>Öffnen</strong> im Menü <strong>Datei</strong> wählen.
-    Alternativ kann man auch ein Tastenkürzel verwenden. <kbd>Strg o</kbd>
-    <kbd>Strg o</kbd> (Windows) oder <kbd>Strg x Strg f</kbd> (Unix) drücken.
-    Es wird der Dialog <strong>Öffnen</strong> angezeigt.</li>
+    Alternativ kann man auch ein Tastenkürzel verwenden <kbd>Strg o</kbd>
+    <kbd>Strg o</kbd>. Es wird der Dialog <strong>Öffnen</strong>
+  angezeigt.</li>
   <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
     gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
     um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
@@ -58,9 +57,9 @@ auf einem entfernten Server befinden, auf verschiedene Arten öffnen:</p>
 öffnen:</p>
 <ol>
   <li><strong>Öffnen (neues Fenster)</strong> im Menü <strong>Datei</strong>
-    wählen. Alternativ kann man auch ein Tastenkürzel verwenden. <kbd>Umsch
-    Strg O</kbd> (Windows) oder <kbd>Strg x Strg o</kbd> (Unix) drücken Es
-    wird der Dialog <strong>Öffnen</strong> angezeigt.</li>
+    wählen. Alternativ kann man auch ein Tastenkürzel verwenden <kbd>Strg o
+    Strg o Str w</kbd> Es wird der Dialog <strong>Öffnen</strong>
+  angezeigt.</li>
   <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
     gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
     um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>

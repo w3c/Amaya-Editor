@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Structure du document HTML</title>
-  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -37,8 +37,8 @@ blocs d'éléments.</p>
 division _ pour l'utiliser, sélectionnez la section que vous voulez assembler
 au groupe (en incluant son en-tête), puis sélectionnez l'option <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-DIV"
-name="DIV">DIV</a> du menu <strong>XHTL</strong> (ou utilisez le
-raccourci-clavier <kbd>Ctrl-t, Ctrl-v</kbd> en unix).</p>
+name="DIV">Division (div)</a> du menu <strong>XHTML</strong> (ou utilisez le
+raccourci-clavier <kbd>Ctrl h Ctrl v</kbd> ).</p>
 
 <p>Il y a une structure spéciale dans HTML _ le lien, qui fait du Web une
 toile. Les informations sur <a href="../Links.html">comment créer un lien</a>

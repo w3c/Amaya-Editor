@@ -3,12 +3,12 @@
      available on the W3C site at http://www.w3.org/Math/XSL/pmathml.xsl -->
 <?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
-      "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd">
+      "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr">
@@ -51,10 +51,10 @@ constructions mathématiques.</p>
 href="Selecting.html.fr#Selecting">déplacer le point d'insertion</a> à
 l'endroit où vous voulez insérer l'expression, puis de cliquer sur le bouton
 <strong>Math</strong> (le bouton à droite de la barre des boutons) ou de
-sélectionner l'entrée <strong>Math</strong> du menu <strong>Xml</strong>. Le
+sélectionner l'entrée <strong>Math</strong> du menu <strong>XML</strong>. Le
 bouton <strong>Math</strong> affiche une palette qui reste à l'écran jusqu´à
 ce que vous cliquiez sur son bouton "terminer". L'entrée
-<strong>Math</strong> du menu <strong>Xml</strong> affiche un menu.
+<strong>Math</strong> du menu <strong>XML</strong> affiche un menu.
 Choisissez l'outil qui vous est le plus commode. Les deux vous permettent de
 choisir la construction mathématique à insérer.</p>
 

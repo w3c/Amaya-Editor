@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Seleccionar por Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -65,16 +65,16 @@ utilizando el teclado:</p>
     elementos de nivel superior (y todo su contenido) hasta llegar a la raíz.
     <p></p>
   </li>
-  <li>Pulsa <code>Control+-</code> (tecla menos) para seleccionar un elemento
+  <li>Pulsa <code>Ctrl -</code> (tecla menos) para seleccionar un elemento
     hijo.
     <p></p>
   </li>
-  <li>Pulsa <code>Control+k</code> para seleccionar el siguiente elemento del
+  <li>Pulsa <code>Ctrl k</code> para seleccionar el siguiente elemento del
     mismo nivel, o del nivel del elemento padre si no hay después o antes un
     elemento hijo del nivel actual.
     <p></p>
   </li>
-  <li>Pulsa <code>Control+j</code> para seleccionar el elemento anterior del
+  <li>Pulsa <code>Ctrl j</code> para seleccionar el elemento anterior del
     mismo nivel, o del nivel del elemento padre si no hay antes un elemento
     hijo del nivel actual.</li>
 </ul>

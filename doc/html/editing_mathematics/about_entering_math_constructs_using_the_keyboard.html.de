@@ -6,11 +6,11 @@
   <title>Über die Eingabe mathematischer Konstrukte mit der Tastatur</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de" ="de">
+<body lang="de">
 
 <table border="0" cellspacing="5" cellpadding="5">
   <tbody>
@@ -95,7 +95,7 @@ angegeben und in der folgenden Tabelle aufgeführt. </p>
       </td>
       <td valign="top"
       style="               border-top:none;               border-left:   none;               border-bottom:solid .5pt;               border-right:solid .5pt;               padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><kbd>Strg m Strg =</kbd></p>
+        class="TableText"><kbd>Strg m Strg g</kbd></p>
       </td>
     </tr>
     <tr>

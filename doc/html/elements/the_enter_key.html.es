@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>The Intro Key</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -44,15 +44,15 @@ de un documento y el cursor está al final de dicho elemento, al pulsar
 <strong>Intro</strong> se crea una nueva línea dentro del
 <code>&lt;pre&gt;</code>. Para crear otro elemento, por ejemplo un párrafo, a
 continuación del <code>&lt;pre&gt;</code>, selecciona todo el elemento
-<code>&lt;pre&gt;</code> pulsando <b>Escape</b> (en Unix) o <b>F2</b> (En
-Windows) y a continuación <b>Intro</b>.</p>
+<code>&lt;pre&gt;</code> pulsando <kbd>Esc</kbd> (en Unix) o <kbd>F2</kbd>
+(En Windows) y a continuación <b>Intro</b>.</p>
 
 <p>Igualmente, puedes crear un nuevo párrafo después de una tabla
 seleccionando toda la tabla y pulsando <strong>Intro</strong>.</p>
 
-<p>Cuando seleccionas un elemento completo como &lt;h2&gt; o &lt;li&gt;, al
-pulsar la tecla <strong>Intro</strong> se crea un nuevo &lt;h2&gt; o
-&lt;li&gt; a continuación.</p>
+<p>Cuando seleccionas un elemento completo como <code>&lt;h2&gt;</code> o
+<code>&lt;li&gt;</code>, al pulsar la tecla <strong>Intro</strong> se crea un
+nuevo <code>&lt;h2&gt;</code> o <code>&lt;li&gt;</code> a continuación.</p>
 
 <h2>Ver también:</h2>
 <ul>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Accessibilité dans Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -67,7 +67,7 @@ pratiques qui sont :</p>
   <li><strong>Scripts, applets, &amp; plug-ins.</strong> Fournissez un
     contenu alternatif dans le cas où les caractéristiques actives sont
     inaccessibles ou sans support.</li>
-  <li><strong>Frames.</strong> Utilisez<code>NOFRAMES</code> ainsi que des
+  <li><strong>Frames.</strong> Utilisez <code>NOFRAMES</code> ainsi que des
     titres significatifs.</li>
   <li><strong>Tables.</strong> Faîtes une lecture sensée ligne par ligne.
     Récapitulez.</li>

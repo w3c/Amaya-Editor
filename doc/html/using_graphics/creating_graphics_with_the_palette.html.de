@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Grafiken mit der Palette erzeugen</title>
   <style type="text/css">
   </style>
@@ -79,15 +79,16 @@ anklickt.</p>
   </li>
   <li>offenes Polygon (<code>polyline</code>)
     <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
-      <polyline points="4,16 23,0 37,16 55,6" stroke="#0000b2"
-                style="stroke: #0000B2; fill: #FFA069"/>
+      <polyline points="0,16 19,0 33,16 51,6" transform="translate(4,0)"
+                stroke="#0000b2" style="stroke: #0000B2; fill: #FFA069"/>
     </svg>
     </p>
   </li>
   <li>geschlossenes Polygon (<code>polygon</code>)
     <p><svg xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm">
-      <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
-               stroke="#000000" style="fill: #C8FF95; stroke: #000000"/>
+      <polygon points="0,16 13,0 26,12 43,4 44,16 15,16 12,11"
+               transform="translate(2,0)" stroke="#000000"
+               style="fill: #C8FF95; stroke: #000000"/>
     </svg>
     </p>
   </li>
@@ -168,17 +169,17 @@ Benutzer:</p>
 <h2>Andere Elemente einfügen</h2>
 
 <p>Man kann in eine SVG-Grafik ein Bild einfügen: aus dem Menü
-<strong>Element</strong> den Befehl <strong>Bild</strong> wählen oder den
-Knopf <strong>Bild</strong><img alt="Knopf Bild"
+<strong>XHTML</strong> den Befehl <strong>Bild</strong> wählen oder den Knopf
+<strong>Bild</strong><img alt="Knopf Bild"
 src="../../images/image_button.gif" /> in der Knopfleiste anklicken und in
 der gleichen Weise verfahren, wie man das in HTML auch macht.</p>
 
 <p>Um einen mathematischen Ausdruck in eine SVG-Zeichnung einzufügen, muss
 man die Zeichnung markieren und das entsprechende Objekt aus der Palette
-Mathematik (<strong>Formel</strong> im Menü <strong>Elemente</strong> oder
-Knopf <strong>Formel</strong> <img alt="Knopf Formel"
-src="../../images/Math.gif" /> in der Knopfleiste) wählen. Amaya generiert
-dann ein <code>foreignObject</code><span class="Note">um das Element
+Mathematik (<strong>Formel</strong> im Menü <strong>XML</strong> oder Knopf
+<strong>Formel</strong> <img alt="Knopf Formel" src="../../images/Math.gif"
+/> in der Knopfleiste) wählen. Amaya generiert dann ein
+<code>foreignObject</code><span class="Note">um das Element
 einzufügen.</span></p>
 
 <p class="Note"><strong>Hinweis</strong>: Der Knopf Group in der Palette

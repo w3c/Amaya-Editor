@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -65,8 +65,7 @@ formularios.</p>
 src="../../images/Editor.gif" alt="Botón Editor" />. Haz clic en el botón
 <img src="../../images/Browser.gif" alt="Botón navegador" /> para volver al
 modo editor. También puedes elegir el modo con el comando de menú
-<strong>Editar &gt; Modo Edición</strong>, o con un atajo de teclado (el
-atajo por omisión es <kbd>Shift-Control-*</kbd>).</p>
+<strong>Editar &gt; Modo Edición</strong>.</p>
 
 <p class="Note"><strong>Nota:</strong> El modo se puede elegir de forma
 independiente en cada ventana de documento.</p>
@@ -94,12 +93,7 @@ caracteres utilizado. Cuando el analizador XML analiza el documento y
 encuentra un caracter que no es UTF-8, el documento se considera
 gramaticalmente incorrecto. El análisis se detiene y Amaya muestra un mensaje
 de error que propone abrir el documento como documento HTML o bien mostrar
-los errores encontrados en el análisis. Si eliges mostrar los errores, Amaya
-ejecuta el comando de menú <strong>Archivo &gt; Reanalizar como
-HTML</strong>. Elige este comando para definir el juego de caracteres como
-ISO-Latin-1 y reabrir el documento de manera que pueda ser analizado
-adecuadamente. Amaya considera que el documento se ha modificado (ya que has
-añadido un juego de caracteres) y puedes guardarlo.</p>
+los errores encontrados en el análisis.</p>
 </div>
 </body>
 </html>

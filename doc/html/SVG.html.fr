@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -151,7 +151,7 @@ l'utilisateur:</p>
 </ul>
 
 <p>Vous pouvez insérer une image dans un graphique. Choisissez l'entrée
-<strong>Image</strong> du menu <strong>Xhtml</strong> ou cliquez sur le
+<strong>Image</strong> du menu <strong>XHTML</strong> ou cliquez sur le
 bouton <img alt="Image " src="../images/Image.gif" longdesc="longdesc.htm" />
 de la barre de boutons, puis procédez <a
 href="ImageMaps.html.fr#Adding">comme dans une page HTML</a>.</p>

@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Menú Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -31,7 +31,7 @@
 <h1>Menú Estructura</h1>
 
 <p>Los menús <strong>XHTML</strong> y <strong>XML</strong> te permiten
-únicamente crear elementos que formen parte del <code>BODY</code> del
+únicamente crear elementos que formen parte del <code>body</code> del
 documento. Para crear elementos en el <code>HEAD</code> del documento,
 utiliza el menú <strong>Estructura</strong> de la vista Estructura. Este menú
 funciona como en los menús <strong>XHTML</strong> y <strong>XML</strong>:
@@ -47,8 +47,8 @@ documento.</p>
 
 <p>Algunos elementos HTML están constituidos for varios elementos de
 diferentes tipos. Por ejemplo, una tabla normalmente contiene un título
-(<code>CAPTION</code>), varias filas (<code>TR</code>) y varias celdas
-(<code>TD</code> or <code>TH</code>) en cada fila.</p>
+(<code>caption</code>), varias filas (<code>tr</code>) y varias celdas
+(<code>td</code> or <code>th</code>) en cada fila.</p>
 
 <p>Cuando Amaya crea ese tipo de elementos, crea también sus componentes. Una
 tabla se crea con el título y una fila que contiene una única celda. El punto

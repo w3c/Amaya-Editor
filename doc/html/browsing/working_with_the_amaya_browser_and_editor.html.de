@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Mit dem Browser und Editor arbeiten</title>
   <style type="text/css">
   </style>
@@ -65,8 +64,8 @@ Auswahl weiterer Informationen bereit:</p>
 das Dokument sowohl editieren als auch browsen.</p>
 
 <p>Die Knopfleiste zeigt den Knopf <img src="../../images/Editor.gif"
-alt="Knopf Editieren" />  wenn sich das Fenster im Editiermodus befindet und
-den Knopf <img src="../../images/Browser.gif" alt="Browser Button" />  wenn
+alt="Knopf Editieren" /> wenn sich das Fenster im Editiermodus befindet und
+den Knopf <img src="../../images/Browser.gif" alt="Browser Button" /> wenn
 sich das Fenster im Browsermodus befindet. Im Browsermodus können auch
 Formulare ausgefüllt werden.</p>
 
@@ -75,11 +74,10 @@ Knopf <img src="../../images/Editor.gif" alt="Knopf Editieren" />. Dieser
 wechselt dann sein Aussehen in <img src="../../images/Browser.gif"
 alt="Knopf Browsen" />. Um wieder in den Editormodus zu gelangen, den Knopf
 erneut anklicken. In diesen Modus gelangt man auch, wenn man im Menü
-<strong>Bearbeiten</strong> den Befehl <strong>Editormodus</strong> wählt
-oder das Tastenkürzel <kbd>Umsch Strg *</kbd> benutzt.</p>
+<strong>Bearbeiten</strong> den Befehl <strong>Editormodus</strong>.</p>
 
-<p class="Note"><strong>Anmerkung:</strong> Man kann die Modi in jedem Fenster
-unabhängig voneinander setzen</p>
+<p class="Note"><strong>Anmerkung:</strong> Man kann die Modi in jedem
+Fenster unabhängig voneinander setzen</p>
 
 <h2>Zeichensätze</h2>
 
@@ -101,13 +99,7 @@ Dokumente oft mit dem falschen Zeichensatz erstellt. Man stelle sich ein
 XHTML-Dokument vor, welches den Zeichensatz ISO-Latin benutzt, aber keinerlei
 Information darüber gibt. Wenn der XML-Parser das Dokument analysiert und auf
 ein Zeichen trifft, welches nicht einem gültigen UTF-8-Zeichen entspricht, so
-stuft er das Dokument als nicht "wohl geformt" (well formed) ein. Das Parsen
-wird abgebrochen und Amaya zeigt einen Fehlerdialog an, in dem vorgeschlagen
-wird das Dokument entweder in HTML darzustellen oder die Parserfehler
-anzuzeigen.Die Option "In HTML darstellen" setzt den Zeichensatz des
-Dokuments auf ISO-Latin. Amaya nimmt dann an, dass das Dokument modifiziert
-wurde (weil ein Zeichensatz hinzugefügt wurde), sodass man es speichern muss,
-damit diese Änderung nicht verloren geht.</p>
+stuft er das Dokument als nicht "wohl geformt" (well formed) ein.</p>
 </div>
 </body>
 </html>

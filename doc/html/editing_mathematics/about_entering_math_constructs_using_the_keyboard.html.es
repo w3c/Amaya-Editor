@@ -4,8 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Crear expresiones matemáticas con el teclado</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/">
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -30,16 +29,16 @@
 <div id="page_body">
 <h1>Crear expresiones matemáticas con el teclado</h1>
 
-<p>No es imprescindible que utilices el menú o la paleta MathML para
-crear o editar expresiones matemáticas. Puedes escribir expresiones
-matemáticas directamente con el teclado, pues cada elemento del menú
-MathML tiene un atajo de teclado asociado. Los atajos se indican en el
-propio menú y en la tabla siguiente. También puedes utilizar las teclas de
-desplazamiento para desplazar el punto de inserción de un lugar a otro. Las
-flechas derecha e izquierda mueven el punto de inserción de acuerdo con la
-estructura de la expresión matemática. Por ejemplo, en una fracción cuando el
-punto de inserción se encuentra al final del numerador, la flecha derecha
-mueve el punto de inserción al principio del denominador.</p>
+<p>No es imprescindible que utilices el menú o la paleta MathML para crear o
+editar expresiones matemáticas. Puedes escribir expresiones matemáticas
+directamente con el teclado, pues cada elemento del menú MathML tiene un
+atajo de teclado asociado. Los atajos se indican en el propio menú y en la
+tabla siguiente. También puedes utilizar las teclas de desplazamiento para
+desplazar el punto de inserción de un lugar a otro. Las flechas derecha e
+izquierda mueven el punto de inserción de acuerdo con la estructura de la
+expresión matemática. Por ejemplo, en una fracción cuando el punto de
+inserción se encuentra al final del numerador, la flecha derecha mueve el
+punto de inserción al principio del denominador.</p>
 
 <table border="1" class="TableText">
   <tbody class="TableText">
@@ -76,7 +75,7 @@ mueve el punto de inserción al principio del denominador.</p>
     <tr>
       <td valign="top"><p class="TableText">Operador (mo)</p>
       </td>
-      <td valign="top"><p class="TableText">Ctrl-m Ctrl-=</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-g</p>
       </td>
     </tr>
     <tr>

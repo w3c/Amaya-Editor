@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Die Eingabetaste</title>
   <style type="text/css">
  </style>
@@ -33,13 +33,13 @@
 
 <p>Wenn man ein neues Dokument oder einen neuen Teil eines Dokuments
 schreibt, dann kann man Elemente sequenziell durch Drücken der
-<kbd>Eingabetaste</kbd> erzeugen. Das derzeitige Element wird beendet
-und hinter diesem direkt ein neues erzeugt.</p>
+<kbd>Eingabetaste</kbd> erzeugen. Das derzeitige Element wird beendet und
+hinter diesem direkt ein neues erzeugt.</p>
 
 <p>Am häufigsten ist das neue Element einfach ein Absatz. Man kann den Typ
 des neuen Elements ändern, indem man den gewünschten Typ aus dem Menü
-<strong>Elemente</strong> wählt oder den entsprechenden Knopf in der
-Knopfleiste anklickt.</p>
+<strong>XHTML</strong> wählt oder den entsprechenden Knopf in der Knopfleiste
+anklickt.</p>
 
 <p>Befindet sich das Element <code>pre</code> am Ende eines Dokuments und
 steht der Cursor am Ende dieses Elements, so bewirkt das Drücken der

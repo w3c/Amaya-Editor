@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Den Titel eines Dokuments ändern</title>
   <style type="text/css">
   </style>
@@ -32,14 +31,14 @@
 
 <p class="ProcedureCaption">Um den Titel eines Dokuments zu ändern:</p>
 <ul>
-  <li>Das Menü <strong>Elemente</strong> öffnen und den Befehl <strong>Titel
+  <li>Das Menü <strong>XHTML</strong> öffnen und den Befehl <strong>Titel
     ändern</strong>&nbsp;wählen.</li>
 </ul>
 
 <p></p>
 
-<p class="Note"><strong>Anmerkung:</strong> Den Dokumententitel kann man auch im Menü
-<strong>Struktur</strong> des Strukturfensters ändern.</p>
+<p class="Note"><strong>Anmerkung:</strong> Den Dokumententitel kann man auch
+im Menü <strong>Struktur</strong> des Strukturfensters ändern.</p>
 </div>
 </body>
 </html>

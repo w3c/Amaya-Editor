@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>éléments d'une liste</title>
-  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -71,11 +71,10 @@ d'outil en utilisant les boutons <img src="../../images/OList.gif"
 alt="Bulleted List" />, <img src="../../images/NumList.gif"
 alt="Numbered List" />, <img src="../../images/DL.gif" alt="Definition List"
 />. Tous les types de liste peuvent être créés à partir du menu
-<strong>Eléments,</strong> ou en utilisant les raccourcis clavier. Les
-raccourcis clavier par défaut dans les systèmes Unix sont <kbd>control-l
-control-o</kbd> pour une liste ordonnée, <kbd>control-l control-u</kbd> pour
-une liste non ordonnée, et <kbd>control-l control-d</kbd> pour une liste de
-définitions.</p>
+<strong>XHTML,</strong> ou en utilisant les raccourcis clavier. Les
+raccourcis clavier par défaut dans les systèmes Unix sont <kbd>Ctrl h Ctrl
+l</kbd> pour une liste ordonnée, <kbd>Ctrl h Ctrl n</kbd> pour une liste non
+ordonnée, et <kbd>Ctrl h Ctrl d</kbd> pour une liste de définitions.</p>
 
 <p><a href="../StyleSheets.html.fr">Les Feuilles de style</a> peuvent être
 utilisées pour changer la présentation des listes. Il est possible de changer

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -40,8 +40,7 @@ bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../images/Browser.gif"
 alt="browser-mode" /> et vous pouvez seulement naviguer et remplir les
 formulaires. cette option est également disponible à&nbsp;partir de l'option
-<strong>Mode Editeur</strong> du menu d'Édition, ou bien par le raccourci
-clavier (<strong>Shift-Control-*</strong> par défaut).</p>
+<strong>Mode Editeur</strong> du menu d'Édition.</p>
 
 <p>Amaya vous permet d'accéder et d'éditer des documents HTML ainsi que
 certains types de documents XML : XHTML, MathML et SVG. Il vous permet
@@ -94,15 +93,15 @@ aisément le point d'insertion à l'intérieur des liens : vous devez soit
 utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <strong>Alt-Enter</strong> par défaut,
-mais la commande <em>DoAction</em> peut être associée à un autre <a
+contrôles. La commande au clavier est <kbd>Alt Enter</kbd> par défaut, mais
+la commande <em>DoAction</em> peut être associée à un autre <a
 href="ShortCuts.html.fr">raccourci clavier</a>. La commande
 <em>NextLinkOrFormElement</em>, associée par défaut au raccourci clavier
-<strong>Tab</strong>, vous permet de trouver le prochain (ou le premier) lien
-ou élément de formulaire HTML dans le document. La commande
+<kbd>Tab</kbd>, vous permet de trouver le prochain (ou le premier) lien ou
+élément de formulaire HTML dans le document. La commande
 <em>PreviousLinkOrFormElement</em>, associée par défaut au raccourci clavier
-<strong>Shift-Tab</strong>, vous permet de trouver le lien ou élément de
-formulaire HTML qui précède (ou le dernier) dans le document.</p>
+<kbd>Shift Tab</kbd>, vous permet de trouver le lien ou élément de formulaire
+HTML qui précède (ou le dernier) dans le document.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> le document
 courant dans la même fenêtre et conserve le mode (éditeur ou navigateur). Si
@@ -124,16 +123,16 @@ conditions où c'est nécessaire ou utile.</p>
 
 <p>Si l'auteur du document a associé un attribut <code>accesskey</code> au
 lien (par exemple <code>acceskey="a"</code>) dans un document, la commande
-<strong>Alt-accesskey</strong> (par exemple Alt-a) va activer le lien. Quand
-elle est assignée à un élément de formulaire, la commande
-<strong>Alt-accesskey</strong> donne le focus à cet élément (le suivant dans
-le cas de LABEL et LEGEND).</p>
+<strong>Alt accesskey</strong> (par exemple Alt a) va activer le lien. Quand
+elle est assignée à un élément de formulaire, la commande <strong>Alt
+accesskey</strong> donne le focus à cet élément (le suivant dans le cas de
+LABEL et LEGEND).</p>
 
 <p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
 les pages d'Aide déclarent des accès rapides&nbsp;: "n" pour aller à la page
 suivante, "p" pour aller à la page précédente, "t" pour la table des
-matières. Si l'utilisateur a associé un raccourci clavier Alt-p à une
-commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
+matières. Si l'utilisateur a associé un raccourci clavier <kbd>Alt p</kbd> à
+une commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
 quand ces pages d'aide sont affichées. Par défaut la touche de modification
 utilisée est <strong>Alt</strong>. Le menu de préférences
 <code>Spécial/Préférences/Général</code> permet de modifier cette
@@ -148,9 +147,8 @@ de cible <a name="target"><img src="../images/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
-<strong>Vues</strong>. Par défaut la commande au clavier est
-<strong>Control-v Contol-t</strong> sur Unix, <strong>Alt-v Alt-l</strong>
-sur Windows.</p>
+<strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl v Ctrl
+t</kbd> sur Unix, <kbd>Ctrl u Ctrl t</kbd> sur Windows.</p>
 
 <p>Ces icônes sont associées aux <em>éléments cibles</em>, i.e. éléments avec
 un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
@@ -171,13 +169,12 @@ vite.</p>
       <strong>Ouvrir dans nouvelle fenêtre</strong>, vous permettent
       respectivement d'ouvrir un nouveau document dans la même fenêtre ou
       dans une nouvelle fenêtre. Les commandes clavier par défaut sont
-      respectivement <strong>Control-x Contol-f</strong> et <strong>Control-x
-      Control-o</strong> sur Unix, <strong>Control-o</strong> et
-      <strong>Shift-Control-O</strong> sur Windows. Ces deux commandes font
-      apparaître une boîte de dialogue dans laquelle vous pouvez entrer un
-      nom de fichier local ou une URI. Vous pouvez également choisir un
-      fichier à partir de l'option <strong>Butiner</strong> qui vous propose
-      un sélecteur de fichiers locaux.
+      respectivement <kbd>Ctrl o Ctrl o</kbd> et <kbd>Ctrl o Ctrl w</kbd> .
+      Ces deux commandes font apparaître une boîte de dialogue dans laquelle
+      vous pouvez entrer un nom de fichier local ou une URI. Vous pouvez
+      également choisir un fichier à partir de l'option
+      <strong>Butiner</strong> qui vous propose un sélecteur de fichiers
+      locaux.
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>. Cette commande peut aussi être utilisée
       pour créer un nouveau document local.</p>
@@ -201,10 +198,9 @@ chargées :</p>
 <dl>
   <dt>Menu Fichier</dt>
     <dd>Il y a des entrées dans le menu Fichier pour avancer ou reculer. Les
-      raccourcis clavier sont par défaut respectivement
-      <strong>Alt-b</strong> et <strong>Alt-f</strong> sur Unix,
-      <strong>Control-b</strong> et <strong>Shift-Control-F</strong> sur
-      Windows.</dd>
+      raccourcis clavier sont par défaut respectivement <kbd>Alt b</kbd> et
+      <kbd>Alt f</kbd> sur Unix, <kbd>Ctrl b Ctrl b</kbd> et <kbd>Ctrl b Ctrl
+      f</kbd> sur Windows.</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons : <img alt="Back " src="../images/Back.gif" /> et <img
       alt="Forward " src="../images/Forward.gif" /> vous permettent de
@@ -215,9 +211,9 @@ chargées :</p>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
-raccourci clavier <strong>Alt-r</strong> sur Unix et
-<strong>Control-r</strong> sur Windows, ou le bouton <img
-src="../images/Reload.png" alt="reload" /> de la barre des boutons.</p>
+raccourci clavier <kbd>Alt r</kbd> sur Unix et <kbd>Ctrl r</kbd> sur Windows,
+ou le bouton <img src="../images/Reload.gif" alt="reload" /> de la barre des
+boutons.</p>
 
 <h3><a name="Keyboard">Contrôle du clavier</a></h3>
 

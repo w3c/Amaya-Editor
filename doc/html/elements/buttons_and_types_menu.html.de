@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Das Menü Elemente und die Knopfleiste</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -30,11 +29,11 @@
 <div id="page_body">
 <h1>Das Menü Elemente und die Knopfleiste</h1>
 
-<p>Die Befehle im Menü <strong>Elemente</strong> und die entsprechenden
-Knöpfe in der Knopfleiste erzeugen innerhalb eines Dokuments ein neues
-Element an der Cursorposition. Um die Befehle aus dem Menü
-<strong>Elemente</strong> zu verwenden, muss man den Cursor an die gewünschte
-Position plazieren und das gewünschte Element aus dem Memü auswählen.</p>
+<p>Die Befehle im Menü <strong>XHTML</strong> und die entsprechenden Knöpfe
+in der Knopfleiste erzeugen innerhalb eines Dokuments ein neues Element an
+der Cursorposition. Um die Befehle aus dem Menü <strong>XHTML</strong> zu
+verwenden, muss man den Cursor an die gewünschte Position plazieren und das
+gewünschte Element aus dem Memü auswählen.</p>
 
 <h2>Einfügepunkt</h2>
 
@@ -49,8 +48,8 @@ Markierung gehört in das gewählte Element zu <em>transformieren</em>.</p>
 weil die DTD von HTML das nicht zulässt. Amaya versucht dann das Element an
 der nächst möglichen Stelle zu plaziern. Beispiel: befindet sich der Cursor
 am Ende der letzten Zeile eines Absatzes und drückt man auf den Knopf <img
-src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> in der Knopfleiste, dann erzeugt
-Amaya die Überschrift unterhalb des Absatzes.</p>
+src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> in der
+Knopfleiste, dann erzeugt Amaya die Überschrift unterhalb des Absatzes.</p>
 
 <p>In einigen anderen Fällen ändert Amaya die existierende Struktur um das
 gewünschte Element zu erzeugen: befindet sich der Cursor innerhalb eines

@@ -3,14 +3,14 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/">
   <title>Mathematische Ausdrücke editieren</title>
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de" ="de">
+<body lang="de">
 
 <table border="0" cellspacing="5" cellpadding="5">
   <tbody>
@@ -34,15 +34,15 @@
 Methoden wie bei den HTML-Tabellen zur Verfügung. Ähnlich wie bei den
 Tabellen löscht der Befehl <strong>Matrixpalte entfernen</strong> die Spalte
 einer Matrix, auch dann, wenn diese nicht leer ist. Diesen Befehl findet man
-im Menü <strong>Elemente</strong>, Untermenü <strong>Formel</strong> an
-unterster Stelle.</p>
+im Menü <strong>XML</strong>, Untermenü <strong>Formel</strong> an unterster
+Stelle.</p>
 
 <h2>Die Struktur eines Ausdrucks ändern</h2>
 
 <p>Wenn man die Struktur eines existierenden Ausdrucks ändern möchte, um etwa
 ein Superscript einzufügen oder ihn in Klammern einzuschließen, muss man den
 Ausdruck markieren und das neue Konstrukt über die Palette, das Menü
-<strong>Elemente</strong> oder die Tastatur einfügen. Man kann auch
+<strong>XML</strong> oder die Tastatur einfügen. Man kann auch
 <strong>Transformieren</strong> aus dem Menü <strong>Bearbeiten</strong>
 benutzen. Hierbei wird dann eine Liste der möglichen Transformationen
 angezeigt.</p>
