@@ -2870,6 +2870,10 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      CutCommand (FALSE, FALSE);
 				      /* move the selection at the end of the
 					 previous element */
+				      if (FirstSelectedElement &&
+					  FirstSelectedChar <= FirstSelectedElement->ElVolume)
+					/* it doesn't point at the end of the
+					   previous text */
 				      TtcPreviousChar (FrameTable[frame].FrDoc, 1);
 				      return;
 				    }
