@@ -1,0 +1,14 @@
+#!/bin/sh
+tarAmaya
+tarSourcesAmaya
+tarSourcesThot
+tarEditor
+tarSourcesEditor
+
+echo -n Test source packaging Y/n :
+read ans
+if [ "$ans" = "n" -o "$ans" = "N" -o "$ans" = "no" -o "$ans" = "NO" ]
+then
+    exit 0
+fi
+testSourcesDistr

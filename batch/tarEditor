@@ -1,5 +1,5 @@
 #!/bin/sh
-THOTVERSON=2.0b
+THOTVERSION=2.0b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF LINUX-SPARC SUN4 SGI RS6000"
@@ -52,22 +52,39 @@ do
    Thot/config/thot.color \
    Thot/config/thot.pattern \
    Thot/config/thot.keyboard \
-   Thot/config/en-thotdialogue \
-   Thot/config/en-thotmsg \
-   Thot/config/en-libdialogue \
-   Thot/config/en-transdialogue \
-   Thot/config/en-corrdialogue \
-   Thot/config/en-printdialogue \
-   Thot/config/en-table \
-   Thot/config/en-resdyndialogue \
    Thot/config/fr-thotdialogue \
-   Thot/config/fr-thotmsg \
-   Thot/config/fr-libdialogue \
-   Thot/config/fr-transdialogue \
+   Thot/config/en-appdialogue \
+   Thot/config/en-compildialogue \
+   Thot/config/en-corrdialogue \
+   Thot/config/en-drawdialogue \
+   Thot/config/en-grmdialogue \
+   Thot/config/en-inddialogue \
+   Thot/config/en-itfdialogue \
+   Thot/config/en-libdialogue \
+   Thot/config/en-printdialogue \
+   Thot/config/en-prsdialogue \
+   Thot/config/en-strdialogue \
+   Thot/config/en-thotdialogue \
+   Thot/config/en-thotmessage \
+   Thot/config/en-thotversion \
+   Thot/config/en-transdialogue \
+   Thot/config/en-typdialogue \
+   Thot/config/fr-appdialogue \
+   Thot/config/fr-compildialogue \
    Thot/config/fr-corrdialogue \
+   Thot/config/fr-drawdialogue \
+   Thot/config/fr-grmdialogue \
+   Thot/config/fr-inddialogue \
+   Thot/config/fr-itfdialogue \
+   Thot/config/fr-libdialogue \
    Thot/config/fr-printdialogue \
-   Thot/config/fr-table \
-   Thot/config/fr-resdyndialogue \
+   Thot/config/fr-prsdialogue \
+   Thot/config/fr-strdialogue \
+   Thot/config/fr-thotdialogue \
+   Thot/config/fr-thotmessage \
+   Thot/config/fr-thotversion \
+   Thot/config/fr-transdialogue \
+   Thot/config/fr-typdialogue \
    Thot/dicopar/*.ptn \
    Thot/dicopar/alphabet \
    Thot/dicopar/clavier \
@@ -313,6 +330,6 @@ do
    Thot/schemas/Rapport.en \
    Thot/schemas/RefBib.en \
    Thot/schemas/Table.en \
-   | $COMPRESS  > $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz
+   | $COMPRESS  > $DEST/thoteditor-$MACH-$THOTVERSION.tar.gz
 done
 

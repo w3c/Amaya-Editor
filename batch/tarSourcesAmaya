@@ -819,9 +819,6 @@ do
     $MACH/Makefile.orig \
     $MACH/config.h \
     $MACH/libwww.a \
-    $MACH/libjpeg.a \
-    $MACH/libpng.a \
-    $MACH/libz.a \
     | $COMPRESS  > $DEST/amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 done
 
