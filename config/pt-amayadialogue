@@ -102,7 +102,7 @@
 100 Identificador (mi)
 101 Número (mn)
 102 Operador (mo)
-103 Espao (mspace)
+103 Espaço (mspace)
 104 Carácter (&xxx;)
 105 Multiplicação Invisível (InvisibleTimes)
 106 Aplicar função (ApplyFunction)
