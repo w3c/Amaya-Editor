@@ -65,7 +65,7 @@ char docToOpen [256];
 #endif /* _WINDOWS */
 
 #define AMAYA_PAGE "http://www.w3.org/Amaya/"
-#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/member/User/"
+#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
 
 static int          AmayaInitialized = 0;
 
