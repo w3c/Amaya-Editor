@@ -588,13 +588,11 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
   if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
-      ((elType.ElTypeNum == HTML_EL_Object ||
+      ((elType.ElTypeNum == HTML_EL_Object || elType.ElTypeNum == HTML_EL_IFRAME ||
 	elType.ElTypeNum == HTML_EL_Embed_) &&
        (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)))
     {
-      /** for the moment, the above function won't identify SVG images.
-	  So, we do the job here.
-	  This block should at some time be integrated with the above one */
+      /* Determine the type of the external element */
       is_svg = FALSE;
       is_mml = FALSE;
       is_html = FALSE;
@@ -698,7 +696,6 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	}
       else
 	{
-	  /* svg images don't use Image Maps */
 	  /* display the content of a picture element */
 	  TtaSetPictureContent (el, (unsigned char *)tempfile, SPACE, doc, mime_type);
 	  UpdateImageMap (el, doc, -1, -1);
@@ -967,7 +964,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
   ElemImage          *ctxEl;
   ElementType         elType;
   Element             elAttr;
-  AttributeType       attrType;
+  AttributeType       attrType, attrType2;
   Attribute           attr;
   LoadedImageDesc    *desc;
   char               *imageName, *utf8value;
@@ -995,6 +992,8 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 	    /* it's not a SVG element, it's then a HTML img element */
 	    {
 	      attrType.AttrTypeNum = HTML_ATTR_SRC;
+	      attrType2.AttrSSchema = attrType.AttrSSchema;
+	      attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
 	      elAttr = el;
 	    }
           else
@@ -1003,6 +1002,8 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 	      elAttr = TtaGetParent (el);
 	    }
 	  attr = TtaGetAttribute (elAttr, attrType);
+	  if (attr == NULL)
+	    attr = TtaGetAttribute (elAttr, attrType2);
 	  if (attr != NULL)
 	    /* an element with an attribute SRC or xlink:href has been found */
 	    {
@@ -1154,7 +1155,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
   ----------------------------------------------------------------------*/
 ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 {
-  AttributeType       attrType;
+  AttributeType       attrType, attrType1, attrType2;
   Attribute           attr, attrFound;
   ElementType         elType;
   Element             el, elFound, pic, elNext;
@@ -1197,16 +1198,20 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
        Get all 'img' or 'object' or 'embed' elements */
     {
       /* search all elements having an attribute SRC */
+      attrType1.AttrSSchema = attrType.AttrSSchema;
+      attrType2.AttrSSchema = attrType.AttrSSchema;
       attrType.AttrTypeNum = HTML_ATTR_SRC;
+      attrType1.AttrTypeNum = HTML_ATTR_SRC;
+      attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
       /* Start from the root element */
-      if (elSubTree == NULL)
+	if (elSubTree == NULL)
 	{
 	  el = TtaGetMainRoot (doc);
-	  TtaSearchAttribute (attrType, SearchForward,
+	  TtaSearchAttributes (attrType1,attrType2, SearchForward,
 			      el, &elFound, &attr);
 	}
       else
-	TtaSearchAttribute (attrType, SearchInTree,
+	TtaSearchAttributes (attrType1,attrType2, SearchInTree,
 			    elSubTree, &elFound, &attr);
       el = elFound;
       do
@@ -1228,14 +1233,15 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 	      /* search the next element having an attribute SRC */
 	      elNext = el;
 	      if (elSubTree == NULL)
-		TtaSearchAttribute (attrType, SearchForward,
-				    elNext, &elFound, &attr);
+		TtaSearchAttributes (attrType1, attrType2,
+				     SearchForward, elNext, &elFound, &attr);
 	      if (elSubTree != NULL && elFound != NULL &&
 		  !TtaIsAncestor (elFound, elSubTree))
 		elFound = NULL;
 
 	      /* Load only wanted elements (images, objects) :
 	       * this could be changed into preferences menu (browsing) */
+	      elType     = TtaGetElementType (el);
 	      parent     = TtaGetParent (el);
 	      parentType = TtaGetElementType (parent);
 	      if (parentType.ElTypeNum == HTML_EL_Object ||
@@ -1245,6 +1251,11 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		  if (loadObjects)
 		    FetchImage (doc, el, NULL, flags, NULL, NULL);
 	      	}
+	      else if (elType.ElTypeNum == HTML_EL_IFRAME)
+		{
+		  if (loadObjects)
+		    FetchImage (doc, el, NULL, flags, NULL, NULL);		  
+		}
 	      else
 	      	{
 		  /* this element is an IMAGE */

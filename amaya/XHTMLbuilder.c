@@ -397,6 +397,42 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 TtaFreeMemory (data);
        break;
 
+     case HTML_EL_IFRAME:	  /* it's an iframe */
+       child = TtaGetFirstChild (el);
+       /* is the Iframe_Content element already created ? */
+       if (child)
+	 /* the iframe element has at least 1 child element */
+	 {
+	   content = NULL;
+	   desc = child;
+	   elType = TtaGetElementType (desc);
+	   if (elType.ElTypeNum != HTML_EL_Iframe_Content)
+	     {
+	       TtaNextSibling(&desc);
+	       if (desc)
+		 elType = TtaGetElementType (desc);
+	     }
+	   /* is it the Iframe_Content element ? */
+	   if (elType.ElTypeNum == HTML_EL_Iframe_Content)
+	     content = desc;
+	   else
+	     {
+	       /* create an Iframe_Content element */
+	       elType.ElTypeNum = HTML_EL_Iframe_Content;
+	       content = TtaNewElement (doc, elType);
+	       TtaInsertSibling (content, child, TRUE, doc);
+	       /* move previous existing children into Iframe_Content */
+	       child = TtaGetLastChild(el);
+	       while (child != content)
+		 {
+		   TtaRemoveTree (child, doc);
+		   TtaInsertFirstChild (&child, content, doc);
+		   child = TtaGetLastChild(el);
+		 }
+	     }
+	 }
+       break;
+
      case HTML_EL_Unnumbered_List:
      case HTML_EL_Numbered_List:
      case HTML_EL_Menu:

@@ -939,7 +939,7 @@ RULES
 		Create '\12' After;
 	END;
 
- SVG_Image: BEGIN
+ External_Object: BEGIN
 	if IsInput BEGIN
 	        create SOT;
 		Create 'input type="image"';
@@ -967,7 +967,7 @@ RULES
 		Create '\12' After;
 	END;
 
- SVG_ImageContent: BEGIN
+ External_Object_Content: BEGIN
 	Remove;
 	END;
 
@@ -1306,6 +1306,10 @@ RULES
 	Indent -2;
 	create SCT after;
 	Create 'iframe>\12' After;	
+	END;
+
+ Iframe_Src_Content: BEGIN
+	Remove;
 	END;
 
  ruby: BEGIN

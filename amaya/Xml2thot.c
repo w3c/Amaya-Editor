@@ -684,7 +684,7 @@ static void  XmlWhiteSpaceHandling ()
 /*----------------------------------------------------------------------
    XmlWhiteInStack
    The last element in stack has a xml:space attribute
-   (or it is a PRE, STYLE or SCRIPT element in XHTML)
+   (or it is a pre, style, textarea or script element in XHTML)
   ----------------------------------------------------------------------*/
 static void    XmlWhiteSpaceInStack (char  *attrValue)
 
@@ -1963,8 +1963,9 @@ static void       EndOfXmlStartElement (char *name)
 	{
 	  if (!strcmp ((char *)nameElementStack[stackLevel - 1], "pre")   ||
 	      !strcmp ((char *)nameElementStack[stackLevel - 1], "style") ||
+	      !strcmp ((char *)nameElementStack[stackLevel - 1], "textarea") ||
 	      !strcmp ((char *)nameElementStack[stackLevel - 1], "script"))
-	    /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
+	    /* a <pre>, <style> <textarea> or <scriptT> tag has been read */
 	    XmlWhiteSpaceInStack ((char *)NULL);
 	  else
 	    if (!strcmp ((char *)nameElementStack[stackLevel - 1], "table"))
@@ -4637,8 +4638,8 @@ static Element  SetExternalElementType (Element el, Document doc,
       parentType = TtaGetElementType (parent);
       if (parentType.ElTypeNum == HTML_EL_Object)
 	{
-	  /* Create a SVG_ImageContent element */
-	  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
+	  /* Create an External_Object_Content element */
+	  elType.ElTypeNum = HTML_EL_External_Object_Content;
 	  elemContent = TtaNewElement (doc, elType);
 	  if (elemContent != NULL)
 	    {
@@ -4658,16 +4659,16 @@ static Element  SetExternalElementType (Element el, Document doc,
 	}
       else
 	{
-	  /* create a SVG_Image element instead of the PICTURE element */
-	  elType.ElTypeNum = HTML_EL_SVG_Image;
+	  /* create an External_Object element instead of the PICTURE element */
+	  elType.ElTypeNum = HTML_EL_External_Object;
 	  elemElement = TtaNewElement (doc, elType);
 	  if (elemElement != NULL)
 	    {
 	      TtaInsertSibling (elemElement, el, FALSE, doc);
 	      /* Attach the attributes to that new element */
 	       MoveExternalAttribute (el, elemElement, doc);
-	      /* create a SVG_ImageContent element */
-	      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
+	      /* create an External_ObjectContent element */
+	      elType.ElTypeNum = HTML_EL_External_Object_Content;
 	      elemContent = TtaNewElement (doc, elType);
 	      if (elemContent != NULL)
 		TtaInsertFirstChild (&elemContent, elemElement, doc);
@@ -4682,6 +4683,21 @@ static Element  SetExternalElementType (Element el, Document doc,
       /* We are parsing an embed element within a HTML document*/
       /* Is there an Embed_Content element? */
       elType.ElTypeNum = HTML_EL_Embed_Content;
+      elemContent = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (!elemContent)
+	/* no, create one */
+	{
+	  elemContent = TtaNewElement (doc, elType);
+	  if (elemContent != NULL)
+	    TtaInsertFirstChild (&elemContent, el, doc);
+	}
+    }
+  else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+	   elType.ElTypeNum == HTML_EL_IFRAME)
+    {
+      /* We are parsing an iframe element within a HTML document*/
+      /* Is there an Iframe_Src_Content element? */
+      elType.ElTypeNum = HTML_EL_Iframe_Src_Content;
       elemContent = TtaSearchTypedElement (elType, SearchInTree, el);
       if (!elemContent)
 	/* no, create one */
@@ -5020,12 +5036,7 @@ void ParseExternalDocument (char     *fileName,
       /* DocNetworkStatus[doc] = AMAYA_NET_ACTIVE; */
       FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
       /* Make the external element not editable */
-      child = TtaGetFirstChild (extEl);
-      while (child)
-	{
-	  TtaSetAccessRight (child, ReadOnly, doc);
-	  TtaNextSibling (&child);
-	}
+      TtaSetAccessRight (extEl, ReadOnly, doc);
     }
 
 

@@ -1112,6 +1112,8 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
   char          type[NAME_LENGTH];
   char          tempdoc2 [100];
   ThotBool      ok = FALSE;
+  char          err_doc [100];
+  char          err_extdoc [100];
 
   /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
@@ -1170,9 +1172,15 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
   if (ErrFile)
     {
       CleanUpParsingErrors ();
-      /* Ask for confirmation */
-      ShowLogFile (ext_doc, 1);
+      /* Show the parsing errors */
+      sprintf (err_doc, "%s%c%d%cPARSING.ERR",
+	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      sprintf (err_extdoc, "%s%c%d%cPARSING.ERR",
+	       TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP);
+      TtaFileCopy (err_extdoc, err_doc);
+      ShowLogFile (doc, 1);
       ShowSource (doc, 1);
+      /* Ask for confirmation */
       InitConfirm3L (doc, 1,
 		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE1),
 		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE2),
@@ -1180,6 +1188,8 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, cha
 		     TRUE);
       ok =  UserAnswer;
       *error = TRUE;
+      TtaFileUnlink (err_doc);
+
     }
   else
     ok = TRUE;

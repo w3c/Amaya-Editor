@@ -4294,7 +4294,7 @@ RULES
 		Visibility: 0;
 	END;
 
- SVG_Image: BEGIN
+ External_Object: BEGIN
 	if ALT
 	        CreateBefore(IMG_ALT);
 	if IsInput
@@ -4336,7 +4336,7 @@ RULES
 		Visibility: 0;
 	END;
 
- SVG_ImageContent: BEGIN
+ External_Object_Content: BEGIN
 	LineBreak: No;
 	PageBreak: No;
 	IN Structure_view
@@ -5266,6 +5266,39 @@ RULES
 	        BorderRightStyle: none;
 		LineBreak: Yes;
 		END;
+	END;
+
+ Iframe_Content: BEGIN
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		VertPos: Top = Previous . Bottom;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		VertPos: Top = Enclosing . Top;
+		END;
+	END;
+
+ Iframe_Src_Content: BEGIN
+	LineBreak: No;
+	PageBreak: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
 	END;
 
   simple_ruby: BEGIN

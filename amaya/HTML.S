@@ -166,7 +166,7 @@ STRUCT
         SVG;			                                { SVG }
 	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
-	SVG_Image						{ GRAPHIC }
+	External_Object						
 	    (ATTR SRC; ALT; longdesc;
 		{ src  alt  longdesc }
 		  Height_; Width__;
@@ -183,7 +183,7 @@ STRUCT
 		{ border }
 		  hspace; vspace) =
 		{ hspace  vspace }
-		 SVG_ImageContent;
+		 External_Object_Content;
 	Embed_						{ EMBED }
 	    (ATTR SRC;
 		  Alignment;
@@ -207,7 +207,7 @@ STRUCT
 	END;
 
 	HTMLfragment = LIST OF (Element);
-	SVG_ImageContent = SVG;
+	External_Object_Content = NATURE;
 	Embed_Content = NATURE;
 
   Block_Quote							{ BLOCKQUOTE }
@@ -254,7 +254,7 @@ STRUCT
 	Basic_Set
 	     - (PICTURE, Object, Applet,
 		Big_text, Small_text, Subscript, Superscript,
-		Font_, BaseFont, SVG_Image);
+		Font_, BaseFont, External_Object);
 
   Anchor							{ A }
      (ATTR charset; Link_type; NAME;
@@ -296,7 +296,7 @@ STRUCT
 	ruby;                                                   { ruby }
 	MathML;							{ MATH }
 	XLink;							{ Annotations }
-	SVG_Image;						{ GRAPHIC }
+	External_Object;				        { External Object }
 	END;
 
   BaseFont							{ BASEFONT }
@@ -818,7 +818,11 @@ STRUCT
 	 { marginwidth  marginheight  scrolling }
 	   Alignment; Width__; Height_) =
 	 { align      width    height }
-	LIST OF (Element);
+	BEGIN
+	Iframe_Src_Content= NATURE;
+	Iframe_Content = LIST OF (ElemOrParam_2 = CASE OF
+	                          Element; Parameter; END);   { PARAM }
+	END;
 
   ruby =                                                        { ruby }
         CASE OF
@@ -959,12 +963,13 @@ EXCEPT
         tfoot:	        NoBreakByReturn;
 	Table_row:	IsRow, PageBreakPlace, NoBreakByReturn;
 	IFRAME:	        NoBreakByReturn;
+	Iframe_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
+	Iframe_Src_Content: Hidden;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	ColRef, Invisible;
 	colspan_:	ColSpan;
 	rowspan_:	RowSpan;
-	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	Ghost_restruct:	Invisible;
         IntEntity:	Invisible;
         EntityName:	Invisible;
@@ -988,8 +993,9 @@ EXCEPT
 	onselect:	EventAttr;
 	ID :		CssId;
 	Class:		CssClass;
-	SVG_ImageContent: Hidden;
+	External_Object_Content: Hidden;
 	Embed_Content:  Hidden, NoSelect;
+	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	is_css:	Invisible;
 	xml_space:      SpacePreserve;
 END
