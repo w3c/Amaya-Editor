@@ -2606,6 +2606,7 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetBrowseConf (void)
 {
+
   TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
@@ -2699,7 +2700,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
-	case IDC_BGIMAGES:
+	case IDC_LOADIMG:
 	  LoadImages = !LoadImages;
 	  break;
 	case IDC_DOUBLECLICK:

@@ -1001,7 +1001,10 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 
   TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
   if (!loadImages)
-    return FALSE;
+    {
+      ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
+      return FALSE;
+    }
   /* JK: verify if StopTransfer was previously called */
   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
     {

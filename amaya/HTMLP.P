@@ -922,6 +922,23 @@ BOXES
 		END;
 	END;
 
+ SHOW_ALT: BEGIN
+	Visibility: Enclosing =;
+	Content: (ALT);
+	IN Structure_view BEGIN
+		Visibility: 0;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: 0;
+		END;
+	IN Links_view BEGIN
+		Visibility: 0;
+		END;
+	IN Table_of_contents BEGIN
+		Visibility: 0;
+		END;
+	END;
+
  VALUE_ALT: BEGIN
 	Visibility: 0;
 	Content: (ALT);
@@ -4959,6 +4976,12 @@ RULES
 	END;
 
 ATTRIBUTES
+#ifndef PAGE
+ NoImages(PICTURE_UNIT):
+	BEGIN
+        CreateBefore(SHOW_ALT);
+	END;
+#endif
 
  Language:
 	BEGIN

@@ -44,7 +44,7 @@ CONST
 STRUCT
 
   HTML								{ HTML }
-     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
+     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_; NoImages = Yes_;
 	   PrintURL = Yes_; PI = Text;
 	   Namespaces = Text; RealLang = Yes_; Charset = Text) =
 	BEGIN
