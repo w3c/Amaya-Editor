@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.8  2002-06-13 13:40:32  kahan
+ ** Revision 1.9  2002-07-01 10:34:16  kahan
+ ** JK: Enabling/Disabling DAV support by means of the new DAV_Enable
+ ** registry entry.
+ ** Removed the DAV menu from the standard profile.
+ **
+ ** Revision 1.8  2002/06/13 13:40:32  kahan
  ** JK: Changed MAX_LINE to DAV_MAX_LINE. MAX_LINE is a reserved macro and
  ** the code was generating a warning.
  **
@@ -544,6 +549,9 @@ void DAVAddIfHeader (AHTReqContext *context, char *url)
     AHTDAVContext *davctx = NULL;
     HTList * matches = NULL;
     char *ifHeader = NULL;
+
+    if (!DAVLibEnable)
+      return;
     
     if (context && url && (*url) && (context->request)) 
      {
@@ -581,6 +589,9 @@ void DAVAddIfHeader (AHTReqContext *context, char *url)
   ----------------------------------------------------------------------*/
 void DAVRemoveIfHeader (AHTReqContext *context) 
 {
+    if (!DAVLibEnable)
+      return;
+
 #ifdef DEBUG_DAV            
        fprintf (stderr,"DAVRemoveIfHeader..... Request for %s\n",context->urlName);
 #endif          
@@ -607,6 +618,9 @@ void DAVRemoveIfHeader (AHTReqContext *context)
 AHTDAVContext * AHTDAVContext_new (const char *DocURL) 
 {
     AHTDAVContext *me = NULL;
+
+    if (!DAVLibEnable)
+      return NULL;
 
     if (!DocURL || !(*DocURL)) 
         return NULL;

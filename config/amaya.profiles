@@ -61,7 +61,8 @@
 +templates
 +views
 &CreateRuby
-+davbase
+# JK: Removed davlib from the profiles
+#+davbase
 
 ################# AMAYA MINI-EDITOR
 <Mini-editor>

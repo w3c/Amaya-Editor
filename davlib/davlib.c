@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.9  2002-06-13 16:10:13  kirschpi
+ ** Revision 1.10  2002-07-01 10:34:16  kahan
+ ** JK: Enabling/Disabling DAV support by means of the new DAV_Enable
+ ** registry entry.
+ ** Removed the DAV menu from the standard profile.
+ **
+ ** Revision 1.9  2002/06/13 16:10:13  kirschpi
  ** New dialogue "WebDAV Preferences"
  ** Corrections due last commit by JK
  ** Manuele
@@ -90,8 +95,12 @@ void InitDAV (void)
     BOOL modified = FALSE;
     char *fqdn = NULL;
     char *email = NULL;
-    
-    
+
+    /* check if DAV support is enabled */
+    TtaGetEnvBoolean ("DAV_ENABLE", &DAVLibEnable);
+    if (!DAVLibEnable)
+      return;
+
     /* ******************** DAVHome ********************* */
     /* try to get default home (.amaya) dir from APP_HOME */
     ptr = TtaGetEnvString ("APP_HOME");
@@ -289,6 +298,9 @@ void DAVFreeLock (Document docid)
     char *relURI, *absURI, *ptr;
     char label1[DAV_LINE_MAX], label2[DAV_LINE_MAX];
 
+    if (!DAVLibEnable)
+      return;
+
     lockinfo = relURI = absURI = ptr = NULL;
     
     /* if user doesn't want awareness info, neither
@@ -342,6 +354,9 @@ void DAVFreeLock (Document docid)
   ----------------------------------------------------------------------*/
 void DAVSaveRegistry (void)
 {
+  if (!DAVLibEnable)
+    return;
+
     /***** DAVUserURL, DAVLockScope, DAVDepth, DAVTimeout *****/
     TtaSetEnvString (DAV_USER_URL,DAVUserURL,TRUE);
     TtaSetEnvString (DAV_LOCK_SCOPE,DAVLockScope,TRUE);
@@ -394,6 +409,9 @@ void DAVLockDocument (Document document, View view)
 {
     AHTDAVContext *davctx = NULL;
 
+    if (!DAVLibEnable)
+      return;
+
 #ifdef DEBUG_DAV    
     fprintf (stderr,"DAVLockDocument..... Locking document %s\n",DocumentURLs[document]);
     fprintf (stderr,"DAVLockDocument..... creating the dav context object\n");
@@ -434,6 +452,9 @@ void DAVLockDocument (Document document, View view)
 void DAVUnlockDocument (Document document, View view) 
 {
     AHTDAVContext *davctx = NULL;
+
+    if (!DAVLibEnable)
+      return;
     
 #ifdef DEBUG_DAV    
     fprintf (stderr,"DAVUnlockDocument..... Unlocking document %s\n",DocumentURLs[document]);
@@ -472,6 +493,9 @@ void DAVUnlockDocument (Document document, View view)
 void DAVProfindDocument (Document document, View view) 
 {
     AHTDAVContext *davctx= NULL;
+
+    if (!DAVLibEnable)
+      return;
 
 #ifdef DEBUG_DAV
     fprintf (stderr,"DAVPropfindDocument.... Profind document %s\n",DocumentURLs[document]);
@@ -516,6 +540,10 @@ void DAVCopyLockInfo (Document document, View view)
 {
     AHTDAVContext *davctx= NULL;
     BOOL ok = NO;
+
+    if (!DAVLibEnable)
+      return;
+
 #ifdef DEBUG_DAV
     fprintf (stderr,"DAVCopyLockInfo.... Profind document %s\n",DocumentURLs[document]);
     fprintf (stderr,"DAVCopyLockInfo..... creating the dav context object\n");    
@@ -576,6 +604,9 @@ void DAVLockIndicator (Document document, View view)
   ----------------------------------------------------------------------*/
 void DAVPreferences (Document document, View view) 
 {
+    if (!DAVLibEnable)
+      return;
+
     DAVShowPreferencesDlg (document);
 }
 
