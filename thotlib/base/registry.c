@@ -443,6 +443,7 @@ FILE               *output;
       fprintf (output, "[%s]\n", cour->appli);
       /* add all the entries under the same appli name */
       if (cour->level == REGISTRY_USER 
+		  && ustrcasecmp (cour->name, "TMPDIR")
 		  && ustrcasecmp (cour->name, "APP_TMPDIR")
 		  && ustrcasecmp (cour->name, "APP_HOME"))
 	fprintf (output, "%s=%s\n", cour->name, cour->orig);
@@ -450,6 +451,7 @@ FILE               *output;
       while (next != NULL && !ustrcasecmp (next->appli, cour->appli))
 	{
 	  if (next->level == REGISTRY_USER
+	      && ustrcasecmp (cour->name, "TMPDIR")
 #ifndef _WINDOWS
 	      && ustrcasecmp (next->name, "APP_TMPDIR")
 #endif /* _WINDOWS */
@@ -1332,7 +1334,7 @@ char* appArgv0;
 #  ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
   TCHAR username[21];
-  TCHAR windir[MAX_PATH];
+  TCHAR windir[MAX_PATH+1];
   DWORD dwSize;
 #  ifndef __CYGWIN32__
   extern int _fmode;
@@ -1606,15 +1608,16 @@ char* appArgv0;
      /* under win95, there may be no user name */
      ptr = WIN_DEF_USERNAME;
    if (IS_NT)
-      /* winnt: apphome is windowsdir\profiles\username\appname */
-   {
-	  dwSize = MAX_PATH;
-	  GetWindowsDirectory (windir, dwSize);
-      usprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppRegistryEntryAppli);
-   }
+     /* winnt: apphome is windowsdir\profiles\username\appname */
+     {
+       dwSize = MAX_PATH;
+       GetWindowsDirectory (windir, dwSize);
+       usprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, 
+		 AppRegistryEntryAppli);
+     }
    else
-      /* win95: apphome is  thotdir\users\username */
-      usprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);   
+     /* win95: apphome is  thotdir\users\username */
+     usprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);   
 # else /* !_WINDOWS */
    ptr = getenv ("HOME");
    usprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppRegistryEntryAppli); 

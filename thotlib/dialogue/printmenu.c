@@ -581,7 +581,12 @@ Document document;
 	   else
 	     {
 	       ptr = NULL;
-	       ptr = TtaGetEnvString ("TMPDIR");
+	       ptr = TtaGetEnvString ("APP_TMPDIR");
+	       if (ptr == NULL || *ptr == EOS || !TtaCheckDirectory (ptr))
+		 {
+		   ptr = NULL;
+		   ptr = TtaGetEnvString ("TMPDIR");
+		 }
 	       if (ptr != NULL && TtaCheckDirectory (ptr))
 		 {
 		   ustrcpy(PSdir,ptr);
