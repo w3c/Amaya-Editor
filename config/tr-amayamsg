@@ -211,13 +211,13 @@
 209 **Portrait
 210 **Landscape
 211 **Enable FTP (experimental)
-212 **This document is incomplete, don't save it - See Views/Show parsing errors
-213 **Some characters are not supported - see Views/Show parsing errors
-214 **In the current Amaya profile:
-215 **Some tags/attributes are ignored - see Views/Show parsing errors
-216 **The encoding of this document is not supported by Amaya
-217 **This document has no encoding declaration
-218 **There is no encoding, set it to ISO_8859_1 ?
+212 **Invalid XML - Reload as HTML or show parsing errors?
+213 **Invalid XML - Show parsing errors?
+214 **Invalid characters - Reload as HTML or show parsing errors?
+215 **Invalid characters
+216 **In the current Amaya profile:
+217 **Some tags/attributes are ignored - see Views/Show parsing errors
+218 **The encoding of this document is not supported by Amaya
 219 **Not available
 220 **Browse
 221 **File Browser

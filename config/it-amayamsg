@@ -211,13 +211,13 @@
 209 Ritratto
 210 Paesaggio
 211 Abilita FTP (sperimentale)
-212 Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion
-213 Alcuni caratteri non sono supportati - vedi Viste/Mostra gli errori di parsificazione
-214 Nel profilo attuale di Amaya:
-215 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-216 La codifica per questo documento non e` supportata da Amaya
-217 Questo documento non ha una dichiarazione di codifica
-218 Non è indicata codifica: usare ISO_8859_1?
+212 **Invalid XML - Reload as HTML or show parsing errors?
+213 **Invalid XML - Show parsing errors?
+214 **Invalid characters - Reload as HTML or show parsing errors?
+215 **Invalid characters
+216 Nel profilo attuale di Amaya:
+217 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
+218 La codifica per questo documento non e` supportata da Amaya
 219 Non disponibile
 220 Scorri
 221 File Browser

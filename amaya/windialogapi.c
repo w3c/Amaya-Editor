@@ -103,7 +103,6 @@ static char*      mimeType;
 static char*      charSet;
 static int          currentDoc;
 static int          currentView;
-static int          currentRef;
 static int          SpellingBase;
 static int          ChkrSelectProp;
 static int          ChkrMenuOR;
@@ -2297,9 +2296,8 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
     case WM_INITDIALOG:
       /* get the default GUI font */
       newFont = GetStockObject (DEFAULT_GUI_FONT); 
-      SetWindowText (hwnDlg, wndTitle);
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), wndTitle);
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       messageWnd = CreateWindow ("STATIC", message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
@@ -2316,11 +2314,11 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 	{
 	case ID_CONFIRM:
 	  EndDialog (hwnDlg, ID_CONFIRM);
-	  ThotCallback (currentRef, INTEGER_DATA, (char*) 1);
+	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
 	  break;
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
-	  ThotCallback (currentRef, INTEGER_DATA, (char*) 0);
+	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0);
 	  break;
 	}
       break;
@@ -2340,8 +2338,7 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
       {
       case WM_INITDIALOG:
 	SetWindowText (hwnDlg, wndTitle);
-	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), wndTitle);
 	if (WithCancel)
 	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 	  TtaGetMessage (LIB, TMSG_CANCEL));
@@ -2358,12 +2355,12 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
 	  {
 	  case ID_CONFIRM:
 	    EndDialog (hwnDlg, ID_CONFIRM);
-	    ThotCallback (currentRef, INTEGER_DATA, (char*) 1);
+	    ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
 	    break;
 	    
 	  case IDCANCEL:
 	    EndDialog (hwnDlg, IDCANCEL);
-	    ThotCallback (currentRef, INTEGER_DATA, (char*) 0);
+	    ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0);
 	    break;
 	  }
 	break;
@@ -3856,25 +3853,25 @@ void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_lis
   nbClass     = (UINT)nb_class;
   classList   = class_list;
   WithEdit = FALSE;
-  DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL/*parent*/, (DLGPROC) ApplyClassDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL,
+	     (DLGPROC) ApplyClassDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
-void CreateInitConfirmDlgWindow (ThotWindow parent, int ref, char *title, char *msg)
+void CreateInitConfirmDlgWindow (ThotWindow parent, char *title, char *label)
 {  
-  strcpy (message, msg);
+  strcpy (message, label);
   strcpy (wndTitle, title);
-  currentRef = ref;
-
-  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
+	     (DLGPROC) InitConfirmDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateInitConfirm3LDlgWindow
  ------------------------------------------------------------------------*/
-void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, char *title,
+void CreateInitConfirm3LDlgWindow (ThotWindow parent, char *title,
 				   char *msg, char *msg2, char *msg3,
 				   ThotBool withCancel)
 {
@@ -3887,16 +3884,15 @@ void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, char *title,
     strcpy (message3, msg3);
   else
     message3[0] = EOS;
-  
   strcpy (wndTitle, title);
-  currentRef = ref;
-  
   /* register if the cancel button has to be generated */
   WithCancel = withCancel;
   if (withCancel)
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent,
+	       (DLGPROC) InitConfirm3LDlgProc);
   else
-	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG1), parent, (DLGPROC) InitConfirm3LDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG1), parent,
+		   (DLGPROC) InitConfirm3LDlgProc);
 }
 
 /*-----------------------------------------------------------------------

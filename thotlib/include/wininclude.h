@@ -71,8 +71,8 @@ extern void       CreateRuleDlgWindow (ThotWindow parent, int nb_class, char *cl
 extern void       CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_list);
 extern void       CreateSpellCheckDlgWindow (ThotWindow, char *, char *, int, int, int, int, int, int, int);
 extern void       CreateMathAttribDlgWindow (int);
-extern void       CreateInitConfirmDlgWindow (ThotWindow parent, int ref, char *title, char *msg);
-extern void       CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, char *title, char *msg, char *msg2, char *msg3, ThotBool withCancel);
+extern void       CreateInitConfirmDlgWindow (ThotWindow parent, char *title, char *msg);
+extern void       CreateInitConfirm3LDlgWindow (ThotWindow parent, char *title, char *msg, char *msg2, char *msg3, ThotBool withCancel);
 extern void       CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing, int align_num, int indent_value, int indent_num, int old_lineSp, int line_spacingNum);
 extern void       CreateGreekKeyboardDlgWindow (ThotWindow parent);
 extern void       CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm, char *server);

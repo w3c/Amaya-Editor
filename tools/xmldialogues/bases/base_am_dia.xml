@@ -263,12 +263,12 @@
 	<message xml:lang="pt">Sincronizar</message>
 </label>
 <label define="BLatinReading">
-	<message xml:lang="en">Reopen in ISO-latin-1</message>
-	<message xml:lang="fr">Reouvrir en ISO-latin-1</message>
-	<message xml:lang="de">Dokument mit ISO-latin-1 neu parsen</message>
-	<message xml:lang="it">Riapri in ISO-latin-1</message>
-	<message xml:lang="es">Recargar como ISO-latin-1</message>
-	<message xml:lang="pt">Reabrir em ISO-latin-1</message>
+	<message xml:lang="en">Reparse in HTML</message>
+	<message xml:lang="fr">Reparser en HTML</message>
+	<message xml:lang="de">Dokument mit HTML neu parsen</message>
+	<message xml:lang="it">Riapri in HTML</message>
+	<message xml:lang="es">Recargar como HTML</message>
+	<message xml:lang="pt">Reabrir em HTML</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>

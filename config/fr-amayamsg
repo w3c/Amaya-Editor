@@ -211,13 +211,13 @@
 209 Portrait
 210 Paysage
 211 Support FTP (experimental)
-212 Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs
-213 Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs
-214 Dans le profil Amaya courant :
-215 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
-216 Le codage de ce document n'est pas supporté par Amaya
-217 Aucun codage n'est déclaré pour ce document
-218 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
+212 XML invalide - Recharger pour corriger ou montrer les erreurs ?
+213 XML invalide - Montrer les erreurs ?
+214 Caractères invalides - Recharger en HTML ou	montrer les erreurs ?
+215 Caractères invalides
+216 Dans le profil Amaya courant :
+217 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+218 Le codage de ce document n'est pas supporté par Amaya
 219 Non disponible
 220 Butiner
 221 Sélecteur de fichiers

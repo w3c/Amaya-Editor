@@ -211,13 +211,13 @@
 209 Hochformat
 210 Querformat
 211 FTP zulassen (noch in der Erprobung)
-212 Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen
-213 Einige Zeichen werden nicht unterstützt - siehe Ansicht/Parsefehler anzeigen
-214 Im gegenwärtigen Amaya Profil:
-215 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-216 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-217 Dieses Dokument enthält keine Kodierungsdeklaration
-218 Keine Kodierung vorhanden, ISO_8859_1 verwenden?
+212 **Invalid XML - Reload as HTML or show parsing errors?
+213 **Invalid XML - Show parsing errors?
+214 **Invalid characters - Reload as HTML or show parsing errors?
+215 **Invalid characters
+216 Im gegenwärtigen Amaya Profil:
+217 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+218 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
 219 Nicht verfügbar
 220 Browsen
 221 Datei-Browser

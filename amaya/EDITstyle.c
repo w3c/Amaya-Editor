@@ -1409,7 +1409,7 @@ void CreateClass (Document doc, View view)
    ApplyClass
    Initialize and activate the Apply Class dialogue box.
   ----------------------------------------------------------------------*/
-void                ApplyClass (Document doc, View view)
+void ApplyClass (Document doc, View view)
 {
   Attribute           attr;
   AttributeType       attrType;

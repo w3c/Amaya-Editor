@@ -1827,21 +1827,22 @@
 	<message xml:lang="es">Activar FTP (experimental)</message>
 	<message xml:lang="pt">Habilitar FTP (experimental)</message>
 </label>
-<label define="AM_XML_NOT_WELL_FORMED">
-	<message xml:lang="en">This document is incomplete, don't save it - See Views/Show parsing errors</message>
-	<message xml:lang="fr">Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs</message>
-	<message xml:lang="de">Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen</message>
-	<message xml:lang="es">El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log</message>
-	<message xml:lang="it">Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion</message>
-	<message xml:lang="pt">Este documento está incompleto; não salve ele - Veja Vistas/Exibir erros de gramática (parsing)</message>
+<label define="AM_XML_RETRY">
+	<message xml:lang="en">Invalid XML - Reload as HTML or show parsing errors?</message>
+	<message xml:lang="fr">XML invalide - Recharger pour corriger ou montrer les erreurs ?</message>
+</label>
+<label define="AM_XML_ERROR">
+	<message xml:lang="en">Invalid XML - Show parsing errors?</message>
+	<message xml:lang="fr">XML invalide - Montrer les erreurs ?</message>
+</label>
+<label define="AM_XML_CHARACTER_RETRY">
+	<message xml:lang="en">Invalid characters - Reload as HTML or show parsing errors?</message>
+	<message xml:lang="fr">Caractères invalides - Recharger en HTML ou
+	montrer les erreurs ?</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
-	<message xml:lang="en">Some characters are not supported - see Views/Show parsing errors</message>
-	<message xml:lang="fr">Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs</message>
-	<message xml:lang="it">Alcuni caratteri non sono supportati - vedi Viste/Mostra gli errori di parsificazione</message>
-	<message xml:lang="de">Einige Zeichen werden nicht unterstützt - siehe Ansicht/Parsefehler anzeigen</message>
-	<message xml:lang="es">Algunos caracteres no están soportados - vea análisis de errores Ver/Mostrar</message>
-	<message xml:lang="pt">Alguns caracteres não são suportados - veja Vistas/Exibir erros de gramática (parsing)</message>
+	<message xml:lang="en">Invalid characters</message>
+	<message xml:lang="fr">Caractères invalides</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
@@ -1851,7 +1852,7 @@
 	<message xml:lang="es">En el perfil actual de Amaya:</message>
 	<message xml:lang="pt">No perfil Amaya atual:</message>
 </label>
-<label define="AM_XML_ERROR">
+<label define="AM_XML_WARNING">
 	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
 	<message xml:lang="fr">Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
@@ -1866,22 +1867,6 @@
 	<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht unterstützt</message>
 	<message xml:lang="es">La codificación de este documento no está soportada por Amaya</message>
 	<message xml:lang="pt">A codificação deste documento não é suportada por Amaya</message>
-</label>
-<label define="AM_UNDEFINED_ENCODING">
-	<message xml:lang="en">This document has no encoding declaration</message>
-	<message xml:lang="fr">Aucun codage n'est déclaré pour ce document</message>
-	<message xml:lang="de">Dieses Dokument enthält keine Kodierungsdeklaration</message>
-	<message xml:lang="es">El documento no tiene una declaración de codage</message>
-	<message xml:lang="it">Questo documento non ha una dichiarazione di codifica</message>
-	<message xml:lang="pt">Este documento não tem declaração de codificação</message>
-</label>
-<label define="AM_UNDEFINED_ENCODING_CONFIRM">
-	<message xml:lang="en">There is no encoding, set it to ISO_8859_1 ?</message>
-	<message xml:lang="fr">Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?</message>
-	<message xml:lang="de">Keine Kodierung vorhanden, ISO_8859_1 verwenden?</message>
-	<message xml:lang="es">Ningun codage declarado. Utilisar ISO_8859_1 ?</message>
-	<message xml:lang="it">Non è indicata codifica: usare ISO_8859_1?</message>
-	<message xml:lang="pt">Não há codificação declarada. Utilizar ISO_8859_1 ?</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>

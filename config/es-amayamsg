@@ -211,13 +211,13 @@
 209 Vertical
 210 Apaisado
 211 Activar FTP (experimental)
-212 El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log
-213 Algunos caracteres no están soportados - vea análisis de errores Ver/Mostrar
-214 En el perfil actual de Amaya:
-215 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
-216 La codificación de este documento no está soportada por Amaya
-217 El documento no tiene una declaración de codage
-218 Ningun codage declarado. Utilisar ISO_8859_1 ?
+212 **Invalid XML - Reload as HTML or show parsing errors?
+213 **Invalid XML - Show parsing errors?
+214 **Invalid characters - Reload as HTML or show parsing errors?
+215 **Invalid characters
+216 En el perfil actual de Amaya:
+217 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
+218 La codificación de este documento no está soportada por Amaya
 219 No disponible
 220 Navegar
 221 Navegador de ficheros

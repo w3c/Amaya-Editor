@@ -1528,21 +1528,20 @@ void FreeDocumentResource (Document doc)
 	    }
 	  /* is this document the source of another document? */
 	  for (i = 1; i < DocumentTableLength; i++)
-	    if (DocumentURLs[i] != NULL)
-	      if (DocumentSource[i] == doc)
-		{
-		  DocumentSource[i] = 0;
-		  if (DocumentTypes[i] == docLog)
-		    {
-		      /* close the window of the log file attached to the
-			 current document */
-		      TtaCloseDocument (i);
-		      TtaFreeMemory (DocumentURLs[i]);
-		      DocumentURLs[i] = NULL;
-		      /* switch off the button Show Log file */
-		      TtaSetItemOff (doc, 1, Views, BShowLogFile);
-		    }
-		}
+	    if (DocumentURLs[i] != NULL && DocumentSource[i] == doc)
+	      {
+		DocumentSource[i] = 0;
+		if (DocumentTypes[i] == docLog)
+		  {
+		    /* close the window of the log file attached to the
+		       current document */
+		    TtaCloseDocument (i);
+		    TtaFreeMemory (DocumentURLs[i]);
+		    DocumentURLs[i] = NULL;
+		    /* switch off the button Show Log file */
+		    TtaSetItemOff (doc, 1, Views, BShowLogFile);
+		  }
+	      }
 	  RemoveDocCSSs (doc);
 	  /* avoid to free images of backup documents */
 	  if (BackupDocument != doc)

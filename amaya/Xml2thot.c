@@ -3463,10 +3463,9 @@ static void     Hndl_PI (void *userData,
    Hndl_UnknownEncoding
    Handler to deal with encodings other than the built in
   ----------------------------------------------------------------------*/
-static int     Hndl_UnknownEncoding (void           *encodingData,
-				     const XML_Char *name,
-				     XML_Encoding   *info)
-
+static int Hndl_UnknownEncoding (void           *encodingData,
+				 const XML_Char *name,
+				 XML_Encoding   *info)
 {
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_UnknownEncoding");
@@ -3483,13 +3482,12 @@ static int     Hndl_UnknownEncoding (void           *encodingData,
    Handler that receives declarations of unparsed entities.
    These are entity declarations that have a notation (NDATA) field:
   ----------------------------------------------------------------------*/
-static void     Hndl_UnparsedEntity (void *userData,
-				     const XML_Char *entityName,
-				     const XML_Char *base,
-				     const XML_Char *systemId,
-				     const XML_Char *publicId,
-				     const XML_Char *notationName)
-
+static void Hndl_UnparsedEntity (void *userData,
+				 const XML_Char *entityName,
+				 const XML_Char *base,
+				 const XML_Char *systemId,
+				 const XML_Char *publicId,
+				 const XML_Char *notationName)
 {
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_UnparsedEntity");
@@ -3593,7 +3591,7 @@ static void  InitializeExpatParser (CHARSET charset)
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
   /* Disable "Read as Iso-Latin1" entry */
-  TtaSetItemOff (XMLcontext.doc, 1, File, BLatinReading);
+  TtaSetItemOff (XMLcontext.doc, 1, File, BParseAsHTML);
 
   /* Construct a new parser with namespace processing */
   /* accordingly to the document encoding */
@@ -3607,7 +3605,7 @@ static void  InitializeExpatParser (CHARSET charset)
 	       "Warning: no encoding specified, assuming UTF-8");
       XmlParseError (undefinedEncoding, msgBuffer, 0);
       /* Enable "Read as Iso-Latin1 entry" */
-      TtaSetItemOn (XMLcontext.doc, 1, File, BLatinReading);
+      TtaSetItemOn (XMLcontext.doc, 1, File, BParseAsHTML);
       /* TtaSetDocumentCharset (XMLcontext.doc, UTF_8); */
     }
   else if (charset == UTF_8 || charset == UTF_16)

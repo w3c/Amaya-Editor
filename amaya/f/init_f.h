@@ -32,7 +32,7 @@ extern void ShowLogFile ( Document doc,
 extern ThotBool OpenParsingErrors ( Document document );
 extern void RemoveParsingErrors ( Document document );
 extern void CleanUpParsingErrors ( void );
-extern void CheckParsingErrors ( Document document );
+extern void CheckParsingErrors ( Document doc );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
@@ -45,6 +45,10 @@ extern void InitFormAnswer ( Document document,
                              char *server );
 extern void InitInfo ( char *label,
                        char *info );
+extern void ConfirmError ( Document document,
+                           View view,
+                           char *label,
+                           char *what );
 extern void InitConfirm3L ( Document document,
                             View view,
                             char *label1,
@@ -75,8 +79,8 @@ extern Document InitDocView ( Document doc,
                               DocumentType docType,
                               Document sourceOfDoc,
                               ThotBool readOnly );
-extern void LatinReading ( Document document,
-                           View view );
+extern void ParseAsHTML ( Document document,
+                          View view );
 extern void Reload_callback ( int doc,
                               int status,
                               char *urlName,
@@ -215,7 +219,7 @@ extern void ShowLogFile (/* Document doc,
 extern ThotBool OpenParsingErrors (/* Document document */);
 extern void RemoveParsingErrors (/* Document document */);
 extern void CleanUpParsingErrors (/* void */);
-extern void CheckParsingErrors (/* Document document */);
+extern void CheckParsingErrors (/* Document doc */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);
@@ -228,6 +232,10 @@ extern void InitFormAnswer (/* Document document,
                                char *server */);
 extern void InitInfo (/* char *label,
                          char *info */);
+extern void ConfirmError (/* Document document,
+                             View view,
+                             char *label,
+                             char *what */);
 extern void InitConfirm3L (/* Document document,
                               View view,
                               char *label1,
@@ -258,8 +266,8 @@ extern Document InitDocView (/* Document doc,
                                 DocumentType docType,
                                 Document sourceOfDoc,
                                 ThotBool readOnly */);
-extern void LatinReading (/* Document document,
-                             View view */);
+extern void ParseAsHTML (/* Document document,
+                            View view */);
 extern void Reload_callback (/* int doc,
                                 int status,
                                 char *urlName,

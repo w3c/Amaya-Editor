@@ -211,13 +211,13 @@
 209 Vertical
 210 Horizontal
 211 Habilitar FTP (experimental)
-212 Este documento está incompleto; não salve ele - Veja Vistas/Exibir erros de gramática (parsing)
-213 Alguns caracteres não são suportados - veja Vistas/Exibir erros de gramática (parsing)
-214 No perfil Amaya atual:
-215 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
-216 A codificação deste documento não é suportada por Amaya
-217 Este documento não tem declaração de codificação
-218 Não há codificação declarada. Utilizar ISO_8859_1 ?
+212 **Invalid XML - Reload as HTML or show parsing errors?
+213 **Invalid XML - Show parsing errors?
+214 **Invalid characters - Reload as HTML or show parsing errors?
+215 **Invalid characters
+216 No perfil Amaya atual:
+217 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
+218 A codificação deste documento não é suportada por Amaya
 219 Indisponível
 220 Navegar
 221 Navegador de arquivos
