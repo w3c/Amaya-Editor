@@ -538,11 +538,6 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
     return;
   }
 
-#if 0  
-  wxLogDebug( _T("AmayaCanvas::OnIdle : isactive=%s"),
-              IsParentPageActive() ? _T("true") : _T("false") );
-#endif /* 0 */
-
 #ifdef _GL
   GL_DrawAll();
 #endif /* _GL */
