@@ -36,12 +36,6 @@ you can manipulate math expressions in the same way you manipulate other parts
 of HTML documents. All editing commands provided by Amaya for handling text
 are also available for math, and there are some additional controls to enter
 mathematical constructs.</p>
-<p>
-<strong>Warning:</strong> In the current version of Amaya only <a
-href="#Limitations">a subset of MathML is implemented</a>. The purpose of this
-alpha version of the math extension is to show how MathML may improve
-scientific communication over the Web. A more complete and more robust
-implementation is planed for future releases.</p>
 
 <h3>Creating a math expression</h3>
 
@@ -57,26 +51,14 @@ Item Math from the  <strong>Types</strong> menu displays a popup menu. Just
 choose the most convenient tool. Both allow you to select the mathematical
 construct to be inserted.</p>
 <p>
-In the Math palette (or menu) the first two items allow you to create a new
+In the Math palette (or menu) the first item allows you to create a new
 formula when the caret is in some HTML element (but the caret should not be
 within a MathML element):</p>
-<ul>
-<li>
-The <strong>Math</strong> button (or the <strong>Inline math</strong> item)
-creates an inline formula.
-</li>
-<li>
-The <strong>MathDisp</strong> button (or the <strong>Equation</strong> item)
-creates a display (block level) formula. If the caret is in a block element,
-such as a paragraph or a heading, this block element is split and the new
-formula is created between the two parts.
-</li>
-</ul>
 <p>
 The next items of the <strong>Math</strong> menu (or palette) allow you to
 create new constructs within a formula. If the caret is not in a formula, a
-<code>Math</code> element is created first to accept the new construct. In
-this version of Amaya, the available constructs are, from top to bottom:</p>
+<code>Math</code> element is created first to accept the new construct. The
+available constructs are, from top to bottom:</p>
 <ul>
 <li>
 Root with index, <code>mroot</code> in MathML:  <math>
@@ -266,8 +248,8 @@ to another, with the arrow keys.</p>
 <p>
 When you type a character string in a MathML element, Amaya parses that string
 and generates elements <code>mo</code> (operator), <code>mn</code> (number),
-<code>mi</code> (identifier), <code>mtext</code> automatically. For instance,
-to enter</p>
+<code>mi</code> (identifier), and <code>mtext</code> automatically. For
+instance, to enter</p>
 <p>
 <math>
   <mrow>
@@ -281,17 +263,17 @@ to enter</p>
 </math>
 </p>
 <p>
-just type <code>x=2a+b</code>, (don't forget to first click on the Math or
-MathDisp item of the <strong>Math</strong> menu, if you are not in a
-mathematical expression) and you will get the following structure (you can
-check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
+just type <code>x=2a+b</code>, (don't forget to first click on the Math item
+of the <strong>Math</strong> menu, if you are not in a mathematical
+expression) and you will get the following structure (you can check in the <a
+href="#Math_Struc">Math_Structure view</a>):</p>
 <pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
 
 <h3>Structure editing</h3>
 <p>
 You may want to change the structure of an existing expression, e.g. appending
-a superscript or puting parentheses around an expression. Select the
-expression and enter the new construct with the palette, the
+a superscript or puting parentheses around an expression. To do that, just
+select the expression and enter the new construct with the palette, the
 <strong>Math</strong> menu or the <a href="#Entering">keyboard</a>.</p>
 <p>
 You can also use the <strong>Transform</strong> command from the

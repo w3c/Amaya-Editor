@@ -48,7 +48,7 @@
 #define MAX_MATHS  2
 
 static Pixmap	iconMath;
-static Pixmap	mIcons[15];
+static Pixmap	mIcons[14];
 static int	MathsDialogue;
 static boolean	InitMaths;
 static boolean	IsLastDeletedElement = FALSE;
@@ -359,8 +359,6 @@ int                 construct;
   Element            sibling, last, el, row, fence, symbol, child, leaf,
 		     placeholderEl, parent;
   ElementType        newType, elType, symbType;
-  Attribute	     attr;
-  AttributeType	     attrType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len;
   boolean	     before, ParBlock, surround, insertSibling,
@@ -759,7 +757,7 @@ char               *data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if ((int) data == 14)
+      if ((int) data == 13)
 	/* the user asks for the Symbol palette */
 	{
 	  TtcDisplayGreekKeyboard (doc, 1);
@@ -796,7 +794,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 15, mIcons, FALSE);
+		   NULL, 14, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
@@ -1032,20 +1030,19 @@ void                InitMathML ()
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    TtaRegisterPixmap("Math", iconMath);
    mIcons[0] = TtaCreatePixmapLogo (math_xpm);
-   mIcons[1] = TtaCreatePixmapLogo (mathdisp_xpm);
-   mIcons[2] = TtaCreatePixmapLogo (root_xpm);
-   mIcons[3] = TtaCreatePixmapLogo (sqrt_xpm);
-   mIcons[4] = TtaCreatePixmapLogo (frac_xpm);
-   mIcons[5] = TtaCreatePixmapLogo (subsup_xpm);
-   mIcons[6] = TtaCreatePixmapLogo (sub_xpm);
-   mIcons[7] = TtaCreatePixmapLogo (sup_xpm);
-   mIcons[8] = TtaCreatePixmapLogo (overunder_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (under_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (over_xpm);
-   mIcons[11] = TtaCreatePixmapLogo (fence_xpm);
-   mIcons[12] = TtaCreatePixmapLogo (mscript_xpm);
-   mIcons[13] = TtaCreatePixmapLogo (matrix_xpm);
-   mIcons[14] = TtaCreatePixmapLogo (greek_xpm);
+   mIcons[1] = TtaCreatePixmapLogo (root_xpm);
+   mIcons[2] = TtaCreatePixmapLogo (sqrt_xpm);
+   mIcons[3] = TtaCreatePixmapLogo (frac_xpm);
+   mIcons[4] = TtaCreatePixmapLogo (subsup_xpm);
+   mIcons[5] = TtaCreatePixmapLogo (sub_xpm);
+   mIcons[6] = TtaCreatePixmapLogo (sup_xpm);
+   mIcons[7] = TtaCreatePixmapLogo (overunder_xpm);
+   mIcons[8] = TtaCreatePixmapLogo (under_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (over_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (fence_xpm);
+   mIcons[11] = TtaCreatePixmapLogo (mscript_xpm);
+   mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
+   mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
 #  endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
