@@ -234,6 +234,11 @@ typedef struct {
 
 	double anim_start;
 
+	int previous_x;
+	int previous_y;
+	int x;
+	int y;
+
 } TTimeline;
 
 
@@ -337,6 +342,11 @@ static void Init_timeline_struct(int k) {
 	dt[k].bgcolor_start = 0;
 	dt[k].fgcolor_start = 0;
 	dt[k].anim_start = 0;
+
+	dt[k].previous_x = 0;
+	dt[k].previous_y = 0;
+	dt[k].x = 0;
+	dt[k].y = 0;
 }
 #endif /* _SVGANIM */
 
@@ -351,19 +361,6 @@ static int Time_to_xposition(double t) {
 	return ct_left_bar + 1 + (int)(t * time_sep);
 }
 #endif /* _SVGANIM */
-
-
-/*----------------------------------------------------------------------
-   Xposition_to_time
-   Convert a x position (pixels) to clock value
-  ----------------------------------------------------------------------*/
-/*
-#ifdef _SVGANIM
-static double Xposition_to_time(int x) {
-	return (x - ct_left_bar - 1) / time_sep;
-}
-#endif  _SVGANIM */
-
 
 
 
@@ -411,8 +408,6 @@ void InitSVGAnim ()
 	for (k=0; k<DocumentTableLength; k++)
 		Init_timeline_struct(k);
 
-   /* temp :
-   GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH); */
 #endif /* _SVGANIM */
 }
 
@@ -1331,22 +1326,27 @@ static int Get_id_of (Element el, char* buffer)
 #endif /* _SVGANIM */
  
 
+
+
+
 /*----------------------------------------------------------------------
-   Get_x_of
-      returns horizontal position of a Timeline Element 
-  ----------------------------------------------------------------------	
+   Get_height_of_SVG_el
+      return the height of a SVG Element 
+  ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static int Get_x_of (Element el)
+static int Get_height_of_SVG_el (Element el)
 {
-	int                  length, r = 0;
-    char                *text, *ptr;
+	int r = 0;
+	
+	int length;
+    char *text = NULL, *ptr;
     PresentationValue    pval;
     AttributeType attrType;
     Attribute attr = NULL;
     ElementType elType = TtaGetElementType (el);
    
     attrType.AttrSSchema = elType.ElSSchema;
-    attrType.AttrTypeNum = Timeline_ATTR_x;
+    attrType.AttrTypeNum = SVG_ATTR_height_;
 			
 	attr = TtaGetAttribute (el, attrType);
 
@@ -1354,16 +1354,179 @@ static int Get_x_of (Element el)
     text = TtaGetMemory (length);
    
    if (text) {
+      /* get the value of the x attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (a number followed by a unit) */
       ptr = text;
 	  ptr = ParseNumber (ptr, &pval);
 	  r = pval.typed_data.value;
+	  TtaFreeMemory (text);
    }
-   TtaFreeMemory (text);
 
-return r;
+
+   return r;
 }
-#endif  _SVGANIM */
+#endif /* _SVGANIM */
+
+/*----------------------------------------------------------------------
+   Get_width_of_SVG_el
+      return the width of a SVG Element 
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static int Get_width_of_SVG_el (Element el)
+{
+	int r = 0;
+
+	
+	int length;
+    char *text = NULL, *ptr;
+    PresentationValue    pval;
+    AttributeType attrType;
+    Attribute attr = NULL;
+    ElementType elType = TtaGetElementType (el);
+   
+    attrType.AttrSSchema = elType.ElSSchema;
+    attrType.AttrTypeNum = SVG_ATTR_width_;
+			
+	attr = TtaGetAttribute (el, attrType);
+
+    length = TtaGetTextAttributeLength (attr) + 2;
+    text = TtaGetMemory (length);
+   
+    if (text) {
+      /* get the value of the x attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+	  ptr = ParseNumber (ptr, &pval);
+	  r = pval.typed_data.value;
+	  TtaFreeMemory (text);
+    }
+
+   return r;
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
+   Get_center_y_of_SVG_el
+      returns vertical position of the center of an SVG Element,
+	  To do: this is incomplete and should handle SVG transformations
+  ----------------------------------------------------------------------*/	
+#ifdef _SVGANIM
+static int Get_center_y_of_SVG_el (Element el)
+{
+	int                  length, res = 0, r = 0;
+    char                *text = NULL, *ptr;
+    PresentationValue    pval;
+    AttributeType attrType;
+    Attribute attr = NULL;
+	Element parent = TtaGetParent (el);
+    ElementType elType = TtaGetElementType (el);
+   
+    attrType.AttrSSchema = elType.ElSSchema;
+
+    
+	attrType.AttrTypeNum = SVG_ATTR_cy;
+	attr = TtaGetAttribute (el, attrType);
+	/* check for cy */
+	if (attr) {
+		length = TtaGetTextAttributeLength (attr) + 2;
+		text = TtaGetMemory (length);
+   
+	   if (text) {
+		  /* get the value of the attribute */
+		  TtaGiveTextAttributeValue (attr, text, &length);
+		  /* parse the attribute value (a number followed by a unit) */
+		  ptr = text;
+		  ptr = ParseNumber (ptr, &pval);
+		  res = pval.typed_data.value;
+		  TtaFreeMemory (text);
+	   }
+	} else { /* no cx, check for y and height */
+		attrType.AttrTypeNum = SVG_ATTR_y;
+		attr = TtaGetAttribute (el, attrType);
+		length = TtaGetTextAttributeLength (attr) + 2;
+		text = TtaGetMemory (length);
+   
+  	    if (text) {
+		  /* get the value of the attribute */
+		  TtaGiveTextAttributeValue (attr, text, &length);
+		  /* parse the attribute value (a number followed by a unit) */
+		  ptr = text;
+		  ptr = ParseNumber (ptr, &pval);
+		  r = pval.typed_data.value;
+		  TtaFreeMemory (text);
+		}
+
+		res = r + Get_height_of_SVG_el (el)/2;
+	}
+
+  	return res;
+}
+#endif /* _SVGANIM */
+
+
+/*----------------------------------------------------------------------
+   Get_center_x_of_SVG_el
+      returns horizontal position of the center of an SVG Element,
+	  To do: this is incomplete and should handle SVG transformations
+  ----------------------------------------------------------------------*/	
+#ifdef _SVGANIM
+static int Get_center_x_of_SVG_el (Element el)
+{
+	int                  length, res = 0, r = 0;
+    char                *text = NULL, *ptr;
+    PresentationValue    pval;
+    AttributeType attrType;
+    Attribute attr = NULL;
+	Element parent = TtaGetParent (el);
+    ElementType elType = TtaGetElementType (el);
+   
+    attrType.AttrSSchema = elType.ElSSchema;
+
+    
+	attrType.AttrTypeNum = SVG_ATTR_cx;
+	attr = TtaGetAttribute (el, attrType);
+	/* check for cx */
+	if (attr) {
+		length = TtaGetTextAttributeLength (attr) + 2;
+		text = TtaGetMemory (length);
+   
+	   if (text) {
+		  /* get the value of the attribute */
+		  TtaGiveTextAttributeValue (attr, text, &length);
+		  /* parse the attribute value (a number followed by a unit) */
+		  ptr = text;
+		  ptr = ParseNumber (ptr, &pval);
+		  res = pval.typed_data.value;
+		  TtaFreeMemory (text);
+	   }
+	} else { /* no cx, check for x and width */
+		attrType.AttrTypeNum = SVG_ATTR_x;
+		attr = TtaGetAttribute (el, attrType);
+		length = TtaGetTextAttributeLength (attr) + 2;
+		text = TtaGetMemory (length);
+   
+  	    if (text) {
+		  /* get the value of the attribute */
+		  TtaGiveTextAttributeValue (attr, text, &length);
+		  /* parse the attribute value (a number followed by a unit) */
+		  ptr = text;
+		  ptr = ParseNumber (ptr, &pval);
+		  r = pval.typed_data.value;
+		  TtaFreeMemory (text);
+		}
+
+		res = r + Get_width_of_SVG_el (el)/2;
+	}
+
+  	return res;
+}
+#endif /* _SVGANIM */
+
+
 
 
 /*----------------------------------------------------------------------
@@ -1554,6 +1717,9 @@ static int Get_width_of (Element el)
    return r;
 }
 #endif /* _SVGANIM */
+
+
+
 
 /*----------------------------------------------------------------------
    Set_y_translation
@@ -1999,25 +2165,6 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
 	}
 
 	return res;
-}
-#endif /* _SVGANIM */
-
-
-
-/*----------------------------------------------------------------------
-  Get_last_anim
-  ----------------------------------------------------------------------
-#ifdef _SVGANIM
-static Element Get_last_anim (Document basedoc, Element animated_el) 
-{	
-	Element lfound = NULL, found =  Search_first_anim_in_tree (basedoc, animated_el);
-
-	while ((found) && (TtaGetParent (found) == animated_el)) {
-		lfound = found;
-		found = Search_next_anim_in_tree (basedoc, found);
-	}
-
-return lfound;
 }
 #endif /* _SVGANIM */
 
@@ -2484,8 +2631,6 @@ static void Build_timeline(Document basedoc, char* timelineName)
 */
 
 	/* timing info */
-	/*	temp_el = Insert_rectangle(dt[basedoc].timelinedoc, temp_el, "white", "gray", 
-	80, 10, ct_left_bar-100, 4+ct_elem_font_size, 0, Timeline_EL_rect_interface); */
 	sprintf (buffer, "%.2fs", (float) 0.0);	
 	dt[basedoc].timing_text = Insert_text ( dt[basedoc].timelinedoc, temp_el, "black", buffer, ct_elem_font_family, 
 										     ct_elem_font_size, ct_left_bar - ct_w_image_toolbar + 32, 10, 0, Timeline_EL_timing_text);
@@ -2530,7 +2675,6 @@ static void Build_timeline(Document basedoc, char* timelineName)
 		TtaSetMenuOff (dt[basedoc].timelinedoc, 1, Special);
 	/*	TtaSetMenuOff (timelinedoc, 1, Help_); */
 	} else {
-			   /* FreeDocumentResource (timelinedoc); ??? */
 			   TtaCloseDocument (dt[basedoc].timelinedoc);
 			   Init_timeline_struct (basedoc);
 		   }
@@ -2726,7 +2870,7 @@ void AddAnimButton (Document doc, View view)
 void ShowSourceOfTimeline (Document document, View view)
 {
 #ifdef _SVGANIM
-	/* this function is temporary, only for debugging purposes */
+	/* this function is temporary, only for debugging purposes
 	CHARSET          charset;
 	char            *tempdocument;
 	char            *s;
@@ -2739,7 +2883,7 @@ void ShowSourceOfTimeline (Document document, View view)
 	int ok=-1;
 
 	non_sav=(!DocumentURLs[document]);
-	if (non_sav) /* TEMP @@@ : put a relative path */
+	if (non_sav) 
 	DocumentURLs[document]=TtaStrdup ("C:\\temp.svg");
   
 
@@ -2747,26 +2891,22 @@ void ShowSourceOfTimeline (Document document, View view)
 		DocumentTypes[document] != docSVG &&
 #ifdef XML_GENERIC      
        DocumentTypes[document] != docXml &&
-#endif /* XML_GENERIC */
+#endif 
        DocumentTypes[document] != docMath)
-     /* it's not an HTML or an XML document */
+   
 	 return;
 	if (DocumentSource[document])
-     /* the source code of this document is already shown */
-     /* raise its window */
+     
      TtaRaiseView (DocumentSource[document], 1);
 	else {
-        /* save the current state of the document into the temporary file */
-		tempdocument = GetLocalPath (document, DocumentURLs[document]);
+        tempdocument = GetLocalPath (document, DocumentURLs[document]);
 		
 		if (non_sav) {
-			/* TEMP @@@ : put a relative path */
 			tempdocument =TtaStrdup ("C:\\temp2.svg");
 			ok = TtaExportDocumentWithNewLineNumbers (document, tempdocument, "TimelineT");
 		}
 
      TtaExtractName (tempdocument, tempdir, documentname);
-     /* open a window for the source code */
      sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE, L_Other);   
      if (sourceDoc > 0) {
 		 DocumentSource[document] = sourceDoc;
@@ -2777,10 +2917,7 @@ void ShowSourceOfTimeline (Document document, View view)
 		 DocumentMeta[sourceDoc]->initial_url = NULL;
 		 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
 		 DocumentMeta[sourceDoc]->xmlformat = FALSE;
-	 /* copy the MIME type, charset, and content location */
-
-
-		/* temp debug */
+	
 		if (non_sav) {
 			DocumentMeta[document] = DocumentMetaDataAlloc ();
 			DocumentMeta[document]->form_data = NULL;
@@ -2788,7 +2925,7 @@ void ShowSourceOfTimeline (Document document, View view)
 			DocumentMeta[document]->method = CE_ABSOLUTE;
 			DocumentMeta[document]->xmlformat = FALSE;
 		}
-	  /* end temp debug */
+
 
 	 if (DocumentMeta[document]->content_type)
 	   DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[document]->content_type);
@@ -2812,8 +2949,8 @@ void ShowSourceOfTimeline (Document document, View view)
 		      tempdocument, TRUE);
 	 SetWindowTitle (document, sourceDoc, 0);
 	
-	 TtcSwitchButtonBar (sourceDoc, 1); /* no button bar */
-	 TtcSwitchCommands (sourceDoc, 1); /* no command open */
+	 TtcSwitchButtonBar (sourceDoc, 1); 
+	 TtcSwitchCommands (sourceDoc, 1);
 	 TtaSetItemOff (sourceDoc, 1, File, New1);
 	 TtaSetItemOff (sourceDoc, 1, File, BHtmlBasic);
 	 TtaSetItemOff (sourceDoc, 1, File, BHtmlStrict);
@@ -2832,21 +2969,19 @@ void ShowSourceOfTimeline (Document document, View view)
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowTextZone);
 	 TtaSetMenuOff (sourceDoc, 1, Special);
 	 TtaSetMenuOff (sourceDoc, 1, Help_);
-	 /* Update the doctype menu */
+	
 	 UpdateDoctypeMenu (sourceDoc);
 #ifdef ANNOTATIONS
 	 TtaSetMenuOff (sourceDoc, 1, Annotations_);
-#endif /* ANNOTATIONS */
+#endif
 
-    	 /* Switch the synchronization entry */
     	 if (TtaIsDocumentModified (document))
     	    DocStatusUpdate (document, TRUE);
-	 /* Synchronize selections */
-	 event.document = document;
+ event.document = document;
 	 SynchronizeSourceView (&event);
        }
     TtaFreeMemory (tempdocument);
-     }
+     } */
 #endif /* _SVGANIM */
 }
 
@@ -3406,14 +3541,6 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
     TtaAttachAttribute (animtag, attr, basedoc);
 
 	anType = TtaGetElementType (pm->animated_elem);
-/*	switch (anType.ElTypeNum) {
-		case SVG_EL_text_ : 
-			strcpy(buffer,"font-color");	
-			break;
-		default : 
-			strcpy(buffer,"fill");
-			break;
-	} */
 	strcpy(buffer,"fill");
 	TtaSetAttributeText (attr, buffer, animtag, basedoc);
 
@@ -3438,33 +3565,77 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 
 
 
+
 /*----------------------------------------------------------------------
   Generate_animate_motion
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
 static void Generate_animate_motion (Document basedoc, int previous_x, int previous_y,
 									 int x, int y, double start, double duration,
-									pmapping_animated pm) 
+									pmapping_animated pm, Element period) 
 {
 	ElementType elType;
 	Element animtag, lastchild;
-//	AttributeType attrType;
-//	Attribute attr;
-	
-	elType = TtaGetElementType (pm->animated_elem);
+	AttributeType attrType;
+	Attribute attr;
+	char buffer[512];
+
+	elType.ElSSchema = TtaGetSSchema ("SVG", basedoc);
 	elType.ElTypeNum = SVG_EL_animateMotion;
 	animtag = TtaNewElement (basedoc, elType);
 
 	/* set attributes */
+	attrType.AttrSSchema = elType.ElSSchema;
 
-	
-	/* insert */
+	/* begin */
+	attrType.AttrTypeNum = SVG_ATTR_begin_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	sprintf (buffer, "%.2fs", (float) (max (0.0, start)));	
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+	/* dur */
+	attrType.AttrTypeNum = SVG_ATTR_dur;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	sprintf (buffer, "%.2fs", (float) duration);	
+	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+
+	/* path */
+	attrType.AttrTypeNum = SVG_ATTR_path_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+    sprintf (buffer, "M %d %d L %d %d", previous_x, previous_y, x, y);
+  	TtaSetAttributeText (attr, buffer, animtag, basedoc);
+
+
+	/* fill */
+	attrType.AttrTypeNum = SVG_ATTR_fill_;
+    attr = TtaNewAttribute (attrType);
+    TtaAttachAttribute (animtag, attr, basedoc);
+	TtaSetAttributeValue (attr, SVG_ATTR_fill__VAL_freeze, animtag, basedoc);
+
+	/* insert */ 
 	lastchild = TtaGetLastChild (pm->animated_elem);
-	TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+
+	/* problem in the SVG S schema ??? */
+	if (TtaCanInsertSibling (elType, lastchild, FALSE, basedoc))
+		TtaInsertSibling (animtag, lastchild, FALSE, basedoc);
+
+	/* update mapping of <animate> tags */
+	pm->mapping_animations[pm->nb_periods].animation_tag = animtag;
+	pm->mapping_animations[pm->nb_periods].period = period;
+	pm->nb_periods = pm->nb_periods + 1;
+
+	if ((pm->nb_periods >= 2) && (!Image_collapse_for_title_group (basedoc, pm->animated_elem)))
+		Add_image_collapse_on_title_group (basedoc, pm->animated_elem, 0);
 
 	TtaSetDocumentModified (basedoc);
 }
 #endif /* _SVGANIM */
+
+
 
 
 
@@ -3513,13 +3684,17 @@ void Timeline_finished_moving_slider(NotifyPresentation *event)
 		vpos = Get_height_of (brect) - ct_static_bar_height - 6 + ct_offset_y_period;
 				
 		if (dt[basedoc].definition_of_motion_period) {
-			Insert_rectangle (event->document, insertel, ct_animatemotion_color,
+			new_period = Insert_rectangle (event->document, insertel, ct_animatemotion_color,
 					  "none", previous_slider_position+6, vpos, x - previous_slider_position, 
 					  ct_period_height, 0, Timeline_EL_exp_period);
 
 		
+	
 			/* generate animation in basedoc */
-			//Generate_animate_motion ();
+			Generate_animate_motion (basedoc, dt[basedoc].previous_x,
+											dt[basedoc].previous_y, dt[basedoc].x,
+				dt[basedoc].y,dt[basedoc].anim_start, 
+				end-dt[basedoc].anim_start, dt[basedoc].current_edited_mapping,new_period);
 
 			dt[basedoc].definition_of_motion_period = FALSE;
 			TtaSetStatus (event->document, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_ANIM_DEFINED), NULL);
@@ -3888,14 +4063,13 @@ void Key_position_defined (Document basedoc, Element cross)
 {
 #ifdef _SVGANIM
 
-	int x = 0, y =0;
 	PRule         presRule;
 	presRule = TtaGetPRule (cross, PRHorizPos);
 	if (presRule)
-		x = TtaGetPRuleValue (presRule);
+		dt[basedoc].x = TtaGetPRuleValue (presRule);
 	presRule = TtaGetPRule (cross, PRVertPos);
 	if (presRule)
-		y = TtaGetPRuleValue (presRule);
+		dt[basedoc].y = TtaGetPRuleValue (presRule);
 
 	dt[basedoc].definition_of_motion_period = TRUE;
 	TtaSetStatus ( dt[basedoc].timelinedoc, dt[basedoc].timelineView, TtaGetMessage (AMAYA, AM_SVGANIM_MOTION_HINT2), NULL);
@@ -3913,7 +4087,7 @@ static void Define_motion_anim (NotifyElement *event)
 {
 	Element el;
 	ElementType elType;
-	int fc, lc, x ,y, h;
+	int fc, lc, h;
 	pmapping_animated pm;
 	Document basedoc = Get_basedoc_of (event->document);
 	Document timelinedoc = event->document;
@@ -3960,13 +4134,12 @@ static void Define_motion_anim (NotifyElement *event)
 
 	Prepare_and_add_a_period (basedoc, timelinedoc, pm);
 
-	/* make a special copy of the animated element in edited document
-	parent = TtaGetParent (pm->animated_elem);
-	cop = TtaCopyTree (pm->animated_elem, basedoc, basedoc, parent);
-	TtaInsertFirstChild (&cop, parent, basedoc); */
-	x = 450;
-	y = 150;
-	Display_cross (basedoc, x, y);
+	elType = TtaGetElementType (pm->animated_elem);
+
+	dt[basedoc].previous_x = Get_center_x_of_SVG_el (pm->animated_elem) - ct_w_image_cross/2;
+	dt[basedoc].previous_y = Get_center_y_of_SVG_el (pm->animated_elem) - ct_h_image_cross/2;
+	
+	Display_cross (basedoc, dt[basedoc].previous_x , dt[basedoc].previous_y);
 
 	dt[basedoc].current_edited_mapping = pm;
 
