@@ -1,0 +1,61 @@
+style HTMLP
+ 
+open
+ Formatted_view:	60 0 184 168
+ 
+geometry
+ Structure_view:	1 80 140 100
+ Alternate_view:        1 1 140 80
+ Links_view:		1 3 140 80
+ Table_of_contents:	1 5 140 80
+ Math_Structure_view:   1 1 100 80
+ Graph_Structure_view:  1 1 70  80
+
+ 
+#--------------------------------------------
+ 
+style HTMLPBW
+
+open
+ Formatted_view:	1 1 182 250
+ 
+geometry
+ Structure_view:	190 100 160 170
+ Alternate_view:        190 1 156 99
+ Links_view:		192 3 156 120
+ Table_of_contents:	194 5 156 120
+ Math_Structure_view:   190 1 160 120
+
+#--------------------------------------------
+
+style HTMLPP
+
+open
+ Formatted_view:	1 1 182 250
+ 
+geometry
+ Structure_view:	190 100 160 170
+ Alternate_view:        190 1 156 99
+ Links_view:		192 3 156 120
+ Table_of_contents:	194 5 156 120
+ 
+options
+ pagesize:	A4
+ orientation:	Portrait
+
+#--------------------------------------------
+
+style HTMLPPUS
+
+open
+ Formatted_view:	1 1 172 240
+ 
+geometry
+ Structure_view:	190 100 160 170
+ Alternate_view:        190 1 156 99
+ Links_view:		192 3 156 120
+ Table_of_contents:	194 5 156 120
+ 
+options
+ pagesize:	US
+ orientation:	Portrait
