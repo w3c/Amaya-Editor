@@ -301,7 +301,9 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
 {
    Element             child, parent, new_, next;
    ElementType         elType, newType;
+   ThotBool            substitute;
 
+   substitute = FALSE;
    child = TtaGetFirstChild (elem);
    if (child == NULL)
      /* empty element. Create a text element in it */
@@ -348,13 +350,23 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
 	{
 	child = TtaNewElement(document, elType);
 	TtaInsertFirstChild (&child, elem, document);
+	if (child == elem)
+	  /* the new TEXT element has replaced the existing empty element */
+	  substitute = TRUE;
 	TtaRegisterElementCreate (child, document);
 	}
      }
    while (child)
      {
-	next = child;
-	TtaNextSibling (&next);
+       if (substitute)
+	 /* the empty element has been replaced by a TEXT element. Process
+	    only this text element, not its following siblings */
+	 next = NULL;
+       else
+	 {
+	   next = child;
+	   TtaNextSibling (&next);
+	 }
 	elType = TtaGetElementType (child);
 	/* process only HTML elements */
 	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
