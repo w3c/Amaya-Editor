@@ -177,7 +177,7 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
 		      (const GLuint*)&(Cache->texbind));
   
 #ifdef _PCLDEBUG
-  g_print ("\n Free Image %s from cache", 
+  printf ("\n Free Image %s from cache", 
 	   Cache->filename);      
 #endif /*_PCLDEBUG*/ 
   TtaFreeMemory (Cache->filename);
@@ -299,7 +299,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	  Image->TexCoordH = Cache->TexCoordH;
 	  Image->TextureBind = Cache->texbind;  
 #ifdef _PCLDEBUG
-	  g_print ("\n Lookup succeed Image %s ", Image->PicFileName);      
+	  printf ("\n Lookup succeed Image %s ", Image->PicFileName);      
 #endif /*_PCLDEBUG*/  
 	  return 1;
 	}      
@@ -328,7 +328,7 @@ void FreeGlTextureNoCache (void *ImageDesc)
     {      
       glDeleteTextures (1,  &(Image->TextureBind));
 #ifdef _PCLDEBUG
-      g_print ("\n Image %s Freed", Image->PicFileName);      
+      printf ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
       Image->TextureBind = 0;
       Image->RGBA = False;
@@ -366,7 +366,7 @@ void FreeGlTexture (void *ImageDesc)
 			/*not found in cache, we free it manually.*/
 			glDeleteTextures (1,  &(Image->TextureBind));
 #ifdef _PCLDEBUG
-      g_print ("\n Image %s Freed", Image->PicFileName);      
+      printf ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
       Image->TextureBind = 0;
       Image->RGBA = False;
