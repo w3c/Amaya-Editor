@@ -53,11 +53,11 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 wxmsw25u_html.lib wxbase25u_xml.lib wxmsw25u_gl.lib wxmsw25u_xrc.lib wxmsw25u_adv.lib wxmsw25u_core.lib wxbase25u.lib freetype219.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"LIBC.lib" /libpath:"..\..\wxWidgets\lib\vc_dll" /libpath:"..\..\freetype-2.1.9\objs"
+# ADD LINK32 wxbase25u_xml.lib wxmsw25u_gl.lib wxmsw25u_xrc.lib wxmsw25u_adv.lib wxmsw25u_core.lib wxbase25u.lib freetype219.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib:"LIBC.lib" /libpath:"..\..\wxWidgets\lib\vc_dll" /libpath:"..\..\freetype-2.1.9\objs"
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                    ..\..\wxWidgets\lib\vc_dll\*.dll                    bin\ 
+PreLink_Cmds=copy                     ..\..\wxWidgets\lib\vc_dll\*.dll                     bin\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                    ..\..\wxWidgets\lib\vc_dll\*.dll                    bin\ 
+PreLink_Cmds=copy                     ..\..\wxWidgets\lib\vc_dll\*.dll                     bin\ 
 # End Special Build Tool
 
 !ENDIF 
