@@ -2419,23 +2419,40 @@ void SynchronizeSourceView (NotifyElement *event)
 /*----------------------------------------------------------------------
   ShowError points the corresponding error in the souce view.
  -----------------------------------------------------------------------*/
-ThotBool ShowError (NotifyElement *event)
+static ThotBool ShowError (Element el, Document doc)
 {
-  Element             el, child;
+  Element             child, otherEl;
   ElementType         elType;
-  Document	      doc, otherDoc;
+  Document	      otherDoc;
   Language            lang;
-  char               *buffer, *ptr;
+  char               *buffer, *ptr, message[50];
   int                 len, line = 0, index = 0, i;
 
-  doc = event->document;
-  el = event->element;
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = TextFile_EL_Line_;
   if (DocumentTypes[doc] == docLog)
     {
       /* get the document concerned */
       otherDoc = DocumentSource[doc];
+      otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
+      len = TtaGetTextLength (otherEl);
+      buffer = TtaGetMemory (len + 1);
+      TtaGiveTextContent (otherEl, buffer, &len, &lang);
+      ptr = strstr (buffer, " in ");
+      if (ptr)
+	{
+	  ptr += 4;
+	  if (strcmp (ptr, DocumentURLs[otherDoc]))
+	    {
+	      /* it doesn't concern the source document itself */
+	      for (otherDoc = 1; otherDoc < MAX_DOCUMENTS; otherDoc++)
+		if (!strcmp (ptr, DocumentURLs[otherDoc]))
+		  break;
+	    }
+	}
+      TtaFreeMemory (buffer);
       /* get the error string */
-      if (el && otherDoc)
+      if (el && otherDoc && otherDoc < MAX_DOCUMENTS)
 	 {
 	   len = TtaGetTextLength (el);
 	   if (len > 0)
@@ -2455,39 +2472,66 @@ ThotBool ShowError (NotifyElement *event)
 	   if (line)
 	     {
 	       /* open the source file */
-	       if (DocumentSource[otherDoc] == 0)
-		 ShowSource (otherDoc, 1);
-	       doc = DocumentSource[otherDoc];
+	       if (DocumentTypes[otherDoc] == docCSS)
+		 doc = otherDoc;
+	       else
+		 {
+		   if (DocumentSource[otherDoc] == 0)
+		     ShowSource (otherDoc, 1);
+		   doc = DocumentSource[otherDoc];
+		 }
 	       /* look for an element with the same line number in the other doc */
 	       /* line numbers are increasing in document order */
 	       el = TtaGetMainRoot (doc);
-	       elType = TtaGetElementType (el);
-	       elType.ElTypeNum = TextFile_EL_Line_;
-	       i = 0;
-	       while (el && i < line)
-		 {
-		   /*TtaNextSibling (&el);*/
-		   el = TtaSearchTypedElement (elType, SearchForward, el);
-		   i++;
-		 }
+	       el = TtaSearchTypedElement (elType, SearchForward, el);
+	       for (i = 1; i < line; i++)
+		 TtaNextSibling (&el);
 	       if (el)
 		 {
 		   child = TtaGetFirstChild (el);
 		   if (child)
 		     {
 		       TtaSelectString (doc, child, index, index);
-		       TtaSetStatus (doc, 1, "   ", NULL);
-		       /* synchronize other views */
-		       event->document = doc;
-		       SynchronizeSourceView (event);
+		       sprintf (message, "line %d char %d", line, index);
+		       TtaSetStatus (doc, 1, message, NULL);
 		     }
-		   return TRUE; /* don't let Thot perform normal operation */
 		 }
-	       TtaSetStatus (doc, 1, "   ", NULL);
+	       else
+		 TtaSetStatus (doc, 1, "   ", NULL);
 	     }
 	 }
     }
-  return FALSE; /* let Thot perform normal operation */
+  return TRUE; /* don't let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  SimpleClickError The user has clicked an error message.         
+  ----------------------------------------------------------------------*/
+ThotBool SimpleClickError (NotifyElement *event)
+{
+  ThotBool usedouble;
+
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
+  if (usedouble)
+    return TRUE;
+  else
+    /* don't let Thot perform normal operation if there is an activation */
+    return (ShowError (event->element, event->document));
+}
+
+/*----------------------------------------------------------------------
+  DoubleClickError     The user has double-clicked an error message.         
+  ----------------------------------------------------------------------*/
+ThotBool DoubleClickError (NotifyElement *event)
+{
+  ThotBool usedouble;
+
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  if (usedouble)
+    /* don't let Thot perform normal operation */
+    return (ShowError (event->element, event->document));
+  else
+    return FALSE;
 }
 
 /*----------------------------------------------------------------------

@@ -541,14 +541,13 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 }
 
 /*----------------------------------------------------------------------
-   ShowBox force la position de la boi^te dans la fenetree^tre        
-   affiche'e sur l'e'cran.                                 
-   La parame`tre pBox identifie la boi^te a` montrer.      
-   Le parame`tre position indique s'il faut afficher en    
-   haut (0), au milieu (1) ou en bas (2).                  
-   Si postion = 0, percent indique la distance entre le   
-   haut de la fenetre et le haut de la boite, exprimee en  
-   pourcentage de la hauteur de la fenetre.                
+  ShowBox displays the box pBox at the requested position in the window.
+  The parameter position is:
+    0 for the top of the window
+    1 for the middle of the window
+    2 for the bottom of the window
+   When the postion = 0, percent give the percent from the top of the
+   window.
   ----------------------------------------------------------------------*/
 void ShowBox (int frame, PtrBox pBox, int position, int percent)
 {
@@ -663,71 +662,70 @@ ThotBool IsScrolled (int frame, int selection)
 
 
 /*----------------------------------------------------------------------
-   ShowSelectedBox montre le de'but de la se'lection dans la      
-   frame et rend cette frame active si l'indicateur actif     
-   est Vrai.                                               
+  ShowSelectedBox shows the beginning of the selection within the frame
+  and makes this frame active if the parameter active is TRUE.
   ----------------------------------------------------------------------*/
-void ShowSelectedBox (int frame, ThotBool actif)
+void ShowSelectedBox (int frame, ThotBool active)
 {
    ViewFrame          *pFrame;
    PtrBox              pBo1;
    int                 xmin, xmax;
    int                 ymin, ymax;
-   int                 x, y, dx, dy;
+   int                 x, y, dx, dy, w, h;
 
-   /* Faut-il rendre la fenetre active (frame d'insertion de texte) */
-   if (actif)
+   if (active)
+     /* make the window active */
       ChangeSelFrame (frame);
-
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
      {
 	pBo1 = pFrame->FrSelectionBegin.VsBox;
-
-	/* Verifie qu'une des boites selectionnees est visible */
-	while (pBo1 != NULL && pBo1->BxAbstractBox != NULL &&
+	/* Check if almost one box is displayed */
+	while (pBo1 && pBo1->BxAbstractBox &&
 	       pBo1->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
 	  {
 	     if (pBo1->BxAbstractBox->AbSelected ||
 		 pBo1 == pFrame->FrSelectionBegin.VsBox)
 		pBo1 = pBo1->BxNext;
 	     else
-		return;		/* aucune boite n'est visible */
+		/* no box found */
+		return;
 	  }
 	if (pBo1 != NULL)
 	  {
 #ifndef _GL
 	     x = pBo1->BxXOrg;
 	     y = pBo1->BxYOrg;
-	     GetSizesFrame (frame, &dx, &dy);
+	     GetSizesFrame (frame, &w, &h);
 	     xmin = pFrame->FrXOrg;
-	     xmax = xmin + dx;
+	     xmax = xmin + w;
 	     ymin = pFrame->FrYOrg;
-	     ymax = ymin + dy;
+	     ymax = ymin + h;
 #else /* _GL */
 	     x = pBo1->BxClipX;
 	     y = pBo1->BxClipY;
-	     GetSizesFrame (frame, &dx, &dy);
+	     GetSizesFrame (frame, &w, &h);
 	     xmin = 0;
-	     xmax = dx;
+	     xmax = w;
 	     ymin = 0;
-	     ymax = dy;
+	     ymax = h;
 #endif /* _GL*/
-	     /* MilieuX de la fenetre */
+	     /* center in the window */
 	     dx = pFrame->FrSelectionBegin.VsXPos;
 	     dy = 13;
-
-	     if (pBo1->BxAbstractBox != NULL)
+	     w /= 2;
+	     h /= 2;
+	     if (pBo1->BxAbstractBox)
 	       {
 		 if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
 		   /* the box position is not given by the user */
 		   {
 		   if (x + dx < xmin + 10)
 		     /* scroll the window */
-		     HorizontalScroll (frame, x + dx - xmin - 10, 0);
+		     HorizontalScroll (frame, x + dx - xmin - w, 0);
 		   else if (x + dx > xmax - 10)
 		     /* scroll the window */
-		     HorizontalScroll (frame, x + dx - xmax + 10, 0);
+		     HorizontalScroll (frame, x + dx - xmax + w, 0);
 		   }
 
 		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
@@ -735,10 +733,10 @@ void ShowSelectedBox (int frame, ThotBool actif)
 		   {
 		   if (y + pBo1->BxHeight < ymin + dy)
 		     /* scroll the window */
-		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - dy, 0);
+		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - h, 0);
 		   else if (y > ymax - dy)
 		     /* scroll the window */
-		     VerticalScroll (frame, y - ymax + dy, 0);
+		     VerticalScroll (frame, y - ymax + h, 0);
 		   }
 	       }
 	  }

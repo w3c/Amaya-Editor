@@ -214,7 +214,7 @@ static void CSSPrintError (char *msg, char *value)
   ----------------------------------------------------------------------*/
 static void CSSParseError (char *msg, char *value, char *endvalue)
 {
-  char        c = EOS;
+  char        c;
 
   if (endvalue)
     {
@@ -1219,7 +1219,6 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
-  char               *ptr;
 
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_BOX;
@@ -1236,10 +1235,8 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "right", 5))
     pval.typed_data.value = FloatRight;
 
-  ptr = cssRule;
-  cssRule = SkipWord (cssRule);
   if (pval.typed_data.value == 0)
-    CSSParseError ("Invalid float value", ptr, cssRule);
+    cssRule = SkipValue ("Invalid float value", cssRule);
   else
     {
       if (DoApply)
@@ -1248,8 +1245,8 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 	    cssRule = CheckImportantRule (cssRule, context);
 	  TtaSetStylePresentation (PRFloat, element, tsch, context, pval);
 	}
+      cssRule = SkipValue (NULL, cssRule);
     }
-  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1261,7 +1258,6 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 			    CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
-  char               *ptr;
 
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_BOX;
@@ -1280,10 +1276,8 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "both", 4))
     pval.typed_data.value = ClearBoth;
 
-  ptr = cssRule;
-  cssRule = SkipWord (cssRule);
   if (pval.typed_data.value == 0)
-    CSSParseError ("Invalid clear value", ptr, cssRule);
+    cssRule = SkipValue ("Invalid clear value", cssRule);
   else
     {
       if (DoApply)
@@ -1292,8 +1286,8 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 	    cssRule = CheckImportantRule (cssRule, context);
 	  TtaSetStylePresentation (PRClear, element, tsch, context, pval);
 	}
+      cssRule = SkipValue (NULL, cssRule);
     }
-  cssRule = SkipValue (NULL, cssRule);
   return (cssRule);
 }
 
@@ -1316,7 +1310,6 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 			      CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
-  char               *ptr;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
@@ -1358,12 +1351,8 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	      strncasecmp (cssRule, "table-caption", 13) &&
 	      strncasecmp (cssRule, "table", 5) &&
 	      strncasecmp (cssRule, "inherit", 7))
-	    {
-	      ptr = cssRule;
-	      cssRule = SkipWord (cssRule);
-	      CSSParseError ("Invalid display value", ptr, cssRule);
-	    }
-	  return (cssRule);
+	    cssRule = SkipValue ("Invalid display value", cssRule);
+ 	  return (cssRule);
 	}
       
       if (DoApply)
@@ -1447,7 +1436,6 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   align;
-   char               *ptr;
 
    align.typed_data.value = 0;
    align.typed_data.unit = UNIT_REL;
@@ -1476,10 +1464,8 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
      }
    else
      {
-       ptr = cssRule;
-       cssRule = SkipWord (cssRule);
-       CSSParseError ("Invalid text-align value", ptr, cssRule);
-	return (cssRule);
+       cssRule = SkipValue ("Invalid text-align value", cssRule);
+       return (cssRule);
      }
 
    /*
@@ -1502,7 +1488,6 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   direction;
-   char               *ptr;
 
    direction.typed_data.value = 0;
    direction.typed_data.unit = UNIT_REL;
@@ -1527,9 +1512,7 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
      }
    else
      {
-       ptr = cssRule;
-       cssRule = SkipWord (cssRule);
-       CSSParseError ("Invalid direction value", ptr, cssRule);
+       cssRule = SkipValue ("Invalid direction value", cssRule);
        return (cssRule);
      }
 
@@ -1553,7 +1536,6 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   bidi;
-   char               *ptr;
 
    bidi.typed_data.value = 0;
    bidi.typed_data.unit = UNIT_REL;
@@ -1583,9 +1565,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
      }
    else
      {
-       ptr = cssRule;
-       cssRule = SkipWord (cssRule);
-       CSSParseError ("Invalid unicode-bidi value", ptr, cssRule);
+       cssRule = SkipValue ("Invalid unicode-bidi value", cssRule);
        return (cssRule);
      }
 
@@ -2262,33 +2242,32 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   decor;
-   char               *ptr;
 
    decor.typed_data.value = 0;
    decor.typed_data.unit = UNIT_REL;
    decor.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "none", strlen ("none")))
+   if (!strncasecmp (cssRule, "none", 4))
      {
 	decor.typed_data.value = NoUnderline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "underline", strlen ("underline")))
+   else if (!strncasecmp (cssRule, "underline", 9))
      {
 	decor.typed_data.value = Underline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "overline", strlen ("overline")))
+   else if (!strncasecmp (cssRule, "overline", 8))
      {
 	decor.typed_data.value = Overline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "line-through", strlen ("line-through")))
+   else if (!strncasecmp (cssRule, "line-through", 12))
      {
 	decor.typed_data.value = CrossOut;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "blink", strlen ("blink")))
+   else if (!strncasecmp (cssRule, "blink", 5))
      {
 	/* the blink text-decoration attribute is not supported */
 	cssRule = SkipWord (cssRule);
@@ -2300,10 +2279,8 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
      }
    else
      {
-       ptr = cssRule;
-       cssRule = SkipWord (cssRule);
-       CSSParseError ("Invalid text-decoration value", ptr, cssRule);
-	return (cssRule);
+       cssRule = SkipValue ("Invalid text-decoration value", cssRule);
+       return (cssRule);
      }
 
    /*
@@ -2343,8 +2320,11 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
   if (val.typed_data.value != 0 &&
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
-    CSSParseError ("height value", ptr, cssRule);
-  else if (DoApply)
+    {
+      CSSParseError ("height value", ptr, cssRule);
+      val.typed_data.unit == UNIT_PX;
+    }
+  if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
@@ -2380,8 +2360,11 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
   if (val.typed_data.value != 0 &&
       (val.typed_data.unit == UNIT_INVALID ||
        val.typed_data.unit == UNIT_BOX))
-    CSSParseError ("Invalid width value", ptr, cssRule);
-  else if (DoApply)
+    {
+      CSSParseError ("Invalid width value", ptr, cssRule);
+      val.typed_data.unit == UNIT_PX;
+    }
+  if (DoApply)
     {
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);

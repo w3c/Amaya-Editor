@@ -99,6 +99,14 @@ extern void TtaRemoveInitialSpaces (Element element, Document document);
 extern void TtaRemoveFinalSpaces (Element element, Document document,
 				  ThotBool all);
 
+/*----------------------------------------------------------------------
+  TtaSearchText looks for the text forward or backward in the document.
+  If the string is found the function returns the element that includes
+  it. It return NULL if the string is not found.
+  ----------------------------------------------------------------------*/
+extern Element TtaSearchText (Document document, Element element, ThotBool forward,
+			      char *text, CHARSET encoding);
+
 /* ----------------------------------------------------------------------
    TtaInsertTextContent
 
@@ -532,7 +540,8 @@ extern void TtaGiveTextContent (Element element, unsigned char *buffer,
    buffer: (the buffer contains the substring).
    language: language of the text.
   ----------------------------------------------------------------------*/
-extern void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length, Language *language);
+extern void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
+				  Language *language);
 
 /*----------------------------------------------------------------------
    TtaSetBufferContent
@@ -590,7 +599,8 @@ extern CHAR_T TtaGetLastBufferContent (Element element);
    buffer: (the buffer contains the substring).
    In _I18N mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
-extern void TtaGiveSubString (Element element, unsigned char *buffer, int position, int length);
+extern void TtaGiveSubString (Element element, unsigned char *buffer,
+			      int position, int length);
 
 /*----------------------------------------------------------------------
    TtaGetGraphicsShape

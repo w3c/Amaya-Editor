@@ -26,6 +26,7 @@
 #include "message.h"
 #include "typecorr.h"
 #include "appdialogue.h"
+#include "application.h"
 
 #define THOT_EXPORT extern
 #include "platform_tv.h"
@@ -52,6 +53,7 @@
 #include "structmodif_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
+#include "thotmsg_f.h"
 #include "tree_f.h"
 #include "uconvert_f.h"
 #include "views_f.h"
@@ -499,10 +501,9 @@ static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
 }
 
 /*----------------------------------------------------------------------
-   SearchText looks for the string described by text and textLen.
-   Parameters firstEl, firstChar, lastEl, lastChar give the search context.
-   Au retour, elles indiquent la chaine trouvee si la fonction     
-   retourne Vrai. (La fonction retourne faux en cas d'echec).      
+  SearchText looks for the string described by text and textLen.
+  Parameters firstEl, firstChar, lastEl, lastChar give the search context.
+  If the string is found the function returns TRUE and points that string.
   ----------------------------------------------------------------------*/
 ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		     PtrElement *lastEl, int *lastChar, ThotBool forward,
@@ -674,6 +675,55 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
     }
   return result;
 }
+
+/*----------------------------------------------------------------------
+  TtaSearchText looks for the text forward or backward in the document.
+  If the string is found the function returns the element that includes
+  it. It return NULL if the string is not found.
+  ----------------------------------------------------------------------*/
+Element TtaSearchText (Document document, Element element, ThotBool forward,
+		       char *text, CHARSET encoding)
+{
+  PtrDocument         pDoc;
+  PtrElement          elFound;
+  PtrElement          pfirstEl, plastEl;
+  int                 firstChar = 0, lastChar = 0;
+  ThotBool            found;
+#ifdef _I18N_
+  CHAR_T             *ptr;
+#endif /* _I18N_ */
+
+   UserErrorCode = 0;
+   /* Checks the parameter document */
+   elFound = NULL;
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (text == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+     {
+       pfirstEl = (PtrElement) element;
+       plastEl = NULL;
+#ifdef _I18N_
+       ptr = TtaConvertByteToWC (text, encoding);
+#else /* _I18N_ */
+       ptr = text;
+#endif /* _I18N_ */
+       found = SearchText (pDoc, &pfirstEl, &firstChar, &plastEl,
+			   &lastChar, forward, TRUE, ptr, ustrlen (ptr));
+#ifdef _I18N_
+       TtaFreeMemory (ptr);
+#endif /* _I18N_ */
+       if (found)
+	 elFound = pfirstEl;
+     }
+  return ((Element) elFound);
+}
+
 
 /*----------------------------------------------------------------------
    SearchPageBreak recherche a partir de l'element pEl un element

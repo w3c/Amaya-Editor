@@ -29,6 +29,11 @@ extern ThotBool SearchText ( PtrDocument pDoc,
                              ThotBool caseEquiv,
                              CHAR_T *text,
                              int textLen );
+extern Element TtaSearchText ( Document document,
+                               Element element,
+                               ThotBool forward,
+                               char *text,
+                               CHARSET encoding );
 extern PtrElement SearchPageBreak ( PtrElement pEl,
                                     int view,
                                     int pageNum,
@@ -62,6 +67,11 @@ extern ThotBool SearchText (/* PtrDocument pDoc,
                                ThotBool caseEquiv,
                                CHAR_T *text,
                                int textLen */);
+extern Element TtaSearchText (/* Document document,
+                                 Element element,
+                                 ThotBool forward,
+                                 char *text,
+                                 CHARSET encoding */);
 extern PtrElement SearchPageBreak (/* PtrElement pEl,
                                       int view,
                                       int pageNum,

@@ -667,7 +667,6 @@ void TtaRemoveFinalSpaces (Element element, Document document,
     }
 }
 
-
 /*----------------------------------------------------------------------
    TtaInsertTextContent
 
