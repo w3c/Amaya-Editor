@@ -1423,10 +1423,10 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
     pval.typed_data.value = Circle;
   else if (!strncasecmp (cssRule, "square", 6))
     pval.typed_data.value = Square;
-  else if (!strncasecmp (cssRule, "decimal", 7))
-    pval.typed_data.value = Decimal;
   else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
     pval.typed_data.value = DecimalLeadingZero;
+  else if (!strncasecmp (cssRule, "decimal", 7))
+    pval.typed_data.value = Decimal;
   else if (!strncasecmp (cssRule, "lower-roman", 11))
     pval.typed_data.value = LowerRoman;
   else if (!strncasecmp (cssRule, "upper-roman", 11))

@@ -914,6 +914,8 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
      {
      case CntDecimal:
      case CntZLDecimal:
+       if (style == CntZLDecimal && number < 10)
+	 string[(*len)++] = '0';
        if (number >= 100000)
 	 {
 	   string[(*len)++] = '?';
@@ -929,8 +931,6 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	 c = 2;
        else
 	 c = 1;
-       if (style == CntZLDecimal)
-	 c++;
        *len += c;
        i = *len;
        do
@@ -940,8 +940,6 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	   number = number / 10;
 	 }
        while (number > 0);
-       if (style == CntZLDecimal && i > 0)
-	 string[i - 1] = '0';
        break;
      case CntURoman:
      case CntLRoman:
