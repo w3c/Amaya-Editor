@@ -688,6 +688,28 @@ static void CancelOldestSequence (PtrDocument pDoc, ThotBool undo)
 }
 
 /*----------------------------------------------------------------------
+   CheckUniqueInit
+   If Op is a Delimiter considered as the beginning of an initial sequence,
+   make sure that there is no other Delimiter in the list that is considered
+   as the beginning of an initial sequence.
+  ----------------------------------------------------------------------*/
+static void CheckUniqueInit (PtrEditOperation Op)
+{
+  PtrEditOperation	editOp;
+
+  if (Op->EoType != EtDelimiter || !Op->EoInitialSequence)
+    return;
+
+  editOp = Op->EoPreviousOp;
+  while (editOp)
+    {
+      if (editOp->EoType == EtDelimiter)
+	editOp->EoInitialSequence = FALSE;
+      editOp = editOp->EoPreviousOp;
+    }
+}
+
+/*----------------------------------------------------------------------
    OpenHistorySequence
    Open a sequence of editing operations in the history.
    firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
@@ -729,6 +751,8 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement last
       editOp->EoSelectedAttrSch = NULL;
       editOp->EoSelectedAttr = 0;
     }
+  editOp->EoInitialSequence = !pDoc->DocModified;
+  CheckUniqueInit (editOp);
   /* update the number of editing commands remaining in the history */
   UpdateHistoryLength (1, pDoc);
   /* If the history is too long, cancel the oldest sequence in the history */
@@ -785,7 +809,7 @@ void CancelLastSequenceFromHistory (PtrDocument pDoc)
       /* history is empty */
         return;
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
-	    stop = TRUE;
+	stop = TRUE;
       CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
    }
 }
@@ -949,6 +973,10 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           CallEventType ((NotifyEvent *) & notifyEl, FALSE);
           }
         }
+      if (editOp->EoInitialSequence)
+	/* That's the first sequence registered since the document was loaded
+	   The document is no longer modified */
+	SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
       }
 
    if (editOp->EoType == EtAttribute)
@@ -1201,6 +1229,8 @@ static void OpenRedoSequence (Document doc)
       editOp->EoLastSelectedEl = (PtrElement)lastSel;
       editOp->EoLastSelectedChar = lastSelChar;
     }
+  editOp->EoInitialSequence = !pDoc->DocModified;
+  CheckUniqueInit (editOp);
   /* update the number of editing sequences registered in the Redo queue */
   UpdateRedoLength (1, pDoc);
   /* If the Redo queue is too long, cancel the oldest sequence */

@@ -892,12 +892,10 @@ void DocStatusUpdate (Document doc, ThotBool modified)
 	 TtaSetItemOn (doc, 1, File, BSynchro);
     }
   else
+    /* the document is no longer modified */
     {
-      if (!TtaIsDocumentModified (doc))
-	{
-	  TtaSetItemOff (doc, 1, File, BSave);
-	  TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
-	}
+      TtaSetItemOff (doc, 1, File, BSave);
+      TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
       if (TtaIsDocumentUpdated (doc))
 	{
 	  /* if we have a pair source/structured document allow synchronization */

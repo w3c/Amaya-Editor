@@ -729,6 +729,10 @@ typedef struct _EditOperation
 					    a character string */
       PtrSSchema    _EoSelectedAttrSch_; /* schema of the selected attribute */
       int           _EoSelectedAttr_;    /* index of the selected attribute */
+      ThotBool      _EoInitialSequence_; /* the sequence starting with this
+                                            delimiter represents the first
+                                            editing operation made to the
+                                            document since it was loaded */
     } s0;
     struct        /* EoType = EtElement */
     {
@@ -792,6 +796,7 @@ typedef struct _NsUriDescr
 #define EoLastSelectedEl u.s0._EoLastSelectedEl_
 #define EoLastSelectedChar u.s0._EoLastSelectedChar_
 #define EoSelectedAttrSch u.s0._EoSelectedAttrSch_
+#define EoInitialSequence u.s0._EoInitialSequence_
 #define EoSelectedAttr u.s0._EoSelectedAttr_
 #define EoParent u.s1._EoParent_
 #define EoPreviousSibling u.s1._EoPreviousSibling_
