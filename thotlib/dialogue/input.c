@@ -1,13 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*=======================================================================*/
 /*|                                                                     | */
 /*|               Module de gestion des entrees clavier.                | */
-/*|                                                                     | */
-/*|                                                                     | */
-/*|                     I. Vatton       Novembre 89                     | */
-/*|                                                                     | */
 /*|                                                                     | */
 /*=======================================================================*/
 
@@ -32,7 +25,7 @@ extern void         EndInsert ();
 #endif
 
 #define MAX_EQUIV 25
-#define THOT_SANS_MOD	0
+#define THOT_NO_MOD	0
 #define THOT_MOD_CTRL	1
 #define THOT_MOD_META	2
 #define THOT_MOD_ALT	4
@@ -40,19 +33,19 @@ extern void         EndInsert ();
 #define THOT_MOD_S_CTRL	11
 #define THOT_MOD_S_META	12
 #define THOT_MOD_S_ALT	14
-#define MAX_AUTOMATE	80
-/* structure d'automate pour les touches */
-typedef struct _touche
+#define MAX_AUTOMATA	80
+/* structure d'automata pour les touches */
+typedef struct _key
   {
-     int                 T_Cle;	/* cle d'entree                             */
-     struct _touche     *T_Suite;	/* 1ere touche complementaire (1er niveau)  */
-     struct _touche     *T_Autre;	/* entree suivante de meme niveau           */
-     short               T_Commande;	/* indice dans la liste des commandes ou -1 */
-     int                 T_Valeur;	/* cle de retour si commande = -1           */
+     int                 K_EntryCode;	/* cle d'entree                             */
+     struct _key        *K_Next;	/* 1ere touche complementaire (1er niveau)  */
+     struct _key        *K_Other;	/* entree suivante de meme niveau           */
+     short               K_Command;	/* indice dans la liste des commandes ou -1 */
+     int                 K_Value;	/* cle de retour si commande = -1           */
   }
-TOUCHE;
+KEY;
 
-#define T_Modifieur T_Suite	/* valeur du modifieur (2eme niveau)          */
+#define T_Modifieur K_Next	/* valeur du modifieur (2eme niveau)          */
 
 
 #undef EXPORT
@@ -90,26 +83,26 @@ TOUCHE;
 static int          SpecialKeys[] =
 {5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
 
-/* Les automates */
-static TOUCHE      *Automate_normal = NULL;
+/* Les automates */ 
+static KEY      *Automata_normal = NULL;
 
-static TOUCHE      *Automate_ctrl = NULL;
-static TOUCHE      *Automate_meta = NULL;
-static TOUCHE      *Automate_alt = NULL;
-static TOUCHE      *Automate_CTRL = NULL;
-static TOUCHE      *Automate_META = NULL;
-static TOUCHE      *Automate_ALT = NULL;
-static TOUCHE      *Automate_current = NULL;
+static KEY      *Automata_ctrl = NULL;
+static KEY      *Automata_meta = NULL;
+static KEY      *Automata_alt = NULL;
+static KEY      *Automata_CTRL = NULL;
+static KEY      *Automata_META = NULL;
+static KEY      *Automata_ALT = NULL;
+static KEY      *Automata_current = NULL;
 
 /* ---------------------------------------------------------------------- */
 /* |    NomCle traduit les noms de cle's non supporte's par             | */
 /* |            l'interpre'teur des translations Motif.                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static char        *NomCle (char *name)
+static char        *NameCode (char *name)
 
 #else  /* __STDC__ */
-static char        *NomCle (name)
+static char        *NameCode (name)
 char               *name;
 
 #endif /* __STDC__ */
@@ -132,7 +125,7 @@ char               *name;
       return ("0x7f");
    else
       return (name);
-}				/*NomCle */
+}				/*NameCode */
 
 
 /* ---------------------------------------------------------------------- */
@@ -140,9 +133,9 @@ char               *name;
 /* |            en une valeur de cle' exploitable par Thot.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static unsigned int CleSpecial (char *name)
+static unsigned int SpecialKey (char *name)
 #else  /* __STDC__ */
-static unsigned int CleSpecial (name)
+static unsigned int SpecialKey (name)
 char               *name;
 
 #endif /* __STDC__ */
@@ -244,183 +237,183 @@ char               *name;
       return (unsigned int) THOT_KEY_End;
    else
       return (unsigned int) name[0];
-}				/*CleSpecial */
+}				/*SpecialKey */
 
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MemoTouche memorise un raccourci clavier dans les automates.    | */
+/* |    MemoKey memorise un raccourci clavier dans les automates.    | */
 /* |            mod1 = 1ere modifieur                                   | */
-/* |            cle1 = 1ere cle                                         | */
-/* |            mod2 = 2eme modifieur                                   | */
-/* |            cle2 = 2eme cle                                         | */
-/* |            cle  = valeur du keysym ou 0                            | */
-/* |            commande = numero de commande dans MesActions           | */
+/* |            key1 = 1ere cle                                         | */
+/* |            key2 = 2eme modifieur                                   | */
+/* |            key2 = 2eme cle                                         | */
+/* |            key  = valeur du keysym ou 0                            | */
+/* |            command = numero de commande dans MesActions           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         MemoTouche (int mod1, int cle1, int mod2, int cle2, int cle, int commande)
+static void         MemoKey (int mod1, int key1, int mod2, int key2, int key, int command)
 #else  /* __STDC__ */
-static void         MemoTouche (mod1, cle1, mod2, cle2, cle, commande)
+static void         MemoKey (mod1, key1, mod2, key2, key, command)
 int                 mod1;
-int                 cle1;
+int                 key1;
 int                 mod2;
-int                 cle2;
-int                 cle;
-int                 commande;
+int                 key2;
+int                 key;
+int                 command;
 
 #endif /* __STDC__ */
 {
-   boolean             existe;
-   TOUCHE             *ptr = NULL;
-   TOUCHE             *oldptr;
-   TOUCHE            **addebut;
+   boolean             exists;
+   KEY             *ptr = NULL;
+   KEY             *oldptr;
+   KEY            **addFirst;
 
-   if (cle1 == 0)
+   if (key1 == 0)
       return;
 
    /* Point d'entree dans l'automate */
    switch (mod1)
 	 {
-	    case THOT_SANS_MOD:
-	       addebut = &Automate_normal;
+	    case THOT_NO_MOD:
+	       addFirst = &Automata_normal;
 	       break;
 	    case THOT_MOD_CTRL:
-	       addebut = &Automate_ctrl;
+	       addFirst = &Automata_ctrl;
 	       break;
 	    case THOT_MOD_ALT:
-	       addebut = &Automate_alt;
+	       addFirst = &Automata_alt;
 	       break;
 	    case THOT_MOD_META:
-	       addebut = &Automate_meta;
+	       addFirst = &Automata_meta;
 	       break;
 	    case THOT_MOD_S_CTRL:
-	       addebut = &Automate_CTRL;
+	       addFirst = &Automata_CTRL;
 	       break;
 	    case THOT_MOD_S_ALT:
-	       addebut = &Automate_ALT;
+	       addFirst = &Automata_ALT;
 	       break;
 	    case THOT_MOD_S_META:
-	       addebut = &Automate_META;
+	       addFirst = &Automata_META;
 	       break;
 	    default:
 	       return;
 	 }
 
    /* Initialisations */
-   ptr = (TOUCHE *) TtaGetMemory (sizeof (TOUCHE));	/* nouvelle entree */
-   oldptr = *addebut;		/* debut chainage entrees existantes */
+   ptr = (KEY *) TtaGetMemory (sizeof (KEY));	/* nouvelle entree */
+   oldptr = *addFirst;		/* debut chainage entrees existantes */
    /* Regarde si l'on a deja une touche ctrl */
    if (oldptr == NULL)
      {
 	/* C'est la premiere touche crtl cree */
-	*addebut = ptr;
-	existe = FALSE;		/* la cle1 n'est pas encore connue */
+	*addFirst = ptr;
+	exists = FALSE;		/* la key1 n'est pas encore connue */
      }
    else
      {
 	/* Regarde si cette touche est deja enregistree */
-	existe = FALSE;
+	exists = FALSE;
 	do
 	  {
-	     /* Est-ce la meme cle d'entree */
-	     if (oldptr->T_Cle == cle1)
-		existe = TRUE;	/* L'entree cle1 existe deja */
-	     else if (oldptr->T_Autre != NULL)
+	     /* Est-ce la meme key d'entree */
+	     if (oldptr->K_EntryCode == key1)
+		exists = TRUE;	/* L'entree cle1 existe deja */
+	     else if (oldptr->K_Other != NULL)
 	       {
-		  oldptr = oldptr->T_Autre;
-		  if (oldptr->T_Cle == cle1)
-		     existe = TRUE;	/* Il faut en plus verifier la derniere entree */
+		  oldptr = oldptr->K_Other;
+		  if (oldptr->K_EntryCode == key1)
+		     exists = TRUE;	/* Il faut en plus verifier la derniere entree */
 	       }
 	  }
-	while (oldptr->T_Autre != NULL && !existe);
+	while (oldptr->K_Other != NULL && !exists);
      }
 
    /* Est-ce une sequence a 2 cles avec modifieur sur la 1ere ? */
-   if ((cle2 != 0) && (mod1 != THOT_SANS_MOD))
+   if ((key2 != 0) && (mod1 != THOT_NO_MOD))
      {
 	/* Est-ce que l'entree de 1er niveau existe deja ? */
-	if (!existe)
+	if (!exists)
 	  {
 	     /* Creation d'une entree d'automate de 1er niveau */
-	     ptr->T_Cle = cle1;
-	     ptr->T_Suite = NULL;
-	     ptr->T_Autre = NULL;
-	     ptr->T_Commande = 0;
-	     ptr->T_Valeur = 0;
+	     ptr->K_EntryCode = key1;
+	     ptr->K_Next = NULL;
+	     ptr->K_Other = NULL;
+	     ptr->K_Command = 0;
+	     ptr->K_Value = 0;
 
 	     /* Chainage a l'entree precedente */
 	     if (oldptr != NULL)
-		oldptr->T_Autre = ptr;
+		oldptr->K_Other = ptr;
 
 	     oldptr = ptr;
 	     ptr = NULL;
 	  }
 
 	/* Il faut parcourir les entrees de 2eme niveau */
-	if (oldptr->T_Suite == NULL)
+	if (oldptr->K_Next == NULL)
 	  {
 	     /* creation d'une 1ere entree de 2eme niveau */
-	     ptr = (TOUCHE *) TtaGetMemory (sizeof (TOUCHE));
-	     ptr->T_Cle = cle2;
-	     ptr->T_Modifieur = (TOUCHE *) mod2;
-	     ptr->T_Autre = NULL;
-	     ptr->T_Commande = commande;
-	     ptr->T_Valeur = cle;
-	     oldptr->T_Suite = ptr;
-	     existe = TRUE;
+	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+	     ptr->K_EntryCode = key2;
+	     ptr->T_Modifieur = (KEY *) mod2;
+	     ptr->K_Other = NULL;
+	     ptr->K_Command = command;
+	     ptr->K_Value = key;
+	     oldptr->K_Next = ptr;
+	     exists = TRUE;
 	  }
 	else
 	  {
-	     oldptr = oldptr->T_Suite;
-	     existe = FALSE;
+	     oldptr = oldptr->K_Next;
+	     exists = FALSE;
 	     do
 	       {
 		  /* Est-ce la meme cle d'entree */
-		  if (oldptr->T_Cle == cle2)
+		  if (oldptr->K_EntryCode == key2)
 		     /* L'entree existe deja */
-		     existe = TRUE;
-		  else if (oldptr->T_Autre != NULL)
+		     exists = TRUE;
+		  else if (oldptr->K_Other != NULL)
 		    {
-		       oldptr = oldptr->T_Autre;
+		       oldptr = oldptr->K_Other;
 		       /* Il faut en plus verifier la derniere entree */
-		       if (oldptr->T_Cle == cle2)
-			  existe = TRUE;
+		       if (oldptr->K_EntryCode == key2)
+			  exists = TRUE;
 		    }
 	       }
-	     while (oldptr->T_Autre != NULL && !existe);
+	     while (oldptr->K_Other != NULL && !exists);
 	  }
 
 	/* Si l'entree de 2eme niveau n'existe pas deja ? */
-	if (!existe)
+	if (!exists)
 	  {
 	     /* Creation d'une entree d'automate de 2eme niveau */
-	     ptr = (TOUCHE *) TtaGetMemory (sizeof (TOUCHE));
-	     ptr->T_Cle = cle2;
-	     ptr->T_Modifieur = (TOUCHE *) mod2;
-	     ptr->T_Autre = NULL;
-	     ptr->T_Commande = commande;
-	     ptr->T_Valeur = cle;
+	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+	     ptr->K_EntryCode = key2;
+	     ptr->T_Modifieur = (KEY *) mod2;
+	     ptr->K_Other = NULL;
+	     ptr->K_Command = command;
+	     ptr->K_Value = key;
 
 	     /* Chainage a l'entree precedente */
 	     if (oldptr != NULL)
-		oldptr->T_Autre = ptr;
+		oldptr->K_Other = ptr;
 	  }
      }
    else
      {
 	/* on cree une entree de premier niveau */
-	ptr->T_Cle = cle1;
-	ptr->T_Modifieur = (TOUCHE *) mod1;
-	ptr->T_Autre = NULL;
-	ptr->T_Suite = NULL;
-	ptr->T_Commande = commande;
-	ptr->T_Valeur = cle;
+	ptr->K_EntryCode = key1;
+	ptr->T_Modifieur = (KEY *) mod1;
+	ptr->K_Other = NULL;
+	ptr->K_Next = NULL;
+	ptr->K_Command = command;
+	ptr->K_Value = key;
 
 	/* Chainage a l'entree precedente */
 	if (oldptr != NULL)
-	   oldptr->T_Autre = ptr;
+	   oldptr->K_Other = ptr;
      }
-}				/*MemoTouche */
+}				/*MemoKey */
 
 
 #ifdef NEW_WILLOWS
@@ -435,7 +428,7 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 #endif				/* __STDC__ */
 {
    int                 keyboard_mask = 0;
-   char                chaine[2];
+   char                string[2];
    int                 len = 0;
 
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
@@ -456,11 +449,11 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 
    if (msg == WM_CHAR)
      {
-	chaine[0] = (char) wParam;
+	string[0] = (char) wParam;
 	len = 1;
      }
 
-   MaTranslation (frame, &chaine[0], len, keyboard_mask, wParam);
+   MaTranslation (frame, &string[0], len, keyboard_mask, wParam);
 }
 #endif /* NEW_WILLOWS */
 
@@ -479,10 +472,10 @@ XEvent             *event;
 
 #endif /* __STDC__ */
 {
-   int                 i, retour;
+   int                 i, status;
    int                 PicMask;
    int                 frame;
-   unsigned char       chaine[2];
+   unsigned char       string[2];
    XComposeStatus      ComS;
    KeySym              KS, KS1;
 
@@ -491,14 +484,14 @@ XEvent             *event;
       frame = 0;
 
    i = event->xkey.state;
-   if (Automate_current == NULL)
+   if (Automata_current == NULL)
      {
-	retour = XLookupString ((XKeyEvent *) event, chaine, 2, &KS, &ComS);
-	if (!retour)
+	status = XLookupString ((XKeyEvent *) event, string, 2, &KS, &ComS);
+	if (!status)
 	  {
 	     event->xkey.state = i & (ShiftMask);
-	     retour = XLookupString ((XKeyEvent *) event, chaine, 2, &KS1, &ComS);
-	     if (retour)
+	     status = XLookupString ((XKeyEvent *) event, string, 2, &KS1, &ComS);
+	     if (status)
 		KS = KS1;
 	  }
      }
@@ -506,7 +499,7 @@ XEvent             *event;
      {
 	/* On est entre dans l'automate, pas d'interpretation des modifieurs */
 	event->xkey.state = i & ShiftMask;
-	retour = XLookupString ((XKeyEvent *) event, chaine, 2, &KS, &ComS);
+	status = XLookupString ((XKeyEvent *) event, string, 2, &KS, &ComS);
      }
 
    PicMask = 0;
@@ -521,7 +514,7 @@ XEvent             *event;
    if (i & Mod2Mask)
       PicMask |= THOT_MOD_ALT;
 
-   MaTranslation (frame, &chaine[0], retour, PicMask, KS);
+   MaTranslation (frame, &string[0], status, PicMask, KS);
 }
 #endif /* WWW_XWINDOWS */
 
@@ -529,46 +522,46 @@ XEvent             *event;
 /* |    MaTranslation handle the caracter encoding.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MaTranslation (int frame, unsigned char *chaine, unsigned int nb,
+void                MaTranslation (int frame, unsigned char *string, unsigned int nb,
 				   int PicMask, int key)
 #else  /* __STDC__ */
-void                MaTranslation (frame, chaine, nb, PicMask, key)
+void                MaTranslation (frame, string, nb, PicMask, key)
 int                 frame;
-unsigned char      *chaine;
+unsigned char      *string;
 unsigned int        nb;
 int                 PicMask;
 int                 key;
 
 #endif /* __STDC__ */
 {
-   int                 valeur;
+   int                 value;
    int                 modtype;
-   int                 commande;
-   TOUCHE             *ptr;
-   boolean             trouve;
+   int                 command;
+   KEY                 *ptr;
+   boolean             found;
    Document            document;
-   View                vue;
+   View                view;
 
    if (frame > MAX_FRAME)
       frame = 0;
 
-   valeur = chaine[0];
-   trouve = FALSE;
+   value = string[0];
+   found = FALSE;
    if (nb == 2)
      {
 	/* C'est l'appel d'une action Thot */
-	commande = (int) chaine[1];
-	trouve = TRUE;
+	command = (int) string[1];
+	found = TRUE;
      }
    else
      {
-	commande = 0;
+	command = 0;
 	/* Est-on entre dans un automate ? */
-	if (Automate_current != NULL)
+	if (Automata_current != NULL)
 	  {
 	     /* Recheche l'entree de 2eme niveau */
-	     ptr = Automate_current;
-	     Automate_current = NULL;
+	     ptr = Automata_current;
+	     Automata_current = NULL;
 
 	     /* Teste s'il y a un modifieur en jeu */
 	     if (PicMask & THOT_MOD_CTRL)
@@ -589,19 +582,19 @@ int                 key;
 	     else if (PicMask & THOT_MOD_SHIFT)
 		modtype = THOT_MOD_SHIFT;
 	     else
-		modtype = THOT_SANS_MOD;
+		modtype = THOT_NO_MOD;
 
 	     /* Recherche l'entree de 1er niveau */
-	     while (!trouve && ptr != NULL)
-		if (ptr->T_Cle == key && modtype == (int) ptr->T_Modifieur)
-		   trouve = TRUE;
+	     while (!found && ptr != NULL)
+		if (ptr->K_EntryCode == key && modtype == (int) ptr->T_Modifieur)
+		   found = TRUE;
 		else
-		   ptr = ptr->T_Autre;
+		   ptr = ptr->K_Other;
 
-	     if (trouve)
+	     if (found)
 	       {
-		  valeur = (unsigned char) ptr->T_Valeur;
-		  commande = ptr->T_Commande;
+		  value = (unsigned char) ptr->K_Value;
+		  command = ptr->K_Command;
 	       }
 	  }
 	else
@@ -610,42 +603,42 @@ int                 key;
 	     /* Teste s'il y a un modifieur en jeu */
 	     if (PicMask & THOT_MOD_CTRL)
 		if (PicMask & THOT_MOD_SHIFT)
-		   ptr = Automate_CTRL;
+		   ptr = Automata_CTRL;
 		else
-		   ptr = Automate_ctrl;
+		   ptr = Automata_ctrl;
 	     else if (PicMask & THOT_MOD_META)
 		if (PicMask & THOT_MOD_SHIFT)
-		   ptr = Automate_META;
+		   ptr = Automata_META;
 		else
-		   ptr = Automate_meta;
+		   ptr = Automata_meta;
 	     else if (PicMask & THOT_MOD_ALT)
 		if (PicMask & THOT_MOD_SHIFT)
-		   ptr = Automate_ALT;
+		   ptr = Automata_ALT;
 		else
-		   ptr = Automate_alt;
+		   ptr = Automata_alt;
 	     else
-		ptr = Automate_normal;
+		ptr = Automata_normal;
 
 	     /* Recherche l'entree de 1er niveau */
-	     while (!trouve && ptr != NULL)
-		if (ptr->T_Cle == key)
+	     while (!found && ptr != NULL)
+		if (ptr->K_EntryCode == key)
 		  {
 		     /* On entre dans un automate */
-		     trouve = TRUE;
-		     Automate_current = ptr->T_Suite;
-		     if (Automate_current == NULL)
+		     found = TRUE;
+		     Automata_current = ptr->K_Next;
+		     if (Automata_current == NULL)
 		       {
 			  /* il s'agit d'une valeur definie a premier niveau */
-			  valeur = (unsigned char) ptr->T_Valeur;
-			  commande = ptr->T_Commande;
+			  value = (unsigned char) ptr->K_Value;
+			  command = ptr->K_Command;
 		       }
 		  }
 		else
-		   ptr = ptr->T_Autre;
+		   ptr = ptr->K_Other;
 	  }
      }
 
-   if (!trouve)
+   if (!found)
       /* Traitement des cles speciales */
       switch (key)
 	    {
@@ -653,87 +646,87 @@ int                 key;
 #ifdef THOT_KEY_R8
 	       case THOT_KEY_R8:
 #endif
-		  commande = SpecialKeys[MY_KEY_Up];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Up];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Left:
 #ifdef THOT_KEY_R10
 	       case THOT_KEY_R10:
 #endif
-		  commande = SpecialKeys[MY_KEY_Left];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Left];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Right:
 #ifdef THOT_KEY_R12
 	       case THOT_KEY_R12:
 #endif
-		  commande = SpecialKeys[MY_KEY_Right];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Right];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Down:
 #ifdef THOT_KEY_R14
 	       case THOT_KEY_R14:
 #endif
-		  commande = SpecialKeys[MY_KEY_Down];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Down];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Prior:
 #ifdef THOT_KEY_R9
 	       case THOT_KEY_R9:
 #endif
-		  commande = SpecialKeys[MY_KEY_Prior];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Prior];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Next:
 #ifdef THOT_KEY_R15
 	       case THOT_KEY_R15:
 #endif
-		  commande = SpecialKeys[MY_KEY_Next];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Next];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Home:
 #ifdef THOT_KEY_R7
 	       case THOT_KEY_R7:
 #endif
-		  commande = SpecialKeys[MY_KEY_Home];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Home];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_End:
 #ifdef THOT_KEY_R13
 	       case THOT_KEY_R13:
 #endif
-		  commande = SpecialKeys[MY_KEY_End];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_End];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_BackSpace:
-		  commande = SpecialKeys[MY_KEY_BackSpace];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_BackSpace];
+		  Automata_current = NULL;
 		  break;
 	       case THOT_KEY_Delete:
-		  commande = SpecialKeys[MY_KEY_Delete];
-		  Automate_current = NULL;
+		  command = SpecialKeys[MY_KEY_Delete];
+		  Automata_current = NULL;
 		  break;
 	       default:
 		  break;
 	    }
 
-   if (Automate_current == NULL)
+   if (Automata_current == NULL)
      {
 	/* Appel d'une action Thot */
-	VueDeFenetre (frame, &document, &vue);
-	if (commande > 0)
+	VueDeFenetre (frame, &document, &view);
+	if (command > 0)
 	  {
 	     /* Termine l'insertion eventuellement en cours */
-	     if (commande != CMD_DeletePrevChar)
+	     if (command != CMD_DeletePrevChar)
 		/* Ce n'est pas un delete, il faut terminer l'insertion courante */
 		EndInsert ();
 	     /* Faut-il passer un parametre ? */
-	     if (MenuActionList[commande].ActionActive[frame])
+	     if (MenuActionList[command].ActionActive[frame])
 	       {
 		  /* l'action est active pour la fenetre courante */
 		  /* prepare les parametres */
-		  if (MenuActionList[commande].Call_Action != NULL)
-		     (*MenuActionList[commande].Call_Action) (document, vue);
+		  if (MenuActionList[command].Call_Action != NULL)
+		     (*MenuActionList[command].Call_Action) (document, view);
 	       }
 	  }
 	/* Rien a inserer */
@@ -747,53 +740,53 @@ int                 key;
 		  /* Delete the current selection */
 		  EndInsert ();
 		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		     (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, vue);
+		     (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 	       }
-	     else if (valeur == 8 || valeur == 127)
+	     else if (value == 8 || value == 127)
 	       {
 		  /* Par defaut BackSpace detruit le caractere precedent */
 		  /* sans se soucier de la langue courante */
 		  if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
-		     (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, vue);
+		     (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
 		  return;
 	       }
 
 /*** Sequence de traitement des espaces ***/
-	     if (valeur == SAUT_DE_LIGNE
-		 || (InputSpace && valeur == SeeCtrlRC))
+	     if (value == SAUT_DE_LIGNE
+		 || (InputSpace && value == SeeCtrlRC))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, SAUT_DE_LIGNE);
+		     (*MenuActionList[0].Call_Action) (document, view, SAUT_DE_LIGNE);
 	       }
-	     else if (valeur == FINE || (InputSpace && valeur == SeeFine))
+	     else if (value == FINE || (InputSpace && value == SeeFine))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, FINE);
+		     (*MenuActionList[0].Call_Action) (document, view, FINE);
 	       }
-	     else if (valeur == DEMI_CADRATIN
-		      || (InputSpace && valeur == SeeDemiCadratin))
+	     else if (value == DEMI_CADRATIN
+		      || (InputSpace && value == SeeDemiCadratin))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, DEMI_CADRATIN);
+		     (*MenuActionList[0].Call_Action) (document, view, DEMI_CADRATIN);
 	       }
-	     else if (valeur == BLANC_DUR
-		      || (InputSpace && valeur == SeeBlancDur))
+	     else if (value == BLANC_DUR
+		      || (InputSpace && value == SeeBlancDur))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, BLANC_DUR);
+		     (*MenuActionList[0].Call_Action) (document, view, BLANC_DUR);
 	       }
-	     else if ((InputSpace && valeur == SeeBlanc))
+	     else if ((InputSpace && value == SeeBlanc))
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, BLANC);
+		     (*MenuActionList[0].Call_Action) (document, view, BLANC);
 	       }
 
-	     else if ((valeur >= 32 && valeur < 128)
-		      || (valeur >= 144 && valeur < 256))
+	     else if ((value >= 32 && value < 128)
+		      || (value >= 144 && value < 256))
 		/* on insere un caractere valide quelque soit la langue */
 	       {
 		  if (MenuActionList[0].Call_Action)
-		     (*MenuActionList[0].Call_Action) (document, vue, valeur);
+		     (*MenuActionList[0].Call_Action) (document, view, value);
 	       }
 	  }
      }
@@ -812,34 +805,34 @@ char               *appliname;
 
 #endif /* __STDC__ */
 {
-   char               *texte;	/* fichier de translation transmis a motif */
-   char                ligne[200];	/* ligne en construction pour motif */
+   char               *text;	/* fichier de translation transmis a motif */
+   char                line[200];	/* ligne en construction pour motif */
    char                home[200], name[80], ch[80], *adr;
    char                equiv[MAX_EQUIV];	/* chaine des equivalents caracteres pour motif */
-   unsigned int        cle1, cle2;	/* 1ere et 2 eme cles sous forme de keysym X */
+   unsigned int        key1, key2;	/* 1ere et 2 eme cles sous forme de keysym X */
    int                 e, i;
    int                 mod1, mod2;	/* 1er et 2eme modifieurs : voir definitions THOT_MOD_xx */
-   int                 lg, max;
-   FILE               *fich;
+   int                 len, max;
+   FILE               *file;
    XtTranslations      table;
 
-   texte = TtaGetEnvString ("HOME");
+   text = TtaGetEnvString ("HOME");
    strcpy (name, appliname);
    strcat (name, ".keyboard");
 
-   if (texte != NULL)
+   if (text != NULL)
      {
-	strcpy (home, texte);
+	strcpy (home, text);
 	strcat (home, DIR_STR);
 	strcat (home, name);
-	if (!SearchFile (home, 0, ligne))
-	   SearchFile (name, 2, ligne);
+	if (!SearchFile (home, 0, line))
+	   SearchFile (name, 2, line);
      }
    else
-      SearchFile (name, 2, ligne);
+      SearchFile (name, 2, line);
 
-   fich = fopen (ligne, "r");
-   if (!fich)
+   file = fopen (line, "r");
+   if (!file)
      {
 	/*Fichier inaccessible */
 	TtaDisplaySimpleMessage (INFO, LIB, NO_KBD);
@@ -848,25 +841,25 @@ char               *appliname;
    else
      {
 	/* Lecture du fichier des translations */
-	fseek (fich, 0L, 2);	/* fin du fichier */
-	lg = ftell (fich) * 2 + 10;	/* pour assurer de la marge */
-	texte = TtaGetMemory (lg);
-	fseek (fich, 0L, 0);	/* debut du fichier */
+	fseek (file, 0L, 2);	/* fin du fichier */
+	len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
+	text = TtaGetMemory (len);
+	fseek (file, 0L, 0);	/* debut du fichier */
 
 	/* Initialise la lecture du fichier */
 	e = 1;
 	max = MaxMenuAction;
-	lg = strlen (CST_InsertChar) + 2;
+	len = strlen (CST_InsertChar) + 2;
 
 	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
-	strcpy (texte, "#override\n");
-	fscanf (fich, "%80s", ch);
+	strcpy (text, "#override\n");
+	fscanf (file, "%80s", ch);
 	do
 	  {
 	     /* Initialisations */
-	     mod1 = mod2 = THOT_SANS_MOD;
-	     cle1 = cle2 = 0;
-	     strcpy (ligne, "!");	/* initialisation de la ligne */
+	     mod1 = mod2 = THOT_NO_MOD;
+	     key1 = key2 = 0;
+	     strcpy (line, "!");	/* initialisation de la ligne */
 
 	     /* Est-ce la fin de fichier ? */
 	     if (strlen (ch) == 0 || EndOfString (ch, "^"))
@@ -879,14 +872,14 @@ char               *appliname;
 		    {
 		       mod1 = THOT_MOD_SHIFT;
 		       strcpy (equiv, "Shift+");
-		       strcat (ligne, ch);	/* copie 1er modifieur */
-		       strcat (ligne, " ");
+		       strcat (line, ch);	/* copie 1er modifieur */
+		       strcat (line, " ");
 		       /* Lecture enventuelle d'un deuxieme modifieur */
-		       fscanf (fich, "%80s", ch);
+		       fscanf (file, "%80s", ch);
 		    }
 		  else
 		    {
-		       mod1 = THOT_SANS_MOD;
+		       mod1 = THOT_NO_MOD;
 		       equiv[0] = '\0';
 		    }
 
@@ -898,14 +891,14 @@ char               *appliname;
 		     mod1 += THOT_MOD_META;
 
 		  /* Lecture de la cle */
-		  if (mod1 != THOT_SANS_MOD && mod1 != THOT_MOD_SHIFT)
+		  if (mod1 != THOT_NO_MOD && mod1 != THOT_MOD_SHIFT)
 		    {
 		       strcat (equiv, ch);
 		       strcat (equiv, "+");
-		       strcat (ligne, ch);	/* copie 2eme modifieur */
-		       strcat (ligne, " ");
+		       strcat (line, ch);	/* copie 2eme modifieur */
+		       strcat (line, " ");
 		       strcpy (ch, "");
-		       fscanf (fich, "%80s", ch);
+		       fscanf (file, "%80s", ch);
 		    }
 
 		  /* Extrait la valeur de la cle */
@@ -913,7 +906,7 @@ char               *appliname;
 		  sscanf (ch, "<Key>%80s", name);
 		  if (name[0] != '\0')
 		    {
-		       strcat (ligne, "<Key>");		/* copie de la cle */
+		       strcat (line, "<Key>");		/* copie de la cle */
 		       i = strlen (name);
 		       /* Elimine le : a la fin du nom */
 		       if ((name[i - 1] == ':') && i != 1)
@@ -925,39 +918,39 @@ char               *appliname;
 		       else
 			  i = 0;
 
-		       strcat (ligne, NomCle (name));	/* copie le nom normalise */
+		       strcat (line, NameCode (name));	/* copie le nom normalise */
 		       if (i == 1)
-			  strcat (ligne, ": ");
+			  strcat (line, ": ");
 		       else
-			  strcat (ligne, " ");
+			  strcat (line, " ");
 		    }
 
 		  /* convertion vers keysym pour l'automate */
-		  cle1 = CleSpecial (name);
+		  key1 = SpecialKey (name);
 		  strcat (equiv, name);
 
 		  /* Lecture eventuelle d'une deuxieme composition */
 		  strcpy (name, "");
-		  fscanf (fich, "%80s", name);
+		  fscanf (file, "%80s", name);
 		  if (name[0] == ',')
 		    {
-		       strcat (ligne, ", ");	/* copie du separateur */
+		       strcat (line, ", ");	/* copie du separateur */
 		       strcpy (ch, "");
-		       fscanf (fich, "%80s", ch);
+		       fscanf (file, "%80s", ch);
 
 		       if (!strcmp (ch, "Shift"))
 			 {
 			    mod2 = THOT_MOD_SHIFT;
-			    strcat (ligne, ch);		/* copie du 1er modifieur */
-			    strcat (ligne, " ");
+			    strcat (line, ch);		/* copie du 1er modifieur */
+			    strcat (line, " ");
 			    strcat (equiv, " Shift+");
 			    /* Lecture enventuelle d'un deuxieme modifieur */
 			    strcpy (ch, "");
-			    fscanf (fich, "%80s", ch);
+			    fscanf (file, "%80s", ch);
 			 }
 		       else
 			 {
-			    mod2 = THOT_SANS_MOD;
+			    mod2 = THOT_NO_MOD;
 			    strcat (equiv, " ");
 			 }
 
@@ -969,23 +962,23 @@ char               *appliname;
 			  mod2 += THOT_MOD_META;
 
 		       /* Lecture de la cle */
-		       if (mod2 != THOT_SANS_MOD && mod2 != THOT_MOD_SHIFT)
+		       if (mod2 != THOT_NO_MOD && mod2 != THOT_MOD_SHIFT)
 			 {
 			    strcat (equiv, ch);
 			    strcat (equiv, "+");
-			    strcat (ligne, ch);		/* copie 2eme modifieur */
-			    strcat (ligne, " ");
+			    strcat (line, ch);		/* copie 2eme modifieur */
+			    strcat (line, " ");
 			    strcpy (ch, "");
-			    fscanf (fich, "%80s", ch);
-			    strcat (ligne, ch);		/* copie de la cle */
-			    strcat (ligne, " ");
+			    fscanf (file, "%80s", ch);
+			    strcat (line, ch);		/* copie de la cle */
+			    strcat (line, " ");
 			 }
 		       /* Extrait la valeur de la cle */
 		       strcpy (name, "");
 		       sscanf (ch, "<Key>%80s", name);
 		       if (name != "")
 			 {
-			    strcat (ligne, "<Key>");	/* copie de la cle */
+			    strcat (line, "<Key>");	/* copie de la cle */
 			    i = strlen (name);
 			    /* Elimine le : a la fin du nom */
 			    if (name[i - 1] == ':' && i != 1)
@@ -996,18 +989,18 @@ char               *appliname;
 			      }
 			    else
 			       i = 0;
-			    strcat (ligne, NomCle (name));	/* copie le nom normalise */
+			    strcat (line, NameCode (name));	/* copie le nom normalise */
 			    if (i == 1)
-			       strcat (ligne, ": ");
+			       strcat (line, ": ");
 			    else
-			       strcat (ligne, " ");
+			       strcat (line, " ");
 			 }
-		       cle2 = CleSpecial (name);
+		       key2 = SpecialKey (name);
 		       strcat (equiv, name);
 
 		       /* Lecture de l'action */
 		       strcpy (name, "");
-		       fscanf (fich, "%80s", name);
+		       fscanf (file, "%80s", name);
 		    }
 
 		  /* Isole l'intitule de la commande */
@@ -1028,61 +1021,61 @@ char               *appliname;
 		  if (i <= 8)
 		    {
 		       /* FnCopy la ligne dans le source de la table de translations */
-		       strcat (texte, ligne);
+		       strcat (text, line);
 		       if (!strcmp (ch, CST_InsertChar))
 			 {
-			    strcat (texte, "insert-string(");
-			    strcat (texte, TransCani (&adr[1]));
+			    strcat (text, "insert-string(");
+			    strcat (text, TransCani (&adr[1]));
 			 }
 		       else if (!strcmp (ch, CST_DeleteSelection))
-			  strcat (texte, "delete-selection()");
+			  strcat (text, "delete-selection()");
 		       else if (!strcmp (ch, CST_DeletePrevChar))
-			  strcat (texte, "delete-prev-char()");
+			  strcat (text, "delete-prev-char()");
 		       else if (!strcmp (ch, CST_BackwardChar))
-			  strcat (texte, "backward-char()");
+			  strcat (text, "backward-char()");
 		       else if (!strcmp (ch, CST_ForwardChar))
-			  strcat (texte, "forward-char()");
+			  strcat (text, "forward-char()");
 		       else if (!strcmp (ch, CST_PreviousLine))
-			  strcat (texte, "previous-line()");
+			  strcat (text, "previous-line()");
 		       else if (!strcmp (ch, CST_NextLine))
-			  strcat (texte, "next-line()");
+			  strcat (text, "next-line()");
 		       else if (!strcmp (ch, CST_BeginningOfLine))
-			  strcat (texte, "beginning-of-line()");
+			  strcat (text, "beginning-of-line()");
 		       else if (!strcmp (ch, CST_EndOfLine))
-			  strcat (texte, "end-of-line()");
-		       strcat (texte, "\n");
+			  strcat (text, "end-of-line()");
+		       strcat (text, "\n");
 		    }
 
 		  if (i == 0)
 		    {
 		       /* C'est l'action insert-string */
 		       /* FnCopy la ligne dans le source de la table de translations */
-		       strcat (texte, ligne);
-		       strcat (texte, TransCani (name));
-		       strcat (texte, "\n");
+		       strcat (text, line);
+		       strcat (text, TransCani (name));
+		       strcat (text, "\n");
 		       /* C'est un encodage de caractere */
-		       adr = TransCani (&name[lg]);
-		       MemoTouche (mod1, cle1, mod2, cle2, (unsigned int) adr[0], 0);
+		       adr = TransCani (&name[len]);
+		       MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
 		    }
 		  else if (i < max)
 		    {
 		       /* C'est une autre action Thot */
-		       MemoTouche (mod1, cle1, mod2, cle2, /*255+i */ 0, i);
+		       MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
 		       /* On met a jour l'equivalent clavier */
 		       MenuActionList[i].ActionEquiv = TtaGetMemory (strlen (equiv) + 1);
 		       strcpy (MenuActionList[i].ActionEquiv, equiv);
 		    }
 	       }
 	     strcpy (ch, "");
-	     fscanf (fich, "%80s", ch);
+	     fscanf (file, "%80s", ch);
 	  }
 	while (e != 0);
 
-	fclose (fich);
+	fclose (file);
 
 	/* Creation de la table de translation */
-	table = XtParseTranslationTable (texte);
-	TtaFreeMemory (texte);
+	table = XtParseTranslationTable (text);
+	TtaFreeMemory (text);
 	return table;
      }				/*else */
 }				/*InitTranslation */
