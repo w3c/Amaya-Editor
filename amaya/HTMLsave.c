@@ -2539,7 +2539,7 @@ void SaveDocument (Document doc, View view)
   ----------------------------------------------------------------------*/
 ThotBool CanReplaceCurrentDocument (Document doc, View view)
 {
-   ThotBool	ret;
+   ThotBool	ret, always_replace;
 
    ret = TRUE;
    if (TtaIsDocumentModified (doc) ||
@@ -2547,10 +2547,18 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 	DocumentTypes[doc] != docLog && DocumentSource[doc] &&
 	TtaIsDocumentModified (DocumentSource[doc])))
      {
-       /* ask if the user wants to save, quit or cancel */
-       ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
-		     TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-		     TtaGetMessage (AMAYA, AM_DONT_SAVE));
+       TtaGetEnvBoolean ("IGNORE_UPDATES", &always_replace);
+       if (always_replace)
+	 {
+	   /* doesn't check if the document is modified */
+	   ExtraChoice = TRUE;
+	   UserAnswer = FALSE;
+	 }
+       else
+	 /* ask if the user wants to save, quit or cancel */
+	 ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
+		       TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+		       TtaGetMessage (AMAYA, AM_DONT_SAVE));
        if (UserAnswer)
 	   SaveDocument (doc, view);
        else if (ExtraChoice)

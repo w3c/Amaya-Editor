@@ -39,7 +39,7 @@ static ThotBool     SaveBeforeClosing;
 #include "documentapi_f.h"
 #include "docs_f.h"
 #include "views_f.h"
-
+#include "registry_f.h"
 #ifdef _WINGUI
   #include "wininclude.h"
 #endif /* _WINGUI */
@@ -126,7 +126,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
 ThotBool CloseADocument (Document document, Document docform, View viewform)
 {
   PtrDocument         pDoc;
-  ThotBool            save, ok;
+  ThotBool            save, ok, always_replace;
 
   ok = TRUE;
   if (document == 0)
@@ -140,7 +140,8 @@ ThotBool CloseADocument (Document document, Document docform, View viewform)
 	  /* si le document a ete modifie', demande a l'utilisateur s'il */
 	  /* veut le sauver. L'utilisateur peut aussi annuler la commande.*/
 	  /* if (!pDoc->DocReadOnly && pDoc->DocModified) */
-	  if (pDoc->DocModified)
+	  TtaGetEnvBoolean ("IGNORE_UPDATES", &always_replace);
+	  if (!always_replace && pDoc->DocModified)
 	    {
 	      /* Faut-il creer le formulaire TtcCloseDocument */
 	      if (ThotLocalActions[T_confirmclose] == NULL)
