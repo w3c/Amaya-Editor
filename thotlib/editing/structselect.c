@@ -1932,8 +1932,7 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		      /* the last selected is now the ancestor of the */
 		      /* last selected element whose parent is pElP */
 		      while (LastSelectedElement->ElParent != pElP)
-			LastSelectedElement =
-			  LastSelectedElement->ElParent;
+			LastSelectedElement = LastSelectedElement->ElParent;
 		      /* finished */
 		      pElP = NULL;
 		    }
@@ -2908,12 +2907,19 @@ void SelectAround (int val)
 	pEl = NULL;
       else
 	{
-	  if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
+	  if (DocSelectedAttr && AbsBoxSelectedAttr)
+	    {
 	    /* current selection is within an attribute value */
 	    /* select the element to which the attribute is */
 	    /* attached */
-	    SelectElementWithEvent (DocSelectedAttr,
-				    AbsBoxSelectedAttr->AbElement, TRUE, FALSE);
+	      if (FirstSelectedCharInAttr != 1 &&
+		  LastSelectedCharInAttr <= AbsBoxSelectedAttr->AbVolume)
+		SelectStringInAttr (DocSelectedAttr, AbsBoxSelectedAttr,
+				    1, AbsBoxSelectedAttr->AbVolume + 1, TRUE);
+	      else
+		SelectElementWithEvent (DocSelectedAttr,
+					AbsBoxSelectedAttr->AbElement, TRUE, FALSE);
+	    }
 	  else if (StructSelectionMode)
 	    pEl = SelMenuParentEl;
 	  else
