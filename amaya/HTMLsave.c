@@ -536,8 +536,9 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		D_CANCEL);
 
    /* first line */
-   if (!TextFormat && DocumentTypes[document] != docMath &&
-       DocumentTypes[document] != docSVG)
+   if (!TextFormat && DocumentTypes[document] != docMath 
+       && DocumentTypes[document] != docSVG
+       && DocumentTypes[document] != docImage)
      {
        /* choice between html, xhtml and text */
        sprintf (buffer, "%s%c%s%c%s", "BHTML", EOS, "BXML", EOS,
@@ -558,7 +559,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    /* second line */
-   if (!TextFormat)
+   if (!TextFormat && DocumentTypes[document] != docImage)
      {
        /* choice between html, xhtml and text */
        sprintf (buffer, "B%s%cB%s",
@@ -576,7 +577,8 @@ static void InitSaveForm (Document document, View view, char *pathname)
    else
      TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, "");
 
-   if (!TextFormat && DocumentTypes[document] != docMath)
+   if (!TextFormat && DocumentTypes[document] != docMath
+       && DocumentTypes[document] != docImage)
      {
        TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, FALSE);
@@ -799,6 +801,7 @@ void SaveDocumentAs (Document doc, View view)
 	   if (!TextFormat &&
 	       DocumentTypes[SavingDocument] != docMath &&
 	       DocumentTypes[SavingDocument] != docSVG &&
+	       DocumentTypes[SavingDocument] != docImage &&
 	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
 	     {
 	       strcat (SaveName, ".html");
