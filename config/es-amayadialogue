@@ -142,50 +142,50 @@
 140 Mostrar destinos
 141 Zoom mas
 142 Zoom menos
-143 Mostrar estructura
-144 Mostrar alternativo
-145 Mostrar enlaces
-146 Mostrar tabla de contenidos
-147 Mostrar fuente
-148 Estilo de carácter...
-149 Colores...
-150 Formato...
-151 Imagen de fondo...
-152 Crear regla...
-153 Aplicar clase...
-154 Hojas de estilos
-155 Enlace...
-156 Abrir...
-157 Desactivar...
-158 Activar...
-159 Eliminar...
-160 Tipo de Información
-161 Enfasis (em)
-162 strong
-163 cite
-164 Definición (dfn)
-165 código
-166 Variable (var)
-167 Ejemplo (samp)
-168 Teclado (kbd)
-169 Abreviatura (abbr)
-170 acrónimo
-171 Inserción (ins)
-172 Borrado (del)
-173 Elemento carácter
-174 Itálica (i)
-175 Negrita (b)
-176 Teletipo (tt)
-177 grande
-178 pequeña
-179 Subíndice (sub)
-180 Superíndice (sup)
-181 Remarcado (Quotation q)
-182 BiDi override (bdo)
-183 Numeracón de sección
-184 Hacer libro
-185 Añadir/Eliminar los ID...
-186 Mostrar fichero log
+143 Mostrar fichero log
+144 Mostrar estructura
+145 Mostrar alternativo
+146 Mostrar enlaces
+147 Mostrar tabla de contenidos
+148 Mostrar fuente
+149 Estilo de carácter...
+150 Colores...
+151 Formato...
+152 Imagen de fondo...
+153 Crear regla...
+154 Aplicar clase...
+155 Hojas de estilos
+156 Enlace...
+157 Abrir...
+158 Desactivar...
+159 Activar...
+160 Eliminar...
+161 Tipo de Información
+162 Enfasis (em)
+163 strong
+164 cite
+165 Definición (dfn)
+166 código
+167 Variable (var)
+168 Ejemplo (samp)
+169 Teclado (kbd)
+170 Abreviatura (abbr)
+171 acrónimo
+172 Inserción (ins)
+173 Borrado (del)
+174 Elemento carácter
+175 Itálica (i)
+176 Negrita (b)
+177 Teletipo (tt)
+178 grande
+179 pequeña
+180 Subíndice (sub)
+181 Superíndice (sup)
+182 Remarcado (Quotation q)
+183 BiDi override (bdo)
+184 Numeracón de sección
+185 Hacer libro
+186 Crear/Suprimir attributos ID...
 187 Preferencias
 188 General...
 189 Publicar...

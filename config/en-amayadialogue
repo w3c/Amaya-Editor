@@ -142,50 +142,50 @@
 140 Show targets
 141 Zoom in
 142 Zoom out
-143 Show structure
-144 Show alternate
-145 Show links
-146 Show table of contents
-147 Show source
-148 Character style...
-149 Colors...
-150 Format...
-151 Background image...
-152 Create rule...
-153 Apply class...
-154 Style sheets
-155 Link...
-156 Open...
-157 Disable...
-158 Enable...
-159 Remove...
-160 Information type
-161 Emphasis (em)
-162 strong
-163 cite
-164 Definition (dfn)
-165 code
-166 Variable (var)
-167 Sample (samp)
-168 Keyboard (kbd)
-169 Abbreviation (abbr)
-170 acronym
-171 Insertion (ins)
-172 Deletion (del)
-173 Character element
-174 Italic (i)
-175 Bold (b)
-176 Teletype (tt)
-177 big
-178 small
-179 Subscript (sub)
-180 Superscript (sup)
-181 Quotation (q)
-182 BiDi override (bdo)
-183 Section numbering
-184 Make book
-185 Add/Remove IDs...
-186 Show log file
+143 Show parsing errors
+144 Show structure
+145 Show alternate
+146 Show links
+147 Show table of contents
+148 Show source
+149 Character style...
+150 Colors...
+151 Format...
+152 Background image...
+153 Create rule...
+154 Apply class...
+155 Style sheets
+156 Link...
+157 Open...
+158 Disable...
+159 Enable...
+160 Remove...
+161 Information type
+162 Emphasis (em)
+163 strong
+164 cite
+165 Definition (dfn)
+166 code
+167 Variable (var)
+168 Sample (samp)
+169 Keyboard (kbd)
+170 Abbreviation (abbr)
+171 acronym
+172 Insertion (ins)
+173 Deletion (del)
+174 Character element
+175 Italic (i)
+176 Bold (b)
+177 Teletype (tt)
+178 big
+179 small
+180 Subscript (sub)
+181 Superscript (sup)
+182 Quotation (q)
+183 BiDi override (bdo)
+184 Section numbering
+185 Make book
+186 Add/Remove IDs...
 187 Preferences
 188 General...
 189 Publishing...

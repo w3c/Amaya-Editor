@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Nov 10 09:29:00 CET 2000" version="20">
+<base last_update="Mon Nov 20 17:14:35 CET 2000" version="24">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -261,6 +261,7 @@
 	<message xml:lang="en">Please authenticate for</message>
 	<message xml:lang="it">Autenticazione per</message>
 	<message xml:lang="de">Bitte bestätigen Sie</message>
+	<message xml:lang="es">Por favor, autentíquese para</message>
 </label>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
@@ -1610,54 +1611,63 @@
 	<message xml:lang="fr">Dans le profil Amaya courant :</message>
 	<message xml:lang="it">Nel profilo attuale di Amaya:</message>
 	<message xml:lang="de">Im gegenwärtigen Amaya Profil:</message>
+	<message xml:lang="es">En el perfil actual de Amaya:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Tags/attributes are ignored - see the log file</message>
-	<message xml:lang="fr">Des balises/attributs sont ignorées - voir le fichier log</message>
-	<message xml:lang="it">I tag/attributi sono ignorati - vedi il logfile</message>
-	<message xml:lang="de">Tags/Attribute sind unbeachtet geblieben - siehe Logfile</message>
+	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
+	<message xml:lang="fr">Des balises/attributs sont ignorées - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
+	<message xml:lang="de">Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen</message>
+	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
 	<message xml:lang="fr">Non disponible</message>
 	<message xml:lang="it">Non disponibile</message>
 	<message xml:lang="de">Nicht verfügbar</message>
+	<message xml:lang="es">No disponible</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya. If you edit it, you may loose some information</message>
 	<message xml:lang="fr">L'encodage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.</message>
 	<message xml:lang="it">La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni</message>
 	<message xml:lang="de">Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen</message>
+	<message xml:lang="es">La codificación de este documento no está soportada por Amaya. Si la edita, puede perder información</message>
 </label>
 <label define="AM_BROWSE">
 	<message xml:lang="en">Browse</message>
 	<message xml:lang="fr">Butiner</message>
 	<message xml:lang="it">Scorri</message>
 	<message xml:lang="de">Browsen</message>
+	<message xml:lang="es">Navegar</message>
 </label>
 <label define="AM_FILE_BROWSER">
 	<message xml:lang="en">File Browser</message>
 	<message xml:lang="fr">Sélecteur de fichiers</message>
 	<message xml:lang="it">File Browser</message>
 	<message xml:lang="de">Datei-Browser</message>
+	<message xml:lang="es">Navegador de ficheros</message>
 </label>
 <label define="AM_SELECTION">
 	<message xml:lang="en">Selection</message>
 	<message xml:lang="fr">Sélection</message>
 	<message xml:lang="it">Selezione</message>
 	<message xml:lang="de">Auswahl</message>
+	<message xml:lang="es">Selección</message>
 </label>
 <label define="AM_UNDEFINED_ENCODING">
 	<message xml:lang="en">The encoding of this document is not defined. If you edit it, you may loose some information</message>
 	<message xml:lang="fr">L'encodage de ce document n'est pas défini. Si vous l'éditez, vous pouvez perdre des informations.</message>
 	<message xml:lang="it">La codifica per questo documento non e` definita. Se lo editi, potresti perdere delle informazioni</message>
 	<message xml:lang="de">Die Codierung dieses Dokuments ist nicht definiert. Wenn</message>
+	<message xml:lang="es">La codificación de esta página no está definida. Si la edita puede perder información</message>
 </label>
 <label define="AM_ENCODING_WARNING">
 	<message xml:lang="en">Document encoding unknown or undefined - see the log file</message>
-	<message xml:lang="fr">Encodage non supporté ou non défini - voir le fichier log</message>
-	<message xml:lang="it">Codifica per il documento sconosciuta o non definita - vedi il logfile</message>
-	<message xml:lang="de">Die Codierung dieses Dokuments ist unbekannt oder nicht definiert - siehe Logfile</message>
+	<message xml:lang="fr">Encodage non supporté ou non défini - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="it">Codifica per il documento sconosciuta o non definita - vedi Viste/Mostra le errore</message>
+	<message xml:lang="de">Die Codierung dieses Dokuments ist unbekannt oder nicht definiert - siehe Ansicht/Logdatei anzeigen</message>
+	<message xml:lang="es">Codificación de documento desconocida o no definida - vea Vistas/Mostrar fichero log</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

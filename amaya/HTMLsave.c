@@ -1048,7 +1048,7 @@ CHAR_T           *documentname;
 	  TtaFreeMemory (DocumentURLs[i]);
 	  DocumentURLs[i] = NULL;
 	  /* switch off the button Show Log file */
-	  TtaSetItemOff (doc, 1, Special, BShowLogFile);
+	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	}
   
   /* Calls the corresponding parser */
@@ -1060,9 +1060,9 @@ CHAR_T           *documentname;
 
   /* check parsing errors */
   if (HTMLErrorsFound || XMLErrorsFound)
-    TtaSetItemOn (doc, 1, Special, BShowLogFile);
+    TtaSetItemOn (doc, 1, Views, BShowLogFile);
   else
-    TtaSetItemOff (doc, 1, Special, BShowLogFile);
+    TtaSetItemOff (doc, 1, Views, BShowLogFile);
 
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;

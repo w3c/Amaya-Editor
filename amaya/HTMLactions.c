@@ -1320,7 +1320,7 @@ Document       doc;
   if (doc == 0)
     return;
 
-  TtaSetItemOff (doc, 1, Special, BShowLogFile);
+  TtaSetItemOff (doc, 1, Views, BShowLogFile);
   HTMLErrorsFound = FALSE;
   XMLErrorsFound = FALSE;
 
@@ -1381,7 +1381,7 @@ Document       doc;
 		      TtaFreeMemory (DocumentURLs[i]);
 		      DocumentURLs[i] = NULL;
 		      /* switch off the button Show Log file */
-		      TtaSetItemOff (doc, 1, Special, BShowLogFile);
+		      TtaSetItemOff (doc, 1, Views, BShowLogFile);
 		    }
 		}
 	  RemoveDocCSSs (doc);

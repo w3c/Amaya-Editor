@@ -211,7 +211,7 @@
 209 **Landscape
 210 **Enable FTP (experimental)
 211 **In the current Amaya profile:
-212 **Tags/attributes are ignored - see the log file
+212 **Some tags/attributes are ignored - see Views/Show parsing errors
 213 **Not available
 214 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
 215 **Browse

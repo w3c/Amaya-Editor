@@ -142,50 +142,50 @@
 140 Verknüpfungsziele anzeigen
 141 Schrift vergrößern
 142 Schrift verkleinern
-143 Strukturfenster
-144 Textbrowserfenster
-145 Verknüpfungsfenster
-146 Inhaltsverzeichnisfenster
-147 Quelltext-Fenster
-148 Zeichen...
-149 Farben...
-150 Ausrichtung...
-151 Hintergrundbild...
-152 Format in Stylesheet übernehmen...
-153 Klasse anwenden...
-154 Stylesheets bearbeiten
-155 Mit neuem verknüpfen...
-156 Öffnen...
-157 Deaktivieren...
-158 Aktivieren...
-159 Entfernen...
-160 Logische Formate
-161 Betont (em)
-162 Hervorgehoben (strong)
-163 Zitat (cite)
-164 Definition (dfn)
-165 Programmtext (code)
-166 Variablenwert (var)
-167 Beispiel (samp)
-168 Tastatureingabe (kbd)
-169 Abkürzung (abbr)
-170 Akronym (acronym)
-171 Eingefügte Version (ins)
-172 Veraltete Version (del)
-173 Direkte Formate
-174 Kursiv (i)
-175 Fett (b)
-176 Schreibmaschinenschrift (tt)
-177 Größer (big)
-178 Kleiner (small)
-179 Tiefgestellt (sub)
-180 Hochgestellt (sup)
-181 Zitat im Fließtext (q)
-182 Textrichtung LTR/RTL (bdo)
-183 Abschnittsnummern
-184 Buch zusammenfügen
-185 IDs hinzufügen/entfernen...
-186 Logdatei anzeigen
+143 Logdatei anzeigen
+144 Strukturfenster
+145 Textbrowserfenster
+146 Verknüpfungsfenster
+147 Inhaltsverzeichnisfenster
+148 Quelltext-Fenster
+149 Zeichen...
+150 Farben...
+151 Ausrichtung...
+152 Hintergrundbild...
+153 Format in Stylesheet übernehmen...
+154 Klasse anwenden...
+155 Stylesheets bearbeiten
+156 Mit neuem verknüpfen...
+157 Öffnen...
+158 Deaktivieren...
+159 Aktivieren...
+160 Entfernen...
+161 Logische Formate
+162 Betont (em)
+163 Hervorgehoben (strong)
+164 Zitat (cite)
+165 Definition (dfn)
+166 Programmtext (code)
+167 Variablenwert (var)
+168 Beispiel (samp)
+169 Tastatureingabe (kbd)
+170 Abkürzung (abbr)
+171 Akronym (acronym)
+172 Eingefügte Version (ins)
+173 Veraltete Version (del)
+174 Direkte Formate
+175 Kursiv (i)
+176 Fett (b)
+177 Schreibmaschinenschrift (tt)
+178 Größer (big)
+179 Kleiner (small)
+180 Tiefgestellt (sub)
+181 Hochgestellt (sup)
+182 Zitat im Fließtext (q)
+183 Textrichtung LTR/RTL (bdo)
+184 Abschnittsnummern
+185 Buch zusammenfügen
+186 IDs hinzufügen/entfernen...
 187 Einstellungen
 188 Allgemein...
 189 Veröffentlichen...

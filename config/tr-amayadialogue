@@ -142,50 +142,50 @@
 140 **Show targets
 141 Uzaklaþtýr
 142 Harita alanlarýný göster
-143 Yapýyý göster
-144 Alternatif gösterim
-145 Baðlantýlarý göster
-146 Ýçindekileri göster
-147 **Show source
-148 Karakter tarzý...
-149 Renkler...
-150 Biçim...
-151 Arkaplan görüntüsü...
-152 Kural yarat...
-153 \'class\' uygula...
-154 Tarzý tanýmlarý
-155 **Link...
-156 **Open...
-157 **Disable...
-158 **Enable...
-159 **Remove...
-160 Bilgi türü
-161 Vurgu (em)
-162 Kuvvetli (strong)
-163 Cite (cite)
-164 Taným (dfn)
-165 Kod (code)
-166 Deðiþken (var)
-167 Örnek (samp)
-168 Tuþtakýmý (kbd)
-169 **Abbreviation (abbr)
-170 **acronym
-171 **Insertion (ins)
-172 **Deletion (del)
-173 Karakter birimi
-174 Ýtalik (i)
-175 Kalýn (b)
-176 Teletype (tt)
-177 Büyük (big)
-178 Küçük (small)
-179 Alt (sub)
-180 Üst (sup)
-181 **Quotation (q)
-182 **BiDi override (bdo)
-183 Bölüm numaralandýrmasý
-184 Kitap yap
-185 **Add/Remove IDs...
-186 **Show log file
+143 **Show parsing errors
+144 Yapýyý göster
+145 Alternatif gösterim
+146 Baðlantýlarý göster
+147 Ýçindekileri göster
+148 **Show source
+149 Karakter tarzý...
+150 Renkler...
+151 Biçim...
+152 Arkaplan görüntüsü...
+153 Kural yarat...
+154 \'class\' uygula...
+155 Tarzý tanýmlarý
+156 **Link...
+157 **Open...
+158 **Disable...
+159 **Enable...
+160 **Remove...
+161 Bilgi türü
+162 Vurgu (em)
+163 Kuvvetli (strong)
+164 Cite (cite)
+165 Taným (dfn)
+166 Kod (code)
+167 Deðiþken (var)
+168 Örnek (samp)
+169 Tuþtakýmý (kbd)
+170 **Abbreviation (abbr)
+171 **acronym
+172 **Insertion (ins)
+173 **Deletion (del)
+174 Karakter birimi
+175 Ýtalik (i)
+176 Kalýn (b)
+177 Teletype (tt)
+178 Büyük (big)
+179 Küçük (small)
+180 Alt (sub)
+181 Üst (sup)
+182 **Quotation (q)
+183 **BiDi override (bdo)
+184 Bölüm numaralandýrmasý
+185 Kitap yap
+186 **Add/Remove IDs...
 187 **Preferences
 188 **General...
 189 **Publishing...

@@ -1787,7 +1787,7 @@ ThotBool     readOnly;
 	 }
 
        /* By default no log file */
-       TtaSetItemOff (doc, 1, Special, BShowLogFile);
+       TtaSetItemOff (doc, 1, Views, BShowLogFile);
        if (docType == docLog)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtml);
@@ -2675,9 +2675,9 @@ ThotBool            history;
       if (!plainText)
 	{
 	if (HTMLErrorsFound || XMLErrorsFound)
-	  TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
+	  TtaSetItemOn (newdoc, 1, Views, BShowLogFile);
 	else
-	  TtaSetItemOff (newdoc, 1, Special, BShowLogFile);
+	  TtaSetItemOff (newdoc, 1, Views, BShowLogFile);
 	}
       if (newdoc != doc)
 	/* the document is displayed in a different window */

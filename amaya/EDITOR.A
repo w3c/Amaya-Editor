@@ -178,6 +178,7 @@ MENUS
 	view:1 Views toggle:TZoomIn -> ZoomIn;
 	view:1 Views toggle:TZoomOut -> ZoomOut;
 	view:1 Views Separator;
+	view:1 Views button:BShowLogFile -> ShowLogFile;
 	view:1 Views button:BShowStructure -> ShowStructure;
 	view:1 Views button:BShowAlternate -> ShowAlternate;
 	view:1 Views button:BShowLinks -> ShowLinks;
@@ -224,8 +225,6 @@ MENUS
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
 	view:1 Special button:BMakeID -> MakeIDMenu;
-	view:1 Special Separator;
-	view:1 Special button:BShowLogFile -> ShowLogFile;
         view:1 Special Separator;
 	view:1 Special.Coptions button:BConfigGeneral -> ConfigGeneral;
 	view:1 Special.Coptions button:BConfigPublish -> ConfigPublish;
