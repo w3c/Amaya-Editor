@@ -77,9 +77,11 @@ int                 index;
 {
   Element            added, parent, row;
   ElementType        elType;
+  int                oldStructureChecking;
 
   /* do not check the Thot abstract tree against the structure */
   /* schema while changing the structure */
+  oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
   /* split the text to be inserted */
   TtaSplitText (el, index-1, doc);
@@ -111,7 +113,7 @@ int                 index;
   /* move the old element into the new MROW */
   TtaInsertFirstChild (&el, added, doc);
   /* check the Thot abstract tree against the structure schema. */
-  TtaSetStructureChecking (1, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   return (el);
 }
 
@@ -363,6 +365,7 @@ int                 construct;
   int                c1, c2, i, j, len;
   boolean	     before, ParBlock, surround, insertSibling,
 		     selectFirstChild, displayTableForm;
+  int                oldStructureChecking;
 
       doc = TtaGetSelectedDocument ();
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
@@ -654,6 +657,7 @@ int                 construct;
           el = TtaNewTree (doc, newType, "");
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while changing the structure */
+	  oldStructureChecking = TtaGetStructureChecking (doc);
 	  TtaSetStructureChecking (0, doc);
 	  
 	  if (elType.ElTypeNum == MathML_EL_MROW ||
@@ -770,7 +774,7 @@ int                 construct;
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */
-	  TtaSetStructureChecking (1, doc);
+	  TtaSetStructureChecking (oldStructureChecking, doc);
 	  
 	  /* selected the leaf in the first (or second) child of the new
 	     element */
@@ -1144,6 +1148,7 @@ static void CheckMROW (el, doc)
   AttributeType	attrType;
   Attribute	attr;
   int		nChildren;
+  int           oldStructureChecking;
 
   elType = TtaGetElementType (*el);
   if (elType.ElTypeNum == MathML_EL_MROW)
@@ -1176,6 +1181,7 @@ static void CheckMROW (el, doc)
           Remove the MROW */
        {
        TtaSetDisplayMode (doc, DeferredDisplay);
+       oldStructureChecking = TtaGetStructureChecking (doc);
        TtaSetStructureChecking (0, doc);
        child = firstChild;
        while (child != NULL)
@@ -1188,7 +1194,7 @@ static void CheckMROW (el, doc)
 	  }
        TtaDeleteTree (*el, doc);
        *el = NULL;
-       TtaSetStructureChecking (1, doc);
+       TtaSetStructureChecking (oldStructureChecking, doc);
        TtaSetDisplayMode (doc, DisplayImmediately);
        }
      }
@@ -1452,6 +1458,7 @@ static void ParseMathString (theText, theElem, doc)
   unsigned char text[TXTBUFLEN];
   char		language[TXTBUFLEN];
   unsigned char	mathType[TXTBUFLEN];
+  int           oldStructureChecking;
 
   /* get the current selection */
   TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
@@ -1534,6 +1541,7 @@ static void ParseMathString (theText, theElem, doc)
     }
 
   TtaSetDisplayMode (doc, DeferredDisplay);
+  oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
   firstEl = NULL;
   start = 0;
@@ -1766,7 +1774,7 @@ static void ParseMathString (theText, theElem, doc)
      CreateParentMROW (firstEl, doc);
      }
 
-  TtaSetStructureChecking (1, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
 
   /* set a new selection */
@@ -1826,8 +1834,10 @@ void MathElementPasted(event)
 {
    Element	placeholderEl, parent;
    ElementType	elType;
+  int           oldStructureChecking;
 
    elType = TtaGetElementType (event->element);
+   oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
 
    /* if the new element is a child of a FencedExpression element,
@@ -1841,7 +1851,7 @@ void MathElementPasted(event)
    placeholderEl = InsertPlaceholder (event->element, TRUE, event->document);
    placeholderEl = InsertPlaceholder (event->element, FALSE, event->document);
 
-   TtaSetStructureChecking (1, event->document);
+   TtaSetStructureChecking (oldStructureChecking, event->document);
 }
 
 
@@ -1946,6 +1956,7 @@ void MathElementDeleted(event)
    Element	sibling, placeholderEl, parent, child, grandChild;
    ElementType	parentType;
    int		i, newTypeNum;
+   int          oldStructureChecking;
 
    parent = event->element; /* parent of the deleted element */
    parentType = TtaGetElementType (parent);
@@ -2042,6 +2053,7 @@ void MathElementDeleted(event)
 	break;
       }
 
+   oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
    if (newTypeNum > 0)
       /* transform the parent element */
@@ -2064,7 +2076,7 @@ void MathElementDeleted(event)
 	   }
 	}
       }
-   TtaSetStructureChecking (1, event->document);
+   TtaSetStructureChecking (oldStructureChecking, event->document);
 }
 
 /*----------------------------------------------------------------------

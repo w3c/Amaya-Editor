@@ -863,6 +863,7 @@ NotifyElement      *event;
   char               *tempURL;
   char               *path;
   int                 length, i, iName;
+  int                 oldStructureChecking;
 
   el = event->element;
   doc = event->document;
@@ -927,6 +928,7 @@ NotifyElement      *event;
       documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
       path = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
       TtaSetDisplayMode (doc, DeferredDisplay);
+      oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
       /* Is there a parent anchor */
       parent = TtaGetTypedAncestor (el, elType);
@@ -1035,7 +1037,7 @@ NotifyElement      *event;
       TtaFreeMemory (path);
       TtaFreeMemory (documentURL);
       TtaFreeMemory (tempURL);
-      TtaSetStructureChecking (1, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
     }
 }

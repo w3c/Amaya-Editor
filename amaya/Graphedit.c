@@ -829,6 +829,7 @@ int                 construct;
    char		        shape;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    boolean	        found, automaticPlacement;
+   int	                oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
    newEl = NULL;
@@ -1033,9 +1034,10 @@ int                 construct;
 	   child = TtaNewTree (doc, childType, "");
 	   /* do not check the Thot abstract tree against the structure */
 	   /* schema when inserting this element */
+	   oldStructureChecking = TtaGetStructureChecking (doc);
 	   TtaSetStructureChecking (0, doc);
 	   TtaInsertFirstChild (&child, newEl, doc);
-	   TtaSetStructureChecking (1, doc);
+	   TtaSetStructureChecking (oldStructureChecking, doc);
 	   /* select the first leaf */
 	   elem = child;
 	   do
