@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="Confirm3LDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_1">
+              <label>'                                                                              '</label>
+              <style></style>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_2">
+              <label>'                                                                                 '</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_3">
+              <label>'                                                                   '</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine" name="wxID_LINE2"/>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <orient>wxVERTICAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_DONEBUTTON">
+              <label>  Done    </label>
+              <default>1</default>
+              <focused>1</focused>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL</flag>
+        <border>5</border>
+      </object>
+    </object>
+  </object>
+</resource>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="wxID_DLG_CHECKED_LIST">
+    <title>Checked list of items</title>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_LABEL_LIST">
+          <label>This is a list of checked elements a, b, c, d</label>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxCheckListBox" name="wxID_CHECKED_LIST">
+              <content>
+                
+                
+                
+                <item checked="1">href</item>
+                
+                
+                
+                <item checked="0">id</item>
+                
+                
+                
+                <item checked="0">class</item>
+              </content>
+              <focused>1</focused>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxStaticText" name="wxID_LABEL_COMMENT">
+          <label>[x] if the element is checked</label>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_OK">
+              <label>Apply</label>
+              <default>1</default>
+            </object>
+            <flag>wxRIGHT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>Close</label>
+            </object>
+          </object>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <border>5</border>
+      </object>
+    </object>
+  </object>
+</resource>
