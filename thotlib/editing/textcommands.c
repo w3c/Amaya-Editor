@@ -907,6 +907,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   if (lastChar == 0)
     /* Il faut prendre tout le contenu de tout l'element */
     lastChar = pLastEl->ElVolume;
+  if (pFirstEl->ElTypeNumber != CharString + 1)
+    /* if it's an image firstChar is not significant here. Set it to 0 */
+    firstChar = 0;
 
   /* Calcule la longueur du buffer a produire */
   if (pFirstEl == pLastEl)
@@ -914,7 +917,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
     maxLength = lastChar - firstChar;
   else
     {
-      maxLength = pFirstEl->ElVolume - firstChar;	/* volume 1er element */
+      maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
       pEl = pFirstEl;
       while (pEl != NULL)
 	{
@@ -1143,7 +1146,7 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	      c = PreviousCharacter (&buffer, &i);
 	      isSep = IsSeparatorChar (c);
 	    }
-	  /* look for the beginning of the word */
+	  /* look for the end of the word */
 	  buffer = pBuffer;
 	  last = pos;
 	  i = index - 1;
@@ -1158,7 +1161,12 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	  if (isSep)
 	    last--;
 	  pDoc = LoadedDocument[doc - 1];
-	  SelectString (pDoc, pAb->AbElement, first, last);
+	  if (pAb->AbPresentationBox && pAb->AbCanBeModified)
+	    /* user has clicked in the presentation box displaying an */
+	    /* attribute value */
+	    SelectStringInAttr (pDoc, pAb, first, last, TRUE);
+	  else
+	    SelectString (pDoc, pAb->AbElement, first, last);
 	  if (inClipboard)
 	    ClipboardLength = CopyXClipboard (&Xbuffer, pAb->AbDocView);
 	}

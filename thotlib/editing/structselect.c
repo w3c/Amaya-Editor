@@ -1262,7 +1262,6 @@ void          HighlightVisibleAncestor (PtrElement pEl)
     }
 }
 
-
 /*----------------------------------------------------------------------
    SelectStringInAttr
    The new current selection is now the character string contained
@@ -1271,7 +1270,8 @@ void          HighlightVisibleAncestor (PtrElement pEl)
    pAb is a presentation abstract box that contains the value of a
    numerical or textual attribute.
   ----------------------------------------------------------------------*/
-static void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool string)
+void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
+			 int lastChar, ThotBool string)
 {
    PtrElement          pEl;
    PtrAbstractBox      pAbView;
