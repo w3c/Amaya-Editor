@@ -1178,6 +1178,9 @@ void SvgImageCreated (NotifyElement *event)
   ElementType        elType;
   Element            el, desc, leaf;
   Document           doc;
+#ifndef _WX
+  char              *utf8value;
+#endif /* _WX */
   char              *text;
   char              *pathimage;
   char              *imagename;
@@ -1221,8 +1224,8 @@ void SvgImageCreated (NotifyElement *event)
 #ifdef _WX
        TtaSetTextContent (leaf, (unsigned char *)ImgAlt, SPACE, doc);
 #else /* _WX */
-	   utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
-						   TtaGetDefaultCharset ());
+       utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+						TtaGetDefaultCharset ());
        TtaSetTextContent (leaf, (unsigned char *)utf8value, SPACE, doc);
 	   TtaFreeMemory (utf8value);
 #endif /* _WX */
