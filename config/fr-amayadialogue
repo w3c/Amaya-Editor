@@ -235,37 +235,38 @@
 233 Fichier des favorits
 234 Edition thêmes
 235 Visualiser les favorits
-236 Verrouiller la ressource...
-237 Déverrouiller la ressource...
-238 Visualiser les propriétés de la ressource...
-239 Copier les informations du verrou...
-240 Verrouillé ?
-241 Préférences...
-242 À propos de Amaya
-243 À propos de Amaya au W3C
-244 Index
-245 Navigation
-246 Vues
-247 Sélection
-248 Document
-249 Création
-250 Attributs
-251 Caratères
-252 Transformer
-253 Liens
-254 Tables
-255 Zones actives
-256 Math
-257 Graphiques
-258 Support XML
-259 Feuilles de style
-260 Chercher
-261 Corriger
-262 Publier
-263 Imprimer
-264 Numéroter
-265 Construire un livre
-266 Annotations
-267 Configurer Amaya
-268 Raccourcis clavier
-269 Accessibilité d'Amaya
+236 **Import a topic hierarchy
+237 Verrouiller la ressource...
+238 Déverrouiller la ressource...
+239 Visualiser les propriétés de la ressource...
+240 Copier les informations du verrou...
+241 Verrouillé ?
+242 Préférences...
+243 À propos de Amaya
+244 À propos de Amaya au W3C
+245 Index
+246 Navigation
+247 Vues
+248 Sélection
+249 Document
+250 Création
+251 Attributs
+252 Caratères
+253 Transformer
+254 Liens
+255 Tables
+256 Zones actives
+257 Math
+258 Graphiques
+259 Support XML
+260 Feuilles de style
+261 Chercher
+262 Corriger
+263 Publier
+264 Imprimer
+265 Numéroter
+266 Construire un livre
+267 Annotations
+268 Configurer Amaya
+269 Raccourcis clavier
+270 Accessibilité d'Amaya

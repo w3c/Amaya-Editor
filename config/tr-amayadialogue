@@ -235,37 +235,38 @@
 233 Tekrar okumayı kilidi aç
 234 Tekrar okuma ayarlarını göster
 235 kilitli bilgileri kopyala
-236 Tekrar okumayı kitle...
-237 Tekrar okumayı kilidi aç...
-238 Tekrar okuma ayarlarını göster...
-239 kilitli bilgileri kopyala...
-240 kitli mi?
-241 Ayarlar...
-242 Amaya hakkında
-243 W3C deki Amaya hakkında
-244 Içerik
-245 Tarama
-246 Görünümler
-247 Seç
-248 Döküman
-249 Yarat
-250 Tarz tanımları
-251 karakterler
-252 Yeniden yapılandırma
-253 Bağlantılar
-254 Tablolar
-255 Aktif alan
-256 Matematik
-257 Grafik
-258 XML desteği
-259 Görüntü haritaları
-260 Yazı hataları arama
-261 Yazı hataları düzeltmek
-262 Bastırma
-263 Sayfa yerleştirme
-264 Numaralandır
-265 Kitap oluşturma
-266 Not ekleme
-267 Amaya yapılandırması
-268 Kısalmalar
-269 Amaya\'ya ulaşmak
+236 **Import a topic hierarchy
+237 Tekrar okumayı kitle...
+238 Tekrar okumayı kilidi aç...
+239 Tekrar okuma ayarlarını göster...
+240 kilitli bilgileri kopyala...
+241 kitli mi?
+242 Ayarlar...
+243 Amaya hakkında
+244 W3C deki Amaya hakkında
+245 Içerik
+246 Tarama
+247 Görünümler
+248 Seç
+249 Döküman
+250 Yarat
+251 Tarz tanımları
+252 karakterler
+253 Yeniden yapılandırma
+254 Bağlantılar
+255 Tablolar
+256 Aktif alan
+257 Matematik
+258 Grafik
+259 XML desteği
+260 Görüntü haritaları
+261 Yazı hataları arama
+262 Yazı hataları düzeltmek
+263 Bastırma
+264 Sayfa yerleştirme
+265 Numaralandır
+266 Kitap oluşturma
+267 Not ekleme
+268 Amaya yapılandırması
+269 Kısalmalar
+270 Amaya\'ya ulaşmak

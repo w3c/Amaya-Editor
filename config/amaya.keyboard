@@ -257,6 +257,7 @@ Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
 Ctrl <Key>n , Ctrl <Key>b:	   BookmarkFile()
 Ctrl <Key>n , Ctrl <Key>t:	   EditTopics()
 Ctrl <Key>n , Ctrl <Key>v:	   ViewBookmarks()
+Ctrl <Key>n , Ctrl <Key>i:	   ImportTopics()
 
 #Try to override bizzare behaviour
 Shift <Key>End:     TtcSelEndOfLine()

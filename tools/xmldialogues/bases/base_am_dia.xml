@@ -2350,6 +2350,9 @@
 	<message xml:lang="tr">kilitli bilgileri kopyala</message>
 	<message xml:lang="es">Ver Favoritos</message>
 </label>
+<label define="BImportTopics">
+	<message xml:lang="en">Import a topic hierarchy</message>
+</label>       
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
 	<message xml:lang="fr">Verrouiller la ressource...</message>
