@@ -3547,12 +3547,12 @@ static void      EndOfEntity (char c)
    else
      {
        /* entity not in the table. Print an error message */
-       PutInBuffer ((char) START_ENTITY);
+       PutInBuffer ('&');
        for (i = 0; i < LgEntityName; i++)
 	 PutInBuffer (EntityName[i]);
        PutInBuffer (';');
        /* print an error message */
-       sprintf (msgBuffer, "Entity not supported\"&%s;\"", EntityName);
+       sprintf (msgBuffer, "Entity not supported");
        HTMLParseError (HTMLcontext.doc, msgBuffer);
      }
    LgEntityName = 0;
@@ -3653,7 +3653,7 @@ static void      EntityChar (unsigned char c)
 	   /* the entity name read so far is not in the table */
 	   /* invalid entity */
 	   /* put the entity name in the buffer */
-	   PutInBuffer ((char) START_ENTITY);
+	   PutInBuffer ('&');
 	   for (i = 0; i < LgEntityName; i++)
 	     PutInBuffer (EntityName[i]);
 	   /* print an error message only if it's not the first character
@@ -3664,7 +3664,7 @@ static void      EntityChar (unsigned char c)
 	       /* print an error message */
 	       EntityName[LgEntityName++] = c;
 	       EntityName[LgEntityName++] = EOS;
-	       sprintf (msgBuffer, "Entity not supported\"&%s\"", EntityName);
+	       sprintf (msgBuffer, "Entity not supported");
 	       HTMLParseError (HTMLcontext.doc, msgBuffer);
 	     }
 	   /* next state is the return state from the entity subautomaton,
