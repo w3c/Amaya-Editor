@@ -131,12 +131,13 @@ static void parse_file (librdf_world *world, char *filename, char *base, int ntr
   librdf_parser_set_feature(parser, LIBRDF_MS_aboutEachPrefix_URI, "yes");
 
   stream = librdf_parser_parse_as_stream (parser, uri, base_uri);
+  librdf_free_uri (uri);
+  librdf_free_uri (base_uri); 
+
   if (!stream)
     {
       fprintf(stderr, "Failed to parse RDF as stream\n");
       librdf_free_parser(parser);
-      librdf_free_uri(uri);
-      /* librdf_free_uri(base_uri); */
       return;
     }
 
@@ -156,8 +157,6 @@ static void parse_file (librdf_world *world, char *filename, char *base, int ntr
   }
   librdf_free_stream (stream);  
   librdf_free_parser (parser);
-  librdf_free_uri (uri);
-  /* librdf_free_uri (base_uri); */
   fprintf(stderr, "Added %d statements\n", count);
 }
 
@@ -1000,6 +999,7 @@ ThotBool Model_dumpTopicChild (char *parent_topic_url, List **dump)
     librdf_statement_set_predicate (partial_statement, predicate);
     librdf_statement_set_object (partial_statement, object);
     stream = librdf_model_find_statements (model, partial_statement);
+    librdf_free_statement (partial_statement);
 
     if (!librdf_stream_end (stream))
       {
@@ -1281,6 +1281,7 @@ BookmarkP BM_getItem (char *url, ThotBool isTopic)
 		me->context = Model_getNodeAsString (object, TRUE);
 	    }
 	}
+      free (uri_str);
       librdf_stream_next (stream);
     }
 
@@ -1403,6 +1404,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 		librdf_model_remove_statement (model, statement);
 	    }
 	}
+      free (uri_str);
       librdf_stream_next (stream);
     }
   librdf_free_stream (stream);
