@@ -1572,8 +1572,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
     return;
 
   /* relative line positions */
-  left += pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
-  top += pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
   orgX = 0;
   orgY = 0;
   if (xAbs)
@@ -3530,6 +3528,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
       while (pLine)
 	{
 	  pNextLine = pLine->LiNext;
+	  pLine->LiNext = NULL;
 	  FreeLine (pLine);
 	  pLine = pNextLine;
 	}
