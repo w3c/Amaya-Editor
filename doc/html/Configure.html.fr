@@ -82,6 +82,10 @@ stocké dans les différentes architectures :</p>
       <td>Windows NT</td>
       <td>c :\winnt\profiles\username\amaya</td>
     </tr>
+    <tr>
+      <td>Windows XP</td>
+      <td>c ::\WINDOWS\profiles\username\amaya</td>
+    </tr>
   </tbody>
 </table>
 

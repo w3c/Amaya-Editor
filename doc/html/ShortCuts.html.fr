@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -57,9 +57,13 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <ul>
       <li><span style="color: #E55500" class="menuItems">TtcNextChar,
         TtcPreviousChar</span> : déplace caractère par caractère.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextWord,
+        TtcPreviousWord</span> : déplace mot par mot.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcStartOfLine,
+        TtcEndOfLine</span> : déplace au début ou à la fin de la ligne
+        courante..</li>
       <li><span style="color: #E55500" class="menuItems">TtcNextLine,
-        TtcPreviousLine, TtcStartOfLine, TtcEndOfLine</span> : déplace ligne
-        par ligne.</li>
+        TtcPreviousLine</span> : déplace ligne par ligne.</li>
       <li><span style="color: #E55500" class="menuItems">TtcNextElement,
         TtcPreviousElement, TtcChildElement, TtcParentElement</span> :
         déplace élément par élément.</li>
@@ -69,6 +73,19 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
       <li><span style="color: #E55500" class="menuItems">TtcLineUp,
         TtcLineDown</span> fait défiler une ligne en haut ou une ligne en
       bas.</li>
+    </ul>
+  </li>
+  <li>Commandes d'extension de la sélection : 
+    <ul>
+      <li><span style="color: #E55500" class="menuItems">TtcNextSelChar,
+        TtcPreviousSelChar</span> : sélectionne caractère par caractère.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextSelWord,
+        TtcPreviousSelWord</span> : sélectionne mot par mot.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcSelStartOfLine,
+        TtcSelEndOfLine</span> : sélectionne jusqu'au début ou à la fin de la
+        ligne courante.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextSelLine,
+        TtcPreviousSelLine</span> : sélectionne ligne par ligne.</li>
     </ul>
   </li>
   <li>Une commande qui permet de suivre un lien ou d'activer un élément de
