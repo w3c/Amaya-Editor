@@ -208,6 +208,9 @@ int                 docid;
    if ((me = (AHTReqContext *) TtaGetMemory (sizeof (AHTReqContext))) == NULL)
       outofmem (__FILE__, "Context_new");
 
+   /* clean the associated file structure);
+   HTRequest_setOutputStream (me->request, NULL);
+
    /* Bind the Context object together with the Request Object */
 
    me->request = HTRequest_new ();
@@ -299,8 +302,12 @@ AHTReqContext      *me;
 		  TtaFreeMemory ((void *) docid_status);
 	       }
 	  }
-	HTRequest_delete (me->request);
 
+	if (HTRequest_outputStream (me->request))
+	  AHTFWriter_FREE (me->request->output_stream);
+	  
+	HTRequest_delete (me->request);
+	  
 	if (me->error_stream != (char *) NULL)
 	  HT_FREE (me->error_stream);
 #     ifndef _WINDOWS
@@ -315,10 +322,10 @@ AHTReqContext      *me;
 	  /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
 	     or in PutObjectWWW */
 	  {
-	    TtaFreeMemory (me->urlName);
-	    me->urlName = NULL;
-	    TtaFreeMemory (me->outputfile);
-	    me->outputfile = NULL;
+            if (me->urlName)
+	       TtaFreeMemory (me->urlName);
+            if (me->outputfile)
+	       TtaFreeMemory (me->outputfile);
 	  }
    
 	TtaFreeMemory ((void *) me);
@@ -525,16 +532,16 @@ int                 status;
 
 	/* Start request with new credentials */
 
-	if (me->output) {
+	if (HTRequest_outputStream (me->request) != NULL) {
 #ifdef DEBUG_LIBWWW
-	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
+	  fprintf (stderr, "redirection_handler: New URL is  %s, closing "
 		             "FILE %p\n", me->urlName, me->output); 
 #endif 
-	    AHTFWriter_FREE (request->output_stream);
-	    if (me->output != stdout) { /* Are we writing to a file? */
-	      fclose (me->output);
-	      me->output = NULL;
-	    }
+	  AHTFWriter_FREE (request->output_stream);
+	  if (me->output != stdout) { /* Are we writing to a file? */
+	    fclose (me->output);
+	    me->output = NULL;
+	  }
 	}
 
 	me->reqStatus = HT_NEW; /* reset the status */
@@ -592,7 +599,8 @@ int                 status;
    
    if (status == HT_LOADED || 
        status == HT_CREATED || 
-       status == HT_NO_DATA)
+       status == HT_NO_DATA ||
+       me->reqStatus == HT_ABORT)
      error_flag = FALSE;
    else
      error_flag = TRUE;
@@ -1612,13 +1620,6 @@ boolean       error_html;
      if (me->output)
        fclose (me->output);
 
-     if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
-       if (me->outputfile)
-	 TtaFreeMemory (me->outputfile);
-       if (me->urlName)
-	 TtaFreeMemory (me->urlName);
-     }
-     
       if (me->reqStatus == HT_ERR) {
 	status = HT_ERROR;
 	/* show an error message on the status bar */
@@ -1636,7 +1637,7 @@ boolean       error_html;
 	    AHTReqContext_delete (me);
          }
    }
-   TtaHandlePendingEvents ();
+/* TtaHandlePendingEvents (); */
 
 #else  /* !_WINDOWS */
 
@@ -1646,13 +1647,6 @@ boolean       error_html;
 	 memory and exit */
       if (me->output && me->output != stdout)
 	 fclose (me->output);
-
-      if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
-	if (me->outputfile)
-	  TtaFreeMemory (me->outputfile);
-	if (me->urlName)
-	  TtaFreeMemory (me->urlName);
-      }
 
       if (me->reqStatus == HT_ERR) {
 	status = HT_ERROR;
@@ -1671,7 +1665,7 @@ boolean       error_html;
        AHTReqContext_delete (me);
 	 }
    }
-   TtaHandlePendingEvents ();
+  /*TtaHandlePendingEvents (); */
 
 #endif /* !_WINDOWS */
 
@@ -1979,8 +1973,8 @@ int                 docid;
 #                 ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
 #                 endif _WINDOWS
-			      HTRequest_kill (me->request);
 			      
+                              HTRequest_kill (me->request);
 			      if ((me->mode & AMAYA_ASYNC) ||
 				  (me->mode & AMAYA_IASYNC))
 				{

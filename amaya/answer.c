@@ -302,8 +302,6 @@ HTAlertPar         *reply;
 
 #endif /* __STDC */
 {
-   char               *username = NULL;
-   char               *password = NULL;
    AHTReqContext      *me = HTRequest_context (request);
    
    /* Update the status bar */
@@ -320,14 +318,12 @@ HTAlertPar         *reply;
    /* handle the user's answers back to the library */
    if (Answer_name[0] != EOS)
      {
-	StrAllocCopy (username, Answer_name);
-	HTAlert_setReplyMessage (reply, username);
+	HTAlert_setReplyMessage (reply, Answer_name);
 
 	if (Answer_password[0] != EOS)
 	  {
 	     /* give password back to the request */
-	     StrAllocCopy (password, Answer_password);
-	     HTAlert_setReplySecret (reply, password);
+	     HTAlert_setReplySecret (reply, Answer_password);
 	     return YES;
 	  }
      }
