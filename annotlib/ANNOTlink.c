@@ -305,6 +305,22 @@ AnnotMeta *annot;
 	       not see it at all */
 	    TtaInsertSibling (anchor, first, TRUE, source_doc);
 	}
+      else if (elType.ElTypeNum == HTML_EL_Unnumbered_List
+	       || elType.ElTypeNum == HTML_EL_Numbered_List
+	       || elType.ElTypeNum == HTML_EL_List_Item)
+	{
+	  /* for lists, we attach the Annot element to the first pseudo
+	     paragraph. The .S forbids doing so elsewhere */
+	  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	  el = TtaSearchTypedElement (elType, SearchForward, el);
+	  if (el)
+	    /* add it to the beginning */
+	    TtaInsertFirstChild (&anchor, el, source_doc);
+	  else
+	    /* we add it where it was declared, although we may
+	       not see it at all */
+	    TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
       else 
 	{
 	  if (c1 == 0)
