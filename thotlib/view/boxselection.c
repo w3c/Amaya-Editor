@@ -1,5 +1,4 @@
 /*
-   visu.c : gestion des Selections.
    Module de gestion des Selections.
    I. Vatton
  */
@@ -46,7 +45,7 @@ PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrAbstractBox             pAbbox1;
 
    pAbbox1 = pAb;
@@ -58,11 +57,11 @@ PtrAbstractBox             pAb;
    else
      {
 	/* Sinon on parcours le sous-arbre */
-	pavefils = pAbbox1->AbFirstEnclosed;
-	while (pavefils != NULL)
+	pChildAb = pAbbox1->AbFirstEnclosed;
+	while (pChildAb != NULL)
 	  {
-	     RazPavSelect (pavefils);
-	     pavefils = pavefils->AbNext;
+	     RazPavSelect (pChildAb);
+	     pChildAb = pChildAb->AbNext;
 	  }
      }
 }
@@ -714,7 +713,7 @@ int                 bouton;
 	/* il faut eviter de selectionner la boite englobante */
 	if (bouton == 0 || bouton == 1)
 	  {
-	     if (Parent (pBox, pFrame->FrSelectionBegin.VsBox))
+	     if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
 		pBox = DesBoiteTerm (frame, x, y);
 	  }
 	if (pBox != NULL)

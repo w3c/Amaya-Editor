@@ -80,7 +80,7 @@ int                *pointselect;
    PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
-   int                 lepoint;
+   int                 pointIndex;
    ViewFrame            *pFrame;
    int                 d;
 
@@ -98,12 +98,12 @@ int                *pointselect;
 	while (pBox != NULL)
 	  {
 	     pav = pBox->BxAbstractBox;
-	     lepoint = 0;
+	     pointIndex = 0;
 	     if (pav->AbVisibility >= pFrame->FrVisibility)
 	       {
 		  if (pav->AbPresentationBox || pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
 		    {
-		       testbox = DansLaBoite (pav, x, x, y, &lepoint);
+		       testbox = DansLaBoite (pav, x, x, y, &pointIndex);
 		       if (testbox == NULL)
 			  d = distmax + 1;
 		       else
@@ -123,7 +123,7 @@ int                *pointselect;
 			    /* detecte si on selectionne la droite de l'image */
 			    d = pBox->BxXOrg + (pBox->BxWidth / 2);
 			    if (x > d)
-			       lepoint = 1;
+			       pointIndex = 1;
 			    d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg,
 					 pBox->BxWidth, pBox->BxHeight);
 			 }
@@ -139,7 +139,7 @@ int                *pointselect;
 		    {
 		       distmax = d;
 		       sbox = pBox;
-		       *pointselect = lepoint;	/* le point selectionne */
+		       *pointselect = pointIndex;	/* le point selectionne */
 		    }
 		  else if (d == distmax)
 		    {
@@ -148,14 +148,14 @@ int                *pointselect;
 			 {
 			    distmax = d;
 			    sbox = pBox;
-			    *pointselect = lepoint;	/* le point selectionne */
+			    *pointselect = pointIndex;	/* le point selectionne */
 			 }
 		       /* Si la boite est sur un plan au dessus de la precedente */
 		       else if (sbox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
 			 {
 			    distmax = d;
 			    sbox = pBox;
-			    *pointselect = lepoint;	/* le point selectionne */
+			    *pointselect = pointIndex;	/* le point selectionne */
 			 }
 		    }
 	       }

@@ -1051,7 +1051,7 @@ int                 y;
    PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
-   int                 lepoint;
+   int                 pointIndex;
    int                 d;
    ViewFrame            *pFrame;
 
@@ -1073,7 +1073,7 @@ int                 y;
 	       {
 		  if (pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
 		    {
-		       testbox = DansLaBoite (pav, x, x, y, &lepoint);
+		       testbox = DansLaBoite (pav, x, x, y, &pointIndex);
 		       /*d = DistGraphique(x, y, pBox, (int)pav->AbRealShape); */
 		       if (testbox == NULL)
 			  d = distmax + 1;

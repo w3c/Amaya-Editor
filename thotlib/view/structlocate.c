@@ -1,8 +1,7 @@
 
 /* 
-   des.c : gestion des designations de boites.
-   I. Vatton - Mars 85
-   IV : Juin 93 polylines
+   Locate boxes in the Concrete Image
+   I. Vatton
  */
 
 #include "libmsg.h"
@@ -76,7 +75,7 @@ int                *pointselect;
    PtrBox            sbox, pBox;
    PtrBox            testbox;
    int                 distmax;
-   int                 lepoint;
+   int                 pointIndex;
    ViewFrame            *pFrame;
 
    /* On admet une erreur de precision de DELTA dans la designation */
@@ -89,32 +88,32 @@ int                *pointselect;
 	/* Est-ce le pave selectionne ? */
 	if (pav->AbVisibility >= pFrame->FrVisibility)
 	  {
-	     pBox = DansLaBoite (pav, distmax, x, y, &lepoint);
+	     pBox = DansLaBoite (pav, distmax, x, y, &pointIndex);
 	     if (pBox != NULL)
 		/* Si c'est le premier pave trouve */
 		if (sbox == NULL)
 		  {
 		     sbox = pBox;
-		     *pointselect = lepoint;	/* le point selectionne */
+		     *pointselect = pointIndex;	/* le point selectionne */
 		  }
 	     /* Si le pave est sur un plan au dessus du precedent */
 	     /* ou si le pave est un fils du precedent */
 		else if (sbox->BxAbstractBox->AbDepth > pav->AbDepth
 			 || (sbox->BxAbstractBox->AbLeafType == LtCompound && pBox->BxAbstractBox->AbLeafType != LtCompound)
-			 || Parent (sbox, pBox))
+			 || IsParentBox (sbox, pBox))
 		  {
 		     sbox = pBox;
-		     *pointselect = lepoint;
+		     *pointselect = pointIndex;
 		  }
 		else
 		  {
 		     /* Verifie que le point designe est strictement dans la boite */
-		     pBox = DansLaBoite (pav, x, x, y, &lepoint);
-		     testbox = DansLaBoite (sbox->BxAbstractBox, x, x, y, &lepoint);
+		     pBox = DansLaBoite (pav, x, x, y, &pointIndex);
+		     testbox = DansLaBoite (sbox->BxAbstractBox, x, x, y, &pointIndex);
 		     if (testbox == NULL && pBox != NULL)
 		       {
 			  sbox = pBox;
-			  *pointselect = lepoint;	/* le point selectionne */
+			  *pointselect = pointIndex;	/* le point selectionne */
 		       }
 		  }
 	  }

@@ -1,5 +1,5 @@
 /*
-   dep.c : gestion des deplacements des boites
+   gestion des deplacements des boites
    I. Vatton
  */
 
@@ -21,67 +21,49 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |        Parent retourne vrai si pBox est une englobante de la boite | */
-/* |                cebox.                                              | */
+/* |   IsXYPosComplete retourne les indicateurs de placement absolu     | */
+/* |            horizRef et vertRef pour la boi^te pBox.                | */
+/* |            L'indicateur est vrai si on est pas dans une cre'ation  | */
+/* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
+/* |            est e'lastique horizontalement (verticalement) ou si    | */
+/* |            une boi^te englobante a une relation hors-structure.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean           Parent (PtrBox pBox, PtrBox cebox)
+void                XYEnAbsolu (PtrBox pBox, boolean *horizRef, boolean *vertRef)
 #else  /* __STDC__ */
-boolean           Parent (pBox, cebox)
-PtrBox            pBox;
-PtrBox            cebox;
+void                XYEnAbsolu (pBox, horizRef, vertRef)
+PtrBox              pBox;
+boolean            *horizRef;
+boolean            *vertRef;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pave;
-   boolean             egal;
-   boolean             parent;
+   PtrBox           pParentBox;
 
-   if (cebox == NULL || pBox == NULL)
-      parent = FALSE;
-   else
+   pParentBox = pBox;
+   *vertRef = (Propage != ToSiblings);
+   *horizRef = *vertRef;
+   while ((!*vertRef || !*horizRef) && pParentBox != NULL)
      {
-	/* Recherche dans la parente de cebox y compris elle-meme */
-	pave = cebox->BxAbstractBox;
-	egal = FALSE;
-	while (!egal && pave != NULL)
-	  {
-	     egal = pave->AbBox == pBox;
-	     pave = pave->AbEnclosing;
-	  }
-	parent = egal;
+	if (!*vertRef)
+	   *vertRef = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
+	if (!*horizRef)
+	   *horizRef = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
+	/* Remonte a la boite englobante */
+	if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	   pParentBox = NULL;
+	else
+	   pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
      }
-   return parent;
-}
 
-/* ---------------------------------------------------------------------- */
-/* |        Soeur retourne vrai si pBox a le meme pave pere que la      | */
-/* |                boite cebox et n'est pas la boite pBox.             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static boolean    Soeur (PtrBox pBox, PtrBox cebox)
-#else  /* __STDC__ */
-static boolean    Soeur (pBox, cebox)
-PtrBox            pBox;
-PtrBox            cebox;
-
-#endif /* __STDC__ */
-{
-   if (cebox == pBox)
-      return (FALSE);
-   else if (cebox == NULL)
-      return (FALSE);
-   else if (pBox == NULL)
-      return (FALSE);
-   else if (cebox->BxAbstractBox->AbEnclosing == pBox->BxAbstractBox->AbEnclosing)
-      return (TRUE);
-   else
-      return (FALSE);
+   if (pBox->BxType == BoBlock && pBox->BxYToCompute)
+      /* C'est trop tot pour placer le contenu du bloc de lignes en Y */
+      *vertRef = FALSE;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |        XEnAbsolu retourne vrai si on est pas dans une cre'ation    | */
+/* |   IsXPosComplete retourne vrai si on est pas dans une cre'ation    | */
 /* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
 /* |            est e'lastique horizontalement ou si elle a un          | */
 /* |            positionnement horizontal hors-structure.               | */
@@ -90,30 +72,29 @@ PtrBox            cebox;
 boolean             XEnAbsolu (PtrBox pBox)
 #else  /* __STDC__ */
 boolean             XEnAbsolu (pBox)
-PtrBox            pBox;
-
+PtrBox              pBox;
 #endif /* __STDC__ */
 {
-   PtrBox            box1;
-   boolean             Ok;
+   PtrBox           pParentBox;
+   boolean          Ok;
 
-   box1 = pBox;
+   pParentBox = pBox;
    Ok = (Propage != ToSiblings);
-   while (!Ok && box1 != NULL)
+   while (!Ok && pParentBox != NULL)
      {
-	Ok = (box1->BxHorizFlex || box1->BxXOutOfStruct);
+	Ok = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
 	/* Remonte a la boite englobante */
-	if (box1->BxAbstractBox->AbEnclosing == NULL)
-	   box1 = NULL;
+	if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	   pParentBox = NULL;
 	else
-	   box1 = box1->BxAbstractBox->AbEnclosing->AbBox;
+	   pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
      }
    return (Ok);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |        YEnAbsolu retourne vrai si on est pas dans une cre'ation    | */
+/* |   IsYPosComplete retourne vrai si on est pas dans une cre'ation    | */
 /* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
 /* |            est e'lastique verticalement ou si elle a un            | */
 /* |            positionnement vertical hors-structure.                 | */
@@ -122,155 +103,169 @@ PtrBox            pBox;
 boolean             YEnAbsolu (PtrBox pBox)
 #else  /* __STDC__ */
 boolean             YEnAbsolu (pBox)
-PtrBox            pBox;
+PtrBox              pBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox            box1;
-   boolean             Ok;
+   PtrBox           pParentBox;
+   boolean          Ok;
 
-   box1 = pBox;
+   pParentBox = pBox;
    Ok = (Propage != ToSiblings);
-   while (!Ok && box1 != NULL)
+   while (!Ok && pParentBox != NULL)
      {
-	Ok = (box1->BxVertFlex || box1->BxYOutOfStruct);
+	Ok = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
 	/* Remonte a la boite englobante */
-	if (box1->BxAbstractBox->AbEnclosing == NULL)
-	   box1 = NULL;
+	if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	   pParentBox = NULL;
 	else
-	   box1 = box1->BxAbstractBox->AbEnclosing->AbBox;
+	   pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
      }
    return (Ok);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |        XYEnAbsolu retourne les indicateurs de placement absolu     | */
-/* |            EnHorizontal et EnVertical pour la boi^te pBox.         | */
-/* |            L'indicateur est vrai si on est pas dans une cre'ation  | */
-/* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
-/* |            est e'lastique horizontalement (verticalement) ou si    | */
-/* |            une boi^te englobante a une relation hors-structure.    | */
+/* |   IsParentBox retourne vrai si pBox est une englobante de la boite | */
+/* |                pRefBox.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                XYEnAbsolu (PtrBox pBox, boolean * EnHorizontal, boolean * EnVertical)
+boolean           IsParentBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
-void                XYEnAbsolu (pBox, EnHorizontal, EnVertical)
+boolean           IsParentBox (pBox, pRefBox)
 PtrBox            pBox;
-boolean            *EnHorizontal;
-boolean            *EnVertical;
-
+PtrBox            pRefBox;
 #endif /* __STDC__ */
 {
-   PtrBox            box1;
+   PtrAbstractBox      pAb;
+   boolean             equal;
 
-   box1 = pBox;
-   *EnVertical = (Propage != ToSiblings);
-   *EnHorizontal = *EnVertical;
-   while ((!*EnVertical || !*EnHorizontal) && box1 != NULL)
+   if (pRefBox == NULL || pBox == NULL)
+      return FALSE;
+   else
      {
-	if (!*EnVertical)
-	   *EnVertical = (box1->BxVertFlex || box1->BxYOutOfStruct);
-	if (!*EnHorizontal)
-	   *EnHorizontal = (box1->BxHorizFlex || box1->BxXOutOfStruct);
-	/* Remonte a la boite englobante */
-	if (box1->BxAbstractBox->AbEnclosing == NULL)
-	   box1 = NULL;
-	else
-	   box1 = box1->BxAbstractBox->AbEnclosing->AbBox;
+	/* Recherche dans la parente de pRefBox y compris elle-meme */
+	pAb = pRefBox->BxAbstractBox;
+	equal = FALSE;
+	while (!equal && pAb != NULL)
+	  {
+	     equal = pAb->AbBox == pBox;
+	     pAb = pAb->AbEnclosing;
+	  }
+	return equal;
      }
-
-   if (pBox->BxType == BoBlock && pBox->BxYToCompute)
-      /* C'est trop tot pour placer le contenu du bloc de lignes en Y */
-      *EnVertical = FALSE;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PolyInverse inverse les points de la polyline.                  | */
-/* |            Les parame`tres InversionHoriz et InversionVert         | */
+/* |   IsSiblingBox retourne vrai si pBox a le meme pave pere que la    | */
+/* |                boite pRefBox et n'est pas la boite pBox.           | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static boolean    IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
+#else  /* __STDC__ */
+static boolean    IsSiblingBox (pBox, pRefBox)
+PtrBox            pBox;
+PtrBox            pRefBox;
+#endif /* __STDC__ */
+{
+   if (pRefBox == pBox)
+      return (FALSE);
+   else if (pRefBox == NULL)
+      return (FALSE);
+   else if (pBox == NULL)
+      return (FALSE);
+   else if (pRefBox->BxAbstractBox->AbEnclosing == pBox->BxAbstractBox->AbEnclosing)
+      return (TRUE);
+   else
+      return (FALSE);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    MirrorPolyline inverse les points de la polyline.               | */
+/* |            Les parame`tres horizRef et vertRef                     | */
 /* |            indiquent si la boi^te e'lastique a` l'origine du       | */
 /* |            traitement est inverse'e dans chacun des sens.          | */
-/* |            Le parame`tre Saisie est Vrai quand l'inversion doit    | */
+/* |            inAbtractBox est Vrai quand l'inversion doit            | */
 /* |            s'appliquer aux repe`res du pave et non de la boite.    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PolyInverse (PtrAbstractBox pAb, boolean InversionHoriz, boolean InversionVert, boolean Saisie)
+static void         MirrorPolyline (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
 #else  /* __STDC__ */
-static void         PolyInverse (pAb, InversionHoriz, InversionVert, Saisie)
-PtrAbstractBox             pAb;
-boolean             InversionHoriz;
-boolean             InversionVert;
-boolean             Saisie;
-
+static void         MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox)
+PtrAbstractBox      pAb;
+boolean             horizRef;
+boolean             vertRef;
+boolean             inAbtractBox;
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      adbuffs, adbuffd;
+   PtrTextBuffer     pSourceBuff, pTargetBuff;
    PtrBox            pBox;
-   int                 maxX, maxY;
-   int                 val, i, j;
-   float               rapportX, rapportY;
-   int                 lepoint;
+   int               xMax, yMax;
+   int               val, i, j;
+   float             xRatio, yRatio;
+   int               pointIndex;
 
    pBox = pAb->AbBox;
    j = 1;
-   if (Saisie)
+   if (inAbtractBox)
      {
 	/* maj des reperes du pave a partir de la boite */
-	adbuffs = pBox->BxBuffer;
-	adbuffd = pAb->AbPolyLineBuffer;
-	rapportX = pBox->BxXRatio;
-	rapportY = pBox->BxYRation;
+	pSourceBuff = pBox->BxBuffer;
+	pTargetBuff = pAb->AbPolyLineBuffer;
+	xRatio = pBox->BxXRatio;
+	yRatio = pBox->BxYRation;
      }
    else
      {
 	/* maj des reperes de la boite a partir du pave */
-	adbuffs = pAb->AbPolyLineBuffer;
-	adbuffd = pBox->BxBuffer;
+	pSourceBuff = pAb->AbPolyLineBuffer;
+	pTargetBuff = pBox->BxBuffer;
 	/* annule les deformations precedentes */
-	rapportX = 1;
-	rapportY = 1;
+	xRatio = 1;
+	yRatio = 1;
 	pBox->BxXRatio = 1;
 	pBox->BxYRation = 1;
-	adbuffd->BuPoints[0].XCoord = adbuffs->BuPoints[0].XCoord;
-	adbuffd->BuPoints[0].YCoord = adbuffs->BuPoints[0].YCoord;
+	pTargetBuff->BuPoints[0].XCoord = pSourceBuff->BuPoints[0].XCoord;
+	pTargetBuff->BuPoints[0].YCoord = pSourceBuff->BuPoints[0].YCoord;
      }
 
    /* inversions eventuelles par rapport aux milieux */
-   maxX = adbuffs->BuPoints[0].XCoord;
-   maxY = adbuffs->BuPoints[0].YCoord;
+   xMax = pSourceBuff->BuPoints[0].XCoord;
+   yMax = pSourceBuff->BuPoints[0].YCoord;
    val = pBox->BxNChars;
    for (i = 1; i < val; i++)
      {
-	if (j >= adbuffs->BuLength)
+	if (j >= pSourceBuff->BuLength)
 	  {
-	     if (adbuffs->BuNext != NULL)
+	     if (pSourceBuff->BuNext != NULL)
 	       {
 		  /* Changement de buffer */
-		  adbuffs = adbuffs->BuNext;
-		  adbuffd = adbuffd->BuNext;
+		  pSourceBuff = pSourceBuff->BuNext;
+		  pTargetBuff = pTargetBuff->BuNext;
 		  j = 0;
 	       }
 	  }
 
-	lepoint = (int) ((float) adbuffs->BuPoints[j].XCoord / rapportX);
-	if (InversionHoriz)
+	pointIndex = (int) ((float) pSourceBuff->BuPoints[j].XCoord / xRatio);
+	if (horizRef)
 	   /* inversion des points en x */
-	   adbuffd->BuPoints[j].XCoord = maxX - lepoint;
+	   pTargetBuff->BuPoints[j].XCoord = xMax - pointIndex;
 	else
-	   adbuffd->BuPoints[j].XCoord = lepoint;
+	   pTargetBuff->BuPoints[j].XCoord = pointIndex;
 
-	lepoint = (int) ((float) adbuffs->BuPoints[j].YCoord / rapportY);
-	if (InversionVert)
+	pointIndex = (int) ((float) pSourceBuff->BuPoints[j].YCoord / yRatio);
+	if (vertRef)
 	   /* inversion des points en y */
-	   adbuffd->BuPoints[j].YCoord = maxY - lepoint;
+	   pTargetBuff->BuPoints[j].YCoord = yMax - pointIndex;
 	else
-	   adbuffd->BuPoints[j].YCoord = lepoint;
+	   pTargetBuff->BuPoints[j].YCoord = pointIndex;
 
 	j++;
      }
 
-   if (pBox->BxPictInfo != NULL && !Saisie)
+   if (pBox->BxPictInfo != NULL && !inAbtractBox)
      {
 	/* le calcul des points de controle doit etre reexecute */
 	free ((char *) pBox->BxPictInfo);
@@ -280,166 +275,166 @@ boolean             Saisie;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AjusteTrace ajuste les trace's graphiques en fonction des       | */
+/* |    MirrorShape ajuste les trace's graphiques en fonction des       | */
 /* |            inversions des boi^tes e'lastiques.                     | */
 /* |            Si le pave' passe' en parame`tre est un pave' compose'  | */
 /* |            la demande de conversion est transmise aux pave's fils. | */
-/* |            Les parame`tres InversionHoriz et InversionVert         | */
+/* |            Les parame`tres horizRef et vertRef                     | */
 /* |            indiquent si la boi^te e'lastique a` l'origine du       | */
 /* |            traitement est inverse'e dans chacun des sens.          | */
-/* |            Le parame`tre Saisie est Vrai quand le caracte`re de    | */
+/* |            inAbtractBox est Vrai quand le caracte`re de            | */
 /* |            re'fe'rence correspond au caracte`re saisi (TraceReel)  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                AjusteTrace (PtrAbstractBox pAb, boolean InversionHoriz, boolean InversionVert, boolean Saisie)
+void                AjusteTrace (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
 #else  /* __STDC__ */
-void                AjusteTrace (pAb, InversionHoriz, InversionVert, Saisie)
-PtrAbstractBox             pAb;
-boolean             InversionHoriz;
-boolean             InversionVert;
-boolean             Saisie;
+void                AjusteTrace (pAb, horizRef, vertRef, inAbtractBox)
+PtrAbstractBox      pAb;
+boolean             horizRef;
+boolean             vertRef;
+boolean             inAbtractBox;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
-   char                car;
+   PtrAbstractBox     pChildAb;
+   char               shape;
 
-   if (pAb->AbLeafType == LtCompound && !Saisie)
+   if (pAb->AbLeafType == LtCompound && !inAbtractBox)
      {
 	/* Transmet le traitement aux paves fils */
-	pavefils = pAb->AbFirstEnclosed;
-	while (pavefils != NULL)
+	pChildAb = pAb->AbFirstEnclosed;
+	while (pChildAb != NULL)
 	  {
-	     if (pavefils->AbLeafType == LtGraphics
-		 || pavefils->AbLeafType == LtPlyLine
-		 || pavefils->AbLeafType == LtCompound)
-		AjusteTrace (pavefils, InversionHoriz, InversionVert, Saisie);
-	     pavefils = pavefils->AbNext;
+	     if (pChildAb->AbLeafType == LtGraphics
+		 || pChildAb->AbLeafType == LtPlyLine
+		 || pChildAb->AbLeafType == LtCompound)
+		AjusteTrace (pChildAb, horizRef, vertRef, inAbtractBox);
+	     pChildAb = pChildAb->AbNext;
 	  }
      }
    else if (pAb->AbLeafType == LtPlyLine)
-      PolyInverse (pAb, InversionHoriz, InversionVert, Saisie);
+      MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox);
    else if (pAb->AbLeafType == LtGraphics)
      {
 	/* Ajuste le graphique de la boite */
-	if (Saisie)
+	if (inAbtractBox)
 	   /* le caractere de reference est le trace reel */
-	   car = pAb->AbRealShape;
+	   shape = pAb->AbRealShape;
 	else
 	   /* le caractere de reference est le trace de l'element */
-	   car = pAb->AbShape;
+	   shape = pAb->AbShape;
 
-	if (InversionHoriz)
-	   switch (car)
+	if (horizRef)
+	   switch (shape)
 		 {
 		    case '\\':
-		       car = '/';
+		       shape = '/';
 		       break;
 		    case '/':
-		       car = '\\';
+		       shape = '\\';
 		       break;
 		    case '>':
-		       car = '<';
+		       shape = '<';
 		       break;
 		    case '<':
-		       car = '>';
+		       shape = '>';
 		       break;
 		    case 'l':
-		       car = 'r';
+		       shape = 'r';
 		       break;
 		    case 'r':
-		       car = 'l';
+		       shape = 'l';
 		       break;
 		    case 'o':
-		       car = 'e';
+		       shape = 'e';
 		       break;
 		    case 'e':
-		       car = 'o';
+		       shape = 'o';
 		       break;
 		    case 'O':
-		       car = 'E';
+		       shape = 'E';
 		       break;
 		    case 'E':
-		       car = 'O';
+		       shape = 'O';
 		       break;
 		    case 'W':
-		       car = 'Z';
+		       shape = 'Z';
 		       break;
 		    case 'Z':
-		       car = 'W';
+		       shape = 'W';
 		       break;
 		    case 'X':
-		       car = 'Y';
+		       shape = 'Y';
 		       break;
 		    case 'Y':
-		       car = 'X';
+		       shape = 'X';
 		       break;
 		    default:
 		       break;
 		 }
 
-	if (InversionVert)
-	   switch (car)
+	if (vertRef)
+	   switch (shape)
 		 {
 		    case '\\':
-		       car = '/';
+		       shape = '/';
 		       break;
 		    case '/':
-		       car = '\\';
+		       shape = '\\';
 		       break;
 		    case '^':
-		       car = 'V';
+		       shape = 'V';
 		       break;
 		    case 'V':
-		       car = '^';
+		       shape = '^';
 		       break;
 		    case 't':
-		       car = 'b';
+		       shape = 'b';
 		       break;
 		    case 'b':
-		       car = 't';
+		       shape = 't';
 		       break;
 		    case 'o':
-		       car = 'O';
+		       shape = 'O';
 		       break;
 		    case 'O':
-		       car = 'o';
+		       shape = 'o';
 		       break;
 		    case 'e':
-		       car = 'E';
+		       shape = 'E';
 		       break;
 		    case 'E':
-		       car = 'e';
+		       shape = 'e';
 		       break;
 		    case 'W':
-		       car = 'X';
+		       shape = 'X';
 		       break;
 		    case 'Z':
-		       car = 'Y';
+		       shape = 'Y';
 		       break;
 		    case 'X':
-		       car = 'W';
+		       shape = 'W';
 		       break;
 		    case 'Y':
-		       car = 'Z';
+		       shape = 'Z';
 		       break;
 		    default:
 		       break;
 		 }
 
 	/* Ajuste le graphique de la boite */
-	if (Saisie)
+	if (inAbtractBox)
 	   /* le caractere de reference est le trace reel */
-	   pAb->AbShape = car;
+	   pAb->AbShape = shape;
 	else
 	   /* le caractere de reference est le trace de l'element */
-	   pAb->AbRealShape = car;
+	   pAb->AbRealShape = shape;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |        HorizInverse inverse les reperes horizontaux position et    | */
+/* |      XEdgesExchange inverse les reperes horizontaux position et    | */
 /* |            dimension de la boite elastique pBox. Si la boite est   | */
 /* |            une boite graphique les dessins sont modifies.          | */
 /* ---------------------------------------------------------------------- */
@@ -447,62 +442,65 @@ boolean             Saisie;
 void                HorizInverse (PtrBox pBox, OpRelation op)
 #else  /* __STDC__ */
 void                HorizInverse (pBox, op)
-PtrBox            pBox;
+PtrBox              pBox;
 OpRelation          op;
-
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrPosRelations      pPosRel;
-   int                 i;
-   BoxEdge         rp1;
-   BoxEdge         rp2;
-   BoxEdge         rd1;
-   BoxEdge         rd2;
-   PtrBox            boxpos;
+   PtrAbstractBox   pAb;
+   PtrPosRelations  pPosRel;
+   int              i;
+   BoxEdge          oldPosEdge;
+   BoxEdge          newPosEdge;
+   BoxEdge          oldDimEdge;
+   BoxEdge          newDimEdge;
+   PtrBox           pRefBox;
 
    pAb = pBox->BxAbstractBox;
 
-   /* On prend le repere symetrique dans le positionnement */
-   rp1 = pAb->AbHorizPos.PosEdge;	/* Ancien repere de position */
-   rp2 = rp1;			/* Nouveau repere de position */
-   rd1 = rp1;			/* Ancien repere de dimension */
-   rd2 = rp1;			/* Nouveau repere de dimension */
-   if (rp1 == Left)
+   /* prend le repere symetrique dans le positionnement */
+   /* Ancien repere de position */
+   oldPosEdge = pAb->AbHorizPos.PosEdge;
+   /* Nouveau repere de position */
+   newPosEdge = oldPosEdge;
+   /* Ancien repere de dimension */
+   oldDimEdge = oldPosEdge;
+   /* Nouveau repere de dimension */
+   newDimEdge = oldPosEdge;
+   if (oldPosEdge == Left)
      {
-	rp2 = Right;
-	pAb->AbHorizPos.PosEdge = rp2;
-	rd1 = Right;
-	rd2 = Left;
-	pAb->AbWidth.DimPosition.PosEdge = rd2;
+	newPosEdge = Right;
+	pAb->AbHorizPos.PosEdge = newPosEdge;
+	oldDimEdge = Right;
+	newDimEdge = Left;
+	pAb->AbWidth.DimPosition.PosEdge = newDimEdge;
      }
-   else if (rp1 == Right)
+   else if (oldPosEdge == Right)
      {
-	rp2 = Left;
-	pAb->AbHorizPos.PosEdge = rp2;
-	rd1 = Left;
-	rd2 = Right;
-	pAb->AbWidth.DimPosition.PosEdge = rd2;
+	newPosEdge = Left;
+	pAb->AbHorizPos.PosEdge = newPosEdge;
+	oldDimEdge = Left;
+	newDimEdge = Right;
+	pAb->AbWidth.DimPosition.PosEdge = newDimEdge;
      }
 
    /* Mise a jour du point fixe de la boite */
-   if (op == OpWidth && pBox->BxHorizEdge == rp1)
-      pBox->BxHorizEdge = rp2;
-   else if (op == OpHorizDep && pBox->BxHorizEdge == rd1)
-      pBox->BxHorizEdge = rd2;
+   if (op == OpWidth && pBox->BxHorizEdge == oldPosEdge)
+      pBox->BxHorizEdge = newPosEdge;
+   else if (op == OpHorizDep && pBox->BxHorizEdge == oldDimEdge)
+      pBox->BxHorizEdge = newDimEdge;
 
    /* Les reperes sont inverses */
    pBox->BxHorizInverted = !pBox->BxHorizInverted;
 
    /* Modifie enventuellement le dessin de la boite */
-   if (rp1 != rp2)
+   if (oldPosEdge != newPosEdge)
       AjusteTrace (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 
    /* Note la boite qui fixe la position de la boite elastique */
    if (pAb->AbHorizPos.PosAbRef == NULL)
-      boxpos = NULL;
+      pRefBox = NULL;
    else
-      boxpos = pAb->AbHorizPos.PosAbRef->AbBox;
+      pRefBox = pAb->AbHorizPos.PosAbRef->AbBox;
 
    /* Met a jour les relations de la boite */
    i = 1;
@@ -515,17 +513,17 @@ OpRelation          op;
 	     i = 0;
 	  }
 	/* Est-ce une relation avec le repere de position ? */
-	else if (pPosRel->PosRTable[i - 1].ReRefEdge == rp1
-		 && pPosRel->PosRTable[i - 1].ReBox == boxpos
+	else if (pPosRel->PosRTable[i - 1].ReRefEdge == oldPosEdge
+		 && pPosRel->PosRTable[i - 1].ReBox == pRefBox
 		 && pPosRel->PosRTable[i - 1].ReOp != OpHorizRef)
-	   pPosRel->PosRTable[i - 1].ReRefEdge = rp2;
+	   pPosRel->PosRTable[i - 1].ReRefEdge = newPosEdge;
 	i++;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    VertInverse inverse les reperes verticaux position et dimension | */
+/* | YEdgesExchange inverse les reperes verticaux position et dimension | */
 /* |            de la boite elastique pBox. Si la boite est une boite   | */
 /* |            graphique, les dessins sont modifies.                   | */
 /* ---------------------------------------------------------------------- */
@@ -533,62 +531,64 @@ OpRelation          op;
 void                VertInverse (PtrBox pBox, OpRelation op)
 #else  /* __STDC__ */
 void                VertInverse (pBox, op)
-PtrBox            pBox;
+PtrBox              pBox;
 OpRelation          op;
-
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   PtrPosRelations      pPosRel;
-   int                 i;
-   BoxEdge         rp1;
-   BoxEdge         rp2;
-   BoxEdge         rd1;
-   BoxEdge         rd2;
-   PtrBox            boxpos;
+   PtrAbstractBox   pAb;
+   PtrPosRelations  pPosRel;
+   int              i;
+   BoxEdge          oldPosEdge;
+   BoxEdge          newPosEdge;
+   BoxEdge          oldDimEdge;
+   BoxEdge          newDimEdge;
+   PtrBox           pRefBox;
 
    pAb = pBox->BxAbstractBox;
 
-   /* On prend le repere symetrique dans le positionnement */
-   rp1 = pAb->AbVertPos.PosEdge;
-   rp2 = rp1;			/* Nouveau repere de position */
-   rd1 = rp1;			/* Ancien repere de dimension */
-   rd2 = rp1;			/* Nouveau repere de dimension */
-   if (rp1 == Top)
+   /* prend le repere symetrique dans le positionnement */
+   oldPosEdge = pAb->AbVertPos.PosEdge;
+   /* Nouveau repere de position */
+   newPosEdge = oldPosEdge;
+   /* Ancien repere de dimension */
+   oldDimEdge = oldPosEdge;
+   /* Nouveau repere de dimension */
+   newDimEdge = oldPosEdge;
+   if (oldPosEdge == Top)
      {
-	rp2 = Bottom;
-	pAb->AbVertPos.PosEdge = rp2;
-	rd1 = Bottom;
-	rd2 = Top;
-	pAb->AbHeight.DimPosition.PosEdge = rd2;
+	newPosEdge = Bottom;
+	pAb->AbVertPos.PosEdge = newPosEdge;
+	oldDimEdge = Bottom;
+	newDimEdge = Top;
+	pAb->AbHeight.DimPosition.PosEdge = newDimEdge;
      }
-   else if (rp1 == Bottom)
+   else if (oldPosEdge == Bottom)
      {
-	rp2 = Top;
-	pAb->AbVertPos.PosEdge = rp2;
-	rd1 = Top;
-	rd2 = Bottom;
-	pAb->AbHeight.DimPosition.PosEdge = rd2;
+	newPosEdge = Top;
+	pAb->AbVertPos.PosEdge = newPosEdge;
+	oldDimEdge = Top;
+	newDimEdge = Bottom;
+	pAb->AbHeight.DimPosition.PosEdge = newDimEdge;
      }
 
    /* Mise a jour du point fixe de la boite */
-   if (op == OpHeight && pBox->BxVertEdge == rp1)
-      pBox->BxVertEdge = rp2;
-   else if (op == OpVertDep && pBox->BxVertEdge == rd1)
-      pBox->BxVertEdge = rd2;
+   if (op == OpHeight && pBox->BxVertEdge == oldPosEdge)
+      pBox->BxVertEdge = newPosEdge;
+   else if (op == OpVertDep && pBox->BxVertEdge == oldDimEdge)
+      pBox->BxVertEdge = newDimEdge;
 
    /* Les reperes sont inverses */
    pBox->BxVertInverted = !pBox->BxVertInverted;
 
    /* Modifie enventuellement le dessin de la boite */
-   if (rp1 != rp2)
+   if (oldPosEdge != newPosEdge)
 /**PL*/ AjusteTrace (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 
    /* Note la boite qui fixe la position de la boite elastique */
    if (pAb->AbVertPos.PosAbRef == NULL)
-      boxpos = NULL;
+      pRefBox = NULL;
    else
-      boxpos = pAb->AbVertPos.PosAbRef->AbBox;
+      pRefBox = pAb->AbVertPos.PosAbRef->AbBox;
 
    /* Met a jour les relations de la boite */
    i = 1;
@@ -601,90 +601,33 @@ OpRelation          op;
 	     i = 0;
 	  }
 	/* Est-ce une relation avec le repere de position ? */
-	else if (pPosRel->PosRTable[i - 1].ReRefEdge == rp1
-		 && pPosRel->PosRTable[i - 1].ReBox == boxpos
+	else if (pPosRel->PosRTable[i - 1].ReRefEdge == oldPosEdge
+		 && pPosRel->PosRTable[i - 1].ReBox == pRefBox
 		 && pPosRel->PosRTable[i - 1].ReOp != OpVertRef)
-	   pPosRel->PosRTable[i - 1].ReRefEdge = rp2;
+	   pPosRel->PosRTable[i - 1].ReRefEdge = newPosEdge;
 	i++;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChangeLgContenu met a` jour la largeur du contenu de la boi^te. | */
-/* |            Cette proce'dure ve'rifie que la re`gle du minimum est  | */
-/* |            respecte'e. Eventuellement e'change largeur re'elle et  | */
-/* |            autre largeur.                                          | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                ChangeLgContenu (PtrBox pBox, PtrBox org, int large, int dbl, int frame)
-#else  /* __STDC__ */
-void                ChangeLgContenu (pBox, org, large, dbl, frame)
-PtrBox            pBox;
-PtrBox            org;
-int                 large;
-int                 dbl;
-int                 frame;
-
-#endif /* __STDC__ */
-{
-   int                 delta;
-
-   if (pBox != NULL)
-     {
-	/* Regarde si la largeur reelle actuelle depend du contenu */
-	if (pBox->BxContentWidth)
-	  {
-	     /* La largeur reelle est egale a la largeur du contenu */
-	     if (large < pBox->BxRuleWidth)
-	       {
-		  /* Il faut echanger la largeur reelle avec l'autre largeur */
-		  delta = pBox->BxRuleWidth - pBox->BxWidth;
-		  pBox->BxRuleWidth = large;
-		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  if (delta != 0)
-		     ModLarg (pBox, org, NULL, delta, dbl, frame);
-	       }
-	     else
-		/* Mise a jour de la largeur du contenu */
-		ModLarg (pBox, org, NULL, large - pBox->BxWidth, dbl, frame);
-	  }
-	else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition && pBox->BxAbstractBox->AbWidth.DimMinimum)
-	  {
-	     /* La largeur reelle est egale au minimum */
-	     if (large > pBox->BxWidth)
-	       {
-		  /* Il faut echanger la largeur reelle avec l'autre largeur */
-		  pBox->BxRuleWidth = pBox->BxWidth;
-		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  ModLarg (pBox, org, NULL, large - pBox->BxWidth, dbl, frame);
-	       }
-	     else
-		/* Mise a jour de la largeur du contenu */
-		pBox->BxRuleWidth = large;
-	  }
-     }
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    ChangeHtContenu met a` jour la largeur du contenu de la boi^te. | */
+/* | ChangeDefaultHeight met a` jour la largeur du contenu de la boi^te | */
 /* |            Cette proce'dure ve'rifie que la re`gle du minimum est  | */
 /* |            respecte'e. Eventuellement e'change hauteur re'elle et  | */
 /* |            autre hauteur.                                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeHtContenu (PtrBox pBox, PtrBox org, int haut, int frame)
+void              ChangeHtContenu (PtrBox pBox, PtrBox pSourceBox, int height, int frame)
 #else  /* __STDC__ */
-void                ChangeHtContenu (pBox, org, haut, frame)
+void              ChangeHtContenu (pBox, pSourceBox, height, frame)
 PtrBox            pBox;
-PtrBox            org;
-int                 haut;
-int                 frame;
+PtrBox            pSourceBox;
+int               height;
+int               frame;
 
 #endif /* __STDC__ */
 {
-   int                 delta;
+   int            delta;
 
    if (pBox != NULL)
      {
@@ -692,56 +635,112 @@ int                 frame;
 	if (pBox->BxContentHeight)
 	  {
 	     /* La hauteur reelle est egale a la hauteur du contenu */
-	     if (haut < pBox->BxRuleHeigth)
+	     if (height < pBox->BxRuleHeigth)
 	       {
 		  /* Il faut echanger la hauteur reelle avec l'autre hauteur */
 		  delta = pBox->BxRuleHeigth - pBox->BxHeight;
-		  pBox->BxRuleHeigth = haut;
+		  pBox->BxRuleHeigth = height;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ModHaut (pBox, org, NULL, delta, frame);
+		  ModHaut (pBox, pSourceBox, NULL, delta, frame);
 	       }
 	     else
 		/* Mise a jour de la hauteur du contenu */
-		ModHaut (pBox, org, NULL, haut - pBox->BxHeight, frame);
+		ModHaut (pBox, pSourceBox, NULL, height - pBox->BxHeight, frame);
 	  }
 	else if (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum)
 	  {
 	     /* La hauteur reelle est egale au minimum */
-	     if (haut > pBox->BxHeight)
+	     if (height > pBox->BxHeight)
 	       {
 		  /* Il faut echanger la hauteur reelle avec l'autre hauteur */
 		  pBox->BxRuleHeigth = pBox->BxHeight;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ModHaut (pBox, org, NULL, haut - pBox->BxHeight, frame);
+		  ModHaut (pBox, pSourceBox, NULL, height - pBox->BxHeight, frame);
 	       }
 	     else
 		/* Mise a jour de la hauteur du contenu */
-		pBox->BxRuleHeigth = haut;
+		pBox->BxRuleHeigth = height;
 	  }
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |        ChangeLargeur propage la modification sur la largeur de la  | */
+/* |  ChangeDefaultWidth met a` jour la largeur du contenu de la boi^te | */
+/* |            Cette proce'dure ve'rifie que la re`gle du minimum est  | */
+/* |            respecte'e. Eventuellement e'change largeur re'elle et  | */
+/* |            autre largeur.                                          | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void              ChangeLgContenu (PtrBox pBox, PtrBox pSourceBox, int width, int spaceDelta, int frame)
+#else  /* __STDC__ */
+void              ChangeLgContenu (pBox, pSourceBox, width, spaceDelta, frame)
+PtrBox            pBox;
+PtrBox            pSourceBox;
+int               width;
+int               spaceDelta;
+int               frame;
+#endif /* __STDC__ */
+{
+   int            delta;
+
+   if (pBox != NULL)
+     {
+	/* Regarde si la largeur reelle actuelle depend du contenu */
+	if (pBox->BxContentWidth)
+	  {
+	     /* La largeur reelle est egale a la largeur du contenu */
+	     if (width < pBox->BxRuleWidth)
+	       {
+		  /* Il faut echanger la largeur reelle avec l'autre largeur */
+		  delta = pBox->BxRuleWidth - pBox->BxWidth;
+		  pBox->BxRuleWidth = width;
+		  pBox->BxContentWidth = !pBox->BxContentWidth;
+		  if (delta != 0)
+		     ModLarg (pBox, pSourceBox, NULL, delta, spaceDelta, frame);
+	       }
+	     else
+		/* Mise a jour de la largeur du contenu */
+		ModLarg (pBox, pSourceBox, NULL, width - pBox->BxWidth, spaceDelta, frame);
+	  }
+	else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition && pBox->BxAbstractBox->AbWidth.DimMinimum)
+	  {
+	     /* La largeur reelle est egale au minimum */
+	     if (width > pBox->BxWidth)
+	       {
+		  /* Il faut echanger la largeur reelle avec l'autre largeur */
+		  pBox->BxRuleWidth = pBox->BxWidth;
+		  pBox->BxContentWidth = !pBox->BxContentWidth;
+		  ModLarg (pBox, pSourceBox, NULL, width - pBox->BxWidth, spaceDelta, frame);
+	       }
+	     else
+		/* Mise a jour de la largeur du contenu */
+		pBox->BxRuleWidth = width;
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |        ChangeWidth propage la modification sur la largeur de la    | */
 /* |            boi^te pBox. Cette proce'dure ve'rifie la re`gle du     | */
 /* |            minimum. La largeur re'elle ou l'autre largeur de la    | */
 /* |            boi^te sera modifie'e.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeLargeur (PtrBox pBox, PtrBox org, PtrBox prec, int delta, int dbl, int frame)
+void              ChangeLargeur (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void                ChangeLargeur (pBox, org, prec, delta, dbl, frame)
+void              ChangeLargeur (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
 PtrBox            pBox;
-PtrBox            org;
-PtrBox            prec;
-int                 delta;
-int                 dbl;
-int                 frame;
+PtrBox            pSourceBox;
+PtrBox            pFromBox;
+int               delta;
+int               spaceDelta;
+int               frame;
 
 #endif /* __STDC__ */
 {
-   int                 large;
+   int            width;
 
    if (pBox != NULL)
      {
@@ -749,36 +748,36 @@ int                 frame;
 	if (pBox->BxContentWidth)
 	  {
 	     /* Il y a une regle de minimum mais ce n'est la largeur reelle */
-	     large = pBox->BxRuleWidth + delta;
-	     if (large > pBox->BxWidth)
+	     width = pBox->BxRuleWidth + delta;
+	     if (width > pBox->BxWidth)
 	       {
 		  /* Il faut echanger la largeur reelle avec l'autre largeur */
 		  pBox->BxRuleWidth = pBox->BxWidth;
 		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  ModLarg (pBox, org, prec, large - pBox->BxWidth, dbl, frame);
+		  ModLarg (pBox, pSourceBox, pFromBox, width - pBox->BxWidth, spaceDelta, frame);
 	       }
 	     else
 		/* Mise a jour de la largeur minimum */
-		pBox->BxRuleWidth = large;
+		pBox->BxRuleWidth = width;
 	  }
 	else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition && pBox->BxAbstractBox->AbWidth.DimMinimum)
 	  {
 	     /* La largeur reelle est egale au minimum */
-	     large = pBox->BxWidth + delta;
-	     if (large < pBox->BxRuleWidth)
+	     width = pBox->BxWidth + delta;
+	     if (width < pBox->BxRuleWidth)
 	       {
 		  /* Il faut echanger la largeur reelle avec l'autre largeur */
-		  large = pBox->BxRuleWidth;
+		  width = pBox->BxRuleWidth;
 		  pBox->BxRuleWidth = pBox->BxWidth + delta;
 		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  ModLarg (pBox, org, prec, large - pBox->BxWidth, dbl, frame);
+		  ModLarg (pBox, pSourceBox, pFromBox, width - pBox->BxWidth, spaceDelta, frame);
 	       }
 	     else
 		/* Mise a jour de la largeur minimum */
-		ModLarg (pBox, org, prec, delta, dbl, frame);
+		ModLarg (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame);
 	  }
 	else
-	   ModLarg (pBox, org, prec, delta, dbl, frame);
+	   ModLarg (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame);
      }
 }
 
@@ -790,18 +789,18 @@ int                 frame;
 /* |            boi^te sera modifie'e.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeHauteur (PtrBox pBox, PtrBox org, PtrBox prec, int delta, int frame)
+void              ChangeHauteur (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                ChangeHauteur (pBox, org, prec, delta, frame)
+void              ChangeHauteur (pBox, pSourceBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            org;
-PtrBox            prec;
-int                 delta;
-int                 frame;
+PtrBox            pSourceBox;
+PtrBox            pFromBox;
+int               delta;
+int               frame;
 
 #endif /* __STDC__ */
 {
-   int                 haut;
+   int            height;
 
    if (pBox != NULL)
      {
@@ -809,35 +808,35 @@ int                 frame;
 	if (pBox->BxContentHeight)
 	  {
 	     /* Il y a une regle de minimum mais ce n'est la hauteur reelle */
-	     haut = pBox->BxRuleHeigth + delta;
-	     if (haut > pBox->BxHeight)
+	     height = pBox->BxRuleHeigth + delta;
+	     if (height > pBox->BxHeight)
 	       {
 		  /* Il faut echanger la hauteur reelle avec l'autre hauteur */
 		  pBox->BxRuleHeigth = pBox->BxHeight;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ModHaut (pBox, org, prec, haut - pBox->BxHeight, frame);
+		  ModHaut (pBox, pSourceBox, pFromBox, height - pBox->BxHeight, frame);
 	       }
 	     else
 		/* Mise a jour de la hauteur minimum */
-		pBox->BxRuleHeigth = haut;
+		pBox->BxRuleHeigth = height;
 	  }
 	else if (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum)
 	  {
 	     /* La hauteur courante est egale au minimum */
-	     haut = pBox->BxHeight + delta;
-	     if (haut < pBox->BxRuleHeigth)
+	     height = pBox->BxHeight + delta;
+	     if (height < pBox->BxRuleHeigth)
 	       {
 		  /* Il faut echanger la hauteur reelle avec l'autre hauteur */
-		  haut = pBox->BxRuleHeigth;
+		  height = pBox->BxRuleHeigth;
 		  pBox->BxRuleHeigth = pBox->BxHeight + delta;
 		  pBox->BxContentHeight = !pBox->BxContentHeight;
-		  ModHaut (pBox, org, prec, haut - pBox->BxHeight, frame);
+		  ModHaut (pBox, pSourceBox, pFromBox, height - pBox->BxHeight, frame);
 	       }
 	     else
-		ModHaut (pBox, org, prec, delta, frame);
+		ModHaut (pBox, pSourceBox, pFromBox, delta, frame);
 	  }
 	else
-	   ModHaut (pBox, org, prec, delta, frame);
+	   ModHaut (pBox, pSourceBox, pFromBox, delta, frame);
      }
 }
 
@@ -848,11 +847,11 @@ int                 frame;
 /* |            negative.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChngBElast (PtrBox pBox, PtrBox org, OpRelation op, int delta, int frame, boolean EnX)
+void                ChngBElast (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta, int frame, boolean EnX)
 #else  /* __STDC__ */
-void                ChngBElast (pBox, org, op, delta, frame, EnX)
+void                ChngBElast (pBox, pSourceBox, op, delta, frame, EnX)
 PtrBox            pBox;
-PtrBox            org;
+PtrBox            pSourceBox;
 OpRelation          op;
 int                 delta;
 int                 frame;
@@ -860,39 +859,39 @@ boolean             EnX;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
-   BoxEdge         rp1;
-   int                 trans;
+   PtrAbstractBox   pAb;
+   BoxEdge          oldPosEdge;
+   int              trans;
 
    pAb = pBox->BxAbstractBox;
    trans = 0;
    /* Il faut verifier que l'on pas deja en train de traiter cette boite */
    if (pAb != NULL && delta != 0 && pBox->BxSpaceWidth == 0)
      {
-	/* On indique que le traitement est en cours */
+	/* indique que le traitement est en cours */
 	pBox->BxSpaceWidth = 1;
 	if (EnX)
 	  {
 	     /* Recherche le repere deplace et le repere fixe de la boite elastique */
 	     if (op == OpWidth)
-		rp1 = pAb->AbWidth.DimPosition.PosEdge;
+		oldPosEdge = pAb->AbWidth.DimPosition.PosEdge;
 
 	     else
 	       {
-		  rp1 = pAb->AbHorizPos.PosEdge;
-		  /* Met a jour la pile des boites pour ne pas deplacer org */
-		  pBox->BxMoved = org;
+		  oldPosEdge = pAb->AbHorizPos.PosEdge;
+		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
+		  pBox->BxMoved = pSourceBox;
 	       }
 
-	     /* On calcule le changement de largeur */
-	     if (rp1 == Left)
+	     /* calcule le changement de largeur */
+	     if (oldPosEdge == Left)
 	       {
 		  delta = -delta;
 		  pBox->BxHorizEdge = Right;
 	       }
-	     else if (rp1 == Right)
+	     else if (oldPosEdge == Right)
 		pBox->BxHorizEdge = Left;
-	     else if (rp1 == VertMiddle)
+	     else if (oldPosEdge == VertMiddle)
 	       {
 		  delta = delta * 2;
 		  if (op == OpHorizDep)
@@ -913,35 +912,35 @@ boolean             EnX;
 		     trans = -pBox->BxWidth;
 		  else if (pBox->BxHorizEdge == Left)
 		     trans = pBox->BxWidth;
-		  DepOrgX (pBox, org, trans, frame);
+		  DepOrgX (pBox, pSourceBox, trans, frame);
 	       }
-	     ModLarg (pBox, org, NULL, delta, 0, frame);
+	     ModLarg (pBox, pSourceBox, NULL, delta, 0, frame);
 
-	     /* On retablit le point fixe */
+	     /* retablit le point fixe */
 	     pBox->BxHorizEdge = NoEdge;
 	  }
 	else
 	  {
 	     /* Recherche le repere deplace et le repere fixe de la boite elastique */
 	     if (op == OpHeight)
-		rp1 = pAb->AbHeight.DimPosition.PosEdge;
+		oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
 
 	     else
 	       {
-		  rp1 = pAb->AbVertPos.PosEdge;
-		  /* Met a jour la pile des boites pour ne pas deplacer org */
-		  pBox->BxMoved = org;
+		  oldPosEdge = pAb->AbVertPos.PosEdge;
+		  /* Met a jour la pile des boites pour ne pas deplacer pSourceBox */
+		  pBox->BxMoved = pSourceBox;
 	       }
 
-	     /* On calcule le changement de hauteur */
-	     if (rp1 == Top)
+	     /* calcule le changement de hauteur */
+	     if (oldPosEdge == Top)
 	       {
 		  delta = -delta;
 		  pBox->BxVertEdge = Bottom;
 	       }
-	     else if (rp1 == Bottom)
+	     else if (oldPosEdge == Bottom)
 		pBox->BxVertEdge = Top;
-	     else if (rp1 == HorizMiddle)
+	     else if (oldPosEdge == HorizMiddle)
 	       {
 		  delta = delta * 2;
 		  if (op == OpVertDep)
@@ -962,16 +961,17 @@ boolean             EnX;
 		     trans = -pBox->BxHeight;
 		  else if (pBox->BxVertEdge == Top)
 		     trans = pBox->BxHeight;
-		  DepOrgY (pBox, org, trans, frame);
+		  DepOrgY (pBox, pSourceBox, trans, frame);
 
 	       }
-	     ModHaut (pBox, org, NULL, delta, frame);
-	     /* On retablit le point fixe */
+	     ModHaut (pBox, pSourceBox, NULL, delta, frame);
+	     /* retablit le point fixe */
 	     pBox->BxVertEdge = NoEdge;
 	  }
-	/* On indique que le traitement est termine */
+	/* indique que le traitement est termine */
 	pBox->BxSpaceWidth = 0;
-	pBox->BxMoved = org;	/* retablit le chainage des deplacements */
+	/* retablit le chainage des deplacements */
+	pBox->BxMoved = pSourceBox;
      }
 }
 
@@ -990,7 +990,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            box1;
    PtrBox            SaveEnglob;
    int                 i;
@@ -1002,21 +1002,21 @@ int                 frame;
    if (pBox != NULL && (delta != 0 || pBox->BxXToCompute))
      {
 
-	/* On enregistre la hierarchie des boites dont le */
+	/* enregistre la hierarchie des boites dont le */
 	/* traitement de l'englobement doit etre differe  */
 	SaveEnglob = Englobement;
 	if (pBox->BxAbstractBox->AbEnclosing != NULL)
 	   Englobement = pBox /*->BxAbstractBox->AbEnclosing->AbBox*/ ;
 
 	/* Si Englobement est une boite mere de la boite   */
-	/* precedemment designee on garde l'ancienne boite */
-	if (Parent (Englobement, SaveEnglob))
+	/* pFromBoxedemment designee on garde l'ancienne boite */
+	if (IsParentBox (Englobement, SaveEnglob))
 	   Englobement = SaveEnglob;
 
 	/* Si la boite est mise en lignes */
 	if (pBox->BxType == BoSplit)
 	  {
-	     box1 = pBox->BxNexChild;	/* On decale les boites de coupure */
+	     box1 = pBox->BxNexChild;	/* decale les boites de coupure */
 	     while (box1 != NULL)
 	       {
 		  box1->BxXOrg += delta;
@@ -1024,7 +1024,7 @@ int                 frame;
 	       }
 	  }
 
-	/* On analyse les relations pour savoir comment deplacer la boite */
+	/* analyse les relations pour savoir comment deplacer la boite */
 	else if (pBox->BxAbstractBox != NULL)
 	  {
 	     /* La boite est elastique et n'est pas en cours de traitement */
@@ -1052,7 +1052,7 @@ int                 frame;
 				   pBox->BxXOrg + pBox->BxWidth - delta + i, pBox->BxYOrg + pBox->BxHeight + i);
 		    }
 
-		  /* On decale les boites qui ont des relations hors-structure avec */
+		  /* decale les boites qui ont des relations hors-structure avec */
 		  /* la boite deplacee et on met a jour les dimensions elastiques   */
 		  /* des boites liees a la boite deplacee.                          */
 		  pPosRel = pBox->BxPosRelations;
@@ -1070,8 +1070,8 @@ int                 frame;
 				     && pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pBox->BxAbstractBox)
 				   {
 
-				      /* On refuse de deplacer une boite englobante de pBox */
-				      if (Parent (pRelation->ReBox, pBox)) ;
+				      /* refuse de deplacer une boite englobante de pBox */
+				      if (IsParentBox (pRelation->ReBox, pBox)) ;
 
 				      else if (pRelation->ReBox->BxHorizFlex)
 					 ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
@@ -1092,7 +1092,7 @@ int                 frame;
 		    }
 
 		  /* Decale des boites englobees dont l'origine depend de l'englobante */
-		  pavefils = pBox->BxAbstractBox->AbFirstEnclosed;
+		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  /* Traite le niveau inferieur */
 		  reenglobx = FALSE;
 		  /* Si la boite est en cours de deplacement -> il faut transmettre */
@@ -1100,19 +1100,19 @@ int                 frame;
 		  if (pBox->BxXToCompute)
 		     delta = pBox->BxXOrg;
 
-		  while (pavefils != NULL)
+		  while (pChildAb != NULL)
 		    {
-		       if (pavefils->AbBox != NULL)
-			  if (pavefils->AbBox->BxXOutOfStruct)
+		       if (pChildAb->AbBox != NULL)
+			  if (pChildAb->AbBox->BxXOutOfStruct)
 			     reenglobx = TRUE;
 			  else
 			    {
-			       if (pBox->BxXToCompute && !pavefils->AbBox->BxHorizFlex)
+			       if (pBox->BxXToCompute && !pChildAb->AbBox->BxHorizFlex)
 				  /* Additionne le decalage de la boite */
-				  pavefils->AbBox->BxXToCompute = TRUE;
-			       DepXContenu (pavefils->AbBox, delta, frame);
+				  pChildAb->AbBox->BxXToCompute = TRUE;
+			       DepXContenu (pChildAb->AbBox, delta, frame);
 			    }
-		       pavefils = pavefils->AbNext;
+		       pChildAb = pChildAb->AbNext;
 		    }
 		  pBox->BxXToCompute = FALSE;	/* le decalage eventuel est pris en compte */
 
@@ -1123,7 +1123,7 @@ int                 frame;
 		     RecordEnclosing (pBox, TRUE);
 	       }
 	  }
-	Englobement = SaveEnglob;	/* On restaure */
+	Englobement = SaveEnglob;	/* restaure */
      }
 }
 
@@ -1142,7 +1142,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            box1;
    PtrBox            SaveEnglob;
    int                 i;
@@ -1153,21 +1153,21 @@ int                 frame;
 
    if (pBox != NULL && (delta != 0 || pBox->BxYToCompute))
      {
-	/* On enregistre la hierarchie des boites dont le */
+	/* enregistre la hierarchie des boites dont le */
 	/* traitement de l'englobement doit etre differe  */
 	SaveEnglob = Englobement;
 	if (pBox->BxAbstractBox->AbEnclosing != NULL)
 	   Englobement = pBox /*->BxAbstractBox->AbEnclosing->AbBox*/ ;
 
 	/* Si Englobement est une boite mere de la boite   */
-	/* precedemment designee on garde l'ancienne boite */
-	if (Parent (Englobement, SaveEnglob))
+	/* pFromBoxedemment designee on garde l'ancienne boite */
+	if (IsParentBox (Englobement, SaveEnglob))
 	   Englobement = SaveEnglob;
 
 	/* Si la boite est mise en lignes */
 	if (pBox->BxType == BoSplit)
 	  {
-	     box1 = pBox->BxNexChild;	/* On decale les boites de coupure */
+	     box1 = pBox->BxNexChild;	/* decale les boites de coupure */
 	     while (box1 != NULL)
 	       {
 		  box1->BxYOrg += delta;
@@ -1176,7 +1176,7 @@ int                 frame;
 
 	  }
 
-	/* On analyse les relations pour savoir comment deplacer la boite */
+	/* analyse les relations pour savoir comment deplacer la boite */
 	else if (pBox->BxAbstractBox != NULL)
 	  {
 /*-> La boite est elastique et n'est pas en cours de traitement */
@@ -1205,7 +1205,7 @@ int                 frame;
 				   pBox->BxYOrg + pBox->BxHeight - delta + i);
 		    }
 
-		  /* On decale les boites qui ont des relations hors-structure avec */
+		  /* decale les boites qui ont des relations hors-structure avec */
 		  /* la boite deplacee et on met a jour les dimensions elastiques   */
 		  /* des boites liees a la boite deplacee.                          */
 		  pPosRel = pBox->BxPosRelations;
@@ -1224,8 +1224,8 @@ int                 frame;
 				     && pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pBox->BxAbstractBox)
 				   {
 
-				      /* On refuse de deplacer une boite englobante de pBox */
-				      if (Parent (pRelation->ReBox, pBox))
+				      /* refuse de deplacer une boite englobante de pBox */
+				      if (IsParentBox (pRelation->ReBox, pBox))
 					 ;
 				      else if (pRelation->ReBox->BxVertFlex)
 					 ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
@@ -1244,28 +1244,28 @@ int                 frame;
 		       pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
 		    }
 
-		  /* On traite les fils englobes ou places par rapport a l'englobante */
-		  pavefils = pBox->BxAbstractBox->AbFirstEnclosed;	/* Traite le niveau inferieur */
+		  /* traite les fils englobes ou places par rapport a l'englobante */
+		  pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;	/* Traite le niveau inferieur */
 		  reengloby = FALSE;
 		  /* Si la boite est en cours de deplacement -> il faut transmettre */
 		  /* la valeur de l'origine plutot que la valeur du decalage        */
 		  if (pBox->BxYToCompute)
 		     delta = pBox->BxYOrg;
-		  while (pavefils != NULL)
+		  while (pChildAb != NULL)
 		    {
-		       if (pavefils->AbBox != NULL)
+		       if (pChildAb->AbBox != NULL)
 			 {
-			    if (pavefils->AbBox->BxYOutOfStruct)
+			    if (pChildAb->AbBox->BxYOutOfStruct)
 			       reengloby = TRUE;
 			    else
 			      {
-				 if (pBox->BxYToCompute && !pavefils->AbBox->BxVertFlex)
+				 if (pBox->BxYToCompute && !pChildAb->AbBox->BxVertFlex)
 				    /* Additionne le decalage de la boite */
-				    pavefils->AbBox->BxYToCompute = TRUE;
-				 DepYContenu (pavefils->AbBox, delta, frame);
+				    pChildAb->AbBox->BxYToCompute = TRUE;
+				 DepYContenu (pChildAb->AbBox, delta, frame);
 			      }
 			 }
-		       pavefils = pavefils->AbNext;
+		       pChildAb = pChildAb->AbNext;
 		    }
 		  pBox->BxYToCompute = FALSE;	/* le decalage eventuel est pris en compte */
 
@@ -1276,7 +1276,7 @@ int                 frame;
 		     RecordEnclosing (pBox, FALSE);
 	       }
 	  }
-	Englobement = SaveEnglob;	/* On restaure */
+	Englobement = SaveEnglob;	/* restaure */
      }
 }
 
@@ -1286,11 +1286,11 @@ int                 frame;
 /* |                frametre frame et les boites qui en dependent.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DepAxe (PtrBox pBox, PtrBox prec, int delta, int frame)
+void                DepAxe (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                DepAxe (pBox, prec, delta, frame)
+void                DepAxe (pBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            prec;
+PtrBox            pFromBox;
 int                 delta;
 int                 frame;
 
@@ -1302,7 +1302,7 @@ int                 frame;
    boolean             deplace;
    boolean             nonnul;
    PtrBox            box1;
-   PtrBox            cebox;
+   PtrBox            pRefBox;
    PtrPosRelations      pPosRel;
    BoxRelation           *pRelation;
 
@@ -1313,8 +1313,8 @@ int                 frame;
 	     {
 		/* Verifie que le deplacement n'est pas deja traite */
 		deplace = TRUE;
-		box1 = prec;
-		cebox = pBox;
+		box1 = pFromBox;
+		pRefBox = pBox;
 		while (box1 != NULL)
 		   if (box1 == pBox)
 		     {
@@ -1324,7 +1324,7 @@ int                 frame;
 		   else
 		     {
 			if (box1->BxMoved == NULL)
-			   cebox = box1;	/* boite ancetre */
+			   pRefBox = box1;	/* boite ancetre */
 			box1 = box1->BxMoved;
 		     }
 
@@ -1332,9 +1332,9 @@ int                 frame;
 		  {
 		     pBox->BxVertRef += delta;
 		     pavebox = pBox->BxAbstractBox;
-		     /* On met a jour la pile des boites traitees */
-		     pBox->BxMoved = prec;
-		     /* On regarde si les regles de dependance sont valides */
+		     /* met a jour la pile des boites traitees */
+		     pBox->BxMoved = pFromBox;
+		     /* regarde si les regles de dependance sont valides */
 		     if (pavebox->AbEnclosing != NULL)
 			if (pavebox->AbEnclosing->AbBox != NULL)
 			   deplace = pavebox->AbEnclosing->AbBox->BxType != BoGhost;
@@ -1345,7 +1345,7 @@ int                 frame;
 			  {
 			     delta = -delta;
 			     deplace = TRUE;	/* Il faut verifier l'englobement */
-			     /* On evalue la partie de la fenetre a reafficher */
+			     /* evalue la partie de la fenetre a reafficher */
 			     if (EvalAffich && pBox->BxType != BoSplit)
 			       {
 				  i = pBox->BxXOrg;
@@ -1365,13 +1365,13 @@ int                 frame;
 			     if (XEnAbsolu (pBox))
 			       {
 				  DepXContenu (pBox, delta, frame);
-				  /* On a pu detruire le chainage des boites deplacees */
-				  pBox->BxMoved = prec;
+				  /* a pu detruire le chainage des boites deplacees */
+				  pBox->BxMoved = pFromBox;
 			       }
 			     else
 				pBox->BxXOrg += delta;
 
-			     /* On decale aussi les boites liees a la boite deplacee */
+			     /* decale aussi les boites liees a la boite deplacee */
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
@@ -1423,7 +1423,7 @@ int                 frame;
 					    /* reference verticale */
 					    if (pRelation->ReRefEdge == VertRef)
 					       if (pRelation->ReOp == OpHorizRef)
-						  DepAxe (pRelation->ReBox, prec, delta, frame);
+						  DepAxe (pRelation->ReBox, pFromBox, delta, frame);
 					       else if ((pRelation->ReOp == OpHorizDep
 							 && pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
 						    || pRelation->ReOp == OpWidth)
@@ -1442,7 +1442,7 @@ int                 frame;
 				  pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
 			       }
 
-			     /* On deplace des boites incluses */
+			     /* deplace des boites incluses */
 			     box1 = NULL;
 			     if (XEnAbsolu (pBox) && pBox->BxType != BoBlock)
 			       {
@@ -1462,11 +1462,11 @@ int                 frame;
 				  /* Faut-il reevaluer l'englobement de la boite pBox ? */
 				  /*et si ce n'est pas une boite fille de pBox */
 				  if (box1 != NULL && Propage == ToAll)
-				     Englobx (pavebox, cebox, frame);
+				     Englobx (pavebox, pRefBox, frame);
 			       }
 			  }
 
-		     /* On respecte les contraintes d'englobement */
+		     /* respecte les contraintes d'englobement */
 		     pAb = pavebox->AbEnclosing;
 		     if (deplace)
 			if (pAb == NULL)
@@ -1478,9 +1478,9 @@ int                 frame;
 		     /* sauf si l'englobement des boites doit etre differe        */
 			else if (!pAb->AbInLine
 				 && pAb->AbBox->BxType != BoGhost
-				 && !Parent (pAb->AbBox, cebox)
-				 && !Parent (pAb->AbBox, Englobement))
-			   Englobx (pAb, cebox, frame);
+				 && !IsParentBox (pAb->AbBox, pRefBox)
+				 && !IsParentBox (pAb->AbBox, Englobement))
+			   Englobx (pAb, pRefBox, frame);
 		  }
 	     }
      }
@@ -1491,11 +1491,11 @@ int                 frame;
 /* |                frame frame et les boites qui en dependent.         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DepBase (PtrBox pBox, PtrBox prec, int delta, int frame)
+void                DepBase (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                DepBase (pBox, prec, delta, frame)
+void                DepBase (pBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            prec;
+PtrBox            pFromBox;
 int                 delta;
 int                 frame;
 
@@ -1507,7 +1507,7 @@ int                 frame;
    boolean             deplace;
    boolean             nonnul;
    PtrBox            box1;
-   PtrBox            cebox;
+   PtrBox            pRefBox;
    PtrPosRelations      pPosRel;
    BoxRelation           *pRelation;
 
@@ -1518,8 +1518,8 @@ int                 frame;
 	     {
 		/* Verifie que le deplacement n'est pas deja traite */
 		deplace = TRUE;
-		box1 = prec;
-		cebox = pBox;
+		box1 = pFromBox;
+		pRefBox = pBox;
 		while (box1 != NULL)
 		   if (box1 == pBox)
 		     {
@@ -1529,7 +1529,7 @@ int                 frame;
 		   else
 		     {
 			if (box1->BxMoved == NULL)
-			   cebox = box1;	/* boite ancetre */
+			   pRefBox = box1;	/* boite ancetre */
 			box1 = box1->BxMoved;
 		     }
 
@@ -1537,9 +1537,9 @@ int                 frame;
 		  {
 		     pBox->BxHorizRef += delta;
 		     pavebox = pBox->BxAbstractBox;
-		     /* On met a jour la pile des boites traitees */
-		     pBox->BxMoved = prec;
-		     /* On regarde si les regles de dependance sont valides */
+		     /* met a jour la pile des boites traitees */
+		     pBox->BxMoved = pFromBox;
+		     /* regarde si les regles de dependance sont valides */
 		     if (pavebox->AbEnclosing != NULL)
 			if (pavebox->AbEnclosing->AbBox != NULL)
 			   deplace = pavebox->AbEnclosing->AbBox->BxType != BoGhost;
@@ -1551,7 +1551,7 @@ int                 frame;
 			  {
 			     delta = -delta;
 			     deplace = TRUE;	/* Il faut verifier l'englobement */
-			     /* On evalue la partie de la fenetre a reafficher */
+			     /* evalue la partie de la fenetre a reafficher */
 			     if (EvalAffich && pBox->BxType != BoSplit)
 			       {
 				  i = pBox->BxYOrg;
@@ -1571,13 +1571,13 @@ int                 frame;
 			     if (YEnAbsolu (pBox))
 			       {
 				  DepYContenu (pBox, delta, frame);
-				  /* On a pu detruire le chainage des boites deplacees */
-				  pBox->BxMoved = prec;
+				  /* a pu detruire le chainage des boites deplacees */
+				  pBox->BxMoved = pFromBox;
 			       }
 			     else
 				pBox->BxYOrg += delta;
 
-			     /* On decale aussi les boites liees a la boite deplacee */
+			     /* decale aussi les boites liees a la boite deplacee */
 			     pPosRel = pBox->BxPosRelations;
 			     while (pPosRel != NULL)
 			       {
@@ -1628,14 +1628,14 @@ int                 frame;
 					    /* reference horizontale */
 					    if (pRelation->ReRefEdge == HorizRef)
 					       if (pRelation->ReOp == OpVertRef)
-						  DepBase (pRelation->ReBox, prec, delta, frame);
+						  DepBase (pRelation->ReBox, pFromBox, delta, frame);
 					       else if ((pRelation->ReOp == OpVertDep
 							 && pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
 						    || pRelation->ReOp == OpHeight)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
 					       else if (pRelation->ReOp == OpVertDep)
 						 {
-						    /* On deplace une voisine */
+						    /* deplace une voisine */
 						    DepOrgY (pRelation->ReBox, pBox, delta, frame);
 						    deplace = TRUE;	/* Il faut verifier l'englobement */
 						 }
@@ -1668,11 +1668,11 @@ int                 frame;
 				  /* Faut-il reevaluer l'englobement de la boite pBox ? */
 				  /* et si ce n'est pas une boite fille de pBox */
 				  if (box1 != NULL && Propage == ToAll)
-				     Engloby (pavebox, cebox, frame);
+				     Engloby (pavebox, pRefBox, frame);
 			       }
 			  }
 
-		     /* On respecte les contraintes d'englobement */
+		     /* respecte les contraintes d'englobement */
 		     pAb = pavebox->AbEnclosing;
 		     if (deplace)
 			if (pAb == NULL)
@@ -1688,9 +1688,9 @@ int                 frame;
 			  }
 		     /* Verifie l'englobement des boites de la hierarchie voisine */
 		     /* sauf si l'englobement des boites doit etre differe        */
-			else if (!Parent (pAb->AbBox, cebox)
-				 && !Parent (pAb->AbBox, Englobement))
-			   Engloby (pAb, cebox, frame);
+			else if (!IsParentBox (pAb->AbBox, pRefBox)
+				 && !IsParentBox (pAb->AbBox, Englobement))
+			   Engloby (pAb, pRefBox, frame);
 		  }
 	     }
      }
@@ -1699,27 +1699,27 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 /* |    ModLarg modifie la largeur de la boite pBox correspondant a` la | */
 /* |        frame frame suite au changement de largeur de la boite      | */
-/* |        origine org.                                                | */
-/* |        On respecte les contraintes de position :                   | */
+/* |        origine pSourceBox.                                                | */
+/* |        respecte les contraintes de position :                   | */
 /* |        - Toute boite liee a` un des cotes deplaces est             | */
 /* |          deplacee.                                                 | */
 /* |        - On met a` jour la base de la boite pBox si necessaire.    | */
 /* |        On respecte les contraintes de dimension :                  | */
 /* |        - On met a` jour les largeurs de boites qui en              | */
 /* |          dependent.                                                | */
-/* |        Le parametre dbl correspond au nombre de caracteres         | */
+/* |        Le parametre spaceDelta correspond au nombre de caracteres         | */
 /* |        blanc ajoutes (>0) ou retires (<0). Il n'a de sens que      | */
 /* |        quand la boite texte appartient a` une ligne justifiee.     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ModLarg (PtrBox pBox, PtrBox org, PtrBox prec, int delta, int dbl, int frame)
+void                ModLarg (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void                ModLarg (pBox, org, prec, delta, dbl, frame)
+void                ModLarg (pBox, pSourceBox, pFromBox, delta, spaceDelta, frame)
 PtrBox            pBox;
-PtrBox            org;
-PtrBox            prec;
+PtrBox            pSourceBox;
+PtrBox            pFromBox;
 int                 delta;
-int                 dbl;
+int                 spaceDelta;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -1742,13 +1742,13 @@ int                 frame;
    if (pBox != NULL && delta != 0)
      {
 	/* Faut-il nettoyer la file des boites deplacees */
-	if (org == NULL && prec == NULL)
+	if (pSourceBox == NULL && pFromBox == NULL)
 	   pBox->BxMoved = NULL;
 
 	if (pBox->BxAbstractBox != NULL)
 	   if (!pBox->BxAbstractBox->AbDead)
 	     {
-		/* On verifie que la largeur d'une boite ne devient pas negative */
+		/* verifie que la largeur d'une boite ne devient pas negative */
 		if (Propage != ToSiblings && delta < 0 && -delta > pBox->BxWidth)
 		   delta = -pBox->BxWidth;
 		/* Valeurs limites avant deplacement */
@@ -1767,13 +1767,13 @@ int                 frame;
 		     pBox->BxPictInfo = NULL;
 		  }
 
-		/* On regarde si les regles de dependance sont valides */
+		/* regarde si les regles de dependance sont valides */
 		deplace = TRUE;
 		if (pavebox->AbEnclosing != NULL)
 		   if (pavebox->AbEnclosing->AbBox != NULL)
 		      deplace = pavebox->AbEnclosing->AbBox->BxType != BoGhost;
 
-		/* On respecte les contraintes de position */
+		/* respecte les contraintes de position */
 		/* Point fixe sur l'origine */
 		if (!deplace || pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)
 		  {
@@ -1789,7 +1789,7 @@ int                 frame;
 		     /* L'origine de la boite et le cote inferieur sont deplaces */
 		     dxo = pBox->BxWidth / 2 - (pBox->BxWidth + delta) / 2;
 		     dxf = delta + dxo;
-		     /* On corrige les erreurs d'arrondi */
+		     /* corrige les erreurs d'arrondi */
 		     dxm = 0;
 		  }
 		/* Point fixe sur le cote droit */
@@ -1803,7 +1803,7 @@ int                 frame;
 		pBox->BxWidth += delta;
 		pBox->BxXOrg += dxo;
 
-		/* On evalue la partie de la fenetre a reafficher */
+		/* evalue la partie de la fenetre a reafficher */
 		if (EvalAffich
 		    && pBox->BxType != BoSplit
 		/* Il ne faut pas tenir compte de la boite si elle */
@@ -1861,7 +1861,7 @@ int                 frame;
 					       if (pRelation->ReOp == OpHorizRef)
 						 {
 						    if (pRelation->ReBox != pBox)
-						       DepAxe (pRelation->ReBox, org, dxo, frame);
+						       DepAxe (pRelation->ReBox, pSourceBox, dxo, frame);
 						 }
 					       else if (pRelation->ReOp == OpHorizInc)
 						 {
@@ -1871,7 +1871,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
 						    || pRelation->ReOp == OpWidth)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dxo, frame, TRUE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgX (pRelation->ReBox, pBox, dxo, frame);
 					       break;
 					       /* milieu vertical */
@@ -1880,10 +1880,10 @@ int                 frame;
 						  if (pRelation->ReBox == pBox)
 						    {
 						       DepAxe (pBox, NULL, delta / 2, frame);
-						       pBox->BxMoved = prec;	/* restaure le chainage */
+						       pBox->BxMoved = pFromBox;	/* restaure le chainage */
 						    }
 						  else
-						     DepAxe (pRelation->ReBox, org, dxm, frame);
+						     DepAxe (pRelation->ReBox, pSourceBox, dxm, frame);
 					       else if (pRelation->ReOp == OpHorizInc)
 						 {
 						    if (!pBox->BxHorizFlex)
@@ -1892,7 +1892,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
 						    || pRelation->ReOp == OpWidth)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dxm, frame, TRUE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgX (pRelation->ReBox, pBox, dxm, frame);
 					       break;
 					       /* cote droit */
@@ -1901,10 +1901,10 @@ int                 frame;
 						  if (pRelation->ReBox == pBox)
 						    {
 						       DepAxe (pBox, NULL, delta, frame);
-						       pBox->BxMoved = prec;	/* restaure le chainage */
+						       pBox->BxMoved = pFromBox;	/* restaure le chainage */
 						    }
 						  else
-						     DepAxe (pRelation->ReBox, org, dxf, frame);
+						     DepAxe (pRelation->ReBox, pSourceBox, dxf, frame);
 					       else if (pRelation->ReOp == OpHorizInc)
 						 {
 						    if (!pBox->BxHorizFlex)
@@ -1913,7 +1913,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpHorizDep && pRelation->ReBox->BxHorizFlex)
 						    || pRelation->ReOp == OpWidth)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dxf, frame, TRUE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgX (pRelation->ReBox, pBox, dxf, frame);
 					       break;
 					    default:
@@ -1939,7 +1939,7 @@ int                 frame;
 		   /* ou elle est a l'interieur d'une boite hors-structure */
 		   /* ou elle n'herite pas de la taille de son contenu */
 		   if (pBox->BxType == BoBlock)
-		      ReevalBloc (pavebox, pBox->BxFirstLine, org, frame);
+		      ReevalBloc (pavebox, pBox->BxFirstLine, pSourceBox, frame);
 		   else
 		     {
 			pAb = pavebox->AbFirstEnclosed;
@@ -1948,7 +1948,7 @@ int                 frame;
 			     if (!pAb->AbDead && pAb->AbBox != NULL)
 			       {
 				  box1 = pAb->AbBox;
-				  /* On regarde si la boite est liee a son englobante */
+				  /* regarde si la boite est liee a son englobante */
 				  pPosRel = box1->BxPosRelations;
 				  while (pPosRel != NULL)
 				    {
@@ -2010,7 +2010,7 @@ int                 frame;
 			  }
 		     }
 
-		/* On respecte les contraintes de dimension */
+		/* respecte les contraintes de dimension */
 		pDimRel = pBox->BxWidthRelations;
 		while (pDimRel != NULL)
 		  {
@@ -2027,9 +2027,9 @@ int                 frame;
 				  dxo = pBox->BxWidth * pAb->AbWidth.DimValue / 100 - box1->BxWidth;
 			       else
 				  dxo = delta;	/* + ou - une constante */
-			       /* On evite de boucler sur l'automodification */
+			       /* evite de boucler sur l'automodification */
 			       if (box1 != pBox)
-				  ChangeLargeur (box1, org, pBox, dxo, dbl, frame);
+				  ChangeLargeur (box1, pSourceBox, pBox, dxo, spaceDelta, frame);
 
 			    }
 			  else
@@ -2050,7 +2050,7 @@ int                 frame;
 				  dxo = pBox->BxWidth * pAb->AbHeight.DimValue / 100 - box1->BxHeight;
 			       else
 				  dxo = delta;
-			       ChangeHauteur (box1, org, NULL, dxo, frame);
+			       ChangeHauteur (box1, pSourceBox, NULL, dxo, frame);
 			    }
 
 			  i++;
@@ -2060,7 +2060,7 @@ int                 frame;
 		     pDimRel = pDimRel->DimRNext;
 		  }
 
-		/* On respecte les contraintes d'englobement */
+		/* respecte les contraintes d'englobement */
 		pAb = pavebox->AbEnclosing;		/* pave pere */
 		if (!deplace)
 		  {
@@ -2080,13 +2080,13 @@ int                 frame;
 		else if (pavebox->AbHorizEnclosing)
 		  {
 		     /* note l'origine externe ou non de la modification de largeur */
-		     relexterne = !Parent (pAb->AbBox, org);
+		     relexterne = !IsParentBox (pAb->AbBox, pSourceBox);
 
-		     /* si org n'est pas une fille il faut propager */
+		     /* si pSourceBox n'est pas une fille il faut propager */
 		     if ((Propage == ToAll || relexterne)
 		     /* et si l'englobement n'est pas fait par une boite soeur */
-			 && !Soeur (pBox, prec)
-			 && !Soeur (pBox, org))
+			 && !IsSiblingBox (pBox, pFromBox)
+			 && !IsSiblingBox (pBox, pSourceBox))
 		       {
 
 			  /* Inclusion dans un bloc de ligne */
@@ -2097,19 +2097,19 @@ int                 frame;
 				  adligne = pViewSel->VsLine;
 			       else
 				  adligne = SearchLine (pBox);
-			       MajBloc (pAb, adligne, pBox, delta, dbl, frame);
+			       MajBloc (pAb, adligne, pBox, delta, spaceDelta, frame);
 			    }
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != Englobement
-				 && !Parent (pAb->AbBox, Englobement))
-			     /* On differe le traitement de l'englobement   */
+				 && !IsParentBox (pAb->AbBox, Englobement))
+			     /* differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propage != ToAll)
 				RecordEnclosing (pAb->AbBox, TRUE);
 			  /* l'englobement d'une boite ne peut etre traite */
 			  /* plus de deux fois (sinon on boucle).      */
 			     else if (pAb->AbBox->BxNPixels <= 1)
-				Englobx (pAb, org, frame);
+				Englobx (pAb, pSourceBox, frame);
 
 		       }
 		     else if (!pavebox->AbNew
@@ -2118,7 +2118,7 @@ int                 frame;
 			    && pavebox->AbInLine && !pBox->BxYToCompute)
 			/* La largeur de la boite mise en lignes est donnee par une */
 			/* boite suivante, il faut verifier l'englobement vertical */
-			Engloby (pAb, org, frame);
+			Engloby (pAb, pSourceBox, frame);
 		  }
 	     }
      }
@@ -2127,21 +2127,21 @@ int                 frame;
 /* ---------------------------------------------------------------------- */
 /* |    ModHaut modifie la hauteur de la boite pBox correspondant a` la | */
 /* |         frame frame suite au changement de hauteur de la boite     | */
-/* |         origine org. On respecte les contraintes de position :     | */
+/* |         origine pSourceBox. On respecte les contraintes de position :     | */
 /* |         - Toute boite liee a` un des cotes deplaces est            | */
 /* |           deplacee.                                                | */
-/* |         - On met a` jour la base de la boite pBox si necessaire.   | */
+/* |         - met a` jour la base de la boite pBox si necessaire.   | */
 /* |         On respecte les contraintes de dimension :                 | */
 /* |         - On met a` jour les hauteurs des boites qui en            | */
 /* |           dependent.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ModHaut (PtrBox pBox, PtrBox org, PtrBox prec, int delta, int frame)
+void                ModHaut (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                ModHaut (pBox, org, prec, delta, frame)
+void                ModHaut (pBox, pSourceBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            org;
-PtrBox            prec;
+PtrBox            pSourceBox;
+PtrBox            pFromBox;
 int                 delta;
 int                 frame;
 
@@ -2167,13 +2167,13 @@ int                 frame;
      {
 
 	/* Faut-il nettoyer la file des boites deplacees */
-	if (org == NULL && prec == NULL)
+	if (pSourceBox == NULL && pFromBox == NULL)
 	   pBox->BxMoved = NULL;
 
 	if (pBox->BxAbstractBox != NULL)
 	   if (!pBox->BxAbstractBox->AbDead)
 	     {
-		/* On verifie que la hauteur d'une boite ne devient pas negative */
+		/* verifie que la hauteur d'une boite ne devient pas negative */
 		if (Propage != ToSiblings && delta < 0 && -delta > pBox->BxHeight)
 		   delta = -pBox->BxHeight;
 		/* Valeurs limites avant deplacement */
@@ -2193,13 +2193,13 @@ int                 frame;
 		     pBox->BxPictInfo = NULL;
 		  }
 
-		/* On regarde si les regles de dependance sont valides */
+		/* regarde si les regles de dependance sont valides */
 		deplace = TRUE;
 		if (pavebox->AbEnclosing != NULL)
 		   if (pavebox->AbEnclosing->AbBox != NULL)
 		      deplace = pavebox->AbEnclosing->AbBox->BxType != BoGhost;
 
-		/* On respecte les contraintes de position */
+		/* respecte les contraintes de position */
 /*=> Point fixe sur l'origine */
 		if (!deplace || pBox->BxVertEdge == Top || pBox->BxVertEdge == HorizRef)
 		  {
@@ -2213,7 +2213,7 @@ int                 frame;
 		  {
 		     /* L'origine de la boite et le cote inferieur sont deplaces */
 		     dyo = pBox->BxHeight / 2 - (pBox->BxHeight + delta) / 2;
-		     dyf = delta + dyo;		/* On corrige les erreurs d'arrondi */
+		     dyf = delta + dyo;		/* corrige les erreurs d'arrondi */
 		     dym = 0;
 		  }
 /*=> Point fixe sur le cote inferieur */
@@ -2227,7 +2227,7 @@ int                 frame;
 		pBox->BxHeight += delta;
 		pBox->BxYOrg += dyo;
 
-		/* On evalue la partie de la fenetre a reafficher */
+		/* evalue la partie de la fenetre a reafficher */
 		if (EvalAffich
 		    && pBox->BxType != BoSplit
 		/* Il ne faut pas tenir compte de la boite si elle */
@@ -2285,7 +2285,7 @@ int                 frame;
 					       if (pRelation->ReOp == OpVertRef)
 						 {
 						    if (pRelation->ReBox != pBox)
-						       DepBase (pRelation->ReBox, org, dyo, frame);
+						       DepBase (pRelation->ReBox, pSourceBox, dyo, frame);
 						 }
 					       else if (pRelation->ReOp == OpVertInc)
 						 {
@@ -2295,7 +2295,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
 						    || pRelation->ReOp == OpHeight)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dyo, frame, FALSE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgY (pRelation->ReBox, pBox, dyo, frame);
 					       break;
 					       /* milieu horizontal */
@@ -2304,10 +2304,10 @@ int                 frame;
 						  if (pRelation->ReBox == pBox)
 						    {
 						       DepBase (pBox, NULL, delta / 2, frame);
-						       pBox->BxMoved = prec;	/* restaure le chainage */
+						       pBox->BxMoved = pFromBox;	/* restaure le chainage */
 						    }
 						  else
-						     DepBase (pRelation->ReBox, org, dym, frame);
+						     DepBase (pRelation->ReBox, pSourceBox, dym, frame);
 					       else if (pRelation->ReOp == OpVertInc)
 						 {
 						    if (!pBox->BxVertFlex)
@@ -2316,7 +2316,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
 						    || pRelation->ReOp == OpHeight)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dym, frame, FALSE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgY (pRelation->ReBox, pBox, dym, frame);
 					       break;
 					       /* cote inferieur */
@@ -2331,10 +2331,10 @@ int                 frame;
 							 else
 							    j = delta;
 							 DepBase (pBox, NULL, j, frame);
-							 pBox->BxMoved = prec;	/* restaure le chainage */
+							 pBox->BxMoved = pFromBox;	/* restaure le chainage */
 						      }
 						    else
-						       DepBase (pRelation->ReBox, org, dyf, frame);
+						       DepBase (pRelation->ReBox, pSourceBox, dyf, frame);
 						 }
 					       else if (pRelation->ReOp == OpVertInc)
 						 {
@@ -2344,7 +2344,7 @@ int                 frame;
 					       else if ((pRelation->ReOp == OpVertDep && pRelation->ReBox->BxVertFlex)
 						    || pRelation->ReOp == OpHeight)
 						  ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, dyf, frame, FALSE);
-					       else if (pRelation->ReBox != org)
+					       else if (pRelation->ReBox != pSourceBox)
 						  DepOrgY (pRelation->ReBox, pBox, dyf, frame);
 					       break;
 					    default:
@@ -2367,7 +2367,7 @@ int                 frame;
 		     /* qui ne sont pas en cours de placement          */
 		     if (dyo != 0)
 		       {
-			  /* On decale aussi les boites mises en ligne */
+			  /* decale aussi les boites mises en ligne */
 			  pAb = pavebox->AbFirstEnclosed;
 			  while (pAb != NULL)
 			    {
@@ -2391,7 +2391,7 @@ int                 frame;
 			  if (!pAb->AbDead && pAb->AbBox != NULL)
 			    {
 			       box1 = pAb->AbBox;
-			       /* On regarde si la boite est liee a son englobante */
+			       /* regarde si la boite est liee a son englobante */
 			       pPosRel = box1->BxPosRelations;
 			       while (pPosRel != NULL)
 				 {
@@ -2454,7 +2454,7 @@ int                 frame;
 		       }
 		  }
 
-		/* On respecte les contraintes de dimension */
+		/* respecte les contraintes de dimension */
 		pDimRel = pBox->BxHeightRelations;
 		while (pDimRel != NULL)
 		  {
@@ -2482,9 +2482,9 @@ int                 frame;
 				  dyo = pBox->BxHeight * pAb->AbHeight.DimValue / 100 - box1->BxHeight;
 			       else
 				  dyo = delta;
-			       /* On evite de boucler sur l'automodification */
+			       /* evite de boucler sur l'automodification */
 			       if (box1 != pBox)
-				  ChangeHauteur (box1, org, pBox, dyo, frame);
+				  ChangeHauteur (box1, pSourceBox, pBox, dyo, frame);
 			    }
 			  else
 			     /* Non => Changement de largeur */
@@ -2495,7 +2495,7 @@ int                 frame;
 			       else
 				 /* + ou - une constante */
 				 dyo = delta;
-			       ChangeLargeur (box1, org, NULL, dyo, 0, frame);
+			       ChangeLargeur (box1, pSourceBox, NULL, dyo, 0, frame);
 			    }
 			  i++;
 			  if (i <= MAX_RELAT_DIM)
@@ -2505,7 +2505,7 @@ int                 frame;
 		     pDimRel = pDimRel->DimRNext;
 		  }
 
-		/* On respecte les contraintes d'englobement */
+		/* respecte les contraintes d'englobement */
 		pAb = pavebox->AbEnclosing;
 		if (!deplace)
 		  {
@@ -2525,28 +2525,28 @@ int                 frame;
 		else if (pavebox->AbVertEnclosing)
 		  {
 		     /* note l'origine externe ou non de la modification de hauteur */
-		     relexterne = !Parent (pAb->AbBox, org);
+		     relexterne = !IsParentBox (pAb->AbBox, pSourceBox);
 
-		     /* si org n'est pas une fille il faut propager */
+		     /* si pSourceBox n'est pas une fille il faut propager */
 		     if ((Propage == ToAll || relexterne)
 		     /* et si l'englobement n'est pas fait par une boite soeur */
-			 && !Soeur (pBox, prec)
-			 && !Soeur (pBox, org))
+			 && !IsSiblingBox (pBox, pFromBox)
+			 && !IsSiblingBox (pBox, pSourceBox))
 		       {
 			  if (pAb->AbInLine)
 			     /* Inclusion dans un bloc de ligne */
 			     EnglLigne (pBox, frame, pAb);
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != Englobement
-				 && !Parent (pAb->AbBox, Englobement))
-			     /* On differe le traitement de l'englobement   */
+				 && !IsParentBox (pAb->AbBox, Englobement))
+			     /* differe le traitement de l'englobement   */
 			     /* quand la mise a jour a une origine externe  */
 			     if (Propage != ToAll)
 				RecordEnclosing (pAb->AbBox, FALSE);
 			  /* l'englobement d'une boite ne peut etre traite */
 			  /* plus de deux fois (sinon on boucle).      */
 			     else if (pAb->AbBox->BxSpaceWidth <= 1)
-				Engloby (pAb, org, frame);
+				Engloby (pAb, pSourceBox, frame);
 		       }
 		  }
 	     }
@@ -2590,11 +2590,11 @@ int                 frame;
 /* |            de delta. On respecte les contraintes de position.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DepOrgX (PtrBox pBox, PtrBox prec, int delta, int frame)
+void                DepOrgX (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                DepOrgX (pBox, prec, delta, frame)
+void                DepOrgX (pBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            prec;
+PtrBox            pFromBox;
 int                 delta;
 int                 frame;
 
@@ -2617,21 +2617,21 @@ int                 frame;
 	if (pAbbox1 != NULL)
 	   if (!pAbbox1->AbDead)
 	     {
-		/* On verifie que la boite n'a pas ete deja deplacee */
-		if (prec != NULL)
+		/* verifie que la boite n'a pas ete deja deplacee */
+		if (pFromBox != NULL)
 		  {
-		     box1 = prec->BxMoved;
+		     box1 = pFromBox->BxMoved;
 		     while (box1 != NULL)
 			if (box1 == pBox)
 			   return;
 			else
 			   box1 = box1->BxMoved;
 		  }
-		/* On met a jour la pile des boites traitees */
-		pBox->BxMoved = prec;
+		/* met a jour la pile des boites traitees */
+		pBox->BxMoved = pFromBox;
 
 		aplacer = pBox->BxXToCompute;	/* memorise que la boite doit etre placee */
-		/* On evalue la partie de la fenetre a reafficher */
+		/* evalue la partie de la fenetre a reafficher */
 		if (EvalAffich)
 		  {
 		     if (pBox->BxType != BoSplit)
@@ -2660,7 +2660,7 @@ int                 frame;
 				    pBox->BxWidth - delta, pBox->BxYOrg + pBox->BxHeight);
 		  }
 
-		/* On deplace seulement l'origine de la boite si elle est en cours  */
+		/* deplace seulement l'origine de la boite si elle est en cours  */
 		/* de creation et que ce n'est pas une boite elastique, sinon on    */
 		/*  deplace tout le contenu (boites englobees)                      */
 		depabsolu = XEnAbsolu (pBox);
@@ -2669,12 +2669,12 @@ int                 frame;
 		if (depabsolu)
 		  {
 		     DepXContenu (pBox, delta, frame);
-		     /* On a pu detruire le chainage des boites deplacees */
-		     pBox->BxMoved = prec;
-		     /* On evite d'introduire une boucle */
-		     box1 = prec;
+		     /* a pu detruire le chainage des boites deplacees */
+		     pBox->BxMoved = pFromBox;
+		     /* evite d'introduire une boucle */
+		     box1 = pFromBox;
 		     while (box1 != NULL)
-			if (box1->BxMoved == prec)
+			if (box1->BxMoved == pFromBox)
 			  {
 			     box1->BxMoved = NULL;
 			     box1 = NULL;
@@ -2726,7 +2726,7 @@ int                 frame;
 					   && pAbbox1 != pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
 				     ;
 
-				  /* On ne decale pas les boites qui ont des relations  */
+				  /* ne decale pas les boites qui ont des relations  */
 				  /* hors-structure avec la boite deplacee et on ne met */
 				  /* pas a jour les dimensions elastiques des boites    */
 				  /* liees a la boite deplacee si elles ont ete         */
@@ -2757,8 +2757,8 @@ int                 frame;
 				     ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
 			       }
 
-			     /* On a pu detruire le chainage des boites deplacees */
-			     pBox->BxMoved = prec;
+			     /* a pu detruire le chainage des boites deplacees */
+			     pBox->BxMoved = pFromBox;
 			     i++;
 			     if (i <= MAX_RELAT_POS)
 				nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
@@ -2769,17 +2769,17 @@ int                 frame;
 		/* Si le calcul de la largeur de la boite englobante est a refaire */
 		pAb = pAbbox1->AbEnclosing;
 		if (deplace && pBox->BxXOutOfStruct && pAb != NULL)
-		   /* On ne peut traiter l'englobement d'une boite si cette boite */
+		   /* ne peut traiter l'englobement d'une boite si cette boite */
 		   /* est en cours de placement ou si ce traitement est differe   */
 		   if (!pAb->AbBox->BxXToCompute
-		       && !Parent (pAb->AbBox, Englobement)
-		   /* si org est une fille il faut la propagation a toutes */
-		       && (Propage == ToAll || !Parent (pAb->AbBox, prec))
+		       && !IsParentBox (pAb->AbBox, Englobement)
+		   /* si pSourceBox est une fille il faut la propagation a toutes */
+		       && (Propage == ToAll || !IsParentBox (pAb->AbBox, pFromBox))
 		   /* et si l'englobement n'est pas fait par une boite soeur */
-		       && !Soeur (pBox, prec)
+		       && !IsSiblingBox (pBox, pFromBox)
 		   /* et si la boite deplacee est effectivement englobee */
 		       && pAbbox1->AbHorizEnclosing)
-		      Englobx (pAb, prec, frame);
+		      Englobx (pAb, pFromBox, frame);
 	     }
      }
 }
@@ -2789,11 +2789,11 @@ int                 frame;
 /* |            de delta. On respecte les contraintes de position.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DepOrgY (PtrBox pBox, PtrBox prec, int delta, int frame)
+void                DepOrgY (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
-void                DepOrgY (pBox, prec, delta, frame)
+void                DepOrgY (pBox, pFromBox, delta, frame)
 PtrBox            pBox;
-PtrBox            prec;
+PtrBox            pFromBox;
 int                 delta;
 int                 frame;
 
@@ -2816,21 +2816,21 @@ int                 frame;
 	if (pAbbox1 != NULL)
 	   if (!pAbbox1->AbDead)
 	     {
-		/* On verifie que la boite n'a pas ete deja deplacee */
-		if (prec != NULL)
+		/* verifie que la boite n'a pas ete deja deplacee */
+		if (pFromBox != NULL)
 		  {
-		     box1 = prec->BxMoved;
+		     box1 = pFromBox->BxMoved;
 		     while (box1 != NULL)
 			if (box1 == pBox)
 			   return;
 			else
 			   box1 = box1->BxMoved;
 		  }
-		/* On met a jour la pile des boites traitees */
-		pBox->BxMoved = prec;
+		/* met a jour la pile des boites traitees */
+		pBox->BxMoved = pFromBox;
 
 		aplacer = pBox->BxYToCompute;	/* memorise que la boite doit etre placee */
-		/* On evalue la partie de la fenetre a reafficher */
+		/* evalue la partie de la fenetre a reafficher */
 		if (EvalAffich)
 		  {
 		     if (pBox->BxType != BoSplit)
@@ -2859,7 +2859,7 @@ int                 frame;
 				    pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight - delta);
 		  }
 
-		/* On deplace seulement l'origine de la boite si elle est en cours  */
+		/* deplace seulement l'origine de la boite si elle est en cours  */
 		/* de creation et que ce n'est pas une boite elastique, sinon on    */
 		/*  deplace tout le contenu (boites englobees)                      */
 		depabsolu = YEnAbsolu (pBox);
@@ -2868,12 +2868,12 @@ int                 frame;
 		if (depabsolu)
 		  {
 		     DepYContenu (pBox, delta, frame);
-		     /* On a pu detruire le chainage des boites deplacees */
-		     pBox->BxMoved = prec;
-		     /* On evite d'introduire une boucle */
-		     box1 = prec;
+		     /* a pu detruire le chainage des boites deplacees */
+		     pBox->BxMoved = pFromBox;
+		     /* evite d'introduire une boucle */
+		     box1 = pFromBox;
 		     while (box1 != NULL)
-			if (box1->BxMoved == prec)
+			if (box1->BxMoved == pFromBox)
 			  {
 			     box1->BxMoved = NULL;
 			     box1 = NULL;
@@ -2891,7 +2891,7 @@ int                 frame;
 		      deplace = (pAbbox1->AbEnclosing->AbBox->BxType != BoGhost);
 
 
-		/* On decale les boites dependantes qui restent a deplacer */
+		/* decale les boites dependantes qui restent a deplacer */
 
 		pPosRel = pBox->BxPosRelations;
 		if (deplace)
@@ -2926,7 +2926,7 @@ int                 frame;
 				  else if (pBox->BxVertFlex
 					   && pAbbox1 != pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
 				     ;
-				  /* On ne decale pas les boites qui ont des relations  */
+				  /* ne decale pas les boites qui ont des relations  */
 				  /* hors-structure avec la boite deplacee et on ne met */
 				  /* pas a jour les dimensions elastiques dess boites   */
 				  /* liees a la boite deplacee si elles ont ete         */
@@ -2956,8 +2956,8 @@ int                 frame;
 				     ChngBElast (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
 			       }
 
-			     /* On a pu detruire le chainage des boites deplacees */
-			     pBox->BxMoved = prec;
+			     /* a pu detruire le chainage des boites deplacees */
+			     pBox->BxMoved = pFromBox;
 			     i++;
 			     if (i <= MAX_RELAT_POS)
 				nonnul = pPosRel->PosRTable[i - 1].ReBox != NULL;
@@ -2969,39 +2969,39 @@ int                 frame;
 		/* Si le calcul de la hauteur de la boite englobante est a refaire */
 		pAb = pAbbox1->AbEnclosing;
 		if (deplace && pBox->BxYOutOfStruct && pAb != NULL)
-		   /* On ne peut traiter l'englobement d'une boite si cette boite */
+		   /* ne peut traiter l'englobement d'une boite si cette boite */
 		   /* est en cours de placement ou si ce traitement est differe   */
 		   if (!pAb->AbBox->BxYToCompute
-		       && !Parent (pAb->AbBox, Englobement)
-		   /* si org est une fille il faut la propagation a toutes */
-		       && (Propage == ToAll || !Parent (pAb->AbBox, prec))
+		       && !IsParentBox (pAb->AbBox, Englobement)
+		   /* si pSourceBox est une fille il faut la propagation a toutes */
+		       && (Propage == ToAll || !IsParentBox (pAb->AbBox, pFromBox))
 		   /* et si l'englobement n'est pas fait par une boite soeur */
-		       && !Soeur (pBox, prec)
+		       && !IsSiblingBox (pBox, pFromBox)
 		   /* et si la boite deplacee est effectivement englobee */
 		       && pAbbox1->AbVertEnclosing)
-		      Engloby (pAb, prec, frame);
+		      Engloby (pAb, pFromBox, frame);
 	     }
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    Englobx verifie l'inclusion en largeur des boites englobees dans| */
-/* |            le pave pAb suite au changement de largeur de la     | */
-/* |            boite origine org.                                      | */
+/* |            le pave pAb suite au changement de largeur de la        | */
+/* |            boite origine pSourceBox.                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                Englobx (PtrAbstractBox pAb, PtrBox org, int frame)
+void                Englobx (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 #else  /* __STDC__ */
-void                Englobx (pAb, org, frame)
+void                Englobx (pAb, pSourceBox, frame)
 PtrAbstractBox             pAb;
-PtrBox            org;
+PtrBox            pSourceBox;
 int                 frame;
 
 #endif /* __STDC__ */
 {
    int                 val, larg;
    int                 x, i, j, k;
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            box1;
    PtrBox            box2;
    boolean             nonvide;
@@ -3013,7 +3013,7 @@ int                 frame;
    PtrAbstractBox             cepave;
    AbPosition        *pPosAb;
 
-   /* On verifie que la largeur de la boite depend du contenu et qu'on */
+   /* verifie que la largeur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
    /* ATTENTION: le champs BxNPixels a une signification differente      */
    /* dans les boites de paves composes des boites de texte */
@@ -3022,10 +3022,10 @@ int                 frame;
    pDimAb = &pAb->AbWidth;
    if (pBo1->BxContentWidth && pBo1->BxType != BoGhost)
      {
-	/* On indique que l'englobement horizontal est en cours de traitement */
+	/* indique que l'englobement horizontal est en cours de traitement */
 	pBo1->BxNPixels += 1;
 
-	/* On verifie l'encadrement et l'englobement */
+	/* verifie l'encadrement et l'englobement */
 	/* Faut-il prendre l'origine en relatif ou en absolu ? */
 	depabsolu = XEnAbsolu (pBo1);
 	if (depabsolu)
@@ -3045,13 +3045,13 @@ int                 frame;
 	/* largeur de la boite englobante est delimitee par le cote     */
 	/* droit le plus a droite des boites englobees.                 */
 
-	pavefils = pAb->AbFirstEnclosed;
-	while (pavefils != NULL)
+	pChildAb = pAb->AbFirstEnclosed;
+	while (pChildAb != NULL)
 	  {
-	     box1 = pavefils->AbBox;
-	     if (!pavefils->AbDead && box1 != NULL
-		 && pavefils->AbHorizEnclosing
-		 && pavefils->AbWidth.DimAbRef != pAb)
+	     box1 = pChildAb->AbBox;
+	     if (!pChildAb->AbDead && box1 != NULL
+		 && pChildAb->AbHorizEnclosing
+		 && pChildAb->AbWidth.DimAbRef != pAb)
 	       {
 		  /* Recherche la boite dont elle depend */
 		  box2 = BoiteHInclus (box1, NULL);
@@ -3059,8 +3059,8 @@ int                 frame;
 		     if (box2->BxAbstractBox != NULL)
 		       {
 			  pPa3 = box2->BxAbstractBox;
-			  /* note le pave dont depend la largeur de pavefils */
-			  cepave = pavefils->AbWidth.DimAbRef;
+			  /* note le pave dont depend la largeur de pChildAb */
+			  cepave = pChildAb->AbWidth.DimAbRef;
 			  if (pPa3->AbHorizPos.PosAbRef == NULL)
 			    {
 			       /* Box est mobile, on tient compte de son origine */
@@ -3074,26 +3074,26 @@ int                 frame;
 				&& (pPa3->AbHorizPos.PosRefEdge != Left
 				    || (pPa3->AbWidth.DimAbRef == pAb
 					&& !pPa3->AbWidth.DimIsPosition
-			  && pavefils->AbHorizPos.PosRefEdge != Left)))
+			  && pChildAb->AbHorizPos.PosRefEdge != Left)))
 			     i = x + box1->BxWidth;
 			  /* La taille de la boite depend d'une boite externe ? */
 			  else if (box1->BxWOutOfStruct)
 			    {
 			       /* qui herite de la taille de l'englobante ? */
-			       if (Parent (cepave->AbBox, pBo1)
+			       if (IsParentBox (cepave->AbBox, pBo1)
 				   && cepave->AbWidth.DimAbRef == NULL
 				   && cepave->AbWidth.DimValue == 0
 				&& cepave->AbBox->BxWidth == pBo1->BxWidth)
 				  i = x;
 			       else
-				  /* On evalue l'encadrement et l'englobement */
+				  /* evalue l'encadrement et l'englobement */
 			       if (box1->BxXOrg < x)
 				  i = x + box1->BxWidth;
 			       else
 				  i = box1->BxXOrg + box1->BxWidth;
 			    }
 			  else
-			     /* On evalue l'encadrement et l'englobement */
+			     /* evalue l'encadrement et l'englobement */
 			  if (box1->BxXOrg < x)
 			     i = x + box1->BxWidth;
 			  else
@@ -3102,7 +3102,7 @@ int                 frame;
 			     larg = i;
 		       }
 	       }
-	     pavefils = pavefils->AbNext;
+	     pChildAb = pChildAb->AbNext;
 	  }
 
 	val = -val + x;		/* Decalage de la position extreme gauche */
@@ -3115,12 +3115,12 @@ int                 frame;
 	x = larg - pBo1->BxWidth;	/* Difference de largeur */
 
 	/* Faut-il deplacer les boites englobees ? */
-	pavefils = pAb->AbFirstEnclosed;
+	pChildAb = pAb->AbFirstEnclosed;
 	if (nonvide && val != 0)
-	   while (pavefils != NULL)
+	   while (pChildAb != NULL)
 	     {
-		box1 = pavefils->AbBox;
-		if (!pavefils->AbDead && box1 != NULL && pavefils->AbHorizEnclosing)
+		box1 = pChildAb->AbBox;
+		if (!pChildAb->AbDead && box1 != NULL && pChildAb->AbHorizEnclosing)
 		  {
 
 		     /* Est-ce une boite mobile a deplacer ? */
@@ -3130,7 +3130,7 @@ int                 frame;
 			if (box2->BxAbstractBox != NULL)
 			   if (box2->BxAbstractBox->AbHorizPos.PosAbRef == NULL)
 			     {
-				/* On met a jour la zone de reaffichage */
+				/* met a jour la zone de reaffichage */
 				if (EvalAffich)
 				  {
 				     /* Prend en compte une zone de debordement des graphiques */
@@ -3154,7 +3154,7 @@ int                 frame;
 
 				/* Est-ce que cette boite deplace l'axe de l'englobante ? */
 				pPosAb = &pAb->AbVertRef;
-				if (pPosAb->PosAbRef == pavefils)
+				if (pPosAb->PosAbRef == pChildAb)
 				  {
 				     deplace = TRUE;
 				     box1->BxMoved = NULL;
@@ -3174,12 +3174,12 @@ int                 frame;
 				  }
 			     }
 		  }
-		pavefils = pavefils->AbNext;
+		pChildAb = pChildAb->AbNext;
 	     }
 
 	/* Faut-il changer la largeur de la boite englobante ? */
 	if (x != 0)
-	   ChangeLgContenu (pBo1, org, larg, 0, frame);
+	   ChangeLgContenu (pBo1, pSourceBox, larg, 0, frame);
 	/* Faut-il verifier l'englobement au dessus ? */
 	else if (deplace)
 	   if (pAb->AbEnclosing == NULL)
@@ -3189,7 +3189,7 @@ int                 frame;
 	     }
 	   else if (!pAb->AbEnclosing->AbInLine
 		    && pAb->AbEnclosing->AbBox->BxType != BoGhost)
-	      Englobx (pAb->AbEnclosing, org, frame);
+	      Englobx (pAb->AbEnclosing, pSourceBox, frame);
 
 	/* Indique que le traitement de l'englobement horizontal est termine */
 	pBo1->BxNPixels -= 1;
@@ -3200,28 +3200,28 @@ int                 frame;
 	    && pBo1->BxType != BoGhost)
      {
 	GiveEnclosureSize (pAb, frame, &larg, &val);
-	ChangeLgContenu (pBo1, org, larg, 0, frame);
+	ChangeLgContenu (pBo1, pSourceBox, larg, 0, frame);
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |        Engloby  verifie l'inclusion en hauteur des boites englobees| */
-/* |           dans le pave pAb suite au changement de hauteur de la | */
-/* |           boite origine org.                                       | */
+/* |           dans le pave pAb suite au changement de hauteur de la    | */
+/* |           boite origine pSourceBox.                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                Engloby (PtrAbstractBox pAb, PtrBox org, int frame)
+void                Engloby (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 #else  /* __STDC__ */
-void                Engloby (pAb, org, frame)
+void                Engloby (pAb, pSourceBox, frame)
 PtrAbstractBox             pAb;
-PtrBox            org;
+PtrBox            pSourceBox;
 int                 frame;
 
 #endif /* __STDC__ */
 {
    int                 val, haut;
    int                 y, i, j, k;
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            box1;
    PtrBox            box2;
    boolean             nonvide;
@@ -3233,7 +3233,7 @@ int                 frame;
    PtrAbstractBox             cepave;
    AbPosition        *pPosAb;
 
-   /* On verifie que la hauteur de la boite depend du contenu et qu'on */
+   /* verifie que la hauteur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
    /* ATTENTION: le champs BxSpaceWidth a une signification differente      */
    /* dans les boites de paves composes des boites de texte            */
@@ -3243,10 +3243,10 @@ int                 frame;
    if (pBo1->BxContentHeight && pBo1->BxType != BoGhost)
      {
 
-	/* On indique que l'englobement vertical est en cours de traitement */
+	/* indique que l'englobement vertical est en cours de traitement */
 	pBo1->BxSpaceWidth += 1;
 
-	/* On verifie l'encadrement et l'englobement */
+	/* verifie l'encadrement et l'englobement */
 	/* Faut-il prendre l'origine en relatif ou en absolu ? */
 	depabsolu = YEnAbsolu (pBo1);
 	if (depabsolu)
@@ -3266,14 +3266,14 @@ int                 frame;
 	/* de la boite englobante est delimitee par le cote inferieur   */
 	/* le plus bas des boites englobees.                          */
 
-	pavefils = pAb->AbFirstEnclosed;
-	while (pavefils != NULL)
+	pChildAb = pAb->AbFirstEnclosed;
+	while (pChildAb != NULL)
 	  {
-	     box1 = pavefils->AbBox;
-	     if (!pavefils->AbDead
+	     box1 = pChildAb->AbBox;
+	     if (!pChildAb->AbDead
 		 && box1 != NULL
-		 && pavefils->AbVertEnclosing
-		 && pavefils->AbHeight.DimAbRef != pAb)
+		 && pChildAb->AbVertEnclosing
+		 && pChildAb->AbHeight.DimAbRef != pAb)
 	       {
 		  /* Recherche la boite dont elle depend */
 		  box2 = BoiteVInclus (box1, NULL);
@@ -3281,8 +3281,8 @@ int                 frame;
 		     if (box2->BxAbstractBox != NULL)
 		       {
 			  pPa3 = box2->BxAbstractBox;
-			  /* note le pave dont depend la hauteur de pavefils */
-			  cepave = pavefils->AbHeight.DimAbRef;
+			  /* note le pave dont depend la hauteur de pChildAb */
+			  cepave = pChildAb->AbHeight.DimAbRef;
 			  if (pPa3->AbVertPos.PosAbRef == NULL)
 			    {
 			       /* Box mobile, on tient compte de son origine */
@@ -3296,26 +3296,26 @@ int                 frame;
 				   && (pPa3->AbVertPos.PosRefEdge != Top
 				       || (pPa3->AbHeight.DimAbRef == pAb
 					   && !pPa3->AbHeight.DimIsPosition
-			     && pavefils->AbVertPos.PosRefEdge != Top)))
+			     && pChildAb->AbVertPos.PosRefEdge != Top)))
 			     i = y + box1->BxHeight;
 			  /* La taille de la boite depend d'une boite externe ? */
 			  else if (box1->BxHOutOfStruct)
 			    {
 			       /* qui herite de la taille de l'englobante ? */
-			       if (Parent (cepave->AbBox, pBo1)
+			       if (IsParentBox (cepave->AbBox, pBo1)
 				   && cepave->AbHeight.DimAbRef == NULL
 				   && cepave->AbHeight.DimValue == 0
 				&& cepave->AbBox->BxHeight == pBo1->BxHeight)
 				  i = y;
 			       else
-				  /* On evalue l'encadrement et l'englobement */
+				  /* evalue l'encadrement et l'englobement */
 			       if (box1->BxYOrg < y)
 				  i = y + box1->BxHeight;
 			       else
 				  i = box1->BxYOrg + box1->BxHeight;
 			    }
 			  else
-			     /* On evalue l'encadrement et l'englobement */
+			     /* evalue l'encadrement et l'englobement */
 			  if (box1->BxYOrg < y)
 			     i = y + box1->BxHeight;
 			  else
@@ -3324,7 +3324,7 @@ int                 frame;
 			     haut = i;
 		       }
 	       }
-	     pavefils = pavefils->AbNext;
+	     pChildAb = pChildAb->AbNext;
 	  }
 
 	val = -val + y;		/* Decalage de la position extreme haute */
@@ -3337,12 +3337,12 @@ int                 frame;
 	y = haut - pBo1->BxHeight;	/* Difference de hauteur */
 
 	/* Faut-il deplacer les boites englobees ? */
-	pavefils = pAb->AbFirstEnclosed;
+	pChildAb = pAb->AbFirstEnclosed;
 	if (nonvide && val != 0)
-	   while (pavefils != NULL)
+	   while (pChildAb != NULL)
 	     {
-		box1 = pavefils->AbBox;
-		if (!pavefils->AbDead && box1 != NULL && pavefils->AbVertEnclosing)
+		box1 = pChildAb->AbBox;
+		if (!pChildAb->AbDead && box1 != NULL && pChildAb->AbVertEnclosing)
 		  {
 		     /* Est-ce une boite mobile a deplacer ? */
 		     /* Recherche la boite dont elle depend */
@@ -3351,7 +3351,7 @@ int                 frame;
 			if (box2->BxAbstractBox != NULL)
 			   if (box2->BxAbstractBox->AbVertPos.PosAbRef == NULL)
 			     {
-				/* On met a jour la zone de reaffichage */
+				/* met a jour la zone de reaffichage */
 				if (EvalAffich)
 				  {
 				     i = box1->BxYOrg;
@@ -3376,7 +3376,7 @@ int                 frame;
 
 				/* Est-ce que cette boite deplace la base de l'englobante ? */
 				pPosAb = &pAb->AbHorizRef;
-				if (pPosAb->PosAbRef == pavefils)
+				if (pPosAb->PosAbRef == pChildAb)
 				  {
 				     deplace = TRUE;
 				     box1->BxMoved = NULL;
@@ -3396,12 +3396,12 @@ int                 frame;
 				  }
 			     }
 		  }
-		pavefils = pavefils->AbNext;
+		pChildAb = pChildAb->AbNext;
 	     }
 
 	/* Faut-il changer la hauteur de la boite englobante ? */
 	if (y != 0)
-	   ChangeHtContenu (pBo1, org, haut, frame);
+	   ChangeHtContenu (pBo1, pSourceBox, haut, frame);
 	/* Faut-il verifier l'englobement au dessus ? */
 	else if (deplace)
 	   if (pAb->AbEnclosing == NULL)
@@ -3419,9 +3419,9 @@ int                 frame;
 		EnglLigne (pBo1, frame, pAb->AbEnclosing);
 	     }
 	   else
-	      Engloby (pAb->AbEnclosing, org, frame);
+	      Engloby (pAb->AbEnclosing, pSourceBox, frame);
 
-	/* On indique que le traitement de l'englobement vertical est termine */
+	/* indique que le traitement de l'englobement vertical est termine */
 	pBo1->BxSpaceWidth -= 1;
      }
    /* Si la boite prend la hauteur minimum, il faut quand meme      */
@@ -3430,7 +3430,6 @@ int                 frame;
 	    && pBo1->BxType != BoGhost)
      {
 	GiveEnclosureSize (pAb, frame, &val, &haut);
-	ChangeHtContenu (pBo1, org, haut, frame);
+	ChangeHtContenu (pBo1, pSourceBox, haut, frame);
      }
 }
-/* End Of Module dep */

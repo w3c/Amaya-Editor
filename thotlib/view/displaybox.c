@@ -559,7 +559,7 @@ PtrBox            pBox;
 #endif /* __STDC__ */
 
 {
-   float               rapportX, rapportY, lepoint;
+   float               xRatio, yRatio, pointIndex;
    PtrTextBuffer      adbuff;
    int                 i;
    int                 j, val;
@@ -569,32 +569,32 @@ PtrBox            pBox;
    if (val != pBox->BxBuffer->BuPoints[0].XCoord
        && pBox->BxBuffer->BuPoints[0].XCoord > 0)
      {
-	lepoint = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
+	pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
 	/* memorise le nouveau rapport de deformation entre pave et boite */
-	pBox->BxXRatio = (float) val / lepoint;
+	pBox->BxXRatio = (float) val / pointIndex;
 	/* rapport applique sur la boite */
-	rapportX = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord;
+	xRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord;
 	pBox->BxBuffer->BuPoints[0].XCoord = val;
      }
    else
-      rapportX = 1;
+      xRatio = 1;
 
    /* calcul du rapport en Y */
    val = PixelToPoint (pBox->BxHeight * 1000);
    if (val != pBox->BxBuffer->BuPoints[0].YCoord
        && pBox->BxBuffer->BuPoints[0].YCoord > 0)
      {
-	lepoint = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRation;
+	pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRation;
 	/* memorise le nouveau rapport de deformation entre pave et boite */
-	pBox->BxYRation = (float) val / lepoint;
+	pBox->BxYRation = (float) val / pointIndex;
 	/* rapport applique sur la boite */
-	rapportY = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
+	yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
 	pBox->BxBuffer->BuPoints[0].YCoord = val;
      }
    else
-      rapportY = 1;
+      yRatio = 1;
 
-   if (rapportX != 1 || rapportY != 1)
+   if (xRatio != 1 || yRatio != 1)
      {
 	j = 1;
 	adbuff = pBox->BxBuffer;
@@ -610,8 +610,8 @@ PtrBox            pBox;
 		       j = 0;
 		    }
 	       }
-	     adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * rapportX);
-	     adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * rapportY);
+	     adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
+	     adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
 	     j++;
 	  }
      }

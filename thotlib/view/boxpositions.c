@@ -151,7 +151,7 @@ boolean             EnY;
    int                 x, y, i;
    PtrBox            box1;
    int                 larg, haut;
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    boolean             eclate;
    boolean             Peclate;
    boolean             nonnul;
@@ -173,7 +173,7 @@ boolean             EnY;
    larg = pBox->BxWidth;
    haut = pBox->BxHeight;
    Peclate = pBox->BxType == BoGhost;
-   pavefils = pAb->AbFirstEnclosed;
+   pChildAb = pAb->AbFirstEnclosed;
 
    /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
    reenglobx = FALSE;
@@ -184,10 +184,10 @@ boolean             EnY;
 
    /* Transforme origines relatives des boites filles en origines absolues */
    if (pAb->AbVisibility >= SeuilVisu)
-      while (pavefils != NULL)
+      while (pChildAb != NULL)
 	{
 
-	   pBo1 = pavefils->AbBox;
+	   pBo1 = pChildAb->AbBox;
 	   if (pBo1 != NULL)
 	     {
 		eclate = Peclate || pBo1->BxType == BoGhost;
@@ -236,7 +236,7 @@ boolean             EnY;
 				  newX = FALSE;
 			    }
 			  /* Il faut placer les boites positionnees par rapport la racine */
-			  else if (pavefils->AbHorizPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
+			  else if (pChildAb->AbHorizPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
 			     placeenX = TRUE;
 		       }
 		     else
@@ -267,7 +267,7 @@ boolean             EnY;
 				  newY = FALSE;
 			    }
 			  /* Il faut placer les boites positionnee par rapport la racine */
-			  else if (pavefils->AbVertPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
+			  else if (pChildAb->AbVertPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
 			     placeenY = TRUE;
 		       }
 		     else
@@ -287,29 +287,29 @@ boolean             EnY;
 		     if (!eclate && pBo1->BxType != BoPicture
 		     /* Ne verifie pas les boites placees par relation hors-structure */
 			 && !pBo1->BxXOutOfStruct && !pBo1->BxYOutOfStruct)
-			if (pavefils->AbHorizEnclosing && placeenX
+			if (pChildAb->AbHorizEnclosing && placeenX
 			    && (pBo1->BxXOrg < 0 || pBo1->BxXOrg > larg))
 			  {
 			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
+				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
 
 			       }
 			  }
-			else if (pavefils->AbVertEnclosing && placeenY
+			else if (pChildAb->AbVertEnclosing && placeenY
 			       && (pBo1->BxYOrg < 0 || pBo1->BxYOrg > haut))
 			  {
 			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
+				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pChildAb));
 
 			       }
 			  }
@@ -319,10 +319,10 @@ boolean             EnY;
 			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = TRUE;
+				  pChildAb->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
 
 			       }
 			  }
@@ -332,10 +332,10 @@ boolean             EnY;
 			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = TRUE;
+				  pChildAb->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pavefils));
+				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
 
 			       }
 			  }
@@ -347,7 +347,7 @@ boolean             EnY;
 			  if (pBo1->BxHorizFlex)
 			    {
 			       /* Initialise la file des boites deplacees */
-			       box1 = pavefils->AbHorizPos.PosAbRef->AbBox;
+			       box1 = pChildAb->AbHorizPos.PosAbRef->AbBox;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
@@ -363,7 +363,7 @@ boolean             EnY;
 			  pBo1->BxXToCompute = FALSE;	/* La boite est placee */
 
 			  /* On detecte les debordements de la boite englobante */
-			  if (pavefils->AbHorizEnclosing
+			  if (pChildAb->AbHorizEnclosing
 			      && !eclate
 			      && i > 1
 			      && !pBo1->BxHorizFlex
@@ -372,10 +372,10 @@ boolean             EnY;
 			       Erreur = TRUE;
 			       if (HardMsgAff)
 				 {
-				    pavefils->AbSelected = TRUE;
+				    pChildAb->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, HORIZ_BOX_OVERFLOW), AbsBoxType (pavefils));
+				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
 
 				 }
 			    }
@@ -400,7 +400,7 @@ boolean             EnY;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpHorizDep
 					     && pRelation->ReBox->BxXOutOfStruct
-						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pavefils)
+						&& pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxHorizFlex)
 						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, x, frame, TRUE);
@@ -446,7 +446,7 @@ boolean             EnY;
 			  if (pBo1->BxVertFlex)
 			    {
 			       /* Initialise la file des boites deplacees */
-			       box1 = pavefils->AbVertPos.PosAbRef->AbBox;
+			       box1 = pChildAb->AbVertPos.PosAbRef->AbBox;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
@@ -460,7 +460,7 @@ boolean             EnY;
 			     pBo1->BxYOrg += y;
 			  pBo1->BxYToCompute = FALSE;	/* La boite est placee */
 			  /* On detecte les debordements en Y de la boite englobante */
-			  if (pavefils->AbVertEnclosing
+			  if (pChildAb->AbVertEnclosing
 			      && !eclate
 			      && i > 1
 			      && !pBo1->BxVertFlex
@@ -469,10 +469,10 @@ boolean             EnY;
 			       Erreur = TRUE;
 			       if (HardMsgAff)
 				 {
-				    pavefils->AbSelected = TRUE;
+				    pChildAb->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, VERT_BOX_OVERFLOW), AbsBoxType (pavefils));
+				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
 
 				 }
 			    }
@@ -497,7 +497,7 @@ boolean             EnY;
 					    /* Relation hors-struture sur l'origine de la boite */
 					    if (pRelation->ReOp == OpVertDep
 					     && pRelation->ReBox->BxYOutOfStruct
-						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pavefils)
+						&& pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pChildAb)
 					      {
 						 if (pRelation->ReBox->BxVertFlex)
 						    ChngBElast (pRelation->ReBox, pBo1, pRelation->ReOp, y, frame, FALSE);
@@ -537,10 +537,10 @@ boolean             EnY;
 		       }
 		     /* On traite les origines des boites de niveau inferieur */
 		     if (placeenX || placeenY)
-			Placer (pavefils, SeuilVisu, frame, placeenX, placeenY);
+			Placer (pChildAb, SeuilVisu, frame, placeenX, placeenY);
 		  }
 	     }
-	   pavefils = pavefils->AbNext;	/* On passe au suivant */
+	   pChildAb = pChildAb->AbNext;	/* On passe au suivant */
 	}
    /* Si une dimension de la boite depend du contenu et qu'une des  */
    /* boites filles est positionnee par une relation hors-structure */
@@ -671,7 +671,7 @@ boolean            *modifpage;
 
 {
    int                 org;
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            box1;
    PtrBox            prec;
    PtrBox            first;
@@ -789,27 +789,27 @@ boolean            *modifpage;
 	       }
 
 	     /* On traite les paves fils */
-	     pavefils = Pv->AbFirstEnclosed;
+	     pChildAb = Pv->AbFirstEnclosed;
 	     /* Ce n'est pas la peine de continuer le calcul */
 	     /* des coupures de boites quand la limite de    */
 	     /* page est deplacee */
-	     while (pavefils != NULL && !*modifpage)
+	     while (pChildAb != NULL && !*modifpage)
 	       {
 #ifdef __COLPAGE__
 		  /* on saute les paves de colonnes pour arriver a la */
 		  /* derniere car c'est toujours pour la derniere */
 		  /* colonne qu'on evalue la coupure */
-		  while (pavefils->AbElement->ElTypeNumber == PageBreak + 1
-			 && (pavefils->AbElement->ElPageType == ColBegin
-			  || pavefils->AbElement->ElPageType == ColComputed
-		       || pavefils->AbElement->ElPageType == ColUser
-			 || pavefils->AbElement->ElPageType == ColGroup)
-			 && pavefils->AbNext != NULL)
-		     pavefils = pavefils->AbNext;
+		  while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
+			 && (pChildAb->AbElement->ElPageType == ColBegin
+			  || pChildAb->AbElement->ElPageType == ColComputed
+		       || pChildAb->AbElement->ElPageType == ColUser
+			 || pChildAb->AbElement->ElPageType == ColGroup)
+			 && pChildAb->AbNext != NULL)
+		     pChildAb = pChildAb->AbNext;
 #endif /* __COLPAGE__ */
-		  CoupSurPage (pavefils, haut, modifpage);
+		  CoupSurPage (pChildAb, haut, modifpage);
 		  /* On passe au suivant */
-		  pavefils = pavefils->AbNext;
+		  pChildAb = pChildAb->AbNext;
 	       }
 	  }			/*else */
 
@@ -1110,7 +1110,7 @@ boolean             EnY;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pavefils;
+   PtrAbstractBox             pChildAb;
    PtrBox            pBox;
 
    pBox = pAb->AbBox;
@@ -1131,12 +1131,10 @@ boolean             EnY;
      }
 
    /* Marque les paves englobes */
-   pavefils = pAb->AbFirstEnclosed;
-   while (pavefils != NULL)
+   pChildAb = pAb->AbFirstEnclosed;
+   while (pChildAb != NULL)
      {
-	MarqueAPlacer (pavefils, EnX, EnY);
-	pavefils = pavefils->AbNext;
+	MarqueAPlacer (pChildAb, EnX, EnY);
+	pChildAb = pChildAb->AbNext;
      }
 }
-
-/* End Of Module pos */
