@@ -62,7 +62,7 @@
 61 Speichern überschreibt die folgenden URL:
 62 Speichern der URL fehlerhaft: 
 63 Speichern auf Festplatte?
-64 Brafiken speichern
+64 Grafiken speichern
 65 Absolute Verknüpfungszieladressen
 66 Dokumentenadresse
 67 Grafik(unter)verzeichnis
@@ -138,4 +138,4 @@
 137 CSS-Fehler: %s
 138 Nur Standardtyp erlaubt
 139 Aktualisierung der Verknüpfung : %s%% erfolgreich
-140 Nothing to save
+140 Nichts zu speichern
