@@ -2564,6 +2564,151 @@ PtrAbstractBox     pAb;
 }
 
 /*----------------------------------------------------------------------
+  RemoveFunctionPRule
+  The pPres function presentation rule has been removed for the element
+  having abstract box pAb.  Undo that presentation rule for that abstract box.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void       RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void       RemoveFunctionPRule (pPres, pAb, pDoc)
+PtrPRule pPres;
+PtrAbstractBox pAb;
+PtrDocument pDoc;
+#endif /* __STDC__ */
+
+{
+   if (pPres->PrPresFunction == FnBackgroundPicture &&
+       pAb->AbPictBackground != NULL)
+     {
+       TtaFreeMemory ((((PictInfo *) (pAb->AbPictBackground))->PicFileName));
+       FreePictInfo ((int *) (pAb->AbPictBackground));
+       pAb->AbPictBackground = NULL;
+     }
+   else if (pPres->PrPresFunction == FnPictureMode &&
+	    pAb->AbPictBackground != NULL)
+       ((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
+   else if (pPres->PrPresFunction == FnShowBox)
+       pAb->AbFillBox = FALSE;
+
+   pAb->AbAspectChange = TRUE;
+   RedispAbsBox (pAb, pDoc);
+   /* pDoc->DocViewModifiedAb[view] = pAb; */
+}
+
+/*----------------------------------------------------------------------
+  ApplyPRulesElement
+  Redisplay boxes of element pEl that are concerned by removing the
+  presentation function pRule
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void            ApplyPRulesElement (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, boolean remove)
+#else  /* __STDC__ */
+void            ApplyPRulesElement (pRule, pEl, pDoc, remove)
+PtrPRule	pRule;
+PtrElement	pEl;
+PtrDocument	pDoc;
+boolean         remove;
+
+#endif /* __STDC__ */
+
+{
+  PtrAbstractBox  pAb, pParent;
+  PtrPRule	  pCurrentRule, pRP;
+  PtrPSchema	  pSPR;
+  PtrAttribute	  pAttr;
+  PRuleType	  ruleType;
+  int             viewSch;
+  int             view;
+  boolean	  done, enclosed;
+
+  TtaClearViewSelections ();
+  enclosed = FALSE;
+  /* do nothing if the document no longer exists */
+  if (pDoc != NULL)
+    /* examine all abstract boxes of element */
+    for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      /* the abstract box of the root element */
+      pAb = pEl->ElAbstractBox[view - 1];
+      /* the schema view associatde with the current view */
+      viewSch = pDoc->DocView[view].DvPSchemaView;
+      while (pAb != NULL)
+	{
+	  /* process each presentation rule */
+	  pCurrentRule = pRule;
+	  while (pCurrentRule != NULL)
+	    {
+	    ruleType = pCurrentRule->PrType;
+	    done = FALSE;
+	    /* is the view concerned by the presentation rule ? */
+	    if (pCurrentRule->PrViewNum == 1 ||
+		pCurrentRule->PrViewNum == viewSch)
+	       {
+	       /* checks if the abstract box is concerned by the rule */
+	       pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType,
+				   pCurrentRule->PrPresFunction, TRUE, &pAttr);
+	       if (pRP == pCurrentRule || remove)
+		  {
+		  done = TRUE;
+	          if (remove && ruleType == PtFunction &&
+		     pAb->AbLeafType == LtCompound)
+	             /* remove a PtFunction rule */
+		     RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
+		  else if (pRP != NULL)
+		     ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+		  }
+	       }
+	    pCurrentRule = pCurrentRule->PrNextPRule;
+	    }
+
+	  if (done)
+	    {
+	      /* update abstract image and redisplay */
+	      AbstractImageUpdated (pDoc);
+	      RedisplayDocViews (pDoc);
+	    }
+
+	  /* get the next abstract box of that element */
+	  if (enclosed)
+	     {
+	     pParent = pAb->AbEnclosing;
+	     pAb = pAb->AbNext;
+	     while (pAb && pAb->AbElement != pEl)
+		pAb = pAb->AbNext;
+	     if (pAb == NULL && pParent)
+		{
+		pAb = pParent;
+		enclosed = FALSE;
+		}
+	     }
+          else
+	     if (pAb->AbPresentationBox || !pAb->AbFirstEnclosed)
+		{
+	        pAb = pAb->AbNext;
+		if (pAb && pAb->AbElement != pEl)
+		   pAb = NULL;
+		}
+	     else
+		{
+		pAb = pAb->AbFirstEnclosed;
+	        pParent = pAb->AbEnclosing;
+	        while (pAb && pAb->AbElement != pEl)
+		   pAb = pAb->AbNext;
+		if (pAb)
+		   enclosed = TRUE;
+		else
+		   {
+		   pAb = pParent->AbNext;
+		   if (pAb->AbElement != pEl)
+		      pAb = NULL;
+		   }
+		}
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   ApplyPRules applies a set of PRules to all abstract boxes concerned by
   the given element type or the given attribute type or the given
   presentation box.
@@ -2598,7 +2743,8 @@ boolean            remove;
   boolean         found;
 
   pDoc = LoadedDocument[doc - 1];
-  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+  selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel,
+				     &firstChar, &lastChar);
   /* eteint la selection courante */
   TtaClearViewSelections ();
   /* do nothing if the document no longer exists */
@@ -2614,61 +2760,48 @@ boolean            remove;
 	{
 	  found = FALSE;
 	  if (elType > 0)
-	    /* new presentation rules are attached to an element type */
+	    /* presentation rules are associated with an element type */
 	    found = (pAb->AbElement->ElTypeNumber == elType &&
-	      pAb->AbElement->ElStructSchema->SsCode == pSS->SsCode);
+	             pAb->AbElement->ElStructSchema->SsCode == pSS->SsCode);
 	  else if (attrType > 0)
 	    {
-	      /* new presentation rules are attached to an attribute type */
+	      /* presentation rules are associated with an attribute type */
 	      pAttr = pAb->AbElement->ElFirstAttr;
 	      while (!found && pAttr != NULL)
 		{
-		  found = (pAttr->AeAttrNum == attrType && pAttr->AeAttrSSchema->SsCode == pSS->SsCode);
-		  pAttr = pAttr->AeNext;
+		  found = (pAttr->AeAttrNum == attrType &&
+			   pAttr->AeAttrSSchema->SsCode == pSS->SsCode);
+		  if (!found)
+		     pAttr = pAttr->AeNext;
 		}
 	    }
 	  else if (presBox > 0)
-	    /* new presentation rules are attached to a presentation box */
-	    found = (pAb->AbPresentationBox && pAb->AbTypeNum == presBox && pAb->AbPSchema == pSS->SsPSchema);
+	    /* presentation rules are associated with a presentation box */
+	    found = (pAb->AbPresentationBox && pAb->AbTypeNum == presBox &&
+		     pAb->AbPSchema == pSS->SsPSchema);
 	  if (found)
 	    {
-	      /* examine each presentation rule */
+	      /* process each presentation rule */
 	      pCurrentRule = pRule;
 	      while (pCurrentRule != NULL)
 		{
-		  /* is the view concerned by the presentation rule ? */
 		  ruleType = pCurrentRule->PrType;
-		  /* note if a rule has been applied */
-		  found = FALSE;
-		  if (pCurrentRule->PrViewNum == 1 || pCurrentRule->PrViewNum == viewSch)
+		  found = FALSE;    /* indicate if a rule has been applied */
+		  /* is the view concerned by the presentation rule ? */
+		  if (pCurrentRule->PrViewNum == 1 ||
+		      pCurrentRule->PrViewNum == viewSch)
 		    {
-		      /* checks if the abstract box is concerned by the new rule */
-		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, pCurrentRule->PrPresFunction, TRUE, &pAttr);
+		      /* checks if the abstract box is concerned by the rule */
+		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType,
+				   pCurrentRule->PrPresFunction, TRUE, &pAttr);
 		      if (pRP == pCurrentRule || remove)
 			{
 			  /* apply a new rule */
 			  found = TRUE;
 			  if (remove && ruleType == PtFunction &&
-			           pAb->AbLeafType == LtCompound)
-			    {
-			      /* remove a PtFunction rule */
-			      if (pCurrentRule->PrPresFunction == FnBackgroundPicture
-				  && pAb->AbPictBackground != NULL)
-				{
-				  TtaFreeMemory ((((PictInfo *) (pAb->AbPictBackground))->PicFileName));
-				  FreePictInfo ((int *) (pAb->AbPictBackground));
-				  pAb->AbPictBackground = NULL;
-				}
-			      else if (pCurrentRule->PrPresFunction == FnPictureMode
-				       && pAb->AbPictBackground != NULL)
-				((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
-			      else if (pCurrentRule->PrPresFunction == FnShowBox)
-				pAb->AbFillBox = FALSE;
-
-			      pAb->AbAspectChange = TRUE;
-			      RedispAbsBox (pAb, pDoc);
-			      /* pDoc->DocViewModifiedAb[view] = pAb; */
-			    }
+			      pAb->AbLeafType == LtCompound)
+			    /* remove a PtFunction rule */
+			    RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
 			  else if (pRP != NULL)
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}
@@ -2686,9 +2819,8 @@ boolean            remove;
 	  /* get the next abstract box */
 	  pAb = NextAbstractBox (pAb);
 	  if (pAb != NULL)
-	    if (presBox == 0 && pAb->AbPresentationBox)
-	      pAb = NextAbstractBox (pAb);
-	    else if (presBox > 0 && !pAb->AbPresentationBox)
+	    if ((presBox == 0 && pAb->AbPresentationBox) ||
+		(presBox > 0  && !pAb->AbPresentationBox))
 	      pAb = NextAbstractBox (pAb);
 	}
     }

@@ -29,11 +29,11 @@
 #include "edit_tv.h"
 
 #include "appli_f.h"
+#include "boxpositions_f.h"
+#include "changepresent_f.h"
 #include "compilmsg_f.h"
 #include "font_f.h"
 #include "memory_f.h"
-#include "changepresent_f.h"
-#include "boxpositions_f.h"
 #include "viewapi_f.h"
 
 extern int          UserErrorCode;
@@ -416,9 +416,14 @@ Document            document;
 	     ((PtrElement) element)->ElFirstPRule = pPres->PrNextPRule;
 	   else
 	     pPreviousPres->PrNextPRule = pPres->PrNextPRule;
+	   pPres->PrNextPRule = NULL;
 #ifndef NODISPLAY
-	   RedisplayDefaultPresentation (document, (PtrElement) element, pPres->PrType,
-					 pPres->PrPresFunction,pPres->PrViewNum);
+	   if (pPres->PrType == PtFunction)
+	      ApplyPRulesElement (pPres, (PtrElement)element,
+				  LoadedDocument[document - 1], TRUE);
+	   else
+	      RedisplayDefaultPresentation (document, (PtrElement) element,
+			pPres->PrType, pPres->PrPresFunction,pPres->PrViewNum);
 #endif
 	   FreePresentRule (pPres);
 	 }
@@ -1209,8 +1214,8 @@ int                 presentationType;
       pPres = ((PtrElement) element)->ElFirstPRule;
       found = FALSE;
       while (pPres != NULL && !found)
-	if ((pPres->PrType == presentationType && func == -1) ||
-	    (pPres->PrType == PtFunction && pPres->PrPresFunction == func))
+	if (((int)(pPres->PrType) == presentationType && func == -1) ||
+	    (pPres->PrType == PtFunction && (int)(pPres->PrPresFunction) == func))
 	  {
 	    pRule = pPres;
 	    found = TRUE;

@@ -142,29 +142,20 @@ PresentationValue   v;
 
 #endif
 {
-   SpecificTarget  elem = (SpecificTarget) t;
+   PtrElement elem = (PtrElement) t;
    SpecificContext ctxt = (SpecificContext) c;
    ElementType type;
    Document doc;
-   PtrSSchema pSS;
-   int elType = 0;
    PtrPRule pRule;
 
    if (ctxt == NULL)
      return(-1);
-
-   doc = ctxt->doc;
-   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
-
    /* The PRule list is directly associated to the element */
-   type = TtaGetElementType(elem);
-   elType = type.ElTypeNum;
-   pRule = ((PtrElement) elem)->ElFirstPRule;
-
+   pRule = elem->ElFirstPRule;
    if (pRule == NULL)
       return (-1);
-
-   ApplyPRules (doc, pSS, elType, 0, 0, pRule, ctxt->destroy);
+   doc = ctxt->doc;
+   ApplyPRulesElement (pRule, elem, LoadedDocument[doc - 1], ctxt->destroy);
    return(0);
 }
 
@@ -173,12 +164,12 @@ PresentationValue   v;
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule  InsertElementPRule (SpecificTarget el, PRuleType type, int extra)
+static PtrPRule  InsertElementPRule (SpecificTarget el, PRuleType type, unsigned int extra)
 #else
 static PtrPRule  InsertElementPRule (el, type, extra)
 SpecificTarget      el;
 PRuleType           type;
-int                 extra;
+unsigned int        extra;
 
 #endif
 {
@@ -255,19 +246,17 @@ int                 extra;
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  RemoveElementPRule (SpecificTarget el, PRuleType type, int extra)
+static void  RemoveElementPRule (SpecificTarget el, PRuleType type, unsigned int extra)
 #else
 static void  RemoveElementPRule (el, type, extra)
 SpecificTarget      el;
 PRuleType           type;
-int                 extra;
+unsigned int        extra;
 
 #endif
 {
     PtrPRule cur, prev;
     Document doc;
-    PtrSSchema pSS;
-    ElementType elType;
     
     prev = NULL;
     cur = ((PtrElement) el)->ElFirstPRule;
@@ -310,9 +299,7 @@ int                 extra;
 
     /* update the presentation */
     doc = TtaGetDocument(el);
-    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
-    elType = TtaGetElementType(el);
-    ApplyPRules (doc, pSS, elType.ElTypeNum, 0, 0, cur, TRUE);
+    ApplyPRulesElement (cur, (PtrElement)el, LoadedDocument[doc -1], TRUE);
 
     /* Free the PRule */
     FreePresentRule(cur);
@@ -325,12 +312,12 @@ int                 extra;
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule SearchElementPRule (SpecificTarget el, int type, int extra)
+static PtrPRule SearchElementPRule (SpecificTarget el, PRuleType type, unsigned int extra)
 #else
 static PtrPRule SearchElementPRule (el, type, extra)
 SpecificTarget      el;
-int                 type;
-int                 extra;
+PRuleType           type;
+unsigned int        extra;
 
 #endif
 {

@@ -75,6 +75,10 @@ extern void ApplyStandardRule ( PtrElement pEl,
                                 PRuleType ruleType,
                                 FunctionType funcType,
                                 int viewSch );
+extern void ApplyPRulesElement ( PtrPRule pRule,
+                                 PtrElement pEl,
+                                 PtrDocument pDoc,
+                                 boolean remove );
 extern void ApplyPRules ( Document doc,
                           PtrSSchema pSS,
                           int elType,
@@ -158,6 +162,10 @@ extern void ApplyStandardRule (/* PtrElement pEl,
                                   PRuleType ruleType,
                                   FunctionType funcType,
                                   int viewSch */);
+extern void ApplyPRulesElement (/* PtrPRule pRule,
+                                   PtrElement pEl,
+                                   PtrDocument pDoc,
+                                   boolean remove */);
 extern void ApplyPRules (/* Document doc,
                             PtrSSchema pSS,
                             int elType,
