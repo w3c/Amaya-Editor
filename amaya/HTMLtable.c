@@ -1783,6 +1783,7 @@ ThotBool DeleteColumn (NotifyElement * event)
 	    {
 	      /* there is a colspan */
 	      colspan = TtaGetAttributeValue (attr);
+	      ChangeColspan (cell, colspan, 1, doc);
 	    }
 	  attr = TtaGetAttribute (cell, attrTypeR);
 	  if (attr)
@@ -2157,43 +2158,36 @@ void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
       curRow = row; i = 0;
       while (curRow && i < rowspan)
 	{
-	  elType = TtaGetElementType (curRow);
-	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
-	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
-			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
-	    /* this is really a row */
+	  i++;
+	  if (curRow == row)
+	    prevCell = cell;
+	  else
 	    {
-	      i++;
-	      if (curRow == row)
-		prevCell = cell;
-	      else
-		{
-		  cHead = colHead;
-		  prevCell = NULL;
-		  do
-		    {
-		      TtaPreviousSibling (&cHead);
-		      if (cHead)
-			prevCell = GetCellFromColumnHead (curRow, cHead,
-							  inMath);
-		    }
-		  while (cHead && !prevCell);
-		}
 	      cHead = colHead;
-	      /* skip the columns covered by the cell with its new colspan */
-	      for (j = 0; j < newspan; j++)
-		TtaNextSibling (&cHead);
-	      /* add new empty cells to fill the space left by reducing the
-		 colspan value */
-	      for (ncol = 0; ncol < oldspan - newspan; ncol++)
+	      prevCell = NULL;
+	      do
 		{
-		  prevCell = AddEmptyCellInRow (curRow, cHead, prevCell, FALSE,
-						doc, inMath, FALSE, TRUE);
-		  TtaNextSibling (&cHead);
+		  TtaPreviousSibling (&cHead);
+		  if (cHead)
+		    prevCell = GetCellFromColumnHead (curRow, cHead,
+						      inMath);
 		}
+	      while (cHead && !prevCell);
+	    }
+	  cHead = colHead;
+	  /* skip the columns covered by the cell with its new colspan */
+	  for (j = 0; j < newspan; j++)
+	    TtaNextSibling (&cHead);
+	  /* add new empty cells to fill the space left by reducing the
+	     colspan value */
+	  for (ncol = 0; ncol < oldspan - newspan; ncol++)
+	    {
+	      prevCell = AddEmptyCellInRow (curRow, cHead, prevCell, FALSE,
+					    doc, inMath, FALSE, TRUE);
+	      TtaNextSibling (&cHead);
 	    }
 	  /* next sibling of current row */
-	  TtaNextSibling (&curRow);
+	  curRow = GetSiblingRow (curRow, FALSE, inMath);
 	}
     }
   SetColExt (cell, newspan, doc, inMath);
@@ -2267,7 +2261,7 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 {
   Element             table, row, previous, nextCell, colHead, curColHead,
                       prevCell, siblingColhead;
-  ElementType         elType, tableType;
+  ElementType         tableType;
   AttributeType       attrType, colspanType;
   Attribute           attr;
   Document            refDoc;
@@ -2328,60 +2322,53 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 	previous = TtaGetLastChild (previous);
       while (row && nrows < newspan)
 	{
-	  elType = TtaGetElementType (row);
-	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
-	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
-			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
-	    /* it's a row (skip comments) */
+	  nrows++; /* count rows */
+	  if (nrows > oldspan)
 	    {
-	      nrows++; /* count rows */
-	      if (nrows > oldspan)
+	      nextCell = GetCellFromColumnHead (row, colHead, inMath);
+	      if (nextCell)
 		{
-		  nextCell = GetCellFromColumnHead (row, colHead, inMath);
-		  if (nextCell)
+		  attr = TtaGetAttribute (nextCell, colspanType);
+		  if (attr)
+		    /* this cell has a colspan attribute */
 		    {
-		      attr = TtaGetAttribute (nextCell, colspanType);
-		      if (attr)
-			/* this cell has a colspan attribute */
-			{
-			  curColspan = TtaGetAttributeValue (attr);
-			  if (curColspan < 1)
-			    curColspan = 1;
-			}
-		      else
+		      curColspan = TtaGetAttributeValue (attr);
+		      if (curColspan < 1)
 			curColspan = 1;
-		      if (curColspan > colspan)
-			/* create empty cells */
+		    }
+		  else
+		    curColspan = 1;
+		  if (curColspan > colspan)
+		    /* create empty cells */
+		    {
+		      curColHead = colHead;
+		      prevCell = nextCell;
+		      for (i = 1; i < curColspan; i++)
 			{
-			  curColHead = colHead;
-			  prevCell = nextCell;
-			  for (i = 1; i < curColspan; i++)
-			    {
-			      TtaNextSibling (&curColHead);
-			      if (i >= colspan)
-				prevCell = AddEmptyCellInRow (row, curColHead,
-				    prevCell, FALSE, doc, inMath, FALSE, TRUE);
-			    }
+			  TtaNextSibling (&curColHead);
+			  if (i >= colspan)
+			    prevCell = AddEmptyCellInRow (row, curColHead, prevCell,
+							  FALSE, doc, inMath, FALSE, TRUE);
 			}
-		      MoveCellContents (nextCell, cell, &previous, doc,inMath);
-		      if (colspan > curColspan)
+		    }
+		  MoveCellContents (nextCell, cell, &previous, doc,inMath);
+		  if (colspan > curColspan)
+		    {
+		      /* merge more cells from that row */
+		      curColHead = colHead;
+		      for (i = curColspan; i < colspan; i++)
 			{
-			  /* merge more cells from that row */
-			  curColHead = colHead;
-			  for (i = curColspan; i < colspan; i++)
-			    {
-			      TtaNextSibling (&curColHead);
-			      nextCell = GetCellFromColumnHead (row,
-							   curColHead, inMath);
-			      if (nextCell)
-				MoveCellContents (nextCell, cell, &previous,
-						  doc, inMath);
-			    }
+			  TtaNextSibling (&curColHead);
+			  nextCell = GetCellFromColumnHead (row,
+							    curColHead, inMath);
+			  if (nextCell)
+			    MoveCellContents (nextCell, cell, &previous,
+					      doc, inMath);
 			}
 		    }
 		}
 	    }
-	  TtaNextSibling (&row);
+	  row = GetSiblingRow (row, FALSE, inMath);
 	}
     }
   else if (newspan < oldspan)
@@ -2389,47 +2376,40 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
     {
       while (row && nrows < oldspan)
 	{
-	  elType = TtaGetElementType (row);
-	  if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
-	      (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
-			  elType.ElTypeNum == MathML_EL_MLABELEDTR)))
-	    /* it's a row (skip comments) */
+	  nrows++;
+	  if (nrows > newspan)
 	    {
-	      nrows++;
-	      if (nrows > newspan)
+	      prevCell = NULL;
+	      siblingColhead = colHead;
+	      TtaPreviousSibling (&siblingColhead);
+	      if (siblingColhead)
 		{
-		  prevCell = NULL;
+		  prevCell = GetCellFromColumnHead (row, siblingColhead,
+						    inMath);
+		  if (prevCell)
+		    before = FALSE;
+		}
+	      if (!prevCell)
+		{
+		  before = TRUE;
 		  siblingColhead = colHead;
-		  TtaPreviousSibling (&siblingColhead);
-		  if (siblingColhead)
+		  while (siblingColhead && !prevCell)
 		    {
-		      prevCell = GetCellFromColumnHead (row, siblingColhead,
+		      TtaNextSibling (&siblingColhead);
+		      prevCell = GetCellFromColumnHead (row,siblingColhead,
 							inMath);
-		      if (prevCell)
-		        before = FALSE;
-		    }
-		  if (!prevCell)
-		    {
-		      before = TRUE;
-		      siblingColhead = colHead;
-		      while (siblingColhead && !prevCell)
-			{
-			  TtaNextSibling (&siblingColhead);
-			  prevCell = GetCellFromColumnHead (row,siblingColhead,
-							    inMath);
-			}
-		    }
-		  curColHead = colHead;
-		  for (i = 0; i < colspan; i++)
-		    {
-		      prevCell = AddEmptyCellInRow (row, curColHead, prevCell,
-					     before, doc, inMath, FALSE, TRUE);
-		      before = FALSE;
-		      TtaNextSibling (&curColHead);
 		    }
 		}
+	      curColHead = colHead;
+	      for (i = 0; i < colspan; i++)
+		{
+		  prevCell = AddEmptyCellInRow (row, curColHead, prevCell,
+						before, doc, inMath, FALSE, TRUE);
+		  before = FALSE;
+		  TtaNextSibling (&curColHead);
+		}
 	    }
-	  TtaNextSibling (&row);
+	  row = GetSiblingRow (row, FALSE, inMath);
 	}
     }
   SetRowExt (cell, newspan, doc, inMath);
