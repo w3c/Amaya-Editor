@@ -26,7 +26,7 @@ and must be removed at the end of the debug */
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
-#include <setjmp.h>
+/* #include <setjmp.h> */
 #include <signal.h>
 #include <math.h>
 

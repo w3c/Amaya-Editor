@@ -486,13 +486,16 @@ int *bg;
     return(NULL);
   rewind (infile);
 
-    png_ptr = (png_struct*) TtaGetMemory (sizeof (png_struct));
+   png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+		(png_voidp)my_png_error, (png_voidp)my_png_error, (png_voidp)my_png_warning);
+
+    
     if (!png_ptr)
       return NULL;
 
-    png_set_error_fn(png_ptr, NULL, (png_voidp)my_png_error, (png_voidp)my_png_warning);
+    /* png_set_error_fn(png_ptr, NULL, (png_voidp)my_png_error, (png_voidp)my_png_warning); */
     
-    info_ptr = (png_info*) TtaGetMemory (sizeof (png_info));
+    info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
       {
 	TtaFreeMemory (png_ptr);
@@ -519,11 +522,13 @@ int *bg;
       }
 
     /* initialize the structures, info first for error handling */
-    png_info_init (info_ptr);
-    png_read_init (png_ptr);   
+    /* png_info_init (info_ptr);
+       png_read_init (png_ptr);  */ 
+    /* png_read_png(png_ptr, info_ptr, png_transforms, NULL);*/
     /* set up the input control for C streams*/
     png_init_io (png_ptr, infile);
     
+    /* png_read_png(png_ptr, info_ptr, png_transforms, NULL); */
     /* read the file information */
     png_read_info (png_ptr, info_ptr);
     

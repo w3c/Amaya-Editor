@@ -22,6 +22,7 @@
  *
  * Last modification: Jan 09 1997
  */
+#define PNG_SETJMP_SUPPORTED
 
 
 #include "thot_gui.h"

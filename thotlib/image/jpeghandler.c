@@ -22,6 +22,7 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
+#include <setjmp.h>
 #include "constmedia.h"
 #include "typemedia.h"
 #include "picture.h"
