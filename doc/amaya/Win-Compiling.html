@@ -30,11 +30,11 @@ not include the compilers (this will be done in the next release).</p>
 To compile Amaya, we have first to compile the libwww project which provides
 different dynamic (.DLL) and static (.LIB) libraries corresponding to
 different protocols (http, ftp, etc.). Then we have to compile lib jpeg,
-libz/libpng and Thot library. This latter must include libjpeg.lib and
-libpng.lib. Finally we can compile Amaya application by including in its
-workspace project C files in the Thot/amaya directory, all the static
-libraries provided by the libwww and LibThotEditor.lib. This release includes
-make files for libwww, thot library and Amaya application.</p>
+libz/libpng and Thot library. Finally we can compile Amaya application by
+including in its workspace project C files in the Thot/amaya directory, all
+the static libraries provided by the libwww, libjpeg.lib, libpng.lib and
+LibThotEditor.lib. This release includes make files for libwww, thot library
+and Amaya application.</p>
 <p style="text-align: justify">
 To execute Amaya, move all the dynamic libraries (www*.dll) provided after
 compiling libwww in the directory containing amaya.exe file</p>
