@@ -700,7 +700,7 @@ int FontPointSize (int size)
 PtrFont LoadFont (char *name)
 {
 #ifdef _I18N_
-  printf ("%s\n", name);
+  /*printf ("%s\n", name);*/
 #endif /* _I18N_ */
 #ifdef _GTK
   GdkFont *result;

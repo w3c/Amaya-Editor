@@ -117,7 +117,7 @@ Amaya/config/en-tradialogue \
 Amaya/config/XKeysymDB \
 Amaya/config/*thot.rc \
 Amaya/config/thot.color \
-Amaya/config/annot*rdf \
+Amaya/config/*rdf \
 Amaya/config/annot.schemas \
 Amaya/cpp/winnt/*.bat \
 Amaya/cpp/*.c \
