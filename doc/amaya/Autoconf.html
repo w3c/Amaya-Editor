@@ -78,16 +78,22 @@ compiled:</p>
       --enable-java           Add Kaffe Java virtual machine
       --enable-plugin         Add Netscape Plug-Ins support</pre>
 <p>
-By default configure disable <strong>Java</strong> (network accesses are done
-using <strong>libWWW</strong>) and disable <strong>Plugins</strong>.  To
-compile <strong>Amaya</strong> with Plugins use the following:</p>
+<strong>Java</strong> (network accesses are done using
+<strong>libWWW</strong>) and <strong>Plugins</strong> are not available by
+default.  To compile <strong>Amaya</strong> with Plugins, use the
+following:</p>
 <pre> ../configure --enable-plugin
  </pre>
 <p>
+To compile <strong>Amaya</strong> with Java support, you need to retrieve the
+Amaya-java source distribution. Then, you need to type the following:</p>
+<pre> ../configure --enable-java
+ </pre>
+
 This creates all the Makefiles needed and generate an Options.orig file
 containing all the variable which can be tuned. For example one can just
 change the CFLAGS values. Be careful, autoconf usually set up the debug flag
-"-g" which tends to generate very big library and binaries.</p>
+"-g" which tends to generate very big library and binaries.
 <p>
 With -g the Target tree can grow up to 100 MBytes while without it it won't
 use more than 20 MBytes.</p>
