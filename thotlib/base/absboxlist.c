@@ -126,7 +126,7 @@ FILE               *outfile;
 
 {
    int                 i, j;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox             pAbEnclosed;
    PtrTextBuffer      adbuff;
    PtrPosRelations      adpos;
    PtrDimRelations      addim;
@@ -474,11 +474,11 @@ FILE               *outfile;
 		  for (j = 1; j <= Indent + 6; j++)
 		     fprintf (outfile, " ");
 		  fprintf (outfile, "\n");
-		  pAb = pAb->AbFirstEnclosed;
-		  while (pAb != NULL)
+		  pAbEnclosed = pAb->AbFirstEnclosed;
+		  while (pAbEnclosed != NULL)
 		    {
-		       WrPav (pAb, Indent + 2, outfile);
-		       pAb = pAb->AbNext;
+		       WrPav (pAbEnclosed, Indent + 2, outfile);
+		       pAbEnclosed = pAbEnclosed->AbNext;
 		    }
 	       }
 	  }
@@ -489,17 +489,13 @@ FILE               *outfile;
 /* |    ListeBoites cree un fichier fname qui contient la liste des     | */
 /* |            relations entre boites dans la fenetre frame.           | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                ListeBoites (Name fname, int frame)
-
 #else  /* __STDC__ */
 void                ListeBoites (fname, frame)
 Name                 fname;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    FILE               *outfile;
@@ -534,21 +530,17 @@ int                 frame;
 /* |    StPav calcule le nombre d'entrees utilisees dans les blocs      | */
 /* |            relation.                                               | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static void         StPav (PtrAbstractBox pAb, L_Relations TabPos, L_Relations TabDimH, L_Relations TabDimV)
-
 #else  /* __STDC__ */
 static void         StPav (pAb, TabPos, TabDimH, TabDimV)
 PtrAbstractBox             pAb;
 L_Relations         TabPos;
 L_Relations         TabDimH;
 L_Relations         TabDimV;
-
 #endif /* __STDC__ */
-
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox             pAbEnclosed;
    int                 i, j;
    PtrPosRelations      adpos;
    PtrDimRelations      addim;
@@ -639,11 +631,11 @@ L_Relations         TabDimV;
 	if (j > 0)
 	   TabDimV[j - 1]++;
 	/* On passe aux boites filles */
-	pAb = pAb->AbFirstEnclosed;
-	while (pAb != NULL)
+	pAbEnclosed = pAb->AbFirstEnclosed;
+	while (pAbEnclosed != NULL)
 	  {
-	     StPav (pAb, TabPos, TabDimH, TabDimV);
-	     pAb = pAb->AbNext;
+	     StPav (pAbEnclosed, TabPos, TabDimH, TabDimV);
+	     pAbEnclosed = pAbEnclosed->AbNext;
 	  }
      }
 }

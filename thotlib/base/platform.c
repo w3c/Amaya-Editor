@@ -1,4 +1,3 @@
-
 /*
    platform.c : basic system functions
  */
@@ -448,7 +447,7 @@ static void         QuitQuitHandler ()
 /* ---------------------------------------------------------------------- */
 /* |    CoreHandler est un handler d'erreur fatale.                     | */
 /* ---------------------------------------------------------------------- */
-static void         CoreHandler ()
+static void         ErrorHandler ()
 {
    /* si on recoit signal sur signal, tant pis. */
 #ifndef NEW_WILLOWS
@@ -467,20 +466,19 @@ static void         CoreHandler ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ThotFin termine l'application Thot.                             | */
+/* |    ThotExit termine l'application Thot.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ThotFin (int result)
+void                ThotExit (int result)
 #else  /* __STDC__ */
-void                ThotFin (result)
+void                ThotExit (result)
 int                 result;
-
 #endif /* __STDC__ */
 {
    fflush (stderr);
    fflush (stdout);
    if (result)
-      CoreHandler ();
+      ErrorHandler ();
    else
       exit (result);
 }
@@ -506,17 +504,17 @@ static void         QuitHandler ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    InitCoreHandler initialise le handler de core dump.             | */
+/* |    InitErrorHandler initialise le handler de core dump.             | */
 /* ---------------------------------------------------------------------- */
-void                InitCoreHandler ()
+void                InitErrorHandler ()
 {
 #ifndef NEW_WILLOWS
-   signal (SIGBUS, CoreHandler);	/* bus error */
-   signal (SIGSEGV, CoreHandler);	/* memory fault */
+   signal (SIGBUS, ErrorHandler);	/* bus error */
+   signal (SIGSEGV, ErrorHandler);	/* memory fault */
 #ifdef SIGABRT
-   signal (SIGABRT, CoreHandler);	/* ? abort */
+   signal (SIGABRT, ErrorHandler);	/* ? abort */
 #else
-   signal (SIGIOT, CoreHandler);	/* ? abort */
+   signal (SIGIOT, ErrorHandler);	/* ? abort */
 #endif
 
    signal (SIGHUP, QuitQuitHandler);	/* kill -1 */

@@ -1,12 +1,9 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    crpages : procedures liees a la creation des pages et des colonnes
    appelees par crimabs pour la creation des images abstraites
    contient quelques procedures du module crimabs
 
-   C. Roisin mars 95
-
+   C. Roisin
  */
 
 
@@ -43,25 +40,18 @@
 
 
 #ifdef __COLPAGE__
-
- /* nouvelle procedure du module crpages, utilisee dans CreePaves */
- /* et CrPavHB */
 /* ---------------------------------------------------------------------- */
 /* |    CopiePav retourne un pave qui est la duplication du pave pAb ;   */
 /* |         tous les champs sont recopies sauf ceux de chainage,         */
 /* |         de position, de dimension et de modification qui sont        */
 /* |         initialises par initpave.                                    */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 static PtrAbstractBox      CopiePav (PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 static PtrAbstractBox      CopiePav (pAb)
 PtrAbstractBox             pAb;
-
 #endif /* __STDC__ */
-
 {
 
    PtrAbstractBox             NouvPave;
@@ -2338,7 +2328,7 @@ boolean            *arret;
 		       {
 			  /* erreur */
 			  printf ("erreur i.a. pave corps page devrait etre cree pour la colonne \n");
-			  ThotFin (1);
+			  ThotExit (1);
 		       }
 		     cas = 4;	/* cas 5 traite en meme temps */
 		  }
@@ -2399,7 +2389,7 @@ boolean            *arret;
 		    {
 		       /* erreur */
 		       printf ("erreur i.a. pave corps page devrait etre cree pour la colonne \n");
-		       ThotFin (1);
+		       ThotExit (1);
 		    }
 		  cas = 9;
 	       }
