@@ -29,7 +29,9 @@ class AmayaTextGraber : public wxTextCtrl
     void LogKeyEvent(const wxChar *name, wxKeyEvent& event) const;
 #endif /* #ifdef __WXDEBUG__ */
     
-    static int m_ThotMask;
+    static int  m_ThotMask;
+	static bool m_Lock;
+
     int m_AmayaFrameId;
     
     DECLARE_EVENT_TABLE()

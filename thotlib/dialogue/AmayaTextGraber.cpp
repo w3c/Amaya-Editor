@@ -38,23 +38,31 @@ BEGIN_EVENT_TABLE(AmayaTextGraber, wxTextCtrl)
     EVT_TEXT(-1,  AmayaTextGraber::OnText)
 END_EVENT_TABLE()
 
-int AmayaTextGraber::m_ThotMask = 0;
+int  AmayaTextGraber::m_ThotMask = 0;
+bool AmayaTextGraber::m_Lock = false;
 
 void AmayaTextGraber::OnText(wxCommandEvent& event)
 {
-  wxString s = GetValue();
-  Clear(); // SetValue( _T("") ) crash on windows ...
+  // to avoid recursive call
+  // because Clear() generate a OnText event
+  if (!m_Lock)
+  {
+	m_Lock = true;
+    wxString s = GetValue();
+    Clear(); // SetValue( _T("") ); // crash on windows ...
 
-  wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
+    wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
 
-  // wxkeycodes are directly mapped to thot keysyms :
-  // no need to convert the wxwindows keycodes
-  wxChar c;
-  c = s.GetChar(0);
-  int thot_keysym = c;
+    // wxkeycodes are directly mapped to thot keysyms :
+    // no need to convert the wxwindows keycodes
+    wxChar c;
+    c = s.GetChar(0);
+    int thot_keysym = c;
 
-  // Call the generic function for key events management
-  ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
+    // Call the generic function for key events management
+    ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
+	m_Lock = false;
+  }
 }
 
 void AmayaTextGraber::OnChar(wxKeyEvent& event)
@@ -89,79 +97,6 @@ void AmayaTextGraber::OnKeyUp(wxKeyEvent& event)
 
 void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
 {
-#ifdef __WXDEBUG__
-  switch ( event.GetKeyCode() )
-    {
-    case WXK_F1:
-      // show current position and text length
-      {
-	long line, column, pos = GetInsertionPoint();
-	PositionToXY(pos, &column, &line);
-
-	wxLogDebug(_T("Current position: %ld\nCurrent line, column: (%ld, %ld)\nNumber of lines: %ld\nCurrent line length: %ld\nTotal text length: %u (%ld)"),
-		   pos,
-		   line, column,
-		   (long) GetNumberOfLines(),
-		   (long) GetLineLength(line),
-		   GetValue().length(),
-		   GetLastPosition());
-
-	long from, to;
-	GetSelection(&from, &to);
-	
-	wxString sel = GetStringSelection();
-	
-	wxLogDebug(_T("Selection: from %ld to %ld."), from, to);
-	wxLogDebug(_T("Selection = '%s' (len = %u)"),
-		   sel.c_str(), sel.length());
-      }
-      break;
-      
-    case WXK_F2:
-      // go to the end
-      SetInsertionPointEnd();
-      break;
-      
-    case WXK_F3:
-      // go to position 10
-      SetInsertionPoint(10);
-      break;
-      
-    case WXK_F5:
-      // insert a blank line
-      WriteText(_T("\n"));
-      break;
-      
-    case WXK_F6:
-      wxLogDebug(_T("IsModified() before SetValue(): %d"),
-		 IsModified());
-      SetValue(_T("SetValue() has been called"));
-      wxLogDebug(_T("IsModified() after SetValue(): %d"),
-		 IsModified());
-      break;
-      
-    case WXK_F7:
-      wxLogDebug(_T("Position 10 should be now visible."));
-      ShowPosition(10);
-      break;
-      
-    case WXK_F8:
-      wxLogDebug(_T("Control has been cleared"));
-      Clear();
-      break;
-      
-    case WXK_F9:
-      WriteText(_T("WriteText() has been called"));
-      break;
-      
-    case WXK_F10:
-      AppendText(_T("AppendText() has been called"));
-      break;
-    }
-  
-  LogKeyEvent( wxT("Key down"), event);
-#endif /* #ifdef __WXDEBUG__ */
-
   // update special keys status
   // convert wx key stats to thot key stats 
   m_ThotMask = 0;
@@ -200,7 +135,7 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
     }
   else if (
          thot_keysym == WXK_F2 	   ||
-         thot_keysym == WXK_F3 	   ||
+         /*thot_keysym == WXK_F3 	   ||
          thot_keysym == WXK_F4 	   ||
          thot_keysym == WXK_F5 	   ||
          thot_keysym == WXK_F6 	   ||
@@ -213,7 +148,7 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
          thot_keysym == WXK_F13    ||
          thot_keysym == WXK_F14    ||
          thot_keysym == WXK_F15    ||
-         thot_keysym == WXK_F16    ||
+         thot_keysym == WXK_F16    ||*/
 	     thot_keysym == WXK_INSERT ||
 	     thot_keysym == WXK_DELETE ||
 	     thot_keysym == WXK_HOME   ||
