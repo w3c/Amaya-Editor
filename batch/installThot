@@ -1,10 +1,11 @@
 #!/bin/sh
 cd ../..
-THOTVERSION=2.0b
+THOTVERSION=2.1a
 THOTDIR=/tahiti/diffusion/opera
-echo "Intallation version " $THOTVERSION
-DIR=/usr/local/applis/thot/$THOTVERSION
 PLATFORMS="solaris2 SUN4 SGI RS6000"
+
+DIR=/afs/.inria.fr/common/usr/local/thot/$THOTVERSION
+echo "Intallation version " $DIR
 mkdir $DIR
 
  mkdir $DIR/config
@@ -60,4 +61,62 @@ do
    cp -p Thot/$MACH/bin/tra $DIR/$MACH/bin/
    cp -p Thot/batch/concatps* $DIR/$MACH/bin/
 done
+DIR=/mnt/thot/$THOTVERSION
+echo "Intallation version " $DIR
+mkdir $DIR
+
+ mkdir $DIR/config
+   cp -p Thot/config/XKeysymDB $DIR/config/
+   cp -p Thot/config/thot.ini $DIR/config/
+   cp -p Thot/config/thot.keyboard $DIR/config/
+   cp -p Thot/config/en-thotdialogue $DIR/config/
+   cp -p Thot/config/en-thotmessage $DIR/config/
+   cp -p Thot/config/en-libdialogue $DIR/config/
+   cp -p Thot/config/en-drawdialogue $DIR/config/
+   cp -p Thot/config/en-inddialogue $DIR/config/
+   cp -p Thot/config/en-corrdialogue $DIR/config/
+   cp -p Thot/config/en-printdialogue $DIR/config/
+   cp -p Thot/config/en-compildialogue $DIR/config/
+   cp -p Thot/config/en-prsdialogue $DIR/config/
+   cp -p Thot/config/en-strdialogue $DIR/config/
+   cp -p Thot/config/en-tradialogue $DIR/config/
+   cp -p Thot/config/fr-thotdialogue $DIR/config/
+   cp -p Thot/config/fr-thotmessage $DIR/config/
+   cp -p Thot/config/fr-libdialogue $DIR/config/
+   cp -p Thot/config/fr-drawdialogue $DIR/config/
+   cp -p Thot/config/fr-inddialogue $DIR/config/
+   cp -p Thot/config/fr-corrdialogue $DIR/config/
+   cp -p Thot/config/fr-printdialogue $DIR/config/
+   cp -p Thot/config/fr-compildialogue $DIR/config/
+   cp -p Thot/config/fr-prsdialogue $DIR/config/
+   cp -p Thot/config/fr-strdialogue $DIR/config/
+   cp -p Thot/config/fr-tradialogue $DIR/config/
+ mkdir $DIR/dicopar
+   cp -p Thot/dicopar/*.ptn $DIR/dicopar/
+   cp -p Thot/dicopar/alphabet $DIR/dicopar/
+   cp -p Thot/dicopar/clavier $DIR/dicopar/
+   cp -p Thot/dicopar/*.dic $DIR/dicopar/
+   cp -p Thot/dicopar/*.tri $DIR/dicopar/
+ mkdir $DIR/schemas
+   cp -p Thot/schemas/* $DIR/schemas/
+ mkdir $DIR/schemasOPERA
+   cp -p Thot/schemasOPERA/* $DIR/schemasOPERA/
+ mkdir $DIR/fonts
+   cp -p Thot/fonts/Families.list $DIR/fonts/
+   cp -p Thot/fonts/fonts.dir $DIR/fonts/
+   cp -p Thot/fonts/icones* $DIR/fonts/
+   cp -p Thot/fonts/iv* $DIR/fonts/
+
+for MACH in $PLATFORMS
+do
+ mkdir $DIR/$MACH
+ mkdir $DIR/$MACH/bin
+   cp -p Thot/$MACH/bin/thot $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/prs $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/str $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/tra $DIR/$MACH/bin/
+   cp -p Thot/batch/concatps* $DIR/$MACH/bin/
+done
+
 echo "Fin installation"

@@ -1,12 +1,12 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=0.95b
+AMAYAVERSION=1.0a
 THOTDIR=/tahiti/diffusion/opera
-echo "Intallation version " $AMAYAVERSION
-DIR=/usr/local/applis/amaya/$AMAYAVERSION
 PLATFORMS="solaris2 SUN4 SGI RS6000"
-mkdir $DIR
 
+DIR=/afs/.inria.fr/common/usr/local/amaya/$AMAYAVERSION
+echo "Intallation version " $DIR
+mkdir $DIR
  mkdir $DIR/config
    cp -p Thot/config/XKeysymDB $DIR/config/
    cp -p Thot/config/thot.ini $DIR/config/
@@ -45,5 +45,50 @@ do
  mkdir $DIR/$MACH/bin
    cp -p Thot/$MACH/bin/amaya $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/dns_daemon $DIR/$MACH/bin/
+done
+
+DIR=/mnt/amaya/$AMAYAVERSION
+echo "Intallation version " $DIR
+mkdir $DIR
+ mkdir $DIR/config
+   cp -p Thot/config/XKeysymDB $DIR/config/
+   cp -p Thot/config/thot.ini $DIR/config/
+   cp -p Thot/config/amaya.keyboard $DIR/config/
+   cp -p Thot/config/en-amayadialogue $DIR/config/
+   cp -p Thot/config/en-amayamsg $DIR/config/
+   cp -p Thot/config/en-libdialogue $DIR/config/
+   cp -p Thot/config/en-transdialogue $DIR/config/
+   cp -p Thot/config/en-corrdialogue $DIR/config/
+   cp -p Thot/config/en-javamsg $DIR/config/
+   cp -p Thot/config/fr-amayadialogue $DIR/config/
+   cp -p Thot/config/fr-amayamsg $DIR/config/
+   cp -p Thot/config/fr-libdialogue $DIR/config/
+   cp -p Thot/config/fr-transdialogue $DIR/config/
+   cp -p Thot/config/fr-corrdialogue $DIR/config/
+   cp -p Thot/config/fr-javamsg $DIR/config/
+   cp -p Thot/config/java.properties $DIR/config/
+ ln -s ../../thot/Current/dicopar $DIR/dicopar
+ mkdir $DIR/amaya
+   cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
+   cp -p Thot/amaya/COPYRIGHT.html $DIR/amaya/
+   cp -p Thot/amaya/HTML.STR $DIR/amaya/
+   cp -p Thot/amaya/HTML.conf $DIR/amaya/
+   cp -p Thot/amaya/HTML.trans $DIR/amaya/
+   cp -p Thot/amaya/HTML.en $DIR/amaya/
+   cp -p Thot/amaya/HTML.fr $DIR/amaya/
+   cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
+   cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
+ mkdir $DIR/classes
+   cp -p Thot/classes/*.zip $DIR/classes/
+ ln -s ../../thot/Current/fonts $DIR/fonts
+
+for MACH in $PLATFORMS
+do
+ mkdir $DIR/$MACH
+ mkdir $DIR/$MACH/bin
+   cp -p Thot/$MACH/bin/amaya $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
+   cp -p Thot/$MACH/bin/dns_daemon $DIR/$MACH/bin/
 done
 echo "Fin installation"

@@ -46,7 +46,6 @@ do
    Thot/dicopar/clavier \
    Thot/$MACH/bin/amaya \
    Thot/$MACH/bin/print \
-   Thot/plugintest/$MACH/*.so \
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \
