@@ -38,6 +38,7 @@
   #include "AmayaWindow.h"
   #include "AmayaPanel.h"
   #include "AmayaAttributePanel.h"
+  #include "AmayaSubPanelManager.h"
   #include "appdialogue_wx.h"
 #endif /* _WX */
 
@@ -1119,8 +1120,9 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
 #ifdef _WX
   /* update the attribute dialog */
-  if (p_dlg)
-    p_dlg->UpdateAttributeList (bufMenuAttr, nbItemAttr, ActiveAttr, bufEventAttr, nbEvent, ActiveEventAttr);
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_dlg,
+							(void*)bufMenuAttr, (void*)nbItemAttr, (void*)ActiveAttr,
+							(void*)bufEventAttr, (void*)nbEvent, (void*)ActiveEventAttr );
 #endif /* _WX */
 
 #ifndef _WX

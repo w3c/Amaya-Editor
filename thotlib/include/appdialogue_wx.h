@@ -46,7 +46,8 @@ extern void TtaSetupPanel( int type,
 
 extern void TtaSwitchPanelButton( Document doc, View view,
 				  int panel_type,
-				  int button_id );
+				  int button_id,
+				  ThotBool value );
 
 extern void TtaRefreshPanelTooltips( int window_id );
 

@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void List_addEnd ( List **me,
                           void *object );
 extern void List_add ( List **me,
@@ -131,7 +130,6 @@ extern char *Annot_ConcatenateBase ( char *base,
                                      char *fragment );
 
 #else /* __STDC__ */
-
 extern void List_addEnd ( List **me,
                             void *object );
 extern void List_add ( List **me,

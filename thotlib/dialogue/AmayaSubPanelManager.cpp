@@ -156,19 +156,6 @@ bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaSubPanelManager
- *      Method:  StateChanged
- * Description:  is called when a registred sub-panel has changed its state, then it's
- *               possible to update other sub-panel sates.
- *--------------------------------------------------------------------------------------
- */
-void AmayaSubPanelManager::StateChanged( AmayaSubPanel * p_panel, unsigned int old_state )
-{
-  
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaSubPanelManager
  *      Method:  DebugSubPanelList
  * Description:  
  *--------------------------------------------------------------------------------------
@@ -183,6 +170,149 @@ void AmayaSubPanelManager::DebugSubPanelList()
       sp_list += wxString::Format(_T("%x "), current);
     }
   wxLogDebug( _T("AmayaSubPanelManager::DebugSubPanelList - @registred_panel_list=[")+sp_list+_T("]") );
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  UnExpand
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
+{
+  wxLogDebug( _T("AmayaSubPanelManager::UnExpand [%x]"), p_panel );
+
+  // do nothing if the content is already unexpanded or if it is floating
+  if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
+    return;
+
+  p_panel->UnExpand();
+  p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  UnExpand
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
+{
+  wxLogDebug( _T("AmayaSubPanelManager::Expand [%x]"), p_panel );
+
+  // do nothing if the content is already expanded or if it is floating
+  if ( !CanChangeState(p_panel, p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
+    return;
+
+  p_panel->Expand();
+  p_panel->ChangeState( p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  DoFloat
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
+{
+  wxLogDebug( _T("AmayaSubPanelManager::DoFloat [%x]"), p_panel );
+
+  // can float ?
+  if ( !CanChangeState(p_panel, p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_FLOATING) )
+    return;
+
+  // - every side-panels must unexpand before showing the unique floating panel
+  // - every side-panels must have floating state on
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == p_panel->GetPanelType() )
+	{
+	  current->ChangeState( current->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
+	  current->UnExpand();
+	}
+    }
+
+  // force the panel to refresh its floating panel
+  p_panel->AssignDataPanelReferences();
+
+  // the panel should be updated because floating state change
+  p_panel->ShouldBeUpdated();
+
+  // ok now float the panel
+  p_panel->DoFloat();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  DoUnfloat
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
+{
+  wxLogDebug( _T("AmayaSubPanelManager::DoUnfloat [%x]"), p_panel );
+
+  // can unfloat ?
+  if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING) )
+    return;
+  
+
+  // besure that the panel has right unfloating state before switching references
+  p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
+  // force the panel to refresh its side-panel
+  p_panel->AssignDataPanelReferences();
+  // the panel should be updated because floating state change
+  p_panel->ShouldBeUpdated();
+
+  // - hide every (unique) floating panel
+  // - restore every side-panels
+  // - every side-panels must have floating state off
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == p_panel->GetPanelType() )
+	{
+	  current->DoUnfloat();
+	  current->ChangeState( current->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
+	  if (current->IsExpanded())
+	    current->Expand();
+	  else
+	    current->UnExpand();
+	}
+    }  
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  SendDataToPanel
+ * Description:  distribute new values to the given panel and all its brothers
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::SendDataToPanel( AmayaSubPanel * p_panel,
+					    void * param1, void * param2, void * param3,
+					    void * param4, void * param5, void * param6 )
+{
+  if (!p_panel)
+    return;
+
+  // send data to each registred panel which have same type as p_panel
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == p_panel->GetPanelType() )
+	{
+	  wxLogDebug( _T("AmayaSubPanelManager::SendDataToPanel [p_panel=%x]"), current );
+	  current->SendDataToPanel( param1, param2, param3, param4, param5, param6 );
+	}
+    }
 }
 
 

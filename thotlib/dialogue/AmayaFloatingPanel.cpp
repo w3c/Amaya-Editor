@@ -5,6 +5,8 @@
 
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanel.h"
+#include "AmayaSubPanelManager.h"
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFloatingPanel
@@ -21,11 +23,15 @@ AmayaFloatingPanel::AmayaFloatingPanel( AmayaSubPanel * p_subpanel
   : wxFrame( p_subpanel, id, _T("AmayaFloatingPanel"), pos, size, style )
     ,m_pPanel(p_subpanel)
 {
-  wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel") );
+  wxString xrc_id = m_pPanel->GetPanelType();
+  wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - id=")+xrc_id );
 
-  m_pPanelContent = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_CONTENT_DETACH")), m_pPanel);
-  m_pPanelContentParent = m_pPanelContent->GetParent();
-  m_pPanelContent->Reparent(this);
+  // load resource, and take only the interesting part
+  wxPanel * p_panel_copy = wxXmlResource::Get()->LoadPanel(this, xrc_id);
+  m_pPanelContentDetach = (wxPanel *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_PANEL_CONTENT_DETACH")), p_panel_copy);
+  //  m_pPanelContentParent = m_pPanelContent->GetParent();
+  m_pPanelContentDetach->Reparent(this);
+  p_panel_copy->Destroy();
   
   // set the frame title
   wxStaticText * p_title_widget = (wxStaticText *)wxWindow::FindWindowById(wxXmlResource::GetXRCID(_T("wxID_LABEL_TITLE")), m_pPanel);
@@ -34,11 +40,10 @@ AmayaFloatingPanel::AmayaFloatingPanel( AmayaSubPanel * p_subpanel
   // insert the subpanel into the frame
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
-  m_pTopSizer->Add( m_pPanelContent, 1, wxALL | wxEXPAND , 0 );
+  m_pTopSizer->Add( m_pPanelContentDetach, 1, wxALL | wxEXPAND , 0 );
   m_pTopSizer->Fit(this);
   
   Layout();
-  SetAutoLayout(true);
 }
 
 /*
@@ -64,10 +69,36 @@ void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
 {
   wxLogDebug(_T("AmayaFloatingPanel - OnClose") );
 
-  m_pPanelContent->Reparent(m_pPanelContentParent);
-  m_pPanel->DoUnfloat();
+  AmayaSubPanelManager::GetInstance()->DoUnfloat( m_pPanel );
+  Hide();
 
-  event.Skip();
+  // do not skip this event, we want to keep this floating window in order to update it
+  //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFloatingPanel
+ *      Method:  Raise
+ * Description:  override the top wxWindows::Raise methode. just show and raise the panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFloatingPanel::Raise()
+{
+  Show();
+  wxWindow::Raise();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFloatingPanel
+ *      Method:  GetPanelContent
+ * Description:  returns the panel content detachable, this content depends on owner panel type
+ *--------------------------------------------------------------------------------------
+ */
+wxPanel * AmayaFloatingPanel::GetPanelContentDetach()
+{
+  return m_pPanelContentDetach;
 }
 
 /*----------------------------------------------------------------------

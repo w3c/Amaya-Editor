@@ -24,8 +24,14 @@ public:
 		   ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaXHTMLPanel();
 
-  void RefreshCheckButtonState( bool * p_checked_array );
+  //void RefreshCheckButtonState( bool * p_checked_array );
   void RefreshToolTips();
+
+ protected:
+  virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
+				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  virtual void AssignDataPanelReferences();
+  virtual void DoUpdate();
 
  protected:
   DECLARE_EVENT_TABLE()

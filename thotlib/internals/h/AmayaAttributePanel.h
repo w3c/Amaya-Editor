@@ -25,8 +25,10 @@ public:
   virtual ~AmayaAttributePanel();
 
   void ForceAttributeUpdate();
-  void UpdateAttributeList( const char * p_attr_list, int nb_attr, const int * p_active_attr,
-			    const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt  );
+
+  /*  void UpdateAttributeList( const char * p_attr_list, int nb_attr, const int * p_active_attr,
+      const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt  );*/
+
   bool IsFreezed();
   void SelectAttribute( int position );
 
@@ -39,6 +41,10 @@ public:
   void OnCancel( wxCommandEvent& event );
   void OnAutoRefresh( wxCommandEvent& event );
 
+ protected:
+  virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
+				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  virtual void AssignDataPanelReferences();
   virtual void DoUpdate();
 
  public:
@@ -60,12 +66,13 @@ public:
   void SetupTextValue( const char * text );
   void SetupEnumValue( const char * enums, int nb_enum, int selected );
   void SetupNumValue( int num );
-  
+
+
  protected:
   wxPanel *           m_pVPanelParent;
   wxSizer *           m_pVPanelSizer;
-
   wxCheckListBox *    m_pAttrList;
+  wxCheckBox *        m_pAutoRefresh;
   wxPanel *           m_pPanel_Lang;
   wxPanel *           m_pPanel_Num;
   wxPanel *           m_pPanel_Text;

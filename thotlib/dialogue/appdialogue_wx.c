@@ -44,6 +44,7 @@
 #include "AmayaPanel.h"
 #include "AmayaSubPanel.h"
 #include "AmayaXHTMLPanel.h"
+#include "AmayaSubPanelManager.h"
 
 /* 
  * In this file there is a list of functions useful
@@ -1162,7 +1163,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
 	    return;
 
 	  /* refresh the subpanel with button stats */
-	  p_subpanel->RefreshCheckButtonState( p_checked_array );
+	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel, (void*)p_checked_array );
 	}
     }
 #endif /* _WX */
@@ -1177,7 +1178,8 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
   ----------------------------------------------------------------------*/
 void TtaSwitchPanelButton( Document doc, View view,
 			   int panel_type,
-			   int button_id )
+			   int button_id,
+			   ThotBool value )
 {
 #ifdef _WX
   int frame_id = -1;
@@ -1205,7 +1207,7 @@ void TtaSwitchPanelButton( Document doc, View view,
 	  if (p_checked_array)
 	    {
 	      bool status = p_checked_array[button_id];
-	      p_checked_array[button_id] = !status;
+	      p_checked_array[button_id] = value;
 	      TtaRefreshPanelButton( doc, view, panel_type );
 	    }
 	}

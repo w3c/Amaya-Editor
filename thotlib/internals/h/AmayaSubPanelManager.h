@@ -27,10 +27,16 @@ class AmayaSubPanelManager
 
   bool RegisterSubPanel( AmayaSubPanel * p_panel );
   bool UnregisterSubPanel( AmayaSubPanel * p_panel );
-  bool CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state );
-  void StateChanged( AmayaSubPanel * p_panel, unsigned int old_state );
+  void SendDataToPanel( AmayaSubPanel * p_panel,
+			void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
+			void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
+  void UnExpand( AmayaSubPanel * p_panel );
+  void Expand( AmayaSubPanel * p_panel );
+  void DoFloat( AmayaSubPanel * p_panel );
+  void DoUnfloat( AmayaSubPanel * p_panel );
 
  protected:
+  bool CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state );
   void DebugSubPanelList();
 
  protected:

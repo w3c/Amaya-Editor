@@ -74,7 +74,8 @@ extern void TtaRefreshPanelButton ( Document doc,
 extern void TtaSwitchPanelButton ( Document doc,
                                    View view,
                                    int panel_type,
-                                   int button_id );
+                                   int button_id,
+                                   ThotBool value );
 extern void TtaSetupPanel ( int panel_type,
                             int window_id,
                             int button_id,
@@ -157,7 +158,8 @@ extern void TtaRefreshPanelButton ( Document doc,
 extern void TtaSwitchPanelButton ( Document doc,
                                      View view,
                                      int panel_type,
-                                     int button_id );
+                                     int button_id,
+                                     ThotBool value );
 extern void TtaSetupPanel ( int panel_type,
                               int window_id,
                               int button_id,

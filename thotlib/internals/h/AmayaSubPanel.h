@@ -9,16 +9,19 @@
 class AmayaFloatingPanel;
 class AmayaNormalWindow;
 class AmayaSubPanelManager;
-
+ 
 /*
  *  Description:  - AmayaSubPanel contains a sub-panel (xhtml, ...)
  *       Author:  Stephane GULLY
  *      Created:  13/09/2004 04:45:34 PM CET
  *     Revision:  none
-*/
+ */
 
 class AmayaSubPanel : public wxPanel
 {
+ public:
+  friend class AmayaSubPanelManager;
+
  public:
   typedef enum
     {
@@ -40,24 +43,32 @@ class AmayaSubPanel : public wxPanel
   virtual ~AmayaSubPanel();
 
   wxString GetPanelType();
+  bool     IsExpanded();
+  bool     IsFloating();
+  bool     IsVisible();
+
+  void ShouldBeUpdated( bool should_update = true );
+  
+  void SetTopAmayaWindow( AmayaNormalWindow * p_parent_window );
+  
+  //virtual void RefreshCheckButtonState( bool * p_checked_array );
+  virtual void RefreshToolTips();
+
+  void Raise();
+
+ protected:
+  virtual void SendDataToPanel( void * param1 = NULL, void * param2 = NULL, void * param3 = NULL,
+				void * param4 = NULL, void * param5 = NULL, void * param6 = NULL );
 
   void UnExpand();
   void Expand();
   void DoFloat();
   void DoUnfloat();
-  int  GetState();
 
-  bool IsExpanded();
-  bool IsFloating();
-  bool IsVisible();
-  void ShouldBeUpdated( bool should_update = true );
+  unsigned int GetState();
+  void ChangeState( unsigned int new_state );
   
-  void SetTopAmayaWindow( AmayaNormalWindow * p_parent_window );
-
-  virtual void RefreshCheckButtonState( bool * p_checked_array );
-  virtual void RefreshToolTips();
-
-  void Raise();
+  wxPanel * GetPanelContentDetach();
 
  protected:
   DECLARE_EVENT_TABLE()
@@ -65,6 +76,7 @@ class AmayaSubPanel : public wxPanel
   void OnDetach( wxCommandEvent& event );
 
   virtual void DoUpdate();
+  virtual void AssignDataPanelReferences();
 
  protected:
   AmayaNormalWindow * m_pParentNWindow;
@@ -74,6 +86,7 @@ class AmayaSubPanel : public wxPanel
   wxString             m_PanelType;
   wxPanel *            m_pPanel;
   wxPanel *            m_pPanelContent;
+  wxPanel *            m_pPanelContentDetach;
   wxPanel *            m_pPanelTitle;
   AmayaFloatingPanel * m_pFloatingPanel;
 

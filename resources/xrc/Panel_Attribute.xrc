@@ -58,22 +58,87 @@
                                 <orient>wxVERTICAL</orient>
                                 <object class="sizeritem">
                                   <object class="wxCheckListBox" name="wxID_CLIST_ATTR">
-                                    <content>
-                                      <item checked="1">href</item>
-                                      <item checked="0">id</item>
-                                      <item checked="0">class</item>
-                                    </content>
+                                    <content/>
                                     <focused>1</focused>
                                   </object>
                                   <option>1</option>
                                   <flag>wxALL|wxEXPAND</flag>
                                   <border>2</border>
-                                  <minsize>30,200</minsize>
+                                  <minsize>40,200</minsize>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxPanel" name="wxID_PANEL_ATTRVALUE">
                                     <object class="wxBoxSizer">
                                       <orient>wxVERTICAL</orient>
+                                      <object class="sizeritem">
+                                        <object class="wxPanel" name="wxID_ATTRIBUTE_LANG">
+                                          <object class="wxBoxSizer">
+                                            <orient>wxVERTICAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxComboBox" name="wxID_ATTR_COMBO_LANG_LIST">
+                                                <content/>
+                                                <style>wxCB_SORT|wxCB_READONLY</style>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxEXPAND</flag>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxStaticText" name="wxID_ATTR_LABEL_LANG_INHER">
+                                                <label>Inherited language: French</label>
+                                              </object>
+                                            </object>
+                                          </object>
+                                          <style>wxTAB_TRAVERSAL</style>
+                                        </object>
+                                        <flag>wxALL|wxEXPAND</flag>
+                                        <border>2</border>
+                                      </object>
+                                      <object class="sizeritem">
+                                        <object class="wxPanel" name="wxID_ATTRIBUTE_TEXT">
+                                          <object class="wxBoxSizer">
+                                            <orient>wxVERTICAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxTextCtrl" name="wxID_ATTR_TEXT_VALUE">
+                                                <value></value>
+                                                <style></style>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxEXPAND</flag>
+                                            </object>
+                                          </object>
+                                          <style>wxTAB_TRAVERSAL</style>
+                                        </object>
+                                        <flag>wxALL|wxEXPAND</flag>
+                                        <border>2</border>
+                                      </object>
+                                      <object class="sizeritem">
+                                        <object class="wxPanel" name="wxID_ATTRIBUTE_ENUM">
+                                          <object class="wxBoxSizer">
+                                            <orient>wxVERTICAL</orient>
+                                          </object>
+                                          <style>wxTAB_TRAVERSAL</style>
+                                        </object>
+                                        <flag>wxALL|wxEXPAND</flag>
+                                        <border>2</border>
+                                      </object>
+                                      <object class="sizeritem">
+                                        <object class="wxPanel" name="wxID_ATTRIBUTE_NUM">
+                                          <object class="wxBoxSizer">
+                                            <orient>wxVERTICAL</orient>
+                                            <object class="sizeritem">
+                                              <object class="wxSpinCtrl" name="wxID_ATTR_NUM_VALUE">
+                                                <value></value>
+                                                <style></style>
+                                              </object>
+                                              <option>0</option>
+                                              <flag>wxEXPAND</flag>
+                                            </object>
+                                          </object>
+                                          <style>wxTAB_TRAVERSAL</style>
+                                        </object>
+                                        <flag>wxALL|wxEXPAND</flag>
+                                        <border>2</border>
+                                      </object>
                                     </object>
                                     <style>wxTAB_TRAVERSAL</style>
                                   </object>

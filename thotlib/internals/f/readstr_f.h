@@ -5,12 +5,10 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern ThotBool ReadStructureSchema ( Name fileName,
                                       PtrSSchema pSS );
 
 #else /* __STDC__ */
-
 extern ThotBool ReadStructureSchema ( Name fileName,
                                         PtrSSchema pSS );
 

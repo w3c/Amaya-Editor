@@ -28,6 +28,7 @@
 #include "AmayaXHTMLPanel.h"
 #include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
+#include "AmayaFloatingPanel.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLPanel, AmayaSubPanel)
 
@@ -44,7 +45,7 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
 
-  m_OffColour = XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
+  m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
 }
 
@@ -72,18 +73,18 @@ void AmayaXHTMLPanel::RefreshToolTips()
 {  
   wxASSERT(m_pParentNWindow);
   const char ** p_tooltip_array = WindowTable[m_pParentNWindow->GetWindowId()].Tooltip_Panel_XHTML;
-  XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
-  XRCCTRL(*this, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H1]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H2]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H3]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_BULLET]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_NL]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_DL]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_IMG]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_LINK]));
-  XRCCTRL(*this, "wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_TABLE]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H1]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H2]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H3]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_BULLET]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_NL]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_DL]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_IMG]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_LINK]));
+  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_TABLE]));
 }
 
 /*
@@ -134,29 +135,69 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaXHTMLPanel
- *      Method:  RefreshCheckButtonState
+ *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
  *--------------------------------------------------------------------------------------
  */
-void AmayaXHTMLPanel::RefreshCheckButtonState( bool * p_checked_array )
+void AmayaXHTMLPanel::SendDataToPanel( void * param1, void * param2, void * param3, void * param4, void * param5, void * param6 )
 {
+  bool * p_checked_array = (bool *)param1;
+
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
 
   Refresh();
   Layout();
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaXHTMLPanel
+ *      Method:  AssignDataPanelReferences
+ * Description:  assign right references depending on floating state
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaXHTMLPanel::AssignDataPanelReferences()
+{
+  if (IsFloating())
+    {
+      m_pPanelContentDetach = XRCCTRL(*m_pFloatingPanel, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+    }
+  else
+    {
+      m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaXHTMLPanel
+ *      Method:  DoUpdate
+ * Description:  force a refresh when the user expand or detach this panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaXHTMLPanel::DoUpdate()
+{
+  AmayaSubPanel::DoUpdate();
+  
+  // force to refresh the strong, emphasis... button states
+  Document doc;
+  View view;
+  TtaGetActiveView( &doc, &view );
+  TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
 }
 
 /*----------------------------------------------------------------------

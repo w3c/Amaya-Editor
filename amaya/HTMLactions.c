@@ -2027,7 +2027,7 @@ void UpdateContextSensitiveMenus (Document doc)
 #ifndef _WX
 	TtaSwitchButton (doc, 1, iI);
 #else /* _WX */
-	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH );
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, newSelInElem );
 #endif /* _WX */	
      }
 
@@ -2049,7 +2049,7 @@ void UpdateContextSensitiveMenus (Document doc)
 #ifndef _WX
 	TtaSwitchButton (doc, 1, iB);
 #else /* _WX */
-	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG );
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, newSelInElem );
 #endif /* _WX */
      }
 
@@ -2173,7 +2173,7 @@ void UpdateContextSensitiveMenus (Document doc)
 #ifndef _WX
 	TtaSwitchButton (doc, 1, iT);
 #else /* _WX */
-	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE );
+	TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, newSelInElem );
 #endif /* _WX */
      }
 

@@ -43,6 +43,9 @@ public:
 		      );
   virtual ~AmayaFloatingPanel();
 
+  void Raise();
+  wxPanel * GetPanelContentDetach();
+
  protected:
   DECLARE_EVENT_TABLE()
   void OnClose( wxCloseEvent& event );
@@ -50,8 +53,7 @@ public:
   wxBoxSizer * m_pTopSizer;
 
   AmayaSubPanel * m_pPanel;
-  wxPanel *       m_pPanelContent;
-  wxWindow *      m_pPanelContentParent;
+  wxPanel *       m_pPanelContentDetach;
 
   wxPanel * m_pPanelTitle;
 
