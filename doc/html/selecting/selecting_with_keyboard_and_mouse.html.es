@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <title>Seleccionar con el Teclado y el Ratón</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -40,7 +40,7 @@ del documento es compleja.</p>
 <p>Por ejemplo, al seleccionar una palabra de esta frase, en la barra de
 estado se mostrará:</p>
 
-<p><samp>text \ p \ div \ body \ html \ Document</samp></p>
+<p><samp>text \ p \ div \ body \ html</samp></p>
 
 <p>lo que significa que lo has elegido es texto contenido en un elemento
 <code>p</code> (que está contenido en un elemento div, que a su vez está
@@ -50,7 +50,7 @@ contenido en el elemento body etc.).</p>
 haciendo clic en la palabra estructura y a continuación pulsando
 <kbd>Escape</kbd> o <kbd>F2</kbd>), en la barra de estado se mostrará</p>
 
-<p><samp>strong \ p \ div \ body \ html \ Document</samp></p>
+<p><samp>strong \ p \ div \ body \ html</samp></p>
 
 <h2>Seleccionar con el ratón</h2>
 <ul>

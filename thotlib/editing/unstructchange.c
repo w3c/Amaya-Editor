@@ -205,10 +205,6 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	     (!before && pElem->ElNext == NULL))
 	   {
 	     pElem = pElem->ElParent;
-	     if (pElem && !isCell &&
-		 TypeHasException (ExcIsCell, pElem->ElTypeNumber,
-				   pElem->ElStructSchema))
-		 pElem = NULL;
 	     if (pElem)
 	       ok = AllowedSibling (pElem, pDoc, pOrig->ElTypeNumber,
 				    pOrig->ElStructSchema, before,
@@ -870,7 +866,6 @@ void PasteCommand ()
 	    for (i = 0; i < NCreatedElements; i++)
 	      if (CreatedElement[i])
 	        {
-		  AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
 		  if (WholeColumnSaved)
 		    {
 		      /* change the value of "info" in the latest cell
@@ -892,6 +887,8 @@ void PasteCommand ()
 		  if (CreatedElement[i]->ElStructSchema == NULL)
 		    /* application has deleted that element */
 		    CreatedElement[i] = NULL;
+		  else
+		    AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
 	      }
 	    /* close the history sequence after applications have possibly
 	       registered more changes to the pasted elements */
