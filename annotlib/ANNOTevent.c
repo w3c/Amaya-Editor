@@ -401,7 +401,7 @@ Document doc;
 	     It'd be nice to keep the annotation open, even if the
 	     doc disappears
 	  */
-	  while (DocumentURLs[i])
+	  /* while (DocumentURLs[i]) */
 	    CloseDocument (i, 1);
 	}
     }
