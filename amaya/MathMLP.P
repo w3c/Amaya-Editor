@@ -412,6 +412,17 @@ BOXES
 		END;
 	END;
 
+ MACTION_S: BEGIN
+	Content: Text 'maction';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
   ATTR_link_simple: BEGIN
         Content: Text ' xml:link=simple';
         Visibility: 0;
@@ -1413,6 +1424,21 @@ RULES
 	CreateBefore(MPHANTOM_S);
 	CreateWith(VerticalLine);
 	Foreground: White;	{****** should be Transparent ****}
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Foreground: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
+
+   MACTION:
+	BEGIN
+	CreateBefore(MACTION_S);
+	CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
 	VertPos: HRef = Previous . HRef;
 	IN Math_Structure_view BEGIN

@@ -453,6 +453,18 @@ RULES
 	create 'mphantom>\12' after;
 	end;
 
+   MACTION:
+	begin
+	create SOT;
+	create 'maction';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'maction>\12' after;
+	end;
+
    TEXT_UNIT :
 	begin
 	end;

@@ -11,6 +11,7 @@ ATTR
    { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
+
    link = simple, extended, locator, group, document;	{ xml:link }
 
 CONST
@@ -23,37 +24,53 @@ STRUCT
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
-   MROW = LIST OF (Construct);
-
-   FencedSeparator = TEXT;
-
+   { Presentation: all presentation constructs }
    Construct (ATTR placeholder = yes_) = CASE OF
+
+		{ ptoken }
 		  MTEXT = TEXT (ATTR entity = yes_);
-		  MROW;
-		  MROOT = BEGIN
-			RootBase = Construct;
-		  	Index = Construct;
-			END;
-		  MSQRT = BEGIN
-			RootBase;
-			END;
+		  MI (ATTR fontstyle = normal, italic;
+			   IntFontstyle = IntNormal, IntItalic) = TEXT;
+		  MN = TEXT;
+		  MO (ATTR fence = true, false;
+			   vertstretch = yes_;
+			   addspace = nospace, spacebefore, spaceafter, both) =
+			TEXT;
+		  MS = TEXT;
+
+		{ petoken}
+		  MSPACE = CONSTANT C_Empty;
+
+		{ plschema }
+		{ pgenschema }
+		  MROW = LIST OF (Construct);
 		  MFRAC = BEGIN
 			Numerator = Construct;
 			Denominator = Construct;
 			END;
+		  MSQRT = BEGIN
+			RootBase;
+			END;
+		  MROOT = BEGIN
+			RootBase = Construct;
+		  	Index = Construct;
+			END;
+		  MSTYLE = LIST OF (Construct);
+		  MERROR = LIST OF (Construct);
+		  MPADDED = LIST OF (Construct);
+		  MPHANTOM = LIST OF (Construct);
 		  MFENCED (ATTR open = TEXT; close = TEXT; separators = TEXT;
-				vertstretch = yes_) =
+				vertstretch;) =
 			BEGIN
 			OpeningFence = SYMBOL with vertstretch = yes_;
 			FencedExpression = LIST OF (Construct)
 					         + (FencedSeparator);
 			ClosingFence = SYMBOL with vertstretch = yes_;
 			END;
-		  MSUBSUP (ATTR vertstretch) = BEGIN
-			Base = Construct;
-		  	Subscript = Construct;
-		  	Superscript = Construct;
-			END;
+		  { MF is for internal use. Exported as MO }
+		  MF (ATTR fence; vertstretch) = TEXT with vertstretch = yes_;
+
+		{ pscrschema }
 		  MSUB (ATTR vertstretch) = BEGIN
 			Base;
 		  	Subscript;
@@ -61,6 +78,11 @@ STRUCT
 		  MSUP (ATTR vertstretch) = BEGIN
 			Base;
 		  	Superscript;
+			END;
+		  MSUBSUP (ATTR vertstretch) = BEGIN
+			Base = Construct;
+		  	Subscript = Construct;
+		  	Superscript = Construct;
 			END;
 		  MUNDER (ATTR vertstretch) = BEGIN
 			UnderOverBase (ATTR horizstretch = yes_) = Construct;
@@ -82,41 +104,41 @@ STRUCT
 						MSubscript = Construct;
 						MSuperscript = Construct;
 						END);
+			{ pscreschema: mprescripts, none }
 			PrescriptPairs = LIST OF (PrescriptPair =
 						BEGIN
 						MSubscript;
 						MSuperscript;
 						END);
 			END;
+
+		{ ptabschema }
 		  MTABLE = BEGIN
 			MTable_head = LIST OF
 				(MColumn_head = CONSTANT MC_Head);
 			MTable_body = LIST OF
 				(MTR = LIST OF (MTD));
 			END;
-		  MI (ATTR fontstyle = normal, italic;
-			   IntFontstyle = IntNormal, IntItalic) = TEXT;
-		  MN = TEXT;
-		  MO (ATTR fence = true, false;
-			   vertstretch;
-			   addspace = nospace, spacebefore, spaceafter, both) =
-			TEXT;
-		  MF (ATTR fence; vertstretch) = TEXT with vertstretch = yes_;
-		  MSPACE = CONSTANT C_Empty;
-		  MS = TEXT;
+
+		{ pactions }
+		  MACTION = LIST OF (Construct);
+
+		{ sep: provision for content tags }
 		  SEP = CONSTANT C_Empty;
-		  MSTYLE = LIST OF (Construct);
-		  MERROR = LIST OF (Construct);
-		  MPADDED = LIST OF (Construct);
-		  MPHANTOM = LIST OF (Construct);
+
 		  END;
 
    MTD (ATTR MRef_column = REFERENCE(MColumn_head)) = BEGIN
-		  CellWrapper = Construct;
-		  END + (MALIGNGROUP, MALIGNMARK);
+	  	CellWrapper = Construct;
+	  	END + (MALIGNGROUP, MALIGNMARK);
 
+   { peschema }
    MALIGNGROUP =  CONSTANT C_Empty;
    MALIGNMARK =   CONSTANT C_Empty;
+
+   { FencedSeparator is for internal use only. It contains a separator
+     in a mfenced expression, according to the separator attribute }
+   FencedSeparator = TEXT;
 
 EXCEPT
 

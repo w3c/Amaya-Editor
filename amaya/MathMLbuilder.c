@@ -242,6 +242,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    /* This table MUST be in alphabetical order */
    {"XMLcomment", SPACE, MathML_EL_XMLcomment},
    {"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
+   {"maction", SPACE, MathML_EL_MACTION},
    {"maligngroup", 'E', MathML_EL_MALIGNGROUP},
    {"malignmark", 'E', MathML_EL_MALIGNMARK},
    {"merror", SPACE, MathML_EL_MERROR},
@@ -647,6 +648,7 @@ Element el;
   if (elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MF ||
       elType.ElTypeNum == MathML_EL_MFENCED ||
+      elType.ElTypeNum == MathML_EL_MACTION ||
       elType.ElTypeNum == MathML_EL_MROOT ||
       elType.ElTypeNum == MathML_EL_MSQRT ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
