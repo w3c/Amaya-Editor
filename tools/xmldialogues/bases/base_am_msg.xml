@@ -2257,6 +2257,7 @@
 	<message xml:lang="fr">Le document sera réanalysé pour prendre en compte le doctype. Les modifications en cours ne pourront être défaites</message>
 	<message xml:lang="it">Creare o cambiare il doctype fa riparsificare il documento. Le modifiche non potranno venire annullate.</message>
 	<message xml:lang="de">Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.</message>
+	<message xml:lang="es">Crear o cambiar el tipo de documento provoca que el documento sea reanalizado. No se desharán las modificaciones pendientes.</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
