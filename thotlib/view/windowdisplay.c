@@ -2123,6 +2123,8 @@ C_points           *controls;
    Pixmap              pat = (Pixmap) 0;
    HPEN                hPen;
    HPEN                hOldPen;
+   HBRUSH              hBrush;
+   HBRUSH              hOldBrush;
    int                 result;
 
    /* allocate the list of points */
@@ -2201,6 +2203,11 @@ C_points           *controls;
          WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawSpline (1)");
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
+      if (pat != (Pixmap)0) {
+         hBrush = CreateSolidBrush (ColorPixel (bg));
+         hOldBrush = SelectObject (TtDisplay, hBrush);
+         Polygon (TtDisplay, points, npoints);
+	  }
       Polyline (TtDisplay, points, npoints);
       FinishDrawing (0, RO, active);
 	  SelectObject (TtDisplay, hOldPen);
