@@ -53,7 +53,7 @@ Document            document;
 
 #endif
 {
-   DocHistoryIndex[(int) doc] = -1;
+   DocHistoryIndex[doc] = -1;
 }
 
 /*----------------------------------------------------------------------

@@ -1149,7 +1149,10 @@ ThotEvent             *ev;
    status = XtAppPending (app_cont);
    if (status != 0)
      {
-       XtAppNextEvent (app_cont, ev);
+       if (status & XtIMXEvent)
+	 XtAppNextEvent (app_cont, ev);
+       else
+	 XtAppProcessEvent (app_cont, XtIMAll);
        return (TRUE);
      }
 #endif /* ! _WINDOWS */

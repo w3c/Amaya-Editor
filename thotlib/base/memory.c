@@ -760,6 +760,8 @@ PtrAttribute        pAttr;
        TtaFreeMemory (pAttr);
 #else
    pAttr->AeNext = PtFree_Attr;
+   pAttr->AeAttrSSchema = NULL;
+   pAttr->AeAttrNum = 0;
    PtFree_Attr = pAttr;
    NbFree_Attr++;
 #endif
