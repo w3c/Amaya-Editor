@@ -519,6 +519,7 @@ char                  *newURL;
 {
    char                tempfile[MAX_LENGTH];
    char                localpath[MAX_LENGTH];
+   char                oldpath[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
    char                imgname[MAX_LENGTH];
    char                url[MAX_LENGTH];
@@ -526,63 +527,124 @@ char                  *newURL;
    int                 buflen;
    AttributeType       attrType;
    ElementType         elType;
-   Attribute           attrSRC;
-   Element             elSRC;
+   Attribute           attr;
+   Element             el;
    LoadedImageDesc    *pImage;
 
 
-   /* save the old document path to search image descriptors */
-   if (IsHTTPPath (DocumentURLs[SavingDocument]))
-     sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
-   else
-     localpath[0] = '\0';
+   /* save the old document path to locate images */
+   strcpy (tempfile, DocumentURLs[SavingDocument]);
+   TtaExtractName (tempfile, oldpath, tempname);
+   strcat (oldpath, DIR_STR);
+   /* path to search image descriptors */
+   sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
 
    /* update the document url */
    TtaFreeMemory (DocumentURLs[SavingDocument]);
    DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
-   /*
-    * change all remote Picture SRC to a local name.
-    * and copy them to the local directory.
-    */
    if (CopyImages)
      {
-       elSRC = TtaGetMainRoot (SavingDocument);
+       el = TtaGetMainRoot (SavingDocument);
+       /* search the BASE element */
+       elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
+       elType.ElTypeNum = HTML_EL_BASE;
+       el = TtaSearchTypedElement (elType, SearchInTree, el);
+       if (el)
+	 {
+	   /* 
+	   ** The document has a BASE element 
+	   ** Get the HREF attribute of the BASE Element 
+	   */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr)
+	     {
+	       /* change the base */
+	       buflen = MAX_LENGTH;
+	       TtaGiveTextAttributeValue (attr, oldpath, &buflen);
+	       if (imgbase[0] != EOS)
+		 {
+		   TtaSetAttributeText (attr, imgbase, el, SavingDocument);
+		   imgbase[0] = EOS;
+		 }
+	       else
+		 {
+		   buf = HTParse (newURL, "", PARSE_ALL);
+		   if (buf)
+		     {
+		       buf = HTSimplify (&buf);
+		       TtaExtractName (buf, tempfile, tempname);
+		       strcat (tempfile, DIR_STR);
+		       TtaSetAttributeText (attr, tempfile, el, SavingDocument);
+		       HT_FREE (buf);
+		     }
+		 }
+	     }
+	 }
+       else
+	 el = TtaGetMainRoot (SavingDocument);
+
+       /* Change all Picture SRC and prepare the saving process */
+       /* 
+	*                       \   newpath=local |  newpath=remote
+	* oldpath                \                |
+	* ------------------------|---------------|------------------
+	*        | old img=remote | .amaya->file  | update descriptor
+	*  local |----------------|---------------|------------------
+	*        | old img=local  | file->file    | add descriptor
+	* ------------------------|---------------|------------------
+	*        | old img=remote | .amaya->file  | update descriptor
+	* remote |----------------|---------------|------------------
+	*        | old img=local  |   xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	* ------------------------|---------------|------------------
+	*/
        attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
        attrType.AttrTypeNum = HTML_ATTR_SRC;
-       TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-       while (elSRC != NULL)
+       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+       while (el != NULL)
 	 {
-	   elType = TtaGetElementType (elSRC);
+	   elType = TtaGetElementType (el);
 	   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	     {
-	       buflen = TtaGetTextAttributeLength (attrSRC);
+	       buflen = TtaGetTextAttributeLength (attr);
 	       buf = (char *) TtaGetMemory (buflen + 2);
 	       if (buf == NULL)
 		 break;
-	       TtaGiveTextAttributeValue (attrSRC, buf, &buflen);
+	       TtaGiveTextAttributeValue (attr, buf, &buflen);
 	       
-	       /* save the new SRC attr */
+	       /* extract the image name */
 	       NormalizeURL (buf, SavingDocument, tempname, imgname);
-	       if (SaveImgsURL[0] != EOS)
+	       /* save the new SRC attr */
+	       if (imgbase[0] != EOS)
 		 {
-		   strcpy (url, SaveImgsURL);
+		   /* absolute name */
+		   strcpy (url, imgbase);
 		   strcat (url, DIR_STR);
 		   strcat (url, imgname);
 		 }
 	       else
+		 /* relative name */
 		 strcpy (url, imgname);
+	       TtaSetAttributeText (attr, url, el, SavingDocument);
 
-	       TtaSetAttributeText (attrSRC, url, elSRC, SavingDocument);
+	       /* mark the image descriptor or copy the file */
 	       if (dst_is_local)
 		 {
 		   /* copy the file to the new location */
-		   if (IsHTTPPath (tempname) || localpath[0] != '\0')
+		   if (IsW3Path (buf) || IsHTTPPath (oldpath))
 		     {
+		       /* it was a remote image */
 		       /* change tempname to the local temporary name */
 		       strcpy (tempname, localpath);
 		       strcat (tempname, imgname);
 		     }
-		   
+		   else
+		     {
+		       /* rebuild the old image path */
+		       strcpy (tempname, oldpath);
+		       strcat (tempname, buf);
+		     }
 		   if (imgbase[0] != EOS)
 		     {
 		       strcpy (tempfile, imgbase);
@@ -599,14 +661,13 @@ char                  *newURL;
 		 }
 	       else
 		 {
-		   /* compute the real path of the image */
+		   /* compute the real new path of the image */
 		   NormalizeURL (url, SavingDocument, tempname, imgname);
-		   if (!IsW3Path (tempname))
-		     /* add the localfile to the images list */
-		     AddLocalImage (tempname, imgname, url, SavingDocument, &pImage);
-		   else if (localpath[0] != '\0')
+		   /* save on a remote server */
+		   if (IsW3Path (tempname) || IsHTTPPath (oldpath))
 		     {
-		       /* search the image descriptor */
+		       /* it was already a remote image */
+		       /* change tempname to the local temporary name */
 		       strcpy (tempfile, localpath);
 		       strcat (tempfile, imgname);
 		       pImage = SearchLoadedImage (tempfile, SavingDocument);
@@ -622,14 +683,17 @@ char                  *newURL;
 		     }
 		   else
 		     {
-		       /* the image was previously local */
-		       AddLoadedImage (imgname, tempname, SavingDocument, &pImage);
-		       pImage->status = IMAGE_MODIFIED;
+		       /* reset the old name */
+		       strcpy (tempfile, oldpath);
+		       strcat (tempfile, imgname);
+		       /* add the localfile to the images list */
+		       AddLocalImage (tempfile, imgname, tempname, SavingDocument, &pImage);
 		     }
+
 		 }
 	       TtaFreeMemory (buf);
 	     }
-	   TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
+	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	 }
      }
 }

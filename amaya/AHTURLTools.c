@@ -331,31 +331,11 @@ char               *url;
 }
 
 /*----------------------------------------------------------------------
-  IsValidNormalizeURL
-  says which URLs may be normalized            
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-boolean             IsValidNormalizeURL (char *path)
-#else  /* __STDC__ */
-boolean             IsValidNormalizeURL (path)
-char               *path;
-
-#endif /* __STDC__ */
-{
-   if (strchr (path, ':') && !strncmp (path, "http:", 5))
-      return (TRUE);
-   else
-      return (FALSE);
-}
-
-
-/*----------------------------------------------------------------------
    NormalizeURL
    normalizes orgName according to a base associated with doc, and
    following the standard URL format rules.
    The function returns the new complete and normalized URL 
-   or file name path (newName) and the name of the document (docName).                 
+   or file name path (newName) and the name of the document (docName).        
    N.B. If the function can't find out what's the docName, it assigns
    the name "noname.html".
   ----------------------------------------------------------------------*/
@@ -397,7 +377,7 @@ char               *docName;
       ** each element which is retrieved. A better way would be to
       ** move this higher up in the function call hierarchy.
     */
-   if (IsValidNormalizeURL (tempname) && doc)
+   if (!IsW3Path (tempname) && doc)
      {
 	length = MAX_LENGTH;
 	/* get the root element    */
