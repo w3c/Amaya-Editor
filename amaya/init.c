@@ -3535,8 +3535,6 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
-   /* if it's a file: url, we remove the protocol, as it
-      is a local file */
 #ifdef _WINDOWS
    sprintf (wTitle, "%s", documentname);
 #endif /* _WINDOWS */
