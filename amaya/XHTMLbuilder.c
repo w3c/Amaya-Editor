@@ -299,7 +299,7 @@ void             XhtmlEntityCreated (int         entityValue,
 	  GetFallbackCharacter (entityValue, buffer, &lang);
 	}
       len = ustrlen (entityName);
-      bufName[0] = (char) 128;
+      bufName[0] = (char) START_ENTITY;
       ustrncpy (&bufName[1], entityName, len);
       bufName[len+1] = ';';
       bufName[len+2] = WC_EOS;
@@ -330,8 +330,6 @@ void             XhtmlEntityCreated (int         entityValue,
 	  attrType.AttrTypeNum = HTML_ATTR_EntityName;
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (elLeaf, attr, context->doc);
-	  if (len > MAX_ENTITY_LENGTH -3)
-	    len = MAX_ENTITY_LENGTH -3;
 	  TtaSetAttributeText (attr, bufName, elLeaf, context->doc);
 	}
       context->lastElement = elLeaf;

@@ -801,12 +801,12 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
        TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
        len = usprintf (buffer, "%d", (int) wcharRead);
        i = 0;
-       bufName[i++] = (char) 128;
+       bufName[i++] = (char) START_ENTITY;
        bufName[i++] = '#';
        for (j = 0; j < len; j++)
 	 bufName[i++] = buffer[j];
-       buffer[i++] = ';';
-       buffer[i] = WC_EOS;
+       bufName[i++] = ';';
+       bufName[i] = WC_EOS;
        TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
      }
 }
@@ -2320,7 +2320,6 @@ static void         EndOfXmlAttributeValue (CHAR_T *attrValue)
 static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 {
 
-  /* CHAR_T         msgBuffer[MaxMsgLength]; */
    unsigned char *buffer;
    unsigned char *srcbuf;
    wchar_t        wcharRead;
@@ -2329,21 +2328,22 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
    int            i = 0, j = 0;
    int            length;
    CHAR_T         tmpbuf[10];
-   int            tmplen, k;
-   ThotBool       isSupported;
+   int            tmplen;
+   int            k, l;
+   CHAR_T        *entityName;
+   int            entityValue;	
+   ThotBool       found;
 
    if (lastMappedAttr != NULL  || currentAttribute != NULL) 
      {
        if (currentParserCtxt != NULL)
 	 {
-	   /* Actually, Amaya supports only the ISO-LATIN characters
-	      in the attribute values */
 	   length = ustrlen (attrValue);
 	   buffer = TtaAllocString (2*length + 1);
 	   buffer[j] = WC_EOS;
-	   isSupported = TRUE;
+	   entityName = TtaAllocString (length + 1);
 
-	   while (i < length && isSupported)
+	   while (i < length)
 	     {
 	       srcbuf = (unsigned char *) &attrValue[i];
 	       nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
@@ -2354,42 +2354,71 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 		 {
 		   /* It's an ISO-Latin1 character */
 		   charRead = (char) wcharRead;
-		   buffer[j++] = charRead;
+		   if (charRead == '&')
+		     {
+		       /* Maybe it is the beginning of an entity */
+		       l = 0;
+		       for (k = i; k < length; k++)
+			 {
+			   if (attrValue[k] == '&')
+			     {
+			       /* An '&' inside an other '&' ?? We suppose */
+			       /* the first one don't belongs to an entity */
+			       k = length;
+			       buffer [j++] = (char) START_ENTITY;
+			     }
+			   else if (attrValue[k] == ';')
+			     {
+			       /* End of the entity */
+			       entityName[l] = WC_EOS;
+			       found = MapXMLEntity (currentParserCtxt->XMLtype,
+						     entityName, &entityValue);
+			       if (found && entityValue <= 255)
+				 {
+				   /* It is an ISO latin1 character */
+				   buffer [j++] = (CHAR_T) entityValue;
+				   i = k + 1;
+				 }
+			       else
+				 {
+				   buffer [j++] = (char) START_ENTITY;
+				 }
+			     }
+			   else
+			     entityName[l++] = attrValue[k];
+			 }
+		     }
+		   else
+		     buffer[j++] = charRead;
 		 }
 	       else
 		 {
-		   /* It's not ISO-Latin1 character */
+		   /* It's not an ISO-Latin1 character */
 		   tmplen = usprintf (tmpbuf, "%d", (int) wcharRead);
-		   buffer[j++] = (char) 128;
+		   buffer[j++] = (char) START_ENTITY;
 		   buffer[j++] = '#';
 		   for (k = 0; k < tmplen; k++)
 		       buffer[j++] = tmpbuf[k];
 		   buffer[j++] = ';';
-		   /*
-		   usprintf (msgBuffer, TEXT("Some characters are not supported in the value of the attribute : %s"), attrName);
-		   XmlParseError (errorCharacterNotSupported, msgBuffer, 0);
-		   isSupported = FALSE;
-		   */
 		 }
 	     }
 
-	   if (isSupported)
-	     {
-	       if (buffer[0] != WC_EOS)
-		 buffer[j] = WC_EOS; 
-	       if (XMLSpaceAttribute)
-		 XmlWhiteSpaceInStack (buffer);
-	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-		 EndOfHTMLAttributeValue (buffer, lastMappedAttr,
-					  currentAttribute, lastAttrElement,
-					  UnknownAttr, &XMLcontext, TRUE);
-	       else
-		 EndOfXmlAttributeValue (buffer);
-	     }
+	   if (buffer[0] != WC_EOS)
+	     buffer[j] = WC_EOS; 
+	   if (XMLSpaceAttribute)
+	     XmlWhiteSpaceInStack (buffer);
+	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	     EndOfHTMLAttributeValue (buffer, lastMappedAttr,
+				      currentAttribute, lastAttrElement,
+				      UnknownAttr, &XMLcontext, TRUE);
+	   else
+	     EndOfXmlAttributeValue (buffer);
+
 	   TtaFreeMemory (buffer);
+	   TtaFreeMemory (entityName);
 	 }
      }
-
+   
    currentAttribute = NULL;
    HTMLStyleAttribute = FALSE;
    XMLSpaceAttribute = FALSE;

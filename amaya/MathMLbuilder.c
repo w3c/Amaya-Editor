@@ -332,7 +332,7 @@ void  MathMLEntityCreatedWithExpat (int         entityValue,
       len = ustrlen (entityName);
       if (len > MAX_ENTITY_LENGTH -3)
 	len = MAX_ENTITY_LENGTH -3;
-      bufName[0] = (char) 128;
+      bufName[0] = (char) START_ENTITY;
       ustrncpy (&bufName[1], entityName, len);
       bufName[len+1] = ';';
       bufName[len+2] = WC_EOS;
