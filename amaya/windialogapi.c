@@ -158,7 +158,6 @@ static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
 static ThotBool     upper_lower = FALSE;
-static ThotBool     IdApplyToSel;
 
 static OPENFILENAME OpenFileName;
 static CHAR_T*      szFilter;
@@ -3505,63 +3504,84 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    switch (msg)
-      {
-      case WM_INITDIALOG:
-	MakeIDHwnd = hwnDlg;
-	SetWindowText (hwnDlg, TEXT("ID Handler menu"));
-	SetDlgItemText (hwnDlg, IDC_IDELEMNAME, TEXT(""));
-	SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
-		       TtaGetMessage (LIB, TMSG_DONE));
-	CheckDlgButton (hwnDlg, IDC_IDAPPLYTOSEL, 
-			 (IdApplyToSel) ? BST_CHECKED : BST_UNCHECKED);
-	break;
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      MakeIDHwnd = hwnDlg;
+      /* init the dialog's text */
+      SetWindowText (hwnDlg, TEXT("ID Handler menu"));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
+		     TtaGetMessage (LIB, TMSG_DONE));
+      /* set up/clear the other options */
+      /* elem name */
+      SetDlgItemText (hwnDlg, IDC_IDELEMNAME, TEXT(""));
+      /* status bar */
+      SetDlgItemText (hwnDlg, IDC_IDSTATUS, TEXT(""));
+      /* radio buttons */
+      if (IdApplyToSelection)
+	CheckRadioButton (hwnDlg, IDC_IDAPPLYTOSEL, 
+			  IDC_IDAPPLYTOSEL, IDC_APPLYTODOC);
+      else
+	CheckRadioButton (hwnDlg, IDC_IDAPPLYTODOC, 
+			  IDC_IDAPPLYTOSEL, IDC_APPLYTODOC);
+      break;
 
-      case WM_CLOSE:
-      case WM_DESTROY:
-	MakeIDHwnd = NULL;
-	EndDialog (hwnDlg, ID_DONE);
-	break;
+    case WM_CLOSE:
+    case WM_DESTROY:
+      MakeIDHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+      
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+	  switch (LOWORD (wParam))
+	    {
+	    case IDC_IDELEMNAME:
+	      GetDlgItemText (hwnDlg, IDC_IDELEMNAME, szBuffer,
+			      MAX_LENGTH - 1);
+	      szBuffer[MAX_LENGTH - 1] = EOS;
+	      ThotCallback (BaseImage + mElemName, STRING_DATA, szBuffer);
+	      break;
+	    }
+	}
+      
+      switch (LOWORD (wParam))
+	{
+	  /* radio buttons */
+	case IDC_IDAPPLYTODOC:
+	  ThotCallback (BaseDialog + mIdUseSelection, INTEGER_DATA, 
+			(CHAR_T *) 0);
+	  break;
 
-      case WM_COMMAND:
-	if (HIWORD (wParam) == EN_UPDATE)
-	  {
-	    switch (LOWORD (wParam))
-	      {
-	      case IDC_IDELEMNAME:
-		GetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemName, 
-				sizeof (IdElemName) - 1);
-		IdElemName[MAX_LENGTH -1] = EOS;
-		break;
-	      }
-	  }
-
-	switch (LOWORD (wParam))
-	  {
-	    /* toggle buttons */
-	  case IDC_IDAPPLYTOSEL:
-	    IdApplyToSel = !IdApplyToSel;
-	    break;
-
-	    /* action buttons */
-	  case ID_CREATEID:
-		ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 1);
-	    break;
-	    
-	  case ID_REMOVEID:
-		ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 2);
-	    break;
-	    
-	  case ID_DONE:
-	    MakeIDHwnd = NULL;
-	    EndDialog (hwnDlg, ID_DONE);
-	    break;
-	  }
-	break;
-	
-      default: return FALSE;
-      }
-    return TRUE;
+	case IDC_IDAPPLYTOSEL:
+	  ThotCallback (BaseDialog + mIdUseSelection, INTEGER_DATA, 
+			(CHAR_T *) 1);
+	  break;
+	  
+	  /* action buttons */
+	case ID_CREATEID:
+	  ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 1);
+	  /* update the status bar with the result of the operation */
+	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, DialogueLang);
+	  break;
+	  
+	case ID_REMOVEID:
+	  ThotCallback (BaseDialog + MakeIdMenu, INTEGER_DATA, (CHAR_T *) 2);
+	  /* update the status bar with the result of the operation */
+	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, DialogueLang);
+	  break;
+	  
+	case ID_DONE:
+	  MakeIDHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+      
+    default: return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -4204,7 +4224,7 @@ STRING image_location;
 }
 
 /*-----------------------------------------------------------------------
- CreateBackgroundImageDlgWindow
+ CreateMakeIDDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 void CreateMakeIDDlgWindow (ThotWindow parent)
@@ -4213,6 +4233,9 @@ void CreateMakeIDDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {
+  /* we only use one such dialog at the time */
+  if (MakeIDHwnd)
+    EndDialog (hwnDlg, ID_DONE);
   DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), parent, (DLGPROC) MakeIDDlgProc);
 }
 #endif /* _WINDOWS */

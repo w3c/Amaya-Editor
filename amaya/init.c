@@ -4314,18 +4314,30 @@ CHAR_T*             data;
 	 case 1:
 	   CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
 				    (IdApplyToSelection) ? TRUE: FALSE);
+#ifndef _WINDOWS
+	   /* and show the status */
+	   TtaNewLabel (BaseDialog + mIdStatus,
+			BaseDialog + MakeIdMenu,
+			IdStatus);
+#endif /* _WINDOWS */
 	   break;
 	 case 2:
 	   CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
 				    (IdApplyToSelection) ? TRUE: FALSE);
+#ifndef _WINDOWS
+	   /* and show the status */
+	   TtaNewLabel (BaseDialog + mIdStatus,
+			BaseDialog + MakeIdMenu,
+			IdStatus);
+#endif /* _WINDOWS */
 	   break;
 	 }
        break;
      case mElemName:
        ustrncpy (IdElemName, data, MAX_LENGTH);
-       IdElemName[MAX_LENGTH -1] = EOS;
+       IdElemName[MAX_LENGTH - 1] = EOS;
        break;
-     case mUseSelection:
+     case mIdUseSelection:
        IdApplyToSelection = val;
        break;
      }
@@ -4947,17 +4959,18 @@ View                view;
 
   /* initialize the global variables */
   IdElemName[0] = EOS;
+  IdStatus[0] = EOS;
   IdDoc = doc;
 
   /* Create the dialogue form */
 #ifndef _WINDOWS
   i = 0;
-  strcpy (&s[i], TEXT("Add id"));
+  strcpy (&s[i], TEXT("Add ID"));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Remove id"));
+  strcpy (&s[i], TEXT("Remove ID"));
   TtaNewSheet (BaseDialog + MakeIdMenu,
 	       TtaGetViewFrame (doc, view),
-	       TEXT("Create/Remove ID attributes"),
+	       TEXT("ID attributes"),
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
 		  BaseDialog + MakeIdMenu,
@@ -4965,10 +4978,11 @@ View                view;
 		  10,
 		  1,
 		  TRUE);
+  /* apply operation in */
   strcpy (s, "TIn the whole document");
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("TWithin selection"));
-  TtaNewSubmenu (BaseDialog + mUseSelection,
+  TtaNewSubmenu (BaseDialog + mIdUseSelection,
 		 BaseDialog + MakeIdMenu,
 		 0,
 		 TEXT("Apply operation"),
@@ -4976,7 +4990,12 @@ View                view;
 		 s,
 		 NULL,
 		 TRUE);
-  TtaSetMenuForm (BaseDialog + mUseSelection, IdApplyToSelection);
+  /* status label */
+  TtaNewLabel (BaseDialog + mIdStatus,
+	       BaseDialog + MakeIdMenu,
+	       " ");
+  /* select the current radio button */
+  TtaSetMenuForm (BaseDialog + mIdUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
 #else
