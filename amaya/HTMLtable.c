@@ -2011,15 +2011,16 @@ void CellPasted (NotifyElement * event)
      command (only the first reinserted cell has to create a ColumnHead)
      See function RemoveColumn above */
   if (event->info == 4)
-    /* undoing the deletion of the last cell in a "delete column"
-       command. Regenerate the corresponding ColumnHead and link the
-       restored cell with that ColumnHead, but do not generate empty
-       cells in other rows */
+    /* undoing the deletion of the last cell in a "delete column" command,
+       or pasting the first cell in a "paste column" command.
+       Regenerate the corresponding ColumnHead and link the restored cell
+       with that ColumnHead, but do not generate empty cells in other rows */
     NewCell (cell, doc, TRUE, FALSE, FALSE);
   else if (event->info == 3)
     {
-      /* undoing the deletion of any other cell in a "delete column"
-	 command. Link the restored cell with the corresponding ColumnHead*/
+      /* undoing the deletion of any other cell in a "delete column" command,
+	 or pasting any other cell.
+	 Link the restored cell with the corresponding ColumnHead */
       elType = TtaGetElementType (cell);
       inMath = TtaSameSSchemas (elType.ElSSchema,
 				TtaGetSSchema ("MathML", doc));
@@ -2659,10 +2660,14 @@ void CopyCell (Element cell, Document doc, ThotBool inRow)
 void NextCellInColumn (Element* cell, Element* row, Element colHead,
 		       Document doc, ThotBool* fake)
 {
-  Element            nextCell, table, block, nextBlock, parent;
-  ElementType        elType, blockType;
-  int                rowType;
-  ThotBool           inMath;
+  Element             nextCell, table, block, nextBlock, parent;
+  ElementType         elType, blockType;
+  Attribute           attr;
+  AttributeType       attrType;
+  int                 rowType;
+  Document            refDoc;
+  char                name[50];
+  ThotBool            inMath;
 
   nextCell = NULL;
   *fake = FALSE;
@@ -2768,6 +2773,7 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
 	/* we have found a row. Get the cell in that row that is linked to
 	   the given column head */
 	{
+	  elType = TtaGetElementType (colHead);
 	  nextCell = GetCellFromColumnHead (*row, colHead, inMath);
 	  if (!nextCell)
 	    /* there is no cell at that position in the table */
@@ -2779,6 +2785,20 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
 		elType.ElTypeNum = HTML_EL_Data_cell;
 	      /* generate an empty cell */
 	      nextCell = TtaNewTree (doc, elType, "");
+	    }
+	  else
+	    /* there is a cell in the table */
+	    {
+	      /* if this cell has a rowspan attribute, return the row
+		 corresponding to the bottom of the cell */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      if (inMath)
+		attrType.AttrTypeNum = MathML_ATTR_MRowExt;
+	      else
+		attrType.AttrTypeNum = HTML_ATTR_RowExt;
+	      attr = TtaGetAttribute (nextCell, attrType);
+	      if (attr)
+		TtaGiveReferenceAttributeValue (attr, row, name, &refDoc);
 	    }
 	}
     }

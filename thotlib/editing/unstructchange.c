@@ -161,10 +161,10 @@ static void NotifyHExtension (PtrElement pCell, Document doc)
 		    {
 		      if (pAttr->AeAttrValue > 1)
 			{
-			  pAttr->AeAttrValue++;
 			  AddAttrEditOpInHistory (pAttr, pCell,
 						  LoadedDocument[doc -1],
 						  TRUE, TRUE);
+			  pAttr->AeAttrValue++;
 			}
 		      /* notify .POST */
 		      CallEventAttribute (&notifyAttr, FALSE);
@@ -1010,7 +1010,6 @@ void PasteCommand ()
 		}
 	      else
 		{
-		  before = FALSE;
 		  if (pasteOrig && pasteOrig->ElNext)
 		    pasteOrig = pasteOrig->ElNext;
 		  else
