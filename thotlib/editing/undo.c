@@ -89,43 +89,6 @@ static void UpdateHistoryLength (diff, pDoc)
 }
 
 /*----------------------------------------------------------------------
-   FreeSavedElementsHist
-   free the saved elements associated with editing operation editOp
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void FreeSavedElementsHist (PtrEditOperation editOp, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void FreeSavedElementsHist (editOp, pDoc)
-PtrEditOperation editOp;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
-{
-   PtrElement	pEl;
-
-   pEl = editOp->EoSavedElement;
-   if (pEl)
-      {
-      /* if the saved selection is in the freed element, cancel it */
-      if (editOp->EoFirstSelectedEl)
-	 if (ElemIsWithinSubtree (editOp->EoFirstSelectedEl, pEl))
-	    {
-	    editOp->EoFirstSelectedEl = NULL;
-	    editOp->EoLastSelectedEl = NULL;
-	    }
-      if (editOp->EoLastSelectedEl)
-	 if (ElemIsWithinSubtree (editOp->EoLastSelectedEl, pEl))
-	    {
-	    editOp->EoFirstSelectedEl = NULL;
-	    editOp->EoLastSelectedEl = NULL;
-	    }
-      /* free the saved element */
-      DeleteElement (&pEl, pDoc);
-      }
-   editOp->EoSavedElement = NULL;
-}
-
-/*----------------------------------------------------------------------
    CancelAnEdit
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
@@ -808,8 +771,8 @@ View                view;
             TtaDeleteTree ((Element)pEl, doc);
 	    /* tell the application that an element has been removed */
 	    CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+	    pDoc->DocLastEdit->EoCreatedElement = NULL;
 	    }
-	 pDoc->DocLastEdit->EoCreatedElement;
 
          /* insert the saved element in the abstract tree */
          if (pDoc->DocLastEdit->EoSavedElement)
@@ -824,8 +787,8 @@ View                view;
             /* send event ElemPaste.Post to the application */
             NotifySubTree (TteElemPaste, pDoc,
 			   pDoc->DocLastEdit->EoSavedElement, 0);
+            pDoc->DocLastEdit->EoSavedElement = NULL;
             }
-         pDoc->DocLastEdit->EoSavedElement = NULL;
 	 }
    
       /* the most recent editing operation in the history has been undone.
