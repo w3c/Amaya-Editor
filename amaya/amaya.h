@@ -38,14 +38,12 @@
 
 #define HTAppName     TEXT ("amaya")
 #define HTAppVersion  TEXT ("V2.5")
-#define HTAppDate     TEXT ("17 Dec 1999")
+#define HTAppDate     TEXT (" ")
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
-
 #define CUS_URL_STR   TEXT ("/")
 #define CUS_URL_SEP   TEXT ('/')
-
 #define WC_URL_STR    TEXT ("/")
 #define WC_URL_SEP    TEXT ('/')
 

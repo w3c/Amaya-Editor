@@ -304,17 +304,16 @@ int document;
   AmayaLoadHTMLDocument : Load an HTML Document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int AmayaLoadHTMLDocument (char *URL, int document)
+int AmayaLoadHTMLDocument (char *URL, int doc)
 #else
-int AmayaLoadHTMLDocument (URL, document)
+int AmayaLoadHTMLDocument (URL, doc)
 char *URL;
-int document;
+int doc;
 #endif
 {
-    Document res;
+  Document res;
     
-    res = GetHTMLDocument (URL, NULL, document, document, CE_ABSOLUTE, TRUE, NULL, NULL);
-
-    return((int) res);
+  res = GetHTMLDocument (URL, NULL, doc, doc, CE_ABSOLUTE, TRUE, NULL, NULL);
+  return((int) res);
 }
 #endif /* AMAYA_JAVA */

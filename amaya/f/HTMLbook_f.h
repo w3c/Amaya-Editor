@@ -23,7 +23,6 @@ extern void GetIncludedDocuments_callback ( int newdoc,
                                             STRING outputfile,
                                             STRING content_type,
                                             void * context );
-extern void MakeBook_callback ( Document document );
 extern void MakeBook ( Document document,
                        View view );
 
@@ -46,7 +45,6 @@ extern void GetIncludedDocuments_callback (/* int newdoc,
                                               STRING outputfile,
                                               STRING content_type,
                                               void * context */);
-extern void MakeBook_callback (/* Document document */);
 extern void MakeBook (/* Document document,
                          View view */);
 

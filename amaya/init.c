@@ -482,7 +482,6 @@ Document            document;
 {
   if (FilesLoading[document] != 0)
     FilesLoading[document]--;
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (FilesLoading[document] == 0)
     /* The last object associated to the document has been loaded */
     {
@@ -497,7 +496,6 @@ Document            document;
 	}
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -510,15 +508,11 @@ void                ActiveTransfer (document)
 Document            doc;
 #endif
 {
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-#endif
   FilesLoading[document] = 1;
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
     TtaChangeButton (document, 1, iStop, stopR, TRUE);
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -531,17 +525,19 @@ void                SetStopButton (document)
 Document            doc;
 #endif
 {
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-  if (DocNetworkStatus[document] != AMAYA_NET_ACTIVE)
-    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-#endif
-  if (FilesLoading[document] == 0)
-    FilesLoading[document] = 1;
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+  if (document == 0)
+    return;
+  else if (document != DocBook)
+    {
+      if (DocNetworkStatus[document] != AMAYA_NET_ACTIVE)
+	DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+      if (FilesLoading[document] == 0)
+	FilesLoading[document] = 1;
+    }
+
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
     TtaChangeButton (document, 1, iStop, stopR, TRUE);
-#endif
 }
 
 
@@ -930,22 +926,6 @@ Document            doc;
 	     }
 	 }
      }
-}
-/*----------------------------------------------------------------------
-   ActiveMakeBook initialize the current transfer
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ActiveMakeBook (Document document)
-#else
-void                ActiveMakeBook (document)
-Document            doc;
-#endif
-{
-  DocBook = document;
-  IncludedDocument = 0;
-  if (TtaGetViewFrame (document, 1) != 0)
-    /* this document is displayed */
-    TtaChangeButton (document, 1, 1 , stopR, TRUE);
 }
 
 
@@ -3399,7 +3379,6 @@ ClickEvent          CE_event;
 ThotBool	    history;
 TTcbf              *cbf;
 void               *ctx_cbf;
-
 #endif
 {
    Document            newdoc;

@@ -589,7 +589,7 @@ ClickEvent          method;
 
    if (!url)
       return;
-   if (*url == '\0')
+   if (*url == EOS)
       return;
    /* avoid storing POST forms */
    if (method == CE_FORM_POST)

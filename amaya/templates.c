@@ -46,16 +46,11 @@ View view;
 #endif /* __STDC__ */
 
 {
-   STRING    URLform;
- //  Document  templateSelect;
+  STRING    url;
 
-   URLform = TtaGetEnvString ("TEMPLATE_URL");
-   if (URLform != NULL)
-     {
-    /*  templateSelect = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);*/
-       doc = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
-       /* SetBrowserEditor(doc); */ 
-     }
+  url = TtaGetEnvString ("TEMPLATE_URL");
+  if (url)
+    GetHTMLDocument (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 }
 /*----------------------------------------------------------------------
    OpenTemplateDocument: Process the meta of a template document,

@@ -21,7 +21,6 @@ extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document document,
                               ThotBool modified );
 extern void SetBrowserEditor ( Document document );
-extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
@@ -167,7 +166,6 @@ extern void SetStopButton (/* Document document */);
 extern void DocStatusUpdate (/* Document document,
                                 ThotBool modified */);
 extern void SetBrowserEditor (/* Document document */);
-extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);

@@ -471,14 +471,50 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-  STRING            ptr;
+  STRING            ptrT, ptrR, ptrB, ptrL;
 
-  ptr = cssRule;
-  ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML);
-  ParseCSSBorderBottomWidth (element, tsch, context, ptr, css, isHTML);
-  ParseCSSBorderLeftWidth (element, tsch, context, ptr, css, isHTML);
-  ParseCSSBorderRightWidth (element, tsch, context, ptr, css, isHTML);
-  cssRule = SkipProperty (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
+  /* First parse Border-Top */
+  ptrR = ParseCSSBorderTopWidth (element, tsch, context, ptrT, css, isHTML);
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+    {
+      cssRule = ptrR;
+      /* apply the Border-Top to all */
+      ptrR = ParseCSSBorderRightWidth (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderBottomWidth (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderLeftWidth (element, tsch, context, ptrT, css, isHTML);
+    }
+  else
+    {
+      /* parse Border-Right */
+      ptrB = ParseCSSBorderRightWidth (element, tsch, context, ptrR, css, isHTML);
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+	{
+	  cssRule = ptrB;
+	  /* apply the Border-Top to Border-Bottom */
+	  ptrB = ParseCSSBorderBottomWidth (element, tsch, context, ptrT, css, isHTML);
+	  /* apply the Border-Right to Border-Left */
+	  ptrB = ParseCSSBorderLeftWidth (element, tsch, context, ptrR, css, isHTML);
+	}
+      else
+	{
+	  /* parse Border-Bottom */
+	  ptrL = ParseCSSBorderBottomWidth (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	    {
+	      cssRule = ptrL;
+	      /* apply the Border-Right to Border-Left */
+	      ptrL = ParseCSSBorderLeftWidth (element, tsch, context, ptrR, css, isHTML);
+	    }
+	  else
+	    /* parse Border-Left */
+	    cssRule = ParseCSSBorderLeftWidth (element, tsch, context, ptrL, css, isHTML);
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+    }
   return (cssRule);
 }
 
@@ -491,48 +527,6 @@ static STRING       ParseCSSBorderTop (Element element, PSchema tsch,
 				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderTop (element, tsch, context, cssRule, css, isHTML)
-Element             element;
-PSchema             tsch;
-PresentationContext context;
-STRING              cssRule;
-CSSInfoPtr          css;
-ThotBool            isHTML;
-#endif
-{
-  cssRule = SkipProperty (cssRule);
-  return (cssRule);
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSBorderRight : parse a CSS BorderRight
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static STRING       ParseCSSBorderRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
-#else
-static STRING       ParseCSSBorderRight (element, tsch, context, cssRule, css, isHTML)
-Element             element;
-PSchema             tsch;
-PresentationContext context;
-STRING              cssRule;
-CSSInfoPtr          css;
-ThotBool            isHTML;
-#endif
-{
-  cssRule = SkipProperty (cssRule);
-  return (cssRule);
-}
-
-/*----------------------------------------------------------------------
-   ParseCSSBorderBottom : parse a CSS BorderBottom
-   attribute string.                                          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static STRING       ParseCSSBorderBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
-#else
-static STRING       ParseCSSBorderBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -567,14 +561,14 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColor : parse a CSS border-color        
+   ParseCSSBorderBottom : parse a CSS BorderBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderColor (Element element, PSchema tsch,
+static STRING       ParseCSSBorderBottom (Element element, PSchema tsch,
 				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderColor (element, tsch, context, cssRule, css, isHTML)
+static STRING       ParseCSSBorderBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -588,14 +582,14 @@ ThotBool            isHTML;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyle : parse a CSS border-style        
+   ParseCSSBorderRight : parse a CSS BorderRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       ParseCSSBorderStyle (Element element, PSchema tsch,
+static STRING       ParseCSSBorderRight (Element element, PSchema tsch,
 				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static STRING       ParseCSSBorderStyle (element, tsch, context, cssRule, css, isHTML)
+static STRING       ParseCSSBorderRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -625,7 +619,346 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
+  STRING            ptrT, ptrR, ptrB, ptrL;
+
+  ptrT = SkipBlanksAndComments (cssRule);
+  /* First parse Border-Top */
+  ptrR = ParseCSSBorderTop (element, tsch, context, ptrT, css, isHTML);
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+    {
+      cssRule = ptrR;
+      /* apply the Border-Top to all */
+      ptrR = ParseCSSBorderRight (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderLeft (element, tsch, context, ptrT, css, isHTML);
+    }
+  else
+    {
+      /* parse Border-Right */
+      ptrB = ParseCSSBorderRight (element, tsch, context, ptrR, css, isHTML);
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+	{
+	  cssRule = ptrB;
+	  /* apply the Border-Top to Border-Bottom */
+	  ptrB = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+	  /* apply the Border-Right to Border-Left */
+	  ptrB = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	}
+      else
+	{
+	  /* parse Border-Bottom */
+	  ptrL = ParseCSSBorderBottom (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	    {
+	      cssRule = ptrL;
+	      /* apply the Border-Right to Border-Left */
+	      ptrL = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	    }
+	  else
+	    /* parse Border-Left */
+	    cssRule = ParseCSSBorderLeft (element, tsch, context, ptrL, css, isHTML);
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+    }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColorTop : parse a CSS BorderColorTop
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderColorTop (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
   cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColorLeft : parse a CSS BorderColorLeft
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderColorLeft (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColorBottom : parse a CSS BorderColorBottom
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderColorBottom (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColorRight : parse a CSS BorderColorRight
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderColorRight (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColor : parse a CSS border-color        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderColor (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderColor (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  STRING            ptrT, ptrR, ptrB, ptrL;
+
+  ptrT = SkipBlanksAndComments (cssRule);
+  /* First parse Border-Top */
+  ptrR = ParseCSSBorderTop (element, tsch, context, ptrT, css, isHTML);
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+    {
+      cssRule = ptrR;
+      /* apply the Border-Top to all */
+      ptrR = ParseCSSBorderRight (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderLeft (element, tsch, context, ptrT, css, isHTML);
+    }
+  else
+    {
+      /* parse Border-Right */
+      ptrB = ParseCSSBorderRight (element, tsch, context, ptrR, css, isHTML);
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+	{
+	  cssRule = ptrB;
+	  /* apply the Border-Top to Border-Bottom */
+	  ptrB = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+	  /* apply the Border-Right to Border-Left */
+	  ptrB = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	}
+      else
+	{
+	  /* parse Border-Bottom */
+	  ptrL = ParseCSSBorderBottom (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	    {
+	      cssRule = ptrL;
+	      /* apply the Border-Right to Border-Left */
+	      ptrL = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	    }
+	  else
+	    /* parse Border-Left */
+	    cssRule = ParseCSSBorderLeft (element, tsch, context, ptrL, css, isHTML);
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+    }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyleTop : parse a CSS BorderStyleTop
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderStyleTop (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyleLeft : parse a CSS BorderStyleLeft
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderStyleLeft (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyleBottom : parse a CSS BorderStyleBottom
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderStyleBottom (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyleRight : parse a CSS BorderStyleRight
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderStyleRight (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyleStyle : parse a CSS border-style        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING       ParseCSSBorderStyle (Element element, PSchema tsch,
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
+#else
+static STRING       ParseCSSBorderStyle (element, tsch, context, cssRule, css, isHTML)
+Element             element;
+PSchema             tsch;
+PresentationContext context;
+STRING              cssRule;
+CSSInfoPtr          css;
+ThotBool            isHTML;
+#endif
+{
+  STRING            ptrT, ptrR, ptrB, ptrL;
+
+  ptrT = SkipBlanksAndComments (cssRule);
+  /* First parse Border-Top */
+  ptrR = ParseCSSBorderTop (element, tsch, context, ptrT, css, isHTML);
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+    {
+      cssRule = ptrR;
+      /* apply the Border-Top to all */
+      ptrR = ParseCSSBorderRight (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseCSSBorderLeft (element, tsch, context, ptrT, css, isHTML);
+    }
+  else
+    {
+      /* parse Border-Right */
+      ptrB = ParseCSSBorderRight (element, tsch, context, ptrR, css, isHTML);
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+	{
+	  cssRule = ptrB;
+	  /* apply the Border-Top to Border-Bottom */
+	  ptrB = ParseCSSBorderBottom (element, tsch, context, ptrT, css, isHTML);
+	  /* apply the Border-Right to Border-Left */
+	  ptrB = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	}
+      else
+	{
+	  /* parse Border-Bottom */
+	  ptrL = ParseCSSBorderBottom (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	    {
+	      cssRule = ptrL;
+	      /* apply the Border-Right to Border-Left */
+	      ptrL = ParseCSSBorderLeft (element, tsch, context, ptrR, css, isHTML);
+	    }
+	  else
+	    /* parse Border-Left */
+	    cssRule = ParseCSSBorderLeft (element, tsch, context, ptrL, css, isHTML);
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+    }
   return (cssRule);
 }
 
@@ -2739,7 +3072,15 @@ static CSSProperty CSSProperties[] =
    {TEXT ("border-bottom-width"), ParseCSSBorderBottomWidth},
    {TEXT ("border-left-width"), ParseCSSBorderLeftWidth},
    {TEXT ("border-width"), ParseCSSBorderWidth},
+   {TEXT ("border-top-color"), ParseCSSBorderColorTop},
+   {TEXT ("border-right-color"), ParseCSSBorderColorRight},
+   {TEXT ("border-bottom-color"), ParseCSSBorderColorBottom},
+   {TEXT ("border-left-color"), ParseCSSBorderColorLeft},
    {TEXT ("border-color"), ParseCSSBorderColor},
+   {TEXT ("border-top-style"), ParseCSSBorderStyleTop},
+   {TEXT ("border-right-style"), ParseCSSBorderStyleRight},
+   {TEXT ("border-bottom-style"), ParseCSSBorderStyleBottom},
+   {TEXT ("border-left-style"), ParseCSSBorderStyleLeft},
    {TEXT ("border-style"), ParseCSSBorderStyle},
    {TEXT ("border-top"), ParseCSSBorderTop},
    {TEXT ("border-right"), ParseCSSBorderRight},

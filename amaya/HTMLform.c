@@ -729,61 +729,55 @@ STRING              action;
 
 #endif
 {
-   int                 buffer_size;
-   int                 i;
-   STRING              urlName;
+  int                 buffer_size;
+  int                 i;
+  STRING              urlName;
 
-   /* remove any trailing & */
-   if (buffer)
-      buffer_size = ustrlen (buffer);
-   else
-     {
-       buffer_size = 0;
-       buffer = _EMPTYSTR_;
-     }
-   if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
-     {
-	buffer[buffer_size - 1] = EOS;
-	buffer_size--;
-     }
+  /* remove any trailing & */
+  if (buffer)
+    buffer_size = ustrlen (buffer);
+  else
+    {
+      buffer_size = 0;
+      buffer = _EMPTYSTR_;
+    }
+  if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
+    {
+      buffer[buffer_size - 1] = EOS;
+      buffer_size--;
+    }
 
-   switch (method)
-	 {
-	    case -9999:	/* index attribute, not yet supported by Amaya */
-
-	       for (i = 0; i < buffer_size; i++)
-		  switch (buffer[i])
-			{
-			   case '&':
-			   case '=':
-			      buffer[i] = '+';
-			      break;
-			   default:
-			      break;
-			}	/* switch */
-	       break;		/* case INDEX */
-	    case HTML_ATTR_METHOD_VAL_Get_:
-	       urlName = TtaAllocString (ustrlen (action) + buffer_size + 2);
-	       if (urlName != (STRING) NULL)
-		 {
-		    ustrcpy (urlName, action);
-		    /*** @@ removing it from here
-		    ustrcat (urlName, "?");
-		    if (buffer_size)
-		      ustrcat (urlName, buffer);
-		      ***/
-		    GetHTMLDocument (urlName, buffer, doc, doc,
-				     CE_FORM_GET, TRUE, NULL, NULL);
-		    TtaFreeMemory (urlName);
-		 }
-	       break;
-	    case HTML_ATTR_METHOD_VAL_Post_:
-	       GetHTMLDocument (action, buffer, doc, doc,
-				CE_FORM_POST, TRUE, NULL, NULL);
-	       break;
-	    default:
-	       break;
-	 }
+  switch (method)
+    {
+    case -9999:	/* index attribute, not yet supported by Amaya */
+      for (i = 0; i < buffer_size; i++)
+	switch (buffer[i])
+	  {
+	  case '&':
+	  case '=':
+	    buffer[i] = '+';
+	    break;
+	  default:
+	    break;
+	  }
+      break;		/* case INDEX */
+    case HTML_ATTR_METHOD_VAL_Get_:
+      urlName = TtaAllocString (ustrlen (action) + buffer_size + 2);
+      if (urlName != (STRING) NULL)
+	{
+	  ustrcpy (urlName, action);
+	  GetHTMLDocument (urlName, buffer, doc, doc,
+			   CE_FORM_GET, TRUE, NULL, NULL);
+	  TtaFreeMemory (urlName);
+	}
+      break;
+    case HTML_ATTR_METHOD_VAL_Post_:
+      GetHTMLDocument (action, buffer, doc, doc,
+		       CE_FORM_POST, TRUE, NULL, NULL);
+      break;
+    default:
+      break;
+    }
 }
 
 

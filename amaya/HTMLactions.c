@@ -594,28 +594,26 @@ void *context;
   The parameter doc is the document that includes the anchor element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc)
+static ThotBool  FollowTheLink (Element anchor, Element elSource, Document doc)
 #else  /* __STDC__ */
-static ThotBool     FollowTheLink (anchor, elSource, doc)
-Element             anchor;
-Element             elSource;
-Document            doc;
-
+static ThotBool  FollowTheLink (anchor, elSource, doc)
+Element          anchor;
+Element          elSource;
+Document         doc;
 #endif /* __STDC__ */
 {
-   AttributeType       attrType;
-   Attribute           HrefAttr, PseudoAttr, attr;
+   AttributeType          attrType;
+   Attribute              HrefAttr, PseudoAttr, attr;
 #ifdef ANNOTATIONS
-   Attribute           isAnnotLink;
+   Attribute              isAnnotLink;
 #endif /* ANNOTATIONS */
-
-   ElementType         elType;
-   Document            targetDocument;
-   SSchema             HTMLSSchema;
-   CHAR_T                documentURL[MAX_LENGTH];
-   STRING              url, info, sourceDocUrl;
-   int                 length;
-   ThotBool		isHTML;
+   ElementType            elType;
+   Document               targetDocument;
+   SSchema                HTMLSSchema;
+   CHAR_T                 documentURL[MAX_LENGTH];
+   STRING                 url, info, sourceDocUrl;
+   int                    length;
+   ThotBool		  isHTML;
    FollowTheLink_context *ctx;
 
    info = NULL;
@@ -737,14 +735,14 @@ Document            doc;
 						   doc,
 						   (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
 						   TRUE, 
-				   (void *) FollowTheLink_callback,
+						   (void *) FollowTheLink_callback,
 						   (void *) ctx);
 #else
 		 targetDocument = GetHTMLDocument (documentURL, NULL,
 						   doc, 
 						   doc, 
 						   CE_RELATIVE, TRUE, 
-				   (void *) FollowTheLink_callback,
+						   (void *) FollowTheLink_callback,
 						   (void *) ctx);
 #endif /* ANNOTATIONS */
 	       }

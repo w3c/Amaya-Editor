@@ -11,6 +11,67 @@ extern void AddMathButton ( Document doc,
 extern void SwitchIconMath ( Document doc,
                              View view,
                              ThotBool state );
+extern void CreateMath ( Document document,
+                         View view );
+extern void CreateMROOT ( Document document,
+                          View view );
+extern void CreateMSQRT ( Document document,
+                          View view );
+extern void CreateMFRAC ( Document document,
+                          View view );
+extern void CreateMSUBSUP ( Document document,
+                            View view );
+extern void CreateMSUB ( Document document,
+                         View view );
+extern void CreateMSUP ( Document document,
+                         View view );
+extern void CreateMUNDEROVER ( Document document,
+                               View view );
+extern void CreateMUNDER ( Document document,
+                           View view );
+extern void CreateMOVER ( Document document,
+                          View view );
+extern void CreateMROW ( Document document,
+                         View view );
+extern void CreateMMULTISCRIPTS ( Document document,
+                                  View view );
+extern void CreateMTABLE ( Document document,
+                           View view );
+extern void CreateCharStringElement ( int typeNum,
+                                      Document doc );
+extern void CreateMTEXT ( Document document,
+                          View view );
+extern void CreateMI ( Document document,
+                       View view );
+extern void CreateMN ( Document document,
+                       View view );
+extern void CreateMO ( Document document,
+                       View view );
+extern void CreateMathEntity ( Document document,
+                               View view );
+extern void InitMathML ( void );
+extern void MtextCreated ( NotifyElement *event );
+extern void MathStringModified ( NotifyOnTarget *event );
+extern void NewMathString ( NotifyElement *event );
+extern void MathElementPasted ( NotifyElement *event );
+extern ThotBool MathElementWillBeDeleted ( NotifyElement *event );
+extern void DeleteMColumn ( Document document,
+                            View view );
+extern void MathElementDeleted ( NotifyElement *event );
+extern void FenceModified ( NotifyOnValue *event );
+extern void MathAttrOtherCreated ( NotifyAttribute *event );
+extern ThotBool LinkAttrInMenu ( NotifyAttribute * event );
+extern void MathAttrFontsizeCreated ( NotifyAttribute *event );
+extern ThotBool MathAttrFontsizeDelete ( NotifyAttribute *event );
+extern void MathAttrFontfamilyCreated ( NotifyAttribute *event );
+extern ThotBool MathAttrFontfamilyDelete ( NotifyAttribute *event );
+extern void MathAttrColorCreated ( NotifyAttribute *event );
+extern ThotBool MathAttrColorDelete ( NotifyAttribute *event );
+extern void MathAttrBackgroundCreated ( NotifyAttribute *event );
+extern ThotBool MathAttrBackgroundDelete ( NotifyAttribute *event );
+extern void AttrOpenCloseChanged ( NotifyAttribute *event );
+extern void FencedSeparatorModified ( NotifyOnTarget *event );
+extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -19,6 +80,67 @@ extern void AddMathButton (/* Document doc,
 extern void SwitchIconMath (/* Document doc,
                                View view,
                                ThotBool state */);
+extern void CreateMath (/* Document document,
+                           View view */);
+extern void CreateMROOT (/* Document document,
+                            View view */);
+extern void CreateMSQRT (/* Document document,
+                            View view */);
+extern void CreateMFRAC (/* Document document,
+                            View view */);
+extern void CreateMSUBSUP (/* Document document,
+                              View view */);
+extern void CreateMSUB (/* Document document,
+                           View view */);
+extern void CreateMSUP (/* Document document,
+                           View view */);
+extern void CreateMUNDEROVER (/* Document document,
+                                 View view */);
+extern void CreateMUNDER (/* Document document,
+                             View view */);
+extern void CreateMOVER (/* Document document,
+                            View view */);
+extern void CreateMROW (/* Document document,
+                           View view */);
+extern void CreateMMULTISCRIPTS (/* Document document,
+                                    View view */);
+extern void CreateMTABLE (/* Document document,
+                             View view */);
+extern void CreateCharStringElement (/* int typeNum,
+                                        Document doc */);
+extern void CreateMTEXT (/* Document document,
+                            View view */);
+extern void CreateMI (/* Document document,
+                         View view */);
+extern void CreateMN (/* Document document,
+                         View view */);
+extern void CreateMO (/* Document document,
+                         View view */);
+extern void CreateMathEntity (/* Document document,
+                                 View view */);
+extern void InitMathML (/* void */);
+extern void MtextCreated (/* NotifyElement *event */);
+extern void MathStringModified (/* NotifyOnTarget *event */);
+extern void NewMathString (/* NotifyElement *event */);
+extern void MathElementPasted (/* NotifyElement *event */);
+extern ThotBool MathElementWillBeDeleted (/* NotifyElement *event */);
+extern void DeleteMColumn (/* Document document,
+                              View view */);
+extern void MathElementDeleted (/* NotifyElement *event */);
+extern void FenceModified (/* NotifyOnValue *event */);
+extern void MathAttrOtherCreated (/* NotifyAttribute *event */);
+extern ThotBool LinkAttrInMenu (/* NotifyAttribute * event */);
+extern void MathAttrFontsizeCreated (/* NotifyAttribute *event */);
+extern ThotBool MathAttrFontsizeDelete (/* NotifyAttribute *event */);
+extern void MathAttrFontfamilyCreated (/* NotifyAttribute *event */);
+extern ThotBool MathAttrFontfamilyDelete (/* NotifyAttribute *event */);
+extern void MathAttrColorCreated (/* NotifyAttribute *event */);
+extern ThotBool MathAttrColorDelete (/* NotifyAttribute *event */);
+extern void MathAttrBackgroundCreated (/* NotifyAttribute *event */);
+extern ThotBool MathAttrBackgroundDelete (/* NotifyAttribute *event */);
+extern void AttrOpenCloseChanged (/* NotifyAttribute *event */);
+extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
+extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
