@@ -1094,32 +1094,6 @@ BEGIN
                     IDC_STATIC,39,18,213,16
 END
 
-DE_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "General Preferences"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
-    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
-    LTEXT           "Home Page",IDC_STATIC,7,7,65,11
-    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Zoom (-10...10)",IDC_STATIC,7,99,116,10
-    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
-    LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
-    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
-    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,162,66,8
-    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
-    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
-    LTEXT           "Amaya user directory",IDC_STATIC,7,39,66,8
-    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
-    LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
-    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
-END
-
 EN_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Publishing Preferences"
@@ -1214,6 +1188,32 @@ BEGIN
     PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
     LTEXT           "Accept Language",-1,7,7,75,11
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+END
+
+DE_GENERALMENU DIALOG DISCARDABLE  100, 100, 202, 230
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "General Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
+    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
+    LTEXT           "Home Page",IDC_STATIC,8,68,65,11
+    EDITTEXT        IDC_HOMEPAGE,8,82,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Zoom (-10...10)",IDC_STATIC,7,99,116,10
+    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
+    LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
+    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
+    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,162,66,8
+    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
+    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
+    LTEXT           "Amaya user directory",IDC_STATIC,7,7,66,8
+    EDITTEXT        IDC_APPHOME,7,19,188,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Temporary directory",IDC_STATIC,7,37,63,8
+    EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
 END
 
 
@@ -1430,14 +1430,6 @@ BEGIN
         BOTTOMMARGIN, 58
     END
 
-    DE_GENERALMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 195
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 223
-    END
-
     EN_PUBLISHMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1484,6 +1476,14 @@ BEGIN
         RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
+    END
+
+    DE_GENERALMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2489,8 +2489,8 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
     PUSHBUTTON      "Done",ID_DONE,145,209,50,14
     PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
-    LTEXT           "Home Page",IDC_STATIC,7,7,65,11
-    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Home Page",IDC_STATIC,8,68,65,11
+    EDITTEXT        IDC_HOMEPAGE,8,82,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
     LTEXT           "Zoom (-10...10)",IDC_STATIC,7,99,116,10
     EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
     LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
@@ -2501,10 +2501,10 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
     CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
-    LTEXT           "Amaya user directory",IDC_STATIC,7,39,66,8
-    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
-    LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
-    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
+    LTEXT           "Amaya user directory",IDC_STATIC,7,7,66,8
+    EDITTEXT        IDC_APPHOME,7,19,188,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Temporary directory",IDC_STATIC,7,37,63,8
+    EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
 END
 
 EN_GETSAVEDIALOG DIALOG DISCARDABLE  100, 100, 263, 65
@@ -4176,33 +4176,6 @@ BEGIN
     EDITTEXT        IDC_BGCOLOR,7,49,96,12,ES_AUTOHSCROLL
 END
 
-FR_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Configuration Générale"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,209,50,14
-    PUSHBUTTON      "Terminer",ID_DONE,145,209,50,14
-    PUSHBUTTON      "Défaults",ID_DEFAULTS,76,209,50,14
-    LTEXT           "Page de démarrage",IDC_STATIC,7,7,65,11
-    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Zoom (-10...10)",IDC_STATIC,7,99,116,10
-    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
-    LTEXT           "Langue des dialogues (prise en compte au démarrage)",
-                    IDC_STATIC,7,129,172,8
-    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
-    CONTROL         "Activer multi-key (accents, ...)",IDC_MULTIKEY,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,162,107,8
-    CONTROL         "Montrer les images de fond",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,101,10
-    CONTROL         "Activer les liens avec un double-click",IDC_DOUBLECLICK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,188,133,10
-    LTEXT           "Répertoire utilisateur",IDC_STATIC,7,39,65,8
-    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
-    LTEXT           "Répertoire temporaire",IDC_STATIC,7,69,68,8
-    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
-END
-
 FR_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Configuration de la Publication"
@@ -4286,6 +4259,33 @@ BEGIN
     PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
     LTEXT           "Accept Language",-1,7,7,75,11
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+END
+
+FR_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Configuration Générale"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,209,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,145,209,50,14
+    PUSHBUTTON      "Défaults",ID_DEFAULTS,76,209,50,14
+    LTEXT           "Page de démarrage",IDC_STATIC,7,69,65,11
+    EDITTEXT        IDC_HOMEPAGE,7,82,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Zoom (-10...10)",IDC_STATIC,7,99,116,10
+    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
+    LTEXT           "Langue des dialogues (prise en compte au démarrage)",
+                    IDC_STATIC,7,129,172,8
+    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
+    CONTROL         "Activer multi-key (accents, ...)",IDC_MULTIKEY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,162,107,8
+    CONTROL         "Montrer les images de fond",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,101,10
+    CONTROL         "Activer les liens avec un double-click",IDC_DOUBLECLICK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,188,133,10
+    LTEXT           "Répertoire utilisateur",IDC_STATIC,7,7,65,8
+    EDITTEXT        IDC_APPHOME,7,19,188,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Répertoire temporaire",IDC_STATIC,7,37,68,8
+    EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
 END
 
 
@@ -4518,14 +4518,6 @@ BEGIN
         BOTTOMMARGIN, 83
     END
 
-    FR_GENERALMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 195
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 223
-    END
-
     FR_PUBLISHMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -4564,6 +4556,14 @@ BEGIN
         RIGHTMARGIN, 191
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
+    END
+
+    FR_GENERALMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
     END
 END
 #endif    // APSTUDIO_INVOKED
