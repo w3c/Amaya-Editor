@@ -296,7 +296,6 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
   ----------------------------------------------------------------------*/
 static ThotBool CloseTextInsertionWithControl ()
 {
-   PtrAttribute        pAttr;
    PtrElement          pEl;
    PtrBox              pBox;
    PtrBox              pSelBox;
@@ -470,11 +469,9 @@ static ThotBool CloseTextInsertionWithControl ()
 	     else if (LastInsertAttr != NULL)
 	       {
 		 /* Notify the end of attribute change */
-		 pAttr = LastInsertAttr;
-		 pEl = LastInsertAttrElem;
 		 LastInsertAttr = NULL;
 		 LastInsertAttrElem = NULL;
-		 APPattrModify (pAttr, pEl, frame, FALSE);
+		 /* the notification was already done by NewContent */
 		 notified = TRUE;
 	       }
 	  }

@@ -581,7 +581,7 @@ static ThotBool     FileExistTarget (char *filename)
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
   ----------------------------------------------------------------------*/
-void            SetArrowButton (Document document, ThotBool back, ThotBool on)
+void SetArrowButton (Document document, ThotBool back, ThotBool on)
 {
   int		index;
   ThotBool      state;
@@ -625,7 +625,7 @@ void            SetArrowButton (Document document, ThotBool back, ThotBool on)
 /*----------------------------------------------------------------------
    ResetStop resets the stop button state                             
   ----------------------------------------------------------------------*/
-void                ResetStop (Document document)
+void ResetStop (Document document)
 {
   if (FilesLoading[document] != 0)
     FilesLoading[document]--;
