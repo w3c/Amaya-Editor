@@ -369,6 +369,14 @@ NotifyPresentation *event;
 	  MovePRule (&presRule, event->element, elem, doc);
 	  }
 
+     /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
+	element */
+     if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	{
+	elem = TtaGetParent (elem);
+	MovePRule (&presRule, event->element, elem, doc);
+	}
+
      /* if it is a new PRule on a text string, create a SPAN element that
         encloses this text string and move the PRule to that SPAN element */
      if (MakeASpan (elem, &span, doc))
