@@ -629,10 +629,11 @@ static void InitCSSDialog (Document doc, char *s)
   while (css)
     {
       if (css->documents[doc] &&
-	  /* only en external sheet can be removed */
+	  /* the document style cannot be open */
 	  ((CSScase == 1 && css->category != CSS_DOCUMENT_STYLE) ||
-	  /* it's impossible to remove the User style sheet */
+	  /* it's impossible to disable an imported style sheet */
 	   (CSScase == 2 && css->enabled[doc] && css->category != CSS_IMPORT) ||
+	   /* it's impossible to enable an imported style sheet */
 	   (CSScase == 3 && !css->enabled[doc] && css->category != CSS_IMPORT) ||
 	   /* only en external sheet can be removed */
 	   (CSScase == 4 && css->category == CSS_EXTERNAL_STYLE)))
