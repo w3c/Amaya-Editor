@@ -211,7 +211,7 @@ extern char      LostPicturePath [512];
 #include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
 #ifdef _SVG
-#include "Graphedit_f.h"
+#include "SVGedit_f.h"
 #endif /* _SVG */
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
