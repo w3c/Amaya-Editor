@@ -1003,14 +1003,6 @@ ThotBool            horizRef;
 	{
 	case Top:
 	  y += t;
-	  if (sibling && localEdge == Bottom)
-	    {
-	      /* only take the larger margin into account */
-	      if (pBox->BxBMargin < pRefBox->BxTMargin)
-		y -= pBox->BxBMargin;
-	      else
-		y -= pRefBox->BxTMargin;
-	    }
 	  break;
 	case Left:
 	  x += l;
@@ -1024,14 +1016,27 @@ ThotBool            horizRef;
 	    }
 	  break;
 	case Bottom:
-	  y = y + pRefBox->BxHeight - b ;
+	  y = y + pRefBox->BxHeight - b;
 	  if (sibling && localEdge == Top)
 	    {
+	      /* normally b = 0 */
 	      /* only take the larger margin into account */
-	      if (pBox->BxTMargin < pRefBox->BxBMargin)
-		y -= pBox->BxTMargin;
+	      if (pBox->BxTMargin > 0 && pRefBox->BxBMargin > 0)
+		{
+		  if (pBox->BxTMargin < pRefBox->BxBMargin)
+		    y = y + pRefBox->BxBMargin;
+		  else
+		    y = y + pBox->BxTMargin;
+		}
+	      else if (pBox->BxTMargin < 0 && pRefBox->BxBMargin < 0)
+		{
+		  if (pBox->BxTMargin < pRefBox->BxBMargin)
+		    y = y + pBox->BxTMargin;
+		  else
+		    y = y + pRefBox->BxBMargin;
+		}
 	      else
-		y -= pRefBox->BxBMargin;
+		y = y + pBox->BxTMargin + pRefBox->BxBMargin;
 	    }
 	  break;
 	case Right:
