@@ -1087,7 +1087,7 @@ void                CutCommand (ThotBool save)
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
-                      firstCharInit, lastCharInit;
+                      firstCharInit, lastCharInit, prevDepth, nextDepth;
   ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
   ThotBool            canCut, recorded, lock;
 
@@ -1713,8 +1713,27 @@ void                CutCommand (ThotBool save)
 			    lastSel == pLastSave ||
 			    ElemIsWithinSubtree(lastSel, pLastSave))
 			  {
-			    /* the selection points to deleted elements */
-			    if (pNext != NULL)
+			    /* the selection points to deleted elements. Set
+			       a new selection */
+			    /* first, get the depth of the previous and
+			       next elements */
+			    prevDepth = 0;
+			    pE = pPrev;
+			    while (pE)
+			      {
+				prevDepth++;
+				pE = pE->ElParent;
+			      }
+			    nextDepth = 0;
+			    pE = pNext;
+			    while (pE)
+			      {
+				nextDepth++;
+				pE = pE->ElParent;
+			      }
+			    if (pNext != NULL && nextDepth >= prevDepth)
+			      /* there is a next element and it's deeper in
+				 the abstract tree. Select its beginning */
 			      if (nextChar == 0)
 				{
 				  /* select the following element */
