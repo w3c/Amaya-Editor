@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Welcome to Amaya</title>
-  <meta name="generator" content="amaya 8.7, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -73,13 +74,13 @@
 </svg>
 </div>
 
-<h1>Bienvenido a Amaya 9.0</h1>
+<h1>Bienvenido a Amaya 9.1</h1>
 
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
-diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a 
-href="http://www.inria.fr/">INRIA</a> con el principal objetivo de
-demostrar nuevas tecnologías Web y ayudar a los usuarios a producir páginas
-Web válidas.<br />
+diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
+href="http://www.inria.fr/">INRIA</a> con el principal objetivo de demostrar
+nuevas tecnologías Web y ayudar a los usuarios a producir páginas Web
+válidas.<br />
 Con Amaya se pueden manipular páginas Web complejas, con formularios, tablas
 y las características más avanzadas del <acronym
 title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar

@@ -54,7 +54,7 @@ RULES
         begin
         NoLineBreak;
         Create '<!--';
-	NoTranslation;
+	{NoTranslation;}
         Create '-->\12' after;
         end;
 
@@ -65,7 +65,7 @@ RULES
         begin
         NoLineBreak;
         Create '<?';
-	NoTranslation;
+	{NoTranslation;}
         Create '?>\12' after;
         end;
 

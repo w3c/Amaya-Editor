@@ -39,7 +39,7 @@ RULES
 	BEGIN
 	NoLineBreak;
         Create '<!--';
-	NoTranslation;
+	{NoTranslation;}
         Create '-->\12' after;
         END;
 
@@ -50,7 +50,7 @@ RULES
 	BEGIN
 	NoLineBreak;
         Create '<?';
-	NoTranslation;
+	{NoTranslation;}
         Create '?>\12' after;
         END;
 

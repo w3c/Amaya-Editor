@@ -459,7 +459,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
   AttributeType      attrType;
   Attribute          attr;
 #define STYLELEN 1000
-  char               buffer[15];
+  char               buffer[15], *name;
   int                presType;
   int                w, h, unit, value, i;
   ThotBool           ret;
@@ -487,13 +487,15 @@ ThotBool ChangePRule (NotifyPresentation *event)
     if (elType.ElSSchema != HTMLschema)
       /* it's not an HTML element */
       {
-	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "TextFile"))
+	name = TtaGetSSchemaName (elType.ElSSchema);
+	if (!strcmp (name, "TextFile"))
 	  {
 	    /* should generate the CSS rule */
 	    SetStyleString (doc, el, presRule);
 	    ret = TRUE; /* don't let Thot perform normal operation */
 	  }
-	else if (TtaGetConstruct (el) == ConstructBasicType)
+	else if ((!strcmp (name, "MathML") || !strcmp (name, "SVG")) &&
+		 TtaGetConstruct (el) == ConstructBasicType)
 	  /* it's a basic type. Move the PRule to the parent element */
 	  {
 	    el = TtaGetParent (el);

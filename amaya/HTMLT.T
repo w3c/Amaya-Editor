@@ -1204,7 +1204,7 @@ RULES
  Comment\240: BEGIN
 	NoLineBreak;
  	Create '<!--';
-	NoTranslation;
+	{NoTranslation;}
 	Create '-->\12' after;
 	END;
 
@@ -1215,7 +1215,7 @@ RULES
  XMLPI: BEGIN
 	NoLineBreak;
  	Create '<?';
-	NoTranslation;
+	{NoTranslation;}
         IF Within BODY
 	Create '?>' after;
 	IF not Within BODY
