@@ -50,6 +50,8 @@
 #include "boxselection_f.h"
 
 
+#define MAX_DISTANCE 2000
+
 /*----------------------------------------------------------------------
    GetClickedBox recherche recursivement le pave qui englobe le point 
    designe' par x,y.                                       
@@ -83,7 +85,7 @@ int                *pointselect;
    pBox = NULL;
    pSelBox = NULL;
    /* au-dela, on n'accepte pas la selection */
-   dist = 2000;
+   dist = MAX_DISTANCE;
    pFrame = &ViewFrameTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
@@ -127,6 +129,9 @@ int                *pointselect;
 		       else
 			  d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
 					      pBox->BxWidth, pBox->BxHeight);
+		       /* limit the distance to MAX_DISTANCE */
+		       if (d > dist && dist == MAX_DISTANCE)
+			 dist = d;
 		    }
 		  else
 		     d = dist + 1;
@@ -161,6 +166,9 @@ int                *pointselect;
 	       }
 	     pBox = pBox->BxNext;
 	  }
+	/* return the root box if there is no box selected */
+	if (pSelBox == NULL)
+	  pSelBox = pBox = pFrame->FrAbstractBox->AbBox;
      }
    *result = pSelBox;
 }

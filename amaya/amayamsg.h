@@ -131,5 +131,6 @@ int                 AMAYA;
 #define AM_SERVER_INTERNAL_ERROR_500_CAUSE 119
 #define AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE 120
 #define AM_SERVER_NOT_IMPLEMENTED_501_ERROR 121
-#define AMAYA_MSG_MAX                 122
+#define AM_PARSE		      122
+#define AMAYA_MSG_MAX                 123
 

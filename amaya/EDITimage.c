@@ -65,6 +65,14 @@ char               *data;
 		    LastURLImage[0] = EOS;
 		    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 		 }
+	       else if (val == 3)
+		  /* Parse */
+		 {
+		   /* reinitialize directories and document lists */
+		   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+				     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+				     "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+		 }
 	       else
 		 {
 		    TtaDestroyDialogue (BaseImage + FormImage);
@@ -86,15 +94,11 @@ char               *data;
 		    change = NormalizeFile (data, LastURLImage);
 		    if (change)
 		       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-		    if (LastURLImage[strlen (LastURLImage) - 1] == DIR_SEP)
+		    if (TtaCheckDirectory (LastURLImage))
 		      {
 			 strcpy (DirectoryImage, LastURLImage);
 			 ImageName[0] = EOS;
 			 LastURLImage[0] = EOS;
-			 /* reinitialize directories and document lists */
-			 TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-					   "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 		      }
 		    else
 		       TtaExtractName (LastURLImage, DirectoryImage, ImageName);
@@ -174,10 +178,11 @@ View                view;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
-		2,
-		s, TRUE, 2, 'L', D_CANCEL);
+		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");

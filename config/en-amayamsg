@@ -120,3 +120,4 @@
 119 Server reports a 501 error: %s
 120 Server reports a 501 error
 121 Server does not support this request method
+122 List

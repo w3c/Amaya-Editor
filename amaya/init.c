@@ -482,10 +482,11 @@ View                view;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
-		2,
-		s, TRUE, 2, 'L', D_CANCEL);
+		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
@@ -1393,6 +1394,14 @@ char               *data;
 		    LastURLName[0] = EOS;
 		    TtaSetTextForm (BaseDialog + URLName, LastURLName);
 		 }
+	       else if (val == 3)
+		  /* Parse */
+		 {
+		    /* reinitialize directories and document lists */
+		    TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+				      TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
+				      ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+		 }
 	       else
 		 {
 		    TtaDestroyDialogue (BaseDialog + OpenForm);
@@ -1450,14 +1459,15 @@ char               *data;
 		    if (change)
 		       TtaSetTextForm (BaseDialog + URLName, tempfile);
 
-		    if (tempfile[strlen (tempfile) - 1] == DIR_SEP)
+		    if (TtaCheckDirectory (tempfile))
 		      {
 			 strcpy (DirectoryName, tempfile);
 			 DocumentName[0] = EOS;
-			 /* reinitialize directories and document lists */
-			 TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
-					   ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+			 /* reinitialize directories and document lists
+			    TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
+			    ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
+			  */
 		      }
 		    else
 		       TtaExtractName (tempfile, DirectoryName, DocumentName);

@@ -50,7 +50,7 @@
 49 HTML.trans erreur de syntaxe ligne %s
 50 Ajouter
 51 Visualiser
-52 Browse
+52 Traiter
 53 CSS Externe
 54 Supprimer CSS
 55 Supprimer
@@ -62,8 +62,8 @@
 61 La sauvegarde entrainera \351craser les URLs suivantes :
 62 Erreur de sauvegarde de l'URL 
 63 Sauvegarder sur le disque ?
-64 BCopier Images
-65 Btransformer URLs
+64 Copier Images
+65 Transformer URLs
 66 Emplacement du document
 67 Emplacement des images
 68 Emplacement de l'objet
@@ -120,3 +120,4 @@
 119 Le serveur reporte une erreur 501:
 120 Le serveur reporte une erreur 501
 121 Le serveur ne supporte pas cette methode d'accès
+122 Lister

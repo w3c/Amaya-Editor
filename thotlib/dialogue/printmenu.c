@@ -329,9 +329,9 @@ char               *viewNames;
    boolean	       docReadOnly;
    boolean             ok;
    Name                savePres, newPres;
-   int                 orientation;
    ThotPid             pid = ThotPid_get ();
    char                cmd[100];
+   int                 orientation, lg;
 
    pDoc = LoadedDocument[document - 1];
    InitPrintParameters (pDoc);
@@ -352,11 +352,15 @@ char               *viewNames;
    system (cmd);
    numOfJobs++;
    strcpy(tmpDocName,"ThotXXXXXX");
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
    _mktemp (tmpDocName);
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS */
    mktemp (tmpDocName);
-#endif /* !WWW_MSWINDOWS */
+#endif /* !_WINDOWS */
+   /* remove eventual dot at the end of tmpDocName */
+   lg = strlen (tmpDocName) - 1;
+   if (tmpDocName[lg] == '.')
+     tmpDocName[lg] = EOS;
    strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
    strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
