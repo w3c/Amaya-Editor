@@ -715,7 +715,7 @@ void PasteCommand ()
 	      if (pRow && pColHead)
 		/* get the first row in the table */
 		pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
-					   pRow->ElStructSchema);
+					   pRow->ElStructSchema, NULL);
 	      else
 		pRow = NULL;
 	      /* change the selection to paste a whole column */

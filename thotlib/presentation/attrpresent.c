@@ -335,7 +335,7 @@ void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
 		    /* content to the documents of interest */
 		    /* Search an element of that type in the document */
 		    pSrcEl = FwdSearchTypedElem (pDoc->DocDocElement,
-						 srcNumType + 1, pSS);
+						 srcNumType + 1, pSS, NULL);
 		    if (pSrcEl != NULL)
 		      /* apply the Transmit rule to the element found */
 		      TransmitElementContent (pSrcEl, pDoc,
@@ -375,7 +375,7 @@ void  RepApplyTransmitRules (PtrElement pTransmEl, PtrElement pEl,
     while (pEl != NULL)
       {
 	pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber,
-				  pTransmEl->ElStructSchema);
+				  pTransmEl->ElStructSchema, NULL);
 	ApplyTransmitRules (pEl, pDoc);
       }
 }

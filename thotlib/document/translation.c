@@ -1908,7 +1908,7 @@ static int CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS,
 	   /* compte les marques de page qui precedent l'element */
 	   do
 	     {
-	     pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
+	     pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL, NULL);
 	     if (pEl != NULL)
 	       /* cas page rappel supprime */
 	       /* on ne compte que les marques de page de la vue 1 */
@@ -1948,7 +1948,7 @@ static int CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS,
 	   {
 	   pEl = FwdSearchElem2Types (pEl, pCntr->TnElemType2,
 				      pElNum->ElTypeNumber, pSSch,
-				      pElNum->ElStructSchema);
+				      pElNum->ElStructSchema, NULL);
 	   if (pEl != NULL)
 	     if (EquivalentType (pEl, pCntr->TnElemType2, pSSch))
 	       /* on ignore les pages qui ne concernent pas la vue 1 */

@@ -2366,8 +2366,8 @@ static void         FindFirstAbsBox (PtrElement pElBegin, int nv)
 	      stop = TRUE;
 	   else
 	      /* l'element n'a pas de pave dans la vue, */
-	      /* ?cherche un element suivant qui ait un pave */
-	      pEl = FwdSearchTypedElem (pEl, 0, NULL);
+	      /* cherche un element suivant qui ait un pave */
+	      pEl = FwdSearchTypedElem (pEl, 0, NULL, NULL);
 	while (!stop);
 	if (pEl != NULL)
 	   pAbbBegin[nv - 1] = pEl->ElAbstractBox[nv - 1];
@@ -2392,7 +2392,7 @@ void ComputePageNum (PtrElement pEl, PtrDocument pDoc, int view)
    /* renumerote toutes les pages qui suivent pour la meme vue */
    do
      {
-	pPage = FwdSearchTypedElem (pPage, PageBreak + 1, NULL);
+	pPage = FwdSearchTypedElem (pPage, PageBreak + 1, NULL, NULL);
 	if (pPage == NULL)
 	   /* c'etait la derniere page, on s'arrete */
 	   stop = TRUE;
@@ -2958,7 +2958,7 @@ static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
 	    TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
 				counter, pSchP, pSS);
 	  /* cherche le document inclus suivant */
-	  pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS);
+	  pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS, NULL);
 	}
     }
 }

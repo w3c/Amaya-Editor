@@ -554,7 +554,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 	      }
 	  while (!found && pEl)
 	    {
-	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
 	      if (pEl != NULL)
 		/* on a trouve un element de texte */
 		{
@@ -600,7 +600,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 	      }
 	  while (!found && pEl != NULL)
 	    {
-	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
+	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL, NULL);
 	      if (pEl)
 		/* on a trouve' un element de texte */
 		{
@@ -743,7 +743,7 @@ PtrElement SearchPageBreak (PtrElement pEl, int view, int pageNum,
       pElP = pEl;
       while (pageNum > 0 && pElP != NULL)
 	{
-	  pElP = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
+	  pElP = FwdSearchTypedElem (pEl, PageBreak + 1, NULL, NULL);
 	  if (pElP != NULL)
 	    {
 	      if (pElP->ElViewPSchema == view)
@@ -768,7 +768,7 @@ PtrElement SearchPageBreak (PtrElement pEl, int view, int pageNum,
   else
     while (pageNum < 0 && pElP != NULL)
       {
-	pElP = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
+	pElP = BackSearchTypedElem (pEl, PageBreak + 1, NULL, NULL);
 	if (pElP != NULL)
 	  {
 	    if (pElP->ElViewPSchema == view)

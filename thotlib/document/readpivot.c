@@ -2903,7 +2903,7 @@ void                AssociatePairs (PtrElement pRoot)
 	     do
 	       {
 		 pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1,
-					    pEl1->ElStructSchema);
+					    pEl1->ElStructSchema, NULL);
 		 if (pEl2 != NULL)
 		   /* on a trouve' un element du type cherche' */
 		   /* c'est le bon s'il a le meme identificateur */

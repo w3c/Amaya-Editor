@@ -3029,7 +3029,8 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	if (pE == NULL)
 	  if (pPRule->PrNPresBoxes > 0)
 	    /* la boite a copier est definie par son numero de type */
-	    pE = BackSearchTypedElem (pAb->AbElement, pPRule->PrPresBox[0], pEl1->ElStructSchema);
+	    pE = BackSearchTypedElem (pAb->AbElement, pPRule->PrPresBox[0],
+				      pEl1->ElStructSchema, NULL);
 	/*        else */
 	/* la boite a copier est definie par son nom */
 	/* non implemente' */

@@ -581,7 +581,7 @@ static void DestroyPageMarks (PtrDocument pDoc, PtrElement pRootEl, int schView)
   while (pEl != NULL)
     /* cherche la prochaine marque de page */
     {
-      pEl = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
+      pEl = FwdSearchTypedElem (pEl, PageBreak + 1, NULL, NULL);
       if (pEl != NULL && pEl->ElViewPSchema == schView)
 	/* on a trouve' une marque de page concernant la vue */
 	if (pEl->ElPageType == PgComputed)
@@ -1758,7 +1758,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
      /* the PAGE rule is then associated with the root element */
      {
        pEl = FwdSearchTypedElem (pRootEl, pRootEl->ElStructSchema->SsRootElem,
-				 pRootEl->ElStructSchema);
+				 pRootEl->ElStructSchema, NULL);
        if (pEl)
 	 pEl = pEl->ElFirstChild;
      }

@@ -1171,7 +1171,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	  pEl = pFirstEl;
 	  while (pEl)
 	    {
-	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
 	      if (pEl && ElemIsBefore (pLastEl, pEl))
 		/* l'element trouve' est apres l'element de fin, on */
 		/* fait comme si on n'avait pas trouve' */
@@ -1230,7 +1230,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   pEl = pFirstEl;
   while (pEl)
     {
-      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
       if (pEl)
 	{
 	  if (pEl != pLastEl && ElemIsBefore (pLastEl, pEl))

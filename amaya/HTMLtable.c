@@ -596,8 +596,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		elType.ElTypeNum = MathML_EL_TableRow;
 	      else
 		elType.ElTypeNum = HTML_EL_Table_row;
-	      currentrow = TtaSearchTypedElement (elType, SearchInTree,
-						  table);
+	      currentrow = TtaSearchTypedElement (elType, SearchInTree, table);
 	      backward = FALSE;
 	    }
 

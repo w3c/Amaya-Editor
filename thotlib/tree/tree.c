@@ -135,10 +135,10 @@ PtrElement GetOtherPairedElement (PtrElement pEl)
 		{
 		   if (begin)
 		      /* forward search */
-		      pOther = FwdSearchTypedElem (pOther, typeNum, pSS);
+		      pOther = FwdSearchTypedElem (pOther, typeNum, pSS, NULL);
 		   else
 		      /* backward search */
-		      pOther = BackSearchTypedElem (pOther, typeNum, pSS);
+		      pOther = BackSearchTypedElem (pOther, typeNum, pSS,NULL);
 		   if (pOther != NULL)
 		      /* we found an element having the same type as that of
 		         the of the element we are searching */
@@ -1351,7 +1351,7 @@ PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
   FwdSearch2TypesInSubtree
-  The parameter test is TRUE when pEl should be tested too.
+  The parameter test is TRUE if pEl should be tested too.
   ----------------------------------------------------------------------*/
 PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
 				     int typeNum2, int typeNum1,
@@ -1384,18 +1384,22 @@ PtrElement FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test,
 
 /*----------------------------------------------------------------------
    FwdSearchElem2Types
-   starting from the element pointed by pEl
-   forward searches in the tree an element of type typeNum1 (defined in the
-   structure scheme pointed by pSS1) or of typeNum2 (defined in the
-   structure scheme pointed by pSS2). If pSS1 or pSS2 is NULL, the
-   search will stop on any element whose type number is typeNum1 or
-   typeNum2, independently of its structure scheme.
-   This is useful for searching the base elements such as character
-   stringsm symbols, graphic elements, ...
-   The function returns a pointed to the found element or NULL.
+   starting from the element pointed by pEl search forward in the tree an
+   element of type typeNum1 (defined in the structure schema pointed by pSS1)
+   or of typeNum2 (defined in the structure schema pointed by pSS2).
+   If pSS1 (resp. pSS2) is NULL, the search will stop on any element whose
+   type number is typeNum1 (resp. peNum2), independently of its structure
+   schema. This is useful for searching basic elements such as character
+   strings, symbols, graphic elements, etc.
+   If pAncestor is NULL, the search may proceed to the end of the whole
+   abstract tree.
+   If pAncestor is not NULL, the search is performed only in the subtree
+   rooted at pAncestor.
+   The function returns a pointer to the element found or NULL if not found.
   ----------------------------------------------------------------------*/
 PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
-				PtrSSchema pSS1, PtrSSchema pSS2)
+				PtrSSchema pSS1, PtrSSchema pSS2,
+				PtrElement pAncestor)
 {
   PtrElement          pRet, pCur, pAsc;
   ThotBool            stop;
@@ -1404,9 +1408,10 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
   if (pEl != NULL)
     /* searches the subtree of the element */
     {
-      pRet = FwdSearch2TypesInSubtree (pEl, FALSE, typeNum2, typeNum1, pSS2, pSS1);
-      if (pRet == NULL)
-	/* if failure, searches the subtrees of the next siblings of the element */
+      pRet = FwdSearch2TypesInSubtree (pEl, FALSE, typeNum2, typeNum1, pSS2,
+				       pSS1);
+      if (pRet == NULL && pEl != pAncestor)
+	/* failure. Search the subtrees of the next siblings of the element */
 	{
 	  pCur = pEl->ElNext;
 	  while (pCur && pCur->ElStructSchema && pRet == NULL)
@@ -1415,7 +1420,7 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 					       typeNum1, pSS2, pSS1);
 	      pCur = pCur->ElNext;
 	    }
-	  /* if failure, searches the first ancestor with a next sibling */
+	  /* if failure, search the first ancestor with a following sibling */
 	  if (pRet == NULL)
 	    {
 	      stop = FALSE;
@@ -1425,7 +1430,12 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 		  pAsc = pAsc->ElParent;
 		  if (pAsc == NULL)
 		    stop = TRUE;
-		  else if (pAsc->ElNext != NULL)
+		  else if (pAsc == pAncestor)
+		    {
+		      pAsc = NULL;
+		      stop = TRUE;
+		    }
+		  else if (pAsc->ElNext)
 		    stop = TRUE;
 		}
 	      while (!stop);
@@ -1436,11 +1446,12 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 		  if (pAsc != NULL)
 		    {
 		      if (EquivalentType (pAsc, typeNum1, pSS1) ||
-			  EquivalentType (pAsc, typeNum2, pSS2) || typeNum1 == 0)
+			  EquivalentType (pAsc, typeNum2, pSS2) ||
+			  typeNum1 == 0)
 			pRet = pAsc;	/* found */
 		      else
 			pRet = FwdSearchElem2Types (pAsc, typeNum1, typeNum2,
-						    pSS1, pSS2);
+						    pSS1, pSS2, pAncestor);
 		    }
 		}
 	    }
@@ -1449,21 +1460,24 @@ PtrElement FwdSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
   return pRet;
 }
 
-
 /*----------------------------------------------------------------------
    FwdSearchTypedElem
    starting from the element pointed by pEl, makes a forward search
-   for an element of type typeNum defined in the structure scheme
-   pointed by pSS. If pSS is NULL, it ignores the structure scheme.
-   This is useful for searching the base elements such as character
-   stringsm symbols, graphic elements, ...
-   The function returns a pointed to the found element or NULL.
+   for an element of type typeNum defined in the structure schema
+   pointed by pSS. If pSS is NULL, it ignores the structure schema.
+   This is useful for searching basic elements such as character
+   strings, symbols, graphic elements, ...
+   If pAncestor is NULL, the search may proceed to the end of the whole
+   abstract tree.
+   If pAncestor is not NULL, the search is performed only in the subtree
+   rooted at pAncestor.
+   The function returns a pointer to the element found, or NULL if not found
   ----------------------------------------------------------------------*/
-PtrElement FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
+PtrElement FwdSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS,
+			       PtrElement pAncestor)
 {
-   return FwdSearchElem2Types (pEl, typeNum, 0, pSS, NULL);
+   return FwdSearchElem2Types (pEl, typeNum, 0, pSS, NULL, pAncestor);
 }
-
 
 /*----------------------------------------------------------------------
    BackSearch2TypesInSubtree                                      
@@ -1500,42 +1514,48 @@ static PtrElement BackSearch2TypesInSubtree (PtrElement pEl, int typeNum2,
 
 /*----------------------------------------------------------------------
    BackSearchElem2Types
-   starting from the element pointed by pEl
-   backward searches in the tree an element of type typeNum1 (defined in the
-   structure scheme pointed by pSS1) or of typeNum2 (defined in the
-   structure scheme pointed by pSS2). If pSS1 or pSS2 is NULL, the
-   search will stop on any element whose type number is typeNum1 or
-   typeNum2, independently of its structure scheme.
-   This is useful for searching the base elements such as character
-   stringsm symbols, graphic elements, ...
-   The function returns a pointed to the found element or NULL.
+   starting from the element pointed by pEl search backwards in the tree
+   an element of type typeNum1 (defined in the structure schema pointed
+   by pSS1) or of typeNum2 (defined in the structure schema pointed by pSS2).
+   If pSS1 (resp. pSS2) is NULL, the search will stop on any element whose
+   type number is typeNum1 (resp. typeNum2), independently of its structure
+   schema.  This is useful for searching basic elements such as character
+   strings symbols, graphic elements, ...
+   If pAncestor is NULL, the search may proceed to the end of the whole
+   abstract tree.
+   If pAncestor is not NULL, the search is performed only in the subtree
+   rooted at pAncestor.
+   The function returns a pointer to the element found or NULL.
   ----------------------------------------------------------------------*/
 PtrElement BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
-				 PtrSSchema pSS1, PtrSSchema pSS2)
+				 PtrSSchema pSS1, PtrSSchema pSS2,
+				 PtrElement pAncestor)
 {
   PtrElement          pRet, pCur;
 
-  pRet = NULL;			/* pRet: result of the search */
+  pRet = NULL;	 /* pRet: result of the search */
   if (pEl)
-    /* searches in the subtrees of the siblings preceding the element */
+    /* search in the subtrees of the siblings preceding the element */
     {
       pCur = pEl->ElPrevious;
       while (pCur != NULL && pRet == NULL)
 	{
-	  pRet = BackSearch2TypesInSubtree (pCur, typeNum2, typeNum1, pSS2, pSS1);
+	  pRet = BackSearch2TypesInSubtree (pCur, typeNum2, typeNum1, pSS2,
+					    pSS1);
 	  pCur = pCur->ElPrevious;
 	}
-      /* if failure, verify if it's the parent, then search in the subtrees of the uncles
-	 of the element */
+      /* if failure, verify if it's the parent, then search in the subtrees of
+	 the uncles of the element */
       if (pRet == NULL)
-	if (pEl->ElParent)
+	if (pEl->ElParent && pEl->ElParent != pAncestor)
 	  {
 	    pEl = pEl->ElParent;
 	    if (EquivalentType (pEl, typeNum1, pSS1) ||
 		EquivalentType (pEl, typeNum2, pSS2))
 	      pRet = pEl;	/* found, it's the parent */
 	    else
-	      pRet = BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2);
+	      pRet = BackSearchElem2Types (pEl, typeNum1, typeNum2, pSS1, pSS2,
+					   pAncestor);
 	  }
     }
   return pRet;
@@ -1544,16 +1564,21 @@ PtrElement BackSearchElem2Types (PtrElement pEl, int typeNum1, int typeNum2,
 
 /*----------------------------------------------------------------------
    BackSearchTypedElem
-   starting from the element pointed by pEl, makes a backward search
-   for an element of type typeNum defined in the structure scheme
-   pointed by pSS. If pSS is NULL, it ignores the structure scheme.
-   This is useful for searching the base elements such as character
-   stringsm symbols, graphic elements, ...
-   The function returns a pointed to the found element or NULL.
+   starting from the element pointed by pEl, do a backward search
+   for an element of type typeNum defined in the structure schema
+   pointed by pSS. If pSS is NULL, ignore the structure schema.
+   This is useful for searching basic elements such as character
+   strings, symbols, graphic elements, ...
+   If pAncestor is NULL, the search may proceed to the beginning of
+   the whole abstract tree.
+   If pAncestor is not NULL, the search is performed only in the
+   subtree rooted at pAncestor.
+   The function returns a pointer to the element found or NULL.
   ----------------------------------------------------------------------*/
-PtrElement BackSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
+PtrElement BackSearchTypedElem (PtrElement pEl, int typeNum, PtrSSchema pSS,
+				PtrElement pAncestor)
 {
-   return BackSearchElem2Types (pEl, typeNum, 0, pSS, NULL);
+   return BackSearchElem2Types (pEl, typeNum, 0, pSS, NULL, pAncestor);
 }
 
 
@@ -3835,7 +3860,6 @@ ElementType TtaGetElementType (Element element)
    return elementType;
 }
 
-
 /* ----------------------------------------------------------------------
    TtaSearchTypedElement
 
@@ -3848,66 +3872,63 @@ ElementType TtaGetElementType (Element element)
    element of that type will be returned, whatever its structure
    schema.
    scope: SearchForward, SearchBackward or SearchInTree.
-   element: the element that is the root of the tree
-   (if scope = SearchInTree) or the starting element
-   (if scope = SearchForward or SearchBackward).
+   element: the element that is the root of the tree (if scope = SearchInTree)
+   or the starting element (if scope = SearchForward or SearchBackward).
    Return value:
    the element found, or NULL if no element has been found.
    ---------------------------------------------------------------------- */
 Element TtaSearchTypedElement (ElementType searchedType, SearchDomain scope,
 			       Element element)
 {
-   PtrElement          pEl;
-   PtrElement          elementFound;
-   ThotBool            ok;
+  PtrElement          pEl;
+  PtrElement          elementFound;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   elementFound = NULL;
-   ok = TRUE;
-   if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-	ok = FALSE;
-     }
-   else if (((PtrElement) element)->ElStructSchema == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-	ok = FALSE;
-     }
-   else if (searchedType.ElSSchema == NULL)
-     {
-	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
-	  {
-	     TtaError (ERR_invalid_element_type);
-	     ok = FALSE;
-	  }
-     }
-   else if (searchedType.ElTypeNum < 1 ||
-	    searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
-     {
-	TtaError (ERR_invalid_element_type);
-	ok = FALSE;
-     }
+  UserErrorCode = 0;
+  elementFound = NULL;
+  ok = TRUE;
+  if (element == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (((PtrElement) element)->ElStructSchema == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (searchedType.ElSSchema == NULL)
+    {
+      if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
+	{
+	  TtaError (ERR_invalid_element_type);
+	  ok = FALSE;
+	}
+    }
+  else if (searchedType.ElTypeNum < 1 ||
+	   searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
+    {
+      TtaError (ERR_invalid_element_type);
+      ok = FALSE;
+    }
 
-   if (ok)
-     {
-	if (scope == SearchBackward)
-	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
-	else
-	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
-
-	if (pEl != NULL)
-	   if (scope == SearchInTree)
-	     {
-		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
-		   pEl = NULL;
-	     }
-	if (pEl != NULL)
-	   elementFound = pEl;
-     }
-   return ((Element) elementFound);
+  if (ok)
+    {
+      if (scope == SearchBackward)
+	pEl = BackSearchTypedElem ((PtrElement) element,
+		searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema),
+		NULL);
+      else if (scope == SearchInTree)
+	pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum,
+		(PtrSSchema) (searchedType.ElSSchema), (PtrElement) element);
+      else
+	pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum,
+				  (PtrSSchema) (searchedType.ElSSchema), NULL);
+      if (pEl != NULL)
+	elementFound = pEl;
+    }
+  return ((Element) elementFound);
 }
-
 
 /* ----------------------------------------------------------------------
    TtaSearchTypedElementInTree
@@ -3923,9 +3944,8 @@ Element TtaSearchTypedElement (ElementType searchedType, SearchDomain scope,
    schema.
    scope: SearchForward, SearchBackward or SearchInTree.
    parent: the limited tree where the searching can be done.
-   element: the element that is the root of the tree
-   (if scope = SearchInTree) or the starting element
-   (if scope = SearchForward or SearchBackward).
+   element: the element that is the starting point of the search. It must be
+   a descendant of parent.
    Return value:
    the element found, or NULL if no element has been found.
    ---------------------------------------------------------------------- */
@@ -3933,64 +3953,52 @@ Element TtaSearchTypedElementInTree (ElementType searchedType,
 				     SearchDomain scope, Element parent,
 				     Element element)
 {
-   PtrElement          pEl = NULL;
-   PtrElement          elementFound;
-   ThotBool            ok;
+  PtrElement          pEl;
+  PtrElement          elementFound;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   elementFound = NULL;
-   ok = TRUE;
-   if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-	ok = FALSE;
-     }
-   else if (((PtrElement) element)->ElStructSchema == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-	ok = FALSE;
-     }
-   else if (searchedType.ElSSchema == NULL)
-     {
-	if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
-	  {
-	     TtaError (ERR_invalid_element_type);
-	     ok = FALSE;
-	  }
-     }
-   else if (searchedType.ElTypeNum < 1 ||
-	    searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
-     {
-	TtaError (ERR_invalid_element_type);
-	ok = FALSE;
-     }
+  UserErrorCode = 0;
+  elementFound = NULL;
+  ok = TRUE;
+  if (element == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (((PtrElement) element)->ElStructSchema == NULL)
+    {
+      TtaError (ERR_invalid_parameter);
+      ok = FALSE;
+    }
+  else if (searchedType.ElSSchema == NULL)
+    {
+      if (searchedType.ElTypeNum > MAX_BASIC_TYPE)
+	{
+	  TtaError (ERR_invalid_element_type);
+	  ok = FALSE;
+	}
+    }
+  else if (searchedType.ElTypeNum < 1 ||
+	   searchedType.ElTypeNum > ((PtrSSchema) (searchedType.ElSSchema))->SsNRules)
+    {
+      TtaError (ERR_invalid_element_type);
+      ok = FALSE;
+    }
 
-   if (ok)
-     {
-	if (scope == SearchBackward)
-	   pEl = BackSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
-	else
-	   pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema));
+  if (ok)
+    {
+      if (scope == SearchBackward)
+	pEl = BackSearchTypedElem ((PtrElement) element,
+                searchedType.ElTypeNum, (PtrSSchema) (searchedType.ElSSchema),
+		(PtrElement) parent);
+      else
+	pEl = FwdSearchTypedElem ((PtrElement) element, searchedType.ElTypeNum,
+		(PtrSSchema) (searchedType.ElSSchema), (PtrElement) parent);
 
-	if (pEl != NULL)
-	   if (scope == SearchInTree)
-	     {
-		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
-		   pEl = NULL;
-	     }
-	if (pEl != NULL)
-	  elementFound = pEl;
-     }
-
-   if (parent != NULL)
-     {
-       /* check if parent is a parent of pEl */
-       while (pEl != NULL && pEl != (PtrElement) parent)
-	 pEl = pEl->ElParent;
-     }
-   if (pEl == NULL)
-     elementFound = NULL;
-   return ((Element) elementFound);
+      if (pEl != NULL)
+	elementFound = pEl;
+    }
+  return ((Element) elementFound);
 }
 
 /* ----------------------------------------------------------------------

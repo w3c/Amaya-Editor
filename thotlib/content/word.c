@@ -297,7 +297,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   while (pBuf == NULL && pEl != NULL)
     {
       /* Search the first non-empty and non-protected element */
-      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
       iChar = 1;
       if (pEl)
 	{
@@ -437,7 +437,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   while (pBuf == NULL && pEl)
     {
       /* Recherche le premier element texte non vide */
-      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
+      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL, NULL);
       if (pEl != NULL)
 	{
 	  if (endEl && ElemIsBefore (pEl, endEl))

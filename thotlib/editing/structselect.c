@@ -688,10 +688,10 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
 	      while (pRow && !pEl)
 		{
 		  pRow = BackSearchTypedElem (pRow, pRow->ElTypeNumber,
-					     pRow->ElStructSchema);
+					     pRow->ElStructSchema, NULL);
 		  if (pRow)
 		    {
-		      pCell = GetCellInRow (pRow, SelectedColumn, FALSE, &back);
+		      pCell = GetCellInRow (pRow, SelectedColumn, FALSE,&back);
 		      if (pCell)
 			/* there is a cell for that column in the row */
 			/* take that cell */
@@ -820,7 +820,7 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 		  while (pRow && !pEl)
 		    {
 		      pRow = FwdSearchTypedElem (pRow, pRow->ElTypeNumber,
-						 pRow->ElStructSchema);
+						 pRow->ElStructSchema, NULL);
 		      if (pRow)
 			{
 			  pCell = GetCellInRow (pRow, SelectedColumn, FALSE, &back);
@@ -3440,7 +3440,7 @@ static void SelColumn (PtrElement column)
   /* get the first row of the table */
   /* ********* TODO: there are several types of rows in MathML */
   rowType = GetElemWithException (ExcIsRow, column->ElStructSchema);
-  pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema);
+  pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema, NULL);
   /* get the relevant cell in the first row */
   do
     {

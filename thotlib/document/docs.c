@@ -356,7 +356,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	       /* selectionne la 1ere feuille du document */
 	       pEl = FwdSearchTypedElem ((*pDoc)->DocDocElement,
 					 (*pDoc)->DocSSchema->SsRootElem,
-					 (*pDoc)->DocSSchema);
+					 (*pDoc)->DocSSchema, NULL);
 	       if (pEl)
 		 {
 	          pEl = FirstLeaf (pEl);

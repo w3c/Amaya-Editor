@@ -273,7 +273,7 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		 stop = FALSE;
 		 do
 		   {
-		     pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
+		     pEl = BackSearchTypedElem (pEl, TypeRank, NULL, NULL);
 		     if (pEl == NULL)
 		       /* pas de marque de page precedente */
 		       stop = TRUE;
@@ -313,7 +313,7 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		  /* suivantes jusqu'a ne plus en trouver */
 		  while (pEl != NULL)
 		    {
-		       pEl = FwdSearchTypedElem (pEl, TypeRank, NULL);
+		       pEl = FwdSearchTypedElem (pEl, TypeRank, NULL, NULL);
 		       if (pEl != NULL)
 			  if ((pEl->ElViewPSchema == view) && (pEl->ElPageNumber > value))
 			     value = pEl->ElPageNumber - 1;
@@ -420,43 +420,43 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 
 	if (Maximum)
 	  {
-	     /* On veut la valeur maximale du compteur     */
-	     /* a partir de l'element trouve', cherche en avant tous les */
-	     /* elements ayant le type qui incremente le compteur, */
-	     /* jusqu'a rencontrer un autre element qui reset le compteur */
-	     if (TypeIncr <= MAX_BASIC_TYPE)
-		/* c'est un type de base, on le cherche quel que soit son schema */
-		pSchIncr = NULL;
-	     else
-		pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
-	     if (TypeIncr > 0)
-		do
-		  {
-		     pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-						pElNum->ElStructSchema);
-		     if (pEl != NULL &&
-			 EquivalentType (pEl, TypeIncr, pSchIncr))
-		       {
-			   /* on a trouve' un element du type qui incremente */
-			if (!CondAttr)
-			   value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-			else
-			   /* check conditions on attributes */
-			   {
-			   i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-			   if (i >= 0)
-			      if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-			         value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-			   }
-		       }
-		  }
-		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
+	    /* On veut la valeur maximale du compteur a partir de l'element
+	       trouve', cherche en avant tous les elements ayant le type qui
+	       incremente le compteur, jusqu'a rencontrer un autre element qui
+	       reset le compteur */
+	    if (TypeIncr <= MAX_BASIC_TYPE)
+	      /* c'est un type de base, on le cherche quel que soit son schema */
+	      pSchIncr = NULL;
+	    else
+	      pSchIncr = pSchStr; /* schema de struct. du type qui incremente*/
+	    if (TypeIncr > 0)
+	      do
+		{
+		  pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber,
+				       pSchIncr, pElNum->ElStructSchema, NULL);
+		  if (pEl != NULL &&
+		      EquivalentType (pEl, TypeIncr, pSchIncr))
+		    {
+		      /* on a trouve' un element du type qui incremente */
+		      if (!CondAttr)
+			value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+		      else
+			/* check conditions on attributes */
+			{
+			  i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
+			  if (i >= 0)
+			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+			}
+		    }
+		}
+	      while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
 	  }
 	ReleaseAliasTypeCount (TypeSet, pSS);
 	ReleaseAliasTypeCount (TypeIncr, pSS);
      }
    if (value < 0)
-      value = 0;
+     value = 0;
 
    return value;
 }
@@ -538,7 +538,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 	     stop = FALSE;
 	     do
 	       {
-		  pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
+		  pEl = BackSearchTypedElem (pEl, TypeRank, NULL, NULL);
 		  if (pEl == NULL)
 		     /* pas de marque de page precedente */
 		     stop = TRUE;
@@ -725,33 +725,33 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  /* elements ayant le type qui incremente le compteur, */
 	  /* jusqu'a rencontrer l'element qui a cree la boite compteur. */
 	  if (TypeIncr <= MAX_BASIC_TYPE)
-	     /* c'est un type de base, on le cherche quel que soit son schema*/
-	     pSchIncr = NULL;
+	    /* c'est un type de base, on le cherche quel que soit son schema*/
+	    pSchIncr = NULL;
 	  else
-	     pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
+	    pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
 	  if (TypeIncr > 0)
-	     do
-	       {
-		  pEl = FwdSearchElem2Types (pEl, TypeIncr,
-					     pElNum->ElTypeNumber, pSchIncr,
-					     pElNum->ElStructSchema);
-		  if (pEl != NULL &&
-		      EquivalentType (pEl, TypeIncr, pSchIncr))
-		    {
-		      /* on a trouve' un element du type qui incremente */
-		      if (!CondAttr)
-			value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-		      else
-			/* check conditions on attributes */
-			{
-			  i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-			  if (i >= 0)
-			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-			      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-			}
-		    }
-	       }
-	     while (pEl != NULL && pEl != pElNum);
+	    do
+	      {
+		pEl = FwdSearchElem2Types (pEl, TypeIncr,
+					   pElNum->ElTypeNumber, pSchIncr,
+					   pElNum->ElStructSchema, NULL);
+		if (pEl != NULL &&
+		    EquivalentType (pEl, TypeIncr, pSchIncr))
+		  {
+		    /* on a trouve' un element du type qui incremente */
+		    if (!CondAttr)
+		      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+		    else
+		      /* check conditions on attributes */
+		      {
+			i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
+			if (i >= 0)
+			  if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			    value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+		      }
+		  }
+	      }
+	    while (pEl != NULL && pEl != pElNum);
 	  }
 
 	else
@@ -796,7 +796,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 	     do
 	       {
 		  pEl = BackSearchElem2Types (pEl, TypeSet, TypeIncr, pSchSet,
-					      pSchIncr);
+					      pSchIncr, NULL);
 		  if (pEl != NULL)
 		    {
 		     if (EquivalentType (pEl, TypeIncr, pSchIncr))
@@ -1147,7 +1147,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    found = FALSE;
 	    do
 	      {
-		pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
+		pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL, NULL);
 		if (pEl != NULL &&
 		    /* on ignore les pages qui ne concernent pas la view */
 		    pEl->ElViewPSchema == pVa1->ViView)

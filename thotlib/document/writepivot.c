@@ -1281,7 +1281,7 @@ static void UpdateLanguageTable (PtrDocument pDoc, PtrElement pEl)
 
    while (pEl != NULL)
      {
-	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
+	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL, NULL);
 	if (pEl != NULL)
 	  {
 	     found = FALSE;

@@ -1286,8 +1286,10 @@ static int ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1,
 			 {
 			    /* go to next text element */
 			    *pEl2 = forw ?
-			       FwdSearchTypedElem (*pEl2, CharString + 1, NULL) :
-			       BackSearchTypedElem (*pEl2, CharString + 1, NULL);
+			       FwdSearchTypedElem (*pEl2, CharString + 1, NULL,
+						   NULL) :
+			       BackSearchTypedElem (*pEl2, CharString + 1,
+						    NULL, NULL);
 			    if ((*pEl2) != NULL)
 			       *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 			    else
@@ -1299,7 +1301,7 @@ static int ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1,
 			    if (pos1 == 0 && !forw)
 			      {
 				 /* go to previous text element */
-				 *pEl2 = BackSearchTypedElem (*pEl2, CharString + 1, NULL);
+				 *pEl2 = BackSearchTypedElem (*pEl2, CharString + 1, NULL, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -1309,7 +1311,7 @@ static int ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1,
 			    else if (pos1 > pEl1->ElTextLength && forw)
 			      {
 				 /* go to next text */
-				 *pEl2 = FwdSearchTypedElem (*pEl2, CharString + 1, NULL);
+				 *pEl2 = FwdSearchTypedElem (*pEl2, CharString + 1, NULL, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -1876,8 +1878,8 @@ ThotBool SearchRegularExpression (PtrElement *firstEl, int *firstChar,
 		  if (pEl1 != NULL && pEl1->ElTypeNumber != 1)
 		    {
 		       pEl1 = forward ?
-			  FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
-			  BackSearchTypedElem (NextElement (pEl1), CharString + 1, NULL);
+			  FwdSearchTypedElem (pEl1, CharString + 1, NULL, NULL) :
+			  BackSearchTypedElem (NextElement (pEl1), CharString + 1, NULL, NULL);
 		       if (pEl1 != NULL)
 			  inx1 = forward ? 1 : pEl1->ElTextLength;
 		    }
@@ -1897,9 +1899,8 @@ ThotBool SearchRegularExpression (PtrElement *firstEl, int *firstChar,
 				 if (*textchar == -1)
 				   {
 				      pEl1 = forward ?
-					 FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
-					 BackSearchTypedElem (NextElement (pEl1), CharString + 1,
-							      NULL);
+					 FwdSearchTypedElem (pEl1, CharString + 1, NULL, NULL) :
+					 BackSearchTypedElem (NextElement (pEl1), CharString + 1, NULL, NULL);
 				      if (pEl1 == NULL)
 					{
 					   stop = TRUE;
@@ -1983,9 +1984,9 @@ ThotBool SearchRegularExpression (PtrElement *firstEl, int *firstChar,
 			    if (*textchar == -1)
 			      {
 				 pEl1 = forward ?
-				    FwdSearchTypedElem (pEl1old, CharString + 1, NULL) :
+				    FwdSearchTypedElem (pEl1old, CharString + 1, NULL, NULL) :
 				    BackSearchTypedElem (pEl1old, CharString + 1,
-							 NULL);
+							 NULL, NULL);
 				 if (pEl1 == NULL)
 				    goto Lstop;
 				 else
