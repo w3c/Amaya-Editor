@@ -30,7 +30,7 @@
 28 Recherche de %s
 29 Statut inconnu
 30 Dialogue d'authentification
-31 **Please authenticate for
+31 Authentification pour
 32 Manque d'autorisation pour accéder à %s
 33 %s chargé mais ne comporte pas de données
 34 Interruption du transfert !
@@ -202,14 +202,14 @@
 200 Nom de l'utilisateur
 201 Serveur de publication
 202 Serveur d'annotations
-203 Charger automatiquement les annoations
+203 Charger automatiquement les annotations
 204 Couleur de sélection
 205 Couleur du curseur d'insertion
 206 Orientation
 207 Portrait
 208 Paysage
 209 Support FTP (experimental)
-210 Ce document est incomplet, ne le sauvez pas  - voir Vues/Montrer les erreurs
+210 Ce document est incomplet, ne le sauvez pas - voir Vues/Montrer les erreurs
 211 Dans le profil Amaya courant :
 212 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
 213 Le codage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.
