@@ -1411,6 +1411,10 @@
 	<message xml:lang="fi">Väri</message>
 	<message xml:lang="tr">Renk</message>
 </label>
+<label define="TMSG_NO_ELEMENT">
+	<message xml:lang="en">No element can be inserted</message>
+	<message xml:lang="fr">Pas d'élément � insérer</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

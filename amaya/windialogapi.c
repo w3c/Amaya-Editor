@@ -235,10 +235,78 @@ LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 }
 
 /*-----------------------------------------------------------------------
+ XMLDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK XMLDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+							 LPARAM lParam)
+{
+  int             index = 0;
+  UINT            i = 0;
+
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, WndTitle);
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		  TtaGetMessage (LIB, TMSG_DONE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES),
+		  TtaGetMessage (AMAYA, AM_CSS_FILE));
+      wndCSSList = GetDlgItem (hwnDlg, IDC_CSSLIST);
+      /* set the font of the window */
+      WIN_SetDialogfont (wndCSSList);
+      SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
+      while (i < NbItem && cssList[index] != EOS)
+	{
+	  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]); 
+	  index += strlen (&cssList[index]) + 1;	/* entry length */
+	  i++;
+	}
+
+      itemIndex = SendMessage (wndCSSList, LB_SETCURSEL, (WPARAM)0, (LPARAM)0);
+      SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      if (LOWORD (wParam) == IDC_CSSLIST && HIWORD (wParam) == LBN_SELCHANGE)
+	{
+	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
+	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
+	SetDlgItemText (hwnDlg, IDC_CSSEDIT, SzBuffer);
+	ThotCallback (BaseCSS + CSSSelect, STRING_DATA, SzBuffer);
+	}
+
+      switch (LOWORD (wParam))
+	{
+	case ID_CONFIRM:
+	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 1);
+	  EndDialog (hwnDlg, ID_CONFIRM);
+	  break;
+
+	case IDCANCEL:
+	case ID_DONE:
+	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 0);
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+    default:
+      return FALSE;
+    }
+  return TRUE;
+}
+
+/*-----------------------------------------------------------------------
  CSSDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-							 LPARAM lParam)
+			     LPARAM lParam)
 {
   int             index = 0;
   UINT            i = 0;
@@ -3537,6 +3605,23 @@ void CreateAltDlgWindow ()
 {
   DialogBox (hInstance, MAKEINTRESOURCE (GETALTERNATEDIALOG), NULL,
 	  (DLGPROC) AltDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateXMLDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateXMLDlgWindow (ThotWindow parent, int nb_item, char *buffer,
+			 char *title, char *msg_text)
+{
+  NbItem     = (UINT)nb_item;
+  cssList    = buffer;
+  strcpy (WndTitle, title);
+  if (NbItem == 0)
+    /* no entry */
+    MessageBox (parent, msg_text, WndTitle, MB_OK | MB_ICONWARNING);
+  else 
+    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent,
+	       (DLGPROC) XMLDlgProc);
 }
 
 /*-----------------------------------------------------------------------

@@ -43,34 +43,18 @@ static char     NameOfElementToBeCreated[MAX_TXT_LEN];
 
 /*----------------------------------------------------------------------
   BuildElementSelector
-  Build a selector containing all the element types defined in the
+  Prepare a selector containing all the element types defined in the
   structure schema of the first selected element.
   Return the number of entries in the selector created.
   ----------------------------------------------------------------------*/
-static int BuildElementSelector (PtrDocument pDoc)
+static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
+				 char menuBuf[MAX_TXT_LEN])
 {
-#ifdef _GTK
-  PtrDocument    pSelDoc;
-  PtrElement     firstSel, lastSel;
-  char           menuBuf[MAX_TXT_LEN];
   int            menuInd;
-  PtrSSchema     pSS;
-  int            nbItem, len, typeNum, height, firstChar, lastChar;
+  int            nbItem, len, typeNum;
   NotifyElement  notifyEl;
-  ThotBool       withTextInput;
 
   nbItem = 0;
-  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-			    &lastChar))
-    return 0;
-  if (pSelDoc != pDoc)
-    return 0;
-  
-  pSS = firstSel->ElStructSchema;
-  if (!strcmp (pSS->SsName, "TextFile"))
-    /* don't create structure elements in a Text file */
-    return 0;
-
   /* make the list of all possible element types */
   menuBuf[0] = EOS;
   menuInd = 0;
@@ -103,27 +87,7 @@ static int BuildElementSelector (PtrDocument pDoc)
 	      }
 	  }
       }
-
-  /* build the type selector */
-  if (nbItem > 0)
-    {
-       if (nbItem >= 4)
-	 height = 4;
-       else
-	 height = nbItem;
-       /* does not allow the user to create new type names in well
-	  defined XML vocabularies */
-       withTextInput =  (strcmp (pSS->SsName, "HTML") &&
-			 strcmp (pSS->SsName, "SVG") &&
-			 strcmp (pSS->SsName, "MathML"));
-       TtaNewSelector (NumSelectElemToBeCreated, NumFormElemToBeCreated,
-		       TtaGetMessage (LIB, TMSG_EL_TYPE), nbItem, menuBuf,
-		       height, NULL, withTextInput, TRUE);
-    }
   return nbItem;
-#else
-  return 0;
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -133,11 +97,15 @@ static int BuildElementSelector (PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void TtaShowElementMenu (Document doc, View view)
 {
-#ifdef _GTK
-  char          menuBuf[MAX_TXT_LEN];
-  int           nbItem;
+  PtrDocument    pSelDoc, pDoc;
+  PtrElement     firstSel, lastSel;
+  PtrSSchema     pSS;
+  char           menuBuf[MAX_TXT_LEN];
+  int            nbItem, height, firstChar, lastChar;
+  ThotBool       withTextInput;
 
   UserErrorCode = 0;
+  height = 4;
   if (doc < 1 || doc > MAX_DOCUMENTS)
     /* Checks the parameter document */
     TtaError (ERR_invalid_document_parameter);
@@ -145,16 +113,47 @@ void TtaShowElementMenu (Document doc, View view)
     TtaError (ERR_invalid_document_parameter);
   else if (!LoadedDocument[doc - 1]->DocReadOnly)
     {
+      pDoc = LoadedDocument[doc - 1];
+      if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar) &&
+	  pSelDoc == pDoc)
+	{
+	  pSS = firstSel->ElStructSchema;
+	  nbItem = 0;
+	  menuBuf[0] = EOS;
+	  withTextInput =  (strcmp (pSS->SsName, "HTML") &&
+			    strcmp (pSS->SsName, "SVG") &&
+			    strcmp (pSS->SsName, "MathML"));
+	  if (strcmp (pSS->SsName, "TextFile"))
+	    nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+	}
       /* generate the form with two buttons Apply and Done */
-      strcpy (menuBuf, TtaGetMessage (LIB, TMSG_APPLY));
-      TtaNewSheet (NumFormElemToBeCreated, TtaGetViewFrame (doc, view),
-		   TtaGetMessage(LIB, TMSG_EL_TYPE), 1, menuBuf, FALSE, 2, 'L',
-		   D_DONE);
-      nbItem = BuildElementSelector (LoadedDocument[doc - 1]);
+#ifdef _WINGUI
+      CreateXMLDlgWindow (TtaGetViewFrame (doc, 1), nbItem, menuBuf,
+			  TtaGetMessage (LIB, TMSG_EL_TYPE),
+			  TtaGetMessage (LIB, TMSG_NO_ELEMENT));
+#endif /* _WINGUI */
+#ifdef _GTK
       if (nbItem > 0)
-	TtaShowDialogue (NumFormElemToBeCreated, TRUE);
-    }
+	{
+	  TtaNewSheet (NumFormElemToBeCreated, TtaGetViewFrame (doc, view),
+		       TtaGetMessage(LIB, TMSG_EL_TYPE),
+		       1, TtaGetMessage (LIB, TMSG_INSERT), FALSE, 2, 'L',
+		       D_DONE);
+	  if (nbItem >= 4)
+	    height = 4;
+	  else
+	    height = nbItem;
+	  /* does not allow the user to create new type names in well
+	     defined XML vocabularies */
+	  TtaNewSizedSelector (NumSelectElemToBeCreated, NumFormElemToBeCreated,
+			       TtaGetMessage (LIB, TMSG_EL_TYPE), nbItem, menuBuf,
+			       200, height, NULL, withTextInput, TRUE);
+	  TtaShowDialogue (NumFormElemToBeCreated, TRUE);
+	}
+      else
+	TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_NO_ELEMENT), NULL);
 #endif /* _GTK */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -168,7 +167,8 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
   PtrElement   firstSel, lastSel;
   PtrSSchema   pSS;
   char*        mappedName = NULL;
-  int          firstChar, lastChar, typeNum;
+  char         menuBuf[MAX_TXT_LEN];
+  int          firstChar, lastChar, typeNum, height, nbItem;
 
   doit = FALSE;
   switch (ref)
@@ -216,6 +216,7 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
 	  if (!done)
 	    /* this type name is unknown in the structure schema */
 	    {
+	      height = 4;
 	      /* does not allow the user to create new type names in well
 		 defined XML vocabularies */
 	      if (strcmp (pSS->SsName, "HTML") &&
@@ -229,7 +230,23 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
 		  if (typeNum > 0)
 		    {
 		      CreateNewElement (typeNum, pSS, pDoc, FALSE);
-		      BuildElementSelector (pDoc);
+		      nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+#ifdef _GTK
+		      if (nbItem > 0)
+			{
+			  if (nbItem >= 4)
+			    height = 4;
+			  else
+			    height = nbItem;
+			  /* does not allow the user to create new type names in well
+			     defined XML vocabularies */
+			  TtaNewSizedSelector (NumSelectElemToBeCreated,
+					       NumFormElemToBeCreated,
+					       TtaGetMessage (LIB, TMSG_EL_TYPE),
+					       nbItem, menuBuf,
+					       200, height, NULL, TRUE, TRUE);
+			}
+#endif /* _GTK */
 		    }
 		}
 	    }

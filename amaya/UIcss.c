@@ -1071,11 +1071,11 @@ static void InitCSSDialog (Document doc, char *s)
     }
 
   /* display the form */
-#  ifdef _WINGUI
+#ifdef _WINGUI
   CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
 		      TtaGetMessage (AMAYA, AM_NO_CSS));
   TtaFreeMemory (buf);
-#  else  /* !_WINGUI */
+#else  /* _WINGUI */
   if (nb > 0)
     {
       if (nb >= 10)
@@ -1093,7 +1093,7 @@ static void InitCSSDialog (Document doc, char *s)
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
-#  endif /* !_WINGUI */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
