@@ -38,7 +38,7 @@ sub create_base {
 	my $base_name = shift;
 	my $out_basename = $base_directory . $base_name ;
 	
-	my $comment_at_the_begining =shift; #for the function  ::init_label
+	my $comment_at_the_begining = shift; #for the function  ::init_label
 
 # to avoid pb with %label if 2 call to this function 	
 	%label = ();
@@ -68,7 +68,7 @@ sub create_base {
 #	read the file source only if it exists and is readable
 	my @list = ();
 	do {
-	 	$_ = @list = Read_label::init_label ($in_headfile,$comment_at_the_begining);
+	 	$_ = @list = Read_label::init_label ($in_headfile, $comment_at_the_begining);
 	}while ($_ == 0);
 	my $total = $list[0];
 	my $i = 1;	

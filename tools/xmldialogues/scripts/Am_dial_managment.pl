@@ -219,7 +219,7 @@ do { # to continue to treat the same type of dialogue
 			$Import_am_msg::in_textdirectory = $lang_dir { $index{ $last_choice}};
 			$Import_am_msg::in_textsufix = $lang_sufix { $index{ $last_choice}};
 			$Import_am_msg::encodage = "latin1";
-			Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}}) ;
+			Import_am_msg::import_a_language ("en", $ending_label{ $index{ $last_choice}},$comment_for_begining_of_h_file) ;
 		}
 
 		$choice = -1; #to avoid problem		
@@ -252,7 +252,7 @@ do { # to continue to treat the same type of dialogue
 		$Import_am_msg::in_textdirectory = "$path_amaya/Amaya/tools/xmldialogues/in/";
 		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};				
 			}
-		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what} ) ;		
+		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what},$comment_for_begining_of_h_file ) ;		
 		$choice = -1; #to avoid problem		
 	}	
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -261,7 +261,8 @@ do { # to continue to treat the same type of dialogue
 										$OUT_MSG_directory,
 										$lang_sufix { $of_what},
 										$head_dir{ $of_what} . $head_name{ $of_what},
-										$ending_label { $of_what}
+										$ending_label { $of_what},
+										$comment_for_begining_of_h_file
 										);
 		$choice = -1; #to avoid problem		
 	}
@@ -302,7 +303,8 @@ do { # to continue to treat the same type of dialogue
 										$OUT_MSG_directory,
 										$lang_sufix { $of_what},
 										$head_dir{ $of_what} . $head_name{ $of_what},
-										$ending_label { $of_what}
+										$ending_label { $of_what},
+										$comment_for_begining_of_h_file
 										);
 	}
 }

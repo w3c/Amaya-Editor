@@ -41,12 +41,27 @@ sub init_label {
 
 	my $line = "";
 	my $line_count = 0; # used to indicate the line of an error
-	my $continue = 1; # to indicate that one label at least is rcognise 
+	my $continue = 0; # to indicate that one label at least is recognise 
 
 #to avoid problem	
 	$num_of_label = 0 ; 
 	@list_of_label = (); 
 	%label_refs = (); 
+	
+	
+	unless (defined ( $comment_for_begining_of_h_file) ) {
+						
+		print "There must be a specific commentary at the begining like:\n"
+				. "\t/*that is the real begin of labels used*/\n"
+				. "please fill the comment_for_begining_of_h_file variable into "									
+				. "Am_dial_managment and verify that this parameter is given to "
+				. "Read_label::init_label\n"
+				. "Now press <ctrl>-c and restart the proram after modification\n";
+				<STDIN>;
+	}
+					
+					
+					
 # open $in_labelfile only if it exists and is readable
    if (-r $in_labelfile) { # it's ok
 		if (! (open (LABEL, "<$in_labelfile")) ) {
@@ -55,27 +70,22 @@ sub init_label {
 		else {
 #	drop the comments at the beginning	
 #	comments have to be either empty lines either don't begin with "#define" 
-			while ( $continue && defined ($line = <LABEL>)  ) {
+			
+			
+			do {
+				$line = <LABEL> ;
+				chomp $line;
 				$line_count++;
-				chomp ($line);
-				if (defined ($line) 
-					&& defined ( $comment_for_begining_of_h_file) 
-					&& $line eq $comment_for_begining_of_h_file ) {
-						$continue = 0 ;
-				}		 
-			} 
+				if ($line eq $comment_for_begining_of_h_file) {
+					$continue = 1;
+				}
+			}while ( defined ($line) && $line ne $comment_for_begining_of_h_file );
+			
+			
+
 #	the first line in witch we are interested can be (but not necessary)read	now
-			if ( $continue) {
+			if ( $continue == 0) {
 				do {
-					unless (defined ( $comment_for_begining_of_h_file) ) {
-						
-							print "There must be a specific commentary at the begining like:\n"
-									. "\t/*that is the real begin of labels used*/\n"
-									. "please fill the $ comment_for_begining_of_h_file variables into "									."Am_dial_managment and verify that this parameter is given to"
-									. "Read_label::init_label\n"
-									. "Now press <ctrl>-c and restart the proram\n";
-									<STDIN>;
-					}
 					print "\n\tPlease write this line at the begining of the good labels:\n",
 							"$comment_for_begining_of_h_file\n",
 							"\tInto $in_labelfile \n",
@@ -87,7 +97,7 @@ sub init_label {
 				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
 				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; ##warning : recursivity, can do some errors
 			}
-			else { #continue == 0
+			else { #continue == 1
 #	reads and adds all the labels
 #	warning, the rest of the file must be well-formed without errors 	
 	 			@list_of_label = ();	# to avoid pbs
@@ -174,7 +184,7 @@ use Read_label qw (&init_label);
 {
 my @a = (); # sorted list
 my %b = (); # table keys/values
-my @list = Read_label::init_label ("/home/ehuck/opera/Amaya/amaya/amayamsg.h");
+my @list = Read_label::init_label ("/home/ehuck/opera/Amaya/amaya/amayamsg.h", $comment);
 my $total = $list[0];
 
 my $i = 1;
