@@ -1450,6 +1450,12 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ script_language: BEGIN
+        Create ' language="';
+        Create script_language;
+        Create DoubleQuote;
+        END;
+
  defer: BEGIN
         create SAN;
 	Create 'defer="defer"';
