@@ -1895,7 +1895,6 @@ static boolean      PolyNewPoint (x, y)
 int                 x, y;
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    ThotPoint          *tmp;
    int                 taille;
 
@@ -1919,7 +1918,6 @@ int                 x, y;
    points[npoints].x = x;
    points[npoints].y = y;
    npoints++;
-#  endif /* _WINDOWS */
    return (TRUE);
 }
 
@@ -2071,9 +2069,8 @@ C_points           *controls;
    /* alloue la liste des points */
    npoints = 0;
    MAX_points = ALLOC_POINTS;
-#  ifndef _WINDOWS
+
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
-#  endif /* _WINDOWS */
 
    adbuff = buffer;
    j = 1;
@@ -2133,7 +2130,10 @@ C_points           *controls;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (frame);
+   Polyline (TtDisplay, points, npoints) ;
+#  else  /* !_WINDOWS */
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #  endif /* _WINDOWS */
 
@@ -2183,13 +2183,16 @@ C_points           *controls;
    float               x1, y1, x2, y2;
    float               cx1, cy1, cx2, cy2;
    Pixmap              pat;
+#  ifdef _WINDOWS
+   HPEN                hPen;
+   HPEN                hOldPen;
+   int                 result;
+#  endif /* _WINDOWS */
 
    /* allocate the list of points */
    npoints = 0;
    MAX_points = ALLOC_POINTS;
-#  ifndef _WINDOWS
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
-#  endif /* _WINDOWS */
 
    adbuff = buffer;
    j = 1;
@@ -2246,24 +2249,41 @@ C_points           *controls;
 
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-#  ifndef _WINDOWS
-   if (pat != 0)
-     {
-	XSetTile (TtDisplay, TtGreyGC, pat);
-	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
-	XFreePixmap (TtDisplay, pat);
+   if (pat != 0) {
+#     ifdef _WINDOWS
+#     else  /* !_WINDOWS */
+      XSetTile (TtDisplay, TtGreyGC, pat);
+      XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
+      XFreePixmap (TtDisplay, pat);
+#     endif /* _WINDOWS */
      }
-#  endif /* _WINDOWS */
 
    /* Draw the border */
-   if (thick > 0)
-     {
-	InitDrawing (0, style, thick, RO, active, fg);
-#       ifndef _WINDOWS
-	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-#       endif /* _WINDOWS */
-	FinishDrawing (0, RO, active);
-     }
+   if (thick > 0) {
+      InitDrawing (0, style, thick, RO, active, fg);
+#     ifdef _WINDOWS
+      WIN_GetDeviceContext (frame);
+      result = SelectClipRgn (TtDisplay, clipRgn);  
+      if (result == ERROR)
+         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
+      /* if (!GetClipRgn(TtDisplay, clipRgn))
+         WinErrorBox (NULL); */
+      WinLoadGC (TtDisplay, fg, RO);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+      InitDrawing (0, style, thick, RO, active, fg);
+      Polyline (TtDisplay, points, npoints);
+      FinishDrawing (0, RO, active);
+	  SelectObject (TtDisplay, hOldPen);
+      WIN_ReleaseDeviceContext ();
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd);
+#     else  /* !_WINDOWS */
+      XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
+#     endif /* _WINDOWS */
+      FinishDrawing (0, RO, active);
+   }
 
    /* free the table of points */
    free ((char *) points);
