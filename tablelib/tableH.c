@@ -652,8 +652,13 @@ ThotBool         force;
     {
       /* limit given by precent of available space */
       width = table->AbEnclosing->AbBox->BxWidth * percent / 100;
-      if (width == 0)
-	width = 1;      
+    }
+
+  if (constraint && width == 0)
+    {
+      /* limit given by available space */
+      width = table->AbEnclosing->AbBox->BxWidth;
+      constraint = FALSE;
     }
   sumPercent = 0;
   min = 0;
