@@ -2433,6 +2433,9 @@ int main (int argc, char **argv)
 #endif /* _WX */
 #endif /* _WINDOWS */
 {
+#ifdef _WINDOWS
+  char             *fileName;
+#endif
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2855,7 +2858,7 @@ int main (int argc, char **argv)
 	  if (tmpDir)
 	    {
 	      length = strlen (tmpDir);
-	      /* remove CSS files in the temporary directory */
+	      /* remove CSS files from the temporary directory */
 	      for (i = 0; i < cssCounter; i++)
 		{
 		  if (CSSName[i] && TtaFileExist (CSSName[i]) &&
@@ -2869,6 +2872,37 @@ int main (int argc, char **argv)
 		  }
 		  TtaFreeMemory (CSSName[i]);
 		  CSSName[i] = NULL;
+		}
+	      /* remove the structure and presentation schemas from the
+		 temporary directory */
+	      for (i = 0; i < TheDoc->DocNNatures; i++)
+		{
+		  if (TheDoc->DocNatureName[i])
+		    {
+		      fileName = (char *)TtaGetMemory (length +
+                                       strlen(TheDoc->DocNatureName[i]) + 6);
+		      sprintf (fileName, "%s\\%s.STR", tmpDir, TheDoc->DocNatureName[i]);
+		      if (TtaFileExist (fileName))
+#ifndef _WX
+			DeleteFile (fileName);
+#else /* _WX */
+		        /* TODO */
+#endif /* _WX */
+		      TtaFreeMemory (fileName);
+		    } 
+		  if (TheDoc->DocNaturePresName[i])
+		    {
+		      fileName = (char *)TtaGetMemory (length +
+                                     strlen(TheDoc->DocNaturePresName[i]) + 6);
+		      sprintf (fileName, "%s\\%s.PRS", tmpDir, TheDoc->DocNaturePresName[i]);
+		      if (TtaFileExist (fileName))
+#ifndef _WX
+			DeleteFile (fileName);
+#else /* _WX */
+		        /* TODO */
+#endif /* _WX */
+		      TtaFreeMemory (fileName);
+		    } 
 		}
 	      if (rmdir (tempDir))
 		  {
