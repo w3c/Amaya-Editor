@@ -24,7 +24,7 @@ extern ThotBool AnnotFilter_delete ( List **list,
                                      AnnotMeta *annot );
 extern List *AnnotFilter_search ( List *list,
                                   void *object,
-				  ThotBool isString);
+                                  ThotBool isString );
 extern ThotBool AnnotFilter_show ( List *list,
                                    void *object );
 extern ThotBool AnnotFilter_showServer ( List *list,
@@ -42,7 +42,7 @@ extern ThotBool AnnotList_delAnnot ( List **list,
                                      ThotBool useAnnotUrl );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotFilter_free ( List *annot_list,
-			       ThotBool (*del_function)(void *));
+                               ThotBool (*del_function)(void *) );
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
@@ -94,7 +94,7 @@ extern ThotBool AnnotFilter_delete (/* List **list,
                                        AnnotMeta *annot */);
 extern List *AnnotFilter_search (/* List *list,
                                     void *object,
-				    ThotBool isString */);
+                                    ThotBool isString */);
 extern ThotBool AnnotFilter_show (/* List *list,
                                      void *object */);
 extern ThotBool AnnotFilter_showServer (/* List *list,
@@ -112,7 +112,7 @@ extern ThotBool AnnotList_delAnnot (/* List **list,
                                        ThotBool useAnnotUrl */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotFilter_free (/* List *annot_list,
-				 ThotBool (*del_function)(void *) */);
+                                 ThotBool (*del_function)(void *) */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);

@@ -297,12 +297,6 @@ static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_en
   int index = 0;
   int i = 0;
 
-	/*
-    FilterSelHwnd = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				 10, 40, 310, 200, FilterHwnd, (HMENU) 1, 
-				(HINSTANCE) GetWindowLong (FilterHwnd, GWL_HINSTANCE), NULL);
-	*/
-
   /* erase the text of the existing window */
   SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_RESETCONTENT, 0, 0);
 
@@ -310,7 +304,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_en
     {
       SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_INSERTSTRING,
 		  i, (LPARAM) &entries[index]); 
-      /* @@ Longueur de l'intitule ?? */
+      /* @@ JK: what does this mean? Longueur de l'intitule ?? */
       index += ustrlen (&entries[index]) + 1;
       i++;
     }
@@ -356,9 +350,9 @@ Document doc;
 	   CHAR_T *name;
 	   if (selector == BY_TYPE)
 	     name = ANNOT_GetLabel (&annot_schema_list,
-				    (RDFResourceP)filter->object);
+				    (RDFResourceP) filter->object);
 	   else
-	     name = (CHAR_T*)filter->object;
+	     name = (CHAR_T *) filter->object;
 	   usprintf (&s[i], TEXT("%c%s"), 
 		     (filter->show) ? TEXT(' ') : TEXT('*'),
 		     name);
@@ -401,6 +395,7 @@ ThotBool show;
   List               *list_item;
   AnnotFilterData    *filter;
   CHAR_T             *annot_url;
+  CHAR_T             *name;
   AnnotMeta          *annot;
   int                 length;
   ThotBool            annot_show;
@@ -436,7 +431,14 @@ ThotBool show;
   while (list_item)
     {
       filter = (AnnotFilterData *) list_item->object;
-      if (filter && !ustrcasecmp (filter->object, object + 1))
+
+      if (selector == BY_TYPE)
+	name = ANNOT_GetLabel (&annot_schema_list,
+			       (RDFResourceP) filter->object);
+      else
+	name = (CHAR_T *) filter->object;
+
+      if (filter && !ustrcasecmp (name, object + 1))
 	{
 	  filter->show = show;
 	  break;
@@ -954,6 +956,7 @@ View                view;
  **  AnnotTypes menu
  ***************************************************/
 
+#if 0
 /*---------------------------------------------------------------
   BuildAnnotTypesSelector
   builds the list showing the different annotation types
@@ -1020,6 +1023,7 @@ static void BuildAnnotTypesSelector ()
 		  TRUE);
 #endif /* !_WINDOWS */
 }
+#endif 
 
 /*---------------------------------------------------------------
   BuildAnnotTypesSelector2
@@ -1027,9 +1031,9 @@ static void BuildAnnotTypesSelector ()
   Returns the number of entries in the menu.
 ------------------------------------------------------------------*/
 #ifdef __STDC__
-static int BuildAnnotTypesSelector2 (Document doc)
+static int BuildAnnotTypesSelector (Document doc)
 #else
-static	int BuildAnnotTypesSelector2 (doc)
+static	int BuildAnnotTypesSelector (doc)
 Document doc;
 #endif /* __STDC__ */
 {
@@ -1053,7 +1057,7 @@ Document doc;
 
       for (item=annotClass->class->subClasses; item; item=item->next)
 	{
-	  RDFClassP subType = (RDFClassP)item->object;
+	  RDFClassP subType = (RDFClassP) item->object;
 	  TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
 
 	  t->type = subType;
@@ -1079,7 +1083,7 @@ Document doc;
   /* create the main menu */
   TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 	       NULL, nb_entries, s, NULL, 'L');
-
+  
   return nb_entries;
 }
 
@@ -1140,6 +1144,7 @@ CHAR_T             *data;
     }
 }
 
+#if 0 
 /*----------------------------------------------------------------------
   AnnotTypes
   Returns the RDF Resource pointer that represents the type selection
@@ -1188,16 +1193,17 @@ View                view;
 #endif /* _WINDOWS */
   return NULL;
 }
+#endif
 
 /*----------------------------------------------------------------------
-  AnnotTypes2
+  AnnotTypes
   Returns the RDF Resource pointer that represents the type selection
   of the user. It is NULL if the user doesn't select a type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-RDFResourceP AnnotTypes2 (Document document, View view)
+RDFResourceP AnnotTypes (Document document, View view)
 #else
-RDFResourceP AnnotTypes2 (document, view)
+RDFResourceP AnnotTypes (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__*/
@@ -1206,7 +1212,7 @@ View                view;
   int nb_entries;
 
   /* prepare the selector */
-  nb_entries = BuildAnnotTypesSelector2 (document);
+  nb_entries = BuildAnnotTypesSelector (document);
   
   /* activate the menu that has just been created */
   ReturnOption = -1;
