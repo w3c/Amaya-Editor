@@ -1031,6 +1031,7 @@ int                 keyboard;
   ThotBool            notification;
   ThotBool	      setAttribute = TRUE;
 
+  language = 0;
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
   pSelAb = *pAb;
@@ -2447,6 +2448,7 @@ int                 editType;
 
 	if (pAb != NULL)
 	  {
+             pLastAb = NULL;
 	    /*-- Les commandes sont traitees dans l'application */
 	     /* si la selection ne porte que sur un pave */
 	     pBox = ViewFrameTable[frame - 1].FrSelectionEnd.VsBox;

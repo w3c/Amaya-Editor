@@ -220,7 +220,7 @@ View                view;
 ThotBool            extendSel;
 #endif /* __STDC__ */
 {
-   PtrBox              pBox;
+   PtrBox              pBox = NULL;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;

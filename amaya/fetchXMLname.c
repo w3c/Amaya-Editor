@@ -233,19 +233,22 @@ STRING            buffer;
 	name = TtaGetSSchemaName (elType.ElSSchema);
 	if (ustrcmp (TEXT("MathML"), name) == 0)
 	  ptr = MathMLElemMappingTable;
-	if (ustrcmp (TEXT("GraphML"), name) == 0)
+	else if (ustrcmp (TEXT("GraphML"), name) == 0)
 	  ptr = GraphMLElemMappingTable;
+        else
+	  ptr = NULL;
 
-	do
-	  {
+	if (ptr)
+	  do
+	    {
 	    if (ptr[i].ThotType == elType.ElTypeNum)
 	      {
 		*buffer = ptr[i].XMLname;
 		return;
 	      }
 	    i++;
-	  }
-	while (ptr[i].XMLname[0] != EOS);	  
+	    }
+	  while (ptr[i].XMLname[0] != EOS);	  
      }
    *buffer = TEXT("???");
    return;

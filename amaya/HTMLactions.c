@@ -1790,13 +1790,11 @@ NotifyElement* event;
    /* get the other Thot document to be synchronized with the one where the
       user has just clicked */
    otherDoc = 0;
+   otherDocIsHTML = FALSE;
    if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docHTMLRO)
       /* the user clicked on a HTML document, the other doc is the
          corresponding source document */
-      {
       otherDoc = DocumentSource[doc];
-      otherDocIsHTML = FALSE;
-      }
    else if (DocumentTypes[doc] == docSource ||
 	    DocumentTypes[doc] == docSourceRO)
       /* the user clicked on a source document, the other doc is the

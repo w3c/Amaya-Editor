@@ -1320,7 +1320,7 @@ View                view;
 #endif /* __STDC__ */
 {
    NotifyElement       event;
-   STRING              tempdocument;
+   STRING              tempdocument = NULL;
    CHAR_T              documentname[MAX_LENGTH];
    CHAR_T              tempdir[MAX_LENGTH];
    Document            htmlDoc;
@@ -2077,6 +2077,7 @@ void                DoSaveAs ()
   else
     url_sep = URL_SEP;
 
+  new_put_def_name = FALSE;
   if (SaveName[0] == EOS)
     {
       /* there is no document name */
@@ -2102,10 +2103,7 @@ void                DoSaveAs ()
 	}
     }
   else
-    {
       ustrcat (documentFile, SaveName);
-      new_put_def_name = FALSE;
-    }
 
   doc = SavingDocument;
   if (ok && dst_is_local)

@@ -273,7 +273,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
-   UCHAR_T               line[MAX_TXT_LEN];
+   UCHAR_T             line[MAX_TXT_LEN];
    ThotBool            ok, paragraph, emptyLine;
 
    ok = FALSE;
@@ -281,6 +281,7 @@ PtrDocument         pDoc;
    /* exceptions ExcImportLine ou ExcImportParagraph ? */
    exceptNum = ExcImportLine;
    typeNum = GetElemWithException (exceptNum, pDoc->DocSSchema);
+   paragraph = FALSE;
    if (typeNum != 0)
       /* exception ImportLine trouvee. on traitera le fichier d'entree */
       /* par lignes */

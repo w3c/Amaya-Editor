@@ -205,6 +205,7 @@ ThotBool           *assoc;
 
    *pDoc = NULL;
    *viewNum = 0;
+   pD = NULL;
    if (FrameTable[frame].FrDoc != 0)
      {
 	pD = LoadedDocument[FrameTable[frame].FrDoc - 1];

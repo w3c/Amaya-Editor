@@ -41,6 +41,7 @@
 +print
 +source-view
 +spell
++svg
 +tables
 +templates
 +views
@@ -241,7 +242,7 @@ HelpMath
 
 ################# SVG
 [svg]
-&ShowGraphicsPalette
+ShowGraphicsPalette
 
 ########### STYLE
 [html-style]
