@@ -59,8 +59,8 @@ AmayaXMLPanel::AmayaXMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_
 
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
-
-  RefreshXMLPanel();
+  // Do not refresh
+  //RefreshXMLPanel();
 }
 
 /*

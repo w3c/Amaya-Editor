@@ -200,10 +200,10 @@ void AmayaXHTMLPanel::DoUpdate()
   AmayaSubPanel::DoUpdate();
   
   // force to refresh the strong, emphasis... button states
-  Document doc;
-  View view;
-  TtaGetActiveView( &doc, &view );
-  TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
+  //Document doc;
+  //View view;
+  //TtaGetActiveView( &doc, &view );
+  //TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
 }
 
 

@@ -370,11 +370,15 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
  */
 void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaParams& params )
 {
+  // Get the active window
+  AmayaWindow * activeWindow = TtaGetActiveWindow();
+
   // send data to each registred panel which have same type
   for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
     {
       AmayaSubPanel * current = node->GetData();
-      if ( current->GetPanelType() == panel_type )
+      if ( current->GetPanelType() == panel_type &&
+	   (current->IsFloating () || current->GetTopAmayaWindow() == activeWindow) )
 	current->SendDataToPanel( params );
     }
 }

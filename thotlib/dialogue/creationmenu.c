@@ -134,7 +134,8 @@ void TtaShowElementMenu (Document doc, View view)
       withTextInput =  (strcmp (pSS->SsName, "HTML") &&
 			strcmp (pSS->SsName, "SVG") &&
 			strcmp (pSS->SsName, "MathML"));
-      if (strcmp (pSS->SsName, "TextFile"))
+      if (strcmp (pSS->SsName, "TextFile") && withTextInput)
+	/* build the menu only for generic XML schemas */
 	nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
 
       /* generate the form with two buttons Isert and Done */
