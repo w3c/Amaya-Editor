@@ -1019,7 +1019,9 @@ View                view;
    /* compose le titre du formulaire "Recherche dans le document..." */
    ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (bufTitle, pDoc->DocDName);
+#  ifdef _WINDOWS
    strcpy (msgCaption, bufTitle);
+#  endif /* _WINDOWS */
    /* feuille de dialogue Rechercher texte et structure */
    ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
