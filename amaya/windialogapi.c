@@ -171,6 +171,9 @@ static ThotWindow         WndSearchEdit;
 static ThotWindow         GraphPal = NULL;
 static ThotWindow         MathPal = NULL;
 static ThotWindow         GreekPal = NULL;
+static ThotWindow         CharacterForm = NULL;
+static ThotWindow         FormatForm = NULL;
+static ThotWindow         PrintForm = NULL;
 
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -599,6 +602,7 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARA
   switch (msg)
     {
     case WM_INITDIALOG:
+	  PrintForm = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_PRINT));
       SetWindowText (GetDlgItem (hwnDlg, ID_PRINT), TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
@@ -630,6 +634,7 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARA
 	  break;
 	case ID_PRINT:
 	  ThotCallback (BasePrint + PrintSupport, INTEGER_DATA, (CHAR_T*) 0);
+	  PrintForm = NULL;
 	  EndDialog (hwnDlg, ID_PRINT);
 	  if (TtaGetPrinterDC (FALSE, &orientation, &paper))
 	    {
@@ -642,6 +647,7 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARA
 	  break;
 	case IDCANCEL:
 	  ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)0);
+	  PrintForm = NULL;
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	}
@@ -1515,6 +1521,7 @@ LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, L
   switch (msg)
     {
     case WM_INITDIALOG:
+	  CharacterForm = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_CHAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_FONTFAMILYGROUP), TtaGetMessage (LIB, TMSG_FONT_FAMILY));
       SetWindowText (GetDlgItem (hwnDlg, IDC_TIMES), TEXT("Times"));
@@ -1632,10 +1639,12 @@ LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, L
       switch (LOWORD (wParam)) {
       case ID_DONE:
 	ThotCallback (NumFormPresChar, INTEGER_DATA, (CHAR_T*) 0);
+	CharacterForm = NULL;
 	EndDialog (hwnDlg, ID_DONE);
 	break;
       case WM_CLOSE:
       case WM_DESTROY:
+	CharacterForm = NULL;
 	EndDialog (hwnDlg, ID_DONE);
 	break;
       case ID_APPLY:
@@ -1974,6 +1983,7 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 
   switch (msg) {
   case WM_INITDIALOG:
+	   FormatForm = hwnDlg;	
        SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_FORMAT));
 	   SetWindowText (GetDlgItem (hwnDlg, IDCALIGNGROUP), TtaGetMessage (LIB, TMSG_ALIGN));
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTALIGN), TtaGetMessage (LIB, TMSG_UNCHANGED));
@@ -2033,11 +2043,13 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       
     case WM_CLOSE:
     case WM_DESTROY:
-      EndDialog (hwnDlg, ID_DONE);
+ 	  FormatForm = NULL;	
+	  EndDialog (hwnDlg, ID_DONE);
       break;
       
     case ID_DONE:
       ThotCallback (NumFormPresFormat, INTEGER_DATA, (CHAR_T*) 0);
+	  FormatForm = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
       
@@ -3035,7 +3047,12 @@ void       CreatePrintDlgWindow (ThotWindow parent, STRING ps_dir)
   gbAbort            = FALSE;
   ghwndMain          = parent;
   ustrcpy (currentFileToPrint, ps_dir);
-  DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+
+  if (PrintForm)
+    SetFocus (PrintForm);
+  else
+    DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
+
   if (!gbAbort)
     {
       EnableWindow  (parent, TRUE);
@@ -3181,7 +3198,9 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style, 
     fontUnderline = font_underline;
     fontSize      = font_size;
 
-
+  if (CharacterForm)
+    SetFocus (CharacterForm);
+  else
 	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
 }
 
@@ -3307,7 +3326,10 @@ void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing
   Old_lineSp          = old_lineSp;
   Line_spacingNum     = line_spacingNum;
   
-  DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+  if (FormatForm)
+    SetFocus (FormatForm);
+  else
+	DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 }
 
 /*-----------------------------------------------------------------------
