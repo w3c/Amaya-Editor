@@ -409,7 +409,6 @@ View view;
 #endif /* __STDC__*/
 {
   ElementType elType;
-  char *annotUrl;
 
   REMOTELOAD_context *ctx;
   int res;
@@ -432,12 +431,9 @@ View view;
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   /* make some space to store the remote file name */
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
-  /* "compute" the url we're looking up in the annotation server */
-  annotUrl = TtaGetMemory (MAX_LENGTH);
-  sprintf (annotUrl, "%s/%s", annotServer, "CGI/annotate");
   /* launch the request */
   res = GetObjectWWW (doc,
-		      annotUrl,
+		      annotServer,
 		      TEXT("/tmp/rdf.tmp"),
 		      ctx->remoteAnnotIndex,
 		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
@@ -447,8 +443,6 @@ View view;
 		      (void *) ctx,
 		      NO,
 		      NULL);
-  TtaFreeMemory (annotUrl);
-
   if (res)
     {
       fprintf (stderr, "Failed to post the annotation!\n"); /* @@ */
