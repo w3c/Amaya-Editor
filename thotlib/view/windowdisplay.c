@@ -1640,7 +1640,7 @@ static void  DoDrawPolygon (int frame, int thick, int style,
      }
 
    /* draw the border */
-    if (thick > 0)
+   if (thick > 0)
      Polyline (TtDisplay, points, npoints);
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();

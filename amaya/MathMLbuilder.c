@@ -1419,14 +1419,17 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		           val = MathML_ATTR_IntAddSpace_VAL_both;
 			}
 		     }
-		  else if (text[0] == '+' ||
-			   text[0] == '&' ||
+		  else if (text[0] == '&' ||
 			   text[0] == '*' ||
+			   text[0] == '+' ||
 			   text[0] == '/' ||
 			   text[0] == '<' ||
 			   text[0] == '=' ||
 			   text[0] == '>' ||
-			   text[0] == '^')
+			   text[0] == '^' ||
+			   (int)text[0] == 177 || /* plus or minus */
+			   (int)text[0] == 215 || /* times */
+			   (int)text[0] == 247)   /* divide */
 		     /* infix operator */
 		     val = MathML_ATTR_IntAddSpace_VAL_both;
 		  else if (text[0] == ',' ||
@@ -1435,7 +1438,7 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	             val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
 		  }
 	       else if (alphabet == 'G')
-		  /* Symbol character set */
+		 /* Symbol character set */
 		 if ((int)text[0] == 163 || /* less or equal */
 		     (int)text[0] == 177 || /* plus or minus */
 		     (int)text[0] == 179 || /* greater or equal */
