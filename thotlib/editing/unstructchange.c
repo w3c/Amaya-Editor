@@ -959,7 +959,7 @@ void PasteCommand ()
 		    }
 		}
 
-	      /* get the next pasted element */
+	      /* get the next element to be pasted */
 	      if (!within && before && !WholeColumnSaved)
 		{
 		  if (cellChild)
@@ -983,7 +983,8 @@ void PasteCommand ()
 		    /* remove this generated cell */
 		    DeleteElement (&addedCell, pDoc);
 		  else
-		    pPasteD = pPasteD->PeNext;
+		    if (pPasteD)
+		      pPasteD = pPasteD->PeNext;
 		}
 
 	      pRow = pNextRow;
