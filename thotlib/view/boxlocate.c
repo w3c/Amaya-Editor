@@ -793,9 +793,9 @@ static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
 }
 
 /*----------------------------------------------------------------------
-  InShape returns TRUE if the point x, y is included by the drawing.
+  IsInShape returns TRUE if the point x, y is included by the drawing.
   ----------------------------------------------------------------------*/
-static ThotBool     InShape (PtrAbstractBox pAb, int x, int y)
+static ThotBool     IsInShape (PtrAbstractBox pAb, int x, int y)
 {
   int                 point[8][2];
   int                 cross;
@@ -966,6 +966,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   PtrBox              pBox;
   int                 controlPoint;
   int                 arc;
+  float               value1, value2, value3;
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
@@ -1026,6 +1027,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case TEXT('6'):
     case TEXT('7'):
     case TEXT('8'):
+      /* rectangle */
       if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth,
 			pBox->BxHeight) ||
@@ -1045,6 +1047,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       break;
     case 'C':
     case 'P':
+      /* rectangle with rounded corners */
       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
       if (IsOnSegment (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
 	  IsOnSegment (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
@@ -1054,20 +1057,36 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 			pBox->BxHeight - arc))
 	return (pBox);
       break;
-    case 'a':
-    case 'c':
-    case 'Q':
-      if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 ||
-	  controlPoint == 8)
-	return (pBox);
+    case 'a': /* circle */
+    case 'c': /* ellipse */
+    case 'Q': /* ellipse with a bar */
+      /* ellipse or circle */
+      value1 = x - ((float) pBox->BxWidth / 2);
+      value2 = (y - ((float) pBox->BxHeight / 2)) *
+                ((float) pBox->BxWidth / (float) pBox->BxHeight);
+      /* value1 = square of (distance from center to point) */
+      value1 = value1 * value1 + value2 * value2;
+      /* value2 = square of (radius - DELTA_SEL) */
+      value2 = (float) pBox->BxWidth / 2;
+      value3 = value2;
+      value2 -= DELTA_SEL;
+      value2 = value2 * value2;
+      /* value3 = square of (radius + DELTA_SEL) */
+      value3 += DELTA_SEL;
+      value3 = value3 * value3;
+
+      if (value1 >= value2 && value1 <= value3)
+	return (pBox);	/* on the circle */
       break;
     case 'W':
+      /* upper right corner of the box */
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
 	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
 	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
       break;
     case 'X':
+      /* lower right corner of the box */
       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
 	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth,
 			pBox->BxHeight) ||
@@ -1075,6 +1094,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	return (pBox);
       break;
     case 'Y':
+      /* a segment with an arrow head at the end */
       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
 	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,
 			pBox->BxHeight) ||
@@ -1082,6 +1102,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	return (pBox);
       break;
     case 'Z':
+      /* the upper left corner of the box */
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0) ||
 	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
@@ -1090,17 +1111,20 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'h':
     case '<':
     case '>':
+      /* a horizontal line or arrow */
       if (controlPoint == 4 || controlPoint == 8 ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth,
 			pBox->BxHeight / 2))
 	return (pBox);
       break;
     case 't':
+      /* a horizontal line along the upper side of the box */
       if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
 	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
 	return (pBox);
       break;
     case 'b':
+      /* a horizontal line along the lower side of the box */
       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
 	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
 	return (pBox);
@@ -1108,17 +1132,20 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'v':
     case '^':
     case 'V':
+      /* a vertical line or arrow as tall as the box and placed in its middle*/
       if (controlPoint == 2 || controlPoint == 6 ||
 	  IsOnSegment (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2,
 			pBox->BxHeight))
 	return (pBox);
       break;
     case 'l':
+      /* a vertical line on the left side of the box */
       if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0))
 	return (pBox);
       break;
     case 'r':
+      /* a vertical line on the right side of the box */
       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
 	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
@@ -1126,6 +1153,8 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case '\\':
     case 'O':
     case 'e':
+      /* The northwest/southeast diagonal of the box possibly with an
+	 arrowhead */
       if (controlPoint == 1 || controlPoint == 5 ||
 	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
 	return (pBox);
@@ -1133,12 +1162,14 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case '/':
     case 'o':
     case 'E':
+      /* The southwest/northeast diagonal of the box possibly with an
+	 arrowhead */
       if (controlPoint == 3 || controlPoint == 7 ||
 	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
 	return (pBox);
       break;
     case 'g':
-      /* Coords of the line are given by the enclosing box */
+      /* a line from the origin of the box to its opposite corner */
       pAb = pAb->AbEnclosing;
       if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
 	  (pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
@@ -1261,7 +1292,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 				    pParent->ElStructSchema))
 		/* the box is filled. Is the point within the shape? */
 		{
-		  if (InShape (pAb, lowerX, y))
+		  if (IsInShape (pAb, lowerX, y))
 		    return (pAb->AbBox);
 		  else
 		    return (NULL);
