@@ -1947,8 +1947,14 @@ char 	     *content_type;
 
    /* do the request */
    if (mode & AMAYA_FORM_POST)
-     status = HTPostFormAnchor (me->formdata, (HTAnchor *) me->anchor, 
-				me->request);
+     {
+       /* this call doesn't give back a boolean */
+       HTParentAnchor * posted = NULL;
+
+       posted = HTPostFormAnchor (me->formdata, (HTAnchor *) me->anchor, 
+				    me->request);
+       status = posted ? YES : NO; 
+     }
    else
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
