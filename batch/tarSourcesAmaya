@@ -61,10 +61,13 @@ Amaya/annotlib/*.A \
 Amaya/annotlib/*.S \
 Amaya/annotlib/*.P \
 Amaya/annotlib/*.T \
+Amaya/annotlib/*.en \
 Amaya/annotlib/*.c \
 Amaya/annotlib/*.h \
 Amaya/annotlib/f/*.h \
 Amaya/annotlib/selected.gif \
+Amaya/annotlib/closed.png \
+Amaya/annotlib/open.png \
 Amaya/batch/COPYRIGHT* \
 Amaya/batch/*.LAN \
 Amaya/batch/*.GRM \

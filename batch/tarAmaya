@@ -32,9 +32,12 @@ echo "Platform ------->" $MACH
    Amaya/amaya/*.gif \
    Amaya/amaya/*.png \
    Amaya/amaya/*.trans \
-   Amaya/annotlib/Annot.STR \
-   Amaya/annotlib/AnnotP.PRS \
-   Amaya/annotlib/AnnotT.TRA \
+   Amaya/annotlib/*.STR \
+   Amaya/annotlib/*P.PRS \
+   Amaya/annotlib/*T.TRA \
+   Amaya/annotlib/*.en \
+   Amaya/annotlib/closed.png \
+   Amaya/annotlib/open.png \
    Amaya/annotlib/selected.gif \
    Amaya/batch/MachineType \
    Amaya/config/XKeysymDB \
