@@ -99,6 +99,10 @@ SOURCE=..\..\thotlib\base\AmayaApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\AmayaAppInstance.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaPrintNotify.cpp
 # End Source File
 # Begin Source File
