@@ -225,6 +225,8 @@ void TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
    int                 size;
    char                buffer[8192];
 
+   if (!sourceFileName || !targetFileName)
+     return;
    if (strcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS

@@ -38,6 +38,7 @@ Address: address
 Block_Quote: blockquote
 Horizontal_Rule: hr
 Basic_Set: Element
+AddressContent: Element
 Paragraph: p
 H1: h1
 H2: h2

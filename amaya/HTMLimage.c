@@ -101,7 +101,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
    TtaFreeMemory (localname);
    if (sameImage)
      {
-	/* the image file exist for a different document */
+	/* the image file exists for a different document */
 	pImage->status = IMAGE_LOADED;
 	pImage->tempfile = GetLocalPath (doc, sameImage->tempfile);
 	TtaFileCopy (sameImage->tempfile, pImage->tempfile);
