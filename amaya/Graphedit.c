@@ -884,6 +884,7 @@ Element          el;
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
+      dh = dw = 0;
       TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &dummy);
       elType = TtaGetElementType (el);
       if (x < 0 && elType.ElTypeNum != GraphML_EL_tspan)
@@ -937,7 +938,7 @@ Element          el;
 	      TtaNextSibling (&child);
 	    }
 	}
-      else
+      else if ( elType.ElTypeNum != GraphML_EL_line_)
 	{
 	  /* check if the SVG width includes that element */
 	  TtaGiveBoxPosition (el, doc, 1, unit, &x, &dummy);
@@ -1009,7 +1010,7 @@ Element          el;
 	      TtaNextSibling (&child);
 	    }
 	}
-      else
+      else if ( elType.ElTypeNum != GraphML_EL_line_)
 	{
 	  /* check if the SVG height includes that element */
 	  TtaGiveBoxPosition (el, doc, 1, unit, &dummy, &y);
@@ -1023,7 +1024,7 @@ Element          el;
 	    }
 	}
 
-      if (dw || dh)
+      if (dw > 0 || dh > 0)
 	{
 	  /* manage included polylines */
 	  child = TtaGetFirstChild (graphRoot);
