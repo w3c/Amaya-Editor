@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
@@ -158,6 +156,11 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     MakeBook, MakeID, ShowLogFile, ConfigGeneral, ConfigPublish, ConfigCache,
     ConfigProxy, ConfigColor, ConfigGeometry, ConfigLanNeg, ConfigProfile,
     ConfigTemplates.</span></p>
+  </li>
+  <li>Dans le menu Annotations:
+    <p class="menuItems"><span style="color: #E55500">AnnotateSelection,
+    AnnotateDocument, LoadAnnotations, PostAnnot, DeleteAnnot,
+    FilterAnnotations, ConfigAnnotations.</span></p>
   </li>
 </ul>
 <ul>
