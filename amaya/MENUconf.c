@@ -2395,6 +2395,20 @@ LPARAM lParam;
       break;
 
     case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_FGCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor,
+			      sizeof (FgColor) - 1);
+	      break;
+		case IDC_BGCOLOR:
+	      GetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor,
+			      sizeof (BgColor) - 1);
+	      break;
+	    }
+	}
       switch (LOWORD (wParam))
 	{
 	  /* action buttons */
