@@ -2686,7 +2686,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       /* drag is finished */
       /* we stop the callback calling timer */
       Selecting = FALSE;
-      printf ("button release\n");
       Motion_y = event->y;
       Motion_x = event->x;
       if (timer != None)

@@ -504,8 +504,9 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
     ibox2 = NULL;
 
   /* Initialize the new last piece */
-  if (ibox2 != NULL)
+  if (ibox2)
     {
+      ibox2->BxScript = pBox->BxScript;
       ibox2->BxContentWidth = TRUE;
       ibox2->BxContentHeight = TRUE;
       ibox2->BxH = pBox->BxH;
@@ -538,6 +539,7 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
       if (pBox->BxType == BoComplete)
 	{
 	  /* Initialize the new first piece */
+	  ibox1->BxScript = pBox->BxScript;
 	  ibox1->BxContentWidth = TRUE;
 	  ibox1->BxContentHeight = TRUE;
 	  ibox1->BxIndChar = 0;

@@ -110,7 +110,7 @@ PtrAbstractBox SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
 /*----------------------------------------------------------------------
   GetParentCell returns the enlcosing cell or NULL.                
   ----------------------------------------------------------------------*/
-PtrAbstractBox      GetParentCell (PtrBox pBox)
+PtrAbstractBox GetParentCell (PtrBox pBox)
 {
    PtrAbstractBox      pAb;
    ThotBool            found;
@@ -135,9 +135,8 @@ PtrAbstractBox      GetParentCell (PtrBox pBox)
    return (pAb);
 }
 
-
 /*----------------------------------------------------------------------
-  GetParentDraw returns the enlcosing Draw or NULL.                
+  GetParentDraw returns the enclosing Draw or NULL.                
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentDraw (PtrBox pBox)
 {
@@ -164,7 +163,6 @@ PtrAbstractBox GetParentDraw (PtrBox pBox)
      }
    return (pAb);
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -811,13 +809,10 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox1->BxFirstChar = box->BxFirstChar;
       ibox1->BxNChars = lg;
       ibox1->BxNSpaces = spaces;
-      if (script == 'A' || script == 'H')
-	ibox1->BxXOrg = box->BxXOrg + box->BxWidth - ibox1->BxWidth;
-      else
-	ibox1->BxXOrg = box->BxXOrg;
       ibox1->BxYOrg = box->BxYOrg;
       /* Initialize the second piece */
       ibox2->BxType = BoScript;
+      ibox2->BxScript = box->BxScript;
       ibox2->BxAbstractBox = pAb;
       ibox2->BxIndChar = ind;
       ibox2->BxContentWidth = TRUE;
@@ -843,10 +838,16 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxFirstChar = ibox1->BxFirstChar + lg;
       ibox2->BxNChars = box->BxNChars - lg;
       ibox2->BxNSpaces = box->BxNSpaces - spaces;
-      if (script == 'A' || script == 'H')
-	ibox2->BxXOrg = ibox1->BxXOrg - ibox2->BxWidth;
+      if (pAb->AbDirection == 'L')
+	{
+	  ibox1->BxXOrg = box->BxXOrg;
+	  ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+	}
       else
-	ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+	{
+	  ibox2->BxXOrg = box->BxXOrg;
+	  ibox1->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
+	}
       ibox2->BxYOrg = box->BxYOrg;
       /* update the chain of leaf boxes */
       ibox1->BxNexChild = ibox2;
@@ -871,6 +872,7 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       /* Initialize the second piece */
       ibox2 = GetBox (pAb);
       ibox2->BxType = BoScript;
+      ibox2->BxScript = box->BxScript;
       ibox2->BxAbstractBox = pAb;
       ibox2->BxIndChar = ind;
       ibox2->BxContentWidth = TRUE;
@@ -896,13 +898,6 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxFirstChar = box->BxFirstChar + lg;
       ibox2->BxNChars =  box->BxNChars - lg;
       ibox2->BxNSpaces = box->BxNSpaces - spaces;
-      if (script == 'A' || script == 'H')
-	{
-	  box->BxXOrg = box->BxXOrg + box->BxWidth - width + l;
-	  ibox2->BxXOrg = box->BxXOrg - ibox2->BxWidth;
-	}
-      else
-	ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
       ibox2->BxYOrg = box->BxYOrg;
       /* Update the first piece */
       box->BxScript = script; 
@@ -916,6 +911,13 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       box->BxRPadding = 0;
       box->BxNChars = lg;
       box->BxNSpaces = spaces;
+      if (pAb->AbDirection == 'L')
+	ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
+      else
+	{
+	  ibox2->BxXOrg = box->BxXOrg;
+	  box->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
+	}
 
       /* update the chain of leaf boxes */
       ibox2->BxNexChild = box->BxNexChild;

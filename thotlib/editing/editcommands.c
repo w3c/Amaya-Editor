@@ -2875,8 +2875,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  toDelete = FALSE;
 #ifdef _I18N_
 			  script = TtaGetCharacterScript (c);
-			  if  (script != ' ' &&script != 'D' &&
-			       pSelBox && pSelBox->BxScript != script)
+			  if  (script != ' ' && script != 'D' &&
+			       pSelBox && pSelBox->BxScript != EOS &&
+			       pSelBox->BxScript != script)
 			    {
 			      /* update the clipping */
 			      DefClip (frame, pSelBox->BxXOrg, topY,
@@ -2884,7 +2885,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      /* split the current box */
 			      pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
 						     previousChars,
-						     xx, pSelBox->BxH,
+						     xx - pSelBox->BxXOrg, pSelBox->BxH,
 						     pViewSel->VsNSpaces,
 						     ind, pBuffer,
 						     ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
@@ -2926,45 +2927,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      box->BxNChars = 0;
 			      box->BxNSpaces = 0;
 			      box->BxYOrg = pBox->BxYOrg;
-			      if (script == 'A' || script == 'H')
-				{
-				  if (pBox->BxScript == 'A' ||  pBox->BxScript == 'H')
-				    /* same direction rtl */
-				    box->BxXOrg = pSelBox->BxXOrg;
-				  else if (pAb->AbDirection == 'L')
-				    {
-				      /* the first box is moved */
-				      pSelBox->BxXOrg = pBox->BxXOrg;
-				      /* insert after the first box */
-				      box->BxXOrg = pSelBox->BxXOrg + pSelBox->BxWidth;
-				      /* the next box is moved too */
-				      pBox->BxXOrg = box->BxXOrg;
-				    }
-				  else
-				    /* between the 2 boxes */
-				    box->BxXOrg = pSelBox->BxXOrg;
-				}
+			      if (pAb->AbDirection == 'L')
+				/* insert after the first box */
+				box->BxXOrg = pBox->BxXOrg;
 			      else
-				{
-				  if (pBox->BxScript != 'A' ||  pBox->BxScript != 'H')
-				    /* same direction ltr */
-				    box->BxXOrg = pBox->BxXOrg;
-				  else if (pAb->AbDirection == 'L')
-				    /* between the 2 boxes */
-				    box->BxXOrg = pBox->BxXOrg;
-				  else
-				    {
-				      /* the first box is moved */
-				      pSelBox->BxXOrg = pBox->BxXOrg + pBox->BxWidth - pSelBox->BxWidth;
-				      /* insert before the first box */
-				      box->BxXOrg = pSelBox->BxXOrg;
-				      /* the next box is moved too */
-				      pBox->BxXOrg = box->BxXOrg - pBox->BxWidth;
-				    }
-				}
-			      xx = 0;
-			      pSelBox = box;
-			      previousChars = 0;
+				/* insert before the first box */
+				box->BxXOrg = pSelBox->BxXOrg;
+			      /*xx = 0;
+				previousChars = 0;*/
+			      pSelBox = pAb->AbBox;
 			      toSplit = TRUE;
 			    }
 #endif /* _I18N_ */
