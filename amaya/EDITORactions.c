@@ -1276,7 +1276,7 @@ void CreateRuby (Document document, View view)
 		    /* it's a text element */
 		    {
 		      lg = TtaGetElementVolume (lastEl);
-		      if (lastSelectedChar < lg && lastSelectedChar > 1)
+		      if (lastSelectedChar <= lg && lastSelectedChar > 1)
 			/* the last selected element is only partly selected.
 			   Split it */
 			TtaSplitText (lastEl, lastSelectedChar, document);

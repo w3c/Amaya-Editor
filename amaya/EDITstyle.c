@@ -620,7 +620,7 @@ static void DoApplyClass (Document doc)
      /* it's a text element */
      {
      lg = TtaGetElementVolume (lastSelectedEl);
-     if (lastSelectedChar < lg && lastSelectedChar > 1)
+     if (lastSelectedChar <= lg && lastSelectedChar > 1)
 	/* the last selected element is only partly selected. Split it */
 	TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
      else

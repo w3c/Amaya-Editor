@@ -2425,7 +2425,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	    /* it's a caret */
 	    lastSelectedChar = firstSelectedChar;
 	  length = TtaGetElementVolume (lastEl);
-	  if (lastSelectedChar != 0 && lastSelectedChar < length)
+	  if (lastSelectedChar != 0 && lastSelectedChar <= length)
 	    {
 	      TtaRegisterElementReplace (lastEl, document);	     
 	      TtaSplitText (lastEl, lastSelectedChar, document);
