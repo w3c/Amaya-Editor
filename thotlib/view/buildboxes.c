@@ -1748,6 +1748,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 	      if (pInc)
 		{
 		  if (pInc->AbFloat != 'N' &&
+		      pInc->AbNext == NULL &&
 		      (pInc->AbLeafType == LtPicture ||
 		       (pInc->AbLeafType == LtCompound &&
 			!pInc->AbWidth.DimIsPosition &&

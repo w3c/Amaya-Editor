@@ -790,6 +790,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
     } 
+  if (pAb->AbFloat != 'N')
+    {
+      pAb->AbVertPosChange = FALSE;
+      pAb->AbHorizPosChange = FALSE;
+      return;
+    }
   
   if (horizRef)
     {
@@ -907,41 +913,33 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 		}
 	    }
 
-	  if (pAb->AbFloat != 'N')
+	  refEdge = rule.PosRefEdge;
+	  localEdge = rule.PosEdge;
+	  /* Convert the distance value */
+	  dim = pAb->AbEnclosing->AbBox->BxW;
+	  if (rule.PosUnit == UnPercent)
 	    {
-	      pAb->AbHorizPosChange = FALSE;
-	      return;
+	      dist = PixelValue (rule.PosDistance, UnPercent,
+				 (PtrAbstractBox) dim, 0);
+	      /* Change the rule for further updates */
+	      pAb->AbHorizPos.PosDistance = dist;
+	      pAb->AbHorizPos.PosUnit = UnPixel;
 	    }
 	  else
+	    dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  if (rule.PosDeltaUnit == UnPercent)
 	    {
-	      refEdge = rule.PosRefEdge;
-	      localEdge = rule.PosEdge;
-	      /* Convert the distance value */
-	      dim = pAb->AbEnclosing->AbBox->BxW;
-	      if (rule.PosUnit == UnPercent)
-		{
-		  dist = PixelValue (rule.PosDistance, UnPercent,
-				     (PtrAbstractBox) dim, 0);
-		  /* Change the rule for further updates */
-		  pAb->AbHorizPos.PosDistance = dist;
-		  pAb->AbHorizPos.PosUnit = UnPixel;
-		}
-	      else
-		dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      if (rule.PosDeltaUnit == UnPercent)
-		{
-		  d = PixelValue (rule.PosDistDelta, UnPercent,
-				  (PtrAbstractBox) dim, 0);
-		  /* Change the rule for further updates */
-		  pAb->AbHorizPos.PosDistDelta = d;
-		  pAb->AbHorizPos.PosUnit = UnPixel;
-		}
-	      else
-		d = PixelValue (rule.PosDistDelta, rule.PosDeltaUnit, pAb,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      dist += d;
+	      d = PixelValue (rule.PosDistDelta, UnPercent,
+			      (PtrAbstractBox) dim, 0);
+	      /* Change the rule for further updates */
+	      pAb->AbHorizPos.PosDistDelta = d;
+	      pAb->AbHorizPos.PosUnit = UnPixel;
 	    }
+	  else
+	    d = PixelValue (rule.PosDistDelta, rule.PosDeltaUnit, pAb,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  dist += d;
 	}
     }
   else
@@ -1046,6 +1044,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 		  rule.PosDistDelta = 0;
 		}
 	    }
+
 	  if (pAb->AbEnclosing == pRefAb && !pBox->BxVertFlex)
 	    /* it's not a stretchable box and it depends on its enclosing */
 	    op = OpVertInc;
