@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -24,9 +24,9 @@
 #define AMAYA_LOST_UPDATE
 
 #ifdef _WINDOWS
-#define CACHE_DIR_NAME TEXT("\\libwww-cache\\")
+#define CACHE_DIR_NAME "\\libwww-cache\\"
 #else
-#define CACHE_DIR_NAME TEXT("/libwww-cache/")
+#define CACHE_DIR_NAME "/libwww-cache/"
 #endif
 
 /* libwww default parameters */
@@ -83,7 +83,6 @@ struct _HTError
 /* Type definitions and global variables etc. local to this module */
 
 /*----------------------------------------------------------------------*/
-
 /*** private variables ***/
 
 static HTList      *converters = NULL;	/* List of global converters */
@@ -118,24 +117,9 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 
 /* prototypes */
 
-#ifdef __STDC__
-static void RecCleanCache (CHAR_T* dirname);
 #ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
-static void SafePut_init (void);
-static void SafePut_delete (void);
-static ThotBool SafePut_query (CHAR_T* url);
-
-#else
-static void RecCleanCache (/* char *dirname */);
-#ifdef _WINDOWS
-int WIN_Activate_Request (/* HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar* */);
-#endif /* _WINDOWS */
-static void SafePut_init (/* void */);
-static void SafePut_delete (/* void */);
-static ThotBool SafePut_query (/* CHAR_T* url */);
-#endif /* __STDC__ */
 
 
 #ifdef AMAYA_WWW_CACHE
@@ -149,12 +133,7 @@ static ThotBool SafePut_query (/* CHAR_T* url */);
   Returns -1 in case of failure, otherwise, it'll open a handle on
   filename and fd_cachelock will take its value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int set_cachelock (CHAR_T* filename)
-#else        
-static int set_cachelock (filename)
-CharUniut* filename;
-#endif /* __STDC__ */
+static int set_cachelock (char *filename)
 {
   int status;
 #ifdef _WINDOWS
@@ -191,12 +170,7 @@ CharUniut* filename;
   remove the write lock set on a filename.
   It'll close the fd handle on filename and reset *fd to 0.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int clear_cachelock (void)
-#else        
-static int clear_cachelock ()
-int *fd;
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
   return 0;
@@ -218,12 +192,7 @@ int *fd;
   returns 0 if a fd is not locked by other process, otherwise 
   returns the pid of the process who has the lock
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int test_cachelock (CHAR_T* filename)
-#else
-static int test_cachelock (filename)
-CHAR_T*  filename;
-#endif /* __STDC__ */
+static int test_cachelock (char *filename)
 {
 #ifdef _WINDOWS
   /* if the lock is set, we can't unlink the file under Windows */
@@ -263,14 +232,7 @@ CHAR_T*  filename;
   GetDocIdStatus
   gets the status associated to a docid                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
-#else
-AHTDocID_Status    *GetDocIdStatus (docid, documents)
-int                 docid;
-HTList             *documents;
-
-#endif
 {
    AHTDocId_Status    *me;
    HTList             *cur;
@@ -293,21 +255,14 @@ HTList             *documents;
   AHTGuessAtom_for
   Converts an Amaya type descriptor into the equivalent MIME type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static  HTAtom *AHTGuessAtom_for (STRING urlName, PicType contentType)
-#else
-static  HTAtom *AHTGuessAtom_for (urlName, contentType)
-STRING  urlName;
-PicType contentType;
-#endif
+static  HTAtom *AHTGuessAtom_for (char *urlName, PicType contentType)
 {
  HTAtom           *atom;
- CHAR_T*           filename;
+ char *          filename;
  HTEncoding        enc = NULL;
  HTEncoding        cte = NULL;
  HTLanguage        lang = NULL;
  double            quality = 1.0;
- char              FName[MAX_LENGTH];
 
  switch (contentType)
    {
@@ -335,9 +290,9 @@ PicType contentType;
      ** Amaya could not detect the type, so 
      ** we try to use the filename's suffix to do so.
      */
-     filename = AmayaParseUrl (urlName, TEXT(""), AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
-     wc2iso_strcpy (FName, filename);
-     HTBind_getFormat (FName, &atom, &enc, &cte, &lang, &quality);
+     filename = AmayaParseUrl (urlName, "", 
+			       AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
+     HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
      TtaFreeMemory (filename);
      if (atom ==  WWW_UNKNOWN)
 	 /*
@@ -356,15 +311,7 @@ PicType contentType;
   Copies the headers in which the application is interested, doing
   any in-between conversions as needed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context, int status)
-#else
-void HTTP_headers_set (request, response, context, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *context;
-int                 status;
-#endif
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   HTAtom *tmp_atom;
@@ -372,7 +319,7 @@ int                 status;
   HTAtom *unk_atom;
 #endif
   char *tmp_char;
-  CHAR_T tmp_wchar[MAX_LENGTH];
+  char   tmp_wchar[MAX_LENGTH];
   HTParentAnchor *anchor = NULL;
   ThotBool  use_anchor = FALSE;
 
@@ -450,12 +397,7 @@ int                 status;
   HTTP_headers_delete
   Deletes all the paramaters that were assigned to the response type
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void HTTP_headers_delete (AHTHeaders me)
-#else
-static void HTTP_headers_delete (me)
-AHTHeaders me;
-#endif
 {
   if (me.content_type)
     TtaFreeMemory (me.content_type);
@@ -472,15 +414,9 @@ AHTHeaders me;
   Returns the value of a parameter in the HTTP response structure.
   Returns null if this structure is empty.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
-#else
-CHAR_T *HTTP_headers (me, param)
-AHTHeaders *me;
-AHTHeaderName param;
-#endif
+char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
 {
-  CHAR_T *result;
+  char   *result;
 
   if (!me)
     return NULL;
@@ -508,13 +444,7 @@ AHTHeaderName param;
   create a new Amaya Context Object and update the global Amaya
   request status.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static AHTReqContext *AHTReqContext_new (int docid)
-#else
-static AHTReqContext *AHTReqContext_new (docid)
-int                 docid;
-
-#endif
 {
    AHTReqContext      *me;
    AHTDocId_Status    *docid_status;
@@ -573,14 +503,7 @@ int                 docid;
   Delete an Amaya Context Object and update the global Amaya request
   status.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool  AHTReqContext_delete (AHTReqContext * me)
-#else
-ThotBool  AHTReqContext_delete (me)
-AHTReqContext      *me;
-
-#endif
 {
    AHTDocId_Status    *docid_status;
 
@@ -687,11 +610,7 @@ AHTReqContext      *me;
   Thread_deleteAll
   this function deletes the whole list of active threads.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Thread_deleteAll (void)
-#else
-static void         Thread_deleteAll ()
-#endif
 {
   HTList             *cur;
   AHTReqContext      *me;
@@ -734,31 +653,21 @@ static void         Thread_deleteAll ()
 /*----------------------------------------------------------------------
   AHTOpen_file
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 AHTOpen_file (HTRequest * request)
-#else
-int                 AHTOpen_file (request)
-HTRequest           *request;
-
-#endif /* __STDC__ */
 {
   AHTReqContext      *me;      /* current request */
 
   me = HTRequest_context (request);
-
   if (!me)
       return HT_ERROR;
-
 #ifdef DEBUG_LIBWWW
   fprintf(stderr, "AHTOpen_file: start for object : %p\n", me);
 #endif /* DEBUG_LIBWWW */
-
   if (me->reqStatus == HT_ABORT) 
     {
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: caught an abort request, skipping it\n");
 #endif /* DEBUG_LIBWWW */
-
       return HT_OK;
     }
 
@@ -770,7 +679,6 @@ HTRequest           *request;
 
   if (HTRequest_outputStream (me->request)) 
     {
-
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: output stream already existed for url %s\n", me->urlName);
 #endif /* DEBUG_LIBWWW */      
@@ -778,34 +686,118 @@ HTRequest           *request;
     }
 
 #ifdef DEBUG_LIBWWW
-      fprintf(stderr, "AHTOpen_file: opening output stream for url %s\n", me->urlName);
+  fprintf(stderr, "AHTOpen_file: opening output stream for url %s\n", me->urlName);
 #endif /* DEBUG_LIBWWW */      
 
   if (!(me->output) && 
       (me->output != stdout) && 
 #ifndef _WINDOWS
-      (me->output = ufopen (me->outputfile, TEXT("w"))) == NULL)
-    {
+      (me->output = fopen (me->outputfile, "w")) == NULL)
 #else /* !_WINDOWS */
-    (me->output = ufopen (me->outputfile, TEXT("wb"))) == NULL)  
-    {
+      (me->output = fopen (me->outputfile, "wb")) == NULL)  
 #endif /* !_WINDOWS */
-
+    {
       me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
 #endif
-      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
+      TtaSetStatus (me->docid, 1,
+		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+		    me->outputfile);
       me->reqStatus = HT_ERR;
       return (HT_ERROR);
     }
 	  
   HTRequest_setOutputStream (me->request,
-			     AHTFWriter_new (me->request, 
-					     me->output, YES));
+			     AHTFWriter_new (me->request, me->output, YES));
   me->reqStatus = HT_WAITING;
-  
   return HT_OK;
+}
+
+/*----------------------------------------------------------------------
+  SafePut_init
+  Sets up the domains which are authorized to make a redirect on 
+  a PUT.
+  ----------------------------------------------------------------------*/
+static void SafePut_init (void)
+{
+  char     *strptr;
+  char     *str = NULL;
+  char*     ptr, *strptrA, *ptr2;
+  char*     domain;
+
+  /* get the proxy settings from the thot.ini file */
+  strptr = TtaGetEnvString ("SAFE_PUT_REDIRECT");
+  if (strptr && *strptr)
+    {
+      /* Get copy we can mutilate */
+      ptr2 = strptr;
+      /* convert to lowercase */
+      ptr = strptr;
+      while (*ptr) 
+	{
+	  *ptr = tolower (*ptr);
+	  ptr++;
+	}
+      
+      /* create the list container */
+      safeput_list = HTList_new ();   
+      /* store the domain list */
+
+      ptr = strptr;
+      while ((domain = HTNextField (&strptr)) != NULL)
+	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
+
+      TtaFreeMemory (str);
+      TtaFreeMemory (ptr2);
+    }
+}
+
+/*----------------------------------------------------------------------
+  SafePut_delete
+  Deletes the safeput_list variable
+  ----------------------------------------------------------------------*/
+static void SafePut_delete (void)
+{
+  HTList *cur = safeput_list;
+  char *domain;
+
+  if (!safeput_list) 
+    return;
+
+  while ((domain = (char *) HTList_nextObject (cur))) 
+      TtaFreeMemory (domain);
+   HTList_delete (safeput_list);
+   safeput_list = NULL;
+}
+
+/*----------------------------------------------------------------------
+  SafePut_query
+  returns true if the domain to which belongs the URL accepts an automatic
+  PUT redirect.
+  ----------------------------------------------------------------------*/
+static ThotBool SafePut_query (char *url)
+{
+  HTList*  cur;
+  char*    me;
+  ThotBool found;
+  char     tmp[MAX_LENGTH];
+
+  /* extract the domain path of the url and normalize it */
+  /* domain = url; */
+  cur = safeput_list;
+  found = FALSE;
+
+  while ((me = (char*) HTList_nextObject (cur))) {
+        iso2wc_strcpy (tmp, me);
+        if (strstr (url, tmp))
+	  {
+           found = TRUE;
+           break;
+	  } 
+  } 
+
+  return (found);
 }
 
 /*----------------------------------------------------------------------
@@ -813,153 +805,166 @@ HTRequest           *request;
   this function is registered to handle permanent and temporary
   redirections.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          redirection_handler (HTRequest * request, HTResponse * response, void *param, int status)
-#else
-static int          redirection_handler (request, context, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *param;
-int                 status;
-
-#endif
+static int redirection_handler (HTRequest *request, HTResponse *response,
+				void *param, int status)
 {
- 
-   HTAnchor           *new_anchor = HTResponse_redirection (response);
-   AHTReqContext      *me = HTRequest_context (request);
-   HTMethod            method = HTRequest_method (request);
-   CHAR_T*             ref;
-   CHAR_T*             escape_src, *dst;
-   CHAR_T              urlAdr[MAX_LENGTH];
-   char                urlRef[MAX_LENGTH];
+  HTAnchor           *new_anchor = HTResponse_redirection (response);
+  AHTReqContext      *me = HTRequest_context (request);
+  HTMethod            method = HTRequest_method (request);
+  char               *ref;
+  char               *escape_src, *dst;
+  char                urlAdr[MAX_LENGTH];
 
-   if (!me) /* if the redirect doesn't come from Amaya, we call libwww's standard redirect filter */
-      return (HTRedirectFilter (request, response, param, status));
-
-   if (!new_anchor) {
-      if (PROT_TRACE)
+   if (!me)
+     /* if the redirect doesn't come from Amaya, we call libwww's standard redirect filter */
+     return (HTRedirectFilter (request, response, param, status));
+   
+   if (!new_anchor)
+     {
+       if (PROT_TRACE)
          HTTrace ("Redirection. No destination\n");
-      return HT_OK;
-   }
+       return HT_OK;
+     }
 
    /*
    ** Only do redirect on GET, HEAD, and authorized domains for PUT
-    */
-   if ((me->method == METHOD_PUT && !SafePut_query (me->urlName)) || (me->method != METHOD_PUT && !HTMethod_isSafe (method))) {
-      /*
-      ** If we got a 303 See Other then change the method to GET.
-      ** Otherwise ask the user whether we should continue.
-      */
-      if (status == HT_SEE_OTHER) {
+   */
+   if ((me->method == METHOD_PUT && !SafePut_query (me->urlName)) ||
+       (me->method != METHOD_PUT && !HTMethod_isSafe (method)))
+     {
+     /*
+     ** If we got a 303 See Other then change the method to GET.
+     ** Otherwise ask the user whether we should continue.
+     */
+     if (status == HT_SEE_OTHER)
+       {
          if (PROT_TRACE)
-            HTTrace("Redirection. Changing method from %s to GET\n", HTMethod_name(method));
-            HTRequest_setMethod(request, METHOD_GET);
-	  } else {
-             HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-             if (prompt) {
-                if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION, NULL, NULL, NULL) != YES)
-		  {
-		    /* the user didn't agree on the redirection, so
-		       we consider it's an abort */
-		    me->reqStatus = HT_ABORT;
-		    /* and we return HT_OK so that the terminate_handler
-		       will be called */
-		    return HT_OK;
-		  }
-	     } 
-	  } 
-   } 
-   /*
-    **  Start new request with the redirect anchor found in the headers.
-    **  Note that we reuse the same request object which means that we must
-    **  keep this around until the redirected request has terminated. It also           
-    **  allows us in an easy way to keep track of the number of redirections
-    **  so that we can detect endless loops.
-    */
-
-   if (HTRequest_doRetry (request)) {
-      /*
-      ** Start request with new credentials 
-      */
-      /* only do a redirect using a network protocol understood by Amaya */
-      iso2wc_strcpy (urlAdr, new_anchor->parent->address);
-      if (IsValidProtocol (urlAdr)) {
-         /* if it's a valid URL, we try to normalize it */
-         /* We use the pre-redirection anchor as a base name */
-         /* @@ how to obtain this address here? */
-         dst = urlAdr;
-         escape_src = EscapeURL (me->urlName);
-         if (escape_src) {
-            ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
-            wc2iso_strcpy (urlRef, ref);
-            TtaFreeMemory (escape_src);
-		 } else
-               ref = NULL;
-
-         if (ref) {
-            HTAnchor_setPhysical (HTAnchor_parent (new_anchor), urlRef);
-            TtaFreeMemory (ref);
-		 } else
-               return HT_OK; /* We can't redirect anymore */
-	  } else
-            return HT_OK; /* We can't redirect anymore */
-
-      /* update the current file name */
-      if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC) || (me->method == METHOD_PUT)) {
-         TtaFreeMemory (me->urlName);
-         me->urlName = TtaWCSdup (urlAdr);
-	  } else {
-            /* it's a SYNC mode, so we should keep the urlName */
-            ustrncpy (me->urlName, urlAdr, MAX_LENGTH - 1);
-            me->urlName[MAX_LENGTH - 1] = EOS;
-	  }
-      ChopURL (me->status_urlName, me->urlName);
-
-      /* @@ verify if this is important */
-      /* @@@ new libwww doesn't need this free stream while making
-         a PUT. Is it the case everywhere or just for PUT? */
-      if (me->method != METHOD_PUT && me->request->orig_output_stream != NULL)
-	{
-	  AHTFWriter_FREE (me->request->orig_output_stream);
-	  me->request->orig_output_stream = NULL;
-	  if (me->output != stdout) { /* Are we writing to a file? */
-#ifdef DEBUG_LIBWWW
-            fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
-#endif 
-            fclose (me->output);
-            me->output = NULL;
-	  }
-	}
-
-      /* tell the user what we're doing */
-      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
-      /*
-      ** launch the request
-      */
-      /* add a link relationship? */
-      /* reset the request status */
-      me->reqStatus = HT_NEW; 
-      /* clear the errors */
-      HTError_deleteAll (HTRequest_error (request));
-      HTRequest_setError (request, NULL);
-      /* clear the authentication credentials, as they get regenerated  */
-      HTRequest_deleteCredentialsAll (request);
-	
-      if (me->method == METHOD_POST || me->method == METHOD_PUT) { /* PUT, POST etc. */
-         char url_Name[MAX_LENGTH];
-         wc2iso_strcpy (url_Name, me->urlName);
-         status = HTLoadAbsolute (url_Name, request);
-      } else
-           HTLoadAnchor (new_anchor, request);
-   } else {
-          HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT, NULL, 0, "HTRedirectFilter");
-          /* so that we can show the error message */
-          if (me->error_html)
-             DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
-          me->reqStatus = HT_ERR;
-          TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT), NULL);
+	   HTTrace("Redirection. Changing method from %s to GET\n", HTMethod_name(method));
+	 HTRequest_setMethod(request, METHOD_GET);
+       }
+     else
+       {
+	 HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
+	 if (prompt)
+	   {
+	     if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION, NULL, NULL, NULL) != YES)
+	       {
+		 /* the user didn't agree on the redirection, so
+		    we consider it's an abort */
+		 me->reqStatus = HT_ABORT;
+		 /* and we return HT_OK so that the terminate_handler
+		    will be called */
+		 return HT_OK;
+	       }
+	   }
+       }
    }
 
+   /*
+   **  Start new request with the redirect anchor found in the headers.
+   **  Note that we reuse the same request object which means that we must
+   **  keep this around until the redirected request has terminated. It also
+   **  allows us in an easy way to keep track of the number of redirections
+   **  so that we can detect endless loops.
+   */
+   if (HTRequest_doRetry (request))
+     {
+       /*
+       ** Start request with new credentials 
+       */
+       /* only do a redirect using a network protocol understood by Amaya */
+       iso2wc_strcpy (urlAdr, new_anchor->parent->address);
+       if (IsValidProtocol (urlAdr))
+	 {
+	   /* if it's a valid URL, we try to normalize it */
+	   /* We use the pre-redirection anchor as a base name */
+	   /* @@ how to obtain this address here? */
+	   dst = urlAdr;
+	   escape_src = EscapeURL (me->urlName);
+	   if (escape_src)
+	     {
+	       ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
+	       TtaFreeMemory (escape_src);
+	     }
+	   else
+	     ref = NULL;
+	   
+	   if (ref)
+	     {
+	       HTAnchor_setPhysical (HTAnchor_parent (new_anchor), ref);
+	       TtaFreeMemory (ref);
+	     }
+	   else
+	     return HT_OK; /* We can't redirect anymore */
+	 }
+       else
+	 return HT_OK; /* We can't redirect anymore */
+       
+       /* update the current file name */
+       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC) ||
+	   (me->method == METHOD_PUT))
+	 {
+	   TtaFreeMemory (me->urlName);
+	   me->urlName = TtaWCSdup (urlAdr);
+	 }
+       else
+	 {
+	   /* it's a SYNC mode, so we should keep the urlName */
+	   strncpy (me->urlName, urlAdr, MAX_LENGTH - 1);
+	   me->urlName[MAX_LENGTH - 1] = EOS;
+	 }
+       ChopURL (me->status_urlName, me->urlName);
+
+       /* @@ verify if this is important */
+       /* @@@ new libwww doesn't need this free stream while making
+	  a PUT. Is it the case everywhere or just for PUT? */
+       if (me->method != METHOD_PUT &&
+	   me->request->orig_output_stream != NULL)
+	 {
+	   AHTFWriter_FREE (me->request->orig_output_stream);
+	   me->request->orig_output_stream = NULL;
+	   if (me->output != stdout)
+	     {
+	       /* Are we writing to a file? */
+#ifdef DEBUG_LIBWWW
+	       fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
+#endif 
+	       fclose (me->output);
+	       me->output = NULL;
+	     }
+	 }
+       
+       /* tell the user what we're doing */
+       TtaSetStatus (me->docid, 1,
+		     TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
+       /*
+       ** launch the request
+       */
+       /* add a link relationship? */
+       /* reset the request status */
+       me->reqStatus = HT_NEW; 
+       /* clear the errors */
+       HTError_deleteAll (HTRequest_error (request));
+       HTRequest_setError (request, NULL);
+       /* clear the authentication credentials, as they get regenerated  */
+       HTRequest_deleteCredentialsAll (request);
+       
+       if (me->method == METHOD_POST || me->method == METHOD_PUT)
+	 /* PUT, POST etc. */
+	 status = HTLoadAbsolute (me->urlName, request);
+       else
+	 HTLoadAnchor (new_anchor, request);
+     }
+   else
+     {
+       HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT, NULL, 0, "HTRedirectFilter");
+       /* so that we can show the error message */
+       if (me->error_html)
+	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+       me->reqStatus = HT_ERR;
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT), NULL);
+     }
+   
    /*
    **  By returning HT_ERROR we make sure that this is the last handler to be
    **  called. We do this as we don't want any other filter to delete the 
@@ -973,15 +978,8 @@ int                 status;
   precondition_handler
   412 "Precondition failed" handler
   ----------------------------------------------------------------------*/
-#if __STDC__
-static int          precondition_handler (HTRequest * request, HTResponse * response, void *context, int status)
-#else
-static int          precondition_handler (request, response, context, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *context;
-int                 status;
-#endif /* __STDC__ */
+static int precondition_handler (HTRequest *request, HTResponse *response,
+				 void *context, int status)
 {
   AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
@@ -1165,15 +1163,8 @@ static int check_handler (HTRequest * request, HTResponse * response,
   terminate_handler
   this function is registered to handle the result of the request
   ----------------------------------------------------------------------*/
-#if __STDC__
-static int          terminate_handler (HTRequest * request, HTResponse * response, void *context, int status)
-#else
-static int          terminate_handler (request, response, context, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *context;
-int                 status;
-#endif /* __STDC__ */
+static int terminate_handler (HTRequest *request, HTResponse *response,
+			      void *context, int status)
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   ThotBool            error_flag;
@@ -1294,7 +1285,9 @@ int                 status;
 
    /* to avoid a hangup while downloading css files */
    if (AmayaAlive_flag && (me->mode & AMAYA_LOAD_CSS))
-     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_ELEMENT_LOADED), me->status_urlName);
+     TtaSetStatus (me->docid, 1,
+		   TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
+		   me->status_urlName);
    
   /* don't remove or Xt will hang up during the PUT */
    if (AmayaIsAlive ()  && ((me->method == METHOD_POST) ||
@@ -1314,21 +1307,10 @@ int                 status;
   this is an application "AFTER" Callback. It's called by the library
   when a request has ended, so that we can setup the correct status.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int          AHTLoadTerminate_handler (HTRequest * request, HTResponse * response, void *param, int status)
-#else
-int          AHTLoadTerminate_handler (request, response, param, status)
-HTRequest          *request;
-HTResponse         *response;
-void               *param;
-int                 status;
-
-#endif
+int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
+			      void *param, int status)
 {
-
   /** @@@@ use this with printstatus ?? */
-
    AHTReqContext      *me = HTRequest_context (request);
    HTAlertCallback    *cbf;
    AHTDocId_Status    *docid_status;
@@ -1378,7 +1360,8 @@ int                 status;
 
      case HT_NOT_MODIFIED:
        if (PROT_TRACE)
-	 HTTrace ("Load End.... NOT MODIFIED (%s)", me->status_urlName ? me->status_urlName :" <UNKNOWN>");
+	 HTTrace ("Load End.... NOT MODIFIED (%s)",
+		  me->status_urlName ? me->status_urlName :" <UNKNOWN>");
        break;
        
      case HT_ERROR:
@@ -1387,8 +1370,11 @@ int                 status;
 	 (*cbf) (request, HT_A_MESSAGE, HT_MSG_NULL, NULL,
 		 HTRequest_error (request), NULL);
        if (PROT_TRACE)
-           HTTrace ("Load End.... ERROR: Can't access `%s\'\n", me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
+           HTTrace ("Load End.... ERROR: Can't access `%s\'\n",
+		    me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
+       TtaSetStatus (me->docid, 1,
+		     TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+		     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
        break;
 
      case HTERR_TIMEOUT:
@@ -1397,8 +1383,10 @@ int                 status;
 	 (*cbf) (request, HT_A_MESSAGE, HT_MSG_NULL, NULL,
 		 HTRequest_error (request), NULL);
        if (PROT_TRACE)
-           HTTrace ("Load End.... REQUEST TIMEOUT: Can't access `%s\'\n", me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
+           HTTrace ("Load End.... REQUEST TIMEOUT: Can't access `%s\'\n",
+		    me->status_urlName ? me->status_urlName :"<UNKNOWN>"); 
+       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+		     me->status_urlName ? me->status_urlName : "<UNKNOWN>");
        break;
 
      default:
@@ -1425,12 +1413,7 @@ static  int LineTrace (const char * fmt, va_list pArgs)
   This function prepares the Accept header used by Amaya during
   the HTTP content negotiation phase
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void           AHTAcceptTypesInit (HTList *c)
-#else  /* __STDC__ */
-static void           AHTAcceptTypesInit (c)
-HTList             *c;
-#endif /* __STDC__ */
 {
    if (c == (HTList *) NULL) 
       return;
@@ -1466,22 +1449,17 @@ HTList             *c;
   This function prepares the Accept header used by Amaya during
   the HTTP content negotiation phase
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AHTAcceptLanguagesInit (HTList *c)
-#else  /* __STDC__ */
-static void         AHTAcceptLanguagesInit (c)
-HTList             *c;
-#endif /* __STDC__ */
 {
-  CHAR_T*         ptr;
-  CHAR_T*         lang_list;
+  char             *ptr;
+  char             *lang_list;
   char              s[3];
   int               count, lg;
   double            quality;
   ThotBool          still;
 
   if (c == (HTList *) NULL) 
-      return;
+    return;
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
@@ -1492,61 +1470,70 @@ HTList             *c;
       /* how many languages do we have? */
       ptr = lang_list;
       count = 0;
-      while (*ptr != WC_EOS) {
-            while (*ptr != WC_EOS && (*ptr < TEXT('A') || (*ptr > TEXT('Z') && *ptr < TEXT('a')) || *ptr > TEXT('z')))
-                  /* skip the whole separator */
-                  ptr++;
-            lg = 0;
-            while ((*ptr >= TEXT('A') && *ptr <= TEXT('Z')) || (*ptr >= TEXT('a') && *ptr <= TEXT('z')) || *ptr == TEXT('-')) {
-                  /* it's a new language */
-                  ptr++;
-                  lg++;
-			}
-            if (lg >= 2)
-               count++;
-            if (*ptr != WC_EOS)
-               ptr++;
-	  }
+      while (*ptr != WC_EOS)
+	{
+	  while (*ptr != WC_EOS &&
+		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
+	    /* skip the whole separator */
+	    ptr++;
+	  lg = 0;
+	  while ((*ptr >= 'A' &&
+		  *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-')
+	    {
+	      /* it's a new language */
+	      ptr++;
+	      lg++;
+	    }
+	  if (lg >= 2)
+	    count++;
+	  if (*ptr != WC_EOS)
+	    ptr++;
+	}
 
       if (count > 0)
-         quality = 1.1 - (double) count/10.0;
+	quality = 1.1 - (double) count/10.0;
       else
-          quality = 1.0;
+	quality = 1.0;
 
-     /* Read the languages from the registry, then inject them one, by one.
-        The first one is the one with the highest priority.
-        The libwww ask for the lowest priority first.
+      /* Read the languages from the registry, then inject them one, by one.
+	 The first one is the one with the highest priority.
+	 The libwww ask for the lowest priority first.
       */
       ptr--;
       still = TRUE;
-      while (count) {
-            while (still && (*ptr < TEXT('A') || (*ptr > TEXT('Z') && *ptr < TEXT('a')) || *ptr > TEXT('z')))
-                  /* skip the whole separator */
-                  if (ptr > lang_list)
-                     ptr--;
-                  else
-                      still = FALSE;
-            lg = 0;
-            while (still && ((*ptr >= TEXT('A') && *ptr <= TEXT('Z')) || (*ptr >= TEXT('a') && *ptr <= TEXT('z')) || *ptr == TEXT('-'))) {
-                  /* it's a new language */
-                  if (ptr > lang_list)
-                     ptr--;
-                  else
-                      still = FALSE;
-                  lg++;
-			}
-            if (lg >= 2) {
-               if (still)
-                  wc2iso_strncpy  (s, &ptr[1], 2);
-               else
-                   wc2iso_strncpy (s, lang_list, 2);
-               count--;
-               HTLanguage_add (c, s, quality);
-               quality += 0.1;
-			}
-            ptr--;
-	  }
-  }
+      while (count)
+	{
+	  while (still && (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
+	    /* skip the whole separator */
+	    if (ptr > lang_list)
+	      ptr--;
+	    else
+	      still = FALSE;
+	  lg = 0;
+	  while (still &&
+		 ((*ptr >= 'A' &&
+		   *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-'))
+	    {
+	      /* it's a new language */
+	      if (ptr > lang_list)
+		ptr--;
+	      else
+		still = FALSE;
+	      lg++;
+	    }
+	  if (lg >= 2)
+	    {
+	      if (still)
+		strncpy  (s, &ptr[1], 2);
+	      else
+		strncpy (s, lang_list, 2);
+	      count--;
+	      HTLanguage_add (c, s, quality);
+	      quality += 0.1;
+	    }
+	  ptr--;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1554,14 +1541,8 @@ HTList             *c;
   Bindings between a source media type and a destination media type
   (conversion).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AHTConverterInit (HTList *c)
-#else  /* __STDC__ */
-static void         AHTConverterInit (c)
-HTList             *c;
-#endif /* __STDC__ */
 {
-
    /* Handler for custom http error messages */
    HTConversion_add (c, "*/*", "www/debug", AHTMemConverter, 1.0, 0.0, 0.0);
 
@@ -1613,7 +1594,7 @@ HTList             *c;
   ----------------------------------------------------------------------*/
 static void         AHTProtocolInit (void)
 {
-  CHAR_T* strptr;
+  char *strptr;
 
   /* 
      NB. Preemptive == YES means Blocking requests
@@ -1638,7 +1619,7 @@ static void         AHTProtocolInit (void)
 
    /* initialize pipelining */
   strptr = TtaGetEnvString ("ENABLE_PIPELINING");
-  if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
+  if (strptr && *strptr && strcasecmp (strptr, "yes"))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
 
@@ -1693,11 +1674,7 @@ static void         AHTNetInit (void)
   AHTAlertInit
   Register alert messages and their callbacks.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AHTAlertInit (void)
-#else
-static void         AHTAlertInit ()
-#endif
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
 #ifdef __WINDOWS
@@ -1710,120 +1687,30 @@ static void         AHTAlertInit ()
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
 }
 
-/*----------------------------------------------------------------------
-  libwww_CleanCache
-  frontend to the recursive cache cleaning function
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void libwww_CleanCache (void)
-#else
-void libwww_CleanCache ()
-Document doc;
-View view;
-#endif /* __STDC__ */
-{
-#ifdef AMAYA_WWW_CACHE
-  CHAR_T*  real_dir;
-  char*    cache_dir;
-  char*    tmp;
-  int      cache_size;
-  int      cache_expire;
-  int      cache_disconnect;
-  ThotBool error;
-  CHAR_T*  ptr;
-
-  if (!HTCacheMode_enabled ())
-    /* don't do anything if we're not using a cache */
-    return;
-  /* temporarily close down the cache, purge it, then restart */
-  tmp = HTCacheMode_getRoot ();
-  /* don't do anything if we don't have a valid cache dir */
-  if (!tmp || *tmp == EOS)
-	  return;
-  cache_dir = TtaStrdup (tmp);
-  HT_FREE (tmp);
-  cache_size = HTCacheMode_maxSize ();
-  cache_expire = HTCacheMode_expires ();
-  cache_disconnect = HTCacheMode_disconnected ();
-
-  /* get something we can work on :) */
-  tmp = HTWWWToLocal (cache_dir, "file:", NULL);
-  real_dir = TtaAllocString (strlen (tmp) + 20);
-  iso2wc_strcpy (real_dir, tmp);
-  HT_FREE (tmp);
-
-  /* safeguard... abort the operation if cache_dir doesn't end with
-     CACHE_DIR_NAME */
-  error = TRUE;
-  ptr = ustrstr (real_dir, CACHE_DIR_NAME);  
-    if (ptr && *ptr && !ustrcasecmp (ptr, CACHE_DIR_NAME))
-      error = FALSE;
-  if (error)
-    return;  
-  
-  /* remove the concurrent cache lock */
-#ifdef DEBUG_LIBWWW
-  fprintf (stderr, "Clearing the cache lock\n");
-#endif /* DEBUG_LIBWWW */
-  clear_cachelock ();
-  HTCacheTerminate ();
-  HTCacheMode_setEnabled (FALSE);
-  
-  RecCleanCache (real_dir);
-
-  HTCacheMode_setExpires (cache_expire);
-  HTCacheMode_setDisconnected (cache_disconnect);
-  HTCacheInit (cache_dir, cache_size);
-  /* set a new concurrent cache lock */
-  ustrcat (real_dir, TEXT(".lock"));
-  if (set_cachelock (real_dir) == -1)
-    /* couldn't open the .lock file, so, we close the cache to
-       be in the safe side */
-    {
-#ifdef DEBUG_LIBWWW
-      fprintf (stderr, "couldnt set the cache lock\n");
-#endif /* DEBUG_LIBWWW */
-      HTCacheTerminate ();
-      HTCacheMode_setEnabled (FALSE);
-    }
-#ifdef DEBUG_LIBWWW
-  fprintf (stderr, "set a cache lock\n");
-#endif /* DEBUG_LIBWWW */
-  TtaFreeMemory (real_dir);
-  TtaFreeMemory (cache_dir);
-#endif /* AMAYA_WWW_CACHE */
-}
-
 #ifdef AMAYA_WWW_CACHE
 /*----------------------------------------------------------------------
   RecCleanCache
   Clears an existing cache directory
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RecCleanCache (CHAR_T* dirname)
-#else
-static void RecCleanCache (dirname)
-CHAR_T*   dirname;
-#endif /* __STDC__ */
-
-#ifdef _WINDOWS
+static void RecCleanCache (char *dirname)
 {
+#ifdef _WINDOWS
   HANDLE          hFindFile;
   ThotBool        status;
   WIN32_FIND_DATA ffd;
-  CHAR_T        t_dir [MAX_LENGTH];
-  CHAR_T*       ptr;
+  char          t_dir [MAX_LENGTH];
+  char *      ptr;
 
   /* create a t_dir name to start searching for files */
-  if ((ustrlen (dirname) + 10) > MAX_LENGTH)
+  if ((strlen (dirname) + 10) > MAX_LENGTH)
     /* ERROR: directory name is too big */
     return;
 
-  ustrcpy (t_dir, dirname);
+  strcpy (t_dir, dirname);
   /* save the end of the dirname. We'll use it to make
      a complete pathname when erasing files */
-  ptr = &t_dir[ustrlen (t_dir)];
-  ustrcat (t_dir, TEXT("*"));
+  ptr = &t_dir[strlen (t_dir)];
+  strcat (t_dir, "*");
 
   hFindFile = FindFirstFile (t_dir, &ffd);
     
@@ -1837,10 +1724,10 @@ CHAR_T*   dirname;
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	{
 	  /* it's a directory, erase it recursively */
-	  if (ustrcmp (ffd.cFileName, TEXT("..")) && ustrcmp (ffd.cFileName, TEXT(".")))
+	  if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
 	    {
-	      ustrcpy (ptr, ffd.cFileName);
-	      ustrcat (ptr, WC_DIR_STR);
+	      strcpy (ptr, ffd.cFileName);
+	      strcat (ptr, WC_DIR_STR);
 	      RecCleanCache (t_dir);
 	      urmdir (t_dir);
 	    }
@@ -1848,16 +1735,14 @@ CHAR_T*   dirname;
 	else
 	  {
 	    /* it's a file, erase it */
-	    ustrcpy (ptr, ffd.cFileName);
+	    strcpy (ptr, ffd.cFileName);
 	    TtaFileUnlink (t_dir);
 	  }
       status = FindNextFile (hFindFile, &ffd);
     }
   FindClose (hFindFile);
-}
 
 #else /* _WINDOWS */
-{
   DIR *dp;
   struct stat st;
 #ifdef HAVE_DIRENT_H
@@ -1908,30 +1793,102 @@ CHAR_T*   dirname;
 	}
     }
   closedir (dp);
-}
 #endif /* _WINDOWS */
+}
 #endif /* AMAYA_WWW_CACHE */
+
+/*----------------------------------------------------------------------
+  libwww_CleanCache
+  frontend to the recursive cache cleaning function
+  ----------------------------------------------------------------------*/
+void libwww_CleanCache (void)
+{
+#ifdef AMAYA_WWW_CACHE
+  char * real_dir;
+  char*    cache_dir;
+  char*    tmp;
+  int      cache_size;
+  int      cache_expire;
+  int      cache_disconnect;
+  ThotBool error;
+  char * ptr;
+
+  if (!HTCacheMode_enabled ())
+    /* don't do anything if we're not using a cache */
+    return;
+  /* temporarily close down the cache, purge it, then restart */
+  tmp = HTCacheMode_getRoot ();
+  /* don't do anything if we don't have a valid cache dir */
+  if (!tmp || *tmp == EOS)
+	  return;
+  cache_dir = TtaStrdup (tmp);
+  HT_FREE (tmp);
+  cache_size = HTCacheMode_maxSize ();
+  cache_expire = HTCacheMode_expires ();
+  cache_disconnect = HTCacheMode_disconnected ();
+
+  /* get something we can work on :) */
+  tmp = HTWWWToLocal (cache_dir, "file:", NULL);
+  real_dir = TtaGetMemory (strlen (tmp) + 20);
+  iso2wc_strcpy (real_dir, tmp);
+  HT_FREE (tmp);
+
+  /* safeguard... abort the operation if cache_dir doesn't end with
+     CACHE_DIR_NAME */
+  error = TRUE;
+  ptr = strstr (real_dir, CACHE_DIR_NAME);  
+    if (ptr && *ptr && !strcasecmp (ptr, CACHE_DIR_NAME))
+      error = FALSE;
+  if (error)
+    return;  
+  
+  /* remove the concurrent cache lock */
+#ifdef DEBUG_LIBWWW
+  fprintf (stderr, "Clearing the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+  clear_cachelock ();
+  HTCacheTerminate ();
+  HTCacheMode_setEnabled (FALSE);
+  
+  RecCleanCache (real_dir);
+
+  HTCacheMode_setExpires (cache_expire);
+  HTCacheMode_setDisconnected (cache_disconnect);
+  HTCacheInit (cache_dir, cache_size);
+  /* set a new concurrent cache lock */
+  strcat (real_dir, ".lock");
+  if (set_cachelock (real_dir) == -1)
+    /* couldn't open the .lock file, so, we close the cache to
+       be in the safe side */
+    {
+#ifdef DEBUG_LIBWWW
+      fprintf (stderr, "couldnt set the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+      HTCacheTerminate ();
+      HTCacheMode_setEnabled (FALSE);
+    }
+#ifdef DEBUG_LIBWWW
+  fprintf (stderr, "set a cache lock\n");
+#endif /* DEBUG_LIBWWW */
+  TtaFreeMemory (real_dir);
+  TtaFreeMemory (cache_dir);
+#endif /* AMAYA_WWW_CACHE */
+}
 
 /*----------------------------------------------------------------------
   CacheInit
   Reads the cache settings from the thot.ini file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CacheInit (void)
-#else
-static void Cacheinit ()
-#endif
-
 {
 #ifndef AMAYA_WWW_CACHE
    HTCacheMode_setEnabled (NO);
 
 #else /* AMAYA_WWW_CACHE */
-  CHAR_T* strptr;
-  CHAR_T* real_dir = NULL;
-  CHAR_T* cache_lockfile;
-  char      www_realDir[MAX_LENGTH];
-  char*     cache_dir = NULL;
+  char     *strptr;
+  char     *real_dir = NULL;
+  char     *cache_lockfile;
+  char     *cache_dir = NULL;
   int       cache_size;
   int       cache_entry_size;
   ThotBool  cache_enabled;
@@ -1942,14 +1899,14 @@ int i;
 
   /* activate cache? */
   strptr = TtaGetEnvString ("ENABLE_CACHE");
-  if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
+  if (strptr && *strptr && strcasecmp (strptr, "yes"))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
   strptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
-  if (strptr && *strptr && !ustrcasecmp (strptr, TEXT("yes")))
+  if (strptr && *strptr && !strcasecmp (strptr, "yes"))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
@@ -1958,53 +1915,47 @@ int i;
   strptr = TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
-      real_dir = TtaAllocString (ustrlen (strptr) + ustrlen (CACHE_DIR_NAME) + 20);
-      ustrcpy (real_dir, strptr);
-	  if (*(real_dir + ustrlen (real_dir) - 1) != WC_DIR_SEP)
-	    ustrcat (real_dir, WC_DIR_STR);
+      real_dir = TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
+      strcpy (real_dir, strptr);
+      if (*(real_dir + strlen (real_dir) - 1) != WC_DIR_SEP)
+	strcat (real_dir, WC_DIR_STR);
     }
   else
     {
-      real_dir = TtaAllocString (ustrlen (TempFileDirectory) + ustrlen (CACHE_DIR_NAME) + 20);
-      usprintf (real_dir, TEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
+      real_dir = TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
+      usprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
      include CACHE_DIR_NAME? If not, add it */
-  strptr = ustrstr (real_dir, CACHE_DIR_NAME);
+  strptr = strstr (real_dir, CACHE_DIR_NAME);
   if (!strptr)
-    ustrcat (real_dir, CACHE_DIR_NAME);
+    strcat (real_dir, CACHE_DIR_NAME);
   else
     {
-      i = ustrlen (CACHE_DIR_NAME);
+      i = strlen (CACHE_DIR_NAME);
 	  if (strptr[i] != WC_EOS)
-          ustrcat (real_dir, CACHE_DIR_NAME);
+          strcat (real_dir, CACHE_DIR_NAME);
     }
 
   /* convert the local cache dir into a file URL, as expected by
      libwww */
- 
-  wc2iso_strcpy (www_realDir, real_dir);
-
-  cache_dir = HTLocalToWWW (www_realDir, "file:");
-
+  cache_dir = HTLocalToWWW (real_dir, "file:");
   /* get the cache size (or use a default one) */
   strptr = TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
     cache_size = uatoi (strptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
-
   /* get the max cached file size (or use a default one) */
   if (!TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &cache_entry_size))
     cache_entry_size = DEFAULT_MAX_CACHE_ENTRY_SIZE;
-
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      cache_lockfile = TtaAllocString (ustrlen (real_dir) + 20);
-      ustrcpy (cache_lockfile, real_dir);
-      ustrcat (cache_lockfile, TEXT(".lock"));
+      cache_lockfile = TtaGetMemory (strlen (real_dir) + 20);
+      strcpy (cache_lockfile, real_dir);
+      strcat (cache_lockfile, ".lock");
       cache_locked = FALSE;
       if (TtaFileExist (cache_lockfile) && !(cache_locked = test_cachelock (cache_lockfile)))
 	{
@@ -2014,10 +1965,10 @@ int i;
 	  /* remove the lock and clean the cache (the clean cache 
 	     will remove all, making the following call unnecessary */
 	  /* little trick to win some memory */
-	  strptr = ustrrchr (cache_lockfile, TEXT('.'));
+	  strptr = strrchr (cache_lockfile, '.');
 	  *strptr = WC_EOS;
 	  RecCleanCache (cache_lockfile);
-	  *strptr = TEXT('.');
+	  *strptr = '.';
 	}
 
       if (!cache_locked) 
@@ -2078,7 +2029,7 @@ int i;
     TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */
   if (cache_enabled && !HTCacheMode_enabled ())
-      InitInfo (TEXT("Cache"), TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE));
+      InitInfo ("Cache", TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE));
 #endif /* AMAYA_WWW_CACHE */
 }
 
@@ -2087,31 +2038,27 @@ int i;
   Reads any proxies settings which may be declared as environmental
   variables or in the thot.ini file. The former overrides the latter.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ProxyInit (void)
-#else
-static void ProxyInit ()
-#endif /* __STDC__ */
 {
-  CHAR_T*   strptr;
-  char*     name;
+  char     *strptr;
+  char     *name;
+  char     *tmp = NULL;
+  char     *strptrA;
   ThotBool  proxy_is_onlyproxy;
-  char*     tmp = NULL;
-  char*     strptrA;
 
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("HTTP_PROXY");
   if (strptr && *strptr)
     {
-      tmp = (char*) TtaGetMemory (ustrlen (strptr) + 1);
-      wc2iso_strcpy (tmp, strptr);
+      tmp = (char *) TtaGetMemory (strlen (strptr) + 1);
+      strcpy (tmp, strptr);
 
       /* does the proxy env string has an "http://" prefix? */
-      if (!ustrncasecmp (strptr, TEXT("http://"), 7)) 
+      if (!strncasecmp (strptr, "http://", 7)) 
         HTProxy_add ("http", tmp);
       else 
 	{
-	  strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 9);
+	  strptrA = (char *) TtaGetMemory (strlen (strptr) + 9);
 	  strcpy (strptrA, "http://");
 	  strcat (strptrA, tmp);
 	  HTProxy_add ("http", strptrA);
@@ -2124,21 +2071,22 @@ static void ProxyInit ()
   strptr = TtaGetEnvString ("PROXYDOMAIN");
   if (strptr && *strptr) 
     {
-      strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 1);
-      wc2iso_strcpy (strptrA, strptr);
-      /* as HTNextField changes the ptr we pass as an argument, we'll
-	 work with another variable, so that we can free the strptrA
-	 block later on */
+      strptrA = (char *) TtaGetMemory (strlen (strptr) + 1);
       tmp = strptrA;
+      strcpy (tmp, strptr);
+      /* as HTNextField changes the ptr we pass as an argument, we'll
+	 work with another variable, so that we can free the tmp
+	 block later on */
       while ((name = HTNextField (&tmp)) != NULL) 
 	{
 	  char* portstr = strchr (name, ':');
 	  unsigned port=0;
-	  if (portstr) { 
-	    *portstr++ = EOS;
-	    if (*portstr) 
-	      port = (unsigned) atoi (portstr);
-	  }
+	  if (portstr)
+	    { 
+	      *portstr++ = EOS;
+	      if (*portstr) 
+		port = (unsigned) atoi (portstr);
+	    }
 	  /* Register it for all access methods */
 	  HTNoProxy_add (name, NULL, port);
 	}
@@ -2154,109 +2102,12 @@ static void ProxyInit ()
 }
 
 /*----------------------------------------------------------------------
-  SafePut_init
-  Sets up the domains which are authorized to make a redirect on 
-  a PUT.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void SafePut_init (void)
-#else
-static void SafePut_init ()
-#endif /* __STDC__ */
-{
-  CHAR_T* strptr;
-  CHAR_T* str = NULL;
-  char*     ptr, *strptrA, *ptr2;
-  char*     domain;
-
-  /* get the proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString ("SAFE_PUT_REDIRECT");
-  if (strptr && *strptr)
-    {
-      /* Get copy we can mutilate */
-      strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 1);
-      wc2iso_strcpy (strptrA, strptr);
-      ptr2 = strptrA;
-      /* convert to lowercase */
-      ptr = strptrA;
-      while (*ptr) 
-	{
-	  *ptr = tolower (*ptr);
-	  ptr++;
-	}
-      
-      /* create the list container */
-      safeput_list = HTList_new ();   
-      /* store the domain list */
-
-      ptr = strptrA;
-      while ((domain = HTNextField (&strptrA)) != NULL)
-	  HTList_addObject (safeput_list, TtaStrdup (domain)); 
-
-      TtaFreeMemory (str);
-      TtaFreeMemory (ptr2);
-    }
-}
-
-/*----------------------------------------------------------------------
-  SafePut_delete
-  Deletes the safeput_list variable
-  ----------------------------------------------------------------------*/
-static void SafePut_delete (void)
-{
-  HTList *cur = safeput_list;
-  char *domain;
-
-  if (!safeput_list) 
-    return;
-
-  while ((domain = (char *) HTList_nextObject (cur))) 
-      TtaFreeMemory (domain);
-   HTList_delete (safeput_list);
-   safeput_list = NULL;
-}
-
-/*----------------------------------------------------------------------
-  SafePut_query
-  returns true if the domain to which belongs the URL accepts an automatic
-  PUT redirect.
-  ----------------------------------------------------------------------*/
-static ThotBool SafePut_query (CHAR_T* url)
-{
-  HTList*  cur;
-  char*    me;
-  ThotBool found;
-  CHAR_T   tmp[MAX_LENGTH];
-
-  /* extract the domain path of the url and normalize it */
-  /* domain = url; */
-  cur = safeput_list;
-  found = FALSE;
-
-  while ((me = (char*) HTList_nextObject (cur))) {
-        iso2wc_strcpy (tmp, me);
-        if (ustrstr (url, tmp)) {
-           found = TRUE;
-           break;
-		} 
-  } 
-
-  return (found);
-}
-
-/*----------------------------------------------------------------------
   AHTProfile_newAmaya
   creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AHTProfile_newAmaya (CHAR_T* AppName, CHAR_T* AppVersion)
-#else  /* __STDC__ */
-static void         AHTProfile_newAmaya (AppName, AppVersion)
-char* AppName;
-char* AppVersion;
-#endif /* __STDC__ */
+static void AHTProfile_newAmaya (char *AppName, char *AppVersion)
 {
-   CHAR_T* strptr;
+   char *strptr;
 #ifdef _I18N_
    unsigned char mbAppName[MAX_LENGTH], mbAppVersion[MAX_LENGTH];
 #else  /* !_I18N_ */
@@ -2320,7 +2171,7 @@ char* AppVersion;
    HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL, HTBasic_delete);
    /* activate MDA by defaul */
    strptr = TtaGetEnvString ("ENABLE_MDA");
-   if (!strptr || (strptr && *strptr && ustrcasecmp (strptr, TEXT("no"))))
+   if (!strptr || (strptr && *strptr && strcasecmp (strptr, "no")))
      HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
    
    /* Get any proxy settings */
@@ -2362,15 +2213,9 @@ char* AppVersion;
   AHTProfile_delete
   deletes the Amaya client profile.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AHTProfile_delete (void)
-#else
-static void         AHTProfile_delete ()
-#endif				/* __STDC__ */
 {
- 
   /* free the Amaya global context */
-
   /* Clean up all the registred converters */
   HTFormat_deleteAll ();
   if (acceptTypes)
@@ -2417,12 +2262,7 @@ static void         AHTProfile_delete ()
   AmayacontextInit
   initializes an internal Amaya context for our libwww interface 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void                AmayaContextInit ()
-#else
-static void                AmayaContextInit ()
-#endif
-
+static void    AmayaContextInit ()
 {
   AmayaAlive_flag = TRUE;
   /* Initialization of the global context */
@@ -2436,15 +2276,11 @@ static void                AmayaContextInit ()
   QueryInit
   initializes the libwww interface 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                QueryInit ()
-#else
-void                QueryInit ()
-#endif
+void         QueryInit ()
 {
-  CHAR_T* strptr;
-  int tmp_i;
-  long tmp_l;
+  char   *strptr;
+  int     tmp_i;
+  long    tmp_l;
 
    AmayaContextInit ();
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
@@ -2516,12 +2352,12 @@ void                QueryInit ()
        if (WWW_TraceFlag)
 	 {
 	   /* Trace activation (for debugging) */
-	   CHAR_T *s, *tmp;
+	   char   *s, *tmp;
 	   s = TtaGetEnvString ("APP_TMPDIR");
-	   tmp = TtaGetMemory (ustrlen (s) + sizeof (TEXT("/libwww.log")) + 1);
-	   ustrcpy (tmp, s);
-	   ustrcat (tmp, TEXT("/libwww.log"));
-	   trace_fp = ufopen (tmp, TEXT("ab"));
+	   tmp = TtaGetMemory (strlen (s) + sizeof ("/libwww.log") + 1);
+	   strcpy (tmp, s);
+	   strcat (tmp, "/libwww.log");
+	   trace_fp = fopen (tmp, "ab");
 	   TtaFreeMemory (tmp);
 	   if (trace_fp)
 	     HTTrace_setCallback(LineTrace);
@@ -2589,11 +2425,7 @@ void                QueryInit ()
   a copy of the Thop event loop so we can handle the stop button in Unix
   and preemptive requests under Windows
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          LoopForStop (AHTReqContext * me)
-#else
-static int          LoopForStop (AHTReqContext * me)
-#endif
 {
 #ifdef _WINDOWS
   MSG msg;
@@ -2694,14 +2526,7 @@ void QueryClose ()
 /*----------------------------------------------------------------------
   NextNameValue
   ---------------------------------------------------------------------*/
-#ifdef __STDC__
-static char * NextNameValue (char ** pstr, char **name, char **value)
-#else
-static char * NextNameValue (pstr, name, value);
-char ** pstr;
-char **name;
-char **value;
-#endif /* __STDC__ */
+static char * NextNameValue (char **pstr, char **name, char **value)
 {
   char * p = *pstr;
   char * start = NULL;
@@ -2737,12 +2562,7 @@ char **value;
 /*----------------------------------------------------------------------
   PrepareFormdata
   ---------------------------------------------------------------------*/
-#ifdef __STDC__
-static   HTAssocList * PrepareFormdata (CHAR_T* string)
-#else
-static   HTAssocList * PrepareFormdata (string)
-CHAR_T*  string;
-#endif /* __STDC__ */
+static   HTAssocList * PrepareFormdata (char *string)
 {
   char*        tmp_string, *tmp_string_ptr;
   char*        name;
@@ -2756,7 +2576,7 @@ CHAR_T*  string;
      change
      */
   
-  tmp_string_ptr = TtaGetMemory (ustrlen (string) + 1);
+  tmp_string_ptr = TtaGetMemory (strlen (string) + 1);
   tmp_string = tmp_string_ptr;
   wc2iso_strcpy (tmp_string_ptr, string);
   formdata = HTAssocList_new();
@@ -2774,13 +2594,7 @@ CHAR_T*  string;
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------*/
-#ifdef __STDC__
 void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
-#else
-void AHTRequest_setCustomAcceptHeader (request, value)
-HTRequest *request;
-char *value;
-#endif /* __STDC__ */
 {				
   HTRqHd rqhd = HTRequest_rqHd (request);
   rqhd = rqhd & (~HT_C_ACCEPT_TYPE);
@@ -2793,17 +2607,9 @@ char *value;
   A simple function to invoke a callback function whenever there's an error
   in GetObjectWWW
   ---------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void      InvokeGetObjectWWW_callback (int docid, STRING urlName, STRING outputfile, TTcbf *terminate_cbf, void *context_tcbf, int status)
-#else
-void      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf, context_tcbf, status)
-int docid;
-STRING urlName;
-STRING outputfile;
-TTcbf *terminate_cbf;
-void *context_tcbf;
-#endif /* __STDC__ */
+void InvokeGetObjectWWW_callback (int docid, char *urlName,
+				  char *outputfile, TTcbf *terminate_cbf,
+				  void *context_tcbf, int status)
 {
   if (!terminate_cbf)
     return;
@@ -2875,32 +2681,14 @@ void *context_tcbf;
    HT_OK
  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int GetObjectWWW (int docid, STRING urlName, STRING formdata,
-		  STRING outputfile, int mode, TIcbf* incremental_cbf, 
-		  void* context_icbf, TTcbf* terminate_cbf, 
-		  void* context_tcbf, ThotBool error_html, STRING content_type)
-#else
-int GetObjectWWW (docid, urlName, formdata, outputfile, mode, 
-		  incremental_cbf, context_icbf, 
-		  terminate_cbf, context_tcbf, error_html, content_type)
-int           docid;
-CHAR_T*       urlName;
-CHAR_T*       formdata;
-CHAR_T*       outputfile;
-int           mode;
-TIcbf        *incremental_cbf;
-void         *context_icbf;
-TTcbf        *terminate_cbf;
-void         *context_tcbf;
-ThotBool      error_html;
-CHAR_T*       content_type;
-#endif
+int GetObjectWWW (int docid, char *urlName, char *formdata,
+		  char *outputfile, int mode, TIcbf *incremental_cbf, 
+		  void *context_icbf, TTcbf *terminate_cbf, 
+		  void *context_tcbf, ThotBool error_html, char *content_type)
 {
    AHTReqContext      *me;
-   CHAR_T*             ref;
-   CHAR_T*             esc_url;
-   char                urlRef[MAX_LENGTH];
+   char *            ref;
+   char *            esc_url;
    int                 status, l;
    int                 tempsubdir;
    ThotBool            bool_tmp;
@@ -2919,9 +2707,9 @@ CHAR_T*       content_type;
      }
 
    /* if it's a 'docImage', we have already downloaded it */
-   if (!ustrncmp (TEXT("internal:"), urlName, 9)) 
+   if (!strncmp ("internal:", urlName, 9)) 
      {
-       ustrcpy (outputfile, urlName);
+       strcpy (outputfile, urlName);
        InvokeGetObjectWWW_callback (docid, urlName, outputfile,
 				    terminate_cbf, context_tcbf, HT_OK);
        return HT_OK;
@@ -2950,7 +2738,7 @@ CHAR_T*       content_type;
    tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
 
    /* create a tempfilename */
-   usprintf (outputfile, TEXT("%s%c%d%c%04dAM"), TempFileDirectory, WC_DIR_SEP, tempsubdir, WC_DIR_SEP, object_counter);
+   usprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, WC_DIR_SEP, tempsubdir, WC_DIR_SEP, object_counter);
    /* update the object_counter (used for the tempfilename) */
    object_counter++;
    
@@ -2958,7 +2746,7 @@ CHAR_T*       content_type;
    esc_url = EscapeURL (urlName);
    if (esc_url) 
      {
-       ref = AmayaParseUrl (esc_url, TEXT(""), AMAYA_PARSE_ALL);
+       ref = AmayaParseUrl (esc_url, "", AMAYA_PARSE_ALL);
        TtaFreeMemory (esc_url);
      }
    else
@@ -3048,18 +2836,18 @@ CHAR_T*       content_type;
 
    if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) 
      {
-       l = ustrlen (outputfile);
+       l = strlen (outputfile);
        if (l > MAX_LENGTH)
-	 me->outputfile = TtaAllocString (l + 2);
+	 me->outputfile = TtaGetMemory (l + 2);
        else
-	 me->outputfile = TtaAllocString (MAX_LENGTH + 2);
-       ustrcpy (me->outputfile, outputfile);
-       l = ustrlen (urlName);
+	 me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
+       strcpy (me->outputfile, outputfile);
+       l = strlen (urlName);
        if (l > MAX_LENGTH)
-	 me->urlName = TtaAllocString (l + 2);
+	 me->urlName = TtaGetMemory (l + 2);
        else
-	 me->urlName = TtaAllocString (MAX_LENGTH + 2);
-       ustrcpy (me->urlName, urlName);
+	 me->urlName = TtaGetMemory (MAX_LENGTH + 2);
+       strcpy (me->urlName, urlName);
 #ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
@@ -3101,8 +2889,7 @@ CHAR_T*       content_type;
 		 TtaGetMessage (AMAYA, AM_FETCHING),
 		 me->status_urlName);
 
-   wc2iso_strcpy (urlRef, ref);
-   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlRef);
+   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
    TtaFreeMemory (ref);
    
    TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
@@ -3264,21 +3051,9 @@ CHAR_T*       content_type;
    HT_ERROR
    HT_OK
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PutObjectWWW (int docid, STRING fileName, STRING urlName, int mode, PicType contentType,
-				  TTcbf * terminate_cbf, void *context_tcbf)
-#else
-int                 PutObjectWWW (docid, urlName, fileName, mode, contentType,
-				  ,terminate_cbf, context_tcbf)
-int                 docid;
-STRING              urlName;
-STRING              fileName;
-int                 mode;
-PicType             contentType;
-TTcbf              *terminate_cbf;
-void               *context_tcbf;
-
-#endif /* __STDC__ */
+int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
+		  PicType contentType,
+		  TTcbf *terminate_cbf, void *context_tcbf)
 {
    AHTReqContext      *me;
    CHARSET             charset;
@@ -3287,19 +3062,19 @@ void               *context_tcbf;
    char               *fileURL;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;
-   CHAR_T*             tmp;
-   CHAR_T*             esc_url;
+   char               *tmp;
+   char               *esc_url;
    int                 UsePreconditions;
    ThotBool            lost_update_check = TRUE;
    char                url_name[MAX_LENGTH];
-   char*               tmp2;
+   char               *tmp2;
 #ifdef _WINDOWS
    char                file_name[MAX_LENGTH];
 #endif /* _WINDOWS */
 
    /* should we protect the PUT against lost updates? */
    tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
-   if (tmp && *tmp && ustrcasecmp (tmp, TEXT("yes")))
+   if (tmp && *tmp && strcasecmp (tmp, "yes"))
      lost_update_check = FALSE;
 
    UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
@@ -3346,16 +3121,16 @@ void               *context_tcbf;
    */
    if (DocumentMeta[docid]->put_default_name)
      {
-       CHAR_T *ptr1, *ptr2;
+       char   *ptr1, *ptr2;
        ptr1 = TtaGetEnvString ("DEFAULTNAME");
        if (ptr1 && *ptr1) 
 	 {
-	   ptr2 = ustrstr (urlName, ptr1);
+	   ptr2 = strstr (urlName, ptr1);
 	   if (ptr2) 
 	     {
            wc2iso_strcpy (url_name, urlName);
 	       me->default_put_name = TtaStrdup (url_name);
-	       me->default_put_name[strlen (me->default_put_name) - ustrlen (ptr1)] = EOS;
+	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
 	       HTRequest_setDefaultPutName (me->request, me->default_put_name);
 	     }
 	 }
@@ -3374,7 +3149,7 @@ void               *context_tcbf;
    me->method = METHOD_PUT;
    me->output = stdout;
    /* we are not expecting to receive any input from the server */
-   me->outputfile = (CHAR_T*) NULL; 
+   me->outputfile = (char  *) NULL; 
 
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
@@ -3527,12 +3302,7 @@ void               *context_tcbf;
   StopRequest
   stops (kills) all active requests associated with a docid 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StopRequest (int docid)
-#else
-void                StopRequest (docid)
-int                 docid;
-#endif
 {
    if (Amaya && CanDoStop ())
      { 
@@ -3554,12 +3324,7 @@ int                 docid;
   StopAllRequests
   stops (kills) all active requests. We use the docid 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                StopAllRequests (int docid)
-#else
-void                StopAllRequests (docid)
-int                 docid;
-#endif
 {
    HTList             *cur;
    AHTReqContext      *me;
@@ -3581,8 +3346,8 @@ int                 docid;
 	  processing easier */
        UserAborted_flag = TRUE;
        /* abort all outstanding libwww UI dialogues */
-       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, (CHAR_T*) 0);
-       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, (CHAR_T*) 0);
+       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, NULL);
+       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, NULL);
        /* expire all outstanding timers */
        HTTimer_expireAll ();
        /* HTNet_killAll (); */
@@ -3661,11 +3426,7 @@ int                 docid;
   AmayaIsAlive
   returns the value of the AmayaAlive_flag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AmayaIsAlive (void)
-#else
-ThotBool AmayaIsAlive ()
-#endif /* _STDC_ */
 {
   return AmayaAlive_flag;
 }
@@ -3674,11 +3435,7 @@ ThotBool AmayaIsAlive ()
   CanDoStop
   returns the value of the CanDoStop flag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool CanDoStop (void)
-#else
-ThotBool CanDoStop ()
-#endif /* _STDC_ */
 {
   return CanDoStop_flag;
 }
@@ -3687,22 +3444,14 @@ ThotBool CanDoStop ()
   CanDoStop_set
   sets the value of the CanDoStop flag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CanDoStop_set (ThotBool value)
-#else
-void CanDoStop (value)
-ThotBool value;
-#endif /* _STDC_ */
 {
   CanDoStop_flag = value;
 }
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void libwww_updateNetworkConf (int status)
-#else
-void libwww_updateNetworkConf (status)
-int status;
-#endif /*__STDC__*/
 {
   /* @@@ the docid parameter isn't used... clean it up */
   int docid = 1;
@@ -3750,12 +3499,7 @@ int status;
 /*----------------------------------------------------------------------
   AHT_FTPURL_flag_set
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AHTFTPURL_flag_set (ThotBool value)
-#else
-void AHTFTPURL_flag_set (value)
-ThotBool value;
-#endif /* __STDC__ */
 {
   FTPURL_flag = value;
 }
@@ -3763,11 +3507,7 @@ ThotBool value;
 /*----------------------------------------------------------------------
   AHT_FTPURL_flag
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool AHTFTPURL_flag (void)
-#else
-ThotBool AHTFTPURL_flag (void)
-#endif /* __STDC__ */
 {
   return (FTPURL_flag);
 }

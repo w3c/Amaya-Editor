@@ -88,10 +88,9 @@
 */
 extern HWND     FrMainRef [12];
 extern int      currentFrame;
-extern CHAR_T   wTitle [MAX_LENGTH];
+extern char     wTitle [MAX_LENGTH];
 int             Window_Curs;
-
-CHAR_T DocToOpen [MAX_LENGTH];
+char            DocToOpen[MAX_LENGTH];
 /* extern bmpID;  */
 #endif /* _WINDOWS */
 
@@ -193,8 +192,7 @@ static ThotIcon       iconPlugin;
 
 extern int       currentFrame;
 extern int       menu_item;
-extern CHAR_T    LostPicturePath [512];
-
+extern char      LostPicturePath [512];
 static ThotBool  itemChecked = FALSE;
 
 #include "wininclude.h"
@@ -241,28 +239,30 @@ extern void CreateFormPlugin (Document, View);
 
 /* the structure used for storing the context of the 
    GetHTMLDocument_callback function */
-typedef struct _GETHTMLDocument_context {
+typedef struct _GETHTMLDocument_context
+{
   Document   doc;
   Document   baseDoc;
   ThotBool   ok;
   ThotBool   history;
   ThotBool   local_link;
-  CHAR_T*    target;
-  CHAR_T*    documentname;
-  CHAR_T*    initial_url;
-  CHAR_T*     form_data;
+  char      *target;
+  char      *documentname;
+  char      *initial_url;
+  char      *form_data;
   ClickEvent method;
-  CHAR_T*    tempdocument;
-  TTcbf*     cbf;
-  void*      ctx_cbf;
+  char      *tempdocument;
+  TTcbf     *cbf;
+  void      *ctx_cbf;
 } GETHTMLDocument_context;
 
 /* the structure used for storing the context of the 
    Reload_callback function */
-typedef struct _RELOAD_context {
+typedef struct _RELOAD_context
+{
   Document newdoc;
-  CHAR_T* documentname;
-  CHAR_T* form_data;
+  char *documentname;
+  char *form_data;
   ClickEvent method;
   int position;	/* volume preceding the the first element to be shown */
   int distance; /* distance from the top of the window to the top of this
@@ -302,7 +302,7 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
    IsDocumentLoaded returns the document identification if the        
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
-Document            IsDocumentLoaded (CHAR_T* documentURL, CHAR_T* form_data)
+Document            IsDocumentLoaded (char *documentURL, char *form_data)
 {
   int               i;
   ThotBool          found;
@@ -318,12 +318,12 @@ Document            IsDocumentLoaded (CHAR_T* documentURL, CHAR_T* form_data)
       if (DocumentURLs[i])
 	{
 	  /* compare the url */
-	  found = (!ustrcmp (documentURL, DocumentURLs[i]) ||
-		   (DocumentMeta[i]->initial_url && !ustrcmp (documentURL, DocumentMeta[i]->initial_url)));
+	  found = (!strcmp (documentURL, DocumentURLs[i]) ||
+		   (DocumentMeta[i]->initial_url && !strcmp (documentURL, DocumentMeta[i]->initial_url)));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
-		  !ustrcmp (form_data, DocumentMeta[i]->form_data)))))
+		  !strcmp (form_data, DocumentMeta[i]->form_data)))))
 	    found = FALSE;	  
 	}
       if (!found)
@@ -369,25 +369,25 @@ ThotBool       CanReplaceCurrentDocument (Document document, View view)
 /*----------------------------------------------------------------------
    ExtractParameters extract parameters from document nane.        
   ----------------------------------------------------------------------*/
-void                ExtractParameters (CHAR_T* aName, CHAR_T* parameters)
+void                ExtractParameters (char *aName, char *parameters)
 {
    int              lg, i;
-   CHAR_T*          ptr;
-   CHAR_T*          oldptr;
+   char *         ptr;
+   char *         oldptr;
 
    if (!parameters || !aName)
      /* bad parameters */
      return;
 
-   parameters[0] = WC_EOS;
-   lg = ustrlen (aName);
+   parameters[0] = EOS;
+   lg = strlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = ustrrchr (oldptr, TEXT('?'));
+	     ptr = strrchr (oldptr, '?');
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -396,9 +396,9 @@ void                ExtractParameters (CHAR_T* aName, CHAR_T* parameters)
 	i = (int) (oldptr) - (int) (aName);	/* name length */
 	if (i > 1)
 	  {
-	     aName[i - 1] = WC_EOS;
+	     aName[i - 1] = EOS;
 	     if (i != lg)
-		ustrcpy (parameters, oldptr);
+		strcpy (parameters, oldptr);
 	  }
      }
 }
@@ -408,20 +408,17 @@ void                ExtractParameters (CHAR_T* aName, CHAR_T* parameters)
    Removes the URL target separator ('#') before verifying if a file
    exists.
   ----------------------------------------------------------------------*/
-static ThotBool     FileExistTarget (CHAR_T* filename)
+static ThotBool     FileExistTarget (char *filename)
 {
-  CHAR_T *ptr;
+  char   *ptr;
   ThotBool result;
 
-  ptr = ustrrchr (filename, TEXT('#'));
+  ptr = strrchr (filename, '#');
   if (ptr)
-    *ptr = TEXT('\0');
-
+    *ptr = EOS;
   result = TtaFileExist (filename);
-
   if (ptr)
-    *ptr = TEXT('#');
-
+    *ptr = '#';
   return result;
 }
 
@@ -577,7 +574,7 @@ static void	SetDocumentReadOnly (Document doc)
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       elType.ElTypeNum = HTML_EL_Form;
       elForm = TtaSearchTypedElement (elType, SearchForward, el);
@@ -969,10 +966,10 @@ void                StopTransfer (Document document, View view)
    The Address text field in a document window has been modified by the user
    Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
-static void         TextURL (Document document, View view, CHAR_T* text)
+static void         TextURL (Document document, View view, char *text)
 {
-  CHAR_T           *s = NULL;
-  CHAR_T           *url;
+  char             *s = NULL;
+  char             *url;
   ThotBool          change;
 
   change = FALSE;
@@ -984,7 +981,7 @@ static void         TextURL (Document document, View view, CHAR_T* text)
 
       if (!IsW3Path (text))
 	{
-	  s = TtaAllocString (MAX_LENGTH);
+	  s = TtaGetMemory (MAX_LENGTH);
 	  change = NormalizeFile (text, s, AM_CONV_NONE);
 	  if (!TtaFileExist (s))
 	    {
@@ -1023,7 +1020,7 @@ static void         TextURL (Document document, View view, CHAR_T* text)
 
       InNewWindow = FALSE;
       CurrentDocument = document;
-      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
 }
 
@@ -1040,12 +1037,12 @@ void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
    ElementType         elType;
    Element             el, child;
    Language            lang;
-   CHAR_T*              text;
+   char *             text;
    int                 length;
 
    el = TtaGetMainRoot (sourceDoc);
    elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      /* sourceDoc is a HTML document */
      {
        /* search the Title element in sourceDoc */
@@ -1057,7 +1054,7 @@ void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 	   if (child)
 	     {
 	       length = TtaGetTextLength (child) + 1;
-	       text = TtaAllocString (length);
+	       text = TtaGetMemory (length);
 	       TtaGiveTextContent (child, text, &length, &lang);
                TtaChangeWindowTitle (targetDoc, view, text);
 	       TtaFreeMemory (text);
@@ -1070,23 +1067,23 @@ void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
   InitFormAnswer
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
-void                InitFormAnswer (Document document, View view, const CHAR_T* auth_realm, CHAR_T* server)
+void                InitFormAnswer (Document document, View view, const char *auth_realm, char *server)
 {
 #ifndef _WINDOWS
-   CHAR_T* label;
+   char *label;
 
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
 	       TRUE, 1, 'L', D_CANCEL);
 
-   label = TtaAllocString (((server) ? ustrlen (server) : 0)
-			   + ustrlen (TtaGetMessage (AMAYA, 
+   label = TtaGetMemory (((server) ? strlen (server) : 0)
+			   + strlen (TtaGetMessage (AMAYA, 
 						     AM_AUTHENTICATION_REALM_SERVER))
-			   + ((auth_realm) ? ustrlen (auth_realm) : 0)
+			   + ((auth_realm) ? strlen (auth_realm) : 0)
 			   + 20); /*a bit more than enough memory */
-   usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
-	     ((auth_realm) ? auth_realm : TEXT("")), 
-	     ((server) ? server : TEXT("")));
+   sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
+	    ((auth_realm) ? auth_realm : ""), 
+	    ((server) ? server : ""));
    TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,
 		label);
    TtaFreeMemory (label);
@@ -1101,7 +1098,7 @@ void                InitFormAnswer (Document document, View view, const CHAR_T* 
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
    if (UserAnswer &&
-       (Answer_name[0] == WC_EOS || Answer_password[0] == WC_EOS))
+       (Answer_name[0] == EOS || Answer_password[0] == EOS))
      {
        /* no login name or password, retry */
        TtaSetTextForm (BaseDialog + NameText, Answer_name);
@@ -1111,8 +1108,8 @@ void                InitFormAnswer (Document document, View view, const CHAR_T* 
        TtaWaitShowDialogue ();
      }
 #else /* _WINDOWS */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), (STRING)auth_realm,
-				  server);
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
+				  (char *)auth_realm, server);
 #endif /* _WINDOWS */
 }
 
@@ -1120,9 +1117,9 @@ void                InitFormAnswer (Document document, View view, const CHAR_T* 
   InitInfo
   Displays a message box with the given info text
   ----------------------------------------------------------------------*/
-void       InitInfo (CHAR_T* label, CHAR_T* info)
+void       InitInfo (char *label, char *info)
 {
-  if (!info || *info == WC_EOS)
+  if (!info || *info == EOS)
     return;
 #ifdef _WINDOWS   
   MessageBox (NULL, info, label, MB_OK);
@@ -1133,7 +1130,7 @@ void       InitInfo (CHAR_T* label, CHAR_T* info)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void      InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3, ThotBool withCancel)
+void      InitConfirm3L (Document document, View view, char   *label1, char   *label2, char   *label3, ThotBool withCancel)
 {
 #ifndef _WINDOWS
   /* Confirm form */
@@ -1146,12 +1143,12 @@ void      InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *l
 		       1,  TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
 		       FALSE, 3, 'L');
    /* open as many label widgets as \n we find in the label */
-   if (label1 && *label1 != WC_EOS)
+   if (label1 && *label1 != EOS)
      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
    /* open as many label widgets as \n we find in the label */
-   if (label2 && *label2 != WC_EOS)
+   if (label2 && *label2 != EOS)
      TtaNewLabel (BaseDialog + Label2, BaseDialog + ConfirmForm, label2);
-   if (label3 && *label3  != WC_EOS)
+   if (label3 && *label3  != EOS)
      TtaNewLabel (BaseDialog + Label3, BaseDialog + ConfirmForm, label3);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
@@ -1168,7 +1165,7 @@ void      InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *l
 static ThotBool critic = FALSE;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void             InitConfirm (Document document, View view, CHAR_T* label)
+void             InitConfirm (Document document, View view, char *label)
 {
 #ifndef _WINDOWS
    /* Confirm form */
@@ -1201,19 +1198,19 @@ void             InitConfirm (Document document, View view, CHAR_T* label)
   BrowserForm
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
-static void   BrowserForm (Document doc, View view, CHAR_T* urlname)
+static void   BrowserForm (Document doc, View view, char *urlname)
 {
-   CHAR_T    s[MAX_LENGTH];
+   char      s[MAX_LENGTH];
    int       i;
-   CHAR_T    tempfile[MAX_LENGTH];
+   char      tempfile[MAX_LENGTH];
 
    /* Dialogue form for open URL or local */
    i = 0;
-   ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-   i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    
    TtaNewSheet (BaseDialog + FileBrowserForm, TtaGetViewFrame (doc, 1),
 		TtaGetMessage (AMAYA, AM_FILE_BROWSER), 3, s,
@@ -1224,46 +1221,46 @@ static void   BrowserForm (Document doc, View view, CHAR_T* urlname)
 		BaseDialog + FileBrowserForm, " ");
 
    /* initialise the text fields in the dialogue box */
-   tempfile[0] = WC_EOS;
-   if (urlname[0] != WC_EOS)
+   tempfile[0] = EOS;
+   if (urlname[0] != EOS)
        NormalizeFile (urlname, tempfile, AM_CONV_NONE);
    
-   if (tempfile[0] != WC_EOS && !IsW3Path (tempfile))
+   if (tempfile[0] != EOS && !IsW3Path (tempfile))
      { 
        if (TtaCheckDirectory (tempfile))
 	 {
-	   ustrcpy (DirectoryName, tempfile);
-	   DocumentName[0] = WC_EOS;
+	   strcpy (DirectoryName, tempfile);
+	   DocumentName[0] = EOS;
 	 }
        else
 	 TtaExtractName (tempfile, DirectoryName, DocumentName);
-       if (DirectoryName[0] == WC_EOS)
+       if (DirectoryName[0] == EOS)
 	 {
 	   ugetcwd (DirectoryName, MAX_LENGTH);
-	   DocumentName[0] = WC_EOS;
+	   DocumentName[0] = EOS;
 	 }
-       ustrcpy (s, DirectoryName);
-       ustrcat (s, DIR_STR);
-       ustrcat (s, DocumentName);
+       strcpy (s, DirectoryName);
+       strcat (s, DIR_STR);
+       strcat (s, DocumentName);
      }
    else
      {
-       if (tempfile[0] != WC_EOS && IsW3Path (tempfile))
+       if (tempfile[0] != EOS && IsW3Path (tempfile))
 	 {
 	   ugetcwd (DirectoryName, MAX_LENGTH);
-	   DocumentName[0] = WC_EOS;
+	   DocumentName[0] = EOS;
 	 }
        else
 	 {
-	   if (DirectoryName[0] == WC_EOS)
+	   if (DirectoryName[0] == EOS)
 	     {
 	       ugetcwd (DirectoryName, MAX_LENGTH);
-	       DocumentName[0] = WC_EOS;
+	       DocumentName[0] = EOS;
 	     }
 	 }
-       ustrcpy (s, DirectoryName);
-       ustrcat (s, DIR_STR);
-       ustrcat (s, DocumentName);
+       strcpy (s, DirectoryName);
+       strcat (s, DIR_STR);
+       strcat (s, DocumentName);
      }
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
@@ -1285,9 +1282,9 @@ static void   BrowserForm (Document doc, View view, CHAR_T* urlname)
   InitOpenDocForm initializes a form that ask the URI of the opened or
   new created document.
   ----------------------------------------------------------------------*/
-static void        InitOpenDocForm (Document document, View view, CHAR_T* title)
+static void        InitOpenDocForm (Document document, View view, char *title)
 {
-   CHAR_T            s[MAX_LENGTH];
+   char              s[MAX_LENGTH];
 #ifndef _WINDOWS
 #ifdef _GTK
    ThotWidget        dialog_new;
@@ -1297,11 +1294,11 @@ static void        InitOpenDocForm (Document document, View view, CHAR_T* title)
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
    i = 0;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
-   i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-   i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
 #ifdef _GTK
    dialog_new = create_dialog_new (title);
@@ -1312,13 +1309,13 @@ static void        InitOpenDocForm (Document document, View view, CHAR_T* title)
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-   if (LastURLName[0] != WC_EOS)
+   if (LastURLName[0] != EOS)
       TtaSetTextForm (BaseDialog + URLName, LastURLName);
    else
      {
-	ustrcpy (s, DirectoryName);
-	ustrcat (s, DIR_STR);
-	ustrcat (s, DocumentName);
+	strcpy (s, DirectoryName);
+	strcat (s, DIR_STR);
+	strcat (s, DocumentName);
 	TtaSetTextForm (BaseDialog + URLName, s);
      }
    TtaSetDialoguePosition ();
@@ -1327,10 +1324,10 @@ static void        InitOpenDocForm (Document document, View view, CHAR_T* title)
 #else /* _WINDOWS */
 
    CurrentDocument = document;
-   if (LastURLName[0] != WC_EOS)
-      usprintf (s, TEXT("%s"), LastURLName);
+   if (LastURLName[0] != EOS)
+      sprintf (s, "%s", LastURLName);
    else
-     usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
+     sprintf (s, "%s%c%s", DirectoryName, DIR_SEP, DocumentName);
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, DocSelect, DirSelect, 2);
 #endif /* _WINDOWS */
 }
@@ -1361,7 +1358,7 @@ void                OpenDocInNewWindow (Document document, View view)
   ----------------------------------------------------------------------*/
 void        OpenNew (Document document, View view, int docType)
 {
-  CHAR_T  tempfile[MAX_LENGTH];
+  char    tempfile[MAX_LENGTH];
   int       i;
 
   /* create a new document */
@@ -1372,75 +1369,75 @@ void        OpenNew (Document document, View view, int docType)
   if (NewDocType == docHTML)
     {
       /* generate a default name for the new document */
-      if (LastURLName[0] != WC_EOS)
+      if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
 	  if (IsW3Path (LastURLName))
 	  {
-		i = ustrlen (tempfile);
-		if (tempfile[i - 1] == TEXT (':'))
+		i = strlen (tempfile);
+		if (tempfile[i - 1] == ':')
 		  /* LastURLName is the root of the server */
-		  i = ustrlen (LastURLName);
-	    usprintf (&LastURLName[i], TEXT("%cNew.html"), WC_URL_SEP);
+		  i = strlen (LastURLName);
+	    sprintf (&LastURLName[i], "%cNew.html", URL_SEP);
 	  }
 	  else
-	    usprintf (LastURLName, TEXT("%s%cNew.html"), tempfile, WC_DIR_SEP);
+	    sprintf (LastURLName, "%s%cNew.html", tempfile, DIR_SEP);
 	}
       else
-	ustrcpy (DocumentName, TEXT("New.html"));
+	strcpy (DocumentName, "New.html");
       InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
     }
   else if (NewDocType == docMath)
     {
       /* generate a default name for the new document */
-      if (LastURLName[0] != WC_EOS)
+      if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
 	  if (IsW3Path (LastURLName))
 	  {
-		i = ustrlen (tempfile);
-		if (tempfile[i - 1] == TEXT (':'))
+		i = strlen (tempfile);
+		if (tempfile[i - 1] == ':')
 		  /* LastURLName is the root of the server */
-		  i = ustrlen (LastURLName);
-	    usprintf (&LastURLName[i], TEXT("%cNew.mml"), WC_URL_SEP);
+		  i = strlen (LastURLName);
+	    sprintf (&LastURLName[i], "%cNew.mml", URL_SEP);
 	  }
 	  else
-	    usprintf (LastURLName, TEXT("%s%cNew.mml"), tempfile, WC_DIR_SEP);
+	    sprintf (LastURLName, "%s%cNew.mml", tempfile, DIR_SEP);
 	}
       else
-	ustrcpy (DocumentName, TEXT("New.mml"));
+	strcpy (DocumentName, "New.mml");
       InitOpenDocForm (document, view, TtaGetMessage (1, BMathml));
     }
   else if (NewDocType == docSVG)
     {
       /* generate a default name for the new document */
-      if (LastURLName[0] != WC_EOS)
+      if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
 	  if (IsW3Path (LastURLName))
 	  {
-		i = ustrlen (tempfile);
-		if (tempfile[i - 1] == TEXT (':'))
+		i = strlen (tempfile);
+		if (tempfile[i - 1] == ':')
 		  /* LastURLName is the root of the server */
-		  i = ustrlen (LastURLName);
-	    usprintf (&LastURLName[i], TEXT("%cNew.svg"), WC_URL_SEP);
+		  i = strlen (LastURLName);
+	    sprintf (&LastURLName[i], "%cNew.svg", URL_SEP);
 	  }
 	  else
-	    usprintf (LastURLName, TEXT("%s%cNew.svg"), tempfile, WC_DIR_SEP);
+	    sprintf (LastURLName, "%s%cNew.svg", tempfile, DIR_SEP);
 	}
       else
-	ustrcpy (DocumentName, TEXT("New.svg"));
+	strcpy (DocumentName, "New.svg");
       InitOpenDocForm (document, view, TtaGetMessage (1, BSvg));
     }
   else
     {
-      if (LastURLName[0] != WC_EOS)
+      if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  usprintf (LastURLName, TEXT("%s%cNew.css"), tempfile, WC_DIR_SEP);
+	  sprintf (LastURLName, "%s%cNew.css", tempfile, DIR_SEP);
 	}
       else
-	ustrcpy (DocumentName, TEXT("New.css"));
+	strcpy (DocumentName, "New.css");
       InitOpenDocForm (document, view, TtaGetMessage (1, BCss));
     }
 }
@@ -1450,23 +1447,23 @@ void        OpenNew (Document document, View view, int docType)
   ----------------------------------------------------------------------*/
 void            GoToHome (Document doc, View view)
 {
-  CHAR_T   *s, *lang;
+  char     *s, *lang;
 
   s = TtaGetEnvString ("HOME_PAGE");
   lang = TtaGetVarLANG ();
   if (s == NULL)
     {
       s = TtaGetEnvString ("THOTDIR");
-      usprintf (LastURLName, TEXT("%s%camaya%c%s.%s"), s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
+      sprintf (LastURLName, "%s%camaya%c%s.%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
       
       if (!TtaFileExist (LastURLName))
-	usprintf (LastURLName, TEXT("%s%camaya%c%s"), s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
+	sprintf (LastURLName, "%s%camaya%c%s", s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
     }
   else
-    ustrcpy (LastURLName, s);
+    strcpy (LastURLName, s);
   InNewWindow = FALSE;
   CurrentDocument = doc;
-  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 }
 
 
@@ -1476,14 +1473,14 @@ void            GoToHome (Document doc, View view)
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
 Document     InitDocView (Document doc,
-			  CHAR_T* docname,
+			  char *docname,
 			  DocumentType docType,
 			  Document sourceOfDoc,
 			  ThotBool readOnly)
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
-  CHAR_T       *tmp;
+  char         *tmp;
   int           x, y, w, h;
   int           requested_doc;
   ThotBool      isOpen, reinitialized;
@@ -1561,19 +1558,19 @@ Document     InitDocView (Document doc,
        docType == docCSS ||
        docType == docSource ||
        docType == docLog)
-     doc = TtaInitDocument (TEXT("TextFile"), docname, requested_doc);
+     doc = TtaInitDocument ("TextFile", docname, requested_doc);
    else if (docType == docAnnot)
-     doc = TtaInitDocument (TEXT("Annot"), docname, requested_doc);
+     doc = TtaInitDocument ("Annot", docname, requested_doc);
    else if (docType == docSVG)
-     doc = TtaInitDocument (TEXT("GraphML"), docname, requested_doc);
+     doc = TtaInitDocument ("GraphML", docname, requested_doc);
    else if (docType == docMath)
-     doc = TtaInitDocument (TEXT("MathML"), docname, requested_doc);
+     doc = TtaInitDocument ("MathML", docname, requested_doc);
 #ifdef XML_GEN      
    else if (docType == docXml)
-     doc = TtaInitDocument (TEXT("XML"), docname, requested_doc);
+     doc = TtaInitDocument ("XML", docname, requested_doc);
 #endif /* XML_GEN */
    else
-     doc = TtaInitDocument (TEXT("HTML"), docname, requested_doc);
+     doc = TtaInitDocument ("HTML", docname, requested_doc);
    if (doc >= DocumentTableLength)
      {
        TtaCloseDocument (doc);
@@ -1586,24 +1583,24 @@ Document     InitDocView (Document doc,
 	   docType == docCSS ||
            docType == docSource ||
 	   docType == docLog)
-	   TtaSetPSchema (doc, TEXT("TextFileP"));
+	   TtaSetPSchema (doc, "TextFileP");
        else if (docType == docAnnot)
-	   TtaSetPSchema (doc, TEXT("AnnotP"));
+	   TtaSetPSchema (doc, "AnnotP");
        else if (docType == docSVG)
-	   TtaSetPSchema (doc, TEXT("GraphMLP"));
+	   TtaSetPSchema (doc, "GraphMLP");
        else if (docType == docMath)
-	   TtaSetPSchema (doc, TEXT("MathMLP"));
+	   TtaSetPSchema (doc, "MathMLP");
 #ifdef XML_GEN      
        else if (docType == docXml)
-	   TtaSetPSchema (doc, TEXT("XMLP"));
+	   TtaSetPSchema (doc, "XMLP");
 #endif /* XML_GEN */
        /* @@ shouldn't we have a Color and BW case for annots too? */
        else
 	 {
 	   if (TtaGetScreenDepth () > 1)
-	     TtaSetPSchema (doc, TEXT("HTMLP"));
+	     TtaSetPSchema (doc, "HTMLP");
 	   else
-	     TtaSetPSchema (doc, TEXT("HTMLPBW"));
+	     TtaSetPSchema (doc, "HTMLPBW");
 	 }
 
        TtaSetNotificationMode (doc, 1);
@@ -1801,7 +1798,7 @@ Document     InitDocView (Document doc,
 	     {
 	       ResetStop (old_doc);
 	       /* clear the status line of previous document */
-	       TtaSetStatus (old_doc, 1, TEXT(" "), NULL);
+	       TtaSetStatus (old_doc, 1, " ", NULL);
 	       ActiveTransfer (doc);
 	     }
 	 }
@@ -1938,12 +1935,12 @@ Document     InitDocView (Document doc,
 /*----------------------------------------------------------------------
   CreateHTMLContainer creates an HTML container for an image
   ----------------------------------------------------------------------*/
-static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname,
-				 CHAR_T* tempfile, ThotBool local)
+static void CreateHTMLContainer (char *pathname, char *docname,
+				 char *tempfile, ThotBool local)
 {
   FILE *file;
-  CHAR_T* tempfile_new;
-  CHAR_T* ptr;
+  char *tempfile_new;
+  char *ptr;
 
   if (!local)
     {
@@ -1951,32 +1948,32 @@ static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname,
 	 find it easily next time around. 
 	 The convention is to change the image's extension to 'html',
 	 and give the HTML's container the image's extension */
-      tempfile_new = TtaAllocString (ustrlen (tempfile) + ustrlen (docname) + 10);
-      ustrcpy (tempfile_new, tempfile);
-      ptr = ustrrchr (tempfile_new, WC_DIR_SEP);
+      tempfile_new = TtaGetMemory (strlen (tempfile) + strlen (docname) + 10);
+      strcpy (tempfile_new, tempfile);
+      ptr = strrchr (tempfile_new, DIR_SEP);
       ptr++;
-      ustrcpy (ptr, docname);
-      ptr = ustrrchr (tempfile_new, TEXT('.'));
+      strcpy (ptr, docname);
+      ptr = strrchr (tempfile_new, '.');
       if (ptr)
 	{
 	  ptr++;
-	  ustrcpy (ptr, TEXT("html"));
+	  strcpy (ptr, "html");
 	}
       else
-	ustrcat (tempfile_new, TEXT(".html"));
+	strcat (tempfile_new, ".html");
       TtaFileUnlink (tempfile_new);
 #ifndef _WINDOWS
       rename (tempfile, tempfile_new);
 #else /* _WINDOWS */
       if (urename (tempfile, tempfile_new)  != 0)
-	usprintf (tempfile_new, TEXT("%s"), tempfile); 
+	sprintf (tempfile_new, "%s", tempfile); 
 #endif /* _WINDOWS */
       urename (tempfile, tempfile_new);
       TtaFreeMemory (tempfile_new);
     }
   /* create a temporary file for the container and make Amaya think
      that it is the current downloaded file */
-  file = ufopen (tempfile, TEXT("w"));
+  file = fopen (tempfile, "w");
   if (local)
     fprintf (file, "<html><head></head><body>"
 	     "<img src=\"%s\"></body></html>", pathname);
@@ -1991,29 +1988,29 @@ static void CreateHTMLContainer (CHAR_T* pathname, CHAR_T* docname,
   one directory to another
   ----------------------------------------------------------------------*/
 static void MoveImageFile (Document source_doc, Document dest_doc,
-			   CHAR_T* documentname)
+			   char *documentname)
 {
-  CHAR_T* source;
-  CHAR_T* target;
-  CHAR_T* imagefile;
-  CHAR_T* ptr;
+  char *source;
+  char *target;
+  char *imagefile;
+  char *ptr;
   
   /* generate the name of the file where is stored the image */
-  imagefile = TtaAllocString (ustrlen (documentname) + 6);
-  ustrcpy (imagefile, documentname);
-  ptr = ustrrchr (imagefile, TEXT('.'));
+  imagefile = TtaGetMemory (strlen (documentname) + 6);
+  strcpy (imagefile, documentname);
+  ptr = strrchr (imagefile, '.');
   if (!ptr)
-     ustrcat (imagefile, TEXT(".html"));
+     strcat (imagefile, ".html");
   else
-     ustrcpy (&(ptr[1]), TEXT("html"));
+     strcpy (&(ptr[1]), "html");
 
   /* create the source and dest file names */
-  source = TtaAllocString (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
-  usprintf (source, TEXT("%s%c%d%c%s"), 
-	   TempFileDirectory, WC_DIR_SEP, source_doc, WC_DIR_SEP, imagefile);
-  target = TtaAllocString (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
-  usprintf (target, TEXT("%s%c%d%c%s"), 
-	   TempFileDirectory, WC_DIR_SEP, dest_doc, WC_DIR_SEP, imagefile);
+  source = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  sprintf (source, "%s%c%d%c%s", 
+	   TempFileDirectory, DIR_SEP, source_doc, DIR_SEP, imagefile);
+  target = TtaGetMemory (strlen (TempFileDirectory) + strlen (imagefile) + 6);
+  sprintf (target, "%s%c%d%c%s", 
+	   TempFileDirectory, DIR_SEP, dest_doc, DIR_SEP, imagefile);
 
   /* move the file */
   TtaFileCopy (source, target);
@@ -2031,10 +2028,10 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
-static Document  LoadDocument (Document doc, CHAR_T* pathname,
-			       CHAR_T* form_data, CHAR_T* initial_url,
-			       int method, CHAR_T* tempfile,
-			       CHAR_T* documentname, AHTHeaders *http_headers,
+static Document  LoadDocument (Document doc, char *pathname,
+			       char *form_data, char *initial_url,
+			       int method, char *tempfile,
+			       char *documentname, AHTHeaders *http_headers,
 			       ThotBool history)
 {
   CSSInfoPtr          css;
@@ -2042,12 +2039,12 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
   DocumentType        docType;
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
-  CHAR_T*             charEncoding;
-  CHAR_T*             tempdocument;
-  CHAR_T*             tempdir;
-  CHAR_T*             s;
-  CHAR_T*             content_type;
-  STRING              profile;
+  char               *charEncoding;
+  char               *tempdocument;
+  char               *tempdir;
+  char               *s;
+  char               *content_type;
+  char               *profile;
   int                 i, j;
   int                 parsingLevel;
   ThotBool            unknown;
@@ -2060,7 +2057,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
   tempdir = tempdocument = NULL;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* check if there is an XML declaration with a charset declaration */
-  if (tempfile[0] != WC_EOS)
+  if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype,
 		    &isXML, &parsingLevel, &charset, &thotType);
   else
@@ -2070,7 +2067,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   if (charset == UNDEFINED_CHARSET)
     {
-      if (tempfile[0] != WC_EOS)
+      if (tempfile[0] != EOS)
 	CheckCharsetInMeta (tempfile, &metacharset);
       else
 	CheckCharsetInMeta (pathname, &metacharset);
@@ -2123,13 +2120,13 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	 {
 	   content_type[i] = EOS;
 	   j = i+1;
-	   while (content_type[j] != TEXT(';') && content_type[j] != EOS)
+	   while (content_type[j] != ';' && content_type[j] != EOS)
 	     j++;
-	   if (content_type[j] == TEXT(';'))
+	   if (content_type[j] == ';')
 	     content_type[j] = EOS;
-	   if (!ustrcasecmp (content_type, TEXT("text")))
+	   if (!strcasecmp (content_type, "text"))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], TEXT("html"), 4))
+	       if (!strncasecmp (&content_type[i+1], "html", 4))
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
@@ -2137,7 +2134,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
-	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
+	       else if (!strncasecmp (&content_type[i+1], "xhtml", 5))
 		 {
 		   /* it's an XHTML document */
 		   docType = docHTML;
@@ -2145,7 +2142,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
-	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xml"), 3))
+	       else if (!strncasecmp (&content_type[i+1], "xml", 3))
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
@@ -2161,14 +2158,14 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		     docType = docHTML;
 		   unknown = FALSE;
 		 }
-	       else if (!ustrncasecmp (&content_type[i+1], TEXT("css"), 3))
+	       else if (!strncasecmp (&content_type[i+1], "css", 3))
 		 {
 		   docType = docCSS;
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
-	       else if (!ustrncasecmp (&content_type[i+1], TEXT("mathml"), 6) ||
-			!ustrncasecmp (&content_type[i+1], TEXT("x-mathml"), 8))
+	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
+			!strncasecmp (&content_type[i+1], "x-mathml", 8))
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
@@ -2183,15 +2180,15 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		   unknown = FALSE;
 		 }
 	     }
-	   else if (!ustrcasecmp (content_type, TEXT("application")))
+	   else if (!strcasecmp (content_type, "application"))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], TEXT("x-sh"), 4))
+	       if (!strncasecmp (&content_type[i+1], "x-sh", 4))
 		 {
 		   docType = docText;
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }	     
-	       else if (!ustrncasecmp (&content_type[i+1], TEXT("mathml"), 6))
+	       else if (!strncasecmp (&content_type[i+1], "mathml", 6))
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
@@ -2199,10 +2196,17 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
+	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
+		 {
+		   /* it's an XML document */
+		   isXML = TRUE;
+		   docType = docHTML;
+		   unknown = FALSE;
+		 }
 	     }
-	   else if (!ustrcasecmp (content_type, TEXT("image")))
+	   else if (!strcasecmp (content_type, "image"))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], TEXT("svg"), 3))
+	       if (!strncasecmp (&content_type[i+1], "svg", 3))
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
@@ -2230,25 +2234,25 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	 }
      }
 
-  if (unknown && tempfile[0] != WC_EOS)
+  if (unknown && tempfile[0] != EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
       /* rename the temporary file */
-      ustrcpy (SavingFile, tempfile);
+      strcpy (SavingFile, tempfile);
       SavingDocument = 0;
       SavingObject = 0;
-      tempdocument = TtaAllocString (MAX_LENGTH);
+      tempdocument = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (pathname, tempfile, tempdocument);
       /* reinitialize directories and document lists */
-      ustrcpy (pathname, DirectoryName);
-      ustrcat (pathname, WC_DIR_STR);
-      ustrcat (pathname, tempdocument);
-      ustrcpy (SavePath, DirectoryName);
-      ustrcpy (SaveName, tempdocument);
+      strcpy (pathname, DirectoryName);
+      strcat (pathname, DIR_STR);
+      strcat (pathname, tempdocument);
+      strcpy (SavePath, DirectoryName);
+      strcpy (SaveName, tempdocument);
       ResetStop (doc);
       InitSaveObjectForm (doc, 1, SavingFile, pathname);
     }
-  else if (pathname[0] != WC_EOS)
+  else if (pathname[0] != EOS)
     {
       if (method != CE_MAKEBOOK)
 	{
@@ -2275,7 +2279,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	      newdoc = InitDocView (0, documentname, docType, 0, FALSE);
 	      ResetStop (doc);
 	      /* clear the status line of previous document */
-	      TtaSetStatus (doc, 1, TEXT(" "), NULL);
+	      TtaSetStatus (doc, 1, " ", NULL);
 	      ActiveTransfer (newdoc);
 	    }
 #ifdef ANNOTATIONS
@@ -2311,14 +2315,14 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	  else 
 	    {
 	      /* It's a local image file */
-	      usprintf (tempfile, TEXT("%s%c%d%c%s"), TempFileDirectory,
-			WC_DIR_SEP, 0, WC_DIR_SEP, TEXT("contain.html"));
+	      sprintf (tempfile, "%s%c%d%c%s", TempFileDirectory,
+			DIR_SEP, 0, DIR_SEP, "contain.html");
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
 	}
 
       /* what we have to do if doc and targetDocument are different */
-      if (tempfile[0] != WC_EOS)
+      if (tempfile[0] != EOS)
 	{
 	  /* It is a document loaded from the Web */
 	  if (!TtaFileExist (tempfile))
@@ -2365,7 +2369,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	      s = GetLocalPath (0, pathname);
 	      TtaFileCopy (tempdocument, s);
 	      /* initialize a new CSS context */
-	      if (UserCSS && !ustrcmp (pathname, UserCSS))
+	      if (UserCSS && !strcmp (pathname, UserCSS))
 		AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, s);
 	      else
 		AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
@@ -2384,7 +2388,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	}
       /* if the document was already loaded, warn the user */
       if (IsDocumentLoaded (s, form_data))
-	InitConfirm3L (newdoc, 1, TEXT("Warning: this document is already loaded in another Window"), TEXT("Saving that instance may cause a lost update problem"), NULL, FALSE);
+	InitConfirm3L (newdoc, 1, "Warning: this document is already loaded in another Window", "Saving that instance may cause a lost update problem", NULL, FALSE);
       DocumentURLs[newdoc] = s;
 
       /* save the document's formdata into the document table */
@@ -2393,7 +2397,7 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
       else
 	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
-      if (initial_url && ustrcmp (pathname, initial_url))
+      if (initial_url && strcmp (pathname, initial_url))
 	DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
       else
 	DocumentMeta[newdoc]->initial_url = NULL;
@@ -2417,21 +2421,21 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	{
 	  /* concatenate the URL and its form_data and then
 	     display it on the amaya URL box */
-	  i = ustrlen (pathname) + 5;
+	  i = strlen (pathname) + 5;
 	  if (form_data && method != CE_FORM_POST)
-	    i += ustrlen (form_data);
-	  s = TtaAllocString (i);
+	    i += strlen (form_data);
+	  s = TtaGetMemory (i);
 
 	  if (form_data && method != CE_FORM_POST)
-	    usprintf (s, TEXT("%s?%s"), pathname, form_data);
+	    sprintf (s, "%s?%s", pathname, form_data);
 	  else
-	    ustrcpy (s, pathname);
+	    strcpy (s, pathname);
 
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
 	}
 
-      tempdir = TtaAllocString (MAX_LENGTH);
+      tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
@@ -2443,12 +2447,12 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	ParsingLevel[newdoc] = parsingLevel;
       else
 	{
-	  if (!ustrncmp (profile, TEXT("XHTML"), 5))
+	  if (!strncmp (profile, "XHTML", 5))
 	    /* force the XML parsing */
 	    DocumentMeta[newdoc]->xmlformat = TRUE;
-	  if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+	  if (!strncmp (profile, "XHTML-basic", 10))
 	    ParsingLevel[newdoc] = L_Basic;
-	  else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
+	  else if (!strncmp (profile, "XHTML-strict", 10))
 	    ParsingLevel[newdoc] = L_Strict;
 	  else
 	    ParsingLevel[newdoc] = L_Transitional;
@@ -2509,16 +2513,16 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 /*----------------------------------------------------------------------
   Reload_callback
   ----------------------------------------------------------------------*/
-void  Reload_callback (int doc, int status, CHAR_T* urlName,
-		       CHAR_T* outputfile, AHTHeaders *http_headers,
+void  Reload_callback (int doc, int status, char *urlName,
+		       char *outputfile, AHTHeaders *http_headers,
 		       void * context)
 {
   Document newdoc;
-  CHAR_T* pathname;
-  CHAR_T* tempfile;
-  CHAR_T* documentname;
-  CHAR_T* form_data;
-  CHAR_T* initial_url;
+  char *pathname;
+  char *tempfile;
+  char *documentname;
+  char *form_data;
+  char *initial_url;
   ClickEvent method;
   Document res;
   Element el;
@@ -2534,8 +2538,8 @@ void  Reload_callback (int doc, int status, CHAR_T* urlName,
 
   tempfile = outputfile;
 
-  pathname = TtaAllocString (MAX_LENGTH);
-  ustrcpy (pathname, urlName);
+  pathname = TtaGetMemory (MAX_LENGTH);
+  strcpy (pathname, urlName);
   
   if (status == 0)
      {
@@ -2601,11 +2605,11 @@ void  Reload_callback (int doc, int status, CHAR_T* urlName,
   ----------------------------------------------------------------------*/
 void                Reload (Document doc, View view)
 {
-   CHAR_T*              tempfile;
-   CHAR_T*              pathname;
-   CHAR_T*              documentname;
+   char *             tempfile;
+   char *             pathname;
+   char *             documentname;
    int                 toparse;
-   CHAR_T*             form_data;
+   char *            form_data;
    ClickEvent          method;
    int                 mode;
    int		       position;
@@ -2628,8 +2632,8 @@ void                Reload (Document doc, View view)
       return;
 
    /* reload the document */
-   pathname = TtaAllocString (MAX_LENGTH);
-   documentname = TtaAllocString (MAX_LENGTH);
+   pathname = TtaGetMemory (MAX_LENGTH);
+   documentname = TtaGetMemory (MAX_LENGTH);
    /* if the document is a template, restore the template script URL */
    if (DocumentMeta[doc]->method == CE_TEMPLATE)
       ReloadTemplateParams (&(DocumentURLs[doc]), &(DocumentMeta[doc]->method));
@@ -2661,7 +2665,7 @@ void                Reload (Document doc, View view)
    if (method == CE_FORM_POST)
      mode |= AMAYA_FORM_POST;
 
-   tempfile = TtaAllocString (MAX_LENGTH);
+   tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
    ActiveTransfer (doc);
@@ -2724,7 +2728,7 @@ void                ShowTargets (Document document, View view)
 void                ZoomIn (Document document, View view)
 {
   int               zoom, zoomVal;
-  CHAR_T*            zoomStr;
+  char *           zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom < 10)
@@ -2739,7 +2743,7 @@ void                ZoomIn (Document document, View view)
     zoomVal = 0;
   else
     {
-      usscanf (zoomStr, TEXT("%d"), &zoomVal);
+      usscanf (zoomStr, "%d", &zoomVal);
       if (zoomVal > 10 || zoomVal < -10)
 	zoomVal = 0;
     }
@@ -2758,7 +2762,7 @@ void                ZoomIn (Document document, View view)
 void                ZoomOut (Document document, View view)
 {
   int               zoom, zoomVal;
-  CHAR_T*            zoomStr;
+  char *           zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom > -10)
@@ -2773,7 +2777,7 @@ void                ZoomOut (Document document, View view)
     zoomVal = 0;
   else
     {
-      usscanf (zoomStr, TEXT("%d"), &zoomVal);
+      usscanf (zoomStr, "%d", &zoomVal);
       if (zoomVal > 10 || zoomVal < -10)
 	zoomVal = 0;
     }
@@ -2793,10 +2797,10 @@ void                ZoomOut (Document document, View view)
   ----------------------------------------------------------------------*/
 void                ShowSource (Document document, View view)
 {
-   CHAR_T*        tempdocument;
-   CHAR_T*       s;
-   CHAR_T	     documentname[MAX_LENGTH];
-   CHAR_T	     tempdir[MAX_LENGTH];
+   char *       tempdocument;
+   char *      s;
+   char  	     documentname[MAX_LENGTH];
+   char  	     tempdir[MAX_LENGTH];
    Document	     sourceDoc;
    NotifyElement event;
 
@@ -2825,20 +2829,20 @@ void                ShowSource (Document document, View view)
 	 if (DocumentTypes[document] == docHTML)
 	   if (DocumentMeta[document]->xmlformat)
 	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  TEXT("HTMLTX"));
+						  "HTMLTX");
 	   else
 	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  TEXT("HTMLT"));
+						  "HTMLT");
 	 else if (DocumentTypes[document] == docSVG)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						TEXT("GraphMLT"));
+						"GraphMLT");
 	 else if (DocumentTypes[document] == docMath)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						TEXT("MathMLT"));
+						"MathMLT");
 #ifdef XML_GEN
 	 else if (DocumentTypes[document] == docXml)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						TEXT("XMLT"));
+						"XMLT");
 #endif /* XML_GEN */
        }
      TtaExtractName (tempdocument, tempdir, documentname);
@@ -2906,9 +2910,9 @@ void                ShowStructure (Document document, View view)
 {
    View                structView;
    int                 x, y, w, h;
-   CHAR_T              structureName[30];
+   char                structureName[30];
 
-   ustrcpy (structureName, TEXT("Structure_view"));  
+   strcpy (structureName, "Structure_view");  
    structView = TtaGetViewFromName (document, structureName);
    if (structView != 0 && TtaIsViewOpen (document, structView))
      TtaRaiseView (document, structView);
@@ -2954,7 +2958,7 @@ void                ShowAlternate (Document document, View view)
    else
      {
 	TtaGetViewGeometry (document, "Alternate_view", &x, &y, &w, &h);
-	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
+	altView = TtaOpenView (document, "Alternate_view", x, y, w, h);
 	if (altView != 0)
 	  {
 	    SetWindowTitle (document, document, altView);
@@ -2992,7 +2996,7 @@ void                ShowLinks (Document document, View view)
    else
      {
 	TtaGetViewGeometry (document, "Links_view", &x, &y, &w, &h);
-	linksView = TtaOpenView (document, TEXT("Links_view"), x, y, w, h);
+	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
 	if (linksView != 0)
 	  {
 	    SetWindowTitle (document, document, linksView);
@@ -3030,7 +3034,7 @@ void                ShowToC (Document document, View view)
    else
      {
 	TtaGetViewGeometry (document, "Table_of_contents", &x, &y, &w, &h);
-	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
+	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
 	if (tocView != 0)
 	  {
 	    SetWindowTitle (document, document, tocView);
@@ -3088,21 +3092,21 @@ ThotBool            ViewToClose (NotifyDialog * event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* outputfile, AHTHeaders *http_headers, void * context)
+void GetHTMLDocument_callback (int newdoc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, void * context)
 {
    Element             elFound;
    Document            doc;
    Document            baseDoc;
    Document            res;
-   CHAR_T*             tempfile;
-   CHAR_T*             target;
-   CHAR_T*             pathname;
-   CHAR_T*             initial_url;
-   CHAR_T*             documentname;
-   CHAR_T*             form_data;
+   char *            tempfile;
+   char *            target;
+   char *            pathname;
+   char *            initial_url;
+   char *            documentname;
+   char *            form_data;
    ClickEvent          method;
-   CHAR_T*             tempdocument;
-   CHAR_T*             s;
+   char *            tempdocument;
+   char *            s;
    int                 i;
    ThotBool	       history;
    ThotBool            ok;
@@ -3132,13 +3136,13 @@ void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* 
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
    
-   pathname = TtaAllocString (MAX_LENGTH + 1);
-   ustrncpy (pathname, urlName, MAX_LENGTH);
-   pathname[MAX_LENGTH] = WC_EOS;
-   tempfile = TtaAllocString (MAX_LENGTH + 1);
+   pathname = TtaGetMemory (MAX_LENGTH + 1);
+   strncpy (pathname, urlName, MAX_LENGTH);
+   pathname[MAX_LENGTH] = EOS;
+   tempfile = TtaGetMemory (MAX_LENGTH + 1);
    if (outputfile != NULL)
      {
-       ustrncpy (tempfile, outputfile, MAX_LENGTH);
+       strncpy (tempfile, outputfile, MAX_LENGTH);
        tempfile[MAX_LENGTH] = EOS;
      }
    else
@@ -3192,7 +3196,7 @@ void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* 
 	       else
 		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
-	       if (ustrcmp (pathname, initial_url))
+	       if (strcmp (pathname, initial_url))
 		 DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
 	       else
 		 DocumentMeta[newdoc]->initial_url = NULL;
@@ -3256,17 +3260,17 @@ void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* 
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
+Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
    Document            newdoc;
    CSSInfoPtr          css;
-   CHAR_T*             tempfile;
-   CHAR_T*             tempdocument;
-   CHAR_T*             parameters;
-   CHAR_T*             target;
-   CHAR_T*             pathname;
-   CHAR_T*             documentname;
-   CHAR_T*             content_type = NULL;
+   char *            tempfile;
+   char *            tempdocument;
+   char *            parameters;
+   char *            target;
+   char *            pathname;
+   char *            documentname;
+   char *            content_type = NULL;
    int                 toparse;
 #if 0
    int                 slash;
@@ -3277,26 +3281,26 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
    GETHTMLDocument_context *ctx = NULL;
 
    /* Extract parameters if necessary */
-   if (ustrlen (documentPath) > MAX_LENGTH - 1) 
+   if (strlen (documentPath) > MAX_LENGTH - 1) 
      {
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL),
-		     TEXT("512"));
+		     "512");
        return (0);
      }
    else
      /* clean up the status line */
-     TtaSetStatus (baseDoc, 1, TEXT(" "), NULL);
+     TtaSetStatus (baseDoc, 1, " ", NULL);
  
    ok = TRUE;
-   tempdocument = TtaAllocString (MAX_LENGTH);
-   target       = TtaAllocString (MAX_LENGTH);
-   documentname = TtaAllocString (MAX_LENGTH);
-   parameters   = TtaAllocString (MAX_LENGTH);
-   tempfile     = TtaAllocString (MAX_LENGTH);
-   tempfile[0]  = WC_EOS;
-   pathname     = TtaAllocString (MAX_LENGTH);
+   tempdocument = TtaGetMemory (MAX_LENGTH);
+   target       = TtaGetMemory (MAX_LENGTH);
+   documentname = TtaGetMemory (MAX_LENGTH);
+   parameters   = TtaGetMemory (MAX_LENGTH);
+   tempfile     = TtaGetMemory (MAX_LENGTH);
+   tempfile[0]  = EOS;
+   pathname     = TtaGetMemory (MAX_LENGTH);
 
-   ustrcpy (tempdocument, documentPath);
+   strcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
@@ -3311,7 +3315,7 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
       is a local file */
 
 #ifdef _WINDOWS
-   usprintf (wTitle, TEXT("%s"), documentname);
+   sprintf (wTitle, "%s", documentname);
 #endif /* _WINDOWS */
 
    /* check the document suffix */
@@ -3346,8 +3350,8 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
 	   NormalizeFile (pathname, tempfile, AM_CONV_ALL);
 	 else
 	   NormalizeFile (pathname, tempfile, AM_CONV_NONE);
-	 ustrcpy (pathname, tempfile);
-	 tempfile[0] = WC_EOS;
+	 strcpy (pathname, tempfile);
+	 tempfile[0] = EOS;
        }
 
    /* check if the user is already browsing the document in another window */
@@ -3360,10 +3364,10 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
    else
      {
        /* concatenate the parameters before making the test */
-       if (parameters[0] != WC_EOS)
+       if (parameters[0] != EOS)
 	 {
-	   ustrcat (pathname, TEXT("?"));
-	   ustrcat (pathname, parameters);
+	   strcat (pathname, "?");
+	   strcat (pathname, parameters);
 	 }
        newdoc = IsDocumentLoaded (pathname, NULL);
      }
@@ -3449,7 +3453,7 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
 	   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
-	   content_type = TEXT("application/rdf");
+	   content_type = "application/rdf";
 	 }
 #endif /* ANNOTATIONS */
        else if (doc == 0)
@@ -3489,11 +3493,11 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
 	       */
 #if 0
 	       if (CE_event != CE_FORM_POST
-		   && !ustrcmp (documentname, TEXT("noname.html")))
+		   && !strcmp (documentname, "noname.html"))
 		 {
-		   slash = ustrlen (pathname);
-		   if (slash && pathname[slash - 1] != TEXT('/'))
-		     ustrcat (pathname, TEXT("/"));
+		   slash = strlen (pathname);
+		   if (slash && pathname[slash - 1] != '/')
+		     strcat (pathname, "/");
 		 }
 #endif
 	       css = SearchCSS (0, pathname);
@@ -3508,7 +3512,7 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
 		   TtaSetStatus (newdoc, 1,
 				 TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 		   /* just take a copy of the local temporary file */
-		   ustrcpy (tempfile, css->localName);
+		   strcpy (tempfile, css->localName);
 		   GetHTMLDocument_callback (newdoc, 0, pathname,
 					     tempfile, NULL,
 					     (void *) ctx);
@@ -3594,61 +3598,61 @@ static void	UpdateSaveAsButtons ()
   ----------------------------------------------------------------------*/
 static void	SetFileSuffix ()
 {
-  CHAR_T	       suffix[6];
-  CHAR_T*          filename;
+  char  	       suffix[6];
+  char *         filename;
   int		       i, len;
 
-  if (SavingDocument != 0 && SaveName[0] != WC_EOS)
+  if (SavingDocument != 0 && SaveName[0] != EOS)
     {
      if (SaveAsHTML)
-        ustrcpy (suffix, TEXT("html"));
+        strcpy (suffix, "html");
      else if (SaveAsXML)
-        ustrcpy (suffix, TEXT("xml"));
+        strcpy (suffix, "xml");
      else if (SaveAsText)
-        ustrcpy (suffix, TEXT("txt"));
+        strcpy (suffix, "txt");
      else
         return;
 
      /* looks for a suffix at the end of the document name */
-     len = ustrlen (SaveName);
-     for (i = len-1; i > 0 && SaveName[i] != TEXT('.'); i--);
-     if (SaveName[i] != TEXT('.'))
+     len = strlen (SaveName);
+     for (i = len-1; i > 0 && SaveName[i] != '.'; i--);
+     if (SaveName[i] != '.')
        {
          /* there is no suffix */
          i = len;
-         SaveName[i++] = TEXT('.');
+         SaveName[i++] = '.';
        }
      else
        {
 	 /* there is a suffix */
 	 i++;
-	 if (ustrncmp (suffix, &SaveName[i], 3) == 0)
+	 if (strncmp (suffix, &SaveName[i], 3) == 0)
 	   /* the requested suffix is already here. Do nothing */
 	   i = 0;
 #ifdef _WINDOWS
-	 ustrcpy (DocToOpen, SavePath );
-	 if (ustrchr (SavePath, TEXT('/')))
-	   ustrcat (DocToOpen, WC_URL_STR);
+	 strcpy (DocToOpen, SavePath );
+	 if (strchr (SavePath, '/'))
+	   strcat (DocToOpen, URL_STR);
 	 else
-	   ustrcat (DocToOpen, WC_DIR_STR);
-	 ustrcat (DocToOpen, SaveName);
+	   strcat (DocToOpen, DIR_STR);
+	 strcat (DocToOpen, SaveName);
 #endif /* _WINDOWS */
        }
      
      if (i > 0)
        {
 	 /* change or append the suffix */
-	 ustrcpy (&SaveName[i], suffix);
+	 strcpy (&SaveName[i], suffix);
 	 /* display the new filename in the dialog box */
-	 filename = TtaAllocString (MAX_LENGTH);
-	 ustrcpy (filename, SavePath );
-	 if (ustrchr (SavePath, TEXT('/')))
-           ustrcat (filename, WC_URL_STR);
+	 filename = TtaGetMemory (MAX_LENGTH);
+	 strcpy (filename, SavePath );
+	 if (strchr (SavePath, '/'))
+           strcat (filename, URL_STR);
 	 else
-	   ustrcat (filename, WC_DIR_STR);
-	 ustrcat (filename, SaveName);
+	   strcat (filename, DIR_STR);
+	 strcat (filename, SaveName);
 #ifdef _WINDOWS
-	 usprintf (DocToOpen, filename);
+	 sprintf (DocToOpen, filename);
 #else /* _WINDOWS */
 	 TtaSetTextForm (BaseDialog + NameSave, filename);
 #endif /* _WINDOWS */
@@ -3660,21 +3664,20 @@ static void	SetFileSuffix ()
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
+void                CallbackDialogue (int ref, int typedata, char *data)
 {
-  CHAR_T*           tempfile;
-  CHAR_T*           tempname;
-  CHAR_T            sep;
+  char             *tempfile;
+  char             *tempname;
+  char              sep;
   int               val, i;
   ThotBool          change;
 
-  if (typedata == STRING_DATA && data && ustrchr (data, TEXT('/')))
-    sep = WC_URL_SEP;
+  if (typedata == STRING_DATA && data && strchr (data, '/'))
+    sep = URL_SEP;
   else
-    sep = WC_DIR_SEP;
+    sep = DIR_SEP;
 
    val = (int) data;
-
    if (ref - BaseDialog >= OptionMenu &&
        ref - BaseDialog <= OptionMenu + MAX_SUBMENUS)
      /* a popup menu corresponding to a SELECT element or a submenu
@@ -3693,7 +3696,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 {
 	   TtaDestroyDialogue (BaseDialog + OpenForm);
 	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-	   if (LastURLName[0] != WC_EOS)
+	   if (LastURLName[0] != EOS)
 	     {
 	       if (NewFile)
 		 InitializeNewDoc (LastURLName, NewDocType);
@@ -3706,15 +3709,15 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 				  CurrentDocument, Loading_method, TRUE,
 				  NULL, NULL);
 	     }
-	   else if (DirectoryName[0] != WC_EOS &&
-		    DocumentName[0] != WC_EOS)
+	   else if (DirectoryName[0] != EOS &&
+		    DocumentName[0] != EOS)
 	     {
 	       /* load a local file */
-	       tempfile = TtaAllocString (MAX_LENGTH);
-	       memset (tempfile, WC_EOS, MAX_LENGTH);
-	       ustrcpy (tempfile, DirectoryName);
-	       ustrcat (tempfile, WC_DIR_STR);
-	       ustrcat (tempfile, DocumentName);
+	       tempfile = TtaGetMemory (MAX_LENGTH);
+	       memset (tempfile, EOS, MAX_LENGTH);
+	       strcpy (tempfile, DirectoryName);
+	       strcat (tempfile, DIR_STR);
+	       strcat (tempfile, DocumentName);
 	       if (FileExistTarget (tempfile))
 		 {
 		   if (InNewWindow)
@@ -3746,7 +3749,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	       else
 		 TtaSetStatus (CurrentDocument, 1,
 			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			       TEXT(""));
+			       "");
 	     }
 	   NewFile = FALSE;
 	   CurrentDocument = 0;
@@ -3762,9 +3765,9 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        else if (val == 3)
 	 {
 	   /* Clear button */
-	   LastURLName[0] = WC_EOS;
-	   DirectoryName[0] = WC_EOS;
-	   DocumentName[0] = WC_EOS;
+	   LastURLName[0] = EOS;
+	   DirectoryName[0] = EOS;
+	   DocumentName[0] = EOS;
 #ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
 #endif /* !_WINDOWS */
@@ -3782,19 +3785,19 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
-	   ustrcpy (LastURLName, data);
-	   DocumentName[0] = WC_EOS;
+	   strcpy (LastURLName, data);
+	   DocumentName[0] = EOS;
 	 }
        else
 	 {
-	   LastURLName[0] = WC_EOS;
-	   tempfile = TtaAllocString (MAX_LENGTH);
+	   LastURLName[0] = EOS;
+	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
-	       ustrcpy (DirectoryName, tempfile);
-	       DocumentName[0] = WC_EOS;
+	       strcpy (DirectoryName, tempfile);
+	       DocumentName[0] = EOS;
 	     }
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
@@ -3804,24 +3807,24 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 
      case DirSelect:
 #ifdef _WINDOWS
-       usprintf (DirectoryName, TEXT("%s"), data);
+       sprintf (DirectoryName, "%s", data);
 #else  /* _WINDOWS */
        if (DirectoryName[0] != EOS)
 	 {
-	   if (!ustrcmp (data, ".."))
+	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaAllocString (MAX_LENGTH);
-	       tempfile = TtaAllocString (MAX_LENGTH);
-	       ustrcpy (tempname, DirectoryName);
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       tempfile = TtaGetMemory (MAX_LENGTH);
+	       strcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
 	       TtaFreeMemory (tempfile);
 	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
-	       ustrcat (DirectoryName, DIR_STR);
-	       ustrcat (DirectoryName, data);
+	       strcat (DirectoryName, DIR_STR);
+	       strcat (DirectoryName, data);
 	     }
 	   TtaSetTextForm (BaseDialog + URLName, DirectoryName);
 	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
@@ -3839,13 +3842,13 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 ugetcwd (DirectoryName, MAX_LENGTH);
        
        /* Extract suffix from document name */
-       ustrcpy (DocumentName, data);
-       LastURLName[0] = WC_EOS;
+       strcpy (DocumentName, data);
+       LastURLName[0] = EOS;
        /* construct the document full name */
-       tempfile = TtaAllocString (MAX_LENGTH);
-       ustrcpy (tempfile, DirectoryName);
-       ustrcat (tempfile, WC_DIR_STR);
-       ustrcat (tempfile, DocumentName);
+       tempfile = TtaGetMemory (MAX_LENGTH);
+       strcpy (tempfile, DirectoryName);
+       strcat (tempfile, DIR_STR);
+       strcat (tempfile, DocumentName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + URLName, tempfile);
 #endif /* !_WINDOWS */
@@ -3858,8 +3861,8 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        break;
      case FilterText:
        /* Filter value */
-       if (ustrlen(data) <= NAME_LENGTH)
-	 ustrcpy (ScanFilter, data);
+       if (strlen(data) <= NAME_LENGTH)
+	 strcpy (ScanFilter, data);
 #ifndef _WINDOWS
        else
 	 TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
@@ -3871,8 +3874,8 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 {
 	   /* no answer */
 	   Answer_text[0] = EOS;
-	   Answer_name[0] = WC_EOS;
-	   Answer_password[0] = WC_EOS;
+	   Answer_name[0] = EOS;
+	   Answer_password[0] = EOS;
 	   UserAnswer = 0;
 	 }
        else
@@ -3880,35 +3883,35 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        TtaDestroyDialogue (BaseDialog + FormAnswer);
        break;
      case AnswerText:
-       ustrncpy (Answer_text, data, MAX_LENGTH);
+       strncpy (Answer_text, data, MAX_LENGTH);
        Answer_text[MAX_LENGTH - 1] = EOS;
        break;
      case NameText:
-       ustrncpy (Answer_name, data, NAME_LENGTH);
+       strncpy (Answer_name, data, NAME_LENGTH);
        Answer_text[NAME_LENGTH - 1] = EOS;
        break;
      case PasswordText:
-       i = ustrlen (data);
+       i = strlen (data);
        if (i < NAME_LENGTH - 1)
 	 {
 	   if (Lg_password < i)
 	     {
 	       /* a new char */
 	       Answer_password[Lg_password] = data[Lg_password];
-	       Display_password[Lg_password] = TEXT('*');
-	       Answer_password[++Lg_password] = WC_EOS;
+	       Display_password[Lg_password] = '*';
+	       Answer_password[++Lg_password] = EOS;
 	       Display_password[Lg_password] = EOS;
 	     }
 	   else if (Lg_password > i)
 	     {		/* a valid backspace */
 	       
 	       Lg_password--;
-	       Answer_password[Lg_password] = WC_EOS;
+	       Answer_password[Lg_password] = EOS;
 	       Display_password[Lg_password] = EOS;
 	     }
 	 }
        else
-	 Answer_password[NAME_LENGTH - 1] = WC_EOS;
+	 Answer_password[NAME_LENGTH - 1] = EOS;
 #ifndef _WINDOWS
        if (i > 0)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
@@ -3969,16 +3972,16 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	   /* Move the information into LastURLName or DirectoryName */
 	   if (IsW3Path (SavePath))
 	     {
-	       ustrcpy (LastURLName, SavePath);
-	       ustrcat (LastURLName, TEXT("/"));
-	       ustrcat (LastURLName, SaveName);
-	       DirectoryName[0] = WC_EOS;
+	       strcpy (LastURLName, SavePath);
+	       strcat (LastURLName, "/");
+	       strcat (LastURLName, SaveName);
+	       DirectoryName[0] = EOS;
 	     }
 	   else
 	     {
-	       LastURLName[0] = WC_EOS;
-	       ustrcpy (DirectoryName, SavePath);
-	       ustrcat (DocumentName, SaveName);
+	       LastURLName[0] = EOS;
+	       strcpy (DirectoryName, SavePath);
+	       strcat (DocumentName, SaveName);
 	     }
 	 }
        else if (val == 2)
@@ -3986,9 +3989,9 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 {
 	   if (SavingDocument != 0)
 	     {
-	       SavePath[0] = WC_EOS;
-	       SaveImgsURL[0] = WC_EOS;
-	       SaveName[0] = WC_EOS;
+	       SavePath[0] = EOS;
+	       SaveImgsURL[0] = EOS;
+	       SaveName[0] = EOS;
 #ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
@@ -4019,16 +4022,16 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        break;
      case NameSave:
        /* Document location */
-       tempfile = TtaAllocString (MAX_LENGTH);
+       tempfile = TtaGetMemory (MAX_LENGTH);
        if (!IsW3Path (data))
 	 change = NormalizeFile (data, tempfile, AM_CONV_NONE);
        else
-	 ustrcpy (tempfile, data);
+	 strcpy (tempfile, data);
        
-       if (*tempfile && tempfile[ustrlen (tempfile) - 1] == sep)
+       if (*tempfile && tempfile[strlen (tempfile) - 1] == sep)
 	 {
-	   ustrcpy (SavePath, tempfile);
-	   SaveName[0] = WC_EOS;
+	   strcpy (SavePath, tempfile);
+	   SaveName[0] = EOS;
 	 }
        else
 	 {
@@ -4045,32 +4048,32 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        if (!IsW3Path (data))
 	 change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
        else
-	 ustrcpy (SaveImgsURL, data);
+	 strcpy (SaveImgsURL, data);
        break;
      case DirSave:
        if (!IsW3Path (SavePath))
 	 {
 	   /* Document directories */
-	   tempfile = TtaAllocString (MAX_LENGTH);
-	   if (!ustrcmp (data, TEXT("..")))
+	   tempfile = TtaGetMemory (MAX_LENGTH);
+	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaAllocString (MAX_LENGTH);
-	       ustrcpy (tempname, SavePath);
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       strcpy (tempname, SavePath);
 	       TtaExtractName (tempname, SavePath, tempfile);
 	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
-	       ustrcat (SavePath, WC_DIR_STR);
-	       ustrcat (SavePath, data);
+	       strcat (SavePath, DIR_STR);
+	       strcat (SavePath, data);
 	     }
-	   ustrcpy (tempfile, SavePath);
-	   ustrcat (tempfile, WC_DIR_STR);
+	   strcpy (tempfile, SavePath);
+	   strcat (tempfile, DIR_STR);
 	   if (SavingDocument != 0)
-	     ustrcat (tempfile, DocumentName);
+	     strcat (tempfile, DocumentName);
 	   else
-	     ustrcat (tempfile, ObjectName);
+	     strcat (tempfile, ObjectName);
 #ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
 #endif /* !_WINDOWS */
@@ -4088,12 +4091,12 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 /* set path on current directory */
 	 ugetcwd (SavePath, MAX_LENGTH);
        
-       ustrcpy (SaveName, data);
+       strcpy (SaveName, data);
        /* construct the document full name */
-       tempfile = TtaAllocString (MAX_LENGTH);
-       ustrcpy (tempfile, SavePath);
-       ustrcat (tempfile, WC_DIR_STR);
-       ustrcat (tempfile, SaveName);
+       tempfile = TtaGetMemory (MAX_LENGTH);
+       strcpy (tempfile, SavePath);
+       strcat (tempfile, DIR_STR);
+       strcat (tempfile, SaveName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
 #endif /* !_WINDOWS */
@@ -4117,7 +4120,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 {
 	   /* Confirm button */
 	   /* create an attribute HREF for the Link_Anchor */
-	   if (AttrHREFvalue[0] != WC_EOS)
+	   if (AttrHREFvalue[0] != EOS)
 	     SetREFattribute (AttrHREFelement, AttrHREFdocument,
 			      AttrHREFvalue, NULL);
 	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
@@ -4134,7 +4137,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        else if (val == 3)
 	 {
 	   /* Clear button */
-	   AttrHREFvalue[0] = WC_EOS;
+	   AttrHREFvalue[0] = EOS;
 #ifndef _WINDOWS
 	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 #endif /* !_WINDOWS */
@@ -4157,21 +4160,21 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
-	     ustrcpy (AttrHREFvalue, data);
-	   DocumentName[0] = WC_EOS;
+	     strcpy (AttrHREFvalue, data);
+	   DocumentName[0] = EOS;
 	 }
        else
 	 {
-	   tempfile = TtaAllocString (MAX_LENGTH);
+	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   if (TtaCheckDirectory (tempfile))
 	     {
-	       ustrcpy (DirectoryName, tempfile);
-	       DocumentName[0] = WC_EOS;
+	       strcpy (DirectoryName, tempfile);
+	       DocumentName[0] = EOS;
 	     }
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
-	   ustrcpy (AttrHREFvalue, tempfile);
+	   strcpy (AttrHREFvalue, tempfile);
 	   TtaFreeMemory (tempfile);
 	 }       
        break;
@@ -4184,23 +4187,23 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 #ifndef _WINDOWS
 	   /* this code is only valid under Unix. */
 	   /* In Windows, we're using a system widget */
-	   tempfile = TtaAllocString (MAX_LENGTH);
-	   memset (tempfile, WC_EOS, MAX_LENGTH);
-	   ustrcpy (tempfile, DirectoryName);
-	   ustrcat (tempfile, WC_DIR_STR);
-	   ustrcat (tempfile, DocumentName);
+	   tempfile = TtaGetMemory (MAX_LENGTH);
+	   memset (tempfile, EOS, MAX_LENGTH);
+	   strcpy (tempfile, DirectoryName);
+	   strcat (tempfile, DIR_STR);
+	   strcat (tempfile, DocumentName);
 	   if (WidgetParent == HrefAttrBrowser)
 	     {
 	       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
-	       ustrcpy (AttrHREFvalue, tempfile);
+	       strcpy (AttrHREFvalue, tempfile);
 	       TtaFreeMemory (tempfile);
-	       CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
+	       CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
 	     }
 	   else if (WidgetParent == OpenDocBrowser)
 	     {
 	       TtaSetTextForm (BaseDialog + URLName, tempfile);
 	       TtaFreeMemory (tempfile);
-	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	     }
 #endif /* !_WINDOWS */
 	 }
@@ -4209,15 +4212,15 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 {
 	   if (WidgetParent == OpenDocBrowser)
 	     {
-	       LastURLName[0] = WC_EOS;
+	       LastURLName[0] = EOS;
 #ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
 #endif /* !_WINDOWS */
 	     }
 	   else if (WidgetParent == HrefAttrBrowser)
 	     {
-	       tempname = TtaAllocString (MAX_LENGTH);
-	       tempname[0] = WC_EOS; 	       
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       tempname[0] = EOS; 	       
 #ifndef _WINDOWS
 	     TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
 #endif /* !_WINDOWS */
@@ -4244,20 +4247,20 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        RemoveNewLines (data);
        if (IsW3Path (data))
 	 {
-	   DocumentName[0] = WC_EOS;
+	   DocumentName[0] = EOS;
 	 }
        else
 	 {
-	   tempfile = TtaAllocString (MAX_LENGTH);
+	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
 	   if (TtaCheckDirectory (tempfile))
 	     {
-	       ustrcpy (DirectoryName, tempfile);
-	       DocumentName[0] = WC_EOS;
+	       strcpy (DirectoryName, tempfile);
+	       DocumentName[0] = EOS;
 	     }
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
-	   ustrcpy (AttrHREFvalue, tempfile);
+	   strcpy (AttrHREFvalue, tempfile);
 	   TtaFreeMemory (tempfile);
 	 }       
        break;
@@ -4265,28 +4268,28 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        /* *********Browser DirSelect*********** */
      case BrowserDirSelect:
 #ifdef _WINDOWS
-       usprintf (DirectoryName, TEXT("%s"), data);
+       sprintf (DirectoryName, "%s", data);
 #else  /* _WINDOWS */
        if (DirectoryName[0] != EOS)
 	 {
-	   if (!ustrcmp (data, ".."))
+	   if (!strcmp (data, ".."))
 	     {
 	       /* suppress last directory */
-	       tempname = TtaAllocString (MAX_LENGTH);
-	       tempfile = TtaAllocString (MAX_LENGTH);
-	       ustrcpy (tempname, DirectoryName);
+	       tempname = TtaGetMemory (MAX_LENGTH);
+	       tempfile = TtaGetMemory (MAX_LENGTH);
+	       strcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
 	       TtaFreeMemory (tempfile);
 	       TtaFreeMemory (tempname);
 	     }
 	   else
 	     {
-	       ustrcat (DirectoryName, DIR_STR);
-	       ustrcat (DirectoryName, data);
+	       strcat (DirectoryName, DIR_STR);
+	       strcat (DirectoryName, data);
 	     }
 
 	   if (WidgetParent == OpenDocBrowser)
-	     LastURLName[0] = WC_EOS;
+	     LastURLName[0] = EOS;
 
 	   TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
 	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
@@ -4306,16 +4309,16 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 ugetcwd (DirectoryName, MAX_LENGTH);
 
        /* Extract suffix from document name */
-       ustrcpy (DocumentName, data);
+       strcpy (DocumentName, data);
 
        if (WidgetParent == OpenDocBrowser)
-	 LastURLName[0] = WC_EOS;
+	 LastURLName[0] = EOS;
 
        /* construct the document full name */
-       tempfile = TtaAllocString (MAX_LENGTH);
-       ustrcpy (tempfile, DirectoryName);
-       ustrcat (tempfile, WC_DIR_STR);
-       ustrcat (tempfile, DocumentName);
+       tempfile = TtaGetMemory (MAX_LENGTH);
+       strcpy (tempfile, DirectoryName);
+       strcat (tempfile, DIR_STR);
+       strcat (tempfile, DocumentName);
 #ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
 #endif /* !_WINDOWS */
@@ -4325,8 +4328,8 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
        /* *********Browser Filter*********** */
      case FileBrowserFilter:
        /* Filter value */
-       if (ustrlen(data) <= NAME_LENGTH)
-	 ustrcpy (ScanFilter, data);
+       if (strlen(data) <= NAME_LENGTH)
+	 strcpy (ScanFilter, data);
 #ifndef _WINDOWS
        else
 	 TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
@@ -4342,7 +4345,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 
      case TitleText:
        /* new document name */
-       ustrncpy (Answer_text, data, MAX_LENGTH);
+       strncpy (Answer_text, data, MAX_LENGTH);
        Answer_text[MAX_LENGTH - 1] = EOS;
        break;
 
@@ -4374,7 +4377,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	   MathMLEntityName[0] = EOS;
        break;
      case MathEntityText:
-       ustrncpy (MathMLEntityName, data, MAX_LENGTH);
+       strncpy (MathMLEntityName, data, MAX_LENGTH);
        MathMLEntityName[MAX_LENGTH - 1] = EOS;
        break;
      case MakeIdMenu:
@@ -4403,7 +4406,7 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 	 }
        break;
      case mElemName:
-       ustrncpy (IdElemName, data, MAX_LENGTH);
+       strncpy (IdElemName, data, MAX_LENGTH);
        IdElemName[MAX_LENGTH - 1] = EOS;
        break;
      case mIdUseSelection:
@@ -4419,11 +4422,11 @@ void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
   tempdoc is the name of the saved file.
   Return the new recovered document
   ----------------------------------------------------------------------*/
-static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docname, DocumentType docType)
+static int       RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname, DocumentType docType)
 {
   AHTHeaders          http_headers;
-  CHAR_T              content_type[MAX_LENGTH];
-  CHAR_T              tempfile[MAX_LENGTH];
+  char                content_type[MAX_LENGTH];
+  char                tempfile[MAX_LENGTH];
   int                 newdoc, len;
   ThotBool            stopped_flag;
 
@@ -4440,7 +4443,7 @@ static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docn
 	  /* it's a remote file */
 	  if (docType == docHTML)
 	    {
-	      ustrcpy (content_type, TEXT("text/html"));
+	      strcpy (content_type, "text/html");
 	      http_headers.content_type = content_type;
 	    }
 	  else
@@ -4459,9 +4462,9 @@ static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docn
 			tempfile, DocumentName, NULL, FALSE);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
-	  len = ustrlen (docname) + 1;
-	  DocumentURLs[newdoc] = TtaAllocString (len);
-	  ustrcpy (DocumentURLs[newdoc], docname);
+	  len = strlen (docname) + 1;
+	  DocumentURLs[newdoc] = TtaGetMemory (len);
+	  strcpy (DocumentURLs[newdoc], docname);
 	  DocumentSource[newdoc] = 0;
 	  TtaSetTextZone (newdoc, 1, 1, docname);
 	  /* change its directory name */
@@ -4493,20 +4496,20 @@ static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docn
 static ThotBool       RestoreAmayaDocs ()
 {
   FILE           *f;
-  CHAR_T          tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR_T          docname[MAX_LENGTH];  
+  char            tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  char            docname[MAX_LENGTH];  
   char            line[MAX_LENGTH * 2];
   int             docType, i, j;
   ThotBool        aDoc;
 
   /* check if Amaya has crashed */
-  usprintf (tempname, TEXT("%s%cCrash.amaya"), TempFileDirectory, WC_DIR_SEP);
+  sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
   /* no document is opened */
   aDoc = FALSE;
   if (TtaFileExist (tempname))
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
-      f = fopen (tempname, TEXT("r"));
+      f = fopen (tempname, "r");
       if (f != NULL)
 	{
 	  InNewWindow = TRUE;
@@ -4558,7 +4561,7 @@ static ThotBool       RestoreAmayaDocs ()
 	      while (line[i] != '\n');
 	      line[i] = EOS;
 	      sscanf (&line[j], "%d",  &docType);
-	      if (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc))
+	      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
 		{
 		  if (UserAnswer)
 		    {
@@ -4589,15 +4592,15 @@ static ThotBool       RestoreAmayaDocs ()
   all the intermediary directories.
   Returns TRUE if the operation succeeds, FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool CheckMakeDirectory (CHAR_T* name, ThotBool recursive)
+ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
 {
   ThotBool  i;
-  CHAR_T* tmp_name;
-  CHAR_T* ptr;
-  CHAR_T  tmp_char;
+  char     *tmp_name;
+  char     *ptr;
+  char      tmp_char;
 
   /* protection against bad calls */
-  if (!name || *name == WC_EOS)
+  if (!name || *name == EOS)
     return FALSE;
 
   /* does the directory exist? */
@@ -4618,14 +4621,14 @@ ThotBool CheckMakeDirectory (CHAR_T* name, ThotBool recursive)
       tmp_name = TtaWCSdup (name);
       ptr = tmp_name;
       /* create all the intermediary directories */
-      while (*ptr != WC_EOS)
+      while (*ptr != EOS)
 	{
-	  if (*ptr != WC_DIR_SEP)
+	  if (*ptr != DIR_SEP)
 	    ptr++;
 	  else
 	    {
 	      tmp_char = *ptr;
-	      *ptr = WC_EOS;
+	      *ptr = EOS;
 	      i = TtaMakeDirectory (tmp_name);
 	      if (!i)
 		{
@@ -4686,8 +4689,8 @@ void                FreeAmayaStructures ()
   ----------------------------------------------------------------------*/
 void                InitAmaya (NotifyEvent * event)
 {
-   CHAR_T             *s;
-   CHAR_T             *tempname;
+   char               *s;
+   char               *tempname;
    int                 i;
    ThotBool            restoredDoc;
 
@@ -4786,10 +4789,10 @@ void                InitAmaya (NotifyEvent * event)
        else
 	 /* didn't work, so we exit */
 	 {
-	   usprintf (TempFileDirectory,
-		     TEXT("InitAmaya: Couldnt' create directory %s"), s);
+	   sprintf (TempFileDirectory,
+		     "InitAmaya: Couldnt' create directory %s", s);
 #ifdef _WINDOWS
-	   MessageBox (NULL, TempFileDirectory, TEXT("Error"), MB_OK);
+	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
 #else
 	   fprintf (stderr, TempFileDirectory);
 #endif /* _WINDOWS */
@@ -4798,7 +4801,7 @@ void                InitAmaya (NotifyEvent * event)
      }
 
    /* add the temporary directory in document path */
-   ustrcpy (TempFileDirectory, s);
+   strcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
  
 #ifdef _WINDOWS
@@ -4806,9 +4809,9 @@ void                InitAmaya (NotifyEvent * event)
    if (!CheckMakeDirectory (s, TRUE))
      /* didn't work, so we exit */
      {
-       usprintf (TempFileDirectory,
-		 TEXT("InitAmaya: Couldnt' create directory %s"), s);
-       MessageBox (NULL, TempFileDirectory, TEXT("Error"), MB_OK);
+       sprintf (TempFileDirectory,
+		 "InitAmaya: Couldnt' create directory %s", s);
+       MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
        exit (1);
      }
 #endif /* _WINDOWS */
@@ -4817,8 +4820,8 @@ void                InitAmaya (NotifyEvent * event)
     * $HOME/.amaya/amaya.css on Unix platforms
     * $HOME\amaya\amaya.css on Windows platforms
     */
-   tempname = TtaAllocString (MAX_LENGTH);
-   usprintf (tempname, TEXT("%s%c%s.css"), s, WC_DIR_SEP, HTAppName);
+   tempname = TtaGetMemory (MAX_LENGTH);
+   sprintf (tempname, "%s%c%s.css", s, DIR_SEP, HTAppName);
    if (TtaFileExist (tempname))
      UserCSS = TtaWCSdup (tempname);
    else
@@ -4839,7 +4842,7 @@ void                InitAmaya (NotifyEvent * event)
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and
 	  image files */
-       usprintf (tempname, TEXT("%s%c%d"), TempFileDirectory, WC_DIR_SEP, i);
+       sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        TtaMakeDirectory (tempname);
        /* adding the CSS directory */
        if (i == 0)
@@ -4847,30 +4850,30 @@ void                InitAmaya (NotifyEvent * event)
      }
 
    /* allocate working buffers */
-   LastURLName = TtaAllocString (MAX_LENGTH);
-   LastURLName[0] = WC_EOS;
-   DirectoryName = TtaAllocString (MAX_LENGTH);
+   LastURLName = TtaGetMemory (MAX_LENGTH);
+   LastURLName[0] = EOS;
+   DirectoryName = TtaGetMemory (MAX_LENGTH);
 
    /* set path on current directory */
    ugetcwd (DirectoryName, MAX_LENGTH);
-   DocumentName = TtaAllocString (MAX_LENGTH);
+   DocumentName = TtaGetMemory (MAX_LENGTH);
    memset (DocumentName, EOS, MAX_LENGTH);
-   SavePath = TtaAllocString (MAX_LENGTH);
-   SavePath[0] = WC_EOS;
-   SaveName = TtaAllocString (MAX_LENGTH);
+   SavePath = TtaGetMemory (MAX_LENGTH);
+   SavePath[0] = EOS;
+   SaveName = TtaGetMemory (MAX_LENGTH);
    SaveName[0] = EOS;
-   ObjectName = TtaAllocString (MAX_LENGTH);
+   ObjectName = TtaGetMemory (MAX_LENGTH);
    ObjectName[0] = EOS;
-   SaveImgsURL = TtaAllocString (MAX_LENGTH);
+   SaveImgsURL = TtaGetMemory (MAX_LENGTH);
    SaveImgsURL[0] = EOS;
-   ustrcpy (ScanFilter, TEXT(".*htm*"));
+   strcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
    SaveAsXML = FALSE;
    SaveAsText = FALSE;
    CopyImages = FALSE;
    UpdateURLs = FALSE;
-   SavingFile = TtaAllocString (MAX_LENGTH);
-   AttrHREFvalue = TtaAllocString (MAX_LENGTH);
+   SavingFile = TtaGetMemory (MAX_LENGTH);
+   AttrHREFvalue = TtaGetMemory (MAX_LENGTH);
    AttrHREFvalue[0] = EOS;
 
 #ifdef WITH_SOCKS
@@ -4884,7 +4887,7 @@ void                InitAmaya (NotifyEvent * event)
    TtaSetBackup (BackUpDocs);
    TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
-   AMAYA = TtaGetMessageTable (TEXT("amayamsg"), AMAYA_MSG_MAX);
+   AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);
    /* init the Picture context */
@@ -4918,18 +4921,18 @@ void                InitAmaya (NotifyEvent * event)
      /* old documents are restored */
      return;
 #ifdef _WINDOWS
-   usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"),
+   sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));              
 #endif /* _WINDOWS */
    if (!s)
-      /* No argument in the command line, no HOME_PAGE variable. Open the */
+      /* No argument in the command line, no HOME_PAGE variable (). Open the */
       /* default Amaya URL */
      GoToHome (0, 1);
    else if (IsW3Path (s))
      {
        /* it's a remote document */
-       ustrcpy (LastURLName, s);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+       strcpy (LastURLName, s);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else
      {
@@ -4937,18 +4940,18 @@ void                InitAmaya (NotifyEvent * event)
        if (FileExistTarget (LastURLName)) {
          /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
-	 if ((LastURLName[0] == WC_DIR_SEP) || (LastURLName[1] == TEXT(':')))
+	 if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
 #else  /* !_WINDOWS */
-           if (LastURLName[0] == WC_DIR_SEP)
+           if (LastURLName[0] == DIR_SEP)
 #endif /* !_WINDOWS */
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
-	     ustrcpy (DocumentName, LastURLName);
+	     strcpy (DocumentName, LastURLName);
 	   /* start with the local document */
-	   LastURLName[0] = WC_EOS;
-	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+	   LastURLName[0] = EOS;
+	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	 }
     else
         /* Create a new document */
@@ -5027,7 +5030,7 @@ void                MakeIDMenu (Document doc, View view)
 {
 #ifndef _WINDOWS
   int i;
-  CHAR_T  s[MAX_LENGTH];
+  char    s[MAX_LENGTH];
 #endif /* _WINDOWS */
 
   /* initialize the global variables */
@@ -5038,27 +5041,27 @@ void                MakeIDMenu (Document doc, View view)
   /* Create the dialogue form */
 #ifndef _WINDOWS
   i = 0;
-  strcpy (&s[i], TEXT("Add ID"));
-  i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Remove ID"));
+  strcpy (&s[i], "Add ID");
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], "Remove ID");
   TtaNewSheet (BaseDialog + MakeIdMenu,
 	       TtaGetViewFrame (doc, view),
-	       TEXT("ID attributes"),
+	       "ID attributes",
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
 		  BaseDialog + MakeIdMenu,
-		  TEXT("Enter an element name"),
+		  "Enter an element name",
 		  10,
 		  1,
 		  TRUE);
   /* apply operation in */
   strcpy (s, "TIn the whole document");
-  i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("TWithin selection"));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], "TWithin selection");
   TtaNewSubmenu (BaseDialog + mIdUseSelection,
 		 BaseDialog + MakeIdMenu,
 		 0,
-		 TEXT("Apply operation"),
+		 "Apply operation",
 		 2,
 		 s,
 		 NULL,
@@ -5081,7 +5084,7 @@ void                MakeIDMenu (Document doc, View view)
   ----------------------------------------------------------------------*/
 void                HelpAmaya (Document document, View view)
 {
-   CHAR_T                localname[MAX_LENGTH];
+   char                  localname[MAX_LENGTH];
 #ifdef AMAYA_DEBUG
    Element             el;
    View                structView, tocView;
@@ -5089,31 +5092,31 @@ void                HelpAmaya (Document document, View view)
 
    /* get the root element */
    el = TtaGetMainRoot (document);
-   ustrcpy (localname, TempFileDirectory);
-   ustrcat (localname, "/tree.debug");
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, "/tree.debug");
    list = fopen (localname, "w");
    TtaListAbstractTree (el, list);
    fclose (list);
-   ustrcpy (localname, TempFileDirectory);
-   ustrcat (localname, "/view.debug");
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, "/view.debug");
    list = fopen (localname, "w");
    TtaListView (document, view, list);
    fclose (list);
-   ustrcpy (localname, TempFileDirectory);
-   ustrcat (localname, "/boxes.debug");
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, "/boxes.debug");
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
    structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpen (document, structView))
      {
-       ustrcpy (localname, TempFileDirectory);
-       ustrcat (localname, "/structview.debug");
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/structview.debug");
        list = fopen (localname, "w");
        TtaListView (document, structView, list);
        fclose (list);
-       ustrcpy (localname, TempFileDirectory);
-       ustrcat (localname, "/structboxes.debug");
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
        fclose (list);
@@ -5121,20 +5124,20 @@ void                HelpAmaya (Document document, View view)
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (tocView != 0 && TtaIsViewOpen (document, tocView))
      {
-       ustrcpy (localname, TempFileDirectory);
-       ustrcat (localname, "/tocview.debug");
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/tocview.debug");
        list = fopen (localname, "w");
        TtaListView (document, tocView, list);
        fclose (list);
-       ustrcpy (localname, TempFileDirectory);
-       ustrcat (localname, "/tocboxes.debug");
+       strcpy (localname, TempFileDirectory);
+       strcat (localname, "/tocboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, tocView, list);
        fclose (list);
      }
    /* list now CSS rules */
-   ustrcpy (localname, TempFileDirectory);
-   ustrcat (localname, "/style.debug");
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, "/style.debug");
    list = fopen (localname, "w");
    TtaListStyleSchemas (document, list);
    fclose (list);
@@ -5144,11 +5147,11 @@ void                HelpAmaya (Document document, View view)
    TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
 		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 #endif  /* _WINDOWS */
-   ustrcpy (localname, HTAppName);
-   ustrcat (localname, TEXT(" - "));
-   ustrcat (localname, HTAppVersion);
-   ustrcat (localname, TEXT("     "));
-   ustrcat (localname, HTAppDate);
+   strcpy (localname, HTAppName);
+   strcat (localname, " - ");
+   strcat (localname, HTAppVersion);
+   strcat (localname, "     ");
+   strcat (localname, HTAppDate);
 #ifndef _WINDOWS
    TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);
    TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
@@ -5168,10 +5171,10 @@ void                HelpAmaya (Document document, View view)
   ----------------------------------------------------------------------*/
 void                HelpAtW3C (Document document, View view)
 {
-  CHAR_T    localname[MAX_LENGTH];
+  char      localname[MAX_LENGTH];
   
-  ustrcpy (localname, AMAYA_PAGE_DOC);
-  ustrcat (localname, TEXT("BinDist.html"));
+  strcpy (localname, AMAYA_PAGE_DOC);
+  strcat (localname, "BinDist.html");
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
 			      NULL);
   InitDocHistory (document);
@@ -5183,20 +5186,20 @@ void                HelpAtW3C (Document document, View view)
 static void DisplayHelp (int doc, int index)
 {
   Document    document;
-  CHAR_T      localname[MAX_LENGTH];
-  CHAR_T     *s, *lang;
+  char        localname[MAX_LENGTH];
+  char       *s, *lang;
 
   lang = TtaGetVarLANG ();
   s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     {
       /* get the documentation in the current language */
-      usprintf (localname, TEXT("%s%cdoc%camaya%c%s.%s"), s, DIR_SEP, DIR_SEP,
+      sprintf (localname, "%s%cdoc%camaya%c%s.%s", s, DIR_SEP, DIR_SEP,
 		DIR_SEP, Manual[index], lang);
 
       if (!TtaFileExist (localname))
       /* get the standard english documentation */
-	usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP,
+	sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP,
 		  DIR_SEP, Manual[index]);
     }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL,
@@ -5384,10 +5387,10 @@ void HelpAccess (Document document, View view)
  -----------------------------------------------------------------------*/
 void ShowLogFile (Document doc, View view)
 {
-  CHAR_T    localname[MAX_LENGTH];
+  char      localname[MAX_LENGTH];
   int       newdoc;
 
-  usprintf (localname, TEXT("%s%c%d%cPARSING.ERR"), TempFileDirectory, DIR_SEP,
+  sprintf (localname, "%s%c%d%cPARSING.ERR", TempFileDirectory, DIR_SEP,
 	    doc, DIR_SEP);
   newdoc = GetHTMLDocument (localname, NULL, doc, 0, CE_LOG, FALSE, NULL, NULL);
   /* store the relation with the original document */

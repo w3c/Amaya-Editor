@@ -6,110 +6,110 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ConvertToLowerCase ( STRING string );
-extern void EscapeChar ( STRING string,
-                         UCHAR_T c );
-extern STRING EscapeURL ( const STRING url );
+extern void ConvertToLowerCase ( char *string );
+extern void EscapeChar ( char *string,
+                         char c );
+extern char *EscapeURL ( const char *url );
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
                          char **dir,
                          char **file );
-extern void ExtractSuffix ( CHAR_T* aName,
-                            CHAR_T* aSuffix );
-extern ThotBool IsHTMLName ( const CHAR_T* path );
-extern ThotBool IsXMLName ( const STRING path );
-extern ThotBool IsMathMLName ( const STRING path );
-extern ThotBool IsSVGName ( const STRING path );
-extern ThotBool IsCSSName ( const STRING path );
-extern ThotBool IsImageName ( const STRING path );
-extern ThotBool IsImageType ( const STRING type );
-extern ThotBool IsTextName ( const STRING path );
-extern ThotBool IsHTTPPath ( const STRING path );
+extern void ExtractSuffix ( char *aName,
+                            char *aSuffix );
+extern ThotBool IsHTMLName ( const char *path );
+extern ThotBool IsXMLName ( const char *path );
+extern ThotBool IsMathMLName ( const char *path );
+extern ThotBool IsSVGName ( const char *path );
+extern ThotBool IsCSSName ( const char *path );
+extern ThotBool IsImageName ( const char *path );
+extern ThotBool IsImageType ( const char *type );
+extern ThotBool IsTextName ( const char *path );
+extern ThotBool IsHTTPPath ( const char *path );
 extern ThotBool IsWithParameters ( const char *url );
-extern ThotBool IsW3Path ( const CHAR_T* path );
-extern ThotBool IsFilePath ( const CHAR_T* path );
-extern ThotBool IsValidProtocol ( const STRING url );
-extern CHAR_T* GetBaseURL ( Document doc );
-extern CHAR_T* GetLocalPath ( Document doc,
-                              CHAR_T* url );
-extern void ExtractTarget ( CHAR_T* aName,
-                            CHAR_T* target );
-extern ThotBool RemoveNewLines ( CHAR_T *text );
-extern void NormalizeURL ( CHAR_T* orgName,
+extern ThotBool IsW3Path ( const char *path );
+extern ThotBool IsFilePath ( const char *path );
+extern ThotBool IsValidProtocol ( const char *url );
+extern char *GetBaseURL ( Document doc );
+extern char *GetLocalPath ( Document doc,
+                            char *url );
+extern void ExtractTarget ( char *aName,
+                            char *target );
+extern ThotBool RemoveNewLines ( char *text );
+extern void NormalizeURL ( char *orgName,
                            Document doc,
-                           CHAR_T* newName,
-                           CHAR_T* docName,
-                           CHAR_T* otherPath );
-extern ThotBool IsSameHost ( const STRING url1,
-                             const STRING url2 );
-extern ThotBool HasKnownFileSuffix ( const STRING path );
-extern void ChopURL ( CHAR_T* outputURL,
-                      const CHAR_T* inputURL );
-extern CHAR_T* AmayaParseUrl ( const CHAR_T* aName,
-                               CHAR_T* relatedName,
-                               int wanted );
-extern void SimplifyUrl ( CHAR_T** url );
-extern ThotBool NormalizeFile ( CHAR_T* src,
-                                CHAR_T* target,
+                           char *newName,
+                           char *docName,
+                           char *otherPath );
+extern ThotBool IsSameHost ( const char *url1,
+                             const char *url2 );
+extern ThotBool HasKnownFileSuffix ( const char *path );
+extern void ChopURL ( char *outputURL,
+                      const char *inputURL );
+extern char *AmayaParseUrl ( const char *aName,
+                             char *relatedName,
+                             int wanted );
+extern void SimplifyUrl ( char **url );
+extern ThotBool NormalizeFile ( char *src,
+                                char *target,
                                 ConvertionType convertion );
-extern STRING MakeRelativeURL ( STRING aName,
-                                STRING relatedName );
-extern ThotBool AM_GetFileSize ( CHAR_T* filename,
+extern char *MakeRelativeURL ( char *aName,
+                               char *relatedName );
+extern ThotBool AM_GetFileSize ( char *filename,
                                  unsigned long *file_size );
 
 #else /* __STDC__ */
 
-extern void ConvertToLowerCase (/* STRING string */);
-extern void EscapeChar (/* STRING string,
-                           UCHAR_T c */);
-extern STRING EscapeURL (/* const STRING url */);
+extern void ConvertToLowerCase (/* char *string */);
+extern void EscapeChar (/* char *string,
+                           char c */);
+extern char *EscapeURL (/* const char *url */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
                            char **host,
                            char **dir,
                            char **file */);
-extern void ExtractSuffix (/* CHAR_T* aName,
-                              CHAR_T* aSuffix */);
-extern ThotBool IsHTMLName (/* const CHAR_T* path */);
-extern ThotBool IsXMLName (/* const STRING path */);
-extern ThotBool IsMathMLName (/* const STRING path */);
-extern ThotBool IsSVGName (/* const STRING path */);
-extern ThotBool IsCSSName (/* const STRING path */);
-extern ThotBool IsImageName (/* const STRING path */);
-extern ThotBool IsImageType (/* const STRING type */);
-extern ThotBool IsTextName (/* const STRING path */);
-extern ThotBool IsHTTPPath (/* const STRING path */);
+extern void ExtractSuffix (/* char *aName,
+                              char *aSuffix */);
+extern ThotBool IsHTMLName (/* const char *path */);
+extern ThotBool IsXMLName (/* const char *path */);
+extern ThotBool IsMathMLName (/* const char *path */);
+extern ThotBool IsSVGName (/* const char *path */);
+extern ThotBool IsCSSName (/* const char *path */);
+extern ThotBool IsImageName (/* const char *path */);
+extern ThotBool IsImageType (/* const char *type */);
+extern ThotBool IsTextName (/* const char *path */);
+extern ThotBool IsHTTPPath (/* const char *path */);
 extern ThotBool IsWithParameters (/* const char *url */);
-extern ThotBool IsW3Path (/* const CHAR_T* path */);
-extern ThotBool IsFilePath (/* const CHAR_T* path */);
-extern ThotBool IsValidProtocol (/* const STRING url */);
-extern CHAR_T* GetBaseURL (/* Document doc */);
-extern CHAR_T* GetLocalPath (/* Document doc,
-                                CHAR_T* url */);
-extern void ExtractTarget (/* CHAR_T* aName,
-                              CHAR_T* target */);
-extern ThotBool RemoveNewLines (/* CHAR_T *text */);
-extern void NormalizeURL (/* CHAR_T* orgName,
+extern ThotBool IsW3Path (/* const char *path */);
+extern ThotBool IsFilePath (/* const char *path */);
+extern ThotBool IsValidProtocol (/* const char *url */);
+extern char *GetBaseURL (/* Document doc */);
+extern char *GetLocalPath (/* Document doc,
+                              char *url */);
+extern void ExtractTarget (/* char *aName,
+                              char *target */);
+extern ThotBool RemoveNewLines (/* char *text */);
+extern void NormalizeURL (/* char *orgName,
                              Document doc,
-                             CHAR_T* newName,
-                             CHAR_T* docName,
-                             CHAR_T* otherPath */);
-extern ThotBool IsSameHost (/* const STRING url1,
-                               const STRING url2 */);
-extern ThotBool HasKnownFileSuffix (/* const STRING path */);
-extern void ChopURL (/* CHAR_T* outputURL,
-                        const CHAR_T* inputURL */);
-extern CHAR_T* AmayaParseUrl (/* const CHAR_T* aName,
-                                 CHAR_T* relatedName,
-                                 int wanted */);
-extern void SimplifyUrl (/* CHAR_T** url */);
-extern ThotBool NormalizeFile (/* CHAR_T* src,
-                                  CHAR_T* target,
+                             char *newName,
+                             char *docName,
+                             char *otherPath */);
+extern ThotBool IsSameHost (/* const char *url1,
+                               const char *url2 */);
+extern ThotBool HasKnownFileSuffix (/* const char *path */);
+extern void ChopURL (/* char *outputURL,
+                        const char *inputURL */);
+extern char *AmayaParseUrl (/* const char *aName,
+                               char *relatedName,
+                               int wanted */);
+extern void SimplifyUrl (/* char **url */);
+extern ThotBool NormalizeFile (/* char *src,
+                                  char *target,
                                   ConvertionType convertion */);
-extern STRING MakeRelativeURL (/* STRING aName,
-                                  STRING relatedName */);
-extern ThotBool AM_GetFileSize (/* CHAR_T* filename,
+extern char *MakeRelativeURL (/* char *aName,
+                                 char *relatedName */);
+extern ThotBool AM_GetFileSize (/* char *filename,
                                    unsigned long *file_size */);
 
 #endif /* __STDC__ */

@@ -7,12 +7,12 @@
 #ifdef __STDC__
 
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
-extern Document IsDocumentLoaded ( CHAR_T* documentURL,
-                                   CHAR_T* form_data );
+extern Document IsDocumentLoaded ( char *documentURL,
+                                   char *form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
-extern void ExtractParameters ( CHAR_T* aName,
-                                CHAR_T* parameters );
+extern void ExtractParameters ( char *aName,
+                                char *parameters );
 extern void SetArrowButton ( Document document,
                              ThotBool back,
                              ThotBool on );
@@ -32,19 +32,19 @@ extern void SetWindowTitle ( Document sourceDoc,
                              View view );
 extern void InitFormAnswer ( Document document,
                              View view,
-                             const CHAR_T* auth_realm,
-                             CHAR_T* server );
-extern void InitInfo ( CHAR_T* label,
-                       CHAR_T* info );
+                             const char *auth_realm,
+                             char *server );
+extern void InitInfo ( char *label,
+                       char *info );
 extern void InitConfirm3L ( Document document,
                             View view,
-                            CHAR_T *label1,
-                            CHAR_T *label2,
-                            CHAR_T *label3,
+                            char *label1,
+                            char *label2,
+                            char *label3,
                             ThotBool withCancel );
 extern void InitConfirm ( Document document,
                           View view,
-                          CHAR_T* label );
+                          char *label );
 extern void OpenDoc ( Document document,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
@@ -55,14 +55,14 @@ extern void OpenNew ( Document document,
 extern void GoToHome ( Document doc,
                        View view );
 extern Document InitDocView ( Document doc,
-                              CHAR_T* docname,
+                              char *docname,
                               DocumentType docType,
                               Document sourceOfDoc,
                               ThotBool readOnly );
 extern void Reload_callback ( int doc,
                               int status,
-                              CHAR_T* urlName,
-                              CHAR_T* outputfile,
+                              char *urlName,
+                              char *outputfile,
                               AHTHeaders *http_headers,
                               void * context );
 extern void Reload ( Document doc,
@@ -86,12 +86,12 @@ extern void ShowToC ( Document document,
 extern ThotBool ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
-                                       CHAR_T* urlName,
-                                       CHAR_T* outputfile,
+                                       char *urlName,
+                                       char *outputfile,
                                        AHTHeaders *http_headers,
                                        void * context );
-extern Document GetHTMLDocument ( const CHAR_T* documentPath,
-                                  CHAR_T* form_data,
+extern Document GetHTMLDocument ( const char *documentPath,
+                                  char *form_data,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
@@ -100,8 +100,8 @@ extern Document GetHTMLDocument ( const CHAR_T* documentPath,
                                   void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                int typedata,
-                               CHAR_T* data );
-extern ThotBool CheckMakeDirectory ( CHAR_T* name,
+                               char *data );
+extern ThotBool CheckMakeDirectory ( char *name,
                                      ThotBool recursive );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
@@ -170,12 +170,12 @@ extern void AmayaClose ( Document document,
 #else /* __STDC__ */
 
 extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
-extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
-                                     CHAR_T* form_data */);
+extern Document IsDocumentLoaded (/* char *documentURL,
+                                     char *form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                               View view */);
-extern void ExtractParameters (/* CHAR_T* aName,
-                                  CHAR_T* parameters */);
+extern void ExtractParameters (/* char *aName,
+                                  char *parameters */);
 extern void SetArrowButton (/* Document document,
                                ThotBool back,
                                ThotBool on */);
@@ -195,19 +195,19 @@ extern void SetWindowTitle (/* Document sourceDoc,
                                View view */);
 extern void InitFormAnswer (/* Document document,
                                View view,
-                               const CHAR_T* auth_realm,
-                               CHAR_T* server */);
-extern void InitInfo (/* CHAR_T* label,
-                         CHAR_T* info */);
+                               const char *auth_realm,
+                               char *server */);
+extern void InitInfo (/* char *label,
+                         char *info */);
 extern void InitConfirm3L (/* Document document,
                               View view,
-                              CHAR_T *label1,
-                              CHAR_T *label2,
-                              CHAR_T *label3,
+                              char *label1,
+                              char *label2,
+                              char *label3,
                               ThotBool withCancel */);
 extern void InitConfirm (/* Document document,
                             View view,
-                            CHAR_T* label */);
+                            char *label */);
 extern void OpenDoc (/* Document document,
                         View view */);
 extern void OpenDocInNewWindow (/* Document document,
@@ -218,14 +218,14 @@ extern void OpenNew (/* Document document,
 extern void GoToHome (/* Document doc,
                          View view */);
 extern Document InitDocView (/* Document doc,
-                                CHAR_T* docname,
+                                char *docname,
                                 DocumentType docType,
                                 Document sourceOfDoc,
                                 ThotBool readOnly */);
 extern void Reload_callback (/* int doc,
                                 int status,
-                                CHAR_T* urlName,
-                                CHAR_T* outputfile,
+                                char *urlName,
+                                char *outputfile,
                                 AHTHeaders *http_headers,
                                 void * context */);
 extern void Reload (/* Document doc,
@@ -249,12 +249,12 @@ extern void ShowToC (/* Document document,
 extern ThotBool ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
-                                         CHAR_T* urlName,
-                                         CHAR_T* outputfile,
+                                         char *urlName,
+                                         char *outputfile,
                                          AHTHeaders *http_headers,
                                          void * context */);
-extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
-                                    CHAR_T* form_data,
+extern Document GetHTMLDocument (/* const char *documentPath,
+                                    char *form_data,
                                     Document doc,
                                     Document baseDoc,
                                     ClickEvent CE_event,
@@ -263,8 +263,8 @@ extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
-                                 CHAR_T* data */);
-extern ThotBool CheckMakeDirectory (/* CHAR_T* name,
+                                 char *data */);
+extern ThotBool CheckMakeDirectory (/* char *name,
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);
