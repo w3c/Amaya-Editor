@@ -1541,9 +1541,8 @@ void CreateGraphicElement (int entry)
   char		    shape;
   char             *path;
   int		    c1, i, w, h, dir, svgDir;
-  int	            oldStructureChecking;
   int               docModified;
-  ThotBool	    found, newGraph = FALSE;
+  ThotBool	    found, newGraph = FALSE, oldStructureChecking;;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1844,7 +1843,7 @@ void CreateGraphicElement (int entry)
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema when inserting this element */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
-	  TtaSetStructureChecking (0, doc);
+	  TtaSetStructureChecking (FALSE, doc);
 	  /* insert the new <div> element */
 	  TtaInsertFirstChild (&child, foreignObj, doc);
 	  /* put an XHTML namespace declaration on the <div> element */

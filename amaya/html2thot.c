@@ -6606,9 +6606,9 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
        NumberOfLinesRead = 0;
        HTMLparse (NULL, HTMLbuf);
        /* Handle character-level elements which contain block-level elements */
-       TtaSetStructureChecking (0, doc);
+       TtaSetStructureChecking (FALSE, doc);
        CheckBlocksInCharElem (doc);
-       TtaSetStructureChecking (1, doc);
+       TtaSetStructureChecking (TRUE, doc);
      }
    else
      {
@@ -6785,7 +6785,7 @@ void StartParser (Document doc, char *fileName,
 
       /* do not check the Thot abstract tree against the structure */
       /* schema while building the Thot document. */
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       /* set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
       HTMLcontext.language = TtaGetDefaultLanguage ();
@@ -6951,7 +6951,7 @@ void StartParser (Document doc, char *fileName,
       TtaSetDisplayMode (doc, dispMode);
 
       /* check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (1, doc);
+      TtaSetStructureChecking (TRUE, doc);
 
       DocumentSSchema = NULL;
     }

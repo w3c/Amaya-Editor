@@ -64,7 +64,7 @@ extern void TtaSetMandatoryInsertion ( ThotBool on,
                                        Document document );
 extern void TtaSetStructureChecking ( ThotBool on,
                                       Document document );
-extern int TtaGetStructureChecking ( Document document );
+extern ThotBool TtaGetStructureChecking ( Document document );
 extern void TtaSetCheckingMode ( ThotBool strict );
 extern void TtaNextAssociatedRoot ( Document document,
                                     Element * root );
@@ -197,7 +197,7 @@ extern void TtaSetMandatoryInsertion ( ThotBool on,
                                          Document document );
 extern void TtaSetStructureChecking ( ThotBool on,
                                         Document document );
-extern int TtaGetStructureChecking ( Document document );
+extern ThotBool TtaGetStructureChecking ( Document document );
 extern void TtaSetCheckingMode ( ThotBool strict );
 extern void TtaNextAssociatedRoot ( Document document,
                                       Element * root );

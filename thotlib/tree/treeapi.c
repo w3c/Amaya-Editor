@@ -1337,7 +1337,7 @@ void TtaHolophrastElement (Element element, ThotBool holophrast,
    document: the document for which insertion is changed.
 
    ---------------------------------------------------------------------- */
-void                TtaSetMandatoryInsertion (ThotBool on, Document document)
+void TtaSetMandatoryInsertion (ThotBool on, Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -1360,7 +1360,7 @@ void                TtaSetMandatoryInsertion (ThotBool on, Document document)
    structure checking.
    document: the document for which structure checking is changed.
    ---------------------------------------------------------------------- */
-void                TtaSetStructureChecking (ThotBool on, Document document)
+void TtaSetStructureChecking (ThotBool on, Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -1381,17 +1381,17 @@ void                TtaSetStructureChecking (ThotBool on, Document document)
    Parameter:
    document: the document for which structure checking is asked.
    ---------------------------------------------------------------------- */
-int                 TtaGetStructureChecking (Document document)
+ThotBool TtaGetStructureChecking (Document document)
 {
-  int	ret;
+  ThotBool	ret;
 
-  ret = 0;
+  ret = FALSE;
   if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
-  else
-    ret = !(ThotBool)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
+  else if (LoadedDocument[document - 1]->DocCheckingMode & COMPLETE_CHECK_MASK)
+    ret = TRUE;
   return ret;
 }
 

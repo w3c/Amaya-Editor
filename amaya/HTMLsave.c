@@ -864,7 +864,7 @@ char *UpdateDocumentCharset (Document doc)
    char                *ptr;
 #define MAX_CHARSET_LEN 50
    char                *charsetname;
-   int                  oldStructureChecking;
+   ThotBool             oldStructureChecking;
 
    /* Create or update the document charset */
    charsetname = (char *)TtaGetMemory (MAX_CHARSET_LEN);
@@ -903,11 +903,11 @@ char *UpdateDocumentCharset (Document doc)
        else
 	 {
 	   oldStructureChecking = TtaGetStructureChecking (doc);
-	   TtaSetStructureChecking (0, doc);
+	   TtaSetStructureChecking (FALSE, doc);
 	   charsetAttr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (docEl, charsetAttr, doc);
 	   TtaSetAttributeText (charsetAttr, charsetname, docEl, doc);	
-	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	   TtaSetStructureChecking (oldStructureChecking, doc);
 	 }
      }
    return charsetname;

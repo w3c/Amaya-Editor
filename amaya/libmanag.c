@@ -2307,10 +2307,11 @@ Document CreateNewSVGFileofSVGSelected (char *url)
   ElementType          elType;
   Attribute            newAttr;
   AttributeType        attrType;
-  char                 buffer[MAX_LENGTH], charsetName[MAX_LENGTH];
-  int                  firstChar, lastChar, i, oldStructureChecking;
   Language             lang;
   View                 SVGView;
+  char                 buffer[MAX_LENGTH], charsetName[MAX_LENGTH];
+  int                  firstChar, lastChar, i;
+  ThotBool             oldStructureChecking;
   
   newSVGDoc = TtaInitDocument ("SVG", "tmp", 0);
   if (newSVGDoc != 0)
@@ -2318,7 +2319,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       TtaSetPSchema (newSVGDoc, "SVGP");
       TtaSetDocumentCharset (newSVGDoc, ISO_8859_1, FALSE);
       oldStructureChecking = TtaGetStructureChecking (newSVGDoc);
-      TtaSetStructureChecking (0, newSVGDoc);
+      TtaSetStructureChecking (FALSE, newSVGDoc);
 
       DocumentMeta[newSVGDoc] = DocumentMetaDataAlloc ();
       DocumentMeta[newSVGDoc]->form_data = NULL;
@@ -2343,9 +2344,9 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       root = TtaGetRootElement (newSVGDoc);
       elType.ElTypeNum = SVG_EL_XMLcomment;
       comment = TtaNewTree (newSVGDoc, elType, "");
-      TtaSetStructureChecking (0, newSVGDoc);
+      TtaSetStructureChecking (FALSE, newSVGDoc);
       TtaInsertSibling (comment, root, TRUE, newSVGDoc);
-      TtaSetStructureChecking (1, newSVGDoc);
+      TtaSetStructureChecking (TRUE, newSVGDoc);
       strcpy (buffer, " Created by ");
       strcat (buffer, HTAppName);
       strcat (buffer, " ");
@@ -2376,7 +2377,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
 	  attrType.AttrTypeNum = SVG_ATTR_id;
 	  newAttr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (newEl, newAttr, newSVGDoc);
-	  TtaSetStructureChecking (0, newSVGDoc);
+	  TtaSetStructureChecking (FALSE, newSVGDoc);
 	  TtaInsertFirstChild(&newEl, elFound, newSVGDoc);
 	  
 	  /* insert the copy of an element in the same order than selection */
@@ -2413,7 +2414,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
 	  MakeUniqueName (newEl, newSVGDoc);
 	}
 
-      TtaSetStructureChecking ((ThotBool)oldStructureChecking, newSVGDoc);
+      TtaSetStructureChecking (oldStructureChecking, newSVGDoc);
       /* get the width and height before opening the svg file */
 
       SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box,
@@ -2664,14 +2665,14 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   Attribute       attr;
   AttributeType   attrType;
   char           *basename, *class_, *relativeURL = NULL;
-  int             oldStructureChecking;
+  ThotBool        oldStructureChecking;
 
   basename = (char *) TtaGetMemory (MAX_LENGTH);
   /*  relativeURL = (char *) TtaGetMemory (MAX_LENGTH);*/
   class_ = (char *) TtaGetMemory (MAX_LENGTH);
 
   oldStructureChecking = TtaGetStructureChecking (libDoc);
-  TtaSetStructureChecking (0, libDoc);
+  TtaSetStructureChecking (FALSE, libDoc);
 
   /*Insert or paste new element at the beginning of the table */
   rootEl = TtaGetRootElement (libDoc);

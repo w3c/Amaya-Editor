@@ -903,7 +903,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 #ifdef AMAYA_DEBUG
        printf("%s\n\n", bufHTML);
 #endif
-	TtaSetStructureChecking (0, doc);
+	TtaSetStructureChecking (FALSE, doc);
 	/* Get the current language */
 	heritAttr = TtaGetTypedAttrAncestor (myFirstSelect, 1, NULL, &elAttr);
 	if (heritAttr)
@@ -934,7 +934,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 	    TtaNextSibling (&courEl);
 	  }
 	TtaCloseUndoSequence (doc);
-	TtaSetStructureChecking (1, doc);
+	TtaSetStructureChecking (TRUE, doc);
 	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
 	typeEl.ElTypeNum = HTML_EL_Invalid_element;
 	invEl = NULL;
@@ -1818,22 +1818,22 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 		elParent = TtaGetParent (elParent);
 	      if (elParent != NULL)
 		{
-		  TtaSetStructureChecking (0, doc);
+		  TtaSetStructureChecking (FALSE, doc);
 		  /* set the document context */
 		  context.encoding = TtaGetDocumentCharset (doc);
 		  context.doc = doc;
 		  MathMLElementComplete (&context, elParent, &error);
-		  TtaSetStructureChecking (1, doc);
+		  TtaSetStructureChecking (TRUE, doc);
 		} 
 	    }
 	  else if (!strcmp (name, "HTML"))
 	    {
 	      /* disable the structure checking */
-	      TtaSetStructureChecking (0, doc);
+	      TtaSetStructureChecking (FALSE, doc);
 	      /* check the Thot abstract tree */
 	      CheckAbstractTree (doc);
 	      /* enable the structure checking */
-	      TtaSetStructureChecking (1, doc);
+	      TtaSetStructureChecking (TRUE, doc);
 	    }
 		   
 	  if (myLastSelect == NULL)

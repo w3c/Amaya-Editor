@@ -770,13 +770,14 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 {
    FetchImage_context *FetchImage_ctx;
    LoadedImageDesc    *desc;
+   ElemImage          *ctxEl, *ctxPrev;
+   ElementType         elType;
    char               *tempfile;
    char               *base_url;
    char               *ptr;
    char               *dir, *name;
    char               *prefix;
-   ElemImage          *ctxEl, *ctxPrev;
-   ElementType         elType;
+   ThotBool            oldStructureChecking;
 
    /* restore the context */
    desc = NULL;
@@ -895,9 +896,10 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 		       elType.ElTypeNum == SVG_EL_tref)))
 		  {
 		    /* do not check mandatory attributes */
-		    TtaSetStructureChecking (0, doc);
+		    oldStructureChecking = TtaGetStructureChecking (doc);
+		    TtaSetStructureChecking (FALSE, doc);
 		    DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
-		    TtaSetStructureChecking (1, doc);
+		    TtaSetStructureChecking (oldStructureChecking, doc);
 		  }
 	      }
 	    ctxPrev = ctxEl;

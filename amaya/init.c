@@ -2598,9 +2598,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   else
 	     elType.ElTypeNum = MathML_EL_XMLcomment;
 	   comment = TtaNewTree (doc, elType, "");
-	   TtaSetStructureChecking (0, doc);
+	   TtaSetStructureChecking (FALSE, doc);
 	   TtaInsertSibling (comment, root, TRUE, doc);
-	   TtaSetStructureChecking (1, doc);
+	   TtaSetStructureChecking (TRUE, doc);
 	   strcpy (buffer, " Created by ");
 	   strcat (buffer, HTAppName);
 	   strcat (buffer, " ");
@@ -5294,7 +5294,7 @@ static void ChangeDoctype (ThotBool isXml)
   
   profile = TtaGetDocumentProfile (doc);
   /* Don't check the Thot abstract tree against the structure schema. */
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
   
   doctype = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&doctype, root, doc);
@@ -5353,7 +5353,7 @@ static void ChangeDoctype (ThotBool isXml)
 	    TtaSetTextContent (text, (unsigned char *)DOCTYPE2_HTML_TRANSITIONAL, Latin_Script, doc);
 	}
     }
-  TtaSetStructureChecking (1, doc);  
+  TtaSetStructureChecking (TRUE, doc);  
 }
 
 /*----------------------------------------------------------------------

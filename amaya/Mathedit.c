@@ -239,13 +239,13 @@ static Element SplitTextInMathML (Document doc, Element el, int index,
   ElementType        elType;
   AttributeType      attrType;
   Attribute	     attr;
-  int                oldStructureChecking, len;
-  ThotBool           withinMrow, before;
+  int                len;
+  ThotBool           withinMrow, before, oldStructureChecking;
 
   /* do not check the Thot abstract tree against the structure schema while
      changing the structure */
   oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
 
   /* get the parent element (MO, MN, MI or MTEXT) */
   parent = TtaGetParent (el);
@@ -353,7 +353,7 @@ static Element SplitTextInMathML (Document doc, Element el, int index,
   if (withinMrow)
      TtaRegisterElementCreate (added, doc);
   /* resume structure checking */
-  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   return (el);
 }
 
@@ -364,9 +364,9 @@ static Element SplitTextInMathML (Document doc, Element el, int index,
   ----------------------------------------------------------------------*/
 static void DeleteIfPlaceholder (Element *el, Document doc, ThotBool record)
 {
-Attribute	attr;
-ElementType	elType;
-AttributeType	attrType;
+  Attribute	attr;
+  ElementType	elType;
+  AttributeType	attrType;
 
      if (*el == NULL)
        return;
@@ -501,7 +501,7 @@ static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while inserting the Placeholder */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
-	  TtaSetStructureChecking (0, doc);
+	  TtaSetStructureChecking (FALSE, doc);
 	  TtaInsertSibling (placeholderEl, el, before, doc);
 	  /* resume structure checking */
 	  TtaSetStructureChecking (oldStructureChecking, doc);
@@ -525,12 +525,13 @@ static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
   create an enclosing MROW, 
   except if el is a child of a MFENCED element.
   ----------------------------------------------------------------------*/
-static void	   CreateParentMROW (Element el, Document doc)
+static void CreateParentMROW (Element el, Document doc)
 {
   Element            sibling, row, parent, firstChild, lastChild, next,
                      previous;
   ElementType        elType;
-  int                nChildren, oldStructureChecking;
+  int                nChildren;
+  ThotBool           oldStructureChecking;
 
   /* check whether the parent is a mrow or inferred mrow */
   parent = TtaGetParent (el);
@@ -603,7 +604,7 @@ static void	   CreateParentMROW (Element el, Document doc)
 	    row = TtaNewElement (doc, elType);
 	    lastChild = TtaGetLastChild (parent);
 	    oldStructureChecking = TtaGetStructureChecking (doc);
-	    TtaSetStructureChecking (0, doc);
+	    TtaSetStructureChecking (FALSE, doc);
 	    TtaInsertSibling (row, lastChild, FALSE, doc);
 	    TtaRegisterElementCreate (row, doc);
 	    sibling = firstChild;
@@ -626,7 +627,7 @@ static void	   CreateParentMROW (Element el, Document doc)
 		  sibling = next;
 	      }
 	    /* resume structure checking */
-	    TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	    TtaSetStructureChecking (oldStructureChecking, doc);
 	  }
 	}
     }
@@ -954,7 +955,8 @@ static void         CreateMathConstruct (int construct)
   char              *name;
   Language           lang;
   DisplayMode        dispMode;
-  int                c1, i, len, oldStructureChecking;
+  int                c1, i, len;
+  ThotBool           oldStructureChecking;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
 
@@ -1330,7 +1332,7 @@ static void         CreateMathConstruct (int construct)
 	      /* do not check the Thot abstract tree against the structure/
 		 schema while inserting the Math element */
 	      oldStructureChecking = TtaGetStructureChecking (doc);
-	      TtaSetStructureChecking (0, doc);
+	      TtaSetStructureChecking (FALSE, doc);
 	      if (insertSibling)
 		/* insert the new Math element as a sibling element */
 		TtaInsertSibling (el, sibling, before, doc);
@@ -1347,7 +1349,7 @@ static void         CreateMathConstruct (int construct)
 	      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
 	      TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
 	      /* restore structure checking mode */
-	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	      TtaSetStructureChecking (oldStructureChecking, doc);
 	      sibling = TtaGetFirstChild (el);
 	      /* register the new Math element in the Undo queue */
 	      if (!registered)
@@ -1515,7 +1517,7 @@ static void         CreateMathConstruct (int construct)
       /* do not check the Thot abstract tree against the structure */
       /* schema while changing the structure */
       oldStructureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       
       if ((elType.ElTypeNum == MathML_EL_MROW ||
 	   elType.ElTypeNum == MathML_EL_MathML) &&
@@ -1604,7 +1606,7 @@ static void         CreateMathConstruct (int construct)
 
       TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
 	  
       if (newType.ElTypeNum == MathML_EL_MSPACE ||
 	  elType.ElTypeNum == MathML_EL_MGLYPH ||
@@ -1907,7 +1909,7 @@ static void CheckMROW (Element* el, Document doc)
   AttributeType	attrType;
   Attribute	attr;
   int		nChildren;
-  int           oldStructureChecking;
+  ThotBool      oldStructureChecking;
 
   elType = TtaGetElementType (*el);
   if (elType.ElTypeNum == MathML_EL_MROW &&
@@ -1943,7 +1945,7 @@ static void CheckMROW (Element* el, Document doc)
        {
        TtaSetDisplayMode (doc, DeferredDisplay);
        oldStructureChecking = TtaGetStructureChecking (doc);
-       TtaSetStructureChecking (0, doc);
+       TtaSetStructureChecking (FALSE, doc);
        TtaRegisterElementDelete (*el, doc);
        child = firstChild;
        while (child != NULL)
@@ -1957,7 +1959,7 @@ static void CheckMROW (Element* el, Document doc)
 	  }
        TtaDeleteTree (*el, doc);
        *el = NULL;
-       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+       TtaSetStructureChecking (oldStructureChecking, doc);
        TtaSetDisplayMode (doc, DisplayImmediately);
        }
      }
@@ -2033,8 +2035,8 @@ static void CreateCharStringElement (int typeNum, Document doc)
    AttributeType  attrType;
    Element        firstSel, lastSel, first, last, el, newEl, nextEl,
                   leaf, lastLeaf, nextLeaf, parent, selEl;
-   int            firstChar, lastChar, i, j, oldStructureChecking;
-   ThotBool       nonEmptySel, done, mrowCreated, same;
+   int            firstChar, lastChar, i, j;
+   ThotBool       nonEmptySel, done, mrowCreated, same, oldStructureChecking;
 
    if (!TtaGetDocumentAccessMode (doc))
       /* the document is in ReadOnly mode */
@@ -2100,7 +2102,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
    TtaSetDisplayMode (doc, DeferredDisplay);
    TtaOpenUndoSequence (doc, firstSel, lastSel, firstChar, lastChar);
    oldStructureChecking = TtaGetStructureChecking (doc);
-   TtaSetStructureChecking (0, doc);
+   TtaSetStructureChecking (FALSE, doc);
    selEl = NULL;
 
    RoundSelection (&firstSel, &lastSel, &firstChar, &lastChar);
@@ -2257,7 +2259,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
        }
      }
  
-   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+   TtaSetStructureChecking (oldStructureChecking, doc);
    TtaCloseUndoSequence (doc);
    TtaSetDisplayMode (doc, DisplayImmediately);
    if (selEl)
@@ -3180,7 +3182,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   CHAR_T        text[TXTBUFLEN];
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
-  int           oldStructureChecking;
+  ThotBool      oldStructureChecking;
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   elType = TtaGetElementType (theElem);
@@ -3313,7 +3315,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
     }
   TtaSetDisplayMode (doc, DeferredDisplay);
   oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
   firstEl = NULL;
   start = 0;
   lastEl = NULL;
@@ -3639,7 +3641,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
        CreateParentMROW (firstEl, doc);
      }
 
-  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
   if (closeUndoSeq)
     TtaCloseUndoSequence (doc);
@@ -4057,8 +4059,8 @@ void SetMathCharFont (Document doc, int attribute)
   Attribute           attr;
   AttributeType       attrType;
   DisplayMode         dispMode;
-  int                 firstChar, lastChar, i, j, val, oldStructureChecking;
-  ThotBool            emptySel, same, mrowCreated;
+  int                 firstChar, lastChar, i, j, val;
+  ThotBool            emptySel, same, mrowCreated, oldStructureChecking;
 
   if (!TtaGetDocumentAccessMode (doc))
      return;
@@ -4085,7 +4087,7 @@ void SetMathCharFont (Document doc, int attribute)
      TtaSetDisplayMode (doc, DeferredDisplay);
   TtaOpenUndoSequence (doc, firstSel, lastSel, firstChar, lastChar);
   oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
   TtaUnselect (doc);
 
   /* move selection at the level of elements MTEXT, MI, etc. if it starts or
@@ -4160,7 +4162,7 @@ void SetMathCharFont (Document doc, int attribute)
       el = next;
     }
 
-  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
   TtaCloseUndoSequence (doc);
   TtaSetDisplayMode (doc, dispMode);
   TtaSelectElement (doc, firstSel);
@@ -4232,7 +4234,7 @@ void MathElementPasted (NotifyElement *event)
   ElementType	 elType, elTypeParent;
   Attribute     attr;
   AttributeType attrType;
-  int           oldStructureChecking;
+  ThotBool      oldStructureChecking;
 
   /* if the pasted element is an XLink, update the link */
   XLinkPasted (event);
@@ -4265,7 +4267,7 @@ void MathElementPasted (NotifyElement *event)
     }
 
   oldStructureChecking = TtaGetStructureChecking (event->document);
-  TtaSetStructureChecking (0, event->document);
+  TtaSetStructureChecking (FALSE, event->document);
 
   /* if an enclosing MROW element is needed create it, except if it's a
      call from Undo command */
@@ -4321,7 +4323,7 @@ void MathElementPasted (NotifyElement *event)
 	}
     }
 
-  TtaSetStructureChecking ((ThotBool) oldStructureChecking, event->document);
+  TtaSetStructureChecking (oldStructureChecking, event->document);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (event->element, event->document);
@@ -4380,7 +4382,7 @@ void MathElementDeleted (NotifyElement *event)
    AttributeType attrType;
    Attribute     attr;
    int		 i, newTypeNum;
-   int           oldStructureChecking;
+   ThotBool      oldStructureChecking;
 
    if (event->info == 1 || event->info == 2)
       /* call from Undo command or Return key. Don't do anything */
@@ -4562,7 +4564,7 @@ void MathElementDeleted (NotifyElement *event)
       }
 
    oldStructureChecking = TtaGetStructureChecking (event->document);
-   TtaSetStructureChecking (0, event->document);
+   TtaSetStructureChecking (FALSE, event->document);
    if (newTypeNum > 0)
      /* transform the parent element */
      {
@@ -4593,7 +4595,7 @@ void MathElementDeleted (NotifyElement *event)
 	   }
 	}
       }
-   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+   TtaSetStructureChecking (oldStructureChecking, event->document);
 }
 
 /*----------------------------------------------------------------------

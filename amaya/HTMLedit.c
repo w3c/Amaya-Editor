@@ -414,7 +414,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   /* this element may be in a different namespace, so don't check
 	      validity */
 	   oldStructureChecking = TtaGetStructureChecking (doc);
-	   TtaSetStructureChecking (0, doc);
+	   TtaSetStructureChecking (FALSE, doc);
 	   TtaAttachAttribute (element, attr, doc);
 	   TtaSetStructureChecking (oldStructureChecking, doc);
 	   if (!isHTML && !isSVG)
@@ -2425,8 +2425,8 @@ void ElementPasted (NotifyElement * event)
   Attribute           attr;
   SSchema             HTMLschema;
   char               *value;
-  int                 length, oldStructureChecking;
-  ThotBool            ok;
+  int                 length;
+  ThotBool            oldStructureChecking, ok;
   DisplayMode         dispMode;
 
   el = event->element;
@@ -2521,7 +2521,7 @@ void ElementPasted (NotifyElement * event)
 	   -> it breaks down views formatting when Enter generates new elements  */
 	TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       /* Is there an anchor ancestor? */
       ancestor = TtaGetTypedAncestor (el, elType);
       if (ancestor)
@@ -2595,7 +2595,7 @@ void ElementPasted (NotifyElement * event)
                  ChangeURI (anchor, attr, originDocument, doc);
 	    }
 	}
-      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
       /* Restore the display mode */
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, dispMode);

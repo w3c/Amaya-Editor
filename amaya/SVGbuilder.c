@@ -443,9 +443,9 @@ void  CopyUseContent (Element el, Document doc, char *href)
   Attribute            attr;
   AttributeType        attrType;
   SearchDomain         direction;
-  int                  i, length, oldStructureChecking;
+  int                  i, length;
   char *               id;
-  ThotBool             isUse;
+  ThotBool             isUse, oldStructureChecking;
 
   /* look for an element with an id attribute with the same value as the
      href attribute */
@@ -498,7 +498,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	}
 
       oldStructureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
 
       if (isUse)
 	/* it's a use element. Copy the source element itself */

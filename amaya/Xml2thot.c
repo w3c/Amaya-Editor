@@ -4732,7 +4732,7 @@ static Element  SetExternalElementType (Element el, Document doc,
   Element       parent, elemElement, elemContent;
   AttributeType attrType;
   Attribute     attr;
-  int           oldStructureChecking;
+  ThotBool      oldStructureChecking;
  
   elemElement = NULL;
   elemContent = NULL;
@@ -4741,7 +4741,7 @@ static Element  SetExternalElementType (Element el, Document doc,
 
   /* Disable structure checking */
   oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
 
   if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
       (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
@@ -4921,7 +4921,7 @@ void ParseExternalDocument (char     *fileName,
 	  InitializeXmlParsingContext (externalDoc, RootElement, FALSE, FALSE);
 	  /* Set the document reference  (used for local CSS)*/
 	  /* Disable structure checking for the external document*/
-	  TtaSetStructureChecking (0, externalDoc);
+	  TtaSetStructureChecking (FALSE, externalDoc);
 	  /* Delete all element except the root element */
 	  parent = TtaGetFirstChild (RootElement);
 	  while (parent != NULL)
@@ -5249,9 +5249,9 @@ ThotBool ParseXmlBuffer (char *xmlBuffer, Element el, ThotBool isclosed,
   if ((schemaName != NULL) &&
       (strcmp ((char *)schemaName, "HTML") == 0))
     {
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       CheckBlocksInCharElem (doc);
-      TtaSetStructureChecking (1, doc);
+      TtaSetStructureChecking (TRUE, doc);
     }
       
   /* Restore the display mode */
@@ -5676,7 +5676,7 @@ void StartXmlParser (Document doc, char *fileName,
       /* Some valid XHTML documents could be considered as invalid Thot documents */
       /* For example, a <tbody> as a child of a <table> would be considered */
       /* invalid because the Thot SSchema requires a Table_body element in between */
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       /* Set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
       TtaSetDisplayMode (doc, NoComputedDisplay);
@@ -5774,7 +5774,7 @@ void StartXmlParser (Document doc, char *fileName,
 	}
 
       /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (1, doc);
+      TtaSetStructureChecking (TRUE, doc);
       DocumentSSchema = NULL;
     }
   TtaSetDocumentUnmodified (doc);

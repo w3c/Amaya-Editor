@@ -403,7 +403,7 @@ extern void TtaSetStructureChecking (ThotBool on, Document document);
    Parameter:
    document: the document for which structure checking is asked.
    ---------------------------------------------------------------------- */
-extern int TtaGetStructureChecking (Document document);
+extern ThotBool TtaGetStructureChecking (Document document);
 
 /* ----------------------------------------------------------------------
    TtaSetCheckingMode

@@ -142,7 +142,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   char		  buffer[400];
   
   /* Check the Thot abstract tree against the structure schema. */
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
   
   /* We use the Latin_Script language to avoid */
   /* the spell_chekcer to check the doctype */
@@ -260,7 +260,7 @@ void CreateDoctype (Document doc, Element doctype, int profile,
       else if (profile == L_SVG)
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_SVG10, language, doc);
     }
-  TtaSetStructureChecking (1, doc);
+  TtaSetStructureChecking (TRUE, doc);
   return;
 }
 
@@ -1560,12 +1560,12 @@ void CreateRuby (Document document, View view)
 {
   ElementType   elType;
   Element       el, selEl, rbEl, rubyEl, firstEl, lastEl, nextEl, prevEl;
-  int           i, j, lg, firstSelectedChar, lastSelectedChar,
-                oldStructureChecking, min, max;
+  int           i, j, lg, firstSelectedChar, lastSelectedChar, min, max;
   Language      lang;
   CHAR_T        *buffer;
   ThotBool      error;
   DisplayMode   dispMode;
+  ThotBool      oldStructureChecking;
 
   if (HTMLelementAllowed (document))
     {
@@ -1746,7 +1746,7 @@ void CreateRuby (Document document, View view)
 	{
 	  /* create a first rp element after the rb element */
 	  oldStructureChecking = TtaGetStructureChecking (document);
-	  TtaSetStructureChecking (0, document);
+	  TtaSetStructureChecking (FALSE, document);
 	  elType.ElTypeNum = HTML_EL_rp;
 	  el = TtaNewTree (document, elType, "");
 	  TtaInsertSibling (el, rbEl, FALSE, document);
@@ -3591,7 +3591,8 @@ void  CreateObject (Document document, View view)
   Attribute           attr;
   AttributeType       attrType;
   char               *text;
-  int                 length, firstchar, lastchar, oldStructureChecking;
+  int                 length, firstchar, lastchar;
+  ThotBool            oldStructureChecking;
 
   if (HTMLelementAllowed (document))
     {
@@ -3642,7 +3643,7 @@ void  CreateObject (Document document, View view)
 	  if (length > 0)
 	    {
 	      oldStructureChecking = TtaGetStructureChecking (document);
-	      TtaSetStructureChecking (0, document);
+	      TtaSetStructureChecking (FALSE, document);
 	      text = (char *)TtaGetMemory (length + 1);
 	      TtaGiveTextAttributeValue (attr, text, &length);
 	      elType.ElTypeNum = HTML_EL_Object_Content;

@@ -2054,7 +2054,8 @@ void      CheckFence (Element el, Document doc)
    CHAR_T              text[2];
    char	               script;
    unsigned char       c;
-   int                 len, val, oldStructureChecking;
+   int                 len, val;
+   ThotBool            oldStructureChecking;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO ||
@@ -2121,11 +2122,11 @@ void      CheckFence (Element el, Document doc)
 		/* do not check the Thot abstract tree against the structure
 		   schema while inserting this child element  */
 		oldStructureChecking = TtaGetStructureChecking (doc);
-		TtaSetStructureChecking (0, doc);
+		TtaSetStructureChecking (FALSE, doc);
 		TtaInsertFirstChild (&content, el, doc);
 		TtaSetGraphicsShape (content, c, doc);
 		/* resume structure checking */
-		TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+		TtaSetStructureChecking (oldStructureChecking, doc);
 		}
 	      }
 	   }

@@ -555,45 +555,39 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
    buttons = 0;
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    buttons++;
-   i = strlen (bufMenu) + 1;
-   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
-   buttons++;
-   /* detruit la feuille de dialogue et la recree */
    if (required)
      {
        form = NumMenuAttrRequired;
        if (MandatoryAttrFormExists)
 	 TtaDestroyDialogue (NumMenuAttrRequired);
-#ifdef _GTK
-       TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view),
-		   TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
-#endif /* _GTK */
+       MandatoryAttrFormExists = TRUE;
 #ifdef _WINGUI
        isForm = TRUE;
        DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
 		         (DLGPROC) InitFormDialogWndProc);
 #endif /* _WINGUI */
-       MandatoryAttrFormExists = TRUE;
-     }
+      }
    else
      {
        form = NumMenuAttr;
        if (AttrFormExists)
 	 TtaDestroyDialogue (NumMenuAttr);
+       AttrFormExists = TRUE;
+       i = strlen (bufMenu) + 1;
+       strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
+       buttons++;
+     }
 #ifdef _GTK
-       TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view),
-		    TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
-		    'L', D_DONE);
+   TtaNewSheet (form, TtaGetViewFrame (doc, view),
+		TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
+		'L', D_DONE);
 #endif /* _GTK */
 #ifdef _WINGUI
        isForm = FALSE;
 #endif /* _WINGUI */
-       AttrFormExists = TRUE;
-     }  
 
    title = (char *)TtaGetMemory (strlen (pAttr1->AttrName) + 2);
    strcpy (title, pAttr1->AttrName);
-
    switch (pAttr1->AttrType)
      {
      case AtNumAttr: /* attribut a valeur numerique */
@@ -617,8 +611,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 WIN_AtNumAttr  = TRUE;
 	 WIN_AtTextAttr = FALSE;
 	 WIN_AtEnumAttr = FALSE;
-	 sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL,
-		  MAX_INT_ATTR_VAL); 
+	 sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
 	 formValue = i;
 #endif /* _WINGUI */
 #ifdef _WX
@@ -1610,7 +1603,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 
 		/* construit le formulaire de saisie de la valeur de */
 		/* l'attribut */
-		MenuValues (pAttr, FALSE, currAttr, SelDoc, view);
+		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
 		NumCurrentAttr = AttrNumber[att];
@@ -1624,10 +1617,13 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
 		/* display the form */
-		TtaShowDialogue (NumMenuAttr, TRUE);
+		if (mandatory)
+		  TtaShowDialogue (NumMenuAttrRequired, TRUE);
+		else
+		  TtaShowDialogue (NumMenuAttr, TRUE);
 #endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
-		if (WIN_AtNumAttr) 
+		if (WIN_AtNumAttr)
 		   DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
 		   (DLGPROC) InitNumAttrDialogWndProc);
 		else if (WIN_AtTextAttr && !isForm)

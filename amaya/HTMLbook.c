@@ -918,7 +918,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
   Element          lastInserted, srce, copy, old, parent, sibling;
   ElementType	   elType;
   NotifyElement    event;
-  int		   checkingMode;
+  ThotBool         checkingMode;
   ThotBool         isID;
 
   div = NULL;
@@ -944,7 +944,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
     {
       /* don't check the abstract tree against the structure schema */
       checkingMode = TtaGetStructureChecking (destDoc);
-      TtaSetStructureChecking (0, destDoc);
+      TtaSetStructureChecking (FALSE, destDoc);
       /* get elem, the ancestor of el which is a child of a DIV or BODY
 	 element in the destination document. The copied elements will be
 	 inserted just before this element. */
@@ -1033,7 +1033,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       while (sibling == NULL);
       TtaDeleteTree (elem, destDoc);
       /* restore previous chacking mode */
-      TtaSetStructureChecking ((ThotBool)checkingMode, destDoc);
+      TtaSetStructureChecking (checkingMode, destDoc);
     }
   /* return the address of the new division */
   return (div);

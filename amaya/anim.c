@@ -2541,17 +2541,16 @@ static Element Draw_graduation (Document timelinedoc, Element position,
 static void Build_timeline (Document basedoc, char* timelineName)
 {
   Element           el, found, root, temp_el, parent, baseroot;
-  int               oldStructureChecking;  
+  pmapping_animated mapping;
   int               h_current, left, x_timeline, y_timeline, w_timeline;
   int               h_timeline, period_w_size;
   double            t_debut_toutes_anim, t_fin_toutes_anim;
   char              buffer[512];
-  pmapping_animated mapping;
-
   /* params used to specify a position for the view in wxWidgets version */
-  int window_id     = -1;
-  int page_id       = -1;
-  int page_position = -1;
+  int               window_id     = -1;
+  int               page_id       = -1;
+  int               page_position = -1;
+  ThotBool          oldStructureChecking;  
 	
   el = NULL;
   root = NULL;
@@ -2576,7 +2575,7 @@ static void Build_timeline (Document basedoc, char* timelineName)
   /* do not check the Thot abstract tree against the structure 
      schema when inserting this element */
   oldStructureChecking = TtaGetStructureChecking (dt[basedoc].timelinedoc);
-  TtaSetStructureChecking (0, dt[basedoc].timelinedoc);
+  TtaSetStructureChecking (FALSE, dt[basedoc].timelinedoc);
 
   root = TtaGetRootElement (dt[basedoc].timelinedoc);
   TtaSetElCoordinateSystem (root);
@@ -3496,13 +3495,13 @@ static void Generate_animate_color (Document basedoc, int from_c, int to_c,
 				    double start, double duration,
 				    pmapping_animated pm, Element period) 
 {
-  ThotBool       sav;
   ElementType    elType, anType;
   Element        animtag, lastchild;
   AttributeType  attrType;
   Attribute      attr;
   char           buffer[512];
   unsigned short r,g,b;
+  ThotBool       sav;
 
   elType.ElSSchema = TtaGetSSchema ("SVG", basedoc);
   elType.ElTypeNum = SVG_EL_animateColor;

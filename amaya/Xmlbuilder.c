@@ -224,7 +224,7 @@ void InsertCssInXml (Document doc, View view)
   Element      firstSel, lastSel;
 
   /* Check the Thot abstract tree against the structure schema. */
-  TtaSetStructureChecking (0, doc);
+  TtaSetStructureChecking (FALSE, doc);
 
   /* Create an xmlpi element */
   el = NULL;
@@ -282,7 +282,7 @@ void InsertCssInXml (Document doc, View view)
 	}
     }
   TtaCloseUndoSequence (doc);
-  TtaSetStructureChecking (1, doc);
+  TtaSetStructureChecking (TRUE, doc);
  
   return;
 }
@@ -395,7 +395,7 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
   char          pathname[MAX_LENGTH], documentname[MAX_LENGTH];   
   int           length;
   Language      lang;
-  int           oldStructureChecking;
+  ThotBool      oldStructureChecking;
     
   if (event->target != NULL)
     {
@@ -430,9 +430,9 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
 			  NormalizeURL (OldCssName, event->document, pathname, documentname, NULL);
 			  RemoveStyle (pathname, event->document, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
 			  oldStructureChecking = TtaGetStructureChecking (event->document);
-			  TtaSetStructureChecking (0, event->document);
+			  TtaSetStructureChecking (FALSE, event->document);
 			  XmlStyleSheetPi (buffer, event->element);
-			  TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+			  TtaSetStructureChecking (oldStructureChecking, event->document);
 			}
 		    }
 		}
@@ -476,11 +476,11 @@ ThotBool XmlStyleSheetDeleted (NotifyElement * event)
 void XmlStyleSheetPasted (NotifyElement *event)
 {
    Element	 parent;
-   int           oldStructureChecking;
+   Language      lang;
    char          buffer[MAX_LENGTH];
    char         *ptr = NULL;
    int           length;
-   Language      lang;
+   ThotBool      oldStructureChecking;
 
    parent = IsXmlStyleSheet (event->element);
    if (parent != NULL)
@@ -493,9 +493,9 @@ void XmlStyleSheetPasted (NotifyElement *event)
        if (ptr != NULL)
 	 {
 	   oldStructureChecking = TtaGetStructureChecking (event->document);
-	   TtaSetStructureChecking (0, event->document);
+	   TtaSetStructureChecking (FALSE, event->document);
 	   XmlStyleSheetPi (buffer, parent);
-	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+	   TtaSetStructureChecking (oldStructureChecking, event->document);
 	 }
      }
 }

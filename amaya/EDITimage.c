@@ -856,18 +856,16 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
   char               imagename[MAX_LENGTH];
 
   elType = TtaGetElementType (el);
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-    /* it's not a SVG element, it's then a HTML img element, which is
-       itself a Thot picture element */
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    /* it's a Thot picture element */
     pict = el;
   else
-    /* it's a SVG image. The Thot picture element is one of its children */
     {
-      elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
       pict = TtaSearchTypedElement (elType, SearchInTree, el);
       if (!pict)
-	/* no Thot picture element. Create one */
 	{
+	  /* no Thot picture element. Create one */
 	  pict = TtaNewTree (doc, elType, "");
 	  TtaInsertFirstChild (&el, pict, doc);
 	}
@@ -1196,9 +1194,10 @@ void CreateImage (Document doc, View view)
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
+  NotifyOnTarget     event;
   char              *name, *value;
   int                c1, i, j, cN, length;
-  NotifyOnTarget     event;
+  ThotBool           oldStructureChecking;
 
   TtaGiveFirstSelectedElement (doc, &firstSelEl, &c1, &i); 
   if (firstSelEl == NULL)
@@ -1310,7 +1309,11 @@ void CreateImage (Document doc, View view)
 		  TtaSelectElement (doc, leaf);
 		}
 	      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	      /* do not check mandatory attributes */
+	      oldStructureChecking = TtaGetStructureChecking (doc);
+	      TtaSetStructureChecking (FALSE, doc);
 	      TtaCreateElement (elType, doc);
+	      TtaSetStructureChecking (oldStructureChecking, doc);
 	    }
 	}
       ImgDocument = 0;

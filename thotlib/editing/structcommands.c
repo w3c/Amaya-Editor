@@ -37,6 +37,7 @@
 #include "select_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
+#include "platform_tv.h"
 
 /* isomorphism description */
 typedef struct _IsomorphDesc *PtrIsomorphDesc;
@@ -2335,7 +2336,8 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	/* d'etre cree', et on lui met les attributs obligatoires */
 	CompleteElement (pElSurround, pDoc);
 	RemoveExcludedElem (&pRoot, pDoc);
-	AttachMandatoryAttributes (pElSurround, pDoc);
+	if (FullStructureChecking)
+	  AttachMandatoryAttributes (pElSurround, pDoc);
 	if (pDoc->DocSSchema != NULL)
 	   /* le document n'a pas ete ferme' pendant que l'utilisateur avait */
 	   /* le controle pour donner les valeurs des attributs obligatoires */
@@ -3273,7 +3275,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		      /* traite les exclusions des elements crees */
 		      RemoveExcludedElem (&pNew, pSelDoc);
 		      /* traite les attributs requis des elements crees */
-		      AttachMandatoryAttributes (pNew, pSelDoc);
+		      if (FullStructureChecking)
+			AttachMandatoryAttributes (pNew, pSelDoc);
 		      if (pSelDoc->DocSSchema != NULL)
 			/* le document n'a pas ete ferme' entre temps */
 			{
@@ -3568,7 +3571,8 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	    }
 	  /* remove exclusions from the created element */
 	  RemoveExcludedElem (&pNew, pDoc);
-	  AttachMandatoryAttributes (pNew, pDoc);
+	  if (FullStructureChecking)
+	    AttachMandatoryAttributes (pNew, pDoc);
 	  if (pDoc->DocSSchema != NULL)
 	    /* the document has not been closed while waiting for mandatory
 	       attributes */

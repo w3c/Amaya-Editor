@@ -144,8 +144,8 @@ STRUCT
 	FIELDSET;						{ FIELDSET }
 	Address;						{ ADDRESS }
 	PICTURE							{ IMG }
-	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
-		{ src         alt         longdesc }
+	    (ATTR !SRC = Text; !ALT = Text; longdesc = Text;
+		{ !src         !alt         longdesc }
 		  Height_ = Text; Width__ = Text;
 		{ height          width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;

@@ -1308,11 +1308,11 @@ void CheckTable (Element table, Document doc)
                       prevEl, nextEl, enclosingTable;
   AttributeType       attrType;
   Attribute           attr;
-  int                 PreviousStuctureChecking;
+  ThotBool            previousStructureChecking;
   ThotBool            before, inMath;
 
   firstcolhead = NULL;
-  PreviousStuctureChecking = 0;
+  previousStructureChecking = 0;
   if (table)
     {
       /* what are the children of element table? */
@@ -1368,8 +1368,8 @@ void CheckTable (Element table, Document doc)
 	}
 
       /* disable document structure checking */
-      PreviousStuctureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (0, doc);
+      previousStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (FALSE, doc);
 
       /* create a Table_head element with a first Column_head */
       elType = TtaGetElementType (table);
@@ -1477,7 +1477,7 @@ void CheckTable (Element table, Document doc)
 	}
     }
   /* resume document structure checking */
-  TtaSetStructureChecking ((ThotBool)PreviousStuctureChecking, doc);
+  TtaSetStructureChecking (previousStructureChecking, doc);
 }
 
 /*----------------------------------------------------------------------

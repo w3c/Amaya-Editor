@@ -1119,12 +1119,12 @@ static void UpdateClass (Document doc)
 	}
 
       /* do not check mandatory attributes */
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       if (title)
 	TtaInsertSibling (el, title, FALSE, doc);
       else
 	TtaInsertFirstChild (&el, head, doc);
-      TtaSetStructureChecking (1, doc);
+      TtaSetStructureChecking (TRUE, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, "text/css", el, doc);

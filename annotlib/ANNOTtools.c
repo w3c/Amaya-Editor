@@ -2928,10 +2928,10 @@ char * ANNOT_GetBodySSchemaName (Document doc)
 void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
 {
   ElementType elType;
-  Element body, el;
-  ThotBool result;
-  ThotBool oldStructureChecking;
-  char *ns_uri = NULL;
+  Element     body, el;
+  ThotBool    result;
+  ThotBool    oldStructureChecking;
+  char       *ns_uri = NULL;
 
   if (DocumentTypes[doc] == docAnnot)
     {
@@ -3229,10 +3229,10 @@ void ANNOT_bodyType_set (Document annot_doc, DocumentType bodyType)
   -----------------------------------------------------------------------*/
 void Annot_SetXMLBody (Document doc)
 {
-  Element el;
+  Element        el;
   Attribute      attr;
   AttributeType  attrType;
-  int            oldStructureChecking;
+  ThotBool       oldStructureChecking;
 
   if (DocumentTypes[doc] != docAnnot)
     return;
@@ -3247,10 +3247,10 @@ void Annot_SetXMLBody (Document doc)
   if (!attr)  /* attach a new attribute */
     {
       oldStructureChecking = TtaGetStructureChecking (doc);
-      TtaSetStructureChecking (0, doc);
+      TtaSetStructureChecking (FALSE, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      TtaSetStructureChecking ((ThotBool) oldStructureChecking, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
     }
 }
 

@@ -374,10 +374,10 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
+  SSchema       XLinkSchema;
   char         *docSchemaName;
   int           c1, cN;
-  int           check_mode;
-  SSchema       XLinkSchema;
+  ThotBool      check_mode;
 
   /*annot_user = GetAnnotUser ();*/
   if (annot->xptr)
