@@ -336,12 +336,16 @@ void AmayaFrame::SetCurrent()
 {
   if ( DisplayIsReady() )
   {
-	wxLogDebug( _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
+#ifdef _GL_DEBUG
+    wxLogDebug( _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
+#endif /* _GL_DEBUG */
     m_pCanvas->SetCurrent();
   }
   else
   {
+#ifdef _GL_DEBUG
     wxLogDebug( _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
+#endif /* _GL_DEBUG */
   }
 }
 
