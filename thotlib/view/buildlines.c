@@ -2451,8 +2451,8 @@ int                 frame;
      {
 	pBox = GetNextBox (pBox->BxAbstractBox);
 	if (pBox != NULL && pBox->BxNexChild != NULL && pBox->BxType == BoSplit)
-	   pBox = pBox->BxNexChild;
-	if (!pBox->BxAbstractBox->AbNotInLine)
+	  pBox = pBox->BxNexChild;
+	if (pBox != NULL && !pBox->BxAbstractBox->AbNotInLine)
 	  XMove (pBox, NULL, x, frame);
      }
    DefClip (frame, xd, yd, xf, yf);

@@ -853,13 +853,13 @@ boolean             rebuild;
    * we need to split it in a set of style declaration.
    */
   cssRule = SkipBlanks (cssRule);
-  while (*cssRule != 0)
+  while (*cssRule != EOS)
     {
       cssRule = SkipBlanks (cssRule);
       decl_end = cssRule;
-      while ((*decl_end != 0) && (*decl_end != '}'))
+      while (*decl_end != EOS && *decl_end != '}')
 	decl_end++;
-      if (*decl_end == 0)
+      if (*decl_end == EOS)
 	{
 	  fprintf (stderr, "Invalid STYLE header : %s\n", cssRule);
 	  return;
@@ -870,7 +870,7 @@ boolean             rebuild;
        */
       decl_end++;
       saved = *decl_end;
-      *decl_end = 0;
+      *decl_end = EOS;
       ParseStyleDeclaration (el, cssRule, doc, css);
       
       *decl_end = saved;

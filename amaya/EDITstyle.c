@@ -552,7 +552,7 @@ Document            doc;
       TtaSetAttributeText (attr, a_class, ClassReference, doc);
     }
   /* parse and apply this new CSS to the current document */
-  ParseHTMLStyleHeader (NULL, stylestring, doc, TRUE);
+  ParseHTMLStyleHeader (NULL, stylestring, doc, FALSE);
   TtaFreeMemory (stylestring);
 }
 

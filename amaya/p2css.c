@@ -17,9 +17,11 @@
 #include "amaya.h"
 #include "css.h"
 
+#include "AHTURLTools_f.h"
+#include "HTMLimage_f.h"
+#include "HTMLstyle_f.h"
 #include "html2thot_f.h"
 #include "p2css_f.h"
-#include "HTMLstyle_f.h"
 
 /* DEBUG_RPI turn on verbose debugging of the RPI manipulations */
 
@@ -329,11 +331,27 @@ PresentationSetting settings;
 void               *param;
 #endif
 {
+  LoadedImageDesc    *imgInfo;
   char               *css_rules = param;
   char                string[150];
+  char               *ptr;
 
   string[0] = EOS;
-  PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+  if (settings->type == DRIVERP_BGIMAGE)
+    {
+      /* transform absolute URL into relative URL */
+      imgInfo = SearchLoadedImage((char *)settings->value.pointer, 0);
+      if (imgInfo != NULL)
+	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[ctxt->doc]);
+      else
+	ptr = MakeRelativeURL ((char *)settings->value.pointer, DocumentURLs[ctxt->doc]);
+      settings->value.pointer = ptr;
+      PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+      TtaFreeMemory (ptr);
+    }
+  else
+    PresentationSettingsToCSS(settings, &string[0], sizeof(string));
+
   if ((string[0] != EOS) && (*css_rules != EOS))
     strcat (css_rules, "; ");
   if (string[0] != EOS)
