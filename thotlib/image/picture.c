@@ -2781,8 +2781,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   pAb = box->BxAbstractBox;
 
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-    /* the picture is not visible */
-    return;
+    {
+      /* the picture is not visible */
+      imageDesc->PicWidth = 0;
+      imageDesc->PicHeight = 0;      
+      imageDesc->PicXArea = 0;
+      imageDesc->PicYArea = 0;
+      imageDesc->PicWArea = 0;
+      imageDesc->PicHArea = 0;
+      return;
+    }
 
   if (imageDesc->PicFileName == NULL || 
       imageDesc->PicFileName[0] == EOS)
