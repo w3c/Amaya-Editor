@@ -93,19 +93,17 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		   char *viewsToPrint, char *cssToPrint, Document document)
 {
    char                   *ptr;
-
 #ifdef _WINDOWS_DLL
    HINSTANCE               hLib;
    /* FARPROC                 ptrMainProc; */
    typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
 			      int, char *, char *, HINSTANCE, ThotBool);
-   MYPROC  ptrMainProc;
-
+   MYPROC                  ptrMainProc;
    char                    tmp[MAX_TXT_LEN];
    char                   *printArgv [100];
    int                     printArgc = 0;
 #else /* _WINDOWS_DLL */
-   char                    cmd[1024];
+   char                    cmd[1024], c;
 #ifndef _WINDOWS
    int                     res;
 #endif /*_WINDOWS*/
@@ -116,7 +114,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* initialize the print command */
    ptr = TtaGetEnvString ("LANG");
 #ifdef _WINDOWS_DLL
-   for (i=0; i<100; i++)
+   for (i = 0; i < 100; i++)
      printArgv[i] = NULL;
    printArgv[printArgc] = TtaGetMemory (strlen (BinariesDirectory) + 7);
    strcpy (printArgv[printArgc], BinariesDirectory);
@@ -164,7 +162,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    /* transmit the server name */
    if (servername && servername[0] != EOS)
-     { 
+     {
 #ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (9);
        strcpy (printArgv[printArgc], "-display");
@@ -180,7 +178,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 
    /* transmit the document name */
    if (realName)
-     { 
+     {
+       /* cut the name at the first & character */
+       ptr = strstr (realName, "&");
+       if (ptr)
+	 *ptr = EOS;
 #ifdef _WINDOWS_DLL
        printArgv[printArgc] = TtaGetMemory (6);
        strcpy (printArgv[printArgc], "-name");
@@ -192,6 +194,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        strcat (cmd, " -name ");
        strcat (cmd, realName);
 #endif /* _WINDOWS */
+       /* restore the name */
+       if (ptr)
+	 *ptr = '&';
      }
 
    /* transmit the orientation (default value is portrait) */
@@ -650,7 +655,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    InitPrintParameters
    initializes the printing parameters.
   ----------------------------------------------------------------------*/
-void        InitPrintParameters (Document document)
+void InitPrintParameters (Document document)
 {
    PtrDocument pDoc;
    char       *ptr;
