@@ -524,7 +524,10 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
        break;
        
      case HTML_EL_Text_Area:	/* it's a Text_Area */
-       SetParsingTextArea (FALSE);
+       if (DocumentMeta[doc]->xmlformat)
+	 SetParsingTextArea (FALSE);
+       else
+	 SetHtmlParsingTextArea (FALSE);
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	 /* it's an empty Text_Area */

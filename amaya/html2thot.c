@@ -698,6 +698,16 @@ void  SetHtmlParsingCSS (ThotBool value)
 }
 
 /*----------------------------------------------------------------------
+  SetHtmlParsingTextArea
+  Sets the value of ParsingTextArea boolean.
+  ----------------------------------------------------------------------*/
+void  SetHtmlParsingTextArea (ThotBool value)
+
+{
+   HTMLcontext.parsingTextArea = value;
+}
+
+/*----------------------------------------------------------------------
    SetHtmlElemLineNumber
    Assigns the current line number
   ----------------------------------------------------------------------*/
@@ -6337,6 +6347,7 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 
    StackLevel = 1;
    HTMLcontext.language = TtaGetDefaultLanguage ();
+   HTMLcontext.parsingTextArea = FALSE;
    if (lastelem != NULL && doc != 0)
      {
 	/* initialize the stack with ancestors of lastelem */

@@ -13,6 +13,7 @@ extern void ParseAreaCoords ( Element element,
 extern void SetLanguagInHTMLStack ( Language lang );
 extern ThotBool IsHtmlParsingCSS ( void );
 extern void SetHtmlParsingCSS ( ThotBool value );
+extern void SetHtmlParsingTextArea ( ThotBool value );
 extern void SetHtmlElemLineNumber ( Element el );
 extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
@@ -77,6 +78,7 @@ extern void ParseAreaCoords (/* Element element,
 extern void SetLanguagInHTMLStack (/* Language lang */);
 extern ThotBool IsHtmlParsingCSS (/* void */);
 extern void SetHtmlParsingCSS (/* ThotBool value */);
+extern void SetHtmlParsingTextArea (/* ThotBool value */);
 extern void SetHtmlElemLineNumber (/* Element el */);
 extern int IsWithinHtmlTable (/* void */);
 extern void InitMapping (/* void */);
