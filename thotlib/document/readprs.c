@@ -1311,7 +1311,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
   char                buf[MAX_TXT_LEN];
   int                 InitialNElems, i, j, k, l;
   PtrHostView         pHostView, prevHostView;
-  ThotBool            ret;
+  ThotBool            ret, ComparAttrValue;
 
   error = FALSE;
   pPSch = NULL;
@@ -1594,8 +1594,14 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 								  &pNextPRule);
 			  break;
 			case AtTextAttr:
-			  TtaReadName (file, name);
-			  pAttrP->ApString = TtaStrdup (name);
+			  TtaReadBool (file, &ComparAttrValue);
+			  if (ComparAttrValue)
+			    {
+			      TtaReadName (file, name);
+			      pAttrP->ApString = TtaStrdup (name);
+			    }
+			  else
+			    pAttrP->ApString = NULL;
 			  pAttrP->ApTextFirstPRule = ReadPRulePtr (file,
 								  &pNextPRule);
 			  pAttrP->ApMatch = CoMatch;

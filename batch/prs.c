@@ -67,6 +67,8 @@ static int           CurElemHeritAttr;	/* numero de l'element heritant de cet
 					   attribut */
 static int           CurAttrLowerBound;	/* borne inferieure de comparaison */
 static int           CurAttrUpperBound;	/* borne superieure de comparaison */
+static ThotBool      CurTextDefined;    /* une valeur d'attribut a ete definie
+					   dans un selecteur */
 static Name          CurTextEqual;	/* valeur d'attribut textuel */
 static int           CurType;	  /* numero de la regle de struct definissant
 				     le type dont on analyse les regles de
@@ -921,11 +923,11 @@ static void         GenerateRPresAttribute (indLine wi)
       pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
       for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
 	   pPRuleA = pPRuleA->ApNextAttrPres)
-	if (CurTextEqual[0] == EOS)
+	if (!CurTextDefined)
 	  if (pPRuleA->ApElemType == CurElemHeritAttr)
 	    break;
       /* si on n'a pas touve, on alloue un paquet suivant */
-      if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextEqual[0] != EOS)
+      if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextDefined)
 	{
 	  pPRuleA->ApNextAttrPres = NewAttrPRule (CurAttrNum);
 	  pPRuleA = pPRuleA->ApNextAttrPres;
@@ -993,7 +995,11 @@ static void         GenerateRPresAttribute (indLine wi)
       break;
 
     case AtTextAttr:
-      pPRuleA->ApString = TtaStrdup (CurTextEqual);
+      if (CurTextDefined)
+        pPRuleA->ApString = TtaStrdup (CurTextEqual);
+      else
+	pPRuleA->ApString = NULL;
+      CurTextDefined = False;
       CurTextEqual[0] = EOS;
       pPRuleA->ApTextFirstPRule = NextRule;
       FirstRule = NextRule;
@@ -1152,8 +1158,7 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 		  found = TRUE;
 		else
 		  {
-		  if (!pCond->CoTestAttrValue &&
-		      (pPRuleAttr->ApString == NULL || pPRuleAttr->ApString[0] == EOS))
+		  if (!pCond->CoTestAttrValue && pPRuleAttr->ApString == NULL)
 		    found = TRUE;
 		  else if (!strcmp(pPRuleAttr->ApString, pCond->CoAttrTextValue))
 		    found = TRUE;
@@ -1239,7 +1244,7 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  pCond2->CoTestAttrValue = TRUE;
 	  break;
         case AtTextAttr:
-	  if (CurAttrPRule->ApString == NULL || CurAttrPRule->ApString[0] == EOS)
+	  if (CurAttrPRule->ApString == NULL)
 	    pCond2->CoTestAttrValue = FALSE;
 	  else
 	    {
@@ -4738,6 +4743,8 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* - infini */
 	  CurAttrUpperBound = MAX_INT_ATTR_VAL + 1;
 	  /* + infini */
+	  CurTextDefined = FALSE;
+	  /* pas de valeur d'attribut textuel specifiee */
 	  CurTextEqual[0] = EOS;
 	  /* string vide */
 	  }
@@ -5623,6 +5630,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 			      LineNum);
 	   else
 	     {
+	       CurTextDefined = TRUE;
 	       for (i = 0; i < wl - 1; i++)
 		 CurTextEqual[i] = inputLine[wi + i - 1];
 	       CurTextEqual[wl - 1] = EOS;

@@ -1698,7 +1698,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontSize: parse a CSS font size attr string  
+   ParseCSSFontSizeAdjust: parse a CSS fontsizeAdjust attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
@@ -1708,6 +1708,7 @@ static char *ParseCSSFontSizeAdjust (Element element, PSchema tsch,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
   cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------

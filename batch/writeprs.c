@@ -1342,7 +1342,17 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 			 WriteRulePtr (pAttPres->ApRefFirstPRule);
 			 break;
 		      case AtTextAttr:
-			 WriteName (pAttPres->ApString);
+			 if (pAttPres->ApString)
+			   /* presentation rules apply only for a given
+			      value (char string) of the attribute */
+			   {
+			     WriteBoolean (TRUE);
+			     WriteName (pAttPres->ApString);
+			   }
+			 else
+			   /* presentation rules apply for any value of the
+			      attribute */
+			   WriteBoolean (FALSE);
 			 WriteRulePtr (pAttPres->ApTextFirstPRule);
 			 break;
 		      case AtEnumAttr:
