@@ -5585,7 +5585,8 @@ RULES
 	Style: Bold;
 	Adjust: VMiddle;
 	CreateBefore(TH_S);
-	CreateAfter (CellFooter);
+	if NOT RowExt
+	   CreateAfter (CellFooter);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
 		Style : Enclosing =;
