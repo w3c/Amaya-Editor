@@ -1731,8 +1731,34 @@ char	alphabet;
 }
 
 /*----------------------------------------------------------------------
+  ElementContainsText
+  returns TRUE if element el contains some text.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean      ElementContainsText (Element el)
+#else
+boolean      ElementContainsText (el)
+Element el;
+ 
+#endif
+{
+  ElementType   elType;
+ 
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_Construct ||
+      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == MathML_EL_MI  ||
+      elType.ElTypeNum == MathML_EL_MO ||
+      elType.ElTypeNum == MathML_EL_MN ||
+      elType.ElTypeNum == MathML_EL_MS ||
+      elType.ElTypeNum == MathML_EL_MTEXT)
+     return TRUE;
+  else
+     return FALSE;
+}
+ 
+/*----------------------------------------------------------------------
   CreatePlaceholders
-  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void	CreatePlaceholders (Element el, Document doc)
@@ -2775,33 +2801,6 @@ Element el;
 
 #ifdef MATHML
 
-/*----------------------------------------------------------------------
-  ElementContainsText
-  returns TRUE if element el contains some text.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean      ElementContainsText (Element el)
-#else
-boolean      ElementContainsText (el)
-Element el;
- 
-#endif
-{
-  ElementType   elType;
- 
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_Construct ||
-      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-      elType.ElTypeNum == MathML_EL_MI  ||
-      elType.ElTypeNum == MathML_EL_MO ||
-      elType.ElTypeNum == MathML_EL_MN ||
-      elType.ElTypeNum == MathML_EL_MS ||
-      elType.ElTypeNum == MathML_EL_MTEXT)
-     return TRUE;
-  else
-     return FALSE;
-}
- 
 /*----------------------------------------------------------------------
   CheckMathSubExpressions
   Children of elements el should be of type type1, type2, and type3.
@@ -4342,14 +4341,14 @@ char                c;
 
    CloseBuffer ();
 #ifdef MATHML
-/*********
+#ifdef IV
    if (WithinMathML)
       {
-      /* provisional implementation: attributes are ignored * /
+      /* provisional implementation: attributes are ignored */
       InitBuffer ();
       return;
       }
-********/
+#endif /* IV */
 #endif /* MATHML */
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
@@ -4575,14 +4574,14 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
 #ifdef MATHML
-   /*********
+#ifdef IV
    if (WithinMathML)
       {
-      /* provisional implementation: attributes are ignored * /
+      /* provisional implementation: attributes are ignored */
       InitBuffer ();
       return;
       }
-*******/
+#endif /* IV */
 #endif /* MATHML */
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
