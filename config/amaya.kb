@@ -32,8 +32,7 @@ Ctrl <Key>Space:	TtcInsertChar("\240")
 
 Ctrl <Key>-:	TtcChildElement()
 
-Shift Alt <Key>E:	CreateDisplayMath()
-Shift Alt <Key>I:	CreateInlineMath()
+Shift Alt <Key>E:	CreateMath()
 Shift Alt <Key>F:	CreateMFRAC()
 Shift Alt <Key>M:	CreateMMULTISCRIPTS()
 Shift Alt <Key>O:	CreateMOVER()

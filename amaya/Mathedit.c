@@ -374,7 +374,7 @@ int                 construct;
       elType = TtaGetElementType (sibling);
       docSchema = TtaGetDocumentSSchema (doc);
 
-      if (construct == 0 || construct == 1)
+      if (construct == 1)
 	/* button Math or DisplayMath */
 	{
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
@@ -383,28 +383,6 @@ int                 construct;
            newType.ElTypeNum = HTML_EL_Math;
            newType.ElSSchema = docSchema;
            TtaCreateElement (newType, doc);
-	   if (construct == 1)
-	     /* put attribute mode=display on the new Math element */
-	     {
-	     TtaGiveFirstSelectedElement (doc, &el, &c1, &c2);
-	     if (el)
-	        {
-	        el = TtaGetTypedAncestor (el, newType);
-	        if (el)
-		   {
-		   attrType.AttrSSchema = newType.ElSSchema;
-		   attrType.AttrTypeNum = HTML_ATTR_mode;
-		   attr = TtaGetAttribute (el, attrType);
-		   if (!attr)
-		      {
-		      attr =  TtaNewAttribute (attrType);
-		      TtaAttachAttribute (el, attr, doc);
-		      }
-		   TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
-					 el, doc);
-		   }
-	        }
-	      }
 	   }
 #ifdef GRAPHML
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
@@ -594,11 +572,7 @@ int                 construct;
       ParBlock = FALSE;
       switch (construct)
 	{
-	case 0:	/* create a Math element */
-	  /* handled above */
-	  return;
-	  break;
-	case 1:	/* create a Math element with mode=display */
+	case 1:	/* create a Math element */
 	  /* handled above */
 	  return;
 	  break;
@@ -793,7 +767,7 @@ char               *data;
 	}
       else if (doc > 0)
 	/* there is a selection */
-        CreateMathConstruct ((int) data);
+        CreateMathConstruct (((int) data) +1);
       break;
 
     default:
@@ -802,12 +776,12 @@ char               *data;
 }
 
 /*----------------------------------------------------------------------
-   CreateMaths creates the maths menus.           
+   CreateMathMenu creates the maths menus.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateMaths (Document doc, View view)
+static void         CreateMathMenu (Document doc, View view)
 #else
-static void         CreateMaths (doc, view)
+static void         CreateMathMenu (doc, view)
 Document            doc;
 View                view;
 #endif
@@ -845,34 +819,22 @@ View                view;
 #endif
 {
 # ifndef _WINDOWS
-  TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+  TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+		TtaGetMessage (AMAYA, AM_BUTTON_MATH));
 # else  /* _WINDOWS */
-  WIN_TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+  WIN_TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+		    TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON,
+		    TBSTATE_ENABLED);
 # endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-  CreateInlineMath
+  CreateMath
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateInlineMath (Document document, View view)
+void                CreateMath (Document document, View view)
 #else  /* __STDC__ */
-void                CreateInlineMath (document, view)
-Document            document;
-View                view;
- 
-#endif /* __STDC__ */
-{
-   CreateMathConstruct (0);
-}
-
-/*----------------------------------------------------------------------
-  CreateDisplayMath
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateDisplayMath (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDisplayMath (document, view)
+void                CreateMath (document, view)
 Document            document;
 View                view;
  

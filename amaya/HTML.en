@@ -138,6 +138,9 @@ Height_: height
 hspace: hspace
 vspace: vspace
 Img_border: border
+mode: mode
+display: display
+inline_math: inline
 ISMAP: ismap
 USEMAP: usemap
 target_: target

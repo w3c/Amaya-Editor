@@ -115,8 +115,7 @@ MENUS
 	Types.Object button:BParameter -> CreateParameter;
 	Types button:BIFrame -> CreateIFrame;
 
-	Types.Math button:BInlineMath -> CreateInlineMath;
-	Types.Math button:BDisplayMath -> CreateDisplayMath;
+	Types.Math button:BDisplayMath -> CreateMath;
         Types.Math button:BNthRoot -> CreateMROOT;
         Types.Math button:BSquareRoot -> CreateMSQRT;
         Types.Math button:BFraction -> CreateMFRAC;
