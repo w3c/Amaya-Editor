@@ -3213,7 +3213,6 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        */
       if (absoluteMove)
 	{
-	  
 	  XMoveAllEnclosed (pBox, delta, frame);
 	  /* we could clean up the history -> restore it */
 	  pBox->BxMoved = pFromBox;

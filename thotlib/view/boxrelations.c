@@ -793,6 +793,9 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
   BoxEdge             refEdge, localEdge;
   OpRelation          op;
   int                 x, y, dist, dim, d;
+#ifdef _GL
+  int                 sgx, sgy;
+#endif /* _GL */
   int                 t, l, b, r;
   ThotBool            sibling = FALSE;
   
@@ -807,7 +810,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
     {
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
-    } 
+    }
   if (pAb->AbFloat != 'N' &&
       (pAb->AbLeafType == LtPicture ||
        (pAb->AbLeafType == LtCompound &&
@@ -1181,9 +1184,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    }
 	  else
 	    {
-	      GetSystemOrigins (pRefBox->BxAbstractBox, &x, &y);
-	      x = -x + pRefBox->BxXOrg;
-	      y = -y + pRefBox->BxYOrg;
+	      GetSystemOrigins (pRefBox->BxAbstractBox, &sgx, &sgy);
+	      x = pRefBox->BxXOrg - sgx;
+	      y = pRefBox->BxYOrg - sgy;
+	      GetSystemOrigins (pBox->BxAbstractBox, &sgx, &sgy);
+	      x += sgx;
+	      y += sgy;
 	    }
 #else /* _GL */
 	  x = pRefBox->BxXOrg;
