@@ -161,6 +161,14 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   file = TtaReadOpen (pBuffer); 
   if (file == NULL)
     {
+      /* force the english version */
+      fileName[0] = 'e';
+      fileName[1] = 'n';
+    }
+  SearchFile (fileName, 2, pBuffer);
+  file = TtaReadOpen (pBuffer); 
+  if (file == NULL)
+    {
       printf ("WARNING: cannot open file %s\n", pBuffer);
       return (-1);
     }
