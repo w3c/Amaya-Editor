@@ -3612,7 +3612,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 		      else
 			ibox1 = pLi2->LiFirstBox;
 		      
-		      if (ibox1->BxWidth > maxLength)
+		      if (ibox1 && ibox1->BxWidth > maxLength)
 			{
 			  if (ibox1->BxAbstractBox->AbLeafType == LtText &&
 			      maxLength > 0)
@@ -3813,24 +3813,26 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		{
 		  while (pNextLine)
 		    {
-		      pNextLine->LiYOrg += h;
-		      pPieceBox = pNextLine->LiFirstBox;
-		      if ((pPieceBox->BxType == BoSplit ||
-			   pPieceBox->BxType == BoSplit) &&
-			  pNextLine->LiFirstPiece)
-			pPieceBox = pNextLine->LiFirstPiece;
-		      do
+		      if (pNextLine->LiFirstBox)
 			{
-			  if (pPieceBox->BxType == BoSplit)
-			    ibox1 = pPieceBox->BxNexChild;
-			  else
-			    ibox1 = pPieceBox;
-			  YMove (ibox1, NULL, h, frame);
-			  pPieceBox = GetNextBox (ibox1->BxAbstractBox);
+			  pNextLine->LiYOrg += h;
+			  pPieceBox = pNextLine->LiFirstBox;
+			  if ((pPieceBox->BxType == BoSplit ||
+			       pPieceBox->BxType == BoSplit) &&
+			      pNextLine->LiFirstPiece)
+			    pPieceBox = pNextLine->LiFirstPiece;
+			  do
+			    {
+			      if (pPieceBox->BxType == BoSplit)
+				ibox1 = pPieceBox->BxNexChild;
+			      else
+				ibox1 = pPieceBox;
+			      YMove (ibox1, NULL, h, frame);
+			      pPieceBox = GetNextBox (ibox1->BxAbstractBox);
+			    }
+			  while (pPieceBox && ibox1 != pNextLine->LiLastBox &&
+				 ibox1 != pNextLine->LiLastPiece);
 			}
-		      while (pPieceBox && ibox1 != pNextLine->LiLastBox &&
-			     ibox1 != pNextLine->LiLastPiece);
-		  
 		      pNextLine = pNextLine->LiNext;
 		    }
 	      
