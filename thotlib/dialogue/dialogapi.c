@@ -945,6 +945,7 @@ static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gp
     return FALSE;
 }
 
+#if 0
 /*----------------------------------------------------------------------
   Callback for a scrolled window (keypress)
   ----------------------------------------------------------------------*/
@@ -953,6 +954,8 @@ static gboolean scr_popup_focus_out (GtkWidget * widget, GdkEventKey * event, gp
   printf ("focus out on widget %p\n", widget);
   return FALSE;
 }
+#endif /* 0 */
+
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
