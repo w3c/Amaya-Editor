@@ -697,6 +697,7 @@ void AddDoctype (Document document, View view)
     }
   while (nature);
 
+  profile =  L_Other;
   docType = DocumentTypes[document];
   if (docType == docHTML)
     {
@@ -2260,6 +2261,7 @@ static Element GetEnclosingCell (Document doc)
   char               *s;
   int                 firstchar, lastchar, i;
 
+  el = NULL;
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstchar, &i);
   if (firstSel)

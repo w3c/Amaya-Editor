@@ -2669,6 +2669,7 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
         /* get the row that follows the given row in the same table */
 	{
 	  /* in MathML table, there are no blocks. All rows are siblings */
+	  block = NULL;
 	  if (!inMath)
 	    /* remember the parent (a block) of the given row */
 	    block = TtaGetParent (*row);

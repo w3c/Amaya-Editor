@@ -2520,8 +2520,8 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 		  TtaSetAttributeText (attrFound, relativeURI, elFound, destDoc);
 		  TtaFreeMemory (relativeURI);
 		}
-	      TtaFreeMemory (path);
 	    }
+	  TtaFreeMemory (path);
 	  /* search next attribute */
 	  deletedEl = elFound;
 	  TtaSearchAttribute (attrType, SearchForward,
@@ -2537,7 +2537,6 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
       TtaFreeMemory (basename);
       TtaFreeMemory (filename); 
       TtaFreeMemory (pathname);
-      TtaFreeMemory (path);
     }
 #endif /* _SVG */
 }
