@@ -399,6 +399,7 @@ void AttrTransformChanged (NotifyAttribute *event)
 {
    ParseTransformAttribute (event->attribute, event->element, event->document,
 			    FALSE);
+   CheckSVGRoot (event->document, event->element);
 }
 
 /*----------------------------------------------------------------------
