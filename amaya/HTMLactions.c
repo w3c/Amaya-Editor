@@ -739,7 +739,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	   /* get the referred document */
 #ifdef ANNOTATIONS
 	   /* is it an annotation link? */
-	   if (elType.ElSSchema == attrType.AttrSSchema &&
+	   if (elType.ElSSchema == TtaGetSSchema ("XLink", doc) &&
 	       elType.ElTypeNum == XLink_EL_XLink)
 	     {
 	       /* loading an annotation */
