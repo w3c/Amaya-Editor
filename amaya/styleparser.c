@@ -2110,19 +2110,8 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "larger", 6))
-     {
-	pval.typed_data.unit = UNIT_PERCENT;
-	pval.typed_data.value = 130;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "smaller", 7))
-     {
-	pval.typed_data.unit = UNIT_PERCENT;
-	pval.typed_data.value = 80;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "xx-small", 8))
+   /* absolute size */
+   if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 8;
@@ -2164,6 +2153,27 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 	pval.typed_data.value = 16;
 	cssRule = SkipWord (cssRule);
      }
+   /* relative size */
+   else if (!strncasecmp (cssRule, "larger", 6))
+     {
+	pval.typed_data.unit = UNIT_PERCENT;
+	pval.typed_data.value = 130;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "smaller", 7))
+     {
+	pval.typed_data.unit = UNIT_PERCENT;
+	pval.typed_data.value = 80;
+	cssRule = SkipWord (cssRule);
+     }
+   /* inherit */
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       /* not implemented */
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
+     }
+   /* length or percentage */
    else if (!isdigit (*cssRule) && *cssRule != '.')
      {
        if (!check)
@@ -2472,7 +2482,9 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "inherit", 7) || !strncasecmp (cssRule, "bolder", 6) || !strncasecmp (cssRule, "lighter", 7))
+   else if (!strncasecmp (cssRule, "inherit", 7) ||
+	    !strncasecmp (cssRule, "bolder", 6) ||
+	    !strncasecmp (cssRule, "lighter", 7))
      {
      /* not implemented */
      cssRule = SkipWord (cssRule);
@@ -2572,7 +2584,7 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
 /*----------------------------------------------------------------------
    ParseCSSFontStyle: parse a CSS font style string     
    we expect the input string describing the attribute to be     
-   italic, oblique or normal                         
+   normal, italic, oblique or inherit                         
   ----------------------------------------------------------------------*/
 static char *ParseACSSFontStyle (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
