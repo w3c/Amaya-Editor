@@ -1174,7 +1174,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 		/* sinon on reduit le nombre de menus */
 		ptrmenu = NULL;
 	  }
-
+#if 0
         /**** creation de la fenetre principale ****/
 	if (n == 0)
 	  {
@@ -1186,6 +1186,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 	     WithMessages = TRUE;
 	     TtaInitDialogueWindow (name, NULL, logo, icon, n, string);
 	  }
+#endif
 
 	/* icone des fenetres de documents */
 #ifndef _WINDOWS
@@ -1514,7 +1515,7 @@ void *TtaGetButtonCallback (Document document, View view, int index)
    view: the concerned view.
    index: the index.
   ----------------------------------------------------------------------*/
-void      TtaSwitchButton (Document document, View view, int index)
+void TtaSwitchButton (Document document, View view, int index)
 {
   int                 frame;
 #ifndef _WINDOWS
@@ -1679,7 +1680,7 @@ void WIN_TtaSwitchButton (Document document, View view, int index, int picture, 
    document: identifier of the document.
    view: identifier of the view.
   ----------------------------------------------------------------------*/
-void             TtcSwitchButtonBar (Document document, View view)
+void TtcSwitchButtonBar (Document document, View view)
 {
    int                 frame;
 #ifndef _WINDOWS
@@ -1795,8 +1796,8 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-int   TtaAddTextZone (Document document, View view, char *label,
-		      ThotBool editable, void (*procedure) ())
+int TtaAddTextZone (Document document, View view, char *label,
+		    ThotBool editable, void (*procedure) ())
 {
   int                 frame, i;
   ThotWidget          w, row;
@@ -2026,7 +2027,7 @@ void TtaSetTextZone (Document document, View view, int index, char *text)
    document: identifier of the document.
    view: identifier of the view.
   ----------------------------------------------------------------------*/
-void       TtcSwitchCommands (Document document, View view)
+void TtcSwitchCommands (Document document, View view)
 {
    int                 frame;
 #ifdef _WINDOWS
@@ -2120,7 +2121,7 @@ void       TtcSwitchCommands (Document document, View view)
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
-void           DrawingInput (int *w, int frame, int *infos)
+void DrawingInput (int *w, int frame, int *infos)
 {
 }
 
@@ -3265,7 +3266,7 @@ void DestroyFrame (int frame)
 /*----------------------------------------------------------------------
    GetMenu_Ctl donne le contexte du menu associe' a` la fenetree^tre. 
   ----------------------------------------------------------------------*/
-static Menu_Ctl    *GetMenu_Ctl (int frame, int menu)
+static Menu_Ctl *GetMenu_Ctl (int frame, int menu)
 {
    int                 i;
    Menu_Ctl           *ptrmenu;
@@ -3285,7 +3286,7 @@ static Menu_Ctl    *GetMenu_Ctl (int frame, int menu)
   FindMenu returns the menu index and its context if this menu is
   displayed in this specific frame or -1.
   ----------------------------------------------------------------------*/
-int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
+int FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
 {
    Menu_Ctl           *ptrmenu;
    int                 m;
@@ -3322,8 +3323,8 @@ int                 FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
   - item index or 0
   - action index or -1
   ----------------------------------------------------------------------*/
-static void   FindItemMenu (int frame, int menuID, int itemID, int *menu,
-			    int *submenu, int *item, int *action)
+static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
+			  int *submenu, int *item, int *action)
 {
    Menu_Ctl           *ptrmenu, *ptrsmenu;
    Item_Ctl           *ptr;
@@ -3434,7 +3435,7 @@ static void   FindItemMenu (int frame, int menuID, int itemID, int *menu,
   SwitchUndo enables (on=TRUE) or disables (on=FALSE) the Undo
   entry in all document frames.
   ----------------------------------------------------------------------*/
-void         SwitchUndo (PtrDocument pDoc, ThotBool on)
+void SwitchUndo (PtrDocument pDoc, ThotBool on)
 {
 #ifndef _GTK
 #ifndef _WINDOWS 
@@ -3588,7 +3589,7 @@ void         SwitchPaste (PtrDocument pDoc, ThotBool on)
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
    de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
-void      TtaSetMenuOff (Document document, View view, int menuID)
+void TtaSetMenuOff (Document document, View view, int menuID)
 {
 #ifndef _GTK
    ThotMenu            w;
@@ -3670,7 +3671,7 @@ void      TtaSetMenuOff (Document document, View view, int menuID)
    TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     
    de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
-void       TtaSetMenuOn (Document document, View view, int menuID)
+void TtaSetMenuOn (Document document, View view, int menuID)
 {
 #ifndef _GTK
    ThotMenu            w;
@@ -3921,7 +3922,7 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    Return:
    reference of the first form or menu.
   ----------------------------------------------------------------------*/
-int     TtaSetCallback (void (*callbakProcedure) (), int set)
+int TtaSetCallback (void (*callbakProcedure) (), int set)
 {
    PtrCallbackCTX      ctxCallback;
 
@@ -4196,3 +4197,11 @@ void ThotCallback (int ref, int typedata, char *data)
     }
 }
 /* End Of Module Thot */
+
+
+
+
+
+
+
+
