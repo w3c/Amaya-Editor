@@ -3674,6 +3674,11 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
     { 
       Document document  = IdentDocument(pDoc);
       int      window_id = TtaGetDocumentWindowId( document, -1 );
+
+      /* do nothing if the document doesn't have a window parent */
+      if ( window_id <= 0 )
+	return;
+
       int      item_id   = WindowTable[window_id].MenuItemUndo;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
@@ -3732,6 +3737,11 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
     {
       Document document  = IdentDocument(pDoc);
       int      window_id = TtaGetDocumentWindowId( document, -1 );
+
+      /* do nothing if the document doesn't have a window parent */
+      if ( window_id <= 0 )
+	return;
+
       int      item_id   = WindowTable[window_id].MenuItemRedo;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
@@ -3790,6 +3800,11 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
     {
       Document document  = IdentDocument(pDoc);
       int      window_id = TtaGetDocumentWindowId( document, -1 );
+
+      /* do nothing if the document doesn't have a window parent */
+      if ( window_id <= 0 )
+	return;
+
       int      item_id   = WindowTable[window_id].MenuItemPaste;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
