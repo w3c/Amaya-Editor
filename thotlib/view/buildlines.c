@@ -1665,7 +1665,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	      clearR = 'R';
 	    }
 	  pLine->LiXOrg = left + indent;
-	  pLine->LiXMax = pBlock->BxW + left;
+	  pLine->LiXMax = pBlock->BxW - indent;
 	  /* check previous floating box to set the x position */
 	  if (floatL)
 	    {
