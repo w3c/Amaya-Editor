@@ -1224,6 +1224,8 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 	{
 	  /* It is a new loaded image */
 	  pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
+	  /* clear the structure */
+	  memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
 	  pImage->originalName = TtaGetMemory (strlen (url) + 1);
 	  strcpy (pImage->originalName, url);
 	  pImage->localName = TtaGetMemory (strlen (localname) + 1);
