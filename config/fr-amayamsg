@@ -265,4 +265,4 @@
 263 Ce document est déjà affiché dans une autre fenêtre.
 264 Sauver cette instance peut provoquer des problèmes de mise à jour.
 265 Le document sera réanalysé pour prendre en compte le doctype. Les modifications en cours ne pourront être défaites
-266 Utiliser le type MIME application/xthml+xml pour	les documents XHTML
+266 Utiliser le type MIME application/xhtml+xml pour	les documents XHTML
