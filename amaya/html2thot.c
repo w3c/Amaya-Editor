@@ -293,7 +293,8 @@ static int          CharLevelElement[] =
    HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT,
    HTML_EL_Anchor,
    HTML_EL_Italic_text, HTML_EL_Bold_text, HTML_EL_Teletype_text,
-   HTML_EL_Struck_text, HTML_EL_Font_,
+   HTML_EL_Struck_text, HTML_EL_Big_text, HTML_EL_Small_text,
+   HTML_EL_Font_,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
    HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
    HTML_EL_Input,
@@ -1508,37 +1509,90 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
-   CheckSurrounding inserts an element Paragraph in the abstract
-   tree of the Thot document if el is a leaf and is not
-   allowed to be a child of element parent.
+   CheckSurrounding
+
+   inserts an element Paragraph in the abstract tree of the Thot document
+   if el is a leaf and is not allowed to be a child of element parent.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckSurrounding (Element * el, Element parent)
+static void      CheckSurrounding (Element * el, Element parent)
 #else
-static boolean      CheckSurrounding (el, parent)
+static void      CheckSurrounding (el, parent)
 Element            *el;
 Element             parent;
 
 #endif
 {
 
-   ElementType         parentType, newElType;
-   Element             newEl;
-   boolean             ret;
+   ElementType         parentType, newElType, elType;
+   Element             newEl, ancestor, sibling, previous, child;
 
    if (parent == NULL)
-      return (FALSE);
-   ret = FALSE;
-   parentType = TtaGetElementType (parent);
-   if (IsCharacterLevelElement (*el))
+      return;
+   elType = TtaGetElementType (*el);
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     {
+	/* the element to be inserted is a character string */
+	/* Search the ancestor that is not a character level element */
+	ancestor = parent;
+	while (ancestor != NULL && IsCharacterLevelElement (ancestor))
+	   ancestor = TtaGetParent (ancestor);
+	if (ancestor != NULL)
+	  {
+	   elType = TtaGetElementType (ancestor);
+	   if (CannotContainText (elType) && !Within (HTML_EL_Option_Menu))
+	      /* Element ancestor cannot contain text directly. Create a */
+	      /* paragraph element as a child of that ancestor */
+	      {
+	      newElType.ElTypeNum = HTML_EL_Paragraph;
+	      newElType.ElSSchema = structSchema;
+	      newEl = TtaNewElement (theDocument, newElType);
+	      /* insert the new paragraph element as the last child of */
+	      /* element ancestor */
+	      child = TtaGetFirstChild (ancestor);
+	      if (child == NULL)
+		 TtaInsertFirstChild (&newEl, ancestor, theDocument);
+	      else
+		 {
+		 while (child != NULL)
+		    {
+		    sibling = child;
+		    TtaNextSibling (&child);
+		    }
+		 TtaInsertSibling (newEl, sibling, FALSE, theDocument);
+		 child = sibling;
+		 }
+	      /* moves the last children of ancestor which are character */
+	      /* level elements into the new paragraph */
+	      if (newEl != NULL)
+		 {
+		  while (child != NULL)
+		     {
+		     previous = child;
+	             TtaPreviousSibling (&previous);
+		     if (!IsCharacterLevelElement (child))
+			/* this child is not a character level element. Stop */
+			previous = NULL;
+		     else
+			{
+			TtaRemoveTree (child, theDocument);
+			TtaInsertFirstChild (&child, newEl, theDocument);
+			}
+		     child = previous;
+		     }
+		  if (lastElement == parent)
+		     if (lastElement == ancestor)
+		        lastElement = newEl;
+		 }
+     	      }
+	  }
+     }
+   else if (IsCharacterLevelElement (*el))
       /* it is a character level element */
      {
+	parentType = TtaGetElementType (parent);
 	newElType.ElTypeNum = 0;
-	if (CannotContainText (parentType) && !Within (HTML_EL_Option_Menu))
-	   /* parent cannot contain text directly. Create first a
-	      paragraph element as a child of parent */
-	   newElType.ElTypeNum = HTML_EL_Paragraph;
-	else if (parentType.ElTypeNum == HTML_EL_Preformatted)
+	if (parentType.ElTypeNum == HTML_EL_Preformatted)
 	   /* A basic element cannot be a child of a Preformatted */
 	   /* create a Pre_Line element as a child of Preformatted */
 	   newElType.ElTypeNum = HTML_EL_Pre_Line;
@@ -1552,13 +1606,10 @@ Element             parent;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
-	       {
-		  TtaInsertFirstChild (el, newEl, theDocument);
-		  ret = TRUE;
-	       }
+		if (lastElement == parent)
+		    lastElement = newEl;
 	  }
      }
-   return ret;
 }
 
 
@@ -1583,20 +1634,20 @@ Element            *el;
 	   parent = NULL;
 	else
 	   parent = TtaGetParent (lastElement);
-	if (!CheckSurrounding (el, parent))
-	   if (parent != NULL)
-	      TtaInsertSibling (*el, lastElement, FALSE, theDocument);
-	   else
-	     {
-		TtaDeleteTree (*el, theDocument);
-		*el = NULL;
-	     }
+	CheckSurrounding (el, parent);
+	if (parent != NULL)
+	   TtaInsertSibling (*el, lastElement, FALSE, theDocument);
+	else
+	   {
+	     TtaDeleteTree (*el, theDocument);
+	     *el = NULL;
+	   }
 	ret = TRUE;
      }
    else
      {
-	if (!CheckSurrounding (el, lastElement))
-	   TtaInsertFirstChild (el, lastElement, theDocument);
+	CheckSurrounding (el, lastElement);
+	TtaInsertFirstChild (el, lastElement, theDocument);
 	ret = FALSE;
      }
    if (*el != NULL)
