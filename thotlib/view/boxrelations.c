@@ -678,7 +678,13 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	      pParent->BxType != BoFloatGhost &&
 	      pParent->BxW >= dim)
 	    {
-	      dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
+	      if ( !pAb->AbWidth.DimIsPosition &&
+		   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbWidth.DimValue == 0)
+		/* the box has the size of its parent */
+		dim = 0;
+	      else
+	        dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
 	      if (pAb->AbLeftMarginUnit == UnAuto && pAb->AbRightMarginUnit == UnAuto)
 		{
 		  pBox->BxLMargin = dim / 2;
