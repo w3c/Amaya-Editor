@@ -270,12 +270,13 @@ ThotBool DeleteLink (NotifyElement *event)
 ThotBool CheckMandatory (NotifyAttribute *event)
 {
   AttributeType       attrType;
-  char               *name;
+  ElementType         elType;
 
   attrType.AttrSSchema = event->attributeType.AttrSSchema;
   attrType.AttrTypeNum = event->attributeType.AttrTypeNum;
-  name = TtaGetSSchemaName (attrType.AttrSSchema);
-  if (!strcmp (name, "HTML"))
+  elType = TtaGetElementType (event->element);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+      elType.ElTypeNum == HTML_EL_Anchor)
     {
       if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
 	/* check if there is a name */
@@ -700,7 +701,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
      /* the user has clicked the same document: pop up a dialogue box
 	to allow the user to type the target URI */
      {
-	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
+       if (fromButton)
+	 TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
 
 	if (!LinkAsXmlCSS)
@@ -881,8 +883,7 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    Element             elText;
    SSchema	       HTMLSSchema;
    Language            lang;
-   char               *text;
-   char               *url = (char *)TtaGetMemory (MAX_LENGTH);
+   char               *text, *url;
    int                 length, i, space;
    ThotBool            found;
    ThotBool            withinHTML, new_;
@@ -894,7 +895,8 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrSSchema = HTMLSSchema;
    if (withinHTML && (elType.ElTypeNum == HTML_EL_Anchor ||
-		      elType.ElTypeNum == HTML_EL_MAP))
+		      elType.ElTypeNum == HTML_EL_MAP ||
+		      elType.ElTypeNum == HTML_EL_map))
      {
        if (forceID)
 	 attrType.AttrTypeNum = HTML_ATTR_ID;
@@ -928,23 +930,18 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 	new_ = TRUE;
      }
    else
-     {
-     new_ = FALSE;
-     if (withUndo)
-        TtaRegisterAttributeReplace (attr, el, doc);
-     }
+     /* already done */
+     return;
 
    /* build a value for the new attribute */
-   if (withinHTML && elType.ElTypeNum == HTML_EL_MAP)
-     {
-       /* mapxxx for a map element */
-       strcpy (url, "map");
-     }
+   url = (char *)TtaGetMemory (MAX_LENGTH);
+   if (withinHTML &&
+       (elType.ElTypeNum == HTML_EL_MAP || elType.ElTypeNum == HTML_EL_map))
+     /* mapxxx for a map element */
+     strcpy (url, "map");
    else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
-     {
-       /* linkxxx for a link element */
-       strcpy (url, "link");
-     }
+     /* linkxxx for a link element */
+     strcpy (url, "link");
    else
        /* get the content for other elements */
      {
@@ -1059,7 +1056,10 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
   s = TtaGetSSchemaName (elType.ElSSchema);
-  if (elType.ElTypeNum == HTML_EL_Anchor && !strcmp (s, "HTML") &&
+  if ((elType.ElTypeNum == HTML_EL_Anchor |
+       elType.ElTypeNum == HTML_EL_MAP ||
+       elType.ElTypeNum == HTML_EL_map) &&
+      !strcmp (s, "HTML") &&
       first == last)
     /* add an attribute on the current anchor */
     anchor = first;
@@ -1073,7 +1073,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
     {
       /* check whether the selection is within an anchor */
       if (!strcmp (s, "HTML") || !strcmp (s, "SVG"))
-	el = SearchAnchor (doc, first, &attr, TRUE);
+	el = SearchAnchor (doc, first, &attr, !createLink);
       else
 	el = NULL;
       if (el)
@@ -1116,6 +1116,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		      elType.ElTypeNum != HTML_EL_Font_ &&
 		      elType.ElTypeNum != HTML_EL_SCRIPT_ &&
 		      elType.ElTypeNum != HTML_EL_MAP &&
+		      elType.ElTypeNum != HTML_EL_map &&
 		      elType.ElTypeNum != HTML_EL_Quotation &&
 		      elType.ElTypeNum != HTML_EL_Subscript &&
 		      elType.ElTypeNum != HTML_EL_Superscript &&
@@ -1490,6 +1491,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       child = TtaGetLastChild (anchor);
       TtaSelectString (doc, child, 1, 0);
     }
+
   if (createLink)
     {
       if (UseLastTarget)
@@ -1515,7 +1517,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	}
     }
   else
-    CreateTargetAnchor (doc, anchor, FALSE, FALSE);
+    {
+      TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
+      CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+      TtaCloseUndoSequence (doc);
+    }
 
   if (parag)
     TtaRegisterElementCreate (parag, doc);
@@ -1539,27 +1545,31 @@ void MakeUniqueName (Element el, Document doc)
   char             *value;
   char              url[MAX_LENGTH];
   int               length, i;
-  ThotBool          change, checkID;
+  ThotBool          change, checkID, checkNAME;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  checkID = FALSE;
+  checkID = checkNAME = FALSE;
   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       /* it's an element from the XHTML namespace */
       if (elType.ElTypeNum == HTML_EL_Anchor ||
-	  elType.ElTypeNum == HTML_EL_MAP)
+	  elType.ElTypeNum == HTML_EL_MAP ||
+	  elType.ElTypeNum == HTML_EL_map)
 	/* it's an anchor or a map. Look for a NAME attribute */
 	{
 	  attrType.AttrTypeNum = HTML_ATTR_NAME;
 	  attr = TtaGetAttribute (el, attrType);
-	  if (attr != 0)
+	  if (attr)
 	    /* the element has a NAME attribute. Check it and then check
 	       if there is an ID too */
 	    checkID = TRUE;
 	  else
-	    /* no NAME. Look for an ID */
-	    attrType.AttrTypeNum = HTML_ATTR_ID;
+	    {
+	      /* no NAME. Look for an ID */
+	      attrType.AttrTypeNum = HTML_ATTR_ID;
+	      checkNAME = TRUE;
+	    }
 	}
       else
 	/* Look for an ID attribute */
@@ -1603,17 +1613,7 @@ void MakeUniqueName (Element el, Document doc)
 		{
 		  /* copy the element Label into the NAME attribute */
 		  TtaSetAttributeText (attr, value, el, doc);
-		  if (checkID)
-		    /* It's an HTML anchor. We have just changed its NAME
-		       attribute. Change its ID (if any) accordingly */
-		    {
-		      attrType.AttrTypeNum = HTML_ATTR_ID;
-		      attr = TtaGetAttribute (el, attrType);
-		      if (attr)
-			TtaSetAttributeText (attr, value, el, doc);
-		    }
-		  if ((strcmp(TtaGetSSchemaName (elType.ElSSchema),
-			       "HTML") == 0) &&
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
 		      elType.ElTypeNum == HTML_EL_MAP)
 		    /* it's a MAP element */
 		    {
@@ -1630,8 +1630,8 @@ void MakeUniqueName (Element el, Document doc)
 			{
 			  i = MAX_LENGTH;
 			  TtaGiveTextAttributeValue (attr, url, &i);
-			  if (i == length+1 && !strncmp (&url[1], value,
-							  length))
+			  if (i == length+1 &&
+			      !strncmp (&url[1], value, length))
 			    {
 			      /* Change the USEMAP attribute of the image */
 			      attr = TtaGetAttribute (image, attrType);
@@ -1641,6 +1641,46 @@ void MakeUniqueName (Element el, Document doc)
 			}
 		    }
 		}
+	    }
+	  if (checkID)
+	    {
+	      /* Change or insert an ID attribute accordingly */
+	      attrType.AttrTypeNum = HTML_ATTR_ID;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, attr, doc);
+		  change = FALSE;
+		}
+	      else
+		{
+		  change = TRUE;
+		  TtaRegisterAttributeReplace (attr, el, doc);
+		}
+	      TtaSetAttributeText (attr, value, el, doc);
+	      if (!change)
+		TtaRegisterAttributeCreate (attr, el, doc);
+	    }
+	  else if (checkNAME)
+	    {
+	      /* Change or insert a NAME attribute accordingly */
+	      attrType.AttrTypeNum = HTML_ATTR_NAME;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (el, attr, doc);
+		  change = FALSE;
+		}
+	      else
+		{
+		  change = TRUE;
+		  TtaRegisterAttributeReplace (attr, el, doc);
+		}
+	      TtaSetAttributeText (attr, value, el, doc);
+	      if (!change)
+		TtaRegisterAttributeCreate (attr, el, doc);
 	    }
 	  TtaFreeMemory (value);
 	}
@@ -2858,7 +2898,20 @@ void CheckNewLines (NotifyOnTarget *event)
   ----------------------------------------------------------------------*/
 void CreateTarget (Document doc, View view)
 {
-   CreateAnchor (doc, view, FALSE);
+  CreateAnchor (doc, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   UpdateAttrNAME
+   A NAME attribute has been created or modified.
+   If it's a creation or modification, check that the ID is a unique name
+   in the document.
+   If it's a deletion for a SPAN element, remove that element if it's
+   not needed.
+  ----------------------------------------------------------------------*/
+void UpdateAttrNAME (NotifyAttribute * event)
+{
+  MakeUniqueName (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -2871,24 +2924,24 @@ void CreateTarget (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateAttrID (NotifyAttribute * event)
 {
-   Element	firstChild, lastChild;
+  Element	firstChild, lastChild;
 
-   if (event->event == TteAttrDelete)
-      /* if the element is a SPAN without any other attribute, remove the SPAN
-         element */
-      DeleteSpanIfNoAttr (event->element, event->document, &firstChild,
-			  &lastChild);
-   else
-      {
+  if (event->event == TteAttrDelete)
+    /* if the element is a SPAN without any other attribute, remove the SPAN
+       element */
+    DeleteSpanIfNoAttr (event->element, event->document, &firstChild,
+			&lastChild);
+  else
+    {
       MakeUniqueName (event->element, event->document);
       if (event->event == TteAttrCreate)
-         /* if the ID attribute is on a text string, create a SPAN element that
-         encloses this text string and move the ID attribute to that SPAN
-         element */
-         AttrToSpan (event->element, event->attribute, event->document);
-      }
+	/* if the ID attribute is on a text string, create a SPAN element that
+	   encloses this text string and move the ID attribute to that SPAN
+	   element */
+	AttrToSpan (event->element, event->attribute, event->document);
+    }
 #ifdef _SVG
-   Update_element_id_on_timeline (event); 
+  Update_element_id_on_timeline (event); 
 #endif /* _SVG */
 }
 
@@ -3781,8 +3834,7 @@ void SetOnOffBDO (Document document, View view)
 /*----------------------------------------------------------------------
   SearchAnchor
   Return the enclosing anchor element.
-  If name is true, take into account Anchor(HTML) elements with a name
-  attribute.
+  If name is true, take into account elements with a name or an ID attribute.
   ----------------------------------------------------------------------*/
 Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 		      ThotBool name)
@@ -3795,10 +3847,10 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
    ThotBool            found;
    View                activeView;
    Document            activeDoc;
+   char               *s;
 
    elAnchor = NULL;
    *HrefAttr = NULL;
-   /* get the XLink SSchema for the document, if the document uses it */
    XLinkSchema = TtaGetSSchema ("XLink", doc);
    /* check the element and its ancestors */
    ancestor = element;
@@ -3806,15 +3858,21 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
      {
        attr = NULL;
        elType = TtaGetElementType (ancestor);
-       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+       s = TtaGetSSchemaName (elType.ElSSchema);
+       if (!strcmp (s, "HTML"))
 	 /* the current element belongs to the HTML namespace */
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   if (name && elType.ElTypeNum == HTML_EL_Anchor)
+	   if (name &&
+	       (elType.ElTypeNum == HTML_EL_Anchor ||
+		elType.ElTypeNum == HTML_EL_MAP ||
+		elType.ElTypeNum == HTML_EL_map))
 	     /* look for a name attribute */
 	     {
 	       attrType.AttrTypeNum = HTML_ATTR_NAME;
 	       attr = TtaGetAttribute (ancestor, attrType);
+	       /* stop the research */
+	       elAnchor = ancestor;
 	     }
 	   if (!attr)
 	     {
@@ -3843,10 +3901,10 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 		 }
 	     }
 	 }
-       else if (!attr &&
-		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+       else if (!attr && !strcmp (s, "SVG"))
 	 /* the current element belongs to the SVG namespace */
 	 {
+#ifdef _SVG
 	   found = FALSE;
 	   if (elType.ElTypeNum == SVG_EL_a)
 	     found = TRUE;
@@ -3868,13 +3926,15 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 	       attrType.AttrTypeNum = SVG_ATTR_xlink_href;
 	       attr = TtaGetAttribute (ancestor, attrType);
 	     }
+#endif /* _SVG */
 	 }
-       else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink"))
+       else if (!strcmp (s, "XLink"))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = XLink_ATTR_href_;
 	   attr = TtaGetAttribute (ancestor, attrType);
 	 }
+	   
        if (!attr && XLinkSchema)
 	 /* the document uses XLink. Check whether the current element has
 	    a xlink:href attribute */
@@ -3883,6 +3943,7 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 	   attrType.AttrTypeNum = XLink_ATTR_href_;
 	   attr = TtaGetAttribute (ancestor, attrType);
 	 }
+
        if (attr)
 	 {
 	   elAnchor = ancestor;
@@ -3891,7 +3952,7 @@ Element SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
        else
 	 ancestor = TtaGetParent (ancestor);
      }
-   while (elAnchor == NULL && ancestor != NULL);
+   while (elAnchor == NULL && ancestor);
    return elAnchor;
 }
 

@@ -1235,8 +1235,14 @@ BOXES
  VALUE_NAME_ANCH: BEGIN
 	Content: (NAME);
 	Visibility: 0;
-	IN Links_view
+	Style: Bold;
+	IN Links_view BEGIN
+		Style: Enclosing =;
+#ifndef PAGE
+		Foreground: ATTR_Color;
+#endif
 		Visibility: 5;
+		END;
 	END;
 
  ATTR_HREF_LINKS_VIEW: BEGIN
@@ -5572,6 +5578,8 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	if MAP CreateLast(ATTR_NAME_ANCH);
 	if MAP CreateLast(VALUE_NAME_ANCH);
+	if map CreateLast(ATTR_NAME_ANCH);
+	if map CreateLast(VALUE_NAME_ANCH);
 	if Anchor CreateLast(ATTR_NAME_ANCH);
 	if Anchor CreateLast(VALUE_NAME_ANCH);
 #ifdef LINK_NUMBER
@@ -5586,7 +5594,7 @@ ATTRIBUTES
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
 	if MAP Underline: Underlined;
-	if MAP Underline: Underlined;
+	if map Underline: Underlined;
 #else
 	if MAP Foreground: LINK_Color;
 #endif

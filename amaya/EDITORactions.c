@@ -3478,7 +3478,9 @@ void  CreateIFrame (Document document, View view)
 void  CreateOrChangeLink (Document doc, View view)
 {
    Element             el;
+   ElementType         elType;
    Attribute           attr;
+   char               *s;
    int                 firstSelectedChar, i;
 
    if (!TtaGetDocumentAccessMode (doc))
@@ -3495,6 +3497,18 @@ void  CreateOrChangeLink (Document doc, View view)
      {
        /* Look if there is an enclosing anchor element */
        el = SearchAnchor (doc, el, &attr, TRUE);
+       if (el)
+	 {
+	   elType = TtaGetElementType (el);
+	   s = TtaGetSSchemaName (elType.ElSSchema);
+	   if ((elType.ElTypeNum != HTML_EL_Anchor || strcmp (s, "HTML"))
+#ifdef _SVG
+	       && (elType.ElTypeNum != SVG_EL_a || strcmp (s, "SVG"))
+#endif /* _SVG */
+	       )
+	     /* it's not an anchor */
+	     el = NULL;
+	 }
        if (el == NULL)
 	 {
 	   /* The link element is a new created one */

@@ -223,6 +223,8 @@ ATTRIBUTES
 	BEGIN
 	AttrMenu.Pre ->    AttrNAMEinMenu;
 	AttrExport.Pre ->  CheckValidID;	
+	AttrCreate.Post -> UpdateAttrNAME;
+	AttrModify.Post -> UpdateAttrNAME;	
 	AttrDelete.Pre ->  CheckMandatory;
 	END;
 
