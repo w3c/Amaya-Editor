@@ -5614,8 +5614,13 @@ int                 oldWidth;
 	  TtaAttachAttribute (el, attrNew, doc);
 	}
 #ifndef STANDALONE
-      else if (isImage)
-	oldWidth = TtaGetAttributeValue (attrOld);
+      else if (isImage && oldWidth == -1)
+	{
+	  if (attrOld == NULL)
+	    oldWidth = TtaGetAttributeValue (attrNew);
+	  else
+	    oldWidth = TtaGetAttributeValue (attrOld);
+	}
 #endif
     }
   else
@@ -5630,10 +5635,13 @@ int                 oldWidth;
 	  TtaAttachAttribute (el, attrNew, doc);
 	}
 #ifndef STANDALONE
-      else if (isImage)
+      else if (isImage && oldWidth == -1)
 	{
 	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
-	  oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
+	  if (attrOld == NULL)
+	    oldWidth = w * TtaGetAttributeValue (attrNew) / 100;
+	  else
+	    oldWidth = w * TtaGetAttributeValue (attrOld) / 100;	  
 	}
 #endif
     }

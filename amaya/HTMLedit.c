@@ -943,9 +943,16 @@ NotifyAttribute    *event;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
        /* update the associated map */
-       UpdateImageMap (el, event->document, OldWidth, OldHeight);
-       OldWidth = -1;
-       OldHeight = -1;
+       if (event->attributeType.AttrTypeNum == HTML_ATTR_IntWidthPxl)
+	 {
+	   UpdateImageMap (el, event->document, OldWidth, -1);
+	   OldWidth = -1;
+	 }
+       else
+	 {
+	   UpdateImageMap (el, event->document, -1, OldHeight);
+	   OldHeight = -1;
+	 }
      }
    else
      {
@@ -972,9 +979,7 @@ NotifyAttribute    *event;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-    {
-      TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &OldWidth, &h);
-    }
+    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &OldWidth, &h);
   else
     OldWidth = -1;
   return FALSE;		/* let Thot perform normal operation */
@@ -991,11 +996,14 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   Attribute           attr;
+  ElementType	     elType;
+  int                w;
 
-   attr = event->attribute;
-   if (attr != NULL)
-     OldHeight = TtaGetAttributeValue (attr);
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &w, &OldHeight);
+  else
+     OldHeight = -1;
    return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1015,6 +1023,7 @@ NotifyAttribute    *event;
    AttributeType       attrType;
    Attribute           attr;
 
+   StoreHeight (event);
    attrType = event->attributeType;
    attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
    attr = TtaGetAttribute (event->element, attrType);

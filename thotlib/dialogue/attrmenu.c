@@ -748,139 +748,144 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   int                 i, lgmenu, val;
-   int                 form, subform;
-   char                title[MAX_NAME_LENGTH + 2];
-   char                bufMenu[MAX_TXT_LEN];
-   Document            doc;
+  int                 i, lgmenu, val;
+  int                 form, subform;
+  char                title[MAX_NAME_LENGTH + 2];
+  char                bufMenu[MAX_TXT_LEN];
+  Document            doc;
 
-#  ifdef _WINDOWS
-   WIN_pAttr1 = pAttr1;
-   WIN_currAttr	= currAttr;
-#  endif /* _WINDOWS */
+#ifdef _WINDOWS
+  WIN_pAttr1 = pAttr1;
+  WIN_currAttr	= currAttr;
+#endif /* _WINDOWS */
 
-   doc = (Document) IdentDocument (pDoc);
-   /* detruit la feuille de dialogue et la recree */
-   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
-   i = strlen (bufMenu) + 1;
-   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
-   if (required) {
-	  form = NumMenuAttrRequired;
-	  if (MandatoryAttrFormExists) {
-	     TtaUnmapDialogue (NumMenuAttrRequired);
-	     TtaDestroyDialogue (NumMenuAttrRequired);
-	  }
-#     ifndef _WINDOWS 
-	  TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
-	    	      TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
-#     else  /* _WINDOWS */
-	  isForm = TRUE ;
-	  WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
-#     endif /* _WINDOWS */
-	  MandatoryAttrFormExists = TRUE;
-   } else {
-	    form = NumMenuAttr;
-	    if (AttrFormExists) {
-	       TtaUnmapDialogue (NumMenuAttr);
-	       TtaDestroyDialogue (NumMenuAttr);
-	    }
-#       ifndef _WINDOWS
-	    TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
-	                 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
-#       else  /* _WINDOWS */
-		isForm = FALSE ;
-#       endif /* _WINDOWS */
-	    AttrFormExists = TRUE;
-   }
+  doc = (Document) IdentDocument (pDoc);
+  /* detruit la feuille de dialogue et la recree */
+  strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+  i = strlen (bufMenu) + 1;
+  strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
+  if (required)
+    {
+      form = NumMenuAttrRequired;
+      if (MandatoryAttrFormExists)
+	{
+	  TtaUnmapDialogue (NumMenuAttrRequired);
+	  TtaDestroyDialogue (NumMenuAttrRequired);
+	}
+#ifndef _WINDOWS 
+      TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
+		  TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
+#else  /* _WINDOWS */
+      isForm = TRUE ;
+      WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
+#endif /* _WINDOWS */
+      MandatoryAttrFormExists = TRUE;
+    }
+  else
+    {
+      form = NumMenuAttr;
+      if (AttrFormExists)
+	{
+	  TtaUnmapDialogue (NumMenuAttr);
+	  TtaDestroyDialogue (NumMenuAttr);
+	}
+#ifndef _WINDOWS
+      TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
+		   TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
+#else  /* _WINDOWS */
+      isForm = FALSE ;
+#endif /* _WINDOWS */
+      AttrFormExists = TRUE;
+    }
 
    strncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
    switch (pAttr1->AttrType)
+     {
+     case AtNumAttr:
+       /* attribut a valeur numerique */
+       subform = form + 1;
+#ifndef _WINDOWS
+       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, TRUE);
+       TtaAttachForm (subform);
+#endif /* !_WINDOWS */
+       if (currAttr == NULL)
+	 i = 0;
+       else
+	 i = currAttr->AeAttrValue;
+
+#ifndef _WINDOWS
+       TtaSetNumberForm (subform, i);
+#else /* !_WINDOWS */
+       WIN_AtNumAttr  = TRUE;
+       WIN_AtTextAttr = FALSE;
+       WIN_AtEnumAttr = FALSE;
+       sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
+       formValue = i;
+#endif /* _WINDOWS */
+       break;
+
+     case AtTextAttr:
+       /* attribut a valeur textuelle */
+       subform = form + 2;
+#ifndef _WINDOWS
+       TtaNewTextForm (subform, form, title, 40, 3, FALSE);
+       TtaAttachForm (subform);
+       if (currAttr == NULL)
+	 TtaSetTextForm (subform, "");
+       else if (currAttr->AeAttrText == NULL)
+	 TtaSetTextForm (subform, "");
+       else
+	 TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
+#else  /* _WINDOWS */
+       WIN_AtNumAttr  = FALSE;
+       WIN_AtTextAttr = TRUE;
+       WIN_AtEnumAttr = FALSE;
+#endif /* _WINDOWS */
+       break;
+
+     case AtEnumAttr:
+       /* attribut a valeurs enumerees */
+       subform = form + 3;
+       /* cree un menu de toutes les valeurs possibles de l'attribut */
+       lgmenu = 0;
+       val = 0;
+       /* boucle sur les valeurs possibles de l'attribut */
+       while (val < pAttr1->AttrNEnumValues)
 	 {
-	    case AtNumAttr:
-	       /* attribut a valeur numerique */
-	       subform = form + 1;
-#          ifndef _WINDOWS
-	       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, FALSE);
-	       TtaAttachForm (subform);
-#          endif /* !_WINDOWS */
-	       if (currAttr == NULL)
-		      i = 0;
-	       else
-		      i = currAttr->AeAttrValue;
-
-#          ifndef _WINDOWS
-	       TtaSetNumberForm (subform, i);
-#          endif /* !_WINDOWS */
-
-#          ifdef _WINDOWS
-		   WIN_AtNumAttr  = TRUE;
-		   WIN_AtTextAttr = FALSE;
-		   WIN_AtEnumAttr = FALSE;
-		   sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
-		   formValue = i;
-#          endif /* _WINDOWS */
-	       break;
-
-	    case AtTextAttr:
-	        /* attribut a valeur textuelle */
-	        subform = form + 2;
-#           ifndef _WINDOWS
-	        TtaNewTextForm (subform, form, title, 40, 3, FALSE);
-	        TtaAttachForm (subform);
-	        if (currAttr == NULL)
-		       TtaSetTextForm (subform, "");
-	        else if (currAttr->AeAttrText == NULL)
-		         TtaSetTextForm (subform, "");
-	        else
-		        TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
-#           else  /* _WINDOWS */
-		    WIN_AtNumAttr  = FALSE;
-		    WIN_AtTextAttr = TRUE;
-		    WIN_AtEnumAttr = FALSE;
-#           endif /* _WINDOWS */
-	        break;
-
-	    case AtEnumAttr:
-	         /* attribut a valeurs enumerees */
-	         subform = form + 3;
-	         /* cree un menu de toutes les valeurs possibles de l'attribut */
-	         lgmenu = 0;
-	         val = 0;
-	         /* boucle sur les valeurs possibles de l'attribut */
-	         while (val < pAttr1->AttrNEnumValues) {
-		           i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
-		           if (lgmenu + i < MAX_TXT_LEN) {
-			          bufMenu[lgmenu] = 'B';
-			          strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
-			          val++;
-				   }
-		           lgmenu += i;
-			 }
-
-#            ifndef _WINDOWS
-	         /* cree le menu des valeurs de l'attribut */
-	         TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, FALSE);
-	         TtaAttachForm (subform);
-	         /* initialise le menu avec la valeur courante */
-	         val = -1;
-	         if (currAttr != NULL)
-		        val = currAttr->AeAttrValue - 1;
-	         TtaSetMenuForm (subform, val);
-#            else  /* _WINDOWS */
-		 nbDlgItems = val;
-		 WIN_AtNumAttr  = FALSE;
-		 WIN_AtTextAttr = FALSE;
-		 WIN_AtEnumAttr = TRUE;
-#            endif /* _WINDOWS */
-	         break;
-
-	    case AtReferenceAttr:
-	         /* attribut reference, on ne fait rien */
-	         break;
-
-	    default:
-	       break;
+	   i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
+	   if (lgmenu + i < MAX_TXT_LEN)
+	     {
+	       bufMenu[lgmenu] = 'B';
+	       strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+	       val++;
+	     }
+	   lgmenu += i;
 	 }
+
+#ifndef _WINDOWS
+       /* cree le menu des valeurs de l'attribut */
+       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, TRUE);
+       TtaAttachForm (subform);
+       /* initialise le menu avec la valeur courante */
+       val = -1;
+       if (currAttr != NULL)
+	 val = currAttr->AeAttrValue - 1;
+       TtaSetMenuForm (subform, val);
+#else  /* _WINDOWS */
+       nbDlgItems = val;
+       WIN_AtNumAttr  = FALSE;
+       WIN_AtTextAttr = FALSE;
+       WIN_AtEnumAttr = TRUE;
+#endif /* _WINDOWS */
+       break;
+
+     case AtReferenceAttr:
+       /* attribut reference, on ne fait rien */
+       break;
+
+     default:
+       break;
+     }
 }
 
 
@@ -898,43 +903,43 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
-   int                 length;
-
-   switch (ref)
-	 {
-	    case NumMenuAttrRequired:
-	       /* retour de la feuille de dialogue elle-meme */
-	       /* on detruit cette feuille de dialogue sauf si c'est */
-	       /* un abandon */
-	       if (val != 0)
-		 {
-		    TtaDestroyDialogue (NumMenuAttrRequired);
-		    MandatoryAttrFormExists = FALSE;
-		 }
-	       /* on ne fait rien d'autre : tout a ete fait par les cas */
-	       /* suivants */
-	       break;
-	    case NumMenuAttrNumNeeded:
-	       /* zone de saisie de la valeur numerique de l'attribut */
-	       if (val >= -MAX_INT_ATTR_VAL || val <= MAX_INT_ATTR_VAL)
-		  PtrReqAttr->AeAttrValue = val;
-	       break;
-	    case NumMenuAttrTextNeeded:
-	       /* zonee de saisie du texte de l'attribut */
-	       if (PtrReqAttr->AeAttrText == NULL)
-		  GetTextBuffer (&PtrReqAttr->AeAttrText);
-	       else
-		  ClearText (PtrReqAttr->AeAttrText);
-	       CopyStringToText (txt, PtrReqAttr->AeAttrText, &length);
-	       break;
-	    case NumMenuAttrEnumNeeded:
-	       /* menu des valeurs d'un attribut a valeurs enumerees */
-	       val++;
-	       PtrReqAttr->AeAttrValue = val;
-	       break;
-	    default:
-	       break;
-	 }
+  int                 length;
+  
+  switch (ref)
+    {
+    case NumMenuAttrRequired:
+      /* retour de la feuille de dialogue elle-meme */
+      /* on detruit cette feuille de dialogue sauf si c'est */
+      /* un abandon */
+      if (val != 0)
+	{
+	  TtaDestroyDialogue (NumMenuAttrRequired);
+	  MandatoryAttrFormExists = FALSE;
+	}
+      /* on ne fait rien d'autre : tout a ete fait par les cas */
+      /* suivants */
+      break;
+    case NumMenuAttrNumNeeded:
+      /* zone de saisie de la valeur numerique de l'attribut */
+      if (val >= -MAX_INT_ATTR_VAL || val <= MAX_INT_ATTR_VAL)
+	PtrReqAttr->AeAttrValue = val;
+      break;
+    case NumMenuAttrTextNeeded:
+      /* zonee de saisie du texte de l'attribut */
+      if (PtrReqAttr->AeAttrText == NULL)
+	GetTextBuffer (&PtrReqAttr->AeAttrText);
+      else
+	ClearText (PtrReqAttr->AeAttrText);
+      CopyStringToText (txt, PtrReqAttr->AeAttrText, &length);
+      break;
+    case NumMenuAttrEnumNeeded:
+      /* menu des valeurs d'un attribut a valeurs enumerees */
+      val++;
+      PtrReqAttr->AeAttrValue = val;
+      break;
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1267,108 +1272,116 @@ char               *valtext;
 
 #endif /* __STDC__ */
 {
-   PtrDocument         SelDoc;
-   PtrElement          firstSel, lastSel;
-   int                 firstChar, lastChar;
-   PtrAttribute        pAttrNew;
-   int                 lg;
+  PtrDocument         SelDoc;
+  PtrElement          firstSel, lastSel;
+  int                 firstChar, lastChar;
+  PtrAttribute        pAttrNew;
+  int                 lg, act;
 
-   switch (ref)
-	 {
-	    case NumMenuAttrNumber:
-	       /* valeur d'un attribut numerique */
-	       NumAttrValue = valmenu;
-	       break;
-	    case NumMenuAttrText:
-	       /* valeur d'un attribut textuel */
-	       strncpy (TextAttrValue, valtext, LgMaxAttrText);
-	       break;
-	    case NumMenuAttrEnum:
-	       /* numero de la valeur d'un attribut enumere' */
-	       NumAttrValue = valmenu + 1;
-	       break;
-	    case NumMenuAttr:
-	       /* retour de la feuille de dialogue elle-meme */
-	       if (valmenu == 0)
-		  /* fermeture de la feuille de dialogue */
-		 {
-		    /* on detruit la feuille de dialogue */
-		    TtaDestroyDialogue (NumMenuAttr);
-		    AttrFormExists = FALSE;
-		 }
-	       else
-		  /* ce n'est pas une simple fermeture de la feuille de dialogue */
-		  /* demande quelle est la selection courante */
-	       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
-		  /* il y a bien une selection */
-		 {
-		    GetAttribute (&pAttrNew);
-		    if (SchCurrentAttr != NULL)
-		      {
-			 pAttrNew->AeAttrSSchema = SchCurrentAttr;
-			 pAttrNew->AeAttrNum = NumCurrentAttr;
-			 pAttrNew->AeDefAttr = FALSE;
-			 pAttrNew->AeAttrType = SchCurrentAttr->
-			    SsAttribute[NumCurrentAttr - 1].AttrType;
+  act = 1; /* apply by default */
+  switch (ref)
+    {
+    case NumMenuAttrNumber:
+      /* valeur d'un attribut numerique */
+      NumAttrValue = valmenu;
+      act = 0;
+      break;
+    case NumMenuAttrText:
+      /* valeur d'un attribut textuel */
+      strncpy (TextAttrValue, valtext, LgMaxAttrText);
+      act = 0;
+      break;
+    case NumMenuAttrEnum:
+      /* numero de la valeur d'un attribut enumere' */
+      NumAttrValue = valmenu + 1;
+      break;
+    case NumMenuAttr:
+      /* retour de la feuille de dialogue elle-meme */
+      if (valmenu == 0)
+	/* fermeture de la feuille de dialogue */
+	{
+	  /* on detruit la feuille de dialogue */
+	  TtaDestroyDialogue (NumMenuAttr);
+	  AttrFormExists = FALSE;
+	  act = 0;
+	}
+      else
+	act = valmenu;
+      break;
+    }
 
-			 switch (pAttrNew->AeAttrType)
-			       {
-				  case AtNumAttr:
-				     if (valmenu == 2)
-					/* Supprimer l'attribut */
-					pAttrNew->AeAttrValue = MAX_INT_ATTR_VAL + 1;
-				     else
-					/* la valeur saisie devient la valeur courante */
-					pAttrNew->AeAttrValue = NumAttrValue;
-				     /* applique les attributs a la partie selectionnee */
-				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc, TRUE);
-				     break;
-
-				  case AtTextAttr:
-				     if (valmenu == 2)
-					/* suppression de l'attribut */
-					pAttrNew->AeAttrText = NULL;
-				     else
-				       {
-					  /* la valeur saisie devient la valeur courante */
-					  if (pAttrNew->AeAttrText == NULL)
-					     GetTextBuffer (&(pAttrNew->AeAttrText));
-					  else
-					     ClearText (pAttrNew->AeAttrText);
-					  CopyStringToText (TextAttrValue,
-						 pAttrNew->AeAttrText, &lg);
-				       }
-				     /* applique les attributs a la partie selectionnee */
-				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc, TRUE);
-				     break;
-
-				  case AtReferenceAttr:
-
-				     break;
-
-				  case AtEnumAttr:
-				     if (valmenu == 2)
-					/* suppression de l'attribut */
-					pAttrNew->AeAttrValue = 0;
-				     else
-					/* la valeur choisie devient la valeur courante */
-					pAttrNew->AeAttrValue = NumAttrValue;
-				     /* applique les attributs a la partie selectionnee */
-				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-							SelDoc, TRUE);
-				     break;
-
-				  default:
-				     break;
-			       }
-			 UpdateAttrMenu (SelDoc);
-		      }
-		    DeleteAttribute (NULL, pAttrNew);
-		 }
-	       break;
-	 }
+  if (act > 0)
+    {
+      /* ce n'est pas une simple fermeture de la feuille de dialogue */
+      /* demande quelle est la selection courante */
+      if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+	/* il y a bien une selection */
+	{
+	  GetAttribute (&pAttrNew);
+	  if (SchCurrentAttr != NULL)
+	    {
+	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
+	      pAttrNew->AeAttrNum = NumCurrentAttr;
+	      pAttrNew->AeDefAttr = FALSE;
+	      pAttrNew->AeAttrType = SchCurrentAttr->
+		SsAttribute[NumCurrentAttr - 1].AttrType;
+	      
+	      switch (pAttrNew->AeAttrType)
+		{
+		case AtNumAttr:
+		  if (act == 2)
+		    /* Supprimer l'attribut */
+		    pAttrNew->AeAttrValue = MAX_INT_ATTR_VAL + 1;
+		  else
+		    /* la valeur saisie devient la valeur courante */
+		    pAttrNew->AeAttrValue = NumAttrValue;
+		  /* applique les attributs a la partie selectionnee */
+		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
+				     SelDoc, TRUE);
+		  break;
+		    
+		case AtTextAttr:
+		  if (act == 2)
+		    /* suppression de l'attribut */
+		    pAttrNew->AeAttrText = NULL;
+		  else
+		    {
+		      /* la valeur saisie devient la valeur courante */
+		      if (pAttrNew->AeAttrText == NULL)
+			GetTextBuffer (&(pAttrNew->AeAttrText));
+		      else
+			ClearText (pAttrNew->AeAttrText);
+		      CopyStringToText (TextAttrValue,
+					pAttrNew->AeAttrText, &lg);
+		    }
+		  /* applique les attributs a la partie selectionnee */
+		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
+				     SelDoc, TRUE);
+		  break;
+		  
+		case AtReferenceAttr:		    
+		  break;
+		  
+		case AtEnumAttr:
+		  if (act == 2)
+		    /* suppression de l'attribut */
+		    pAttrNew->AeAttrValue = 0;
+		  else
+		    /* la valeur choisie devient la valeur courante */
+		    pAttrNew->AeAttrValue = NumAttrValue;
+		  /* applique les attributs a la partie selectionnee */
+		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
+				     SelDoc, TRUE);
+		  break;
+		  
+		default:
+		  break;
+		}
+	      UpdateAttrMenu (SelDoc);
+	    }
+	  DeleteAttribute (NULL, pAttrNew);
+	}
+    }
 }
 
 

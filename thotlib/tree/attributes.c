@@ -1043,7 +1043,7 @@ PtrAttribute        pNewAttr;
    create = (pAttr == NULL);
 
    /* peut-on appliquer l'attribut a l'element ? */
-   if (!CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory))
+   if (create && !CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory))
       return;
 
    /* est-ce une suppression d'attribut */
@@ -1241,20 +1241,10 @@ PtrAttribute        pNewAttr;
 	     ApplyAttrPRules (pEl, pDoc, pAttrAsc);
 	  }
 	/* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
-	notifyAttr.document = (Document) IdentDocument (pDoc);
-	notifyAttr.element = (Element) pEl;
-	notifyAttr.attribute = (Attribute) pAttr;
-	notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
-	notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
-	if (create)
-	   notifyAttr.event = TteAttrCreate;
-	else if (suppress)
-	  {
-	     notifyAttr.attribute = NULL;
-	     notifyAttr.event = TteAttrDelete;
-	  }
-	else
-	   notifyAttr.event = TteAttrModify;
+	if (notifyAttr.event == TteAttrCreate)
+	  notifyAttr.attribute = (Attribute) pAttr;
+	else if (notifyAttr.event == TteAttrDelete)
+	  notifyAttr.attribute = NULL;
 	CallEventAttribute (&notifyAttr, FALSE);
      }
 }

@@ -176,7 +176,8 @@ int                 oldHeight;
    Attribute           attr;
    Element             el, child;
    char               *text;
-   int                 shape, w, h, length, delta;
+   int                 shape, w, h, length;
+   int                 deltax, deltay, val;
    DisplayMode         dispMode;
 
    dispMode = TtaGetDisplayMode (document);
@@ -236,18 +237,66 @@ int                 oldHeight;
 			    TtaAttachAttribute (el, attr, document);
 			 }
 		       TtaSetAttributeReference (attr, el, document, image, document);
+		       /* do we need to initialize the polyline limits */
+		       if (oldWidth == -1 && oldHeight == -1)
+			 {
+                            child = TtaGetFirstChild (el);
+                            TtaChangeLimitOfPolyline (child, UnPixel, w, h, document);
+			 }
 		    }
 		  else if (oldWidth != -1 || oldHeight != -1)
 		    {
-		      /* move and resize the map area */
+		      deltax = deltay = 0;
+		      /* move and resize the current map area */
 		      if (oldWidth != -1 && w != 0)
 			{
-			  delta = (w - oldWidth) / w;
+			  deltax = (w - oldWidth) * 100 / oldWidth;
+			  if (deltax != 0)
+			    {
+			      /* Search the x_coord attribute */
+			      attrType.AttrTypeNum = HTML_ATTR_x_coord;
+			      attr = TtaGetAttribute (el, attrType);
+			      val = TtaGetAttributeValue (attr);
+			      val = val + (val * deltax / 100);
+			      TtaSetAttributeValue (attr, val, el, document);    
+			      /* Search the width attribute */
+			      attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+			      attr = TtaGetAttribute (el, attrType);
+			      val = TtaGetAttributeValue (attr);
+			      val = val + (val * deltax / 100);
+			      TtaSetAttributeValue (attr, val, el, document);
+			    }
 			}
 		      if (oldHeight != -1 && h != 0)
 			{
-			  delta = (h - oldHeight) / h;
+			  deltay = (h - oldHeight) * 100 / oldHeight;
+			  if (deltay != 0)
+			    {
+			      /* Search the y_coord attribute */
+			      attrType.AttrTypeNum = HTML_ATTR_y_coord;
+			      attr = TtaGetAttribute (el, attrType);
+			      val = TtaGetAttributeValue (attr);
+			      val = val + (val * deltay / 100);
+			      TtaSetAttributeValue (attr, val, el, document);
+			      /* Search the height attribute */
+			      attrType.AttrTypeNum = HTML_ATTR_height_;
+			      attr = TtaGetAttribute (el, attrType);
+			      val = TtaGetAttributeValue (attr);
+			      val = val + (val * deltay / 100);
+			      TtaSetAttributeValue (attr, val, el, document);
+			    }
 			}
+
+		      /* update area coords */
+		      if (deltax && deltay)
+			/* both width and height */
+			SetAreaCoords (document, el, 0);
+		      else if (deltax)
+			/* only width */
+			SetAreaCoords (document, el, HTML_ATTR_IntWidthPxl);
+		      else
+			/* only height */
+			SetAreaCoords (document, el, HTML_ATTR_height_);
 		    }
 	       }
 	     TtaNextSibling (&el);

@@ -841,17 +841,13 @@ AttributeType       attributeType;
    0 if both types are different, 1 if they are identical.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaSameAttributeTypes (AttributeType type1, AttributeType type2)
-
 #else  /* __STDC__ */
 int                 TtaSameAttributeTypes (type1, type2)
 AttributeType       type1;
 AttributeType       type2;
-
 #endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -891,30 +887,24 @@ AttributeType       type2;
    Value of that attribute.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaGetAttributeValue (Attribute attribute)
-
 #else  /* __STDC__ */
 int                 TtaGetAttributeValue (attribute)
 Attribute           attribute;
-
 #endif /* __STDC__ */
-
 {
    int                 value;
 
    UserErrorCode = 0;
    value = 0;
-   if (((PtrAttribute) attribute)->AeAttrType != AtEnumAttr &&
-       ((PtrAttribute) attribute)->AeAttrType != AtNumAttr)
-     {
-	TtaError (ERR_invalid_attribute_type);
-     }
+   if (attribute == NULL)
+     TtaError (ERR_invalid_attribute_type);
+   else if (((PtrAttribute) attribute)->AeAttrType != AtEnumAttr &&
+	    ((PtrAttribute) attribute)->AeAttrType != AtNumAttr)
+     TtaError (ERR_invalid_attribute_type);
    else
-     {
-	value = ((PtrAttribute) attribute)->AeAttrValue;
-     }
+     value = ((PtrAttribute) attribute)->AeAttrValue;
    return value;
 }
 
@@ -930,34 +920,30 @@ Attribute           attribute;
    length of the character string contained in the attribute.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaGetTextAttributeLength (Attribute attribute)
-
 #else  /* __STDC__ */
 int                 TtaGetTextAttributeLength (attribute)
 Attribute           attribute;
-
 #endif /* __STDC__ */
-
 {
    int                 length;
    PtrTextBuffer       pBT;
 
    UserErrorCode = 0;
    length = 0;
-   if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
-     {
-	TtaError (ERR_invalid_attribute_type);
-     }
+   if (attribute == NULL)
+     TtaError (ERR_invalid_attribute_type);
+   else if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
+     TtaError (ERR_invalid_attribute_type);
    else
      {
-	pBT = ((PtrAttribute) attribute)->AeAttrText;
-	while (pBT != NULL)
-	  {
-	     length += pBT->BuLength;
-	     pBT = pBT->BuNext;
-	  }
+       pBT = ((PtrAttribute) attribute)->AeAttrText;
+       while (pBT != NULL)
+	 {
+	   length += pBT->BuLength;
+	   pBT = pBT->BuNext;
+	 }
      }
    return length;
 }
@@ -987,11 +973,11 @@ int                *length;
 #endif /* __STDC__ */
 
 {
-
   UserErrorCode = 0;
-  /**** supprimer ca :	*length = 0;	****/
   *buffer = EOS;
-  if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
+  if (attribute == NULL)
+    TtaError (ERR_invalid_attribute_type);
+   else if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
     TtaError (ERR_invalid_attribute_type);
   else
     CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer, length);

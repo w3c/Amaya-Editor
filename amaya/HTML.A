@@ -25,11 +25,6 @@ ELEMENTS
 	ElemTextModify.Post -> UpdateSRCattribute;
 	END;
 
-   GRAPHICS_UNIT:
-      	BEGIN
-      	ElemGraphModify.Post -> GraphicsModified;
-      	END;
-
    TEXT_UNIT:
 	BEGIN
 	ElemDelete.Pre -> DeleteText;
@@ -128,11 +123,11 @@ ATTRIBUTES
      	BEGIN
       	AttrModify.Post -> GraphicsModified;
      	END;
-     
+
    IntWidthPxl:
    	BEGIN
 	AttrModify.Pre -> StoreWidth;
-    	AttrModify.Post -> GraphicsModified;
+   	AttrModify.Post -> GraphicsModified;
     	END;
     
    height\240:
@@ -160,10 +155,21 @@ ATTRIBUTES
    NAME:
 	AttrMenu.Pre ->    AttrNAMEinMenu;
 
+    
+   Height_:
+   	BEGIN
+	AttrCreate.Pre -> StoreHeight;
+	AttrCreate.Post -> GraphicsModified;
+	AttrModify.Pre -> StoreHeight;
+   	AttrModify.Post -> GraphicsModified;
+	AttrDelete.Pre -> StoreHeight;
+   	END;
+
    Width__:
 	BEGIN
-	AttrModify.Pre -> StoreWidth;
+	AttrCreate.Pre -> StoreWidth;
 	AttrCreate.Post -> AttrWidthModified;
+	AttrModify.Pre -> StoreWidth;
 	AttrModify.Post -> AttrWidthModified;
 	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;

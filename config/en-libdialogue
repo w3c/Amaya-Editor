@@ -105,9 +105,9 @@
 104 modified documents, if any, will be saved on .SAV files
 105 As it is
 106 Scaled
-107 Repeted
-108 X Repeted
-109 Y Repeat
+107 Repeated
+108 X Repeated
+109 Y Repeated
 110 Premature EOF
 111 No bounding box in ps file %s
 112 Cannot open hyphen patterns file: %s
