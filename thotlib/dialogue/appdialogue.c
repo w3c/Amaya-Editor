@@ -1685,8 +1685,11 @@ Pixmap              picture;
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
+#        ifdef _WINDOWS
+	     if (index > MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index - 1] == 0)
+#        else  /* !_WINDOWS */
+	     if (index >= MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index] == 0)
+#        endif /* _WINDOWS */
 		TtaError (ERR_invalid_parameter);
 	     else
 	       {
