@@ -53,7 +53,7 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x, L_Other},
    {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y, L_Other},
    {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct, L_Other},
-   {TEXT(""), TEXT(""), EOS, 0, L_Other}		/* Last entry. Mandatory */
+   {TEXT(""), TEXT(""), EOS, 0, L_Other}	  /* Last entry. Mandatory */
 };
 #else /* GRAPHML */
 /* there is no mapping table of GraphML elements */

@@ -63,6 +63,10 @@ ATTRIBUTES
 	AttrModify.Post -> AttrCoordChanged;
    y:
 	AttrModify.Post -> AttrCoordChanged;
+   dx:
+	AttrModify.Post -> AttrCoordChanged;
+   dy:
+	AttrModify.Post -> AttrCoordChanged;
    IntPosX:
 	AttrModify.Post -> AttrIntPosChanged;
    IntPosY:

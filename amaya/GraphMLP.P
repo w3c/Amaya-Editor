@@ -729,11 +729,7 @@ RULES
         Width: Enclosed . Width;
         Height: Enclosed . Height;
         if NOT within GraphML
-	   BEGIN
            VertPos: Top = Previous . Bottom;
-	   MarginTop: 0.4;
-	   MarginBottom: 0.4;
-	   END;
 	PageBreak: No;
 	LineBreak: No;
 	Justify: No;
@@ -743,8 +739,6 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
         	Height	: Enclosed . Height;
-	   	MarginTop: 0;
-	   	MarginBottom: 0;
 		Visibility: 10;
 		END;
 	IN Graph_Alternate_view BEGIN
@@ -1058,8 +1052,8 @@ RULES
 	CreateBefore (TEXT_S);
 	CreateWith (VerticalLine);
 	Width: Enclosed . Width;
-	HorizPos: Left = Enclosing . Left + 1 pt  UserSpecified;
-	VertPos:  Top = Enclosing . Top + 1 pt  UserSpecified;
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  Top = Enclosing . Top Userspecified;
 	IN Graph_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -1131,6 +1125,15 @@ RULES
         VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
+	IN Graph_Structure_view BEGIN
+		if NOT within XMLcomment_line
+		   BEGIN
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous . Bottom;
+		   END;
+		if within XMLcomment_line
+		   HorizPos: Left = Previous . Right;
+		END;
 	IN Graph_Alternate_view BEGIN
 	        Width: Enclosed . Width;
         	VertPos: HRef = Previous . HRef;
@@ -1207,12 +1210,23 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_x);
 	CreateBefore (VALUE_x);
+   	HorizPos: Left = Enclosing . Left;
+	IN Graph_Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
   y:
 	BEGIN
 	CreateBefore (ATTR_y);
 	CreateBefore (VALUE_y);
+	if not text_
+   	        VertPos:  Top = Enclosing . Top;
+	if text_
+	        VertPos:  HRef = Enclosing . Top;
+   	IN Graph_Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Graph_Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
   width_:

@@ -724,6 +724,10 @@ Document	doc;
           ruleType = PRHorizPos;
       else if (attrType.AttrTypeNum == GraphML_ATTR_y)
           ruleType = PRVertPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_dx)
+          ruleType = PRHorizPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_dy)
+          ruleType = PRVertPos;
       else
 	  return;
       /* get the value of the x or y attribute */
@@ -828,6 +832,8 @@ Document	doc;
 	break;
      case GraphML_ATTR_x:
      case GraphML_ATTR_y:
+     case GraphML_ATTR_dx:
+     case GraphML_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
 	break;
      case GraphML_ATTR_width_:

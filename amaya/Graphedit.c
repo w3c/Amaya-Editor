@@ -277,7 +277,6 @@ void AttrCoordChanged (event)
    ParseCoordAttribute (event->attribute, event->element, event->document);
 }
 
-
 /*----------------------------------------------------------------------
  UpdatePointsAttribute
  update attribute "points" for element el according its content
