@@ -497,6 +497,8 @@ int                 fg;
    int                 thickness;	/* thickness of drawing */
    int                 shift;	/* shifting of drawing   */
 
+   if (fg < 0)
+     return;
    if (lg > 0)
      {
 	w = FrRef[frame];
@@ -519,29 +521,28 @@ int                 fg;
 	 *         height = y + 2 * thickness;
 	 *         bottom = y + ascent + 3;
 	 */
-
 	InitDrawing (0, 5, thickness, RO, active, fg);
 	switch (type)
-	      {
-		 case 1:
-		    /* underlined */
-		    DoDrawOneLine (frame, x - lg, bottom, x, bottom);
-		    break;
-
-		 case 2:
-		    /* overlined */
-		    DoDrawOneLine (frame, x - lg, height, x, height);
-		    break;
-
-		 case 3:
-		    /* cross-over */
-		    DoDrawOneLine (frame, x - lg, middle, x, middle);
-		    break;
-
-		 default:
-		    /* not underlined */
-		    break;
-	      }
+	  {
+	  case 1:
+	    /* underlined */
+	    DoDrawOneLine (frame, x - lg, bottom, x, bottom);
+	    break;
+	    
+	  case 2:
+	    /* overlined */
+	    DoDrawOneLine (frame, x - lg, height, x, height);
+	    break;
+	    
+	  case 3:
+	    /* cross-over */
+	    DoDrawOneLine (frame, x - lg, middle, x, middle);
+	    break;
+	    
+	  default:
+	    /* not underlined */
+	    break;
+	  }
 	FinishDrawing (0, RO, active);
      }
 }
@@ -622,12 +623,12 @@ ptrfont             font;
 int                 RO;
 int                 active;
 int                 fg;
-
 #endif /* __STDC__ */
-
 {
    int                 xm, xp, fh;
 
+   if (fg < 0)
+     return;
    fh = FontHeight (font);
    xm = x + (fh / 2);
    xp = x + (fh / 4);
@@ -773,6 +774,8 @@ int                 fg;
 {
    int                 xm, ym, fh;
 
+   if (fg < 0)
+     return;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\345', font))
      {
@@ -820,6 +823,8 @@ int                 fg;
 {
    int                 fh;
 
+   if (fg < 0)
+     return;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\325', font))
      {
@@ -864,6 +869,8 @@ int                 fg;
 {
    int                 arc, fh;
 
+   if (fg < 0)
+     return;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\307', font))
      {
@@ -913,6 +920,8 @@ int                 fg;
 {
    int                 arc, fh;
 
+   if (fg < 0)
+     return;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
      {
@@ -1034,6 +1043,8 @@ int                 fg;
 {
    int                 xm, ym, xf, yf;
 
+   if (fg < 0)
+     return;
    if (thick <= 0)
       return;
    y += FrameTable[frame].FrTopMargin;
@@ -1474,7 +1485,7 @@ int                 pattern;
     }
 
   /* Draw the border */
-  if (thick > 0)
+  if (thick > 0 && fg >= 0)
     {
       if (width > thick)
 	width = width - thick;
@@ -1560,7 +1571,7 @@ int                 pattern;
      }
 
    /* Draw the border */
-   if (thick > 0)
+   if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
@@ -1611,7 +1622,7 @@ int                 arrow;
   int                 i, j;
   PtrTextBuffer       adbuff;
 
-  if (thick == 0)
+  if (thick == 0 || fg < 0)
     return;
 
   /* Allocate a table of points */
@@ -1734,7 +1745,8 @@ int                 pattern;
 
    /* Fill in the polygone */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
-   if (pat != 0) {
+   if (pat != 0) 
+     {
 #ifdef _GTK
      gdk_gc_set_tile (TtGreyGC, pat);
      gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, nb); 
@@ -1744,10 +1756,11 @@ int                 pattern;
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
       XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
-   }
+     }
 
    /* Draw the border */
-   if (thick > 0) {
+   if (thick > 0 && fg >= 0)
+     {
       InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, nb); 
@@ -1755,7 +1768,7 @@ int                 pattern;
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
 #endif /* _GTK */
       FinishDrawing (0, RO, active);
-   }
+     }
    /* free the table of points */
    free (points);
 }
@@ -1937,7 +1950,7 @@ C_points           *controls;
   float               x1, y1, x2, y2;
   float               cx1, cy1, cx2, cy2;
 
-  if (thick == 0)
+  if (thick == 0 || fg < 0)
     return;
 
   /* alloue la liste des points */
@@ -2158,7 +2171,7 @@ C_points           *controls;
     }
 
   /* Draw the border */
-  if (thick > 0)
+  if (thick > 0 && fg >= 0)
     {
       InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
@@ -2351,7 +2364,7 @@ int                 pattern;
      }
 
    /* Draw the border */
-   if (thick > 0)
+   if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
@@ -2408,7 +2421,8 @@ int                 pattern;
    if (pat == 0 && thick <= 0)
       return;
 
-   if (pat != 0) {
+   if (pat != 0)
+     {
 #ifdef _GTK
       gdk_gc_set_tile ( TtGreyGC, pat);
       gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
@@ -2418,10 +2432,11 @@ int                 pattern;
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
       XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
-   }
+     }
 
    /* Draw the border */
-   if (thick > 0) {
+   if (thick > 0 && fg >= 0)
+     {
       InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
       gdk_draw_arc (FrRef[frame], TtLineGC, FALSE,  x, y, width, height, 0, 360 * 64);
@@ -2429,7 +2444,7 @@ int                 pattern;
       XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
       FinishDrawing (0, RO, active);
-   }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2468,7 +2483,7 @@ int                 fg;
     Y = y + h - (thick + 1) / 2;
   else
     Y = y + thick / 2;
-  if (thick > 0)
+  if (thick > 0 && fg >= 0)
     {
       InitDrawing (0, style, thick, RO, active, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
@@ -2513,7 +2528,7 @@ int                 fg;
     X = x + thick / 2;
 
   y += FrameTable[frame].FrTopMargin;
-  if (thick > 0)
+  if (thick > 0 && fg >= 0)
     {
       InitDrawing (0, style, thick, RO, active, fg);
       DoDrawOneLine (frame, X, y, X, y + h);
@@ -2552,7 +2567,7 @@ int                 fg;
    y += FrameTable[frame].FrTopMargin;
    xf = x + l - 1 - thick;
    yf = y + h - 1 - thick;
-   if (thick > 0)
+   if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 	if (direction == 0)
@@ -2815,7 +2830,7 @@ int                 pattern;
      }
 
    /* Draw the border */
-   if (thick > 0)
+   if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
@@ -2906,7 +2921,7 @@ int                 pattern;
      }
 
    /* Draw the border */
-   if (thick > 0)
+   if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK

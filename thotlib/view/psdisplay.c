@@ -468,7 +468,7 @@ int                 fg;
   int                 l_end;	/* end of the line       */
   FILE               *fout;
 
-  if (y < 0)
+  if (y < 0 || thick <= 0 || fg < 0)
     return;
   y += FrameTable[frame].FrTopMargin;
   
@@ -543,7 +543,7 @@ int                 fg;
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
-   if (thick < 0)
+   if (thick < 0 || fg < 0)
       return;
 
    fout = (FILE *) FrRef[frame]; 
@@ -834,7 +834,7 @@ int                 fg;
     return;
    y += FrameTable[frame].FrTopMargin;
 
-   if (thick <= 0)
+   if (thick <= 0 || fg < 0)
       return;
 
    /* Do we need to change the current color ? */
@@ -986,7 +986,7 @@ int                 fg;
       return;
 
    y += FrameTable[frame].FrTopMargin;
-   if (thick < 0)
+   if (thick < 0 || fg < 0)
       return;
 
    fout = (FILE *) FrRef[frame];
@@ -1121,14 +1121,16 @@ int                 pattern;
    y += FrameTable[frame].FrTopMargin;
    fout = (FILE *) FrRef[frame];
 
-   /* Do we need to change the current color ? */
-   if (thick > 0)
-      CurrentColor (fout, fg);
-
    xf = PixelToPoint (x + width);
    yf = PixelToPoint (y + height);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
+
+   /* Do we need to change the current color ? */
+   if (fg < 0)
+     thick = 0;
+   if (thick > 0)
+      CurrentColor (fout, fg);
 
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
@@ -1180,7 +1182,7 @@ int                 arrow;
    y += FrameTable[frame].FrTopMargin;
    xp = yp = 0;
    prevx = prevy = 0;
-   if (thick == 0)
+   if (thick == 0 || fg < 0)
       return;
 
    lg = HL + thick;
@@ -1344,7 +1346,7 @@ C_points           *controls;
   if (y < 0)
     return;
    y += FrameTable[frame].FrTopMargin;
-   if (thick == 0)
+   if (thick == 0 || fg < 0)
       return;
 
    /* Do we need to change the current color ? */
@@ -1578,6 +1580,8 @@ int                 pattern;
 
    y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
+   if (fg < 0)
+     thick = 0;
    if (thick > 0)
      CurrentColor (fout, fg);
 
@@ -1636,6 +1640,8 @@ int                 pattern;
    if (y < 0)
       return;
    /* Do we need to change the current color ? */
+   if (fg < 0)
+     thick = 0;
    if (thick > 0)
       CurrentColor (fout, fg);
    width = width / 2;
@@ -1685,7 +1691,7 @@ int                 fg;
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0)
+   if (thick <= 0 || fg < 0)
       return;
    fout = (FILE *) FrRef[frame];
 
@@ -1746,6 +1752,8 @@ int                 pattern;
     return;
    y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
+   if (fg < 0)
+     thick = 0;
    if (thick > 0)
       CurrentColor (fout, fg);
 
@@ -1797,6 +1805,8 @@ int                 pattern;
     return;
    y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
+   if (fg < 0)
+     thick = 0;
    if (thick > 0)
       CurrentColor (fout, fg);
 
@@ -1857,7 +1867,7 @@ int                 fg;
    if (y < 0)
      return;
    y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0)
+   if (thick <= 0 || fg < 0)
      return;
 
    fout = (FILE *) FrRef[frame];
@@ -1906,7 +1916,7 @@ int                 fg;
       return;
 
    y += FrameTable[frame].FrTopMargin;
-   if (thick <= 0)
+   if (thick <= 0 || fg < 0)
       return;
 
    fout = (FILE *) FrRef[frame];
@@ -1988,6 +1998,8 @@ int                 fg;
   if (y < 0)
     return;
    y += FrameTable[frame].FrTopMargin;
+   if (fg < 0)
+     thick = 0;
    if (thick <= 0)
       return;
 

@@ -40,6 +40,7 @@ DEFAULT
    HorizPos: Left = Enclosing . Left;
    VertPos:  Top = Enclosing . Top;
    Visibility: Enclosing =;
+   FillPattern: Enclosing =;
    Depth: Enclosing =;
    IN Structure_view
 	BEGIN
@@ -1072,7 +1073,6 @@ RULES
 	MarginLeft: 5 px;
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
-	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginLeft: 0;
@@ -1098,7 +1098,6 @@ RULES
 	MarginLeft: 5 px;
 	MarginBottom: 5 px;
 	MarginRight: 5 px;
-	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginLeft: 0;
@@ -1202,7 +1201,6 @@ RULES
 	CreateBefore (POLYLINE_S);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1220,7 +1218,6 @@ RULES
 	CreateWith (VerticalLine);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
-	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
