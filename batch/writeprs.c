@@ -1195,6 +1195,8 @@ PtrPRule            pPRule;
 				WriteBoolean (currentRule->PrJustify);
 				break;
 			     case PtPictInfo:
+			     case PtXRadius:
+			     case PtYRadius:
 				break;
 			  }
 
