@@ -1,0 +1,55 @@
+NOTE:
+
+If you don't want to try these version right now, make a copy of the
+following files before making an update, or get the precedent version
+from CVS. Otherwise, you won't be able to compile Amaya/libwww:
+
+	query.c
+	answer.c
+
+Instructions for compiling Amaya with the cvs.w3.org/libwww
+
+=== get libwww out of CVS===
+cd ~
+mv libwww libwww-opera (or destroy it)
+
+cvs -d :pserver:anonymous@dev.w3.org:/sources/public login
+cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 checkout -rAmaya libwww
+
+=== Bootstrap libwww
+cd libwww
+perl config/winConfigure.pl 
+
+Additional step for UNIX platformsw:
+
+aclocal ; autoheader ; automake ; autoconf ;
+
+==== Compile it (Unix Platforms)
+cd ~/Amaya/obj
+rm -r libwww.a libwww
+make amaya
+
+This will create a new libwww directory and lots of mini libwww*.a files
+If you want to recompile libwww, you'll have to make a
+
+   cd ~/Amaya/obj
+   rm -r libwww*
+
+next time
+===============
+
+Compile it (Windows Platforms)
+
+Add the modules/md5, modules/expat/xmltok, modules/expat/xmlparse
+files to the project.
+Undefine the symbol WWW_WIN_DLL in the settings for libwww.
+The rest of the settings are the same as for the precedent libwww (see
+Vanuatu).
+
+Self remainder. Windows files I had to change:
+
+Library/src/windows/config.h
+Library/src/HTZip.c
+Library/src/HTUtils.html
+
+-Jose 20, May 1999.
