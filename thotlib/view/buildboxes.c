@@ -2284,6 +2284,7 @@ boolean             horizRef;
    pPreviousDimRel = NULL;
    pDimRel = RetardeEngl;
    toCreate = TRUE;
+   i = 0;
    while (toCreate && pDimRel != NULL)
      {
 	i = 0;
@@ -2291,15 +2292,17 @@ boolean             horizRef;
 	while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
 	  {
 	     if (pDimRel->DimRTable[i] == pBox && pDimRel->DimRSame[i] == horizRef)
-		return;		/* La boite est deja enregistree */
+		/* La boite est deja enregistree */
+		return;
 	     else
 		i++;
 	  }
 
 	if (i == MAX_RELAT_DIM)
-	   pDimRel = pDimRel->DimRNext;	/* Bloc suivant */
+	  /* Bloc suivant */
+	  pDimRel = pDimRel->DimRNext;
 	else
-	   toCreate = FALSE;
+	  toCreate = FALSE;
      }
 
    /* Faut-il creer un nouveau bloc de relations ? */
@@ -2313,7 +2316,8 @@ boolean             horizRef;
      }
 
    pDimRel->DimRTable[i] = pBox;
-   pDimRel->DimRSame[i] = horizRef;	/* englobement horizontal */
+   /* englobement horizontal */
+   pDimRel->DimRSame[i] = horizRef;
 }
 
 
