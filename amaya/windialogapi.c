@@ -38,9 +38,8 @@ extern int         ActiveFrame;
 
 #define MAX_BUFF 4096
 /* JK: I think that some of these widgets, which are general, should
-   go into the thotlib, such as IDC_LANGEDIT. We have a dupllication of
+   go into the thotlib, such as IDC_LANGEDIT. We have a dupblication of
    IDC refs between thotlib and Amaya */
-#define IDC_WORDBUTTON    20000
 #define IDC_EDITRULE      20001
 #define IDC_LANGEDIT      20002
 #define IDC_CSSEDIT       20004
@@ -67,9 +66,6 @@ int                WIN_NormalLineSpacing;
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
 extern char         DocToOpen[MAX_LENGTH];
-extern char         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
-extern int          ClickX, ClickY;
-extern int          CORR;
 extern ThotBool     TtIsPrinterTrueColor;
 extern ThotBool     bUserAbort;
 extern ThotBool     WithToC;
@@ -100,15 +96,6 @@ static char        *SavList;
 static char        *cssList;
 static char        *mimeType;
 static char        *charSet;
-static int          currentDoc;
-static int          currentView;
-static int          SpellingBase;
-static int          ChkrSelectProp;
-static int          ChkrMenuOR;
-static int          ChkrFormCorrect;
-static int          ChkrMenuIgnore;
-static int          ChkrCaptureNC;
-static int          ChkrSpecial;
 static int          repeatMode;
 static int          fontNum;
 static int          fontStyle;
