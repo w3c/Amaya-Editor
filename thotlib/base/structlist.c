@@ -2503,6 +2503,10 @@ static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 	   wrnomboite (pos.PoRefIdent, fileDescriptor);
 	else if (pos.PoRefKind == RkAttr)
 	   wrnomattr (pos.PoRefIdent, fileDescriptor);
+	else if (pos.PoRefKind == RkAnyElem)
+	   fprintf (fileDescriptor, "AnyElem");
+	else if (pos.PoRefKind == RkAnyBox)
+	   fprintf (fileDescriptor, "AnyBox");
 	fprintf (fileDescriptor, ". ");
 	wrrepere (pos.PoPosRef, fileDescriptor);
 	if (pos.PoDistance != 0)
@@ -2559,6 +2563,10 @@ static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
 		wrnomboite (Dim.DrRefIdent, fileDescriptor);
 	     else if (Dim.DrRefKind == RkAttr)
 		wrnomattr (Dim.DrRefIdent, fileDescriptor);
+	     else if (Dim.DrRefKind == RkAnyElem)
+	        fprintf (fileDescriptor, "AnyElem");
+	     else if (Dim.DrRefKind == RkAnyBox)
+	        fprintf (fileDescriptor, "AnyBox");
 	     fprintf (fileDescriptor, ". ");
 	     if ((Dim.DrSameDimens && Hauteur) || (!Dim.DrSameDimens && !Hauteur))
 		fprintf (fileDescriptor, "Height");

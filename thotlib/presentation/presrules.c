@@ -986,39 +986,35 @@ static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
       if (notType)
 	/* on accepte le pave s'il est de type different de numAbType */
 	{
-	   if (refKind == RkElType)
-	     /* un pave d'un element de structure */
+	   if (refKind == RkAnyElem)
 	     {
-	     if (numAbType == MAX_RULES_SSCHEMA + 1)
-		{
-		/* C'est une regle Not AnyElem, on accepte la premiere */
-		/* boite de presentation trouvee */
-		if (pAb->AbPresentationBox)
-		   *found = TRUE;
-		}
-	     else
-		/* c'est une regle Not Type */
-		if (pAb->AbTypeNum != numAbType ||
-		    pAb->AbPresentationBox ||
-		    pAb->AbPSchema != pSP)
-		   *found = TRUE;
+	       /* C'est une regle Not AnyElem, on accepte la premiere */
+	       /* boite de presentation trouvee */
+	       if (pAb->AbPresentationBox)
+		 *found = TRUE;
+	     }
+	   else if (refKind == RkElType)
+	     /* c'est une regle Not Type */
+	     {
+	       if (pAb->AbTypeNum != numAbType ||
+		   pAb->AbPresentationBox ||
+		   pAb->AbPSchema != pSP)
+		 *found = TRUE;
+	     }
+	   else if (refKind == RkAnyBox)
+	     {
+	       /* Cas d'une regle Not AnyBox, on accepte le premier */
+	       /* element trouve' */
+	       if (!pAb->AbPresentationBox)
+		 *found = TRUE;
 	     }
 	   else if (refKind == RkPresBox)
-	     /* un pave d'une boite de pres. */
 	     {
-	     if (numAbType == MAX_PRES_BOX + 1)
-		{
-	        /* Cas d'une regle Not AnyBox, on accepte le premier */
-	        /* element trouve' */
-		if (!pAb->AbPresentationBox)
-	           *found = TRUE;
-		}
-	     else
-		/* c'est une regle Not Box */
-		if (pAb->AbTypeNum != numAbType ||
-		    !pAb->AbPresentationBox ||
-		    pAb->AbPSchema != pSP)
-		   *found = TRUE;
+	       /* c'est une regle Not Box */
+	       if (pAb->AbTypeNum != numAbType ||
+		   !pAb->AbPresentationBox ||
+		   pAb->AbPSchema != pSP)
+		 *found = TRUE;
 	     }
 	   else if (refKind == RkAttr)
 	     /* le pave d'un element portant un attribut */
@@ -1029,39 +1025,35 @@ static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
 	}
       else
 	{
-	   if (refKind == RkElType)
-	     /* un pave d'un element de structure */
+	   if (refKind == RkAnyElem)
 	     {
-	     if (numAbType == MAX_RULES_SSCHEMA + 1)
-		{
-		/* C'est une regle AnyElem, on accepte le premier element
-		   trouve' */
-		if (!pAb->AbPresentationBox)
-		   *found = TRUE;
-		}
-	     else
-		/* C'est une regle Type */
-		if (pAb->AbTypeNum == numAbType &&
-		    !pAb->AbPresentationBox &&
-		    (pAb->AbPSchema == pSP || pSP == NULL))
-		   *found = TRUE;
+	       /* C'est une regle AnyElem, on accepte le premier element
+		  trouve' */
+	       if (!pAb->AbPresentationBox)
+		 *found = TRUE;
+	     }
+	   else if (refKind == RkElType)
+	     /* C'est une regle Type */
+	     {
+	       if (pAb->AbTypeNum == numAbType &&
+		   !pAb->AbPresentationBox &&
+		   (pAb->AbPSchema == pSP || pSP == NULL))
+		 *found = TRUE;
+	     }
+	   else if (refKind == RkAnyBox)
+	     {
+	       /* C'est une regle AnyBox, on accepte la premiere boite de */
+	       /* presentation trouvee */
+	       if (pAb->AbPresentationBox)
+		 *found = TRUE;
 	     }
 	   else if (refKind == RkPresBox)
-	     /* un pave d'une boite de presentation */
 	     {
-	     if (numAbType == MAX_PRES_BOX + 1)
-		{
-	        /* C'est une regle AnyBox, on accepte la premiere boite de */
-	        /* presentation trouvee */
-		if (pAb->AbPresentationBox)
-	           *found = TRUE;
-		}
-	     else
-		/* C'est une regle Box */
-		if (pAb->AbTypeNum == numAbType &&
-		    pAb->AbPresentationBox &&
-		    (pAb->AbPSchema == pSP || pSP == NULL))
-		   *found = TRUE;
+	       /* C'est une regle Box */
+	       if (pAb->AbTypeNum == numAbType &&
+		   pAb->AbPresentationBox &&
+		   (pAb->AbPSchema == pSP || pSP == NULL))
+		 *found = TRUE;
 	     }
 	   else if (refKind == RkAttr)
 	     {
@@ -1209,7 +1201,7 @@ static void VerifyAbsBoxDescent (ThotBool *found, PtrPSchema pSP,
 }
 
 /*----------------------------------------------------------------------
-   	SearchAbsBoxRef Si notType est faux, rend un pointeur sur le pave de	
+  SearchAbsBoxRef Si notType est faux, rend un pointeur sur le pave de
    		type numAbType et de niveau level (relativement au pave	
    		pAbb). Si notType est vrai, rend un pointeur sur le	
    		premier pave de niveau level (relativement a pAbb) qui n'est
@@ -1217,7 +1209,8 @@ static void VerifyAbsBoxDescent (ThotBool *found, PtrPSchema pSP,
    		Si refKind == RkElType, le pave represente par numAbType est
    		celui d'un element de la representation interne,
 		si refKind == RkPresBox, c'est une boite de presentation
-		definie dans le schema de presentation pointe' par pSP.				si refKind == RkAttr, c'est un numero d'attribut.
+		definie dans le schema de presentation pointe' par pSP.
+		si refKind == RkAttr, c'est un numero d'attribut.
    		Si level vaut RlReferred, on cherche parmi les paves de	
    		l'element designe' par l'attribut reference pointe'	
    		par pAttr.						
@@ -1909,7 +1902,8 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	/* cherche le pave (pAbbPos) par rapport auquel le pave */
 	/* traite' se positionne  */
 	pAbbPos = NULL;
-	if (pPosRule->PoRefKind == RkElType)
+	if (pPosRule->PoRefKind == RkElType ||
+	    pPosRule->PoRefKind == RkAnyElem)
 	   /* appelle l'exception des tableaux, au cas ou ce serait la */
 	   /* regle de hauteur d'un filet vertical d'un tableau */
 	   if (ThotLocalActions[T_abref] != NULL)

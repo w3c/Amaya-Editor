@@ -3099,12 +3099,12 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  SetLevel (RlReferred, wi);
 	break;
       case KWD_AnyElem:
-	CurRule->PrPosRule.PoRefKind = RkElType;
-	CurRule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;
+	CurRule->PrPosRule.PoRefKind = RkAnyElem;
+	CurRule->PrPosRule.PoRefIdent = 1; /* must not be 0 see presrules.c */
 	break;
       case KWD_AnyBox:
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
-	CurRule->PrPosRule.PoRefIdent = MAX_PRES_BOX + 1;
+	CurRule->PrPosRule.PoRefKind = RkAnyBox;
+	CurRule->PrPosRule.PoRefIdent = 1; /* must not be 0 see presrules.c */
 	break;
       case KWD_ElemWithAttr:
 	break;

@@ -88,6 +88,8 @@
 #define C_KIND_ELEMENT_TYPE   L'E'
 #define C_KIND_PRES_BOX       L'B'
 #define C_KIND_ATTRIBUTE      L'A'
+#define C_KIND_ANYELEM        L'L'
+#define C_KIND_ANYBOX         L'O'
 
 /* presentation box contents type */
 /* type du contenu d'une boite de presentation */
@@ -254,6 +256,8 @@
 #define C_KIND_ELEMENT_TYPE   'E'
 #define C_KIND_PRES_BOX       'B'
 #define C_KIND_ATTRIBUTE      'A'
+#define C_KIND_ANYELEM        'L'
+#define C_KIND_ANYBOX         'O'
 
 /* presentation box contents type */
 /* type du contenu d'une boite de presentation */

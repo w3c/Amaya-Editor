@@ -572,6 +572,10 @@ static void         wrpos (PosRule pos, ThotBool Def)
 	   wrnomboite (pos.PoRefIdent);
 	else if (pos.PoRefKind == RkAttr)
 	   wrnomattr (pos.PoRefIdent);
+	else if (pos.PoRefKind == RkAnyElem)
+	   printf ("AnyElem");
+	else if (pos.PoRefKind == RkAnyBox)
+	   printf ("AnyBox");
 	printf (". ");
 	wrrepere (pos.PoPosRef);
 	if (pos.PoDistance != 0)
@@ -626,6 +630,10 @@ static void         wrdimens (DimensionRule Dim, ThotBool Hauteur)
 		wrnomboite (Dim.DrRefIdent);
 	     else if (Dim.DrRefKind == RkAttr)
 		wrnomattr (Dim.DrRefIdent);
+	     else if (Dim.DrRefKind == RkAnyElem)
+	       printf ("AnyElem");
+	     else if (Dim.DrRefKind == RkAnyBox)
+	       printf ("AnyBox");
 	     printf (". ");
 	     if ((Dim.DrSameDimens && Hauteur) || (!Dim.DrSameDimens && !Hauteur))
 		printf ("Height");

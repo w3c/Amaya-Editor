@@ -852,6 +852,12 @@ static void         WriteRefKind (RefKind kind)
 	    case RkAttr:
 	       TtaWriteByte (outfile, C_KIND_ATTRIBUTE);
 	       break;
+	    case RkAnyElem:
+	       TtaWriteByte (outfile, C_KIND_ANYELEM);
+	       break;
+	    case RkAnyBox:
+	       TtaWriteByte (outfile, C_KIND_ANYBOX);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid reference %X\n", kind);
 	       break;

@@ -62,7 +62,7 @@ typedef enum
 /* Kind of object used as a reference in a relative position */
 typedef enum
 {
-  RkElType, RkPresBox, RkAttr
+  RkElType, RkPresBox, RkAttr, RkAnyElem, RkAnyBox
 } RefKind;
 
 /* relative positionning rule for the dimensions or axes of two boxes */

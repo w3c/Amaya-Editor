@@ -952,6 +952,12 @@ static RefKind      ReadRefKind (BinFile file)
 	    case C_KIND_ATTRIBUTE:
 	       return (RkAttr);
 	       break;
+	    case C_KIND_ANYELEM:
+	       return (RkAnyElem);
+	       break;
+	    case C_KIND_ANYBOX:
+	       return (RkAnyBox);
+	       break;
 	    default:
 	       error = True;
 	       return (RkElType);

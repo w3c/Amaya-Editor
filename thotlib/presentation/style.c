@@ -1441,9 +1441,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrPosRule.PoPosRef = Bottom;
 	  rule->PrPosRule.PoRelation = RlPrevious;
 	  rule->PrPosRule.PoNotRel = FALSE;
-	  rule->PrPosRule.PoRefKind = RkElType;
+	  rule->PrPosRule.PoRefKind = RkAnyElem;
 	  rule->PrPosRule.PoUserSpecified = FALSE;
-	  rule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;	  
+	  rule->PrPosRule.PoRefIdent = 0;	  
 	}
       break;
     case PtHorizPos:
