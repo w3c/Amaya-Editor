@@ -181,7 +181,7 @@ ptrfont font;
 #endif /* __STDC__ */
 {
    if (LastUsedFont == (ptrFC)0) {
-      LastUsedFont            = (ptrFC) TtaGetMemory (sizeof (ptrFC));
+      LastUsedFont            = (ptrFC) TtaGetMemory (sizeof (FontCharacteristics));
       LastUsedFont->highlight = font->highlight; 
       LastUsedFont->size      = font->size;
       LastUsedFont->alphabet  = font->alphabet; 
