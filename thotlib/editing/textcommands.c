@@ -25,6 +25,10 @@
 #include "appaction.h"
 #include "appdialogue.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 /* variables */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1238,8 +1242,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 		  /* Add new lines */
 		  text[i++] = EOL;
 #ifdef IV /*_WINDOWS*/
-		  if (PasteLineByLine)
-		    text[i++] = __CR__;
+		  text[i++] = __CR__;
 #endif /* _WINDOWS */
 		  text[i] = EOS;
 		}

@@ -33,6 +33,9 @@
 #include "textcommands_f.h"
 #include "xwindowdisplay_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
    VerticalScroll scrolls forward (delta > 0) or backward (delta < 0).

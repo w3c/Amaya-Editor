@@ -50,6 +50,9 @@ char                mbsTmpStr[MAX_TXT_LEN];
 #include "tree_f.h"
 #include "viewapi_f.h"
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 /*----------------------------------------------------------------------
    WrPRuleType ecrit le type de la regle de presentation       
    pointee par pRule, dans le fichier fileDescriptor.            
