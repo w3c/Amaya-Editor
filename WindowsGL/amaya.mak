@@ -43,12 +43,12 @@ ALL : "$(OUTDIR)\amaya.exe"
 
 !ELSE 
 
-ALL : "davlib - Win32 Release" "Compilers - Win32 Release" "annotlib - Win32 Release" "libThotTable - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
+ALL : "libraptor - Win32 Release" "davlib - Win32 Release" "Compilers - Win32 Release" "annotlib - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" "davlib - Win32 ReleaseCLEAN" 
+CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" "davlib - Win32 ReleaseCLEAN" "libraptor - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -90,7 +90,6 @@ CLEAN :
 	-@erase "$(INTDIR)\SVGAPP.obj"
 	-@erase "$(INTDIR)\SVGbuilder.obj"
 	-@erase "$(INTDIR)\SVGedit.obj"
-	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\templates.obj"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\TimelineAPP.obj"
@@ -116,7 +115,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS_" /D "_GL" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\..\freetype-2.1.0\include" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS_" /D "_GL" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -163,7 +162,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\SVGAPP.obj" \
 	"$(INTDIR)\SVGbuilder.obj" \
 	"$(INTDIR)\SVGedit.obj" \
-	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\templates.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\TimelineAPP.obj" \
@@ -187,7 +185,6 @@ LINK32_OBJS= \
 	"$(OUTDIR)\thotprinter.lib" \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
-	".\libThotTable.lib" \
 	".\annotlib.lib" \
 	".\davlib\Release\davlib.lib"
 
@@ -210,12 +207,12 @@ ALL : "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ELSE 
 
-ALL : "davlib - Win32 Debug" "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libThotTable - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
+ALL : "libraptor - Win32 Debug" "davlib - Win32 Debug" "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" "davlib - Win32 DebugCLEAN" 
+CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" "davlib - Win32 DebugCLEAN" "libraptor - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -294,8 +291,6 @@ CLEAN :
 	-@erase "$(INTDIR)\SVGbuilder.sbr"
 	-@erase "$(INTDIR)\SVGedit.obj"
 	-@erase "$(INTDIR)\SVGedit.sbr"
-	-@erase "$(INTDIR)\tableH.obj"
-	-@erase "$(INTDIR)\tableH.sbr"
 	-@erase "$(INTDIR)\templates.obj"
 	-@erase "$(INTDIR)\templates.sbr"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
@@ -341,7 +336,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /GR /GX /ZI /Od /I "..\freetype-2.1.0\objs" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -384,7 +379,6 @@ BSC32_SBRS= \
 	"$(INTDIR)\SVGAPP.sbr" \
 	"$(INTDIR)\SVGbuilder.sbr" \
 	"$(INTDIR)\SVGedit.sbr" \
-	"$(INTDIR)\tableH.sbr" \
 	"$(INTDIR)\templates.sbr" \
 	"$(INTDIR)\TextFileAPP.sbr" \
 	"$(INTDIR)\TimelineAPP.sbr" \
@@ -447,7 +441,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\SVGAPP.obj" \
 	"$(INTDIR)\SVGbuilder.obj" \
 	"$(INTDIR)\SVGedit.obj" \
-	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\templates.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\TimelineAPP.obj" \
@@ -470,7 +463,6 @@ LINK32_OBJS= \
 	".\libraptor.lib" \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
-	".\libThotTable.lib" \
 	".\annotlib.lib" \
 	".\davlib\Debug\davlib.lib"
 
@@ -655,32 +647,6 @@ LINK32_OBJS= \
 
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
-"libThotTable - Win32 Release" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
-   cd ".."
-
-"libThotTable - Win32 ReleaseCLEAN" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
-   cd ".."
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-"libThotTable - Win32 Debug" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
-   cd ".."
-
-"libThotTable - Win32 DebugCLEAN" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
-   cd ".."
-
-!ENDIF 
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
 "annotlib - Win32 Release" : 
    cd ".\annotlib"
    $(MAKE) /$(MAKEFLAGS) /F .\annotlib.mak CFG="annotlib - Win32 Release" 
@@ -753,6 +719,32 @@ LINK32_OBJS= \
 "davlib - Win32 DebugCLEAN" : 
    cd ".\davlib"
    $(MAKE) /$(MAKEFLAGS) /F .\davlib.mak CFG="davlib - Win32 Debug" RECURSE=1 CLEAN 
+   cd ".."
+
+!ENDIF 
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+"libraptor - Win32 Release" : 
+   cd ".\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" 
+   cd ".."
+
+"libraptor - Win32 ReleaseCLEAN" : 
+   cd ".\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Release" RECURSE=1 CLEAN 
+   cd ".."
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+"libraptor - Win32 Debug" : 
+   cd ".\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" 
+   cd ".."
+
+"libraptor - Win32 DebugCLEAN" : 
+   cd ".\libraptor"
+   $(MAKE) /$(MAKEFLAGS) /F .\libraptor.mak CFG="libraptor - Win32 Debug" RECURSE=1 CLEAN 
    cd ".."
 
 !ENDIF 
@@ -1436,24 +1428,6 @@ SOURCE=..\amaya\SVGedit.c
 
 
 "$(INTDIR)\SVGedit.obj"	"$(INTDIR)\SVGedit.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\tablelib\tableH.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-
-"$(INTDIR)\tableH.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-
-"$(INTDIR)\tableH.obj"	"$(INTDIR)\tableH.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

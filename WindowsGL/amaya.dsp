@@ -246,10 +246,6 @@ SOURCE=..\amaya\SVGedit.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\tablelib\tableH.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\templates.c
 # End Source File
 # Begin Source File

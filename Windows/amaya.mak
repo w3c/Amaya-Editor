@@ -43,12 +43,12 @@ ALL : "$(OUTDIR)\amaya.exe"
 
 !ELSE 
 
-ALL : "davlib - Win32 Release" "Compilers - Win32 Release" "annotlib - Win32 Release" "libThotTable - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
+ALL : "davlib - Win32 Release" "Compilers - Win32 Release" "annotlib - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" "davlib - Win32 ReleaseCLEAN" 
+CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" "davlib - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -182,7 +182,6 @@ LINK32_OBJS= \
 	"$(OUTDIR)\thotprinter.lib" \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
-	".\libThotTable.lib" \
 	".\annotlib.lib" \
 	".\davlib\Release\davlib.lib"
 
@@ -205,12 +204,12 @@ ALL : "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ELSE 
 
-ALL : "davlib - Win32 Debug" "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libThotTable - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
+ALL : "davlib - Win32 Debug" "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" "davlib - Win32 DebugCLEAN" 
+CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" "davlib - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -457,7 +456,6 @@ LINK32_OBJS= \
 	"$(OUTDIR)\thotprinter.lib" \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
-	".\libThotTable.lib" \
 	".\annotlib.lib" \
 	".\davlib\Debug\davlib.lib"
 
@@ -636,32 +634,6 @@ LINK32_OBJS= \
 "libpng - Win32 DebugCLEAN" : 
    cd ".\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
-   cd ".."
-
-!ENDIF 
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-"libThotTable - Win32 Release" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
-   cd ".."
-
-"libThotTable - Win32 ReleaseCLEAN" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
-   cd ".."
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-"libThotTable - Win32 Debug" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
-   cd ".."
-
-"libThotTable - Win32 DebugCLEAN" : 
-   cd ".\libThotTable"
-   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
    cd ".."
 
 !ENDIF 

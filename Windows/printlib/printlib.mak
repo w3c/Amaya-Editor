@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 OUTDIR=.\..
@@ -67,6 +70,7 @@ CLEAN :
 	-@erase "$(INTDIR)\fontserver.obj"
 	-@erase "$(INTDIR)\frame.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
+	-@erase "$(INTDIR)\global.obj"
 	-@erase "$(INTDIR)\glwindowdisplay.obj"
 	-@erase "$(INTDIR)\hyphen.obj"
 	-@erase "$(INTDIR)\inites.obj"
@@ -95,6 +99,7 @@ CLEAN :
 	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
+	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\units.obj"
@@ -111,40 +116,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -182,6 +154,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\fontserver.obj" \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\glwindowdisplay.obj" \
 	"$(INTDIR)\hyphen.obj" \
 	"$(INTDIR)\inites.obj" \
@@ -216,7 +189,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -265,6 +239,7 @@ CLEAN :
 	-@erase "$(INTDIR)\fontserver.obj"
 	-@erase "$(INTDIR)\frame.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
+	-@erase "$(INTDIR)\global.obj"
 	-@erase "$(INTDIR)\glwindowdisplay.obj"
 	-@erase "$(INTDIR)\hyphen.obj"
 	-@erase "$(INTDIR)\inites.obj"
@@ -293,11 +268,13 @@ CLEAN :
 	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
+	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\units.obj"
 	-@erase "$(INTDIR)\ustring.obj"
 	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\windowdisplay.obj"
 	-@erase "$(INTDIR)\xbmhandler.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
@@ -309,40 +286,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDOWS_DLL" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -380,6 +324,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\fontserver.obj" \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\glwindowdisplay.obj" \
 	"$(INTDIR)\hyphen.obj" \
 	"$(INTDIR)\inites.obj" \
@@ -414,7 +359,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -422,6 +368,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -614,6 +590,12 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\thotlib\base\global.c
+
+"$(INTDIR)\global.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\thotlib\view\glwindowdisplay.c
 
 "$(INTDIR)\glwindowdisplay.obj" : $(SOURCE) "$(INTDIR)"
@@ -779,6 +761,12 @@ SOURCE=..\..\thotlib\tree\structschema.c
 SOURCE=..\..\Thotlib\presentation\Style.c
 
 "$(INTDIR)\Style.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\thotlib\view\tableH.c
+
+"$(INTDIR)\tableH.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

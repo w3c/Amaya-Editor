@@ -92,6 +92,7 @@ CLEAN :
 	-@erase "$(INTDIR)\frame.obj"
 	-@erase "$(INTDIR)\geom.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
+	-@erase "$(INTDIR)\global.obj"
 	-@erase "$(INTDIR)\hyphen.obj"
 	-@erase "$(INTDIR)\inites.obj"
 	-@erase "$(INTDIR)\input.obj"
@@ -136,6 +137,7 @@ CLEAN :
 	-@erase "$(INTDIR)\searchref.obj"
 	-@erase "$(INTDIR)\selectionapi.obj"
 	-@erase "$(INTDIR)\spellchecker.obj"
+	-@erase "$(INTDIR)\spline.obj"
 	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\structcommands.obj"
 	-@erase "$(INTDIR)\structcreation.obj"
@@ -144,6 +146,7 @@ CLEAN :
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\structselect.obj"
 	-@erase "$(INTDIR)\style.obj"
+	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\thotmsg.obj"
 	-@erase "$(INTDIR)\translation.obj"
@@ -233,6 +236,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\hyphen.obj" \
 	"$(INTDIR)\inites.obj" \
 	"$(INTDIR)\input.obj" \
@@ -277,6 +281,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\spline.obj" \
 	"$(INTDIR)\stix.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
@@ -304,7 +309,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -427,6 +433,8 @@ CLEAN :
 	-@erase "$(INTDIR)\geom.sbr"
 	-@erase "$(INTDIR)\gifhandler.obj"
 	-@erase "$(INTDIR)\gifhandler.sbr"
+	-@erase "$(INTDIR)\global.obj"
+	-@erase "$(INTDIR)\global.sbr"
 	-@erase "$(INTDIR)\hyphen.obj"
 	-@erase "$(INTDIR)\hyphen.sbr"
 	-@erase "$(INTDIR)\inites.obj"
@@ -515,6 +523,8 @@ CLEAN :
 	-@erase "$(INTDIR)\selectionapi.sbr"
 	-@erase "$(INTDIR)\spellchecker.obj"
 	-@erase "$(INTDIR)\spellchecker.sbr"
+	-@erase "$(INTDIR)\spline.obj"
+	-@erase "$(INTDIR)\spline.sbr"
 	-@erase "$(INTDIR)\stix.obj"
 	-@erase "$(INTDIR)\stix.sbr"
 	-@erase "$(INTDIR)\structcommands.obj"
@@ -531,6 +541,8 @@ CLEAN :
 	-@erase "$(INTDIR)\structselect.sbr"
 	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\style.sbr"
+	-@erase "$(INTDIR)\tableH.obj"
+	-@erase "$(INTDIR)\tableH.sbr"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\textcommands.sbr"
 	-@erase "$(INTDIR)\thotmsg.obj"
@@ -581,7 +593,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /I "..\..\amaya" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "__STDC__" /D "STDC_HEADERS" /D "SOCKSTHOT_TOOLTIPS" /D "_I18N_" /D "_FONTCONFIG" /D "_STIX" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINDOWS_DLL" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\libThotEditor.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -637,6 +649,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\frame.sbr" \
 	"$(INTDIR)\geom.sbr" \
 	"$(INTDIR)\gifhandler.sbr" \
+	"$(INTDIR)\global.sbr" \
 	"$(INTDIR)\hyphen.sbr" \
 	"$(INTDIR)\inites.sbr" \
 	"$(INTDIR)\input.sbr" \
@@ -681,6 +694,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\searchref.sbr" \
 	"$(INTDIR)\selectionapi.sbr" \
 	"$(INTDIR)\spellchecker.sbr" \
+	"$(INTDIR)\spline.sbr" \
 	"$(INTDIR)\stix.sbr" \
 	"$(INTDIR)\structcommands.sbr" \
 	"$(INTDIR)\structcreation.sbr" \
@@ -708,7 +722,8 @@ BSC32_SBRS= \
 	"$(INTDIR)\writedoc.sbr" \
 	"$(INTDIR)\writepivot.sbr" \
 	"$(INTDIR)\xbmhandler.sbr" \
-	"$(INTDIR)\xpmhandler.sbr"
+	"$(INTDIR)\xpmhandler.sbr" \
+	"$(INTDIR)\tableH.sbr"
 
 "$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -770,6 +785,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\frame.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
+	"$(INTDIR)\global.obj" \
 	"$(INTDIR)\hyphen.obj" \
 	"$(INTDIR)\inites.obj" \
 	"$(INTDIR)\input.obj" \
@@ -814,6 +830,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
 	"$(INTDIR)\spellchecker.obj" \
+	"$(INTDIR)\spline.obj" \
 	"$(INTDIR)\stix.obj" \
 	"$(INTDIR)\structcommands.obj" \
 	"$(INTDIR)\structcreation.obj" \
@@ -841,7 +858,8 @@ LIB32_OBJS= \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj"
+	"$(INTDIR)\xpmhandler.obj" \
+	"$(INTDIR)\tableH.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -1827,6 +1845,24 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 
 !ENDIF 
 
+SOURCE=..\..\thotlib\base\global.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\global.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\global.obj"	"$(INTDIR)\global.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\thotlib\view\hyphen.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -2619,6 +2655,24 @@ SOURCE=..\..\thotlib\editing\spellchecker.c
 
 !ENDIF 
 
+SOURCE=..\..\thotlib\view\spline.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\spline.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\spline.obj"	"$(INTDIR)\spline.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\thotlib\dialogue\stix.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -2758,6 +2812,24 @@ SOURCE=..\..\thotlib\presentation\style.c
 
 
 "$(INTDIR)\style.obj"	"$(INTDIR)\style.sbr" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\thotlib\view\tableH.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+
+"$(INTDIR)\tableH.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+
+"$(INTDIR)\tableH.obj"	"$(INTDIR)\tableH.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -539,6 +539,10 @@ SOURCE=..\..\thotlib\presentation\style.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\tableH.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\tesse.c
 # End Source File
 # Begin Source File
