@@ -57,6 +57,7 @@ do
    Thot/doc/thoteditor/thot.gif \
    Thot/doc/thoteditor/thotdraw.gif \
    Thot/doc/thoteditor/traits.gif \
+   Thot/doc/thoteditor/manual_html/*.html \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
    Thot/config/thot.color \

@@ -100,6 +100,7 @@ doc/thoteditor/polygones.gif \
 doc/thoteditor/thot.gif \
 doc/thoteditor/thotdraw.gif \
 doc/thoteditor/traits.gif \
+doc/thoteditor/manual_html/*.html \
 drawlib/Draw3.A \
 drawlib/Draw3actions.c \
 drawlib/Draw3actions.h \
