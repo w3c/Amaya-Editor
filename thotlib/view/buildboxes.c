@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1867,7 +1867,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		LoadPicture (frame, pCurrentBox, picture);
 	    }
 
-	  /* Is it a filled box ? */
+	  /* Is it a filled box? */
 	  if (pCurrentBox->BxType != BoCell &&
 	      ( pAb->AbFillBox ||
 		(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
@@ -2901,7 +2901,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  else if (pAb->AbLeafType == LtCompound)
 	    {
-	      /* Is there a background image ? */
+	      /* Is there a background image? */
 	      if (pAb->AbPictBackground != NULL)
 		{
 		  /* force filling */
@@ -2936,7 +2936,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			 pBox->BxYOrg + pBox->BxHeight);
 	    }
 
-	  /* Is it a filled box ? */
+	  /* Is it a filled box? */
 	  if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
 	    {
 	      if (pAb->AbFillBox ||

@@ -263,7 +263,9 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   GetSizesFrame (frame, &w, &h);
   if (pBox == NULL)
     return;
-  if (pAb == pFrame->FrAbstractBox)
+  if (pAb == pFrame->FrAbstractBox ||
+      TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+			pAb->AbElement->ElStructSchema))
     {
       /* get the maximum of the window size and the root box size */
       if (pBox->BxWidth > w)
@@ -272,11 +274,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	h = pBox->BxHeight;
       width = w + 1;
       height = h + 1;
-      if (pBox->BxFill
-#ifndef _WINDOWS
-	  && Printing
-#endif /* _WINDOWS */
-	  ) /****/
+      if (pBox->BxFill)
 	{
 	  /* draw the box background */
 	  xd = xmin - pFrame->FrXOrg;
