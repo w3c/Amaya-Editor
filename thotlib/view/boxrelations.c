@@ -28,6 +28,7 @@
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "memory_f.h"
 

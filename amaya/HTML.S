@@ -870,7 +870,8 @@ STRUCT
 
 EXCEPT
 	HTML:           NoMove, NoResize;
-	BODY:		NoCut, CssBackground, NoMove, NoResize;
+	BODY:		NoCut, CssBackground, NoMove, NoResize,
+		        SetWindowBackground;
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck, NoCut;

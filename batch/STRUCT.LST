@@ -137,7 +137,7 @@ number
 			 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
 			 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
 			 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
-			 'EventAttr' / 'NoShowBox' /
+			 'EventAttr' / 'NoShowBox' / 'SetWindowBackground' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -260,7 +260,8 @@ code  key-word      numbers of rules using the key-word
 1182  CssPseudoClass       51
 1183  EventAttr            51
 1184  NoShowBox            51
-1185  Root                 54
+1185  SetWindowBackground  51
+1186  Root                 54
 
 
 
