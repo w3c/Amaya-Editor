@@ -451,7 +451,6 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
      }
    kbd = KeyboardMode;
    /* Insert the selected character */
-#ifdef _I18N_
    if (KeyboardMode == 3)
      /* character entered through the Symbol/Greek palette */
      {
@@ -462,7 +461,7 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
 	    same as entering the character using the real keyboard */
 	 kbd = -1;
      }
-#endif /* _I18N_ */
+
    if (ThotLocalActions[T_insertchar] != NULL)
       (*(Proc3)ThotLocalActions[T_insertchar]) (
 		(void *)ActiveFrame,

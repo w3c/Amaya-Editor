@@ -640,10 +640,8 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
-#ifdef _I18N_
   CHARSET             charset;
   wchar_t            *str, *p;
-#endif /* _I18N_ */
   Document            document;
   View                view;
   KeySym              key;
@@ -700,7 +698,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
     PicMask |= THOT_MOD_CTRL;
   if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
     PicMask |= THOT_MOD_ALT;
-#ifdef _I18N_
   if(event->keyval == GDK_VoidSymbol)
     {
       /******* Not sure this code makes sense */
@@ -722,7 +719,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	  return FALSE;
 	}
     }
-#endif /* _I18N_ */
+
   if (event->string)
     value = (unsigned char) event->string[0];
   else
@@ -922,10 +919,8 @@ void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym, unsig
 void CharTranslation (ThotKeyEvent *event)
 {
 #ifdef _MOTIF
-#ifdef _I18N_
   CHARSET             charset;
   wchar_t            *str, *p;
-#endif /* _I18N_ */
   Document            document;
   View                view;
   KeySym              key;
@@ -958,7 +953,7 @@ void CharTranslation (ThotKeyEvent *event)
     PicMask |= THOT_MOD_CTRL;
   if (state & Mod1Mask || state & Mod4Mask)
     PicMask |= THOT_MOD_ALT;
-#ifdef _I18N_
+
   if (key == 0)
     {
       charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
@@ -979,7 +974,7 @@ void CharTranslation (ThotKeyEvent *event)
 	  return /* FALSE */;
 	}
     }
-#endif /* _I18N_ */
+
   if (status == 2)
     command = (int) string[1];
   else

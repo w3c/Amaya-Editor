@@ -56,10 +56,7 @@ static char         GreekFontScript;
   
   #include "wininclude.h"  
 #endif /* _WINGUI */
-
-#ifdef _I18N_
 static SpecFont   FirstFontSel = NULL;
-#endif /* _I18N_ */
 
 #include "buildlines_f.h"
 #include "dialogapi_f.h"
@@ -76,7 +73,6 @@ static SpecFont   FirstFontSel = NULL;
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /*_GTK*/
-
 
 #include "fontconfig.h"
 
@@ -699,7 +695,6 @@ int SpecialCharBoxWidth (CHAR_T c)
   ----------------------------------------------------------------------*/
 int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 {
-#ifdef _I18N_
   ThotFont        font;
   int             car;
 
@@ -714,10 +709,6 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #else /*_GL*/
     return CharacterWidth (c, font);
 #endif /*_GL*/
-  
-#else /* _I18N_ */
-  return CharacterWidth (c, specfont);
-#endif /* _I18N_ */
 }
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
@@ -893,7 +884,6 @@ int FontAscent (ThotFont font)
   ----------------------------------------------------------------------*/
 static int XFontAscent (SpecFont specfont)
 {
-#ifdef _I18N_
   ThotFont        font;
   unsigned char   car;
 
@@ -901,9 +891,6 @@ static int XFontAscent (SpecFont specfont)
   if (font == NULL)
     font = DialogFont;
   return CharacterAscent ('x', font);
-#else /* _I18N_ */
-  return CharacterAscent ('x', specfont);
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -947,15 +934,11 @@ int FontHeight (ThotFont font)
   ----------------------------------------------------------------------*/
 int BoxFontHeight (SpecFont specfont)
 {
-#ifdef _I18N_
   ThotFont        font;
   int             car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
   return FontHeight (font);
-#else /* _I18N_ */
-  return FontHeight (specfont);
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -1132,15 +1115,11 @@ int FontBase (ThotFont font)
   ----------------------------------------------------------------------*/
 int BoxFontBase (SpecFont specfont)
 {
-#ifdef _I18N_
   ThotFont        font;
   unsigned char   car;
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
   return FontBase (font);
-#else /* _I18N_ */
-  return FontBase (specfont);
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -1177,10 +1156,6 @@ int FontPointSize (int size)
 ThotFont LoadFont (char *name)
 {
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
-#ifdef _I18N_
-  /*printf ("%s\n", name);*/
-#endif /* _I18N_ */
-  
 #ifdef _GTK
   GdkFont *result;
 
@@ -1858,7 +1833,6 @@ void *LoadStixFont (int family, int size)
   ----------------------------------------------------------------------*/
 void ChangeFontsetSize (int size, PtrBox box, int frame)
 {
-#ifdef _I18N_
   SpecFont fontset, fontsetbase = box->BxFont;
   char code = box->BxScript;
 
@@ -1882,7 +1856,6 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
 					    size, size,
 					    frame, TRUE, TRUE);
     }
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -1891,7 +1864,6 @@ void ChangeFontsetSize (int size, PtrBox box, int frame)
   ----------------------------------------------------------------------*/
 int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 {
-#ifdef _I18N_
   ThotFont           lfont, *pfont;
   CHARSET            encoding;
   char               code;
@@ -2253,11 +2225,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #else /*_GL*/
   return c;
 #endif /*_GL*/
-  
-#else /* _I18N_ */
-  *font = fontset;
-  return c;
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -2267,11 +2234,9 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 			     int size, TypeUnit unit, int frame)
 {
   int                 index;
-#ifdef _I18N_
   SpecFont            prevfontset, fontset;
   unsigned int        mask;
   ThotBool            specificFont = (script == 'G');
-#endif /* _I18N_ */
 
   /* use only standard sizes */
   index = 0;
@@ -2285,7 +2250,6 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 	index++;
     }
 
-#ifdef _I18N_
   /* look for the fontsel */
   fontset = FirstFontSel;
   mask = 1 << (frame - 1);
@@ -2332,10 +2296,6 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 					    index, index, frame, TRUE, TRUE);
     }
   return (fontset);
-#else /* _I18N_ */
-  return LoadNearestFont (script, family, highlight, index, index,
-			  frame, TRUE, TRUE);
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -2674,9 +2634,7 @@ static void FreeAFont (int i)
   ----------------------------------------------------------------------*/
 void ThotFreeFont (int frame)
 {
-#ifdef _I18N_
   SpecFont            prevset, fontset, nextset;
-#endif /* _I18N_ */
   int                 i;
   unsigned int        mask;
 
@@ -2684,7 +2642,6 @@ void ThotFreeFont (int frame)
     {
       /* compute the frame mask */
       mask = 1 << (frame - 1);
-#ifdef _I18N_
       /* free all attached fontsets */
       fontset = FirstFontSel;
       prevset = NULL;
@@ -2709,7 +2666,7 @@ void ThotFreeFont (int frame)
 	    }
 	  fontset = nextset;
 	}
-#endif /* _I18N_ */
+
       /* keep default fonts */
       i = 0;
       /* free all attached fonts */
@@ -2733,12 +2690,9 @@ void ThotFreeFont (int frame)
   ----------------------------------------------------------------------*/
 void ThotFreeAllFonts (void)
 {
-#ifdef _I18N_
   SpecFont            fontset, nextset;
-#endif /* _I18N_ */
   int                 i;
 
-#ifdef _I18N_
   /* free all attached fontsets */
   fontset = FirstFontSel;
   while (fontset)
@@ -2748,7 +2702,7 @@ void ThotFreeAllFonts (void)
       fontset = nextset;
     }
   FirstFontSel = NULL;
-#endif /* _I18N_ */
+
   for (i = 0; i < MAX_FONT && TtFonts[i]; i++)
     FreeAFont (i);
   TtaFreeMemory (FontFamily);
@@ -2774,7 +2728,6 @@ void ThotFreeAllFonts (void)
   ----------------------------------------------------------------------------*/
 void LoadingArabicFont (SpecFont fontset ,ThotFont *font)
 {
-#ifdef _I18N_
   ThotFont     lfont;
   int          encoding;
   int          frame;
@@ -2797,9 +2750,6 @@ void LoadingArabicFont (SpecFont fontset ,ThotFont *font)
   /* even if the font is not found avoid to retry later */
   fontset->FontUnicode = lfont;
   *font = lfont;
-#else /* _I18N_ */
-  *font = fontset;
-#endif /* _I18N_ */
 }
 
 
@@ -2874,21 +2824,18 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
       else
 	prevChar = 0x0020;
       }
+
   car = GetArabFontAndIndex(c, prevChar, nextChar, specfont, &font);
    if ( Char_Width(car) != -1 ) 
 	return Char_Width(car);
    if (font == NULL)
     return 6;
   else
-#ifdef _I18N_
-  {
-	l = CharacterWidth (car, font);
-	Put_Char_Width ( car , l );
-    return l;
-  }
-#else /* _I18N_ */
-  return CharacterWidth (c, specfont);
-#endif /* _I18N_ */ 
+    {
+      l = CharacterWidth (car, font);
+      Put_Char_Width ( car , l );
+      return l;
+    }
 }
 
 

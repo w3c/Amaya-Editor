@@ -503,9 +503,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 			PtrAttribute currAttr, PtrDocument pDoc, int view)
 {
    Document          doc;
-#ifdef _I18N_
    char             *tmp;
-#endif /* _I18N_ */
    char              bufMenu[MAX_TXT_LEN];
    char             *title = NULL;
    int               i, lgmenu, val, buttons;
@@ -601,12 +599,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 {
 	   i = LgMaxAttrText - 2;
 	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, (unsigned char*)TextAttrValue, i);
-#ifdef _I18N_
 	   /* convert to the dialogue encoding */
 	   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
 	   strcpy (TextAttrValue, tmp);
 	   TtaFreeMemory (tmp);
-#endif /* _I18N_ */
 	 }
        else
 	   TextAttrValue[0] = EOS;
@@ -1242,9 +1238,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   PtrAttribute        pAttrNew;
   DisplayMode         dispMode = DeferredDisplay;
   Document            doc = 0;
-#ifdef _I18N_
-   char              *tmp;
-#endif /* _I18N_ */
+  char               *tmp;
   int                 firstChar, lastChar;
   int                 act;
   ThotBool            lock = TRUE;
@@ -1340,14 +1334,9 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-#ifdef _I18N_
 		      tmp = (char *)TtaConvertByteToMbs ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
 		      CopyMBs2Buffer ((unsigned char *)tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
 		      TtaFreeMemory (tmp);
-#else /* _I18N_ */
-		      CopyMBs2Buffer (TextAttrValue, pAttrNew->AeAttrText, 0,
-				      strlen (TextAttrValue));
-#endif /* _I18N_ */
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,

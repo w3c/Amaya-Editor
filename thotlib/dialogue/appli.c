@@ -3892,13 +3892,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #if defined(_GTK) || defined(_MOTIF)  
   ThotWidget          w;
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
-
 #ifdef _MOTIF
   int                 n;
   Arg                 args[MAX_ARGS];
 #endif /* _MOTIF */
-
-#ifdef _I18N_
   CHAR_T             *ptr;
 
   if (encoding == TtaGetDefaultCharset ())
@@ -3911,15 +3908,11 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
       title = TtaConvertWCToByte (ptr, TtaGetDefaultCharset ());
       TtaFreeMemory (ptr);
     }
-#else /* _I18N_ */
-  title = text;
-#endif /* _I18N_ */
 
 #ifdef _WINGUI
   if (FrMainRef [frame])
     SetWindowText (FrMainRef[frame], title);
 #endif /* _WINGUI */
-
 #if defined(_GTK) || defined(_MOTIF)  
   w = FrameTable[frame].WdFrame;
   if (w)

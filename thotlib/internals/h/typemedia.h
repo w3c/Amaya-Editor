@@ -19,7 +19,6 @@
 #include "typecorr.h"
 #include "typetra.h"
 
-#ifdef _I18N_
 typedef struct _FontSet      *SpecFont;
 typedef struct _FontSet {
   SpecFont      NextFontSet;
@@ -42,9 +41,6 @@ typedef struct _FontSet {
   ThotFont      FontSymbol; /* Symbol of Stix fonts ?? */
   ThotFont      FontUnicode;
 } FontSet;
-#else /* _I18N_ */
-typedef ThotFont              SpecFont;
-#endif /* _I18N_ */
 
 typedef unsigned char RuleSet[32];
 
