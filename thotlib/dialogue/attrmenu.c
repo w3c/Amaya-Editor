@@ -66,7 +66,6 @@ static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
 static int          CurrentAttr;
-static int	    MenuAlphaLangValue;
 /* return value of the input form */
 static int          NumAttrValue;
 /* main menu of attributes */
