@@ -570,6 +570,20 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
     tmp = annot->body_url;
   TtaSetAttributeText (attr, tmp, thread_item, doc);
 
+  /* mark the thread item as orphan or not */
+  if (annot->is_orphan_item)
+    {
+      attrType.AttrTypeNum = Annot_ATTR_Orphan_item;
+      /* remove the previous reverse link if it exists already */
+      attr = TtaGetAttribute (thread_item, attrType);
+      if (!attr)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (thread_item, attr, doc);
+	}
+      TtaSetAttributeValue (attr, Annot_ATTR_Orphan_item_VAL_Yes_, thread_item, doc);
+    }
+
   /* put the type of the annotation */
   elType.ElTypeNum = Annot_EL_TI_Type;
   el = TtaSearchTypedElement (elType, SearchInTree, thread_item);

@@ -84,6 +84,7 @@ typedef struct _AnnotMeta {
 			  saving the local annotations */
   ThotBool is_orphan; /* set to true if the XPointer for this annotation
 			 doesn't resolve anymore */
+  ThotBool is_orphan_item; /* set to true if the thread item has lost its parent */
   ThotBool show;      /* this annotation is visible in the formatted view */
 
   char *title;     /* title of the annotation */

@@ -1189,6 +1189,7 @@ void AnnotThread_sortThreadList (List **thread_list)
   Container *root;
   HTArray *keys;
   char *url;
+  ThotBool is_orphan; 
 
   list_cur = *thread_list;
 
@@ -1204,6 +1205,9 @@ void AnnotThread_sortThreadList (List **thread_list)
   while (list_cur)
     {      
       annot_cur = (AnnotMeta *) list_cur->object;
+
+      /* reset the orphan annotation status */
+      annot_cur->is_orphan_item = FALSE;
 
       /* create the message container */
       /* use either body_url or annot_url */
@@ -1297,9 +1301,15 @@ void AnnotThread_sortThreadList (List **thread_list)
    The brothers of root have messages that have lost their in-reply-to parents */
   annot_list = NULL;
   tmp_entry = root;
+  is_orphan = FALSE;
   while (tmp_entry)
     {
+      if (is_orphan)
+	{
+	  tmp_entry->child->annot->is_orphan_item = TRUE;
+	}
       ConvertContainerToList (&annot_list, tmp_entry->child);
+      is_orphan = TRUE;
       tmp_entry = tmp_entry->next;
     }
   *thread_list = annot_list;
