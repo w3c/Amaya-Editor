@@ -165,6 +165,7 @@ static ThotIcon       iconLinkNo;
 static ThotIcon       iconTable;
 static ThotIcon       iconTableNo;
 static ThotIcon       iconHome;
+static ThotIcon       iconLogo;
 #endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI
@@ -2677,13 +2678,13 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 {
 #ifdef _WX
 	   iBack = TtaAddToolBarButton( window_id,
-					iconBackNo,
+					iconBack,
 					TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
 					"GotoPreviousHTML",
 					(Proc)GotoPreviousHTML,
 					FALSE );
 	   iForward = TtaAddToolBarButton( window_id,
-					   iconForwardNo,
+					   iconForward,
 					   TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
 					   "GotoNextHTML",
 					   (Proc)GotoNextHTML,
@@ -2695,7 +2696,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 					  (Proc)Reload,
 					  TRUE );
 	   iStop = TtaAddToolBarButton( window_id,
-					stopN,
+					stopR,
 					TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
 					"StopTransfer",
 					(Proc)StopTransfer,
@@ -2709,7 +2710,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   /* SEPARATOR */
 	   TtaAddToolBarButton( window_id, NULL, NULL, NULL, NULL, FALSE );
 	   iSave = TtaAddToolBarButton( window_id,
-					iconSaveNo,
+					iconSave,
 					TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 					"SaveDocument",
 					(Proc)SaveDocument,
@@ -2912,6 +2913,16 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     {
       TtaAddTextZone ( doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
 		       TRUE, (Proc)TextURL, URL_list );
+    }
+  if (!isOpen) /* only if this page iss not allready open */
+    {
+      /* add the amaya logo after the url bar */
+      iLogo = TtaAddToolBarButton( window_id,
+				   iconLogo,
+				   NULL,
+				   NULL,
+				   NULL,
+				   TRUE );
     }
 #endif /* _WX */
 
@@ -6646,6 +6657,8 @@ void FreeAmayaIcons ()
     delete iconTable;
   if (iconTableNo) 	
     delete iconTableNo;
+  if (iconLogo) 	
+    delete iconLogo;
 
   stopR = (ThotIcon) 0;
   stopN = (ThotIcon) 0;
@@ -6683,6 +6696,7 @@ void FreeAmayaIcons ()
   iconLinkNo = (ThotIcon) 0;
   iconTable = (ThotIcon) 0;
   iconTableNo = (ThotIcon) 0;
+  iconLogo = (ThotIcon) 0;
 #endif /* defined(_WX) */
 }
 
@@ -6784,19 +6798,18 @@ void InitAmaya (NotifyEvent * event)
 
    /* initialize icons */
 #ifdef _WX
-   wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
-   stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
-   stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.png") );
-   iconSave      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.png") );
-   iconSaveNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.png") );
-   iconFind      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/find.png") );
-   iconReload    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/reload.png") );
-   iconHome      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/home.png") );
-   iconBack      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.png") );
-   iconBackNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.png") );
-   iconForward   = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.png") );
-   iconForwardNo = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.png") );
-   iconPrint     = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/print.png") );
+   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "stop.png") );
+   stopN         = (ThotIcon) 0;
+   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "save.png") );
+   iconSaveNo    = (ThotIcon) 0;
+   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "find.png") );
+   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "reload.png") );
+   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "home.png") );
+   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "back.png") );
+   iconBackNo    = (ThotIcon) 0;
+   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "forward.png") );
+   iconForwardNo = (ThotIcon) 0;
+   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "print.png") );
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
@@ -6821,6 +6834,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) 0;
    iconTable = (ThotIcon) 0;
    iconTableNo = (ThotIcon) 0;
+   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.png") );
 #endif /* _WX */
 #ifdef _GTK
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
