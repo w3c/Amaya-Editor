@@ -3728,7 +3728,7 @@ void                TtcPaste (Document document, View view)
 	    {
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = ustrlen (lpData);
-	      if (Xbuffer == NULL || !ustrcmp (Xbuffer, (USTRING) lpData))
+	      if (Xbuffer == NULL || ustrcmp (Xbuffer, (USTRING) lpData))
 		PasteXClipboard ((USTRING) lpData, lpDatalength);
 	      else  
 		ContentEditing (TEXT_PASTE);
