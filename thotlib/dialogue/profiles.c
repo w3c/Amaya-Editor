@@ -81,7 +81,7 @@ void Prof_InitTable()
 	  /* seek the chosen profile in the profile file*/
 	  while (!(found) && fgets(string, sizeof string, proFILE))
 	    {
-	      if (ustrncmp(Current_Profile,TEXT(string),ustrlen(Current_Profile)) == 0) 
+	      if (ustrncmp(Current_Profile,ISO2WideChar(string),ustrlen(Current_Profile)) == 0) 
 		{ 
 #ifdef DEBUG
 		  fputs(string,stdout);
