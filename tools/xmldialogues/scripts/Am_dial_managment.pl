@@ -18,10 +18,12 @@ my $BASE_directory = "$path_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
 my $OUT_MSG_directory = "$path_amaya/Amaya/config/";
 
-
+#where redy to translate file are put
 my $directory_for_file_to_translate = "$path_amaya/Amaya/tools/xmldialogues/docs/";
-#	sufix for the generated file created into /docs to help translation
+
+#	and the sufix for the generated file created into /docs to help translation
 my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
+
 # commentary for begining of the ".h" file
 my $comment_for_begining_of_h_file  = "/*that is the real begin of labels used*/";
 
@@ -35,6 +37,9 @@ my %head_name ;	# table for the name of the ".h" files
 my %lang_dir ;		# table for the name of the directories where translated texts are
 my %lang_sufix ;	# table for the sufix name of the translated texts
 
+# used because some directive of compilations are needed(not used for Amaya dialogue)
+my %for_h_file_compilation_begin = ();
+my %for_h_file_compilation_end = ();
 
 
 ### for messages of the interface 
@@ -61,6 +66,8 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
   $base_name {'dia'} = 'base_am_dia.xml';
+  $for_h_file_compilation_begin {'msg'} = "";#never used
+  $for_h_file_compilation_end {'msg'} = "";#never used
 
 ####	for Amayamsg => msg or $index {2}
  $head_dir {'msg'} = "$path_amaya/Amaya/amaya/";
@@ -68,6 +75,8 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $lang_dir {'msg'} = $OUT_MSG_directory;
  $lang_sufix {'msg'} = '-amayamsg' ;
  $base_name {'msg'} = 'base_am_msg.xml';
+ $for_h_file_compilation_begin {'msg'} = "";
+ $for_h_file_compilation_end {'msg'} = "";
 
 ####	for libdialogue => lib or $index {3}
  $head_dir {'lib'} = "$path_amaya/Amaya/thotlib/include/" ;
@@ -75,7 +84,8 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $lang_dir {'lib'} = $OUT_MSG_directory;
  $lang_sufix {'lib'} = '-libdialogue' ;
  $base_name {'lib'} = 'base_am_lib.xml';
-
+ $for_h_file_compilation_begin {'lib'} = "#ifndef LIB_MSG_H\n#define LIB_MSG_H\n";
+ $for_h_file_compilation_end {'lib'} = "#\nendif\n";
 
 ####	for corrdialogue => corrd or $index {4}
  $head_dir {'corrd'} = "$path_amaya/Amaya/thotlib/internals/h/" ;
@@ -83,6 +93,8 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $lang_dir {'corrd'} = $OUT_MSG_directory;
  $lang_sufix {'corrd'} = '-corrdialogue' ;
  $base_name {'corrd'} = 'base_am_corrd.xml';
+ $for_h_file_compilation_begin {'corrd'} = "";
+ $for_h_file_compilation_end {'corrd'} = "";
  
 
 
@@ -205,7 +217,7 @@ do { # to continue to treat the same type of dialogue
 
 ##|||||||||||||||||||||||||||||||| treats the answer\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	if ($choice == 1) { #Init the XML base
-		$_ = verify ();
+		$_ = verify ( $BASE_directory . $base_name { $of_what });
 		if ( /^y/i || /^yes/i ) {
 			Initialisation::create_base ( $head_dir{ $of_what }, 
 													$head_name{ $of_what },
@@ -231,12 +243,13 @@ do { # to continue to treat the same type of dialogue
 		do {
 		 	print "\tAre files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
 					"\tOur choice [0] : ";
+			$choice = 0;		
 			$choice = <STDIN>;
 			chomp ($choice ) ;
 			if ( $choice eq "") { 
 				$choice = 0;
 			}
-		} while ($choice != /^[0-1]/);
+		} while ($choice !~ /^[0-1]/);
 		$_ = $choice;
 		if (/0/)
 			{	
@@ -283,7 +296,7 @@ do { # to continue to treat the same type of dialogue
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 6) { # n'arrive que si last_choice = 1
 		#en principe ne reprend que EDITOR.h		
-		$_ = verify ();
+		$_ = verify ( $BASE_directory . $base_name{ $of_what});
 		if ( /^y/i || /^yes/i ) {
 			Forcer::forcer ( 	$BASE_directory,
 									$base_name{ $of_what},
@@ -315,8 +328,8 @@ do { # to continue to treat the same type of dialogue
 #################################################################################
 sub verify {
 	do {
-			print "\tAre you certain to want to erase the old base (Yes ,No )?\n";
-			print " \tOur choice [n]:\t";
+			print "\tAre you certain to want to erase the old base " . $_[0] . " ?\n";
+			print " \tOur choice (Yes ,No )[n]:\t";
 			$_ = <STDIN>;
 			chomp;
 			if ($_ eq "") {

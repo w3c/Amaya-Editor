@@ -74,13 +74,14 @@ sub init_label {
 			
 			do {
 				$line = <LABEL> ;
-				chomp $line;
-				$line_count++;
-				if ($line eq $comment_for_begining_of_h_file) {
-					$continue = 1;
+				if (defined ($line) ) {
+					chomp ($line);
+					$line_count++;
 				}
 			}while ( defined ($line) && $line ne $comment_for_begining_of_h_file );
-			
+			if (defined ($line) && $line eq $comment_for_begining_of_h_file) {
+				$continue = 1;
+			}
 			
 
 #	the first line in witch we are interested can be (but not necessary)read	now

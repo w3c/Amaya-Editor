@@ -66,6 +66,7 @@ use vars  qw(		$in_labelfile
 	 	$encodage = ""; #to load the encoding type of the messages
 	my $end_label = ""; #to now what the latest label used by Amaya
 # packages used
+	my $warning = 0;
 
 use Read_label qw ( &init_label );
 use Read_text qw ( &init_text );
@@ -96,7 +97,7 @@ sub import_a_language {
 	@list_of_lang_occur = () ;
 	%labels = ();
 	%texts = ();
-
+	$warning = 0;
 
 # declaration of the parser
 	my $parser = new XML::Parser (
@@ -147,6 +148,9 @@ sub import_a_language {
 	close (OUT) || die "problem during $newbasefile is closed: $!";
 			
 	debug ( "the encodage is $encodage ");
+	if ($warning == 1) {
+		print "WARNING!!\nIt is the english version that couldn't be empty\n";
+	}
 	print "\tEnd Add/Update a language\n";
 	
 	if ($debug) {
@@ -291,7 +295,8 @@ sub addbegintag { #	automatical copy WITHOUT modification to the attributes
 #--------------------------------------------------------------------
 
 sub end_hndl { #	do the modification if necessary
-	my ($p, $end_tag) = @_;
+	my ($p, $end_tag) = @_ ;  
+	
 		
 	if ($end_tag eq "label") {	
 		if ($found == 1) {
@@ -303,6 +308,9 @@ sub end_hndl { #	do the modification if necessary
 				print OUT "</message>\n";
 			}else {
 				if ( $current_label  ne $end_label) { # This label is always empty
+					if ( $language_code eq "en") {
+						$warning = 1;
+					}
 					print '==> ' . "the label $current_label (ref ";
 					print $labels{$current_label} ;
 					print ")don't have a translate in the message file\n";

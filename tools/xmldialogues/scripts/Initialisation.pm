@@ -42,6 +42,9 @@ sub create_base {
 
 # to avoid pb with %label if 2 call to this function 	
 	%label = ();
+	@list_of_label = ();
+	$num_of_label = 0;
+	
 # to avoid to erase the old base
 	if (-r $out_basename) {
 		rename ( $out_basename, $out_basename . ".old" )  || 	
@@ -66,6 +69,7 @@ sub create_base {
 	
 	
 #	read the file source only if it exists and is readable
+	@list_of_label = ();
 	my @list = ();
 	do {
 	 	$_ = @list = Read_label::init_label ($in_headfile, $comment_at_the_begining);
