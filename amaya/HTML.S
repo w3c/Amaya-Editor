@@ -97,8 +97,8 @@ STRUCT
   META								{ META }
      (ATTR http_equiv = Text;
 	 { http-equiv }
-	   !meta_name = Text; !meta_content = Text;
-         {  name               content }
+	   meta_name = Text; meta_content = Text;
+         { name              content }
 	   scheme = Text) =
 	 { scheme }
 	CONSTANT C_Empty;

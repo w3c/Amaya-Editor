@@ -669,6 +669,7 @@ View                view;
    Set the content of the Namespaces attribute (on the root element)
    according to the SSchemas used in the document.
    Set the HtmlDTD attribute to Frameset if the document uses Frames.
+   Create a META element to specify Content-Type and Charset.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SetNamespacesAndDTD (Document doc)
@@ -678,11 +679,11 @@ Document     doc;
 
 #endif
 {
-   Element		root, el;
+   Element		root, el, head, meta, lastmeta, lastel;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr;
-   CHAR_T			buffer[200];
+   CHAR_T		buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
    useMathML = FALSE;
@@ -719,6 +720,7 @@ Document     doc;
 	 }
       TtaSetAttributeText (attr, buffer, root, doc);
       }
+
    /* looks for a FRAMESET element and set attribute HtmlDTD */
    useFrames = FALSE;
    el = TtaGetFirstChild (root);
@@ -741,7 +743,74 @@ Document     doc;
    if (useFrames)
       TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Frameset, root, doc);
    else
-      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root, doc);
+      TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root,
+			    doc);
+
+   /* Create (or update) a META element to specify Content-type and Charset */
+   /* Get the HEAD element first */
+   el = TtaGetFirstChild (root);
+   head = NULL;
+   while (el && !head)
+      {
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == attrType.AttrSSchema &&
+	  elType.ElTypeNum == HTML_EL_HEAD)
+	 head = el;
+      else
+         TtaNextSibling (&el);
+      }
+   if (head)
+      {
+      el = TtaGetFirstChild (head);
+      meta = NULL;
+      lastmeta = NULL;
+      lastel = NULL;
+      attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+      attr = NULL;
+      while (el && !meta)
+	 {
+	 elType = TtaGetElementType (el);
+         if (elType.ElSSchema == attrType.AttrSSchema &&
+             elType.ElTypeNum == HTML_EL_META)
+	    {
+	    lastmeta = meta;
+	    attr = TtaGetAttribute (el, attrType);
+	    if (attr)
+	       meta = el;
+	    }
+	 if (!meta)
+	    {
+	    lastel = el;
+	    TtaNextSibling (&el);
+	    }
+	 }
+      if (!meta)
+	 {
+	 elType.ElSSchema = attrType.AttrSSchema;
+	 elType.ElTypeNum = HTML_EL_META;
+	 meta = TtaNewElement (doc, elType);
+	 if (!lastmeta)
+	    lastmeta = lastel;
+	 if (lastmeta)
+	    TtaInsertSibling (meta, lastmeta, FALSE, doc);
+	 else
+	    TtaInsertFirstChild (&meta, head, doc);
+	 }
+      if (!attr)
+	 {
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (meta, attr, doc);
+	 }
+      TtaSetAttributeText (attr, "Content-Type", meta, doc);
+      attrType.AttrTypeNum = HTML_ATTR_meta_content;
+      attr = TtaGetAttribute (meta, attrType);
+      if (!attr)
+	 {
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (meta, attr, doc);
+	 }
+      TtaSetAttributeText (attr, "text/html; charset=ISO-8859-1", meta, doc);
+      } 
 }
 
 /*----------------------------------------------------------------------
