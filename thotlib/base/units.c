@@ -41,12 +41,11 @@ int                 value;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS 
-   /* return ((value * GetDeviceCaps (TtDisplay, LOGPIXELSY) + 36) / 72); */
-   return ((value * DOT_PER_INCHE + 36) / 72);
-#  else /* _WINDOWS */
-   return ((value * DOT_PER_INCHE + 36) / 72);
+#  ifdef _WINDOWS
+   if (DOT_PER_INCHE == 0)
+      DOT_PER_INCHE = 72;
 #  endif /* _WINDOWS */
+   return ((value * DOT_PER_INCHE + 36) / 72);
 }
 
 
@@ -62,14 +61,9 @@ int                 value;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   WIN_GetDeviceContext (-1);
    if (DOT_PER_INCHE == 0)
       DOT_PER_INCHE = 72;
-   /* return ((value * 72 + GetDeviceCaps (TtDisplay, LOGPIXELSY) / 2) / GetDeviceCaps (TtDisplay, LOGPIXELSY)); */
-   return ((value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
-   WIN_ReleaseDeviceContext ();
-#  else  /* !_WINDOWS */
-   return ((value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
 #  endif /* _WINDOWS */
+   return ((value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
 }
 
