@@ -336,7 +336,13 @@ Eliminar dos niveles de listas: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 
 Incluir en formulario:(h1|h2|h3|h4|h5|h6|p)+;
 	{
-	* > form:*;
+	h1 > form:h1;
+	h2 > form:h2;
+	h3 > form:h3;
+	h4 > form:h4;
+	h5 > form:h5;
+	h6 > form:h6;
+	p > form:p;
 	}
 
 Eliminar formulario: form{?*+};

@@ -325,7 +325,13 @@ Remove two list levels: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 
 Enclosing into Form: (h1|h2|h3|h4|h5|h6|p)+;
 	{
-	* > form:*;
+	h1 > form:h1;
+	h2 > form:h2;
+	h3 > form:h3;
+	h4 > form:h4;
+	h5 > form:h5;
+	h6 > form:h6;
+	p > form:p;
 	}
 
 Remove the Form: form{?*+};
