@@ -84,7 +84,12 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
 		/* descend la hierarchie */
 		while (loop)
 		   if (pNextAb->AbBox == NULL)
-		      pNextAb = pNextAb->AbNext;
+		     {
+		       if (pNextAb->AbNext)
+			 pNextAb = pNextAb->AbNext;
+		       else
+			 loop = FALSE;
+		     }
 		   else if (pNextAb->AbBox->BxType == BoGhost ||
 			    pNextAb->AbBox->BxType == BoFloatGhost)
 		      pNextAb = pNextAb->AbFirstEnclosed;

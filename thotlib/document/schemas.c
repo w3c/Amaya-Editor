@@ -2239,26 +2239,6 @@ void SetXmlInLineRule (ElementType elType, PtrDocument pDoc)
       /* Add the new rule into the chain */
       LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
     }
-
-  /* Rule "margin-bottom: 0.5em" view 1 */
-  GetPresentRule (&pRule);
-  if (pRule != NULL)
-    {
-      pRule->PrType = PtMarginBottom;
-      pRule->PrNextPRule = NULL;
-      pRule->PrCond = NULL;
-      pRule->PrViewNum = FORMATTED_VIEW;
-      pRule->PrSpecifAttr = 0;
-      pRule->PrSpecificity = 0;
-      pRule->PrImportant = FALSE;
-      pRule->PrSpecifAttrSSchema = NULL;
-      pRule->PrPresMode = PresImmediate;
-      pRule->PrMinUnit = UnRelative;
-      pRule->PrMinAttr = FALSE;
-      pRule->PrMinValue = 5;
-      /* Add the new rule into the chain */
-      LinkNewPRule (pRule, &pPSch->PsElemPRule->ElemPres[nSRule]);
-    }
 }
 #endif
 
