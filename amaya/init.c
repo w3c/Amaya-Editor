@@ -954,7 +954,6 @@ char               *documentname;
 	     sprintf (tempdir, "%s%s%d%s", TempFileDirectory, DIR_STR, newdoc, DIR_STR);
 	     strcpy (tempdocument, tempdir);
 	     strcat (tempdocument, documentname);
-		 printf ("tempdir: %s\ntempdocument: %s\n", tempdir, tempdocument);
 	     if (doc != newdoc)
 	       {
                  if (!TtaCheckDirectory (tempdir))

@@ -512,14 +512,28 @@ boolean        deleteTree;
   ElementType	   elType;
   NotifyElement    event;
   int		   checkingMode;
+  boolean          isID;
 
   firstInserted = NULL;
-  /* get the BODY element of source document */
-  root = TtaGetMainRoot (sourceDoc);
-  elType = TtaGetElementType (root);
-  elType.ElTypeNum = HTML_EL_BODY;
-  body = TtaSearchTypedElement (elType, SearchForward, root);
-  if (body != NULL)
+  if (target != NULL)
+    {
+      /* locate the target element within the source document */
+      root = SearchNAMEattribute (sourceDoc, target, NULL);
+      elType = TtaGetElementType (root);
+      isID = (elType.ElTypeNum != HTML_EL_Anchor 
+	      && elType.ElTypeNum != HTML_EL_MAP);
+    }
+  else
+    {
+      isID = FALSE;
+      /* get the BODY element of source document */
+      root = TtaGetMainRoot (sourceDoc);
+      elType = TtaGetElementType (root);
+      elType.ElTypeNum = HTML_EL_BODY;
+      root = TtaSearchTypedElement (elType, SearchForward, root);
+    }
+
+  if (root != NULL)
     {
       /* don't check the abstract tree against the structure schema */
       checkingMode = TtaGetStructureChecking (destDoc);
@@ -546,7 +560,7 @@ boolean        deleteTree;
      
       /* do copy */
       lastInserted = NULL;
-      srce = TtaGetFirstChild (body);
+      srce = TtaGetFirstChild (root);
       while (srce != NULL)
 	{
 	  copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
@@ -573,6 +587,9 @@ boolean        deleteTree;
 	  TtaNextSibling (&srce);
 	  if (deleteTree)
 	    TtaDeleteTree (old, sourceDoc);
+	  /* Stop here if the target points to a specific element with an ID */
+	  if (isID)
+	    srce = NULL;
 	}
       
       /* delete the element(s) containing the link to the copied document */

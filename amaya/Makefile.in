@@ -1,7 +1,7 @@
 #
 # Makefile for Amaya WWW Browser/Editor
 # Generated from amaya/Makefile.in
-# Daniel Veillard, 1997
+# Daniel Veillard and Irene Vatton, 1997
 #
 
 @VPATHOPT@= @srcdir@
@@ -98,8 +98,8 @@ force :
 #include the fragments for libwww if configured in
 @www_frag@
 
-#include the fragments for xml if configured in
-@xml_frag@
+#include the fragments for math if configured in
+@math_frag@
 
 #########################################################################
 #									#
@@ -109,19 +109,19 @@ force :
 
 
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) $(AMAYA_JAVA_OPTIONS) $(AMAYA_PLUGIN_OPTIONS) \
-               $(AMAYA_LIBWWW_OPTIONS) $(AMAYA_XML_OPTIONS)
+               $(AMAYA_LIBWWW_OPTIONS) $(AMAYA_MATH_OPTIONS)
 
 AMAYA_OPTION_INCLUDES= $(AMAYA_JAVA_INCLUDES) $(AMAYA_PLUGIN_INCLUDES) \
-               $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_XML_INCLUDES)
+               $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES)
 
 AMAYA_OPTION_OBJ= $(AMAYA_JAVA_OBJ) $(AMAYA_PLUGIN_OBJ) \
-               $(AMAYA_LIBWWW_OBJ) $(AMAYA_XML_OBJ)
+               $(AMAYA_LIBWWW_OBJ) $(AMAYA_MATH_OBJ)
 
 AMAYA_OPTION_LIBS= $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
-               $(AMAYA_LIBWWW_LIBS) $(AMAYA_XML_LIBS)
+               $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS)
 
 AMAYA_OPTION_SCHEMAS= $(AMAYA_JAVA_SCHEMAS) $(AMAYA_PLUGIN_SCHEMAS) \
-               $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_XML_SCHEMAS)
+               $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_MATH_SCHEMAS)
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ -I@srcdir@/f \
                 -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
@@ -145,7 +145,6 @@ AMAYA_OBJ = \
 	HTMLAPP.o \
 	EDITORAPP.o \
 	init.o \
-	Mathedit.o \
 	EDITORactions.o \
 	HTMLactions.o \
 	HTMLbook.o \
@@ -299,33 +298,3 @@ proto : ../bin/cextract
 	 done)
 
 
-#
-# This part has migrated in Makefile.xml included if needed at the
-# @xml_frag@ marker .
-#
-#xml: $(AMAYA)/MathML.STR $(AMAYA)//MathMLP.PRS $(AMAYA)//MathMLT.TRA
-#
-##
-## Structure schema compilation.
-##
-#$(AMAYA)/MathML.STR : $(AMAYA)/MathML.S ../bin/str
-#	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
-#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
-#	$$STR $(ALL_AMAYA_OPTIONS) MathML ;\
-#	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP ;\
-#	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
-##
-## Presentation schemas compilation
-##
-#$(AMAYA)/MathMLP.PRS : $(AMAYA)/MathMLP.P
-#	PRS=`pwd`/../bin/prs ; \
-#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
-#	$$PRS $(ALL_AMAYA_OPTIONS) MathMLP
-#
-##
-## Traduction schemas compilation
-##
-#$(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T
-#	TRA=`pwd`/../bin/tra ; \
-#	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
-#	$$TRA $(ALL_AMAYA_OPTIONS) MathMLT
