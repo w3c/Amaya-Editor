@@ -100,12 +100,16 @@ extern void         TtaCopyAttributeReference (Attribute attribute, Element elem
    TtaUpdateInclusionElements
 
    Up to date the value of inclusion elements whoses targets elements
-   belong to the document.
+   belong to the document. If loadExternalDoc is TRUE, open the documents
+   that contain the inclusion elements and copy the source values in this
+   elements.
 
    Parameters:
    document: the document to which targets elements belong.
+   loadExternalDoc: if it is necessary to update the inclusions that do not
+   belong to the document.
    ---------------------------------------------------------------------- */
-extern void         TtaUpdateInclusionElements (Document document);
+extern void         TtaUpdateInclusionElements (Document document, boolean loadExternalDoc);
 
 /*----------------------------------------------------------------------
    TtaGiveReferredElement
