@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Eine Zeile hinzufügen</title>
+  <title>Zeilen zu einer Tabelle hinzufügen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -19,31 +18,71 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="add_column.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../../images/left.gif" /></a> <a href="../Tables.html.de"
-        accesskey="t"><img alt="erste Seite" src="../../images/up.gif" /></a>
-        <a href="add_tbody.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../../images/right.gif" /></a></td>
+      <td><a href="add_column.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        href="../Tables.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a href="add_tbody.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
+        /></a></td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Eine Zeile hinzufügen</h1>
+<h1>Zeilen zu einer Tabelle hinzufügen</h1>
 
-<p class="ProcedureCaption">Um eine neue Zeile oberhalb einer existierenden
-Zelle zu erzeugen:</p>
+<p class="ProcedureCaption">Um eine neue Tabellenzeile zu erzeugen:</p>
 <ol>
-  <li>Den Cursor an den Anfang der Zelle positionieren. </li>
-  <li>Die Taste <kbd>Eingabe</kbd> dreimal drücken</li>
+  <li>Um eine neue Tabellenzeile oberhalb einer existierenden Zeile zu
+    erzeugen, klickt man an den Anfang der ersten Zelle in der Zeile und
+    wählt den Eintrag <strong>Zeile einfügen (darüber)</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl i</code>).</li>
+  <li>Um eine neue Tabellenzeile unterhalb einer existierenden Zelle zu
+    erzeugen, setzt man den Cursor an das Ende der letzten Zelle in der Zeile
+    und wählt den Eintrag <strong>Zeile einfügen (dahinter)</strong> im
+    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl n</code>).</li>
 </ol>
 
-<p class="ProcedureCaption">Um eine neue Zeile unterhalb einer existierenden
-Zelle zu erzeugen:</p>
+<p>Neue Tabellenzeilen können auch einfach mit Hilfe der
+<strong>Enter</strong> Taste eingefügt werden. Wenn eine vollständige
+Tabellenzeile ausgewählt ist (mit <code>F2</code> unter Windows bzw.
+<code>Esc</code> unter Linux), wird durch Drücken der <strong>Enter</strong>
+Taste eine neue Tabellenzeile unterhalb der ausgewählten Zeile erzeugt.</p>
+
+<p class="ProcedureCaption">Um eine Tabellenzeile zu löschen oder zu kopieren
+und einzufügen:</p>
+
+<p>Wenn eine vollständige Tabellenzeile ausgewählt ist, kann man diese
+löschen, oder kopieren/ausschneiden und vor oder hinter einer anderen
+Tabellenzeile einfügen.</p>
+
+<p class="ProcedureCaption">Um eine Tabellenzeile auszuwählen:</p>
 <ol>
-  <li>Den Cursor an das Ende der Zelle positionieren. </li>
-  <li>Die Taste <kbd>Eingabe</kbd> dreimal drücken</li>
+  <li>Dies geht mit dem Eintrag <strong>Zeile auswählen</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl r</code>).</li>
+  <li>Alternativ kann man auch den Cursor in eine Zelle der gewünschten
+    Tabellenzeile setzen und durch (gegebenenfalls mehrfaches) Drücken der
+    <code>F2</code> Taste unter Windows (bzw. der <code>Esc</code> Taste
+    unter Linux) die Auswahl auf die ganze Tabellenzeile erweitern.</li>
 </ol>
+
+<p>Wenn eine vollständige Tabellenzeile ausgewählt ist, kann man diese
+kopieren (oder ausschneiden) und vor oder hinter einer anderen Tabellenzeile
+einfügen.</p>
+<ol>
+  <li>Um eine Tabellenzeile vor einer existierenden Zeile einzufügen, klickt
+    man an den Anfang der existierenden Zeile und fügt die kopierte oder
+    ausgeschnittene Zeile ein, oder man verwendet den Eintrag
+    <strong>Einfügen (davor)</strong> im Untermenü <strong>Tabelle</strong>
+    (<code>Ctrl t Ctrl p</code>).</li>
+  <li>Um eine Tabellenzeile hinter einer existierenden Zeile einzufügen,
+    setzt man den Cursor an das Ende der existierenden Zeile und fügt die
+    kopierte oder ausgeschnittene Zeile ein, oder man verwendet den Eintrag
+    <strong>Einfügen (danach)</strong> im Untermenü <strong>Tabelle</strong>
+    (<code>Ctrl t Ctrl v</code>).</li>
+</ol>
+
+<p></p>
 </div>
 </body>
 </html>

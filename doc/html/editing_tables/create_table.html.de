@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Eine Tabelle erzeugen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -34,14 +33,14 @@
 
 <p class="ProcedureCaption">Um eine neue Tabelle zu erzeugen:</p>
 <ol>
-  <li>Den Cursor an die Stelle im Dokument plazieren, an der die Tabelle
+  <li>Den Cursor an der Stelle im Dokument plazieren, an der die Tabelle
     erzeugt werden soll.</li>
   <li>Den Knopf <strong>Tabelle</strong> <img alt="Icon Tabelle"
     src="../../images/table.gif" /> in der Knopfleiste anklicken oder im Menü
-    <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong> den Befehl
-    <strong>Neue Tabelle</strong> wählen. Der Dialog
-    <strong>NeueTabelle</strong> wird angezeigt.</li>
-  <li>Hier die Anzahl der Zeilen und Spalten, sowie die Breite des Rahmens
+    <strong>XHTML</strong>, Untermenü <strong>Tabelle</strong> den Befehl
+    <strong>Neue Tabelle (table)</strong> wählen (<code>Ctrl t Ctrl
+    t</code>). Der Dialog <strong>NeueTabelle</strong> wird angezeigt.</li>
+  <li>Hier die Anzahl der Zeilen und Spalten sowie die Breite des Rahmens
     eingeben.</li>
   <li>Den Knopf <strong>OK</strong> anklicken. Amaya generiert eine grafische
     Repräsentation der Tabelle.</li>

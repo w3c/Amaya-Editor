@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Eine Spalte entfernen</title>
+  <title>Entfernen/Kopieren/Einfügen von Tabellenspalten</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -18,27 +18,73 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="add_tbody.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../../images/left.gif" /></a> <a href="../Tables.html.de"
-        accesskey="t"><img alt="erste Seite" src="../../images/up.gif"
-      /></a></td>
+      <td><a href="add_tbody.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        href="../Tables.html.de" accesskey="t"><img alt="erste Seite"
+        src="../../images/up.gif" /></a></td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Eine Spalte entfernen</h1>
+<h1>Entfernen/Kopieren/Einfügen von Tabellenspalten</h1>
 
-<p>Wenn man in einer Spalte eine Zelle löscht und diese Spalte dann leer
-wird, so wird diese von Amaya automatisch entfernt. Man kann auch Spalten,
-die nicht leer sind löschen.</p>
+<p>Wenn eine vollständige Tabellenspalte ausgewählt ist, kann man diese
+löschen, oder kopieren (oder ausschneiden) und vor oder hinter einer anderen
+Spalte einfügen.</p>
 
-<p class="ProcedureCaption">Um eine Spalte aus einer Tabelle zu entfernen:</p>
+<p class="ProcedureCaption">Um eine Tabellenspalte auszuwählen:</p>
 <ol>
-  <li>Den Cursor in die Spalte plazieren. </li>
-  <li>Im Menü <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong>
-    den Befehl <strong>Spalte löschen</strong> wählen.</li>
+  <li>Dies geschieht mit dem Eintrag <strong>Spalte auswählen</strong> im
+    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl c</code>).</li>
+  <li>Alternativ kann man auch in eine beliebige Zelle der gewünschten Spalte
+    klicken und mit der Maus die Auswahl bis zu einer anderen Zelle derselben
+    Spalte erweitern. Dies bewirkt, dass Amaya in den Spaltenauswahlmodus
+    wechselt. Durch Drücken der <code>F2</code> Taste unter Windows (bzw. der
+    <code>Esc</code> Taste unter Linux) wird die Auswahl auf die gesamte
+    Spalte, welche die beiden Zellen enthält, erweitert. Beispiel: Um in der
+    folgenden Tabelle die mittlere Spalte auszuwählen, klickt man in Zelle
+    1.2 und zieht den Cursor in Zelle 2.2 und drückt zweimal <code>F2</code>
+    unter Windows, bzw. <code>Esc</code> unter Linux:</li>
 </ol>
+
+<table border="1" summary="table">
+  <tbody>
+    <tr>
+      <td>Zelle 1.1</td>
+      <td>Zelle 1.2</td>
+      <td>Zelle 1.3</td>
+    </tr>
+    <tr>
+      <td>Zelle 2.1</td>
+      <td>Zelle 2.2</td>
+      <td>Zelle 2.3</td>
+    </tr>
+    <tr>
+      <td>Zelle 3.1</td>
+      <td>Zelle 3.2</td>
+      <td>Zelle 3.3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Wenn eine vollständige Tabellenspalte ausgewählt ist, kann man diese
+kopieren (oder ausschneiden) und vor oder hinter einer anderen Spalte
+einfügen.</p>
+<ol>
+  <li>Um eine Tabellenspalte vor einer existierenden Spalte einzufügen,
+    klickt man an den Anfang einer Zelle in der existierenden Spalte und fügt
+    die kopierte oder ausgeschnittene Spalte ein, oder man verwendet den
+    Eintrag <strong>Einfügen (davor)</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl p</code>).</li>
+  <li>Um eine Tabellenspalte hinter einer existierenden Spalte einzufügen,
+    setzt man den Cursor an das Ende einer Zelle in der existierenden Spalte
+    und fügt die kopierte oder ausgeschnittene Spalte ein, oder man verwendet
+    den Eintrag <strong>Einfügen (danach)</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl v</code>).</li>
+</ol>
+
+<p></p>
 </div>
 </body>
 </html>

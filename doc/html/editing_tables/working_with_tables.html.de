@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Mit Tabellen arbeiten</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -31,18 +30,48 @@
 <h1>Mit Tabellen arbeiten</h1>
 
 <p>Amaya enthält keinen separaten Tabelleneditor. Für Amaya ist eine Tabelle
-einfach eine Struktur, welche in der <strong>Document Type
-Definition</strong> (DTD) von HTML beschrieben wird und als solche editiert
-wird. Man kann auf eine Tabelle die gleichen Befehle, die auch auf andere
-Strukturen zutreffen, und einige mehr, anwenden.</p>
+einfach eine Struktur, die in der <strong>Document Type Definition</strong>
+(DTD) von HTML beschrieben wird und als solche bearbeitet wird. Für Tabellen
+kann man die gleichen Befehle verwenden wie für andere Strukturen. Außerdem
+gibt es einige zusätzliche Befehle speziell für Tabellen.</p>
+
+<p class="ProcedureCaption">Erweitern von Tabellenzellen:</p>
+<ol>
+  <li>Ausdehnen einer Tabellenzelle in die nächste Zelle nach rechts:
+    Menüpunkt <strong>Zusammenfügen mit rechter Zelle</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl e</code>).</li>
+  <li>Ausdehnen einer Tabellenzelle in die nächste Zelle nach unten:
+    Menüpunkt <strong>Zusammenfügen mit der Zelle darunter</strong> im
+    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl j</code>).</li>
+  <li>Horizontale Ausdehnung einer Tabellenzelle verkleinern: Menüpunkt
+    <strong>Horizontale Ausdehnung verkleinern</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl s</code>).</li>
+  <li>Vertikale Ausdehnung einer Tabellenzelle verkleinern: Menüpunkt
+    <strong>Vertikale Ausdehnung verkleinern</strong> im Untermenü
+    <strong>Tabelle</strong> (<code>Ctrl t Ctrl m</code>).</li>
+</ol>
+
+<p>Die Ausdehnung einer Tabellenzelle kann auch durch Bearbeiten der <a
+href="/usr/share/Amaya/doc/html/Attributes.html">Attribute</a> colspan and
+rowspan geändert werden.</p>
+
+<p class="ProcedureCaption">Einfügen von Elementen hinter einer Tabelle:</p>
+
+<p>Um Elemente hinter einer Tabelle einzufügen muss die Tabelle verlassen
+werden. Dazu wählt man das table Element (mit <code>F2</code> unter Windows
+bzw. <code>Esc</code> unter Unix) und drückt die <strong>Enter</strong>
+Taste. Amaya fügt dann einen neuen Absatz hinter der ausgewählten Tabelle
+ein. Dieser kann dann durch ein anderes Element ersetzt werden.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
   <li><a href="create_table.html.de">Eine Tabelle erzeugen</a></li>
-  <li><a href="add_column.html.de">Eine Spalte hinzufügen</a></li>
-  <li><a href="add_row.html.de">Eine Zeile hinzufügen</a></li>
+  <li><a href="add_column.html.de">Spalten zu einer Tabelle
+  hinzufügen</a></li>
+  <li><a href="add_row.html.de">Zeilen zu einer Tabelle hinzufügen</a></li>
   <li><a href="add_tbody.html.de">Einen Tabellenkörper hinzufügen</a></li>
-  <li><a href="remove_column.html.de">Eine Spalte entfernen</a></li>
+  <li><a href="remove_column.html.de">Tabellenspalten
+    entfernen/kopieren/einfügen</a></li>
 </ul>
 </div>
 </body>

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Eine Spalte hinzufügen</title>
+  <title>Spalten zu einer Tabelle hinzufügen</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -30,21 +29,27 @@
 </table>
 
 <div id="page_body">
-<h1>Eine Spalte hinzufügen</h1>
+<h1>Spalten zu einer Tabelle hinzufügen</h1>
 
-<p class="ProcedureCaption">Um eine neue Spalte rechts von einer
-existierenden Zelle zu erzeugen:</p>
+<p class="ProcedureCaption">Um eine neue Spalte zu einer Tabelle
+hinzuzufügen:</p>
 <ol>
-  <li>Den Cursor an das Ende der Zelle positionieren. </li>
-  <li>Die Taste <kbd>Eingabe</kbd> zweimal drücken</li>
+  <li>Um eine neue Spalte links von einer existierenden Spalte zu erzeugen,
+    wählt man den Eintrag <strong>Spalte einfügen (davor)</strong> im
+    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl b</code>).</li>
+  <li>Um eine neue Spalte rechts von einer existierenden Spalte zu erzeugen,
+    wählt man den Eintrag <strong>Spalte einfügen (danach)</strong> im
+    Untermenü <strong>Tabelle</strong> (<code>Ctrl t Ctrl a</code>).</li>
 </ol>
 
-<p class="ProcedureCaption">Um eine neue Spalte links von einer existierenden
-Zelle zu erzeugen:</p>
-<ol>
-  <li>Den Cursor an den Anfang der Zelle positionieren. </li>
-  <li>Die Taste <kbd>Eingabe</kbd> zweimal drücken</li>
-</ol>
+<p>Neue Spalten können auch einfach mit Hilfe der <strong>Enter</strong>
+Taste zu einer Tabelle hinzugefügt werden. Wenn eine vollständige Zelle
+ausgewählt ist (mit <code>F2</code> unter Windows bzw. <code>Esc</code> unter
+Linux), wird durch Drücken der <strong>Enter</strong> Taste eine neue
+Tabellenzelle und die zugehörige Spalte rechts von der ausgewählten Zelle
+erzeugt.</p>
+
+<p></p>
 </div>
 </body>
 </html>
