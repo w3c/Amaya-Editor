@@ -1268,9 +1268,9 @@ boolean             save;
 				          d'accord pour detruire l'element */
 				       if (NextElemToBeCut (pEl, lastSel,
 						    pSelDoc, pSave) == NULL)
-					  last = 1;
+					  last = TTE_STANDARD_DELETE_LAST_ITEM;
 				       else
-					  last = 0;
+					  last = TTE_STANDARD_DELETE_FIRST_ITEMS;
 				    if (!SendEventSubTree (TteElemDelete,
 							 pSelDoc, pE, last))
 				      {
@@ -2582,7 +2582,7 @@ boolean             Before;
 				 /* envoie l'evenement ElemDelete.Pre a
 				    l'application */
 				 if (!SendEventSubTree (TteElemDelete, pSelDoc,
-							pEl, 0))
+							pEl, TTE_STANDARD_DELETE_LAST_ITEM))
 				   {
 				      /* detruit les paves de l'element vide a 
 				         detruire */

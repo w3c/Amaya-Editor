@@ -1219,7 +1219,7 @@ boolean             block;
 		       NSiblings++;
 		       pSibling = pSibling->ElPrevious;
 		    }
-		  notifyEl.position = 0;
+		  notifyEl.position = TTE_TOOLKIT_DELETE;
 		  CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
 		  RemoveElement (pE);
 		  /* signale a l'application qu'on a retire' un element */
@@ -1288,7 +1288,7 @@ boolean             block;
 				      NSiblings++;
 				      pSibling = pSibling->ElPrevious;
 				   }
-				 notifyEl.position = 0;
+				 notifyEl.position = TTE_TOOLKIT_DELETE;
 				 CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
 				 RemoveElement (pClose);
 				 /* signale a l'application qu'on a retire' un element */

@@ -1006,7 +1006,7 @@ void                TtcCreateElement (doc, view)
 	     if (ok && pElDelete != NULL)
 		/* on va detruire un sous arbre vide. */
 		/* envoie l'evenement ElemDelete.Pre */
-		ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete, 0);
+		ok = !SendEventSubTree (TteElemDelete, pDoc, pElDelete, TTE_STANDARD_DELETE_LAST_ITEM);
 	     if (ok)
 	       {
 		  /* annule d'abord la selection */
@@ -1357,7 +1357,7 @@ boolean             before;
 	     {
 		pNext = pElem->ElNext;
 		/* envoie l'evenement ElemDelete.Pre a l'application */
-		if (!SendEventSubTree (TteElemDelete, pDoc, pElem, 0))
+		if (!SendEventSubTree (TteElemDelete, pDoc, pElem, TTE_STANDARD_DELETE_LAST_ITEM))
 		  {
 		     /* detruit les paves de l'element qui va etre deplace' */
 		     DestroyAbsBoxes (pElem, pDoc, TRUE);
@@ -1427,7 +1427,7 @@ boolean             before;
 		pParent = pE->ElParent;
 		/* envoie l'evenement ElemDelete.Pre et demande a */
 		/* l'application si elle est d'accord pour detruire l'elem. */
-		if (!SendEventSubTree (TteElemDelete, pDoc, pE, 0))
+		if (!SendEventSubTree (TteElemDelete, pDoc, pE, TTE_STANDARD_DELETE_LAST_ITEM))
 		  {
 		     /* cherche l'element qui precede l'element a detruire */
 		     pPrev = PreviousNotPage (pE);
