@@ -1793,6 +1793,18 @@ char               *data;
 			 TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
 			 ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
        break;
+     case DocSave:
+       if (DirectoryName[0] == EOS)
+	 /* set path on current directory */
+	 getcwd (DirectoryName, MAX_LENGTH);
+       
+       strcpy (DocumentName, data);
+       /* construct the document full name */
+       strcpy (tempfile, DirectoryName);
+       strcat (tempfile, DIR_STR);
+       strcat (tempfile, DocumentName);
+       TtaSetTextForm (BaseDialog + NameSave, tempfile);
+       break;
      case ConfirmSave:
        /* *********SaveConfirm********* */
        UserAnswer = (val == 1);

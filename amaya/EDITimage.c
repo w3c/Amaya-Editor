@@ -59,6 +59,7 @@ char               *data;
 
 #endif /* __STDC__ */
 {
+  Document           document;
   ElementType	     elType;
   Element            el, elStyle;
   Element            first, last;
@@ -98,13 +99,15 @@ char               *data;
 	    }
 	  else if (ref == BaseImage + FormBackground && BgDocument != 0)
 	    {
+	      /* save BgDocument because operation can be too long */
+	      document = BgDocument;
 	      /* get the first and last selected element */
-	      TtaGiveFirstSelectedElement (BgDocument, &first, &c1, &i);
+	      TtaGiveFirstSelectedElement (document, &first, &c1, &i);
 	      if (first == NULL)
 		{
 		  /* set the pRule on the root element */
-		  el =  TtaGetMainRoot (BgDocument);
-		  elType.ElSSchema = TtaGetDocumentSSchema (BgDocument);
+		  el =  TtaGetMainRoot (document);
+		  elType.ElSSchema = TtaGetDocumentSSchema (document);
 		  elType.ElTypeNum = HTML_EL_BODY;
 		  /* set the style on body element */
 		  elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -117,7 +120,7 @@ char               *data;
 		  if (elType.ElTypeNum == HTML_EL_BODY)
 		    {
 		      /* move the pRule on the root element */
-		      el =  TtaGetMainRoot (BgDocument);
+		      el =  TtaGetMainRoot (document);
 		      last = el;
 		    }
 		  else if (elType.ElTypeNum == HTML_EL_HEAD)
@@ -128,7 +131,7 @@ char               *data;
 		    }
 		  else
 		    {
-		      /* TODO:  TtaGiveLastSelectedElement (BgDocument, &last, &i, &cN); */
+		      /* TODO:  TtaGiveLastSelectedElement (document, &last, &i, &cN); */
 		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
 			  elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 			el = TtaGetParent (el);
@@ -143,7 +146,7 @@ char               *data;
 		}
 
 	      if (LastURLImage[0] == EOS)
-		HTMLResetBackgroundImage (BgDocument, el);
+		HTMLResetBackgroundImage (document, el);
 	      else
 		{
 		  if (RepeatValue == 0)
@@ -154,9 +157,10 @@ char               *data;
 		    i = DRIVERP_VREPEAT;
 		  else
 		    i = DRIVERP_SCALE;
-		  HTMLSetBackgroundImage (BgDocument, el, i, LastURLImage);
+		  HTMLSetBackgroundImage (document, el, i, LastURLImage);
 		}
-	      SetStyleAttribute (BgDocument, elStyle);
+	      SetStyleAttribute (document, elStyle);
+	      TtaSetDocumentModified (document);
 	    }
 	  else
 	    TtaDestroyDialogue (ref);
