@@ -346,7 +346,7 @@ int                *lastChar;
 	     if (LastSelectedChar == 0)
 		*lastChar = 0;
 	     else if (SelPosition) 
-		*lastChar = LastSelectedChar;
+		*lastChar = FirstSelectedChar;
 	     else
 		*lastChar = LastSelectedChar + 1;
 	  }
@@ -1783,7 +1783,7 @@ boolean             string;
 }
 
 /*----------------------------------------------------------------------
-   SelectString
+   SelectStringOrPosition
 
    Set the current selection to the string beginning at position firstChar
    and ending at position lastChar in the text element pEl.
