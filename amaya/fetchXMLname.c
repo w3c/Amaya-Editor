@@ -468,7 +468,6 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
    Returns FALSE if entityValue is not found.
   ----------------------------------------------------------------------*/
 void MapEntityByCode (int entityValue, char **entityName)
-
 {
   XmlEntity  *ptr;
   ThotBool    found;
@@ -478,19 +477,28 @@ void MapEntityByCode (int entityValue, char **entityName)
   ptr = XhtmlEntityTable;
   if (ptr)
     {
-      /* look for the first concerned entry in the table */
+      /* look for in the HTML entities table */
       found = FALSE;
-      for (i = 0; ptr[i].charCode >= 0 && !found; i++)
-	found = (ptr[i].charCode == entityValue);
-  
-      if (found)
+      while (ptr && !found)
 	{
-	  /* entity value found */
-	  i--;
-	  *entityName = (char *) (ptr[i].charName);
+	  for (i = 0; ptr[i].charCode >= 0 && !found; i++)
+	    found = (ptr[i].charCode == entityValue);
+  
+	  if (found)
+	    {
+	      /* entity value found */
+	      i--;
+	      *entityName = (char *) (ptr[i].charName);
+	    }
+	  else if (ptr != MathEntityTable)
+	    /* look for in the Math entities table */
+	    ptr = MathEntityTable;
+	  else
+	    {
+	      *entityName = NULL;
+	      ptr = NULL;
+	    }
 	}
-      else
-	*entityName = NULL;
     }
   else
     *entityName = NULL;

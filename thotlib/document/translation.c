@@ -176,26 +176,36 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
       if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
 	{
 	  (*GetEntityFunction) (c, &(entity));
+	  mbc[0] = '&';
 	  if (entity)
 	    {
-	      mbc[0] = '&';
 	      strncpy (&mbc[1], entity, 40);
 	      mbc[42] = EOS;
-	      nb_bytes2write = strlen (mbc);
-	      mbc[nb_bytes2write++] = ';';
 	    }
+	  else
+	    {
+	      mbc[1] = '#';
+	      sprintf (&mbc[2], TEXT("%d"), c);
+	    }
+	  nb_bytes2write = strlen (mbc);
+	  mbc[nb_bytes2write++] = ';';
 	}
       else if (GetEntityFunction && c > 255 && pDoc->DocCharset == ISO_8859_1)
 	{
 	  (*GetEntityFunction) (c, &(entity));
+	  mbc[0] = '&';
 	  if (entity)
 	    {
-	      mbc[0] = '&';
 	      strncpy (&mbc[1], entity, 40);
 	      mbc[42] = EOS;
-	      nb_bytes2write = strlen (mbc);
-	      mbc[nb_bytes2write++] = ';';
 	    }
+	  else
+	    {
+	      mbc[1] = '#';
+	      sprintf (&mbc[2], TEXT("%d"), c);
+	    }
+	  nb_bytes2write = strlen (mbc);
+	  mbc[nb_bytes2write++] = ';';
 	}
       else
 #ifdef _I18N_ 
