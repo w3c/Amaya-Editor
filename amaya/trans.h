@@ -201,12 +201,9 @@ Document            TransDoc;
 
 /* dialog and messages */
 int                 TransBaseDialog;
-int                 TRANSDIAL;
 
-#define TR_TRANSFORM 0
-#define TRANS_MSG_MAX 1
 #define TransMenu 1
 #define MAX_TRANS_DLG 2
 
-#endif
+#endif /* PPSTANDALONE */
 #endif /* _TRANS_H__ */

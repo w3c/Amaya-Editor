@@ -197,4 +197,5 @@ int                 AMAYA;
 #define AM_TEMPLATES_MENU             185
 #define AM_SAFE_PUT_REDIRECT          186
 #define AM_WITH_CSS                   187
-#define AMAYA_MSG_MAX                 188
+#define AM_TRANS		      188
+#define AMAYA_MSG_MAX                 189

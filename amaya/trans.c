@@ -170,9 +170,7 @@ void                InitTransform ()
 void                InitTransform ()
 #endif
 {
-   TRANSDIAL = TtaGetMessageTable (TEXT("transdialogue"), TRANS_MSG_MAX);
    TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
-
 }
 
 /*----------------------------------------------------------------------
@@ -2707,7 +2705,9 @@ View                view;
       TtaFreeMemory (tag);
       if (i > 0)
 	{ /* if some transformations have been matched, shows the menu */
-	  TtaNewPopup (TransBaseDialog + TransMenu, 0, TtaGetMessage (TRANSDIAL, TR_TRANSFORM), i, menuBuf, NULL, 'L');
+	  TtaNewPopup (TransBaseDialog + TransMenu, 0, 
+		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
+		       NULL, 'L');
 #     ifndef _WINDOWS
 	  TtaSetDialoguePosition ();
 #     endif /* !_WINDOWS */
