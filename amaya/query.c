@@ -1994,7 +1994,7 @@ int i;
   /* get the cache size (or use a default one) */
   strptr = TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
-    cache_size = uatoi (strptr);
+    cache_size = atoi (strptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
   /* get the max cached file size (or use a default one) */
@@ -2412,7 +2412,7 @@ void         QueryInit ()
    /* Maximum number of simultaneous open sockets */
    strptr = TtaGetEnvString ("MAX_SOCKET");
    if (strptr && *strptr) 
-     tmp_i = uatoi (strptr);
+     tmp_i = atoi (strptr);
    else
      tmp_i = DEFAULT_MAX_SOCKET;
    HTNet_setMaxSocket (tmp_i);
@@ -2421,7 +2421,7 @@ void         QueryInit ()
    /* dns timeout */
    strptr = TtaGetEnvString ("DNS_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = uatoi (strptr);
+     tmp_i = atoi (strptr);
    else
      tmp_i = DEFAULT_DNS_TIMEOUT;
    HTDNS_setTimeout (tmp_i);
@@ -2429,7 +2429,7 @@ void         QueryInit ()
    /* persistent connections timeout */
    strptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_l = uatol (strptr); 
+     tmp_l = atol (strptr); 
    else
      tmp_l = DEFAULT_PERSIST_TIMEOUT;
    HTHost_setPersistTimeout (tmp_l);
@@ -2437,7 +2437,7 @@ void         QueryInit ()
    /* default timeout in ms */
    strptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = uatoi (strptr);
+     tmp_i = atoi (strptr);
    else
      tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
    HTHost_setEventTimeout (tmp_i);

@@ -1105,8 +1105,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	     do
 	       {
 		 if (!TtaReadWideChar (pivFile,
-				       &pBT->BuContent[pBT->BuLength++],
-				       UTF_8))
+				       &pBT->BuContent[pBT->BuLength++]))
 		   /* erreur de lecture */
 		   PivotError (pivFile, "Attribute1");
 		 else if (pBT->BuContent[pBT->BuLength - 1] == WC_EOS)
@@ -2272,7 +2271,7 @@ static  LabelString         label;
 		{
 		  if (leafType == CharString || leafType == Picture)
 		    {
-		      if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
+		      if (!TtaReadWideChar (pivFile, &ctext))
 			PivotError (pivFile, "PivotError: Text 1");
 		      if (ctext != (CHAR_T) C_PIV_END)
 			{
@@ -2281,7 +2280,7 @@ static  LabelString         label;
 			    /* skip the text */
 			    {
 			      while (ctext != WC_EOS && !error)
-				if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
+				if (!TtaReadWideChar (pivFile, &ctext))
 				  PivotError (pivFile, "PivotError: Text 2");
 			    }
 			  else
@@ -2305,7 +2304,7 @@ static  LabelString         label;
 				  n++;
 				  /* store the character and read the next one */
 				  pBuf->BuContent[n - 1] = ctext;
-				  if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
+				  if (!TtaReadWideChar (pivFile, &ctext))
 				    PivotError (pivFile, "PivotError: Text 3");
 				}
 			      while (ctext != WC_EOS);

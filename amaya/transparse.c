@@ -1309,7 +1309,7 @@ static void         ppEndOfAttrValue (unsigned char c)
 	if (!isText)
 	  {
 	     ppAttr->IsInt = TRUE;
-	     ppAttr->IntVal = uatoi (inputBuffer);
+	     ppAttr->IntVal = atoi (inputBuffer);
 	  }
 	else
 	  {

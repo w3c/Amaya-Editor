@@ -900,137 +900,139 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
    Ce pave contient deja les nouvelles valeurs du volume et du     
    pointeur sur le 1er buffer texte.                               
   ----------------------------------------------------------------------*/
-void                NewContent (PtrAbstractBox pAb)
+void NewContent (PtrAbstractBox pAb)
 {
-   int                 dVol, len;
-   PtrDocument         pDoc;
-   PtrElement          pEl, pAncest;
-   PtrAttribute        pAttr, pNewAttr;
+  PtrDocument         pDoc;
+  PtrElement          pEl, pAncest;
+  PtrAttribute        pAttr, pNewAttr;
+  char                text[10];
+  int                 dVol, len;
 
-   /* cherche le document auquel appartient le pave */
-   pEl = pAb->AbElement;
-   pDoc = DocumentOfElement (pEl);
-   if (pAb->AbPresentationBox && pAb->AbCanBeModified)
-      /* c'est un pave' affichant la valeur d'un attribut */
-     {
-	if (pAb->AbCreatorAttr != NULL)
-	  {
-	     pAttr = pAb->AbCreatorAttr;
-	     GetAttribute (&pNewAttr);
-	     pNewAttr->AeAttrSSchema = pAttr->AeAttrSSchema;
-	     pNewAttr->AeAttrNum = pAttr->AeAttrNum;
-	     pNewAttr->AeDefAttr = pAttr->AeDefAttr;
-	     pNewAttr->AeAttrType = pAttr->AeAttrType;
-	     switch (pNewAttr->AeAttrType)
-		   {
-		      case AtNumAttr:
-			 sscanf (pAb->AbText->BuContent, "%d", &pNewAttr->AeAttrValue);
-			 break;
-		      case AtTextAttr:
-			 if (pNewAttr->AeAttrText == NULL)
-			    GetTextBuffer (&pNewAttr->AeAttrText);
-			 else
-			    ClearText (pNewAttr->AeAttrText);
-			 CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
-			 break;
-		      default:
-			 break;
-		   }
-	     /* reafficher l'attribut */
-	     /********  when undoing this operation, the whole element having
-                 this attribute will be selected.  How to record the current
-                 selection, which is within the attribute value? ************/
-	     OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
-	     AttachAttrWithValue (pEl, pDoc, pNewAttr);
-	     CloseHistorySequence (pDoc);
-	     DeleteAttribute (NULL, pNewAttr);
-	     AbstractImageUpdated (pDoc);
-	     RedisplayDocViews (pDoc);
-	  }
-     }
-   else if (pEl->ElTerminal)
-      /* il s'agit d'une feuille */
-      /* mise a jour de l'element de l'arbre abstrait */
-     {
-	/* dVol: difference de volume du pave */
-	dVol = 0;
-	switch (pAb->AbLeafType)
-	      {
-		 case LtPicture:
-		    pEl->ElTextLength = pAb->AbVolume;
-		    pEl->ElVolume = 100;
-		    dVol = pAb->AbVolume - pEl->ElVolume;
-		    pEl->ElText->BuLength = strlen (pEl->ElText->BuContent);
-		    break;
-		 case LtText:
-		    dVol = pAb->AbVolume - pEl->ElTextLength;
-		    pEl->ElTextLength = pAb->AbVolume;
-		    pEl->ElVolume = pEl->ElTextLength;
-		    pEl->ElText = pAb->AbText;
-		    break;
-		 case LtPolyLine:
-		    if (pEl->ElLeafType == LtGraphics)
-		       /* un graphique simple a transformer en Polyline */
-		      {
-			 pEl->ElLeafType = LtPolyLine;
-			 if (pEl->ElGraph == EOS)
-			    pEl->ElNPoints = 0;
-			 else
-			    pEl->ElNPoints = 1;
-			 pEl->ElPolyLineType = EOS;
-		      }
-		    dVol = pAb->AbVolume - pEl->ElNPoints;
-		    pEl->ElNPoints = pAb->AbVolume;
-		    pEl->ElVolume = pAb->AbVolume;
-		    pEl->ElPolyLineBuffer = pAb->AbPolyLineBuffer;
-		    pEl->ElPolyLineType = pAb->AbPolyLineShape;
-		    break;
-		 case LtSymbol:
-		 case LtGraphics:
-		    if (pAb->AbLeafType == LtGraphics &&
-			pEl->ElLeafType == LtPolyLine)
-		       /* une Polyline a transformer en graphique simple */
-		      {
-			 dVol = -pEl->ElNPoints;
-			 if (pAb->AbShape != EOS)
-			    dVol++;
-			 ClearText (pEl->ElPolyLineBuffer);
-			 FreeTextBuffer (pEl->ElPolyLineBuffer);
-			 pEl->ElLeafType = LtGraphics;
-		      }
-		    else
-		      {
-			 if (pEl->ElGraph == EOS && pAb->AbShape != EOS)
-			    dVol = 1;
-			 if (pEl->ElGraph != EOS && pAb->AbShape == EOS)
-			    dVol = -1;
-		      }
-		    /* don't change a symbol representing a wide char */
-		    if (pEl->ElLeafType != LtSymbol || pEl->ElGraph != '?')
-		      {
-			pEl->ElGraph = pAb->AbShape;
-			pDoc->DocNTypedChars += 5;
-			pEl->ElVolume += dVol;
-		      }
-		    break;
-		 default:
-		    break;
-	      }
-	/* ajoute le volume a celui des elements englobants */
-	if (dVol != 0)
-	  {
-	     pDoc->DocNTypedChars += abs (dVol);
-	     pAncest = pEl->ElParent;
-	     while (pAncest != NULL)
-	       {
-		  pAncest->ElVolume = pAncest->ElVolume + dVol;
-		  pAncest = pAncest->ElParent;
-	       }
-	  }
-	SetDocumentModified (pDoc, TRUE, 0);
-	/* traite les paves correspondant dans les autres vues */
-	RedisplayNewContent (pEl, pDoc, dVol, pAb->AbDocView, pAb);
-     }
+  /* cherche le document auquel appartient le pave */
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement (pEl);
+  if (pAb->AbPresentationBox && pAb->AbCanBeModified)
+    /* c'est un pave' affichant la valeur d'un attribut */
+    {
+      if (pAb->AbCreatorAttr != NULL)
+	{
+	  pAttr = pAb->AbCreatorAttr;
+	  GetAttribute (&pNewAttr);
+	  pNewAttr->AeAttrSSchema = pAttr->AeAttrSSchema;
+	  pNewAttr->AeAttrNum = pAttr->AeAttrNum;
+	  pNewAttr->AeDefAttr = pAttr->AeDefAttr;
+	  pNewAttr->AeAttrType = pAttr->AeAttrType;
+	  switch (pNewAttr->AeAttrType)
+	    {
+	    case AtNumAttr:
+	      sscanf (text, "%d", &pNewAttr->AeAttrValue);
+	      CopyMBs2Buffer (text, pAb->AbText, 0, 9);
+	      break;
+	    case AtTextAttr:
+	      if (pNewAttr->AeAttrText == NULL)
+		GetTextBuffer (&pNewAttr->AeAttrText);
+	      else
+		ClearText (pNewAttr->AeAttrText);
+	      CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
+	      break;
+	    default:
+	      break;
+	    }
+	  /* reafficher l'attribut */
+	  /********  when undoing this operation, the whole element having
+		     this attribute will be selected.  How to record the current
+		     selection, which is within the attribute value? ************/
+	  OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
+	  AttachAttrWithValue (pEl, pDoc, pNewAttr);
+	  CloseHistorySequence (pDoc);
+	  DeleteAttribute (NULL, pNewAttr);
+	  AbstractImageUpdated (pDoc);
+	  RedisplayDocViews (pDoc);
+	}
+    }
+  else if (pEl->ElTerminal)
+    /* il s'agit d'une feuille */
+    /* mise a jour de l'element de l'arbre abstrait */
+    {
+      /* dVol: difference de volume du pave */
+      dVol = 0;
+      switch (pAb->AbLeafType)
+	{
+	case LtPicture:
+	  pEl->ElTextLength = pAb->AbVolume;
+	  pEl->ElVolume = 100;
+	  dVol = pAb->AbVolume - pEl->ElVolume;
+	  pEl->ElText->BuLength = ustrlen (pEl->ElText->BuContent);
+	  break;
+	case LtText:
+	  dVol = pAb->AbVolume - pEl->ElTextLength;
+	  pEl->ElTextLength = pAb->AbVolume;
+	  pEl->ElVolume = pEl->ElTextLength;
+	  pEl->ElText = pAb->AbText;
+	  break;
+	case LtPolyLine:
+	  if (pEl->ElLeafType == LtGraphics)
+	    /* un graphique simple a transformer en Polyline */
+	    {
+	      pEl->ElLeafType = LtPolyLine;
+	      if (pEl->ElGraph == EOS)
+		pEl->ElNPoints = 0;
+	      else
+		pEl->ElNPoints = 1;
+	      pEl->ElPolyLineType = EOS;
+	    }
+	  dVol = pAb->AbVolume - pEl->ElNPoints;
+	  pEl->ElNPoints = pAb->AbVolume;
+	  pEl->ElVolume = pAb->AbVolume;
+	  pEl->ElPolyLineBuffer = pAb->AbPolyLineBuffer;
+	  pEl->ElPolyLineType = pAb->AbPolyLineShape;
+	  break;
+	case LtSymbol:
+	case LtGraphics:
+	  if (pAb->AbLeafType == LtGraphics &&
+	      pEl->ElLeafType == LtPolyLine)
+	    /* une Polyline a transformer en graphique simple */
+	    {
+	      dVol = -pEl->ElNPoints;
+	      if (pAb->AbShape != EOS)
+		dVol++;
+	      ClearText (pEl->ElPolyLineBuffer);
+	      FreeTextBuffer (pEl->ElPolyLineBuffer);
+	      pEl->ElLeafType = LtGraphics;
+	    }
+	  else
+	    {
+	      if (pEl->ElGraph == EOS && pAb->AbShape != EOS)
+		dVol = 1;
+	      if (pEl->ElGraph != EOS && pAb->AbShape == EOS)
+		dVol = -1;
+	    }
+	  /* don't change a symbol representing a wide char */
+	  if (pEl->ElLeafType != LtSymbol || pEl->ElGraph != '?')
+	    {
+	      pEl->ElGraph = pAb->AbShape;
+	      pDoc->DocNTypedChars += 5;
+	      pEl->ElVolume += dVol;
+	    }
+	  break;
+	default:
+	  break;
+	}
+      /* ajoute le volume a celui des elements englobants */
+      if (dVol != 0)
+	{
+	  pDoc->DocNTypedChars += abs (dVol);
+	  pAncest = pEl->ElParent;
+	  while (pAncest != NULL)
+	    {
+	      pAncest->ElVolume = pAncest->ElVolume + dVol;
+	      pAncest = pAncest->ElParent;
+	    }
+	}
+      SetDocumentModified (pDoc, TRUE, 0);
+      /* traite les paves correspondant dans les autres vues */
+      RedisplayNewContent (pEl, pDoc, dVol, pAb->AbDocView, pAb);
+    }
 }
 
 /*----------------------------------------------------------------------

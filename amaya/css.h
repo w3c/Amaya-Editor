@@ -47,8 +47,8 @@ typedef struct _CSSInfo
 {
   struct _CSSInfo    *NextCSS;
   int                 doc;   /* entry in the document table or 0 */
-  STRING              url;
-  STRING              localName;
+  char               *url;
+  char               *localName;
   CSSCategory         category;
   PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */
@@ -58,7 +58,7 @@ typedef struct _CSSInfo
 } CSSInfo , *CSSInfoPtr;
 
 THOT_EXPORT CSSInfoPtr   CSSList;
-THOT_EXPORT char*      UserCSS; /* name of the User style sheet */
-THOT_EXPORT char       CSSbuffer[MAX_CSS_LENGTH + 1];
+THOT_EXPORT char        *UserCSS; /* name of the User style sheet */
+THOT_EXPORT char         CSSbuffer[MAX_CSS_LENGTH + 1];
 
 #endif /* CSS_INC_H */

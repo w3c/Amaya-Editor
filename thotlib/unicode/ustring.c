@@ -88,19 +88,6 @@ static CharsetCode CharsetCodeTable[] =
 
 
 /*-------------------------------------------------------------
-  uputchar
-  -------------------------------------------------------------*/
-int     uputchar (int c)
-{
-#ifdef _I18N_
-    /* Compatibility of putwchar: ANSI, WIN NT and WIN 9x */
-    return putwchar (c);
-#else  /* _I18N_ */
-    return putchar (c);
-#endif /* _I18N_ */
-}
-
-/*-------------------------------------------------------------
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
 int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)

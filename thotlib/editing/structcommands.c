@@ -238,7 +238,7 @@ static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
    ThotBool            ret;
 
    ret = FALSE;
-   if (typeNum1 == typeNum2 && !ustrcmp (pSS1->SsName, pSS2->SsName))
+   if (typeNum1 == typeNum2 && !strcmp (pSS1->SsName, pSS2->SsName))
       /* meme regle */
       ret = TRUE;
    else
@@ -249,14 +249,14 @@ static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
 	   switch (pSRule1->SrConstruct)
 	     {
 	     case CsNatureSchema:
-	       ret = (ustrcmp (pSRule1->SrName, pSRule2->SrName) == 0);
+	       ret = (strcmp (pSRule1->SrName, pSRule2->SrName) == 0);
 	       break;
 	     case CsBasicElement:
 	       ret = (pSRule1->SrBasicType == pSRule2->SrBasicType);
 	       break;
 	     case CsReference:
 	       ret = (pSRule1->SrReferredType == pSRule2->SrReferredType &&
-		      ustrcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
+		      strcmp (pSRule1->SrRefTypeNat, pSRule2->SrRefTypeNat) == 0);
 	       break;
 	     case CsIdentity:
 	       ret = (pSRule1->SrIdentRule == pSRule2->SrIdentRule);
@@ -312,7 +312,7 @@ static void RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS, int typeNum)
 
    /* on ne propose pas le type qu'a deja l'element */
    if (pEl->ElTypeNumber != typeNum ||
-       ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName))
+       strcmp (pEl->ElStructSchema->SsName, pSS->SsName))
       /* on ne fait rien si la table est pleine */
       if (NChangeTypeItems < MAX_ITEMS_CHANGE_TYPE - 1)
 	{
@@ -320,7 +320,7 @@ static void RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS, int typeNum)
 	   found = FALSE;
 	   for (i = 0; i < NChangeTypeItems && !found; i++)
 	      if (typeNum == ChangeTypeTypeNum[i] &&
-		 !ustrcmp (pSS->SsName, ChangeTypeSSchema[i]->SsName))
+		 !strcmp (pSS->SsName, ChangeTypeSSchema[i]->SsName))
 		found = TRUE;
 	   if (!found)
 	     {
@@ -380,7 +380,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
    ThotBool            found;
 
    if (pEl->ElTypeNumber == typeNum &&
-       !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName))
+       !strcmp (pEl->ElStructSchema->SsName, pSS->SsName))
       /* l'element a deja le type voulu, il n'y a rien a faire */
       return;
    pSRule = &pSS->SsRule[typeNum - 1];
@@ -424,7 +424,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
 	  {
 	     pNextDoubleAttr = pAttrDouble->AeNext;
 	     if (pAttrDouble->AeAttrNum == pAttr->AeAttrNum &&
-		 !ustrcmp (pAttrDouble->AeAttrSSchema->SsName,
+		 !strcmp (pAttrDouble->AeAttrSSchema->SsName,
 			   pAttr->AeAttrSSchema->SsName))
 	       {
 		  if (pNextAttr == pAttrDouble)
@@ -448,7 +448,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
 	     while (pIsoD != NULL)
 	       {
 		  if (pIsoD->IDtypeNum == pChild->ElTypeNumber &&
-		      !ustrcmp (pIsoD->IDStructSch->SsName,
+		      !strcmp (pIsoD->IDStructSch->SsName,
 				pChild->ElStructSchema->SsName))
 		    {
 		       newType = pIsoD->IDtypeNumIso;
@@ -1953,7 +1953,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	pElSurround = NewSubtree (typeNum, pSS, pDoc, FALSE, TRUE, TRUE, TRUE);
 	pRoot = pElSurround;
 	unit = FALSE;
-	if (ustrcmp (pElSurround->ElStructSchema->SsName,
+	if (strcmp (pElSurround->ElStructSchema->SsName,
 		     pEl1->ElParent->ElStructSchema->SsName))
 	  {
 	   /* cet element appartient a un schema de structure different de */
@@ -2104,7 +2104,7 @@ static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
    found = FALSE;
    Anchor = (PtrChoiceOptionDescr *) param;
    if (typeNum != pEl->ElTypeNumber ||
-       ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
+       strcmp (pSS->SsName, pEl->ElStructSchema->SsName))
       /* on n'est pas arrive' encore au type de l'element pEl */
      {
 	pSRule = &(pSS->SsRule[typeNum - 1]);
@@ -2146,7 +2146,7 @@ static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
 		 {
 		   /* on verifie d'abord si le type de l'element est une */
 		   /* des options de ce choix */
-		   if (!ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
+		   if (!strcmp (pSS->SsName, pEl->ElStructSchema->SsName))
 		     for (choice = 0; choice < pSRule->SrNChoices &&
 			    !found; choice++)
 		       if (pSRule->SrChoice[choice] == pEl->ElTypeNumber)
@@ -2356,7 +2356,7 @@ static ThotBool ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
 			  for (ent = 0; !ok && ent < NChangeTypeItems; ent++)
 			    {
 			       if (newTypeNum == ChangeTypeTypeNum[ent] &&
-				   !ustrcmp (newSSchema->SsName,
+				   !strcmp (newSSchema->SsName,
 					     ChangeTypeSSchema[ent]->SsName))
 				    {
                                       method = ChangeTypeMethod[ent];

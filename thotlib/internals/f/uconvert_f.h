@@ -30,6 +30,7 @@ extern unsigned char *TtaConvertIsoToMbs ( unsigned char *src,
                                            CHARSET encoding );
 extern unsigned char *TtaConverMbsToIso ( unsigned char *src,
                                           CHARSET encoding );
+extern CHAR_T *TtaConverMbsToCHAR ( unsigned char *src );
 extern char *TtaConvertCHARToIso ( CHAR_T *src,
                                    CHARSET encoding );
 extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
@@ -61,6 +62,7 @@ extern unsigned char *TtaConvertIsoToMbs (/* unsigned char *src,
                                              CHARSET encoding */);
 extern unsigned char *TtaConverMbsToIso (/* unsigned char *src,
                                             CHARSET encoding */);
+extern CHAR_T *TtaConverMbsToCHAR (/* unsigned char *src */);
 extern char *TtaConvertCHARToIso (/* CHAR_T *src,
                                      CHARSET encoding */);
 extern CHAR_T *TtaConvertIsoToCHAR (/* unsigned char *src,

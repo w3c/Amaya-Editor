@@ -24,10 +24,10 @@ extern void AddWord ( unsigned char *word,
 extern void GiveProposal ( Language language,
                            PtrDict docDict );
 extern int ParametrizeChecker ( void );
-extern void WordReplace ( char orgWord[MAX_WORD_LEN],
-                          char newWord[MAX_WORD_LEN] );
+extern void WordReplace ( unsigned char *orgWord,
+                          unsigned char *newWord );
 extern ThotBool CheckChangeSelection ( void );
-extern void NextSpellingError ( char word[MAX_WORD_LEN],
+extern void NextSpellingError ( unsigned char *word,
                                 PtrDict docDict );
 
 #else /* __STDC__ */
@@ -50,10 +50,10 @@ extern void AddWord (/* unsigned char *word,
 extern void GiveProposal (/* Language language,
                              PtrDict docDict */);
 extern int ParametrizeChecker (/* void */);
-extern void WordReplace (/* char orgWord[MAX_WORD_LEN],
-                            char newWord[MAX_WORD_LEN] */);
+extern void WordReplace (/* unsigned char *orgWord,
+                            unsigned char *newWord */);
 extern ThotBool CheckChangeSelection (/* void */);
-extern void NextSpellingError (/* char word[MAX_WORD_LEN],
+extern void NextSpellingError (/* unsigned char *word,
                                   PtrDict docDict */);
 
 #endif /* __STDC__ */

@@ -67,12 +67,12 @@ ThotBool TtaReadByte (BinFile file, unsigned char *bval)
 /*----------------------------------------------------------------------
    TtaReadWideChar reads a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval, CHARSET encoding)
+ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
 {
 #ifdef _I18N_
   int           nbBytesToRead;
   unsigned char car;
-  char        res;
+  unsigned char res;
 
   if (TtaReadByte (file, &car) == 0)
     {
@@ -80,93 +80,46 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval, CHARSET encoding)
       return (FALSE);
     } 
 
-  switch (encoding)
-    {
-    case ISO_8859_1: 
-      *bval = (char)car;
-      break;
+  if (car < 0xC0)
+    nbBytesToRead = 1;
+  else if (car < 0xE0)
+    nbBytesToRead = 2;
+  else if (car < 0xF0)
+    nbBytesToRead = 3;
+  else if (car < 0xF8)
+    nbBytesToRead = 4;
+  else if (car < 0xFC)
+    nbBytesToRead = 5;
+  else if (car <= 0xFF)
+    nbBytesToRead = 6;
 
-    case ISO_8859_2:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_2_Code (car);
-      break;
-
-    case ISO_8859_3:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_3_Code (car);
-      break;
-
-    case ISO_8859_4:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_4_Code (car);
-      break;
-
-    case ISO_8859_5:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_5_Code (car);
-      break;
-
-    case ISO_8859_6:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_6_Code (car);
-      break;
-
-    case ISO_8859_7:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_7_Code (car);
-      break;
-
-    case ISO_8859_8:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_8_Code (car);
-      break;
-
-    case ISO_8859_9:
-      *bval = TtaGetUnicodeValueFrom_ISO_8859_9_Code (car);
-      break;
-
-    case UTF_8:
-      if (car < 0xC0)
-	nbBytesToRead = 1;
-      else if (car < 0xE0)
-	nbBytesToRead = 2;
-      else if (car < 0xF0)
-	nbBytesToRead = 3;
-      else if (car < 0xF8)
-	nbBytesToRead = 4;
-      else if (car < 0xFC)
-	nbBytesToRead = 5;
-      else if (car <= 0xFF)
-	nbBytesToRead = 6;
-
-      res = 0;
-
-      /* See how many bytes to read to build a wide character */
-      switch (nbBytesToRead)
-	{        /** WARNING: There is not break statement between cases */
-	case 6: res += car;
-	  res <<= 6;
-	  TtaReadByte (file, &car);
-
-	case 5: res += car;
-	  res <<= 6;
-	  TtaReadByte (file, &car);
-
-	case 4: res += car;
-	  res <<= 6;
-	  TtaReadByte (file, &car);
-
-	case 3: res += car;
-	  res <<= 6;
-	  TtaReadByte (file, &car);
-
-	case 2: res += car;
-	  res <<= 6;
-	  TtaReadByte (file, &car);
-  
-	case 1: res += car;
-	}
-      res -= offset[nbBytesToRead - 1];
-
-      if (res <= 0xFFFF)
-	*bval = res;
-      else 
-	*bval = '?';    
-      break;
+  res = 0;
+  /* See how many bytes to read to build a wide character */
+  switch (nbBytesToRead)
+    {        /** WARNING: There is not break statement between cases */
+    case 6: res += car;
+      res <<= 6;
+      TtaReadByte (file, &car);
+    case 5: res += car;
+      res <<= 6;
+      TtaReadByte (file, &car);
+    case 4: res += car;
+      res <<= 6;
+      TtaReadByte (file, &car);
+    case 3: res += car;
+      res <<= 6;
+      TtaReadByte (file, &car);
+    case 2: res += car;
+      res <<= 6;
+      TtaReadByte (file, &car);
+    case 1: res += car;
     }
+  res -= offset[nbBytesToRead - 1];
+
+  if (res <= 0xFFFF)
+    *bval = res;
+  else 
+    *bval = '?';    
   return (TRUE);
 #else  /* !_I18N_ */
   return TtaReadByte (file, bval);
@@ -384,7 +337,7 @@ ThotBool TtaWriteByte (BinFile file, char bval)
 /*----------------------------------------------------------------------
    TtaWriteWideChar writes a wide character value.
   ----------------------------------------------------------------------*/
-ThotBool TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
+ThotBool TtaWriteWideChar (BinFile file, CHAR_T val)
 {
 #ifdef _I18N_
    unsigned char mbc[MAX_BYTES + 1], *ptr;

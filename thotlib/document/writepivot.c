@@ -393,7 +393,7 @@ void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 	      {
 		i = 0;
 		while (pBuf->BuContent[i] != WC_EOS)
-		  TtaWriteWideChar (pivFile, pBuf->BuContent[i++], UTF_8);
+		  TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
 		pBuf = pBuf->BuNext;
 	      }
 	    TtaWriteByte (pivFile, EOS);
@@ -915,7 +915,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 			{
 			  i = 0;
 			  while (pBuf->BuContent[i] != WC_EOS && i < pBuf->BuLength)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], UTF_8);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++]);
 			  c = c + i;
 			  /* buffer suivant du meme element */
 			  pBuf = pBuf->BuNext;

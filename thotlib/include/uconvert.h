@@ -72,11 +72,18 @@ extern wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding);
 extern unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
-  string (8-bit).
+  TtaConvertMbsToIso converts a UTF-8 string (8-bit) into an
+  Iso string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConverMbsToIso (unsigned char *src, CHARSET encoding);
+
+/*-------------------------------------------------------------
+  TtaConvertMbsToCHAR converts a UTF-8 string (8-bit) into CHAR_T
+  string (8-bit or 16-bit).
+  The returned string should be freed by the caller.
+  -------------------------------------------------------------*/
+extern CHAR_T *TtaConverMbsToCHAR (unsigned char *src);
 
 /*-------------------------------------------------------------
   TtaConvertCHARToIso converts the src CHAR_T* into an ISO

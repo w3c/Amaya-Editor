@@ -208,12 +208,12 @@ void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
+int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 		ptrfont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   ThotWindow          w;
-  STRING              ptcar;
+  char               *ptcar;
   int                 width;
   register int        j;
 #ifdef _GTK
@@ -224,7 +224,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   y += FrameTable[frame].FrTopMargin + FontBase (font);
   /* compute the width of the string */
   width = 0;
-  if (lg > 0 && w != None)
+  if (lg > 0 && w)
     {
       /* Dealing with BR tag for windows */
 #ifndef _GTK
@@ -245,13 +245,23 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 	}
       else
 	{
-	  if (buff[i - 1] == '\212' || buff[i - 1] == '\12')
+	  if (buff[i - 1] == BREAK_LINE || buff[i - 1] == NEW_LINE)
 	    {
 	      /* skip the Control return char */
 	      i++;
 	      lg--;
 	    }
+#ifdef _I18N_
+	  j = 0;
+	  while (j < lg)
+	    {
+	      ptcar[j] = TtaGetCharFromWC (buff[i - 1], ISO_8859_1);
+	      j++;
+	      i++;
+	    }
+#else /* _I18N_ */
 	  ustrncpy (ptcar, &buff[i - 1], lg);
+#endif /* I18N_ */
 	  ptcar[lg] = EOS;
 	  TranslateChars (ptcar);
 	  j = 0;
@@ -367,8 +377,8 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
    ThotWindow          w;
    ptrfont             font;
+   char               *ptcar;
    int                 xcour, width, nb;
-   STRING              ptcar;
 
    font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (boxWidth > 0)
@@ -2572,7 +2582,7 @@ void WChaine (ThotWindow w, char *string, int x, int y, ptrfont font,
 #else /* _GTK */
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, string, ustrlen (string));
+   XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
 #endif /* _GTK */
 }
 

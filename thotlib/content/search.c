@@ -522,16 +522,17 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		     int textLen)
 {
   PtrElement          pEl;
+  PtrElement          pAncest;
+  PtrTextBuffer       pBuf;
+  CHAR_T             *tmp;
   int                 i;
   int                 ibuf;
   int                 ichar;
   ThotBool            found;
-  PtrTextBuffer       pBuf;
   ThotBool            result;
-  PtrElement          pAncest;
 
   result = FALSE;
-  if (*firstEl != NULL)
+  if (*firstEl)
     {
       /* on n'a pas encore trouve' la chaine cherchee */
       found = FALSE;
@@ -540,6 +541,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 	/* the element doesn't exist anymore */
 	return FALSE;
       /* on cherche d'abord la chaine */
+      tmp = TtaConverMbsToCHAR (text);
       if (forward)
 	/* Recherche en avant */
 	{
@@ -561,7 +563,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		   a tester */
 		ibuf = *firstChar - i;
 		ichar = *firstChar;
-		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, text);
+		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, tmp);
 	      }
 	  while (!found && pEl != NULL)
 	    {
@@ -582,7 +584,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		      {
 			ichar = 1;
 			FwdSearchString (pEl->ElText, 1, &found, &ichar,
-					 caseEquiv, text);
+					 caseEquiv, tmp);
 		      }
 		}
 	    }
@@ -607,7 +609,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		/* pointe par pBuf du 1er caractere a tester */
 		ichar = *firstChar - 1;
 		BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
-				  text, textLen);
+				  tmp, textLen);
 	      }
 	  while (!found && pEl != NULL)
 	    {
@@ -631,13 +633,14 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 			  pBuf = pBuf->BuNext;
 			ichar = pEl->ElTextLength;
 			BackSearchString (pBuf, pBuf->BuLength, &found, &ichar,
-					  caseEquiv, text, textLen);
+					  caseEquiv, tmp, textLen);
 		      }
 		}
 	    }
 	  if (found)
 	    ichar = ichar - textLen + 1;
 	}
+      TtaFreeMemory (tmp);
       if (found)
 	/* on a trouve' la chaine cherchee */
 	/* l'element trouve' est pointe' par pEl et ichar est le rang */

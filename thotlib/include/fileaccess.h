@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -85,7 +85,7 @@ extern void TtaFileCopy ( CONST char *sourceFileName,
 
 extern ThotBool TtaReadByte ( BinFile file,
                              unsigned char *bval );
-extern ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval, CHARSET);
+extern ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval);
 
 extern ThotBool TtaReadBool ( BinFile file,
                              ThotBool * bval );
@@ -102,7 +102,7 @@ extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                               char bval );
-extern ThotBool TtaWriteWideChar (BinFile file, CHAR_T bval, CHARSET encoding);
+extern ThotBool TtaWriteWideChar (BinFile file, CHAR_T bval);
 extern ThotBool TtaWriteShort ( BinFile file,
                                int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,

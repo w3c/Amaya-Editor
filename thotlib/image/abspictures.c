@@ -62,32 +62,24 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	  pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
 	  return;
 	}
-
-      if (filename == NULL)
+      ptr = filename;
+    }
+  else if (pAb->AbPresentationBox)
+    {
+      /*  It's a presentation box -> Create the descriptor */
+      imageDesc = (PictInfo *) pAb->AbPictInfo;
+      if (imageDesc == NULL)
 	{
-	  GetTextBuffer (&pBuffer);
-	  pAb->AbElement->ElText = pBuffer;
-	  ptr = &pBuffer->BuContent[0];
+	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  memset (imageDesc, 0, sizeof (PictInfo));
+	  pAb->AbPictInfo = (int *) imageDesc;
 	}
       else
-	ptr = filename;
-     }
-   else if (pAb->AbPresentationBox)
-     {
-       /*  It's a presentation box -> Create the descriptor */
-       imageDesc = (PictInfo *) pAb->AbPictInfo;
-       if (imageDesc == NULL)
-	 {
-	   imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	   memset (imageDesc, 0, sizeof (PictInfo));
-	   pAb->AbPictInfo = (int *) imageDesc;
-	 }
-       else
-	 /* don't reset the presentation value */
-	 picPresent = imageDesc->PicPresent;
-       
-       ptr = filename;
-     }
+	/* don't reset the presentation value */
+	picPresent = imageDesc->PicPresent;
+      
+      ptr = filename;
+    }
   else if (pAb->AbLeafType == LtCompound)
     {
       /*  It's a background image -> Create the descriptor */

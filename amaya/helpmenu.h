@@ -16,7 +16,7 @@
  then associate a macro to its index.
 ***************************************/
 
-static STRING       Manual[] = {
+static char *Manual[] = {
   "Index.html",
 "Browsing.html",
 "Selecting.html",

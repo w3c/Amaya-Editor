@@ -2678,51 +2678,51 @@ void PrepareSelectionMenu ()
    build the selection message according to the current selection
    and display that message
   ----------------------------------------------------------------------*/
-void                BuildSelectionMessage ()
+void BuildSelectionMessage ()
 {
-   PtrElement          pEl;
-   PtrDocument         pDoc;
-   CHAR_T              msgBuf[MAX_TXT_LEN];
-   int                 nbasc;
+  PtrElement          pEl;
+  PtrDocument         pDoc;
+  char                msgBuf[MAX_TXT_LEN];
+  int                 nbasc;
 
-   if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
-      /* current selection is within an attribute value */
-      /* present the element to which the attribute is attached */
-     {
-	pDoc = DocSelectedAttr;
-	pEl = AbsBoxSelectedAttr->AbElement;
-     }
-   else
-     {
-	pDoc = SelectedDocument;
-	pEl = FirstSelectedElement;
-     }
-   /* put the type name of the first selected element */
-      ustrncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-	       MAX_NAME_LENGTH);
-   /* add the types of the ancestors */
-   pEl = pEl->ElParent;
-   nbasc = 1;
-   while (pEl != NULL)
-     {
-	/* skip that ancestor if it is hidden */
-	if (!HiddenType (pEl))
-	  {
-	     /* put a separator */
-	     ustrcat (&msgBuf[ustrlen (msgBuf)], " \\ ");
-	     /* put the element type */
-	     ustrcat (&msgBuf[ustrlen (msgBuf)], pEl->ElStructSchema->
-		     SsRule[pEl->ElTypeNumber - 1].SrName);
-	     nbasc++;
-	  }
-	if (nbasc >= MAX_ITEM_MSG_SEL)
-	   pEl = NULL;
-	else
-	   pEl = pEl->ElParent;
-     }
-   /* if the Selection message or the selected document have changed, */
-   /* display this new message */
-   DisplaySelMessage (msgBuf, pDoc);
+  if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
+    /* current selection is within an attribute value */
+    /* present the element to which the attribute is attached */
+    {
+      pDoc = DocSelectedAttr;
+      pEl = AbsBoxSelectedAttr->AbElement;
+    }
+  else
+    {
+      pDoc = SelectedDocument;
+      pEl = FirstSelectedElement;
+    }
+  /* put the type name of the first selected element */
+  strncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+	   MAX_NAME_LENGTH);
+  /* add the types of the ancestors */
+  pEl = pEl->ElParent;
+  nbasc = 1;
+  while (pEl != NULL)
+    {
+      /* skip that ancestor if it is hidden */
+      if (!HiddenType (pEl))
+	{
+	  /* put a separator */
+	  strcat (msgBuf, " \\ ");
+	  /* put the element type */
+	  strcat (msgBuf,
+		  pEl->ElStructSchema-> SsRule[pEl->ElTypeNumber - 1].SrName);
+	  nbasc++;
+	}
+      if (nbasc >= MAX_ITEM_MSG_SEL)
+	pEl = NULL;
+      else
+	pEl = pEl->ElParent;
+    }
+  /* if the Selection message or the selected document have changed, */
+  /* display this new message */
+  DisplaySelMessage (msgBuf, pDoc);
 }
 
 

@@ -64,7 +64,6 @@ extern CHARSET TtaGetCharset (char *charsetname);
   ----------------------------------------------------------------------*/
 extern char *TtaGetCharsetName (CHARSET charset);
 
-extern int uputchar (int);
 extern int ustrcasecmp (const CHAR_T *, const CHAR_T *);
 extern CHAR_T *ustrcat (CHAR_T *, const CHAR_T *);
 extern CHAR_T *ustrchr (const CHAR_T *, CHAR_T);

@@ -169,7 +169,8 @@ static void         DisplayWords (void)
 /*-----------------------------------------------------------------------
  SpellCheckDlgProc
  ------------------------------------------------------------------------*/
-static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
+					   WPARAM wParam, LPARAM lParam)
 {
   ThotBool ok;	  
   int  val;

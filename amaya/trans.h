@@ -41,7 +41,7 @@ strMatch;
 /* Source structure tree nodes definition */
 typedef struct _Node
   {
-     STRING              Tag;		/* HTML tag */
+     unsigned char      *Tag;		/* HTML tag */
      Element             Elem;		/* element instance */
      struct _Node       *Parent;	
      struct _Node       *Child;
@@ -64,18 +64,18 @@ typedef strNode   *StructureTree;
 /* Attribute descriptor */
 typedef struct _AttrDesc
   {
-     STRING              NameAttr;
+     unsigned char       *NameAttr;
      int                 ThotAttr;
      ThotBool            IsInt;
      ThotBool            IsTransf;
      union
        {
-	  STRING              _TextVal;
+	  unsigned char      *_TextVal;
 	  int                 _IntVal;
 	  struct _s0
 	    {
-	       STRING              _Tag;
-	       STRING              _Attr;
+	       unsigned char      *_Tag;
+	       unsigned char      *_Attr;
 	    }
 	  s0;
        }
@@ -92,7 +92,7 @@ strAttrDesc;
 /* node generated */
 typedef struct _NodeDesc
   {
-     STRING              Tag;
+     unsigned char      *Tag;
      strAttrDesc        *Attributes;
      struct _NodeDesc   *Next;
   }
@@ -100,7 +100,7 @@ strNodeDesc;
 
 typedef struct _RuleDesc
   {
-     STRING              RuleName;
+     unsigned char      *RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
      ThotBool		DeleteRule;
@@ -131,8 +131,8 @@ strListSymb;
 /* pattern node (symbol) */
 typedef struct _SymbDesc
   {
-     STRING              SymbolName;
-     STRING              Tag;
+     unsigned char      *SymbolName;
+     unsigned char      *Tag;
      strRuleDesc        *Rule;
      ThotBool            IsOptional;
      ThotBool            IsActiveSymb;
@@ -148,7 +148,7 @@ strSymbDesc;
 /* transformation descriptor */
 typedef struct _TransDesc
   {
-     STRING              NameTrans;
+     unsigned char      *NameTrans;
      int                 NbPatSymb;
      int                 NbRules;
      int                 PatDepth;
@@ -157,7 +157,7 @@ typedef struct _TransDesc
      strSymbDesc        *Symbols;
      strRuleDesc        *Rules;
      ThotBool            IsActiveTrans;
-     STRING              DestinationTag;
+     unsigned char      *DestinationTag;
      struct _TransDesc  *Next;
   }
 strTransDesc;

@@ -2346,7 +2346,7 @@ int main (int argc, char **argv)
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
 	      argCounter++;
-	      NPagesPerSheet = uatoi (argv[argCounter++]);
+	      NPagesPerSheet = atoi (argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-bw"))
 	    {
@@ -2401,28 +2401,28 @@ int main (int argc, char **argv)
 	      option [index] = EOS;
 	      switch (argv[argCounter][1])
 		{
-		case 'F': FirstPrinted = uatoi (option);
+		case 'F': FirstPrinted = atoi (option);
 		  argCounter++;
 		  break;
-		case 'L': LastPrinted = uatoi (option);
+		case 'L': LastPrinted = atoi (option);
 		  argCounter++;
 		  break;
 		case 'P': strcpy (pageSize, option);
 		  argCounter++;
 		  break;
-		case '#': NCopies = uatoi (option);
+		case '#': NCopies = atoi (option);
 		  argCounter++;
 		  break;
-		case 'H': HorizShift = uatoi (option);
+		case 'H': HorizShift = atoi (option);
 		  argCounter++;
 		  break;
-		case 'V': VertShift = uatoi (option);
+		case 'V': VertShift = atoi (option);
 		  argCounter++;
 		  break;
-		case '%': Zoom = uatoi (option);
+		case '%': Zoom = atoi (option);
 		  argCounter++;
 		  break;
-		case 'w': thotWindow = (ThotWindow) uatoi (option);
+		case 'w': thotWindow = (ThotWindow) atoi (option);
 		  argCounter++;
 		  break;
 		default:

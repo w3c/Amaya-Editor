@@ -234,7 +234,7 @@ void RestoreAfterSearch ()
   The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
 ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
-			 CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
+			 CHAR_T *word, PtrSearchContext context)
 {
   PtrElement          pEl, endEl;
   PtrElement          pAncestor;
@@ -373,7 +373,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
 ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
-			     CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
+			     CHAR_T *word, PtrSearchContext context)
 {
   PtrElement          pEl, endEl;
   PtrElement          pAncestor;

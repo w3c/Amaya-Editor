@@ -218,7 +218,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	{
 #ifdef _I18N_
 	  nb_bytes2write = 1;
-	  mbc[0] = TtaGetCharFromUnicode (c, pDoc->DocCharset);
+	  mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
 #else  /* !_I18N_ */
 	  nb_bytes2write = 1;
 	  mbc[0] = (unsigned char) c;

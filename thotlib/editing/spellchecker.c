@@ -25,7 +25,6 @@
 #include "fileaccess.h"
 #include "dictionary.h"
 
-#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "spell_tv.h"
 #undef THOT_EXPORT
@@ -106,7 +105,7 @@ ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         Asci2Code (char *string)
+static void Asci2Code (char *string)
 {
    int                 i;
 
@@ -121,7 +120,7 @@ static void         Asci2Code (char *string)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         Code2Asci (char *string)
+static void Code2Asci (char *string)
 {
    int                 i = 0;
 
@@ -132,42 +131,10 @@ static void         Code2Asci (char *string)
      }
 }
 
-#ifdef IV
-/*----------------------------------------------------------------------
-  minMAJ returns TRUE if the string doesn't contains only lowercases 
-  ----------------------------------------------------------------------*/
-ThotBool            minMAJ (char *string)
-{
-   int                 maj = 0;
-   int                 i = 0;
-   char                c;
-
-   while ((c = string[i]) != EOS && (maj == 0))
-     {
-	maj = isimaj (string[i]);
-	i++;
-     }
-   return (maj == 1) ? TRUE : FALSE;
-}
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-char                tomin (char caract)
-{
-   char                c;
-
-   c = caract;
-   if (isimaj (caract) != 0)
-      c = tolower (caract);
-
-   return (c);
-}
-#endif /* IV */
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void         SetUpperCase (char *string)
+void SetUpperCase (char *string)
 {
    int                 i = 0;
 
@@ -182,7 +149,7 @@ void         SetUpperCase (char *string)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void         SetCapital (char *string)
+void SetCapital (char *string)
 {
    if (isimin (string[0]) != 0)
       string[0] = toupper (string[0]);
@@ -192,7 +159,7 @@ void         SetCapital (char *string)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool     IsUpperCase (char *string)
+ThotBool IsUpperCase (char *string)
 {
    int                 maj = 1;
    int                 i = 0;
@@ -209,7 +176,7 @@ ThotBool     IsUpperCase (char *string)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool     IsCapital (char *string)
+ThotBool IsCapital (char *string)
 {
    int                 cap = 0;
    int                 i = 0;
@@ -389,7 +356,7 @@ static int Insert (int x, int pWord, PtrDict dict)
    1 si le mot a pu etre ajoute dans le dictionnaire 
    par defaut : tous les mots nouveaux sont insecables        
   ----------------------------------------------------------------------*/
-static int InsertWord (PtrDict dict, char word[MAX_WORD_LEN])
+static int InsertWord (PtrDict dict, unsigned char *word)
 {
    int                 size, place, i, k;
 
@@ -733,7 +700,7 @@ void AddWord (unsigned char *word, PtrDict * pDict)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void            InitChecker ()
+static void InitChecker ()
 {
    int                 j;
 
@@ -757,7 +724,7 @@ static void            InitChecker ()
    met dans ChkrCorrection les propositions de correction du mot       
    qui se trouve dans ChkrErrWord                                   
   ----------------------------------------------------------------------*/
-void                GiveProposal (Language language, PtrDict docDict)
+void GiveProposal (Language language, PtrDict docDict)
 {
    PtrDict             globalDict;
    PtrDict             personalDict;
@@ -834,7 +801,7 @@ static void init_Tsub (FILE *ftsub)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         init_param (FILE * fd)
+static void init_param (FILE * fd)
 {
    int                 i, cc, ii, oo, pp, bb, mm, dd, ss, rr;
 
@@ -878,7 +845,7 @@ static void         init_param (FILE * fd)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         DefaultParams (int lettres)
+static void DefaultParams (int lettres)
 {
    int                 i;
 
@@ -896,7 +863,7 @@ static void         DefaultParams (int lettres)
    1 si OK                                         
    positionne Clavier_charge                                   
   ----------------------------------------------------------------------*/
-int                 ParametrizeChecker ()
+int ParametrizeChecker ()
 {
    FILE               *fparam;
    FILE               *ftsub;
@@ -952,7 +919,7 @@ int                 ParametrizeChecker ()
 /*----------------------------------------------------------------------
    WordReplace                                               
   ----------------------------------------------------------------------*/
-void WordReplace (char orgWord[MAX_WORD_LEN], char newWord[MAX_WORD_LEN])
+void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 {
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
@@ -1005,7 +972,7 @@ void WordReplace (char orgWord[MAX_WORD_LEN], char newWord[MAX_WORD_LEN])
    CheckChangeSelection retourne vrai si la selection a change      
    depuis la derniere recherche d'erreur.                       
   ----------------------------------------------------------------------*/
-ThotBool            CheckChangeSelection ()
+ThotBool CheckChangeSelection ()
 {
    PtrDocument         docsel;
    PtrElement          pEl1, pElN;
@@ -1060,139 +1027,134 @@ ThotBool            CheckChangeSelection ()
    retourne TRUE si oui                               
    FALSE sinon                               
   ----------------------------------------------------------------------*/
-static ThotBool     CheckCharList (char car, char *listcar)
+static ThotBool CheckCharList (unsigned char car, unsigned char *listcar)
 {
-   int                 i;
+  int                 i, l;
 
-   for (i = 0; (size_t) i < strlen (listcar); i++)
-     {
-	if (car == listcar[i])
-	   return (TRUE);
-     }
-   return (FALSE);
+  l = strlen (listcar);
+  for (i = 0; i < l; i++)
+    {
+      if (car == listcar[i])
+	return (TRUE);
+    }
+  return (FALSE);
 }
 
 /*----------------------------------------------------------------------
-   ACeCar retourne TRUE si le mot contient un des caracteres       
-   contenu dans ListCar.                                    
+   IncludeAChar returns TRUE if the word includes a character of the
+   list ListCar.
   ----------------------------------------------------------------------*/
-static ThotBool     ACeCar (char word[MAX_WORD_LEN])
+static ThotBool IncludeAChar (unsigned char *word)
 {
+  int                 i;
+  int                 len;
+  ThotBool            result;
 
-   ThotBool            result;
-   int                 i;
-   int                 longueur;
-
-   result = FALSE;
-   longueur = strlen (word);
-   if (longueur > 0)
-     {
-	for (i = 0; i < longueur && (result == FALSE); i++)
-	   if (CheckCharList (word[i], RejectedChar) == TRUE)
-	      result = TRUE;
-     }
-   return result;
+  result = FALSE;
+  len = strlen (word);
+  if (len > 0)
+    {
+      for (i = 0; i < len && (result == FALSE); i++)
+	if (CheckCharList (word[i], RejectedChar) == TRUE)
+	  result = TRUE;
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
-   IncludeANumber                                                       
-   retourne TRUE si le mot contient au moins un chiffre arabe.     
+   IncludeANumber returns TRUE if the word include a number.
   ----------------------------------------------------------------------*/
-static ThotBool     IncludeANumber (char word[MAX_WORD_LEN])
+static ThotBool IncludeANumber (unsigned char *word)
 {
+  int                 i;
+  int                 len;
+  ThotBool            result;
 
-   ThotBool            result;
-   int                 i;
-   int                 longueur;
-
-   result = FALSE;
-   longueur = strlen (word);
-   if (longueur > 0)
-     {
-	for (i = 0; i < longueur && (result == FALSE); i++)
-	   if (word[i] >= '0' && word[i] <= '9')
-	      result = TRUE;
-     }
-   return result;
+  result = FALSE;
+  len = strlen (word);
+  if (len > 0)
+    {
+      for (i = 0; i < len && (result == FALSE); i++)
+	if (word[i] >= '0' && word[i] <= '9')
+	  result = TRUE;
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
    IsANumber retourne TRUE si le mot est forme' uniquement de    
    chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
-static ThotBool     IsANumber (char word[MAX_WORD_LEN])
+static ThotBool IsANumber (unsigned char *word)
 {
+  int                 i;
+  int                 len;
+  ThotBool            result;
 
-   ThotBool            result;
-   int                 i;
-   int                 longueur;
-
-   result = FALSE;
-   longueur = strlen (word);
-   if (longueur > 0)
-     {
-
-	result = TRUE;
-	for (i = 0; i < longueur && result; i++)
-	   if (word[i] < '0' || word[i] > '9')
-	      result = FALSE;
-     }
-   return result;
+  result = FALSE;
+  len = strlen (word);
+  if (len > 0)
+    {
+      
+      result = TRUE;
+      for (i = 0; i < len && result; i++)
+	if (word[i] < 48 || word[i] > 57)
+	  result = FALSE;
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
    InRoman retourne TRUE si le mot est forme' uniquement de       
    chiffres romains.                                               
   ----------------------------------------------------------------------*/
-static ThotBool     InRoman (char word[MAX_WORD_LEN])
+static ThotBool InRoman (unsigned char *word)
 {
-   ThotBool            result;
-   int                 i, j, nbcar;
-   int                 longueur, lg1;
-   char                cecar;
+  int                 i, j, nbcar;
+  int                 len, lg1;
+  unsigned char       c;
+  ThotBool            result;
 
-   result = FALSE;
-   longueur = strlen (word);
-   if (longueur > 0)
-     {
-	result = TRUE;
-	for (i = 0; i < longueur && result; i++)
-	   if (CheckCharList (word[i], NRomain) != TRUE)
-	      result = FALSE;
-     }
-   if (result == TRUE)
-      /* analyse plus fine de ce "possible" chiffre romain */
-     {
-	/* pas plus de 3 fois la meme lettre successivement dans ce nombre */
-	lg1 = longueur - 3;
-	for (i = 0; i < lg1 && result; i++)
-	  {
-	     cecar = word[i];
-	     nbcar = 1;
-	     for (j = i + 1; j < longueur && word[j] == cecar; j++)
-		nbcar++;
-	     if (nbcar > 3)
-		/* ce n'est pas un "bon" chiffre romain */
-		result = FALSE;
-	  }
+  result = FALSE;
+  len = strlen (word);
+  if (len > 0)
+    {
+      result = TRUE;
+      for (i = 0; i < len && result; i++)
+	if (CheckCharList (word[i], NRomain) != TRUE)
+	  result = FALSE;
+    }
+  if (result == TRUE)
+    /* analyse plus fine de ce "possible" chiffre romain */
+    {
+      /* pas plus de 3 fois la meme lettre successivement dans ce nombre */
+      lg1 = len - 3;
+      for (i = 0; i < lg1 && result; i++)
+	{
+	  c = word[i];
+	  nbcar = 1;
+	  for (j = i + 1; j < len && word[j] == c; j++)
+	    nbcar++;
+	  if (nbcar > 3)
+	    /* ce n'est pas un "bon" chiffre romain */
+	    result = FALSE;
+	}
 
-	/* pas plus de 1 fois V, L ou D successivement dans ce nombre */
-	for (i = 0; i < longueur - 1 && result; i++)
-	  {
-	     if (CheckCharList (word[i], NRomainIsole) == TRUE)
-	       {
-		  if (word[i + 1] == word[i])
-		     result = FALSE;
-	       }
-	  }
-
-	/* ne pas considerer "M" comme un romain */
- if (strlen (word) == 1 && word[0] == 'M')
- result = FALSE;
-	/* verifier aussi l'ordre des I V X L C D M */
-	/* A FAIRE */
-     }
-   return result;
+      /* pas plus de 1 fois V, L ou D successivement dans ce nombre */
+      for (i = 0; i < len - 1 && result; i++)
+	{
+	  if (CheckCharList (word[i], NRomainIsole) == TRUE &&
+	      word[i + 1] == word[i])
+	    result = FALSE;
+	}
+      
+      /* ne pas considerer "M" comme un romain */
+      if (strlen (word) == 1 && word[0] == 'M')
+	result = FALSE;
+      /* verifier aussi l'ordre des I V X L C D M */
+      /* A FAIRE */
+    }
+  return result;
 }
 
 
@@ -1202,31 +1164,24 @@ static ThotBool     InRoman (char word[MAX_WORD_LEN])
    chiffre arabe, car. special)                                       
    retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
-static ThotBool     IgnoreWord (char word[MAX_WORD_LEN])
+static ThotBool IgnoreWord (unsigned char *word)
 {
 
-   ThotBool            result = FALSE;
+  ThotBool            result = FALSE;
 
-   /* les mots en capitale */
-   if (IgnoreUppercase)
-      if (IsUpperCase (word))
-	 return (TRUE);
-
-   /* les mots contenant un chiffre arabe */
-   if (IgnoreArabic)
-      if (IncludeANumber (word))
-	 return (TRUE);
-
-   /* les chiffres romains */
-   if (IgnoreRoman)
-      if (InRoman (word))
-	 return (TRUE);
-
-   /* les mots contenant au moins l'un des caracteres de RejectedChar[] */
-   if (IgnoreSpecial)
-      result = ACeCar (word);
-
-   return result;
+  /* les mots en capitale */
+  if (IgnoreUppercase && IsUpperCase (word))
+    return (TRUE);
+  /* les mots contenant un chiffre arabe */
+  if (IgnoreArabic && IncludeANumber (word))
+    return (TRUE);
+  /* les chiffres romains */
+  if (IgnoreRoman && InRoman (word))
+    return (TRUE);
+  /* les mots contenant au moins l'un des caracteres de RejectedChar[] */
+  if (IgnoreSpecial)
+    result = IncludeAChar (word);
+  return result;
 }
 
 
@@ -1235,12 +1190,30 @@ static ThotBool     IgnoreWord (char word[MAX_WORD_LEN])
    selectionne dans la vue courante du document.                
    Le mot errone' est mis dans ChkrErrWord.                           
   ----------------------------------------------------------------------*/
-void NextSpellingError (char word[MAX_WORD_LEN], PtrDict docDict)
+void NextSpellingError (unsigned char *word, PtrDict docDict)
 {
   Language            language;
-  ThotBool            ok, novalid;
+#ifdef _I18N_
+  CHAR_T              s[MAX_WORD_LEN];
+  int                 j;
+#else /* _I18N_ */
+  CHAR_T             *s;
+#endif /* _I18N */
   int                 i;
+  ThotBool            ok, novalid;
 
+#ifdef _I18N_
+  /* get the CHAR_T string */
+  j = 0;
+  while (word[j] != EOS)
+    {
+      s[j] = TtaGetWCFromChar (word[j], ISO_8859_1);
+      j++;
+    }
+  s[j] = WC_EOS;
+#else /* _I18N_ */
+  s = word;
+#endif /* _I18N */
   i = 0;
   do
     {
@@ -1250,13 +1223,26 @@ void NextSpellingError (char word[MAX_WORD_LEN], PtrDict docDict)
       while (ok && novalid)
 	{
 	  if (ChkrRange->SStartToEnd)
-	    ok = SearchNextWord (&ChkrElement, &i, &ChkrIndChar, word, ChkrRange);
+	    ok = SearchNextWord (&ChkrElement, &i, &ChkrIndChar, s, ChkrRange);
 	  else
-	    ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, word, ChkrRange);
+	    ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, s, ChkrRange);
 	  /* Is it a valid selection ? */
 	  if (ok && ChkrElement->ElParent != NULL)
-	    novalid = TypeHasException (ExcNoSpellCheck, ChkrElement->ElParent->ElTypeNumber, ChkrElement->ElParent->ElStructSchema);
+	    novalid = TypeHasException (ExcNoSpellCheck,
+					ChkrElement->ElParent->ElTypeNumber,
+					ChkrElement->ElParent->ElStructSchema);
 	}
+
+#ifdef _I18N_
+      /* get back the Iso string */
+      j = 0;
+      while (s[j] != 0)
+	{
+	  word[j] = TtaGetCharFromWC (s[j], ISO_8859_1);
+	  j++;
+	}
+      word[j] = EOS;
+#endif /* _I18N */
       
       if (ok)
 	{
@@ -1284,16 +1270,17 @@ void NextSpellingError (char word[MAX_WORD_LEN], PtrDict docDict)
     }
   /* saute les mots qui sont dans une langue SANS dictionnaire */
   while (ok && (i > 0 || i == -1));
-  
+
   i = strlen (word);
   if (i > 0)
     {
-      /* on a trouve un mot */
-      /* selectionner le mot a corriger */
+      /* a word is found, select it */
       if (ChkrRange->SStartToEnd)
-	SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar - i + 1, ChkrIndChar);
+	SelectString (ChkrRange->SDocument, ChkrElement,
+		      ChkrIndChar - i + 1, ChkrIndChar);
       else
-	SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar + 1, ChkrIndChar + i);
+	SelectString (ChkrRange->SDocument, ChkrElement,
+		      ChkrIndChar + 1, ChkrIndChar + i);
     }
   strcpy (ChkrErrWord, word);
 }

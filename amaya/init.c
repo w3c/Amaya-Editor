@@ -1417,7 +1417,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
 static ThotBool critic = FALSE;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void             InitConfirm (Document document, View view, char *label)
+void InitConfirm (Document document, View view, char *label)
 {
 #ifndef _WINDOWS
    /* Confirm form */

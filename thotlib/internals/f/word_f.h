@@ -18,12 +18,12 @@ extern void RestoreAfterSearch ( void );
 extern ThotBool SearchNextWord ( PtrElement *curEl,
                                  int *beginning,
                                  int *end,
-                                 CHAR_T word[MAX_WORD_LEN],
+                                 CHAR_T *word,
                                  PtrSearchContext context );
 extern ThotBool SearchPreviousWord ( PtrElement *curEl,
                                      int *beginning,
                                      int *end,
-                                     CHAR_T word[MAX_WORD_LEN],
+                                     CHAR_T *word,
                                      PtrSearchContext context );
 
 #else /* __STDC__ */
@@ -40,12 +40,12 @@ extern void RestoreAfterSearch (/* void */);
 extern ThotBool SearchNextWord (/* PtrElement *curEl,
                                    int *beginning,
                                    int *end,
-                                   CHAR_T word[MAX_WORD_LEN],
+                                   CHAR_T *word,
                                    PtrSearchContext context */);
 extern ThotBool SearchPreviousWord (/* PtrElement *curEl,
                                        int *beginning,
                                        int *end,
-                                       CHAR_T word[MAX_WORD_LEN],
+                                       CHAR_T *word,
                                        PtrSearchContext context */);
 
 #endif /* __STDC__ */

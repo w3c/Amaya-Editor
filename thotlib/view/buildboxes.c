@@ -369,7 +369,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
    while (j <= nChars)
      {
 	/* On traite les differents caracteres */
-	car = (CHAR_T) (pBuffer->BuContent[i - 1]);
+	car = pBuffer->BuContent[i - 1];
 	if (car == SPACE)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */
@@ -383,12 +383,12 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
 	  {
 	     pBuffer = pBuffer->BuNext;
 	     if (pBuffer == NULL)
-		j = nChars;
+		j = nChars + 1;
 	     i = 1;
 	  }
 	else
 	   i++;
-	if (car != EOS)
+	if (car != WC_EOS)
 	  j++;
      }
 }

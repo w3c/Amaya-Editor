@@ -82,7 +82,7 @@ static void           LoadAlphabet ()
 /*----------------------------------------------------------------------
   Resolves the common characters for two consecutive words 
   ----------------------------------------------------------------------*/
-void                TreateDictionary (PtrDict dict)
+void TreateDictionary (PtrDict dict)
 {
    int                 word, i;
    char                lastWord[MAX_WORD_LEN];
@@ -126,7 +126,7 @@ void                TreateDictionary (PtrDict dict)
    ReleaseDictionary: Releases dictionaries which descriptor is    
    referenced by pDictionary.                   
   ----------------------------------------------------------------------*/
-static void         ReleaseDictionary (PtrDict *pDictionary)
+static void ReleaseDictionary (PtrDict *pDictionary)
 {
    int                 d;
    PtrDict             pdict;
@@ -630,7 +630,7 @@ ThotBool ReloadDictionary (PtrDict *pDictionary)
 /*----------------------------------------------------------------------
    Dict_Init                                                       
   ----------------------------------------------------------------------*/
-void                Dict_Init ()
+void Dict_Init ()
 {
    int                 i;
 
