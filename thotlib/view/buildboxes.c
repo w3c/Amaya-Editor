@@ -2646,7 +2646,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 		{
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISLIST
-  if (pPieceBox->DisplayList) printf ( "GLBUG - RemoveBoxes : glIsList=%s (pose prb sur certaines machines)\n", glIsList (pPieceBox->DisplayList) ? "yes" : "no" );
+  if (pPieceBox->DisplayList)
+    printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pPieceBox->DisplayList) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
 		  if (glIsList (pPieceBox->DisplayList))
 		    {
@@ -2688,7 +2689,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    (*ThotLocalActions[T_cleartable]) (pAb);
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISLIST
-  if (pAb->AbBox->DisplayList) printf ( "GLBUG - RemoveBoxes : glIsList=%s (pose prb sur certaines machines)\n", glIsList (pAb->AbBox->DisplayList) ? "yes" : "no" );
+  if (pAb->AbBox->DisplayList)
+    printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pAb->AbBox->DisplayList) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
 	  if (glIsList (pAb->AbBox->DisplayList))
 	    {

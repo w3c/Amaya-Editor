@@ -2165,7 +2165,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
 	  !selected)
 	{
 #ifdef _TRACE_GL_BUGS_GLISLIST
-  if (box->DisplayList) printf ( "GLBUG - DisplayBox : glIsList=%s (pose prb sur certaines machines)\n", glIsList (box->DisplayList) ? "yes" : "no" );
+  if (box->DisplayList)
+    printf ( "GLBUG - DisplayBox : glIsList=%s\n", glIsList (box->DisplayList) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
 	  if (!(box->VisibleModification) && !selected &&
 	      box->DisplayList && glIsList (box->DisplayList))
