@@ -559,20 +559,23 @@ void CallbackTextReplace (int ref, int val, char *txt)
       break;
     case NumZoneTextReplace:
       /* Chaine a remplacer */
+      if (pReplaceString[0] == EOS && txt[0] != EOS)
+	{
+	  if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
+	    {
+	      WithReplace = TRUE;
+	      DoReplace = TRUE;
+#ifndef _WINDOWS
+	      TtaSetMenuForm (NumMenuReplaceMode, 1);
+#endif /* _WINDOWS */
+	    }
+	}
       strcpy (pReplaceString, txt);
       /* convert the string if necessary */
       TtaFreeMemory (RString);
       RString = TtaConvertByteToCHAR (pReplaceString, ISO_8859_1);
       RStringLen = ustrlen (RString);
       /* bascule automatiquement le remplacement */
-      if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
-	{
-	  WithReplace = TRUE;
-	  DoReplace = TRUE;
-#ifndef _WINDOWS
-	  TtaSetMenuForm (NumMenuReplaceMode, 1);
-#endif /* _WINDOWS */
-	}
       break;
     case NumToggleUpperEqualLower:
       if (val == 0)
