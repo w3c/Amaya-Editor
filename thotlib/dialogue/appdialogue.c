@@ -4240,9 +4240,10 @@ void      ThotCallback (int ref, int typedata, STRING data)
 	  item = (int) data;
 	  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
 	    {
-	      for (i = 0; i < item || (ptrmenu->ItemsList[i].ItemType == TEXT('M') &&
-		    ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0); i++)
-		item++;
+	      for (i = 0; i <= item; i++)
+		if (ptrmenu->ItemsList[i].ItemType == 'M' &&
+		    ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
+		  item++;
 	    action = ptrmenu->ItemsList[item].ItemAction;
 	    }
 	  /*action = GetActionItem(frame, menu, (int)data); */
