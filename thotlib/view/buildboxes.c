@@ -1533,7 +1533,7 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
 		   ThotBool evalAuto)
 {
-  int lt, rb;
+  int                 lt, rb;
 
   /* update vertical margins, borders and paddings */
   lt = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
@@ -1545,11 +1545,10 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   pAb->AbBox->BxHorizRef += lt;
   if (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     TransmitMBP (pBox, frame, lt, rb, FALSE);
-  else if (lt != 0 || rb != 0)
+  else if (lt || rb)
     {
       if (pAb->AbHeight.DimIsPosition ||
-	  pAb->AbHeight.DimAbRef/* ||
-	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing*/)
+	  pAb->AbHeight.DimAbRef)
 	/* the outside height is constrained */
 	ResizeHeight (pBox, pBox, NULL, - lt - rb, lt, rb, frame);
       else
@@ -1566,13 +1565,11 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
   /* Check if the changes affect the inside or the outside width */
   if (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     TransmitMBP (pBox, frame, lt, rb, TRUE);
-  else if (lt != 0 || rb != 0)
+  else if (lt || rb)
     {
       pAb->AbBox->BxVertRef += lt;
       if (pAb->AbWidth.DimIsPosition ||
-	  pAb->AbWidth.DimAbRef
-	  /* ||
-	     pAb->AbWidth.DimAbRef == pAb->AbEnclosing*/)
+	  pAb->AbWidth.DimAbRef)
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, - lt - rb, lt, rb, 0, frame);
       else
@@ -2159,7 +2156,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	GiveEnclosureSize (pAb, frame, &width, &height);
       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
       /* recheck auto and % margins */
-      CheckMBP (pAb, pCurrentBox, frame, TRUE);
+     CheckMBP (pAb, pCurrentBox, frame, TRUE);
       
       /* Positionnement des origines de la boite construite */
       i = 0;

@@ -1520,7 +1520,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   PtrFloat            pfloatL = NULL, pfloatR = NULL;
   PtrAbstractBox      pAb;
   char                clearL, clearR;
-  int                 bottomL = 0, bottomR = 0, left, y;
+  int                 bottomL = 0, bottomR = 0, left, top, y;
   int                 orgX, orgY, width;
   ThotBool            variable, newFloat;
 
@@ -1528,11 +1528,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
     return;
 
   /* relative line positions */
-  orgX = orgY = 0;
+  left = pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
+  top = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
+  orgX = 0;
+  orgY = 0;
   if (xAbs)
-    orgX = pBlock->BxXOrg;
+    orgX += pBlock->BxXOrg;
   if (yAbs)
-    orgY = pBlock->BxYOrg;
+    orgY += pBlock->BxYOrg;
   if (pBox)
     pAb = pBox->BxAbstractBox;
   else
@@ -1561,10 +1564,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
     width = pBox->BxMinWidth;
   else if (!variable && pBox)
     width = pBox->BxWidth;
+  else if (pBox)
+    width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   else
     width = 20;
 
-  left = pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
   if (floatL)
     {
       pfloatL = pBlock->BxLeftFloat;
@@ -1645,7 +1649,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
       if (floatR == NULL)
 	{
 	  /* line extended to the right edge of the block */
-	  pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+	  pLine->LiXMax = pBlock->BxW + left - pLine->LiXOrg;
 	  bottomR = pLine->LiYOrg;
 	}
   
@@ -2391,6 +2395,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	      ThotBool *breakLine, int frame, int indent, PtrBox *floatL,
 	      PtrBox *floatR)
 {
+  Propagation         savpropage;
   PtrBox              boxPrev;
   int                 x, y;
 
@@ -2427,8 +2432,12 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y += pBlock->BxYOrg;
 	  boxPrev = NULL;
 	}
+      /* limit the propagation */
+      savpropage = Propagate;
+      /*Propagate = ToSiblings;*/
       XMove (box, NULL, x - box->BxXOrg, frame);
       YMove (box, NULL, y - box->BxYOrg, frame);
+      Propagate = savpropage;
       *floatL = box;
     }
   else
@@ -2463,8 +2472,12 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (yAbs && !boxPrev)
 	    y += pBlock->BxYOrg;
 	}
+      /* limit the propagation */
+      savpropage = Propagate;
+      /*Propagate = ToSiblings;*/
       XMove (box, NULL, x - box->BxXOrg, frame);
       YMove (box, NULL, y - box->BxYOrg, frame);
+      Propagate = savpropage;
       *floatR = box;
     }
   return FillLine (pLine, pBlock, pRootAb, xAbs, yAbs, notComplete, full,

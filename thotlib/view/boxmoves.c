@@ -1835,7 +1835,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   ThotBool            absoluteMove;
   ThotBool            externalRef;
 
-  if (!pBox)
+  if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pCurrentAb = pBox->BxAbstractBox;
@@ -2078,11 +2078,14 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsXPosComplete (pBox);
 	  /* internal boxes take into account margins borders and paddings */
-	  if (l != 0 || r != 0)
+	  if (!absoluteMove && (l || r))
 	    {
 	      orgTrans = l;
 	      middleTrans = (l - r)/2;
 	      endTrans = - r;
+	      if (l)
+		  /* internal boxes must be translated */
+		  absoluteMove = TRUE;
 	    }
 	  /* Moving included boxes or reevalution of the block of lines? */
 	  if (absoluteMove ||
@@ -2099,7 +2102,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
 	      {
 		pAb = pCurrentAb->AbFirstEnclosed;
-		while (pAb != NULL)
+		while (pAb)
 		  {
 		    if (!pAb->AbDead && pAb->AbBox != NULL)
 		      {
@@ -2170,9 +2173,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  }
 	      }
 	    }
+
 	  /* check dimension constraints */
 	  pDimRel = pBox->BxWidthRelations;
-	  while (pDimRel != NULL)
+	  while (pDimRel)
 	    {
 	      i = 0;
 	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
@@ -2349,8 +2353,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   ThotBool            absoluteMove;
   ThotBool            externalRef;
   
-  
-  if (!pBox)
+  if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pCurrentAb = pBox->BxAbstractBox;
@@ -2580,15 +2583,18 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* next relations block */
 	      pPosRel = pPosRel->PosRNext;
 	    }
-	     
+	  
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
 	  /* internal boxes take into account margins borders and paddings */
-	  if (t != 0 || b != 0)
+	  if (!absoluteMove && (t || b))
 	    {
 	      orgTrans = t;
 	      middleTrans = (t - b)/2;
 	      endTrans = -b;
+	      if (t)
+		  /* internal boxes must be translated */
+		  absoluteMove = TRUE;
 	    }
 	  /* Moving included boxes? */
 	  if (absoluteMove &&
@@ -2596,7 +2602,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    {
 	      /* manage stretched block of lines */
 	      /* which are already processed     */
-	      if (orgTrans != 0)
+	      if (orgTrans)
 		{
 		  /* move also included boxes */
 		  pAb = pCurrentAb->AbFirstEnclosed;
@@ -2686,7 +2692,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* check dimension constraints */
 	  pDimRel = pBox->BxHeightRelations;
-	  while (pDimRel != NULL)
+	  while (pDimRel)
 	    {
 	      i = 0;
 	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
@@ -2821,7 +2827,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     }
   
   /* Manage the specific width of symbols */
-  if (pBox != NULL)
+  if (pBox)
     {
       if (pCurrentAb->AbLeafType == LtSymbol)
 	{
@@ -2862,6 +2868,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	}
     }
 }
+
 /*----------------------------------------------------------------------
   XMove moves horizontally the box.
   Check positionning constraints.
@@ -2879,7 +2886,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent;
   ThotBool            absoluteMove;
 
-  if (pBox && delta != 0)
+  if (pBox && delta != 0 && pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
     {
       pCurrentAb = pBox->BxAbstractBox;
       if (pCurrentAb && !IsDead (pCurrentAb))
@@ -3143,7 +3150,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent;
   ThotBool            absoluteMove;
 
-  if (pBox && delta != 0)
+  if (pBox && delta != 0 && pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
     {
       pCurrentAb = pBox->BxAbstractBox;
       if (pCurrentAb && !IsDead (pCurrentAb))
