@@ -268,9 +268,7 @@ void FrameKilled (int *w, int frame, int *info)
   Kill the current document                             
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-gboolean KillFrameGTK (GtkWidget *widget,
-		       GdkEvent *event,
-		       gpointer frame)
+gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer frame)
 {
   PtrDocument         pDoc;
   int                 view;

@@ -1004,9 +1004,7 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 		    {
 #ifndef _GTK
 		      XtManageChild (catalogue->Cat_Widget);
-#else /* _GTK */
-		      gtk_widget_show_all (catalogue->Cat_Widget);
-#endif /* !_GTK */
+#endif /* _GTK */
 		    }
 	       }
 
@@ -1020,7 +1018,7 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 		  else
 		     adbloc = adbloc->E_Next;
 	       }
-	  }			/*while */
+	  }
 	
 	w = parentCatalogue->Cat_Widget;
 #ifndef _GTK
@@ -1040,32 +1038,33 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 	    XtPopup (PopShell, XtGrabNonexclusive);
 	  }
 #else /* _GTK */
-	gtk_widget_set_uposition (GTK_WIDGET(w), ShowX, ShowY);
-	gtk_widget_show_all (GTK_WIDGET(w));
-
 	if (PopShell != 0)
 	  {
-	    gtk_widget_set_uposition (GTK_WIDGET(PopShell), ShowX, ShowY);
+	    gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);
+	    /*gtk_widget_set_uposition (GTK_WIDGET(PopShell), ShowX, ShowY);*/
 	    gtk_widget_show_all (PopShell);
 	  }
-#endif /* !_GTK */
+	else
+	  {
+	    /*gtk_widget_set_uposition (GTK_WIDGET(w), ShowX, ShowY);*/
+	    gtk_window_set_position (GTK_WINDOW (w),
+				     GTK_WIN_POS_MOUSE);
+	    gtk_widget_show_all (GTK_WIDGET(w));
+	  }
+#endif /* _GTK */
      }
 }
-#ifndef _GTK
-/*----------------------------------------------------------------------
-   Callback d'initialisation d'un formulaire avec positionnement.     
-  ----------------------------------------------------------------------*/
-static void INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
-{
-   TtaSetDialoguePosition ();
-   INITform (w, parentCatalogue, call_d);
-}
-#endif /* !_WINDOWS */
+
 
 /*----------------------------------------------------------------------
    Destruction de feuillet.                                           
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+#else /* _GTK */
+static void formKillGTK (GtkWidget *widget, GdkEvent *event,
+			 struct Cat_Context *catalogue)
+#endif /* _GTK */
 {
    /* Le widget est detruit */
   if ((catalogue->Cat_Type == CAT_FORM)
@@ -3550,13 +3549,9 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue,
 	XtManageChild (w);
 #else /* _GTK */
 	if (catalogue->Cat_in_lines)
-	  {
-	    w = gtk_hbox_new (FALSE, 5);
-	  }
+	  w = gtk_hbox_new (FALSE, 5);
 	else
-	  {
-	    w = gtk_vbox_new (FALSE, 5);
-	  }
+	  w = gtk_vbox_new (FALSE, 5);
      	gtk_widget_show_all (GTK_WIDGET(w));
 	gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), TRUE, TRUE, 0);
 #endif /* !_GTK */
@@ -3844,7 +3839,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   ThotWidget          tmpw;
   ThotWidget          accelw = NULL;
   char                equiv_item [255];
-  char                menu_item [1024];
 #endif /* _GTK */
   ThotWidget          menu;
   char                heading[200];
@@ -5601,7 +5595,7 @@ static int DestForm (int ref)
 #ifndef _GTK
 		      XtUnmanageChild (catalogue->Cat_Widget);
 #else /* _GTK */
-		      /*		      gtk_widget_hide(GTK_WIDGET(catalogue->Cat_Widget));*/
+		      /* gtk_widget_hide(GTK_WIDGET(catalogue->Cat_Widget));*/
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 		      adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
@@ -5617,14 +5611,6 @@ static int DestForm (int ref)
 			{
 				/* Detache le formulaire du bouton du menu */
 			  w = adbloc->E_ThotWidget[entry];
-#ifndef _WINDOWS
-#ifndef _GTK
-			  XtRemoveCallback (w, XmNactivateCallback,
-					    (XtCallbackProc) INITetPOSform, catalogue);
-#else /* _GTK */
-			  /*			  gtk_signal_disconnect_by_func(GTK_OBJECT(w), GTK_SIGNAL_FUNC(INITetPOSform), catalogue); */
-#endif /* !_GTK */
-#endif /* _WINDOWS */
 			  adbloc->E_Free[entry] = 'Y';
 			}
 		    }
@@ -5648,7 +5634,9 @@ static int DestForm (int ref)
 		  XtRemoveCallback (catalogue->Cat_Widget, XmNdestroyCallback,
 				    (XtCallbackProc) formKill, catalogue);
 #else /* _GTK */
-		  /*		  gtk_signal_disconnect_by_func(GTK_OBJECT(catalogue->Cat_Widget), GTK_SIGNAL_FUNC(formKill), catalogue); */
+		  gtk_signal_disconnect_by_func(GTK_OBJECT(catalogue->Cat_Widget)
+						, GTK_SIGNAL_FUNC(formKillGTK),
+						catalogue);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 		}
@@ -6064,35 +6052,25 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 	form = XmCreateBulletinBoard (form, "", args, n);
-	XtAddCallback (XtParent (form), XmNpopdownCallback, (XtCallbackProc) CallSheet, catalogue);
+	XtAddCallback (XtParent (form), XmNpopdownCallback,
+		       (XtCallbackProc) CallSheet, catalogue);
+	XtAddCallback (XtParent (form), XmNdestroyCallback,
+		       (XtCallbackProc) formKill, catalogue);
 	XmStringFree (title_string);
 #else
-	/*
-	 * A VERIFIER
-	 * et a completter
-	 *
-	 *
-	 *
-	 *
-	 *
-	 */
-
-	
-	/* Creation de la window widget */
+	/* Creation of the window */
 	if (w == PopShell)
 	  form = PopShell;
 	else
 	{
 	  form = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	  /*form->style->font=DefaultFont;*/
-	  /*gtk_widget_realize (GTK_WIDGET(form));	*/
 	  gtk_widget_realize (GTK_WIDGET(form));	
 	  gtk_window_set_title (GTK_WINDOW (form), title);
 	  gtk_window_set_position (GTK_WINDOW (form), GTK_WIN_POS_MOUSE);
 	  ConnectSignalGTK (GTK_OBJECT(form),
 			    "delete_event",
-			    GTK_SIGNAL_FUNC(gtk_true),
-			    (gpointer)NULL);
+			    GTK_SIGNAL_FUNC(formKillGTK),
+			    (gpointer) catalogue);
 	}
 	gtk_container_set_border_width (GTK_CONTAINER(form), 10);
 	/* On initialise les fonts (le style)*/
@@ -6296,6 +6274,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       ConnectSignalGTK (GTK_OBJECT(w), "clicked",
 					 GTK_SIGNAL_FUNC(CallSheet),
 					 (gpointer)catalogue);
+		       gtk_widget_grab_default(GTK_WIDGET(w));
 #endif /* !_GTK */
 		       adbloc->E_ThotWidget[ent] = w;
 		    }
@@ -7699,14 +7678,14 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 		 gtk_widget_show (GTK_WIDGET(w));
 		 w->style->font=DefaultFont;
 		 gtk_widget_set_name (w, "Dialogue");
-		 gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
+		 gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
 	       }	
 
 	     /* new text widget added into the row widget */
 	     w = gtk_entry_new ();
 	     gtk_widget_show (w);
 	     w->style->font=DefaultFont;
-	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
+	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
 	     /* assigne the good size for the widget */
 	     if (width == 0)
 	       gtk_widget_set_usize (GTK_WIDGET(w),
@@ -7716,6 +7695,9 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	       gtk_widget_set_usize (GTK_WIDGET(w),
 				     (width)*gdk_char_width(DefaultFont, 'n'),
 				     10+gdk_char_height(DefaultFont, '|'));
+	     if (ent == 1)
+	       /* first entry in the form */
+	       gtk_widget_grab_focus (GTK_WIDGET(w));
 	     /* if the widget is reactive */
 	     if (react)
 	       {
@@ -8124,8 +8106,9 @@ void TtaSetDialoguePosition ()
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 #else /* _GTK */
    /*   printf("pos avant: x=%d, y=%d\n", ShowX, ShowY);*/
-   gdk_window_get_pointer((GdkWindow *)(gdk_window_get_toplevels()->data), &ShowX, &ShowY, &flag_tmp);
-   /*   printf("pos apres: x=%d, y=%d\n", ShowX, ShowY);*/
+   gdk_window_get_pointer((GdkWindow *)(gdk_window_get_toplevels()->data),
+			  &ShowX, &ShowY, &flag_tmp);
+   /*printf("pos apres: x=%d, y=%d\n", ShowX, ShowY);*/
 #endif /* !_GTK */
 #endif /* !_WINDOWS */
 }
@@ -8179,8 +8162,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
       ShowWindow (w, SW_SHOWNORMAL);
       UpdateWindow (w);
     }
-#else  /* !_WINDOWS */
-
+#else  /* _WINDOWS */
 #ifndef _GTK
   if (XtIsManaged (w))
     XMapRaised (GDp, XtWindowOfObject (XtParent (w)));

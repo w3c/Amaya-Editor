@@ -1704,14 +1704,7 @@ void TtaChangeButton (Document doc, View view, int index,
 	      /* The old picture is linked to the button widget with gtk_object_set_data */
 	      tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
 	      if (tmpw)
-		{
-		  /*		  gtk_container_remove (GTK_CONTAINER (FrameTable[frame].Button[index]),
-				  GTK_WIDGET (tmpw));*/
-		  /*		  tmpw = gtk_pixmap_new (picture, NULL);*/
-		  gtk_pixmap_set (GTK_PIXMAP(tmpw), picture, NULL);
-		  /*		  gtk_container_add (GTK_CONTAINER (FrameTable[frame].Button[index]), GTK_WIDGET(tmpw));*/
-		  /*		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);*/
-		}
+		gtk_pixmap_set (GTK_PIXMAP(tmpw), picture, NULL);
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
