@@ -5,16 +5,21 @@
 Configuring Amaya</title>
 </head>
 <body>
-<!-- Created by: Irene Vatton, 22 August 1996 -->
-<!-- Last change: Irene Vatton 17 November 1997 -->
-
-<div id="head">
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home">
-</a> <a href="../"><img border="0" alt="Amaya" src="../Icons/amaya.gif"></a>
-<a href="Manual.html"><img alt="Doc" border="0"
-src="../Icons/doc48x.gif"></a></p>
-</div>
+<table border="0" width="100%">
+<tbody>
+<tr>
+<td><p>
+<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
+alt="Amaya" src="../Icons/amaya.gif"></p>
+</td>
+<td><p align="right">
+<a href="../../../../vatton/opera/doc/amaya/MakeBook.html#Assembling"><img
+alt="previous" border="0" src="../Icons/left.gif"></a> <a
+href="Manual.html"><img alt="top" border="0" src="../Icons/up.gif"></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 
 <div id="Configuring">
 
@@ -38,21 +43,25 @@ href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
 language</a>, the path to the personall dictionary, and<a href="#L242"> the
 default printer command</a>.</p>
 <li>
-The keyboard file <strong>$HOME/amaya.keyboard</strong> (Unix) or
-<strong>Thot/config/amaya.kb</strong> (Windows).
+The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
+(this file is specific to a Unix user) or <strong><a
+href="../../config/amaya.keyboard">Thot/config/amaya.keyboard</a></strong>
+(this file is the default for Unix users). or <strong><a
+href="../../config/amaya.kb">Thot/config/amaya.kb</a></strong> (this file is
+the default for Windows users).
 <p>
 This file defines <a href="#L236">Amaya keyboard shortcuts</a>..</p>
 <li>
-The HTML configuration file <strong>$HOME/HTML.conf</strong> (Unix) or
-<strong>Thot/amaya/HTMLconf</strong> (Windows). This file defines <a
+The <a name="HTML1">HTML configuration file</a>
+<strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
+<strong><a href="../../amaya/HTML.conf">Thot/amaya/HTMLconf</a></strong> (this
+file is the default for Unix or Windows users). This file defines <a
 href="#HTML">position</a> and the <a href="#HTML">size</a> of the Amaya
 document windows.
 <li>
-The User CSS file <strong>$HOME/.amaya.css</strong> (Unix) or
+The standard User's Preference Styles are defined in the file
+<strong>$HOME/.amaya.css</strong> (Unix) or
 <strong>Thot/amaya/amaya.css</strong> (Windows).
-<p>
-This file defines standard <a href="StyleSheets.html#L1023">User's Preference
-Styles</a>, but also a <a href="#Magnificat">Magnification</a> rule.</p>
 </ul>
 
 <h3><a name="L138">Home Page</a></h3>
@@ -75,10 +84,10 @@ NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
 
 <h3><a name="HTML">Document Windows</a></h3>
 <p>
-Parameters related to the particular schema HTML are stored in the HTML.conf
-file. In that file there are different sections, one by Presentation Schema,
-that allows user to control position and size of document windows defined by
-the presentation schema:</p>
+Parameters related to the particular schema HTML are stored in the <a
+href="#HTML1">HTML.conf file</a>. In that file there are different sections,
+one by Presentation Schema, that allows user to control position and size of
+document windows defined by the presentation schema:</p>
 <ul>
 <li>
 Each presentation schema name is introduced by the keyword
@@ -191,9 +200,9 @@ href="#registry">registry file</a>.</p>
 <p>
 It is useful to be able to invoke menu commands directly from the keyboard.
 The Thot toolkit provides a facility that let user accomplish this by means of
-an application  keyboard shortcuts file. This file defines a list of
-associations between a keyboard sequence an the invoked  corresponding
-command.</p>
+an application  <a href="#keyboard">keyboard shortcuts file</a>. This file
+defines a list of associations between a keyboard sequence an the invoked 
+corresponding command.</p>
 <p>
 The syntax used to define an association is:</p>
 <pre> Directive = KeySeq ':' IdentCommand ;
@@ -279,15 +288,8 @@ HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpImageMaps,
 HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting,
 HelpMakeBook.</p>
 </ul>
-
-<h2><a name="Magnificat">Magnification</a></h2>
 <p>
-Magnification allows user to change the global rendering for Amaya. For
-example the rule:</p>
-<pre>Body {magnification: 2}</pre>
-<p>
-will display all HTML document with 14 points fonts instead of 12 points ones
-without any change in displayed documents.</p>
+</p>
 </div>
 <hr>
 <address>
