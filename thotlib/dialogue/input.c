@@ -840,7 +840,7 @@ void CharTranslation (ThotKeyEvent *event)
     command = (int) string[1];
   else
     command = 0;
-  ThotInput (frame, (unsigned int) &string[0], command, PicMask, key);
+  ThotInput (frame, (unsigned int) string[0], command, PicMask, key);
 }
 #endif /* _MOTIF */
 
