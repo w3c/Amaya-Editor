@@ -533,7 +533,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
     {
       if (c == ':')
 	{
-	  if (!StartDate &&
+	  if (!StartDate && DateIndex > 0 &&
 	      !strncasecmp ((char *)DateString, "Date", DateIndex))
 	    {
 	      /* following characters will be skipped until the $ or EOL or EOS */
