@@ -727,7 +727,7 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
   if (face > 0)
     {
       if (**font == NULL)
-	**font = LoadStixFont (face, fontset->FontSize);
+	**font = (ThotFont)LoadStixFont (face, fontset->FontSize);
     }
 #endif /* _GL */
   return index;
