@@ -430,7 +430,11 @@ void AmayaAttributePanel::SetupLangValue( const char * selected_lang,
   if ( wx_selected_lang != _T("") )
     p_combo->SetStringSelection(wx_selected_lang);
   else
+  {
+#ifndef _WINDOWS
     p_combo->SetValue(_T(""));
+#endif /* _WINDOWS */
+  }
 
   m_pPanel_Lang->Refresh();
 }

@@ -44,7 +44,12 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
 
   // create the combobox and the ok button
   m_pComboBox = new wxComboBox( this, -1, _T(""), wxDefaultPosition, wxDefaultSize );
-  
+  m_pComboBox->SetWindowStyleFlag(wxPROCESS_ENTER);
+  //m_pComboBox->Connect( -1, wxEVT_CHAR, (wxObjectEventFunction)(wxEventFunction)(wxCharEventFunction)&AmayaURLBar::OnChar );
+  //m_pComboBox->Connect( -1, wxEVT_KEY_DOWN, (wxObjectEventFunction)(wxEventFunction)(wxCharEventFunction)&AmayaURLBar::OnChar );
+  //m_pComboBox->Connect( -1, wxEVT_COMMAND_TEXT_ENTER, (wxObjectEventFunction)(wxEventFunction)(wxCommandEventFunction)&AmayaURLBar::OnURLTextEnter );
+  //m_pComboBox->Connect( -1, wxEVT_SET_FOCUS, (wxObjectEventFunction)(wxEventFunction)(wxFocusEventFunction)&AmayaPopupList::OnSetFocus );
+
   // create the sizer to contains these widgets (combo)
   // it's possible to add others widgets here - exemple : validate button
   wxBoxSizer * p_sizer = new wxBoxSizer ( wxHORIZONTAL );
@@ -173,7 +178,6 @@ void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
 #endif /* _WINDOWS */
 }
 
-
 #if 0
 void AmayaURLBar::OnChar( wxKeyEvent& event )
 {
@@ -202,7 +206,7 @@ BEGIN_EVENT_TABLE(AmayaURLBar, wxPanel)
   EVT_TEXT_ENTER( -1,       AmayaURLBar::OnURLTextEnter )
   //  EVT_BUTTON( -1,           AmayaURLBar::OnURLTextEnter )
   //  EVT_TEXT(-1,              AmayaURLBar::OnURLText )
-  //  EVT_CHAR(		    AmayaURLBar::OnChar) // Process a wxEVT_CHAR event. 
+  // EVT_CHAR(		    AmayaURLBar::OnChar) // Process a wxEVT_CHAR event. 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

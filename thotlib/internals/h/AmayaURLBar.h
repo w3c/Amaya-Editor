@@ -37,7 +37,8 @@ public:
   DECLARE_EVENT_TABLE()
   void OnURLSelected( wxCommandEvent& event );
   void OnURLTextEnter( wxCommandEvent& event );
-  
+  //void OnChar( wxKeyEvent& event );
+
   AmayaWindow *    m_pAmayaWindowParent;
   wxComboBox *     m_pComboBox;
   wxBitmapButton * m_pValidateButton;
