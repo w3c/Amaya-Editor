@@ -597,23 +597,23 @@ char               *fileName;
    char                URL_DIR_SEP;
 
    if (name && strchr (name, '/'))
-	  URL_DIR_SEP = '/';
+     URL_DIR_SEP = '/';
    else 
-	   URL_DIR_SEP = DIR_SEP;
+     URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
    if (name[0] == URL_DIR_SEP || name [1] == ':')
-      strcpy (fileName, name);
+     strcpy (fileName, name);
    else
      {
-	strcpy (directory, DocumentPath);
-	MakeCompleteName (name, "", directory, fileName, &length);
-	if (!TtaFileExist (fileName))
-	  {
-	     /* Recherche le fichier dans les repertoires de schemas */
-	     strcpy (directory, SchemaPath);
-	     MakeCompleteName (name, "", directory, fileName, &length);
-	  }
+       strcpy (directory, DocumentPath);
+       MakeCompleteName (name, "", directory, fileName, &length);
+       if (!TtaFileExist (fileName))
+	 {
+	   /* Recherche le fichier dans les repertoires de schemas */
+	   strcpy (directory, SchemaPath);
+	   MakeCompleteName (name, "", directory, fileName, &length);
+	 }
      }
 }
 
@@ -692,12 +692,12 @@ int                *length;
    if (directory[0] == '~')
      {
 	home_dir = TtaGetEnvString ("HOME");
-     }
-   if (home_dir != NULL)
-     {
-	/* tilde will not be copied */
-	i--;
-	h = strlen (home_dir);
+	if (home_dir != NULL)
+	  {
+	    /* tilde will not be copied */
+	    i--;
+	    h = strlen (home_dir);
+	  }
      }
    if (i > 1)
       /* for the added DIR_STR */
@@ -728,19 +728,15 @@ int                *length;
    completeName[0] = '\0';
    if (home_dir)
      {
-	strcat (completeName, home_dir);
-	strcat (completeName, &directory[1]);
+       strcat (completeName, home_dir);
+       strcat (completeName, &directory[1]);
      }
    else
-     {
-	strcat (completeName, directory);
-     }
+     strcat (completeName, directory);
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
-     {
-	strcat (completeName, DIR_STR);
-     }
+     strcat (completeName, DIR_STR);
 
    /* on recopie le nom */
    strcat (completeName, fileName);

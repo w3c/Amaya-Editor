@@ -454,7 +454,17 @@ PictInfo           *imageDesc;
 	{
 	case ReScale:
 #         ifndef _WINDOWS
+	  if (imageDesc->PicMask)
+	    {
+	      XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
+	      XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
+	    }
 	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+	   if (imageDesc->PicMask)
+	     {
+	       XSetClipMask (TtDisplay, TtGraphicGC, None);
+	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
+	     }
 #         else /* _WINDOWS */
 	  WIN_InitSystemColors ();
 		 
@@ -490,7 +500,7 @@ PictInfo           *imageDesc;
 	case YRepeat:
 #         ifndef _WINDOWS
           valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-          values.fill_style = FillTiled;
+	  values.fill_style = FillTiled;
           values.tile = pixmap;
           values.ts_x_origin = xFrame;
           values.ts_y_origin = yFrame;
@@ -547,8 +557,13 @@ PictInfo           *imageDesc;
                else
                   rect.width = delta;
 	    }
-	  
-          XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	  if (imageDesc->PicMask)
+	    {
+	      XSetClipOrigin (TtDisplay, tiledGC, xFrame - picXOrg, yFrame - picYOrg);
+	      XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
+	    }
+	  else
+	    XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
           XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
           /* remove clipping */
           rect.x = 0;
@@ -556,6 +571,11 @@ PictInfo           *imageDesc;
           rect.width = MAX_SIZE;
           rect.height = MAX_SIZE;
           XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	   if (imageDesc->PicMask)
+	     {
+	       XSetClipMask (TtDisplay, tiledGC, None);
+	       XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
+	     }
 #         else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;
@@ -1003,7 +1023,6 @@ int                 hlogo;
    h = 0;
 
    drawable = TtaGetThotWindow (frame);
-
    switch (imageDesc->PicPresent)
      {
      case RealSize:
@@ -1035,7 +1054,6 @@ int                 hlogo;
    XFillRectangle (TtDisplay, pixmap, TtBlackGC, x, y, w, h);
    
    /* putting the cross edges */
-   
    XDrawRectangle (TtDisplay, pixmap, TtDialogueGC, x, y, w - 1, h - 1);
    XDrawLine (TtDisplay, pixmap, TtDialogueGC, x, y, x + w - 1, y + h - 2);
    XDrawLine (TtDisplay, pixmap, TtDialogueGC, x + w - 1, y, x, y + h - 2);
@@ -1205,9 +1223,6 @@ int                 frame;
    SetPictureClipping (&picWArea, &picHArea, wFrame, hFrame, imageDesc);
    if (!Printing)
      {
-#      ifndef _WINDOWS
-       SetCursorWatch (frame);
-#      endif /* !_WINDOWS */
        if (imageDesc->PicType == EPS_FORMAT) 
 	 DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
        else
@@ -1223,14 +1238,6 @@ int                 frame;
 	     /* Center real sized images wihin their picture boxes */
 	     Picture_Center (picWArea, picHArea, wFrame, hFrame, pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
 	   
-#ifndef _WINDOWS
-	   if (imageDesc->PicMask)
-	     {
-	       XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg + xTranslate, yFrame - picYOrg + yTranslate);
-	       XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
-	     }
-#endif /* _WINDOWS */
-
 	   if (typeImage >= InlineHandlers)
 	     {
 	       if (PictureHandlerTable[typeImage].DrawPicture != NULL)
@@ -1241,17 +1248,7 @@ int                 frame;
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
 	   }
 	   
-#ifndef _WINDOWS
-	   if (imageDesc->PicMask)
-	     {
-	       XSetClipMask (TtDisplay, TtGraphicGC, None);
-	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
-	     }
-#endif /* _WINDOWS */
 	 }
-#      ifndef _WINDOWS
-       ResetCursorWatch (frame);
-#      endif /* _WINDOWS */
      }
    else if (typeImage < InlineHandlers && typeImage > -1)
      /* for the moment we didn't consider plugin printing */
@@ -1405,8 +1402,8 @@ PictInfo           *imageDesc;
      {
        myDrawable = PictureLogo;
        imageDesc->PicType = -1;
-       w = 40;
-       h = 40;
+       wFrame = w = 40;
+       hFrame = h = 40;
        picMask = None;
      }
    else
