@@ -98,7 +98,7 @@
 96 y\'de tekrar
 97 Kullanıcı ismini girin:
 98 %d istek var sırada
-99 Olumlu CSS dosyası yoktur
+99 Olumlu CSS yoktur
 100 Aktarımı kes
 101 Önceki belge
 102 Sonraki belge
@@ -366,3 +366,5 @@
 364 **Created:
 365 **Last modified:
 366 **Description:
+367 **Please select an element
+368 **All CSS

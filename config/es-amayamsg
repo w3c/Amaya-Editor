@@ -98,7 +98,7 @@
 96 Repetir-y (repeat-y)
 97 Por favor, introduzca un nombre de usuario:
 98 %d solicitud pendiente
-99 No hay archivo CSS disponible
+99 No CSS
 100 Interrumpir transferencia
 101 Documento anterior
 102 Documento siguiente
@@ -339,7 +339,7 @@
 337 Crear biblioteca
 338 Ojear la biblioteca
 339 Crear o buscar en la biblioteca
-340 La selección actual no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
+340 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
 341 El título de la biblioteca es obligatorio
 342 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
 343 Posición clave definida. Desplace el marcador para definir la duración de la animación...
@@ -366,3 +366,5 @@
 364 **Created:
 365 **Last modified:
 366 **Description:
+367 **Please select an element
+368 **All CSS

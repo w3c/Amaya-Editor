@@ -202,73 +202,74 @@
 200 Arkaplan görüntüsü...
 201 Kural yarat...
 202 \'class\' uygula...
-203 Bağlantı
-204 Aç
-205 Olumsuzla
-206 Olumla
-207 Sil
-208 Bölüm numaralandırması
-209 Kitap yap
-210 IDs ekle/sil
-211 Tercih
-212 Genel...
-213 Tarama...
-214 Derleme...
-215 Önbellekleme...
-216 Proxy...
-217 Renkler...
-218 Geometri...
-219 Ülke dilleri...
-220 Profiller...
-221 Sayfa modelleri...
-222 Seçili alan ekleme
-223 Doküman eklemek
-224 Seçili alanı taşı
-225 Xpointer\'daki birikenleri taşı
-226 Tekrar ekle
-227 Server\'e kaydet
-228 Sil
-229 Yükle
-230 Kişisel ayarlama...
-231 Sabit filitre...
-232 **Configure...
-233 **New Bookmark
-234 **New Topic
-235 kilitli bilgileri kopyala
-236 **Import a topic hierarchy
-237 Tekrar okumayı kitle...
-238 Tekrar okumayı kilidi aç...
-239 Tekrar okuma ayarlarını göster...
-240 kilitli bilgileri kopyala...
-241 kitli mi?
-242 Ayarlar...
-243 Amaya hakkında
-244 W3C deki Amaya hakkında
-245 Içerik
-246 Tarama
-247 Görünümler
-248 Seç
-249 Döküman
-250 Yarat
-251 Tarz tanımları
-252 karakterler
-253 Yeniden yapılandırma
-254 Bağlantılar
-255 Tablolar
-256 Aktif alan
-257 Matematik
-258 Grafik
-259 XML desteği
-260 Görüntü haritaları
-261 Yazı hataları arama
-262 Yazı hataları düzeltmek
-263 Bastırma
-264 WebDAV
-265 Sayfa yerleştirme
-266 Numaralandır
-267 Kitap oluşturma
-268 Not ekleme
-269 &Birlikte çalışmak
-270 Amaya yapılandırması
-271 Kısalmalar
-272 Amaya\'ya ulaşmak
+203 **Show applied style...
+204 Bağlantı
+205 Aç
+206 Olumsuzla
+207 Olumla
+208 Sil
+209 Bölüm numaralandırması
+210 Kitap yap
+211 IDs ekle/sil
+212 Tercih
+213 Genel...
+214 Tarama...
+215 Derleme...
+216 Önbellekleme...
+217 Proxy...
+218 Renkler...
+219 Geometri...
+220 Ülke dilleri...
+221 Profiller...
+222 Sayfa modelleri...
+223 Seçili alan ekleme
+224 Doküman eklemek
+225 Seçili alanı taşı
+226 Xpointer\'daki birikenleri taşı
+227 Tekrar ekle
+228 Server\'e kaydet
+229 Sil
+230 Yükle
+231 Kişisel ayarlama...
+232 Sabit filitre...
+233 **Configure...
+234 **New Bookmark
+235 **New Topic
+236 kilitli bilgileri kopyala
+237 **Import a topic hierarchy
+238 Tekrar okumayı kitle...
+239 Tekrar okumayı kilidi aç...
+240 Tekrar okuma ayarlarını göster...
+241 kilitli bilgileri kopyala...
+242 kitli mi?
+243 Ayarlar...
+244 Amaya hakkında
+245 W3C deki Amaya hakkında
+246 Içerik
+247 Tarama
+248 Görünümler
+249 Seç
+250 Döküman
+251 Yarat
+252 Tarz tanımları
+253 karakterler
+254 Yeniden yapılandırma
+255 Bağlantılar
+256 Tablolar
+257 Aktif alan
+258 Matematik
+259 Grafik
+260 XML desteği
+261 Görüntü haritaları
+262 Yazı hataları arama
+263 Yazı hataları düzeltmek
+264 Bastırma
+265 WebDAV
+266 Sayfa yerleştirme
+267 Numaralandır
+268 Kitap oluşturma
+269 Not ekleme
+270 &Birlikte çalışmak
+271 Amaya yapılandırması
+272 Kısalmalar
+273 Amaya\'ya ulaşmak

@@ -1597,13 +1597,38 @@ void UpdateTitle (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-   FreeDocumentResource                                                  
+  CloseLogs closes all logs attached to the document.
+  ----------------------------------------------------------------------*/
+void CloseLogs (Document doc)
+{
+  int		     i;
+
+  /* is this document the source of another document? */
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] && DocumentSource[i] == doc &&
+	DocumentTypes[i] == docLog)
+      {
+	/* close the window of the log file attached to the
+	   current document */
+	TtaCloseDocument (i);
+	TtaFreeMemory (DocumentURLs[i]);
+	DocumentURLs[i] = NULL;
+	/* switch off the button Show Log file */
+	TtaSetItemOff (doc, 1, Views, BShowLogFile);
+	DocumentSource[i] = 0;
+	/* restore the default document type */
+	DocumentTypes[i] = docHTML;
+      }
+}
+
+/*----------------------------------------------------------------------
+  FreeDocumentResource
   ----------------------------------------------------------------------*/
 void FreeDocumentResource (Document doc)
 {
   Document	     sourceDoc;
   char              *tempdocument;
-  int		     i;
+  int                i;
 
   if (doc == 0)
     return;
@@ -1622,17 +1647,9 @@ void FreeDocumentResource (Document doc)
 	  TtaFreeMemory (tempdocument);
 	  /* remove the Parsing errors file */
 	  RemoveParsingErrors (doc);
-
 #ifdef ANNOTATIONS
 	  ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */
-
-	  if (DocumentTypes[doc] == docImage)
-	    DocumentTypes[doc] = docHTML;
-#ifdef BOOKMARKS
-	  if (DocumentTypes[doc] == docBookmark)
-	    DocumentTypes[doc] = docHTML;
-#endif /* BOOKMARKS */
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
@@ -1660,7 +1677,7 @@ void FreeDocumentResource (Document doc)
 	    }
 	  /* is this document the source of another document? */
 	  for (i = 1; i < DocumentTableLength; i++)
-	    if (DocumentURLs[i] != NULL && DocumentSource[i] == doc)
+	    if (DocumentURLs[i] && DocumentSource[i] == doc)
 	      {
 		DocumentSource[i] = 0;
 		if (DocumentTypes[i] == docLog)
@@ -1679,6 +1696,8 @@ void FreeDocumentResource (Document doc)
 	  if (BackupDocument != doc)
 	    RemoveDocumentImages (doc);
 	}
+      /* restore the default document type */
+      DocumentTypes[doc] = docHTML;
     }
 }
  
@@ -2468,23 +2487,65 @@ void SynchronizeSourceView (NotifyElement *event)
     }
 }
 
+/*----------------------------------------------------------------------
+  GotoLine points the corresponding line in a source file.
+ -----------------------------------------------------------------------*/
+void GotoLine (Document doc, int line, int index)
+{
+  Element             el, child;
+  ElementType         elType;
+  char                message[50];
+  int                 i;
+
+  if (line)
+    {
+      /* open the source file */
+      if (DocumentTypes[doc] != docCSS)
+	{
+	  if (DocumentSource[doc] == 0)
+	    ShowSource (doc, 1);
+	  doc = DocumentSource[doc];
+	}
+      TtaRaiseView (doc, 1);
+      /* look for an element with the same line number in the other doc */
+      /* line numbers are increasing in document order */
+      el = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = TextFile_EL_Line_;
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      for (i = 1; i < line; i++)
+	TtaNextSibling (&el);
+      if (el)
+	{
+	  child = TtaGetFirstChild (el);
+	  if (child)
+	    {
+	      if (index >= 0)
+		TtaSelectString (doc, child, index, index);
+	      else
+		TtaSelectElement (doc, child);
+	      sprintf (message, "line %d char %d", line, index);
+	      TtaSetStatus (doc, 1, message, NULL);
+	    }
+	}
+      else
+	TtaSetStatus (doc, 1, "   ", NULL);
+    }
+}
 
 /*----------------------------------------------------------------------
-  ShowError points the corresponding error in the souce view.
+  ShowError points the corresponding error in the souce file.
  -----------------------------------------------------------------------*/
 static ThotBool ShowError (Element el, Document doc)
 {
-  Element             child, otherEl;
-  ElementType         elType;
   Document	      otherDoc;
+  Element             otherEl;
   Language            lang;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
-  char               *buffer, *ptr, message[50];
-  int                 len, line = 0, index = 0, i;
+  char               *buffer, *ptr;
+  int                 len, line = 0, index = 0;
 
-  elType = TtaGetElementType (el);
-  elType.ElTypeNum = TextFile_EL_Line_;
   if (DocumentTypes[doc] == docLog)
     {
       /* get the document concerned */
@@ -2534,40 +2595,7 @@ static ThotBool ShowError (Element el, Document doc)
 		 sscanf (&ptr[4], "%d", &index);
 	       TtaFreeMemory (buffer);
 	     }
-	   if (line)
-	     {
-	       /* open the source file */
-	       if (DocumentTypes[otherDoc] == docCSS)
-		 doc = otherDoc;
-	       else
-		 {
-		   if (DocumentSource[otherDoc] == 0)
-		     ShowSource (otherDoc, 1);
-		   doc = DocumentSource[otherDoc];
-		 }
-	       TtaRaiseView (doc, 1);
-	       /* look for an element with the same line number in the other doc */
-	       /* line numbers are increasing in document order */
-	       el = TtaGetMainRoot (doc);
-	       el = TtaSearchTypedElement (elType, SearchForward, el);
-	       for (i = 1; i < line; i++)
-		 TtaNextSibling (&el);
-	       if (el)
-		 {
-		   child = TtaGetFirstChild (el);
-		   if (child)
-		     {
-		       if (index >= 0)
-			 TtaSelectString (doc, child, index, index);
-		       else
-			 TtaSelectElement (doc, child);
-		       sprintf (message, "line %d char %d", line, index);
-		       TtaSetStatus (doc, 1, message, NULL);
-		     }
-		 }
-	       else
-		 TtaSetStatus (doc, 1, "   ", NULL);
-	     }
+	   GotoLine (otherDoc, line, index);
 	 }
       return TRUE; /* don't let Thot perform normal operation */
     }

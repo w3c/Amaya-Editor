@@ -98,7 +98,7 @@
 96 repeat-y
 97 Please enter username:
 98 %d outstanding requests
-99 No CSS file available
+99 No CSS
 100 Interrupt transfer
 101 Previous document
 102 Next document
@@ -339,7 +339,7 @@
 337 Create library
 338 Browse library
 339 Create or search library
-340 The current selection not contain only SVG elements. Please reselect
+340 The selection includes no SVG elements. Please reselect
 341 The library title is mandatory
 342 Move the position cursor in edited document to define a new key position...
 343 Key position defined. Move the slider to define animation duration...
@@ -366,3 +366,5 @@
 364 Created:
 365 Last modified:
 366 Description:
+367 Please select an element
+368 All CSS

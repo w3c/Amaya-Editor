@@ -1785,7 +1785,12 @@ void Synchronize (Document doc, View view)
 	  /* the other view has not been modified either */
 	  saveBefore = TRUE;
      }
-
+   /* Only one synchronize at the same time */
+   if (Synchronizing)
+     return;
+   Synchronizing = TRUE;
+   /* close log files */
+   CloseLogs (doc);
    /* change display mode to avoid flicker due to callbacks executed when
       saving some elements, for instance META */
    dispMode = TtaGetDisplayMode (doc);
@@ -1844,14 +1849,14 @@ void Synchronize (Document doc, View view)
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-       RestartParser (xmlDoc, tempdoc, tempdir, docname);
-       /* the other document is now different from the original file. It can
-	  be saved */
-       TtaSetDocumentModified (otherDoc);
-       /* the source can be closed without save */
-       TtaSetDocumentUnmodified (doc);
-       /* but it could be saved too */
-       TtaSetItemOn (doc, 1, File, BSave);
+	   RestartParser (xmlDoc, tempdoc, tempdir, docname);
+	   /* the other document is now different from the original file. It can
+	      be saved */
+	   TtaSetDocumentModified (otherDoc);
+	   /* the source can be closed without save */
+	   TtaSetDocumentUnmodified (doc);
+	   /* but it could be saved too */
+	   TtaSetItemOn (doc, 1, File, BSave);
 	 }
      }
    else
@@ -1885,6 +1890,7 @@ void Synchronize (Document doc, View view)
      SynchronizeSourceView (&event);
    }
    TtaFreeMemory (tempdoc);
+   Synchronizing = FALSE;
 }
 
 /*----------------------------------------------------------------------

@@ -98,7 +98,7 @@
 96 repeat-y
 97 Entrer le nom utilisateur :
 98 Il y a %d requêtes en cours
-99 Pas de fichier CSS possible
+99 Pas de CSS
 100 Interrompre le chargement
 101 Document précédent
 102 Document suivant
@@ -339,7 +339,7 @@
 337 Créer une librairie
 338 Butiner librairies
 339 Créer ou chercher une librairie
-340 La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP
+340 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
 341 Le titre de la librairie est obligatoire
 342 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
 343 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
@@ -366,3 +366,5 @@
 364 Crée:
 365 Dernière modification:
 366 Description:
+367 Sélectionnez un lment
+368 Toutes les CSS

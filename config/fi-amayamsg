@@ -98,7 +98,7 @@
 96 toista-y
 97 Syöttäkää kayttäjätunnus:
 98 %d selvittämätön pyyntö
-99 Ei CSS-tiedostoa saatavilla
+99 Ei CSS saatavilla
 100 Keskeytä tiedonsiirto
 101 Edellinen dokumentti
 102 Seuraava dokumentti
@@ -366,3 +366,5 @@
 364 **Created:
 365 **Last modified:
 366 **Description:
+367 **Please select an element
+368 **All CSS

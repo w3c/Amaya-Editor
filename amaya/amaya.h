@@ -41,7 +41,7 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     "amaya"
-#define HTAppVersion  "8.1b"
+#define HTAppVersion  "8.1c"
 #define HTAppDate     __DATE__ 
 
 #define URL_STR       "/"
@@ -431,6 +431,7 @@ THOT_EXPORT ThotBool   XMLCharacterNotSupported;
 THOT_EXPORT ThotBool   XMLUnknownEncoding;
 /*  enabling/disabling DAVLib */
 THOT_EXPORT ThotBool   DAVLibEnable;
+THOT_EXPORT ThotBool   Synchronizing;
 
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;

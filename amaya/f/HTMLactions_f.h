@@ -40,11 +40,15 @@ extern ThotBool SimpleRClick ( NotifyElement *event );
 extern ThotBool AnnotSimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                           Document doc );
+extern void CloseLogs ( Document doc );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement *event );
+extern void GotoLine ( Document doc,
+                       int line,
+                       int index );
 extern ThotBool SimpleClickError ( NotifyElement *event );
 extern ThotBool DoubleClickError ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
@@ -88,11 +92,15 @@ extern ThotBool SimpleRClick (/* NotifyElement *event */);
 extern ThotBool AnnotSimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,
                             Document doc */);
+extern void CloseLogs (/* Document doc */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void ResetHighlightedElement (/* void */);
 extern void SynchronizeSourceView (/* NotifyElement *event */);
+extern void GotoLine (/* Document doc,
+                         int line,
+                         int index */);
 extern ThotBool SimpleClickError (/* NotifyElement *event */);
 extern ThotBool DoubleClickError (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);

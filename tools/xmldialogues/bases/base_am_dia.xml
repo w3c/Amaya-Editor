@@ -2029,6 +2029,10 @@
 	<message xml:lang="pt">Aplicar classe...</message>
 	<message xml:lang="fi">Käytä luokkaa...</message>
 </label>
+<label define="BShowAppliedStyle">
+	<message xml:lang="en">Show applied style...</message>
+	<message xml:lang="fr">Montrer le style appliqué...</message>
+</label>
 <label define="BLinkCSS">
 	<message xml:lang="en">Lin&amp;k...</message>
 	<message xml:lang="fr">&amp;Ajouter...</message>

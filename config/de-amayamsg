@@ -98,7 +98,7 @@
 96 Wiederholung y
 97 Bitte Benutzernamen eingeben:
 98 %d offene Anfrage(n)
-99 Keine Formatvorlage vorhanden
+99 Keine CSS
 100 Stop
 101 Zurück
 102 Vorwärts
@@ -366,3 +366,5 @@
 364 **Created:
 365 **Last modified:
 366 **Description:
+367 **Please select an element
+368 **All CSS

@@ -475,6 +475,7 @@ HelpSVG
 OpenCSS
 DisableCSS
 EnableCSS
+ShowAppliedStyle
 HelpStyleSheets
 
 [basic-style]

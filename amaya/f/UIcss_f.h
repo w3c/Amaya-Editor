@@ -23,6 +23,8 @@ extern void UpdateStyleSheet ( char *url,
                                char *tempdoc );
 extern char *CssToPrint ( Document doc,
                           char *printdir );
+extern void ShowAppliedStyle ( Document doc,
+                               View view );
 extern void InitCSS ( void );
 extern void LinkCSS ( Document doc,
                       View view );
@@ -54,6 +56,8 @@ extern void UpdateStyleSheet (/* char *url,
                                  char *tempdoc */);
 extern char *CssToPrint (/* Document doc,
                             char *printdir */);
+extern void ShowAppliedStyle (/* Document doc,
+                                 View view */);
 extern void InitCSS (/* void */);
 extern void LinkCSS (/* Document doc,
                         View view */);

@@ -729,6 +729,41 @@ static void CallbackCSS (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
+  ShowAppliedStyle shows style applied to the current selected
+  element.
+ -----------------------------------------------------------------------*/
+void ShowAppliedStyle (Document doc, View view)
+{
+  Element             el;
+  Document            newdoc;
+  FILE               *list;
+  char                fileName [100];
+  int                 f, l;
+
+  TtaGiveFirstSelectedElement (doc, &el, &f, &l);
+  if (el == NULL)
+      InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
+		TtaGetMessage (AMAYA, AM_NO_SELECTION));
+  else
+    {
+      /* list CSS rules applied to the current selection */
+      sprintf (fileName, "%s%c%d%cSTYLE.LST",
+	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      list = fopen (fileName, "w");
+      TtaListStyleOfCurrentElement (doc, list);
+      fclose (list);
+      newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL,
+			    NULL, TtaGetDefaultCharset ());
+      /* store the relation with the original document */
+      if (newdoc)
+	{
+	  DocumentSource[newdoc] = doc;
+	  TtaSetStatus (newdoc, 1, "   ", NULL);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    InitCSS                                                         
   ----------------------------------------------------------------------*/
 void InitCSS (void)
@@ -914,7 +949,7 @@ static void InitCSSDialog (Document doc, char *s)
     }
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
-		 TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
+		 TtaGetMessage (AMAYA, AM_NO_CCS));
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);

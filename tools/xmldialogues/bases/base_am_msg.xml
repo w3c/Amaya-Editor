@@ -997,15 +997,15 @@
 	<message xml:lang="pt">%d requisições pendentes</message>
 	<message xml:lang="fi">%d selvittämätön pyyntö</message>
 </label>
-<label define="AM_NO_CCS_FILE">
-	<message xml:lang="en">No CSS file available</message>
-	<message xml:lang="fr">Pas de fichier CSS possible</message>
-	<message xml:lang="de">Keine Formatvorlage vorhanden</message>
-	<message xml:lang="it">Non è disponibile nessun file CSS</message>
-	<message xml:lang="es">No hay archivo CSS disponible</message>
-	<message xml:lang="pt">Não há arquivo CSS disponível</message>
-	<message xml:lang="fi">Ei CSS-tiedostoa saatavilla</message>
-	<message xml:lang="tr">Olumlu CSS dosyası yoktur</message>
+<label define="AM_NO_CCS">
+	<message xml:lang="en">No CSS</message>
+	<message xml:lang="fr">Pas de CSS</message>
+	<message xml:lang="de">Keine CSS</message>
+	<message xml:lang="it">Nessun CSS</message>
+	<message xml:lang="es">No CSS</message>
+	<message xml:lang="pt">Não CSS</message>
+	<message xml:lang="fi">Ei CSS saatavilla</message>
+	<message xml:lang="tr">Olumlu CSS yoktur</message>
 </label>
 <label define="AM_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -3391,12 +3391,12 @@
 	<message xml:lang="tr">Kütüphane yarat veya ara</message>
 </label>
 <label define="AM_SVGLIB_NO_SVG_SELECTION">
-	<message xml:lang="en">The current selection not contain only SVG elements. Please reselect</message>
-	<message xml:lang="fr">La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP</message>
+	<message xml:lang="en">The selection includes no SVG elements. Please reselect</message>
+	<message xml:lang="fr">La sélection contient des éléments non SVG. Effectuer une autre sélection SVP</message>
 	<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren</message>
 	<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG elementtejä. Valitse uudelleen.</message>
-	<message xml:lang="it">La selezione corrente non contiene solo elementi SVG. Per favore riseleziona.</message>
-	<message xml:lang="es">La selección actual no contiene sólo elementos SVG. Por favor, vuelva a seleccionar</message>
+	<message xml:lang="it">La selezione non contiene solo elementi SVG. Per favore riseleziona.</message>
+	<message xml:lang="es">La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar</message>
 	<message xml:lang="tr">Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
@@ -3558,6 +3558,14 @@
 <label define="AM_BM_DESCRIPTION">
 	<message xml:lang="en">Description:</message>
 	<message xml:lang="fr">Description:</message>
+</label>
+<label define="AM_NO_SELECTION">
+	<message xml:lang="en">Please select an element</message>
+	<message xml:lang="fr">Sélectionnez un �l�ment</message>
+</label>
+<label define="AM_ALL_CSS">
+	<message xml:lang="en">All CSS</message>
+	<message xml:lang="fr">Toutes les CSS</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

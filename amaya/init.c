@@ -617,7 +617,8 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 
    ret = TRUE;
    if (TtaIsDocumentModified (doc) ||
-       (DocumentTypes[doc] != docLog && DocumentSource[doc] &&
+       (!Synchronizing &&
+	DocumentTypes[doc] != docLog && DocumentSource[doc] &&
 	TtaIsDocumentModified (DocumentSource[doc])))
      {
        InitConfirm (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
@@ -6534,8 +6535,7 @@ void FreeAmayaStructures ()
 
 
 /*----------------------------------------------------------------------
-  InitAmaya intializes Amaya variables and open the first document
-  window.
+  InitAmaya intializes Amaya variables and open the first document window.
   ----------------------------------------------------------------------*/
 void InitAmaya (NotifyEvent * event)
 {
@@ -6571,6 +6571,7 @@ void InitAmaya (NotifyEvent * event)
    SelectionInTT = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
+   Synchronizing = FALSE;
    IdElemName[0] = EOS;
    /* Initialize the LogFile variables */
    CleanUpParsingErrors ();

@@ -98,7 +98,7 @@
 96 repeat-y
 97 Digita lo username:
 98 %d richieste inevase
-99 Non è disponibile nessun file CSS
+99 Nessun CSS
 100 Interrompi trasferimento
 101 Documento precedente
 102 Documento successivo
@@ -339,7 +339,7 @@
 337 Crea libreria
 338 Scorri la libreria
 339 Crea o cerca libreria
-340 La selezione corrente non contiene solo elementi SVG. Per favore riseleziona.
+340 La selezione non contiene solo elementi SVG. Per favore riseleziona.
 341 Il titolo della libreria è obbligatorio
 342 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
 343 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
@@ -366,3 +366,5 @@
 364 **Created:
 365 **Last modified:
 366 **Description:
+367 **Please select an element
+368 **All CSS
