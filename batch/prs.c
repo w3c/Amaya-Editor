@@ -5261,7 +5261,7 @@ void                SortAllPRules ()
      }
    
    /* ordonne les regles des elements structures */
-   for (j = 0; j < MAX_RULES_SSCHEMA; j++)
+   for (j = 0; j < pSSchema->SsNRules; j++)
      SortPresRules (&pPSchema->PsElemPRule[j]);
 }
 

@@ -1495,7 +1495,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
     return;
 
   /* free all element and attribute inherit tables */
-  for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+  for (i = 0; i < pSS->SsNRules; i++)
     if (pPSch->PsInheritedAttr[i])
       {
 	TtaFreeMemory (pPSch->PsInheritedAttr[i]);

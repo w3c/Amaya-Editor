@@ -177,13 +177,6 @@ static void         Initialize ()
    pTSchema->TsNVariables = 0;	/* nombre de variables de traduction */
    pTSchema->TsNBuffers = 0;	/* nombre de buffers */
    pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
-   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-     {
-	pTSchema->TsElemTRule[i] = NULL; /* pointeurs sur le debut de la chaine
-					    de regles de traduction specifiques
-					    a chaque type d'element */
-	pTSchema->TsInheritAttr[i] = False;
-     }
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       pTSchema->TsPresTRule[i].RtExist = False;
    pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
@@ -244,6 +237,22 @@ static void         InitAttrTransl ()
 	 default:
 	   break;
 	 }
+     }
+}
+
+/*----------------------------------------------------------------------
+   initialise les regles de traduction des elements               
+  ----------------------------------------------------------------------*/
+static void         InitElemTransl ()
+{
+   int                 i;
+
+   for (i = 0; i < pSSchema->SsNRules; i++)
+     {
+	pTSchema->TsElemTRule[i] = NULL; /* pointeurs sur le debut de la chaine
+					    de regles de traduction specifiques
+					    a chaque type d'element */
+	pTSchema->TsInheritAttr[i] = False;
      }
 }
 
@@ -2176,6 +2185,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			 {
 			   pTSchema->TsStructCode = pSSchema->SsCode;
 			   InitAttrTransl ();
+			   InitElemTransl ();
 			 }
 		   }
 		 else if (pr == RULE_CondOnAscend)
@@ -3563,7 +3573,7 @@ int main (int argc, char **argv)
 	      }
 	    for (i = 0; i < pSSchema->SsNAttributes; i++)
 	      free (pTSchema->TsAttrTRule->TsAttrTransl[i]);
-	    FreeSchTra (pTSchema);
+	    FreeSchTra (pTSchema, pSSchema);
 	    FreeSchStruc (pSSchema);
 	    FreeSchStruc (pExtSSchema);
 	 }

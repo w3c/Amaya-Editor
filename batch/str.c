@@ -112,8 +112,6 @@ static ThotBool     CompilExcept;  /* we are parsing exceptions */
 static int          ExceptType;	   /* element type concerned by exceptions */
 static int          ExceptAttr;	   /* attribute concerned by exceptions */
 static int          CurBasicElem;  /* current basic type */
-static int          NAlias;	   /* number of aliases defined in the schema*/
-static int          Alias[MAX_RULES_SSCHEMA]; /* rules which define aliases */
 static ThotBool     FirstInPair;   /* we met the keyword "First" */
 static ThotBool     SecondInPair;  /* we met the keyword "Second" */
 static ThotBool     ReferenceAttr; /* we manage a reference attribute */
@@ -275,7 +273,6 @@ static void         Initialize ()
    ExceptType = 0;
    ExceptAttr = 0;
    CurBasicElem = 0;
-   NAlias = 0;
    PreviousRule = 0;
    FirstInPair = False;
    SecondInPair = False;
@@ -2595,9 +2592,11 @@ static void         ChkRecurs ()
 {
    int                i;
    int                path[100];
-   ThotBool           busy[MAX_RULES_SSCHEMA + 1], done[MAX_RULES_SSCHEMA + 1];
+   ThotBool           *busy, *done;
    SRule              *pRule;
 
+   busy = (ThotBool*) malloc ((pSSchema->SsNRules+1) * sizeof (ThotBool));
+   done = (ThotBool*) malloc ((pSSchema->SsNRules+1) * sizeof (ThotBool));
    for (i = 0; i <= pSSchema->SsNRules; i++)
       busy[i] = done[i] = False;
 
@@ -2611,17 +2610,27 @@ static void         ChkRecurs ()
 	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM),
 			      pRule->SrName);
      }
+   free (busy);
+   free (done);
 }
 
 /*----------------------------------------------------------------------
-   ListAliases
-   Liste les elements consideres comme des alias et verifie les paires.
+   ListAliasesAndNotCreated
+   Lists elements considered as aliases and then
+   lists elements which will not be created by the editor.
   ----------------------------------------------------------------------*/
-static void         ListAliases ()
+static void         ListAliasesAndNotCreated ()
 {
-   int                 i;
+   int          NAlias;	   /* number of aliases defined in the schema*/
+   int          *Alias; /* rules which define aliases */
+   int          r, rr, i;
+   ThotBool     temp;
+   SRule        *pRule;
+   SRule        *pRule2;
 
-   /* go through all rules table */
+   /* Liste les elements consideres comme des alias et verifie les paires */
+   Alias = (int*) malloc (pSSchema->SsNRules * sizeof (int));
+   NAlias = 0;
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
        if (pSSchema->SsRule[i].SrRecursDone)
@@ -2633,8 +2642,8 @@ static void         ListAliases ()
 	       /* it's a choice that defines an alias */
 	       /* insert the element in table of aliases */
 	       {
+		 Alias[NAlias] = i + 1;
 		 NAlias++;
-		 Alias[NAlias - 1] = i + 1;
 		 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS),
 				    pSSchema->SsRule[i].SrName);
 	       }
@@ -2648,18 +2657,6 @@ static void         ListAliases ()
 				    pSSchema->SsRule[i].SrName);
 	   }
      }
-}
-
-/*----------------------------------------------------------------------
-   ListNotCreated lists elements which will not be created by the editor.
-  ----------------------------------------------------------------------*/
-static void         ListNotCreated ()
-{
-   int                 r, rr;
-   int                 i;
-   ThotBool             temp;
-   SRule              *pRule;
-   SRule              *pRule2;
 
    /* clear all creation indicators */
    /* (use SrRecursDone as creation incator) */
@@ -2736,7 +2733,7 @@ static void         ListNotCreated ()
 	   break;
 	 }
      }
-   
+
    /* write the result */
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
@@ -2787,6 +2784,7 @@ static void         ListNotCreated ()
 	       }
 	   }
      }
+   free (Alias);
 }
 
 
@@ -3049,7 +3047,7 @@ int main (int argc, char **argv)
 		     /* no more word in the line */
 		   } 
 	     } 
-	   
+
            /* end of file */
            TtaReadClose (inputFile);
            if (!error) /* stop the parser */
@@ -3063,10 +3061,9 @@ int main (int argc, char **argv)
            if (!error) {
               /* list recursive rules */
               ChkRecurs ();
-              /* list aliases */
-              ListAliases ();
-              /* list elements which will not be created by the editor */
-              ListNotCreated ();
+              /* list aliases and elements that will not be created by the
+		 editor */
+              ListAliasesAndNotCreated ();
 		
               /* write the compiled schema into the output file */
               SchemaPath[0] = '\0';	/* use current directory */

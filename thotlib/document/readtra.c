@@ -1228,5 +1228,5 @@ void FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
        pTSch->TsAttrTRule = NULL;
      }
    /* libere le schema de traduction lui-meme */
-   FreeSchTra (pTSch);
+   FreeSchTra (pTSch, pSS);
 }

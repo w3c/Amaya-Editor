@@ -1076,7 +1076,7 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
       free (pSP->PsComparAttr);
     }
 
-  for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+  for (i = 0; i < pSS->SsNRules; i++)
     {
       pSP->PsElemPRule[i] = NULL;
       if (pSP->PsInheritedAttr[i] != NULL)
@@ -1234,13 +1234,13 @@ void GetSchTra (PtrTSchema *pST)
 /*----------------------------------------------------------------------
    FreeSchTra frees a translation schema
   ----------------------------------------------------------------------*/
-void FreeSchTra (PtrTSchema pST)
+void FreeSchTra (PtrTSchema pST, PtrSSchema pSS)
 {
   int     i;
 
   if (pST)
     {
-      for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+      for (i = 0; i < pSS->SsNRules; i++)
 	pST->TsElemTRule[i] = NULL;
       if (pST->TsAttrTRule)
 	TtaFreeMemory (pST->TsAttrTRule);
@@ -1335,7 +1335,7 @@ void FreeSchStruc (PtrSSchema pSS)
   for (i = 0; i < pSS->SsNAttributes; i++)
     free (pSS->SsAttribute->TtAttr[i]);
   free (pSS->SsAttribute);
-  for (i = 0; i < MAX_RULES_SSCHEMA + 2; i++)
+  for (i = 0; i < pSS->SsNRules; i++)
     {
       if (pSS->SsRule[i].SrLocalAttr)
 	TtaFreeMemory (pSS->SsRule[i].SrLocalAttr);
