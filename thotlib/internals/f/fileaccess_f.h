@@ -68,7 +68,7 @@ extern ThotBool TtaCheckDirectory ( char* directory );
 #else /* __STDC__ */
 
 extern ThotBool TtaReadByte (/* BinFile file,
-                                PCHAR_T bval */);
+                                char* bval */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                 ThotBool * bval */);
 extern ThotBool TtaReadShort (/* BinFile file,

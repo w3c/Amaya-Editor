@@ -21,9 +21,6 @@ extern PresentationContext TtaGetSpecificStyleContext ( Document doc );
 extern void TtaCleanStylePresentation ( Element el,
                                         PSchema tsch,
                                         Document doc );
-extern void TtaUpdateStylePresentation ( Element el,
-                                         PSchema tsch,
-                                         PresentationContext c );
 extern void TtaApplyAllSpecificSettings ( Element el,
                                           Document doc,
                                           SettingsApplyHandler handler,
@@ -46,9 +43,6 @@ extern PresentationContext TtaGetSpecificStyleContext (/* Document doc */);
 extern void TtaCleanStylePresentation (/* Element el,
                                           PSchema tsch,
                                           Document doc */);
-extern void TtaUpdateStylePresentation (/* Element el,
-                                           PSchema tsch,
-                                           PresentationContext c */);
 extern void TtaApplyAllSpecificSettings (/* Element el,
                                             Document doc,
                                             SettingsApplyHandler handler,

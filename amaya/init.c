@@ -4864,6 +4864,12 @@ View                view;
        TtaListBoxes (document, tocView, list);
        fclose (list);
      }
+   /* list now CSS rules */
+   ustrcpy (localname, TempFileDirectory);
+   ustrcat (localname, "/style.debug");
+   list = fopen (localname, "w");
+   TtaListStyleSchemas (document, list);
+   fclose (list);
 #endif /* AMAYA_DEBUG */
 
 # ifndef _WINDOWS

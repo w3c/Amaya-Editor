@@ -293,7 +293,7 @@ unsigned int        extra;
     
     /* update the presentation */
     doc = TtaGetDocument ((Element) el);
-    ApplyPRulesElement (cur, el, LoadedDocument[doc -1], TRUE);
+    ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
 
     /* Free the PRule */
     FreePresentRule(cur);
@@ -531,7 +531,8 @@ int                 nr;
    cond->CoCondition = PcWithin;
    cond->CoTarget = FALSE;
    cond->CoNotNegative = TRUE;
-   cond->CoRelation = nr;
+   /* as it's greater we register the number of ancestors - 1 */
+   cond->CoRelation = nr - 1;
    cond->CoTypeAncestor = type;
    cond->CoImmediate = FALSE;
    cond->CoAncestorRel = CondGreater;
@@ -568,14 +569,14 @@ int                 type;
 }
 
 /*----------------------------------------------------------------------
-  PresAttrsRuleSearch: look in the array of Attribute presentation
+  FirstPresAttrRuleSearch: look in the array of Attribute presentation
   blocks, for a block and a rule corresponding to the current context.
   When the rule is not found, attrblock points to the last block.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule    *PresAttrRuleSearch (PtrPSchema tsch, int attrType, GenericContext ctxt, int ancestor, AttributePres **attrblock)
+static PtrPRule    *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType, GenericContext ctxt, int ancestor, AttributePres **attrblock)
 #else  /* __STDC__ */
-static PtrPRule    *PresAttrRuleSearch (tsch, attrType, ctxt, ancestor, attrblock)
+static PtrPRule    *FirstPresAttrRuleSearch (tsch, attrType, ctxt, ancestor, attrblock)
 PtrPSchema          tsch;
 int                 attrType;
 GenericContext      ctxt;
@@ -648,14 +649,14 @@ AttributePres     **attrblock;
 }
 
 /*----------------------------------------------------------------------
-  PresAttrsRuleInsert : look in the array of Attribute presentation
+  PresAttrChainInsert : look in the array of Attribute presentation
   blocks, for a block corresponding to the current context.
   if not found we add a new one to the array.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule    *PresAttrRuleInsert (PtrPSchema tsch, int attrType, GenericContext ctxt, int ancestor)
+static PtrPRule    *PresAttrChainInsert (PtrPSchema tsch, int attrType, GenericContext ctxt, int ancestor)
 #else  /* __STDC__ */
-static PtrPRule    *PresAttrRuleInsert (tsch, attrType, ctxt, ancestor)
+static PtrPRule    *PresAttrChainInsert (tsch, attrType, ctxt, ancestor)
 PtrPSchema          tsch;
 int                 attrType;
 GenericContext      ctxt;
@@ -669,7 +670,7 @@ int                 ancestor;
   int                 nbrules, val;
 
   pSS = (PtrSSchema) ctxt->schema;
-  ppRule = PresAttrRuleSearch (tsch, attrType, ctxt, ancestor, &attrs);
+  ppRule = FirstPresAttrRuleSearch (tsch, attrType, ctxt, ancestor, &attrs);
   /* If no attribute presentation rule is found, create and initialize it */
   if (!ppRule)
     {
@@ -750,51 +751,85 @@ int                 ancestor;
   *      second by View,
   *      and Last by conditions
   If pres is zero, we don't test on the kind of rule ...
+  If att is less than MAX_ANCESTORS we're testing conditions of an
+  attribute rule, otherwise we're testing conditions for element rules.
+  Returns:
+  * 0 if the rule has all needed condititons
+  * -1 if the rule has less conditions than neeeded
+  * 1 if the rule has more conditions than neeeded
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int      TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres)
+static int      TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres, unsigned int att)
 #else  /* __STDC__ */
-static int      TstRuleContext (rule, ctxt, pres)
+static int      TstRuleContext (rule, ctxt, pres, att)
 PtrPRule        rule;
 GenericContext  ctxt;
 PRuleType       pres;
+unsigned int    att;
 #endif /* !__STDC__ */
 {
-   PtrCondition        firstCond, cond;
-   int                 i;
+  PtrCondition        firstCond, cond;
+  int                 i, nbcond;
 
-   /* short test on the vue number and type of pres rule */
-   if (rule->PrViewNum != 1)
-      return (0);
-   if (pres && rule->PrType != pres)
-      return (0);
+  /* test the number and type of the rule */
+  if (rule->PrViewNum != 1)
+    return (-1);
+  if (pres && rule->PrType != pres)
+    return (-1);
 
    /* scan all the conditions associated to a rule */
    firstCond = rule->PrCond;
-   i = 0;
-   while (ctxt->name[i] != 0)
+   /* check the number of condititons */
+   cond = firstCond;
+   nbcond = 0;
+   while (cond)
      {
-       /* test if the ancestor conditions */
-       cond = firstCond;
-       if (ctxt->names_nb[i] > 0)
+       cond = cond->CoNextCondition;
+       nbcond++;
+     }
+
+   if (att < MAX_ANCESTORS)
+     {
+       /* the rule is associated to an attribute */
+       /* test if the element type is within the rule conditions */
+       if (ctxt->name[att] &&
+	   (nbcond != 1 ||
+	    firstCond->CoCondition != PcElemType ||
+	    firstCond->CoTypeElAttr != (int) ctxt->name[att] ||
+	    (att == 0 && firstCond->CoTypeElAttr != (int) ctxt->type)))
+	 /* it's not the right rule */
+	 return (1);
+       else if (nbcond != 0)
+	 /* it's not the right rule: there are too many conditions in the rule */
+	 return (-1);
+     }
+   /* check if all ancestors are within the rule conditions */
+   i = 0;
+   while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
+     {
+       if (ctxt->names_nb[i] > 0 && i != att)
 	 {
-	   /* should be at the beginning as effect of sorting but ... */
-	   while (cond != NULL &&
+	   cond = firstCond;
+	   while (cond &&
 		  (cond->CoCondition != PcWithin ||
 		   cond->CoTypeAncestor != ctxt->names_nb[i] ||
-		   cond->CoRelation != ctxt->names_nb[i]))
+		   cond->CoRelation != ctxt->names_nb[i] - 1))
 	     cond = cond->CoNextCondition;
 	   if (cond == NULL)
-	     return (0);
+	     /* the ancestor is not found */
+	     return (1);
 	 }
        i++;
      }
-   return (1);
+   if (i != nbcond + 1)
+     /* it's not the right rule: there are too many conditions in the rule */
+     return (-1);
+   return (0);
 }
 
 /*----------------------------------------------------------------------
   PresRuleSearch : search a presentation rule for a given view
-  in a chain.
+  in an attribute chain or an element chain.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule     PresRuleSearch (PtrPSchema tsch, GenericContext ctxt, PRuleType pres, unsigned int extra, PtrPRule **chain)
@@ -807,14 +842,15 @@ unsigned int        extra;
 PtrPRule          **chain;
 #endif /* !__STDC__ */
 {
-  PtrPRule            cur;
-  unsigned int        attrType, i;
+  PtrPRule            pRule;
+  unsigned int        attrType, att;
+  int                 condCheck;
   ThotBool            found;
 
   *chain = NULL;
   /* by default the rule doesn't concern any attribute */
   attrType = 0;
-  i = 0;
+  att = MAX_ANCESTORS;
 
   /* select the good starting point depending on the context */
   if (ctxt->box != 0)
@@ -826,54 +862,59 @@ PtrPRule          **chain;
 	an attribute rule with conditions on the current element or
 	ancestor elements.
       */
-      i = 0;
-      while (attrType == 0 && i < MAX_ANCESTORS)
-	attrType = ctxt->attrType[i++];
+      att = 0;
+      while (attrType == 0 && att < MAX_ANCESTORS)
+	attrType = ctxt->attrType[att++];
       if (attrType)
-	*chain = PresAttrRuleInsert (tsch, attrType, ctxt, --i);
-      else if (ctxt->type != 0)
+	*chain = PresAttrChainInsert (tsch, attrType, ctxt, --att);
+      else if (ctxt->type)
 	/* we are now sure that only elements are concerned */
 	*chain = &tsch->PsElemPRule[ctxt->type - 1];
       else
-	{
-	  fprintf (stderr, "Internal : invalid Generic Context\n");
-	  return (NULL);
-	}
+	return (NULL);
     }
 
   /*
    * scan the chain of presentation rules looking for an existing
    * rule for this context and kind of presentation attribute.
    */
-  cur = **chain;
+  pRule = **chain;
   found = FALSE;
-  while (!found && cur != NULL)
+  while (!found && pRule != NULL)
     {
       /* shortcut : rules are sorted by type and view number and
 	 Functions rules are sorted by number */
-      if (cur->PrType > pres ||
-	  (cur->PrType == pres && cur->PrViewNum > 1) ||
-	  (cur->PrType == pres && pres == PtFunction &&
-	   cur->PrPresFunction >  (FunctionType) extra))
-	  cur = NULL;
-      else if (cur->PrType != pres ||
-	       (pres == PtFunction && cur->PrPresFunction !=  (FunctionType) extra))
+      if (pRule->PrType > pres ||
+	  (pRule->PrType == pres && pRule->PrViewNum > 1) ||
+	  (pRule->PrType == pres && pres == PtFunction &&
+	   pRule->PrPresFunction >  (FunctionType) extra))
+	  pRule = NULL;
+      else if (pRule->PrType != pres ||
+	       (pres == PtFunction && pRule->PrPresFunction !=  (FunctionType) extra))
 	/* check for extra specification in case of function rule */
 	{
-	  *chain = &(cur->PrNextPRule);
-	  cur = cur->PrNextPRule;
+	  *chain = &(pRule->PrNextPRule);
+	  pRule = pRule->PrNextPRule;
 	}
-      else if (TstRuleContext (cur, ctxt, pres))
-	/* this rule already exists */
-	found = TRUE;
       else
 	{
-	  /* jump to next and keep track of previous */
-	  *chain = &(cur->PrNextPRule);
-	  cur = cur->PrNextPRule;
+	  condCheck = TstRuleContext (pRule, ctxt, pres, att);
+	  if (condCheck == 0)
+	    /* this rule already exists */
+	    found = TRUE;
+	  else if (condCheck > 0)
+	    {
+	      /* the new rule should be added after */
+	      *chain = &(pRule->PrNextPRule);
+	      /* jump to next */
+	      pRule = pRule->PrNextPRule;
+	    }
+	  else
+	      /* the new rule should be added before */
+	    pRule = NULL;
 	}
     }
-   return (cur);
+   return (pRule);
 }
 
 /*----------------------------------------------------------------------
@@ -893,7 +934,7 @@ unsigned int        extra;
 {
   PtrPRule           *chain;
   PtrPRule            cur, pRule = NULL;
-  int                 i;
+  int                 i, att;
 
   /* Search presentation rule */
   cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
@@ -915,13 +956,20 @@ unsigned int        extra;
 	  pRule->PrSpecifAttrSSchema = NULL;
       
 	  /* In case of an attribute rule, add the Attr condition */
-	  if (ctxt->attrType[0] && ctxt->type != 0)
+	  att = 0;
+	  while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
+	    att++;
+	  if (att == 0 && ctxt->type)
+	    /* the attribute should be attached to that element */
 	    PresRuleAddAttrCond (pRule, ctxt->type);
+	  else if (att < MAX_ANCESTORS && ctxt->name[att])
+	    /* the attribute should be attached to that element */
+	    PresRuleAddAttrCond (pRule, ctxt->name[att]);
 	  /* add the ancesters conditions ... */
 	  i = 0;
-	  while (i < MAX_ANCESTORS)
+	  while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
 	    {
-	      if (ctxt->name[i] != 0 && ctxt->names_nb[i] > 0)
+	      if (ctxt->names_nb[i] > 0 && i != att)
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      i++;
 	    }
@@ -956,12 +1004,12 @@ unsigned int        extra;
   PtrPRule          cur;
   Document          doc;
   PtrSSchema        pSS;
-  int               elType = 0;
-  int               attrType = 0;
-  int               presBox = 0;
+  int               elType;
+  int               attrType;
+  int               presBox;
+  int               i;
 
   /* Search presentation rule */
-  presBox = ctxt->box;
   cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
   if (cur != NULL)
     {
@@ -972,8 +1020,12 @@ unsigned int        extra;
       cur->PrNextPRule = NULL;
       /* update the rendering */
       doc = ctxt->doc;
+      /* remove that specific rule */
+      presBox = ctxt->box;
+      attrType = 0;
+      elType = 0;
       pSS = (PtrSSchema) ctxt->schema;
-      ApplyPRules (doc, pSS, elType, attrType, presBox, cur, TRUE);
+      ApplyAGenericStyleRule (doc, pSS, elType, attrType, presBox, cur, TRUE);
       /* Free the PRule */
       FreePresentRule(cur);
     }
@@ -1762,10 +1814,14 @@ PresentationContext c;
 PresentationValue   v;
 #endif
 {
-  PtrPRule          rule;
+  GenericContext    ctxt = (GenericContext) c;
+  PtrPRule          pRule;
   PRuleType         intRule;
   unsigned int      func = 0;
   int               cst = 0;
+  int               i;
+  int               attrType;
+  int               doc = c->doc;
   ThotBool          absolute, generic;
 
   TypeToPresentation (type, &intRule, &func, &absolute);
@@ -1773,34 +1829,48 @@ PresentationValue   v;
   if (c->destroy)
     {
       if (generic)
-	PresRuleRemove ((PtrPSchema) tsch, (GenericContext) c, intRule, func);
+	PresRuleRemove ((PtrPSchema) tsch, ctxt, intRule, func);
       else
 	RemoveElementPRule ((PtrElement) el, intRule, func);
     }
   else
     {
+      attrType = 0;
       if (generic)
-	rule = PresRuleInsert ((PtrPSchema) tsch, (GenericContext) c, intRule, func);
+	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
       else
-	rule = InsertElementPRule ((PtrElement) el, intRule, func);
-      if (rule == NULL)
-	return (-1);
+	pRule = InsertElementPRule ((PtrElement) el, intRule, func);
 
-      if (type == PRBackgroundPicture)
+      if (pRule)
 	{
-	  if (!generic)
-	    tsch = (PSchema) (LoadedDocument[c->doc - 1]->DocSSchema->SsPSchema);
-	  cst = PresConstInsert (tsch, v.pointer);
-	  v.typed_data.unit = STYLE_UNIT_REL;
-	  v.typed_data.value = cst;
-	  v.typed_data.real = FALSE;
-	}
-      PresentationValueToPRule (v, intRule, rule, func, absolute, generic);
-      if (generic)
-	{
-	  rule->PrViewNum = 1;
-	  if (((GenericContext) c)->box != 0 && intRule == PtFunction)
-	    BuildBoxName ((GenericContext) c, &rule->PrPresBoxName);
+	  if (type == PRBackgroundPicture)
+	    {
+	      if (!generic)
+		tsch = (PSchema) (LoadedDocument[doc - 1]->DocSSchema->SsPSchema);
+	      cst = PresConstInsert (tsch, v.pointer);
+	      v.typed_data.unit = STYLE_UNIT_REL;
+	      v.typed_data.value = cst;
+	      v.typed_data.real = FALSE;
+	    }
+	  PresentationValueToPRule (v, intRule, pRule, func, absolute, generic);
+	  if (generic)
+	    {
+	      pRule->PrViewNum = 1;
+	      if (ctxt->box && intRule == PtFunction)
+		BuildBoxName (ctxt, &pRule->PrPresBoxName);
+	      /*  select the good starting point depending on the context */
+	      if (ctxt->box)
+		pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
+	      if (pRule)
+		{
+		  i = 0;
+		  while (attrType == 0 && i < MAX_ANCESTORS)
+		    attrType = ctxt->attrType[i++];
+		  ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema, ctxt->type, attrType, ctxt->box, pRule, FALSE);
+		}
+	    }
+	  else
+	    ApplyASpecificStyleRule (pRule, (PtrElement) el, LoadedDocument[doc - 1], FALSE);
 	}
     }
   return (0);
@@ -1968,11 +2038,11 @@ Document            doc;
   ctxt->schema = TtaGetDocumentSSchema (doc);
   ctxt->destroy = 0;
   ctxt->box = 0;
-  ctxt->attrType[0] = 0;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
+      ctxt->attrType[i] = 0;
       ctxt->attrText[i] = NULL;
     }
    return (ctxt);
@@ -2053,7 +2123,7 @@ Document            doc;
 	  pRule = ((PtrPSchema) tsch)->PsElemPRule[elType];
 	  while (pRule != NULL)
 	    {
-	      ApplyPRules (doc, pSS, elType+1, 0, 0, pRule, TRUE);
+	      ApplyAGenericStyleRule (doc, pSS, elType+1, 0, 0, pRule, TRUE);
 	      pRule = pRule->PrNextPRule;
 	    }
 	}
@@ -2074,7 +2144,7 @@ Document            doc;
 		      pRule = attrs->ApCase[j].CaFirstPRule;
 		      while (pRule != NULL)
 			{
-			  ApplyPRules (doc, pSS, 0, attrType+1, 0, pRule, TRUE);
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0, pRule, TRUE);
 			  pRule = pRule->PrNextPRule;
 			}
 		    }
@@ -2091,7 +2161,7 @@ Document            doc;
 		      pRule = attrs->ApEnumFirstPRule[j];
 		      while (pRule != NULL)
 			{
-			  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
 			  pRule = pRule->PrNextPRule;
 			}
 		    }
@@ -2100,7 +2170,7 @@ Document            doc;
 	  
 	      while (pRule != NULL)
 		{
-		  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+		  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
 		  pRule = pRule->PrNextPRule;
 		}
 	      attrs = attrs->ApNextAttrPres;
@@ -2112,90 +2182,6 @@ Document            doc;
     TtaSetDisplayMode (doc, dispMode);
 }
 
-/*----------------------------------------------------------------------
-  Function used to update the drawing after styling an element or a
-  generic type.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaUpdateStylePresentation (Element el, PSchema tsch, PresentationContext c)
-#else  /* !__STDC__ */
-void                TtaUpdateStylePresentation (el, tsch, c)
-Element             el;
-PSchema             tsch;
-PresentationContext c;
-#endif /* !__STDC__ */
-{
-   GenericContext ctxt = (GenericContext) c;
-   Document       doc;
-   PtrSSchema     pSS;
-   PtrPRule       pRule, *ppRule;
-   AttributePres *attrs;
-   DisplayMode    dispMode;
-   int            elType = 0;
-   int            attrType, i;
-   int            presBox = 0;
-
-   if (c == NULL || (el == NULL && tsch == NULL) || c->destroy)
-     return;
-
-   doc = c->doc;
-  /* avoid too many redisplay */
-   dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
-   
-   if (el != NULL)
-     {
-       pRule = ((PtrElement)el)->ElFirstPRule;
-       if (pRule != NULL)
-	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], FALSE);
-     }
-   else
-     {
-       /* by default the rule doesn't concern any attribute */
-       attrType = 0;
-       i = 0;
-       pSS = (PtrSSchema) c->schema;
-       /*  select the good starting point depending on the context */
-       if (ctxt->box != 0)
-	 {
-	   presBox = ctxt->box;
-	   pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
-	 }
-       else
-	 {
-	   /*
-	     detect whether there is an attribute in the selector to generate
-	     an attribute rule with conditions on the current element or
-	     ancestor elements.
-	   */
-	   i = 0;
-	   while (attrType == 0 && i < MAX_ANCESTORS)
-	     attrType = ctxt->attrType[i++];
-	   if (attrType)
-	     {
-	       ppRule = PresAttrRuleSearch ((PtrPSchema) tsch, attrType, ctxt, --i, &attrs);
-	       if (ppRule)
-		 pRule = *ppRule;
-	       else
-		 pRule = NULL;
-	     }
-	   else if (c->type != 0)
-	     {
-	       elType = c->type;
-	       pRule = ((PtrPSchema) tsch)->PsElemPRule[elType - 1];
-	     }
-	   else
-	     pRule = NULL;
-	 }
-
-       if (pRule != NULL)
-	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
-     }
-   /* restore the display mode */
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, dispMode);
-}
 
 /*----------------------------------------------------------------------
   ApplyAllSpecificSettings browses all the PRules structures,

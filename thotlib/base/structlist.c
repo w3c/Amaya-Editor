@@ -36,6 +36,8 @@ static int          NbElemLevels[MAXNB];
 static int          NbAscendSiblings[MAXNB];
 static int          NbNodes;
 static int          NbLeaves;
+static PtrSSchema   pSchemaStr;
+static PtrPSchema   pSc1;
 
 #include "absboxes_f.h"
 #include "fileaccess_f.h"
@@ -876,7 +878,7 @@ FILE               *fileDescriptor;
 	       fprintf (fileDescriptor, "VMiddle");
 	       break;
 	    case NoEdge:
-	       fprintf (fileDescriptor, "????");
+	       fprintf (fileDescriptor, "NULL");
 	       break;
 	    default:
 	       fprintf (fileDescriptor, "BoxEdge ????");
@@ -1913,6 +1915,1382 @@ FILE               *fileDescriptor;
 		TtaError (ERR_invalid_parameter);
 	     else
 	       ListBoxes (pDoc->DocAssocFrame[numAssoc - 1], fileDescriptor);
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   wrlevel ecrit au terminal le niveau relatif n.                 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrlevel (Level n, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrlevel (n, fileDescriptor)
+Level               n;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   switch (n)
+	 {
+	    case RlEnclosing:
+	       fprintf (fileDescriptor, "Enclosing");
+	       break;
+	    case RlSameLevel:
+	       ;
+	       break;
+	    case RlEnclosed:
+	       fprintf (fileDescriptor, "Enclosed");
+	       break;
+	    case RlPrevious:
+	       fprintf (fileDescriptor, "Previous");
+	       break;
+	    case RlNext:
+	       fprintf (fileDescriptor, "Next");
+	       break;
+	    case RlSelf:
+	       fprintf (fileDescriptor, "*");
+	       break;
+	    case RlContainsRef:
+	       fprintf (fileDescriptor, "Refering");
+	       break;
+	    case RlRoot:
+	       fprintf (fileDescriptor, "Root");
+	       break;
+	    case RlReferred:
+	       fprintf (fileDescriptor, "Referred");
+	       break;
+	    case RlCreator:
+	       fprintf (fileDescriptor, "Creator");
+	       break;
+	 }
+}
+
+/*----------------------------------------------------------------------
+   wrdistunit ecrit le nom d'une unite' de distance.               
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void         wrdistunit (TypeUnit u, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrdistunit (u, fileDescriptor)
+FILE               *fileDescriptor;
+TypeUnit            u;
+#endif /* __STDC__ */
+{
+   switch (u)
+	 {
+	    case UnRelative:
+	       ;
+	       break;
+	    case UnXHeight:
+	       fprintf (fileDescriptor, " ex");
+	       break;
+	    case UnPoint:
+	       fprintf (fileDescriptor, " pt");
+	       break;
+	    case UnPixel:
+	       fprintf (fileDescriptor, " px");
+	       break;
+	    case UnPercent:
+	       fprintf (fileDescriptor, " %%");
+	       break;
+	 }
+}
+
+
+/*----------------------------------------------------------------------
+   wrnomregle ecrit au terminal le nom de la regle de numero r.    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrnomregle (int r, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrnomregle (r, fileDescriptor)
+int                 r;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   if (r > 0)
+      fprintf (fileDescriptor, pSchemaStr->SsRule[r - 1].SrName);
+}
+
+
+/*----------------------------------------------------------------------
+   wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrnomattr (int a, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrnomattr (a, fileDescriptor)
+int                 a;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   if (a != 0)
+      fprintf (fileDescriptor, pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
+}
+
+
+/*----------------------------------------------------------------------
+   wrnomboite ecrit au terminal le nom de la boite de presentation 
+   de numero b.                                            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrnomboite (int b, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrnomboite (b, fileDescriptor)
+int                 b;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   if (b > 0)
+      fprintf (fileDescriptor, pSc1->PsPresentBox[b - 1].PbName);
+}
+
+
+/*----------------------------------------------------------------------
+   wrModeHerit ecrit au terminal un mode d'heritage.               
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrModeHerit (InheritMode M, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrModeHerit (M, fileDescriptor)
+InheritMode         M;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   switch (M)
+	 {
+	    case InheritParent:
+	       fprintf (fileDescriptor, "Enclosing");
+	       break;
+	    case InheritPrevious:
+	       fprintf (fileDescriptor, "Previous");
+	       break;
+	    case InheritChild:
+	       fprintf (fileDescriptor, "Enclosed");
+	       break;
+	    case InheritCreator:
+	       fprintf (fileDescriptor, "Creator");
+	       break;
+	    case InheritGrandFather:
+	       fprintf (fileDescriptor, "GrandFather");
+	       break;
+	 }
+}
+
+
+/*----------------------------------------------------------------------
+   wrsize ecrit au terminal la regle de taille pointee par pR.     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrsize (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrsize (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+     {
+	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
+	if (pRe1->PrInhPercent)
+	  {
+	  fprintf (fileDescriptor, " * ");
+	  if (pRe1->PrInhAttr)
+	     wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	  else
+	     wrnumber (pRe1->PrInhDelta, fileDescriptor);
+	  fprintf (fileDescriptor, " %");
+	  }
+	else
+	   if (pRe1->PrInhDelta == 0)
+	      fprintf (fileDescriptor, " =");
+	   else
+	      {
+	      if (pRe1->PrInhDelta > 0)
+		 fprintf (fileDescriptor, "+");
+	      if (pRe1->PrInhAttr)
+		 wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	      else
+		 wrnumber (pRe1->PrInhDelta, fileDescriptor);
+	      wrdistunit (pRe1->PrInhUnit, fileDescriptor);
+	      }
+	if (pRe1->PrInhMinOrMax > 0)
+	  {
+	     if (pRe1->PrInhDelta >= 0)
+		fprintf (fileDescriptor, " max ");
+	     else
+		fprintf (fileDescriptor, " min ");
+	     if (pRe1->PrMinMaxAttr)
+		wrnomattr (pRe1->PrInhMinOrMax, fileDescriptor);
+	     else
+		wrnumber (pRe1->PrInhMinOrMax, fileDescriptor);
+	  }
+     }
+   else if (pRe1->PrPresMode == PresImmediate)
+     {
+	if (pRe1->PrMinAttr)
+	   wrnomattr (pRe1->PrMinValue, fileDescriptor);
+	else
+	   wrnumber (pRe1->PrMinValue, fileDescriptor);
+	wrdistunit (pRe1->PrMinUnit, fileDescriptor);
+     }
+   else
+      fprintf (fileDescriptor, "??????");
+   fprintf (fileDescriptor, ";");
+}
+
+
+/*----------------------------------------------------------------------
+   wrfontstyle ecrit au terminal la regle d'heritage ou la valeur  
+   entiere de la regle pointee par pR.                     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrfontstyle (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrfontstyle (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+     {
+	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
+	if (pRe1->PrInhDelta == 0 && !pRe1->PrInhPercent)
+	   fprintf (fileDescriptor, " =");
+	else
+	   fprintf (fileDescriptor, "??????");
+     }
+   else if (pRe1->PrPresMode == PresImmediate)
+     {
+      if (pRe1->PrType == PtFont)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'C':
+		     fprintf (fileDescriptor, "Courrier");
+		     break;
+		  case 'H':
+		     fprintf (fileDescriptor, "Helvetica");
+		     break;
+		  case 'T':
+		     fprintf (fileDescriptor, "Times");
+		     break;
+		  case 'c':
+		     fprintf (fileDescriptor, "courrier");
+		     break;
+		  case 'h':
+		     fprintf (fileDescriptor, "helvetica");
+		     break;
+		  case 't':
+		     fprintf (fileDescriptor, "times");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtStyle)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'I':
+		     fprintf (fileDescriptor, "Italics");
+		     break;
+		  case 'R':
+		     fprintf (fileDescriptor, "Roman");
+		     break;
+		  case 'O':
+		     fprintf (fileDescriptor, "Oblique");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtWeight)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'B':
+		     fprintf (fileDescriptor, "Bold");
+		     break;
+		  case 'N':
+		     fprintf (fileDescriptor, "Normal");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtUnderline)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'N':
+		     fprintf (fileDescriptor, "NoUnderline");
+		     break;
+		  case 'U':
+		     fprintf (fileDescriptor, "Underlined");
+		     break;
+		  case 'O':
+		     fprintf (fileDescriptor, "Overlined");
+		     break;
+		  case 'C':
+		     fprintf (fileDescriptor, "CrossedOut");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtThickness)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'T':
+		     fprintf (fileDescriptor, "Thick");
+		     break;
+		  case 'N':
+		     fprintf (fileDescriptor, "Thin");
+		     break;
+		  default:
+		     fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtLineStyle)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'S':
+		     fprintf (fileDescriptor, "Solid");
+		     break;
+		  case '-':
+		     fprintf (fileDescriptor, "Dashed");
+		     break;
+		  case '.':
+		     fprintf (fileDescriptor, "Dotted");
+		     break;
+	       }
+      else
+	 fprintf (fileDescriptor, "%c", pRe1->PrChrValue);
+    }
+   else
+      fprintf (fileDescriptor, "??????");
+   fprintf (fileDescriptor, ";");
+}
+
+
+/*----------------------------------------------------------------------
+   wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
+   entiere de la regle pointee par pR.                     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrnbherit (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrnbherit (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+     if (pRe1->PrInhPercent)
+	fprintf (fileDescriptor, "??????");
+     else
+        {
+	wrModeHerit (pRe1->PrInheritMode, fileDescriptor);
+	if (pRe1->PrInhDelta == 0)
+	   fprintf (fileDescriptor, " =");
+	else
+	  {
+	     if (pRe1->PrInhDelta > 0)
+		fprintf (fileDescriptor, "+");
+	     if (pRe1->PrInhAttr)
+		wrnomattr (pRe1->PrInhDelta, fileDescriptor);
+	     else
+		wrnumber (pRe1->PrInhDelta, fileDescriptor);
+	  }
+	if (pRe1->PrInhMinOrMax > 0)
+	  {
+	     if (pRe1->PrInhDelta >= 0)
+		fprintf (fileDescriptor, " max ");
+	     else
+		fprintf (fileDescriptor, " min ");
+	     if (pRe1->PrMinMaxAttr)
+		wrnomattr (pRe1->PrInhMinOrMax, fileDescriptor);
+	     else
+		wrnumber (pRe1->PrInhMinOrMax, fileDescriptor);
+	  }
+        }
+   else if (pRe1->PrPresMode == PresImmediate)
+      if (pRe1->PrAttrValue)
+	 wrnomattr (pRe1->PrIntValue, fileDescriptor);
+      else
+	 wrnumber (pRe1->PrIntValue, fileDescriptor);
+   else
+      fprintf (fileDescriptor, "??????");
+   fprintf (fileDescriptor, ";");
+}
+
+
+/*----------------------------------------------------------------------
+   wrminind ecrit au terminal la regle 'NoBreak1, NoBreak2 ou      
+   Indent pointee par pR.                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrminind (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrminind (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+
+{
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+      wrnbherit (pR, fileDescriptor);
+   else
+     {
+	if (pRe1->PrPresMode == PresImmediate)
+	  {
+	     if (pRe1->PrMinAttr)
+		wrnomattr (pRe1->PrMinValue, fileDescriptor);
+	     else
+		wrnumber (pRe1->PrMinValue, fileDescriptor);
+	     wrdistunit (pRe1->PrMinUnit, fileDescriptor);
+	  }
+	else
+	   fprintf (fileDescriptor, "??????");
+	fprintf (fileDescriptor, ";");
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   WrPos ecrit au terminal la position pos.                        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         WrPos (PosRule pos, ThotBool Def, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         WrPos (pos, Def, fileDescriptor)
+PosRule             pos;
+ThotBool             Def;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PosRule            *pRe1;
+
+   pRe1 = &pos;
+   if (Def)
+      if (pRe1->PoPosDef == NoEdge)
+	 fprintf (fileDescriptor, " NULL");
+      else
+	{
+	   wrrepere (pRe1->PoPosDef, fileDescriptor);
+	   fprintf (fileDescriptor, " = ");
+	}
+   if (!Def || pRe1->PoPosDef != NoEdge)
+     {
+	wrlevel (pRe1->PoRelation, fileDescriptor);
+	if (pRe1->PoNotRel)
+	   fprintf (fileDescriptor, " NOT");
+	fprintf (fileDescriptor, " ");
+	if (pRe1->PoRefKind == RkElType)
+	   wrnomregle (pRe1->PoRefIdent, fileDescriptor);
+	else if (pRe1->PoRefKind == RkPresBox)
+	   wrnomboite (pRe1->PoRefIdent, fileDescriptor);
+	else if (pRe1->PoRefKind == RkAttr)
+	   wrnomattr (pRe1->PoRefIdent, fileDescriptor);
+	fprintf (fileDescriptor, ". ");
+	wrrepere (pRe1->PoPosRef, fileDescriptor);
+	if (pRe1->PoDistance != 0)
+	  {
+	     if (pRe1->PoDistance > 0)
+		fprintf (fileDescriptor, "+");
+	     else
+		fprintf (fileDescriptor, "-");
+	     if (pRe1->PoDistAttr)
+		wrnomattr (abs (pRe1->PoDistance), fileDescriptor);
+	     else
+		wrnumber (abs (pRe1->PoDistance), fileDescriptor);
+	     wrdistunit (pRe1->PoDistUnit, fileDescriptor);
+	  }
+	if (pRe1->PoUserSpecified)
+	   fprintf (fileDescriptor, " UserSpecified");
+     }
+   fprintf (fileDescriptor, ";");
+}
+
+
+/*----------------------------------------------------------------------
+   wrdimens ecrit au terminal la dimension Dim.                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrdimens (DimensionRule Dim, ThotBool Hauteur, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrdimens (Dim, Hauteur, fileDescriptor)
+DimensionRule       Dim;
+ThotBool             Hauteur;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   DimensionRule      *pRe1;
+
+   pRe1 = &Dim;
+   if (pRe1->DrPosition)
+      WrPos (pRe1->DrPosRule, True, fileDescriptor);
+   else
+     {
+	if (pRe1->DrAbsolute)
+	  {
+	     if (pRe1->DrAttr)
+		wrnomattr (pRe1->DrValue, fileDescriptor);
+	     else
+		wrnumber (pRe1->DrValue, fileDescriptor);
+	     if (pRe1->DrValue != 0)
+		wrdistunit (pRe1->DrUnit, fileDescriptor);
+	     if (pRe1->DrUserSpecified)
+		fprintf (fileDescriptor, " UserSpecified");
+	     if (pRe1->DrMin)
+		fprintf (fileDescriptor, " Min");
+	  }
+	else
+	  {
+	     wrlevel (pRe1->DrRelation, fileDescriptor);
+	     fprintf (fileDescriptor, " ");
+	     if (pRe1->DrNotRelat)
+		fprintf (fileDescriptor, "not ");
+	     if (pRe1->DrRefKind == RkElType)
+		wrnomregle (pRe1->DrRefIdent, fileDescriptor);
+	     else if (pRe1->DrRefKind == RkPresBox)
+		wrnomboite (pRe1->DrRefIdent, fileDescriptor);
+	     else if (pRe1->DrRefKind == RkAttr)
+		wrnomattr (pRe1->DrRefIdent, fileDescriptor);
+	     fprintf (fileDescriptor, ". ");
+	     if ((pRe1->DrSameDimens && Hauteur) || (!pRe1->DrSameDimens && !Hauteur))
+		fprintf (fileDescriptor, "Height");
+	     else
+		fprintf (fileDescriptor, "Width");
+	     if (pRe1->DrUnit == UnPercent)
+	       {
+		  fprintf (fileDescriptor, "*");
+		  if (pRe1->DrValue < 0)
+		     fprintf (fileDescriptor, "-");
+		  if (pRe1->DrAttr)
+		     wrnomattr (abs (pRe1->DrValue), fileDescriptor);
+		  else
+		     wrnumber (abs (pRe1->DrValue), fileDescriptor);
+		  fprintf (fileDescriptor, "%%");
+	       }
+	     else
+	       {
+		  if (pRe1->DrValue < 0)
+		     fprintf (fileDescriptor, "-");
+		  if (pRe1->DrValue > 0)
+		     fprintf (fileDescriptor, "+");
+		  if (pRe1->DrValue != 0)
+		    {
+		       if (pRe1->DrAttr)
+			  wrnomattr (abs (pRe1->DrValue), fileDescriptor);
+		       else
+			  wrnumber (abs (pRe1->DrValue), fileDescriptor);
+		       wrdistunit (pRe1->DrUnit, fileDescriptor);
+		    }
+	       }
+	     if (pRe1->DrMin)
+		fprintf (fileDescriptor, " Min");
+	  }
+	fprintf (fileDescriptor, ";");
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   wrCondition                                             
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrCondition (PtrCondition pCond, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrCondition (pCond, fileDescriptor)
+PtrCondition        pCond;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   if (!pCond->CoNotNegative)
+      fprintf (fileDescriptor, "NOT ");
+   switch (pCond->CoCondition)
+	 {
+	    case PcFirst:
+	       fprintf (fileDescriptor, "First ");
+	       break;
+	    case PcLast:
+	       fprintf (fileDescriptor, "Last ");
+	       break;
+	    case PcReferred:
+	       fprintf (fileDescriptor, "Referred ");
+	       break;
+	    case PcFirstRef:
+	       fprintf (fileDescriptor, "FirstRef ");
+	       break;
+	    case PcLastRef:
+	       fprintf (fileDescriptor, "LastRef ");
+	       break;
+	    case PcExternalRef:
+	       fprintf (fileDescriptor, "ExternalRef ");
+	       break;
+	    case PcInternalRef:
+	       fprintf (fileDescriptor, "InternalRef ");
+	       break;
+	    case PcCopyRef:
+	       fprintf (fileDescriptor, "PcCopyRef ");
+	       break;
+	    case PcAnyAttributes:
+	       fprintf (fileDescriptor, "AnyAttributes ");
+	       break;
+	    case PcFirstAttr:
+	       fprintf (fileDescriptor, "FirstAttr ");
+	       break;
+	    case PcLastAttr:
+	       fprintf (fileDescriptor, "LastAttr ");
+	       break;
+	    case PcUserPage:
+	       fprintf (fileDescriptor, "UserPage ");
+	       break;
+	    case PcStartPage:
+	       fprintf (fileDescriptor, "StartPage ");
+	       break;
+	    case PcComputedPage:
+	       fprintf (fileDescriptor, "ComputedPage ");
+	       break;
+	    case PcEmpty:
+	       fprintf (fileDescriptor, "PcEmpty ");
+	       break;
+	    case PcEven:
+	       fprintf (fileDescriptor, "Even");
+	       break;
+	    case PcOdd:
+	       fprintf (fileDescriptor, "Odd");
+	       break;
+	    case PcOne:
+	       fprintf (fileDescriptor, "One");
+	       break;
+	    case PcWithin:
+	       if (pCond->CoImmediate)
+		  fprintf (fileDescriptor, "Immediately ");
+	       fprintf (fileDescriptor, "Within ");
+	       if (pCond->CoAncestorRel == CondGreater &&
+		   pCond->CoRelation != 0)
+		  fprintf (fileDescriptor, ">");
+	       else if (pCond->CoAncestorRel == CondLess)
+		  fprintf (fileDescriptor, "<");
+	       if (pCond->CoRelation > 0 ||
+		   pCond->CoAncestorRel == CondEquals)
+		 {
+		    wrnumber (pCond->CoRelation, fileDescriptor);
+		    fprintf (fileDescriptor, " ");
+		 }
+	       if (pCond->CoTypeAncestor == 0)
+		 {
+		    fprintf (fileDescriptor, pCond->CoAncestorName);
+		    fprintf (fileDescriptor, "(");
+		    fprintf (fileDescriptor, pCond->CoSSchemaName);
+		    fprintf (fileDescriptor, ")");
+		 }
+	       else
+		  wrnomregle (pCond->CoTypeAncestor, fileDescriptor);
+	       fprintf (fileDescriptor, " ");
+	       break;
+	    case PcInterval:
+	       if (pCond->CoCounter > 0)
+		 {
+		    fprintf (fileDescriptor, "(");
+		    if (pCond->CoValCounter == CntMaxVal)
+		       fprintf (fileDescriptor, "MaxRangeVal ");
+		    else if (pCond->CoValCounter == CntMinVal)
+		       fprintf (fileDescriptor, "MinRangeVal ");
+		    fprintf (fileDescriptor, "Cpt");
+		    wrnumber (pCond->CoCounter, fileDescriptor);
+		    fprintf (fileDescriptor, ") ");
+		 }
+	       break;
+	    case PcElemType:
+	       wrnomregle (pCond->CoTypeElAttr, fileDescriptor);
+	       fprintf (fileDescriptor, " ");
+	       break;
+	    case PcAttribute:
+	       wrnomattr (pCond->CoTypeElAttr, fileDescriptor);
+	       fprintf (fileDescriptor, " ");
+	       break;
+	    default:
+	       break;
+	 }
+   if (pCond->CoCondition == PcEven || pCond->CoCondition == PcOdd ||
+       pCond->CoCondition == PcOne)
+      if (pCond->CoCounter > 0)
+	{
+	   fprintf (fileDescriptor, "(Cpt");
+	   wrnumber (pCond->CoCounter, fileDescriptor);
+	   fprintf (fileDescriptor, ") ");
+	}
+}
+
+/*----------------------------------------------------------------------
+   wrFonctPres ecrit au terminal la fonction de presentation       
+   contenue dans la regle pointee par pR.                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrFonctPres (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrFonctPres (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   int                 i;
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   switch (pRe1->PrPresFunction)
+	 {
+	    case FnLine:
+	       fprintf (fileDescriptor, "Line");
+	       break;
+	    case FnNoLine:
+	       fprintf (fileDescriptor, "NoLine");
+	       break;
+	    case FnCreateBefore:
+	       fprintf (fileDescriptor, "CreateBefore");
+	       break;
+	    case FnCreateWith:
+	       fprintf (fileDescriptor, "CreateWith");
+	       break;
+	    case FnCreateFirst:
+	       fprintf (fileDescriptor, "CreateFirst");
+	       break;
+	    case FnCreateLast:
+	       fprintf (fileDescriptor, "CreateLast");
+	       break;
+	    case FnCreateAfter:
+	       fprintf (fileDescriptor, "CreateAfter");
+	       break;
+	    case FnCreateEnclosing:
+	       fprintf (fileDescriptor, "CreateEnclosing");
+	       break;
+	    case FnPage:
+	       fprintf (fileDescriptor, "Page");
+	       break;
+	    case FnColumn:
+	       fprintf (fileDescriptor, "Column");
+	       break;
+	    case FnSubColumn:
+	       fprintf (fileDescriptor, "Included Column");
+	       break;
+	    case FnCopy:
+	       fprintf (fileDescriptor, "Copy");
+	       break;
+	    case FnContentRef:
+	       fprintf (fileDescriptor, "Content: Cste");
+	       wrnumber (pRe1->PrPresBox[0], fileDescriptor);
+	       break;
+	    case FnShowBox:
+	       fprintf (fileDescriptor, "ShowBox");
+	       break;
+	    case FnBackgroundPicture:
+	       fprintf (fileDescriptor, "BackgroundPicture: Cste");
+	       wrnumber (pRe1->PrPresBox[0], fileDescriptor);
+	       break;
+	    case FnPictureMode:
+	       fprintf (fileDescriptor, "PictureMode: ");
+	       switch (pRe1->PrPresBox[0])
+		 {
+		 case RealSize:
+		    fprintf (fileDescriptor, "NormalSize");
+		    break;
+		 case ReScale:
+		    fprintf (fileDescriptor, "Scale");
+		    break;
+		 case FillFrame:
+		    fprintf (fileDescriptor, "RepeatXY");
+		    break;
+		 case XRepeat:
+		    fprintf (fileDescriptor, "RepeatX");
+		    break;
+		 case YRepeat:
+		    fprintf (fileDescriptor, "RepeatY");
+		    break;
+		 default:
+		    fprintf (fileDescriptor, "??????");
+		    break;
+		 }
+	       break;
+	    case FnNotInLine:
+	       fprintf (fileDescriptor, "InLine: No");
+	       break;
+	   case FnAny:
+	       fprintf (fileDescriptor, "??????");
+	       break;		    
+	 }
+   if (pRe1->PrPresFunction != FnLine &&
+            pRe1->PrPresFunction != FnContentRef &&
+            pRe1->PrPresFunction != FnShowBox &&
+            pRe1->PrPresFunction != FnBackgroundPicture &&
+            pRe1->PrPresFunction != FnPictureMode &&
+	    pRe1->PrPresFunction != FnNoLine)
+     {
+	fprintf (fileDescriptor, "(");
+	if (pRe1->PrNPresBoxes == 0)
+	  {
+	     fprintf (fileDescriptor, pRe1->PrPresBoxName);
+	     if (pRe1->PrExternal || !pRe1->PrElement)
+		fprintf (fileDescriptor, "(****)");
+	  }
+	else
+	   for (i = 1; i <= pRe1->PrNPresBoxes; i++)
+	     {
+		if (i > 1)
+		   fprintf (fileDescriptor, ", ");
+		if (pRe1->PrElement)
+		   wrnomregle (pRe1->PrPresBox[i - 1], fileDescriptor);
+		else
+		   wrnomboite (pRe1->PrPresBox[i - 1], fileDescriptor);
+	     }
+	fprintf (fileDescriptor, ")");
+     }
+   fprintf (fileDescriptor, ";");
+}
+
+
+/*----------------------------------------------------------------------
+   wrajust ecrit au terminal la regle d'ajustement des lignes.     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrajust (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrajust (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+      wrnbherit (pR, fileDescriptor);
+   if (pRe1->PrPresMode == PresImmediate)
+      switch (pRe1->PrAdjust)
+	    {
+	       case AlignLeft:
+		  fprintf (fileDescriptor, "Left;");
+		  break;
+	       case AlignRight:
+		  fprintf (fileDescriptor, "Right;");
+		  break;
+	       case AlignCenter:
+		  fprintf (fileDescriptor, "VMiddle;");
+		  break;
+	       case AlignLeftDots:
+		  fprintf (fileDescriptor, "LeftWithDots;");
+		  break;
+	    }
+}
+
+
+/*----------------------------------------------------------------------
+   wrjustif ecrit la regle de justification ou hyphenation pointee 
+   par pR.                                                 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrjustif (PtrPRule pR, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrjustif (pR, fileDescriptor)
+PtrPRule            pR;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+
+   pRe1 = pR;
+   if (pRe1->PrPresMode == PresInherit)
+      wrnbherit (pR, fileDescriptor);
+   if (pRe1->PrPresMode == PresImmediate)
+      if (pRe1->PrJustify)
+	 fprintf (fileDescriptor, "Yes;");
+      else
+	 fprintf (fileDescriptor, "No;");
+}
+
+
+/*----------------------------------------------------------------------
+   WriteCounterStyle ecrit au terminal un style de compteur.            
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         WriteCounterStyle (CounterStyle St, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         WriteCounterStyle (St, fileDescriptor)
+CounterStyle        St;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   switch (St)
+	 {
+	    case CntArabic:
+	       fprintf (fileDescriptor, ",Arabic)");
+	       break;
+	    case CntURoman:
+	       fprintf (fileDescriptor, ",URoman)");
+	       break;
+	    case CntLRoman:
+	       fprintf (fileDescriptor, ",LRoman)");
+	       break;
+	    case CntUppercase:
+	       fprintf (fileDescriptor, ",Uppercase)");
+	       break;
+	    case CntLowercase:
+	       fprintf (fileDescriptor, ",Lowercase)");
+	       break;
+	 }
+}
+
+
+/*----------------------------------------------------------------------
+   wrsuiteregles ecrit au terminal la suite de regles chainees dont 
+   RP pointe sur la regle de tete.                         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         wrsuiteregles (PtrPRule RP, FILE * fileDescriptor)
+#else  /* __STDC__ */
+static void         wrsuiteregles (RP, fileDescriptor)
+PtrPRule            RP;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrPRule            pRe1;
+   PtrCondition        pCond;
+
+   while (RP != NULL)
+      /* ecrit une regle de presentation */
+     {
+	pRe1 = RP;
+	fprintf (fileDescriptor, "   ");
+	if (pRe1->PrViewNum > 1)
+	  {
+	     fprintf (fileDescriptor, "IN ");
+	     fprintf (fileDescriptor, pSc1->PsView[pRe1->PrViewNum - 1]);
+	     fprintf (fileDescriptor, " ");
+	  }
+	if (pRe1->PrCond != NULL)
+	  {
+	     pCond = pRe1->PrCond;
+	     if (pCond->CoCondition == PcDefaultCond)
+		fprintf (fileDescriptor, "OTHERWISE ");
+	     else
+	       {
+		  fprintf (fileDescriptor, "IF ");
+		  wrCondition (pCond, fileDescriptor);
+	       }
+	     pCond = pCond->CoNextCondition;
+	     while (pCond != NULL)
+	       {
+		  fprintf (fileDescriptor, "AND ");
+		  wrCondition (pCond, fileDescriptor);
+		  pCond = pCond->CoNextCondition;
+	       }
+	  }
+	switch (pRe1->PrType)
+	      {
+		 case PtVisibility:
+		    fprintf (fileDescriptor, "Visibility: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtFunction:
+		    wrFonctPres (RP, fileDescriptor);
+		    break;
+		 case PtVertRef:
+		    fprintf (fileDescriptor, "VertRef: ");
+		    WrPos (pRe1->PrPosRule, False, fileDescriptor);
+		    break;
+		 case PtHorizRef:
+		    fprintf (fileDescriptor, "HorizRef: ");
+		    WrPos (pRe1->PrPosRule, False, fileDescriptor);
+		    break;
+		 case PtHeight:
+		    fprintf (fileDescriptor, "Height: ");
+		    wrdimens (pRe1->PrDimRule, True, fileDescriptor);
+		    break;
+		 case PtWidth:
+		    fprintf (fileDescriptor, "Width: ");
+		    wrdimens (pRe1->PrDimRule, False, fileDescriptor);
+		    break;
+		 case PtVertPos:
+		    fprintf (fileDescriptor, "VertPos: ");
+		    WrPos (pRe1->PrPosRule, True, fileDescriptor);
+		    break;
+		 case PtHorizPos:
+		    fprintf (fileDescriptor, "HorizPos: ");
+		    WrPos (pRe1->PrPosRule, True, fileDescriptor);
+		    break;
+		 case PtFont:
+		    fprintf (fileDescriptor, "Font: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtStyle:
+		    fprintf (fileDescriptor, "Style: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtWeight:
+		    fprintf (fileDescriptor, "Weight: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtUnderline:
+		    fprintf (fileDescriptor, "Underline: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtThickness:
+		    fprintf (fileDescriptor, "Thickness: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtSize:
+		    fprintf (fileDescriptor, "Size: ");
+		    wrsize (RP, fileDescriptor);
+		    break;
+		 case PtIndent:
+		    fprintf (fileDescriptor, "Indent: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtBreak1:
+		    fprintf (fileDescriptor, "NoBreak1: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtBreak2:
+		    fprintf (fileDescriptor, "NoBreak2: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtLineSpacing:
+		    fprintf (fileDescriptor, "LineSpacing: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtAdjust:
+		    fprintf (fileDescriptor, "Adjust: ");
+		    wrajust (RP, fileDescriptor);
+		    break;
+		 case PtJustify:
+		    fprintf (fileDescriptor, "Justify: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+		 case PtHyphenate:
+		    fprintf (fileDescriptor, "Hyphenate: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+		 case PtVertOverflow:
+		    fprintf (fileDescriptor, "VertOverflow: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+		 case PtHorizOverflow:
+		    fprintf (fileDescriptor, "HorizOverflow: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+		 case PtDepth:
+		    fprintf (fileDescriptor, "Depth: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtLineStyle:
+		    fprintf (fileDescriptor, "LineStyle: ");
+		    wrfontstyle (RP, fileDescriptor);
+		    break;
+		 case PtLineWeight:
+		    fprintf (fileDescriptor, "LineWeight: ");
+		    wrminind (RP, fileDescriptor);
+		    break;
+		 case PtFillPattern:
+		    fprintf (fileDescriptor, "FillPattern: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtBackground:
+		    fprintf (fileDescriptor, "Background: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtForeground:
+		    fprintf (fileDescriptor, "Foreground: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+		 case PtPictInfo:
+		    break;
+	      }
+	fprintf (fileDescriptor, "\n");		/* passe a la regle suivante */
+	RP = pRe1->PrNextPRule;
+     }
+}
+
+/*----------------------------------------------------------------------
+   TtaListStyleSchemas
+
+   Produces in a file a human-readable form of style schemas applied to 
+   the current document.
+
+   Parameters:
+   document: the document.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaListStyleSchemas (Document document, FILE * fileDescriptor)
+#else  /* __STDC__ */
+void                TtaListStyleSchemas (document, fileDescriptor)
+Document            document;
+FILE               *fileDescriptor;
+#endif /* __STDC__ */
+{
+   PtrDocument         pDoc;
+   PtrHandlePSchema    pHd;
+   Counter            *pCo1;
+   CntrItem           *pCp1;
+   PresConstant       *pPr1;
+   PresentationBox    *pBo1;
+   TtAttribute        *pAt1;
+   AttributePres      *pRP1;
+   NumAttrCase        *pCa1;
+   int                 i, j;
+   int                 El, Attr, Val;
+   
+   if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      /* parametre document correct */
+     {
+	pDoc = LoadedDocument[document - 1];
+	pSchemaStr = pDoc->DocSSchema;
+	pHd = pSchemaStr->SsFirstPSchemaExtens;
+	while (pHd != NULL)
+	  {
+	     pSc1 = pHd->HdPSchema;
+	     if (pSc1 != NULL)
+	       {
+		 fprintf (fileDescriptor, "PRESENTATION ");
+		 wrtext (pSchemaStr->SsName, fileDescriptor);
+		 fprintf (fileDescriptor, ";\n");
+
+		 /* les constantes */
+		 if (pSc1->PsNConstants > 0)
+		   {
+		     fprintf (fileDescriptor, "\n");
+		     fprintf (fileDescriptor, "CONST\n");
+		     for (i = 1; i <= pSc1->PsNConstants; i++)
+		       {
+			 pPr1 = &pSc1->PsConstant[i - 1];
+			 /* donne un nom a chaque constante */
+			 fprintf (fileDescriptor, "   Cste");
+			 wrnumber (i, fileDescriptor);
+			 fprintf (fileDescriptor, "= ");
+			 /* ecrit le type de la constante */
+			 switch (pPr1->PdType)
+			   {
+			   case CharString:
+			     fprintf (fileDescriptor, "Text ");
+			     fprintf (fileDescriptor, "%c", pPr1->PdAlphabet);
+			     break;
+			   case GraphicElem:
+			     fprintf (fileDescriptor, "Graphics ");
+			     break;
+			   case Symbol:
+			     fprintf (fileDescriptor, "Symbol ");
+			     break;
+			   case Picture:
+			     fprintf (fileDescriptor, "Picture ");
+			     /* ecrit la valeur de la constante */
+			     break;
+			   default:
+			     break;
+			   }
+			 
+			 fprintf (fileDescriptor, " \'");
+			 j = 0;
+			 while (pPr1->PdString[j] != '\0')
+			   {
+			     if (pPr1->PdString[j] < ' ')
+			       fprintf (fileDescriptor, "\\%3d", (int) pPr1->PdString[j]);
+			     else
+			       fprintf (fileDescriptor, "%c", pPr1->PdString[j]);
+			     j++;
+			   }
+			 fprintf (fileDescriptor, "\';\n");
+		       }
+		   }
+
+		 /* les regles de presentation des elements structure's */
+		 fprintf (fileDescriptor, "\nRULES\n\n");
+		 for (El = 1; El <= pSchemaStr->SsNRules; El++)
+		   {
+		     if (pSc1->PsElemPRule[El - 1])
+		       {
+			 if (pSchemaStr->SsRule[El - 1].SrConstruct == CsPairedElement)
+			   if (pSchemaStr->SsRule[El - 1].SrFirstOfPair)
+			     fprintf (fileDescriptor, "First ");
+			   else
+			     fprintf (fileDescriptor, "Second ");
+			 wrnomregle (El, fileDescriptor);
+			 fprintf (fileDescriptor, ":\n");
+			 fprintf (fileDescriptor, "   BEGIN\n");
+			 wrsuiteregles (pSc1->PsElemPRule[El - 1], fileDescriptor);
+			 if (pSc1->PsInPageHeaderOrFooter[El - 1])
+			   fprintf (fileDescriptor, "   { displayed in top or bottom of page }\n");
+			 if (pSc1->PsAssocPaginated[El - 1])
+			   fprintf (fileDescriptor, "   { with pages }\n");
+			 fprintf (fileDescriptor, "   END;\n");
+			 fprintf (fileDescriptor, "\n");
+		       }
+		   }
+
+		 /* les regles de presentation des attributs */
+		 if (pSchemaStr->SsNAttributes > 0)
+		   {
+		     fprintf (fileDescriptor, "\n");
+		     fprintf (fileDescriptor, "ATTRIBUTES\n");
+		     fprintf (fileDescriptor, "\n");
+		     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
+		       {
+			 pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
+			 pRP1 = pSc1->PsAttrPRule[Attr - 1];
+			 if (pRP1 != NULL)
+			   {
+			     /* si cet attribut a une presentation */
+			     switch (pAt1->AttrType)
+			       {
+			       case AtNumAttr:
+				 for (i = 1; i <= pRP1->ApNCases; i++)
+				   {
+				     pCa1 = &pRP1->ApCase[i - 1];
+				     wrtext (pAt1->AttrName, fileDescriptor);
+				     if (pRP1->ApElemType > 0)
+				       {
+					 fprintf (fileDescriptor, "(");
+					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 fprintf (fileDescriptor, ")");
+				       }
+				     if (pCa1->CaLowerBound == pCa1->CaUpperBound)
+				       {
+					 fprintf (fileDescriptor, "=");
+					 wrnumber (pCa1->CaLowerBound, fileDescriptor);
+				       }
+				     else if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1
+					      && pCa1->CaUpperBound != MAX_INT_ATTR_VAL + 1)
+				       {
+					 fprintf (fileDescriptor, " IN [");
+					 wrnumber (pCa1->CaLowerBound, fileDescriptor);
+					 fprintf (fileDescriptor, "..");
+					 wrnumber (pCa1->CaUpperBound, fileDescriptor);
+					 fprintf (fileDescriptor, "] ");
+				       }
+				     else if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1
+					      || pCa1->CaUpperBound != MAX_INT_ATTR_VAL + 1)
+				       if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1)
+					 {
+					   fprintf (fileDescriptor, ">");
+					   wrnumber (pCa1->CaLowerBound - 1, fileDescriptor);
+					 }
+				       else if (pCa1->CaUpperBound != MAX_INT_ATTR_VAL + 1)
+					 {
+					   fprintf (fileDescriptor, "<");
+					   wrnumber (pCa1->CaUpperBound + 1, fileDescriptor);
+					 }
+				     fprintf (fileDescriptor, ":\n");
+				     if (pCa1->CaFirstPRule == NULL)
+				       fprintf (fileDescriptor, "   BEGIN END;\n");
+				     else
+				       {
+					 if (pCa1->CaFirstPRule->PrNextPRule != NULL)
+					   fprintf (fileDescriptor, "   BEGIN\n");
+					 wrsuiteregles (pCa1->CaFirstPRule, fileDescriptor);
+					 if (pCa1->CaFirstPRule->PrNextPRule != NULL)
+					   fprintf (fileDescriptor, "   END;\n");
+				       }
+				     fprintf (fileDescriptor, "\n");
+				   }
+				 break;
+			       case AtTextAttr:
+				 if (pRP1->ApTextFirstPRule != NULL)
+				   {
+				     wrtext (pAt1->AttrName, fileDescriptor);
+				     if (pRP1->ApElemType > 0)
+				       {
+					 fprintf (fileDescriptor, "(");
+					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 fprintf (fileDescriptor, ")");
+				       }
+				     if (pRP1->ApString[0] != '\0')
+				       {
+					 fprintf (fileDescriptor, "=\'");
+					 wrtext (pRP1->ApString, fileDescriptor);
+					 fprintf (fileDescriptor, "\'");
+				       }
+				     fprintf (fileDescriptor, ":\n");
+				     if (pRP1->ApTextFirstPRule->PrNextPRule != NULL)
+				       fprintf (fileDescriptor, "   BEGIN\n");
+				     wrsuiteregles (pRP1->ApTextFirstPRule, fileDescriptor);
+				     if (pRP1->ApTextFirstPRule->PrNextPRule != NULL)
+				       fprintf (fileDescriptor, "   END;\n");
+				     fprintf (fileDescriptor, "\n");
+				   }
+				 break;
+			       case AtReferenceAttr:
+				 if (pRP1->ApRefFirstPRule != NULL)
+				   {
+				     wrtext (pAt1->AttrName, fileDescriptor);
+				     if (pRP1->ApElemType > 0)
+				       {
+					 fprintf (fileDescriptor, "(");
+					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 fprintf (fileDescriptor, ")");
+				       }
+				     fprintf (fileDescriptor, ":\n");
+				     if (pRP1->ApRefFirstPRule->PrNextPRule != NULL)
+				       fprintf (fileDescriptor, "   BEGIN\n");
+				     wrsuiteregles (pRP1->ApRefFirstPRule, fileDescriptor);
+				     if (pRP1->ApRefFirstPRule->PrNextPRule != NULL)
+				       fprintf (fileDescriptor, "   END;\n");
+				     fprintf (fileDescriptor, "\n");
+				   }
+				 break;
+			       case AtEnumAttr:
+				 for (Val = 0; Val <= pAt1->AttrNEnumValues; Val++)
+				   if (pRP1->ApEnumFirstPRule[Val] != NULL)
+				     {
+				       wrtext (pAt1->AttrName, fileDescriptor);
+				       if (pRP1->ApElemType > 0)
+					 {
+					   fprintf (fileDescriptor, "(");
+					   wrnomregle (pRP1->ApElemType, fileDescriptor);
+					   fprintf (fileDescriptor, ")");
+					 }
+				       if (Val > 0)
+					 {
+					   fprintf (fileDescriptor, "=");
+					   wrtext (pAt1->AttrEnumValue[Val - 1], fileDescriptor);
+					 }
+				       fprintf (fileDescriptor, ":\n");
+				       if (pRP1->ApEnumFirstPRule[Val]->PrNextPRule
+					   != NULL)
+					 fprintf (fileDescriptor, "   BEGIN\n");
+				       wrsuiteregles (pRP1->ApEnumFirstPRule[Val], fileDescriptor);
+				       if (pRP1->ApEnumFirstPRule[Val]->PrNextPRule
+					   != NULL)
+					 fprintf (fileDescriptor, "   END;\n");
+				       fprintf (fileDescriptor, "\n");
+				     }
+				 break;
+			       default:;
+				 break;
+			       }
+			   }
+		       }
+		   }
+	       }
+	     pHd = pHd->HdNextPSchema;
 	  }
      }
 }

@@ -44,6 +44,9 @@ extern void TtcPageTop ( Document document,
 extern void TtcPageEnd ( Document document,
                          View view );
 extern void InitializeOtherThings ( void );
+extern void TtaChangeWindowTitle ( Document document,
+                                   View view,
+                                   STRING title );
 extern void TtaRaiseView ( Document document,
                            View view );
 extern void DisplaySelMessage ( STRING text,
@@ -126,6 +129,9 @@ extern void TtcPageTop (/* Document document,
 extern void TtcPageEnd (/* Document document,
                            View view */);
 extern void InitializeOtherThings (/* void */);
+extern void TtaChangeWindowTitle (/* Document document,
+                                     View view,
+                                     STRING title */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
 extern void DisplaySelMessage (/* STRING text,

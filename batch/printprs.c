@@ -79,14 +79,14 @@ int                 nb;
 
 
 /*----------------------------------------------------------------------
-   wrniveau ecrit au terminal le niveau relatif n.                 
+   wrlevel ecrit au terminal le niveau relatif n.                 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         wrniveau (Level n)
+static void         wrlevel (Level n)
 
 #else  /* __STDC__ */
-static void         wrniveau (n)
+static void         wrlevel (n)
 Level               n;
 
 #endif /* __STDC__ */
@@ -665,7 +665,7 @@ ThotBool             Def;
 	}
    if (!Def || pRe1->PoPosDef != NoEdge)
      {
-	wrniveau (pRe1->PoRelation);
+	wrlevel (pRe1->PoRelation);
 	if (pRe1->PoNotRel)
 	   printf (" NOT");
 	printf (" ");
@@ -733,7 +733,7 @@ ThotBool             Hauteur;
 	  }
 	else
 	  {
-	     wrniveau (pRe1->DrRelation);
+	     wrlevel (pRe1->DrRelation);
 	     printf (" ");
 	     if (pRe1->DrNotRelat)
 		printf ("not ");

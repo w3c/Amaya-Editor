@@ -23,6 +23,8 @@ extern void ListBoxes ( int frame,
 extern void TtaListBoxes ( Document document,
                            View view,
                            FILE *fileDescriptor );
+extern void TtaListStyleSchemas ( Document document,
+                                  FILE * fileDescriptor );
 
 #else /* __STDC__ */
 
@@ -43,6 +45,8 @@ extern void ListBoxes (/* int frame,
 extern void TtaListBoxes (/* Document document,
                              View view,
                              FILE *fileDescriptor */);
+extern void TtaListStyleSchemas (/* Document document,
+                                    FILE * fileDescriptor */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

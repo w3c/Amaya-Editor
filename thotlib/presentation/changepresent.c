@@ -1002,14 +1002,14 @@ PtrDocument pDoc;
 }
 
 /*----------------------------------------------------------------------
-  ApplyPRulesElement
+  ApplyASpecificStyleRule
   Redisplay boxes of element pEl that are concerned by removing the
   presentation function pRule
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            ApplyPRulesElement (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, ThotBool remove)
+void            ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, ThotBool remove)
 #else  /* __STDC__ */
-void            ApplyPRulesElement (pRule, pEl, pDoc, remove)
+void            ApplyASpecificStyleRule (pRule, pEl, pDoc, remove)
 PtrPRule	pRule;
 PtrElement	pEl;
 PtrDocument	pDoc;
@@ -1042,7 +1042,7 @@ ThotBool        remove;
 	{
 	  /* process each presentation rule */
 	  pCurrentRule = pRule;
-	  while (pCurrentRule != NULL)
+	  if (pCurrentRule != NULL)
 	    {
 	    ruleType = pCurrentRule->PrType;
 	    done = FALSE;
@@ -1064,7 +1064,7 @@ ThotBool        remove;
 		     ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 		  }
 	       }
-	    pCurrentRule = pCurrentRule->PrNextPRule;
+	    /* pCurrentRule = pCurrentRule->PrNextPRule; */
 	    }
 
 	  if (done)
@@ -1116,16 +1116,16 @@ ThotBool        remove;
 }
 
 /*----------------------------------------------------------------------
-  ApplyPRules applies a set of PRules to all abstract boxes concerned by
-  the given element type or the given attribute type or the given
-  presentation box.
+  ApplyAGenericStyleRule applies a Presentation Rule to all abstract
+  boxes concerned by  the given element type or the given attribute type
+  or the given presentation box.
   For each displayed abstract box and each new presention rule
   check if it is concerned by this new pRule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ApplyPRules (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, ThotBool remove)
+void               ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, ThotBool remove)
 #else  /* __STDC__ */
-void               ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, remove)
+void               ApplyAGenericStyleRule (doc, pSS, elType, attrType, presBox, pRule, remove)
 Document           doc;
 PtrSSchema         pSS;
 int                elType;
@@ -1161,7 +1161,7 @@ ThotBool           remove;
     {
       /* the abstract box of the root element */
       pAb = pDoc->DocViewRootAb[view];
-      /* the schema view associatde with the current view */
+      /* the schema view associated with the current view */
       viewSch = pDoc->DocView[view].DvPSchemaView;
       while (pAb != NULL)
 	{
@@ -1190,7 +1190,7 @@ ThotBool           remove;
 	    {
 	      /* process each presentation rule */
 	      pCurrentRule = pRule;
-	      while (pCurrentRule != NULL)
+	      if (pCurrentRule != NULL)
 		{
 		  ruleType = pCurrentRule->PrType;
 		  found = FALSE;    /* indicate if a rule has been applied */
@@ -1217,7 +1217,7 @@ ThotBool           remove;
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
 			}
 		    }
-		  pCurrentRule = pCurrentRule->PrNextPRule;
+		  /*pCurrentRule = pCurrentRule->PrNextPRule;*/
 		}
 	      /* redisplay the element if needed */
 	      if (found)
@@ -1327,7 +1327,7 @@ Document            document;
 	   pPres->PrNextPRule = NULL;
 #ifndef NODISPLAY
 	   if (pPres->PrType == PtFunction)
-	      ApplyPRulesElement (pPres, (PtrElement)element,
+	      ApplyASpecificStyleRule (pPres, (PtrElement)element,
 				  LoadedDocument[document - 1], TRUE);
 	   else
 	      RedisplayDefaultPresentation (document, (PtrElement) element,

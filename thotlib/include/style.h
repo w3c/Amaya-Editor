@@ -222,10 +222,18 @@ extern void TtaApplyAllSpecificSettings (Element element, Document doc, Settings
 extern void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc );
 
 /*----------------------------------------------------------------------
-  Function used to update the drawing after styling an element or a
-  generic type.
+   TtaListStyleSchemas
+
+   Produces in a file a human-readable form of style schemas applied to 
+   the current document.
+
+   Parameters:
+   document: the document.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+
   ----------------------------------------------------------------------*/
-extern void TtaUpdateStylePresentation (Element el, PSchema tsch, PresentationContext c);
+extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
 
 #else  /* __STDC__ */
 extern GenericContext TtaGetGenericStyleContext (/* doc */)
@@ -234,8 +242,7 @@ extern int TtaSetStylePresentation (/* unsigned int type, Element el, PSchema ts
 extern int TtaGetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v */);
 extern void TtaApplyAllSpecificSettings (/* Element element, Document doc, SettingsApplyHandler handler, void *param */);
 extern void TtaCleanStylePresentation (/* Element el, PSchema tsch, Document doc */);
-extern void TtaUpdateStylePresentation (/* Element el, PSchema tsch, PresentationContext c */);
-
+extern void TtaListStyleSchemas (/* Document document, FILE * fileDescriptor */);
 #endif /* __STDC__ */
 
 #endif /* __STYLE_H__ */

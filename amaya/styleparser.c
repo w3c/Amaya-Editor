@@ -661,6 +661,7 @@ ThotBool            isHTML;
      cssRule = SkipProperty (cssRule);
    else
      fprintf (stderr, "invalid display value %s\n", cssRule);
+
    return (cssRule);
 }
 
@@ -2176,43 +2177,50 @@ STRING   file;
 void    *extra;
 #endif
 {
-   BackgroundImageCallbackPtr callblock = (BackgroundImageCallbackPtr) extra;
-   Element             el;
-   PSchema             tsch;
-   PresentationContext context;
-   PresentationValue   image;
-   PresentationValue   repeat;
-   PresentationValue   value;
+  DisplayMode         dispMode;
+  BackgroundImageCallbackPtr callblock = (BackgroundImageCallbackPtr) extra;
+  Element             el;
+  PSchema             tsch;
+  PresentationContext context;
+  PresentationValue   image;
+  PresentationValue   repeat;
+  PresentationValue   value;
 
-   if (callblock == NULL)
-     return;
-   el = callblock->el;
-   tsch = callblock->tsch;
-   context = &callblock->context.specific;
+  if (callblock == NULL)
+    return;
 
-   /* Ok the image was fetched, finish the background-image handling */
-   image.pointer = file;
-   TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 
-   /* If there is no default repeat mode, enforce a V-Repeat */
-   if (TtaGetStylePresentation (PRPictureMode, el, tsch, context, &repeat) < 0)
-     {
-       repeat.typed_data.value = STYLE_REPEAT;
-       repeat.typed_data.unit = STYLE_UNIT_REL;
-       repeat.typed_data.real = FALSE;
-       TtaSetStylePresentation (PRPictureMode, el, tsch, context, repeat);
-     }
+  el = callblock->el;
+  tsch = callblock->tsch;
+  context = &callblock->context.specific;
 
-   /* If there is no default repeat mode, enforce a V-Repeat */
-   value.typed_data.value = 1;
-   value.typed_data.unit = STYLE_UNIT_REL;
-   value.typed_data.real = FALSE;
-   TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
+  /* Ok the image was fetched, finish the background-image handling */
+  image.pointer = file;
+  TtaSetStylePresentation (PRBackgroundPicture, el, tsch, context, image);
 
-   /* Update the rendering */
-   TtaUpdateStylePresentation (el, tsch, context);
+  /* If there is no default repeat mode, enforce a V-Repeat */
+  if (TtaGetStylePresentation (PRPictureMode, el, tsch, context, &repeat) < 0)
+    {
+      repeat.typed_data.value = STYLE_REPEAT;
+      repeat.typed_data.unit = STYLE_UNIT_REL;
+      repeat.typed_data.real = FALSE;
+      TtaSetStylePresentation (PRPictureMode, el, tsch, context, repeat);
+    }
 
-   TtaFreeMemory (callblock);
+  /* If there is no default repeat mode, enforce a V-Repeat */
+  value.typed_data.value = 1;
+  value.typed_data.unit = STYLE_UNIT_REL;
+  value.typed_data.real = FALSE;
+  TtaSetStylePresentation (PRShowBox, el, tsch, context, value);
+
+  TtaFreeMemory (callblock);
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 
@@ -2741,10 +2749,16 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
+  DisplayMode         dispMode;
   STRING              p = NULL;
   int                 lg;
-  unsigned int        i, savedtype;
+  unsigned int        i;
   ThotBool            found;
+
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (context->doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (context->doc, DeferredDisplay);
 
   while (*cssRule != EOS)
     {
@@ -2776,26 +2790,11 @@ ThotBool            isHTML;
 	    }
 	  /* try to parse the attribute associated to this attribute */
 	  if (CSSProperties[i].parsing_function != NULL)
-	    p = CSSProperties[i].parsing_function (element, tsch, context, cssRule, css, isHTML);
-	  
-	  /* Update the rendering */
-	  TtaUpdateStylePresentation (element, tsch, context);
-	  /* In case of specific rules on BODY element */
-	  if (context->type == HTML_EL_BODY && isHTML)
 	    {
-	      if (element)
-		TtaUpdateStylePresentation (TtaGetMainRoot (context->doc), NULL, context);
-	      else
-		{
-		  savedtype = context->type;
-		  context->type = HTML_EL_HTML;
-		  TtaUpdateStylePresentation (NULL, tsch, context);
-		  context->type = savedtype;
-		}
+	      p = CSSProperties[i].parsing_function (element, tsch, context, cssRule, css, isHTML);
+	      /* update index and skip the ";" separator if present */
+	      cssRule = p;
 	    }
-	    
-	  /* update index and skip the ";" separator if present */
-	  cssRule = p;
 	}
       /* next property */
       cssRule = SkipBlanksAndComments (cssRule);
@@ -2805,6 +2804,10 @@ ThotBool            isHTML;
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
+
+  /* restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (context->doc, dispMode);
 }
 
 

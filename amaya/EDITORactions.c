@@ -72,6 +72,7 @@ View               view;
 
 
 /*----------------------------------------------------------------------
+  InitializeNewDoc builds the initial contents of a new document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitializeNewDoc (STRING url, ThotBool isHTML)
@@ -115,6 +116,9 @@ ThotBool            isHTML;
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
   root = TtaGetMainRoot (doc);
+  /* disable auto save */
+  TtaSetDocumentBackUpInterval (doc, 0);
+
   elType = TtaGetElementType (root);
   attrType.AttrSSchema = elType.ElSSchema;
   if (isHTML)
