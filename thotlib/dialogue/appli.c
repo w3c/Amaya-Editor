@@ -792,7 +792,7 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
 	  /* Calcule le nombre de caracteres represente par un pixel */
 	  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
 #ifndef _GTK
-	  y = (int) ((float) info->value * carparpix);
+	  y = (int) ((float) infos->value * carparpix);
 #else /* _GTK */
 	  y = (int) ((float) w->value * carparpix);	  
 #endif /* !_GTK */
