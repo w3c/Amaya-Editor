@@ -215,8 +215,8 @@ boolean             error_html;
         case 203:
         case 204:
 	    /* Success */
-            javaString2CString(unhand(request)->urlName, url, MAX_PATH);
-            javaString2CString(unhand(request)->filename, outputfile, MAX_PATH);
+            javaString2CString(unhand(request)->urlName, &url[0], MAX_PATH);
+            javaString2CString(unhand(request)->filename, &outputfile[0], MAX_PATH);
 	    break;
 	case 404:
 	    /* Not found error */
