@@ -3,6 +3,8 @@
 <html>
 <head>
   <title>Configuring Amaya</title>
+  <style type="text/css">
+.menuItems { color: #E55500}</style>
   <meta name="GENERATOR" content="amaya V2.2">
 </head>
 
@@ -537,82 +539,105 @@ by default located in the directory <code>Amaya/config</code>.</p>
 <ul>
   <li>Moving commands:
     <ul>
-      <li><span style="color: #E55500">TtcNextChar, TtcPreviousChar</span>:
-        move character by character.</li>
-      <li><span style="color: #E55500">TtcNextLine, TtcPreviousLine,
-        TtcStartOfLine, TtcEndOfLine</span>: move line by line.</li>
-      <li><span style="color: #E55500">TtcNextElement, TtcPreviousElement,
-        TtcChildElement, TtcParentElement</span>: move element by
-      element.</li>
-      <li><span style="color: #E55500">TtcPageDown, TtcPageUp, TtcPageTop,
-        TtcPageEn</span>d: scroll from page to page.</li>
-      <li><span style="color: #E55500">TtcLineUp, TtcLineDown</span> scroll
-        one line up or one line down.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextChar,
+        TtcPreviousChar</span>: move character by character.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextLine,
+        TtcPreviousLine, TtcStartOfLine, TtcEndOfLine</span>: move line by
+        line.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcNextElement,
+        TtcPreviousElement, TtcChildElement, TtcParentElement</span>: move
+        element by element.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcPageDown,
+        TtcPageUp, TtcPageTop, TtcPageEn</span>d: scroll from page to
+      page.</li>
+      <li><span style="color: #E55500" class="menuItems">TtcLineUp,
+        TtcLineDown</span> scroll one line up or one line down.</li>
     </ul>
   </li>
   <li>A command that allows one to follow a link or to activate a form element
-    (menu, button, etc.): <span style="color: #E55500">DoAction</span>.</li>
+    (menu, button, etc.):
+    <p class="menuItems">DoAction.</p>
+  </li>
   <li>In <code>File</code> menu:
-    <p><span style="color: #E55500">New, NewTemplate, NewCss, OpenDoc,
-    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, SaveDocument,
-    SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs TtcCloseDocument,
-    AmayaClose</span></p>
+    <p class="menuItems">New, NewTemplate, NewCss, OpenDoc,
+    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, GoToHome,
+    SaveDocument, SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs
+    TtcCloseDocument, AmayaClose</p>
   </li>
   <li>In Edit menu:
-    <p><span style="color: #E55500">TtcUndo, TtcRedo, TtcCutSelection,
-    TtcCopySelection, TtcPaste, TtcDeleteSelection, SetBrowserEditor,
-    TtcSearchText, EnSpellCheck, FrSpellCheck, TransformType</span>.</p>
+    <p class="menuItems">TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection,
+    TtcPaste, TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
+    TransformType.</p>
   </li>
-  <li>In <code>Structure Types</code> menu:
-    <p><span style="color: #E55500">CreateBase, CreateMeta, CreateLinkInHead,
-    CreateScript, CreateStyle, CreateComment</span>.</p>
+  <li>In <code>Structure</code> menu:
+    <p class="menuItems">CreateBase, CreateMeta, CreateLinkInHead,
+    CreateScript, CreateStyle, CreateComment.</p>
   </li>
   <li>In Types menu:
-    <p><span style="color: #E55500">CreateParagraph, CreateImage,
-    CreateHeading1, CreateHeading2, CreateHeading3, CreateHeading4,
-    CreateHeading5, CreateHeading6, CreateList, CreateNumberedList,
-    ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
-    CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
-    CreateBlockQuote, CreatePreformatted, CreateAddress, CreateToggle,
-    CreateRadio, CreateOption, CreateTextInput, CreateTextArea, CreateSubmit,
-    CreateReset, CreateAreaRect, CreateAreaCircle, CreateAreaPoly,
-    CreateDivision, CreateNOSCRIPT, CreateObject, CreateParameter,
-    CreateIFrame, CreateInlineMath, CreateMath, CreateMROOT, CreateMSQRT,
-    CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP, CreateMUNDEROVER,
-    CreateMUNDER, CreateMOVER, CreateMROW, CreateMMULTISCRIPTS, CreateMTABLE.,
-    CreateTable, CreateCaption, CreateTHead, CreateTBody, CreateTFoot,
-    CreateRow, CreateDataCell, CreateHeadingCell, DeleteColumn</span>.</p>
+    <dl>
+      <dt>Main Menu:</dt>
+        <dd class="menuItems">CreateParagraph, CreateImage,
+          CreateHorizontalRule, CreateBlockQuote, CreatePreformatted,
+          CreateAddress, CreateDivision, CreateNOSCRIPT, CreateObject,
+          CreateParameter, CreateIFrame, CreateBreak("\212")</dd>
+      <dt>AREA submenu:</dt>
+        <dd class="menuItems">CreateAreaRect, CreateAreaCircle,
+        CreateAreaPoly</dd>
+      <dt>Form submenu:</dt>
+        <dd class="menuItems">CreateForm, CreateFileInput,
+          CreatePasswordInput, CreateHiddenInput, CreateLabel, CreateFieldset,
+          CreateOptGroup, CreateToggle, CreateRadio, CreateOption,
+          CreateTextInput, CreateTextArea, CreateSubmit, CreateReset, </dd>
+      <dt>Heading submenu:</dt>
+        <dd class="menuItems">CreateHeading1, CreateHeading2, CreateHeading3,
+          CreateHeading4, CreateHeading5, CreateHeading6</dd>
+      <dt>List submenu:</dt>
+        <dd class="menuItems">CreateList, CreateNumberedList, ThotCreateMenu,
+          ThotCreateDirectory, CreateDefinitionList, CreateDefinitionTerm,
+          CreateDefinitionDef</dd>
+      <dt>Math submenu:</dt>
+        <dd class="menuItems">CreateInlineMath, CreateMath, CreateMROOT,
+          CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
+          CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
+          CreateMMULTISCRIPTS, CreateMTABLE</dd>
+      <dt>OBJECT submenu:</dt>
+        <dd class="menuItems">CreateObject, CreateParameter</dd>
+      <dt>Table submenu:</dt>
+        <dd class="menuItems">CreateTable, CreateCaption, CreateTHead,
+          CreateTBody, CreateTFoot, CreateRow, CreateDataCell,
+          CreateHeadingCell, DeleteColumn</dd>
+    </dl>
   </li>
   <li>In <code>Links</code> menu:
-    <p><span style="color: #E55500">LinkToPreviousTarget, CreateOrChangeLink,
-    CreateTarget, DeleteAnchor</span>.</p>
+    <p class="menuItems">LinkToPreviousTarget, CreateOrChangeLink,
+    CreateTarget, DeleteAnchor.</p>
   </li>
   <li>In <code>Views</code> menu:
-    <p><span style="color: #E55500">TtcSwitchButtonBar, TtcSwitchCommands,
-    ShowMapAreas, ShowTargets, ZoomIn, ZoomOut, ShowStructure, ShowAlternate,
-    ShowLinks, ShowToC., ShowSource</span></p>
+    <p class="menuItems">TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas,
+    ShowTargets, ZoomIn, ZoomOut, ShowStructure, ShowAlternate, ShowLinks,
+    ShowToC., ShowSource</p>
   </li>
   <li>In <code>Style</code> menu:
-    <p><span style="color: #E55500">TtcChangeCharacters, TtcChangeColors,
+    <p class="menuItems">TtcChangeCharacters, TtcChangeColors,
     TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass, LinkCSS,
     OpenCSS, DisableCSS, EnableCSS, RemoveCSS, SetOnOffEmphasis,
     SetOnOffStrong, SetOnOffCite, SetOnOffDefinition, SetOnOffCode,
     SetOnOffVariable, SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr,
     SetOnOffAcronym, SetOnOffINS, SetOnOffDEL, SetOnOffItalic, SetOnOffBold,
     SetOnOffTeletype, SetOnOffBig, SetOnOffSmall, SetOnOffSub, SetOnOffSup,
-    SetOnOffQuotation, SetOnOffBDO</span>.</p>
+    SetOnOffQuotation, SetOnOffBDO.</p>
   </li>
   <li>In <code>Special</code> menu:
-    <p><span style="color: #E55500">SectionNumbering, MakeBook, ShowLogFile,
+    <p class="menuItems">SectionNumbering, MakeBook, ShowLogFile,
     ConfigGeneral, ConfigPublish, ConfigCache, ConfigProxy, ConfigColor,
-    ConfigGeometry, ConfigLanNeg, ConfigProfile, ConfigTemplates</span>.</p>
+    ConfigGeometry, ConfigLanNeg, ConfigProfile, ConfigTemplates.</p>
   </li>
   <li>In <code>Help</code> menu:
-    <p><span style="color: #E55500">HelpAmaya, HelpAtW3C, HelpBrowsing,
-    HelpSelecting, HelpSearching, HelpViews, HelpCreating, HelpLinks,
-    HelpChanging, HelpTables, HelpMath, HelpImageMaps, HelpStyleSheets,
-    HelpAttributes, HelpPublishing, HelpPrinting, HelpNumbering, HelpMakeBook,
-    HelpConfigure</span>.</p>
+    <p class="menuItems">HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting,
+    HelpSearching, HelpViews, HelpCreating, HelpLinks, HelpChanging,
+    HelpTables, HelpMath, HelpImageMaps, HelpStyleSheets, HelpAttributes,
+    HelpPublishing, HelpPrinting, HelpNumbering, HelpMakeBook,
+    HelpConfigure.</p>
   </li>
 </ul>
 
