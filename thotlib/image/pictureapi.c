@@ -46,16 +46,19 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
    else
       return (0);
 #else /* _GTK */
-   /*   if (bits !=NULL)
-     return gdk_pixmap_create_from_data (DefaultWindow->window,
-					 bits,
-					 width,
-					 height,
-					 1,
-					 ColorPixel(TtaGetThotColor(0,0,0)),
-					 ColorPixel(TtaGetThotColor(255,255,255))); 
-					 else*/
-
+   GdkColor           black;
+   GdkColor           white;
+   gdk_color_black (TtCmap, &black);
+   gdk_color_white (TtCmap, &white);
+   if (bits != NULL)
+     return  gdk_pixmap_create_from_data (DefaultWindow->window,
+					  bits,
+					  width,
+					  height,					   
+					    1,
+					  &white,
+					  &black);
+   else
      return 0;
 #endif /* !_GTK */
 #else  /* _WINDOWS */
@@ -73,9 +76,10 @@ Pixmap TtaCreatePixmapLogo (char **d)
 #else  /* _WINDOWS */
    Pixmap              pixmap;
 #ifdef _GTK
-   ThotIcon            icon;
+   /*ThotIcon            icon;*/
    ThotBitmap          mask;
 
+   /*   icon = 0;*/
    pixmap = 0;
    if (d != NULL)
      {
@@ -83,9 +87,9 @@ Pixmap TtaCreatePixmapLogo (char **d)
 					      &mask ,
 					      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
 					      (gchar **) d); 
-       icon = gtk_pixmap_new (pixmap, mask);
+       /*       icon = gtk_pixmap_new (pixmap, mask);
        gdk_pixmap_unref (pixmap);
-       gdk_bitmap_unref (mask);	
+       gdk_bitmap_unref (mask);	*/
      }	    
    return (pixmap);
 #else /* _GTK */

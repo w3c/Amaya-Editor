@@ -95,9 +95,6 @@ CallbackCTX;
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
-#ifdef _GTK
-static Pixmap       wind_mask; /* the icone mask for transparence */
-#endif /* _GTK */
 static  void       *LastProcedure = NULL;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
@@ -1150,12 +1147,6 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
    Menu_Ctl           *ptrmenu;
    char               *ptr;
 
-#ifdef _GTK
-   GdkColor           black;
-   GdkColor           white;
-   /*   printf("appel de TteOpenMainWindow\n");*/
-#endif
-
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
    TtaInitDialogueTranslations (InitTranslations (name));
@@ -1224,23 +1215,7 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 					     logowindow_width,
 					     logowindow_height);
 #else /* _GTK */
-	gdk_color_black (TtCmap, &black);
-	gdk_color_white (TtCmap, &white);
-	wind_pixmap =  gdk_pixmap_create_from_data (DefaultWindow->window,
-						    (gchar *) logowindow_bits ,
-						    (gint) logowindow_width,
-						    (gint) logowindow_height,
-						    1,
-						    &white,
-						    &black);
-	wind_mask =  gdk_pixmap_create_from_data (DefaultWindow->window,
-						  (gchar *) logowindow_bits ,
-						  (gint) logowindow_width,
-						  (gint) logowindow_height,
-						  1,
-						  &white,
-						  &white);
- 
+	wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height, logowindow_bits);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
         /**** creation des menus ****/
@@ -1378,7 +1353,6 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   ThotWidget          tmpw;
   ThotWidget          toolbar;
   GtkTooltips        *tooltipstmp;
-  GdkColor colortmp;
 #endif /* !_GTK */
   ThotWidget          w, row;
 #else  /* _WINDOWS */
@@ -1428,27 +1402,13 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      /* set the relief to null */
 		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
 		      w = gtk_pixmap_new (picture, NULL);
+
 		      /* insert the icon */
 		      gtk_container_add (GTK_CONTAINER (row), w);
-		      
 		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
-
-		      /*		      gtk_toolbar_append_widget (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
-					      row, "" ,"private");*/
-
-		      /* here I try to put the right color to the tooltips */
 		      tooltipstmp = gtk_tooltips_new ();
-		      colortmp.red = 0;
-		      colortmp.green = 0;
-		      colortmp.blue = 0;
-		      if (!gdk_color_alloc (TtCmap, &colortmp))
-			printf("couleur non enregistree :(\n");
-		      gtk_tooltips_set_colors (tooltipstmp,
-					       &colortmp,
-					       &colortmp);
-		      gtk_tooltips_enable (tooltipstmp);
 		      gtk_tooltips_set_tip (tooltipstmp, row, info, "private");
-
+		      gtk_tooltips_enable (tooltipstmp);
 		      
 		      /* Connecte the clicked acton to the button */
 		      ConnectSignalGTK (row,
@@ -1729,11 +1689,12 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 	      tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
 	      if (tmpw)
 		{
-		  gtk_container_remove (GTK_CONTAINER (FrameTable[frame].Button[index]),
-					GTK_WIDGET (tmpw));
-		  tmpw = gtk_pixmap_new (picture, NULL);
-		  gtk_container_add (GTK_CONTAINER (FrameTable[frame].Button[index]), GTK_WIDGET(tmpw));
-		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);
+		  /*		  gtk_container_remove (GTK_CONTAINER (FrameTable[frame].Button[index]),
+				  GTK_WIDGET (tmpw));*/
+		  /*		  tmpw = gtk_pixmap_new (picture, NULL);*/
+		  gtk_pixmap_set (tmpw, picture, NULL);
+		  /*		  gtk_container_add (GTK_CONTAINER (FrameTable[frame].Button[index]), GTK_WIDGET(tmpw));*/
+		  /*		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);*/
 		}
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 	      FrameTable[frame].EnabledButton[index] = state;
@@ -3043,7 +3004,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
-	   gdk_window_set_icon (Main_Wd->window, NULL, wind_pixmap, wind_mask);
+	   gdk_window_set_icon (Main_Wd->window, NULL, wind_pixmap, NULL);
 
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;

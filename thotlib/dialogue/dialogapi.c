@@ -3534,7 +3534,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue,
 	    w = gtk_vbox_new (FALSE, 5);
 	  }
      	gtk_widget_show (GTK_WIDGET(w));
-	gtk_widget_set_name (GTK_WIDGET(w), "Dialogue");
 	gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), TRUE, FALSE, 5);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -3573,18 +3572,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue,
 void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 		     int number, Pixmap * icons, ThotBool horizontal)
 {
-#ifndef _GTK
-  /*
-  * A FAIRE
-  *
-  *
-  *
-  *
-  *
-  *
-  *
-  **/
-
    int                 i;
    int                 ent;
    int                 n;
@@ -3595,7 +3582,11 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
    ThotWidget          menu;
    ThotWidget          w;
    ThotWidget          row;
+#ifndef _GTK
    XmString            title_string;
+#else /* _GTK */
+   ThotWidget          tmpw;
+#endif /* !_GTK */
 
    if (ref == 0)
      {
@@ -3612,7 +3603,9 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
    else
      {
 	catalogue->Cat_React = TRUE;
+#ifndef _GTK
 	title_string = 0;
+#endif /* !_GTK */
 	parentCatalogue = CatEntry (ref_parent);
 	/*__________________________________ Le catalogue parent n'existe pas __*/
 	if (parentCatalogue == NULL)
@@ -3631,7 +3624,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
 	     w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
+#ifndef _GTK
 	     /*** Cree un sous-menu d'un formulaire ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -3643,7 +3636,11 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     XtSetArg (args[n], XmNspacing, 0);
 	     n++;
 	     menu = XmCreateRowColumn (w, "Dialogue", args, n);
-
+#else /* _GTK */
+	     menu = gtk_vbox_new (FALSE, 2);
+	     gtk_widget_show (menu);
+	     gtk_container_add (GTK_CONTAINER(w), menu);	     
+#endif /* !_GTK */
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_FMENU;
 	     catalogue->Cat_Data = -1;
@@ -3659,6 +3656,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	/*** Cree le titre du sous-menu ***/
 	if (title != NULL)
 	  {
+#ifndef _GTK
 	     n = 0;
 	     title_string = XmStringCreateSimple (title);
 	     XtSetArg (args[n], XmNlabelString, title_string);
@@ -3683,8 +3681,25 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     XtManageChild (w);
 	     adbloc->E_ThotWidget[1] = w;
 	     XmStringFree (title_string);
+#else /* _GTK */
+	     /* add a label */
+	     w = gtk_label_new (title);
+	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
+	     gtk_widget_show (w);
+	     w->style->font=DefaultFont;
+	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
+	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
+	     adbloc->E_ThotWidget[0] = w;
+	     
+	     /* add a separator */
+	     w = gtk_hseparator_new ();
+	     gtk_widget_show (w);
+	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
+	     adbloc->E_ThotWidget[1] = w;
+#endif /* !_GTK */
 	  }
 
+#ifndef _GTK
 	/* Cree un Row-Column d'icone dans le Row-Column du formulaire */
 	n = 0;
 	XtSetArg (args[n], XmNmarginWidth, 0);
@@ -3717,6 +3732,14 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	n++;
 	XtSetArg (args[n], XmNlabelType, XmPIXMAP);
 	n++;
+#else /* _GTK */
+	if (horizontal)
+	  row = gtk_hbox_new (FALSE, 0);
+	else
+	  row = gtk_vbox_new (FALSE, 0);
+	gtk_widget_show (row);
+	gtk_container_add (GTK_CONTAINER(menu), row);
+#endif /* !_GTK */
 	i = 0;
 	ent = 2;
 	while (i < number)
@@ -3732,16 +3755,28 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     /* On ne traite que des entrees de type bouton */
 	     adbloc->E_Type[ent] = 'B';
 	     adbloc->E_Free[ent] = 'Y';
+#ifndef _GTK
 	     XtSetArg (args[n], XmNlabelPixmap, icons[i]);
 	     w = XmCreateCascadeButton (row, "dialogue", args, n + 1);
 	     XtManageChild (w);
-	     adbloc->E_ThotWidget[ent] = w;
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallRadio, catalogue);
+#else /* _GTK */
+	     tmpw = gtk_pixmap_new (icons[i], NULL);
+	     gtk_widget_show (tmpw);
+	     w = gtk_button_new ();
+	     gtk_widget_show (w);
+	     gtk_container_add (GTK_CONTAINER (w), tmpw);
+	     /* Connecte the clicked acton to the button */
+	     ConnectSignalGTK (w,
+			       "clicked",
+			       GTK_SIGNAL_FUNC(CallRadio),
+			       (gpointer)catalogue);
+#endif /* !_GTK */
+	     adbloc->E_ThotWidget[ent] = w;
 	     i++;
 	     ent++;
 	  }
      }
-#endif /* _GTK */
 }
 #endif /* _WINDOWS */
 
@@ -3872,7 +3907,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #else /* _GTK */
 	      menu = gtk_vbox_new (FALSE, 0);
 	      gtk_widget_show (menu);
-	      gtk_widget_set_name (menu, "Dialogue");
 	      gtk_container_add (GTK_CONTAINER(w), menu);
 #endif /* !_GTK */
 #endif /* !_WINDOWS */
