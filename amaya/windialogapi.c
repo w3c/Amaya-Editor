@@ -159,6 +159,10 @@ static int      	numCols;
 static int      	numRows;
 static int      	tBorder;
 static int          urlName;
+static int          baseImage; 
+static int          formAlt; 
+static int          imgeAlt; 
+static int          imageLabel;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -195,6 +199,7 @@ CHAR_T currentWord [MAX_WORD_LEN];
 BOOL gbAbort;
 
 #ifdef __STDC__
+LRESULT CALLBACK AltDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CSSDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -226,6 +231,7 @@ LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthentificationDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
+LRESULT CALLBACK AltDlgProc ();
 LRESULT CALLBACK CSSDlgProc ();
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
@@ -256,7 +262,8 @@ LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthentificationDlgProc ();
 LRESULT CALLBACK BackgroundImageDlgProc ();
-#endif /* __STDC__ *
+#endif /* __STDC__ */
+
 /* ------------------------------------------------------------------------ *
  *                                                                          *
  *  FUNCTION   : GetPrinterDC()                                             *
@@ -310,7 +317,38 @@ void WinInitPrinterColors ()
    else  
        TtIsPrinterTrueColor = FALSE ;
    initialized = TRUE;
- }
+}
+
+/*-----------------------------------------------------------------------
+ CreateAltDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAltDlgWindow (int base_img, int form_alt, int img_alt, int img_label)
+#else  /* __STDC__ */
+void CreateAltDlgWindow (base_img, form_alt, img_alt, img_label)
+int base_img; 
+int form_alt; 
+int img_alt; 
+int img_label;
+#endif /* __STDC__ */
+{
+     baseImage  = base_img; 
+     formAlt    = form_alt; 
+     imgeAlt    = img_alt; 
+     imageLabel = img_label;
+
+	switch (app_lang) {
+           case FR_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (FR_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
+				break;
+		   case EN_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
+				break;
+		   case DE_LANG:
+                DialogBox (hInstance, MAKEINTRESOURCE (DE_GETALTERNATEDIALOG), NULL, (DLGPROC) AltDlgProc);
+				break;
+	}
+}
 
 /*-----------------------------------------------------------------------
  CreateCSSDlgWindow
@@ -1230,6 +1268,50 @@ STRING image_location;
          *                                                       *
          *********************************************************/
 
+
+/*-----------------------------------------------------------------------
+ AltDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK AltDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK AltDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_GETALT, "");
+                break;
+
+		   case WM_COMMAND:
+			    if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_GETALT) {
+					  GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
+					  ThotCallback (baseImage + imageAlt, STRING_DATA, altText);
+				   }
+				}
+
+			    switch (LOWORD (wParam)) {
+                       case ID_CONFIRM:
+                            if (!altText || altText [0] == 0)
+                               MessageBox (hwnDlg, "Attribute ALT is mandatory", "Open Image", MB_OK | MB_ICONERROR);
+                            else 
+                                 EndDialog (hwnDlg, ID_CONFIRM);
+                            break;
+
+                       case ID_DONE:
+					        EndDialog (hwnDlg, ID_DONE);
+                            break;
+				}
+				break;
+				default: return FALSE;
+	return TRUE ;
+	}
+}
 
 /*-----------------------------------------------------------------------
  CSSDlgProc

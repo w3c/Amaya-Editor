@@ -339,6 +339,9 @@
 #define EN_COLORMENU                    502
 #define FR_COLORMENU                    503
 #define DE_COLORMENU                    504
+#define EN_GETALTERNATEDIALOG           505
+#define FR_GETALTERNATEDIALOG           506
+#define DE_GETALTERNATEDIALOG           507
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -714,6 +717,7 @@
 #define IDC_TMPDIR                      1447
 #define IDC_FGCOLOR                     1450
 #define IDC_BGCOLOR                     1451
+#define IDC_ALTTEXT                     1452
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -748,9 +752,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        505
+#define _APS_NEXT_RESOURCE_VALUE        508
 #define _APS_NEXT_COMMAND_VALUE         40048
-#define _APS_NEXT_CONTROL_VALUE         1451
+#define _APS_NEXT_CONTROL_VALUE         1453
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

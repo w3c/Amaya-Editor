@@ -1194,6 +1194,17 @@ BEGIN
     LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
 END
 
+DE_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Alternate Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,69,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,150,47,50,14
+    EDITTEXT        IDC_GETALT,7,23,253,17,ES_AUTOHSCROLL
+    LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1446,6 +1457,14 @@ BEGIN
         RIGHTMARGIN, 183
         TOPMARGIN, 7
         BOTTOMMARGIN, 107
+    END
+
+    DE_GETALTERNATEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2636,6 +2655,17 @@ BEGIN
     LTEXT           "Document background color",IDC_STATIC,7,36,91,8
 END
 
+EN_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Alternate Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,69,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,150,47,50,14
+    EDITTEXT        IDC_GETALT,7,23,253,17,ES_AUTOHSCROLL
+    LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2886,6 +2916,14 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
+    END
+
+    EN_GETALTERNATEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -4185,6 +4223,17 @@ BEGIN
                     118,8
 END
 
+FR_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Alternate Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,69,47,50,14
+    PUSHBUTTON      "Done",ID_DONE,150,47,50,14
+    EDITTEXT        IDC_GETALT,7,23,253,17,ES_AUTOHSCROLL
+    LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4445,6 +4494,14 @@ BEGIN
         RIGHTMARGIN, 183
         TOPMARGIN, 7
         BOTTOMMARGIN, 107
+    END
+
+    FR_GETALTERNATEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
     END
 END
 #endif    // APSTUDIO_INVOKED

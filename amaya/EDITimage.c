@@ -440,13 +440,9 @@ View                view;
        TtaShowDialogue (BaseImage + FormAlt, FALSE);
        TtaWaitShowDialogue ();
      }
-   TtaDestroyDialogue (BaseImage + FormAlt);
-#   
+   TtaDestroyDialogue (BaseImage + FormAlt);   
 #  else  /* _WINDOWS */
-   /*CreateAltDlgWindow (TtaGetViewFrame (document, view),
-			       BaseImage + FormAlt,
-			       TtaGetMessage (AMAYA, AM_ALT), label);
-   */
+   CreateAltDlgWindow (BaseImage, FormAlt, ImageAlt, ImageLabel4);
 #  endif /* _WINDOWS */
 }
 
