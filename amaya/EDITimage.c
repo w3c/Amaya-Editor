@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -412,9 +412,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape, attrRefimg;
    char                *url;
-#ifdef _I18N_
-   char                *tmp;
-#endif
+   char                *utf8value;
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
@@ -624,13 +622,10 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	GetAlt (doc, view);
-#ifdef _I18N_
-	tmp = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt, TtaGetDefaultCharset ());
-	TtaSetAttributeText (attr, tmp, el, doc);
-	TtaFreeMemory (tmp);
-#else /* _I18N_ */
-	TtaSetAttributeText (attr, ImgAlt, el, doc);
-#endif /* _I18N_ */
+	utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+					   TtaGetDefaultCharset ());
+	TtaSetAttributeText (attr, utf8value, el, doc);
+	TtaFreeMemory (utf8value);
 	ImgAlt[0] = EOS;
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
@@ -678,7 +673,7 @@ char *GetImageURL (Document document, View view)
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
-   int                 i;
+   int                i;
 
    /* Dialogue form for open URL or local */
    i = 0;
@@ -930,11 +925,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   AttributeType    attrType;
   Attribute        attr;
   Element          elSRC, el;
-  ElementType        elType;
+  ElementType      elType;
   Document         doc;
-  char*            text;
-  char*            pathimage;
-  char*            tmp;
+  char            *text, *pathimage;
+  char            *utf8value;
   ThotBool         newAttr;
 
   el = event->element;
@@ -980,24 +974,21 @@ void UpdateSRCattribute (NotifyOnTarget *event)
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
      {
-       tmp = (char *)TtaGetMemory (MAX_LENGTH);
+       utf8value = (char *)TtaGetMemory (MAX_LENGTH);
        pathimage = (char *)TtaGetMemory (MAX_LENGTH);
-       strcpy (tmp, " ");
-       TtaExtractName (text, pathimage, &tmp[1]);
-       strcat (tmp, " ");
-       TtaSetAttributeText (attr, tmp, elSRC, doc);
+       strcpy (utf8value, " ");
+       TtaExtractName (text, pathimage, &utf8value[1]);
+       strcat (utf8value, " ");
+       TtaSetAttributeText (attr, utf8value, elSRC, doc);
        TtaFreeMemory (pathimage);
-       TtaFreeMemory (tmp);
+       TtaFreeMemory (utf8value);
      }
    else
      {
-#ifdef _I18N_
-       tmp = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt, TtaGetDefaultCharset ());
-       TtaSetAttributeText (attr, tmp, elSRC, doc);
-       TtaFreeMemory (tmp);
-#else /* _I18N_ */
-       TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
-#endif /* _I18N_ */
+       utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+					  TtaGetDefaultCharset ());
+       TtaSetAttributeText (attr, utf8value, elSRC, doc);
+       TtaFreeMemory (utf8value);
        ImgAlt[0] = EOS;
      }
    if (!CreateNewImage && newAttr)

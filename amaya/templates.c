@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT INRIA and W3C, 1996-2003
+ *  COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -38,8 +38,7 @@ void NewTemplate (Document doc, View view)
 
   url = TtaGetEnvString ("TEMPLATE_URL");
   if (url)
-    GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL,
-		 TtaGetDefaultCharset ());
+    GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
 }
 /*----------------------------------------------------------------------
    OpenTemplateDocument: Process the meta of a template document,
@@ -53,11 +52,9 @@ void OpenTemplateDocument (Document doc)
   Attribute           metaAttr;
   AttributeType       metaAttrType;
   ThotBool            found = FALSE;
-  ThotBool            ok = FALSE;
   int                 length;
-  char              buffer[MAX_LENGTH];
-  char             *URLdir;
-  char             *URLname;
+  char               *utf8path, *path;
+  char               *URLdir, *URLname;
 
   metaElType.ElSSchema = TtaGetDocumentSSchema (doc);
   metaElType.ElTypeNum = HTML_EL_META;
@@ -65,6 +62,7 @@ void OpenTemplateDocument (Document doc)
   metaAttrType.AttrTypeNum = HTML_ATTR_meta_name;
   /* search the meta element */
   metaEl = TtaGetMainRoot (doc);
+  path = NULL;
   do
     {
       metaEl = TtaSearchTypedElement (metaElType, SearchForward, metaEl);
@@ -73,13 +71,18 @@ void OpenTemplateDocument (Document doc)
           metaAttr = TtaGetAttribute (metaEl, metaAttrType); 
           if (metaAttr != NULL)
             {
-              length = MAX_LENGTH - 1;
- 	      TtaGiveTextAttributeValue (metaAttr, buffer, &length);
-              found = !strcmp (buffer, META_TEMPLATE_NAME);
+	      length = TtaGetTextAttributeLength (metaAttr) + 1;
+	      utf8path = (char *) TtaGetMemory (length);
+ 	      TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
+	      path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+						  TtaGetDefaultCharset ());
+	      TtaFreeMemory (utf8path);
+              found = !strcmp (path, META_TEMPLATE_NAME);
             }
         }
     }
-  while (metaEl != NULL && !found);
+  while (metaEl && !found);
+
   if (found)
     {
       /* get the url of the document */
@@ -87,43 +90,32 @@ void OpenTemplateDocument (Document doc)
       metaAttr = TtaGetAttribute (metaEl, metaAttrType);
       if (metaAttr != NULL)
 	{
-	  length = MAX_LENGTH - 1;
-	  TtaGiveTextAttributeValue (metaAttr, buffer, &length);
+	  length = TtaGetTextAttributeLength (metaAttr) + 1;
+	  utf8path = (char *) TtaGetMemory (length);
+	  TtaGiveTextAttributeValue (metaAttr, utf8path, &length);
+	  path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+					      TtaGetDefaultCharset ());
+	  TtaFreeMemory (utf8path);
 	}
+
       /* Delete the meta element */
       TtaDeleteTree (metaEl, doc);  
-      /* try to save to the new url */
-#ifdef WITH_PRELABLE_SAVE_POUR_VOIR      
-      ok = SaveDocumentThroughNet (doc, 1, buffer, FALSE, TRUE, TRUE);
-#else
-      ok = TRUE;
-#endif
-      if (ok)
-        {
-          if (script_URL == NULL)
-            script_URL = TtaStrdup (DocumentURLs[doc]);
-	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaStrdup (buffer);
-          DocumentMeta[doc]->method = CE_TEMPLATE;
-	  AddURLInCombobox (DocumentURLs[doc], NULL, TRUE);
-	  TtaSetTextZone (doc, 1, URL_list);
-	  TtaSetDocumentUnmodified (doc);
-          
-	}
-      else 
-	{
-	  /* save failed : print warning message */
-         
-	}
-	
-      /* set the document name and dir */
+      if (script_URL == NULL)
+	script_URL = TtaStrdup (DocumentURLs[doc]);
+      TtaFreeMemory (DocumentURLs[doc]);
+      DocumentURLs[doc] = TtaStrdup (path);
+      DocumentMeta[doc]->method = CE_TEMPLATE;
+      AddURLInCombobox (DocumentURLs[doc], NULL, TRUE);
+      TtaSetTextZone (doc, 1, URL_list);
+      TtaSetDocumentUnmodified (doc);
       
-      URLname = strrchr (buffer, URL_SEP);
+      /* set the document name and dir */
+      URLname = strrchr (path, URL_SEP);
       if (URLname)
 	{
 	  URLname[0] = EOS;
 	  URLname++;
-	  URLdir = buffer;
+	  URLdir = path;
 	  TtaSetDocumentDirectory (doc, URLdir);
 	  TtaSetDocumentName (doc, URLname);
 	  /* SetBrowserEditor(doc); */ 
@@ -131,11 +123,11 @@ void OpenTemplateDocument (Document doc)
       else
 	{
 	  TtaSetDocumentDirectory (doc, "");
-	  TtaSetDocumentName (doc, buffer);
+	  TtaSetDocumentName (doc, path);
 	}
       SetWindowTitle (doc, doc, 0);
     }
-    
+  TtaFreeMemory (path);
 }
   
 /*----------------------------------------------------------------------

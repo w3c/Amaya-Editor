@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -654,7 +654,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	    {
 	    case 1:
 	      /* display the CSS file */
-	      GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS, FALSE, NULL, NULL, UTF_8);
+	      GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS, FALSE, NULL, NULL);
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
@@ -822,8 +822,8 @@ void ShowAppliedStyle (Document doc, View view)
       if (TtaFileExist (fileName))
 	TtaFileUnlink (fileName);
       GenerateStyleListFileForElem (el, doc, fileName);
-      newdoc = GetAmayaDoc (fileName, "STYLE.LST", 0, doc, CE_LOG, FALSE, NULL,
-			    NULL, TtaGetDefaultCharset ());
+      newdoc = GetAmayaDoc (fileName, "STYLE.LST", 0, doc, CE_LOG, FALSE,
+			    NULL, NULL);
       /* store the relation with the original document */
       if (newdoc)
 	{
@@ -1001,11 +1001,9 @@ static void InitCSSDialog (Document doc, char *s)
 			}
 		    }
 		  else if (css->url == NULL)
-		    ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css->localName,
-					       TtaGetDefaultCharset ());
+		    ptr = css->localName;
 		  else
-		    ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css->url,
-					       TtaGetDefaultCharset ());
+		    ptr = css->url;
 		  if (ptr)
 		    {
 		      len = strlen (ptr) + 1; /* + EOS */
@@ -1035,7 +1033,6 @@ static void InitCSSDialog (Document doc, char *s)
 			    }
 			  select = i;
 			}
-		      TtaFreeMemory (ptr);
 		      i++;
 		    }
 		}

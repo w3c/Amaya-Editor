@@ -2242,7 +2242,7 @@
 </label>
 <label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>
-	<message xml:lang="fr">Annoter la séléction</message>
+	<message xml:lang="fr">Annoter la sélection</message>
 	<message xml:lang="it">Annota la selezione</message>
 	<message xml:lang="de">Zur Markierung</message>
 	<message xml:lang="es">Anotar &amp;selección</message>
@@ -2262,7 +2262,7 @@
 </label>
 <label define="BMoveAnnotSel">
 	<message xml:lang="en">Move to selection</message>
-	<message xml:lang="fr">Déplacer sur la séléction</message>
+	<message xml:lang="fr">Déplacer sur la sélection</message>
 	<message xml:lang="de">Auf Markierung verschieben</message>
 	<message xml:lang="es">&amp;Mover a selección</message>
 	<message xml:lang="it">Muovi sulla selezione</message>

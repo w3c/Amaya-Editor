@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2003
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -326,40 +326,25 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_firstName);
       if (s)
 	{
-#ifdef _I18N_
 	  tmp = (char *) s->object->name;
-#else
-	  tmp = TtaConvertMbsToByte ((char *) s->object->name, ISO_8859_1);
-#endif /* _I18N_ */
 	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
 	  TtaSetTextContent (el, (unsigned char *)tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
-#ifndef _I18N_
-	  TtaFreeMemory (tmp);
-#endif /* _I18N_ */
 	}
 
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_name);
       if (s)
 	{
-#ifdef _I18N_
 	  tmp = (char *) s->object->name;
-#else
-	  tmp = TtaConvertMbsToByte ((char *) s->object->name, ISO_8859_1);
-#endif /* _I18N_ */
-
 	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
 	  TtaSetTextContent (el, (unsigned char *) tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
-#ifndef _I18N_
-	  TtaFreeMemory (tmp);
-#endif /* _I18N_ */
 	}
 
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_Email);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -525,16 +525,12 @@ void CreateXMLElementMenu (Document doc, View view)
       /* add an item */
       /* we have to add the 'B', 'T' or 'M' character */
       text[0] = 'B';
-#ifdef _I18N_
       /* convert the UTF-8 string */
-      tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
+      tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text,
+					 TtaGetDefaultCharset ());
       strcpy (&buffer[last_buffer_char], tmp);
       last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
       TtaFreeMemory (tmp);
-#else /* _I18N_ */
-      last_buffer_char = last_buffer_char + (strlen (tmp) + 2) - 1;
-      TtaFreeMemory (text);
-#endif /* _I18N_ */
       nbitems++; 
       nb++;
     }

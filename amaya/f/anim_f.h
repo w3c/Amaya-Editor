@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void Get_timeline_of_doc ( Document basedoc,
-                                  Document* timelinedoc,
-                                  View* timelineview );
+                                  Document *timelinedoc,
+                                  View *timelineview );
 extern void Free_timeline_of_doc ( Document doc );
 extern void InitSVGAnim ( void );
 extern void Read_time_info ( Element el,
@@ -47,8 +47,8 @@ extern ThotBool TimelineElClicked ( NotifyElement *event );
 #else /* __STDC__ */
 
 extern void Get_timeline_of_doc ( Document basedoc,
-                                    Document* timelinedoc,
-                                    View* timelineview );
+                                    Document *timelinedoc,
+                                    View *timelineview );
 extern void Free_timeline_of_doc ( Document doc );
 extern void InitSVGAnim ( void );
 extern void Read_time_info ( Element el,

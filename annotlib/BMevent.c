@@ -578,11 +578,11 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
       i++;
       url = (char *)TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, url, &i);
-      
+      /*** DO WE HAVE TO CONVERT THIS UTF-8 STRING??? */
       GetAmayaDoc (url, NULL, 0, doc, 
 		   CE_RELATIVE, FALSE, 
 		   FollowBookmark_callback, 
-		   (void *) url, UTF_8);
+		   (void *) url);
       
       /* don't let Thot perform the normal operation */
       return TRUE;

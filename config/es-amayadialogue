@@ -124,20 +124,20 @@
 122 thead
 123 tbody
 124 tfoot
-125 Cambiar a celda de datos (td)
-126 Cambiar a celda de cabecera (th)
-127 Unir con celda derecha
-128 Unir con celda inferior
-129 Reducir extensión horizontal
-130 Reducir extensión vertical
-131 Seleccionar fila
-132 Insertar fila delante
-133 Insertar fila detrás
-134 Seleccionar columna
-135 Insertar columna delante
-136 Insertar columna detrás
-137 Pegar delante
-138 Pegar detrás
+125 **Change to Data cell (td)
+126 **Change to Heading cell (th)
+127 **Join with the cell at the right
+128 **Join with the cell below
+129 **Shrink horizontal extend
+130 **Shrink vertical extend
+131 **Select the row
+132 **Insert a row before
+133 **Insert a row after
+134 **Select the column
+135 **Insert a column before
+136 **Insert a column after
+137 **Paste before
+138 **Paste after
 139 Tipo de Información
 140 Énfasis (em)
 141 Enérgico (strong)
@@ -189,10 +189,10 @@
 187 &Ver Biblioteca SVG
 188 &Añadir la selección a la Biblioteca SVG
 189 Elementos XML...
-190 Enlazar último destino &creado
+190 Enlazar el destino &previo
 191 Crear o cambiar &enlace...
-192 Crear &destino (a / id)
-193 &Borrar ancla (a)
+192 Crear &destino
+193 &Borrar ancla
 194 Guardar selección como &XPointer
 195 &Barra de botones
 196 D&irección
@@ -214,9 +214,9 @@
 212 A&plicar clase...
 213 &Mostrar estilo aplicado...
 214 &Enlazar hoja de estilo...
-215 &Abrir hoja de estilo enlazada...
-216 &Desactivar hoja de estilo enlazada...
-217 Acti&var hoja de estilo enlazada...
+215 &Abrir hoja de estilo...
+216 &Desactivar hoja de estilo...
+217 Acti&var hoja de estilo...
 218 &Borrar enlace a hoja de estilo...
 219 &Numeración de sección
 220 &Hacer libro

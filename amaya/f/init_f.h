@@ -120,15 +120,14 @@ extern void GetAmayaDoc_callback ( int newdoc,
                                    char *outputfile,
                                    AHTHeaders *http_headers,
                                    void * context );
-extern Document GetAmayaDoc ( char *documentPath,
+extern Document GetAmayaDoc ( char *urlname,
                               char *form_data,
                               Document doc,
                               Document baseDoc,
                               ClickEvent method,
                               ThotBool history,
                               TTcbf *cbf,
-                              void *ctx_cbf,
-                              CHARSET charset );
+                              void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -213,14 +212,14 @@ extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
                          View view );
-extern void AddURLInCombobox ( char *url_utf8,
+extern void AddURLInCombobox ( char *pathname,
                                char *form_data,
                                ThotBool keep );
 extern void InitStringForCombobox ( void );
-extern void RemoveDocFromSaveList ( char *save_name,
+extern void RemoveDocFromSaveList ( char *name,
                                     char *initial_url,
                                     int doctype );
-extern void AddDocInSaveList ( char *save_name,
+extern void AddDocInSaveList ( char *name,
                                char *initial_url,
                                int doctype );
 extern void InitAutoSave ( void );
@@ -341,15 +340,14 @@ extern void GetAmayaDoc_callback ( int newdoc,
                                      char *outputfile,
                                      AHTHeaders *http_headers,
                                      void * context );
-extern Document GetAmayaDoc ( char *documentPath,
+extern Document GetAmayaDoc ( char *urlname,
                                 char *form_data,
                                 Document doc,
                                 Document baseDoc,
                                 ClickEvent method,
                                 ThotBool history,
                                 TTcbf *cbf,
-                                void *ctx_cbf,
-                                CHARSET charset );
+                                void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                  int typedata,
                                  char *data );
@@ -434,14 +432,14 @@ extern void CloseDocument ( Document doc,
                               View view );
 extern void AmayaClose ( Document document,
                            View view );
-extern void AddURLInCombobox ( char *url_utf8,
+extern void AddURLInCombobox ( char *pathname,
                                  char *form_data,
                                  ThotBool keep );
 extern void InitStringForCombobox ( void );
-extern void RemoveDocFromSaveList ( char *save_name,
+extern void RemoveDocFromSaveList ( char *name,
                                       char *initial_url,
                                       int doctype );
-extern void AddDocInSaveList ( char *save_name,
+extern void AddDocInSaveList ( char *name,
                                  char *initial_url,
                                  int doctype );
 extern void InitAutoSave ( void );

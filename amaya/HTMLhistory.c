@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -419,7 +419,7 @@ void GotoPreviousHTML (Document doc, View view)
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
 		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
-		   GotoPreviousHTML_callback,(void *) ctx, TtaGetDefaultCharset ());
+		   GotoPreviousHTML_callback,(void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
@@ -579,8 +579,7 @@ void GotoNextHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
-		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx,
-		   TtaGetDefaultCharset ());
+		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx);
       /* out of the critic section */
       Back_Forward = FALSE;
     }

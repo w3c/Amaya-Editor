@@ -2004,32 +2004,19 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
   
   if (annot->title)
     {
-#ifdef _I18N_
       tmp = annot->title;
-#else
-      tmp = TtaConvertByteToMbs (annot->title, ISO_8859_1);
-#endif /* _I18N_ */
       fprintf (fp,
 	       "<d:title>%s</d:title>\n",
 	       tmp);
-#ifndef _I18N_
       TtaFreeMemory (tmp);
-#endif /* _I18N_ */
     }
   
   if (annot->author)
     {
-#ifdef _I18N_
       tmp = annot->author;
-#else
-      tmp = TtaConvertByteToMbs (annot->author, ISO_8859_1);
-#endif /* _I18N_ */
       fprintf (fp,
 	       "<d:creator>%s</d:creator>\n",
 	       tmp);
-#ifndef _I18N_
-      TtaFreeMemory (tmp);
-#endif /* _I18N_ */
     }
 
   fprintf (fp,

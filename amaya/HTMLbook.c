@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -34,7 +34,7 @@ typedef struct _IncludeCtxt
 {
   Element		div; /* enclosing element for the search */
   Element		link; /* current processed link */
-  char		       *url; /* called url */
+  char		       *utf8path; /* called url */
   char                 *name; /* the fragment name */
   struct _IncludeCtxt  *ctxt; /* the previous context */
 } IncludeCtxt;
@@ -1035,7 +1035,7 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
 {
   Element		link, div;
   IncludeCtxt          *ctx, *prev;
-  char		       *url, *ptr;
+  char		       *utf8path, *ptr;
   ThotBool              found = FALSE;
 
   /* restore GetIncludedDocuments's context */
@@ -1046,15 +1046,15 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
   div = NULL;
   link = ctx->link;
   ptr = ctx->name;
-  url = ctx->url;
-  if (url)
+  utf8path = ctx->utf8path;
+  if (utf8path)
     {
       if (newdoc && newdoc != DocBook)
 	{
 	  /* it's not the DocBook itself */
 	  /* copy the target document at the position of the link */
 	  TtaSetDocumentModified (DocBook);
-	  div = MoveDocumentBody (link, DocBook, newdoc, ptr, url,
+	  div = MoveDocumentBody (link, DocBook, newdoc, ptr, utf8path,
 				  (ThotBool)(newdoc == IncludedDocument));
 	}
       /* global variables */
@@ -1063,20 +1063,21 @@ void   GetIncludedDocuments_callback (int newdoc, int status,
       IncludedDocument = 0;
     }
 
-  if (div != NULL)
+  if (div)
     {
       /* new starting point for the search */
       ctx->link = div;
       found = GetIncludedDocuments (div, div, DocBook, ctx);
     }
+
   while (!found && ctx)
     {
       /* this sub-document has no more inclusion, examine the caller */
       div = ctx->div;
       link = ctx->link;
       prev = ctx->ctxt;
-      TtaFreeMemory (url);
-	  url = NULL;
+      TtaFreeMemory (utf8path);
+      utf8path = NULL;
       TtaFreeMemory (ctx);
       ctx = prev;
       found = GetIncludedDocuments (div, link, DocBook, ctx);
@@ -1101,8 +1102,7 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
   AttributeType	        attrType;
   Document		newdoc;
   IncludeCtxt          *ctx = NULL;
-  CHARSET               charset;
-  char		       *text, *ptr, *url = NULL;
+  char		       *utf8path, *ptr;
   int			length;
   ThotBool              found = FALSE;
 
@@ -1124,13 +1124,13 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
       if (attr)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, text, &length);
+	  utf8path = (char *)TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, utf8path, &length);
 	  /* Valid rel values are rel="chapter" or rel="subdocument" */
-	  if (strcasecmp (text, "chapter") &&
-	      strcasecmp (text, "subdocument"))
+	  if (strcasecmp (utf8path, "chapter") &&
+	      strcasecmp (utf8path, "subdocument"))
 	    attr = NULL;
-	  TtaFreeMemory (text);
+	  TtaFreeMemory (utf8path);
 	}
   
       if (attr)
@@ -1143,49 +1143,50 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
 	/* this link has an attribute HREF */
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  text = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, text, &length);
-	  ptr = strrchr (text, '#');
-	  url = text;
-	  if (ptr != NULL)
+	  utf8path = (char *)TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, utf8path, &length);
+	  ptr = strrchr (utf8path, '#');
+	  if (ptr)
 	    {
-	      if (ptr == text)
-		url = NULL;
-	      /* link to a particular position within a remote document */
-	      ptr[0] = EOS;
-	      ptr = &ptr[1];
+	      /* link to a particular position within a document */
+	      if (ptr == utf8path)
+		{
+		  /* local link */
+		  TtaFreeMemory (utf8path);
+		  utf8path = NULL;
+		}
+	      else
+		{
+		  ptr[0] = EOS;
+		  ptr = &ptr[1];
+		}
 	    }
 		  
-	  if (url != NULL)
+	  if (utf8path)
 	    /* this link designates an external document */
 	    {
 	      /* create a new document and loads the target document */
 	      IncludedDocument = TtaNewDocument ("HTML", "tmp");
 	      if (IncludedDocument != 0)
 		{
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
+		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_FETCHING), utf8path);
 		  ctx = (IncludeCtxt *)TtaGetMemory (sizeof (IncludeCtxt));
 		  ctx->div =  el;
 		  ctx->link = link;
-		  ctx->url = url; /* the URL of the document */
+		  ctx->utf8path = utf8path; /* the URL of the document */
 		  ctx->name = ptr;
 		  ctx->ctxt = prev; /* previous context */
 		  /* Get the reference of the calling document */
 		  SetStopButton (doc);
-#ifdef _I18N_
-		  charset = UTF_8;
-#else /* _I18N_ */
-		  charset = TtaGetDocumentCharset (doc);
-#endif /* _I18N_ */
-		  newdoc = GetAmayaDoc (url, NULL, IncludedDocument,
+		  newdoc = GetAmayaDoc (utf8path, NULL, IncludedDocument,
 					doc, CE_MAKEBOOK, FALSE, 
 					(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetIncludedDocuments_callback,
-					(void *) ctx, charset);
+					(void *) ctx);
 		  found = TRUE;
 		}
 	    }
 	  else
-	    TtaFreeMemory (text);
+	    TtaFreeMemory (utf8path);
 	}
     }
   return (found);

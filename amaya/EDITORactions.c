@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -249,6 +249,7 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
 /*----------------------------------------------------------------------
   InitializeNewDoc builds the initial contents of a new document
   When the parameter doc is 0 the function creates a new document window.
+  The url is coded with the default charset.
   ----------------------------------------------------------------------*/
 void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 {
@@ -289,10 +290,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   /* save the document name into the document table */
   s = TtaStrdup (url);
   DocumentURLs[doc] = s;
-  s = (char *)TtaConvertByteToMbs ((unsigned char *)url, TtaGetDefaultCharset ());
-  AddURLInCombobox (s, NULL, TRUE);
+  AddURLInCombobox (url, NULL, TRUE);
   TtaSetTextZone (doc, 1, URL_list);
-  TtaFreeMemory (s);
   DocumentMeta[doc] = DocumentMetaDataAlloc ();
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->initial_url = NULL;

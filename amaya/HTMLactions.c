@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -77,7 +77,7 @@ typedef struct _FollowTheLink_context {
   Element              anchor;
   Element              elSource;
   char                *sourceDocUrl;
-  char                *url;
+  char                *utf8path;
 } FollowTheLink_context;
 
 /*----------------------------------------------------------------------
@@ -516,8 +516,8 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   Attribute           PseudoAttr, HrefAttr;
   SSchema             docSchema; 
   View                view;
-  FollowTheLink_context      *ctx = (FollowTheLink_context *) context;
-  char               *sourceDocUrl, *url;
+  FollowTheLink_context  *ctx = (FollowTheLink_context *) context;
+  char               *sourceDocUrl, *utf8path;
 
   /* retrieve the context */
   if (ctx == NULL)
@@ -526,11 +526,11 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   doc = ctx->doc;
   sourceDocUrl = ctx->sourceDocUrl;  
   anchor = ctx->anchor;
-  url = ctx->url;
+  utf8path = ctx->utf8path;
   elSource = ctx->elSource;
-  if (url[0] == '#' && targetDocument != 0)
+  if (utf8path[0] == '#' && targetDocument != 0)
     /* attribute HREF contains the NAME of a target anchor */
-    elFound = SearchNAMEattribute (targetDocument, &url[1], NULL, NULL);
+    elFound = SearchNAMEattribute (targetDocument, &utf8path[1], NULL, NULL);
   if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], sourceDocUrl))
   {
   elType = TtaGetElementType (anchor);
@@ -539,7 +539,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
     {
       /* it's an HTML A element. Change it's color */
       docSchema =   TtaGetSSchema ("HTML", doc);
-      if (docSchema && (doc != targetDocument || url[0] == '#') && anchor != NULL)
+      if (docSchema && (doc != targetDocument || utf8path[0] == '#') && anchor)
 	{
 	  /* search PseudoAttr attribute */
 	  attrType.AttrSSchema = docSchema;
@@ -557,7 +557,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
 	     follow */
 	  if (PseudoAttr && status != -1)
 	    {
-	      if (url[0] == '#')
+	      if (utf8path[0] == '#')
 		{
 		  if (targetDocument != 0 && elFound)
 		    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
@@ -569,7 +569,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
     }
   }
 
-  if (url[0] == '#' && targetDocument != 0)
+  if (utf8path[0] == '#' && targetDocument != 0)
     {
       if (elFound)
 	{
@@ -603,9 +603,8 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
 	    }
 	}
     }
-  TtaFreeMemory (url);
-  if (sourceDocUrl)
-    TtaFreeMemory (sourceDocUrl);
+  TtaFreeMemory (utf8path);
+  TtaFreeMemory (sourceDocUrl);
   TtaFreeMemory (ctx);
 }
 
@@ -662,10 +661,9 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    ElementType            elType;
    Document               targetDocument, reldoc;
    SSchema                HTMLSSchema;
-   CHARSET                charset;
-   char                   documentURL[MAX_LENGTH];
-   char                   buffer[MAX_LENGTH], documentname[MAX_LENGTH];
-   char                  *url, *info, *sourceDocUrl;
+   char                  *pathname, *utf8value;
+   char                   documentname[MAX_LENGTH];
+   char                  *utf8path, *info, *s;
    int                    length;
    int                    method;
    FollowTheLink_context *ctx;
@@ -673,7 +671,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 
    if (anchor == NULL || HrefAttr == NULL)
      return FALSE;
-   info = NULL;
+   info = pathname = NULL;
    elType = TtaGetElementType (anchor);
    attrType.AttrTypeNum = 0;
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -685,10 +683,9 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    targetDocument = 0;
    PseudoAttr = NULL;
    /* get a buffer for the target URL */
-   length = TtaGetTextAttributeLength (HrefAttr);
-   length++;
-   url = (char *)TtaGetMemory (length);
-   if (url != NULL)
+   length = TtaGetTextAttributeLength (HrefAttr) + 1;
+   utf8path = (char *)TtaGetMemory (length);
+   if (utf8path)
      {
        elType = TtaGetElementType (anchor);
        if (isHTML && elType.ElTypeNum == HTML_EL_Anchor)
@@ -706,24 +703,22 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	   TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
 	 }
        /* get the URL itself */
-       TtaGiveTextAttributeValue (HrefAttr, url, &length);
+       TtaGiveTextAttributeValue (HrefAttr, utf8path, &length);
        /* suppress white spaces at the end */
        length--;
-       while (url[length] == ' ')
-	 url[length--] = EOS;
-       /* save the complete URL of the source document */
-       length = strlen (DocumentURLs[doc])+1;
-       sourceDocUrl = (char *)TtaGetMemory (length);
-       strcpy (sourceDocUrl, DocumentURLs[doc]);
+       while (utf8path[length] == ' ')
+	 utf8path[length--] = EOS;
+
        /* save the context */
        ctx = (FollowTheLink_context*)TtaGetMemory (sizeof (FollowTheLink_context));
        ctx->anchor = anchor;
        ctx->doc = doc;
-       ctx->url = url;
+       ctx->utf8path = utf8path;
        ctx->elSource = elSource;
-       ctx->sourceDocUrl = sourceDocUrl;
+       /* save the complete URL of the source document */
+       ctx->sourceDocUrl = TtaStrdup (DocumentURLs[doc]);
        TtaSetSelectionMode (TRUE);
-       if (url[0] == '#')
+       if (utf8path[0] == '#')
 	 {
 	   /* the target element is part of the same document */
 	   targetDocument = doc;
@@ -734,36 +729,49 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
        else
 	 /* the target element seems to be in another document */
 	 {
-	   strncpy (documentURL, url, MAX_LENGTH - 1);
-	   documentURL[MAX_LENGTH - 1] = EOS;
-	   url[0] = EOS;
 	   /* is the source element an image map? */
 	   if (HTMLSSchema)
 	     {
 	       attrType.AttrSSchema = HTMLSSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_ISMAP;
 	       attr = TtaGetAttribute (elSource, attrType);
-	       if (attr != NULL)
-		 /* it's an image map */
+	       if (attr)
 		 {
-		   info = GetActiveImageInfo (doc, elSource);
-		   if (info != NULL)
-		     {
-		       /* @@ what do we do with the precedent parameters?*/
-		       strcat (documentURL, info);
-		       TtaFreeMemory (info);
-		     }
+		   /* it's an image map */
+		   utf8value = GetActiveImageInfo (doc, elSource);
+		   info = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+						 TtaGetDefaultCharset ());
+		   TtaFreeMemory (utf8value);
 		 }
+	     }
+
+	   s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+					    TtaGetDefaultCharset ());
+	   length = strlen (s);
+	   if (info)
+	     length += strlen (info);
+	   if (length < MAX_LENGTH)
+	     length = MAX_LENGTH;
+	   pathname = (char *)TtaGetMemory (length);
+	   strcpy (pathname, utf8path);
+	   /* don't free utf8path as it's stored within the context */
+	   utf8path[0] = EOS;
+	   if (info)
+	     {
+	       /* @@ what do we do with the precedent parameters?*/
+	       strcat (pathname, info);
+	       TtaFreeMemory (info);
 	     }
 	   /* interrupt current transfer */
 	   StopTransfer (doc, 1);	   
 	   /* get the referred document */
-	   if (!strncmp (documentURL, "mailto:", 7))
+	   if (!strncmp (pathname, "mailto:", 7))
 	     {
 	       TtaSetStatus (doc, 1,
 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   documentURL);
-	       TtaFreeMemory (url);
+			   pathname);
+	       TtaFreeMemory (pathname);
+	       TtaFreeMemory (utf8path);
 	       TtaFreeMemory (ctx);
 	       return (FALSE);
 	     }
@@ -791,33 +799,31 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 		   method = CE_CSS;
 		   history = FALSE;
 		   /* normalize the URL */
-		   strcpy (buffer, documentURL);
-		   NormalizeURL (buffer, doc, documentURL, documentname, NULL);
+		   s = (char *)TtaGetMemory (length);
+		   strcpy (s, pathname);
+		   NormalizeURL (s, doc, pathname, documentname, NULL);
+		   TtaFreeMemory (s);
 		 }
 	     }
 
 	   if (method != CE_RELATIVE || InNewWindow ||
 	       CanReplaceCurrentDocument (doc, 1))
 	     {
-	       if (IsUndisplayedName (documentURL))
+	       if (IsUndisplayedName (pathname))
 		 /* it's not necessary to open a new window */
 		 InNewWindow = FALSE;
 	       /* Load the new document */
-#ifdef _I18N_
-	       charset = UTF_8;
-#else /* _I18N_ */
-	       charset = TtaGetDocumentCharset (doc);
-#endif /* _I18N_ */
-	       targetDocument = GetAmayaDoc (documentURL, NULL, reldoc, doc, 
+	       targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
 					     (ClickEvent)method, history, 
 					     (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
-					     (void *) ctx, charset);
+					     (void *) ctx);
 	     }
 	   else
 	     {
-	       TtaFreeMemory (url);
+	       TtaFreeMemory (utf8path);
 	       TtaFreeMemory (ctx);
 	     }
+	   TtaFreeMemory (pathname);
 	 }
        return (TRUE);
      }
@@ -2613,7 +2619,7 @@ static ThotBool ShowLogLine (Element el, Document doc)
   Language            lang;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
-  char               *buffer = NULL, *ptr = NULL;
+  char               *utf8value = NULL, *ptr = NULL, *s = NULL;
   int                 len, line = 0, index = 0;
 
   if (DocumentTypes[doc] == docLog)
@@ -2624,10 +2630,10 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	   len = TtaGetTextLength (el);
 	   if (len > 0)
 	     {
-	       buffer = (char *)TtaGetMemory (len + 1);
-	       TtaGiveTextContent (el, (unsigned char *)buffer, &len, &lang);
+	       utf8value = (char *)TtaGetMemory (len + 1);
+	       TtaGiveTextContent (el, (unsigned char *)utf8value, &len, &lang);
 	       /* extract the line number and the index within the line */
-	       ptr = strstr (buffer, "line ");
+	       ptr = strstr (utf8value, "line ");
 	       if (ptr)
 		 sscanf (&ptr[4], "%d", &line);
 	       if (ptr)
@@ -2635,45 +2641,49 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	       if (ptr)
 		 sscanf (&ptr[4], "%d", &index);
 	       /* Is there a file name in the current line */
-	       ptr = strstr (buffer, ", File ");
+	       ptr = strstr (utf8value, ", File ");
 	       if (ptr)
 		 ptr += 7;
 	     }
-      
+
 	   /* get the target document */
 	   otherDoc = DocumentSource[doc];
 	   if (ptr == NULL)
 	     {
-	       TtaFreeMemory (buffer);
+	       TtaFreeMemory (utf8value);
 	       otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
 	       len = TtaGetTextLength (otherEl);
-	       buffer = (char *)TtaGetMemory (len + 1);
-	       TtaGiveTextContent (otherEl, (unsigned char *)buffer, &len, &lang);
-	       ptr = strstr (buffer, " in ");
+	       utf8value = (char *)TtaGetMemory (len + 1);
+	       TtaGiveTextContent (otherEl, (unsigned char *)utf8value, &len, &lang);
+	       ptr = strstr (utf8value, " in ");
 	       if (ptr)
 		 ptr += 4;
 	     }
+	   if (ptr)
+	     s = (char *)TtaConvertMbsToByte ((unsigned char *)ptr,
+					      TtaGetDefaultCharset ());
 	   if (DocumentURLs[otherDoc] &&
-	       ptr && strcmp (ptr, DocumentURLs[otherDoc]))
+	       s && strcmp (s, DocumentURLs[otherDoc]))
 	     {
 	       /* it doesn't concern the source document itself
 		look or the target file */
 	       for (otherDoc = 1; otherDoc < MAX_DOCUMENTS; otherDoc++)
 		 if (DocumentURLs[otherDoc] &&
-		     !strcmp (ptr, DocumentURLs[otherDoc]))
+		     !strcmp (s, DocumentURLs[otherDoc]))
 		   break;
 	       if (otherDoc == MAX_DOCUMENTS)
 		 {
 		   /* not found: do we have to open a CSS file */
-		   css = SearchCSS (0, ptr, NULL, &pInfo);
+		   css = SearchCSS (0, s, NULL, &pInfo);
 		   if (css)
-		     otherDoc = GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS,
-					     FALSE, NULL, NULL, UTF_8);
+		     otherDoc = GetAmayaDoc (s, NULL, 0, 0, CE_CSS,
+					     FALSE, NULL, NULL);
 		 }
 	     }
 	 }
-      TtaFreeMemory (buffer);
 
+      TtaFreeMemory (s);
+      TtaFreeMemory (utf8value);
       /* skip to the line */
       if (line && otherDoc && otherDoc < MAX_DOCUMENTS)
 	GotoLine (otherDoc, line, index, FALSE);

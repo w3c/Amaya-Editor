@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2490,7 +2490,6 @@ static int GetCharType (CHAR_T c, char script)
   int	ret;
 
   ret = MathML_EL_MO;
-#ifdef _I18N_
   if (c >= '0' && c <= '9')
     /* decimal digit */
     ret = MathML_EL_MN;
@@ -2506,31 +2505,6 @@ static int GetCharType (CHAR_T c, char script)
     ret = MathML_EL_MI;
   else
     ret = MathML_EL_MO;
-#else  /* _I18N_ */
-  if (script == 'L')
-     /* ISO-Latin 1 */
-     {
-     if (c >= '0' && c <= '9')
-        ret = MathML_EL_MN;
-     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')
-        ret = MathML_EL_MI;
-     else if (((int) c) >= 192 && ((int) c) <= 255 &&
-	      ((int) c) != 215 && ((int) c) != 247)
-	ret = MathML_EL_MI;
-     else
-        ret = MathML_EL_MO;
-     }
-  else if (script == 'G')
-     /* Symbol character set */
-     {
-     if (c >= '0' && c <= '9')
-        ret = MathML_EL_MN;
-     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-        ret = MathML_EL_MI;
-     else
-        ret = MathML_EL_MO;
-     }
-#endif  /* _I18N_ */
   return ret;
 }
 
@@ -2755,13 +2729,7 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
 		  firstChar = 0;
 		  /* ignore text leaves that are shorter than the shortest
 		     function name (2 characters) */
-		  if (len > 1
-#ifndef _I18N_
-		      /* function names can only be written in latin
-			 characters */
-		      && TtaGetScript (lang) == 'L'
-#endif
-		      )
+		  if (len > 1)
 		    {
 		      /* check all possible substrings of the text leaf */
 		      for (i = 0; i < len-1; i++)
@@ -3220,17 +3188,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	/* by default create a separate element */
 	separate = TRUE;
         /* if successive integral characters, keep them in the same element */
-#ifdef _I18N_
 	if (text[i] == 0x222B && text[i] == text [i-1])
 	  separate = FALSE;
-#else
-	if ((int)text[i] == 242 && text[i] == text [i-1])
-	  {
-	  if (TtaGetScript (language[i]) == 'G' &&
-	      language[i] == language[i-1])
-	    separate = FALSE;
-	  }
-#endif
 	}
       if (separate)
         /* create a new element */
@@ -3452,10 +3411,8 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
   ThotBool       found;
   int            value;
   Language       lang;
-#ifdef _I18N_   
   unsigned char *ptr;
   int            i;
-#endif /* _I18N_ */
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);
   if (!found)
@@ -3465,7 +3422,6 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
       bufEntity[1] = EOS;
       lang = TtaGetLanguageIdFromScript('L');
     }
-#ifdef _I18N_
   else if (value < 1023)
     {
       /* get the UTF-8 string of the unicode character */
@@ -3473,7 +3429,6 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
       i = TtaWCToMBstring ((wchar_t) value, &ptr);
       bufEntity[i] = EOS;
     }
-#endif /* _I18N_ */
   else
     {
       if (value < 255)

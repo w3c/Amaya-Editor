@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -490,11 +490,8 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
-#ifdef _I18N_
 /* second char of an UTF-8 string */
 static unsigned char SecondByte[6] = {EOS, EOS, EOS, EOS, EOS, EOS};
-#endif /* _I18N_ */
-
 static void         ProcessStartGI (char* GIname);
 static void         EndOfAttrValue (char c);
 
@@ -3162,144 +3159,18 @@ static void StartOfEntity (char c)
   ----------------------------------------------------------------------*/
 void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 {  
-#ifdef _I18N_
   unsigned char *ptr;
-#endif /* _I18N_ */
   int	         i;
 
   fallback[0] = EOS;
   fallback[1] = EOS;
   fallback[2] = EOS;
-#ifdef _I18N_
   /* get the UTF-8 string of the unicode character */
   ptr = fallback;
   i = TtaWCToMBstring ((wchar_t) code, &ptr);
   fallback[i] = EOS;
-#else /* _I18N_ */
-  /* look for that code in the fallback table */
-  for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
-	 UnicodeFallbackTable[i].unicodeVal > 0;  i++);
-  if (UnicodeFallbackTable[i].unicodeVal != code)
-    /* character is not in the fallback table */
-    {
-      /* display a question mark instead */
-      *lang = Latin_Script;
-      fallback[0]= '?';
-    }
-  else
-    /* this character is on the fallback table */
-    {
-      if (UnicodeFallbackTable[i].EightbitCode < 255)
-	{
-	  /* Generation of a Greek fallback symbol */
-	  *lang = Greek_Script;
-	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
-	}
-      else if (UnicodeFallbackTable[i].EightbitCode < 2000)
-	{
-	  /* Generation of a Latin fallback symbol */
-	  *lang = Latin_Script;
-	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
-	}
-      else
-	{
-	  /* Generation of a Greek fallback symbol */
-	  *lang = Greek_Script;
-	  fallback[0] = UnicodeFallbackTable[i].EightbitCode - 2000;
-	}
-      /* some special cases: add a second character */
-      if (code == 338)		/* OE ligature */
-	fallback[1] = 'E';
-      else if (code == 339)	/* oe ligature */
-	fallback[1] = 'e';
-      else if (code == 8195)	/* em space, U+2003 ISOpub */
-	fallback[1] = '\240';
-      else if (code == 8220)	/* left double quotation mark */
-	fallback[1] = '\140';
-      else if (code == 8221)	/* right double quotation mark */
-	fallback[1] = '\47';
-      else if (code == 8222)	/* double low-9 quotation mark */
-	fallback[1] = ',';
-      else if (code == 8240)	/* per mille sign */
-	fallback[1] = '\260';
-      else if (code == 8741)	/* parallel sign */
-	fallback[1] = '|';
-      else
-	fallback[2] = EOS;
-    }
-#endif /* _I18N_ */
 }
 
-#ifndef _I18N_
-/*----------------------------------------------------------------------
-   PutNonISOlatin1Char     
-   Put a Unicode character belonging to an element in the input buffer.
-  ----------------------------------------------------------------------*/
-static void PutNonISOlatin1Char (int code, char *prefix)
-{
-   Language	 lang, l;
-   ElementType	 elType;
-   Element	 elLeaf;
-   AttributeType attrType;
-   Attribute	 attr;
-   char	         buffer[MaxEntityLength+10];
-
-   /* put the current content of the input buffer into the document */
-   TextToDocument ();
-   HTMLcontext.mergeText = FALSE;
-
-   /* try to find a fallback character */
-   l = HTMLcontext.language;
-   lang = l;
-   GetFallbackCharacter (code, buffer, &lang);
-
-   if (buffer[0] == '?' && prefix != EOS)
-     {
-       /* Numeric entity not found in the fallback table */
-       /* Create a symbol leaf */
-       elType.ElSSchema = DocumentSSchema;
-       elType.ElTypeNum = HTML_EL_SYMBOL_UNIT;
-       elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-       TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-       InsertElement (&elLeaf);
-       HTMLcontext.lastElementClosed = TRUE;
-       /* Put the symbol '?' into the new symbol leaf */
-       TtaSetGraphicsShape (elLeaf, buffer[0], HTMLcontext.doc);
-       /* Changes the wide char code associated with that symbol */
-       TtaSetSymbolCode (elLeaf, (wchar_t) code, HTMLcontext.doc);
-       /* Make that leaf read-only */
-       TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
-       HTMLcontext.mergeText = FALSE;
-     }
-   else
-     {
-       /* Character found in the fallback table */
-       /* Create a new text leaf */
-       elType.ElSSchema = DocumentSSchema;
-       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-       elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-       TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-       InsertElement (&elLeaf);
-       HTMLcontext.lastElementClosed = TRUE;
-       /* put that fallback character in the new text leaf */
-       TtaSetTextContent (elLeaf, (unsigned char *)buffer, lang, HTMLcontext.doc);
-       HTMLcontext.language = l;
-       /* make that text leaf read-only */
-       TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
-       /* associate an attribute EntityName with the new text leaf */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_EntityName;
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (elLeaf, attr, HTMLcontext.doc);
-       buffer[0] = '&';
-       strcpy ((char *)&buffer[1], (char *)prefix);
-       strcat ((char *)buffer, (char *)EntityName);
-       strcat ((char *)buffer, (char *)";");
-       TtaSetAttributeText (attr, buffer, elLeaf, HTMLcontext.doc);
-       HTMLcontext.mergeText = FALSE;
-     }
-}
-#endif /* _I18N_ */
 
 #ifdef LC
 /*----------------------------------------------------------------------
@@ -3338,10 +3209,8 @@ static void PutAmpersandInDoc ()
   ----------------------------------------------------------------------*/
 static void EndOfEntity (unsigned char c)
 {
-#ifdef _I18N_
   unsigned char fallback[7], *ptr;
   int           len;
-#endif /* _I18N_ */
   int           i;
   unsigned char msgBuffer[MaxMsgLength];
 
@@ -3349,7 +3218,6 @@ static void EndOfEntity (unsigned char c)
   if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
     {
       /* the entity read matches the current entry of entity table */
-#ifdef _I18N_
       if (XhtmlEntityTable[EntityTableEntry].charCode > 127)
 	{
 	  /* generate the UTF-8 string */
@@ -3358,20 +3226,6 @@ static void EndOfEntity (unsigned char c)
 	  for (i = 0; i < len; i++)
 	    PutInBuffer (fallback[i]);
 	}
-#else /* _I18N_ */
-      if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	{
-	  if (ReadingAnAttrValue)
-	    {
-	      PutInBuffer ((char) START_ENTITY);
-	      for (i = 0; i < LgEntityName; i++)
-		PutInBuffer (EntityName[i]);
-	      PutInBuffer (';');
-	    }
-	  else
-	    PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
-	}
-#endif /* _I18N_ */
       else
 	PutInBuffer ((char)XhtmlEntityTable[EntityTableEntry].charCode);
     }
@@ -3395,10 +3249,8 @@ static void EndOfEntity (unsigned char c)
   ----------------------------------------------------------------------*/
 static void EntityChar (unsigned char c)
 {
-#ifdef _I18N_
   unsigned char fallback[7], *ptr;
   int           len;
-#endif /* _I18N_ */
   unsigned char msgBuffer[MaxMsgLength];
   int           i;
   ThotBool      OK, done, stop;
@@ -3432,7 +3284,6 @@ static void EntityChar (unsigned char c)
 	  /* If we are not reading an attribute value, assume that semicolon is
 	     missing and put the corresponding char in the document content */
 	  EntityName[LgEntityName] = EOS;
-#ifdef _I18N_
 	  if (XhtmlEntityTable[EntityTableEntry].charCode > 127)
 	    {
 	      /* generate the UTF-8 string */
@@ -3441,20 +3292,6 @@ static void EntityChar (unsigned char c)
 	      for (i = 0; i < len; i++)
 		PutInBuffer (fallback[i]);
 	    }
-#else /* _I18N_ */
-	  if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
-	    {
-	      if (ReadingAnAttrValue)
-		{
-		  PutInBuffer ((char) START_ENTITY);
-		  for (i = 0; i < LgEntityName; i++)
-		    PutInBuffer (EntityName[i]);
-		  PutInBuffer (';');
-		}
-	      else
-		PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, "");
-	    }
-#endif /* _I18N_ */
 	  else
 	    PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
 	  if (c != SPACE)
@@ -3530,16 +3367,13 @@ static void EntityChar (unsigned char c)
   ----------------------------------------------------------------------*/
 static void EndOfDecEntity (unsigned char c)
 {
-#ifdef _I18N_
   unsigned char fallback[7], *ptr;
   int           len;
-#endif /* _I18N_ */
   int           code;
   int           i;
 
   EntityName[LgEntityName] = EOS;
   sscanf (EntityName, "%d", &code);
-#ifdef _I18N_
   if (code > 127)
     {
       /* generate the UTF-8 string */
@@ -3548,21 +3382,6 @@ static void EndOfDecEntity (unsigned char c)
       for (i = 0; i < len; i++)
 	PutInBuffer (fallback[i]);
     }
-#else /* _I18N_ */
-  if (code > 255)
-    {
-      if (ReadingAnAttrValue)
-	{
-	  PutInBuffer ((char) START_ENTITY);
-	  PutInBuffer ('#');
-	  for (i = 0; i < LgEntityName; i++)
-	    PutInBuffer (EntityName[i]);
-	  PutInBuffer (';');
-	}
-      else
-	PutNonISOlatin1Char (code, "#");
-    }
-#endif /* _I18N_ */
   else
     PutInBuffer ((char) code);
   LgEntityName = 0;
@@ -3613,16 +3432,13 @@ static void DecEntityChar (unsigned char c)
   ----------------------------------------------------------------------*/
 static void EndOfHexEntity (unsigned char c)
 {
-#ifdef _I18N_
   unsigned char fallback[7], *ptr;
   int           len;
-#endif /* _I18N_ */
   int           code;
   int           i;
 
   EntityName[LgEntityName] = EOS;
   sscanf (EntityName, "%x", &code);
-#ifdef _I18N_
   if (code > 127)
     {
       /* generate the UTF-8 string */
@@ -3631,22 +3447,6 @@ static void EndOfHexEntity (unsigned char c)
       for (i = 0; i < len; i++)
 	PutInBuffer (fallback[i]);
     }
-#else /* _I18N_ */
-  if (code > 255)
-    {
-      if (ReadingAnAttrValue)
-	{
-	  PutInBuffer ((char) START_ENTITY);
-	  PutInBuffer ('#');
-	  PutInBuffer ('x');
-	  for (i = 0; i < LgEntityName; i++)
-	    PutInBuffer (EntityName[i]);
-	  PutInBuffer (';');
-	}
-      else
-	PutNonISOlatin1Char (code, "#x");
-    }
-#endif /* _I18N_ */
   else
     PutInBuffer ((char) code);
   LgEntityName = 0;
@@ -4239,16 +4039,6 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   unsigned char  fallback[5];
   unsigned char *ptr;
   int            res = 0;
-#ifndef _I18N_
-  unsigned char  extrabuf[7];
-  Language       lang;
-  ElementType    elType;
-  Element        elLeaf;
-  int            i;
-  int            nbBytes;
-  long           nbBytesToRead;
-  ThotBool       isHTML;
-#endif /* _I18N_ */
 
   charRead = EOS;
   *endOfFile = FALSE;
@@ -4256,7 +4046,6 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
   if (buffer)
     {
       /* read from a buffer */
-#ifdef _I18N_
       if (SecondByte[0] != EOS)
 	{
 	  /* return the second UTF-8 byte */
@@ -4289,36 +4078,13 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		}
 	    }
 	}
-#else /* _I18N_ */
-      ptr = &buffer[*index];
-      nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr,
-					HTMLcontext.encoding);
-      if (nbBytes < 1)
-	{
-	  /* error detected */
-	  HTMLParseError (HTMLcontext.doc, "Invalid character");
-	  *endOfFile = TRUE;
-	}
-      else
-	{
-	  (*index) += nbBytes;
-	  if (wcharRead != 0)
-	    charRead = (char) wcharRead;
-	  else
-	    *endOfFile = TRUE;
-	}
-#endif /* _I18N_ */
     }
   else if (infile == NULL)
     *endOfFile = TRUE;
   else
     {
       /* read from a file */
-#ifdef _I18N_
       if (*index == 0 && SecondByte[0] == EOS)
-#else /* _I18N_ */
-      if (*index == 0)
-#endif /* _I18N_ */
 	{
 	  if (NotToReadFile)
 	    NotToReadFile = FALSE;
@@ -4347,7 +4113,6 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	}
       else if (*endOfFile == FALSE)
 	{
-#ifdef _I18N_
 	  if (SecondByte[0] != EOS)
 	    {
 	      /* return the second UTF-8 byte */
@@ -4395,118 +4160,6 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		    }
 		}
 	    }
-#else /* _I18N_ */
-	  if (HTMLcontext.encoding == UTF_8)
-	    {
-	      /* We are reading a UTF8-coded character data */
-	      ptr = (unsigned char *) &FileBuffer[(*index)];
-	      nbBytes = TtaGetNumberOfBytesToRead (&ptr, UTF_8);
-	      if (nbBytes > 1 && (*index + (nbBytes -1) > LastCharInFileBuffer))
-		{
-		  for (i = 0; *index + i <= LastCharInFileBuffer; i++)
-		    extrabuf[i] = ptr[i];
-		  nbBytesToRead = nbBytes - i;
-		  res = gzread (infile, &extrabuf[i], nbBytesToRead);
-		  if (res <= 0)
-		    {
-		      /* error or end of file */
-		      *endOfFile = TRUE;
-		      charRead = EOS;
-		    }
-		  ptr = (unsigned char *) &extrabuf[0];
-		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
-		  if (nbBytes < 1)
-		    {
-		      /* error detected */
-		      HTMLParseError (HTMLcontext.doc, "Invalid character");
-		      *endOfFile = TRUE;
-		      charRead = EOS;
-		    }
-		  else
-		    *index = 0;
-		}
-	      else
-		{
-		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
-		  if (nbBytes < 1)
-		    {
-		      /* error detected */
-		      HTMLParseError (HTMLcontext.doc, "Invalid character");
-		      *endOfFile = TRUE;
-		      charRead = EOS;
-		    }
-		  else
-		    (*index) += nbBytes;
-		}
-	      if (wcharRead < 0x100)
-		/* It's an 8bits character */
-		charRead = (char) wcharRead;
-	      else
-		{
-		  /* It's not an 8bits character */
-		  /* Put the current content of the buffer into the last element */
-		  isHTML = DocumentTypes[HTMLcontext.doc] == docHTML;
-		  if (isHTML)
-		    TextToDocument ();
-		  else if (HTMLcontext.lastElement && LgBuffer != 0)
-		    {
-		      inputBuffer[LgBuffer] = EOS;
-		      TtaSetTextContent (HTMLcontext.lastElement, (unsigned char *)inputBuffer,
-					 HTMLcontext.language,
-					 HTMLcontext.doc);
-		      InitBuffer ();
-		    }
-		  /* Try to find a fallback character */
-		  lang = HTMLcontext.language;
-		  GetFallbackCharacter ((int) wcharRead, fallback, &lang);
-		  if (fallback[0] == '?')
-		    {
-		      /* Character not found in the fallback table */
-		      /* Create a symbol leaf */
-		      elType = TtaGetElementType (HTMLcontext.lastElement);
-		      elType.ElTypeNum = 3;
-		      elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-		      if (isHTML)
-			InsertElement (&elLeaf);
-		      else
-			TtaInsertSibling (elLeaf, HTMLcontext.lastElement,
-					  FALSE, HTMLcontext.doc);
-		      HTMLcontext.lastElement = elLeaf;
-		      HTMLcontext.lastElementClosed = TRUE;
-
-		      /* Put the symbol '?' into the new symbol leaf */
-		      TtaSetGraphicsShape (elLeaf, fallback[0], HTMLcontext.doc);
-		      /* Change the wide char code associated with that symbol */
-		      TtaSetSymbolCode (elLeaf, wcharRead, HTMLcontext.doc);
-		      /* Make that leaf read-only */
-		      TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
-		    }
-		  else
-		    {
-		      /* Character found in the fallback table */
-		      /* Create a new text leaf */
-		      elType = TtaGetElementType (HTMLcontext.lastElement);
-		      elType.ElTypeNum = 1;
-		      elLeaf = TtaNewElement (HTMLcontext.doc, elType);
-		      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
-		      if (isHTML)
-			InsertElement (&elLeaf);
-		      else
-			TtaInsertSibling (elLeaf, HTMLcontext.lastElement,
-					  FALSE, HTMLcontext.doc);
-		      HTMLcontext.lastElement = elLeaf;
-		      HTMLcontext.lastElementClosed = TRUE;
-		      /* Put the fallback character into the new text leaf */
-		      TtaSetTextContent (elLeaf, (unsigned char *)fallback, lang, HTMLcontext.doc);
-		      HTMLcontext.mergeText = FALSE;
-		    }
-		}
-	    }
-	  else
-	    /* read ISO-latin-1 characters */
-	    charRead = FileBuffer[(*index)++];
-#endif /* _I18N_ */
 	  
 	  if (*index > LastCharInFileBuffer)
 	    *index = 0;
@@ -4723,13 +4376,6 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 		    if (EmptyLine)
 		      charRead = EOS;
 		}
-#ifndef _I18N_
-	      else if (((int)charRead < 32 ||
-			((int) charRead >= 127 && (int) charRead <= 143))
-		       && (int) charRead != TAB)
-		/* it's not a printable character, ignore it */
-		charRead = EOS;
-#endif /* !_I18N_ */
 	      else
 		/* it's a printable character. Keep it as it is and */
 		/* stop ignoring spaces */
@@ -4975,14 +4621,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  charRead = EOS;
 	  withinTag = FALSE;
 	}
-#ifndef _I18N_
-      else if (((int) charRead < 32 ||
-	        ((int) charRead >= 127 && (int) charRead <= 143)) &&
-	       (int) charRead != TAB)
-	/* Ignore non printable characters except HT */
-	/* it's not a printable character, ignore it */
-	charRead = EOS;
-#endif /* !_I18N_ */
+
       if (charRead != EOS)
 	{
 	  /* a valid character has been read */

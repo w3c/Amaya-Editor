@@ -31,7 +31,7 @@ extern char *GetActiveImageInfo ( Document document,
                                   Element element );
 extern void FetchImage ( Document doc,
                          Element el,
-                         char *URL,
+                         char *imageURI,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
@@ -68,7 +68,7 @@ extern char *GetActiveImageInfo ( Document document,
                                     Element element );
 extern void FetchImage ( Document doc,
                            Element el,
-                           char *URL,
+                           char *imageURI,
                            int flags,
                            LoadedImageCallback callback,
                            void *extra );

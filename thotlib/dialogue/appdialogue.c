@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2003
+ * Copyright (c) INRIA 1996-2004
  */
 
 /*

@@ -260,9 +260,7 @@ static void CopyAlgaeTemplateURL (char **dest, char *url)
       else
 	break;
     }
-  *dest = (char *)TtaGetMemory (i * strlen (url)
-			+ strlen (annotAlgaeText)
-			+ 30);
+  *dest = (char *)TtaGetMemory (i * strlen (url) + strlen (annotAlgaeText) + 30);
   in = annotAlgaeText;
   out = *dest;
   while (*in != EOS)
@@ -315,13 +313,7 @@ void ANNOT_Init ()
 
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
-    {
-#ifdef _I18N_
-      annotUser = (char *)TtaConvertByteToMbs ((unsigned char *)tmp, ISO_8859_1);
-#else
-      annotUser = TtaStrdup (tmp);
-#endif /* _I18N_ */
-    }
+    annotUser = (char *)TtaConvertByteToMbs ((unsigned char *)tmp, ISO_8859_1);
   else
     annotUser = NULL;
   tmp = TtaGetEnvString ("ANNOT_SERVERS");
@@ -1427,7 +1419,7 @@ void ANNOT_SelectSourceDoc (int doc, Element sel)
   AttributeType    attrType;
   Attribute	   attr;
   int              length;
-  char          *annot_url;
+  char            *annot_url;
 
   /* reset the last selected annotation ptr */
   last_selected_annotation[doc] = NULL;
@@ -1456,11 +1448,9 @@ void ANNOT_SelectSourceDoc (int doc, Element sel)
   attr = TtaGetAttribute (el, attrType);
   if (!attr)
     return;
-  length = TtaGetTextAttributeLength (attr);
-  length++;
+  length = TtaGetTextAttributeLength (attr) + 1;
   annot_url = (char *)TtaGetMemory (length);
   TtaGiveTextAttributeValue (attr, annot_url, &length);
-
   /* select the annotated text */
   LINK_SelectSourceDoc (doc, annot_url, FALSE);
   /* memorize the last selected annotation */
@@ -1520,7 +1510,6 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ElementType      elType;
   AttributeType    attrType;
   Attribute	   HrefAttr;
-  CHARSET          charset;
   ThotBool	   docModified;
   ThotBool         has_thread = FALSE;
   int              length;
@@ -1571,6 +1560,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       length++;
       url = (char *)TtaGetMemory (length);
       TtaGiveTextAttributeValue (HrefAttr, url, &length);
+      /*** DO WE HAVE TO CONVERT THIS UTF-8 STRING??? */
     }
 
 #ifdef ANNOT_ON_ANNOT
@@ -1626,15 +1616,10 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       rel_doc = doc_annot;
       method = CE_ABSOLUTE;
     }
-#ifdef _I18N_
-  charset = UTF_8;
-#else /* _I18N_ */
-  charset = TtaGetDocumentCharset (doc_annot);
-#endif /* _I18N_ */
   targetDocument = GetAmayaDoc (url, NULL, rel_doc,
 				doc_annot, (ClickEvent)method, FALSE, 
 				(void (*)(int, int, char*, char*, const AHTHeaders*, void*)) Annot_RaiseSourceDoc_callback,
-				(void *) ctx, charset);
+				(void *) ctx);
 
   /* don't let Thot perform the normal operation */
   return TRUE;

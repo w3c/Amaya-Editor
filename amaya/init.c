@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -305,21 +305,21 @@ extern void InitMathML ();
 
 /* the structure used for storing the context of the 
    GetAmayaDoc_callback function */
-typedef struct _GETHTMLDocument_context
+typedef struct _AmayaDoc_context
 {
   Document   doc;
   Document   baseDoc;
   ThotBool   history;
   ThotBool   local_link;
   char      *target;
-  char      *documentname;
-  char      *initial_url;
+  char      *documentname; /* the document name */
+  char      *initial_url;  /* initial loaded URL */
   char      *form_data;
   ClickEvent method;
   ThotBool   inNewWindow;
   TTcbf     *cbf;
   void      *ctx_cbf;
-} GETHTMLDocument_context;
+} AmayaDoc_context;
 
 /* the structure used for storing the context of the 
    Reload_callback function */
@@ -1314,8 +1314,8 @@ void ShowLogFile (Document doc, View view)
 
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
 	   TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE, NULL,
-			NULL, TtaGetDefaultCharset ());
+  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
+			NULL, NULL);
   /* store the relation with the original document */
   if (newdoc)
     {
@@ -3289,11 +3289,10 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* ANNOTATIONS */
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
-  char                charsetname[MAX_LENGTH], *isopath;
+  char                charsetname[MAX_LENGTH];
   char               *charEncoding;
-  char               *tempdocument;
   char               *tempdir;
-  char               *s;
+  char               *s, *localdoc;
   char               *content_type;
   char               *http_content_type;
   int                 i, j;
@@ -3309,7 +3308,7 @@ static Document LoadDocument (Document doc, char *pathname,
   isRDF = FALSE;
   docType = docText;
   unknown = TRUE;
-  tempdir = tempdocument = NULL;
+  tempdir = localdoc = NULL;
   charsetname[0] = EOS;
   local_content_type[0] = EOS;
   http_content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
@@ -3321,19 +3320,17 @@ static Document LoadDocument (Document doc, char *pathname,
 
   /* Check informations within the document */
   if (tempfile[0] != EOS)
-    isopath = (char *)TtaConvertMbsToByte ((unsigned char *)tempfile,
-					   TtaGetDefaultCharset ());
+    s = tempfile;
   else
-    isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
-					   TtaGetDefaultCharset ());
+    s = pathname;
 
-  CheckDocHeader (isopath, &xmlDec, &withDoctype, &isXML, &isknown,
-		    &docProfile, &charset, charsetname, &thotType);
+  CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &isknown,
+		  &docProfile, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
- 	CheckCharsetInMeta (isopath, &metacharset, charsetname);
+    CheckCharsetInMeta (s, &metacharset, charsetname);
  
   if (method == CE_CSS)
     {
@@ -3630,7 +3627,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  /* verify if it contains bookmarks */
 	  /* we detected some bookmarks, in this rdf document */
-	  if (BM_Open (pathname, isopath))
+	  if (BM_Open (pathname, s))
 	    docType = docBookmark;
 	}
 #endif /* BOOKMARKS */
@@ -3642,16 +3639,16 @@ static Document LoadDocument (Document doc, char *pathname,
       strcpy (SavingFile, tempfile);
       SavingDocument = 0;
       SavingObject = 0;
-      tempdocument = (char *)TtaGetMemory (MAX_LENGTH);
-      TtaExtractName (isopath, tempfile, tempdocument);
+      localdoc = (char *)TtaGetMemory (MAX_LENGTH);
+      TtaExtractName (pathname, tempfile, localdoc);
       /* reinitialize directories and document lists */
-      strcpy (isopath, DirectoryName);
-      strcat (isopath, DIR_STR);
-      strcat (isopath, tempdocument);
       strcpy (SavePath, DirectoryName);
-      strcpy (SaveName, tempdocument);
+      strcpy (SaveName, localdoc);
+      strcpy (localdoc, SavePath);
+      strcat (localdoc, DIR_STR);
+      strcat (localdoc, SaveName);
       ResetStop (doc);
-      InitSaveObjectForm (doc, 1, SavingFile, isopath);
+      InitSaveObjectForm (doc, 1, SavingFile, localdoc);
     }
   else if (pathname[0] != EOS)
     {
@@ -3730,13 +3727,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  if (content_type)
 	    /* it's an image downloaded from the web */
-	    CreateHTMLContainer (isopath, documentname, tempfile, FALSE);
+	    CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
 	  else 
 	    {
 	      /* It's a local image file */
 	      sprintf (tempfile, "%s%c%d%c%s", TempFileDirectory,
 			DIR_SEP, newdoc, DIR_SEP, "contain.html");
-	      CreateHTMLContainer (isopath, documentname, tempfile, TRUE);
+	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
 	  ChangeToBrowserMode (doc);
 	}
@@ -3744,13 +3741,6 @@ static Document LoadDocument (Document doc, char *pathname,
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
 	{
-       if (IsW3Path (pathname))
-	 {
-	   TtaFreeMemory (isopath);
-	   isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
-						  TtaGetDefaultCharset ());
-	 }
-
 	  /* It is a document loaded from the Web */
 	  if (!TtaFileExist (tempfile))
 	    {
@@ -3760,37 +3750,37 @@ static Document LoadDocument (Document doc, char *pathname,
 	      return (0);
 	    }
 	  /* we have to rename the temporary file */
-	  /* allocate and initialize tempdocument */
-	  tempdocument = GetLocalPath (newdoc, isopath);
-	  TtaFileUnlink (tempdocument);
+	  /* allocate and initialize a teporary document */
+	  localdoc = GetLocalPath (newdoc, pathname);
+	  TtaFileUnlink (localdoc);
 	  if (doc != newdoc)
 	    {
 	      /* now we can rename the local name of a remote document */
-	      TtaFileCopy (isopath, tempdocument);
-	      TtaFileUnlink (isopath);
+	      TtaFileCopy (tempfile, localdoc);
+	      TtaFileUnlink (tempfile);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
 	      if (DocumentTypes[newdoc] == docImage)
 		MoveImageFile (doc, newdoc, documentname);
 	    }
 	  else if (DocumentTypes[newdoc] == docCSS)
-	      TtaFileCopy (tempfile, tempdocument);
+	      TtaFileCopy (tempfile, localdoc);
 	    /* now we can rename the local name of a remote document */
 	  else
 	    /* now we can rename the local name of a remote document */
-	    rename (tempfile, tempdocument);
+	    rename (tempfile, localdoc);
 	}
       else
 	{
 	  /* store a copy of the local document */
-	  /* allocate and initialize tempdocument */
-	  tempdocument = GetLocalPath (newdoc, isopath);
-	  TtaFileCopy (isopath, tempdocument);
+	  /* allocate and initialize a teporary document */
+	  localdoc = GetLocalPath (newdoc, pathname);
+	  TtaFileCopy (pathname, localdoc);
 	}
 
 #ifdef BOOKMARKS
       if (docType == docBookmark)
 	/* update the corresponding bookmark context to point to the new tmpfile */
-	BM_TempFileSet (isopath, tempdocument);
+	BM_TempFileSet (pathname, localdoc);
 #endif /* BOOKMARKS */
 
 
@@ -3802,7 +3792,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	    {
 	      /* store a copy of this new CSS context in .amaya/0 */
 	      s = GetLocalPath (0, pathname);
-	      TtaFileCopy (tempdocument, s);
+	      TtaFileCopy (localdoc, s);
 	      /* initialize a new CSS context */
 	      if (UserCSS && !strcmp (pathname, UserCSS))
 		AddCSS (newdoc, 0, CSS_USER_STYLE, CSS_ALL, NULL, s, NULL);
@@ -3815,7 +3805,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       
       /* save the document name into the document table */
-      s = TtaStrdup (isopath);
+      s = TtaStrdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
 	{
 	  TtaFreeMemory (DocumentURLs[newdoc]);
@@ -3906,7 +3896,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
 
       tempdir = (char *)TtaGetMemory (MAX_LENGTH);
-      TtaExtractName (tempdocument, tempdir, documentname);
+      TtaExtractName (localdoc, tempdir, documentname);
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
@@ -3933,11 +3923,11 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* BOOKMARKS */
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
-	StartXmlParser (newdoc,	tempdocument, documentname,
-			tempdir, isopath, xmlDec, withDoctype);
+	StartXmlParser (newdoc,	localdoc, documentname,
+			tempdir, pathname, xmlDec, withDoctype);
       else
-	StartParser (newdoc, tempdocument, documentname, tempdir,
-		     isopath, plainText);
+	StartParser (newdoc, localdoc, documentname, tempdir,
+		     pathname, plainText);
       
       TtaFreeMemory (tempdir);
    
@@ -3965,20 +3955,19 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* ANNOTATIONS */
     }
   TtaFreeMemory (content_type);
-  TtaFreeMemory (tempdocument);
-  TtaFreeMemory (isopath);
+  TtaFreeMemory (localdoc);
   return (newdoc);
 }
 
 /*----------------------------------------------------------------------
   Reload_callback
+  The urlName is encoded with the default charset.
   ----------------------------------------------------------------------*/
 void Reload_callback (int doc, int status, char *urlName,
 		      char *outputfile, AHTHeaders *http_headers,
 		      void * context)
 {
   Document          newdoc;
-  char              *pathname;
   char              *tempfile;
   char              *documentname;
   char              *form_data;
@@ -4007,9 +3996,6 @@ void Reload_callback (int doc, int status, char *urlName,
     }
 
   tempfile = outputfile;
-  pathname = (char *)TtaConvertByteToMbs ((unsigned char *)urlName,
-	  TtaGetDefaultCharset ());
-
   if (status == 0)
      {
        TtaSetCursorWatch (0, 0);
@@ -4029,13 +4015,13 @@ void Reload_callback (int doc, int status, char *urlName,
 	   /* add the URI in the combobox string */
 	   keep = (method == CE_ABSOLUTE || method == CE_INIT);
 	   if (form_data && method == CE_FORM_GET)
-	       AddURLInCombobox (pathname, form_data, keep);
+	       AddURLInCombobox (urlName, form_data, keep);
 	   else
-	     AddURLInCombobox (pathname, NULL, keep);
+	     AddURLInCombobox (urlName, NULL, keep);
 	 }
        /* parse and display the document, res contains the new document
 	  identifier, as given by the thotlib */
-       res = LoadDocument (newdoc, pathname, form_data, NULL, method,
+       res = LoadDocument (newdoc, urlName, form_data, NULL, method,
 			   tempfile, documentname, http_headers, FALSE, &InNewWindow);
        if (!ReadOnlyDocument[doc])
 	 UpdateEditorMenus (doc);
@@ -4100,10 +4086,9 @@ void Reload_callback (int doc, int status, char *urlName,
       DAVLockDiscovery (newdoc);
       DAVSetLockIndicator(newdoc);
     }
-#endif  /* DAV */
+#endif /* DAV */
 
   DocStatusUpdate (newdoc, FALSE);
-  TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)
     TtaFreeMemory (form_data);
@@ -4655,6 +4640,7 @@ ThotBool ViewToClose (NotifyDialog *event)
 }
 
 /*----------------------------------------------------------------------
+  The urlName is encoded with the default charset.
   ----------------------------------------------------------------------*/
 void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 			       char *outputfile, AHTHeaders *http_headers,
@@ -4663,7 +4649,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   Element             elFound;
   Document            doc;
   Document            res;
-  GETHTMLDocument_context *ctx;
+  AmayaDoc_context   *ctx;
   TTcbf              *cbf;
   ClickEvent         method;
   void               *ctx_cbf;
@@ -4682,7 +4668,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   ThotBool            local_link;
 
   /* restore GETHTMLDocument's context */  
-  ctx = (GETHTMLDocument_context *) context;
+  ctx = (AmayaDoc_context *) context;
   if (!ctx)
     return;
   doc = ctx->doc;
@@ -4867,28 +4853,27 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 /*----------------------------------------------------------------------
   GetAmayaDoc loads the document if it is not loaded yet and calls the
   parser if the document can be parsed.
-    - documentPath: can be relative or absolute address.
+    - urlname: can be relative or absolute address.
+      It's encoded with the default charset.
     - form_data: the text to be posted.
     - doc: the document which can be removed if not updated.
-    - baseDoc: the document which documentPath is relative to.
+    - baseDoc: the document which urlname is relative to.
     - method: CE_FORM_POST for a post request, CE_RELATIVE for a double 
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-Document GetAmayaDoc (char *documentPath, char *form_data,
+Document GetAmayaDoc (char *urlname, char *form_data,
 		      Document doc, Document baseDoc, ClickEvent method,
-		      ThotBool history, TTcbf *cbf, void *ctx_cbf,
-		      CHARSET charset)
+		      ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
   Document            newdoc, refdoc;
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
-  GETHTMLDocument_context *ctx = NULL;
+  AmayaDoc_context   *ctx = NULL;
   char               *tempfile;
-  char               *tempdocument;
   char               *parameters;
   char               *target;
-  char               *pathname;
+  char               *initial_url;
   char               *documentname;
   char               *content_type = NULL;
   int                 toparse;
@@ -4897,7 +4882,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
   ThotBool            ok;
 
   /* Extract parameters if necessary */
-  if (strlen (documentPath) > MAX_LENGTH - 1) 
+  if (strlen (urlname) > MAX_LENGTH - 1) 
     {
       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
       return (0);
@@ -4911,18 +4896,16 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
   parameters   = (char *)TtaGetMemory (MAX_LENGTH);
   tempfile     = (char *)TtaGetMemory (MAX_LENGTH);
   tempfile[0]  = EOS;
-  pathname     = (char *)TtaGetMemory (MAX_LENGTH);
-  /* Store DocumentURLs and DocHistory in UTF-8 */
-  tempdocument = (char *)TtaConvertByteToMbs ((unsigned char *)documentPath, charset);
-  ExtractParameters (tempdocument, parameters);
+  initial_url     = (char *)TtaGetMemory (MAX_LENGTH);
+  ExtractParameters (urlname, parameters);
   /* Extract the target if necessary */
-  ExtractTarget (tempdocument, target);
+  ExtractTarget (urlname, target);
   /* Add the  base content if necessary */
   if (method == CE_RELATIVE || method == CE_FORM_GET ||
       method == CE_FORM_POST || method == CE_MAKEBOOK)
-    NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
+    NormalizeURL (urlname, baseDoc, initial_url, documentname, NULL);
   else
-     NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
+     NormalizeURL (urlname, 0, initial_url, documentname, NULL);
   /* check the document suffix */
   if (IsMathMLName (documentname))
     docType = docMath;
@@ -4947,7 +4930,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
   
    /* we skip the file: prefix if it is present and do other local
       file urls conversions */
-  if (!IsW3Path (pathname))
+  if (!IsW3Path (initial_url))
     {
       /* we take the long way around to get the result
 	 of normalizeFile, as the function doesn't allocate
@@ -4958,17 +4941,17 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	  method == CE_MAKEBOOK)
 	/* we're following a link, so do all the convertions on
 	   the URL */
-	NormalizeFile (pathname, tempfile, AM_CONV_ALL);
+	NormalizeFile (initial_url, tempfile, AM_CONV_ALL);
       else
-	NormalizeFile (pathname, tempfile, AM_CONV_NONE);
-      strcpy (pathname, tempfile);
+	NormalizeFile (initial_url, tempfile, AM_CONV_NONE);
+      strcpy (initial_url, tempfile);
       tempfile[0] = EOS;
     }
 
   /* check if the user is already browsing the document in another window */
   if (method == CE_FORM_GET)
     {
-      newdoc = IsDocumentLoaded (pathname, form_data);
+      newdoc = IsDocumentLoaded (initial_url, form_data);
       /* we don't concatenate the new parameters as we give preference
 	 to the form data */
     }
@@ -4977,15 +4960,15 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
       /* concatenate the parameters before making the test */
       if (parameters[0] != EOS)
 	{
-	  strcat (pathname, "?");
-	  strcat (pathname, parameters);
+	  strcat (initial_url, "?");
+	  strcat (initial_url, parameters);
 	}
       /* if it's a POST form, we search the document using the
 	 form_data */
       if (method == CE_FORM_POST)
-	newdoc = IsDocumentLoaded (pathname, form_data);
+	newdoc = IsDocumentLoaded (initial_url, form_data);
       else
-	newdoc = IsDocumentLoaded (pathname, NULL);
+	newdoc = IsDocumentLoaded (initial_url, NULL);
     }
 
   if (newdoc != 0)
@@ -5012,13 +4995,13 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
     }
 
   /* Create the context for the callback */
-  ctx = (GETHTMLDocument_context*)TtaGetMemory (sizeof (GETHTMLDocument_context));
+  ctx = (AmayaDoc_context*)TtaGetMemory (sizeof (AmayaDoc_context));
   ctx->doc = doc;
   ctx->baseDoc = baseDoc;
   ctx->history = history;
   ctx->target = target;
   ctx->documentname = documentname;
-  ctx->initial_url = TtaStrdup (pathname);
+  ctx->initial_url = TtaStrdup (initial_url);
   if (form_data)
     ctx->form_data = TtaStrdup (form_data);
   else
@@ -5032,14 +5015,16 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
   toparse = 0;
   if (newdoc == 0)
     {
+      /*
+	DocumentURLs and DocHistory are coded in the default charset */
       /* document not loaded yet */
       if ((method == CE_RELATIVE || method == CE_FORM_GET ||
 	   method == CE_FORM_POST || method == CE_MAKEBOOK ||
 	   method == CE_ANNOT) &&
-	  !IsW3Path (pathname) && !TtaFileExist (pathname))
+	  !IsW3Path (initial_url) && !TtaFileExist (initial_url))
 	{
 	  /* the target document doesn't exist */
-	  TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	  TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), initial_url);
 	  ok = FALSE; /* do not continue */
 	}
       else if (method == CE_LOG)
@@ -5049,7 +5034,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
       else if (method == CE_HELP)
 	{
 	  /* add the URI in the combobox string */
-	  AddURLInCombobox (pathname, NULL, FALSE);
+	  AddURLInCombobox (initial_url, NULL, FALSE);
 	  /* need to create a new window for the document */
 	  newdoc = InitDocAndView (doc, documentname, (DocumentType)docType, 0, TRUE,
 				   L_Other, (ClickEvent)method);
@@ -5076,7 +5061,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	{
 	  /* In case of initial document, open the view before loading */
 	  /* add the URI in the combobox string */
-	  AddURLInCombobox (pathname, NULL, FALSE);
+	  AddURLInCombobox (initial_url, NULL, FALSE);
 	  newdoc = InitDocAndView (0, documentname, (DocumentType)docType, 0, FALSE,
 				   L_Other, (ClickEvent)method);
 	}
@@ -5107,16 +5092,16 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	  else if (method == CE_MAKEBOOK)
 	    mode = AMAYA_ASYNC;
 
-	  if (IsW3Path (pathname))
+	  if (IsW3Path (initial_url))
 	    {
-	      css = SearchCSS (0, pathname, NULL, &pInfo);
+	      css = SearchCSS (0, initial_url, NULL, &pInfo);
 	      if (method == CE_MAKEBOOK || method == CE_RELATIVE)
 		/* add the referer field in the GET */
 		refdoc = doc;
 	      else
 		refdoc = 0;
 	      if ((css == NULL) || (css != NULL && newdoc == doc))
-		toparse =  GetObjectWWW (newdoc, refdoc, pathname, form_data,
+		toparse =  GetObjectWWW (newdoc, refdoc, initial_url, form_data,
 					 tempfile, mode, NULL, NULL,
 					 (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GetAmayaDoc_callback,
 					 (void *) ctx, YES, content_type);
@@ -5127,7 +5112,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 				TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 		  /* just take a copy of the local temporary file */
 		  strcpy (tempfile, css->localName);
-		  GetAmayaDoc_callback (newdoc, 0, pathname,
+		  GetAmayaDoc_callback (newdoc, 0, initial_url,
 					tempfile, NULL, (void *) ctx);
 		  TtaHandlePendingEvents ();
 		}
@@ -5138,7 +5123,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	      TtaSetStatus (newdoc, 1,
 			    TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
 			    NULL);
-	      GetAmayaDoc_callback (newdoc, 0, pathname, tempfile,
+	      GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile,
 				    NULL, (void *) ctx);
 	      TtaHandlePendingEvents ();
 	    }
@@ -5149,7 +5134,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
       /* following a local link */
       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
       ctx->local_link = 1;
-      GetAmayaDoc_callback (newdoc, 0, pathname, tempfile, NULL, (void *) ctx);
+      GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile, NULL, (void *) ctx);
       TtaHandlePendingEvents ();
     }
   
@@ -5163,15 +5148,14 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
       if (ctx)
 	TtaFreeMemory (ctx);
       if (cbf)
-	(*cbf) (newdoc, -1, pathname, tempfile, NULL, ctx_cbf);
+	(*cbf) (newdoc, -1, initial_url, tempfile, NULL, ctx_cbf);
       /* Free the memory associated with the context */
       TtaFreeMemory (target);
       TtaFreeMemory (documentname);
     }
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);
-  TtaFreeMemory (pathname);
-  TtaFreeMemory (tempdocument);
+  TtaFreeMemory (initial_url);
   InNewWindow = FALSE;
   return (newdoc);
 }
@@ -5376,14 +5360,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
 {
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
-  char              sep, *tmp, *ptr;
+  char              sep, *utf8value, *ptr;
   int               val;
 #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) 
   int               i;
 #endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
   ThotBool          change, updated;
 
-  tmp = NULL;
+  utf8value = NULL;
   if (typedata == STRING_DATA && data && strchr (data, '/'))
     sep = URL_SEP;
   else
@@ -5419,11 +5403,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      /* load an URL */ 
 	      else if (InNewWindow)
 		GetAmayaDoc (LastURLName, NULL, 0, 0, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
+			     FALSE, NULL, NULL);
 	      else
 		GetAmayaDoc (LastURLName, NULL, CurrentDocument,
 			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
-			     NULL, NULL, TtaGetDefaultCharset ());
+			     NULL, NULL);
 	    }
 	  else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 	    {
@@ -5437,11 +5421,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		{
 		  if (InNewWindow)
 		    GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
-				 FALSE, NULL, NULL, TtaGetDefaultCharset ());
+				 FALSE, NULL, NULL);
 		  else
 		    GetAmayaDoc (tempfile, NULL, CurrentDocument,
 				 CurrentDocument, (ClickEvent)Loading_method,
-				 TRUE, NULL, NULL, TtaGetDefaultCharset ());
+				 TRUE, NULL, NULL);
 		}
 	      else if (NewFile)
 		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
@@ -5478,11 +5462,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      /* update the list of URLs */
 	      if (InNewWindow)
 		GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
+			     FALSE, NULL, NULL);
 	      else
 		GetAmayaDoc (DocumentName, NULL, CurrentDocument,
 			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
-			     NULL, NULL, TtaGetDefaultCharset ());
+			     NULL, NULL);
 	    }
 	  else if (DirectoryName[0] != EOS)
 	    TtaSetStatus (CurrentDocument, 1,
@@ -5963,17 +5947,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  /* Confirm button */
 	  if (AttrHREFvalue[0] != EOS)
 	    {
-#ifdef _I18N_
-	      tmp = (char *)TtaConvertByteToMbs ((unsigned char *)AttrHREFvalue, TtaGetDefaultCharset ());
+	      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)AttrHREFvalue,
+						 TtaGetDefaultCharset ());
 	      /* create an attribute HREF for the Link_Anchor */
 	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
-			       tmp, NULL);
-	      TtaFreeMemory (tmp);
-#else /* _I18N_ */
-	      /* create an attribute HREF for the Link_Anchor */
-	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
-			       AttrHREFvalue, NULL);
-#endif /* _I18N_ */
+			       utf8value, NULL);
+	      TtaFreeMemory (utf8value);
 	    }
 	  TtaDestroyDialogue (BaseDialog + AttrHREFForm);
 	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
@@ -6381,11 +6360,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 }
 
 /*----------------------------------------------------------------------
-  RestoreOneAmayaDoc restores a saved file
-  doc is the suggested doc to be loaded or 0.
+  RestoreOneAmayaDoc restores a saved file doc is the suggested doc to
+  be loaded or 0.
   docname is the original name of the document.
   tempdoc is the name of the saved file.
   Return the new recovered document
+  URIs are encoded with the default charset.
   ----------------------------------------------------------------------*/
 static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 			       DocumentType docType, ThotBool iscrash)
@@ -6400,8 +6380,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
   AddURLInCombobox (docname, NULL, TRUE);
-  newdoc = InitDocAndView (doc, DocumentName, (DocumentType)docType, 0, FALSE, L_Other,
-			   (ClickEvent)CE_ABSOLUTE);
+  newdoc = InitDocAndView (doc, DocumentName, (DocumentType)docType, 0,
+			   FALSE, L_Other, (ClickEvent)CE_ABSOLUTE);
    if (newdoc != 0)
     {
       /* load the saved file */
@@ -6552,7 +6532,8 @@ static ThotBool RestoreAmayaDocs ()
 		{
 		  if (restore)
 		    {
-		      if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType, iscrash))
+		      if (RestoreOneAmayaDoc (0, tempdoc, docname,
+					      (DocumentType) docType, iscrash))
 			aDoc = TRUE;
 		    }
 		  else
@@ -6643,7 +6624,6 @@ static ThotBool RestoreAmayaDocs ()
 	  if (!UserAnswer)
 	    TtaFileUnlink (tempname);
 	}
-
     }
   return (aDoc);
 }
@@ -7619,8 +7599,8 @@ void HelpAtW3C (Document document, View view)
 #endif /* LC */
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP, FALSE, NULL,
-			  NULL, TtaGetDefaultCharset ());
+  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
   InitDocHistory (document);
 }
 
@@ -7646,8 +7626,8 @@ static void DisplayHelp (int doc, int index)
 	sprintf (localname, "%s%cdoc%chtml%c%s", s, DIR_SEP, DIR_SEP,
 		  DIR_SEP, Manual[index]);
     }
-  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP, FALSE, NULL,
-			  NULL, TtaGetDefaultCharset ());
+  document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
+			  FALSE, NULL, NULL);
   InitDocHistory (document);
 }
 
@@ -7937,26 +7917,25 @@ void AmayaClose (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-  AddURLInCombobox adds the new URL in the string for combobox
+  AddURLInCombobox adds the new pathname in the combobox list.
   Store that URL into the file only if keep is TRUE.
+  URIs are encoded with the default charset.
   ----------------------------------------------------------------------*/
-void AddURLInCombobox (char *url_utf8, char *form_data, ThotBool keep)
+void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 {
   char     *urlstring, *app_home, *ptr, *url;
   int       i, j, len, nb, end;
   FILE     *file = NULL;
 
-  if (url_utf8 == NULL || url_utf8[0] == EOS)
+  if (pathname == NULL || pathname[0] == EOS)
     return;
   if (form_data && form_data[0] != EOS)
     {
-      ptr = (char *)TtaGetMemory (strlen (url_utf8) + strlen (form_data) + 2);
-      sprintf (ptr, "%s?%s", url_utf8, form_data);
-      url = (char *)TtaConvertMbsToByte ((unsigned char *)ptr, TtaGetDefaultCharset ());
-      TtaFreeMemory (ptr);
+      url = (char *)TtaGetMemory (strlen (pathname) + strlen (form_data) + 2);
+      sprintf (url, "%s?%s", pathname, form_data);
     }
   else
-    url = (char *)TtaConvertMbsToByte ((unsigned char *)url_utf8, TtaGetDefaultCharset ());
+    url = TtaStrdup (pathname);
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
@@ -8076,31 +8055,25 @@ void InitStringForCombobox ()
 /*----------------------------------------------------------------------
   RemoveDocFromSaveList remove the file from the AutoSave list
   ----------------------------------------------------------------------*/
-void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
+void RemoveDocFromSaveList (char *name, char *initial_url, int doctype)
 {
-  char     *urlstring, *app_home, *ptr, *name, *url, *list_item;
+  char     *urlstring, *app_home, *ptr, *list_item;
   char     *ptr_end, *ptr_beg;
   int       i, j, len, nb, end;
   FILE     *file = NULL;
 
-  if (save_name == NULL || save_name[0] == EOS)
+  if (name == NULL || name[0] == EOS)
     return;
   if (initial_url == NULL || initial_url[0] == EOS)
     return;
-
-  name = (char *)TtaConvertMbsToByte ((unsigned char *)save_name,
-				      TtaGetDefaultCharset ());
-  url = (char *)TtaConvertMbsToByte ((unsigned char *)initial_url,
-				     TtaGetDefaultCharset ());
   /* keep the previous list */
   ptr = AutoSave_list;
-
   /* create a new list */
   AutoSave_list = (char *)TtaGetMemory (AutoSave_list_len + 1);  
-  len = strlen (url) + strlen (name) + 1;
+  len = strlen (initial_url) + strlen (name) + 1;
   len += 17; /*doctype + quotation marks + spaces */
   list_item  = (char *)TtaGetMemory (len);
-  sprintf (list_item, "\"%s\" \"%s\" %d", name, url, doctype);
+  sprintf (list_item, "\"%s\" \"%s\" %d", name, initial_url, doctype);
   /* open the file AutoSave.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
@@ -8128,7 +8101,7 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
 		      if (ptr_beg)
 			{
 			  ptr_beg++;
-			  if (strcmp (url, ptr_beg))
+			  if (strcmp (initial_url, ptr_beg))
 			    {
 			      /* keep this entry */
 			      *ptr_end = '\"';
@@ -8163,42 +8136,31 @@ void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
       AutoSave_list_len = 0;
     }
   
-  if (ptr)
-    TtaFreeMemory (ptr);
-  if (urlstring)
-    TtaFreeMemory (urlstring);
-  if (name)
-    TtaFreeMemory (name);
-  if (url)
-    TtaFreeMemory (url);
-  if (list_item)
-    TtaFreeMemory (list_item);
+  TtaFreeMemory (ptr);
+  TtaFreeMemory (urlstring);
+  TtaFreeMemory (list_item);
 }
 
 /*----------------------------------------------------------------------
   AddDocInSaveList adds the new URL into the AutoSave list
   ----------------------------------------------------------------------*/
-void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
+void AddDocInSaveList (char *name, char *initial_url, int doctype)
 {
-  char     *urlstring, *app_home, *ptr, *name, *url;
+  char     *urlstring, *app_home, *ptr;
   char     *ptr_end, *ptr_beg;
   int       i, j, len, nb, end;
   FILE     *file = NULL;
 
   if (AutoSave_Interval == 0)
     return;
-  if (save_name == NULL || save_name[0] == EOS)
+  if (name == NULL || name[0] == EOS)
     return;
   if (initial_url == NULL || initial_url[0] == EOS)
     return;
-
-  name = (char *)TtaConvertMbsToByte ((unsigned char *)save_name, TtaGetDefaultCharset ());
-  url = (char *)TtaConvertMbsToByte ((unsigned char *)initial_url, TtaGetDefaultCharset ());
-
   /* keep the previous list */
   ptr = AutoSave_list;
   /* create a new list */
-  len = strlen (url) + strlen (name) + 1;
+  len = strlen (initial_url) + strlen (name) + 1;
   len += 7; /*doctype + quotation marks + spaces */
   AutoSave_list = (char *)TtaGetMemory (AutoSave_list_len + len + 1);  
 
@@ -8215,7 +8177,7 @@ void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
       j = len;
       nb = 1;
       /* put the new line */
-      sprintf (AutoSave_list, "\"%s\" \"%s\" %d", name, url, doctype);
+      sprintf (AutoSave_list, "\"%s\" \"%s\" %d", name, initial_url, doctype);
       AutoSave_list_len = len + 1;
       fprintf (file, "%s\n", AutoSave_list);
       if (ptr && *ptr != EOS)
@@ -8233,7 +8195,7 @@ void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
 		  if (ptr_beg)
 		    {
 		      ptr_beg++;
-		      if ((end != len) || (strcmp (url, ptr_beg)))
+		      if ((end != len) || (strcmp (initial_url, ptr_beg)))
 			{
 			  /* copy the url */
 			  *ptr_end = '\"';
@@ -8252,14 +8214,9 @@ void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
       AutoSave_list[j] = EOS;
       TtaWriteClose (file);
     }
-  if (ptr)
-    TtaFreeMemory (ptr);
-  if (urlstring)
-    TtaFreeMemory (urlstring);
-  if (name)
-    TtaFreeMemory (name);
-  if (url)
-    TtaFreeMemory (url);
+
+  TtaFreeMemory (ptr);
+  TtaFreeMemory (urlstring);
 }
 
 /*----------------------------------------------------------------------

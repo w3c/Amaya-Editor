@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,7 +40,6 @@ extern XmlEntity *pMathEntityTable;
   ----------------------------------------------------------------------*/
 static ThotBool IsLargeOp (CHAR_T character, char script)
 {
-#ifdef _I18N_
   if (character == 0x22C1 || /* Vee */
       character == 0x2296 || /* CircleMinus */
       character == 0x2295 || /* CirclePlus */
@@ -57,10 +56,6 @@ static ThotBool IsLargeOp (CHAR_T character, char script)
       character == 0x2210 || /* Coproduct */
       character == 0x220F || /* Product */
       character == 0x22C2 ) /* Intersection */
-#else
-  if ((script == 'G') &&
-      (character == 229 || character == 213))  /* large Sigma or Pi */
-#endif
     /* it's a large operator */
     return TRUE;
   else
@@ -74,17 +69,12 @@ static ThotBool IsLargeOp (CHAR_T character, char script)
   ----------------------------------------------------------------------*/
 static ThotBool IsStretchyFence (CHAR_T character, char script)
 {
-  if ((
-#ifndef _I18N_
-       (script == 'L') &&
-#endif
-        (character == '(' || character == ')' ||
-	 character == '[' || character == ']' ||
-	 character == '{' || character == '}' ||
-	 character == '|'))  ||   /* strangely enough, appendix F.5 does not
-				     consider this character as a fence */
+  if (((character == '(' || character == ')' ||
+	character == '[' || character == ']' ||
+	character == '{' || character == '}' ||
+	character == '|'))  ||   /* strangely enough, appendix F.5 does not
+				    consider this character as a fence */
       (
-#ifdef _I18N_
        (character == 0x2329 || /* LeftAngleBracket */
         /* LeftBracketingBar ??? */
 	character == 0x2308 || /* LeftCeiling */
@@ -97,11 +87,7 @@ static ThotBool IsStretchyFence (CHAR_T character, char script)
 	character == 0x301B || /* RightDoubleBracket */
 	/* RightDoubleBracketingBar ??? */
 	character == 0x230B )  /* RightFloor */
-#else
-       (script == 'G') &&
-       (character == 225 || character == 241) /* left and right angle bracket*/
-#endif
-     ))
+       ))
     return TRUE;
   else
     return FALSE;
@@ -424,9 +410,6 @@ void SetIntMovelimitsAttr (Element el, Document doc)
   CHAR_T        text[10];
   char          buffer[20];
   ThotBool      movable;
-#ifndef _I18N_
-  char          script;
-#endif
 
   if (el == NULL || doc == 0)
      return;
@@ -500,11 +483,8 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 			      len = TtaGetElementVolume (textEl);
 			      if (len == 3)
 				{
-				  TtaGiveTextContent (textEl, (unsigned char *)buffer, &len, &lang);
-#ifndef _I18N_
-				  script = TtaGetScript (lang);
-				  if (script == 'L')
-#endif
+				  TtaGiveTextContent (textEl, (unsigned char *)buffer,
+						      &len, &lang);
 				    {
 				      if (!strcmp (buffer, "lim") ||
 					  !strcmp (buffer, "max") ||
@@ -515,7 +495,6 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 			      else if (len == 1)
 				{
 				  TtaGiveBufferContent (textEl, text, len+1, &lang);
-#ifdef _I18N_
 				  if (text[0] == 0x22C1 /* Vee */ ||
 				      text[0] == 0x2296 /* CircleMinus */ ||
 				      text[0] == 0x2295 /* CirclePlus */ ||
@@ -529,15 +508,6 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 				      text[0] == 0x22C2 /* Intersection */ ||
 				      text[0] == 0x2299 /* CircleDot */ )
 				    movable = TRUE;
-#else
-				  script = TtaGetScript (lang);
-				  if (script == 'G')
-				    /* Adobe Symbol character set */
-				    if (text[0] == 197 || text[0] == 229 ||
-					text[0] == 200 || text[0] == 196 ||
-					text[0] == 213 || text[0] == 199)
-				      movable = TRUE;
-#endif
 				}
 			    }
 			}
@@ -996,15 +966,11 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		   TtaGiveBufferContent (textEl, text, len, &lang);
 		   script = TtaGetScript (lang);
 		   if (
-#ifndef _I18N_
-		       (script == 'L') &&
-#endif
 		       (text[0] == '-' || text[0] == '_' ||
 			text[0] == 175))
 		     /* a horizontal line in the middle of the box */
 		     c = 'h'; 
 		   else 
-#ifdef _I18N_
 		     if (text[0] == 0x2190)
 		       c = 'L';  /* arrow left */
 		     else if (text[0] == 0x2192)
@@ -1022,23 +988,6 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 		       c = 'o';  /* Over brace */
 		     else if (text[0] == 65080)
 		       c = 'u';  /* Under brace */
-#else
-		   if (script == 'G')
-		     /* a single Symbol character */
-		     {
-		       if (text[0] == 172)
-			 c = 'L';  /* arrow left */
-		       else if (text[0] == 174)
-			 c = 'R';  /* arrow right */
-		       else if (text[0] == 45)    /* - (minus) */
-			 /* a horizontal line in the middle of the box */
-			 c = 'h'; 
-		       else if (text[0] == 132)
-			 c = 'o';  /* Over brace */
-		       else if (text[0] == 133)
-			 c = 'u';  /* Under brace */
-		     }
-#endif
 		   if (c != EOS)
 		     doit = TRUE;
 		 }
@@ -1229,7 +1178,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		    len = buflen-1;
 		  TtaGiveBufferContent (textEl, text, len+1, &lang);
 		  script = TtaGetScript (lang);
-#ifdef _I18N_
 		  stretchable = TRUE;
 		  for (i = 0; i < len; i++)
 		    if ((text[i] < 0x222B || text[i] > 0x2233) &&
@@ -1241,22 +1189,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			 triple integral, contour integral, etc. or vertical
 		         arrows (add more arrows *****) */
 		      stretchable = FALSE;
-#else
-		  stretchable = FALSE;
-		  if (script == 'G')
-		    /* Adobe Symbol character set */
-		    {
-		    stretchable = TRUE;
-		    /* check all characters in this TEXT element */
-		    for (i = 0; i < len; i++)
-		      if (text[i] != 242 &&     /* integral */
-			  text[i] != 173 && text[i] != 175 &&  /* arrows */
-			  text[i] != 221 && text[i] != 223) /* double arrows */
-		        /**** accept also other symbols like double or triple
-			      integral, contour integral, etc. ****/
-			stretchable = FALSE;
-		    }
-#endif
 		  if (stretchable)
 		    /* the operator contains only stretchable symbols */
 		    {
@@ -1282,7 +1214,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			  for (i = 0; i < len; i++)
 			    {
 			      c = (unsigned char) text[i];
-#ifdef _I18N_
 		              if (text[i] == 0x222B)
 				c = 'i';
 			      else if (text[i] == 0x222C)
@@ -1295,14 +1226,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				c = '^';
 			      else if (text[i] == 0x2193)
 				c = 'V';
-#else /*_I18N_ */
-			      if (text[i] == 242)
-				c = 'i';
-			      else if (text[i] == 173)
-				c = '<';
-			      else if (text[i] == 175)
-				c = '>';
-#endif /*_I18N_ */
 			      symbolEl = TtaNewElement (doc, elType);
 			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 			      TtaSetGraphicsShape (symbolEl, c, doc);
@@ -1336,18 +1259,12 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				      TtaGiveBufferContent (textEl, text,
 							    len+1, &lang); 
 				      script = TtaGetScript (lang);
-#ifdef _I18N_
 				      if (text[0] != 0x222B &&
 					  text[0] != 0x222C &&
 					  text[0] != 0x222D &&
 					  text[0] != 0x222E &&
 					  text[0] != 0x2191 &&
 					  text[0] != 0x2193)
-#else /*_I18N_ */
-				      if (script != 'G' ||
-					  (text[0] != 242 && text[0] != 173 &&
-					   text[0] != 175))
-#endif /*_I18N_ */
 					/* not a stretchable symbol */
 					textEl = NULL;
 				    }
@@ -1772,10 +1689,6 @@ void SetFontstyleAttr (Element el, Document doc)
   Element       ancestor, textEl;
   int		len;
   Language      lang;
-#ifndef _I18N_
-  char          script;
-  char         *value;
-#endif
   CHAR_T        text[2];
   ThotBool      italic;
 
@@ -1872,45 +1785,15 @@ void SetFontstyleAttr (Element el, Document doc)
 			  /* get that character */
 			  len = 2;
 			  TtaGiveBufferContent (textEl, text, len, &lang);
-#ifndef _I18N_
-			  script = TtaGetScript (lang);
-#endif
-			  if (
-#ifndef _I18N_
-			      script == 'L' &&
-#endif
-			      text[0] >= '0' && text[0] <= '9')
+			  if (text[0] >= '0' && text[0] <= '9')
 			    /* that's a single digit */
 			    italic = FALSE;
 			  else
-#ifdef _I18N_
 			    /* is this the Unicode character for DifferentialD,
 			       ExponentialE or ImaginaryI? */
 			    if (text[0] == 0x2146 || text[0] == 0x2147 ||
 				text[0] == 0x2148)
 			      italic = FALSE;
-#else
-			    {
-			    /* is there an attribute EntityName on that
-			       character? */
-			    attrType.AttrTypeNum = MathML_ATTR_EntityName;
-			    attr = TtaGetAttribute (textEl, attrType);
-			    if (attr)
-			      {
-				len = TtaGetTextAttributeLength (attr);
-				if (len > 0)
-				  {
-				    value = (char *)TtaGetMemory (len+1);
-				    TtaGiveTextAttributeValue (attr, value, &len);
-				    if (strcmp (&value[1], "ImaginaryI;") == 0 ||
-					strcmp (&value[1], "ExponentialE;") == 0 ||
-					strcmp (&value[1], "DifferentialD;") == 0)
-				      italic = FALSE;
-				    TtaFreeMemory (value);
-				  }
-			      }
-			    }
-#endif
 			}
 		    }
 		  if (italic)
@@ -2018,139 +1901,104 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	      TtaGiveBufferContent (textEl, text, len+1, &lang);
 	      script = TtaGetScript (lang);
 	      /* the mo element contains a single character */
-#ifndef _I18N_
-	      if (script == 'L')
-		/* ISO-Latin 1 character */
+	      if (text[0] == '-' || text[0] == 0x2212 /* minus */)
+		/* prefix or infix operator? */
 		{
-#endif
-		  if (text[0] == '-'
-#ifdef _I18N_
-		      || text[0] == 0x2212   /* minus */
-#endif
-		      )
-		    /* prefix or infix operator? */
+		  /* skip preceding comments if any */
+		  previous = el;
+		  do
 		    {
-		      /* skip preceding comments if any */
-		      previous = el;
-		      do
-			{
-			  comment = FALSE;
-			  TtaPreviousSibling (&previous);
-			  if (previous)
-			    {
-			      elType = TtaGetElementType (previous);
-			      comment = (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
-					 elType.ElTypeNum == MathML_EL_XMLcomment);
-			    }
-			}
-		      while (previous && comment);
-		      
-		      if (previous == NULL)
-			/* no previous sibling => prefix operator */
-			val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		      else
+		      comment = FALSE;
+		      TtaPreviousSibling (&previous);
+		      if (previous)
 			{
 			  elType = TtaGetElementType (previous);
-			  if (elType.ElTypeNum == MathML_EL_MO ||
-			      elType.ElTypeNum == MathML_EL_OpeningFence ||
-			      elType.ElTypeNum == MathML_EL_ClosingFence ||
-			      elType.ElTypeNum == MathML_EL_FencedSeparator)
-			    /* after an operator => prefix operator */
-			    val = MathML_ATTR_IntAddSpace_VAL_nospace;
-			  else
-			    /* infix operator */
-			    val = MathML_ATTR_IntAddSpace_VAL_both_;
+			  comment = (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
+				     elType.ElTypeNum == MathML_EL_XMLcomment);
 			}
 		    }
-		  else if (text[0] == '&' ||
-			   text[0] == '*' ||
-			   text[0] == '+' ||
-			   text[0] == '/' ||
-			   text[0] == '<' ||
-			   text[0] == '=' ||
-			   text[0] == '>' ||
-			   text[0] == '^' ||
-			   (int)text[0] == 177 || /* plus or minus */
-			   (int)text[0] == 215 || /* times */
-			   (int)text[0] == 247)   /* divide */
-		    /* infix operator */
-		    val = MathML_ATTR_IntAddSpace_VAL_both_;
-		  else if (text[0] == ',' ||
-			   text[0] == '!' ||
-			   text[0] == '&' ||
-			   text[0] == ':' ||
-			   text[0] == ';')
-		    /* separator */
-		    val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
-		  else if (text[0] == '(' ||
-			   text[0] == ')' ||
-			   text[0] == '[' ||
-			   text[0] == ']' ||
-			   text[0] == '{' ||
-			   text[0] == '}' ||
-			   text[0] == '.' ||
-			   text[0] == '@' ||
-#ifndef _I18N_
-			   text[0] == 'd' ||       /* probably DifferentialD */
-#endif
-			   (int)text[0] == 129 ||  /* thin space */
-			   (int)text[0] == 130 ||  /* en space */
-			   (int)text[0] == 160)    /* em space */
+		  while (previous && comment);
+		  
+		  if (previous == NULL)
+		    /* no previous sibling => prefix operator */
 		    val = MathML_ATTR_IntAddSpace_VAL_nospace;
-#ifndef _I18N_
-		}
-	      else if (script == 'G')
-		{
-		  /* Symbol character set */
-		  if ((int)text[0] == 163 || /* less or equal */
-		      (int)text[0] == 177 || /* plus or minus */
-		      (int)text[0] == 179 || /* greater or equal */
-		      (int)text[0] == 180 || /* times */
-		      (int)text[0] == 184 || /* divide */
-		      (int)text[0] == 185 || /* not equal */
-		      (int)text[0] == 186 || /* identical */
-		      (int)text[0] == 187 || /* equivalent */
-		      (int)text[0] == 196 || /* circle times */
-		      (int)text[0] == 197 || /* circle plus */
-		      ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
-		      (int)text[0] == 217 || /* and */
-		      (int)text[0] == 218)   /* or */
-#else
-		    else
-		      if ((int)text[0] == 0x2264 || /* less or equal */
-			  (int)text[0] == 0x00B1 || /* plus or minus */
-			  (int)text[0] == 0x2265 || /* greater or equal */
-			  (int)text[0] == 0x00D7 || /* times */
-			  (int)text[0] == 0x00F7 || /* divide */
-			  (int)text[0] == 0x2260 || /* not equal */
-			  (int)text[0] == 0x2261 || /* identical */
-			  (int)text[0] == 0x2248 || /* equivalent */
-			  (int)text[0] == 0x2297 || /* circle times */
-			  (int)text[0] == 0x2295 || /* circle plus */
-			  (int)text[0] == 0x2229 || /* Intersection */
-			  (int)text[0] == 0x222A || /* Union */
-			  (int)text[0] == 0x2283 || /* Superset of */
-			  (int)text[0] == 0x2287 || /* Superset of or equal to */
-			  (int)text[0] == 0x2284 || /* Not a subset of */
-			  (int)text[0] == 0x2282 || /* Subset of */
-			  (int)text[0] == 0x2286 || /* Subset of or equal to */
-			  (int)text[0] == 0x2208 || /* Element of */
-			  (int)text[0] == 0x2209 || /* Not an element of */
-			  (int)text[0] == 0x2220 || /* Angle */
-			  (int)text[0] == 0x2207 || /* Nabla */
-			  (int)text[0] == 0x2227 || /* and */
-			  (int)text[0] == 0x2228 || /* or */
-			  (int)text[0] == 0x2190 || /* left arrow */
-			  (int)text[0] == 0x2192 || /* right arrow */
-			  (int)text[0] == 0x2194)   /* left right arrow */
-#endif
+		  else
+		    {
+		      elType = TtaGetElementType (previous);
+		      if (elType.ElTypeNum == MathML_EL_MO ||
+			  elType.ElTypeNum == MathML_EL_OpeningFence ||
+			  elType.ElTypeNum == MathML_EL_ClosingFence ||
+			  elType.ElTypeNum == MathML_EL_FencedSeparator)
+			/* after an operator => prefix operator */
+			val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		      else
 			/* infix operator */
 			val = MathML_ATTR_IntAddSpace_VAL_both_;
-		      else
-			val = MathML_ATTR_IntAddSpace_VAL_nospace;
-#ifndef _I18N_
+		    }
 		}
-#endif
+	      else if (text[0] == '&' ||
+		       text[0] == '*' ||
+		       text[0] == '+' ||
+		       text[0] == '/' ||
+		       text[0] == '<' ||
+		       text[0] == '=' ||
+		       text[0] == '>' ||
+		       text[0] == '^' ||
+		       (int)text[0] == 177 || /* plus or minus */
+		       (int)text[0] == 215 || /* times */
+		       (int)text[0] == 247)   /* divide */
+		/* infix operator */
+		val = MathML_ATTR_IntAddSpace_VAL_both_;
+	      else if (text[0] == ',' ||
+		       text[0] == '!' ||
+		       text[0] == '&' ||
+		       text[0] == ':' ||
+		       text[0] == ';')
+		/* separator */
+		val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+	      else if (text[0] == '(' ||
+		       text[0] == ')' ||
+		       text[0] == '[' ||
+		       text[0] == ']' ||
+		       text[0] == '{' ||
+		       text[0] == '}' ||
+		       text[0] == '.' ||
+		       text[0] == '@' ||
+		       (int)text[0] == 129 ||  /* thin space */
+		       (int)text[0] == 130 ||  /* en space */
+		       (int)text[0] == 160)    /* em space */
+		val = MathML_ATTR_IntAddSpace_VAL_nospace;
+	      else
+		if ((int)text[0] == 0x2264 || /* less or equal */
+		    (int)text[0] == 0x00B1 || /* plus or minus */
+		    (int)text[0] == 0x2265 || /* greater or equal */
+		    (int)text[0] == 0x00D7 || /* times */
+		    (int)text[0] == 0x00F7 || /* divide */
+		    (int)text[0] == 0x2260 || /* not equal */
+		    (int)text[0] == 0x2261 || /* identical */
+		    (int)text[0] == 0x2248 || /* equivalent */
+		    (int)text[0] == 0x2297 || /* circle times */
+		    (int)text[0] == 0x2295 || /* circle plus */
+		    (int)text[0] == 0x2229 || /* Intersection */
+		    (int)text[0] == 0x222A || /* Union */
+		    (int)text[0] == 0x2283 || /* Superset of */
+		    (int)text[0] == 0x2287 || /* Superset of or equal to */
+		    (int)text[0] == 0x2284 || /* Not a subset of */
+		    (int)text[0] == 0x2282 || /* Subset of */
+		    (int)text[0] == 0x2286 || /* Subset of or equal to */
+		    (int)text[0] == 0x2208 || /* Element of */
+		    (int)text[0] == 0x2209 || /* Not an element of */
+		    (int)text[0] == 0x2220 || /* Angle */
+		    (int)text[0] == 0x2207 || /* Nabla */
+		    (int)text[0] == 0x2227 || /* and */
+		    (int)text[0] == 0x2228 || /* or */
+		    (int)text[0] == 0x2190 || /* left arrow */
+		    (int)text[0] == 0x2192 || /* right arrow */
+		    (int)text[0] == 0x2194)   /* left right arrow */
+		  /* infix operator */
+		  val = MathML_ATTR_IntAddSpace_VAL_both_;
+		else
+		  val = MathML_ATTR_IntAddSpace_VAL_nospace;
 	    }
 	}
       TtaSetAttributeValue (attr, val, el, doc);
@@ -2262,21 +2110,12 @@ void      CheckFence (Element el, Document doc)
 		  }
 		/* create a new content for the MF element */
 		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-#ifdef _I18N_
                 if (text[0] == 9002)
-#else
-		if (script == 'G' && text[0] == 241)
-#endif
 		  c = '>';    /* RightAngleBracket */
+		else if (text[0] == 9001)
+		  c = '<';    /* LeftAngleBracket */
 		else
-#ifdef _I18N_
-                  if (text[0] == 9001)
-#else
-		  if (script == 'G' && text[0] == 225)
-#endif
-		    c = '<';    /* LeftAngleBracket */
-		  else
-		    c = (char) text[0];
+		  c = (char) text[0];
 		content = TtaNewElement (doc, elType);
 		/* do not check the Thot abstract tree against the structure
 		   schema while inserting this child element  */

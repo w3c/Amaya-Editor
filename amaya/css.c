@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,28 +40,7 @@
   ----------------------------------------------------------------------*/
 char *ReallocUTF8String (char *url, Document doc)
 {
-#ifndef _I18N_
-  unsigned char *tmp;
-
-  if (!url || *url == EOS)
-    return NULL;
-  /* does the URL contain chars > 127 ? */
-  tmp = url;
-  while (*tmp)
-    {
-      if (*tmp > 127)
-        break;
-      tmp++;
-    }
-  if (*tmp == EOS)
-    return url;  /* no such chars found */
-  tmp = TtaConvertByteToMbs (url, TtaGetDocumentCharset (doc));
-  if (tmp)
-    TtaFreeMemory (url);
-  return tmp;
-#else /* _I18N_ */
   return url;
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -531,9 +531,7 @@ void ChangeTitle (Document doc, View view)
    ElementType         elType;
    Element             el, child;
    Language            lang;
-#ifdef _I18N_
-  unsigned char       *title;
-#endif /* _I18N_ */
+   unsigned char       *title;
    int                 length;
 
    if (!TtaGetDocumentAccessMode (doc))
@@ -558,12 +556,9 @@ void ChangeTitle (Document doc, View view)
 	 }
        length = MAX_LENGTH;
        TtaGiveTextContent (child, (unsigned char *)Answer_text, &length, &lang);
-#ifdef _I18N_
        title = TtaConvertMbsToByte ((unsigned char *)Answer_text, TtaGetDefaultCharset ());
        strcpy (Answer_text, (char *)title);
        TtaFreeMemory (title);
-#endif /* _I18N_ */
-
        CurrentDocument = doc;
 #if defined(_MOTIF) || defined(_GTK)
        TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
@@ -591,9 +586,7 @@ void SetNewTitle (Document doc)
 {
   ElementType         elType;
   Element             el, child;
-#ifdef _I18N_
   unsigned char       *title;
-#endif /* _I18N_ */
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
@@ -610,14 +603,10 @@ void SetNewTitle (Document doc)
 	{
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRegisterElementReplace (el, doc);
-#ifdef _I18N_
 	  title = TtaConvertByteToMbs ((unsigned char *)Answer_text, ISO_8859_1);
-	  TtaSetTextContent (child, (unsigned char *)title, TtaGetDefaultLanguage (), doc);
+	  TtaSetTextContent (child, (unsigned char *)title,
+			     TtaGetDefaultLanguage (), doc);
 	  TtaFreeMemory (title);
-#else /* _I18N_ */
-	  TtaSetTextContent (child, (unsigned char *)Answer_text, TtaGetDefaultLanguage (),
-			     doc);
-#endif /* _I18N_ */
 	  TtaCloseUndoSequence (doc);
 	  TtaSetDocumentModified (doc);
 	  SetWindowTitle (doc, doc, 0);

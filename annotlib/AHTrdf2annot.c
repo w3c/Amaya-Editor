@@ -225,31 +225,17 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 	{
 	  if (annot->author)
 	    TtaFreeMemory (annot->author);
-#ifdef _I18N_
 	  annot->author = TtaStrdup ((char *) object);
-#else
-	  /* convert it to ISO Latin-1 (will surely change in the
-	     I18N amaya version */
-	  annot->author = TtaConvertMbsToByte ((char *) object, ISO_8859_1);
-#endif /* _I18N_ */
 	}
     }
   else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
-      annot->cdate = TtaStrdup ((char *) object);
+    annot->cdate = TtaStrdup ((char *) object);
   else if (contains (predicate, DC_NS, DC_DATE) ||
 	   contains (predicate, DC1_NS, DC_DATE))
-      annot->mdate = TtaStrdup ((char *) object);
+    annot->mdate = TtaStrdup ((char *) object);
   else if (contains (predicate, DC_NS, DC_TITLE) ||
 	   contains (predicate, DC1_NS, DC_TITLE))
-    {
-#ifdef _I18N_
-      annot->title = TtaStrdup ((char *) object);
-#else
-      /* convert it to ISO Latin-1 (will surely change in the
-	 I18N amaya version */
-      annot->title = TtaConvertMbsToByte ((char *) object, ISO_8859_1);
-#endif /* _I18N_ */
-    }
+    annot->title = TtaStrdup ((char *) object);
   else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
     {
       if (annot->type && (contains (object, ANNOT_NS, ANNOT_ANNOTATION) ||
@@ -259,11 +245,9 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 	     we already have a type, so we don't save it */
 	} 
 	else 
-	  {
-	    annot->type = ANNOT_FindRDFResource (&annot_schema_list,
-						 object,
-						 TRUE);
-	  }
+	  annot->type = ANNOT_FindRDFResource (&annot_schema_list,
+					       object,
+					       TRUE);
     }
   else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))
     {

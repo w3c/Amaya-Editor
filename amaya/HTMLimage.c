@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -946,10 +946,12 @@ char *GetActiveImageInfo (Document document, Element element)
 }
 
 /*----------------------------------------------------------------------
-   FetchImage loads an image from local file or from the web. The flags
-   may indicate extra transfer parameters, for example bypassing the cache.		
+  FetchImage loads an image from local file or from the web.
+  The flags may indicate extra transfer parameters, for example bypassing
+  the cache.
+  The imageURI is encoded with the default charset.
   ----------------------------------------------------------------------*/
-void FetchImage (Document doc, Element el, char *URL, int flags,
+void FetchImage (Document doc, Element el, char *imageURI, int flags,
 		 LoadedImageCallback callback, void *extra)
 {
   ElemImage          *ctxEl;
@@ -958,7 +960,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char               *imageName, *isopath;
+  char               *imageName, *utf8value;
   char                pathname[MAX_LENGTH];
   char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
@@ -974,7 +976,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 
   if (el || extra)
     {
-      if (URL == NULL)
+      if (imageURI == NULL)
 	{
 	  /* prepare the attribute to be searched */
 	  elType = TtaGetElementType (el);
@@ -999,13 +1001,16 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	      if (length > 0)
 		{
 		  /* allocate some memory: length of name + 6 cars for noname */
-		  imageName = (char *)TtaGetMemory (length + 7);
-		  TtaGiveTextAttributeValue (attr, imageName, &length);
+		  utf8value = (char *)TtaGetMemory (length + 7);
+		  TtaGiveTextAttributeValue (attr, utf8value, &length);
+		  imageName = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+						 TtaGetDefaultCharset ());
+		  TtaFreeMemory (utf8value);
 		}
 	    }
 	}
       else
-	imageName = URL;
+	imageName = imageURI;
       
       /* LC 3/7/01 */
       /* Don't treat the  xlink:href attributes 
@@ -1016,7 +1021,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	{
 	  if (strncasecmp (imageName, "data:", 5) == 0)
 	    {
-	      if (MakeImageFromBase64  (imageName))	
+	      if (MakeImageFromBase64 (imageName))	
 		update = TRUE;
 	    }
 	  else
@@ -1027,15 +1032,11 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	{
 #else /*_BASE64*/
       if (imageName && strncasecmp (imageName, "data:", 5) != 0)
-	{	  
+	{
 	  update = TRUE;    
 #endif /*_BASE64*/
 	  /* add BASE to image name, if necessary */
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
-	  isopath = (char *)TtaConvertMbsToByte ((unsigned char *)pathname,
-						 TtaGetDefaultCharset ());
-	  strcpy (pathname, isopath);
-	  TtaFreeMemory (isopath);
 	  /* if it's not a remote URL, make any necessary file: conversions */
 	  if (!IsW3Path (pathname))
 	    {
@@ -1147,7 +1148,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
   Attribute           attr, attrFound;
   ElementType         elType;
   Element             el, elFound, pic, elNext;
-  char               *currentURL, *imageURI;
+  char               *currentURL, *imageURI, *utf8value;
   int                 length;
   ThotBool            stopped_flag, loadImages, loadObjects;
   ElementType         parentType;
@@ -1309,8 +1310,11 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		  if (length > 0)
 		    {
 		      /* allocate some memory */
-		      imageURI = (char *)TtaGetMemory (length + 7);
-		      TtaGiveTextAttributeValue (attr, imageURI, &length);
+		      utf8value = (char *)TtaGetMemory (length + 7);
+		      TtaGiveTextAttributeValue (attr, utf8value, &length);
+		      imageURI = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+							      TtaGetDefaultCharset ());
+		      TtaFreeMemory (utf8value);
 		      if (!( (imageURI[0] == '#')))
 			/* don't handle internal links for a use element */
 			FetchImage (doc, pic, imageURI, flags, NULL, NULL);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -430,7 +430,7 @@ ThotBool ImageElement (Document doc, char **url, Element *image)
   Attribute           attr, srcAttr;
   AttributeType       attrType;
   int                 length;
-  char               *value;
+  char               *utf8value;
 
   if (DocumentTypes[doc] != docImage)
     return FALSE;
@@ -449,9 +449,11 @@ ThotBool ImageElement (Document doc, char **url, Element *image)
     {
       attr = TtaGetAttribute (imgEl, attrType);
       length = TtaGetTextAttributeLength (srcAttr) + 1;
-      value = (char *)TtaGetMemory (length);
-      TtaGiveTextAttributeValue (srcAttr, value, &length);
-      *url = value;
+      utf8value = (char *)TtaGetMemory (length);
+      TtaGiveTextAttributeValue (srcAttr, utf8value, &length);
+      *url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+					  TtaGetDefaultCharset ());
+      TtaFreeMemory (utf8value);
     }
   return TRUE;
 }
@@ -989,7 +991,7 @@ char  *GetBaseURL (Document doc)
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char               *ptr, *basename;
+  char               *ptr, *basename, *utf8path;
   int                 length;
   ThotBool            hasDocBase;
 
@@ -1033,6 +1035,10 @@ char  *GetBaseURL (Document doc)
 	    {
 	      /* Use the base path of the document */
 	      TtaGiveTextAttributeValue (attr, basename, &length);
+	      utf8path = basename;
+	      basename = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+						      TtaGetDefaultCharset ());
+	      TtaFreeMemory (utf8path);
 	    }
 	}
     }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2357,7 +2357,6 @@ void PutInXmlElement (char *data, int length)
   When handling the content of a comment (element != NULL and
   stdText == FALSE) the function stops either when the whole string is
   handled or when it has generated a fallback character for an entity
-  (or a non Iso-latin character in the non I18N version).
   Returns
   - the content of the TEXT element.
   - the length of the parsed original string in *length.
@@ -2367,12 +2366,6 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 {
   unsigned char *buffer;
   unsigned char *ptr;
-#ifndef _I18N_
-  wchar_t        wcharRead;
-  int            tmplen;
-  unsigned char  tmpbuf[10];
-  int            nbBytesRead = 0;
-#endif /* _I18N_ */
   unsigned char *entityName;
   int            i = 0, j = 0;
   int            max;
@@ -2407,7 +2400,6 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		  entityName[l] = EOS;
 		  found = MapXMLEntity (currentParserCtxt->XMLtype,
 					(char *)&entityName[1], &entityValue);
-#ifdef _I18N_
 		  if (found && (entityValue <  0x3FF ||
 				entityValue == 0x200D ||
 				entityValue == 0x200E /* lrm */ ||
@@ -2422,11 +2414,6 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		      ptr = &buffer[j];
 		      j += TtaWCToMBstring ((wchar_t) entityValue, &ptr);
 		    }
-#else /* _I18N_ */
-		  if (found && entityValue <= 255)
-		    /* store the ISO latin1 character */
-		    buffer[j++] = entityValue;
-#endif /* _I18N_ */
 		  else if (found && element)
 		    {
 		      if (stdText)
@@ -2476,59 +2463,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 	  i++;
 	}
       else
-	{
-#ifdef _I18N_
-	  buffer[j++] = data[i++];
-#else /* _I18N_ */
-	  ptr = &data[i];
-	  nbBytesRead = TtaGetNextWCFromString (&wcharRead,
-						&ptr, UTF_8);
-	  /* the string provided by expat is obviously correct */
-	  i += nbBytesRead;
-	  if (wcharRead <= 255)
-	      /* ISO-Latin1 character */
-	    buffer[j++] = (unsigned char) wcharRead;
-	  else if (element)
-	    {
-	      if (stdText)
-		{
-		  buffer[j] = EOS;
-		  if (j > 0)
-		    {
-		      /* close the current text element */
-		      PutInXmlElement (buffer, j);
-		      XMLcontext.lastElementClosed = TRUE;
-		    }
-		  XMLcontext.mergeText = FALSE;
-		  ImmediatelyAfterTag = FALSE;
-		  element = XMLcontext.lastElement;
-		  j = 0;
-		}
-	      else
-		{
-		  /* stop the handling of the original string */
-		  max = i;
-		  *length = max;
-		}
-	      XmlGetFallbackCharacter (wcharRead, NULL, element);
-	      if (stdText)
-		{
-		  XMLcontext.lastElementClosed = TRUE;
-		  XMLcontext.mergeText = FALSE;
-		}
-	    }
-	  else
-	    {
-	      /* it's not an ISO-Latin1 character */
-	      tmplen = sprintf ((char *)tmpbuf, "%d", (int) wcharRead);
-	      buffer[j++] = START_ENTITY;
-	      buffer[j++] = '#';
-	      for (k = 0; k < tmplen; k++)
-		buffer[j++] = tmpbuf[k];
-	      buffer[j++] = ';';
-	    }
-#endif /* _I18N_ */
-	}
+	buffer[j++] = data[i++];
     }
   buffer[j] = EOS;
   if (stdText)

@@ -276,7 +276,7 @@ Retirer 2 niveaux de liste: *{(li{(*{?(li{(lev2:*)+})+})+})+};
 ! Forms to/from elements
 !!!!!!!!!!!!!!!!!!!!!!!!
 
-Eglober dans Formulaire: *+;
+Englober dans Formulaire: *+;
 	{
 	* > Form:*;
 	}

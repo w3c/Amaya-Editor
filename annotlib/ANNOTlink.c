@@ -1151,7 +1151,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	  searchType = AM_BODY_URL;
 	}
       old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-					     url, searchType);
+					 url, searchType);
 #ifdef ANNOT_ON_ANNOT
       /* do the same thing to avoid duplicating the thread items */
       if (!old_annot && AnnotThread[doc].annotations)
@@ -1247,6 +1247,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
    Selects the text that was annotated in a document.
    Returns the element corresponding to the annotation anchor in the
    source document if the return_el flag is set to TRUE.
+   The parameter annot_url is a utf-8 string.
   -----------------------------------------------------------------------*/
 Element LINK_SelectSourceDoc (Document doc, CONST char *annot_url, 
 			      ThotBool return_el)

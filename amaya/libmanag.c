@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -525,7 +525,8 @@ ThotBool IsCurrentSelectionContainsUseElement()
   currentEl = firstSelEl;
   while (currentEl && (stop == 0))
     {
-      elFound = TtaSearchTypedElement (elTypeSearch, SearchInTree, TtaGetParent (currentEl));
+      elFound = TtaSearchTypedElement (elTypeSearch, SearchInTree,
+				       TtaGetParent (currentEl));
       if (elFound == currentEl || TtaIsAncestor (elFound, currentEl))
 	{
 	  containUseEl = TRUE;
@@ -624,7 +625,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	  /* Open svg file in a document (Cf. MakeBook) */
 	  svgDoc = TtaNewDocument("SVG","tmp");
 	  res = GetAmayaDoc (pathname, NULL, svgDoc, 0, CE_MAKEBOOK,
-			     FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset */);
+			     FALSE, NULL, NULL);
 	  id = GetURIId (LibURL);
 	  if (id)
 	    {
@@ -634,7 +635,8 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	  DocumentTypes[svgDoc] = docSVG;
 	  if (el)
 	    /* Copy element */
-	    copiedElement = PasteLibraryGraphicElement (el, svgDoc, CopySVGLibSelection);
+	    copiedElement = PasteLibraryGraphicElement (el, svgDoc,
+							CopySVGLibSelection);
 	  FreeDocumentResource (svgDoc);
 	  TtaCloseDocument (svgDoc);
 	  break;
@@ -642,9 +644,10 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	case ReferToSVGLibSelection:
 	  svgDoc = TtaNewDocument("SVG","tmp");
 	  res = GetAmayaDoc (pathname, NULL, svgDoc, 0, CE_MAKEBOOK,
-			     FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset */);
+			     FALSE, NULL, NULL);
 	  /* Only paste a use element into the clicked view  */
-	  copiedElement = PasteLibraryGraphicElement (el, svgDoc, ReferToSVGLibSelection);
+	  copiedElement = PasteLibraryGraphicElement (el, svgDoc,
+						      ReferToSVGLibSelection);
 	  /* Free external resource before displaying svg image */
 	  FreeDocumentResource (svgDoc);
 	  TtaCloseDocument (svgDoc);
@@ -700,7 +703,8 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		  if (TtaCheckDirectory (dirname) &&
 		      IsLibraryName (filename))
 		    {
-		      AddLibraryDataIntoStructure (TRUE, LastURLCatalogue, NewLibraryTitle);
+		      AddLibraryDataIntoStructure (TRUE, LastURLCatalogue,
+						   NewLibraryTitle);
 		      /* create all the HTML element, *.svg file and *.png file */
 		      AddSVGModelIntoLibrary (0, TRUE, NewLibraryTitle);
 		      /* save inter session file */
@@ -710,7 +714,8 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		    }
 #ifndef _WINGUI
 		  else
-		    TtaNewLabel (BaseLibrary + SVGLibraryLabel2, BaseLibrary + NewSVGLibrary,
+		    TtaNewLabel (BaseLibrary + SVGLibraryLabel2,
+				 BaseLibrary + NewSVGLibrary,
 				 TtaGetMessage (AMAYA, AM_SVGLIB_MISSING_TITLE));
 #endif /* _WINGUI */
 		  TtaFreeMemory (filename);
@@ -721,7 +726,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		  libDoc = TtaNewDocument("HTML", "tmp");
 		  InNewWindow = TRUE;
 		  res = GetAmayaDoc (LastURLCatalogue, NULL, libDoc, 0, CE_ABSOLUTE,
-				     FALSE, NULL, NULL, /*ISO_8859_1*/TtaGetDefaultCharset());
+				     FALSE, NULL, NULL);
 		  AddSVGModelIntoLibrary (res, FALSE, NewLibraryTitle);
 		  TtaDestroyDialogue (ref);
 		  TtaDestroyDialogue (BaseLibrary + AddSVGModel);
@@ -1287,7 +1292,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   GetLibraryFileTitle
   Allocates and returns the title associated to a Library File document
   input parameters:
-  URL of the library file
+  URL of the library file encoded with the default charset.
   ----------------------------------------------------------------------*/
 char *GetLibraryFileTitle (char *url)
 {
@@ -1297,48 +1302,40 @@ char *GetLibraryFileTitle (char *url)
   ElementType         elTypeSearch;
   Element             el, child;
   Language            lang;
-#ifdef _I18N_
   unsigned char       *title;
-#endif /* _I18N_ */
   int                 length;
   
-  if (url)
+  if (url && TtaFileExist (url))
     {
-      if (TtaFileExist (url))
+      /* Open library file in a document (Cf. MakeBook) */
+      libraryDoc = TtaNewDocument("HTML", "tmp");
+      InNewWindow = FALSE;
+      res = GetAmayaDoc (url, NULL, libraryDoc, 0, CE_MAKEBOOK,
+			 FALSE, NULL, NULL);
+      
+      /* search the Title element */
+      el = TtaGetMainRoot (res);
+      elTypeSearch.ElSSchema = TtaGetDocumentSSchema (res);
+      if (!strcmp (TtaGetSSchemaName (elTypeSearch.ElSSchema), "HTML"))
+	/* it's a HTML document */
 	{
-	  /* Open library file in a document (Cf. MakeBook) */
-	  libraryDoc = TtaNewDocument("HTML", "tmp");
-	  InNewWindow = FALSE;
-	  res = GetAmayaDoc (url, NULL,
-			     libraryDoc, 0, CE_MAKEBOOK,
-			     FALSE, NULL, NULL,
-			     ISO_8859_1/* TtaGetDefaultCharset() */);
-	  
-	  /* search the Title element */
-	  el = TtaGetMainRoot (res);
-	  elTypeSearch.ElSSchema = TtaGetDocumentSSchema (res);
-	  if (!strcmp (TtaGetSSchemaName (elTypeSearch.ElSSchema), "HTML"))
-	    /* it's a HTML document */
+	  elTypeSearch.ElTypeNum = HTML_EL_TITLE;
+	  el = TtaSearchTypedElement (elTypeSearch, SearchForward, el);
+	  child = TtaGetFirstChild (el);
+	  if (child != NULL)
 	    {
-	      elTypeSearch.ElTypeNum = HTML_EL_TITLE;
-	      el = TtaSearchTypedElement (elTypeSearch, SearchForward, el);
-	      child = TtaGetFirstChild (el);
-	      if (child != NULL)
-		{
-		  /* title exist */
-		  length = MAX_LENGTH;
-		  reTitle = (char *) TtaGetMemory (MAX_LENGTH);
-		  TtaGiveTextContent (child, (unsigned char *)reTitle, &length, &lang);
-#ifdef _I18N_
-		  title = TtaConvertMbsToByte ((unsigned char *)reTitle, TtaGetDefaultCharset ());
-		  strcpy ((char *)reTitle, (char *)title);
-		  TtaFreeMemory (title);
-#endif /* _I18N_ */
-		}
-	      else
-		/* Title not found */
-		reTitle = NULL;
+	      /* title exist */
+	      length = MAX_LENGTH;
+	      reTitle = (char *) TtaGetMemory (MAX_LENGTH);
+	      TtaGiveTextContent (child, (unsigned char *)reTitle, &length, &lang);
+	      title = TtaConvertMbsToByte ((unsigned char *)reTitle,
+					   TtaGetDefaultCharset ());
+	      strcpy ((char *)reTitle, (char *)title);
+	      TtaFreeMemory (title);
 	    }
+	  else
+	    /* Title not found */
+	    reTitle = NULL;
 	  /* Free resource */
 	  FreeDocumentResource (libraryDoc);
 	  TtaCloseDocument (libraryDoc);
@@ -1700,12 +1697,13 @@ void OpenCatalogue (Document doc, View view)
 	      InNewWindow = TRUE;
 	      CurrentDocument = doc;
 	      GetAmayaDoc (buffer, NULL, 0, 0, CE_RELATIVE,
-			   FALSE, NULL, NULL, TtaGetDefaultCharset());
+			   FALSE, NULL, NULL);
 	    }
 	  TtaFreeMemory (buffer);
 	}
     }
-  else /* Open the default catalogue in THOTDIR/config/libconfig/default_cat.lhtml */
+  else
+    /* Open the default catalogue in THOTDIR/config/libconfig/default_cat.lhtml */
     {
       /* Open the Amaya default library file */
       lib_path =  (char *) TtaGetMemory (MAX_LENGTH);
@@ -1716,8 +1714,7 @@ void OpenCatalogue (Document doc, View view)
       /* load the Catalogue document */
       InNewWindow = TRUE;
       CurrentDocument = doc;
-      GetAmayaDoc (lib_path, NULL, 0, 0, CE_ABSOLUTE,
-		   FALSE, NULL, NULL, TtaGetDefaultCharset());
+      GetAmayaDoc (lib_path, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
       TtaFreeMemory (lib_path);
     }
 #endif /* _SVG */
@@ -1750,10 +1747,10 @@ void SaveSVGURL (Document doc, Element El)
 #ifdef _SVG
   ElementType       elTypeSearch;
   Element           currentEl, prevEl;
-/*  Language          lang;*/
   Attribute         attrSearch;
   AttributeType     attrTypeSearch;
-  int     length;
+  char             *s;
+  int               length;
   
   currentEl = El;
   /*
@@ -1777,6 +1774,11 @@ void SaveSVGURL (Document doc, Element El)
     {
       length = MAX_LENGTH;
       TtaGiveTextAttributeValue (attrSearch, LibURL, &length);
+      /* convert the libURL with the default encoding */
+      s = (char *)TtaConvertMbsToByte ((unsigned char *)LibURL,
+				       TtaGetDefaultCharset ());
+      strcpy (LibURL, s);
+      TtaFreeMemory (s);
     }
 #endif /* _SVG */
 }
@@ -1845,10 +1847,9 @@ void InitLibrary (void)
 }
 
 /*----------------------------------------------------------------------
-  GetURIId
-  this function allocates and returns Identifier of a URI if it exists
-                                      NULL if not
-  parameter: the xlink:href URI
+  GetURIId this function allocates and returns the Identifier of a URI
+  if it exists or NULL.
+  parameter: the "xlink:href" URI
   ----------------------------------------------------------------------*/
 char *GetURIId (char *href)
 {
@@ -2263,8 +2264,8 @@ void CreatePNGofSVGFile (Document svgDoc, char *pngurl)
   Gets x min, y min, width max and height max
   (Cf.TtaGiveXYWH)
   ----------------------------------------------------------------------*/
-void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
-				int *x, int *y, int *width, int *height)
+void GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
+			      int *x, int *y, int *width, int *height)
 {
 #ifdef _SVG
   Element      parent;
@@ -2278,23 +2279,15 @@ void   GiveSVGXYWidthAndHeight (Element el, Document svgDoc, View view,
 
   TtaGiveBoxPosition (parent, svgDoc, 1, UnPixel, &x_tmp, &y_tmp);
   if (*x > x_tmp)
-    {
-      *x = x_tmp;
-    }
+    *x = x_tmp;
   if (*y > y_tmp)
-    {
-      *y = y_tmp;
-    }
+    *y = y_tmp;
 
   TtaGiveBoxSize (parent, svgDoc, 1, UnPixel, &width_tmp, &height_tmp);
   if (*width < width_tmp)
-    {
-      *width = width_tmp;
-    }
+    *width = width_tmp;
   if (*height < height_tmp)
-    {
-      *height = height_tmp;
-    }
+    *height = height_tmp;
 #endif /*_SVG*/
 }
 
@@ -2450,7 +2443,8 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
   ElementType           elType;
   Attribute             attrFound;
   AttributeType         attrType;
-  char                 *uriid, *basename, *uri, *relativeURI, *pathname, *filename, *tempbuf;
+  char                 *uriid, *basename, *relativeURI;
+  char                 *pathname, *filename, *utf8path, *path;
   int                   length;
   ThotBool              IsUseElement = FALSE;
   ThotBool              stop = FALSE;
@@ -2464,31 +2458,34 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
   /* replace use element by it's content definition*/
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-  TtaSearchAttribute (attrType, SearchInTree, TtaGetParent (copiedEl), &elFound, &attrFound);
+  TtaSearchAttribute (attrType, SearchInTree, TtaGetParent (copiedEl),
+		      &elFound, &attrFound);
   if (attrFound && (elFound == copiedEl || TtaIsAncestor (elFound, copiedEl)))
     {
+      basename = (char *) TtaGetMemory (MAX_LENGTH);
+      filename = (char *) TtaGetMemory (MAX_LENGTH);
+      pathname = (char *) TtaGetMemory (MAX_LENGTH);
       while (!stop && elFound)
 	{
 	  /* get the old href attribute */
 	  length = TtaGetTextAttributeLength (attrFound);
-	  tempbuf = (char *) TtaGetMemory (length + 2);
-	  TtaGiveTextAttributeValue (attrFound, tempbuf, &length);
-	  if (!IsW3Path (tempbuf))
+	  utf8path = (char *) TtaGetMemory (length + 2);
+	  TtaGiveTextAttributeValue (attrFound, utf8path, &length);
+	  path = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+					      TtaGetDefaultCharset ());
+	  TtaFreeMemory (utf8path);
+	  if (!IsW3Path (path))
 	    {
-	      uriid = GetURIId (tempbuf);
-	      basename = (char *) TtaGetMemory (MAX_LENGTH);
-	      filename = (char *) TtaGetMemory (MAX_LENGTH);
-	      pathname = (char *) TtaGetMemory (MAX_LENGTH);
-	      uri = (char *) TtaGetMemory (MAX_LENGTH);
-	      basename = GetBaseURL (selDoc);
+	      uriid = GetURIId (path);
 	      NormalizeURL (DocumentURLs[selDoc], selDoc, pathname, filename, NULL);
-	      /* A EFFECTUER make another test to know if elFound is a use element */
+	      /* todo: make another test to know if elFound is a use element */
 	      if (uriid)
-		{/* it's a use element: replace use element by it's content definition */
-		  /* Copy what the use element refer from abstract tree                */
-		  /* Then remove element use                                           */
+		{
+		  /* use element: replace use element by it's content definition */
+		  /* Copy what the use element refer from abstract tree          */
+		  /* Then remove element use                                     */
 		  child = TtaGetFirstChild (elFound);
-		  /* A EFFECTUER: continuer les tests sur les éléments symbol et defs */
+		  /* todo: test symbols and defs */
 		  elType = TtaGetElementType (child);
 		  if (elType.ElTypeNum == SVG_EL_symbol_)
 		    {
@@ -2510,21 +2507,16 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 		  TtaFreeMemory (uriid);
 		}
 	      else
-		{/* it's an img element or any other else*/
-		  /* tempbuf contient l'url relative de l'image ou autre element 
-		     ainsi que le nom du fichier */
-		  sprintf (uri, "%s%s", basename, tempbuf);
-		  SimplifyUrl (&uri);
-		  relativeURI = MakeRelativeURL (uri, newurl);
+		{
+		  /* img element or any other: */
+		  basename = GetBaseURL (selDoc);
+		  sprintf (pathname, "%s%s", basename, path);
+		  SimplifyUrl (&pathname);
+		  relativeURI = MakeRelativeURL (pathname, newurl);
 		  TtaSetAttributeText (attrFound, relativeURI, elFound, destDoc);
-		  TtaFreeMemory (tempbuf);
-		  if (relativeURI)
-		    TtaFreeMemory (relativeURI);
+		  TtaFreeMemory (relativeURI);
 		}
-	      TtaFreeMemory (basename);
-	      TtaFreeMemory (filename); 
-	      TtaFreeMemory (pathname);
-	      TtaFreeMemory (uri);
+	      TtaFreeMemory (path);
 	    }
 	  /* search next attribute */
 	  deletedEl = elFound;
@@ -2536,13 +2528,14 @@ void MakeStaticCopy (Element copiedEl, Document selDoc, Document destDoc,
 	      TtaDeleteTree (deletedEl, destDoc);
 	    }
 	  if (!TtaIsAncestor (elFound, copiedEl))
-	    {
-	      stop = TRUE;
-	    }
+	    stop = TRUE;
 	}
+      TtaFreeMemory (basename);
+      TtaFreeMemory (filename); 
+      TtaFreeMemory (pathname);
+      TtaFreeMemory (path);
     }
-  /* change the attribute text content */
-#endif /* -SVG */
+#endif /* _SVG */
 }
 
 /*----------------------------------------------------------------------
@@ -2557,7 +2550,7 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
   Attribute             newAttr, attrExist, attrFound = NULL;
   AttributeType         attrType;
   int                   length, val, oldVal, attrKind = 0;
-  char                 *text=NULL, *ptr;
+  char                 *text = NULL, *ptr;
   char                  buffer[MAX_LENGTH];
   PresentationValue     pval, oldpval;
 
@@ -2565,9 +2558,8 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
   /* Copy all attribute except xlink:href, x and y position */
   while (attrFound)
     {
-      TtaGiveAttributeType (attrFound, 
-			    &attrType, &attrKind);
-      if (!(attrType.AttrTypeNum == SVG_ATTR_xlink_href))
+      TtaGiveAttributeType (attrFound, &attrType, &attrKind);
+      if (attrType.AttrTypeNum != SVG_ATTR_xlink_href)
 	{
 	  attrExist = TtaGetAttribute (destElement, attrType);
 	  if (attrExist)
@@ -2604,9 +2596,9 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		      ptr = text;
 		      ParseNumber (ptr, &oldpval);
 		      TtaFreeMemory (text);
-
 		      /* You can change the unit by adding it after %d */
-		      sprintf (buffer, "%d", pval.typed_data.value + oldpval.typed_data.value);
+		      sprintf (buffer, "%d",
+			       pval.typed_data.value + oldpval.typed_data.value);
 		      TtaSetAttributeText (attrExist, buffer, destElement, doc);
 		      break;
 		    case 3:	/* reference */
@@ -2615,9 +2607,14 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		  SVGAttributeComplete (attrExist, destElement, doc);
 		}
 	      else
-		{ /* change the value of the concerned attribute */
-/*A EFFECTUER une fonction générique qui remplace la valeur courante d'un attribut */
-/*prototype void ChangeAttributeValue (Element curEl, Attribute currentAttr, int TypeOfValue, char *value)*/
+		{
+		  /* change the value of the concerned attribute */
+		  /*
+		    TODO une fonction générique qui remplace la valeur
+		    courante d'un attribut
+		    void ChangeAttributeValue (Element curEl,
+		    Attribute currentAttr, int TypeOfValue, char *value)
+		  */
 		}
 	    }
 	  else
@@ -2639,22 +2636,19 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 		  text = (char * ) TtaGetMemory (length);
 		  TtaGiveTextAttributeValue (attrFound, text, &length);
 		  TtaSetAttributeText (newAttr, text, destElement, doc);
-/*		  TtaFreeMemory (text);*/
+		  if (attrType.AttrTypeNum == SVG_ATTR_style_)
+		    ApplyCSSRules (destElement, text, doc, FALSE);
+		  TtaFreeMemory (text);
 		  break;
 		case 3:	/* reference */
 		  break;
 		}
-	      if (attrType.AttrTypeNum == SVG_ATTR_style_)
-		ApplyCSSRules (destElement, text, doc, FALSE);
-	      else
+	      if (attrType.AttrTypeNum != SVG_ATTR_style_)
 		SVGAttributeComplete (newAttr, destElement, doc);
-	      if (text)
-		TtaFreeMemory (text);
 	    }
 	}
       TtaNextAttribute (useEl, &attrFound);
     }
-
 #endif /* _SVG */
 }
 
@@ -2694,7 +2688,8 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
       elType.ElTypeNum = HTML_EL_Table;
       table = TtaNewTree (libDoc, elType, "");
       elType.ElTypeNum = HTML_EL_BODY;
-      TtaInsertFirstChild (&table, TtaSearchTypedElement (elType, SearchInTree, rootEl), 
+      TtaInsertFirstChild (&table,
+			   TtaSearchTypedElement (elType, SearchInTree, rootEl), 
 			   libDoc);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Border;
@@ -2898,8 +2893,8 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
 	  DocumentTypes[tmpDoc] = docLibrary;
 	  InNewWindow = TRUE;
-	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc, CE_ABSOLUTE,
-				    FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
+	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc,
+				    CE_ABSOLUTE, FALSE, FALSE, FALSE);
 	}
     }
   else
@@ -3099,7 +3094,7 @@ void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
       /* open curList library (Cf Makebook) and look after graphical object title */
       libDoc = TtaNewDocument("HTML", "tmp");
       res = GetAmayaDoc (curList->URI, NULL, libDoc, 0, CE_MAKEBOOK,
-			 FALSE, NULL, NULL, TtaGetDefaultCharset ());
+			 FALSE, NULL, NULL);
       if (res)
 	{
 	  root = TtaGetRootElement (res);
@@ -3238,7 +3233,7 @@ void OpenLibraryCallback (Document doc, View view, char *text)
 	      CurrentDocument = doc;
 	      GetAmayaDoc (url, NULL, CurrentDocument,
 			   CurrentDocument, CE_ABSOLUTE, TRUE,
-			   NULL, NULL, TtaGetDefaultCharset ());
+			   NULL, NULL);
 	    }
 	  TtaFreeMemory (url);
 	}

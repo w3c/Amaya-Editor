@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2003
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,18 +40,18 @@
 #include "HTMLimage_f.h"
 #include "AHTURLTools_f.h"
 
-static char        *buffer;    /* temporary buffer used to build the query
+static char        *FormBuf;    /* temporary buffer used to build the query
 				  string */
-static int          lgbuffer;  /* size of the temporary buffer */
-static int          last_buffer_char; /* gives the index of the last char + 1 added to
+static int          FormLength;  /* size of the temporary buffer */
+static int          FormBufIndex; /* gives the index of the last char + 1 added to
 					 the buffer (only used in AddBufferWithEos) */
 static int          documentStatus;
 
 #ifdef _WINGUI 
-  extern HWND         FrMainRef [12];
-  extern int          ActiveFrame;
-  Document            opDoc;
-  Element             opOption [200];
+extern HWND         FrMainRef [12];
+extern int          ActiveFrame;
+Document            opDoc;
+Element             opOption [200];
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
@@ -87,26 +87,26 @@ static void AddToBuffer (char *orig)
   int                 lg;
 
   lg = strlen (orig) + 1;
-  if ((int)strlen (buffer) + lg > lgbuffer)
+  if ((int)strlen (FormBuf) + lg > FormLength)
     {
-      /* it is necessary to extend the buffer */
+      /* it is necessary to extend the FormBuf */
       if (lg < PARAM_INCREMENT)
 	lg = PARAM_INCREMENT;
-      status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));      
+      status = TtaRealloc (FormBuf, sizeof (char) * (FormLength + lg));      
       if (status != NULL)
 	{
-	  buffer = (char *)status;
-	  lgbuffer += lg;
-	  strcat (buffer, orig);
+	  FormBuf = (char *)status;
+	  FormLength += lg;
+	  strcat (FormBuf, orig);
 	}
     }
   else
-    strcat (buffer, orig);
+    strcat (FormBuf, orig);
 }
 
 /*----------------------------------------------------------------------
   AddToBufferWithEos
-  reallocates memory and concatenates a string into buffer. Skips the
+  reallocates memory and concatenates a string into FormBuf. Skips the
   last EOS char.
   ----------------------------------------------------------------------*/
 static void AddToBufferWithEOS (char *orig)
@@ -116,50 +116,48 @@ static void AddToBufferWithEOS (char *orig)
    int                 i;
 
    lg = strlen (orig) + 2;
-   if ((int)(&buffer[last_buffer_char] - buffer) + lg > lgbuffer)
+   if ((int)(&FormBuf[FormBufIndex] - FormBuf) + lg > FormLength)
      {
-	/* it is necessary to extend the buffer */
+	/* it is necessary to extend the FormBuf */
 	if (lg < PARAM_INCREMENT)
 	   i = PARAM_INCREMENT;
 	else i = lg;
 
-	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + i));
+	status = TtaRealloc (FormBuf, sizeof (char) * (FormLength + i));
 
 	if (status != NULL)
 	  {
-	     buffer = (char *)status;
-	     lgbuffer += i;
-	     strcpy (&buffer[last_buffer_char], orig);
-	     last_buffer_char = last_buffer_char + lg - 1;
+	     FormBuf = (char *)status;
+	     FormLength += i;
+	     strcpy (&FormBuf[FormBufIndex], orig);
+	     FormBufIndex = FormBufIndex + lg - 1;
 	  }
      }
    else
      {
-       strcpy (&buffer[last_buffer_char], orig);
-       last_buffer_char = last_buffer_char + lg - 1;
+       strcpy (&FormBuf[FormBufIndex], orig);
+       FormBufIndex = FormBufIndex + lg - 1;
      }
 }
 
 
 /*----------------------------------------------------------------------
   AddElement
-  add a string into the query buffer				
+  add a string into the query FormBuf				
   ----------------------------------------------------------------------*/
 static void AddElement (unsigned char *element, CHARSET charset)
 {
-#ifdef _I18N_
   CHAR_T           wc;
-#endif /* _I18N_ */
   char            tmp[4];
   char            tmp2[2];
 
   strcpy (tmp, "%");
   strcpy (tmp2, "a");
-  if (buffer == NULL)
+  if (FormBuf == NULL)
     {
-      buffer = (char *)(char *)TtaGetMemory (PARAM_INCREMENT);
-      lgbuffer = PARAM_INCREMENT;
-      buffer[0] = EOS;
+      FormBuf = (char *)(char *)TtaGetMemory (PARAM_INCREMENT);
+      FormLength = PARAM_INCREMENT;
+      FormBuf[0] = EOS;
     }
   while (*element)
     {
@@ -198,7 +196,6 @@ static void AddElement (unsigned char *element, CHARSET charset)
       else
 	{
 	  /* for all other characters */
-#ifdef _I18N_
 	  if (charset != UTF_8)
 	    {
 	      TtaMBstringToWC (&element, &wc);
@@ -206,7 +203,6 @@ static void AddElement (unsigned char *element, CHARSET charset)
 	      element--; /* it will be incremented after */
 	    }
 	  else
-#endif /* _I18N_ */
 	    tmp2[0] = *element;
 	  if (tmp2[0] == '\n')
 	    {
@@ -258,7 +254,7 @@ static void TrimSpaces (char *string)
 
 /*----------------------------------------------------------------------
   AddNameValue
-  add a name=value pair, and a trailling & into the query buffer	
+  add a name=value pair, and a trailling & into the query FormBuf	
   ----------------------------------------------------------------------*/
 static void AddNameValue (char *name, char *value, CHARSET charset)
 {
@@ -739,66 +735,52 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 
 /*----------------------------------------------------------------------
   DoSubmit
-  submits a form : builds the query string and sends the request	       
+  submits a form : builds the query string and sends the request
+  action is a utf-8 string.
   ----------------------------------------------------------------------*/
 static void DoSubmit (Document doc, int method, char *action)
 {
-  CHARSET             charset;
-  int                 buffer_size;
-  int                 i;
-  char               *urlName, *ptr;
+  ClickEvent          evt;
+  char               *urlName, *ptr, *param;
+  int                 lg;
 
   /* clear the selection */
   if (TtaGetSelectedDocument () == doc)
     TtaUnselect (doc);
 
-  if (buffer)
-    buffer_size = strlen (buffer);
-  else
-    buffer_size = 0;
-  if (buffer_size)
-    {
-      if (buffer[buffer_size - 1] == '&')
-	{
-	  /* remove any trailing & */
-	  buffer[buffer_size - 1] = EOS;
-	  buffer_size--;
-	}
-      ptr = buffer;
-    }
-  else
-    ptr = "";
-
-#ifdef _I18N_
-  /* the URI is already in UTF-8: GetAmayaDoc won't reencode it */
-  charset = UTF_8;
-#else /* _I18N_ */
-  charset = TtaGetDocumentCharset (doc);
-#endif /* _I18N_ */
+  /* Reencode the URI */
   switch (method)
     {
-    case -9999:	/* index attribute, not yet supported by Amaya */
-      ptr = TtaStrdup (buffer);
-      for (i = 0; i < buffer_size; i++)
-	{
-	  if (ptr[i] == '&'|| ptr[i] == '=')
-	    ptr[i] = '+';
-	}
-      TtaFreeMemory (ptr);
-      break;
     case HTML_ATTR_METHOD_VAL_Get_:
-      urlName = (char *)TtaGetMemory (strlen (action) + buffer_size + 2);
+    case HTML_ATTR_METHOD_VAL_Post_:
+      if (method == HTML_ATTR_METHOD_VAL_Get_)
+	evt = CE_FORM_GET;
+      else
+	evt = CE_FORM_POST;
+      urlName = (char *)TtaConvertMbsToByte ((unsigned char *)action,
+					     TtaGetDefaultCharset ());
       if (urlName)
 	{
-	  strcpy (urlName, action);
-	  GetAmayaDoc (urlName, ptr, doc, doc, CE_FORM_GET, TRUE,
-		       NULL, NULL, charset);
+	  if (FormBuf)
+	    {
+	      lg = strlen (FormBuf);
+	      if (lg && FormBuf[lg - 1] == '&')
+		/* remove any trailing & */
+		FormBuf[lg - 1] = EOS;
+	      ptr = FormBuf;
+	    }
+	  else
+	    ptr = NULL;
+	  if (ptr)
+	    param = (char *)TtaConvertMbsToByte ((unsigned char *)ptr,
+						 TtaGetDefaultCharset ());
+	  else
+	    param = "";
+	  GetAmayaDoc (urlName, param, doc, doc, evt, TRUE, NULL, NULL);
+	  if (ptr)
+	    TtaFreeMemory (param);
 	  TtaFreeMemory (urlName);
 	}
-      break;
-    case HTML_ATTR_METHOD_VAL_Post_:
-      GetAmayaDoc (action, ptr, doc, doc, CE_FORM_POST, TRUE,
-		   NULL, NULL, charset);
       break;
     default:
       break;
@@ -824,7 +806,7 @@ void SubmitForm (Document doc, Element element)
   int                 method;
   ThotBool	       found, withinForm;
 
-  buffer = NULL;
+  FormBuf = NULL;
   action = NULL;
   /* find out the characteristics of the button which was pressed */
   found = FALSE;
@@ -955,7 +937,7 @@ void SubmitForm (Document doc, Element element)
       if (!elForm)
 	{
 	  /* could not find a form before that element */
-	  TtaFreeMemory (buffer);
+	  TtaFreeMemory (FormBuf);
 	  return;
 	}
     }
@@ -1019,7 +1001,7 @@ void SubmitForm (Document doc, Element element)
    
   if (action)
     TtaFreeMemory (action);
-  TtaFreeMemory (buffer);
+  TtaFreeMemory (FormBuf);
 }
 
 
@@ -1059,13 +1041,13 @@ ThotBool HandleReturn (NotifyOnTarget *event)
 	     {
 	       action = (char *)TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, action, &length);
-	       buffer = NULL;
+	       FormBuf = NULL;
 	       ParseForm (event->document, elForm, elForm, 
 			  HTML_EL_Submit_Input);
 	       DoSubmit (event->document, method, action);
 	       TtaFreeMemory (action);
-	       if (buffer && *buffer != EOS)
-		 TtaFreeMemory (buffer);
+	       if (FormBuf && *FormBuf != EOS)
+		 TtaFreeMemory (FormBuf);
 	     }
 	 }
        else
@@ -1147,7 +1129,7 @@ void SelectOneRadio (Document doc, Element el)
   Attribute           attr, attrN;
   AttributeType       attrType, attrTypeN;
   int                 modified, length;
-  char              name[MAX_LENGTH], *buffer = NULL;
+  char                name[MAX_LENGTH], *buffer = NULL;
 
   if (el == NULL)
     return;
@@ -1351,10 +1333,10 @@ void SelectOneOption (Document doc, Element el)
 	   el = TtaGetFirstChild (menuEl);
 
 	   /* use the global allocation buffer to store the entries */
-	   buffer = (char *)TtaGetMemory (PARAM_INCREMENT);
-	   lgbuffer = PARAM_INCREMENT;
-	   buffer[0] = EOS;
-	   last_buffer_char = 0;
+	   FormBuf = (char *)TtaGetMemory (PARAM_INCREMENT);
+	   FormLength = PARAM_INCREMENT;
+	   FormBuf[0] = EOS;
+	   FormBufIndex = 0;
 
 	   while (el && nbitems < MAX_OPTIONS)
 	     {
@@ -1411,35 +1393,30 @@ void SelectOneOption (Document doc, Element el)
 		     text[0] = 'T';
 		   else
 		     text[0] = 'B';
-#ifdef _I18N_
 		   /* convert the UTF-8 string */
 		   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
 		   AddToBufferWithEOS (tmp);
 		   TtaFreeMemory (tmp);
-#else /* _I18N_ */
-		   AddToBufferWithEOS (text);
-#endif /* _I18N_ */
 		   nbitems++;
 		 }
 	       TtaNextSibling (&el);
 	     }
 
 	   if (nbitems == 0)
-	     TtaFreeMemory (buffer);
+	     TtaFreeMemory (FormBuf);
 	   else
 	     {
 	       /* create the main menu */
 #if defined (_WINGUI) || defined (_GTK)
 	       if (nbsubmenus == 0)
 		 TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-				    NULL, nbitems, buffer, NULL, multipleOptions, 'L');
+				    NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
 	       else
 #endif /* WINDOWS || _GTK */
 		 TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			      NULL, nbitems, buffer, NULL, 'L');
+			      NULL, nbitems, FormBuf, NULL, 'L');
 
-	       TtaFreeMemory (buffer);
-
+	       TtaFreeMemory (FormBuf);
 
 #ifdef _WINGUI
   if (multipleOptions)
@@ -1507,13 +1484,9 @@ void SelectOneOption (Document doc, Element el)
 				   /* count the EOS character */
 				   text[length] = EOS;
 				   length++;
-#ifdef _I18N_
 				   /* convert the UTF-8 string */
 				   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
 				   length = strlen (tmp) + 1;
-#else /* _I18N_ */
-				   tmp = text;
-#endif /* _I18N_ */
 				   /* we have to add the 'B'or 'T' character */
 				   length++;
 				   if (lgmenu + length < MAX_LENGTH)
@@ -1524,9 +1497,7 @@ void SelectOneOption (Document doc, Element el)
 					 sprintf (&buffmenu[lgmenu], "B%s", tmp);
 				       nbsubitems++;
 				     } 
-#ifdef _I18N_
 				   TtaFreeMemory (tmp);
-#endif /* _I18N_ */
 				   lgmenu += length;
 				 } 
 			       /* next child of OPTGROUP */
