@@ -561,8 +561,8 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
 	       name[0] == '_' ||
 	       name[0] == '-' ||
 	       name[0] == ' ' ||
-	       (name[0] >= 48 && /*  '0'  */
-		name[0] <= 57))/*  '9'  */
+	       (name[0] >= 48 && name[0] <= 57) ||/*  '0' '9'  */
+		strstr (name, " "))
 	    {
 	      sprintf (msgBuffer, "Invalid ID value %s", name);
 	      lineNum = TtaGetElementLineNumber(el);

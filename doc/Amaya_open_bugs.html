@@ -87,12 +87,6 @@ h2         {  font-size: 12; }</style>
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>Size = x is not acted upon which yields awkward screens.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Disabled form entry areas are still able to be used.</td>
       <td></td>
       <td>J. Russel</td>
@@ -105,12 +99,12 @@ h2         {  font-size: 12; }</style>
       <td>J. Russel</td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Report a warning when the parsed document includes duplicate
       ids</td>
       <td>2004-10-08</td>
       <td>J. Russel</td>
-      <td></td>
+      <td>2005-03-02</td>
     </tr>
     <tr>
       <td>Should Amaya set the CF_HTML format in the clipboard, aditionally
@@ -126,44 +120,51 @@ h2         {  font-size: 12; }</style>
       <td>Juan Lanus</td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Amaya 8.7 for Windows XP allows the creation of invalid non-single
         token ids and do not detect this kind of error. For example, it is
         possible to set the id attribute to "one two three", but this value
-        is not valid according to W3C validator.
-
-        <p>Amaya 8.7 for Windows XP allows the creation of invalid ids
+        is not valid according to W3C validator.</td>
+      <td>2004-11-17</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td>2005-03-02</td>
+    </tr>
+    <tr class="fixed">
+      <td><p>Amaya 8.7 for Windows XP allows the creation of invalid ids
         begining with a number and do not detect this kind of error. For
         example, it is possible to set the id attribute to "1", but this
         value is not valid according to W3C validator.</p>
       </td>
       <td>2004-11-17</td>
       <td>Bartolomé Sintes Marco</td>
-      <td></td>
+      <td>2005-03-02</td>
     </tr>
     <tr>
       <td>When there is no map created and the first area is created, the
         alternate text attribute of the area is not saved (a window is shown
-        to introduce the alt value, but this value is lost).
-
-        <p>When a map area is already created and the user creates a second
-        (or third or ...) area, two windows are shown (the title of the first
-        window is "Attributes / alt", the title of the second one is
-        "Alternate text"). The first one does not force to write a text, the
-        second one do forces to write a text, but the value stored in the alt
-        attribute of the area is the text written in the first window. The
-        text written in the second window is lost.</p>
-      </td>
+        to introduce the alt value, but this value is lost).</td>
       <td>2004-11-17</td>
       <td>Bartolomé Sintes Marco</td>
       <td></td>
     </tr>
     <tr>
+      <td>When a map area is already created and the user creates a second
+        (or third or ...) area, two windows are shown (the title of the first
+        window is "Attributes / alt", the title of the second one is
+        "Alternate text"). The first one does not force to write a text, the
+        second one do forces to write a text, but the value stored in the alt
+        attribute of the area is the text written in the first window. The
+        text written in the second window is lost.</td>
+      <td>2004-11-17</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td></td>
+    </tr>
+    <tr class="fixed">
       <td>Amaya attribute menu dialog for accesskey still allows more than
         one character to be entered.</td>
       <td>2005-02-24</td>
       <td>J. Russel</td>
-      <td></td>
+      <td>2005-03-02</td>
     </tr>
     <tr>
       <td>A polygon area seems to be moved or modified using Ctrl+left or

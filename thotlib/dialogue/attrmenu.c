@@ -1553,6 +1553,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			      (TextAttrValue[0] >= 48 && /*  '0'  */
 			       TextAttrValue[0] <= 57))/*  '9'  */
 			    TextAttrValue[0] = 'L';
+			  /* no space allowed within the attribute value */
+			  tmp = strstr (TextAttrValue, " ");
+			  if (tmp)
+			    *tmp = EOS;
 			}
 		      else if (!strcmp (tmp, "accesskey") &&
 			       !strcmp (SchCurrentAttr->SsName, "HTML"))
