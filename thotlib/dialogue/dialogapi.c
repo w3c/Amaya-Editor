@@ -8228,9 +8228,9 @@ void TtaShowDialogue (int ref, ThotBool remanent)
   ----------------------------------------------------------------------*/
 void TtaWaitShowProcDialogue ()
 {
-  ThotEvent              event;
-
 #ifdef _WINDOWS
+   ThotEvent              event;
+
    /* wait until the user selects something */
    while (GetMessage (&event, NULL, 0, 0))
       {
