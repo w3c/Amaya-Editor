@@ -131,7 +131,8 @@ static GLfloat       LastLineWidth;
 /* The GL context. GL is not thread safe (we should create a
    local GLcontext during GLBeginPage) */
 GLcontext *GL = NULL;
- 
+static int            X, Y;
+
 /*#define FILE_STREAM GL->stream;*/
 #define FILE_STREAM ((FILE*) FrRef[1])
 
@@ -708,7 +709,6 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   FILE               *fout;
   int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
-  int                 X = 0,Y = 0;
   int                 NbWhiteSp = 0;
   char                fontname[35];
   static  int         SameBox = 0;
