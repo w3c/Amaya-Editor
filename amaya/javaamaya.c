@@ -2,6 +2,8 @@
  * javaamaya.h : defines part of the Java related Amaya API.
  */
 
+#ifdef AMAYA_JAVA
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "javaamaya.h"
@@ -320,3 +322,6 @@ View     view;
    TtaShowDialogue (BaseJava + JAVA_FORM, FALSE);
    TtaFreeMemory (s);
 }
+
+#endif /* AMAYA_JAVA */
+
