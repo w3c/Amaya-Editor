@@ -2230,7 +2230,6 @@ ATTRIBUTES
 
 TextTRANSLATE
 	BEGIN
-{ 	'\42' -> '&quot;'; }	{ quotation mark = APL quote, U+0022 ISOnum }
 	'\46' -> '&amp;';	{ ampersand, U+0026 ISOnum }
 	'\74' -> '&lt;';	{ less-than sign, U+003C ISOnum }
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
