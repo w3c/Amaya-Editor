@@ -18,8 +18,6 @@ extern void TtaGiveThotRGB ( int num,
                              unsigned short *green,
                              unsigned short *blue );
 extern unsigned long CreatePattern ( int disp,
-                                     int RO,
-                                     int active,
                                      int fg,
                                      int bg,
                                      int pattern );
@@ -38,8 +36,6 @@ extern void TtaGiveThotRGB (/* int num,
                                unsigned short *green,
                                unsigned short *blue */);
 extern unsigned long CreatePattern (/* int disp,
-                                       int RO,
-                                       int active,
                                        int fg,
                                        int bg,
                                        int pattern */);

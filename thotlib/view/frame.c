@@ -49,14 +49,7 @@
 /*----------------------------------------------------------------------
    GetXYOrg : do a coordinate shift related to current frame.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GetXYOrg (int frame, int *XOrg, int *YOrg)
-#else  /* __STDC__ */
-void                GetXYOrg (frame, XOrg, YOrg)
-int                 frame;
-int                *XOrg;
-int                *YOrg;
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
 
@@ -68,16 +61,7 @@ int                *YOrg;
 /*----------------------------------------------------------------------
    DefClip defines the area of the frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DefClip (int frame, int xd, int yd, int xf, int yf)
-#else  /* __STDC__ */
-void                DefClip (frame, xd, yd, xf, yf)
-int                 frame;
-int                 xd;
-int                 yd;
-int                 xf;
-int                 yf;
-#endif /* __STDC__ */
 {
    int                 width, height;
    ViewFrame          *pFrame;
@@ -146,19 +130,7 @@ int                 yf;
 /*----------------------------------------------------------------------
    DefRegion store the area of frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DefRegion (int frame, int xd, int yd, int xf, int yf)
-
-#else  /* __STDC__ */
-void                DefRegion (frame, xd, yd, xf, yf)
-int                 frame;
-int                 xd;
-int                 yd;
-int                 xf;
-int                 yf;
-
-#endif /* __STDC__ */
-
 {
    ViewFrame          *pFrame;
 
@@ -190,16 +162,7 @@ void                TtaRefresh ()
    RedrawFilledBoxes redraw from top to bottom all filled boxes.
    Clipping is done by xmin, xmax, ymin, ymax.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RedrawFilledBoxes (int frame, int xmin, int xmax, int ymin, int ymax)
-#else  /* __STDC__ */
-static void         RedrawFilledBoxes (frame, xmin, xmax, ymin, ymax)
-int                 frame;
-int                 xmin;
-int                 xmax;
-int                 ymin;
-int                 ymax;
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pAb, pAbChild;
   PtrBox              pBox, pBoxChild;
@@ -234,7 +197,7 @@ int                 ymax;
       /* paint the whole window */
       /* todo: clip when backgroud will be printed */
       DrawRectangle (frame, 0, 0,
-		     xd - x, yd - y, width, height, 0, 0, pAb->AbForeground,
+		     xd - x, yd - y, width, height, pAb->AbForeground,
 		     pAb->AbBackground, pAb->AbFillPattern);
     }
   imageDesc = (PictInfo *) pAb->AbPictBackground;
@@ -366,7 +329,7 @@ int                 ymax;
 			else
 			  DrawRectangle (frame, 0, 0,
 					 xd - x, yd - y,
-					 width, height, 0, 0, pAb->AbForeground,
+					 width, height, pAb->AbForeground,
 					 pAb->AbBackground, pAb->AbFillPattern);
 		      }
 		    pBoxChild = pBoxChild->BxNext;
@@ -447,7 +410,7 @@ int                 ymax;
 		else
 		  DrawRectangle (frame, 0, 0,
 				 xd - x, yd - y,
-				 width, height, 0, 0, pAb->AbForeground,
+				 width, height, pAb->AbForeground,
 				 pAb->AbBackground, pAb->AbFillPattern);
 	      }
 	  }
@@ -467,13 +430,7 @@ int                 ymax;
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            RedrawFrameTop (int frame, int scroll)
-#else  /* __STDC__ */
-ThotBool            RedrawFrameTop (frame, scroll)
-int                 frame;
-int                 scroll;
-#endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrBox              pTopBox, pBottomBox;
@@ -810,14 +767,7 @@ int                 scroll;
    from the most englobing box down to pBox itself.
    It ensure unicity of boxes referenced in adbloc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
-#else  /* __STDC__ */
-static void         AddBoxToCreate (tocreate, pBox, frame)
-PtrBox             *tocreate;
-PtrBox              pBox;
-int                 frame;
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
   int                 i;
@@ -869,14 +819,7 @@ int                 frame;
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
-#else  /* __STDC__ */
-ThotBool            RedrawFrameBottom (frame, scroll, subtree)
-int                 frame;
-int                 scroll;
-PtrAbstractBox      subtree;
-#endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrBox              pTopBox;
@@ -897,9 +840,9 @@ PtrAbstractBox      subtree;
    ThotBool            ontop;
    ThotBool            toadd;
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* are new abstract boxes needed */
    toadd = FALSE;
@@ -1277,9 +1220,9 @@ PtrAbstractBox      subtree;
 
    FirstCreation = FALSE;
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    return toadd;
 }
 
@@ -1289,12 +1232,7 @@ PtrAbstractBox      subtree;
    If a part of the abstract image is selected, the
    corresponding concrete image is centered in the frame.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayFrame (int frame)
-#else  /* __STDC__ */
-void                DisplayFrame (frame)
-int                 frame;
-#endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
   int                 w, h;

@@ -10,6 +10,8 @@ extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
 extern void LinkToPreviousTarget ( Document doc,
                                    View view );
+extern void AddAccessKey ( NotifyAttribute *event );
+extern ThotBool RemoveAccessKey ( NotifyAttribute *event );
 extern void RemoveLink ( Element el,
                          Document doc );
 extern ThotBool DeleteLink ( NotifyElement * event );
@@ -122,6 +124,8 @@ extern void SetTargetContent (/* Document doc,
                                  Attribute attrNAME */);
 extern void LinkToPreviousTarget (/* Document doc,
                                      View view */);
+extern void AddAccessKey (/* NotifyAttribute *event */);
+extern ThotBool RemoveAccessKey (/* NotifyAttribute *event */);
 extern void RemoveLink (/* Element el,
                            Document doc */);
 extern ThotBool DeleteLink (/* NotifyElement * event */);

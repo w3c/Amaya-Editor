@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,7 @@
  *                   MS-Windows (incomplete).
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INROA) Unicode
+ *          R. Guetari (W3C/INRIA) Unicode
  *
  */
 
@@ -71,13 +71,7 @@ int                 X, Y;
 /*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SetMainWindowBackgroundColor (int frame, int color)
-#else  /* __STDC__ */
-void         SetMainWindowBackgroundColor (frame, color)
-int          frame;
-int          color;
-#endif /* __STDC__ */
 {
   COLORREF    cr;
 
@@ -92,12 +86,7 @@ int          color;
   SpaceToChar substitute in text the space chars to their visual
   equivalents.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SpaceToChar (USTRING text)
-#else  /* __STDC__ */
-static void         SpaceToChar (text)
-USTRING             text;
-#endif /* __STDC__ */
 {
   int                 i;
 
@@ -132,16 +121,7 @@ USTRING             text;
 /*----------------------------------------------------------------------
   DrawArrowHead draw the end of an arrow.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   DrawArrowHead (int frame, int x1, int y1, int x2, int y2, int thick, int fg)
-#else  /* __STDC__ */
-static void   DrawArrowHead (frame, x1, y1, x2, y2, thick, fg)
-     int           frame;
-int           x1, y1, x2, y2;
-int           thick;
-int           fg;
-
-#endif /* __STDC__ */
 {
   float               x, y, xb, yb, dx, dy, l, sina, cosa;
   float               width, height;
@@ -201,19 +181,7 @@ int           fg;
 /*----------------------------------------------------------------------
   DrawOneLine draw one line starting from (x1, y1) to (x2, y2) in frame.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  DrawOneLine (int frame, int thick, int style, int x1, int y1, int x2, int y2, int fg)
-#else  /* __STDC__ */
-static void  DrawOneLine (frame, thick, style, x1, y1, x2, y2, fg)
-int          frame;
-int          thick;
-int          style;
-int          x1;
-int          y1;
-int          x2;
-int          y2;
-int          fg;
-#endif /* __STDC__ */
 {
   HPEN     hPen;
   HPEN     hOldPen;
@@ -257,22 +225,9 @@ int          fg;
 
 /*----------------------------------------------------------------------
   DrawChar draw a char at location (x, y) in frame and with font.
-  RO indicates whether it's a read-only box active
-  indicates if the box is active parameter fg indicates the drawing color
+  The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T     car;
-int         frame;
-int         x;
-int         y;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void      DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 {
   CHAR_T              str[2] = {car, 0};
   HFONT               hOldFont;
@@ -315,32 +270,10 @@ int         fg;
   hyphen indicates whether an hyphen char has to be added.
   debutbloc is 1 if the text is at a paragraph beginning
   (no justification of first spaces).
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
-  
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg, int shadow)
-#else  /* __STDC__ */
-int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg, shadow)
-STRING              buff;
-int                 i;
-int                 lg;
-int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
-int                 lgboite;
-int                 bl;
-int                 hyphen;
-int                 debutbloc;
-int                 RO;
-int                 active;
-int                 fg;
-int                 shadow;
-#endif /* __STDC__ */
+int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int fg, int shadow)
 {
    STRING              ptcar;
    int                 j, width;
@@ -642,18 +575,7 @@ int                 shadow;
 	      \|/____________I_________________\|/_ bottom
 	      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
-#else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, lg, fg)
-int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
-int                 type;
-int                 lg;
-int                 fg;
-#endif /* __STDC__ */
+void      DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg, int fg)
 {
   int                 fheight;	/* font height           */
   int                 bottom;	/* underline position    */
@@ -706,21 +628,9 @@ int                 fg;
 
 /*----------------------------------------------------------------------
   DrawPoints draw a line of dot.
-  RO indicates whether it's a read-only box active indicates if the box
-  is active parameter fg indicates the drawing color
+  The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int active, int fg)
-#else  /* __STDC__ */
-void                DrawPoints (frame, x, y, lgboite, RO, active, fg)
-int                 frame;
-int                 x;
-int                 y;
-int                 lgboite;
-int                 RO;
-int                 active;
-int                 fg;
-#endif /* __STDC__ */
+void      DrawPoints (int frame, int x, int y, int lgboite, int fg)
 {
   ptrfont             font;
   int                 xcour;
@@ -748,7 +658,7 @@ int                 fg;
       /* draw the points */
       while (nb > 0)
 	  {
-      DrawChar ('\362', frame, xcour, y, font, RO, active, fg);
+      DrawChar ('\362', frame, xcour, y, font, fg);
 	  xcour += width;
 	  nb--;
 	  }
@@ -757,25 +667,9 @@ int                 fg;
 
 /*----------------------------------------------------------------------
   DrawRadical Draw a radical symbol.
-  RO indicates whether it's a read-only box active indicates if the box
-  is active parameter fg indicates the drawing color
+  The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void        DrawRadical (frame, thick, x, y, l, h, font, RO, active, fg)
-int         frame;
-int         thick;
-int         x;
-int         y;
-int         l;
-int         h;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void     DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int       xm, xp, fh;
 
@@ -803,26 +697,9 @@ int         fg;
   - simple if type = 0
   - contour if type = 1
   - double if type = 2.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void       DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void       DrawIntegral (frame, thick, x, y, l, h, type, font, RO, active, fg)
-int        frame;
-int        thick;
-int        x;
-int        y;
-int        l;
-int        h;
-int        type;
-ptrfont    font;
-int        RO;
-int        active;
-int        fg;
-#endif /* __STDC__ */
+void       DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int fg)
 {
   int      xm, yf, yend, exnum, delta;
   int      wd, asc, hd;
@@ -842,17 +719,17 @@ int        fg;
       xm = x + ((l - CharacterWidth ('\362', font)) / 2);
       yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
       CharacterAscent ('\362', font);
-      DrawChar ('\362', frame, xm, yf, font, RO, active, fg);
+      DrawChar ('\362', frame, xm, yf, font, fg);
     }
   else
     {
       /* Need more than one glyph */
       xm = x + ((l - CharacterWidth ('\363', font)) / 2);
       yf = y - FontAscent (font) + CharacterAscent ('\363', font);
-      DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
+      DrawChar ('\363', frame, xm, yf, font, fg);
       yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
       CharacterAscent ('\365', font) - 1;
-      DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
+      DrawChar ('\365', frame, xm, yend, font, fg);
 	 
       yf += CharacterHeight ('\363', font);
       delta = yend - yf;
@@ -862,73 +739,43 @@ int        fg;
       if (delta >= 0)
 	  {
 	    for (yf += asc, yend -= hd; yf < yend; yf += CharacterHeight ('\364', font), exnum++)
-	      DrawChar ('\364', frame, xm+wd, yf, font, RO, active, fg);
+	      DrawChar ('\364', frame, xm+wd, yf, font, fg);
 	    if (exnum)
-	      DrawChar ('\364', frame, xm+wd, yend, font, RO, active, fg);
+	      DrawChar ('\364', frame, xm+wd, yend, font, fg);
 	    else
-	      DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, active, fg);
+	      DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, fg);
 	  }
   }
 
   if (type == 2)
     /* double integral */
-    DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, RO, active, fg);
+    DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2), y, l, h, -1, font, fg);
   else if (type == 1)
     /* contour integral */
     DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
 	      y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
-	      font, RO, active, fg);
+	      font, fg);
 }
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
-#else  /* __STDC__ */
-static void         DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-CHAR_T              symb;
-int                 frame;
-int                 x;
-int                 y;
-int                 l;
-int                 h;
-int                 RO;
-int                 active;
-ptrfont             font;
-int                 fg;
-#endif /* __STDC__ */
+static void     DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int                 xm, yf;
 
   y += FrameTable[frame].FrTopMargin;
   xm = x + ((l - CharacterWidth (symb, font)) / 2);
   yf = y + ((h - CharacterHeight (symb, font)) / 2) - FontAscent (font) + CharacterAscent (symb, font);
-  DrawChar (symb, frame, xm, yf, font, RO, active, fg);
+  DrawChar (symb, frame, xm, yf, font, fg);
 }
 
 /*----------------------------------------------------------------------
   DrawSigma draw a Sigma symbol.
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void                DrawSigma (frame, x, y, l, h, font, RO, active, fg)
-int                 frame;
-int                 x;
-int                 y;
-int                 l;
-int                 h;
-ptrfont             font;
-int                 RO;
-int                 active;
-int                 fg;
-#endif /* __STDC__ */
+void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int               xm, ym, fh;
 
@@ -942,7 +789,7 @@ int                 fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\345', font))
      /* Only one glyph needed */
-     DrawMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
+     DrawMonoSymb ('\345', frame, x, y, l, h, font, fg);
    else
      {
        xm = x + (l / 3);
@@ -959,24 +806,9 @@ int                 fg;
 
 /*----------------------------------------------------------------------
   DrawPi draw a PI symbol.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawPi (frame, x, y, l, h, font, RO, active, fg)
-int         frame;
-int         x;
-int         y;
-int         l;
-int         h;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   int         fh;
 
@@ -992,7 +824,7 @@ int         fg;
    if (h < fh * 2 && l <= CharacterWidth ('\325', font))
      {
 	/* Only one glyph needed */
-	DrawMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
+	DrawMonoSymb ('\325', frame, x, y, l, h, font, fg);
      }
    else
      {
@@ -1006,24 +838,9 @@ int         fg;
 
 /*----------------------------------------------------------------------
   DrawIntersection draw an intersection symbol.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawIntersection (frame, x, y, l, h, font, RO, active, fg)
-int         frame;
-int         x;
-int         y;
-int         l;
-int         h;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   HPEN        hPen;
   HPEN        hOldPen;
@@ -1040,7 +857,7 @@ int         fg;
   fh = FontHeight (font);
   if (h < fh * 2 && l <= CharacterWidth ('\307', font))
     /* Only one glyph needed */
-    DrawMonoSymb ('\307', frame, x, y, l, h, RO, active, font, fg);
+    DrawMonoSymb ('\307', frame, x, y, l, h, font, fg);
   else
     {
       /* radius of arcs is 6mm */
@@ -1066,24 +883,9 @@ int         fg;
 
 /*----------------------------------------------------------------------
   DrawUnion draw an Union symbol.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawUnion (frame, x, y, l, h, font, RO, active, fg)
-int         frame;
-int         x;
-int         y;
-int         l;
-int         h;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   HPEN        hPen;
   HPEN        hOldPen;
@@ -1100,7 +902,7 @@ int         fg;
    fh = FontHeight (font);
    if (h < fh * 2 && l <= CharacterWidth ('\310', font))
      /* Only one glyph needed */
-     DrawMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
+     DrawMonoSymb ('\310', frame, x, y, l, h, font, fg);
    else
      {
        /* radius of arcs is 3mm */
@@ -1128,26 +930,9 @@ int         fg;
   DrawArrow draw an arrow following the indicated direction in degrees :
   0 (right arrow), 45, 90, 135, 180,
   225, 270 ou 315.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawArrow (frame, thick, style, x, y, l, h, orientation, RO, active, fg)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         l;
-int         h;
-int         orientation;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int fg)
 {
   int         xm, ym, xf, yf;
 
@@ -1214,29 +999,9 @@ int         fg;
 
 /*----------------------------------------------------------------------
   DrawBracket draw an opening or closing bracket (depending on direction)
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void        DrawBracket (frame, thick, x, y, l, h, direction, font, RO, active, fg)
-int         frame;
-int         thick;
-int         x;
-int         y;
-int         l;
-int         h;
-int         direction;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-
-#endif /* __STDC__ */
-
+void        DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
 {
    int         xm, yf, yend;
 
@@ -1251,7 +1016,7 @@ int         fg;
 	     xm = x + ((l - CharacterWidth ('[', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('[', font)) / 2) -
 		FontAscent (font) + CharacterAscent ('[', font);
-	     DrawChar (TEXT('['), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('['), frame, xm, yf, font, fg);
 	  }
 	else
 	  {
@@ -1259,7 +1024,7 @@ int         fg;
 	     xm = x + ((l - CharacterWidth (']', font)) / 2);
 	     yf = y + ((h - CharacterHeight (']', font)) / 2) -
 		FontAscent (font) + CharacterAscent (']', font);
-	     DrawChar (TEXT(']'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT(']'), frame, xm, yf, font, fg);
 	  }
      }
    else
@@ -1270,30 +1035,30 @@ int         fg;
 	     /* Draw a opening bracket */
 	     xm = x + ((l - CharacterWidth ('\351', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\351', font);
-	     DrawChar (TEXT('\351'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\351'), frame, xm, yf, font, fg);
 	     yend = y + h - CharacterHeight ('\353', font) -
 		FontAscent (font) + CharacterAscent ('\353', font);
-	     DrawChar (TEXT('\353'), frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\353'), frame, xm, yend, font, fg);
 	     for (yf = yf + CharacterHeight ('\351', font) -
 		  FontAscent (font) + CharacterAscent ('\352', font);
 		  yf < yend;
 		  yf += CharacterHeight ('\352', font))
-		DrawChar (TEXT('\352'), frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\352'), frame, xm, yf, font, fg);
 	  }
 	else
 	  {
 	     /* Draw a closing bracket */
 	     xm = x + ((l - CharacterWidth ('\371', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\371', font);
-	     DrawChar (TEXT('\371'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\371'), frame, xm, yf, font, fg);
 	     yend = y + h - CharacterHeight ('\373', font) -
 		FontAscent (font) + CharacterAscent ('\373', font);
-	     DrawChar (TEXT('\373'), frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\373'), frame, xm, yend, font, fg);
 	     for (yf = yf + CharacterHeight ('\371', font) -
 		  FontAscent (font) + CharacterAscent ('\372', font);
 		  yf < yend;
 		  yf += CharacterHeight ('\372', font))
-		DrawChar (TEXT('\372'), frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\372'), frame, xm, yf, font, fg);
 	  }
      }
 }
@@ -1301,29 +1066,9 @@ int         fg;
 /*----------------------------------------------------------------------
   DrawPointyBracket draw an opening or closing pointy bracket (depending
   on direction)
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void        DrawPointyBracket (frame, thick, x, y, l, h, direction, font, RO, active, fg)
-int         frame;
-int         thick;
-int         x;
-int         y;
-int         l;
-int         h;
-int         direction;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-
-#endif /* __STDC__ */
-
+void        DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
 {
    int         xm, yf;
 
@@ -1338,7 +1083,7 @@ int         fg;
 	     xm = x + ((l - CharacterWidth ('\341', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('\341', font)) / 2) -
 		FontAscent (font) + CharacterAscent ('\341', font);
-	     DrawChar (TEXT('['), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('['), frame, xm, yf, font, fg);
 	  }
 	else
 	  {
@@ -1346,7 +1091,7 @@ int         fg;
 	     xm = x + ((l - CharacterWidth ('\361', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('\361', font)) / 2) -
 		FontAscent (font) + CharacterAscent ('\361', font);
-	     DrawChar (TEXT(']'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT(']'), frame, xm, yf, font, fg);
 	  }
      }
    else
@@ -1369,26 +1114,9 @@ int         fg;
 
 /*----------------------------------------------------------------------
   DrawParenthesis draw a closing or opening parenthesis (direction).
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void        DrawParenthesis (frame, thick, x, y, l, h, direction, font, RO, active, fg)
-int         frame;
-int         thick;
-int         x;
-int         y;
-int         l;
-int         h;
-int         direction;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
 {
   int         xm, yf, yend, exnum, delta;
 
@@ -1407,13 +1135,13 @@ int         fg;
 	      /* draw an opening parenthesis */
 	      xm = x + ((l - CharacterWidth ('(', font)) / 2);
 	      yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
-	      DrawChar ('(', frame, xm, yf, font, RO, active, fg);
+	      DrawChar ('(', frame, xm, yf, font, fg);
 	    }
 	  else
 	    { /* draw a closing parenthesis */
 	      xm = x + ((l - CharacterWidth (')', font)) / 2);
 	      yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
-	      DrawChar (')', frame, xm, yf, font, RO, active, fg);
+	      DrawChar (')', frame, xm, yf, font, fg);
 	    }
 	}
       else
@@ -1423,9 +1151,9 @@ int         fg;
 	      /* draw a opening parenthesis */
 	      xm = x + ((l - CharacterWidth ('\346', font)) / 2);
 	      yf = y - FontAscent (font) + CharacterAscent ('\346', font);
-	      DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
+	      DrawChar ('\346', frame, xm, yf, font, fg);
 	      yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
-	      DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
+	      DrawChar ('\350', frame, xm, yend, font, fg);
 	      
 	      yf += CharacterHeight ('\346', font) - 1;
 	      delta = yend - yf;
@@ -1435,11 +1163,11 @@ int         fg;
 			 yend -= CharacterHeight ('\347', font) - 1;
 		       yf < yend;
 		       yf += CharacterHeight ('\347', font), exnum++)
-		    DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
+		    DrawChar ('\347', frame, xm, yf, font, fg);
 		  if (exnum)
-		    DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
+		    DrawChar ('\347', frame, xm, yend, font, fg);
 		  else
-		    DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
+		    DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, fg);
 		}
 	    }
 	  else
@@ -1447,9 +1175,9 @@ int         fg;
 	      /* draw a closing parenthesis */
 	      xm = x + ((l - CharacterWidth ('\366', font)) / 2);
 	      yf = y - FontAscent (font) + CharacterAscent ('\366', font);
-	      DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
+	      DrawChar ('\366', frame, xm, yf, font, fg);
 	      yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
-	      DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
+	      DrawChar ('\370', frame, xm, yend, font, fg);
 
 	      yf += CharacterHeight ('\366', font) - 1;
 	      delta = yend - yf;
@@ -1459,11 +1187,11 @@ int         fg;
 			 yend -= CharacterHeight ('\367', font) - 1;
 		       yf < yend;
 		       yf += CharacterHeight ('\367', font), exnum++)
-		    DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
+		    DrawChar ('\367', frame, xm, yf, font, fg);
 		  if (exnum)
-		    DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
+		    DrawChar ('\367', frame, xm, yend, font, fg);
 		  else
-		    DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
+		    DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, fg);
 		}
 	    }
 	}
@@ -1479,14 +1207,14 @@ int         fg;
 	  /* draw a opening parenthesis */
 	  xm = x + ((l - CharacterWidth ('(', font)) / 2);
 	  yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
-	  DrawChar (TEXT('('), frame, xm, yf, font, RO, active, fg);
+	  DrawChar (TEXT('('), frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* draw a closing parenthesis */
 	  xm = x + ((l - CharacterWidth (')', font)) / 2);
 	  yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
-	  DrawChar (TEXT(')'), frame, xm, yf, font, RO, active, fg);
+	  DrawChar (TEXT(')'), frame, xm, yf, font, fg);
 	}
     }
   else
@@ -1497,9 +1225,9 @@ int         fg;
 	  /* draw a opening parenthesis */
 	  xm = x + ((l - CharacterWidth ('\346', font)) / 2);
 	  yf = y - FontAscent (font) + CharacterAscent ('\346', font);
-	  DrawChar (TEXT('\346'), frame, xm, yf, font, RO, active, fg);
+	  DrawChar (TEXT('\346'), frame, xm, yf, font, fg);
 	  yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
-	  DrawChar (TEXT('\350'), frame, xm, yend, font, RO, active, fg);
+	  DrawChar (TEXT('\350'), frame, xm, yend, font, fg);
 	  
 	  yf += CharacterHeight ('\346', font) - 1;
 	  delta = yend - yf;
@@ -1509,11 +1237,11 @@ int         fg;
 		     yend -= CharacterHeight ('\347', font) - 1;
 		   yf < yend;
 		   yf += CharacterHeight ('\347', font), exnum++)
-		DrawChar (TEXT('\347'), frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\347'), frame, xm, yf, font, fg);
 	      if (exnum)
-		DrawChar (TEXT('\347'), frame, xm, yend, font, RO, active, fg);
+		DrawChar (TEXT('\347'), frame, xm, yend, font, fg);
 	      else
-		DrawChar (TEXT('\347'), frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
+		DrawChar (TEXT('\347'), frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, fg);
 	    }
 	}
       else
@@ -1521,9 +1249,9 @@ int         fg;
 	  /* draw a closing parenthesis */
 	  xm = x + ((l - CharacterWidth ('\366', font)) / 2);
 	  yf = y - FontAscent (font) + CharacterAscent ('\366', font);
-	  DrawChar (TEXT('\366'), frame, xm, yf, font, RO, active, fg);
+	  DrawChar (TEXT('\366'), frame, xm, yf, font, fg);
 	  yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
-	  DrawChar (TEXT('\370'), frame, xm, yend, font, RO, active, fg);
+	  DrawChar (TEXT('\370'), frame, xm, yend, font, fg);
 	  
 	  yf += CharacterHeight ('\366', font) - 1;
 	  delta = yend - yf;
@@ -1533,11 +1261,11 @@ int         fg;
 		     yend -= CharacterHeight ('\367', font) - 1;
 		   yf < yend;
 		   yf += CharacterHeight ('\367', font), exnum++)
-		DrawChar (TEXT('\367'), frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\367'), frame, xm, yf, font, fg);
 	      if (exnum)
-		DrawChar (TEXT('\367'), frame, xm, yend, font, RO, active, fg);
+		DrawChar (TEXT('\367'), frame, xm, yend, font, fg);
 	      else
-		DrawChar (TEXT('\367'), frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
+		DrawChar (TEXT('\367'), frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, fg);
 	    }
 	}
     }
@@ -1546,27 +1274,9 @@ int         fg;
 
 /*----------------------------------------------------------------------
   DrawBrace draw an opening of closing brace (depending on direction).
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void        DrawBrace (frame, thick, x, y, l, h, direction, font, RO, active, fg)
-int         frame;
-int         thick;
-int         x;
-int         y;
-int         l;
-int         h;
-int         direction;
-ptrfont     font;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int fg)
 {
    int         xm, ym, yf, yend, exnum, delta;
 
@@ -1582,14 +1292,14 @@ int         fg;
 	     /* just use the opening brace glyph */
 	     xm = x + ((l - CharacterWidth ('{', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('{', font)) / 2) - FontAscent (font) + CharacterAscent ('{', font);
-	     DrawChar (TEXT('{'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('{'), frame, xm, yf, font, fg);
 	  }
 	else
 	  {
 	     /* just use the closing brace glyph */
 	     xm = x + ((l - CharacterWidth ('}', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('}', font)) / 2) - FontAscent (font) + CharacterAscent ('}', font);
-	     DrawChar (TEXT('}'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('}'), frame, xm, yf, font, fg);
 	  }
      }
 
@@ -1601,14 +1311,14 @@ int         fg;
 	     /* top */
 	     xm = x + ((l - CharacterWidth ('\354', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\354', font);
-	     DrawChar (TEXT('\354'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\354'), frame, xm, yf, font, fg);
 	     /* vertical line */
 	     ym = y + ((h - CharacterHeight ('\355', font)) / 2) - FontAscent (font)
 		+ CharacterAscent ('\355', font);
-	     DrawChar (TEXT('\355'), frame, xm, ym, font, RO, active, fg);
+	     DrawChar (TEXT('\355'), frame, xm, ym, font, fg);
 	     /* bottom */
 	     yend = y + h - CharacterHeight ('\356', font) - FontAscent (font) + CharacterAscent ('\356', font);
-	     DrawChar (TEXT('\356'), frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\356'), frame, xm, yend, font, fg);
 
 	     /* finish top */
 	     yf += CharacterHeight ('\354', font) - 1;
@@ -1619,11 +1329,11 @@ int         fg;
 		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, fg);
 		  if (exnum)
-		     DrawChar (TEXT('\357'), frame, xm, ym, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, ym, font, fg);
 		  else
-		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, fg);
 	       }
 	     /* finish bottom */
 	     yf = ym + CharacterHeight ('\355', font) + CharacterHeight ('\357', font);
@@ -1634,11 +1344,11 @@ int         fg;
 		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, fg);
 		  if (exnum)
-		     DrawChar (TEXT('\357'), frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yend, font, fg);
 		  else
-		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, fg);
 	       }
 	  }
 
@@ -1647,15 +1357,15 @@ int         fg;
 	     /* top */
 	     xm = x + ((l - CharacterWidth ('\374', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\374', font);
-	     DrawChar (TEXT('\374'), frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\374'), frame, xm, yf, font, fg);
 	     /* center */
 	     ym = y + ((h - CharacterHeight ('\375', font)) / 2)
 		- FontAscent (font) + CharacterAscent ('\375', font);
-	     DrawChar (TEXT('\375'), frame, xm, ym, font, RO, active, fg);
+	     DrawChar (TEXT('\375'), frame, xm, ym, font, fg);
 	     /* bottom */
 	     yend = y + h - CharacterHeight ('\376', font)
 		- FontAscent (font) + CharacterAscent ('\376', font);
-	     DrawChar (TEXT('\376'), frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\376'), frame, xm, yend, font, fg);
 	     /* finish top */
 	     yf += CharacterHeight ('\374', font) - 1;
 	     delta = ym - yf;
@@ -1665,11 +1375,11 @@ int         fg;
 		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, fg);
 		  if (exnum)
-		     DrawChar (TEXT('\357'), frame, xm, ym, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, ym, font, fg);
 		  else
-		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, fg);
 	       }
 	     /* finish bottom */
 	     yf = ym + CharacterHeight ('\375', font) + CharacterHeight ('\357', font);
@@ -1680,11 +1390,11 @@ int         fg;
 		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, fg);
 		  if (exnum)
-		     DrawChar (TEXT('\357'), frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yend, font, fg);
 		  else
-		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, fg);
 	       }
 	  }
      }
@@ -1694,28 +1404,10 @@ int         fg;
   DrawRectangle draw a rectangle located at (x, y) in frame,
   of geometry width x height.
   thick indicates the thickness of the lines.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
-#else  /* __STDC__ */
-void        DrawRectangle (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         width;
-int         height;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         pattern;
-#endif /* __STDC__ */
+void        DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
 {
    LOGBRUSH    logBrush;
    Pixmap      pat = (Pixmap) 0;
@@ -1754,7 +1446,7 @@ int         pattern;
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0)
      logBrush.lbStyle = BS_NULL;
    else
@@ -1803,29 +1495,11 @@ int         pattern;
 
 /*----------------------------------------------------------------------
   DrawDiamond draw a diamond.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
 
-#else  /* __STDC__ */
-void        DrawDiamond (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         width;
-int         height;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         pattern;
-#endif /* __STDC__ */
+void        DrawDiamond (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
 {
 }
 
@@ -1834,8 +1508,6 @@ int         pattern;
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   fg parameter gives the drawing color.
   arrow parameter indicates whether :
   - no arrow have to be drawn (0)
@@ -1843,32 +1515,14 @@ int         pattern;
   - a backward arrow has to be drawn (2)
   - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, int bg, int pattern)
-
-#else  /* __STDC__ */
-void        DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, bg, pattern)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-PtrTextBuffer       buffer;
-int         nb;
-int         RO;
-int         active;
-int         fg;
-int         arrow;
-int         bg;
-int         pattern;
-#endif /* __STDC__ */
+void        DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, int bg, int pattern)
 {
   ThotPoint  *points;
   int         i, j;
   PtrTextBuffer       adbuff;
 
   /* fill the included polygon */
-  DrawPolygon (frame, 0, style, x, y, buffer, nb, RO, active, fg, bg, pattern);
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
   if (thick == 0 || fg < 0)
     return;
 
@@ -1917,29 +1571,10 @@ int         pattern;
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
-
-#else  /* __STDC__ */
-void          DrawPolygon (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-PtrTextBuffer buffer;
-int           nb;
-int           RO;
-int           active;
-int           fg;
-int           bg;
-int           pattern;
-#endif /* __STDC__ */
+void          DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
 {
   ThotPoint          *points;
   PtrTextBuffer       adbuff;
@@ -2001,7 +1636,7 @@ int           pattern;
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0)
      logBrush.lbStyle = BS_NULL;
    else
@@ -2060,12 +1695,7 @@ int           pattern;
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     PolyNewPoint (int x, int y)
-#else  /* __STDC__ */
-static ThotBool     PolyNewPoint (x, y)
-int                 x, y;
-#endif /* __STDC__ */
 {
   ThotPoint          *tmp;
   int                 taille;
@@ -2096,12 +1726,7 @@ int                 x, y;
 /*----------------------------------------------------------------------
   PushStack : push a spline on the stack.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   PushStack (float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
-#else  /* __STDC__ */
-static void   PushStack (x1, y1, x2, y2, x3, y3, x4, y4)
-float         x1, y1, x2, y2, x3, y3, x4, y4;
-#endif /* __STDC__ */
 {
    StackPoint         *stack_ptr;
 
@@ -2123,13 +1748,7 @@ float         x1, y1, x2, y2, x3, y3, x4, y4;
 /*----------------------------------------------------------------------
   PopStack : pop a spline from the stack.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     PopStack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
-#else  /* __STDC__ */
-static ThotBool     PopStack (x1, y1, x2, y2, x3, y3, x4, y4)
-float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
-
-#endif /* __STDC__ */
 {
    StackPoint         *stack_ptr;
 
@@ -2153,13 +1772,7 @@ float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 /*----------------------------------------------------------------------
   PolySplit : split a poly line and push the results on the stack.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   PolySplit (float a1, float b1, float a2, float b2, float a3, float b3, float a4, float b4)
-#else  /* __STDC__ */
-static void   PolySplit (a1, b1, a2, b2, a3, b3, a4, b4)
-float         a1, b1, a2, b2, a3, b3, a4, b4;
-
-#endif /* __STDC__ */
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, x4, y4;
@@ -2198,8 +1811,6 @@ float         a1, b1, a2, b2, a3, b3, a4, b4;
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   fg indicates the drawing color
   arrow parameter indicates whether :
   - no arrow have to be drawn (0)
@@ -2208,24 +1819,7 @@ float         a1, b1, a2, b2, a3, b3, a4, b4;
   - both backward and forward arrows have to be drawn (3)
   Parameter control indicates the control points.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
-
-#else  /* __STDC__ */
-void          DrawCurve (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-PtrTextBuffer buffer;
-int           nb;
-int           RO;
-int           active;
-int           fg;
-int           arrow;
-C_points     *controls;
-#endif /* __STDC__ */
+void          DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, C_points * controls)
 {
   PtrTextBuffer       adbuff;
   int                 i, j;
@@ -2360,31 +1954,11 @@ C_points     *controls;
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
   The first point is a fake one containing the geometry.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   Parameter controls contains the list of control points.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
-
-#else  /* __STDC__ */
-void          DrawSpline (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern, controls)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-PtrTextBuffer buffer;
-int           nb;
-int           RO;
-int           active;
-int           fg;
-int           bg;
-int           pattern;
-C_points     *controls;
-#endif /* __STDC__ */
+void          DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, C_points * controls)
 {
   PtrTextBuffer adbuff;
   int           i, j;
@@ -2489,7 +2063,7 @@ C_points     *controls;
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0)
      logBrush.lbStyle = BS_NULL;
    else
@@ -2548,28 +2122,9 @@ C_points     *controls;
 /*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int RO, int active, int fg, int bg, int pattern)
-
-#else  /* __STDC__ */
-void                DrawPath (frame, thick, style, x, y, path, RO, active, fg, bg, pattern)
-int                 frame;
-int                 thick;
-int                 style;
-int                 x;
-int                 y;
-PtrPathSeg          path;
-int                 RO;
-int                 active;
-int                 fg;
-int                 bg;
-int                 pattern;
-
-#endif /* __STDC__ */
+void                DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int fg, int bg, int pattern)
 {
   /****** to be written *******/
   return;
@@ -2577,30 +2132,10 @@ int                 pattern;
 
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with smoothed corners.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int RO, int active, int fg, int bg, int pattern)
-#else  /* __STDC__ */
-void          DrawOval (frame, thick, style, x, y, width, height, rx, ry RO, active, fg, bg, pattern)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           width;
-int           height;
-int           rx;
-int           ry;
-int           RO;
-int           active;
-int           fg;
-int           bg;
-int           pattern;
-#endif /* __STDC__ */
+void          DrawOval (int frame, int thick, int style, int x, int y, int width, int height, int rx, int ry, int fg, int bg, int pattern)
 {
   Pixmap        pat = (Pixmap) 0;
   HPEN          hPen;
@@ -2658,7 +2193,7 @@ int           pattern;
 	 }
      }
    /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0)
      logBrush.lbStyle = BS_NULL;
    else
@@ -2696,29 +2231,10 @@ int           pattern;
 
 /*----------------------------------------------------------------------
   DrawEllips draw an ellips (or a circle).
-  RO indicates whether it's a read-only box active indicates if the box
-  is active.
   Parameters fg, bg, and pattern are for drawing color, background color
   and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
-
-#else  /* __STDC__ */
-void          DrawEllips (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           width;
-int           height;
-int           RO;
-int           active;
-int           fg;
-int           bg;
-int           pattern;
-#endif /* __STDC__ */
+void          DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
 {
   Pixmap   pat = (Pixmap)0;
   HPEN     hPen;
@@ -2756,7 +2272,7 @@ int           pattern;
 	 }
     }
   /* how to fill the polygone */
-  pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
   if (pat == 0)
     logBrush.lbStyle = BS_NULL;
   else
@@ -2796,27 +2312,9 @@ int           pattern;
 /*----------------------------------------------------------------------
   DrawHorizontalLine draw a vertical line aligned top center or bottom
   depending on align value.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void          DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           l;
-int           h;
-int           align;
-int           RO;
-int           active;
-int           fg;
-#endif /* __STDC__ */
+void          DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
 {
    int        Y;
 
@@ -2839,27 +2337,9 @@ int           fg;
 /*----------------------------------------------------------------------
   DrawHorizontalBrace draw a horizontal brace aligned top
   or bottom depending on align value.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void          DrawHorizontalBrace (frame, thick, style, x, y, l, h, align, RO, active, fg)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           l;
-int           h;
-int           align;
-int           RO;
-int           active;
-int           fg;
-#endif /* __STDC__ */
+void          DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
 {
   int        Y;
 
@@ -2891,27 +2371,9 @@ int           fg;
 /*----------------------------------------------------------------------
   DrawVerticalLine draw a vertical line aligned left center or right
   depending on align value.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void          DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           l;
-int           h;
-int           align;
-int           RO;
-int           active;
-int           fg;
-#endif /* __STDC__ */
+void          DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
 {
   int        X;
 
@@ -2935,27 +2397,9 @@ int           fg;
 /*----------------------------------------------------------------------
   DrawDoubleVerticalLine draw a double vertical line aligned left center or
   right depending on align value.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void          DrawDoubleVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           l;
-int           h;
-int           align;
-int           RO;
-int           active;
-int           fg;
-#endif /* __STDC__ */
+void          DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int fg)
 {
   int        X;
 
@@ -2980,27 +2424,9 @@ int           fg;
 
 /*----------------------------------------------------------------------
   DrawSlash draw a slash or backslash depending on direction.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Le parame`tre indique la couleur du trace'.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void          DrawSlash (frame, thick, style, x, y, l, h, direction, RO, active, fg)
-int           frame;
-int           thick;
-int           style;
-int           x;
-int           y;
-int           l;
-int           h;
-int           direction;
-int           RO;
-int           active;
-int           fg;
-#endif /* __STDC__ */
+void          DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int fg)
 {
   int              xf, yf;
 
@@ -3023,27 +2449,9 @@ int           fg;
 
 /*----------------------------------------------------------------------
   DrawCorner draw a corner.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void        DrawCorner (frame, thick, style, x, y, l, h, corner, RO, active, fg)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         l;
-int         h;
-int         corner;
-int         RO;
-int         active;
-int         fg;
-#endif /* __STDC__ */
+void        DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int corner, int fg)
 {
   ThotPoint   point[3];
   int         xf, yf;
@@ -3127,59 +2535,20 @@ int         fg;
 /*----------------------------------------------------------------------
   DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
   and with an horizontal line at 6mm from top.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
-
-#else  /* __STDC__ */
-void        DrawRectangleFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         width;
-int         height;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         pattern;
-#endif /* __STDC__ */
+void        DrawRectangleFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
 {
 }
 
 /*----------------------------------------------------------------------
   DrawEllipsFrame draw an ellipse at 7mm under the top of the
   enclosing box.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
-
-#else  /* __STDC__ */
-void        DrawEllipsFrame (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
-int         frame;
-int         thick;
-int         style;
-int         x;
-int         y;
-int         width;
-int         height;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         pattern;
-#endif /* __STDC__ */
-
+void        DrawEllipsFrame (int frame, int thick, int style, int x, int y, int width, int height, int fg, int bg, int pattern)
 {
 }
 
@@ -3187,32 +2556,18 @@ int         pattern;
   StorePageInfo and psBoundingBox are empty, they have no meaning in
   this context and are kept for interface compatibility.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        StorePageInfo (int pagenum, int width, int height)
-#else  /* __STDC__ */
-void        StorePageInfo (pagenum, width, height)
-int         pagenum;
-int         width;
-int         height;
-#endif /* __STDC__ */
 {
-#  ifdef _WIN_PRINT
+#ifdef _WIN_PRINT
    LastPageNumber = pagenum;
    LastPageWidth = width;
    LastPageHeight = height;
-#  endif /* WIN_PRINT */
+#endif /* WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        psBoundingBox (int frame, int width, int height)
-#else  /* __STDC__ */
-void        psBoundingBox (frame, width, height)
-int         frame;
-int         width;
-int         height;
-#endif /* __STDC__ */
 {
 }
 
@@ -3220,16 +2575,7 @@ int         height;
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        Clear (int frame, int width, int height, int x, int y)
-#else  /* __STDC__ */
-void        Clear (frame, width, height, x, y)
-int         frame;
-int         width;
-int         height;
-int         x;
-int         y;
-#endif /* __STDC__ */
 {
    ThotWindow          w;
    HBRUSH              hBrush;
@@ -3252,18 +2598,7 @@ int         y;
   Scroll do a scrolling/Bitblt of frame of a width x height area
   from (xd,yd) to (xf,yf).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
-#else  /* __STDC__ */
-void Scroll (frame, width, height, xd, yd, xf, yf)
-int  frame;
-int  width;
-int  height;
-int  xd;
-int  yd;
-int  xf;
-int  yf;
-#endif /* __STDC__ */
 {
   RECT cltRect;
 
@@ -3285,27 +2620,9 @@ int  yf;
   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
   located on (x , y) and geometry width x height, using the
   given pattern.
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
-#else  /* __STDC__ */
-void        PaintWithPattern (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
-int         frame;
-int         x;
-int         y;
-int         width;
-int         height;
-ThotWindow  w;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         pattern;
-
-#endif /* __STDC__ */
+void        PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int fg, int bg, int pattern)
 {
 }

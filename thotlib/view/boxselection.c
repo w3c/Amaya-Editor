@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -50,13 +50,7 @@
    ClearAbstractBoxSelection parcours l'arborescence pour annuler  
    toutes ls selections de pave.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ClearAbstractBoxSelection (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-static void         ClearAbstractBoxSelection (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pAbbox1;
@@ -83,13 +77,7 @@ PtrAbstractBox      pAb;
 /*----------------------------------------------------------------------
    ClearViewSelMarks annule la selection courante dans la fenetre.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearViewSelMarks (int frame)
-#else  /* __STDC__ */
-void                ClearViewSelMarks (frame)
-int                 frame;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
 
@@ -108,13 +96,7 @@ int                 frame;
    ClearViewSelection bascule et annule la mise en evidence de la   
    selection dans la fenetre.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ClearViewSelection (int frame)
-#else  /* __STDC__ */
-void                ClearViewSelection (frame)
-int                 frame;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    PtrBox              pBox, pBox1, pBox2;
@@ -323,16 +305,7 @@ void                TtaClearViewSelections ()
    UpdateViewSelMarks met a jour les marques de selection de frame   
    apres insertion ou destruction de caracteres.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
-#else  /* __STDC__ */
-void                UpdateViewSelMarks (frame, xDelta, spaceDelta, charDelta)
-int                 frame;
-int                 xDelta;
-int                 spaceDelta;
-int                 charDelta;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
@@ -356,14 +329,7 @@ int                 charDelta;
    Detruit le buffer donne en parametre, met a jour les marques de 
    selection et rend le pointeur sur le buffer precedent.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrTextBuffer       DeleteBuffer (PtrTextBuffer pBuffer, int frame)
-#else  /* __STDC__ */
-PtrTextBuffer       DeleteBuffer (pBuffer, frame)
-PtrTextBuffer       pBuffer;
-int                 frame;
-
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pNextBuffer;
    PtrTextBuffer       pPreviousBuffer;
@@ -430,14 +396,7 @@ int                 frame;
    celui qui contient le caractere d'indice global index   
    ainsi que son indice dans ce buffer.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         LocateBuffer (PtrTextBuffer * pBuffer, int *index)
-#else  /* __STDC__ */
-static void         LocateBuffer (pBuffer, index)
-PtrTextBuffer      *pBuffer;
-int                *index;
-
-#endif /* __STDC__ */
 {
    ThotBool            still;
 
@@ -472,13 +431,7 @@ int                *index;
    le precedant VsNSpaces, la position dans la boite VsXPos
    et la ligne contenant la boite VsLine.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ComputeViewSelMarks (ViewSelection * selMark)
-#else  /* __STDC__ */
-void                ComputeViewSelMarks (selMark)
-ViewSelection      *selMark;
-
-#endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
   PtrTextBuffer       pSelBuffer;
@@ -616,19 +569,7 @@ ViewSelection      *selMark;
   the last selected character.
   The parameter alone is set to TRUE when only one abstract box is selected.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
-#else  /* __STDC__ */
-void                InsertViewSelMarks (frame, pAb, firstChar, lastChar, startSelection, endSelection, alone)
-int                 frame;
-PtrAbstractBox      pAb;
-int                 firstChar;
-int                 lastChar;
-ThotBool            startSelection;
-ThotBool            endSelection;
-ThotBool            alone;
-
-#endif /* __STDC__ */
 {
   PtrLine             adline;
   PtrTextBuffer       pBuffer;
@@ -1009,14 +950,7 @@ ThotBool            alone;
    IsAbstractBoxDisplayed rend la valeur vrai si le pave est affiche'
    dans le frame.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-ThotBool            IsAbstractBoxDisplayed (pAb, frame)
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
 {
    int                 min, max;
 

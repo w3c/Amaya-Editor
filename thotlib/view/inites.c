@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -46,14 +46,7 @@ static int             have_colors = 0;
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void       FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
-#else  /* __STDC__ */
-static void       FindOutColor (dsp, colormap, colr)
-Display          *dsp;
-Colormap          colormap;
-ThotColorStruct  *colr;
-#endif /* __STDC__ */
 {
    int                 i, match;
 #ifdef MORE_ACCURATE
@@ -150,17 +143,12 @@ ThotColorStruct  *colr;
 /*----------------------------------------------------------------------
    InstallColor try to install a color in the public colormap.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void InstallColor (int i)
-#else  /* __STDC__ */
-static void InstallColor (i)
-int         i;
-#endif /* __STDC__ */
 {
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    ThotColorStruct     col;
 
    if (Color_Table[i] != NULL)
@@ -175,7 +163,7 @@ int         i;
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -187,11 +175,7 @@ int         i;
    color base and should be far less expensive than an optimal
    (e.g. closest in cube) algorithm.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ApproximateColors (void)
-#else /* __STDC__ */
-static void ApproximateColors ()
-#endif /* __STDC__ */
 {
    ThotColor  white = Pix_Color[0];
    ThotColor  col;
@@ -268,13 +252,7 @@ void         FreeDocColors ()
    If ReduceColor environment setting is set, less color
    are allocated.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitDocColors (CHAR_T* name)
-#else  /* __STDC__ */
-void                InitDocColors (name)
-CHAR_T*             name;
-
-#endif /* __STDC__ */
 {
 #ifndef _WIN_PRINT
    int                 i, j, k;
@@ -300,10 +278,10 @@ CHAR_T*             name;
       reducecolor = FALSE;
 
    /* set up black and white Pixels */
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    Pix_Color[0] = RGB (255, 255, 255);
    Pix_Color[1] = RGB (0, 0, 0);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
 #ifdef _GTK
    gdk_color_white (TtCmap, &gdkwhite);  
    gdk_color_black (TtCmap, &gdkblack);
@@ -313,7 +291,7 @@ CHAR_T*             name;
    Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
    Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
 #endif /* _GTK */
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* setup greyscale colors */
    for (i = 2; i < 8; i++)
@@ -391,13 +369,7 @@ int                 NumberOfColors ()
 /*----------------------------------------------------------------------
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T*          ColorName (int num)
-#else  /* __STDC__ */
-CHAR_T*          ColorName (num)
-int              num;
-
-#endif /* __STDC__ */
 {
    if (num < NColors && num >= 0)
       return Color_Table[num];
@@ -408,12 +380,7 @@ int              num;
 /*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotColor ColorPixel (int num)
-#else  /* __STDC__ */
-ThotColor ColorPixel (num)
-int                 num;
-#endif /* __STDC__ */
 {
 #ifdef _GTK 
   unsigned short   red, green, blue;
@@ -441,12 +408,7 @@ int                 num;
 /*----------------------------------------------------------------------
   TtaFreeThotColor frees the Thot Color.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             TtaFreeThotColor (int num)
-#else  /* __STDC__ */
-int              TtaFreeThotColor (num)
-int              num;
-#endif /* __STDC__ */
 {
   if (num < NColors + NbExtColors && num >= NColors)
     {
@@ -470,14 +432,7 @@ int              num;
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
-#else  /* __STDC__ */
-int                 TtaGetThotColor (red, green, blue)
-unsigned short      red;
-unsigned short      green;
-unsigned short      blue;
-#endif /* __STDC__ */
 {
    short               delred, delgreen, delblue;
    int                 best;
@@ -587,15 +542,7 @@ unsigned short      blue;
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
-#else  /* __STDC__ */
-void                TtaGiveThotRGB (num, red, green, blue)
-int                 num;
-unsigned short     *red;
-unsigned short     *green;
-unsigned short     *blue;
-#endif /* __STDC__ */
 {
   if (num < NColors && num >= 0)
     {
@@ -622,13 +569,7 @@ unsigned short     *blue;
    ColorNumber     lookup in Thot color table for an entry given it's
    name. Returns the index or -1 if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 ColorNumber (STRING name)
-#else  /* __STDC__ */
-int                 ColorNumber (name)
-STRING              name;
-
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            found;
@@ -662,13 +603,7 @@ int                 NumberOfPatterns ()
 /*----------------------------------------------------------------------
    PatternName     returns the name of a pattern available.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING              PatternName (int num)
-#else  /* __STDC__ */
-STRING              PatternName (num)
-int                 num;
-
-#endif /* __STDC__ */
 {
    if (num < NumberOfPatterns () && num >= 0)
       return Patterns[num];
@@ -681,13 +616,7 @@ int                 num;
    PatternNumber   lookup fo a pattern given it's name. Returns the
    index or -1 if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 PatternNumber (STRING name)
-#else  /* __STDC__ */
-int                 PatternNumber (name)
-STRING              name;
-
-#endif /* __STDC__ */
 {
    int                 i;
    int                 max;
@@ -714,18 +643,7 @@ STRING              name;
    parameters fg, bg, and motif indicate respectively
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Pixmap      CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
-#else  /* __STDC__ */
-Pixmap      CreatePattern (disp, RO, active, fg, bg, motif)
-int         disp;
-int         RO;
-int         active;
-int         fg;
-int         bg;
-int         motif;
-
-#endif /* __STDC__ */
+Pixmap      CreatePattern (int disp, int fg, int bg, int motif)
 {
    unsigned long       FgPixel;
    unsigned long       BgPixel;

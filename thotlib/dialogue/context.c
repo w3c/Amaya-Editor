@@ -498,7 +498,7 @@ static void InitGraphicContexts ()
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
-   pix = CreatePattern (0, 0, 0, black, white, 6);
+   pix = CreatePattern (0, black, white, 6);
 
    GCmodel.function = GXcopy;
    GCmodel.foreground = White_Color;

@@ -84,15 +84,7 @@ static int          SelectedPictureEdge;/* if the current selection is a
    Parameter:
        keyboard: the keyboard to be displayed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetCurrentKeyboard (int keyboard)
-
-#else  /* __STDC__ */
-void                TtaSetCurrentKeyboard (keyboard)
-int                 keyboard;
-
-#endif /* __STDC__ */
-
 {
    if (ThotLocalActions[T_keyboard] != NULL)
       (*ThotLocalActions[T_keyboard]) (keyboard);
@@ -106,7 +98,6 @@ int                 keyboard;
 
    initialize variable describing the current selection.
   ----------------------------------------------------------------------*/
-
 void                InitSelection ()
 {
    SelectedDocument = NULL;
@@ -143,13 +134,7 @@ void                InitSelection ()
    "document" et si oui definit une nouvelle selection, sans cet   
    element.                                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CheckSelectedElement (PtrElement pEl, Document document)
-#else  /* __STDC__ */
-void         CheckSelectedElement (pEl, document)
-PtrElement          pEl;
-Document            document;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    PtrDocument         selDoc;
@@ -284,14 +269,7 @@ void                TtaSetFocus ()
    returns the first element in the descendants of element pEl which has
    an abstract box in the view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   VisibleDescendant (PtrElement pEl, int view)
-#else  /* __STDC__ */
-static PtrElement   VisibleDescendant (pEl, view)
-PtrElement          pEl;
-int                 view;
-
-#endif /* __STDC__ */
 {
    PtrElement          pChild, pVisible;
 
@@ -320,13 +298,7 @@ int                 view;
   Restore in all views the enclosing abstract boxes for associated element
   pEl, if this associated element is displayed in a page footer or header.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EnclosingAssocAbsBox (PtrElement pEl)
-#else  /* __STDC__ */
-static void         EnclosingAssocAbsBox (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
 {
    int                 view;
    PtrElement          pDesc;
@@ -380,18 +352,7 @@ PtrElement          pEl;
 	and if *firstChar == *lastChar, no character is selected, only the
 	position before firstChar is selected.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
-#else  /* __STDC__ */
-ThotBool            GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
-PtrDocument        *pDoc;
-PtrElement         *firstEl;
-PtrElement         *lastEl;
-int                *firstChar;
-int                *lastChar;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ret;
    PtrElement          pEl;
@@ -469,17 +430,7 @@ int                *lastChar;
    view: number of this view in the document (if assoc is FALSE)
          number of the corresponding associated element (if assoc is TRUE)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GetActiveView (PtrDocument * pDoc, int *view, ThotBool * assoc)
-
-#else  /* __STDC__ */
-void                GetActiveView (pDoc, view, assoc)
-PtrDocument        *pDoc;
-int                *view;
-ThotBool           *assoc;
-
-#endif /* __STDC__ */
-
 {
    int                 firstChar, lastChar;
    PtrDocument         pSelDoc;
@@ -551,15 +502,7 @@ void                CancelSelection ()
    If the current selection is in document pDoc, cancel this selection.
   ----------------------------------------------------------------------*/
 
-#ifdef __STDC__
 void                ResetSelection (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                ResetSelection (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    if (pDoc == SelectedDocument || pDoc == DocSelectedAttr)
      {
@@ -577,17 +520,7 @@ PtrDocument         pDoc;
    Returns NULL if the last selected element (pLastEl) has previously been
    returned.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PtrElement          NextInSelection (PtrElement pEl, PtrElement pLastEl)
-
-#else  /* __STDC__ */
-PtrElement          NextInSelection (pEl, pLastEl)
-PtrElement          pEl;
-PtrElement          pLastEl;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
    ThotBool            found;
@@ -668,13 +601,7 @@ PtrElement          pLastEl;
    Returns TRUE if, according to its type, element pEl must be hidden to
    the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            HiddenType (PtrElement pEl)
-#else  /* __STDC__ */
-ThotBool            HiddenType (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    SRule              *pSRule;
    ThotBool            ret;
@@ -709,13 +636,7 @@ PtrElement          pEl;
    If showBegin is TRUE, scroll the document to show the beginning of
    the first selected element. If 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
-#else  /* __STDC__ */
-void                HighlightSelection (showBegin, clearOldSel)
-ThotBool            showBegin;
-ThotBool            clearOldSel;
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pNextAb;
    PtrElement          pEl, pNextEl;
@@ -897,13 +818,7 @@ ThotBool            clearOldSel;
    current selection os visible.
    If exceptView is not null, avoid to choose that view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetActiveView (int exceptView)
-#else  /* __STDC__ */
-static void         SetActiveView (exceptView)
-int                 exceptView;
-
-#endif /* __STDC__ */
 {
    int                 view;
    ThotBool            stop;
@@ -946,21 +861,12 @@ int                 exceptView;
 
 /*----------------------------------------------------------------------
    DeactivateView
-
    A view has been closed for document pDoc. Change active view if the
    closed view was the active one.
    view is the number of the view, or, if assoc is TRUE, the number of the
    associated tree whose view has been closed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
-#else  /* __STDC__ */
-void                DeactivateView (pDoc, view, assoc)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            assoc;
-
-#endif /* __STDC__ */
 {
 
    if (pDoc == SelectedDocument)
@@ -1001,17 +907,7 @@ ThotBool            assoc;
 
    return TRUE if abstract box pAB is in the subtree of abstract box pRootAb.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
-
-#else  /* __STDC__ */
-static ThotBool     WithinAbsBox (pAb, pRootAb)
-PtrAbstractBox      pAb;
-PtrAbstractBox      pRootAb;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ret;
 
@@ -1032,16 +928,7 @@ PtrAbstractBox      pRootAb;
    returns the abstract box that displays the same attribute as
    AbsBoxSelectedAttr, but in view view.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static PtrAbstractBox GetAbsBoxSelectedAttr (int view)
-
-#else  /* __STDC__ */
-static PtrAbstractBox GetAbsBoxSelectedAttr (view)
-int                 view;
-
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbView, pAb;
 
@@ -1098,17 +985,7 @@ int                 view;
    If visible is TRUE, the beginning of the selection should be made
    visible to the user.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ShowSelection (PtrAbstractBox pRootAb, ThotBool visible)
-
-#else  /* __STDC__ */
-void                ShowSelection (pRootAb, visible)
-PtrAbstractBox      pRootAb;
-ThotBool            visible;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pEl, pNextEl;
    PtrAbstractBox      pAb, pNextAb;
@@ -1263,20 +1140,9 @@ ThotBool            visible;
 
 /*----------------------------------------------------------------------
    DisplaySel
-
    Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DisplaySel (PtrElement pEl, int view, int frame, ThotBool assoc, ThotBool * abExist)
-
-#else  /* __STDC__ */
-static void         DisplaySel (pEl, view, frame, assoc, abExist)
-PtrElement          pEl;
-int                 view;
-int                 frame;
-ThotBool            assoc;
-ThotBool           *abExist;
-#endif /* __STDC__ */
 {
   PtrAbstractBox      pAb, pNextAb;
   int                 firstChar, lastChar;
@@ -1413,20 +1279,12 @@ ThotBool           *abExist;
 
 /*----------------------------------------------------------------------
    SelectAbsBoxes
-
    Select in all views all abstract boxes of element pEl.
    If no abstract exists currently for this element in any view, try
    to to open a view where this element would have an abstract box, but
    only if createView is TRUE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     SelectAbsBoxes (PtrElement pEl, ThotBool createView)
-#else  /* __STDC__ */
-static ThotBool     SelectAbsBoxes (pEl, createView)
-PtrElement          pEl;
-ThotBool            createView;
-#endif /* __STDC__ */
-
 {
   PtrElement          pRoot;
   NotifyDialog        notifyDoc;
@@ -1650,16 +1508,9 @@ ThotBool            createView;
 
 /*----------------------------------------------------------------------
    HighlightVisibleAncestor
-
    Highlight the first ancestor of element pEl that has an abstract box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HighlightVisibleAncestor (PtrElement pEl)
-#else  /* __STDC__ */
-void                HighlightVisibleAncestor (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
-
 {
    int                 view, lastView, frame;
    ThotBool            assoc, found, abExist;
@@ -1714,24 +1565,13 @@ PtrElement          pEl;
 
 /*----------------------------------------------------------------------
    SelectStringInAttr
-
    The new current selection is now the character string contained
    in the text buffer of abstract box pAb, starting at rank firstChar
    and ending at rank last Char.
    pAb is a presentation abstract box that contains the value of a
    numerical or textual attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool string)
-#else  /* __STDC__ */
-static void         SelectStringInAttr (pDoc, pAb, firstChar, lastChar, string)
-PtrDocument         pDoc;
-PtrAbstractBox      pAb;
-int                 firstChar;
-int                 lastChar;
-ThotBool            string;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrAbstractBox      pAbView;
@@ -1808,17 +1648,7 @@ ThotBool            string;
    string indicates if a string is selected (TRUE) or a position between
    two characters.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar, ThotBool string)
-#else  /* __STDC__ */
-static void         SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 firstChar;
-int                 lastChar;
-ThotBool            string;
-
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            elVisible;
@@ -1937,41 +1767,22 @@ ThotBool            string;
 
 /*----------------------------------------------------------------------
    MoveCaret
-
    Set the current selection to the position before the character of rank
    firstChar in the text element pEl.
    If pEl is a polyline element, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
-#else  /* __STDC__ */
-void                MoveCaret (pDoc, pEl, firstChar)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 firstChar;
-
-#endif /* __STDC__ */
 {
    SelectStringOrPosition (pDoc, pEl, firstChar, firstChar, FALSE);
 }
 
 /*----------------------------------------------------------------------
    SelectString
-
    Set the current selection to the string beginning at position firstChar
    and ending at position lastChar in the text element pEl.
    If pEl is a polyline, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
-#else  /* __STDC__ */
-void                SelectString (pDoc, pEl, firstChar, lastChar)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 firstChar;
-int                 lastChar;
-
-#endif /* __STDC__ */
 {
    ThotBool            string;
 
@@ -1989,22 +1800,12 @@ int                 lastChar;
 
 /*----------------------------------------------------------------------
    SelectElement
-
    Set the current selection to element pEl in document pDoc.
    If this element is not supposed to be shown to the user, its first or
    last child is selected instead, depending on parameter begin, except
    when check is FALSE.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
-#else  /* __STDC__ */
-void                SelectElement (pDoc, pEl, begin, check)
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            begin;
-ThotBool            check;
-
-#endif /* __STDC__ */
 {
    PtrElement          pAncest, pE;
    ThotBool            bool, stop, elVisible;
@@ -2169,7 +1970,6 @@ ThotBool            check;
 
 /*----------------------------------------------------------------------
    ExtendSelection
-
    Extend current selection to element pEl.
    If rank = 0, element pEl is entirely selected.
    If rank > 0, extend selection to the character having that rank in the
@@ -2183,20 +1983,7 @@ ThotBool            check;
               element pEl.
    If drag is TRUE, only the minimum processing is done.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin, ThotBool drag)
-
-#else  /* __STDC__ */
-void                ExtendSelection (pEl, rank, fixed, begin, drag)
-PtrElement          pEl;
-int                 rank;
-ThotBool            fixed;
-ThotBool            begin;
-ThotBool            drag;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          oldFirstEl, oldLastEl, pElP;
    int                 oldFirstChar, oldLastChar;
@@ -2402,21 +2189,10 @@ ThotBool            drag;
 
 /*----------------------------------------------------------------------
    ReverseSelect
-
    Highlight or switch off (according to parameter highlight) all
    boxes of element pEl in document pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ReverseSelect (PtrElement pEl, PtrDocument pDoc, ThotBool highlight)
-
-#else  /* __STDC__ */
-static void         ReverseSelect (pEl, pDoc, highlight)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            highlight;
-
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb;
    int                 lastView, view, frame;
@@ -2454,19 +2230,11 @@ ThotBool            highlight;
 
 /*----------------------------------------------------------------------
    AddInSelection
-
    Add element pEl to the current selection.
    Parameter last indicates if it's the last element added to the current
    selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AddInSelection (PtrElement pEl, ThotBool last)
-#else  /* __STDC__ */
-void                AddInSelection (pEl, last)
-PtrElement          pEl;
-ThotBool            last;
-
-#endif /* __STDC__ */
 {
    int                 i;
    ThotBool            ok;
@@ -2526,19 +2294,10 @@ ThotBool            last;
 
 /*----------------------------------------------------------------------
    RemoveFromSelection
-
    Remove element pEl from the current selection, but only if the
    current selection is discrete.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-void                RemoveFromSelection (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    int                 i, j;
 
@@ -2561,20 +2320,10 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
   SelectElementWithEvent
-
   Same function as SelectElement, but send  events TteElemSelect.Pre and
    TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
-#else  /* __STDC__ */
-void                SelectElementWithEvent (pDoc, pEl, begin, check)
-PtrDocument         pDoc;
-PtrElement          pEl;
-ThotBool            begin;
-ThotBool            check;
-#endif /* __STDC__ */
-
 {
    NotifyElement       notifyEl;
    Document            doc;
@@ -2608,15 +2357,7 @@ ThotBool            check;
    Same function as MoveCaret, but send  events TteElemSelect.Pre and
    TteElemSelect.Post to the application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
-#else  /* __STDC__ */
-void                SelectPositionWithEvent (pDoc, pEl, first)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 first;
-#endif /* __STDC__ */
-
+void    SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 {
    NotifyElement       notifyEl;
    Document            doc;
@@ -2650,16 +2391,7 @@ int                 first;
    Same function as SelectString, but send events TteElemSelect.Pre and
    TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
-#else  /* __STDC__ */
-void                SelectStringWithEvent (pDoc, pEl, firstChar, lastChar)
-PtrDocument         pDoc;
-PtrElement          pEl;
-int                 firstChar;
-int                 lastChar;
-#endif /* __STDC__ */
-
 {
    NotifyElement       notifyEl;
    Document            doc;
@@ -2690,7 +2422,6 @@ int                 lastChar;
 
 /*----------------------------------------------------------------------
    ChangeSelection
-
    The user wants to make a new selection or an extension to the current
    selection, according to parameter extension.
    frame: the window where the user has clicked.
@@ -2705,18 +2436,7 @@ int                 lastChar;
    doubleClick: if TRUE, the user has double-clicked without moving the mouse.
    drag: the user extends the selection by dragging.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ChangeSelection (int frame, PtrAbstractBox pAb, int rank, ThotBool extension, ThotBool update, ThotBool doubleClick, ThotBool drag)
-#else  /* __STDC__ */
-void                ChangeSelection (frame, pAb, rank, extension, update, doubleClick, drag)
-int                 frame;
-PtrAbstractBox      pAb;
-int                 rank;
-ThotBool            extension;
-ThotBool            update;
-ThotBool            doubleClick;
-ThotBool            drag;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    PtrElement          pEl, pEl1;
@@ -3109,17 +2829,9 @@ ThotBool            drag;
 
 /*----------------------------------------------------------------------
    PrepareSelectionMenu
-
    Search elements to be put in the Select menu.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                PrepareSelectionMenu ()
-
-#else  /* __STDC__ */
-void                PrepareSelectionMenu ()
-#endif				/* __STDC__ */
-
 {
    PtrElement          pEl1;
    PtrElement          pEl2;
@@ -3269,7 +2981,6 @@ void                PrepareSelectionMenu ()
 
 /*----------------------------------------------------------------------
    BuildSelectionMessage
-
    build the selection message according to the current selection
    and display that message
   ----------------------------------------------------------------------*/
@@ -3323,15 +3034,12 @@ void                BuildSelectionMessage ()
 
 /*----------------------------------------------------------------------
    SelectPairInterval                               
-
    If the current selection is a paired element, select all elements
       comprised between the two elements of the pair, and the paired
       elements themselves, and return TRUE
    else
       just return FALSE
-
   ----------------------------------------------------------------------*/
-
 ThotBool            SelectPairInterval ()
 {
    ThotBool            ret;
@@ -3354,21 +3062,13 @@ ThotBool            SelectPairInterval ()
 
 /*----------------------------------------------------------------------
    SelectAround
-
    Select an element relatively to current selection:
-
    - parent of first selected element if val = 1
    - previous element if val = 2
    - next element if val = 3
    - child of first selected element if val = 4
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectAround (int val)
-#else  /* __STDC__ */
-void                SelectAround (val)
-int                 val;
-
-#endif /* __STDC__ */
 {
    PtrElement          pEl, pParent, pFirst, pLast;
    int                 lg;
@@ -3481,18 +3181,9 @@ int                 val;
 
 /*----------------------------------------------------------------------
    TtcParentElement
-
    Select the parent of the first selected element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcParentElement (Document document, View view)
-#else  /* __STDC__ */
-void                TtcParentElement (document, view)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
 {
    SelectAround (1);
 }
@@ -3500,18 +3191,9 @@ CHAR_T                c;
 
 /*----------------------------------------------------------------------
    TtcPreviousElement
-
    Select the element preceding the first selected element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPreviousElement (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPreviousElement (document, view)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
 {
    SelectAround (2);
 }
@@ -3519,18 +3201,9 @@ CHAR_T                c;
 
 /*----------------------------------------------------------------------
    TtcNextElement
-
    Select the element following the last selected element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcNextElement (Document document, View view)
-#else  /* __STDC__ */
-void                TtcNextElement (document, view)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
 {
    SelectAround (3);
 }
@@ -3540,15 +3213,7 @@ CHAR_T                c;
 
    Select the first child of the first selected element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcChildElement (Document document, View view)
-#else  /* __STDC__ */
-void                TtcChildElement (document, view)
-Document            document;
-View                view;
-CHAR_T                c;
-
-#endif /* __STDC__ */
 {
    SelectAround (4);
 }

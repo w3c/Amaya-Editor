@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GenerateApplication ( CHAR_T *fname,
+extern void GenerateApplication ( char *fname,
                                   PtrEventsSet pAppli );
 
 #else /* __STDC__ */
 
-extern void GenerateApplication (/* CHAR_T *fname,
+extern void GenerateApplication (/* char *fname,
                                     PtrEventsSet pAppli */);
 
 #endif /* __STDC__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -300,13 +300,7 @@ extern unsigned char  basket_bits[32];
 /*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table. (fake)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitDocColors (CHAR_T* name)
-#else  /* __STDC__ */
-void                InitDocColors (name)
-CHAR_T*             name;
-
-#endif /* __STDC__ */
 {
    NbExtColors = 0;
    ExtRGB_Table = (RGBstruct *) TtaGetMemory (256 * sizeof (RGBstruct));
@@ -323,13 +317,7 @@ void         FreeDocColors ()
 /*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 unsigned long       ColorPixel (int num)
-#else  /* __STDC__ */
-unsigned long       ColorPixel (num)
-int                 num;
-
-#endif /* __STDC__ */
 {
    return 0;
 }
@@ -337,12 +325,7 @@ int                 num;
 /*----------------------------------------------------------------------
   TtaFreeThotColor frees the Thot Color.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             TtaFreeThotColor (int num)
-#else  /* __STDC__ */
-int              TtaGetThotColor (num)
-int              num;
-#endif /* __STDC__ */
 {
 }
 
@@ -350,14 +333,7 @@ int              num;
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
-#else  /* __STDC__ */
-int                 TtaGetThotColor (red, green, blue)
-unsigned short      red;
-unsigned short      green;
-unsigned short      blue;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -392,16 +368,7 @@ unsigned short      blue;
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
-#else  /* __STDC__ */
-void                TtaGiveThotRGB (num, red, green, blue)
-int                 num;
-unsigned short     *red;
-unsigned short     *green;
-unsigned short     *blue;
-
-#endif /* __STDC__ */
 {
   if (num < NColors && num >= 0)
     {
@@ -431,23 +398,7 @@ unsigned short     *blue;
    parameters fg, bg, and pattern indicate respectively
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-#ifdef _WINDOWS
-Pixmap
-#else  /* _WINDOWS */
-unsigned long       
-#endif /* _WINDOWS */
-                    CreatePattern (int disp, int RO, int active, int fg, int bg, int pattern)
-#else  /* __STDC__ */
-unsigned long       CreatePattern (disp, RO, active, fg, bg, pattern)
-int                 disp;
-int                 RO;
-int                 active;
-int                 fg;
-int                 bg;
-int                 pattern;
-
-#endif /* __STDC__ */
+unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
 {
    unsigned long       FgPixel;
    unsigned long       BgPixel;
