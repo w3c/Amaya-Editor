@@ -95,11 +95,11 @@ static  boolean     AmayaAlive; /* set to 1 if the application is active;
 /* prototypes */
 
 #ifdef __STDC__
-#ifdef __WINDOWS
+#ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
 #else
-#ifdef __WINDOWS
+#ifdef _WINDOWS
 int WIN_Activate_Request ();
 #endif /* _WINDOWS */
 #endif /* __STDC__ */
@@ -636,7 +636,7 @@ HTRequest          *request;
 HTResponse         *response;
 void               *context;
 int                 status;
-#endif
+#endif /* __STDC__ */
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   boolean             error_flag;
@@ -790,6 +790,11 @@ int                 status;
    AHTReqContext      *me = HTRequest_context (request);
    HTAlertCallback    *cbf;
    AHTDocId_Status    *docid_status;
+
+#ifdef _WINDOWS
+   /* @@@ I have problems with the trace variables under windows */
+   return HT_OK
+#endif /* _WINDOWS */
 
    switch (status)
      {
@@ -1218,7 +1223,7 @@ static void Cacheinit ()
 #ifndef _WINDOWS
       strcat (strptr, "/.lock");
 #else
-      strcat (strptr, "\.lock");
+      strcat (strptr, "\\.lock");
 #endif /* !_WINDOWS */
       if (TtaFileExist (strptr))
 	{
@@ -1438,10 +1443,9 @@ void                QueryInit ()
    HTEventInit;
 #endif /* _WINDOWS */
 
+#ifndef _WINDOWS
    HTEvent_setRegisterCallback ((void *) AHTEvent_register);
    HTEvent_setUnregisterCallback ((void *) AHTEvent_unregister);
-
-#ifndef _WINDOWS
    HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
@@ -1910,6 +1914,7 @@ char 	     *content_type;
        me->outputfile = outputfile;
        me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
+       /* @@@ verify this */
        HTRequest_setPreemptive (me->request, YES);
      }
 #else /* !_WINDOWS */
@@ -1962,12 +1967,14 @@ char 	     *content_type;
    else
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
+#ifndef _WINDOWS
+   /* @@@ may need some special windows error msg here */
    /* control the errors */
    if (status != HT_OK
        && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
      status = HT_ERROR;
-     
-     /* test the effect of HTRequest_kill () */
+#endif /* !_WINDOWS */      
+     /* @@@test the effect of HTRequest_kill () */
      
 #if 0
      /** *this should go to term_d @@@@ */

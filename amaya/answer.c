@@ -361,7 +361,11 @@ HTAlertPar         *reply;
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    int                 index;
 
+#ifndef _WINDOWS
    if (WWWTRACE)
+#else 
+   if (WWW_TraceFlag)
+#endif /* !_WINDOWS */
       HTTrace ("HTError..... Generating message\n");
    if (!request || !cur)
       return NO;
@@ -412,7 +416,12 @@ HTRequest          *request;
    int                 index;
    char                buffer[1024];
 
+
+#ifndef _WINDOWS
    if (WWWTRACE)
+#else 
+   if (WWW_TraceFlag)
+#endif /* !_WINDOWS */	   
       HTTrace ("HTError..... Generating message\n");
    if (!request || !cur)
       return;

@@ -287,7 +287,10 @@ HTAlertPar         *reply;
    return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
-#else /* _WINDOWS */
+#endif /* WINDOWS but should be an else */
+/* #else  */ /* _WINDOWS */
+
+#ifndef _WINDOWS
 
 /*----------------------------------------------------------------------
   AHTEvent_register
