@@ -21,7 +21,8 @@
 #include "memory_f.h"
 #include "readpivot_f.h"
 
-/* procedure bidon declarees localement et exportees */
+/* dummy procedures to make the link editor happy */
+
 int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 {
   return 1;
@@ -78,4 +79,14 @@ ThotBool BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 
 void AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
 {
+}
+
+void *TtaCopyTransform(void *void_pPa)
+{
+  return NULL;
+}
+
+void *TtaCopyAnim (void *void_src)
+{
+  return NULL;
 }

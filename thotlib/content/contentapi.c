@@ -1953,8 +1953,8 @@ void TtaSetStopOffsetColorGradient (int offset, Element el)
 }
 
 /*----------------------------------------------------------------------
-  TtaAppendTransform
-  Copy a Linked List of transform into another struct
+  TtaCopyTransform
+  Copy a Linked List of transforms into another struct
   ----------------------------------------------------------------------*/
 void *TtaCopyTransform(void *void_pPa)
 {
