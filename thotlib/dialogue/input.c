@@ -451,9 +451,10 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
    MS-Window front-end to the character translation and handling.
    Decodes the MS-Window callback parameters and calls the
    generic character handling function.
+   Returns TRUE if an access key was executed.
   ----------------------------------------------------------------------*/
-void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
-			  LPARAM lParam, ThotBool isSpecial)
+ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
+			      LPARAM lParam, ThotBool isSpecial)
 {
    char string[2];
    int  keyboard_mask = 0;   
@@ -461,8 +462,7 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    int  len;
 
    if (frame < 0)
-     return;
-
+     return FALSE;
    len = 1;
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
@@ -478,12 +478,12 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    /* Is the Alt key pressed ?? */
    status = GetKeyState (VK_MENU);
    if (HIBYTE (status))
-      /* the Alt key is pressed */
-      keyboard_mask |= THOT_MOD_ALT;
+     /* the Alt key is pressed */
+     keyboard_mask |= THOT_MOD_ALT;
 
    if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
-	   !(keyboard_mask & THOT_MOD_ALT))
-	   return;
+       !(keyboard_mask & THOT_MOD_ALT))
+     return FALSE;
    /* check if it's a special key */
    Special = isSpecial;
    if (HIBYTE (GetKeyState (VK_UP)))
@@ -528,7 +528,7 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 	 /* Linefeed key */
 	 wParam = 0x0D;
      }
-   ThotInput (frame, &string[0], len, keyboard_mask, wParam);
+   return (ThotInput (frame, &string[0], len, keyboard_mask, wParam));
 }
 #else /* _WINDOWS */
 #ifdef _GTK
@@ -813,11 +813,11 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 
 
 /*----------------------------------------------------------------------
-   ThotInput
-   handles the character encoding.                     
+  ThotInput handles the character encoding.
+  Returns TRUE when an access key is handled.
   ----------------------------------------------------------------------*/
-void ThotInput (int frame, unsigned char *string, unsigned int nb,
-		int PicMask, int key)
+ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
+		    int PicMask, int key)
 {
   KEY                *ptr;
   Document            document;
@@ -856,7 +856,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	  p++;
 	}
       TtaFreeMemory(str);
-      return;
+      return FALSE;
     }
   }
 #endif /* _I18N_ */
@@ -937,7 +937,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		      /* close the current insertion */
 		      CloseInsertion ();
 		      (*AccessKeyFunction) (document, ptr->K_Param);
-		      return;
+		      return TRUE;
 		    }
 		}
 	      ptr = Automata_ctrl;
@@ -958,7 +958,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		      /* close the current insertion */
 		      CloseInsertion ();
 		      (*AccessKeyFunction) (document, ptr->K_Param);
-		      return;
+		      return TRUE;
 		    }
 		}
 	      ptr = Automata_alt;
@@ -1126,7 +1126,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
        {
 	 /* Rien a inserer */ 
 	 Automata_current = NULL;
-	 return;
+	 return FALSE;
        }
       /* Traitement des caracteres au cas par cas */
       else
@@ -1137,7 +1137,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	      /* sans se soucier de la langue courante */
 	      if (MenuActionList[CMD_DeletePrevChar].Call_Action)
 		(*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
-	      return;
+	      return FALSE;
 	    }
       
 	  /*** Sequence de traitement des espaces ***/
@@ -1176,6 +1176,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	    }
 	}
     }
+  return FALSE;
 }
 
 

@@ -7,11 +7,11 @@
 #ifdef __STDC__
 
 extern void CharTranslation ( ThotKeyEvent *event );
-extern void ThotInput ( int frame,
-                        unsigned char *string,
-                        unsigned int nb,
-                        int PicMask,
-                        int key );
+extern ThotBool ThotInput ( int frame,
+                            unsigned char *string,
+                            unsigned int nb,
+                            int PicMask,
+                            int key );
 extern void FreeTranslations ( void );
 extern void TtaSetAccessKeyFunction ( Proc procedure );
 extern void TtaAddAccessKey ( Document doc,
@@ -25,11 +25,11 @@ extern void InitTranslations ( char *appliname );
 #else /* __STDC__ */
 
 extern void CharTranslation (/* ThotKeyEvent *event */);
-extern void ThotInput (/* int frame,
-                          unsigned char *string,
-                          unsigned int nb,
-                          int PicMask,
-                          int key */);
+extern ThotBool ThotInput (/* int frame,
+                              unsigned char *string,
+                              unsigned int nb,
+                              int PicMask,
+                              int key */);
 extern void FreeTranslations (/* void */);
 extern void TtaSetAccessKeyFunction (/* Proc procedure */);
 extern void TtaAddAccessKey (/* Document doc,

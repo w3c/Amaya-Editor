@@ -822,47 +822,7 @@ void TtaInstallMultiKey ()
 #endif /* _WINDOWS */
 }
 
-#ifdef _WINDOWS 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-int WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
-{
-  int          index;
-  char         KS = EOS;
-
-  if (!Enable_Multikey) /* no multi-key allowed */
-    return 1;
-  if (msg == WM_CHAR)
-    KS = (char) wParam;
-  if (mk_state == 1 && msg == WM_CHAR)
-    {
-      /* we have already read the stressed character */ 
-      /* We look for the result in the list */
-      mk_state = 0;
-      for (index = 0; index < NB_MK; index++)
-	  {
-        if (mk_tab[index].m == previous_keysym && mk_tab[index].c == wParam)
-		{
-	    /*
-	     * The corresponding sequence is found. 
-	     * Generation of the corresponding character
-	     */
-	    *k = mk_tab[index].r;
-	    return 1;
-		}
-	  }
-      return 1;
-    }
-  if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*')
-    {
-      /* start of a compose sequence */
-       mk_state = 1;
-       previous_keysym = KS;
-       return 0;
-    }
-  return 1;
-}
-#else /* _WINDOWS */
+#ifndef _WINDOWS 
 #ifndef _GTK
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
