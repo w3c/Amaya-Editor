@@ -318,11 +318,7 @@ View view;
   if (!annotServers || List_search (annotServers, TEXT("localhost")))
     {
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
-#if 1
       LINK_LoadAnnotationIndex (doc, annotIndex);
-#else
-      LINK_LoadAnnotationIndex (doc, "/tmp/rdfquery.xml");
-#endif
       TtaFreeMemory (annotIndex);
     }
   /* 

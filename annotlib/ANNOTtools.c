@@ -120,6 +120,24 @@ List *List_search (List *list, CHAR_T *object)
 }
 
 /* ------------------------------------------------------------
+   List_count
+   Returns the number of items in a list
+   ------------------------------------------------------------*/
+int List_count (List *list)
+{
+  List *item = list;
+  int count = 0;
+
+  while (item)
+    {
+      count++;
+      item = item->next;
+    }
+
+  return (count);
+}
+
+/* ------------------------------------------------------------
    AnnotMeta_new
    Creates a new annotation metadata element
    ------------------------------------------------------------*/

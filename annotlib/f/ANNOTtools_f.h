@@ -13,7 +13,8 @@ extern void List_delAll ( List **me );
 extern void List_delObject ( List **list,
                              char *object );
 extern List *List_search ( List *list,
-                           char *object );
+                           CHAR_T *object );
+extern int List_count ( List *list );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
@@ -50,7 +51,8 @@ extern void List_delAll (/* List **me */);
 extern void List_delObject (/* List **list,
                                char *object */);
 extern List *List_search (/* List *list,
-                             char *object */);
+                             CHAR_T *object */);
+extern int List_count (/* List *list */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
