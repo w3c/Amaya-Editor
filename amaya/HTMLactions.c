@@ -385,15 +385,21 @@ NotifyElement      *event;
      }
    else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
-       /* it is a double click on graphic submit element? */
-       attrType.AttrSSchema = docSchema;
-       attrType.AttrTypeNum = HTML_ATTR_NAME;
-       attr = TtaGetAttribute (event->element, attrType);
-       if (attr)
+       /* is it a double click on graphic submit element? */
+       elType = TtaGetElementType (TtaGetParent (event->element));
+       elType.ElTypeNum = HTML_EL_Form;
+       elFound = TtaGetTypedAncestor (event->element, elType);
+       if (elFound != NULL)
 	 {
-	   /* it's a graphic submit element */
-	   SubmitForm (event->document, event->element);
-	   return (TRUE);
+	   attrType.AttrSSchema = docSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_NAME;
+	   attr = TtaGetAttribute (event->element, attrType);
+	   if (attr)
+	     {
+	       /* it's a graphic submit element */
+	       SubmitForm (event->document, event->element);
+	       return (TRUE);
+	     }
 	 }
      }
    else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)

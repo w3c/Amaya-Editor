@@ -6024,31 +6024,19 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
-	If Applet
-	   Height: Height_ px;
-	If PICTURE_UNIT
-	   Height: Height_ px;
-#ifdef COUGAR
-	If Object
-	   Height: Height_ px;
-#endif
+	Height: Height_ px;
 	IN Structure_view
 	   BEGIN
-	   If Applet
-		Height: Enclosed . Height;
 	   If PICTURE_UNIT
 	        Height: 1 px;
-#ifdef COUGAR
-	   If Object
+	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
-#endif
 	   END;
 	IN Alternate_view
 	   BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
-#ifdef COUGAR
-	   If Object
+	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
 #endif
 	   END;

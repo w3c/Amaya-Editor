@@ -2601,7 +2601,7 @@ int                 keyboard;
     nat = LtGraphics;
   else
     nat = LtText;
-  /* recupere la selection est active */
+  /* recupere la selection active */
   SetInsert (&pAb, &frame, nat, toDelete);
 
   /* Ou se trouve la marque d'insertion ? */

@@ -463,14 +463,9 @@ boolean         force;
   if (!constraint)
     {
       if (force && pCell == NULL)
-	{
-	  /* use the current width */
-	  width = table->AbBox->BxWidth;
-	  force = FALSE;
-	}
-      else
-	/* limit given by available space */
-	width = table->AbEnclosing->AbBox->BxWidth;
+	force = FALSE;
+      /* limit given by available space */
+      width = table->AbEnclosing->AbBox->BxWidth;
     }
   else if (percent != 0)
     {
