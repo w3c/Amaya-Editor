@@ -15,7 +15,10 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Revision 1.3  2002-06-04 08:15:43  cvs
+ ** JK: removing Windows compiler warnings
+ **
+ ** Revision 1.2  2002/05/31 17:59:19  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -103,9 +106,12 @@ BOOL DAVConfirmDialog (Document docid, char *msg1, char *msg2, char *msg3) {
 void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader, \
                        char *lheader, AwList *list) {
         
-    int i=MAX_REF+1, form=MAX_REF, lines=0;        
+    int i=MAX_REF+1, form=MAX_REF, lines=0;
+	
+#ifndef _WINDOWS
     char *name, *value;
-    
+#endif /* ! _WINDOWS */
+
     if (docid>0 && list) {
         lines = AwList_size(list)/2;
              
@@ -181,7 +187,7 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader, \
             
         TtaSetDialoguePosition ();
         TtaShowDialogue (BaseDialog + form, TRUE);            
-#endif
+#endif /* ! _WINDOWS */
      }
 }
 
