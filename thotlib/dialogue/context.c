@@ -217,28 +217,27 @@ ThotColor*  colorpixel;
 
    value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
-   if (value == NULL && defaultcolor != NULL)
-       value = TtaWCSdup (defaultcolor);
-
    if (value != NULL)
-     {
-	TtaGiveRGB (value, &red, &green, &blue);
-	col = TtaGetThotColor (red, green, blue);
-	/* register the default background color */
-	if (strcmp (colorplace, "BackgroundColor") == 0)
-	   DefaultBColor = col;
-	/* register the default background color */
-	else if (strcmp (colorplace, "ForegroundColor") == 0)
-	   DefaultFColor = col;
-#   ifdef _WINDOWS 
-	*colorpixel = col;
-#   else  /* _WINDOWS */
-	*colorpixel = ColorPixel (col);
-#   endif /* _WINDOWS */
-	return (TRUE);
-     }
+     TtaGiveRGB (value, &red, &green, &blue);
+   else if (defaultcolor != NULL)
+     TtaGiveRGB (defaultcolor, &red, &green, &blue);
    else
-      return (FALSE);
+     return (FALSE);
+
+   col = TtaGetThotColor (red, green, blue);
+   /* register the default background color */
+   if (strcmp (colorplace, "BackgroundColor") == 0)
+     DefaultBColor = col;
+   /* register the default background color */
+   else if (strcmp (colorplace, "ForegroundColor") == 0)
+     DefaultFColor = col;
+#ifdef _WINDOWS 
+   *colorpixel = col;
+#else  /* _WINDOWS */
+   *colorpixel = ColorPixel (col);
+#endif /* _WINDOWS */
+   return (TRUE);
+
 }
 
 /*----------------------------------------------------------------------

@@ -3182,33 +3182,38 @@ CHAR_T                c;
   int                 length;
   STRING              text;
   ThotBool	      math;
+  int                 len;
+  CHAR_T*             inBuff;
+  CHAR_T*             ptrText;
+  CHAR_T*             ptrIBuff;
+  CHAR_T*             str;
+  CHAR_T              charsetname[MAX_LENGTH];
+  int                 pos, index = 0;
 
-  if (charset_undefined == TRUE) {
-     int len = ustrlen (inputBuffer);
-     CHAR_T* inBuff = TtaAllocString (len + 1);
-     CHAR_T* ptrText = inBuff;
-     CHAR_T* ptrIBuff = inputBuffer;
-     CHAR_T* str;
-     CHAR_T  charsetname[MAX_LENGTH];
-     int     pos, index = 0;
+  if (charset_undefined == TRUE)
+    {
+      len = ustrlen (inputBuffer);
+      inBuff = TtaAllocString (len + 1);
+      ptrText = inBuff;
+      ptrIBuff = inputBuffer;
+      while (*ptrText++ = utolower (*ptrIBuff++));
+      str = ustrstr (inBuff, TEXT("charset"));
+      
+      if (str)
+	{
+	  pos = str - inBuff + 8;
 
-     while (*ptrText++ = utolower (*ptrIBuff++));
-     str = ustrstr (inBuff, TEXT("charset"));
-     
-     if (str) {
-        pos = str - inBuff + 8;
+	  while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
+	    charsetname[index++] = inputBuffer[pos++];
+	  charsetname[index] = WC_EOS;
 
-        while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
-              charsetname[index++] = inputBuffer[pos++];
-        charsetname[index] = WC_EOS;
+	  CharEncoding = TtaGetCharset (charsetname);
+	  if (CharEncoding == UNDEFINED_CHARSET)
+	    CharEncoding = UTF_8;
 
-        CharEncoding = TtaGetCharset (charsetname);
-
-        if (CharEncoding == UNDEFINED_CHARSET)
-           CharEncoding = UTF_8;
-
-        charset_undefined = FALSE;
-	 }
+	  charset_undefined = FALSE;
+	}
+      TtaFreeMemory (inBuff);
   }
 
   UnknownTag = FALSE;
@@ -5235,36 +5240,41 @@ static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
 CHAR_T                c;
-
 #endif
 {
-  if (charset_undefined == TRUE) {
-     int len = ustrlen (inputBuffer);
-     CHAR_T* inBuff = TtaAllocString (len + 1);
-     CHAR_T* ptrText = inBuff;
-     CHAR_T* ptrIBuff = inputBuffer;
-     CHAR_T* str;
-     CHAR_T  charsetname[MAX_LENGTH];
-     int     pos, index = 0;
+  int     len;
+  CHAR_T* inBuff;
+  CHAR_T* ptrText;
+  CHAR_T* ptrIBuff;
+  CHAR_T* str;
+  CHAR_T  charsetname[MAX_LENGTH];
+  int     pos, index = 0;
 
-     while (*ptrText++ = utolower (*ptrIBuff++));
-     str = ustrstr (inBuff, TEXT("charset"));
-     
-     if (str) {
-        pos = str - inBuff + 8;
+  if (charset_undefined == TRUE)
+    {
+      len = ustrlen (inputBuffer);
+      inBuff = TtaAllocString (len + 1);
+      ptrText = inBuff;
+      ptrIBuff = inputBuffer;
+      while (*ptrText++ = utolower (*ptrIBuff++));
 
-        while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
-              charsetname[index++] = inputBuffer[pos++];
-        charsetname[index] = WC_EOS;
+      str = ustrstr (inBuff, TEXT("charset"));
+      if (str)
+	{
+	  pos = str - inBuff + 8;
 
-        CharEncoding = TtaGetCharset (charsetname);
+	  while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
+	    charsetname[index++] = inputBuffer[pos++];
+	  charsetname[index] = WC_EOS;
 
-        if (CharEncoding == UNDEFINED_CHARSET)
-           CharEncoding = UTF_8;
+	  CharEncoding = TtaGetCharset (charsetname);
+	  if (CharEncoding == UNDEFINED_CHARSET)
+	    CharEncoding = UTF_8;
 
-        charset_undefined = FALSE;
-	 }
-  }
+	  charset_undefined = FALSE;
+	}
+      TtaFreeMemory (inBuff);
+    }
 }
 
 /* some type definitions for the automaton */
