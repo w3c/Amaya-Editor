@@ -118,13 +118,6 @@ static  ThotPixmap  wind_pixmap;
 static  Proc 	    LastProcedure = NULL;   
 static  ThotBool    ActivatedButton = FALSE;   
 
-/* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
-/* Chaque item contient le numero d'entree dans le fichier de    */
-/* dialogue (le texte pouvant varier avec la langue utilisee) et */
-/* l'indice dans la TABLE DES ACTIONS de l'action associee.      */
-/* CsList des menus attache's aux frames de documents en ge'ne'ral */
-Menu_Ctl    *DocumentMenuList;
-
 void InitClue (ThotWidget toplevel);
 
 #ifdef _WINGUI

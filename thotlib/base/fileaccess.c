@@ -49,7 +49,7 @@ extern unsigned long offset[6] ;
          0xFA082080UL,
          0x82082080UL
 };*/
-extern CHARSET CharEncoding;
+//extern CHARSET CharEncoding;
 
 #define LMASK           0x000000ffL
 #define DECAL_3         (3 * 8)

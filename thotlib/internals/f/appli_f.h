@@ -112,6 +112,9 @@ extern void DefineClipping ( int frame,
                              int raz );
 extern void RemoveClipping ( int frame );
 extern void UpdateScrollbars ( int frame );
+extern const char * TtaGetAppVersion ( void );
+extern const char * TtaGetAppName ( void );
+extern const char * TtaGetAppDate ( void );
 
 #else /* __STDC__ */
 
@@ -221,6 +224,9 @@ extern void DefineClipping ( int frame,
                                int raz );
 extern void RemoveClipping ( int frame );
 extern void UpdateScrollbars ( int frame );
+extern const char * TtaGetAppVersion ( void );
+extern const char * TtaGetAppName ( void );
+extern const char * TtaGetAppDate ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

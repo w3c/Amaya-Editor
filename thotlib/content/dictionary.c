@@ -31,7 +31,7 @@
 
 extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern int               FreeEntry;
-extern CHARSET           CharEncoding;
+//extern CHARSET           CharEncoding;
 
 static char        *dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];

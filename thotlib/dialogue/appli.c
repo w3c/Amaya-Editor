@@ -11,6 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Windows version
  *          P. Cheyrou-Lagreze (INRIA) - OpenGL Version
+ *          S. Gully (INRIA) - GTK and wxWidgets Versions
  */
 
 #ifdef _WX
@@ -64,6 +65,11 @@ static ThotBool     ComputeScrollBar;
 
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
+
+/* this is a buffer where the appversion string is stored 
+ * to query this string use TtaGetAppVersion function */
+static char     TtAppVersion[MAX_TXT_LEN];
+static ThotBool TtAppVersion_IsInit = FALSE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -3910,4 +3916,47 @@ void UpdateScrollbars (int frame)
 			 frame);
     }
 #endif /* _WINGUI */
+}
+
+/*----------------------------------------------------------------------
+  This function returns the current appversion comming from configure
+  (if was :
+   #ifdef _WX
+   #define HTAppVersion  "9.0.1"
+   #else
+   #define HTAppVersion  "8.7.2"
+   #endif
+  )
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppVersion()
+{
+  if (!TtAppVersion_IsInit)
+    {
+      if (APP_MINVER == 0 && APP_SUBVER == 0)
+	sprintf (TtAppVersion, "%d", APP_MAJVER);
+      else if (APP_SUBVER == 0)
+	sprintf (TtAppVersion, "%d.%d", APP_MAJVER, APP_MINVER);
+      else
+	sprintf (TtAppVersion, "%d.%d.%d", APP_MAJVER, APP_MINVER, APP_SUBVER);
+      TtAppVersion_IsInit = TRUE;
+    }
+  return TtAppVersion;
+}
+
+/*----------------------------------------------------------------------
+  This function returns the app name
+  ( if was : #define HTAppName     "amaya" )
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppName()
+{
+  return "amaya";
+}
+
+/*----------------------------------------------------------------------
+  This function returns the app date
+  (it was : #define HTAppDate     __DATE__ )
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppDate()
+{
+  return __DATE__;
 }

@@ -584,7 +584,16 @@ dnl
   AC_SUBST(MAKEPNG)
 fi # with_wx = no
 
-AMAYA_VER="8.2"
+if test "$with_wx" = "yes" ; then
+  AMAYA_MAJVER=9
+  AMAYA_MINVER=0
+  AMAYA_SUBVER=1
+else
+  AMAYA_MAJVER=8
+  AMAYA_MINVER=7
+  AMAYA_SUBVER=2
+fi
+AMAYA_VER=$AMAYA_MAJVER.$AMAYA_MINVER.$AMAYA_SUBVER
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -1219,6 +1228,9 @@ dnl
 dnl Exports the current values of the variables.
 dnl
 
+AC_SUBST(AMAYA_MAJVER)
+AC_SUBST(AMAYA_MINVER)
+AC_SUBST(AMAYA_SUBVER)
 AC_SUBST(AMAYA_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
@@ -1365,6 +1377,7 @@ fi
 ])
 
 if test "$build_amaya" = "yes" ; then
+    echo Amaya $AMAYA_VER configured
     echo Amaya configured with libWWW
     if test "$with_plugin" = "yes" ; then
         echo Amaya configured with Plugins support

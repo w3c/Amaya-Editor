@@ -8,7 +8,7 @@
 /* instancied in picture.c */
 extern ThotGC          GCpicture;	 /* for bitmap */
 THOT_EXPORT ThotGC     GCimage;	 	/* for pixmap */
-extern char           *FileExtension[]; 
+//extern char           *FileExtension[]; 
 extern int             HandlersCounter;
 extern int             InlineHandlers;
 

@@ -20,7 +20,7 @@
  *									*
  ************************************************************************/
 
-extern int          TtaUseOwnXLookupString;
+//extern int          TtaUseOwnXLookupString;
 
 #define ISO_1_keyboard			0
 #define Greek_keyboard			1

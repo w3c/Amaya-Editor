@@ -22,6 +22,7 @@
 #include "thot_key.h"
 #include "appdialogue_wx.h"
 #include "logdebug.h"
+#include "message_wx.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -477,7 +478,7 @@ void AmayaFrame::SetWindowTitle(const wxString & window_name)
 
   p_window->SetTitle( m_WindowTitle +
 		      _T(" - Amaya ") +
-		      wxString::FromAscii( HTAppVersion ) );
+		      TtaConvMessageToWX(TtaGetAppVersion()) );
 }
 
 /*

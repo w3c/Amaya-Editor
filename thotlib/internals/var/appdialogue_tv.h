@@ -13,6 +13,9 @@
 
 THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 
+/* variables defined into appdialogue.c */
+THOT_EXPORT Menu_Ctl    *	DocumentMenuList;
+
 #ifndef NODISPLAY
 
 #ifdef _WINGUI

@@ -2695,9 +2695,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaInsertSibling (comment, root, TRUE, doc);
 	   TtaSetStructureChecking (TRUE, doc);
 	   strcpy (buffer, " Created by ");
-	   strcat (buffer, HTAppName);
+	   strcat (buffer, TtaGetAppName());
 	   strcat (buffer, " ");
-	   strcat (buffer, HTAppVersion);
+	   strcat (buffer, TtaGetAppVersion());
 	   strcat (buffer, ", see http://www.w3.org/Amaya/ ");
 	   leaf = TtaGetFirstLeaf (comment);
 	   lang = TtaGetLanguageIdFromScript('L');
@@ -3076,7 +3076,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     {
       /* add the amaya logo after the url bar */
       strcpy (buffer, "Amaya ");
-      strcat (buffer, HTAppVersion);
+      strcat (buffer, TtaGetAppVersion());
       iLogo = TtaAddToolBarButton( window_id, iconLogo, buffer,
 				   "HelpLocal", (Proc)HelpLocal, TRUE );
     }
@@ -7413,7 +7413,7 @@ void InitAmaya (NotifyEvent * event)
     * $HOME\amaya\amaya.css on Windows platforms
     */
    ptr = (char *)TtaGetMemory (MAX_LENGTH);
-   sprintf (ptr, "%s%c%s.css", s, DIR_SEP, HTAppName);
+   sprintf (ptr, "%s%c%s.css", s, DIR_SEP, TtaGetAppName());
    UserCSS = TtaStrdup (ptr);
    InitUserStyleSheet (UserCSS);
    TtaFreeMemory (ptr);

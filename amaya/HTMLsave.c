@@ -223,9 +223,9 @@ ThotBool CheckGenerator (NotifyElement *event)
 	      else
 		{
 		  /* update the version */
-		  strcpy (buff, HTAppName); 
+		  strcpy (buff, TtaGetAppName()); 
 		  strcat (buff, " ");
-		  strcat (buff, HTAppVersion);
+		  strcat (buff, TtaGetAppVersion());
 		  strcat (buff, ", see http://www.w3.org/Amaya/");
 		  TtaSetAttributeText (attr, buff, event->element,
 				       event->document);

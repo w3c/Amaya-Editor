@@ -456,9 +456,9 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       attrType.AttrTypeNum = HTML_ATTR_meta_content;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
-      strcpy (tempfile, HTAppName);
+      strcpy (tempfile, TtaGetAppName());
       strcat (tempfile, " ");
-      strcat (tempfile, HTAppVersion);
+      strcat (tempfile, TtaGetAppVersion());
       strcat (tempfile, ", see http://www.w3.org/Amaya/");
       TtaSetAttributeText (attr, tempfile, meta, doc);
       TtaInsertSibling (meta, child, FALSE, doc);

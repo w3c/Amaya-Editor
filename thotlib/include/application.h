@@ -7,13 +7,6 @@
 
 #ifndef _APPLICATION_H_
 #define _APPLICATION_H_
-#define HTAppName     "amaya"
-#ifdef _WX
-#define HTAppVersion  "9.0.1"
-#else /* _WX */
-#define HTAppVersion  "8.7.2"
-#endif /* _WX */
-#define HTAppDate     __DATE__ 
 
 #include "typebase.h"
 #include "fileaccess.h"
@@ -67,6 +60,22 @@
 
 #ifndef __CEXTRACT__
 
+/*----------------------------------------------------------------------
+  This function returns the current appversion comming from configure
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppVersion();
+
+/*----------------------------------------------------------------------
+  This function returns the app name
+  ( if was : #define HTAppName     "amaya" )
+  ----------------------------------------------------------------------*/
+const char * TtaGetAppName();
+
+/*----------------------------------------------------------------------
+  This function returns the app date
+  (it was : #define HTAppDate     __DATE__ )
+  ----------------------------------------------------------------------*/
+     const char * TtaGetAppDate();
 
 /*----------------------------------------------------------------------
   TtaUseDotForFloat returns TRUE if floats take the form xx.yy

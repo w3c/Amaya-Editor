@@ -813,11 +813,11 @@ void HelpAmaya (Document document, View view)
 		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 #endif  /* #if defined(_GTK) */
    
-   strcpy (localname, HTAppName);
+   strcpy (localname, TtaGetAppName());
    strcat (localname, " - ");
-   strcat (localname, HTAppVersion);
+   strcat (localname, TtaGetAppVersion());
    strcat (localname, "     ");
-   strcat (localname, HTAppDate);
+   strcat (localname, TtaGetAppDate());
    
 #if defined(_GTK)
    TtaNewLabel(BaseDialog + Version, BaseDialog + AboutForm, localname);

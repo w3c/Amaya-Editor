@@ -62,9 +62,6 @@ typedef struct _Menu_Ctl
   struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/
 }Menu_Ctl;
 
-/* variables defined into appdialogue.c */
-extern Menu_Ctl    *	DocumentMenuList;
-
 /*
   Predefined indexes in the internal default Thot actions table.
   This table is used by the Thotlib to accede optional actions. It tests

@@ -532,7 +532,7 @@ extern char         asciitoebcdic[], ebcdictoascii[];
 #define STDIO_H
 #endif
 #ifndef HAVE_STRERROR           /* Otherwise use the table */
-extern char        *sys_errlist[];
+//extern char        *sys_errlist[];
 extern int          sys_nerr;
 
 #endif
@@ -770,7 +770,7 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 
 /* ioctl.h */
 #ifdef HAVE_SYS_IOCTL_H
-#include <sys/ioctl.h>
+//#include <sys/ioctl.h>
 #endif
 
 /* time.h */

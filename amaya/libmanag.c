@@ -1252,9 +1252,9 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   attrType.AttrTypeNum = HTML_ATTR_meta_content;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (meta, attr, newLibraryDoc);
-  strcpy (tempfile, HTAppName);
+  strcpy (tempfile, TtaGetAppName());
   strcat (tempfile, " ");
-  strcat (tempfile, HTAppVersion);
+  strcat (tempfile, TtaGetAppVersion());
   strcat (tempfile, ", see http://www.w3.org/Amaya/");
   TtaSetAttributeText (attr, tempfile, meta, newLibraryDoc);
   TtaInsertSibling (meta, child, FALSE, newLibraryDoc);
@@ -2348,9 +2348,9 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       TtaInsertSibling (comment, root, TRUE, newSVGDoc);
       TtaSetStructureChecking (TRUE, newSVGDoc);
       strcpy (buffer, " Created by ");
-      strcat (buffer, HTAppName);
+      strcat (buffer, TtaGetAppName());
       strcat (buffer, " ");
-      strcat (buffer, HTAppVersion);
+      strcat (buffer, TtaGetAppVersion());
       strcat (buffer, ", see http://www.w3.org/Amaya/ ");
       leaf = TtaGetFirstLeaf (comment);
       lang = TtaGetLanguageIdFromScript('L');

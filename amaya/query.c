@@ -2382,7 +2382,7 @@ static void ProxyInit (void)
   AHTProfile_newAmaya
   creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
-static void AHTProfile_newAmaya (char *AppName, char *AppVersion)
+static void AHTProfile_newAmaya (const char *AppName, const char *AppVersion)
 {
    char *strptr;
 
@@ -2542,7 +2542,7 @@ void         QueryInit ()
   long    tmp_l;
 
    AmayaContextInit ();
-   AHTProfile_newAmaya (HTAppName, HTAppVersion);
+   AHTProfile_newAmaya (TtaGetAppName(), TtaGetAppVersion());
    CanDoStop_set (TRUE);
    UserAborted_flag = FALSE;
 
