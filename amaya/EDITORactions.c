@@ -1942,14 +1942,14 @@ static void ChangeCell (Document doc, View view, int typeCell)
 			}
 		      TtaRegisterElementTypeChange (el, other, doc);
 		    }
-		  TtaNextSibling (&el);
+		  TtaGiveNextSelectedElement (doc, &el, &firstchar, &lastchar);
 		}
 	      done = TRUE;
 	    }
 	  if (el == lastSel)
 	    el = NULL;
 	  else
-	    TtaNextSibling (&el);
+	    TtaGiveNextSelectedElement (doc, &el, &firstchar, &lastchar);
 	}
       if (open)
 	TtaCloseUndoSequence (doc);
