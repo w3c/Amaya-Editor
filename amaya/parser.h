@@ -90,7 +90,7 @@ typedef enum
 } ErrorType;
 
 #define MATHML_XSLT_NAME     "pmathml.xsl"
-#define MATHML_XSLT_URI      "http://www.w3.org/Math/Group/XSL/"
+#define MATHML_XSLT_URI      "http://www.w3.org/Math/XSL/"
 
 
 #endif /* PARSER_H */
