@@ -1,6 +1,7 @@
 		{ I. Vatton 	 Novembre 1994-1995  }
 
-{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, SECTION_NUMBER }
+{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, SECTION_NUMBER,
+			    LINK_NUMBER }
 PRESENTATION HTML;
 
 VIEWS
@@ -58,6 +59,9 @@ COUNTERS
 #ifdef PAGE
    CptPage : Rank of Page(Formatted_view);
 #endif
+#ifdef LINK_NUMBER
+   AnchorCounter : Set 0 on BODY add 1 on Anchor;
+#endif
 #ifdef SECTION_NUMBER
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H2 add 1 on H3;
@@ -92,6 +96,39 @@ DEFAULT
 	END;
 
 BOXES
+
+#ifdef LINK_NUMBER
+ AnchorNumFormattedView:
+	BEGIN
+	Content: (Text ' [' Value(AnchorCounter, Arabic) Text ']');
+	Visibility: Creator =;
+	Font: Creator =;
+	Style: Creator =;
+	Size: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	IN Anchors_view
+		Visibility: 0;
+	END;
+
+ AnchorNumToC:
+	BEGIN
+	Content: (Text '[' Value(AnchorCounter, Arabic) Text ']  ');
+	Visibility: 0;
+	IN Anchors_view
+		BEGIN
+		Visibility: Creator =;
+		Font: Creator =;
+		Style: Creator =;
+		Size: Creator =;
+		VertPos: HRef = Creator . HRef;
+		END;
+	END;
+#endif
 
 #ifdef SECTION_NUMBER
  H2_section_number:
@@ -1844,7 +1881,7 @@ BOXES
 	END;
 
  NAME_S_A: BEGIN
-	Content: (Text 'name=' NAME Text '  ');
+	Content: (Text ' name=' NAME);
 	Visibility: 0;
 	IN Anchors_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1879,7 +1916,7 @@ BOXES
 	END;
 
  ATTR_HREF_ANCH: BEGIN
-	Content: Text 'href=';
+	Content: Text ' href=';
 	Visibility: 0;
 	IN Anchors_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1904,11 +1941,6 @@ BOXES
 	IN Anchors_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Creator . HRef;
-#ifdef BLACK_WHITE
-		Underline: Underlined;
-#else
-		Foreground : LINK_Color;
-#endif
 		Visibility: 5;
 		END;
 	END;
@@ -4876,14 +4908,15 @@ RULES
 		Visibility: 1;
 #endif
 		END;
-	IN Anchors_view BEGIN
-		Visibility: 0;
-		END;
 	END;
 
  Anchor: BEGIN
 	CreateBefore(A_S);
 	CreateWith(VerticalLine);
+#ifdef LINK_NUMBER
+	CreateBefore(AnchorNumToC);
+	CreateAfter(AnchorNumFormattedView);
+#endif
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
 		Underline: Enclosing =;
@@ -4897,8 +4930,12 @@ RULES
 		END;
 	IN Anchors_view BEGIN
 		Visibility: 7;
+		VertPos: Top = Previous Anchor . Bottom + 0.1;
+#ifdef LINK_NUMBER
+		HorizPos: Left = Previous AnchorNumToC . Right;
+#else
 		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom + 1.1;
+#endif
 		END;
 	END;
 
