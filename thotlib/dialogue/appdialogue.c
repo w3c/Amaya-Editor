@@ -3912,7 +3912,7 @@ void      ThotCallback (int ref, int typedata, char *data)
 	return;		/* pas de callback definis */
       else
 	{
-	  /* recherc he le bon callback */
+	  /* recherche le bon callback */
 	  ctxCallback = FirstCallbackAPI;
 	  base = MAX_ThotMenu;
 	  while (ref >= base + ctxCallback->callbackSet)
