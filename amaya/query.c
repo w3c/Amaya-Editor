@@ -119,18 +119,17 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 #include "AHTMemConv_f.h"
 #include "AHTFWrite_f.h"
 
-/* prototypes */
-
-#ifdef _WINDOWS
-int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
-#endif /* _WINDOWS */
-
-
 #ifdef DAV
 #include "davlib.h"
 #include "davlib_f.h"
 #include "davlibCommon_f.h"
 #endif
+
+/* prototypes */
+
+#ifdef _WINDOWS
+int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
+#endif /* _WINDOWS */
 
 #ifdef AMAYA_WWW_CACHE
 /***************************************************************
