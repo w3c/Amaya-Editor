@@ -141,6 +141,8 @@ RULES
 
    image:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'image';
 	indent +7;
@@ -160,6 +162,8 @@ RULES
 
    switch:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'switch';
 	indent +8;
@@ -186,6 +190,8 @@ RULES
 
    path:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'path';
 	indent +6;
@@ -205,6 +211,8 @@ RULES
 
    rect:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'rect';
 	indent +6;
@@ -224,6 +232,8 @@ RULES
 
    circle:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'circle';
 	indent +8;
@@ -243,6 +253,8 @@ RULES
 
    ellipse:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'ellipse';
 	indent +6;
@@ -262,6 +274,8 @@ RULES
 
    line_:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'line';
 	indent +6;
@@ -281,6 +295,8 @@ RULES
 
    polyline:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'polyline';
 	indent +10;
@@ -300,6 +316,8 @@ RULES
 
    polygon:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'polygon';
 	indent +9;
@@ -319,6 +337,8 @@ RULES
 
    text_:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'text';
 	indent +6;
@@ -332,6 +352,8 @@ RULES
 
    tspan:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'tspan';
 	indent +7;
@@ -345,6 +367,8 @@ RULES
 
    tref:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'tref';
 	indent +6;
@@ -377,6 +401,8 @@ RULES
 
    a:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'a';
 	indent +3;
@@ -390,6 +416,8 @@ RULES
 
    script_:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'script';
 	indent +8;
@@ -403,6 +431,8 @@ RULES
  
    animate:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'animate';
  	indent +9;
@@ -422,6 +452,8 @@ RULES
 
    set_:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'set';
 	indent +5;
@@ -441,6 +473,8 @@ RULES
 
    animateMotion:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'animateMotion';
         indent +15;
@@ -460,6 +494,8 @@ RULES
 
    mpath:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'mpath';
 	indent +7;
@@ -479,6 +515,8 @@ RULES
 
    animateColor:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'animateColor';
  	indent +14;
@@ -498,6 +536,8 @@ RULES
 
    animateTransform:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'animateTransform';
 	indent +18;
@@ -530,6 +570,8 @@ RULES
 
    foreignObject:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'foreignObject';
 	indent +15;
@@ -594,6 +636,8 @@ RULES
 
    TEXT_UNIT:
 	BEGIN
+	if within use_
+           Ignore;
 	if within tref and
            not within desc and not within metadata and not within title
             Ignore;
