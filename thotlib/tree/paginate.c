@@ -5,6 +5,7 @@
  *
  */
 
+
 /*
  * gestion de la pagination d'un arbre abstrait. Insere les diverses
  * marques de saut de page dans l'AA. Les effets de bord sont nombreux.
@@ -25,10 +26,10 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 
-#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
 #include "boxes_tv.h"
+#include "units_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "page_tv.h"
@@ -613,7 +614,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	     }
 	 }
      }
-   else if (position == 1)
+   else if (position == 1 || pP->AbElement->ElTerminal)
        /* insert after */
        ElemIsBefore = FALSE;
    else
@@ -764,9 +765,11 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
 	    val = RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
-	    pPos->PosDistance = PixelValue (val, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification);
-	    /*pPos->PosDistance = PixelToPoint (val);*/
+#ifdef _WIN_PRINT
+	    pPos->PosDistance = (val * ScreenDPI + PrinterDPI/ 2) / PrinterDPI;
+#else /* _WIN_PRINT */
+	    pPos->PosDistance = val + (val * ViewFrameTable[frame - 1].FrMagnification / 10);
+#endif /* _WIN_PRINT */
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Bottom;
 	    pPos->PosUnit = UnPoint;
@@ -778,9 +781,11 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
 	    val = RealPageHeight - pAb->AbBox->BxYOrg;
-	    pPos->PosDistance = PixelValue (val, UnPixel, NULL,
-					    ViewFrameTable[frame - 1].FrMagnification);
-	    /*pPos->PosDistance = PixelToPoint (val);*/
+#ifdef _WIN_PRINT
+	    pPos->PosDistance = (val * ScreenDPI + PrinterDPI/ 2) / PrinterDPI;
+#else /* _WIN_PRINT */
+	    pPos->PosDistance = val + (val * ViewFrameTable[frame - 1].FrMagnification / 10);
+#endif /* _WIN_PRINT */
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Top;
 	    pPos->PosUnit = UnPoint;
@@ -1008,23 +1013,36 @@ static void SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc,
 			/* look for the abstract box of the cell and skip
 			 presentation boxes */
 			pCreator = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
+			/*WinErrorBox (NULL, "Printing");*/
 			while (pCreator->AbPresentationBox)
 			  pCreator = pCreator->AbNext;
-			/* insert the page break at the bottom of the cell */
+			/* it's the cell abstract box */
+			pAb = pCreator;
+			/* insert the page break within the cell */
 			pChild = pCreator->AbFirstEnclosed;
 			/* locate the last child */
-			while (pChild != NULL && pChild->AbNext != NULL)
-			  pChild = pChild->AbNext;
-			/* skip bacwards presentation boxes of the cell */
-			while (pChild != NULL && pChild->AbElement == pCreator->AbElement)
-			  pChild = pChild->AbPrevious;
-			if (pChild == NULL)
-			  /* insert as a child */
-			  *pPage = InsertMark (pCreator, frame, nbView, origCutAbsBox,
-				      needBreak, schView, pDoc, rootEl, 2); 
-			else
-			  *pPage = InsertMark (pChild, frame, nbView, origCutAbsBox,
-				      needBreak, schView, pDoc, rootEl, 1);
+			while (pChild)
+			{
+			  while (pChild->AbNext && !pChild->AbNext->AbAfterPageBreak)
+			    pChild = pChild->AbNext;
+			  /* skip bacwards presentation boxes of the cell */
+			  while (pChild && pChild->AbPresentationBox)
+			    pChild = pChild->AbPrevious;
+			  if (pChild)
+			  {
+			    pCreator = pChild;
+			    if (pChild->AbLeafType == LtCompound)
+			      pChild = pCreator->AbFirstEnclosed;
+			    else
+			      pChild = NULL;
+			  }
+			}
+			/* see if the the break can be inserted after the parent */
+			while (!pCreator->AbNext && pCreator->AbEnclosing &&
+			       pCreator->AbEnclosing != pAb)
+			  pCreator = pCreator->AbEnclosing;
+			*pPage = InsertMark (pCreator, frame, nbView, origCutAbsBox,
+					     needBreak, schView, pDoc, rootEl, 1);
 			pCreator->AbOnPageBreak = TRUE;
 			done = (*pPage != NULL);
 		      }
@@ -1447,7 +1465,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 void PaginateView (PtrDocument pDoc, int view)
 {
   PtrElement          pRootEl, firstPage, lastPage, pPage;
-  PtrAbstractBox      rootAbsBox, pP;
+  PtrAbstractBox      rootAbsBox, pP, pAb;
   PtrAbstractBox      previousPageAbBox;
 #ifdef PAGINEETIMPRIME
   PtrPSchema          pSchP;
@@ -1458,14 +1476,15 @@ void PaginateView (PtrDocument pDoc, int view)
   int                 FirstSelectedChar = 0, LastSelectedChar = 0;
   ThotBool            sel;
 #endif /* PAGINEETIMPRIME */
+  AbPosition         *pPos;
+  PtrPSchema          pSchPage;
+  int                 b, val;
   int                 schView;
   int                 v, clipOrg;
   int                 frame, volume, volprec, iview;
   ThotBool            shorter;
   ThotBool            complete;
   ThotBool            isFirstPage;
-  PtrPSchema          pSchPage;
-  int                 b;
   ThotBool            somthingAdded;
 
   RunningPaginate = TRUE;
@@ -1655,7 +1674,7 @@ void PaginateView (PtrDocument pDoc, int view)
 #ifdef PAGINEETIMPRIME
    /* il faut imprimer la derniere page */
    /* on cree d'abord son pave */
-   pDoc->DocViewFreeVolume[iview] = 100;
+   pDoc->DocViewFreeVolume[iview] = 10000;
    rootAbsBox->AbTruncatedTail = TRUE;
    if (lastPage)
      {
@@ -1692,6 +1711,19 @@ void PaginateView (PtrDocument pDoc, int view)
 	 {
 	   shorter = ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[iview]);
 	   pDoc->DocViewModifiedAb[iview] = NULL;
+	 }
+       pPos = &pP->AbVertPos;
+       pAb = pPos->PosAbRef;
+       if (pAb)
+	 {
+	   val = RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
+#ifdef _WIN_PRINT
+	   pPos->PosDistance = (val * ScreenDPI + PrinterDPI/ 2) / PrinterDPI;
+#else /* _WIN_PRINT */
+	   pPos->PosDistance = val + (val * ViewFrameTable[frame - 1].FrMagnification / 10);
+#endif /* _WIN_PRINT */
+	   pP->AbVertPosChange = TRUE;
+	   ChangeConcreteImage (frame, &h, pP);
 	 }
        PrintOnePage (pDoc, previousPageAbBox, pP, rootAbsBox, clipOrg);
      }

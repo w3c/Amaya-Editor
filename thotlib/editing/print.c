@@ -2461,9 +2461,9 @@ int main (int argc, char **argv)
   /* The following loop removes the suffix from the filename (name) */
   while ((index < length) && !done)
      {
-       if (name [index] == '.')
+       if (name[index] == '.')
 	 {
-	   name [index] = EOS;
+	   name[index] = EOS;
 	   done = TRUE;
 	 }
        else
@@ -2590,17 +2590,17 @@ int main (int argc, char **argv)
     {
 #ifdef _WINDOWS
       if (!strcmp (destination, "PSFILE"))
-		  DeleteFile (cmd);
+	DeleteFile (cmd);
       else
 	{
-	  int cssNDX;
-	  char *pivDoc = TtaGetMemory (strlen (tmpDocName) + strlen (tmpDir) + 6);
-	  sprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
-	  DeleteFile (pivDoc);
-	  for (cssNDX = 0; cssNDX < MAX_CSS; cssNDX++)
-	    if (CSSName[cssNDX] && CSSName[cssNDX][0] != EOS &&
-		TtaFileExist (CSSName[cssNDX]))
-	      DeleteFile (CSSName[cssNDX]); 
+	  sprintf (name, "%s\\%s.PIV", tmpDir, tmpDocName); 
+	  DeleteFile (name);
+	  length = strlen (tmpDir);
+	  /* remove CSS files in the temporary directory */
+	  for (i = 0; i < cssCounter; i++)
+	    if (CSSName[i] && TtaFileExist (CSSName[i]) &&
+		strcmp(CSSName[i], tmpDir, length);
+	      DeleteFile (CSSName[i]); 
 	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
       }
