@@ -1899,7 +1899,7 @@
 <label define="BMakeToc">
 	<message xml:lang="en">&amp;Generate Table of contents</message>
 	<message xml:lang="fr">&amp;Engendrer la table des matières</message>
-	<message xml:lang="es">&amp;Generar �ndice de materias</message>
+	<message xml:lang="es">&amp;Generar índice de materias</message>
 	<message xml:lang="ru">Создать оглавление</message>
 	<message xml:lang="de">Inhaltsverzeichnis erzeugen</message>
 </label>
