@@ -1,15 +1,30 @@
-
 TRANSLATION HTML;
 
 LINELENGTH 78;
 
 COUNTERS
   ItemCounter : Rank of List_Item;
+  LOG_AnchorCounter : Set 1 on BODY Add 1 on Anchor;
+
+CONST
+  TmpFileExt = '.tmp';
+  TmpFileName = 'test';
+  TmpFileDir = '/tmp/';
+
+VAR
+  OUT_AnchorCounter : Value(LOG_AnchorCounter);
+  OUT_URL  : HREF_;	
+  TmpFile : TmpFileDir TmpFileName TmpFileExt;
+#
+# Have to do this until include can read the value of a variable
+# It should rather be:
+#  TmpFile : TmpFileDir FileName TmpFileExt;
+#
+
 
 RULES
 
  HTML : BEGIN
-	Create '\12' After;
 	END;
 
  HEAD:	BEGIN
@@ -18,7 +33,7 @@ RULES
 
  Document_URL:
 	BEGIN
-	Remove;
+	Create Attributes;
 	END;
 
  TITLE:	BEGIN
@@ -29,7 +44,7 @@ RULES
 	END;
 
  BASE:	BEGIN
-	Remove;
+	Create Attributes;
 	END;
 
  Styles:BEGIN
@@ -51,216 +66,123 @@ RULES
 	END;
 
  BODY:	BEGIN
+	Create '\12\12' After;
+	Create '-------------------------\12' After;
+	Create 'Document URL: http://www.w3.org/...\12\12';
+	Include '/tmp/test.tmp' After;
 	END;
 
  H1:	BEGIN
-	Create '\12\12\12';
-	Create '\12\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  H2:	BEGIN
-	Create '\12\12';
-	Create '\12\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  H3:	BEGIN
-	Create '<h3';
-	Create Attributes;
-	Create '>';
-	Create '</h3>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  H4:	BEGIN
-	Create '<h4';
-	Create Attributes;
-	Create '>';
-	Create '</h4>' After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  H5:	BEGIN
-	Create '<h5';
-	Create Attributes;
-	Create '>';
-	Create '</h5>' After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  H6:	BEGIN
-	Create '<h6';
-	Create Attributes;
-	Create '>';
-	Create '</h6>' After;
-	if not within Preformatted Create '\12' After;
+	if not within Preformatted Create '\12';
+	Create '\12' After;
 	END;
 
  BaseFont:
 	BEGIN
-	Create '<basefont';
 	Remove;
-	Create Attributes;
-	Create '>\12';
 	END;
 
  BR:	BEGIN
-	Create '<br';
-	Create Attributes;
-	Create '>\12';
+	Create '\12';
 	Remove;
 	END;
  Italic_text:
 	BEGIN
-	Create '<i';
-	Create Attributes;
-	Create '>';
-	Create '</i>' After;
 	END;
  Bold_text:
 	BEGIN
-	Create '<b';
-	Create Attributes;
-	Create '>';
-	Create '</b>' After;
 	END;
  Teletype_text:
 	BEGIN
-	Create '<tt';
-	Create Attributes;
-	Create '>';
-	Create '</tt>' After;
 	END;
  Underlined_text:
 	BEGIN
-	Create '<u';
-	Create Attributes;
-	Create '>';
-	Create '</u>' After;
 	END;
  Struck_text:
 	BEGIN
-	Create '<strike';
-	Create Attributes;
-	Create '>';
-	Create '</strike>' After;
 	END;
  Big_text:
 	BEGIN
-	Create '<big';
-	Create Attributes;
-	Create '>';
-	Create '</big>' After;
 	END;
  Small_text:
 	BEGIN
-	Create '<small';
-	Create Attributes;
-	Create '>';
-	Create '</small>' After;
 	END;
  Subscript:
 	BEGIN
-	Create '<sub';
-	Create Attributes;
-	Create '>';
-	Create '</sub>' After;
 	END;
  Superscript:
 	BEGIN
-	Create '<sup';
-	Create Attributes;
-	Create '>';
-	Create '</sup>' After;
 	END;
 
  Emphasis:
 	BEGIN
-	Create '<em';
-	Create Attributes;
-	Create '>';
-	Create '</em>' After;
 	END;
  Strong:
 	BEGIN
-	Create '<strong';
-	Create Attributes;
-	Create '>';
-	Create '</strong>' After;
 	END;
  Def:
 	BEGIN
-	Create '<dfn';
-	Create Attributes;
-	Create '>';
-	Create '</dfn>' After;
 	END;
  Code:
 	BEGIN
-	Create '<code';
-	Create Attributes;
-	Create '>';
-	Create '</code>' After;
 	END;
  Sample:
 	BEGIN
-	Create '<samp';
-	Create Attributes;
-	Create '>';
-	Create '</samp>' After;
 	END;
  Keyboard:
 	BEGIN
-	Create '<kbd';
-	Create Attributes;
-	Create '>';
-	Create '</kbd>' After;
 	END;
  Variable:
 	BEGIN
-	Create '<var';
-	Create Attributes;
-	Create '>';
-	Create '</var>' After;
 	END;
  Cite:
 	BEGIN
-	Create '<cite';
-	Create Attributes;
-	Create '>';
-	Create '</cite>' After;
 	END;
 
  Font_: BEGIN
-	Create '<font';
-	Create Attributes;
-	Create '>';
-	Create '</font>' After;
+	Remove;
 	END;
 
  Applet: BEGIN
-	Create '<applet';
-	Create Attributes;
-	Create '>\12';
-	Create '</applet>\12' After;	
 	END;
 
  Parameter: BEGIN
-	Create '<param';
-	Create Attributes;
 	Remove;
-	Create '>\12';
 	END;
 
 #ifdef COUGAR
- Object: BEGIN
-	Create '<object';
-	Create Attributes;
-	Create '>\12';
-	Create '</object>\12' After;	
+Object: BEGIN
+	Create '\12';
+	Create '\12' After;	
 	END;
 #endif
  Paragraph: BEGIN
-	Create '\12' After;
+	Create '\12\12' After;
 	END;
 
  Pseudo_paragraph: BEGIN
@@ -289,6 +211,8 @@ RULES
 	END;
 
  Definition_List: BEGIN
+	Create '\12';
+	Create '\12' After;
 	END;
 
  Term:	BEGIN
@@ -304,6 +228,7 @@ RULES
 	if not within Unnumbered_List and not within Numbered_List and not
 	   within Definition_List
 	   BEGIN
+	   Create '\12';
 	   Indent +3;
 	   Indent -3 After;
 	   END;
@@ -313,30 +238,23 @@ RULES
 	if not within Unnumbered_List and not within Numbered_List and not
 	   within Definition_List
 	   BEGIN
+	   Create '\12';
 	   Indent +3;
 	   Indent -3 After;
 	   END;
 	END;
 
  Address: BEGIN
-	Create '<address';
-	Create Attributes;
-	Create '>\12';
-	Create '</address>\12' After;
+	Create '\12';
+	Create '\12' After;
 	END;
 
  Menu:	BEGIN
-	Create '<menu';
-	Create Attributes;
-	Create '>\12';
-	Create '</menu>\12' After;
+	Create '\12' After;
 	END;
 
  Directory: BEGIN
-	Create '<dir';
-	Create Attributes;
-	Create '>\12';
-	Create '</dir>\12' After;
+	Create '\12' After;
 	END;
 
  List_Item: BEGIN
@@ -347,18 +265,11 @@ RULES
 
  Preformatted: BEGIN
 	NoLineBreak;
-	Create '<pre';
-	Create Attributes;
-	Create '>';
-	Create '</pre>\12' After;
+	Create '\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
-	Create '<hr';
-	Create Attributes;
-	Remove;
-	Create '>';
-	if not within Preformatted Create '>\12';
+	Create '-----------------------------\12';
 	END;
 
  Form: BEGIN
@@ -473,10 +384,10 @@ RULES
 	END;
 
  Block_Quote: BEGIN
-	Create '<blockquote';
-	Create Attributes;
-	Create '>\12';
-	Create '</blockquote>\12' After;
+	Create '\12';
+	Indent +5;
+	Indent -5 After;
+	Create '\12' After;
 	END;
 
  PICTURE_UNIT: BEGIN
@@ -484,42 +395,37 @@ RULES
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object BEGIN
-		Create '<img';
-		Create Attributes;
-		Create '>' After;
+		Create '[';
+		Create ']' After;
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
 		Create '\12' After;
 #else
-	Create '<img';
 	Create Attributes;
-	Create '>' After;
 	if NOT within Paragraph
 		Create '\12' After;
 #endif
 	END;
 
  Anchor: BEGIN
-	Create '<a';
-	Create Attributes;
-	Create '>';
-	Create '</a>' After;
+	Create IN TmpFile '[' After;
+	Create IN TmpFile  OUT_AnchorCounter After;
+	Create IN TmpFile  '] ' After;
+	Create IN TmpFile  OUT_URL After;
+	Create IN TmpFile '\12' After;
+	Create '[';
+	Create OUT_AnchorCounter;
+	Create ']';
 	END;
 
  MAP:
 	BEGIN
-	Create '<map';
-	Create Attributes;
-	Create '>\12';
-	Create '</map>\12' after;
+	Remove;
 	END;
 
  AREA:
 	BEGIN
-	Create '<area';
-	Create Attributes;
 	Remove;
-	Create '>\12';
 	END;
 
 { ---- Tables ---- }
@@ -537,7 +443,7 @@ RULES
 	Create '<caption';
 	Create Attributes;
 	Create '>';
-	Create '</caption>\12' after;
+	Create '</caption>\12' After;
 	END;
 
  Table_head:
@@ -546,25 +452,17 @@ RULES
 #ifdef COUGAR
  thead:
 	BEGIN
-	Create '<thead';
-	Create Attributes;
-	Create '>\12';
-	Create '</thead>\12' after;
+	Create '\12' After;
 	END;
 
  tfoot:
 	BEGIN
-	Create '<tfoot';
-	Create Attributes;
-	Create '>\12';
-	Create '</tfoot>\12' after;
+	Create '\12';
+	Create '\12' After;
 	END;
  tbody:
 	BEGIN
-	Create '<tbody';
-	Create Attributes;
-	Create '>\12';
-	Create '</tbody>\12' after;
+	Create '\12' After;
 	END;
 #endif
 
@@ -573,24 +471,16 @@ RULES
 
  Table_row:
 	BEGIN
-	Create '<tr';
-	Create Attributes;
-	Create '>\12';
-	Create '</tr>\12' after;
+	Remove;
 	END;
 
  Data_cell:
 	BEGIN
-	Create '<td';
-	Create Attributes;
-	Create '>';
+	Create '\12' After;
 	END;
 
  Heading_cell:
 	BEGIN
-	Create '<th';
-	Create Attributes;
-	Create '>';
 	END;
 
  Table_foot:
@@ -599,10 +489,7 @@ RULES
 	END;
 
  Division: BEGIN
-	Create '\12<div';
-	Create Attributes;
-	Create '>\12';
-	Create '</div>\12' After;
+	Create '\12' After;
 	END;
 
  Center: BEGIN
@@ -614,22 +501,13 @@ RULES
 
  Invalid_element:
 	BEGIN
-	if Error_type = BadPosition
-	   Remove;
-	if not Error_type = BadPosition
-           BEGIN
-	   NoTranslation;
-	   Create Content;
-	   Remove;
-	   Create Attributes;
-	   Create '>';
-	   END;
+	Remove;
 	END;
 
  Comment\240: BEGIN
 	NoLineBreak;
- 	Create '<!--';
-	Create '-->\12' after;
+ 	Create '@@@ ';
+	Create '\12' after;
 	END;
 
  Comment_line: BEGIN
@@ -655,6 +533,7 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
+	Create HREF_;
 	END;
 
  background_ :
@@ -686,7 +565,7 @@ ATTRIBUTES
 	END;
 
  Font_size :
-	BEGIN
+	BEGIN	
 	END;
 
  color :
@@ -695,33 +574,42 @@ ATTRIBUTES
 
  Clear = Left_:
 	BEGIN
+	Create '\12';	
 	END;
 
  Clear = Right_:
 	BEGIN
+	Create '\12';	
 	END;
  Clear = All_:
 	BEGIN
+	Remove;
 	END;
  Clear = None:
 	BEGIN
+	Remove;
 	END;
 
  Align = left_:
 	BEGIN
+	Remove;
 	END;
  Align = center_:
 	BEGIN
+	Remove;
 	END;
  Align = right_:
 	BEGIN
+	Remove;
 	END;
 
  NoShade:
-	BEGIN
+	BEGIN	
+	Remove;
 	END;
 
  Size_: BEGIN
+	Remove;
 	END;
 
  Width__: BEGIN
@@ -734,12 +622,15 @@ ATTRIBUTES
 	END;
 
  applet_name: BEGIN
+	Remove;
 	END;
 
  Param_name: BEGIN
+	Remove;
 	END;
 
  Param_value: BEGIN
+	Remove;
 	END;
 #ifdef COUGAR
  classid: BEGIN
@@ -836,11 +727,13 @@ ATTRIBUTES
 	END;
 
  SRC:	BEGIN
-	Create SRC;
+	Remove;
 	END;
 
  ALT:	BEGIN
+	Create '[';
 	Create ALT;
+	Create ']' After;
 	END;
 
  Alignment = Top_:
@@ -967,3 +860,9 @@ GraphTRANSLATE
 	END;
 
 END
+
+
+
+
+
+
