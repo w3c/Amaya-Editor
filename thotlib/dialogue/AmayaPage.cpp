@@ -808,6 +808,9 @@ void AmayaPage::RaisePage()
       p_notebook->SetSelection(GetPageId());
       SetSelected( TRUE );
     }
+  // force the window's parent to raises to the top of the window hierarchy if it is a managed window (dialog or frame).
+  if ( GetWindowParent() )
+    GetWindowParent()->Raise();
 }
 
 /*----------------------------------------------------------------------
