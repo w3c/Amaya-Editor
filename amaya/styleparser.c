@@ -1810,7 +1810,7 @@ ThotBool            isHTML;
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && margin.typed_data.value != 0)
     {
-      TtaSetStylePresentation (PRTMargin, element, tsch, context, margin);
+      TtaSetStylePresentation (PRMarginTop, element, tsch, context, margin);
       if (margin.typed_data.value < 0)
 	TtaSetStylePresentation (PRVertOverflow, element, tsch, context, margin);
     }
@@ -1841,7 +1841,7 @@ ThotBool            isHTML;
   cssRule = ParseCSSUnit (cssRule, &margin);
   margin.typed_data.value = - margin.typed_data.value;
   /*if (margin.typed_data.unit != STYLE_UNIT_INVALID)
-    TtaSetStylePresentation (PRBMargin, element, tsch, context, margin)*/;
+    TtaSetStylePresentation (PRMarginBottom, element, tsch, context, margin)*/;
   return (cssRule);
 }
 
@@ -1869,10 +1869,10 @@ ThotBool            isHTML;
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && margin.typed_data.value != 0)
     {
-      TtaSetStylePresentation (PRLMargin, element, tsch, context, margin);
+      TtaSetStylePresentation (PRMarginLeft, element, tsch, context, margin);
       if (margin.typed_data.value < 0)
 	TtaSetStylePresentation (PRHorizOverflow, element, tsch, context, margin);
-      TtaSetStylePresentation (PRRMargin, element, tsch, context, margin);
+      TtaSetStylePresentation (PRMarginRight, element, tsch, context, margin);
     }
   return (cssRule);
 }
@@ -1900,7 +1900,7 @@ ThotBool            isHTML;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   /*if (margin.typed_data.unit != STYLE_UNIT_INVALID)
-      TtaSetStylePresentation (PRRMargin, element, tsch, context, margin)*/;
+      TtaSetStylePresentation (PRMarginRight, element, tsch, context, margin)*/;
   return (cssRule);
 }
 
@@ -2999,14 +2999,14 @@ int                  len
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
       break;
-    case PRTMargin:
+    case PRMarginTop:
       if (real)
 	usprintf (buffer, TEXT("marging-top: %g"), fval);
       else
 	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case PRLMargin:
+    case PRMarginLeft:
       if (real)
 	usprintf (buffer, TEXT("margin-left: %g"), fval);
       else

@@ -891,9 +891,21 @@ PtrPSchema          pSPR;
       pAb->AbHorizRefChange = TRUE;
       break;
     case PtHeight:
+    case PtMarginTop:
+    case PtMarginBottom:
+    case PtPaddingTop:
+    case PtPaddingBottom:
+    case PtBorderTopWidth:
+    case PtBorderBottomWidth:
       pAb->AbHeightChange = TRUE;
       break;
     case PtWidth:
+    case PtMarginRight:
+    case PtMarginLeft:
+    case PtPaddingRight:
+    case PtPaddingLeft:
+    case PtBorderRightWidth:
+    case PtBorderLeftWidth:
       pAb->AbWidthChange = TRUE;
       break;
     case PtVertPos:
@@ -911,6 +923,14 @@ PtrPSchema          pSPR;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtBorderTopColor:
+    case PtBorderRightColor:
+    case PtBorderBottomColor:
+    case PtBorderLeftColor:
+    case PtBorderTopStyle:
+    case PtBorderRightStyle:
+    case PtBorderBottomStyle:
+    case PtBorderLeftStyle:
       pAb->AbAspectChange = TRUE;
       break;
     case PtFunction:

@@ -1829,14 +1829,29 @@ ThotBool           *absolute;
     case PRVisibility:
       *intRule = PtVisibility;
       break;
-    case PRForeground:
-      *intRule = PtForeground;
+    case PRFillPattern:
+      *intRule = PtFillPattern;
       break;
     case PRBackground:
       *intRule = PtBackground;
       break;
-    case PRSize:
-      *intRule = PtSize;
+    case PRForeground:
+      *intRule = PtForeground;
+      break;
+    case PRBorderTopColor:
+      *intRule = PtBorderTopColor;
+      break;
+    case PRBorderRightColor:
+      *intRule = PtBorderRightColor;
+      break;
+    case PRBorderBottomColor:
+      *intRule = PtBorderBottomColor;
+      break;
+    case PRBorderLeftColor:
+      *intRule = PtBorderLeftColor;
+      break;
+    case PRFont:
+      *intRule = PtFont;
       break;
     case PRStyle:
       *intRule = PtStyle;
@@ -1844,11 +1859,79 @@ ThotBool           *absolute;
     case PRWeight:
       *intRule = PtWeight;
       break;
-    case PRAdjust:
-      *intRule = PtAdjust;
+    case PRUnderline:
+      *intRule = PtUnderline;
+      break;
+    case PRBorderTopStyle:
+      *intRule = PtBorderTopStyle;
+      break;
+    case PRBorderRightStyle:
+      *intRule = PtBorderRightStyle;
+      break;
+    case PRBorderBottomStyle:
+      *intRule = PtBorderBottomStyle;
+      break;
+    case PRBorderLeftStyle:
+      *intRule = PtBorderLeftStyle;
       break;
     case PRIndent:
       *intRule = PtIndent;
+      break;
+    case PRSize:
+      *intRule = PtSize;
+      break;
+    case PRLineSpacing:
+      *intRule = PtLineSpacing;
+      break;
+    case PRMarginTop:
+      *intRule = PtMarginTop;
+      break;
+    case PRMarginRight:
+      *intRule = PtMarginRight;
+      break;
+    case PRMarginBottom:
+      *intRule = PtMarginBottom;
+      break;
+    case PRMarginLeft:
+      *intRule = PtMarginLeft;
+      break;
+    case PRPaddingTop:
+      *intRule = PtPaddingTop;
+      break;
+    case PRPaddingRight:
+      *intRule = PtPaddingRight;
+      break;
+    case PRPaddingBottom:
+      *intRule = PtPaddingBottom;
+      break;
+    case PRPaddingLeft:
+      *intRule = PtPaddingLeft;
+      break;
+    case PRBorderTopWidth:
+      *intRule = PtBorderTopWidth;
+      break;
+    case PRBorderRightWidth:
+      *intRule = PtBorderRightWidth;
+      break;
+    case PRBorderBottomWidth:
+      *intRule = PtBorderBottomWidth;
+      break;
+    case PRBorderLeftWidth:
+      *intRule = PtBorderLeftWidth;
+      break;      
+    case PRVertPos:
+      *intRule = PtVertPos;
+      break;
+    case PRHorizPos:
+      *intRule = PtHorizPos;
+      break;
+    case PRHeight:
+      *intRule = PtHeight;
+      *absolute = TRUE;
+      break;
+    case PRWidth:
+      *intRule = PtWidth;
+      *absolute = TRUE;
       break;
     case PRJustify:
       *intRule = PtJustify;
@@ -1856,49 +1939,14 @@ ThotBool           *absolute;
     case PRHyphenate:
       *intRule = PtHyphenate;
       break;
-    case PRUnderline:
-      *intRule = PtUnderline;
-      break;
-    case PRFillPattern:
-      *intRule = PtFillPattern;
-      break;
-    case PRFont:
-      *intRule = PtFont;
-      break;
-    case PRLineSpacing:
-      *intRule = PtLineSpacing;
-      break;
-    case PRVertPos:
-      *intRule = PtVertPos;
-      break;
-    case PRHorizPos:
-      *intRule = PtHorizPos;
-      break;
-    case PRWidth:
-      *intRule = PtWidth;
-      *absolute = TRUE;
-      break;
-    case PRHeight:
-      *intRule = PtHeight;
-      *absolute = TRUE;
-      break;
-    case PRTMargin:
-      *intRule = PtVertPos;
-      break;
-    case PRLMargin:
-      *intRule = PtHorizPos;
-      break;
-    case PRBMargin:
-      *intRule = PtHeight;
-      break;
-    case PRRMargin:
-      *intRule = PtWidth;
+    case PRVertOverflow:
+      *intRule = PtVertOverflow;
       break;
     case PRHorizOverflow:
       *intRule = PtHorizOverflow;
       break;
-    case PRVertOverflow:
-      *intRule = PtVertOverflow;
+    case PRAdjust:
+      *intRule = PtAdjust;
       break;
     case PRShowBox:
       *intRule = PtFunction;
@@ -2069,6 +2117,18 @@ int                 extra;
     case PtForeground:
       setting->type = PRForeground;
       break;
+    case PtBorderTopColor:
+      setting->type = PRBorderTopColor;
+      break;
+    case PtBorderRightColor:
+      setting->type = PRBorderRightColor;
+      break;
+    case PtBorderBottomColor:
+      setting->type = PRBorderBottomColor;
+      break;
+    case PtBorderLeftColor:
+      setting->type = PRBorderLeftColor;
+      break;
     case PtFont:
       setting->type = PRFont;
       break;
@@ -2081,6 +2141,18 @@ int                 extra;
     case PtUnderline:
       setting->type = PRUnderline;
       break;
+    case PtBorderTopStyle:
+      setting->type = PRBorderTopStyle;
+      break;
+    case PtBorderRightStyle:
+      setting->type = PRBorderRightStyle;
+      break;
+    case PtBorderBottomStyle:
+      setting->type = PRBorderBottomStyle;
+      break;
+    case PtBorderLeftStyle:
+      setting->type = PRBorderLeftStyle;
+      break;
     case PtIndent:
       setting->type = PRIndent;
       break;
@@ -2091,10 +2163,40 @@ int                 extra;
       setting->type = PRLineSpacing;
       break;
     case PtMarginTop:
-      setting->type = PRTMargin;
+      setting->type = PRMarginTop;
+      break;
+    case PtMarginRight:
+      setting->type = PRMarginRight;
+      break;
+    case PtMarginBottom:
+      setting->type = PRMarginBottom;
       break;
     case PtMarginLeft:
-      setting->type = PRLMargin;
+      setting->type = PRMarginLeft;
+      break;
+    case PtPaddingTop:
+      setting->type = PRPaddingTop;
+      break;
+    case PtPaddingRight:
+      setting->type = PRPaddingRight;
+      break;
+    case PtPaddingBottom:
+      setting->type = PRPaddingBottom;
+      break;
+    case PtPaddingLeft:
+      setting->type = PRPaddingLeft;
+      break;
+    case PtBorderTopWidth:
+      setting->type = PRBorderTopWidth;
+      break;
+    case PtBorderRightWidth:
+      setting->type = PRBorderRightWidth;
+      break;
+    case PtBorderBottomWidth:
+      setting->type = PRBorderBottomWidth;
+      break;
+    case PtBorderLeftWidth:
+      setting->type = PRBorderLeftWidth;
       break;
     case PtHeight:
       setting->type = PRHeight;

@@ -54,13 +54,9 @@ typedef int        *PRule;
 #define PRShowBox 30
 #define PRBackgroundPicture 31
 #define PRPictureMode 32
-#define PRTMargin 33
 #define PRMarginTop 33
-#define PRLMargin 34
 #define PRMarginLeft 34
-#define PRBMargin 35
 #define PRMarginBottom 35
-#define PRRMargin 36
 #define PRMarginRight 36
 #define PRCreateEnclosing 37
 #define PRHorizOverflow 38
