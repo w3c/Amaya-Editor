@@ -2076,11 +2076,6 @@ int                 frame;
       int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
       PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr, pAbbFirstEmptyCr,
                           pAbbReDisp, pAbbRoot, pPrevious;
-
-#ifndef __COLPAGE__
-      int                 nR;
-
-#endif /* __COLPAGE__ */
       PtrElement          pEl1;
       PtrAbstractBox      pAbbox1;
       boolean             complete;
@@ -2093,6 +2088,7 @@ int                 frame;
       PtrPSchema          pSchPage;
 
       pagedView = FALSE;
+      pAbbLastEmptyCr = NULL;
       pElPage = NULL;
       if (pEl != NULL)
 	{
@@ -2390,7 +2386,9 @@ int                 frame;
 	      /* vue non paginee : on garde l'ancien code */ if (pEl->ElAbstractBox[view - 1] == NULL)
 	     {
 #else  /* __COLPAGE__ */
+      int         nR;
 
+      pAbbLastEmptyCr = NULL;
       if (pEl != NULL)
 	 if (pEl->ElAbstractBox[view - 1] == NULL)
 	   {

@@ -959,7 +959,7 @@ boolean             subTree;
 		     /* on n'ecrit pas le texte des constantes, ni celui des */
 		     /* parametres, il est cree automatiquement */
 		    {
-		       if (pEl1->ElLeafType == LtText)
+		       if (pEl1->ElTypeNumber == CharString + 1)
 			  /* ecrit le numero de langue de la feuille de texte, si ce */
 			  /* n'est pas la premiere langue de la table du document */
 			 {

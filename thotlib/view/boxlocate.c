@@ -1539,7 +1539,7 @@ int                 ym;
 	     width = pBox->BxWidth;
 	     height = pBox->BxHeight;
 
-	     if (pointselect != 0)
+	     if (pointselect != 0 && pBox->BxType != BoPicture)
 	       {
 		  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, TRUE))
 		    {
