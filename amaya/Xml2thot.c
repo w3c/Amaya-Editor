@@ -1727,6 +1727,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
   char         *s;
   char         *ns_name;
   ElementType   parentType;
+  Element       parent;
 #endif /* XML_GENERIC */
 
  /* initialize all parser contexts if not done yet */
@@ -1789,7 +1790,11 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		}
 	      else
 		{
-		  parentType = TtaGetElementType (XMLcontext.lastElement);
+		  if (XMLcontext.lastElementClosed)
+		    parent = TtaGetParent (XMLcontext.lastElement);
+		  else
+		    parent = XMLcontext.lastElement;
+		  parentType = TtaGetElementType (parent);
 		  if (parentType.ElSSchema == NULL)
 		    {
 		      isnew = FALSE;
