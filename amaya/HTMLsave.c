@@ -702,6 +702,8 @@ void SaveDocumentAs (Document doc, View view)
 	strcpy (UserMimeType, AM_MATHML_MIME_TYPE);
       else if (DocumentTypes[doc] == docXml)
 	strcpy (UserMimeType, AM_GENERIC_XML_MIME_TYPE);
+      else if (DocumentTypes[doc] == docCSS)
+	strcpy (UserMimeType, "text/css");
       else
 	UserMimeType[0] = EOS;
     }
