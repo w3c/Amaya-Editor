@@ -360,10 +360,10 @@ schemas/Paragraphe.en \
 schemas/Rapport.en \
 schemas/RefBib.en \
 schemas/Table.en \
-tablelib/tableau.c \
-tablelib/tableau2.c \
-tablelib/f/tableau2_f.h \
-tablelib/f/tableau_f.h \
+tablelib/table.c \
+tablelib/table2c \
+tablelib/f/table2_f.h \
+tablelib/f/table_f.h \
 thot/EDITOR.A \
 thot/EDITORactions.c \
 thot/EDITORactions.h \
