@@ -3336,8 +3336,9 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "fixed", 5))
     {
       /* force no-repeat for that background image */
-      ParseCSSBackgroundPosition (element, tsch, context,
-				  "no-repeat", css, isHTML);
+      ptr = "no-repeat";
+      ParseCSSBackgroundRepeat (element, tsch, context,
+				ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   return (cssRule);
