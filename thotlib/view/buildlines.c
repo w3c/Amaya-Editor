@@ -1582,7 +1582,39 @@ void ClearFloats (PtrBox pBox)
 	}
     }
 }
- 
+
+
+/*----------------------------------------------------------------------
+  SetClear returns clearL and clearR of the box.
+  ----------------------------------------------------------------------*/
+static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
+{
+  PtrAbstractBox      pAb, pParent;
+
+  *clearL = FALSE;
+  *clearR = FALSE;
+  if (box && box->BxAbstractBox)
+    {
+      pAb = box->BxAbstractBox;
+      *clearL = (pAb->AbClear == 'L' || pAb->AbClear == 'B');
+      *clearR =(pAb->AbClear == 'R' || pAb->AbClear == 'B');
+      /* check if an enclosing ghost box generates a clear */
+      pParent = pAb->AbEnclosing;
+      while (pParent && pParent->AbBox &&
+	     pParent->AbBox->BxType == BoGhost &&
+	     pParent->AbElement &&
+	     pParent->AbElement->ElFirstChild == pAb->AbElement)
+	{
+	  if (pParent->AbClear == 'L' || pParent->AbClear == 'B')
+	    *clearL = TRUE;
+	  if (pParent->AbClear == 'R' || pParent->AbClear == 'B')
+	    *clearR = TRUE;
+	  pAb = pParent;
+	  pParent = pAb->AbEnclosing;	
+	}
+    }
+}
+
 
 /*----------------------------------------------------------------------
   InitLine computes the x,y position and the max width of the line pLine
@@ -1602,10 +1634,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrFloat            pfloatL = NULL, pfloatR = NULL;
   PtrAbstractBox      pAb, pAbRef = NULL;
   PtrBox              box;
-  char                clearL, clearR;
   int                 bottomL = 0, bottomR = 0, y;
   int                 orgX, orgY, width;
   int                 t, b, l, r, lbmp, rbmp;
+  ThotBool            clearL, clearR;
   ThotBool            variable, newFloat, still;
 #define MIN_SPACE 20
 
@@ -1613,8 +1645,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     return;
 
   /* clear values */
-  clearL = 'N';
-  clearR = 'N';
   newFloat = FALSE;
   /* relative line positions */
   orgX = 0;
@@ -1635,14 +1665,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 		    pAb->AbNotInLine || pAb->AbBox == NULL));
 	  if (still)
 	    box = GetNextBox (pAb, frame);
-	  else if (pAb && pAb->AbFloat == 'L')
-	    {
-	      pBox = box = NULL;
-	    }
-	  else if (pAb && pAb->AbFloat == 'R')
-	    {
-	      pBox = box = NULL;
-	    }
+	  else if (pAb && (pAb->AbFloat == 'L' || pAb->AbFloat == 'R'))
+	    pBox = box = NULL;
 	  else
 	    {
 	      pBox = box;
@@ -1664,10 +1688,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  {
 	    newFloat = pAb->AbFloat != 'N';
 	    pAbRef = pAb->AbWidth.DimAbRef;
-	    if (pAb->AbClear == 'L' || pAb->AbClear == 'B')
-	      clearL = 'L';
-	    if (pAb->AbClear == 'R' || pAb->AbClear == 'B')
-	      clearR = 'R';
 	  }
 	}
       else
@@ -1679,6 +1699,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       t = b = l = r = lbmp = rbmp = 0;
     }
 
+  /* check if a clear is requested */
+  SetClear (pBox, &clearL, &clearR);
   variable = (pBox && pAb &&
 	      pBox->BxType != BoFloatGhost &&
 	      (pAb->AbLeafType == LtText ||
@@ -1835,20 +1857,27 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       /* check if there is enough space between left and right floating boxes */
       if ((floatL || floatR) &&
 	  ((width > 0 && pLine->LiXMax < width) ||
-	   (floatL && floatL != pBox && clearL == 'L') ||
-	   (floatR && floatR != pBox && clearR == 'R')))
+	   (floatL && floatL != pBox && clearL) ||
+	   (floatR && floatR != pBox && clearR)))
 	{
 	  /* update line information */
-	  if (clearL == 'L' || clearR == 'R')
+	  if (clearL || clearR)
 	    {
-	      if (clearL == 'L' && pLine->LiYOrg < bottomL)
+	      if (clearL && pLine->LiYOrg < bottomL)
+		{
+		  //printf ("Clear left\n");
 		pLine->LiYOrg = bottomL;
-	      if (clearR == 'R' && pLine->LiYOrg < bottomR)
+		}
+	      if (clearR && pLine->LiYOrg < bottomR)
+		{
+		  //printf ("Clear right\n");
 		pLine->LiYOrg = bottomR;
+		}
 	    }
 	  else if (!newFloat)
 	    {
 	      /* not enough space: move to the first bottom */
+	      //printf ("Not enough space\n");
 	      if (floatR == NULL)
 		pLine->LiYOrg = bottomL;
 	      else if (floatL == NULL)
@@ -1961,9 +1990,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   int                 xi, val;
   int                 maxLength, minWidth;
   int                 t, b, l, r;
-  ThotBool            still;
-  ThotBool            toCut;
-  ThotBool            found;
+  ThotBool            still, toCut, found;
+  ThotBool            clearL, clearR;
 
   *adjust = TRUE;
   *breakLine = FALSE;
@@ -2095,7 +2123,16 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    }
 	}
 
-      if (pNextBox->BxAbstractBox->AbFloat != 'N' ||
+      /* check if a clear is requested */
+      SetClear (pNextBox, &clearL, &clearR);
+      if ((clearL && pBlock->BxLeftFloat && pLine->LiFirstBox != pNextBox) ||
+	  (clearR && pBlock->BxRightFloat && pLine->LiFirstBox != pNextBox))
+	{
+	  /* report the floating box to the next line */
+	  *full = TRUE;
+	  still = FALSE;
+	}
+      else if (pNextBox->BxAbstractBox->AbFloat != 'N' ||
 	  !pNextBox->BxAbstractBox->AbHorizEnclosing ||
 	  pNextBox->BxAbstractBox->AbNotInLine)
 	{
@@ -2116,6 +2153,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		  (lastbox->BxAbstractBox->AbFloat == 'R' &&
 		   !IsFloatSet (lastbox, *floatR, pBlock)))
 		{
+#ifdef IV
 		  if ((pBlock->BxType == BoFloatBlock ||
 		       lastbox->BxAbstractBox->AbClear != 'N') &&
 		      pLine->LiFirstBox != pNextBox &&
@@ -2127,6 +2165,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		      still = FALSE;
 		    }
 		  else
+#endif
 		    {
 		      pLine->LiRealLength = xi;
 		      /* handle a new floating box and rebuild the line */
@@ -3117,13 +3156,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
   int                 top, left, right, bottom, spacing;
-  ThotBool            toAdjust;
-  ThotBool            breakLine;
-  ThotBool            xAbs, yAbs;
-  ThotBool            extensibleBox;
-  ThotBool            full;
-  ThotBool            still;
-  ThotBool            standard;
+  ThotBool            toAdjust, breakLine;
+  ThotBool            xAbs, yAbs, extensibleBox;
+  ThotBool            full, still, standard;
 
   /* avoid any cycle */
   if (pBox->BxCycles > 0)
