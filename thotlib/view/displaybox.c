@@ -111,7 +111,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   ptrfont             font;
   ViewFrame          *pFrame;
   ThotBool            withbackground;
-  int                 xd, yd, i;
+  int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
 
@@ -231,7 +231,14 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case '?':
-	      DrawRectangle (frame, 1, 5, xd, yd, width, height, fg, 0, 0);
+	      /* Thot does not know how to display that symbol or character */
+	      /* Draw a box instead and leave some space (1 pixel) to the
+		 right and the bottom to avoid collision with the next char */
+	      if (width > 3)
+		w = width - 1;
+	      else
+		w = width;
+	      DrawRectangle (frame, 1, 5, xd, yd, w, height-1, fg, 0, 0);
 	      break;
 	    default:
 	      DrawChar (pBox->BxAbstractBox->AbShape, frame, xd, yd, font, fg);
