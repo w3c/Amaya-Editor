@@ -2555,6 +2555,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
+#ifndef BOOKMARKS
+       /* if bookmarks are not enabled, disable the menu */
+       TtaSetMenuOff (doc, 1, Bookmarks_);
+#endif /* BOOKMARKS */
+
        if (docType == docSource)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
