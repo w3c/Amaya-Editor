@@ -570,14 +570,15 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        FreeLibrary (hLib);
        return /* FATAL_EXIT_CODE */;
      }
+   
+   EnableWindow  (FrRef[frame], FALSE);
 
    ptrMainProc (FrRef[frame], printArgc, printArgv,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
    FreeLibrary (hLib);
 
-   if (!IsWindowEnabled (FrRef[frame]))
-      EnableWindow (FrRef[frame], TRUE);
+   EnableWindow (FrRef[frame], TRUE);
    SetFocus (FrRef[frame]);
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv[i]);
