@@ -926,16 +926,11 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	    {
 	      pAb = create->BxAbstractBox;
 	      DirectCreation (create, frame);
-	      /* Should son's boxes being handled too ? */
-	      while (pAb && pAb->AbFirstEnclosed)
-		{
-		  /* Volume computed is sufficient */
-		  /* Is a cleanup of the bottom of frame needed ? */
-		  if (y > 0)
-		    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
-		  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-		}
-	      
+	      /* Volume computed is sufficient */
+	      /* Is a cleanup of the bottom of frame needed ? */
+	      if (y > 0)
+		Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+	      pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 	      /* update of image is finished */
 	      FrameUpdating = FALSE;
 	    }
