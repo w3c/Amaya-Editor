@@ -2031,7 +2031,7 @@ void TtcChangeCharacters (Document document, View view)
 		 break;
 	       default:
 		 FontFamily = 'T';
-		 i = 0;
+		 i = 4;
 		 break;
 	       }
 #ifdef _WINDOWS 
