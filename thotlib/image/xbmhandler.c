@@ -33,6 +33,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *height, int zoom)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
   Pixmap              pixmap;
   Pixmap              bitmap;
   int                 status;
@@ -50,13 +51,14 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       *hif = h;
       *width = w;
       *height = h;
-#ifndef _GTK
       pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
       XCopyPlane (TtDisplay, bitmap, pixmap, GCpicture, 0, 0, w, h, 0, 0, 1);
       XFreePixmap (TtDisplay, bitmap);
-#endif /* _GTK */
       return (pixmap);
     }
+#else /* _GTK */
+  return (Drawable)NULL;
+#endif /* _GTK */
 #else /* _WINDOWS */
   return NULL;
 #endif /* !_WINDOWS */
@@ -70,6 +72,7 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, unsigned int bgPixel)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
   XImage             *pict;
   Pixmap              pix;
   int                 delta;
@@ -159,6 +162,7 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
       XDestroyImage (pict);
       XFreePixmap (TtDisplay, pix);
     }
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -167,6 +171,7 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   ----------------------------------------------------------------------*/
 ThotBool IsXbmFormat (char *fn)
 {
+#ifndef _GTK
 #ifdef _WINDOWS
    return (FALSE);
 #else  /* _WINDOWS */
@@ -180,4 +185,8 @@ ThotBool IsXbmFormat (char *fn)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);
 #endif /* !_WINDOWS */
+#else /* _GTK */
+   return FALSE;
+#endif /* !_GTK */
 }
+

@@ -47,19 +47,29 @@ static int             have_colors = 0;
 static void FindOutColor (Display *dsp, Colormap colormap,
 			  ThotColorStruct *colr)
 {
-   int                 i, match;
+   int                 i;
    int                 rd, gd, bd, dist, mindist;
    int                 cindx;
    int                 NumCells;
+#ifndef _GTK
+   int                 match;
+#else /* _GTK */
+   gboolean            match;
+#endif /* !_GTK */
 
 #ifdef _GTK
- match =  gdk_colormap_alloc_color (colormap, colr, FALSE, TRUE);
+ match = gdk_colormap_alloc_color ((GdkColormap *)colormap, (GdkColor *)colr, FALSE, TRUE);
 #else /* _GTK */
  match = XAllocColor (dsp, colormap, colr);
 #endif /* _GTK */
    NumCells = 0;
+#ifndef _GTK
    if (match == 0)
      {
+#else /* _GTK */
+ if (!match)
+     {
+#endif /* !_GTK */
 #ifdef _GTK
         NumCells = gdk_colormap_get_system_size ();
 #else /* _GTK */
@@ -70,7 +80,12 @@ static void FindOutColor (Display *dsp, Colormap colormap,
 	     for (i = 0; i < NumCells; i++)
 		def_colrs[i].pixel = i;
 #ifdef _GTK
-	     match =  gdk_colormap_alloc_colors (colormap, &def_colrs[0], NumCells, FALSE, TRUE, NULL); 
+	     match = gdk_colormap_alloc_colors ((GdkColormap *)colormap,
+						(GdkColor *)&def_colrs[0],
+						NumCells,
+						FALSE,
+						TRUE, 
+						NULL); 
 #else /* _GTK */
 	     XQueryColors (dsp, colormap, def_colrs, NumCells);
 #endif /* _GTK */
@@ -134,7 +149,7 @@ static void InstallColor (int i)
 	col.blue  = RGB_Table[i].blue * 256;
 
 	/* Find closest color */
-	FindOutColor (TtDisplay, TtCmap, &col);
+	FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
@@ -323,8 +338,8 @@ void InitDocColors (char *name)
 
   /* set up black and white Pixels */
 #ifdef _GTK
-  gdk_color_white (TtCmap, &gdkwhite);  
-  gdk_color_black (TtCmap, &gdkblack);
+  gdk_color_white (TtCmap, (GdkColor *)&gdkwhite);  
+  gdk_color_black (TtCmap, (GdkColor *)&gdkblack);
   Pix_Color[0] = gdkwhite.pixel;
   Pix_Color[1] = gdkblack.pixel;
 #else /* _GTK */
@@ -545,7 +560,7 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	   col.red   = red * 256;
 	   col.green = green * 256;
 	   col.blue  = blue * 256;
-	   FindOutColor (TtDisplay, TtCmap, &col);
+	   FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
 	   ExtColor[prev] = col.pixel;
 #endif /* _WINDOWS */
 	   /* check if this color is already in the table */
@@ -1056,120 +1071,120 @@ Pixmap CreatePattern (int disp, int fg, int bg, int motif)
    switch (motif)
      {
      case 1:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
-					     gray8_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
+					     gray8_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 2:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
-					     gray0_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
+					     gray0_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 3:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
-					     gray1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
+					     gray1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 4:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
-					     gray2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
+					     gray2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 5:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
-					     gray3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
+					     gray3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 6:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
-					     gray4_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
+					     gray4_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 7:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
-					     gray5_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
+					     gray5_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 8:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
-					     gray6_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
+					     gray6_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 9:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
-					     gray7_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
+					     gray7_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 10:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
-					     horiz1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
+					     horiz1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 11:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
-					     horiz2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
+					     horiz2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 12:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
-					     horiz3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
+					     horiz3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 13:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
-					     vert1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
+					     vert1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 14:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
-					     vert2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
+					     vert2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 15:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
-					     vert3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
+					     vert3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 16:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
-					     left1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
+					     left1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 17:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
-					     left2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
+					     left2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 18:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
-					     left3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
+					     left3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 19:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
-					     right1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
+					     right1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 20:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
-					     right2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
+					     right2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 21:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
-					     right3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
+					     right3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 22:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
-					     square1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
+					     square1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 23:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
-					     square2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
+					     square2_height, TtWDepth,(GdkColor *) &gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 24:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
-					     square3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
+					     square3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 25:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
-					     lozenge_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
+					     lozenge_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 26:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
-					     brick_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
+					     brick_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 27:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
-					     tile_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
+					     tile_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 28:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
-					     sea_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
+					     sea_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      case 29:
-       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
-					     basket_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+       pixmap = (Pixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
+					     basket_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
        break;
      default:
        pixmap = None;

@@ -42,15 +42,8 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-#ifdef _WINDOWS
-  *width = 0;
-  *height = 0;
-  *wif = 0;
-  *hif = 0;
-  *xif = 0;
-  *yif = 0;
-  return (NULL);
-#else /* !_WINDOWS */
+#ifndef _WINDOWS
+#ifndef _GTK
   int                 status;
   Pixmap              pixmap;
   XpmAttributes       att;
@@ -86,6 +79,23 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       att.valuemask = valuemask;/* reinitialises the value mask */
       return (Drawable) pixmap;
     }
+#else /* _GTK */
+  *width = 0;
+  *height = 0;
+  *wif = 0;
+  *hif = 0;
+  *xif = 0;
+  *yif = 0;
+  return (NULL);
+#endif /* _GTK */
+#else /* _WINDOWS */
+  *width = 0;
+  *height = 0;
+  *wif = 0;
+  *hif = 0;
+  *xif = 0;
+  *yif = 0;
+  return (NULL);
 #endif  /* _WINDOWS */
 }
 
@@ -96,6 +106,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
+#ifndef _GTK
 #ifndef _WINDOWS 
    register int        i;
    XpmAttributes       att;
@@ -150,6 +161,7 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    XpmFreeXpmImage (&image);
    att.valuemask = valuemask;
 #endif /* _WINDOWS */
+#endif /* !_GTK */
 }			
 
 /*----------------------------------------------------------------------

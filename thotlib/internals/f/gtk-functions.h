@@ -14,11 +14,11 @@ extern void FrameRedraw ( int frame,
                           Dimension width,
                           Dimension height );
 
-extern void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data);
+extern void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data);
 
-extern void FrameHScrolled ( GtkAdjustment *w,
+extern void FrameHScrolledGTK ( GtkAdjustment *w,
                              int frame );
-extern void FrameVScrolled ( GtkAdjustment *w,
+extern void FrameVScrolledGTK ( GtkAdjustment *w,
                              int frame );
 extern void TtcLineUp ( Document document,
                         View view );
@@ -88,11 +88,10 @@ extern ThotTranslations InitTranslations ( char *appliname );
 extern void APP_TextCallbackGTK (GtkWidget *w, int frame);
 extern void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue);
 
+/*extern gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data);*/
+/*extern gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data);*/
 
-
-extern gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data);
-extern gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data);
-extern gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data);
+extern gint ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data);
 
 
 
@@ -119,10 +118,10 @@ gboolean LeaveCallbackGTK (GtkWidget *widget,
 gboolean EnterCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data);
-void ConnectSignalGTK (ThotWidget w, gchar *signal_name, GtkFunction callback, gpointer data);
+void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, gpointer data);
 
 
-void RemoveSignalGTK (ThotWidget w, gchar *signal_name);
+void RemoveSignalGTK (GtkObject *w, gchar *signal_name);
 
 
 
@@ -137,3 +136,4 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev);
 gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
 void CreateColorSelectionGTK (int x, int y);
+

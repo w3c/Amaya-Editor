@@ -61,10 +61,6 @@ void FontOrig (ptrfont font, char firstchar, int *pX, int *pY)
 static void LoadColor (int fg)
 {
 #ifdef _GTK
-  ThotColor           gc_fg;
-#endif /* _GTK */
-
-#ifdef _GTK
   /* Color of the box */
   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
 #else /* _GTK */
@@ -216,9 +212,6 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
   char               *ptcar;
   int                 width;
   register int        j;
-#ifdef _GTK
-  CHAR_T              car;
-#endif /* _GTK */
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin + FontBase (font);
@@ -393,7 +386,9 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	nb = boxWidth / width;
 	xcour = x + (boxWidth % width);
 	y = y + FrameTable[frame].FrTopMargin - FontBase (font);
-	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+#ifndef _GTK
+      	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+#endif /* !_GTK */
 	LoadColor (fg);
 
 	/* draw the points */
@@ -694,10 +689,9 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    if (pattern != 0)
      {
 #ifdef _GTK
-      gdk_gc_set_tile (TtGreyGC, pattern);
-      gdk_draw_polygon (FrRef[frame], TtGreyGC,TRUE,  point, 3);
-      gdk_pixmap_unref (pattern);
-
+      gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pattern);
+      gdk_draw_polygon (FrRef[frame], TtGreyGC,TRUE, point, 3);
+      gdk_pixmap_unref ((GdkPixmap *)pattern);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pattern);     
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
@@ -1125,9 +1119,9 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
   if (pat != 0)
     {
 #ifdef _GTK
-      gdk_gc_set_tile ( TtGreyGC, pat);    
-      gdk_draw_rectangle ( FrRef[frame], TtGreyGC, TRUE, x, y, width, height);
-      gdk_pixmap_unref (pat);
+      gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);    
+      gdk_draw_rectangle (FrRef[frame], TtGreyGC, TRUE, x, y, width, height);
+      gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height);
@@ -1189,9 +1183,9 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
    if (pat != 0)
      {
 #ifdef _GTK
-      gdk_gc_set_tile (TtGreyGC, pat);
+      gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 5);
-      gdk_pixmap_unref (pat); 
+      gdk_pixmap_unref ((GdkPixmap *)pat); 
 #else /* _GTK */
        XSetTile (TtDisplay, TtGreyGC, pat);
        XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -1311,9 +1305,9 @@ static void DoDrawLines (int frame, int thick, int style,
    if (pat != 0) 
      {
 #ifdef _GTK
-       gdk_gc_set_tile (TtGreyGC, pat);
+       gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
        gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, points, npoints); 
-       gdk_pixmap_unref (pat);
+       gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
        XSetTile (TtDisplay, TtGreyGC, pat);
        XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints,
@@ -1597,9 +1591,9 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   if (pat != 0)
     {
 #ifdef _GTK
-      gdk_gc_set_tile ( TtGreyGC, pat);
+      gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
-      gdk_pixmap_unref (pat);
+      gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
@@ -1996,7 +1990,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	point[12].y = point[0].y;
 
 #ifdef _GTK
-	gdk_gc_set_tile (TtGreyGC, pat);
+	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE, point, 13);
 	
 	/* Trace quatre arcs de cercle */
@@ -2006,7 +2000,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 			xarc[i].width, xarc[i].height, 
 			xarc[i].angle1,xarc[i].angle2); 
 	}
-	gdk_pixmap_unref (pat);
+	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -2028,7 +2022,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 			xarc[i].width, xarc[i].height, 
 			xarc[i].angle1,xarc[i].angle2);
 	}
-	gdk_draw_segments (FrRef[frame], TtLineGC, seg, 4);
+	gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
 #else /* _GTK */
 	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
@@ -2059,9 +2053,9 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    if (pat != 0)
      {
 #ifdef _GTK
-      gdk_gc_set_tile ( TtGreyGC, pat);
+      gdk_gc_set_tile ( TtGreyGC, (GdkPixmap *)pat);
       gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE, x, y, width, height, 0, 360 * 64);
-      gdk_pixmap_unref (pat);
+      gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
       XSetTile (TtDisplay, TtGreyGC, pat);
       XFillArc (TtDisplay, FrRef[frame], TtGreyGC, x, y, width, height, 0, 360 * 64);
@@ -2403,7 +2397,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	point[12].y = point[0].y;
 
 #ifdef _GTK
-	gdk_gc_set_tile (TtGreyGC, pat);
+	gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE,  point, 13);
 	/* Trace quatre arcs de cercle */
 	for (i = 0; i < 4; i++)
@@ -2413,7 +2407,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			xarc[i].width, xarc[i].height, 
 			xarc[i].angle1, xarc[i].angle2);
 	  }
-	gdk_pixmap_unref (pat);
+	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
@@ -2442,7 +2436,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	if (arc2 < height / 2)
 	  {
 #ifdef _GTK
-	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 5);
+	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 5);
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
 #endif /* _GTK */
@@ -2450,7 +2444,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 	else
 	  {
 #ifdef _GTK
-	   gdk_draw_segments (FrRef[frame], TtLineGC, seg, 4);
+	   gdk_draw_segments (FrRef[frame], TtLineGC, (GdkSegment *)seg, 4);
 #else /* _GTK */
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 #endif /* _GTK */
@@ -2482,10 +2476,10 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    if (pat != 0)
      {
 #ifdef _GTK
-        gdk_gc_set_tile (TtGreyGC, pat);
+        gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 	gdk_draw_arc (FrRef[frame], TtGreyGC, TRUE,
 		  x, y, width, height, 0, 360 * 64);
-	gdk_pixmap_unref (pat);
+	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
@@ -2650,7 +2644,7 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
    if (pat != 0)
      {
 #ifdef _GTK
-        gdk_gc_set_tile (TtGreyGC, pat);
+        gdk_gc_set_tile (TtGreyGC, (GdkPixmap *)pat);
 #else /* _GTK */
 	XSetTile (TtDisplay, TtGreyGC, pat);
 #endif /* _GTK */
@@ -2670,7 +2664,7 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
 #endif /* _GTK */
 	}
 #ifdef _GTK
-	gdk_pixmap_unref (pat);
+	gdk_pixmap_unref ((GdkPixmap *)pat);
 #else /* _GTK */
 	XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
