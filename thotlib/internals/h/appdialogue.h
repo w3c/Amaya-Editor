@@ -123,39 +123,20 @@ extern Menu_Ctl    *	DocumentMenuList;
 #define T_AIupdate			48
 #define T_initevents			49
 #define T_rprint	50
-#define T_deletepage            51
-#define T_deletepageab          52
-#define T_redisplay		53
-#define T_writedocument         54
-#define T_enter	                55
-#define T_cmdpaste	        56
-#define T_deletenextchar        57
-#define T_checktable            58
-#define T_cleartable		59
-#define T_resizetable           60
-#define T_firstcolumn		61
-#define T_checkcolumn		62
-#define T_checktableheight      63
-#define T_createtable           64
-#define T_selecttable           65
-#define T_singlecell            66
-#define T_attrtable             67
-#define T_abref                 68
-#define T_vertspan              69
-#define T_excepttable           70 
-#define T_lastsaved             71
-#define T_condlast              72
-#define T_pastesiblingtable     73
-#define T_refattr               74
-#define T_ruleattr              75
-#define T_createhairline        76
-#define T_holotable             77
-#define T_checkextens           78
-#define T_entertable            82
-#define T_insertpage            83
-#define T_cutpage               84
-#define T_autosave              85
-#define MAX_LOCAL_ACTIONS       86
+#define T_redisplay		51
+#define T_writedocument         52
+#define T_enter	                53
+#define T_cmdpaste	        54
+#define T_deletenextchar        55
+#define T_checktable            56
+#define T_cleartable		57
+#define T_resizetable           58
+#define T_firstcolumn		59
+#define T_checkcolumn		60
+#define T_checktableheight      61
+
+#define T_autosave              62
+#define MAX_LOCAL_ACTIONS       63
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.1c, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -43,9 +43,9 @@ formulaires. cette option est également disponible à&nbsp;partir de l'option
 <strong>Mode Editeur</strong> du menu d'Édition, ou bien par le raccourci
 clavier (<strong>Shift-Control-*</strong> par défaut).</p>
 
-<p>Amaya vous permet d'acceder et d'éditer des documents HTML ainsi que
+<p>Amaya vous permet d'accéder et d'éditer des documents HTML ainsi que
 certains types de documents XML : XHTML, MathML et SVG. Il vous permet
-d'acceder (en lecture seulement) aux autres types de documents XML, de
+d'accéder (en lecture seulement) aux autres types de documents XML, de
 visualiser leur contenu et d'interpréter les feuilles de style CSS
 associées.</p>
 
@@ -136,7 +136,7 @@ matières. Si l'utilisateur a associé un raccourci clavier Alt-p à une
 commande d'édition de Amaya, ce raccourci clavier ne sera pas accessible
 quand ces pages d'aide sont affichées. Par défaut la touche de modification
 utilisée est <strong>Alt</strong>. Le menu de préférences
-<code>Special/Preferences/General</code> permet de modifier cette
+<code>Spécial/Préférences/Général</code> permet de modifier cette
 configuration par défaut. L'utilisateur peut utiliser la touche
 <strong>Control</strong> au lieu de <strong>Alt</strong> et peut décider de
 désactiver la prise en compte des accès rapides.</p>

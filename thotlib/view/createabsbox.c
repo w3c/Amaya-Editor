@@ -918,11 +918,6 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 		stop = TRUE;
 	    while (!stop);
 	    found = pElSibling == NULL;
-	    /* traitement particulier pour les lignes de tableau */
-	    if (ThotLocalActions[T_condlast] != NULL)
-	      (*(Proc2)ThotLocalActions[T_condlast]) (
-			(void *)pElem,
-			(void *)&found);
 	    break;
        
 	  case PcReferred:
@@ -3734,13 +3729,6 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      {
 		      pFirstAncest = pElAttr->ElParent;
 		      apply = TRUE;
-		      /* exceptions for attributes related to tables */
-		      if (ThotLocalActions[T_ruleattr] != NULL)
-			(*(Proc4)ThotLocalActions[T_ruleattr]) (
-				(void *)pEl,
-				(void *)pAttr,
-				(void *)pDoc,
-				(void *)&apply);
 		      if (apply)
 		        {
 			view = AppliedView (pEl, pAttr, pDoc, viewNb);
@@ -3843,13 +3831,6 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      else
 		pSchPattr = pSchPres;
 	      apply = TRUE;
-	      /* exceptions for the attributes of a table */
-	      if (ThotLocalActions[T_ruleattr] != NULL)
-		(*(Proc4)ThotLocalActions[T_ruleattr]) (
-			(void *)pEl,
-			(void *)pAttr,
-			(void *)pDoc,
-		       	(void *)&apply);
 	      if (apply)
 		{
 		  view = AppliedView (pEl, pAttr, pDoc, viewNb);

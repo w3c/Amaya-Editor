@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Accessibilité dans Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,14 +13,12 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td>
-        <p><img alt="W3C" src="../images/w3c_home" /><img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="ShortCuts.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a></p>
+      <td><p><a href="ShortCuts.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -35,17 +33,17 @@
 href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C. Certaines caractéristiques, comme par exemple
 l'obligation d'avoir un attribut "alt" pour les images et les zones actives ,
-ont déjà été incluses _ il est impossible d'ajouter une image tant qu'il n'y a
-pas de texte alterné. Amaya produit aussi automatiquement un balisage valide
-conforme au W3C. D'autres caractéristiques, comme les longues descriptions
-spécifiques et les légendes, doivent être effectuées par l'auteur à l'aide des
-attributs des menus ou des menus de structure.</p>
+ont déjà été incluses _ il est impossible d'ajouter une image tant qu'il n'y
+a pas de texte alterné. Amaya produit aussi automatiquement un balisage
+valide conforme au W3C. D'autres caractéristiques, comme les longues
+descriptions spécifiques et les légendes, doivent être effectuées par
+l'auteur à l'aide des attributs des menus ou des menus de structure.</p>
 
 <p>La documentation d'aide d'Amaya décrit <a
 href="HTML-elements/infoTypes.html.fr">comment utiliser quelques éléments
 individuels HTML</a>et inclue une aide en ligne sur comment assurer que les
-pages produites soient accessibles. De plus, les guides en ligne plus complets
-sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
+pages produites soient accessibles. De plus, les guides en ligne plus
+complets sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
 Accessibility Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web
 Accessibility Initiative</a> du W3C publie également "<a
 href="http://www.w3.org/WAI/References/QuickTips/#Introduction">De brefs
@@ -54,21 +52,21 @@ pratiques qui sont :</p>
 <ul>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
-  <li><strong>Zones actives.</strong> Utilisez le <code>MAP</code> côté-client
-    et le texte pour les zones sensibles.</li>
+  <li><strong>Zones actives.</strong> Utilisez le <code>MAP</code>
+    côté-client et le texte pour les zones sensibles.</li>
   <li><strong>Multimedia.</strong> Fournissez des légendes et des
     transcriptions audio, et des descriptions vidéo.</li>
-  <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens même
-    lorsqu'il est lu en-dehors du contexte. Par exemple, évitez "cliquer
-  ici".</li>
+  <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens
+    même lorsqu'il est lu en-dehors du contexte. Par exemple, évitez "cliquer
+    ici".</li>
   <li><strong>Organisation de la page.</strong> Utilisez les en-têtes, les
     listes, ainsi qu'une structure logique. Utilisez les <strong>CSS</strong>
     pour la bordure et le style quand cela est possible.</li>
   <li><strong>Graphismes &amp; cartes.</strong> Récapitulez ou utilisez
     l'attribut <code>longdesc</code>.</li>
-  <li><strong>Scripts, applets, &amp; plug-ins.</strong> Fournissez un contenu
-    alternatif dans le cas où les caractéristiques actives sont inaccessibles
-    ou sans support.</li>
+  <li><strong>Scripts, applets, &amp; plug-ins.</strong> Fournissez un
+    contenu alternatif dans le cas où les caractéristiques actives sont
+    inaccessibles ou sans support.</li>
   <li><strong>Frames.</strong> Utilisez<code>NOFRAMES</code> ainsi que des
     titres significatifs.</li>
   <li><strong>Tables.</strong> Faîtes une lecture sensée ligne par ligne.
@@ -97,14 +95,14 @@ l'exception la saisie de texte) sans utiliser le clavier.</p>
   <li>Editer la source.</li>
   <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
     incluant une feuille de style.</li>
-  <li>Les accès rapides et l'activation des commandes au clavier, des liens et
-    des contrôles de forme.</li>
+  <li>Les accès rapides et l'activation des commandes au clavier, des liens
+    et des contrôles de forme.</li>
 </ul>
 </div>
 
-<p><a href="Configure.html.fr"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a></p>
+<p><a href="Configure.html.fr"><img alt="previous" src="../images/left.gif"
+/></a> <a href="Manual.html.fr"><img alt="top" src="../images/up.gif"
+/></a></p>
 <hr />
 </body>
 </html>

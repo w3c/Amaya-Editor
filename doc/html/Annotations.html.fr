@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -74,7 +74,7 @@ lui sont présentées dans une nouvelle fenêtre.</p>
 <p style="text-align: center"><img src="../images/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
-<p>Une annotation possède plusieurs propriétés :</p>
+<p>Une annotation possède plusieurs propriétés&nbsp;:</p>
 <ul>
   <li>Point de stockage: dans le système de fichiers de l'utilisateur ou sur
     un serveur d'annotations</li>
@@ -98,7 +98,7 @@ href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Annotati
 HOWTO</a>".</p>
 
 <p>Les <strong>annotations locales</strong> ne nécessitent pas l'utilisation
-de serveur. Elles sont enregistrées sous le repértoire de configuration
+de serveur. Elles sont enregistrées sous le répertoire de configuration
 d'Amaya, dans un répertoire spécifique appelé <code>annotations</code> et
 peuvent être visualisées uniquement par leur auteur (selon les droits d'accès
 en fonction). Ce répertoire comporte trois sortes de fichiers:</p>
@@ -107,8 +107,8 @@ en fonction). Ce répertoire comporte trois sortes de fichiers:</p>
     <dd>les URL associées aux fichiers dans lesquels les méta-données des
       annotations sont sauvegardées.</dd>
   <dt><strong>index + random suffix</strong></dt>
-    <dd>un fichier contenant les meta-données d'une annotation relative à une
-      URL. Les meta-données sont spécifiées avec RDF.</dd>
+    <dd>un fichier contenant les méta-données d'une annotation relative à une
+      URL. Les méta-données sont spécifiées avec RDF.</dd>
   <dt><strong>annot + random suffix.html</strong></dt>
     <dd>contient le corps de l'annotation enregistrée en XHTML.</dd>
 </dl>
@@ -157,7 +157,7 @@ alt="configuration dialog box" /></p>
       serveurs d'annotations sont spécifiés à la suite, séparés par un
       espace. Sous Windows, ils sont spécifiés les uns après les autres et
       séparés par la touche <code>Return</code>. Par défaut, ce champ est
-      initialisé avec <code>localhost</code>. 
+      initialisé avec <code>localhost</code>.
       <p><em>ASTUCE</em>: Vous pouvez inhiber la consultation d'un serveur
       d'annotations en préfixant l'URL du serveur avec le caractère '-'.</p>
     </dd>
@@ -283,7 +283,7 @@ d'annotations. Pour appliquer chacun de ces filtres, cliquez sur le texte
 correspondant pour sélectionner un type donné d'annotation puis sur le bouton
 correspondant à l'action. Les commandes <strong>Montrer Tout</strong> et
 <strong>Cacher Tout</strong> s'appliquent sur l'ensemble des annotations. On
-prefixe chaque entrée du menu d'un espace (' '), d'une étoile ('*') et d'un
+préfixe chaque entrée du menu d'un espace (' '), d'une étoile ('*') et d'un
 tiré ('-') pour indiquer que toutes les annotations appartenant à une
 catégorie donnée sont visibles, cachées ou partiellement cachées,
 respectivement.</p>
@@ -320,14 +320,14 @@ alt="Link window shows annotations" /></p>
 
 <h3 id="Moving">Déplacer des annotations</h3>
 
-<p>Amaya vous permet également de deplacer une annotation vers un autre
+<p>Amaya vous permet également de déplacer une annotation vers un autre
 endroit du document, par exemple pour rattacher des <a
 href="Annotations.html#Issues1">annotations trompeuses ou orphelines</a>.
 Vous pouvez déplacer une annotation soit vers la sélection courante, soit
-vers la valeur d'un XPointer. Actuellemnt, on ne peut déplacer des
+vers la valeur d'un XPointer. Actuellement, on ne peut déplacer des
 annotations que dans le document où elles ont été créées.</p>
 
-<p>Pour déplacer une annotation vers la sélection courante, il faut dábord
+<p>Pour déplacer une annotation vers la sélection courante, il faut d'abord
 ouvrir une fenêtre d'annotation et sélectionner une partie du document
 annoté. Puis, dans la fenêtre d'annotation, appeler le menu
 <strong>Annotations/Move to selection</strong>. Amaya déplace alors l'icône
@@ -336,7 +336,7 @@ modifiée. Pour rendre ce changement effectif, vous devrez la sauver. De la
 même manière que pour la création, vous pouvez déplacer une annotation vers
 la position courante du curseur sans avoir besoin de faire la sélection.</p>
 
-<p>Pous pouvez aussi mémoriser la position où vous voulez déplacer une
+<p>Vous pouvez aussi mémoriser la position où vous voulez déplacer une
 annotation, par exemple pour déplacer plusieurs annotations vers le même
 endroit ou pour se déplacer dans la fenêtre avant de faire la manipulation.
 Pour cela, faire la sélection (ou placer le curseur) à l'endroit désiré puis,

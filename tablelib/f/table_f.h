@@ -6,15 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SetAttrColTitle ( PtrElement pElTitleCol,
-                              PtrDocument pDoc );
-extern void TableauLoadResources ( void );
-
 #else /* __STDC__ */
-
-extern void SetAttrColTitle (/* PtrElement pElTitleCol,
-                                PtrDocument pDoc */);
-extern void TableauLoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CreateWithException ( PtrElement pEl,
-                                  PtrDocument pDoc );
 extern int TtaGetDocumentProfile ( Document document );
 extern void TtaSetDocumentProfile ( Document document,
                                     int profile );
@@ -115,8 +113,6 @@ extern ThotBool TtaIsXmlSSchema ( SSchema schema );
 
 #else /* __STDC__ */
 
-extern void CreateWithException (/* PtrElement pEl,
-                                    PtrDocument pDoc */);
 extern int TtaGetDocumentProfile (/* Document document */);
 extern void TtaSetDocumentProfile (/* Document document,
                                       int profile */);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -57,7 +57,7 @@ bouton <img alt="floppy" src="../images/floppy.gif" />. Cette commande sauve
 le document courant à l'adresse d'où il a été amené. Si la réponse du serveur
 inclut l'en-tête HTTP <code>Content-Location</code>, la cible de la
 sauvegarde sera l'URL précisée par cet en-tête. Ceci est utile pour enlever
-les ambiguïtés induites par la négociation du contenu.  Par exemple, soient
+les ambiguïtés induites par la négociation du contenu. Par exemple, soient
 report.html.fr et report.html.en deux versions d'un même document, une écrite
 en français, l'autre en anglais. De même, on utilisera l'URL virtuelle
 report.html pour référencer ce document. En fonction de la configuration du
@@ -75,7 +75,7 @@ document quand seul le nom du serveur ou le répertoire du serveur ont donné.
 C'est très utile au moment de la navigation, mais ça n'est pas supporté par
 la méthode "PUT". Dans ce cas, Amaya détecte que le nom du document manque et
 propose d'utiliser un nom par défaut pour répondre à la demande. Notez que
-l'utilisation de l'en-tête<code> Content-Location</code> permet de
+l'utilisation de l'en-tête<code>Content-Location</code> permet de
 s'affranchir de ce problème.</p>
 
 <p>Si quelqu'un a besoin de sauver des images nouvellement ajoutées dans un
@@ -106,18 +106,18 @@ sont utilisés comme suit :</p>
   <li>Le <strong>Format de document</strong> propose le choix entre
     <strong>HTML</strong>, <strong>XML</strong> (XHTML) et
     <strong>Text</strong> pour les documents HTML. Ce sous-menu n'est pas
-    proposé quan on sauve un document SVG, MathML, CSS out tout autre type.
+    proposé quand on sauve un document SVG, MathML, CSS ou tout autre type.
     Par défaut Amaya conserve le format courant du document. Le format Text
     (<a href="#L1105">voir plus bas</a>) supprime les balises HTML et les
     remplace par des espaces, sauts de lignes, etc.</li>
   <li>Le champ <strong>Adresse du document</strong> indique l'adresse où le
     fichier HTML a été écrit. Ce peut être un fichier dans le système du
     fichier local (par exemple "/pub/html/welcome.html") ou le nom d'un URI
-    lointain (par exemple "http://www.w3.org/pub/Welcome.html"). 
+    lointain (par exemple "http://www.w3.org/pub/Welcome.html").
     <p><strong>Notez</strong>que vous devrez donner le chemin complet comme
     si il n'y avait aucun moyen de deviner le nom de "http://www.w3.org/pub".
     Vous devrez également vous assurer que vous avez le <strong>droit
-    d'éxécuter une méthode PUT</strong> dans le cas d'une adresse lointaine.
+    d'exécuter une méthode PUT</strong> dans le cas d'une adresse lointaine.
     Regardez la page <a
     href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur
     pour permettre la méthode PUT</a> ou demander à votre administrateur
@@ -134,7 +134,7 @@ sont utilisés comme suit :</p>
     attributs <strong>SRC</strong> pour pointer vers de nouvelles adresses
     d'images. Les nouvelles adresses seront des URIs relatifs.</li>
   <li>Le choix <strong>Transformer les URIs</strong> transforme tous les URIs
-    courants en URIs relatifs quand c'est possible. Biensûr, si le document
+    courants en URIs relatifs quand c'est possible. Bien sûr, si le document
     est sauvé dans un fichier local et si les URIs pointent sur des fichiers
     lointains, les URIs resteront absolus. Ceci assure que tous les liens
     dans le document restent corrects après la copie. Cependant, si vous avez
@@ -146,14 +146,14 @@ sont utilisés comme suit :</p>
     des images (si <strong>Copier les Images</strong> a été sélectionné) à un
     autre endroit que le fichier HTML. Ce champ devrait contenir le nom d'un
     répertoire dans le système de fichier local ou une adresse dans le
-    serveur lointain. 
+    serveur lointain.
     <ul>
       <li>en utilisant un chemin relatif, les images sont stockées à une
         adresse relative au répertoire du document. Par exemple, si l'adresse
         du document est "http://www.w3.org/pub/Welcome.html" et que l'adresse
         des images est "Images", une image "W3C.png" contenue dans le
         document est stockée à l'URI "http://www.w3.org/pub/Images/W3C.png"
-        et le fichier HTML est modifiée le référant à : 
+        et le fichier HTML est modifiée le référant à :
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>C'est la même chose dans le cas d'une adresse dans le fichier
         système local.</p>
@@ -163,7 +163,7 @@ sont utilisés comme suit :</p>
         l'exemple précédent, si l'adresse des images spécifiée est
         "http://pub/Images", l'image est stockée à l'adresse
         "http://www.w3.org/pub/Images/W3C.png" et le fichier HTML
-        correspondant est modifié de la manière suivante : 
+        correspondant est modifié de la manière suivante :
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
     </ul>
@@ -174,7 +174,7 @@ sont utilisés comme suit :</p>
 <ul>
   <li>Le fait de cliquer sur <strong>Confirmer</strong> débute le processus
     de transformation du document et un événement demande confirmation dans
-    les deux cas suivants : 
+    les deux cas suivants :
     <ol>
       <li>Le document a été sauvé sur un serveur lointain. L'URI complet qui
         doit être écrit est visualisé pour vérification.</li>
@@ -192,8 +192,8 @@ sont utilisés comme suit :</p>
         document existe déjà.</li>
     </ul>
   </li>
-  <li>En clicquant sur <strong>Butiner</strong> l'utilisateur peur choisir le
-    répertoire et le fichier de sauvegarde : 
+  <li>En cliquant sur <strong>Butiner</strong> l'utilisateur peur choisir le
+    répertoire et le fichier de sauvegarde&nbsp;:
     <ul>
       <li>Le sélecteur <strong>Répertoires</strong> montre les répertoires
         contenus dans le répertoire courant. Il devrait être utilisé pour

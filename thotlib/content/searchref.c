@@ -383,7 +383,7 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
    PtrReference        pRef, pNextRef;
    PtrAttribute        pAttr, pNextAttr;
    PtrDocument         pDocRef, pNextDocRef;
-   ThotBool            attrRef, delAttr;
+   ThotBool            delAttr;
    PtrExternalDoc      pExtDoc;
    PtrElement          pElemRef;
    int                 l;
@@ -464,16 +464,6 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 		     pElemRef = pRef->RdElement;
 		  SetReference (pElemRef, pRef->RdAttribute, pRoot, pDocRef,
 				pDoc, FALSE, FALSE);
-		  /* si c'est une reference par attribut, verifie la */
-		  /* validite de l'attribut dans le cas des extensions de */
-		  /* cellule des tableaux */
-		  if (pRef->RdAttribute != NULL)
-		     if (ThotLocalActions[T_checkextens] != NULL)
-			(*(Proc4)ThotLocalActions[T_checkextens]) (
-			    (void *)pRef->RdAttribute,
-			    (void *)pRef->RdElement,
-			    (void *)pRef->RdElement,
-			    (void *)TRUE);
 	       }
 	     pRef = pNextRef;	/* passe a la reference suivante */
 	     pDocRef = pNextDocRef;
@@ -502,30 +492,14 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 		       if (!IsASavedElement (pElRef))
 			 if (!IsWithinANewElement (pElRef))
 			   {
-			     /* verifie la validite de l'attribut dans le cas des */
-			     /* extensions de cellule des tableaux */
-			     if (ThotLocalActions[T_checkextens] != NULL)
-			       (*(Proc4)ThotLocalActions[T_checkextens]) (
-					(void *)pAttr,
-				       	(void *)pRoot,
-				       	(void *)pRoot,
-				       	(void *)TRUE);
 			     if (DocOfSavedElements != pDoc)
 			       /* reference et objet reference' sont */
 			       /* dans des documents differents, on */
 			       /* supprime l'attribut, sauf dans le */
 			       /* cas particulier des tableaux. */
 			       {
-				 attrRef = TRUE;
-				 if (ThotLocalActions[T_refattr] != NULL)
-				   (*(Proc2)ThotLocalActions[T_refattr]) (
-					(void *)pAttr,
-					(void *)&attrRef);
-				 if (!attrRef)
-				   {
-				   RemoveAttribute (pRoot, pAttr);
-				   delAttr = TRUE;
-				   }
+				 RemoveAttribute (pRoot, pAttr);
+				 delAttr = TRUE;
 			       }
 			   }
 		     if (delAttr)

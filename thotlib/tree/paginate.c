@@ -49,6 +49,7 @@
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
+#include "memory_f.h"
 #include "paginate_f.h"
 #include "pagecommands_f.h"
 #include "presrules_f.h"
@@ -59,6 +60,8 @@
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "presvariables_f.h"
+#include "references_f.h"
+#include "tableH_f.h"
 #include "tree_f.h"
 #include "units_f.h"
 #include "writepivot_f.h"
@@ -73,7 +76,6 @@ static int          pagesCounter;
 
 
 #ifndef PAGINEETIMPRIME
-
 /*----------------------------------------------------------------------
   AbortPageSelection
   Annule et deplace si besoin la selection courante du document.
@@ -224,11 +226,296 @@ static ThotBool AbortPageSelection (PtrDocument pDoc, int schView,
 
 
 /*----------------------------------------------------------------------
+  InsertPageInTable       Si pElPage est une marque de page dans une
+  structure demandant une coupure spe'ciale, cree les elements a repeter
+  devant et derriere le saut de page puis cree les paves de ces elements
+  ainsi que ceux du saut de page
+  et retourne Vrai. Si on n'est pas dans une structure a coupure speciale,
+  ne fait rien et retourne Faux.
+  ----------------------------------------------------------------------*/
+void InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb,
+			ThotBool * cutDone)
+{
+   PtrElement          pEl, pElToCopy, pSpecial;
+   ThotBool             finish;
+
+   *cutDone = FALSE;
+   /* cherche les ascendants qui demandent un traitement special des */
+   /* coupures par saut de page */
+   pSpecial = pElPage->ElParent;
+   finish = FALSE;
+   while (!finish)
+     {
+	if (pSpecial == NULL)
+	   finish = TRUE;
+	else
+	  {
+	     if (TypeHasException (ExcPageBreak, pSpecial->ElTypeNumber,
+				   pSpecial->ElStructSchema))
+		/* cet element demande une coupure speciale */
+	       {
+		  *cutDone = TRUE;
+		  /*cherche l'element a repeter */
+		  pElToCopy = SearchTypeExcept (pSpecial, pElPage,
+						ExcPageBreakRepBefore, FALSE);
+		  if (pElToCopy != NULL)
+		     /* il y a bien un element a repeter avant le saut de page */
+		    {
+		       pEl = NewSubtree (pElToCopy->ElTypeNumber,
+					 pElToCopy->ElStructSchema, pDoc,
+					 FALSE, TRUE, TRUE, TRUE);
+		       GetReference (&pEl->ElSource);
+		       if (pEl->ElSource == NULL)
+			  DeleteElement (&pEl, pDoc);
+		       else
+			 {
+			    pEl->ElSource->RdElement = pEl;
+			    pEl->ElSource->RdTypeRef = RefInclusion;
+			    /* insere l'element cree' dans l'arbre abstrait */
+			    InsertElementBefore (pElPage, pEl);
+			    /* lie l'inclusion a l'element trouve' */
+			    if (SetReference (pEl, NULL, pElToCopy, pDoc, pDoc,
+					      FALSE, FALSE))
+			       /* l'element a inclure est connu, on le copie */
+			       CopyIncludedElem (pEl, pDoc);
+			    /* cree les paves du nouvel element */
+			    CreateAllAbsBoxesOfEl (pEl, pDoc);
+			 }
+		    }
+		  if (viewNb > 0)
+		     /* cree les paves du saut de page */
+		     CreateNewAbsBoxes (pElPage, pDoc, viewNb);
+
+		  /*cherche l'element a repeter */
+		  pElToCopy = SearchTypeExcept (pSpecial, pElPage,
+						ExcPageBreakRepetition, FALSE);
+		  if (pElToCopy != NULL)
+		     /* il y a bien un element a repeter apres le saut de page */
+		    {
+		       pEl = NewSubtree (pElToCopy->ElTypeNumber,
+					 pElToCopy->ElStructSchema, pDoc,
+					 FALSE, TRUE, TRUE, TRUE);
+		       /* associe un bloc reference a l'element cree' */
+		       GetReference (&pEl->ElSource);
+		       if (pEl->ElSource == NULL)
+			  DeleteElement (&pEl, pDoc);
+		       else
+			 {
+			    pEl->ElSource->RdElement = pEl;
+			    pEl->ElSource->RdTypeRef = RefInclusion;
+			    /* insere l'element cree dans l'arbre abstrait */
+			    InsertElementAfter (pElPage, pEl);
+			    /* lie l'inclusion a l'element trouve' */
+			    if (SetReference (pEl, NULL, pElToCopy, pDoc, pDoc, FALSE, FALSE))
+			       /* l'element a inclure est connu, on le copie */
+			       CopyIncludedElem (pEl, pDoc);
+			    /* cree les paves du nouvel element */
+			    CreateAllAbsBoxesOfEl (pEl, pDoc);
+			 }
+		    }
+	       }
+	     pSpecial = pSpecial->ElParent;	/* passe a l'ascendant */
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  ExcCutPage est appele' par CutCommand qui effectue le traitement
+  de la commande Couper.
+  pElFirstSel et pElLastSel pointent le premier et le dernier element
+  selectionne's, qui doivent etre coupe's.
+  S'il s'agit d'un seul et meme element saut de page qui se trouve
+  dans une structure demandant un traitement special des sauts de
+  pages, on etend la selection a l'element portant l'exception
+  PageBreakRepBefore qui precede ce saut de page et a l'element
+  portant l'exception PageBreakRepetition qui
+  suit, pour que CutCommand coupe les 3 elements a la fois.
+  Dans ce cas, on met toBeSaved a Faux (on ne sauvera pas les elements
+  coupe's dans le buffer Couper-Copier-Coller) et deletePage a
+  Vrai (on detruira le saut de page bien qu'il ne soit plus le seul
+  selectionne').
+  ----------------------------------------------------------------------*/
+void ExcCutPage (PtrElement *pElFirstSel, PtrElement *pElLastSel,
+		 PtrDocument pDoc, ThotBool *toBeSaved, ThotBool *deletePage)
+{
+  PtrElement          pElPrec, pElNext;
+  ThotBool             stop;
+
+  if (*pElFirstSel == *pElLastSel &&
+      /* one selected element */
+      (*pElFirstSel)->ElTerminal &&
+      (*pElFirstSel)->ElLeafType == LtPageColBreak)
+    /* and a pagebreak */
+    {
+      /* les precedents peuvent etre des elements repete's */
+      pElPrec = (*pElFirstSel)->ElPrevious;
+      stop = FALSE;
+      while (!stop)
+	{
+	  if (pElPrec == NULL)
+	    stop = TRUE;	/* pas d'autre element precedent */
+	  else if (!TypeHasException (ExcPageBreakRepBefore, pElPrec->ElTypeNumber,
+				      pElPrec->ElStructSchema))
+	    /* l'element precedent n'est pas une repetition */
+	    stop = TRUE;
+	  else if (pElPrec->ElSource == NULL)
+	    /* l'element precedent n'est pas une inclusion */
+	    stop = TRUE;
+	  else
+	    /* il faut supprimer cet element precedent */
+	    {
+	      *pElFirstSel = pElPrec;
+	      *toBeSaved = FALSE;
+	      *deletePage = TRUE;
+	      /* passe au precedent */
+	      pElPrec = pElPrec->ElPrevious;
+	    }
+	}
+      /* les suivants peuvent etre des elements repetes */
+      pElNext = (*pElLastSel)->ElNext;
+      stop = FALSE;
+      while (!stop)
+	{
+	  if (pElNext == NULL)
+	    stop = TRUE;	/* pas d'autre element suivant */
+	  else if (!TypeHasException (ExcPageBreakRepetition, pElNext->ElTypeNumber,
+				      pElNext->ElStructSchema))
+	    /* l'element suivant n'est pas une repetition */
+	    stop = TRUE;
+	  else if (pElNext->ElSource == NULL)
+	    /* l'element suivant n'est pas une inclusion */
+	    stop = TRUE;
+	  else
+	    /* il faut supprimer cet element suivant */
+	    {
+	      *pElLastSel = pElNext;
+	      *toBeSaved = FALSE;
+	      *deletePage = TRUE;
+	      pElNext = pElNext->ElNext;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DeletePageInTable      Si l'element saut de page pointe' par
+  pElPage est dans une structure a coupure speciale, supprime les
+  elements repetes qui precedent et qui suivent.
+  ----------------------------------------------------------------------*/
+static void DeletePageInTable (PtrElement pElPage, PtrDocument pDoc)
+{
+   PtrElement          pElPrevious, pElPrevious1, pElNext, pElNext1;
+   ThotBool             stop;
+
+   /* supprime les elements repetes precedents */
+   pElPrevious = pElPage->ElPrevious;
+   stop = FALSE;
+   while (!stop)
+     {
+	if (pElPrevious == NULL)
+	   stop = TRUE;		/* pas d'autre element precedent */
+	else if (!TypeHasException (ExcPageBreakRepBefore, pElPrevious->ElTypeNumber,
+				    pElPrevious->ElStructSchema))
+	   /* l'element precedent n'est pas une repetition */
+	   stop = TRUE;
+	else if (pElPrevious->ElSource == NULL)
+	   /* l'element precedent n'est pas une inclusion */
+	   stop = TRUE;
+	else
+	   /* il faut supprimer cet element precedent */
+	  {
+	     pElPrevious1 = pElPrevious->ElPrevious;
+	     DeleteElement (&pElPrevious, pDoc);
+	     pElPrevious = pElPrevious1;
+	  }
+     }
+   /* supprime les elements repetes suivants */
+   pElNext = pElPage->ElNext;
+   stop = FALSE;
+   while (!stop)
+     {
+	if (pElNext == NULL)
+	   stop = TRUE;		/* pas d'autre element suivant */
+	else if (!TypeHasException (ExcPageBreakRepetition, pElNext->ElTypeNumber,
+				    pElNext->ElStructSchema))
+	   /* l'element suivant n'est pas une repetition */
+	   stop = TRUE;
+	else if (pElNext->ElSource == NULL)
+	   /* l'element suivant n'est pas une inclusion */
+	   stop = TRUE;
+	else
+	   /* il faut supprimer cet element suivant */
+	  {
+	     pElNext1 = pElNext->ElNext;
+	     DeleteElement (&pElNext, pDoc);
+	     pElNext = pElNext1;
+	  }
+     }
+}
+
+
+/*----------------------------------------------------------------------
+  DeletePageAbsBoxes  Si l'element saut de page pointe'
+  par pElPage est dans une structure demandant une coupure speciale,
+  detruit les paves des elements repetes qui precedent et ceux des
+  elements repetes qui suivent.
+  ----------------------------------------------------------------------*/
+static void DeletePageAbsBoxes (PtrElement pElPage, PtrDocument pDoc, int viewNb)
+{
+   PtrElement          pElPrevious, pElNext;
+   ThotBool             stop;
+
+   /* detruit les paves des elements repetes qui precedent */
+   pElPrevious = pElPage->ElPrevious;
+   stop = FALSE;
+   while (!stop)
+     {
+	if (pElPrevious == NULL)
+	   stop = TRUE;		/* pas d'autre element precedent */
+	else if (!TypeHasException (ExcPageBreakRepBefore, pElPrevious->ElTypeNumber,
+				    pElPrevious->ElStructSchema))
+	   /* l'element precedent n'est pas une repetition */
+	   stop = TRUE;
+	else if (pElPrevious->ElSource == NULL)
+	   /* l'element precedent n'est pas une inclusion */
+	   stop = TRUE;
+	else
+	   /* c'est bien un element repete', on detruit ses paves */
+	  {
+	     DestroyAbsBoxesView (pElPrevious, pDoc, FALSE, viewNb);
+	     pElPrevious = pElPrevious->ElPrevious;
+	  }
+     }
+   /* detruit les paves des elements repetes qui suivent */
+   pElNext = pElPage->ElNext;
+   stop = FALSE;
+   while (!stop)
+     {
+	if (pElNext == NULL)
+	   stop = TRUE;		/* pas d'autre element suivant */
+	else if (!TypeHasException (ExcPageBreakRepetition, pElNext->ElTypeNumber,
+				    pElNext->ElStructSchema))
+	   /* l'element suivant n'est pas une repetition */
+	   stop = TRUE;
+	else if (pElNext->ElSource == NULL)
+	   /* l'element suivant n'est pas une inclusion */
+	   stop = TRUE;
+	else
+	   /* c'est bien un element repete', on detruit ses paves */
+	  {
+	     DestroyAbsBoxesView (pElNext, pDoc, FALSE, viewNb);
+	     pElNext = pElNext->ElNext;
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
    SuppressPageMark supprime la marque de page pointee par pPage et	
-   		essaie de fusionner l'element precedent avec l'element	
-   		suivant.						
-   		Retourne dans pLib un pointeur sur l'element a libere	
-   		resultant de la fusion, si elle a pu se faire.		
+   essaie de fusionner l'element precedent avec l'element	
+   suivant.						
+   Retourne dans pLib un pointeur sur l'element a libere	
+   resultant de la fusion, si elle a pu se faire.		
   ----------------------------------------------------------------------*/
 static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * pLib)
 {
@@ -247,37 +534,34 @@ static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * p
    notifyEl.info = 0; /* not sent by undo */
    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
      {
-	/* traitement de la suppression des pages dans les structures avec */
-	/* coupures speciales */
-	if (ThotLocalActions[T_deletepage] != NULL)
-	   (*(Proc2)ThotLocalActions[T_deletepage]) (
-		(void *)pPage,
-		(void *)pDoc);
-	pPrevious = pPage->ElPrevious;
-	/* prepare l'evenement ElemDelete.Post */
-	notifyEl.event = TteElemDelete;
-	notifyEl.document = (Document) IdentDocument (pDoc);
-	notifyEl.element = (Element) (pPage->ElParent);
-	notifyEl.info = 0; /* not sent by undo */
-	notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
-	NSiblings = 0;
-	DeleteElement (&pPage, pDoc);
-	*pLib = NULL;
-	if (pPrevious != NULL)
-	  {
-	     /* il y avait un element avant la marque de page, on essaie de le */
-	     /* fusionner avec l'element qui le suit maintenant. */
-	     if (!IsIdenticalTextType (pPrevious, pDoc, pLib))
-		*pLib = NULL;
-	     while (pPrevious != NULL)
-	       {
-		  NSiblings++;
-		  pPrevious = pPrevious->ElPrevious;
-	       }
-	  }
-	notifyEl.position = NSiblings;
-	CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+       /* traitement de la suppression des pages dans les structures avec */
+       /* coupures speciales */
+       DeletePageInTable (pPage, pDoc);
+       pPrevious = pPage->ElPrevious;
+       /* prepare l'evenement ElemDelete.Post */
+       notifyEl.event = TteElemDelete;
+       notifyEl.document = (Document) IdentDocument (pDoc);
+       notifyEl.element = (Element) (pPage->ElParent);
+       notifyEl.info = 0; /* not sent by undo */
+       notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
+       notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
+       NSiblings = 0;
+       DeleteElement (&pPage, pDoc);
+       *pLib = NULL;
+       if (pPrevious != NULL)
+	 {
+	   /* il y avait un element avant la marque de page, on essaie de le */
+	   /* fusionner avec l'element qui le suit maintenant. */
+	   if (!IsIdenticalTextType (pPrevious, pDoc, pLib))
+	     *pLib = NULL;
+	   while (pPrevious != NULL)
+	     {
+	       NSiblings++;
+	       pPrevious = pPrevious->ElPrevious;
+	     }
+	 }
+       notifyEl.position = NSiblings;
+       CallEventType ((NotifyEvent *) & notifyEl, FALSE);
      }
 }
 
@@ -754,12 +1038,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
    /* traitement de l'insertion des pages dans les structures avec coupures
       speciales */
    cut = FALSE;		/* a priori pas de coupure effectuee par l'exception */
-   if (ThotLocalActions[T_insertpage] != NULL)
-      (*(Proc4)ThotLocalActions[T_insertpage]) (
-		(void *)pElPage,
-		(void *)pDoc,
-		(void *)nbView,
-		(void *)&cut);
+   InsertPageInTable (pElPage, pDoc, nbView, &cut);
    if (!cut)
       CreateNewAbsBoxes (pElPage, pDoc, nbView);
    modifAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
@@ -1322,11 +1601,7 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
 		  /* detruit le saut de page et ses paves */
 		  DestroyAbsBoxesView (pPage, pDoc, FALSE, nbView);
 		  /* traitement des elements demandant des coupures speciales */
-		  if (ThotLocalActions[T_deletepageab] != NULL)
-		    (*(Proc3)ThotLocalActions[T_deletepageab]) (
-				(void *)pPage,
-				(void *)pDoc,
-				(void *)nbView);
+		  DeletePageAbsBoxes (pPage, pDoc, nbView);
 		  if (WorkingPage == pPage)
 		    NbBoxesPageHeaderToCreate = 0;
 		  /* signale les paves morts au Mediateur */

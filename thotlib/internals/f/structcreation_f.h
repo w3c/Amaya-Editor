@@ -13,8 +13,6 @@ extern void NotifySubTree ( APPevent appEvent,
 extern void InsertOption ( PtrElement pEl,
                            PtrElement *pOption,
                            PtrDocument pDoc );
-extern void CreationExceptions ( PtrElement pEl,
-                                 PtrDocument pDoc );
 extern void GetExternalTypeName ( PtrSSchema pSS,
                                   int typeNum,
                                   char **typeName );
@@ -66,7 +64,8 @@ extern PtrElement CreateOrPasteInText ( ThotBool create,
                                         ThotBool paste,
                                         ThotBool page,
                                         PtrElement *pFree );
-extern void CreateInsertPageMenu ( void );
+extern void CreationExceptions ( PtrElement pEl,
+                                 PtrDocument pDoc );
 extern void CreatePasteIncludeCmd ( ThotBool create,
                                     ThotBool paste,
                                     char button,
@@ -84,8 +83,6 @@ extern void NotifySubTree (/* APPevent appEvent,
 extern void InsertOption (/* PtrElement pEl,
                              PtrElement *pOption,
                              PtrDocument pDoc */);
-extern void CreationExceptions (/* PtrElement pEl,
-                                   PtrDocument pDoc */);
 extern void GetExternalTypeName (/* PtrSSchema pSS,
                                     int typeNum,
                                     char **typeName */);
@@ -137,7 +134,8 @@ extern PtrElement CreateOrPasteInText (/* ThotBool create,
                                           ThotBool paste,
                                           ThotBool page,
                                           PtrElement *pFree */);
-extern void CreateInsertPageMenu (/* void */);
+extern void CreationExceptions (/* PtrElement pEl,
+                                   PtrDocument pDoc */);
 extern void CreatePasteIncludeCmd (/* ThotBool create,
                                       ThotBool paste,
                                       char button,

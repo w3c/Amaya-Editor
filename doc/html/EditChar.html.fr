@@ -3,6 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Entrer des caracteres ISO-Latin-1 et Unicode dans Amaya</title>
   <style type="text/css">
 .name { background-color : #FFF6C1}</style>
@@ -31,7 +32,7 @@
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya utilise le support standard fournit par le système
-(Operating System). </p>
+(Operating System).</p>
 
 <p>Amaya fournit un mécanisme pour assigner <a href="ShortCuts.html.fr">des
 raccourcis clavier</a> à des caractères non disponibles au clavier. Quelques
@@ -55,7 +56,7 @@ uns sont prédéfinis&nbsp;:</p>
 
 <p>On donne une description de la méthode multi-touches standard des versions
 Motif et GTK. Pour les autres méthodes il faut se reporter aux documentations
-du systéme (Operating System).</p>
+du système (Operating System).</p>
 
 <h3><a name="Standard">Le support multi-touches standard des versions Motif
 et GTK</a></h3>
@@ -386,7 +387,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">deg</td>
       <td>176</td>
       <td>accent circonflexe</td>
-      <td>0 (zero)</td>
+      <td>0 (zéro)</td>
       <td>&deg;</td>
     </tr>
     <tr>
@@ -616,7 +617,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
     <tr>
       <td class="name">raquo</td>
       <td>187</td>
-      <td>&gt; (superieur)</td>
+      <td>&gt; (supérieur)</td>
       <td>&gt;</td>
       <td>»</td>
     </tr>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -43,7 +43,7 @@ document.</p>
       dans le sens que, à n'importe quel moment, il montre les changements
       que vous êtes en train d'effectuer sur le document. Cette propriété
       diffère des autres éditeurs qui eux fournissent seulement des séries de
-      photos instantannées du document.</dd>
+      photos instantanées du document.</dd>
   <dt><a name="Structure">Vue structure</a></dt>
     <dd>Cette vue montre la structure actuelle du document qui est en train
       d'être rédigé. Chaque élément est représenté par son nom d'étiquette,
@@ -52,9 +52,9 @@ document.</p>
       montre l'étendue de l'élément. Les parties visualisées en noir peuvent
       être éditées directement , en cliquant et en tapant. Les parties
       visualisées en bleu peuvent être modifiées uniquement par
-      l'intermédiaire des commandes d'édition. 
+      l'intermédiaire des commandes d'édition.
       <p>La vue structure montre tous les élément du document, même ceux qui
-      ne sont pas affichés dans la vue formattée comme les commentaires, le
+      ne sont pas affichés dans la vue formatée comme les commentaires, le
       type du document (doctype), les instructions de traitement ou les
       éléments de la section <strong>head</strong>.</p>
       <p>Elle présente également l'adresse de l'espace de noms utilisé par
@@ -129,7 +129,7 @@ toutes les autres vues du document. Inversement, quand vous avez effectué des
 changements dans une autre vue, entrez la commande
 <strong>Synchroniser</strong> pour mettre à jour la vue source.</p>
 
-<p>Synchroniser un document depuis la Vue source fera revalider le document
+<p>Synchroniser un document depuis la Vue source fera re-valider le document
 par Amaya. Si des erreurs de balisage ont été introduites dans la vue source,
 Amaya tentera de les corriger du mieux qu'il pourra. Vous devriez vérifier le
 document dans la vue structure ou bien dans la vue formatée après avoir édité

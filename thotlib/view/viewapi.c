@@ -1170,10 +1170,6 @@ void UndisplayElement (PtrElement pEl, Document document)
 	   return;
 	 }
      }
-   if (ThotLocalActions[T_createhairline] != NULL)
-     (*(Proc2)ThotLocalActions[T_checksel]) (
-		(void*)pEl,
-		(void*)document);
    /* cherche l'element qui precede l'element a detruire : pPrevious */
    pPrevious = pEl->ElPrevious;
    /* saute les marques de page */
@@ -1259,12 +1255,6 @@ void UndisplayElement (PtrElement pEl, Document document)
 	if (pNeighbour == NULL)
 	   /* l'element qui precede la partie detruite devient dernier */
 	   ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
-	/* traitement particulier aux tableaux */
-	if (ThotLocalActions[T_createhairline] != NULL)
-	   (*(Proc3)ThotLocalActions[T_createhairline]) (
-			(void*)pPrevious,
-			(void*)pEl,
-			(void*)pDoc);
      }
    /* reevalue l'image de toutes les vues */
    AbstractImageUpdated (pDoc);

@@ -6,57 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CanApplAttrRules ( PtrElement pEl,
-                               PtrAttribute pAttr,
-                               PtrDocument pDoc,
-                               ThotBool *ApplAttr );
-extern void CheckHeightRuleHairline ( PtrAbstractBox pAb,
-                                      PosRule *position,
-                                      PtrPRule pRule,
-                                      PtrAbstractBox * pAbFootTable );
-extern void CheckNextIsFootTable ( PtrElement pEl,
-                                   ThotBool * PcLast );
-extern void SetVertOverflow ( PtrPRule pRule,
-                              PtrAbstractBox pAb );
-extern void ApplHeightRuleToHairlines ( PtrElement pFootTable,
-                                        PtrDocument pDoc );
-extern void InsertPageInTable ( PtrElement pElPage,
-                                PtrDocument pDoc,
-                                int viewNb,
-                                ThotBool * cutDone );
-extern void DeletePageInTable ( PtrElement pElPage,
-                                PtrDocument pDoc );
-extern void DeletePageAbsBoxes ( PtrElement pElPage,
-                                 PtrDocument pDoc,
-                                 int viewNb );
-extern void Table2LoadResources ( void );
-
 #else /* __STDC__ */
-
-extern void CanApplAttrRules (/* PtrElement pEl,
-                                 PtrAttribute pAttr,
-                                 PtrDocument pDoc,
-                                 ThotBool *ApplAttr */);
-extern void CheckHeightRuleHairline (/* PtrAbstractBox pAb,
-                                        PosRule *position,
-                                        PtrPRule pRule,
-                                        PtrAbstractBox * pAbFootTable */);
-extern void CheckNextIsFootTable (/* PtrElement pEl,
-                                     ThotBool * PcLast */);
-extern void SetVertOverflow (/* PtrPRule pRule,
-                                PtrAbstractBox pAb */);
-extern void ApplHeightRuleToHairlines (/* PtrElement pFootTable,
-                                          PtrDocument pDoc */);
-extern void InsertPageInTable (/* PtrElement pElPage,
-                                  PtrDocument pDoc,
-                                  int viewNb,
-                                  ThotBool * cutDone */);
-extern void DeletePageInTable (/* PtrElement pElPage,
-                                  PtrDocument pDoc */);
-extern void DeletePageAbsBoxes (/* PtrElement pElPage,
-                                   PtrDocument pDoc,
-                                   int viewNb */);
-extern void Table2LoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -308,13 +308,13 @@ alt="Publish Preferences Menu" /></p>
   <dt></dt>
   <dt><strong>Charger les images</strong></dt>
     <dd>Contrôle si les images doivent être chargées et affichées. Sinon,
-      l'attibut ALT est visualisé à la place de l'image. Cette option prend
+      l'attribut ALT est visualisé à la place de l'image. Cette option prend
       effet dès que le formulaire est validé. <br />
     </dd>
   <dt><strong>Charger les objets</strong></dt>
     <dd>Contrôle si les objets doivent être chargés et affichés. Sinon, le
       contenu de l'objet est visualisé à la place de l'objet. Cette option
-      prend effet dès que le formulaire est validé. </dd>
+      prend effet dès que le formulaire est validé.</dd>
   <dt><strong>Montrer les images de fond</strong></dt>
     <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
       Cette option prend effet dès que le formulaire est validé.
@@ -327,13 +327,13 @@ alt="Publish Preferences Menu" /></p>
     </dd>
   <dt><strong>Activer le FTP</strong></dt>
     <dd>Amaya permet de suivre les URLs de type FTP. Ce support est
-      expérimental et il n'est pas encore débugué. Par exemple, les URLs FTP
+      expérimental et il n'est pas encore débogué. Par exemple, les URLs FTP
       nécessitent une authentification de l'utilisateur, l'authentification
       de l'information n'étant pas toujours mémorisée. Aussi, le fait de
       taper sur le bouton Stop pendant un téléchargement FTP peut faire
       planter Amaya. Malgré ces problèmes, nous avons rajouté cette option
-      dans Amaya afin que les autres développeurs puissent nous aider à le
-      débuguer rapidement. Par défaut, cette option est inactive.</dd>
+      dans Amaya afin que les autres développeur puissent nous aider à le
+      déboguer rapidement. Par défaut, cette option est inactive.</dd>
   <dt><strong>Type d'écran courant</strong></dt>
     <dd>L'application des feuilles de style (CSS) dépendent du type d'écran
       choisi dans ce formulaire.</dd>
@@ -343,7 +343,7 @@ alt="Publish Preferences Menu" /></p>
 
 <p>Cette boîte de dialogue vous permet d'enregistrer vos préférences pour les
 ETAGS et pré-conditions, pour vérifier ou non chaque commande PUT avec une
-commande GET, pour définir un nom par défault pour les URLs finissant par un
+commande GET, pour définir un nom par défaut pour les URLs finissant par un
 '/' et pour autoriser la redirection automatique de la commande PUT dans des
 domaines spécifiques.</p>
 
@@ -354,13 +354,13 @@ alt="Publish Preferences Menu" /></p>
   XHTML</strong></dt>
     <dd>Lorsqu'elle est active, cette option associe le nouveau (et officiel)
       type MIME XHTML à tout nouveau document XHTML publié sur le Web. Elle
-      est désactivée par défaut pour cette version d'Amaya car à l'heure
+      est désactivé par défaut pour cette version d'Amaya car à l'heure
       actuelle, tous les serveurs ne gèrent pas ce type MIME. Cette option ne
       modifie pas le type MIME des anciens documents: le type MIME qui est
-      recu est celui qui sera utilisé pour publier le document, sauf si vous
+      reçu est celui qui sera utilisé pour publier le document, sauf si vous
       utilisez la commande <strong>Sauver comme</strong>. Il est à noter que
       cette option nécessite aussi de modifier la configuration de votre
-      serveur si celui-ci n'enregistre pas les meta-données associées à
+      serveur si celui-ci n'enregistre pas les méta-données associées à
       chaque document.</dd>
   <dt><strong>Utiliser les ETAGS et les conditions requises</strong></dt>
     <dd>HTTP/1.1 introduit des nouvelles entêtes qui permettent d'éviter le
@@ -493,7 +493,7 @@ hexadécimal, ou leur format rgb :</p>
 <ul type="square">
   <li>Les noms valides sont : Aqua, Black, Blue, Fuschia, Gray, Green, Lime,
     Maroon, Navy, Olive, Purple, Red, Silver, Teal, yellow, et White.</li>
-  <li>Le format hexdécimal valide est #FF00FF par exemple.</li>
+  <li>Le format hexadécimal valide est #FF00FF par exemple.</li>
   <li>Le format rgb valide est rgb(255, 0, 255) par exemple.</li>
 </ul>
 
@@ -516,7 +516,7 @@ et des liens activés est donné dans la feuille de style Amaya.css</p>
 alt="Geometry Preferences Menu" /></p>
 
 <p>Ce menu vous permet de sauver la position de la fenêtre courante et la
-taille des différentes vues d'un document (formaté, structure, alterné,
+taille des différentes vues d'un document (formatée, structure, alterné,
 liens, and Table des Matières.) ou pour restaurer les valeurs par défaut.
 Notez que les valeurs qui sont sauvées appartiennent aux vues du document
 d'où vous appelez le menu. Ces changements seront effectifs quand vous

@@ -804,8 +804,6 @@ void                HideElement (PtrElement pEl, Document document)
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   if (ThotLocalActions[T_createhairline] != NULL)
-     (*(Proc2)ThotLocalActions[T_checksel]) ((void *)pEl, (void *)document);
    if (pEl->ElParent == NULL)
       /* c'est la racine d'un arbre, on detruit les paves des fils */
       /* pour garder au moins le pave racine */

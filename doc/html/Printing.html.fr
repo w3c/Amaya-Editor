@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Imprimer</title>
-  <meta name="GENERATOR" content="amaya V4.3" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Publishing.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" 
-        src="../images/up.gif" /></a> <a href="Numbering.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+      <td><p><a href="Publishing.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Numbering.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -31,10 +30,10 @@
 <h2><a name="L1062">Imprimer des documents</a></h2>
 
 <p>Amaya est capable d'imprimer des document avec ou sans feuilles de style
-CSS pour les stations Unix et Windows. Sur les stations Unix il est uniquement
-possible de générer une description Postscript, donc vous avez besoin d'une
-imprimante PostScript ou d'utiliser une application capable de traduire le
-PostScript en votre langage d'imprimante spécifique.</p>
+CSS pour les stations Unix et Windows. Sur les stations Unix il est
+uniquement possible de générer une description PostScript, donc vous avez
+besoin d'une imprimante PostScript ou d'utiliser une application capable de
+traduire le PostScript en votre langage d'imprimante spécifique.</p>
 
 <p>Il y a trois manières d'imprimer un document avec Amaya :</p>
 <ul>
@@ -42,10 +41,10 @@ PostScript en votre langage d'imprimante spécifique.</p>
     (<code>Fichier/Paramétrer et imprimer)</code>, qui vous permet de fixer
     certains paramètres et options avant d'imprimer.</li>
   <li>la commande <strong>Imprimer</strong> (<code>Fichier/Imprimer</code>),
-    qui imprime un document en utilisant la configuration de paramétrage de la
-    commande précédante.</li>
-  <li>le <strong>bouton</strong> <img src="../images/Print.gif" alt="Print" />
-    , dans la barre des boutons, est un raccourci de la commande
+    qui imprime un document en utilisant la configuration de paramétrage de
+    la commande précédente.</li>
+  <li>le <strong>bouton</strong> <img src="../images/Print.gif" alt="Print"
+    /> , dans la barre des boutons, est un raccourci de la commande
     <strong>Imprimer</strong> sur les stations Unix. Sous Windows, ce bouton
     est le raccourci de la commande <strong>Paramétrer et imprimer</strong>.
     C'est dû à un problème d'utilisation de DLLs sur Windows 95.</li>
@@ -97,19 +96,20 @@ paramètres d'impression.</p>
 <h3><a name="commande1">La commande imprimer</a></h3>
 Cette commande imprime le document courant avec le paramètre d'impression par
 défaut ou avec les valeurs précédemment fixées grâce à la commande
-<strong>Paramétrer et imprimer</strong>. 
+<strong>Paramétrer et imprimer</strong>.
 
 <p>Sur les stations Windows, la première fois que vous lancer la commande
 <strong>Imprimer</strong>, le dialogue standard de Windows sera visualiser et
-vous laissera vérifier que l'imprimante par défaut est correcte. Les commandes
-<strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
+vous laissera vérifier que l'imprimante par défaut est correcte. Les
+commandes <strong>Imprimer</strong> suivantes seront lancées sans aucun
+dialogue.</p>
 
 <h3><a name="L224">Contrôler l'impression avec les CSS</a></h3>
 
 <p>Les liens ne sont soulignés à l'impression Pour ce faire, votre feuille de
 style utilisateur (fichier <code>amaya.css</code> dans votre <a
-href="Configure.html.fr#AmayaHome">répertoire Amaya home</a>) doit contenir :
-</p>
+href="Configure.html.fr#AmayaHome">répertoire Amaya home</a>) doit
+contenir&nbsp;:</p>
 <pre><br />
 @media print {a:link {text-decoration: underline} ... }</pre>
 
@@ -122,10 +122,10 @@ ou à l'intérieur de la feuille de style CSS externe, elle génère une rupture
 de page avant chaque cas de cet élément.</p>
 </div>
 
-<p><a href="Publishing.html.fr"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Numbering.html.fr"><img
-alt="next" src="../images/right.gif" /></a></p>
+<p><a href="Publishing.html.fr"><img alt="previous" src="../images/left.gif"
+/></a> <a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
+<a href="Numbering.html.fr"><img alt="next" src="../images/right.gif"
+/></a></p>
 <hr />
 </body>
 </html>

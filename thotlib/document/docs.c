@@ -157,8 +157,6 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
 		  /* Create required attributes for the whole created tree */
 		  AttachMandatoryAttributes (pDoc->DocDocElement, pDoc);
 #endif
-		  /* dealing with exceptions */
-		  CreateWithException (pEl, pDoc);
 		  /* An attribut Language is stored in the root */
 		  CheckLanguageAttr (pDoc, pEl);
 		  /* The document is named */
@@ -353,11 +351,6 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	       /* le document n'a pas ete ferme' pendant l'attente */
 	       /* des attributs requis */
 	       {
-	       /* traitement des exceptions */
-	       if (ThotLocalActions[T_createtable] != NULL)
-		  (*(Proc2)ThotLocalActions[T_createtable]) (
-			(void *)pEl,
-		       	(void *)*pDoc);
 	       /* ouvre les vues du document cree' */
 	       OpenDefaultViews (*pDoc);
 	       /* selectionne la 1ere feuille du document */
@@ -405,7 +398,7 @@ void                PaginateDocument (PtrDocument pDoc)
    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
    le document pDoc.                                       
   ----------------------------------------------------------------------*/
-void                UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
+void UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pChild, pNext;
    PtrTextBuffer       pBuf, pNextBuf;

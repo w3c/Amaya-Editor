@@ -2940,8 +2940,6 @@ int main (int argc, char **argv)
 
    /* Initialise the list of table editing actions */
    TableHLoadResources (); 
-   Table2LoadResources (); 
-
 
    /* Initialise Picture Drivers for printing */
    InitPictureHandlers (TRUE);

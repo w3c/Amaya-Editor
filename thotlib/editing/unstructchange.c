@@ -481,11 +481,6 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 	       /* garde le pointeur sur le sous-arbre colle' */
 	       CreatedElement[NCreatedElements] = newElement;
 	       NCreatedElements++;
-	       if (ThotLocalActions[T_pastesiblingtable] != NULL)
-		 (*(Proc3)ThotLocalActions[T_pastesiblingtable]) (
-			(void *)newElement,
-			(void *)&pOrig,
-			(void *)pDoc);
 	     }
 	 }
      }

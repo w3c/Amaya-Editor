@@ -1677,13 +1677,6 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 	/* the selection is not visible, highlight the first visible */
 	/* ancestor */
 	HighlightVisibleAncestor (FirstSelectedElement);
-      /* call the procedure handling selection in tables */
-      if (ThotLocalActions[T_selecttable] != NULL)
-	(*(Proc4)ThotLocalActions[T_selecttable]) (
-		(void *)FirstSelectedElement,
-		(void *)SelectedDocument,
-		(void *)FALSE,
-		(void *)&b);
       /* if the selected element is a paired element, select the other */
       /* element of the pair too */
       if (FirstSelectedElement->ElStructSchema->SsRule->SrElem[FirstSelectedElement->ElTypeNumber - 1]->SrConstruct ==
@@ -1754,14 +1747,6 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 #ifdef _GTK
    gtk_claim_selection();
 #endif /*_GTK*/
-
-  if (pEl != NULL &&ThotLocalActions[T_selecttable] != NULL)
-    /* call procedure handling selection in tables, if it is present */
-    (*(Proc4)ThotLocalActions[T_selecttable]) (
-		(void *)pEl,
-		(void *)SelectedDocument,
-		(void *)TRUE,
-		(void *)&sel);
   if (sel)
     {
       done = FALSE;

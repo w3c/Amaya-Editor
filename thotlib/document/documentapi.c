@@ -64,15 +64,6 @@ static char nameBuffer[100];
 static char ISObuffer[400];
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void CreateWithException (PtrElement pEl, PtrDocument pDoc)
-{
-   /* If table creation */
-   if (ThotLocalActions[T_createtable] != NULL)
-      (*(Proc2)ThotLocalActions[T_createtable]) (pEl, pDoc);
-}
-
-/*----------------------------------------------------------------------
   TtaGetDocumentProfile
   Gets the document profile
  ----------------------------------------------------------------------*/

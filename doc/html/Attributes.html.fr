@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des Attributs</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -59,7 +59,7 @@ sélectionné, choisissez dans le menu <strong>Attributs</strong>l'attribut à
   <li>Si c'est un attribut avec une série limitée de valeurs ( comme
     <code>align</code> pour un paragraphe ou une en-tête), une boîte de
     dialogue apparaît. Elle contient trois boutons et un menu des valeurs
-    disponibles. 
+    disponibles.
     <ul>
       <li>Si vous voulez créer cet attribut ou changer sa valeur, choisissez
         dans le menu la valeur désirée et cliquer sur le bouton
@@ -75,7 +75,7 @@ sélectionné, choisissez dans le menu <strong>Attributs</strong>l'attribut à
     cliquez sur le bouton <strong>Delete</strong>.</li>
 </ul>
 
-<h3><a name="Copying">Copier des attributs</a></h3>
+<h3><a name="Copying">Copier des attribut</a></h3>
 
 <p>Un attribut n'est pas un élément. Il ne peut pas être copié à l'aide des
 commandes Copier/Coller. Pour copier un attribut, vous devez utiliser le menu

@@ -676,8 +676,6 @@ static Element    CreateDescent (Document document, Element element,
 		  RemoveExcludedElem (&pE, LoadedDocument[document - 1]);
 		  if (pE != NULL)
 		    {
-		      /* Dealing with exceptions */
-		      CreateWithException (pE, LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 		      /* Treats the required attributs of the created elements */
 		      AttachMandatoryAttributes (pE, LoadedDocument[document - 1]);
@@ -974,8 +972,6 @@ void TtaInsertSibling (Element newElement, Element sibling,
 	   if (pEl->ElReferredDescr)
 	     /* the descriptor should be linked to the current document */
 	     LinkReferredElDescr (pEl->ElReferredDescr, pDoc);
-	   /* Dealing with exceptions */
-	   CreateWithException (pEl, pDoc);
 	   /* If element pair, chain it with its homologue */
 	   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
 	     GetOtherPairedElement (pEl);
@@ -1096,8 +1092,6 @@ void TtaInsertFirstChild (Element *newElement, Element parent, Document document
 	      if (pSon->ElReferredDescr)
 		/* the descriptor should be linked to the current document */
 		LinkReferredElDescr (pSon->ElReferredDescr, pDoc);
-	      /* Dealing with exceptions */
-	      CreateWithException (pSon, pDoc);
 #ifndef NODISPLAY
 	      /* treats the required attibutes of the created elements */
 	      if (pDoc->DocCheckingMode & ATTR_MANDATORY_MASK)
@@ -1308,8 +1302,6 @@ void TtaHolophrastElement (Element element, ThotBool holophrast,
    else
      {
 	CanHolo = TRUE;
-	if (ThotLocalActions[T_holotable] != NULL)
-	   (*(Proc2)ThotLocalActions[T_holotable]) (((PtrElement) element), &CanHolo);
 	if ((((PtrElement) element)->ElTerminal &&
 	     ((PtrElement) element)->ElLeafType == LtPageColBreak) ||
 	    !CanHolo)

@@ -80,7 +80,7 @@ ${AMAYADIR}/amaya/*.cpp \
 ${AMAYADIR}/amaya/*.conf \
 ${AMAYADIR}/amaya/*.en \
 ${AMAYADIR}/amaya/*.h \
-${AMAYADIR}/amaya/*.trans \
+${AMAYADIR}/amaya/*.trans* \
 ${AMAYADIR}/amaya/greek.sgml \
 ${AMAYADIR}/amaya/*.bmp \
 ${AMAYADIR}/amaya/*.gif \

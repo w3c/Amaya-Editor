@@ -2044,15 +2044,6 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
        /* cherche le pave (pAbbPos) par rapport auquel le pave */
        /* traite' se positionne  */
        pAbbPos = NULL;
-       if (pPosRule->PoRefKind == RkElType || pPosRule->PoRefKind == RkAnyElem)
-	 /* appelle l'exception des tableaux, au cas ou ce serait la */
-	 /* regle de hauteur d'un filet vertical d'un tableau */
-	 if (ThotLocalActions[T_abref] != NULL)
-	   (*(Proc4)ThotLocalActions[T_abref]) (
-		(void *)pAbb1,
-	 	(void *)pPosRule,
-		(void *)pPRule,
-		(void *)&pAbbPos);
        /* si l'exception n'a pas ete traitee, effectue un traitement
 	  normal */
        if (pAbbPos == NULL)
@@ -3297,13 +3288,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  break;
 	case PtHeight:
 	  ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
-	  /* traitement special pour le debordement vertical des cellules */
-	  /* de tableau etendues verticalement */
-	  if (ThotLocalActions[T_vertspan] != NULL)
-	    (*(Proc2)ThotLocalActions[T_vertspan]) (
-		(void *)pPRule,
-		(void *)pAb);
-	    break;
+	  break;
 	case PtWidth:
 	  ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
 	  break;
@@ -3398,12 +3383,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pAb->AbVertPos = Posit;
 		}
 	    }
-	  /* traitement special pour le debordement vertical des cellules */
-	  /* de tableau etendues verticalement */
-	  if (ThotLocalActions[T_vertspan] != NULL)
-	    (*(Proc2)ThotLocalActions[T_vertspan]) (
-		(void *)pPRule,
-		(void *)pAb);
 	  break;
 	case PtHorizPos:
 	  Posit = pAb->AbHorizPos;

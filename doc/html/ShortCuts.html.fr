@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body>
+<body xml:lang="en" lang="en">
 
 <table border="0" summary="toc">
   <tbody>
@@ -57,7 +57,7 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 
 <p>La liste des commandes disponibles est :</p>
 <ul>
-  <li>Commandes de déplacement : 
+  <li>Commandes de déplacement :
     <ul>
       <li><span style="color: #E55500" class="menuItems">TtcNextChar,
         TtcPreviousChar</span> : déplace caractère par caractère.</li>
@@ -79,7 +79,7 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
       bas.</li>
     </ul>
   </li>
-  <li>Commandes d'extension de la sélection : 
+  <li>Commandes d'extension de la sélection :
     <ul>
       <li><span style="color: #E55500" class="menuItems">TtcNextSelChar,
         TtcPreviousSelChar</span> : sélectionne caractère par caractère.</li>
@@ -93,34 +93,34 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     </ul>
   </li>
   <li>Une commande qui permet de suivre un lien ou d'activer un élément de
-    formulaire HTML (menu, bouton, etc.) : 
+    formulaire HTML (menu, bouton, etc.) :
     <p class="menuItems"><span style="color: #E55500">DoAction.</span></p>
   </li>
   <li>Une commande qui permet de sauter au prochain (ou au premier s'il n'y a
-    pas de sélection) lien ou élément de formulaire HTML&nbsp;: 
+    pas de sélection) lien ou élément de formulaire HTML&nbsp;:
     <p><span style="color: #E55500">NextLinkOrFormElement.</span></p>
   </li>
   <li>Une commande qui permet de sauter lien ou élément de formulaire HTML
-    précédent&nbsp;: 
+    précédent&nbsp;:
     <p><span style="color: #E55500">PreviousLinkOrFormElement.</span></p>
   </li>
-  <li>Dans le menu <code>Fichier</code> :<span style="color: #FFDA95"></span> 
+  <li>Dans le menu <code>Fichier</code> :<span style="color: #FFDA95"></span>
     <p class="menuItems"><span style="color: #E55500">New, NewTemplate,
     NewCss, OpenDoc, OpenDocInNewWindow, Reload, GotoPreviousHTML,
     GotoNextHTML, GoToHome, SaveDocument, SaveDocumentAs, Synchronize,
     ParseAsHTML, DocumentInfo, SetupAndPrint, PrintAs CloseDocument,
     AmayaClose</span></p>
   </li>
-  <li>Dans le menu Édition : 
+  <li>Dans le menu Édition :
     <p class="menuItems"><span style="color: #E55500">TtcUndo, TtcRedo,
     TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
     SetBrowserEditor, TtcSearchText, SpellCheck, TransformType.</span></p>
   </li>
-  <li>Dans le menu <code>structure</code> : 
+  <li>Dans le menu <code>structure</code> :
     <p class="menuItems"><span style="color: #E55500">CreateBase, CreateMeta,
     CreateLinkInHead, CreateScript, CreateStyle, CreateComment.</span></p>
   </li>
-  <li>Dans le menu Éléments : 
+  <li>Dans le menu Eléments :
     <dl>
       <dt>Menu principal :</dt>
       <dt style="color: #E55500">ChangeTitle, CreateAddress, CreateParagraph,
@@ -156,16 +156,16 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
       DeleteColumn</dt>
     </dl>
   </li>
-  <li>Dans le menu <code>Liens</code> : 
+  <li>Dans le menu <code>Liens</code> :
     <p class="menuItems"><span style="color: #E55500">LinkToPreviousTarget,
     CreateOrChangeLink, CreateTarget, DeleteAnchor.</span></p>
   </li>
-  <li>Dans le menu <code>Vues</code> : 
+  <li>Dans le menu <code>Vues</code> :
     <p class="menuItems"><span style="color: #E55500">TtcSwitchButtonBar,
     TtcSwitchCommands, ShowMapAreas, ShowTargets, ZoomIn, ZoomOut,
     ShowStructure, ShowAlternate, ShowLinks, ShowToC., ShowSource</span></p>
   </li>
-  <li>Dans le menu <code>Style</code> : 
+  <li>Dans le menu <code>Style</code> :
     <dl>
       <dt>Menu principal :</dt>
       <dt style="color: #E55500">TtcChangeCharacters, TtcChangeColors,
@@ -184,13 +184,13 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
       SetOnOffQuotation, SetOnOffBDO.</dt>
     </dl>
   </li>
-  <li>Dans le menu <code>Spécial</code> : 
+  <li>Dans le menu <code>Spécial</code> :
     <p class="menuItems"><span style="color: #E55500">SectionNumbering,
     MakeBook, MakeID, ShowLogFile, ConfigGeneral, ConfigPublish, ConfigCache,
     ConfigProxy, ConfigColor, ConfigGeometry, ConfigLanNeg, ConfigProfile,
     ConfigTemplates.</span></p>
   </li>
-  <li>Dans le menu Annotations: 
+  <li>Dans le menu Annotations:
     <p class="menuItems"><span style="color: #E55500"><span
     style="color: #E55500">AnnotateSelection, AnnotateDocument,
     LoadAnnotations, PostAnnotation, DeleteAnnotation, FilterAnnot,
@@ -198,7 +198,7 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
   </li>
 </ul>
 <ul>
-  <li>Dans le menu <code>Aide</code> : 
+  <li>Dans le menu <code>Aide</code> :
     <p class="menuItems"><span style="color: #E55500">HelpAmaya, HelpAtW3C,
     HelpBrowsing, HelpSelecting, HelpSearching, HelpViews, HelpCreating,
     HelpLinks, HelpChanging, HelpTables, HelpMath, HelpSVG, HelpImageMaps,

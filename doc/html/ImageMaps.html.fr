@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Images et Zones actives</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -47,16 +48,16 @@ fichiers qui correspondent à votre critère.</p>
 
 <h3>Remplacer une image</h3>
 
-<p>Pour remplacer une image sélectionnez cette image en dragant sur l'image
+<p>Pour remplacer une image sélectionnez cette image en draguant sur l'image
 avec la souris. Procédez alors comme pour l'ajout d'une image (voir
 ci-dessus). Lorsqu'une image (et seulement une image) est entièrement
-séelectionnée, la boîte de dialogue des images effectue le remplacement de
+sélectionnée, la boîte de dialogue des images effectue le remplacement de
 l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
 
 <h3><a name="Alternative">Texte de remplacement et descriptions
 longues</a></h3>
 
-<p>Pour les éléments comme les images (et autres objets multimedia) vous
+<p>Pour les éléments comme les images (et autres objets multimédia) vous
 devez fournir un texte de remplacement. Celui ci sera présenté, comme à
 l'habitude, à la place de l'image par un navigateur avec un système de sortie
 vocale, ou une visualisation en Braille (utilisé par de nombreux aveugles).
@@ -150,7 +151,7 @@ href="Links.html.fr#L245">créer des liens</a>.</p>
     Control</strong> et le <strong>bouton du milieu</strong> ou le
     <strong>bouton droit</strong> de la souris à l'intérieur de la zone
     active, vous pourrez redimensionner cette zone.</li>
-  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue. 
+  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue.
     <p></p>
   </li>
 </ul>

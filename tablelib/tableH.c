@@ -1532,6 +1532,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
   reformat = (box->BxWidth < min ||
 	      (box->BxRuleWidth != width && box->BxWidth == box->BxRuleWidth) ||
 	      (box->BxWidth < min) ||
+	      (box->BxMinWidth != min && box->BxWidth == box->BxMinWidth) ||
 	      (box->BxMaxWidth != max && (box->BxWidth == box->BxMaxWidth ||
 					  (box->BxWidth != box->BxRuleWidth &&
 					   box->BxWidth != box->BxMinWidth))));
@@ -1927,7 +1928,6 @@ void TtaGiveTableFormattingLock (ThotBool *lock)
   else
     *lock = Lock;
 }
-
 
 /*----------------------------------------------------------------------
    TableHLoadResources : connect resources for managing HTML tables

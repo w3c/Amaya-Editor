@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Edition des graphiques</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -121,7 +122,7 @@ sont :</p>
 <p></p>
 
 <p>Quand vous sélectionnez une forme dans la palette et que la sélection est
-dans la structure HTMLdu document, Amaya crée un nouvel élément SVG juste au
+dans la structure HTML du document, Amaya crée un nouvel élément SVG juste au
 début de la sélection courante et la forme choisie dans ce nouvel élément
 SVG. Amaya crée les dessins SVG comme des blocs, entre deux paragraphes. Si
 vous souhaitez afficher un dessin en ligne, vous devez aujourd'hui laisser
@@ -209,7 +210,7 @@ clic avec le bouton du milieu ou droit de la souris peint l'élément
 <div id="page_body">
 <h2>Gestion de librairies graphiques SVG</h2>
 <ul>
-  <li>Utilisation d'une librairie d'objets graphiques SVG 
+  <li>Utilisation d'une librairie d'objets graphiques SVG
     <p><img alt="Use SVG library" src="../images/scenario_graphique.png"
     /></p>
     <p>Pour coller un élément graphique d'une librairie SVG dans un document,
@@ -219,24 +220,24 @@ clic avec le bouton du milieu ou droit de la souris peint l'élément
         cet élément.</li>
       <li>Cliquer sur le bouton <strong>Librairie</strong> . Le bouton
         <strong>Librairie</strong> (<img alt="SVG Library button"
-        src="../images/SVGLibrary.gif" />) displays a document which contains
-        library graphic elements.</li>
+        src="../images/SVGLibrary.gif" />) affiche la librairie graphique
+        standard.</li>
       <li>Choisir un élément graphique en cliquant sur sa représentation
         graphique.</li>
       <li>Sélectionner le mode de "copie": vous pouvez choisir de copier ou
-        de référencer l'élément graphique. 
+        de référencer l'élément graphique.
         <ul>
           <li>En mode "Copie", vous éditez la définition SVG explicite de
             l'élément graphique.</li>
-          <li>En mode "Référence", vous éditez un élément use référencant la
-            définition explicite de l'élément. ( <a
+          <li>En mode "Référence", vous éditez un élément &lt;use&gt;
+            référençant la définition explicite de l'élément. ( <a
             href="http://www.w3.org/TR/SVG/struct.html#UseElement">Regarder
             la spécification SVG</a>)</li>
         </ul>
       </li>
     </ol>
   </li>
-  <li>Ajouter un nouvel objet graphique à une librairie 
+  <li>Ajouter un nouvel objet graphique à une librairie
     <p><img alt="Add new model in a library"
     src="../images/enrichissement_lib.png" /></p>
   </li>
@@ -247,11 +248,11 @@ clic avec le bouton du milieu ou droit de la souris peint l'élément
 <ol>
   <li>Sélectionner des éléments SVG dans un document.</li>
   <li>Presser les touches <code>Control</code> key "l" <code>Control</code>
-    key "a" (comme "l"ibrairie "a"jout) ou utiliser le menu pour ouvrir le
-    dialogue d'ajout.</li>
-  <li>Selectionner un titre de librairie dans lequel vous souhaitez ajouter
+    key "a" ("l" comme librairie "a" comme ajout) ou utiliser le menu pour
+    ouvrir le dialogue d'ajout.</li>
+  <li>Sélectionner un titre de librairie dans lequel vous souhaitez ajouter
     la sélection.</li>
-  <li>Confirmer ou choisir de créer une nouvelle librairie dans laquel vous
+  <li>Confirmer ou choisir de créer une nouvelle librairie dans laquelle vous
     souhaitez ajouter la sélection.</li>
 </ol>
 

@@ -100,6 +100,7 @@ static Proc         CopyAndCutFunction = NULL;
 #include "externalref_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
+#include "paginate_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
 #include "res_f.h"
@@ -1130,13 +1131,7 @@ void CutCommand (ThotBool save)
 	      cutPage = FALSE;
 	      /* traitement special pour les pages dans les structures
 		 qui le demandent */
-	      if (ThotLocalActions[T_cutpage] != NULL)
-		(*(Proc5)ThotLocalActions[T_cutpage]) (
-			(void*)&firstSel,
-			(void*)&lastSel,
-			(void*)pSelDoc,
-			(void*)&save,
-			(void*)&cutPage);
+	      ExcCutPage (&firstSel, &lastSel, pSelDoc, &save, &cutPage);
 	      /* "remonte" la selection au niveau des freres si c'est
 		 possible */
 	      if (ThotLocalActions[T_selectsiblings] != NULL)
@@ -1633,13 +1628,6 @@ void CutCommand (ThotBool save)
 		       * check if sibling elements become first or last
 		       */
 		      ProcessFirstLast (pPrev, pNext, pSelDoc);
-		      if (pPrev != NULL)
-			/* traitement particulier aux tableaux */
-			if (ThotLocalActions[T_createhairline] != NULL)
-			  (*(Proc3)ThotLocalActions[T_createhairline]) (
-				(void*)pPrev,
-				(void*)pSave,
-				(void*)pSelDoc);
 		      /* reaffiche toutes les vues */
 		      AbstractImageUpdated (pSelDoc);
 		      RedisplayDocViews (pSelDoc);

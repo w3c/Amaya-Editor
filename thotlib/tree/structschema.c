@@ -1233,17 +1233,7 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
       else if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
 				 pEl->ElStructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
-	{
-	   ret = FALSE;
-	   if (ThotLocalActions[T_singlecell] != NULL)
-	     {
-		(*(Proc3)ThotLocalActions[T_singlecell]) (pEl, pElCut, &InCutBuffer);
-		if (InCutBuffer)
-		   /* C'est une cellule de tableau orpheline, sa colonne de
-		      reference a deja ete coupee */
-		   ret = TRUE;
-	     }
-	}
+	ret = FALSE;
       else if (FullStructureChecking)
 	 /* on est en mode de controle strict de la structure */
 	 if (pEl->ElParent != NULL)
@@ -2548,8 +2538,6 @@ ThotBool            CanSplitElement (PtrElement firstEl, int firstChar,
 	     pE = pE->ElParent;
 	  }
 	exctab = FALSE;
-	if (ThotLocalActions[T_excepttable] != NULL)
-	   (*(Proc2)ThotLocalActions[T_excepttable]) (*pSplitEl, &exctab);
 	if (exctab)
 	   /* c'est la division d'un tableau, on refuse */
 	  {

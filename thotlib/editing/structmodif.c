@@ -511,10 +511,6 @@ void TtcHolophrast (Document document, View view)
 		/* on n'holophraste pas certains elements de tableau */
 	       {
 		  canHolophrast = TRUE;
-		  if (ThotLocalActions[T_holotable] != NULL)
-		     (*(Proc2)ThotLocalActions[T_holotable]) (
-				(void *)pEl,
-				(void *)&canHolophrast);
 		  if (canHolophrast)
 		    {
 		       done = TRUE;

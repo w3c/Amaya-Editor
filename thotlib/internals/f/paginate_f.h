@@ -6,6 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InsertPageInTable ( PtrElement pElPage,
+                                PtrDocument pDoc,
+                                int viewNb,
+                                ThotBool * cutDone );
+extern void ExcCutPage ( PtrElement *pElFirstSel,
+                         PtrElement *pElLastSel,
+                         PtrDocument pDoc,
+                         ThotBool *toBeSaved,
+                         ThotBool *deletePage );
 extern PtrElement AddLastPageBreak ( PtrElement pRootEl,
                                      int schView,
                                      PtrDocument pDoc,
@@ -15,6 +24,15 @@ extern void PaginateView ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
+extern void InsertPageInTable (/* PtrElement pElPage,
+                                  PtrDocument pDoc,
+                                  int viewNb,
+                                  ThotBool * cutDone */);
+extern void ExcCutPage (/* PtrElement *pElFirstSel,
+                           PtrElement *pElLastSel,
+                           PtrDocument pDoc,
+                           ThotBool *toBeSaved,
+                           ThotBool *deletePage */);
 extern PtrElement AddLastPageBreak (/* PtrElement pRootEl,
                                        int schView,
                                        PtrDocument pDoc,

@@ -235,9 +235,9 @@ le nouveau terme.</p>
 
 <h3><a name="Changing">Changer le titre du document</a></h3>
 
-<p>Vous pouvez éditer le titre du document (élément title) en utilisant le
-menu <strong>Xhtml/changer le titre.</strong> Vous pouvez aussi éditer le
-titre du document dans la <a href="Views.html.fr#Structure">vue
+<p>Vous pouvez éditer le titre du document (élément &lt;title&gt;) en
+utilisant le menu <strong>Xhtml/changer le titre.</strong> Vous pouvez aussi
+éditer le titre du document dans la <a href="Views.html.fr#Structure">vue
 structure</a>.</p>
 </div>
 
@@ -296,7 +296,7 @@ significatif</strong></code><code><strong>s</strong>au chargement</code></p>
 
 <p>car les blancs de début et de fin de l'élément <code>strong</code> sont
 considérés comme non significatifs et sont donc supprimés. La forme correcte
-autait été:</p>
+aurait été:</p>
 
 <p><code>&lt;p&gt;Amaya supprime les &lt;strong&gt;blancs non
 significatifs&lt;/strong&gt; au chargement&lt;/p&gt;</code></p>

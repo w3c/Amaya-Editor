@@ -1171,12 +1171,6 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
       /* met la nouvelle valeur de l'attribut dans l'element et */
       /* applique les regles de presentation de l'attribut a l'element */
       AttachAttrWithValue (pEl, pDoc, pAttr);
-      /* special attributes */
-      if (ThotLocalActions[T_attrtable])
-   	(*(Proc3)ThotLocalActions[T_attrtable]) (
-		(void *)pEl,
-		(void *)pAttr,
-		(void *)pDoc);
     }
 }
 
@@ -1440,14 +1434,6 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 	    pAttrNew->AeAttrReference = Ref;
 	    pAttrNew->AeAttrReference->RdElement = NULL;
 	    pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
-	    /* demande a l'utilisateur l'element reference' */
-	    if (LinkReference (firstSel, pAttrNew, SelDoc))
-	      if (ThotLocalActions[T_checkextens] != NULL)
-		(*(Proc4)ThotLocalActions[T_checkextens]) (
-			(void *)pAttrNew,
-			(void *)firstSel,
-			(void *)lastSel,
-			(void *)FALSE);
 	    /* applique l'attribut a la partie selectionnee */
 	    AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 			       firstSel, SelDoc, TRUE);

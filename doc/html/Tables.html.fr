@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editer des tables</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -29,9 +30,10 @@
 <h2>Editer des tables</h2>
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans
-<strong>Amaya</strong>. Une table est une simple structure décrite par le DTD
+<strong>Amaya</strong>. Une table est une simple structure décrite par la DTD
 HTML et elle est éditée comme telle. Les commandes pour les tables sont les
-mêmes que pour les autres structures HTML, avec quelques suppXhtml.</p>
+mêmes que pour les autres structures HTML, avec quelques fonctions
+supplémentaires.</p>
 
 <h3><a name="Creating">Créer une nouvelle table</a></h3>
 
@@ -42,8 +44,8 @@ qui vous permet de spécifier le nombre initial de lignes et de colonnes pour
 la nouvelle table, ainsi que sa bordure. Si vous avez fait ça par erreur,
 cliquez simplement sur le bouton <strong>Annuler</strong>. Pour créer une
 nouvelle table à la position courante, cliquez sur le bouton
-<strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
-suivante (3 colonnes et 2 lignes dans ce cas) :</p>
+<strong>Confirmer</strong>. Amaya engendrera ainsi quelque chose comme la
+table suivante (3 colonnes et 2 lignes dans ce cas) :</p>
 
 <table border="1" summary="table">
   <caption>I</caption>
@@ -116,7 +118,7 @@ paragraphe après la table.</p>
 <h3><a name="Removing">Détruire une colonne</a></h3>
 
 <p>Il n'existe pas de commande spécifique pour créer une nouvelle colonne.
-Quand vous créez une nouvelle cellule, Amaya génère la nouvelle colonne
+Quand vous créez une nouvelle cellule, Amaya engendre la nouvelle colonne
 correspondante. Quand vous supprimez une cellule dans une colonne elle
 devient vide et Amaya détruit la colonne automatiquement.Mais il existe une
 commande spécifique (Détruire colonne de table) pour détruire une colonne,
@@ -132,13 +134,13 @@ H1, H2, etc. ou sélectionnant une entrée dans le menu <strong>Xhtml</strong>)
 pendant qu'un composant de la table est sélectionné. Quand vous voulez créer
 un élément après la table, vous devez sélectionner la table entière
 (contrôler la sélection courante dans la ligne du bas de la fenêtre) et taper
-sur la touche Enter. Amaya génèrera un paragraphe après la table. Ce nouveau
-paragraphe peut être modifié si besoin est.</p>
+sur la touche Enter. Amaya engendrera un paragraphe après la table. Ce
+nouveau paragraphe peut être modifié si besoin est.</p>
 
 <p><em>Notez que le modèle de table implémenté dans</em>
 <strong><em>Amaya</em></strong> <em>est le modèle d'</em><a
 href="../../TR/REC-html40"><em>HTML&nbsp;4.0</em></a><em>. Celui ci inclus
-des carastéristiques comme les corps multiples
+des caractéristiques comme les corps multiples
 (</em><code><em>tbody</em></code><em>), des entêtes de table
 (</em><code><em>thead</em></code><em>) et des bas de table
 (</em><code><em>tfoot</em></code><em>).</em></p>

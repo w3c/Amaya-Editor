@@ -84,6 +84,58 @@ ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 
 
 /*----------------------------------------------------------------------
+  SearchTypeExcept looks in the element pElToCut for an element with:
+  - exception TypeExcept
+  - same schema
+  - not a copy
+  Skip elements with:
+  - exception PageBreak
+  - natures
+  - copies
+  Stop the research on element StopElem if Restrict = TRUE
+  Returns the pointer to the found element trouve or NULL.
+  ----------------------------------------------------------------------*/
+PtrElement SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem,
+			     int TypeExcept, ThotBool Restrict)
+{
+  PtrElement          pE, Repetition;
+
+  Repetition = NULL;
+  if (pElToCut != NULL && !pElToCut->ElTerminal)
+    {
+      for (pE = pElToCut->ElFirstChild; pE != NULL; pE = pE->ElNext)
+	{
+	  if (Restrict && pE == StopElem)
+	    /* on arrete la recherche */
+	    break;
+	  else
+	    {
+	      if (pE->ElStructSchema == pElToCut->ElStructSchema &&
+		/* same schema and not a copy */
+		  pE->ElSource == NULL)
+		{
+		  if (TypeHasException (TypeExcept, pE->ElTypeNumber
+					, pE->ElStructSchema))
+		    /* exception ok */
+		    {
+		      Repetition = pE;
+		      /* c'est donc le bon */
+		      break;
+		    }
+		  else
+		    /* recursion */ 
+		    if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber,
+					   pE->ElStructSchema))
+		      SearchTypeExcept (pE, StopElem, TypeExcept, Restrict);
+		}
+	    }
+	}
+    }
+  return Repetition;
+}
+
+
+/*----------------------------------------------------------------------
    AttrHasException returns TRUE if the exception exceptNum is associated
    to the attribute attr in the structure schema pSS.
   ----------------------------------------------------------------------*/

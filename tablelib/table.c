@@ -1,3 +1,4 @@
+#ifdef IV
 /*
  *
  *  (c) COPYRIGHT INRIA, 1996-2002
@@ -1633,3 +1634,4 @@ void TableauLoadResources ()
 }
 
 /* End Of Module table */
+#endif 

@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -103,7 +104,7 @@ alt="The Add/Remove ID menu" /></p>
 
 <h4>Liens externes</h4>
 
-<p>Pour créér une ancre qui est un lien vers un autre document :</p>
+<p>Pour créer une ancre qui est un lien vers un autre document :</p>
 <ol>
   <li><a href="Selecting.html.fr#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>

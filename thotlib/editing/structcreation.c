@@ -82,6 +82,7 @@ static ThotBool     createPasteMenuOK;
 #include "exceptions_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
+#include "paginate_f.h"
 #include "presvariables_f.h"
 #include "readpivot_f.h"
 #include "references_f.h"
@@ -91,6 +92,7 @@ static ThotBool     createPasteMenuOK;
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
+#include "tableH_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
 #include "views_f.h"
@@ -178,26 +180,6 @@ void InsertOption (PtrElement pEl, PtrElement *pOption, PtrDocument pDoc)
 	     AbstractImageUpdated (pDoc);
 	  }
      }
-}
-
-/*----------------------------------------------------------------------
-   CreationExceptions						
-  ----------------------------------------------------------------------*/
-void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
-{
-   ThotBool            b;
-
-   if (pEl->ElTypeNumber == PageBreak + 1)
-      if (ThotLocalActions[T_insertpage] != NULL)
-	 (*(Proc4)ThotLocalActions[T_insertpage]) (
-		(void *)pEl,
-		(void *)pDoc,
-		(void *)0,
-		(void *)&b);
-   if (ThotLocalActions[T_createtable] != NULL)
-      (*(Proc2)ThotLocalActions[T_createtable]) (
-		(void *)pEl,
-	       	(void *)pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -2853,10 +2835,22 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 
 
 /*----------------------------------------------------------------------
+   CreationExceptions						
+  ----------------------------------------------------------------------*/
+void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
+{
+   ThotBool            b;
+
+   if (pEl->ElTypeNumber == PageBreak + 1)
+     InsertPageInTable (pEl, pDoc, 0, &b);
+}
+
+#ifdef IV
+/*----------------------------------------------------------------------
    CreateInsertPageMenu cree le menu d'insertion des pages en fonction de     
    la selection courante.                                             
   ----------------------------------------------------------------------*/
-void                CreateInsertPageMenu ()
+void CreateInsertPageMenu ()
 {
    PtrElement          firstSel, lastSel;
    PtrDocument         pDoc;
@@ -2920,7 +2914,7 @@ void                CreateInsertPageMenu ()
 	   BuildPasteMenu (NumMenuInsert, menuBuf, titre, nItems, 'L');
      }
 }
-
+#endif
 
 /*----------------------------------------------------------------------
    CreatePasteIncludeCmd    traite les commandes INSERT, PASTE et INCLUDE.     
@@ -3614,7 +3608,6 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
    copie d'element si paste est faux.                              
    item est le numero de l'entree choisie dans le menu.             
   ----------------------------------------------------------------------*/
-
 void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 {
    PtrElement          firstSel, lastSel, newsel, pEl, pLeaf, pFollow,
