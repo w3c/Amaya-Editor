@@ -63,7 +63,6 @@ static List     *typesList;
 
 #ifdef _WINDOWS
 static HWND       FilterHwnd = NULL;
-static ThotWindow FilterSelHwnd = NULL;
 #endif /* WINDOWS */
 
 typedef struct _typeSelector
@@ -298,18 +297,19 @@ static void WIN_AnnotFilterNewSelector (Document doc, CHAR_T *entries, int nb_en
   int index = 0;
   int i = 0;
 
-  if (!FilterSelHwnd)
-    /* create a new window if it didn't exist */
+	/*
     FilterSelHwnd = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				 10, 40, 310, 200, FilterHwnd, (HMENU) 1, 
 				(HINSTANCE) GetWindowLong (FilterHwnd, GWL_HINSTANCE), NULL);
-  else
-    /* erase the text of the existing window */
-    SendMessage (FilterSelHwnd, LB_RESETCONTENT, 0, 0);
+	*/
+
+  /* erase the text of the existing window */
+  SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_RESETCONTENT, 0, 0);
 
   while (i < nb_entries && entries[index] != '\0')
     {
-      SendMessage (FilterSelHwnd, LB_INSERTSTRING, i, (LPARAM) &entries[index]); 
+      SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL, LB_INSERTSTRING,
+		  i, (LPARAM) &entries[index]); 
       /* @@ Longueur de l'intitule ?? */
       index += ustrlen (&entries[index]) + 1;
       i++;
@@ -662,14 +662,17 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
 	  FilterHwnd = hwnDlg;
+	  /* write the dialogue text */
       SetWindowText (hwnDlg, "Annotation Local Filter Menu");
-      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), "Show selection");
-      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), "Hide selection");
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), "Show");
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), "Hide");
       SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), "Show all");
 	  SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), "Hide all");
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-
+	  /* display the by author items */
       BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+  	  /* select the by author radio button */
+	  i = CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR, IDC_FILTERBYAUTHOR);
     break;
     
     case WM_CLOSE:
@@ -677,43 +680,85 @@ LPARAM lParam;
 	  FilterHwnd = NULL;
 	  /* the filter select window is destroyed automatically when we kill
 		  the parent window */
-	  FilterSelHwnd = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1)
-	{
-	  if (HIWORD (wParam) == LBN_SELCHANGE)
-	    {
-	      itemIndex = SendMessage (FilterSelHwnd, LB_GETCURSEL, 0, 0);
-	      itemIndex = SendMessage (FilterSelHwnd, LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
-		  break;
-	    }
-	}
 
     switch (LOWORD (wParam))
 	{
+
+	/* list box (filter select) */
+	case IDC_FILTERSEL:
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	    {
+		  /* get the index of the selected item */
+	      itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+				LB_GETCURSEL, 0, 0);
+		  /* get the text of this item */
+	      SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+				LB_GETTEXT, itemIndex, (LPARAM) AnnotSelItem);
+		  break;
+	  }
+		break;
+
+	  /* radio buttons */
+	case IDC_FILTERBYAUTHOR:
+	  if (AnnotSelType != 0)
+	  {
+	    AnnotSelType = 0;
+		CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYAUTHOR);
+        BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	  }
+	  break;
+
+	case IDC_FILTERBYTYPE:
+	  if (AnnotSelType != 1)
+	  {
+	    AnnotSelType = 1;
+		CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYTYPE);
+        BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	  }
+	  break;
+
+	case IDC_FILTERBYSERVER:
+	if (AnnotSelType != 2)
+	{
+	  AnnotSelType = 2;
+	  CheckRadioButton (hwnDlg, IDC_FILTERBYAUTHOR, IDC_FILTERBYSERVER, IDC_FILTERBYSERVER);
+	  BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
+	}
+	  break;
+
+	 /* action buttons */
 	case ID_ANNOTSHOW:
+	  /* memorize the last selection */
+	  itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+	 			  LB_GETCURSEL, 0, 0);
 	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
 				 AnnotSelItem, TRUE);
-	  /* maybe refresh the dialogue */
+		/* select it again (as the selection gets deselected automatically */
+	  SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+			LB_SETCURSEL, itemIndex, 0);
 	  break;
 	  
 	case ID_ANNOTHIDE:
+	  /* memorize the last selection */
+	  itemIndex = SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+	 			  LB_GETCURSEL, 0, 0);
 	  ChangeAnnotVisibility (AnnotFilterDoc, AnnotSelType, 
 				 AnnotSelItem, FALSE);
-	  /* maybe refresh the dialogue */
+		/* select it again (as the selection gets deselected automatically */
+	  SendDlgItemMessage (FilterHwnd, IDC_FILTERSEL,
+			LB_SETCURSEL, itemIndex, 0);
 	  break;
 
 	case ID_ANNOTSHOWALL:
 	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, TRUE);
-	  /* maybe refresh the dialogue and reset the selection */
 	  break;
 
 	case ID_ANNOTHIDEALL:
 	  DocAnnotVisibility (AnnotFilterDoc, AnnotFilterView, FALSE);
-	  /* maybe refresh the dialogue and reset the selection */
 	  break;
 
 	case ID_DONE:
