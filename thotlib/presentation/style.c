@@ -2542,7 +2542,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      /*  select the good starting point depending on the context */
 	      if (ctxt->box)
 		pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
-	      if (pRule && documentDisplayMode[doc - 1] != NoComputedDisplay)
+	      if (pRule)
 		{
 		  i = 0;
 		  while (attrType == 0 && i < MAX_ANCESTORS)
