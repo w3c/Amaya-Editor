@@ -18,7 +18,7 @@ extern void InsertChar ( int frame,
                          int keyboard );
 extern void TtcInsertChar ( Document doc,
                             View view,
-                            unsigned char c );
+                            CHAR_T c );
 extern void TtcCutSelection ( Document doc,
                               View view );
 extern void TtcDeletePreviousChar ( Document doc,
@@ -51,7 +51,7 @@ extern void InsertChar (/* int frame,
                            int keyboard */);
 extern void TtcInsertChar (/* Document doc,
                               View view,
-                              unsigned char c */);
+                              CHAR_T c */);
 extern void TtcCutSelection (/* Document doc,
                                 View view */);
 extern void TtcDeletePreviousChar (/* Document doc,

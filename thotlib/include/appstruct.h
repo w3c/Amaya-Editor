@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -115,7 +115,7 @@ extern void         TtcHolophrast (Document document, View view);
 extern void         TtcInclude (Document document, View view);
 extern void         TtcIndex (Document document, View view);
 extern void         TtcInsert (Document document, View view);
-extern void         TtcInsertChar (Document document, View view, unsigned char c);
+extern void         TtcInsertChar (Document document, View view, CHAR_T c);
 extern void         TtcInsertGraph (Document document, View view, unsigned char c);
 extern void         TtcInsertLineBreak (Document document, View view);
 extern void         TtcInsertPageBreak (Document document, View view);

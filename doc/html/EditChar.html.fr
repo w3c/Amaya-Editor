@@ -30,11 +30,6 @@
 <div id="Keyboard">
 <h3>Entrer des caractères ISO-Latin et Unicode dans Amaya</h3>
 
-<p>Pour obtenir un espace non sécable avec Amaya, vous devez taper la touche
-<code>Control</code> avec la touche <code>Esspace</code>. Ce caractère sera
-<a href="Browsing.html.fr#entite">sauvé comme une entité</a>
-(<code>&amp;nbsp;</code>).</p>
-
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
 depuis le clavier, Amaya utilise le support standard fournit par le système
 (Operating System). Un support multi-touches est aussi fourni pour les
@@ -46,6 +41,26 @@ qu'une autre, se fait par l'utilisateur grâce à l'entrée de dialogue
 href="Configure.html.fr#Enable">Spécial/Préférences/Générales</a>. Quand le
 <a href="#Optional">support multi-touches optionnel</a> est activé et le
 support multi-touches standard est désactivé.</p>
+
+<p>Amaya fournit un mécanisme pour assigner <a href="ShortCuts.html.fr">des
+raccourcis clavier</a> à des caractères non disponibles au clavier. Quelques
+uns sont prédéfinis&nbsp;:</p>
+<ul>
+  <li>Pour obtenir un espace non sécable, vous devez taper <code>Control -
+    espace</code>. Ce caractère sera <a href="Browsing.html.fr#entite">sauvé
+    comme une entité</a> (<code>&amp;nbsp;</code>).</li>
+  <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -
+  e</code>.</li>
+  <li>Pour obtenir un &oelig; (oelig), vous devez taper <code>Control -
+    o</code> puis Control - e.</li>
+  <li>Pour obtenir un &OElig; (OElig), vous devez taper <code>Shift - Control
+    - o</code> puis <code>Shift - Control - e</code>.</li>
+  <li>Pour obtenir un «, vous devez taper  <code>Control - &lt;</code> ou
+    Shift - <code>Control - &lt;</code> (cela dépend de votre clavier).</li>
+  <li>Pour obtenir un », vous devez taper <code>Shift - Control - &gt;</code>.
+    <p></p>
+  </li>
+</ul>
 
 <p>On donne une description des deux méthodes d'insertion de caractères par
 combinaison de touches, pour les autres méthodes il faut se reporter aux

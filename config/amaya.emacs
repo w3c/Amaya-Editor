@@ -79,7 +79,6 @@ Alt <Key>Left:      TtcPageTop()
 Alt <Key>Right:     TtcPageEnd()
 
 #File menu 
-Shift Ctrl <Key>N:                 ChangeTitle()
 Ctrl <Key>x , Ctrl <Key>f:         OpenDoc() 
 Ctrl <Key>x , Ctrl <Key>o:         OpenDocInNewWindow() 
 Ctrl <Key>x , Ctrl <Key>b:         NewXHTMLBasic() 
@@ -101,6 +100,12 @@ Ctrl <Key>x , Ctrl <Key>k:         CloseDocument()
 Ctrl <Key>x , Ctrl <Key>c:         AmayaClose()
 hift Alt <Key>V , Alt <Key>x:         TtcCloseView()
 Ctrl <Key>x , Ctrl <Key>z:         Synchronize()
+Ctrl <Key><:                                TtcInsertChar("\253")
+Shift Ctrl <Key><:                          TtcInsertChar("\253")
+Shift Ctrl <Key>>:                          TtcInsertChar("\273")
+Ctrl <Key>o , Ctrl <Key>e:        	    TtcInsertChar("&#339;")
+Shift Ctrl <Key>O , Shift Ctrl <Key>E:      TtcInsertChar("&#338;")
+Alt <Key>e:                                 TtcInsertChar("&#8364;")
 
 #edit menu 
 Ctrl <Key>w:                       TtcCutSelection() 
@@ -115,6 +120,7 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
  
 #Types 
+Ctrl <Key>t , Ctrl <Key>n:         ChangeTitle()
 Shift <Key>Return:                 CreateParagraph() 
 Ctrl <Key>t , Ctrl <Key>w:         CreatePreformatted() 
 Ctrl <Key>t , Ctrl <Key>i:         CreateImage() 

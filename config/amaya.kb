@@ -8,9 +8,12 @@
 # You have to distinguish between <Alt/Control><Key> sequences and
 # <Shift><Alt/Control><Key> sequences.
 # For example:
-# Alt <Key>+:		ZoomIn()	## is wrong
-# Shift Alt <Key>+:	ZoomIn()	## is correct
-# Alt <Key>=:	    ZoomIn()	## is correct
+# Ctrl <Key>O:		ZoomIn()	## is wrong
+# Shift  <Key>O:	ZoomIn()	## is correct
+# Alt <Key>=:	        ZoomIn()	## is correct
+#
+# On Windows platforms Shift Alt is reserved by the system and
+# cannot be used to define shortcuts
 #
 # Ctrl-x, c, v are used for cut, copy, paste
 # Ctrl-z and Ctrl-y are used for Undo/Redo
@@ -60,8 +63,12 @@ Ctrl <Key>Home:     TtcPageTop()
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction() 
 Alt <Key>Home:      GoToHome()
-Ctrl <Key><:        TtcInsertChar("\253")
-Shift Ctrl <Key>>:  TtcInsertChar("\273")
+Ctrl <Key><:                                TtcInsertChar("\253")
+Shift Ctrl <Key><:                          TtcInsertChar("\253")
+Shift Ctrl <Key>>:                          TtcInsertChar("\273")
+Ctrl <Key>o , Ctrl <Key>e:        	    TtcInsertChar("&#339;")
+Shift Ctrl <Key>O , Shift Ctrl <Key>E:      TtcInsertChar("&#338;")
+Alt <Key>e:                                 TtcInsertChar("&#8364;")
 
 #File menu 
 Ctrl <Key>o:                       OpenDoc() 
@@ -86,7 +93,6 @@ Ctrl <Key>w:                       CloseDocument()
 Ctrl <Key>q:                       AmayaClose()
 Alt <Key>v , Alt <Key>x:           TtcCloseView()
 Alt <Key>v , Alt <Key>w:           Synchronize()
-Shift Alt <Key>O:                  ChangeTitle()
 
 #edit menu 
 Ctrl <Key>x:	                   TtcCutSelection()
@@ -102,7 +108,7 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 Ctrl <Key>k:                       SpellCheck()
  
 #Types 
-Shift Ctrl <Key>N:                 ChangeTitle()
+Ctrl <Key>t , Ctrl <Key>n:         ChangeTitle()
 Shift <Key>Return:                 CreateParagraph() 
 Ctrl <Key>t , Ctrl <Key>w:         CreatePreformatted() 
 Ctrl <Key>t , Ctrl <Key>i:         CreateImage() 

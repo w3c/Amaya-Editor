@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -45,7 +45,11 @@ la commande correspondante invoquée.</p>
               'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /
               'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
- Char = KeyValue / OctalValue ; OctalValue = '\' NUMBER ; </pre>
+ Char = KeyValue / OctalValue / Entity ;
+ OctalValue = '\' NUMBER ; 
+ Entity = DecEntity / HexaEntity ;
+ DecEntity = '&amp;' '#' NUMBER ';' ;
+ HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</pre>
 
 <p>Par exemple, regardez les fichiers standards <code>amaya.keyboard</code>
 (pour stations Unix) et <code>amaya.kb</code> (pour stations Windows), qui
@@ -93,11 +97,11 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <p class="menuItems"><span style="color: #E55500">DoAction.</span></p>
   </li>
   <li>Une commande qui permet de sauter au prochain (ou au premier s'il n'y a
-    pas de sélection) lien ou élément de formulaire HTML : 
+    pas de sélection) lien ou élément de formulaire HTML&nbsp;: 
     <p><span style="color: #E55500">NextLinkOrFormElement.</span></p>
   </li>
   <li>Une commande qui permet de sauter lien ou élément de formulaire HTML
-    précédent : 
+    précédent&nbsp;: 
     <p><span style="color: #E55500">PreviousLinkOrFormElement.</span></p>
   </li>
   <li>Dans le menu <code>Fichier</code> :<span style="color: #FFDA95"></span> 

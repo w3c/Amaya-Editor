@@ -3216,7 +3216,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
-void TtcInsertChar (Document doc, View view, unsigned char c)
+void TtcInsertChar (Document doc, View view, CHAR_T c)
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;

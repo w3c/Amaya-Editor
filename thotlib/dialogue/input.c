@@ -881,7 +881,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
       
 	  if (found)
 	    {
-	      value = (unsigned char) ptr->K_Value;
+	      value = ptr->K_Value;
 	      command = ptr->K_Command;
 	    }
 	}
@@ -952,7 +952,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 			if (Automata_current == NULL)
 			  {
 			    /* one key shortcut */
-			    value = (unsigned char) ptr->K_Value;
+			    value = ptr->K_Value;
 			    command = ptr->K_Command;
 			  }
 		      }
@@ -1129,7 +1129,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		(*MenuActionList[0].Call_Action) (document, view, SPACE);
 	    }
 	  else if (value == 9 ||
-		   ( value >= 32 && value < 128) || (value >= 144 && value < 256))
+		   ( value >= 32))
 	    {
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  value == TAB)
@@ -1341,9 +1341,9 @@ ThotTranslations InitTranslations (char *appliname)
   char                line[200];  /* ligne en construction pour motif */
   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
-  int                 e, i;
+  int                 e, i, j;
   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
-  int                 len, max;
+  int                 len, max, value;
   FILE               *file;
   ThotTranslations    table = 0;
   ThotBool            isSpecialKey1, isSpecialKey2;
@@ -1574,10 +1574,9 @@ ThotTranslations InitTranslations (char *appliname)
 		      break;
 		} 
 
-	      /* Est-ce une translation valable pour le texte Motif */
 	      if (i <= 8)
 		{
-		  /* FnCopy la ligne dans le source de la table de translations */
+		  /* Prepare translations for Motif */
 		  strcat (text, line);
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {
@@ -1605,15 +1604,29 @@ ThotTranslations InitTranslations (char *appliname)
 
 	      if (i == 0)
 		{
-		  /* C'est l'action insert-string */
-		  /* FnCopy la ligne dans le source de la table de translations */
-		  strcat (text, line);
-		  strcat (text, AsciiTranslate (transText));
-		  strcat (text, "\n");
-		  /* C'est un encodage de caractere */
-		  adr = AsciiTranslate (&transText[len]);
+		  /* action insert-string */
+		  if (transText[len] == '&' && transText[len + 1] == '#')
+		    {
+		      /* it's an entity */
+		      j = 2;
+		      while (transText[len + j] != EOS &&
+			     transText[len + j] != ';' &&
+			     transText[len + j] != ')' &&
+			     transText[len + j] != '"')
+			j++;
+		      transText[len + j] = EOS;
+		      if (transText[len + 2] == 'x')
+			sscanf (&transText[len + 3], "%x", &value);
+		      else
+			sscanf (&transText[len + 2], "%d", &value);
+		    }
+		  else
+		    {
+		      adr = AsciiTranslate (&transText[len]);
+		      value = (unsigned char) adr[0];
+		    }
 		  MemoKey (mod1, key1, isSpecialKey1,
-			   mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
+			   mod2, key2, isSpecialKey2, value, 0);
 		}
 	      else if (i < max)
 		{

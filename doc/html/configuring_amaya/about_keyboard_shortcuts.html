@@ -7,7 +7,7 @@
   <title>About Keyboard Shortcuts</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,16 +38,22 @@ a keyboard sequence.</p>
 <p>The syntax used to define an association is:</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
- KeysSeq = KeySet [ ',' KeySet ] ;<br />
- KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
- Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
- Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
- KeyValue = 'a' / 'b' / ... ;<br />
- SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
-              'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
-              'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
- IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
- Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ;</code></p>
+&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
+&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
+&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
+&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
+&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
+&nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
+&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
+&nbsp;Char = KeyValue / OctalValue / Entity ;</code><code><br />
+ OctalValue = '\' NUMBER ;<br />
+ Entity = DecEntity / HexaEntity ; <br />
+ DecEntity = '&amp;' '#' NUMBER ';' ; <br />
+ HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code></p>
 
 <p>To view an example, see the standard files amaya.keyboard (for Unix
 platforms) and amaya.kb (for Windows platforms), which are located in the

@@ -10,6 +10,7 @@ extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
 extern int CharacterWidth ( unsigned char c,
                             PtrFont font );
+extern int SpecialCharBoxWidth ( CHAR_T c );
 extern int BoxCharacterWidth ( CHAR_T c,
                                SpecFont specfont );
 extern int CharacterHeight ( unsigned char c,
@@ -64,6 +65,7 @@ extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
 extern int CharacterWidth (/* unsigned char c,
                               PtrFont font */);
+extern int SpecialCharBoxWidth (/* CHAR_T c */);
 extern int BoxCharacterWidth (/* CHAR_T c,
                                  SpecFont specfont */);
 extern int CharacterHeight (/* unsigned char c,
