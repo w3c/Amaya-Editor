@@ -3420,6 +3420,8 @@ void DestroyFrame (int frame)
 #endif /* _WX */
   
 #ifdef _GL
+  /* set the frame context active to avoid mesa warnings */
+  GL_prepare (frame);
   GL_DestroyFrame (frame);
 #endif /* _GL */
   
