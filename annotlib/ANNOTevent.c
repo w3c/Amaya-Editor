@@ -958,9 +958,6 @@ void ANNOT_Post_callback (int doc, int status,
      {
        AnnotMeta *annot = GetMetaData (source_doc, doc);
 
-       TtaSetDocumentUnmodified (doc);
-       DocStatusUpdate (doc, TRUE);
-
        /* Use the server's metadata answer to update our local metadata
 	  and the reverse links that point to the annotation */
        /* @@ needs more work to handle error return codes */
@@ -1172,6 +1169,9 @@ void ANNOT_Post_callback (int doc, int status,
 	       if (ctx->localfile)
 		   TtaFileUnlink (ctx->localfile);
 	     }
+	   TtaSetDocumentUnmodified (doc); 
+	   /* switch Amaya buttons and menus */
+	   DocStatusUpdate (doc, TRUE);
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
      }
@@ -1379,6 +1379,8 @@ void ANNOT_SaveDocument (Document doc_annot, View view)
       if (ANNOT_LocalSave (doc_annot, filename))
 	{
 	  TtaSetDocumentUnmodified (doc_annot);
+	  /* switch Amaya buttons and menus */
+	  DocStatusUpdate (doc_annot, FALSE);
 	  LINK_SaveLink (DocumentMeta[doc_annot]->source_doc, isReplyTo);
 	}
       TtaFreeMemory (filename); 
