@@ -181,6 +181,15 @@ typedef unsigned char   ThotBool;
 #define PATH_SEP ':'
 #define PATH_STR ":"
 
+#define WC_DIR_SEP  TEXT('/')
+#define WC_PATH_SEP TEXT(':')
+#define WC_DIR_STR  TEXT("/")
+#define WC_PATH_STR TEXT(":")
+
+#define CUS_DIR_SEP  CUSTEXT('/')
+#define CUS_PATH_SEP CUSTEXT(':')
+#define CUS_DIR_STR  CUSTEXT("/")
+#define CUS_PATH_STR CUSTEXT(":")
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
 #ifdef _I18N_
