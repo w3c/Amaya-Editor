@@ -42,7 +42,7 @@
 #include "boxselection_f.h"
 
 
-#define MAX_DISTANCE 2000
+#define MAX_DISTANCE THOT_MAXINT
 
 /*----------------------------------------------------------------------
   GetDistance returns 0 if value is between -delta and +delta.
@@ -71,6 +71,9 @@ int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio)
 
   /* check limits given by an enclosing cell */
   pCell = GetParentCell (pBox);
+  if (pCell && pCell->AbPrevious && pCell->AbPrevious->AbPresentationBox)
+    /* use the pesentation box limits */
+    pCell = pCell->AbPrevious;
   xcell = ycell = 0;
   wcell = hcell = MAX_DISTANCE;
 #ifdef _GL
@@ -108,7 +111,8 @@ int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio)
   if (xRef < xcell || xRef > xcell + wcell ||
       yRef < ycell || yRef > ycell + hcell)
     return MAX_DISTANCE;
-  value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
+  else
+    value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
   return (value);
 }
 

@@ -1343,8 +1343,9 @@ void TtcUndo (Document doc, View view)
 {
    PtrDocument          pDoc;
    DisplayMode          dispMode;
-   ThotBool		doit;
+   ThotBool		doit, lock;
 
+   lock = TRUE;
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastEdit)
      /* history is empty */
@@ -1357,6 +1358,13 @@ void TtcUndo (Document doc, View view)
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
+   if (ThotLocalActions[T_islock])
+     {
+       (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
+       if (!lock)
+	 /* table formatting is not locked, lock it now */
+	 (*ThotLocalActions[T_lock]) ();
+     }
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1376,6 +1384,10 @@ void TtcUndo (Document doc, View view)
          Remove it from the editing history and put it in the Redo queue */
          MoveEditToRedoQueue (pDoc);
       }
+
+   if (!lock)
+     /* unlock table formatting */
+     (*ThotLocalActions[T_unlock]) ();
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DisplayImmediately);
 }

@@ -837,7 +837,7 @@ void CopyCommand ()
 	    {
 	      /* copy the element with its attributes */
 	      /* if referred loose the reference */
-	      if (enclosingCell == NULL &&
+	      if (enclosingCell == NULL && !WholeColumnSelected &&
 		  TypeHasException (ExcIsCell, pEl->ElTypeNumber,
 				    pEl->ElStructSchema))
 		{
@@ -976,7 +976,8 @@ static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
 	  else
 	    pNext = NextInSelection (pNext, lastSel);
 	}
-      else if (TypeHasException (ExcIsCell, pNext->ElTypeNumber,
+      else if (!WholeColumnSelected &&
+	       TypeHasException (ExcIsCell, pNext->ElTypeNumber,
 				 pNext->ElStructSchema))
 	{
 	  if (pNext->ElFirstChild)
