@@ -1610,6 +1610,8 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
   pAb = pFrame->FrAbstractBox;
+  if (pAb == NULL)
+    return;
   GetSizesFrame (frame, &l, &h);
   pBox = pAb->AbBox;
   if (pBox == NULL)
