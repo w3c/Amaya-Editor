@@ -180,11 +180,13 @@ typedef struct FrCatalogue {
 
 FrCatalogue FrameCatList [MAX_FRAME] ;
 
+#if 0
 char* thotargv[] = {
       "amaya", "/users/guetari/opera/WINNT/test.html"
 };
 
 int                 thotargc = 1;
+#endif /* 0 */
 
 #ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
@@ -596,6 +598,68 @@ HWND hWnd;
    MessageBox (hWnd, str, tszAppName, MB_OK);
 }
 
+#ifdef __STDC__
+int makeArgcArgv (HINSTANCE hInstance, char*** pArgv, char* commandLine)
+#else  /* __STDC__ */
+int makeArgcArgv (hInstance, pArgv, commandLine)
+HINSTANCE hInstance; 
+char***   pArgv; 
+char*     commandLine;
+#endif /* __STDC__ */
+{
+    int          argc;
+    static char* argv[20];
+    static char  argv0[256];
+    char*        ptr     = commandLine;
+    char         lookFor = 0;
+
+    enum {
+	nowAt_start, 
+	nowAt_text
+    } nowAt;
+
+    *pArgv = argv;
+    argc   = 0;
+    GetModuleFileName (hInstance, argv0, sizeof (argv0));
+    /* argv[argc++] = argv0; */
+    for (nowAt = nowAt_start;;) {
+        if (!*ptr) {
+	   argv[0] = (char*) malloc (6) ;
+           strcpy (argv[0], "amaya");
+           return (argc);
+	}
+        if (lookFor) {
+           if (*ptr == lookFor) {
+	      nowAt = nowAt_start;
+	      lookFor = 0;
+	      *ptr = 0;   /* remove the quote */
+	   } else if (nowAt == nowAt_start) {
+	        argv[argc++] = ptr;
+                nowAt = nowAt_text;
+	   }
+	   ptr++;
+	   continue;
+        }
+        if (*ptr == ' ' || *ptr == '\t') {
+           *ptr = 0;
+	   ptr++;
+	   nowAt = nowAt_start;
+	   continue;
+        }
+        if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start) {
+           lookFor = *ptr;
+	   nowAt = nowAt_start;
+	   ptr++;
+	   continue;
+        }
+        if (nowAt == nowAt_start) {
+           argv[argc++] = ptr;
+	   nowAt = nowAt_text;
+        }
+        ptr++;
+    }
+}
+
 /*----------------------------------------------------------------------
    WinMain
   ----------------------------------------------------------------------*/
@@ -609,12 +673,15 @@ LPSTR     lpCommand;
 int       nShow;
 #endif /* __STDC__ */
 {
+   int    argc ;
+   char** argv;
 
    hInstance  = hInst;
    nAmayaShow = nShow;
    tszAppName = "Amaya";
 
-   thotmain (thotargc, thotargv);
+   argc = makeArgcArgv (hInst, &argv, lpCommand);
+   thotmain (argc, argv);
    return (TRUE);
 }
 #endif /* _WINDOWS */
@@ -1445,7 +1512,7 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
-   RootShell.style         = 0 ;
+   RootShell.style         = CS_DBLCLKS ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
    RootShell.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;

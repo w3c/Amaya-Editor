@@ -975,20 +975,6 @@ LPARAM      lParam;
 
      switch (mMsg) {
             case WM_CREATE:
-		 /* If not true color device, initialize thot palette colors */
-		/*
-		 if (!TtIsTrueColor && !paletteRealized) {
-		    HDC hDC ;
-		    paletteRealized = TRUE;
-		    hDC = GetDC (hwnd);
-		    if (!SelectPalette (hDC, TtCmap, FALSE))
-		       WinErrorBox (hwnd);
-		    else if (!RealizePalette (hDC))
-		       WinErrorBox (hwnd);
-		    ReleaseDC (hwnd, hDC);
-		 }
-		 */
-
 	         /* Create toolbar  */
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;

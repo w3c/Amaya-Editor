@@ -1257,17 +1257,17 @@ void                TtaMainLoop ()
 {
    NotifyEvent         notifyEvt;
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    MSG                 msg;
-#else /* ! _WINDOWS */
+#  else /* ! _WINDOWS */
    ThotEvent              ev;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    if (NewInitMainLoop) NewInitMainLoop(app_cont);
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    TtaInstallMultiKey ();
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
    UserErrorCode = 0;
    /* Sends the message Init.Pre */
    notifyEvt.event = TteInit;
@@ -1286,13 +1286,13 @@ void                TtaMainLoop ()
 	    NewMainLoop();
 	    continue;
 	  }
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
         TtaFetchOneEvent(&ev);
 	TtaHandleOneEvent(&ev);
-#else  /* !_WINDOWS */
+#       else  /* !_WINDOWS */
 	if (GetMessage (&msg, NULL, 0, 0))
 	   TtaHandleOneWindowEvent (&msg);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
      }
 }				/*TtaMainLoop */
 
