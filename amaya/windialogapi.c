@@ -2023,16 +2023,15 @@ LRESULT CALLBACK CharacterDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	break;
       }
       break;
-
+    case WM_CLOSE:
+    case WM_DESTROY:
+	  CharacterForm = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
     case WM_COMMAND:
       switch (LOWORD (wParam)) {
       case ID_DONE:
 	ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 0);
-	CharacterForm = NULL;
-	EndDialog (hwnDlg, ID_DONE);
-	break;
-      case WM_CLOSE:
-      case WM_DESTROY:
 	CharacterForm = NULL;
 	EndDialog (hwnDlg, ID_DONE);
 	break;
@@ -2456,7 +2455,12 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
     SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, Old_lineSp, FALSE);
     break;
     
-  case WM_COMMAND:
+    case WM_CLOSE:
+    case WM_DESTROY:
+ 	  FormatForm = NULL;	
+	  EndDialog (hwnDlg, ID_DONE);
+      break;
+	case WM_COMMAND:
     if (HIWORD (wParam) == EN_UPDATE)
 	{
       if (LOWORD (wParam) == IDC_INDENTPTEDIT)
@@ -2478,14 +2482,8 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
     case ID_APPLY:
       ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1);
       break;
-      
-    case WM_CLOSE:
-    case WM_DESTROY:
- 	  FormatForm = NULL;	
-	  EndDialog (hwnDlg, ID_DONE);
-      break;
-      
-    case ID_DONE:
+
+	case ID_DONE:
       ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 0);
 	  FormatForm = NULL;
       EndDialog (hwnDlg, ID_DONE);
