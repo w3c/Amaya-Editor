@@ -192,20 +192,35 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
    char           *name1, *data;
    int            length;
    SSchema        docSSchema;
-   ThotBool       isImage;
+   ThotBool       isImage, isInline;
 
    *error = 0;
    doc = context->doc;
    docSSchema = TtaGetDocumentSSchema (doc);
 
    elType = TtaGetElementType (el);
+   isInline = IsXMLElementInline (elType, doc);
    newElType.ElSSchema = elType.ElSSchema;
 
-   if (elType.ElTypeNum != HTML_EL_Text_Area &&
-       IsXMLElementInline (elType, doc))
-     /* It's an inline element. If it is empty, insert a Basic_Elem to allow
-	the user to put the selection within this element */
-     /* Don't do it for a Text_Area, as a Inserted_Text element has to be
+   if (elType.ElTypeNum == HTML_EL_Paragraph ||
+       elType.ElTypeNum == HTML_EL_Address ||
+       elType.ElTypeNum == HTML_EL_H1 ||
+       elType.ElTypeNum == HTML_EL_H2 ||
+       elType.ElTypeNum == HTML_EL_H3 ||
+       elType.ElTypeNum == HTML_EL_H4 ||
+       elType.ElTypeNum == HTML_EL_H5 ||
+       elType.ElTypeNum == HTML_EL_H6 ||
+       elType.ElTypeNum == HTML_EL_Preformatted ||
+       elType.ElTypeNum == HTML_EL_Term ||
+       elType.ElTypeNum == HTML_EL_LEGEND ||
+       elType.ElTypeNum == HTML_EL_CAPTION ||
+       elType.ElTypeNum == HTML_EL_rb ||
+       elType.ElTypeNum == HTML_EL_rt ||
+       (isInline && elType.ElTypeNum != HTML_EL_Text_Area))
+     /* It's an element that is supposed to contain at least a Basic_Elem.
+	If it is empty, insert a Basic_Elem to allow the user to put the
+	selection within this element */
+     /* Don't do it for a Text_Area, as an Inserted_Text element has to be
 	created (see below) */
      {
        child = TtaGetFirstChild (el);
@@ -218,7 +233,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   TtaInsertFirstChild (&child, el, doc);
 	 }
      }
-   else
+   if (!isInline)
      /* It's a block-level element. Is it within a character-level element? */
      if (elType.ElTypeNum != HTML_EL_Comment_ &&
 	 elType.ElTypeNum != HTML_EL_XMLPI)

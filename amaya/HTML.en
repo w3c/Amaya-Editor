@@ -37,7 +37,7 @@ NOSCRIPT: noscript
 Address: address
 Block_Quote: blockquote
 Horizontal_Rule: hr
-Basic_Set: Element
+Basic_Set: \240
 Paragraph: p
 H1: h1
 H2: h2
@@ -47,7 +47,7 @@ H5: h5
 H6: h6
 Preformatted: pre
 Anchor: a
-Basic_Elem: Element
+Basic_Elem: \240
 Subscript: sub
 Superscript: sup
 Span: span
@@ -95,7 +95,7 @@ Term_List: term list
 Term: dt
 Definition: dd
 Form: form
-Form_Element: form element
+Form_Element: \240
 Option_Menu: select
 Option: option
 OptGroup: optgroup
