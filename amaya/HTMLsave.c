@@ -3111,7 +3111,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 		  TtaSetTextContent (doc_url, DocumentURLs[xmlDoc],
 				     TtaGetDefaultLanguage (), xmlDoc);
 		}
-	      AddURLInCombobox (DocumentURLs[xmlDoc], TRUE);
+	      AddURLInCombobox (DocumentURLs[xmlDoc], NULL, TRUE);
 	      TtaSetTextZone (xmlDoc, 1, URL_list);
 	      if (DocumentSource[doc])
 		{

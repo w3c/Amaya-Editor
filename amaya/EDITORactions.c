@@ -272,7 +272,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   /* save the document name into the document table */
   s = TtaStrdup (url);
   DocumentURLs[doc] = s;
-  AddURLInCombobox (url, TRUE);
+  AddURLInCombobox (url, NULL, TRUE);
   TtaSetTextZone (doc, 1, URL_list);
   DocumentMeta[doc] = DocumentMetaDataAlloc ();
   DocumentMeta[doc]->form_data = NULL;

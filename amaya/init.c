@@ -1552,7 +1552,7 @@ static void TextURL (Document doc, View view, char *text)
       if (!InNewWindow && !CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
-	  AddURLInCombobox (DocumentURLs[doc], FALSE);
+	  AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
 	  TtaSetTextZone (doc, view, URL_list);
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
@@ -3867,8 +3867,18 @@ void Reload_callback (int doc, int status, char *urlName,
 
        RemoveParsingErrors (newdoc);
        /* add the URI in the combobox string */
-       keep = (method == CE_ABSOLUTE || method == CE_INIT);
-       AddURLInCombobox (pathname, keep);
+       if (method != CE_MAKEBOOK && method != CE_ANNOT &&
+	   method != CE_LOG && method != CE_HELP &&
+	   DocumentTypes[newdoc] != docLibrary &&
+	   status == 0)
+	 {
+	   /* add the URI in the combobox string */
+	   keep = (method == CE_ABSOLUTE || method == CE_INIT);
+	   if (form_data && method == CE_FORM_GET)
+	       AddURLInCombobox (pathname, form_data, keep);
+	   else
+	     AddURLInCombobox (pathname, NULL, keep);
+	 }
        /* parse and display the document, res contains the new document
 	  identifier, as given by the thotlib */
        res = LoadDocument (newdoc, pathname, form_data, NULL, method,
@@ -4535,7 +4545,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
     {
       /* add the URI in the combobox string */
       keep = (method == CE_ABSOLUTE || method == CE_INIT);
-      AddURLInCombobox (pathname, keep);
+      if (form_data && method == CE_FORM_GET)
+	  AddURLInCombobox (pathname, form_data, keep);
+      else
+	AddURLInCombobox (pathname, NULL, keep);
     }
   if (outputfile != NULL)
      {
@@ -4872,7 +4885,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
        else if (method == CE_HELP)
 	 {
 	   /* add the URI in the combobox string */
-	   AddURLInCombobox (pathname, FALSE);
+	   AddURLInCombobox (pathname, NULL, FALSE);
 	   /* need to create a new window for the document */
 	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE,
 				    L_Other, method);
@@ -4899,7 +4912,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 {
 	   /* In case of initial document, open the view before loading */
 	   /* add the URI in the combobox string */
-	   AddURLInCombobox (pathname, FALSE);
+	   AddURLInCombobox (pathname, NULL, FALSE);
 	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
 				    L_Other, method);
 	 }
@@ -6179,7 +6192,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  DocumentURLs[newdoc] = TtaStrdup (docname);
 	  DocumentSource[newdoc] = 0;
 	  /* add the URI in the combobox string */
-	  AddURLInCombobox (docname, FALSE);
+	  AddURLInCombobox (docname, NULL, FALSE);
 	  TtaSetTextZone (newdoc, 1, URL_list);
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
@@ -7473,7 +7486,7 @@ void AmayaClose (Document document, View view)
   AddURLInCombobox adds the new URL in the string for combobox
   Store that URL inot the file only if keep is TRUE.
   ----------------------------------------------------------------------*/
-void AddURLInCombobox (char *url_utf8, ThotBool keep)
+void AddURLInCombobox (char *url_utf8, char *form_data, ThotBool keep)
 {
   char     *urlstring, *app_home, *ptr, *url;
   int       i, j, len, nb, end;
@@ -7481,7 +7494,15 @@ void AddURLInCombobox (char *url_utf8, ThotBool keep)
 
   if (url_utf8 == NULL || url_utf8[0] == EOS)
     return;
-  url = TtaConvertMbsToByte (url_utf8, TtaGetDefaultCharset ());
+  if (form_data && form_data[0] != EOS)
+    {
+      ptr = TtaGetMemory (strlen (url_utf8) + strlen (form_data) + 2);
+      sprintf (ptr, "%s?%s", url_utf8, form_data);
+      url = TtaConvertMbsToByte (ptr, TtaGetDefaultCharset ());
+      TtaFreeMemory (ptr);
+    }
+  else
+    url = TtaConvertMbsToByte (url_utf8, TtaGetDefaultCharset ());
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
