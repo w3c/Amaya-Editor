@@ -93,6 +93,8 @@ public:
 
   AmayaCanvas * GetCanvas();
 
+  bool DisplayIsReady();
+  
   wxMenuBar * GetMenuBar();
   static wxMenuItem * AppendMenuItem ( wxMenu * 		p_menu_parent,
 				       long 		        id,

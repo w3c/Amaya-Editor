@@ -122,6 +122,11 @@ AmayaCanvas::~AmayaCanvas( )
  */
 void AmayaCanvas::OnSize( wxSizeEvent& event )
 {
+#ifdef _GL
+  // this is also necessary to update the context on some platforms
+  wxGLCanvas::OnSize(event);
+#endif /* _GL */
+
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {
@@ -181,14 +186,6 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
  */
 void AmayaCanvas::OnPaint( wxPaintEvent& event )
 {
-  /*
-   * Note that In a paint event handler, the application must
-   * always create a wxPaintDC object, even if you do not use it.
-   * Otherwise, under MS Windows, refreshing for this and
-   * other windows will go wrong.
-   */
-  wxPaintDC dc(this);
-
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {
@@ -201,11 +198,19 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
   wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d"),
      m_pAmayaFrame->GetFrameId() );
 
-  // get the current frame id
-  int frame = m_pAmayaFrame->GetFrameId();
+  /*
+   * Note that In a paint event handler, the application must
+   * always create a wxPaintDC object, even if you do not use it.
+   * Otherwise, under MS Windows, refreshing for this and
+   * other windows will go wrong.
+   */
+  wxPaintDC dc(this);
 
   // initialize the canvas context
   Init(); 
+
+  // get the current frame id
+  int frame = m_pAmayaFrame->GetFrameId();
 
   int x,y,w,h;                             // Dimensions of client area in pixels
   wxRegionIterator upd(GetUpdateRegion()); // get the update rect list
@@ -222,7 +227,8 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
     upd ++ ;
   }
 
-  event.Skip();
+  // not necesarry : cf cube.cpp sample
+  //  event.Skip();
 }
 
 /*
@@ -551,6 +557,9 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
  */
 void AmayaCanvas::Init()
 {
+  if (!GetContext())
+    return;
+
   // do not initialize twice
   if (m_Init)
     return;

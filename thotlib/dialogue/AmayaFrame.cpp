@@ -122,6 +122,7 @@ AmayaFrame::~AmayaFrame()
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
 {
   AmayaCanvas * p_canvas = NULL;
+
 #ifdef _GL
 
 #ifndef _NOSHARELIST
@@ -146,9 +147,6 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
   p_canvas = new AmayaCanvas( this );
 #endif /* _NOSHARELIST */
 
-  /* try to force opengl to use this canvas (initialize the opengl context) */
-  p_canvas->SetCurrent();
-
 #else /* _GL */
   p_canvas = new AmayaCanvas( this );
 #endif /* _GL */
@@ -161,8 +159,11 @@ void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
     return;
 
   // detach scrollbar and canvas (delete canvas)
-  m_pCanvas->Hide();
-  m_pHSizer->Remove(0);
+  if (m_pCanvas)
+  {
+    m_pCanvas->Hide();
+    m_pHSizer->Remove(0);
+  }
   m_pHSizer->Detach(0); // the scroll bar 
 
   // assign the new canvas
@@ -310,8 +311,22 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
  */
 void AmayaFrame::SetCurrent()
 {
-  if (m_pCanvas && m_pCanvas->IsInit())
+  if ( DisplayIsReady() )
     m_pCanvas->SetCurrent();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  DisplayIsReady
+ * Description:  return true if the canvas is ready to recived drawing instructions
+ *               usefull with opengl because on certains implementations, it's important to wait 
+ *               for initilaisation before sending commands to opengl.
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaFrame::DisplayIsReady()
+{
+  return (m_pCanvas && m_pCanvas->IsInit());
 }
 
 /*

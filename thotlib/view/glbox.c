@@ -681,7 +681,7 @@ ThotBool GL_prepare (int frame)
 
 #ifdef _WX
       /*   wxLogDebug(_T("GL_prepare: frame=%d"), frame);*/
-    if (FrameTable[frame].WdFrame)
+    if (FrameTable[frame].WdFrame && FrameTable[frame].WdFrame->DisplayIsReady() )
     {
       FrameTable[frame].WdFrame->SetCurrent();
       return TRUE;
