@@ -4344,7 +4344,7 @@ ThotBool    xmlDoctype;
    /* and set the document in read-only access mode */
    if (XMLabort)
      {
-       SetErrorMode (doc);
+       ChangeToBrowserMode (doc);
        profile = TtaGetEnvString ("Profile");
        if (!profile)
 	 profile = TEXT("");
@@ -4356,7 +4356,7 @@ ThotBool    xmlDoctype;
      if (XMLErrorsFound)
        {
 	 if (unknownCharset)
-	   SetErrorMode (doc);
+	   ChangeToBrowserMode (doc);
 	   profile = TtaGetEnvString ("Profile");
 	   if (!profile)
 	     profile = TEXT("");
@@ -4366,7 +4366,7 @@ ThotBool    xmlDoctype;
      else 
        if (CharsetErrorFound)
 	 {
-	   SetErrorMode (doc);
+	   ChangeToBrowserMode (doc);
 	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_ENCODING_WARNING));
 	   XMLErrorsFound = TRUE;
 	 }

@@ -2672,7 +2672,7 @@ Document       doc;
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  SetErrorMode (doc);
+  ChangeToBrowserMode (doc);
   XMLabort = TRUE;
   CurrentBufChar = 0;
   /* InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR)); */

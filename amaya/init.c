@@ -915,14 +915,14 @@ Document  doc;
 }
 
 /*----------------------------------------------------------------------
-   Change to Error/Warning mode
+   ChangeToBrowserMode
    This mode is similar to Browser mode except for 
    the variable ReadOnlyDocument[document]
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void    SetErrorMode (Document document)
+void    ChangeToBrowserMode (Document document)
 #else
-void    SetErrorMode (document)
+void    ChangeToBrowserMode (document)
 Document    doc;
 #endif
 {
