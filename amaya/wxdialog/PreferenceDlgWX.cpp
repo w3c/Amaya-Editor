@@ -253,16 +253,16 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 {
   wxLogDebug( _T("PreferenceDlgWX::SetupDialog_General") );
 
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",  wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
 
-  XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSlider)->SetValue( prop.Zoom );
+  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSlider)->SetValue( prop.Zoom );
   XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->SetValue( prop.FontMenuSize );
 
-  XRCCTRL(*this, "wxID_CHECK_CCLINE",      wxCheckBox)->SetValue( prop.PasteLineByLine );
-  XRCCTRL(*this, "wxID_CHECK_BACKUP",      wxCheckBox)->SetValue( prop.S_AutoSave );
-  XRCCTRL(*this, "wxID_CHECK_SAVEGEO",     wxCheckBox)->SetValue( prop.S_Geometry );
+  XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->SetValue( prop.PasteLineByLine );
+  XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->SetValue( prop.S_AutoSave );
+  XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->SetValue( prop.S_Geometry );
   XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->SetValue( prop.S_Buttons );
-  XRCCTRL(*this, "wxID_CHECK_SHOWADDR",    wxCheckBox)->SetValue( prop.S_Address );
+  XRCCTRL(*this, "wxID_CHECK_SHOWADDR", wxCheckBox)->SetValue( prop.S_Address );
   XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->SetValue( prop.S_Targets );
 
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->SetSelection( prop.AccesskeyMod );
@@ -284,20 +284,20 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
 
   wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_General") );
 
-  value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",  wxComboBox)->GetValue();
+  value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->GetValue();
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSlider)->GetValue();
   prop.FontMenuSize = XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->GetValue();
 
-  prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE",      wxCheckBox)->GetValue();
-  prop.S_AutoSave      = XRCCTRL(*this, "wxID_CHECK_BACKUP",      wxCheckBox)->GetValue();
-  prop.S_Geometry      = XRCCTRL(*this, "wxID_CHECK_SAVEGEO",     wxCheckBox)->GetValue();
-  prop.S_Buttons       = XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->GetValue();
-  prop.S_Address       = XRCCTRL(*this, "wxID_CHECK_SHOWADDR",    wxCheckBox)->GetValue();
-  prop.S_Targets       = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
+  prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();
+  prop.S_AutoSave = XRCCTRL(*this, "wxID_CHECK_BACKUP", wxCheckBox)->GetValue();
+  prop.S_Geometry = XRCCTRL(*this, "wxID_CHECK_SAVEGEO", wxCheckBox)->GetValue();
+  prop.S_Buttons = XRCCTRL(*this, "wxID_CHECK_SHOWBUTTONS", wxCheckBox)->GetValue();
+  prop.S_Address = XRCCTRL(*this, "wxID_CHECK_SHOWADDR", wxCheckBox)->GetValue();
+  prop.S_Targets = XRCCTRL(*this, "wxID_CHECK_SHOWTARGETS", wxCheckBox)->GetValue();
 
-  prop.AccesskeyMod    = XRCCTRL(*this, "wxID_RADIO_QUICKAXX",    wxRadioBox)->GetSelection();
+  prop.AccesskeyMod = XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->GetSelection();
 
   value = XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->GetStringSelection();
   strcpy( prop.DialogueLang, (const char*)value.mb_str(wxConvUTF8) );
@@ -373,10 +373,10 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
 
   prop.LoadImages  = XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->GetValue();
   prop.LoadObjects = XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->GetValue();
-  prop.BgImages    = XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->GetValue();
-  prop.LoadCss     = XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->GetValue();
+  prop.BgImages = XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->GetValue();
+  prop.LoadCss = XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->GetValue();
   prop.DoubleClick = XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->GetValue();
-  prop.EnableFTP   = XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->GetValue();
+  prop.EnableFTP = XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->GetValue();
   
   value = XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->GetStringSelection();
   strcpy( prop.ScreenType, (const char*)value.mb_str(wxConvUTF8) );
@@ -517,8 +517,8 @@ void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
 
   XRCCTRL(*this, "wxID_CHECK_ENABLECACHE",  wxCheckBox)->SetValue( prop.EnableCache );
   XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->SetValue( prop.CacheProtectedDocs );
-  XRCCTRL(*this, "wxID_CHECK_DISCO",        wxCheckBox)->SetValue( prop.CacheDisconnectMode );
-  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE",    wxCheckBox)->SetValue( prop.CacheExpireIgnore );
+  XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->SetValue( prop.CacheDisconnectMode );
+  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->SetValue( prop.CacheExpireIgnore );
 
   XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.CacheDirectory) );
 
@@ -538,15 +538,15 @@ Prop_Cache PreferenceDlgWX::GetValueDialog_Cache()
   Prop_Cache      prop;
   memset( &prop, 0, sizeof(Prop_Cache) );
 
-  prop.EnableCache         = XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->GetValue();
+  prop.EnableCache = XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->GetValue();
   prop.CacheProtectedDocs  = XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->GetValue();
   prop.CacheDisconnectMode = XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->GetValue();
-  prop.CacheExpireIgnore   = XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->GetValue();
+  prop.CacheExpireIgnore = XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->GetValue();
 
   value = XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->GetValue();
   strcpy( prop.CacheDirectory, (const char*)value.mb_str(wxConvUTF8) );
 
-  prop.CacheSize    = XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->GetValue();
+  prop.CacheSize = XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->GetValue();
   prop.MaxCacheFile = XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->GetValue();
 
   return prop;
@@ -665,10 +665,10 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
   while (id_color < NumberOfColors())
     {
       color_name = ColorName(id_color);
-      XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->Append( TtaConvMessageToWX(color_name) );
-      XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->Append( TtaConvMessageToWX(color_name) );
-      XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(color_name) );
-      XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->Append( TtaConvMessageToWX(color_name) );
       id_color++;
     }
 
@@ -685,26 +685,26 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
   wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Color") );
 
   XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->Append( TtaConvMessageToWX(prop.BgSelColor) );
-  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->Append( TtaConvMessageToWX(prop.FgSelColor) );
-  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(prop.BgColor) );
-  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(prop.FgColor) );
-  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgSelColor) );
-  XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgSelColor) );
-  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgColor) );
-  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgColor) );
+  XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->Append( TtaConvMessageToWX(prop.FgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->Append( TtaConvMessageToWX(prop.BgColor) );
+  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->Append( TtaConvMessageToWX(prop.FgColor) );
+  XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgSelColor) );
+  XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgColor) );
+  XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgColor) );
 
   // setup background colours
   unsigned short      red;
   unsigned short      green;
   unsigned short      blue;
   TtaGiveRGB ((char *)prop.BgSelColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR",  wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.FgSelColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR",      wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.BgColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR",     wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.FgColor, &red, &green, &blue);
-  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR",     wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
 }
 
 /*----------------------------------------------------------------------
@@ -743,10 +743,10 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
 {
   wxLogDebug( _T("PreferenceDlgWX::OnColorPalette") );
   
-  int textcolor_id     = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEXTCOLOR"));
-  int backcolor_id     = wxXmlResource::GetXRCID(_T("wxID_BUTTON_BACKCOLOR"));
-  int selcolor_id      = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELCOLOR"));
-  int selbackcolor_id  = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELBACKCOLOR"));
+  int textcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEXTCOLOR"));
+  int backcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_BACKCOLOR"));
+  int selcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELCOLOR"));
+  int selbackcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELBACKCOLOR"));
 
   // First of all setup the dialog with the combobox color
   wxString value;
@@ -770,8 +770,8 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
   wxColourDialog dialog(this, &colour_data);
   if (dialog.ShowModal() == wxID_OK)
   {
-    colour_data   = dialog.GetColourData();
-    wxColour col  = colour_data.GetColour();
+    colour_data = dialog.GetColourData();
+    wxColour col = colour_data.GetColour();
 
     char color_string[7];
     sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
@@ -848,10 +848,10 @@ void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
   wxColour col4( red, green, blue );
 
   // setup background colours
-  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR",  wxBitmapButton)->SetBackgroundColour( col4 );
-  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR",      wxBitmapButton)->SetBackgroundColour( col3 );
-  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR",     wxBitmapButton)->SetBackgroundColour( col2 );
-  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR",     wxBitmapButton)->SetBackgroundColour( col1 );
+  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton)->SetBackgroundColour( col4 );
+  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton)->SetBackgroundColour( col3 );
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton)->SetBackgroundColour( col2 );
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton)->SetBackgroundColour( col1 );
 
   event.Skip();
 }
@@ -878,8 +878,8 @@ void PreferenceDlgWX::SetupLabelDialog_Geometry()
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_MENU)) );
 
   
-  XRCCTRL(*this, "wxID_LABEL_GEOMCHG",     wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
-  XRCCTRL(*this, "wxID_BUTTON_GEOMSAVE",   wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY)) );
+  XRCCTRL(*this, "wxID_LABEL_GEOMCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
+  XRCCTRL(*this, "wxID_BUTTON_GEOMSAVE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY)) );
   XRCCTRL(*this, "wxID_BUTTON_GEOMRESTOR", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_RESTORE_GEOMETRY)) );
   
 }
@@ -927,7 +927,13 @@ void PreferenceDlgWX::SetupLabelDialog_Annot()
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_CONF_MENU)) );
 
-  XRCCTRL(*this, "wxID_LABEL_ANNOT_USER",     wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_USER)) );
+  XRCCTRL(*this, "wxID_LABEL_ANNOT_USER", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_USER)) );
+  XRCCTRL(*this, "wxID_LABEL_POST_SERVER", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_POST_SERVER)) );
+  XRCCTRL(*this, "wxID_LABEL_SERVERS", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_SERVERS)) );
+
+  XRCCTRL(*this, "wxID_CHECK_LOCAL_LOAD", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_LAUTOLOAD)) );
+  XRCCTRL(*this, "wxID_CHECK_REMOTE_LOAD", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_RAUTOLOAD)) );
+  XRCCTRL(*this, "wxID_CHECK_DISABLELOAD", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_RAUTOLOAD_RST)) );
 }
 
 /*----------------------------------------------------------------------
@@ -940,6 +946,13 @@ void PreferenceDlgWX::SetupDialog_Annot( const Prop_Annot & prop )
 {
   wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Annot") );
 
+  XRCCTRL(*this, "wxID_ANNOT_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotUser) );
+  XRCCTRL(*this, "wxID_POST_SERVER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotPostServer) );
+  XRCCTRL(*this, "wxID_ANNOT_SERVERS", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotServers) );
+
+  XRCCTRL(*this, "wxID_CHECK_LOCAL_LOAD", wxCheckBox)->SetValue( prop.AnnotLAutoLoad );
+  XRCCTRL(*this, "wxID_CHECK_REMOTE_LOAD", wxCheckBox)->SetValue( prop.AnnotRAutoLoad );
+  XRCCTRL(*this, "wxID_CHECK_DISABLELOAD", wxCheckBox)->SetValue( prop.AnnotRAutoLoadRst );
 }
 
 /*----------------------------------------------------------------------
@@ -955,6 +968,16 @@ Prop_Annot PreferenceDlgWX::GetValueDialog_Annot()
   memset( &prop, 0, sizeof(Prop_Annot) );
 
   wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Annot") );
+  value = XRCCTRL(*this, "wxID_ANNOT_USER", wxTextCtrl)->GetValue();
+  strcpy( prop.AnnotUser, (const char*)value.mb_str(wxConvUTF8) );
+  value = XRCCTRL(*this, "wxID_POST_SERVER", wxTextCtrl)->GetValue();
+  strcpy( prop.AnnotPostServer, (const char*)value.mb_str(wxConvUTF8) );
+  value = XRCCTRL(*this, "wxID_ANNOT_SERVERS", wxTextCtrl)->GetValue();
+  strcpy( prop.AnnotServers, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.AnnotLAutoLoad = XRCCTRL(*this, "wxID_CHECK_LOCAL_LOAD", wxCheckBox)->GetValue();
+  prop.AnnotRAutoLoad = XRCCTRL(*this, "wxID_CHECK_REMOTE_LOAD", wxCheckBox)->GetValue();
+  prop.AnnotRAutoLoadRst = XRCCTRL(*this, "wxID_CHECK_DISABLELOAD", wxCheckBox)->GetValue();
 
   return prop;
 }
@@ -1051,9 +1074,10 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
 
   wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_DAV") );
 
-
-  XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserReference) );
-  XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserResources) );
+  value = XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->GetValue();
+  strcpy( prop.textUserReference, (const char*)value.mb_str(wxConvUTF8) );
+  value = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->GetValue();
+  strcpy( prop.textUserResources, (const char*)value.mb_str(wxConvUTF8) );
 
   val = XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->GetSelection();
   if (val == 1)

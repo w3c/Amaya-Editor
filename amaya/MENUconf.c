@@ -257,12 +257,6 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 #ifdef ANNOTATIONS
 int      AnnotBase;
 static Prop_Annot  GProp_Annot;
-static char     AnnotUser[MAX_LENGTH];
-static char     AnnotPostServer[MAX_LENGTH];
-static char     AnnotServers[MAX_LENGTH];
-static ThotBool AnnotLAutoLoad;
-static ThotBool AnnotRAutoLoad;
-static ThotBool AnnotRAutoLoadRst;
 
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -1019,19 +1013,19 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	case IDC_ENABLECACHE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  GProp_Cache.EnableCache = !GProp_Cache.EnableCache;
+	  GProp_Cache.EnableCache = !(GProp_Cache.EnableCache);
 	  break;
 	case IDC_CACHEPROTECTEDDOCS:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  GProp_Cache.CacheProtectedDocs = !GProp_Cache.CacheProtectedDocs;
+	  GProp_Cache.CacheProtectedDocs = !(GProp_Cache.CacheProtectedDocs);
 	  break;
 	case IDC_CACHEDISCONNECTEDMODE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  GProp_Cache.CacheDisconnectMode = !GProp_Cache.CacheDisconnectMode;
+	  GProp_Cache.CacheDisconnectMode = !(GProp_Cache.CacheDisconnectMode);
 	  break;
 	case IDC_CACHEEXPIREIGNORE:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
-	  GProp_Cache.CacheExpireIgnore = !GProp_Cache.CacheExpireIgnore;
+	  GProp_Cache.CacheExpireIgnore = !(GProp_Cache.CacheExpireIgnore);
 	  break;
 
 	  /* action buttons */
@@ -1124,19 +1118,19 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	    {
 	    case 0:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      GProp_Cache.EnableCache = !GProp_Cache.EnableCache;
+	      GProp_Cache.EnableCache = !(GProp_Cache.EnableCache);
 	      break;
 	    case 1:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      GProp_Cache.CacheProtectedDocs = !GProp_Cache.CacheProtectedDocs;
+	      GProp_Cache.CacheProtectedDocs = !(GProp_Cache.CacheProtectedDocs);
 	      break;
 	    case 2:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      GProp_Cache.CacheDisconnectMode = !GProp_Cache.CacheDisconnectMode;
+	      GProp_Cache.CacheDisconnectMode = !(GProp_Cache.CacheDisconnectMode);
 	      break;
 	    case 3:
 	      CacheStatus |= AMAYA_CACHE_RESTART;
-	      GProp_Cache.CacheExpireIgnore = !GProp_Cache.CacheExpireIgnore;
+	      GProp_Cache.CacheExpireIgnore = !(GProp_Cache.CacheExpireIgnore);
 	      break;
 	    default:
 	      break;
@@ -1733,7 +1727,7 @@ static void UpdateShowTargets ()
 	{
 	  visibility = TtaGetSensibility (doc, 1);
 	  if ((visibility == 5 && GProp_General.S_Targets) ||
-	      (visibility == 4 && !GProp_General.S_Targets))
+	      (visibility == 4 && !(GProp_General.S_Targets)))
 	    /* change the status of the document */
 	    ShowTargets (doc, 1);
 	}
@@ -2009,26 +2003,26 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	   GProp_General.AccesskeyMod = 2;
 	   break;
 	case IDC_LINES:
-	  GProp_General.PasteLineByLine = !GProp_General.PasteLineByLine;
+	  GProp_General.PasteLineByLine = !(GProp_General.PasteLineByLine);
 	  break;
 	case IDC_AUTOSAVE:
-	  GProp_General.S_AutoSave = !GProp_General.S_AutoSave;
+	  GProp_General.S_AutoSave = !(GProp_General.S_AutoSave);
 	  if (GProp_General.S_AutoSave)
 	    AutoSave_Interval = DEF_SAVE_INTVL;
 	  else
 	    AutoSave_Interval = 0;
 	  break;
 	case IDC_SAVE_GEOMETRY_EXIT:
-	  GProp_General.S_Geometry = !GProp_General.S_Geometry;
+	  GProp_General.S_Geometry = !(GProp_General.S_Geometry);
 	  break;
 	case IDC_SHOWBUTTONS:
-	  GProp_General.S_Buttons = !GProp_General.S_Buttons;
+	  GProp_General.S_Buttons = !(GProp_General.S_Buttons);
 	  break;
 	case IDC_SHOWADDRESS:
-	  GProp_General.S_Address = !GProp_General.S_Address;
+	  GProp_General.S_Address = !(GProp_General.S_Address);
 	  break;
 	case IDC_SHOWTARGET:
-	  GProp_General.S_Targets = !GProp_General.S_Targets;
+	  GProp_General.S_Targets = !(GProp_General.S_Targets);
 	  break;
 
 	  /* action buttons */
@@ -2128,26 +2122,26 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      GProp_General.PasteLineByLine = !GProp_General.PasteLineByLine;
+	      GProp_General.PasteLineByLine = !(GProp_General.PasteLineByLine);
 	      break;
 	    case 1:
-	      GProp_General.S_AutoSave = !GProp_General.S_AutoSave;
+	      GProp_General.S_AutoSave = !(GProp_General.S_AutoSave);
 	      if (GProp_General.S_AutoSave)
 		AutoSave_Interval = DEF_SAVE_INTVL;
 	      else
 		AutoSave_Interval = 0;	      
 	      break;
 	    case 2:
-	      GProp_General.S_Geometry = !GProp_General.S_Geometry;
+	      GProp_General.S_Geometry = !(GProp_General.S_Geometry);
 	      break;
 	    case 3:
-	      GProp_General.S_Buttons = !GProp_General.S_Buttons;
+	      GProp_General.S_Buttons = !(GProp_General.S_Buttons);
 	      break;
 	    case 4:
-	      GProp_General.S_Address = !GProp_General.S_Address;
+	      GProp_General.S_Address = !(GProp_General.S_Address);
 	      break;
 	    case 5:
-	      GProp_General.S_Targets = !GProp_General.S_Targets;
+	      GProp_General.S_Targets = !(GProp_General.S_Targets);
 	      break;
 	    }
 	  break;
@@ -2437,16 +2431,16 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_USEXHTMLMIMETYPE:
-	  GProp_Publish.UseXHTMLMimeType = !GProp_Publish.UseXHTMLMimeType;
+	  GProp_Publish.UseXHTMLMimeType = !(GProp_Publish.UseXHTMLMimeType);
 	  break;
 	case IDC_LOSTUPDATECHECK:
-	  GProp_Publish.LostUpdateCheck = !GProp_Publish.LostUpdateCheck;
+	  GProp_Publish.LostUpdateCheck = !(GProp_Publish.LostUpdateCheck);
 	  break;
 	case IDC_VERIFYPUBLISH:
-	  GProp_Publish.VerifyPublish = !GProp_Publish.VerifyPublish;
+	  GProp_Publish.VerifyPublish = !(GProp_Publish.VerifyPublish);
 	  break;
 	case IDC_CRLF:
-	  GProp_Publish.ExportCRLF = !GProp_Publish.ExportCRLF;
+	  GProp_Publish.ExportCRLF = !(GProp_Publish.ExportCRLF);
 	  break;
 	  /* action buttons */
 	case ID_APPLY:
@@ -2602,13 +2596,13 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      GProp_Publish.UseXHTMLMimeType = !GProp_Publish.UseXHTMLMimeType;
+	      GProp_Publish.UseXHTMLMimeType = !(GProp_Publish.UseXHTMLMimeType);
 	      break;
 	    case 1:
-	      GProp_Publish.LostUpdateCheck = !GProp_Publish.LostUpdateCheck;
+	      GProp_Publish.LostUpdateCheck = !(GProp_Publish.LostUpdateCheck);
 	      break;
 	    case 2:
-	      GProp_Publish.VerifyPublish = !GProp_Publish.VerifyPublish;
+	      GProp_Publish.VerifyPublish = !(GProp_Publish.VerifyPublish);
 	      break;
 	    }
 	  break;
@@ -2878,22 +2872,22 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case IDC_LOADIMG:
-	  GProp_Browse.LoadImages = !GProp_Browse.LoadImages;
+	  GProp_Browse.LoadImages = !(GProp_Browse.LoadImages);
 	  break;
 	case IDC_LOADOBJ:
-	  GProp_Browse.LoadObjects = !GProp_Browse.LoadObjects;
+	  GProp_Browse.LoadObjects = !(GProp_Browse.LoadObjects);
 	  break;
 	case IDC_BGIMAGES:
-	  GProp_Browse.BgImages = !GProp_Browse.BgImages;
+	  GProp_Browse.BgImages = !(GProp_Browse.BgImages);
 	  break;
 	case IDC_LOADCSS:
-	  GProp_Browse.LoadCss = !GProp_Browse.LoadCss;
+	  GProp_Browse.LoadCss = !(GProp_Browse.LoadCss);
 	  break;
 	case IDC_DOUBLECLICK:
-	  GProp_Browse.DoubleClick = !GProp_Browse.DoubleClick;
+	  GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
 	  break;
 	case IDC_ENABLEFTP:
-	  GProp_Browse.EnableFTP = !GProp_Browse.EnableFTP;
+	  GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
 	  break;
 	case IDC_SCREENLIST:
 	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
@@ -3057,22 +3051,22 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      GProp_Browse.LoadImages = !GProp_Browse.LoadImages;
+	      GProp_Browse.LoadImages = !(GProp_Browse.LoadImages);
 	      break;
 	    case 1:
-	      GProp_Browse.LoadObjects = !GProp_Browse.LoadObjects;
+	      GProp_Browse.LoadObjects = !(GProp_Browse.LoadObjects);
 	      break;
 	    case 2:
-	      GProp_Browse.BgImages = !GProp_Browse.BgImages;
+	      GProp_Browse.BgImages = !(GProp_Browse.BgImages);
 	      break;
 	    case 3:
-	      GProp_Browse.LoadCss = !GProp_Browse.LoadCss;
+	      GProp_Browse.LoadCss = !(GProp_Browse.LoadCss);
 	      break;
 	    case 4:
-	      GProp_Browse.DoubleClick = !GProp_Browse.DoubleClick;
+	      GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
 	      break;
 	    case 5:
-	      GProp_Browse.EnableFTP = !GProp_Browse.EnableFTP;
+	      GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
 	      break;
 	    }
 	  break;
@@ -3793,16 +3787,16 @@ void         GeometryConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetAnnotConf (void)
 {
-  GetEnvString ("ANNOT_USER", AnnotUser);
-  GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
-  GetEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &(AnnotLAutoLoad));
-  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &(AnnotRAutoLoad));
-  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(AnnotRAutoLoadRst));
+  GetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
+  GetEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
+  GetEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
+  TtaGetEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &(GProp_Annot.AnnotRAutoLoad));
+  TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(GProp_Annot.AnnotRAutoLoadRst));
 
 #ifdef _WINGUI
   /* we substitute spaces into \r for the configuration widget menu */
-  ConvertSpaceNL (AnnotServers, TRUE);
+  ConvertSpaceNL (GProp_Annot.AnnotServers, TRUE);
 #endif /* _WINGUI */
 }
 
@@ -3814,15 +3808,15 @@ static void SetAnnotConf (void)
 {
 #ifdef _WINGUI
 	/* we remove the \n added for the configuration menu widget */
-  ConvertSpaceNL (AnnotServers, FALSE);
+  ConvertSpaceNL (GProp_Annot.AnnotServers, FALSE);
 #endif /* _WINGUI */
 
-  TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
-  TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
-  TtaSetEnvString ("ANNOT_SERVERS", AnnotServers, TRUE);
-  TtaSetEnvBoolean ("ANNOT_LAUTOLOAD", AnnotLAutoLoad, TRUE);
-  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", AnnotRAutoLoad, TRUE);
-  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD_RST", AnnotRAutoLoadRst, TRUE);
+  TtaSetEnvString ("ANNOT_USER", GProp_Annot.AnnotUser, TRUE);
+  TtaSetEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer, TRUE);
+  TtaSetEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers, TRUE);
+  TtaSetEnvBoolean ("ANNOT_LAUTOLOAD", GProp_Annot.AnnotLAutoLoad, TRUE);
+  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD", GProp_Annot.AnnotRAutoLoad, TRUE);
+  TtaSetEnvBoolean ("ANNOT_RAUTOLOAD_RST", GProp_Annot.AnnotRAutoLoadRst, TRUE);
 
   TtaSaveAppRegistry ();
 
@@ -3840,15 +3834,15 @@ static void SetAnnotConf (void)
 static void GetDefaultAnnotConf ()
 {
   /* read the default values */
-  GetDefEnvString ("ANNOT_USER", AnnotUser);
-  GetDefEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
-  GetDefEnvString ("ANNOT_SERVERS", AnnotServers);
-  TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &(AnnotLAutoLoad));
-  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &(AnnotRAutoLoad));
-  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(AnnotRAutoLoadRst));
+  GetDefEnvString ("ANNOT_USER", GProp_Annot.AnnotUser);
+  GetDefEnvString ("ANNOT_POST_SERVER", GProp_Annot.AnnotPostServer);
+  GetDefEnvString ("ANNOT_SERVERS", GProp_Annot.AnnotServers);
+  TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &(GProp_Annot.AnnotLAutoLoad));
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &(GProp_Annot.AnnotRAutoLoad));
+  TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &(GProp_Annot.AnnotRAutoLoadRst));
 #ifdef _WINGUI
   /* we substitute spaces into \n for the configuration widget menu */
-  ConvertSpaceNL (AnnotServers, TRUE);
+  ConvertSpaceNL (GProp_Annot.AnnotServers, TRUE);
 #endif /* _WINGUI */
 }
 
@@ -3859,14 +3853,14 @@ static void GetDefaultAnnotConf ()
   ----------------------------------------------------------------------*/
 static void WIN_RefreshAnnotMenu (HWND hwnDlg)
 {
-  SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
-  SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
-  SetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers);
-  CheckDlgButton (hwnDlg, IDC_ANNOTLAUTOLOAD, (AnnotLAutoLoad) 
+  SetDlgItemText (hwnDlg, IDC_ANNOTUSER, GProp_Annot.AnnotUser);
+  SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, GProp_Annot.AnnotPostServer);
+  SetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, GProp_Annot.AnnotServers);
+  CheckDlgButton (hwnDlg, IDC_ANNOTLAUTOLOAD, (GProp_Annot.AnnotLAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOAD, (AnnotRAutoLoad) 
+  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOAD, (GProp_Annot.AnnotRAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOADRST, (AnnotRAutoLoadRst) 
+  CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOADRST, (GProp_Annot.AnnotRAutoLoadRst) 
 		  ? BST_CHECKED : BST_UNCHECKED);
 }
 #else /* WINDOWS */
@@ -3877,12 +3871,12 @@ static void WIN_RefreshAnnotMenu (HWND hwnDlg)
 static void RefreshAnnotMenu ()
 {
   /* set the menu entries to the current values */
-  TtaSetTextForm (AnnotBase + mAnnotUser, AnnotUser);
-  TtaSetTextForm (AnnotBase + mAnnotPostServer, AnnotPostServer);
-  TtaSetTextForm (AnnotBase + mAnnotServers, AnnotServers);
-  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, AnnotLAutoLoad);
-  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 1, AnnotRAutoLoad);
-  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 2, AnnotRAutoLoadRst);
+  TtaSetTextForm (AnnotBase + mAnnotUser, GProp_Annot.AnnotUser);
+  TtaSetTextForm (AnnotBase + mAnnotPostServer, GProp_Annot.AnnotPostServer);
+  TtaSetTextForm (AnnotBase + mAnnotServers, GProp_Annot.AnnotServers);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 0, GProp_Annot.AnnotLAutoLoad);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 1, GProp_Annot.AnnotRAutoLoad);
+  TtaSetToggleMenu (AnnotBase + mToggleAnnot, 2, GProp_Annot.AnnotRAutoLoadRst);
 }
 #endif /* !_WINGUI */
 
@@ -3917,16 +3911,16 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
           switch (LOWORD (wParam))
 	    {
 	    case IDC_ANNOTUSER:
-	      GetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser,
-			      sizeof (AnnotUser) - 1);
+	      GetDlgItemText (hwnDlg, IDC_ANNOTUSER, GProp_Annot.AnnotUser,
+			      sizeof (GProp_Annot.AnnotUser) - 1);
 	      break;
 	    case IDC_ANNOTPOSTSERVER:
-	      GetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer,
-			      sizeof (AnnotPostServer) - 1);
+	      GetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, GProp_Annot.AnnotPostServer,
+			      sizeof (GProp_Annot.AnnotPostServer) - 1);
 	      break;
 	    case IDC_ANNOTSERVERS:
-	      GetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers,
-			      sizeof (AnnotServers) - 1);
+	      GetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, GProp_Annot.AnnotServers,
+			      sizeof (GProp_Annot.AnnotServers) - 1);
 	      break;
 	    }
 	}
@@ -3934,13 +3928,13 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  /* toggle buttons */
 	case IDC_ANNOTLAUTOLOAD:
-	  AnnotLAutoLoad = !AnnotLAutoLoad;
+	  GProp_Annot.AnnotLAutoLoad = !(GProp_Annot.AnnotLAutoLoad);
 	  break;
 	case IDC_ANNOTRAUTOLOAD:
-	  AnnotRAutoLoad = !AnnotRAutoLoad;
+	  GProp_Annot.AnnotRAutoLoad = !(GProp_Annot.AnnotRAutoLoad);
 	  break;
 	case IDC_ANNOTRAUTOLOADRST:
-	  AnnotRAutoLoadRst = !AnnotRAutoLoadRst;
+	  GProp_Annot.AnnotRAutoLoadRst = !(GProp_Annot.AnnotRAutoLoadRst);
 	  break;
 
 	  /* action buttons */
@@ -4008,36 +4002,36 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 
 	case mAnnotUser:
 	  if (data)
-	    strcpy (AnnotUser, data);
+	    strcpy (GProp_Annot.AnnotUser, data);
 	  else
-	    AnnotUser[0] = EOS;
+	    GProp_Annot.AnnotUser[0] = EOS;
 	  break;
 
 	case mAnnotPostServer:
 	  if (data)
-	    strcpy (AnnotPostServer, data);
+	    strcpy (GProp_Annot.AnnotPostServer, data);
 	  else
-	    AnnotPostServer[0] = EOS;
+	    GProp_Annot.AnnotPostServer[0] = EOS;
 	  break;
 
 	case mAnnotServers:
 	  if (data)
-	    strcpy (AnnotServers, data);
+	    strcpy (GProp_Annot.AnnotServers, data);
 	  else
-	    AnnotServers[0] = EOS;
+	    GProp_Annot.AnnotServers[0] = EOS;
 	  break;
 
 	case mToggleAnnot:
 	  switch (val) 
 	    {
 	    case 0:
-	      AnnotLAutoLoad = !AnnotLAutoLoad;
+	      GProp_Annot.AnnotLAutoLoad = !(GProp_Annot.AnnotLAutoLoad);
 	      break;
 	    case 1:
-	      AnnotRAutoLoad = !AnnotRAutoLoad;
+	      GProp_Annot.AnnotRAutoLoad = !(GProp_Annot.AnnotRAutoLoad);
 	      break;
 	    case 2:
-	      AnnotRAutoLoadRst = !AnnotRAutoLoadRst;
+	      GProp_Annot.AnnotRAutoLoadRst = !(GProp_Annot.AnnotRAutoLoadRst);
 	      break;
 	    }
 	  break;

@@ -843,7 +843,7 @@
                       <size>0,5</size>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxTextCtrl" name="wxID_ANNOT_USER"/>
+                      <object class="wxTextCtrl" name="wxID_ANNOT_SERVERS"/>
                       <flag>wxEXPAND</flag>
                     </object>
                   </object>

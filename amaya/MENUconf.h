@@ -152,7 +152,12 @@ typedef struct Prop_Color_t
 
 typedef struct Prop_Annot_t
 {
-  char UserReference[MAX_LENGTH];
+  char     AnnotUser[MAX_LENGTH];
+  char     AnnotPostServer[MAX_LENGTH];
+  char     AnnotServers[MAX_LENGTH];
+  ThotBool AnnotLAutoLoad;
+  ThotBool AnnotRAutoLoad;
+  ThotBool AnnotRAutoLoadRst;
 } Prop_Annot;
 
 typedef struct Prop_DAV_t

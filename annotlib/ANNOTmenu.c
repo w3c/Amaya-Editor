@@ -164,7 +164,7 @@ static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
   CustomQueryMenuInit
   Build and display the Query Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void         CustomQueryMenuInit (Document document, View view)
+void CustomQueryMenuInit (Document document, View view)
 {
 #ifndef _WINGUI
    int              i;
