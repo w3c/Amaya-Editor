@@ -3324,8 +3324,11 @@ PtrAttribute        pAttr;
      {
 	/* removes the attribute from the element's chain of attributes */
 	if (pEl->ElFirstAttr == pAttr)
-	   /* it's the first attribute of the element */
-	   pEl->ElFirstAttr = pAttr->AeNext;
+	  {
+	    /* it's the first attribute of the element */
+	    pEl->ElFirstAttr = pAttr->AeNext;
+	    pAttr->AeNext = NULL;
+	  }
 	else
 	   /* searches the attribute to remove in the element's chain of attributes */
 	  {
@@ -3340,6 +3343,7 @@ PtrAttribute        pAttr;
 		   /* found it, so unlink it */
 		  {
 		     pPrevAttr->AeNext = pAttr->AeNext;
+		     pAttr->AeNext = NULL;
 		     stop = TRUE;
 		  }
 		else
@@ -3510,7 +3514,10 @@ PtrElement         *pEl;
 	       {
 		  CancelReference (*pEl);
 		  if (pEl1->ElReference != NULL)
-		     FreeReference (pEl1->ElReference);
+		    {
+		      FreeReference (pEl1->ElReference);
+		      pEl1->ElReference = NULL;
+		    }
 	       }
 	     if (pEl1->ElLeafType == LtPairedElem)
 		if (pEl1->ElOtherPairedEl != NULL)

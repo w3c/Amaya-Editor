@@ -583,7 +583,7 @@ int                 y;
 	nextY = point[i][1];
 	if (prevY >= y)
 	  {
-	     while ((i <= max) && (nextY >= y))
+	     while ((i < max) && (nextY >= y))
 	       {
 		  i++;		/* changement de point */
 		  prevY = nextY;
@@ -605,7 +605,7 @@ int                 y;
 	  }
 	else
 	  {
-	     while ((i <= max) && (nextY < y))
+	     while ((i < max) && (nextY < y))
 	       {
 		  i++;		/* changement de point */
 		  prevY = nextY;

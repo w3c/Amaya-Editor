@@ -61,6 +61,8 @@ int                 Val;
 
    pEl1 = pEl;
    attr = GetAttrWithException (NumExcept, pSS);
+   if (attr == 0)
+     return;
 
    /* verifie que l'element ne porte pas deja cet attribut */
    pAttr = pEl1->ElFirstAttr;
