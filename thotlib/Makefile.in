@@ -257,12 +257,16 @@ base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
 	   -DCOMPILED_IN_THOTDIR2=\"@datadir@/thot\" -c @srcdir@/base/registry.c -o $@
 
-libThotKernel.a : directories $(THOTK_OBJ) $(KERNEL_OBJ)
+libThotKernel : directories libThotKernel.a
+
+libThotKernel.a : $(THOTK_OBJ) $(KERNEL_OBJ)
 	$(AR) libThotKernel.a $(THOTK_OBJ) $(KERNEL_OBJ)
 	$(RANLIB) libThotKernel.a
 	@$(ECHO) "====>" libThotKernel is done
 
-libThotEditor.a : directories $(THOTK_OBJ) $(EDITOR_OBJ) $(DIALOGUE_OBJ)
+libThotEditor : directories libThotEditor.a
+
+libThotEditor.a : $(THOTK_OBJ) $(EDITOR_OBJ) $(DIALOGUE_OBJ)
 	$(AR) libThotEditor.a $(THOTK_OBJ) $(EDITOR_OBJ) $(DIALOGUE_OBJ)
 	$(RANLIB) libThotEditor.a
 	@$(ECHO) "====>" libThotEditor is done
