@@ -22,7 +22,7 @@ it :</strong></span></p>
   <li>Profiles_File :
     <p>This field contains the location of the file which defines the
     available profiles.</p>
-    <p>e.g : Profiles_File=/home/bonameau/.amaya/Profiles</p>
+    <p>e.g : <em>Profiles_File=/home/bonameau/.amaya/Profiles.</em></p>
     <p>You have to create this file and fill it in before using profiles.</p>
     <p>This file looks like this :</p>
     <p></p>
@@ -37,6 +37,7 @@ it :</strong></span></p>
     <p><em>SaveDocument</em></p>
     <p><em>SaveDocumentAs</em></p>
     <p>MenuAttribute</p>
+    <p>ConfigProfile</p>
     <p><em>.....</em></p>
     <p><em><span style="color: #0071FF">[EditorMaster]               <span
     style="color: #000000">/* Profile's name */</span></span></em></p>
@@ -49,6 +50,8 @@ it :</strong></span></p>
     <p><em>....</em></p>
     <p>MenuAttribute</p>
     <p>.....</p>
+    <p>ConfigProfile</p>
+    <p>...</p>
     <p><em><span style="color: #0071FF">[Browser]                      <span
     style="color: #000000">/* Profile's name */</span></span></em></p>
     <p><em>OpenDoc                                  /* List of functions added
@@ -64,7 +67,7 @@ it :</strong></span></p>
     <p><em>TtcCloseView</em></p>
     <p><em>....</em></p>
     <p><em>HelpBrowsing</em></p>
-    <p>[...........]</p>
+    <p><span style="color: #0071FF">[...........]</span></p>
     <p>.....</p>
   </li>
 </ul>
@@ -73,11 +76,14 @@ it :</strong></span></p>
 <ul>
   <li>Profile :
     <p>This field contains the current profile to use.</p>
-    <p>e.g :  Profile=<span style="color: #0071FF">[Browser]</span></p>
+    <p>e.g :  <em>Profile=</em><span style="color:    
+    #0071FF"><em>[Browser]</em></span></p>
   </li>
 </ul>
 
 <p></p>
+
+<p>Use the Profile entry from the config menu to set these fields.</p>
 
 <p>After having done these modifications, just restart Amaya with the new
 profile.</p>

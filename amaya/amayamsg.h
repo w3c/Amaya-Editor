@@ -189,4 +189,6 @@ int                 AMAYA;
 #define AM_CANT_CREATE_CACHE	      177
 #define AM_BUTTON_HOME                178
 #define AM_LANG_NEGOTIATION           179
-#define AMAYA_MSG_MAX                 180
+#define AM_PROFILES_FILE              180
+#define AM_PROFILE                    181
+#define AMAYA_MSG_MAX                 182

@@ -63,6 +63,11 @@
 #define mLanNeg              2
 #define MAX_LANNEGMENU_DLG   3
 
+#define ProfileMenu           1
+#define mProfiles_File        2
+#define mProfile              3
+#define MAX_PROFILEMENU_DLG   4
+
 #endif /* _MENUCONF.h */
 
 

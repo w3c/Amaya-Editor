@@ -2421,6 +2421,26 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+  ConfigProfile
+  A frontend to the profile configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigProfile (Document doc, View view)
+#else
+void ConfigProfile (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+  ProfileConfMenu (doc, view);
+#endif /* AMAYA_JAVA */
+}
+
+
+
+/*----------------------------------------------------------------------
   SaveOptions
   Saves the user modified configuration options
   ----------------------------------------------------------------------*/

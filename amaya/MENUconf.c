@@ -131,6 +131,19 @@ static HWND LanNegHwnd = NULL;
 static int LanNegBase;
 static CHAR_T LanNeg [MAX_LENGTH+1];
 
+
+/* Profile menu options */
+#ifdef _WINDOWS
+static HWND ProfileHwnd = NULL;
+#endif /* _WINDOWS */
+static int ProfileBase;
+static CHAR_T Profile [MAX_LENGTH+1];
+static CHAR_T Profiles_File [MAX_LENGTH+1];
+
+
+
+
+
 /* 
 ** function prototypes
 */
@@ -150,6 +163,8 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshProfileMenu (HWND hwnDlg);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
@@ -164,6 +179,8 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshProfileMenu (/* HWND hwnDlg */);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 
@@ -214,6 +231,7 @@ static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
 #endif /* !_WINDOWS */
 static void         RestoreDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
+
 #ifndef _WINDOWS
 static void         LanNegCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshLanNegMenu (void);
@@ -221,6 +239,15 @@ static void         RefreshLanNegMenu (void);
 static void         GetLanNegConf (void);
 static void         GetDefaultLanNegConf (void);
 static void         SetLanNegConf (void);
+
+/*profile*/
+#ifndef _WINDOWS
+static void         ProfileCallbackDialog(int ref, int typedata, STRING data);
+static void         RefreshProfileMenu (void);
+#endif /* !_WINDOWS */
+static void         GetProfileConf (void);
+static void         GetDefaultProfileConf (void);
+static void         SetProfileConf (void);
 
 #else /* __STDC__ */
 static void         GetEnvString (/* const STRING name, STRING value */);
@@ -276,6 +303,13 @@ static void         RefreshLanNegMenu (/* void */);
 static void         GetLanNegConf (/* void */);
 static void         GetDefaultLanNegConf (/* void */);
 static void         SetLanNegConf (/* void */);
+#ifndef _WINDOWS
+static void         ProfileCallbackDialog(/* int ref, int typedata, STRING data */);
+#endif /* !_WINDOWS */
+static void         RefreshProfileMenu (/* void */);
+static void         GetProfileConf (/* void */);
+static void         GetDefaultProfileConf (/* void */);
+static void         SetProfileConf (/* void */);
 #endif
 
 /*
@@ -372,6 +406,8 @@ void                InitConfMenu ()
 				 MAX_GEOMETRYMENU_DLG);
   LanNegBase = TtaSetCallback (LanNegCallbackDialog,
 			       MAX_LANNEGMENU_DLG);
+  ProfileBase = TtaSetCallback (ProfileCallbackDialog,
+			       MAX_PROFILEMENU_DLG);
 #endif /* !_WINDOWS */
 }
 
@@ -3115,7 +3151,7 @@ STRING              pathname;
    TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
 		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
 		   20, 1, FALSE);
-#endif /* !_WINDOWS */
+#endif   /* !_WINDOWS */
  
    /* load and display the current values */
    GetLanNegConf ();
@@ -3224,4 +3260,287 @@ static void SetLanNegConf ()
 }
 
 
+/**********************
+** Profile Menu
+**********************/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_ProfileDlgProc
+  Windows callback for the Profile menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_ProfileDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      ProfileHwnd = hwnDlg;
+      WIN_RefreshProfileMenu (hwnDlg);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      ProfileHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDC_LANNEG:
+	  GetDlgItemText (hwnDlg, IDC_LANNEG, Profile,
+			  sizeof (Profile) - 1);
+	  break;
+	  /* action buttons */
+	case ID_APPLY:
+	  SetProfileConf ();	  
+	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  ProfileHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultProfileConf ();
+	  WIN_RefreshProfileMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+   callback of the Profile configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ProfileCallbackDialog (int ref, int typedata, STRING data)
+#else
+static void         ProfileCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+STRING              data;
+
+#endif
+{
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the Profile conf menu */
+      TtaDestroyDialogue (ProfileBase + ProfileMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - ProfileBase)
+	{
+	case ProfileMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetProfileConf ();
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 2:
+	      GetDefaultProfileConf ();
+	      RefreshProfileMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mProfile:
+	  if (data)
+	    ustrcpy (Profile, data);
+	  else
+	    Profile [0] = EOS;
+	  break;
+
+	case mProfiles_File:
+	  if (data)
+	    ustrcpy (Profiles_File, data);
+	  else
+	    Profiles_File [0] = EOS;
+	  break;
+ 
+	default:
+	  break;
+	}
+    }
+}
+#endif /* !_WINDOWS */
+
+
+/*----------------------------------------------------------------------
+  ProfileConfMenu
+  Build and display the Conf Menu dialog box and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         ProfileConfMenu (Document document, View view)
+#else
+void         ProfileConfMenu (document, view)
+Document            document;
+View                view;
+STRING              pathname;
+
+#endif
+{
+#ifndef _WINDOWS
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i += ustrlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
+   TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
+		TtaGetMessage (1, BConfigProfile), 2, s, TRUE, 1, 'L', D_DONE);
+   /* first line */
+   TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
+		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
+		   20, 1, FALSE);
+
+/* -----------*/
+   TtaNewTextForm (ProfileBase + mProfile, ProfileBase + ProfileMenu,
+		   TtaGetMessage (AMAYA, AM_PROFILE),
+		   20, 1, FALSE);
+
+/**-------------*/
+
+#endif /* !_WINDOWS */
+ 
+   /* load and display the current values */
+   GetProfileConf ();
+#ifndef _WINDOWS
+   RefreshProfileMenu ();
+   /* display the menu */
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (ProfileBase + ProfileMenu, TRUE);
+#else 
+   if (!ProfileHwnd)
+    /* only activate the menu if it isn't active already */
+    {
+      switch (app_lang)
+	{
+	case FR_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_ProfileDlgProc);
+	  break;
+	case DE_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_ProfileDlgProc);
+	  break;
+	default:
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_ProfileDlgProc);
+	}
+    }
+   else
+     SetFocus (ProfileHwnd);
+#endif /* !_WINDOWS */
+
+}
+
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshProfileMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshProfileMenu (HWND hwnDlg)
+#else
+void WIN_RefreshProfileMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+  SetDlgItemText (hwnDlg, IDC_LANNEG, Profile);
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  RefreshProfileMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshProfileMenu ()
+#else
+static void RefreshProfileMenu ()
+#endif /* __STDC__ */
+{
+  TtaSetTextForm (ProfileBase + mProfile, Profile);
+  TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
+}
+#endif /* !_WINDOWS */
+
+
+/*----------------------------------------------------------------------
+  GetProfileConf
+  Makes a copy of the current registry Profile values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetProfileConf (void)
+#else
+static void GetProfileConf ()
+#endif /* __STDC__ */
+{
+  GetEnvString (TEXT("Profiles_File"), Profiles_File);
+  GetEnvString (TEXT("Profile"), Profile);
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultProfileConf
+  Makes a copy of the default registry Profile values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultProfileConf (void)
+#else
+static void GetDefaultProfileConf ()
+#endif /* __STDC__ */
+{
+  GetDefEnvString (TEXT("Profiles_File"), Profiles_File);
+  GetDefEnvString (TEXT("Profile"), Profile);
+}
+
+
+/*----------------------------------------------------------------------
+  SetProfileConf
+  Updates the registry Profile values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetProfileConf (void)
+#else
+static void SetProfileConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString (TEXT("Profiles_File"), Profiles_File,TRUE);
+  TtaSetEnvString (TEXT("Profile"), Profile,TRUE);
+  TtaSaveAppRegistry ();
+
+  /* change the current settings */
+  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+}
