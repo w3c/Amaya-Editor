@@ -35,7 +35,8 @@
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
-#include "XmlNameSpaces_f.h"
+#include "XLinkbuilder_f.h"
+#include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 
@@ -89,6 +90,8 @@ typedef struct _XMLparserContext
     
     Proc	   EntityCreated;	/* action to be called when an entity
 					   has been parsed */
+    Proc	   InsertElem;	        /* action to be called to insert an
+					   element in the abstract tree */
     Proc	   ElementComplete;	/* action to be called when an element
 					   has been generated completely */
     Proc	   AttributeComplete;	/* action to be called when an
@@ -99,19 +102,22 @@ typedef struct _XMLparserContext
   }
 XMLparserContext;
 
+/* information about XML languages */
 /* All parser contexts describing known XML DTDs constitute a chain */
-                /* first context in the chain*/
+/* first context in the chain*/
 static PtrParserCtxt	firstParserCtxt = NULL;
-                /* current context */
+/* current context */
 static PtrParserCtxt	currentParserCtxt = NULL;
-                /* xhtml context */
+/* xhtml context */
 static PtrParserCtxt	xhtmlParserCtxt = NULL;
+/* XLink parser context */
+static PtrParserCtxt    XLinkParserCtxt = NULL;
+
 
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
 #define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
 #define GraphML_URI          TEXT("Unknown URI")
-
 
 /* SSchema stack */
 #define MAX_NS   10
@@ -216,23 +222,22 @@ static CHAR_T	    currentMappedName[16];
 #define MaxMsgLength 200
 
 #ifdef __STDC__
-static void         StartOfXmlStartTag (CHAR_T* GIname);
-static void         InsertElement (Element * el);
+static void         StartOfXmlStartTag (CHAR_T *GIname);
+static void         InsertElement (Element *el);
 static void         PutMathMLEntity (USTRING entityValue, Language lang,
 				     STRING entityName, Document doc);
-static void         XhtmlElementComplete (Element el, Document doc, int *error);
+static void         XhtmlInsertElement (Element *el);
+static void         XmlInsertElement (Element *el);
 #else
-static void         StartOfXmlStartTag ();
-static void         InsertElement ();
+static void         StartOfXmlStartTag (GIname);
+static void         InsertElement (el);
 static void         PutMathMLEntity (entityValue, lang, entityName, doc);
-static void         XhtmlElementComplete (el, doc, error);
+static void         XhtmlInsertElement (el);
+static void         XmlInsertElement (el);
 #endif
 
 static FILE*    ErrFile = (FILE*) 0;
 static CHAR_T   ErrFileName [80];
-
-extern CHARSET  CharEncoding;
-extern ThotBool charset_undefined;
 
 
 /*----------------------------------------------------------------------
@@ -251,7 +256,7 @@ static void            InitXmlParserContexts ()
    prevCtxt = NULL;
    ctxt = NULL;
 
-   /* initialize XHTML parser */
+   /* create and initialize a context for the XHTML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -269,13 +274,14 @@ static void            InitXmlParserContexts ()
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
    /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
    ctxt->EntityCreated = NULL;
+   ctxt->InsertElem = (Proc) XhtmlInsertElement;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
    prevCtxt = ctxt;
    xhtmlParserCtxt = ctxt;
 
-   /* initialize MathML parser */
+   /* create and initialize a context for the MathML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -293,13 +299,14 @@ static void            InitXmlParserContexts ()
    ctxt->MapEntity = (Proc) MapMathMLEntity;
    /*   ctxt->EntityCreated = (Proc) MathMLEntityCreated; */
    ctxt->EntityCreated = (Proc) PutMathMLEntity;
+   ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
    prevCtxt = ctxt;
 
 #ifdef GRAPHML
-   /* initialize GraphML parser */
+   /* create and initialize a context for the GraphML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
    if (prevCtxt == NULL)
       firstParserCtxt = ctxt;
@@ -316,11 +323,33 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
    ctxt->MapEntity = (Proc) MapGraphMLEntity;
    ctxt->EntityCreated = (Proc) GraphMLEntityCreated;
+   ctxt->InsertElem = (Proc) XmlInsertElement;
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
    prevCtxt = ctxt;
 #endif /* GRAPHML */
+
+   /* create and initialize a context for the XLink parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = XLINK_TYPE;
+   ctxt->MapAttribute = (Proc) MapXLinkAttribute;
+   ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
+   ctxt->MapEntity = NULL;
+   ctxt->EntityCreated = NULL;
+   ctxt->InsertElem = NULL;
+   ctxt->ElementComplete = NULL;
+   ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
+   ctxt->GetDTDName = NULL;
+   XLinkParserCtxt = ctxt;
+   prevCtxt = ctxt;
+
 }
 
 /*----------------------------------------------------------------------
@@ -343,7 +372,7 @@ STRING              DTDname;
   /* initialize the corresponding entry */
   if (currentParserCtxt != NULL)
         currentParserCtxt->XMLSSchema = 
-          GetXmlDTD (currentParserCtxt->XMLtype, currentDocument);
+          GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
 }
 
 
@@ -412,8 +441,8 @@ Document         doc;
     {
       /* by default we're looking at in the current schema */
       elType->ElSSchema = currentParserCtxt->XMLSSchema;
-      MapXmlElType (currentParserCtxt->XMLtype, XMLname,
-		    elType, mappedName, content, doc);
+      MapXMLElementType (currentParserCtxt->XMLtype, XMLname,
+			 elType, mappedName, content, doc);
     }
   else
     if (elType->ElSSchema != NULL)
@@ -421,12 +450,13 @@ Document         doc;
 	/* The schema is known -> search the corresponding context */
 	ctxt = firstParserCtxt;
 	while (ctxt != NULL &&
-	       ustrcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
+	       ustrcmp (TtaGetSSchemaName (elType->ElSSchema),
+			ctxt->SSchemaName))
 	  ctxt = ctxt->NextParserCtxt;
 	/* get the Thot element number */
 	if (ctxt != NULL)
-	  MapXmlElType (ctxt->XMLtype, XMLname,
-			elType, mappedName, content, doc);
+	  MapXMLElementType (ctxt->XMLtype, XMLname,
+			     elType, mappedName, content, doc);
       }
   
   /* if not found, look at other contexts */
@@ -438,8 +468,8 @@ Document         doc;
 	  elType->ElSSchema = NULL;
 	  if (ctxt != currentParserCtxt)
 	    {
-	      MapXmlElType (ctxt->XMLtype, XMLname,
-			    elType, mappedName, content, doc);
+	      MapXMLElementType (ctxt->XMLtype, XMLname,
+				 elType, mappedName, content, doc);
 	      if (elType->ElSSchema != NULL)
 		  ctxt->XMLSSchema = elType->ElSSchema;
 	    }
@@ -466,93 +496,78 @@ Element		el;
 }
 
 /*----------------------------------------------------------------------
-  XhtmlParseCharset:
-  Parses the element HTTP-EQUIV and looks for the charset value.
+  IsParsingCSS 
+  Returns the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void XhtmlParseCharset (Element el) 
-#else  /* !__STDC__ */
-static void XhtmlParseCharset (el) 
-Element el;
-#endif /* !__STDC__ */
+ThotBool  IsParsingCSS ()
+#else
+ThotBool  IsParsingCSS ()
+
+#endif
 {
- 
-   int           length;
-   CHAR_T       *text, *text2, *ptrText, *str;
-   CHAR_T        charsetname[MAX_LENGTH];
-   int           pos, index = 0;
-   AttributeType attrType;
-   Attribute     attr;
-   Element       root;
-
-   if (!charset_undefined)
- 	  return;
-
-  attrType.AttrSSchema = DocumentSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_http_equiv;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL) {
-     /* There is a HTTP-EQUIV attribute */
-     length = TtaGetTextAttributeLength (attr);
-     if (length > 0) {
-        text = TtaAllocString (length + 1);
-        TtaGiveTextAttributeValue (attr, text, &length);
-        if (!ustrcasecmp (text, TEXT("content-type"))) {
-           attrType.AttrTypeNum = HTML_ATTR_meta_content;
-           attr = TtaGetAttribute (el, attrType);
-           if (attr != NULL) {
-              length = TtaGetTextAttributeLength (attr);
-              if (length > 0) {
-                 text2 = TtaAllocString (length + 1);
-                 TtaGiveTextAttributeValue (attr, text2, &length);
-                 ptrText = text2;
-                 while (*ptrText) {
-                       *ptrText = utolower (*ptrText);
-                       ptrText++;
-				 }
-
-                 str = ustrstr (text2, TEXT("charset="));
-    
-                 if (str) {
- 			       pos = str - text2 + 8;
-
-                   while (text2[pos] != WC_SPACE &&
-			  text2[pos] != WC_TAB && text2[pos] != WC_EOS)
-                         charsetname[index++] = text2[pos++];
-                   charsetname[index] = WC_EOS;
-                   CharEncoding = TtaGetCharset (charsetname);
-
-                   if (CharEncoding == UNDEFINED_CHARSET)
-                      CharEncoding = UTF_8;
-                   else {
-                        /* copy the charset to the document's metadata info */
-                        root = TtaGetMainRoot (currentDocument);
-                        attrType.AttrTypeNum = HTML_ATTR_Charset;
-                        attr = TtaGetAttribute (root, attrType);
-                        if (!attr)
-                           /* the root element does not have a Charset attribute.
-                           Create one */
-						{
-                          attr = TtaNewAttribute (attrType);
-                          TtaAttachAttribute (root, attr, currentDocument);
-						}
-                        TtaSetAttributeText (attr, charsetname,
-					     root, currentDocument);
-				   }
-                   charset_undefined = FALSE;
-				 }
-                 TtaFreeMemory (text2);
-			  }       
-		   } 
-		}
-        TtaFreeMemory (text);
-	 }
-  }
+   return ParsingCSS;
 }
 
 /*----------------------------------------------------------------------
-   XmlWithin  
-   Checks if an element of type ThotType is in the stack.
+  SetParsingCSS 
+  Sets the value of ParsingCSS boolean.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  SetParsingCSS (ThotBool value)
+#else
+void  SetParsingCSS (value)
+ThotBool   value;
+
+#endif
+{
+   ParsingCSS = value;
+}
+
+/*----------------------------------------------------------------------
+  SetParsingTextArea
+  Sets the value of ParsingTextArea boolean.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  SetParsingTextArea (ThotBool value)
+#else
+void  SetParsingTextArea (value)
+ThotBool   value;
+
+#endif
+{
+   ParsingTextArea = value;
+}
+
+/*----------------------------------------------------------------------
+  IsWithinTable 
+  Returns the value of WithinTable integer.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int  IsWithinTable ()
+#else
+int  IsWithinTable ()
+
+#endif
+{
+   return WithinTable;
+}
+
+/*----------------------------------------------------------------------
+  SubWithinTable
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void  SubWithinTable ()
+#else
+void  SubWithinTable ()
+#endif
+{
+   WithinTable--;
+}
+
+/*----------------------------------------------------------------------
+  XmlWithin  
+  Checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool  XmlWithin (int ThotType,
@@ -560,8 +575,8 @@ static ThotBool  XmlWithin (int ThotType,
 #else
 static ThotBool  XmlWithin (ThotType,
 			    ThotSSchema)
-int                 ThotType;
-SSchema		    ThotSSchema;
+int       ThotType;
+SSchema	  ThotSSchema;
 
 #endif
 {
@@ -750,6 +765,68 @@ Element           parent;
    return ret;
 }
 
+/*----------------------------------------------------------------------
+   XhtmlInsertElement 
+   Insert an XHTML element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     XhtmlInsertElement (Element *el)
+#else
+static void     XhtmlInsertElement (el)
+Element    *el;
+
+#endif
+{
+   Element   parent;
+
+   if (InsertSibling ())
+     {
+       if (lastElement == NULL)
+	   parent = NULL;
+       else
+	   parent = TtaGetParent (lastElement);
+
+       if (!CheckSurrounding (el, parent))
+	 {
+	   if (parent != NULL)
+	       TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
+	   else
+	     {
+	       TtaDeleteTree (*el, currentDocument);
+	       *el = NULL;
+	     }
+	 }
+     }
+   else
+     {
+       if (!CheckSurrounding (el, lastElement))
+	   TtaInsertFirstChild (el, lastElement, currentDocument);
+     }
+}
+
+/*----------------------------------------------------------------------
+   XmlInsertElement 
+   Insert a XML element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     XmlInsertElement (Element *el)
+#else
+static void     XmlInsertElement (el)
+Element    *el;
+
+#endif
+{
+   Element       parent;
+
+   if (InsertSibling ())
+     {
+       TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
+     }
+   else
+     {
+       TtaInsertFirstChild (el, lastElement, currentDocument);
+     }
+}
 
 /*----------------------------------------------------------------------
    InsertElement   
@@ -757,52 +834,15 @@ Element           parent;
    at the current position.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     InsertElement (Element * el)
+static void     InsertElement (Element *el)
 #else
 static void     InsertElement (el)
-Element            *el;
+Element    *el;
 
 #endif
 {
-   Element       parent;
 
-   /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
-   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) 
-     {
-       if (InsertSibling ())
-	 {
-	   if (lastElement == NULL)
-	     parent = NULL;
-	   else
-	     parent = TtaGetParent (lastElement);
-	   if (!CheckSurrounding (el, parent))
-	     if (parent != NULL)
-	       TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
-	     else
-	       {
-		 TtaDeleteTree (*el, currentDocument);
-		 *el = NULL;
-	       }
-	 }
-       else
-	 {
-	   if (!CheckSurrounding (el, lastElement))
-	     {
-	       TtaInsertFirstChild (el, lastElement, currentDocument);
-	     }
-	 }
-     }
-   else
-     {
-       if (InsertSibling ())
-	 {
-	   TtaInsertSibling (*el, lastElement, FALSE, currentDocument);
-	 }
-       else
-	 {
-	   TtaInsertFirstChild (el, lastElement, currentDocument);
-	 }
-     }
+   (*(currentParserCtxt->InsertElem)) (el);
    
    if (*el != NULL)
      {
@@ -812,18 +852,18 @@ Element            *el;
 }
 
 /*----------------------------------------------------------------------
-   LastLeafInElement
+   XmlLastLeafInElement
    return the last leaf element in element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      LastLeafInElement (Element el)
+Element      XmlLastLeafInElement (Element el)
 #else
-static Element      LastLeafInElement (el)
+Element      XmlLastLeafInElement (el)
 Element             el;
 
 #endif
 {
-   Element             child, lastLeaf;
+   Element  child, lastLeaf;
 
    child = el;
    lastLeaf = NULL;
@@ -831,378 +871,11 @@ Element             el;
      {
        child = TtaGetLastChild (child);
        if (child != NULL)
-	 lastLeaf = child;
+	   lastLeaf = child;
      }
    return lastLeaf;
 }
 
-
-
-/*----------------------------------------------------------------------
-   XhtmlElementComplete
-   Complete XHTML elements
-   Element el is complete. Check its attributes and its contents.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         XhtmlElementComplete (Element el, Document doc, int *error)
-#else
-static void         XhtmlElementComplete (el, doc, error)
-Element           el;
-Document          doc;
-int               *error;
-#endif
-{
-   ElementType         elType, newElType, childType;
-   Element             constElem, child, desc, leaf, prev, next, last,
-		       elFrames, lastFrame, lastChild;
-   Attribute           attr;
-   AttributeType       attrType;
-   Language            lang;
-   STRING              text;
-   CHAR_T              lastChar[2];
-   STRING              name1;
-   int                 length;
-
-   *error = 0;
-   elType = TtaGetElementType (el);
-   /* is this a block-level element in a character-level element? */
-   if (!IsCharacterLevelElement (el) && elType.ElTypeNum != HTML_EL_Comment_)
-      BlockInCharLevelElem (el);
-
-   newElType.ElSSchema = elType.ElSSchema;
-   switch (elType.ElTypeNum)
-    {
-    case HTML_EL_Object:	/*  it's an object */
-       /* create Object_Content */
-       child = TtaGetFirstChild (el);
-       if (child != NULL)
-	 elType = TtaGetElementType (child);
-	 
-       /* is it the PICTURE element ? */
-       if (child == NULL || elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
-	 {
-	   desc = child;
-	   /* create the PICTURE element */
-	   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	   child = TtaNewTree (currentDocument, elType, "");
-	   if (desc == NULL)
-	     TtaInsertFirstChild (&child, el, currentDocument);
-	   else
-	     TtaInsertSibling (child, desc, TRUE, currentDocument);
-	 }
-       /* copy attribute data into SRC attribute of Object_Image */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_data;
-       attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
-	 {
-	    length = TtaGetTextAttributeLength (attr);
-	    if (length > 0)
-	      {
-		name1 = TtaAllocString (length + 1);
-		TtaGiveTextAttributeValue (attr, name1, &length);
-		attrType.AttrTypeNum = HTML_ATTR_SRC;
-		attr = TtaGetAttribute (child, attrType);
-		if (attr == NULL)
-		  {
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (child, attr, currentDocument);
-		  }
-		TtaSetAttributeText (attr, name1, child, currentDocument);
-		TtaFreeMemory (name1);
-	      }
-	 }
-       /* is the Object_Content element already created ? */
-       desc = child;
-       TtaNextSibling(&desc);
-       if (desc != NULL)
-	 elType = TtaGetElementType (desc);
-	 
-       /* is it the Object_Content element ? */
-       if (desc == NULL || elType.ElTypeNum != HTML_EL_Object_Content)
-	 {
-	   /* create Object_Content */
-	   elType.ElTypeNum = HTML_EL_Object_Content;
-	   desc = TtaNewTree (currentDocument, elType, "");
-	   TtaInsertSibling (desc, child, FALSE, currentDocument);
-	   /* move previous existing children into Object_Content */
-	   child = TtaGetLastChild(el);
-	   while (child != desc)
-	     {
-	       TtaRemoveTree (child, currentDocument);
-	       TtaInsertFirstChild (&child, desc, currentDocument);
-	       child = TtaGetLastChild(el);
-	     }
-	 }
-	break;
-
-    case HTML_EL_Unnumbered_List:
-    case HTML_EL_Numbered_List:
-    case HTML_EL_Menu:
-    case HTML_EL_Directory:
-	/* It's a List element. It should only have List_Item children.
-	   If it has List element chidren, move these List elements
-	   within their previous List_Item sibling.  This is to fix
-           a bug in document generated by Mozilla. */
-	prev = NULL;
-	next = NULL;
-	child = TtaGetFirstChild (el);
-	while (child != NULL)
-	   {
-	   next = child;
-	   TtaNextSibling (&next);
-	   elType = TtaGetElementType (child);
-	   if (elType.ElTypeNum == HTML_EL_Unnumbered_List ||
-	       elType.ElTypeNum == HTML_EL_Numbered_List ||
-	       elType.ElTypeNum == HTML_EL_Menu ||
-	       elType.ElTypeNum == HTML_EL_Directory)
-	     /* this list element is a child of another list element */
-	     if (prev)
-		{
-		elType = TtaGetElementType (prev);
-		if (elType.ElTypeNum == HTML_EL_List_Item)
-		   {
-		   /* get the last child of the previous List_Item */
-		   desc = TtaGetFirstChild (prev);
-		   last = NULL;
-		   while (desc)
-		      {
-		      last = desc;
-		      TtaNextSibling (&desc);
-		      }
-		   /* move the list element after the last child of the
-		      previous List_Item */
-		   TtaRemoveTree (child, currentDocument);
-		   if (last)
-		      TtaInsertSibling (child, last, FALSE, currentDocument);
-		   else
-		      TtaInsertFirstChild (&child, prev, currentDocument);
-		   child = prev;
-		   }
-	        }
-	   prev = child;
-	   child = next;
-	   }
-	break;
-
-    case HTML_EL_FRAMESET:
-	/* The FRAMESET element is now complete.  Gather all its FRAMESET
-	   and FRAME children and wrap them up in a Frames element */
-	elFrames = NULL; lastFrame = NULL;
-	lastChild = NULL;
-	child = TtaGetFirstChild (el);
-	while (child != NULL)
-	   {
-	   next = child;
-	   TtaNextSibling (&next);
-	   elType = TtaGetElementType (child);
-	   if (elType.ElTypeNum == HTML_EL_FRAMESET ||
-	       elType.ElTypeNum == HTML_EL_FRAME ||
-	       elType.ElTypeNum == HTML_EL_Comment_)
-	       {
-	       /* create the Frames element if it does not exist */
-	       if (elFrames == NULL)
-		 {
-		    newElType.ElSSchema = DocumentSSchema;
-		    newElType.ElTypeNum = HTML_EL_Frames;
-		    elFrames = TtaNewElement (currentDocument, newElType);
-		    XmlSetElemLineNumber (elFrames);
-		    TtaInsertSibling (elFrames, child, TRUE, currentDocument);
-		 }
-	       /* move the element as the last child of the Frames element */
-	       TtaRemoveTree (child, currentDocument);
-	       if (lastFrame == NULL)
-		  TtaInsertFirstChild (&child, elFrames, currentDocument);
-	       else
-		  TtaInsertSibling (child, lastFrame, FALSE, currentDocument);
-	       lastFrame = child;
-	       }
-	   child = next;
-           }
-	break;
-
-    case HTML_EL_Input:	/* it's an INPUT without any TYPE attribute */
-	/* Create a child of type Text_Input */
-	elType.ElTypeNum = HTML_EL_Text_Input;
-	child = TtaNewTree (currentDocument, elType, "");
-	XmlSetElemLineNumber (child);
-	TtaInsertFirstChild (&child, el, currentDocument);
-	/* now, process it like a Text_Input element */
-    case HTML_EL_Text_Input:
-    case HTML_EL_Password_Input:
-    case HTML_EL_File_Input:
-      /* get element Inserted_Text */
-      child = TtaGetFirstChild (el);
-      if (child != NULL)
-	{
-	  attrType.AttrSSchema = DocumentSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_Value_;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr != NULL)
-	    {
-	      /* copy the value of attribute "value" into the first text
-		 leaf of element */
-	      length = TtaGetTextAttributeLength (attr);
-	      if (length > 0)
-		{
-		  /* get the text leaf */
-		  leaf = TtaGetFirstChild (child);
-		  if (leaf != NULL)
-		    {
-		      childType = TtaGetElementType (leaf);
-		      if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			{
-			  /* copy attribute value into the text leaf */
-			  text = TtaAllocString (length + 1);
-			  TtaGiveTextAttributeValue (attr, text, &length);
-			  TtaSetTextContent (leaf, text, currentLanguage,
-					     currentDocument);
-			  TtaFreeMemory (text);
-			}
-		    }
-		}
-	    }
-	}
-      break;
-
-	case HTML_EL_META:
-         XhtmlParseCharset (el);
-         break;
-
-    case HTML_EL_STYLE_:	/* it's a STYLE element */
-    case HTML_EL_Preformatted:	/* it's a PRE */
-    case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
-       /* if the last line of the Preformatted is empty, remove it */
-       leaf = LastLeafInElement (el);
-       if (leaf != NULL)
-	  {
-	    elType = TtaGetElementType (leaf);
-	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	      /* the last leaf is a TEXT element */
-	      {
-		length = TtaGetTextLength (leaf);
-		if (length > 0)
-		  {
-		     TtaGiveSubString (leaf, lastChar, length, 1);
-		     if (lastChar[0] == EOL)
-			/* last character is new line, delete it */
-			{
-		        if (length == 1)
-		          /* empty TEXT element */
-		          TtaDeleteTree (leaf, currentDocument);
-		        else
-		          /* remove the last character */
-		          TtaDeleteTextContent (leaf, length, 1,
-					        currentDocument);
-			}
-		  }
-	      }
-	  }
-       if (ParsingCSS)
-	 {
-	   text = GetStyleContents (el);
-	   if (text)
-	     {
-	       ReadCSSRules (currentDocument, NULL, text, FALSE);
-	       TtaFreeMemory (text);
-	     }
-	   ParsingCSS = FALSE;
-	 }
-	/* and continue as if it were a Preformatted or a Script */
-       break;
-
-    case HTML_EL_Text_Area:	/* it's a Text_Area */
-      ParsingTextArea = FALSE;
-       child = TtaGetFirstChild (el);
-       if (child == NULL)
-	  /* it's an empty Text_Area */
-	  /* insert a Inserted_Text element in the element */
-	 {
-	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	   child = TtaNewTree (currentDocument, newElType, "");
-	   TtaInsertFirstChild (&child, el, currentDocument);
-	 }
-       else
-	 {
-	   /* save the text into Default_Value attribute */
-	   attrType.AttrSSchema = DocumentSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_Default_Value;
-	   if (TtaGetAttribute (el, attrType) == NULL)
-	     /* attribute Default_Value is missing */
-	     {
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, currentDocument);
-	       desc = TtaGetFirstChild (child);
-	       length = TtaGetTextLength (desc) + 1;
-	       text = TtaAllocString (length);
-	       TtaGiveTextContent (desc, text, &length, &lang);
-	       TtaSetAttributeText (attr, text, el, currentDocument);
-	       TtaFreeMemory (text);
-	     }
-	 }
-       /* insert a Frame element */
-       newElType.ElTypeNum = HTML_EL_Frame;
-       constElem = TtaNewTree (currentDocument, newElType, "");
-       TtaInsertSibling (constElem, child, FALSE, currentDocument);
-       break;
-
-    case HTML_EL_Radio_Input:
-    case HTML_EL_Checkbox_Input:
-       /* put an attribute Checked if it is missing */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_Checked;
-       if (TtaGetAttribute (el, attrType) == NULL)
-	  /* attribute Checked is missing */
-	 {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (el, attr, currentDocument);
-	    TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, el,
-				  currentDocument);
-	 }
-       break;
-
-    case HTML_EL_Option_Menu:
-       /* Check that at least one option has a SELECTED attribute */
-       OnlyOneOptionSelected (el, currentDocument, TRUE);
-       break;
-    case HTML_EL_PICTURE_UNIT:
-       break;
-
-    case HTML_EL_LINK:
-       CheckCSSLink (el, currentDocument, DocumentSSchema);
-       break;
-
-    case HTML_EL_Data_cell:
-    case HTML_EL_Heading_cell:
-      /* insert a pseudo paragraph into empty cells */
-       child = TtaGetFirstChild (el);
-       if (child == NULL)
-	 {
-	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	   child = TtaNewTree (currentDocument, elType, "");
-	   if (child != NULL)
-	     TtaInsertFirstChild (&child, el, currentDocument);
-	 }
-
-       /* detect whether we're parsing a whole table or just a cell */
-       if (WithinTable == 0)
-	 NewCell (el, currentDocument, FALSE);
-       break;
-
-    case HTML_EL_Table:
-       CheckTable (el, currentDocument);
-       WithinTable--;
-       break;
-
-    case HTML_EL_TITLE:
-       /* show the TITLE in the main window */
-       UpdateTitle (el, currentDocument);
-       break;
-
-    default:
-       break;
-    }
-}
 
 /*----------------------------------------------------------------------
    RemoveEndingSpaces
@@ -1229,7 +902,7 @@ Element el;
       /* it's a block element. */
       {
 	   /* Search the last leaf in the element's tree */
-	   lastLeaf = LastLeafInElement (el);
+	   lastLeaf = XmlLastLeafInElement (el);
 	   if (lastLeaf != NULL)
 	     {
 	       elType = TtaGetElementType (lastLeaf);
@@ -2745,7 +2418,7 @@ Document  doc;
     }
   
   elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
-  elType.ElSSchema = GetMathML_DTD (doc);
+  elType.ElSSchema = GetMathMLSSchema (doc);
   elText = TtaNewElement (doc, elType);
   XmlSetElemLineNumber (elText);
   InsertElement (&elText);
@@ -2757,7 +2430,7 @@ Document  doc;
   TtaSetAccessRight (elText, ReadOnly, doc);
   
   /* associate an attribute EntityName with the new text leaf */
-  attrType.AttrSSchema = GetMathML_DTD (doc);
+  attrType.AttrSSchema = GetMathMLSSchema (doc);
   attrType.AttrTypeNum = MathML_ATTR_EntityName;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (elText, attr, doc);

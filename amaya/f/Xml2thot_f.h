@@ -7,6 +7,12 @@
 #ifdef __STDC__
 
 extern void XmlSetElemLineNumber ( Element el );
+extern ThotBool IsParsingCSS ( void );
+extern void SetParsingCSS ( ThotBool value );
+extern void SetParsingTextArea ( ThotBool value );
+extern int IsWithinTable ( void );
+extern void SubWithinTable ( void );
+extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( STRING data );
 extern void PutMathMLEntity ( USTRING entityValue,
                               Language lang,
@@ -23,6 +29,12 @@ extern void StartXmlParser ( Document doc,
 #else /* __STDC__ */
 
 extern void XmlSetElemLineNumber (/* Element el */);
+extern ThotBool IsParsingCSS (/* void */);
+extern void SetParsingCSS (/* ThotBool value */);
+extern void SetParsingTextArea (/* ThotBool value */);
+extern int IsWithinTable (/* void */);
+extern void SubWithinTable (/* void */);
+extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* STRING data */);
 extern void PutMathMLEntity (/* USTRING entityValue,
                                 Language lang,

@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XhtmlElementComplete ( Element el,
+                                   Document doc,
+                                   int *error );
 extern void XhtmlGetDTDName ( STRING DTDname,
                               STRING elementName );
 extern AttributeMapping* XhtmlMapAttribute ( CHAR_T* attrName,
@@ -22,6 +25,9 @@ extern void XhtmlMapEntity ( STRING entityName,
 
 #else /* __STDC__ */
 
+extern void XhtmlElementComplete (/* Element el,
+                                     Document doc,
+                                     int *error */);
 extern void XhtmlGetDTDName (/* STRING DTDname,
                                 STRING elementName */);
 extern AttributeMapping* XhtmlMapAttribute (/* CHAR_T* attrName,
