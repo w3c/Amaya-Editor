@@ -69,7 +69,7 @@ int                WIN_NormalLineSpacing;
 
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
-extern CHAR_T       DocToOpen [256];
+extern CHAR_T       DocToOpen [MAX_LENGTH];
 extern CHAR_T       WIN_buffMenu [MAX_TXT_LEN];
 extern CHAR_T       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern HWND         hWndParent;
