@@ -863,7 +863,7 @@ Document doc;
     {
     *****/
       ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
-      ustrcat (tmpfilename, DIR_SEP);
+      ustrcat (tmpfilename, DIR_STR);
       ustrcat (tmpfilename, "amayatrans.tmp");
       TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
       StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
