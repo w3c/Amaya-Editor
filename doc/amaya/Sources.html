@@ -21,7 +21,7 @@ alt="Doc"></a></p>
 Below is the picture of the whole tree built from the source archives for Thot
 and Amaya.</p>
 <p>
-We assume that all the archives needed have been fetched from W3C or INRIA
+We assume that the right archive needed has been fetched from W3C or INRIA
 servers, namely and stored in <code>/tmp</code> :</p>
 <ul>
 <li>
@@ -32,88 +32,54 @@ the <strong>Amaya</strong> source archive <code>amaya-src-yyy.tar.gz</code>
 <img src="../Icons/warning.gif">The archive amaya-src-yyy.tar.gz,  allows you
 only to build the Amaya  without Java support.</p>
 <p>
-Here is a short table of compatibles versions of Thot and Amaya :</p>
+Here is a short table of compatibles versions of Thot and Amaya:</p>
 
 <table border="1">
 <tbody>
 <tr>
 <td>
-Thot (xxx)
+Thot
 </td>
 <td>
-Amaya (yyy)
-</td>
-</tr>
-<tr>
-<td>
-2.0
+2.0(a-b)
 </td>
 <td>
-0.95
+2.1(a-b)
 </td>
-</tr>
-<tr>
-<td>
-2.0a
-</td>
-<td>
-0.95a
-</td>
-</tr>
-<tr>
-<td>
-2.0b
-</td>
-<td>
-0.95b
-</td>
-</tr>
-<tr>
-<td>
-2.1
-</td>
-<td>
-1.0
-</td>
-</tr>
-<tr>
-<td>
-2.1a
-</td>
-<td>
-1.0a
-</td>
-</tr>
-<tr>
-<td>
-2.1b
-</td>
-<td>
-1.0b
-</td>
-</tr>
-<tr>
 <td>
 2.1c
 </td>
-<td>
-1.1
+<td><p>
+2.1d</p>
 </td>
-</tr>
-<tr>
-<td>
-2.1d
-</td>
-<td>
-1.1a
-</td>
-</tr>
-<tr>
 <td>
 2.1e
 </td>
 <td>
-1.1b or 1.1c
+2.2
+</td>
+</tr>
+<tr>
+<td>
+Amaya
+</td>
+<td>
+0.95(a-b)
+</td>
+<td>
+1.0(a-b)
+</td>
+<td>
+1.1
+</td>
+<td>
+1.1a
+</td>
+<td>
+1.1b 1.1c
+</td>
+<td>
+1.2(a)
 </td>
 </tr>
 </tbody>
@@ -140,10 +106,6 @@ code.
 defining the interfaces exported by the library are in the
 <code>include</code> sub-directory.
 <li>
-<code>makes</code> subdirectory, it contains most of the Makefiles and
-dependancies needed to rebuild <strong>amaya</strong> and the Thot compilers
-from the sources.
-<li>
 <code>batch</code> directory contains the sources for the schema compilers.
 <li>
 <code>font</code> directory contains a few X-Windows specific fonts needed by
@@ -154,9 +116,6 @@ from the sources.
 <code>config</code> contains all the dialogs messages files both for english
 and french, as well as a few configuration files like the <a
 href="Registry.html">Thot registry</a> (stored in file thot.ini).
-<li>
-<code>doc</code> contains the programming documentation for Thot library and
-languages.
 <li>
 <code>libjpeg</code> and <code>libpng</code> contains the sources of two
 graphic libraries needed by Thot toolkit.

@@ -22,8 +22,8 @@ src="../Icons/doc48x.gif"></a></p>
 <p>
 <strong>Amaya</strong> uses different configuration files to get initial
 values for global parameters, dialogue strings, shortcuts, windows size and
-windows position. You can change the default values by creating or updating
-the following configuration files:</p>
+windows position, user CSS. You can change the default values by creating or
+updating the following configuration files:</p>
 <ul>
 <li>
 The <a name="registry">registry file</a> <strong>$HOME/.thotrc</strong> (Unix)
@@ -39,13 +39,20 @@ language</a>, the path to the personall dictionary, and<a href="#L242"> the
 default printer command</a>.</p>
 <li>
 The keyboard file <strong>$HOME/amaya.keyboard</strong> (Unix) or
-<strong>Thot/config/amaya.keyboard</strong> (Windows). This file defines <a
-href="#L236">Amaya keyboard shortcuts</a>..
+<strong>Thot/config/amaya.keyboard</strong> (Windows).
+<p>
+This file defines <a href="#L236">Amaya keyboard shortcuts</a>..</p>
 <li>
 The HTML configuration file <strong>$HOME/HTML.conf</strong> (Unix) or
-<strong>Thot/amaya/HTML/conf</strong> (Windows). This file defines <a
+<strong>Thot/amaya/HTMLconf</strong> (Windows). This file defines <a
 href="#HTML">position</a> and the <a href="#HTML">size</a> of the Amaya
 document windows.
+<li>
+The User CSS file <strong>$HOME/.amaya.css</strong> (Unix) or
+<strong>Thot/amaya/amaya.css</strong> (Windows).
+<p>
+This file defines standard <a href="StyleSheets.html#L1023">User's Preference
+Styles</a>, but also a <a href="#Magnificat">Magnification</a> rule.</p>
 </ul>
 
 <h3><a name="L138">Home Page</a></h3>
@@ -272,6 +279,15 @@ HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpImageMaps,
 HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting,
 HelpMakeBook.</p>
 </ul>
+
+<h2><a name="Magnificat">Magnification</a></h2>
+<p>
+Magnification allows user to change the global rendering for Amaya. For
+example the rule:</p>
+<pre>Body {magnification: 2}</pre>
+<p>
+will display all HTML document with 14 points fonts instead of 12 points ones
+without any change in displayed documents.</p>
 </div>
 <hr>
 <address>
