@@ -1494,10 +1494,10 @@ void CreateGraphicElement (int entry)
 	  /* Allow an SVG element only within an HTML or a generic XML element */
 	  if (strcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
 	    {
-	      /* It's not an HTML element. Is it an XML one ? */
+	      /* It's not an HTML element. Is it a generic XML element ? */
 	      if (!TtaIsXmlSSchema (selType.ElSSchema))
 		{
-		  /* It's not an XML element */
+		  /* It's not a generic XML element */
 		  TtaCancelLastRegisteredSequence (doc);
 		  return;
 		}

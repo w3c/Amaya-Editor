@@ -767,9 +767,15 @@ static void GenerateStyleListFileForElem (Element el, Document doc,
   /* open the file */
   list = fopen (fileName, "w");
   /* generate its contents */
-  fprintf (list, "\n\n");      
-  fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
-	   GetXMLElementName (elType, doc));      
+  fprintf (list, "\n\n");
+  if (TtaIsXmlSSchema(elType.ElSSchema))
+    /* it's an element belonging to an generic XML vocabulary */
+    fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
+	     TtaGetElementTypeName (elType));
+  else
+    /* it's an element belonging to a known XML vocabulary */
+    fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
+	     GetXMLElementName (elType, doc));
   fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));
   if (el)
     n = TtaListStyleOfCurrentElement (doc, list);

@@ -279,9 +279,11 @@ char *GetXMLElementName (ElementType elType, Document doc)
 	ptr = MathMLElemMappingTable;
       else if (strcmp ("SVG", name) == 0)
 	ptr = SVGElemMappingTable;
-      else
+      else if (strcmp ("HTML", name) == 0)
 	ptr = XHTMLElemMappingTable;
-      
+      else
+	ptr = NULL;
+
       if (ptr)
 	do
 	  {
