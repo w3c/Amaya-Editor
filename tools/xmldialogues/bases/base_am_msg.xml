@@ -1844,16 +1844,16 @@
 	<message xml:lang="pt">Habilitar FTP (experimental)</message>
 </label>
 <label define="AM_XML_RETRY">
-	<message xml:lang="en">Invalid XML - Reload as HTML or show parsing errors?</message>
-	<message xml:lang="fr">XML invalide - Recharger pour corriger ou montrer les erreurs ?</message>
+	<message xml:lang="en">Not Well-Formed XML document - Reload as HTML or show parsing errors?</message>
+	<message xml:lang="fr">Document XML mal formé - Recharger pour corriger ou montrer les erreurs ?</message>
 	<message xml:lang="it">XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?</message>
 	<message xml:lang="de">Ungültiger XML Code - als HTML laden oder Parsefehler anzeigen?</message>
 	<message xml:lang="es">XML inválido - ¿Recargar como HTML o mostrar análisis de errores?</message>
 	<message xml:lang="pt">XML inválido - recarregar como HTML ou mostrar erros sintáticos?</message>
 </label>
 <label define="AM_XML_ERROR">
-	<message xml:lang="en">Invalid XML - Show parsing errors?</message>
-	<message xml:lang="fr">XML invalide - Montrer les erreurs ?</message>
+	<message xml:lang="en">Not Well-Formed XML document - Show parsing errors?</message>
+	<message xml:lang="fr">Document XML mal formé - Montrer les erreurs ?</message>
 	<message xml:lang="it">XML non valido - Mostro gli errori di parsificazione?</message>
 	<message xml:lang="de">Ungültiger XML Code - Parsefehler anzeigen?</message>
 	<message xml:lang="es">XML inválido - ¿Mostrar análisis de errores?</message>

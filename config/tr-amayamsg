@@ -213,8 +213,8 @@
 211 **Portrait
 212 **Landscape
 213 **Enable FTP (experimental)
-214 **Invalid XML - Reload as HTML or show parsing errors?
-215 **Invalid XML - Show parsing errors?
+214 **Not Well-Formed XML document - Reload as HTML or show parsing errors?
+215 **Not Well-Formed XML document - Show parsing errors?
 216 **Invalid characters - Reload as HTML or show parsing errors?
 217 **Invalid characters
 218 **Document profile:
