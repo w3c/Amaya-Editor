@@ -3451,34 +3451,28 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  ctxt->attrText[j] = classes[i];
 	  ctxt->attrType[j] = HTML_ATTR_Class;
 	  /* add a new entry */
-	  j = k;
-	  k++;
-	  maxAttr++;
+	  maxAttr = i + 1;
 	}
       if (pseudoclasses[i])
 	{
 	  ctxt->attrText[j] = pseudoclasses[i];
 	  ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 	  /* add a new entry */
-	  j = k;
-	  k++;
-	  maxAttr++;
+	  maxAttr = i + 1;
 	}
       if (ids[i])
 	{
 	  ctxt->attrText[j] = ids[i];
 	  ctxt->attrType[j] = HTML_ATTR_ID;
-	    maxAttr++;
+	  /* add a new entry */
+	  maxAttr = i + 1;
 	}
       if (attrs[i])
 	{
 	  MapHTMLAttribute (attrs[i], &attrType, names[i], &level, doc);
 	  ctxt->attrText[j] = attrvals[i];
 	  ctxt->attrType[j] = attrType.AttrTypeNum;
-	  /* add a new entry */
-	  j = k;
-	  k++;
-	  maxAttr++;
+	  maxAttr = i + 1;
 	}
       i++;
     }
