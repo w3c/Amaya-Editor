@@ -2679,7 +2679,8 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 			   /* add the localfile to the images list */
 			   AddLocalImage (buf, imgname, tempname, doc, &pImage);
 			    /* get image type */
-			   pImage->imageType = TtaGetPictureType (el);
+			   if (pImage)
+			     pImage->imageType = TtaGetPictureType (el);
 			 }
 		       /* mark the image descriptor or copy the file */
 		       if (dst_is_local)
@@ -2732,9 +2733,11 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				   /*pImage->elImage = (struct _ElemImage *) el;*/
 				 }
 			     }
+#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
 			   else
 			       /* add the localfile to the images list */
 			       AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
+#endif
 			 }
 		     }
 		   TtaFreeMemory (buf);
