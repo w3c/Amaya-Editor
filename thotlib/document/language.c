@@ -189,21 +189,6 @@ static ISO639entry	ISO639table[] =
 	{"",               ""}
 };
 
-/* this table associates the ancient language names used in Thot documents
-   with their standard code */
-static ISO639entry	OldLangTable[] =
-{
-	{"American",    "EN-US"},
-	{"Deutsch",     "DE"},
-	{"Espa\361ol",  "ES"},
-	{"Fran\347ais", "FR"},
-	{"ISO_latin_1", "x-Latin1"},
-	{"ISO_latin_2", "x-Latin2"},
-	{"Italiano",    "IT"},
-	{"Symbol",      "x-Symbol"},
-	{"",            ""}
-};
-
 
 /*----------------------------------------------------------------------
    TtaGetLanguageNameFromCode
@@ -216,15 +201,9 @@ char *TtaGetLanguageNameFromCode (char *code)
   Langbuffer[0] = EOS;
   for (i = 0; Langbuffer[0] == EOS && ISO639table[i].code[0] != EOS; i++)
     {
-      if (!strcasecmp (code, (const char *)ISO639table[i].code))
+      if (!strncasecmp (code, (const char *)ISO639table[i].code, 2))
 	strcpy (Langbuffer, (const char *)ISO639table[i].fullName);
     }
-  if (Langbuffer[0] == EOS)
-    for (i = 0; Langbuffer[0] == EOS && OldLangTable[i].code[0] != EOS; i++)
-      {
-	if (!strcasecmp (code, (const char *)OldLangTable[i].code))
-	  strcpy (Langbuffer, (const char *)OldLangTable[i].fullName);
-      }
   return Langbuffer;
 }
 
@@ -283,12 +262,6 @@ char *TtaGetLanguageCodeFromName (char *name)
 	  !strcasecmp (name, (const char *)ISO639table[i].code))
 	strcpy (CodeBuffer, (const char *)ISO639table[i].code);
     }
-  if (CodeBuffer[0] == EOS)
-    for (i = 0; CodeBuffer[0] == EOS && OldLangTable[i].fullName[0] != EOS; i++)
-      {
-	if (!strcasecmp (name, (const char *)OldLangTable[i].fullName))
-	  strcpy (CodeBuffer, (const char *)OldLangTable[i].code);
-      }
   return CodeBuffer;
 }
 
