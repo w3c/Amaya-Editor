@@ -2136,7 +2136,10 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
   HBRUSH              hOldBrush;
   POINT               ptCurve[3];
 
-  if (thick > 0 || fg >= 0)
+  if (fg < 0)
+     thick = 0;
+
+  if (thick > 0 || bg >= 0)
     {
 #ifdef _WIN_PRINT
       display = TtPrinterDC;
@@ -2145,14 +2148,13 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
       display = TtDisplay;
 #endif /* _WIN_PRINT */
       pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-      if (pat != NULL)
-	{
 	  logBrush.lbColor = ColorPixel (bg);
-	  logBrush.lbStyle = BS_SOLID;
+      if (pat == NULL)
+	    logBrush.lbStyle = BS_NULL;
+	  else
+	    logBrush.lbStyle = BS_SOLID;
 	  hBrush = CreateBrushIndirect (&logBrush); 
 	  hOldBrush = SelectObject (display, hBrush);
-	  SelectObject (display, hOldBrush);
-	}
       if (thick <= 0)
 	hPen = CreatePen (PS_NULL, 0, ColorPixel (fg));
       else
