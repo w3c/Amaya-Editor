@@ -1182,6 +1182,8 @@ void RedisplaySourceFile (Document doc)
 	/* parse and display the new version of the source code */
 	StartParser (DocumentSource[doc], localFile, documentname, tempdir,
 		     localFile, TRUE);
+	/* Clear the document history because the document is reparsed */
+	TtaClearUndoHistory (DocumentSource[doc]);
 	TtaSetDocumentUnmodified (DocumentSource[doc]);
 	event.document = doc;
 	SynchronizeSourceView (&event);
@@ -1857,9 +1859,14 @@ void Synchronize (Document doc, View view)
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
+#ifdef IV
+	   /* These lines update the text coloration but brake undo */
 	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
 	   /* restore the current selection */
 	   GotoLine (doc, line, index, TRUE);
+	   /* Clear the document history because the document is reparsed */
+	   TtaClearUndoHistory (doc);
+#endif /* IV */
 	   RestartParser (xmlDoc, tempdoc, tempdir, docname);
 	   /* the other document is now different from the original file. It can
 	      be saved */
@@ -1881,9 +1888,14 @@ void Synchronize (Document doc, View view)
 	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
 	   TtaExportDocument (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
+#ifdef IV
+	   /* These lines update the text coloration but brake undo */
 	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
 	   /* restore the current selection */
 	   GotoLine (doc, line, index, TRUE);
+	   /* Clear the document history because the document is reparsed */
+	   TtaClearUndoHistory (doc);
+#endif /* IV */
 	   /* reapply the CSS to relative documents */
 	   UpdateStyleSheet (DocumentURLs[doc], tempdoc);
 	 }
@@ -2091,6 +2103,8 @@ void SaveDocument (Document doc, View view)
       StartParser (doc, localFile, documentname, tempdir, localFile, TRUE);
       /* restore the current selection */
       GotoLine (doc, line, index, TRUE);
+      /* Clear the document history because the document is reparsed */
+      TtaClearUndoHistory (doc);
     }
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);

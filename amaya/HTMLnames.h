@@ -176,7 +176,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"axis", "", 'A', HTML_ATTR_axis, L_BasicValue},
 
    {"background", "", 'A', HTML_ATTR_background_, L_TransitionalValue},
-   {"bgcolor", "", 'A', HTML_ATTR_BackgroundColor, L_StrictValue},
+   {"bgcolor", "", 'A', HTML_ATTR_BackgroundColor, L_TransitionalValue},
    {"border", "embed", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
    {"border", "image", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
    {"border", "img", 'A', HTML_ATTR_Img_border, L_TransitionalValue},
