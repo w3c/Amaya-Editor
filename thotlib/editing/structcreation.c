@@ -3260,7 +3260,7 @@ PtrElement         *pFree;
    if (pNew == NULL)
       /* echec insertion, recolle les 2 parties de texte */
      {
-	MergeTextElements (lastSel, pFree, pDoc, TRUE);
+	MergeTextElements (lastSel, pFree, pDoc, TRUE, FALSE);
 	DeleteElement (pFree);
 	*pFree = NULL;
      }
@@ -4619,7 +4619,7 @@ int                 item;
 				      if (newsel == NULL)
 					 /* echec insertion, recolle les 2 parties de texte */
 					{
-					   MergeTextElements (firstSel, &pFree, pDoc, TRUE);
+					   MergeTextElements (firstSel, &pFree, pDoc, TRUE, FALSE);
 					   DeleteElement (&pFree);
 					   pFree = NULL;
 					}
