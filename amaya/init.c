@@ -1396,17 +1396,19 @@ static void   BrowserForm (Document doc, View view, char *urlname)
 /*----------------------------------------------------------------------
   InitOpenDocForm initializes a form that ask the URI of the opened or
   new created document.
+  The parameter name gives a proposed document name.
+  The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
-static void        InitOpenDocForm (Document doc, View view, char *title)
+static void InitOpenDocForm (Document doc, View view, char *name, char *title)
 {
   char              s[MAX_LENGTH];
+  ThotBool          remote;
 #ifndef _WINDOWS
 #ifdef _GTK
   ThotWidget        dialog_new;
 #endif /* _GTK */
   int               i;
 
-  CurrentDocument = doc;
   /* Dialogue form for open URL or local */
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
@@ -1424,141 +1426,88 @@ static void        InitOpenDocForm (Document doc, View view, char *title)
   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-  if (!IsW3Path (DocumentURLs[doc]))
+#endif /* _GTK */
+#endif /* _WINDOWS */
+
+  CurrentDocument = doc;
+  /* generate the right name and URI */
+  TtaExtractName (DocumentURLs[doc], s, DocumentName);
+  remote = IsW3Path (DocumentURLs[doc]);
+  if (remote)
     {
-      strcpy (LastURLName, DocumentURLs[doc]);
-      TtaSetTextForm (BaseDialog + URLName, LastURLName);
+      if (name[0] != EOS)
+	{
+	  strcpy (LastURLName, s);
+	  strcat (LastURLName, URL_STR);
+	  strcat (LastURLName, name);
+	}
+      else
+	strcpy (LastURLName, DocumentURLs[doc]);
+      strcpy (s, LastURLName);
     }
   else
     {
-      TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
-      TtaSetTextForm (BaseDialog + URLName, DocumentURLs[doc]);
+      strcpy (DirectoryName, s);
+      if (name[0] != EOS)
+	{
+	  strcpy (DocumentName, name);
+	  strcat (s, DIR_STR);
+	  strcat (s, name);
+	}
+      else
+	strcpy (s, DocumentURLs[doc]);
     }
+
+#ifdef  _WINDOWS
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
+#else /* WINDOWS */
+#ifndef _GTK
+  TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
 #endif /* _GTK */
-#else /* _WINDOWS */
-
-  CurrentDocument = doc;
-  if (LastURLName[0] != EOS)
-    sprintf (s, "%s", LastURLName);
-  else
-    {
-      TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
-      sprintf (s, "%s%c%s", DirectoryName, DIR_SEP, DocumentName);
-    }
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
 #endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                OpenDoc (Document doc, View view)
+void  OpenDoc (Document doc, View view)
 {
    if (CanReplaceCurrentDocument (doc, view))
      {
        /* load the new document */
        InNewWindow = FALSE;
-       InitOpenDocForm (doc, view, TtaGetMessage (1, BOpenDoc));
+       InitOpenDocForm (doc, view, "", TtaGetMessage (1, BOpenDoc));
      }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                OpenDocInNewWindow (Document document, View view)
+void OpenDocInNewWindow (Document document, View view)
 {
    InNewWindow = TRUE;
-   InitOpenDocForm (document, view, TtaGetMessage (1, BOpenInNewWindow));
+   InitOpenDocForm (document, view, "", TtaGetMessage (1, BOpenInNewWindow));
 }
 
 
 /*----------------------------------------------------------------------
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
-void        OpenNew (Document document, View view, int docType)
+void OpenNew (Document document, View view, int docType)
 {
-  char    tempfile[MAX_LENGTH];
-  int       i;
-
   /* create a new document */
   InNewWindow = TRUE;
   NewFile = TRUE;
   NewDocType = docType;
 
   if (NewDocType == docHTML)
-    {
-      /* generate a default name for the new document */
-      if (LastURLName[0] != EOS)
-	{
-	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  if (IsW3Path (LastURLName))
-	  {
-		i = strlen (tempfile);
-		if (tempfile[i - 1] == ':')
-		  /* LastURLName is the root of the server */
-		  i = strlen (LastURLName);
-	    sprintf (&LastURLName[i], "%cNew.html", URL_SEP);
-	  }
-	  else
-	    sprintf (LastURLName, "%s%cNew.html", tempfile, DIR_SEP);
-	}
-      else
-	strcpy (DocumentName, "New.html");
-      InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
-    }
+    InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml));
   else if (NewDocType == docMath)
-    {
-      /* generate a default name for the new document */
-      if (LastURLName[0] != EOS)
-	{
-	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  if (IsW3Path (LastURLName))
-	  {
-		i = strlen (tempfile);
-		if (tempfile[i - 1] == ':')
-		  /* LastURLName is the root of the server */
-		  i = strlen (LastURLName);
-	    sprintf (&LastURLName[i], "%cNew.mml", URL_SEP);
-	  }
-	  else
-	    sprintf (LastURLName, "%s%cNew.mml", tempfile, DIR_SEP);
-	}
-      else
-	strcpy (DocumentName, "New.mml");
-      InitOpenDocForm (document, view, TtaGetMessage (1, BMathml));
-    }
+    InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml));
   else if (NewDocType == docSVG)
-    {
-      /* generate a default name for the new document */
-      if (LastURLName[0] != EOS)
-	{
-	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  if (IsW3Path (LastURLName))
-	  {
-		i = strlen (tempfile);
-		if (tempfile[i - 1] == ':')
-		  /* LastURLName is the root of the server */
-		  i = strlen (LastURLName);
-	    sprintf (&LastURLName[i], "%cNew.svg", URL_SEP);
-	  }
-	  else
-	    sprintf (LastURLName, "%s%cNew.svg", tempfile, DIR_SEP);
-	}
-      else
-	strcpy (DocumentName, "New.svg");
-      InitOpenDocForm (document, view, TtaGetMessage (1, BSvg));
-    }
+    InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg));
   else
-    {
-      if (LastURLName[0] != EOS)
-	{
-	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  sprintf (LastURLName, "%s%cNew.css", tempfile, DIR_SEP);
-	}
-      else
-	strcpy (DocumentName, "New.css");
-      InitOpenDocForm (document, view, TtaGetMessage (1, BCss));
-    }
+    InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss));
 }
 
 /*----------------------------------------------------------------------
