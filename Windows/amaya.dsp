@@ -243,10 +243,6 @@ SOURCE=..\amaya\SVGedit.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\tablelib\tableH.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\templates.c
 # End Source File
 # Begin Source File
@@ -276,10 +272,6 @@ SOURCE=..\amaya\wincurso.cur
 # Begin Source File
 
 SOURCE=..\amaya\windialogapi.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\thotlib\view\windowdisplay.c
 # End Source File
 # Begin Source File
 

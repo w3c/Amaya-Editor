@@ -106,10 +106,6 @@ SOURCE=..\amaya\AHTURLTools.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\amaya.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\amaya.rc
 # End Source File
 # Begin Source File
@@ -130,23 +126,7 @@ SOURCE=..\amaya\appicon.ico
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\bindent1.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\bitmap1.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\css.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\div.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\down.bmp
 # End Source File
 # Begin Source File
 
@@ -174,55 +154,7 @@ SOURCE=..\Amaya\fetchXMLname.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\galpha1.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\galpha2.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gccurve.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gcircle.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gcpolyli.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gcurve.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gellipse.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\ggroup.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\thotlib\view\gldisplay.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gline.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\gpolylin.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\grect.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\grrect.bmp
 # End Source File
 # Begin Source File
 
@@ -270,19 +202,11 @@ SOURCE=..\amaya\HTMLtable.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\ind.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\init.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\amaya\libmanag.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\math.bmp
 # End Source File
 # Begin Source File
 
@@ -298,23 +222,7 @@ SOURCE=..\amaya\MathMLbuilder.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\matrix.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\MENUconf.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\parexp.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\pow.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\powind.bmp
 # End Source File
 # Begin Source File
 
@@ -322,23 +230,7 @@ SOURCE=..\amaya\query.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\root.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\thotlib\document\schemas.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\sroot.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\styleparser.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\f\styleparser_f.h
 # End Source File
 # Begin Source File
 
@@ -351,10 +243,6 @@ SOURCE=..\amaya\SVGbuilder.c
 # Begin Source File
 
 SOURCE=..\amaya\SVGedit.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\sym.bmp
 # End Source File
 # Begin Source File
 
@@ -374,10 +262,6 @@ SOURCE=.\amaya\TimelineAPP.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\toolbar1.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\trans.c
 # End Source File
 # Begin Source File
@@ -386,19 +270,7 @@ SOURCE=..\amaya\transparse.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\udlr.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\UIcss.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\up.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=..\amaya\updn.bmp
 # End Source File
 # Begin Source File
 
