@@ -2987,9 +2987,13 @@ int                 color;
 {
    unsigned long       Bgcolor;
 
-#ifndef _WINDOWS
    Bgcolor = ColorPixel (color);
+#ifndef _WINDOWS
    XSetWindowBackground (TtDisplay, FrRef[frame], Bgcolor);
+#else  /* _WINDOWS */
+   WIN_GetDeviceContext (frame) ;
+   SetBkColor (WIN_curHdc, Bgcolor); 
+   WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
 }				/*SetMainWindowBackgroundColor */
 

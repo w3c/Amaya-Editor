@@ -1007,7 +1007,7 @@ char               *name;
 		memcpy (dirlist, currentlist, ncurrent * sizeof (char *));
 
 #else
-		bcopy (currentlist, dirlist, ncurrent * sizeof (char *));
+		bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 
 #endif
 	     dirlist[ncurrent] = FONT_PATH;

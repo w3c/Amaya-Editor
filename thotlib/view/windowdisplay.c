@@ -344,6 +344,10 @@ int                 fg;
 
 #ifdef _WINDOWS
    SIZE                size;
+   /* RAMZI */
+   PAINTSTRUCT         pStruct;
+   RECT                rect;
+   /* RAMZI */
 
 #endif
 
@@ -377,7 +381,11 @@ int                 fg;
 	     ptcar[lg] = '\0';
 	     SpaceToChar (ptcar);	/* substitute spaces */
 #ifdef _WINDOWS
+             SetBkColor (WIN_curHdc, GetSysColor (COLOR_BTNFACE));
+             SetTextColor (WIN_curHdc, GetSysColor (COLOR_WINDOWTEXT));
 	     WinLoadGC (WIN_curHdc, &TtLineGC);
+             GetClientRect (WIN_curHdc, &rect);
+             DrawText (WIN_curHdc, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -387,7 +395,10 @@ int                 fg;
 	else
 	  {
 #ifdef _WINDOWS
+             SetBkColor (WIN_curHdc, GetSysColor (COLOR_BTNFACE));
+             SetTextColor (WIN_curHdc, GetSysColor (COLOR_WINDOWTEXT));
 	     WinLoadGC (WIN_curHdc, &TtLineGC);
+             DrawText (WIN_curHdc, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);

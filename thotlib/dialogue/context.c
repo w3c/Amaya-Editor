@@ -74,26 +74,19 @@ ThotGC              gc;
 #endif /* __STDC__ */
 {
    if (gc->capabilities & THOT_GC_PEN)
-     {
-	SelectObject (hdc, gc->pen);
-     }
+      SelectObject (hdc, gc->pen);
+
    if (gc->capabilities & THOT_GC_FOREGROUND)
-     {
-	SetTextColor (hdc, gc->foreground);
-     }
-   if (gc->capabilities & THOT_GC_BACKGROUND)
-     {
+      SetTextColor (hdc, gc->foreground);
+
+   if (gc->capabilities & THOT_GC_BACKGROUND) {
 	SetBkMode (hdc, OPAQUE);
 	SetBkColor (hdc, gc->background);
-     }
-   else
-     {
+   } else 
 	SetBkMode (hdc, TRANSPARENT);
-     }
+
    if (gc->capabilities & THOT_GC_FUNCTION)
-     {
-	SetROP2 (hdc, gc->mode);
-     }
+      SetROP2 (hdc, gc->mode);
 }
 
 /*----------------------------------------------------------------------
@@ -132,68 +125,56 @@ void                WinInitColors (void)
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
-   ptrLogPal = (LOGPALETTE *) TtaGetMemory (sizeof (LOGPALETTE) +
-					 MAX_COLOR * sizeof (PALETTEENTRY));
-   ptrLogPal->palVersion = 0x300;
-   ptrLogPal->palNumEntries = MAX_COLOR;
-   ptrLogPal->palPalEntry[0].peRed = 255;
+   ptrLogPal = (LOGPALETTE *) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
+   ptrLogPal->palVersion             = 0x300;
+   ptrLogPal->palNumEntries          = MAX_COLOR;
+   ptrLogPal->palPalEntry[0].peRed   = 255;
    ptrLogPal->palPalEntry[0].peGreen = 255;
-   ptrLogPal->palPalEntry[0].peBlue = 255;
+   ptrLogPal->palPalEntry[0].peBlue  = 255;
    ptrLogPal->palPalEntry[0].peFlags = 0;
-   ptrLogPal->palPalEntry[1].peRed = 0;
+   ptrLogPal->palPalEntry[1].peRed   = 0;
    ptrLogPal->palPalEntry[1].peGreen = 0;
-   ptrLogPal->palPalEntry[1].peBlue = 0;
+   ptrLogPal->palPalEntry[1].peBlue  = 0;
    ptrLogPal->palPalEntry[1].peFlags = 0;
 
-   for (i = 2; i < MAX_COLOR; i++)
-     {
-	ptrLogPal->palPalEntry[1].peRed = RGB_Table[i].red;
-	ptrLogPal->palPalEntry[1].peGreen = RGB_Table[i].green;
-	ptrLogPal->palPalEntry[1].peBlue = RGB_Table[i].blue;
-	ptrLogPal->palPalEntry[1].peFlags = 0;
-     }
+   for (i = 2; i < MAX_COLOR; i++) {
+       ptrLogPal->palPalEntry[i].peRed = RGB_Table[i].red;
+       ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
+       ptrLogPal->palPalEntry[i].peBlue = RGB_Table[i].blue;
+       ptrLogPal->palPalEntry[i].peFlags = 0;
+   }
+
    TtCmap = CreatePalette (ptrLogPal);
-   if (TtCmap == NULL)
-     {
-	fprintf (stderr, "couldn't CreatePalette\n");
-	WinErrorBox ();
-     }
-   else
-      SelectPalette (WIN_curHdc, TtCmap, TRUE);
+   if (TtCmap == NULL) {
+      fprintf (stderr, "couldn't CreatePalette\n");
+      WinErrorBox ();
+   } else
+        SelectPalette (WIN_curHdc, TtCmap, TRUE);
+
    TtaFreeMemory (ptrLogPal);
 
-   /*
-    * fill-in the Pix_Color table
-    */
-   for (i = 0;
-	i < (sizeof (Pix_Color) / sizeof (Pix_Color[0]));
-	i++)
-      Pix_Color[i] = PALETTERGB (RGB_Table[i].red,
-				 RGB_Table[i].green,
-				 RGB_Table[i].blue);
+   /* fill-in the Pix_Color table */
+   for (i = 0; i < (sizeof (Pix_Color) / sizeof (Pix_Color[0])); i++)
+       Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
     /*
       Pix_Color[i] = GetNearestColor(WIN_curHdc,
       RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
       */
 
    /* initialize some standard colors. */
-   Black_Color = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 0));
-   White_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 255, 255));
-   Scroll_Color = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Button_Color = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Select_Color = GetNearestColor (WIN_curHdc, PALETTERGB (70, 130, 180));
-   BgMenu_Color = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Box_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
-   RO_Color = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 205));
+   Black_Color     = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 0));
+   White_Color     = GetNearestColor (WIN_curHdc, PALETTERGB (255, 255, 255));
+   Scroll_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
+   Button_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
+   Select_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (70, 130, 180));
+   BgMenu_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
+   Box_Color       = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
+   RO_Color        = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 205));
    InactiveB_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
 
    /* set up the default background colors for all views. */
-   for (i = 0;
-	i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0]));
-	i++)
-     {
-	BackgroundColor[i] = White_Color;
-     }
+   for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
+       BackgroundColor[i] = White_Color;
 
    initialized = 1;
 }
@@ -308,8 +289,8 @@ unsigned short     *blue;
     */
    maxcolor = NumberOfColors ();
    for (i = 0; i < maxcolor; i++)
-      if (!strcasecmp (ColorName (i), colname))
-	 TtaGiveThotRGB (i, red, green, blue);
+       if (!strcasecmp (ColorName (i), colname))
+	  TtaGiveThotRGB (i, red, green, blue);
 
 #ifndef _WINDOWS
    /* Lookup the color name in the X color name database */
@@ -352,7 +333,7 @@ unsigned long      *colorpixel;
    value = (char *) TtaGetEnvString (colorplace);
    /* faut-il prendre la valeur par defaut ? */
    if (value == NULL && defaultcolor != NULL)
-      value = defaultcolor;
+       value = defaultcolor;
 
    if (value != NULL)
      {
@@ -393,9 +374,9 @@ char               *name;
 
 #endif /* __STDC__ */
 {
+   boolean             found;
 #ifndef _WINDOWS
    ThotColorStruct     col;
-   boolean             found;
 
    /* Depending on the display Black and White order may be inverted */
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
@@ -412,13 +393,12 @@ char               *name;
 	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
 	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
      }
-
    /* Initialize colors for the application */
    Black_Color = cblack.pixel;
    Button_Color = Select_Color = cblack.pixel;
    White_Color = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
-
+#endif /* _WINDOWS */
 
    if (TtWDepth > 1)
      {
@@ -447,6 +427,7 @@ char               *name;
       }
    /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
+#ifndef _WINDOWS
    if (!found)
       Box_Color = cwhite.pixel;
    else if (TtWDepth == 1)
@@ -458,6 +439,9 @@ char               *name;
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
+#else  /* _WINDOWS */
+   WIN_curHdc = GetDC (WIN_Main_Wd) ;
+   WinInitColors ();
 #endif /* _WINDOWS */
 }
 
@@ -679,7 +663,7 @@ void                InitDocContexts ()
    InitKernelMemory ();
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
-      FrRef[i] = 0;
+       FrRef[i] = 0;
    PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
    BoxCreating = FALSE;		/* no interractive creation yet */

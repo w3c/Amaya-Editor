@@ -230,7 +230,11 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
    FrameTable[frame].FrLeftMargin = 0;
+#ifdef RAMZI
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
+   FrameTable[frame].FrHeight = (int) height;
+#endif /* RAMZI */
+   FrameTable[frame].FrWidth = (int) width;
    FrameTable[frame].FrHeight = (int) height;
 
    /* need to recompute the content of the window */
@@ -920,7 +924,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    int                 frame;
    PAINTSTRUCT         ps;
    RECT                rect;
-
+#ifdef RAMZI
    if (msg == WM_CREATE)
      {
 	/* cannot get WIN_GetFen at this point */
@@ -928,28 +932,28 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc (hWnd, msg, wParam, lParam);
      }
-
-   frame = WIN_GetFen (hWnd);
+#endif /* RAMZI */
+   frame = GetFen (hWnd);
 
    /* 
     * do not handle events if the Document is in NoComputedDisplay mode.
     */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return (DefWindowProc (hWnd, msg, wParam, lParam));
+   if (frame != -1) {
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+         return (DefWindowProc (hWnd, msg, wParam, lParam));
 
-   /*
-    * If are waiting for the user to explicitely point to a document,
-    * store the location and return.
-    */
-   if (ClickIsDone == 1 &&
-       ((msg == WM_LBUTTONDOWN) || (msg == WM_RBUTTONDOWN)))
-     {
-	ClickIsDone = 0;
-	ClickFrame = frame;
-	ClickX = LOWORD (lParam);
-	ClickY = HIWORD (lParam);
-	return (DefWindowProc (hWnd, msg, wParam, lParam));
-     }
+      /*
+       * If are waiting for the user to explicitely point to a document,
+       * store the location and return.
+       */
+      if (ClickIsDone == 1 && ((msg == WM_LBUTTONDOWN) || (msg == WM_RBUTTONDOWN))) {
+	 ClickIsDone = 0;
+	 ClickFrame = frame;
+	 ClickX = LOWORD (lParam);
+	 ClickY = HIWORD (lParam);
+	 return (DefWindowProc (hWnd, msg, wParam, lParam));
+      }
+   }
 
    /*
     * If there is a TtaWaitShowDialogue, it's not possible to change
@@ -963,7 +967,6 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    /* fprintf(stderr,"WndProc\n"); */
    switch (msg)
 	 {
-
 	    case WM_PAINT:
 	       /* WinInitColors (); */	/* has to go to some better place !!!! */
 	       /*

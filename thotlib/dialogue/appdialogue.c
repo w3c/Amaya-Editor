@@ -50,6 +50,8 @@ extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
 extern char       **appArgv;
+extern ThotWidget   WIN_curWin;
+
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
 
@@ -1797,12 +1799,13 @@ int                 doc;
    Dimension           dx, dy;
 
 #endif /* _WINDOWS */
-   ThotWidget          Main_Wd;
+   ThotWidget          Main_Wd = (ThotWidget) 0 ;
    ThotWidget          Wframe;
    ThotWidget          shell;
 
 #ifdef _WINDOWS
    HMENU               menu_bar, w;
+   MSG                 msg;
    struct Cat_Context *catalogue;
 
 #else  /* _WINDOWS */
@@ -1884,18 +1887,18 @@ int                 doc;
 		Y = mmtopixel (Y, 0);
 
 #ifdef _WINDOWS
-	     Main_Wd = CreateWindow (tszAppName,	/* window class name */
-				     tszAppName,	/* window caption */
-				     WS_OVERLAPPEDWINDOW |
-				     WS_VSCROLL | WS_HSCROLL,	/* window style */
-				     CW_USEDEFAULT,	/* initial x pos */
-				     CW_USEDEFAULT,	/* initial y pos */
-				     large,	/* initial x size */
-				     haut,	/* initial y size */
-				     0,		/* parent window handle */
-				     0,		/* window menu handle */
-				     hInstance,		/* program instance handle */
-				     0);	/* creation parameters */
+	     Main_Wd = CreateWindowEx (0L, tszAppName,	/* window class name */
+				       tszAppName,	/* window caption */
+				       WS_OVERLAPPEDWINDOW |
+				       WS_VSCROLL | WS_HSCROLL,	/* window style */
+				       CW_USEDEFAULT,	/* initial x pos */
+				       CW_USEDEFAULT,	/* initial y pos */
+				       large,	/* initial x size */
+				       haut,	/* initial y size */
+				       0,		/* parent window handle */
+				       0,		/* window menu handle */
+				       hInstance,		/* program instance handle */
+				       0);	/* creation parameters */
 	     if (Main_Wd == 0)
 		WinErrorBox ();
 	     else
@@ -1904,13 +1907,16 @@ int                 doc;
 		  /*
 		   * store everything.
 		   */
-		  FrRef[frame] = Main_Wd;
+                   FrRef[frame] = Main_Wd;
 
 		  /*
 		   * and show it up.
 		   */
 		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
 		  UpdateWindow (Main_Wd);
+                  /*****  BEGIN RAMZI  BEGIN *****/
+                  InitCommonControls ();
+                  /******  END  RAMZI   END  *****/
 	       }
 #endif /* _WINDOWS */
 
@@ -2295,20 +2301,19 @@ int                 doc;
 #endif /* _WINDOWS */
 
 #ifdef _WINDOWS
-	     FrameTable[frame].WdStatus = CreateWindow (
-							  STATUSCLASSNAME,	/* window class name */
-							  NULL,		/* window caption */
-						     WS_CHILD | WS_VISIBLE |
-							  WS_CLIPSIBLINGS |
-							  CCS_BOTTOM,	/* window style */
-							  0,	/* initial x pos */
-							  0,	/* initial y pos */
-							  0,	/* initial x size */
-							  0,	/* initial y size */
-							  Main_Wd,	/* parent window handle */
-							  0,	/* window menu handle */
-							  hInstance,	/* program instance handle */
-							  0);	/* creation parameters */
+	     FrameTable[frame].WdStatus = CreateWindow (STATUSCLASSNAME,	/* window class name */
+							NULL,		/* window caption */
+						        WS_CHILD | WS_VISIBLE |
+							WS_CLIPSIBLINGS |
+							CCS_BOTTOM,	/* window style */
+							0,	/* initial x pos */
+							0,	/* initial y pos */
+							0,	/* initial x size */
+							0,	/* initial y size */
+							Main_Wd,	/* parent window handle */
+							0,	/* window menu handle */
+							hInstance,	/* program instance handle */
+							0);	/* creation parameters */
 	     if (!FrameTable[frame].WdStatus)
 	       {
 		  WinErrorBox ();
@@ -2370,8 +2375,6 @@ int                 doc;
 	     XtPopup (shell, XtGrabNonexclusive);
 
 	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
-
-	     FrameTable[frame].WdFrame = w;
 	     FrRef[frame] = XtWindowOfObject (w);
 	     FrameTable[frame].WdScrollH = hscrl;
 	     FrameTable[frame].WdScrollV = vscrl;
@@ -2386,6 +2389,7 @@ int                 doc;
 	     FrameTable[frame].FrWidth = (int) dx;
 	     FrameTable[frame].FrHeight = (int) dy;
 #endif /* _WINDOWS */
+	     FrameTable[frame].WdFrame = w;
 	  }
 	else
 	   ChangeFrameTitle (frame, name);

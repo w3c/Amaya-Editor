@@ -162,10 +162,10 @@ struct struct_winerror win_errtab[] =
  */
 
 char               *thotargv[] =
-{"amaya", "/opera/gnuwin/test.html"};
+{"amaya", "/opera/WINNT/test.html"};
 int                 thotargc = 1;
 
-LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
@@ -285,7 +285,9 @@ void                WIN_GetDeviceContext (int frame)
 	fprintf (stderr, "Could not get Device Context for Window #%d\n", frame);
 	return;
      }
+   
    win = FrRef[frame];
+   
    if (win == 0)
      {
 	fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
@@ -298,7 +300,6 @@ void                WIN_GetDeviceContext (int frame)
     */
    if ((WIN_curWin == win) && (WIN_curHdc != 0))
       return;
-
    /*
     * release the previous Device Context.
     */
@@ -447,29 +448,10 @@ BOOL PASCAL         WinMain (HINSTANCE hInst,
 			     LPSTR lpCommand,
 			     int nShow)
 {
-   ATOM                res;
 
    hInstance  = hInst;
    nAmayaShow = nShow;
    tszAppName = "amaya";
-
-   RootShell.cbSize = sizeof (RootShell);
-   RootShell.style = CS_HREDRAW | CS_VREDRAW;
-   RootShell.lpfnWndProc = WndProc;
-   RootShell.cbClsExtra = 0;
-   RootShell.cbWndExtra = 0;
-   RootShell.hInstance = hInstance;
-   RootShell.hIcon = LoadIcon (0, IDI_APPLICATION);
-   RootShell.hCursor = LoadCursor (0, IDC_ARROW);
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
-   RootShell.lpszMenuName = NULL;
-   RootShell.lpszClassName = tszAppName;
-   RootShell.hIconSm = LoadIcon (0, IDI_APPLICATION);
-
-   if (!(res = RegisterClassEx (&RootShell)))
-     {
-	WinErrorBox ();
-     }
 
    thotmain (thotargc, thotargv);
    return (TRUE);
@@ -1272,7 +1254,27 @@ Display           **Dp;
    int                 n;
 
 #ifdef _WINDOWS
-   InitCommonControls ();
+   ATOM                res;
+
+   RootShell.cbSize = sizeof (RootShell);
+   RootShell.style = CS_HREDRAW | CS_VREDRAW;
+   RootShell.lpfnWndProc = WndProc;
+   RootShell.cbClsExtra = 0;
+   RootShell.cbWndExtra = 0;
+   RootShell.hInstance = hInstance;
+   RootShell.hIcon = LoadIcon (0, IDI_APPLICATION);
+   RootShell.hCursor = LoadCursor (0, IDC_ARROW);
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+   RootShell.lpszMenuName = NULL;
+   RootShell.lpszClassName = tszAppName;
+   RootShell.hIconSm = LoadIcon (0, IDI_APPLICATION);
+
+   if (!(res = RegisterClassEx (&RootShell)))
+     {
+	WinErrorBox ();
+     }
+
+   /*   InitCommonControls (); */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS

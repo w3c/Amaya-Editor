@@ -1282,9 +1282,8 @@ void                TtaMainLoop ()
         TtaFetchOneEvent(&ev);
 	TtaHandleOneEvent(&ev);
 #else  /* !_WINDOWS */
-	GetMessage (&msg, NULL, 0, 0);
-	TranslateMessage (&msg);
-	TtaHandleOneWindowEvent (&msg);
+	if (GetMessage (&msg, NULL, 0, 0))
+	   TtaHandleOneWindowEvent (&msg);
 #endif /* _WINDOWS */
      }
 }				/*TtaMainLoop */
