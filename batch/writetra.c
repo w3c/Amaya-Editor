@@ -288,6 +288,9 @@ TRuleType           typ;
 	    case TAddCounter:
 	       TtaWriteByte (outfile, C_TR_ADD_COUNTER);
 	       break;
+	    case TIndent:
+	       TtaWriteByte (outfile, C_TR_INDENT);
+	       break;
 	 }
 
 }
@@ -636,6 +639,10 @@ PtrTRule            pTRule;
 		    WriteShort (currentRule->TrCounterNum);
 		    WriteShort (currentRule->TrCounterParam);
 		    break;
+		 case TIndent:
+		    WriteShort (currentRule->TrIndentFileNameVar);
+		    WriteSignedShort (currentRule->TrIndentVal);
+		    WriteBoolean (currentRule->TrRelativeIndent);
 		 default:
 		    break;
 	      }

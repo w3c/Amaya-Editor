@@ -53,6 +53,8 @@ typedef struct _AnOutputFile
      char                OfFileName[MAX_PATH];	/* file name */
      FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
+     int		 OfIndent;	/* current value of indentation */
+     boolean		 OfStartOfLine;	/* start a new line */
      char                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
   }
 AnOutputFile;
@@ -139,6 +141,8 @@ PtrDocument         pDoc;
 	  {
 	     strcpy (OutputFile[NOutputFiles].OfFileName, fName);
 	     OutputFile[NOutputFiles].OfBufferLen = 0;
+	     OutputFile[NOutputFiles].OfIndent = 0;
+	     OutputFile[NOutputFiles].OfStartOfLine = TRUE;
 	     NOutputFiles++;
 	     return (NOutputFiles - 1);
 	  }
@@ -169,7 +173,7 @@ boolean             lineBreak;
 #endif /* __STDC__ */
 
 {
-   int                 i, j;
+   int                 i, j, indent;
    PtrTSchema          pTSch;
    FILE               *fileDesc;
    char                tmp[2];
@@ -207,38 +211,65 @@ boolean             lineBreak;
 		  fprintf (fileDesc, pTSch->TsEOL);
 		  /* le buffer de sortie est vide maintenant */
 		  OutputFile[fileNum].OfBufferLen = 0;
+		  OutputFile[fileNum].OfStartOfLine = TRUE;
 	       }
 	     else
 		/* ce n'est pas un caractere de fin de ligne */
 	       {
 		  if (OutputFile[fileNum].OfBufferLen >= MAX_BUFFER_LEN)
-		     /* le buffer de sorite est plein, on ecrit son contenu */
+		     /* le buffer de sortie est plein, on ecrit son contenu */
 		    {
 		       for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
 			  putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
 		       OutputFile[fileNum].OfBufferLen = 0;
 		    }
+		  if (OutputFile[fileNum].OfStartOfLine)
+		     {
+		     if (OutputFile[fileNum].OfIndent >= MAX_BUFFER_LEN)
+			indent = MAX_BUFFER_LEN - 1;
+		     else
+			indent = OutputFile[fileNum].OfIndent;
+		     for (j = 0; j < indent; j++)
+			OutputFile[fileNum].OfBuffer[j] = ' ';
+		     OutputFile[fileNum].OfBufferLen = indent;
+		     OutputFile[fileNum].OfStartOfLine = FALSE;
+		     }
 		  /* on met le caractere dans le buffer */
+		  OutputFile[fileNum].OfBuffer[OutputFile[fileNum].OfBufferLen] = c;
 		  OutputFile[fileNum].OfBufferLen++;
-		  OutputFile[fileNum].OfBuffer[OutputFile[fileNum].OfBufferLen - 1] = c;
 		  if (lineBreak)
 		     if (OutputFile[fileNum].OfBufferLen > pTSch->TsLineLength)
 			/* le contenu du buffer depasse la longueur de ligne maximum */
 			/* on cherche le dernier blanc */
 		       {
-			  i = OutputFile[fileNum].OfBufferLen;
-			  while (OutputFile[fileNum].OfBuffer[i - 1] != ' ' && i > 1)
+			  i = OutputFile[fileNum].OfBufferLen - 1;
+			  while (OutputFile[fileNum].OfBuffer[i] != ' ' && i > 0)
 			     i--;
-			  if (OutputFile[fileNum].OfBuffer[i - 1] == ' ')
-			     /* on ecrit tout ce qui precede ce blanc */
+			  if (OutputFile[fileNum].OfBuffer[i] == ' ')
 			    {
-			       for (j = 0; j < i - 1; j++)
+			       /* on ecrit tout ce qui precede ce blanc */
+			       for (j = 0; j < i; j++)
 				  putc (OutputFile[fileNum].OfBuffer[j], fileDesc);
+			       /* on ecrit un saut de ligne */
 			       fprintf (fileDesc, pTSch->TsTranslEOL);
+			       /* on traite l'indentation */
+			       if (OutputFile[fileNum].OfIndent > pTSch->TsLineLength - 10)
+				  indent = pTSch->TsLineLength - 10;
+			       else
+				  indent = OutputFile[fileNum].OfIndent;
+			       for (j = 0; j < indent; j++)
+				  OutputFile[fileNum].OfBuffer[j] = ' ';
+			       i -= indent;
+			       i++;
+			       if (i < 0)
+				  i = 0;
+			       OutputFile[fileNum].OfStartOfLine = FALSE;
+			       
 			       /* on decale ce qui suit le blanc */
 			       OutputFile[fileNum].OfBufferLen -= i;
-			       for (j = 0; j < OutputFile[fileNum].OfBufferLen; j++)
-				  OutputFile[fileNum].OfBuffer[j] = OutputFile[fileNum].OfBuffer[i + j];
+			       if (i > 0 )
+			         for (j = indent; j < OutputFile[fileNum].OfBufferLen; j++)
+				    OutputFile[fileNum].OfBuffer[j] = OutputFile[fileNum].OfBuffer[i + j];
 			    }
 		       }
 	       }
@@ -2789,6 +2820,8 @@ boolean            *removeEl;
 			 fclose (OutputFile[1].OfFileDesc);
 			 /* on bascule sur le nouveau fichier */
 			 OutputFile[1].OfBufferLen = 0;
+			 OutputFile[1].OfIndent = 0;
+			 OutputFile[1].OfStartOfLine = TRUE;
 			 OutputFile[1].OfFileDesc = newFile;
 		      }
 		 }
@@ -2800,6 +2833,24 @@ boolean            *removeEl;
 
 	    case TAddCounter:
 	       pTSch->TsCounter[pTRule->TrCounterNum - 1].TnParam1 += pTRule->TrCounterParam;
+	       break;
+
+	    case TIndent:
+	       if (pTRule->TrIndentFileNameVar == 0)
+		  /* sortie sur le fichier principal courant */
+		  fileNum = 1;
+	       else
+		  /* sortie sur un fichier secondaire */
+		 {
+		    /* construit le nom du fichier secondaire */
+		    PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrIndentFileNameVar,
+			         FALSE, secondaryFileName, 0, pDoc, lineBreak);
+		    fileNum = GetSecondaryFile (secondaryFileName, pDoc);
+		 }
+	       if (pTRule->TrRelativeIndent)
+		  OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
+	       else
+		  OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
 	       break;
 
 	    case TGet:
@@ -3260,10 +3311,14 @@ PtrDocument         pDoc;
    OutputFile[0].OfFileName[0] = '\0';
    OutputFile[0].OfFileDesc = NULL;
    OutputFile[0].OfBufferLen = 0;
+   OutputFile[0].OfIndent = 0;
+   OutputFile[0].OfStartOfLine = TRUE;
    /* Entree 1 : fichier de sortie principal */
    OutputFile[1].OfFileName[0] = '\0';
    OutputFile[1].OfFileDesc = mainFile;
    OutputFile[1].OfBufferLen = 0;
+   OutputFile[1].OfIndent = 0;
+   OutputFile[1].OfStartOfLine = TRUE;
    NOutputFiles = 2;
 }
 
@@ -3367,7 +3422,7 @@ char               *TSchemaName;
 	     /* traduit les arbres associe's */
 	     for (i = 0; i < MAX_ASSOC_DOC; i++)
 		if (pDoc->DocAssocRoot[i] != NULL)
-		   TranslateTree (pDoc->DocAssocRoot[i], pDoc, TRUE, TRUE, FALSE);
+		   TranslateTree (pDoc->DocAssocRoot[i], pDoc,TRUE,TRUE,FALSE);
 	     /* vide ce qui traine dans les buffers de sortie */
 	     /* et ferme ces fichiers */
 	     FlushOutputFiles (pDoc);

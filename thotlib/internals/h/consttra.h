@@ -87,6 +87,7 @@
 #define C_TR_SET_COUNTER 'S'
 #define C_TR_ADD_COUNTER 'A'
 #define C_TR_NOLINEBREAK 'B'
+#define C_TR_INDENT 'i'
 
 /* position where the translator-produced chains must be created */
 #define C_TR_AFTER 'A'

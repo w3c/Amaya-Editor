@@ -205,6 +205,9 @@ BinFile             file;
 	       case C_TR_ADD_COUNTER:
 		  ruleType = TAddCounter;
 		  break;
+	       case C_TR_INDENT:
+		  ruleType = TIndent;
+		  break;
 	       default:
 		  TSchemaError (4);
 		  ruleType = TRemove;
@@ -655,6 +658,11 @@ PtrTRule           *pNextTRule;
 		       case TAddCounter:
 			  TtaReadShort (file, &pTRule->TrCounterNum);
 			  TtaReadShort (file, &pTRule->TrCounterParam);
+			  break;
+		       case TIndent:
+			  TtaReadShort (file, &pTRule->TrIndentFileNameVar);
+			  TtaReadSignedShort (file, &pTRule->TrIndentVal);
+			  TtaReadBool (file, &pTRule->TrRelativeIndent);
 			  break;
 		       default:
 			  break;

@@ -71,7 +71,8 @@ typedef enum
 	TChangeMainFile,
 	TSetCounter,
 	TAddCounter,
-	TNoLineBreak
+	TNoLineBreak,
+	TIndent
 } TRuleType;
 
 /* the position where the translator-produced strings are created */
@@ -239,15 +240,15 @@ typedef struct _TranslRule
     {
       struct	/* TrType = TCreate, TWrite */
 	{
-	  CreatedObject 	_TrObject_;	/* type of the object to create for the output */
+	  CreatedObject _TrObject_;	/* type of the object to create for the output */
 	  int	 	_TrObjectNum_;	/* number of the object to create or write */
-	  Name		_TrObjectNature_;	/* schema where the element is defined,
-						   0 if same structure schema */
-	  boolean	_TrReferredObj_;	/* the variable to be created must be
-						   computed for the referenced element,
-						   not the element itself */
-	  int		_TrFileNameVar_;	/* variable defining the name of the
-						   output file */
+	  Name		_TrObjectNature_; /* schema where the element is defined,
+					   0 if same structure schema */
+	  boolean	_TrReferredObj_;  /* the variable to be created must be
+					   computed for the referenced element,
+					   not the element itself */
+	  int		_TrFileNameVar_;  /* variable defining the name of the
+					   output file */
 	} s0;
       struct	/* TrType = TGet, TCopy */
 	{
@@ -284,6 +285,13 @@ typedef struct _TranslRule
 	  int	_TrCounterNum_;	/* number of the counter to update */ 
 	  int	_TrCounterParam_;	/* update value */ 
 	} s7;
+     struct	/* TrType = TIndent */
+	{
+	  int	_TrIndentFileNameVar_;  /* variable defining the name of the
+					   output file */
+	  int   _TrIndentVal_;	/* indent value */
+	  boolean _TrRelativeIndent_;	/* Indent value is relative to parent*/
+	} s8;
     } u;
 } TranslRule;
 
@@ -303,6 +311,9 @@ typedef struct _TranslRule
 #define TrNewFileVar u.s6._TrNewFileVar_
 #define TrCounterNum u.s7._TrCounterNum_
 #define TrCounterParam u.s7._TrCounterParam_
+#define TrIndentFileNameVar u.s8._TrIndentFileNameVar_
+#define TrIndentVal u.s8._TrIndentVal_
+#define TrRelativeIndent u.s8._TrRelativeIndent_
 
 /* counter operation type */
 typedef enum

@@ -131,7 +131,12 @@ Rule1 =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
                  'NoLineBreak' ';' /
 		 'ChangeMainFile' VariableIdent [ Position ] ';' /
 		 'Set' CounterIdent InitValue [ Position ] ';' /
-		 'Add' CounterIdent IncrValue [ Position ] ';' .
+		 'Add' CounterIdent IncrValue [ Position ] ';' /
+                 'Indent' [ 'IN' VariableIdent ] [ IndentSign ] IndentVal
+                          [ Position ] ';' .
+
+IndentSign =     '+' / '-' .
+IndentVal =	 NUMBER .
 
 Token =		 ConstIdent / VariableIdent /
 		 'Refered' VarOrType [ '(' TypeIdent ')' ] /

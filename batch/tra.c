@@ -115,6 +115,7 @@ static int          PresValSign;	/* Signe d'une valeur de presentation */
 static int          AncestorSign;	/* signe du dernier niveau d'ancetre */
 
 				/* rencontre' dans un compteur */
+static int	    IndentSign;		/* identation sign */
 static boolean      VarDefinition;
 static boolean      FirstInPair;	/* on a rencontre' "First" */
 static boolean      SecondInPair;	/* on a rencontre' "Second" */
@@ -1140,6 +1141,13 @@ SyntRuleNum         pr;
 			 }
 		       break;
 
+		    case CHR_43:
+		       /*  +  */
+		       if (r == RULE_IndentSign)
+			  /* devant la valeur de l'indentation relative */
+			  IndentSign = 1;
+		       break;
+
 		    case CHR_45:
 		       /*  -  */
 		       if (r == RULE_AttrRelat || r == RULE_AttrValue)
@@ -1149,8 +1157,12 @@ SyntRuleNum         pr;
 			  /* devant une valeur numerique de presentation */
 			  PresValSign = -1;
 		       else if (r == RULE_RelAncestorLevel)
-			  /* devant le niveau relatif d'un ancetre dans un compteur CntrRank */
+			  /* devant le niveau relatif d'un ancetre dans un
+			     compteur CntrRank */
 			  AncestorSign = -1;
+		       else if (r == RULE_IndentSign)
+			  /* devant la valeur de l'indentation relative */
+			  IndentSign = -1;
 		       break;
 
 		    case CHR_60:
@@ -1865,7 +1877,17 @@ SyntRuleNum         pr;
 		       break;
 
 		    case KWD_Indent:
-		       PresentationName (PtIndent, pr, wi);
+		       if (r == RULE_PresRule)
+		          PresentationName (PtIndent, pr, wi);
+		       else if (r == RULE_Rule1)
+			  /* instruction de traduction Indent */
+			  {
+			  NewTransRule ();
+			  CurTRule->TrType = TIndent;
+			  CurTRule->TrRelativeIndent = FALSE;
+			  CurTRule->TrIndentFileNameVar = 0;
+			  IndentSign = 0;
+			  }
 		       break;
 
 		    case KWD_LineSpacing:
@@ -2481,6 +2503,8 @@ SyntRuleNum         pr;
 					 CurTRule->TrFileNameVar = Identifier[nb - 1].SrcIdentDefRule;
 				      else if (CurTRule->TrType == TChangeMainFile)
 					 CurTRule->TrNewFileVar = Identifier[nb - 1].SrcIdentDefRule;
+				      else if (CurTRule->TrType == TIndent)
+					 CurTRule->TrIndentFileNameVar = Identifier[nb - 1].SrcIdentDefRule;
 
 				   break;
 
@@ -2665,6 +2689,15 @@ SyntRuleNum         pr;
 				case RULE_AncestorLevel:	/* AncestorLevel */
 				   pTSchema->TsCounter[pTSchema->TsNCounters - 1].TnAcestorLevel =
 				      k * AncestorSign;
+				   break;
+				case RULE_IndentVal:	/* IndentVal */
+				   if (IndentSign != 0)
+				      /* indent value is relative */
+				      {
+				      CurTRule->TrRelativeIndent = TRUE;
+				      k  = k * IndentSign;
+				      }
+				   CurTRule->TrIndentVal = k;
 				   break;
 				case RULE_RelLevel:	/* RelLevel */
 				   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendLevel = k;

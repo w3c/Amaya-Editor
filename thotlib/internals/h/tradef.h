@@ -1,10 +1,3 @@
-/*
- *
- *  (c) COPYRIGHT INRIA, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
- 
 /* Definitions for compiler of language TRANS */
 
 /*  SHORT KEY-WORDS  */
@@ -22,6 +15,7 @@
 #define CHR_46 	1011
 #define CHR_93 	1012
 #define CHR_42 	1013
+#define CHR_43 	1014
 
 /*  LONG KEY-WORDS  */
 
@@ -100,14 +94,14 @@
 #define KWD_NoTranslation 	1173
 #define KWD_NoLineBreak 	1174
 #define KWD_ChangeMainFile 	1175
-#define KWD_Content 	1176
-#define KWD_RefId 	1177
-#define KWD_PairId 	1178
-#define KWD_After 	1179
-#define KWD_Before 	1180
-#define KWD_Included 	1181
-#define KWD_Size 	1182
-#define KWD_Indent 	1183
+#define KWD_Indent 	1176
+#define KWD_Content 	1177
+#define KWD_RefId 	1178
+#define KWD_PairId 	1179
+#define KWD_After 	1180
+#define KWD_Before 	1181
+#define KWD_Included 	1182
+#define KWD_Size 	1183
 #define KWD_LineSpacing 	1184
 #define KWD_Adjust 	1185
 #define KWD_Justify 	1186
@@ -219,25 +213,27 @@
 #define RULE_Position 	  67
 #define RULE_RelPosition 	  68
 #define RULE_File 	  69
-#define RULE_VarOrType 	  70
-#define RULE_FileName 	  71
-#define RULE_Translation 	  72
-#define RULE_Source 	  73
-#define RULE_Target 	  74
-#define RULE_TransPres 	  75
-#define RULE_PresRelat 	  76
-#define RULE_AdjustVal 	  77
-#define RULE_BooleanVal 	  78
-#define RULE_StyleVal 	  79
-#define RULE_FontVal 	  80
-#define RULE_UnderLineVal 	  81
-#define RULE_UnderLStyleVal 	  82
-#define RULE_LineStyleVal 	  83
-#define RULE_Pattern 	  84
-#define RULE_Color 	  85
-#define RULE_PresValue 	  86
-#define RULE_MinimumPres 	  87
-#define RULE_MaximumPres 	  88
-#define RULE_MinIntervalPres 	  89
-#define RULE_MaxIntervalPres 	  90
-#define RULE_PresVal 	  91
+#define RULE_IndentSign 	  70
+#define RULE_IndentVal 	  71
+#define RULE_VarOrType 	  72
+#define RULE_FileName 	  73
+#define RULE_Translation 	  74
+#define RULE_Source 	  75
+#define RULE_Target 	  76
+#define RULE_TransPres 	  77
+#define RULE_PresRelat 	  78
+#define RULE_AdjustVal 	  79
+#define RULE_BooleanVal 	  80
+#define RULE_StyleVal 	  81
+#define RULE_FontVal 	  82
+#define RULE_UnderLineVal 	  83
+#define RULE_UnderLStyleVal 	  84
+#define RULE_LineStyleVal 	  85
+#define RULE_Pattern 	  86
+#define RULE_Color 	  87
+#define RULE_PresValue 	  88
+#define RULE_MinimumPres 	  89
+#define RULE_MaximumPres 	  90
+#define RULE_MinIntervalPres 	  91
+#define RULE_MaxIntervalPres 	  92
+#define RULE_PresVal 	  93
