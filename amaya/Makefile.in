@@ -19,12 +19,14 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) \
 	  $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
-CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard \
+CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
 	    en-amayadialogue en-amayamsg en-libdialogue en-corrdialogue \
 	    fr-amayadialogue fr-amayamsg fr-libdialogue fr-corrdialogue \
 	    de-amayadialogue de-amayamsg de-libdialogue de-corrdialogue \
 	    tr-amayadialogue tr-amayamsg tr-libdialogue tr-corrdialogue \
 	    it-amayadialogue it-amayamsg it-libdialogue it-corrdialogue
+
+ANNOTFILES=Annot.STR AnnotP.PRS AnnotT.TRA
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
@@ -423,12 +425,12 @@ html2piv: ../bin/html2piv
 	$(CC) $(LDFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -o ../bin/html2piv  @srcdir@/html2thot.c $(HTML2THOT_LIBS)
 	@$(ECHO) "====>" html2piv is done
 
-install : all ../bin/print $(AMAYA_PLUGIN_INSTALL) \
-		$(AMAYA_ANNOT_INSTALL)
+install : all ../bin/print
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/Amaya ; then $(MKDIR) $(prefix)/Amaya ; fi)
 	@(if test ! -d $(prefix)/Amaya/amaya ; then $(MKDIR) $(prefix)/Amaya/amaya ; fi)
 	@(if test ! -d $(prefix)/Amaya/config ; then $(MKDIR) $(prefix)/Amaya/config ; fi)
+	@(if test ! -d $(prefix)/Amaya/annotlib ; then $(MKDIR) $(prefix)/Amaya/annotlib ; fi)
 	@(if test ! -d $(prefix)/Amaya/fonts ; then $(MKDIR) $(prefix)/Amaya/fonts ; fi)
 	@(if test ! -d $(prefix)/Amaya/dicopar ; then $(MKDIR) $(prefix)/Amaya/dicopar ; fi)
 	@(if test ! -d $(prefix)/Amaya/doc ; then $(MKDIR) $(prefix)/Amaya/doc ; fi)
@@ -446,6 +448,10 @@ install : all ../bin/print $(AMAYA_PLUGIN_INSTALL) \
 	(for i in $(CONFIGFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/Amaya/config 2>/dev/null || true ; \
+	  done ; done)
+	(for i in $(ANNOTFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/annotlib/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(prefix)/Amaya/annotlib 2>/dev/null || true ; \
 	  done ; done)
 	(for i in $(DICOFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \

@@ -280,7 +280,7 @@ static int          CharLevelElement[] =
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
    HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
-   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text, HTML_EL_Text_Area,
+   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
    HTML_EL_Button_Input, HTML_EL_BUTTON,
    HTML_EL_LABEL,
    HTML_EL_BR,
@@ -291,7 +291,7 @@ static int          CharLevelElement[] =
 static int          BlockLevelElement[] =
 {
    HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
-   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
+   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph, HTML_EL_Text_Area,
    HTML_EL_Term, HTML_EL_Address, HTML_EL_LEGEND, HTML_EL_CAPTION,
    0};
 
@@ -6127,7 +6127,8 @@ Document            doc;
 	       }
 	     elType = TtaGetElementType (elem);
 	     if (!IsCharacterLevelElement (elem) &&
-		 elType.ElTypeNum != HTML_EL_Comment_)
+		 elType.ElTypeNum != HTML_EL_Comment_ &&
+		 elType.ElTypeNum != HTML_EL_Frame)
 	       /* This is not a character level element */
 	       /* create copies of element parent for all decendants of child*/
 	       {
