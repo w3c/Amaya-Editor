@@ -2479,8 +2479,8 @@ ThotBool            history;
 	    ParsingLevel[newdoc] = parsingLevel;
 	}
 
-#ifdef EXPAT_PARSER
       plainText = (parsingLevel == L_Other);
+#ifdef EXPAT_PARSER
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,
 			tempdocument,
