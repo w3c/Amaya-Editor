@@ -5675,12 +5675,12 @@ void StartXmlParser (Document doc, char *fileName,
       /* Display the document */
       if (!externalDoc)
 	{
-	  if (DocumentTypes[doc] == docHTML)
-	    /* Load specific user style only for an (X)HTML document */
-	    /* For a generic XML document, it would create new element types
-	       in the structure schema, one for each type appearing in a
-	       selector in the User style sheet */
-	    LoadUserStyleSheet (doc);
+	  /* if (DocumentTypes[doc] == docHTML) */
+	  /* Load specific user style only for an (X)HTML document */
+	  /* For a generic XML document, it would create new element types
+	     in the structure schema, one for each type appearing in a
+	     selector in the User style sheet */
+	  LoadUserStyleSheet (doc);
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	}
 
