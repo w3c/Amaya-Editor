@@ -76,6 +76,7 @@ extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
 extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
 extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
+extern ThotBool AttrScriptLanguageinMenu ( NotifyAttribute * event );
 extern void SetOnOffEmphasis ( Document document,
                                View view );
 extern void SetOnOffStrong ( Document document,
@@ -198,6 +199,7 @@ extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
 extern ThotBool GlobalAttrInMenu (/* NotifyAttribute * event */);
 extern ThotBool AttrNAMEinMenu (/* NotifyAttribute * event */);
+extern ThotBool AttrScriptLanguageinMenu (/* NotifyAttribute * event */);
 extern void SetOnOffEmphasis (/* Document document,
                                  View view */);
 extern void SetOnOffStrong (/* Document document,

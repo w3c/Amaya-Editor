@@ -162,6 +162,7 @@ Prompt: prompt
 Notation: type
 content_type: type
 script_src: src
+script_language: language
 for_: for
 http_equiv: http-equiv
 meta_name: name

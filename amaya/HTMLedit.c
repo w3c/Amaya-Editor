@@ -3241,6 +3241,23 @@ ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+   AttrScriptLanguageinMenu
+   Don't display script_language attribute in menu
+  ----------------------------------------------------------------------*/
+ThotBool  AttrScriptLanguageinMenu (NotifyAttribute * event)
+{
+   AttributeType       attrType;
+   Attribute           attr;
+   ElementType         elType;
+
+   elType = TtaGetElementType (event->element);
+   if (elType.ElTypeNum == HTML_EL_SCRIPT_)
+      return TRUE;
+   else
+      return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
    SetOnOffEmphasis
    The Emphasis button or menu item has been clicked
   ----------------------------------------------------------------------*/

@@ -284,6 +284,9 @@ ATTRIBUTES
 	AttrDelete.Post -> AttrItemStyle;
 	END;
 
+   script_language:
+	AttrMenu.Pre ->    AttrScriptLanguageinMenu;
+
    Language:
 	BEGIN
 	AttrCreate.Post -> AttrLangCreated;

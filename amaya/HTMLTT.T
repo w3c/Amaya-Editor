@@ -617,6 +617,9 @@ ATTRIBUTES
  script_src: BEGIN
 	END;
 
+ script_language: BEGIN
+        END;
+
  defer: BEGIN
 	END;
 

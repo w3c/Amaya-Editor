@@ -101,8 +101,8 @@ STRUCT
   SCRIPT_							{ SCRIPT }
      (ATTR charset = Text; !content_type = Text;
 	 { charset          type }
-	   script_src = Text;
-	 { src }
+	   script_language = Text; script_src = Text;
+	 { language                src }
 	   defer = Yes_; event = Text; for_ = Text) =
 	 { defer         event         for }
 	TEXT;
