@@ -1,7 +1,9 @@
 { 
-#premier document lu
+# premiere version : Laurent Boivin
+# deuxieme version : Laurent Tardif (encore un Laurent !) et Cecile Roisin
 # p : nombre total de pages genere pour le document global
 # q : nombre de page courant du document courant
+#premier document lu
 	if (a==0)
 		{
 		if ($0 != "EndThot")
