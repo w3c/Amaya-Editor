@@ -11,7 +11,10 @@
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
  *          R. Guetari (INRIA) - Printing routines for Windows.
- *                               Integration of PostScript prologue. 
+ *                               Integration of PostScript prologue.
+ * 13/08/02: A small patch which changes the generation of Postscript DSC
+ *           page comments to prevent an extraneous one at the end of the document,
+ *           which could confuse programs such as gv (by Brian Campbell).
  *
  */
 
@@ -396,28 +399,42 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   h = 0;
   ChangeConcreteImage (frame, &h, pPage);
 }
+ 
+ /*----------------------------------------------------------------------
+   NotePageNumber produces a Postscript DSC page number comment.
+  ----------------------------------------------------------------------*/
+static void NotePageNumber (FILE *fout)
+{
+  NumberOfPages++;
+#ifdef _WINDOWS 
+  if (!TtPrinterDC)
+#endif
+    {
+      fprintf (fout, "%%%%Page: %d %d\n", NumberOfPages, NumberOfPages);
+      fflush (fout);
+    }
+}
 
 /*----------------------------------------------------------------------
    DrawPage check whether a showpage is needed.
   ----------------------------------------------------------------------*/
 static void DrawPage (FILE *fout)
 {
-  NumberOfPages++;
 #ifdef _WINDOWS 
   if (TtPrinterDC)
-     EndPage (TtPrinterDC);
+    EndPage (TtPrinterDC);
   else
-     {
-     fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber,
-	      LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
-     fflush (fout);
-     /* Enforce loading the font when starting a new page */
-     PostscriptFont = NULL;
-     ColorPs = -1;
-     }
+    {
+      fprintf (fout, "%d %d %d nwpage\n", LastPageNumber,
+	       LastPageWidth, LastPageHeight);
+      fflush (fout);
+      /* Enforce loading the font when starting a new page */
+      PostscriptFont = NULL;
+      ColorPs = -1;
+    }
 #else  /* _WINDOWS */
-  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber,
-	   LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+  fprintf (fout, "%d %d %d nwpage\n", LastPageNumber,
+	   LastPageWidth, LastPageHeight);
   fflush (fout);
   /* Enforce loading the font when starting a new page */
   PostscriptFont = NULL;
@@ -1368,8 +1385,8 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "/HPrinterOff 0 def\n");
 	  fprintf (PSfile, "/VPrinterOff 0 def\n");
 	  fprintf (PSfile, "InitThot\n");
-	  fprintf (PSfile, "frstpage\n%%%%Page: cover 1\n");
-	  NumberOfPages = 1;
+	  fprintf (PSfile, "frstpage\n");
+	  NumberOfPages = 0;
 	  fflush (PSfile);
 	}
     }
@@ -1678,6 +1695,7 @@ static void PrintView (PtrDocument pDoc)
        else
 #endif /* _WINDOWS */
 	 PSfile = (FILE *) FrRef[CurrentFrame];
+       NotePageNumber (PSfile);
        DisplayFrame (CurrentFrame);
        DrawPage (PSfile);
      }
@@ -2080,6 +2098,7 @@ static int       n = 1;
 	  /* indique au Mediateur la hauteur de la page, pour qu'il */
 	  /* n'imprime pas ce qui se trouve au-dela de cette limite */
 	  {
+	    NotePageNumber (PSfile);
 	    /* display the content of the page header and delete its contents
 	       except the break line */
 	    PrintPageHeader (PSfile, CurrentFrame, pPageAb, clipOrg);
