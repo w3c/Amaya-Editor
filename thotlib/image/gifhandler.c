@@ -1217,7 +1217,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		}
 	      *bitp++ = 0;
 	    }
-	
+	  }
       break;
     }
 
