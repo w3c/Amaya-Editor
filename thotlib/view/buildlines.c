@@ -1243,9 +1243,9 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
    *   or without (lostPixels = -2);
    * - if we want to remove extra spaces at the end of the box.
    */
-  if (pNewBuff && length < pBox->BxNChars &&
+  if (pNewBuff &&
       (lostPixels != 0 || nSpaces != oldnSpaces || oldnSpaces == 0) &&
-      (pBox->BxW != width /*|| lostPixels != pBox->BxNSpaces*/))
+      (pBox->BxW != width /*|| length < pBox->BxNChars*/))
     ibox2 = GetBox (pAb);
   else
     ibox2 = NULL;
@@ -1382,7 +1382,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
    * - if we want to remove extra spaces at the end of the box.
    */
   if (pNewBuff && length < pBox->BxNChars &&
-      (lostPixels != 0 || nSpaces != 0 || force) &&
+      (lostPixels != 0 || force) &&
       (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
     {
       ibox1 = GetBox (pAb);
@@ -2209,6 +2209,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    pBox = pBox->BxNexChild;
 		  pLine->LiFirstPiece = pBox;
 		}
+	      else
+		pLine->LiFirstPiece = pBox;
 	    }
 	}
       else
@@ -2239,6 +2241,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		  else
 		    pBox = pNextBox;
 		}
+	      else
+		pBox = GetPreviousBox (pNextBox->BxAbstractBox);
 	      toCut = FALSE;
 	    }
 
