@@ -1978,7 +1978,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	   if (pParent &&
 	       TypeHasException (ExcIsCell,
 				pParent->ElTypeNumber,
-				 pParent->ElStructSchema));
+				 pParent->ElStructSchema))
 	   /* DeleteNextChar cannot cross a cell limit */
 	   pParent = NULL;
 	 }
