@@ -460,10 +460,8 @@ UINT   msg;
 WPARAM wParam; 
 LPARAM lParam;
 #endif /* __STDC__ */
-{
-   int  keyboard_mask = 0;
-   int  status;
-   char string[2];
+{   
+   int  keyboard_mask = 0;   int  status;   char string[2];
    int  len = 0;
 
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
@@ -491,16 +489,32 @@ LPARAM lParam;
    if (HIBYTE (status))
       keyboard_mask |= THOT_MOD_ALT;
 
+   if ((wParam == VK_CANCEL) ||
+       (wParam == VK_BACK)   ||
+       (wParam == VK_RETURN) ||
+       (wParam == VK_ESCAPE) ||
+       (wParam == VK_PRIOR)  ||
+       (wParam == VK_NEXT)   ||
+       (wParam == VK_END)    ||
+       (wParam == VK_HOME)   ||
+       (wParam == VK_LEFT)   ||
+       (wParam == VK_UP)     ||
+       (wParam == VK_RIGHT)  ||
+       (wParam == VK_DOWN)   ||
+       (wParam == VK_INSERT) ||
+       (wParam == VK_DELETE))
+      len = 0;
+   else
+       len = 1;
+
    if (msg == WM_CHAR){
 	string[0] = (char) wParam;
-	len = 1;
 	ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    /* } else if ((msg == WM_KEYDOWN) && (wParam >= 32) && (wParam <= 46)) { */
    } else if ((wParam == VK_CANCEL) ||
-			  (wParam == VK_BACK)   ||
 			  (wParam == VK_RETURN) ||
 			  (wParam == VK_ESCAPE) ||
-			  (wParam == VK_SPACE)  ||
+			  (wParam == VK_SPACE)  || 
 			  (wParam == VK_PRIOR)  ||
 			  (wParam == VK_NEXT)   ||
 			  (wParam == VK_END)    ||
@@ -513,9 +527,9 @@ LPARAM lParam;
 			  (wParam == VK_DELETE))   
    {
 	  string[0] = (char) wParam;
-	  len = 1;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    }
+
 }
 #endif /* _WINDOWS */
 
@@ -706,11 +720,7 @@ int                 key;
 	  }
      }
 
-#  ifdef _WINDOWS
-   if (specialKey && !found)
-#  else  /* !_WINDOWS */
    if (!found)
-#  endif /* _WINDOWS */
       /* Traitement des cles speciales */
       switch (key)
 	    {

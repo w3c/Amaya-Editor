@@ -100,12 +100,14 @@ extern BOOL      WIN_UserGeometry;
 
 static HWND      hwndHead   ;
 static char*     txtZoneLabel;
-static boolean   paletteRealized = FALSE;
+static BOOL      paletteRealized = FALSE;
 
 static HRGN      hrgn;
-
 static char      URL_txt [500];
 static char      doc_title [500];
+
+static int       oldXPos;
+static int       oldYPos;
 
 int         cyToolBar ;
 int         CommandToString [MAX_BUTTON];
@@ -972,18 +974,18 @@ View                view;
    int                 frame;
 
    if (document == 0 && view == 0)
-      return(0);
+      return 0;
    else
       {
       frame = GetWindowNumber (document, view);
       if (frame == 0)
-	 return(0);
+	 return 0;
       }
    /* Si les parametres sont invalides */
    if (frame > MAX_FRAME)
      {
 	TtaError (ERR_invalid_parameter);
-	return (0);
+	return 0;
      }
    else
 #     ifndef _WINDOWS
@@ -1160,11 +1162,11 @@ LPARAM      lParam;
 
 	    case WM_VSCROLL:
 	         WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
-	         return (0);
+	         return 0;
 
 	    case WM_HSCROLL:
              WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
-	         return (0);
+	         return 0;
 
 		case WM_ENTER:
 			 hwndTextEdit = GetFocus ();
@@ -1315,6 +1317,7 @@ LPARAM lParam;
      int          status;
 	 static POINT ptBegin;
 	 static POINT ptEnd;
+	 static BOOL  fBlocking;
 
      frame = GetFrameNumber (hwnd);
 
@@ -1328,14 +1331,16 @@ LPARAM lParam;
          * If are waiting for the user to explicitely point to a document,
          * store the location and return.
          */
+		
         if (ClickIsDone == 1 && ((mMsg == WM_LBUTTONDOWN) || (mMsg == WM_RBUTTONDOWN))) {
-	   ClickIsDone = 0;
-	   currentWindow = hwnd;
-	   ClickFrame = frame;
-	   ClickX = LOWORD (lParam);
-	   ClickY = HIWORD (lParam);
-	   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+           ClickIsDone = 0;
+           currentWindow = hwnd;
+           ClickFrame = frame;
+           ClickX = LOWORD (lParam);
+           ClickY = HIWORD (lParam);
+           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
         }
+		
      }
 
      switch (mMsg) {
@@ -1345,107 +1350,110 @@ LPARAM lParam;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
 	       TtDisplay = saveHdc;
 	       return 0;
+
           case WM_SIZE: {
                HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
                int  cx         = LOWORD (lParam) ;
                int  cy         = HIWORD (lParam) ;
 
                WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
-
-	       WIN_ReleaseDeviceContext ();
+               WIN_ReleaseDeviceContext ();
 
                return 0 ;
-	  }
+               }
 
-	  case WM_KEYDOWN:
-	  case WM_CHAR:
-	       TtaAbortShowDialogue ();
-	       WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
-	       return 0;
+          case WM_KEYDOWN:
+          case WM_CHAR:
+               TtaAbortShowDialogue ();
+               WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
+               return 0;
 
-	  case WM_LBUTTONDOWN:
-	      /* Activate the client window */
-	       SetFocus (FrRef[frame]);
-	       /* stop any current insertion of text */
-	       CloseInsertion ();
+          case WM_LBUTTONDOWN:
+               /* Activate the client window */
+               SetFocus (FrRef[frame]);
+               /* stop any current insertion of text */
+               CloseInsertion ();
 		   
-		   if (!WIN_UserGeometry) {
-		      /* if the CTRL key is pressed this is a geometry change */
-              status = GetKeyState (VK_CONTROL);
-	          if (HIBYTE (status)) {
-		         /* changes the box position */
-		         ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+               if (!WIN_UserGeometry) {
+                  /* if the CTRL key is pressed this is a geometry change */
+                  status = GetKeyState (VK_CONTROL);
+                  if (HIBYTE (status)) {
+                     /* changes the box position */
+                     ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
 
-		         /* This is the beginning of a selection */
-	          } else {
-		           ClickFrame = frame;
-		           ClickX = LOWORD (lParam);
-		           ClickY = HIWORD (lParam);
-		           LocateSelectionInView (frame, ClickX, ClickY, 2);
-			  }
-		   } else {
-		         ClickFrame = frame;
-		         ClickX = LOWORD (lParam);
-		         ClickY = HIWORD (lParam);
-			     ptBegin.x = ptEnd.x = ClickX;
-				 ptBegin.y = ptEnd.y = ClickY;
-				 DrawBoxOutline (hwnd, ptBegin, ptEnd);
-				 SetCursor (LoadCursor (NULL, IDC_CROSS));
-		   }
-	       return (0);
+                     /* This is the beginning of a selection */
+                  } else {
+                       ClickFrame = frame;
+                       oldXPos = ClickX = LOWORD (lParam);
+                       oldYPos = ClickY = HIWORD (lParam);
+                       LocateSelectionInView (frame, ClickX, ClickY, 2);
+                  }
+               } else {
+                    ClickFrame = frame;
+                    ClickX = LOWORD (lParam);
+                    ClickY = HIWORD (lParam);
+                    ptBegin.x = ptEnd.x = ClickX;
+                    ptBegin.y = ptEnd.y = ClickY;
+                    DrawBoxOutline (hwnd, ptBegin, ptEnd);
+                    SetCursor (LoadCursor (NULL, IDC_CROSS));
+               }
+               fBlocking = TRUE;
+               return 0;
 
-	  case WM_MOUSEMOVE: { 
-	       WPARAM mMask = wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON |
-					                MK_SHIFT | MK_CONTROL);
 
-	       if (mMask == MK_LBUTTON) { 
-		      if (!WIN_UserGeometry) 
-		         LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-			  
-	          else {
-			      SetCursor (LoadCursor (NULL, IDC_CROSS));
-				  DrawBoxOutline (hwnd, ptBegin, ptEnd);
-				  ptEnd.x = LOWORD (lParam);
-				  ptEnd.y = HIWORD (lParam);
-				  DrawBoxOutline (hwnd, ptBegin, ptEnd);
-			  }
-		   }
-		   return (0);
-	  }
+          case WM_LBUTTONUP:
+               if (fBlocking) {
+                  if (WIN_UserGeometry) {
+                     DrawBoxOutline (hwnd, ptBegin, ptEnd);
+                     SetCursor (LoadCursor (NULL, IDC_ARROW));
+                     WIN_UserGeometry = FALSE;
+                  }
+				  fBlocking = FALSE;
+			   }
+               return 0;
 
-	  case WM_LBUTTONUP:
-		   if (WIN_UserGeometry) {
-			  DrawBoxOutline (hwnd, ptBegin, ptEnd);
-			  SetCursor (LoadCursor (NULL, IDC_ARROW));
-			  WIN_UserGeometry = FALSE;
-		   }
-		   return 0;
+          case WM_LBUTTONDBLCLK:/* left double click handling */
+               TtaAbortShowDialogue ();
 
-	  case WM_LBUTTONDBLCLK:/* left double click handling */
-	       TtaAbortShowDialogue ();
+               /* memorise la position de la souris */
+               ClickFrame = frame;
+               ClickX     = LOWORD (lParam);
+               ClickY     = HIWORD (lParam);
+               LocateSelectionInView (frame, ClickX, ClickY, 3);
+               return 0;
 
-	       /* memorise la position de la souris */
-	       ClickFrame = frame;
-	       ClickX     = LOWORD (lParam);
-	       ClickY     = HIWORD (lParam);
-	       LocateSelectionInView (frame, ClickX, ClickY, 3);
-	       return (0);
+          case WM_MBUTTONDOWN:
+               /* stop any current insertion of text */
+               CloseInsertion ();
 
-	  case WM_MBUTTONDOWN:
-	       /* stop any current insertion of text */
-	       CloseInsertion ();
+               /* if the CTRL key is pressed this is a size change */
+               status = GetKeyState (VK_CONTROL);
+               if (HIBYTE (status)) {
+                  /* changes the box size */
+                  ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
+                  /* memorize the click position */
+               } else {
+                    TtaAbortShowDialogue ();
+                    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+               }
+               return 0;
 
-	       /* if the CTRL key is pressed this is a size change */
-	       status = GetKeyState (VK_CONTROL);
-	       if (HIBYTE (status)) {
-		  /* changes the box size */
-		  ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
-		  /* memorize the click position */
-	       } else {
-		     TtaAbortShowDialogue ();
-		     LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-	       }
-	       return (0);
+          case WM_MOUSEMOVE:
+               /* if (wParam & MK_LBUTTON) {  */
+               if (fBlocking) { 
+                  if (!WIN_UserGeometry) { 
+                     if (((oldXPos <= LOWORD (lParam) -1) || (oldXPos >= LOWORD (lParam) +1)) && 
+						 ((oldYPos <= HIWORD (lParam) -1) || (oldYPos >= HIWORD (lParam) +1)))	  
+                        LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+                  } else {
+                       SetCursor (LoadCursor (NULL, IDC_CROSS));
+                       DrawBoxOutline (hwnd, ptBegin, ptEnd);
+                       ptEnd.x = LOWORD (lParam);
+                       ptEnd.y = HIWORD (lParam);
+                       DrawBoxOutline (hwnd, ptBegin, ptEnd);
+                  }
+               }
+               return 0;
 
           case WM_DESTROY: 
 			   WIN_ReleaseDeviceContext ();
@@ -1729,7 +1737,8 @@ int                 thotThotWindowid;
    drawable = TtaGetThotWindow (thotThotWindowid);
    XDefineCursor (TtDisplay, drawable, WaitCurs);
 #  else  /* _WINDOWS */
-   SetCursor (IDC_WAIT);
+   SetCursor (LoadCursor (NULL, IDC_WAIT));
+   ShowCursor (TRUE);
 #  endif /* _WINDOWS */
 }
 
@@ -1745,12 +1754,15 @@ int                 thotThotWindowid;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XUndefineCursor (TtDisplay, drawable);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   ShowCursor (FALSE);
+   SetCursor (LoadCursor (NULL, IDC_ARROW));
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

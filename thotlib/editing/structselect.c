@@ -2953,7 +2953,8 @@ boolean             drag;
 		       /* application accepts selection */
 		       {
 			  /* do select */
-			  ExtendSelection (pEl, rank, fixed, begin, drag);
+			  ExtendSelection
+				  (pEl, rank, fixed, begin, drag);
 			  /* send event TteElemExtendSelect.Pre to the */
 			  /* application */
 			  notifyEl.event = TteElemExtendSelect;
