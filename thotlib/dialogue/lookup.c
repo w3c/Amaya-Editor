@@ -9,7 +9,7 @@
  * lookup.c -- Binding of TtaXLookupString in place of the X11
  *             XLookupString function.
  *
- * Author: D. Veillard (INRIA)
+ * Author: D. Veillard (INRIA/W3C)
  *
  */
 

@@ -9,7 +9,7 @@
  * Module dedicated to font handling.
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
+ *         D. Veillard (W3C/INRIA): Amaya porting on Windows NT and Window 95
  *
  */
 

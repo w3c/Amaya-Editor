@@ -181,6 +181,7 @@ char               *imageName;
     }
   else
     {
+fprintf(stderr,"Background image !\n");
       /* create a background image for the element */
       /* set the value */
     }
@@ -190,16 +191,15 @@ char               *imageName;
     TtaSetDocumentUnmodified (doc);
 }
 
-#ifdef AMAYA_JAVA
 /*----------------------------------------------------------------------
-   JavaImageLoaded is the callback procedure when the image is loaded	
+   HandleImageLoaded is the callback procedure when the image is loaded	
    		from the web.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                JavaImageLoaded (int doc, int status, char *urlName,
+void                HandleImageLoaded (int doc, int status, char *urlName,
                                      char *outputfile, void * context)
 #else  /* __STDC__ */
-void                JavaImageLoaded (doc, status, urlName, outputfile, context)
+void                HandleImageLoaded (doc, status, urlName, outputfile, context)
 int doc;
 int status;
 char *urlName;
@@ -213,12 +213,11 @@ void *context;
    LoadedImageDesc    *desc = (LoadedImageDesc *) context;
    ElemImage          *ctxEl, *ctxPrev;
 
+#ifdef AMAYA_JAVA
    FilesLoading[doc]--;
+#endif
    if (DocumentURLs[doc] != NULL)
      {
-	/* an image of the document is now loaded */
-
-	/* update the stop button status */
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
@@ -239,7 +238,11 @@ void *context;
 	desc->elImage = NULL;
 	while (ctxEl != NULL)
 	  {
-	     DisplayImage (doc, ctxEl->currentElement, tempfile);
+	     if (ctxEl->callback != NULL)
+	         ctxEl->callback(doc, ctxEl->currentElement, tempfile,
+		                 ctxEl->extra);
+             else
+		 DisplayImage (doc, ctxEl->currentElement, tempfile);
 	     ctxPrev = ctxEl;
 	     ctxEl = ctxEl->nextElement;
 	     TtaFreeMemory ((char *) ctxPrev);
@@ -247,26 +250,21 @@ void *context;
      }
 }
 
-#else /* ! AMAYA_JAVA */
-
+#ifndef AMAYA_JAVA
 /*----------------------------------------------------------------------
-   ImageLoaded is the callback procedure when the image is loaded	
-   		from the web.						
+   libWWWImageLoaded is the libWWW callback procedure when the image
+                is loaded from the web.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ImageLoaded (void *ctxt, int status)
+void                libWWWImageLoaded (void *ctxt, int status)
 #else  /* __STDC__ */
-void                ImageLoaded (ctxt, status)
+void                libWWWImageLoaded (ctxt, status)
 void               *ctxt;
 int                 status;
 
 #endif /* __STDC__ */
 {
-   char               *pathname;
-   char                tempfile[MAX_LENGTH];
-   LoadedImageDesc    *desc;
    Document            doc;
-   ElemImage          *ctxEl, *ctxPrev;
    AHTReqContext      *context = (AHTReqContext *) ctxt;
 
    doc = context->docid;
@@ -282,30 +280,10 @@ int                 status;
 	   return;
 
 	/* rename the local file of the image */
-	desc = (LoadedImageDesc *) context->context_tcbf;
-	strcpy (tempfile, desc->localName);
-	TtaFileUnlink (tempfile);
-	rename (context->outputfile, tempfile);
-
-	/* save pathname */
-	TtaFreeMemory (desc->originalName);
-	pathname = context->urlName;
-	desc->originalName = TtaGetMemory (strlen (pathname) + 1);
-	desc->status = IMAGE_LOADED;
-	strcpy (desc->originalName, pathname);
-	/* display for each elements in the list */
-	ctxEl = desc->elImage;
-	desc->elImage = NULL;
-	while (ctxEl != NULL)
-	  {
-	     DisplayImage (context->docid, ctxEl->currentElement, tempfile);
-	     ctxPrev = ctxEl;
-	     ctxEl = ctxEl->nextElement;
-	     TtaFreeMemory ((char *) ctxPrev);
-	  }
+        HandleImageLoaded (doc, status, context->urlName,
+	                   context->outputfile, context->context_tcbf);
      }
 }
-
 #endif /* AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
@@ -313,13 +291,16 @@ int                 status;
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el, char *URL, int flags)
+void                FetchImage (Document doc, Element el, char *URL, int flags,
+                                LoadedImageCallback callback, void *extra)
 #else  /* __STDC__ */
-void                FetchImage (doc, el, URL, flags)
+void                FetchImage (doc, el, URL, flags, callback, extra)
 Document            doc;
 Element             el;
 char               *URL;
 int                 flags;
+LoadedImageCallback callback;
+void               *extra;
 
 #endif /* __STDC__ */
 {
@@ -375,18 +356,20 @@ int                 flags;
 	      desc->elImage = ctxEl;
 	      ctxEl->currentElement = el;
 	      ctxEl->nextElement = NULL;
+	      ctxEl->callback = callback;
+	      ctxEl->extra = extra;
 	      update = FALSE;	/* the image is not loaded yet */
 #ifdef AMAYA_JAVA
 	      FilesLoading[doc]++;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
-				(void *) JavaImageLoaded,
+				(void *) HandleImageLoaded,
 				(void *) desc, NO);
 #else /* !AMAYA_JAVA */
 	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC, NULL, NULL,
-				(void *) ImageLoaded,
+				(void *) libWWWImageLoaded,
 				(void *) desc, NO);
 #endif /* !AMAYA_JAVA */
 	      if (i != -1) 
@@ -401,12 +384,19 @@ int                 flags;
 	  /* display the image within the document */
 	  if (update)
 	    {
-	      if (desc == NULL)
+	      if (desc == NULL) {
 		/* it is a local image */
-		DisplayImage (doc, el, pathname);
-	      else if (TtaFileExist (desc->localName))
-		DisplayImage (doc, el, desc->localName);
-	      else
+		if (callback)
+		    callback(doc, el, pathname, extra);
+		else
+		    DisplayImage (doc, el, pathname);
+	      } else if (TtaFileExist (desc->localName)) {
+	        /* remote image, but already here */
+		if (callback)
+		    callback(doc, el, desc->localName, extra);
+		else
+		    DisplayImage (doc, el, desc->localName);
+	      } else
 		{
 		  /* chain this new element as waiting for this image */
 		  ctxEl = desc->elImage;
@@ -486,7 +476,8 @@ int                 flags;
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
 	/* FetchImage increments FilesLoading[doc] for each new get request */
-	FetchImage (doc, el, NULL, flags);
+	if (el != NULL)
+	    FetchImage (doc, el, NULL, flags, NULL, NULL);
      }
    while (el != NULL);
 

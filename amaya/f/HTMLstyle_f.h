@@ -38,6 +38,10 @@ extern void ParseHTMLGenericStyle ( char *selector,
                                     char *attrstr,
                                     Document doc,
                                     PSchema gPres );
+extern void ParseCSSBackgroundImageCallback ( Document doc,
+                                              Element el,
+                                              char *file,
+                                              void *extra );
 extern void ParseHTMLStyleDeclaration ( Element elem,
                                         char *attrstr,
                                         Document doc,
@@ -121,6 +125,10 @@ extern void ParseHTMLGenericStyle (/* char *selector,
                                       char *attrstr,
                                       Document doc,
                                       PSchema gPres */);
+extern void ParseCSSBackgroundImageCallback (/* Document doc,
+                                                Element el,
+                                                char *file,
+                                                void *extra */);
 extern void ParseHTMLStyleDeclaration (/* Element elem,
                                           char *attrstr,
                                           Document doc,

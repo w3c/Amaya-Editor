@@ -1206,18 +1206,18 @@ int                 extra;
  */
 
 #ifdef __STDC__
-static int PresConstSearch (PSchema tsch, char *value)
+static int PresConstSearch (Document doc, char *value)
 #else  /* __STDC__ */
-static int PresConstSearch (tsch, value)
-PSchema             tsch;
+static int PresConstSearch (doc, value)
+Document            doc;
 char               *value;
 
 #endif /* !__STDC__ */
 {
-    PtrPSchema pSchemaPrs = (PtrPSchema) tsch;
+    PtrPSchema pSchemaPrs = (PtrPSchema) TtaGetDocumentSSchema (doc);
     int i;
 
-    if ((tsch == NULL) || (value == NULL)) return(-1);
+    if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
 
     /*
      * Lookup the existing constants, searching for
@@ -1226,7 +1226,7 @@ char               *value;
     for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
 	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
         if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
-	    MAX_PRES_CONST_LEN)) return(i);
+	    MAX_PRES_CONST_LEN)) return(i + 1);
     }
 
     return(-1);
@@ -1238,18 +1238,18 @@ char               *value;
  */
 
 #ifdef __STDC__
-static int PresConstInsert (PSchema tsch, char *value)
+static int PresConstInsert (Document doc, char *value)
 #else  /* __STDC__ */
-static int PresConstInsert (tsch, value)
-PSchema             tsch;
+static int PresConstInsert (doc, value)
+Document            doc;
 char               *value;
 
 #endif /* !__STDC__ */
 {
-    PtrPSchema pSchemaPrs = (PtrPSchema) tsch;
+    PtrPSchema pSchemaPrs = (PtrPSchema) TtaGetDocumentSSchema (doc);
     int i;
 
-    if ((tsch == NULL) || (value == NULL)) return(-1);
+    if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
 
     /*
      * First lookup the existing constants, searching for
@@ -1258,7 +1258,7 @@ char               *value;
     for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
 	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
         if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
-	    MAX_PRES_CONST_LEN)) return(i);
+	    MAX_PRES_CONST_LEN)) return(i + 1);
     }
 
     /*
@@ -1267,9 +1267,10 @@ char               *value;
     if (pSchemaPrs->PsNConstants >= MAX_PRES_CONST) return(-1);
     i = pSchemaPrs->PsNConstants;
     pSchemaPrs->PsConstant[i].PdType = CharString;
+    pSchemaPrs->PsConstant[i].PdAlphabet = 'L';
     strncpy(&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
     pSchemaPrs->PsNConstants++;
-    return(i);
+    return(i + 1);
 }
 
 /*----------------------------------------------------------------------
@@ -1760,20 +1761,20 @@ void               *param;
 
 }
 
-/*----------------------------------------------------------------------
-   *									*
-   *	Macro's used to generate presentations routines			*
-   *      These heavily rely on the token-pasting mechanism provided by   *
-   *      the C preprocessor. The string a##b is replaced by the string   *
-   *      "ab", but this is done after the macro is expanded.             *
-   *      This mecanism allows to avoid a lot of typing, errors and keep  *
-   *      the code compact at the price of a loss of readability.         *
-   *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
-   *      a side effect of the preprocessor implementation on empty       *
-   *      comments. In this case we use a+slash+star+star+slash+b to      *
-   *      produce the same string "ab".					*
-   *									*
-  ----------------------------------------------------------------------*/
+/************************************************************************
+ *									*
+ *	Macro's used to generate presentations routines			*
+ *      These heavily rely on the token-pasting mechanism provided by   *
+ *      the C preprocessor. The string a##b is replaced by the string   *
+ *      "ab", but this is done after the macro is expanded.             *
+ *      This mecanism allows to avoid a lot of typing, errors and keep  *
+ *      the code compact at the price of a loss of readability.         *
+ *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
+ *      a side effect of the preprocessor implementation on empty       *
+ *      comments. In this case we use a+slash+star+star+slash+b to      *
+ *      produce the same string "ab".					*
+ *									*
+ ************************************************************************/
 
 #if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP) || defined(WWW_MSWINDOWS)
 
@@ -2185,8 +2186,8 @@ PresentationStrategy GenericStrategy =
    (PresentationGetFunction) GenericGetShowBox,
    (PresentationSetFunction) GenericSetShowBox,
 
-   NULL, /* (PresentationGetFunction) GenericGetBgImage, */
-   NULL, /* (PresentationSetFunction) GenericSetBgImage, */
+   (PresentationGetFunction) GenericGetBgImage,
+   (PresentationSetFunction) GenericSetBgImage,
 
    (PresentationGetFunction) GenericGetPictureMode,
    (PresentationSetFunction) GenericSetPictureMode,

@@ -6,6 +6,9 @@
  */
 
 /*
+ * Everything directly linked to the CSS syntax should now hopefully
+ * be contained in this module.
+ *
  * Author: D. Veillard
  *
  */
@@ -195,130 +198,95 @@ typedef char       *(*HTML3StyleValueParser) ();
 
 #endif
 
-#ifdef __STDC__
-static char        *ParseHTML3StyleBackground (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleForeground (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFont (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFontSize (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFontWeight (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFontStyle (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFontFamily (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleTextDecoration (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleHeight (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleWidth (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMarginTop (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMarginBottom (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBgBlendDir (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBgPosition (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBgStyle (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderColor (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderColorInternal (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderStyle (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderStyleInternal (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderWidth (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleBorderWidthInternal (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleClear (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleDisplay (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleFloat (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleLetterSpacing (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleLineSpacing (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleListStyle (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMagnification (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMarginLeft (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMarginRight (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleMargin (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StylePack (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StylePadding (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleTextAlign (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleTextIndent (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleTextTransform (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleVerticalAlign (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleWhiteSpace (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleWordSpacing (PresentationTarget target,
-				PresentationContext context, char *attrstr);
-static char        *ParseHTML3StyleTest (PresentationTarget target,
-				PresentationContext context, char *attrstr);
 
+/*
+ *	Macro's used to generate Parser routines signatures.
+ *      These heavily rely on the token-pasting mechanism provided by
+ *      the C preprocessor. The string a##b is replaced by the string
+ *      "ab", but this is done after the macro is expanded.
+ *      This mecanism allows to avoid a lot of typing, errors and keep
+ *      the code compact at the price of a loss of readability.
+ *      On old fashionned preprocessor (pre-Ansi) the token pasting was
+ *      a side effect of the preprocessor implementation on empty
+ *      comments. In this case we use a+slash+star+star+slash+b to
+ *      produce the same string "ab".
+ */
+
+#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP) || defined(WWW_MSWINDOWS)
+#define VALUEPARSER(name)						\
+static char        *ParseCSS##name (PresentationTarget target,	\
+			PresentationContext context, char *attrstr);
 #else
-static char        *ParseHTML3StyleBackground ();
-static char        *ParseHTML3StyleForeground ();
-static char        *ParseHTML3StyleFont ();
-static char        *ParseHTML3StyleFontSize ();
-static char        *ParseHTML3StyleFontWeight ();
-static char        *ParseHTML3StyleFontStyle ();
-static char        *ParseHTML3StyleFontFamily ();
-static char        *ParseHTML3StyleTextDecoration ();
-static char        *ParseHTML3StyleHeight ();
-static char        *ParseHTML3StyleWidth ();
-static char        *ParseHTML3StyleMarginTop ();
-static char        *ParseHTML3StyleMarginBottom ();
-static char        *ParseHTML3StyleBgBlendDir ();
-static char        *ParseHTML3StyleBgPosition ();
-static char        *ParseHTML3StyleBgStyle ();
-static char        *ParseHTML3StyleBorderColor ();
-static char        *ParseHTML3StyleBorderColorInternal ();
-static char        *ParseHTML3StyleBorderStyle ();
-static char        *ParseHTML3StyleBorderStyleInternal ();
-static char        *ParseHTML3StyleBorderWidth ();
-static char        *ParseHTML3StyleBorderWidthInternal ();
-static char        *ParseHTML3StyleClear ();
-static char        *ParseHTML3StyleDisplay ();
-static char        *ParseHTML3StyleFloat ();
-static char        *ParseHTML3StyleLetterSpacing ();
-static char        *ParseHTML3StyleListStyle ();
-static char        *ParseHTML3StyleLineSpacing ();
-static char        *ParseHTML3StyleMagnification ();
-static char        *ParseHTML3StyleMarginLeft ();
-static char        *ParseHTML3StyleMarginRight ();
-static char        *ParseHTML3StyleMargin ();
-static char        *ParseHTML3StylePack ();
-static char        *ParseHTML3StylePadding ();
-static char        *ParseHTML3StyleTextAlign ();
-static char        *ParseHTML3StyleTextIndent ();
-static char        *ParseHTML3StyleTextTransform ();
-static char        *ParseHTML3StyleVerticalAlign ();
-static char        *ParseHTML3StyleWhiteSpace ();
-static char        *ParseHTML3StyleWordSpacing ();
-
+#define VALUEPARSER(name)						\
+static char        *ParseCSS/**/name();
 #endif
+
+VALUEPARSER(FontFamily)
+VALUEPARSER(FontStyle)
+VALUEPARSER(FontVariant)
+VALUEPARSER(FontWeight)
+VALUEPARSER(FontSize)
+VALUEPARSER(Font)
+
+VALUEPARSER(Foreground)
+VALUEPARSER(BackgroundColor)
+VALUEPARSER(BackgroundImage)
+VALUEPARSER(BackgroundRepeat)
+VALUEPARSER(BackgroundAttachment)
+VALUEPARSER(BackgroundPosition)
+VALUEPARSER(Background)
+
+VALUEPARSER(WordSpacing)
+VALUEPARSER(LetterSpacing)
+VALUEPARSER(TextDecoration)
+VALUEPARSER(VerticalAlign)
+VALUEPARSER(TextTransform)
+VALUEPARSER(TextAlign)
+VALUEPARSER(TextIndent)
+VALUEPARSER(LineSpacing)
+
+VALUEPARSER(MarginTop)
+VALUEPARSER(MarginRight)
+VALUEPARSER(MarginBottom)
+VALUEPARSER(MarginLeft)
+VALUEPARSER(Margin)
+
+VALUEPARSER(PaddingTop)
+VALUEPARSER(PaddingRight)
+VALUEPARSER(PaddingBottom)
+VALUEPARSER(PaddingLeft)
+VALUEPARSER(Padding)
+
+VALUEPARSER(BorderTopWidth)
+VALUEPARSER(BorderRightWidth)
+VALUEPARSER(BorderBottomWidth)
+VALUEPARSER(BorderLeftWidth)
+VALUEPARSER(BorderWidth)
+VALUEPARSER(BorderColor)
+VALUEPARSER(BorderStyle)
+VALUEPARSER(BorderTop)
+VALUEPARSER(BorderRight)
+VALUEPARSER(BorderBottom)
+VALUEPARSER(BorderLeft)
+VALUEPARSER(Border)
+
+VALUEPARSER(Width)
+VALUEPARSER(Height)
+VALUEPARSER(Float)
+VALUEPARSER(Clear)
+
+VALUEPARSER(Display)
+VALUEPARSER(WhiteSpace)
+
+VALUEPARSER(ListStyleType)
+VALUEPARSER(ListStyleImage)
+VALUEPARSER(ListStylePosition)
+VALUEPARSER(ListStyle)
+
+/* Sorry, not in CSS but so useful ! */
+VALUEPARSER(Magnification)
+VALUEPARSER(Test)
+
 /*
  * Description of the set of HTML3 Style Attributes supported.
  */
@@ -337,48 +305,72 @@ HTML3StyleAttribute;
 
 static HTML3StyleAttribute HTML3StyleAttributes[] =
 {
-   {"align", ParseHTML3StyleTextAlign},
-   {"background", ParseHTML3StyleBackground},
-   {"bg-blend-direction", ParseHTML3StyleBgBlendDir},
-   {"bg-position", ParseHTML3StyleBgPosition},
-   {"bg-style", ParseHTML3StyleBgStyle},
-   {"border-color", ParseHTML3StyleBorderColor},
-   {"border-color-internal", ParseHTML3StyleBorderColorInternal},
-   {"border-style", ParseHTML3StyleBorderStyle},
-   {"border-style-internal", ParseHTML3StyleBorderStyleInternal},
-   {"border-width", ParseHTML3StyleBorderWidth},
-   {"border-width-internal", ParseHTML3StyleBorderWidthInternal},
-   {"clear", ParseHTML3StyleClear},
-   {"color", ParseHTML3StyleForeground},
-   {"display", ParseHTML3StyleDisplay},
-   {"float", ParseHTML3StyleFloat},
-   {"font-size", ParseHTML3StyleFontSize},
-   {"font-weight", ParseHTML3StyleFontWeight},
-   {"font-style", ParseHTML3StyleFontStyle},
-   {"font-family", ParseHTML3StyleFontFamily},
-   {"font-leading", ParseHTML3StyleLineSpacing},
-   {"font", ParseHTML3StyleFont},
-   {"height", ParseHTML3StyleHeight},
-   {"letter-spacing", ParseHTML3StyleLetterSpacing},
-   {"line-height", ParseHTML3StyleLineSpacing},
-   {"list-style", ParseHTML3StyleListStyle},
-   {"magnification", ParseHTML3StyleMagnification},
-   {"margin-bottom", ParseHTML3StyleMarginBottom},
-   {"margin-left", ParseHTML3StyleMarginLeft},
-   {"margin-right", ParseHTML3StyleMarginRight},
-   {"margin-top", ParseHTML3StyleMarginTop},
-   {"margin", ParseHTML3StyleMargin},
-   {"pack", ParseHTML3StylePack},
-   {"padding", ParseHTML3StylePadding},
-   {"test", ParseHTML3StyleTest},
-   {"text-align", ParseHTML3StyleTextAlign},
-   {"text-decoration", ParseHTML3StyleTextDecoration},
-   {"text-indent", ParseHTML3StyleTextIndent},
-   {"text-transform", ParseHTML3StyleTextTransform},
-   {"vertical-align", ParseHTML3StyleVerticalAlign},
-   {"width", ParseHTML3StyleWidth},
-   {"white-space", ParseHTML3StyleWhiteSpace},
-   {"word-spacing", ParseHTML3StyleWordSpacing},
+   {"font-family", ParseCSSFontFamily},
+   {"font-style", ParseCSSFontStyle},
+   {"font-variant", ParseCSSFontVariant},
+   {"font-weight", ParseCSSFontWeight},
+   {"font-size", ParseCSSFontSize},
+   {"font", ParseCSSFont},
+
+   {"color", ParseCSSForeground},
+   {"background-color", ParseCSSBackgroundColor},
+   {"background-image", ParseCSSBackgroundImage},
+   {"background-repeat", ParseCSSBackgroundRepeat},
+   {"background-attachment", ParseCSSBackgroundAttachment},
+   {"background-position", ParseCSSBackgroundPosition},
+   {"background", ParseCSSBackground},
+
+   {"word-spacing", ParseCSSWordSpacing},
+   {"letter-spacing", ParseCSSLetterSpacing},
+   {"text-decoration", ParseCSSTextDecoration},
+   {"vertical-align", ParseCSSVerticalAlign},
+   {"text-transform", ParseCSSTextTransform},
+   {"text-align", ParseCSSTextAlign},
+   {"text-indent", ParseCSSTextIndent},
+   {"line-height", ParseCSSLineSpacing},
+
+   {"margin-top", ParseCSSMarginTop},
+   {"margin-right", ParseCSSMarginRight},
+   {"margin-bottom", ParseCSSMarginBottom},
+   {"margin-left", ParseCSSMarginLeft},
+   {"margin", ParseCSSMargin},
+
+   {"padding-top", ParseCSSPaddingTop},
+   {"padding-right", ParseCSSPaddingRight},
+   {"padding-bottom", ParseCSSPaddingBottom},
+   {"padding-left", ParseCSSPaddingLeft},
+   {"padding", ParseCSSPadding},
+
+   {"border-top-width", ParseCSSBorderTopWidth},
+   {"border-right-width", ParseCSSBorderRightWidth},
+   {"border-bottom-width", ParseCSSBorderBottomWidth},
+   {"border-left-width", ParseCSSBorderLeftWidth},
+   {"border-width", ParseCSSBorderWidth},
+   {"border-color", ParseCSSBorderColor},
+   {"border-style", ParseCSSBorderStyle},
+   {"border-top", ParseCSSBorderTop},
+   {"border-right", ParseCSSBorderRight},
+   {"border-bottom", ParseCSSBorderBottom},
+   {"border-left", ParseCSSBorderLeft},
+   {"border", ParseCSSBorder},
+
+   {"width", ParseCSSWidth},
+   {"height", ParseCSSHeight},
+   {"float", ParseCSSFloat},
+   {"clear", ParseCSSClear},
+
+   {"display", ParseCSSDisplay},
+   {"white-space", ParseCSSWhiteSpace},
+
+   {"list-style-type", ParseCSSListStyleType},
+   {"list-style-image", ParseCSSListStyleImage},
+   {"list-style-position", ParseCSSListStylePosition},
+   {"list-style", ParseCSSListStyle},
+
+   /* Extra's wrt. CSS 1.0 */
+
+   {"magnification", ParseCSSMagnification},
+   {"test", ParseCSSTest},
 };
 
 #define NB_HTML3STYLEATTRIBUTE (sizeof(HTML3StyleAttributes) / \
@@ -768,7 +760,11 @@ int                 max;
 /*
  * PresentationSettingsToCSS :  translate a PresentationSetting to the
  *      equivalent CSS string, and add it to the buffer given as the
- *      argument.
+ *      argument. It is used when extracting the CSS string from actual
+ *      presentation.
+ *
+ * All the possible values returned by the presentation drivers are
+ * described in thotlib/include/presentdriver.h (PresentationType enum).
  */
 
 #ifdef __STDC__
@@ -800,13 +796,15 @@ char               *param;
 
    switch (settings->type)
 	 {
+	    case DRIVERP_NONE:
+	       break;
 	    case DRIVERP_FOREGROUND_COLOR:
 	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
 	       sprintf (buffer, "color : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_BACKGROUND_COLOR:
 	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-	       sprintf (buffer, "background : #%02X%02X%02X", red, green, blue);
+	       sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_FONT_SIZE:
 	       if (settings->value.typed_data.unit == DRIVERP_UNIT_REL)
@@ -895,13 +893,6 @@ char               *param;
 			   break;
 		     }
 	       break;
-	    case DRIVERP_LINE_SPACING:
-	       if (real)
-		  sprintf (buffer, "line-height : %g", fval);
-	       else
-		  sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
 	    case DRIVERP_ALIGNMENT:
 	       switch (settings->value.typed_data.value)
 		     {
@@ -919,9 +910,12 @@ char               *param;
                            break;
 		     }
 	       break;
-	    case DRIVERP_JUSTIFICATION:
-	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
-		  sprintf (buffer, "text-align: justify");
+	    case DRIVERP_LINE_SPACING:
+	       if (real)
+		  sprintf (buffer, "line-height : %g", fval);
+	       else
+		  sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
+	       add_unit = 1;
 	       break;
 	    case DRIVERP_INDENT:
 	       if (real)
@@ -930,13 +924,17 @@ char               *param;
 		  sprintf (buffer, "text-indent : %d", settings->value.typed_data.value);
 	       add_unit = 1;
 	       break;
-#if 0
-	       /* not yet in CSS */
-	    case DRIVERP_HYPHENATION:
+	    case DRIVERP_JUSTIFICATION:
 	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
 		  sprintf (buffer, "text-align: justify");
 	       break;
+	    case DRIVERP_HYPHENATION:
+#if 0
+	       /* not yet in CSS */
+	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
+		  sprintf (buffer, "text-align: justify");
 #endif
+	       break;
 	    case DRIVERP_FILL_PATTERN:
 	       break;
 	    case DRIVERP_VERTICAL_POSITION:
@@ -982,8 +980,31 @@ char               *param;
 	       break;
 	    case DRIVERP_BOX:
 	       break;
-	    default:
-	       return;
+	    case DRIVERP_SHOWBOX:
+	       break;
+	    case DRIVERP_BGIMAGE:
+	       if (settings->value.pointer != NULL)
+		   sprintf (buffer, "background-image: url(%s)",
+		            (char *) settings->value.pointer);
+               else
+		   sprintf (buffer, "background-image: none");
+	       break;
+	    case DRIVERP_PICTUREMODE:
+	       switch (settings->value.typed_data.value) {
+	           case DRIVERP_REALSIZE:
+		       sprintf (buffer, "background-repeat: no-repeat");
+		       break;
+	           case DRIVERP_REPEAT:
+		       sprintf (buffer, "background-repeat: repeat");
+		       break;
+	           case DRIVERP_VREPEAT:
+		       sprintf (buffer, "background-repeat: repeat-y");
+		       break;
+	           case DRIVERP_HREPEAT:
+		       sprintf (buffer, "background-repeat: repeat-x");
+		       break;
+	       }
+	       break;
 	 }
    if (add_unit)
      {
@@ -1003,8 +1024,8 @@ char               *param;
 
 /************************************************************************
  *									*  
- *	GENERIC FUNCTIONS FOR CONVERTING BEETWEEN                 	*
- *	PRESENTATION ATTRIBUTES AND THE CORRESPONDING STYLE		*
+ *	THESE FUNCTIONS ARE USED TO MAINTAIN THE CSS ATTRIBUTE		*
+ *	COHERENCY WRT. THE ACTUAL INTERNAL PRESENTATION VALUES		*
  *									*  
  ************************************************************************/
 
@@ -1157,6 +1178,13 @@ int                *len;
    *len = strlen (buf);
    buf[strlen (buf)] = 0;
 }
+
+/************************************************************************
+ *									*  
+ *	CORE OF THE CSS PARSER : THESE TAKE THE CSS STRINGS 		*
+ *	PRODUCE THE CORECT DRIVER CONTEXT, AND DO THE PARSING		*
+ *									*  
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
    ParseHTMLStyleDecl : parse an HTML3 Style string                        
@@ -1501,18 +1529,18 @@ PSchema             gPres;
 
 /************************************************************************
  *									*  
- *		PARSING FUNCTIONS FOR EACH ATTRIBUTES			*
+ *	PARSING FUNCTIONS FOR EACH CSS ATTRIBUTE SUPPORTED		*
  *									*  
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleTest : For testing purposes only !!!             
+   ParseCSSTest : For testing purposes only !!!             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleTest (PresentationTarget target,
+static char        *ParseCSSTest (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleTest (target, context, attrstr)
+static char        *ParseCSSTest (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -1524,201 +1552,259 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBgBlendDir : parse an HTML3 bg-blend-direction   
-   attribute string                                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTML3StyleBgBlendDir (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
-#else
-static char        *ParseHTML3StyleBgBlendDir (target, context, attrstr)
-PresentationTarget  target;
-PresentationContext context;
-char               *attrstr;
-#endif
-{
-   MSG ("ParseHTML3StyleBgBlendDir ");
-   TODO
-      return (attrstr);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTML3StyleBgPosition : parse an HTML3 bg-position          
-   attribute string                                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTML3StyleBgPosition (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
-#else
-static char        *ParseHTML3StyleBgPosition (target, context, attrstr)
-PresentationTarget  target;
-PresentationContext context;
-char               *attrstr;
-#endif
-{
-   MSG ("ParseHTML3StyleBgPosition ");
-   TODO
-      return (attrstr);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTML3StyleBgStyle : parse an HTML3 bg-style attribute string 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTML3StyleBgStyle (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
-#else
-static char        *ParseHTML3StyleBgStyle (target, context, attrstr)
-PresentationTarget  target;
-PresentationContext context;
-char               *attrstr;
-#endif
-{
-   MSG ("ParseHTML3StyleBgStyle ");
-   TODO
-      return (attrstr);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTML3StyleBorderColor : parse an HTML3 border-color        
+   ParseCSSBorderTopWidth : parse an HTML3 BorderTopWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderColor (PresentationTarget target,
+static char        *ParseCSSBorderTopWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderColor (target, context, attrstr)
+static char        *ParseCSSBorderTopWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderColor ");
+   MSG ("ParseCSSBorderTopWidth ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBorderStyle : parse an HTML3 border-style        
+   ParseCSSBorderRightWidth : parse an HTML3 BorderRightWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderStyle (PresentationTarget target,
+static char        *ParseCSSBorderRightWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderStyle (target, context, attrstr)
+static char        *ParseCSSBorderRightWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderStyle ");
+   MSG ("ParseCSSBorderRightWidth ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBorderWidth : parse an HTML3 border-width        
+   ParseCSSBorderBottomWidth : parse an HTML3 BorderBottomWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderWidth (PresentationTarget target,
+static char        *ParseCSSBorderBottomWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderWidth (target, context, attrstr)
+static char        *ParseCSSBorderBottomWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderWidth ");
+   MSG ("ParseCSSBorderBottomWidth ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBorderColorInternal : parse an HTML3 border-color        
+   ParseCSSBorderLeftWidth : parse an HTML3 BorderLeftWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderColorInternal (PresentationTarget target,
+static char        *ParseCSSBorderLeftWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderColorInternal (target, context, attrstr)
+static char        *ParseCSSBorderLeftWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderColorInternal ");
+   MSG ("ParseCSSBorderLeftWidth ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBorderStyleInternal : parse an HTML3 border-style        
+   ParseCSSBorderWidth : parse an HTML3 BorderWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderStyleInternal (PresentationTarget target,
+static char        *ParseCSSBorderWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderStyleInternal (target, context, attrstr)
+static char        *ParseCSSBorderWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderStyleInternal ");
+   MSG ("ParseCSSBorderWidth ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBorderWidthInternal : parse an HTML3 border-width        
+   ParseCSSBorderTop : parse an HTML3 BorderTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBorderWidthInternal (PresentationTarget target,
+static char        *ParseCSSBorderTop (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBorderWidthInternal (target, context, attrstr)
+static char        *ParseCSSBorderTop (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleBorderWidthInternal ");
+   MSG ("ParseCSSBorderTop ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleClear : parse an HTML3 clear attribute string    
+   ParseCSSBorderRight : parse an HTML3 BorderRight
+   attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleClear (PresentationTarget target,
+static char        *ParseCSSBorderRight (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleClear (target, context, attrstr)
+static char        *ParseCSSBorderRight (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleClear ");
+   MSG ("ParseCSSBorderRight ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleDisplay : parse an HTML3 display attribute string        
+   ParseCSSBorderBottom : parse an HTML3 BorderBottom
+   attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleDisplay (PresentationTarget target,
+static char        *ParseCSSBorderBottom (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleDisplay (target, context, attrstr)
+static char        *ParseCSSBorderBottom (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBorderBottom ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderLeft : parse an HTML3 BorderLeft
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBorderLeft (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBorderLeft (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBorderLeft ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderColor : parse an HTML3 border-color        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBorderColor (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBorderColor (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBorderColor ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorderStyle : parse an HTML3 border-style        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBorderStyle (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBorderStyle (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBorderStyle ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBorder : parse an HTML3 border        
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBorder (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBorder (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBorder ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSClear : parse an HTML3 clear attribute string    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSClear (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSClear (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSClear ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSDisplay : parse an HTML3 display attribute string        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSDisplay (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSDisplay (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -1765,70 +1851,127 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFloat : parse an HTML3 float attribute string    
+   ParseCSSFloat : parse an HTML3 float attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFloat (PresentationTarget target,
+static char        *ParseCSSFloat (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFloat (target, context, attrstr)
+static char        *ParseCSSFloat (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleFloat ");
+   MSG ("ParseCSSFloat ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleLetterSpacing : parse an HTML3 letter-spacing    
+   ParseCSSLetterSpacing : parse an HTML3 letter-spacing    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleLetterSpacing (PresentationTarget target,
+static char        *ParseCSSLetterSpacing (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleLetterSpacing (target, context, attrstr)
+static char        *ParseCSSLetterSpacing (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleLetterSpacing ");
+   MSG ("ParseCSSLetterSpacing ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleListStyle : parse an HTML3 list-style            
+   ParseCSSListStyleType : parse an HTML3 list-style-type
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleListStyle (PresentationTarget target,
+static char        *ParseCSSListStyleType (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleListStyle (target, context, attrstr)
+static char        *ParseCSSListStyleType (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleListStyle ");
+   MSG ("ParseCSSListStyleType ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMagnification : parse an HTML3 magnification     
+   ParseCSSListStyleImage : parse an HTML3 list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleMagnification (PresentationTarget target,
+static char        *ParseCSSListStyleImage (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMagnification (target, context, attrstr)
+static char        *ParseCSSListStyleImage (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSListStyleImage ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSListStylePosition : parse an HTML3 list-style-position
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSListStylePosition (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSListStylePosition (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSListStylePosition ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSListStyle : parse an HTML3 list-style            
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSListStyle (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSListStyle (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSListStyle ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSMagnification : parse an HTML3 magnification     
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSMagnification (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSMagnification (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -1862,106 +2005,165 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMarginLeft : parse an HTML3 margin-left          
+   ParseCSSMarginLeft : parse an HTML3 margin-left          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleMarginLeft (PresentationTarget target,
+static char        *ParseCSSMarginLeft (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMarginLeft (target, context, attrstr)
+static char        *ParseCSSMarginLeft (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleMarginLeft ");
+   MSG ("ParseCSSMarginLeft ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMarginRight : parse an HTML3 margin-right        
+   ParseCSSMarginRight : parse an HTML3 margin-right        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleMarginRight (PresentationTarget target,
+static char        *ParseCSSMarginRight (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMarginRight (target, context, attrstr)
+static char        *ParseCSSMarginRight (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleMarginRight ");
+   MSG ("ParseCSSMarginRight ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMargin : parse an HTML3 margin attribute string. 
+   ParseCSSMargin : parse an HTML3 margin attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleMargin (PresentationTarget target,
+static char        *ParseCSSMargin (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMargin (target, context, attrstr)
+static char        *ParseCSSMargin (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleMargin ");
+   MSG ("ParseCSSMargin ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StylePack : parse an HTML3 pack attribute string.     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTML3StylePack (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
-#else
-static char        *ParseHTML3StylePack (target, context, attrstr)
-PresentationTarget  target;
-PresentationContext context;
-char               *attrstr;
-#endif
-{
-   MSG ("ParseHTML3StylePack ");
-   TODO
-      return (attrstr);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTML3StylePadding : parse an HTML3 padding attribute string. 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseHTML3StylePadding (PresentationTarget target,
-				 PresentationContext context, char *attrstr)
-#else
-static char        *ParseHTML3StylePadding (target, context, attrstr)
-PresentationTarget  target;
-PresentationContext context;
-char               *attrstr;
-#endif
-{
-   MSG ("ParseHTML3StylePadding ");
-   TODO
-      return (attrstr);
-}
-
-/*----------------------------------------------------------------------
-   ParseHTML3StyleTextAlign : parse an HTML3 text-align            
+   ParseCSSPaddingTop : parse an HTML3 PaddingTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleTextAlign (PresentationTarget target,
+static char        *ParseCSSPaddingTop (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleTextAlign (target, context, attrstr)
+static char        *ParseCSSPaddingTop (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSPaddingTop ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingRight : parse an HTML3 PaddingRight
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingRight (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSPaddingRight (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSPaddingRight ");
+   TODO
+      return (attrstr);
+}
+
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingBottom : parse an HTML3 PaddingBottom
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingBottom (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSPaddingBottom (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSPaddingBottom ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPaddingLeft : parse an HTML3 PaddingLeft
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPaddingLeft (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSPaddingLeft (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSPaddingLeft ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPadding : parse an HTML3 padding attribute string. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSPadding (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSPadding (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSPadding ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSTextAlign : parse an HTML3 text-align            
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSTextAlign (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSTextAlign (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2021,14 +2223,14 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleTextIndent : parse an HTML3 text-indent          
+   ParseCSSTextIndent : parse an HTML3 text-indent          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleTextIndent (PresentationTarget target,
+static char        *ParseCSSTextIndent (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleTextIndent (target, context, attrstr)
+static char        *ParseCSSTextIndent (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2054,52 +2256,52 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleTextTransform : parse an HTML3 text-transform    
+   ParseCSSTextTransform : parse an HTML3 text-transform    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleTextTransform (PresentationTarget target,
+static char        *ParseCSSTextTransform (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleTextTransform (target, context, attrstr)
+static char        *ParseCSSTextTransform (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleTextTransform ");
+   MSG ("ParseCSSTextTransform ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleVerticalAlign : parse an HTML3 vertical-align    
+   ParseCSSVerticalAlign : parse an HTML3 vertical-align    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleVerticalAlign (PresentationTarget target,
+static char        *ParseCSSVerticalAlign (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleVerticalAlign (target, context, attrstr)
+static char        *ParseCSSVerticalAlign (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleVerticalAlign ");
+   MSG ("ParseCSSVerticalAlign ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleWhiteSpace : parse an HTML3 white-space          
+   ParseCSSWhiteSpace : parse an HTML3 white-space          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleWhiteSpace (PresentationTarget target,
+static char        *ParseCSSWhiteSpace (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleWhiteSpace (target, context, attrstr)
+static char        *ParseCSSWhiteSpace (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2124,55 +2326,55 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleWordSpacing : parse an HTML3 word-spacing        
+   ParseCSSWordSpacing : parse an HTML3 word-spacing        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleWordSpacing (PresentationTarget target,
+static char        *ParseCSSWordSpacing (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleWordSpacing (target, context, attrstr)
+static char        *ParseCSSWordSpacing (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleWordSpacing ");
+   MSG ("ParseCSSWordSpacing ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFont : parse an HTML3 font attribute string      
+   ParseCSSFont : parse an HTML3 font attribute string      
    we expect the input string describing the attribute to be     
    !!!!!!                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFont (PresentationTarget target,
+static char        *ParseCSSFont (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFont (target, context, attrstr)
+static char        *ParseCSSFont (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   MSG ("ParseHTML3StyleFont ");
+   MSG ("ParseCSSFont ");
    TODO
       return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFontSize : parse an HTML3 font size attr string  
+   ParseCSSFontSize : parse an HTML3 font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFontSize (PresentationTarget target,
+static char        *ParseCSSFontSize (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFontSize (target, context, attrstr)
+static char        *ParseCSSFontSize (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2242,15 +2444,15 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFontFamily : parse an HTML3 font family string   
+   ParseCSSFontFamily : parse an HTML3 font family string   
    we expect the input string describing the attribute to be     
    a common generic font style name                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFontFamily (PresentationTarget target,
+static char        *ParseCSSFontFamily (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFontFamily (target, context, attrstr)
+static char        *ParseCSSFontFamily (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2308,16 +2510,16 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFontWeight : parse an HTML3 font weight string   
+   ParseCSSFontWeight : parse an HTML3 font weight string   
    we expect the input string describing the attribute to be     
    extra-light, light, demi-light, medium, demi-bold, bold, extra-bold
    or a number encoding for the previous values                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFontWeight (PresentationTarget target,
+static char        *ParseCSSFontWeight (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFontWeight (target, context, attrstr)
+static char        *ParseCSSFontWeight (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2407,15 +2609,84 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleFontStyle : parse an HTML3 font style string     
+   ParseCSSFontVariant : parse an HTML3 font variant string     
    we expect the input string describing the attribute to be     
-   italic, oblique, small-caps or normal                         
+   normal or small-caps
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleFontStyle (PresentationTarget target,
+static char        *ParseCSSFontVariant (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleFontStyle (target, context, attrstr)
+static char        *ParseCSSFontVariant (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   PresentationValue   style;
+
+   style.typed_data.value = 0;
+   style.typed_data.unit = 1;
+   SKIP_BLANK (attrstr);
+   if (IS_WORD (attrstr, "small-caps"))
+     {
+        /*
+	 * Not supported yet, so we use bold for rendering
+	 */
+	style.typed_data.value = DRIVERP_FONT_BOLD;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "normal"))
+     {
+	style.typed_data.value = DRIVERP_FONT_ROMAN;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	MSG ("invalid font variant\n");
+	return (attrstr);
+     }
+
+   /*
+    * install the new presentation.
+    */
+   if (style.typed_data.value != 0)
+     {
+	PresentationValue   previous_style;
+
+	if ((context->drv->GetFontStyle) &&
+	    (!context->drv->GetFontStyle (target, context, &previous_style)))
+	  {
+	     if (previous_style.typed_data.value == DRIVERP_FONT_BOLD)
+	       {
+		  if (style.typed_data.value == DRIVERP_FONT_ITALICS)
+		     style.typed_data.value = DRIVERP_FONT_BOLDITALICS;
+		  if (style.typed_data.value == DRIVERP_FONT_OBLIQUE)
+		     style.typed_data.value = DRIVERP_FONT_BOLDOBLIQUE;
+	       }
+	     if (context->drv->SetFontStyle)
+		context->drv->SetFontStyle (target, context, style);
+	  }
+	else
+	  {
+	     if (context->drv->SetFontStyle)
+		context->drv->SetFontStyle (target, context, style);
+	  }
+     }
+   return (attrstr);
+}
+
+
+/*----------------------------------------------------------------------
+   ParseCSSFontStyle : parse an HTML3 font style string     
+   we expect the input string describing the attribute to be     
+   italic, oblique or normal                         
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSFontStyle (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSFontStyle (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2437,12 +2708,6 @@ char               *attrstr;
    else if (IS_WORD (attrstr, "oblique"))
      {
 	style.typed_data.value = DRIVERP_FONT_OBLIQUE;
-	SKIP_WORD (attrstr);
-     }
-   else if (IS_WORD (attrstr, "small-caps"))
-     {
-	style.typed_data.value = DRIVERP_FONT_BOLD;
-	size.typed_data.value = -2;
 	SKIP_WORD (attrstr);
      }
    else if (IS_WORD (attrstr, "normal"))
@@ -2505,15 +2770,15 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleLineSpacing : parse an HTML3 font leading string 
+   ParseCSSLineSpacing : parse an HTML3 font leading string 
    we expect the input string describing the attribute to be     
    value% or value                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleLineSpacing (PresentationTarget target,
+static char        *ParseCSSLineSpacing (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleLineSpacing (target, context, attrstr)
+static char        *ParseCSSLineSpacing (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2536,16 +2801,16 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleTextDecoration : parse an HTML3 text decor string   
+   ParseCSSTextDecoration : parse an HTML3 text decor string   
    we expect the input string describing the attribute to be     
    underline, overline, line-through, box, shadowbox, box3d,       
    cartouche, blink or none                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleTextDecoration (PresentationTarget target,
+static char        *ParseCSSTextDecoration (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleTextDecoration (target, context, attrstr)
+static char        *ParseCSSTextDecoration (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2619,16 +2884,16 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleColor : parse an HTML3 color attribute string    
+   ParseCSSColor : parse an HTML3 color attribute string    
    we expect the input string describing the attribute to be     
    either a color name, a 3 tuple or an hexadecimal encoding.    
    The color used will be approximed from the current color      
    table                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleColor (char *attrstr, PresentationValue * val)
+static char        *ParseCSSColor (char *attrstr, PresentationValue * val)
 #else
-static char        *ParseHTML3StyleColor (attrstr, val)
+static char        *ParseCSSColor (attrstr, val)
 char               *attrstr;
 PresentationValue  *val;
 #endif
@@ -2765,13 +3030,13 @@ PresentationValue  *val;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleWidth : parse an HTML3 width attribute           
+   ParseCSSWidth : parse an HTML3 width attribute           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleWidth (PresentationTarget target,
+static char        *ParseCSSWidth (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleWidth (target, context, attrstr)
+static char        *ParseCSSWidth (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2786,7 +3051,7 @@ char               *attrstr;
    if (!strcasecmp (attrstr, "auto"))
      {
 	SKIP_WORD (attrstr);
-	MSG ("ParseHTML3StyleWidth : auto ");
+	MSG ("ParseCSSWidth : auto ");
 	TODO;
 	return (attrstr);
      }
@@ -2801,14 +3066,14 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMarginTop : parse an HTML3 margin-top attribute  
+   ParseCSSMarginTop : parse an HTML3 margin-top attribute  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static char        *ParseHTML3StyleMarginTop (PresentationTarget target,
+static char        *ParseCSSMarginTop (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMarginTop (target, context, attrstr)
+static char        *ParseCSSMarginTop (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2834,14 +3099,14 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleMarginBottom : parse an HTML3 margin-bottom      
+   ParseCSSMarginBottom : parse an HTML3 margin-bottom      
    attribute                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleMarginBottom (PresentationTarget target,
+static char        *ParseCSSMarginBottom (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleMarginBottom (target, context, attrstr)
+static char        *ParseCSSMarginBottom (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2866,13 +3131,13 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleHeight : parse an HTML3 height attribute                 
+   ParseCSSHeight : parse an HTML3 height attribute                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleHeight (PresentationTarget target,
+static char        *ParseCSSHeight (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleHeight (target, context, attrstr)
+static char        *ParseCSSHeight (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2886,7 +3151,7 @@ char               *attrstr;
    if (!strcasecmp (attrstr, "auto"))
      {
 	SKIP_WORD (attrstr);
-	MSG ("ParseHTML3StyleHeight : auto ");
+	MSG ("ParseCSSHeight : auto ");
 	TODO;
 	return (attrstr);
      }
@@ -2898,13 +3163,13 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleForeground : parse an HTML3 foreground attribute 
+   ParseCSSForeground : parse an HTML3 foreground attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleForeground (PresentationTarget target,
+static char        *ParseCSSForeground (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleForeground (target, context, attrstr)
+static char        *ParseCSSForeground (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
@@ -2912,7 +3177,7 @@ char               *attrstr;
 {
    PresentationValue   best;
 
-   attrstr = ParseHTML3StyleColor (attrstr, &best);
+   attrstr = ParseCSSColor (attrstr, &best);
 
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
@@ -2927,42 +3192,40 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTML3StyleBackground : parse an HTML3 background attribute 
+   ParseCSSBackgroundColor : parse an HTML3 background color attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3StyleBackground (PresentationTarget target,
+static char        *ParseCSSBackgroundColor (PresentationTarget target,
 				 PresentationContext context, char *attrstr)
 #else
-static char        *ParseHTML3StyleBackground (target, context, attrstr)
+static char        *ParseCSSBackgroundColor (target, context, attrstr)
 PresentationTarget  target;
 PresentationContext context;
 char               *attrstr;
 #endif
 {
-   Element             el;
    PresentationValue     best;
    GenericContext        gblock;
    SpecificContextBlock *sblock;
    SpecificTarget        elem;
-   char                 *url;
    char                 *name;
    boolean               setColor;
 
-   url = NULL;
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    setColor = TRUE;
-   if (IS_CASE_WORD (attrstr, "url"))
-     /*
-      * we don't currently support URL just parse it to skip it.
-      */
-     attrstr = ParseHTMLURL (attrstr, &url);
+   if (IS_CASE_WORD (attrstr, "transparent")) {
+       best.typed_data.value = DRIVERP_PATTERN_NONE;
+       best.typed_data.unit = DRIVERP_UNIT_REL;
+       if (context->drv->SetFillPattern)
+	 context->drv->SetFillPattern (target, context, best);
+       return (attrstr);
+   }
 
-   attrstr = ParseHTML3StyleColor (attrstr, &best);
+   attrstr = ParseCSSColor (attrstr, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
      setColor = FALSE;
 
-   if (url || setColor)
-     {
+   if (setColor) {
        /*
 	* if the background is set on the HTML or BODY element,
 	* set the background color for the full window.
@@ -2977,12 +3240,6 @@ char               *attrstr;
 		 {
 		   CSSSetBackground (gblock->doc, (PSchema) target, best.typed_data.value);
 		   setColor = False;
-		 }
-	       if (url)
-		 {
-		   /* fetch and display background image of element */
-		   el = TtaGetMainRoot (gblock->doc);
-		   FetchImage (gblock->doc, el, url, 0);
 		 }
 	     }
 	 }
@@ -3000,11 +3257,248 @@ char               *attrstr;
 		   TtaSetViewBackgroundColor (sblock->doc, 1, best.typed_data.value);
 		   setColor = False;
 		 }
+	     }
+	 }
+
+       if (setColor)
+	 {
+	   /* install the new presentation. */
+	   if (context->drv->SetBackgroundColor)
+	     context->drv->SetBackgroundColor (target, context, best);
+	   /* thot specificity : need to set fill pattern for background color */
+	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetFillPattern)
+	     context->drv->SetFillPattern (target, context, best);
+	   best.typed_data.value = 1;
+	   best.typed_data.unit = DRIVERP_UNIT_REL;
+	   if (context->drv->SetShowBox)
+	     context->drv->SetShowBox (target, context, best);
+	 }
+     }
+
+   return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundImageCallback : Callback called asynchronously by
+   FetchImage when a background image has been fetched.
+  ----------------------------------------------------------------------*/
+
+typedef struct _BackgroundImageCallbackBlock {
+    PresentationTarget target;
+    PresentationContext context;
+} BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
+
+#ifdef __STDC__
+void ParseCSSBackgroundImageCallback (Document doc, Element el, char *file,
+                                      void *extra)
+#else
+void ParseCSSBackgroundImageCallback (doc, el, file, extra)
+Document doc;
+Element el;
+char *file;
+void *extra;
+#endif
+{
+   BackgroundImageCallbackPtr callblock = (BackgroundImageCallbackPtr) extra;
+   PresentationTarget target;
+   PresentationContext context;
+   PresentationValue image;
+
+fprintf(stderr,"ParseCSSBackgroundImageCallback\n");
+
+   if (callblock == NULL) return;
+   target = callblock->target;
+   context = callblock->context;
+   TtaFreeMemory(callblock);
+
+   /*
+    * Ok the image was fetched, finish the background-image handling.
+    */
+   image.pointer = file;
+   if (context->drv->SetBgImage)
+       context->drv->SetBgImage (target, context, image);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundImage : parse an HTML3 BackgroundImage
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBackgroundImage (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBackgroundImage (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBackgroundImage ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundRepeat : parse an HTML3 BackgroundRepeat
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBackgroundRepeat (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBackgroundRepeat (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBackgroundRepeat ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundAttachment : parse an HTML3 BackgroundAttachment
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBackgroundAttachment (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBackgroundAttachment (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBackgroundAttachment ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackgroundPosition : parse an HTML3 BackgroundPosition
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBackgroundPosition (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBackgroundPosition (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   MSG ("ParseCSSBackgroundPosition ");
+   TODO
+      return (attrstr);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBackground : parse an HTML3 background attribute 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSBackground (PresentationTarget target,
+				 PresentationContext context, char *attrstr)
+#else
+static char        *ParseCSSBackground (target, context, attrstr)
+PresentationTarget  target;
+PresentationContext context;
+char               *attrstr;
+#endif
+{
+   Element             el;
+   PresentationValue     best;
+   GenericContext        gblock;
+   SpecificContextBlock *sblock;
+   SpecificTarget        elem;
+   char                 *url;
+   char                 *name;
+   boolean               setColor;
+   BackgroundImageCallbackPtr callblock;
+
+   url = NULL;
+   best.typed_data.unit = DRIVERP_UNIT_INVALID;
+   setColor = TRUE;
+   if (IS_CASE_WORD (attrstr, "url"))
+     /*
+      * we don't currently support URL just parse it to skip it.
+      */
+     attrstr = ParseHTMLURL (attrstr, &url);
+
+   attrstr = ParseCSSColor (attrstr, &best);
+   if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
+     setColor = FALSE;
+
+   if (url || setColor)
+     {
+       /*
+	* if the background is set on the HTML or BODY element,
+	* set the background color for the full window.
+	*/
+       if (context->drv == &GenericStrategy)
+	 {
+	   gblock = (GenericContext) context;
+	   if ((gblock->type == HTML_EL_HTML) || (gblock->type == HTML_EL_BODY) ||
+	       (gblock->type == HTML_EL_HEAD))
+	     {
+	       if (setColor)
+		 {
+		   CSSSetBackground (gblock->doc, (PSchema) target,
+		                     best.typed_data.value);
+		   setColor = False;
+		 }
 	       if (url)
 		 {
-		   /* fetch and display background image of element */
-		   el = TtaGetMainRoot (sblock->doc);
-		   FetchImage (sblock->doc, el, url, 0);
+		   callblock = (BackgroundImageCallbackPtr)
+		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+		   if (callblock != NULL) {
+		       callblock->target = target;
+		       callblock->context = context;
+
+		       /* fetch and display background image of element */
+		       el = TtaGetMainRoot (gblock->doc);
+
+		       FetchImage (gblock->doc, el, url, 0,
+		                   ParseCSSBackgroundImageCallback,
+				   callblock);
+		   }
+		 }
+	     }
+	 }
+       else if (context->drv == &SpecificStrategy)
+	 {
+	   sblock = (SpecificContextBlock *) context;
+	   elem = (SpecificTarget) target;
+	   name = GetHTML3Name (elem, sblock->doc);
+	   
+	   if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
+	       (!strcmp (name, "HEAD")))
+	     {
+	       if (setColor)
+		 {
+		   TtaSetViewBackgroundColor (sblock->doc, 1,
+		                              best.typed_data.value);
+		   setColor = False;
+		 }
+	       if (url)
+		 {
+		   callblock = (BackgroundImageCallbackPtr)
+		       TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
+		   if (callblock != NULL) {
+		       callblock->target = target;
+		       callblock->context = context;
+
+		       /* fetch and display background image of element */
+		       el = TtaGetMainRoot (sblock->doc);
+
+		       FetchImage (sblock->doc, el, url, 0,
+		                   ParseCSSBackgroundImageCallback,
+				   callblock);
+		   }
 		 }
 	     }
 	 }
@@ -3015,7 +3509,7 @@ char               *attrstr;
 	   if (context->drv->SetBackgroundColor)
 	     context->drv->SetBackgroundColor (target, context, best);
 	   /* thot specificity : need to set fill pattern for background color */
-	   best.typed_data.value = 2;
+	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
 	   best.typed_data.unit = DRIVERP_UNIT_REL;
 	   if (context->drv->SetFillPattern)
 	     context->drv->SetFillPattern (target, context, best);

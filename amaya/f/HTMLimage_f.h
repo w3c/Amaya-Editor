@@ -15,12 +15,19 @@ extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
 extern void DisplayImage ( Document doc,
                            Element el,
                            char *imageName );
-extern void ImageLoaded ( void *ctxt,
-                          int status );
+extern void HandleImageLoaded ( int doc,
+                                int status,
+                                char *urlName,
+                                char *outputfile,
+                                void * context );
+extern void libWWWImageLoaded ( void *ctxt,
+                                int status );
 extern void FetchImage ( Document doc,
                          Element el,
                          char *URL,
-                         int flags );
+                         int flags,
+                         LoadedImageCallback callback,
+                         void *extra );
 extern void FetchAndDisplayImages ( Document doc,
                                     int flags );
 
@@ -35,12 +42,19 @@ extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
 extern void DisplayImage (/* Document doc,
                              Element el,
                              char *imageName */);
-extern void ImageLoaded (/* void *ctxt,
-                            int status */);
+extern void HandleImageLoaded (/* int doc,
+                                  int status,
+                                  char *urlName,
+                                  char *outputfile,
+                                  void * context */);
+extern void libWWWImageLoaded (/* void *ctxt,
+                                  int status */);
 extern void FetchImage (/* Document doc,
                            Element el,
                            char *URL,
-                           int flags */);
+                           int flags,
+                           LoadedImageCallback callback,
+                           void *extra */);
 extern void FetchAndDisplayImages (/* Document doc,
                                       int flags */);
 

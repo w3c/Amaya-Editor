@@ -214,10 +214,19 @@ THOT_EXPORT char AmayaLastHTTPErrorMsg [];
 #define IMAGE_LOADED		2
 #define IMAGE_MODIFIED		3
 
+#ifdef __STDC__
+typedef void (*LoadedImageCallback)(Document doc, Element el, char *file,
+                                  void *extra);
+#else
+typedef void (*LoadedImageCallback)();
+#endif
+
 typedef struct _ElemImage
   {
-     Element             currentElement;	/* first element using this image */
+     Element             currentElement;/* first element using this image */
      struct _ElemImage  *nextElement;
+     LoadedImageCallback callback;	/* Callback for non-standard handling */
+     void		*extra;		/* any extra info for the CallBack */
   }
 ElemImage;
 
@@ -225,11 +234,11 @@ typedef struct _LoadedImageDesc
   {
      char               *originalName;	/* complete URL of the image             */
      char               *localName;	/* local name (without path) of the image   */
-     struct _LoadedImageDesc *prevImage;
-     struct _LoadedImageDesc *nextImage;
+     struct _LoadedImageDesc *prevImage;/* double linked list */
+     struct _LoadedImageDesc *nextImage;/* easier to unchain */
      Document            document;	/* document concerned                        */
      struct _ElemImage  *elImage;	/* first element using this image          */
-     int                 status;
+     int                 status;	/* the status of the Image loading */
   }
 LoadedImageDesc;
 
