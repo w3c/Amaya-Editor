@@ -1303,7 +1303,7 @@ ThotBool            save;
 			dispMode = TtaGetDisplayMode (doc);
 			if (dispMode == DisplayImmediately)
 			  TtaSetDisplayMode (doc, DeferredDisplay);
-			/* table formatting is not loked, lock it now */
+			/* table formatting is not locked, lock it now */
 			(*ThotLocalActions[T_lock]) ();
 		      }
 		  }
@@ -1335,23 +1335,25 @@ ThotBool            save;
 		    stop = TRUE;
 		while (!stop);
 
-		/* cherche l'element qui precede la partie selectionnee */
-		pPrev = PreviousNotPage (firstSel);
-		/* cherche le premier element apres la selection */
-		pNext = NextNotPage (lastSel);
-		nextChar = 0;
-		pEl1 = firstSel;
-		if (pEl1->ElTerminal
-		    && pEl1->ElLeafType == LtText
-		    && pEl1->ElTextLength > 0
-		    && pEl1->ElTextLength < firstChar)
-		  /* debut de la selection apres l'element complet */
+		if (firstSel != NULL)
 		  {
-		    firstSel = NextElement (firstSel);
-		    firstChar = 0;
-		    pPrev = firstSel;
+		    /* cherche l'element qui precede la partie selectionnee */
+		    pPrev = PreviousNotPage (firstSel);
+		    /* cherche le premier element apres la selection */
+		    pNext = NextNotPage (lastSel);
+		    nextChar = 0;
+		    pEl1 = firstSel;
+		    if (pEl1->ElTerminal
+			&& pEl1->ElLeafType == LtText
+			&& pEl1->ElTextLength > 0
+			&& pEl1->ElTextLength < firstChar)
+		      /* debut de la selection apres l'element complet */
+		      {
+			firstSel = NextElement (firstSel);
+			firstChar = 0;
+			pPrev = firstSel;
+		      }
 		  }
-
 		if (firstSel != NULL)
 		  {
 		    /* open the sequence of editing operations for the history */
