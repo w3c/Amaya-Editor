@@ -17,10 +17,10 @@ border="0" src="../Icons/WWW/activity_48x48" alt="Activities" width="48"></a>
 <p>
 The first tools made widely available to end users on the Web were browsers.
 Then some help was provided to authors by such tools as filters or text
-editors with an HTML mode. Recently, more specialized editors were proposed
-for HTML. With the evolution of HTML towards a richer structure (tables,
-divisions) and a number of additional formats (graphics, objects, multimedia,
-style sheets, etc), more sophisticated tools are needed.</p>
+editors with an HTML mode. Recently, specialized editors were proposed for
+HTML. With the evolution of HTML towards a richer structure (tables,
+divisions) and a number of additional formats (graphics, multimedia objects,
+math, style sheets, etc), more sophisticated tools are needed.</p>
 <p>
 <strong>Amaya</strong> has been designed as a new generation of client
 software that can integrate all aspects of the Web and that still remains user
@@ -51,11 +51,11 @@ view.</p>
 
 <h3>A sample implementation of HTML</h3>
 <p>
-<strong>Amaya</strong> currently implements the latest version of HTML, <a
-href="../MarkUp/Wilbur/">HTML 3.2</a>. It is also used to test and experiment
-new extensions of HTML (<a href="../TR/WD-html40/cover.html">HTML 4.0</a>),
-such as a richer model of tables, more structured forms, multimedia objects,
-or I18N features.</p>
+<strong>Amaya</strong> currently implements the latest W3C recommendation for
+HTML, <a href="../MarkUp/Wilbur/">HTML 3.2</a>. It is also used to test and
+experiment new extensions of HTML (<a href="../TR/WD-html40/cover.html">HTML
+4.0</a>), such as a richer model of tables, more structured forms, multimedia
+objects, or I18N features.</p>
 
 <h3>A sample implementation of CSS</h3>
 <p>
@@ -69,7 +69,7 @@ support CSS1 and provide a user interface for the design of style sheets.</p>
 <strong>Amaya</strong> should be used for experimenting the specifications
 developed in various areas, such as <a
 href="../International/">Internationalization</a>, <a
-href="../PICS/">PICS</a>, or electronic payment.</p>
+href="../PICS/">PICS</a>, <a href="../Math">Math</a> or metadata..</p>
 
 <h2>Current situation</h2>
 <p>
@@ -85,15 +85,15 @@ which any developer can make extensions and experiments. It includes the
 following features:</p>
 <ul>
 <li>
-browsing and editing with a direct manipulation user interface and a
-structured representation of documents 
+Browsing and editing with a direct manipulation user interface and a
+structured representation of documents
 <li>
-support for a large subset of CSS1 properties 
+Support for a large subset of CSS1 properties 
 <li>
-publishing on remote servers 
+Publishing on remote servers 
 <li>
-full support of HTML 3.2 and support of some <a
-href="../TR/WD-html40/cover.html">HTML 4.0r</a> features, such as: 
+Full support of HTML 3.2 and support of some <a
+href="../TR/WD-html40/cover.html">HTML 4.0</a> features, such as: 
 <ul>
 <li>
 OBJECT element and the associated plug-in mechanism. 
@@ -115,12 +115,18 @@ a user cache.
 An API is available from the Java language offering an easy customization path
 for Amaya users.</p>
 </ul>
+<li>
+A prototype implementation of <a href="../TR/WD-math/">MathML</a> to browse
+web pages containing mathematical expressions and to edit such pages.
 </ul>
 <p>
-It is available for X11/UNIX workstations. A demo version for Windows will
-soon be available.</p>
+It is available for X11/UNIX workstations. An alpha version for Windows has
+been released to W3C members on July 11, 1997.</p>
 
 <h2>Next step</h2>
+<p>
+The next public release of Amaya, including the Windows version, is scheduled
+for early September 97.</p>
 <p>
 It is expected that the next extensions to <strong>Amaya</strong> be done</p>
 <ul>
@@ -142,16 +148,18 @@ Support for printing with CSS
 <li>
 A stable Windows version 
 <li>
-Full support of HTML-Cougar 
+A more complete implementation of HTML 4.0 
 <li>
 Extend the event model and the Java API to support dynamic documents 
 <li>
-Make experiments with XML: Mathematics and xml-links 
+Extend the implementation of <a href="../TR/WD-math/">MathML</a>
+<li>
+Additional internationalization features
 </ul>
 <p>
 Contributions are expected for adding more features in future versions:
-integration of applets, document management, templates of specific document
-types, export to other document formats, cscw, etc.</p>
+document management, templates of specific document types, export to other
+document formats, cscw, etc.</p>
 <hr>
 <address>
 <a href="mailto:vincent.quint@w3.org">Vincent Quint</a>, <a
