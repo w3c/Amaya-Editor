@@ -54,13 +54,6 @@ static int      AnimButton;
 #endif /* _WINDOWS */
 
 
-
-/* Default position and size of the timeline window */
-#define x_timeline 400
-#define y_timeline 300
-#define w_timeline 820
-#define h_timeline 500
-
 /* path to images */
 #define cte_image_c1_filename "collapse1.png"
 #define cte_image_c2_filename "collapse2.png"
@@ -1485,7 +1478,7 @@ View build_timeline(Document basedoc, char* timelineName)
 	View timelineView;
 	Element       el, found, root, temp_el, parent, baseroot;
 	int oldStructureChecking;  
-	int i, h_current, hg;
+	int i, h_current, hg, x_timeline, y_timeline, w_timeline, h_timeline;
 	char buffer[512];
 	
 	el = NULL;
@@ -1567,7 +1560,7 @@ View build_timeline(Document basedoc, char* timelineName)
 	/* time slider + red mark + timing info */
 	build_path_to_image_dir (buffer);
 	strcat(buffer, cte_image_slider_filename);
-	temp_el = insere_rectangle(timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-80, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
+	temp_el = insere_rectangle(timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-100, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
 	temp_el = insere_image (timelinedoc, temp_el, buffer, cte_left_bar-6, 8, 0, Timeline_EL_image_slider);
 	sprintf (buffer, "%.2lfs", 0.0);	
 	dt[basedoc].timing_text = insere_texte ( timelinedoc, temp_el, "black", buffer, cte_elem_font_family, 
@@ -1586,6 +1579,7 @@ View build_timeline(Document basedoc, char* timelineName)
 	/* timeline has been built */
     TtaSetStructureChecking (oldStructureChecking, timelinedoc);
 
+	TtaGetViewGeometry (timelinedoc, "Timeline_view", &x_timeline, &y_timeline, &w_timeline, &h_timeline);
 	timelineView = TtaOpenMainView (timelinedoc, x_timeline, y_timeline, w_timeline, h_timeline);
     
 	if (timelineView != 0) {

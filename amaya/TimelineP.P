@@ -4,7 +4,8 @@
 
 PRESENTATION Timeline;
 
-
+VIEWS
+   Timeline_view;
 
 DEFAULT
 
