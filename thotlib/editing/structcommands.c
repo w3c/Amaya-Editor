@@ -1012,6 +1012,8 @@ PtrDocument         pDoc;
      }
 }
 
+#define MAX_ANCESTOR 10
+
 /*----------------------------------------------------------------------
    CutCommand  traite la commande CUT				
    DeleteElement du document la partie selectionnee.               
@@ -1028,10 +1030,13 @@ boolean             save;
 {
    PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                        pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
-                       pSel, pEl1, pA;
+                       pSel, pEl1, pA,
+		       pAncestor[MAX_ANCESTOR],
+		       pAncestorPrev[MAX_ANCESTOR],
+		       pAncestorNext[MAX_ANCESTOR];
    PtrDocument         pSelDoc;
    NotifyElement       notifyEl;
-   int                 firstChar, lastChar, nextChar, NSiblings, last;
+   int                 firstChar, lastChar, nextChar, NSiblings, last, i;
    boolean             oneAtLeast, cutPage, stop, pageSelected, cutAll,
                        canCut;
 
@@ -1219,16 +1224,50 @@ boolean             save;
 				   else
 #endif /* __COLPAGE__ */
 				      pageSelected = TRUE;
-			  /* traite les elements selectionnes */
+			  if (firstSel == NULL)
+			     pParent = NULL;
+			  else
+			     pParent = firstSel->ElParent;
+			  pAncestorPrev[0] = pPrev;
+			  pAncestorNext[0] = pNext;
+			  pPrev = firstSel;
+			  pNext = lastSel;
+			  for (i = 0; i < MAX_ANCESTOR; i++)
+			     {
+			     pAncestor[i] = pParent;
+			     if (pParent != NULL)
+				pParent = pParent->ElParent;
+			     if (i > 0)
+				{
+				if (pPrev == NULL)
+				    pAncestorPrev[i] = NULL;
+				else
+				    {
+				    pPrev = pPrev->ElParent;
+				    if (pPrev == NULL)
+				       pAncestorPrev[i] = NULL;
+				    else
+				       pAncestorPrev[i] = pPrev->ElPrevious;
+				    }
+				if (pNext == NULL)
+				    pAncestorNext[i] = NULL;
+				else
+				    {
+				    pNext = pNext->ElParent;
+				    if (pNext == NULL)
+				       pAncestorNext[i] = NULL;
+				    else
+				       pAncestorNext[i] = pNext->ElNext;
+				    }
+				}
+			     }
+
+			  /* premier element selectionne */
+			  pEl = firstSel;
 			  pS = NULL;
 			  pSave = NULL;
-#ifdef __COLPAGE__
-			  if (firstSel != NULL)
-#endif /* __COLPAGE__ */
-			     pParent = firstSel->ElParent;
-			  pEl = firstSel;
-			  /* premier element selectionne */
 			  pFree = NULL;
+			  /* traite tous les elements selectionnes */
 			  while (pEl != NULL)
 			    {
 			       if (!pageSelected)
@@ -1381,6 +1420,38 @@ boolean             save;
 				      }
 				 }
 			    }
+			  /* les elements a couper ont ete coupe's */
+			  /* verifie que les elements suivant et precedent */
+			  /* n'ont pas ete detruits par les actions */
+			  /* declanchees par les evenements TteElemDelete */
+			  /* cherche d'abord le premier ancetre qui soit */
+			  /* encore dans le document */
+			  pParent = NULL;
+			  for (i = 0; i < MAX_ANCESTOR && pParent == NULL; i++)
+			     {
+			     if (pAncestor[i] == NULL)
+				i = MAX_ANCESTOR;
+			     else
+				if (DocumentOfElement (pAncestor[i]) == pSelDoc)
+				   pParent = pAncestor[i];
+			     }
+
+			  pNext = NULL;
+			  for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
+			     {
+			     if (pAncestorNext[i] != NULL)
+				if (DocumentOfElement (pAncestorNext[i]) == pSelDoc)
+				   pNext = pAncestorNext[i];
+			     }
+
+			  pPrev = NULL;
+			  for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
+			     {
+			     if (pAncestorPrev[i] != NULL)
+				if (DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
+				   pPrev = pAncestorPrev[i];
+			     }
+
 			  /* reaffiche les paves qui copient les elements detruits */
 			  if (oneAtLeast)
 			    {

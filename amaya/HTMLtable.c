@@ -2385,7 +2385,7 @@ NotifyElement      *event;
 
 #endif
 {
-   Element             row, currentrow, nextrow, cell, table;
+   Element             row, currentrow, nextrow, prevrow, tbody, cell, table;
    ElementType         elType;
    Document            doc;
    int                 span;
@@ -2430,12 +2430,23 @@ NotifyElement      *event;
      }
    if (empty)
      {
-	PreDeleteRow (row);
 	nextrow = row;
 	TtaNextSibling (&nextrow);
-	TtaDeleteTree (row, doc);
-	row = NULL;
-	PostDeleteRow (nextrow, table, doc);
+	prevrow = row;
+	TtaPreviousSibling (&prevrow);
+	if (prevrow == NULL && nextrow == NULL)
+	   /* it's the only row in the tbody element. Delete the tbody */
+	   {
+	   tbody = TtaGetParent(row);
+	   TtaDeleteTree (tbody, doc);
+	   }
+	else
+	   {
+	   PreDeleteRow (row);
+	   TtaDeleteTree (row, doc);
+	   row = NULL;
+	   PostDeleteRow (nextrow, table, doc);
+	   }
      }
 }
 
