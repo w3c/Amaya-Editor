@@ -23,6 +23,7 @@
 #include "panel.h"
 #include "thot_key.h"
 #include "logdebug.h"
+#include "glwindowdisplay.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -2192,7 +2193,12 @@ ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
 		/* if a simple caractere has been entred, give focus to canvas
 		 * it resolves accesibility problems when the focus is blocked on a panel */
 		TtaRedirectFocus();
-
+	      
+	      // try to redraw something because when a key in pressed a long time
+	      // the ThotInput action is repeted but nothing is shown on the screen 
+	      // before the user release the key.
+	      GL_DrawAll();
+	      
 	      return true;
 	    }
 	  else
@@ -2270,6 +2276,12 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	}
       // Call the generic function for key events management
       ThotInput (TtaGiveActiveFrame(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
+
+      // try to redraw something because when a key in pressed a long time
+      // the ThotInput action is repeted but nothing is shown on the screen 
+      // before the user release the key.
+      GL_DrawAll();
+
       return true;
     }
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
@@ -2284,6 +2296,12 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     {
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+
+      // try to redraw something because when a key in pressed a long time
+      // the ThotInput action is repeted but nothing is shown on the screen 
+      // before the user release the key.
+      GL_DrawAll();
+
       return true;
     }
     else if ( thot_keysym == WXK_F2 ||
@@ -2297,9 +2315,15 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	      /*	      thot_keysym == WXK_F10 ||*/
 	      thot_keysym == WXK_F11 ||
 	      thot_keysym == WXK_F12 )
-    {
-      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
-      return true;
+      {
+	ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+
+	// try to redraw something because when a key in pressed a long time
+	// the ThotInput action is repeted but nothing is shown on the screen 
+	// before the user release the key.
+	GL_DrawAll();
+
+	return true;
       }
   else
     return false;
@@ -2392,8 +2416,16 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 	    thotMask |= THOT_MOD_ALT;
 	  if (event.ShiftDown())
 	    thotMask |= THOT_MOD_SHIFT;
+
 	  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
+
 	  ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+
+	  // try to redraw something because when a key in pressed a long time
+	  // the ThotInput action is repeted but nothing is shown on the screen 
+	  // before the user release the key.
+	  GL_DrawAll();
+
 	  return true;
 	}
       else
