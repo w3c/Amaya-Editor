@@ -552,22 +552,22 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   SpecFont            font;
   PtrBox              box;
   int                 hfont;
-  PtrFont             Ptrfont = NULL;
+  PtrFont             pfont = NULL;
 
-  GetMathFontFromChar (pAb->AbShape,
-		       pAb->AbBox->BxFont,
-		       (void **) &Ptrfont,
-		       pAb->AbBox->BxFont->FontSize);
-  if (Ptrfont)
-    {
-      GiveStixSize (Ptrfont, pAb, 
-		    width, height, pAb->AbBox->BxFont->FontSize);
-      
-	return;      
-    }
   box = pAb->AbBox;
   font = box->BxFont;
   hfont = BoxFontHeight (font);
+#ifdef _I18N_
+  GetMathFontFromChar (pAb->AbShape, font, (void **) &pfont,
+		       font->FontSize);
+  if (pfont)
+    {
+      GiveStixSize (pfont, pAb, 
+		    width, height, font->FontSize);
+      
+	return;      
+    }
+#endif /* _I18N_ */
   if (pAb->AbVolume == 0)
     {
       /* empty Symbol */

@@ -1958,7 +1958,9 @@ void MyWarningHandler ()
 /*----------------------------------------------------------------------
   Procedure which controls Motif dialogue colors
   ----------------------------------------------------------------------*/
-void ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg, ThotColorStruct *sel, ThotColorStruct *top, ThotColorStruct *bottom)
+void ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg,
+		      ThotColorStruct *sel, ThotColorStruct *top,
+		      ThotColorStruct *bottom)
 {
    top->red = RGB_Table[3].red *256;
    top->green = RGB_Table[3].green *256;

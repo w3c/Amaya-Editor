@@ -204,8 +204,8 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      else if (isNew)
-	pPRule->PrChrValue = LineStyle;
+      /*else if (isNew)
+	pPRule->PrChrValue = LineStyle;*/
     }
 
   /* graphics line weight */
@@ -229,11 +229,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	}
-      else if (isNew)
-	{
-	  pPRule->PrMinValue = LineWeight;
-	  pPRule->PrMinUnit = LineWeightUnit;
 	}
     }
 
@@ -282,8 +277,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 		  }
 	    }
 	}
-      else if (isNew)
-	pPRule->PrIntValue = FillPattern;
     }
 
   /* couleur de fond */
@@ -328,8 +321,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 		  }
 	    }
 	}
-      else if (isNew)
-	pPRule->PrIntValue = ColorBackground;
     }
 
   /* couleur du trace' */
@@ -353,8 +344,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      else if (isNew)
-	pPRule->PrIntValue = LineColor;
     }
 }
 
