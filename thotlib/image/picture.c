@@ -1220,93 +1220,94 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
     /* for the moment we didn't consider plugin printing */
 #ifdef _WINDOWS
     if (TtPrinterDC)
-	{
+      {
 #ifdef _WIN_PRINT
-	  /* load the device context into TtDisplay */
-	  WIN_GetDeviceContext (frame);
-	  LoadPicture (frame, box, imageDesc);
-	  if (imageDesc->PicPixmap == None) 
-	    WinErrorBox (NULL, "DrawPicture (1)");
-	  else
+	/* load the device context into TtDisplay */
+	WIN_GetDeviceContext (frame);
+	LoadPicture (frame, box, imageDesc);
+	if (imageDesc->PicPixmap == None) 
+	  WinErrorBox (NULL, "DrawPicture (1)");
+	else
 	  {
-      /* Retrieve the bitmap's color format, width, and height. */ 
-      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap), sizeof(BITMAP), (LPSTR)&bmp))
-        WinErrorBox (NULL, "DrawPicture (1)");
-      else
-	  {
-        /* Convert the color format to a count of bits. */ 
-        cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
-        if (cClrBits != 1)
-		{ 
-          if (cClrBits <= 4) 
-	        cClrBits = 4;
-          else if (cClrBits <= 8) 
-	        cClrBits = 8;
-          else if (cClrBits <= 16) 
-	        cClrBits = 16;
-          else if (cClrBits <= 24) 
-	        cClrBits = 24;
-          else 
-	        cClrBits = 32;
-		}
-      /* 
-       * Allocate memory for the BITMAPINFO structure. (This structure 
-       * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-       * structures.) 
-       */ 
-      if (cClrBits != 24) 
-	    pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
-						  sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
-      else
-        /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
-        pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
-      if (pbmi)
-	  {
-        /* Initialize the fields in the BITMAPINFO structure. */
-        pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
-        pbmi->bmiHeader.biWidth    = bmp.bmWidth;
-        pbmi->bmiHeader.biHeight   = bmp.bmHeight;
-        pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
-        pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
-        if (cClrBits < 24)
-          pbmi->bmiHeader.biClrUsed = 2^cClrBits;
-        /* If the bitmap is not compressed, set the BI_RGB flag. */  
-        pbmi->bmiHeader.biCompression = BI_RGB;
-        /* 
-         * Compute the number of bytes in the array of color 
-         * indices and store the result in biSizeImage. 
-         */
-        pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
-        /* 
-         * Set biClrImportant to 0, indicating that all of the 
-         * device colors are important. 
-         */
-        pbmi->bmiHeader.biClrImportant = 0;
- 	    lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
-	    if (!lpBits) 
-	      WinErrorBox (NULL, "DrawPicture (2)");
+	    /* Retrieve the bitmap's color format, width, and height. */ 
+	    if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
+			    sizeof(BITMAP), (LPSTR)&bmp))
+	      WinErrorBox (NULL, "DrawPicture (1)");
 	    else
-		{
-		  if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-				 (UINT)pbmi->bmiHeader.biHeight,
-				 lpBits, pbmi, DIB_RGB_COLORS)) 
-		    WinErrorBox (NULL, "DrawPicture (3)");
-		  else
-		  {
-		    StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
-				   pbmi->bmiHeader.biWidth,
-				   pbmi->bmiHeader.biHeight,
-				   lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
+	      {
+		/* Convert the color format to a count of bits. */ 
+		cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
+		if (cClrBits != 1)
+		  { 
+		    if (cClrBits <= 4) 
+		      cClrBits = 4;
+		    else if (cClrBits <= 8) 
+		      cClrBits = 8;
+		    else if (cClrBits <= 16) 
+		      cClrBits = 16;
+		    else if (cClrBits <= 24) 
+		      cClrBits = 24;
+		    else 
+		      cClrBits = 32;
 		  }
-		  GlobalFree (lpBits);
-		}
-		LocalFree (pbmi);
+		/* 
+		 * Allocate memory for the BITMAPINFO structure. (This structure 
+		 * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+		 * structures.) 
+		 */ 
+		if (cClrBits != 24) 
+		  pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
+						   sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
+		else
+		  /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
+		  pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
+		if (pbmi)
+		  {
+		    /* Initialize the fields in the BITMAPINFO structure. */
+		    pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
+		    pbmi->bmiHeader.biWidth    = bmp.bmWidth;
+		    pbmi->bmiHeader.biHeight   = bmp.bmHeight;
+		    pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
+		    pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
+		    if (cClrBits < 24)
+		      pbmi->bmiHeader.biClrUsed = 2^cClrBits;
+		    /* If the bitmap is not compressed, set the BI_RGB flag. */  
+		    pbmi->bmiHeader.biCompression = BI_RGB;
+		    /* 
+		     * Compute the number of bytes in the array of color 
+		     * indices and store the result in biSizeImage. 
+		     */
+		    pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
+		    /* 
+		     * Set biClrImportant to 0, indicating that all of the 
+		     * device colors are important. 
+		     */
+		    pbmi->bmiHeader.biClrImportant = 0;
+		    lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
+		    if (!lpBits) 
+		      WinErrorBox (NULL, "DrawPicture (2)");
+		    else
+		      {
+			if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+					(UINT)pbmi->bmiHeader.biHeight,
+					lpBits, pbmi, DIB_RGB_COLORS)) 
+			  WinErrorBox (NULL, "DrawPicture (3)");
+			else
+			  {
+			    StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
+					   pbmi->bmiHeader.biWidth,
+					   pbmi->bmiHeader.biHeight,
+					   lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
+			  }
+			GlobalFree (lpBits);
+		      }
+		    LocalFree (pbmi);
+		  }
+	      }
 	  }
-  }
-	  }
-	  WIN_ReleaseDeviceContext ();
+	WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-	}
+      }
 #else /* _WINDOWS */
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres,
 							  x, y, w, h,
@@ -1456,18 +1457,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       pres = RealSize;
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
-	  if (TtDisplay == NULL)
-	  {
-	    /* load the device context into TtDisplay */
-	    WIN_GetDeviceContext (frame);
-		releaseDC = TRUE;
-	  }
+      if (TtDisplay == NULL)
+	{
+	  /* load the device context into TtDisplay */
+	  WIN_GetDeviceContext (frame);
+	  releaseDC = TRUE;
+	}
 #else /* _WIN_PRINT */
-	  imageDesc->PicType = 3;
-	  imageDesc->PicPresent = pres;
-	  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
-	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame,
-	     &hFrame, Bgcolor, &width, &height);
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = pres;
+      drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
+	(LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame,
+	 &hFrame, Bgcolor, &width, &height);
 #endif /* _WIN_PRINT */
 #else  /* !_WINDOWS */
       drw = PictureLogo;
@@ -1595,6 +1596,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  /* if it's a background, dont rescale the picture */
 		  w = im->rgb_width;
 		  h = im->rgb_height;
+		}
+	      else
+		{
+		  if (w == 0)
+		    w = im->rgb_width;
+		  if (h == 0)
+		    h = im->rgb_height;
 		}
 	      gdk_imlib_render(im, (gint)w, (gint)h);
 	      drw = gdk_imlib_move_image (im);

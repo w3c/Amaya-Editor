@@ -560,14 +560,6 @@ static void FirstFrame (char *server)
    /* gtkv2.0 dont use imlib , it uses gdkpixbuf */
    gdk_rgb_init();
 #endif /* _GTK2 */
-   /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
-      initialization of GraphicContexts */
-   DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_widget_realize (DefaultWindow);
-   DefaultDrawingarea = gtk_drawing_area_new();
-   gtk_widget_set_parent (DefaultDrawingarea, DefaultWindow); 
-   gtk_widget_realize (DefaultDrawingarea);
-   DefaultDrawable = DefaultDrawingarea->window;
    gtk_widget_push_visual(gdk_imlib_get_visual());
    gtk_widget_push_colormap(gdk_imlib_get_colormap());
 #endif /* _GTK */
