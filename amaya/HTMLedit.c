@@ -2331,13 +2331,13 @@ void CheckNewLines (NotifyOnTarget *event)
   if (!event->target)
     return;
   leaf = event->target;
-  firstLeaf = leaf;
-  doc = event->document;
   length = TtaGetElementVolume (leaf);
   if (length == 0)
     return;
-
+  firstLeaf = leaf;
+  doc = event->document;
   undoSeqExtended = FALSE;
+
   /* is there a preformatted or paragraph (or equivalent) ancestor? */
   pre = FALSE;
   para = FALSE;
@@ -2367,7 +2367,7 @@ void CheckNewLines (NotifyOnTarget *event)
     /* there is a <PRE> ancestor. Don't change anything */
     return;
 
-  /* get the user value for this option */
+  /* get the user value for the Paste-Line-By-Line option */
   TtaGetEnvBoolean ("PASTE_LINE_BY_LINE", &PasteLineByLine);
 
   /* replace every new line in the content of the element by a space
@@ -2544,24 +2544,7 @@ void CheckNewLines (NotifyOnTarget *event)
 	}
     }
 
-  /* all the content of the modified element has been processed */
-  next = leaf;
-  TtaNextSibling (&next);
-  if (j > 0 && content[j-1] == SPACE &&
-      (!next || TtaGetFirstBufferContent (next) == SPACE))
-    /* remove trailing space */
-    {
-      j--;
-      changed = TRUE;
-      if (selEl)
-	if (firstSelChar >= j)
-	  /* The selection is after the current position.
-	     Update it */
-	  {
-	    firstSelChar--;
-	    selChanged = TRUE;
-	  }
-    }
+  /* all the content of the modified element has now been processed */
   if (j < length)
     content[j] = EOS;
   if (changed)
