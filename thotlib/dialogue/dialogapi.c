@@ -6611,6 +6611,7 @@ void                TtaSetNumberForm (int ref, int val)
      }
 #endif /* _GTK */
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaSetDialoguePosition me'morise la position actuelle de la souris 
@@ -6618,6 +6619,7 @@ void                TtaSetNumberForm (int ref, int val)
   ----------------------------------------------------------------------*/
 void                TtaSetDialoguePosition ()
 {
+#ifndef /* _WINDOWS */
 #ifndef _GTK
    ThotWindow          wdum;
    int                 xdum;
@@ -6627,8 +6629,9 @@ void                TtaSetDialoguePosition ()
    wdum = RootWindow (GDp, DefaultScreen (GDp));
    XQueryPointer (GDp, wdum, &wdum, &wdum, &xdum, &ydum, &ShowX, &ShowY, &xdum);
 #endif /* _GTK */
-}
 #endif /* !_WINDOWS */
+}
+
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/

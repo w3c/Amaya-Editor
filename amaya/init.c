@@ -3046,7 +3046,6 @@ void                ShowSource (Document document, View view)
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenDoc);
 	 TtaSetItemOff (sourceDoc, 1, File, BOpenInNewWindow);
 	 TtaSetItemOff (sourceDoc, 1, File, BReload);
-	 TtaSetItemOff (sourceDoc, 1, File, BSaveAs);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BSpellCheck);
 	 TtaSetItemOff (sourceDoc, 1, Edit_, BTransform);
 	 TtaSetItemOff (sourceDoc, 1, Views, TShowButtonbar);

@@ -419,7 +419,7 @@ void                SetRelativeURLs (Document document, STRING newpath)
   InitSaveForm
   Build and display the Save As dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-static void         InitSaveForm (Document document, View view, STRING pathname)
+static void InitSaveForm (Document document, View view, STRING pathname)
 {
 #ifndef _WINDOWS
    char             buffer[3000];
@@ -624,12 +624,9 @@ void                SaveDocumentAs (Document doc, View view)
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
-   else if (DocumentTypes[doc] == docSource)
-      /* it's a source "view". Don't save it */
-      return;
-
    TextFormat = (DocumentTypes[doc] == docText ||
-		 DocumentTypes[doc] == docCSS);
+		 DocumentTypes[doc] == docCSS ||
+		 DocumentTypes[doc] == docSource);
 
    /* memorize the current document */
    if (SavingDocument == 0)
@@ -1503,20 +1500,20 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, STRING url,
   ----------------------------------------------------------------------*/
 Document       GetDocFromSource (Document sourceDoc)
 {
-  Document	htmlDoc;
+  Document	xmlDoc;
   int		i;
 
-  htmlDoc = 0;
+  xmlDoc = 0;
   if (DocumentTypes[sourceDoc] == docSource)
      /* It's a source document */
-     for (i = 1; i < DocumentTableLength && htmlDoc == 0; i++)
+     for (i = 1; i < DocumentTableLength && xmlDoc == 0; i++)
         if (DocumentTypes[i] == docHTML ||
 	    DocumentTypes[i] == docAnnot ||
 	    DocumentTypes[i] == docSVG ||
 	    DocumentTypes[i] == docMath)
            if (DocumentSource[i] == sourceDoc)
-	      htmlDoc = i;
-  return htmlDoc;
+	      xmlDoc = i;
+  return xmlDoc;
 }
 
 /*----------------------------------------------------------------------
@@ -1531,7 +1528,7 @@ void                Synchronize (Document document, View view)
    char              documentname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
    DisplayMode         dispMode;
-   Document            htmlDoc, otherDoc;
+   Document            xmlDoc, otherDoc;
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
@@ -1594,14 +1591,14 @@ void                Synchronize (Document document, View view)
    else if (DocumentTypes[document] == docSource)
      /* it's a source document */
      {
-       htmlDoc = GetDocFromSource (document);
-       otherDoc = htmlDoc;
+       xmlDoc = GetDocFromSource (document);
+       otherDoc = xmlDoc;
        /* save the current state of the document into the temporary file */
-       tempdocument = GetLocalPath (htmlDoc, DocumentURLs[htmlDoc]);
+       tempdocument = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
        TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					    "TextFileT");
        TtaExtractName (tempdocument, tempdir, documentname);
-       RestartParser (htmlDoc, tempdocument, tempdir, documentname);
+       RestartParser (xmlDoc, tempdocument, tempdir, documentname);
        /* the other document is now different from the original file. It can
 	  be saved */
        TtaSetDocumentModified (otherDoc);
@@ -1633,13 +1630,13 @@ void                Synchronize (Document document, View view)
 void                SaveDocument (Document doc, View view)
 {
   NotifyElement       event;
-  char              tempname[MAX_LENGTH];
-  char              localFile[MAX_LENGTH];
-  char              documentname[MAX_LENGTH];
-  char              tempdir[MAX_LENGTH];
-  char*             ptr;
+  char                tempname[MAX_LENGTH];
+  char                localFile[MAX_LENGTH];
+  char                documentname[MAX_LENGTH];
+  char                tempdir[MAX_LENGTH];
+  char*               ptr;
   int                 i, res;
-  Document	      htmlDoc;
+  Document	      xmlDoc;
   DisplayMode         dispMode;
   ThotBool            ok, newLineNumbers;
 
@@ -1669,9 +1666,9 @@ void                SaveDocument (Document doc, View view)
 
   /* if it's a source document, get the corresponding HTML document */
   if (DocumentTypes[doc] == docSource)
-     htmlDoc = GetDocFromSource (doc);
+     xmlDoc = GetDocFromSource (doc);
   else
-     htmlDoc = 0;
+     xmlDoc = 0;
 
   SavingDocument = doc;
 
@@ -1737,10 +1734,10 @@ void                SaveDocument (Document doc, View view)
 	      {
 	      /* it's a source document. Change the URL of the corresponding
 		 HTML document */
-	      if (htmlDoc)
+	      if (xmlDoc)
 		 {
-		 TtaFreeMemory (DocumentURLs[htmlDoc]);
-		 DocumentURLs[htmlDoc] = TtaStrdup (tempname);
+		 TtaFreeMemory (DocumentURLs[xmlDoc]);
+		 DocumentURLs[xmlDoc] = TtaStrdup (tempname);
 		 }
 	      }
 	}
@@ -1809,8 +1806,8 @@ void                SaveDocument (Document doc, View view)
 	newLineNumbers = TRUE;
 	}
       /* save a local copy of the current document */
-      if (htmlDoc)
-	ptr = GetLocalPath (htmlDoc, tempname);
+      if (xmlDoc)
+	ptr = GetLocalPath (xmlDoc, tempname);
       else
 	ptr = GetLocalPath (doc, tempname);
       TtaFileCopy (tempname, ptr);
@@ -1831,11 +1828,11 @@ void                SaveDocument (Document doc, View view)
      else if (DocumentTypes[doc] == docSource)
        {
 	/* It's a source document. Reparse the corresponding HTML document */
-	if (htmlDoc)
+	if (xmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-	   RestartParser (htmlDoc, localFile, tempdir, documentname);
-	   TtaSetDocumentUnmodified (htmlDoc);
+	   RestartParser (xmlDoc, localFile, tempdir, documentname);
+	   TtaSetDocumentUnmodified (xmlDoc);
 	   /* Synchronize selections */
 	   event.document = doc;
 	   SynchronizeSourceView (&event);
@@ -2301,6 +2298,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   ----------------------------------------------------------------------*/
 void                DoSaveAs (void)
 {
+  NotifyElement       event;
   Document            doc;
   AttributeType       attrType;
   ElementType         elType;
@@ -2308,10 +2306,12 @@ void                DoSaveAs (void)
   STRING              documentFile;
   STRING              tempname, oldLocal, newLocal;
   STRING              imagePath, base;
-  char              imgbase[MAX_LENGTH];
-  char              url_sep;
+  char                imgbase[MAX_LENGTH];
+  char                documentname[MAX_LENGTH];
+  char                tempdir[MAX_LENGTH];
+  char                url_sep;
   int                 res;
-  int                 len;
+  int                 len, xmlDoc;
   DisplayMode         dispMode;
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
@@ -2565,33 +2565,57 @@ void                DoSaveAs (void)
 	  if (toUndo)
 	    TtaCancelLastRegisteredSequence (doc);
 	  /* add to the history the data of the previous document */
-	  AddDocHistory (doc, DocumentURLs[doc], 
-			 DocumentMeta[doc]->initial_url,
-			 DocumentMeta[doc]->form_data,
-			 DocumentMeta[doc]->method);
+	  if (DocumentTypes[doc] == docSource)
+	    {
+	      /* the original document must be updated */
+	      xmlDoc = GetDocFromSource (doc);
+	      /* update the source document */
+	      TtaFreeMemory (DocumentURLs[doc]);
+	      DocumentURLs[doc] = TtaStrdup (documentFile);
+	      TtaSetDocumentUnmodified (doc);
+	      /* switch Amaya buttons and menus */
+	      DocStatusUpdate (doc, FALSE);
+	    }
+	  else
+	    xmlDoc = doc;
+	  AddDocHistory (xmlDoc, DocumentURLs[xmlDoc], 
+			 DocumentMeta[xmlDoc]->initial_url,
+			 DocumentMeta[xmlDoc]->form_data,
+			 DocumentMeta[xmlDoc]->method);
 	  /* change the document url */
 	  if (TextFormat || !SaveAsText)
 	    {
-	      TtaFreeMemory (DocumentURLs[doc]);
-	      DocumentURLs[doc] = TtaStrdup (documentFile);
-	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
+	      TtaFreeMemory (DocumentURLs[xmlDoc]);
+	      DocumentURLs[xmlDoc] = TtaStrdup (documentFile);
+	      TtaSetTextZone (xmlDoc, 1, 1, DocumentURLs[xmlDoc]);
 	      if (DocumentSource[doc])
 		{
 	          TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
 	          DocumentURLs[DocumentSource[doc]] = TtaStrdup (documentFile);
 		}
-	      if (DocumentMeta[doc]->method == CE_TEMPLATE)
+	      if (DocumentMeta[xmlDoc]->method == CE_TEMPLATE)
 		{
-		  DocumentMeta[doc]->method = CE_ABSOLUTE;
-		  DocumentMetaClear (DocumentMeta[doc]);
+		  DocumentMeta[xmlDoc]->method = CE_ABSOLUTE;
+		  DocumentMetaClear (DocumentMeta[xmlDoc]);
 		}
-	      TtaSetDocumentUnmodified (doc);
+	      TtaSetDocumentUnmodified (xmlDoc);
 	      /* switch Amaya buttons and menus */
-	      DocStatusUpdate (doc, FALSE);
+	      DocStatusUpdate (xmlDoc, FALSE);
 	    }
-	  /* if it's a HTML document and the source view is open, redisplay
-	     the source. */
-	  RedisplaySourceFile (doc);
+	  if (doc != xmlDoc)
+	   {
+	     /* It's a source document. Reparse the corresponding HTML document */
+	     TtaExtractName (documentFile, tempdir, documentname);
+	     RestartParser (xmlDoc, documentFile, tempdir, documentname);
+	     TtaSetDocumentUnmodified (xmlDoc);
+	     /* Synchronize selections */
+	     event.document = doc;
+	     SynchronizeSourceView (&event);
+	   }
+	  else
+	    /* if it's a HTML document and the source view is open, redisplay
+	       the source. */
+	    RedisplaySourceFile (doc);
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	  /* remove the previous temporary file */
