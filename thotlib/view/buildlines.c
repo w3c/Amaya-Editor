@@ -2710,9 +2710,18 @@ int                 frame;
 	 pLine = NULL;
        else
 	 {
-	   pLine = pFirstLine;
-	   if (pLine == NULL)
+	   if (pFirstLine == NULL)
 	     pLine = pBox->BxFirstLine;
+	   else
+	     {
+	       /* regarde si cette ligne fait bien parti de ce bloc de lignes */
+	       pLine = pBox->BxFirstLine;
+	       while (pLine != pFirstLine && pLine != NULL)
+		 pLine = pLine->LiNext;
+	       if (pLine == NULL)
+		 /* cette ligne ne fait plus parti du bloc de lignes */
+		 return;
+	     }
 	 }
 
 	/* Zone affichee avant modification */

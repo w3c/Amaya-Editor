@@ -509,9 +509,9 @@ Document            doc;
 				      /* there is no Column_head for that cell */
 				      /* Create an additional Column_head */
 				      colElement[cRef] = NewColumnHead (colElement[cRef-1], doc, FALSE, row);
-				      colVSpan[cRef] = colVSpan[cRef-1];
 				      cNumber++;
 				    }
+				  colVSpan[cRef] = colVSpan[cRef-1];
 				}
 
 			      /* set the attribute ColExt */

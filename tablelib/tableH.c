@@ -1232,7 +1232,8 @@ int             frame;
 		  width = (width + delta - 1) / delta;
 		}
 	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 && colMaxWidth[cRef] > minsize)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		    (colMaxWidth[cRef] > minsize || span == 0))
 		  colMinWidth[cRef] += width;
 	    }
 	  if (colSpan_MaxWidth[i] > max)

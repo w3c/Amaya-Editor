@@ -1233,6 +1233,18 @@ boolean             horizRef;
 		     pAb->AbHorizPos.PosEdge = Left;
 	       }
 	     else if (pAb->AbHorizPos.PosAbRef == NULL
+		      && (pAb->AbWidth.DimPosition.PosAbRef == NULL ||
+			  pAb->AbWidth.DimPosition.PosAbRef == pParentAb))
+	       {
+		  /* prend la dimension de l'englobant */
+		  pAb->AbHorizPos.PosAbRef = pParentAb;
+		  pAb->AbWidth.DimIsPosition = FALSE;
+		  pAb->AbWidth.DimAbRef = pParentAb;
+		  pAb->AbWidth.DimValue = 0;
+		  pAb->AbWidth.DimSameDimension = TRUE;
+		  pAb->AbWidth.DimUserSpecified = FALSE;
+	       }
+	     else if (pAb->AbHorizPos.PosAbRef == NULL
 		      || pAb->AbWidth.DimPosition.PosEdge == VertRef
 		      || pAb->AbWidth.DimPosition.PosAbRef == NULL
 		      || pAb->AbWidth.DimPosition.PosAbRef == pAb)
@@ -1246,7 +1258,6 @@ boolean             horizRef;
 		  pAb->AbWidth.DimUnit = UnPoint;
 		  pAb->AbWidth.DimUserSpecified = FALSE;
 	       }
-
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbHorizPos.PosAbRef->AbDead)
 	       {
@@ -1271,6 +1282,18 @@ boolean             horizRef;
 		     pAb->AbVertPos.PosEdge = Top;
 	       }
 	     else if (pAb->AbVertPos.PosAbRef == NULL
+		      && (pAb->AbHeight.DimPosition.PosAbRef == NULL ||
+			  pAb->AbHeight.DimPosition.PosAbRef == pParentAb))
+	       {
+		  /* prend la dimension de l'englobant */
+		  pAb->AbVertPos.PosAbRef = pParentAb;
+		  pAb->AbHeight.DimIsPosition = FALSE;
+		  pAb->AbHeight.DimAbRef = pParentAb;
+		  pAb->AbHeight.DimValue = 0;
+		  pAb->AbHeight.DimSameDimension = TRUE;
+		  pAb->AbHeight.DimUserSpecified = FALSE;
+	       }
+	     else if (pAb->AbVertPos.PosAbRef == NULL
 		      || pAb->AbHeight.DimPosition.PosEdge == HorizRef
 		      || pAb->AbHeight.DimPosition.PosAbRef == NULL
 		      || pAb->AbHeight.DimPosition.PosAbRef == pAb)
@@ -1284,14 +1307,13 @@ boolean             horizRef;
 		  pAb->AbHeight.DimUnit = UnPoint;
 		  pAb->AbHeight.DimUserSpecified = FALSE;
 	       }
-
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbVertPos.PosAbRef->AbDead)
 	       {
 		  fprintf (stderr, "Dimension refers a dead box");
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
-		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
+		  pAb->AbHeight.DimValue = 0;
 		  pAb->AbHeight.DimUnit = UnPoint;
 		  pAb->AbHeight.DimUserSpecified = FALSE;
 	       }

@@ -628,15 +628,13 @@ int                 status;
 	/* update the current file name */
 	if (strlen (new_anchor->parent->address) > (MAX_LENGTH - 2))
 	  {
-	     strncpy (me->urlName, new_anchor->parent->address, 
-		      MAX_LENGTH - 1);
+	     strncpy (me->urlName, new_anchor->parent->address, MAX_LENGTH - 1);
 	     me->urlName[MAX_LENGTH - 1] = EOS;
 	  }
 	else
 	  strcpy (me->urlName, new_anchor->parent->address);
 
 	ChopURL (me->status_urlName, me->urlName);
-
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
 		      me->status_urlName);
 
@@ -1517,7 +1515,7 @@ char 	     *content_type;
 {
    AHTReqContext      *me;
    char               *ref;
-   int                 status;
+   int                 status, l;
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) {
       /* no file to be loaded */
@@ -1612,9 +1610,17 @@ char 	     *content_type;
     */
 
    if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
-      me->outputfile = TtaGetMemory (strlen (outputfile) + 1);
+      l = strlen (outputfile);
+      if (l > MAX_LENGTH)
+	me->outputfile = TtaGetMemory (l + 2);
+      else
+	me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
       strcpy (me->outputfile, outputfile);
-      me->urlName = TtaGetMemory (strlen (urlName) + 1);
+      l = strlen (urlName);
+      if (l > MAX_LENGTH)
+	me->urlName = TtaGetMemory (l + 2);
+      else
+	me->urlName = TtaGetMemory (MAX_LENGTH + 2);
       strcpy (me->urlName, urlName);
 #  ifdef _WINDOWS
       HTRequest_setPreemptive (me->request, NO);

@@ -739,6 +739,7 @@ Document            doc;
 #endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous, *next;
+   ElemImage          *ctxEl, *ctxPrev;
 
    pImage = ImageURLs;
    previous = NULL;
@@ -759,7 +760,17 @@ Document            doc;
 		TtaFreeMemory (pImage->originalName);
 	     if (pImage->localName != NULL)
 		TtaFreeMemory (pImage->localName);
-
+	     if (pImage->elImage)
+	       {
+		 ctxEl = pImage->elImage;
+		 pImage->elImage = NULL;
+		 while (ctxEl != NULL)
+		   {
+		     ctxPrev = ctxEl;
+		     ctxEl = ctxEl->nextElement;
+		     TtaFreeMemory ( ctxPrev);
+		   }
+	       }
 	     /* set up the image descriptors link */
 	     if (previous != NULL)
 		previous->nextImage = next;

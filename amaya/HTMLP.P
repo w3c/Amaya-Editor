@@ -5507,6 +5507,9 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
+	IN Alternate_view BEGIN
+		Visibility: 0;
+		END;
 	END;
 
  Column_head:
@@ -5536,8 +5539,10 @@ RULES
 #endif
 	CreateAfter(THeadBottomBorder);
 	IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Visibility: 0;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: 0;
 		END;
 	END;
 
@@ -5550,8 +5555,10 @@ RULES
 	PageBreak: No;
 #endif
 	IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Visibility: 0;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: 0;
 		END;
 	END;
 
@@ -5561,6 +5568,10 @@ RULES
 	PageBreak: Yes;
 #endif
 	IN Structure_view BEGIN
+		visibility: Enclosing =;
+		Width: Enclosing . Width;
+		END;
+	IN Alternate_view BEGIN
 		visibility: Enclosing =;
 		Width: Enclosing . Width;
 		END;
@@ -5576,6 +5587,10 @@ RULES
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
+		END;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -5595,6 +5610,10 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		END;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Width: Enclosing . Width;
+		END;
 	END;
 
  Data_cell:
@@ -5613,6 +5632,11 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		END;	
+	IN Alternate_view BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
 	END;
 
  Heading_cell:
@@ -5634,6 +5658,11 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		END;	
+	IN Alternate_view BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
 	END;
 
  Table_foot:
@@ -5642,6 +5671,9 @@ RULES
 	VertPos: Bottom = Previous . Bottom;
 	IN Structure_view
 		Visibility: 0;
+	IN Alternate_view BEGIN
+		Visibility: 0;
+		END;
 	END;
 
  C_Foot:
@@ -5687,6 +5719,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Adjust: Enclosing =;	
 		END;
+	IN Alternate_view
+		Adjust: Left;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -6005,15 +6039,13 @@ ATTRIBUTES
 	   Width: IntWidthPxl px UserSpecified;
 	If NOT AREA
 	   Width: IntWidthPxl px;
-	IN Structure_view
-	   BEGIN
+	IN Structure_view BEGIN
 	   If NOT PICTURE_UNIT
 	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
 		Width: 1 px;
 	   END;
-	IN Alternate_view
-	   BEGIN
+	IN Alternate_view BEGIN
 	   Width: Enclosing . Width;
 	   END;
 	END;
@@ -6021,15 +6053,24 @@ ATTRIBUTES
  IntWidthPercent:
 	BEGIN
 	Width: Enclosing . Width * IntWidthPercent %;
-	IN Structure_view
-	   BEGIN
+	IN Structure_view BEGIN
 	   If NOT PICTURE_UNIT
 	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
 		Width: 1 px;
 	   END;
-	IN Alternate_view
-	   BEGIN
+	IN Alternate_view BEGIN
+	  If Data_cell  BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
+	  If Heading_cell  BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
+	  If NOT Data_cell and NOT Heading_cell
 	   Width: Enclosing . Width;
 	   END;
 	END;
@@ -6039,15 +6080,13 @@ ATTRIBUTES
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
 	Height: Height_ px;
-	IN Structure_view
-	   BEGIN
+	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
 	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
 	   END;
-	IN Alternate_view
-	   BEGIN
+	IN Alternate_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
 	   If NOT PICTURE_UNIT
@@ -6254,16 +6293,22 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ALIGN_TOP);
 	HorizRef: * . Top + 0.7;
+	IN Alternate_view
+		HorizRef: Enclosed . HRef;
 	END;
  Alignment = Middle_:
 	BEGIN
 	CreateBefore(ALIGN_MIDDLE);
 	HorizRef: * . HMiddle + 0.2;
+	IN Alternate_view
+		HorizRef: Enclosed . HRef;
 	END;
  Alignment = Bottom_:
 	BEGIN
 	CreateBefore(ALIGN_BOTTOM);
 	HorizRef: * . Bottom;
+	IN Alternate_view
+		HorizRef: Enclosed . HRef;
 	END;
  Alignment = Left_:
 	BEGIN
@@ -6276,6 +6321,10 @@ ATTRIBUTES
 	CreateBefore(ALIGN_RIGHT);
 	HorizPos: Right = Enclosing . Right;
 	Adjust: Left;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
 	END;
 
  Align (Table) = left_:
@@ -6283,18 +6332,24 @@ ATTRIBUTES
 	HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
  Align (Table) = center_:
 	BEGIN
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
  Align (Table) = right_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+	   HorizPos: Left = Enclosing . Left;
 	END;
 
  Align (Horizontal_Rule) = left_:
@@ -6609,6 +6664,10 @@ ATTRIBUTES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
+	IN Alternate_view BEGIN
+		Width: Right = Enclosing . Right;
+		HorizPos: Left = Previous . Left + STRUCT_INDENT;
+		END;
 	END;
 
  ColExt:
@@ -6616,6 +6675,10 @@ ATTRIBUTES
 	Width: Right = Referred . Right - TableSimpleHSpace;
 	IN Structure_view
 		Width: Enclosing . Width;
+	IN Alternate_view BEGIN
+		Width: Right = Enclosing . Right;
+		HorizPos: Left = Previous . Left + STRUCT_INDENT;
+		END;
 	END;
 
  RowExt:
@@ -6627,6 +6690,11 @@ ATTRIBUTES
 	if last
 	  CreateAfter(LastExtCellRBorder);
 	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		Height : Enclosed . Height;
+		VertOverflow: No;
+		END;	
+	IN Alternate_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		Height : Enclosed . Height;
 		VertOverflow: No;
@@ -6705,6 +6773,9 @@ ATTRIBUTES
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;
+	IN Alternate_view BEGIN
+	   	Adjust: Left;
+		END;
 	END;
 
  Cell_align = Cell_right :
@@ -6715,6 +6786,9 @@ ATTRIBUTES
 	IN Structure_view BEGIN
 		Adjust: Enclosing =;
 		END;
+	IN Alternate_view BEGIN
+	   	Adjust: Left;
+		END;
 	END;
 
  Row_valign (Data_cell) = Row_top :
@@ -6723,12 +6797,16 @@ ATTRIBUTES
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign (Heading_cell) = Row_top :
 	BEGIN
 	CreateBefore(VALIGN_TOP);
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
 		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign = Row_top :
@@ -6740,12 +6818,16 @@ ATTRIBUTES
 	VertPos : HMiddle = Enclosing . HMiddle;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign (Heading_cell) = Row_middle :
 	BEGIN
 	CreateBefore(VALIGN_MIDDLE);
 	VertPos : HMiddle = Enclosing . HMiddle;
 	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
 		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign = Row_middle :
@@ -6758,6 +6840,8 @@ ATTRIBUTES
 	CreateBefore (CellHeader);
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign (Heading_cell) = Row_bottom :
 	BEGIN
@@ -6765,6 +6849,8 @@ ATTRIBUTES
 	VertPos : Bottom = Enclosing . Bottom - TableSimpleVSpace;
 	CreateBefore (CellHeader);
 	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
 		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign = Row_bottom :
@@ -6785,6 +6871,8 @@ ATTRIBUTES
 	CreateBefore (CellHeader);
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
  Row_valign = Row_baseline :
 	CreateBefore(VALIGN_BASELINE);
@@ -6795,6 +6883,8 @@ ATTRIBUTES
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Cell_valign = Cell_middle :
@@ -6802,6 +6892,8 @@ ATTRIBUTES
 	CreateBefore(VALIGN_MIDDLE);
 	VertPos : HMiddle = Enclosing . HMiddle;
 	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
 		VertPos: Top = Previous . Bottom;
 	END;
 
@@ -6812,6 +6904,8 @@ ATTRIBUTES
 	CreateBefore (CellHeader);
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
+	IN Alternate_view
+		VertPos: Top = Previous . Bottom;
 	END;
 
  Cell_height:
@@ -6820,6 +6914,8 @@ ATTRIBUTES
 	CreateBefore(VALUE_CELLHEIGHT);
 	Height: Cell_height px min;
 	IN Structure_view
+		Height: Enclosed . Height;
+	IN Alternate_view
 		Height: Enclosed . Height;
 	END;
 
