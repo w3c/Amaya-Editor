@@ -1,8 +1,8 @@
 #!/bin/sh
 cd ../..
-THOTVERSION=2.1d
+THOTVERSION=2.1e
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
+PLATFORMS="solaris2 SGI RS6000 osf1"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2
@@ -88,6 +88,7 @@ do
 done
 
 DIR=/mnt/thot/$THOTVERSION
+PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF"
 echo "Intallation version " $DIR
 mkdir $DIR
 

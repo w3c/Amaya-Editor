@@ -2,7 +2,7 @@
 cd ../..
 AMAYAVERSION=1.1b
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
+PLATFORMS="solaris2 SGI RS6000 osf1"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2
@@ -29,7 +29,7 @@ mkdir $DIR
  ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
-   cp -p Thot/amaya/COPYRIGHT.html $DIR/amaya/
+   cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
    cp -p Thot/amaya/HTML.STR $DIR/amaya/
    cp -p Thot/amaya/HTML.conf $DIR/amaya/
    cp -p Thot/amaya/HTML.trans $DIR/amaya/
@@ -53,6 +53,7 @@ do
 done
 
 DIR=/mnt/amaya/$AMAYAVERSION
+PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF"
 echo "Intallation version " $DIR
 mkdir $DIR
  mkdir $DIR/config
@@ -75,7 +76,7 @@ mkdir $DIR
  ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
-   cp -p Thot/amaya/COPYRIGHT.html $DIR/amaya/
+   cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
    cp -p Thot/amaya/HTML.STR $DIR/amaya/
    cp -p Thot/amaya/HTML.conf $DIR/amaya/
    cp -p Thot/amaya/HTML.trans $DIR/amaya/
