@@ -97,8 +97,9 @@ Document            doc;
    attrType.AttrTypeNum = HTML_ATTR_colspan;
    attrColspan = TtaGetAttribute (cell, attrType);
    if (attrColspan != NULL)
-      /* the cell has an attribute colspan, ignore its width */
-      return;
+      /* the cell has an attribute colspan, ignore its width if colspan > 1 */
+      if (TtaGetAttributeValue (attrColspan) > 1)
+         return;
    /* look for an attribute Cell_width (width, in HTML) */
    attrType.AttrTypeNum = HTML_ATTR_Cell_width;
    attrCellWidth = TtaGetAttribute (cell, attrType);

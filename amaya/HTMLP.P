@@ -2917,7 +2917,7 @@ BOXES
 	Width: Enclosing . Width - TableSimpleHSpace;
 	Height: 3 pt;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -2931,7 +2931,7 @@ BOXES
 	Width: Enclosing . Width - TableSimpleHSpace;
 	Height: 3 pt;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -2945,7 +2945,7 @@ BOXES
 	Width: Enclosing . Width - TableSimpleHSpace;
 	Height: 3 pt;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -2963,7 +2963,7 @@ BOXES
 	Width: Creator . Width + TableDoubleHSpace;
 	Height: 1 pt;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3013,7 +3013,7 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3031,7 +3031,7 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3050,7 +3050,7 @@ BOXES
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
 	VertOverflow: Yes;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3069,7 +3069,7 @@ BOXES
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
 	VertOverflow: Yes;
 	LineStyle: Solid;
-	LineWeight: Creator =;
+	LineWeight: Border pt;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5502,6 +5502,9 @@ ATTRIBUTES
 		END;
 	END;
 
+ ShowAreas (AREA):
+	LineWeight: 2 pt;
+
  SectionNumbering (H2):
 	CreateFirst(H2_section_number);
  SectionNumbering (H3):
@@ -5623,7 +5626,7 @@ ATTRIBUTES
 #ifdef BLACK_WHITE
 	Underline: Underlined;
 #else
-	Foreground: TARGET_Color;
+	Foreground: LINK_Color;
 #endif
 #endif
 	IN Structure_view BEGIN
@@ -6254,7 +6257,6 @@ dans des paragraphes s affichent a cote de leur cadre...
 	BEGIN
 	CreateBefore(ATTR_BORDER);
 	CreateBefore(VALUE_BORDER);
-	LineWeight: Border pt;
 	END;
 
  Col_width_percent:

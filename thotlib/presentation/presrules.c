@@ -491,6 +491,42 @@ boolean            *ok;
    return val;
 }
 
+/*----------------------------------------------------------------------
+  GetEnclosingAttr
+  return the attribute of type attrNumber associated to element pEl or
+  one of its ancestors. Return NULL is neither pEl nor any of its ancestor
+  have such an attribute.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber)
+#else  /* __STDC__ */
+static PtrAttribute GetEnclosingAttr (pEl, attrNumber)
+PtrElement	pEl;
+int		attrNumber;
+
+#endif /* __STDC__ */
+{
+   PtrAttribute        pAttr, pA;
+   PtrElement	       pAsc;
+
+   pAttr = NULL;
+   pAsc = pEl;
+   if (attrNumber < 0)
+      attrNumber = -attrNumber;
+   while (pAttr == NULL && pAsc != NULL)
+      {
+      pA = pAsc->ElFirstAttr;
+      while (pAttr == NULL && pA != NULL)
+	 if (pA->AeAttrNum == attrNumber &&
+	     pA->AeAttrSSchema == pEl->ElStructSchema)
+	    pAttr = pA;
+	 else
+	    pA = pA->AeNext;
+      pAsc = pAsc->ElParent;
+      }
+   return pAttr;
+}
+
 
 /*----------------------------------------------------------------------
    	IntegerRule evalue une regle de presentation de type entier pour
@@ -541,6 +577,8 @@ PtrAttribute        pAttr;
 			 if (pPRule->PrInhAttr)
 			   {
 			      /* c'est la valeur d'un attribut */
+			      if (pAttr == NULL)
+				 pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta);
 			      if (pPRule->PrInhDelta < 0)
 				 /* il faut retrancher cette valeur */
 				 i = -AttrValue (pAttr);
@@ -609,6 +647,8 @@ PtrAttribute        pAttr;
 			      if (pPRule->PrMinMaxAttr)
 				 /* c'est la valeur d'un attribut */
 				{
+				   if (pAttr == NULL)
+				      pAttr = GetEnclosingAttr (pEl, pPRule->PrInhMinOrMax);
 				   if (pPRule->PrInhMinOrMax < 0)
 				      /* inverser cette valeur */
 				      i = -AttrValue (pAttr);
@@ -667,11 +707,15 @@ PtrAttribute        pAttr;
 			|| pPRule->PrType == PtForeground)
 		       if (pPRule->PrAttrValue)
 			  /* c'est la valeur d'un attribut */
+			  {
+			  if (pAttr == NULL)
+			     pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue);
 			  if (pPRule->PrIntValue < 0)
 			     /* il faut inverser cette valeur */
 			     val = -AttrValue (pAttr);
 			  else
 			     val = AttrValue (pAttr);
+			  }
 		       else
 			  /* c'est la valeur elle meme qui est dans la regle */
 			  val = pPRule->PrIntValue;
@@ -686,6 +730,8 @@ PtrAttribute        pAttr;
 			 if (pPRule->PrMinAttr)
 			    /* c'est la valeur d'un attribut */
 			   {
+			      if (pAttr == NULL)
+				 pAttr = GetEnclosingAttr (pEl, pPRule->PrMinValue);
 			      if (pPRule->PrMinValue < 0)
 				 /* il faut inverser cette valeur */
 				 val = -AttrValue (pAttr);

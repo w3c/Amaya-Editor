@@ -17,7 +17,7 @@ CONST
    C_BR   = '\212';
 
 STRUCT
-  HTML (ATTR SectionNumbering = Yes_) =
+  HTML (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =
 	BEGIN
 	HEAD;
 	BODY;
@@ -391,6 +391,7 @@ EXCEPT
 	DefaultSelected: Invisible;
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
+	ShowAreas:	Invisible;
 
 	Table:		PageBreak;
 	Column_head:	NoHMove, NoVMove, NoCut, Hidden, NoSelect;

@@ -1152,36 +1152,6 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ShowMapAreas (Document document, View view)
-#else
-void                ShowMapAreas (document, view)
-Document            document;
-View                view;
-
-#endif
-{
-   Element             root;
-   PRule               rule;
-
-   root = TtaGetMainRoot (document);
-   rule = TtaGetPRule (root, PRLineWeight);
-   if (!rule)
-     {
-	/* create the pRule for displaying AREAs */
-	rule = TtaNewPRule (PRLineWeight, view, document);
-	TtaAttachPRule (root, rule, document);
-	TtaSetPRuleValue (root, rule, 1, document);
-     }
-   else
-     {
-	/* remove the pRule */
-	TtaRemovePRule (root, rule, document);
-     }
-}
-
-/*----------------------------------------------------------------------
    GetHTMLDocument loads the document if it is not loaded yet and    
    calls the parser if the document can be parsed.         
   ----------------------------------------------------------------------*/
@@ -1905,18 +1875,18 @@ NotifyEvent        *event;
     }
 }
 
-
 /*----------------------------------------------------------------------
-  SectionNumbering
-  The user wants to number sections if they are not currently numbered,
-  or to stop numbering if sections are numbered.
+  ChangeAttrOnRoot
+  If the root element of the document does not have an attribute of
+  type attrNum, create one.
+  If the root has such an attribute, delete it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SectionNumbering (Document document, View view)
+static void         ChangeAttrOnRoot (Document document, int attrNum)
 #else
-void                SectionNumbering (document, view)
+static void         ChangeAttrOnRoot (document, view)
 Document            document;
-View                view;
+int                 attrNum;
 #endif
 {
    Element	    root;
@@ -1927,7 +1897,7 @@ View                view;
    docModified = TtaIsDocumentModified (document);
    root = TtaGetMainRoot (document);
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_SectionNumbering;
+   attrType.AttrTypeNum = attrNum;
    attr = TtaGetAttribute (root, attrType);
    if (attr != NULL)
       /* the root element has a SectionNumbering attribute. Remove it */
@@ -1941,6 +1911,37 @@ View                view;
       }
    if (!docModified)
 	TtaSetDocumentUnmodified (document);
+}
+
+/*----------------------------------------------------------------------
+  SectionNumbering
+  Execute the "Section Numbering" command
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SectionNumbering (Document document, View view)
+#else
+void                SectionNumbering (document, view)
+Document            document;
+View                view;
+#endif
+{
+   ChangeAttrOnRoot (document, HTML_ATTR_SectionNumbering);
+}
+
+/*----------------------------------------------------------------------
+  ShowMapAreas
+  Execute the "Show Map Areas" command
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ShowMapAreas (Document document, View view)
+#else
+void                ShowMapAreas (document, view)
+Document            document;
+View                view;
+
+#endif
+{
+   ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 
 /*----------------------------------------------------------------------
