@@ -135,6 +135,9 @@ typedef char        AmayaReadChar ();
 /* Prevents a stop race condition in ASYNC transfers */
 #define AMAYA_ASYNC_SAFE_STOP  256
 #define AMAYA_LOAD_CSS   512
+#else
+#define AMAYA_ASYNC_SAFE_STOP  0
+#define AMAYA_LOAD_CSS   0
 #endif /* ! AMAYA_JAVA */
 /*
  * Flags to indicate the status of the network requests associated
