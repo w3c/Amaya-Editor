@@ -867,7 +867,6 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
   ----------------------------------------------------------------------*/
 void LocateFirstChar (PtrBox pBox, ThotBool rtl, PtrTextBuffer *adbuff, int *ind)
 {
-  int                 indmax;
   int                 buffleft;
   int                 nbcar;
   

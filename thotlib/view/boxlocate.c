@@ -42,6 +42,7 @@
 #include "callback_f.h"
 #include "changepresent_f.h"
 #include "dialogapi_f.h"
+#include "displaybox_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
