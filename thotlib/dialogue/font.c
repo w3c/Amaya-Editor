@@ -409,9 +409,8 @@ int                 FontHeight (ptrfont font)
 {
 
 #ifdef _GTK
-   int lbearing, rbearing, width, ascent, descent;
+  /* int lbearing, rbearing, width, ascent, descent;*/
   char c[]="Xp";
-  int l;   
 #endif /* _GTK */
 
   if (font == NULL)
@@ -1068,6 +1067,7 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 void InitDialogueFonts (char *name)
 {
+#ifndef _GTK
 #ifndef _WINDOWS
   int              ndir, ncurrent;
   char             FONT_PATH[128];
@@ -1075,6 +1075,7 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
+#endif /* !_GTK */
   char            *value;
   char             alphabet;
   int              f3;

@@ -478,10 +478,43 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 }
 
 /*----------------------------------------------------------------------
-   FrameResized Evenement sur une frame document.                              
+  Callback function appellée par une frame lorsque celle-ci recoit un
+  evenement de type exposer. Redessine la page.
+  Le paramètre widget indique le widget qui a appellé cette fonction.
+  Le parametre event contient des informations sur l'evenement.
+  Le parametre data contient le numero de la frame.
+-------------------------------------------------------------------------*/
+#ifdef _GTK
+gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 h;
+
+  nframe = (int )data;
+  x = event->area.x;
+  y = event->area.y;
+  l = event->area.width;
+  h = event->area.height;
+  
+  
+  if (nframe > 0 && nframe <= MAX_FRAME)
+    {
+      DefRegion (nframe, x, y, l+x, y+h );
+      RedrawFrameBottom(nframe, 0, NULL);
+    }
+  return FALSE;
+}
+#endif /* _GTK */
+
+/*----------------------------------------------------------------------
+   FrameResized Evenement sur une frame document.
+   recu si le document est retaille a la souris (changement de taille)                              
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int frame;
   Dimension           width, height;
@@ -493,7 +526,7 @@ void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   FrameRedraw (frame, width, height);
 }
 
-#else /* _GTK */
+#else /* !_GTK */
 void FrameResized (int *w, int frame, int *info)
 {
    int                 n;
@@ -642,12 +675,13 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 #ifndef _GTK
 void FrameHScrolled (int *w, int frame, int *param)
 #else /* _GTK */
-void FrameHScrolled (GtkAdjustment *w, int frame)
+void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* !_GTK */
 {
    int                 delta, l;
-   int                 n, view;
+   int                 view;
 #ifndef _GTK
+   int                 n;
    Arg                 args[MAX_ARGS];
    XmScrollBarCallbackStruct *info;
 #endif /* !_GTK */
@@ -746,7 +780,7 @@ void FrameHScrolled (GtkAdjustment *w, int frame)
 #ifndef _GTK
 void FrameVScrolled (int *w, int frame, int *param)
 #else /* _GTK */
-void FrameVScrolled (GtkAdjustment *w, int frame)
+void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* !_GTK */
 {
   int                 delta;
@@ -1957,21 +1991,20 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #ifndef _GTK
   ThotEvent           event;
   ThotEvent          *ev = (ThotEvent *) evnt;
+  int                 comm, dx, dy, sel, h;
 #else /* _GTK */
-  int                 nframe;
+  /*  int                 nframe;
   int                 x;
   int                 y;
-  int                 l;
+  int                 l;*/
   int                 frame;
 
-  PtrDocument         docsel;
-  PtrElement          firstSel, lastSel;
-  int                 firstCar, lastCar;
-  ThotBool            ok;
+  /*PtrDocument         docsel;*/
+  /*  PtrElement          firstSel, lastSel;*/
+  /*  int                 firstCar, lastCar;*/
 #endif /* !_GTK */
   Document            document;
   View                view;
-  int                 comm, dx, dy, sel, h;
 
 #ifdef _GTK
   /*  printf("FrameCallbackGTK\n");*/
@@ -2394,7 +2427,7 @@ gboolean FocusInCallbackGTK (GtkWidget *widget,
 			     gpointer user_data)
   {
 
-    int frame = (int)user_data;
+    /*    int frame = (int)user_data;*/
     /*    printf("focus in\n");*/
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
     return FALSE;
@@ -2404,7 +2437,7 @@ gboolean FocusOutCallbackGTK (GtkWidget *widget,
 			      GdkEventFocus *event,
 			      gpointer user_data)
   {
-    int frame = (int)user_data;
+    /*    int frame = (int)user_data;*/
     
     /*    printf("focus out\n");*/
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
@@ -2454,8 +2487,10 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		 win, cursor, CurrentTime);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -2466,7 +2501,9 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 void ThotUngrab ()
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    XUngrabPointer (TtDisplay, CurrentTime);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -2520,7 +2557,9 @@ void TtaSetCursorWatch (Document document, View view)
 {
    int                 frame;
 #  ifndef _WINDOWS
+#ifndef _GTK
    Drawable            drawable;
+#endif /* !_GTK */
 #  endif  /* _WINDOWS */
 
    UserErrorCode = 0;
@@ -2555,8 +2594,10 @@ void TtaSetCursorWatch (Document document, View view)
 void TtaResetCursor (Document document, View view)
 {
    int                 frame;
-#  ifndef _WINDOWS 
+#  ifndef _WINDOWS
+#ifndef _GTK
    Drawable            drawable;
+#endif /* !_GTK */
 #  endif /* _WINDOWS */
 
    UserErrorCode = 0;
@@ -2594,7 +2635,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 {
 #ifndef _WINDOWS
    ThotEvent           event;
+#ifndef _GTK
    Drawable            drawable;
+#endif /* !_GTK */
 #else  /* _WINDOWS */
    MSG                 event;
    HCURSOR             cursor;          

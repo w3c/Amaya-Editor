@@ -51,7 +51,9 @@ extern LPCTSTR iconID;
 
 static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
+#ifndef _GTK
 static ThotGC       GCkey;
+#endif /* !_GTK */
 static int          LastBg;
 static int          LastFg;
 static int          FgColor, BgColor;
@@ -196,7 +198,7 @@ static void ThotSelectPalette (int bground, int fground)
 }
 
 
-
+#ifndef _GTK
 /*----------------------------------------------------------------------
    KillPalette
    kills the palette.
@@ -206,7 +208,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
    Color_Palette = 0;
    Color_Window = 0;
 }
-
+#endif /* !_GTK */
 
 /*----------------------------------------------------------------------
    ColorsExpose
@@ -215,7 +217,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
 #ifndef _GTK
 static void ColorsExpose ()
 #else /* _GTK */
-static gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev)
+gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev)
 #endif /* !_GTK */
 {
    int                 max, y, w, h;
@@ -315,6 +317,9 @@ static gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev)
    LastBg = -1;
    ThotSelectPalette (bground, fground);
 #endif /* _WINDOWS */
+#ifdef _GTK
+   return TRUE;
+#endif /* _GTK */
 }
 
 
@@ -325,7 +330,7 @@ static gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev)
 #ifndef _GTK
 static void ColorsPress (int button, int x, int y)
 #else /*_GTK*/
-static gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
+gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* !_GTK */
 {
 #ifdef _GTK
@@ -359,7 +364,11 @@ static gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpoint
 	  ModifyColor (-1, TRUE);
 	  ThotSelectPalette (-1, LastFg);
 	}
+#ifndef _GTK 
       return;
+#else /* _GTK */
+      return TRUE;
+#endif /* !_GTK */  
     }
   li = x / wcase;
   co = (y - hcase) / hcase;
@@ -387,7 +396,11 @@ static gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpoint
 	      BgColor = -1;
 	    }
 	}
+#ifndef _GTK 
       return;
+#else /* _GTK */
+      return TRUE;
+#endif /* !_GTK */  
     } 
   li = (y - 60) / 15;
   co = x / 39;
@@ -413,6 +426,9 @@ static gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpoint
 	  ThotSelectPalette (color, LastFg);
 	}
     }
+#ifdef _GTK
+  return TRUE;
+#endif /* _GTK */
 }
 
 
@@ -724,17 +740,13 @@ void CreateColorSelectionGTK (int x, int y)
   ThotWidget palette;
   ThotWidget tmpw_vbox;
   ThotWidget tmpw_colsel;
-  ThotWidget tmpw_draw;
-  ThotWidget tmpw_label;
   ThotWidget tmpw_frame;
   ThotWidget tmpw_hbox;
-  ThotWidget tmpw_button;
-  
-  
+
   /* create the window */
   palette = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (Color_Palette), TtaGetMessage (LIB, TMSG_COLORS));
-  ConnectSignalGTK (Color_Palette,
+  ConnectSignalGTK (GTK_OBJECT (Color_Palette),
 		    "delete_event",
 		    GTK_SIGNAL_FUNC(gtk_true),
 		    (gpointer)NULL);
@@ -757,7 +769,7 @@ void CreateColorSelectionGTK (int x, int y)
   /* gtk_color_selection_set_color (GTK_COLOR_SELECTION (tmpw_colsel), 0);*/
   /* to get the curent color, use: gtk_colorselection_get_color (colorsel, *color) */
   /* to connect a callback when the curent color change use the following code :*/
-  /*   ConnectSignalGTK (tmpw_colsel,
+  /*   ConnectSignalGTK (GTK_OBJECT (tmpw_colsel),
        "color_changed",
        GTK_SIGNAL_FUNC(callback_du_changement_de_couleur),
 	(gpointer)tmpw_colsel);*/
@@ -773,7 +785,7 @@ void CreateColorSelectionGTK (int x, int y)
   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(tmpw_button), GTK_CAN_DEFAULT);
   gtk_widget_grab_default (GTK_WIDGET(tmpw_button));
   gtk_box_pack_start (GTK_BOX (tmpw_hbox), tmpw_button, FALSE, FALSE, 0);
-  ConnectSignalGTK (tmpw_button,
+  ConnectSignalGTK (GTK_OBJECT (tmpw_button),
 		    "clicked",
 		    GTK_SIGNAL_FUNC (EndPalette),
 		    (gpointer)NULL);*/
@@ -1057,7 +1069,6 @@ ThotBool ThotCreatePalette (int x, int y)
    /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
    int                 width, height;
    ThotWidget tmpw_vbox;
-   ThotWidget tmpw_colsel;
    ThotWidget tmpw_draw;
    ThotWidget tmpw_label;
    ThotWidget tmpw_frame;
@@ -1070,7 +1081,7 @@ ThotBool ThotCreatePalette (int x, int y)
    /* create the window */
    Color_Palette = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title (GTK_WINDOW (Color_Palette), TtaGetMessage (LIB, TMSG_COLORS));
-   ConnectSignalGTK (Color_Palette,
+   ConnectSignalGTK (GTK_OBJECT (Color_Palette),
 		     "delete_event",
 		     GTK_SIGNAL_FUNC(gtk_true),
 		     (gpointer)NULL);
@@ -1101,16 +1112,16 @@ ThotBool ThotCreatePalette (int x, int y)
 
    /* put the drawing area */
    tmpw_draw = gtk_drawing_area_new ();
-   gtk_drawing_area_size (tmpw_draw, width, height);
+   gtk_drawing_area_size (GTK_DRAWING_AREA (tmpw_draw), width, height);
    gtk_container_add (GTK_CONTAINER (tmpw_frame), tmpw_draw);
    gtk_widget_set_events (GTK_WIDGET (tmpw_draw),  
 			  GDK_BUTTON_PRESS_MASK	| GDK_EXPOSURE_MASK
 			  );
-   ConnectSignalGTK (tmpw_draw,
+   ConnectSignalGTK (GTK_OBJECT (tmpw_draw),
 		     "expose_event",
 		     GTK_SIGNAL_FUNC (ColorsExposeGTK),
 		     (gpointer)tmpw_draw);
-   ConnectSignalGTK (tmpw_draw,
+   ConnectSignalGTK (GTK_OBJECT (tmpw_draw),
 		     "button_press_event",
 		     GTK_SIGNAL_FUNC(ColorsPressGTK),
 		     (gpointer)tmpw_draw);
@@ -1124,7 +1135,7 @@ ThotBool ThotCreatePalette (int x, int y)
    GTK_WIDGET_SET_FLAGS (GTK_WIDGET(tmpw_button), GTK_CAN_DEFAULT);
    gtk_widget_grab_default (GTK_WIDGET(tmpw_button));
    gtk_box_pack_start (GTK_BOX (tmpw_hbox), tmpw_button, FALSE, FALSE, 0);
-   ConnectSignalGTK (tmpw_button,
+   ConnectSignalGTK (GTK_OBJECT (tmpw_button),
 		     "clicked",
 		     GTK_SIGNAL_FUNC (EndPalette),
 		     (gpointer)NULL);

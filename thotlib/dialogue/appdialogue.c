@@ -61,7 +61,7 @@
 #include "inites_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
-static    Time   t1;
+/*static    Time   t1;*/
 #else /* !_GTK */
 #include "input_f.h"
 #include "appli_f.h"
@@ -1273,7 +1273,9 @@ void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
 }
 
 #ifndef _WINDOWS
+#ifndef _GTK
 static ThotWidget liteClue = NULL;
+#endif /* !_GTK */
 /*----------------------------------------------------------------------
    InitClue
 
@@ -1351,7 +1353,6 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   XmString            title_string;
   Arg                 args[MAX_ARGS];
 #else /* _GTK */
-  ThotWidget          tmpw;
   ThotWidget          toolbar;
   GtkTooltips        *tooltipstmp;
 #endif /* !_GTK */
@@ -1409,7 +1410,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      gtk_tooltips_enable (tooltipstmp);
 		      
 		      /* Connecte the clicked acton to the button */
-		      ConnectSignalGTK (row,
+		      ConnectSignalGTK (GTK_OBJECT (row),
 					"clicked",
 					GTK_SIGNAL_FUNC(APP_ButtonCallback),
 					(gpointer)frame);
@@ -1574,8 +1575,10 @@ void TtaSwitchButton (Document doc, View view, int index)
   int                 frame;
   ThotBool            status;
 #ifndef _WINDOWS
+#ifndef _GTK
   int                 n;
   Arg                 args[MAX_ARGS];
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
   UserErrorCode = 0;
@@ -1655,7 +1658,6 @@ void TtaChangeButton (Document doc, View view, int index,
   int                 n;
 #else /* _GTK */
   ThotWidget          tmpw;
-  ThotWidget          pixtmp;
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 
@@ -1703,7 +1705,7 @@ void TtaChangeButton (Document doc, View view, int index,
 		  /*		  gtk_container_remove (GTK_CONTAINER (FrameTable[frame].Button[index]),
 				  GTK_WIDGET (tmpw));*/
 		  /*		  tmpw = gtk_pixmap_new (picture, NULL);*/
-		  gtk_pixmap_set (tmpw, picture, NULL);
+		  gtk_pixmap_set (GTK_PIXMAP(tmpw), picture, NULL);
 		  /*		  gtk_container_add (GTK_CONTAINER (FrameTable[frame].Button[index]), GTK_WIDGET(tmpw));*/
 		  /*		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);*/
 		}
@@ -1730,8 +1732,10 @@ void TtcSwitchButtonBar (Document doc, View view)
 {
    int                 frame;
 #ifndef _WINDOWS
+#ifndef _GTK
    Dimension           dy;
    Arg                 args[MAX_ARGS];
+#endif /* !_GTK */
    ThotWidget          row;
 #else /* _WINDOWS */
    RECT                r;
@@ -1870,13 +1874,13 @@ int TtaAddTextZone (Document doc, View view, char *label,
   int            frame, i;
   ThotWidget     w, row;
 #ifndef _WINDOWS
+#ifndef _GTK
   int            n;
   ThotWidget     rowh;
   ThotWidget    *brother;
-#ifndef _GTK
   XmString       title_string;
-#endif
   Arg            args[MAX_ARGS];
+#endif
 #else /* _WINDOWS */
   HFONT          newFont;
   RECT           rect;
@@ -2033,18 +2037,18 @@ int TtaAddTextZone (Document doc, View view, char *label,
  	      FrameTable[frame].Text_Zone[i] = w;
 
 	      /* callback to know if the mouse is over the edit zone or not */
-	      ConnectSignalGTK (w,
+	      ConnectSignalGTK (GTK_OBJECT (w),
 				"enter-notify-event",
 				GTK_SIGNAL_FUNC(EnterCallbackGTK),
 				(gpointer)frame);
-	      ConnectSignalGTK (w,
+	      ConnectSignalGTK (GTK_OBJECT (w),
 				"leave-notify-event",
 				GTK_SIGNAL_FUNC(LeaveCallbackGTK),
 				(gpointer)frame);
 	      if (procedure != NULL)
 		{
 		  /* execute APP_TextCallbackGTK when pressing enter */
-		  ConnectSignalGTK (w,
+		  ConnectSignalGTK (GTK_OBJECT (w),
 				    "activate",
 				    GTK_SIGNAL_FUNC(APP_TextCallbackGTK),
 				    (gpointer)frame);
@@ -2162,9 +2166,12 @@ void TtcSwitchCommands (Document doc, View view)
    ThotBool itemChecked = FALSE;
    RECT    r;
 #else /* _WINDOWS */
+#ifndef _GTK
    Dimension           y, dy;
    Arg                 args[MAX_ARGS];
-   ThotWidget          row, w;
+   ThotWidget          w;
+#endif /* !_GTK */
+   ThotWidget          row;
 #endif /* _WINDOWS */
 
 
@@ -2275,14 +2282,14 @@ void DrawingInput (int *w, int frame, int *infos)
   good event and to attache the signal connect ID to the widget in order
   to disconnect it further.
 -------------------------------------------------------------------------*/
-void ConnectSignalGTK (ThotWidget w, gchar *signal_name, GtkFunction callback, gpointer data)
+void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback, gpointer data)
 {
   guint id;
   id = gtk_signal_connect (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
 
-void RemoveSignalGTK (ThotWidget w, gchar *signal_name)
+void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   guint id;
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
@@ -2299,7 +2306,8 @@ void RemoveSignalGTK (ThotWidget w, gchar *signal_name)
   Le parametre data contient le numero de la frame.
 -------------------------------------------------------------------------*/
 #ifdef _GTK
-gboolean ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
+#if 0
+gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   int nframe;
   int                 x;
@@ -2308,29 +2316,26 @@ gboolean ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
   int                 h;
 
   nframe = (int )data;
-   x = event->area.x;
-   y = event->area.y;
-   l = event->area.width;
-   h = event->area.height;
-
-
+  x = event->area.x;
+  y = event->area.y;
+  l = event->area.width;
+  h = event->area.height;
+  
+  
   if (nframe > 0 && nframe <= MAX_FRAME)
-     {
-       DefRegion (nframe, x, y, l+x, y+h );
-       RedrawFrameBottom(nframe, 0, NULL);
-     }
-
- return FALSE;
+    {
+      DefRegion (nframe, x, y, l+x, y+h );
+      RedrawFrameBottom(nframe, 0, NULL);
+    }
+  return FALSE;
 }
 
-#if 0
 gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
     TtaAbortShowDialogue ();
     CharTranslationGTK (widget, event, data);
  return FALSE;
 }
-#endif
 
 gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
@@ -2471,6 +2476,8 @@ gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
      }
  return FALSE;
 }
+#endif /*0*/
+
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
@@ -2494,7 +2501,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w; /* menu button */
-   ThotWidget          table1;
    ThotWidget          drawing_area;
    ThotWidget          drawing_frame;  
    ThotWidget          hbox1, hbox2;
@@ -2506,23 +2512,17 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget handlebox2;
    ThotWidget handlebox3;
 #endif
-   ThotWidget scrolledwindow1;
-   ThotWidget viewport1;
-   ThotWidget          vbox2;
-   ThotWidget          vbox3;
    ThotWidget          menu_item;
    ThotWidget          logo_pixmap;
    ThotWidget          table2;
-   ThotWidget          entry1;
-   ThotWidget          label1;
-   ThotWidget          label3;
    ThotWidget          statusbar;
    ThotWidget          toolbar;
-   ThotWidget          boxtmp;
    GdkPixmap          *amaya_pixmap;
    GdkBitmap          *amaya_mask;
-   GtkAdjustment      *tmpw;
+   GtkObject          *tmpw;
+   GtkAccelGroup      *accel_group;
 #else /* _GTK */
+   ThotWidget          table1;
    ThotWidget          shell;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
@@ -2653,10 +2653,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
 	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
 	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
-	   ConnectSignalGTK (Main_Wd,
+	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
 			     "delete_event",
 			     GTK_SIGNAL_FUNC(KillFrameGTK),
 			     (gpointer)frame);
+	   /* adding an accelerator group for menu shortcuts */
+	   /*accel_group = gtk_accel_group_new ();
+	     gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
+
 	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
 
@@ -2774,9 +2778,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
 		   if (ptrmenu->MenuHelp == TRUE)
 		     gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
-		   gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
+		   gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
+		   gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
 		   w = menu_item;
-#else /* _GTK */
+#else /* !_GTK */
 		   if (menu_bar == NULL)
 		     {
 		       /*** The menu bar ***/
@@ -2899,41 +2904,41 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  | GDK_EXPOSURE_MASK
 				  | GDK_FOCUS_CHANGE_MASK
 				  );
-	   ConnectSignalGTK (drawing_area,
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "button_press_event",
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
-	   ConnectSignalGTK (drawing_area,
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "button_release_event",
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
-	   ConnectSignalGTK (drawing_area,
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "motion_notify_event",
 			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
 			     (gpointer)frame);
 
  	   /* the key press event is intercepted by the main frame and not by the drawing area.
               the result is analised into the callback */
-	   ConnectSignalGTK (Main_Wd,
+	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
 			     "key_press_event",
 			     GTK_SIGNAL_FUNC(CharTranslationGTK),
 			     (gpointer)frame);
 	   /* callbacks to know if it's necessary to redisplay */
-	   ConnectSignalGTK (drawing_area,
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "expose_event",
-			     GTK_SIGNAL_FUNC(ExposeCB),
+			     GTK_SIGNAL_FUNC(ExposeCallbackGTK),
 			     (gpointer)frame);
-	   ConnectSignalGTK (drawing_area,
+	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "configure_event",
-			     GTK_SIGNAL_FUNC(FrameResized),
+			     GTK_SIGNAL_FUNC(FrameResizedGTK),
 			     (gpointer)frame);
 	   /* Put the scrollbars */
-	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
-	   ConnectSignalGTK (tmpw,
+	   tmpw = gtk_adjustment_new ((gfloat)0, (gfloat)0, (gfloat)dy, (gfloat)13, (gfloat)dy-13, (gfloat)dy);
+	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
-			     GTK_SIGNAL_FUNC(FrameVScrolled),
+			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
 			     (gpointer)frame);
-      	   vscrl = gtk_vscrollbar_new (tmpw);
+      	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
 	   gtk_widget_show (vscrl);
 	   gtk_object_set_data (GTK_OBJECT(vscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
@@ -2941,11 +2946,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
-	   ConnectSignalGTK (tmpw,
+	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
-			     GTK_SIGNAL_FUNC(FrameHScrolled),
+			     GTK_SIGNAL_FUNC(FrameHScrolledGTK),
 			     (gpointer)frame);
-      	   hscrl = gtk_hscrollbar_new (tmpw);
+      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw));
 	   gtk_widget_show (hscrl);
 	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
@@ -2958,7 +2963,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (statusbar);
 	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
 	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
-			       (gpointer)gtk_statusbar_get_context_id(statusbar, "MainSerie"));
+			       (gpointer)gtk_statusbar_get_context_id(GTK_STATUSBAR (statusbar), "MainSerie"));
 	   gtk_statusbar_push(GTK_STATUSBAR(statusbar),
 			      (guint)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
 			      "");
@@ -2969,7 +2974,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
-	   gdk_window_set_icon (Main_Wd->window, NULL, wind_pixmap, NULL);
+	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
 
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
@@ -3722,11 +3727,8 @@ void TtaSetMenuOff (Document document, View view, int menuID)
    int                 ref;
    Menu_Ctl*           ptrmenu;
 #ifndef _WINDOWS
-   int                 n; 
-#endif /* !_WINDOWS */
-
-#ifndef _WINDOWS
 #ifndef _GTK
+   int                 n; 
    XmFontList          font;
    Arg                 args[MAX_ARGS];
 #endif
@@ -3814,8 +3816,10 @@ void TtaSetMenuOn (Document document, View view, int menuID)
    Menu_Ctl*           ptrmenu;
 
 #ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
+#ifndef _GTK
 
+   Arg                 args[MAX_ARGS];
+#endif /* !_GTK */
 #endif
 
    if (document == 0 && view == 0)

@@ -1402,7 +1402,7 @@ void TtaMainLoop ()
 #ifndef _GTK
   ThotEvent           ev;
 #else /* _GTK */
-  ThotEvent           ev=NULL;
+  ThotEvent           ev;
 #endif /* !_GTK */
   TtaInstallMultiKey ();
 

@@ -553,7 +553,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    int                 frame;
    unsigned int        state, save;
    unsigned char       string[2];
-   ThotComposeStatus   ComS;
    KeySym              KS;
    GtkWidget          *drawing_area;
    GtkEntry           *textzone;
@@ -565,12 +564,12 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    /*   printf("KEY event\n");*/
    /* the drawing area is the main zone where keypress event must be active */
    drawing_area = FrameTable[frame].WdFrame;
-   textzone = FrameTable[frame].Text_Zone[1];
+   textzone = GTK_ENTRY(FrameTable[frame].Text_Zone[1]);
 
    if (textzone)
      {
        /* if the mouse is into the text zone then event must be ignored */
-       if (w == textzone || gtk_object_get_data (GTK_OBJECT(textzone), "MouseIn"))
+       if (w == GTK_WIDGET (textzone) || gtk_object_get_data (GTK_OBJECT(textzone), "MouseIn"))
 	 {
 	   return FALSE;
 	 }
