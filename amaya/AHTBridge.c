@@ -469,6 +469,9 @@ HTEventType         type;
 #endif /* __STDC__ */
 {
   int    status;
+  
+  if (sock == INVSOC)
+    return HT_OK;
 
 #ifndef _WINDOWS   
    /* remove the Xt event hooks */
@@ -502,7 +505,12 @@ HTEventType         type;
   ----------------------------------------------------------------------*/
 int AHTEvent_unregister (SOCKET s, HTEventType type)
  {
-   SockInfo *info = get_sock_info(s, FALSE);
+   SockInfo *info;
+
+   if (s == INVSOC)
+     return HT_OK;
+
+   info = get_sock_info(s, FALSE);
  
    if (info) {
      if (info->ev[HTEvent_INDEX(type)].io_tag)
