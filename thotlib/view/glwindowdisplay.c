@@ -158,7 +158,7 @@ static ThotBool Software_Mode = TRUE;
 static ThotBool NotFeedBackMode = TRUE;
 
 /*One Timer to rule them all */
-static int Timer = 0; 
+static int AnimTimer = 0; 
 
 
 ThotBool GL_Err() 
@@ -1832,20 +1832,25 @@ static void TtaChangePlay (int frame)
 	FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
 	if (FrameTable[frame].Anim_play)
 	  {
-	    if (Timer == 0)
+	    if (AnimTimer == 0)
 #ifdef _GTK
-	      Timer = gtk_timeout_add (FRAME_TIME,
+	      AnimTimer = gtk_timeout_add (FRAME_TIME,
 				       (gpointer) GL_DrawAll, 
 				       (gpointer)   NULL); 
 	   	      
 #else /*_GTK*/
 #ifdef _WINDOWS
 	    {
-	      SetTimer(FrMainRef[frame],                
+	     /* SetTimer(FrMainRef[frame],                
 		       frame,               
 		       FRAME_TIME,                     
 		       (TIMERPROC) MyTimerProc); 
-	      Timer = frame;
+
+	      AnimTimer = frame;*/
+          AnimTimer = SetTimer(NULL,                
+		       frame,               
+		       FRAME_TIME,                     
+		       (TIMERPROC) MyTimerProc);
 	    }    
 #endif /*_WINDOWS*/
 #endif /*_GTK*/
@@ -1853,7 +1858,7 @@ static void TtaChangePlay (int frame)
 	    FrameTable[frame].LastTime = 0;
 	  }
 	else
-	  if (Timer)
+	  if (AnimTimer)
 	    {
 	      remove = FALSE;
 	      for (frame = 0; frame < MAX_FRAME; frame++)
@@ -1865,13 +1870,14 @@ static void TtaChangePlay (int frame)
 		{
 
 #ifdef _GTK
-		  gtk_timeout_remove (Timer); 	
+		  gtk_timeout_remove (AnimTimer); 	
 #else /*_GTK*/
 #ifdef _WINDOWS
-		  KillTimer (FrMainRef[Timer], Timer);
+		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
+		  KillTimer (NULL, AnimTimer);
 #endif /*_WINDOWS*/
 #endif /*_GTK*/
-		  Timer = 0; 
+		  AnimTimer = 0; 
 		}
 	    }
       }  
