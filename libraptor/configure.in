@@ -367,7 +367,8 @@ if test $need_expat = 1; then
   if test $need_expat_source = 1; then
     SD="$SD expat"
     CPPFLAGS="-I\$(top_srcdir)/expat/xmlparse $CPPFLAGS"
-    LIBS="$LIBS \$(top_builddir)/expat/xmlparse/xmlparse.o \$(top_builddir)/expat/xmlparse/hashtable.o \$(top_builddir)/expat/xmltok/xmlrole.o \$(top_builddir)/expat/xmltok/xmltok.o"
+    # JK: Removed the following line to be able to compile raptor with Amaya
+    #LIBS="$LIBS \$(top_builddir)/expat/xmlparse/xmlparse.o \$(top_builddir)/expat/xmlparse/hashtable.o \$(top_builddir)/expat/xmltok/xmlrole.o \$(top_builddir)/expat/xmltok/xmltok.o"
     # We know local expat sources has XML_SetNamespaceDeclHandler already
     found=yes
   else

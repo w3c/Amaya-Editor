@@ -134,6 +134,9 @@ extern int errno;
 #ifdef HAVE_XMLPARSE_H
 #include <xmlparse.h>
 #endif
+#if !defined(HAVE_EXPAT_H) && !defined(HAVE_XMLPARSE_H)
+#include "xmlparse.h"
+#endif
 #endif
 
 #ifdef RAPTOR_XML_LIBXML
