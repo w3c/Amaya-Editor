@@ -84,97 +84,8 @@ static int          clear_code, end_code;
 static int          table[2][(1 << MAX_LWZ_BITS)];
 static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
-#ifdef _WINDOWS
-#define MAXNUMBER 256
-static PALETTEENTRY pe[MAXNUMBER];
-static int nbSysColors= 0;
-static int peInited= 0;
-
-/* ---------------------------------------------------------------------- */
-/* |	InitTabAvailColors						| */
-/* ---------------------------------------------------------------------- */
-int InitTabAvailColors () {
-    HWND hwnd = NULL;
-    HDC  hdc;
-    
-    if (peInited)
-	return 1;
-    
-    hdc = GetDC(hwnd);
-    /*
-    if (!(GetDeviceCaps (hdc, RASTERCAPS) & RC_PALETTE)) {
-       ReleaseDC(hwnd, hdc);
-       return 1;
-    }
-    */
-    nbSysColors = GetSystemPaletteEntries (hdc, 0, GetDeviceCaps (hdc, SIZEPALETTE), pe);
-    /* debugprint ("nbSysColors=%d", nbSysColors); */
-    
-    ReleaseDC (hwnd, hdc);
-    peInited = 1;
-    return 0;
-}
-
-/* ----------------------------------------------------------------------
-   FindPaletteIndex						
-   ---------------------------------------------------------------------- */
-#ifdef __STDC__
-unsigned int FindPaletteIndex (int r, int g, int b)
-#else /* __STDC__ */
-unsigned int FindPaletteIndex (r, g, b)
-int r; 
-int g; 
-int b;
-#endif /* __STDC__ */
-{
-    int i, ri, gi, bi, dMin, iMin, d, db, dr, dg;
-    LPLOGPALETTE ptrLogPal ;
-    
-    /* InitTabAvailColors (); */
-
-    ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
-
-    GetPaletteEntries (TtCmap, 0, MAX_COLOR, ptrLogPal->palPalEntry);
-    
-    iMin= 0;
-    dMin= INT_MAX;
-    /*    
-    r = r >> 8;
-    g = g >> 8;
-    b = b >> 8;
-    */
-    
-    for (i = 0; i < MAX_COLOR; i++) {
-        ri = ptrLogPal->palPalEntry[i].peRed;
-	dr = r-ri;
-	d  = dr*dr;
-	if (d >= dMin)
-	   continue;
-	
-	bi = ptrLogPal->palPalEntry[i].peBlue;
-	db = b-bi;
-	d += db*db;
-	if (d >= dMin)
-	   continue;
-	    
-	gi = ptrLogPal->palPalEntry[i].peGreen;
-	dg = g-gi;
-	d += dg*dg;
-	if (d >= dMin)
-	   continue;
-	    
-	dMin= d;
-	iMin= i;
-	
-	if (dMin == 0)
-	    break;
-    }
-    
-    return iMin;
-}
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
+  ReadGifImage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static unsigned char* ReadGifImage (FILE* fd, int len, int height, unsigned char clmap[3][MAXCOLORMAPSIZE], int interlace, int ignore)
@@ -276,6 +187,7 @@ int                 ignore;
 }
 
 /*----------------------------------------------------------------------
+  ReadGIF
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned char* ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256])
@@ -441,6 +353,7 @@ ThotColorStruct colrs[256];
 }
 
 /*----------------------------------------------------------------------
+  ReadColorMap
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ReadColorMap (FILE* fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
@@ -470,6 +383,7 @@ unsigned char       buffer[3][MAXCOLORMAPSIZE];
 }
 
 /*----------------------------------------------------------------------
+  DoExtension
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 DoExtension (FILE* fd, int label)
@@ -513,6 +427,7 @@ int                 label;
 }
 
 /*----------------------------------------------------------------------
+  GetDataBlock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetDataBlock (FILE* fd, unsigned char *buf)
@@ -537,6 +452,7 @@ unsigned char      *buf;
 }
 
 /*----------------------------------------------------------------------
+  GetCode
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetCode (FILE* fd, int code_size, int flag)
@@ -584,6 +500,7 @@ int                 flag;
 }
 
 /*----------------------------------------------------------------------
+  LWZReadByte
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 LWZReadByte (FILE * fd, int flag, int input_code_size)
@@ -1102,8 +1019,6 @@ ThotColorStruct    *colrs;
    return (newimage);
 }
 
-static signed int tabCorres [256];
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1137,7 +1052,7 @@ ThotColorStruct     colrs[256];
    else
       need_to_dither = FALSE;
 
-   Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
+   Mapping = (int*) TtaGetMemory (num_colors * sizeof (int));
 
    for (i = 0; i < num_colors; i++) {
 	tmpcolr.red   = colrs[i].red;
@@ -1250,62 +1165,65 @@ ThotColorStruct     colrs[256];
    return (Img);
 #  else /* _WINDOWS */
    static int     cbPlanes, cbBits;
-   int            i, j, ret= 0, imageIndex, mapIndex;
-   BYTE*          tabBytes;
+   int            i, j, ret = 0, imageIndex, mapIndex;
+   int            Mapping [MAX_COLOR];
+   char*          bmBits;
    HDC            hdcMemOrig, hdcMemDest, hdcMem;  
-   HBITMAP        oldBm1, oldBm2, bmpLine, bmp= 0;
+   HBITMAP        bmpLine, bmp = 0;
    
-   hdcMem   = CreateCompatibleDC(NULL);
+   hdcMem   = CreateCompatibleDC (NULL);
    cbBits   = GetDeviceCaps (hdcMem, BITSPIXEL);
    cbPlanes = GetDeviceCaps (hdcMem, PLANES);
    DeleteDC (hdcMem);
     
    /* debugprint ("cbBits= %d cbPlanes=%d", cbBits, cbPlanes); */
    
-   tabBytes = (BYTE*) malloc (width * sizeof (BYTE));
-   if (tabBytes == NULL)
+   bmBits = malloc (width);
+   if (bmBits == NULL)
       return NULL;
     
-   for (i=0; i<256; i++)
-       tabCorres [i] = -1;
+   for (i = 0; i < MAX_COLOR; i++)
+       Mapping [i] = -1;
     
    bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
    bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
 
    if ((bmp == NULL) || (bmpLine == NULL)) {
-      free (tabBytes);
+      free (bmBits);
       return (Pixmap) bmp;
    }
     
    hdcMemOrig = CreateCompatibleDC(NULL);       /* un hdc mem compatible ecran pour le bm original */
    hdcMemDest = CreateCompatibleDC(NULL);       /* un hdc mem pour le bm final */
    
+   /*
    oldBm1 = SelectObject(hdcMemDest, bmp);
    oldBm2 = SelectObject(hdcMemOrig, bmpLine);
+   */
+   SelectObject (hdcMemDest, bmp);
+   SelectObject (hdcMemOrig, bmpLine);
    
    for (j = 0; j < height; j++) {
        for (i = 0; i < width; i++) {
 	   imageIndex = image_data [i + j * width];
-	   if (tabCorres [imageIndex] != -1)
-	       mapIndex = tabCorres [imageIndex];
+	   if (Mapping [imageIndex] != -1)
+	       mapIndex = Mapping [imageIndex];
 	   else {
-	       mapIndex = FindPaletteIndex (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
-	       tabCorres [imageIndex]= mapIndex;  
+	       mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+	       Mapping [imageIndex] = mapIndex;  
 	   }    
-	   tabBytes[i] = mapIndex;
+	   bmBits[i] = mapIndex;
        }    
-       ret = SetBitmapBits(bmpLine, width, tabBytes);
+       ret = SetBitmapBits(bmpLine, width, bmBits);
        BitBlt (hdcMemDest, 0, j, width, 1, hdcMemOrig, 0, 0, SRCCOPY);
    }
         
    /* Cleanup */
    /*.........*/
-   SelectObject(hdcMemDest, oldBm1);  
-   SelectObject(hdcMemOrig, oldBm2); 
    DeleteObject (bmpLine);
    DeleteDC(hdcMemDest);
    DeleteDC(hdcMemOrig); 
-   free (tabBytes);
+   free (bmBits);
     
    return (Pixmap) bmp;
 #  endif /* _WINDOWS */

@@ -111,7 +111,6 @@ ThotGC              gc;
 void                WinInitColors (void)
 {
    int                 i;
-   LOGPALETTE         *ptrLogPal;
    static int          initialized = 0;
 
    if (initialized)
@@ -125,7 +124,9 @@ void                WinInitColors (void)
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
-   ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
+   /* ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY)); */
+   ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+
    ptrLogPal->palVersion             = 0x300;
    ptrLogPal->palNumEntries          = MAX_COLOR;
    ptrLogPal->palPalEntry[0].peRed   = 255;
@@ -145,13 +146,17 @@ void                WinInitColors (void)
    }
 
    TtCmap = CreatePalette (ptrLogPal);
-   if (TtCmap == NULL) {
+ 
+  if (TtCmap == NULL) {
       fprintf (stderr, "couldn't CreatePalette\n");
       WinErrorBox ();
-   } else
-        SelectPalette (TtDisplay, TtCmap, TRUE);
+   } else {
+          if (SelectPalette (TtDisplay, TtCmap, TRUE))
+	     if (RealizePalette (TtDisplay))
+	        UpdateColors (TtDisplay);
+   }
 
-   TtaFreeMemory (ptrLogPal);
+   /* TtaFreeMemory (ptrLogPal); */
 
    /* fill-in the Pix_Color table */
    for (i = 0; i < (sizeof (Pix_Color) / sizeof (Pix_Color[0])); i++)
@@ -174,15 +179,10 @@ void                WinInitColors (void)
 
    /* set up the default background colors for all views. */
    for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
-#      ifndef _WINDOWS
-       BackgroundColor[i] = White_Color;
-#      else   /* _WINDOWS */
-       BackgroundColor[i] = ColorNumber ("White");
-#      endif  /* _WINDOWS */
+       BackgroundColor[i] = 0;
 
    initialized = 1;
 }
-
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -230,9 +230,9 @@ Display            *dpy;
  *            red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int      TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 #else  /* __STDC__ */
-int      TtaGetThotColor (red, green, blue)
+int TtaGetThotColor (red, green, blue)
 unsigned short      red;
 unsigned short      green;
 unsigned short      blue;
@@ -408,19 +408,31 @@ char               *name;
    if (TtWDepth > 1)
      {
 	/* background color */
+#       ifndef _WINDOWS
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
+#       else  /* _WINDOWS */
+	found = FindColor (0, name, "BackgroundColor", "LightGrey1", &White_Color);
+#       endif /* _WINDOWS */
 	/* drawing color */
-	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);
+	found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
 	/* scrolls color */
-	found = FindColor (0, name, "ScrollColor", "grey", &Scroll_Color);
+	found = FindColor (0, name, "ScrollColor", "Grey", &Scroll_Color);
 	/* color for the selection menu */
-	found = FindColor (0, name, "MenuBgColor", "grey", &BgMenu_Color);
+	found = FindColor (0, name, "MenuBgColor", "Grey", &BgMenu_Color);
 	/* olor for the selection */
+#       ifndef _WINDOWS
 	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
+#       else  /* _WINDOWS */
+	found = FindColor (0, name, "DocSelectColor", "Blue", &Select_Color);
+#       endif /* _WINDOWS */
 	/* color for borders and buttons */
-	found = FindColor (0, name, "ButtonColor", "grey", &Button_Color);
+	found = FindColor (0, name, "ButtonColor", "Grey", &Button_Color);
 	/* color for incative options and buttons */
+#       ifndef _WINDOWS
 	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
+#       else  /* _WINDOWS */
+	found = FindColor (0, name, "InactiveItemColor", "LightGrey1", &InactiveB_Color);
+#       endif /* _WINDOWS */
      }
    else
      {

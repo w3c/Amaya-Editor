@@ -2777,6 +2777,8 @@ int                 y;
 	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
 #       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
+        SelectPalette (TtDisplay, TtCmap, TRUE);
+        RealizePalette (TtDisplay);
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
 	hBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);

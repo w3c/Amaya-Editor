@@ -42,31 +42,32 @@ THOT_EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
 
 #ifdef _WINDOWS
-THOT_EXPORT WNDCLASSEX RootShell;
-THOT_EXPORT HFONT      DefaultFont;/* default Font                */
-THOT_EXPORT HDC        TtDisplay;
-THOT_EXPORT HPALETTE   TtCmap;	/* Table des couleurs pour Thot		*/
-THOT_EXPORT WIN_GC_BLK TtWhiteGC;
-THOT_EXPORT WIN_GC_BLK TtBlackGC;
-THOT_EXPORT WIN_GC_BLK TtInvertGC;
-THOT_EXPORT WIN_GC_BLK TtGreyGC;
-THOT_EXPORT WIN_GC_BLK TtLineGC;
-THOT_EXPORT WIN_GC_BLK TtDialogueGC;
-THOT_EXPORT WIN_GC_BLK TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT WNDCLASSEX   RootShell;
+THOT_EXPORT HFONT        DefaultFont; /* default Font                */
+THOT_EXPORT HDC          TtDisplay;
+THOT_EXPORT HPALETTE     TtCmap;	    /* Table des couleurs pour Thot  */
+THOT_EXPORT LPLOGPALETTE ptrLogPal;
+THOT_EXPORT WIN_GC_BLK   TtWhiteGC;
+THOT_EXPORT WIN_GC_BLK   TtBlackGC;
+THOT_EXPORT WIN_GC_BLK   TtInvertGC;
+THOT_EXPORT WIN_GC_BLK   TtGreyGC;
+THOT_EXPORT WIN_GC_BLK   TtLineGC;
+THOT_EXPORT WIN_GC_BLK   TtDialogueGC;
+THOT_EXPORT WIN_GC_BLK   TtGraphicGC;	/* Graphic context pour les images      */
 #else /* _WINDOWS */
-THOT_EXPORT ThotWidget RootShell;
-THOT_EXPORT XmFontList DefaultFont;  /* default Font                */
-THOT_EXPORT Time       t1;
-THOT_EXPORT Display*   TtDisplay;	/* Identification du serveur X 	       	*/
-THOT_EXPORT int	       TtScreen; 	/* Identification de l'ecran   		*/
-THOT_EXPORT Colormap   TtCmap;	/* Table des couleurs pour Thot		*/
-THOT_EXPORT ThotGC     TtWhiteGC;
-THOT_EXPORT ThotGC     TtBlackGC;
-THOT_EXPORT ThotGC     TtInvertGC;
-THOT_EXPORT ThotGC     TtGreyGC;
-THOT_EXPORT ThotGC     TtLineGC;
-THOT_EXPORT ThotGC     TtDialogueGC;
-THOT_EXPORT ThotGC     TtGraphicGC;	/* Graphic context pour les images      */
+THOT_EXPORT ThotWidget   RootShell;
+THOT_EXPORT XmFontList   DefaultFont;  /* default Font                */
+THOT_EXPORT Time         t1;
+THOT_EXPORT Display*     TtDisplay;	/* Identification du serveur X 	       	*/
+THOT_EXPORT int	         TtScreen; 	/* Identification de l'ecran   		*/
+THOT_EXPORT Colormap     TtCmap;	/* Table des couleurs pour Thot		*/
+THOT_EXPORT ThotGC       TtWhiteGC;
+THOT_EXPORT ThotGC       TtBlackGC;
+THOT_EXPORT ThotGC       TtInvertGC;
+THOT_EXPORT ThotGC       TtGreyGC;
+THOT_EXPORT ThotGC       TtLineGC;
+THOT_EXPORT ThotGC       TtDialogueGC;
+THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context pour les images      */
 #endif /* !_WINDOWS */
 
 THOT_EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/

@@ -196,6 +196,8 @@ LPARAM     lParam;
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
 	     TtDisplay = BeginPaint (w, &ps);
+             SelectPalette (ps.hdc, TtCmap, TRUE);
+             RealizePalette (ps.hdc);
              GetClientRect (w, &rect);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
@@ -1006,29 +1008,6 @@ BOOL  bCheck;
      CheckMenuItem (hmenu, id, iState) ;
 }
 
-/* -------------------------------------------------------------------
-   InitTextZone
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-HWND InitTextZone (HWND hwndParent, int width, char* label)
-#else  /* !__STDC__ */
-HWND InitTextZone (hwndParent, width, label)
-HWND  hwndParent;
-int   width;
-char* label;
-#endif /* __STDC__ */
-{
-    RECT r ;
-    HWND txtZone;
-
-    txtZoneLabel = TtaStrdup (label);
-
-    txtZone = CreateWindow ("WinTxtZone", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
-                            0, 0, width, 30, hwndParent, (HMENU) 1, hInstance, 0) ;
-
-    return txtZone ;
-}
-
 /*----------------------------------------------------------------------
    WndProc :  The main MS-Windows event handler for the Thot         
    Library.                                                    
@@ -1090,6 +1069,10 @@ LPARAM      lParam;
 
             case WM_DESTROY:
                  SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
+		 /*
+                 HeapFree (GetProcessHeap (), 0, TtCmap);
+                 DeleteObject (TtCmap);
+		 */
                  PostQuitMessage (0) ;
                  return 0 ;
 
@@ -1170,58 +1153,11 @@ LPARAM      lParam;
      }
 }
 
-/* -------------------------------------------------------------------
-   TxtZoneWndProc
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-LRESULT CALLBACK TxtZoneWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK TxtZoneWndProc (hwnd, mMsg, wParam, lParam)
-HWND   hwnd; 
-UINT   mMsg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-    HWND labelWin ;
-    HWND editWin ;
-
-   int cx ;
-   int cy ;
-
-    switch (mMsg) {
-           case WM_CREATE:
-                cx = LOWORD (lParam) ;
-                printf ("CX : %d\n", cx) ;
-                cy = HIWORD (lParam) ;
-                printf ("CY : %d\n", cy) ;
-
-                labelWin = CreateWindow ("STATIC", txtZoneLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
-                                         10, 10, 100, 15, hwnd, (HMENU) 101, hInstance, NULL);
-                ShowWindow (labelWin, SW_SHOWNORMAL);
-                UpdateWindow (labelWin);
-
-                editWin  = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-                                         100, 8, cx - 10, 20, hwnd, (HMENU) 102, hInstance, NULL);
-                ShowWindow (editWin, SW_SHOWNORMAL);
-                UpdateWindow (editWin);
-                return 0;
-
-           case WM_SIZE:
-                cx = LOWORD (lParam) ;
-                cy = HIWORD (lParam) ;
-
-                MoveWindow (labelWin, 10, 10, 100, 15, TRUE) ;
-                MoveWindow (editWin, 100, 8, cx - 10, 20, TRUE) ;
-                return 0;
-
-           default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
-    }
-}
 
 /* -------------------------------------------------------------------
    HeadDlgProc
    ------------------------------------------------------------------- */
+#ifdef RAMZI
 #ifdef __STDC__
 LRESULT CALLBACK HeadDlgProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
@@ -1284,11 +1220,13 @@ LPARAM lParam;
                 cy = HIWORD (lParam) ;
                 MoveWindow (URLLabel, 100 + charWidth, 10, cx - 10, 20, TRUE);
                 MoveWindow (TitleLabel, 100 + charWidth, 40, cx - 10, 20, TRUE);
+
                 return 0;
 
            default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
     }
 }
+#endif /* RAMZI */
 
 /* -------------------------------------------------------------------
    ClientWndProc
@@ -1331,6 +1269,13 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
+          case WM_CREATE: {
+               HDC hdc = GetDC (hwnd);
+               SelectPalette (hdc, TtCmap, TRUE);
+               RealizePalette (hdc);
+               break;
+	  }
+
           case WM_PAINT: /* Some part of the Client Area has to be repaint. */
 	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
@@ -1346,6 +1291,7 @@ LPARAM lParam;
                WIN_ChangeTaille (frame, cx, cy, 0, 0) ;
 
 	       WIN_ReleaseDeviceContext ();
+
                return 0 ;
 	  }
 	  /*

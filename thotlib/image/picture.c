@@ -18,7 +18,7 @@
  * Picture Handling
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
- *          R. Guetari (INRIA) - Plugins and Windows routines
+ *          R. Guetari (INRIA) - Plugins and Windows 95/NT routines
  *
  * Last modification: Jan 09 1997
  */
@@ -302,7 +302,11 @@ PictInfo           *imageDesc;
   XRectangle        rect;
   XGCValues         values;
   unsigned int      valuemask;
-#endif /* _WINDOWS */
+# endif /* _WINDOWS */
+# ifdef _WINDOWS
+  HDC     hDC;
+  HBITMAP hTmpBitmap;
+# endif /* _WINDOWS */
   int               delta;
 
   if (picXOrg < 0)
@@ -325,11 +329,14 @@ PictInfo           *imageDesc;
 #         ifndef _WINDOWS
 	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #         else /* _WINDOWS */
-	  {
-	  HDC hDC = CreateCompatibleDC (TtDisplay);
-	  SelectObject (hDC, pixmap);
+          hTmpBitmap = CopyImage (pixmap, IMAGE_BITMAP, w, h, LR_COPYRETURNORG);
+	  hDC = CreateCompatibleDC (TtDisplay);
+	  SelectObject (hDC, hTmpBitmap);
+	  SelectPalette (TtDisplay, TtCmap, TRUE);
+          RealizePalette (TtDisplay);
 	  BitBlt (TtDisplay, xFrame, yFrame, w, h, hDC, 0, 0, SRCCOPY);
-	  }
+          DeleteDC (hDC);
+          DeleteObject (hTmpBitmap);
 #         endif /* _WINDOWS */
 	  break;
 	  
@@ -551,6 +558,7 @@ boolean             printing;
 {
 
 #  ifdef _WINDOWS
+#  if 0 
    HDC                 hdc;
 
    /* more magic needed - @@@ */
@@ -563,6 +571,7 @@ boolean             printing;
    /* THOT_vInfo.class = THOT_PseudoColor; */
    ReleaseDC (WIN_Main_Wd, hdc);
    EpsfPictureLogo = CreateBitmap (epsflogo_width, epsflogo_height, THOT_vInfo.depth, 16, epsflogo_bits);
+#  endif /* 0 */
 #  else  /* _WINDOWS */
    XVisualInfo         vinfo;
 
@@ -764,10 +773,6 @@ int                 hlogo;
 
    drawable = TtaGetThotWindow (frame);
 
-#  ifdef _WINDOWS
-   WIN_GetDeviceContext (frame);
-#  endif /* _WINDOWS */
-
    switch (imageDesc->PicPresent)
      {
      case RealSize:
@@ -899,9 +904,6 @@ int                 hlogo;
        XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, strlen (filename));
      }
 #  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
-#  endif /* _WINDOWS */
 }
 
 
@@ -927,11 +929,6 @@ int                 frame;
    Drawable            drawable;
    int                 x, y;
    ThotColor           BackGroundPixel;
-
-#  ifdef _WINDOWS
-   HDC hDC;
-   HBITMAP hBitmap;
-#  endif /* _WINDOWS */
 
    xTranslate = 0;
    yTranslate = 0;
@@ -1015,8 +1012,7 @@ int                 frame;
 							     picYArea, picWArea, picHArea,
 							     (FILE *) drawable, BackGroundPixel);
 #  ifdef _WINDOWS
-   WIN_ReleaseDeviceContext (frame);
-   DeleteDC (hDC);
+   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
 }
 

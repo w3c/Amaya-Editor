@@ -162,9 +162,9 @@ unsigned short     *blue;
    InstallColor try to install a color in the public colormap.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InstallColor (int i)
+static void InstallColor (int i)
 #else  /* __STDC__ */
-static void         InstallColor (i)
+static void InstallColor (i)
 int                 i;
 
 #endif /* __STDC__ */
@@ -172,7 +172,8 @@ int                 i;
    ThotColorStruct     col;
 
 #  ifdef _WINDOWS
-   Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+   /* Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue); */
+   Pix_Color[i] = GetNearestColor (TtDisplay, PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
 #  else  /* _WINDOWS */
    if (Color_Table[i] != NULL)
      {
@@ -197,7 +198,11 @@ int                 i;
    color base and should be far less expensive than an optimal
    (e.g. closest in cube) algorithm.
   ----------------------------------------------------------------------*/
-static void         ApproximateColors ()
+#ifdef __STDC__
+static void ApproximateColors (void)
+#else /* __STDC__ */
+static void ApproximateColors ()
+#endif /* __STDC__ */
 {
    ThotColor  white = Pix_Color[0];
    ThotColor  col;
