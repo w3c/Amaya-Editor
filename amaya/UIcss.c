@@ -487,8 +487,7 @@ char *CssToPrint (Document doc, char *printdir)
 			  length += strlen (css->localName);
 			  ptr[length++] = SPACE;
 			}
-		      else
-			pInfo = pInfo->PiNext;
+		      pInfo = pInfo->PiNext;
 		    }
 		}
 	      css = css->NextCSS;
@@ -514,8 +513,7 @@ char *CssToPrint (Document doc, char *printdir)
 			  length += strlen (css->localName);
 			  ptr[length++] = SPACE;
 			}
-		      else
-			pInfo = pInfo->PiNext;
+		      pInfo = pInfo->PiNext;
 		    }
 		}
 	      css = css->NextCSS;
