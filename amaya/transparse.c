@@ -1419,6 +1419,57 @@ unsigned char       c;
 }
 
 /*----------------------------------------------------------------------
+   	ppPutInBuffer	put character c in the input buffer.		
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ppPutInBuffer (unsigned char c)
+#else
+static void         ppPutInBuffer (c)
+unsigned char       c;
+
+#endif
+{
+   int                 len;
+
+   if ((ppLgBuffer == 0 || inputBuffer[0] != '\"') &&
+       (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
+	c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
+	c == '<' || c == '.' || c == '!' || c == '?'))
+     {
+       ppError = TRUE;
+       ErrorMessage ("Invalid char");
+     }
+   else
+     {
+	/* put the character into the buffer if it is not an ignored char. */
+	if ((int) c == 9)	/* HT */
+	   len = 8;		/* HT = 8 spaces */
+	else
+	   len = 1;
+	if (c != EOS)
+	  {
+	     if (ppLgBuffer + len >= MaxBufferLength)
+	       {
+		  ppError = TRUE;
+		  ErrorMessage ("Panic: buffer overflow");
+		  ppLgBuffer = 0;
+	       }
+	     if (len == 1)
+		inputBuffer[ppLgBuffer++] = c;
+	     else		/* HT */
+		do
+		  {
+		     inputBuffer[ppLgBuffer++] = SPACE;
+		     len--;
+		  }
+		while (len > 0);
+	  }
+	inputBuffer[ppLgBuffer] = EOS;
+     }
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ppStartOfAttrValue (unsigned char c)
@@ -1801,56 +1852,6 @@ unsigned char       c;
 	td->Next = ppTrans;
      }
    ppTrans = NULL;
-}
-
-/*----------------------------------------------------------------------
-   	ppPutInBuffer	put character c in the input buffer.		
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ppPutInBuffer (unsigned char c)
-#else
-static void         ppPutInBuffer (c)
-unsigned char       c;
-
-#endif
-{
-   int                 len;
-
-   if ((ppLgBuffer == 0 || inputBuffer[0] != '\"') &&
-       (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
-	c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
-	c == '<' || c == '.' || c == '!' || c == '?'))
-     {
-       ppError = TRUE;
-       ErrorMessage ("Invalid char");
-     }
-   else
-     {
-	/* put the character into the buffer if it is not an ignored char. */
-	if ((int) c == 9)	/* HT */
-	   len = 8;		/* HT = 8 spaces */
-	else
-	   len = 1;
-	if (c != EOS)
-	  {
-	     if (ppLgBuffer + len >= MaxBufferLength)
-	       {
-		  ppError = TRUE;
-		  ErrorMessage ("Panic: buffer overflow");
-		  ppLgBuffer = 0;
-	       }
-	     if (len == 1)
-		inputBuffer[ppLgBuffer++] = c;
-	     else		/* HT */
-		do
-		  {
-		     inputBuffer[ppLgBuffer++] = SPACE;
-		     len--;
-		  }
-		while (len > 0);
-	  }
-	inputBuffer[ppLgBuffer] = EOS;
-     }
 }
 
 /*----------------------------------------------------------------------

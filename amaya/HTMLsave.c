@@ -25,6 +25,17 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
+#ifdef _WINDOWS
+#include "resource.h"
+static char         currentDocToSave[MAX_LENGTH];
+static char         currentPathName[MAX_LENGTH];
+extern HINSTANCE    hInstance;
+#ifdef __STDC__
+LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
+#else  /* !__STDC__ */
+LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 static char         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
@@ -50,6 +61,75 @@ static int          SRC_attr_tab[] = {
 #include "query_f.h"
 #endif
 
+
+#ifdef _WINDOWS
+/*-----------------------------------------------------------------------
+ CreateGetSaveDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateGetSaveDlgWindow (HWND parent, char* path_name)
+#else  /* !__STDC__ */
+void CreateGetSaveDlgWindow (parent, path_name)
+HWND  parent;
+char* path_name;
+#endif /* __STDC__ */
+{  
+	sprintf (currentPathName, path_name);
+
+	DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent, (DLGPROC) GetSaveDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ SaveAsDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK GetSaveDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static char txt [500];
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
+				break;
+
+		   case WM_COMMAND:
+			    if (HIWORD (wParam) == EN_UPDATE) {
+				   if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
+					  GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave, sizeof (currentDocToSave) - 1);
+				   } 
+				}
+			    switch (LOWORD (wParam)) {
+					   case IDC_BROWSE:
+						    WIN_ListSaveDirectory (BaseDialog + SaveForm, currentDocToSave);
+							SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentDocToSave);
+							break;
+
+					   case IDCANCEL:
+						    ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+					        EndDialog (hwnDlg, IDCANCEL);
+							break;
+
+				       case ID_CONFIRM:
+						    /* TODO: Extract directory and file name from urlToOpen */
+                            TtaExtractName (currentDocToSave, DirectoryName, ObjectName);
+						    ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
+					        EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    SetRelativeURLs: try to make relative URLs within an HTML document.
@@ -1184,6 +1264,7 @@ char               *pathname;
    SavingObject = document;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
+#  ifndef _WINDOWS
    /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
@@ -1197,6 +1278,9 @@ char               *pathname;
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+#  else  /* _WINDOWS */
+   CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname, BaseDialog, SaveForm);
+#  endif /* _WINDOWS */
 }
 
 
@@ -1266,5 +1350,4 @@ void                DoSaveObjectAs ()
    SavingObject = 0;
    SavingDocument = 0;
 }
-
 

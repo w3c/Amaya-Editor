@@ -604,16 +604,14 @@ char               *docName;
    else
      basename = (char *) NULL;
 
-   if (strchr (orgName, URL_SEP) || (basename && strchr (basename, URL_SEP)))
-     { 
-       used_str = URL_STR;
-       used_sep = URL_SEP;
-     }
-   else
-     {
-       used_str = DIR_STR;
-       used_sep = DIR_SEP;
-     }
+   /*if (strchr (orgName, URL_SEP) || (basename && strchr (basename, URL_SEP))) {*/
+   if (strchr (orgName, DIR_SEP)) {
+      used_str = DIR_STR;
+      used_sep = DIR_SEP;
+   } else {
+         used_str = URL_STR;
+         used_sep = URL_SEP;
+   }
 
    /*
     * Clean orgName
@@ -969,15 +967,16 @@ int            wanted;
   char       used_sep;
   char      *used_str;
 
-  if (strchr (aName, URL_SEP) || strchr (relatedName, URL_SEP) )
-    {
-      used_str = URL_STR;
-      used_sep = URL_SEP;
-    }
-  else
+  /*if (strchr (aName, URL_SEP) || strchr (relatedName, URL_SEP) )*/
+  if (strchr (aName, DIR_SEP))
     {
       used_str = DIR_STR;
       used_sep = DIR_SEP;
+    }
+  else
+    {
+      used_str = URL_STR;
+      used_sep = URL_SEP;
     }
 
   /* Make working copies of input strings to cut up: */

@@ -833,8 +833,11 @@ Document doc;
   char		      tmpfilename[25];
   char		      charRead;
   FILE		     *inputFile;
-  
+# ifndef _WINDOWS  
   strcpy (tmpfilename, "/tmp/amayatrans.tmp");
+# else  /* _WINDOWS */
+  strcpy (tmpfilename, "C:\\TEMP\\amayatrans.tmp");
+# endif /* _WINDOWS */
   TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
   inputFile = fopen (tmpfilename, "r");
   charRead = getc (inputFile);  
