@@ -395,9 +395,12 @@ void HTTP_headers_set (HTRequest *request, HTResponse *response,
   me->http_headers.content_length = TtaStrdup (tmp_string);
 
   /* copy the reason */
-  tmp_char = HTResponse_reason (response);
-  if (tmp_char)
-      me->http_headers.reason = TtaStrdup (tmp_char);
+  if (status != HT_INTERRUPTED)
+    {
+      tmp_char = HTResponse_reason (response);
+      if (tmp_char)
+	me->http_headers.reason = TtaStrdup (tmp_char);
+    }
 
   /* copy the content-location */
   tmp_char = HTAnchor_location (anchor);
@@ -440,10 +443,14 @@ void HTTP_headers_set (HTRequest *request, HTResponse *response,
 	case HTERR_TIME_OUT:
 	case HTERR_CSO_SERVER:
 	  me->http_headers.status = index;
+	  if (me->http_headers.reason)
+	    TtaFreeMemory (me->http_headers.reason);
 	  me->http_headers.reason = TtaStrdup ("Cannot contact server");
 	  break;
 	case HTERR_INTERRUPTED:
 	  me->http_headers.status = index;
+	  if (me->http_headers.reason)
+	    TtaFreeMemory (me->http_headers.reason);
 	  me->http_headers.reason = TtaStrdup ("Interrupted");
 	  break;
 	}

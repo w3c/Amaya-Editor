@@ -592,6 +592,12 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
 		    "Conflict with the current state of the resource", NULL);
       sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
+  else if (status == -902)
+    {
+      TtaSetStatus (me->docid, 1,
+		    "Transfer interrupted", NULL);
+      sprintf(AmayaLastHTTPErrorMsg, "902: Transfer interrupted");
+    }
 #ifdef DAV
   else if (status == -423 || status == 207 || status == -424 ) 
    {
@@ -738,18 +744,24 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
 	}
     }
   /* set the reason string */
-  if (status < 0)
+  if (status < 0 && status != -902 )
     {
-      response = HTRequest_response (me->request);
-      if (response)
+      if (me->http_headers.reason && *me->http_headers.reason)
+	  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+		   me->http_headers.reason);
+      else
 	{
-	  server_status = HTResponse_reason (response);
-	  if (server_status && *server_status)
+	  response = HTRequest_response (me->request);
+	  if (response)
 	    {
-	      wc_tmp = TtaStrdup (server_status);
-	      sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
-			wc_tmp);
-	      TtaFreeMemory (wc_tmp);
+	      server_status = HTResponse_reason (response);
+	      if (server_status && *server_status)
+		{
+		  wc_tmp = TtaStrdup (server_status);
+		  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+			   wc_tmp);
+		  TtaFreeMemory (wc_tmp);
+		}
 	    }
 	}
     }
