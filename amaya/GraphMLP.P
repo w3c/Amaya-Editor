@@ -1225,6 +1225,7 @@ RULES
 	Width: Enclosed . Width;
    	HorizPos: Left = Enclosing . Left + 1 pt Userspecified;
    	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -1243,6 +1244,7 @@ RULES
 	CreateWith (VerticalLine);
 	HorizPos: Left = Previous . Right;
 	VertPos:  HRef = Previous . HRef;
+	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
