@@ -9,6 +9,11 @@
  * Module de gestion des vues des documents
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/app.h"
+  DECLARE_APP(wxApp)
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -545,14 +550,15 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
 
 #ifdef _WX
       int doc_id = IdentDocument(pDoc);
-      frame = TtaMakeFrame( doc_id,
-	                    view,
+      frame = TtaMakeFrame( pSS->SsName,
+	                    schView,
+			    doc_id,
 			    pDoc->DocDName,
 			    width, height, &volume );
-      TtaAttachFrame( frame, TtaGetWindowId( doc_id ), TtaGetPageId( doc_id ) );
-
-      /* show the window */
-      TtaShowWindow( TtaGetWindowId( doc_id ), TRUE );
+      TtaAttachFrame( frame,
+		      TtaGetWindowId( doc_id ),
+		      TtaGetPageId( doc_id ),
+		      schView > 1 ? 2 : 1 /* TODO: 1=up 2=down ajouter la vue en haut ou en bas, au choix de l'utilisateur */ );
 #endif /* _WX */
       
 #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
@@ -579,6 +585,7 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
       DisplayFrame (frame);
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
+
       /* Update Paste entry in menu */
 #ifdef _WINGUI
 	  if (pDoc->DocReadOnly)
@@ -610,6 +617,13 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
 	(*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
 	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
+
+#ifdef _WX
+      /* wait for frame initialisation (needed by opengl) */
+      wxApp & app = wxGetApp();
+      while ( app.Pending() )
+	app.Dispatch();
+#endif /* _WX */
     }
 }
 
