@@ -34,6 +34,7 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "appevents_tv.h"
+#include "units_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "print_tv.h"
@@ -140,6 +141,7 @@ char               *applicationName;
    NColors = MAX_COLOR;
    RGB_Table = RGB_colors;
    Color_Table = Name_colors;
+   DOT_PER_INCHE = 72;
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (char *);

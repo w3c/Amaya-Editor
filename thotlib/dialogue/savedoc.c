@@ -53,6 +53,7 @@
 #include "config_f.h"
 #include "platform_f.h"
 #include "viewapi_f.h"
+#include "actions_f.h"
 
 extern int          CurrentDialog;
 static PathBuffer   SaveDirectoryName;

@@ -31,7 +31,6 @@ THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2];	/* window references */
 #endif /* _WINDOWS */
 THOT_EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
 
-THOT_EXPORT int	 DOT_PER_INCHE;	   /* screen resolution		  */
 THOT_EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
 THOT_EXPORT ThotColor White_Color;      /* Couleur de fond             */
 THOT_EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */

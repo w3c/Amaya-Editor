@@ -31,6 +31,7 @@ static int          GridSize = 1;
 #include "appli_f.h"
 #include "windowdisplay_f.h"
 #include "font_f.h"
+#include "unit_f.h"
 #include "memory_f.h"
 #include "content_f.h"
 

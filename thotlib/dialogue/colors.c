@@ -49,6 +49,7 @@ static ThotGC       GCkey;
 
 #include "config_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "windowdisplay_f.h"
 #include "font_f.h"
 #include "changepresent_f.h"

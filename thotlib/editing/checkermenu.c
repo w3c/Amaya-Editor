@@ -63,6 +63,7 @@ static char         SpecialChars[] =
 #include "dictionary_f.h"
 #include "word_f.h"
 #include "appli_f.h"
+#include "actions_f.h"
 #include "memory_f.h"
 #include "views_f.h"
 #include "savedoc_f.h"

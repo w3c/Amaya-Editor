@@ -39,6 +39,7 @@
 #include "appdialogue_tv.h"
 
 #include "appli_f.h"
+#include "actions_f.h"
 #include "applicationapi_f.h"
 #include "tree_f.h"
 #include "attrpresent_f.h"

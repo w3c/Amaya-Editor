@@ -26,6 +26,7 @@
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
+#include "units_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "font_tv.h"
@@ -46,6 +47,7 @@ static boolean      UseBitStreamFamily;
 
 #include "memory_f.h"
 #include "font_f.h"
+#include "unit_f.h"
 #include "windowdisplay_f.h"
 #include "buildlines_f.h"
 #include "registry_f.h"
@@ -84,20 +86,6 @@ int                 NumberOfFonts ()
 }
 
 /*----------------------------------------------------------------------
- *      PointToPixel convert from points to pixels.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PointToPixel (int value)
-#else  /* __STDC__ */
-int                 PointToPixel (value)
-int                 value;
-
-#endif /* __STDC__ */
-{
-   return ((value * DOT_PER_INCHE) / DOT_PER_INCHE);
-}
-
-/*----------------------------------------------------------------------
  *      GetCharsCapacity converts from pixel volume to char size
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -113,19 +101,6 @@ int                 volpixel;
    return volpixel / 200;
 }
 
-/*----------------------------------------------------------------------
- *      PixelToPoint convert from pixels to points.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PixelToPoint (int value)
-#else  /* __STDC__ */
-int                 PixelToPoint (value)
-int                 value;
-
-#endif /* __STDC__ */
-{
-   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
-}
 
 /*----------------------------------------------------------------------
  *      CharacterWidth returns the width of a char in a given font.

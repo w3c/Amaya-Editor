@@ -30,6 +30,7 @@
 
 #include "printmenu_f.h"
 #include "views_f.h"
+#include "actions_f.h"
 
 static int NewFirstPage;
 static int NewLastPage;

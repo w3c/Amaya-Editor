@@ -41,6 +41,7 @@
 static int          Fenvisibilityview;
 
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "boxparams_f.h"
 
 #ifdef __STDC__

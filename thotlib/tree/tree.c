@@ -961,17 +961,17 @@ boolean             Kind;
 }
 
 /*----------------------------------------------------------------------
-   ChangeLnaguageLeaves
+   ChangeLanguageLeaves
    changes the language attribute for all the text leaves in the
    subtree of the element pointed by pEl.
   ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
-static void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
+void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
 
 #else  /* __STDC__ */
-static void         ChangeLanguageLeaves (pEl, lang)
+void         ChangeLanguageLeaves (pEl, lang)
 PtrElement          pEl;
 Language            lang;
 

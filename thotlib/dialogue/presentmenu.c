@@ -53,6 +53,7 @@
 #include "presrules_f.h"
 #include "boxselection_f.h"
 #include "structselect_f.h"
+#include "actions_f.h"
 
 #define SINGLE_LINESPACING 11
 

@@ -51,6 +51,7 @@ static char         DirectoryDocToCreate[MAX_PATH] = "";
 #include "browser_f.h"
 #include "platform_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "views_f.h"
 #include "config_f.h"
 #include "opendoc_f.h"

@@ -49,6 +49,7 @@
 #include "dialogapi_f.h"
 #include "views_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "callback_f.h"
 #include "font_f.h"
 #include "inites_f.h"

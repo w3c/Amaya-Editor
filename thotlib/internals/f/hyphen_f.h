@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean IsSeparatorChar ( char car );
+extern boolean IsSeparatorChar ( char c );
 extern void SmallLettering ( char *word );
 extern int HyphenLastWord ( ptrfont font,
-                            Language langue,
+                            Language language,
                             PtrTextBuffer * buffer,
                             int *rank,
                             int *width,
@@ -18,10 +18,10 @@ extern boolean CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
 
-extern boolean IsSeparatorChar (/* char car */);
+extern boolean IsSeparatorChar (/* char c */);
 extern void SmallLettering (/* char *word */);
 extern int HyphenLastWord (/* ptrfont font,
-                              Language langue,
+                              Language language,
                               PtrTextBuffer * buffer,
                               int *rank,
                               int *width,

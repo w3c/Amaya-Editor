@@ -85,6 +85,7 @@ static Name         NewSchemaName;
 #include "views_f.h"
 
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "viewcommands_f.h"
 #include "platform_f.h"
 #include "opendoc_f.h"

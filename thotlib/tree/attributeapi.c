@@ -446,8 +446,12 @@ Document            document;
 	     GetTextBuffer (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
 	     lang = TtaGetLanguageIdFromName (buffer);
+#ifdef NODISPLAY
+             ChangeLanguageLeaves((PtrElement) element, lang);
+#else
 	     ChangeLanguage (LoadedDocument[document - 1],
 			     (PtrElement) element, lang, FALSE);
+#endif
 	  }
 #ifndef NODISPLAY
 	if (element != NULL)

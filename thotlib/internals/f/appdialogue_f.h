@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TteConnectAction ( int id,
-                               Proc procedure );
 extern void TteInitMenus ( char *name,
                            int number );
 extern void TteAddMenuAction ( char *actionName,
@@ -104,8 +102,6 @@ extern void ThotCallback ( int ref,
 
 #else /* __STDC__ */
 
-extern void TteConnectAction (/* int id,
-                                 Proc procedure */);
 extern void TteInitMenus (/* char *name,
                              int number */);
 extern void TteAddMenuAction (/* char *actionName,

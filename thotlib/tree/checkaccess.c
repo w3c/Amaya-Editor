@@ -39,6 +39,7 @@
 #include "structschema_f.h"
 #include "labelalloc_f.h"
 
+#include "actions_f.h"
 #include "tree_f.h"
 #include "exceptions_f.h"
 #include "abspictures_f.h"

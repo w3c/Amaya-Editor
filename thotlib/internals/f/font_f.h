@@ -7,9 +7,7 @@
 #ifdef __STDC__
 
 extern int NumberOfFonts ( void );
-extern int PointToPixel ( int value );
 extern int GetCharsCapacity ( int volpixel );
-extern int PixelToPoint ( int value );
 extern int CharacterWidth ( unsigned char c,
                             ptrfont font );
 extern int CharacterHeight ( unsigned char c,
@@ -52,9 +50,7 @@ extern void ThotFreeFont ( int frame );
 #else /* __STDC__ */
 
 extern int NumberOfFonts (/* void */);
-extern int PointToPixel (/* int value */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int PixelToPoint (/* int value */);
 extern int CharacterWidth (/* unsigned char c,
                               ptrfont font */);
 extern int CharacterHeight (/* unsigned char c,

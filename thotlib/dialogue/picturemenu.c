@@ -62,6 +62,7 @@ static char         DirectoryImage[MAX_PATH] = "";
 #include "browser_f.h"
 #include "fileaccess_f.h"
 #include "picture_f.h"
+#include "actions_f.h"
 #include "savedoc_f.h"
 
 /*----------------------------------------------------------------------

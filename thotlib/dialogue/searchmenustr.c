@@ -51,6 +51,7 @@
 #include "createabsbox_f.h"
 #include "search_f.h"
 #include "exceptions_f.h"
+#include "actions_f.h"
 #include "word_f.h"
 #include "appli_f.h"
 #include "searchmenu_f.h"

@@ -68,6 +68,7 @@ static boolean      FromKeyboard;
 
 #include "abspictures_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -78,6 +79,7 @@ static boolean      FromKeyboard;
 #include "content_f.h"
 #include "editcommands_f.h"
 #include "callback_f.h"
+#include "unit_f.h"
 #include "font_f.h"
 #include "geom_f.h"
 #include "picture_f.h"

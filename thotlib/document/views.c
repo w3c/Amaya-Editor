@@ -76,6 +76,7 @@
 #include "structschema_f.h"
 #include "presvariables_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "docs_f.h"
 #include "frame_f.h"
 #include "closedoc_f.h"

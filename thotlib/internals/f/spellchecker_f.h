@@ -6,49 +6,55 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean TtaLoadDocumentDictionary ( PtrDocument document,
+                                           int *pDictionary,
+                                           boolean ToCreate );
 extern void SetUpperCase ( char *string );
 extern void SetCapital ( char *string );
 extern boolean IsUpperCase ( char *string );
 extern boolean IsCapital ( char *string );
 extern boolean IsIso ( char *string );
 extern int WordInDictionary ( char word[MAX_WORD_LEN],
-			      PtrDict dict );
-extern int  CheckWord (char word[MAX_WORD_LEN],
-		       Language language,
-		       PtrDict dict);
+                              PtrDict dict );
+extern int CheckWord ( char word[MAX_WORD_LEN],
+                       Language language,
+                       PtrDict dict );
 extern void AddWord ( char word[MAX_WORD_LEN],
-		      PtrDict * pDict );
+                      PtrDict * pDict );
 extern void GiveProposal ( Language language,
-                            PtrDict docDict );
+                           PtrDict docDict );
 extern int ParametrizeChecker ( void );
 extern void WordReplace ( char orgWord[MAX_WORD_LEN],
-                                char newWord[MAX_WORD_LEN] );
+                          char newWord[MAX_WORD_LEN] );
 extern boolean CheckChangeSelection ( void );
 extern void NextSpellingError ( char word[MAX_CHAR],
-                              PtrDict docDict );
+                                PtrDict docDict );
 
 #else /* __STDC__ */
 
+extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
+                                             int *pDictionary,
+                                             boolean ToCreate */);
 extern void SetUpperCase (/* char *string */);
 extern void SetCapital (/* char *string */);
 extern boolean IsUpperCase (/* char *string */);
 extern boolean IsCapital (/* char *string */);
 extern boolean IsIso (/* char *string */);
 extern int WordInDictionary (/* char word[MAX_WORD_LEN],
-				PtrDict dict */);
-extern int  CheckWord (/*char word[MAX_WORD_LEN],
-			 Language language,
-			 PtrDict dict*/);
+                                PtrDict dict */);
+extern int CheckWord (/* char word[MAX_WORD_LEN],
+                         Language language,
+                         PtrDict dict */);
 extern void AddWord (/* char word[MAX_WORD_LEN],
-			PtrDict * pDict */);
+                        PtrDict * pDict */);
 extern void GiveProposal (/* Language language,
-                              PtrDict docDict */);
+                             PtrDict docDict */);
 extern int ParametrizeChecker (/* void */);
 extern void WordReplace (/* char orgWord[MAX_WORD_LEN],
-                                  char newWord[MAX_WORD_LEN] */);
+                            char newWord[MAX_WORD_LEN] */);
 extern boolean CheckChangeSelection (/* void */);
 extern void NextSpellingError (/* char word[MAX_CHAR],
-                                PtrDict docDict */);
+                                  PtrDict docDict */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

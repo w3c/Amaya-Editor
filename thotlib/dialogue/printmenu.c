@@ -33,6 +33,7 @@
 #include "frame_tv.h"
 
 #include "appli_f.h"
+#include "actions_f.h"
 #include "applicationapi_f.h"
 #include "attrmenu_f.h"
 #include "tree_f.h"

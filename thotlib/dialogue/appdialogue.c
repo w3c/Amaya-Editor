@@ -40,6 +40,7 @@
 #include "font_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
+#include "units_tv.h"
 #include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
@@ -93,6 +94,7 @@ HWND StatusBar;
 #include "dialogapi_f.h"
 #include "views_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "callback_f.h"
 #include "windowdisplay_f.h"
 #include "font_f.h"
@@ -110,21 +112,6 @@ HWND StatusBar;
 #include "dictionary_f.h"
 #include "viewapi_f.h"
 #include "sortmenu_f.h"
-
-/*----------------------------------------------------------------------
-   TteConnectAction rend accessible une action locale (Callback).     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteConnectAction (int id, Proc procedure)
-#else  /* __STDC__ */
-void                TteConnectAction (id, procedure)
-int                 id;
-Proc                procedure;
-
-#endif /* __STDC__ */
-{
-   ThotLocalActions[id] = procedure;
-}
 
 
 /*----------------------------------------------------------------------

@@ -67,6 +67,7 @@ static PtrAttribute PtrReqAttr;
 #include "attributes_f.h"
 #include "structcreation_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "callback_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"

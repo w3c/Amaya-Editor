@@ -54,6 +54,7 @@
 #include "content_f.h"
 #include "presvariables_f.h"
 #include "font_f.h"
+#include "unit_f.h"
 
 /*----------------------------------------------------------------------
    	AttrValue retourne la valeur que prend l'attribut numerique	

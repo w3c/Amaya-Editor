@@ -43,6 +43,7 @@ static boolean      SaveBeforeClosing;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "docs_f.h"
 #include "viewcommands_f.h"
 

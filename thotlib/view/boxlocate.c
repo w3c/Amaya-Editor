@@ -32,6 +32,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "frame_tv.h"
+#include "units_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 
@@ -41,6 +42,7 @@
 #include "views_f.h"
 #include "callback_f.h"
 #include "font_f.h"
+#include "unit_f.h"
 #include "geom_f.h"
 #include "absboxes_f.h"
 #include "buildboxes_f.h"

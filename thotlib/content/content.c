@@ -377,6 +377,7 @@ boolean             removeAbsBox;
 			      }
 			    if (merge)
 			      {
+#ifndef NODISPLAY
                                  /* Si l'element est selectionne, alors annule la selection */
 				 if ((pEl2 == FirstSelectedElement) ||
 				     (pEl2 == LastSelectedElement))
@@ -385,7 +386,7 @@ boolean             removeAbsBox;
                                  /* Detruit eventuellement les paves du 2ieme element */
                                  if (removeAbsBox)
                                     DestroyAbsBoxes (pEl2, pDoc, FALSE);
-
+#endif
 				 /* cherche le dernier buffer de texte du premier element */
 				 pBuf1 = pEl1->ElText;
 				 while (pBuf1->BuNext != NULL)

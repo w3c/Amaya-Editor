@@ -399,8 +399,8 @@ Document            document;
 {
 #ifndef NODISPLAY
   int              nv, numassoc;
-  PtrDocument      pDoc;
 #endif
+  PtrDocument      pDoc;
 
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -411,9 +411,9 @@ Document            document;
   else
     /* parameter document is correct */
     {
+      pDoc = LoadedDocument[document - 1];
 #ifndef NODISPLAY
       /* Closing all opened views relating to the document */
-      pDoc = LoadedDocument[document - 1];
       /* First, one close the views of the main tree */
       for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
@@ -428,9 +428,11 @@ Document            document;
 	    DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
 	    CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	  }
-#endif
       UnloadTree (document);
-      UnloadDocument (&LoadedDocument[document - 1]);
+#else
+      DeleteAllTrees (pDoc);
+#endif
+      UnloadDocument (&pDoc);
     }
 }
 

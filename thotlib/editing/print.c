@@ -112,6 +112,7 @@ static ThotWindow   thotWindow;
 #include "readpivot_f.h"
 #include "registry_f.h"
 #include "dictionary_f.h"
+#include "actions_f.h"
 
 static int          manualFeed;
 static char         pageSize [3];
@@ -126,21 +127,6 @@ static int          Repaginate;
 static int          firstPage;
 static int          lastPage;
 
-
-/*----------------------------------------------------------------------
-   TteConnectAction rend accessible une action locale (Callback).     
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TteConnectAction (int id, Proc procedure)
-#else  /* __STDC__ */
-void                TteConnectAction (id, procedure)
-int                 id;
-Proc                procedure;
-
-#endif /* __STDC__ */
-{
-   ThotLocalActions[id] = procedure;
-}
 
 
 /*----------------------------------------------------------------------

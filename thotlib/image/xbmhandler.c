@@ -31,6 +31,7 @@
 
 #include "picture_f.h"
 #include "font_f.h"
+#include "unit_f.h"
 
 /*----------------------------------------------------------------------
    XbmCreate reads and produces the bitmap read from the file      

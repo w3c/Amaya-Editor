@@ -389,6 +389,7 @@ static ITEM         Items_Graph[] =
 #include "textcommands_f.h"
 #include "config_f.h"
 #include "appdialogue_f.h"
+#include "actions_f.h"
 #include "windowdisplay_f.h"
 #include "font_f.h"
 #include "structselect_f.h"

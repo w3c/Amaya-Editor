@@ -80,6 +80,7 @@
 #include "searchref_f.h"
 #include "unstructlocate_f.h"
 #include "structcommands_f.h"
+#include "actions_f.h"
 
 /*----------------------------------------------------------------------
    InsertPastedElement

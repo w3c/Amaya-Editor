@@ -44,6 +44,7 @@
 #include "viewcommands_f.h"
 
 #include "absboxes_f.h"
+#include "actions_f.h"
 #include "changeabsbox_f.h"
 #include "schemas_f.h"
 #include "createabsbox_f.h"

@@ -7,18 +7,15 @@
 #ifdef __STDC__
 
 extern void TreateDictionary ( PtrDict dict );
-extern int  LoadTreatedDict (PtrDict * pDictionary,
-			     Language lang,
-			     PtrDocument document,
-			     char *dictName,
-			     char *dictDirectory,
-			     boolean readonly,
-			     boolean toCreate);
+extern int LoadTreatedDict ( PtrDict * pDictionary,
+                             Language lang,
+                             PtrDocument document,
+                             char *dictName,
+                             char *dictDirectory,
+                             boolean readonly,
+                             boolean toCreate );
 extern boolean ReloadDictionary ( PtrDict * pDictionary );
 extern void Dict_Init ( void );
-extern boolean TtaLoadDocumentDictionary ( PtrDocument document,
-                                           int *pDictionary,
-                                           boolean ToCreate );
 extern boolean TtaLoadLanguageDictionaries ( Language languageId );
 extern boolean TtaLoadTypoDictionaries ( Language languageId );
 extern void TtaUnLoadLanguageDictionaries ( Language languageId );
@@ -31,18 +28,15 @@ extern Dictionary TtaGetSecondaryTypoDictionary ( Language languageId );
 #else /* __STDC__ */
 
 extern void TreateDictionary (/* PtrDict dict */);
-extern int  LoadTreatedDict (/*PtrDict * pDictionary,
-			     Language lang,
-			     PtrDocument document,
-			     char *dictName,
-			     char *dictDirectory,
-			     boolean readonly,
-			     boolean toCreate*/);
+extern int LoadTreatedDict (/* PtrDict * pDictionary,
+                               Language lang,
+                               PtrDocument document,
+                               char *dictName,
+                               char *dictDirectory,
+                               boolean readonly,
+                               boolean toCreate */);
 extern boolean ReloadDictionary (/* PtrDict * pDictionary */);
 extern void Dict_Init (/* void */);
-extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
-                                             int *pDictionary,
-                                             boolean ToCreate */);
 extern boolean TtaLoadLanguageDictionaries (/* Language languageId */);
 extern boolean TtaLoadTypoDictionaries (/* Language languageId */);
 extern void TtaUnLoadLanguageDictionaries (/* Language languageId */);
