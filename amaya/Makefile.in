@@ -165,7 +165,7 @@ HTML2THOT_LIBS= ../thotlib/libThotKernel.a
 
 amaya_schemas : compHTML compHTMLP compHTMLT graph_schema math_schema
 
-amaya_src : HTML.h 
+amaya_src : HTML.h $(AMAYA_SRC)
 
 #
 # Rule to build objects
