@@ -15,7 +15,7 @@
 14 Finito!
 15 Seleziona l'obiettivo
 16 Obiettivo non valido
-17 Indirizzo
+17 **Indirizzo
 18 Titolo
 19 Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?
 20 Redirezione durante il caricamento di %s
@@ -136,7 +136,7 @@
 135 Numero di colonne
 136 Bordo
 137 Testo alternativo
-138 L'attributo ALT è obbligatorio
+138 Il testo alternativo è obbligatorio
 139 Stampa URL
 140 Applica
 141 Predefinite

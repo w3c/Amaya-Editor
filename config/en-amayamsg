@@ -15,7 +15,7 @@
 14 Finished!
 15 Select the target
 16 Invalid target
-17 Address
+17 Insert the URI or browse
 18 Title
 19 Document modified. All changes will be lost. Do you want to continue ?
 20 Redirection fetching of %s
@@ -136,7 +136,7 @@
 135 Number of Columns
 136 Border
 137 Alternate text
-138 Attribute ALT is mandatory
+138 The Alternate text is mandatory
 139 Print URL
 140 Apply
 141 Defaults
