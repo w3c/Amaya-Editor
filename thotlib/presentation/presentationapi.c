@@ -318,6 +318,8 @@ ThotBool            display;
 		  else
 		    /* position rule of stretched box is related to the parent */
 		    dy = Y;
+		  dy = LogicalValue (dy, unit, pAb,
+				     ViewFrameTable[frame - 1].FrMagnification);
 		  value = 0;
 		}
 	      else
@@ -464,6 +466,8 @@ ThotBool            display;
 		  else
 		    /* position rule of stretched box is related to the parent */
 		    dx = X;
+		  dx = LogicalValue (dx, unit, pAb,
+				     ViewFrameTable[frame - 1].FrMagnification);
 		  value = 0;
 		}
 	      else
