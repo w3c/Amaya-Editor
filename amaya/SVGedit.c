@@ -179,6 +179,48 @@ ThotBool SetEmptyShapeAttribute (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+ ExportForeignObject
+ A foreignObject element will be generated in the output file.
+ Associate a Namespace attribute with its child. This attribute will be
+ generated with the child.
+ -----------------------------------------------------------------------*/
+ThotBool ExportForeignObject (NotifyElement *event)
+{
+  Element       child;
+  ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
+
+  child = TtaGetFirstChild (event->element);
+  while (child)
+    {
+      elType = TtaGetElementType (child);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	 /* child is an HTML element */
+	{
+        attrType.AttrTypeNum = SVG_ATTR_Namespace;
+        attrType.AttrSSchema = TtaGetElementType (event->element).ElSSchema;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (child, attr, event->document);
+        TtaSetAttributeText (attr, "http://www.w3.org/1999/xhtml", child,
+			     event->document);
+	}
+      TtaNextSibling (&child);
+    }
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ NameSpaceGenerated
+ An attribute Namespace has been generated for a child of a foreign
+ element. Delete that attribute.
+ -----------------------------------------------------------------------*/
+void NameSpaceGenerated (NotifyAttribute *event)
+{
+   TtaRemoveAttribute (event->element, event->attribute, event->document);
+}
+
+/*----------------------------------------------------------------------
    A new element has been selected.
    Check that this element can be selected.
    Synchronize selection in source view.      
@@ -1440,48 +1482,6 @@ ThotBool PastePicture (NotifyOnValue *event)
 {
   /* code to be written */
   return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
- ExportForeignObject
- A foreignObject element will be generated in the output file.
- Associate a Namespace attribute with its child. This attribute will be
- generated with the child.
- -----------------------------------------------------------------------*/
-ThotBool ExportForeignObject (NotifyElement *event)
-{
-  Element       child;
-  ElementType   elType;
-  Attribute     attr;
-  AttributeType attrType;
-
-  child = TtaGetFirstChild (event->element);
-  while (child)
-    {
-      elType = TtaGetElementType (child);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	 /* child is an HTML element */
-	{
-        attrType.AttrTypeNum = SVG_ATTR_Namespace;
-        attrType.AttrSSchema = TtaGetElementType (event->element).ElSSchema;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (child, attr, event->document);
-        TtaSetAttributeText (attr, "http://www.w3.org/1999/xhtml", child,
-			     event->document);
-	}
-      TtaNextSibling (&child);
-    }
-  return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
- NameSpaceGenerated
- An attribute Namespace has been generated for a child of a foreign
- element. Delete that attribute.
- -----------------------------------------------------------------------*/
-void NameSpaceGenerated (NotifyAttribute *event)
-{
-   TtaRemoveAttribute (event->element, event->attribute, event->document);
 }
 
 /*----------------------------------------------------------------------

@@ -1101,9 +1101,12 @@ void RestartParser (Document doc, char *localFile,
   
   /* Removes all CSS informations linked with the document */
   RemoveDocCSSs (doc);  
-  /* free access keys table */
+  /* Clear all editing operations registered in the editing history of the
+     document */
+  TtaClearUndoHistory (doc);
+  /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
-  /* store the document profile if it has been modified */
+  /* Store the document profile if it has been modified */
   profile = TtaGetDocumentProfile (doc);
   if (profile != parsingLevel)
     {
@@ -1137,7 +1140,7 @@ void RestartParser (Document doc, char *localFile,
 
 /*----------------------------------------------------------------------
    RedisplaySourceFile
-   If doc is a HTML document and the source view is open, redisplay the
+   If doc is a structured document and the source view is open, redisplay the
    source.
   ----------------------------------------------------------------------*/
 void RedisplaySourceFile (Document doc)
@@ -1149,24 +1152,28 @@ void RedisplaySourceFile (Document doc)
 
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
+#ifdef XML_GENERIC      
+      DocumentTypes[doc] == docXml ||
+#endif /* XML_GENERIC */
       DocumentTypes[doc] == docMath)
     /* it's a structured document */
     if (DocumentSource[doc])
-       /* The source code of this document is currently displayed */
-       {
-	 /* Get its local copy */
-          localFile = GetLocalPath (doc, DocumentURLs[doc]);
-	  TtaExtractName (localFile, tempdir, documentname);
-	  /* parse and display the new version */
-	  StartParser (DocumentSource[doc], localFile, documentname, tempdir,
-		       localFile, TRUE);
-	  TtaSetDocumentUnmodified (DocumentSource[doc]);
-	  event.document = doc;
-	  SynchronizeSourceView (&event);
-	  TtaSetDocumentName (DocumentSource[doc], documentname);
-	  SetWindowTitle (doc, DocumentSource[doc], 0);
-	  TtaFreeMemory (localFile);
-       }
+      /* The source code of this document is currently displayed */
+      {
+	TtaClearUndoHistory (DocumentSource[doc]);
+	/* Get its local copy */
+	localFile = GetLocalPath (doc, DocumentURLs[doc]);
+	TtaExtractName (localFile, tempdir, documentname);
+	/* parse and display the new version of the source code */
+	StartParser (DocumentSource[doc], localFile, documentname, tempdir,
+		     localFile, TRUE);
+	TtaSetDocumentUnmodified (DocumentSource[doc]);
+	event.document = doc;
+	SynchronizeSourceView (&event);
+	TtaSetDocumentName (DocumentSource[doc], documentname);
+	SetWindowTitle (doc, DocumentSource[doc], 0);
+	TtaFreeMemory (localFile);
+      }
 }
 
 /*----------------------------------------------------------------------

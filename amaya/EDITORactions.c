@@ -577,9 +577,6 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   RestartParser (doc, tempdocument, tempdir, documentname);
   TtaSetDocumentModified (doc);
 
-  /* Clear all editing operations registered in the editing history of the document */
-  TtaClearUndoHistory (doc);
-
   /* Clear the current selection */
   TtaClearViewSelections ();
 

@@ -19,8 +19,8 @@ REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
 xmlcomment: comment
-xmlcomment_line:
+xmlcomment_line: \240
 xmlpi: PI
-xmlpi_line:
-doctype_line:
-cdata_line:
+xmlpi_line: \240
+doctype_line: \240
+cdata_line: \240
