@@ -76,7 +76,7 @@ char                BufMenu[MAX_TXT_LEN];
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
@@ -92,7 +92,7 @@ char                BufMenu[MAX_TXT_LEN];
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
@@ -108,7 +108,7 @@ char                BufMenu[MAX_TXT_LEN];
    if (pEl != NULL)
      {
 #ifdef __COLPAGE__
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 #else  /* __COLPAGE__ */
@@ -147,9 +147,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   stop1 = True;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
-		   if (pEl2->ElTypeNumber == ord (PageBreak) + 1)
+		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelPremier->ElTypeNumber != ord (PageBreak) + 1)
+		      if (SelPremier->ElTypeNumber != PageBreak + 1)
 			 /* le pave de structure physique est le premier trouve */
 			 /* il faudrait tester la vue ! */
 			 stop = True;
@@ -203,7 +203,7 @@ char                BufMenu[MAX_TXT_LEN];
 	 pEl = pEl->ElParent;
    if (pEl != NULL)
      {
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
@@ -232,9 +232,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   stop1 = True;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
-		   if (pEl2->ElTypeNumber == ord (PageBreak) + 1)
+		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelPremier->ElTypeNumber != ord (PageBreak) + 1)
+		      if (SelPremier->ElTypeNumber != PageBreak + 1)
 			 /* pas de precedent si l'element n'est pas une */
 			 /* marque page ou colonne */
 			{
@@ -293,7 +293,7 @@ char                BufMenu[MAX_TXT_LEN];
 	 pEl = pEl->ElParent;
    if (pEl != NULL)
      {
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
@@ -322,9 +322,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   stop1 = True;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
-		   if (pEl2->ElTypeNumber == ord (PageBreak) + 1)
+		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelDernier->ElTypeNumber != ord (PageBreak) + 1)
+		      if (SelDernier->ElTypeNumber != PageBreak + 1)
 			 stop = True;	/* on a trouve la structure suivante */
 		      else if (SelDernier->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
@@ -377,7 +377,7 @@ char                BufMenu[MAX_TXT_LEN];
 
    if (pEl != NULL)
      {
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
@@ -406,9 +406,9 @@ char                BufMenu[MAX_TXT_LEN];
 		   stop1 = True;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
-		   if (pEl2->ElTypeNumber == ord (PageBreak) + 1)
+		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
-		      if (SelDernier->ElTypeNumber != ord (PageBreak) + 1)
+		      if (SelDernier->ElTypeNumber != PageBreak + 1)
 			{
 			   stop = True;		/* pas de structure englobee */
 			   pEl = NULL;
@@ -467,7 +467,7 @@ char                BufMenu[MAX_TXT_LEN];
 	 pEl = pEl->ElParent;
    if (pEl != NULL)
      {
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+	if (pEl->ElTypeNumber == PageBreak + 1)
 	   NomElem = TypePageCol (pEl);
 	else
 	   NomElem = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;

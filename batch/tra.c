@@ -341,7 +341,7 @@ int                 wi;
    if (pr == RULE_TransPres)
       /* debut des regles de traduction d'une presentation */
      {
-	CurPres = ord (TypeRPres) + 1;
+	CurPres = TypeRPres + 1;
 	CurPresVal = 0;
 	pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
 	if (!pPresTrans->RtExist)
@@ -396,7 +396,7 @@ int                 wi;
 	ProcessAncestorName (pSSchema);
 	i = CurBlock->TbNConditions - 1;
 	CurBlock->TbCondition[i].TcCondition = TcondPRule;
-	CurBlock->TbCondition[i].TcAttr = ord (TypeRPres);
+	CurBlock->TbCondition[i].TcAttr = TypeRPres;
 	if (TypeRPres == PtSize || TypeRPres == PtIndent ||
 	    TypeRPres == PtLineSpacing || TypeRPres == PtLineWeight ||
 	    TypeRPres == PtFillPattern || TypeRPres == PtBackground ||
@@ -671,13 +671,13 @@ static void         NewRuleBlock ()
 	 /* bloc de regles associe' a une presentation */
 	{
 	   pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
-	   if (CurPres == ord (PtSize) + 1
-	       || CurPres == ord (PtIndent) + 1
-	       || CurPres == ord (PtLineSpacing) + 1
-	       || CurPres == ord (PtLineWeight) + 1
-	       || CurPres == ord (PtFillPattern) + 1
-	       || CurPres == ord (PtBackground) + 1
-	       || CurPres == ord (PtForeground) + 1)
+	   if (CurPres == PtSize + 1
+	       || CurPres == PtIndent + 1
+	       || CurPres == PtLineSpacing + 1
+	       || CurPres == PtLineWeight + 1
+	       || CurPres == PtFillPattern + 1
+	       || CurPres == PtBackground + 1
+	       || CurPres == PtForeground + 1)
 	      pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaTRuleBlock = pBlock;
 	   else
 	      pPresTrans->RtPRuleValueBlock[CurPresVal] = pBlock;
@@ -1769,7 +1769,7 @@ rnb                 pr;
 		       break;
 
 		    case KWD_Alphabet:		/* Alphabet */
-		       if (CurType != ord (CharString) + 1)
+		       if (CurType != CharString + 1)
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_TEXT_UNITS, inputLine, linenb);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAlphabet;
@@ -2058,7 +2058,7 @@ rnb                 pr;
 		       break;
 
 		    case KWD_ComputedPage:
-		       if (CurType != ord (PageBreak) + 1)
+		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
@@ -2067,7 +2067,7 @@ rnb                 pr;
 		       break;
 
 		    case KWD_StartPage:
-		       if (CurType != ord (PageBreak) + 1)
+		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
@@ -2076,7 +2076,7 @@ rnb                 pr;
 		       break;
 
 		    case KWD_UserPage:
-		       if (CurType != ord (PageBreak) + 1)
+		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);
@@ -2085,7 +2085,7 @@ rnb                 pr;
 		       break;
 
 		    case KWD_ReminderPage:
-		       if (CurType != ord (PageBreak) + 1)
+		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
 			  CompilerError (wi, TRA, FATAL, TRA_ONLY_FOR_PAGES, inputLine, linenb);

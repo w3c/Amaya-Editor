@@ -86,7 +86,7 @@ int                *sval;
 	*sval = 0;
 	return False;
      }
-   *sval = 256 * ord (b1) + ord (b2);
+   *sval = 256 * b1 + b2;
    return True;
 }
 
@@ -115,7 +115,7 @@ int                *sval;
 	*sval = 0;
 	return False;
      }
-   *sval = 256 * b1 + ord (b2);
+   *sval = 256 * b1 + b2;
    if (*sval > 32767)
       *sval = *sval - 65536;
    return True;

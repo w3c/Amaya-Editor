@@ -392,10 +392,10 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchNextWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchNextWPtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context
 
 #else  /* __STDC__ */
-boolean             SearchNextWord (ElCourant, CarCourant, mot, context)
+boolean             SearchNextWElCourant, CarCourant, mot, context
 PtrElement         *ElCourant;
 int                *CarCourant;
 char                mot[MAX_WORD_LEN];
@@ -428,7 +428,7 @@ PtrSearchContext           context;
    /* Verifie que l'element est de type texte */
    /* et que la recherche ne debute pas sur le dernier caractere */
    if (pEl != NULL)
-      if (pEl->ElTypeNumber != ord (CharString) + 1 || icar + 1 >= pEl->ElTextLength)
+      if (pEl->ElTypeNumber != CharString + 1 || icar + 1 >= pEl->ElTextLength)
 	{
 	   /* On n'a pas trouve de buffer */
 	   adbuff = NULL;
@@ -454,7 +454,7 @@ PtrSearchContext           context;
      {
 	/* Recherche le premier element texte non vide et modifiable */
 
-	pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	icar = 0;
 	if (pEl != NULL)
 	  {
@@ -471,8 +471,8 @@ PtrSearchContext           context;
 		/* cherche l'arbre a traiter apres celui ou` on n'a pas trouve' */
 		if (ArbreSuivant (&pEl, &icar, context))
 		   /* Il se peut que l'element rendu soit de type texte  */
-		   if (pEl->ElTypeNumber != ord (CharString) + 1)
-		      pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+		   if (pEl->ElTypeNumber != CharString + 1)
+		      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	     }
 
 	if (pEl != NULL)
@@ -540,7 +540,7 @@ PtrSearchContext           context;
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchNextWord (ElCourant, CarCourant, mot, context));
+	   return (SearchNextWElCourant, CarCourant, mot, context);
      }
 }				/*SearchNextWord */
 
@@ -555,10 +555,10 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchPreviousWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchPreviousWPtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context
 
 #else  /* __STDC__ */
-boolean             SearchPreviousWord (ElCourant, CarCourant, mot, context)
+boolean             SearchPreviousWElCourant, CarCourant, mot, context
 PtrElement         *ElCourant;
 int                *CarCourant;
 char                mot[MAX_WORD_LEN];
@@ -593,7 +593,7 @@ PtrSearchContext           context;
 
    /* Verifie que l'element est de type texte */
    /* et que la recherche ne debute pas sur le dernier caractere */
-   if (pEl->ElTypeNumber != ord (CharString) + 1 || icar <= 0)
+   if (pEl->ElTypeNumber != CharString + 1 || icar <= 0)
      {
 	/* On n'a pas trouve de buffer */
 	adbuff = NULL;
@@ -620,7 +620,7 @@ PtrSearchContext           context;
    while (adbuff == NULL && pEl != NULL)
      {
 	/* Recherche le premier element texte non vide */
-	pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+	pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 	if (pEl != NULL)
 	  {
 	     if (Elfin != NULL)
@@ -636,8 +636,8 @@ PtrSearchContext           context;
 		/* cherche l'arbre a traiter avant celui ou` on n'a pas trouve' */
 		if (ArbreSuivant (&pEl, &icar, context))
 		   /* Il se peut que l'element rendu soit de type texte */
-		   if (pEl->ElTypeNumber != ord (CharString) + 1)
-		      pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+		   if (pEl->ElTypeNumber != CharString + 1)
+		      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 	     }
 
 	/* On saute les elements vides */
@@ -715,6 +715,6 @@ PtrSearchContext           context;
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchPreviousWord (ElCourant, CarCourant, mot, context));
+	   return (SearchPreviousWElCourant, CarCourant, mot, context);
      }
 }				/*SearchPreviousWord */

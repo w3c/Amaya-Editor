@@ -160,10 +160,10 @@ boolean             EnAvant;
      {
 	if (EnAvant)
 	   /* on recherche dans l'arbre abstrait la marque de page precedente */
-	   pPage = BackSearchTypedElem (pE, ord (PageBreak) + 1, NULL);
+	   pPage = BackSearchTypedElem (pE, PageBreak + 1, NULL);
 	else
 	   /* on recherche dans l'arbre abstrait la marque de page suivante */
-	   pPage = FwdSearchTypedElem (pE, ord (PageBreak) + 1, NULL);
+	   pPage = FwdSearchTypedElem (pE, PageBreak + 1, NULL);
 	if (pPage == NULL)
 	   /* c'est fini, on n'a pas trouve */
 	   fini = True;
@@ -243,10 +243,10 @@ boolean             EnAvant;
      {
 	if (EnAvant)
 	   /* on recherche dans l'arbre abstrait la marque de page precedente */
-	   pPage = BackSearchTypedElem (pE, ord (PageBreak) + 1, NULL);
+	   pPage = BackSearchTypedElem (pE, PageBreak + 1, NULL);
 	else
 	   /* on recherche dans l'arbre abstrait la marque de page suivante */
-	   pPage = FwdSearchTypedElem (pE, ord (PageBreak) + 1, NULL);
+	   pPage = FwdSearchTypedElem (pE, PageBreak + 1, NULL);
 	if (pPage == NULL)
 	   /* c'est fini, on n'a pas trouve */
 	   fini = True;
@@ -340,7 +340,7 @@ PtrPSchema         *pSchPPage;
 	     /* il faut rechercher la regle sur l'element suivant */
 	     /* car les elements marque page debut sont places AVANT les elements */
 	     /* qui portent la regle page */
-	     if ((pEl->ElTypeNumber == ord (PageBreak) + 1)
+	     if ((pEl->ElTypeNumber == PageBreak + 1)
 		 && pEl->ElPageType == PgBegin)
 		if (pEl->ElNext != NULL)
 		  {
@@ -348,7 +348,7 @@ PtrPSchema         *pSchPPage;
 		     /* on saute les eventuelles marques de colonnes */
 		     /* ou de page (pour d'autres vues par exemple) */
 		     while (pSuiv != NULL
-			    && pSuiv->ElTypeNumber == ord (PageBreak) + 1)
+			    && pSuiv->ElTypeNumber == PageBreak + 1)
 			pSuiv = pSuiv->ElNext;
 		     /* on cherche sur pPsuiv car normalement l'element */
 		     /* marque page debut a ete place juste devant l'element qui */
@@ -361,7 +361,7 @@ PtrPSchema         *pSchPPage;
 			  do
 			     if (pRegle == NULL)
 				stop = True;
-			     else if (ord (pRegle->PrType) > ord (PtFunction))
+			     else if (pRegle->PrType > PtFunction)
 				stop = True;
 			     else
 			       {
@@ -402,7 +402,7 @@ PtrPSchema         *pSchPPage;
 		     do
 			if (pRegle == NULL)
 			   stop = True;
-			else if (ord (pRegle->PrType) > ord (PtFunction))
+			else if (pRegle->PrType > PtFunction)
 			   stop = True;
 			else
 			  {
@@ -420,7 +420,7 @@ PtrPSchema         *pSchPPage;
 				  /* presentation pour construire */
 				  /* le contenu de l'element Marque Page */
 #ifdef __COLPAGE__
-				  if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+				  if (pEl->ElTypeNumber == PageBreak + 1)
 #endif /* __COLPAGE__ */
 				     pEl->ElSructSchema = pPere->ElSructSchema;
 			       }
@@ -493,7 +493,7 @@ int                *NbCol;
 	/* TODO pb si l'element marque page ou colonne a ete place suite */
 	/* a une regle page ou colonne du premier fils de la racine ! */
 	debutdoc = False;	/* a priori on n'est pas au debut du document */
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1
+	if (pEl->ElTypeNumber == PageBreak + 1
 	  && (pEl->ElPageType == ColBegin || pEl->ElPageType == ColGroup)
 	    && pPere->ElParent == NULL)
 	  {
@@ -502,7 +502,7 @@ int                *NbCol;
 	     while (!stop && !debutdoc)
 		if (pPrec == NULL)
 		   debutdoc = True;
-		else if (pPrec->ElTypeNumber != ord (PageBreak) + 1)
+		else if (pPrec->ElTypeNumber != PageBreak + 1)
 		   stop = True;
 		else
 		   pPrec = pPrec->ElPrevious;
@@ -516,7 +516,7 @@ int                *NbCol;
 	     /* qui portent la regle page ; sauf si la regle colonne est placee */
 	     /* dans une boite page : la marque colonne se trouve alors apres */
 	     /* la marque page */
-	     if ((pEl->ElTypeNumber == ord (PageBreak) + 1)
+	     if ((pEl->ElTypeNumber == PageBreak + 1)
 		 && pEl->ElPageType == ColBegin)
 		if (pPere->ElParent != NULL || !debutdoc)
 		   if (pEl->ElNext != NULL)
@@ -526,7 +526,7 @@ int                *NbCol;
 			/* marque page debut a ete place juste devant l'element qui */
 			/* portait la regle page correspondante */
 			/* on saute les eventuelles autres marques page (d'autres vues) */
-			while (pSuiv != NULL && pSuiv->ElTypeNumber == ord (PageBreak) + 1)
+			while (pSuiv != NULL && pSuiv->ElTypeNumber == PageBreak + 1)
 			   pSuiv = pSuiv->ElNext;
 			if (pSuiv != NULL)	/* pSuiv n'est pas une marque page */
 			  {
@@ -536,7 +536,7 @@ int                *NbCol;
 			     do
 				if (pRegle == NULL)
 				   stop = True;
-				else if (ord (pRegle->PrType) > ord (PtFunction))
+				else if (pRegle->PrType > PtFunction)
 				   stop = True;
 				else
 				  {
@@ -574,20 +574,20 @@ int                *NbCol;
 	     /* et dans ce cas, la marque colonne debut est placee apres la marque */
 	     /* page : on recherche l'element marque page qui pourrait avoir une */
 	     /* regle FnColumn */
-	     if (TypeCol == 0 && pEl->ElTypeNumber == ord (PageBreak) + 1
+	     if (TypeCol == 0 && pEl->ElTypeNumber == PageBreak + 1
 		 && pEl->ElPageType == ColBegin)
 		if (pEl->ElPrevious != NULL)
 		  {
 		     pPrec = pEl->ElPrevious;
 		     /* on saute les eventuelles autres marques page (d'autres vues) */
-		     while (pPrec != NULL && pPrec->ElTypeNumber == ord (PageBreak) + 1
+		     while (pPrec != NULL && pPrec->ElTypeNumber == PageBreak + 1
 			    && (pPrec->ElViewPSchema != VueNb
 				|| pPrec->ElPageType == ColBegin
 				|| pPrec->ElPageType == ColComputed
 				|| pPrec->ElPageType == ColGroup
 				|| pPrec->ElPageType == ColUser))
 			pPrec = pPrec->ElPrevious;
-		     if (pPrec != NULL && pPrec->ElTypeNumber == ord (PageBreak) + 1)
+		     if (pPrec != NULL && pPrec->ElTypeNumber == PageBreak + 1)
 			/* on est bien sur un element Marque page de la meme vue */
 		       {
 			  /* on recherche si cet element porte une regle colonne */
@@ -630,7 +630,7 @@ int                *NbCol;
 		     do
 			if (pRegle == NULL)
 			   stop = True;
-			else if (ord (pRegle->PrType) > ord (PtFunction))
+			else if (pRegle->PrType > PtFunction)
 			   stop = True;
 			else
 			  {
@@ -881,7 +881,7 @@ boolean             EnAvant;
 			  /* est une marque de page pour la vue consideree */
 			  /* pour s'arreter, on met un volume negatif */
 			  if (Nb > NbAvant + 1
-			      && (pEl->ElTypeNumber == (ord (PageBreak) + 1)
+			      && (pEl->ElTypeNumber == (PageBreak + 1)
 				  && pEl->ElViewPSchema == VueSch)
 			      && (pEl->ElPageType == PgBegin
 				  || pEl->ElPageType == PgComputed
@@ -896,10 +896,10 @@ boolean             EnAvant;
 				 {
 				    if (EnAvant)
 				       pPage = FwdSearchTypedElem (pEl1,
-						ord (PageBreak) + 1, NULL);
+						PageBreak + 1, NULL);
 				    else
 				       pPage = BackSearchTypedElem (pEl1,
-						ord (PageBreak) + 1, NULL);
+						PageBreak + 1, NULL);
 				    /* on saute les colonnes */
 				    if (pPage != NULL &&
 					(pPage->ElPageType == PgBegin
@@ -949,7 +949,7 @@ boolean             EnAvant;
 					      pPavDetruire = NULL;
 					      while (!trouve && pAb != NULL
 					      && pAb->AbElement->ElTypeNumber !=
-						     ord (PageBreak) + 1
+						     PageBreak + 1
 						     && pAb != pDoc->DocViewRootAb[VueNb - 1])
 						{
 						   /* on regarde si pAb est vide */
@@ -980,7 +980,7 @@ boolean             EnAvant;
 						   /* de page : on lui met son volume a un pour */
 						   /* ne s'affiche pas en grise         */
 						   if (pPavDetruire->AbEnclosing->AbElement
-						       ->ElTypeNumber == ord (PageBreak) + 1)
+						       ->ElTypeNumber == PageBreak + 1)
 						      pPavDetruire->AbEnclosing->AbVolume = 1;
 						   /* destruction des paves */
 						   pAb = pPavDetruire;
@@ -1818,13 +1818,13 @@ PtrElement         *pElSauv;
 	/* cas temporaire ou des colonnes ne sont pas englobees dans un pave */
 	/* groupe de colonnes. On cree un element Marque ColGroup devant */
 	/* la premiere colonne */
-	if (pEl->ElTypeNumber == ord (PageBreak) + 1
+	if (pEl->ElTypeNumber == PageBreak + 1
 	    && pEl->ElViewPSchema == VueSch
 	 && (pEl->ElPageType == ColBegin || pEl->ElPageType == ColComputed))
 	  {
-	     pEl1 = BackSearchTypedElem (pEl, ord (PageBreak) + 1, NULL);
+	     pEl1 = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 	     while (pEl1 != NULL && pEl1->ElViewPSchema != VueSch)
-		pEl1 = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+		pEl1 = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 	     if (pEl1 != NULL
 		 && (pEl1->ElPageType == PgBegin
 		     || pEl1->ElPageType == PgComputed
@@ -1832,7 +1832,7 @@ PtrElement         *pElSauv;
 		/* pEl est une marque colonne de debut qui n'est pas precedee */
 		/* d'une marque colonne groupee : on en ajoute une */
 	       {
-		  pEl1 = NewSubtree (ord (PageBreak) + 1, pEl->ElSructSchema,
+		  pEl1 = NewSubtree (PageBreak + 1, pEl->ElSructSchema,
 		       pDoc, pEl->ElAssocNum, True, True, True, True);
 		  InsertElementBefore (pEl, pEl1);
 		  pEl1->ElPageType = ColGroup;
@@ -1861,7 +1861,7 @@ PtrElement         *pElSauv;
 		   do
 		     {
 			pEl1 = pPage;
-			pPage = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+			pPage = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 			if (pPage == NULL)
 			   stop = True;
 			else if (pPage->ElViewPSchema == VueSch
@@ -1908,7 +1908,7 @@ PtrElement         *pElSauv;
 			/* recherche de la marque ColGroup precedente */
 			pEl1 = pEl;
 			do
-			   pEl1 = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+			   pEl1 = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 			while (pEl1 != NULL && (pEl1->ElViewPSchema != VueSch
 					     || pEl1->ElPageType == ColBegin
 					  || pEl1->ElPageType == ColComputed
@@ -1948,7 +1948,7 @@ PtrElement         *pElSauv;
 			do
 			  {
 			     pEl1 = pPage;
-			     pPage = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+			     pPage = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 			  }
 			while (pPage != NULL && pPage->ElViewPSchema != VueSch);
 			if (pPage != NULL &&
@@ -2314,7 +2314,7 @@ boolean            *arret;
 		     trouve = False;
 		     while (pEl1 != NULL && !trouve)
 		       {
-			  pEl1 = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+			  pEl1 = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 			  trouve = (pEl1->ElViewPSchema == VueSch &&
 				    pEl1->ElPageType == ColGroup);
 		       }
@@ -2373,7 +2373,7 @@ boolean            *arret;
 		  trouve = False;
 		  while (pEl1 != NULL && !trouve)
 		    {
-		       pEl1 = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+		       pEl1 = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 		       trouve = (pEl1->ElViewPSchema == VueSch &&
 				 (pEl1->ElPageType == PgBegin
 				  || pEl1->ElPageType == PgComputed
@@ -2582,7 +2582,7 @@ boolean            *arret;
 	/* on descend la hierarchie des paves page et col */
 	if (PavPagePrec != NULL)
 	   while (PavPagePrec->AbFirstEnclosed != NULL
-		  && PavPagePrec->AbFirstEnclosed->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+		  && PavPagePrec->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 	     {
 		PavPagePrec = PavPagePrec->AbFirstEnclosed;
 		while (PavPagePrec->AbPresentationBox)		/* on saute les paves de pres */
@@ -2592,7 +2592,7 @@ boolean            *arret;
 	     }
 	/* si le document est mis en colonnes, PavPavPrec est toujours un pave de col */
 	if ((!premcol) && PavPagePrec != NULL
-	    && !(pEl1 != NULL && pEl1->ElTypeNumber == ord (PageBreak) + 1
+	    && !(pEl1 != NULL && pEl1->ElTypeNumber == PageBreak + 1
 		 && pEl1->ElViewPSchema == VueSch
 		 && (pEl1->ElPageType == PgBegin
 		     || pEl1->ElPageType == PgComputed
@@ -2651,7 +2651,7 @@ boolean            *arret;
 		     /* s'il n'existe pas comme voisin, on cherche dans la branche */
 		     /* precedente (ou suivante) */
 		     else
-			/* cas des colonnes */ if (pP->AbEnclosing->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+			/* cas des colonnes */ if (pP->AbEnclosing->AbElement->ElTypeNumber == PageBreak + 1)
 		       {
 			  pP = pP->AbEnclosing;
 			  if (EnAvant && pP->AbPrevious != NULL)
@@ -2660,7 +2660,7 @@ boolean            *arret;
 			     pP = pP->AbNext;
 			  else
 			     /* pas de precedent (suivant) */
-			     /* on remonte d'un dernier niveau */ if (pP->AbEnclosing->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+			     /* on remonte d'un dernier niveau */ if (pP->AbEnclosing->AbElement->ElTypeNumber == PageBreak + 1)
 			     if (EnAvant && pP->AbPrevious != NULL)
 				pP = pP->AbPrevious;
 			     else if (!EnAvant && pP->AbNext != NULL)
@@ -2676,7 +2676,7 @@ boolean            *arret;
 			     /* structure physique de plus bas niveau */
 			    {
 			       while (pP->AbFirstEnclosed != NULL
-				      && pP->AbFirstEnclosed->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+				      && pP->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 				 {
 				    pP = pP->AbFirstEnclosed;
 				    if (EnAvant)	/* on va sur le dernier fils */
@@ -2768,7 +2768,7 @@ boolean            *arret;
 				      || pEl->ElPageType == PgComputed
 				      || pEl->ElPageType == PgUser)
 				     while (pEl1->ElNext != NULL &&
-					    pEl1->ElNext->ElTypeNumber == ord (PageBreak) + 1 &&
+					    pEl1->ElNext->ElTypeNumber == PageBreak + 1 &&
 				     (pEl1->ElNext->ElPageType == ColBegin
 				      || pEl1->ElNext->ElPageType == ColComputed
 				      || pEl1->ElNext->ElPageType == ColUser
@@ -2777,7 +2777,7 @@ boolean            *arret;
 					pEl1 = pEl1->ElNext;
 				  else if (pEl->ElPageType == ColGroup)
 				     while (pEl1->ElNext != NULL &&
-					    pEl1->ElNext->ElTypeNumber == ord (PageBreak) + 1 &&
+					    pEl1->ElNext->ElTypeNumber == PageBreak + 1 &&
 				     (pEl1->ElNext->ElPageType == ColBegin
 				      || pEl1->ElNext->ElPageType == ColComputed
 				      || pEl1->ElNext->ElPageType == ColUser
@@ -2785,22 +2785,22 @@ boolean            *arret;
 					pEl1 = pEl1->ElNext;
 				  else	/* on saute uniquement les marques des autres vues */
 				     while (pEl1->ElNext != NULL
-					    && pEl1->ElNext->ElTypeNumber == ord (PageBreak) + 1
+					    && pEl1->ElNext->ElTypeNumber == PageBreak + 1
 				     && pEl1->ElNext->ElViewPSchema != VueSch)
 					pEl1 = pEl1->ElNext;
 			       else	/* !EnAvant, quelque soit pEl, */
 				  /* on saute uniquement les marques des autres vues */
 				  while (pEl1->ElPrevious != NULL &&
-					 pEl1->ElPrevious->ElTypeNumber == ord (PageBreak) + 1
+					 pEl1->ElPrevious->ElTypeNumber == PageBreak + 1
 				    && pEl1->ElNext->ElViewPSchema != VueSch)
 				     pEl1 = pEl1->ElPrevious;
 			       /* on remonte l'arbre tant qu'on n'a rien a dupliquer */
 			       while (pEl1 != pAb->AbElement && !adupliquer)
 				  if (EnAvant && pEl1->ElNext != NULL
-				      && pEl1->ElNext->ElTypeNumber != ord (PageBreak) + 1)
+				      && pEl1->ElNext->ElTypeNumber != PageBreak + 1)
 				     adupliquer = True;
 				  else if (!EnAvant && pEl1->ElPrevious != NULL
-					   && pEl1->ElPrevious->ElTypeNumber != ord (PageBreak) + 1)
+					   && pEl1->ElPrevious->ElTypeNumber != PageBreak + 1)
 				     adupliquer = True;
 				  else
 				     pEl1 = pEl1->ElParent;	/* jamais NULL */
@@ -3388,7 +3388,7 @@ boolean            *arret;
 	     pEl1 = pElSauv;
 	     while (pEl1 != NULL && !stop)
 	       {
-		  pEl1 = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+		  pEl1 = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 		  if (pEl1 != NULL)
 		     /* on saute les marques des autres vues */
 		     /* et les marques colonnes simples */
@@ -3418,7 +3418,7 @@ boolean            *arret;
 	     pPage = NULL;
 	     while (pEl1 != NULL && !stop)
 	       {		/* recherche en avant */
-		  pEl1 = FwdSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+		  pEl1 = FwdSearchTypedElem (pEl1, PageBreak + 1, NULL);
 		  if (pEl1 != NULL && pEl1->ElViewPSchema == VueSch)
 		     if (pEl1->ElPageType == ColBegin
 			 || pEl1->ElPageType == ColComputed

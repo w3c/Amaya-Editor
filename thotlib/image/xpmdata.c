@@ -276,7 +276,7 @@ unsigned int       *ui_return;
    char                buf[BUFSIZ];
    int                 l;
 
-   l = xpmNextWord (mdata, buf, BUFSIZ);
+   l = xpmNextWmdata, buf, BUFSIZ;
    return atoui (buf, l, ui_return);
 }
 
@@ -286,11 +286,11 @@ unsigned int       *ui_return;
 
 #ifdef __STDC__
 unsigned int
-                    xpmNextWord (xpmData * mdata, char *buf, unsigned int buflen)
+                    xpmNextWxpmData * mdata, char *buf, unsigned int buflen
 
 #else  /* __STDC__ */
 unsigned int
-                    xpmNextWord (mdata, buf, buflen)
+                    xpmNextWmdata, buf, buflen
 xpmData            *mdata;
 char               *buf;
 unsigned int        buflen;
@@ -758,13 +758,13 @@ xpmData            *mdata;
 	mdata->Bos = '\0';
 	mdata->Eos = '\n';
 	mdata->Bcmt = mdata->Ecmt = NULL;
-	l = xpmNextWord (mdata, buf, BUFSIZ);
+	l = xpmNextWmdata, buf, BUFSIZ;
 	if (l == 7 && !strncmp ("#define", buf, 7))
 	  {
 	     /* this maybe an XPM 1 file */
 	     char               *ptr;
 
-	     l = xpmNextWord (mdata, buf, BUFSIZ);
+	     l = xpmNextWmdata, buf, BUFSIZ;
 	     if (!l)
 		return (XpmFileInvalid);
 	     ptr = index (buf, '_');
@@ -781,7 +781,7 @@ xpmData            *mdata;
 	      * skip the first word, get the second one, and see if this is
 	      * XPM 2 or 3
 	      */
-	     l = xpmNextWord (mdata, buf, BUFSIZ);
+	     l = xpmNextWmdata, buf, BUFSIZ;
 	     if ((l == 3 && !strncmp ("XPM", buf, 3)) ||
 		 (l == 4 && !strncmp ("XPM2", buf, 4)))
 	       {
@@ -790,7 +790,7 @@ xpmData            *mdata;
 		  else
 		    {
 		       /* get the type key word */
-		       l = xpmNextWord (mdata, buf, BUFSIZ);
+		       l = xpmNextWmdata, buf, BUFSIZ;
 
 		       /*
 		        * get infos about this type

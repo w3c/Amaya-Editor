@@ -736,13 +736,13 @@ PtrDocument         pDoc;
 		 /* pages de l'arbre abstrait traite' */
 		{
 		   if (pCnt->CnItem[0].CiCntrOp == CntrRank && pCnt->CnItem[0].
-		       CiElemType == ord (PageBreak) + 1)
+		       CiElemType == PageBreak + 1)
 		      /* c'est un compteur de la forme CntrRank of Page(view) */
 		      ReNumPages (pEl, pCnt->CnItem[0].CiViewNum);
 		   else
 		      /* c'est un compteur de la forme Set...Add n on Page(view) */
 		      if (pCnt->CnItem[0].CiCntrOp == CntrSet
-			  && pCnt->CnItem[1].CiElemType == ord (PageBreak) + 1)
+			  && pCnt->CnItem[1].CiElemType == PageBreak + 1)
 		      ReNumPages (pEl, pCnt->CnItem[1].CiViewNum);
 		   /* fait reafficher toutes les boites de presentation dependant */
 		   /* de la valeur de ce compteur */

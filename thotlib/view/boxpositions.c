@@ -806,7 +806,7 @@ boolean            *modifpage;
 		  /* on saute les paves de colonnes pour arriver a la */
 		  /* derniere car c'est toujours pour la derniere */
 		  /* colonne qu'on evalue la coupure */
-		  while (pavefils->AbElement->ElTypeNumber == ord (PageBreak) + 1
+		  while (pavefils->AbElement->ElTypeNumber == PageBreak + 1
 			 && (pavefils->AbElement->ElPageType == ColBegin
 			  || pavefils->AbElement->ElPageType == ColComputed
 		       || pavefils->AbElement->ElPageType == ColUser

@@ -76,7 +76,7 @@ PtrSSchema        pSS;
 	/* specifique de type fonction, on la prend, si ses conditions */
 	/* d'application sont satisfaites. */
 	if ((*pRSpecif)->PrType == PtFunction &&
-	    ord ((*pRDefaut)->PrType) > ord (PtFunction))
+	    (*pRDefaut->PrType) > PtFunction)
 	  {
 	     stop = False;
 	     do
@@ -986,7 +986,7 @@ PtrSSchema        pSS;
 		       do
 			  if (pVois == NULL)
 			     stop = True;
-			  else if (pVois->ElTypeNumber == ord (PageBreak) + 1)
+			  else if (pVois->ElTypeNumber == PageBreak + 1)
 			     pVois = pVois->ElPrevious;
 			  else
 			     stop = True;
@@ -1001,7 +1001,7 @@ PtrSSchema        pSS;
 		       do
 			  if (pVois == NULL)
 			     stop = True;
-			  else if (pVois->ElTypeNumber == ord (PageBreak) + 1)
+			  else if (pVois->ElTypeNumber == PageBreak + 1)
 			     pVois = pVois->ElNext;
 			  else
 			     stop = True;
@@ -1107,21 +1107,21 @@ PtrSSchema        pSS;
 		    case PcUserPage:
 		       /* la condition est satisfaite si l'element
 		          est un saut de page utilisateur */
-		       if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+		       if (pElem->ElTypeNumber == PageBreak + 1)
 			  condcour = pElem->ElPageType == PgUser;
 		       break;
 
 		    case PcStartPage:
 		       /* la condition est satisfaite si l'element
 		          est un saut de page de debut */
-		       if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+		       if (pElem->ElTypeNumber == PageBreak + 1)
 			  condcour = pElem->ElPageType == PgBegin;
 		       break;
 
 		    case PcComputedPage:
 		       /* la condition est satisfaite si l'element
 		          est un saut de page calcule */
-		       if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+		       if (pElem->ElTypeNumber == PageBreak + 1)
 			  condcour = pElem->ElPageType == PgComputed;
 		       break;
 
@@ -1301,16 +1301,16 @@ int                *VueSch;
 	if (Arriere)
 	  {
 	     /* cherche en arriere */
-	     *pElRef = BackSearchElem2Types (*pElRef, ord (PageBreak) + 1, TypEl, NULL, pSchStr);
+	     *pElRef = BackSearchElem2Types (*pElRef, PageBreak + 1, TypEl, NULL, pSchStr);
 	  }
 	else
 	  {
 	     /* cherche en avant */
-	     *pElRef = FwdSearchElem2Types (*pElRef, ord (PageBreak) + 1, TypEl, NULL, pSchStr);
+	     *pElRef = FwdSearchElem2Types (*pElRef, PageBreak + 1, TypEl, NULL, pSchStr);
 	  }
 	if (*pElRef == NULL)	/* on n'a rien trouve'. Fin sans succes. */
 	   fin = True;
-	else if ((*pElRef)->ElTypeNumber == ord (PageBreak) + 1
+	else if ((*pElRef)->ElTypeNumber == PageBreak + 1
 		 && (*pElRef)->ElViewPSchema == *VueSch)
 	   /* on a trouve' une marque de page pour la vue traitee. */
 	   /* Fin sans succes. */
@@ -1728,7 +1728,7 @@ boolean             CreateurComplet;
 			 /* sous le pave corps de page s'il existe */
 			 if (pP1->AbEnclosing == NULL && pP1->AbFirstEnclosed != NULL
 			     && pP1->AbFirstEnclosed->AbElement->ElTypeNumber ==
-			     ord (PageBreak) + 1)
+			     PageBreak + 1)
 			   {
 			      pP1 = pP1->AbFirstEnclosed;
 			      /* recherche du premier pave corps de page (on saute le */
@@ -1739,7 +1739,7 @@ boolean             CreateurComplet;
 			      while (pP1 != NULL &&
 				     pP1->AbFirstEnclosed != NULL &&
 				     pP1->AbFirstEnclosed->AbElement->ElTypeNumber
-				     == ord (PageBreak) + 1)
+				     == PageBreak + 1)
 				{
 				   pP1 = pP1->AbFirstEnclosed;
 				   /* on saute les eventuels paves de presentation */
@@ -1851,7 +1851,7 @@ boolean             CreateurComplet;
 			 /* sous le dernier pave corps de page s'il en existe */
 			 if (pP1->AbEnclosing == NULL && pP1->AbFirstEnclosed != NULL
 			     && pP1->AbFirstEnclosed->AbElement->ElTypeNumber ==
-			     ord (PageBreak) + 1)
+			     PageBreak + 1)
 			   {
 			      pP1 = pP1->AbFirstEnclosed;
 			      /* recherche du dernier pave corps de page  */
@@ -1864,7 +1864,7 @@ boolean             CreateurComplet;
 
 			      /* on descend la hierarchie des colonnes */
 			      while (pP1->AbFirstEnclosed != NULL &&
-				     pP1->AbFirstEnclosed->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+				     pP1->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 				{
 				   pP1 = pP1->AbFirstEnclosed;
 				   while (pP1->AbNext != NULL)
@@ -2164,7 +2164,7 @@ boolean             CreateurComplet;
 		   else
 		     {
 			/* il y a un frere suivant */
-			if (pVoisin->ElTerminal && pVoisin->ElTypeNumber == ord (PageBreak) + 1)
+			if (pVoisin->ElTerminal && pVoisin->ElTypeNumber == PageBreak + 1)
 			   /* c'est une marque de page, on passe au suivant */
 			   pVoisin = pVoisin->ElNext;
 			else
@@ -2368,7 +2368,7 @@ boolean             CreateurComplet;
 			      stop = False;
 			      do
 				 if ((pP1->AbPresentationBox && pP1->AbElement == pEl)
-				     || (pP1->AbElement->ElTypeNumber == ord (PageBreak) + 1
+				     || (pP1->AbElement->ElTypeNumber == PageBreak + 1
 					 && pP1->AbElement->ElPageType == PgBegin))
 				    /* c'est un pave de presentation de l'element ou */
 				    /* un saut de page de debut d'element */
@@ -2393,7 +2393,7 @@ boolean             CreateurComplet;
 
 			      if (PavCree != NULL)
 				 if (pP1->AbElement == pEl
-				     || (pP1->AbElement->ElTypeNumber == ord (PageBreak) + 1
+				     || (pP1->AbElement->ElTypeNumber == PageBreak + 1
 					 && pP1->AbElement->ElPageType == PgBegin))
 				    /* chaine le nouveau pave apres le dernier pave */
 				    /* de presentation cree par une regle FnCreateFirst */
@@ -2826,7 +2826,7 @@ boolean             CreateurComplet;
 		    }
 		  /* met a jour le volume libre restant dans la vue */
 		  MajVolLibre (PavCree, pDoc);
-		  if (pEl->ElTypeNumber == ord (PageBreak) + 1)
+		  if (pEl->ElTypeNumber == PageBreak + 1)
 		     /* c'est une boite de haut ou bas de page. Sa creation */
 		     /* affecte peut-etre les autres boites de haut ou bas de page */
 		     /* deja creees. */
@@ -3082,7 +3082,7 @@ PtrPRule        pRegle;
    do
       if (pRegle == NULL)
 	 stop = True;
-      else if (ord (pRegle->PrType) > ord (PtFunction))
+      else if (pRegle->PrType > PtFunction)
 	{
 	   stop = True;
 	   pRegle = NULL;
@@ -3644,7 +3644,7 @@ boolean             EnAvant;
 		/* on saute les elements marque page si !EnAvant car l'ordre n'est */
 		/* plus respecte */
 		if (pElem->ElAbstractBox[VueNb - 1] == NULL
-		    || (!EnAvant && pElem->ElTypeNumber == ord (PageBreak) + 1))
+		    || (!EnAvant && pElem->ElTypeNumber == PageBreak + 1))
 		   /* l'element n'a pas de pave dans la vue cherche le premier */
 		   /* descendant qui ait un pave dans la vue */
 		   pDesc = DescVisible (pElem, VueNb, EnAvant);
@@ -4193,7 +4193,7 @@ PtrPSchema         *pSchPPage;
 	     pNext = pEl->ElNext;
 	     while (pNext)
 	       {
-		  if (pNext->ElTypeNumber == ord (PageBreak) + 1)
+		  if (pNext->ElTypeNumber == PageBreak + 1)
 		    {
 		       pPageAssociee = pNext;
 		       break;
@@ -4211,7 +4211,7 @@ PtrPSchema         *pSchPPage;
 	     pPrec = pEl->ElPrevious;
 	     while (pPrec)
 	       {
-		  if (pPrec->ElTypeNumber == ord (PageBreak) + 1)
+		  if (pPrec->ElTypeNumber == PageBreak + 1)
 		    {
 		       pPageAssociee = pPrec;
 		       break;
@@ -4436,7 +4436,7 @@ PtrAbstractBox             NouvPave;
       /* applique une regle si elle concerne la vue */
       /* et si ce n'est pas une hauteur de page */
      {
-	if (!(pEl->ElTypeNumber == ord (PageBreak) + 1 && pR->PrType == PtHeight))
+	if (!(pEl->ElTypeNumber == PageBreak + 1 && pR->PrType == PtHeight))
 	   if ((pR->PrViewNum == VueSch
 		|| pR->PrType == PtImDescr)
 	       && NouvPave != NULL
@@ -5003,7 +5003,7 @@ boolean            *complet;
 				    /* on appellera CreePaves s'il faut appliquer les */
 				    /* regles de presentation de ce fils */
 				    if (pAb1->AbSize != -1
-					&& !(!EnAvant && pFils->ElTypeNumber == ord (PageBreak) + 1))
+					&& !(!EnAvant && pFils->ElTypeNumber == PageBreak + 1))
 				       /* si !EnAvant, il faut appeler CreePaves si */
 				       /* l'element est une marque de page */
 				       if (pAb1->AbLeafType != LtCompound)
@@ -5239,7 +5239,7 @@ boolean            *complet;
 						     /* aller sous le dernier corps de page */
 						     if (PavFils != NULL
 							 && PavFils->AbElement->ElTypeNumber
-						     == ord (PageBreak) + 1)
+						     == PageBreak + 1)
 						       {
 							  while (PavFils->AbNext != NULL)
 							     PavFils = PavFils->AbNext;
@@ -5249,7 +5249,7 @@ boolean            *complet;
 							  /* PavFils est le dernier corps de page
 							     on descend la hierarchie des colonnes */
 							  while (PavFils->AbFirstEnclosed != NULL &&
-								 PavFils->AbFirstEnclosed->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+								 PavFils->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 							    {
 							       PavFils = PavFils->AbFirstEnclosed;
 							       while (PavFils->AbNext != NULL)
@@ -5295,14 +5295,14 @@ boolean            *complet;
 						     /* aller sous le premier corps de page */
 						     if (PavFils != NULL
 							 && PavFils->AbElement->ElTypeNumber
-						     == ord (PageBreak) + 1)
+						     == PageBreak + 1)
 						       {
 							  while (PavFils->AbPresentationBox)
 							     PavFils = PavFils->AbNext;
 							  /* PavFils premier corps de page. On */
 							  /* descend la hierarchie des colonnes */
 							  while (PavFils->AbFirstEnclosed != NULL &&
-								 PavFils->AbFirstEnclosed->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+								 PavFils->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 							    {
 							       PavFils = PavFils->AbFirstEnclosed;
 							       while (PavFils->AbPresentationBox)
@@ -5617,7 +5617,7 @@ boolean            *complet;
 	     pElPage = pEl;
 	     do
 	       {
-		  pElPage = BackSearchTypedElem (pElPage, ord (PageBreak) + 1, NULL);
+		  pElPage = BackSearchTypedElem (pElPage, PageBreak + 1, NULL);
 		  if (pElPage == NULL)
 		     stop = True;
 		  else if (pElPage->ElViewPSchema == VueSch &&

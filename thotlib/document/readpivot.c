@@ -101,7 +101,7 @@ BinFile             fich;
 	     if (c < ' ')
 	       {
 		  printf ("^");
-		  c = (char) (ord (c) + ord ('@'));
+		  c = (char) (c + '@');
 		  i++;
 	       }
 	     printf ("%c", c);
@@ -482,13 +482,13 @@ boolean             oldformat;
 	if (!oldformat)
 	   /* l'octet lu est l'octet de poids fort de la longueur */
 	  {
-	     lg = 256 * ord (c);	/* lit le 2eme octet de la longueur */
+	     lg = 256 * c;	/* lit le 2eme octet de la longueur */
 	     if (!BIOreadByte (fich, &c))
 	       {
 		  c = '\0';
 		  PivotError (fich);
 	       }
-	     lg += ord (c);
+	     lg += c;
 	  }
 	if (!effectif)
 	  {
@@ -794,13 +794,13 @@ BinFile             fich;
 	     *TR = RefFollow;
 	     *RExt = False;	/* il n'y a qu'un label court, sans marque */
 	     /* l'octet lu est l'octet de poids fort du label */
-	     j = 256 * ord (c);	/* lit le 2eme octet du label */
+	     j = 256 * c;	/* lit le 2eme octet du label */
 	     if (!BIOreadByte (fich, &c))
 	       {
 		  c = '\0';
 		  PivotError (fich);
 	       }
-	     j += ord (c);
+	     j += c;
 	     /* convertit le label numerique en chaine de caracteres */
 	     LabelIntToString (j, lab);
 	  }
@@ -1998,7 +1998,7 @@ boolean             creedesc;
 		  if (c < ' ')
 		    {
 		       printf ("^");
-		       c = (char) (ord (c) + ord ('@'));
+		       c = (char) (c + '@');
 		       i++;
 		    }
 		  printf ("%c", c);
@@ -2064,7 +2064,7 @@ boolean             creedesc;
 			    }
 			  ContenuElExp (&creetout, &TypeElement, &pSchStr, pschcont, typecontenu);
 		       }
-		  if (TypeElement == ord (PageBreak) + 1)
+		  if (TypeElement == PageBreak + 1)
 		     if (creepage)
 		       {
 			  cree = True;	/* on le cree */
@@ -2403,7 +2403,7 @@ boolean             creedesc;
 							     n++;
 							     /* mise a la norme iso des anciens pivots */
 							     if (pDoc->DocPivotVersion < 3)
-								if (ord (ch) >= 1 && ord (ch) <= 31)
+								if (ch >= 1 && ch <= 31)
 								   switch (ch)
 									 {
 									    case '\021':
@@ -2419,7 +2419,7 @@ boolean             creedesc;
 									       ch = '\351';
 									       break;	/*eacute */
 									    default:
-									       ch = (char) (ord (ch) + 223);
+									       ch = (char) (ch + 223);
 									 }
 							     /* changement des oe et OE */
 							     if (pDoc->DocPivotVersion < 4)
@@ -2636,7 +2636,7 @@ boolean             creedesc;
 						 else if (pEl != NULL)
 						   {
 						      if (!creetout)
-							 if (p->ElTypeNumber != ord (PageBreak) + 1)
+							 if (p->ElTypeNumber != PageBreak + 1)
 							    if (p->ElSructSchema != pEl->ElSructSchema)
 							       /* l'element a inserer dans l'arbre appartient       */
 							       /* a un schema different de celui de son pere        */
@@ -3416,8 +3416,8 @@ boolean             WithAPPEvent;
 		  /* seulement ses fils */
 		  premier = p;
 		  /* on lit les marques de pages jusqu'au premier element associe' */
-		  if (!error && typelu == ord (PageBreak) + 1)
-		     while (typelu == ord (PageBreak) + 1)
+		  if (!error && typelu == PageBreak + 1)
+		     while (typelu == PageBreak + 1)
 		       {
 			  nR = 0;
 			  pNat = NULL;

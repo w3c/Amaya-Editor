@@ -90,7 +90,7 @@ boolean             Affiche;
    boolean             DontReplace;
    boolean             UnPave;
 
-   if (pEl->ElTypeNumber != ord (CharString) + 1)
+   if (pEl->ElTypeNumber != CharString + 1)
       return;
    /* envoie l'evenement ElemTextModify.Pre a qui le demande */
    DontReplace = False;
@@ -651,7 +651,7 @@ int                 LgChaineCh;
 		  }
 	     while (!trouve && pEl != NULL)
 	       {
-		  pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+		  pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 		  if (pEl != NULL)
 		     /* on a trouve un element de texte */
 		    {
@@ -697,7 +697,7 @@ int                 LgChaineCh;
 		  }
 	     while (!trouve && pEl != NULL)
 	       {
-		  pEl = BackSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+		  pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 		  if (pEl != NULL)
 		     /* on a trouve' un element de texte */
 		    {
@@ -994,12 +994,12 @@ boolean             relatif;
 	if (relatif)
 	   /* c'est un deplacement relatif, si on est sur une page, on */
 	   /* l'ignore et on commence la recherche a partir du suivant */
-	   if (from->ElTypeNumber == ord (PageBreak) + 1)
+	   if (from->ElTypeNumber == PageBreak + 1)
 	      from = ElemSuiv (from);
 	pp = from;
 	while (depl > 0 && pp != NULL)
 	  {
-	     pp = FwdSearchTypedElem (from, ord (PageBreak) + 1, NULL);
+	     pp = FwdSearchTypedElem (from, PageBreak + 1, NULL);
 	     if (pp != NULL)
 	       {
 		  if (pp->ElViewPSchema == vue)
@@ -1023,7 +1023,7 @@ boolean             relatif;
    else
       while (depl < 0 && pp != NULL)
 	{
-	   pp = BackSearchTypedElem (from, ord (PageBreak) + 1, NULL);
+	   pp = BackSearchTypedElem (from, PageBreak + 1, NULL);
 	   if (pp != NULL)
 	     {
 		if (pp->ElViewPSchema == vue)

@@ -54,7 +54,7 @@ PtrPSchema         *pSchP;
    do
       if (pRegle == NULL)
 	 stop = True;
-      else if (ord (pRegle->PrType) > ord (PtFunction))
+      else if (pRegle->PrType > PtFunction)
 	 stop = True;
       else if (pRegle->PrType == PtFunction &&
 	 /**TODO*//* valeur de Vue si vue d'element associes ?? */
@@ -99,9 +99,9 @@ PtrPSchema          pSchP;
      {
 	if (pR == NULL)
 	   stop = True;
-	else if (ord (pR->PrType) > ord (TypeR))
+	else if (pR->PrType > TypeR)
 	   stop = True;
-	else if (ord (pR->PrType) == ord (TypeR))
+	else if (pR->PrType == TypeR)
 	  {
 	     stop = True;
 	     existe = True;
@@ -153,7 +153,7 @@ PtrPSchema         *pSchP;
 	     /* on saute les eventuelles marques de colonnes */
 	     /* ou de page (pour d'autres vues par exemple ?) */
 	     while (pSuiv != NULL
-		    && pSuiv->ElTypeNumber == ord (PageBreak) + 1)
+		    && pSuiv->ElTypeNumber == PageBreak + 1)
 		pSuiv = pSuiv->ElNext;
 	     /* on cherche uniquement sur pPsuiv car normalement l'element */
 	     /* marque page debut a ete place juste devant l'element qui */
@@ -289,7 +289,7 @@ PtrAbstractBox            *PavReaff;
      {
 	/* on ignore les paves deja morts */
 	if (!pP->AbDead)
-	   if (pP->AbElement->ElTypeNumber != ord (PageBreak) + 1)
+	   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
 	      /* demande au Mediateur la position et la hauteur du pave */
 	     {
 		HautCoupure (pP, True, &haut, &y, &NCar);
@@ -352,7 +352,7 @@ int                 VueNb;
 
    /* Test pour verifier que les paves sont bien des marques */
    /* de page et non de colonnes */
-   if (pPage->AbElement->ElTypeNumber == ord (PageBreak + 1)
+   if (pPage->AbElement->ElTypeNumber == PageBreak + 1
        && (pPage->AbElement->ElPageType == PgBegin
 	   || pPage->AbElement->ElPageType == PgComputed
 	   || pPage->AbElement->ElPageType == PgUser))

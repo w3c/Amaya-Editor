@@ -703,13 +703,13 @@ PtrSSchema        pSchStr;
 			 break;
 		      case TcondPRule:
 			 wrshort (Cond->TcAttr);
-			 if (Cond->TcAttr == ord (PtSize) ||
-			     Cond->TcAttr == ord (PtIndent) ||
-			     Cond->TcAttr == ord (PtLineSpacing) ||
-			     Cond->TcAttr == ord (PtLineWeight) ||
-			     Cond->TcAttr == ord (PtFillPattern) ||
-			     Cond->TcAttr == ord (PtBackground) ||
-			     Cond->TcAttr == ord (PtForeground))
+			 if (Cond->TcAttr == PtSize ||
+			     Cond->TcAttr == PtIndent ||
+			     Cond->TcAttr == PtLineSpacing ||
+			     Cond->TcAttr == PtLineWeight ||
+			     Cond->TcAttr == PtFillPattern ||
+			     Cond->TcAttr == PtBackground ||
+			     Cond->TcAttr == PtForeground)
 			   {
 			      wrsignshort (Cond->TcLowerBound);
 			      wrsignshort (Cond->TcUpperBound);
@@ -801,10 +801,10 @@ PtrTSchema        pSchTra;
 
    pRT1 = &pSchTra->TsPresTRule[pres - 1];
    if (pRT1->RtExist)
-      if (pres == ord (PtSize) + 1 || pres == ord (PtIndent) + 1 ||
-       pres == ord (PtLineSpacing) + 1 || pres == ord (PtLineWeight) + 1 ||
-	  pres == ord (PtFillPattern) + 1 || pres == ord (PtBackground) + 1 ||
-	  pres == ord (PtForeground) + 1)
+      if (pres == PtSize + 1 || pres == PtIndent + 1 ||
+       pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
+	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
+	  pres == PtForeground + 1)
 	 /* presentation a valeur numerique */
 	{
 	   wrshort (pRT1->RtNCase);
@@ -936,10 +936,10 @@ PtrSSchema        pSchStr;
 	pRTP1 = &pSc1->TsPresTRule[i - 1];
 	wrbool (pRTP1->RtExist);
 	if (pRTP1->RtExist)
-	   if (i == ord (PtSize) + 1 || i == ord (PtIndent) + 1 ||
-	       i == ord (PtLineSpacing) + 1 ||
-	       i == ord (PtLineWeight) + 1 || i == ord (PtFillPattern) + 1 ||
-	       i == ord (PtBackground) + 1 || i == ord (PtForeground) + 1)
+	   if (i == PtSize + 1 || i == PtIndent + 1 ||
+	       i == PtLineSpacing + 1 ||
+	       i == PtLineWeight + 1 || i == PtFillPattern + 1 ||
+	       i == PtBackground + 1 || i == PtForeground + 1)
 	      /* presentation a valeur numerique */
 	     {
 		wrshort (pRTP1->RtNCase);

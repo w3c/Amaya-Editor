@@ -480,7 +480,7 @@ static void         writefiles ()
 		  fprintf (outfile, "%c %4d\n", strtable[mc].identname[0], strtable[mc].identtype);
 		  fprintf (list, "%4d      ", strtable[mc].identtype);
 		  if (strtable[mc].identname[0] < ' ')
-		     fprintf (list, "\\%3d ", ord (strtable[mc].identname[0]));
+		     fprintf (list, "\\%3d ", strtable[mc].identname[0]);
 		  else
 		     fprintf (list, "%c    ", strtable[mc].identname[0]);
 		  lgln = 15;
@@ -703,8 +703,8 @@ iline               wl;
 	/* mot-cle long */
 	if ((inputLine[wi - 1] >= 'A'
 	     && inputLine[wi - 1] <= 'Z') || (inputLine[wi - 1] >= 'a'
-	       && inputLine[wi - 1] <= 'z') || (ord (inputLine[wi - 1]) >= 1
-					  && ord (inputLine[wi - 1]) <= 31))
+	       && inputLine[wi - 1] <= 'z') || (inputLine[wi - 1] >= 1
+					  && inputLine[wi - 1] <= 31))
 	   /* le premier caractere est une lettre */
 	  {
 	     j = wi;
@@ -713,7 +713,7 @@ iline               wl;
 		  if (!((inputLine[j] >= 'A'
 			 && inputLine[j] <= 'Z') || (inputLine[j] >= 'a'
 			     && inputLine[j] <= 'z') || (inputLine[j] >= '0'
-		    && inputLine[j] <= '9') || (ord (inputLine[wi - 1]) >= 1
+		    && inputLine[j] <= '9') || (inputLine[wi - 1] >= 1
 						&& inputLine[wi - 1] < ' ')))
 		     CompilerError (wi, GRM, FATAL, GRM_INCOR_KEY_WORD, inputLine, linenb);
 		  j++;

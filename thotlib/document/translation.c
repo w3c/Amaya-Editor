@@ -907,7 +907,7 @@ PtrElement          pEl;
    do
       if (pVois == NULL)
 	 stop = True;
-      else if (pVois->ElTypeNumber == ord (PageBreak) + 1)
+      else if (pVois->ElTypeNumber == PageBreak + 1)
 	 pVois = pVois->ElPrevious;
       else
 	 stop = True;
@@ -1038,7 +1038,7 @@ PtrDocument         pDoc;
 				 do
 				    if (pVois == NULL)
 				       stop = True;
-				    else if (pVois->ElTypeNumber == ord (PageBreak) + 1)
+				    else if (pVois->ElTypeNumber == PageBreak + 1)
 				       pVois = pVois->ElNext;
 				    else
 				       stop = True;
@@ -1305,7 +1305,7 @@ PtrDocument         pDoc;
 				 /* parcourt les presentations specifiques de l'element */
 				 while (pPres != NULL && !ret)
 				   {
-				      if (ord (pPres->PrType) == Cond->TcAttr)
+				      if (pPres->PrType == Cond->TcAttr)
 					 /* c'est la presentation cherchee, on teste sa valeur */
 					 if (pPres->PrType == PtSize || pPres->PrType == PtIndent ||
 					     pPres->PrType == PtLineSpacing ||
@@ -1337,7 +1337,7 @@ PtrDocument         pDoc;
 				 break;
 				 case TcondAlphabet
 			      /* la condition porte sur l'alphabet */ :
-				 if (pElem->ElTypeNumber == ord (CharString) + 1)
+				 if (pElem->ElTypeNumber == CharString + 1)
 				    ret = (TtaGetAlphabet (pElem->ElLanguage) == Cond->TcAlphabet);
 				 break;
 			      case TcondAttributes:
@@ -1360,19 +1360,19 @@ PtrDocument         pDoc;
 			      case TcondComputedPage:
 				 /* la condition est satisfaite si l'element
 				    est un saut de page calcule */
-				 if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+				 if (pElem->ElTypeNumber == PageBreak + 1)
 				    ret = pElem->ElPageType == PgComputed;
 				 break;
 			      case TcondStartPage:
 				 /* la condition est satisfaite si l'element
 				    est un saut de page de debut */
-				 if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+				 if (pElem->ElTypeNumber == PageBreak + 1)
 				    ret = pElem->ElPageType == PgBegin;
 				 break;
 			      case TcondUserPage:
 				 /* la condition est satisfaite si l'element
 				    est un saut de page utilisateur */
-				 if (pElem->ElTypeNumber == ord (PageBreak) + 1)
+				 if (pElem->ElTypeNumber == PageBreak + 1)
 				    ret = pElem->ElPageType == PgUser;
 				 break;
 				 /* cas page rappel supprime */
@@ -1479,7 +1479,7 @@ PtrElement          pElNum;
 	  }
 	else
 	  {
-	     if (pTr1->TnElemType1 == ord (PageBreak) + 1)
+	     if (pTr1->TnElemType1 == PageBreak + 1)
 		/* c'est un compteur de pages */
 	       {
 		  PSchStr = NULL;
@@ -1527,10 +1527,10 @@ PtrElement          pElNum;
 	     if (pEl == NULL)
 		val = 0;	/* pas trouve' */
 	     else if (pTr1->TnOperation == TCntrRank)
-		if (pTr1->TnElemType1 == ord (PageBreak) + 1)
+		if (pTr1->TnElemType1 == PageBreak + 1)
 		   /* c'est un compteur de pages */
 		  {
-		     if (pEl->ElTypeNumber == ord (PageBreak) + 1 && pEl->ElViewPSchema == 1)
+		     if (pEl->ElTypeNumber == PageBreak + 1 && pEl->ElViewPSchema == 1)
 			val = 1;
 		     else if (initattr)
 			val = valinitattr;
@@ -1539,7 +1539,7 @@ PtrElement          pElNum;
 		     /* compte les marques de page qui precedent l'element */
 		     do
 		       {
-			  pEl = BackSearchTypedElem (pEl, ord (PageBreak) + 1, NULL);
+			  pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 			  if (pEl != NULL)
 			     /* cas page rappel supprime */
 			     /* on ne compte que les marques de page de la vue 1 */
@@ -1585,8 +1585,8 @@ PtrElement          pElNum;
 			    if (EquivalentType (pEl, pTr1->TnElemType2, PSchStr))
 			       /* on ignore les pages qui ne */
 			       /* concernent pas la vue 1 */
-			       if (pEl1->ElTypeNumber != ord (PageBreak) + 1 ||
-				   (pEl1->ElTypeNumber == ord (PageBreak) + 1 &&
+			       if (pEl1->ElTypeNumber != PageBreak + 1 ||
+				   (pEl1->ElTypeNumber == PageBreak + 1 &&
 				    pEl1->ElViewPSchema == 1))
 				  val += pTr1->TnParam2;
 			 }
@@ -2012,7 +2012,7 @@ PtrDocument         pDoc;
    /* parcourt les regles de presentation specifique de l'element */
    while (pPres != NULL)
      {
-	pRT1 = &pSchT->TsPresTRule[ord (pPres->PrType)];
+	pRT1 = &pSchT->TsPresTRule[pPres->PrType];
 	if (pRT1->RtExist)
 	   /* il y a des regles de traduction pour cette presentation */
 	  {

@@ -95,7 +95,7 @@ char                ch;
 	if (ch < ' ' || ch > '~')
 	   /* caractere non imprimable, on ecrit son code octal apres \ */
 	  {
-	     c = ord (ch);
+	     c = ch;
 	     printf ("\\%o", c);
 	  }
 	else
@@ -106,7 +106,7 @@ char                ch;
 	if (ch < ' ' || ch > '~')
 	   /* caractere non imprimable, on le remplace par un caractere imprimable */
 	  {
-	     c = ord (ch);
+	     c = ch;
 	     switch (c)
 		   {
 		      case 0340:
@@ -595,7 +595,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = ord (CharString) + 1;
+   r = CharString + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");
@@ -604,7 +604,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = ord (GraphicElem) + 1;
+   r = GraphicElem + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");
@@ -613,7 +613,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = ord (Symbol) + 1;
+   r = Symbol + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");
@@ -622,7 +622,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = ord (Picture) + 1;
+   r = Picture + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");
@@ -631,7 +631,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = ord (PageBreak) + 1;
+   r = PageBreak + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");

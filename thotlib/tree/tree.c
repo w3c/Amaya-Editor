@@ -1100,7 +1100,7 @@ int                 assocNum;
       /* le parametre n'a pas de valeur, on cree un element texte contenant */
       /* son nom entre deux caracteres '$' */
      {
-	pEl = NewSubtree (ord (CharString) + 1, pSS, pDoc, assocNum, True, True,
+	pEl = NewSubtree (CharString + 1, pSS, pDoc, assocNum, True, True,
 			  True, False);
 	if (pEl != NULL)
 	  {

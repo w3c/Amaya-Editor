@@ -25,10 +25,10 @@ typedef enum
 
 typedef struct
 {
-     char     menuName[MAXFORMATNAMELENGHT];
-     Drawable (*CreateImage) ();
-     void     (*PrintImage) ();
-     boolean  (*IsFormat) ();
+  char     menuName[MAXFORMATNAMELENGHT];
+  Drawable (*CreateImage) ();
+  void     (*PrintImage) ();
+  boolean  (*IsFormat) ();
 } PictureHandler;
 
 #define EXPORT extern

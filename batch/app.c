@@ -1262,35 +1262,35 @@ FILE               *Hfile;
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSchStr->SsName);
-   r = ord (CharString) + 1;
+   r = CharString + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSchStr->SsName);
-   r = ord (GraphicElem) + 1;
+   r = GraphicElem + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSchStr->SsName);
-   r = ord (Symbol) + 1;
+   r = Symbol + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSchStr->SsName);
-   r = ord (Picture) + 1;
+   r = Picture + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSchStr->SsName);
-   r = ord (PageBreak) + 1;
+   r = PageBreak + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);

@@ -105,7 +105,7 @@ static void ChangeRHPage(PavRacine, pDoc, VueNb)
    pP = pP->AbNext;
  while (pP != NULL)
    {
-     if (pP->AbElement->ElTypeNumber == ord(PageBreak) + 1 /* tj vrai ? */
+     if (pP->AbElement->ElTypeNumber == PageBreak + 1 /* tj vrai ? */
          && !pP->AbPresentationBox)
        {
          /* c'est un corps de page */
@@ -122,14 +122,14 @@ static void ChangeRHPage(PavRacine, pDoc, VueNb)
          /* si le fils est une colonne, on fait pareil */
          pPFils = pP->AbFirstEnclosed;
          while (pPFils != NULL 
-                && pPFils->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+                && pPFils->AbElement->ElTypeNumber == PageBreak + 1)
            /* on parcourt la suite des groupes de colonnes en */
            /* sautant les eventuels paves de presentation */
            /* TODO parcours en profondeur quand regles incluses ! */
            {
              while (pPFils->AbPresentationBox)
                pPFils = pPFils->AbNext;
-             if (pPFils->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+             if (pPFils->AbElement->ElTypeNumber == PageBreak + 1)
                {
                  pDim = &pPFils->AbHeight;
                  pDim->DimIsPosition = False;
@@ -143,14 +143,14 @@ static void ChangeRHPage(PavRacine, pDoc, VueNb)
                  /* si le fils est une colonne, on fait pareil */
                  pCol = pPFils->AbFirstEnclosed;
                  while (pCol != NULL 
-                   && pCol->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+                   && pCol->AbElement->ElTypeNumber == PageBreak + 1)
                    /* on parcourt la suite des colonnes en */
                    /* sautant les eventuels paves de presentation */
                    /* TODO parcours en profondeur quand regles incluses ! */
                    {
              	    while (pCol->AbPresentationBox)
                	      pCol = pCol->AbNext;
-             	    if (pCol->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+             	    if (pCol->AbElement->ElTypeNumber == PageBreak + 1)
                	      {
                  	pDim = &pCol->AbHeight;
                  	pDim->DimIsPosition = False;
@@ -226,7 +226,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
       /* on verifie si la selection commence ou se termine sur une marque */
       /* de page qui va disparaitre et dans ce cas on change la selection */
       pEl1 = Prem; /* debut de la selection */
-      if (pEl1->ElTypeNumber == ord(PageBreak) + 1)
+      if (pEl1->ElTypeNumber == PageBreak + 1)
 	if (pEl1->ElViewPSchema == VueSch)
 #ifdef __COLPAGE__
 	  if (pEl1->ElPageType == PgComputed
@@ -260,7 +260,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
 		}
       pEl1 = Der; 
       /* dernier element de la selection */ 
-      if (pEl1->ElTypeNumber == ord(PageBreak) + 1)
+      if (pEl1->ElTypeNumber == PageBreak + 1)
 	if (pEl1->ElViewPSchema == VueSch)
 #ifdef __COLPAGE__
 	  if (pEl1->ElPageType == PgComputed
@@ -292,7 +292,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
 	if (pEl1->ElLeafType == LtText)
 	  /* la selection debute dans une feuille de texte */
 	  if (pEl1->ElPrevious != NULL)
-	    if (pEl1->ElPrevious->ElTypeNumber == ord(PageBreak) + 1)
+	    if (pEl1->ElPrevious->ElTypeNumber == PageBreak + 1)
 	      if (pEl1->ElPrevious->ElViewPSchema == VueSch)
 #ifdef __COLPAGE__
 		if (pEl1->ElPrevious->ElPageType == PgComputed
@@ -338,7 +338,7 @@ static boolean AnnuleSelectionPage(pDoc, VueSch, SelPrem, SelDer, SelPremCar, Se
 	if (pEl1->ElLeafType == LtText)
 	  /* la selection se termine dans une feuille de texte */
 	  if (pEl1->ElPrevious != NULL)
-	    if (pEl1->ElPrevious->ElTypeNumber == ord(PageBreak) + 1)
+	    if (pEl1->ElPrevious->ElTypeNumber == PageBreak + 1)
 	      if (pEl1->ElPrevious->ElViewPSchema == VueSch)
 #ifdef __COLPAGE__
 		if (pEl1->ElPrevious->ElPageType == PgComputed
@@ -467,7 +467,7 @@ static void DtrMarquesDePages(pDoc, pElRacine, VueSch)
   while (pEl != NULL)
     /* cherche la prochaine marque de page */
     {
-      pEl = FwdSearchTypedElem(pEl, ord(PageBreak) + 1, NULL);
+      pEl = FwdSearchTypedElem(pEl, PageBreak + 1, NULL);
       if (pEl != NULL)
 	if (pEl->ElViewPSchema == VueSch)
 	  /* on a trouve' une marque de page concernant la vue */
@@ -794,13 +794,13 @@ static PtrElement SautDePage(pEl, VueSch)
 	   if (pEl->ElFirstChild == NULL)
 	      return NULL;
 	   else
-	      if (pEl->ElFirstChild->ElTypeNumber == ord(PageBreak)+1)
+	      if (pEl->ElFirstChild->ElTypeNumber == PageBreak+1)
 		{
 		  /* on cherche dans les premiers fils une marque de la vue */
 		    trouve = False;
 		    pE = pEl->ElFirstChild;
 		    while (!trouve && pE != NULL && 
-			   pE->ElTypeNumber == ord(PageBreak)+1)
+			   pE->ElTypeNumber == PageBreak+1)
 		      if (pE->ElViewPSchema == VueSch)
 		        trouve = True;
 		      else
@@ -887,7 +887,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   pP = pAb;
  /* si pAb est un pave de marque page, inutile d'inserer */
  /* une marque en plus : le decoupage courant est satisfaisant */
- if (!(pP->AbElement->ElTypeNumber == ord(PageBreak)+1
+ if (!(pP->AbElement->ElTypeNumber == PageBreak+1
 	    && (pP->AbElement->ElPageType == PgBegin
 		|| pP->AbElement->ElPageType == PgComputed
 		|| pP->AbElement->ElPageType == PgUser)))
@@ -995,7 +995,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
                ElemIsBefore = False;
              }
          pRegle = pRegle->PrNextPRule;
-         if (pRegle != NULL && ord(pRegle->PrType) > ord(PtFunction))
+         if (pRegle != NULL && pRegle->PrType > PtFunction)
            pRegle = NULL;
        }
    }
@@ -1016,7 +1016,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 /*653*/       while (pEl1->ElNext != NULL)
 /*653*/         pEl1 = pEl1->ElNext;
 /*653*/	    }
-  if (ElemIsBefore && pEl1->ElTypeNumber == ord(PageBreak)+1)
+  if (ElemIsBefore && pEl1->ElTypeNumber == PageBreak+1)
      return pEl1;
   if (ElemIsBefore)
     {
@@ -1031,7 +1031,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   notifyEl.event = TteElemNew;
   notifyEl.document = (Document)IdentDocument(pDoc);
   notifyEl.element = (Element)(pEl->ElParent);
-  notifyEl.elementType.ElTypeNum = ord(PageBreak)+1;
+  notifyEl.elementType.ElTypeNum = PageBreak+1;
   notifyEl.elementType.ElSSchema = (SSchema)(ElRacine->ElSructSchema);
   nbFreres = 0;
   pF = pEl1;
@@ -1045,7 +1045,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
   notifyEl.position = nbFreres;
   ThotSendMessage((NotifyEvent *)&notifyEl, True);
   /* cree l'element Marque de Page */
-  pElPage = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
+  pElPage = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
 		       pDoc, pEl->ElAssocNum, True, True, True, True);
   /* insere l'element dans l'arbre abstrait */
   if (pEl1->ElParent != NULL)
@@ -1069,7 +1069,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
  /* Sinon, on  cree une page. */
  pP = pAb;
  trouve = False;
- while (pP->AbElement->ElTypeNumber != ord(PageBreak)+1)
+ while (pP->AbElement->ElTypeNumber != PageBreak+1)
    pP = pP->AbEnclosing;
  /* les paves de page ou colonnes englobent leur contenu */
  if (pP->AbElement->ElPageType == ColBegin
@@ -1095,7 +1095,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 		   /* il faut creer une nouvelle marque de page, */
 		   pEl1->ElPageType = PgComputed;
 	            /* creer une nouvelle marque de colonnes ColGroup */
-	           pElColG = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
+	           pElColG = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
 	                       pDoc, pEl->ElAssocNum, True, True, True, True);
 		   /* insere l'element dans l'arbre abstrait */
 	           InsertElementAfter(pEl1, pElColG);
@@ -1103,7 +1103,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
 		   pElColG->ElPageNumber = 0;
 		   pElColG->ElViewPSchema = VueSch;   
 		   /* et creer une nouvelle marque de colonne gauche */
-	           pElCol = NewSubtree(ord(PageBreak)+1, ElRacine->ElSructSchema,
+	           pElCol = NewSubtree(PageBreak+1, ElRacine->ElSructSchema,
 	                       pDoc, pEl->ElAssocNum, True, True, True, True);
 		   /* insere l'element dans l'arbre abstrait */
 	           InsertElementAfter(pElColG, pElCol);
@@ -1192,7 +1192,7 @@ static PtrElement InsereMarque(pAb, frame, VueNb, PaveCoupeOrig, PaveTropHaut, V
        }
      else
        pP = pP->AbEnclosing;
- if (pP1 != NULL && pP1->AbElement->ElTypeNumber == ord(PageBreak)+1
+ if (pP1 != NULL && pP1->AbElement->ElTypeNumber == PageBreak+1
 		   && (pP1->AbElement->ElPageType == PgBegin
 		       || pP1->AbElement->ElPageType == PgComputed
 		       || pP1->AbElement->ElPageType == PgUser))
@@ -1493,7 +1493,7 @@ static int DeplCoupure(pAb, NoBr1, VueSch)
    /* on saute les paves de colonnes pour arriver a la derniere */
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
    if (pAb != NULL)
-	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+	    while (pAb->AbElement->ElTypeNumber == PageBreak+1
 		   && (pAb->AbElement->ElPageType == ColBegin
 		       || pAb->AbElement->ElPageType == ColComputed
 		       || pAb->AbElement->ElPageType == ColUser
@@ -1586,7 +1586,7 @@ static void PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
 	  {
 	    pAb = pAb->AbFirstEnclosed;
-	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+	    while (pAb->AbElement->ElTypeNumber == PageBreak+1
 		   && (pAb->AbElement->ElPageType == ColBegin
 		       || pAb->AbElement->ElPageType == ColComputed
 		       || pAb->AbElement->ElPageType == ColUser
@@ -1612,7 +1612,7 @@ static void PlaceMarque(pAb, ElRacine, pDoc, VueSch, PaveTropHaut, PaveCoupeOrig
          /* n'est pas sur la limite. (page complete) */
          /* a voir si c'est necessaire !!! */
            if (pAb->AbOnPageBreak
-              && pAb->AbElement->ElTypeNumber == ord(PageBreak) +1
+              && pAb->AbElement->ElTypeNumber == PageBreak +1
               && pAb->AbLeafType == LtGraphics)
              {
                pAb->AbOnPageBreak = False;
@@ -1902,7 +1902,7 @@ static PtrElement PoseMarque(ElRacine, VueNb, pDoc, frame)
    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
 	  {
 	    pAb = pAb->AbFirstEnclosed;
-	    while (pAb->AbElement->ElTypeNumber == ord(PageBreak)+1
+	    while (pAb->AbElement->ElTypeNumber == PageBreak+1
 		   && (pAb->AbElement->ElPageType == ColBegin
 		       || pAb->AbElement->ElPageType == ColComputed
 		       || pAb->AbElement->ElPageType == ColUser
@@ -2126,7 +2126,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
        /* on saute les eventuelles marques de colonnes */
        /* ou de page (pour d'autres vues par exemple ?) */  
        while (pSuiv != NULL
- 		     && pSuiv->ElTypeNumber == ord(PageBreak)+1)
+ 		     && pSuiv->ElTypeNumber == PageBreak+1)
          pSuiv = pSuiv->ElNext; 
        /* on cherche uniquement sur pPsuiv car normalement l'element */
        /* marque page debut a ete place juste devant l'element qui */
@@ -2161,7 +2161,7 @@ static void HautPage(pElPage, Vue, VueSch, frame, pDoc)
 	  do
 	    if (pR == NULL)
 	      stop = True;
-	    else if (ord(pR->PrType) >= ord(PtHeight))
+	    else if (pR->PrType >= PtHeight)
 	      stop = True;
 	    else
 	      pR = pR->PrNextPRule;
@@ -2390,7 +2390,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
   stop = False;		/* descend l'arbre */
   if (pEl != NULL)
   do
-    if (pEl->ElTypeNumber == ord(PageBreak) + 1 && pEl->ElViewPSchema == VueSch)
+    if (pEl->ElTypeNumber == PageBreak + 1 && pEl->ElViewPSchema == VueSch)
       {
 	/* c'est une marque de page pour cette vue */
 	/* saute les marques de page suivantes, qui concernent d'autres vues */
@@ -2403,7 +2403,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
 	  else
 	    {	/* examine l'element suivant */
 	      pEl = pEl->ElNext;
-	      if (pEl->ElTypeNumber != ord(PageBreak)+1)
+	      if (pEl->ElTypeNumber != PageBreak+1)
 		stop1 = True;
 	        /* ce n'est pas une marque de page, la */
 	        /* marque trouvee n'est donc pas en fin */
@@ -2440,7 +2440,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
         notifyEl.event = TteElemNew;
         notifyEl.document = (Document)IdentDocument(pDoc);
         notifyEl.element = (Element)(pEl->ElParent);
-        notifyEl.elementType.ElTypeNum = ord(PageBreak)+1;
+        notifyEl.elementType.ElTypeNum = PageBreak+1;
         notifyEl.elementType.ElSSchema = (SSchema)(pElRacine->ElSructSchema);
         notifyEl.position = nbFreres;
         ok = !ThotSendMessage((NotifyEvent *)&notifyEl, True);
@@ -2450,7 +2450,7 @@ void AjoutePageEnFin(pElRacine, VueSch, pDoc, withAPP)
       if (ok)
 	{
 	/* cree l'element marque de page */
-	pElPage = NewSubtree(ord(PageBreak)+1, pElRacine->ElSructSchema, pDoc,
+	pElPage = NewSubtree(PageBreak+1, pElRacine->ElSructSchema, pDoc,
 			     pEl->ElAssocNum, True, True, True, True);
 	/* insere la nouvelle marque de page apres le dernier fils */
 	InsertElementAfter(pEl, pElPage);	/* remplit cette marque de page */
@@ -2510,7 +2510,7 @@ static void Equilibrer_Col (pDoc, PavRacine, VueNb, VueSch)
     pP = pP->AbFirstEnclosed; /* premier groupe de colonnes */
   while (pP != NULL && pP->AbNext != NULL)
     pP = pP->AbNext; /* dernier groupe de colonnes */
-  if (pP->AbElement->ElTypeNumber == ord(PageBreak)+1
+  if (pP->AbElement->ElTypeNumber == PageBreak+1
       && pP->AbElement->ElPageType == ColGroup)
     {
       /* version simple : le groupe de colonnes ne contient qu'une seule */
@@ -2650,10 +2650,10 @@ PtrPSchema	pSchPage;
  /* (premier fils de la racine) */
    /* recherche du premier element Marque Page de la vue VueSch */
  pElPage1 = pElRacine->ElFirstChild;
- while (pElPage1 != NULL && pElPage1->ElTypeNumber == ord(PageBreak) + 1
+ while (pElPage1 != NULL && pElPage1->ElTypeNumber == PageBreak + 1
         && pElPage1->ElViewPSchema != VueSch)
    pElPage1 = pElPage1->ElNext;
- if (pElPage1 != NULL && pElPage1->ElTypeNumber == ord(PageBreak) + 1)
+ if (pElPage1 != NULL && pElPage1->ElTypeNumber == PageBreak + 1)
    {
  /* document mis en pages, on peut continuer la procedure */
 #endif /* __COLPAGE__ */
@@ -2752,7 +2752,7 @@ HauteurTotalePage = 0;
  PavRacine->AbTruncatedHead = True;
  /* si on a detruit des paves, la racine est coupee en tete */
  volume += volprec - PavRacine->AbVolume;
- if (pP->AbElement->ElTypeNumber != ord(PageBreak) + 1)
+ if (pP->AbElement->ElTypeNumber != PageBreak + 1)
    printf("erreur pagination : pave <> page sous racine", "\n");
  /* on renumerote cette marque de page */
  pEl1 = pP->AbElement;
@@ -3052,14 +3052,14 @@ HauteurTotalePage = 0;
   /* pour connaitre la hauteur des pages */
   /* cherche d'abord le 1er pave feuille ou la premiere marque de page */
   while (pP->AbFirstEnclosed != NULL &&
-	 pP->AbElement->ElTypeNumber != ord(PageBreak) + 1)
+	 pP->AbElement->ElTypeNumber != PageBreak + 1)
     pP = pP->AbFirstEnclosed;
-  if (pP->AbElement->ElTypeNumber != ord(PageBreak) + 1)
+  if (pP->AbElement->ElTypeNumber != PageBreak + 1)
     /* le document ne commence pas par une marque de page pour cette */
     /* vue ; on cherche la premiere marque de page qui suit */
-    pP = PavCherche(pP, False, ord(PageBreak) + 1, NULL, NULL);
+    pP = PavCherche(pP, False, PageBreak + 1, NULL, NULL);
   if (pP != NULL)
-    if (pP->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+    if (pP->AbElement->ElTypeNumber == PageBreak + 1)
       /* on a trouve une marque de page, on determine */
       /* la hauteur de ce type de page */
       HautPage(pP->AbElement, VueSch, &b, &pSchPage);
@@ -3072,13 +3072,13 @@ HauteurTotalePage = 0;
       pP = PavRacine;
       /* cherche le premier pave feuille ou la premiere marque de page */
       while (pP->AbFirstEnclosed != NULL 
-	     && pP->AbElement->ElTypeNumber != ord(PageBreak) + 1)
+	     && pP->AbElement->ElTypeNumber != PageBreak + 1)
 	pP = pP->AbFirstEnclosed;
       do
 	/* cherche les marques de page correspondant au debut d'un element */
 	/* portant une regle Page ou les marques mises par l'utilisateur */
 	{
-	  if (pP->AbElement->ElTypeNumber == ord(PageBreak) + 1)
+	  if (pP->AbElement->ElTypeNumber == PageBreak + 1)
 	    /* c'est une marque de page */
 	    /* affiche un message avec le numero de page */
 	    {
@@ -3100,7 +3100,7 @@ HauteurTotalePage = 0;
 		}
 	    }
 	  /* cherche la marque de la page suivante */
-	  pP = PavCherche(pP, False, ord(PageBreak)+1, NULL, NULL);
+	  pP = PavCherche(pP, False, PageBreak+1, NULL, NULL);
 	  if (pP != NULL)
 	    /* on a trouve' une marque de page. C'est une page */
 	    /* de debut d'element ou une page creee par l'utilisateur. */
@@ -3278,7 +3278,7 @@ HauteurTotalePage = 0;
 	    while (pP->AbNext != NULL)
 	     pP = pP->AbNext;
 	    }
-	  pP = PavCherche(pP, False, ord(PageBreak)+1, NULL, NULL);
+	  pP = PavCherche(pP, False, PageBreak+1, NULL, NULL);
 	  }
  if (pP != NULL)
  /* on fait calculer l'image par le mediateur avant d'appeler */

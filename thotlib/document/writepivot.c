@@ -1379,7 +1379,7 @@ PtrElement          RlRoot;
    pEl = RlRoot;
    while (pEl != NULL)
      {
-	pEl = FwdSearchTypedElem (pEl, ord (CharString) + 1, NULL);
+	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	if (pEl != NULL)
 	  {
 	     trouve = False;
@@ -1520,7 +1520,7 @@ PtrDocument         pDoc;
 		do
 		   if (s == NULL)
 		      stop = True;
-		   else if (s->ElTypeNumber == ord (PageBreak) + 1)
+		   else if (s->ElTypeNumber == PageBreak + 1)
 		      s = s->ElNext;
 		   else
 		      stop = True;

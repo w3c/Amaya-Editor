@@ -972,7 +972,7 @@ FILE               *outfile;
 	   ElSructSchema->SsRule[pPa1->AbElement->ElTypeNumber - 1];
 	fprintf (outfile, "%s", pRe1->SrName);
 	fprintf (outfile, " ");
-	if (pPa1->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+	if (pPa1->AbElement->ElTypeNumber == PageBreak + 1)
 	  {
 	     fprintf (outfile, "%d", pPa1->AbElement->ElPageType);
 	     fprintf (outfile, " ");

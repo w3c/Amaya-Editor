@@ -1076,7 +1076,7 @@ int                 pageView;
      {
 	pCntr = &pPSchema->PsCounter[counter];
 	for (item = 0; item < pCntr->CnNItems; item++)
-	   if (pCntr->CnItem[item].CiElemType == ord (PageBreak) + 1)
+	   if (pCntr->CnItem[item].CiElemType == PageBreak + 1)
 	      if (pCntr->CnItem[item].CiViewNum == pageView)
 		 /* C'est un compteur de pages pour la vue voulue */
 		 if (pCntr->CnNPresBoxes < MAX_PRES_COUNT_USER)
@@ -2412,7 +2412,7 @@ iline               wi;
 	       if (gCode == RULE_TypeOrPage)	/* dans un compteur */
 		 {
 		    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-		    pCntr->CnItem[pCntr->CnNItems - 1].CiElemType = ord (PageBreak) + 1;
+		    pCntr->CnItem[pCntr->CnNItems - 1].CiElemType = PageBreak + 1;
 		    pCntr->CnItem[pCntr->CnNItems - 1].CiViewNum = 0;
 		 }
 	       else
@@ -4937,15 +4937,15 @@ PtrPRule        pPRule2;
    boolean             ret;
 
    /* on classe d'abord dans l'ordre des types de regle */
-   if (ord (pPRule1->PrType) != ord (pPRule2->PrType))
-      ret = ord (pPRule1->PrType) < ord (pPRule2->PrType);
+   if (pPRule1->PrType != pPRule2->PrType)
+      ret = pPRule1->PrType < pPRule2->PrType;
    else
       /* meme type */
    if (pPRule1->PrType == PtFunction)
      {
 	/* c'est une fonction de presentation, on classe */
 	/* d'abord dans l'ordre des codes de fonction. */
-	if (ord (pPRule1->PrPresFunction) != ord (pPRule2->PrPresFunction))
+	if (pPRule1->PrPresFunction != pPRule2->PrPresFunction)
 	  {
 #ifdef __COLPAGE__
 	     if (((pPRule1->PrPresFunction == FnPage) || (pPRule1->PrPresFunction == FnColumn) ||
@@ -4957,7 +4957,7 @@ PtrPRule        pPRule2;
 		ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
 	     else
 #endif /* __COLPAGE__ */
-		ret = ord (pPRule1->PrPresFunction) < ord (pPRule2->PrPresFunction);
+		ret = pPRule1->PrPresFunction < pPRule2->PrPresFunction;
 	  }
 	else
 	  {
@@ -5133,9 +5133,9 @@ int                 counter;
 
    pCntr = &pPSchema->PsCounter[counter - 1];
    ret = ((pCntr->CnItem[0].CiCntrOp == CntrRank
-	   && pCntr->CnItem[0].CiElemType == ord (PageBreak) + 1)
+	   && pCntr->CnItem[0].CiElemType == PageBreak + 1)
 	  || (pCntr->CnItem[0].CiCntrOp == CntrSet
-	      && pCntr->CnItem[1].CiElemType == ord (PageBreak) + 1));
+	      && pCntr->CnItem[1].CiElemType == PageBreak + 1));
    return ret;
 }
 
@@ -5169,7 +5169,7 @@ int                 view;
      {
 	if (pR == NULL)
 	   stop = True;
-	else if (ord (pR->PrType) >= ord (ruleType))
+	else if (pR->PrType >= ruleType)
 	   stop = True;
 	if (!stop)
 	  {
@@ -5183,7 +5183,7 @@ int                 view;
      {
 	if (pR == NULL)
 	   stop = True;
-	else if (ord (pR->PrType) != ord (ruleType) || pR->PrViewNum >= view)
+	else if (pR->PrType != ruleType || pR->PrViewNum >= view)
 	   stop = True;
 	if (!stop)
 	  {
@@ -5194,7 +5194,7 @@ int                 view;
    while (!(stop));
    if (pR == NULL)
       cree = True;
-   else if (ord (pR->PrType) > ord (ruleType) || pR->PrViewNum > view)
+   else if (pR->PrType > ruleType || pR->PrViewNum > view)
       cree = True;
    else
       cree = False;
@@ -5280,7 +5280,7 @@ static void         CheckPageBoxes ()
 	  {
 	     if (pR == NULL)
 		stop = True;
-	     else if (ord (pR->PrType) > ord (PtFunction))
+	     else if (pR->PrType > PtFunction)
 		stop = True;
 	     if (!stop)
 	       {
@@ -5307,9 +5307,9 @@ static void         CheckPageBoxes ()
 			 {
 			    if (pRule == NULL)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) > ord (PtHeight))
+			    else if (pRule->PrType > PtHeight)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) == ord (PtHeight))
+			    else if (pRule->PrType == PtHeight)
 			      {
 				 stop1 = True;
 				 exist = True;
@@ -5334,9 +5334,9 @@ static void         CheckPageBoxes ()
 			 {
 			    if (pRule == NULL)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) > ord (PtWidth))
+			    else if (pRule->PrType > PtWidth)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) == ord (PtWidth))
+			    else if (pRule->PrType == PtWidth)
 			      {
 				 stop1 = True;
 				 exist = True;
@@ -5373,9 +5373,9 @@ static void         CheckPageBoxes ()
 			 {
 			    if (pRule == NULL)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) > ord (PtVertPos))
+			    else if (pRule->PrType > PtVertPos)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) == ord (PtVertPos))
+			    else if (pRule->PrType == PtVertPos)
 			      {
 				 stop1 = True;
 				 exist = True;
@@ -5418,9 +5418,9 @@ static void         CheckPageBoxes ()
 			 {
 			    if (pRule == NULL)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) > ord (PtHorizPos))
+			    else if (pRule->PrType > PtHorizPos)
 			       stop1 = True;
-			    else if (ord (pRule->PrType) == ord (PtHorizPos))
+			    else if (pRule->PrType == PtHorizPos)
 			      {
 				 stop1 = True;
 				 exist = True;
@@ -5472,7 +5472,7 @@ static void         CheckPageBoxes ()
 	     {
 		if (pR == NULL)
 		   stop = True;
-		else if (ord (pR->PrType) > ord (PtFunction))
+		else if (pR->PrType > PtFunction)
 		   stop = True;
 		if (!stop)
 		  {
@@ -5512,9 +5512,9 @@ static void         CheckPageBoxes ()
 			       {
 				  if (pPRule == NULL)
 				     stop1 = True;
-				  else if (ord (pPRule->PrType) > ord (PtVertPos))
+				  else if (pPRule->PrType > PtVertPos)
 				     stop1 = True;
-				  else if (ord (pPRule->PrType) == ord (PtVertPos))
+				  else if (pPRule->PrType == PtVertPos)
 				    {
 				       stop1 = True;
 				       exist = True;
@@ -5540,7 +5540,7 @@ static void         CheckPageBoxes ()
 				  || pPRule->PrPosRule.PoPosDef == HorizMiddle)
 				      || pPRule->PrPosRule.PoNotRel
 				      || !pPRule->PrPosRule.PoRefElem
-				      || pPRule->PrPosRule.PoTypeRefElem != ord (PageBreak) + 1)
+				      || pPRule->PrPosRule.PoTypeRefElem != PageBreak + 1)
 #endif /* __COLPAGE__ */
 				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INCOR_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  if (pPRule->PrPosRule.PoDistance != 0)
@@ -5568,9 +5568,9 @@ static void         CheckPageBoxes ()
 					 {
 					    if (pHeadR == NULL)
 					       stop1 = True;
-					    else if (ord (pHeadR->PrType) > ord (PtHeight))
+					    else if (pHeadR->PrType > PtHeight)
 					       stop1 = True;
-					    else if (ord (pHeadR->PrType) == ord (PtHeight))
+					    else if (pHeadR->PrType == PtHeight)
 					      {
 						 stop1 = True;
 						 exist = True;
@@ -5644,9 +5644,9 @@ static void         CheckPageBoxes ()
 					 {
 					    if (pHeadR == NULL)
 					       stop1 = True;
-					    else if (ord (pHeadR->PrType) > ord (PtHeight))
+					    else if (pHeadR->PrType > PtHeight)
 					       stop1 = True;
-					    else if (ord (pHeadR->PrType) == ord (PtHeight))
+					    else if (pHeadR->PrType == PtHeight)
 					      {
 						 stop1 = True;
 						 exist = True;
@@ -5791,7 +5791,7 @@ static void         CheckPageBoxes ()
 					 {
 					    if (pRC == NULL)
 					       stop1 = True;
-					    else if (ord (pRC->PrType) > ord (PtFunction))
+					    else if (pRC->PrType > PtFunction)
 					       stop1 = True;
 					    if (!stop1)
 					      {
@@ -5894,7 +5894,7 @@ static void         CheckPageBoxes ()
 	  {
 	     if (pR == NULL)
 		stop = True;
-	     else if (ord (pR->PrType) > ord (PtFunction))
+	     else if (pR->PrType > PtFunction)
 		stop = True;
 	     if (!stop)
 	       {
@@ -5914,7 +5914,7 @@ static void         CheckPageBoxes ()
    for (view = 1; view <= pPSchema->PsNViews; view++)
       /* cherche la regle de positionnement vertical */
      {
-	pR = SearchPRule (&pPSchema->PsElemPRule[ord (PageBreak)], PtVertPos, view);
+	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtVertPos, view);
 	/* modifie la regle: positionnement au-dessous de l'element */
 	/* precedent */
 	pR->PrPresMode = PresImmediate;
@@ -5928,7 +5928,7 @@ static void         CheckPageBoxes ()
 	pR->PrPosRule.PoUserSpecified = False;
 	pR->PrPosRule.PoTypeRefElem = 0;
 	/* cherche la regle de positionnement horizontal */
-	pR = SearchPRule (&pPSchema->PsElemPRule[ord (PageBreak)], PtHorizPos, view);
+	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizPos, view);
 	/* modifie la regle: positionnement sur le bord gauche de la */
 	/* boite racine */
 	pR->PrPresMode = PresImmediate;
@@ -5942,7 +5942,7 @@ static void         CheckPageBoxes ()
 	pR->PrPosRule.PoUserSpecified = False;
 	pR->PrPosRule.PoTypeRefElem = 0;
 	/* cherche la regle de largeur */
-	pR = SearchPRule (&pPSchema->PsElemPRule[ord (PageBreak)], PtWidth, view);
+	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtWidth, view);
 	/* modifie la regle: largeur du contenu */
 	pR->PrPresMode = PresImmediate;
 	pR->PrDimRule.DrPosition = False;
@@ -5956,7 +5956,7 @@ static void         CheckPageBoxes ()
 	pR->PrDimRule.DrUserSpecified = False;
 	pR->PrDimRule.DrTypeRefElem = 0;
 	/* cherche la regle de hauteur */
-	pR = SearchPRule (&pPSchema->PsElemPRule[ord (PageBreak)], PtHeight, view);
+	pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHeight, view);
 	/* modifie la regle: hauteur du contenu */
 	pR->PrPresMode = PresImmediate;
 	pR->PrDimRule.DrPosition = False;
@@ -5998,7 +5998,7 @@ boolean             usedBox[MAX_PRES_BOX];
 	if (pRule == NULL)
 	   stop = True;
 	/* derniere regle de la chaine */
-	else if (ord (pRule->PrType) > ord (PtFunction))
+	else if (pRule->PrType > PtFunction)
 	   stop = True;
 	/* on a vu la partie interessante de la chaine */
 	if (!stop)

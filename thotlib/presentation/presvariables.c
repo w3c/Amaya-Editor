@@ -117,7 +117,7 @@ PtrSSchema        pSchStr;
 	 if (EquivalentType (pEl, pCompteur->CnItem[i].CiElemType, pSchStr)
 	     || EquivalentSRules (pEl->ElTypeNumber, pEl->ElSructSchema,
 			pCompteur->CnItem[i].CiElemType, pSchStr, pEl))
-	    if (pCompteur->CnItem[i].CiElemType != ord (PageBreak) + 1
+	    if (pCompteur->CnItem[i].CiElemType != PageBreak + 1
 		|| pEl->ElViewPSchema == pCompteur->CnItem[i].CiViewNum)
 	       return pCompteur->CnItem[i].CiParamValue;
    return 0;			/* par defaut... */
@@ -231,7 +231,7 @@ boolean             Maximum;
 	TypeRank = pCo1->CnItem[0].CiElemType;
 
 	/* Cas particulier du compteur de page */
-	if (TypeRank == ord (PageBreak) + 1)
+	if (TypeRank == PageBreak + 1)
 	  {
 	     /* c'est un compteur de pages (CntrRank of Page) */
 	     if (initattr)
@@ -503,7 +503,7 @@ int                 Vue;
 	TypeRank = pCo1->CnItem[0].CiElemType;
 
 	/* Cas particulier du compteur de page */
-	if (TypeRank == ord (PageBreak) + 1)
+	if (TypeRank == PageBreak + 1)
 	  {
 	     /* c'est un compteur de pages (CntrRank of Page) */
 	     pEl = pElNum;
@@ -996,7 +996,7 @@ PtrDocument         pDoc;
 		    trouve = False;
 		    do
 		      {
-			 pEl = BackSearchTypedElem (pEl, ord (PageBreak) + 1, NULL);
+			 pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 			 if (pEl != NULL)
 			    /* on ignore les pages qui ne concernent pas la vue */
 			    if (pEl->ElViewPSchema == pVa1->ViView)

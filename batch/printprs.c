@@ -1472,7 +1472,7 @@ char              **argv;
 		  while (pPr1->PdString[j - 1] != '\0')
 		    {
 		       if (pPr1->PdString[j - 1] < ' ')
-			  printf ("\\%3d", ord (pPr1->PdString[j - 1]));
+			  printf ("\\%3d", pPr1->PdString[j - 1]);
 		       else
 			  putchar (pPr1->PdString[j - 1]);
 		       j++;

@@ -284,7 +284,7 @@ void                transchar ()
 		  k = i + 1;
 		  n = 0;
 		  while (inputLine[k] >= '0' && inputLine[k] <= '7' && k < i + 4)
-		     n = n * 8 + ord (inputLine[k++]) - ord ('0');
+		     n = n * 8 + inputLine[k++] - '0';
 		  if (n < 1 || n > 255)
 		     CompilerError (i, COMPIL, FATAL, COMPIL_INVALID_CHARACTER,
 				    inputLine, linenb);
@@ -395,7 +395,7 @@ nature             *wn;
 		 || inputLine[j] == '\240'	/*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
-		 || (ord (inputLine[j]) >= 192 && ord (inputLine[j]) <= 255))
+		 || (inputLine[j] >= 192 && inputLine[j] <= 255))
 	   *wn = name;
 	else if (inputLine[j] == '\'')
 	   *wn = strng;
@@ -435,7 +435,7 @@ nature             *wn;
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
-				       || (ord (inputLine[j]) >= 192 && ord (inputLine[j]) <= 255)
+				       || (inputLine[j] >= 192 && inputLine[j] <= 255)
 				 /* lettre accentuee */
 				       || inputLine[j] == '_'))
 				   {
@@ -998,9 +998,9 @@ gname               fn;
 			    for (l = 1; l <= wlen; l++)
 			      {
 				 pkw1->kwname[l - 1] = inputLine[wind + l - 2];
-				 if ((char) (ord (pkw1->kwname[l - 1]) - 32) >= 'A'
-				     && (char) (ord (pkw1->kwname[l - 1]) - 32) <= 'Z')
-				    pkw1->kwname[l - 1] = (char) (ord (pkw1->kwname[l - 1]) - 32);
+				 if ((char) (pkw1->kwname[l - 1] - 32) >= 'A'
+				     && (char) (pkw1->kwname[l - 1] - 32) <= 'Z')
+				    pkw1->kwname[l - 1] = (char) (pkw1->kwname[l - 1] - 32);
 			      }
 			    /* traduit */
 			    /* le mot-cle en majuscules */

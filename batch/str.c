@@ -227,25 +227,25 @@ static void         Initialize ()
    pSSchema->SsNRules = 0;
    /* les premieres regles de structure du schema sont celles qui */
    /* definissent les types de base */
-   pRule = &pSSchema->SsRule[ord (CharString)];
+   pRule = &pSSchema->SsRule[CharString];
    InitBasicType (pRule, "TEXT_UNIT", CharString);
 
-   pRule = &pSSchema->SsRule[ord (GraphicElem)];
+   pRule = &pSSchema->SsRule[GraphicElem];
    InitBasicType (pRule, "GRAPHICS_UNIT", GraphicElem);
 
-   pRule = &pSSchema->SsRule[ord (Symbol)];
+   pRule = &pSSchema->SsRule[Symbol];
    InitBasicType (pRule, "SYMBOL_UNIT", Symbol);
 
-   pRule = &pSSchema->SsRule[ord (Picture)];
+   pRule = &pSSchema->SsRule[Picture];
    InitBasicType (pRule, "PICTURE_UNIT", Picture);
 
-   pRule = &pSSchema->SsRule[ord (Refer)];
+   pRule = &pSSchema->SsRule[Refer];
    InitBasicType (pRule, "REFERENCE_UNIT", Refer);
 
-   pRule = &pSSchema->SsRule[ord (PageBreak)];
+   pRule = &pSSchema->SsRule[PageBreak];
    InitBasicType (pRule, "PAGE_BREAK", PageBreak);
 
-   pRule = &pSSchema->SsRule[ord (UnusedBasicType)];
+   pRule = &pSSchema->SsRule[UnusedBasicType];
    InitBasicType (pRule, "UNUSED", UnusedBasicType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
@@ -1550,7 +1550,7 @@ rnb                 pr;
 	       case KWD_TEXT:
 		  if (r == RULE_BasicType)
 		     /* type d'un element */
-		     BasicEl (ord (CharString) + 1, wi, pr);
+		     BasicEl (CharString + 1, wi, pr);
 		  else
 		     /* type d'un attribut */
 		     pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrType = AtTextAttr;
@@ -1602,13 +1602,13 @@ rnb                 pr;
 		  SecondInPair = True;
 		  break;
 	       case KWD_GRAPHICS:
-		  BasicEl (ord (GraphicElem) + 1, wi, pr);
+		  BasicEl (GraphicElem + 1, wi, pr);
 		  break;
 	       case KWD_SYMBOL:
-		  BasicEl (ord (Symbol) + 1, wi, pr);
+		  BasicEl (Symbol + 1, wi, pr);
 		  break;
 	       case KWD_PICTURE:
-		  BasicEl (ord (Picture) + 1, wi, pr);
+		  BasicEl (Picture + 1, wi, pr);
 		  break;
 	       case KWD_UNIT:
 	       case KWD_NATURE:

@@ -1403,8 +1403,8 @@ boolean             forw;
 			 {
 			    /* se placer sur le prochain texte */
 			    *pEl2 = forw ?
-			       FwdSearchTypedElem (*pEl2, ord (CharString) + 1, NULL) :
-			       BackSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
+			       FwdSearchTypedElem (*pEl2, CharString + 1, NULL) :
+			       BackSearchTypedElem (*pEl2, CharString + 1, NULL);
 			    if ((*pEl2) != NULL)
 			       *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 			    else
@@ -1416,7 +1416,7 @@ boolean             forw;
 			    if (pos1 == 0 && !forw)
 			      {
 				 /* se placer sur le texte precedent */
-				 *pEl2 = BackSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
+				 *pEl2 = BackSearchTypedElem (*pEl2, CharString + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -1427,7 +1427,7 @@ boolean             forw;
 /*HR */ if (pos1 > pEl1->ElTextLength && forw)
 			      {
 				 /* se placer sur le prochain texte */
-				 *pEl2 = FwdSearchTypedElem (*pEl2, ord (CharString) + 1, NULL);
+				 *pEl2 = FwdSearchTypedElem (*pEl2, CharString + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
@@ -2010,8 +2010,8 @@ char               *expression;
 		  if (pEl1 != NULL && pEl1->ElTypeNumber != 1)
 		    {
 		       pEl1 = EnAvant ?
-			  FwdSearchTypedElem (pEl1, ord (CharString) + 1, NULL) :
-			  BackSearchTypedElem (NextElement (pEl1), ord (CharString) + 1, NULL);
+			  FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
+			  BackSearchTypedElem (NextElement (pEl1), CharString + 1, NULL);
 		       if (pEl1 != NULL)
 			  inx1 = EnAvant ? 1 : pEl1->ElTextLength;
 		    }
@@ -2031,8 +2031,8 @@ char               *expression;
 				 if (*textchar == -1)
 				   {
 				      pEl1 = EnAvant ?
-					 FwdSearchTypedElem (pEl1, ord (CharString) + 1, NULL) :
-					 BackSearchTypedElem (NextElement (pEl1), ord (CharString) + 1,
+					 FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
+					 BackSearchTypedElem (NextElement (pEl1), CharString + 1,
 						    NULL);
 				      if (pEl1 == NULL)
 					{
@@ -2128,8 +2128,8 @@ char               *expression;
 			    if (*textchar == -1)
 			      {
 /*HR */ pEl1 = EnAvant ?
-				    FwdSearchTypedElem (pEl1old, ord (CharString) + 1, NULL) :
-				    BackSearchTypedElem (pEl1old, ord (CharString) + 1,
+				    FwdSearchTypedElem (pEl1old, CharString + 1, NULL) :
+				    BackSearchTypedElem (pEl1old, CharString + 1,
 					       NULL);
 				 if (pEl1 == NULL)
 				    goto Lstop;

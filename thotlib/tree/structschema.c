@@ -1307,7 +1307,7 @@ boolean             inTree;
       if (pEl->ElParent != NULL)
 	{
 	   /* on peut inserer une marque de page n'importe ou` */
-	   if (typeNum == ord (PageBreak) + 1)
+	   if (typeNum == PageBreak + 1)
 	      ok = True;
 	   /* OK si c'est une inclusion pour l'un des ascendants */
 	   else if (AllowedIncludedElem (pEl->ElParent, typeNum, pSS))
@@ -1527,8 +1527,8 @@ boolean             inTree;
 			    }
 		       }
 		     if (!ok && pEl != NULL)
-			if (typeNum == ord (CharString) + 1)
-			   if (pEl->ElTypeNumber == ord (CharString) + 1)
+			if (typeNum == CharString + 1)
+			   if (pEl->ElTypeNumber == CharString + 1)
 			      /* on veut inserer un element Texte a cote' d'un autre */
 			      /* element texte, OK */
 			      ok = True;
@@ -1728,7 +1728,7 @@ boolean             inTree;
 	      if (pEl->ElTypeNumber > 0 && pEl->ElTypeNumber <= pEl->ElSructSchema->SsNRules)
 		{
 		   /* on peut inserer une marque de page n'importe ou` */
-		   if (typeNum == ord (PageBreak) + 1)
+		   if (typeNum == PageBreak + 1)
 		      ok = True;
 		   /* OK si c'est une inclusion pour l'un des ascendants */
 		   else if (AllowedIncludedElem (pEl, typeNum, pSS))

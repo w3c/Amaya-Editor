@@ -258,7 +258,7 @@ PtrAbstractBox             pAb;
 	else
 	   /* est-ce une boite de haut ou bas de page contenant des */
 	   /* elements associes ? */
-	if (pPa1->AbPresentationBox && pPa1->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+	if (pPa1->AbPresentationBox && pPa1->AbElement->ElTypeNumber == PageBreak + 1)
 	  {
 	     pBoite = &pPa1->AbPSchema->PsPresentBox[pPa1->AbTypeNum - 1];
 	     if ((pBoite->PbPageHeader || pBoite->PbPageFooter) &&
@@ -710,7 +710,7 @@ PtrAbstractBox             pAb;
 #ifndef __COLPAGE__
 	if (pPa1->AbLeafType == LtCompound)
 	   /* pave' compose' */
-	   if (pPa1->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+	   if (pPa1->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* c'est une marque de saut de page, non-secable */
 	      retour = True;
 	   else
@@ -753,7 +753,7 @@ PtrDocument         pDoc;
    PtrAbstractBox             PavEnglob, pP, PavR;
    boolean             stop;
 
-   if (pAb->AbElement->ElTypeNumber != ord (PageBreak) + 1)
+   if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
      {
 	PavEnglob = pAb->AbEnclosing;
 	while (PavEnglob != NULL && !(PavEnglob->AbTruncatedTail))
@@ -867,7 +867,7 @@ PtrDocument         pDoc;
    pP1 = pAb;
    if (pP1 != NULL
        && pP1->AbEnclosing != NULL
-       && !(pP1->AbElement->ElTypeNumber == ord (PageBreak) + 1
+       && !(pP1->AbElement->ElTypeNumber == PageBreak + 1
 	    && (pP1->AbElement->ElPageType == PgBegin
 		|| pP1->AbElement->ElPageType == PgComputed
 		|| pP1->AbElement->ElPageType == PgUser)))
@@ -883,7 +883,7 @@ PtrDocument         pDoc;
 	SuppRfPave (pP1, &PavR, pDoc);
 	/* on tue tous les paves a droite en remontant l'arbre */
 	while (pP1->AbEnclosing != NULL
-	       && !(pP1->AbElement->ElTypeNumber == ord (PageBreak) + 1
+	       && !(pP1->AbElement->ElTypeNumber == PageBreak + 1
 		    && (pP1->AbElement->ElPageType == PgBegin
 			|| pP1->AbElement->ElPageType == PgComputed
 			|| pP1->AbElement->ElPageType == PgUser)))
@@ -1110,7 +1110,7 @@ boolean             SaufRep;
 			if (pP != NULL && pP->AbElement->ElTerminal
 			    && pP->AbElement->ElLeafType == LtPageColBreak)
 			   /* le document est mis en page */
-			   while (pP->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+			   while (pP->AbElement->ElTypeNumber == PageBreak + 1)
 			     {
 				/* on saute les paves de pres page et colonnes */
 				while (pP->AbPresentationBox)
@@ -1187,7 +1187,7 @@ boolean             SaufRep;
 			    && pP->AbElement->ElLeafType == LtPageColBreak)
 			   /* le document est mis en page */
 			   /* on se place sur le dernier pave non page ou colonne */
-			   while (pP != NULL && pP->AbElement->ElTypeNumber == ord (PageBreak) + 1)
+			   while (pP != NULL && pP->AbElement->ElTypeNumber == PageBreak + 1)
 			     {
 				while (pP->AbNext != NULL)
 				   pP = pP->AbNext;
@@ -1322,7 +1322,7 @@ boolean             SaufCreeAvec;
 			 /* saute les marques de page de debut d'element */
 			{
 			   pEl1 = pP->AbElement;
-			   if (pEl1->ElTypeNumber == ord (PageBreak) + 1
+			   if (pEl1->ElTypeNumber == PageBreak + 1
 			       && pEl1->ElPageType == PgBegin)
 			      pP = pP->AbNext;
 			   else
@@ -1792,7 +1792,7 @@ PtrDocument         pDoc;
 		     pAb = pDo1->DocViewRootAb[vue - 1];
 		     if (pAb->AbFirstEnclosed != NULL
 			 && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
-			 ord (PageBreak) + 1)
+			 PageBreak + 1)
 		       {
 			  nb = NbPages (pAb);
 			  pDo1->DocViewNPages[vue - 1] = nb;
@@ -1818,7 +1818,7 @@ PtrDocument         pDoc;
 		pAb = pDo1->DocAssocRoot[pEl1->ElAssocNum - 1]->ElAbstractBox[0];
 		if (pAb->AbFirstEnclosed != NULL
 		    && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
-		    ord (PageBreak) + 1)
+		    PageBreak + 1)
 		   /* vue du document paginee */
 		  {
 		     nb = NbPages (pAb);
@@ -2242,7 +2242,7 @@ int                 frame;
 		     /* on recherche la page dans laquelle se trouve pEl */
 		     trouve = False;
 		     /* si pEl est une PageBreak, c'est fini */
-		     if (pEl->ElTypeNumber == ord (PageBreak) + 1
+		     if (pEl->ElTypeNumber == PageBreak + 1
 			 && (pEl->ElPageType == PgBegin
 			     || pEl->ElPageType == PgComputed
 			     || pEl->ElPageType == PgUser)
@@ -2256,7 +2256,7 @@ int                 frame;
 			  pEl1 = pEl;
 			  while (!trouve && pEl1 != NULL)
 			    {
-			       pElPage = BackSearchTypedElem (pEl1, ord (PageBreak) + 1, NULL);
+			       pElPage = BackSearchTypedElem (pEl1, PageBreak + 1, NULL);
 			       if (pElPage != NULL && pElPage->ElViewPSchema == VueSch
 				   && (pElPage->ElPageType == PgBegin
 				       || pElPage->ElPageType == PgComputed
@@ -2279,7 +2279,7 @@ int                 frame;
 			/* sans partir d'une marque de page */
 			/* sinon erreur */
 			if (!(pEl->ElParent == NULL
-			      || (pEl->ElTypeNumber == ord (PageBreak) + 1
+			      || (pEl->ElTypeNumber == PageBreak + 1
 				  && pEl->ElViewPSchema != VueSch)))
 			  {
 			     printf ("peut etre erreur VerifPave : pas trouve de marque page %s",
@@ -3201,7 +3201,7 @@ int                 frame;
 	     }
 	   else
 	     {
-		while (pP != NULL && pP->AbElement->ElTypeNumber != ord (PageBreak) + 1)
+		while (pP != NULL && pP->AbElement->ElTypeNumber != PageBreak + 1)
 		  {
 		     if ((pAb->AbNextRepeated != NULL && pP->AbNextRepeated == NULL)
 			 || (pAb->AbPreviousRepeated != NULL && pP->AbPreviousRepeated == NULL))

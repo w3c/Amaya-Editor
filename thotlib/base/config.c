@@ -75,9 +75,9 @@ void                ConfigInit ()
 /* |    getFirstWord                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         getFirstWord (unsigned char *line, unsigned char *mot)
+static void         getFirstWunsigned char *line, unsigned char *mot
 #else  /* __STDC__ */
-static void         getFirstWord (line, mot)
+static void         getFirstWline, mot
 unsigned char      *line;
 unsigned char      *mot;
 
@@ -108,9 +108,9 @@ unsigned char      *mot;
 /* |    getSecondWord                                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         getSecondWord (unsigned char *line, unsigned char *mot)
+static void         getSecondWunsigned char *line, unsigned char *mot
 #else  /* __STDC__ */
-static void         getSecondWord (line, mot)
+static void         getSecondWline, mot
 unsigned char      *line;
 unsigned char      *mot;
 
@@ -149,9 +149,9 @@ unsigned char      *mot;
 /* |    singleWord                                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      singleWord (unsigned char *line)
+static boolean      singleWunsigned char *line
 #else  /* __STDC__ */
-static boolean      singleWord (line)
+static boolean      singleWline
 unsigned char      *line;
 
 #endif /* __STDC__ */
@@ -251,8 +251,8 @@ char               *word2;
 	 stop = True;
       else
 	{
-	   getFirstWord (line, mot);
-	   if (singleWord (line))
+	   getFirstWline, mot;
+	   if (singleWline)
 	     {
 		if (*word1 != '\0')
 		   if (strcmp (mot, word1) == 0)
@@ -306,12 +306,12 @@ boolean            *import;
 	 stop = True;
       else
 	{
-	   getFirstWord (line, mot);
+	   getFirstWline, mot;
 	   if (mot[0] != '\0')
 	      stop = True;
 	}
    while (!stop);
-   if (!singleWord (line))
+   if (!singleWline)
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
@@ -383,7 +383,7 @@ boolean            *import;
 	     }
 	   else
 	     {
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (strcmp (mot, *doctypeOrig) == 0)
 		   stop = True;
 	     }
@@ -815,13 +815,13 @@ char               *BufMenu;
 	      stop = True;
 	   else
 	     {
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (mot[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
-		     if (singleWord (line))
+		     if (singleWline)
 			if (strcmp (mot, "export") == 0)
 			   stop = True;
 			else if (strcmp (mot, "import") == 0)
@@ -968,13 +968,13 @@ char               *BufMenu;
 	      stop = True;
 	   else
 	     {
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (mot[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
-		     if (singleWord (line))
+		     if (singleWline)
 			if (strcmp (mot, "presentation") == 0)
 			   stop = True;
 			else if (strcmp (mot, "import") == 0)
@@ -1138,13 +1138,13 @@ PtrSSchema        pSS;
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (mot[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
-		     if (singleWord (line))
+		     if (singleWline)
 			if (strcmp (mot, "presentation") == 0)
 			   stop = True;
 			else if (strcmp (mot, "export") == 0)
@@ -1210,12 +1210,12 @@ char               *schpres;
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (strcmp (mot, "style") == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
-		     getSecondWord (line, mot);
+		     getSecondWline, mot;
 		     if (mot[0] != '\0')
 			/* il y a bien un 2eme mot : succes */
 		       {
@@ -1260,10 +1260,10 @@ char               *nomPSchema;
 	 stop = True;
       else
 	{
-	   getFirstWord (line, mot);
+	   getFirstWline, mot;
 	   if (strcmp (mot, "style") == 0)
 	     {
-		getSecondWord (line, mot);
+		getSecondWline, mot;
 		if (strcmp (mot, nomPSchema) == 0)
 		   ok = True;
 	     }
@@ -1347,13 +1347,13 @@ char               *line;
       else
 	{
 	   /* prend le permier mot de la ligne lue */
-	   getFirstWord (line, mot1);
+	   getFirstWline, mot1;
 	   if (mot1[0] != '\0')
 	      /* la ligne n'est pas vide */
 	     {
 		/* si la ligne contient un mot cle marquant le debut d'une autre */
 		/* section, on a fini */
-		if (singleWord (line))
+		if (singleWline)
 		   /* la ligne contient un seul mot */
 		  {
 		     if (strcmp (mot1, "open") == 0)
@@ -1372,7 +1372,7 @@ char               *line;
 		   /* la ligne contient plus d'un mot */
 		if (strcmp (mot1, "style") == 0)
 		  {
-		     getSecondWord (line, mot2);
+		     getSecondWline, mot2;
 		     if (mot2[0] != ':')
 			/* la ligne est du type "style xxxx". C'est une fin de section */
 			stop = True;
@@ -1468,7 +1468,7 @@ PtrDocument         pDoc;
 	while (getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une vue a ouvrir */
-	     getFirstWord (line, nomvue);
+	     getFirstWline, nomvue;
 	     /* lit les coordonnees (x, y) et dimensions (width, height) de la */
 	     /* frame ou doit s'afficher la vue */
 	     if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
@@ -1517,7 +1517,7 @@ int                *height;
 	while (!trouve && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une vue */
-	     getFirstWord (line, nomvue);
+	     getFirstWline, nomvue;
 	     /* est-ce le nom de la vue cherchee ? */
 	     trouve = (strcmp (nomvue, vue) == 0);
 	  }
@@ -1531,7 +1531,7 @@ int                *height;
 		while (!trouve && getNextLineInSection (file, line))
 		  {
 		     /* le 1er mot de la ligne est le nom d'une vue */
-		     getFirstWord (line, nomvue);
+		     getFirstWline, nomvue;
 		     /* est-ce le nom de la vue cherchee ? */
 		     trouve = (strcmp (nomvue, vue) == 0);
 		  }
@@ -1607,7 +1607,7 @@ char               *presNature;
 	while (!trouve && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, nom);
+	     getFirstWline, nom;
 	     /* est-ce le nom de la nature cherchee ? */
 	     trouve = (strcmp (nom, nomNature) == 0);
 	  }
@@ -1670,7 +1670,7 @@ char               *optionValue;
 	while (!trouve && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une option */
-	     getFirstWord (line, nom);
+	     getFirstWline, nom;
 	     /* est-ce le nom de l'option cherchee ? */
 	     trouve = (strcmp (nom, optionName) == 0);
 	  }
@@ -1736,11 +1736,11 @@ char               *schemaName;
 	   else
 	     {
 		/* prend le 1er mot de la ligne lue */
-		getFirstWord (line, mot);
+		getFirstWline, mot;
 		if (strcmp (mot, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
-		   getSecondWord (line, lastStyle);
+		   getSecondWline, lastStyle;
 		else if (strcmp (mot, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
@@ -1918,7 +1918,7 @@ char               *schtypo;
 	while (!trouve && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, nom);
+	     getFirstWline, nom;
 	     /* est-ce le nom de la nature cherchee ? */
 	     trouve = (strcmp (nom, nomNature) == 0);
 	  }
