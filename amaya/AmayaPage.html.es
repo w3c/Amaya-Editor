@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -141,7 +142,7 @@ editor. Ha sido diseñado por el <a href="http://www.w3.org/"><acronym
 title="World Wide Web Consortium">W3C</acronym></a> con el principal objetivo
 de demostrar nuevas tecnologías Web en un entorno <acronym
 title="What You See Is What You Get">WYSIWYG</acronym> (What You See Is What
-You Get = Lo Que Ves Es Lo Que Obtienes). La versión actual implementa
+You Get = Lo Que Se Ve Es Lo Que Se Obtiene). La versión actual implementa
 <acronym title="HyperText Markup Language">HTML</acronym> (HyperText Markup
 Language = Lenguaje de Marcas de Hipertexto), <acronym
 title="eXtensible HyperText Markup Language">XHTML</acronym> (eXtensible
@@ -162,15 +163,15 @@ Protocol = Protocolo de Transferencia de HiperTexto).</p>
 <div>
 <h3>Características principales</h3>
 
-<p>Con Amaya puedes manipular páginas Web complejas, con formularios, tablas
-y las características más avanzadas del <acronym
-title="HyperText Markup Language">HTML</acronym>. Puedes crear y editar <a
+<p>Con Amaya se pueden manipular páginas Web complejas, con formularios,
+tablas y las características más avanzadas del <acronym
+title="HyperText Markup Language">HTML</acronym>. Se pueden crear y editar <a
 href="../doc/html/Math.html.es">expresiones matemáticas</a> complejas y <a
 href="../doc/html/SVG.html.es">gráficos <acronym
 title="Scalable Vector Graphics">SVG</acronym></a> simples dentro de las
-páginas web. Puedes dar estilo a tus documentos mediantes las Hojas de Estilo
-en Cascada (<acronym title="Cascading Style Sheets">CSS</acronym>). Puedes
-publicar documentos <acronym
+páginas web. Se puede dar estilo a los documentos mediantes las Hojas de
+Estilo en Cascada (<acronym title="Cascading Style Sheets">CSS</acronym>). Se
+pueden publicar documentos <acronym
 title="HyperText Markup Language">HTML</acronym>, <acronym
 title="eXtensible HyperText Markup Language">XHTML</acronym>, <acronym
 title="Mathematical Markup Language">MathML</acronym> y <acronym
@@ -178,37 +179,39 @@ title="Scalable Vector Graphics">SVG</acronym> en servidores locales o
 remotos mediante <acronym title="HyperText Transfer Protocol">HTTP</acronym>.
 El soporte actual de <acronym
 title="eXtensible Markup Language">XML</acronym> genérico (eXtensible Markup
-Language = Lenguaje Extensible de Marcas) te permite mostrar el contenido de
+Language = Lenguaje Extensible de Marcas) permite mostrar el contenido de
 cualquier documento <acronym title="eXtensible Markup Language">XML</acronym>
 y asociarle una hoja de estilo <acronym
 title="Cascading Style Sheets">CSS</acronym>.</p>
 
-<p>La navegación y la edición están integradas en Amaya. Puedes navegar y
+<p>La navegación y la edición están integradas en Amaya. Se puede navegar y
 editar páginas web al mismo tiempo. Para facilitar la edición, al hacer clic
 en cualquier lugar del documento el cursor se desplaza a la posición señalada
-y te permite editar el documento; para navegar debes hacer doble clic sobre
-los enlaces. Puedes modificar este comportamiento, así que como muchas otras
-características, mediante el menú Editar &gt; Preferencias.</p>
+y permite editar el documento; para navegar se debe hacer doble clic sobre
+los enlaces. Se puede modificar este comportamiento, así que como muchas
+otras características, mediante el menú Editar &gt; Preferencias.</p>
 
 <p>Amaya incluye una herramienta de colaboración para <a
 href="../doc/html/Annotations.html.es"><img src="annot.gif"
-alt="annotation icon" />anotaciones</a> basada en tecnologías del <acronym
+alt="icono anotaciones" />anotaciones</a> basada en tecnologías del <acronym
 title="World Wide Web Consortium">W3C</acronym> (Resource Description
 Framework (<acronym title="Resouce Description Framework">RDF</acronym>),
 XLink y XPointer). Una anotación es un comentario, una nota o una observación
-que puedes adjuntar a cualquier documento Web o a una parte de un documento.
-Puedes almacenar las anotaciones localmente o en servidores de anotaciones
-públicos. Al crear una anotación no modificas el documento original.</p>
+que se puede adjuntar a cualquier documento Web o a una parte de un
+documento. Se pueden almacenar las anotaciones localmente o en servidores de
+anotaciones públicos. Al crear una anotación no se modifica el documento
+original.</p>
 </div>
 
 <div>
 <h3>Manual de Usuario</h3>
 
-<p>Puedes acceder al Manual de Usuario a través del menú Ayuda, que muestra
-cada sección por separado. Si quieres imprimir el manual completo, haz clic
-en este enlace a la <a href="../doc/html/Manual.html.es">página principal del
-Manual</a>. A continuación, construye el manual completo con el comando
-"Hacer libro" del menú Editar e imprime el resultado.</p>
+<p>Se puede acceder al Manual de Usuario a través del menú Ayuda, que muestra
+cada sección por separado. Para imprimir el manual completo, se debe hacer
+clic en este enlace a la <a href="../doc/html/Manual.html.es">página
+principal del Manual</a>. A continuación, se puede construir el manual
+completo con el comando "Hacer libro" del menú XHTML e imprimir el
+resultado.</p>
 </div>
 
 <div>
@@ -221,7 +224,7 @@ href="http://www.w3.org/Consortium/Legal/copyright-software.html">licencia
 <acronym title="Massachusetts Institute of Technology">MIT</acronym> e
 INRIA</a> se incluya en <strong>todas</strong> las copias del programa y de
 la documentación o de porciones de ellos, incluso en las modificaciones que
-tú hayas realizado.</p>
+se hayan realizado.</p>
 </div>
 </body>
 </html>

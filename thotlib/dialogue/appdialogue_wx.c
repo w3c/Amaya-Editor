@@ -1098,8 +1098,7 @@ void TtaSetURLBar( int frame_id,
    * when the user switch between frames, the window urlbar is updated with this string */
   FrameTable[frame_id].WdFrame->SetFrameURL( firsturl );
 
-  wxLogDebug( _T("TtaSetURLBar:")+
-	      wxString(_T(" url="))+firsturl );
+  // wxLogDebug( _T("TtaSetURLBar:")+ wxString(_T(" url="))+firsturl );
 #endif /* #ifdef _WX */
 }
 

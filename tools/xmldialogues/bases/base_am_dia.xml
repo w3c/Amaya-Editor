@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Dec 22 11:03:57 CET 2004" version="90">
+<base last_update="Thu Jan  6 10:48:03 CET 2005" version="91">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -266,7 +266,7 @@
 <label define="BOpenInNewTab">
 	<message xml:lang="en">Open in new &amp;tab...</message>
 	<message xml:lang="fr">Ouvrir dans un nouvel on&amp;glet...</message>
-	<message xml:lang="es">Abrir &amp;pestaña...</message>
+	<message xml:lang="es">Abrir en &amp;pestaña nueva...</message>
 	<message xml:lang="it">Apri &amp;tab...</message>
 	<message xml:lang="de">Öffnen (neues &amp;Registerkarte)...</message>
 	<message xml:lang="ru">Открыть в новой пан&amp;ели...</message>
@@ -847,7 +847,7 @@
 <label define="BInsertBefore">
 	<message xml:lang="en">&amp;Insert</message>
 	<message xml:lang="fr">&amp;Insérer</message>
-	<message xml:lang="es">&amp;Insertar</message>
+	<message xml:lang="es">&amp;Insertar delante</message>
 	<message xml:lang="it">&amp;Inserisci</message>
 	<message xml:lang="de">&amp;Einfügen (davor)</message>
 	<message xml:lang="ru">Вставить</message>
@@ -855,7 +855,7 @@
 <label define="BInsertAfter">
 	<message xml:lang="en">&amp;Append</message>
 	<message xml:lang="fr">&amp;Ajouter</message>
-	<message xml:lang="es">&amp;Añadir</message>
+	<message xml:lang="es">&amp;Añadir detrás</message>
 	<message xml:lang="it">&amp;Aggiungi</message>
 	<message xml:lang="de">&amp;Inzufügen (danach)</message>
 	<message xml:lang="pt">&amp;Adicionar</message>
@@ -2588,7 +2588,7 @@
 <label define="TShowPanel">
 	<message xml:lang="en">Show &amp;tools</message>
 	<message xml:lang="fr">&amp;Montrer outils</message>
-	<message xml:lang="es">&amp;Mostrar ventana de diálogo</message>
+	<message xml:lang="es">Ventana de &amp;herramientas</message>
 	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
 	<message xml:lang="ru">оНЙЮГЮРЭ ХМЯРПСЛ&amp;ЕМРШ</message>
 </label>
@@ -2668,6 +2668,7 @@
 <label define="BShowFormatted">
 	<message xml:lang="en">Show &amp;formatted view</message>
 	<message xml:lang="fr">Montrer la vue &amp;formatée</message>
+	<message xml:lang="es">&amp;Vista formateada</message>
 </label>
 <label define="BShowStructure">
 	<message xml:lang="en">Show &amp;structure</message>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Dec 22 11:21:30 CET 2004" version="43">
+<base last_update="Thu Jan  6 10:48:40 CET 2005" version="44">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1988,6 +1988,7 @@
 <label define="TMSG_SPECHAR">
 	<message xml:lang="en">Special characters</message>
 	<message xml:lang="fr">Caractères spéciaux</message>
+	<message xml:lang="es">Caracteres especiales</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

@@ -22,7 +22,7 @@
 20 Nueva hoja de estilo &CSS...
 21 Desde &plantilla
 22 &Abrir documento...
-23 Abrir &pestaña...
+23 Abrir en &pestaña nueva...
 24 A&brir en ventana nueva...
 25 Actualiza&r
 26 A&trás
@@ -76,8 +76,8 @@
 74 &Copiar
 75 &Pegar
 76 &Borrar
-77 &Insertar
-78 &Añadir
+77 &Insertar delante
+78 &Añadir detrás
 79 &Buscar...
 80 &Revisar ortografía...
 81 &Transformar...
@@ -244,7 +244,7 @@
 242 Crear &destino (a / id)
 243 &Borrar ancla (a)
 244 &Crear/Borrar atributos id...
-245 &Mostrar ventana de diálogo
+245 Ventana de &herramientas
 246 &Pantalla completa
 247 &Barra de botones
 248 D&irección
@@ -252,7 +252,7 @@
 250 &Destinos
 251 &Aumentar tamaño de texto
 252 &Reducir tamaño de texto
-253 **Show &formatted view
+253 &Vista formateada
 254 Es&tructura
 255 Código &fuente
 256 &Enlaces

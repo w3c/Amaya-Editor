@@ -281,7 +281,7 @@
 279 Se ignoran los estilos - vea Archivo > Mostrar errores sintácticos
 280 Este documento ya está cargado en otra ventana
 281 Guardar la copia puede originar un problema de pérdida de actualización
-282 Al añadir o modificar el doctype se eliminarán algunos elementos o atributos
+282 Al añadir o modificar el doctype se pueden eliminar algunos elementos o atributos
 283 Por favor, confirme la operación
 284 En documentos XHTML usar tipo MIME application/xhtml+xml
 285 Juego de caracteres para nuevos documentos:
