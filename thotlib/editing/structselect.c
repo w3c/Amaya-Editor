@@ -2418,7 +2418,9 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		  LastSelectedElement = FirstSelectedElement;
 		  LastSelectedChar = 0;
 		}
-	      if (LastSelectedChar == 0 && LastSelectedElement != FirstSelectedElement)
+	      if (LastSelectedChar == 0 &&
+		  LastSelectedElement != FirstSelectedElement &&
+		  !SelectedColumn)
 		while (LastSelectedElement->ElNext == NULL
 		       && LastSelectedElement->ElPrevious == NULL
 		       && LastSelectedElement->ElParent != NULL)
