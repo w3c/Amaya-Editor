@@ -256,10 +256,10 @@ unsigned char      *text;
  *              parameter fg indicate the drawing color
  **/
 #ifdef __STDC__
-void                DrawChar (char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (unsigned char car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-char                car;
+unsigned char       car;
 int                 frame;
 int                 x;
 int                 y;

@@ -77,14 +77,14 @@ int                 errorCode;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CompilerError (int index, int origin, int level, int msgCode, char *inputline, int lineNum)
+void                CompilerError (int index, int origin, int level, int msgCode, unsigned char *inputline, int lineNum)
 #else  /* __STDC__ */
 void                CompilerError (index, origin, level, msgCode, inputline, lineNum)
 int                 index;
 int                 origin;
 int                 level;
 int                 msgCode;
-char               *inputline;
+unsigned char      *inputline;
 int                 lineNum;
 #endif /* __STDC__ */
 {

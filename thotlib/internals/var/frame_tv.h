@@ -103,7 +103,7 @@ extern int      WIN_DesReturn;		/* Indicateur de selection     */
 extern unsigned char	*WIN_buffer;	/* Buffer pour echanges avec Window */
 extern int		WIN_Lgbuffer;
 
-#endif NEW_WILLOWS
+#endif /* NEW_WILLOWS */
 
 #endif /* !NODISPLAY */
 

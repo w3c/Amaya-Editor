@@ -31,9 +31,9 @@ EXPORT PtrElement 	HFPageRefAssoc;
  *les paves de presentation avant et apres seront detruits dans le module page.
 */
 EXPORT PtrAbstractBox		AbsBoxAssocToDestroy;
-#else __COLPAGE__
+#else /* __COLPAGE__ */
 EXPORT int     	PageHeight; /* hauteur de la coupure corps+haut*/
-#endif __COLPAGE__
+#endif /* __COLPAGE__ */
 
 EXPORT int      RealPageHeight; /* hauteur de la page pour le Mediateur */
 /* NOTE: le Mediateur ne coupe pas exactement a la hauteur indiquee par */

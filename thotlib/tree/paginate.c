@@ -1134,7 +1134,7 @@ static PtrElement InsertMark(pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, s
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
   NotifySubTree(TteElemNew, pDoc, pElPage, 0);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
  NbBoxesPageHeaderToCreate = 0;
  /* code de creation des hauts de page supprime */
 
@@ -1289,7 +1289,7 @@ static PtrElement InsertMark(pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, s
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
   NotifySubTree(TteElemNew, pDoc, pElPage, 0);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 
   /* Si la page precedente prevoit des elements associes en haut de */
   /* page, on peut les creer maintenant */
@@ -2470,7 +2470,7 @@ void AddLastPageBreak(pRootEl, schView, pDoc, withAPP)
 	/* envoie l'evenement ElemNew.Post */
 	if (withAPP)
 	  NotifySubTree(TteElemNew, pDoc, pElPage, 0);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 	}
     }
 }
@@ -2599,7 +2599,7 @@ PtrPSchema	pSchPage;
 #endif /* __COLPAGE__ */
 #ifdef PAGINEETIMPRIME
   int		h;
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 
   RunningPaginate = TRUE;
 #ifdef __COLPAGE__
@@ -3056,7 +3056,7 @@ WholePageHeight = 0;
        previousPageAbBox = pP; /* pave de la page a imprimer */
 #ifndef PAGINEETIMPRIME
 	      DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 
 	      /* On prend la hauteur de ce type de page */
 	      PageHeaderFooter(pP->AbElement, schView, &b, &pSchPage);
@@ -3108,12 +3108,12 @@ WholePageHeight = 0;
 		    UpdateNumbers(NextElement(pEl1), pEl1, pDoc, TRUE);
 		    /* serait-ce plus rapide si on faisait durectement l'appel : */
 		    /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 		  }
 #ifndef PAGINEETIMPRIME
 		/* affiche un message avec le numero de page */
 		DisplayPageMsg (pDoc, pRootEl, pEl1, schView, Assoc, &isFirstPage);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 		/* On prend la hauteur de ce type de page */
 		PageHeaderFooter(pP->AbElement, schView, &b, &pSchPage);
 		/* la marque de page est avant la limite de page calculee, */
@@ -3126,7 +3126,7 @@ WholePageHeight = 0;
 #ifdef PAGINEETIMPRIME
            if (previousPageAbBox != pP)
              PrintOnePage(pDoc, previousPageAbBox, pP, view, Assoc);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
          /* on met a jour previousPageAbBox pour le tour suivant (au cas ou */
          /* on soit a la fin du document) */
          previousPageAbBox = pP;
@@ -3153,7 +3153,7 @@ WholePageHeight = 0;
 #ifdef PAGINEETIMPRIME
        PrintOnePage(pDoc, previousPageAbBox, pPage->ElAbstractBox[nbView-1], 
                        view, Assoc);
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
               /* detruit tous les paves qui precedent la nouvelle frontiere */
        tooShort = KillAbsBoxBeforePage(pPage->ElAbstractBox[nbView-1], 
                                       frame, pDoc, nbView);
@@ -3272,7 +3272,7 @@ WholePageHeight = 0;
 	      }
      PrintOnePage(pDoc, previousPageAbBox, pP, view, Assoc);
  }
-#endif PAGINEETIMPRIME
+#endif /* PAGINEETIMPRIME */
 
   RunningPaginate = FALSE;
   /* detruit l'image abstraite de la fin du document */

@@ -3,7 +3,7 @@
 
 typedef enum {
   ThotDirBrowse_FILES = 1, 
-  ThotDirBrowse_DIRECTORIES = 2, 
+  ThotDirBrowse_DIRECTORIES = 2
 } ThotDirBrowse_mask;
 
 typedef struct {
