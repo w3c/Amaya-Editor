@@ -590,6 +590,7 @@
 #define IDC_ENABLECACHE                 1433
 #define IDC_SAFEPUTREDIRECT             1433
 #define IDC_CACHEPROTECTEDDOCS          1434
+#define IDC_USEXHTMLMIMETYPE            1434
 #define IDC_CACHEDISCONNECTEDMODE       1435
 #define IDC_CACHEEXPIREIGNORE           1436
 #define IDC_CACHEDIRECTORY              1437
