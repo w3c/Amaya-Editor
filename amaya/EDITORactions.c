@@ -2247,10 +2247,10 @@ static void CreateRow (Document doc, View view, ThotBool before)
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
       elNew = TtaNewElement (doc, elType);
       TtaInsertSibling (elNew, el, before, doc);
-      TtaRegisterElementCreate (elNew, doc);
       event.element = elNew;
       event.document = doc;
       RowCreated (&event);
+      TtaRegisterElementCreate (elNew, doc);
       TtaCloseUndoSequence (doc);
       TtaSelectElement (doc, TtaGetFirstLeaf (elNew));
       TtaSetDisplayMode (doc, dispMode);
@@ -2416,24 +2416,25 @@ void PasteAfter (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  IsBeforeRow returns TRUE if there is an enclosing tbody and updates
-  the selection.
+  IsBeforeRow returns the enclosing tbody and TRUE if the new element
+  must be inserted before.
   Parameters head or foot is TRUE when the iserted element is a THead of
   a Tfoot.
   ----------------------------------------------------------------------*/
-static ThotBool BeginningOrEndOfTBody (Element cell, Document doc,
-				       ThotBool head, ThotBool foot)
+static Element BeginningOrEndOfTBody (Element cell, Document doc,
+				      ThotBool head, ThotBool foot,
+				      ThotBool *before)
 {
-  Element             tbody, el, child;
+  Element             tbody;
   ElementType         elType;
-  int                 len;
 
+  tbody = NULL;
   if (cell)
     {
       elType = TtaGetElementType (cell);
       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	/* not an HTML Cell */
-	return FALSE;
+	return NULL;
       /* get the enclosing tbody */
       tbody = cell;
       do
@@ -2445,39 +2446,20 @@ static ThotBool BeginningOrEndOfTBody (Element cell, Document doc,
       while (tbody &&
 	     (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
 	      elType.ElTypeNum != HTML_EL_tbody));
-      if (tbody == NULL)
-	return FALSE;
 
+      if (tbody == NULL)
+	return NULL;
       if (head)
 	{
 	  /* look for the first tbody */
-	  el = tbody;
-	  do
-	    {
-	      tbody = el;
-	      TtaPreviousSibling (&el);
-	      if (el)
-		elType = TtaGetElementType (el);
-	    }
-	  while (el &&
-		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-		  elType.ElTypeNum != HTML_EL_tbody));
-	  cell = NULL;
+	  tbody = TtaGetParent (tbody);
+  	  *before = TRUE;
 	}
       else if (foot)
 	{
 	  /* look for the last tbody */
-	  el = tbody;
-	  do
-	    {
-	      tbody = el;
-	      TtaNextSibling (&el);
-	      if (el)
-		elType = TtaGetElementType (el);
-	    }
-	  while (el &&
-		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-		  elType.ElTypeNum != HTML_EL_tbody));
+	  tbody = TtaGetParent (tbody);
+	  *before = FALSE;
 	}
       else
 	{
@@ -2491,46 +2473,12 @@ static ThotBool BeginningOrEndOfTBody (Element cell, Document doc,
 		 (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
 		  (elType.ElTypeNum != HTML_EL_Data_cell &&
 		   elType.ElTypeNum != HTML_EL_Heading_cell)));
+	  *before = (cell == NULL);
 	}
-
-      if (cell)
-	{
-	  /* there is a previous cell:
-	     move the selection at the end of the row */
-	  child = tbody;
-	  while (child)
-	    {
-	      el = child;
-	      child = TtaGetFirstChild (el);
-	    }
-	  elType = TtaGetElementType (el);
-	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	    TtaSelectString (doc, el, 1, 0);
-	  else
-	    TtaSelectElement (doc, el);
-	}
-      else
-	{
-	  /* there is no previous cell:
-	     move the selection at the beginnining of the row */
-	  child = tbody;
-	  while (child)
-	    {
-	      el = child;
-	      child = TtaGetLastChild (el);
-	    }
-	  elType = TtaGetElementType (el);
-	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	    {
-	      len = TtaGetElementVolume (el);
-	      TtaSelectString (doc, el, len, len-1);
-	    }
-	  else
-	    TtaSelectElement (doc, el);
-	}
-      return TRUE;
+      return tbody;
     }
-  return FALSE;
+  else
+    return NULL;
 }
  
 /*----------------------------------------------------------------------
@@ -2538,21 +2486,36 @@ static ThotBool BeginningOrEndOfTBody (Element cell, Document doc,
   ----------------------------------------------------------------------*/
 void CreateTHead (Document doc, View view)
 {
-  Element             cell, elNew;
+  Element             cell, el, elNew, row;
   ElementType         elType;
+  DisplayMode         dispMode;
+  NotifyElement       event;
+  ThotBool            before;
 
   cell = GetEnclosingCell (doc);
   if (cell)
     {
-      if (BeginningOrEndOfTBody (cell, doc, TRUE, FALSE))
-	/*{
-	  elType = TtaGetElementType (cell);
+      el = BeginningOrEndOfTBody (cell, doc, TRUE, FALSE, &before);
+      if (el)
+	{
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  /* generate a thead and its row */
+	  elType = TtaGetElementType (el);
 	  elType.ElTypeNum = HTML_EL_thead;
 	  elNew = TtaNewElement (doc, elType);
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  row = TtaNewElement (doc, elType);
 	  TtaInsertSibling (elNew, el, before, doc);
+	  TtaInsertFirstChild (&row, elNew, doc);
+	  event.element = row;
+	  event.document = doc;
+	  RowCreated (&event);
 	  TtaRegisterElementCreate (elNew, doc);
-	  }*/
-      CreateHTMLelement (HTML_EL_thead, doc);
+	  TtaSelectElement (doc, TtaGetFirstLeaf (row));
+	  TtaSetDisplayMode (doc, dispMode);
+	}
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
@@ -2563,16 +2526,36 @@ void CreateTHead (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateTBody (Document doc, View view)
 {
-  Element             cell, elNew;
+  Element             cell, el, elNew, row;
   ElementType         elType;
+  DisplayMode         dispMode;
+  NotifyElement       event;
+  ThotBool            before;
 
   cell = GetEnclosingCell (doc);
   if (cell)
     {
-      if (BeginningOrEndOfTBody (cell, doc, FALSE, FALSE))
+      el = BeginningOrEndOfTBody (cell, doc, FALSE, FALSE, &before);
+      if (el)
 	{
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  /* generate a tbody and its row */
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = HTML_EL_tbody;
+	  elNew = TtaNewElement (doc, elType);
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  row = TtaNewElement (doc, elType);
+	  TtaInsertSibling (elNew, el, before, doc);
+	  TtaInsertFirstChild (&row, elNew, doc);
+	  event.element = row;
+	  event.document = doc;
+	  RowCreated (&event);
+	  TtaRegisterElementCreate (elNew, doc);
+	  TtaSelectElement (doc, TtaGetFirstLeaf (row));
+	  TtaSetDisplayMode (doc, dispMode);
 	}
-      CreateHTMLelement (HTML_EL_tbody, doc);
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
@@ -2583,16 +2566,36 @@ void CreateTBody (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateTFoot (Document doc, View view)
 {
-  Element             cell, elNew;
+  Element             cell, el, elNew, row;
   ElementType         elType;
+  DisplayMode         dispMode;
+  NotifyElement       event;
+  ThotBool            before;
 
   cell = GetEnclosingCell (doc);
   if (cell)
     {
-      if (BeginningOrEndOfTBody (cell, doc, FALSE, TRUE))
+      el = BeginningOrEndOfTBody (cell, doc, FALSE, TRUE, &before);
+      if (el)
 	{
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  /* generate a tfoot and its row */
+	  elType = TtaGetElementType (el);
+	  elType.ElTypeNum = HTML_EL_tfoot;
+	  elNew = TtaNewElement (doc, elType);
+	  elType.ElTypeNum = HTML_EL_Table_row;
+	  row = TtaNewElement (doc, elType);
+	  TtaInsertSibling (elNew, el, before, doc);
+	  TtaInsertFirstChild (&row, elNew, doc);
+	  event.element = row;
+	  event.document = doc;
+	  RowCreated (&event);
+	  TtaRegisterElementCreate (elNew, doc);
+	  TtaSelectElement (doc, TtaGetFirstLeaf (row));
+	  TtaSetDisplayMode (doc, dispMode);
 	}
-      CreateHTMLelement (HTML_EL_tfoot, doc);
       TtaCloseUndoSequence (doc);
       TtaSetDocumentModified (doc);
     }
