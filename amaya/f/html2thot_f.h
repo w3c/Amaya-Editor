@@ -11,7 +11,8 @@ extern void ParseAreaCoords ( Element element,
 extern int MapGI ( char *gi,
                    SSchema *schema );
 extern void GIType ( char *gi,
-                     ElementType *elType );
+                     ElementType *elType,
+                     Document doc );
 extern char *GITagNameByType ( ElementType elType );
 extern char *GITagName ( Element elem );
 extern int MapThotAttr ( char *Attr,
@@ -54,7 +55,8 @@ extern void ParseAreaCoords (/* Element element,
 extern int MapGI (/* char *gi,
                      SSchema *schema */);
 extern void GIType (/* char *gi,
-                       ElementType *elType */);
+                       ElementType *elType,
+                       Document doc */);
 extern char *GITagNameByType (/* ElementType elType */);
 extern char *GITagName (/* Element elem */);
 extern int MapThotAttr (/* char *Attr,

@@ -47,7 +47,9 @@ strGenStack;
 static strGenStack *generationStack[MAX_STACK];
 
 static int          topGenerStack;
-
+static unsigned char      TransferMode;
+#define ByAttribute 0
+#define InBuffer 1
 static char        *bufHTML;		/* HTML text buffer */
 static int          szHTML;		/* size of generated HTML code */
 static int          lastRulePlace;	/* pointer to the stack*/
@@ -241,7 +243,9 @@ int                 depth;
    else
       new = father;
    TtaFreeMemory (tag);
-   if (elemType.ElTypeNum != HTML_EL_Comment_ && elemType.ElTypeNum != HTML_EL_Invalid_element)
+   if ((strcmp ( TtaGetSSchemaName (elemType.ElSSchema), "HTML") != 0) ||
+       (elemType.ElTypeNum != HTML_EL_Comment_ && 
+	elemType.ElTypeNum != HTML_EL_Invalid_element))
      {
 	elemCour = TtaGetFirstChild (elem);
 	while (elemCour != NULL)
@@ -722,7 +726,9 @@ int                 rank;
 }
 
 /*----------------------------------------------------------------------
-  Searches an element identified with a given label in the environement subtrees list.
+  FindListSTreeByLabel
+  Searches an element identified with a given label in the environement
+  subtrees list.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element      FindListSTreeByLabel (char *label)
@@ -750,8 +756,8 @@ char               *label;
 }
 
 /*----------------------------------------------------------------------
-   search for the next element with the identifier id in the ListSubTrees, searches the first one if 
-   *elem =NULL 
+   search for the next element with the identifier id in the ListSubTrees, 
+   searches the first one if *elem =NULL 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          FindListSubTree (int id, Element * elem)
@@ -802,7 +808,38 @@ Element            *elem;
      }
    return result;
 }
-
+/*----------------------------------------------------------------------
+   ExportSubTree Exports a subtree in generation buffer without any
+   change
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ExportSubTree (Element subTree, Document doc)
+#else 
+static void ExportSubTree (subTree, doc)
+Element subTree;
+Document doc;
+#endif
+{
+  char		      tmpfilename[25];
+  char		      charRead;
+  FILE		     *inputFile;
+  
+  strcpy (tmpfilename, "/tmp/amayatrans.tmp");
+  TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
+  inputFile = fopen (tmpfilename, "r");
+  charRead = getc (inputFile);  
+  while (charRead != EOF)
+    {
+      bufHTML[szHTML++] = charRead;
+      charRead = getc (inputFile);
+    }
+  bufHTML[szHTML] = EOS;
+}
+      
+  
+  
+  
+  
 /*----------------------------------------------------------------------
    StartHtmlParser initializes  parsing environement in order to parse
    the HTML fragment in buffer in the context of a last descendance of the
@@ -814,7 +851,6 @@ static boolean StartHtmlParser (strMatchChildren * sMatch, Document doc)
 static boolean StartHtmlParser (sMatch, doc)
 strMatch           *sMatch;
 Document            doc;
-
 #endif
 {
    strMatchChildren   *prevMatch, *DMatch;
@@ -849,6 +885,9 @@ Document            doc;
      }
    if (strcmp (bufHTML, ""))
      {
+#ifdef DEBUG
+       printf("%s\n\n",bufHTML);
+#endif
 	TtaSetStructureChecking (0, doc);
 	InitializeParser (myFirstSelect, isClosed, doc);
 	HTMLparse (NULL, bufHTML);
@@ -1267,137 +1306,162 @@ strNode            *TN;
 
 #endif
 {
-   strAttrDesc           *AD;
-   strGenStack          *NS;
-   char               *attrValue, *tag;
-   strNode            *ancestor;
-   boolean             found;
-   AttributeType       attrType;
-   Attribute           attr;
-   int                 l, attrKind;
+  ElementType		elType;
+  strAttrDesc           *AD;
+  strGenStack          *NS;
+  char               *attrValue, *tag;
+  strNode            *ancestor;
+  boolean             found;
+  boolean             withZZGhost = FALSE;
+  AttributeType       attrType;
+  Attribute           attr;
+  int                 l, attrKind;
 
-   attrType.AttrSSchema = TtaGetDocumentSSchema (TransDoc);
-   attrValue = TtaGetMemory (NAME_LENGTH);
-   tag = TtaGetMemory (NAME_LENGTH);
-   /* push the new tag on the generation stack */
-   generationStack[topGenerStack]->Nbc++;
-   NS = (strGenStack *) TtaGetMemory (sizeof (strGenStack));
-   NS->Tag = TtaGetMemory (NAME_LENGTH);
-   strcpy (NS->Tag, ND->Tag);
-   /* create a ghost attribute with the identifier of the node */
-   NS->Idf = idfCounter++;
-   NS->Nbc = 0;
-   NS->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-   NS->Attributes->NameAttr = TtaGetMemory (NAME_LENGTH);
-   strcpy (NS->Attributes->NameAttr, "ZZGHOST");
-   NS->Attributes->IsInt = TRUE;
-   NS->Attributes->IsTransf = FALSE;
-   NS->Attributes->IntVal = NS->Idf;
-   NS->Attributes->Next = ND->Attributes;
-   generationStack[++topGenerStack] = NS;
+  attrType.AttrSSchema = TtaGetDocumentSSchema (TransDoc);
+  attrValue = TtaGetMemory (NAME_LENGTH);
+  tag = TtaGetMemory (NAME_LENGTH);
+  /* push the new tag on the generation stack */
+  generationStack[topGenerStack]->Nbc++;
+  NS = (strGenStack *) TtaGetMemory (sizeof (strGenStack));
+  NS->Tag = TtaGetMemory (NAME_LENGTH);
+  strcpy (NS->Tag, ND->Tag);
+   
+  GIType (NS->Tag, &elType, TransDoc);
+ 
+#ifdef MATHML
+  if (elType.ElSSchema == NULL)
+    {
+      /*specifique a MathML */
+      elType.ElSSchema = TtaGetSSchema ("MathML", TransDoc);
+    }
+#endif
 
-   /* writing the tag name */
-   PutInHtmlBuffer ("<");
-   PutInHtmlBuffer (NS->Tag);
+  NS->Idf = idfCounter++;
+  NS->Nbc = 0;
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+    {
+      TransferMode = ByAttribute;
+      /* create a ghost attribute with the identifier of the node */     
+      NS->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+      NS->Attributes->NameAttr = TtaGetMemory (NAME_LENGTH);
+      strcpy (NS->Attributes->NameAttr, "ZZGHOST");
+      NS->Attributes->IsInt = TRUE;
+      NS->Attributes->IsTransf = FALSE;
+      NS->Attributes->IntVal = NS->Idf;
+      NS->Attributes->Next = ND->Attributes;
+    }
+  else
+    {
+      TransferMode = InBuffer ;
+      NS->Attributes = ND->Attributes;
+    }
+  generationStack[++topGenerStack] = NS;
 
-   AD = NS->Attributes;
-   /* wrting the attributes */
-   while (AD != NULL)
-     {
-	if (AD->IsTransf)
-	  {			/* transfer attribute */
-	     ancestor = TN;
-	     found = FALSE;
-	     while (!found && ancestor != NULL)
-	       {		/* searching for source element (in current element ancestors) */
-		  found = (!strcmp (ancestor->MatchSymb->SymbolName, 
-				    AD->AttrTag)
-			|| !strcmp (ancestor->MatchSymb->Tag, AD->AttrTag));
+  /* writing the tag name */
+  PutInHtmlBuffer ("<");
+  PutInHtmlBuffer (NS->Tag);
+
+  AD = NS->Attributes;
+  /* wrting the attributes */
+  while (AD != NULL)
+    {
+      if (AD->IsTransf)
+	{			/* transfer attribute */
+	  ancestor = TN;
+	  found = FALSE;
+	  while (!found && ancestor != NULL)
+	    {		/* searching for source element (in current element ancestors) */
+	      found = (!strcmp (ancestor->MatchSymb->SymbolName, 
+				AD->AttrTag)
+		       || !strcmp (ancestor->MatchSymb->Tag, AD->AttrTag));
+	      if (!found)
+		ancestor = ancestor->Parent;
+	    }
+	  if (found)
+	    {		/* searching for an ancestor of the source element which have the wanted attribute  */
+	      if (ancestor != NULL)
+		{
+		  strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
+		  attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
+		}
+	      attr = NULL;
+	      found = FALSE;
+	      while (!found && ancestor != NULL)
+		{
+		  if (attrType.AttrTypeNum != -1)
+		    attr = TtaGetAttribute (ancestor->Elem, attrType);
+		  found = (attr != NULL);
 		  if (!found)
-		     ancestor = ancestor->Parent;
-	       }
-	     if (found)
-	       {		/* searching for an ancestor of the source element which have the wanted attribute  */
-		  if (ancestor != NULL)
 		    {
-		       strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
-		       attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
+		      ancestor = ancestor->Parent;
+		      if (ancestor != NULL)
+			{
+			  strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
+			  attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
+			}
 		    }
-		  attr = NULL;
-		  found = FALSE;
-		  while (!found && ancestor != NULL)
-		    {
-		       if (attrType.AttrTypeNum != -1)
-			  attr = TtaGetAttribute (ancestor->Elem, attrType);
-		       found = (attr != NULL);
-		       if (!found)
-			 {
-			    ancestor = ancestor->Parent;
-			    if (ancestor != NULL)
-			      {
-				 strcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
-				 attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
-			      }
-			 }
+		}
+	      if (found)
+		{		/* the attribute has been found, writing the attribute name */
+		  PutInHtmlBuffer (" ");
+		  PutInHtmlBuffer (AD->AttrAttr);
+		  PutInHtmlBuffer ("=");
+		  /* writing the attribute value */
+		  TtaGiveAttributeType (attr, &attrType, &attrKind);
+		  if (attrKind == 2)
+		    {	/* text attribute */
+		      l = TtaGetTextAttributeLength (attr);
+		      TtaGiveTextAttributeValue (attr, attrValue, &l);
+		      PutInHtmlBuffer (attrValue);
 		    }
-		  if (found)
-		    {		/* the attribute has been found, writing the attribute name */
-		       PutInHtmlBuffer (" ");
-		       PutInHtmlBuffer (AD->AttrAttr);
-		       PutInHtmlBuffer ("=");
-		       /* writing the attribute value */
-		       TtaGiveAttributeType (attr, &attrType, &attrKind);
-		       if (attrKind == 2)
-			 {	/* text attribute */
-			    l = TtaGetTextAttributeLength (attr);
-			    TtaGiveTextAttributeValue (attr, attrValue, &l);
-			    PutInHtmlBuffer (attrValue);
-			 }
-		       else
-			 {	/* int attribute */
-			    sprintf (attrValue, "%d", TtaGetAttributeValue (attr));
-			    PutInHtmlBuffer (attrValue);
-			 }
+		  else
+		    {	/* int attribute */
+		      sprintf (attrValue, "%d", TtaGetAttributeValue (attr));
+		      PutInHtmlBuffer (attrValue);
 		    }
-	       }
-	     if (!found)
-	       {
-		  fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
-	       }
-	  }
-	else
-	  {			/* creation of an attribute */
-	     PutInHtmlBuffer (" ");
-	     PutInHtmlBuffer (AD->NameAttr);
-	     PutInHtmlBuffer ("=");
-	     if (AD->IsInt)
-	       {		/* int attribute */
-		  sprintf (attrValue, "%d", AD->IntVal);
-		  PutInHtmlBuffer (attrValue);
-	       }
-	     else
-	       {		/* text attribute */
-		  l = strlen (bufHTML);
-		  bufHTML[l] = '"';
-		  bufHTML[l + 1] = EOS;
-		  szHTML++;
-		  PutInHtmlBuffer (AD->TextVal);
-		  l = strlen (bufHTML);
-		  bufHTML[l] = '"';
-		  bufHTML[l + 1] = EOS;
-		  szHTML++;
-	       }
-	  }
-	AD = AD->Next;
-     }
-   /* closing the tag */
-   PutInHtmlBuffer (">");
-   /*free the ZZGHOST attribute */
-   TtaFreeMemory ((char *) NS->Attributes->NameAttr);
-   TtaFreeMemory ((char *) NS->Attributes);
-   NS->Attributes = NULL;
-   TtaFreeMemory (attrValue);
-   TtaFreeMemory (tag);
+		}
+	    }
+	  if (!found)
+	    {
+	      fprintf (stderr, "can't transfer attribute %s\n", AD->AttrAttr);
+	    }
+	}
+      else
+	{			/* creation of an attribute */
+	  PutInHtmlBuffer (" ");
+	  PutInHtmlBuffer (AD->NameAttr);
+	  PutInHtmlBuffer ("=");
+	  if (AD->IsInt)
+	    {		/* int attribute */
+	      sprintf (attrValue, "%d", AD->IntVal);
+	      PutInHtmlBuffer (attrValue);
+	    }
+	  else
+	    {		/* text attribute */
+	      l = strlen (bufHTML);
+	      bufHTML[l] = '"';
+	      bufHTML[l + 1] = EOS;
+	      szHTML++;
+	      PutInHtmlBuffer (AD->TextVal);
+	      l = strlen (bufHTML);
+	      bufHTML[l] = '"';
+	      bufHTML[l + 1] = EOS;
+	      szHTML++;
+	    }
+	}
+      AD = AD->Next;
+    }
+  /* closing the tag */
+  PutInHtmlBuffer (">");
+  if (withZZGhost)
+    {
+      /*free the ZZGHOST attribute */
+      TtaFreeMemory ((char *) NS->Attributes->NameAttr);
+      TtaFreeMemory ((char *) NS->Attributes);
+    }
+  NS->Attributes = NULL;
+  TtaFreeMemory (attrValue);
+  TtaFreeMemory (tag);
 }
 
 
@@ -1431,6 +1495,7 @@ strNode            *node;
 #endif
 {
    strNode            *child;
+/*    ElementType	       elType; */
 
    child = node->Child;
    while (child != NULL)
@@ -1438,9 +1503,14 @@ strNode            *node;
 	if (TtaGetElementVolume (child->Elem) != 0)
 	  {			/* if the element is empty: no transfert */
 	     generationStack[topGenerStack]->Nbc++;
-	     AddListSubTree (child->Elem,
-			     generationStack[topGenerStack]->Idf,
-			     generationStack[topGenerStack]->Nbc);
+/* 	     elType = TtaGetElementType (child->Elem); */
+	     /* if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) */
+	     if (TransferMode == ByAttribute)
+	       AddListSubTree (child->Elem,
+			       generationStack[topGenerStack]->Idf,
+			       generationStack[topGenerStack]->Nbc);
+	     else
+	       ExportSubTree (child->Elem, TransDoc);
 	  }
 	child = child->Next;
      }
@@ -1459,22 +1529,30 @@ boolean             inplace;
 
 #endif
 {
-   if (TtaGetElementVolume (node->Elem) != 0)
-     {				/* if the element is empty: no transfert */
-	if (!inplace)
-	  /* closing previously generated elements */
-	   while (topGenerStack >= lastRulePlace)
-	     {
-		PutEndTag (generationStack[topGenerStack]);
-		TtaFreeMemory (generationStack[topGenerStack]->Tag);
-		TtaFreeMemory ((char *) generationStack[topGenerStack]);
-		topGenerStack--;
-	     }
-	generationStack[topGenerStack]->Nbc++;
+/*   ElementType elType; */
+
+  if (TtaGetElementVolume (node->Elem) != 0)
+    {	/* if the element is empty: no transfert */
+      if (!inplace)
+	/* closing previously generated elements */
+	while (topGenerStack >= lastRulePlace)
+	  {
+	    PutEndTag (generationStack[topGenerStack]);
+	    TtaFreeMemory (generationStack[topGenerStack]->Tag);
+	    TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	    topGenerStack--;
+	  }
+/*       elType = TtaGetElementType (node->Elem); */
+      generationStack[topGenerStack]->Nbc++;
+/*       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) */
+	if (TransferMode == ByAttribute)
 	AddListSubTree (node->Elem,
 			generationStack[topGenerStack]->Idf,
 			generationStack[topGenerStack]->Nbc);
-     }
+      else
+	ExportSubTree (node->Elem, TransDoc);
+
+    }
 }
 
 
@@ -1549,9 +1627,10 @@ strMatchChildren   *sm;
 
 #endif
 {
-   int                 courNode;
+   int                 courNode, l;
    strMatch           *sm2;
    strNodeDesc        *RNodeCour;
+   strRuleDesc	      *currentRule;
    boolean             stop, sonsMatch;
 
    sm2 = sm->MatchNode->Matches;
@@ -1564,60 +1643,78 @@ strMatchChildren   *sm;
      }
    /* sonsMatch is true if there is at least one matched node in the children of source node */
    sm->MatchNode->MatchSymb = sm->MatchSymb;
-   courNode = 1;
-   RNodeCour = sm->MatchSymb->Rule->OptionNodes;
-   stop = (RNodeCour == NULL || courNode > topGenerStack);
-   while (!stop)
-     { /* for each optional tag in the rule */
-	if (!strcmp (generationStack[courNode]->Tag, RNodeCour->Tag))
-	  {  /* does nothing if the tag is already present in the destination instance */
-	     RNodeCour = RNodeCour->Next;
-	     courNode++;
-	     stop = (RNodeCour == NULL || courNode > topGenerStack);
-	  }
-	else
-	  {
-	    /* a new branch have to be created in the destination */
-	     stop = TRUE;
-	  }
-     }
-
-   while (topGenerStack >= courNode)
-     { /* closes the opened tags (on generation stack) */
-	PutEndTag (generationStack[topGenerStack]);
-	TtaFreeMemory (generationStack[topGenerStack]->Tag);
-	TtaFreeMemory ((char *) generationStack[topGenerStack]);
-	topGenerStack--;
-     }
-
-   while (RNodeCour != NULL)
-     {/* generates optional nodes not already present */
-	PutBeginTag (RNodeCour, sm->MatchNode);
-	courNode++;
-	RNodeCour = RNodeCour->Next;
-     }
-
-   lastRulePlace = courNode;
-   RNodeCour = sm->MatchSymb->Rule->NewNodes;
-
-   while (RNodeCour != NULL && strcmp (RNodeCour->Tag, "*"))
-     { /* generates the new nodes */
-	PutBeginTag (RNodeCour, sm->MatchNode);
-	courNode++;
-	RNodeCour = RNodeCour->Next;
-     }
-   if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "*"))
+   currentRule = sm->MatchSymb->Rule;
+   while (currentRule!=NULL)
      {
-	TransfertNode (sm->MatchNode, TRUE);
-     }
-   /* process the children */
-   else if (sonsMatch)
-     {			
-	ApplyTransChild (sm2->MatchChildren);
-     }
-   else
-     {			
-	TransfertChildren (sm->MatchNode);
+       courNode = 1;
+       RNodeCour = currentRule->OptionNodes;
+       stop = (RNodeCour == NULL || courNode > topGenerStack);
+       while (!stop)
+	 { /* for each optional tag in the rule */
+	   if (!strcmp (generationStack[courNode]->Tag, RNodeCour->Tag))
+	     {  /* does nothing if the tag is already present in the destination instance */
+	       RNodeCour = RNodeCour->Next;
+	       courNode++;
+	       stop = (RNodeCour == NULL || courNode > topGenerStack);
+	     }
+	   else
+	     {
+	       /* a new branch have to be created in the destination */
+	       stop = TRUE;
+	     }
+	 }
+
+       while (topGenerStack >= courNode)
+	 { /* closes the opened tags (on generation stack) */
+	   PutEndTag (generationStack[topGenerStack]);
+	   TtaFreeMemory (generationStack[topGenerStack]->Tag);
+	   TtaFreeMemory ((char *) generationStack[topGenerStack]);
+	   topGenerStack--;
+	 }
+
+       while (RNodeCour != NULL)
+	 {/* generates optional nodes not already present */
+	   PutBeginTag (RNodeCour, sm->MatchNode);
+	   courNode++;
+	   RNodeCour = RNodeCour->Next;
+	 }
+
+       lastRulePlace = courNode;
+       RNodeCour = currentRule->NewNodes;
+
+       while (RNodeCour != NULL && 
+	      RNodeCour->Tag[0] != '"' &&
+	      strcmp (RNodeCour->Tag, "*") != 0 )
+	 { /* generates the new nodes */
+	   PutBeginTag (RNodeCour, sm->MatchNode);
+	   courNode++;
+	   RNodeCour = RNodeCour->Next;
+	 }
+       if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
+	 {
+	   l = strlen (RNodeCour->Tag) - 2;
+	   strncpy (&bufHTML[szHTML], &RNodeCour->Tag[1], l);
+	   szHTML += l;
+	 }
+       else if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "*"))
+	 {
+	   TransfertNode (sm->MatchNode, TRUE);
+	 }
+       else if (RNodeCour != NULL && !strcmp (RNodeCour->Tag, "#"))
+	 {
+	   /* process the children */
+	   if (sonsMatch)
+	     {			
+	       ApplyTransChild (sm2->MatchChildren);
+	     }
+	   else
+	     {			
+	       TransfertChildren (sm->MatchNode);
+	     }
+	 }
+       else if (RNodeCour == NULL)
+	 TransfertChildren (sm->MatchNode);
+       currentRule = currentRule->NextRule;
      }
 }
 
@@ -1656,6 +1753,8 @@ Document            doc;
 	szHTML = 0;
 	bufHTML = TtaGetMemory (BUFFER_LEN);
 	strcpy (bufHTML, "");
+	
+	TransferMode = InBuffer;
 	/* applying the transformation */
 	ApplyTransChild (sm->MatchChildren);
 	while (topGenerStack > 0)
@@ -1777,7 +1876,8 @@ Document            doc;
 	   TtaPreviousSibling (&prevFirst);
 	while (prevFirst != NULL && GITagName (prevFirst) == NULL);
 	while (parentFirst != NULL &&
-	       TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_BODY &&
+	       ((strcmp (TtaGetSSchemaName (TtaGetElementType (parentFirst).ElSSchema), "HTML") != 0) ||
+		TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_BODY) &&
 	       nextLast == NULL && prevFirst == NULL)
 	  {
 	     maxSelDepth++;
@@ -1842,8 +1942,8 @@ Element            *elSelect;
 }
 /*----------------------------------------------------------------------
    IsValidHtmlChild(element, tag)                                       
-   returns TRUE if the tag is valid as a direct descendant of an element of type elType 
-   
+   returns TRUE if the tag is valid as a direct descendant of an element 
+   of type elType 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsValidHtmlChild (ElementType elemType, char *tag, char *prevtag)
@@ -1856,99 +1956,128 @@ char               *prevtag;
 #endif
 {
 
-   ElementType         elemTypeChild, tagElType, prevElType;
-   int                 cardinal, i;
-   ElementType 	      *subTypes;
-   boolean             result, found;
-   Construct           constOfType;
+  ElementType         elemTypeChild, tagElType, prevElType;
+  int                 cardinal, i;
+  ElementType 	      *subTypes;
+  boolean             result, found;
+  Construct           constOfType;
 
-   result = FALSE;
-   elemTypeChild.ElSSchema = elemType.ElSSchema;
-   cardinal = TtaGetCardinalOfType(elemType);
-   subTypes = (ElementType *)TtaGetMemory(cardinal * sizeof(ElementType));
-   TtaGiveConstructorsOfType(&subTypes,&cardinal,elemType);
-   constOfType = TtaGetConstructOfType(elemType);
-   GIType (tag, &tagElType);
-   if (tagElType.ElTypeNum == 0)
-      return FALSE;
-   switch (constOfType)
+  result = FALSE;
+  if (strcmp (tag, "MATH") == 0)
+    result = IsValidHtmlChild (elemType, "MATHDISP", prevtag);
+  if (result)
+    return TRUE;
+  elemTypeChild.ElSSchema = elemType.ElSSchema;
+  cardinal = TtaGetCardinalOfType (elemType);
+  subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
+  TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
+  constOfType = TtaGetConstructOfType (elemType);
+  GIType (tag, &tagElType, (Document)0);
+  if (tagElType.ElTypeNum == 0)
+    return FALSE;
+  switch (constOfType)
+    {
+    case ConstructIdentity:
+      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+	result = TRUE;
+      else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
+	       !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+	/* search if tag can be inserted as a child of the identity */
+	result = IsValidHtmlChild (subTypes[0], tag, "");
+#ifdef MATHML
+      /* any math element can be inserted under <MATH> (only row in MathML.S)*/
+      if (!result && elemType.ElTypeNum == 8 && 
+	  strcmp (TtaGetSSchemaName (elemType.ElSSchema), "MathML") == 0)
+	result = IsValidHtmlChild (subTypes[0], tag, "");
+#endif
+      break;
+
+    case ConstructList:
+      if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
+	result = TRUE;
+      else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
+	       !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+	result = IsValidHtmlChild (subTypes[0], tag, "");
+      break;
+
+    case ConstructChoice:
+      for (i = 0; !result && i < cardinal; i++)
+	{
+	  if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
+	    result = TRUE;
+	  else if (!strcmp (GITagNameByType (subTypes[i]),"???") ||
+		   !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+	    result = IsValidHtmlChild (subTypes[i], tag, "");
+	}
+      break;
+
+    case ConstructOrderedAggregate:
+      found = (!strcmp (prevtag, ""));
+      GIType (prevtag, &prevElType, (Document)0);
+      found = (prevElType.ElTypeNum == 0);
+      /* searches the rule of previous sibling */
+      for (i = 0; !found && i < cardinal; i++)
+	{
+	  if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
+	    found = TRUE;
+	  else if (strcmp (GITagNameByType (subTypes[i]),"???") ||
+		   strcmp (GITagNameByType (subTypes[i]), "NONE"))
+	    i = cardinal;
+	}
+      if (found)
+	{
+	  while (!result && i < cardinal)
+	    {
+	      if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+		result = TRUE;
+	      else if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
+		       !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+		result = IsValidHtmlChild (subTypes[i], tag, "");
+	      if (!result)
+		if (TtaIsOptionalInAggregate(i,elemType)) 
+		  i++;
+		else
+		  i = cardinal;
+	    }
+	}
+      break;
+    case ConstructUnorderedAggregate:
+      while (!result && i < cardinal)
+	{
+	  if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
+	    result = TRUE;
+	  else if (!strcmp (GITagNameByType (subTypes[i]), "???") ||
+		   !strcmp (GITagNameByType (subTypes[i]), "NONE"))
+	    result = IsValidHtmlChild (subTypes[i], tag, "");
+	  if (!result)
+	    if (TtaIsOptionalInAggregate(i,elemType)) 
+	      i++;
+	    else
+	      i = cardinal;
+	}    
+    case ConstructNature:
       {
-            case ConstructIdentity:
-               if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-		  result = TRUE;
-	       else if (!strcmp (GITagNameByType (subTypes[0]), "???"))
-		  /* search if tag can beinserted as a child of the identity */
-		  result = IsValidHtmlChild (subTypes[0], tag, "");
-	       break;
-
-	    case ConstructList:
-	       if (subTypes[0].ElTypeNum == tagElType.ElTypeNum)
-		  result = TRUE;
-	       else if (!strcmp (GITagNameByType (subTypes[0]), "???"))
-                  result = IsValidHtmlChild (subTypes[0], tag, "");
-	       break;
-
-	    case ConstructChoice:
-	       for (i = 0; !result && i < cardinal; i++)
-		 {
-		    if (subTypes[i].ElTypeNum == tagElType.ElTypeNum)
-		       result = TRUE;
-		    else if (!strcmp (GITagNameByType (subTypes[i]),"???"))
- 		       result = IsValidHtmlChild (subTypes[i], tag, "");
-		 }
-	       break;
-
-	    case ConstructOrderedAggregate:
-	       found = (!strcmp (prevtag, ""));
-	       GIType (prevtag, &prevElType);
-	       found = (prevElType.ElTypeNum == 0);
-	       /* searches the rule of previous sibling */
-	       for (i = 0; !found && i < cardinal; i++)
-		 {
-		    if (prevElType.ElTypeNum == subTypes[i].ElTypeNum)
-		       found = TRUE;
-		    else if (strcmp (GITagNameByType (subTypes[i]),"???"))
-		       i = cardinal;
-		 }
-	       if (found)
-		 {
-		    while (!result && i < cardinal)
-		      {
-			 if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-			    result = TRUE;
-			 else if (!strcmp (GITagNameByType (subTypes[i]), "???"))
-			    result = IsValidHtmlChild (subTypes[i], tag, "");
-			 if (!result)
-			    if (TtaIsOptionalInAggregate(i,elemType)) 
-			       i++;
-			    else
-			       i = cardinal;
-		      }
-		 }
-	       break;
-	    case ConstructUnorderedAggregate:
-	       while (!result && i < cardinal)
-		 {
-		    if (tagElType.ElTypeNum == subTypes[i].ElTypeNum)
-		       result = TRUE;
-		    else if (!strcmp (GITagNameByType (subTypes[i]), "???"))
-		       result = IsValidHtmlChild (subTypes[i], tag, "");
-		    if (!result)
-	               if (TtaIsOptionalInAggregate(i,elemType)) 
-			  i++;
-		       else
-			  i = cardinal;
-		 }
-	    case ConstructConstant:
-	    case ConstructReference:
-	    case ConstructBasicType:
-	    case ConstructNature:
-	    case ConstructPair:
-            case ConstructError:
-	       break;
-	 }
-   TtaFreeMemory((char *)subTypes);
-   return result;
+	if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
+	  {
+	    if (subTypes[0].ElTypeNum == 0)
+	      subTypes[0].ElTypeNum = 8;
+	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
+	      result = TRUE;
+	    else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
+		     !strcmp (GITagNameByType (subTypes[0]), "NONE"))
+	    result = IsValidHtmlChild (subTypes[0], tag, "");
+	  }
+      }
+	      
+    case ConstructConstant:
+    case ConstructReference:
+    case ConstructBasicType:
+    case ConstructPair:
+    case ConstructError:
+      break;
+    }
+  TtaFreeMemory((char *)subTypes);
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1966,80 +2095,89 @@ char               *prevTag;
 
 #endif
 {
-   strMatchChildren   *smc;
-   strMatch           *sm2;
-   strNodeDesc           *node;
-   boolean             result, sonsMatch;
-   char               *curTag;
+  strMatchChildren   *smc;
+  strMatch           *sm2;
+  strNodeDesc           *node;
+  boolean             result, sonsMatch;
+  char               *curTag;
 
-   curTag = TtaGetMemory (NAME_LENGTH);
-   result = TRUE;
-   smc = sm->MatchChildren;
-   while (result && smc != NULL)
-     {
-	if (smc->MatchSymb->Rule == NULL)
-	  {			/* there is no rule for the current node */
-	     sm2 = smc->MatchNode->Matches;
-	     sonsMatch = FALSE;
-	     while (sm2 != NULL && !sonsMatch)
-	       {		/* checks if the children of the node have been matched */
-		  sonsMatch = (sm2->MatchSymb == smc->MatchSymb && sm2->MatchChildren != NULL);
-		  if (!sonsMatch)
-		     sm2 = sm2->Next;
-	       }
-	     if (!sonsMatch)
-	       {		/* if the children of the node have not been matched */
-		  /* checks if the node can be transferred in the destination */
-		  if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
-		    {		/* if the element is empty, it is ignored in transformation */
-		       if (strcmp (prevTag, smc->MatchNode->Tag))
-			  result = IsValidHtmlChild (elemTypeRoot,
-						     smc->MatchNode->Tag,
-						     prevTag);
-		       strcpy (prevTag, smc->MatchNode->Tag);
-		    }
-	       }
-	     else
-	       {		/* if they have been, checks the elements generated by these children */
-		  result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
-	       }
-	  }
-	else
-	  {			/* there is a rule for the current node */
-	     node = smc->MatchSymb->Rule->OptionNodes;
-	     if (node != NULL)
-	       {		/* if there is at least one place node */
-		  if (strcmp (prevTag, node->Tag))
-		    {
-		       result = IsValidHtmlChild (elemTypeRoot,
-						  node->Tag,
-						  prevTag);
-		       strcpy (prevTag, smc->MatchNode->Tag);
-		    }
-	       }
-	     else
-	       {
-		  node = smc->MatchSymb->Rule->NewNodes;
-		  if (node != NULL)
-		    {
-		       if (!strcmp (node->Tag, "*"))
-			  strcpy (curTag, smc->MatchNode->Tag);
-		       else
-			  strcpy (curTag, node->Tag);
-		       result = IsValidHtmlChild (elemTypeRoot,
-						  curTag,
-						  prevTag);
-		       strcpy (prevTag, curTag);
-		    }
-		  else		/*error */
-		     result = FALSE;
-	       }
-	  }
-	if (result)
-	   smc = smc->Next;
-     }
-   TtaFreeMemory (curTag);
-   return result;
+#ifdef DEBUG
+  
+  if (strcmp (prevTag,"") == 0)
+    printf ("Check if %s is a valid as successor for %s under %s\n", sm->MatchSymb->SymbolName, prevTag, GITagNameByType(elemTypeRoot));
+  else
+    ("Check if %s is valid  under %s\n", sm->MatchSymb->SymbolName, GITagNameByType(elemTypeRoot));
+#endif
+
+
+  curTag = TtaGetMemory (NAME_LENGTH);
+  result = TRUE;
+  smc = sm->MatchChildren;
+  while (result && smc != NULL)
+    {
+      if (smc->MatchSymb->Rule == NULL)
+	{			/* there is no rule for the current node */
+	  sm2 = smc->MatchNode->Matches;
+	  sonsMatch = FALSE;
+	  while (sm2 != NULL && !sonsMatch)
+	    {		/* checks if the children of the node have been matched */
+	      sonsMatch = (sm2->MatchSymb == smc->MatchSymb && sm2->MatchChildren != NULL);
+	      if (!sonsMatch)
+		sm2 = sm2->Next;
+	    }
+	  if (!sonsMatch)
+	    {		/* if the children of the node have not been matched */
+	      /* checks if the node can be transferred in the destination */
+	      if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
+		{		/* if the element is empty, it is ignored in transformation */
+		  if (strcmp (prevTag, smc->MatchNode->Tag))
+		    result = IsValidHtmlChild (elemTypeRoot,
+					       smc->MatchNode->Tag,
+					       prevTag);
+		  strcpy (prevTag, smc->MatchNode->Tag);
+		}
+	    }
+	  else
+	    {		/* if they have been, checks the elements generated by these children */
+	      result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
+	    }
+	}
+      else
+	{			/* there is a rule for the current node */
+	  node = smc->MatchSymb->Rule->OptionNodes;
+	  if (node != NULL)
+	    {		/* if there is at least one place node */
+	      if (strcmp (prevTag, node->Tag))
+		{
+		  result = IsValidHtmlChild (elemTypeRoot,
+					     node->Tag,
+					     prevTag);
+		  strcpy (prevTag, smc->MatchNode->Tag);
+		}
+	    }
+	  else
+	    {
+	      node = smc->MatchSymb->Rule->NewNodes;
+	      if (node != NULL)
+		{
+		  if (!strcmp (node->Tag, "*"))
+		    strcpy (curTag, smc->MatchNode->Tag);
+		  else
+		    strcpy (curTag, node->Tag);
+		  result = IsValidHtmlChild (elemTypeRoot,
+					     curTag,
+					     prevTag);
+		  strcpy (prevTag, curTag);
+		}
+	      else		/*error */
+		result = FALSE;
+	    }
+	}
+      if (result)
+	smc = smc->Next;
+    }
+  TtaFreeMemory (curTag);
+  return result;
 }
 
 /*----------------------------------------------------------------------

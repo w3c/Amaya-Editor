@@ -416,7 +416,79 @@ Remove tag FONT: FONT{*+};
 	* > :*;
 	}
 
-surround with sqrt: *+;
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! Transformation for maths
+
+!surround an element with a square root
+square root: *;
+        {
+        *> MSQRT:*;
+        }
+
+!surround a set of elements with a square root
+square root: *+;
+        {
+        *> MSQRT.MROW:*;
+        }
+
+! removes a square root
+remove sqrt: MSQRT{*+};
+        {
+        *> :*;
+        }
+
+! removes a Row level
+remove row: MROW{*+};
+        {
+        *> :*;
+        }
+
+!surround element(s) with a fraction
+fraction: (num:*,den:*) | MROW{num:*,den:*} | *;
+        {
+        num > MFRAC:*;
+        den > MFRAC:*;
+        *> MFRAC:*;
+        *> MFRAC:MTEXT." ";
+        }
+
+!removes a fraction level, replacing it by mrow
+remove frac: MFRAC{(num:*,den:*)|numalone:*};
+        {
+        num > MROW:*;
+        den > MROW:*;
+        numalone > :*;
+        }
+
+!changes MSUB in MSUP
+superscript:MSUB;
 	{
-	*> MSQRT:*;
+	MSUB > MSUP;
 	}
+
+!changes MSUP in MSUB
+subscript:MSUP;
+	{
+	MSUP > MSUB;
+	}
+
+!changes MSUB or MSUP in MSUBSUP
+subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
+	{
+	base > MSUBSUP:*;
+	sup > MSUBSUP:MTEXT." ";
+	sup > MSUBSUP:*;
+	sub > MSUBSUP:*;
+	sub > MSUBSUP:MTEXT." ";
+	}
+
+!does not work!!!
+!parenthesise: *;
+!        {
+!        *>:MF."(";
+!        *>:*;
+!        *>:MF.")";
+!        }
+
+
+

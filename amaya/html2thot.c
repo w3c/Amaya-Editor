@@ -1020,12 +1020,12 @@ SSchema		   *schema;
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GIType (char *gi, ElementType *elType)
+void                GIType (char *gi, ElementType *elType, Document doc)
 #else
-void                GIType (gi, elType)
+void                GIType (gi, elType, doc)
 char               *gi;
 ElementType        *elType;
-
+Document	    doc;
 #endif
 {
    int                 i;
@@ -1037,11 +1037,11 @@ ElementType        *elType;
      {
 	if (!strcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	  {
-/******
-	    if (HTMLSSchema == NULL)
+
+	    if (HTMLSSchema == NULL && ! (doc == (Document) 0))
 	       elType->ElSSchema = TtaGetSSchema ("HTML", doc);
 	    else
-******/
+
 	       elType->ElSSchema = HTMLSSchema;
 	    elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	    return;
@@ -1055,11 +1055,11 @@ ElementType        *elType;
      {
 	if (!strcasecmp (MathMLGIMappingTable[i].htmlGI, gi))
 	  {
-/******
-	    if (MathMLSSchema == NULL)
+
+	    if (MathMLSSchema == NULL && ! (doc == (Document) 0))
 	       elType->ElSSchema = TtaGetSSchema ("MathML", doc);
 	    else
-******/
+
 	       elType->ElSSchema = MathMLSSchema;
 	    elType->ElTypeNum = MathMLGIMappingTable[i].ThotType;
 	    return;

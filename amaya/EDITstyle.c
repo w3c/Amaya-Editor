@@ -256,7 +256,7 @@ char               *first;
 		  * Type name are not class names, remove them.
 		  * Don't list the first field twice, too.
 		  */
-		 GIType (val, &elType);
+		 GIType (val, &elType, doc);
 		 if ((elType.ElTypeNum == 0) && (strcmp (val, first)))
 		   {
 		      len = free;

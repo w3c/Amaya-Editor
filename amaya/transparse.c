@@ -1509,6 +1509,7 @@ unsigned char       c;
 	ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
 	ppRule->RuleName = TtaGetMemory (20);
 	strcpy (ppRule->RuleName, inputBuffer);
+	ppRule->NextRule = NULL;
 	ppRule->Next = NULL;
 	ppRule->OptionNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ppRule->NewNodes = NULL;
@@ -1544,7 +1545,7 @@ unsigned char       c;
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
+	if (MapGI (ppNode->Tag, &schema) == -1)
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1579,7 +1580,7 @@ unsigned char       c;
      {
 	strcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
+	if (MapGI (ppNode->Tag, &schema) == -1)
 	  {
 	     ppError = TRUE;
 	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
@@ -1627,120 +1628,130 @@ unsigned char       c;
 
 #endif
 {
-   boolean             ok;
-   strRuleDesc           *prule;
-   strSymbDesc           *psymb;
-   strNodeDesc           *pnode;
-   strAttrDesc           *ad, *ad2;
-   char                msgBuffer[MaxBufferLength];
-   SSchema		schema;
+  boolean                ok;
+  strRuleDesc           *prule;
+  strSymbDesc           *psymb;
+  strNodeDesc           *pnode;
+  strAttrDesc           *ad, *ad2;
+  char                   msgBuffer[MaxBufferLength];
+  SSchema		  schema;
 
-   if (ppLgBuffer != 0)
-     {
-	strcpy (ppNode->Tag, inputBuffer);
-	ppLgBuffer = 0;
-	if (strcmp (ppNode->Tag, "*") && (MapGI (ppNode->Tag, &schema) == -1))
-	  {
-	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
-	     ErrorMessage (msgBuffer);
-	  }
-     }
-   if (ppRule->OptionNodes && !strcmp (ppRule->OptionNodes->Tag, ""))
-     {				/* free the last node if it is empty */
-	ad = ppRule->OptionNodes->Attributes;
-	while (ad)
-	  {
-	     TtaFreeMemory (ad->NameAttr);
-	     if (ad->IsTransf)
-	       {
-		  TtaFreeMemory (ad->AttrTag);
-		  TtaFreeMemory (ad->AttrAttr);
-	       }
-	     else if (!ad->IsInt)
-		TtaFreeMemory (ad->TextVal);
-	     ad2 = ad->Next;
-	     TtaFreeMemory ((char *) ad);
-	     ad = ad2;
-	  }
-	TtaFreeMemory (ppRule->OptionNodes->Tag);
-	TtaFreeMemory ((char *) ppRule->OptionNodes);
-	ppRule->NewNodes = NULL;
-     }
+  if (ppLgBuffer != 0)
+    {
+      strcpy (ppNode->Tag, inputBuffer);
+      ppLgBuffer = 0;
+      if (strcmp (ppNode->Tag, "*") && 
+	  ppNode->Tag[0] != '"' &&
+	  (MapGI (ppNode->Tag, &schema) == -1))
+	{
+	  ppError = TRUE;
+	  sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
+	  ErrorMessage (msgBuffer);
+	}
+    }
+  if (ppRule->OptionNodes && !strcmp (ppRule->OptionNodes->Tag, ""))
+    {				/* free the last node if it is empty */
+      ad = ppRule->OptionNodes->Attributes;
+      while (ad)
+	{
+	  TtaFreeMemory (ad->NameAttr);
+	  if (ad->IsTransf)
+	    {
+	      TtaFreeMemory (ad->AttrTag);
+	      TtaFreeMemory (ad->AttrAttr);
+	    }
+	  else if (!ad->IsInt)
+	    TtaFreeMemory (ad->TextVal);
+	  ad2 = ad->Next;
+	  TtaFreeMemory ((char *) ad);
+	  ad = ad2;
+	}
+      TtaFreeMemory (ppRule->OptionNodes->Tag);
+      TtaFreeMemory ((char *) ppRule->OptionNodes);
+      ppRule->NewNodes = NULL;
+    }
 
-   if (ppRule->NewNodes && !strcmp (ppRule->NewNodes->Tag, ""))
-     {				/* free the last node if it is empty */
-	ad = ppRule->NewNodes->Attributes;
-	while (ad)
-	  {
-	     TtaFreeMemory (ad->NameAttr);
-	     if (ad->IsTransf)
-	       {
-		  TtaFreeMemory (ad->AttrTag);
-		  TtaFreeMemory (ad->AttrAttr);
-	       }
-	     else if (!ad->IsInt)
-		TtaFreeMemory (ad->TextVal);
-	     ad2 = ad->Next;
-	     TtaFreeMemory ((char *) ad);
-	     ad = ad2;
-	  }
-	TtaFreeMemory (ppRule->NewNodes->Tag);
-	TtaFreeMemory ((char *) ppRule->NewNodes);
-	ppRule->NewNodes = NULL;
-     }
-   ppNode = NULL;
+  if (ppRule->NewNodes && !strcmp (ppRule->NewNodes->Tag, ""))
+    {				/* free the last node if it is empty */
+      ad = ppRule->NewNodes->Attributes;
+      while (ad)
+	{
+	  TtaFreeMemory (ad->NameAttr);
+	  if (ad->IsTransf)
+	    {
+	      TtaFreeMemory (ad->AttrTag);
+	      TtaFreeMemory (ad->AttrAttr);
+	    }
+	  else if (!ad->IsInt)
+	    TtaFreeMemory (ad->TextVal);
+	  ad2 = ad->Next;
+	  TtaFreeMemory ((char *) ad);
+	  ad = ad2;
+	}
+      TtaFreeMemory (ppRule->NewNodes->Tag);
+      TtaFreeMemory ((char *) ppRule->NewNodes);
+      ppRule->NewNodes = NULL;
+    }
+  ppNode = NULL;
 
-   /* insert the rule descriptor in the transformation descriptor */
-   prule = ppTrans->Rules;
-   if (prule == NULL)
-      ppTrans->Rules = ppRule;
-   else
-     {
-	while (prule->Next)
-	   prule = prule->Next;
-	prule->Next = ppRule;
-     }
-   ppTrans->NbRules++;
+  /* insert the rule descriptor in the transformation descriptor */
+  prule = ppTrans->Rules;
+  if (prule == NULL)
+    ppTrans->Rules = ppRule;
+  else
+    {
+      while (prule->Next)
+	prule = prule->Next;
+      prule->Next = ppRule;
+    }
+  ppTrans->NbRules++;
 
-   /* link the symbols of the pattern to the current rule */
-   psymb = ppTrans->Symbols;
-   ok = FALSE;
-   while (psymb)
-     {
-	if (!strcmp (ppRule->RuleName, psymb->SymbolName))
-	  {
-	     psymb->Rule = ppRule;
-	     ok = TRUE;
-	  }
-	psymb = psymb->Next;
-     }
+  /* link the symbols of the pattern to the current rule */
+  psymb = ppTrans->Symbols;
+  ok = FALSE;
+  while (psymb)
+    {
+      if (!strcmp (ppRule->RuleName, psymb->SymbolName))
+	{
+	  prule = psymb->Rule;
+	  if (prule == NULL)
+	    psymb->Rule = ppRule;
+	  else
+	    {
+	      while (prule->NextRule)
+		prule = prule->NextRule;
+	      prule->NextRule = ppRule;
+	    }
+	  ok = TRUE;
+	}
+      psymb = psymb->Next;
+    }
 
-   if (ok)
-     {				/* the rule is linked to 1 symbol at least */
-	/* check its consistence with the destination type of the current transformation */
-	if (ppRule->OptionNodes)
-	   pnode = ppRule->OptionNodes;
-	else
-	   pnode = ppRule->NewNodes;
-	if (pnode && ppTrans->DestinationTag == NULL)
-	  {
-	     /* the destination type is undefined => the first tag of the rule defines */
-	     /* the destination type of the transformation */
-	     ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
-	     strcpy (ppTrans->DestinationTag, pnode->Tag);
-	  }
-	else if (pnode && strcmp (ppTrans->DestinationTag, pnode->Tag))
-	   /* the first tag of the rule is different from the destination type : the */
-	   /* rule has no destination type */
-	   strcpy (ppTrans->DestinationTag, "");
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage ("undefined pattern symbol");
-     }
-   ppRule = NULL;
+  if (ok)
+    {				/* the rule is linked to 1 symbol at least */
+      /* check its consistence with the destination type of the current transformation */
+      if (ppRule->OptionNodes)
+	pnode = ppRule->OptionNodes;
+      else
+	pnode = ppRule->NewNodes;
+      if (pnode && ppTrans->DestinationTag == NULL)
+	{
+	  /* the destination type is undefined => the first tag of the rule defines */
+	  /* the destination type of the transformation */
+	  ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
+	  strcpy (ppTrans->DestinationTag, pnode->Tag);
+	}
+      else if (pnode && strcmp (ppTrans->DestinationTag, pnode->Tag))
+	/* the first tag of the rule is different from the destination type : the */
+	/* rule has no destination type */
+	strcpy (ppTrans->DestinationTag, "");
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage ("undefined pattern symbol");
+    }
+  ppRule = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1957,53 +1968,57 @@ static sourceTransition ppsourceAutomaton[] =
    {11, '*', (Proc) ppPutInBuffer, 11},
 /* state 12: reading the position path */
    {12, 'S', (Proc) Do_nothing, 12},
-   {12, '<', (Proc) BeginRuleTag, -15},
+   {12, '<', (Proc) BeginRuleTag, -16},
    {12, ':', (Proc) EndOptNodes, 13},
    {12, ';', (Proc) EndRule, 14},
    {12, '.', (Proc) EndNode, 12},
    {12, '*', (Proc) ppPutInBuffer, 12},
 /* state 13: reading the generated nodes */
    {13, 'S', (Proc) Do_nothing, 13},
-   {13, '<', (Proc) BeginRuleTag, -15},
+   {13, '<', (Proc) BeginRuleTag, -16},
    {13, ';', (Proc) EndRule, 14},
-   {13, '.', (Proc) EndNode, 12},
-   {13, '*', (Proc) ppPutInBuffer, 12},
+   {13, '"', (Proc) ppPutInBuffer, 15},
+   {13, '.', (Proc) EndNode, 13},
+   {13, '*', (Proc) ppPutInBuffer, 13},
 /* state 14: waiting for the next rule or the end of rules */
    {14, 'S', (Proc) Do_nothing, 14},
    {14, '}', (Proc) EndTransformation, 0},
    {14, '*', (Proc) ppPutInBuffer, 11},
+   /* state 23: reading a content string */
+   {15, '"', (Proc) ppPutInBuffer, 13},
+   {15, '*', (Proc) ppPutInBuffer, 15},
 
   /*sub automaton for tags  in transformation rules */
-/* state 15: a '<' has been read : reading tag name */
-   {15, 'S', (Proc) EndRuleTagName, 17},
-   {15, '>', (Proc) EndRuleTagName, -1},
-   {15, '*', (Proc) ppPutInBuffer, 15},
-/* state 16: expexting a space or an end tag */
-   {16, 'S', (Proc) Do_nothing, 17},
-   {16, '>', (Proc) Do_nothing, -1},
-/* state 17: reading an attribute name */
-   {17, 'S', (Proc) ppEndRuleAttrName, 17},
-   {17, '=', (Proc) ppEndRuleAttrName, 18},
-   {17, '.', (Proc) ppTransAttr, 21},
-   {17, '>', (Proc) ppEndRuleAttrName, -1},
-   {17, '*', (Proc) ppPutInBuffer, 17},
-/* state 18: reading an attribute value */
-   {18, '\"', (Proc) ppStartOfAttrValue, 19},
-   {18, '\'', (Proc) ppStartOfAttrValue, 20},
-   {18, 'S', (Proc) ppEndOfAttrValue, 17},
-   {18, '>', (Proc) ppEndOfAttrValue, -1},
-   {18, '.', (Proc) ppTransAttrValue, 21},
+/* state 16: a '<' has been read : reading tag name */
+   {16, 'S', (Proc) EndRuleTagName, 18},
+   {16, '>', (Proc) EndRuleTagName, -1},
+   {16, '*', (Proc) ppPutInBuffer, 16},
+/* state 17: expexting a space or an end tag */
+   {17, 'S', (Proc) Do_nothing, 18},
+   {17, '>', (Proc) Do_nothing, -1},
+/* state 18: reading an attribute name */
+   {18, 'S', (Proc) ppEndRuleAttrName, 18},
+   {18, '=', (Proc) ppEndRuleAttrName, 19},
+   {18, '.', (Proc) ppTransAttr, 22},
+   {18, '>', (Proc) ppEndRuleAttrName, -1},
    {18, '*', (Proc) ppPutInBuffer, 18},
-/* state 19: reading an attribute value between double quotes */
-   {19, '\"', (Proc) ppEndOfAttrValue, 16},
+/* state 19: reading an attribute value */
+   {19, '\"', (Proc) ppStartOfAttrValue, 20},
+   {19, '\'', (Proc) ppStartOfAttrValue, 21},
+   {19, 'S', (Proc) ppEndOfAttrValue, 18},
+   {19, '>', (Proc) ppEndOfAttrValue, -1},
+   {19, '.', (Proc) ppTransAttrValue, 22},
    {19, '*', (Proc) ppPutInBuffer, 19},
-/* state 20: reading an attribute value  between quotes */
-   {20, '\'', (Proc) ppEndOfAttrValue, 16},
+/* state 20: reading an attribute value between double quotes */
+   {20, '\"', (Proc) ppEndOfAttrValue, 17},
    {20, '*', (Proc) ppPutInBuffer, 20},
-/* state 21: reading a transferred attribute name */
-   {21, 'S', (Proc) ppEndTransAttr, 17},
-   {21, '>', (Proc) ppEndTransAttr, -1},
+/* state 21: reading an attribute value  between quotes */
+   {21, '\'', (Proc) ppEndOfAttrValue, 17},
    {21, '*', (Proc) ppPutInBuffer, 21},
+/* state 22: reading a transferred attribute name */
+   {22, 'S', (Proc) ppEndTransAttr, 18},
+   {22, '>', (Proc) ppEndTransAttr, -1},
+   {22, '*', (Proc) ppPutInBuffer, 22},
 
 
 /* st1ate 1000: fictious state. End of automaton table */

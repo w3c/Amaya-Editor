@@ -1544,14 +1544,14 @@ PSchema             gPres;
   HTMLschema = TtaGetDocumentSSchema (doc);
   ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
   if (attrelemname[0] != EOS) {
-    GIType (attrelemname, &elType);
+    GIType (attrelemname, &elType, doc);
     ctxt->attrelem = elType.ElTypeNum;
     /*** what about elType.ElSSchema ?  ***/
     if (ctxt->attrelem == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
        ctxt->attrelem = HTML_EL_HTML;
   }
   
-  GIType (elem, &elType);
+  GIType (elem, &elType, doc);
   ctxt->type = elType.ElTypeNum;
   /*** what about elType.ElSSchema ?  ***/
   if (ctxt->type == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
@@ -1571,7 +1571,7 @@ PSchema             gPres;
     {
       if (ancestors[i] == NULL)
 	break;
-      GIType (ancestors[i], &elType);
+      GIType (ancestors[i], &elType, doc);
       if (elType.ElTypeNum == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
 	elType.ElTypeNum = HTML_EL_HTML;
       if (elType.ElTypeNum == 0)

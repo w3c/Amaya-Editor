@@ -93,7 +93,7 @@ strAttrDesc;
 typedef struct _NodeDesc
   {
      char               *Tag;
-     strAttrDesc           *Attributes;
+     strAttrDesc        *Attributes;
      struct _NodeDesc   *Next;
   }
 strNodeDesc;
@@ -103,6 +103,7 @@ typedef struct _RuleDesc
      char               *RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
+     struct _RuleDesc   *NextRule;
      struct _RuleDesc   *Next;
   }
 strRuleDesc;
