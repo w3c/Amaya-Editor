@@ -873,6 +873,73 @@ PtrElement          pEl;
 
 
 /*----------------------------------------------------------------------
+   EmptyOrConstants
+   Returns TRUE if the next (or previous, depending on before) sibling of
+   element pEl is absent or contains only constants
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static boolean  EmptyOrConstants (PtrElement pEl)
+#else
+static boolean  EmptyOrConstants (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+{
+   PtrElement          child;
+   boolean	       ret;
+
+   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+      ret = TRUE;
+   else
+      if (pEl->ElTerminal)
+	 ret = (pEl->ElVolume == 0);
+      else
+         {
+         child = pEl->ElFirstChild;
+         ret = TRUE;
+         while (child && ret)
+	   {
+	   ret = EmptyOrConstants (child);
+	   child = child->ElNext;
+	   }
+         }
+   return ret;
+}
+
+/*----------------------------------------------------------------------
+   NoSignificantSibling
+   Returns TRUE if the next (or previous, depending on before) sibling of
+   element pEl is absent or contains only constants
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static boolean  NoSignificantSibling (PtrElement pEl, boolean before)
+#else
+static boolean  NoSignificantSibling (pEl, before)
+PtrElement          pEl;
+boolean		    before
+
+#endif /* __STDC__ */
+{
+   PtrElement          pSibling, child;
+   boolean	       ret;
+
+   ret = FALSE;
+   if (before)
+      pSibling = pEl->ElPrevious;
+   else
+      pSibling = pEl->ElNext;
+
+   if (pSibling == NULL)
+      ret = TRUE;
+   else
+      if (EmptyOrConstants (pSibling))
+	 ret = TRUE;
+   return ret;
+}
+
+/*----------------------------------------------------------------------
    L'utilisateur a frappe' la touche "Return".
    Traitement en mode non structure'.
   ----------------------------------------------------------------------*/
@@ -988,7 +1055,8 @@ void                TtcCreateElement (doc, view)
 		       }
 		     if (list && pListEl != NULL)
 		       {
-			  if (pElem->ElPrevious != NULL && pElem->ElNext == NULL)
+			  if (pElem->ElPrevious != NULL &&
+			      NoSignificantSibling (pElem, FALSE))
 			    {
 			       /* detruire pElem et creer un frere suivant a pParent */
 			       ready = TRUE;
@@ -998,7 +1066,8 @@ void                TtcCreateElement (doc, view)
 			       while (pElReplicate->ElParent != pListEl)
 				  pElReplicate = pElReplicate->ElParent;
 			    }
-			  else if (pElem->ElNext != NULL && pElem->ElPrevious == NULL)
+			  else if (pElem->ElNext != NULL &&
+				   NoSignificantSibling (pElem, TRUE))
 			    {
 			       /* detruire pElem et creer un frere precedent a pParent */
 			       ready = TRUE;
@@ -1047,26 +1116,43 @@ void                TtcCreateElement (doc, view)
 	  }
 
 	if (!ready && !empty)
-	  {
-	     /* la selection commence-t-elle en tete d'un element ? */
+          {
+             /* La selection commence-t-elle en tete ou en queue d'element? */
 	     selBegin = FALSE;
-	     if (firstSel == lastSel && firstSel->ElPrevious == NULL)
-		if (firstSel->ElTerminal)
-		   if (firstSel->ElLeafType == LtText && firstChar <= 1)
-		      selBegin = TRUE;
-		   else if (firstSel->ElLeafType == LtPicture && firstChar ==0)
-		      selBegin = TRUE;
-
-	     /* la selection est-t-elle a la fin de la derniere feuille de */
-	     /* texte ou image d'un element ? */
 	     selEnd = FALSE;
-	     if (firstSel == lastSel && lastSel->ElNext == NULL)
-		if (lastSel->ElTerminal)
-		   if (lastSel->ElLeafType == LtText &&
-		       firstChar > lastSel->ElTextLength)
-		      selEnd = TRUE;
-		   else if (firstSel->ElLeafType == LtPicture && firstChar > 0)
-		      selEnd = TRUE;
+	     if (firstSel == lastSel)
+	        /* un seul element selectionne' */
+	        {
+	        /* la selection commence-t-elle en tete de l'element ? */
+		if (firstSel->ElVolume > 0 && EmptyOrConstants (firstSel))
+                   /* un element ne contenant que des constantes */
+                   {
+		   selBegin = TRUE;
+                   selEnd = TRUE;
+                   }
+                else if (firstSel->ElPrevious == NULL)
+		   /* l'element n'a pas de frere precedent */
+		   if (firstSel->ElTerminal)
+		      if (firstSel->ElLeafType == LtText && firstChar <= 1)
+                         /* une feuille de texte avec selection au debut */
+		         selBegin = TRUE;
+		      else if (firstSel->ElLeafType == LtPicture && firstChar ==0)
+                         /* une image avec selection sur le bord gauche */
+		         selBegin = TRUE;
+
+	        /* la selection est-t-elle a la fin de la derniere feuille */
+	        /* de texte ou image d'un element ? */
+	        if (lastSel->ElNext == NULL)
+		   /* l'element selectionne' n'a pas de frere suivant */
+		   if (lastSel->ElTerminal)
+		      if (lastSel->ElLeafType == LtText &&
+		          firstChar > lastSel->ElTextLength)
+                         /* une feuille de texte avec selection en fin */
+		         selEnd = TRUE;
+		      else if (firstSel->ElLeafType == LtPicture && firstChar > 0)
+                         /* une image avec selection sur le bord droit */
+		         selEnd = TRUE;
+	        }
 
 	     /* Si la selection ne commence ni en tete ni en queue, on */
 	     /* essaie de couper un paragraphe en deux */
