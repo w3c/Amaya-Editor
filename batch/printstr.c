@@ -396,7 +396,10 @@ int                 Num;
 	       printf ("NoSpellCheck");
 	       break;
 	    case ExcIsDraw:
-	       printf ("NoIsDraw");
+	       printf ("IsDraw");
+	       break;
+	    case ExcNoShowBox:
+	       printf ("NoShowBox");
 	       break;
 	    case ExcGraphCreation:
 	       printf ("GraphCreation");

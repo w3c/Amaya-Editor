@@ -297,6 +297,9 @@ Amaya/Windows/*.mak \
 Amaya/Windows/*.dsp \
 Amaya/Windows/*.dsw \
 Amaya/Windows/amaya/*.mkf \
+Amaya/Windows/annotlib/*.mak \
+Amaya/Windows/annotlib/*.dsp \
+Amaya/Windows/annotlib/*.dsw \
 Amaya/Windows/Compilers/*.mak \
 Amaya/Windows/Compilers/*.dsp \
 Amaya/Windows/Compilers/*.dsw \
