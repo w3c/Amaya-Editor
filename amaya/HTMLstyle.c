@@ -3355,6 +3355,7 @@ char               *attrstr;
    char                 *url;
    char                 *name;
    BackgroundImageCallbackPtr callblock;
+   char                 *no_bg_image;
 
    url = NULL;
    if (! IS_CASE_WORD (attrstr, "url"))
@@ -3364,6 +3365,12 @@ char               *attrstr;
 
    if (url)
      {
+       no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
+       if ((no_bg_image != NULL) &&
+	   ((!(strcasecmp(no_bg_image,"yes"))) ||
+	    (!(strcasecmp(no_bg_image,"true")))))
+	   return (attrstr);
+
        /*
 	* if the background is set on the HTML or BODY element,
 	* set the background color for the full window.
@@ -3533,6 +3540,7 @@ char               *attrstr;
    SpecificTarget        elem;
    char                 *url;
    char                 *name;
+   char                 *no_bg_image;
    boolean               setColor;
    BackgroundImageCallbackPtr callblock;
 
@@ -3544,6 +3552,15 @@ char               *attrstr;
       * we don't currently support URL just parse it to skip it.
       */
      attrstr = ParseHTMLURL (attrstr, &url);
+
+   no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
+   if ((no_bg_image != NULL) &&
+       ((!(strcasecmp(no_bg_image,"yes"))) ||
+	(!(strcasecmp(no_bg_image,"true"))))) {
+       if (url) TtaFreeMemory (url);
+       url = NULL;
+   }
+       
 
    attrstr = ParseCSSColor (attrstr, &best);
    if (best.typed_data.unit == DRIVERP_UNIT_INVALID)
