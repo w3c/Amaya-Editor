@@ -408,11 +408,11 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,
 			    int orientation,
 			    int disposition,
 			    int paper_print,
-			    bool manual_feed,
-			    bool with_toc,
-			    bool with_links,
-			    bool with_url,
-			    bool ignore_css )
+			    ThotBool manual_feed,
+			    ThotBool with_toc,
+			    ThotBool with_links,
+			    ThotBool with_url,
+			    ThotBool ignore_css )
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
