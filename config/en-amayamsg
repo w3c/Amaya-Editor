@@ -314,7 +314,9 @@
 312 Add new model into library
 313 URL of the new SVG file ...
 314 Library title
-315 Library URI
+315 Library URL
 316 Create library
 317 Add library
 318 Create or search library
+319 The current selection not contain only SVG elements. Please reselect
+320 The library title is mandatory

@@ -3517,6 +3517,61 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 }
 
 /*-----------------------------------------------------------------------
+ PasteLibraryModelDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+									  LPARAM lParam)
+{
+#ifdef _SVGLIB
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1));
+	SetWindowText (GetDlgItem (hwnDlg, ID_COPYSVGLIB),
+		TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_REFERSVGLIB), 
+		TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	break;
+      case WM_COMMAND:
+	if (HIWORD (wParam) == EN_UPDATE)
+	  if (LOWORD (wParam) == IDC_GETALT)
+	    {
+	      GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
+	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
+	    }
+	switch (LOWORD (wParam))
+	  {
+	  case ID_COPYSVGLIB:
+/*	    if (!altText || altText [0] == 0)
+	      MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
+			  TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+			  MB_OK | MB_ICONERROR);
+	    else 
+	      {
+		ThotCallback (BaseLibrary + ImageAlt, STRING_DATA, altText);
+		ThotCallback (BaseLibrary + ImageURL, STRING_DATA, UrlToOpen);
+		ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 1);*/
+	    EndDialog (hwnDlg, ID_COPYSVGLIB);
+	    break;
+	  case ID_REFERSVGLIB:
+	    EndDialog (hwnDlg, ID_REFERSVGLIB);
+	    break;
+
+	  case IDCANCEL:
+	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
+	    EndDialog (hwnDlg, IDCANCEL);
+	    break;
+	  }
+	break;
+      default:
+	return FALSE;
+      }
+    return TRUE;
+#endif /* _SVGLIB */
+}
+
+/*-----------------------------------------------------------------------
  CreateAltDlgWindow
  ------------------------------------------------------------------------*/
 void CreateAltDlgWindow ()
@@ -4020,9 +4075,20 @@ void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
     SetFocus (DocInfo[doc]);
   else
     {
-	  /* copy the value so that we can find it in the callback */
+        /* copy the value so that we can find it in the callback */
       TmpDoc = doc;
       DialogBox (hInstance, MAKEINTRESOURCE (DOCINFOMENU), NULL, (DLGPROC) DocumentInfoDlgProc);
     }
+}
+
+/*-----------------------------------------------------------------------
+ CreatePasteLibraryModelDlgWindow
+ ------------------------------------------------------------------------*/
+void CreatePasteLibraryModelDlgWindow (ThotWindow parent)
+{
+#ifdef _SVGLIB
+  DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent,
+	     (DLGPROC) PasteLibraryModelDlgProc);
+#endif _SVGLIB
 }
 #endif /* _WINDOWS */

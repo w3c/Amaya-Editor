@@ -4,11 +4,8 @@
   <title>Default catalogue (thotdir)</title>
   <link href="catalogue.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
-  <!--
      TD { vertical-align:middle }
-  -->
-
-
+     image { width : 50; height : 50 }
   </style>
   <meta name="generator" content="amaya 6.2, see http://www.w3.org/Amaya/" />
   <meta name="document" content="svglib_file" />

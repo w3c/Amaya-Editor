@@ -314,7 +314,9 @@
 312 Ajouter un modèle dans la librairie
 313 URL du nouveau fichier SVG ...
 314 Titre de la librairie
-315 URI de la librairie
+315 URL de la librairie
 316 Créer une librairie
-317 Ajouterune librairie
+317 Ajouter une librairie
 318 Créer ou chercher une librairie
+319 La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP
+320 Le titre de la librairie est obligatoire

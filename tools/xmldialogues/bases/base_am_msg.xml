@@ -2504,8 +2504,8 @@
 	<message xml:lang="fr">Titre de la librairie</message>
 </label>
 <label define="AM_SVGLIB_CATALOGUE_URL">
-	<message xml:lang="en">Library URI</message>
-	<message xml:lang="fr">URI de la librairie</message>
+	<message xml:lang="en">Library URL</message>
+	<message xml:lang="fr">URL de la librairie</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
 	<message xml:lang="en">Create library</message>
@@ -2513,11 +2513,19 @@
 </label>
 <label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
 	<message xml:lang="en">Add library</message>
-	<message xml:lang="fr">Ajouterune librairie</message>
+	<message xml:lang="fr">Ajouter une librairie</message>
 </label>
 <label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
 	<message xml:lang="en">Create or search library</message>
 	<message xml:lang="fr">Créer ou chercher une librairie</message>
+</label>
+<label define="AM_SVGLIB_NO_SVG_SELECTION">
+	<message xml:lang="en">The current selection not contain only SVG elements. Please reselect</message>
+	<message xml:lang="fr">La sélection courante contient des éléments non SVG. Effectuer une autre sélection SVP</message>
+</label>
+<label define="AM_SVGLIB_MISSING_TITLE">
+	<message xml:lang="en">The library title is mandatory</message>
+	<message xml:lang="fr">Le titre de la librairie est obligatoire</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

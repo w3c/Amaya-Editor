@@ -2463,7 +2463,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
-       if (docType == docLog || docType == docLibrary)
+       if (docType == docLog /* comment for debug*/ || docType == docLibrary)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
@@ -2501,6 +2501,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef _SVGLIB
 	       /* Initialize SVG Library Buffer string */
 	       string = InitSVGBufferForComboBox ();
+/*	       list_url = InitSVGLibraryListURL();*/
 #else /* _SVGLIB */
 	       string = NULL;
 #endif /* _SVGLIB */
@@ -6314,10 +6315,6 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
-#ifdef _SVGLIB
-   iconLibSVG = TtaCreatePixmapLogo (libsvg_xpm);
-/*   iconLibSVGNo = TtaCreatePixmapLogo (libsvgNo_xpm);*/  
-#endif /* _SVGLIB */
 #endif /* !_GTK */
    
 #ifdef AMAYA_PLUGIN
@@ -7085,7 +7082,12 @@ void CheckAmayaClosed ()
     i++;
   
   if (i == DocumentTableLength)
-    TtaQuit ();
+    {
+#ifdef _SVGLIB
+      SVGLIB_FreeDocumentResource ();
+#endif /* _SVGLIB */
+      TtaQuit ();
+    }
 }
 
 

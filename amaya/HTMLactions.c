@@ -1436,7 +1436,7 @@ ThotBool SimpleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble)
     {
       DisplayUrlAnchor (event->element, event->document);
@@ -1454,7 +1454,9 @@ ThotBool SimpleLClick (NotifyElement *event)
 {
 #ifdef _SVGLIB
   ElementType       elType;
+  ThotBool usedouble;
 
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (DocumentTypes[event->document] == docLibrary)
     {
       /* Check the sschema of the document (HTML) */

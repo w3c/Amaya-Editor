@@ -16,16 +16,16 @@ extern CSSInfoPtr AddCSS ( Document doc,
                            CSSCategory category,
                            char *url,
                            char *localName,
-			   Element styleElement );
+                           Element styleElement );
 extern CSSInfoPtr SearchCSS ( Document doc,
                               char *url,
-			      Element styleEl );
+                              Element styleEl );
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( char *url,
                                Document doc,
                                ThotBool disabled,
                                ThotBool removed,
-			       Element styleEl );
+                               Element styleEl );
 extern char *GetStyleContents ( Element el );
 extern void LoadStyleSheet ( char *url,
                              Document doc,
@@ -46,16 +46,16 @@ extern CSSInfoPtr AddCSS (/* Document doc,
                              CSSCategory category,
                              char *url,
                              char *localName,
-			     Element styleElement */);
+                             Element styleElement */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
                                 char *url,
-			        Element styleEl */);
+                                Element styleEl */);
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* char *url,
                                  Document doc,
                                  ThotBool disabled,
                                  ThotBool removed,
-			         Element styleEl */);
+                                 Element styleEl */);
 extern char *GetStyleContents (/* Element el */);
 extern void LoadStyleSheet (/* char *url,
                                Document doc,

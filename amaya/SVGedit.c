@@ -25,9 +25,6 @@
 #ifndef _WINDOWS
 #include "Graph.xpm"
 #include "GraphNo.xpm"
-#ifdef _SVGLIB
-#include "Libsvg.xpm"
-#endif /* _SVGLIB */
 #include "line.xpm"
 #include "rect.xpm"
 #include "roundrect.xpm"
@@ -56,11 +53,6 @@ static int      GraphButton;
 static Pixmap   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
-
-#ifdef _SVGLIB
-static Pixmap   iconLibsvg;
-static int      LibSVGButton;
-#endif /* _SVGLIB */
 
 #define oldHrefMaxLen 400
 static  char  oldXlinkHrefValue[oldHrefMaxLen];
@@ -2038,9 +2030,6 @@ void InitSVG ()
 #  ifndef _WINDOWS
    iconGraph = TtaCreatePixmapLogo (Graph_xpm);
    iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
-#ifdef _SVGLIB
-   iconLibsvg = TtaCreatePixmapLogo (libsvg_xpm);
-#endif /* _SVGLIB */
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
    mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
    mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);
@@ -2069,19 +2058,6 @@ void AddGraphicsButton (Document doc, View view)
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);
 #endif /* _SVG */
-}
-
-/*----------------------------------------------------------------------
-   AddLibraryButton    
-  ----------------------------------------------------------------------*/
-void AddLibraryButton (Document doc, View view)
-{
-#ifdef _SVGLIB
-  LibSVGButton = TtaAddButton (doc, 1, (ThotIcon)iconLibsvg, ShowLibrary,
-			      "ShowLibrary",
-			      TtaGetMessage (AMAYA, AM_BUTTON_SVG_LIBRARY),
-			      TBSTYLE_BUTTON, TRUE);
-#endif /* _SVGLIB */ 
 }
 
 /*----------------------------------------------------------------------

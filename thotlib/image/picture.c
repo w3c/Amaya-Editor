@@ -2529,3 +2529,56 @@ void LittleXBigEndian (register unsigned char *b, register long n)
      }
    while (--n > 0);
 }
+
+/*----------------------------------------------------------------------
+  GetScreenshot makes a screenshot of Amaya drawing area
+  this function allocates and returns the screenshot
+  ----------------------------------------------------------------------*/
+unsigned char *GetScreenshot (int frame, int x, int y, int width, int height)
+{
+#ifdef _GTK
+  GdkImage        *View;
+  unsigned char   *pixel, inter, *screenshot;
+  int              k, cpt1, cpt2, line, line2, mi_h, NbOctetsPerLine, i = 0;
+
+
+  View = gdk_image_get ((FrameTable[frame].WdFrame)->window, x, y, width, height);
+  pixel = (unsigned char *) View->mem;
+  k = 4 * View->width * View->height - 4;
+  /* change BGRA in RGBA */
+  while (i < k)
+    {
+      inter = *(pixel + i);
+      *(pixel + i) = *(pixel + i + 2);
+      *(pixel + i + 2) = inter;
+      *(pixel + i + 3) = 255 - *(pixel + i + 3);
+      i += 4;
+    }
+
+  /* Makes mirror picture */
+  pixel = (unsigned char *) View->mem;
+  i = cpt2 = 0;
+  cpt1 = 1;
+  mi_h = View->height / 2;
+  NbOctetsPerLine = View->width * 4;
+  while (cpt1 < mi_h)
+    {
+      cpt2 = 0;
+      line = NbOctetsPerLine * cpt1;
+      line2 = NbOctetsPerLine * (cpt1 - 1);
+      while (cpt2 < NbOctetsPerLine)
+	{
+	  inter = *(pixel + cpt2 + line2);
+	  *(pixel + cpt2 + line2) = *(pixel + k + 4 - line + cpt2);
+	  *(pixel + k + 4 - line + cpt2) = inter;
+	  cpt2++;
+	  i++;
+	}
+      cpt1++;
+    }
+  screenshot = (unsigned char *) TtaGetMemory (k + 4);
+  memcpy (screenshot, View->mem, k + 4);
+  gdk_image_destroy (View);
+  return screenshot;
+#endif /* _GTK */
+}
