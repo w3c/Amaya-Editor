@@ -45,6 +45,8 @@
 #include "views_f.h"
 #include "structselect_f.h"
 #include "content_f.h"
+#include "searchref_f.h"
+#include "docs_f.h"
 
 static boolean      CaseDistinction;	/* dans la recherche de texte, on */
 

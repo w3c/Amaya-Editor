@@ -54,6 +54,7 @@
 #include "docs_f.h"
 #include "applicationapi_f.h"
 #include "platform_f.h"
+#include "appdialogue_f.h"
 
 extern int          UserErrorCode;
 static Name          nameBuffer;

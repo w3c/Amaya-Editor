@@ -36,6 +36,7 @@ static ThotColorStruct cwhite;
 #include "indmenu_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
+#include "registry_f.h"
 
 #ifdef NEW_WILLOWS
 /**

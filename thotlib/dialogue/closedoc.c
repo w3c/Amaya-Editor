@@ -24,6 +24,8 @@ static boolean      SaveBeforeClosing;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
+#include "docs_f.h"
+#include "viewcommands_f.h"
 
 /*----------------------------------------------------------------------
    CallbackCloseDocMenu   traite les retours du formulaire "Fermer"

@@ -71,7 +71,7 @@ KEY;
 #include "structmodif_f.h"
 #include "structcommands_f.h"
 #include "structselect_f.h"
-
+#include "registry_f.h"
 
 /* Actions associees par defaut aux cles XK_Up, XK_Left, XK_Right, XK_Down */
 #define MY_KEY_Up 0

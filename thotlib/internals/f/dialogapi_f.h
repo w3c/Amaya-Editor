@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #if __STDC__
+extern void TtaInitDialogueTranslations (XtTranslations translations) ;
 extern void TtaInitDialogue (char *server, 
                              char *txtOK, 
                              char *txtRAZ, 
@@ -160,6 +161,7 @@ extern void TtaAbortShowDialogue ( void );
 
 #else /* __STDC__ */
 
+extern void TtaInitDialogueTranslations () ;
 extern void TtaInitDialogue () ;
 extern void DebugBreak (/* void */);
 extern void MyWarningHandler (/* void */);

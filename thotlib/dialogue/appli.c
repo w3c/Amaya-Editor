@@ -65,20 +65,8 @@ static XmString     null_string;
 #include "structselect_f.h"
 #include "selectmenu_f.h"
 #include "thotmsg_f.h"
-
-#ifdef __STDC__
-extern void         CloseInsertion (void);
-extern void         DefRegion (int, int, int, int, int);
-extern boolean      RedrawFrameBottom (int, int);
-extern PtrAbstractBox      GetClickedAbsBox (int, int, int);
-
-#else
-extern void         CloseInsertion ();
-extern void         DefRegion ();
-extern boolean      RedrawFrameBottom ();
-extern PtrAbstractBox      GetClickedAbsBox ();
-
-#endif
+#include "viewapi_f.h"
+#include "frame_f.h"
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 

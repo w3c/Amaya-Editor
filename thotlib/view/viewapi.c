@@ -53,6 +53,8 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 #include "thotmsg_f.h"
+#include "applicationapi_f.h"
+#include "appdialogue_f.h"
 
 extern int          UserErrorCode;
 

@@ -3,14 +3,8 @@
  */
 
 /*----------------------------------------------------------------------
-   
-   Thot Toolkit: Application Program Interface level 3             
+   Application Program Interface level 3             
    --->document windows managment                                  
-   
-   I. Vatton       September 92                    
-   
-   D. Veillard October 95 : add multikey support                      
-   
   ----------------------------------------------------------------------*/
 
 /* #define DEBUG_MULTIKEY */
@@ -57,7 +51,8 @@
 #include "keyboards_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
-
+#include "viewapi_f.h"
+#include "applicationapi_f.h"
 
 #ifndef NEW_WILLOWS
 /*----------------------------------------------------------------------

@@ -57,7 +57,7 @@ static PtrAttribute  PtrReqAttr;
 #include "selectmenu_f.h"
 #include "structschema_f.h"
 #include "content_f.h"
-
+#include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
    InitFormLangue intialise le formulaire pour la saisie des       

@@ -35,14 +35,8 @@ static char         DirectoryDocToCreate[MAX_PATH] = "";
 #include "views_f.h"
 #include "config_f.h"
 #include "opendoc_f.h"
-
-#ifdef __STDC__
-extern void         TtaExtractName (char *, char *, char *);
-
-#else  /* __STDC__ */
-extern void         TtaExtractName ();
-
-#endif /* __STDC__ */
+#include "docs_f.h"
+#include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
    CallbackConfirmMenu met a jour le formulaire de confirm.                    

@@ -26,7 +26,7 @@ static DocViewNumber    ReferenceView;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
-
+#include "viewapi_f.h"
 
 /*----------------------------------------------------------------------
    CallbackOpenView met a jour le formulaire de openview.               

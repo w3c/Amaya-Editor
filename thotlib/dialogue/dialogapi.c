@@ -136,14 +136,6 @@ static ThotWidget   MainShell;
 #include "memory_f.h"
 #include "thotmsg_f.h"
 
-#ifdef __STDC__
-extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);
-
-#else  /* __STDC__ */
-extern ThotWidget   XmCreateBulletinBoard ();
-
-#endif /* __STDC__ */
-
 #ifndef NEW_WILLOWS
 void                DebugBreak (void)
 {

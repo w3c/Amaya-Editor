@@ -16,6 +16,7 @@
 #include "document.h"
 #include "thotfile.h"
 #include "thotdir.h"
+#include "storage.h"
 
 #define MAX_ARGS 20
 
@@ -73,7 +74,8 @@ static Name          NewSchemaName;
 #include "platform_f.h"
 #include "opendoc_f.h"
 #include "structschema_f.h"
-
+#include "fileaccess_f.h"
+#include "docs_f.h"
 
 /*----------------------------------------------------------------------
    BuildPathDocBuffer construit une chaine des paths de documents     

@@ -52,6 +52,9 @@
 #include "printmenu_f.h"
 #include "structselect_f.h"
 #include "selectmenu_f.h"
+#include "memory_f.h"
+#include "registry_f.h"
+#include "docs_f.h"
 
 static PathBuffer   PSdir;
 static boolean      PaperPrint;

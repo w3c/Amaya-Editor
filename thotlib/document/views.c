@@ -63,6 +63,8 @@
 #include "structschema_f.h"
 #include "presvariables_f.h"
 #include "appdialogue_f.h"
+#include "docs_f.h"
+#include "frame_f.h"
 
 static AvailableView    AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];

@@ -63,7 +63,8 @@
 #include "structschema_f.h"
 #include "presvariables_f.h"
 #include "appdialogue_f.h"
-
+#include "docs_f.h"
+#include "readpivot_f.h"
 
 /*----------------------------------------------------------------------
    RedisplayExternalRefs cherche, pour tous les elements du document	

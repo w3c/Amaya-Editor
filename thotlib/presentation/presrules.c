@@ -40,7 +40,7 @@
 #include "boxselection_f.h"
 #include "content_f.h"
 #include "presvariables_f.h"
-
+#include "font_f.h"
 
 /*----------------------------------------------------------------------
    	AttrValue retourne la valeur que prend l'attribut numerique	

@@ -37,14 +37,7 @@ static ThotGC       GCkey;
 #include "font_f.h"
 #include "changepresent_f.h"
 #include "structselect_f.h"
-
-#ifdef __STDC__
-extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);
-
-#else  /* __STDC__ */
-extern ThotWidget   XmCreateBulletinBoard ();
-
-#endif /* __STDC__ */
+#include "inites_f.h"
 
 /*----------------------------------------------------------------------
    FinPalette termine l'affichage de la palette.                   

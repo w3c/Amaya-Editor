@@ -41,14 +41,8 @@
 #include "structschema_f.h"
 #include "content_f.h"
 #include "presvariables_f.h"
-
-#ifdef __STDC__
-extern void         DisplayFrame (int);
-
-#else  /* __STDC__ */
-extern void         DisplayFrame ();
-
-#endif /* __STDC__ */
+#include "applicationapi_f.h"
+#include "frame_f.h"
 
 /*----------------------------------------------------------------------
    SetAttrReference fait pointer l'attribut reference pAttr sur    

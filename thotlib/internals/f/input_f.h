@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #if __STDC__
-
 extern void ThotInput ( int frame,
                         unsigned char *string,
                         unsigned int nb,
@@ -13,7 +12,6 @@ extern void ThotInput ( int frame,
                         int key );
 
 #else /* __STDC__ */
-
 extern void ThotInput (/* int frame,
                           unsigned char *string,
                           unsigned int nb,

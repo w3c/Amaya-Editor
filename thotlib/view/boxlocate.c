@@ -35,6 +35,11 @@
 #include "boxselection_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
+#include "textcommands_f.h"
+#include "tree_f.h"
+#include "exceptions_f.h"
+#include "applicationapi_f.h"
+#include "frame_f.h"
 
 #ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
 #include <math.h>
