@@ -2333,7 +2333,7 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == STYLE_UNIT_INVALID ||
        margin.typed_data.unit == STYLE_UNIT_BOX))
-    CSSParseError ("Invalid top-margin value", ptr, cssRule);
+    CSSParseError ("Invalid margin-top value", ptr, cssRule);
   else if (DoApply)
      {
        if (tsch)
@@ -2369,7 +2369,7 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == STYLE_UNIT_INVALID ||
        margin.typed_data.unit == STYLE_UNIT_BOX))
-    CSSParseError ("Invalid bottom-margin value", ptr, cssRule);
+    CSSParseError ("Invalid margin-bottom value", ptr, cssRule);
   else if (DoApply)
      {
        if (tsch)
@@ -2405,7 +2405,7 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == STYLE_UNIT_INVALID ||
        margin.typed_data.unit == STYLE_UNIT_BOX))
-    CSSParseError ("Invalid left-margin value", ptr, cssRule);
+    CSSParseError ("Invalid margin-left value", ptr, cssRule);
   else if (DoApply)
   if (margin.typed_data.unit != STYLE_UNIT_INVALID && DoApply)
      {
@@ -2442,7 +2442,7 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
   if (margin.typed_data.value != 0 &&
       (margin.typed_data.unit == STYLE_UNIT_INVALID ||
        margin.typed_data.unit == STYLE_UNIT_BOX))
-    CSSParseError ("Invalid right-margin value", ptr, cssRule);
+    CSSParseError ("Invalid margin-right value", ptr, cssRule);
   else if (DoApply)
      {
        if (tsch)
@@ -2532,7 +2532,7 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
       (padding.typed_data.unit == STYLE_UNIT_INVALID ||
        padding.typed_data.unit == STYLE_UNIT_BOX))
     {
-      CSSParseError ("Invalid top-padding value", ptr, cssRule);
+      CSSParseError ("Invalid padding-top value", ptr, cssRule);
       padding.typed_data.value = 0;
     }
   else if (DoApply)
@@ -2565,7 +2565,7 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
       (padding.typed_data.unit == STYLE_UNIT_INVALID ||
        padding.typed_data.unit == STYLE_UNIT_BOX))
     {
-      CSSParseError ("Invalid bottom-padding value", ptr, cssRule);
+      CSSParseError ("Invalid padding-bottom value", ptr, cssRule);
       padding.typed_data.value = 0;
     }
   else if (DoApply)
@@ -2598,7 +2598,7 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
       (padding.typed_data.unit == STYLE_UNIT_INVALID ||
        padding.typed_data.unit == STYLE_UNIT_BOX))
     {
-      CSSParseError ("Invalid left-padding value", ptr, cssRule);
+      CSSParseError ("Invalid padding-left value", ptr, cssRule);
       padding.typed_data.value = 0;
     }
   else if (DoApply)
@@ -2631,7 +2631,7 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
       (padding.typed_data.unit == STYLE_UNIT_INVALID ||
        padding.typed_data.unit == STYLE_UNIT_BOX))
     {
-      CSSParseError ("Invalid right-padding value", ptr, cssRule);
+      CSSParseError ("Invalid padding-right value", ptr, cssRule);
       padding.typed_data.value = 0;
     }
   else if (DoApply)
