@@ -96,13 +96,13 @@ STRUCT
 	 TEXT;
 
   SCRIPT_							{ SCRIPT }
-     (ATTR charset = Text; !content_type = Text;
+     (ATTR charset = Text; content_type = Text;
 	 { charset          type }
 	   script_language = Text; script_src = Text;
 	 { language                src }
 	   defer = Yes_; event = Text; for_ = Text) =
 	 { defer         event         for }
-	TEXT;
+	TEXT with content_type ?= 'text/javascript';
 
   META								{ META }
      (ATTR http_equiv = Text;
@@ -135,7 +135,8 @@ STRUCT
 	Preformatted;						{ PRE preformatted }
 	Division;						{ DIV }
 	Center;							{ CENTER }
-	NOSCRIPT = LIST OF (Element);				{ NOSCRIPT }
+	SCRIPT_;                                                { SCRIPT }
+	NOSCRIPT = LIST OF (Element) - (SCRIPT_);		{ NOSCRIPT }
 	Block_Quote;						{ BLOCKQUOTE }
 	Form;							{ FORM }
 	ISINDEX;						{ ISINDEX }

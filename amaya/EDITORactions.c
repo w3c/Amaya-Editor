@@ -1072,63 +1072,73 @@ void CreateStyle (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void CreateComment (Document document, View view)
+void CreateComment (Document doc, View view)
 {
-   ElementType         elType;
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 first, last;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Comment_;
-       TtaInsertElement (elType, document);
-     }
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  if (el)
+    elType = TtaGetElementType (el);
+  else
+    elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (s, "MathML"))
+    elType.ElTypeNum = MathML_EL_XMLcomment;
+#ifdef _SVG
+  else if (!strcmp (s, "SVG"))
+    elType.ElTypeNum = SVG_EL_XMLcomment;
+#endif /* _SVG */
+  else
+    elType.ElTypeNum = HTML_EL_Comment_;
+  TtaInsertElement (elType, doc);
 }
 
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
-void CreateScript (Document document, View view)
+void CreateScript (Document doc, View view)
 {
    SSchema             docSchema;
    ElementType         elType;
    Element             el, head;
+   char               *s;
    int                 i, j;
 
    /* test if we have to insert a script in the document head */
    head = NULL;
-   TtaGiveFirstSelectedElement (document, &el, &i, &j);
-   docSchema = TtaGetDocumentSSchema (document);
-   if (el != NULL)
+   TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+   docSchema = TtaGetDocumentSSchema (doc);
+   if (el)
      {
        elType = TtaGetElementType (el);
-       if (elType.ElTypeNum != HTML_EL_HEAD ||
-	   strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	 {
-	   if (!strcmp(TtaGetSSchemaName (docSchema), "HTML"))
-	     {
-	       /* it's a HTML document search the head element */
-	       elType.ElTypeNum = HTML_EL_HEAD;
-	       head = TtaSearchTypedElement (elType, SearchForward,
-					     TtaGetMainRoot (document));
-	     }
-	 }
+       s = TtaGetSSchemaName (elType.ElSSchema);
+     }
+   else
+     {
+       elType.ElSSchema = docSchema;
+       s = NULL;
      }
 
-   if (el == NULL || el == head  || TtaIsAncestor (el, head))
-     /* insert within the head */
-     InsertWithinHead (document, view, HTML_EL_SCRIPT_);
+   if (s == NULL || strcmp (s, "HTML"))
+     {
+       /* cannot insert here */
+       if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
+	 /* cannot insert here: insert within the head of this HTML document */
+	 InsertWithinHead (doc, view, HTML_EL_SCRIPT_);
+     }
    else
      {
        /* create Script in the body if we are within an HTML document
 	  and within an HTML element */
-       elType = TtaGetElementType (el);
-       if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-           !strcmp(TtaGetSSchemaName (docSchema), "HTML"))
-	 {
-	   elType.ElTypeNum = HTML_EL_SCRIPT_;
-	   TtaCreateElement (elType, document);
-	 }
+       elType.ElTypeNum = HTML_EL_SCRIPT_;
+       TtaInsertElement (elType, doc);
      }
+   /* insert a comment around the contents */
+   elType.ElTypeNum = HTML_EL_Comment_;
+   TtaInsertElement (elType, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3382,7 +3392,7 @@ void  CreateObject (Document document, View view)
     {
       elType.ElSSchema = TtaGetSSchema ("HTML", document);
       elType.ElTypeNum = HTML_EL_Object;
-      TtaCreateElement (elType, document);
+      TtaInsertElement (elType, document);
 
       /* get the first selected element, i.e. the Object element */
       TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);

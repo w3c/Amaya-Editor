@@ -70,7 +70,7 @@ void ParseCharsetAndContentType (Element el, Document doc)
 {
    AttributeType attrType;
    Attribute     attr;
-   SSchema       docSSchema;
+   ElementType   elType;
    CHARSET       charset;
    char         *text, *text2, *ptrText, *str;
    char          charsetname[MAX_LENGTH];
@@ -82,8 +82,8 @@ void ParseCharsetAndContentType (Element el, Document doc)
        DocumentMeta[doc] && DocumentMeta[doc]->content_type)
      return;
 
-   docSSchema = TtaGetDocumentSSchema (doc);
-   attrType.AttrSSchema = docSSchema;
+   elType = TtaGetElementType (el);
+   attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_http_equiv;
    attr = TtaGetAttribute (el, attrType);
    if (attr != NULL)
@@ -152,7 +152,7 @@ void ParseCharsetAndContentType (Element el, Document doc)
    XhtmlCannotContainText 
    Return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-ThotBool      XhtmlCannotContainText (ElementType elType)
+ThotBool XhtmlCannotContainText (ElementType elType)
 
 {
    int        i;
@@ -191,14 +191,14 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
    char           lastChar[2];
    char           *name1, *data;
    int            length;
-   SSchema        docSSchema;
+   SSchema        htmlSchema;
    ThotBool       isImage, isInline;
 
    *error = 0;
    doc = context->doc;
-   docSSchema = TtaGetDocumentSSchema (doc);
 
    elType = TtaGetElementType (el);
+   htmlSchema = elType.ElSSchema;
    isInline = IsXMLElementInline (elType, doc);
    newElType.ElSSchema = elType.ElSSchema;
 
@@ -515,7 +515,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       /* create the Frames element if it does not exist */
 	       if (elFrames == NULL)
 		 {
-		   newElType.ElSSchema = docSSchema;
+		   newElType.ElSSchema = htmlSchema;
 		   newElType.ElTypeNum = HTML_EL_Frames;
 		   elFrames = TtaNewElement (doc, newElType);
 		   if (DocumentMeta[doc]->xmlformat)
@@ -670,7 +670,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        else
 	 {
 	   /* save the text into Default_Value attribute */
-	   attrType.AttrSSchema = docSSchema;
+	   attrType.AttrSSchema = htmlSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_Default_Value;
 	   if (TtaGetAttribute (el, attrType) == NULL)
 	     /* attribute Default_Value is missing */
@@ -697,7 +697,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
      case HTML_EL_Radio_Input:
      case HTML_EL_Checkbox_Input:
        /* put an attribute Checked if it is missing */
-       attrType.AttrSSchema = docSSchema;
+       attrType.AttrSSchema = htmlSchema;
        attrType.AttrTypeNum = HTML_ATTR_Checked;
        if (TtaGetAttribute (el, attrType) == NULL)
 	 /* attribute Checked is missing */
@@ -717,7 +717,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        break;
        
      case HTML_EL_LINK:
-       CheckCSSLink (el, doc, docSSchema);
+       CheckCSSLink (el, doc, htmlSchema);
        break;
        
      case HTML_EL_Data_cell:
@@ -925,11 +925,8 @@ void CreateHTMLAttribute (Element       el,
    Value val has been read for the HTML attribute TYPE.
    Create a child for the current Thot element INPUT accordingly.
   ----------------------------------------------------------------------*/
-void               HTMLTypeAttrValue (char       *val,
-				      Attribute   lastAttribute,
-				      Element     lastAttrElement,
-				      ParserData *context)
-
+void HTMLTypeAttrValue (char *val, Attribute lastAttribute,
+			Element lastAttrElement, ParserData *context)
 {
   ElementType      elType;
   Element          newChild;
@@ -940,13 +937,14 @@ void               HTMLTypeAttrValue (char       *val,
   int              numberOfLinesRead;
 
   value = MapAttrValue (DummyAttribute, val);
+  elType = TtaGetElementType (context->lastElement);
   if (value <= 0)
     {
       if (strlen (val) > MaxMsgLength - 40)
          val[MaxMsgLength - 40] = EOS;
       sprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
       HTMLParseError (context->doc, msgBuffer);
-      attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
+      attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
       sprintf (msgBuffer, "type=%s", val);
       CreateHTMLAttribute (context->lastElement, attrType, msgBuffer, TRUE,
@@ -954,7 +952,6 @@ void               HTMLTypeAttrValue (char       *val,
     }
   else
     {
-      elType = TtaGetElementType (context->lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
 	{
 	  if (strlen (val) > MaxMsgLength - 40)
@@ -963,7 +960,6 @@ void               HTMLTypeAttrValue (char       *val,
 	}
       else
 	{
-	  elType.ElSSchema = TtaGetDocumentSSchema (context->doc);
 	  elType.ElTypeNum = value;
 	  newChild = TtaNewTree (context->doc, elType, "");
 	  numberOfLinesRead = 0;
@@ -1084,8 +1080,8 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
     length--;
-  attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
-  attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePxl.AttrSSchema = elType.ElSSchema;
+  attrTypePercent.AttrSSchema = elType.ElSSchema;
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
   /* is the last character a '%' ? */
@@ -1192,8 +1188,8 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
   length = strlen (buffer) - 1;
   while (length > 0 && buffer[length] <= SPACE)
     length--;
-  attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
-  attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePxl.AttrSSchema = elType.ElSSchema;
+  attrTypePercent.AttrSSchema = elType.ElSSchema;
   attrTypePxl.AttrTypeNum = HTML_ATTR_IntHeightPxl;
   attrTypePercent.AttrTypeNum = HTML_ATTR_IntHeightPercent;
   /* is the last character a '%' ? */
@@ -1284,15 +1280,17 @@ void CreateAttrIntAreaSize (int value, Element el, Document doc)
    an HTML attribute "size" has been created for a Font element.
    Create the corresponding internal attribute.
   ----------------------------------------------------------------------*/
-void              CreateAttrIntSize (char *buffer, Element el, Document doc)
+void CreateAttrIntSize (char *buffer, Element el, Document doc)
 
 {
+   ElementType    elType;
    AttributeType  attrType;
    int            val, ind, factor, delta;
    Attribute      attr;
    char         msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
+   elType = TtaGetElementType (el);
    ind = 0;
    factor = 1;
    delta = 0;
@@ -1313,7 +1311,7 @@ void              CreateAttrIntSize (char *buffer, Element el, Document doc)
        attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
        delta = 1;
      }
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrSSchema = elType.ElSSchema;
    attr = TtaGetAttribute (el, attrType);
    if (sscanf (&buffer[ind], "%d", &val))
      {
@@ -1341,12 +1339,9 @@ void              CreateAttrIntSize (char *buffer, Element el, Document doc)
    EndOfHTMLAttributeValue
    Filling of an HTML attribute value
   ----------------------------------------------------------------------*/
-void EndOfHTMLAttributeValue (char *attrValue,
-			      AttributeMapping *lastMappedAttr,
-			      Attribute currentAttribute,
-			      Element lastAttrElement,
-			      ThotBool UnknownAttr,
-			      ParserData *context,
+void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
+			      Attribute currentAttribute, Element lastAttrElement,
+			      ThotBool UnknownAttr, ParserData *context,
 			      ThotBool isXML)
 {
   AttributeType   attrType, attrType1;
@@ -1389,6 +1384,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 
   if (!done)
     {
+      elType = TtaGetElementType (lastAttrElement);
       val = 0;
       translation = lastMappedAttr->AttrOrContent;
       switch (translation)
@@ -1398,7 +1394,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	  if (child != NULL)
 	    TtaAppendTextContent (child, (unsigned char *)"\" ", context->doc);
 	  break;
-	  
 	case 'A':
 	  if (currentAttribute != NULL)
 	    {
@@ -1442,8 +1437,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			    {
 			      TtaRemoveAttribute (lastAttrElement,
 					      currentAttribute, context->doc);
-			      attrType.AttrSSchema = 
-				         TtaGetDocumentSSchema (context->doc);
+			      attrType.AttrSSchema = elType.ElSSchema;
 			      attrType.AttrTypeNum =
 			               pHTMLAttributeMapping[0].ThotAttribute;
 			      sprintf (msgBuffer, "%s=%s", attrName,attrValue);
@@ -1515,7 +1509,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 			    /* it's a LANG attribute on the root element */
 			    /* set the RealLang attribute */
 			    {
-			      attrType1.AttrSSchema = TtaGetDocumentSSchema (context->doc);
+			      attrType1.AttrSSchema = elType.ElSSchema;
 			      attrType1.AttrTypeNum = HTML_ATTR_RealLang;
 			      /* this attribute could be already present,
 				 (lang and xml:lang attributes) */
@@ -1561,7 +1555,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
 		}
 	    }
 	  break;
-	  
 	case SPACE:
 	  if (isXML)
 	    XhtmlTypeAttrValue (attrValue, currentAttribute,
@@ -1569,8 +1562,7 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	  else
 	    HTMLTypeAttrValue (attrValue, currentAttribute,
 			       lastAttrElement, context);
-	  break;
-	  
+	  break;  
 	 default:
 	   break;
 	}
@@ -1581,7 +1573,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	  /* if it's an Object element, wait until all attributes are handled,
 	     especially the data attribute that may generate the image to
 	     which the width has to be applied */
-	  elType = TtaGetElementType (lastAttrElement);
 	  if (elType.ElTypeNum != HTML_EL_Object)
 	    /* create the corresponding attribute IntWidthPercent or */
 	    /* IntWidthPxl */
@@ -1594,7 +1585,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	  /* if it's an Object element, wait until all attributes are handled,
 	     especially the data attribute that may generate the image to
 	     which the height has to be applied */
-	  elType = TtaGetElementType (lastAttrElement);
 	  if (elType.ElTypeNum != HTML_EL_Object)
 	    /* create the corresponding attribute IntHeightPercent or */
 	    /* IntHeightPxl */
@@ -1635,7 +1625,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	}
       else if (!strcmp (lastMappedAttr->XMLattribute, "value"))
 	{
-	  elType = TtaGetElementType (lastAttrElement);
 	  if (elType.ElTypeNum == HTML_EL_Text_Input ||
 	      elType.ElTypeNum == HTML_EL_Password_Input ||
 	      elType.ElTypeNum == HTML_EL_File_Input ||
