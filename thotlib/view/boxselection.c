@@ -439,6 +439,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 		x += pBox->BxNPixels;
 	    }
 	}
+
       selMark->VsXPos = x + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
     }
@@ -560,7 +561,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  else if (pAb->AbLeafType == LtCompound)
 		    {
 		      /* select the whole box */
-		      pViewSel->VsXPos = 0;
+		      pViewSelEnd->VsXPos = 0;
 		      pViewSelEnd->VsXPos = pBox->BxWidth;
 		    }
 		  else
