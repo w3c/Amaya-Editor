@@ -2466,6 +2466,8 @@ boolean            *mandatory;
    SRule              *pRe1;
    int                 locAtt;
 
+   if (pEl == NULL || pEl->ElStructSchema == NULL)
+      return FALSE;
    /* cherche si l'attribut a une valeur imposee pour cet element */
    requested = FALSE;
    *mandatory = FALSE;

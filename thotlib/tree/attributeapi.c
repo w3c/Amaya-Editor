@@ -128,7 +128,7 @@ Document            document;
    boolean             obligatory;
 
    UserErrorCode = 0;
-   if (element == NULL || attribute == NULL)
+   if (element == NULL || attribute == NULL || ((PtrElement) element)->ElStructSchema == NULL)
      {
 	TtaError (ERR_invalid_parameter);
      }

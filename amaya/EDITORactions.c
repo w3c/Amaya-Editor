@@ -233,7 +233,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-  MoveWithinHead moves the insert point according with the element type
+  MoveWithinHead moves the insertion point according with the element type
   to be inserted.
   Return TRUE if it succeeds.
   ----------------------------------------------------------------------*/
@@ -253,7 +253,7 @@ int                 elementT;
 
    docSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
-     /* not within HTML document */
+     /* not within an HTML document */
      return (FALSE);
    else
      {
@@ -327,7 +327,7 @@ View                view;
      {
        elType.ElSSchema = TtaGetDocumentSSchema (document);
        elType.ElTypeNum = HTML_EL_ISINDEX;
-       TtaCreateElement (elType, document);
+       TtaInsertElement (elType, document);
      }
 }
 
@@ -352,7 +352,7 @@ View                view;
      {
        elType.ElSSchema = TtaGetDocumentSSchema (document);
        elType.ElTypeNum = HTML_EL_LINK;
-       TtaCreateElement (elType, document);
+       TtaInsertElement (elType, document);
        /* Select a new destination */
        TtaGiveFirstSelectedElement (document, &el, &firstSelectedChar, &i);
        elType = TtaGetElementType (el);
@@ -383,7 +383,7 @@ View                view;
      {
        elType.ElSSchema = TtaGetDocumentSSchema (document);
        elType.ElTypeNum = HTML_EL_BASE;
-       TtaCreateElement (elType, document);
+       TtaInsertElement (elType, document);
      }
 }
 
@@ -405,7 +405,7 @@ View                view;
      {
        elType.ElSSchema = TtaGetDocumentSSchema (document);
        elType.ElTypeNum = HTML_EL_META;
-       TtaCreateElement (elType, document);
+       TtaInsertElement (elType, document);
      }
 }
 

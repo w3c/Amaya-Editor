@@ -2467,7 +2467,7 @@ boolean             Before;
   int                 firstChar, lastChar, NSiblings, ancestorRule,
 		      rule, prevrule, prevprevrule;
   boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
-  boolean             empty, selHead, selTail, done;
+  boolean             empty, selHead, selTail, done, deleted;
 
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -2797,10 +2797,14 @@ boolean             Before;
 		    {
 		      pSibling = pEl->ElPrevious;
 		      InsertElementBefore (pEl, pNew);
+		      deleted = FALSE;
 		      if (empty)
 			/* on detruit l'element vide devant lequel on
 			   vient de creer un nouvel element */
-			{
+			/* verifie si l'element a detruire porte l'exception
+			   NoCut */
+			if (!TypeHasException (ExcNoCut, pEl->ElTypeNumber,
+					      pEl->ElStructSchema))
 			  /* envoie l'evenement ElemDelete.Pre a
 			     l'application */
 			  if (!SendEventSubTree (TteElemDelete, pSelDoc,
@@ -2825,9 +2829,9 @@ boolean             Before;
 			      DeleteElement (&pEl);
 			      /* envoie l'evenement ElemDelete.Post a l'application */
 			      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			      deleted = TRUE;
 			    }
-			}
-		      else if (pSibling == NULL)
+		      if (!deleted && pSibling == NULL)
 			/* l'element pEl n'est plus le premier fils de
 			   son pere */
 			ChangeFirstLast (pEl, pSelDoc, TRUE, TRUE);
