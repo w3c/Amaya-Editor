@@ -1,0 +1,1112 @@
+/*
+   Module de gestion des documents
+
+ */
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmenu.h"
+#include "libmsg.h"
+#include "message.h"
+#include "functions.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "storage.h"
+#include "appdialogue.h"
+#include "thotfile.h"
+#include "thotdir.h"
+
+#undef EXPORT
+#define EXPORT extern
+#include "platform_tv.h"
+#include "modif_tv.h"
+#include "page_tv.h"
+#include "select_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
+
+#include "appli_f.h"
+#include "applicationapi_f.h"
+#include "tree_f.h"
+#include "attributes_f.h"
+#include "search_f.h"
+#include "searchref_f.h"
+#include "config_f.h"
+#include "structcreation_f.h"
+#include "createabsbox_f.h"
+#include "createpages_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "draw_f.h"
+#include "dofile_f.h"
+#include "callback_f.h"
+#include "viewcommands_f.h"
+#include "platform_f.h"
+#include "absboxes_f.h"
+#include "buildboxes_f.h"
+#include "structmodif_f.h"
+#include "structcommands_f.h"
+#include "memory_f.h"
+#include "changeabsbox_f.h"
+#include "ouvre_f.h"
+#include "paginate_f.h"
+#include "writepivot_f.h"
+#include "schemas_f.h"
+#include "boxselection_f.h"
+#include "structselect_f.h"
+#include "fileaccess_f.h"
+#include "references_f.h"
+#include "structschema_f.h"
+#include "presvariables_f.h"
+#include "appdialogue_f.h"
+
+
+/* ---------------------------------------------------------------------- */
+/* | RedisplayExternalRefs cherche, pour tous les elements du document	| */
+/* |            pDoc qui sont designes par des references, toutes les   | */
+/* |            references appartenant a` d'autres documents charges et | */
+/* |            fait reafficher ces references si elles sont deja       | */
+/* |            affichees.                                              | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         RedisplayExternalRefs (PtrDocument pDoc)
+
+#else  /* __STDC__ */
+static void         RedisplayExternalRefs (pDoc)
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrReferredDescr    pDescElRef;
+   PtrReference        pRef;
+   PtrDocument         pRefDoc;
+   PtrExternalDoc      pExtDoc;
+   PtrElement          pEl;
+
+   /* parcourt les descripteurs d'elements reference's du document */
+   pDescElRef = pDoc->DocReferredEl->ReNext;
+   while (pDescElRef != NULL)
+     {
+	if (!pDescElRef->ReExternalRef)
+	   if (pDescElRef->ReExtDocRef != NULL)
+	      /* il y a des references a cet element depuis d'autres */
+	      /* documents cherche toutes les references a cet element */
+	     {
+		pEl = pDescElRef->ReReferredElem;
+		/* l'element reference' */
+		pRef = NULL;
+		pRefDoc = NULL;
+		pExtDoc = NULL;
+		/* on n'a pas encore trouve' de reference */
+		do
+		   /* cherche la reference suivant a l'element */
+		  {
+
+		     pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef,
+					       &pRefDoc, &pExtDoc, TRUE);
+		     if (pRef != NULL)
+			/* on a trouve' une reference a cet element */
+			if (pRefDoc != pDoc)
+			   /* la reference trouvee n'est pas dans le meme */
+			   /* document que l'element reference', on reaffiche */
+			   /* tous ses paves qui copient l'element reference'. */
+			  {
+			     if (pRef->RdTypeRef == RefInclusion)
+				/* c'est une inclusion */
+				if (pRef->RdElement != NULL)
+				   if (pRef->RdElement->ElSource != NULL)
+				      /* c'est une inclusion avec expansion, on */
+				      /* copie d'abord l'element inclus */
+				      CopyIncludedElem (pRef->RdElement, pRefDoc);
+			     ReafReference (pRef, NULL, pRefDoc);
+			  }
+		  }
+		while (pRef != NULL);
+	     }
+	/* passe au descripteur d'element reference' suivant */
+	pDescElRef = pDescElRef->ReNext;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    LoadDocument charge le document que contient le fichier nomme'  | */
+/* |            fileName dans le descripteur pointe par pDoc. Au	| */
+/* |            retour pDoc est NIL si le document n'a pas pu etre      | */
+/* |            charge.                                                 | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                LoadDocument (PtrDocument * pDoc, char *fileName)
+#else  /* __STDC__ */
+void                LoadDocument (pDoc, fileName)
+PtrDocument        *pDoc;
+char               *fileName;
+
+#endif /* __STDC__ */
+{
+   PathBuffer          directoryBuffer;
+#ifdef __COLPAGE__
+   FILE               *list;
+   PtrPSchema          pPagePsch;
+#endif /* __COLPAGE__ */
+   int                 i, j, len;
+   boolean             ok;
+
+   directoryBuffer[0] = '\0';
+   if (fileName != NULL)
+      /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
+     {
+	len = strlen (fileName);
+	if (len > 4)
+	   if (strcmp (fileName + len - 4, ".PIV") == 0)
+	      fileName[len - 4] = '\0';
+	if (fileName[0] != DIR_SEP)
+	  {
+	     if (fileName != DefaultDocumentName)
+		strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+	     /* nom de document relatif */
+	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	     if ((*pDoc)->DocDirectory[0] == '\0')
+		strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	  }
+	else
+	  {
+	     /* nom absolu */
+	     i = 0;
+	     j = 0;
+	     while (fileName[i] != '\0' && i < MAX_PATH - 1)
+	       {
+		  (*pDoc)->DocDirectory[i] = fileName[i];
+		  if ((*pDoc)->DocDirectory[i] == DIR_SEP)
+		     j = i;
+		  i++;
+	       }
+	     (*pDoc)->DocDirectory[j+1] = '\0';
+	     i = 0;
+	     while (fileName[i] != '\0' && i < MAX_NAME_LENGTH - 1)
+	       {
+		  DefaultDocumentName[i] = fileName[j+1];
+		  i++;
+		  j++;
+	       }
+	     DefaultDocumentName[i] = '\0';
+	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	     /* sauve le path des documents avant de l'ecraser */
+	     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
+	     strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
+	  }
+     }
+
+   if (*pDoc != NULL)
+     {
+	/* on ouvre le document en chargeant temporairement les documents */
+	/* externes qui contiennent les elements inclus dans notre document */
+	TtaDisplaySimpleMessage (INFO, LIB, READING_DOC);
+	ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
+	/* restaure le path des documents s'il a ete ecrase */
+	if (directoryBuffer[0] != '\0')
+	   strncpy (DocumentPath, directoryBuffer, MAX_PATH);
+	if (!ok)
+	  {
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, OPEN_DOC_IMP), DefaultDocumentName);
+	     LibDocument (pDoc);
+	     *pDoc = NULL;
+	  }
+     }
+   if (*pDoc != NULL)
+     {
+	/* conserve le path actuel des schemas dans le contexte du document */
+	strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+	/* ouvre les vues a ouvrir */
+	OuvreVuesInit (*pDoc);
+	if ((*pDoc)->DocRootElement != NULL)
+	   /* Pour tous les elements du document que l'on vient de */
+	   /* charger qui sont designe's par des references, cherche */
+	   /* toutes les references appartenant a d'autres documents */
+	   /* charges et fait reafficher ces references si elles sont */
+	   /* deja affichees */
+	   RedisplayExternalRefs (*pDoc);
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    NewDocument cree un document vide, conforme au schema de nom    | */
+/* |            SSchemaName, dans le descripteur pointe' par pDoc.      | */
+/* |            docName est le nom a donner au document                 | */
+/* |            directory est le directory ou il faut creer le document | */
+/* |            Au retour pDoc est NIL si le document n'a pas ete cree. | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                NewDocument (PtrDocument * pDoc, PtrBuffer SSchemaName, Name docName, PathBuffer directory)
+#else  /* __STDC__ */
+void                NewDocument (pDoc, SSchemaName, docName, directory)
+PtrDocument        *pDoc;
+PtrBuffer           SSchemaName;
+Name                docName;
+PathBuffer          directory;
+
+#endif /* __STDC__ */
+{ 
+   PtrElement          pEl;
+   NotifyDialog        notifyDoc;
+   Name                PSchemaName, docNameBuffer, docType;
+   PathBuffer          directoryBuffer;
+   PathBuffer          fileNameBuffer;
+#ifdef __COLPAGE__
+   PtrPSchema          pPagePsch;
+#else  /* __COLPAGE__ */
+   PtrPSchema          pPSchema;
+   int                 view;
+#endif /* __COLPAGE__ */
+   int                 i;
+
+   if (*pDoc != NULL)
+      if (SSchemaName == NULL || SSchemaName[0] == '\0')
+	 /* L'utilisateur n'a pas fourni de nom de schema */
+	 LibDocument (pDoc);
+      else
+	{
+	   strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	   /* si c'est un path, retient seulement le 1er directory */
+	   i = 0;
+	   while ((*pDoc)->DocDirectory[i] != '\0' &&
+		  (*pDoc)->DocDirectory[i] != PATH_SEP && i < MAX_PATH - 1)
+	      i++;
+	   (*pDoc)->DocDirectory[i] = '\0';
+	   /* on suppose que le mon de schema est dans la langue de */
+	   /* l'utilisateur: on le traduit en nom interne */
+	   ConfigNomInterneSSchema ((char *) SSchemaName, docType, TRUE);
+	   if (docType[0] == '\0')
+	      /* ce nom n'est pas dans le fichier langue, on le prend */
+	      /* tel quel */
+	      strncpy (docType, (char *) SSchemaName, MAX_NAME_LENGTH);
+	   /* compose le nom du fichier a ouvrir avec le nom du directory */
+	   /* des schemas... */
+	   strncpy (directoryBuffer, SchemaPath, MAX_PATH);
+	   BuildFileName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
+	   /* teste si le fichier '.STR' existe */
+
+	   if (FileExist (fileNameBuffer) == 0)
+	     {
+		strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
+		strcat (fileNameBuffer, ".STR");
+		TtaDisplayMessage (INFO, TtaGetMessage(LIB, SCHEMA_NOT_FIND), fileNameBuffer);
+	     }
+	   else
+	     {
+		/* charge le schema de structure et le schema de presentation */
+		PSchemaName[0] = '\0';
+		/* pas de preference pour un schema de */
+		/* presentation particulier */
+		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
+		if (docName[0] != '\0')
+		   strncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
+		else
+		  {
+		     strncpy (docNameBuffer, (char *) SSchemaName, MAX_NAME_LENGTH);
+		     strcat (docNameBuffer, "X");
+		  }
+		if ((*pDoc)->DocSSchema != NULL)
+		   if ((*pDoc)->DocSSchema->SsPSchema != NULL)
+		     {
+			notifyDoc.event = TteDocCreate;
+			notifyDoc.document = (Document) IdentDocument (*pDoc);
+			notifyDoc.view = 0;
+			if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+			  {
+			     /* cree la representation interne d'un document vide */
+			     (*pDoc)->DocRootElement = NewSubtree ((*pDoc)->DocSSchema->SsRootElem,
+				(*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
+				TRUE, TRUE);
+			     /* supprime les elements exclus (au sens SGML) */
+			     RemoveExcludedElem (&((*pDoc)->DocRootElement));
+			  }
+		     }
+	     }
+	   if ((*pDoc)->DocRootElement == NULL)
+	      /* echec creation document */
+	      LibDocument (pDoc);
+	   else
+	     {
+
+		(*pDoc)->DocRootElement->ElAccess = AccessReadWrite;
+		CheckLanguageAttr (*pDoc, (*pDoc)->DocRootElement);
+#ifdef __COLPAGE__
+		/* il n'est plus necessaire d'ajouter un saut de page */
+		/* a la fin de l'arbre principal */
+#else  /* __COLPAGE__ */
+		/* ajoute un saut de page a la fin de l'arbre principal */
+		/* pour toutes les vues qui sont mises en page */
+		/* schema de presentation du document */
+		pPSchema = (*pDoc)->DocSSchema->SsPSchema;
+		/* examine toutes les vues definies dans le schema */
+		for (view = 0; view < pPSchema->PsNViews; view++)
+		   if (pPSchema->PsPaginatedView[view])
+		      /* cette vue est mise en page */
+		      AjoutePageEnFin ((*pDoc)->DocRootElement, view+1, *pDoc, TRUE);
+#endif /* __COLPAGE__ */
+		/* le document appartient au directory courant */
+		if (directory[0] != '\0')
+		   strncpy (directoryBuffer, directory, MAX_PATH);
+		else
+		  {
+		     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
+		     /* si c'est un path, retient seulement le 1er directory */
+		     i = 0;
+		     while (directoryBuffer[i ] != '\0' &&
+			    directoryBuffer[i] != PATH_SEP && i < MAX_PATH - 1)
+			i++;
+		     directoryBuffer[i] = '\0';
+		  }
+		DoFileName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
+		strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
+		strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_NAME_LENGTH);
+		/* le document appartient au directory courant */
+		strncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
+		/* conserve le path actuel des schemas dans le contexte du
+		   document */
+		strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+		notifyDoc.event = TteDocCreate;
+		notifyDoc.document = (Document) IdentDocument (*pDoc);
+		notifyDoc.view = 0;
+		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+		/* traitement des attributs requis */
+		AttachMandatoryAttributes ((*pDoc)->DocRootElement, *pDoc);
+		if ((*pDoc)->DocSSchema != NULL)
+		   /* le document n'a pas ete ferme' pendant l'attente */
+		   /* des attributs requis */
+		  {
+		     /* traitement des exceptions */
+		    if (ThotLocalActions[T_createtable]!= NULL)
+		      (*ThotLocalActions[T_createtable])
+			((*pDoc)->DocRootElement, *pDoc);
+		     /* ouvre les vues du document cree' */
+		     OuvreVuesInit (*pDoc);
+		     /* selectionne la 1ere feuille */
+		     pEl = FirstLeaf ((*pDoc)->DocRootElement);
+		     SelectEl (*pDoc, pEl, TRUE, TRUE);
+		  }
+	     }
+	}
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  | */
+/* |            le pave pAb et tous ses descendants.                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
+#else  /* __STDC__ */
+static void         SetAbsBoxAccessMode (pAb, accessMode)
+PtrAbstractBox             pAb;
+int                 accessMode;
+
+#endif /* __STDC__ */
+{
+   PtrAbstractBox             pAbChild;
+
+   if (accessMode == 0)
+     /* read only */
+     {
+	pAb->AbCanBeModified = FALSE;
+	pAb->AbReadOnly = TRUE;
+	pAb->AbChange = TRUE;
+     }
+   else
+      /* read write */
+      /* on laisse en read only si l'element est en read only */
+      if (!ElementIsReadOnly (pAb->AbElement))
+     {
+	if (!pAb->AbPresentationBox)
+	   /* ce n'est pas un pave de presentation, il est donc modifiable */
+	   pAb->AbCanBeModified = TRUE;
+	else if (PavPresentModifiable (pAb))
+	   pAb->AbCanBeModified = TRUE;
+	pAb->AbReadOnly = FALSE;
+	pAb->AbChange = TRUE;
+     }
+   /* on passe aux fils */
+   pAbChild = pAb->AbFirstEnclosed;
+   while (pAbChild != NULL)
+     {
+	SetAbsBoxAccessMode (pAbChild, accessMode);
+	pAbChild = pAbChild->AbNext;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    MajAccessMode met a` jour le mode d'acces sur tout les pave's   | */
+/* |          de tous les elements de toutes les vues du document pDoc. | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                MajAccessMode (PtrDocument pDoc, int accessMode)
+#else  /* __STDC__ */
+void                MajAccessMode (pDoc, accessMode)
+PtrDocument         pDoc;
+int                 accessMode;
+
+#endif /* __STDC__ */
+{
+   int                 view, assoc;
+
+   /* met a jour les vues de l'arbre principal */
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+      if (pDoc->DocView[view].DvPSchemaView > 0)
+	{
+	   SetAbsBoxAccessMode (pDoc->DocRootElement->ElAbstractBox[view], accessMode);
+	   pDoc->DocViewModifiedAb[view] = pDoc->DocRootElement->ElAbstractBox[view];
+	}
+   /* met a jour les vues des elements associes */
+   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+      if (pDoc->DocAssocFrame[assoc] > 0)
+	{
+	   SetAbsBoxAccessMode (pDoc->DocAssocRoot[assoc]->ElAbstractBox[0], accessMode);
+	   pDoc->DocAssocModifiedAb[assoc] = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
+	}
+   /* reaffiche toutes les vues */
+   AbstractImageUpdated (pDoc);
+   RedisplayDocViews (pDoc);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    LibDocument libere le document pDoc				| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                LibDocument (PtrDocument * pDoc)
+#else  /* __STDC__ */
+void                LibDocument (pDoc)
+PtrDocument        *pDoc;
+
+#endif /* __STDC__ */
+{
+   int                 d;
+
+   if (*pDoc != NULL)
+      /* cherche dans la table le descripteur de document a liberer */
+     {
+	d = 0;
+	while (LoadedDocument[d] != *pDoc && d < MAX_DOCUMENTS - 1)
+	   d++;
+	if (LoadedDocument[d] == *pDoc)
+	  {
+	     /* enleve la selection de ce document */
+	     DeSelDoc (*pDoc);
+	     /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
+	     if (DocOfSavedElements == *pDoc)
+		LibBufEditeur ();
+	     /* libere tous les arbres abstraits */
+	     DeleteAllTrees (*pDoc);
+	     /* libere les schemas */
+	     LibSchemas (*pDoc);
+	     FreeDocument (LoadedDocument[d]);
+	     LoadedDocument[d] = NULL;
+	     *pDoc = NULL;
+	  }
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    PaginerDoc	pagine toutes les vues du document pDoc		| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                PaginerDoc (PtrDocument pDoc)
+
+#else  /* __STDC__ */
+void                PaginerDoc (pDoc)
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+
+{
+   AvailableView       viewList;
+   int                 i, nViews, docView;
+   boolean             found;
+
+   nViews = LesVuesDunDoc (pDoc, viewList);
+   for (i = 0; i < nViews; i++)
+      if (viewList[i].VdOpen)
+	 if (viewList[i].VdPaginated)
+	    if (!viewList[i].VdNature)
+	       /* c'est une vue a paginer */
+	      {
+		 if (viewList[i].VdAssoc)
+		    /* c'est une vue d'elements associes, */
+		    /* utilise le numero d'element assoc. */
+		    docView = viewList[i].VdView;
+		 else
+		   {
+		      /* cherche le numero de vue dans le document */
+		      found = FALSE;
+		      for (docView = 0; docView < MAX_VIEW_DOC && !found; docView++)
+			   if (pDoc->DocView[docView].DvPSchemaView ==
+			       viewList[i].VdView
+			       && pDoc->DocView[docView].DvSSchema ==
+			       viewList[i].VdSSchema)
+			      found = TRUE;
+		   }
+		 /* pagine la vue */
+		 Pages (pDoc, docView+1, viewList[i].VdAssoc);
+	      }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    docModify positionne le flag modification d'un document a` TRUE.| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                docModify (PtrDocument pDoc, PtrElement pEl)
+#else  /* __STDC__ */
+void                docModify (pDoc, pEl)
+PtrDocument         pDoc;
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+{
+   if (pDoc != NULL)
+     {
+	pDoc->DocModified = TRUE;
+	pDoc->DocNTypedChars += 10;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    simpleSave sauve un document sous forme pivot dans un fichier   | */
+/* |            dont le nom est donne par name, et ne fait rien d'autre.| */
+/* |            Rend false si l'ecriture n'a pu se faire.               | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withAPP)
+#else  /* __STDC__ */
+static boolean      simpleSave (pDoc, name, withAPP)
+PtrDocument         pDoc;
+char               *name;
+boolean             withAPP;
+
+#endif /* __STDC__ */
+{
+   BinFile             fichpivot;
+   NotifyDialog        notifyDoc;
+   boolean             ok;
+
+   if (!pDoc->DocReadOnly)
+     {
+	fichpivot = BIOwriteOpen (name);
+	if (fichpivot == 0)
+	   return FALSE;
+	else
+	  {
+	     if (withAPP)
+	       {
+		  /* envoie l'evenement DocSave.Pre a l'application */
+		  notifyDoc.event = TteDocSave;
+		  notifyDoc.document = (Document) IdentDocument (pDoc);
+		  notifyDoc.view = 0;
+		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
+	       }
+	     else
+		ok = TRUE;
+	     if (ok)
+		/* l'application laisse Thot effectuer la sauvegarde */
+	       {
+		  /* ecrit le document dans ce fichier sous la forme pivot */
+		  SauveDoc (fichpivot, pDoc);
+		  BIOwriteClose (fichpivot);
+		  if (withAPP)
+		    {
+		       /* envoie l'evenement DocSave.Post a l'application */
+		       notifyDoc.event = TteDocSave;
+		       notifyDoc.document = (Document) IdentDocument (pDoc);
+		       notifyDoc.view = 0;
+		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+		    }
+	       }
+	     return TRUE;
+	  }
+     }
+   return FALSE;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    MajElInclus met a` jour et reaffiche l'element pEl inclus dans  | */
+/* |            le document pDoc.                                       | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+void                MajElInclus (PtrElement pEl, PtrDocument pDoc)
+#else  /* __STDC__ */
+void                MajElInclus (pEl, pDoc)
+PtrElement          pEl;
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pChild, pNext;
+   PtrTextBuffer       pBuf, pNextBuf;
+   int                 view;
+   boolean             ToCreate[MAX_VIEW_DOC];
+
+   /* conserve la liste des vues ou l'element a des paves */
+   if (!AssocView (pEl))
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+	 ToCreate[view] = pEl->ElAbstractBox[view] != NULL;
+   else
+      /* vue d'elements associes */
+      ToCreate[0] = pEl->ElAbstractBox[0] != NULL;
+   /* detruit les paves de l'element */
+   DetrPaves (pEl, pDoc, FALSE);
+   AbstractImageUpdated (pDoc);
+   if (pEl->ElTerminal)
+      switch (pEl->ElLeafType)
+	    {
+	       case LtPicture:
+	       case LtText:
+		  pBuf = pEl->ElText;
+		  while (pBuf != NULL)
+		    {
+		       pNextBuf = pBuf->BuNext;
+		       FreeBufTexte (pBuf);
+		       pBuf = pNextBuf;
+		    }
+		  pEl->ElText = NULL;
+		  pEl->ElTextLength = 0;
+		  break;
+	       case LtPlyLine:
+		  pBuf = pEl->ElPolyLineBuffer;
+		  while (pBuf != NULL)
+		    {
+		       pNextBuf = pBuf->BuNext;
+		       FreeBufTexte (pBuf);
+		       pBuf = pNextBuf;
+		    }
+		  pEl->ElPolyLineBuffer = NULL;
+		  pEl->ElNPoints = 0;
+		  pEl->ElVolume = 0;
+		  pEl->ElPolyLineType = '\0';
+		  break;
+	       case LtSymbol:
+	       case LtGraphics:
+		  pEl->ElGraph = '\0';
+		  break;
+	       default:
+		  break;
+	    }
+   else
+     {
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL)
+	  {
+	     pNext = pChild->ElNext;
+	     DeleteElement (&pChild);
+	     pChild = pNext;
+	  }
+     }
+   /* effectue une nouvelle copie */
+   CopyIncludedElem (pEl, pDoc);
+   /* cree les paves de la nouvelle copie dans les vues ou il y avait */
+   /* deja des paves */
+   if (!AssocView (pEl))
+     {
+	for (view = 0; view < MAX_VIEW_DOC; view++)
+	   if (ToCreate[view])
+	     {
+		pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view];
+		CrPaveNouv (pEl, pDoc, view+1);
+	     }
+     }
+   else
+      /* vue d'elements associes */
+     if (ToCreate[0])
+     {
+	pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
+	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];
+	CrPaveNouv (pEl, pDoc, 1);
+     }
+   ApplDelayedRule (pEl, pDoc);
+   /* reaffiche l'element dans toutes les vues ou il existe */
+   AbstractImageUpdated (pDoc);
+   RedisplayDocViews (pDoc);
+   /* Reaffiche les numeros suivants qui changent */
+   MajNumeros (NextElement (pEl), pEl, pDoc, TRUE);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    UpdateAllInclusions met a` jour tous les elements inclus d'un	| */
+/* |		document.						| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         UpdateAllInclusions (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void         UpdateAllInclusions (pDoc)
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrReference        pRef;
+   PtrReferredDescr    pRefD;
+   PtrDocument         pRefDoc;
+   PtrExternalDoc      pExtDoc;
+   boolean             setSelect;
+
+   setSelect = FALSE;
+   /* parcourt la chaine des descripteurs d'elements reference's */
+   pRefD = pDoc->DocReferredEl;
+   if (pRefD != NULL)
+      /* saute le premier descripteur bidon */
+      pRefD = pRefD->ReNext;
+   while (pRefD != NULL)
+      /* on ne considere que les elements reference's internes au document */
+     {
+	if (!pRefD->ReExternalRef)
+	  {
+	     pRefDoc = NULL;
+	     pRef = NULL;
+	     pExtDoc = NULL;
+	     /* cherche toutes les references a cet element qui se trouvent
+	        dans un document charge' dans l'editeur */
+	     do
+	       {
+
+		  pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc,
+				FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+		  if (pRef != NULL)
+		     if (pRef->RdTypeRef == RefInclusion)
+			/* c'est une inclusion */
+			if (pRef->RdElement != NULL)
+			   if (pRef->RdElement->ElSource != NULL)
+			      /* c'est une inclusion avec expansion */
+			      if (pRefDoc != pDoc)
+				 /* l'element inclus est dans un autre doc */
+				 /* on traite cette inclusion */
+				{
+				   /* eteint la selection si ca n'a pas deja */
+				   /* ete fait */
+				   if (!setSelect)
+				     {
+					ClearAllViewSelection ();
+					setSelect = TRUE;
+				     }
+				   /* refait la copie de l'element inclus */
+				   MajElInclus (pRef->RdElement, pRefDoc);
+				}
+	       }
+	     while (pRef != NULL);
+	  }
+	/* passe au descripteur d'element reference' suivant */
+	if (pRefD != NULL)
+	   pRefD = pRefD->ReNext;
+     }
+   if (setSelect)
+      /* rallume la selection */
+      AllumeSelection (FALSE, FALSE);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    saveWithExtension sauve un document sous forme pivot en         | */
+/* |            concatenant l'extension au nom stocke' dans le document.| */
+/* |            Envoie un message et rend false si l'ecriture n'a pu se | */
+/* |            faire.                                                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static boolean      saveWithExtension (PtrDocument pDoc, char *extension)
+#else  /* __STDC__ */
+static boolean      saveWithExtension (pDoc, extension)
+PtrDocument         pDoc;
+char               *extension;
+
+#endif /* __STDC__ */
+{
+   int                 i;
+   char                buffer[MAX_TXT_LEN];
+
+   if (pDoc == NULL)
+      return FALSE;
+   DoFileName (pDoc->DocDName, extension, pDoc->DocDirectory, buffer, &i);
+   if (simpleSave (pDoc, buffer, FALSE))
+     {
+	UpdateAllInclusions (pDoc);
+	return TRUE;
+     }
+   else
+     {
+	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP), buffer);
+	return FALSE;
+     }
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    SauverDoc       effectue la sauvegarde du document pDoc         | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+boolean             SauverDoc (PtrDocument pDoc, Name NomDuDocument, PathBuffer NomDirectory, boolean SauveDocAvecCopie, boolean SauveDocAvecMove)
+#else  /* __STDC__ */
+boolean             SauverDoc (pDoc, NomDuDocument, NomDirectory, SauveDocAvecCopie, SauveDocAvecMove)
+PtrDocument         pDoc;
+Name                 NomDuDocument;
+PathBuffer          NomDirectory;
+boolean             SauveDocAvecCopie;
+boolean             SauveDocAvecMove;
+
+#endif /* __STDC__ */
+{
+   boolean             status, ok;
+   PathBuffer          NomAuto;	/* sauvegardes auto */
+   PathBuffer          NomFichier;	/* le .PIV final */
+   PathBuffer          NomTemporaire;	/* le .Tmp */
+   PathBuffer          NomBackup;	/* .OLD: ancien .PIV */
+   PathBuffer          DirectoryOrig;
+   char                buffer[MAX_TXT_LEN];
+   boolean             SauverDansMemeFichier;
+   int                 i;
+   NotifyDialog        notifyDoc;
+
+   notifyDoc.event = TteDocSave;
+   notifyDoc.document = (Document) IdentDocument (pDoc);
+   notifyDoc.view = 0;
+   if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+      /* l'application a pris la sauvegarde en charge */
+      status = TRUE;
+   else
+     {
+	status = TRUE;
+	SauverDansMemeFichier = TRUE;
+	if (strcmp (NomDuDocument, pDoc->DocDName) != 0)
+	   SauverDansMemeFichier = FALSE;
+	if (strcmp (NomDirectory, pDoc->DocDirectory) != 0)
+	   SauverDansMemeFichier = FALSE;
+
+	/* construit le nom complet de l'ancien fichier de sauvegarde */
+	DoFileName (pDoc->DocDName, "BAK", pDoc->DocDirectory, NomAuto, &i);
+	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+	/*     SECURITE:                                         */
+	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
+	/*     directement X.PIV ...                             */
+	/*     On fait ensuite des renommages                    */
+	DoFileName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	/* on teste d'abord le droit d'ecriture sur le .PIV */
+	ok = OuvrEcr (buffer) == 0;
+	if (ok)
+	  {
+	     DoFileName (NomDuDocument, "Tmp", NomDirectory, NomTemporaire, &i);
+	     /* on teste le droit d'ecriture sur le .Tmp */
+	     ok = OuvrEcr (NomTemporaire) == 0;
+	     if (ok)
+	       {
+		  TtaDisplaySimpleMessage (INFO, LIB, WRITING);
+		  ok = simpleSave (pDoc, NomTemporaire, FALSE);
+	       }
+	     if (ok)
+		UpdateAllInclusions (pDoc);
+	  }
+	if (!ok)
+	  {
+	     /* on indique un nom connu de l'utilisateur... */
+	     DoFileName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP),
+					    buffer);
+	     status = FALSE;
+	  }
+	else
+	  {
+	     /* 1- faire mv .PIV sur .OLD sauf si c'est une copie */
+	     /* Le nom et le directory du document peuvent avoir change'. */
+	     /* le fichier .OLD reste dans l'ancien directory, avec */
+	     /* l'ancien nom */
+	     DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, NomFichier, &i);
+	     if (!SauveDocAvecCopie)
+	       {
+		  DoFileName (pDoc->DocDName, "OLD", DirectoryOrig, NomBackup, &i);
+		  i = rename (NomFichier, NomBackup);
+	       }
+	     /* 2- faire mv du .Tmp sur le .PIV */
+	     DoFileName (NomDuDocument, "PIV", NomDirectory, NomFichier, &i);
+	     i = rename (NomTemporaire, NomFichier);
+	     if (i >= 0)
+		/* >> tout s'est bien passe' << */
+		/* detruit l'ancienne sauvegarde */
+	       {
+		  RemoveFile (NomAuto);
+		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN),
+						 NomFichier);
+		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
+		  /* directory d'origine. */
+		  pDoc->DocModified = FALSE;
+		  pDoc->DocNTypedChars = 0;
+
+		  /* modifie les fichiers .EXT des documents nouvellement */
+		  /* reference's ou qui ne sont plus reference's par */
+		  /* notre document */
+		  UpdateExt (pDoc);
+		  /* modifie les fichiers .REF des documents qui */
+		  /* referencent des elements qui ne sont plus dans notre */
+		  /* document et met a jour le fichier .EXT de notre */
+		  /* document */
+		  UpdateRef (pDoc);
+		  /* detruit le fichier .REF du document sauve' */
+		  DoFileName (pDoc->DocDName, "REF", DirectoryOrig, buffer, &i);
+		  RemoveFile (buffer);
+		  if (!SauverDansMemeFichier)
+		    {
+		       if (strcmp (NomDirectory, DirectoryOrig) != 0 &&
+			   strcmp (NomDuDocument, pDoc->DocDName) == 0)
+			  /* changement de directory sans changement de nom */
+			  if (SauveDocAvecMove)
+			    {
+			       /* deplacer le fichier .EXT dans le nouveau directory */
+			       DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, buffer, &i);
+			       DoFileName (pDoc->DocDName, "EXT", NomDirectory, NomFichier, &i);
+			       rename (buffer, NomFichier);
+			       /* detruire l'ancien fichier PIV */
+			       DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, buffer, &i);
+			       RemoveFile (buffer);
+			    }
+
+		       if (strcmp (NomDuDocument, pDoc->DocDName) != 0)
+			 {
+			    /* il y a effectivement changement de nom */
+			    if (SauveDocAvecCopie)
+			       /* l'utilisateur veut creer une copie du document. */
+			       /* on fait apparaitre le document copie dans les */
+			       /* fichiers .EXT des documents reference's */
+			       ChangeNomExt (pDoc, NomDuDocument, TRUE);
+			    if (SauveDocAvecMove)
+			      {
+				 /* il s'agit d'un changement de nom du document */
+				 /* change le nom du document dans les fichiers */
+				 /* .EXT de tous les documents reference's */
+				 ChangeNomExt (pDoc, NomDuDocument, FALSE);
+				 /* indique le changement de nom a tous les */
+				 /* documents qui referencent ce document */
+				 ChangeNomRef (pDoc, NomDuDocument);
+				 /* renomme le fichier .EXT du document qui change */
+				 /* de nom */
+				 DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, buffer,
+					     &i);
+				 DoFileName (NomDuDocument, "EXT", NomDirectory,
+					     NomFichier, &i);
+				 rename (buffer, NomFichier);
+				 /* detruit l'ancien fichier .PIV */
+				 DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, buffer,
+					     &i);
+				 RemoveFile (buffer);
+			      }
+			 }
+		       strncpy (pDoc->DocDName, NomDuDocument, MAX_NAME_LENGTH);
+		       strncpy (pDoc->DocIdent, NomDuDocument, MAX_DOC_IDENT_LEN);
+		       strncpy (pDoc->DocDirectory, NomDirectory, MAX_PATH);
+		       changenomdoc (pDoc, NomDuDocument);
+		    }
+	       }
+	     notifyDoc.event = TteDocSave;
+	     notifyDoc.document = (Document) IdentDocument (pDoc);
+	     notifyDoc.view = 0;
+	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	  }
+     }
+   return status;
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    interactiveSave sauve un document sous forme pivot en proposant | */
+/* |            un menu a` l'utilisateur (si 'ask'). Rend false si      | */
+/* |            l'ecriture n'a pu se faire.                             | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static boolean      interactiveSave (PtrDocument pDoc, boolean ask)
+
+#else  /* __STDC__ */
+static boolean      interactiveSave (pDoc, ask)
+PtrDocument         pDoc;
+boolean             ask;
+
+#endif /* __STDC__ */
+
+{
+   boolean             ok;
+   boolean             status;
+   Name                 docName;
+   char                directory[MAX_PATH];
+
+   status = FALSE;
+   if (pDoc->DocReadOnly)
+      /* on ne sauve pas les documents qui sont en lecture seule */
+      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
+   else if (pDoc->DocSSchema == NULL)
+      TtaDisplaySimpleMessage (INFO, LIB, EMPTY_DOC_NOT_WRITTEN);
+   else
+     {
+	strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
+	/* on prend le directory ou le document a ete lu */
+	strncpy (directory, pDoc->DocDirectory, MAX_PATH);
+	/* recherche le nom du fichier en proposant le nom courant */
+	ok = !ask;
+	if (ok && !pDoc->DocReadOnly)
+	   status = SauverDoc (pDoc, docName, directory, FALSE, FALSE);
+     }
+   if (status && ask)
+	{
+	pDoc->DocModified = FALSE;
+	pDoc->DocNTypedChars = 0;
+	}
+   return status;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    SauveDocument sauve sous forme pivot le document pointe' par    | */
+/* |            pDoc. Retourne Vrai si le document a pu etre sauve,     | */
+/* |            Faux si echec.                                          | */
+/* |            - Mode = 0 : demander le nom de fichier a` l'utilisateur| */
+/* |            - Mode = 1 : fichier de sauvegarde automatique (.BAK)   | */
+/* |            - Mode = 2 : fichier scratch (pas de message)           | */
+/* |            - Mode = 3 : fichier de sauvegarde urgente (.SAV)       | */
+/* |            - Mode = 4 : sauve sans demander de nom.                | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             SauveDocument (PtrDocument pDoc, int Mode)
+
+#else  /* __STDC__ */
+boolean             SauveDocument (pDoc, Mode)
+PtrDocument         pDoc;
+int                 Mode;
+
+#endif /* __STDC__ */
+
+{
+   boolean             ok;
+
+   ok = FALSE;
+   if (pDoc != NULL)
+      if (Mode >= 0 && Mode <= 4)
+	 switch (Mode)
+	       {
+		  case 0:
+		     ok = interactiveSave (pDoc, TRUE);
+		     break;
+		  case 1:
+		     ok = saveWithExtension (pDoc, "BAK");
+		     if (ok)
+			TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN), pDoc->DocDName);
+		     break;
+		  case 2:
+		     ok = saveWithExtension (pDoc, "BAK");
+		     break;
+		  case 3:
+		     ok = saveWithExtension (pDoc, "SAV");
+		     break;
+		  case 4:
+		     ok = interactiveSave (pDoc, FALSE);
+		     break;
+	       }
+   return ok;
+}
