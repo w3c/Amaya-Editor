@@ -612,10 +612,11 @@ View                view;
 {
    PtrDocument         pSelDoc;
    PtrElement          pFirstSel, pLastSel;
-   int                 firstChar, lastChar;
-   boolean             selectionOK;
    PtrAbstractBox      pAb;
    PtrDocument         pDoc;
+   int                 firstChar, lastChar;
+   int                 KbX, KbY;
+   boolean             selectionOK;
 
 #ifndef _WINDOWS
    if (ThotLocalActions[T_colors] == NULL)
@@ -641,7 +642,10 @@ View                view;
      {
 	/* Cree la palette si elle n'existe pas */
 	if (Color_Window == 0)
-	   ThotCreatePalette (800, 100);
+	  {	    
+	    ConfigKeyboard (&KbX, &KbY);
+	    ThotCreatePalette (KbX, KbY);
+	  }
 #ifndef _WINDOWS
 	else
 	   XtPopup (Color_Palette, XtGrabNonexclusive);

@@ -1442,8 +1442,8 @@ int             *y;
    char          line[MAX_TXT_LEN];
    int           nbIntegers;
 
-   *x = 0;
-   *y = 0;
+   *x = 600;
+   *y = 100;
    file = openConfigFile ("keyboard", FALSE);
    if (file == NULL)
       return;

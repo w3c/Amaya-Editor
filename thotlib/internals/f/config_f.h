@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
+extern void ConfigKeyboard (int *x, int *y);
 extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( char *BufMenu,
                                    int *lgmenu,
@@ -62,6 +63,7 @@ extern boolean ConfigDefaultTypoSchema ( PtrSSchema pSS,
 #else /* __STDC__ */
 
 extern void ConfigInit (/* void */);
+extern void ConfigKeyboard (/* int *x, int *y */);
 extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
 extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
                                      int *lgmenu,

@@ -755,6 +755,7 @@ int                 number;
    ptrfont             pFontAc;
    ptrfont             pFontIg;
 
+   ConfigKeyboard (&KbX, &KbY);
    switch (number)
 	 {
 	    case 0:		/* Symboles */
