@@ -271,9 +271,28 @@ View                view;
 
 #endif /* __STDC__ */
 {
+   PathBuffer          viewsToPrint;
+
+   strcpy (viewsToPrint, TtaGetViewName (document, view));
+   strcat (viewsToPrint, " ");
+   TtaPrint (document, viewsToPrint) ;
+}
+
+/*----------------------------------------------------------------------
+   TtcPrint traite les retours du formulaire d'impression. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaPrint (Document document, char* viewNames)
+#else  /* __STDC__ */
+void                TtaPrint (document, viewNames)
+Document            document;
+char               *viewNames;
+
+#endif /* __STDC__ */
+{
    PathBuffer          dirName;
    Name                docName;
-   PathBuffer          viewsToPrint;
+   /*PathBuffer          viewsToPrint;*/
    boolean             ok;
    Name                savePres, newPres;
 
@@ -305,8 +324,6 @@ View                view;
    /* on fait une sauvegarde automatique */
    if (ok)
      {
-	strcpy (viewsToPrint, TtaGetViewName (document, view));
-	strcat (viewsToPrint, " ");
 	if (PaperPrint)
 	   Print (pDocPrint->DocDName,
 		  pDocPrint->DocDirectory,
@@ -318,7 +335,7 @@ View                view;
 		  100, 1, TRUE,
 		  (int) ManualFeed, 0,
 		  1,
-		  viewsToPrint);
+		  viewNames);
 	else if (PSdir[0] != '\0')
 	   PostScriptSave (pDocPrint->DocDName,
 			   pDocPrint->DocDirectory,
@@ -330,7 +347,7 @@ View                view;
 			   100, 1, TRUE,
 			   (int) ManualFeed, 0,
 			   1,
-			   viewsToPrint);
+			   viewNames);
      }
    strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
    strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
