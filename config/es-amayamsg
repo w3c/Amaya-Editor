@@ -1,5 +1,5 @@
 # encoding= latin1
-0 Ficheros
+0 Archivos
 1 Abrir
 2 Limpiar
 3 Documento guardado: %s
@@ -7,30 +7,30 @@
 5 URL
 6 Texto
 7 Nombre
-8 Password
+8 Palabra clave
 9 Usar como clase
 10 Aplicar clase
-11 Seleccionar una clase o pseudo-clase
+11 Seleccionar una clase o seudo-clase
 12 Recogiendo %s
 13 No puedo cargar %s
 14 ¡Terminado!
 15 Seleccionar el destino
 16 Destino inválido
-17 Insertar URI o hojear
+17 Insertar URI o navegar
 18 Título
-19 Documento modificado. ¿Se perderán todos los cambios. ¿Quiere seguir?
+19 Documento modificado. ¡Se perderán todos los cambios!. ¿Quiere seguir?
 20 Redirección recuperación de %s
 21 Demasiadas redirecciones detectadas
 22 No puedo crear fichero local %s
-23 Esperando un socket libre
+23 Esperando un puerto libre
 24 Leyendo %s
 25 Escribiendo %s
 26 Esperando conexión
 27 Contactando %s
 28 Mejorando %s
-29 Estado desconocido Status
-30 Diálogo de Autenticación
-31 Por favor, autentíquese para
+29 Estatus desconocido
+30 Diálogo de Autentificación
+31 Por favor, autentifíquese para
 32 Fallo de autorización para %s
 33 %s cargado pero no hay datos disponibles
 34 Transferencia interrumpida
@@ -39,17 +39,17 @@
 37 Guardando %s
 38 No puedo guardar en: %s
 39 Error en el sistema de mensajes (English)
-40 Un ancla no puede ontener estos elementos
+40 Un ancla no puede contener estos elementos
 41 No puedo crear un ancla en un ancla
-42 Lo siento, no hay soporte GET aun para URL de este tipo: %s
-43 Lo siento, no hay soporte PUT aun para URL de este tipo: %s
-44 Esta fersión de Amaya no soporta esta característica
+42 Lo siento, aún no hay soporte GET para URL de este tipo: %s
+43 Lo siento, aún no hay soporte PUT para URL de este tipo: %s
+44 Esta versión de Amaya no soporta esta característica
 45 Finalizado escritura %s
-46 No pude normallizar %s
+46 No pude normalizar %s
 47 No pude crear directorio de ficheros temporales %s
 48 No hay transformación aplicable a la selección
 49 Falló la transformación
-50 error de sintaxis en fichero.trans línea %s
+50 error de sintaxis en archivo HTML.trans línea %s
 51 Matemáticas
 52 Gráficos
 53 Guardar como
@@ -58,30 +58,30 @@
 56 Servidor: %s
 57 Editor/Navegador
 58 Petición caducada - el servidor no responde
-59 %s ya existe. ¿Sobreescribirlo?
-60 %s ha cambiado. ¿Sobreescribirlo?
+59 %s ya existe. ¿Sobrescribirlo?
+60 %s ha cambiado. ¿Sobrescribirlo?
 61 Imagen de fondo
-62 Imagen de fondo no se permite aquí
+62 Imagen de fondo no permitida aquí
 63 CSS
-64 Guardar sobreescibirá las siguientes URL:
+64 Guardar sobrescibirá las siguientes URL:
 65 Fallo al guardar en URL
 66 ¿Guardar en disco?
 67 Copiar Imágenes
 68 Transformar URL
 69 Ubicación de documento
 70 Directorio de Imágenes
-71 Ubicación de objecto
+71 Ubicación de objeto
 72 ficheros CSS
-73 Editor/Hojeador de W3C para la Web
+73 Editor/Navegador de W3C para la Web
 74 (salida de correo para www-amaya@w3.org)
 75 No puedo gestionar URL con más de %s caracteres
 76 Sólo se permite el tipo por omisión
-77 Actualización de enlace: %s%% se ha realizado
+77 Actualización de enlace: %s%% realizada
 78 Nada nuevo que guardar
 79 repetir-y
-80 <HTML><HEAD><TITLE>ERROR: No puedo acceder a la URL</TITLE></HEAD><BODY><H1>El documento solicitado no se pudo obtener</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>Se encontró el sguiente error:</P><UL><LI><STRONG>Fallo de conexion</STRONG></UL><P>El sistema respondió:</P><PRE><I>(%d) %s</I></PRE><P>Esto significa que:</P><PRE>El sitio remoto puede no estar operativo o no existir.</PRE><PRE>Por favor, intentelo de nuevo.</PRE><P></P><HR>\n</BODY></HTML>
+80 <HTML><HEAD><TITLE>ERROR: No puedo acceder a la URL</TITLE></HEAD><BODY><H1>El documento solicitado no se pudo obtener</H1><HR><P>Mientras intentaba encontrar la URL:<A HREF=\"%s\">%s</A></P><P>Se encontró el siguiente error:</P><UL><LI><STRONG>Fallo de conexión</STRONG></UL><P>El sistema respondió:</P><PRE><I>(%d) %s</I></PRE><P>Esto significa que:</P><PRE>El sitio remoto puede no estar operativo o no existe.</PRE><PRE>Por favor, inténtelo de nuevo.</PRE><P></P><HR>\n</BODY></HTML>
 81 Por favor, introduzca un nombre de usuario:
-82 %d outstanding requests
+82 %d solicitud pendiente
 83 No hay fichero CSS disponible
 84 Transferencia interrumpida
 85 Documento previo
@@ -90,7 +90,7 @@
 88 Guardar
 89 Imprimir
 90 Buscar
-91 Enfasis
+91 Énfasis
 92 Strong
 93 Fuente fija
 94 no repetir
@@ -98,21 +98,21 @@
 96 Cabecera Nivel 1
 97 Cabecera Nivel 2
 98 Cabecera Nivel 3
-99 Lista con boliches
+99 Lista con bolos
 100 Lista numerada
-101 Lista de definicion list
+101 Lista de definición
 102 Enlace
 103 Tabla
 104 El documento no tiene nombre. Guardar en:
 105 Plugins
 106 Error desconocido al guardar URL %s
-107 No puedo crear una conexion al servidor
-108 El aceso a %s está prohibido por el servidor
-109 Operacion correcta para %s
+107 No puedo crear una conexión al servidor
+108 El acceso a %s está prohibido por el servidor
+109 Operación correcta para %s
 110 %s se ha creado
 111 %s se ha actualizado
-112 Operacion completada con un código de estado %s
-113 El servidor no entendio la sintaxis de la petición
+112 Operación completada con un código de estado %s
+113 El servidor no entendió la sintaxis de la petición
 114 El servidor no tiene información nueva para devolver
 115 Ese método no está permitido
 116 Por favor identifíquese para acceder a %s
@@ -132,8 +132,8 @@
 130 Modo repetición
 131 repetir
 132 repetir-x
-133 Su sesión previa de amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
-134 Fallo de autenticacion. ¿Reintentar?
+133 Su sesión previa de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
+134 Fallo de autentificación. ¿Reintentar?
 135 La operación será redirigida. ¿Continuar?
 136 Numero de filas
 137 Numero de columnas
@@ -143,47 +143,47 @@
 141 Imprimir URL
 142 Aplicar
 143 Por omisión
-144 Vaciar cache
-145 Preferencias de Cache
-146 Activar cache
-147 documentos protegidos del cache
+144 Vaciar Caché
+145 Preferencias de Caché
+146 Activar Caché
+147 documentos protegidos del Caché
 148 Modo desconectado
 149 Ignorar Expires: cabecera
-150 directorio cache
-151 Tamaño de cache(Mb)
-152 Límite de tamaño de entrada ea cache (Mb)
+150 directorio caché
+151 Tamaño de caché(Mb)
+152 Límite de tamaño de entrada de caché (Mb)
 153 Preferencias de proxy
 154 HTTP proxy (v.g., www.w3.org:1234)
-155 Lista de dominios proxy domain list (e.g., lists.w3.org)
+155 Lista de dominios proxy (e.g., lists.w3.org)
 156 Preferencias generales
 157 Página principal
 158 Retardo ToolTip (ms)
-159 Retardo Duble clic (ms)
-160 Tamaño fuente de menu
+159 Retardo Doble clic (ms)
+160 Tamaño fuente de menú
 161 Zoom de fuente
 162 Idioma de dialogo
-163 Activar multi-key (`+a=à)
+163 Activar combinación de teclas (`+a=à)
 164 Mostrar imágenes de fondo
-165 Doble click activa enlaces
+165 Doble clic activa enlaces
 166 Exportar CR/LF
 167 Preferencias de publicación
 168 Usar ETAGS y precondiciones
 169 Verificar cada PUT con un GET
 170 El nombre por omisión de URL termina en '/'
 171 Preferencias de geometría
-172 Guardar geometria actual
+172 Guardar geometría actual
 173 Restaurar la geometría por omisión
-174 Los cambios serán efectivos cuando abra unanueva ventana.
+174 Los cambios serán efectivos cuando abra una nueva ventana.
 175 Preferencias de color
 176 Color del documento
 177 Color del fondo del documento
-178 Menu color de documeto
-179 Menu color de fondo
-180 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el cache.
-181 Home
+178 Menú color de documento
+179 Menú color de fondo
+180 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
+181 Principal
 182 Lista de idiomas preferidos como "es, en, fr":
 183 Ubicación de fichero de definición de perfiles
-184 Seleccion de perfil
+184 Selección de perfil
 185 Estos cambios no serán efectivos hasta que se reinicie Amaya
 186 Preferencias de perfiles
 187 Introduzca la URL del servidor de plantillas
@@ -199,16 +199,16 @@
 197 Directorio temporal
 198 Usar paleta
 199 Negociación de idioma
-200 Configuracion para anotaciones
+200 Configuración para anotaciones
 201 Anotación de usuario
 202 Servidor de publicación
-203 Servidores de annotaciones
+203 Servidores de anotaciones
 204 Autocargar anotaciones locales
 205 Autocargar anotaciones remotas
 206 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
-207 Seleccion de color
+207 Selección de color
 208 Caret color
-209 Orientacion
+209 Orientación
 210 Vertical
 211 Apaisado
 212 Activar FTP (experimental)
@@ -216,15 +216,15 @@
 214 XML inválido - ¿Mostrar análisis de errores?
 215 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
 216 Caracteres inválidos
-217 Con el perfil de este documento:
+217 Con el perfil actual de Amaya:
 218 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 219 La codificación de este documento no está soportada por Amaya
 220 Al editar y guardar este documento se cambiará su tipo
 221 No disponible
-222 Navegar
+222 Buscar
 223 Navegador de ficheros
 224 Selección
-225 Filtro local de annotaciones
+225 Filtro local de anotaciones
 226 Mostrar
 227 Esconder
 228 Mostrar todo
@@ -232,34 +232,34 @@
 230 * significa escondido, - significa parcialmente escondido
 231 Opciones de filtrado
 232 Por autor
-233 Por typo
+233 Por tipo
 234 Por servidor
-235 Access keys
+235 Atajos de teclado
 236 Ignorar
 237 Elemento de estilo
 238 No puedo crear un XPointer
 239 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
 240 Imposible adjuntar un XPointer final sobre un elemento interno agregado
-241 No se a donde mover la annotación
-242 No puedo mover la annotación a un otro documento
+241 No sé a dónde mover la anotación
+242 No puedo mover la anotación a otro documento
 243 No puede comentar un documento modificado. Por favor guárdelo primero.
-244 No hay comentarios de usuario declarado. Por favor abra el menu de configuración de Comentarios
+244 No hay comentarios de usuario declarado. Por favor abra el menú de configuración de Comentarios
 245 No puedo construir un XPointer para este comentario
 246 Crear un nuevo comentario
 247 Fallo al enviar el comentario
 248 Fallo al borrar el comentario
-249 Comentario borrado!
+249 ¡Comentario borrado!
 250 Fallo al cargar el índice de comentarios
 251 Error
-252 Seleccionar un Charset
+252 Seleccionar un juego de caracteres
 253 Seleccionar un tipo MIME
-254 Cambiar Charset
+254 Cambiar juego de caracteres
 255 Cambiar tipo MIME
 256 Cambiar
 257 Este tipo de documento no soporta charsets
 258 Para usar esta opción el destino tiene que ser una URL HTTP
 259 Error: tipo MIME inválido
 260 Desconocido
-261 Se ignoran estili - vea Vistas/Mostrar fichero log
+261 Se ignoran estilos - vea Vistas/Mostrar fichero log
 262 Este documento ya está cargado en otra ventana
 263 Guardar la copia puede originar un problema de pérdida de actualización
