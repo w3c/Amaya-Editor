@@ -25,7 +25,7 @@ extern void TtcDeletePreviousChar ( Document doc,
                                     View view );
 extern void TtcDeleteSelection ( Document doc,
                                  View view );
-extern void TtcInclude ( Document document,
+extern void TtcInclude ( Document doc,
                          View view );
 extern void TtcPasteFromClipboard ( Document doc,
                                     View view );
@@ -58,7 +58,7 @@ extern void TtcDeletePreviousChar (/* Document doc,
                                       View view */);
 extern void TtcDeleteSelection (/* Document doc,
                                    View view */);
-extern void TtcInclude (/* Document document,
+extern void TtcInclude (/* Document doc,
                            View view */);
 extern void TtcPasteFromClipboard (/* Document doc,
                                       View view */);

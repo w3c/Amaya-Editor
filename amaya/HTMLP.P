@@ -724,44 +724,6 @@ BOXES
 		END;
 	END;
 
- Text_Mark: BEGIN
-	Content: Graphics 'Z';	{ draw the top and left side of the box }
-	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left - 1 px;
-	Width: Enclosing . Width + 2 px;
-	Height: Enclosing . Height;
-	Foreground : Black;
-	LineWeight: 2 px;
-	Depth: Creator + 1;
-	Visibility: Enclosing =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
- Text_Frame: BEGIN
-	Content: Graphics 'R';
-	VertPos: Top = Enclosing . Top - 1 px;
-	HorizPos: Left = Enclosing . Left - 1 px;
-	Width: Enclosing . Width + 2 px;
-	Height: Enclosing . Height;
-	FillPattern: backgroundcolor;
-	Foreground : White;
-	LineWeight: 1 px;
-	Depth: Creator + 2;
-	Visibility: Enclosing =;
-	InLine: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	IN Links_view
-		Visibility: 0;
-	END;
-
  BrowseLabel: BEGIN
 	Content: Text ' Browse...';
 	VertPos: Top = Creator . Top;
@@ -3534,14 +3496,26 @@ RULES
 	MarginLeft: 3 px;
 	MarginBottom: 1 px;
 	MarginRight: 3 px;
+	BorderTopWidth: 2 px;
+	BorderLeftWidth: 2 px;
+	BorderBottomWidth: 2 px;
+	BorderRightWidth: 2 px;
+	BorderTopColor: Black;
+	BorderLeftColor: Black;
+	BorderBottomColor: LightGrey2;
+	BorderRightColor: LightGrey2;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
+	Background: White;
+	FillPattern: backgroundcolor;
+	ShowBox;
 	Width: 20 ex;
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
 	Depth: Enclosing - 1;
-#ifndef BLACK_WHITE
-	Background : LightRed4;
-#endif
 	HorizPos: Left = Enclosing . Left + 0.2;	
 	VertPos: Top = Enclosing . Top + 0.4;
 	HorizRef: Enclosed . HRef;
@@ -3550,6 +3524,10 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		VertPos: HRef = Previous . HRef;
 		HorizPos: Left = Previous . Right;
 		Width: Enclosed . Width;
@@ -3571,10 +3549,10 @@ RULES
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
 	BorderLeftWidth: 1 px;
-	BorderTopColor: Grey;
+	BorderTopColor: LightGrey2;
 	BorderRightColor: Black;
 	BorderBottomColor: Black;
-	BorderLeftColor: Grey;
+	BorderLeftColor: LightGrey2;
 	BorderTopStyle: Solid;
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
@@ -3619,6 +3597,12 @@ RULES
 	HorizPos: Left = Enclosing . Left + 0.4;
 	VertPos: Top = Enclosing . Top + 0.3;
 	Width: Enclosing . Width - 0.6;
+	Background: Enclosing =;
+	FillPattern: nopattern;
+	BorderTopWidth: 0;
+	BorderRightWidth: 0;
+	BorderBottomWidth: 0;
+	BorderLeftWidth: 0;
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
@@ -3630,12 +3614,21 @@ RULES
 	END;
 
  Frame: BEGIN
-	CreateBefore(Text_Mark);
-	CreateBefore(Text_Frame);
-	Width: 1 px;
-	Height: 1 px;
+	VertPos: Top = Enclosing . Top - 1 px;
+	HorizPos: Left = Enclosing . Left - 1 px;
+        Width: 1 px;
+        Height: 1 px;
+	FillPattern: nopattern;
+	BorderTopWidth: 0;
+	BorderRightWidth: 0;
+	BorderBottomWidth: 0;
+	BorderLeftWidth: 0;
 	Depth: Enclosing =;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
 		Visibility: 0;
 	END;
 
@@ -3688,15 +3681,27 @@ RULES
 	MarginLeft: 3 px;
 	MarginBottom: 1 px;
 	MarginRight: 3 px;
+	BorderTopWidth: 2 px;
+	BorderLeftWidth: 2 px;
+	BorderBottomWidth: 2 px;
+	BorderRightWidth: 2 px;
+	BorderTopColor: Black;
+	BorderLeftColor: Black;
+	BorderBottomColor: LightGrey2;
+	BorderRightColor: LightGrey2;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderRightStyle: Solid;
+	Background: White;
+	FillPattern: backgroundcolor;
+	ShowBox;
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
 	Depth: Enclosing - 2;
 	LineBreak: No;
 	Adjust: Left;
-#ifndef BLACK_WHITE
-	Background : LightRed4;
-#endif
 	IN Structure_view BEGIN
 		Width: 0;
 		Height: DOC_FONTSIZE;
@@ -3705,6 +3710,10 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
@@ -3712,6 +3721,10 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		Height: Enclosed . Height;
 		Depth: 0;
 		END;	

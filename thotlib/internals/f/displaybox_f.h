@@ -11,16 +11,32 @@ extern void AnimatedBoxDel ( PtrElement element );
 extern void FreeAnimatedBox ( Animated_Cell *current );
 extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
-                              ThotBool selected );
+                              ThotBool selected,
+                              int t,
+                              int b,
+                              int l,
+                              int r );
 extern void DisplayGraph ( PtrBox pBox,
                            int frame,
-                           ThotBool selected );
+                           ThotBool selected,
+                           int t,
+                           int b,
+                           int l,
+                           int r );
 extern void DisplayPolyLine ( PtrBox pBox,
                               int frame,
-                              ThotBool selected );
+                              ThotBool selected,
+                              int t,
+                              int b,
+                              int l,
+                              int r );
 extern void DisplayPath ( PtrBox pBox,
                           int frame,
-                          ThotBool selected );
+                          ThotBool selected,
+                          int t,
+                          int b,
+                          int l,
+                          int r );
 extern void LocateFirstChar ( PtrBox pBox,
                               ThotBool rtl,
                               PtrTextBuffer *adbuff,
@@ -29,11 +45,19 @@ extern ThotBool LocateNextChar ( PtrTextBuffer *adbuff,
                                  int *ind,
                                  ThotBool rtl );
 extern void DisplayBorders ( PtrBox box,
+                             PtrAbstractBox pFrom,
                              int frame,
                              int x,
                              int y,
                              int w,
-                             int h );
+                             int h,
+                             int et,
+                             int eb,
+                             int el,
+                             int er,
+                             ThotBool topdown,
+                             ThotBool first,
+                             ThotBool last );
 extern void DisplayViewBox ( PtrTransform Trans,
                              int Width,
                              int Height );
@@ -67,16 +91,32 @@ extern void AnimatedBoxDel (/* PtrElement element */);
 extern void FreeAnimatedBox (/* Animated_Cell *current */);
 extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
-                                ThotBool selected */);
+                                ThotBool selected,
+                                int t,
+                                int b,
+                                int l,
+                                int r */);
 extern void DisplayGraph (/* PtrBox pBox,
                              int frame,
-                             ThotBool selected */);
+                             ThotBool selected,
+                             int t,
+                             int b,
+                             int l,
+                             int r */);
 extern void DisplayPolyLine (/* PtrBox pBox,
                                 int frame,
-                                ThotBool selected */);
+                                ThotBool selected,
+                                int t,
+                                int b,
+                                int l,
+                                int r */);
 extern void DisplayPath (/* PtrBox pBox,
                             int frame,
-                            ThotBool selected */);
+                            ThotBool selected,
+                            int t,
+                            int b,
+                            int l,
+                            int r */);
 extern void LocateFirstChar (/* PtrBox pBox,
                                 ThotBool rtl,
                                 PtrTextBuffer *adbuff,
@@ -85,11 +125,19 @@ extern ThotBool LocateNextChar (/* PtrTextBuffer *adbuff,
                                    int *ind,
                                    ThotBool rtl */);
 extern void DisplayBorders (/* PtrBox box,
+                               PtrAbstractBox pFrom,
                                int frame,
                                int x,
                                int y,
                                int w,
-                               int h */);
+                               int h,
+                               int et,
+                               int eb,
+                               int el,
+                               int er,
+                               ThotBool topdown,
+                               ThotBool first,
+                               ThotBool last */);
 extern void DisplayViewBox (/* PtrTransform Trans,
                                int Width,
                                int Height */);

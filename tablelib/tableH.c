@@ -780,7 +780,7 @@ printf ("Maximum Widths ...\n");
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
-      if (width != pBox->BxW)
+      /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
@@ -815,7 +815,7 @@ printf ("Minimum Widths ...\n");
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
-      if (width != pBox->BxW)
+      /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
@@ -849,7 +849,7 @@ printf ("Specific Widths ...\n");
 	AnyWidthUpdate = TRUE;
       /* the table width is constrained by the enclosing box */
       table->AbWidth.DimAbRef = table->AbEnclosing;
-      if (width != pBox->BxW)
+      /*if (width != pBox->BxW)*/
 	/* don't pack rows with each cell */
 	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);

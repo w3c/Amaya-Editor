@@ -270,7 +270,6 @@ typedef struct _Box
   ThotBool	  BxContentHeight;	/* Real height is the content height */
   ThotBool	  BxContentWidth;	/* Real width is the content width */
   ThotBool        BxShadow;		/* Characters are showed as '*' */
-  ThotBool        BxFill;	        /* The box has borders or background */
   ThotBool        BxDisplay;	        /* The box has borders or
 					   background */
     

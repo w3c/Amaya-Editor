@@ -1101,6 +1101,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 {
    int                 i, j;
    PtrAbstractBox      f;
+   PtrBox              pBox;
    ThotBool            root;
    PtrDelayedPRule     pDelPR;
    PtrSRule            pRe1;
@@ -1293,57 +1294,57 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Dir:");
 	switch (pAb->AbDirection)
-	       {
-		  case 'L':
-		     fprintf (fileDescriptor, "ltr");
-		     break;
-		  case 'R':
-		     fprintf (fileDescriptor, "rtl");
-		     break;
-	          default:
-		     fprintf (fileDescriptor, "%c", pAb->AbDirection);
-		     break;
-	       }
+	  {
+	  case 'L':
+	    fprintf (fileDescriptor, "ltr");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "rtl");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pAb->AbDirection);
+	    break;
+	  }
 	fprintf (fileDescriptor, " Bidi:");
 	switch (pAb->AbUnicodeBidi)
-	       {
-		  case 'N':
-		     fprintf (fileDescriptor, "normal");
-		     break;
-		  case 'E':
-		     fprintf (fileDescriptor, "embed");
-		     break;
-		  case 'O':
-		     fprintf (fileDescriptor, "override");
-		     break;
-	          default:
-		     fprintf (fileDescriptor, "%c", pAb->AbUnicodeBidi);
-		     break;
-	       }
+	  {
+	  case 'N':
+	    fprintf (fileDescriptor, "normal");
+	    break;
+	  case 'E':
+	    fprintf (fileDescriptor, "embed");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "override");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pAb->AbUnicodeBidi);
+	    break;
+	  }
 	fprintf (fileDescriptor, " Indent:%d", pAb->AbIndent);
 	wrTypeUnit (pAb->AbIndentUnit, fileDescriptor);
 	fprintf (fileDescriptor, " Align:");
 	switch (pAb->AbAdjust)
-	      {
-		 case AlignLeft:
-		    fprintf (fileDescriptor, "left");
-		    break;
-		 case AlignRight:
-		    fprintf (fileDescriptor, "right");
-		    break;
-		 case AlignCenter:
-		    fprintf (fileDescriptor, "center");
-		    break;
-		 case AlignLeftDots:
-		    fprintf (fileDescriptor, "leftDots");
-		    break;
-		 case AlignJustify:
-		    fprintf (fileDescriptor, "justify");
-		    break;
-		 default:
-		    fprintf (fileDescriptor, "AbAdjust ????");
-		    break;
-	      }
+	  {
+	  case AlignLeft:
+	    fprintf (fileDescriptor, "left");
+	    break;
+	  case AlignRight:
+	    fprintf (fileDescriptor, "right");
+	    break;
+	  case AlignCenter:
+	    fprintf (fileDescriptor, "center");
+	    break;
+	  case AlignLeftDots:
+	    fprintf (fileDescriptor, "leftDots");
+	    break;
+	  case AlignJustify:
+	    fprintf (fileDescriptor, "justify");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "AbAdjust ????");
+	    break;
+	  }
 	fprintf (fileDescriptor, " Hyphen:");
 	wrThotBool (pAb->AbHyphenate, fileDescriptor);
 
@@ -1398,40 +1399,58 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Nature:");
 	switch (pAb->AbLeafType)
-	      {
-		 case LtCompound:
-		    fprintf (fileDescriptor, "COMP");
-		    break;
-		 case LtPicture:
-		    fprintf (fileDescriptor, "PICTURE");
-		    for (i = 1; i <= Indent + 6; i++)
-		       fprintf (fileDescriptor, " ");
-		    break;
-		 case LtText:
-		    fprintf (fileDescriptor, "TEXT ");
-		    break;
-		 case LtPolyLine:
-		    fprintf (fileDescriptor, "POLYLINE ");
-		    break;
-		 case LtPath:
-		    fprintf (fileDescriptor, "PATH ");
-		    break;
-		 case LtPageColBreak:
-		    fprintf (fileDescriptor, "PAGE");
-		    break;
-		 case LtSymbol:
-		    fprintf (fileDescriptor, "SYMBOL");
-		    break;
-		 case LtGraphics:
-		    fprintf (fileDescriptor, "GRAPHICS");
-		    break;
-		 case LtReference:
-		    fprintf (fileDescriptor, "REFER");
-		    break;
-		 default:
-		    fprintf (fileDescriptor, "AbLeafType ????");
-		    break;
-	      }
+	  {
+	  case LtCompound:
+	    pBox = pAb->AbBox;
+	    if (pBox->BxType == BoGhost)
+	      fprintf (fileDescriptor, " GHOST");
+	    else if (pBox->BxType == BoFloatGhost)
+	      fprintf (fileDescriptor, " FLOAT_GHOST");
+	    else if (pBox->BxType == BoBlock)
+	      fprintf (fileDescriptor, " BLOCK");
+	    else if (pBox->BxType == BoFloatBlock)
+	      fprintf (fileDescriptor, " FLOAT_BLOCK");
+	    else if (pBox->BxType == BoTable)
+	      fprintf (fileDescriptor, " TABLE");
+	    else if (pBox->BxType == BoColumn)
+	      fprintf (fileDescriptor, " COLUMN");
+	    else if (pBox->BxType == BoRow)
+	      fprintf (fileDescriptor, " ROW");
+	    else if (pBox->BxType == BoCell)
+	      fprintf (fileDescriptor, " CELL");
+	    else
+	      fprintf (fileDescriptor, " COMP");
+	    break;
+	  case LtPicture:
+	    fprintf (fileDescriptor, "PICTURE");
+	    for (i = 1; i <= Indent + 6; i++)
+	      fprintf (fileDescriptor, " ");
+	    break;
+	  case LtText:
+	    fprintf (fileDescriptor, "TEXT ");
+	    break;
+	  case LtPolyLine:
+	    fprintf (fileDescriptor, "POLYLINE ");
+	    break;
+	  case LtPath:
+	    fprintf (fileDescriptor, "PATH ");
+	    break;
+	  case LtPageColBreak:
+	    fprintf (fileDescriptor, "PAGE");
+	    break;
+	  case LtSymbol:
+	    fprintf (fileDescriptor, "SYMBOL");
+	    break;
+	  case LtGraphics:
+	    fprintf (fileDescriptor, "GRAPHICS");
+	    break;
+	  case LtReference:
+	    fprintf (fileDescriptor, "REFER");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "AbLeafType ????");
+	    break;
+	  }
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1741,7 +1760,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
    ThotBool            loop;
    BoxRelation        *pRe1;
    PictInfo           *image;
-   int                 i, j;
+   int                 i, j, t, b, l, r;
 
    if (pAb->AbBox != NULL)
      {
@@ -1834,7 +1853,22 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     else
 		fprintf (fileDescriptor, " Content-Height:");
 	     wrnumber (pBox->BxRuleHeigth, fileDescriptor);
-
+	     /* display extra margins */
+	     GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+	     if (t || b || l || r)
+	       {
+		 fprintf (fileDescriptor, "\n");
+		 for (j = 1; j <= Indent + 4; j++)
+		   fprintf (fileDescriptor, " ");
+		 fprintf (fileDescriptor, "Ghost-Margins Top:");
+		 wrnumber (t, fileDescriptor);
+		 fprintf (fileDescriptor, " Left:");
+		 wrnumber (l, fileDescriptor);
+		 fprintf (fileDescriptor, " Bottom:");
+		 wrnumber (b, fileDescriptor);
+		 fprintf (fileDescriptor, " Right:");
+		 wrnumber (r, fileDescriptor);
+	       }
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
@@ -1874,7 +1908,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)
 		fprintf (fileDescriptor, " ");
-	     fprintf (fileDescriptor, " Underline:");
+	     fprintf (fileDescriptor, "Underline:");
 	     switch (pBox->BxUnderline)
 	       {
 	       case 0:
@@ -1902,8 +1936,6 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	       fprintf (fileDescriptor, "SELECTED ");
 	     if (pBox->BxDisplay)
 	       fprintf (fileDescriptor, "Displayed:Y ");
-	     if (pBox->BxFill)
-	       fprintf (fileDescriptor, "Filled:Y ");
 	     if (pBox->BxShadow)
 	       fprintf (fileDescriptor, "Shadow:Y ");
 	     if (pAb->AbOnPageBreak)

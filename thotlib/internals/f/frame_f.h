@@ -20,12 +20,16 @@ extern void DefRegion ( int frame,
                         int xf,
                         int yf );
 extern void TtaRefresh ( void );
-extern void DrawFilledBox ( PtrAbstractBox pAb,
+extern void DrawFilledBox ( PtrBox pBox,
+                            PtrAbstractBox pFrom,
                             int frame,
                             int xmin,
                             int xmax,
                             int ymin,
-                            int ymax );
+                            int ymax,
+                            ThotBool first,
+                            ThotBool last,
+                            ThotBool topdown );
 extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                      int frame,
                                      int *lowerx,
@@ -65,12 +69,16 @@ extern void DefRegion (/* int frame,
                           int xf,
                           int yf */);
 extern void TtaRefresh (/* void */);
-extern void DrawFilledBox (/* PtrAbstractBox pAb,
+extern void DrawFilledBox (/* PtrBox pBox,
+                              PtrAbstractBox pFrom,
                               int frame,
                               int xmin,
                               int xmax,
                               int ymin,
-                              int ymax */);
+                              int ymax,
+                              ThotBool first,
+                              ThotBool last,
+                              ThotBool topdown */);
 extern void GetBoxTransformedCoord (/* PtrAbstractBox pAbSeeked,
                                        int frame,
                                        int *lowerx,

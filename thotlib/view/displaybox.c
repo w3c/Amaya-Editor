@@ -25,6 +25,8 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "picture_tv.h" 
+
+#include "boxmoves_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "displayselect_f.h"
@@ -90,9 +92,11 @@ static int GetLineWeight (PtrAbstractBox pAb, int frame)
 
 /*----------------------------------------------------------------------
   DisplayImage displays an image in the frame.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
 static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
-			  int ymin, int ymax, ThotBool selected)
+			  int ymin, int ymax, ThotBool selected,
+			  int t, int b, int l, int r)
 {
   ViewFrame          *pFrame;
   int                 xd, yd, x, y;
@@ -107,9 +111,9 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
            pBox->BxLPadding - x;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
            pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
@@ -119,9 +123,9 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	  xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
                pBox->BxLPadding - x;
-	  yd = pBox->BxYOrg + pBox->BxHorizRef - y;
+	  yd = pBox->BxYOrg + t + pBox->BxHorizRef - y;
 	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc,
 		      pBox->BxAbstractBox->AbForeground);
 	}
@@ -236,52 +240,51 @@ void FreeAnimatedBox (Animated_Cell *current)
   ----------------------------------------------------------------------*/
 ThotBool WinFontExist (char *fontname)
 {
-	static unsigned char Exists = 'D';
-	char filename [MAX_LENGTH];
+  static unsigned char Exists = 'D';
+  char filename [MAX_LENGTH];
 
-	if (Exists == 'T')
-		return TRUE;
-	else if (Exists == 'F')
-		return FALSE;
-	else
+  if (Exists == 'T')
+    return TRUE;
+  else if (Exists == 'F')
+    return FALSE;
+  else
+    {
+      
+      GetWindowsDirectory (filename , 1024);  
+      strcat (filename, "\\fonts\\"); 
+      strcat (filename, fontname); 
+      if (TtaFileExist (filename))
 	{
-		
-	  GetWindowsDirectory (filename , 1024);  
-	  strcat (filename, "\\fonts\\"); 
-	  strcat (filename, fontname); 
-	  if (TtaFileExist (filename))
-		{
-			Exists = 'T';
-			return TRUE;
-		}
-		else
-		{
-			Exists = 'F';
-			return FALSE;
-		}
-
+	  Exists = 'T';
+	  return TRUE;
 	}
+      else
+	{
+	  Exists = 'F';
+	  return FALSE;
+	}
+      
+    }
 }
 #endif /*_WINDOWS*/
 
 /*----------------------------------------------------------------------
   DisplaySymbol displays a mathematical symbols box enclosed in
   a frame. The glyphs are drawn with the Greek font and lines.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
-{ 
+static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
+			   int t, int b, int l, int r)
+{
   PtrFont             font;
   ViewFrame          *pFrame;
-  ThotBool            withbackground;
   int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
   ThotBool            StixExist;
 
- 
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
-  withbackground = (pBox->BxFill && pBox->BxDisplay);
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
@@ -307,9 +310,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
       if (font != NULL)
 	{
 	  /* Position in the frame */
-	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	  xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
 	    pBox->BxLPadding - pFrame->FrXOrg;
-	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	  yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	    pBox->BxTPadding - pFrame->FrYOrg;
 	  
 	  /* box sizes have to be positive */
@@ -320,9 +323,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	  if (height < 0)
 	    height = 0;
 	  
-	  if (withbackground)
-	    /* display the background selection */
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, 0, bg, 2);
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
@@ -501,8 +501,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 /*----------------------------------------------------------------------
   DisplayEmptyBox shows an empty box but formatted and placed.
   A specific background is drawn in the box area.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected)
+void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
+		      int t, int b, int l, int r)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -514,8 +516,10 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected)
   pAb = pBox->BxAbstractBox;
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder
+	+ pBox->BxLPadding - pFrame->FrXOrg;
+      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder
+	+ pBox->BxTPadding - pFrame->FrYOrg;
       /* box sizes have to be positive */
       width = pBox->BxW;
       if (width < 0)
@@ -559,8 +563,10 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected)
 /*----------------------------------------------------------------------
   DisplayGraph display a graphic.
   The parameter selected is TRUE when the graphic is selected.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
+void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
+		    int t, int b, int l, int r)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -578,9 +584,9 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + (float) (pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + (float) (pBox->BxLMargin + l + pBox->BxLBorder +
 	pBox->BxLPadding - pFrame->FrXOrg);
-      yd = pBox->BxYOrg + (float) (pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + (float) (pBox->BxTMargin + t + pBox->BxTBorder +
 	pBox->BxTPadding - pFrame->FrYOrg);
       width = pBox->BxW;
       height = pBox->BxH;
@@ -804,7 +810,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
   DisplayGraph display a graphic.
   The parameter selected is TRUE when the graphic is selected.
   ----------------------------------------------------------------------*/
-void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
+void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
+		    int t, int b, int l, int r)
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -822,9 +829,9 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
 	pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	pBox->BxTPadding - pFrame->FrYOrg;
       width = pBox->BxW;
       height = pBox->BxH;
@@ -1128,8 +1135,10 @@ static void PolyTransform (PtrBox pBox, int frame)
 /*----------------------------------------------------------------------
   DisplayPolyLine displays a polyline.
   The parameter selected is TRUE when the polyline is selected.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
+void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
+		      int t, int b, int l, int r)
 {
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
@@ -1152,9 +1161,9 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
 	pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	pBox->BxTPadding - pFrame->FrYOrg;
       
       /* box sizes have to be positive */
@@ -1259,8 +1268,10 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
 /*----------------------------------------------------------------------
   DisplayPath displays a path.
   The parameter selected is TRUE when the polyline is selected.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
-void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
+void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
+		  int t, int b, int l, int r)
 {
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
@@ -1281,9 +1292,9 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
       bg = pAb->AbBackground;
       pat = pAb->AbFillPattern;
       fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      xd = pBox->BxXOrg + pBox->BxLMargin  + l + pBox->BxLBorder +
 	pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	pBox->BxTPadding - pFrame->FrYOrg;
       
       /* Style and thickness of the line */
@@ -1405,9 +1416,11 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
   the space sizes to ajust line length to the size of the frame.
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
+  t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
 static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
-				  ThotBool selected)
+				  ThotBool selected,
+				  int t, int b, int l, int r)
 {
   PtrTextBuffer       adbuff;
   ViewFrame          *pFrame;
@@ -1433,7 +1446,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 width, org;
   int                 left, right;
   ThotBool            blockbegin;
-  ThotBool            withbackground;
   ThotBool            hyphen, rtl;
   CHAR_T              prevChar, nextChar;
 
@@ -1484,15 +1496,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (!strcmp(pAb->AbElement->ElStructSchema->SsName, "SVG") &&
       FrameTable[frame].FrView == 1)
     {
-    bg = pAb->AbForeground;
-    fg = pAb->AbBackground;
-    withbackground = FALSE;
+      bg = pAb->AbForeground;
+      fg = pAb->AbBackground;
     }
   else
     {
-    fg = pAb->AbForeground;
-    bg = pAb->AbBackground;
-    withbackground = (pAb->AbBox->BxFill && pAb->AbBox->BxDisplay);
+      fg = pAb->AbForeground;
+      bg = pAb->AbBackground;
     }
   pFrame = &ViewFrameTable[frame - 1];
   left = 0;
@@ -1500,10 +1510,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
-      x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+      x = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
 	  pBox->BxLPadding - pFrame->FrXOrg;
-      y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      y = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
+      /* the base line already includes top margins, top borders, etc. */
       y1 = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
       /* no previous spaces */
       bl = 0;
@@ -1614,14 +1625,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    indmax = adbuff->BuLength - 1;
 		}
 	    } 
-	  
-	  /* Do we need to draw a background */
-	  if (withbackground)
-	    DrawRectangle (frame, 0, 0,
-			   x - pBox->BxLPadding, y - pBox->BxTPadding,
-			   width + pBox->BxLPadding + pBox->BxRPadding,
-			   pBox->BxHeight /*BoxFontHeight (font)*/ + pBox->BxTPadding + pBox->BxBPadding,
-			   0, bg, 2);
 	}
 
       /* check if the box is selected */
@@ -2016,7 +2019,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       if (pBox->BxEndOfBloc > 0)
 	{
 	  /* fill the end of the line with dots */
-	  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+	  x = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
 	    pBox->BxLPadding;
 	  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	  DrawPoints (frame, pBox->BxXOrg + width - pFrame->FrXOrg, y,
@@ -2035,33 +2038,53 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 
 /*----------------------------------------------------------------------
   DisplayBorders displays the box borders.
+  The parameter pForm points the box that generates the border or fill.
   Parameters x, y, w, h give the clipping region.
+  e t, eb, el, and er give top, bottom, left and right extra margins.
+  Parameters first and last are TRUE when the box pBox is respectively
+  at the first position and/or the last position of pFrom (they must be
+  TRUE for pFrom itself).
   ----------------------------------------------------------------------*/
-void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h) 
+void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
+		     int x, int y, int w, int h,
+		     int et, int eb, int el, int er,
+		     ThotBool topdown, ThotBool first, ThotBool last) 
 {
-  PtrAbstractBox      pAb;
+  PtrBox              from;
   int                 color;
   int                 t, b, l, r, pos, dim;
   int                 xFrame, yFrame;
 
-  pAb = box->BxAbstractBox;
+  if (pFrom == NULL || pFrom->AbBox == NULL)
+    return;
+
+  from = pFrom->AbBox;
   /* position in the frame */
   xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
   yFrame = box->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
   /* part of the top, left, bottom and right border which are visible */
-  t = yFrame + box->BxTMargin + box->BxTBorder - y;
-  l = xFrame + box->BxLMargin + box->BxLBorder - x;
-  b = y + h - yFrame  - box->BxHeight + box->BxBMargin + box->BxBBorder;
-  r = x + w - xFrame  - box->BxWidth + box->BxRMargin + box->BxRBorder;
-  if (box->BxTBorder && pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 && t > 0)
+  t = yFrame + et + from->BxTBorder - y;
+  l = xFrame + el + from->BxLBorder - x;
+  b = y + h - yFrame - box->BxHeight + eb + from->BxBBorder;
+  r = x + w - xFrame - box->BxWidth + er + from->BxRBorder;
+  if (topdown && !first)
+    t = 0; /* no top border */
+  if (topdown && !last)
+    b = 0; /* no bottom border */
+  if (!topdown && !first)
+    l = 0; /* no left border */
+  if (!topdown && !last)
+    r = 0; /* no right border */
+
+  if (from->BxTBorder && pFrom->AbTopStyle > 2 && pFrom->AbTopBColor != -2 && t > 0)
     {
       /* the top border is visible */
-      if (pAb->AbTopBColor == -1)
-	color = pAb->AbForeground;
+      if (pFrom->AbTopBColor == -1)
+	color = pFrom->AbForeground;
       else
-	color = pAb->AbTopBColor;
+	color = pFrom->AbTopBColor;
       /* the top border is visible */
-      switch (pAb->AbTopStyle)
+      switch (pFrom->AbTopStyle)
 	{
 	case 10: /* outset */
 	  break;
@@ -2074,7 +2097,7 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	case 6: /* double */
 	  /* top line */
 	  DrawHorizontalLine (frame, 1, 5,
-			      x, yFrame + box->BxTMargin,
+			      x, yFrame + from->BxTMargin + t,
 			      w, 1,
 			      0, color);
 	  /* the width of the bottom line depends on the visibility of
@@ -2091,27 +2114,27 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	  /* bottom line */
 	  if (t < h)
 	    DrawHorizontalLine (frame, 1, 5,
-				pos, yFrame + box->BxTMargin + box->BxTBorder,
+				pos, yFrame + from->BxTMargin  + t + from->BxTBorder,
 				dim, 1,
 				2, color);
 	  break;
 	default:
-	  DrawHorizontalLine (frame, t, pAb->AbTopStyle,
+	  DrawHorizontalLine (frame, t, pFrom->AbTopStyle,
 			      x, y,
 			      w, t,
 			      0, color);
 	  break;
 	}
     }
-  if (box->BxLBorder && pAb->AbLeftStyle > 2 &&
-      pAb->AbLeftBColor != -2 && l > 0)
+  if (from->BxLBorder && pFrom->AbLeftStyle > 2 &&
+      pFrom->AbLeftBColor != -2 && l > 0)
     {
-      if (pAb->AbLeftBColor == -1)
-	color = pAb->AbForeground;
+      if (pFrom->AbLeftBColor == -1)
+	color = pFrom->AbForeground;
       else
-	color = pAb->AbLeftBColor;
+	color = pFrom->AbLeftBColor;
       /* the left border is visible */
-      switch (pAb->AbTopStyle)
+      switch (pFrom->AbTopStyle)
 	{
 	case 10: /* outset */
 	  break;
@@ -2124,7 +2147,7 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	case 6: /* double */
 	  /* left line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + box->BxLMargin, y,
+			    xFrame + from->BxLMargin + l, y,
 			    1, h,
 			    0, color);
 	  /* the width of the right line depends on the visibility of
@@ -2140,27 +2163,27 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	    dim -= b;
 	  /* rigth line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + box->BxLMargin + box->BxLBorder, pos,
+			    xFrame + from->BxLMargin  + l+ from->BxLBorder, pos,
 			    1, dim,
 			    2, color);
 	  break;
 	default:
-	  DrawVerticalLine (frame, l, pAb->AbLeftStyle,
+	  DrawVerticalLine (frame, l, pFrom->AbLeftStyle,
 			    x, y,
 			    l, h,
 			    0, color);
 	  break;
 	}
     }
-  if (box->BxBBorder && pAb->AbBottomStyle > 2 &&
-      pAb->AbBottomBColor != -2 && b > 0)
+  if (from->BxBBorder && pFrom->AbBottomStyle > 2 &&
+      pFrom->AbBottomBColor != -2 && b > 0)
     {
-      if (pAb->AbBottomBColor == -1)
-	color = pAb->AbForeground;
+      if (pFrom->AbBottomBColor == -1)
+	color = pFrom->AbForeground;
       else
-	color = pAb->AbBottomBColor;
+	color = pFrom->AbBottomBColor;
       /* the bottom border is visible */
-      switch (pAb->AbBottomStyle)
+      switch (pFrom->AbBottomStyle)
 	{
 	case 10: /* outset */
 	  break;
@@ -2185,35 +2208,33 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	    dim -= r;
 	  /* bottom line */
 	  DrawHorizontalLine (frame, 1, 5,
-			      pos, yFrame + box->BxHeight - box->BxBMargin -
-			                                    box->BxBBorder,
+			      pos, yFrame + box->BxHeight - eb - from->BxBBorder,
 			      dim, 1,
 			      0, color);
 	  /* bottom line */
 	  if (b < h)
 	  DrawHorizontalLine (frame, 1, 5,
-			      x, yFrame + box->BxHeight - box->BxBMargin,
+			      x, yFrame + box->BxHeight - eb,
 			      w, 1,
 			      2, color);
 	  break;
 	default:
-	  DrawHorizontalLine (frame, b, pAb->AbBottomStyle,
-			      x, yFrame + box->BxHeight - box->BxBMargin -
-			                                  box->BxBBorder,
+	  DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
+			      x, yFrame + box->BxHeight - eb - from->BxBBorder,
 			      w, b,
 			      2, color);
 	  break;
 	}
     }
-  if (box->BxRBorder && pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
+  if (from->BxRBorder && pFrom->AbRightStyle > 2 && pFrom->AbRightBColor != -2 &&
       r > 0)
     {
-      if (pAb->AbRightBColor == -1)
-	color = pAb->AbForeground;
+      if (pFrom->AbRightBColor == -1)
+	color = pFrom->AbForeground;
       else
-	color = pAb->AbRightBColor;
+	color = pFrom->AbRightBColor;
       /* the right border is visible */
-      switch (pAb->AbRightStyle)
+      switch (pFrom->AbRightStyle)
 	{
 	case 10: /* outset */
 	  break;
@@ -2237,20 +2258,18 @@ void DisplayBorders (PtrBox box, int frame, int x, int y, int w, int h)
 	    dim -= b;
 	  /* left line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + box->BxWidth - box->BxRMargin -
-			                            box->BxRBorder, pos,
-			    1, dim,
+			    xFrame + box->BxWidth - er - from->BxRBorder,
+			    pos, 1, dim,
 			    0, color);
 	  /* rigth line */
 	  DrawVerticalLine (frame, 1, 5,
-			    xFrame + box->BxWidth - box->BxRMargin, y,
+			    xFrame + box->BxWidth - er, y,
 			    1, h,
 			    2, color);
 	  break;
 	default:
-	  DrawVerticalLine (frame, r, pAb->AbRightStyle,
-			    xFrame + box->BxWidth - box->BxRMargin -
-			                            box->BxRBorder, y,
+	  DrawVerticalLine (frame, r, pFrom->AbRightStyle,
+			    xFrame + box->BxWidth - er - from->BxRBorder, y,
 			    r, h,
 			    2, color);
 	  break;
@@ -2322,16 +2341,18 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   PtrAbstractBox     pAb;
   int                x, y;
   int                xd, yd, width, height;
+  int                t, b, l, r;
   ThotBool           selected;
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
+  GetExtraMargins (box, NULL, &t, &b, &l, &r);
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
-  xd = box->BxXOrg + box->BxLMargin;
-  yd = box->BxYOrg + box->BxTMargin;
-  width = box->BxWidth - box->BxLMargin - box->BxRMargin;
-  height = box->BxHeight - box->BxTMargin - box->BxBMargin;
+  xd = box->BxXOrg + box->BxLMargin + l;
+  yd = box->BxYOrg + box->BxTMargin + t;
+  width = box->BxWidth - box->BxLMargin - box->BxRMargin - l - r;
+  height = box->BxHeight - box->BxTMargin - box->BxBMargin - t - b;
 
   if (Printing)
     {
@@ -2382,12 +2403,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
-  if (FrameTable[frame].FrView == 1 &&
-       !Printing)
+  if (FrameTable[frame].FrView == 1 && !Printing)
     {
-
       /* box->VisibleModification = TRUE; */
-
       if ((pAb->AbLeafType == LtPolyLine ||
 	  /* pAb->AbLeafType == LtGraphics || */
 	  pAb->AbLeafType == LtPath) &&
@@ -2404,12 +2422,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	  else
 	    {      
 	      if (glIsList (box->DisplayList))
-		{
-		  glDeleteLists (box->DisplayList, 1);
-		}
+		glDeleteLists (box->DisplayList, 1);
 	      box->DisplayList = glGenLists (1);
-	      glNewList (box->DisplayList,
-			GL_COMPILE_AND_EXECUTE);
+	      glNewList (box->DisplayList, GL_COMPILE_AND_EXECUTE);
 	    }
 	}
       GL_SetFillOpacity (pAb->AbFillOpacity);
@@ -2435,7 +2450,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		  box == pFrame->FrSelectionEnd.VsBox);
       
       if (pAb->AbLeafType == LtSymbol)
-	DisplayEmptyBox (box, frame, selected);
+	DisplayEmptyBox (box, frame, selected, t, b, l, r);
       else if (pAb->AbLeafType != LtPolyLine &&
 	       pAb->AbLeafType != LtGraphics &&
 	       pAb->AbLeafType != LtPath)
@@ -2448,39 +2463,43 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     }
   else if (pAb->AbLeafType == LtText)
     /* Display a Text box */
-    DisplayJustifiedText (box, mbox, frame, selected);
+    DisplayJustifiedText (box, mbox, frame, selected, t, b, l, r);
   else if (box->BxType == BoPicture || pAb->AbLeafType == LtPicture)
     /* Picture */
-    DisplayImage (box, frame, xmin, xmax, ymin, ymax, selected);
+    DisplayImage (box, frame, xmin, xmax, ymin, ymax, selected,
+		  t, b, l, r);
   else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, selected);
+      DisplayEmptyBox (box, frame, selected, t, b, l, r);
     else
-      DisplaySymbol (box, frame, selected);
+      DisplaySymbol (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, selected);
+      DisplayEmptyBox (box, frame, selected, t, b, l, r);
     else
-      DisplayGraph (box, frame, selected);
+      DisplayGraph (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DisplayPolyLine (box, frame, selected);
+    DisplayPolyLine (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPath)
     /* Path */
-    DisplayPath (box, frame, selected);
+    DisplayPath (box, frame, selected, t, b, l, r);
 
 
   /* then display borders */
-  if (yd + height >= ymin
-      && yd <= ymax
-      && xd + width >= xmin
-      && xd <= xmax)
-    DisplayBorders (box, frame,
-		    xd - x, yd - y,
-		    width, height);
-
+  if (box->BxDisplay &&
+      yd + height >= ymin && yd <= ymax &&
+      xd + width >= xmin && xd <= xmax)
+    {
+      l += box->BxLMargin;
+      b += box->BxBMargin;
+      t += box->BxTMargin;
+      r += box->BxRMargin;
+      DisplayBorders (box, pAb, frame, xd - x, yd - y, width, height,
+		      t, b, l, r, TRUE, TRUE, TRUE);
+    }
 #ifdef _GL
   if (Printing)
     FinishPrintBox ();

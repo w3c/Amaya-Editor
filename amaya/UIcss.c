@@ -143,10 +143,7 @@ void LoadUserStyleSheet (Document doc)
   buffer = NULL;
   ptr = UserCSS;
   css = SearchCSS (doc, ptr, NULL, &pInfo);
-  if (css && pInfo)
-    /* already applied */
-    return;
-  else if (css == NULL)
+  if (css == NULL)
     {
       /* store a copy of the local CSS in .amaya/0 */
       ptr = GetLocalPath (0, UserCSS);
@@ -155,8 +152,11 @@ void LoadUserStyleSheet (Document doc)
       css = AddCSS (0, doc, CSS_USER_STYLE, CSS_ALL, UserCSS, ptr, NULL);
       TtaFreeMemory (ptr);
     }
-  else
+  else if (pInfo == NULL)
     AddInfoCSS (doc, css, CSS_USER_STYLE, CSS_ALL, NULL);
+  else if (pInfo->PiSchemas)
+    /* already applied */
+    return;
 
   ptr = css->localName;
   if (ptr[0] != EOS  && TtaFileExist (ptr))

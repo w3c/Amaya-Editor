@@ -3276,10 +3276,9 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
-
-	  if (url)
-	    TtaFreeMemory (url);
 	}
+      if (url)
+	TtaFreeMemory (url);
     }
   return (cssRule);
 }

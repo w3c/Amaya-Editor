@@ -25,6 +25,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 
+#include "boxmoves_f.h"
 #include "displayselect_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
@@ -48,6 +49,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
   PtrPathSeg          pPa;
   int                 leftX, middleX, rightX;
   int                 topY, middleY, bottomY;
+  int                 t, b, l, r;
   int                 thick, halfThick;
   int                 i, j, n;
   int                 x, y;
@@ -64,8 +66,11 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
       halfThick = thick / 2;
 
       /* selection points */
-      leftX = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
-      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+      leftX = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder
+	+ pBox->BxLPadding - pFrame->FrXOrg;
+      topY = t + pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder
+	+ pBox->BxTPadding - pFrame->FrYOrg;
       bottomY = topY + pBox->BxH - thick;
       rightX = leftX + pBox->BxW - thick;
       middleX = leftX + (pBox->BxW / 2) - halfThick;
@@ -527,8 +532,8 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   int                 width, height;
-  int                 topY, h;
-  int                 col, l;
+  int                 topY, h, col;
+  int                 t, b, l, r;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (leftX > rightX)
@@ -562,7 +567,8 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
 	      - pFrame->FrXOrg;
       /* don't take into account margins and borders */
-      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+      GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+      topY = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
 	     pBox->BxTPadding - pFrame->FrYOrg;
       h = pBox->BxH;
       if (topY > height)
@@ -570,7 +576,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       else if (topY + h > height)
 	h = height - topY;
       /* don't take into account margins and borders */
-      l = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      l = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       leftX = leftX + l - pFrame->FrXOrg;
       if (leftX > width)
 	width = 0;
@@ -589,6 +595,3 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, col, 2);
     }
 }
-
-
-
