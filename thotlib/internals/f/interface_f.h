@@ -5,25 +5,24 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-#ifndef _WINDOWS
+
 extern int TtaXLookupString ( ThotKeyEvent *event,
                               char *buffer,
                               int nbytes,
                               KeySym *keysym,
                               ThotComposeStatus *status );
-#endif /* !_WINDOWS */
 extern void TtaInstallMultiKey ( void );
-#ifndef _WINDOWS
 extern int TtaGetIsoKeysym ( ThotEvent * event,
                              KeySym keysym );
-#endif /* !_WINDOWS */
 extern int TtaHandleMultiKeyEvent ( ThotEvent * event );
 extern void TtaSetMainLoop ( ExternalInitMainLoop init,
                              ExternalMainLoop loop,
                              ExternalFetchEvent fetch,
                              ExternalFetchAvailableEvent fetchavail,
-			     ExternalLockMainLoop lock,
-			     ExternalUnlockMainLoop unlock );
+                             ExternalLockMainLoop lock,
+                             ExternalUnlockMainLoop unlock );
+extern void TtaLockMainLoop ( void );
+extern void TtaUnlockMainLoop ( void );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
 extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern boolean TtaFetchOneAvailableEvent ( ThotEvent *ev );
@@ -58,8 +57,10 @@ extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
                                ExternalMainLoop loop,
                                ExternalFetchEvent fetch,
                                ExternalFetchAvailableEvent fetchavail,
-			       ExternalLockMainLoop lock,
-			       ExternalUnlockMainLoop unlock */);
+                               ExternalLockMainLoop lock,
+                               ExternalUnlockMainLoop unlock */);
+extern void TtaLockMainLoop (/* void */);
+extern void TtaUnlockMainLoop (/* void */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
 extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
 extern boolean TtaFetchOneAvailableEvent (/* ThotEvent *ev */);

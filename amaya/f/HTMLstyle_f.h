@@ -16,10 +16,6 @@ extern void GetHTMLStyleString ( Element el,
                                  Document doc,
                                  char *buf,
                                  int *len );
-extern void ParseHTMLSpecificStyle ( Element elem,
-                                     char *cssRule,
-                                     Document doc,
-                                     boolean destroy );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
@@ -29,6 +25,10 @@ extern char *UpdateCSSBackgroundImage ( char *oldpath,
                                         char *imgpath,
                                         char *styleString );
 extern char *GetCSSBackgroundURL ( char *styleString );
+extern void ParseHTMLSpecificStyle ( Element elem,
+                                     char *cssRule,
+                                     Document doc,
+                                     boolean destroy );
 extern int EvaluateClassContext ( Element el,
                                   char *class,
                                   char *selector,
@@ -85,10 +85,6 @@ extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
                                    char *buf,
                                    int *len */);
-extern void ParseHTMLSpecificStyle (/* Element elem,
-                                       char *cssRule,
-                                       Document doc,
-                                       boolean destroy */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,
@@ -98,6 +94,10 @@ extern char *UpdateCSSBackgroundImage (/* char *oldpath,
                                           char *imgpath,
                                           char *styleString */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
+extern void ParseHTMLSpecificStyle (/* Element elem,
+                                       char *cssRule,
+                                       Document doc,
+                                       boolean destroy */);
 extern int EvaluateClassContext (/* Element el,
                                     char *class,
                                     char *selector,

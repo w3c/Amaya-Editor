@@ -24,6 +24,7 @@ extern void TtaAddElementToSelection ( Document document,
 extern void TtaSelectInterval ( void );
 extern void TtaUnselect ( Document document );
 extern void TtaSetSelectionMode ( boolean withMenu );
+extern boolean TtaIsSelectionEmpty ( void );
 extern void TtaGiveFirstSelectedElement ( Document document,
                                           Element * selectedElement,
                                           int *firstCharacter,
@@ -57,6 +58,7 @@ extern void TtaAddElementToSelection (/* Document document,
 extern void TtaSelectInterval (/* void */);
 extern void TtaUnselect (/* Document document */);
 extern void TtaSetSelectionMode (/* boolean withMenu */);
+extern boolean TtaIsSelectionEmpty (/* void */);
 extern void TtaGiveFirstSelectedElement (/* Document document,
                                             Element * selectedElement,
                                             int *firstCharacter,

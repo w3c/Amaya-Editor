@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void NewPictInfo ( PtrAbstractBox ppav,
+extern void NewPictInfo ( PtrAbstractBox pAb,
                           char *filename,
                           int imagetype );
 extern void FreePictInfo ( int *desc );
@@ -15,7 +15,7 @@ extern void CopyPictInfo ( int *Imdcopie,
 
 #else /* __STDC__ */
 
-extern void NewPictInfo (/* PtrAbstractBox ppav,
+extern void NewPictInfo (/* PtrAbstractBox pAb,
                             char *filename,
                             int imagetype */);
 extern void FreePictInfo (/* int *desc */);

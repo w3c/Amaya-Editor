@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean DeleteMap ( NotifyElement * event );
 extern void CallbackImage ( int ref,
                             int typedata,
                             char *data );
@@ -32,6 +33,7 @@ extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
 
+extern boolean DeleteMap (/* NotifyElement * event */);
 extern void CallbackImage (/* int ref,
                               int typedata,
                               char *data */);

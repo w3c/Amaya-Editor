@@ -20,6 +20,7 @@ extern void SetArrowButton ( Document document,
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
+extern void SetBrowserEditor ( Document document );
 extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -61,7 +62,6 @@ extern void ShowLinks ( Document document,
                         View view );
 extern void ShowToC ( Document document,
                       View view );
-extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
@@ -80,9 +80,9 @@ extern Document GetHTMLDocument ( const char *documentPath,
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
-extern int  RestoreOneAmayaDoc (Document doc,
-				char *tempdoc,
-				char *docname);
+extern int RestoreOneAmayaDoc ( Document doc,
+                                char *tempdoc,
+                                char *docname );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
@@ -126,6 +126,8 @@ extern void HelpMakeBook ( Document document,
                            View view );
 extern void HelpConfigure ( Document document,
                             View view );
+extern void HelpParseErrors ( Document doc,
+                              View view );
 extern void AmayaClose ( Document document,
                          View view );
 
@@ -145,6 +147,7 @@ extern void SetArrowButton (/* Document document,
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
 extern void SetStopButton (/* Document document */);
+extern void SetBrowserEditor (/* Document document */);
 extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
@@ -186,7 +189,6 @@ extern void ShowLinks (/* Document document,
                           View view */);
 extern void ShowToC (/* Document document,
                         View view */);
-extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
@@ -205,9 +207,9 @@ extern Document GetHTMLDocument (/* const char *documentPath,
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
-extern int  RestoreOneAmayaDoc (/* Document doc,
-				   char *tempdoc,
-				   char *docname */);
+extern int RestoreOneAmayaDoc (/* Document doc,
+                                  char *tempdoc,
+                                  char *docname */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);
@@ -251,6 +253,8 @@ extern void HelpMakeBook (/* Document document,
                              View view */);
 extern void HelpConfigure (/* Document document,
                               View view */);
+extern void HelpParseErrors (/* Document doc,
+                                View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
 

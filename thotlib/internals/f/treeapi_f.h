@@ -118,6 +118,10 @@ extern Document TtaGetCopiedDocument ( void );
 extern Element TtaSearchTypedElement ( ElementType searchedType,
                                        SearchDomain scope,
                                        Element element );
+extern Element TtaSearchTypedElementInTree ( ElementType searchedType,
+                                             SearchDomain scope,
+                                             Element parent,
+                                             Element element );
 extern Element TtaSearchElementByLabel ( char *searchedLabel,
                                          Element element );
 extern Element TtaSearchEmptyElement ( SearchDomain scope,
@@ -240,6 +244,10 @@ extern Document TtaGetCopiedDocument (/* void */);
 extern Element TtaSearchTypedElement (/* ElementType searchedType,
                                          SearchDomain scope,
                                          Element element */);
+extern Element TtaSearchTypedElementInTree (/* ElementType searchedType,
+                                               SearchDomain scope,
+                                               Element parent,
+                                               Element element */);
 extern Element TtaSearchElementByLabel (/* char *searchedLabel,
                                            Element element */);
 extern Element TtaSearchEmptyElement (/* SearchDomain scope,

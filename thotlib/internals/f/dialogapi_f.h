@@ -9,7 +9,7 @@
 extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
 extern void TtaInitDialogue ( char *server,
-                               ThotAppContext * app_context,
+                              ThotAppContext * app_context,
                               Display ** Dp );
 extern void TtaInitDialogueTranslations ( ThotTranslations translations );
 extern void TtaChangeDialogueFonts ( char *menufont,

@@ -16,8 +16,8 @@ extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
 extern void NewPosition ( PtrAbstractBox pAb,
-                          int deltaX,
-                          int deltaY,
+                          int X,
+                          int Y,
                           int frame,
                           boolean display );
 extern void NewDimension ( PtrAbstractBox pAb,
@@ -99,8 +99,8 @@ extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
 extern PtrAbstractBox AbsBoxOfEl (/* PtrElement pEl,
                                      int view */);
 extern void NewPosition (/* PtrAbstractBox pAb,
-                            int deltaX,
-                            int deltaY,
+                            int X,
+                            int Y,
                             int frame,
                             boolean display */);
 extern void NewDimension (/* PtrAbstractBox pAb,

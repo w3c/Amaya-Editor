@@ -26,8 +26,8 @@ extern void AttachAttrWithValue ( PtrElement pEl,
 extern boolean IsASavedElement ( PtrElement pEl );
 extern boolean LinkReference ( void );
 extern void NewPosition ( PtrAbstractBox pAb,
-                          int DeltaX,
-                          int DeltaY,
+                          int X,
+                          int Y,
                           int frame,
                           boolean Disp );
 extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
@@ -67,7 +67,8 @@ extern void SelectElement ( PtrDocument pDoc,
                             boolean Debut,
                             boolean Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
-extern void HighlightSelection ( boolean DebVisible );
+extern void HighlightSelection ( boolean DebVisible,
+                                 boolean clearOldSel );
 extern void CancelSelection ( void );
 extern void MergeAndSelect ( PtrDocument SelDoc,
                              PtrElement PremSel,
@@ -116,8 +117,8 @@ extern void AttachAttrWithValue (/* PtrElement pEl,
 extern boolean IsASavedElement (/* PtrElement pEl */);
 extern boolean LinkReference (/* void */);
 extern void NewPosition (/* PtrAbstractBox pAb,
-                            int DeltaX,
-                            int DeltaY,
+                            int X,
+                            int Y,
                             int frame,
                             boolean Disp */);
 extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
@@ -157,7 +158,8 @@ extern void SelectElement (/* PtrDocument pDoc,
                               boolean Debut,
                               boolean Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void HighlightSelection (/* boolean DebVisible */);
+extern void HighlightSelection (/* boolean DebVisible,
+                                   boolean clearOldSel */);
 extern void CancelSelection (/* void */);
 extern void MergeAndSelect (/* PtrDocument SelDoc,
                                PtrElement PremSel,

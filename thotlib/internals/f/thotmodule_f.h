@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void XmlSetPageBreakProperties ( Element el );
+extern void XmlFreePresentationList ( void );
 extern void XmlSetPresentation ( Document doc );
 extern boolean ParseThotAttribute ( Document doc,
                                     Element el,
@@ -18,6 +19,7 @@ extern void RestoreTableActions ( void );
 #else /* __STDC__ */
 
 extern void XmlSetPageBreakProperties (/* Element el */);
+extern void XmlFreePresentationList (/* void */);
 extern void XmlSetPresentation (/* Document doc */);
 extern boolean ParseThotAttribute (/* Document doc,
                                       Element el,

@@ -6,22 +6,22 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CheckAllRows (Element table,
-			  Document doc);
+extern void CheckAllRows ( Element table,
+                           Document doc );
 extern void CheckTable ( Element table,
                          Document doc );
 extern void NewCell ( Element cell,
                       Document doc,
-		      boolean genrateColumn);
+                      boolean genrateColumn );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern boolean DeleteRow ( NotifyElement * event );
 extern void RowDeleted ( NotifyElement * event );
 extern boolean DeleteCell ( NotifyElement * event );
-extern boolean RemoveColumn (Element colhead,
-			     Document doc,
-			     boolean ifEmpty,
-			     boolean inMath );
+extern boolean RemoveColumn ( Element colhead,
+                              Document doc,
+                              boolean ifEmpty,
+                              boolean inMath );
 extern void CellDeleted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
@@ -39,21 +39,21 @@ extern boolean RowspanDelete ( NotifyAttribute * event );
 #else /* __STDC__ */
 
 extern void CheckAllRows (/* Element table,
-			     Document doc */);
+                             Document doc */);
 extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,
                         Document doc,
-			boolean genrateColumn*/);
+                        boolean genrateColumn */);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
 extern boolean DeleteRow (/* NotifyElement * event */);
 extern void RowDeleted (/* NotifyElement * event */);
 extern boolean DeleteCell (/* NotifyElement * event */);
 extern boolean RemoveColumn (/* Element colhead,
-				Document doc,
-				boolean ifEmpty,
-				boolean inMath */);
+                                Document doc,
+                                boolean ifEmpty,
+                                boolean inMath */);
 extern void CellDeleted (/* NotifyElement * event */);
 extern void TableCreated (/* NotifyElement * event */);
 extern void TablebodyDeleted (/* NotifyElement * event */);

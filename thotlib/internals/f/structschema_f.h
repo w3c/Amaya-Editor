@@ -82,7 +82,7 @@ extern boolean AllowedFirstChild ( PtrElement pEl,
 extern void InsertChildFirst ( PtrElement pEl,
                                PtrElement pChild,
                                PtrElement * pFeuille,
-			       PtrDocument pDoc );
+                               PtrDocument pDoc );
 extern PtrElement CreateDescendant ( int typeNum,
                                      PtrSSchema pSS,
                                      PtrDocument pDoc,
@@ -190,7 +190,7 @@ extern boolean AllowedFirstChild (/* PtrElement pEl,
 extern void InsertChildFirst (/* PtrElement pEl,
                                  PtrElement pChild,
                                  PtrElement * pFeuille,
-				 PtrDocument pDoc */);
+                                 PtrDocument pDoc */);
 extern PtrElement CreateDescendant (/* int typeNum,
                                        PtrSSchema pSS,
                                        PtrDocument pDoc,

@@ -89,5 +89,6 @@ extern void StopAllRequests (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
 extern boolean CanDoStop (/* void */);
 extern void CanDoStop_set (/* boolean value */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -58,6 +58,7 @@ extern PRule TtaGetPRule ( Element element,
                            int presentationType );
 extern int TtaGetPRuleType ( PRule pRule );
 extern int TtaGetPRuleValue ( PRule pRule );
+extern int TtaGetPRuleUnit ( PRule pRule );
 extern int TtaGetPRuleView ( PRule pRule );
 extern int TtaSamePRules ( PRule pRule1,
                            PRule pRule2 );
@@ -116,6 +117,7 @@ extern PRule TtaGetPRule (/* Element element,
                              int presentationType */);
 extern int TtaGetPRuleType (/* PRule pRule */);
 extern int TtaGetPRuleValue (/* PRule pRule */);
+extern int TtaGetPRuleUnit (/* PRule pRule */);
 extern int TtaGetPRuleView (/* PRule pRule */);
 extern int TtaSamePRules (/* PRule pRule1,
                              PRule pRule2 */);

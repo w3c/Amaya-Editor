@@ -72,10 +72,14 @@ extern void CreateDataCell ( Document document,
                              View view );
 extern void CreateHeadingCell ( Document document,
                                 View view );
+extern void DeleteColumn ( Document document,
+                           View view );
 extern Element GetEnclosingForm ( Document document,
                                   View view );
 extern void CreateForm ( Document doc,
                          View view );
+extern void CreateFieldset ( Document document,
+                             View view );
 extern void CreateToggle ( Document doc,
                            View view );
 extern void CreateRadio ( Document doc,
@@ -85,6 +89,8 @@ extern void AttrSelectedDeleted ( NotifyAttribute * event );
 extern boolean DeleteAttrSelected ( NotifyAttribute * event );
 extern void CreateOption ( Document doc,
                            View view );
+extern void CreateOptGroup ( Document document,
+                             View view );
 extern void CreateTextInput ( Document doc,
                               View view );
 extern void CreatePasswordInput ( Document doc,
@@ -128,6 +134,8 @@ extern void CreateOrChangeLink ( Document doc,
                                  View view );
 extern void DeleteAnchor ( Document doc,
                            View view );
+extern void ShowLogFile ( Document doc,
+                          View view );
 extern void CleanCache ( Document doc,
                          View view );
 
@@ -199,10 +207,14 @@ extern void CreateDataCell (/* Document document,
                                View view */);
 extern void CreateHeadingCell (/* Document document,
                                   View view */);
+extern void DeleteColumn (/* Document document,
+                             View view */);
 extern Element GetEnclosingForm (/* Document document,
                                     View view */);
 extern void CreateForm (/* Document doc,
                            View view */);
+extern void CreateFieldset (/* Document document,
+                               View view */);
 extern void CreateToggle (/* Document doc,
                              View view */);
 extern void CreateRadio (/* Document doc,
@@ -212,6 +224,8 @@ extern void AttrSelectedDeleted (/* NotifyAttribute * event */);
 extern boolean DeleteAttrSelected (/* NotifyAttribute * event */);
 extern void CreateOption (/* Document doc,
                              View view */);
+extern void CreateOptGroup (/* Document document,
+                               View view */);
 extern void CreateTextInput (/* Document doc,
                                 View view */);
 extern void CreatePasswordInput (/* Document doc,
@@ -255,6 +269,8 @@ extern void CreateOrChangeLink (/* Document doc,
                                    View view */);
 extern void DeleteAnchor (/* Document doc,
                              View view */);
+extern void ShowLogFile (/* Document doc,
+                            View view */);
 extern void CleanCache (/* Document doc,
                            View view */);
 

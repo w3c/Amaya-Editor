@@ -18,6 +18,7 @@ extern void CreateTargetAnchor ( Document doc,
 extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void ElementCreated ( NotifyElement * event );
+extern void ElementDeleted ( NotifyElement *event );
 extern void ElementPasted ( NotifyElement * event );
 extern void CreateLink ( Document doc,
                          View view );
@@ -104,6 +105,7 @@ extern void CreateTargetAnchor (/* Document doc,
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);
+extern void ElementDeleted (/* NotifyElement *event */);
 extern void ElementPasted (/* NotifyElement * event */);
 extern void CreateLink (/* Document doc,
                            View view */);

@@ -88,7 +88,6 @@ install : rebuild
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
-	$(RM) -rf $(prefix)/share/thot
 
 uninstall : 
 	@(for dir in $(SUBDIRS) ;\

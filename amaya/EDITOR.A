@@ -47,6 +47,8 @@ MENUS
 	Edit_ button:BPaste -> TtcPaste;
 	Edit_ button:BClear -> TtcDeleteSelection;
 	Edit_ Separator;
+	Edit_ button:BUndo -> TtcUndo;
+	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;

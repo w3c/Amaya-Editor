@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern BOOL AHTProgress ( HTRequest * request,
+extern BOOL AHTProgress ( HTRequest *request,
                           HTAlertOpcode op,
                           int msgnum,
                           const char *dfault,
                           void *input,
-			  HTAlertPar *reply );
+                          HTAlertPar *reply );
 extern BOOL AHTConfirm ( HTRequest * request,
                          HTAlertOpcode op,
                          int msgnum,
@@ -44,12 +44,12 @@ extern void PrintTerminateStatus ( AHTReqContext *me,
 
 #else /* __STDC__ */
 
-extern BOOL AHTProgress (/* HTRequest * request,
+extern BOOL AHTProgress (/* HTRequest *request,
                             HTAlertOpcode op,
                             int msgnum,
                             const char *dfault,
                             void *input,
-			    HTAlertPar *reply */);
+                            HTAlertPar *reply */);
 extern BOOL AHTConfirm (/* HTRequest * request,
                            HTAlertOpcode op,
                            int msgnum,

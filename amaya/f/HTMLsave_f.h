@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean CheckGenerator ( NotifyElement * event );
+extern boolean GenerateQuoteBefore ( NotifyAttribute * event );
+extern void GenerateQuoteAfter ( NotifyAttribute * event );
 extern void SetRelativeURLs ( Document document,
                               char *newpath );
 extern void SaveDocumentAs ( Document document,
@@ -24,6 +27,9 @@ extern void DoSaveObjectAs ( void );
 
 #else /* __STDC__ */
 
+extern boolean CheckGenerator (/* NotifyElement * event */);
+extern boolean GenerateQuoteBefore (/* NotifyAttribute * event */);
+extern void GenerateQuoteAfter (/* NotifyAttribute * event */);
 extern void SetRelativeURLs (/* Document document,
                                 char *newpath */);
 extern void SaveDocumentAs (/* Document document,

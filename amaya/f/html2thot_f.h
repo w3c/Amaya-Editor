@@ -21,7 +21,7 @@ extern char *GITagName ( Element elem );
 extern void MapHTMLAttribute ( char *Attr,
                                AttributeType *attrType,
                                char* elementName,
-			       Document doc );
+                               Document doc );
 extern int MapThotAttr ( char *Attr,
                          char *tag );
 extern int MapAttrValue ( int ThotAtt,
@@ -75,7 +75,8 @@ extern char *GITagNameByType (/* ElementType elType */);
 extern char *GITagName (/* Element elem */);
 extern void MapHTMLAttribute (/* char *Attr,
                                  AttributeType *attrType,
-                                 char* elementName */);
+                                 char* elementName,
+                                 Document doc */);
 extern int MapThotAttr (/* char *Attr,
                            char *tag */);
 extern int MapAttrValue (/* int ThotAtt,

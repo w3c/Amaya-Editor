@@ -14,7 +14,6 @@ extern char *NameThotToXml ( SSchema schema,
                              int elTypeNum,
                              int attrTypeNum,
                              int attrVal );
-extern void FreeThotXmlTables ( void );
 
 #else /* __STDC__ */
 
@@ -26,7 +25,6 @@ extern char *NameThotToXml (/* SSchema schema,
                                int elTypeNum,
                                int attrTypeNum,
                                int attrVal */);
-extern void FreeThotXmlTables (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

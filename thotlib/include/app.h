@@ -166,6 +166,7 @@ extern void         TtcSpellCheck (Document document, View view);
 extern void         TtcStartOfLine (Document document, View view);
 extern void         TtcSwitchButtonBar (Document document, View view);
 extern void         TtcSwitchCommands (Document document, View view);
+extern void         TtcUndo  (Document document, View view);
 
 #else  /* __STDC__ */
 
@@ -251,7 +252,7 @@ extern void         TtcSpellCheck ( /*Document document, View view */ );
 extern void         TtcStartOfLine ( /*Document document, View view */ );
 extern void         TtcSwitchButtonBar ( /*Document document, View view */ );
 extern void         TtcSwitchCommands ( /*Document document, View view */ );
-
+extern void         TtcUndo ( /*Document document, View view */ );
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

@@ -26,150 +26,151 @@
 25 Kopieren
 26 Einfügen
 27 Löschen
-28 Suchen/Ersetzen...
-29 Rechtschreibung...
-30 Umformatieren...
-31 Basisadresse für rel. Verknüpfungen (BASE)
-32 Meta-Information (META)
-33 Verweis (LINK)
-34 Javascript (SCRIPT)
-35 Style-Sheet (STYLE)
-36 Kommentar (<>)
-37 Autorenadresse (ADDRESS)
-38 Aktiver Grafikbereich (AREA MAP)
-39 Kreis
-40 Polygon
-41 Rechteck
-42 Eingerücktes Zitat (BLOCKQUOTE)
-43 Zeilenumbruch (BR)
-44 logischer Textabschnitt (DIV)
-45 Formular (FORM)
-46 Formular
-47 Druckknopf (BUTTON)
-48 Ankreuzkästchen, mehrere von... (CHECKBOX)
-49 Feld für Dateiname (FILE)
-50 Verborgenes Feld (HIDDEN)
-51 Paßwortfeld (PASSWORD)
-52 Auswahlknopf, einer von... (RADIO)
-53 Knopf zum Zurücksetzen (RESET)
-54 OK-Knopf (SUBMIT)
-55 Eingabezeile (INPUT)
-56 Feldgruppe (FIELDSET)
-57 Feldbeschriftung (LABEL)
-58 Auswahlpunkt (OPTION)
-59 Unter-Auswahlliste (OPTGROUP)
-60 Texteingabe (TEXTAREA)
-61 Überschrift
-62 H1 (groß)
-63 H2
-64 H3
-65 H4
-66 H5
-67 H6 (klein)
-68 Waagerechte Linie (HR)
-69 Inline-Frame (IFRAME)
-70 Grafik (IMG)...
-71 Liste
-72 mit Punkten (LI)
-73 numeriert (OL)
-74 Definitionsliste (DL)
-75 Term (DT)
-76 Definition (DD)
-77 Formel
+28 **Undo
+29 Suchen/Ersetzen...
+30 Rechtschreibung...
+31 Umformatieren...
+32 Basisadresse für rel. Verknüpfungen (BASE)
+33 Meta-Information (META)
+34 Verweis (LINK)
+35 Javascript (SCRIPT)
+36 Style-Sheet (STYLE)
+37 Kommentar (<>)
+38 Autorenadresse (ADDRESS)
+39 Aktiver Grafikbereich (AREA MAP)
+40 Kreis
+41 Polygon
+42 Rechteck
+43 Eingerücktes Zitat (BLOCKQUOTE)
+44 Zeilenumbruch (BR)
+45 logischer Textabschnitt (DIV)
+46 Formular (FORM)
+47 Formular
+48 Druckknopf (BUTTON)
+49 Ankreuzkästchen, mehrere von... (CHECKBOX)
+50 Feld für Dateiname (FILE)
+51 Verborgenes Feld (HIDDEN)
+52 Paßwortfeld (PASSWORD)
+53 Auswahlknopf, einer von... (RADIO)
+54 Knopf zum Zurücksetzen (RESET)
+55 OK-Knopf (SUBMIT)
+56 Eingabezeile (INPUT)
+57 Feldgruppe (FIELDSET)
+58 Feldbeschriftung (LABEL)
+59 Auswahlpunkt (OPTION)
+60 Unter-Auswahlliste (OPTGROUP)
+61 Texteingabe (TEXTAREA)
+62 Überschrift
+63 H1 (groß)
+64 H2
+65 H3
+66 H4
+67 H5
+68 H6 (klein)
+69 Waagerechte Linie (HR)
+70 Inline-Frame (IFRAME)
+71 Grafik (IMG)...
+72 Liste
+73 mit Punkten (LI)
+74 numeriert (OL)
+75 Definitionsliste (DL)
+76 Term (DT)
+77 Definition (DD)
 78 Formel
-79 Wurzel (MROOT)
-80 Quadratwurzel (MSQRT)
-81 Quotient (MFRAC)
-82 Term mit Index und Exponent (MSUBSUP)
-83 Term mit Index (MSUB)
-84 Term mit Exponent (MSUP)
-85 Term mit Unter- und Überschrift (MUNDEROVER)
-86 Term mit Unterschrift (MUNDER)
-87 Term mit Überschrift (MOVER)
-88 Term in Klammern (MF)
-89 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
-90 Matrix (MTABLE)
-91 Matrixspalte löschen
-92 Alternative ohne Scripts (NOSCRIPT)
-93 Objekt
+79 Formel
+80 Wurzel (MROOT)
+81 Quadratwurzel (MSQRT)
+82 Quotient (MFRAC)
+83 Term mit Index und Exponent (MSUBSUP)
+84 Term mit Index (MSUB)
+85 Term mit Exponent (MSUP)
+86 Term mit Unter- und Überschrift (MUNDEROVER)
+87 Term mit Unterschrift (MUNDER)
+88 Term mit Überschrift (MOVER)
+89 Term in Klammern (MF)
+90 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
+91 Matrix (MTABLE)
+92 Matrixspalte löschen
+93 Alternative ohne Scripts (NOSCRIPT)
 94 Objekt
-95 Objekt-Parameter (PARAM)
-96 Absatz (P)
-97 Vorformatierter Text (PRE)
-98 Tabelle 
-99 Tabelle
-100 Überschrift (CAPTION)
-101 Tabellenkopf (THEAD)
-102 Tabellenkörper (TBODY)
-103 Fußzeile (TFOOT)
-104 Zeile (TR)
-105 Zelle (TD)
-106 Kopfzelle (TH)
-107 Tabellenspalte löschen
-108 Markierung als Verknüfung definieren...
-109 Markierung als Verknüpfungsziel definieren
-110 Verknüpfungsziel ändern...
-111 Verknüpfungsziel löschen
-112 Symbolleiste
-113 Dokumentadresse und -titel 
-114 Aktive Grafikbereiche markieren
-115 Verknüpfungsziele anzeigen
-116 Schrift vergrößern
-117 Schrift verkleinern
-118 Strukturfenster
-119 Textbrowserfenster
-120 Verknüpfungsfenster
-121 Inhaltsverzeichnisfenster
-122 Zeichen...
-123 Farben...
-124 Ausrichtung...
-125 Hintergrundbild...
-126 Format in Stylesheet übernehmen...
-127 Klasse anwenden...
-128 Stylesheets bearbeiten
-129 Logische Formate
-130 Betont (EM)
-131 Hervorgehoben (STRONG)
-132 Zitat (CITE)
-133 Definition (DFN)
-134 Programmtext (CODE)
-135 Variablenwert (VAR)
-136 Beispiel (SAMP)
-137 Tastatureingabe (KBD)
-138 Abkürzung (ABBR)
-139 Akronym (ACRONYM)
-140 Eingefügte Version (INS)
-141 Veraltete Version (DEL)
-142 Direkte Formate
-143 Kursiv (I)
-144 Fett (B)
-145 Schreibmaschinenschrift (TT)
-146 Größer (BIG)
-147 Kleiner (SMALL)
-148 Tiefgestellt (SUB)
-149 Hochgestellt (SUP)
-150 Zitat im Fließtext (Q)
-151 Textrichtung LTR/RTL (BDO)
-152 Abschnittsnummern
-153 Buch zusammenfügen
-154 Logdatei anzeigen
-155 Puffer löschen
-156 Info
-157 Verknüpfungen folgen/Dokumente öffnen
-158 Auswählen
-159 Suchen
-160 Ansichten
-161 Einfügen von Elementen
-162 Verknüpfungen bearbeiten
-163 Umformatieren
-164 Tabellen
-165 Formeln
-166 Aktive Grafikbereiche
-167 Formate/Stylesheets
-168 Attribute
-169 Rechtschreibung
-170 Speichern/Publizieren
-171 Drucken
-172 Abschnittsnummern
-173 Buch zusammenfügen
-174 Konfiguration
+95 Objekt
+96 Objekt-Parameter (PARAM)
+97 Absatz (P)
+98 Vorformatierter Text (PRE)
+99 Tabelle 
+100 Tabelle
+101 Überschrift (CAPTION)
+102 Tabellenkopf (THEAD)
+103 Tabellenkörper (TBODY)
+104 Fußzeile (TFOOT)
+105 Zeile (TR)
+106 Zelle (TD)
+107 Kopfzelle (TH)
+108 Tabellenspalte löschen
+109 Markierung als Verknüfung definieren...
+110 Markierung als Verknüpfungsziel definieren
+111 Verknüpfungsziel ändern...
+112 Verknüpfungsziel löschen
+113 Symbolleiste
+114 Dokumentadresse und -titel 
+115 Aktive Grafikbereiche markieren
+116 Verknüpfungsziele anzeigen
+117 Schrift vergrößern
+118 Schrift verkleinern
+119 Strukturfenster
+120 Textbrowserfenster
+121 Verknüpfungsfenster
+122 Inhaltsverzeichnisfenster
+123 Zeichen...
+124 Farben...
+125 Ausrichtung...
+126 Hintergrundbild...
+127 Format in Stylesheet übernehmen...
+128 Klasse anwenden...
+129 Stylesheets bearbeiten
+130 Logische Formate
+131 Betont (EM)
+132 Hervorgehoben (STRONG)
+133 Zitat (CITE)
+134 Definition (DFN)
+135 Programmtext (CODE)
+136 Variablenwert (VAR)
+137 Beispiel (SAMP)
+138 Tastatureingabe (KBD)
+139 Abkürzung (ABBR)
+140 Akronym (ACRONYM)
+141 Eingefügte Version (INS)
+142 Veraltete Version (DEL)
+143 Direkte Formate
+144 Kursiv (I)
+145 Fett (B)
+146 Schreibmaschinenschrift (TT)
+147 Größer (BIG)
+148 Kleiner (SMALL)
+149 Tiefgestellt (SUB)
+150 Hochgestellt (SUP)
+151 Zitat im Fließtext (Q)
+152 Textrichtung LTR/RTL (BDO)
+153 Abschnittsnummern
+154 Buch zusammenfügen
+155 Logdatei anzeigen
+156 Puffer löschen
+157 Info
+158 Verknüpfungen folgen/Dokumente öffnen
+159 Auswählen
+160 Suchen
+161 Ansichten
+162 Einfügen von Elementen
+163 Verknüpfungen bearbeiten
+164 Umformatieren
+165 Tabellen
+166 Formeln
+167 Aktive Grafikbereiche
+168 Formate/Stylesheets
+169 Attribute
+170 Rechtschreibung
+171 Speichern/Publizieren
+172 Drucken
+173 Abschnittsnummern
+174 Buch zusammenfügen
+175 Konfiguration

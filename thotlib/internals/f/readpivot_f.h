@@ -32,6 +32,8 @@ extern void ReadPRulePiv ( PtrDocument pDoc,
                            boolean create,
                            PtrPRule * pRuleRead,
                            boolean link );
+extern void SendEventAttrRead ( PtrElement pEl,
+                                PtrDocument pDoc );
 extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrSSchema pSSchema,
                                 PtrDocument pDoc,
@@ -100,6 +102,8 @@ extern void ReadPRulePiv (/* PtrDocument pDoc,
                              boolean create,
                              PtrPRule * pRuleRead,
                              boolean link */);
+extern void SendEventAttrRead (/* PtrElement pEl,
+                                  PtrDocument pDoc */);
 extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrSSchema pSSchema,
                                   PtrDocument pDoc,

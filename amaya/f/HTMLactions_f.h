@@ -24,7 +24,7 @@ extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
 extern boolean ElemToTransform ( NotifyOnElementType * event );
 extern void SetCharFontOrPhrase ( int document,
-                                  int eltype );
+                                  int elemtype );
 extern void SelectDestination ( Document doc,
                                 Element el );
 
@@ -48,7 +48,7 @@ extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
 extern boolean ElemToTransform (/* NotifyOnElementType * event */);
 extern void SetCharFontOrPhrase (/* int document,
-                                    int eltype */);
+                                    int elemtype */);
 extern void SelectDestination (/* Document doc,
                                   Element el */);
 
