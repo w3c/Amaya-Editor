@@ -3262,12 +3262,17 @@ void ShowSource (Document document, View view)
        {
 	 SetNamespacesAndDTD (document);
 	 if (DocumentTypes[document] == docHTML)
-	   if (DocumentMeta[document]->xmlformat)
-	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  "HTMLTX");
-	   else
-	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						  "HTMLT");
+	   {
+	     if (ParsingLevel[document] == L_Xhtml11)
+	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						    "HTMLT11");
+	     else if (DocumentMeta[document]->xmlformat)
+	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						    "HTMLTX");
+	     else
+	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						    "HTMLT");
+	   }
 	 else if (DocumentTypes[document] == docSVG)
 	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						"GraphMLT");

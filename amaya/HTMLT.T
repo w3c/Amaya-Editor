@@ -1143,9 +1143,11 @@ ATTRIBUTES
 	    Create Langue;
 	    Create DoubleQuote;
 #endif
+#ifndef XHTML11
 	    Create ' lang="';
 	    Create Langue;
 	    Create DoubleQuote;
+#endif
 	    END;
 	IF HTML and RealLang
 	    BEGIN
@@ -1154,9 +1156,11 @@ ATTRIBUTES
 	    Create Langue;
 	    Create DoubleQuote;
 #endif
+#ifndef XHTML11
 	    Create ' lang="';
 	    Create Langue;
 	    Create DoubleQuote;
+#endif
 	    END;
 	END;
 

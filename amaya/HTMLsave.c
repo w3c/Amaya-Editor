@@ -1228,8 +1228,14 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
       if (DocumentTypes[doc] == docHTML)
 	{
 	  if (SaveAsXML)
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						      "HTMLTX");
+	    {
+	      if (ParsingLevel[doc] == L_Xhtml11)
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLT11");
+	      else
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLTX");
+	    }
 	  else
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						      "HTMLT");
@@ -1530,18 +1536,21 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (DocumentTypes[doc] == docHTML)
     if (SaveAsXML)
       {
-      TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
-      DocumentMeta[doc]->xmlformat = TRUE;
+	if (ParsingLevel[doc] == L_Xhtml11)
+	  TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
+	else
+	  TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
+	DocumentMeta[doc]->xmlformat = TRUE;
       }
     else
       {
-      TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
-      DocumentMeta[doc]->xmlformat = FALSE;
+	TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+	DocumentMeta[doc]->xmlformat = FALSE;
       }
   else if (DocumentTypes[doc] == docSVG)
-      TtaExportDocumentWithNewLineNumbers (doc, tempname, "GraphMLT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "GraphMLT");
   else if (DocumentTypes[doc] == docMath)
-      TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+    TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
   else if (DocumentTypes[doc] == docImage)
     {
       /* export the new container using the image file name */
@@ -1779,12 +1788,17 @@ void Synchronize (Document document, View view)
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
        SetNamespacesAndDTD (document);
        if (DocumentTypes[document] == docHTML)
-	 if (DocumentMeta[document]->xmlformat)
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						"HTMLTX");
-	 else
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						"HTMLT");
+	 {
+	   if (ParsingLevel[document] == L_Xhtml11)
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  "HTMLT11");
+	   else if (DocumentMeta[document]->xmlformat)
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  "HTMLTX");
+	   else
+	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+						  "HTMLT");
+	 }
        else if (DocumentTypes[document] == docSVG)
 	 TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 					      "GraphMLT");
@@ -2005,9 +2019,13 @@ void SaveDocument (Document doc, View view)
 	if (DocumentTypes[doc] == docHTML)
 	  if (SaveAsXML)
 	    {
-	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						      "HTMLTX");
-	    DocumentMeta[doc]->xmlformat = TRUE;
+	      if (ParsingLevel[doc] == L_Xhtml11)
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLT11");
+	      else
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLTX");
+	      DocumentMeta[doc]->xmlformat = TRUE;
 	    }
 	  else
 	    {
