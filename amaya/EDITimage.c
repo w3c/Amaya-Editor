@@ -126,7 +126,9 @@ char               *data;
 		 }
 	       /* construct the image full name */
 	       strcpy (LastURLImage, DirectoryImage);
-	       strcat (LastURLImage, DIR_STR);
+	       val = strlen (LastURLImage) - 1;
+	       if (LastURLImage[val] != DIR_SEP)
+		 strcat (LastURLImage, DIR_STR);
 	       strcat (LastURLImage, data);
 	       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 	       break;
