@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Editing ISO-Latin-1 Characters</title>
   <style type="text/css">
   </style>
@@ -35,9 +34,6 @@
   <li><a
     href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.es"
     rel="subdocument">Entering ISO-Latin-1_Characters in Amaya</a></li>
-  <li><a
-    href="editing_iso-latin-1_characters/about_optional_multikey_support.html.es"
-    rel="subdocument">About Optional Multikey Support</a></li>
   <li><a
     href="editing_iso-latin-1_characters/about_standard_multikey_support.html.es"
     rel="subdocument">About Standard Multikey Support</a></li>

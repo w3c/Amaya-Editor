@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Sonderzeichen eingeben</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.0, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -21,7 +19,7 @@
         src="../../images/amaya.gif" /></td>
       <td><a href="../EditChar.html.de" accesskey="t"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a
-        href="about_optional_multikey_support.html.de" accesskey="n"><img
+        href="about_standard_multikey_support.html.de" accesskey="n"><img
         alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
@@ -45,27 +43,15 @@ Einige dieser Tastenkürzel sind bereits in der Datei <code>amaya.kb</code>
   <li><kbd>Strg Leertaste</kbd> erzeugt ein "non breaking space" (nbsp). Dies
     wird als Einheit gespeichert.</li>
   <li><kbd>Alt e</kbd> erzeugt ein &euro; (euro).</li>
-  <li><kbd>Strg o Strg e</kbd> erzeugt ein &oelig; (oelig).</li>
-  <li><kbd>Umsch Strg o Umsch Strg e</kbd> erzeugt ein &OElig; (Oelig).</li>
+  <li><kbd>Strg o Strg e</kbd> erzeugt ein &#x153; (oelig).</li>
+  <li><kbd>Umsch Strg o Umsch Strg e</kbd> erzeugt ein &#x152; (Oelig).</li>
   <li><kbd>Alt &lt;</kbd> erzeugt ein « (laquo).</li>
   <li><kbd>Alt &gt;</kbd> erzeugt ein » (raquo).</li>
 </ul>
 
 <p>Weitere Informationen erhält man in der Beschreibung der beiden Methoden
-zur Mehrfachtasteneingabe:</p>
-<ul>
-  <li><a
-    href="about_standard_multikey_support.html.de">Standardmehrfachtasten</a></li>
-  <li><a href="about_optional_multikey_support.html.de">Optionale
-    Mehrfachtasten</a></li>
-</ul>
-
-<p>Um die gewünschte Methode auszuwählen, muss im Menü
-<strong>Extras</strong>, Untermenü <strong>Einstellungen</strong>, Dialog
-<strong>Allgemein</strong> die Option <strong>Optionale
-Mehrfachtasten</strong> <strong>verwenden</strong> bearbeitet werden. Wenn
-diese aktiviert ist, werden die optionalen Mehrfachtasten unterstützt,
-ansonsten die Standardmehrfachtasten.</p>
+zur Mehrfachtasteneingabe: <a
+href="about_standard_multikey_support.html.de">Standardmehrfachtasten</a></p>
 </div>
 </body>
 </html>

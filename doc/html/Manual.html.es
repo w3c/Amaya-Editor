@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Manual de usuario de Amaya</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -159,10 +158,6 @@ bienvenida de Amaya.</p>
       <li><a
         href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.es#page_body"
         rel="subdocument">Escribir caracteres</a></li>
-      <li><a
-        href="editing_iso-latin-1_characters/about_optional_multikey_support.html.es#page_body"
-        rel="subdocument">Combinaciones de teclas en las versiones Motif y
-        Windows</a></li>
       <li><a
         href="editing_iso-latin-1_characters/about_standard_multikey_support.html.es#page_body"
         rel="subdocument">Combinaciones de teclas en las versiones Motif y
