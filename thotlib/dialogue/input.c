@@ -546,6 +546,11 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
+gboolean OneCharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
+{
+    return False;
+}
+
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
    int                 status;
@@ -555,45 +560,65 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    unsigned char       string[2];
    KeySym              KS;
    GtkWidget          *drawing_area;
+   ThotComposeStatus   ComS;
    GtkEntry           *textzone;
 
+   static char *location_multikey;
+   static multikey_used_one_time = FALSE;
+   static focus_on_url = TRUE;
+   static location_length = 0;
+   
+      
    frame = (int) data;
    if (frame > MAX_FRAME)
      frame = 0;
-   
-   /*   printf("KEY event\n");*/
    /* the drawing area is the main zone where keypress event must be active */
    drawing_area = FrameTable[frame].WdFrame;
-   textzone = GTK_ENTRY(FrameTable[frame].Text_Zone[1]);
-
-   if (textzone)
-     {
-       /* if the mouse is into the text zone then event must be ignored */
-       if (w == GTK_WIDGET (textzone) || gtk_object_get_data (GTK_OBJECT(textzone), "MouseIn"))
-	 {
-	   return FALSE;
-	 }
+   /* Focus is on all the drawing frame : 
+      Drawing area and his hiden text catcher (for multikey),
+      and the URLtext textzone, 
+      so we must now know where is the focus, 
+      to analyse the meaning of the keypress*/
+   if (FrameTable[frame].Text_Zone[1])
+       {
+	   
+	 if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
+	     {
+		 // W'er in the url zone
+		 return FALSE;
+	     }
+	 
+	 else
+	     {
+		 // We're in the drawing
+		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
+		 
+		 /* In order to be able to disable/enabe 
+		    manually input context by erasing wrap_text_ic pointer*/
+		 if (TtaGetMulitkey()){
+		     textzone->editable.ic = gtk_object_get_data (GTK_OBJECT (drawing_area), "disabled_ic");
+		 }
+		 else{
+		     gtk_object_set_data (GTK_OBJECT (textzone), 
+			 "disabled_ic", textzone->editable.ic);
+		     textzone->editable.ic = 0;
+		     }
+		 gtk_widget_grab_focus (GTK_WIDGET(textzone));     
+	     }
      }
-   /* force the focus into the drawing area */
-   gtk_widget_grab_focus (drawing_area);
 
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
    state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
-   if (event->state == state)
-     {
-       strncpy (string, event->string, 2);
-       KS = event->keyval;
-     }
-   else
+
+   strncpy(string, event->string, 2);
+   KS = event->keyval;
+   if (event->state != state)
      {
        save = event->state;
        event->state = state;
        state = save;
-       strncpy (string, event->string, 2);
-       KS = event->keyval;
      }
-
    PicMask = 0;
    if (state & GDK_SHIFT_MASK)
       PicMask |= THOT_MOD_SHIFT;
@@ -643,7 +668,7 @@ void CharTranslation (ThotKeyEvent *event)
 
    ThotInput (frame, &string[0], status, PicMask, KS);
 }
-#endif /* _GTK */
+#endif /* _MOTIF */
 #endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
