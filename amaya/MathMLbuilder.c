@@ -1523,29 +1523,28 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 			   (int)text[0] == 130 ||  /* en space */
 			   (int)text[0] == 160)    /* em space */
 		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		  else
-		    /* default */
-		    val = MathML_ATTR_IntAddSpace_VAL_both;
 		  }
 	       else if (alphabet == 'G')
-		 /* Symbol character set */
-		 if ((int)text[0] == 163 || /* less or equal */
-		     (int)text[0] == 177 || /* plus or minus */
-		     (int)text[0] == 179 || /* greater or equal */
-		     (int)text[0] == 180 || /* times */
-		     (int)text[0] == 184 || /* divide */
-		     (int)text[0] == 185 || /* not equal */
-		     (int)text[0] == 186 || /* identical */
-		     (int)text[0] == 187 || /* equivalent */
-		     (int)text[0] == 196 || /* circle times */
-		     (int)text[0] == 197 || /* circle plus */
-		     ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
-		     (int)text[0] == 217 || /* and */
-		     (int)text[0] == 218 )  /* or */
-		    /* infix operator */
-		    val = MathML_ATTR_IntAddSpace_VAL_both;
-	         else
-		    val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		 {
+		   /* Symbol character set */
+		   if ((int)text[0] == 163 || /* less or equal */
+		       (int)text[0] == 177 || /* plus or minus */
+		       (int)text[0] == 179 || /* greater or equal */
+		       (int)text[0] == 180 || /* times */
+		       (int)text[0] == 184 || /* divide */
+		       (int)text[0] == 185 || /* not equal */
+		       (int)text[0] == 186 || /* identical */
+		       (int)text[0] == 187 || /* equivalent */
+		       (int)text[0] == 196 || /* circle times */
+		       (int)text[0] == 197 || /* circle plus */
+		       ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
+		       (int)text[0] == 217 || /* and */
+		       (int)text[0] == 218 )  /* or */
+		     /* infix operator */
+		     val = MathML_ATTR_IntAddSpace_VAL_both;
+		   else
+		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		 }
 	      }
 	  }
        }
