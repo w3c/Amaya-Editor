@@ -163,12 +163,12 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
    frames de dialogue et de documents.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FrameToRedisplay (ThotWindow w, int frame, XExposeEvent * event)
+void                FrameToRedisplay (ThotWindow w, int frame, void * ev)
 #else  /* __STDC__ */
-void                FrameToRedisplay (w, frame, event)
+void                FrameToRedisplay (w, frame, ev)
 ThotWindow          w;
 int                 frame;
-XExposeEvent       *event;
+void               *ev;
 
 #endif /* __STDC__ */
 {
@@ -176,6 +176,7 @@ XExposeEvent       *event;
    int                 y;
    int                 l;
    int                 h;
+   XExposeEvent       *event = (XExposeEvent *) ev;
 
    x = event->x;
    y = event->y;
@@ -1070,12 +1071,12 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    D.V. equivalent de la fontion MS-Windows ci dessus !           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FrameCallback (int frame, XEvent * ev)
+void                FrameCallback (int frame, void * evnt)
 
 #else  /* __STDC__ */
-void                FrameCallback (frame, ev)
+void                FrameCallback (frame, evnt)
 int                 frame;
-XEvent             *ev;
+void               *event;
 
 #endif /* __STDC__ */
 
@@ -1086,6 +1087,7 @@ XEvent             *ev;
    PtrElement          firstSel, lastSel;
    int                 firstCar, lastCar;
    boolean             ok;
+   XEvent             *ev = (XEvent *) evnt;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)

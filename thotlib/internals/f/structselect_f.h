@@ -8,7 +8,7 @@
 
 extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
-extern void SetFocus ( void );
+extern void TtaSetFocus ( void );
 extern boolean GetCurrentSelection ( PtrDocument * pDoc,
                                      PtrElement * firstEl,
                                      PtrElement * lastEl,
@@ -86,7 +86,7 @@ extern void TtcChildElement ( Document document,
 
 extern void TtaSetCurrentKeyboard (/* int keyboard */);
 extern void InitSelection (/* void */);
-extern void SetFocus (/* void */);
+extern void TtaSetFocus (/* void */);
 extern boolean GetCurrentSelection (/* PtrDocument * pDoc,
                                        PtrElement * firstEl,
                                        PtrElement * lastEl,
