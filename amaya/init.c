@@ -4827,9 +4827,6 @@ NotifyEvent        *event;
    else if (restoredDoc)
      /* old documents are restored */
      return;
-   else
-     /* No argument in the command line. Try the variable HOME_PAGE */
-     s = TtaGetEnvString ("HOME_PAGE");
 #ifdef _WINDOWS
    usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"),
 	     TtaGetEnvString ("THOTDIR"));              
@@ -4838,6 +4835,12 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      GoToHome (0, 1);
+   else if (IsW3Path (s))
+     {
+       /* it's a remote document */
+       ustrcpy (LastURLName, s);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+     }
    else
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);

@@ -3318,6 +3318,8 @@ int                 val;
    int                 lg;
 
    pEl = NULL;
+   pLast = NULL;
+   pFirst = NULL;
    lg = 0;
    switch (val)
 	 {
