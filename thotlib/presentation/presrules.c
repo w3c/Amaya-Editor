@@ -970,20 +970,32 @@ PtrAttribute        pAttr;
                 else
                    /* c'est la valeur elle-meme qui est dans la regle */
                    val = pPRule->PrMinValue;
-                if (pPRule->PrMinUnit == UnPercent && pPRule->PrType != PtIndent)
+
+                if (pPRule->PrMinUnit == UnPercent &&
+		    (pPRule->PrType == PtBreak1 ||
+		     pPRule->PrType == PtBreak2 ||
+		     pPRule->PrType == PtSize ||
+		     pPRule->PrType == PtLineSpacing ||
+		     pPRule->PrType == PtLineWeight))
                   {
                      if (pPRule->PrType == PtSize)
+		       /* font-size is relative to the parent's font-size */
                        {
+			 /* get the parent abstract box */
                           AncestorAbsBox (pEl, view, &pAbb, &pElInherit);
                           if (pAbb == NULL)
+			     /* no parent ??? */
                              *ok = FALSE;
                           else
-                            {
-                               val = (pAbb->AbSize * val) / 100;
-                               *unit = pAbb->AbSizeUnit;
-                            }
+			     /* compute the font-size */
+                             {
+                             val = (pAbb->AbSize * val) / 100;
+                             *unit = pAbb->AbSizeUnit;
+                             }
                        }
                      else
+		       /* the value is relative to the font-size of the
+			  abstract box itself (relative size) */
                        {
                           /* Relative a la police courante */
                           *unit = UnRelative;
@@ -993,7 +1005,8 @@ PtrAttribute        pAttr;
                 else
                   {
                      *unit = pPRule->PrMinUnit;
-                     if (pPRule->PrType == PtSize && pPRule->PrMinUnit == UnRelative)
+                     if (pPRule->PrType == PtSize &&
+			 pPRule->PrMinUnit == UnRelative)
                         val--;
                   }
              }
