@@ -164,6 +164,7 @@ static double current_timeline_end; /* end timing (s) */
 #endif /* _SVGANIM */
 
 
+
 /*----------------------------------------------------------------------
    Build_path_to_image_dir
    Returns path to directory where images of the interface are stored
@@ -173,6 +174,20 @@ static void Build_path_to_image_dir(char* buffer) {
 	sprintf (buffer, "%s%camaya%c", TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
 }
 #endif /* _SVGANIM */
+
+
+/*----------------------------------------------------------------------
+   get_timeline_doc
+   Returns timeline document of a document (export to HTMLactions.c)
+  ----------------------------------------------------------------------*/
+Document get_timeline_doc(Document doc)
+{
+	Document res = 0;
+#ifdef _SVGANIM
+	res = dt[doc].timelinedoc;
+#endif /* _SVGANIM */
+	return res;
+}
 
 
 /*----------------------------------------------------------------------
@@ -2570,7 +2585,7 @@ void TimelineWindowClose (NotifyDialog * event)
 	}
 	if (k!=DocumentTableLength) 
 		Init_timeline_struct(k);
-	TtaSetDocumentUnmodified (event->document);
+	FreeDocumentResource (event->document);
 #endif /* _SVGANIM */
 }
 

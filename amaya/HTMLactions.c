@@ -49,9 +49,14 @@
 #include "davlib_f.h"
 #endif
 
+#ifdef _SVGANIM
+#include "anim_f.h"
+#endif /* _SVGANIM */
+
 #ifdef _SVGLIB
 #include "libmanag_f.h"
 #endif /* _SVGLIB */
+
 
 /* info about the last element highlighted when synchronizing with the
    source view */
@@ -1660,6 +1665,13 @@ void DocumentClosed (NotifyDialog * event)
    DAVFreeLock (event->document);
 #endif
   
+
+#ifdef _SVGANIM 
+   if (get_timeline_doc(event->document))
+	   TtaCloseView (get_timeline_doc(event->document), 1);
+#endif /*_SVGANIM*/
+
+
    FreeDocumentResource (event->document);
    
    CleanUpParsingErrors ();  
