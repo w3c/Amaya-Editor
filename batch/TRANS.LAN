@@ -176,9 +176,10 @@ PresRule =       'Size' [ PresRelat ] /
 	         'Justify' [ '=' BooleanVal ] /
 	         'Hyphenate' [ '=' BooleanVal ] /
                  'Style' [ '=' StyleVal ] /
+                 'Weight' [ '=' WeightVal ] /
                  'Font' [ '=' FontVal ] /
                  'UnderLine' [ '=' UnderLineVal ] /
-	          'Thickness' [ '=' UnderLStyleVal ] /
+	         'Thickness' [ '=' UnderLStyleVal ] /
 		 'LineStyle' [ '=' LineStyleVal ] /
 		 'LineWeight' [ PresRelat ] /
 		 'FillPattern' [ '=' Pattern ] /
@@ -191,8 +192,8 @@ PresRelat =      '=' PresValue /
                           [ '-' ] MaxIntervalPres ']' .
 AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
 BooleanVal =     'Yes' / 'No' .
-StyleVal =       'Bold' / 'Italics' / 'Roman' / 'BoldItalics' /
-                 'Oblique' / 'BoldOblique' .
+StyleVal =       'Roman' / 'Italics' / 'Oblique' .
+WeightVal =      'Normal' / 'Bold' .
 FontVal =        'Times' / 'Helvetica' / 'Courier' .
 UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
 		 { the following values are obsolete }

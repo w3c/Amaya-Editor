@@ -182,9 +182,10 @@ number
 		         'Justify' [ '=' BooleanVal ] /
 		         'Hyphenate' [ '=' BooleanVal ] /
 	                 'Style' [ '=' StyleVal ] /
+	                 'Weight' [ '=' WeightVal ] /
 	                 'Font' [ '=' FontVal ] /
 	                 'UnderLine' [ '=' UnderLineVal ] /
-		          'Thickness' [ '=' UnderLStyleVal ] /
+		         'Thickness' [ '=' UnderLStyleVal ] /
 			 'LineStyle' [ '=' LineStyleVal ] /
 			 'LineWeight' [ PresRelat ] /
 			 'FillPattern' [ '=' Pattern ] /
@@ -197,24 +198,24 @@ number
 	                          [ '-' ] MaxIntervalPres ']' .
    81	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
    82	BooleanVal =     'Yes' / 'No' .
-   83	StyleVal =       'Bold' / 'Italics' / 'Roman' / 'BoldItalics' /
-	                 'Oblique' / 'BoldOblique' .
-   84	FontVal =        'Times' / 'Helvetica' / 'Courier' .
-   85	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
+   83	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
+   84	WeightVal =      'Normal' / 'Bold' .
+   85	FontVal =        'Times' / 'Helvetica' / 'Courier' .
+   86	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
 			 { the following values are obsolete }
 	                 'No' / 'UnderLine' / 'OverLine' / 'StrikeOut' .
-   86	UnderLStyleVal = 'Thick' / 'Thin' .
+   87	UnderLStyleVal = 'Thick' / 'Thin' .
 	
-   87	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
-   88	Pattern =        NAME .
-   89	Color =          NAME .
+   88	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
+   89	Pattern =        NAME .
+   90	Color =          NAME .
 	
-   91	MinimumPres =    NUMBER .
-   92	MaximumPres =    NUMBER .
-   93	MinIntervalPres= NUMBER .
-   94	MaxIntervalPres= NUMBER .
-   90	PresValue =      [ '-' ] PresVal .
-   95	PresVal =        NUMBER .
+   92	MinimumPres =    NUMBER .
+   93	MaximumPres =    NUMBER .
+   94	MinIntervalPres= NUMBER .
+   95	MaxIntervalPres= NUMBER .
+   91	PresValue =      [ '-' ] PresVal .
+   96	PresVal =        NUMBER .
 	
 	END
 	
@@ -226,9 +227,9 @@ code  character  numbers of rules using the key-word
 
 1001      ;       1   1   1   1  15  18  26  28  36  51  66  66  66  66  66  66
                  66  66  66  66  67  67  67  67  67  14  76
-1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  80
+1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  62  80
 1003      :      18  28  30  34  45  79
-1004      -      21  35  35  35  35  37  72  76  80  80  80  80  90
+1004      -      21  35  35  35  35  37  72  76  80  80  80  80  91
 1005      (      26  30  34  59  58  58  66  66  68  68  68
 1006      )      26  30  34  59  58  58  66  66  68  68  68
 1007      ,      30
@@ -336,40 +337,40 @@ code  key-word      numbers of rules using the key-word
 1188  Justify         62
 1189  Hyphenate       62
 1190  Style           62
-1191  Font            62
-1192  UnderLine       62  85
-1193  Thickness       62
-1194  LineStyle       62
-1195  LineWeight      62
-1196  FillPattern     62
-1197  Background      62
-1198  Foreground      62
-1199  Left            81
-1200  Right           81
-1201  VMiddle         81
-1202  LeftWithDots    81
-1203  Yes             82
-1204  No              82  85
-1205  Bold            83
-1206  Italics         83
-1207  Roman           83
-1208  BoldItalics     83
-1209  Oblique         83
-1210  BoldOblique     83
-1211  Times           84
-1212  Helvetica       84
-1213  Courier         84
-1214  NoUnderline     85
-1215  Underlined      85
-1216  Overlined       85
-1217  CrossedOut      85
-1218  OverLine        85
-1219  StrikeOut       85
-1220  Thick           86
-1221  Thin            86
-1222  Solid           87
-1223  Dashed          87
-1224  Dotted          87
+1191  Weight          62
+1192  Font            62
+1193  UnderLine       62  86
+1194  Thickness       62
+1195  LineStyle       62
+1196  LineWeight      62
+1197  FillPattern     62
+1198  Background      62
+1199  Foreground      62
+1200  Left            81
+1201  Right           81
+1202  VMiddle         81
+1203  LeftWithDots    81
+1204  Yes             82
+1205  No              82  86
+1206  Roman           83
+1207  Italics         83
+1208  Oblique         83
+1209  Normal          84
+1210  Bold            84
+1211  Times           85
+1212  Helvetica       85
+1213  Courier         85
+1214  NoUnderline     86
+1215  Underlined      86
+1216  Overlined       86
+1217  CrossedOut      86
+1218  OverLine        86
+1219  StrikeOut       86
+1220  Thick           87
+1221  Thin            87
+1222  Solid           88
+1223  Dashed          88
+1224  Dotted          88
 
 
 
@@ -466,28 +467,29 @@ right part.
    81  AdjustVal            62
    82  BooleanVal           62  62
    83  StyleVal             62
-   84  FontVal              62
-   85  UnderLineVal         62
-   86  UnderLStyleVal       62
-   87  LineStyleVal         62
-   88  Pattern              62
-   89  Color                62  62
-   90  PresValue            80
-   91  MinimumPres          80
-   92  MaximumPres          80
-   93  MinIntervalPres      80
-   94  MaxIntervalPres      80
-   95  PresVal              90
+   84  WeightVal            62
+   85  FontVal              62
+   86  UnderLineVal         62
+   87  UnderLStyleVal       62
+   88  LineStyleVal         62
+   89  Pattern              62
+   90  Color                62  62
+   91  PresValue            80
+   92  MinimumPres          80
+   93  MaximumPres          80
+   94  MinIntervalPres      80
+   95  MaxIntervalPres      80
+   96  PresVal              91
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-  16  19   2  27  29  22  44  65  56  88  89
+  16  19   2  27  29  22  44  65  56  89  90
 
 Numbers of the rules using NUMBER
-   3  25  23  24  31  38  39  40  41  42  60  64  73  91  92  93  94  95
+   3  25  23  24  31  38  39  40  41  42  60  64  73  92  93  94  95  96
 
 Numbers of the rules using STRING
    4   5  17  33  43  77  78  75

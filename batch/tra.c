@@ -941,7 +941,7 @@ indLine             wi;
 #endif /* __STDC__ */
 
 {
-   int                 i;
+   unsigned int         i;
    ThotBool             ok;
 
    /* cherche le nom dans le tableau des trames Thot */
@@ -960,7 +960,7 @@ indLine             wi;
 		       LineNum);
 	i = 0;
      }
-   return i;
+   return ((int)i);
 }
 
 
@@ -2007,6 +2007,10 @@ SyntRuleNum         pr;
 		       PresentationName (PtStyle, pr, wi);
 		       break;
 
+		    case KWD_Weight:
+		       PresentationName (PtWeight, pr, wi);
+		       break;
+
 		    case KWD_Font:
 		       PresentationName (PtFont, pr, wi);
 		       break;
@@ -2069,28 +2073,24 @@ SyntRuleNum         pr;
 			  PresentValue ('N', wi);
 		       break;
 
-		    case KWD_Bold:
-		       PresentValue ('B', wi);
+		    case KWD_Roman:
+		       PresentValue ('R', wi);
 		       break;
 
 		    case KWD_Italics:
 		       PresentValue ('I', wi);
 		       break;
 
-		    case KWD_Roman:
-		       PresentValue ('R', wi);
-		       break;
-
-		    case KWD_BoldItalics:
-		       PresentValue ('G', wi);
-		       break;
-
-		    case KWD_BoldOblique:
-		       PresentValue ('Q', wi);
-		       break;
-
 		    case KWD_Oblique:
 		       PresentValue ('O', wi);
+		       break;
+
+		    case KWD_Normal:
+		       PresentValue ('N', wi);
+		       break;
+
+		    case KWD_Bold:
+		       PresentValue ('B', wi);
 		       break;
 
 		    case KWD_Times:

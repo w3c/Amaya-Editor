@@ -14,7 +14,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of July 3, 1999</h4>
+<h4>Version of July 6, 1999</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -7393,7 +7393,7 @@ those taking numeric values (<tt>Size, Indent, LineSpacing, LineWeight</tt>),
 </li>
 <li>
 those with values taken from a predefined list (<tt>Adjust, Justify,
-Hyphenate, Style, Font, UnderLine, Thickness, LineStyle</tt>),
+Hyphenate, Style, Weight, Font, UnderLine, Thickness, LineStyle</tt>),
 </li>
 <li>
 those whose value is a name (<tt>FillPattern, Background, Foreground</tt>).
@@ -8317,8 +8317,8 @@ rules taking numeric values: <tt>Size</tt>, <tt>Indent</tt>,
 <li>
 rules whose values are taken from a predefined list (i.e. whose type is an
 enumeration): <tt>Adjust</tt>, <tt>Justify</tt>, <tt>Hyphenate,/TT>,
-<tt>Style</tt>, <tt>Font</tt>, <tt>UnderLine</tt>, <tt>Thickness</tt>,
-<tt>LineStyle</tt>,</tt>
+<tt>Style</tt>, <tt>Weight</tt>, <tt>Font</tt>, <tt>UnderLine</tt>,
+<tt>Thickness</tt>, <tt>LineStyle</tt>,</tt>
 </li>
 <li>
 rules whose value is a name: <tt>FillPattern</tt>, <tt>Background</tt>,
@@ -8369,6 +8369,7 @@ followed by the name of the value.  The names of the fill patterns (the
                       'Justify' [ '=' BoolVal ] /
                       'Hyphenate' [ '=' BoolVal ] /
                       'Style' [ '=' StyleVal ] /
+                      'Weight' [ '=' WeightVal ] /
                       'Font' [ '=' FontVal ] /
                       'UnderLine' [ '=' UnderLineVal ] /
                       'Thickness' [ '=' ThicknessVal ] /
@@ -8386,9 +8387,8 @@ followed by the name of the value.  The names of the fill patterns (the
      AdjustVal      = 'Left' / 'Right' / 'VMiddle' / 
                       'LeftWithDots' .
      BoolVal        = 'Yes' / 'No' .
-     StyleVal       = 'Bold' / 'Italics' / 'Roman' /
-                      'BoldItalics' / 'Oblique' /
-                      'BoldOblique' .
+     StyleVal       = 'Roman' / 'Italics' / 'Oblique' .
+     WeightVal      = 'Normal' / 'Bold' .
      FontVal        = 'Times' / 'Helvetica' / 'Courier' .
      UnderLineVal   = 'NoUnderline' / 'UnderLined' /
                       'OverLined' / 'CrossedOut' .
@@ -9154,6 +9154,7 @@ PresRule      = 'Size' [ PresRelation ] /
                 'Justify' [ '=' BoolVal ] /
                 'Hyphenate' [ '=' BoolVal ] /
                 'Style' [ '=' StyleVal ] /
+                'Weight' [ '=' WeightVal ] /
                 'Font' [ '=' FontVal ] /
                 'UnderLine' [ '=' UnderLineVal ] /
                 'Thickness' [ '=' ThicknessVal ] /
@@ -9171,9 +9172,8 @@ PresRelation  = '=' PresValue /
 AdjustVal     = 'Left' / 'Right' / 'VMiddle' / 
                 'LeftWithDots' .
 BoolVal       = 'Yes' / 'No' .
-StyleVal      = 'Bold' / 'Italics' / 'Roman' /
-                'BoldItalics' / 'Oblique' /
-                'BoldOblique' .
+StyleVal      = 'Roman' / 'Italics' / 'Oblique' .
+WeightVal     = 'Normal' / 'Bold' .
 FontVal       = 'Times' / 'Helvetica' / 'Courier' .
 UnderLineVal  = 'NoUnderline' / 'UnderLined' /
                 'OverLined' / 'CrossedOut' .
