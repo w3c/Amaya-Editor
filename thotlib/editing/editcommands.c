@@ -1744,21 +1744,21 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 			    PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb,
 			    int frame, PtrTextBuffer clipboard)
 {
-   int                 ind, endInd;
-   PtrTextBuffer       pBuffer;
-   PtrTextBuffer       pNewBuffer;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   ViewSelection      *pViewSelEnd;
-   PtrTextBuffer       pCurrentBuffer;
-   int                 i, l;
-   int                 xDelta, yDelta;
-   int                 spacesDelta, charsDelta;
-   int                 adjust;
-   SpecFont             font;
-   int                 height;
-   int                 width;
-   PictInfo           *image;
+  PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pNewBuffer;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSelEnd;
+  PtrTextBuffer       pCurrentBuffer;
+  SpecFont             font;
+  int                 ind, endInd;
+  int                 i, l;
+  int                 xDelta, yDelta;
+  int                 spacesDelta, charsDelta;
+  int                 adjust;
+  int                 height;
+  int                 width;
+  PictInfo           *image;
 
    font = pBox->BxFont;
    width = 2; /* see GiveTextSize function */
@@ -1787,9 +1787,11 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	       else
 		 {
 		    /* buffer debut d'insertion */
-		    pBuffer = pViewSel->VsBuffer->BuPrevious;
-		    /* index debut d'insertion */
-		    ind = pBuffer->BuLength + 1;
+		   pBuffer = pViewSel->VsBuffer;
+		   if ( pBuffer->BuPrevious)
+		     pBuffer = pBuffer->BuPrevious;
+		   /* index debut d'insertion */
+		   ind = pBuffer->BuLength + 1;
 		 }
 
 	       /* Insertion des caracteres */

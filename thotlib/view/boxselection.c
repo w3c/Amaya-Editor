@@ -369,38 +369,6 @@ PtrTextBuffer DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 
 
 /*----------------------------------------------------------------------
-   LocateBuffer parcours les buffers de la boite de texte pour trouver
-   celui qui contient le caractere d'indice global index   
-   ainsi que son indice dans ce buffer.                    
-  ----------------------------------------------------------------------*/
-static void LocateBuffer (PtrTextBuffer *pBuffer, int *index)
-{
-   ThotBool            still;
-
-   still = (*pBuffer != NULL);
-   while (still)
-     {
-       /* Est-ce le bon buffer ? */
-       if ((*pBuffer)->BuLength < *index)
-	 /* Non : il faut passer au buffer suivant */
-	 if ((*pBuffer)->BuNext == NULL)
-	   {
-	     /* arrive en fin de liste de buffers sans trouver le caractere */
-	     *index = (*pBuffer)->BuLength + 1;
-	     still = FALSE;
-	   }
-	 else
-	   /* passe au buffer suivant */
-	   {
-	     *index -= (*pBuffer)->BuLength;
-	     *pBuffer = (*pBuffer)->BuNext;
-	   }
-       else
-	 still = FALSE;
-     }
-}
-
-/*----------------------------------------------------------------------
    ComputeViewSelMarks calcule la marque de selection connaissant la 
    boite entiere VsBox, le buffer VsBuffer et l'index du   
    caractere VsIndBuf marque'.                             
@@ -426,7 +394,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	pBox = pBox->BxNexChild;
       /* look for the right box */
       while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos &&
-	     pBox->BxNexChild->BxNChars > 0)
+	     (pBox->BxNexChild->BxNChars > 0 || pBox->BxNexChild->BxNexChild))
 	pBox = pBox->BxNexChild;
       pos -= pBox->BxFirstChar;
       selMark->VsIndBox = pos;
@@ -519,17 +487,24 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
 		      pAb->AbLeafType == LtPath ||
 		      pAb->AbLeafType == LtGraphics);
-
+	  /*printf ("firstChar=%d lastChar=%d\n", firstChar, lastChar);*/
 	  /* check index values */
 	  if (pAb->AbLeafType == LtText)
 	    {
 	      /* it's a text */
-	      if (firstChar == 0 && lastChar != 0)
+	      if (firstChar == 0 && lastChar == 0)
+		{
+		  if (!SelPosition && !startSelection)
+		    {
+		      /* select the whole text */
+		      firstChar = 1;
+		      lastChar = pAb->AbVolume;
+		    }
+		}
+	      else if (firstChar == 0)
 		firstChar = 1;
 	      else if (firstChar > 1 && lastChar == 0)
 		lastChar = pAb->AbVolume;
-	      else if (firstChar == 0)
-		firstChar = 1;
 	    }
 	  else if (!graphSel && pAb->AbLeafType != LtPicture)
 	    firstChar = 0;

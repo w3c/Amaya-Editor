@@ -268,492 +268,501 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
   ----------------------------------------------------------------------*/
 static void MovingCommands (int code, Document doc, View view, ThotBool extendSel)
 {
-   PtrBox              pBox, pBoxBegin, pBoxEnd;
-   PtrElement          pEl = NULL, firstEl, lastEl;
-   PtrLine             pLine;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   ViewSelection      *pViewSelEnd;
-   CHAR_T              word[MAX_WORD_LEN];
-   int                 frame, x, y, i;
-   int                 xDelta, yDelta;
-   int                 h, w;
-   int                 indpos, xpos;
-   int                 first, last;
-   int                 firstC, lastC;
-   ThotBool            done, top = TRUE;
+  PtrBox              pBox, pBoxBegin, pBoxEnd;
+  PtrElement          pEl = NULL, firstEl, lastEl;
+  PtrLine             pLine;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSelEnd;
+  CHAR_T              word[MAX_WORD_LEN];
+  int                 frame, x, y, i;
+  int                 xDelta, yDelta;
+  int                 h, w;
+  int                 indpos, xpos;
+  int                 first, last;
+  int                 firstC, lastC;
+  ThotBool            done, top = TRUE;
 
-   indpos = 0;
-   xpos = 0;
-   CloseInsertion ();
-   frame = GetWindowNumber (doc, view);
-   if (frame > 0)
-     {
-       pFrame = &ViewFrameTable[frame - 1];
-       /* reformat the current paragraph if necessary */
-       if (ThotLocalActions[T_updateparagraph])
-	 (*ThotLocalActions[T_updateparagraph]) (pFrame->FrAbstractBox, frame);
-       pViewSel = &(pFrame->FrSelectionBegin);
-       pViewSelEnd = &(pFrame->FrSelectionEnd);
-       /* beginning of the selection */
-       pBoxBegin = pViewSel->VsBox;
-       if (pBoxBegin)
-	 {
-	   xpos = pViewSel->VsXPos;
-	   while (pBoxBegin && pBoxBegin->BxType == BoGhost &&
-		  pBoxBegin->BxAbstractBox &&
-		  pBoxBegin->BxAbstractBox->AbFirstEnclosed)
-	       /* the real selection is on child elements */
-	       pBoxBegin = pBoxBegin->BxAbstractBox->AbFirstEnclosed->AbBox;
-	 }
+  indpos = 0;
+  xpos = 0;
+  CloseInsertion ();
+  frame = GetWindowNumber (doc, view);
+  if (frame > 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      /* reformat the current paragraph if necessary */
+      if (ThotLocalActions[T_updateparagraph])
+	(*ThotLocalActions[T_updateparagraph]) (pFrame->FrAbstractBox, frame);
+      pViewSel = &(pFrame->FrSelectionBegin);
+      pViewSelEnd = &(pFrame->FrSelectionEnd);
+      /* beginning of the selection */
+      pBoxBegin = pViewSel->VsBox;
+      if (pBoxBegin)
+	{
+	  xpos = pViewSel->VsXPos;
+	  while (pBoxBegin && pBoxBegin->BxType == BoGhost &&
+		 pBoxBegin->BxAbstractBox &&
+		 pBoxBegin->BxAbstractBox->AbFirstEnclosed)
+	    /* the real selection is on child elements */
+	    pBoxBegin = pBoxBegin->BxAbstractBox->AbFirstEnclosed->AbBox;
+	}
+      
+      /* end of the selection */
+      pBoxEnd = pViewSelEnd->VsBox;
+      if (pBoxEnd != NULL)
+	{
+	  while (pBoxEnd != NULL && pBoxEnd->BxType == BoGhost &&
+		 pBoxEnd->BxAbstractBox &&
+		 pBoxEnd->BxAbstractBox->AbFirstEnclosed)
+	    {
+	      /* the real selection is on child elements */
+	      pBoxEnd = pBoxEnd->BxAbstractBox->AbFirstEnclosed->AbBox;
+	      /* take the last child into account */
+	      while (pBoxEnd->BxAbstractBox->AbNext != NULL)
+		pBoxEnd = pBoxEnd->BxAbstractBox->AbNext->AbBox;
+	      while (pBoxEnd->BxAbstractBox->AbPrevious != NULL &&
+		     pBoxEnd->BxAbstractBox->AbPresentationBox)
+		pBoxEnd = pBoxEnd->BxAbstractBox->AbPrevious->AbBox;
+	    }
+	}
 
-       /* end of the selection */
-       pBoxEnd = pViewSelEnd->VsBox;
-       if (pBoxEnd != NULL)
-	 {
-	   while (pBoxEnd != NULL && pBoxEnd->BxType == BoGhost &&
-		  pBoxEnd->BxAbstractBox &&
-		  pBoxEnd->BxAbstractBox->AbFirstEnclosed)
-	     {
-	       /* the real selection is on child elements */
-	       pBoxEnd = pBoxEnd->BxAbstractBox->AbFirstEnclosed->AbBox;
-	       /* take the last child into account */
-	       while (pBoxEnd->BxAbstractBox->AbNext != NULL)
-		 pBoxEnd = pBoxEnd->BxAbstractBox->AbNext->AbBox;
-	       while (pBoxEnd->BxAbstractBox->AbPrevious != NULL &&
-		      pBoxEnd->BxAbstractBox->AbPresentationBox)
-		 pBoxEnd = pBoxEnd->BxAbstractBox->AbPrevious->AbBox;
-	     }
-	 }
+      /* Check if boxes are visible */
+      GetSizesFrame (frame, &w, &h);
+      if (!RightExtended && !LeftExtended)
+	{
+	  if (pBoxBegin != NULL &&
+	      (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
+	       pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+	    {
+	      /* the element is not displayed within the window */
+	      top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
+	      pBoxBegin = NULL;
+	    }
+	  if (pBoxEnd != NULL &&
+	      (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
+	       pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
+	    {
+	      /* the element is not displayed within the window */
+	      pBoxEnd = NULL;
+	    }
+	}
+      if (pBoxBegin == NULL && pBoxEnd != NULL)
+	pBoxBegin = pBoxEnd;
+      else if (pBoxBegin != NULL && pBoxEnd == NULL)
+	pBoxEnd = pBoxBegin;
 
-       /* Check if boxes are visible */
-       GetSizesFrame (frame, &w, &h);
-       if (!RightExtended && !LeftExtended)
-	 {
-	   if (pBoxBegin != NULL &&
-	       (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
-		pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
-	     {
-	       /* the element is not displayed within the window */
-	       top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
-	       pBoxBegin = NULL;
-	     }
-	   if (pBoxEnd != NULL &&
-	       (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
-		pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
-	     {
-	       /* the element is not displayed within the window */
-	       pBoxEnd = NULL;
-	     }
-	 }
-       if (pBoxBegin == NULL && pBoxEnd != NULL)
-	 pBoxBegin = pBoxEnd;
-       else if (pBoxBegin != NULL && pBoxEnd == NULL)
-	 pBoxEnd = pBoxBegin;
+      pBox = pBoxBegin;
+      if (pBox == NULL)
+	{
+	  if (!Retry)
+	    {
+	      /* initialize a selection and retry */
+	      Retry = TRUE;
+	      ClickX = 0;
+	      if (top)
+		ClickY = 0;
+	      else
+		ClickY = h;
+	      LocateSelectionInView (frame, 0, ClickY, 2);
+	      Retry = FALSE;
+	      return;
+	    }
+	  else
+	    pBox = NULL;
+	}
+      /* avoid to process two moving commands at the same time */
+      if (Moving)
+	return;
+      else
+	Moving = TRUE;
+      if (DocSelectedAttr)
+	{
+	  /* work within an attribute */
+	  firstC = FirstSelectedCharInAttr;
+	  lastC = LastSelectedCharInAttr;
+	  firstEl = NULL;
+	  lastEl = NULL;
+	}
+      else
+	{
+	  firstC = FirstSelectedChar;
+	  lastC = LastSelectedChar;
+	  firstEl = FirstSelectedElement;
+	  lastEl = LastSelectedElement;
+	}
+      /* could we shrink the current extended selection */
+      if (extendSel)
+	{
+	  if (firstC == lastC &&
+	      firstEl == lastEl &&
+	      SelPosition)
+	    {
+	      RightExtended = FALSE;
+	      LeftExtended = FALSE;
+	    }
+	  else if (!RightExtended && !LeftExtended)
+	    {
+	      if (firstEl == FixedElement &&
+		  firstC == FixedChar)
+		{
+		  RightExtended = TRUE;
+		  LeftExtended = FALSE;
+		}
+	      else
+		{
+		  RightExtended = FALSE;
+		  LeftExtended = TRUE;
+		}
+	    }
+	}
 
-       pBox = pBoxBegin;
-       if (pBox == NULL)
-	 {
-	   if (!Retry)
-	     {
-	       /* initialize a selection and retry */
-	       Retry = TRUE;
-	       ClickX = 0;
-	       if (top)
-		 ClickY = 0;
-	       else
-		 ClickY = h;
-	       LocateSelectionInView (frame, 0, ClickY, 2);
-	       Retry = FALSE;
-	       return;
-	     }
-	   else
-	     pBox = NULL;
-	 }
-       /* avoid to process two moving commands at the same time */
-       if (Moving)
-	 return;
-       else
-	 Moving = TRUE;
-       if (DocSelectedAttr)
-	 {
-	   /* work within an attribute */
-	   firstC = FirstSelectedCharInAttr;
-	   lastC = LastSelectedCharInAttr;
-	   firstEl = NULL;
-	   lastEl = NULL;
-	 }
-       else
-	 {
-	   firstC = FirstSelectedChar;
-	   lastC = LastSelectedChar;
-	   firstEl = FirstSelectedElement;
-	   lastEl = LastSelectedElement;
-	 }
-       /* could we shrink the current extended selection */
-       if (extendSel)
-	 {
-	   if (firstC == lastC &&
-	       firstEl == lastEl &&
-	       SelPosition)
-	     {
-	       RightExtended = FALSE;
-	       LeftExtended = FALSE;
-	     }
-	   else if (!RightExtended && !LeftExtended)
-	     {
-	       if (firstEl == FixedElement &&
-		   firstC == FixedChar)
-		 {
-		   RightExtended = TRUE;
-		   LeftExtended = FALSE;
-		 }
-	       else
-		 {
-		   RightExtended = FALSE;
-		   LeftExtended = TRUE;
-		 }
-	     }
-	 }
+      /* doesn't change the current Shrink value in other cases */
+      switch (code)
+	{
+	case 1:	/* Backward one character (<-) */
+	  if (pBox)
+	    {
+	      done = FALSE;
+	      pEl = pBox->BxAbstractBox->AbElement;
+	      if (pBox->BxAbstractBox->AbPresentationBox)
+		/* the selection is within an attribute value */
+		done = FALSE;
+	      else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		       MathMoveBackwardCursorFunction != NULL)
+		done = MathMoveBackwardCursorFunction ();
+	      else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+		       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+		{
+		  TtcPreviousElement (doc, view);
+		  done = TRUE;
+		}
+	      if (!done)
+		{
+		  if (extendSel && RightExtended)
+		    {
+		      /* move the right extremity */
+		      pBox = pBoxEnd;
+		      x = lastC;
+		      xpos = pViewSelEnd->VsXPos;
+		    }
+		  else
+		    /* move the left extremity */
+		    x = firstC;
+		  if (x > 0)
+		    {
+		      if (extendSel)
+			{
+			  if (RightExtended && firstC == lastC - 1 &&
+			      firstEl == lastEl)
+			    {
+			      /* a single insert point */
+			      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
+					       FALSE, TRUE, FALSE, FALSE);
+			      RightExtended = FALSE;
+			    }
+			  else if (SelPosition &&
+				   firstC == lastC &&
+				   firstEl == lastEl)
+			    {
+			      /* select one character */
+			      ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
+					       TRUE, TRUE, FALSE, FALSE);
+			      LeftExtended = TRUE;
+			    }
+			  else
+			    /* extend the selection */
+			    ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
+					     TRUE, TRUE, FALSE, FALSE);
+			}
+		      else
+			/* the x is equal to first */
+			ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
+					 FALSE, TRUE, FALSE, FALSE);
+		      /* show the beginning of the selection */
+		      if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
+			{
+			  if (pFrame->FrXOrg > 0)
+			    TtcScrollLeft (doc, view);
+			}
+		      else if (pBoxBegin->BxXOrg + pViewSel->VsXPos > pFrame->FrXOrg + w)
+			HorizontalScroll (frame, pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg - w, 0);
+		    }
+		  else
+		    {
+		      /* a new box will be selected */
+		      /* check if the box is within a line */
+		      pLine = SearchLine (pBox);
+		      if (pLine)
+			{
+			  y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			  x = pBox->BxXOrg + xpos;
+			}
+		      else
+			{
+			  /* moving outside a block of lines */
+			  y = pBox->BxYOrg - 2;
+			  x = pBox->BxXOrg + pBox->BxWidth;
+			}
+		      xDelta = -2;
+		      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
+		    }
+		}
+	    }
+	  /* Get the last X position */
+	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	  break;
+	  
+	case 2:	/* Forward one character (->) */
+	  if (pBox)
+	    {
+	      done = FALSE;
+	      pEl = pBox->BxAbstractBox->AbElement;
+	      if (pBox->BxAbstractBox->AbPresentationBox)
+		/* the selection is within an attribute value */
+		done = FALSE;
+	      else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		       MathMoveForwardCursorFunction != NULL)
+		done = MathMoveForwardCursorFunction ();
+	      else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+		       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+		{
+		  TtcNextElement (doc, view);
+		  done = TRUE;
+		}
+	      if (!done)
+		{
+		  if (!extendSel || !LeftExtended)
+		    {
+		      /* move the right extremity */
+		      pBox = pBoxEnd;
+		      pEl = pBox->BxAbstractBox->AbElement;
+		      if (!extendSel && pViewSelEnd->VsBox &&
+			  pViewSelEnd->VsBox->BxType == BoGhost)
+			x = pBox->BxNChars;
+		      else if ( pBox->BxAbstractBox &&
+				pBox->BxAbstractBox->AbLeafType == LtCompound)
+			x = pBox->BxNChars;
+		      else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
+			x =  pBox->BxNChars;
+		      else
+			x = lastC;
+		    }
+		  else
+		    /* move the left extremity */
+		    x = firstC;
+		  if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+		    {
+		      if (extendSel)
+			{
+			  if (LeftExtended && firstC == lastC - 1 &&
+			      firstEl == lastEl)
+			    {
+			      /* a single insert point */
+			      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
+					       FALSE, TRUE, FALSE, FALSE);
+			      LeftExtended = FALSE;
+			    }
+			  else if (SelPosition &&
+				   firstC == lastC &&
+				   firstEl == lastEl)
+			    {
+			      /* select one character */
+			      ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
+					       TRUE, TRUE, FALSE, FALSE);
+			      RightExtended = TRUE;
+			    }
+			  else
+			    /* extend the end of the current selection */
+			    ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
+					     TRUE, TRUE, FALSE, FALSE);
+			}
+		      else
+			ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
+					 FALSE, TRUE, FALSE, FALSE);
+		      /* show the beginning of the selection */
+		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
+			{
+			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
+			    TtcScrollRight (doc, view);
+			}
+		      else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
+			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
+		    }
+		  else
+		    {
+		      /* check if the box is within a line */
+		      pLine = SearchLine (pBox);
+		      if (pLine)
+			{
+			  y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			  x = pBox->BxXOrg + pBox->BxWidth;
+			}
+		      else
+			{
+			  /* moving ouside a block of lines */
+			  y = pBox->BxYOrg + pBox->BxHeight + 2;
+			  x = pBox->BxXOrg;
+			}
+		      xDelta = 2;
+		      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
+		    }
+		}
+	    }
+	  /* Get the last X position */
+	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	  break;
 
-       /* doesn't change the current Shrink value in other cases */
-       switch (code)
-	 {
-	 case 1:	/* Backward one character (<-) */
-	   if (pBox)
-	     {
-	     done = FALSE;
-	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (pBox->BxAbstractBox->AbPresentationBox)
-	       /* the selection is within an attribute value */
-	       done = FALSE;
-	     else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
-		      MathMoveBackwardCursorFunction != NULL)
-	       done = MathMoveBackwardCursorFunction ();
-	     else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
-		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
-	       {
-		 TtcPreviousElement (doc, view);
-		 done = TRUE;
-	       }
-	     if (!done)
-	       {
-	       if (extendSel && RightExtended)
-		 {
-		   /* move the right extremity */
-		   pBox = pBoxEnd;
-		   x = lastC;
-		   xpos = pViewSelEnd->VsXPos;
-		 }
-	       else
-		 /* move the left extremity */
-		 x = firstC;
-	       if (x > 0)
-		 {
-		   if (extendSel)
-		     {
-		       if (RightExtended && firstC == lastC - 1 &&
-			   firstEl == lastEl)
-			 {
-			   /* a single insert point */
-			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
-			   RightExtended = FALSE;
-			 }
-		       else if (SelPosition &&
-				firstC == lastC &&
-				firstEl == lastEl)
-			 {
-			   /* select one character */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x - 1, TRUE, TRUE, FALSE, FALSE);
-			   LeftExtended = TRUE;
-			 }
-		       else
-			 /* extend the selection */
-			 ChangeSelection (frame, pBox->BxAbstractBox, x - 1, TRUE, TRUE, FALSE, FALSE);
-		     }
-		   else
-		     /* the x is equal to first */
-		     ChangeSelection (frame, pBox->BxAbstractBox, x - 1, FALSE, TRUE, FALSE, FALSE);
-		   /* show the beginning of the selection */
-		   if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
-		     {
-		       if (pFrame->FrXOrg > 0)
-			 TtcScrollLeft (doc, view);
-		     }
-		   else if (pBoxBegin->BxXOrg + pViewSel->VsXPos > pFrame->FrXOrg + w)
-		     HorizontalScroll (frame, pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg - w, 0);
-		 }
-	       else
-		 {
-		   /* a new box will be selected */
-		   /* check if the box is within a line */
-		   pLine = SearchLine (pBox);
-		   if (pLine)
-		     {
-		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
-		       x = pBox->BxXOrg + xpos;
-		     }
-		   else
-		     {
-		       /* moving outside a block of lines */
-		       y = pBox->BxYOrg - 2;
-		       x = pBox->BxXOrg + pBox->BxWidth;
-		     }
-		   xDelta = -2;
-		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
-		 }
-	       }
-	     }
-	   /* Get the last X position */
-	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-	   break;
+	case 3:	/* End of line (^E) */
+	  if (pBox)
+	    MoveInLine (frame, TRUE);
+	  if (pViewSel->VsBox)
+	    /* Get the last X position */
+	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	  break;
 	   
-	 case 2:	/* Forward one character (->) */
-	   if (pBox)
-	     {
-	     done = FALSE;
-	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (pBox->BxAbstractBox->AbPresentationBox)
-	       /* the selection is within an attribute value */
-	       done = FALSE;
-	     else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
-		      MathMoveForwardCursorFunction != NULL)
-	       done = MathMoveForwardCursorFunction ();
-	     else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
-		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
-	       {
-		 TtcNextElement (doc, view);
-		 done = TRUE;
-	       }
-	     if (!done)
-	       {
-	       if (!extendSel || !LeftExtended)
-		 {
-		   /* move the right extremity */
-		   pBox = pBoxEnd;
-		   pEl = pBox->BxAbstractBox->AbElement;
-		   if (!extendSel && pViewSelEnd->VsBox &&
-		       pViewSelEnd->VsBox->BxType == BoGhost)
-		     x = pBox->BxNChars;
-		   else if ( pBox->BxAbstractBox &&
-			     pBox->BxAbstractBox->AbLeafType == LtCompound)
-		     x = pBox->BxNChars;
-		   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
-		     x =  pBox->BxNChars;
-		   else
-		     x = lastC;
-		 }
-	       else
-		 /* move the left extremity */
-		 x = firstC;
-	       if (x < pBox->BxAbstractBox->AbBox->BxNChars)
-		 {
-		   if (extendSel)
-		     {
-		       if (LeftExtended && firstC == lastC - 1 &&
-			   firstEl == lastEl)
-			 {
-			   /* a single insert point */
-			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
-			   LeftExtended = FALSE;
-			 }
-		       else if (SelPosition &&
-				firstC == lastC &&
-				firstEl == lastEl)
-			 {
-			   /* select one character */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
-			   RightExtended = TRUE;
-			 }
-		       else
-			 /* extend the end of the current selection */
-			 ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
-		     }
-		   else
-		     ChangeSelection (frame, pBox->BxAbstractBox, x + 1, FALSE, TRUE, FALSE, FALSE);
-		   /* show the beginning of the selection */
-		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
-		     {
-		       if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
-			 TtcScrollRight (doc, view);
-		     }
-		   else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
-		     HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
-		 }
-	       else
-		 {
-		   /* check if the box is within a line */
-		   pLine = SearchLine (pBox);
-		   if (pLine)
-		     {
-		       y = pBox->BxYOrg + (pBox->BxHeight / 2);
-		       x = pBox->BxXOrg + pBox->BxWidth;
-		     }
-		   else
-		     {
-		       /* moving ouside a block of lines */
-		       y = pBox->BxYOrg + pBox->BxHeight + 2;
-		       x = pBox->BxXOrg;
-		     }
-		   xDelta = 2;
-		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
-		 }
-	       }
-	     }
-	   /* Get the last X position */
-	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-	   break;
+	case 4:	/* Beginning of line (^A) */
+	  if (pBox)
+	    MoveInLine (frame, FALSE);
+	  if (pViewSel->VsBox)
+	    /* Get the last X position */
+	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	  break;
 	   
-	 case 3:	/* End of line (^E) */
-	   if (pBox)
-	     MoveInLine (frame, TRUE);
-	   if (pViewSel->VsBox)
-	     /* Get the last X position */
-	     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-	   break;
-	   
-	 case 4:	/* Beginning of line (^A) */
-	   if (pBox)
-	     MoveInLine (frame, FALSE);
-	   if (pViewSel->VsBox)
-	     /* Get the last X position */
-	     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-	   break;
-	   
-	 case 7:	/* Next line (^N) */
-	   if (pBox)
-	     pEl = pBox->BxAbstractBox->AbElement;
-	   if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
-	       pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
-	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
-	       /* the selection is not  within an attribute value */
-	     TtcNextElement (doc, view);
-	   else if (pBox)
-	     {
-	       pBox = pBoxEnd;
-	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
-	       if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-		 x -= BoxCharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
-	       y = pBox->BxYOrg + pBox->BxHeight;
-	       yDelta = 10;
-	       /* store the end position of the selection as the new reference */
-	       if (extendSel && LeftExtended)
-		 {
-		   i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
-		   if (i < 5 && i > -5)
-		     {
-		       /* change the extension direction */
-		       LeftExtended = FALSE;
-		       RightExtended = TRUE;
-		     }
-		   else
-		     {
-		       /* just decrease the current extension */
-		       y = pBoxBegin->BxYOrg;
-		       x = ClickX + pFrame->FrXOrg;
-		       pBox = pBoxBegin;
-		     }
-		 }
-	       /* there was a drag, but it's finished now */
-	       else if (!extendSel)
-		 {
-		   if (!SelPosition &&
-		       (pBoxBegin != pBoxEnd ||
-			!IsConstantConstructor (pBox->BxAbstractBox->AbElement)))
-		     /* changing from an extension to a simple selection */
-		     ClickX = x - pFrame->FrXOrg;
-		   else
-		     /* take the original position into account */
-		     x = ClickX + pFrame->FrXOrg;
-		 }
-	       else
-		 RightExtended = TRUE;
+	case 7:	/* Next line (^N) */
+	  if (pBox)
+	    pEl = pBox->BxAbstractBox->AbElement;
+	  if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
+	      pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+	      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	    /* the selection is not  within an attribute value */
+	    TtcNextElement (doc, view);
+	  else if (pBox)
+	    {
+	      pBox = pBoxEnd;
+	      x = pViewSelEnd->VsXPos + pBox->BxXOrg;
+	      if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
+		x -= BoxCharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
+	      y = pBox->BxYOrg + pBox->BxHeight;
+	      yDelta = 10;
+	      /* store the end position of the selection as the new reference */
+	      if (extendSel && LeftExtended)
+		{
+		  i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
+		  if (i < 5 && i > -5)
+		    {
+		      /* change the extension direction */
+		      LeftExtended = FALSE;
+		      RightExtended = TRUE;
+		    }
+		  else
+		    {
+		      /* just decrease the current extension */
+		      y = pBoxBegin->BxYOrg;
+		      x = ClickX + pFrame->FrXOrg;
+		      pBox = pBoxBegin;
+		    }
+		}
+	      /* there was a drag, but it's finished now */
+	      else if (!extendSel)
+		{
+		  if (!SelPosition &&
+		      (pBoxBegin != pBoxEnd ||
+		       !IsConstantConstructor (pBox->BxAbstractBox->AbElement)))
+		    /* changing from an extension to a simple selection */
+		    ClickX = x - pFrame->FrXOrg;
+		  else
+		    /* take the original position into account */
+		    x = ClickX + pFrame->FrXOrg;
+		}
+	      else
+		RightExtended = TRUE;
 
-	       LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
-	     }
-	   break;
+	      LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+	    }
+	  break;
 	   
-	 case 8:	/* Previous line (^P) */
-	   if (pBox)
-	     pEl = pBox->BxAbstractBox->AbElement;
-	   if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
-	       pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
-	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
-	     TtcPreviousElement (doc, view);
-	   else if (pBox)
-	     {
-	       y = pBoxBegin->BxYOrg;
-	       x = ClickX + pFrame->FrXOrg;
-	       yDelta = -10;
-	       if (extendSel && RightExtended)
-		 {
-		   i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
-		   if (i < 5 && i > -5)
-		     {
-		       /* change the extension direction */
-		       RightExtended = FALSE;
-		       LeftExtended = TRUE;
-		     }
-		   else
-		     {
-		       /* just decrease the curent extension */
-		       y = pBoxEnd->BxYOrg;
-		       x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
-		       pBox = pBoxEnd;
-		     }
-		 }
-	       else if (extendSel)
-		 LeftExtended = TRUE;
+	case 8:	/* Previous line (^P) */
+	  if (pBox)
+	    pEl = pBox->BxAbstractBox->AbElement;
+	  if (pBox && !pBox->BxAbstractBox->AbPresentationBox &&
+	      pEl && !strcmp (pEl->ElStructSchema->SsName, "SVG") &&
+	      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	    TtcPreviousElement (doc, view);
+	  else if (pBox)
+	    {
+	      y = pBoxBegin->BxYOrg;
+	      x = ClickX + pFrame->FrXOrg;
+	      yDelta = -10;
+	      if (extendSel && RightExtended)
+		{
+		  i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
+		  if (i < 5 && i > -5)
+		    {
+		      /* change the extension direction */
+		      RightExtended = FALSE;
+		      LeftExtended = TRUE;
+		    }
+		  else
+		    {
+		      /* just decrease the curent extension */
+		      y = pBoxEnd->BxYOrg;
+		      x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
+		      pBox = pBoxEnd;
+		    }
+		}
+	      else if (extendSel)
+		LeftExtended = TRUE;
 
-	       LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
-	     }
-	   break;
+	      LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+	    }
+	  break;
 	   
-	 case 9:	/* Previous word (^<-) */
-	   WordSearchContext.SDocument = LoadedDocument[doc - 1];
-	   WordSearchContext.SStartToEnd = FALSE;
-	   if (RightExtended)
-	     {
-	       /* shrink the current selection */
-	       first = lastC;
-	       pEl = lastEl;
-	     }
-	   else
-	     {
-	       /* extend the current selection */
-	       first = firstC;
-	       pEl = firstEl;
-	     }
-	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((RightExtended && last >= lastC) ||
-	       (LeftExtended && first == firstC - 1))
-	     /* It was not the beginning of the next word */
-	     done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if (extendSel)
-	     {
-	       if (!LeftExtended && firstEl == FixedElement &&
-		   last <= FixedChar)
-		 {
-		 /* change the extension direction */
-		   RightExtended = FALSE;
-		   LeftExtended = TRUE;
-		 }
-	       if (LeftExtended)
-		 i = first;
-	       else
-		 i = last;
-	       if (pEl->ElAbstractBox[view - 1])
-		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
-	     }
-	   else
-	     {
-	       SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
-	       /* remove the extension direction */
-	       LeftExtended = FALSE;
-	     }
-	   break;
-	   
-	 case 10:	/* Next word (^->) */
+	case 9:	/* Previous word (^<-) */
+	  WordSearchContext.SDocument = LoadedDocument[doc - 1];
+	  WordSearchContext.SStartToEnd = FALSE;
+	  if (RightExtended)
+	    {
+	      /* shrink the current selection */
+	      first = lastC;
+	      pEl = lastEl;
+	    }
+	  else
+	    {
+	      /* extend the current selection */
+	      first = firstC;
+	      pEl = firstEl;
+	    }
+	  done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
+	  if ((RightExtended && last >= lastC) ||
+	      (LeftExtended && first == firstC - 1))
+	    /* It was not the beginning of the next word */
+	    done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
+	  if (extendSel)
+	    {
+	      if (!LeftExtended && firstEl == FixedElement &&
+		  last <= FixedChar)
+		{
+		  /* change the extension direction */
+		  RightExtended = FALSE;
+		  LeftExtended = TRUE;
+		}
+	      if (LeftExtended)
+		i = first;
+	      else
+		i = last;
+	      if (pEl->ElAbstractBox[view - 1])
+		ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
+				 TRUE, TRUE, FALSE, FALSE);
+	    }
+	  else
+	    {
+	      SelectString (LoadedDocument[doc - 1], pEl, first, first - 1);
+	      /* remove the extension direction */
+	      LeftExtended = FALSE;
+	    }
+	  break;
+
+	case 10:	/* Next word (^->) */
 	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
 	   WordSearchContext.SStartToEnd = TRUE;
 	   if (LeftExtended)
@@ -778,7 +787,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       if (LeftExtended && firstEl == FixedElement &&
 		   first >= FixedChar)
 		 {
-		 /* change the extension direction */
+		   /* change the extension direction */
 		   RightExtended = TRUE;
 		   LeftExtended = FALSE;
 		 }
@@ -787,7 +796,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       else
 		 i = last;
 	       if (pEl->ElAbstractBox[view - 1])
-		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i, TRUE, TRUE, FALSE, FALSE);
+		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
+				  TRUE, TRUE, FALSE, FALSE);
 	     }
 	   else
 	     {
@@ -796,9 +806,9 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       LeftExtended = FALSE;
 	     }
 	   break;
-	 }
-       Moving = FALSE;
-     }
+	}
+      Moving = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------

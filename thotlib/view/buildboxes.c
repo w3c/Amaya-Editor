@@ -555,12 +555,12 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	{
 	case 'c':	/*integrale curviligne */
 	case 'i':	/*integrale */
-	  *width = BoxCharacterWidth (231, font);
+	  *width = BoxCharacterWidth (243, font);
 	  *height += hfont;
 	  break;
 	case 'd':	/*integrale double */
-	  *width = BoxCharacterWidth (231, font) +
-	           BoxCharacterWidth (231, font) / 2;
+	  *width = BoxCharacterWidth (243, font) +
+	           BoxCharacterWidth (243, font) / 2;
 	  *height += hfont;
 	  break;
 	case 'r':	/* root */

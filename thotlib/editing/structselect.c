@@ -1671,7 +1671,8 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
               element pEl.
    If drag is TRUE, only the minimum processing is done.
   ----------------------------------------------------------------------*/
-void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin, ThotBool drag)
+void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
+		       ThotBool drag)
 {
   PtrElement          oldFirstEl, oldLastEl, pElP;
   int                 oldFirstChar, oldLastChar;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -116,8 +116,8 @@ void GetXYOrg (int frame, int *XOrg, int *YOrg)
   ----------------------------------------------------------------------*/
 void DefClip (int frame, int xd, int yd, int xf, int yf)
 {
-   int                 width, height;
    ViewFrame          *pFrame;
+   int                 width, height;
    int                xb, xe, yb, ye;
 
    GetSizesFrame (frame, &width, &height);
@@ -792,7 +792,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
+ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 {
   PtrBox              topBox;
   PtrBox              pRootBox;
@@ -807,8 +807,7 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 ymin;
   int                 ymax;
   ThotBool            toadd;
- 
-  
+
   /* are new abstract boxes needed */
   toadd = FALSE;
   pFrame = &ViewFrameTable[frame - 1];

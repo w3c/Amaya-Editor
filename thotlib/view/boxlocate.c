@@ -139,6 +139,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   NotifyElement       notifyEl;
   PtrElement          el;
   ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
   int                 charsNumber;
   int                 spacesNumber;
   int                 index, pos;
@@ -150,6 +151,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
     {
       /* check if a leaf box is selected */
       pFrame = &ViewFrameTable[frame - 1];
+      pViewSel = &pFrame->FrSelectionBegin;
       x += pFrame->FrXOrg;
       y += pFrame->FrYOrg;
       pAb = pFrame->FrAbstractBox;
@@ -172,11 +174,11 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	 enclosing box */
 	  if (extend)
 	    {
-	      if (pBox != pFrame->FrSelectionBegin.VsBox &&
-		  IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+	      if (pBox != pViewSel->VsBox &&
+		  IsParentBox (pBox, pViewSel->VsBox))
 		pBox = GetClickedLeafBox (frame, x, y);
 	    }
-	  if (pBox != NULL)
+	  if (pBox)
 	    {
 	      pAb = pBox->BxAbstractBox;
 	      if (pAb->AbLeafType == LtText &&
@@ -186,7 +188,30 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    - pBox->BxLPadding;
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &charsNumber, &spacesNumber);
-		  charsNumber = pBox->BxFirstChar + charsNumber;
+		  if (extend)
+		    {
+		      if (pViewSel->VsIndBox == 0 &&
+			  pViewSel->VsBox &&
+			  pViewSel->VsBox->BxAbstractBox == pAb &&
+			  pViewSel->VsBox->BxFirstChar  == FixedChar &&
+			  pViewSel->VsBox->BxFirstChar > pBox->BxFirstChar)
+			{
+			  /* the initial point becomes the end of the selection */
+			  pos = FixedChar - 1;
+			  ChangeSelection (frame, pAb,
+					   pBox->BxFirstChar + charsNumber,
+					   FALSE, TRUE, FALSE, FALSE);
+			  FixedChar = pos;
+			  charsNumber = pos;
+			}
+		      else if (charsNumber == 0)
+			/* the final point becomes the end of the selection */
+			charsNumber = pBox->BxFirstChar - 1;
+		      else
+			charsNumber = pBox->BxFirstChar + charsNumber;
+		    }
+		  else
+		    charsNumber = pBox->BxFirstChar + charsNumber;
 		}
 	    }
 	  else

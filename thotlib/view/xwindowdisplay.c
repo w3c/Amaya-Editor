@@ -991,25 +991,23 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
-   int                 xm, yf;
+   int                 yf;
    int                 yend, delta;
    int                 wd, asc, hd;
 
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
-     xm = x + ((l - CharacterWidth (242, font)) / 2);
      yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
-     DrawChar ('\362', frame, xm, yf, font, fg);
+     DrawChar ('\362', frame, x, yf, font, fg);
      }
    else
      {
      /* Need more than one glyph */
-     xm = x + ((l - CharacterWidth (243, font)) / 2);
      yf = y + CharacterAscent (243, font);
-     DrawChar ('\363', frame, xm, yf, font, fg);
+     DrawChar ('\363', frame, x, yf, font, fg);
      yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
-     DrawChar ('\365', frame, xm, yend, font, fg);
+     DrawChar ('\365', frame, x, yend, font, fg);
      asc = CharacterAscent (244, font);
      hd = CharacterHeight (244, font);
      delta = yend - yf - asc;
@@ -1019,7 +1017,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
        {
 	 while (yf < yend)
 	   {
-	     DrawChar ('\364', frame, xm+wd, yf, font, fg);
+	     DrawChar ('\364', frame, x + wd, yf, font, fg);
 	     yf += hd;
 	   }
        }
