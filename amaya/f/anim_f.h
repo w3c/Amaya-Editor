@@ -25,15 +25,19 @@ extern void Set_slider_position ( Document basedoc,
                                   double f );
 extern void TimelineTextPostModify ( NotifyOnTarget *event );
 extern ThotBool TimelineElSelection ( NotifyElement *event );
-extern ThotBool TimelineElClicked ( NotifyElement *event );
 extern void Timeline_finished_moving_slider ( NotifyPresentation *event );
 extern void Timeline_exp_period_modified ( NotifyPresentation *event );
 extern ThotBool Timeline_col_period_pre_modify ( NotifyPresentation *event );
+extern ThotBool Timeline_slider_pre_modify ( NotifyPresentation *event );
 extern void Timeline_col_period_modified ( NotifyPresentation *event );
 extern void TimelineWindowClose ( NotifyDialog * event );
 extern void Update_period_position_and_size ( Document basedoc,
                                               Element animtag );
 extern void Update_element_id_on_timeline ( NotifyAttribute* event );
+extern void Key_position_defined ( Document basedoc,
+                                   Element cross );
+extern void Selection_changed_in_basedoc ( NotifyElement * event );
+extern ThotBool TimelineElClicked ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -56,15 +60,19 @@ extern void Set_slider_position (/* Document basedoc,
                                     double f */);
 extern void TimelineTextPostModify (/* NotifyOnTarget *event */);
 extern ThotBool TimelineElSelection (/* NotifyElement *event */);
-extern ThotBool TimelineElClicked (/* NotifyElement *event */);
 extern void Timeline_finished_moving_slider (/* NotifyPresentation *event */);
 extern void Timeline_exp_period_modified (/* NotifyPresentation *event */);
 extern ThotBool Timeline_col_period_pre_modify (/* NotifyPresentation *event */);
+extern ThotBool Timeline_slider_pre_modify (/* NotifyPresentation *event */);
 extern void Timeline_col_period_modified (/* NotifyPresentation *event */);
 extern void TimelineWindowClose (/* NotifyDialog * event */);
 extern void Update_period_position_and_size (/* Document basedoc,
                                                 Element animtag */);
 extern void Update_element_id_on_timeline (/* NotifyAttribute* event */);
+extern void Key_position_defined (/* Document basedoc,
+                                     Element cross */);
+extern void Selection_changed_in_basedoc (/* NotifyElement * event */);
+extern ThotBool TimelineElClicked (/* NotifyElement *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
