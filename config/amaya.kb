@@ -1,7 +1,7 @@
 #override
 
 <Key>Delete:	TtcDeleteSelection()
-<Key>Escape:	TtcParentElement()
+<Key>F2:	TtcParentElement()
 <Key>Return:	TtcCreateElement()
 <Key>Home:	TtcStartOfLine()
 <Key>End:	TtcEndOfLine()
