@@ -6455,7 +6455,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      /* get the CSS URI in UTF-8 */
 		      /*ptr = ReallocUTF8String (ptr, docRef);*/
 		      LoadStyleSheet (base, docRef, (Element) css, css,
-				      pInfo->PiMedia,
+				      url, pInfo->PiMedia,
 				      pInfo->PiCategory == CSS_USER_STYLE);
 		      /* restore the displayed URL when an error is reported */
 		      DocURL = saveDocURL;

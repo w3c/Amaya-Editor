@@ -64,11 +64,12 @@ static char       *DisplayCategory[]={
 /*----------------------------------------------------------------------
    LoadRemoteStyleSheet loads a remote style sheet into a file.
    Return FALSE if it's a local file and TRUE otherwise.
+   urlRef gives the url used to resolve relative paths.
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
 ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el,
-			       CSSInfoPtr css, char *completeURL,
+			       char *urlRef, char *completeURL,
 			       char *localfile)
 {
   CSSInfoPtr          oldcss;
@@ -77,14 +78,11 @@ ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el,
   char               *tempdocument = NULL;
   int                 toparse;
   ThotBool            remote = FALSE;
-  ThotBool            import = (css != NULL);
 
   /* this document is displayed -> load the CSS */
   localfile[0] = EOS;
-  if (import && css->url)
-    NormalizeURL (url, 0, completeURL, tempname, css->url);
-  else if (import && css->localName)
-    NormalizeURL (url, 0, completeURL, tempname, css->localName);
+  if (urlRef)
+    NormalizeURL (url, 0, completeURL, tempname, urlRef);
   else
     NormalizeURL (url, doc, completeURL, tempname, NULL);
   
@@ -355,7 +353,7 @@ void AddStyle (char *url, Document doc, Element link, CSSCategory category)
 	    }
 	  else
 	    media = CSS_ALL;
-	  LoadStyleSheet (url, doc, link, NULL, (CSSmedia)media, FALSE);
+	  LoadStyleSheet (url, doc, link, NULL, NULL, (CSSmedia)media, FALSE);
 	  /* Restore the display mode */
 	  if (dispMode != NoComputedDisplay)
 	    TtaSetDisplayMode (doc, dispMode);
@@ -432,7 +430,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 				LoadUserStyleSheet (doc);
 			      else
 				LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
-						(CSSmedia)refInfo->PiMedia,
+						NULL, (CSSmedia)refInfo->PiMedia,
 						refInfo->PiCategory == CSS_USER_STYLE);
 			      if (CSSErrorsFound)
 				{

@@ -3663,7 +3663,7 @@ void  LoadXmlStyleSheet  (Document doc)
   
   for (i = 0; i < XML_CSS_Level; i++)
     LoadStyleSheet (XML_CSS_Href [i], XML_CSS_Doc [i],
-		    XML_CSS_El [i], NULL,
+		    XML_CSS_El [i], NULL, NULL,
 		    XML_CSS_Media [i], FALSE);
 }
 
@@ -3801,7 +3801,7 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 		   else
 		     {
 		       LoadStyleSheet (css_href, XMLcontext.doc, piEl,
-				       css_info, css_media, FALSE);
+				       css_info, NULL, css_media, FALSE);
 		       /* Create a specific attribute for XHTML documents */
 		       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 			 {

@@ -2847,7 +2847,7 @@ int main (int argc, char **argv)
       /* the document is loaded */
       /* load CSS files and apply CSS rules */
       for (i = 0; i < cssCounter; i++)
-	LoadStyleSheet (CSSName[i], 1, NULL, NULL, CSS_ALL,
+	LoadStyleSheet (CSSName[i], 1, NULL, NULL, NULL, CSS_ALL,
 			CSSOrigin[i] == 'u');
       
       if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,

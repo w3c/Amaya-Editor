@@ -1732,7 +1732,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 					     TtaGetDefaultCharset ());
 	  if (buff)
 	    {
-	      LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
+	      LoadStyleSheet (buff, doc, el, NULL, NULL, media, FALSE);
 	      TtaFreeMemory (buff);
 	    }
 	      TtaFreeMemory (utf8path);

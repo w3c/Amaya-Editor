@@ -472,7 +472,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 		   /* don't manage a document used by make book */
 		   if (DocumentMeta[doc] == NULL ||
 		       DocumentMeta[doc]->method != CE_MAKEBOOK)
-		     LoadStyleSheet (targetURL, doc, piEl, NULL, CSS_ALL, FALSE);
+		     LoadStyleSheet (targetURL, doc, piEl, NULL, NULL, CSS_ALL, FALSE);
 		   /* We use the Latin_Script language to avoid the spell_chekcer */
 		   /* to check this element */
 		   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");
@@ -530,7 +530,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	  (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LinkAsCSS = FALSE;
-	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL, FALSE);
+	   LoadStyleSheet (targetURL, doc, element, NULL, NULL, CSS_ALL, FALSE);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr == 0)

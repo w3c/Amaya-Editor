@@ -45,6 +45,7 @@ extern void LoadStyleSheet ( char *url,
                              Document doc,
                              Element link,
                              CSSInfoPtr css,
+                             char *urlRef,
                              CSSmedia media,
                              ThotBool user );
 
@@ -89,6 +90,7 @@ extern void LoadStyleSheet ( char *url,
                                Document doc,
                                Element link,
                                CSSInfoPtr css,
+                               char *urlRef,
                                CSSmedia media,
                                ThotBool user );
 

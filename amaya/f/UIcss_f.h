@@ -9,7 +9,7 @@
 extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        Document doc,
                                        Element el,
-                                       CSSInfoPtr css,
+                                       char *urlRef,
                                        char *completeURL,
                                        char *localfile );
 extern void InitUserStyleSheet ( char *url );
@@ -44,7 +44,7 @@ extern void RemoveCSS ( Document doc,
 extern ThotBool LoadRemoteStyleSheet ( char *url,
                                          Document doc,
                                          Element el,
-                                         CSSInfoPtr css,
+                                         char *urlRef,
                                          char *completeURL,
                                          char *localfile );
 extern void InitUserStyleSheet ( char *url );

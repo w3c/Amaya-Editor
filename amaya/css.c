@@ -170,7 +170,7 @@ void AttrMediaChanged (NotifyAttribute *event)
 	{
 	  if (dispMode != NoComputedDisplay)
 	    TtaSetDisplayMode (doc, NoComputedDisplay);
-	  LoadStyleSheet (completeURL, doc, el, NULL, media,
+	  LoadStyleSheet (completeURL, doc, el, NULL, NULL, media,
 			  pInfo->PiCategory == CSS_USER_STYLE);
 	  /* restore the display mode */
 	  if (dispMode != NoComputedDisplay)
@@ -932,12 +932,13 @@ char *GetStyleContents (Element el)
   (in dialog charset).
   The parameter link gives the element which links the CSS or NULL.
   The parameter css gives the CSS context which imports this CSS file.
+  The parameter urlRef gives the url used to resolve relative paths.
   The parameter media gives the application limits of the CSS.
   The parameter user is true when it's a User style sheet. It's false
   when it's an author style sheet
   ----------------------------------------------------------------------*/
 void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
-		     CSSmedia media, ThotBool user)
+		     char *urlRef, CSSmedia media, ThotBool user)
 {
   CSSInfoPtr          refcss = NULL;
   PInfoPtr            pInfo;
@@ -970,8 +971,16 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   else
     category = CSS_EXTERNAL_STYLE;
   refcss = css;
+
   /* get the absolute URI */
-  LoadRemoteStyleSheet (url, doc, link, css, tempURL, tempfile);
+  if (import && urlRef == NULL)
+    {
+      if (css->url)
+	urlRef = css->url;
+      else
+	urlRef = css->localName;
+    }
+  LoadRemoteStyleSheet (url, doc, link, urlRef, tempURL, tempfile);
   css = SearchCSS (doc, tempURL, link, &pInfo);
   if (css == NULL ||
       (import && !css->import))
@@ -1052,9 +1061,8 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       tmpBuff[buf.st_size] = 0;
       TtaReadClose (res);
       if (css)
-	ReadCSSRules (doc, refcss, tmpBuff, css->url, 0, FALSE, link);
-      else
-	ReadCSSRules (doc, refcss, tmpBuff, NULL, 0, FALSE, link);
+	urlRef = css->url;
+      ReadCSSRules (doc, refcss, tmpBuff, urlRef, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
 #ifdef _WX
       /* Update the list of classes */

@@ -132,7 +132,8 @@ void CloseTextInsertion ()
    The function returns the new complete and normalized URL 
    or file name path (newName) and the name of the document (docName).        
   ----------------------------------------------------------------------*/
-void NormalizeURL (char* orgName, Document doc, char* newName, char* docName, char* otherPath)
+void NormalizeURL (char* orgName, Document doc, char* newName, char* docName,
+		   char* otherPath)
 {
   TtaExtractName (orgName, newName, docName);
 }
@@ -143,7 +144,8 @@ void NormalizeURL (char* orgName, Document doc, char* newName, char* docName, ch
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css, char *completeURL, char *localfile)
+ThotBool LoadRemoteStyleSheet (char *url, Document doc, Element el,
+			       char *urlRef, char *completeURL, char *localfile)
 {
   strcpy (completeURL, url);
   strcpy (localfile, url);

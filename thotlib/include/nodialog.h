@@ -109,7 +109,8 @@ typedef void (*LoadedImageCallback)(Document doc, Element el, char *file,
 				    void *extra, ThotBool isnew);
 
 /* extern declaration : => link with css.c function */
-extern void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css, CSSmedia media, ThotBool user);
+extern void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
+			    char *urlRef, CSSmedia media, ThotBool user);
 
 
 #endif /* __NODIALOG_H__ */
