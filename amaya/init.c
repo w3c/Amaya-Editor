@@ -2487,11 +2487,13 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 	else
 	  TtaSetItemOff (newdoc, 1, Views, BShowLogFile);
 	}
-      if (newdoc != doc)
+      if (InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
-        /* hide template entry if no template server is configured */
+      /* the document is loaded now */
+      InNewWindow = FALSE;
+      /* hide template entry if no template server is configured */
       if (TtaGetEnvString ("TEMPLATE_URL") == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
