@@ -180,8 +180,8 @@ static HWND         currentDlg;
 static UINT         nbClass;
 static UINT         nbItem;
 
-const STRING string_par1;
-const STRING string_par2;
+static STRING string_par1;
+static STRING string_par2;
 
 HWND wordButton;
 HWND hwnListWords;
