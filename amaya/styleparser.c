@@ -3252,6 +3252,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   max = 0; /* number of loops */
   while (1)
     {
+      /* point to the following word in sel[] */
       deb = cur;
       /* copy an item of the selector into sel[] */
       /* put one word in the sel buffer */
@@ -3273,63 +3274,65 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
       if (*selector == ':' || *selector == '.' || *selector == '#')
-	{
-	  /* keep the element name which precedes the id or
-	     pseudo class or the class */
-	  cur = selector + 1;
-	  deb = cur;
-	}
+	/* point to the following word in sel[] */
+	deb = cur;
 
       if (*selector == '.')
 	{
-	  /* copy into sel[] the class if it's valid name */
-	  if (cur[0] > 64)
-	    classes[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
 		 *selector != '.' && *selector != ':' &&
 		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
+	  /* point to the class in sel[] if it's valid name */
+	  if (deb[0] > 64)
+	    classes[0] = deb;
+	  /* close the word */
 	  *cur++ = EOS;
 	}
       else if (*selector == ':')
 	{
-	  /* copy into sel[] the pseudoclass if it's valid name */
-	  if (cur[0] > 64)
-	    pseudoclasses[0]= cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
              !TtaIsBlank (selector))
             *cur++ = *selector++;
+	  /* point to the pseudoclass in sel[] if it's valid name */
+	  if (deb[0] > 64)
+	    pseudoclasses[0]= deb;
+	  /* close the word */
 	  *cur++ = EOS;
 	}
       else if (*selector == '#')
 	{
-	  /* copy into sel[] the attribute if it's valid name */
-	  if (cur[0] > 64)
-	    ids[0] = cur;
 	  selector++;
 	  while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
              !TtaIsBlank (selector))
             *cur++ = *selector++;
+	  /* point to the attribute in sel[] if it's valid name */
+	  if (deb[0] > 64)
+	    ids[0] = deb;
+	  /* close the word */
 	  *cur++ = EOS;
 	}
       else if (*selector == '[')
 	{
-	  /* copy into sel[] the attribute if it's valid name */
-	  if (cur[0] > 64)
-	    attrs[0] = cur;
 	  selector++;
-	  while (*selector != EOS && *selector != ']' && *selector != '=')
+	  while (*selector != EOS && *selector != ']' &&
+		 *selector != '=' && *selector != '~')
 	    *cur++ = *selector++;
-	  if (*cur == '=')
-	    {
-	      /* there is a value "xxxx" */
+	  /* point to the attribute in sel[] if it's valid name */
+	  if (deb[0] > 64)
+	    attrs[0] = deb;
+	  /* close the word */
 	      *cur++ = EOS;
+	  if (*selector == '=')
+	    {
+	      /* look for a value "xxxx" */
 	      while (*selector != EOS && *selector != ']' && *selector != '"')
-		selector++;
+		*cur++ = *selector++;
+	      /* there is a value */
 	      if (*selector != EOS)
 		{
 		  /* we are now parsing the attribute value */

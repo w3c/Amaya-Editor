@@ -627,16 +627,27 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
-   cond->CoCondition = PcWithin;
-   cond->CoTarget = FALSE;
-   cond->CoNotNegative = TRUE;
-   /* as it's greater we register the number of ancestors - 1 */
-   cond->CoRelation = nr - 1;
-   cond->CoTypeAncestor = type;
-   cond->CoImmediate = FALSE;
-   cond->CoAncestorRel = CondGreater;
-   cond->CoAncestorName[0] = EOS;
-   cond->CoSSchemaName[0] = EOS;
+   if (nr == 0)
+     {
+       /* the current element type must be ... */
+       cond->CoCondition = PcElemType;
+       cond->CoNotNegative = TRUE;
+       cond->CoTarget = FALSE;
+       cond->CoTypeElAttr = type;
+     }
+   else
+     {
+       cond->CoCondition = PcWithin;
+       cond->CoTarget = FALSE;
+       cond->CoNotNegative = TRUE;
+       /* as it's greater we register the number of ancestors - 1 */
+       cond->CoRelation = nr - 1;
+       cond->CoTypeAncestor = type;
+       cond->CoImmediate = FALSE;
+       cond->CoAncestorRel = CondGreater;
+       cond->CoAncestorName[0] = EOS;
+       cond->CoSSchemaName[0] = EOS;
+     }
    AddCond (&rule->PrCond, cond);
 }
 
@@ -654,7 +665,7 @@ static void         PresRuleAddAttrCond (PtrPRule rule, int type)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
-   cond->CoCondition = PcElemType;
+   cond->CoCondition = PcAttribute;
    cond->CoNotNegative = TRUE;
    cond->CoTarget = FALSE;
    cond->CoTypeElAttr = type;
@@ -1055,7 +1066,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	    att++;
 	  if (att < MAX_ANCESTORS && ctxt->type)
 	    /* the attribute should be attached to that element */
-	    PresRuleAddAttrCond (pRule, ctxt->type);
+	    PresRuleAddAncestorCond (pRule, ctxt->type, 0);
 	  /* add other conditions ... */
 	  i = 0;
 	  while (i < MAX_ANCESTORS)
