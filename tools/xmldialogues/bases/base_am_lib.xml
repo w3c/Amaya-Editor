@@ -1931,6 +1931,10 @@
 	<message xml:lang="fr">Alphabet grec (majuscules)</message>
 	<message xml:lang="es">Alfabeto griego (mayúsculas)</message>
 </label>
+<label define="TMSG_ARROW">
+	<message xml:lang="en">Arrows</message>
+	<message xml:lang="fr">Flèches</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

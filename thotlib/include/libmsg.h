@@ -187,6 +187,7 @@
 #define TMSG_BINARY_REL_NEG		182
 #define TMSG_OPERATOR		183
 #define TMSG_GREEK_CAP		184
-#define TMSG_LIB_MSG_MAX		185
+#define TMSG_ARROW		185
+#define TMSG_LIB_MSG_MAX		186
 
 #endif

@@ -56,6 +56,7 @@ class AmayaMathMLPanel : public AmayaSubPanel
   void OnButtonFiltre5( wxCommandEvent& event );
   void OnButtonFiltre6( wxCommandEvent& event );
   void OnButtonFiltre7( wxCommandEvent& event );
+  void OnButtonFiltre8( wxCommandEvent& event );
   void OnButtonInsert( wxCommandEvent& event );
 
   wxComboBox * m_pList;

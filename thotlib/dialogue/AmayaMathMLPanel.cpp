@@ -120,6 +120,7 @@ void AmayaMathMLPanel::RefreshToolTips()
   XRCCTRL(*this,"wxID_PANEL_MATH_F5",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL)));
   XRCCTRL(*this,"wxID_PANEL_MATH_F6",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BINARY_REL_NEG)));
   XRCCTRL(*this,"wxID_PANEL_MATH_F7",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MISC)));
+  XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ARROW)));
 
   // TODO
   //XRCCTRL(*this,"wxID_PANEL_MATH_F8",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CUSTOM)));
@@ -301,6 +302,24 @@ void AmayaMathMLPanel::OnButtonFiltre7( wxCommandEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre8
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre8( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre8") );
+  m_pActiveFiltre = filtre_fleches;
+  DoFilter( filtre_fleches );
+  
+  AmayaParams p;
+  p.param1 = (void*)AmayaMathMLPanel::wxMATHML_ACTION_REFRESH;
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_MATHML, p );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
  *      Method:  DoFilter
  * Description:  this method is called to refresh the entity list with a given filter
  *--------------------------------------------------------------------------------------
@@ -362,13 +381,10 @@ void AmayaMathMLPanel::RefreshButtonState()
     XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
     XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-#if 0
-  // TODO
-  if (m_pActiveFiltre == NULL /*filtre_custom*/)
+  if (m_pActiveFiltre == filtre_fleches )
     XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
     XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-#endif /* 0 */
 }
 
 
@@ -478,6 +494,7 @@ BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaMathMLPanel::OnButtonFiltre5 )
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaMathMLPanel::OnButtonFiltre6 )
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaMathMLPanel::OnButtonFiltre7 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F8"), AmayaMathMLPanel::OnButtonFiltre8 )
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_INSERT"), AmayaMathMLPanel::OnButtonInsert ) 
 END_EVENT_TABLE()
 

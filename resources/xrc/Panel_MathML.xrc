@@ -228,6 +228,12 @@
                                                     <tooltip>*Filtre7*</tooltip>
                                                   </object>
                                                 </object>
+                                                <object class="sizeritem">
+                                                  <object class="wxBitmapButton" name="wxID_PANEL_MATH_F8">
+                                                    <bitmap>../icons/MATHML_F_fleches.png</bitmap>
+                                                    <tooltip>*Filtre7*</tooltip>
+                                                  </object>
+                                                </object>
                                               </object>
                                             </object>
                                           </object>
