@@ -9,11 +9,11 @@
 extern boolean IsSeparatorChar ( char car );
 extern void SmallLettering ( char *word );
 extern int HyphenLastWord ( ptrfont font,
-                         Language langue,
-                         PtrTextBuffer * buffer,
-                         int *rank,
-                         int *width,
-                         boolean * hyphen );
+                            Language langue,
+                            PtrTextBuffer * buffer,
+                            int *rank,
+                            int *width,
+                            boolean * hyphen );
 extern boolean CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
@@ -21,11 +21,11 @@ extern boolean CanHyphen ( PtrBox pBox );
 extern boolean IsSeparatorChar (/* char car */);
 extern void SmallLettering (/* char *word */);
 extern int HyphenLastWord (/* ptrfont font,
-                           Language langue,
-                           PtrTextBuffer * buffer,
-                           int *rank,
-                           int *width,
-                           boolean * hyphen */);
+                              Language langue,
+                              PtrTextBuffer * buffer,
+                              int *rank,
+                              int *width,
+                              boolean * hyphen */);
 extern boolean CanHyphen (/* PtrBox pBox */);
 
 #endif /* __STDC__ */

@@ -7,25 +7,25 @@
 #if __STDC__
 
 extern void CallbackPictureMenu ( int ref,
-                           int typedata,
-                           char *txt );
+                                  int typedata,
+                                  char *txt );
 extern void BuildPictureMenu ( char *nom,
-                        boolean *result,
-                        int *typim,
-                        int *pres,
-                        PtrBox pBox );
+                               boolean *result,
+                               int *typim,
+                               int *pres,
+                               PtrBox pBox );
 extern void ImageMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern void CallbackPictureMenu (/* int ref,
-                             int typedata,
-                             char *txt */);
+                                    int typedata,
+                                    char *txt */);
 extern void BuildPictureMenu (/* char *nom,
-                          boolean *result,
-                          int *typim,
-                          int *pres,
-                          PtrBox pBox */);
+                                 boolean *result,
+                                 int *typim,
+                                 int *pres,
+                                 PtrBox pBox */);
 extern void ImageMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */

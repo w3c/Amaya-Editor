@@ -8,29 +8,29 @@
 
 extern ContentType ReadContentType ( BinFile file );
 extern PtrPRule ReadRulePtr ( BinFile file,
-                           PtrPRule * nextr );
+                              PtrPRule * nextr );
 extern void ReadPosition ( BinFile file,
-                         PosRule * RP );
+                           PosRule * RP );
 extern AttrComparType ReadAttrCompar ( BinFile file );
 extern void ReadRules ( BinFile file,
                         PtrPRule * pR,
                         PtrPRule * nextr );
 extern PtrPSchema ReadPresentationSchema ( Name fname,
-                              PtrSSchema SS );
+                                           PtrSSchema SS );
 
 #else /* __STDC__ */
 
 extern ContentType ReadContentType (/* BinFile file */);
 extern PtrPRule ReadRulePtr (/* BinFile file,
-                             PtrPRule * nextr */);
+                                PtrPRule * nextr */);
 extern void ReadPosition (/* BinFile file,
-                           PosRule * RP */);
+                             PosRule * RP */);
 extern AttrComparType ReadAttrCompar (/* BinFile file */);
 extern void ReadRules (/* BinFile file,
                           PtrPRule * pR,
                           PtrPRule * nextr */);
 extern PtrPSchema ReadPresentationSchema (/* Name fname,
-                                PtrSSchema SS */);
+                                             PtrSSchema SS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,32 +7,32 @@
 #if __STDC__
 
 extern void MakeCompleteName ( Name fname,
-                            char *fext,
-                            PathBuffer directory_list,
-                            PathBuffer nomabs,
-                            int *lg );
+                               char *fext,
+                               PathBuffer directory_list,
+                               PathBuffer nomabs,
+                               int *lg );
 extern void GetPictureFileName ( char *name,
-                               char *fn );
+                                 char *fn );
 extern void FindCompleteName ( Name fname,
-                         char *fext,
-                         PathBuffer directory,
-                         PathBuffer nomabs,
-                         int *lg );
+                               char *fext,
+                               PathBuffer directory,
+                               PathBuffer nomabs,
+                               int *lg );
 
 #else /* __STDC__ */
 
 extern void MakeCompleteName (/* Name fname,
-                              char *fext,
-                              PathBuffer directory_list,
-                              PathBuffer nomabs,
-                              int *lg */);
+                                 char *fext,
+                                 PathBuffer directory_list,
+                                 PathBuffer nomabs,
+                                 int *lg */);
 extern void GetPictureFileName (/* char *name,
-                                 char *fn */);
+                                   char *fn */);
 extern void FindCompleteName (/* Name fname,
-                           char *fext,
-                           PathBuffer directory,
-                           PathBuffer nomabs,
-                           int *lg */);
+                                 char *fext,
+                                 PathBuffer directory,
+                                 PathBuffer nomabs,
+                                 int *lg */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -16,8 +16,8 @@ extern void TtaListView ( Document document,
                           FILE * fileDescriptor );
 extern void NumberAbsBox ( PtrAbstractBox pP );
 extern void ListAbsBox ( PtrAbstractBox pAb,
-                       int Indent,
-                       FILE * outfile );
+                         int Indent,
+                         FILE * outfile );
 
 #else /* __STDC__ */
 
@@ -31,8 +31,8 @@ extern void TtaListView (/* Document document,
                             FILE * fileDescriptor */);
 extern void NumberAbsBox (/* PtrAbstractBox pP */);
 extern void ListAbsBox (/* PtrAbstractBox pAb,
-                         int Indent,
-                         FILE * outfile */);
+                           int Indent,
+                           FILE * outfile */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -14,29 +14,29 @@ extern void RestorePath ( PtrDocument pDoc,
                           char *savedir,
                           char *savename );
 extern int CreateWindowWithTitle ( PtrDocument pDoc,
-                        int view,
-                        Name VdViewName,
-                        int *vol,
-                        int X,
-                        int Y,
-                        int L,
-                        int H );
+                                   int view,
+                                   Name VdViewName,
+                                   int *vol,
+                                   int X,
+                                   int Y,
+                                   int L,
+                                   int H );
 extern void ListCommand ( PtrDocument pDoc,
-                                   int nv,
-                                   boolean assoc,
-                                   Name NomFichierListe,
-                                   int TypeFichierListe );
+                          int nv,
+                          boolean assoc,
+                          Name NomFichierListe,
+                          int TypeFichierListe );
 extern void BackupAll ( void );
 extern boolean AtLeastOneDocument ( void );
 extern void ImportDocument ( Name SchStrImport,
-                                 PathBuffer DirectoryDocImport,
-                                 Name NomDocImport );
+                             PathBuffer DirectoryDocImport,
+                             Name NomDocImport );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
 extern void ChangeDocumentPSchema ( PtrDocument pDoc,
-                             Name NewSchPres );
+                                    Name NewSchPres );
 extern void ChangeNaturePSchema ( PtrDocument pDoc,
-                             PtrSSchema pSchNat,
-                             Name NewSchPres );
+                                  PtrSSchema pSchNat,
+                                  Name NewSchPres );
 extern void QuitEditor ( void );
 
 #else /* __STDC__ */
@@ -49,29 +49,29 @@ extern void RestorePath (/* PtrDocument pDoc,
                             char *savedir,
                             char *savename */);
 extern int CreateWindowWithTitle (/* PtrDocument pDoc,
-                          int view,
-                          Name VdViewName,
-                          int *vol,
-                          int X,
-                          int Y,
-                          int L,
-                          int H */);
+                                     int view,
+                                     Name VdViewName,
+                                     int *vol,
+                                     int X,
+                                     int Y,
+                                     int L,
+                                     int H */);
 extern void ListCommand (/* PtrDocument pDoc,
-                                     int nv,
-                                     boolean assoc,
-                                     Name NomFichierListe,
-                                     int TypeFichierListe */);
+                            int nv,
+                            boolean assoc,
+                            Name NomFichierListe,
+                            int TypeFichierListe */);
 extern void BackupAll (/* void */);
 extern boolean AtLeastOneDocument (/* void */);
 extern void ImportDocument (/* Name SchStrImport,
-                                   PathBuffer DirectoryDocImport,
-                                   Name NomDocImport */);
+                               PathBuffer DirectoryDocImport,
+                               Name NomDocImport */);
 extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
 extern void ChangeDocumentPSchema (/* PtrDocument pDoc,
-                               Name NewSchPres */);
+                                      Name NewSchPres */);
 extern void ChangeNaturePSchema (/* PtrDocument pDoc,
-                               PtrSSchema pSchNat,
-                               Name NewSchPres */);
+                                    PtrSSchema pSchNat,
+                                    Name NewSchPres */);
 extern void QuitEditor (/* void */);
 
 #endif /* __STDC__ */

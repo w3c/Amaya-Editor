@@ -6,165 +6,153 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int RuleSetIn ( int N,
-                       RuleSet S1 );
-extern void RuleSetPut ( RuleSet S1,
-                         int N );
-extern void RuleSetClr ( RuleSet S1 );
+extern int RuleSetIn ( int num,
+                       RuleSet RuleS1 );
+extern void RuleSetPut ( RuleSet RuleS1,
+                         int num );
+extern void RuleSetClr ( RuleSet RuleS1 );
 extern boolean MemesRegleSpecif ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern PtrAbstractBox PaveDeElem ( PtrElement pEl,
-                                   int Vue );
-extern boolean PavResizable ( PtrAbstractBox pAb,
-                              boolean Horiz );
-extern boolean PavMovable ( PtrAbstractBox pAb,
-                            boolean Horiz );
+                                   int view );
 extern void NouvPosition ( PtrAbstractBox pAb,
                            int deltaX,
                            int deltaY,
                            int frame,
-                           boolean Disp );
+                           boolean display );
 extern void NouvDimension ( PtrAbstractBox pAb,
                             int deltaX,
                             int deltaY,
                             int frame,
-                            boolean Disp );
-extern PtrAbstractBox PaveMisEnLigne ( PtrAbstractBox *pPav1,
-                                       PtrAbstractBox *pPav2 );
+                            boolean display );
 extern void ApplNouvRegle ( PtrDocument pDoc,
-                            PtrPRule pRegle,
+                            PtrPRule pPRule,
                             PtrElement pEl );
 extern void ModifGraphiques ( PtrElement pEl,
                               PtrDocument pDoc,
-                              int VueTraitee,
-                              boolean ChngStyleTrait,
-                              char StyleTrait,
-                              boolean ChngEpaisTrait,
-                              int EpaisTrait,
-                              TypeUnit EpaisTraitUnit,
-                              boolean ChngTrame,
-                              int Trame,
-                              boolean ChngCoulFond,
-                              int CoulFond,
-                              boolean ChngCoulTrace,
-                              int CoulTrace );
-extern void ChangeCouleur ( int numCouleur,
-                            boolean Fond );
+                              int viewToApply,
+                              boolean modifLineStyle,
+                              char LineStyle,
+                              boolean modifLineWeight,
+                              int LineWeight,
+                              TypeUnit LineWeightUnit,
+                              boolean modifFillPattern,
+                              int FillPattern,
+                              boolean modifColorBackground,
+                              int ColorBackground,
+                              boolean modifLineColor,
+                              int LineColor );
+extern void ChangeCouleur ( int colorNum,
+                            boolean Background );
 extern void ModifCaracteres ( PtrElement pEl,
                               PtrDocument pDoc,
-                              int VueTraitee,
-                              boolean ChngFamille,
-                              char Famille,
-                              boolean ChngStyle,
-                              int Style,
-                              boolean ChngCorps,
-                              int Corps,
-                              boolean ChngSouligne,
-                              int SoulStyle,
-                              boolean ChngEpais,
-                              int SoulEpais );
+                              int viewToApply,
+                              boolean modifFamily,
+                              char family,
+                              boolean modifStyle,
+                              int charStyle,
+                              boolean modifsize,
+                              int size,
+                              boolean modifUnderline,
+                              int underline,
+                              boolean modifWeight,
+                              int weightUnderline );
 extern void ModifLignes ( PtrElement pEl,
                           PtrDocument pDoc,
-                          int VueTraitee,
-                          boolean ChngCadr,
-                          int Cadr,
-                          boolean ChngJustif,
+                          int viewToApply,
+                          boolean modifAdjust,
+                          int Adjust,
+                          boolean modifJustif,
                           boolean Justif,
-                          boolean ChngIndent,
+                          boolean modifIndent,
                           int ValIndent,
-                          boolean ChngInterL,
-                          int InterLigne,
-                          boolean ChngHyphen,
+                          boolean modifLineSpacing,
+                          int LineSpacing,
+                          boolean modifHyphen,
                           boolean Hyphenate );
 extern void AppliqueRegleStandard ( PtrElement pEl,
                                     PtrDocument pDoc,
-                                    PRuleType TypeRegleP,
-                                    int VueSch );
-extern void SupprPresSpec ( PtrElement pSA,
+                                    PRuleType ruleType,
+                                    int viewSch );
+extern void SupprPresSpec ( PtrElement pElRoot,
                             PtrDocument pDoc,
-                            RuleSet Regles,
-                            int VueTraitee );
+                            RuleSet RulesS,
+                            int viewToApply );
 
 #else /* __STDC__ */
 
-extern int RuleSetIn (/* int N,
-                         RuleSet S1 */);
-extern void RuleSetPut (/* RuleSet S1,
-                           int N */);
-extern void RuleSetClr (/* RuleSet S1 */);
+extern int RuleSetIn (/* int num,
+                         RuleSet RuleS1 */);
+extern void RuleSetPut (/* RuleSet RuleS1,
+                           int num */);
+extern void RuleSetClr (/* RuleSet RuleS1 */);
 extern boolean MemesRegleSpecif (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern PtrAbstractBox PaveDeElem (/* PtrElement pEl,
-                                     int Vue */);
-extern boolean PavResizable (/* PtrAbstractBox pAb,
-                                boolean Horiz */);
-extern boolean PavMovable (/* PtrAbstractBox pAb,
-                              boolean Horiz */);
+                                     int view */);
 extern void NouvPosition (/* PtrAbstractBox pAb,
                              int deltaX,
                              int deltaY,
                              int frame,
-                             boolean Disp */);
+                             boolean display */);
 extern void NouvDimension (/* PtrAbstractBox pAb,
                               int deltaX,
                               int deltaY,
                               int frame,
-                              boolean Disp */);
-extern PtrAbstractBox PaveMisEnLigne (/* PtrAbstractBox *pPav1,
-                                         PtrAbstractBox *pPav2 */);
+                              boolean display */);
 extern void ApplNouvRegle (/* PtrDocument pDoc,
-                              PtrPRule pRegle,
+                              PtrPRule pPRule,
                               PtrElement pEl */);
 extern void ModifGraphiques (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                int VueTraitee,
-                                boolean ChngStyleTrait,
-                                char StyleTrait,
-                                boolean ChngEpaisTrait,
-                                int EpaisTrait,
-                                TypeUnit EpaisTraitUnit,
-                                boolean ChngTrame,
-                                int Trame,
-                                boolean ChngCoulFond,
-                                int CoulFond,
-                                boolean ChngCoulTrace,
-                                int CoulTrace */);
-extern void ChangeCouleur (/* int numCouleur,
-                              boolean Fond */);
+                                int viewToApply,
+                                boolean modifLineStyle,
+                                char LineStyle,
+                                boolean modifLineWeight,
+                                int LineWeight,
+                                TypeUnit LineWeightUnit,
+                                boolean modifFillPattern,
+                                int FillPattern,
+                                boolean modifColorBackground,
+                                int ColorBackground,
+                                boolean modifLineColor,
+                                int LineColor */);
+extern void ChangeCouleur (/* int colorNum,
+                              boolean Background */);
 extern void ModifCaracteres (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                int VueTraitee,
-                                boolean ChngFamille,
-                                char Famille,
-                                boolean ChngStyle,
-                                int Style,
-                                boolean ChngCorps,
-                                int Corps,
-                                boolean ChngSouligne,
-                                int SoulStyle,
-                                boolean ChngEpais,
-                                int SoulEpais */);
+                                int viewToApply,
+                                boolean modifFamily,
+                                char family,
+                                boolean modifStyle,
+                                int charStyle,
+                                boolean modifsize,
+                                int size,
+                                boolean modifUnderline,
+                                int underline,
+                                boolean modifWeight,
+                                int weightUnderline */);
 extern void ModifLignes (/* PtrElement pEl,
                             PtrDocument pDoc,
-                            int VueTraitee,
-                            boolean ChngCadr,
-                            int Cadr,
-                            boolean ChngJustif,
+                            int viewToApply,
+                            boolean modifAdjust,
+                            int Adjust,
+                            boolean modifJustif,
                             boolean Justif,
-                            boolean ChngIndent,
+                            boolean modifIndent,
                             int ValIndent,
-                            boolean ChngInterL,
-                            int InterLigne,
-                            boolean ChngHyphen,
+                            boolean modifLineSpacing,
+                            int LineSpacing,
+                            boolean modifHyphen,
                             boolean Hyphenate */);
 extern void AppliqueRegleStandard (/* PtrElement pEl,
                                       PtrDocument pDoc,
-                                      PRuleType TypeRegleP,
-                                      int VueSch */);
-extern void SupprPresSpec (/* PtrElement pSA,
+                                      PRuleType ruleType,
+                                      int viewSch */);
+extern void SupprPresSpec (/* PtrElement pElRoot,
                               PtrDocument pDoc,
-                              RuleSet Regles,
-                              int VueTraitee */);
+                              RuleSet RulesS,
+                              int viewToApply */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void *DicoAlloc ( unsigned int n );
 extern void *TtaGetMemory ( unsigned int n );
 extern void TtaFreeMemory ( void *ptr );
 extern char *TtaStrdup ( char *str );
@@ -67,13 +66,12 @@ extern void GetSearchContext ( PtrSearchContext * pSearch );
 extern void FreeSearchContext ( PtrSearchContext * pSearch );
 extern void FreeStringInDict ( PtrDico pDict );
 extern int GetStringInDict ( PtrDico * pDict,
-                       boolean readonly );
+                             boolean readonly );
 extern void GetDictionary ( PtrDico * pDico );
 extern void FreeDictionary ( PtrDico pDico );
 
 #else /* __STDC__ */
 
-extern void *DicoAlloc (/* unsigned int n */);
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void *ptr */);
 extern char *TtaStrdup (/* char *str */);
@@ -134,7 +132,7 @@ extern void GetSearchContext (/* PtrSearchContext * pSearch */);
 extern void FreeSearchContext (/* PtrSearchContext * pSearch */);
 extern void FreeStringInDict (/* PtrDico pDict */);
 extern int GetStringInDict (/* PtrDico * pDict,
-                         boolean readonly */);
+                               boolean readonly */);
 extern void GetDictionary (/* PtrDico * pDico */);
 extern void FreeDictionary (/* PtrDico pDico */);
 

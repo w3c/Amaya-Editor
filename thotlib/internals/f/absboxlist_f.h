@@ -7,18 +7,18 @@
 #if __STDC__
 
 extern void ListAbsBoxes ( PtrAbstractBox pAb,
-                    int Indent,
-                    FILE * outfile );
+                           int Indent,
+                           FILE * outfile );
 extern void ListBoxes ( Name fname,
-                          int frame );
+                        int frame );
 
 #else /* __STDC__ */
 
 extern void ListAbsBoxes (/* PtrAbstractBox pAb,
-                      int Indent,
-                      FILE * outfile */);
+                             int Indent,
+                             FILE * outfile */);
 extern void ListBoxes (/* Name fname,
-                            int frame */);
+                          int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

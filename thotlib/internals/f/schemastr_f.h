@@ -7,43 +7,43 @@
 #if __STDC__
 
 extern void InitNatures ( void );
-extern void LoadNatureSchema ( PtrSSchema PSchStr,
-                      Name NomSchPrs,
-                      int r );
-extern int CreateNature ( Name NomSchStr,
-                        Name NomSchPrs,
-                        PtrSSchema pSS );
-extern void LoadSchemas ( Name NomSchStr,
-                          Name NomSchPrs,
+extern void LoadNatureSchema ( PtrSSchema pSS,
+                               Name PSchName,
+                               int rule );
+extern int CreateNature ( Name SSchName,
+                          Name PSchName,
+                          PtrSSchema pSS );
+extern void LoadSchemas ( Name SSchName,
+                          Name PSchName,
                           PtrSSchema * pSS,
-                          PtrSSchema pSCharge,
+                          PtrSSchema pLoadedSS,
                           boolean Extension );
-extern PtrSSchema LoadExtension ( Name NomSchStr,
-                                  Name NomSchPrs,
+extern PtrSSchema LoadExtension ( Name SSchName,
+                                  Name PSchName,
                                   PtrDocument pDoc );
-extern boolean FreeNature ( PtrSSchema pSPere,
-                           PtrSSchema pSS );
+extern boolean FreeNature ( PtrSSchema pSS,
+                            PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
 extern void InitNatures (/* void */);
-extern void LoadNatureSchema (/* PtrSSchema PSchStr,
-                        Name NomSchPrs,
-                        int r */);
-extern int CreateNature (/* Name NomSchStr,
-                          Name NomSchPrs,
-                          PtrSSchema pSS */);
-extern void LoadSchemas (/* Name NomSchStr,
-                            Name NomSchPrs,
+extern void LoadNatureSchema (/* PtrSSchema pSS,
+                                 Name PSchName,
+                                 int rule */);
+extern int CreateNature (/* Name SSchName,
+                            Name PSchName,
+                            PtrSSchema pSS */);
+extern void LoadSchemas (/* Name SSchName,
+                            Name PSchName,
                             PtrSSchema * pSS,
-                            PtrSSchema pSCharge,
+                            PtrSSchema pLoadedSS,
                             boolean Extension */);
-extern PtrSSchema LoadExtension (/* Name NomSchStr,
-                                    Name NomSchPrs,
+extern PtrSSchema LoadExtension (/* Name SSchName,
+                                    Name PSchName,
                                     PtrDocument pDoc */);
-extern boolean FreeNature (/* PtrSSchema pSPere,
-                             PtrSSchema pSS */);
+extern boolean FreeNature (/* PtrSSchema pSS,
+                              PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */

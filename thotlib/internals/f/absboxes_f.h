@@ -23,10 +23,10 @@ extern void DecreaseVolume ( boolean inHead,
                              int dVol,
                              int frame );
 extern void CheckAbsBox ( PtrElement pEl,
-                           int Vue,
-                           PtrDocument pDoc,
-                           boolean begin,
-                           boolean display );
+                          int Vue,
+                          PtrDocument pDoc,
+                          boolean begin,
+                          boolean display );
 extern void VolumeTree ( PtrAbstractBox pAbbRoot,
                          PtrAbstractBox pAbbFirst,
                          PtrAbstractBox pAbbLast,
@@ -55,10 +55,10 @@ extern void DecreaseVolume (/* boolean inHead,
                                int dVol,
                                int frame */);
 extern void CheckAbsBox (/* PtrElement pEl,
-                             int Vue,
-                             PtrDocument pDoc,
-                             boolean begin,
-                             boolean display */);
+                            int Vue,
+                            PtrDocument pDoc,
+                            boolean begin,
+                            boolean display */);
 extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
                            PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,

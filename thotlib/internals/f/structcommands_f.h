@@ -15,8 +15,8 @@ extern void CopyCommand ( void );
 extern PtrElement NextNotPage ( PtrElement pEl );
 extern PtrElement PreviousNotPage ( PtrElement pEl );
 extern void ProcessFirstLast ( PtrElement pPrec,
-                                   PtrElement pSuiv,
-                                   PtrDocument pDoc );
+                               PtrElement pSuiv,
+                               PtrDocument pDoc );
 extern void CutCommand ( boolean sauve );
 extern boolean EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int NumTypeACreer,
@@ -42,8 +42,8 @@ extern void CopyCommand (/* void */);
 extern PtrElement NextNotPage (/* PtrElement pEl */);
 extern PtrElement PreviousNotPage (/* PtrElement pEl */);
 extern void ProcessFirstLast (/* PtrElement pPrec,
-                                     PtrElement pSuiv,
-                                     PtrDocument pDoc */);
+                                 PtrElement pSuiv,
+                                 PtrDocument pDoc */);
 extern void CutCommand (/* boolean sauve */);
 extern boolean EmptyElement (/* PtrElement pEl */);
 extern void CreateNewElement (/* int NumTypeACreer,

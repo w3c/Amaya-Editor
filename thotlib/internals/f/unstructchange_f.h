@@ -8,9 +8,9 @@
 
 extern void PasteCommand ( void );
 extern void SelectSiblings ( PtrElement * firstEl,
-                               PtrElement * lastEl,
-                               int *firstChar,
-                               int *lastChar );
+                             PtrElement * lastEl,
+                             int *firstChar,
+                             int *lastChar );
 extern void ReturnKey ( void );
 extern void DeleteNextChar ( int frame,
                              PtrElement pEl,
@@ -21,9 +21,9 @@ extern void NoStructSelectLoadResources ( void );
 
 extern void PasteCommand (/* void */);
 extern void SelectSiblings (/* PtrElement * firstEl,
-                                 PtrElement * lastEl,
-                                 int *firstChar,
-                                 int *lastChar */);
+                               PtrElement * lastEl,
+                               int *firstChar,
+                               int *lastChar */);
 extern void ReturnKey (/* void */);
 extern void DeleteNextChar (/* int frame,
                                PtrElement pEl,

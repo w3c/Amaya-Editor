@@ -6,19 +6,19 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void InitTableSchTrad ( void );
-extern void ClearTableSchTrad ( void );
-extern PtrTSchema LdSchTrad ( Name fname,
-                              PtrSSchema SS );
-extern PtrTSchema SchemaTrad ( PtrSSchema pSS );
+extern void InitTranslationSchemasTable ( void );
+extern void ClearTranslationSchemasTable ( void );
+extern PtrTSchema LoadTranslationSchema ( Name schName,
+                                          PtrSSchema pSS );
+extern PtrTSchema GetTranslationSchema ( PtrSSchema pSS );
 
 #else /* __STDC__ */
 
-extern void InitTableSchTrad (/* void */);
-extern void ClearTableSchTrad (/* void */);
-extern PtrTSchema LdSchTrad (/* Name fname,
-                                PtrSSchema SS */);
-extern PtrTSchema SchemaTrad (/* PtrSSchema pSS */);
+extern void InitTranslationSchemasTable (/* void */);
+extern void ClearTranslationSchemasTable (/* void */);
+extern PtrTSchema LoadTranslationSchema (/* Name schName,
+                                            PtrSSchema pSS */);
+extern PtrTSchema GetTranslationSchema (/* PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,20 +7,20 @@
 #if __STDC__
 
 extern void GetClickedStructBox ( PtrBox * result,
-                          PtrAbstractBox pRootAb,
-                          int frame,
-                          int x,
-                          int y,
-                          int *pointselect );
+                                  PtrAbstractBox pRootAb,
+                                  int frame,
+                                  int x,
+                                  int y,
+                                  int *pointselect );
 
 #else /* __STDC__ */
 
 extern void GetClickedStructBox (/* PtrBox * result,
-                            PtrAbstractBox pRootAb,
-                            int frame,
-                            int x,
-                            int y,
-                            int *pointselect */);
+                                    PtrAbstractBox pRootAb,
+                                    int frame,
+                                    int x,
+                                    int y,
+                                    int *pointselect */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

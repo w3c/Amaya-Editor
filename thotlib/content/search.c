@@ -18,7 +18,7 @@
 #include "edit_tv.h"
 
 #include "tree_f.h"
-#include "attrherit_f.h"
+#include "attrpresent_f.h"
 #include "search_f.h"
 #include "searchmenu_f.h"
 #include "structcreation_f.h"

@@ -7,18 +7,18 @@
 #if __STDC__
 
 extern void SetNewSelectionStatus ( int frame,
-                           PtrAbstractBox pAb,
-                           boolean status );
+                                    PtrAbstractBox pAb,
+                                    boolean status );
 extern void DisplayCurrentSelection ( int frame,
-                      boolean status );
+                                      boolean status );
 
 #else /* __STDC__ */
 
 extern void SetNewSelectionStatus (/* int frame,
-                             PtrAbstractBox pAb,
-                             boolean status */);
+                                      PtrAbstractBox pAb,
+                                      boolean status */);
 extern void DisplayCurrentSelection (/* int frame,
-                        boolean status */);
+                                        boolean status */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -34,7 +34,7 @@
 #include "presrules_f.h"
 #include "structselect_f.h"
 #include "attributes_f.h"
-#include "attrherit_f.h"
+#include "attrpresent_f.h"
 #include "references_f.h"
 #include "tableau2_f.h"
 

@@ -29,17 +29,17 @@ extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern ptrfont LoadFont ( char name[100] );
 extern void FontIdentifier ( char alphabet,
-                       char family,
-                       int highlight,
-                       int size,
-                       TypeUnit unit,
-                       char r_name[10],
-                       char r_nameX[100] );
+                             char family,
+                             int highlight,
+                             int size,
+                             TypeUnit unit,
+                             char r_name[10],
+                             char r_nameX[100] );
 extern ptrfont ReadFont ( char alphabet,
-                           char family,
-                           int highlight,
-                           int size,
-                           TypeUnit unit );
+                          char family,
+                          int highlight,
+                          int size,
+                          TypeUnit unit );
 extern ptrfont ThotLoadFont ( char alphabet,
                               char family,
                               int highlight,
@@ -74,17 +74,17 @@ extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern ptrfont LoadFont (/* char name[100] */);
 extern void FontIdentifier (/* char alphabet,
-                         char family,
-                         int highlight,
-                         int size,
-                         TypeUnit unit,
-                         char r_name[10],
-                         char r_nameX[100] */);
+                               char family,
+                               int highlight,
+                               int size,
+                               TypeUnit unit,
+                               char r_name[10],
+                               char r_nameX[100] */);
 extern ptrfont ReadFont (/* char alphabet,
-                             char family,
-                             int highlight,
-                             int size,
-                             TypeUnit unit */);
+                            char family,
+                            int highlight,
+                            int size,
+                            TypeUnit unit */);
 extern ptrfont ThotLoadFont (/* char alphabet,
                                 char family,
                                 int highlight,

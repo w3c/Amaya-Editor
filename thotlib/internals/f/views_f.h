@@ -7,18 +7,18 @@
 #if __STDC__
 
 extern boolean PaginatedView ( PtrDocument pDoc,
-                             int view,
-                             boolean assoc );
+                               int view,
+                               boolean assoc );
 extern void GetViewFromFrame ( int nframe,
-                     PtrDocument pDoc,
-                     int *viewNum,
-                     boolean * assoc );
+                               PtrDocument pDoc,
+                               int *viewNum,
+                               boolean * assoc );
 extern void GetDocAndView ( int frame,
-                        PtrDocument * pDoc,
-                        int *viewNum,
-                        boolean * assoc );
+                            PtrDocument * pDoc,
+                            int *viewNum,
+                            boolean * assoc );
 extern int BuildDocumentViewList ( PtrDocument pDoc,
-                           AvailableView viewList );
+                                   AvailableView viewList );
 extern void FreeView ( PtrDocument pDoc,
                        DocViewNumber view );
 extern void CloseDocumentView ( PtrDocument pDoc,
@@ -26,55 +26,55 @@ extern void CloseDocumentView ( PtrDocument pDoc,
                                 boolean assoc,
                                 boolean closeDoc );
 extern void ChangeDocumentName ( PtrDocument pDoc,
-                           char *newName );
+                                 char *newName );
 extern void ViewClosed ( int nFrame );
 extern void OpenDefaultViews ( PtrDocument pDoc );
 extern int CreateAbstractImage ( PtrDocument pDoc,
-                                int v,
-                                int r,
-                                PtrSSchema pSS,
-                                int chosenView,
-                                boolean begin,
-                                PtrElement viewRoot );
+                                 int v,
+                                 int r,
+                                 PtrSSchema pSS,
+                                 int chosenView,
+                                 boolean begin,
+                                 PtrElement viewRoot );
 extern void OpenCreatedView ( PtrDocument pDoc,
-                            int view,
-                            boolean assoc,
+                              int view,
+                              boolean assoc,
+                              int X,
+                              int Y,
+                              int width,
+                              int height );
+extern int OpenViewByName ( PtrDocument pDoc,
+                            Name viewName,
                             int X,
                             int Y,
                             int width,
                             int height );
-extern int OpenViewByName ( PtrDocument pDoc,
-                          Name viewName,
-                          int X,
-                          int Y,
-                          int width,
-                          int height );
 extern void OpenViewByMenu ( PtrDocument pDoc,
-                                int menuItem,
-                                PtrElement subTree,
-                                DocViewNumber selectedView );
+                             int menuItem,
+                             PtrElement subTree,
+                             DocViewNumber selectedView );
 extern void BuildViewList ( PtrDocument pDoc,
-                              char *buffer,
-                              int *nItems );
+                            char *buffer,
+                            int *nItems );
 extern void CloseView ( PtrDocument pDoc,
-                           int view,
-                           boolean assoc );
+                        int view,
+                        boolean assoc );
 
 #else /* __STDC__ */
 
 extern boolean PaginatedView (/* PtrDocument pDoc,
-                               int view,
-                               boolean assoc */);
+                                 int view,
+                                 boolean assoc */);
 extern void GetViewFromFrame (/* int nframe,
-                       PtrDocument pDoc,
-                       int *viewNum,
-                       boolean * assoc */);
+                                 PtrDocument pDoc,
+                                 int *viewNum,
+                                 boolean * assoc */);
 extern void GetDocAndView (/* int frame,
-                          PtrDocument * pDoc,
-                          int *viewNum,
-                          boolean * assoc */);
+                              PtrDocument * pDoc,
+                              int *viewNum,
+                              boolean * assoc */);
 extern int BuildDocumentViewList (/* PtrDocument pDoc,
-                             AvailableView viewList */);
+                                     AvailableView viewList */);
 extern void FreeView (/* PtrDocument pDoc,
                          DocViewNumber view */);
 extern void CloseDocumentView (/* PtrDocument pDoc,
@@ -82,39 +82,39 @@ extern void CloseDocumentView (/* PtrDocument pDoc,
                                   boolean assoc,
                                   boolean closeDoc */);
 extern void ChangeDocumentName (/* PtrDocument pDoc,
-                             char *newName */);
+                                   char *newName */);
 extern void ViewClosed (/* int nFrame */);
 extern void OpenDefaultViews (/* PtrDocument pDoc */);
 extern int CreateAbstractImage (/* PtrDocument pDoc,
-                                  int v,
-                                  int r,
-                                  PtrSSchema pSS,
-                                  int chosenView,
-                                  boolean begin,
-                                  PtrElement viewRoot */);
+                                   int v,
+                                   int r,
+                                   PtrSSchema pSS,
+                                   int chosenView,
+                                   boolean begin,
+                                   PtrElement viewRoot */);
 extern void OpenCreatedView (/* PtrDocument pDoc,
-                              int view,
-                              boolean assoc,
+                                int view,
+                                boolean assoc,
+                                int X,
+                                int Y,
+                                int width,
+                                int height */);
+extern int OpenViewByName (/* PtrDocument pDoc,
+                              Name viewName,
                               int X,
                               int Y,
                               int width,
                               int height */);
-extern int OpenViewByName (/* PtrDocument pDoc,
-                            Name viewName,
-                            int X,
-                            int Y,
-                            int width,
-                            int height */);
 extern void OpenViewByMenu (/* PtrDocument pDoc,
-                                  int menuItem,
-                                  PtrElement subTree,
-                                  DocViewNumber selectedView */);
+                               int menuItem,
+                               PtrElement subTree,
+                               DocViewNumber selectedView */);
 extern void BuildViewList (/* PtrDocument pDoc,
-                                char *buffer,
-                                int *nItems */);
+                              char *buffer,
+                              int *nItems */);
 extern void CloseView (/* PtrDocument pDoc,
-                             int view,
-                             boolean assoc */);
+                          int view,
+                          boolean assoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

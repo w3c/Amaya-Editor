@@ -11,7 +11,7 @@
 #include "typemedia.h"
 #include "frame.h"
 
-int                 FindePage = 0;
+int                 EndOfPage = 0;
 
 #include "memory_f.h"
 
@@ -309,7 +309,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   FindePage = 1;
+   EndOfPage = 1;
 }
 
 #ifdef __STDC__

@@ -1,13 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   pses.c : Gestion de la generation du PostScrip
-   Major changes:
-   I. Vatton - Juillet 87
-   IV : Fevrier 92 introduction de la couleur
-   IV : Aout 92 coupure des mots
-   IV : Juin 93 polylines
+ * psdisplay.c : All the Postscript generation routines.
  */
 
 #include "thot_sys.h"
@@ -53,22 +45,22 @@ static char        *Patterns_PS[] =
    "11ff111111ff1111",		/*square1 */
    "33ffff3333ffff33",
    "77ffffff77ffffff",
-   "11aa44aa11aa44aa",		/*lozenge */
+   "11aa44aa11aa44aa",		/*diamond */
    "2222223e222222e3",		/*brick */
    "4244241c244442c1",		/*tile */
    "6688888884444222",		/*sea */
-   "11b87c3a11a3c78b"		/*basket */
+   "11b87c3a11a3c78b"		/*bottomket */
 };
 
 extern int          NbPage;
-extern int          FindePage;
+extern int          EndOfPage;
 int                 X, Y;
 static int          LastPageNumber, LastPageWidth, LastPageHeight;
-static int          MemeBoite = 0;	/* MemeBoite = 1 si le texte continue le texte precedent */
-static int          NbBcour;
+static int          SameBox = 0;/* SameBox = 1 if the text is in the same box */
+static int          NbWhiteSp;
 
-/* Gestion des ressources fontes chargees */
-static ptrfont      PolEnPs = NULL;
+/* Handling of loaded fonts */
+static ptrfont      PoscriptFont = NULL;
 static char        *Scale = NULL;
 static int          ColorPs = -1;
 
@@ -78,39 +70,39 @@ static int          ColorPs = -1;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WriteCar ecrit s1 ou s2 dans fout suivant la valeur de codage.  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      WriteCar writes s1 or s2 depending on encoding.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
-static void         WriteCar (FILE * fout, int codage, char *s1, char *s2)
+static void         WriteCar (FILE * fout, int encoding, char *s1, char *s2)
 
 #else  /* __STDC__ */
-static void         WriteCar (fout, codage, s1, s2)
+static void         WriteCar (fout, encoding, s1, s2)
 FILE               *fout;
-int                 codage;
+int                 encoding;
 char               *s1;
 char               *s2;
 
 #endif /* __STDC__ */
 
 {
-   if (codage == 0)
+   if (encoding == 0)
       fputs (s1, fout);
    else
       fputs (s2, fout);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Transcode ecrit le code PostScript du caractere car.            | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      Transcode emit the Poscript code for the given char.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-static void         Transcode (FILE * fout, int codage, char car)
+static void         Transcode (FILE * fout, int encoding, char car)
 
 #else  /* __STDC__ */
-static void         Transcode (fout, codage, car)
+static void         Transcode (fout, encoding, car)
 FILE               *fout;
-int                 codage;
+int                 encoding;
 char                car;
 
 #endif /* __STDC__ */
@@ -128,7 +120,7 @@ char                car;
 		  fputs ("\\)", fout);
 		  break;
 	       case '*':
-		  WriteCar (fout, codage, "*", "\\267");	/* bullet */
+		  WriteCar (fout, encoding, "*", "\\267");	/* bullet */
 		  break;
 	       case '\\':
 		  fputs ("\\\\", fout);
@@ -139,18 +131,17 @@ char                car;
 }				/*Transcode */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CouleurCourante compare le dernier RGB PostScript charge' avec  | */
-/* |            le nouveau RGB demande'et si ne'cessaire le modifie.    | */
-/* |            Le parametre num donne l'indice de la couleur dans la   | */
-/* |            table des couleurs de Thot.                             | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      CurrentColor compares the last RGB Postscript color loaded
+ *		and the one asked, and load it if needed.
+ *		num is an index in the Thot internal color table.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-static void         CouleurCourante (FILE * fout, int num)
+static void         CurrentColor (FILE * fout, int num)
 
 #else  /* __STDC__ */
-static void         CouleurCourante (fout, num)
+static void         CurrentColor (fout, num)
 FILE               *fout;
 int                 num;
 
@@ -162,12 +153,12 @@ int                 num;
    unsigned short      blue;
    float               fact;
 
-   /* Compare la couleur demandee avec la derniere chargee */
+   /* Compare the color asked with the current one */
    if (num != ColorPs)
      {
-	/* Demande le RGB de la couleur */
+	/* Ask for the RedGreenBlue values */
 	ColorRGB (num, &red, &green, &blue);
-	/* Insere la commande de chargement PostScript */
+	/* Emit the Poscript command */
 	fact = 255;
 	fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
@@ -176,22 +167,21 @@ int                 num;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Remplir remplit la forme courante soit avec un motif noir et    | */
-/* |            blanc, soit avec la couleur du trace', soit avec la     | */
-/* |            couleur de fond ou laisse la forme transparente selon   | */
-/* |            la valeur du parame`tre motif.                          | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      FillWithPattern fills in the current stroke with a black and white
+ *		pattern, or the drawing color, or the background color,
+ *		or keep it transparent, depending on pattern value.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-static void         Remplir (FILE * fout, int fg, int bg, int motif)
+static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-static void         Remplir (fout, fg, bg, motif)
+static void         FillWithPattern (fout, fg, bg, pattern)
 FILE               *fout;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -202,48 +192,47 @@ int                 motif;
    float               fact;
 
    fact = 255;
-   /* Est-ce qu'il faut remplir la forme courante */
-   if (motif == 0)
-      /* Pas de remplissage */
+   /* Do the current stroke need to be filled ? */
+   if (pattern == 0)
+      /* no filling */
       fprintf (fout, "0\n");
-   else if (motif == 1)
+   else if (pattern == 1)
      {
-	/* Demande le RGB de la couleur du trace */
+	/* Ask for the RedGreenBlue values */
 	ColorRGB (fg, &red, &green, &blue);
-	/* Insere la commande de chargement PostScript */
+	/* Emit the Poscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
      }
-   else if (motif == 2)
+   else if (pattern == 2)
      {
-	/* Demande le RGB de la couleur de fond */
+	/* Ask for the RedGreenBlue values */
 	ColorRGB (bg, &red, &green, &blue);
-	/* Insere la commande de chargement PostScript */
+	/* Emit the Poscript command */
 	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
 		 ((float) green) / fact, ((float) blue) / fact);
      }
-   else if (motif >= 10)
+   else if (pattern >= 10)
      {
-	/* Utilisation d'un pattern */
+	/* Use of a fill pattern */
 	/*fprintf(fout, "<d1e3c5885c3e1d88> 8 "); */
-	fprintf (fout, "<%s> 8\n", Patterns_PS[motif - 10]);
+	fprintf (fout, "<%s> 8\n", Patterns_PS[pattern - 10]);
      }
    else
-      /* Level de gris */
-      fprintf (fout, "%d\n", motif - 2);
+      /* Shade of grey */
+      fprintf (fout, "%d\n", pattern - 2);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FontCourante de'termine la fonte PostScript demande'e et e'crit | */
-/* |            le changement de police courante si ne'cessaire.        | */
-/* |            Retourne 0 s'il s'agit d'une police latine, 1 s'il      | */
-/* |            s'agit d'une police grecque.                            | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      CurrentFont compute the correct PostScript font needed,
+ *		and emit the code to load it, if necessary.
+ *              Returns 0 if it is a Latin font and 1 for a Greek one.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
-static int          FontCourante (FILE * fout, ptrfont font)
+static int          CurrentFont (FILE * fout, ptrfont font)
 #else  /* __STDC__ */
-static int          FontCourante (fout, font)
+static int          CurrentFont (fout, font)
 FILE               *fout;
 ptrfont             font;
 
@@ -252,7 +241,7 @@ ptrfont             font;
    int                 i, retour;
    char                c1, c2;
 
-   /* On parcourt la table des polices */
+   /* browse the table of fonts */
    i = 0;
    retour = 0;			/* BUG */
    while ((TtFonts[i] != font) && (i < MAX_FONT))
@@ -262,39 +251,39 @@ ptrfont             font;
    if (i >= MAX_FONT)
       i = 0;
    i = i * 8;
-   if (font != PolEnPs)
+   if (font != PoscriptFont)
      {
-	PolEnPs = font;
-	if (TtPsFontName[i] == 'g')	/* Alphabet Grec */
+	PoscriptFont = font;
+	if (TtPsFontName[i] == 'g')	/* Greek alphabet */
 	  {
 	     c1 = TtPsFontName[i];
-	     c2 = 'r';		/* La police Symbol n'existe qu'en un seul style */
+	     c2 = 'r';		/* Symbol only has one style available */
 	     retour = 1;
 	  }
 	else
 	  {
-	     /* Alphabet Latin */
-	     c1 = TtPsFontName[i + 1];	/* famille Helvetica Times Courrier */
-	     /* On convertit les minuscules en majuscules */
+	     /* Latin Alphabet */
+	     c1 = TtPsFontName[i + 1];	/* font Helvetica Times Courrier */
+	     /* convert lowercase to uppercase */
 	     c2 = TtPsFontName[i + 2];	/* Style normal bold italique */
 	     retour = 0;
 	  }
 
-	/* On note l'echelle courante */
+	/* update the scaling factor */
 	Scale = &TtPsFontName[i + 3];
 	fprintf (fout, "%c%c%c %s sf\n", TtPsFontName[i], c1, c2, Scale);
 	return retour;
      }
-   /* Sinon on retourne simplement l'indicateur de famille de caracteres */
+   /* returns the indicator for the family of fonts */
    else if (TtPsFontName[i] == 'g')
       return (1);
    else
       return (0);
-}				/*FontCourante */
+}				/*CurrentFont */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPage regarde s'il faut engendrer un showpage.                 | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawPage check whether a showpage is needed.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
 void                DrawPage (FILE * fout)
@@ -306,44 +295,39 @@ FILE               *fout;
 #endif /* __STDC__ */
 
 {
-   if (FindePage == 1)
+   if (EndOfPage == 1)
      {
 	NbPage++;
 	fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NbPage, NbPage);
-	FindePage = 0;
-	/* On force le chargement de la police en debut de page */
-	PolEnPs = NULL;
+	EndOfPage = 0;
+	/* Enforce loading the font when starting a new page */
+	PoscriptFont = NULL;
 	ColorPs = -1;
      }
 }
 
-/*debut */
-/* ---------------------------------------------------------------------- */
-/* |    DrawString affiche la chai^ne de caracte`res de longueur lg qui   | */
-/* |            de'bute par buff[i] a` la position x,y dans la fenetree^tre     | */
-/* |            frame en utilisant la police de caracte`res font.               | */
-/* |            Le parame`tre lgboite donne la largeur de la boi^te     | */
-/* |            en fin de traitement sinon 0. Ce parame`tre est         | */
-/* |            utilise' uniquement par le formateur.                   | */
-/* |            Le parame`tre bl indique qu'un blanc pre'ce`de la       | */
-/* |            chai^ne transmise.                                      | */
-/* |            Le parame`tre hyphen indique qu'un caracte`re           | */
-/* |            d'hyphenation doit e^tre ajoute' en fin de chai^ne.     | */
-/* |            Le parame`tre debutbloc vaut 1 quand le texte se trouve | */
-/* |            en de'but de paragraphe pour interdire la justification | */
-/* |            des premiers blancs au moment de l'impression.          | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre fg indique la couleur du trace'.          | */
-/* |            Retourne la largeur de la chaine affichee.              | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawString draw a char string of lg chars beginning at buff[i].
+ *              Drawing starts at (x, y) in frame and using font.
+ *              lgboite gives the width of the final box or zero,
+ *              this is used only by the thot formmating engine.
+ *              bl indicate taht there is a space before the string
+ *              hyphen indicate whether an hyphen char has to be added.
+ *              debutbloc is 1 if the text is at a paragraph beginning
+ *              (no justification of first spaces).
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              parameter fg indicate the drawing color
+ *
+ *              Returns the lenght of the string drawn.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int debutbloc, int RO, int active, int fg)
+int                 DrawString (char *buff, int i, int lg, int frame, int x, int y, ptrfont font, int lgboite, int bl, int hyphen, int StartOfCurrentBlock, int RO, int active, int fg)
 
 #else  /* __STDC__ */
-int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, debutbloc, RO, active, fg)
+int                 DrawString (buff, i, lg, frame, x, y, font, lgboite, bl, hyphen, StartOfCurrentBlock, RO, active, fg)
 char               *buff;
 int                 i;
 int                 lg;
@@ -354,7 +338,7 @@ ptrfont             font;
 int                 lgboite;
 int                 bl;
 int                 hyphen;
-int                 debutbloc;
+int                 StartOfCurrentBlock;
 int                 RO;
 int                 active;
 int                 fg;
@@ -363,112 +347,112 @@ int                 fg;
 
 {
    char               *ptcar;
-   int                 j, codage, large;
-   int                 blancnonjustifie;
+   int                 j, encoding, width;
+   int                 NonJustifiedWhiteSp;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   codage = 0;			/* BUG */
+   encoding = 0;			/* BUG */
 
-   /* L'indicateur blancnonjustifie est positif s'il faut produire */
-   /* un blanc dur et nul s'il faut produire un blanc justifie     */
+   /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
+   /* and equal to 0 if a justified space is to be printed */
 
-   blancnonjustifie = debutbloc;
+   NonJustifiedWhiteSp = StartOfCurrentBlock;
 
-   /* Est-ce que l'on commence a traiter une nouvelle boite ? */
-   if (MemeBoite == 0)
+   /* Is this a new box ? */
+   if (SameBox == 0)
      {
-	/* On debute la boite */
-	MemeBoite = 1;
+	/* Beginning of a new box */
+	SameBox = 1;
 	X = PixelToPoint (x);
 	Y = PixelToPoint (y + FontBase (font));
-	NbBcour = 0;
-	/* Faut-il ajouter un showpage ? */
+	NbWhiteSp = 0;
+	/* Do we need to add a showpage ? */
 	DrawPage (fout);
 
-	/* Faut-il changer de RGB */
-	CouleurCourante (fout, fg);
+	/* Do we need to change the current color ? */
+	CurrentColor (fout, fg);
 
-	/* Faut-il changer de police de caracteres courante */
-	codage = FontCourante (fout, font);
+	/* Do we need to change the current font ? */
+	encoding = CurrentFont (fout, font);
 	fprintf (fout, "(");
      }
 
-   /* On ajoute les blancs justifies */
+   /* Add the justified white space */
    if (bl > 0)
      {
-	NbBcour++;
-	Transcode (fout, codage, ' ');
+	NbWhiteSp++;
+	Transcode (fout, encoding, ' ');
      }
 
-   /* On transmet les caracteres */
+   /* Emit the chars */
    ptcar = &buff[i - 1];
    for (j = 0; j < lg; j++)
      {
-	/* On compte les blancs */
+	/* enumerate the white spaces */
 	if (ptcar[j] == ' ')
-	   if (blancnonjustifie == 0)
+	   if (NonJustifiedWhiteSp == 0)
 	     {
-		/* ecriture d'un blanc justifie */
-		NbBcour++;
-		Transcode (fout, codage, ptcar[j]);
+		/* write a justified white space */
+		NbWhiteSp++;
+		Transcode (fout, encoding, ptcar[j]);
 	     }
 	   else
-	      /* ecriture d'un blanc dur */
+	      /* write a fixed lenght white space */
 	      fputs ("\\240", fout);
 	else
 	  {
-	     blancnonjustifie = 0;
-	     Transcode (fout, codage, ptcar[j]);
+	     NonJustifiedWhiteSp = 0;
+	     Transcode (fout, encoding, ptcar[j]);
 	  }
      }
 
-   /* Faut-il ajouter le tiret d'hyphenation ? */
+   /* Is an hyphen needed ? */
    if (hyphen)
-      Transcode (fout, codage, '\255');
+      Transcode (fout, encoding, '\255');
 
-   /* Est-ce la fin de la boite ? */
+   /* is this the end of the box */
    if (lgboite != 0)
      {
 	lgboite = PixelToPoint (lgboite);
-	/* Faut-il justifier les blancs ? */
-	if (NbBcour == 0)
+	/* Is justification needed ? */
+	if (NbWhiteSp == 0)
 	   fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
 	else
-	   fprintf (fout, ") %d %d %d -%d j\n", NbBcour, lgboite, X, Y);
-	MemeBoite = 0;
+	   fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+	SameBox = 0;
      }
 
    if (lg > 0)
      {
-	/* On calcule la largeur de la chaine de caractere ecrite */
-	large = 0;
+	/* compute the width of the string */
+	width = 0;
 	j = 0;
 	while (j < lg)
-	   large += CarWidth (ptcar[j++], font);
-	return (large);
+	   width += CarWidth (ptcar[j++], font);
+	return (width);
      }
    else
       return (0);
 }				/*DrawString */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayUnderline trace un souligne                                        | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DisplayUnderline draw the underline, overline or cross line
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int epais, int lg, int RO, int func, int fg)
+void                DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int thick, int lg, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DisplayUnderline (frame, x, y, font, type, epais, lg, RO, func, fg)
+void                DisplayUnderline (frame, x, y, font, type, thick, lg, RO, func, fg)
 int                 frame;
 int                 x;
 int                 y;
 ptrfont             font;
 int                 type;
-int                 epais;
+int                 thick;
 int                 lg;
 int                 RO;
 int                 func;
@@ -477,75 +461,75 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   int                 height;	/* hauteur de la fonte   */
-   int                 ascent;	/* ascent  de la fonte   */
-   int                 bas;	/* position du souligne' */
-   int                 milieu;	/* position du biffe'    */
-   int                 haut;	/* position du surligne' */
-   int                 epaisseur;	/* epaisseur du trait    */
+   int                 fheight; /* font height           */
+   int                 ascent;  /* font ascent           */
+   int                 bottom;  /* underline position    */
+   int                 middle;  /* cross-over position   */
+   int                 height;  /* overline position     */
+   int                 thickness;/* thickness of drawing */
 
-   /*  int     decal; *//* decalage entre traits */
-   int                 xdebut;	/* debut du trait        */
-   int                 xfin;	/* fin dur trait         */
+   int                 l_start;	/* start of the line     */
+   int                 l_end;	/* end of the line       */
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
 
-   /* On doit etre sorti d'une boite */
-   if (MemeBoite == 0)
+   /* The last box must be finished */
+   if (SameBox == 0)
      {
-	height = FontHeight (font);
+	fheight = FontHeight (font);
 	ascent = FontAscent (font);
-	epaisseur = ((height / 20) + 1) * (epais + 1);	/* epaisseur proportionnelle a hauteur */
-	haut = y + (2 - epais) * epaisseur;
-	bas = y + ascent + (2 - epais) * epaisseur;
-	milieu = y + height / 2;
-	/*decal = epaisseur; *//* decalage entre les traits */
-	xdebut = X;		/* on recupere le X courant (cf DrawString) */
-	xfin = X + PixelToPoint (lg);	/* on calcule la position de fin */
+	thickness = ((fheight / 20) + 1) * (thick + 1);
+	height = y + (2 - thick) * thickness;
+	bottom = y + ascent + (2 - thick) * thickness;
+	middle = y + height / 2;
+	l_start = X;		/* get current X value (cf DrawString) */
+	l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
 
-	/* Valeur en dur pour ESM */
-	/*         epaisseur = 1; */
-	/*         haut = y + 2 * epaisseur; */
-	/*         bas = y + ascent + 3; */
-	/* a mettre en commentaire ou pas suivant ce que l'on veut */
+        /*
+         * for an underline independant of the font add
+         * the following lines here :
+         *         thickness = 1;
+         *         height = y + 2 * thickness;
+         *         bottom = y + ascent + 3;
+         */
 
 	switch (type)
 	      {
-		 case 0:	/* sans souligne */
+		 case 0:	/* nothing */
 		    break;
 
-		 case 1:	/* souligne */
+		 case 1:	/* underlined */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelToPoint (bas), xdebut, PixelToPoint (bas), 0, epaisseur, 2);
+			     l_end, PixelToPoint (bottom), l_start, PixelToPoint (bottom), 0, thickness, 2);
 		    break;
 
-		 case 2:	/* surligne */
+		 case 2:	/* overlined */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelToPoint (haut), xdebut, PixelToPoint (haut), 0, epaisseur, 2);
+			     l_end, PixelToPoint (height), l_start, PixelToPoint (height), 0, thickness, 2);
 		    break;
 
-		 case 3:	/* biffer */
+		 case 3:	/* cross-over */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelToPoint (milieu), xdebut, PixelToPoint (milieu), 0, epaisseur, 2);
+			     l_end, PixelToPoint (middle), l_start, PixelToPoint (middle), 0, thickness, 2);
 		    break;
 	      }
      }
 }				/*DisplayUnderline */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRadical trace un radical.                                     | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawRadical Draw a radical symbol.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawRadical (int frame, int epais, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
+void                DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawRadical (frame, epais, x, y, l, h, font, RO, func, fg)
+void                DrawRadical (frame, thick, x, y, l, h, font, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
@@ -562,10 +546,10 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Do we need to add a showpage ? */
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    fh = FontHeight (font);
    ex = h / 3;
@@ -588,21 +572,21 @@ int                 fg;
 
 }				/*DrawRadical */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawIntegral trace une integrale :                               | */
-/* |            - simple si type = 0                                    | */
-/* |            - curviligne si type = 1                                | */
-/* |            - double si type = 2                                    | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawIntegral draw an integral. depending on type :
+ *              - simple if type = 0
+ *              - contour if type = 1
+ *              - double if type = 2.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawIntegral (int frame, int epais, int x, int y, int l, int h, int type, ptrfont font, int RO, int func, int fg)
+void                DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawIntegral (frame, epais, x, y, l, h, type, font, RO, func, fg)
+void                DrawIntegral (frame, thick, x, y, l, h, type, font, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
@@ -619,29 +603,15 @@ int                 fg;
    FILE               *fout;
    int                 ey, ym, yf;
 
-#ifdef JA
-   int                 lly;
-
-#endif
-
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   lly = PixelToPoint (y + h);
-   x = PixelToPoint (x);
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   y = PixelToPoint (y);
-   fprintf (fout, "(\\362) %d -%d %d %d flyshow\n", x, lly, l, h);
-#else
-   /* Faut-il changer de police de caracteres courante */
-   FontCourante (fout, font);
+   /* Do we need to change the current font ? */
+   CurrentFont (fout, font);
 
    l--;
    h--;
@@ -654,27 +624,26 @@ int                 fg;
    y = PixelToPoint (y) + 1;
    if (h < ey / 4)
      {
-	/* Sur un seul caractere */
+	/* Made of only one glyph */
 	if (type == 2)
 	  {
-	     /* Trace une integrale double */
+	     /* double integral */
 	     fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelToPoint (CarWidth ('\362', font) / 4));
 	     fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelToPoint (CarWidth ('\362', font) / 4));
 	  }
 	else
 	  {
-	     /* Trace une integrale simple ou circulaire */
 	     fprintf (fout, "-%d %d (\\362) c\n", ym, x);
-	     if (type == 1)
+	     if (type == 1) /* contour integral */
 		fprintf (fout, "-%d %d (o) c\n", ym, x);
 	  }
      }
    else
      {
-	/* Sur deux caracteres ou plus */
+	/* Drawn with more than one glyph */
 	if (type == 2)
 	  {
-	     /* Trace une integrale double */
+	     /* double integral */
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
 	      x - PixelToPoint (CarWidth ('\364', font) / 4), yf, y, Scale);
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
@@ -682,18 +651,16 @@ int                 fg;
 	  }
 	else
 	  {
-	     /* Trace une integrale simple ou circulaire */
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n", x, yf, y, Scale);
-	     if (type == 1)
+	     if (type == 1) /* contour integral */
 		fprintf (fout, "-%d %d (o) c\n", ym, x);
 	  }
      }
-#endif
 }				/*DrawIntegral */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSigma trace un symbole sigma.                                 | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawSigma draw a Sigma symbol.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -712,40 +679,25 @@ int                 fg;
 {
    FILE               *fout;
 
-#ifdef JA
-   int                 lly;
-
-#endif
-
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* On modifie la police courante */
-   PolEnPs = NULL;
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   lly = PixelToPoint (y + h);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   fprintf (fout, "(\\345) %d -%d %d %d flyshow\n", x, lly, l, h);
-#else
+   /* Change the current font */
+   PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\345) c\n", y, x);
-#endif
 }				/*DrawSigma */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPi trace un symbole Pi.                                       | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawPi draw a PI symbol.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -765,31 +717,22 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Do we need to add a showpage ? */
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* On modifie la police courante */
-   PolEnPs = NULL;
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   x = PixelToPoint (x);
-   y = PixelToPoint (y + h);
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   fprintf (fout, "(\\325) %d -%d %d %d flyshow\n", x, y, l, h);
-#else
+   /* Change the current font */
+   PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\325) c\n", y, x);
-#endif
 }				/*DrawPi */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawUnion trace un symbole Union.                                 | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawUnion draw an Union symbol.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -809,31 +752,22 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Do we need to add a showpage ? */
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* On modifie la police courante */
-   PolEnPs = NULL;
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   x = PixelToPoint (x);
-   y = PixelToPoint (y + h);
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   fprintf (fout, "(\\325) %d -%d %d %d flyshow\n", x, y, l, h);
-#else
+   /* Change the current font */
+   PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\310) c\n", y, x);
-#endif
 }				/*DrawUnion */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawIntersection trace un symbole Intersection.                   | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawIntersection draw an intersection symbol.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -853,13 +787,13 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Faut-il ajouter un showpage ? */
+   DrawPage (fout);		/* Do we need to add a showpage ? */
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* On modifie la police courante */
-   PolEnPs = NULL;
+   /* Change the current font */
+   PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
@@ -867,17 +801,17 @@ int                 fg;
 }				/*DrawIntersection */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawArrow trace une fleche orientee en fonction de l'angle donne | */
-/* |            (0 correspond a` une fleche vers la droite, 45, 90, 135,| */
-/* |             180, 225, 270, 315).                                   | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawArrow draw an arrow following the indicated direction in degrees :
+ *              0 (right arrow), 45, 90, 135, 180,
+ *              225, 270 ou 315.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
-void                DrawArrow (int frame, int epais, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
+void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                DrawArrow (frame, epais, style, x, y, l, h, orientation, RO, func, fg)
+void                DrawArrow (frame, thick, style, x, y, l, h, orientation, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -894,113 +828,91 @@ int                 fg;
    FILE               *fout;
 
    if (l == 0 && h == 0)
-      return;			/* ce n'est pas la peine de se fatiguer */
+      return;
 
    fout = (FILE *) FrRef[frame];
    DrawPage (fout);
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", epais * 10);
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-#else
    l--;
    h--;
    xm = PixelToPoint (x + l / 2);
    xf = PixelToPoint (x + l);
    ym = PixelToPoint (y + h / 2);
    yf = PixelToPoint (y + h);
-   lg = HL + epais;		/* longueur de la tete de fleche */
-#endif
+   lg = HL + thick;		/* lenght of the arrow head */
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
    if (orientation == 0)
      {
-#ifdef JA
-	fprintf (fout, "(\\256) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
-	/* Trace une fleche vers la droite */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, ym, xf, ym, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, ym, xf, ym, epais, lg, lg);
-#endif
+	/* draw a right arrow */
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, ym, xf, ym, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, ym, xf, ym, thick, lg, lg);
      }
    else if (orientation == 45)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, yf, xf, y, epais, lg, lg);
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, yf, xf, y, thick, lg, lg);
      }
    else if (orientation == 90)
      {
-#ifdef JA
-	fprintf (fout, "(\\335) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
-	/* Trace une fleche vers le haut */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, yf, xm, y, epais, lg, lg);
-#endif
+	/* draw a bottom-up arrow */
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, yf, xm, y, thick, lg, lg);
      }
    else if (orientation == 135)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, y, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, yf, x, y, epais, lg, lg);
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, y, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, yf, x, y, thick, lg, lg);
      }
    else if (orientation == 180)
      {
-#ifdef JA
-	fprintf (fout, "(\\254) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
-	/* Trace une fleche vers la gauche */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, ym, x, ym, epais, lg, lg);
-#endif
+	/* draw a left arrow */
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, ym, x, ym, thick, lg, lg);
      }
    else if (orientation == 225)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, yf, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, y, x, yf, epais, lg, lg);
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, yf, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, y, x, yf, thick, lg, lg);
      }
    else if (orientation == 270)
      {
-#ifdef JA
-	fprintf (fout, "(\\257) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
-	/* Trace une fleche vers le bas */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, y, xm, yf, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, y, xm, yf, epais, lg, lg);
-#endif
+	/* draw a top-down arrow */
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, y, xm, yf, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, y, xm, yf, thick, lg, lg);
      }
    else if (orientation == 315)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, epais, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, epais, lg, lg);
+	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
+	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, thick, lg, lg);
      }
 }				/*DrawArrow */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawBracket trace un symbole crochet ouvrant ou fermant.          | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawBracket draw an opening or closing bracket (depending on direction)
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawBracket (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawBracket (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawBracket (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 func;
@@ -1013,26 +925,15 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* Faut-il changer de police de caracteres courante */
-   FontCourante (fout, font);
+   /* Do we need to change the current font ? */
+   CurrentFont (fout, font);
 
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   y = PixelToPoint (y);
-   x = PixelToPoint (x);
-   if (sens == 0)
-      fprintf (fout, "(\\133) %d -%d %d %d flyshow\n", x, yf, l, h);
-   else
-      fprintf (fout, "(\\135) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
    l--;
    h--;
    ey = FontHeight (font);
@@ -1044,40 +945,39 @@ int                 fg;
 
    if (h < ey / 4)
      {
-	/* Sur un seul caractere */
-	if (sens == 0)
+	/* Made of only one glyph */
+	if (direction == 0)
 	   fprintf (fout, "-%d %d ([) c\n", yf, x);
 	else
 	   fprintf (fout, "-%d %d (])c\n", yf, x);
      }
    else
      {
-	/* Sur deux caracteres ou plus */
-	if (sens == 0)		/* Trace un crochet ouvrant */
+	/* Drawn with more than one glyph */
+	if (direction == 0)		/* Trace un crochet ouvrant */
 	   fprintf (fout, "%d -%d -%d %s (\\351) (\\352) (\\353) s3\n", x + 1, yf, y, Scale);
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
      }
-#endif
 }				/*DrawBracket */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawParenthesis trace un symbole parenthese ouvrant ou fermant.    | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawParenthesis draw a closing or opening parenthesis (direction).
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawParenthesis (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawParenthesis (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawParenthesis (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 func;
@@ -1090,26 +990,15 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* Faut-il changer de police de caracteres courante */
-   FontCourante (fout, font);
+   /* Do we need to change the current font ? */
+   CurrentFont (fout, font);
 
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   y = PixelToPoint (y);
-   x = PixelToPoint (x);
-   if (sens == 0)
-      fprintf (fout, "(\\50) %d -%d %d %d flyshow\n", x, yf, l, h);
-   else
-      fprintf (fout, "(\\51) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
    l--;
    h--;
    ey = FontHeight (font);
@@ -1121,41 +1010,39 @@ int                 fg;
 
    if (h < ey / 4)
      {
-	/* Sur un seul caractere */
-	if (sens == 0)
+	/* Made of only one glyph */
+	if (direction == 0)
 	   fprintf (fout, "-%d %d (\\() c\n", yf, x);
 	else
 	   fprintf (fout, "-%d %d (\\)) c\n", yf, x);
      }
    else
      {
-	/* Sur deux caracteres ou plus */
-	if (sens == 0)
-	   /* Trace un crochet ouvrant */
+	/* Drawn with more than one glyph */
+	if (direction == 0)
 	   fprintf (fout, "%d -%d -%d %s (\\346) (\\347) (\\350) s3\n", x + 1, yf, y, Scale);
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
      }
-#endif
 }				/*DrawParenthesis */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawBrace trace un symbole accolade ouvrant ou fermant.        | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawBrace draw an opening of closing brace (depending on direction).
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawBrace (int frame, int epais, int x, int y, int l, int h, int sens, ptrfont font, int RO, int func, int fg)
+void                DrawBrace (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawBrace (frame, epais, x, y, l, h, sens, font, RO, func, fg)
+void                DrawBrace (frame, thick, x, y, l, h, direction, font, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 ptrfont             font;
 int                 RO;
 int                 func;
@@ -1168,26 +1055,15 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   /* Faut-il changer de police de caracteres courante */
-   FontCourante (fout, font);
+   /* Do we need to change the current font ? */
+   CurrentFont (fout, font);
 
-#ifdef JA
-   fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelToPoint (l);
-   h = PixelToPoint (h);
-   y = PixelToPoint (y);
-   x = PixelToPoint (x);
-   if (sens == 0)
-      fprintf (fout, "(\\173) %d -%d %d %d flyshow\n", x, yf, l, h);
-   else
-      fprintf (fout, "(\\175) %d -%d %d %d flyshow\n", x, yf, l, h);
-#else
    l--;
    h--;
    ey = FontHeight (font);
@@ -1199,50 +1075,48 @@ int                 fg;
 
    if (h < ey - 1)
      {
-	/* Sur un seul caractere */
-	if (sens == 0)
+	/* Made of only one glyph */
+	if (direction == 0)
 	   fprintf (fout, "-%d %d ({) c\n", yf, x);
 	else
 	   fprintf (fout, "-%d %d (}) c\n", yf, x);
      }
    else
      {
-	/* Sur deux caracteres ou plus */
-	if (sens == 0)
-	   /* Trace un crochet ouvrant */
+	/* Drawn with more than one glyph */
+	if (direction == 0)
 	   fprintf (fout, "%d -%d -%d %s (\\354) (\\355) (\\356) (\\357) s4\n", x, yf, y, Scale);
 	else
 	   fprintf (fout, "%d -%d -%d %s (\\374) (\\375) (\\376) (\\357) s4\n", x, yf, y, Scale);
      }
-#endif
 }				/*DrawBrace */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRectangle trace un rectangle d'origine x, y et de dimensions  | */
-/* |            larg, haut avec une e'paisseur epais dans la fenetree^tre       | */
-/* |            d'indice frame.                                         | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawRectangle draw a rectangle located at (x, y) in frame,
+ *              of geometry width x height.
+ *              thick indicate the thickness of the lines.
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawRectangle (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangle (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawRectangle (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangle (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1251,47 +1125,44 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   if (epais > 0)
-      CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   if (thick > 0)
+      CurrentColor (fout, fg);
 
    xf = PixelToPoint (x + larg);
-   yf = PixelToPoint (y + haut);
+   yf = PixelToPoint (y + height);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   Remplir (fout, fg, bg, motif);
-   fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, epais, 4);
+   FillWithPattern (fout, fg, bg, pattern);
+   fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
 }
 
-/*debut */
-/* ---------------------------------------------------------------------- */
-/* |    DrawSegments trace des lignes brise'es.                            | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg indique la couleur du trace'.        | */
-/* |            Le parametre fleche indique :                           | */
-/* |            - s'il ne faut pas tracer de fleche (0)                 | */
-/* |            - s'il faut tracer une fleche vers l'avant (1)          | */
-/* |            - s'il faut tracer une fleche vers l'arriere (2)        | */
-/* |            - s'il faut tracer une fleche dans les deux sens (3)    | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawSegments draw a set of segments.
+ *              Parameter buffer is a pointer to the list of control points.
+ *              nb indicate the number of points.
+ *              The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              fg parameter gives the drawing color.
+ *              arrow parameter indicate whether :
+ *              - no arrow have to be drawn (0)
+ *              - a forward arrow has to be drawn (1)
+ *              - a backward arrow has to be drawn (2)
+ *              - both backward and forward arrows have to be drawn (3)
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawSegments (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche)
+void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
 
 #else  /* __STDC__ */
-void                DrawSegments (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche)
+void                DrawSegments (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1300,7 +1171,7 @@ int                 nb;
 int                 RO;
 int                 active;
 int                 fg;
-int                 fleche;
+int                 arrow;
 
 #endif /* __STDC__ */
 
@@ -1313,27 +1184,27 @@ int                 fleche;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   if (epais == 0)
+   if (thick == 0)
       return;
 
-   lg = HL + epais;
+   lg = HL + thick;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    adbuff = buffer;
 
-   /* fleche vers l'arriere  */
-   if (fleche == 2 || fleche == 3)
+   /* backward arrow  */
+   if (arrow == 2 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style,
 	       FloatToInt ((float) buffer->BuPoints[2].XCoord / 1000 + x),
 	       FloatToInt ((float) buffer->BuPoints[2].YCoord / 1000 + y),
 	       FloatToInt ((float) buffer->BuPoints[1].XCoord / 1000 + x),
-      FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), epais, lg, lg);
+      FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), thick, lg, lg);
 
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1342,53 +1213,51 @@ int                 fleche;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
 	  }
 	if (i == nb - 1)
 	  {
-	     /* conserve les derniers points pour tracer les fleches */
+	     /* keep last coordinates for drawing the arrows */
 	     prevx = FloatToInt (xp);
 	     prevy = FloatToInt (yp);
 	  }
-	/* Coordonnees d'un nouveau point */
+	/* Coordinate for next point */
 	xp = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
 	yp = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
 	fprintf (fout, "%f -%f\n", xp, yp);
 	j++;
      }
-   /* Caracteristiques du trace */
-   fprintf (fout, " %d %d %d Seg\n", style, epais, nb - 1);
+   /* Extra characteristics for drawing */
+   fprintf (fout, " %d %d %d Seg\n", style, thick, nb - 1);
 
-   /* fleche vers l'avant  */
+   /* forward arrow  */
    j--;
-   if (fleche == 1 || fleche == 3)
+   if (arrow == 1 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, prevx, prevy,
-	       FloatToInt (xp), FloatToInt (yp), epais, lg, lg);
+	       FloatToInt (xp), FloatToInt (yp), thick, lg, lg);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPolygon trace un polygone.                                   | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawPolygon draw a polygone.
+ *              Parameter buffer is a pointer to the list of control points.
+ *              nb indicate the number of points.
+ *              The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawPolygon (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif)
+void                DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawPolygon (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif)
+void                DrawPolygon (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1398,7 +1267,7 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1409,12 +1278,12 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
-   Remplir (fout, fg, bg, motif);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+   FillWithPattern (fout, fg, bg, pattern);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    adbuff = buffer;
@@ -1426,48 +1295,43 @@ int                 motif;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
 	  }
-	/* Coordonnees d'un nouveau point */
+	/* Coordinate for next point */
 	xp = (float) adbuff->BuPoints[j].XCoord / 1000. + x;
 	yp = (float) adbuff->BuPoints[j].YCoord / 1000. + y;
 	fprintf (fout, "%f -%f\n", xp, yp);
 	j++;
      }
-   /* Caracteristiques du trace */
-   fprintf (fout, "%d %d %d  Poly\n", style, epais, nb - 1);
+   /* Extra characteristics for drawing */
+   fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawCurb trace une courbe ouverte.                              | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point donne la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Le parame`tre fg donne la couleur du trace'.            | */
-/* |            Le parametre fleche indique :                           | */
-/* |            - s'il ne faut pas tracer de fleche (0)                 | */
-/* |            - s'il faut tracer une fleche vers l'avant (1)          | */
-/* |            - s'il faut tracer une fleche vers l'arriere (2)        | */
-/* |            - s'il faut tracer une fleche dans les deux sens (3)    | */
-/* |            Le parametre controls contient les points de controle.  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawCurb draw an open curb.
+ *              Parameter buffer is a pointer to the list of control points.
+ *              nb indicate the number of points.
+ *              The first point is a fake one containing the geometry.
+ *              fg indicate the drawing color
+ *              arrow parameter indicate whether :
+ *              - no arrow have to be drawn (0)
+ *              - a forward arrow has to be drawn (1)
+ *              - a backward arrow has to be drawn (2)
+ *              - both backward and forward arrows have to be drawn (3)
+ *              Parameter control indicate the control points.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawCurb (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int fleche, C_points * controls)
+void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawCurb (frame, epais, style, x, y, buffer, nb, RO, active, fg, fleche, controls)
+void                DrawCurb (frame, thick, style, x, y, buffer, nb, RO, active, fg, arrow, controls)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1476,7 +1340,7 @@ int                 nb;
 int                 RO;
 int                 active;
 int                 fg;
-int                 fleche;
+int                 arrow;
 C_points           *controls;
 
 #endif /* __STDC__ */
@@ -1489,15 +1353,15 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
-   if (epais == 0)
+   if (thick == 0)
       return;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   lg = HL + epais;
+   lg = HL + thick;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    j = 1;
@@ -1508,7 +1372,7 @@ C_points           *controls;
    j++;
    newx = adbuff->BuPoints[j].XCoord;
    newy = adbuff->BuPoints[j].YCoord;
-   /* points de repere du premier arc de courbe */
+   /* control points for first arc */
    x1 = (float) lastx / 1000 + x;
    y1 = (float) lasty / 1000 + y;
    x2 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + lastx) / 4000 + x;
@@ -1516,21 +1380,21 @@ C_points           *controls;
    x3 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + newx) / 4000 + x;
    y3 = (float) (PixelToPoint ((int) (controls[i].ly * 3000)) + newy) / 4000 + y;
 
-   /* fleche vers l'arriere  */
-   if (fleche == 2 || fleche == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x2), FloatToInt (y2), FloatToInt (x1), FloatToInt (y1), epais, lg, lg);
+   /* backward arrow  */
+   if (arrow == 2 || arrow == 3)
+      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x2), FloatToInt (y2), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
 
    for (i = 2; i < nb; i++)
      {
-	/* les 3 points pour tracer un arc de courbe */
+	/* 3 points needed to define the arc */
 	fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
-	/* on passe a l'arc de courbe suivant */
+	/* skip to next arc */
 	j++;
 	if (j >= adbuff->BuLength)
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
@@ -1556,37 +1420,34 @@ C_points           *controls;
 	     y3 = (float) (PixelToPoint ((int) (controls[i].ry * 3000)) + newy) / 4000 + y;
 	  }
      }
-   fprintf (fout, "%f -%f %d %d %d Curv\n", x1, y1, style, epais, nb - 1);
+   fprintf (fout, "%f -%f %d %d %d Curv\n", x1, y1, style, thick, nb - 1);
 
-   /* fleche vers l'avant */
-   if (fleche == 1 || fleche == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), epais, lg, lg);
+   /* forward arrow */
+   if (arrow == 1 || arrow == 3)
+      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
 
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSpline trace une courbe fermee.                               | */
-/* |            Le parame`tre buffer pointe sur le 1er buffer qui       | */
-/* |            contient la liste des points de contro^le et le         | */
-/* |            parame`tre nb donne le nombre de points.                | */
-/* |            Le premier point donne la limite de la polyline.        | */
-/* |            Le parame`tre RO indique s'il s'agit d'une boi^te en    | */
-/* |            Read Only (1) ou non (0).                               | */
-/* |            Le parame`tre active indique s'il s'agit d'une boi^te   | */
-/* |            active (1) ou non (0).                                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* |            Le parametre controls contient les points de controle.  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawSpline draw a closed curb.
+ *              Parameter buffer is a pointer to the list of control points.
+ *              nb indicate the number of points.
+ *              The first point is a fake one containing the geometry.
+ *              RO indicate whether it's a read-only box
+ *              active indicate if the box is active
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *              Parameter controls contains the list of control points.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawSpline (int frame, int epais, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int motif, C_points * controls)
+void                DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
 
 #else  /* __STDC__ */
-void                DrawSpline (frame, epais, style, x, y, buffer, nb, RO, active, fg, bg, motif, controls)
+void                DrawSpline (frame, thick, style, x, y, buffer, nb, RO, active, fg, bg, pattern, controls)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1596,7 +1457,7 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 C_points           *controls;
 
 #endif /* __STDC__ */
@@ -1607,12 +1468,12 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
-   Remplir (fout, fg, bg, motif);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+   FillWithPattern (fout, fg, bg, pattern);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    j = 1;
@@ -1633,7 +1494,7 @@ C_points           *controls;
 	  {
 	     if (adbuff->BuNext != NULL)
 	       {
-		  /* Changement de buffer */
+		  /* Next buffer */
 		  adbuff = adbuff->BuNext;
 		  j = 0;
 	       }
@@ -1644,39 +1505,38 @@ C_points           *controls;
 	y2 = (float) PixelToPoint ((int) ((controls[i].ry * 1000))) / 1000 + y;
      }
 
-   /* Ferme le contour */
+   /* Close the stroke */
    x3 = (float) PixelToPoint ((int) ((controls[1].lx * 1000))) / 1000 + x;
    y3 = (float) PixelToPoint ((int) ((controls[1].ly * 1000))) / 1000 + y;
    fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
-   fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, epais, nb);
+   fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, thick, nb);
 
 }
-/*fin */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawDiamond trace un losange.                                     | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawDiamond draw a diamond.
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawDiamond (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawDiamond (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawDiamond (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawDiamond (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1685,46 +1545,45 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
    xm = PixelToPoint (x + larg / 2);
-   ym = PixelToPoint (y + haut / 2);
+   ym = PixelToPoint (y + height / 2);
    xf = PixelToPoint (x + larg);
-   yf = PixelToPoint (y + haut);
+   yf = PixelToPoint (y + height);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   Remplir (fout, fg, bg, motif);
-   fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, epais, 4);
+   FillWithPattern (fout, fg, bg, pattern);
+   fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, thick, 4);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawOval trace un rectangle aux bords arrondis.                  | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawOval draw a rectangle with smoothed corners.
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawOval (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawOval (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawOval (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawOval (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1733,50 +1592,49 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   if (epais > 0)
-      CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   if (thick > 0)
+      CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
    xf = PixelToPoint (x + larg - 1);
-   yf = PixelToPoint (y + haut - 1);
+   yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   Remplir (fout, fg, bg, motif);
+   FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
-	    style, epais,
+	    style, thick,
 	    /*5 */ x, y, /*4 */ x, yf, /*3 */ xf, yf, /*2 */ xf, y, /*1 */ x, y, /*o */ x, yf - arc,
 	    arc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawEllips trace une ellipse (cas particulier un cercle).        | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawEllips draw an ellips (or a circle).
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawEllips (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllips (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawEllips (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllips (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1787,43 +1645,42 @@ int                 motif;
    fout = (FILE *) FrRef[frame];
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   if (epais > 0)
-      CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   if (thick > 0)
+      CurrentColor (fout, fg);
    larg = larg / 2;
-   haut = haut / 2;
+   height = height / 2;
    xm = PixelToPoint (x + larg);
-   ym = PixelToPoint (y + haut);
+   ym = PixelToPoint (y + height);
    larg = PixelToPoint (larg);
-   haut = PixelToPoint (haut);
+   height = PixelToPoint (height);
 
-   Remplir (fout, fg, bg, motif);
-   if (larg == haut)
+   FillWithPattern (fout, fg, bg, pattern);
+   if (larg == height)
      {
-	/* On trace un cercle */
-	fprintf (fout, "%d %d %d -%d %d cer\n", style, epais, xm, ym, larg);
+	/* Draw a circle */
+	fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
      }
    else
      {
-	/* On trace une ellipse */
-	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, epais,
-		 xm, -ym, larg, haut);
+	/* Draw an ellips */
+	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick,
+		 xm, -ym, larg, height);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawCorner trace deux bords de rectangle. func indique s'il s'agit  | */
-/* |            d'une boite active (1) ou non (0).                      | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawCorner draw a corner.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawCorner (int frame, int epais, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
+void                DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, int coin, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawCorner (frame, epais, style, x, y, l, h, coin, RO, func, fg)
+void                DrawCorner (frame, thick, style, x, y, l, h, coin, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
@@ -1843,11 +1700,11 @@ int                 fg;
    fout = (FILE *) FrRef[frame];
    DrawPage (fout);
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
    xf = PixelToPoint (x + l);
    yf = PixelToPoint (y + h);
    x = PixelToPoint (x);
@@ -1855,46 +1712,45 @@ int                 fg;
 
    switch (coin)
 	 {
-	    case 0:		/* Haut + Droite */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, xf, yf, style, epais, 3);
+	    case 0:		/* Top Right */
+	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, xf, yf, style, thick, 3);
 	       break;
-	    case 1:		/* Droite + Bas */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, y, xf, yf, x, yf, style, epais, 3);
+	    case 1:		/* Right Bottom */
+	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, y, xf, yf, x, yf, style, thick, 3);
 	       break;
-	    case 2:		/* Bas + Gauche */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, x, y, style, epais, 3);
+	    case 2:		/* Bottom Left */
+	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, x, y, style, thick, 3);
 	       break;
-	    case 3:		/* Gauche + Haut */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, xf, y, style, epais, 3);
+	    case 3:		/* Left Top */
+	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, xf, y, style, thick, 3);
 	       break;
 	 }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawRectangleFrame trace un rectangle a bords arrondis (diametre 3mm)  | */
-/* |            avec un trait horizontal a 6mm du bord superieur.       | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
+ *              and with an horizontal line at 6mm from top.
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
 
 #ifdef __STDC__
-void                DrawRectangleFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawRectangleFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawRectangleFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1905,49 +1761,48 @@ int                 motif;
    fout = (FILE *) FrRef[frame];
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   if (epais > 0)
-      CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   if (thick > 0)
+      CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
    xf = PixelToPoint (x + larg - 1);
-   yf = PixelToPoint (y + haut - 1);
+   yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   Remplir (fout, fg, bg, motif);
+   FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
-	  style, epais, x, y, x, yf, xf, yf, xf, y, x, y, x, yf - arc, arc);
+	  style, thick, x, y, x, yf, xf, yf, xf, y, x, y, x, yf - arc, arc);
 
    y += 2 * arc;
-   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, epais, 2);
+   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, thick, 2);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawEllipsFrame trace une ellipse avec trait horizontal a 7mm    | */
-/* |            sous le sommet (pour SFGL).                             | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawEllips draw an ellips (or a circle).
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawEllipsFrame (int frame, int epais, int style, int x, int y, int larg, int haut, int RO, int active, int fg, int bg, int motif)
+void                DrawEllipsFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
 
 #else  /* __STDC__ */
-void                DrawEllipsFrame (frame, epais, style, x, y, larg, haut, RO, active, fg, bg, motif)
+void                DrawEllipsFrame (frame, thick, style, x, y, larg, height, RO, active, fg, bg, pattern)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 larg;
-int                 haut;
+int                 height;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 
@@ -1960,58 +1815,58 @@ int                 motif;
    fout = (FILE *) FrRef[frame];
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   if (epais > 0)
-      CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   if (thick > 0)
+      CurrentColor (fout, fg);
 
    larg = larg / 2;
-   haut = haut / 2;
+   height = height / 2;
    xm = PixelToPoint (x + larg);
-   ym = PixelToPoint (y + haut);
+   ym = PixelToPoint (y + height);
    larg = PixelToPoint (larg);
-   haut = PixelToPoint (haut);
+   height = PixelToPoint (height);
 
-   Remplir (fout, fg, bg, motif);
-   if (larg == haut)
+   FillWithPattern (fout, fg, bg, pattern);
+   if (larg == height)
      {
-	/* On trace un cercle */
-	fprintf (fout, "%d %d %d -%d %d cer\n", style, epais, xm, ym, larg);
+	/* draw a circle */
+	fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
      }
    else
      {
-	/* On trace une ellipse */
-	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, epais, xm, -ym, larg, haut);
+	/* draw an ellipse */
+	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, larg, height);
      }
    px7mm = 7 * 72 / 25.4 + 0.5;
-   if (haut > px7mm)
+   if (height > px7mm)
      {
-	y = (ym - haut + px7mm);
-	A = ((double) haut - px7mm) / haut;
+	y = (ym - height + px7mm);
+	A = ((double) height - px7mm) / height;
 	shiftX = larg * sqrt (1 - A * A) + 0.5;
 	fprintf (fout, "%d -%d  %d -%d %d %d %d Seg\n",
-		 xm - shiftX, y, xm + shiftX, y, style, epais, 2);
+		 xm - shiftX, y, xm + shiftX, y, style, thick, 2);
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawHorizontalLine trace une horizontale sur le bord superieur, au milieu  | */
-/* |            ou sur le bord inferieur.                               | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawVerticalLine draw a vertical line aligned top center or bottom
+ *              depending on align value.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawHorizontalLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawHorizontalLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 cadrage;
+int                 align;
 int                 RO;
 int                 func;
 int                 fg;
@@ -2023,14 +1878,14 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    l--;
    h--;
@@ -2040,33 +1895,33 @@ int                 fg;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   if (cadrage == 0)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, y, style, epais, 2);
-   else if (cadrage == 1)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, epais, 2);
+   if (align == 0)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, y, style, thick, 2);
+   else if (align == 1)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
    else
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, epais, 2);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
 }				/*DrawHorizontalLine */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawVerticalLine trace une verticale sur le bord gauche, au milieu ou sur| */
-/* |            le bords droit.                                         | */
-/* ---------------------------------------------------------------------- */
-/**CO*/
+/** ----------------------------------------------------------------------
+ *      DrawVerticalLine draw a vertical line aligned left center or right
+ *              depending on align value.
+ *  ---------------------------------------------------------------------- **/
+
 
 #ifdef __STDC__
-void                DrawVerticalLine (int frame, int epais, int style, int x, int y, int l, int h, int cadrage, int RO, int func, int fg)
+void                DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
 
 #else  /* __STDC__ */
-void                DrawVerticalLine (frame, epais, style, x, y, l, h, cadrage, RO, func, fg)
+void                DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 cadrage;
+int                 align;
 int                 RO;
 int                 func;
 int                 fg;
@@ -2077,15 +1932,15 @@ int                 fg;
    int                 xm, yf, xf;
    FILE               *fout;
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    l--;
    h--;
@@ -2095,17 +1950,17 @@ int                 fg;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   if (cadrage == 0)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, epais, 2);
-   else if (cadrage == 1)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, epais, 2);
+   if (align == 0)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, thick, 2);
+   else if (align == 1)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
    else
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, epais, 2);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
 }				/*DrawVerticalLine */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawPoints trace un ligne de pointilles sur la longueur donnee.   | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawPoints draw a line of dot.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -2120,19 +1975,19 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   int                 xcour, ycour;	/*codage */
+   int                 xcour, ycour;	/*encoding */
    FILE               *fout;
    ptrfont             font;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    font = (ptrfont) ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	fout = (FILE *) FrRef[frame];
-	/* On charge la fonte courante */
-	/*codage = FontCourante(fout,font); */
+	/* Load the current font */
+	/*encoding = CurrentFont(fout,font); */
 	xcour = PixelToPoint (x);
 	ycour = PixelToPoint (y);
 
@@ -2140,21 +1995,21 @@ int                 fg;
      }
 }				/*DrawPoints */
 
-/* ---------------------------------------------------------------------- */
-/* |    DrawSlash trace une diagonale dans le sens precise'.            | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      DrawSlash draw a slash or backslash depending on direction.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
-void                DrawSlash (int frame, int epais, int style, int x, int y, int l, int h, int sens, int RO, int func, int fg)
+void                DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int func, int fg)
 #else  /* __STDC__ */
-void                DrawSlash (frame, epais, style, x, y, l, h, sens, RO, func, fg)
+void                DrawSlash (frame, thick, style, x, y, l, h, direction, RO, func, fg)
 int                 frame;
-int                 epais;
+int                 thick;
 int                 style;
 int                 x;
 int                 y;
 int                 l;
 int                 h;
-int                 sens;
+int                 direction;
 int                 RO;
 int                 func;
 int                 fg;
@@ -2165,14 +2020,14 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   if (epais <= 0)
+   if (thick <= 0)
       return;
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
    l--;
    h--;
@@ -2181,16 +2036,16 @@ int                 fg;
    x = PixelToPoint (x);
    y = PixelToPoint (y);
 
-   if (sens == 0)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, epais, 2);
+   if (direction == 0)
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
    else
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, epais, 2);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
 }				/*DrawSlash */
 
-/* ---------------------------------------------------------------------- */
-/* |    PSPageInfo stocke les numeros, largeur et hauteur de la page    | */
-/* |            que DrawPage utilisera                                    | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      PSPageInfo store the page number, width and height of the page,
+ *		used later by DrawPage.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                PSPageInfo (int pagenum, int width, int height)
 #else  /* __STDC__ */
@@ -2206,10 +2061,9 @@ int                 height;
    LastPageHeight = height;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    psBoundingBox sort un commentaire PostScript utilise' par le    | */
-/* |            filtre de de'coupage special Grands Graphiques.         | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      psBoundingBox output the %%BoundingBox macro for Postscript.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
 void                psBoundingBox (int frame, int width, int height)
 #else  /* __STDC__ */
@@ -2223,58 +2077,61 @@ int                 height;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Compte tenu du fait que l'origine des coordonnees PostScript */
-   /* correspond au coin bas-gauche de la page, qu'une hauteur de  */
-   /* page normale represente 2970 mm (soit 2970*72/254 = 841 pts) */
-   /* que Thot ajoute une marge de 50 pts en haut et a gauche de   */
-   /* l'image produite, la boundingBox est egale a :              */
+
+   /* Since the origin of Postscript coordinates is the lower-left    */
+   /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
+   /* = 841 pts) and that Thot add a 50 pts margin on top and height  */
+   /* of the output image, here is the correct values :               */
+
    fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
 	    50, 791 - PixelToPoint (height),
 	    50 + PixelToPoint (width), 791);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    EndOfString teste si la chaine chaine se termine par suffix.    | */
-/* ---------------------------------------------------------------------- */
+/**
+ *      EndOfString check wether string end by suffix.
+ **/
 #ifdef __STDC__
-int                 EndOfString (char *chaine, char *suffix)
+int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */
-int                 EndOfString (chaine, suffix)
-char               *chaine;
+int                 EndOfString (string, suffix)
+char               *string;
 char               *suffix;
 
 #endif /* __STDC__ */
 {
-   int                 long_chaine, long_suf;
+   int                 string_lenght, suffix_lenght;
 
-   long_chaine = strlen (chaine);
-   long_suf = strlen (suffix);
-   return (strcmp (chaine + long_chaine - long_suf, suffix) == 0);
+   string_lenght = strlen (string);
+   suffix_lenght = strlen (suffix);
+   if (string_lenght < suffix_lenght)
+      return 0;
+   else
+      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    Trame remplit le rectangle de la fenetree^tre w ou d'indice frame       | */
-/* |            (si w=0) de'fini par x, y, large, haut avec le motif    | */
-/* |            donne'.                                                 | */
-/* |            Les parame`tres fg, bg, motif indiquent la couleur du   | */
-/* |            trace', la couleur du fond et le motif de remplissage.  | */
-/* ---------------------------------------------------------------------- */
+/** ----------------------------------------------------------------------
+ *      Trame fill the rectangle associated to a window w (or frame if w= 0)
+ *              located on (x , y) and geometry width x height, using the
+ *              given pattern.
+ *              Parameters fg, bg, and pattern are for drawing
+ *              color, background color and fill pattern.
+ *  ---------------------------------------------------------------------- **/
 #ifdef __STDC__
-void                Trame (int frame, int x, int y, int large, int haut, ThotWindow w, int RO, int active, int fg, int bg, int motif)
+void                Trame (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                Trame (frame, x, y, large, haut, w, RO, active, fg, bg, motif)
+void                Trame (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
 int                 frame;
 int                 x;
 int                 y;
-int                 large;
-int                 haut;
+int                 width;
+int                 height;
 ThotWindow          w;
 int                 RO;
 int                 active;
 int                 fg;
 int                 bg;
-int                 motif;
+int                 pattern;
 
 #endif /* __STDC__ */
 {
@@ -2282,18 +2139,18 @@ int                 motif;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Faut-il ajouter un showpage ? */
+   /* Do we need to add a showpage ? */
    DrawPage (fout);
 
-   /* Faut-il changer de RGB */
-   CouleurCourante (fout, fg);
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
 
-   if (motif >= 0)
+   if (pattern >= 0)
      {
-	xf = PixelToPoint (x + large - 1);
-	yf = PixelToPoint (y + haut - 1);
+	xf = PixelToPoint (x + width - 1);
+	yf = PixelToPoint (y + height - 1);
 	x = PixelToPoint (x);
 	y = PixelToPoint (y);
-	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", motif, x, yf, xf, yf, xf, y, x, y);
+	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", pattern, x, yf, xf, yf, xf, y, x, y);
      }
 }				/*Trame */

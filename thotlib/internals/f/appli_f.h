@@ -7,17 +7,17 @@
 #if __STDC__
 
 extern void FrameToView ( int frame,
-                           int *doc,
-                           int *view );
+                          int *doc,
+                          int *view );
 extern void FrameKilled ( int *w,
-                         int frame,
-                         int *info );
+                          int frame,
+                          int *info );
 extern void FrameToRedisplay ( ThotWindow w,
-                           int frame,
-                           XExposeEvent * event );
+                               int frame,
+                               XExposeEvent * event );
 extern void FrameResized ( int *w,
-                            int frame,
-                            int *info );
+                           int frame,
+                           int *info );
 extern void FrameHScrolled ( int *w,
                              int frame,
                              int *param );
@@ -43,7 +43,7 @@ extern void TtaSetStatus ( Document document,
                            char *text,
                            char *name );
 extern void FrameCallback ( int frame,
-                         XEvent * ev );
+                            XEvent * ev );
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -61,39 +61,39 @@ extern void TtaSetCursorWatch ( Document document,
 extern void TtaResetCursor ( Document document,
                              View view );
 extern void GiveClickedAbsBox ( int *frame,
-                              int *pave );
+                                int *pave );
 extern void ChangeFrameTitle ( int frame,
-                          char *text );
+                               char *text );
 extern void ChangeSelFrame ( int frame );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
-                         int *width,
-                         int *height );
+                            int *width,
+                            int *height );
 extern void DefineClipping ( int frame,
-                      int orgx,
-                      int orgy,
-                      int *xd,
-                      int *yd,
-                      int *xf,
-                      int *yf,
-                      int raz );
+                             int orgx,
+                             int orgy,
+                             int *xd,
+                             int *yd,
+                             int *xf,
+                             int *yf,
+                             int raz );
 extern void RemoveClipping ( int frame );
 extern void UpdateScrollbars ( int frame );
 
 #else /* __STDC__ */
 
 extern void FrameToView (/* int frame,
-                             int *doc,
-                             int *view */);
+                            int *doc,
+                            int *view */);
 extern void FrameKilled (/* int *w,
-                           int frame,
-                           int *info */);
+                            int frame,
+                            int *info */);
 extern void FrameToRedisplay (/* ThotWindow w,
-                             int frame,
-                             XExposeEvent * event */);
+                                 int frame,
+                                 XExposeEvent * event */);
 extern void FrameResized (/* int *w,
-                              int frame,
-                              int *info */);
+                             int frame,
+                             int *info */);
 extern void FrameHScrolled (/* int *w,
                                int frame,
                                int *param */);
@@ -119,7 +119,7 @@ extern void TtaSetStatus (/* Document document,
                              char *text,
                              char *name */);
 extern void FrameCallback (/* int frame,
-                           XEvent * ev */);
+                              XEvent * ev */);
 extern void ThotGrab (/* ThotWindow win,
                          ThotCursor cursor,
                          long events,
@@ -137,22 +137,22 @@ extern void TtaSetCursorWatch (/* Document document,
 extern void TtaResetCursor (/* Document document,
                                View view */);
 extern void GiveClickedAbsBox (/* int *frame,
-                                int *pave */);
+                                  int *pave */);
 extern void ChangeFrameTitle (/* int frame,
-                            char *text */);
+                                 char *text */);
 extern void ChangeSelFrame (/* int frame */);
 extern int GetWindowFrame (/* ThotWindow w */);
 extern void GetSizesFrame (/* int frame,
-                           int *width,
-                           int *height */);
+                              int *width,
+                              int *height */);
 extern void DefineClipping (/* int frame,
-                        int orgx,
-                        int orgy,
-                        int *xd,
-                        int *yd,
-                        int *xf,
-                        int *yf,
-                        int raz */);
+                               int orgx,
+                               int orgy,
+                               int *xd,
+                               int *yd,
+                               int *xf,
+                               int *yf,
+                               int raz */);
 extern void RemoveClipping (/* int frame */);
 extern void UpdateScrollbars (/* int frame */);
 

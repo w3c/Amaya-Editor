@@ -8,17 +8,17 @@
 
 extern void TranslationError ( int err );
 extern PtrTSchema ReadTranslationSchema ( Name fname,
-                              PtrSSchema SS );
+                                          PtrSSchema SS );
 extern void FreeTranslationSchema ( PtrTSchema pSchT,
-                            PtrSSchema pSS );
+                                    PtrSSchema pSS );
 
 #else /* __STDC__ */
 
 extern void TranslationError (/* int err */);
 extern PtrTSchema ReadTranslationSchema (/* Name fname,
-                                PtrSSchema SS */);
+                                            PtrSSchema SS */);
 extern void FreeTranslationSchema (/* PtrTSchema pSchT,
-                              PtrSSchema pSS */);
+                                      PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -29,7 +29,7 @@ extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrAttribute pNewAttr );
 extern boolean IsASavedElement ( PtrElement pEl );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
-                               Name name );
+                                   Name name );
 extern boolean LinkReference ( void );
 extern void NouvPosition ( PtrAbstractBox pAb,
                            int DeltaX,
@@ -41,17 +41,13 @@ extern void NouvDimension ( PtrAbstractBox pAb,
                             int DeltaY,
                             int frame,
                             boolean Disp );
-extern boolean PavResizable ( PtrAbstractBox pAb,
-                              boolean Horiz );
-extern boolean PavMovable ( PtrAbstractBox pAb,
-                            boolean Horiz );
 extern boolean MemesRegleSpecif ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern void ModPresent ( boolean OnlyChars );
 extern void ShowBox ( int frame,
-                           PtrBox boite,
-                           int position,
-                           int pourcent );
+                      PtrBox boite,
+                      int position,
+                      int pourcent );
 extern int IdentDocument ( PtrDocument pDoc );
 extern boolean CallEventType ( int *notifyEvent,
                                boolean pre );
@@ -59,25 +55,18 @@ extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
                                     boolean pre );
 extern void CloseInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
-                                 int frame );
-extern void InsertChar ( unsigned char car,
-                         int clavier );
-extern void MovingCommands ( int code );
-extern void ContentEditing ( int numero,
-                                boolean IsCar );
-extern void PasteXClipboard ( unsigned char *Xbuffer,
-                            int nbytes );
+                                      int frame );
 extern int CopyXClipboard ( unsigned char **buffer );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
-                          char *texte );
+                               char *texte );
 extern void DefineClipping ( int frame,
-                      int orgx,
-                      int orgy,
-                      int *xd,
-                      int *yd,
-                      int *xf,
-                      int *yf );
+                             int orgx,
+                             int orgy,
+                             int *xd,
+                             int *yd,
+                             int *xf,
+                             int *yf );
 extern void RemoveClipping ( int frame );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
@@ -85,32 +74,32 @@ extern void InsertOption ( PtrElement pEl,
                            PtrElement * p,
                            PtrDocument pDoc );
 extern void ShowSelection ( PtrAbstractBox PavRac,
-                         boolean Visible );
+                            boolean Visible );
 extern void SwitchSelection ( int frame,
                               boolean Allume );
 extern PtrElement NextInSelection ( PtrElement pEl,
-                               PtrElement PcLast );
+                                    PtrElement PcLast );
 extern void AddInSelection ( PtrElement pEl,
-                        boolean dernier );
+                             boolean dernier );
 extern void ClearViewSelection ( int frame );
 extern void SelectElement ( PtrDocument pDoc,
-                       PtrElement pEl,
-                       boolean Debut,
-                       boolean Controle );
+                            PtrElement pEl,
+                            boolean Debut,
+                            boolean Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
 extern void HighlightSelection ( boolean DebVisible,
-                              boolean drag );
+                                 boolean drag );
 extern void CancelSelection ( void );
 extern void MergeAndSelect ( PtrDocument SelDoc,
-                       PtrElement PremSel,
-                       PtrElement DerSel,
-                       int premcar,
-                       int dercar );
+                             PtrElement PremSel,
+                             PtrElement DerSel,
+                             int premcar,
+                             int dercar );
 extern void SetNewSelectionStatus ( int frame,
-                           PtrAbstractBox pAb,
-                           boolean Etat );
+                                    PtrAbstractBox pAb,
+                                    boolean Etat );
 extern void DirectCreation ( PtrBox pBox,
-                           int frame );
+                             int frame );
 extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                                         int frame );
 extern void Clear ( int frame,
@@ -198,7 +187,7 @@ extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrAttribute pNewAttr */);
 extern boolean IsASavedElement (/* PtrElement pEl */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
-                                 Name name */);
+                                     Name name */);
 extern boolean LinkReference (/* void */);
 extern void NouvPosition (/* PtrAbstractBox pAb,
                              int DeltaX,
@@ -210,17 +199,13 @@ extern void NouvDimension (/* PtrAbstractBox pAb,
                               int DeltaY,
                               int frame,
                               boolean Disp */);
-extern boolean PavResizable (/* PtrAbstractBox pAb,
-                                boolean Horiz */);
-extern boolean PavMovable (/* PtrAbstractBox pAb,
-                              boolean Horiz */);
 extern boolean MemesRegleSpecif (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern void ModPresent (/* boolean OnlyChars */);
 extern void ShowBox (/* int frame,
-                             PtrBox boite,
-                             int position,
-                             int pourcent */);
+                        PtrBox boite,
+                        int position,
+                        int pourcent */);
 extern int IdentDocument (/* PtrDocument pDoc */);
 extern boolean CallEventType (/* int *notifyEvent,
                                  boolean pre */);
@@ -228,25 +213,18 @@ extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                       boolean pre */);
 extern void CloseInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
-                                   int frame */);
-extern void InsertChar (/* unsigned char car,
-                           int clavier */);
-extern void MovingCommands (/* int code */);
-extern void ContentEditing (/* int numero,
-                                  boolean IsCar */);
-extern void PasteXClipboard (/* unsigned char *Xbuffer,
-                              int nbytes */);
+                                        int frame */);
 extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
-                            char *texte */);
+                                 char *texte */);
 extern void DefineClipping (/* int frame,
-                        int orgx,
-                        int orgy,
-                        int *xd,
-                        int *yd,
-                        int *xf,
-                        int *yf */);
+                               int orgx,
+                               int orgy,
+                               int *xd,
+                               int *yd,
+                               int *xf,
+                               int *yf */);
 extern void RemoveClipping (/* int frame */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
@@ -254,32 +232,32 @@ extern void InsertOption (/* PtrElement pEl,
                              PtrElement * p,
                              PtrDocument pDoc */);
 extern void ShowSelection (/* PtrAbstractBox PavRac,
-                           boolean Visible */);
+                              boolean Visible */);
 extern void SwitchSelection (/* int frame,
                                 boolean Allume */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
-                                 PtrElement PcLast */);
+                                      PtrElement PcLast */);
 extern void AddInSelection (/* PtrElement pEl,
-                          boolean dernier */);
+                               boolean dernier */);
 extern void ClearViewSelection (/* int frame */);
 extern void SelectElement (/* PtrDocument pDoc,
-                         PtrElement pEl,
-                         boolean Debut,
-                         boolean Controle */);
+                              PtrElement pEl,
+                              boolean Debut,
+                              boolean Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
 extern void HighlightSelection (/* boolean DebVisible,
-                                boolean drag */);
+                                   boolean drag */);
 extern void CancelSelection (/* void */);
 extern void MergeAndSelect (/* PtrDocument SelDoc,
-                         PtrElement PremSel,
-                         PtrElement DerSel,
-                         int premcar,
-                         int dercar */);
+                               PtrElement PremSel,
+                               PtrElement DerSel,
+                               int premcar,
+                               int dercar */);
 extern void SetNewSelectionStatus (/* int frame,
-                             PtrAbstractBox pAb,
-                             boolean Etat */);
+                                      PtrAbstractBox pAb,
+                                      boolean Etat */);
 extern void DirectCreation (/* PtrBox pBox,
-                             int frame */);
+                               int frame */);
 extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                           int frame */);
 extern void Clear (/* int frame,

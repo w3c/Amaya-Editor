@@ -9,8 +9,8 @@
 extern int BuildSelectMenu ( char BufMenu[MAX_TXT_LEN] );
 extern void UpdateSelectMenu ( PtrDocument pDoc );
 extern void CallbackSelectMenu ( int refmenu,
-                            int val,
-                            int frame );
+                                 int val,
+                                 int frame );
 extern void SelectionMenuLoadResources ( void );
 
 #else /* __STDC__ */
@@ -18,8 +18,8 @@ extern void SelectionMenuLoadResources ( void );
 extern int BuildSelectMenu (/* char BufMenu[MAX_TXT_LEN] */);
 extern void UpdateSelectMenu (/* PtrDocument pDoc */);
 extern void CallbackSelectMenu (/* int refmenu,
-                              int val,
-                              int frame */);
+                                   int val,
+                                   int frame */);
 extern void SelectionMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */

@@ -7,12 +7,12 @@
 #if __STDC__
 
 extern boolean ReadStructureSchema ( Name fname,
-                             PtrSSchema scheme );
+                                     PtrSSchema scheme );
 
 #else /* __STDC__ */
 
 extern boolean ReadStructureSchema (/* Name fname,
-                               PtrSSchema scheme */);
+                                       PtrSSchema scheme */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

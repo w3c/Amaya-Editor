@@ -6,51 +6,45 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
+extern boolean SetPageBreakPosition ( PtrAbstractBox pAb,
+                                      int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
-                     int SeuilVisu,
-                     int frame,
-                     boolean EnX,
-                     boolean EnY );
-extern boolean SetPageBreakPosition ( PtrAbstractBox Pv,
-                               int *page );
-extern void HautCoupure ( PtrAbstractBox Pv,
+                                 int visibility,
+                                 int frame,
+                                 boolean horizRef,
+                                 boolean vertRef );
+extern void HautCoupure ( PtrAbstractBox pAb,
                           boolean EnPt,
                           int *ht,
                           int *pos,
                           int *nbcar );
-extern void PosPavePt ( PtrAbstractBox Pv,
+extern void PosPavePt ( PtrAbstractBox pAb,
                         int *xCoord,
                         int *yCoord );
-extern void DimPavePt ( PtrAbstractBox Pv,
-                        int *hauteur,
-                        int *largeur );
 extern void SetBoxToTranslate ( PtrAbstractBox pAb,
-                            boolean EnX,
-                            boolean EnY );
+                                boolean horizRef,
+                                boolean vertRef );
 
 #else /* __STDC__ */
 
+extern boolean SetPageBreakPosition (/* PtrAbstractBox pAb,
+                                        int *page */);
 extern void AddBoxTranslations (/* PtrAbstractBox pAb,
-                       int SeuilVisu,
-                       int frame,
-                       boolean EnX,
-                       boolean EnY */);
-extern boolean SetPageBreakPosition (/* PtrAbstractBox Pv,
-                                 int *page */);
-extern void HautCoupure (/* PtrAbstractBox Pv,
+                                   int visibility,
+                                   int frame,
+                                   boolean horizRef,
+                                   boolean vertRef */);
+extern void HautCoupure (/* PtrAbstractBox pAb,
                             boolean EnPt,
                             int *ht,
                             int *pos,
                             int *nbcar */);
-extern void PosPavePt (/* PtrAbstractBox Pv,
+extern void PosPavePt (/* PtrAbstractBox pAb,
                           int *xCoord,
                           int *yCoord */);
-extern void DimPavePt (/* PtrAbstractBox Pv,
-                          int *hauteur,
-                          int *largeur */);
 extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
-                              boolean EnX,
-                              boolean EnY */);
+                                  boolean horizRef,
+                                  boolean vertRef */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,18 +15,18 @@ extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrExternalDoc * pDE,
                                         boolean DocExtSuivant );
 extern boolean GetCurrentSelection ( PtrDocument * SDoc,
-                            PtrElement * PrEl,
-                            PtrElement * DerEl,
-                            int *PrCar,
-                            int *DerCar );
+                                     PtrElement * PrEl,
+                                     PtrElement * DerEl,
+                                     int *PrCar,
+                                     int *DerCar );
 extern void GetSizesFrame ( int frame,
-                         int *larg,
-                         int *haut );
+                            int *larg,
+                            int *haut );
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void GetDocAndView ( int nframe,
-                        PtrDocument * pD,
-                        int *nv,
-                        boolean * assoc );
+                            PtrDocument * pD,
+                            int *nv,
+                            boolean * assoc );
 extern void PrintOnePage ( PtrDocument pDo1,
                            PtrAbstractBox pavPage,
                            PtrAbstractBox pavNPage,
@@ -49,18 +49,18 @@ extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrExternalDoc * pDE,
                                           boolean DocExtSuivant */);
 extern boolean GetCurrentSelection (/* PtrDocument * SDoc,
-                              PtrElement * PrEl,
-                              PtrElement * DerEl,
-                              int *PrCar,
-                              int *DerCar */);
+                                       PtrElement * PrEl,
+                                       PtrElement * DerEl,
+                                       int *PrCar,
+                                       int *DerCar */);
 extern void GetSizesFrame (/* int frame,
-                           int *larg,
-                           int *haut */);
+                              int *larg,
+                              int *haut */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void GetDocAndView (/* int nframe,
-                          PtrDocument * pD,
-                          int *nv,
-                          boolean * assoc */);
+                              PtrDocument * pD,
+                              int *nv,
+                              boolean * assoc */);
 extern void PrintOnePage (/* PtrDocument pDo1,
                              PtrAbstractBox pavPage,
                              PtrAbstractBox pavNPage,

@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void wrshort ( int n );
-extern void wrsignshort ( int n );
+extern void WriteShort ( int n );
+extern void WriteSignedShort ( int n );
 extern void wrnom ( Name N );
 extern void wrnomproc ( Name N );
 extern void wrptrregle ( PtrRegleTypo b );
@@ -28,8 +28,8 @@ extern void WrSchTyp ( Name fname,
 
 #else /* __STDC__ */
 
-extern void wrshort (/* int n */);
-extern void wrsignshort (/* int n */);
+extern void WriteShort (/* int n */);
+extern void WriteSignedShort (/* int n */);
 extern void wrnom (/* Name N */);
 extern void wrnomproc (/* Name N */);
 extern void wrptrregle (/* PtrRegleTypo b */);

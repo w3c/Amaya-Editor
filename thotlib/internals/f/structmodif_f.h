@@ -9,21 +9,21 @@
 extern void InitSave ( void );
 extern boolean IsASavedElement ( PtrElement pEl );
 extern void RedisplayCopies ( PtrElement pEl,
-                             PtrDocument pDoc,
-                             boolean reaff );
+                              PtrDocument pDoc,
+                              boolean reaff );
 extern boolean IsANewElement ( PtrElement pE );
 extern boolean IsWithinANewElement ( PtrElement pE );
 extern void UpdateRefAttributes ( PtrElement pRac,
-                          PtrDocument pDoc );
+                                  PtrDocument pDoc );
 extern void AssignPairIdentifiers ( PtrElement pRac,
-                                PtrDocument pDoc );
+                                    PtrDocument pDoc );
 extern void RedisplayEmptyReferences ( PtrElement pElR,
-                       PtrDocument * docsel,
-                       boolean reaff );
+                                       PtrDocument * docsel,
+                                       boolean reaff );
 extern void TtcHolophrast ( Document document,
                             View view );
 extern void DeHolophrast ( PtrElement pEl,
-                            PtrDocument pDoc );
+                           PtrDocument pDoc );
 extern void NewTextLanguage ( PtrAbstractBox pav,
                               int indexc,
                               Language langue );
@@ -34,34 +34,34 @@ extern boolean BreakElement ( PtrElement ElemADupliquer,
                               int carcoupure,
                               boolean Paragraph );
 extern void MergeTextLeaves ( PtrElement * pEl,
-                       PtrElement * PremLib,
-                       PtrDocument * SelDoc );
+                              PtrElement * PremLib,
+                              PtrDocument * SelDoc );
 extern void MergeAndSelect ( PtrDocument SelDoc,
-                       PtrElement PremSel,
-                       PtrElement DerSel,
-                       int premcar,
-                       int dercar );
+                             PtrElement PremSel,
+                             PtrElement DerSel,
+                             int premcar,
+                             int dercar );
 
 #else /* __STDC__ */
 
 extern void InitSave (/* void */);
 extern boolean IsASavedElement (/* PtrElement pEl */);
 extern void RedisplayCopies (/* PtrElement pEl,
-                               PtrDocument pDoc,
-                               boolean reaff */);
+                                PtrDocument pDoc,
+                                boolean reaff */);
 extern boolean IsANewElement (/* PtrElement pE */);
 extern boolean IsWithinANewElement (/* PtrElement pE */);
 extern void UpdateRefAttributes (/* PtrElement pRac,
-                            PtrDocument pDoc */);
+                                    PtrDocument pDoc */);
 extern void AssignPairIdentifiers (/* PtrElement pRac,
-                                  PtrDocument pDoc */);
+                                      PtrDocument pDoc */);
 extern void RedisplayEmptyReferences (/* PtrElement pElR,
-                         PtrDocument * docsel,
-                         boolean reaff */);
+                                         PtrDocument * docsel,
+                                         boolean reaff */);
 extern void TtcHolophrast (/* Document document,
                               View view */);
 extern void DeHolophrast (/* PtrElement pEl,
-                              PtrDocument pDoc */);
+                             PtrDocument pDoc */);
 extern void NewTextLanguage (/* PtrAbstractBox pav,
                                 int indexc,
                                 Language langue */);
@@ -72,13 +72,13 @@ extern boolean BreakElement (/* PtrElement ElemADupliquer,
                                 int carcoupure,
                                 boolean Paragraph */);
 extern void MergeTextLeaves (/* PtrElement * pEl,
-                         PtrElement * PremLib,
-                         PtrDocument * SelDoc */);
+                                PtrElement * PremLib,
+                                PtrDocument * SelDoc */);
 extern void MergeAndSelect (/* PtrDocument SelDoc,
-                         PtrElement PremSel,
-                         PtrElement DerSel,
-                         int premcar,
-                         int dercar */);
+                               PtrElement PremSel,
+                               PtrElement DerSel,
+                               int premcar,
+                               int dercar */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

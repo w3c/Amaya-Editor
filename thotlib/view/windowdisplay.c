@@ -2406,7 +2406,7 @@ int                 fg;
 
 
 /**
- *      DrawSlash draw a slash of backslash depending on direction.
+ *      DrawSlash draw a slash or backslash depending on direction.
  *              RO indicate whether it's a read-only box
  *              active indicate if the box is active
  *              Le parame`tre indique la couleur du trace'.
@@ -2951,7 +2951,7 @@ int                 yf;
 
 
 /**
- *      EndOfString teste si la string string se termine par suffix.
+ *      EndOfString check wether string end by suffix.
  **/
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)

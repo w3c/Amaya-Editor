@@ -8,16 +8,16 @@
 
 extern void BuildStructSearchMenu ( int pDoc );
 extern void CallbackStructSearchMenu ( int ref,
-                                  int val,
-                                  char *txt,
-                                  PtrSearchContext DomaineCherche );
+                                       int val,
+                                       char *txt,
+                                       PtrSearchContext DomaineCherche );
 extern void BuildSearchOptions ( boolean * erreur,
-                                    PtrSearchContext DomaineCherche );
+                                 PtrSearchContext DomaineCherche );
 extern void StructSearch ( PtrElement elCour,
-                               PtrSearchContext DomaineCherche,
-                               boolean * trouve );
+                           PtrSearchContext DomaineCherche,
+                           boolean * trouve );
 extern void StructAndAttrSearch ( PtrElement premsel,
-                              boolean * ok );
+                                  boolean * ok );
 extern void ValAttrSearch ( void );
 extern void StructSearchLoadResources ( void );
 
@@ -25,16 +25,16 @@ extern void StructSearchLoadResources ( void );
 
 extern void BuildStructSearchMenu (/* int pDoc */);
 extern void CallbackStructSearchMenu (/* int ref,
-                                    int val,
-                                    char *txt,
-                                    PtrSearchContext DomaineCherche */);
+                                         int val,
+                                         char *txt,
+                                         PtrSearchContext DomaineCherche */);
 extern void BuildSearchOptions (/* boolean * erreur,
-                                      PtrSearchContext DomaineCherche */);
+                                   PtrSearchContext DomaineCherche */);
 extern void StructSearch (/* PtrElement elCour,
-                                 PtrSearchContext DomaineCherche,
-                                 boolean * trouve */);
+                             PtrSearchContext DomaineCherche,
+                             boolean * trouve */);
 extern void StructAndAttrSearch (/* PtrElement premsel,
-                                boolean * ok */);
+                                    boolean * ok */);
 extern void ValAttrSearch (/* void */);
 extern void StructSearchLoadResources (/* void */);
 

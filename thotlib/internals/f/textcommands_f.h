@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
+extern void MovingCommands ( int code );
 extern void TtcPreviousChar ( Document document,
                               View view );
 extern void TtcNextChar ( Document document,
@@ -19,13 +20,13 @@ extern void TtcStartOfLine ( Document document,
 extern void TtcEndOfLine ( Document document,
                            View view );
 extern void CloseInsertion ( void );
-extern void MovingCommands ( int code );
 extern int CopyXClipboard ( unsigned char **buffer );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
 
 #else /* __STDC__ */
 
+extern void MovingCommands (/* int code */);
 extern void TtcPreviousChar (/* Document document,
                                 View view */);
 extern void TtcNextChar (/* Document document,
@@ -39,7 +40,6 @@ extern void TtcStartOfLine (/* Document document,
 extern void TtcEndOfLine (/* Document document,
                              View view */);
 extern void CloseInsertion (/* void */);
-extern void MovingCommands (/* int code */);
 extern int CopyXClipboard (/* unsigned char **buffer */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);

@@ -25,7 +25,7 @@
 
 #include "appli_f.h"
 #include "tree_f.h"
-#include "attrherit_f.h"
+#include "attrpresent_f.h"
 #include "attributes_f.h"
 #include "context_f.h"
 #include "structcreation_f.h"

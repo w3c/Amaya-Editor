@@ -7,18 +7,18 @@
 #if __STDC__
 
 extern void ThotInput ( int frame,
-                            unsigned char *chaine,
-                            unsigned int nb,
-                            int PicMask,
-                            int key );
+                        unsigned char *string,
+                        unsigned int nb,
+                        int PicMask,
+                        int key );
 
 #else /* __STDC__ */
 
 extern void ThotInput (/* int frame,
-                              unsigned char *chaine,
-                              unsigned int nb,
-                              int PicMask,
-                              int key */);
+                          unsigned char *string,
+                          unsigned int nb,
+                          int PicMask,
+                          int key */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,69 +7,69 @@
 #if __STDC__
 
 extern void CallbackWhereToSearch ( int ref,
-                                  int val );
+                                    int val );
 extern void CallbackSearchEmptyEl ( int ref,
-                                     int val );
+                                    int val );
 extern void TtcSearchEmptyElement ( Document document,
                                     View view );
 extern void CallbackSearchEmptyref ( int ref,
-                                      int val );
+                                     int val );
 extern void TtcSearchEmptyReference ( Document document,
                                       View view );
 extern void CallbackReferenceMenu ( int val );
 extern void BuildReferenceMenu ( char *bufMenu,
-                                         int nbEntrees,
-                                         int *entreeChoisie );
+                                 int nbEntrees,
+                                 int *entreeChoisie );
 extern void BuildSearchReferences ( PtrDocument pDoc );
 extern void TtcSearchReference ( Document document,
                                  View view );
 extern void CallbackReferenceTo ( int Ref,
-                                 int Data );
+                                  int Data );
 extern void TtcSearchText ( Document document,
                             View view );
 extern void CallbackTextReplace ( int ref,
-                                    int val,
-                                    char *txt );
+                                  int val,
+                                  char *txt );
 extern void BuildGoToPageMenu ( PtrDocument pDoc,
-                            int VueDoc,
-                            int VueSch,
-                            boolean Assoc );
+                                int VueDoc,
+                                int VueSch,
+                                boolean Assoc );
 extern void CallbackGoToPageMenu ( int ref,
-                               int val );
+                                   int val );
 extern void SearchLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern void CallbackWhereToSearch (/* int ref,
-                                    int val */);
+                                      int val */);
 extern void CallbackSearchEmptyEl (/* int ref,
-                                       int val */);
+                                      int val */);
 extern void TtcSearchEmptyElement (/* Document document,
                                       View view */);
 extern void CallbackSearchEmptyref (/* int ref,
-                                        int val */);
+                                       int val */);
 extern void TtcSearchEmptyReference (/* Document document,
                                         View view */);
 extern void CallbackReferenceMenu (/* int val */);
 extern void BuildReferenceMenu (/* char *bufMenu,
-                                           int nbEntrees,
-                                           int *entreeChoisie */);
+                                   int nbEntrees,
+                                   int *entreeChoisie */);
 extern void BuildSearchReferences (/* PtrDocument pDoc */);
 extern void TtcSearchReference (/* Document document,
                                    View view */);
 extern void CallbackReferenceTo (/* int Ref,
-                                   int Data */);
+                                    int Data */);
 extern void TtcSearchText (/* Document document,
                               View view */);
 extern void CallbackTextReplace (/* int ref,
-                                      int val,
-                                      char *txt */);
+                                    int val,
+                                    char *txt */);
 extern void BuildGoToPageMenu (/* PtrDocument pDoc,
-                              int VueDoc,
-                              int VueSch,
-                              boolean Assoc */);
+                                  int VueDoc,
+                                  int VueSch,
+                                  boolean Assoc */);
 extern void CallbackGoToPageMenu (/* int ref,
-                                 int val */);
+                                     int val */);
 extern void SearchLoadResources (/* void */);
 
 #endif /* __STDC__ */

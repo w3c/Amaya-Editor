@@ -7,68 +7,68 @@
 #if __STDC__
 
 extern void VerticalScroll ( int frame,
-                      int delta,
-                      int selection );
+                             int delta,
+                             int selection );
 extern void HorizontalScroll ( int frame,
-                      int delta,
-                      int selection );
+                               int delta,
+                               int selection );
 extern void ShowXPosition ( int frame,
-                           int x,
-                           int large );
+                            int x,
+                            int large );
 extern void ShowYPosition ( int frame,
-                           int y,
-                           int haut );
+                            int y,
+                            int haut );
 extern int ImageAbs ( int frame,
-                          int *debut,
-                          int *fin,
-                          int *total );
+                      int *debut,
+                      int *fin,
+                      int *total );
 extern void ComputeDisplayedChars ( int frame,
-                            int *Xpos,
-                            int *Ypos,
-                            int *largeur,
-                            int *hauteur );
+                                    int *Xpos,
+                                    int *Ypos,
+                                    int *largeur,
+                                    int *hauteur );
 extern void ShowBox ( int frame,
-                           PtrBox pBox,
-                           int position,
-                           int pourcent );
+                      PtrBox pBox,
+                      int position,
+                      int pourcent );
 extern boolean IsScrollNeeded ( int frame,
-                         int selection );
+                                int selection );
 extern void ShowSelectedBox ( int frame,
-                               boolean actif );
+                              boolean actif );
 extern boolean IsAbsBoxVisible ( int frame,
                                  PtrAbstractBox pave );
 
 #else /* __STDC__ */
 
 extern void VerticalScroll (/* int frame,
-                        int delta,
-                        int selection */);
+                               int delta,
+                               int selection */);
 extern void HorizontalScroll (/* int frame,
-                        int delta,
-                        int selection */);
+                                 int delta,
+                                 int selection */);
 extern void ShowXPosition (/* int frame,
-                             int x,
-                             int large */);
+                              int x,
+                              int large */);
 extern void ShowYPosition (/* int frame,
-                             int y,
-                             int haut */);
+                              int y,
+                              int haut */);
 extern int ImageAbs (/* int frame,
-                            int *debut,
-                            int *fin,
-                            int *total */);
+                        int *debut,
+                        int *fin,
+                        int *total */);
 extern void ComputeDisplayedChars (/* int frame,
-                              int *Xpos,
-                              int *Ypos,
-                              int *largeur,
-                              int *hauteur */);
+                                      int *Xpos,
+                                      int *Ypos,
+                                      int *largeur,
+                                      int *hauteur */);
 extern void ShowBox (/* int frame,
-                             PtrBox pBox,
-                             int position,
-                             int pourcent */);
+                        PtrBox pBox,
+                        int position,
+                        int pourcent */);
 extern boolean IsScrollNeeded (/* int frame,
-                           int selection */);
+                                  int selection */);
 extern void ShowSelectedBox (/* int frame,
-                                 boolean actif */);
+                                boolean actif */);
 extern boolean IsAbsBoxVisible (/* int frame,
                                    PtrAbstractBox pave */);
 

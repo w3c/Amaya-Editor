@@ -14,18 +14,18 @@ extern void FreeImageDescriptor ( int *desc );
 extern void FreePicture ( int *desc );
 extern int Corr_Charger ( Language langue );
 extern void AddInSelection ( PtrElement pEl,
-                        boolean dernier );
+                             boolean dernier );
 extern void LibAbbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
-                           PtrPSchema * pSPR,
-                           int NumPres,
-                           PtrPSchema pSchP,
-                           int Vue,
-                           PRuleType TRegle,
-                           boolean Pag,
-                           boolean attr,
-                           PtrAttribute * pAttr );
+                                      PtrPSchema * pSPR,
+                                      int NumPres,
+                                      PtrPSchema pSchP,
+                                      int Vue,
+                                      PRuleType TRegle,
+                                      boolean Pag,
+                                      boolean attr,
+                                      PtrAttribute * pAttr );
 extern boolean FormeComplete ( void );
 extern void CacheRemoveImage ( PtrElement element );
 extern int PixelEnPt ( int x );
@@ -45,18 +45,18 @@ extern void FreeImageDescriptor (/* int *desc */);
 extern void FreePicture (/* int *desc */);
 extern int Corr_Charger (/* Language langue */);
 extern void AddInSelection (/* PtrElement pEl,
-                          boolean dernier */);
+                               boolean dernier */);
 extern void LibAbbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
-                             PtrPSchema * pSPR,
-                             int NumPres,
-                             PtrPSchema pSchP,
-                             int Vue,
-                             PRuleType TRegle,
-                             boolean Pag,
-                             boolean attr,
-                             PtrAttribute * pAttr */);
+                                        PtrPSchema * pSPR,
+                                        int NumPres,
+                                        PtrPSchema pSchP,
+                                        int Vue,
+                                        PRuleType TRegle,
+                                        boolean Pag,
+                                        boolean attr,
+                                        PtrAttribute * pAttr */);
 extern boolean FormeComplete (/* void */);
 extern void CacheRemoveImage (/* PtrElement element */);
 extern int PixelEnPt (/* int x */);

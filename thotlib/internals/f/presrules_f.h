@@ -7,81 +7,81 @@
 #if __STDC__
 
 extern int AttrValue ( PtrAttribute pAttr );
-extern int IntegerRule ( PtrPRule pRegle,
+extern int IntegerRule ( PtrPRule pPRule,
                          PtrElement pEl,
-                         DocViewNumber nv,
+                         DocViewNumber view,
                          boolean *ok,
                          TypeUnit *unit,
                          PtrAttribute pAttr );
 extern void GetBufConst ( PtrAbstractBox pAb );
 extern void UpdateFreeVol ( PtrAbstractBox pAb,
-                          PtrDocument pDoc );
-extern void FillContent( PtrElement pEl, 
-		     PtrAbstractBox pAb, 
-		     PtrDocument pDoc);
-extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
-                                PtrAbstractBox pCreateur,
-                                PtrAbstractBox pCree );
-extern void SearchPresSchema ( PtrElement pEl,
-                           PtrPSchema *pSchP,
-                           int *NumEntree,
-                           PtrSSchema *pSchS );
-extern void ApplyCopy ( PtrDocument pDoc,
-                        PtrPRule pRegle,
-                        PtrAbstractBox pAb,
-                        boolean AvecDescCopie );
-extern boolean ApplyRule ( PtrPRule pRegle,
-                          PtrPSchema pSchP,
+                            PtrDocument pDoc );
+extern void FillContent ( PtrElement pEl,
                           PtrAbstractBox pAb,
-                          PtrDocument pDoc,
-                          PtrAttribute pAttr );
+                          PtrDocument pDoc );
+extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
+                                      PtrAbstractBox pAbbCreator,
+                                      PtrAbstractBox pAbbCreated );
+extern void SearchPresSchema ( PtrElement pEl,
+                               PtrPSchema *pSchP,
+                               int *indexElType,
+                               PtrSSchema *pSchS );
+extern void ApplyCopy ( PtrDocument pDoc,
+                        PtrPRule pPRule,
+                        PtrAbstractBox pAb,
+                        boolean withDescCopy );
+extern boolean ApplyRule ( PtrPRule pPRule,
+                           PtrPSchema pSchP,
+                           PtrAbstractBox pAb,
+                           PtrDocument pDoc,
+                           PtrAttribute pAttr );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
-                              PRuleType TypeR,
-                              boolean *Nouveau,
-                              PtrDocument pDoc,
-                              int Vue );
+                                 PRuleType ruleType,
+                                 boolean *isNew,
+                                 PtrDocument pDoc,
+                                 int view );
 extern void RedispAbsBox ( PtrAbstractBox pAb,
-                       PtrDocument pDoc );
+                           PtrDocument pDoc );
 extern void NewDimPicture ( PtrAbstractBox pAb );
 
 #else /* __STDC__ */
 
 extern int AttrValue (/* PtrAttribute pAttr */);
-extern int IntegerRule (/* PtrPRule pRegle,
+extern int IntegerRule (/* PtrPRule pPRule,
                            PtrElement pEl,
-                           DocViewNumber nv,
+                           DocViewNumber view,
                            boolean *ok,
                            TypeUnit *unit,
                            PtrAttribute pAttr */);
 extern void GetBufConst (/* PtrAbstractBox pAb */);
 extern void UpdateFreeVol (/* PtrAbstractBox pAb,
-                            PtrDocument pDoc */);
-extern void FillContent (/* PtrElement pEl, 
-		     PtrAbstractBox pAb, 
-		     PtrDocument pDoc */);
-extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
-                                  PtrAbstractBox pCreateur,
-                                  PtrAbstractBox pCree */);
-extern void SearchPresSchema (/* PtrElement pEl,
-                             PtrPSchema *pSchP,
-                             int *NumEntree,
-                             PtrSSchema *pSchS */);
-extern void ApplyCopy (/* PtrDocument pDoc,
-                          PtrPRule pRegle,
-                          PtrAbstractBox pAb,
-                          boolean AvecDescCopie */);
-extern boolean ApplyRule (/* PtrPRule pRegle,
-                            PtrPSchema pSchP,
+                              PtrDocument pDoc */);
+extern void FillContent (/* PtrElement pEl,
                             PtrAbstractBox pAb,
-                            PtrDocument pDoc,
-                            PtrAttribute pAttr */);
+                            PtrDocument pDoc */);
+extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
+                                        PtrAbstractBox pAbbCreator,
+                                        PtrAbstractBox pAbbCreated */);
+extern void SearchPresSchema (/* PtrElement pEl,
+                                 PtrPSchema *pSchP,
+                                 int *indexElType,
+                                 PtrSSchema *pSchS */);
+extern void ApplyCopy (/* PtrDocument pDoc,
+                          PtrPRule pPRule,
+                          PtrAbstractBox pAb,
+                          boolean withDescCopy */);
+extern boolean ApplyRule (/* PtrPRule pPRule,
+                             PtrPSchema pSchP,
+                             PtrAbstractBox pAb,
+                             PtrDocument pDoc,
+                             PtrAttribute pAttr */);
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
-                                PRuleType TypeR,
-                                boolean *Nouveau,
-                                PtrDocument pDoc,
-                                int Vue */);
+                                   PRuleType ruleType,
+                                   boolean *isNew,
+                                   PtrDocument pDoc,
+                                   int view */);
 extern void RedispAbsBox (/* PtrAbstractBox pAb,
-                         PtrDocument pDoc */);
+                             PtrDocument pDoc */);
 extern void NewDimPicture (/* PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */

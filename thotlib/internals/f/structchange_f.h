@@ -7,15 +7,15 @@
 #if __STDC__
 
 extern void PasteBeforeOrAfter ( PtrElement * retour,
-                          PtrDocument pDoc,
-                          PtrElement pElem,
-                          boolean Dev,
-                          boolean MajVol,
-                          PtrElement PremElSv,
-                          PtrElement * pLib,
-                          int *PremCarColle,
-                          int nR,
-                          PtrSSchema pS );
+                                 PtrDocument pDoc,
+                                 PtrElement pElem,
+                                 boolean Dev,
+                                 boolean MajVol,
+                                 PtrElement PremElSv,
+                                 PtrElement * pLib,
+                                 int *PremCarColle,
+                                 int nR,
+                                 PtrSSchema pS );
 extern void PasteWithin ( PtrElement * retour,
                           PtrDocument pDoc,
                           PtrElement pEl,
@@ -33,15 +33,15 @@ extern void StructSelectLoadResources ( void );
 #else /* __STDC__ */
 
 extern void PasteBeforeOrAfter (/* PtrElement * retour,
-                            PtrDocument pDoc,
-                            PtrElement pElem,
-                            boolean Dev,
-                            boolean MajVol,
-                            PtrElement PremElSv,
-                            PtrElement * pLib,
-                            int *PremCarColle,
-                            int nR,
-                            PtrSSchema pS */);
+                                   PtrDocument pDoc,
+                                   PtrElement pElem,
+                                   boolean Dev,
+                                   boolean MajVol,
+                                   PtrElement PremElSv,
+                                   PtrElement * pLib,
+                                   int *PremCarColle,
+                                   int nR,
+                                   PtrSSchema pS */);
 extern void PasteWithin (/* PtrElement * retour,
                             PtrDocument pDoc,
                             PtrElement pEl,

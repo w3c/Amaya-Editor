@@ -10,16 +10,16 @@ extern void BuildPathDocBuffer ( char *BufDir,
                                  char separator,
                                  int *nbitem );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
-                               Name name );
+                                   Name name );
 extern void CallbackSchPresNameMenu ( int ref,
-                              int typedata,
-                              char *data );
+                                      int typedata,
+                                      char *data );
 extern void CallbackImportMenu ( int ref,
-                        int typedata,
-                        char *data );
+                                 int typedata,
+                                 char *data );
 extern void CallbackOpenDocMenu ( int ref,
-                         int typedata,
-                         char *data );
+                                  int typedata,
+                                  char *data );
 extern void TtcOpenDocument ( Document document,
                               View view );
 
@@ -29,16 +29,16 @@ extern void BuildPathDocBuffer (/* char *BufDir,
                                    char separator,
                                    int *nbitem */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
-                                 Name name */);
+                                     Name name */);
 extern void CallbackSchPresNameMenu (/* int ref,
-                                int typedata,
-                                char *data */);
+                                        int typedata,
+                                        char *data */);
 extern void CallbackImportMenu (/* int ref,
-                          int typedata,
-                          char *data */);
+                                   int typedata,
+                                   char *data */);
 extern void CallbackOpenDocMenu (/* int ref,
-                           int typedata,
-                           char *data */);
+                                    int typedata,
+                                    char *data */);
 extern void TtcOpenDocument (/* Document document,
                                 View view */);
 

@@ -6,25 +6,25 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void wrTypeRegle ( PRuleType T );
-extern void wrTypeCondition ( PresCondition T );
-extern void wrVarType ( VariableType T );
-extern void wrTypeContenu ( ContentType T );
-extern void WriteRules ( PtrPRule pR );
-extern boolean WrSchPres ( Name fname,
-                           PtrPSchema pSchPres,
-                           PtrSSchema pSchStr );
+extern void WritePRuleType ( PRuleType T );
+extern void WritePresCondition ( PresCondition T );
+extern void WriteVariableType ( VariableType T );
+extern void WriteContentType ( ContentType T );
+extern void WritePRules ( PtrPRule pR );
+extern boolean WritePresentationSchema ( Name fname,
+                                         PtrPSchema pSchPres,
+                                         PtrSSchema pSchStr );
 
 #else /* __STDC__ */
 
-extern void wrTypeRegle (/* PRuleType T */);
-extern void wrTypeCondition (/* PresCondition T */);
-extern void wrVarType (/* VariableType T */);
-extern void wrTypeContenu (/* ContentType T */);
-extern void WriteRules (/* PtrPRule pR */);
-extern boolean WrSchPres (/* Name fname,
-                             PtrPSchema pSchPres,
-                             PtrSSchema pSchStr */);
+extern void WritePRuleType (/* PRuleType T */);
+extern void WritePresCondition (/* PresCondition T */);
+extern void WriteVariableType (/* VariableType T */);
+extern void WriteContentType (/* ContentType T */);
+extern void WritePRules (/* PtrPRule pR */);
+extern boolean WritePresentationSchema (/* Name fname,
+                                           PtrPSchema pSchPres,
+                                           PtrSSchema pSchStr */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -35,14 +35,14 @@ extern boolean SameDocIdent ( DocumentIdentifier Ident1,
 extern void ClearDocIdent ( DocumentIdentifier * Ident );
 extern boolean DocIdentIsNull ( DocumentIdentifier Ident );
 extern void GetDocIdent ( DocumentIdentifier * Ident,
-                          Name NomDoc );
+                          Name docName );
 extern void GetDocName ( DocumentIdentifier Ident,
-                         Name NomDoc );
-extern int FileWriteAccess ( char *fichier );
-extern void GetCounterValue ( int nb,
-                              CounterStyle Style,
-                              char *Chaine,
-                              int *lg );
+                         Name docName );
+extern int FileWriteAccess ( char *fileName );
+extern void GetCounterValue ( int number,
+                              CounterStyle style,
+                              char *string,
+                              int *len );
 
 #else /* __STDC__ */
 
@@ -75,14 +75,14 @@ extern boolean SameDocIdent (/* DocumentIdentifier Ident1,
 extern void ClearDocIdent (/* DocumentIdentifier * Ident */);
 extern boolean DocIdentIsNull (/* DocumentIdentifier Ident */);
 extern void GetDocIdent (/* DocumentIdentifier * Ident,
-                            Name NomDoc */);
+                            Name docName */);
 extern void GetDocName (/* DocumentIdentifier Ident,
-                           Name NomDoc */);
-extern int FileWriteAccess (/* char *fichier */);
-extern void GetCounterValue (/* int nb,
-                                CounterStyle Style,
-                                char *Chaine,
-                                int *lg */);
+                           Name docName */);
+extern int FileWriteAccess (/* char *fileName */);
+extern void GetCounterValue (/* int number,
+                                CounterStyle style,
+                                char *string,
+                                int *len */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

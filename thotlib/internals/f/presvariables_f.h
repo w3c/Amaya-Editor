@@ -6,19 +6,19 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int MinMaxComptVal ( int NCompt,
+extern int MinMaxComptVal ( int counterNum,
                             PtrSSchema pSS,
                             PtrPSchema pSchP,
                             PtrElement pElNum,
-                            int Vue,
+                            int view,
                             boolean Maximum );
-extern int ComptVal ( int NCompt,
+extern int ComptVal ( int counterNum,
                       PtrSSchema pSS,
                       PtrPSchema pSchP,
                       PtrElement pElNum,
-                      int Vue );
+                      int view );
 extern boolean PavPresentModifiable ( PtrAbstractBox pAb );
-extern boolean NouvVariable ( int NVar,
+extern boolean NouvVariable ( int varNum,
                               PtrSSchema pSS,
                               PtrPSchema pSchP,
                               PtrAbstractBox pAb,
@@ -26,19 +26,19 @@ extern boolean NouvVariable ( int NVar,
 
 #else /* __STDC__ */
 
-extern int MinMaxComptVal (/* int NCompt,
+extern int MinMaxComptVal (/* int counterNum,
                               PtrSSchema pSS,
                               PtrPSchema pSchP,
                               PtrElement pElNum,
-                              int Vue,
+                              int view,
                               boolean Maximum */);
-extern int ComptVal (/* int NCompt,
+extern int ComptVal (/* int counterNum,
                         PtrSSchema pSS,
                         PtrPSchema pSchP,
                         PtrElement pElNum,
-                        int Vue */);
+                        int view */);
 extern boolean PavPresentModifiable (/* PtrAbstractBox pAb */);
-extern boolean NouvVariable (/* int NVar,
+extern boolean NouvVariable (/* int varNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,
                                 PtrAbstractBox pAb,

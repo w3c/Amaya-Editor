@@ -6,113 +6,113 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrTextBuffer ReadCommentPiv ( BinFile fich,
-                                   boolean effectif,
+extern PtrTextBuffer ReadComment ( BinFile file,
+                                   boolean store,
                                    boolean oldformat );
-extern void LabelStringToInt ( LabelString strn,
-                               int *num );
-extern void ReadAttributePiv ( BinFile fichpiv,
-                           PtrElement pEl,
-                           PtrDocument pDoc,
-                           boolean cree,
-                           PtrAttribute * pAttrLu,
-                           PtrAttribute * pAttr );
+extern void LabelStringToInt ( LabelString string,
+                               int *number );
+extern void ReadAttr ( BinFile pivFile,
+                       PtrElement pEl,
+                       PtrDocument pDoc,
+                       boolean create,
+                       PtrAttribute * pReadAttr,
+                       PtrAttribute * pAttr );
 extern void ReadPRulePiv ( PtrDocument pDoc,
-                          BinFile fichpiv,
-                          PtrElement pEl,
-                          boolean cree,
-                          PtrPRule * pRegleLue,
-                          boolean Attache );
-extern PtrElement ReadTreePiv ( BinFile fichpiv,
-                                PtrSSchema pSchStr,
+                           BinFile pivFile,
+                           PtrElement pEl,
+                           boolean create,
+                           PtrPRule * pRuleRead,
+                           boolean link );
+extern PtrElement ReadTreePiv ( BinFile pivFile,
+                                PtrSSchema pSSchema,
                                 PtrDocument pDoc,
-                                char *marque,
-                                int NAssoc,
-                                boolean creepar,
-                                boolean creetout,
-                                int * typecontenu,
-                                PtrSSchema * pschcont,
-                                int * TypeLu,
-                                PtrSSchema * SchStrLu,
-                                boolean creepage,
-                                PtrElement Pere,
-                                boolean creedesc );
+                                char *tag,
+                                int assocNum,
+                                boolean createParam,
+                                boolean createAll,
+                                int * contentType,
+                                PtrSSchema * pContSS,
+                                int * typeRead,
+                                PtrSSchema * pSSRead,
+                                boolean createPage,
+                                PtrElement pParent,
+                                boolean createDesc );
 extern boolean AbstractTreeOK ( PtrElement pEl,
-                              PtrDocument pDoc );
-extern void AssociatePairs ( PtrElement pRacine );
-extern void ReadSchemaNamesPiv ( BinFile fich,
-                            PtrDocument pDoc,
-                            char *marque,
-                            PtrSSchema pSCharge );
-extern void ReadLanguageTablePiv ( BinFile fich,
-                             PtrDocument pDoc,
-                             char *marque );
-extern int ReadVersionNumberPiv ( BinFile fich,
-                             PtrDocument pDoc );
-extern void ReadPivotHeader ( BinFile fich,
-                            PtrDocument pDoc,
-                            char *marque );
-extern void LoadDocumentPiv ( BinFile fich,
-                        PtrDocument pDoc,
-                        boolean ChargeDocExt,
-                        boolean Squelette,
-                        PtrSSchema pSCharge,
-                        boolean WithAPPEvent );
+                                PtrDocument pDoc );
+extern void AssociatePairs ( PtrElement pRoot );
+extern void ReadSchemaNamesPiv ( BinFile file,
+                                 PtrDocument pDoc,
+                                 char *tag,
+                                 PtrSSchema pLoadedSS );
+extern void ReadLanguageTablePiv ( BinFile file,
+                                   PtrDocument pDoc,
+                                   char *tag );
+extern int ReadVersionNumberPiv ( BinFile file,
+                                  PtrDocument pDoc );
+extern void ReadPivotHeader ( BinFile file,
+                              PtrDocument pDoc,
+                              char *tag );
+extern void LoadDocumentPiv ( BinFile file,
+                              PtrDocument pDoc,
+                              boolean loadExternalDoc,
+                              boolean skeleton,
+                              PtrSSchema pLoadedSS,
+                              boolean withEvent );
 
 #else /* __STDC__ */
 
-extern PtrTextBuffer ReadCommentPiv (/* BinFile fich,
-                                     boolean effectif,
+extern PtrTextBuffer ReadComment (/* BinFile file,
+                                     boolean store,
                                      boolean oldformat */);
-extern void LabelStringToInt (/* LabelString strn,
-                                 int *num */);
-extern void ReadAttributePiv (/* BinFile fichpiv,
-                             PtrElement pEl,
-                             PtrDocument pDoc,
-                             boolean cree,
-                             PtrAttribute * pAttrLu,
-                             PtrAttribute * pAttr */);
+extern void LabelStringToInt (/* LabelString string,
+                                 int *number */);
+extern void ReadAttr (/* BinFile pivFile,
+                         PtrElement pEl,
+                         PtrDocument pDoc,
+                         boolean create,
+                         PtrAttribute * pReadAttr,
+                         PtrAttribute * pAttr */);
 extern void ReadPRulePiv (/* PtrDocument pDoc,
-                            BinFile fichpiv,
-                            PtrElement pEl,
-                            boolean cree,
-                            PtrPRule * pRegleLue,
-                            boolean Attache */);
-extern PtrElement ReadTreePiv (/* BinFile fichpiv,
-                                  PtrSSchema pSchStr,
+                             BinFile pivFile,
+                             PtrElement pEl,
+                             boolean create,
+                             PtrPRule * pRuleRead,
+                             boolean link */);
+extern PtrElement ReadTreePiv (/* BinFile pivFile,
+                                  PtrSSchema pSSchema,
                                   PtrDocument pDoc,
-                                  char *marque,
-                                  int NAssoc,
-                                  boolean creepar,
-                                  boolean creetout,
-                                  int * typecontenu,
-                                  PtrSSchema * pschcont,
-                                  int * TypeLu,
-                                  PtrSSchema * SchStrLu,
-                                  boolean creepage,
-                                  PtrElement Pere,
-                                  boolean creedesc */);
+                                  char *tag,
+                                  int assocNum,
+                                  boolean createParam,
+                                  boolean createAll,
+                                  int * contentType,
+                                  PtrSSchema * pContSS,
+                                  int * typeRead,
+                                  PtrSSchema * pSSRead,
+                                  boolean createPage,
+                                  PtrElement pParent,
+                                  boolean createDesc */);
 extern boolean AbstractTreeOK (/* PtrElement pEl,
-                                PtrDocument pDoc */);
-extern void AssociatePairs (/* PtrElement pRacine */);
-extern void ReadSchemaNamesPiv (/* BinFile fich,
-                              PtrDocument pDoc,
-                              char *marque,
-                              PtrSSchema pSCharge */);
-extern void ReadLanguageTablePiv (/* BinFile fich,
-                               PtrDocument pDoc,
-                               char *marque */);
-extern int ReadVersionNumberPiv (/* BinFile fich,
-                               PtrDocument pDoc */);
-extern void ReadPivotHeader (/* BinFile fich,
-                              PtrDocument pDoc,
-                              char *marque */);
-extern void LoadDocumentPiv (/* BinFile fich,
-                          PtrDocument pDoc,
-                          boolean ChargeDocExt,
-                          boolean Squelette,
-                          PtrSSchema pSCharge,
-                          boolean WithAPPEvent */);
+                                  PtrDocument pDoc */);
+extern void AssociatePairs (/* PtrElement pRoot */);
+extern void ReadSchemaNamesPiv (/* BinFile file,
+                                   PtrDocument pDoc,
+                                   char *tag,
+                                   PtrSSchema pLoadedSS */);
+extern void ReadLanguageTablePiv (/* BinFile file,
+                                     PtrDocument pDoc,
+                                     char *tag */);
+extern int ReadVersionNumberPiv (/* BinFile file,
+                                    PtrDocument pDoc */);
+extern void ReadPivotHeader (/* BinFile file,
+                                PtrDocument pDoc,
+                                char *tag */);
+extern void LoadDocumentPiv (/* BinFile file,
+                                PtrDocument pDoc,
+                                boolean loadExternalDoc,
+                                boolean skeleton,
+                                PtrSSchema pLoadedSS,
+                                boolean withEvent */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

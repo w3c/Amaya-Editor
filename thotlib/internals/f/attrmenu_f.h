@@ -7,45 +7,45 @@
 #if __STDC__
 
 extern void CallbackReqAttrMenu ( int ref,
-                                int val,
-                                char *txt );
+                                  int val,
+                                  char *txt );
 extern void BuildReqAttrMenu ( PtrAttribute pAttr,
-                                      PtrDocument pDoc );
+                               PtrDocument pDoc );
 extern int BuildAttrMenu ( char *BufMenu,
-                                  PtrDocument pDoc,
-                                  int ActiveAttr[] );
+                           PtrDocument pDoc,
+                           int ActiveAttr[] );
 extern void UpdateAttrMenu ( PtrDocument pDoc );
 extern void CallbackValAttrMenu ( int ref,
-                             int valmenu,
-                             char *valtexte );
+                                  int valmenu,
+                                  char *valtext );
 extern void CallbackAttrMenu ( int refmenu,
                                int att,
                                int frame );
 extern void CallbackLanguageMenu ( int ref,
-                            int val,
-                            char *txt );
+                                   int val,
+                                   char *txt );
 extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
 extern void CallbackReqAttrMenu (/* int ref,
-                                  int val,
-                                  char *txt */);
+                                    int val,
+                                    char *txt */);
 extern void BuildReqAttrMenu (/* PtrAttribute pAttr,
-                                        PtrDocument pDoc */);
+                                 PtrDocument pDoc */);
 extern int BuildAttrMenu (/* char *BufMenu,
-                                    PtrDocument pDoc,
-                                    int ActiveAttr[] */);
+                             PtrDocument pDoc,
+                             int ActiveAttr[] */);
 extern void UpdateAttrMenu (/* PtrDocument pDoc */);
 extern void CallbackValAttrMenu (/* int ref,
-                               int valmenu,
-                               char *valtexte */);
+                                    int valmenu,
+                                    char *valtext */);
 extern void CallbackAttrMenu (/* int refmenu,
                                  int att,
                                  int frame */);
 extern void CallbackLanguageMenu (/* int ref,
-                              int val,
-                              char *txt */);
+                                     int val,
+                                     char *txt */);
 extern void AttributeMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */

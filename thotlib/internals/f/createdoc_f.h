@@ -7,22 +7,22 @@
 #if __STDC__
 
 extern void CallbackConfirmMenu ( int ref,
-                         int typedata,
-                         char *data );
+                                  int typedata,
+                                  char *data );
 extern void CallbackNewDocMenu ( int ref,
-                           int typedata,
-                           char *data );
+                                 int typedata,
+                                 char *data );
 extern void TtcCreateDocument ( Document document,
                                 View view );
 
 #else /* __STDC__ */
 
 extern void CallbackConfirmMenu (/* int ref,
-                           int typedata,
-                           char *data */);
+                                    int typedata,
+                                    char *data */);
 extern void CallbackNewDocMenu (/* int ref,
-                             int typedata,
-                             char *data */);
+                                   int typedata,
+                                   char *data */);
 extern void TtcCreateDocument (/* Document document,
                                   View view */);
 

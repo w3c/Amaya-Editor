@@ -10,18 +10,18 @@ extern boolean AskForNew_RemplRefer ( boolean * Creer,
                                       Name NomType );
 extern void CallbackAskForNew ( int Val );
 extern void BuildChoiceMenu ( char *BufMenu,
-                                    Name TitreMenu,
-                                    int nbentree,
-                                    boolean NatureChoice );
+                              Name TitreMenu,
+                              int nbentree,
+                              boolean NatureChoice );
 extern void InsertSeparatorInMenu ( int *prevmenuind,
-                                 int *nbentree,
-                                 int *menuind,
-                                 char *BufMenu );
+                                    int *nbentree,
+                                    int *menuind,
+                                    char *BufMenu );
 extern void BuildPasteMenu ( int RefMenu,
-                                        char *BufMenu,
-                                        Name titre,
-                                        int nbentree,
-                                        char bouton );
+                             char *BufMenu,
+                             Name titre,
+                             int nbentree,
+                             char bouton );
 
 #else /* __STDC__ */
 
@@ -29,18 +29,18 @@ extern boolean AskForNew_RemplRefer (/* boolean * Creer,
                                         Name NomType */);
 extern void CallbackAskForNew (/* int Val */);
 extern void BuildChoiceMenu (/* char *BufMenu,
-                                      Name TitreMenu,
-                                      int nbentree,
-                                      boolean NatureChoice */);
+                                Name TitreMenu,
+                                int nbentree,
+                                boolean NatureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevmenuind,
-                                   int *nbentree,
-                                   int *menuind,
-                                   char *BufMenu */);
+                                      int *nbentree,
+                                      int *menuind,
+                                      char *BufMenu */);
 extern void BuildPasteMenu (/* int RefMenu,
-                                          char *BufMenu,
-                                          Name titre,
-                                          int nbentree,
-                                          char bouton */);
+                               char *BufMenu,
+                               Name titre,
+                               int nbentree,
+                               char bouton */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -7,8 +7,8 @@
 #if __STDC__
 
 extern void CallbackOpenView ( int ref,
-                             int typedata,
-                             char *data );
+                               int typedata,
+                               char *data );
 extern void TtcOpenView ( Document document,
                           View vue );
 extern void TtcCloseView ( Document document,
@@ -19,8 +19,8 @@ extern void SwitchSynchronize ( Document document,
 #else /* __STDC__ */
 
 extern void CallbackOpenView (/* int ref,
-                               int typedata,
-                               char *data */);
+                                 int typedata,
+                                 char *data */);
 extern void TtcOpenView (/* Document document,
                             View vue */);
 extern void TtcCloseView (/* Document document,

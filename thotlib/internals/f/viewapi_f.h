@@ -80,7 +80,7 @@ extern void NewSelectionExtension ( Document document,
                                     Element element,
                                     int lastCharacter );
 extern boolean DemandeSelEnregistree ( Document document,
-                                       boolean * annulation );
+                                       boolean * abort );
 extern void UndisplayElement ( PtrElement pEl,
                                Document document );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -109,11 +109,11 @@ extern void UndisplayAttribute ( PtrElement pEl,
                                  Document document );
 extern void RedispNewPresSpec ( Document document,
                                 PtrElement pEl,
-                                PtrPRule pRegle );
+                                PtrPRule pRule );
 extern void RedispPresStandard ( Document document,
                                  PtrElement pEl,
-                                 PRuleType typeRegleP,
-                                 int vue );
+                                 PRuleType typeRuleP,
+                                 int view );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
 extern void TtaSetDisplayMode ( Document document,
@@ -203,7 +203,7 @@ extern void NewSelectionExtension (/* Document document,
                                       Element element,
                                       int lastCharacter */);
 extern boolean DemandeSelEnregistree (/* Document document,
-                                         boolean * annulation */);
+                                         boolean * abort */);
 extern void UndisplayElement (/* PtrElement pEl,
                                  Document document */);
 extern void DisplayHolophrasted (/* PtrElement pEl,
@@ -232,11 +232,11 @@ extern void UndisplayAttribute (/* PtrElement pEl,
                                    Document document */);
 extern void RedispNewPresSpec (/* Document document,
                                   PtrElement pEl,
-                                  PtrPRule pRegle */);
+                                  PtrPRule pRule */);
 extern void RedispPresStandard (/* Document document,
                                    PtrElement pEl,
-                                   PRuleType typeRegleP,
-                                   int vue */);
+                                   PRuleType typeRuleP,
+                                   int view */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);
 extern void TtaSetDisplayMode (/* Document document,

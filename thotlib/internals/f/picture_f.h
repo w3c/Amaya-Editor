@@ -6,101 +6,45 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void SwapAllBits ( unsigned char *b,
-                          long n );
-extern void CentreImage ( int wimage,
-                          int himage,
-                          int wbox,
-                          int hbox,
-                          PictureScaling pres,
-                          int *xtranslate,
-                          int *ytranslate,
-                          int *pxorig,
-                          int *pyorig );
 extern void InitPictureHandlers ( boolean printing );
-extern void GetImageDriversList ( int *count,
+extern void GetPictHandlersList ( int *count,
                                   char *buffer );
-extern void DrawImageBox ( PtrBox box,
-                           PictInfo * imageDesc,
-                           int frame,
-                           int wlogo,
-                           int hlogo );
 extern void DrawPicture ( PtrBox box,
-                        PictInfo * imageDesc,
-                        int frame );
+                          PictInfo * imageDesc,
+                          int frame );
 extern void LoadPicture ( int frame,
-                        PtrBox box,
-                        PictInfo * imageDesc );
-extern void PrintImage ( int typeImage,
-                         char *name,
-                         PictureScaling pres,
-                         int xif,
-                         int yif,
-                         int wif,
-                         int hif,
-                         int PicXArea,
-                         int PicYArea,
-                         int PicWArea,
-                         int PicHArea,
-                         FILE * fd,
-                         unsigned long BackGroundPixel );
+                          PtrBox box,
+                          PictInfo * imageDesc );
 extern void FreePicture ( PictInfo * imageDesc );
-extern int GetImageType ( int menuIndex );
+extern int GetPictureType ( int GUIIndex );
 extern int GetPictTypeIndex ( int PicType );
 extern int GetPictPresIndex ( PictureScaling PicPresent );
-extern PictureScaling GetImagePresentation ( int menuIndex );
 extern void GetPictureHandlersList ( int *count,
                                      char *buffer );
+extern void LittleXBigEndian ( unsigned char *b,
+                               long n );
 extern int TtaSetMainThotWindowBackgroundImage ( ThotWindow w,
                                                  char *imageFile );
 
 #else /* __STDC__ */
 
-extern void SwapAllBits (/* unsigned char *b,
-                            long n */);
-extern void CentreImage (/* int wimage,
-                            int himage,
-                            int wbox,
-                            int hbox,
-                            PictureScaling pres,
-                            int *xtranslate,
-                            int *ytranslate,
-                            int *pxorig,
-                            int *pyorig */);
 extern void InitPictureHandlers (/* boolean printing */);
-extern void GetImageDriversList (/* int *count,
+extern void GetPictHandlersList (/* int *count,
                                     char *buffer */);
-extern void DrawImageBox (/* PtrBox box,
-                             PictInfo * imageDesc,
-                             int frame,
-                             int wlogo,
-                             int hlogo */);
 extern void DrawPicture (/* PtrBox box,
-                          PictInfo * imageDesc,
-                          int frame */);
+                            PictInfo * imageDesc,
+                            int frame */);
 extern void LoadPicture (/* int frame,
-                          PtrBox box,
-                          PictInfo * imageDesc */);
-extern void PrintImage (/* int typeImage,
-                           char *name,
-                           PictureScaling pres,
-                           int xif,
-                           int yif,
-                           int wif,
-                           int hif,
-                           int PicXArea,
-                           int PicYArea,
-                           int PicWArea,
-                           int PicHArea,
-                           FILE * fd,
-                           unsigned long BackGroundPixel */);
+                            PtrBox box,
+                            PictInfo * imageDesc */);
 extern void FreePicture (/* PictInfo * imageDesc */);
-extern int GetImageType (/* int menuIndex */);
+extern int GetPictureType (/* int GUIIndex */);
 extern int GetPictTypeIndex (/* int PicType */);
 extern int GetPictPresIndex (/* PictureScaling PicPresent */);
-extern PictureScaling GetImagePresentation (/* int menuIndex */);
 extern void GetPictureHandlersList (/* int *count,
                                        char *buffer */);
+extern void LittleXBigEndian (/* unsigned char *b,
+                                 long n */);
 extern int TtaSetMainThotWindowBackgroundImage (/* ThotWindow w,
                                                    char *imageFile */);
 

@@ -333,10 +333,10 @@ extern void WChaine ( ThotWindow w,
                       ptrfont font,
                       ThotGC GClocal );
 extern void VideoInvert ( int frame,
-                      int width,
-                      int height,
-                      int x,
-                      int y );
+                          int width,
+                          int height,
+                          int x,
+                          int y );
 extern void Scroll ( int frame,
                      int width,
                      int height,
@@ -688,10 +688,10 @@ extern void WChaine (/* ThotWindow w,
                         ptrfont font,
                         ThotGC GClocal */);
 extern void VideoInvert (/* int frame,
-                        int width,
-                        int height,
-                        int x,
-                        int y */);
+                            int width,
+                            int height,
+                            int x,
+                            int y */);
 extern void Scroll (/* int frame,
                        int width,
                        int height,

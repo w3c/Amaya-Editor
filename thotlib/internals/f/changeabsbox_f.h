@@ -9,55 +9,55 @@
 extern PtrAbstractBox Enclosing ( PtrAbstractBox pAbb1,
                                   PtrAbstractBox pAbb2 );
 extern void SimpleSearchRulepEl ( PtrPRule * pRuleView1,
-                              PtrElement pEl,
-                              int view,
-                              PRuleType typeRule,
-                              PtrPRule * pRule );
+                                  PtrElement pEl,
+                                  int view,
+                                  PRuleType typeRule,
+                                  PtrPRule * pRule );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
-                           PtrPSchema * pSPR,
-                           PtrSSchema * pSSR,
-                           int presNum,
-                           PtrPSchema pSchP,
-                           int view,
-                           PRuleType typeRule,
-                           boolean isElPage,
-                           boolean attr,
-                           PtrAttribute * pAttr );
+                                      PtrPSchema * pSPR,
+                                      PtrSSchema * pSSR,
+                                      int presNum,
+                                      PtrPSchema pSchP,
+                                      int view,
+                                      PRuleType typeRule,
+                                      boolean isElPage,
+                                      boolean attr,
+                                      PtrAttribute * pAttr );
 extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
-                          PtrAbstractBox pAb,
-                          PtrPSchema * pSPR,
-                          PRuleType typeRule,
-                          boolean attr,
-                          PtrAttribute * pAttr );
+                                PtrAbstractBox pAb,
+                                PtrPSchema * pSPR,
+                                PRuleType typeRule,
+                                boolean attr,
+                                PtrAttribute * pAttr );
 extern PtrPRule FunctionRule ( PtrElement pEl,
-                                PtrPSchema * pSchP );
+                               PtrPSchema * pSchP );
 extern void SetDeadAbsBox ( PtrAbstractBox pAb );
 extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
-                         PtrAbstractBox * pAbbReDisp,
-                         PtrDocument pDoc );
+                                 PtrAbstractBox * pAbbReDisp,
+                                 PtrDocument pDoc );
 extern void ApplyRefAbsBoxNew ( PtrAbstractBox pAbbFirst,
-                         PtrAbstractBox pAbbLast,
-                         PtrAbstractBox * pAbbReDisp,
-                         PtrDocument pDoc );
+                                PtrAbstractBox pAbbLast,
+                                PtrAbstractBox * pAbbReDisp,
+                                PtrDocument pDoc );
 extern void ChangeFirstLast ( PtrElement pEl,
-                          PtrDocument pDoc,
-                          boolean first,
-                          boolean change );
+                              PtrDocument pDoc,
+                              boolean first,
+                              boolean change );
 extern PtrElement PageElAssoc ( PtrElement pEl,
                                 int viewNb,
                                 int *boxType );
 extern void CreateAllAbsBoxesOfEl ( PtrElement pE,
-                            PtrDocument pDoc );
+                                    PtrDocument pDoc );
 extern void CreateNewAbsBoxes ( PtrElement pEl,
-                         PtrDocument pDoc,
-                         int viewNb );
+                                PtrDocument pDoc,
+                                int viewNb );
 extern void DestroyAbsBoxesView ( PtrElement pEl,
-                        PtrDocument pDoc,
-                        boolean verify,
-                        int view );
+                                  PtrDocument pDoc,
+                                  boolean verify,
+                                  int view );
 extern void DestroyAbsBoxes ( PtrElement pEl,
-                        PtrDocument pDoc,
-                        boolean verify );
+                              PtrDocument pDoc,
+                              boolean verify );
 extern void ReafReference ( PtrReference pRef,
                             PtrAbstractBox pAb,
                             PtrDocument pDocRef );
@@ -100,55 +100,55 @@ extern boolean MemeTexte ( PtrElement pEl,
 extern PtrAbstractBox Enclosing (/* PtrAbstractBox pAbb1,
                                     PtrAbstractBox pAbb2 */);
 extern void SimpleSearchRulepEl (/* PtrPRule * pRuleView1,
-                                PtrElement pEl,
-                                int view,
-                                PRuleType typeRule,
-                                PtrPRule * pRule */);
+                                    PtrElement pEl,
+                                    int view,
+                                    PRuleType typeRule,
+                                    PtrPRule * pRule */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
-                             PtrPSchema * pSPR,
-                             PtrSSchema * pSSR,
-                             int presNum,
-                             PtrPSchema pSchP,
-                             int view,
-                             PRuleType typeRule,
-                             boolean isElPage,
-                             boolean attr,
-                             PtrAttribute * pAttr */);
+                                        PtrPSchema * pSPR,
+                                        PtrSSchema * pSSR,
+                                        int presNum,
+                                        PtrPSchema pSchP,
+                                        int view,
+                                        PRuleType typeRule,
+                                        boolean isElPage,
+                                        boolean attr,
+                                        PtrAttribute * pAttr */);
 extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
-                            PtrAbstractBox pAb,
-                            PtrPSchema * pSPR,
-                            PRuleType typeRule,
-                            boolean attr,
-                            PtrAttribute * pAttr */);
+                                  PtrAbstractBox pAb,
+                                  PtrPSchema * pSPR,
+                                  PRuleType typeRule,
+                                  boolean attr,
+                                  PtrAttribute * pAttr */);
 extern PtrPRule FunctionRule (/* PtrElement pEl,
-                                  PtrPSchema * pSchP */);
+                                 PtrPSchema * pSchP */);
 extern void SetDeadAbsBox (/* PtrAbstractBox pAb */);
 extern void ApplyRefAbsBoxSupp (/* PtrAbstractBox pAb,
-                           PtrAbstractBox * pAbbReDisp,
-                           PtrDocument pDoc */);
+                                   PtrAbstractBox * pAbbReDisp,
+                                   PtrDocument pDoc */);
 extern void ApplyRefAbsBoxNew (/* PtrAbstractBox pAbbFirst,
-                           PtrAbstractBox pAbbLast,
-                           PtrAbstractBox * pAbbReDisp,
-                           PtrDocument pDoc */);
+                                  PtrAbstractBox pAbbLast,
+                                  PtrAbstractBox * pAbbReDisp,
+                                  PtrDocument pDoc */);
 extern void ChangeFirstLast (/* PtrElement pEl,
-                            PtrDocument pDoc,
-                            boolean first,
-                            boolean change */);
+                                PtrDocument pDoc,
+                                boolean first,
+                                boolean change */);
 extern PtrElement PageElAssoc (/* PtrElement pEl,
                                   int viewNb,
                                   int *boxType */);
 extern void CreateAllAbsBoxesOfEl (/* PtrElement pE,
-                              PtrDocument pDoc */);
+                                      PtrDocument pDoc */);
 extern void CreateNewAbsBoxes (/* PtrElement pEl,
-                           PtrDocument pDoc,
-                           int viewNb */);
+                                  PtrDocument pDoc,
+                                  int viewNb */);
 extern void DestroyAbsBoxesView (/* PtrElement pEl,
-                          PtrDocument pDoc,
-                          boolean verify,
-                          int view */);
+                                    PtrDocument pDoc,
+                                    boolean verify,
+                                    int view */);
 extern void DestroyAbsBoxes (/* PtrElement pEl,
-                          PtrDocument pDoc,
-                          boolean verify */);
+                                PtrDocument pDoc,
+                                boolean verify */);
 extern void ReafReference (/* PtrReference pRef,
                               PtrAbstractBox pAb,
                               PtrDocument pDocRef */);

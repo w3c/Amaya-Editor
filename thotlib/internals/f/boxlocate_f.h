@@ -17,39 +17,39 @@ extern int GetBoxDistance ( int xRef,
                             int width,
                             int height );
 extern PtrAbstractBox GetClickedAbsBox ( int frame,
-                                int xRef,
-                                int yRef );
+                                         int xRef,
+                                         int yRef );
 extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
-                            int higherX,
-                            int lowerX,
-                            int y,
-                            int *pointselect );
+                                       int higherX,
+                                       int lowerX,
+                                       int y,
+                                       int *pointselect );
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb );
 extern int GetShapeDistance ( int xRef,
-                           int yRef,
-                           PtrBox pBox,
-                           int value );
+                              int yRef,
+                              PtrBox pBox,
+                              int value );
 extern PtrBox GetClickedLeafBox ( int frame,
-                             int xRef,
-                             int yRef );
+                                  int xRef,
+                                  int yRef );
 extern boolean APPgraphicModify ( PtrElement pEl,
                                   int value,
                                   int frame,
                                   boolean pre );
 extern void ApplyDirectTranslate ( int frame,
-                           int xm,
-                           int ym );
+                                   int xm,
+                                   int ym );
 extern void ApplyDirectResize ( int frame,
-                            int xm,
-                            int ym );
+                                int xm,
+                                int ym );
 extern void DirectCreation ( PtrBox pBox,
-                           int frame );
+                             int frame );
 extern void LocateClickedChar ( PtrBox pBox,
-                           PtrTextBuffer * pBuffer,
-                           int *x,
-                           int *index,
-                           int *charsNumber,
-                           int *spacesNumber );
+                                PtrTextBuffer * pBuffer,
+                                int *x,
+                                int *index,
+                                int *charsNumber,
+                                int *spacesNumber );
 
 #else /* __STDC__ */
 
@@ -64,39 +64,39 @@ extern int GetBoxDistance (/* int xRef,
                               int width,
                               int height */);
 extern PtrAbstractBox GetClickedAbsBox (/* int frame,
-                                  int xRef,
-                                  int yRef */);
+                                           int xRef,
+                                           int yRef */);
 extern PtrBox GetEnclosingClickedBox (/* PtrAbstractBox pAb,
-                              int higherX,
-                              int lowerX,
-                              int y,
-                              int *pointselect */);
+                                         int higherX,
+                                         int lowerX,
+                                         int y,
+                                         int *pointselect */);
 extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb */);
 extern int GetShapeDistance (/* int xRef,
-                             int yRef,
-                             PtrBox pBox,
-                             int value */);
+                                int yRef,
+                                PtrBox pBox,
+                                int value */);
 extern PtrBox GetClickedLeafBox (/* int frame,
-                               int xRef,
-                               int yRef */);
+                                    int xRef,
+                                    int yRef */);
 extern boolean APPgraphicModify (/* PtrElement pEl,
                                     int value,
                                     int frame,
                                     boolean pre */);
 extern void ApplyDirectTranslate (/* int frame,
-                             int xm,
-                             int ym */);
+                                     int xm,
+                                     int ym */);
 extern void ApplyDirectResize (/* int frame,
-                              int xm,
-                              int ym */);
+                                  int xm,
+                                  int ym */);
 extern void DirectCreation (/* PtrBox pBox,
-                             int frame */);
+                               int frame */);
 extern void LocateClickedChar (/* PtrBox pBox,
-                             PtrTextBuffer * pBuffer,
-                             int *x,
-                             int *index,
-                             int *charsNumber,
-                             int *spacesNumber */);
+                                  PtrTextBuffer * pBuffer,
+                                  int *x,
+                                  int *index,
+                                  int *charsNumber,
+                                  int *spacesNumber */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

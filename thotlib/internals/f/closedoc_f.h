@@ -7,32 +7,32 @@
 #if __STDC__
 
 extern void CallbackCloseDocMenu ( int ref,
-                            int typedata,
-                            char *data );
+                                   int typedata,
+                                   char *data );
 extern void AskToConfirm ( PtrDocument pDoc,
-                            Document document,
-                            View view,
-                            boolean * confirme,
-                            boolean * sauver );
+                           Document document,
+                           View view,
+                           boolean * confirmation,
+                           boolean * save );
 extern boolean CloseADocument ( Document document,
-                                 Document docform,
-                                 View viewform );
+                                Document docform,
+                                View viewform );
 extern void TtcCloseDocument ( Document document,
                                View view );
 
 #else /* __STDC__ */
 
 extern void CallbackCloseDocMenu (/* int ref,
-                              int typedata,
-                              char *data */);
+                                     int typedata,
+                                     char *data */);
 extern void AskToConfirm (/* PtrDocument pDoc,
-                              Document document,
-                              View view,
-                              boolean * confirme,
-                              boolean * sauver */);
+                             Document document,
+                             View view,
+                             boolean * confirmation,
+                             boolean * save */);
 extern boolean CloseADocument (/* Document document,
-                                   Document docform,
-                                   View viewform */);
+                                  Document docform,
+                                  View viewform */);
 extern void TtcCloseDocument (/* Document document,
                                  View view */);
 
