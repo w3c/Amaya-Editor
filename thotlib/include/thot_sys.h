@@ -32,6 +32,12 @@ and must be removed at the end of the debug */
 
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
+/*
+  A charater that starts an entity that Amaya cannot convert.
+  It should be displayed as a & and should be exported as &
+  instead of &amp;
+*/
+#define START_ENTITY 128
 
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
@@ -105,8 +111,8 @@ and must be removed at the end of the debug */
 /* lacking types */
 typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
 /* added functions */
-void                bzero (void *s, size_t n);
-int                 _getpid (void);
+void bzero (void *s, size_t n);
+int _getpid (void);
 #define strcasecmp(a, b) _stricmp(a, b)
 #define index(str, ch) strchr(str, ch)
 /* function mappings */
@@ -207,17 +213,5 @@ typedef unsigned char   ThotBool;
 #define NBSP      0xA0
 
 #define MAX_BYTES 6 
-/* We suppose that a multibyte character is encoded on maximum 2 bytes 
-   If this value is modified, we have to adapt the code of the following 
-   proceduress:
-
-   ** TtaReadWideChar
-   ** TtaWriteWideChar
-
-   ** TtaCheckDirectory
-   ** ThotDirBrowse_first
-                        
-   ** getFirstWord
-*/
 
 #endif /* THOT_SYS_H */

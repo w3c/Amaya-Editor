@@ -86,20 +86,9 @@
    Insere l'element pNew devant ou derriere (selon before) l'element pEl du
    document pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InsertPastedElement (PtrElement pEl, ThotBool within,
-					 ThotBool before,
-					 PtrElement* pNew, PtrDocument pDoc)
-#else
-static void         InsertPastedElement (pEl, within, before, pNew, pDoc)
-PtrElement          pEl;
-ThotBool		    within;
-ThotBool            before;
-PtrElement*         pNew;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static void InsertPastedElement (PtrElement pEl, ThotBool within,
+				 ThotBool before,
+				 PtrElement *pNew, PtrDocument pDoc)
 {
    PtrElement          pSibling;
 
@@ -143,20 +132,8 @@ PtrDocument         pDoc;
    within is TRUE), before (if before is TRUE) or after (if before is FALSE)
    element pEl in document pDoc.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-
-static PtrElement   PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
-			     ThotBool within, ThotBool before, PtrDocument pDoc)
-#else  /* __STDC__ */
-static PtrElement   PasteAnElement (pEl, pSavedEl, within, before, pDoc)
-PtrElement          pEl;
-PtrPasteElem        pSavedEl;
-ThotBool	    within;
-ThotBool            before;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
+				  ThotBool within, ThotBool before, PtrDocument pDoc)
 {
    PtrElement          pElem, pChild, pPasted, pOrig, pParent, pSibling,
                        pAncest, pE, pElAttr, newElement;
@@ -835,19 +812,8 @@ void                PasteCommand ()
 /*----------------------------------------------------------------------
    SelectSiblings
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SelectSiblings (PtrElement * firstEl, PtrElement * lastEl,
-				    int *firstChar, int *lastChar)
-#else  /* __STDC__ */
-void                SelectSiblings (firstEl, lastEl, firstChar, lastChar)
-PtrElement         *firstEl;
-PtrElement         *lastEl;
-int                *firstChar;
-int                *lastChar;
-
-#endif /* __STDC__ */
-
+void SelectSiblings (PtrElement *firstEl, PtrElement *lastEl,
+		     int *firstChar, int *lastChar)
 {
    PtrElement          pParent;
 
@@ -931,22 +897,9 @@ int                *lastChar;
    creer un element de meme type que pEl ou un element d'un type different.
    Retourne le type de l'element a creer dans (typeNum, pSS).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
-			      ThotBool begin, PtrDocument pDoc, int *typeNum,
-					 PtrSSchema * pSS)
-#else  /* __STDC__ */
-static void         ReturnCreateNewElem (pListEl, pEl, begin, pDoc, typeNum,
-					 pSS)
-PtrElement          pListEl;
-PtrElement          pEl;
-ThotBool            begin;
-PtrDocument         pDoc;
-int                *typeNum;
-PtrSSchema         *pSS;
-
-#endif /* __STDC__ */
-
+static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
+				 ThotBool begin, PtrDocument pDoc, int *typeNum,
+				 PtrSSchema *pSS)
 {
    int                 TypeListe, TypeElListe, TypeEl;
    PtrSSchema          pSSList;
@@ -979,14 +932,7 @@ PtrSSchema         *pSS;
    return the ancestor of element pEl (or pEl itself) which has an
    exception ExcReturnCreateNL.                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrElement   AscentReturnCreateNL (PtrElement pEl)
-#else
-static PtrElement   AscentReturnCreateNL (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+static PtrElement AscentReturnCreateNL (PtrElement pEl)
 {
    PtrElement          pAncest;
    ThotBool            stop;
@@ -1010,14 +956,7 @@ PtrElement          pEl;
    Returns TRUE if the next (or previous, depending on before) sibling of
    element pEl is absent or contains only constants
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool EmptyOrConstants (PtrElement pEl)
-#else
-static ThotBool EmptyOrConstants (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
 {
    PtrElement          child;
    ThotBool	       ret;
@@ -1045,15 +984,7 @@ PtrElement          pEl;
    Returns TRUE if the next (or previous, depending on before) sibling of
    element pEl is absent or contains only constants
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool NoSignificantSibling (PtrElement pEl, ThotBool before)
-#else
-static ThotBool NoSignificantSibling (pEl, before)
-PtrElement          pEl;
-ThotBool		    before
-
-#endif /* __STDC__ */
 {
    PtrElement          pSibling;
    ThotBool	           ret;
@@ -1075,13 +1006,7 @@ ThotBool		    before
 /*----------------------------------------------------------------------
   TtcInsertLineBreak handles the key "Control Return".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     TtcInsertLineBreak (Document doc, View view)
-#else
-void     TtcInsertLineBreak (doc, view)
-Document doc; 
-View     view;
-#endif
 {
   if (MenuActionList[0].Call_Action)
     (*MenuActionList[0].Call_Action) (doc, view, BREAK_LINE);
@@ -1090,13 +1015,7 @@ View     view;
 /*----------------------------------------------------------------------
   TtcCreateElement handles the key "Return".
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void     TtcCreateElement (Document doc, View view)
-#else
-void     TtcCreateElement (doc, view)
-Document doc; 
-View     view;
-#endif
 {
   PtrElement          firstSel, lastSel, pListEl, pE, pNew, pSibling;
   PtrElement          pClose, pAncest, pElem, pParent, pElDelete, pPrevious;
@@ -1677,14 +1596,7 @@ View     view;
    (or pEl itself) whose parent has exception              
    ExcParagraphBreak.                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrElement   AscentChildOfParagraph (PtrElement pEl)
-#else
-static PtrElement   AscentChildOfParagraph (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
+static PtrElement  AscentChildOfParagraph (PtrElement pEl)
 {
    PtrElement          pAncest, pParent;
    ThotBool            stop;
@@ -1713,14 +1625,7 @@ PtrElement          pEl;
    NextSiblingNotPage retourne l'element frere suivant pEl qui     
    n'est pas un saut de page.                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   NextSiblingNotPage (PtrElement pEl)
-#else  /* __STDC__ */
-static PtrElement   NextSiblingNotPage (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pNext;
    ThotBool            stop;
@@ -1746,15 +1651,7 @@ PtrElement          pEl;
    element pEl and the user has hit the Delete key.  Merging with
    next element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
-#else
-void                DeleteNextChar (frame, pEl, before)
-int                 frame;
-PtrElement          pEl;
-ThotBool            before;
-
-#endif /* __STDC__ */
+void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 {
    PtrElement          pSibling, pNext, pPrev, pE, pElem, pParent, pS;
    PtrElement          pSel, pSuccessor, pLeaf;
@@ -1779,7 +1676,14 @@ ThotBool            before;
 
    /* look for the first ancestor with a previous (if before) or next sibling:
       pParent */
-   pParent = pEl;
+   pParent = pEl->ElParent;
+   if (pParent &&
+       pParent->ElStructSchema->SsRule[pParent->ElTypeNumber - 1].SrConstruct == CsConstant)
+     /* delete the constant itself */
+     pEl = pParent;
+   else
+     pParent = pEl;
+
    do
      {
        if (before)
@@ -1799,15 +1703,14 @@ ThotBool            before;
 
    /* determine the current selection */
    firstChar = 0;  lastChar= 0;
-   if (pEl->ElTerminal)
-     if (pEl->ElLeafType == LtText)
-       {
-	 if (before)
-	   firstChar = 1;
-	 else
-	   firstChar = pEl->ElVolume + 1;
-	 lastChar = firstChar -1;
-       }
+   if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+     {
+       if (before)
+	 firstChar = 1;
+       else
+	 firstChar = pEl->ElVolume + 1;
+       lastChar = firstChar -1;
+     }
 
    doc = IdentDocument (pDoc);
    if (before && pSibling->ElVolume == 0 && pParent->ElVolume > 0)
@@ -2229,7 +2132,7 @@ ThotBool            before;
    NoStructureLoadResources
    connects unstructured editing and selection functions.
   ----------------------------------------------------------------------*/
-void                NoStructSelectLoadResources ()
+void NoStructSelectLoadResources ()
 {
    if (ThotLocalActions[T_selecbox] == NULL)
      {

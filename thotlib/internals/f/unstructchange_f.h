@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void PasteCommand ( void );
-extern void SelectSiblings ( PtrElement * firstEl,
-                             PtrElement * lastEl,
+extern void SelectSiblings ( PtrElement *firstEl,
+                             PtrElement *lastEl,
                              int *firstChar,
                              int *lastChar );
 extern void TtcInsertLineBreak ( Document doc,
@@ -23,8 +23,8 @@ extern void NoStructSelectLoadResources ( void );
 #else /* __STDC__ */
 
 extern void PasteCommand (/* void */);
-extern void SelectSiblings (/* PtrElement * firstEl,
-                               PtrElement * lastEl,
+extern void SelectSiblings (/* PtrElement *firstEl,
+                               PtrElement *lastEl,
                                int *firstChar,
                                int *lastChar */);
 extern void TtcInsertLineBreak (/* Document doc,

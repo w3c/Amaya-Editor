@@ -408,9 +408,9 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML"))
-	       if (MathMoveBackwardCursorFunction != NULL)
-		 done = MathMoveBackwardCursorFunction ();
+	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		 MathMoveBackwardCursorFunction != NULL)
+	       done = MathMoveBackwardCursorFunction ();
 	     if (!done)
 	       {
 	       if (extendSel && RightExtended)
@@ -489,15 +489,16 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
-	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML"))
-	       if (MathMoveForwardCursorFunction != NULL)
-		 done = MathMoveForwardCursorFunction ();
+	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
+		 MathMoveForwardCursorFunction != NULL)
+	       done = MathMoveForwardCursorFunction ();
 	     if (!done)
 	       {
 	       if (!extendSel || !LeftExtended)
 		 {
 		   /* move the right extremity */
 		   pBox = pBoxEnd;
+		   pEl = pBox->BxAbstractBox->AbElement;
 		   if (!extendSel && pViewSelEnd->VsBox &&
 		       pViewSelEnd->VsBox->BxType == BoGhost)
 		     x = pBox->BxNChars;
@@ -593,7 +594,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	       pBox = pBoxEnd;
 	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	       if (pViewSelEnd->VsBuffer && pViewSelEnd->VsIndBuf < pViewSelEnd->VsBuffer->BuLength)
-		 x = x - CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
+		 x -= CharacterWidth (pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf], pBox->BxFont);
 	       y = pBox->BxYOrg + pBox->BxHeight;
 	       yDelta = 10;
 	       /* store the end position of the selection as the new reference */

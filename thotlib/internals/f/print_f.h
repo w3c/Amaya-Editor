@@ -10,12 +10,12 @@ extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument pDoc,
                                         ThotBool processNotLoaded,
                                         PtrReference pPrevRef,
-                                        PtrDocument * pDocRef,
-                                        PtrExternalDoc * pExtDoc,
+                                        PtrDocument *pDocRef,
+                                        PtrExternalDoc *pExtDoc,
                                         ThotBool nextExtDoc );
-extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
-                                      PtrElement * firstEl,
-                                      PtrElement * lastEl,
+extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
+                                      PtrElement *firstEl,
+                                      PtrElement *lastEl,
                                       int *firstChar,
                                       int *lastChar );
 extern void DestroyFrame ( int frame );
@@ -33,9 +33,9 @@ extern void GetSizesFrame ( int frame,
                             int *height );
 extern ThotWindow TtaGetThotWindow ( int frame );
 extern void GetDocAndView ( int frame,
-                            PtrDocument * pDoc,
+                            PtrDocument *pDoc,
                             int *view,
-                            ThotBool * assoc );
+                            ThotBool *assoc );
 extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pPageAb,
                            PtrAbstractBox pNextPageAb,
@@ -54,12 +54,12 @@ extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument pDoc,
                                           ThotBool processNotLoaded,
                                           PtrReference pPrevRef,
-                                          PtrDocument * pDocRef,
-                                          PtrExternalDoc * pExtDoc,
+                                          PtrDocument *pDocRef,
+                                          PtrExternalDoc *pExtDoc,
                                           ThotBool nextExtDoc */);
-extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
-                                        PtrElement * firstEl,
-                                        PtrElement * lastEl,
+extern ThotBool GetCurrentSelection (/* PtrDocument *pDoc,
+                                        PtrElement *firstEl,
+                                        PtrElement *lastEl,
                                         int *firstChar,
                                         int *lastChar */);
 extern void DestroyFrame (/* int frame */);
@@ -77,9 +77,9 @@ extern void GetSizesFrame (/* int frame,
                               int *height */);
 extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void GetDocAndView (/* int frame,
-                              PtrDocument * pDoc,
+                              PtrDocument *pDoc,
                               int *view,
-                              ThotBool * assoc */);
+                              ThotBool *assoc */);
 extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pPageAb,
                              PtrAbstractBox pNextPageAb,

@@ -1864,8 +1864,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    /* end. Set the beginning of selection to the beginning of */
 	    /* next element */
 	    {
-	      FirstSelectedElement =
-		FirstLeaf (NextElement (FirstSelectedElement));
+	      FirstSelectedElement = FirstLeaf (NextElement (FirstSelectedElement));
 	      if (FirstSelectedElement->ElTerminal &&
 		  FirstSelectedElement->ElLeafType == LtText)
 		FirstSelectedChar = 1;

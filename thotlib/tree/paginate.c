@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -71,27 +71,15 @@ static int          pagesCounter;
 #ifndef PAGINEETIMPRIME
 
 /*----------------------------------------------------------------------
-   AbortPageSelection  Annule et deplace si besoin la selection	
-   			  courante du document.				
-   			  Retourne les valeurs de cette selection 	
-   			  dans firstSelection, lastSelection,           
-   FirstSelectedChar et LastSelectedChar	        
+  AbortPageSelection
+  Annule et deplace si besoin la selection courante du document.
+  Retourne les valeurs de cette selection dans firstSelection, lastSelection,
+  FirstSelectedChar et LastSelectedChar
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool     AbortPageSelection (PtrDocument pDoc, int schView, PtrElement * firstSelection, PtrElement * lastSelection, int *FirstSelectedChar, int *LastSelectedChar)
-
-#else  /* __STDC__ */
-static ThotBool     AbortPageSelection (pDoc, schView, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar)
-PtrDocument         pDoc;
-int                 schView;
-PtrElement         *firstSelection;
-PtrElement         *lastSelection;
-int                *FirstSelectedChar;
-int                *LastSelectedChar;
-
-#endif /* __STDC__ */
-
+static ThotBool AbortPageSelection (PtrDocument pDoc, int schView,
+				    PtrElement *firstSelection,
+				    PtrElement *lastSelection,
+				    int *FirstSelectedChar, int *LastSelectedChar)
 {
    PtrDocument         SelDoc;
    PtrElement          pEl1, pEl2, first, last;
@@ -161,79 +149,73 @@ int                *LastSelectedChar;
 	   ce cas il y aura fusion des deux feuilles et la deuxieme
 	   n'existera plus. */
 	pEl1 = first;		/* debut de la selection */
-	if (pEl1->ElTerminal)
-	   if (pEl1->ElLeafType == LtText)
-	      /* la selection debute dans une feuille de texte */
-	      if (pEl1->ElPrevious != NULL)
-		 if (pEl1->ElPrevious->ElTypeNumber == PageBreak + 1)
-		    if (pEl1->ElPrevious->ElViewPSchema == schView)
-		       if (pEl1->ElPrevious->ElPageType == PgComputed)
-			  /* la feuille de texte est precedee d'une marque de
-			     page qui va disparaitre, on examine l'element
-			     precedent la marque de page */
-			 {
-			    pEl2 = pEl1->ElPrevious->ElPrevious;
-			    if (pEl2 != NULL)
-			       if (pEl2->ElTerminal &&
-				   pEl2->ElLeafType == LtText)
-				  /* c'est une feuille de texte */
-				  if (pEl2->ElLanguage == pEl1->ElLanguage)
-				     /* meme langue */
-				     if (SameAttributes (first, pEl2))
-					/* memes attributs */
-					if (BothHaveNoSpecRules (first, pEl2))
-					   /* meme present. */
-					   /* les elements vont fusionner, on selectionne le 1er */
-					  {
-					     if (last == first)
-					       {
-						  last = pEl2;
-						  *LastSelectedChar = 0;
-					       }
-					     first = pEl2;
-					     *LastSelectedChar = 0;
-					  }
-			 }
+	if (pEl1->ElTerminal && pEl1->ElLeafType == LtText &&
+	    /* la selection debute dans une feuille de texte */
+	    pEl1->ElPrevious && pEl1->ElPrevious->ElTypeNumber == PageBreak + 1 &&
+	    pEl1->ElPrevious->ElViewPSchema == schView &&
+	    pEl1->ElPrevious->ElPageType == PgComputed)
+	  /* la feuille de texte est precedee d'une marque de
+	     page qui va disparaitre, on examine l'element
+	     precedent la marque de page */
+	  {
+	    pEl2 = pEl1->ElPrevious->ElPrevious;
+	    if (pEl2 != NULL && pEl2->ElTerminal &&
+		pEl2->ElLeafType == LtText &&
+		/* c'est une feuille de texte */
+		pEl2->ElLanguage == pEl1->ElLanguage &&
+		/* meme langue */
+		SameAttributes (first, pEl2) &&
+		/* memes attributs */
+		BothHaveNoSpecRules (first, pEl2))
+	      /* meme present. */
+	      /* les elements vont fusionner, on selectionne le 1er */
+	      {
+		if (last == first)
+		  {
+		    last = pEl2;
+		    *LastSelectedChar = 0;
+		  }
+		first = pEl2;
+		*LastSelectedChar = 0;
+	      }
+	  }
 	/* la fin de la selection est-il dans une feuille de texte qui
 	   n'est separee de la precedente que par une marque de page ? Dans
 	   ce cas il y aura fusion des deux feuilles et la deuxieme
 	   n'existera plus. */
 	pEl1 = last;
 	/* fin de la selection */
-	if (pEl1->ElTerminal)
-	   if (pEl1->ElLeafType == LtText)
-	      /* la selection se termine dans une feuille de texte */
-	      if (pEl1->ElPrevious != NULL)
-		 if (pEl1->ElPrevious->ElTypeNumber == PageBreak + 1)
-		    if (pEl1->ElPrevious->ElViewPSchema == schView)
-		       if (pEl1->ElPrevious->ElPageType == PgComputed)
-			  /* la feuille de texte est precedee d'une marque de
-			     page qui va disparaitre, on examine l'element
-			     precedent la marque de page */
-			 {
-			    pEl2 = pEl1->ElPrevious->ElPrevious;
-			    if (pEl2 != NULL)
-			       if (pEl2->ElTerminal &&
-				   pEl2->ElLeafType == LtText)
-				  /* c'est une feuille de texte */
-				  if (pEl2->ElLanguage == pEl1->ElLanguage)
-				     /* meme langue */
-				     if (SameAttributes (last, pEl2))
-					/* memes attributs */
-					if (BothHaveNoSpecRules (last, pEl2))
-					   /* meme present. */
-					   /* les elements vont fusionner, on selectionne le 1er */
-					  {
-					     last = pEl2;
-					     *LastSelectedChar = 0;
-					  }
-
-			 }
+	if (pEl1->ElTerminal && pEl1->ElLeafType == LtText &&
+	    /* la selection se termine dans une feuille de texte */
+	    pEl1->ElPrevious &&
+	    pEl1->ElPrevious->ElTypeNumber == PageBreak + 1 &&
+	    pEl1->ElPrevious->ElViewPSchema == schView &&
+	    pEl1->ElPrevious->ElPageType == PgComputed)
+	  /* la feuille de texte est precedee d'une marque de
+	     page qui va disparaitre, on examine l'element
+	     precedent la marque de page */
+	  {
+	    pEl2 = pEl1->ElPrevious->ElPrevious;
+	    if (pEl2 && pEl2->ElTerminal &&
+		pEl2->ElLeafType == LtText &&
+		/* c'est une feuille de texte */
+		pEl2->ElLanguage == pEl1->ElLanguage &&
+		/* meme langue */
+		SameAttributes (last, pEl2) &&
+		/* memes attributs */
+		BothHaveNoSpecRules (last, pEl2))
+	      /* meme present. */
+	      /* les elements vont fusionner, on selectionne le 1er */
+	      {
+		last = pEl2;
+		*LastSelectedChar = 0;
+	      }
+	  }
 	*firstSelection = first;
 	*lastSelection = last;
-     }				/* fin if (sel) */
+     }
    return sel;
-}				/* AbortPageSelection */
+}
 #endif /* PAGINEETIMPRIME */
 
 
@@ -244,18 +226,7 @@ int                *LastSelectedChar;
    		Retourne dans pLib un pointeur sur l'element a libere	
    		resultant de la fusion, si elle a pu se faire.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * pLib)
-
-#else  /* __STDC__ */
-static void         SuppressPageMark (pPage, pDoc, pLib)
-PtrElement          pPage;
-PtrDocument         pDoc;
-PtrElement         *pLib;
-
-#endif /* __STDC__ */
-
+static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * pLib)
 {
    PtrElement          pPrevious;
    NotifyElement       notifyEl;
@@ -310,60 +281,48 @@ PtrElement         *pLib;
    		vue schView, sauf les marques placees par l'utilisateur	
    		et celles de debut des elements portant une regle Page.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DestroyPageMarks (PtrDocument pDoc, PtrElement pRootEl, int schView)
-#else  /* __STDC__ */
-static void         DestroyPageMarks (pDoc, pRootEl, schView)
-PtrDocument         pDoc;
-PtrElement          pRootEl;
-int                 schView;
-#endif /* __STDC__ */
-
+static void DestroyPageMarks (PtrDocument pDoc, PtrElement pRootEl, int schView)
 {
-   PtrElement          pEl, pElPage, pElLib;
+  PtrElement          pEl, pElPage, pElLib;
 
-
-   pEl = pRootEl;
-   pElPage = NULL;
-   /* pas encore de marque de page a supprimer */
-   while (pEl != NULL)
-      /* cherche la prochaine marque de page */
-     {
-	pEl = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
-	if (pEl != NULL &&
-	    pEl->ElViewPSchema == schView)
-	  {
-	    /* on a trouve' une marque de page concernant la vue */
-	    if (pEl->ElPageType == PgComputed)
-	      /* c'est une marque de page calculee */
-	      {
-		if (pElPage != NULL)
-		  /* il y a deja une marque de page a supprimer, on la supprime */
-		  {
-		    SuppressPageMark (pElPage, pDoc, &pElLib);
-		    if (pElLib != NULL)
-		      DeleteElement (&pElLib, pDoc);
-		  }
-		/* on supprimera cette marque de page au tour suivant */
-		pElPage = pEl;
-	      }
-	    else
-	      /* c'est une marque de page a conserver */
-	      /* on ne creera pas tout de suite ses boites de haut de page */
-	      /* contenant des elements associes. */
-	      pEl->ElAssocHeader = FALSE;
-	  }
-     }
-   if (pElPage != NULL)
-      /* il reste une marque de page a supprimer, on la supprime */
-     {
-	SuppressPageMark (pElPage, pDoc, &pElLib);
-	if (pElLib != NULL)
-	   DeleteElement (&pElLib, pDoc);
-     }
-
-}				/*DestroyPageMarks */
-
+  pEl = pRootEl;
+  pElPage = NULL;
+  /* pas encore de marque de page a supprimer */
+  while (pEl != NULL)
+    /* cherche la prochaine marque de page */
+    {
+      pEl = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
+      if (pEl != NULL && pEl->ElViewPSchema == schView)
+	{
+	  /* on a trouve' une marque de page concernant la vue */
+	  if (pEl->ElPageType == PgComputed)
+	    /* c'est une marque de page calculee */
+	    {
+	      if (pElPage != NULL)
+		/* il y a deja une marque de page a supprimer, on la supprime */
+		{
+		  SuppressPageMark (pElPage, pDoc, &pElLib);
+		  if (pElLib != NULL)
+		    DeleteElement (&pElLib, pDoc);
+		}
+	      /* on supprimera cette marque de page au tour suivant */
+	      pElPage = pEl;
+	    }
+	  else
+	    /* c'est une marque de page a conserver */
+	    /* on ne creera pas tout de suite ses boites de haut de page */
+	    /* contenant des elements associes. */
+	    pEl->ElAssocHeader = FALSE;
+	}
+    }
+  if (pElPage != NULL)
+    /* il reste une marque de page a supprimer, on la supprime */
+    {
+      SuppressPageMark (pElPage, pDoc, &pElLib);
+      if (pElLib != NULL)
+	DeleteElement (&pElLib, pDoc);
+    }
+}
 #ifndef PAGINEETIMPRIME
 
 /*----------------------------------------------------------------------
@@ -373,25 +332,14 @@ int                 schView;
    			l'editeur (version vide pour l'appel depuis	
    			la commande d'impression)			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage, int view, ThotBool Assoc, ThotBool sel, PtrElement firstSelection, PtrElement lastSelection, int FirstSelectedChar, int LastSelectedChar)
-#else  /* __STDC__ */
-static void         DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar)
-PtrDocument         pDoc;
-PtrElement          firstPage;
-int                 view;
-ThotBool            Assoc;
-ThotBool            sel;
-PtrElement          firstSelection;
-PtrElement          lastSelection;
-int                 FirstSelectedChar;
-int                 LastSelectedChar;
-
-#endif /* __STDC__ */
-
+static void DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage,
+				int view, ThotBool Assoc, ThotBool sel,
+				PtrElement firstSelection,
+				PtrElement lastSelection, int FirstSelectedChar,
+				int LastSelectedChar)
 {
    PtrElement          pRootEl;
-   PtrAbstractBox      rootAbsBox /* , pP */ ;
+   PtrAbstractBox      rootAbsBox;
    int                 v, schView, frame, h;
    ThotBool            complete;
 
@@ -440,8 +388,7 @@ int                 LastSelectedChar;
    /* de la creation des nouvelles marques de page */
    if (firstPage != NULL)
       UpdateNumbers (NextElement (firstPage), firstPage, pDoc, TRUE);
-
-}				/* DisplaySelectPages */
+}
 #endif /* PAGINEETIMPRIME */
 
 
@@ -450,19 +397,7 @@ int                 LastSelectedChar;
    		caractere de rang cutChar et met a jour les paves	
    		correspondant.						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         Cut (PtrElement pEl, int cutChar, PtrDocument pDoc, int nbView)
-
-#else  /* __STDC__ */
-static void         Cut (pEl, cutChar, pDoc, nbView)
-PtrElement          pEl;
-int                 cutChar;
-PtrDocument         pDoc;
-int                 nbView;
-
-#endif /* __STDC__ */
-
+static void Cut (PtrElement pEl, int cutChar, PtrDocument pDoc, int nbView)
 {
    PtrElement	       pSecond;
 
@@ -493,17 +428,9 @@ int                 nbView;
   If there is a rule NoBreak2 (pR2 != NULL) and it's given by an attribute
   pAt2 points to the attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     AllowBreak (PtrAbstractBox pAb, PtrPRule * pR1, PtrAttribute * pAt1, PtrPRule * pR2, PtrAttribute * pAt2, int schView)
-#else  /* __STDC__ */
-static ThotBool     AllowBreak (pAb, pR1, pAt1, pR2, pAt2, schView)
-PtrAbstractBox      pAb;
-PtrPRule           *pR1;
-PtrAttribute       *pAt1;
-PtrPRule           *pR2;
-PtrAttribute       *pAt2;
-int                 schView;
-#endif /* __STDC__ */
+static ThotBool AllowBreak (PtrAbstractBox pAb, PtrPRule *pR1,
+			    PtrAttribute *pAt1, PtrPRule *pR2,
+			    PtrAttribute *pAt2, int schView)
 {
   PtrPSchema          pSchP;
   PtrSSchema          pSchS;
@@ -537,16 +464,10 @@ int                 schView;
 
 
 /*----------------------------------------------------------------------
-   	PageBrk Page	indique si l'element pEl debute par un saut de	
-   		page de la vue schView					
+  PageBrk Page	indique si l'element pEl debute par un saut de
+  page de la vue schView
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrElement   PageBrk (PtrElement pEl, int schView)
-#else  /* __STDC__ */
-static PtrElement   PageBrk (pEl, schView)
-PtrElement          pEl;
-int                 schView;
-#endif /* __STDC__ */
 {
    PtrElement          pE;
    ThotBool            found;
@@ -589,21 +510,10 @@ int                 schView;
     1 : insere apres l'element.
     2 : insere comme premier fils de l'element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   InsertMark (PtrAbstractBox pAb, int frame, int nbView, PtrAbstractBox *origCutAbsBox, ThotBool *needBreak, int schView, PtrDocument pDoc, PtrElement rootEl, int position)
-
-#else  /* __STDC__ */
-static PtrElement   InsertMark (pAb, frame, nbView, origCutAbsBox, needBreak, schView, pDoc, rootEl, position)
-PtrAbstractBox      pAb;
-int                 frame;
-int                 nbView;
-PtrAbstractBox     *origCutAbsBox;
-ThotBool           *needBreak;
-int                 schView;
-PtrDocument         pDoc;
-PtrElement          rootEl;
-int                 position;
-#endif /* __STDC__ */
+static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
+			      PtrAbstractBox *origCutAbsBox, ThotBool *needBreak,
+			      int schView, PtrDocument pDoc, PtrElement rootEl,
+			      int position)
 {
    PtrElement          pElPage, pEl;
    PtrPRule            pRule;
@@ -948,14 +858,7 @@ int                 position;
   de la frontiere de page. Retourne la nouvelle frontiere de page, en
   points typographiques, ou 0 si la coupure de page convient.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
-#else  /* __STDC__ */
-static int          MoveCut (pAb, NoBr1, schView)
-PtrAbstractBox      pAb;
-ThotBool            NoBr1;
-int                 schView;
-#endif /* __STDC__ */
+static int MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
 {
   int                 ret, h, org, cutChar, min, i;
   PtrPRule            pRNoBr1, pRNoBr2;
@@ -1054,20 +957,10 @@ int                 schView;
   SetMark place dans l'arbre de racine pAb la marque de page en fonction
   de la position des paves relativement a la limite de page.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc, int schView, ThotBool * needBreak, PtrAbstractBox * origCutAbsBox, int nbView, int frame, PtrElement * pPage)
-#else  /* __STDC__ */
-static void         SetMark (pAb, rootEl, pDoc, schView, needBreak, origCutAbsBox, nbView, frame, pPage)
-PtrAbstractBox      pAb;
-PtrElement          rootEl;
-PtrDocument         pDoc;
-int                 schView;
-ThotBool           *needBreak;
-PtrAbstractBox     *origCutAbsBox;
-int                 nbView;
-int                 frame;
-PtrElement         *pPage;
-#endif /* __STDC__ */
+static void SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc,
+		     int schView, ThotBool *needBreak,
+		     PtrAbstractBox *origCutAbsBox, int nbView, int frame,
+		     PtrElement *pPage)
 {
   int                 h, org, cutChar;
   ThotBool            done;
@@ -1193,19 +1086,9 @@ PtrElement         *pPage;
   SetPage place la marque de page en respectant la hauteur de page
   demandee et les conditions de coupure des paves de la page.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetPage (PtrElement * pPage, int frame, PtrAbstractBox * origCutAbsBox, ThotBool * needBreak, PtrDocument pDoc, int schView, int nbView, PtrElement rootEl)
-#else  /* __STDC__ */
-static void         SetPage (pPage, frame, origCutAbsBox, needBreak, pDoc, schView, nbView, rootEl)
-PtrElement         *pPage;
-int                 frame;
-PtrAbstractBox     *origCutAbsBox;
-ThotBool           *needBreak;
-PtrDocument         pDoc;
-int                 schView;
-int                 nbView;
-PtrElement          rootEl;
-#endif /* __STDC__ */
+static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox,
+		     ThotBool *needBreak, PtrDocument pDoc, int schView,
+		     int nbView, PtrElement rootEl)
 {
   int                 turn, newheight, oldheight;
   ThotBool            NoBr1;
@@ -1264,16 +1147,8 @@ static int       n = 1;
   deux parametres en plus
   Retourne l'element marque page creee.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, int schView)
-#else  /* __STDC__ */
-static PtrElement   PutMark (rootEl, nbView, pDoc, frame, schView)
-PtrElement          rootEl;
-int                 nbView;
-PtrDocument         pDoc;
-int                 frame;
-int                 schView;
-#endif /* __STDC__ */
+static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
+			    int frame, int schView)
 {
   PtrAbstractBox      pAb;
   PtrAbstractBox      origCutAbsBox;
@@ -1452,15 +1327,7 @@ static int       n = 1;
     Vue = numero d'elt assoc si vue associee sinon      
     Vue = numero de vue si vue d'arbre principal        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DestroyImAbsPages (int view, ThotBool Assoc, PtrDocument pDoc, int schView)
-#else  /* __STDC__ */
-static void         DestroyImAbsPages (view, Assoc, pDoc, schView)
-int                 view;
-ThotBool            Assoc;
-PtrDocument         pDoc;
-int                 schView;
-#endif /* __STDC__ */
+static void DestroyImAbsPages (int view, ThotBool Assoc, PtrDocument pDoc, int schView)
 {
    PtrAbstractBox      pAb;
    int                 h;
@@ -1522,17 +1389,8 @@ int                 schView;
    AddLastPageBreak	ajoute une marque de page a la fin de la vue	
    	schView de l'arbre de racine pRootEl s'il n'y en a pas deja une
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
-				      ThotBool withAPP)
-#else  /* __STDC__ */
-void                AddLastPageBreak (pRootEl, schView, pDoc, withAPP)
-PtrElement          pRootEl;
-int                 schView;
-PtrDocument         pDoc;
-ThotBool            withAPP;
-#endif /* __STDC__ */
-
+void AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
+		       ThotBool withAPP)
 {
    PtrElement          pEl;
    PtrElement          pElPage;
@@ -1642,14 +1500,7 @@ ThotBool            withAPP;
   Si Assoc est vrai, c'est la vue d'elements associes de	
   numero Vue qui doit etre traitee			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
-#else  /* __STDC__ */
-void                PaginateView (pDoc, view, Assoc)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            Assoc;
-#endif /* __STDC__ */
+void PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 {
   PtrElement          pRootEl, firstPage, pPage;
   PtrAbstractBox      rootAbsBox, pP;

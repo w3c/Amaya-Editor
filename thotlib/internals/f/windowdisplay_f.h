@@ -179,7 +179,7 @@ extern void DrawCurve ( int frame,
                         int nb,
                         int fg,
                         int arrow,
-                        C_points * controls );
+                        C_points *controls );
 extern void DrawSpline ( int frame,
                          int thick,
                          int style,
@@ -190,7 +190,7 @@ extern void DrawSpline ( int frame,
                          int fg,
                          int bg,
                          int pattern,
-                         C_points * controls );
+                         C_points *controls );
 extern void DrawPath ( int frame,
                        int thick,
                        int style,
@@ -499,7 +499,7 @@ extern void DrawCurve (/* int frame,
                           int nb,
                           int fg,
                           int arrow,
-                          C_points * controls */);
+                          C_points *controls */);
 extern void DrawSpline (/* int frame,
                            int thick,
                            int style,
@@ -510,7 +510,7 @@ extern void DrawSpline (/* int frame,
                            int fg,
                            int bg,
                            int pattern,
-                           C_points * controls */);
+                           C_points *controls */);
 extern void DrawPath (/* int frame,
                          int thick,
                          int style,

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  *  module de traitement des regles page
  * ce module contient les procedures utilisees par le
@@ -49,18 +40,7 @@
    type de l'element pointe' par pEl dans la vue view       
    du schema de presentation ou elle est definie           
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrPRule            GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
-
-#else  /* __STDC__ */
-PtrPRule            GetPageRule (pEl, view, pSchP)
-PtrElement          pEl;
-int                 view;
-PtrPSchema         *pSchP;
-
-#endif /* __STDC__ */
-
+PtrPRule GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
 {
    PtrPRule            pRule, pRPage;
    PtrSSchema          pSchS;
@@ -97,18 +77,7 @@ PtrPSchema         *pSchP;
    pointeur sur la regle trouvee ou NULL si pas     
    trouvee.                                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrPRule            GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
-
-#else  /* __STDC__ */
-PtrPRule            GetPRulePage (TypeR, b, pSchP)
-PRuleType           TypeR;
-int                 b;
-PtrPSchema          pSchP;
-
-#endif /* __STDC__ */
-
+PtrPRule GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
 {
    ThotBool            stop, exist;
    PtrPRule            pR;
@@ -148,18 +117,7 @@ PtrPSchema          pSchP;
    Procedure utilisee pour la pagination et l'impression   
    les parametres b et pSchP sont utilises pour le print   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
-
-#else  /* __STDC__ */
-void                PageHeaderFooter (pElPage, view, b, pSchP)
-PtrElement          pElPage;
-int                 view;
-int                *b;
-PtrPSchema         *pSchP;
-
-#endif /* __STDC__ */
-
+void PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
 {
    PtrPRule            pR;
    PtrPSchema          pSP;
@@ -193,12 +151,7 @@ PtrPSchema         *pSchP;
    TagAbsBoxInPage marque tous les paves du sous arbre de racine pAb     
    comme faisant partie de la page courante                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TagAbsBoxInPage (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                TagAbsBoxInPage (pAb)
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
+void TagAbsBoxInPage (PtrAbstractBox pAb)
 {
    PtrAbstractBox      pPa1;
 
@@ -217,16 +170,8 @@ PtrAbstractBox      pAb;
    KillAbsBoxAboveLimit tue tous les paves contenus dans le            
    pave pointe' par pP et qui sont au-dessus de la limite. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int viewNb, PtrDocument pDoc, PtrAbstractBox * RedispAbsBox)
-#else  /* __STDC__ */
-void                KillAbsBoxAboveLimit (pP, limit, viewNb, pDoc, RedispAbsBox)
-PtrAbstractBox      pP;
-int                 limit;
-int                 viewNb;
-PtrDocument         pDoc;
-PtrAbstractBox     *RedispAbsBox;
-#endif /* __STDC__ */
+void KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int viewNb,
+			   PtrDocument pDoc, PtrAbstractBox *RedispAbsBox)
 {
   int               haut, y, NCar;
 
@@ -270,16 +215,8 @@ PtrAbstractBox     *RedispAbsBox;
    englobant pPage.
    Retourne vrai si l'image restante est plus petite qu'une page.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb, int *clipOrg)
-#else  /* __STDC__ */
-ThotBool            KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb, clipOrg)
-PtrAbstractBox      pPage;
-int                 frame;
-PtrDocument         pDoc;
-int                 viewNb;
-int                *clipOrg;
-#endif /* __STDC__ */
+ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
+			       PtrDocument pDoc, int viewNb, int *clipOrg)
 {
   PtrAbstractBox    pAb, RedispAbsBox, rootAbsBox;
   PtrAbstractBox    pPageTable, pTable, pNext, pPageLine;

@@ -136,6 +136,8 @@ static int          NoEmpyBox;
 static int          Repaginate;
 static int          FirstPrinted;
 static int          LastPrinted;
+extern int          errno;
+
 
 #ifdef _WINDOWS
 #define PRINTPROGRESSDLG 389
@@ -274,7 +276,7 @@ void WIN_ReleaseDeviceContext (void)
 /*----------------------------------------------------------------------
    PrintPageFooter
   ----------------------------------------------------------------------*/
-static void         PrintPageFooter (FILE * fout, int frame, PtrAbstractBox pPage)
+static void PrintPageFooter (FILE *fout, int frame, PtrAbstractBox pPage)
 {
   PtrAbstractBox    pAb;
   PtrBox            pBox;
@@ -323,12 +325,12 @@ static void         PrintPageFooter (FILE * fout, int frame, PtrAbstractBox pPag
    PrintPageHeader displays the content of the page header and cleans
    the page element contents except the break line.
   ----------------------------------------------------------------------*/
-static void PrintPageHeader (FILE * fout, int frame, PtrAbstractBox pPage, int org)
+static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int org)
 {
   PtrAbstractBox    pAb;
   PtrBox            pBox;
   ViewFrame        *pFrame;
-  int              framexmin, framexmax;
+  int               framexmin, framexmax;
   int               y, h;
 
 
@@ -384,7 +386,7 @@ static void PrintPageHeader (FILE * fout, int frame, PtrAbstractBox pPage, int o
 /*----------------------------------------------------------------------
    DrawPage check whether a showpage is needed.
   ----------------------------------------------------------------------*/
-static void         DrawPage (FILE * fout)
+static void DrawPage (FILE *fout)
 {
   NumberOfPages++;
 #ifdef _WINDOWS 
@@ -413,9 +415,9 @@ static void         DrawPage (FILE * fout)
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
-static int          XWindowError (Display * dpy, XErrorEvent * err)
+static int XWindowError (Display *dpy, XErrorEvent *err)
 {
-   CHAR_T                msg[200];
+   char                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
    return (0);
@@ -424,15 +426,13 @@ static int          XWindowError (Display * dpy, XErrorEvent * err)
 /*----------------------------------------------------------------------
   XWindowFatalError is the X-Windows fatal errors handler.
  ----------------------------------------------------------------------*/
-static int          XWindowFatalError (Display * dpy)
+static int XWindowFatalError (Display *dpy)
 {
-   extern int          errno;
-
-   if (errno != EPIPE)
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-   else
-      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-   return (0);
+  if (errno != EPIPE)
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+  else
+    TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+  return (0);
 }
 #endif /* _WINDOWS */
 
@@ -468,7 +468,10 @@ static void usage (STRING processName)
 /*----------------------------------------------------------------------
    NextReferenceToEl                                               
   ----------------------------------------------------------------------*/
-PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBool processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
+PtrReference NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
+				ThotBool processNotLoaded, PtrReference pPrevRef,
+				PtrDocument *pDocRef, PtrExternalDoc *pExtDoc,
+				ThotBool nextExtDoc)
 {
    PtrReference        pRef;
 
@@ -493,7 +496,8 @@ PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBoo
 /*----------------------------------------------------------------------
    GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
-ThotBool GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
+ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
+			      PtrElement *lastEl, int *firstChar, int *lastChar)
 {
    *pDoc = NULL;
    return FALSE;
@@ -505,7 +509,7 @@ ThotBool GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrEleme
    Ferme la fenetre, detruit le fichier et libere l'entree.      
    Libere toutes les boites allouees a la fenetre.                   
   ----------------------------------------------------------------------*/
-void                DestroyFrame (int frame)
+void DestroyFrame (int frame)
 {
   ClearConcreteImage (frame);
   ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
@@ -514,7 +518,7 @@ void                DestroyFrame (int frame)
 /*----------------------------------------------------------------------
    FirstFrame cree et initialise la premiere frame.          	
   ----------------------------------------------------------------------*/
-static void         FirstFrame (STRING server)
+static void FirstFrame (STRING server)
 {
    int                 i;
 
@@ -552,7 +556,8 @@ static void         FirstFrame (STRING server)
   recalcule ses limites sur l'image concrete.
   Dans le cas du print, c'est exactement la hauteur de page.
   ----------------------------------------------------------------------*/
-void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
+void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
+		     int *xf, int *yf, int raz)
 {
    FrameTable[frame].FrHeight = *yf;
 }
@@ -560,18 +565,17 @@ void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, i
 /*----------------------------------------------------------------------
    RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
-void                RemoveClipping (int frame)
+void RemoveClipping (int frame)
 {   
    FrameTable[frame].FrWidth = 32000;
    FrameTable[frame].FrHeight = PixelValue (1000, UnPixel, NULL, 0);
-
 }
 
 
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.
   ----------------------------------------------------------------------*/
-void                GetSizesFrame (int frame, int *width, int *height)
+void GetSizesFrame (int frame, int *width, int *height)
 {
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
@@ -581,7 +585,7 @@ void                GetSizesFrame (int frame, int *width, int *height)
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.              
   ----------------------------------------------------------------------*/
-ThotWindow          TtaGetThotWindow (int frame)
+ThotWindow TtaGetThotWindow (int frame)
 {
    return FrRef[frame];
 }
@@ -594,19 +598,19 @@ ThotWindow          TtaGetThotWindow (int frame)
    sinon rend assoc faux.                                  
    Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
-void  GetDocAndView (int frame, PtrDocument * pDoc, int *view, ThotBool * assoc)
+void GetDocAndView (int frame, PtrDocument *pDoc, int *view, ThotBool *assoc)
 {
-   *pDoc = TheDoc;
-   if (CurAssocNum > 0)
-     {
-	*view = CurAssocNum;
-	*assoc = TRUE;
-     }
-   else
-     {
-	*view = CurrentView;
-	*assoc = FALSE;
-     }
+  *pDoc = TheDoc;
+  if (CurAssocNum > 0)
+    {
+      *view = CurAssocNum;
+      *assoc = TRUE;
+    }
+  else
+    {
+      *view = CurrentView;
+      *assoc = FALSE;
+    }
 }
 
 
@@ -1379,7 +1383,7 @@ static int          OpenPSFile (PtrDocument pDoc, int *volume)
 /*----------------------------------------------------------------------
    ClosePSFile ferme le fichier PostScript.                        
   ----------------------------------------------------------------------*/
-static void         ClosePSFile (int frame)
+static void ClosePSFile (int frame)
 {
   FILE               *PSfile;
 
@@ -1401,10 +1405,9 @@ static void         ClosePSFile (int frame)
 
 
 /*----------------------------------------------------------------------
-   GivePageHeight force la limite d'affichage dans la fenetre frame a`   
-   la hauteur d'une page de texte.                         
+   ClipOnPage defines the drawing limits.
   ----------------------------------------------------------------------*/
-static void  GivePageHeight (int frame, int org, int width, int height)
+static void ClipOnPage (int frame, int org, int width, int height)
 {
   int                 y, h, framexmin, framexmax;
   ViewFrame          *pFrame;
@@ -1422,8 +1425,9 @@ static void  GivePageHeight (int frame, int org, int width, int height)
       pFrame->FrClipYBegin = y;
       pFrame->FrYOrg = y;
       pFrame->FrClipYEnd = h;
-      /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
-      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
+      /* set the clipping to the frame size before generating postscript */
+      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin,
+		      &y, &framexmax, &h, 1);
     }
 }
 
@@ -1433,7 +1437,7 @@ static void  GivePageHeight (int frame, int org, int width, int height)
    auquel appartient l'element Marque Page pointe par pPageEl.        
    Cette procedure utilise PageHeaderFooter (commune a print et page)         
   ----------------------------------------------------------------------*/
-static void         SetMargins (PtrElement pPageEl, PtrAbstractBox rootAbsBox)
+static void SetMargins (PtrElement pPageEl, PtrAbstractBox rootAbsBox)
 {
    PtrPRule            pPRule;
    PtrPSchema          pPSchema;
@@ -1573,7 +1577,7 @@ static PtrAbstractBox NextPage (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
    PrintView calcule l'image imprimable de la vue traitee.   
   ----------------------------------------------------------------------*/
-static void         PrintView (PtrDocument pDoc)
+static void PrintView (PtrDocument pDoc)
 {
    PtrElement          pEl;
    PtrAbstractBox      rootAbsBox;
@@ -1742,7 +1746,7 @@ static void         PrintView (PtrDocument pDoc)
 /*----------------------------------------------------------------------
    PrintDocument							
   ----------------------------------------------------------------------*/
-static int         PrintDocument (PtrDocument pDoc, int viewsCounter)
+static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 {
   PtrSSchema          pSS;
   PtrPSchema          pPSchema;
@@ -2001,7 +2005,9 @@ static int         PrintDocument (PtrDocument pDoc, int viewsCounter)
   l'image avant pPageAb sauf dans si pPageAb se trouve dans un element
   BoTable.
   ----------------------------------------------------------------------*/
-void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb, PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox, int clipOrg)
+void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
+		    PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox,
+		    int clipOrg)
 {
   PtrAbstractBox      pAb, pSpaceAb;
   PtrBox              box;
@@ -2132,12 +2138,12 @@ static int       n = 1;
 	    if (pNextPageAb)
 	      {
 		box = pNextPageAb->AbBox;
-	      GivePageHeight (CurrentFrame, clipOrg,
-			      box->BxWidth,
-			      box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
+	      ClipOnPage (CurrentFrame, clipOrg,
+			   FrameTable[CurrentFrame].FrWidth,
+			  box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
 	      }
 	    else
-	      GivePageHeight (CurrentFrame, clipOrg, 32000, PageHeight);
+	      ClipOnPage (CurrentFrame, clipOrg, 32000, PageHeight);
 	    DisplayFrame (CurrentFrame);
 	    if (pNextPageAb)
 	      PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);
@@ -2205,7 +2211,7 @@ static void  ClientSend (ThotWindow clientWindow, STRING name, int messageID)
    DisplayConfirmMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-void                DisplayConfirmMessage (STRING text)
+void DisplayConfirmMessage (STRING text)
 {
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
 }
@@ -2214,7 +2220,7 @@ void                DisplayConfirmMessage (STRING text)
    DisplayMessage
    displays the given message (text).
   ----------------------------------------------------------------------*/
-void                DisplayMessage (STRING text, int msgType)
+void DisplayMessage (STRING text, int msgType)
 {
 #ifndef _WINDOWS
   CHAR_T              cmd[800];
@@ -2240,7 +2246,7 @@ void                DisplayMessage (STRING text, int msgType)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtaError (int errorCode)
+void TtaError (int errorCode)
 {
    UserErrorCode = errorCode;
 }
@@ -2250,7 +2256,7 @@ void                TtaError (int errorCode)
    LoadReferedDocuments    charge tous les documents reference's   
    par le document pointe' par pDoc.			
   ----------------------------------------------------------------------*/
-static void         LoadReferedDocuments (PtrDocument pDoc)
+static void LoadReferedDocuments (PtrDocument pDoc)
 {
   PtrReferredDescr    pRefD;
   PtrDocument         pDocRef;

@@ -21,7 +21,7 @@ extern void KillAbsBoxAboveLimit ( PtrAbstractBox pP,
                                    int limit,
                                    int viewNb,
                                    PtrDocument pDoc,
-                                   PtrAbstractBox * RedispAbsBox );
+                                   PtrAbstractBox *RedispAbsBox );
 extern ThotBool KillAbsBoxBeforePage ( PtrAbstractBox pPage,
                                        int frame,
                                        PtrDocument pDoc,
@@ -45,7 +45,7 @@ extern void KillAbsBoxAboveLimit (/* PtrAbstractBox pP,
                                      int limit,
                                      int viewNb,
                                      PtrDocument pDoc,
-                                     PtrAbstractBox * RedispAbsBox */);
+                                     PtrAbstractBox *RedispAbsBox */);
 extern ThotBool KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
                                          int frame,
                                          PtrDocument pDoc,

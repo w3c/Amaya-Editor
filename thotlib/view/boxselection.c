@@ -578,9 +578,10 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		firstChar = 1;
 	      else if (firstChar > 1 && lastChar == 0)
 		lastChar = pAb->AbVolume;
-	      else if (firstChar == 0 && pAb->AbVolume != 0)
+	      else if (startSelection &&firstChar == 0 && pAb->AbVolume != 0)
 		{
-		  firstChar = 1;	/* selection tout le texte du pave */
+		  /* select the whole text */
+		  firstChar = 1;
 		  lastChar = pAb->AbVolume;
 		}
 	    }
