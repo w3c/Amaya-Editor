@@ -817,7 +817,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	      *nSpaces = spaceCount;
 	      
 	      /* Select the first character after the break */
-	      if (charIndex >= pBuffer->BuLength && pBuffer->BuNext)
+	      if (charIndex >= pBuffer->BuLength - 1 && pBuffer->BuNext)
 		{
 		  /* the next character is in another buffer */
 		  *pNewBuff = pBuffer->BuNext;
