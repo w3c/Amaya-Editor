@@ -149,7 +149,7 @@ STRUCT
 	Horizontal_Rule;					{ HR }
 	Table;							{ TABLE }
 	FIELDSET;						{ FIELDSET }
-	Address = LIST OF (AddressContent);			{ ADDRESS }
+	Address;						{ ADDRESS }
 	PICTURE							{ IMG }
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
 		{ src         alt         longdesc }
@@ -233,16 +233,15 @@ STRUCT
 
   Basic_Set = LIST OF (Basic_Elem);
 
-  AddressContent = CASE OF
-	Basic_Elem;
-	Paragraph;		{ P }
-	Pseudo_paragraph;
-	END;
-
+  { Paragraph must be the first element defined as a Basic_Set, to make
+    sure that the editor will create a Paragraph when the user wants to
+    create a Basic_Elem }
   Paragraph							{ P }
      (ATTR TextAlign = left_, center_, right_, justify_) =
 	 { align       left   center   right   justify }
 	Basic_Set;
+
+  Address = Basic_Set;
 
   Pseudo_paragraph = Basic_Set;
 

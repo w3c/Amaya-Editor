@@ -2802,7 +2802,8 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 
   nAncest = 0;
   NSiblings = 0;
-  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
     return;
   else if (pSelDoc != pDoc)
     /* the document asking for the creation of a new element is NOT the */
@@ -3019,11 +3020,15 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	      nAncest = 0;
 	      while (rule > 0 && !ok)
 		{
-		  /* on cherche d'abord une regle List */
-		  ancestorRule = ListRuleOfElem (rule, pSS);
+		  /* sauf au premier tour, on cherche d'abord une regle
+		     d'identite' */
+		  if (nAncest > 0)
+		    ancestorRule = IdentRuleOfElem (rule, pSS);
+		  /* si on n'a pas trouve', on cherche une regle List */
 		  if (ancestorRule == 0)
-		    /* Pas trouve' de regle List. On cherche une regle 
-		       Aggregate */
+		    ancestorRule = ListRuleOfElem (rule, pSS);
+		  /* si on n'a pas trouve', on cherche une regle Aggregate */
+		  if (ancestorRule == 0)
 		    ancestorRule = AggregateRuleOfElem (rule, pSS);
 		  if (ancestorRule > 0 && ancestorRule == pSS->SsRootElem)
 		    /* don't create a root element */

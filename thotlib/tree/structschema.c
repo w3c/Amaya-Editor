@@ -232,7 +232,7 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch,
 	    {
 	      /* Go to the next extension of the structure schema */
 	      pSS = pSS->SsNextExtens;
-	      /* looks in schema extension the extension rule for the element */
+	      /* look in schema extension the extension rule for the element */
 	      if (pSS != NULL)
 		pRe1 = ExtensionRule (pElem->ElStructSchema,
 				      pElem->ElTypeNumber, pSS);
@@ -446,6 +446,24 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 }
 
 /*----------------------------------------------------------------------
+   IdentRuleOfElem  si l'element de type (typeNum, pSS) peut
+   etre un fils d'un element CsIdentity, retourne le numero de
+   la regle definissant cet element CsIdentity.
+   Retourne 0 sinon.
+  ----------------------------------------------------------------------*/
+int                 IdentRuleOfElem (int typeNum, PtrSSchema pSS)
+{
+  int                 rule, ret;
+
+  ret = 0;
+  for (rule = MAX_BASIC_TYPE; ret == 0 && rule < pSS->SsNRules; rule++)
+    if (pSS->SsRule->SrElem[rule]->SrConstruct == CsIdentity)
+      if (pSS->SsRule->SrElem[rule]->SrIdentRule == typeNum)
+	ret = rule + 1;
+  return ret;
+}
+
+/*----------------------------------------------------------------------
    ListRuleOfElem  si l'element de type (typeNum, pSS) peut	
    etre un fils d'un element CsList, retourne le numero de  
    la regle definissant cet element CsList.                 
@@ -456,7 +474,7 @@ int                 ListRuleOfElem (int typeNum, PtrSSchema pSS)
    int                 rule, ret;
 
    ret = 0;
-   for (rule = 0; ret == 0 && rule < pSS->SsNRules; rule++)
+   for (rule = MAX_BASIC_TYPE; ret == 0 && rule < pSS->SsNRules; rule++)
       if (pSS->SsRule->SrElem[rule]->SrConstruct == CsList)
 	 if (EquivalentSRules (pSS->SsRule->SrElem[rule]->SrListItem, pSS, typeNum, pSS,
 			       NULL))
@@ -476,7 +494,7 @@ int                 AggregateRuleOfElem (int typeNum, PtrSSchema pSS)
    PtrSRule            pRule;
 
    ret = 0;
-   for (rule = 0; ret == 0 && rule < pSS->SsNRules; rule++)
+   for (rule = MAX_BASIC_TYPE; ret == 0 && rule < pSS->SsNRules; rule++)
      {
 	pRule = pSS->SsRule->SrElem[rule];
 	if (pRule->SrConstruct == CsAggregate ||
@@ -490,9 +508,9 @@ int                 AggregateRuleOfElem (int typeNum, PtrSSchema pSS)
 }
 
 /*----------------------------------------------------------------------
-   	ExcludedType verifie si l'element pointe par pEl et ses ascendants
-   	excluent le type d'element de numero typeNum defini dans le	
-   	schema de structure pSS.					
+  ExcludedType verifie si l'element pointe par pEl et ses ascendants
+  excluent le type d'element de numero typeNum defini dans le	
+  schema de structure pSS.					
   ----------------------------------------------------------------------*/
 ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
@@ -602,9 +620,8 @@ ThotBool AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
 	     {
 	       /* parcourt la liste de ses extensions */
 	       for (i = 0; i < pRule->SrNInclusions && (!ret); i++)
-		 if (EquivalentSRules (pRule->SrInclusion[i], pSSrule,
-				       typeNum, pSS, pAsc))
-		   /* l'element est compatible avec l'extension */
+		 if (pRule->SrInclusion[i] == typeNum)
+		   /* l'element est du type de l'extension */
 		   if (!ExcludedType (pEl, pRule->SrInclusion[i],
 				      pSSrule))
 		     /* cette extension n'est pas une exclusion */

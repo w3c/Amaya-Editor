@@ -28,6 +28,8 @@ extern ThotBool EquivalentSRules ( int typeNum1,
                                    int typeNum2,
                                    PtrSSchema pSS2,
                                    PtrElement pEl );
+extern int IdentRuleOfElem ( int typeNum,
+                             PtrSSchema pSS );
 extern int ListRuleOfElem ( int typeNum,
                             PtrSSchema pSS );
 extern int AggregateRuleOfElem ( int typeNum,
@@ -138,6 +140,8 @@ extern ThotBool EquivalentSRules ( int typeNum1,
                                      int typeNum2,
                                      PtrSSchema pSS2,
                                      PtrElement pEl );
+extern int IdentRuleOfElem ( int typeNum,
+                             PtrSSchema pSS );
 extern int ListRuleOfElem ( int typeNum,
                               PtrSSchema pSS );
 extern int AggregateRuleOfElem ( int typeNum,
