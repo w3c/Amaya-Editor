@@ -955,7 +955,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 buffleft;
   int                 indbuff, bl;
   int                 indmax;
-  int                 nbcar, x, y;
+  int                 nbcar, x, y, y1;  /******/
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
@@ -1186,14 +1186,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* display previous chars handled */
 		  if (nbcar > 0)
 		    {
-		      x += DrawString (buffer, nbcar, frame, x, y,
-				       prevfont, 0, bl, 0, blockbegin, fg, shadow);
+/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+                      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+				       0, bl, 0, blockbegin, fg, shadow);
 		      /* all previous spaces are declared */
 		      bl = 0;
 		    }
 		  
 		  if (shadow)
-		    DrawChar ('*', frame, x, y, nextfont, fg);
+		    {
+/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (nextfont);
+		      DrawChar ('*', frame, x, y1, nextfont, fg);
+		    }
 		  else if (!ShowSpace)
 		    {
 		      /* Show the space chars */
@@ -1232,8 +1236,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
-		    x += DrawString (buffer, nbcar, frame, x, y,
-				     prevfont, 0, bl, x, blockbegin, fg, shadow);
+		    {
+/*****/		      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+		      x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+				       0, bl, x, blockbegin, fg, shadow);
+		    }
 		  nbcar = 0;
 		  /* all previous spaces are declared */
 		  bl = 0;
@@ -1247,8 +1254,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    {
 		      /* display previous chars handled */
 		      if (nbcar > 0)
-			x += DrawString (buffer, nbcar, frame, x, y,
-					 prevfont, 0, bl, 0, blockbegin, fg, shadow);
+			{
+/*****/		          y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+                          x += DrawString (buffer, nbcar, frame, x, y1,
+					   prevfont, 0, bl, 0, blockbegin,
+					   fg, shadow);
+			}
 		      nbcar = 0;
 		      prevfont = nextfont;
 		    }
@@ -1304,7 +1315,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      x += DrawString (buffer, nbcar, frame, x, y, prevfont, width,
+/*****/	      y1 = y + BoxFontBase (pBox->BxFont) - FontBase (prevfont);
+	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
