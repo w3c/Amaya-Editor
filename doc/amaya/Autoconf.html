@@ -1,393 +1,291 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-   "http://www.w3.org/TR/REC-html40/loose.dtd">
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>Compiling Amaya</title>
+  <title>Compiling Amaya</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
+
 <body lang="en">
-<p>
-<a href="../../"><img border="0" alt="W3C"
+<p><a href="../../"><img border="0" alt="W3C"
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
 src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
 border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
 <h1>Compiling Amaya Sources with Autoconf</h1>
-<p>
-This document explains how to compile the <strong>Amaya</strong> environment
-(<strong>Amaya</strong> binary and <strong>Amaya</strong> schemas compilers)
-from the distributed <a href="Sources.html">source tree</a>.</p>
-<p>
-Here is the content of this document:</p>
+
+<p>This document explains how to compile the <strong>Amaya</strong>
+environment (<strong>Amaya</strong> binary and <strong>Amaya</strong> schemas
+compilers) from the distributed <a href="Sources.html">source tree</a>.</p>
+
+<p>Here is the content of this document:</p>
 <ol>
-<li>
-<a href="#L437">Prerequisite</a>
-</li>
-<li>
-<a href="#L438">How to build</a>
-</li>
-<li>
-<a href="#L1046">More info on the make files</a>
-</li>
-<li>
-<a href="#L666">More info on the build process</a>
-</li>
-<li>
-<a href="#L440">If make failed</a>
-</li>
-<li>
-<a href="#L689">If amaya binary doesn't work</a>
-</li>
+  <li><a href="#L437">Prerequisite</a></li>
+  <li><a href="#L438">How to build</a></li>
+  <li><a href="#L1046">More info on the make files</a></li>
+  <li><a href="#L666">More info on the build process</a></li>
+  <li><a href="#L440">If make failed</a></li>
+  <li><a href="#L689">If amaya binary doesn't work</a></li>
 </ol>
 
 <h3><a name="L437">Prerequisite:</a></h3>
 <ul>
-<li>
-We strongly recommend to use a GNU make and if possible GNU CC since these are
-the tools used by the Amaya Team, and very few testings have been done with
-other flavours of make and C compilers.
-</li>
-<li>
-Having usual Unix development tools, at least <code>sed</code>,
-<code>awk</code> and <code>cpp</code> should be available.
-</li>
-<li>
-Amaya requires X-Windows (X11R5 or X11R6) and Motif (1.2.x or 2.0). Amaya
-should now work fine with latest versions (0.8.0 and later) of <a
-href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone).
-</li>
+  <li>We strongly recommend to use a GNU make and if possible GNU CC since
+    these are the tools used by the Amaya Team, and very few testings have
+    been done with other flavours of make and C compilers.</li>
+  <li>Having usual Unix development tools, at least <code>sed</code>,
+    <code>awk</code> and <code>cpp</code> should be available.</li>
+  <li>Amaya requires X-Windows (X11R5 or X11R6) and Motif (1.2.x or 2.0).
+    Amaya should now work fine with latest versions (0.8.0 and later) of <a
+    href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone).</li>
 </ul>
 
 <h3><a name="L438">How to build in 4 steps:</a></h3>
-<p>
-Here is a simple recipe explaining how to build using autoconf:</p>
-<ol>
-<li>
-Install your source code tree:
-<pre>gunzip -c /tmp/amaya-src-xxx.tar.gz | tar xvf -</pre>
-<p>
-this will create a Amaya subtree of approximately 13
-MBytes.<strong></strong></p>
-</li>
-<li>
-<span style="color : #FF0000">Create a subtree (obj)</span>  for object and
-launch configure to create the Makefile(s):
-<pre>cd Amaya
-mkdir obj 
-cd obj 
-../configure</pre>
-<p>
-Configure accepts 4 specific parameters allowing to select packages to be
-compiled:</p>
-<pre>      
-      --with-amaya            Build the Amaya HTML browser/editor
-      --enable-java           Add Kaffe Java virtual machine
-      --enable-plugin         Add Netscape Plug-Ins support</pre>
-<p>
-<strong>Java</strong> (network accesses are done using
-<strong>libWWW</strong>) and <strong>Plugins</strong> are not available by
-default.  To compile <strong>Amaya</strong> with Plugins, use the
-following:</p>
-<pre> ../configure --enable-plugin
- </pre>
-<p>
-To compile <strong>Amaya</strong> with Java support, you need to retrieve the
-Amaya-java source distribution. Then, you need to type the following:</p>
-<pre> ../configure --enable-java
- </pre>
 
-This creates all the Makefiles needed and generate an Options.orig file
-containing all the variable which can be tuned. For example one can just
-change the CFLAGS values. Be careful, autoconf usually set up the debug flag
-"-g" which tends to generate very big library and binaries.
-<p>
-With -g the obj  tree can grow up to 100 MBytes while without it it won't use
-more than 20 MBytes.</p>
-<p>
-It also gives some hints on how the source tree is configured.</p>
-<p>
-</p>
-</li>
-<li>
-Build everything:
-<pre>make all</pre>
-<p>
-It is strongly recommended to use GNU make, which may not be the default make
-on your system. In this case try:</p>
-<pre>gmake all</pre>
-<p>
-or</p>
-<pre>gnumake all</pre>
-<p>
-The compilation process can take a fair amount of time, 10 minutes at
-least.</p>
-<p>
-You can test the result immediately by launching Amaya binary built in the bin
-directory:</p>
-<pre>bin/amaya</pre>
-</li>
-<li>
-If amaya binary seems fine you can install it:
-<pre>make install</pre>
-<p>
-By default, links to binaries are installed in /usr/local/bin, binaries and
-data are in /usr/local/thot. This can be overrided by specifying different
-values for prefix(es) using configure command line options in step 2.</p>
-<p>
-Ultimately, if you're not satisfied with your current Amaya installation, you
-can clean up with:</p>
-<pre>make uninstall</pre>
-</li>
+<p>Here is a simple recipe explaining how to build using autoconf:</p>
+<ol>
+  <li>Install your source code tree:
+    <pre>gunzip -c /tmp/amaya-src-xxx.tgz | tar xvf -</pre>
+    <p>this will create a Amaya subtree of approximately 13 MBytes.</p>
+    <p></p>
+  </li>
+  <li><span style="color : #FF0000">Create a subtree (obj)</span>  for object
+    and launch configure to create the Makefile(s):
+    <p>Configure accepts 4 specific parameters allowing to select packages to
+    be compiled:</p>
+    <pre>      --with-amaya            Build the Amaya HTML browser/editor
+      --enable-plugin         Add Netscape Plug-Ins support</pre>
+    <p><strong>Plugins</strong> are not available by default.  To compile
+    <strong>Amaya</strong> with Plugins, use the following:</p>
+    <pre> ../configure --enable-plugin
+ </pre>
+    This creates all the Makefiles needed and generate an Options.orig file
+    containing all the variable which can be tuned. For example one can just
+    change the CFLAGS values. Be careful, autoconf usually set up the debug
+    flag "-g" which tends to generate very big library and binaries.
+    <p>With -g the obj  tree can grow up to 100 MBytes while without it it
+    won't use more than 20 MBytes.</p>
+    <p>It also gives some hints on how the source tree is configured.</p>
+    <p></p>
+    <p><span style="color: #FF0000; font-weight: bold">GTK version:</span>
+    there is no specific option for building a GTK version because that
+    version is too embryonic. Nevertheless people who want to contribute can
+    generate it by processing this way:</p>
+    <ol>
+      <li>Lauching <code>../configure</code> </li>
+      <li></li>
+    </ol>
+    <p></p>
+  </li>
+  <li>Build everything:
+    <pre>make all</pre>
+    <p>It is strongly recommended to use GNU make, which may not be the
+    default make on your system. In this case try:</p>
+    <pre>gmake all</pre>
+    <p>or</p>
+    <pre>gnumake all</pre>
+    <p>The compilation process can take a fair amount of time, 10 minutes at
+    least.</p>
+    <p>You can test the result immediately by launching Amaya binary built in
+    the bin directory:</p>
+    <pre>bin/amaya</pre>
+  </li>
+  <li>If amaya binary seems fine you can install it:
+    <pre>make install</pre>
+    <p>By default, links to binaries are installed in /usr/local/bin, binaries
+    and data are in /usr/local/thot. This can be overrided by specifying
+    different values for prefix(es) using configure command line options in
+    step 2.</p>
+    <p>Ultimately, if you're not satisfied with your current Amaya
+    installation, you can clean up with:</p>
+    <pre>make uninstall</pre>
+  </li>
 </ol>
 
 <h3><a name="L1046">More info on the make files</a></h3>
-<p>
-All the Makefile(s) build in the object tree are generated by configure script
-and Makefile.in templates found in the source tree. It generates a main
+
+<p>All the Makefile(s) build in the object tree are generated by configure
+script and Makefile.in templates found in the source tree. It generates a main
 Makefile at the top of the object tree and a set of Makefiles in most of the
 directory of the object tree. The main Makefile accepts the following
 targets:</p>
 <ul>
-<li>
-make <strong>rebuild</strong> : rebuild all the Makefile(s) from the autoconf
-and Makefile.in files.
-</li>
-<li>
-make <strong>depend</strong> : rebuild all the dependencies in the object
-tree.
-</li>
-<li>
-make <strong>proto</strong> : rebuild all the prototype include files xxx_f.h
-from their xxx.c counterpart.
-</li>
-<li>
-make <strong>clean</strong> : removes all object files, but keep the binaries
-in <code>Amaya/</code><strong>obj </strong><code>/bin</code> .
-</li>
-<li>
-make <strong>libwww</strong> : rebuild the libwww.a library from Amaya/libww
-tree.
-</li>
-<li>
-make <strong>libjpeg</strong> : rebuild the libjpeg.a library from
-Amaya/libjpeg tree.
-</li>
-<li>
-make <strong>libpng</strong> : rebuild the libpng.a and libz.a libraries from
-Amaya/libpng tree.
-</li>
-<li>
-make without argument rebuild everything.
-</li>
-<li>
-make <strong>amaya</strong> rebuild <strong>Print</strong> and
-<strong>Amaya</strong> binaries.
-</li>
+  <li>make <strong>rebuild</strong> : rebuild all the Makefile(s) from the
+    autoconf and Makefile.in files.</li>
+  <li>make <strong>depend</strong> : rebuild all the dependencies in the
+    object tree.</li>
+  <li>make <strong>proto</strong> : rebuild all the prototype include files
+    xxx_f.h from their xxx.c counterpart.</li>
+  <li>make <strong>clean</strong> : removes all object files, but keep the
+    binaries in <code>Amaya/</code><strong>obj </strong><code>/bin</code>
+  .</li>
+  <li>make <strong>libwww</strong> : rebuild the libwww.a library from
+    Amaya/libww tree.</li>
+  <li>make <strong>libjpeg</strong> : rebuild the libjpeg.a library from
+    Amaya/libjpeg tree.</li>
+  <li>make <strong>libpng</strong> : rebuild the libpng.a and libz.a libraries
+    from Amaya/libpng tree.</li>
+  <li>make without argument rebuild everything.</li>
+  <li>make <strong>amaya</strong> rebuild <strong>Print</strong> and
+    <strong>Amaya</strong> binaries.</li>
 </ul>
-<p>
-One can also go to a specific sub-directory in the object tree and launch make
-from that place. It will rebuild all the objects pertaining to this
+
+<p>One can also go to a specific sub-directory in the object tree and launch
+make from that place. It will rebuild all the objects pertaining to this
 directory.</p>
-<p>
-Next section try to give some hint on debugging errors at compile-time.</p>
+
+<p>Next section try to give some hint on debugging errors at compile-time.</p>
 
 <h3><a name="L440">If make failed:</a></h3>
-<p>
-Errors may append at different stages in the compilation process. Here is a
+
+<p>Errors may append at different stages in the compilation process. Here is a
 small checklist:</p>
 <ul>
-<li>
-from the start: typing make in the <code>Amaya/</code><strong>obj </strong>
-directory doesn't work. This means that the step 1 or 2 of the <a
-href="#L666">previous section</a> failed.
-<ol>
-<li>
-do you use GNU make? The Makefile organization heavily relies on including
-sub-Makefiles and some old versions of Make don't support it.
-</li>
-<li>
-do you have write access on the <code>Amaya/</code><strong>obj </strong>
-directory ?
-</li>
-<li>
-do you have all mandatory sources ?
-</li>
-</ol>
-</li>
-<li>
-an error when compiling a C file occurred. This should not be the case on any
-of the supported platform:
-<ol>
-<li>
-check that you have some room left for the object.
-</li>
-<li>
-verify the include path for the X-Windows and Motif include files in
-<code>Amaya/</code><strong>obj </strong><code>/Options.</code>
-</li>
-<li>
-verify that the target directory for the object exist and is writable. The
-object name is shown in the make output behind the <strong>-o</strong> flag.
-</li>
-<li>
-check that you are using an ANSI compliant compiler, while the code should
-compile with non-ANSI ones, we don't test this feature on a regular basis.
-</li>
-<li>
-If the error occurs when compiling a C file in the amaya directory, check that
-all the compilers invocations in steps 7 to 11 did not produce any error (the
-Thot compilers are verbose so errors messages may not be easily detected).
-</li>
-<li>
-otherwise your best bet is to report the problem to the <strong>Amaya</strong>
-development Team, by sending the error to the <code>www-amaya@w3.org</code>
-mailing-list. Please check first the <a
-href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the error may
-have been already reported.
-</li>
-</ol>
-</li>
-<li>
-an error running a compiler schema occurred:
-<ol>
-<li>
-be sure that the compilers were properly build in step 5, check with
-<strong>ldd</strong> that there is no missing shared library, e.g:
-<p>
-<code>ldd bin/app</code></p>
-</li>
-<li>
-be sure that <strong>cpp</strong> preprocessor is in the PATH. One can use the
-following shell script in conjunction with gcc, name it cpp, put it in the
-PATH with 755 Unix rights:
-<pre>#!/bin/sh
+  <li>from the start: typing make in the <code>Amaya/</code><strong>obj
+    </strong> directory doesn't work. This means that the step 1 or 2 of the
+    <a href="#L666">previous section</a> failed.
+    <ol>
+      <li>do you use GNU make? The Makefile organization heavily relies on
+        including sub-Makefiles and some old versions of Make don't support
+        it.</li>
+      <li>do you have write access on the <code>Amaya/</code><strong>obj
+        </strong> directory ?</li>
+      <li>do you have all mandatory sources ?</li>
+    </ol>
+  </li>
+  <li>an error when compiling a C file occurred. This should not be the case
+    on any of the supported platform:
+    <ol>
+      <li>check that you have some room left for the object.</li>
+      <li>verify the include path for the X-Windows and Motif include files in
+        <code>Amaya/</code><strong>obj </strong><code>/Options.</code></li>
+      <li>verify that the target directory for the object exist and is
+        writable. The object name is shown in the make output behind the
+        <strong>-o</strong> flag.</li>
+      <li>check that you are using an ANSI compliant compiler, while the code
+        should compile with non-ANSI ones, we don't test this feature on a
+        regular basis.</li>
+      <li>If the error occurs when compiling a C file in the amaya directory,
+        check that all the compilers invocations in steps 7 to 11 did not
+        produce any error (the Thot compilers are verbose so errors messages
+        may not be easily detected).</li>
+      <li>otherwise your best bet is to report the problem to the
+        <strong>Amaya</strong> development Team, by sending the error to the
+        <code>www-amaya@w3.org</code> mailing-list. Please check first the <a
+        href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the
+        error may have been already reported.</li>
+    </ol>
+  </li>
+  <li>an error running a compiler schema occurred:
+    <ol>
+      <li>be sure that the compilers were properly build in step 5, check with
+        <strong>ldd</strong> that there is no missing shared library, e.g:
+        <p><code>ldd bin/app</code></p>
+      </li>
+      <li>be sure that <strong>cpp</strong> preprocessor is in the PATH. One
+        can use the following shell script in conjunction with gcc, name it
+        cpp, put it in the PATH with 755 Unix rights:
+        <pre>#!/bin/sh
         exec `gcc --print-prog-name=cpp` $@</pre>
-</li>
-<li>
-check that you have write right access on Amaya/amaya directory.
-</li>
-<li>
-One can force the compiler to rebuild the amaya and HTML schemas by typing:
-<p>
-<code>touch ../amaya/*.S</code></p>
-<p>
-<code>touch ../amaya/*.A</code></p>
-<p>
-<code>make amaya</code></p>
-</li>
-</ol>
-</li>
-<li>
-an error occurred at link time:
-<ol>
-<li>
-Check that the current directory contains all the precompiled libraries,
-namely <code>libjpeg.a</code>, <code>libpng.a</code> and <code>libz.a</code>
-for the <strong>obj </strong>. If these files are lacking, fetch the
-appropriate
-<code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code> <a
-href="SourceDist.html">distribution</a> file and install it.
-</li>
-<li>
-Check that the precompiled libraries are not corrupted e.g.:
-<p>
-<code>file libwww.a</code></p>
-<p>
-<code>nm libwww.a</code></p>
-<p>
-should not print any errors</p>
-</li>
-<li>
-In case of a corrupted library, one can re-extract it from the distribution
-file or rebuild it by giving one of the appropriate commands:
-<p>
-make libjpeg</p>
-<p>
-make libpng</p>
-<p>
-make libwww</p>
-<p>
-In case of problem building the WWW library, please check it's <a
-href="/INSTALL.html">installation instructions</a>. Compiling the graphic
-libraries should be quite straightforward.</p>
-</li>
-<li>
-verify the library path (<strong>-L</strong> flags in
-<strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries files in
-<code>Amaya/</code><strong>obj </strong><code>/Makefile</code>.
-</li>
-<li>
-Check whether <strong>-lSM</strong> and <strong>-lICE</strong>  X11R6
-libraries are needed. These were not needed (available) when working on an
-X11R5 environment.
-</li>
-<li>
-If amaya linking complains about <strong>XLookupString</strong>, check in
-<code>Amaya/amaya/EDITOR.A</code> that the section USES does not refer to
-<strong>Lookup</strong>. If needed, remove it, and restart
-<p>
-<code>make amaya</code></p>
-<p>
-This is related to the input of ISO-Latin-1 sequences in Motif dialog
-boxes.</p>
-</li>
-<li>
-Otherwise your best bet is to report the problem to the <strong>Amaya</strong>
-development Team, by sending the error to the <code>www-amaya@w3.org</code>
-mailing-list. Please check first the <a
-href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the error may
-have been already reported
-</li>
-</ol>
-</li>
+      </li>
+      <li>check that you have write right access on Amaya/amaya
+      directory.</li>
+      <li>One can force the compiler to rebuild the amaya and HTML schemas by
+        typing:
+        <p><code>touch ../amaya/*.S</code></p>
+        <p><code>touch ../amaya/*.A</code></p>
+        <p><code>make amaya</code></p>
+      </li>
+    </ol>
+  </li>
+  <li>an error occurred at link time:
+    <ol>
+      <li>Check that the current directory contains all the precompiled
+        libraries, namely <code>libjpeg.a</code>, <code>libpng.a</code> and
+        <code>libz.a</code> for the <strong>obj </strong>. If these files are
+        lacking, fetch the appropriate
+        <code>thot-libs-</code><strong>target</strong><code>-xxx.tar.gz</code>
+        <a href="SourceDist.html">distribution</a> file and install it.</li>
+      <li>Check that the precompiled libraries are not corrupted e.g.:
+        <p><code>file libwww.a</code></p>
+        <p><code>nm libwww.a</code></p>
+        <p>should not print any errors</p>
+      </li>
+      <li>In case of a corrupted library, one can re-extract it from the
+        distribution file or rebuild it by giving one of the appropriate
+        commands:
+        <p>make libjpeg</p>
+        <p>make libpng</p>
+        <p>make libwww</p>
+        <p>In case of problem building the WWW library, please check it's <a
+        href="/INSTALL.html">installation instructions</a>. Compiling the
+        graphic libraries should be quite straightforward.</p>
+      </li>
+      <li>verify the library path (<strong>-L</strong> flags in
+        <strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries
+        files in <code>Amaya/</code><strong>obj
+        </strong><code>/Makefile</code>.</li>
+      <li>Check whether <strong>-lSM</strong> and <strong>-lICE</strong> 
+        X11R6 libraries are needed. These were not needed (available) when
+        working on an X11R5 environment.</li>
+      <li>If amaya linking complains about <strong>XLookupString</strong>,
+        check in <code>Amaya/amaya/EDITOR.A</code> that the section USES does
+        not refer to <strong>Lookup</strong>. If needed, remove it, and
+        restart
+        <p><code>make amaya</code></p>
+        <p>This is related to the input of ISO-Latin-1 sequences in Motif
+        dialog boxes.</p>
+      </li>
+      <li>Otherwise your best bet is to report the problem to the
+        <strong>Amaya</strong> development Team, by sending the error to the
+        <code>www-amaya@w3.org</code> mailing-list. Please check first the <a
+        href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the
+        error may have been already reported</li>
+    </ol>
+  </li>
 </ul>
 
 <h3><a name="L689">If amaya binary doesn't work:</a></h3>
-<p>
-Here is a few rules to check if the amaya binary just produced does not
+
+<p>Here is a few rules to check if the amaya binary just produced does not
 start:</p>
 <ol>
-<li>
-Check that the shared libraries needed by amaya are found on the system. The
-command
-<p>
-<code>ldd bin/amaya           on Suns or Linux</code></p>
-<p>
-<code>chatr bin/amaya         on HP's</code></p>
-<p>
-should print all the shared libraries needed by amaya and the path to the
-corresponding libraries in the system.</p>
-</li>
-<li>
-Check that the amaya compiled <strong>schemas</strong> are present, namely
-<code>Amaya/amaya/HTML.STR</code>, <code>Amaya/amaya/HTMLP.PRS</code>...
-</li>
-<li>
-Verify that the main <a href="Registry.html">registry</a> file
-<code>Amaya/config/thot.ini</code> is present.
-</li>
+  <li>Check that the shared libraries needed by amaya are found on the system.
+    The command
+    <p><code>ldd bin/amaya           on Suns or Linux</code></p>
+    <p><code>chatr bin/amaya         on HP's</code></p>
+    <p>should print all the shared libraries needed by amaya and the path to
+    the corresponding libraries in the system.</p>
+  </li>
+  <li>Check that the amaya compiled <strong>schemas</strong> are present,
+    namely <code>Amaya/amaya/HTML.STR</code>,
+    <code>Amaya/amaya/HTMLP.PRS</code>...</li>
+  <li>Verify that the main <a href="Registry.html">registry</a> file
+    <code>Amaya/config/thot.ini</code> is present.</li>
 </ol>
-<p>
-If everything seems Ok, one can debug the problem by using a system call
+
+<p>If everything seems Ok, one can debug the problem by using a system call
 tracer like <strong>truss</strong> on Solaris or <strong>strace</strong> on
 Linux. Check for syscalls errors near the end of the system trace dump.</p>
-<p>
-All the remaining technics to find out what's wrong are software debugging
+
+<p>All the remaining technics to find out what's wrong are software debugging
 methods, for this of course one need to recompile the binary with debug option
 enabled, and use a debugger program to see what's happening exactly. Once a
 bug has been identified, please report it to the <strong>Amaya</strong>
 development Team, by sending the error to the <code>www-amaya@w3.org</code>
 mailing-list. Please check first the <a
-href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the error may
-have been already reported. Of course, sending a contextual diff of the
+href="http://lists.w3.org/Archives/Public/www-amaya/">archive</a>, the error
+may have been already reported. Of course, sending a contextual diff of the
 modified files may help correcting the problem, and have it patched on next
 release.</p>
-<p>
-</p>
+
+<p></p>
 <hr>
 
 <address>
-<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-<br>
-$Date$</address>
+  <a href="mailto:irene.vatton@w3.org">Irène Vatton</a><br>
+  <br>
+  $Date$
+</address>
 </body>
 </html>
