@@ -92,7 +92,7 @@ NotifyElement      *event;
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
-   Attribute           HrefAttr, attr;
+   Attribute           HrefAttr, PseudoAttr, attr;
    Element             anchor, elFound;
    ElementType         elType;
    int                 length;
@@ -217,13 +217,13 @@ NotifyElement      *event;
 		  /* attach an attribute PseudoClass = active */
 		  attrType.AttrSSchema = elType.ElSSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-		  attr = TtaGetAttribute (anchor, attrType);
-		  if (attr == NULL)
+		  PseudoAttr = TtaGetAttribute (anchor, attrType);
+		  if (PseudoAttr == NULL)
 		    {
-		       attr = TtaNewAttribute (attrType);
-		       TtaAttachAttribute (anchor, attr, event->document);
+		       PseudoAttr = TtaNewAttribute (attrType);
+		       TtaAttachAttribute (anchor, PseudoAttr, event->document);
 		    }
-		  TtaSetAttributeText (attr, "active", anchor, event->document);
+		  TtaSetAttributeText (PseudoAttr, "active", anchor, event->document);
 	       }
 	     /* get the URL itself */
 	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -281,6 +281,8 @@ NotifyElement      *event;
 	       }
 
 	     TtaSetSelectionMode (TRUE);
+	     if (PseudoAttr != NULL)
+	       TtaSetAttributeText (PseudoAttr, "visited", anchor, event->document);
 	     if (url[iName] == '#' && targetDocument != 0)
 	       {
 		  /* attribute HREF contains the NAME of a target anchor */
@@ -293,25 +295,8 @@ NotifyElement      *event;
 			     TtaShowElement (targetDocument, view, elFound, 10);
 		    }
 	       }
-
-	     if (targetDocument > 0)
-	       {
-		  elType = TtaGetElementType (anchor);
-		  if (elType.ElTypeNum == HTML_EL_Anchor)
-		    {
-		       /* attach an attribute PseudoClass = visited */
-		       attrType.AttrSSchema = elType.ElSSchema;
-		       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-		       attr = TtaGetAttribute (anchor, attrType);
-		       if (attr == NULL)
-			 {
-			    attr = TtaNewAttribute (attrType);
-			    TtaAttachAttribute (anchor, attr, event->document);
-			 }
-		       TtaSetAttributeText (attr, "visited", anchor, event->document);
-		    }
-		  TtaRaiseView (targetDocument, 1);
-	       }
+	     else if (targetDocument > 0)
+		 TtaRaiseView (targetDocument, 1);
 	     TtaFreeMemory (url);
 	     return TRUE;
 	  }

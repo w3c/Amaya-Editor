@@ -1363,13 +1363,12 @@ DoubleClickEvent    DC_event;
 	       }
 #ifdef AMAYA_JAVA
              FilesLoading[newdoc]--;
-	     newdoc = res;
 #else
 	     ResetStop( (res == (Document) None) ? newdoc : res);
 #endif /* AMAYA_JAVA */
 	  }
      }
-   return (newdoc);
+   return (res);
 }
 
 
