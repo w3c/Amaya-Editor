@@ -554,7 +554,7 @@ int      blue;
    bitmapDest = CreateCompatibleBitmap (hMemDC, w, h);
    pBitmapDest = SelectObject (hDestDC, bitmapDest);
    /* hDEstDC = */
-   BitBlt (hDestDC, 0, 0, w, h, TtDisplay, xFrame, y, SRCCOPY);
+   BitBlt (hDestDC, 0, 0, w, h, TtDisplay, xFrame, yFrame, SRCCOPY);
    BitBlt (hDestDC, 0, 0, w, h, hAndDC, 0, 0, SRCAND);
    BitBlt (hDestDC, 0, 0, w, h, hOrDC, 0, 0, SRCINVERT);
    BitBlt (TtDisplay, xFrame, yFrame, w, h, hDestDC, 0, 0, SRCCOPY);
