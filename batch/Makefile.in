@@ -79,7 +79,6 @@ grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
 STR_OBJ = \
         ../thotlib/base/compilmsg.o \
 	parser.o \
-	writestr.o \
 	str.o
 
 str : STRUCT.GRM ../thotlib/libThotKernel.a ../bin ../bin/str
@@ -95,7 +94,6 @@ str : STRUCT.GRM ../thotlib/libThotKernel.a ../bin ../bin/str
 PRS_OBJ = \
 	../thotlib/base/compilmsg.o \
 	parser.o \
-	writeprs.o \
 	prs.o
 
 prs : PRESEN.GRM ../thotlib/libThotKernel.a ../bin ../bin/prs
