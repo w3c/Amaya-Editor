@@ -10,31 +10,31 @@ extern void ConfigFree ( void );
 extern void TtaFreeAllCatalogs ( void );
 extern void TteFreeAllEventsList ( void );
 extern int GetObjectWWW ( int docid,
-                          STRING urlName,
-                          STRING formdata,
-                          STRING outputfile,
+                          char *urlName,
+                          char *formdata,
+                          char *outputfile,
                           int mode,
                           void *incremental_cbf,
                           void* context_icbf,
                           void *terminate_cbf,
                           void* context_tcbf,
                           ThotBool error_html,
-                          STRING content_type );
-extern ThotBool IsW3Path ( const CHAR_T* path );
-extern void NormalizeURL ( CHAR_T* orgName,
+                          char *content_type );
+extern ThotBool IsW3Path ( const char* path );
+extern void NormalizeURL ( char* orgName,
                            Document doc,
-                           CHAR_T* newName,
-                           CHAR_T* docName,
-                           CHAR_T* otherPath );
-extern ThotBool LoadRemoteStyleSheet ( STRING url,
+                           char* newName,
+                           char* docName,
+                           char* otherPath );
+extern ThotBool LoadRemoteStyleSheet ( char *url,
                                        Document doc,
                                        Element el,
                                        void *css,
-                                       STRING completeURL,
-                                       STRING localfile );
+                                       char *completeURL,
+                                       char *localfile );
 extern void FetchImage ( Document doc,
                          Element el,
-                         STRING URL,
+                         char *URL,
                          int flags,
                          Proc callback,
                          void *extra );
@@ -44,10 +44,10 @@ extern void TtaHandlePendingEvents ( void );
 extern void ConfigInit ( void );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
-                                         CHAR_T* nomNature,
-                                         CHAR_T* presNature );
-extern ThotBool ConfigDefaultPSchema ( CHAR_T* schema,
-                                       CHAR_T* schpres );
+                                         char* nomNature,
+                                         char* presNature );
+extern ThotBool ConfigDefaultPSchema ( char* schema,
+                                       char* schpres );
 extern void FreeTranslations ( void );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
@@ -61,18 +61,18 @@ extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
                                      ThotBool pre );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           CONST STRING text,
-                           CONST STRING name );
+                           CONST char *text,
+                           CONST char *name );
 extern void FreeMenus ( void );
 extern void SwitchPaste ( PtrDocument pDoc,
                           ThotBool on );
 extern void UpdateScrollbars ( int frame );
 extern void ChangeFrameTitle ( int frame,
-                               STRING texte );
+                               char *texte );
 extern void SetCursorWatch ( int thotWindowid );
 extern void ResetCursorWatch ( int thotWindowid );
 extern void InsertOption ( PtrElement pEl,
-                           PtrElement * p,
+                           PtrElement *p,
                            PtrDocument pDoc );
 extern void ShowSelection ( PtrAbstractBox PavRac,
                             ThotBool Visible );
@@ -133,31 +133,31 @@ extern void ConfigFree (/* void */);
 extern void TtaFreeAllCatalogs (/* void */);
 extern void TteFreeAllEventsList (/* void */);
 extern int GetObjectWWW (/* int docid,
-                            STRING urlName,
-                            STRING formdata,
-                            STRING outputfile,
+                            char *urlName,
+                            char *formdata,
+                            char *outputfile,
                             int mode,
                             void *incremental_cbf,
                             void* context_icbf,
                             void *terminate_cbf,
                             void* context_tcbf,
                             ThotBool error_html,
-                            STRING content_type */);
-extern ThotBool IsW3Path (/* const CHAR_T* path */);
-extern void NormalizeURL (/* CHAR_T* orgName,
+                            char *content_type */);
+extern ThotBool IsW3Path (/* const char* path */);
+extern void NormalizeURL (/* char* orgName,
                              Document doc,
-                             CHAR_T* newName,
-                             CHAR_T* docName,
-                             CHAR_T* otherPath */);
-extern ThotBool LoadRemoteStyleSheet (/* STRING url,
+                             char* newName,
+                             char* docName,
+                             char* otherPath */);
+extern ThotBool LoadRemoteStyleSheet (/* char *url,
                                          Document doc,
                                          Element el,
                                          void *css,
-                                         STRING completeURL,
-                                         STRING localfile */);
+                                         char *completeURL,
+                                         char *localfile */);
 extern void FetchImage (/* Document doc,
                            Element el,
-                           STRING URL,
+                           char *URL,
                            int flags,
                            Proc callback,
                            void *extra */);
@@ -167,10 +167,10 @@ extern void TtaHandlePendingEvents (/* void */);
 extern void ConfigInit (/* void */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
-                                           CHAR_T* nomNature,
-                                           CHAR_T* presNature */);
-extern ThotBool ConfigDefaultPSchema (/* CHAR_T* schema,
-                                         CHAR_T* schpres */);
+                                           char* nomNature,
+                                           char* presNature */);
+extern ThotBool ConfigDefaultPSchema (/* char* schema,
+                                         char* schpres */);
 extern void FreeTranslations (/* void */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);
@@ -184,18 +184,18 @@ extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
                                        ThotBool pre */);
 extern void TtaSetStatus (/* Document document,
                              View view,
-                             CONST STRING text,
-                             CONST STRING name */);
+                             CONST char *text,
+                             CONST char *name */);
 extern void FreeMenus (/* void */);
 extern void SwitchPaste (/* PtrDocument pDoc,
                             ThotBool on */);
 extern void UpdateScrollbars (/* int frame */);
 extern void ChangeFrameTitle (/* int frame,
-                                 STRING texte */);
+                                 char *texte */);
 extern void SetCursorWatch (/* int thotWindowid */);
 extern void ResetCursorWatch (/* int thotWindowid */);
 extern void InsertOption (/* PtrElement pEl,
-                             PtrElement * p,
+                             PtrElement *p,
                              PtrDocument pDoc */);
 extern void ShowSelection (/* PtrAbstractBox PavRac,
                               ThotBool Visible */);

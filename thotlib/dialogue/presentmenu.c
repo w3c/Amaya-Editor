@@ -9,7 +9,7 @@
  * presentmenu.c : Functions to modify the specific presentation
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -30,6 +30,10 @@
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
+#ifdef _WINDOWS 
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 
 #include "actions_f.h"
 #include "applicationapi_f.h"
@@ -53,10 +57,6 @@
 #include "undo_f.h"
 #include "units_f.h"
 #include "unstructchange_f.h"
-
-#ifdef _WINDOWS 
-#include "wininclude.h"
-#endif /* _WINDOWS */
 
 static PtrDocument  DocModPresent;
 static ThotBool            ChngStandardColor;	/* standard presentation colors  */
@@ -169,14 +169,14 @@ static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
   ModifyGraphics applique a l'element pEl les modifications sur	
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
-static void         ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
-				    int viewToApply, ThotBool modifLineStyle,
-				    char LineStyle, ThotBool modifLineWeight,
-				    int LineWeight, TypeUnit LineWeightUnit,
-				    ThotBool modifFillPattern, int FillPattern,
-				    ThotBool modifColorBackground,
-				    int ColorBackground,
-				    ThotBool modifLineColor, int LineColor)
+static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
+			    int viewToApply, ThotBool modifLineStyle,
+			    char LineStyle, ThotBool modifLineWeight,
+			    int LineWeight, TypeUnit LineWeightUnit,
+			    ThotBool modifFillPattern, int FillPattern,
+			    ThotBool modifColorBackground,
+			    int ColorBackground,
+			    ThotBool modifLineColor, int LineColor)
 {
   TypeUnit            unit;
   PtrPRule            pPRule, pFunctRule;
@@ -731,7 +731,11 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
    	ModifyLining applique a l'element pEl les modifications		
    		sur la mise en ligne demandes par l'utilisateur.	
   ----------------------------------------------------------------------*/
-static void         ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifAdjust, int Adjust, ThotBool modifIndent, int ValIndent, ThotBool modifLineSpacing, int LineSpacing, ThotBool modifHyphen, ThotBool Hyphenate)
+static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
+			  int viewToApply, ThotBool modifAdjust,
+			  int Adjust, ThotBool modifIndent, int ValIndent,
+			  ThotBool modifLineSpacing, int LineSpacing,
+			  ThotBool modifHyphen, ThotBool Hyphenate)
 {
    ThotBool            isNew;
    PtrPRule            pPRule;
@@ -1360,7 +1364,7 @@ static void         ApplyPresentMod (int applyDomain)
    handles the return of the Standard Geometry entry of the Present
    menu.
   ----------------------------------------------------------------------*/
-void                TtcStandardGeometry (Document document, View view)
+void TtcStandardGeometry (Document document, View view)
 {
   PtrElement          pEl, pFirstSel, pLastSel;
   PtrDocument         pSelDoc;
@@ -1421,11 +1425,11 @@ void                TtcStandardGeometry (Document document, View view)
    handles the return of the Standard Presentation entry of the Present
    menu.
   ----------------------------------------------------------------------*/
-void                TtcStandardPresentation (Document document, View view)
+void TtcStandardPresentation (Document document, View view)
 {
 #ifndef _WINDOWS
    int                 i;
-   CHAR_T              string[200];
+   char              string[200];
 #endif
    PtrDocument         pDoc;
 
@@ -1440,15 +1444,15 @@ void                TtcStandardPresentation (Document document, View view)
 
    /* choix multiple presentation standard */
    i = 0;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
-   i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
+   sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
+   i += strlen (&string[i]) + 1;
+   sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
+   i += strlen (&string[i]) + 1;
+   sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
+   i += strlen (&string[i]) + 1;
+   sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
+   i += strlen (&string[i]) + 1;
+   sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
 
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
@@ -1466,7 +1470,7 @@ void                TtcStandardPresentation (Document document, View view)
    CallbackStdPresMenu
    callback handler for the Standard Presentation popup menu.
   ----------------------------------------------------------------------*/
-void                CallbackStdPresMenu (int ref, int val)
+void CallbackStdPresMenu (int ref, int val)
 {
   switch (ref)
     {
@@ -1536,7 +1540,7 @@ void                CallbackStdPresMenu (int ref, int val)
    CallbackPresMenu
    callback handler for the Presentation forms.
   ----------------------------------------------------------------------*/
-void                CallbackPresMenu (int ref, int val, STRING txt)
+void CallbackPresMenu (int ref, int val, char *txt)
 {
   char                c;
   int                 i;
@@ -1880,7 +1884,7 @@ void                CallbackPresMenu (int ref, int val, STRING txt)
    associated to view number "view" (if Assoc = True).
    Initializes and activates the corresponding form.
   ----------------------------------------------------------------------*/
-void                TtcChangeCharacters (Document document, View view)
+void TtcChangeCharacters (Document document, View view)
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
@@ -1890,8 +1894,8 @@ void                TtcChangeCharacters (Document document, View view)
 #ifndef _WINDOWS 
    int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
-   STRING              s;
-   CHAR_T                string[MAX_TXT_LEN];
+   char               *s;
+   char                string[MAX_TXT_LEN];
 #else  /* _WINDOWS */
    int                 fontNum;
    static CHOOSEFONT   cf ; 
@@ -1948,11 +1952,11 @@ void                TtcChangeCharacters (Document document, View view)
 	     /* sous-menu Famille de caracteres */
 	     i = 0;
 	     sprintf (&string[i], "%s", "BTimes");
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s", "BHelvetica");
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s", "BCourier");
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFamily, NumFormPresChar, 0,
 	     TtaGetMessage (LIB, TMSG_FONT_FAMILY), 4, string, NULL, TRUE);
@@ -1960,11 +1964,11 @@ void                TtcChangeCharacters (Document document, View view)
 	     /* sous-menu style de caracteres */
 	     i = 0;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_ROMAN));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_ITALIC));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_OBLIQUE));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFontStyle, NumFormPresChar, 0,
 		   TtaGetMessage (LIB, TMSG_STYLE), 4, string, NULL, TRUE);
@@ -1972,13 +1976,13 @@ void                TtcChangeCharacters (Document document, View view)
 	     /* sous-menu type de Souligne */
 	     i = 0;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_NORMAL));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNDERLINE));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_OVERLINE));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_CROSS_OUT));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuUnderlineType, NumFormPresChar, 0,
 		    TtaGetMessage (LIB, TMSG_LINE), 5, string, NULL, TRUE);
@@ -1986,9 +1990,9 @@ void                TtcChangeCharacters (Document document, View view)
 	     /* sous-menu graisse des caracteres */
 	     i = 0;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_NOT_BOLD));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BOLD));
-	     i += ustrlen (&string[i]) + 1;
+	     i += strlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuCharFontWeight, NumFormPresChar, 0,
 		   TtaGetMessage (LIB, TMSG_BOLDNESS), 3, string, NULL, TRUE);
@@ -2005,7 +2009,7 @@ void                TtcChangeCharacters (Document document, View view)
 		  bodyPointSize = FontPointSize (bodyRelatSize);
 		  /* ajoute ce nouveau corps dans le buffer du menu */
 		  sprintf (&string[i], "%s%d %s", "B", bodyPointSize, s);
-		  i += ustrlen (&string[i]) + 1;
+		  i += strlen (&string[i]) + 1;
 		  nbItems++;
 	       }
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
@@ -2103,7 +2107,7 @@ void                TtcChangeGraphics (Document document, View view)
    PtrDocument         pDoc;
    PtrElement          pFirstSel, pLastSel;
    PtrAbstractBox      pAb;
-   CHAR_T                string[MAX_TXT_LEN];
+   char                string[MAX_TXT_LEN];
    int                 currentFontSize;
    int                 i, nbItems;
    int                 firstChar, lastChar;
@@ -2144,13 +2148,13 @@ void                TtcChangeGraphics (Document document, View view)
 
 	     /* sous-menu style des traits */
 	     i = 0;
-	     usprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
-	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
-	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
-	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     sprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
+	     i += strlen (&string[i]) + 1;
+	     sprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
+	     i += strlen (&string[i]) + 1;
+	     sprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
+	     i += strlen (&string[i]) + 1;
+	     sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0, TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
 #ifndef _WINDOWS
@@ -2186,7 +2190,7 @@ void                TtcChangeGraphics (Document document, View view)
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
-	     usprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     sprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 #ifndef _WINDOWS
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
@@ -2226,7 +2230,7 @@ void                TtcChangeGraphics (Document document, View view)
 	     /* Toggle button Motif de remplissage standard */
 #ifndef _WINDOWS
 	     i = 0;
-	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 #endif /* !_WINDOWS */
@@ -2259,7 +2263,7 @@ void                TtcChangeFormat (Document document, View view)
    int                 lineSpacingNum;
    int                 indentNum;
 #else  /* _WINDOWS */
-   CHAR_T                string[MAX_TXT_LEN];
+   char                string[MAX_TXT_LEN];
 #endif /* !_WINDOWS */
    ThotBool            selectionOK;
 
@@ -2294,13 +2298,13 @@ void                TtcChangeFormat (Document document, View view)
          /* sous-menu Alignement */
          i = 0;
          sprintf (&string[i], "%s", "Bmiidn");	/* Left */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "Bmeiin");	/* Right */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "Bmfogn");	/* Center */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "Bmiiin");	/* Justify */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));	/* Inchange */
          TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
          TtaGetMessage (LIB, TMSG_ALIGN), 5, string, NULL, TRUE);
@@ -2345,9 +2349,9 @@ void                TtcChangeFormat (Document document, View view)
          /* sous-menu sens de renfoncement */
          i = 0;
          sprintf (&string[i], "%s", "Bm_`an");
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "Bmb`an");
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
          TtaNewSubmenu (NumMenuRecessSense, NumFormPresFormat, 0,
                         TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, TRUE);
@@ -2372,11 +2376,11 @@ void                TtcChangeFormat (Document document, View view)
          /* sous-menu Interligne (Grandeur) */
          i = 0;
          sprintf (&string[i], "%s", "BmTTTn");	/* 'Normal%' */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "BmWWWn");	/* 'Double%' */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s", "BmZZZn");	/* 'Triple%' */
-         i += ustrlen (&string[i]) + 1;
+         i += strlen (&string[i]) + 1;
          sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
          TtaNewSubmenu (NumMenuLineSpacing, NumFormPresFormat, 0,
                         TtaGetMessage (LIB, TMSG_LINE_SPACING), 4, string, NULL, TRUE);

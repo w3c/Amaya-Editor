@@ -6,38 +6,32 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool AskForNew_RemplRefer ( ThotBool * generate,
-                                       Name typeName );
-extern void CallbackAskForNew ( int Val );
-extern void BuildChoiceMenu ( STRING bufMenu,
+extern void BuildChoiceMenu ( char *bufMenu,
                               Name menuTitle,
                               int nbEntries,
                               ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                     int *nbEntries,
                                     int *menuInd,
-                                    STRING bufMenu );
+                                    char *bufMenu );
 extern void BuildPasteMenu ( int RefMenu,
-                             STRING bufMenu,
+                             char *bufMenu,
                              Name title,
                              int nbEntries,
                              char button );
 
 #else /* __STDC__ */
 
-extern ThotBool AskForNew_RemplRefer (/* ThotBool * generate,
-                                         Name typeName */);
-extern void CallbackAskForNew (/* int Val */);
-extern void BuildChoiceMenu (/* STRING bufMenu,
+extern void BuildChoiceMenu (/* char *bufMenu,
                                 Name menuTitle,
                                 int nbEntries,
                                 ThotBool natureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevMenuInd,
                                       int *nbEntries,
                                       int *menuInd,
-                                      STRING bufMenu */);
+                                      char *bufMenu */);
 extern void BuildPasteMenu (/* int RefMenu,
-                               STRING bufMenu,
+                               char *bufMenu,
                                Name title,
                                int nbEntries,
                                char button */);

@@ -195,9 +195,6 @@ void CreationExceptions (PtrElement pEl, PtrDocument pDoc)
 	 (*ThotLocalActions[T_insertpage]) (pEl, pDoc, 0, &bool);
    if (ThotLocalActions[T_createtable] != NULL)
       (*ThotLocalActions[T_createtable]) (pEl, pDoc);
-   /* creation dans un tableau */
-   if (ThotLocalActions[T_indexnew] != NULL)
-      (*ThotLocalActions[T_indexnew]) (pEl, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -3942,10 +3939,10 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 		     pEl = pEl->ElParent;
 		  else
 		    {
-		       if (typeNum == 0)
-			  AddItemWithinSiblimg (pSibling, TRUE, &menuInd, &nItems,
-						&prevMenuInd, &separatorBefore, &separatorAfter, menuBuf, pDoc);
-		       pEl = NULL;
+		      if (typeNum == 0)
+			AddItemWithinSiblimg (pSibling, TRUE, &menuInd, &nItems,
+					      &prevMenuInd, &separatorBefore, &separatorAfter, menuBuf, pDoc);
+		      pEl = NULL;
 		    }
 	       }
 	  }
@@ -3953,20 +3950,15 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 
 	if (nItems > 0)
 	  {
-	     createPasteMenuOK = FALSE;
-	     if (create)
-		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
-	     else if (paste)
-	       {
-		  strncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
-		  if (FirstSavedElement != NULL)
-		     if (ThotLocalActions[T_indexverif] != NULL)
-			(*ThotLocalActions[T_indexverif]) (&FirstSavedElement->PeElement, pDoc);
-	       }
-	     else
-		strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
-
-	     BuildPasteMenu (menuRef, menuBuf, menuTitle, nItems, button);
+	    createPasteMenuOK = FALSE;
+	    if (create)
+	      strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INSERT), MAX_NAME_LENGTH);
+	    else if (paste)
+	      strncpy (menuTitle, TtaGetMessage (LIB, TMSG_PASTE), MAX_NAME_LENGTH);
+	    else
+	      strncpy (menuTitle, TtaGetMessage (LIB, TMSG_INCLUDE), MAX_NAME_LENGTH);
+	    
+	    BuildPasteMenu (menuRef, menuBuf, menuTitle, nItems, button);
 	  }
      }
    *ret = createPasteMenuOK;

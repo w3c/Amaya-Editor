@@ -907,7 +907,7 @@ static int          TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
    If the whole sequence correspond to a valid MultiKey sequence, the
    event corresponding to a KeyPress for the result character is generated
   ----------------------------------------------------------------------*/
-static int          TtaHandleMultiKeyEvent ( ThotKeyEvent *event)
+static int TtaHandleMultiKeyEvent ( ThotKeyEvent *event)
 {
    KeySym              KS, first, last;
    char                buf[2];
@@ -1154,7 +1154,7 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 
    retrieve one X-Windows Event from the queue, this is a blocking call.
   ----------------------------------------------------------------------*/
-void                TtaFetchOneEvent (ThotEvent *ev)
+void TtaFetchOneEvent (ThotEvent *ev)
 {
 #ifndef _WINDOWS
   XtAppNextEvent (app_cont, ev);
@@ -1176,7 +1176,7 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
    retrieve one X-Windows Event from the queue if one is immediately
    available.
   ----------------------------------------------------------------------*/
-void                TtaFetchOrWaitEvent (ThotEvent *ev)
+void TtaFetchOrWaitEvent (ThotEvent *ev)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1201,7 +1201,7 @@ void                TtaFetchOrWaitEvent (ThotEvent *ev)
    retrieve one X-Windows Event from the queue if one is immediately
    available.
   ----------------------------------------------------------------------*/
-ThotBool            TtaFetchOneAvailableEvent (ThotEvent *ev)
+ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1226,7 +1226,7 @@ ThotBool            TtaFetchOneAvailableEvent (ThotEvent *ev)
 
    Processes one given event in the application.
   ----------------------------------------------------------------------*/
-void                TtaHandleOneEvent (ThotEvent *ev)
+void TtaHandleOneEvent (ThotEvent *ev)
 {
 #ifdef _WINDOWS
   if (ev->message != WM_QUIT)
@@ -1328,7 +1328,7 @@ void                TtaHandleOneEvent (ThotEvent *ev)
   TtaHandlePendingEvents
   Processes all pending events in an application.
   ----------------------------------------------------------------------*/
-void                TtaHandlePendingEvents ()
+void TtaHandlePendingEvents ()
 {
 #ifndef _WINDOWS
    ThotEvent              ev;
@@ -1382,7 +1382,7 @@ void TtaMainLoop ()
    TtaGetMenuColor
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
-Pixel               TtaGetMenuColor ()
+Pixel TtaGetMenuColor ()
 {
    UserErrorCode = 0;
    return (Pixel) BgMenu_Color;
@@ -1392,7 +1392,7 @@ Pixel               TtaGetMenuColor ()
 /*----------------------------------------------------------------------
    DisplayEmptyBoxLoadResources: displays the empty boxes.            
   ----------------------------------------------------------------------*/
-void                DisplayEmptyBoxLoadResources ()
+void DisplayEmptyBoxLoadResources ()
 {
    if (ThotLocalActions[T_emptybox] == NULL)
       TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
@@ -1405,7 +1405,7 @@ void                DisplayEmptyBoxLoadResources ()
    TtaGetCurrentDisplay
    Returns the current display descriptor.
   ----------------------------------------------------------------------*/
-Display            *TtaGetCurrentDisplay ()
+Display *TtaGetCurrentDisplay ()
 {
    UserErrorCode = 0;
    return TtDisplay;
@@ -1417,7 +1417,7 @@ Display            *TtaGetCurrentDisplay ()
    TtaGetScreenDepth
    Returns the current screen depth.
   ----------------------------------------------------------------------*/
-int                 TtaGetScreenDepth ()
+int TtaGetScreenDepth ()
 {
    UserErrorCode = 0;
    return TtWDepth;
@@ -1427,7 +1427,7 @@ int                 TtaGetScreenDepth ()
    TtaClickElement
    Returns document and element clicked.
   ----------------------------------------------------------------------*/
-void        TtaClickElement (Document * document, Element * element)
+void TtaClickElement (Document * document, Element * element)
 {
    int                 frame;
    PtrAbstractBox      absBox;

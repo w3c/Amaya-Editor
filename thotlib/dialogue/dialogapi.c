@@ -25,7 +25,6 @@
 #include "appdialogue.h"
 #include "appli_f.h"
 #include "message.h"
-#include "ustring_f.h"
 #ifdef _WINDOWS
 #include "winsys.h"
 #include "wininclude.h"
@@ -64,15 +63,15 @@
 struct E_List
   {
      struct     E_List* E_Next;         /* CsList d'entrees suivante         */
-     CHAR_T     E_Free[C_NUMBER];       /* Disponibilite des entrees         */
-     CHAR_T     E_Type[C_NUMBER];       /* CsList des types des entrees      */
+     char     E_Free[C_NUMBER];       /* Disponibilite des entrees         */
+     char     E_Type[C_NUMBER];       /* CsList des types des entrees      */
      ThotWidget E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
   };
 
 struct Cat_Context
   {
     int                 Cat_Ref;	/* CsReference appli du catalogue    */
-    UCHAR_T       Cat_Type;	        /* Type du catalogue                 */
+    unsigned char       Cat_Type;	        /* Type du catalogue                 */
     unsigned char Cat_Button;	        /* Le bouton qui active              */
     union
     {
@@ -115,7 +114,7 @@ struct Cat_List
 
 #ifdef _GTK
 extern int          appArgc;
-extern CHAR_T**     appArgv;
+extern char**     appArgv;
 #endif /*_GTK */
 
 ThotBool            WithMessages = TRUE;
@@ -137,7 +136,7 @@ static ThotWidget          MainShell, PopShell;
 
 #ifdef _WINDOWS
 static HFONT          formFONT;
-STRING iconID;
+char                 *iconID;
 static  OPENFILENAME  OpenFileName;
 static  int           cyValue = 10;
 static HWND           currentParent;
@@ -199,18 +198,18 @@ static int      bIndex = 0;
 static int      bAbsBase = 60;
 static WIN_Form formulary;
 static BYTE     fVirt;
-static CHAR_T     key;
+static char     key;
 
 UINT subMenuID [MAX_FRAME];
 static ThotWindow WIN_curWin = NULL;
-extern int main (int, CHAR_T**);
+extern int main (int, char**);
 static struct Cat_Context *CatEntry (int ref);
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-void WinErrorBox (HWND hWnd, STRING source)
+void WinErrorBox (HWND hWnd, char *source)
 {
 #ifndef _AMAYA_RELEASE_
    int                msg;
@@ -223,9 +222,9 @@ void WinErrorBox (HWND hWnd, STRING source)
        if (win_errtab[msg].errNo == WinLastError)
 	  break;
    if (msg >= NB_WIN_ERROR)
-      usprintf (str, "Error %d : not registered\n", WinLastError);
+      sprintf (str, "Error %d : not registered\n", WinLastError);
    else
-     usprintf (str, "(source: %s Error %d : %s\n)", source, WinLastError,
+     sprintf (str, "(source: %s Error %d : %s\n)", source, WinLastError,
 	       win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, "Amaya", MB_OK);
@@ -464,14 +463,14 @@ void CleanFrameCatList (int frame, int ref)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
+int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
 { 
     int            argc;
-    static CHAR_T* argv[20];
-    static CHAR_T  argv0[MAX_TXT_LEN];
-    static CHAR_T  commandLine [MAX_TXT_LEN];
-    CHAR_T*        ptr;
-    CHAR_T         lookFor = 0;
+    static char* argv[20];
+    static char  argv0[MAX_TXT_LEN];
+    static char  commandLine [MAX_TXT_LEN];
+    char*        ptr;
+    char         lookFor = 0;
 
     enum {
          nowAt_start, 
@@ -500,7 +499,7 @@ int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
 	   ptr++;
 	   continue;
         }
-        if (*ptr == WC_SPACE || *ptr == WC_TAB) {
+        if (*ptr == SPACE || *ptr == TAB) {
            *ptr = 0;
 	   ptr++;
 	   nowAt = nowAt_start;
@@ -526,7 +525,7 @@ int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
 BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
 { 
    int        argc;
-   CHAR_T**   argv;
+   char**   argv;
 
    currentFrame = -1;
    hInstance = hInst;
@@ -540,7 +539,7 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
 /*----------------------------------------------------------------------
   WIN_ListOpenDirectory
   ----------------------------------------------------------------------*/
-void WIN_ListOpenDirectory (HWND parent, STRING fileName)
+void WIN_ListOpenDirectory (HWND parent, char *fileName)
 {
   char *szFilter;
   char szFileName[256];
@@ -563,13 +562,13 @@ void WIN_ListOpenDirectory (HWND parent, STRING fileName)
   OpenFileName.lCustData = 0; 
   OpenFileName.Flags = OFN_SHOWHELP | OFN_HIDEREADONLY; 
   if (GetOpenFileName (&OpenFileName))
-    ustrcpy (fileName, OpenFileName.lpstrFile);
+    strcpy (fileName, OpenFileName.lpstrFile);
 }
 
 /*----------------------------------------------------------------------
   WIN_ListSaveDirectory
   ----------------------------------------------------------------------*/
-void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
+void    WIN_ListSaveDirectory (int parentRef, char *title, char *fileName)
 {
   struct Cat_Context *parentCatalogue;
   char               *szFilter;
@@ -591,7 +590,7 @@ void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
   OpenFileName.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
 
   if (GetSaveFileName (&OpenFileName))
-    ustrcpy (fileName, OpenFileName.lpstrFile);
+    strcpy (fileName, OpenFileName.lpstrFile);
 }
 #endif /* _WINDOWS */
 
@@ -613,7 +612,7 @@ int GetFrameNumber (ThotWindow win)
 /*----------------------------------------------------------------------
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
-static void CallbackError (int ref, int typedata, STRING data)
+static void CallbackError (int ref, int typedata, char *data)
 
 {
    printf ("Toolkit error : No callback procedure ...\n");
@@ -1060,7 +1059,7 @@ static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_
 static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   int                 val, val1;
-  CHAR_T              text[11];
+  char              text[11];
   ThotWidget          wtext;
 
   /* Indication de valeur */
@@ -1070,7 +1069,7 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 	catalogue->Cat_Data = 0;
 	wtext = catalogue->Cat_Entries->E_ThotWidget[1];
 	
-	ustrncpy (text, XmTextGetString (wtext), 10);
+	strncpy (text, XmTextGetString (wtext), 10);
 	text[10] = EOS;
 	if (text[0] != EOS)
 	  {
@@ -1091,13 +1090,13 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 	    /* Est-ce qu'il faut changer le contenu du widget ? */
 	    if (val != val1)
 	      {
-		usprintf (text, "%d", val1);
+		sprintf (text, "%d", val1);
 		/* Desactive la procedure de Callback */
 		if (catalogue->Cat_React)
 		  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 		
 		XmTextSetString (wtext, text);
-		val = ustrlen (text);
+		val = strlen (text);
 		XmTextSetSelection (wtext, val, val, 500);
 		
 		/* Reactive la procedure de Callback */
@@ -1123,8 +1122,8 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
   int                 i;
   int                 ent;
   int                 entry;
-  CHAR_T              text[100];
-  STRING              ptr;
+  char                text[100];
+  char               *ptr;
   Arg                 args[MAX_ARGS];
   XmStringTable       strings;
   struct E_List      *adbloc;
@@ -1187,7 +1186,7 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
 		      else if (catalogue->Cat_Type == CAT_INT)
 			{
 			  CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
-			  ustrncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
+			  strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
 			  
 			  text[10] = EOS;
 			  if (text[0] != EOS)
@@ -1269,8 +1268,8 @@ static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_
   ----------------------------------------------------------------------*/
 static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
 {
-   STRING              text = NULL;
-   ThotBool            ok;
+   char              *text = NULL;
+   ThotBool           ok;
 
    if (catalogue->Cat_Widget != 0)
       if (catalogue->Cat_Type == CAT_SELECT)
@@ -1292,8 +1291,8 @@ static void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbac
 static void CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
 #ifndef _GTK
-   ThotWidget          wtext;
-   STRING              text = NULL;
+   ThotWidget         wtext;
+   char              *text = NULL;
 
    if (catalogue->Cat_Widget != 0)
      {
@@ -1322,7 +1321,7 @@ static void CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
    XmString            text;
-   STRING              str = NULL;
+   char               *str = NULL;
 
    if (catalogue->Cat_Widget != 0)
      {
@@ -1521,7 +1520,7 @@ void TtaInitDialogueTranslations (ThotTranslations translations)
 /*----------------------------------------------------------------------
    TtaChangeDialogueFonts change les polices de caracteres du dialogue.
   ----------------------------------------------------------------------*/
-void TtaChangeDialogueFonts (STRING menufont, STRING formfont)
+void TtaChangeDialogueFonts (char *menufont, char *formfont)
 {
 #ifdef _WINDOWS
    /* see code/chap04/ezfont.c */
@@ -1563,8 +1562,8 @@ int TtaGetReferencesBase (int number)
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
    principale d'une application.                           
   ----------------------------------------------------------------------*/
-void TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo,
-			    Pixmap icon, int number, STRING textmenu)
+void TtaInitDialogueWindow (char* name, char *geometry, Pixmap logo,
+			    Pixmap icon, int number, char *textmenu)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1580,7 +1579,7 @@ void TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo,
 #endif /* !_WINDOWS */
 
    int                 n;
-   CHAR_T*             value;
+   char*             value;
 
 #ifndef _WINDOWS
    Pixmap              lthot;
@@ -1661,7 +1660,7 @@ void TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo,
 		  w = XmCreateCascadeButton (menu_bar, &textmenu[index], args, n);
 		  XtManageChild (w);
 		  FrameTable[0].WdMenus[k] = w;
-		  index += ustrlen (&textmenu[index]) + 1;
+		  index += strlen (&textmenu[index]) + 1;
 	       }
 	  }
 	else
@@ -1805,7 +1804,7 @@ static void ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
-void DisplayConfirmMessage (STRING text)
+void DisplayConfirmMessage (char *text)
 {
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -1928,22 +1927,22 @@ void DisplayConfirmMessage (STRING text)
    - INFO : bellow the previous message.                   
    - OVERHEAD : instead of the previous message.           
   ----------------------------------------------------------------------*/
-void DisplayMessage (STRING text, int msgType)
+void DisplayMessage (char *text, int msgType)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
    int                 lg;
    int                 n;
-   CHAR_T                buff[500 + 1];
-   STRING              pointer;
+   char                buff[500 + 1];
+   char               *pointer;
 
    /* Is the initialisation done ? */
-   lg = ustrlen (text);
+   lg = strlen (text);
    if (MainShell != 0 && WithMessages && lg > 0)
      {
 	/* take current messages */
-	ustrncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
-	n = ustrlen (buff);
+	strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
+	n = strlen (buff);
 
 	if (msgType == INFO)
 	  {
@@ -1955,20 +1954,20 @@ void DisplayMessage (STRING text, int msgType)
 		  while (n + lg + 1 >= 450)
 		    {
 		       /* search next New Line */
-		       pointer = ustrchr (buff, '\n');
+		       pointer = strchr (buff, '\n');
 		       if (pointer == NULL)
 			  n = 0;
 		       else
 			 {
-			    ustrcpy (buff, &pointer[1]);
-			    n = ustrlen (buff);
+			    strcpy (buff, &pointer[1]);
+			    n = strlen (buff);
 			 }
 		    }
 
 		  /* add message */
 		  if (n > 0)
-		     ustrcpy (&buff[n++], "\n");
-		  ustrncpy (&buff[n], text, 500 - n);
+		     strcpy (&buff[n++], "\n");
+		  strncpy (&buff[n], text, 500 - n);
 		  lg += n;
 
 		  /* copy text */
@@ -1977,8 +1976,8 @@ void DisplayMessage (STRING text, int msgType)
 	     else
 	       {
 		  /* enough space, just add new message at the end */
-		  ustrcpy (buff, "\n");
-		  ustrcat (buff, text);
+		  strcpy (buff, "\n");
+		  strcat (buff, text);
 		  XmTextInsert (FrameTable[0].WdStatus, n, buff);
 		  lg += n;
 	       }
@@ -1991,7 +1990,7 @@ void DisplayMessage (STRING text, int msgType)
 	     while (buff[n] != EOL && n >= 0)
 		n--;
 	     /* replace last message by the new one */
-	     XmTextReplace (FrameTable[0].WdStatus, n + 1, ustrlen (buff), text);
+	     XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
 	  }
 	XFlush (GDp);
      }
@@ -2161,10 +2160,11 @@ return 0; /*rajouté pour tester gtk */
    Chaque intitule' commence par un caracte`re qui donne le type de   
    l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
    S'il n'est pas nul, le parame`tre ] donne les acce'le'rateurs  
-   des entre'es du menu.                                              
-   Retourne un code d'erreur.                                         
+   des entre'es du menu.    
+   Retourne un code d'erreur.
   ----------------------------------------------------------------------*/
-void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv)
+void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
+		     char *text, char* equiv)
 {
    register int        count;
    register int        index;
@@ -2177,10 +2177,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
    struct E_List      *adbloc;
    ThotMenu            menu;
    ThotWidget          w;
-   CHAR_T              heading[200];
+   char              heading[200];
 #ifdef _WINDOWS
-   CHAR_T              menu_item [1024];
-   CHAR_T              equiv_item [255];
+   char              menu_item [1024];
+   char              equiv_item [255];
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
@@ -2371,7 +2371,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 	if (text != NULL)
 	   while (i < number)
 	     {
-		count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+		count = strlen (&text[index]);	/* Longueur de l'intitule */
 		/* S'il n'y a plus d'intitule -> on arrete */
 		if (count == 0)
 		  {
@@ -2447,11 +2447,11 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 #ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0)
 			  {
-                 usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                 sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
                  equiv_item [0] = 0;
               }
 			  else
-                 usprintf (menu_item, "%s", &text[index + 1]);
+                 sprintf (menu_item, "%s", &text[index + 1]);
 
               /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
               AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
@@ -2488,7 +2488,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
                  subMenuID [currentFrame] = (UINT) w;
                  if (equiv_item && equiv_item [0] != 0)
 				 {
-                   usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
+                   sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
                    /* InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item); */
                    AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
                    equiv_item [0] = 0;
@@ -2513,8 +2513,8 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 		     else if (text[index] == 'F')
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			     ustrcpy (heading, &text[index + 1]);
-			     ustrcat (heading, "...");
+			     strcpy (heading, &text[index + 1]);
+			     strcat (heading, "...");
 #ifdef _WINDOWS
 			     w = (HMENU) CreateMenu ();
                  /* InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
@@ -2601,9 +2601,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-void                WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
+void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #else  /* !_WINDOWS */
-void                TtaSetPulldownOff (int ref, ThotWidget parent)
+void TtaSetPulldownOff (int ref, ThotWidget parent)
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
@@ -2643,9 +2643,9 @@ void                TtaSetPulldownOff (int ref, ThotWidget parent)
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
+void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 #else  /* !_WINDOWS */
-void                TtaSetPulldownOn (int ref, ThotWidget parent)
+void TtaSetPulldownOn (int ref, ThotWidget parent)
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
@@ -2697,8 +2697,8 @@ void                TtaSetPulldownOn (int ref, ThotWidget parent)
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
-				  STRING text, STRING equiv, char button)
+void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
+		  char *text, char *equiv, char button)
 {
 #ifndef _GTK
    register int        count;
@@ -2709,7 +2709,7 @@ void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
    ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   CHAR_T              heading[200];
+   char              heading[200];
 
 #ifdef _WINDOWS
    HMENU               menu;
@@ -2904,7 +2904,7 @@ void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
 	if (text != NULL)
 	   while (i < number)
 	     {
-		count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+		count = strlen (&text[index]);	/* Longueur de l'intitule */
 		/* S'il n'y a plus d'intitule -> on arrete */
 		if (count == 0)
 		  {
@@ -2931,10 +2931,10 @@ void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
 		     if (equiv != NULL)
 		       {
 #ifdef _WINDOWS
-                          eindex += ustrlen (&equiv[eindex]) + 1;
+                          eindex += strlen (&equiv[eindex]) + 1;
 #else  /* !_WINDOWS */
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			  eindex += ustrlen (&equiv[eindex]) + 1;
+			  eindex += strlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* !_WINDOWS */
 		       }
@@ -2985,8 +2985,8 @@ void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
 		     else if (text[index] == 'F')
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  ustrcpy (heading, &text[index + 1]);
-			  ustrcat (heading, "...");
+			  strcpy (heading, &text[index + 1]);
+			  strcat (heading, "...");
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, (UINT) (ref + i), (LPCTSTR) (&heading));
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
@@ -3044,7 +3044,9 @@ void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number,
    + entry -> l'index dans le bloc des entre'es concerne'.            
    + adbloc -> le bloc des entre'es concerne'.                        
   ----------------------------------------------------------------------*/
-static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
+static ThotWidget AddInFormulary (struct Cat_Context *catalogue,
+				  int *index, int *entry,
+				  struct E_List **adbloc)
 {
 #ifndef _GTK
    ThotWidget          row;
@@ -3143,7 +3145,7 @@ return (NULL);
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   TtaNewIconMenu cre'e un sous-menu :                                        
+   TtaNewIconMenu cre'e un sous-menu :
    The parameter ref donne la re'fe'rence pour l'application.         
    The parameter ref_parent identifie le formulaire pe`re.            
    Le parametre entry de'signe l'entre'e correspondante dans le menu  
@@ -3153,7 +3155,8 @@ return (NULL);
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
-void TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal)
+void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
+		     int number, Pixmap * icons, ThotBool horizontal)
 {
 #ifndef _GTK
    int                 i;
@@ -3331,8 +3334,8 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int numbe
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
-		    int number, STRING text, char* equiv, ThotBool react)
+void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
+		    int number, char *text, char* equiv, ThotBool react)
 {
   ThotWidget          w;
   ThotWidget          row;
@@ -3352,13 +3355,13 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
   XmString            title_string;
 #endif /* _GTK */
   ThotWidget          menu;
-  CHAR_T              heading[200];
+  char              heading[200];
   int                 n;
 #else /* !_WINDOWS */
   HMENU               menu;
-  STRING              title_string;
-  CHAR_T              equiv_item [255];
-  CHAR_T              menu_item [1024];
+  char               *title_string;
+  char              equiv_item [255];
+  char              menu_item [1024];
 
   equiv_item[0] = 0;
   button = 'L';
@@ -3540,7 +3543,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 	  ent = 2;
 	  while (i < number)
 	    {
-	      count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+	      count = strlen (&text[index]);	/* Longueur de l'intitule */
 	      /* S'il n'y a plus d'intitule -> on arrete */
 	      if (count == 0)
 		i = number;
@@ -3773,7 +3776,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 	  ent = 2;
 	  while (i < number)
 	    {
-	      count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+	      count = strlen (&text[index]);	/* Longueur de l'intitule */
 	      /* S'il n'y a plus d'intitule -> on arrete */
 	      if (count == 0)
 		{
@@ -3807,7 +3810,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 		      XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* _GTK */
 #endif /* !_WINDOWS */
-		      eindex += ustrlen (&equiv[eindex]) + 1;
+		      eindex += strlen (&equiv[eindex]) + 1;
 		    } 
 		  
 		  if (text[index] == 'B')
@@ -3816,7 +3819,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 #ifdef _WINDOWS
 		      if (equiv_item && equiv_item[0] != 0)
 			{
-			  usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+			  sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
 			  AppendMenu (w, MF_STRING, ref + i, menu_item);
 			  equiv_item [0] = 0;
 			}
@@ -3847,7 +3850,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 #ifdef _WINDOWS
 		      if (equiv_item && equiv_item[0] != 0)
 			{
-			  usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+			  sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
 			  AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
 			  equiv_item [0] = 0;
 			}
@@ -3894,14 +3897,14 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 		      /*__________________________ Appel d'un sous-formulaire __*/
 #ifndef _WINDOWS
 #ifdef _GTK
-		      ustrcpy (heading, &text[index + 1]);
-		      ustrcat (heading, "...");
+		      strcpy (heading, &text[index + 1]);
+		      strcat (heading, "...");
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show (w);
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
-		      ustrcpy (heading, &text[index + 1]);
-		      ustrcat (heading, "...");
+		      strcpy (heading, &text[index + 1]);
+		      strcat (heading, "...");
 		      w = XmCreatePushButton (menu, heading, args, n);
 		      XtManageChild (w);
 		      adbloc->E_ThotWidget[ent] = w;
@@ -4050,8 +4053,8 @@ void TtaSetMenuForm (int ref, int val)
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
-		       STRING text, STRING equiv, ThotBool react)
+void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
+		       char *text, char *equiv, ThotBool react)
 {
 #ifndef _GTK
    register int        count;
@@ -4230,7 +4233,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
 	     ent = 2;		/* decalage de 2 pour le widget titre */
 	     while (i < number)
 	       {
-		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+		  count = strlen (&text[index]);	/* Longueur de l'intitule */
 		  /* S'il n'y a plus d'intitule -> on arrete */
 		  if (count == 0)
 		    {
@@ -4260,7 +4263,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
 		       if (equiv != NULL)
 			 {
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			    eindex += ustrlen (&equiv[eindex]) + 1;
+			    eindex += strlen (&equiv[eindex]) + 1;
 			 }
 		       /* On accepte toggles, boutons et separateurs */
 		       if (text[index] == 'B' || text[index] == 'T')
@@ -4306,9 +4309,9 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
-void          WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
+void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #else  /* !_WINDOWS */
-void          TtaSetToggleMenu (int ref, int val, ThotBool on)
+void TtaSetToggleMenu (int ref, int val, ThotBool on)
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
@@ -4469,7 +4472,7 @@ void          TtaSetToggleMenu (int ref, int val, ThotBool on)
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
-void TtaChangeMenuEntry (int ref, int entry, STRING text)
+void TtaChangeMenuEntry (int ref, int entry, char *text)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -4541,8 +4544,8 @@ void TtaChangeMenuEntry (int ref, int entry, STRING text)
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-void TtaRedrawMenuEntry (int ref, int entry, STRING fontname,
-					Pixel color, int activate)
+void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
+			 Pixel color, int activate)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -4770,7 +4773,7 @@ static int          DestForm (int ref)
 
 
 /*----------------------------------------------------------------------
-   TtaUnmapDialogue desactive le dialogue s'il est actif.             
+   TtaUnmapDialogue desactive le dialogue s'il est actif.
   ----------------------------------------------------------------------*/
 void                TtaUnmapDialogue (int ref)
 {
@@ -4813,9 +4816,9 @@ void                TtaUnmapDialogue (int ref)
 
 
 /*----------------------------------------------------------------------
-   TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                
+   TtaDestroyDialogue de'truit le catalogue de'signe' par ref.
   ----------------------------------------------------------------------*/
-void                TtaDestroyDialogue (int ref)
+void TtaDestroyDialogue (int ref)
 {
 #ifndef _GTK
    register int        entry;
@@ -4951,12 +4954,12 @@ void                TtaDestroyDialogue (int ref)
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
-   TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
-   de dialogue :                                                   
-   The parameter ref donne la re'fe'rence du catalogue.               
-   Le parame'tre title donne le titre du catalogue.                   
+   TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille
+   de dialogue :
+   The parameter ref donne la re'fe'rence du catalogue.    
+   Le parame'tre title donne le titre du catalogue.  
   ----------------------------------------------------------------------*/
-void                TtaChangeFormTitle (int ref, STRING title)
+void TtaChangeFormTitle (int ref, char *title)
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -4991,20 +4994,20 @@ void                TtaChangeFormTitle (int ref, STRING title)
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
-static void NewSheet (int ref, ThotWidget parent, STRING title, int number,
-					  STRING text, ThotBool horizontal, int package,
-					  char button, int dbutton, int cattype)
+static void NewSheet (int ref, ThotWidget parent, char *title, int number,
+		      char *text, ThotBool horizontal, int package,
+		      char button, int dbutton, int cattype)
 {
 #ifndef _GTK
    int                 ent;
    int                 n;
    int                 index;
    int                 count;
-   struct Cat_Context* catalogue;
-   struct E_List*      adbloc;
+   struct Cat_Context *catalogue;
+   struct E_List      *adbloc;
    ThotWidget          form;
    ThotWidget          w;
-   STRING               ptr = NULL;
+   char               *ptr = NULL;
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
    XmString            title_string, OK_string;
@@ -5205,7 +5208,7 @@ static void NewSheet (int ref, ThotWidget parent, STRING title, int number,
 	index = 0;
 	while (ent < C_NUMBER && ent <= number && text != NULL)
 	  {
-	     count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+	     count = strlen (&text[index]);	/* Longueur de l'intitule */
 	     /* S'il n'y a plus d'intitule -> on arrete */
 	     if (count == 0)
 		ent = number;
@@ -5366,10 +5369,13 @@ LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lPara
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int package, char button, int dbutton)
+void TtaNewForm (int ref, ThotWidget parent, char *title,
+		 ThotBool horizontal, int package, char button,
+		 int dbutton)
 {
 #ifndef _GTK
-   NewSheet (ref, parent, title, 0, NULL, horizontal, package, button, dbutton, CAT_FORM);
+   NewSheet (ref, parent, title, 0, NULL, horizontal, package,
+	     button, dbutton, CAT_FORM);
 #endif /* _GTK */
 }
 
@@ -5391,10 +5397,13 @@ void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBo
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button, int dbutton)
+void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
+		  char *text, ThotBool horizontal, int package,
+		  char button, int dbutton)
 {
 #ifndef _GTK
-   NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, CAT_SHEET);
+   NewSheet (ref, parent, title, number, text, horizontal, package,
+	     button, dbutton, CAT_SHEET);
 #endif /* _GTK */
 }
 
@@ -5416,10 +5425,13 @@ void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int n
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button)
+void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
+			int number, char *text, ThotBool horizontal,
+			int package, char button)
 {
 #ifndef _GTK
-   NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, D_DONE, CAT_DIALOG);
+   NewSheet (ref, parent, title, number - 1, text, horizontal, package,
+	     button, D_DONE, CAT_DIALOG);
 #endif /* _GTK */
 }
 
@@ -5577,7 +5589,9 @@ void                TtaDetachForm (int ref)
    Quand le parame`tre react est vrai, tout changement de se'lection
    dans le se'lecteur est imme'diatement signale' a` l'application.
   ----------------------------------------------------------------------*/
-void                TtaNewSizedSelector (int ref, int ref_parent, STRING title, int number, STRING text, int width, int height, STRING label, ThotBool withText, ThotBool react)
+void TtaNewSizedSelector (int ref, int ref_parent, char *title,
+			  int number, char *text, int width, int height,
+			  char *label, ThotBool withText, ThotBool react)
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -5666,7 +5680,7 @@ void                TtaNewSizedSelector (int ref, int ref_parent, STRING title, 
 	while (i < number && text[index] != EOS)
 	  {
 	     item[i++] = XmStringCreateLtoR (&text[index], XmSTRING_DEFAULT_CHARSET);
-	     index += ustrlen (&text[index]) + 1;	/* Longueur de l'intitule */
+	     index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */
 	  }
 	number = i;
      }
@@ -5923,9 +5937,12 @@ void                TtaNewSizedSelector (int ref, int ref_parent, STRING title, 
    Quand le parame`tre react est vrai, tout changement de se'lection
    dans le se'lecteur est imme'diatement signale' a` l'application.
   ----------------------------------------------------------------------*/
-void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react)
+void TtaNewSelector (int ref, int ref_parent, char *title, int number,
+		     char *text, int height, char *label,
+		     ThotBool withText, ThotBool react)
 {
-  TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height, label, withText, react);
+  TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height,
+		       label, withText, react);
 }
 
 /*----------------------------------------------------------------------
@@ -5991,7 +6008,7 @@ void                TtaDesactiveSelector (int ref)
    se'lectionne'e.                                                    
    The parameter text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-void                TtaSetSelector (int ref, int entry, STRING text)
+void TtaSetSelector (int ref, int entry, char *text)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -6048,7 +6065,7 @@ void                TtaSetSelector (int ref, int entry, STRING text)
 
 	     XmTextSetString (wt, text);
       /*----------------------------------------------------------------------
-   lg = ustrlen(text);
+   lg = strlen(text);
    XmTextSetSelection(wt, lg, lg, 500);
   ----------------------------------------------------------------------*/
 	  }
@@ -6072,7 +6089,7 @@ void                TtaSetSelector (int ref, int entry, STRING text)
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-void                TtaNewLabel (int ref, int ref_parent, STRING text)
+void TtaNewLabel (int ref, int ref_parent, char *text)
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -6186,7 +6203,8 @@ void                TtaNewLabel (int ref, int ref_parent, STRING text)
    If the parameter react is TRUE, any change in the input box generates a
    callback to the application.
   ----------------------------------------------------------------------*/
-void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, ThotBool react)
+void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
+		     int height, ThotBool react)
 {
 #ifndef _GTK
    int                 ent;
@@ -6333,7 +6351,7 @@ void                TtaNewTextForm (int ref, int ref_parent, STRING title, int w
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
-void                TtaSetTextForm (int ref, STRING text)
+void TtaSetTextForm (int ref, char *text)
 {
 #ifndef _GTK
    int                 lg;
@@ -6357,7 +6375,7 @@ void                TtaSetTextForm (int ref, STRING text)
            XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
 
         XmTextSetString (w, text);
-        lg = ustrlen (text);
+        lg = strlen (text);
         XmTextSetSelection (w, lg, lg, 500);
 
         /* Si la feuille de saisie est reactive */
@@ -6376,7 +6394,8 @@ void                TtaSetTextForm (int ref, STRING text)
    Quand le parame`tre react est vrai, tout changement dans           
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
-void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, ThotBool react)
+void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
+		       int max, ThotBool react)
 {
 #ifndef _GTK
    int                 ent;
@@ -6389,7 +6408,7 @@ void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int
    ThotWidget          w;
    ThotWidget          row;
    XmString            title_string;
-   CHAR_T                bounds[100];
+   char                bounds[100];
 
    if (ref == 0)
      {
@@ -6495,9 +6514,9 @@ void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int
 	     if (min < max)
 	       {
 		  /* Note les bornes de l'echelle */
-		  usprintf (bounds, "(%d", min);
-		  ustrcat (&bounds[ustrlen (bounds)], "..");
-		  usprintf (&bounds[ustrlen (bounds)], "%d)", max);
+		  sprintf (bounds, "(%d", min);
+		  strcat (&bounds[strlen (bounds)], "..");
+		  sprintf (&bounds[strlen (bounds)], "%d)", max);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
 		  ent = max;
@@ -6505,9 +6524,9 @@ void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int
 	     else
 	       {
 		  /* Note les bornes de l'echelle */
-		  usprintf (bounds, "%d", max);
-		  ustrcat (&bounds[ustrlen (bounds)], "..");
-		  usprintf (&bounds[ustrlen (bounds)], "%d", min);
+		  sprintf (bounds, "%d", max);
+		  strcat (&bounds[strlen (bounds)], "..");
+		  sprintf (&bounds[strlen (bounds)], "%d", min);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
 		  ent = min;
@@ -6531,7 +6550,7 @@ void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int
 	     n++;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     usprintf (bounds, "%d", min);
+	     sprintf (bounds, "%d", min);
 	     XtSetArg (args[n], XmNvalue, bounds);
 	     n++;
 	     if (min < 0)
@@ -6568,7 +6587,7 @@ void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int
 void                TtaSetNumberForm (int ref, int val)
 {
 #ifndef _GTK
-   CHAR_T              text[10];
+   char              text[10];
    int                 lg;
    ThotWidget          wtext;
    struct Cat_Context *catalogue;
@@ -6600,9 +6619,9 @@ void                TtaSetNumberForm (int ref, int val)
 	if (catalogue->Cat_React)
 	  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
-	usprintf (text, "%d", val);
+	sprintf (text, "%d", val);
 	XmTextSetString (wtext, text);
-	lg = ustrlen (text);
+	lg = strlen (text);
 	XmTextSetSelection (wtext, lg, lg, 500);
 
 	/* Reactive la procedure de Callback */

@@ -46,10 +46,10 @@ void TteFreeAllEventsList (void)
 /*----------------------------------------------------------------------
    GetObjectWWW
   ----------------------------------------------------------------------*/
-int GetObjectWWW (int docid, STRING urlName, STRING formdata,
-		  STRING outputfile, int mode, void *incremental_cbf, 
+int GetObjectWWW (int docid, char *urlName, char *formdata,
+		  char *outputfile, int mode, void *incremental_cbf, 
 		  void* context_icbf, void *terminate_cbf, 
-		  void* context_tcbf, ThotBool error_html, STRING content_type)
+		  void* context_tcbf, ThotBool error_html, char *content_type)
 {
   return 0;
 }
@@ -58,7 +58,7 @@ int GetObjectWWW (int docid, STRING urlName, STRING formdata,
   IsW3Path                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-ThotBool             IsW3Path (const CHAR_T* path)
+ThotBool             IsW3Path (const char* path)
 {
   return FALSE;
 }
@@ -68,7 +68,7 @@ ThotBool             IsW3Path (const CHAR_T* path)
    The function returns the new complete and normalized URL 
    or file name path (newName) and the name of the document (docName).        
   ----------------------------------------------------------------------*/
-void                NormalizeURL (CHAR_T* orgName, Document doc, CHAR_T* newName, CHAR_T* docName, CHAR_T* otherPath)
+void                NormalizeURL (char* orgName, Document doc, char* newName, char* docName, char* otherPath)
 {
   TtaExtractName (orgName, newName, docName);
 }
@@ -79,10 +79,10 @@ void                NormalizeURL (CHAR_T* orgName, Document doc, CHAR_T* newName
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, void *css, STRING completeURL, STRING localfile)
+ThotBool        LoadRemoteStyleSheet (char *url, Document doc, Element el, void *css, char *completeURL, char *localfile)
 {
-  ustrcpy (completeURL, url);
-  ustrcpy (localfile, url);
+  strcpy (completeURL, url);
+  strcpy (localfile, url);
   return FALSE;
 }
 
@@ -90,7 +90,7 @@ ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, void
    FetchImage loads an IMG from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-void                FetchImage (Document doc, Element el, STRING URL, int flags, Proc callback, void *extra)
+void                FetchImage (Document doc, Element el, char *URL, int flags, Proc callback, void *extra)
 {
   if (callback && URL)
     callback (doc, el, URL, extra);
@@ -133,7 +133,7 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nomNature, CHAR_T* presNature)
+ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, char* nomNature, char* presNature)
 {
    return FALSE;
 }
@@ -141,7 +141,7 @@ ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nomNature, C
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            ConfigDefaultPSchema (CHAR_T* schema, CHAR_T* schpres)
+ThotBool            ConfigDefaultPSchema (char* schema, char* schpres)
 {
    return FALSE;
 }
@@ -202,7 +202,7 @@ ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool p
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void                TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name)
+void                TtaSetStatus (Document document, View view, CONST char *text, CONST char *name)
 {
 }
 
@@ -230,7 +230,7 @@ void                UpdateScrollbars (int frame)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                ChangeFrameTitle (int frame, STRING texte)
+void                ChangeFrameTitle (int frame, char *texte)
 {
 }
 
@@ -248,7 +248,7 @@ void                ResetCursorWatch (int thotWindowid)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                InsertOption (PtrElement pEl, PtrElement * p, PtrDocument pDoc)
+void                InsertOption (PtrElement pEl, PtrElement *p, PtrDocument pDoc)
 {
 }
 

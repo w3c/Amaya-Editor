@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void TtaUpdateEditorColors ( void );
-extern void ThotInitDisplay ( CHAR_T* name,
+extern void ThotInitDisplay ( char* name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );
@@ -16,7 +16,7 @@ extern void SelectionEvents ( void *ev );
 #else /* __STDC__ */
 
 extern void TtaUpdateEditorColors (/* void */);
-extern void ThotInitDisplay (/* CHAR_T* name,
+extern void ThotInitDisplay (/* char* name,
                                 int dx,
                                 int dy */);
 extern void InitDocContexts (/* void */);

@@ -8,7 +8,7 @@
 /*
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -44,7 +44,7 @@ static DocViewNumber ReferenceView;
    CallbackOpenView
    updates the openview form
   ----------------------------------------------------------------------*/
-void CallbackOpenView (int ref, int dataType, STRING data)
+void CallbackOpenView (int ref, int dataType, char *data)
 {
    if ((int) data >= 0)
       if (ViewToOpenDoc != NULL)
@@ -64,10 +64,10 @@ void CallbackOpenView (int ref, int dataType, STRING data)
 void TtcOpenView (Document document, View view)
 {
    int                 k, l, nbItems;
-   STRING              src;
-   STRING              dest;
-   CHAR_T                buf[MAX_TXT_LEN];
-   CHAR_T                bufMenu[MAX_TXT_LEN];
+   char               *src;
+   char               *dest;
+   char                buf[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
 
    PtrDocument         pDoc;
 
@@ -94,10 +94,10 @@ void TtcOpenView (Document document, View view)
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
 	       {
-		  ustrcpy (dest, "B");
+		  strcpy (dest, "B");
 		  dest++;
-		  l = ustrlen (src);
-		  ustrcpy (dest, src);
+		  l = strlen (src);
+		  strcpy (dest, src);
 		  dest += l + 1;
 		  src += l + 1;
 	       }

@@ -476,7 +476,7 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
   ----------------------------------------------------------------------*/
 void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial)
 {
-   CHAR_T string[2];
+   char string[2];
    int  keyboard_mask = 0;   
    int  status;
    int  len;
@@ -540,7 +540,7 @@ void     WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPA
 	 wParam += 96;
      }
    
-   string[0] = (CHAR_T) wParam;
+   string[0] = (char) wParam;
    if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
      len = 0;
    else
@@ -566,7 +566,7 @@ void CharTranslation (GdkEventKey * event, gpointer * data)
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   UCHAR_T             string[2];
+   unsigned char             string[2];
    ThotComposeStatus   ComS;
    KeySym              KS;
 
@@ -606,7 +606,7 @@ void CharTranslation (GdkEventKey * event, gpointer * data)
 void CharTranslation (ThotKeyEvent *event)
 {
    KeySym              KS;
-   UCHAR_T             string[2];
+   unsigned char             string[2];
    ThotComposeStatus   ComS;
    int                 status;
    int                 PicMask;
@@ -741,7 +741,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
       
 	  if (found)
 	    {
-	      value = (UCHAR_T) ptr->K_Value;
+	      value = (unsigned char) ptr->K_Value;
 	      command = ptr->K_Command;
 	    }
 	}
@@ -810,7 +810,7 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 			if (Automata_current == NULL)
 			  {
 			    /* one key shortcut */
-			    value = (UCHAR_T) ptr->K_Value;
+			    value = (unsigned char) ptr->K_Value;
 			    command = ptr->K_Command;
 			  }
 		      }
@@ -1223,10 +1223,10 @@ void      TtaRemoveAccessKey (Document doc, unsigned int key)
   ----------------------------------------------------------------------*/
 ThotTranslations      InitTranslations (char *appliname)
 {
-  CHAR_T*             appHome;	   /* fichier de translation */
-  CHAR_T              fullName[200];  /* ligne en construction pour motif */
-  CHAR_T              home[200]; 
-  CHAR_T              name[80]; 
+  char*             appHome;	   /* fichier de translation */
+  char              fullName[200];  /* ligne en construction pour motif */
+  char              home[200]; 
+  char              name[80]; 
   char*               text;	   
   char*               adr;
   char                transText [MAX_LENGTH];
@@ -1246,20 +1246,20 @@ ThotTranslations      InitTranslations (char *appliname)
     DocAccessKey[i] = NULL;
 
   appHome = TtaGetEnvString ("APP_HOME");
-  ustrcpy (name, appliname);
+  strcpy (name, appliname);
 #ifdef _WINDOWS
-  ustrcat (name, ".kb");
+  strcat (name, ".kb");
 #else  /* _WINDOWS */
-  ustrcat (name, ".keyboard");
+  strcat (name, ".keyboard");
 #endif /* _WINDOWS */
 
-  ustrcpy (home, appHome);
-  ustrcat (home, WC_DIR_STR);
-  ustrcat (home, name);
+  strcpy (home, appHome);
+  strcat (home, DIR_STR);
+  strcat (home, name);
   if (!SearchFile (home, 0, fullName))
     SearchFile (name, 2, fullName);
 
-  file = ufopen (fullName, "r");
+  file = fopen (fullName, "r");
   if (!file)
     /*Fichier inaccessible */
     return NULL;

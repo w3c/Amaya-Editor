@@ -411,9 +411,6 @@ ThotBool            WriteDocument (PtrDocument pDoc, int mode)
 void PivotLoadResources()
 {
   if (ThotLocalActions[T_writedocument] == NULL)
-    {
-      TteConnectAction (T_writedocument, (Proc) WriteDocument);  
-      TteConnectAction (T_setwritedirectory, (Proc) SetWriteDirectory);
-    }
+    TteConnectAction (T_writedocument, (Proc) WriteDocument);  
 }
 

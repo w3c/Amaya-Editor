@@ -9,11 +9,11 @@
 extern ThotBool Prof_BelongTable ( char* name );
 extern void Prof_InitTable ( void );
 extern void Prof_FreeTable ( void );
-extern void TtaRebuildProTable ( CHAR_T* prof_file );
+extern void TtaRebuildProTable ( char* prof_file );
 extern ThotBool TtaCanEdit ( void );
-extern void TtaGetProfileFileName ( CHAR_T* name,
+extern void TtaGetProfileFileName ( char* name,
                                     int length );
-extern void TtaGetDefProfileFileName ( CHAR_T* name,
+extern void TtaGetDefProfileFileName ( char* name,
                                        int length );
 extern int TtaGetProfilesItems ( char** listEntries,
                                  int length );
@@ -29,11 +29,11 @@ extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 extern ThotBool Prof_BelongTable (/* char* name */);
 extern void Prof_InitTable (/* void */);
 extern void Prof_FreeTable (/* void */);
-extern void TtaRebuildProTable (/* CHAR_T* prof_file */);
+extern void TtaRebuildProTable (/* char* prof_file */);
 extern ThotBool TtaCanEdit (/* void */);
-extern void TtaGetProfileFileName (/* CHAR_T* name,
+extern void TtaGetProfileFileName (/* char* name,
                                       int length */);
-extern void TtaGetDefProfileFileName (/* CHAR_T* name,
+extern void TtaGetDefProfileFileName (/* char* name,
                                          int length */);
 extern int TtaGetProfilesItems (/* char** listEntries,
                                    int length */);

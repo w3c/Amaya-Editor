@@ -32,9 +32,6 @@ extern void CreateNewElement ( int typeNum,
 extern void TtaCreateElement ( ElementType elementType,
                                Document document );
 extern void TtaSetTransformCallback ( Func callbackFunc );
-extern void SurroundMenuInput ( int item );
-extern void TtcSurround ( Document document,
-                          View view );
 extern void ChangeTypeMenuInput ( int entree );
 extern void TtcChangeType ( Document document,
                             View view );
@@ -67,9 +64,6 @@ extern void CreateNewElement (/* int typeNum,
 extern void TtaCreateElement (/* ElementType elementType,
                                  Document document */);
 extern void TtaSetTransformCallback (/* Func callbackFunc */);
-extern void SurroundMenuInput (/* int item */);
-extern void TtcSurround (/* Document document,
-                            View view */);
 extern void ChangeTypeMenuInput (/* int entree */);
 extern void TtcChangeType (/* Document document,
                               View view */);

@@ -52,8 +52,8 @@ AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
-AC_ARG_WITH(more-shared, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
-if test "$with_graphic-libs" = "no" ; then
+AC_ARG_WITH(graphic-libs, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
+if test "$withval" = "no" ; then
 dnl
     AC_MSG_CHECKING([for libjpeg version = 6b])
     AC_EGREP_CPP([x 62 *x],

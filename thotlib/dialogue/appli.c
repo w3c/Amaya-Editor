@@ -9,7 +9,7 @@
  * Handle application frames
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -27,17 +27,16 @@
 #include "view.h"
 #include "appdialogue.h"
 #include "thotcolor.h"
-
 #ifdef _WINDOWS
 #include "winsys.h"
+#include "wininclude.h"
+#else /* _WINDOWS */
+#define MAX_ARGS 20
+static Time         t1;
+static XmString  null_string;
 #endif /* _WINDOWS */
 
-#define MAX_ARGS 20
-
-#ifndef _WINDOWS
-static XmString  null_string;
-#endif
-static CHAR_T       OldMsgSelect[MAX_TXT_LEN];
+static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
 #undef THOT_EXPORT
@@ -87,7 +86,6 @@ static PtrDocument  OldDocMsgSelect;
 #define ToolTip_AddTool(hwnd, lpti) \
     (BOOL)SendMessage((hwnd), TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) lpti)
 
-extern int WIN_TtaHandleMultiKeyEvent (UINT, WPARAM, LPARAM, STRING);
 extern HWND      hwndClient;
 extern HWND      ToolBar;
 extern HWND      logoFrame;
@@ -97,13 +95,16 @@ extern HWND      currentDlg;
 extern int       ReturnOption;
 extern int       Window_Curs;
 
+static HWND      winCapture = (HWND) -1;
 static HWND      hwndHead;
-static STRING    txtZoneLabel;
-static BOOL      paletteRealized = FALSE;
-static CHAR_T    URL_txt [500];
-static CHAR_T    doc_title [500];
+static char     *txtZoneLabel;
+static char      URL_txt [500];
 static int       oldXPos;
 static int       oldYPos;
+static ThotBool  fBlocking;
+static ThotBool  moved = FALSE;
+static ThotBool  firstTime = TRUE;
+static ThotBool  paletteRealized = FALSE;
 static ThotBool  AutoScroll = FALSE;
 
 int         X_Pos;
@@ -269,8 +270,8 @@ static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 {
    int        i;
    int        iButton = lpttt->hdr.idFrom;
-   STRING     pString;
-   STRING     pDest = lpttt->lpszText;
+   char      *pString;
+   char      *pDest = lpttt->lpszText;
 
    /* Map command ID to string index */
    for (i = 1; FrameTable[frame].ButtonId[i] != -1; i++) {
@@ -280,7 +281,7 @@ static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
        }
    }
    pString = FrameTable[frame].TbStrings[iButton];
-   ustrcpy (pDest, pString);
+   strcpy (pDest, pString);
 }
 
 /*----------------------------------------------------------------------
@@ -1046,7 +1047,7 @@ void InitializeOtherThings ()
    if view == 0, changes the title of all windows of document
    otherwise change the window title of the specified view.
   ----------------------------------------------------------------------*/
-void TtaChangeWindowTitle (Document document, View view, STRING title)
+void TtaChangeWindowTitle (Document document, View view, char *title)
 {
     int          idwindow, v;
     PtrDocument  pDoc;
@@ -1100,12 +1101,12 @@ void TtaRaiseView (Document document, View view)
    DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
    la fenetre active.                                            
   ----------------------------------------------------------------------*/
-void DisplaySelMessage (STRING text, PtrDocument pDoc)
+void DisplaySelMessage (char *text, PtrDocument pDoc)
 {
    int                 doc;
    int                 view;
 
-   if (ActiveFrame != 0 && (ustrcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
+   if (ActiveFrame != 0 && (strcmp (OldMsgSelect, text) ||pDoc != OldDocMsgSelect))
      {
 	/* recupere le document concerne */
 	doc = FrameTable[ActiveFrame].FrDoc;
@@ -1116,7 +1117,7 @@ void DisplaySelMessage (STRING text, PtrDocument pDoc)
                TtaSetStatus ((Document) doc, view + 100, text, NULL);
 	  }
 	/* sel old message */
-	ustrncpy (OldMsgSelect, text, MAX_TXT_LEN);
+	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
 	OldDocMsgSelect = pDoc;
      }
 }
@@ -1124,10 +1125,11 @@ void DisplaySelMessage (STRING text, PtrDocument pDoc)
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name)
+void TtaSetStatus (Document document, View view, CONST char *text,
+		   CONST char *name)
 {
    int                 frame;
-   CHAR_T              s[MAX_LENGTH];
+   char              s[MAX_LENGTH];
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
@@ -1148,22 +1150,20 @@ void TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING
 	  if (FrameTable[frame].WdStatus != 0)
 	    {
 #ifdef _WINDOWS
-	     if (name != NULL)
-	       {
-		  /* text est un format */
-		  usprintf (s, text, name);
-	       }
+	     if (name)
+	       /* text est un format */
+	       sprintf (s, text, name);
 	     else
-		ustrncpy (s, text, MAX_LENGTH);
+	       strncpy (s, text, MAX_LENGTH);
 
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
 	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #else  /* _WINDOWS */
 #ifndef _GTK
-	     if (name != NULL)
+	     if (name)
 	       {
 		  /* text est un format */
-		  usprintf (s, text, name);
+		  sprintf (s, text, name);
 		  title_string = XmStringCreateSimple (s);
 	       }
 	     else
@@ -1188,21 +1188,24 @@ void CheckTtCmap ()
 {
   int     i;
 
-  if (TtCmap == NULL) {
-    ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
+  if (TtCmap == NULL)
+    {
+      ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED,
+		   sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
 	  
-    ptrLogPal->palVersion    = 0x300;
-    ptrLogPal->palNumEntries = MAX_COLOR;
+      ptrLogPal->palVersion    = 0x300;
+      ptrLogPal->palNumEntries = MAX_COLOR;
 	  
-    for (i = 0; i < MAX_COLOR; i++) {
-      ptrLogPal->palPalEntry[i].peRed   = (BYTE) RGB_Table[i].red;
-      ptrLogPal->palPalEntry[i].peGreen = (BYTE) RGB_Table[i].green;
-      ptrLogPal->palPalEntry[i].peBlue  = (BYTE) RGB_Table[i].blue;
-      ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+      for (i = 0; i < MAX_COLOR; i++)
+	{
+	  ptrLogPal->palPalEntry[i].peRed   = (BYTE) RGB_Table[i].red;
+	  ptrLogPal->palPalEntry[i].peGreen = (BYTE) RGB_Table[i].green;
+	  ptrLogPal->palPalEntry[i].peBlue  = (BYTE) RGB_Table[i].blue;
+	  ptrLogPal->palPalEntry[i].peFlags = PC_RESERVED;
+	}
+      TtCmap = CreatePalette (ptrLogPal);
+      LocalFree (ptrLogPal);
     }
-    TtCmap = CreatePalette (ptrLogPal);
-    LocalFree (ptrLogPal);
-  }
 }
 
 
@@ -1445,16 +1448,12 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-static BOOL  fBlocking;
-static BOOL  moved = FALSE;
-static BOOL  firstTime = TRUE;
-static HWND  winCapture = (HWND) -1;
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
 LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 {
-  CHAR_T       DroppedFileName [MAX_PATH + 1];
+  char         DroppedFileName [MAX_PATH + 1];
   POINT        ptCursor;
   int          cx;
   int          cy;
@@ -1584,7 +1583,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_DOWN)
 	{
 	  key = (int) wParam;
-	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (char *)&key))
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, TRUE);
 	  if (wParam != VK_MENU)
 	    return 0;
@@ -1594,7 +1593,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_SYSCHAR:
     case WM_CHAR:
       key = (int) wParam;
-      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (char *)&key))
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
       if (wParam != VK_MENU)
 	return 0;
@@ -1929,7 +1928,7 @@ void FrameCallback (int frame, void *evnt)
 /*----------------------------------------------------------------------
    ThotGrab fait un XGrabPointer.                                  
   ----------------------------------------------------------------------*/
-void    ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
+void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
 #ifndef _WINDOWS
    XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
@@ -1941,7 +1940,7 @@ void    ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 /*----------------------------------------------------------------------
    ThotUngrab est une fonction d'interface pour UnGrab.            
   ----------------------------------------------------------------------*/
-void                ThotUngrab ()
+void ThotUngrab ()
 {
 #ifndef _WINDOWS
    XUngrabPointer (TtDisplay, CurrentTime);
@@ -1951,7 +1950,7 @@ void                ThotUngrab ()
 /*----------------------------------------------------------------------
    TtaGetThotWindow recupere le numero de la fenetre.           
   ----------------------------------------------------------------------*/
-ThotWindow          TtaGetThotWindow (int frame)
+ThotWindow TtaGetThotWindow (int frame)
 {
    return FrRef[frame];
 }
@@ -1959,7 +1958,7 @@ ThotWindow          TtaGetThotWindow (int frame)
 /*----------------------------------------------------------------------
    SetCursorWatch affiche le curseur "montre".                  
   ----------------------------------------------------------------------*/
-void                SetCursorWatch (int thotThotWindowid)
+void SetCursorWatch (int thotThotWindowid)
 {
 #  ifndef _WINDOWS
    Drawable            drawable;
@@ -1975,7 +1974,7 @@ void                SetCursorWatch (int thotThotWindowid)
 /*----------------------------------------------------------------------
    ResetCursorWatch enleve le curseur "montre".                 
   ----------------------------------------------------------------------*/
-void                ResetCursorWatch (int thotThotWindowid)
+void ResetCursorWatch (int thotThotWindowid)
 {
 #  ifndef _WINDOWS
    Drawable            drawable;
@@ -1990,7 +1989,7 @@ void                ResetCursorWatch (int thotThotWindowid)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtaSetCursorWatch (Document document, View view)
+void TtaSetCursorWatch (Document document, View view)
 {
    int                 frame;
 #  ifndef _WINDOWS
@@ -2022,7 +2021,7 @@ void                TtaSetCursorWatch (Document document, View view)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                TtaResetCursor (Document document, View view)
+void TtaResetCursor (Document document, View view)
 {
    int                 frame;
 #  ifndef _WINDOWS 
@@ -2056,7 +2055,7 @@ void                TtaResetCursor (Document document, View view)
    GiveClickedAbsBox retourne l'identification de la fenetre et du pave 
    designe.                                                
   ----------------------------------------------------------------------*/
-void                GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
+void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 {
 #ifndef _WINDOWS
    ThotEvent           event;
@@ -2124,7 +2123,7 @@ void                GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 /*----------------------------------------------------------------------
    Modifie le titre de la fenetre d'indice frame.                     
   ----------------------------------------------------------------------*/
-void                ChangeFrameTitle (int frame, STRING text)
+void ChangeFrameTitle (int frame, char *text)
 {
 #  ifdef _WINDOWS
    if (FrMainRef [frame] != 0)
@@ -2153,7 +2152,7 @@ void                ChangeFrameTitle (int frame, STRING text)
 /*----------------------------------------------------------------------
    La frame d'indice frame devient la fenetre active.               
   ----------------------------------------------------------------------*/
-void                ChangeSelFrame (int frame)
+void ChangeSelFrame (int frame)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -2185,7 +2184,7 @@ void                ChangeSelFrame (int frame)
    GetWindowFrame retourne l'indice de la table des Cadres associe'    
    a` la fenetre w.                                        
   ----------------------------------------------------------------------*/
-int                 GetWindowFrame (ThotWindow w)
+int GetWindowFrame (ThotWindow w)
 {
    int                 f;
 
@@ -2217,7 +2216,7 @@ int GetWindowWinMainFrame (ThotWindow w)
 /*----------------------------------------------------------------------
    GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
   ----------------------------------------------------------------------*/
-void                GetSizesFrame (int frame, int *width, int *height)
+void GetSizesFrame (int frame, int *width, int *height)
 {
 #ifndef _WINDOWS
    *width = FrameTable[frame].FrWidth;
@@ -2315,7 +2314,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 /*----------------------------------------------------------------------
    RemoveClipping annule le rectangle de clipping de la fenetre frame.  
   ----------------------------------------------------------------------*/
-void                RemoveClipping (int frame)
+void RemoveClipping (int frame)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
@@ -2352,7 +2351,7 @@ void                RemoveClipping (int frame)
 /*----------------------------------------------------------------------
    UpdateScrollbars met a jour les bandes de defilement de la fenetretre    
   ----------------------------------------------------------------------*/
-void                UpdateScrollbars (int frame)
+void UpdateScrollbars (int frame)
 {
 #ifndef _GTK
    int                 Xpos, Ypos;

@@ -47,15 +47,15 @@ extern void TtcPageEnd ( Document document,
 extern void InitializeOtherThings ( void );
 extern void TtaChangeWindowTitle ( Document document,
                                    View view,
-                                   STRING title );
+                                   char *title );
 extern void TtaRaiseView ( Document document,
                            View view );
-extern void DisplaySelMessage ( STRING text,
+extern void DisplaySelMessage ( char *text,
                                 PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           CONST STRING text,
-                           CONST STRING name );
+                           CONST char *text,
+                           CONST char *name );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,
@@ -73,7 +73,7 @@ extern void TtaResetCursor ( Document document,
 extern void GiveClickedAbsBox ( int *frame,
                                 PtrAbstractBox *pave );
 extern void ChangeFrameTitle ( int frame,
-                               STRING text );
+                               char *text );
 extern void ChangeSelFrame ( int frame );
 extern int GetWindowFrame ( ThotWindow w );
 extern void GetSizesFrame ( int frame,
@@ -133,15 +133,15 @@ extern void TtcPageEnd (/* Document document,
 extern void InitializeOtherThings (/* void */);
 extern void TtaChangeWindowTitle (/* Document document,
                                      View view,
-                                     STRING title */);
+                                     char *title */);
 extern void TtaRaiseView (/* Document document,
                              View view */);
-extern void DisplaySelMessage (/* STRING text,
+extern void DisplaySelMessage (/* char *text,
                                   PtrDocument pDoc */);
 extern void TtaSetStatus (/* Document document,
                              View view,
-                             CONST STRING text,
-                             CONST STRING name */);
+                             CONST char *text,
+                             CONST char *name */);
 extern void FrameCallback (/* int frame,
                               void *evnt */);
 extern void ThotGrab (/* ThotWindow win,
@@ -159,7 +159,7 @@ extern void TtaResetCursor (/* Document document,
 extern void GiveClickedAbsBox (/* int *frame,
                                   PtrAbstractBox *pave */);
 extern void ChangeFrameTitle (/* int frame,
-                                 STRING text */);
+                                 char *text */);
 extern void ChangeSelFrame (/* int frame */);
 extern int GetWindowFrame (/* ThotWindow w */);
 extern void GetSizesFrame (/* int frame,

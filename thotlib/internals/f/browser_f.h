@@ -6,28 +6,28 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ExtractFileName ( STRING word );
-extern ThotBool TtaIsSuffixFileIn ( CHAR_T* aDirectory,
-                                    CHAR_T* suffix );
-extern void TtaListDirectory ( STRING aDirectory,
+extern void ExtractFileName ( char *word );
+extern ThotBool TtaIsSuffixFileIn ( char *aDirectory,
+                                    char *suffix );
+extern void TtaListDirectory ( char *aDirectory,
                                int formRef,
-                               STRING dirTitle,
+                               char *dirTitle,
                                int dirRef,
-                               STRING suffix,
-                               STRING fileTitle,
+                               char *suffix,
+                               char *fileTitle,
                                int fileRef );
 
 #else /* __STDC__ */
 
-extern void ExtractFileName (/* STRING word */);
-extern ThotBool TtaIsSuffixFileIn (/* CHAR_T* aDirectory,
-                                      CHAR_T* suffix */);
-extern void TtaListDirectory (/* STRING aDirectory,
+extern void ExtractFileName (/* char *word */);
+extern ThotBool TtaIsSuffixFileIn (/* char *aDirectory,
+                                      char *suffix */);
+extern void TtaListDirectory (/* char *aDirectory,
                                  int formRef,
-                                 STRING dirTitle,
+                                 char *dirTitle,
                                  int dirRef,
-                                 STRING suffix,
-                                 STRING fileTitle,
+                                 char *suffix,
+                                 char *fileTitle,
                                  int fileRef */);
 
 #endif /* __STDC__ */

@@ -8,7 +8,7 @@
 
 extern void CallbackOpenView ( int ref,
                                int dataType,
-                               STRING data );
+                               char *data );
 extern void TtcOpenView ( Document document,
                           View view );
 extern void TtcCloseView ( Document document,
@@ -20,7 +20,7 @@ extern void SwitchSynchronize ( Document document,
 
 extern void CallbackOpenView (/* int ref,
                                  int dataType,
-                                 STRING data */);
+                                 char *data */);
 extern void TtcOpenView (/* Document document,
                             View view */);
 extern void TtcCloseView (/* Document document,

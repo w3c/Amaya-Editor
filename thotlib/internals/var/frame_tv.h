@@ -66,7 +66,6 @@ THOT_EXPORT HRGN         clipRgn;
 #ifdef _GTK
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;  /* default Font                  */
-THOT_EXPORT Time         t1;
 THOT_EXPORT Display     *TtDisplay;    /* Server context                */
 THOT_EXPORT int          TtScreen;     /* Screen                        */
 THOT_EXPORT GdkColormap *TtCmap;       /* Color palette                 */

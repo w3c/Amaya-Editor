@@ -17,15 +17,13 @@
 
 /* Included headerfiles */
 #include "thot_sys.h"
-#include "ustring.h"
+#include "string.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "application.h"
 #include "registry.h"
 #include "profiles.h"
-
-#include "ustring_f.h"
 
 #define MAX_ENTRIES 10
 typedef struct _Profile_Ctl *PtrProCtl;
@@ -78,7 +76,7 @@ static ThotBool             EnableEdit = TRUE;
 /*----------------------------------------------------------------------
   SkipNewLineSymbol : Remove the EOF ('end of line') character
 ----------------------------------------------------------------------*/
-static void   SkipNewLineSymbol (char* Astring)
+static void   SkipNewLineSymbol (char *Astring)
 {
   int         c = 0;
 
@@ -93,18 +91,19 @@ static void   SkipNewLineSymbol (char* Astring)
   SkipAllBlanks:  Remove all the spaces, tabulations and return
   returns (CR) and "end of line" characters.
 ----------------------------------------------------------------------*/
-static void   SkipAllBlanks (char* Astring)
+static void   SkipAllBlanks (char *Astring)
 {
   int         c = 0;
   int         nbsp = 0;
   
   do
     {
-      while (Astring[c+nbsp] == WC_SPACE || Astring[c+nbsp] == WC_TAB || Astring[c+nbsp] == WC_CR)
+      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB ||
+	     Astring[c+nbsp] == __CR__)
 	nbsp++;
       Astring[c] = Astring[c+nbsp];
     } 
-  while (Astring[c++] != WC_EOS);
+  while (Astring[c++] != EOS);
 
   SkipNewLineSymbol (Astring);
 }
@@ -174,7 +173,7 @@ static PtrProCtl  AddInTable (char *name, ThotBool isModule, ThotBool edit,
   AddModule inserts a new module in the module table.
   Return the first context of the new module.
 ----------------------------------------------------------------------*/
-static PtrProCtl    AddModule (char* name)
+static PtrProCtl    AddModule (char *name)
 {
   PtrProCtl     new = NULL;
 
@@ -194,7 +193,7 @@ static PtrProCtl    AddModule (char* name)
   AddProfile inserts a new profile in the profile table.
   Return the first context of the new profile.
 ----------------------------------------------------------------------*/
-static PtrProCtl    AddProfile (char* name)
+static PtrProCtl    AddProfile (char *name)
 {
   PtrProCtl     new = NULL;
 
@@ -245,7 +244,7 @@ static void    DeleteTable (PtrProCtl ctxt, ThotBool recursive)
   SearchModule searchs a module in the module table and return the
   pointer to current entry.
   ----------------------------------------------------------------------*/
-static ProElement  *SearchModule (char* name)
+static ProElement  *SearchModule (char *name)
 {
   PtrProCtl        current;
   int              i = 0;
@@ -278,7 +277,7 @@ static ProElement  *SearchModule (char* name)
   ProcessDefinition : Recursive function that helps
   building the profile table
   ----------------------------------------------------------------------*/
-static void    ProcessDefinition (char* element)
+static void    ProcessDefinition (char *element)
 {
   ProElement      *pEntry;
   PtrProCtl        ctxt;
@@ -393,7 +392,7 @@ static void AddFunctions (PtrProCtl ctxt)
 static void SortFunctionTable ()
 {
   PtrProCtl     ctxt;
-  char*         ptr;
+  char         *ptr;
   int           i, j, index;
 
   /* copy the list of contexts in a large table */
@@ -443,7 +442,7 @@ static void SortFunctionTable ()
   Prof_BelongTable searchs a function in the function table and return TRUE
   if the function exists.
   ----------------------------------------------------------------------*/
-ThotBool    Prof_BelongTable (char* name)
+ThotBool    Prof_BelongTable (char *name)
 {
   int              left, right, middle, i;
   ThotBool         found = FALSE;
@@ -476,9 +475,9 @@ ThotBool    Prof_BelongTable (char* name)
   ----------------------------------------------------------------------*/
 void Prof_InitTable ()
 {
-  FILE*     profFile;
-  CHAR_T*   ptr;
-  CHAR_T    buffer[MAX_LENGTH];
+  FILE   *profFile;
+  char   *ptr;
+  char    buffer[MAX_LENGTH];
 
   /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
   /* Retreive thot.rc variables and open the profile file */
@@ -488,13 +487,13 @@ void Prof_InitTable ()
     {
       if (SearchFile (ptr, 2, buffer))
 	{
-	  profFile = ufopen (buffer, "r");
+	  profFile = fopen (buffer, "r");
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
 	    wc2iso_strcpy (UserProfile, ptr);	
 	  else
-	    UserProfile[0] = WC_EOS;
+	    UserProfile[0] = EOS;
 
 	  /* Fill a profile and module tables */
 	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
@@ -557,7 +556,7 @@ void Prof_FreeTable ()
 /*----------------------------------------------------------------------
   TtaRebuildProTable: Rebuild the Profiles Table
   ----------------------------------------------------------------------*/
-void     TtaRebuildProTable (CHAR_T* prof_file)
+void     TtaRebuildProTable (char *prof_file)
 {
   /* delete the profiles table */
   Prof_FreeTable ();
@@ -577,18 +576,18 @@ ThotBool    TtaCanEdit ()
    TtaGetProfileFileName:  Get the text for the profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-void     TtaGetProfileFileName (CHAR_T* name, int length)
+void     TtaGetProfileFileName (char *name, int length)
 {
-  CHAR_T*   ptr;
-  CHAR_T    buffer[MAX_LENGTH];
+  char   *ptr;
+  char    buffer[MAX_LENGTH];
 
   name[0] = EOS;
   ptr = TtaGetEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (ustrlen (buffer) < (size_t)length)
-	ustrcpy (name, buffer);
+      if (strlen (buffer) < (size_t)length)
+	strcpy (name, buffer);
     }
 }
 
@@ -596,18 +595,18 @@ void     TtaGetProfileFileName (CHAR_T* name, int length)
    TtaGetDefProfileFileName:  Get the text for the default profile file name.
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
-void     TtaGetDefProfileFileName (CHAR_T* name, int length)
+void     TtaGetDefProfileFileName (char *name, int length)
 {
-  CHAR_T* ptr;
-  CHAR_T  buffer[200];
+  char *ptr;
+  char  buffer[200];
 
-  name[0] = WC_EOS;
+  name[0] = EOS;
   ptr = TtaGetDefEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (ustrlen (buffer) < (size_t)length)
-	ustrcpy (name, buffer);
+      if (strlen (buffer) < (size_t)length)
+	strcpy (name, buffer);
     }
 }
 
@@ -653,7 +652,7 @@ ThotBool Prof_ShowSeparator (Menu_Ctl *ptrmenu, int item, char LastItemType)
   Prof_ShowButton : Add a button if the function associated to that button
   belongs to the user profile
   ----------------------------------------------------------------------*/
-ThotBool    Prof_ShowButton (char* FunctionName)
+ThotBool    Prof_ShowButton (char *FunctionName)
 {
   return (Prof_BelongTable (FunctionName));
 }

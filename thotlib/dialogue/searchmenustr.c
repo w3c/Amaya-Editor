@@ -31,69 +31,68 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
-#include "structcreation_f.h"
-#include "references_f.h"
-#include "structmodif_f.h"
 #include "absboxes_f.h"
-#include "changeabsbox_f.h"
-#include "schemas_f.h"
-#include "createabsbox_f.h"
-#include "search_f.h"
-#include "exceptions_f.h"
 #include "actions_f.h"
-#include "word_f.h"
 #include "appli_f.h"
-#include "searchmenu_f.h"
-#include "structschema_f.h"
+#include "changeabsbox_f.h"
+#include "content_f.h"
+#include "createabsbox_f.h"
+#include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
+#include "references_f.h"
 #include "regexp_f.h"
-#include "views_f.h"
+#include "schemas_f.h"
+#include "search_f.h"
+#include "searchmenu_f.h"
+#include "structschema_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structselect_f.h"
-#include "content_f.h"
+#include "tree_f.h"
+#include "views_f.h"
+#include "word_f.h"
 
 /* table des natures utilisees dans le document ou on cherche un type */
 #define LgTable 10
-static PtrSSchema   TableNaturesDoc[LgTable];
-static int          LgTableNaturesDoc;
+static PtrSSchema TableNaturesDoc[LgTable];
+static int        LgTableNaturesDoc;
 
 /* table des natures prises en compte dans le recherche de type */
-static ThotBool     TableNaturesCherchees[LgTable];
-static CHAR_T         NomTypeAChercher[THOT_MAX_CHAR];		/* le nom du type a chercher */
-static CHAR_T         NomAttrAChercher[THOT_MAX_CHAR];		/* le nom de l'attribut a chercher */
+static ThotBool   TableNaturesCherchees[LgTable];
+static char       NomTypeAChercher[THOT_MAX_CHAR];/* le nom du type a chercher */
+static char       NomAttrAChercher[THOT_MAX_CHAR];/* le nom de l'attribut a chercher */
 
-					  /* defini l'attribut recherche' */
-int                 ValAttrCherche;	/* valeur de l'attribut recherche' */
+			       	  /* defini l'attribut recherche' */
+int               ValAttrCherche; /* valeur de l'attribut recherche' */
 
 #define LgMaxAttrTxtCherche 80
-CHAR_T                ValAttrTxtCherche[LgMaxAttrTxtCherche];	/* valeur de l'attribut recherche', */
+char              ValAttrTxtCherche[LgMaxAttrTxtCherche];	/* valeur de l'attribut recherche', */
 
 #define LgLabelBuffer 200
-
 /* description des attributs qui se trouvent dans le menu de recherche */
 /* des attributs */
 #define nbmaxentrees 40
-static int          NbEntreesTableAttr;
-static PtrSSchema   AttrStructCh[nbmaxentrees];
-static int          AttrNumeroCh[nbmaxentrees];
-static PtrSSchema   SchAttrCherche;	/* schema de structure ou est */
+static int        NbEntreesTableAttr;
+static PtrSSchema AttrStructCh[nbmaxentrees];
+static int        AttrNumeroCh[nbmaxentrees];
+static PtrSSchema SchAttrCherche;	/* schema de structure ou est */
 
   /* defini  l'attribut recherche' */
-static int          NumAttrCherche;	/* numero de l'attribut recherche' */
-static PtrSSchema   pStrTypeCherche;
-static int          NumTypeCherche;
+static int        NumAttrCherche;	/* numero de l'attribut recherche' */
+static PtrSSchema pStrTypeCherche;
+static int        NumTypeCherche;
 static PtrAttribute pAttrTrouve;
 
 /*----------------------------------------------------------------------
    ConstruitSelecteurAttributs construit le selecteur des attributs
    a chercher pour le document pDoc.                       
   ----------------------------------------------------------------------*/
-static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
+static void ConstruitSelecteurAttributs (PtrDocument pDoc)
 {
 #define LgMaxListeAttr 980
    int                 i, nbitem;
-   CHAR_T                ListeAttr[LgMaxListeAttr];
+   char                ListeAttr[LgMaxListeAttr];
    int                 lgmenu;
    int                 nbentrees;
    int                 entree;
@@ -137,9 +136,9 @@ static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
       /* il y a des attributs declares */
      {
 	/* met l'entree 'Quelconque' au debut de la liste des attributs */
-	ustrcpy (ListeAttr, TtaGetMessage (LIB, TMSG_ANY));
+	strcpy (ListeAttr, TtaGetMessage (LIB, TMSG_ANY));
 	nbitem = 1;
-	lgmenu = ustrlen (ListeAttr) + 1;
+	lgmenu = strlen (ListeAttr) + 1;
 	for (entree = 0; entree < nbentrees &&
 	     lgmenu < LgMaxListeAttr - MAX_NAME_LENGTH - 4; entree++)
 	   /* met les noms de tous les attributs dans la liste */
@@ -148,14 +147,14 @@ static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
 		pAt1 = &pDoc->DocSSchema->SsAttribute[AttrNumeroCh[entree] - 1];
 	     else
 		pAt1 = &AttrStructCh[entree]->SsAttribute[AttrNumeroCh[entree] - 1];
-	     ustrncpy (ListeAttr + lgmenu, pAt1->AttrName, MAX_NAME_LENGTH);
-	     lgmenu += ustrlen (pAt1->AttrName) + 1;
+	     strncpy (ListeAttr + lgmenu, pAt1->AttrName, MAX_NAME_LENGTH);
+	     lgmenu += strlen (pAt1->AttrName) + 1;
 	     nbitem++;
 	  }
 	if (entree < nbentrees + 1 && lgmenu >= LgMaxListeAttr - MAX_NAME_LENGTH - 4)
 	   /* le buffer est trop petit ... */
 	  {
-	     ustrncpy (ListeAttr + lgmenu, "...", 4);
+	     strncpy (ListeAttr + lgmenu, "...", 4);
 	     lgmenu += 4;
 	     nbitem++;
 	  }
@@ -176,7 +175,7 @@ static void         ConstruitSelecteurAttributs (PtrDocument pDoc)
 static void         ConstruitSelecteurTypes ()
 {
 #define LgMaxListeTypes 980
-   CHAR_T                ListeTypes[LgMaxListeTypes];
+   char                ListeTypes[LgMaxListeTypes];
    int                 nbitem, lgmenu;
    int                 nat, regle, premregle;
    PtrSSchema          pSS;
@@ -202,16 +201,16 @@ static void         ConstruitSelecteurTypes ()
 		 /* l'exception Hidden */
 		 if (!TypeHasException (ExcHidden, regle, pSS))
 		   {
-		      ustrncpy (ListeTypes + lgmenu, pSS->SsRule[regle - 1].SrName,
+		      strncpy (ListeTypes + lgmenu, pSS->SsRule[regle - 1].SrName,
 			       MAX_NAME_LENGTH);
-		      lgmenu += ustrlen (pSS->SsRule[regle - 1].SrName) + 1;
+		      lgmenu += strlen (pSS->SsRule[regle - 1].SrName) + 1;
 		      nbitem++;
 		   }
 	   premregle = MAX_BASIC_TYPE + 1;
 	   if (regle <= pSS->SsNRules && lgmenu >= LgMaxListeTypes - MAX_NAME_LENGTH - 4)
 	      /* le buffer est trop petit ... */
 	     {
-		ustrncpy (ListeTypes + lgmenu, "...", 4);
+		strncpy (ListeTypes + lgmenu, "...", 4);
 		lgmenu += 4;
 		nbitem++;
 	     }
@@ -293,7 +292,7 @@ static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context,
 		       if ((GetAttributeOfElement == 0 ||
 			    pAttr->AeAttrNum == GetAttributeOfElement) &&
 			   (pSS == NULL ||
-			    !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+			    !strcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
 				/* c'est l'attribut cherche' */
 			 if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
 						pAttr->AeAttrSSchema))
@@ -347,8 +346,8 @@ static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context,
    Retourne un pointeur sur l'element si trouve', ou NULL  
    si echec.                                               
   ----------------------------------------------------------------------*/
-static PtrElement   ChType (PtrElement elCour, PtrSearchContext context,
-			    STRING NomType)
+static PtrElement ChType (PtrElement elCour, PtrSearchContext context,
+			  char *NomType)
 {
    PtrElement          pEl;
    PtrElement          pAscendant;
@@ -428,7 +427,7 @@ static PtrElement   ChType (PtrElement elCour, PtrSearchContext context,
 static void         InitMenuNatures (PtrDocument pDoc)
 {
    int                 nbitem;
-   CHAR_T                ListeTypes[LgMaxListeTypes];
+   char                ListeTypes[LgMaxListeTypes];
    int                 lgmenu;
    int                 nat;
    SRule              *pRe;
@@ -451,11 +450,11 @@ static void         InitMenuNatures (PtrDocument pDoc)
 	lgmenu = 0;
 	for (nat = 0; nat < LgTableNaturesDoc && lgmenu < LgMaxListeTypes - MAX_NAME_LENGTH; nat++)
 	  {
-	     ustrcpy (ListeTypes + lgmenu, "B");
+	     strcpy (ListeTypes + lgmenu, "B");
 	     if (TableNaturesDoc[nat]->SsExtension)
 	       {
-		  ustrncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName, MAX_NAME_LENGTH);
-		  lgmenu += ustrlen (TableNaturesDoc[nat]->SsName) + 2;
+		  strncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName, MAX_NAME_LENGTH);
+		  lgmenu += strlen (TableNaturesDoc[nat]->SsName) + 2;
 	       }
 	     else
 	       {
@@ -463,8 +462,8 @@ static void         InitMenuNatures (PtrDocument pDoc)
 		  /* avoir le nom traduit dans la langue de l'utilisateur */
 		  pRe = &TableNaturesDoc[nat]->SsRule
 		     [TableNaturesDoc[nat]->SsRootElem - 1];
-		  ustrncpy (ListeTypes + lgmenu + 1, pRe->SrName, MAX_NAME_LENGTH);
-		  lgmenu += ustrlen (pRe->SrName) + 2;
+		  strncpy (ListeTypes + lgmenu + 1, pRe->SrName, MAX_NAME_LENGTH);
+		  lgmenu += strlen (pRe->SrName) + 2;
 	       }
 	     nbitem++;
 	  }
@@ -484,13 +483,13 @@ static void         InitMenuNatures (PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void                BuildStructSearchMenu (PtrDocument pDoc)
 {
-   CHAR_T BufMenu [MAX_TXT_LEN];
+   char BufMenu [MAX_TXT_LEN];
 
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
    BufMenu[0] = 'B';
    BufMenu[1] = EOS;
-   ustrcat (BufMenu,TtaGetMessage (LIB, TMSG_ANY));
+   strcat (BufMenu,TtaGetMessage (LIB, TMSG_ANY));
    TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
 	TtaGetMessage (LIB, TMSG_NATURES), 1, BufMenu,
 		     NULL, TRUE);
@@ -556,7 +555,7 @@ static PtrAttribute ElPossedeAttr (PtrElement pEl, int NumAttr,
 	 do
 	    if (pA->AeAttrNum == NumAttr &&
 		(pSchAttr == NULL ||
-		 !ustrcmp (pA->AeAttrSSchema->SsName, pSchAttr->SsName)))
+		 !strcmp (pA->AeAttrSSchema->SsName, pSchAttr->SsName)))
 	       /* c'est l'attribut cherche' */
 	       trouve = TRUE;
 	    else
@@ -592,10 +591,10 @@ static PtrAttribute ElPossedeAttr (PtrElement pEl, int NumAttr,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context,
-				STRING NomType, ThotBool AvecAttribut,
-				int NumAttrCherche, PtrSSchema SchAttrCherche,
-				PtrAttribute * AttrTrouve)
+static PtrElement ChTypeAttr (PtrElement elCour, PtrSearchContext context,
+			      char *NomType, ThotBool AvecAttribut,
+			      int NumAttrCherche, PtrSSchema SchAttrCherche,
+			      PtrAttribute * AttrTrouve)
 {
    PtrElement          pEl;
    PtrElement          pAsc;
@@ -668,8 +667,8 @@ static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                CallbackStructSearchMenu (int ref, int val, STRING txt,
-					      PtrSearchContext DomaineCherche)
+void CallbackStructSearchMenu (int ref, int val, char *txt,
+			       PtrSearchContext DomaineCherche)
 {
    switch (ref)
 	 {
@@ -682,11 +681,11 @@ void                CallbackStructSearchMenu (int ref, int val, STRING txt,
 	       break;
 	    case NumSelTypeToSearch:
 	       /* selecteur de saisie du type de l'element a chercher */
-	       ustrncpy (NomTypeAChercher, txt, MAX_NAME_LENGTH - 1);
+	       strncpy (NomTypeAChercher, txt, MAX_NAME_LENGTH - 1);
 	       break;
 	    case NumSelAttributeToSearch:
 	       /* selecteur de choix de l'attribut a chercher */
-	       ustrncpy (NomAttrAChercher, txt, MAX_NAME_LENGTH - 1);
+	       strncpy (NomAttrAChercher, txt, MAX_NAME_LENGTH - 1);
 	       break;
 	    default:
 	       break;
@@ -727,7 +726,7 @@ void BuildSearchOptions (ThotBool *erreur,
    SchAttrCherche = NULL;
    if (NomAttrAChercher[0] != EOS)
       /* il y a bien un attribut a chercher */
-      if (ustrcmp (NomAttrAChercher, TtaGetMessage (LIB, TMSG_ANY)) != 0)
+      if (strcmp (NomAttrAChercher, TtaGetMessage (LIB, TMSG_ANY)) != 0)
 	{
 	   /* cherche le nom de l'attribut dans la table */
 	   trouve = FALSE;
@@ -740,7 +739,7 @@ void BuildSearchOptions (ThotBool *erreur,
 		else
 		   pAt1 = &AttrStructCh[entree - 1]->
 		      SsAttribute[AttrNumeroCh[entree - 1] - 1];
-		trouve = ustrcmp (NomAttrAChercher, pAt1->AttrName) == 0;
+		trouve = strcmp (NomAttrAChercher, pAt1->AttrName) == 0;
 		if (trouve)
 		  {
 		     SchAttrCherche = AttrStructCh[entree - 1];
@@ -829,7 +828,7 @@ void                StructAndAttrSearch (PtrElement premsel, ThotBool * ok)
 	pAsc = premsel;
 	do
 	  {
-	     trouve = (ustrcmp (NomTypeAChercher, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0);
+	     trouve = (strcmp (NomTypeAChercher, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0);
 	     if (!trouve)
 		pAsc = pAsc->ElParent;
 	  }
@@ -856,9 +855,9 @@ void                StructAndAttrSearch (PtrElement premsel, ThotBool * ok)
   ----------------------------------------------------------------------*/
 void                ValAttrSearch ()
 {
-   CHAR_T                NomAtt[100];
+   char                NomAtt[100];
    int                 lg, lg1;
-   CHAR_T                LabelBuffer[LgLabelBuffer];
+   char                LabelBuffer[LgLabelBuffer];
 
    if (NomAttrAChercher[0] != EOS && pAttrTrouve != NULL)
       /* on cherche un attribut et on l'a trouve' */
@@ -869,27 +868,27 @@ void                ValAttrSearch ()
 	   /* on cherchait un attribut quelconque, on va */
 	   /* afficher le nom de l'attribut trouve' */
 	   if (pAttrTrouve->AeAttrType == AtReferenceAttr)
-	      ustrcpy (LabelBuffer, pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
+	      strcpy (LabelBuffer, pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	   else
-	      usprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
+	      sprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	else
-	   ustrcpy (NomAtt, TtaGetMessage (LIB, TMSG_VALUE_OF_ATTR));
+	   strcpy (NomAtt, TtaGetMessage (LIB, TMSG_VALUE_OF_ATTR));
 	switch (pAttrTrouve->AeAttrType)
 	      {
 		 case AtReferenceAttr:
 		    break;
 		 case AtNumAttr:
-		    usprintf (LabelBuffer, "%s %d", NomAtt, pAttrTrouve->AeAttrValue);
+		    sprintf (LabelBuffer, "%s %d", NomAtt, pAttrTrouve->AeAttrValue);
 		    break;
 		 case AtEnumAttr:
-		    usprintf (LabelBuffer,"%s %s", NomAtt,
+		    sprintf (LabelBuffer,"%s %s", NomAtt,
 			     pAttrTrouve->AeAttrSSchema->SsAttribute
 			     [pAttrTrouve->AeAttrNum - 1].AttrEnumValue
 			     [pAttrTrouve->AeAttrValue - 1]);
 		    break;
 		 case AtTextAttr:
-		    ustrcpy (LabelBuffer, NomAtt);
-		    lg = ustrlen (LabelBuffer);
+		    strcpy (LabelBuffer, NomAtt);
+		    lg = strlen (LabelBuffer);
 		    lg1 = LgLabelBuffer - lg - 1;
 		    CopyTextToString (pAttrTrouve->AeAttrText,
 				      LabelBuffer + lg, &lg1);

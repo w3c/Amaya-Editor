@@ -48,7 +48,7 @@ static ThotBool     SaveBeforeClosing;
    CallbackCloseDocMenu 
    handles the callbacks of the CloseDoc menu
   ----------------------------------------------------------------------*/
-void CallbackCloseDocMenu (int ref, int typedata, STRING data)
+void CallbackCloseDocMenu (int ref, int typedata, char *data)
 {
 #ifndef _WINDOWS
   switch ((int) data)
@@ -78,9 +78,9 @@ void CallbackCloseDocMenu (int ref, int typedata, STRING data)
 void AskToConfirm (PtrDocument pDoc, Document document, View view,
 		   ThotBool *confirmation, ThotBool *save)
 {
-  CHAR_T              buftext[300];
+  char              buftext[300];
 #ifndef _WINDOWS
-  CHAR_T              bufbutton[300];
+  char              bufbutton[300];
   int                 i;
 #endif /* _WINDOWS */
 
@@ -89,17 +89,17 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   /* le document a ete modifie', on propose de le sauver */
   /* initialise le label du formulaire "Fermer" en y mettant le nom */
   /* du document */
-  ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-  ustrcat (buftext, " ");
-  ustrcat (buftext, pDoc->DocDName);
-  ustrcat (buftext, " ");
-  ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
+  strcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+  strcat (buftext, " ");
+  strcat (buftext, pDoc->DocDName);
+  strcat (buftext, " ");
+  strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
 #ifndef _WINDOWS
   /* Feuille de dialogue Fermer */
-  ustrcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-  i = ustrlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
-  ustrcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
+  strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+  i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
+  strcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
   TtaNewSheet (NumFormClose, TtaGetViewFrame(document,view), 
 	       TtaGetMessage (LIB, TMSG_CLOSE_DOC), 2, bufbutton, TRUE, 1,
 	       'L', D_CANCEL);

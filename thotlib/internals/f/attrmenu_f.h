@@ -8,19 +8,19 @@
 
 extern void CallbackReqAttrMenu ( int ref,
                                   int val,
-                                  STRING txt );
+                                  char *txt );
 extern void BuildReqAttrMenu ( PtrAttribute pAttr,
                                PtrDocument pDoc );
 extern void UpdateAttrMenu ( PtrDocument pDoc );
 extern void CallbackValAttrMenu ( int ref,
                                   int valmenu,
-                                  STRING valtext );
+                                  char *valtext );
 extern void CallbackAttrMenu ( int refmenu,
                                int att,
                                int frame );
 extern void CallbackLanguageMenu ( int ref,
                                    int val,
-                                   STRING txt );
+                                   char *txt );
 extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern void AttributeMenuLoadResources ( void );
 
@@ -28,19 +28,19 @@ extern void AttributeMenuLoadResources ( void );
 
 extern void CallbackReqAttrMenu (/* int ref,
                                     int val,
-                                    STRING txt */);
+                                    char *txt */);
 extern void BuildReqAttrMenu (/* PtrAttribute pAttr,
                                  PtrDocument pDoc */);
 extern void UpdateAttrMenu (/* PtrDocument pDoc */);
 extern void CallbackValAttrMenu (/* int ref,
                                     int valmenu,
-                                    STRING valtext */);
+                                    char *valtext */);
 extern void CallbackAttrMenu (/* int refmenu,
                                  int att,
                                  int frame */);
 extern void CallbackLanguageMenu (/* int ref,
                                      int val,
-                                     STRING txt */);
+                                     char *txt */);
 extern void CloseAttributeDialogues (/* PtrDocument pDoc */);
 extern void AttributeMenuLoadResources (/* void */);
 

@@ -69,7 +69,7 @@ static ThotBool     LpInitialized = FALSE;
 
 static PathBuffer   PrintDirName;
 static Name         PrintDocName;
-static CHAR_T       Orientation[MAX_NAME_LENGTH];
+static char       Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -851,8 +851,6 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
      
    if (newPres[0] != EOS)
      strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
-   if (ThotLocalActions[T_rextprint]) 
-     strcmp (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 
    /* initialise temporary directory and temporary file names */
    TtaGetPrintNames (&tmpDocName, &tmpDirName);
@@ -1239,16 +1237,12 @@ void                CallbackPrintmenu (int ref, int val, char *txt)
 	      /* the other options are not taken into account without this
 		 confirmation */
 	      PaperPrint = NewPaperPrint;
-	      if (ThotLocalActions[T_rextprint]!=NULL)
-		(*ThotLocalActions[T_rextprint])(ref, val, txt);
 	      break;
 	    default:
 	      break;
 	    }
 	  break;
 	default:
-	  if (ThotLocalActions[T_rextprint]!=NULL)
-	    (*ThotLocalActions[T_rextprint])(ref, val, txt);
 	  break;
 	}
     }

@@ -44,8 +44,7 @@
 #define MAX_NAME	 80
 #define SELECTOR_NB_ITEMS 5
 static FILE        *ls_stream;
-static int          ls_car;
-static CHAR_T       ls_unixFiles[MAX_NAME * NAME_LENGTH];
+static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int          ls_fileNbr;
 
 #include "browser_f.h"
@@ -55,26 +54,28 @@ static int          ls_fileNbr;
    ExtractFileName
    extracts a filename from the ls_stream.
   ----------------------------------------------------------------------*/
-void                ExtractFileName (STRING word)
+void ExtractFileName (char *word)
 {
    int                 i;
+   int                 ls_car;
    ThotBool            notEof;
 
    i = 0;
-   while (((CHAR_T) ls_car == SPACE) || ((CHAR_T) ls_car == TAB) || ((CHAR_T) ls_car == EOL))
-      ls_car = fgetc (ls_stream);
+   ls_car = fgetc (ls_stream);
+   while (ls_car == SPACE || ls_car == TAB || ls_car == EOL)
+     ls_car = fgetc (ls_stream);
 
    notEof = TRUE;
-   while (((CHAR_T) ls_car != SPACE) && ((CHAR_T) ls_car != TAB) && ((CHAR_T) ls_car != EOF) && (notEof))
+   while (notEof && ls_car != SPACE && ls_car != TAB && ls_car != EOF)
      {
-	if (ls_car == EOF)
-	   notEof = FALSE;
-	else
-	  {
-	     word[i] = (CHAR_T) ls_car;
-	     i++;
-	     ls_car = fgetc (ls_stream);
-	  }
+       if (ls_car == EOF)
+	 notEof = FALSE;
+       else
+	 {
+	   word[i] = (char) ls_car;
+	   i++;
+	   ls_car = fgetc (ls_stream);
+	 }
      }
 
    word[i] = EOS;
@@ -86,9 +87,9 @@ void                ExtractFileName (STRING word)
    returns TRUE if the directory contains any file with the requested
    suffix.
   ----------------------------------------------------------------------*/
-ThotBool TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
+ThotBool TtaIsSuffixFileIn (char *aDirectory, char *suffix)
 {
-  CHAR_T              command[MAX_LENGTH];
+  char                command[MAX_LENGTH];
   ThotDirBrowse       thotDir;
   ThotBool            ret;
 
@@ -97,7 +98,7 @@ ThotBool TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
   if (TtaCheckDirectory (aDirectory))
     {
       thotDir.buf = command;
-      thotDir.bufLen = sizeof (command) / sizeof (CHAR_T);
+      thotDir.bufLen = sizeof (command) / sizeof (char);
       thotDir.PicMask = (ThotDirBrowse_mask)
 	(ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
       ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
@@ -121,14 +122,14 @@ ThotBool TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
    won't be created.
    If aDirectory doesn't exist, the selectors will be empty.
   ----------------------------------------------------------------------*/
-void TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle,
-		       int dirRef, STRING suffix, STRING fileTitle,
+void TtaListDirectory (char *aDirectory, int formRef, char *dirTitle,
+		       int dirRef, char *suffix, char *fileTitle,
 		       int fileRef)
 {
 #ifndef _WINDOWS
   struct stat;
-  STRING              addr1;
-  CHAR_T              word[4 * NAME_LENGTH];
+  char               *addr1;
+  char                word[4 * NAME_LENGTH];
   int                 ls_currentfile;
   int                 length;
   ThotBool            stop;

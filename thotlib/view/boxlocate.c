@@ -206,11 +206,13 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		    /* the application asks Thot to do nothing */
 		    return;
-		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
-		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
-		  /* send event TteElemActivate.Post to the application */
-		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		}
+	      if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+		(*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
+	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  y >= yOrg && y <= yOrg + pBox->BxH)
+		/* send event TteElemActivate.Post to the application */
+		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	      break;
 	    case 6:
 	      /* check if the curseur is within the box */
@@ -232,12 +234,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 		    /* the application asks Thot to do nothing */
 		    return;
-		  TtaSetDialoguePosition ();
-		  if (ThotLocalActions[T_insertpaste] != NULL)
-		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-		  /* send event TteElemActivate.Post to the application */
-		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 		}
+	      TtaSetDialoguePosition ();
+	      if (ThotLocalActions[T_insertpaste] != NULL)
+		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  y >= yOrg && y <= yOrg + pBox->BxH)
+		/* send event TteElemActivate.Post to the application */
+		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	      break;
 	    default: break;
 	    }
@@ -249,7 +253,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   GetDistance returns 0 if value is between -delta and +delta.
   In other cases returns the absolute value of value - delta
   ----------------------------------------------------------------------*/
-static int          GetDistance (int value, int delta)
+static int GetDistance (int value, int delta)
 {
    if (value > delta)
       return (value - delta);

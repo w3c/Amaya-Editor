@@ -3631,8 +3631,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   for (i = 0; i < MAX_ASSOC_DOC; i++)
 	     if (pDoc->DocAssocRoot[i] != NULL)
 		 pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
-	   if (ThotLocalActions[T_indexschema] != NULL)
-	     (*ThotLocalActions[T_indexschema]) (pDoc);
 	   if (withEvent && pDoc->DocSSchema != NULL && !error)
 	     {
 	       notifyDoc.event = TteDocOpen;

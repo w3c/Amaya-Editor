@@ -2243,7 +2243,7 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
            else
              {
                FrameToView (frame, &document, &view);
-               if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+               if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NUL)L
                  (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (document, view);
              }
            break;
@@ -2259,10 +2259,10 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
              }
            else if (!GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
              /* non, message 'Selectionnez' */
-             TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+             return FALSE;
            else if (docsel->DocReadOnly)
              /* on ne peut inserer ou coller dans un document en lecture seule */
-             TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+             return FALSE;
            else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
              {
                /* selection a l'interieur d'une polyline */
@@ -3127,9 +3127,6 @@ void                DestroyFrame (int frame)
 	     ref += MAX_ITEM;
 	     i++;
 	  }
-
-	if (ThotLocalActions[T_rsindex] != NULL)
-	   (*ThotLocalActions[T_rsindex]) (frame);
 
 #ifndef _WINDOWS
         XFlushOutput (0);
@@ -4004,14 +4001,6 @@ void      ThotCallback (int ref, int typedata, char *data)
 	(*ThotLocalActions[T_openview]) (ref, typedata, data);
 	break;
 	
-      case NumZoneFirstPage:
-      case NumZoneLastPage:
-      case NumZoneNbOfCopies:
-      case NumZoneReduction:
-      case NumMenuNbPagesPerSheet:
-      case NumMenuViewsToPrint:
-	(*ThotLocalActions[T_rextprint]) (ref, (int) data, NULL);
-	break;
       case NumFormPrint:
       case NumMenuOptions:
       case NumMenuSupport:

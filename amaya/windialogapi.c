@@ -8,7 +8,9 @@
 /*
  * Windows Dialogue API routines for Amaya
  *
- * Authors:  I. Vatton (W3C/INRIA), R. Guetari (W3C/INRIA), J. Kahan (W3C/INRIA)
+ * Authors:  I. Vatton (W3C/INRIA),
+ *           R. Guetari (W3C/INRIA),
+ *           J. Kahan (W3C/INRIA)
  *
  */
 #ifdef _WINDOWS
@@ -67,9 +69,9 @@ int                WIN_NormalLineSpacing;
 
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
-extern char       DocToOpen [MAX_LENGTH];
-extern char       WIN_buffMenu [MAX_TXT_LEN];
-extern char       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
+extern char         DocToOpen [MAX_LENGTH];
+extern char         WIN_buffMenu [MAX_TXT_LEN];
+extern char         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern int          ClickX, ClickY;
 extern int          CORR;
 extern ThotBool     TtIsPrinterTrueColor;
@@ -149,35 +151,31 @@ static ThotBool     WithBorder;
 static ThotBool     HTMLFormat;
 
 static OPENFILENAME OpenFileName;
-static char*      szFilter;
-static char       szFileName[256];
-static char       szBuffer [MAX_BUFF];
-
-static ThotWindow         currentDlg;
-static ThotWindow         wndCSSList;
-static ThotWindow         wndLangList;
-static ThotWindow         wndListRule;
-static ThotWindow         wndEditRule;
-static ThotWindow         transURLWnd;
-static ThotWindow         copyImgWnd;
-static ThotWindow         WndSearchEdit;
-static ThotWindow         GraphPal = NULL;
-static ThotWindow         MathPal = NULL;
-static ThotWindow         GreekPal = NULL;
-static ThotWindow         CharacterForm = NULL;
-static ThotWindow         FormatForm = NULL;
-static ThotWindow         PrintForm = NULL;
-static ThotWindow         LangForm = NULL;
-static ThotWindow         AttrForm = NULL;
-static ThotWindow         DocInfo[DocumentTableLength];
-
+static char        *szFilter;
+static char         szFileName[256];
+static char         szBuffer [MAX_BUFF];
+static ThotWindow   currentDlg;
+static ThotWindow   wndCSSList;
+static ThotWindow   wndLangList;
+static ThotWindow   wndListRule;
+static ThotWindow   wndEditRule;
+static ThotWindow   transURLWnd;
+static ThotWindow   copyImgWnd;
+static ThotWindow   WndSearchEdit;
+static ThotWindow   GraphPal = NULL;
+static ThotWindow   MathPal = NULL;
+static ThotWindow   GreekPal = NULL;
+static ThotWindow   CharacterForm = NULL;
+static ThotWindow   FormatForm = NULL;
+static ThotWindow   PrintForm = NULL;
+static ThotWindow   LangForm = NULL;
+static ThotWindow   AttrForm = NULL;
+static ThotWindow   DocInfo[DocumentTableLength];
 static UINT         itemIndex;
 static UINT         nbClass;
 static UINT         nbItem;
-
-static char*      string_par1;
-static char*      string_par2;
-
+static char        *string_par1;
+static char        *string_par2;
 static ThotBool     ReleaseFocus;
 static char         text[1024];
 
@@ -185,14 +183,13 @@ ThotWindow          ghwndAbort;
 ThotWindow          ghwndMain;
 ThotWindow          MakeIDHwnd;
 ThotBool            gbAbort;
-
 Document            TmpDoc; /* used to pass the Document id to the
 			       callback when setting up a menu */
 
-/* ------------------------------------------------------------------------ *
+/*----------------------------------------------------------------------
    ReusePrinterDC()
    Call the Windows print dialogue or reuse the previous context.
-  ------------------------------------------------------------------------ */
+  ----------------------------------------------------------------------*/
 void ReusePrinterDC ()
 {
   int        orientation, paper;
@@ -2008,8 +2005,8 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, 
 /*-----------------------------------------------------------------------
  InitConfirmDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									 LPARAM lParam)
+LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
+				     WPARAM wParam, LPARAM lParam)
 {
   ThotWindow messageWnd;
 
@@ -2051,7 +2048,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
  InitConfirm3LDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
-									   WPARAM wParam, LPARAM lParam)
+				       WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
       {

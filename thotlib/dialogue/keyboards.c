@@ -9,7 +9,7 @@
  * Latin, Greek, Math keyboards
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -398,7 +398,7 @@ static ITEM         Items_Graph[] =
    policy font.
    Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
-static void WChar (ThotWindow w, CHAR_T ch, int x, int y, int func,
+static void WChar (ThotWindow w, char ch, int x, int y, int func,
 		   ptrfont font, int disp, ThotGC GClocal)
 {
 #ifndef _GTK
@@ -435,12 +435,12 @@ static void         KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 void         KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 {
 #ifndef _GTK
-   UCHAR_T       car;
+   unsigned char       car;
    ThotWidget          wp;
    int                 i;
 
    /* Recupere la table des items */
-   car = (UCHAR_T) param % 256;
+   car = (unsigned char) param % 256;
    /* Recupere le widget de la palette */
 #ifndef _WINDOWS
    wp=XtParent(XtParent(XtParent(XtParent(w))));
@@ -510,8 +510,8 @@ static void         ExposeKbd (ThotWidget w, int param, XmDrawnButtonCallbackStr
    CreateKeyboard
    creates a keyboard.
   ----------------------------------------------------------------------*/
-static void CreateKeyboard (int number, STRING title, ptrfont pFont,
-			    int col, int x, int y, ITEM * items, int nbitem)
+static void CreateKeyboard (int number, char *title, ptrfont pFont,
+			    int col, int x, int y, ITEM *items, int nbitem)
 {
 #ifndef _GTK
    int                 n;
@@ -522,7 +522,7 @@ static void CreateKeyboard (int number, STRING title, ptrfont pFont,
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    XmFontList          xfont;
-   CHAR_T                string[10];
+   char                string[10];
    int                 param;
    XGCValues           GCmodel;
 

@@ -65,7 +65,6 @@ static HFONT OldFont;
 #include "memory_f.h"
 #include "registry_f.h"
 #include "units_f.h"
-#include "ustring_f.h"
 #include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
@@ -86,7 +85,7 @@ static int   WIN_fdwStrikeOut;
 static HFONT WIN_LoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
 {
    HFONT hFont;
-   CHAR_T lpszFace [MAX_LENGTH];
+   char lpszFace [MAX_LENGTH];
 
    WIN_nHeight      = 0;
    WIN_nWidth       = 0;
@@ -236,7 +235,7 @@ int GetCharsCapacity (int volpixel)
 /*----------------------------------------------------------------------
  *      CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterWidth (UCHAR_T c, ptrfont font)
+int CharacterWidth (unsigned char c, ptrfont font)
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
@@ -325,7 +324,7 @@ int CharacterWidth (UCHAR_T c, ptrfont font)
 /*----------------------------------------------------------------------
  *      CharacterHeight returns the height of a char in a given font.
   ----------------------------------------------------------------------*/
-int                 CharacterHeight (UCHAR_T c, ptrfont font)
+int                 CharacterHeight (unsigned char c, ptrfont font)
 {
 #ifdef _GTK
   int l;
@@ -354,7 +353,7 @@ int                 CharacterHeight (UCHAR_T c, ptrfont font)
 /*----------------------------------------------------------------------
        CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-int                 CharacterAscent (UCHAR_T c, ptrfont font)
+int                 CharacterAscent (unsigned char c, ptrfont font)
 {
 #ifdef _GTK
   int               lbearing, rbearing, width, ascent, descent;
@@ -808,9 +807,9 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 #ifdef _WINDOWS
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  CHAR_T              fontSize[5];
-  char*               pText;
-  STRING              pFontSize;
+  char                fontSize[5];
+  char               *pText;
+  char               *pFontSize;
   int                 c;
   HFONT               hOldFont;
 #endif /* _WINDOWS */
@@ -1058,19 +1057,19 @@ void TtaSetFontZoom (int zoom)
   InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-void                WIN_InitDialogueFonts (HDC hDC, CHAR_T* name)
+void WIN_InitDialogueFonts (HDC hDC, char* name)
 #else  /* !_WINDOWS */
-void                InitDialogueFonts (CHAR_T* name)
+void InitDialogueFonts (char* name)
 #endif /* _WINDOWS */
 {
 #  ifndef _WINDOWS
    int              ndir, ncurrent;
    char             FONT_PATH[128];
-   STRING           fontpath;
+   char            *fontpath;
 #  endif /* _WINDOWS */
    char**           dirlist = NULL;
    char**           currentlist = NULL;
-   CHAR_T*          value;
+   char*          value;
    char             alphabet;
    int              f3;
    int              i;
@@ -1090,7 +1089,7 @@ void                InitDialogueFonts (CHAR_T* name)
      }
    else
      {
-	FontFamily = TtaGetMemory (ustrlen (value) + 1);
+	FontFamily = TtaGetMemory (strlen (value) + 1);
 	wc2iso_strcpy (FontFamily, value);
 	if (!strcmp (FontFamily, "-b&h-lucida"))
 	   UseLucidaFamily = TRUE;

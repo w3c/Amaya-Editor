@@ -114,13 +114,12 @@ typedef struct _SchemaMenu_Ctl
 #define T_emptybox	43
 #define T_freesavedel   44
 #define T_docmodified   45
-#define T_indexcopy	46
-#define T_indexnew	47
-#define T_indexverif	48
-#define T_indexschema	49
-#define T_rsindex	50
+#define T_checkHiddenElement		46
+#define T_checkReadOnlyElement		47
+#define T_checkInsertNearElement	48
+#define T_rchangetype			49
+#define T_initevents			50
 #define T_rprint	51
-#define T_rextprint	52
 #define T_cancopyorcut	53
 #define T_selectsiblings 54
 #define T_selecbox	55
@@ -158,21 +157,14 @@ typedef struct _SchemaMenu_Ctl
 #define T_redisplay		87
 #define T_writedocument         88
 #define T_openview	        89
-#define T_checkHiddenElement		90
-#define T_checkReadOnlyElement		91
-#define T_checkInsertNearElement	92
-#define T_rchangetype			93
-#define T_initevents			96
-#define T_checktable                    97
-#define T_cleartable			98
-#define T_resizetable                   99
-#define T_firstcolumn			100
-#define T_checkcolumn			101
-#define T_checktableheight              102
-#define T_AIupdate			103
-#define T_setwritedirectory             104
-#define T_transformintotype		105
-#define MAX_LOCAL_ACTIONS               106
+#define T_checktable                    90
+#define T_cleartable			91
+#define T_resizetable                   92
+#define T_firstcolumn			93
+#define T_checkcolumn			94
+#define T_checktableheight              95
+#define T_AIupdate			96
+#define MAX_LOCAL_ACTIONS               97
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

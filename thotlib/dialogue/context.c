@@ -127,7 +127,7 @@ static int          XWindowFatalError (Display * dpy)
  * FindColor looks for the named color ressource.
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
-static ThotBool FindColor (int disp, CHAR_T *name, char *colorplace,
+static ThotBool FindColor (int disp, char *name, char *colorplace,
 			   char *defaultcolor, ThotColor *colorpixel)
 {
    int                 col;
@@ -138,7 +138,7 @@ static ThotBool FindColor (int disp, CHAR_T *name, char *colorplace,
 
    value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
-   if (value != NULL && value[0] != WC_EOS)
+   if (value != NULL && value[0] != EOS)
      TtaGiveRGB (value, &red, &green, &blue);
    else if (defaultcolor != NULL)
      TtaGiveRGB (defaultcolor, &red, &green, &blue);
@@ -185,7 +185,7 @@ static void         InitCurs ()
  ----------------------------------------------------------------------*/
 void TtaUpdateEditorColors (void)
 {
-  CHAR_T   *name;
+  char   *name;
   ThotBool  found;
 
   name = TtaGetEnvString ("appname");
@@ -216,7 +216,7 @@ void TtaUpdateEditorColors (void)
 /*----------------------------------------------------------------------
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
-static void         InitColors (CHAR_T* name)
+static void         InitColors (char* name)
 {
    ThotBool            found;
 #ifndef _WINDOWS
@@ -448,7 +448,7 @@ static void InitGraphicContexts (void)
 /*----------------------------------------------------------------------
  *      ThotInitDisplay initialize all the output settings.
  ----------------------------------------------------------------------*/
-void ThotInitDisplay (CHAR_T* name, int dx, int dy)
+void ThotInitDisplay (char* name, int dx, int dy)
 {
 #ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
@@ -619,7 +619,7 @@ void SelectionEvents (void *ev)
 		 {
 		   if (bytes_after > 0)
 		     {
-		       buffer = TtaAllocString (nbitems + bytes_after);
+		       buffer = TtaGetMemory (nbitems + bytes_after);
 		       strcpy (buffer, partbuffer);
 		       r = XGetWindowProperty (event->display, 
 					       event->requestor,

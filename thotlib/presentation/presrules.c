@@ -2889,33 +2889,26 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	pAbb1->AbVolume = 0;
 	pBuffPrec = NULL;
 	/* pas de buffer precedent */
-	if (TypeHasException (1207, pAbb1->AbElement->ElTypeNumber, pAbb1->AbElement->ElStructSchema))
+	/* si l'element a copier est lui-meme une reference qui copie un */
+	/* autre element, c'est cet autre element qu'on copie */
+	pPRule1 = NULL;
+	if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	  {
-	     if (ThotLocalActions[T_indexcopy] != NULL)
-		(*ThotLocalActions[T_indexcopy]) (pE, &pAb, &pBuffPrec);
+	    pPRule1 = GlobalSearchRulepEl (pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pAttr);
+	    pPRule1 = GetRuleCopy (pPRule1);
 	  }
+	if (pPRule1 == NULL)
+	  /* copie simplement toutes les feuilles de texte de pE */
+	  CopyLeaves (pE, &pAb, &pBuffPrec);
 	else
+	  /* applique la regle de copie transitive */
 	  {
-	     /* si l'element a copier est lui-meme une reference qui copie un */
-	     /* autre element, c'est cet autre element qu'on copie */
-	     pPRule1 = NULL;
-	     if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
-	       {
-		  pPRule1 = GlobalSearchRulepEl (pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pAttr);
-		  pPRule1 = GetRuleCopy (pPRule1);
-	       }
-	     if (pPRule1 == NULL)
-		/* copie simplement toutes les feuilles de texte de pE */
-		CopyLeaves (pE, &pAb, &pBuffPrec);
-	     else
-		/* applique la regle de copie transitive */
-	       {
-		  pElSv = pAb->AbElement;
-		  pAb->AbElement = pE;
-		  ApplyCopy (pDoc, pPRule1, pAb, FALSE);
-		  pAb->AbElement = pElSv;
-	       }
+	    pElSv = pAb->AbElement;
+	    pAb->AbElement = pE;
+	    ApplyCopy (pDoc, pPRule1, pAb, FALSE);
+	    pAb->AbElement = pElSv;
 	  }
+
 	if (withDescCopy)
 	  {
 	     /* ajoute a l'element copie' un descripteur d'element copie' */

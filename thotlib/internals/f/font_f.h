@@ -8,11 +8,11 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int CharacterWidth ( UCHAR_T c,
+extern int CharacterWidth ( unsigned char c,
                             ptrfont font );
-extern int CharacterHeight ( UCHAR_T c,
+extern int CharacterHeight ( unsigned char c,
                              ptrfont font );
-extern int CharacterAscent ( UCHAR_T c,
+extern int CharacterAscent ( unsigned char c,
                              ptrfont font );
 extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
@@ -47,7 +47,7 @@ extern ptrfont ThotLoadFont ( char alphabet,
                               TypeUnit unit,
                               int frame );
 extern void TtaSetFontZoom ( int zoom );
-extern void InitDialogueFonts ( CHAR_T* name );
+extern void InitDialogueFonts ( char* name );
 extern void ThotFreeFont ( int frame );
 extern void ThotFreeAllFonts ( void );
 
@@ -55,11 +55,11 @@ extern void ThotFreeAllFonts ( void );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* UCHAR_T c,
+extern int CharacterWidth (/* unsigned char c,
                               ptrfont font */);
-extern int CharacterHeight (/* UCHAR_T c,
+extern int CharacterHeight (/* unsigned char c,
                                ptrfont font */);
-extern int CharacterAscent (/* UCHAR_T c,
+extern int CharacterAscent (/* unsigned char c,
                                ptrfont font */);
 extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);
@@ -94,7 +94,7 @@ extern ptrfont ThotLoadFont (/* char alphabet,
                                 TypeUnit unit,
                                 int frame */);
 extern void TtaSetFontZoom (/* int zoom */);
-extern void InitDialogueFonts (/* CHAR_T* name */);
+extern void InitDialogueFonts (/* char* name */);
 extern void ThotFreeFont (/* int frame */);
 extern void ThotFreeAllFonts (/* void */);
 

@@ -201,7 +201,6 @@ EDITOR_OBJ = \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \
-	dialogue/extprintmenu.o \
 	dialogue/quit.o \
 	dialogue/searchmenu.o \
 	dialogue/searchmenustr.o \
