@@ -791,8 +791,55 @@ View                view;
 }
 
 /*-----------------------------------------------------------------------
+  ANNOT_SelectSourceDoc
+  If the user clicked on an annotation link in the source document,
+  it highlights the annotated text.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               ANNOT_SelectSourceDoc (int doc, Element el)
+#else  /* __STDC__ */
+void               ANNOT_SelectSourceDoc (doc, el)
+int doc;
+Element el;
+
+#endif
+{
+  ElementType elType;
+  AttributeType    attrType;
+  Attribute	   attr;
+  int              length;
+  CHAR_T          *annot_url;
+
+  /* is it a link? */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != HTML_EL_Anchor)
+    return;
+
+  /* is it an annotation link? */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    return;
+
+  /* get the URL of the annotation body */
+  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    return;
+  length = TtaGetTextAttributeLength (attr);
+  length++;
+  annot_url = TtaGetMemory (length);
+  TtaGiveTextAttributeValue (attr, annot_url, &length);
+
+  /* select the annotated text */
+  LINK_SelectSourceDoc (doc, annot_url);
+
+  TtaFreeMemory (annot_url);
+}
+
+/*-----------------------------------------------------------------------
   RaiseSourceDoc_callback
-  -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               Annot_RaiseSourceDoc_callback (int doc, int status, 
@@ -823,24 +870,8 @@ void *context;
 
    /* select the source of the annotation */
    if (ctx->doc_annot)
-     {
-       XPointerContextPtr xptr_ctx;
-       AnnotMeta *annot;
+     LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot]);
 
-       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-				      DocumentURLs[ctx->doc_annot], FALSE);
-       if (annot)
-	 {
-	   xptr_ctx = XPointer_parse (doc, annot->xptr);
-	   if (!xptr_ctx->error)
-	     XPointer_select (xptr_ctx);
-	   else
-	     fprintf (stderr, "RaiseSourceDoc: impossible to set XPointer\n");
-	   XPointer_free (xptr_ctx);
-	 }
-       else
-	 fprintf (stderr, "RaiseSourceDoc: couldn't find annotation metadata\n");
-     }
    TtaFreeMemory (ctx->url);
    TtaFreeMemory (ctx);
 }

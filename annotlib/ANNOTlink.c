@@ -443,8 +443,8 @@ void LINK_DelMetaFromMemory (Document doc)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_LoadAnnotationIndex (doc, char *annotIndex)
-  -----------------------------------------------------------------------
+   LINK_LoadAnnotationIndex (doc, char *annotIndex)
+   -----------------------------------------------------------------------
    Searches for an annotation index related to the document. If it exists,
    it parses it and then displays all of its annotations
   -----------------------------------------------------------------------*/
@@ -507,6 +507,37 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 	}
       List_delFirst (&list_ptr);
     }
+}
+
+/*-----------------------------------------------------------------------
+   LINK_SelectSource
+   Selects the text that was annotated in a document.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void LINK_SelectSourceDoc (Document doc, CHAR_T *annot_url)
+#else /* __STDC__*/
+void LINK_SelectSourceDoc (doc, annotIndex)
+     Document doc;
+     CHAR_T *annotIndex;
+#endif /* __STDC__*/
+{
+  XPointerContextPtr xptr_ctx;
+  AnnotMeta *annot;
+  
+  annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
+				 annot_url, FALSE);
+    if (annot)
+      {
+	xptr_ctx = XPointer_parse (doc, annot->xptr);
+	if (!xptr_ctx->error)
+	  XPointer_select (xptr_ctx);
+	else
+	  fprintf (stderr, "LINK_SelectSource: impossible to set XPointer\n");
+	XPointer_free (xptr_ctx);
+      }
+    else
+      fprintf (stderr, "LINK_SelectSourceDoc: couldn't find annotation metadata\n");
 }
 
 /***************************************************

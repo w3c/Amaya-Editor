@@ -1038,6 +1038,11 @@ NotifyElement      *event;
 {
   ThotBool usedouble;
 
+#ifdef ANNOTATIONS
+  /* if it's an annotation link, highlight the selection */
+  ANNOT_SelectSourceDoc (event->document, event->element);
+#endif /* ANNOTATIONS */
+
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
     return TRUE;
