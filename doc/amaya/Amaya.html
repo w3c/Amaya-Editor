@@ -135,13 +135,12 @@ Amaya</a>."</p>
 
 <h3>Transport protocols</h3>
 
-<p>Amaya accesses remote sites by means of HTTP 1.1. Two different
-implementations of this protocol can be used: <a
-href="http://www.w3.org/Library/">libwww</a> or the Java classes from <a
-href="http://www.w3.org/Jigsaw/">Jigsaw</a>. Amaya takes advantage of the most
+<p>Amaya accesses remote sites by means of HTTP 1.1. Implementation of this
+protocol is provided by the W3C <a
+href="http://www.w3.org/Library/">libwww</a>. Amaya takes advantage of he most
 advanced features of HTTP, such as content negotiation to retrieve the most
-appropriate picture format, for instance, or keep alive connections to save
-bandwidth.</p>
+appropriate picture format, for instance, keep alive connections to save
+bandwidth and authentication to allow secure remote publishing.</p>
 
 <h3>Graphics</h3>
 
@@ -153,28 +152,31 @@ format than GIF and is being increasingly used on the Web.</p>
 drawing packages) developed by Rutherford Appleton Laboratory was demonstrated
 at EITC'97 in Brussells.</p>
 
-<h3>Support for CSS</h3>
+<h3>Style Sheets</h3>
 
-<p>Amaya has support for <a href="../Style/">CSS1</a> although this is not yet
-complete. The user interacts on a formatted document and does need to see the
-CSS syntax. The current implementation should be considered as an experiment
-but the plan is to revisit this part of the Amaya code and improve it to
-provide a stronger basis for implementing CSS2.</p>
+<p>Amaya has support for the W3C style sheet language <a
+href="../Style/">CSS</a> although this is not yet complete. For simple
+properties like foreground and background colors, alignment, etc. the user can
+interact on a formatted document whitout manipulating the CSS syntax. At the
+same time Amaya  provides an efficient mechanism to test and associate
+external style sheets with HTML documents. Users can also download, edit and
+publish CSS style sheets as well as HTML pages. </p>
 
-<h3><a name="math">Demonstration of MathML</a></h3>
+<h3><a name="math">Math on the Web</a></h3>
 
-<p>Amaya now demonstrates a prototype implementation of <a
+<p>Amaya demonstrates an implementation of <a
 href="../TR/REC-MathML/">MathML</a> which allows users to browse and edit web
 pages containing mathematical expressions.  Like the rest of the document,
-these expressions are manipulated through a WYSIWYG interface.</p>
+these expressions are manipulated through a WYSIWYG interface. Amaya uses
+namespaces to integrate MathML expressions within  XHTML documents, i.e. HTML
+documents written in XML syntax.</p>
 
 <p align="left"><img src="Icons/amaya-math" alt="Screen shot of Amaya's Math"
 width="449" height="500" hspace="10"></p>
 
 <p>This screen shot is a demonstration of MathML, an XML application resulting
-from work by the W3C Math working group. MathML allows authors to format
-equations for publishing on the World Wide Web. With Amaya, an author can see
-the formatted view and the structure view at the same time. <br clear="all">
+from work by the W3C Math working group. With Amaya, an author can see the
+formatted view and the structure view at the same time. <br clear="all">
 </p>
 
 <h4>Printing</h4>
@@ -185,7 +187,9 @@ the table of contents of the document.</p>
 <h4>API</h4>
 
 <p>The editor offers an API for adding new functions or for modifying existing
-functions.This API is available in two flavors: C and Java.</p>
+functions.This  API written in C is used to experiment with the Java API
+developed by the Document Object Model (<a href="/DOM/Activity">DOM</a>)
+activity.</p>
 
 <h2 align="left"><a href="User/"><img src="../Icons/WWW/doc48x"
 alt="Documentation" border="0">
@@ -230,7 +234,7 @@ details.</p>
 <ul>
 <li>
 <strong>Amaya team:</strong> Ir&egrave;ne Vatton, Ramzi Gu&eacute;tari,
-Jos&eacute; Kahan, Vincent Quint, Daniel Veillard (amaya-java application).
+Jos&eacute; Kahan, Vincent Quint.
 </li>
 <li>
 <p><strong>Thot toolkit contributors:</strong> Ir&egrave;ne Vatton, Vincent
