@@ -9,55 +9,40 @@
  * Transformation language parser, see file HTML.trans for a 
  * description of the language				
  *
- * Author: S. Bonhomme			
+ * Author: S. Bonhomme
+ *         I. Vatton (W3C/INRIA): XML extension
  *
  */
-
-/* Compiling this module with -DPPSTANDALONE generates the main program of  */
-/* a converter which reads a .trans file and creates the trans tables     */
-/* Without this option, it creates a function ppStartParser that parses a   */
-/* trans file and displays the internal representation of transformations.  */
-/* !!!!!! WARNING : It does not works due to lack of time for maintening */
-/* this code !!!!!!! */ 
 
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "fileaccess.h"
 #include "fetchHTMLname.h"
-#ifdef  PPSTANDALONE
-#define  NAME_LENGTH 20
-#include "parser.h"
-#else
 #include "trans.h"
-#endif
-
 
 extern CHAR_T*   SchemaPath;
 
-
 /* pattern and rules internal representation */
 typedef struct _parForest
-  {
+{
      strListSymb           *first;
      strListSymb           *last;
-     ThotBool            optional;
-     struct _parForest  *next;
-  }
-parForest;
+     ThotBool               optional;
+     struct _parForest     *next;
+} parForest;
 
 typedef struct _parChoice
-  {
+{
      parForest          *forests;
      ThotBool            optional;
-  }
-parChoice;
+} parChoice;
 
 static ThotBool     ppError;
 static ThotBool     ppIsNamed;
 static ThotBool     ppOptional;
 static ThotBool     ppIterTag;
 static ThotBool	    selRuleFlag;
-static CHAR_T         ppName[20];
+static CHAR_T       ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
 static parChoice   *ppLastChoice;
@@ -68,8 +53,8 @@ static strAttrDesc    *ppAttr;	/* attribute descriptor */
 static strNodeDesc    *ppNode;	/* node descriptor */
 static strRuleDesc    *ppRule;	/* rule descriptor */
 static parChoice   *choiceStack[MAX_STACK];
-static CHAR_T         opStack[MAX_STACK];
-static strSymbDesc    *symbolStack[MAX_STACK];
+static CHAR_T       opStack[MAX_STACK];
+static strSymbDesc *symbolStack[MAX_STACK];
 static int          sizeStack;
 static int          patDepth;
 static int          numberOfLinesRead;
@@ -78,7 +63,7 @@ static ThotBool     normalTransition;
 
 #define MaxBufferLength   1000
 #define AllmostFullBuffer  700
-static UCHAR_T inputBuffer[MaxBufferLength];
+static UCHAR_T      inputBuffer[MaxBufferLength];
 static int          ppLgBuffer = 0;	/* actual length of text in input buffer */
 typedef int         State;	/* a state of the automaton */
 static State        currentState;	/* current state of the automaton */
@@ -326,14 +311,10 @@ USTRING     msg;
 
 #endif
 {
-#ifndef PPSTANDALONE
    CHAR_T                numline[5];
 
    usprintf (numline, TEXT("%d"), numberOfLinesRead);
    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_PARSE_ERROR), numline);
-#else
-   fprintf (stderr, "line %d, char %d: %s\n", numberOfLinesRead, numberOfCharRead, msg);
-#endif
    normalTransition = FALSE;
 }
 
@@ -1171,210 +1152,223 @@ UCHAR_T       c;
      }
 }
 
+
 /*----------------------------------------------------------------------
+   MapThotAttr     search in AttributeMappingTable the entry for
+   the attribute of name Attr and returns the Thot Attribute
+   corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndOfAttrName (UCHAR_T c)
+int                 MapThotAttr (CHAR_T* attrName, CHAR_T *elementName)
 #else
-static void         ppEndOfAttrName (c)
-UCHAR_T       c;
+int                 MapThotAttr (attrName, elementName)
+CHAR_T             *attrName;
+CHAR_T             *elementName;
 
 #endif
 {
-   int                 ThotAttrNum;
-   CHAR_T                msgBuffer[MaxBufferLength];
+  int                 i, thotAttr;
 
-   if (ppLgBuffer != 0)
-     {
-#ifndef PPSTANDALONE
-	ThotAttrNum = MapThotAttr (inputBuffer, ppSymb->Tag);
-	if (ThotAttrNum != -1)
-	  {
-#endif
-	     ppAttr = ppSymb->Attributes;
-	     if (!ppAttr)
-	       {
-		  ppSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		  ppAttr = ppSymb->Attributes;
-		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
-		  ppAttr->Next = NULL;
-	       }
-	     else
-	       {
-		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->Next;
-		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
-		    {
-		       ppError = TRUE;
-		       ErrorMessage (TEXT("Multi valued attribute"));
-		    }
-		  else
-		    {
-		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
-		       ppAttr->Next = NULL;
-		    }
-	       }
-	     ustrcpy (ppAttr->NameAttr, inputBuffer);
-	     ppAttr->ThotAttr = ThotAttrNum;
-	     ppAttr->IsInt = TRUE;
-	     ppAttr->IsTransf = FALSE;
-	     ppAttr->IntVal = 0;
-#ifndef PPSTANDALONE
-	  }
-	else
-	  {
-	     ppError = TRUE;
-	     usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
-	     ErrorMessage (msgBuffer);
-	  }
-#endif
-	ppLgBuffer = 0;
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage (TEXT("Missing Attribute Name"));
-     }
+  i = MapXMLAttribute (XHTML_TYPE, attrName, elementName, TransDoc, &thotAttr);
+  if (i < 0)
+    i = MapXMLAttribute (MATH_TYPE, attrName, elementName, TransDoc, &thotAttr);
+  if (i < 0)
+    i = MapXMLAttribute (GRAPH_TYPE, attrName, elementName, TransDoc, &thotAttr);
+  return thotAttr;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppEndRuleAttrName (UCHAR_T c)
+static void   ppEndOfAttrName (UCHAR_T c)
 #else
-static void         ppEndRuleAttrName (c)
+static void   ppEndOfAttrName (c)
 UCHAR_T       c;
 
 #endif
 {
-   int                 ThotAttrNum;
-   CHAR_T                msgBuffer[MaxBufferLength];
+  int                 thotAttr;
+  CHAR_T              msgBuffer[MaxBufferLength];
 
-   if (ppLgBuffer != 0)
-     {
-#ifndef PPSTANDALONE
-       if (ustrcmp (ppNode->Tag, TEXT("*")) == 0)
-	 ThotAttrNum = MapThotAttr (inputBuffer, TEXT(""));
-       else
-	 ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
-	if (ThotAttrNum != -1)
-	  {
-#endif
-	     ppAttr = ppNode->Attributes;
-	     if (!ppAttr)
-	       {
-		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		  ppAttr = ppNode->Attributes;
+  if (ppLgBuffer != 0)
+    {
+      thotAttr = MapThotAttr (inputBuffer, ppSymb->Tag);
+      if (thotAttr != -1)
+	{
+	  ppAttr = ppSymb->Attributes;
+	  if (!ppAttr)
+	    {
+	      ppSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+	      ppAttr = ppSymb->Attributes;
+	      ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
+	      ppAttr->Next = NULL;
+	    }
+	  else
+	    {
+	      while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
+		ppAttr = ppAttr->Next;
+	      if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
+		{
+		  ppError = TRUE;
+		  ErrorMessage (TEXT("Multi valued attribute"));
+		}
+	      else
+		{
+		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		  ppAttr = ppAttr->Next;
 		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
-	       }
-	     else
-	       {
-		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->Next;
-		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
-		    {
-		       ppError = TRUE;
-		       ErrorMessage (TEXT("Multi valued attribute"));
-		    }
-		  else
-		    {
-		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
-		       ppAttr->Next = NULL;
-		    }
-	       }
-	     ustrcpy (ppAttr->NameAttr, inputBuffer);
-	     ppAttr->ThotAttr = ThotAttrNum;
-	     ppAttr->IsInt = TRUE;
-	     ppAttr->IsTransf = FALSE;
-	     ppAttr->IntVal = 0;
-#ifndef PPSTANDALONE
-	  }
-	else
-	  {
-	     ppError = TRUE;
-	     usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
-	     ErrorMessage (msgBuffer);
-	  }
-#endif
-	ppLgBuffer = 0;
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage (TEXT("Missing Attribute Name"));
-     }
+		}
+	    }
+	  ustrcpy (ppAttr->NameAttr, inputBuffer);
+	  ppAttr->ThotAttr = thotAttr;
+	  ppAttr->IsInt = TRUE;
+	  ppAttr->IsTransf = FALSE;
+	  ppAttr->IntVal = 0;
+	}
+      else
+	{
+	  ppError = TRUE;
+	  usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
+	  ErrorMessage (msgBuffer);
+	}
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Missing Attribute Name"));
+    }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ppTransAttr (UCHAR_T c)
+static void   ppEndRuleAttrName (UCHAR_T c)
 #else
-static void         ppTransAttr (c)
+static void   ppEndRuleAttrName (c)
 UCHAR_T       c;
 
 #endif
 {
-   int                 ThotAttrNum;
+  int                 thotAttr;
+  CHAR_T              msgBuffer[MaxBufferLength];
 
-   if (ppLgBuffer != 0)
-     {
-#ifndef PPSTANDALONE
-	ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
-	if (ThotAttrNum != -1)
-	  {
-#endif
-	     ppAttr = ppNode->Attributes;
-	     if (!ppAttr)
-	       {
-		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		  ppAttr = ppNode->Attributes;
+  if (ppLgBuffer != 0)
+    {
+      if (ustrcmp (ppNode->Tag, TEXT("*")) == 0)
+	thotAttr = MapThotAttr (inputBuffer, TEXT(""));
+      else
+	thotAttr = MapThotAttr (inputBuffer, ppNode->Tag);
+      if (thotAttr != -1)
+	{
+	  ppAttr = ppNode->Attributes;
+	  if (!ppAttr)
+	    {
+	      ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+	      ppAttr = ppNode->Attributes;
+	      ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
+	      ppAttr->Next = NULL;
+	    }
+	  else
+	    {
+	      while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
+		ppAttr = ppAttr->Next;
+	      if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
+		{
+		  ppError = TRUE;
+		  ErrorMessage (TEXT("Multi valued attribute"));
+		}
+	      else
+		{
+		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		  ppAttr = ppAttr->Next;
 		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
-	       }
-	     else
-	       {
-		  while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
-		     ppAttr = ppAttr->Next;
-		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
-		    {
-		       ppError = TRUE;
-		       ErrorMessage (TEXT("Multi valued attribute"));
-		    }
-		  else
-		    {
-		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
-		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
-		       ppAttr->Next = NULL;
-		    }
-	       }
-	     ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
-	     ustrcpy (ppAttr->AttrTag, inputBuffer);
-	     ustrcpy (ppAttr->NameAttr, TEXT(""));
-	     ppAttr->ThotAttr = ThotAttrNum;
-	     ppAttr->IsInt = FALSE;
-	     ppAttr->IsTransf = TRUE;
-#ifndef PPSTANDALONE
-	  }
-	else
-	  {
-	     ppError = TRUE;
-	     ErrorMessage (TEXT("Unknown attribute"));
-	  }
+		}
+	    }
+	  ustrcpy (ppAttr->NameAttr, inputBuffer);
+	  ppAttr->ThotAttr = thotAttr;
+	  ppAttr->IsInt = TRUE;
+	  ppAttr->IsTransf = FALSE;
+	  ppAttr->IntVal = 0;
+	}
+      else
+	{
+	  ppError = TRUE;
+	  usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
+	  ErrorMessage (msgBuffer);
+	}
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Missing Attribute Name"));
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   ppTransAttr (UCHAR_T c)
+#else
+static void   ppTransAttr (c)
+UCHAR_T       c;
+
 #endif
-	ppLgBuffer = 0;
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage (TEXT("Missing Attribute Name"));
-     }
+{
+  int                 thotAttr;
+
+  if (ppLgBuffer != 0)
+    {
+      thotAttr = MapThotAttr (inputBuffer, ppNode->Tag);
+      if (thotAttr != -1)
+	{
+	  ppAttr = ppNode->Attributes;
+	  if (!ppAttr)
+	    {
+	      ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+	      ppAttr = ppNode->Attributes;
+	      ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
+	      ppAttr->Next = NULL;
+	    }
+	  else
+	    {
+	      while (ppAttr->Next && ustrcmp (ppAttr->NameAttr, inputBuffer))
+		ppAttr = ppAttr->Next;
+	      if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
+		{
+		  ppError = TRUE;
+		  ErrorMessage (TEXT("Multi valued attribute"));
+		}
+	      else
+		{
+		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		  ppAttr = ppAttr->Next;
+		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
+		  ppAttr->Next = NULL;
+		}
+	    }
+	  ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
+	  ustrcpy (ppAttr->AttrTag, inputBuffer);
+	  ustrcpy (ppAttr->NameAttr, TEXT(""));
+	  ppAttr->ThotAttr = thotAttr;
+	  ppAttr->IsInt = FALSE;
+	  ppAttr->IsTransf = TRUE;
+	}
+      else
+	{
+	  ppError = TRUE;
+	  ErrorMessage (TEXT("Unknown attribute"));
+	}
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Missing Attribute Name"));
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1387,18 +1381,18 @@ UCHAR_T       c;
 
 #endif
 {
-   if (ppLgBuffer != 0)
-     {
-	ppAttr->IsTransf = TRUE;
-	ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
-	ustrcpy (ppAttr->AttrTag, inputBuffer);
-	ppLgBuffer = 0;
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage (TEXT("Missing Tag Name"));
-     }
+  if (ppLgBuffer != 0)
+    {
+      ppAttr->IsTransf = TRUE;
+      ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
+      ustrcpy (ppAttr->AttrTag, inputBuffer);
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Missing Tag Name"));
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1411,21 +1405,21 @@ UCHAR_T       c;
 
 #endif
 {
-   if (ppLgBuffer != 0)
-     {
-	ppAttr->AttrAttr = TtaAllocString (NAME_LENGTH);
-	ustrcpy (ppAttr->AttrAttr, inputBuffer);
-	if (!ustrcmp (ppAttr->NameAttr, TEXT("")))
-	  {
-	     ustrcpy (ppAttr->NameAttr, inputBuffer);
-	  }
-	ppLgBuffer = 0;
-     }
-   else
-     {
-	ppError = TRUE;
-	ErrorMessage (TEXT("Missing Attribute Name"));
-     }
+  if (ppLgBuffer != 0)
+    {
+      ppAttr->AttrAttr = TtaAllocString (NAME_LENGTH);
+      ustrcpy (ppAttr->AttrAttr, inputBuffer);
+      if (!ustrcmp (ppAttr->NameAttr, TEXT("")))
+	{
+	  ustrcpy (ppAttr->NameAttr, inputBuffer);
+	}
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Missing Attribute Name"));
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1439,43 +1433,43 @@ UCHAR_T       c;
 
 #endif
 {
-   int                 len;
-
-   if ((ppLgBuffer == 0 || inputBuffer[0] != '\"') &&
-       (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
-	c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
-	c == '<' || c == '.' || c == '!' || c == '?'))
-     {
-       ppError = TRUE;
-       ErrorMessage (TEXT("Invalid char"));
-     }
-   else
-     {
-	/* put the character into the buffer if it is not an ignored char. */
-	if ((int) c == 9)	/* HT */
-	   len = 8;		/* HT = 8 spaces */
-	else
-	   len = 1;
-	if (c != EOS)
-	  {
-	     if (ppLgBuffer + len >= MaxBufferLength)
-	       {
-		  ppError = TRUE;
-		  ErrorMessage (TEXT("Panic: buffer overflow"));
-		  ppLgBuffer = 0;
-	       }
-	     if (len == 1)
-		inputBuffer[ppLgBuffer++] = c;
-	     else		/* HT */
-		do
-		  {
-		     inputBuffer[ppLgBuffer++] = SPACE;
-		     len--;
-		  }
-		while (len > 0);
-	  }
-	inputBuffer[ppLgBuffer] = EOS;
-     }
+  int                 len;
+  
+  if ((ppLgBuffer == 0 || inputBuffer[0] != '\"') &&
+      (c == ':' || c == ';' || c == '(' || c == ')' || c == '{' || 
+       c == '}' || c == '+' || c == ',' || c == '|' || c == '>' || 
+       c == '<' || c == '.' || c == '!' || c == '?'))
+    {
+      ppError = TRUE;
+      ErrorMessage (TEXT("Invalid char"));
+    }
+  else
+    {
+      /* put the character into the buffer if it is not an ignored char. */
+      if ((int) c == 9)	/* HT */
+	len = 8;		/* HT = 8 spaces */
+      else
+	len = 1;
+      if (c != EOS)
+	{
+	  if (ppLgBuffer + len >= MaxBufferLength)
+	    {
+	      ppError = TRUE;
+	      ErrorMessage (TEXT("Panic: buffer overflow"));
+	      ppLgBuffer = 0;
+	    }
+	  if (len == 1)
+	    inputBuffer[ppLgBuffer++] = c;
+	  else		/* HT */
+	    do
+	      {
+		inputBuffer[ppLgBuffer++] = SPACE;
+		len--;
+	      }
+	    while (len > 0);
+	}
+      inputBuffer[ppLgBuffer] = EOS;
+    }
 }
 
 
@@ -1504,7 +1498,7 @@ UCHAR_T       c;
 #endif
 {
    ThotBool            isText;
-   int                 i, AttrVal;
+   int                 i, attrVal;
 
    if (ppLgBuffer == 0)
      {
@@ -1525,15 +1519,11 @@ UCHAR_T       c;
 	  }
 	else
 	  {
-#ifdef PPSTANDALONE
-	     AttrVal = -1;
-#else
-	     AttrVal = MapAttrValue (ppAttr->ThotAttr, inputBuffer);
-#endif
-	     if (AttrVal != -1)
+	     attrVal = MapAttrValue (ppAttr->ThotAttr, inputBuffer);
+	     if (attrVal != -1)
 	       {
 		  ppAttr->IsInt = TRUE;
-		  ppAttr->IntVal = AttrVal;
+		  ppAttr->IntVal = attrVal;
 	       }
 	     else
 	       {
@@ -1631,14 +1621,14 @@ UCHAR_T       c;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndNode (UCHAR_T c)
+static void   EndNode (UCHAR_T c)
 #else
-static void         EndNode (c)
+static void   EndNode (c)
 UCHAR_T       c;
 
 #endif
 {
-   CHAR_T                msgBuffer[MaxBufferLength];
+   CHAR_T              msgBuffer[MaxBufferLength];
    SSchema	       schema;
 
    if (ppLgBuffer != 0)
@@ -1967,15 +1957,9 @@ CHAR_T                c;
 {
 }
 
-#ifdef PPSTANDALONE
-typedef void        (*Proc) ();
-
-#endif
 
 /* some type definitions for the automaton */
-
 typedef struct _Transition *PtrTransition;
-
 typedef struct _Transition
   {				/* a transition of the automaton in   "executable" form */
      char       trigger;	/* the imput character that triggers
@@ -2224,207 +2208,167 @@ void         FreeTransform ()
    	TRANSparse	parses the transformation file infile and builds the	
    			equivalent matching environment.			
   ----------------------------------------------------------------------*/
-#ifdef PPSTANDALONE
-#ifdef __STDC__
-static void         TRANSparse (FILE * infile)
-#else
-static void         TRANSparse (infile)
-FILE               *infile;
-#endif
-#else
 #ifdef __STDC__
 static void         TRANSparse (BinFile infile)
 #else
 static void         TRANSparse (infile)
-BinFile               infile;
-#endif
+BinFile             infile;
 #endif
 {
-   unsigned char       charRead, oldcharRead;
-   ThotBool            match, readOk;
-   PtrTransition       trans;
+  unsigned char       charRead, oldcharRead;
+  ThotBool            match, readOk;
+  PtrTransition       trans;
 
-   /* initialize automaton */
-   /* parse the input file    */
-   readOk = FALSE;
-   numberOfCharRead = 0;
-   numberOfLinesRead = 1;
-   currentState = 0;
-   charRead = EOS;
-   readOk = FALSE;
-   /* read the file sequentially */
-   do
-     {
-	/* read one character from the input file, if the character read */
-	/* previously has already been processed */
-	if (charRead == EOS)
-#ifdef PPSTANDALONE
-	   charRead = getc (infile);
-	if (!feof (infile) && !ferror (infile))
-#else
-	  readOk = TtaReadByte(infile,&charRead);
-	if(readOk)
-#endif
-	  {
-	     if (charRead == '!' && numberOfCharRead == 0)
-	       {		/*comment */
-		  do
-#ifdef PPSTANDALONE
-		    charRead = getc (infile);
-		  while (charRead != EOL && !feof (infile) && !ferror (infile));
-#else
-		    readOk = TtaReadByte(infile,&charRead);
-		  while (charRead != EOL && readOk);
-#endif
-	       }
-	  }
-#ifdef PPSTANDALONE
-	if (!feof (infile) && !ferror (infile))
-#else
-	  if(readOk)
-#endif
-	  {
-	     if (charRead == EOL)
-	       {
-		  /* new line in file */
-		  numberOfLinesRead++;
-		  numberOfCharRead = 0;
-	       }
-	     else
-		numberOfCharRead++;
+  /* initialize automaton */
+  /* parse the input file    */
+  readOk = FALSE;
+  numberOfCharRead = 0;
+  numberOfLinesRead = 1;
+  currentState = 0;
+  charRead = EOS;
+  readOk = FALSE;
+  /* read the file sequentially */
+  do
+    {
+      /* read one character from the input file, if the character read */
+      /* previously has already been processed */
+      if (charRead == EOS)
+	readOk = TtaReadByte(infile,&charRead);
+      if (readOk)
+	{
+	  if (charRead == '!' && numberOfCharRead == 0)
+	    {
+	      /* reading a comment */
+	      do
+		readOk = TtaReadByte(infile, &charRead);
+	      while (charRead != EOL && readOk);
+	    }
+	}
 
-	     /* Check the character read */
-	     /* Ignore end of line , non printable */
-	     if ((int) charRead < 32 ||
-		 ((int) charRead >= 127 && (int) charRead <= 143))
-		charRead = EOS;
-	     if (charRead != EOS)
-	       {
-		  /* a valid character has been read */
-		  /* first transition of the automaton for the current state */
-		  trans = automaton[currentState].firstTransition;
-		  /* search a transition triggered by the character read */
-		  while (trans)
+      if (readOk)
+	{
+	  if (charRead == EOL)
+	    {
+	      /* new line in file */
+	      numberOfLinesRead++;
+	      numberOfCharRead = 0;
+	    }
+	  else
+	    numberOfCharRead++;
+	  
+	  /* Check the character read */
+	  /* Ignore end of line , non printable */
+	  if ((int) charRead < 32 ||
+	      ((int) charRead >= 127 && (int) charRead <= 143))
+	    charRead = EOS;
+	  if (charRead != EOS)
+	    {
+	      /* a valid character has been read */
+	      /* first transition of the automaton for the current state */
+	      trans = automaton[currentState].firstTransition;
+	      /* search a transition triggered by the character read */
+	      while (trans)
+		{
+		  match = FALSE;
+		  if (charRead == trans->trigger)	/* the char is the trigger */
+		    match = TRUE;
+		  else if (trans->trigger == EOS)	/* any char is a trigger */
+		    match = TRUE;
+		  else if (trans->trigger == SPACE)	/* any space is a trigger */
+		    if ((int) charRead == 9 || (int) charRead == 10 ||
+			(int) charRead == 12 || (int) charRead == 13)	/* a delimiter has been read */
+		      match = TRUE;
+		  if (match)
 		    {
-		       match = FALSE;
-		       if (charRead == trans->trigger)	/* the char is the trigger */
-			  match = TRUE;
-		       else if (trans->trigger == EOS)	/* any char is a trigger */
-			  match = TRUE;
-		       else if (trans->trigger == SPACE)	/* any space is a trigger */
-			  if ((int) charRead == 9 || (int) charRead == 10 ||
-			      (int) charRead == 12 || (int) charRead == 13)	/* a delimiter has been read */
-			     match = TRUE;
-		       if (match)
-			 {
-			    /* transition found. Activate the transition */
-			    /* call the procedure associated with the transition */
-			    normalTransition = TRUE;
-			    if (trans->action)
-			       (*(trans->action)) (charRead);
-			    if (normalTransition)
-			      {
-				 /* the input character has been processed */
-				 charRead = EOS;
-				 /* the procedure associated with the transition has not */
-				 /* changed state explicitely */
-				 /* change current automaton state */
-				 if (trans->newState >= 0)
-				    currentState = trans->newState;
-				 else if (trans->newState == -1)
-				    /* return form subautomaton */
-				    currentState = returnState;
-				 else
-				   {
-				      /* calling a subautomaton */
-				      returnState = currentState;
-				      currentState = -trans->newState;
-				   }
-			      }
-			    else
-			      {	/* an error has been found skipping the transformation */
-#ifdef PPSTANDALONE
-				 oldcharRead = getc (infile);
-				 if (!feof (infile) && !ferror (infile))
-				    charRead = getc (infile);
-				 while ((!feof (infile) && !ferror (infile)) && (charRead != '}' || oldcharRead != ';'))
-				   {
-				      oldcharRead = charRead;
-				      charRead = getc (infile);
-				      while (!feof (infile) && !ferror (infile) && ((int) charRead == 9 ||
-										    (int) charRead == 10 || (int) charRead == 12 || (int) charRead == 13))
-					 charRead = getc (infile);
-				   }
-				 if (!feof (infile) && !ferror (infile))
-#else
-				 readOk=TtaReadByte(infile,&oldcharRead);
-				 if (readOk)
-				    readOk=TtaReadByte(infile,&charRead);
-				 while (readOk && (charRead != '}' || oldcharRead != ';'))
-				   {
-				      oldcharRead = charRead;
-				      readOk=TtaReadByte(infile,&charRead);
-				      while (readOk  && ((int) charRead == 9 ||
-							 (int) charRead == 10 || 
-							 (int) charRead == 12 || 
-							 (int) charRead == 13 ||
-							 (int) charRead == 32 ))
-					 readOk=TtaReadByte(infile,&charRead);
-				   }
-				 if (readOk)
-#endif
-				   {
-				      if (ppTrans)
-					{
+		      /* transition found. Activate the transition */
+		      /* call the procedure associated with the transition */
+		      normalTransition = TRUE;
+		      if (trans->action)
+			(*(trans->action)) (charRead);
+		      if (normalTransition)
+			{
+			  /* the input character has been processed */
+			  charRead = EOS;
+			  /* the procedure associated with the transition has not */
+			  /* changed state explicitely */
+			  /* change current automaton state */
+			  if (trans->newState >= 0)
+			    currentState = trans->newState;
+			  else if (trans->newState == -1)
+			    /* return form subautomaton */
+			    currentState = returnState;
+			  else
+			    {
+			      /* calling a subautomaton */
+			      returnState = currentState;
+			      currentState = -trans->newState;
+			    }
+			}
+		      else
+			{
+			  /* an error has been found skipping the transformation */
+			  readOk = TtaReadByte (infile, &oldcharRead);
+			  if (readOk)
+			    readOk = TtaReadByte (infile, &charRead);
+			  while (readOk && (charRead != '}' || oldcharRead != ';'))
+			    {
+			      oldcharRead = charRead;
+			      readOk = TtaReadByte (infile, &charRead);
+			      while (readOk  && ((int) charRead == 9 ||
+						 (int) charRead == 10 || 
+						 (int) charRead == 12 || 
+						 (int) charRead == 13 ||
+						 (int) charRead == 32 ))
+				readOk = TtaReadByte (infile, &charRead);
+			    }
+			  if (readOk)
+			    {
+			      if (ppTrans)
+				{
 #ifdef AMAYA_DEBUG
-					   fprintf (stderr, "skipping transformation %s\n", ppTrans->NameTrans);
+				  fprintf (stderr, "skipping transformation %s\n", ppTrans->NameTrans);
 #endif
-					   FreeTrans (ppTrans);
-					   ppTrans = NULL;
-					}
-				      else
+				  FreeTrans (ppTrans);
+				  ppTrans = NULL;
+				}
+			      else
 #ifdef AMAYA_DEBUG
-					 fprintf (stderr, "skipping transformation\n");
+				fprintf (stderr, "skipping transformation\n");
 #endif
-				      if (ppChoice != NULL)
-					 FreeChoice (ppChoice);
-				      ppChoice = NULL;
-				      ppError = FALSE;
-				      currentState = 0;
-				      ppLgBuffer = 0;
-				      charRead = EOS;
-				      ppOptional = FALSE;
-				      ppIterTag = FALSE;
-				      ppAttr = NULL;
-				      ppNode = NULL;
-				      ppRule = NULL;
-				      ppIsNamed = FALSE;
-				      ustrcpy (ppName, TEXT(""));
-				      opStack[0] = EOS;
-				      symbolStack[0] = NULL;
-				      choiceStack[0] = NULL;
-				      sizeStack = 1;
-				   }
-			      }	/* done */
-			    trans = NULL;
-			 }
-		       else
-			 {
-			    /* access next transition from the same state */
-			    trans = trans->nextTransition;
-			    if (trans == NULL)
-			       charRead = EOS;
-			 }
+			      if (ppChoice != NULL)
+				FreeChoice (ppChoice);
+			      ppChoice = NULL;
+			      ppError = FALSE;
+			      currentState = 0;
+			      ppLgBuffer = 0;
+			      charRead = EOS;
+			      ppOptional = FALSE;
+			      ppIterTag = FALSE;
+			      ppAttr = NULL;
+			      ppNode = NULL;
+			      ppRule = NULL;
+			      ppIsNamed = FALSE;
+			      ustrcpy (ppName, TEXT(""));
+			      opStack[0] = EOS;
+			      symbolStack[0] = NULL;
+			      choiceStack[0] = NULL;
+			      sizeStack = 1;
+			    }
+			}	/* done */
+		      trans = NULL;
 		    }
-	       }
-	  }
-     }
-#ifdef PPSTANDALONE
-   while (!feof (infile) && !ferror (infile) && !ppError);
-#else
-   while (readOk && !ppError);
-#endif
-   /* end of HTML file */
+		  else
+		    {
+		      /* access next transition from the same state */
+		      trans = trans->nextTransition;
+		      if (trans == NULL)
+			charRead = EOS;
+		    }
+		}
+	    }
+	}
+    }
+  while (readOk && !ppError);
 }
 
 
@@ -2457,29 +2401,23 @@ static void         initpparse ()
    	ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
+int             ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
 #else
-int                 ppStartParser (name, tStrSchema, resTrSet)
-STRING              name;
-SSchema            tStrSchema;
-strTransSet        **resTrSet;
+int             ppStartParser (name, tStrSchema, resTrSet)
+STRING          name;
+SSchema         tStrSchema;
+strTransSet   **resTrSet;
 #endif
 {
-   CHAR_T                msg[200];
-
-#ifdef PPSTANDALONE
-   FILE               *infile = (FILE *)0;
-#else
-   BinFile             infile = (BinFile)0;
-   CHAR_T		       fileName[MAX_LENGTH];
-   CHAR_T                pathes[MAX_LENGTH];
+   CHAR_T             msg[200];
+   BinFile            infile = (BinFile)0;
+   CHAR_T	      fileName[MAX_LENGTH];
+   CHAR_T              pathes[MAX_LENGTH];
    STRING              next, cour;
    ThotBool            found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;
-#endif
 
-#ifndef PPSTANDALONE
    /* searches if a transformation set is already allocated */
    /* for the file to be parsed */
    ppTransSet = strMatchEnv.TransSets;
@@ -2510,7 +2448,7 @@ strTransSet        **resTrSet;
         else
 	  {
             ustrncpy (fileName, cour, (size_t)(next - cour)); 
-	    fileName[(next - cour)] = '\0';
+	    fileName[(next - cour)] = WC_EOS;
           }
         len = ustrlen(fileName);
         if (fileName[len]!= WC_DIR_SEP)
@@ -2539,9 +2477,6 @@ strTransSet        **resTrSet;
        	/* the file xxx.trans has been touched, parsing it */
 	     ppTransSet->timeLastWrite = StatBuffer->st_mtime;
 	     infile = TtaReadOpen(fileName);
-#else
-   infile = fopen (name, "r");
-#endif
 	   if (infile == 0)
 	     {
 		usprintf (msg, TEXT("Can't open file %s.trans"), name);
@@ -2566,149 +2501,14 @@ strTransSet        **resTrSet;
 		inputBuffer[0] = EOS;	/* initialize input buffer */
 		ppLgBuffer = 0;
 		TRANSparse (infile);
-#ifndef PPSTANDALONE
 	        TtaReadClose (infile);
 	      }
           }
      }
    TtaFreeMemory (StatBuffer);
-#else
-	   	fclose (infile);
-  	       }
-#endif
    if (!ppError)
      *resTrSet = ppTransSet;
    else
      *resTrSet = NULL;
    return !ppError;
 }
-
-
-#ifdef PPSTANDALONE
-void                main ()
-{
-   strTransDesc          *td;
-   strSymbDesc           *sd;
-   strListSymb           *ls;
-   strAttrDesc           *pa;
-   strNodeDesc           *nd;
-   strRuleDesc           *pr;
-
-   ppStartParser ("test.trans",NULL,NULL);
-   printf ("\n");
-   td = strMatchEnv.Transformations;
-   while (td)
-     {
-	printf ("transformation : %s\n", td->NameTrans);
-	printf ("entrees : ");
-	ls = td->First;
-	while (ls)
-	  {
-	     printf ("%s, ", ls->Symbol->SymbolName);
-	     ls = ls->Next;
-	  }
-	printf ("\n");
-	sd = td->Symbols;
-	while (sd)
-	  {
-	     printf ("%s  ", s d->SymbolName);
-	     pa = sd->Attributes;
-	     while (pa)
-	       {
-		  printf ("%s=", pa->NameAttr);
-		  if (pa->IsInt)
-		     printf ("%d ,", pa->IntVal);
-		  else
-		     printf ("%s ,", pa->TextVal);
-		  pa = pa->Next;
-	       }
-	     printf ("-- ");
-	     ls = sd->Followings;
-	     while (ls)
-	       {
-		  if (ls->Symbol == NULL)
-		     printf ("end");
-		  else
-		     printf ("%s, ", ls->Symbol->SymbolName);
-		  ls = ls->Next;
-	       }
-	     printf ("%s ", sd->IsOptChild ? "-?" : "-");
-	     ls = sd->Children;
-	     while (ls)
-	       {
-		  if (ls->Symbol == NULL)
-		     printf ("end");
-		  else
-		     printf ("%s, ", ls->Symbol->SymbolName);
-		  ls = ls->Next;
-	       }
-	     pr = sd->Rule;
-	     if (pr)
-	       {
-		  printf ("\n %s > ", pr->RuleName);
-		  nd = pr->OptionNodes;
-		  while (nd)
-		    {
-		       if (nd->Attributes)
-			  printf ("<");
-		       printf ("%s", nd->Tag);
-		       pa = nd->Attributes;
-		       while (pa)
-			 {
-			    printf (" %s=", pa->NameAttr);
-			    if (pa->IsTransf)
-			       printf ("%s.%s", pa->AttrTag, pa->AttrAttr);
-			    else if (pa->IsInt)
-			       printf ("%d", pa->IntVal);
-			    else
-			       printf ("%s", pa->TextVal);
-			    pa = pa->Next;
-			    if (pa)
-			       printf (" ");
-			 }
-		       if (nd->Attributes)
-			  printf (">");
-		       nd = nd->Next;
-		       if (nd)
-			  printf (".");
-		       else
-			  printf (":");
-		    }
-		  nd = pr->NewNodes;
-		  while (nd)
-		    {
-		       if (nd->Attributes)
-			  printf ("<");
-		       printf ("%s", nd->Tag);
-		       pa = nd->Attributes;
-		       while (pa)
-			 {
-			    printf (" %s=", pa->NameAttr);
-			    if (pa->IsTransf)
-			       printf ("%s.%s", pa->AttrTag, pa->AttrAttr);
-			    else if (pa->IsInt)
-			       printf ("%d", pa->IntVal);
-			    else
-			       printf ("%s", pa->TextVal);
-			    pa = pa->Next;
-			    if (pa)
-			       printf (" ");
-			 }
-		       if (nd->Attributes)
-			  printf (">");
-		       nd = nd->Next;
-		       if (nd)
-			  printf (".");
-		       else
-			  printf (";");
-		    }
-	       }
-	     printf ("\n");
-	     sd = sd->Next;
-	  }
-	printf ("\n");
-	td = td->Next;
-     }
-   printf ("\n");
-}
-#endif

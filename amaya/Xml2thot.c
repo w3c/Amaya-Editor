@@ -1551,8 +1551,8 @@ STRING      data;
 	      }
 	    EmptyLine = 0;
 	  }
-	else
 #ifdef LC
+	else
 	  printf ("\n  PutInXmlElement : No create \n");
 #endif /* LC */
      }

@@ -1,4 +1,5 @@
 /* mapping table of XHTML elements */
+#include "HTML.h"
 static ElemMapping    XHTMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
@@ -19,7 +20,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("body"), SPACE, HTML_EL_BODY, L_Basic},
    {TEXT("br"), 'E', HTML_EL_BR, L_Basic},
    {TEXT("button"), SPACE, HTML_EL_BUTTON, L_Transitional},
-   {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT, L_Transitional},
+   {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT, L_Other}, /* used by the trans.c */
    {TEXT("caption"), SPACE, HTML_EL_CAPTION, L_Transitional},
    {TEXT("center"), SPACE, HTML_EL_Center, L_Transitional},
    {TEXT("cite"), SPACE, HTML_EL_Cite, L_Basic},

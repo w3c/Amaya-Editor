@@ -11,7 +11,8 @@
  * for a Thot document of type HTML.
  *
  * Author: V. Quint
- *         R. Guetari (W3C/INRIA): Unicode version 
+ *         R. Guetari (W3C/INRIA): Unicode version
+ *         I. Vatton (W3C/INRIA): XML extension
  */
 
 #define THOT_EXPORT extern
@@ -644,39 +645,6 @@ Document            document;
 	  }
      }
    TtaFreeMemory (text);
-}
-
-
-/*----------------------------------------------------------------------
-   MapThotAttr     search in AttributeMappingTable the entry for
-   the attribute of name Attr and returns the Thot Attribute
-   corresponding to the rank of that entry.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MapThotAttr (CHAR_T* Attr, CHAR_T* tag)
-#else
-int                 MapThotAttr (Attr, tag)
-CHAR_T*             Attr;
-CHAR_T*             tag;
-
-#endif
-{
-   int               thotAttr;
-   SSchema           schema;
-   AttributeMapping* tableEntry;
-
-   thotAttr = -1;
-   lastElemEntry = -1;
-   schema = DocumentSSchema;
-   if (tag[0] != WC_EOS)
-   lastElemEntry = MapGI (tag, &schema, HTMLcontext.doc);
-   if (lastElemEntry >= 0 || tag[0] == WC_EOS)
-     {
-	tableEntry = MapAttr (Attr, &schema, lastElemEntry, HTMLcontext.doc);
-	if (tableEntry != NULL)
-	   thotAttr = tableEntry->ThotAttribute;
-     }
-   return thotAttr;
 }
 
 
@@ -2406,15 +2374,15 @@ ThotBool            onStartTag;
 
 /*----------------------------------------------------------------------
    MapAttrValue    search in AttrValueMappingTable the entry for
-   the attribute ThotAtt and its value AttrVal. Returns the corresponding
+   the attribute thotAttr and its value attrVal. Returns the corresponding
    Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapAttrValue (int ThotAtt, CHAR_T* AttrVal)
+int           MapAttrValue (int thotAttr, CHAR_T* attrVal)
 #else
-int                 MapAttrValue (ThotAtt, AttrVal)
-int                 ThotAtt;
-CHAR_T*             AttrVal;
+int           MapAttrValue (thotAttr, attrVal)
+int           thotAttr;
+CHAR_T       *attrVal;
 
 #endif
 {
@@ -2422,24 +2390,24 @@ CHAR_T*             AttrVal;
 
    value = -1;
    i = 0;
-   while (XhtmlAttrValueMappingTable[i].ThotAttr != ThotAtt &&
+   while (XhtmlAttrValueMappingTable[i].ThotAttr != thotAttr &&
 	  XhtmlAttrValueMappingTable[i].ThotAttr != 0)
       i++;
-   if (XhtmlAttrValueMappingTable[i].ThotAttr == ThotAtt)
+   if (XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr)
       do
-	 if (AttrVal[1] == WC_EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
-				   ThotAtt == HTML_ATTR_ItemStyle))
+	 if (attrVal[1] == WC_EOS && (thotAttr == HTML_ATTR_NumberStyle ||
+				   thotAttr == HTML_ATTR_ItemStyle))
 	    /* attributes NumberStyle (which is always 1 character long) */
 	    /* and ItemStyle (only when its length is 1) are */
 	    /* case sensistive. Compare their exact value */
-	    if (AttrVal[0] == XhtmlAttrValueMappingTable[i].XMLattrValue[0])
+	    if (attrVal[0] == XhtmlAttrValueMappingTable[i].XMLattrValue[0])
 	       value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
 	    else
 	       i++;
 	 else
 	    /* for other attributes, uppercase and lowercase are */
 	    /* equivalent */
-	    if (!ustrcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	    if (!ustrcasecmp (XhtmlAttrValueMappingTable[i].XMLattrValue, attrVal))
 	       value = XhtmlAttrValueMappingTable[i].ThotAttrValue;
 	    else
 	       i++;

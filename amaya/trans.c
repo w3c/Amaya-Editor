@@ -8,6 +8,7 @@
 /*
  *
  * Author: S Bonhomme
+ *         I. Vatton (W3C/INRIA): XML extension
  *
  */
 
@@ -1959,123 +1960,113 @@ Document            doc;
 
 #endif
 {
-   Element             prevFirst, parentFirst, nextLast;
-   Element             parentLast = NULL;
-   ThotBool            result;
+  Element             prevFirst, parentFirst, nextLast;
+  Element             parentLast = NULL;
+  ElementType         elType;
+  ThotBool            result;
 
-   TtaGiveFirstSelectedElement (doc, &origFirstSelect, &ffc, &flc);
-   TtaGiveLastSelectedElement (doc, &origLastSelect, &lfc, &llc);
-   myFirstSelect = origFirstSelect;
-   myLastSelect = origLastSelect;
-   parentFirst = NULL;
-   maxSelDepth = 0;
-   if (myFirstSelect != myLastSelect)
-     {
-       /* selection crosses several elements, looks if their parents */
-       /* surround the whole selection, if it is the case, */
-       /* the parent is considered as a selected element */ 
-	if (myFirstSelect != NULL && ffc <= 1)
-	  {
-	    /* searching for the first selected element */
-	     prevFirst = myFirstSelect;
-	     TtaPreviousSibling (&prevFirst);
-	     parentFirst = TtaGetParent (myFirstSelect);
-	     while (parentFirst != NULL && 
-		    prevFirst == NULL && 
-		    TtaIsBefore (parentFirst, myLastSelect))
-	       {
-		  myFirstSelect = parentFirst;
-		  prevFirst = myFirstSelect;
-		  TtaPreviousSibling (&prevFirst);
-		  parentFirst = TtaGetParent (myFirstSelect);
-	       }
-	  }
-	if (myLastSelect != NULL &&
-	    (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
-	  {
-	    /* searching for the last selected element */
-	     nextLast = myLastSelect;
-	     TtaNextSibling (&nextLast);
-	     parentLast = TtaGetParent (myLastSelect);
-	     while (parentLast != NULL && 
-		    nextLast == NULL && 
-		    TtaIsBefore (myFirstSelect, parentLast))
-	       {
-		  myLastSelect = parentLast;
-		  nextLast = myLastSelect;
-		  TtaNextSibling (&nextLast);
-		  parentLast = TtaGetParent (myLastSelect);
-	       }
-	  }
-     }
-   else if (myFirstSelect != NULL)
-     {
-       /* only one element is selected, check if its parent surround */
-       /* the whole selection */
-	prevFirst = TtaGetFirstChild (myFirstSelect);
-	nextLast = TtaGetLastChild (myFirstSelect);
-	while (prevFirst != NULL && prevFirst == nextLast)
-	  {
-	     myFirstSelect = prevFirst;
-	     prevFirst = TtaGetFirstChild (myFirstSelect);
-	     nextLast = TtaGetLastChild (myFirstSelect);
-	  }
-	if (prevFirst != NULL)
-	  {
-	     myFirstSelect = prevFirst;
-	     myLastSelect = nextLast;
-	  }
-	else
-	  {
-	     myLastSelect = myFirstSelect;
-	  }
-	parentFirst = parentLast = TtaGetParent (myFirstSelect);
-     }
-
-   mySelect = NULL;
-   result = (myFirstSelect != NULL && parentFirst == parentLast);
-   if (result && parentFirst != NULL)
-     {		
-       /* if all selected elements are at the same level, */
-       /* checking if ancestors have any sibling */
-       /* if it is not the case, they become the first selected element */
-	nextLast = myLastSelect;
-	prevFirst = myFirstSelect;
-	do
-	   TtaNextSibling (&nextLast);
-	while (nextLast != NULL &&
-	       GetXMLElementName (TtaGetElementType (nextLast), doc) == NULL);
-
-	do
-	   TtaPreviousSibling (&prevFirst);
-	while (prevFirst != NULL &&
-	       GetXMLElementName (TtaGetElementType (prevFirst), doc) == NULL);
-
-	while (parentFirst != NULL &&
-	       ((ustrcmp (TtaGetSSchemaName (TtaGetElementType (parentFirst).ElSSchema), TEXT("HTML")) != 0) ||
-		TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_HTML) &&
-	       nextLast == NULL && prevFirst == NULL)
-	  {
-	     maxSelDepth++;
-	     mySelect = parentFirst;
-	     parentFirst = TtaGetParent (parentFirst);
-	     if (parentFirst != NULL)
-	       {
-		  nextLast = mySelect;
-		  prevFirst = mySelect;
-		  do
-		     TtaNextSibling (&nextLast);
-		  while (nextLast != NULL &&
-			 GetXMLElementName (TtaGetElementType (nextLast), doc) == NULL);
-
-		  do
-		     TtaPreviousSibling (&prevFirst);
-		  while (prevFirst != NULL &&
-			 GetXMLElementName (TtaGetElementType (prevFirst), doc) == NULL);
-	       }
-	  }
-     }
-   return result;
+  TtaGiveFirstSelectedElement (doc, &origFirstSelect, &ffc, &flc);
+  TtaGiveLastSelectedElement (doc, &origLastSelect, &lfc, &llc);
+  myFirstSelect = origFirstSelect;
+  myLastSelect = origLastSelect;
+  parentFirst = NULL;
+  maxSelDepth = 0;
+  if (myFirstSelect != myLastSelect)
+    {
+      /* selection crosses several elements, looks if their parents */
+      /* surround the whole selection, if it is the case, */
+      /* the parent is considered as a selected element */ 
+      if (myFirstSelect != NULL && ffc <= 1)
+	{
+	  /* searching for the first selected element */
+	  prevFirst = myFirstSelect;
+	  TtaPreviousSibling (&prevFirst);
+	  parentFirst = TtaGetParent (myFirstSelect);
+	  while (parentFirst != NULL && 
+		 prevFirst == NULL && 
+		 TtaIsBefore (parentFirst, myLastSelect))
+	    {
+	      myFirstSelect = parentFirst;
+	      prevFirst = myFirstSelect;
+	      TtaPreviousSibling (&prevFirst);
+	      parentFirst = TtaGetParent (myFirstSelect);
+	    }
+	}
+      if (myLastSelect != NULL &&
+	  (llc == 0 || (llc > 0 && llc >= TtaGetTextLength (myLastSelect))))
+	{
+	  /* searching for the last selected element */
+	  nextLast = myLastSelect;
+	  TtaNextSibling (&nextLast);
+	  parentLast = TtaGetParent (myLastSelect);
+	  while (parentLast != NULL && 
+		 nextLast == NULL && 
+		 TtaIsBefore (myFirstSelect, parentLast))
+	    {
+	      myLastSelect = parentLast;
+	      nextLast = myLastSelect;
+	      TtaNextSibling (&nextLast);
+	      parentLast = TtaGetParent (myLastSelect);
+	    }
+	}
+    }
+  else if (myFirstSelect != NULL)
+    {
+      /* only one element is selected, check if its parent surround */
+      /* the whole selection */
+      prevFirst = TtaGetFirstChild (myFirstSelect);
+      nextLast = TtaGetLastChild (myFirstSelect);
+      while (prevFirst != NULL && prevFirst == nextLast)
+	{
+	  myFirstSelect = prevFirst;
+	  prevFirst = TtaGetFirstChild (myFirstSelect);
+	  nextLast = TtaGetLastChild (myFirstSelect);
+	}
+      if (prevFirst != NULL)
+	{
+	  myFirstSelect = prevFirst;
+	  myLastSelect = nextLast;
+	}
+      else
+	myLastSelect = myFirstSelect;
+      parentFirst = parentLast = TtaGetParent (myFirstSelect);
+    }
+  
+  mySelect = NULL;
+  result = (myFirstSelect != NULL && parentFirst == parentLast);
+  if (result && parentFirst != NULL)
+    {
+      /* check if there is any sibling */
+      nextLast = myLastSelect;
+      prevFirst = myFirstSelect;
+      TtaNextSibling (&nextLast);
+      TtaPreviousSibling (&prevFirst);
+      
+      /* if all selected elements are at the same level, */
+      /* check if ancestors have any sibling */
+      /* if it is not the case, they become the first selected element */
+      elType = TtaGetElementType (parentFirst);
+      while (parentFirst != NULL &&
+	     /* all selected elements are selected? */
+	     nextLast == NULL && prevFirst == NULL &&
+	     /* it's not the HTML element? */
+	     (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ||
+	      elType.ElTypeNum != HTML_EL_HTML))
+	{
+	  maxSelDepth++;
+	  mySelect = parentFirst;
+	  parentFirst = TtaGetParent (parentFirst);
+	  if (parentFirst != NULL)
+	    {
+	      elType = TtaGetElementType (parentFirst);
+	      nextLast = mySelect;
+	      prevFirst = mySelect;
+	      TtaNextSibling (&nextLast);
+	      TtaPreviousSibling (&prevFirst);
+	    }
+	}
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -2092,36 +2083,37 @@ Element            *elSelect;
 
 #endif
 {
-   Element             elFirst;
-   int                 fc, lc;
+  Element             elFirst;
+  int                 fc, lc;
 
-   if (*elSelect == NULL || *elSelect == mySelect || *elSelect == myLastSelect)
-     {  /* if the selection is an unique element, or elSelect is the last */
-	*elSelect = NULL;
-     }
-   else
-     {
-	if (*elSelect == myFirstSelect)
-	  {
-	     TtaGiveFirstSelectedElement (doc, &elFirst, &fc, &lc);
-	     if (elFirst == myFirstSelect)
-		TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	     else
-		while (elFirst != NULL &&
-		       TtaIsAncestor (elFirst, myFirstSelect))
-		   TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	  }
-	else
-	  {
-	     elFirst = *elSelect;
-	     TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
-	  }
-	if (elFirst != NULL && TtaIsAncestor (elFirst, myLastSelect))
-	   *elSelect = myLastSelect;
-	else
-	   *elSelect = elFirst;
-     }
+  if (*elSelect == NULL || *elSelect == mySelect || *elSelect == myLastSelect)
+    /* if the selection is an unique element, or elSelect is the last */
+    *elSelect = NULL;
+  else
+    {
+      if (*elSelect == myFirstSelect)
+	{
+	  TtaGiveFirstSelectedElement (doc, &elFirst, &fc, &lc);
+	  if (elFirst == myFirstSelect)
+	    TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+	  else
+	    while (elFirst != NULL &&
+		   TtaIsAncestor (elFirst, myFirstSelect))
+	      TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+	}
+      else
+	{
+	  elFirst = *elSelect;
+	  TtaGiveNextSelectedElement (doc, &elFirst, &fc, &lc);
+	}
+      if (elFirst != NULL && TtaIsAncestor (elFirst, myLastSelect))
+	*elSelect = myLastSelect;
+      else
+	*elSelect = elFirst;
+    }
 }
+
+
 /*----------------------------------------------------------------------
    IsValidHtmlChild                                       
    returns TRUE if tag is a valid child of an element of type elType 
@@ -2627,24 +2619,24 @@ View                view;
 	  
 	}
       else
-	{ /* parse les transformations correspondant au schema de tous les */
-	  /* elements selectionnes */
+	{ /* check if all selected elements belong to the same structure */
 	  elemSelect = myFirstSelect;
 	  elType = TtaGetElementType (elemSelect);
 	  ustrcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
 	  transSchema = elType.ElSSchema;
 	  while (elemSelect != NULL)
 	    {
-	      elType = TtaGetElementType (elemSelect);
-	      if (ustrcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	      MyNextSelectedElement (TransDoc, &elemSelect);
+	      if (elemSelect)
 		{
-		  MyNextSelectedElement (TransDoc, &elemSelect);
-		}
-	      else
-		{
-		  ustrcpy (nameSet, TEXT(""));
-		  transSchema = NULL;
-		  elemSelect = NULL;
+		  elType = TtaGetElementType (elemSelect);
+		  if (ustrcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)))
+		    {
+		      /* the structure changes -> stop the process */
+		      ustrcpy (nameSet, TEXT(""));
+		      transSchema = NULL;
+		      elemSelect = NULL;
+		    }
 		}
 	    }
 	  ok = ppStartParser (nameSet, transSchema, &CourTransSet);

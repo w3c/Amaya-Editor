@@ -1008,13 +1008,12 @@ ThotBool            genrateColumn;
   CHAR_T                ptr[100];
   int                 span, i;
   ThotBool            before, inMath;
-#ifndef STANDALONE
+
   DisplayMode         dispMode;
   
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-#endif
 
   elType = TtaGetElementType (cell);
   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"),
@@ -1102,9 +1101,7 @@ ThotBool            genrateColumn;
 	}
     }
 
-#ifndef STANDALONE
    TtaSetDisplayMode (doc, dispMode);
-#endif
 }
 
 

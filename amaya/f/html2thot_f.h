@@ -10,8 +10,6 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern int MapThotAttr ( CHAR_T* Attr,
-                         CHAR_T* tag );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              CHAR_T* msg );
@@ -24,8 +22,8 @@ extern void OnlyOneOptionSelected ( Element el,
 extern void CheckCSSLink ( Element el,
                            Document doc,
                            SSchema schema );
-extern int MapAttrValue ( int ThotAtt,
-                          CHAR_T* AttrVal );
+extern int MapAttrValue ( int thotAttr,
+                          CHAR_T* attrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( STRING buffer,
@@ -75,8 +73,6 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern int MapThotAttr (/* CHAR_T* Attr,
-                           CHAR_T* tag */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                CHAR_T* msg */);
@@ -89,8 +85,8 @@ extern void OnlyOneOptionSelected (/* Element el,
 extern void CheckCSSLink (/* Element el,
                              Document doc,
                              SSchema schema */);
-extern int MapAttrValue (/* int ThotAtt,
-                            CHAR_T* AttrVal */);
+extern int MapAttrValue (/* int thotAttr,
+                            CHAR_T* attrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* STRING buffer,

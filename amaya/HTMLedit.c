@@ -32,6 +32,7 @@ static int          OldHeight;
 #include "css_f.h"
 #include "EDITimage_f.h"
 #include "EDITORactions_f.h"
+#include "fetchXMLname_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
@@ -2133,9 +2134,12 @@ NotifyAttribute    *event;
 {
    ElementType         elType;
    SSchema	       HTMLSSchema;
+   STRING              tag, attr;
 
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
    elType = TtaGetElementType (event->element);
+   tag = GetXMLElementName (elType, event->document);
+   
    if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
      /* it's not a HTML document */
       return TRUE;	/* don't put any HTML attribute in the menu */

@@ -222,6 +222,7 @@ Document          doc;
    int                 i;
    ElemMapping        *ptr;
    STRING              name;
+   ThotBool            invalid = FALSE;
 
    if (elType.ElTypeNum > 0)
      {
@@ -240,16 +241,19 @@ Document          doc;
 	    {
 	      if (ptr[i].ThotType == elType.ElTypeNum)
 		{
-		  if (ptr[i].Level <= ParsingLevel[doc])
+		  if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
 		    return ptr[i].XMLname;
 		  else
-		    return TEXT("???");
+		    invalid = TRUE;
 		}
 	      i++;
 	    }
 	  while (ptr[i].XMLname[0] != WC_EOS);	  
      }
-   return TEXT("???");
+   if (invalid)
+     return TEXT("");
+   else
+     return TEXT("???");
 }
 
 
@@ -353,7 +357,7 @@ Document          doc;
 	    {
 	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum)
 	      {
-		if (ptr[i].Level <= ParsingLevel[doc])
+		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
 		  return ptr[i].XMLattribute;
 		else
 		  return TEXT("???");

@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void FreeList ( strListSymb * pl );
+extern int MapThotAttr ( CHAR_T* attrName,
+                         CHAR_T *elementName );
 extern void ppInitAutomaton ( void );
 extern void FreeTransform ( void );
 extern int ppStartParser ( STRING name,
@@ -16,6 +18,8 @@ extern int ppStartParser ( STRING name,
 #else /* __STDC__ */
 
 extern void FreeList (/* strListSymb * pl */);
+extern int MapThotAttr (/* CHAR_T* attrName,
+                           CHAR_T *elementName */);
 extern void ppInitAutomaton (/* void */);
 extern void FreeTransform (/* void */);
 extern int ppStartParser (/* STRING name,
