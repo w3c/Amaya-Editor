@@ -433,7 +433,7 @@ static void PrepareDictionary (PtrDict *pDictionary, char *dictName,
   pdict = *pDictionary;
   pdict->DictDoc = document;
   pdict->DictLanguage = lang;
-  pdict->DictDirectory = strdup (dictDirectory);
+  pdict->DictDirectory = TtaStrdup (dictDirectory);
   strcpy (pdict->DictName, dictName);
   pdict->DictReadOnly = readonly;
   
