@@ -1818,6 +1818,38 @@ static void   PolySplit (float a1, float b1, float a2, float b2, float a3, float
 }
 
 /*----------------------------------------------------------------------
+  QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
+  ----------------------------------------------------------------------*/
+static void         QuadraticSplit (float a1, float b1, float a2, float b2, float a3, float b3)
+{
+   register float      tx, ty;
+   float               x1, y1, x2, y2, x3, y3, i, j;
+   float               sx, sy;
+   float               xmid, ymid;
+
+   stack_deep = 0;
+   PushStack (a1, b1, a2, b2, a3, b3, 0, 0);
+
+   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &i, &j))
+     {
+	if (fabs (x1 - x3) < SEG_SPLINE && fabs (y1 - y3) < SEG_SPLINE)
+	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1));
+	else
+	  {
+	     tx   = (float) MIDDLE_OF (x2, x3);
+	     ty   = (float) MIDDLE_OF (y2, y3);
+	     sx   = (float) MIDDLE_OF (x1, x2);
+	     sy   = (float) MIDDLE_OF (y1, y2);
+	     xmid = (float) MIDDLE_OF (sx, tx);
+	     ymid = (float) MIDDLE_OF (sy, ty);
+
+	     PushStack (xmid, ymid, tx, ty, x3, y3, 0, 0);
+	     PushStack (x1, y1, sx, sy, xmid, ymid, 0, 0);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
   DrawCurve draw an open curve.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
@@ -2145,7 +2177,7 @@ static void  DrawCurrent (int frame, int thick, int style, int fg, int bg,
       if (npoints == 2)
 	/* only two points, that's a single segment */
 	DrawOneLine (frame, thick, style, points[0].x, points[0].y,
-		     points[1].x, points[1].y);
+		     points[1].x, points[1].y, fg);
       else
 	/* draw a polyline or a ploygon */
 	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
