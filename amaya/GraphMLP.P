@@ -229,14 +229,10 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
         CreateWith(VerticalLine);
+	Width: Enclosing . Width;
+        Height: Enclosing . Height;
 	HorizRef: *.Bottom;
-        if within GraphML BEGIN
-           Width: Enclosing . Width;
-           Height: Enclosing . Height;
-	   END;
         if NOT within GraphML BEGIN
-           Width: 10 cm;
-           Height: 5 cm;
            VertPos: Top = Previous . Bottom;
 	   Foreground: transparent;
 	   Background: Black;
