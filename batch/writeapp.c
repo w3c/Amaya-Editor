@@ -553,7 +553,13 @@ static void         WriteActionList (char *fname)
       fprintf (AppFile, "  /* save argc and argv */\n");
       fprintf (AppFile, "  appArgc = argc;\n  appArgv = argv;\n");
       fprintf (AppFile, "  /* extract the name of the application */\n");
-      fprintf (AppFile, "  TtaExtractName (argv[0], workName, appName);\n");
+      fprintf (AppFile, "  if (strstr (argv[0], \"amaya\"))\n");
+      fprintf (AppFile, "    {\n");
+      fprintf (AppFile, "      strcpy (appName, \"amaya\");\n");
+      fprintf (AppFile, "      strcpy (workName, \"amaya\");\n");
+      fprintf (AppFile, "    }\n");
+      fprintf (AppFile, "  else\n");
+      fprintf (AppFile, "    TtaExtractName (argv[0], workName, appName);\n");
       fprintf (AppFile, "  /* application name is limited to 19 characters */\n");
       fprintf (AppFile, "  lg = strlen (appName);\n");
       fprintf (AppFile, "  if (lg > 19)\n");
