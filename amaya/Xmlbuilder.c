@@ -487,30 +487,19 @@ void XmlStyleSheetPasted (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void CreateXMLElementMenu (Document doc, View view)
 {
+#define     MAX_OPTIONS MAX_SUBMENUS
+#define     MAX_SUBOPTIONS 20
+#define     MAX_LABEL_LENGTH 50
+#define     PARAM_INCREMENT 50
+  char     *buffer;
+  int       last_buffer_char;
+  int       nb = 0;
+  char      text[MAX_LABEL_LENGTH + 1];
+  char     *tmp;
+  int       length, nbitems, nbsubmenus;
 #ifdef _WINDOWS
-  int                 nbOldEntries = 20;
+  int       nbOldEntries = 20;
 #endif /* _WINDOWS */
-#define MAX_OPTIONS MAX_SUBMENUS
-#define MAX_SUBOPTIONS 20
-#define MAX_LABEL_LENGTH 50
-#define PARAM_INCREMENT 50
-  char           *buffer;
-  int             last_buffer_char;
-  int             nb = 0;
-
-  ElementType         elType, childType;
-  Element	      elText, menuEl, child;
-  Element             option[MAX_OPTIONS];
-  Element	      subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
-  ThotBool	      selected[MAX_OPTIONS];
-  ThotBool            subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
-  char                text[MAX_LABEL_LENGTH + 1];
-  char                buffmenu[MAX_LENGTH];
-  char               *tmp;
-  Language            lang;
-  int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
-  int                 modified;
-  ThotBool	      multipleOptions, sel;
 
   /* create the option menu */
   nbitems = 0;
@@ -550,7 +539,7 @@ void CreateXMLElementMenu (Document doc, View view)
       /* create the main menu */
 #if defined (_WINDOWS) || defined (_GTK)
       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			 NULL, nbitems, buffer, NULL, multipleOptions, 'L');
+			 NULL, nbitems, buffer, NULL, FALSE, 'L');
 #else /* WINDOWS || _GTK */
       TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 		   NULL, nbitems, buffer, NULL, 'L');
