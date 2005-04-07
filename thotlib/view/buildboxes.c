@@ -4730,20 +4730,19 @@ void CheckScrollingWidth (int frame)
 	      while (pBox)
 		{
 		  /* check if this box is displayed outside the document box */
-#ifdef _GL
+#ifdef IV
 		  /* check if this box is displayed outside the document box */
 		  if (pBox->BxClipX + pBox->BxClipW > max)
 		    max = pBox->BxClipX + pBox->BxClipW;
 		  if (pBox->BxClipX < org)
 		    org = pBox->BxClipX;
-#else /* _GL */
+#endif /*  IV */
 		  if (pBox->BxXOrg + pBox->BxWidth > max)
 		    max = pBox->BxXOrg + pBox->BxWidth;
 		  if (pBox->BxXOrg < org)
 		    org = pBox->BxXOrg;
 		  if (pBox->BxXOrg + pBox->BxLMargin < org)
 		    org = pBox->BxXOrg + pBox->BxLMargin;
-#endif /*  _GL */
 		  if (pBox->BxNext == box)
 		    printf ("Cycle\n");
 		  else

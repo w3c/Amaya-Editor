@@ -182,9 +182,11 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   /* p_frame is the new top frame */  
   *pp_frame_container = p_frame;
 
+#ifndef _MACOS
+ /* do not reparent because on MacOSX it is not implemented */
   /* the frame needs a new parent ! */
-  //p_frame->Reparent( m_pSplitterWindow ); /* do not reparent becaus on MacOSX it is not implemented */
-
+  p_frame->Reparent( m_pSplitterWindow );
+#endif /* _MACOS */
   bool ok = false;
   if (oldframe != NULL)
     ok = m_pSplitterWindow->ReplaceWindow( oldframe, p_frame );

@@ -966,7 +966,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
    * this function waits for complete widgets initialisation */
   /* notice: no not use safe yield here because it use a wxWindowDisabler and it makes menus blinking */
   wxYield();
-
   return TRUE;
 #else
   return FALSE;

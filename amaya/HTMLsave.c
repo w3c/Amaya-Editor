@@ -1170,7 +1170,7 @@ void SetNamespacesAndDTD (Document doc)
 			   length = TtaGetTextAttributeLength (attr);
 			   attrText = (char *)TtaGetMemory (length + 1);
 			   TtaGiveTextAttributeValue (attr, attrText, &length);
-			   if (!strcmp (attrText, "Content-Type"))
+			   if (!strcasecmp (attrText, "content-type"))
 			     meta = el;
 			   TtaFreeMemory (attrText);
 			 }
@@ -1196,7 +1196,7 @@ void SetNamespacesAndDTD (Document doc)
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (meta, attr, doc);
 		 }
-	       TtaSetAttributeText (attr, "Content-Type", meta, doc);
+	       TtaSetAttributeText (attr, "content-type", meta, doc);
 
 	       attrType.AttrTypeNum = HTML_ATTR_meta_content;
 	       attr = TtaGetAttribute (meta, attrType);

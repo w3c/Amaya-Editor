@@ -2238,8 +2238,27 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	      change the rule to refer the enclosing abstract box */
 	   {
 	     PPos->PosAbRef = pAbb1->AbEnclosing;
-	     PPos->PosEdge = pPosRule->PoPosDef;
-	     PPos->PosRefEdge = pPosRule->PoPosDef;
+	     if (pPRule->PrType == PtHorizPos &&
+		 pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right &&
+		 pAbb1->AbAdjust != AlignLeft)
+	       {
+		 /* check the text_align rule */
+		 if (pAbb1->AbAdjust = AlignCenter)
+		   {
+		     PPos->PosEdge = VertMiddle;
+		     PPos->PosRefEdge = VertMiddle;
+		   }
+		 else
+		   {
+		     PPos->PosEdge = Right;
+		     PPos->PosRefEdge = Right;
+		   }
+	       }
+	     else
+	       {
+		 PPos->PosEdge = pPosRule->PoPosDef;
+		 PPos->PosRefEdge = pPosRule->PoPosDef;
+	       }
 	     /* s'agit-il d'une regle de presentation specifique ? */
 	     pRSpec = pAbb1->AbElement->ElFirstPRule;
 	     while (pRSpec != NULL && pRSpec != pPRule)

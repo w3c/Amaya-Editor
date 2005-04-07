@@ -1511,6 +1511,11 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
       cssRule += 5;
       pval.typed_data.value = Block;
     }
+  else if (!strncasecmp (cssRule, "inline-block", 12))
+    {
+      cssRule += 12;
+      pval.typed_data.value = InlineBlock;
+    }
   else if (!strncasecmp (cssRule, "inline", 6))
     {
       cssRule += 6;
@@ -1525,11 +1530,6 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
     {
       cssRule += 6;
       pval.typed_data.value = RunIn;
-    }
-  else if (!strncasecmp (cssRule, "inline-block", 12))
-    {
-      cssRule += 12;
-      pval.typed_data.value = InlineBlock;
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
