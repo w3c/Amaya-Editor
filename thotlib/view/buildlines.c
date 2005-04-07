@@ -2073,7 +2073,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 		  pNextBox = pBox->BxNexChild;
 		  if (pNextBox && pNextBox->BxType == BoPiece)
 		    {
-		      *full = FALSE;
+		      *full = TRUE;
 		      still = FALSE;
 		    }
 		}
