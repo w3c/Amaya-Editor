@@ -4017,7 +4017,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		}
 	      else if (pAb->AbDisplay == 'L')
 		/* display: list-item */
-		appl = CreateListItemMarker (pPRule, pAb, pDoc, pAttr, pSchP);
+		appl = CreateListItemMarker (pAb, pDoc, pAttr);
 	      else if (pAb->AbDisplay != 'U')
 		{
 		  /* display: block */

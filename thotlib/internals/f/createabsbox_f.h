@@ -58,11 +58,9 @@ extern ThotBool ComputeListItemNumber ( PtrAbstractBox pAb );
 extern PtrPRule SearchRuleListItemMarker ( PRuleType ruleType,
                                            PtrElement pEl,
                                            PtrDocument pDoc );
-extern ThotBool CreateListItemMarker ( PtrPRule pPRule,
-                                       PtrAbstractBox pAb,
+extern ThotBool CreateListItemMarker ( PtrAbstractBox pAb,
                                        PtrDocument pDoc,
-                                       PtrAttribute pAttr,
-                                       PtrPSchema pSchP );
+                                       PtrAttribute pAttr );
 extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrPRule pRCre,
@@ -178,11 +176,9 @@ extern ThotBool ComputeListItemNumber ( PtrAbstractBox pAb );
 extern PtrPRule SearchRuleListItemMarker ( PRuleType ruleType,
                                              PtrElement pEl,
                                              PtrDocument pDoc );
-extern ThotBool CreateListItemMarker ( PtrPRule pPRule,
-                                         PtrAbstractBox pAb,
+extern ThotBool CreateListItemMarker ( PtrAbstractBox pAb,
                                          PtrDocument pDoc,
-                                         PtrAttribute pAttr,
-                                         PtrPSchema pSchP );
+                                         PtrAttribute pAttr );
 extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrPRule pRCre,

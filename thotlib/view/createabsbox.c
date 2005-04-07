@@ -1688,9 +1688,8 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
    CreateListItemMarker generate a presentation box representing a
    list item marker for box pAb which has "display: list-item".
   ----------------------------------------------------------------------*/
-ThotBool CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
-			       PtrDocument pDoc, PtrAttribute pAttr,
-			       PtrPSchema pSchP)
+ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
+			       PtrAttribute pAttr)
 {
   PtrElement       pEl;
   PtrAbstractBox   pMarkerAb, pDescAb, pNextAb, pAscAb;

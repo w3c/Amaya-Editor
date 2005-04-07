@@ -3254,12 +3254,12 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
 	  if (pMainAb && pMainAb->AbDisplay == 'L' &&
 	      pMainAb->AbListStyleType != 'N')
 	    /* this box has "display: list-item", create its list item marker*/
-	    CreateListItemMarker (NULL, pMainAb, pDoc, NULL, NULL);
+	    CreateListItemMarker (pMainAb, pDoc, NULL);
 	}
       else if (!pAb->AbPresentationBox && pAb->AbDisplay == 'L' &&
 	       pAb->AbListStyleType != 'N')
 	/* this box has "display: list-item", create its list item marker */
-	CreateListItemMarker (NULL, pAb, pDoc, NULL, NULL);
+	CreateListItemMarker (pAb, pDoc, NULL);
       break;
     case PtFunction:
       if (func == FnBackgroundPicture || func == FnPictureMode ||
