@@ -814,8 +814,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #ifdef TAB_DEBUG
   printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
 #endif
-if (!strcmp (table->AbElement->ElLabel, "L254"))
-  printf ("%s max=%d min=%d w=%d\n",table->AbElement->ElLabel, max, min, width);
   /* now update real widths */
   pBox->BxCycles = 1;
   if (max + sum + sumPercent <= width && !constraint)
