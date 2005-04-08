@@ -146,7 +146,7 @@ void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum)
    RedisplayDocViews demande le reaffichage de toutes les vues du	
    document pDoc.						
   ----------------------------------------------------------------------*/
-void                RedisplayDocViews (PtrDocument pDoc)
+void RedisplayDocViews (PtrDocument pDoc)
 {
   DisplayMode       displayMode;
   int                 i;
@@ -166,7 +166,7 @@ void                RedisplayDocViews (PtrDocument pDoc)
    AbstractImageUpdated	signale les modifications de l'image	
    abstraite du document pDoc.				
   ----------------------------------------------------------------------*/
-void                AbstractImageUpdated (PtrDocument pDoc)
+void AbstractImageUpdated (PtrDocument pDoc)
 {
   DisplayMode       displayMode;
   PtrAbstractBox    pAb;
@@ -536,7 +536,7 @@ void CloseAllViewsDoc (PtrDocument pDoc)
    View = view number
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
-static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
+void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
 {
    PtrAbstractBox      pAb;
    int                 h;
@@ -1029,6 +1029,7 @@ void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
     NewDocSelection[doc - 1].SDElemExt = element;
    NewDocSelection[doc - 1].SDCharExt = lastCharacter;
 }
+
 
 /*----------------------------------------------------------------------
    TtaFreeView

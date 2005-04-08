@@ -33,7 +33,7 @@ extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
 extern int CopyMBs2Buffer ( unsigned char *src,
                             PtrTextBuffer pBuf,
                             int pos,
-                            int max );
+                            int slength );
 extern int CopyBuffer2MBs ( PtrTextBuffer pBuf,
                             int pos,
                             unsigned char *des,
@@ -117,7 +117,7 @@ extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
 extern int CopyMBs2Buffer ( unsigned char *src,
                               PtrTextBuffer pBuf,
                               int pos,
-                              int max );
+                              int slength );
 extern int CopyBuffer2MBs ( PtrTextBuffer pBuf,
                               int pos,
                               unsigned char *des,

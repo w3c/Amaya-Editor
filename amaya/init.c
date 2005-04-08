@@ -2614,7 +2614,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   /* if the document is a source view, open it into the same page as formatted view */
 	   window_id = TtaGetDocumentWindowId( doc, -1 );
 	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
-	   page_position = 2;     
+	   page_position = 2;
 	 }
        else
 	 {
@@ -2737,7 +2737,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
 	     }
 	   page_id = TtaGetFreePageId( window_id );
-	   page_position = 1;    
+	   page_position = 1;
 	 }
 #endif /* _WX */
 

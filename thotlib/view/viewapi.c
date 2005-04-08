@@ -36,6 +36,7 @@
 
 #include "absboxes_f.h"
 #include "appdialogue_f.h"
+#include "appdialogue_wx_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "attrpresent_f.h"
@@ -73,6 +74,36 @@
 #include "appdialogue_wx_f.h"
 
 static char           nameBuffer[MAX_NAME_LENGTH];
+
+/*----------------------------------------------------------------------
+  ClearPagePosition close the preview displayed view.
+  ----------------------------------------------------------------------*/
+static void ClearPagePosition (int window_id, int page_id, int position)
+{
+#ifdef _WX
+  PtrDocument         pDoc;
+  int                 frame = 1;
+  int                 view;
+  ThotBool            found = FALSE;
+
+  while (frame <= MAX_FRAME && !found)
+    {
+      found = (FrameTable[frame].FrWindowId == window_id &&
+	       FrameTable[frame].FrPageId == page_id &&
+	       FrameTable[frame].FrPagePos == position);
+      if (!found)
+        frame++;
+    }
+  if (found)
+    {
+      TtaDetachFrame (frame);
+      pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+      /* free abstract boxes */
+      view = FrameTable[frame].FrView;
+      CleanImageView (view, pDoc, TRUE);
+    }
+#endif /* _WX */
+}
 
 /*----------------------------------------------------------------------
   TtaOpenMainView
@@ -123,6 +154,8 @@ View TtaOpenMainView ( Document document,
 		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
 	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
 					   TRUE, NULL);
+	      /* close the preview displayed view */
+	      ClearPagePosition (window_id, page_id, page_position);
 	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
 		               window_id, page_id, page_position, "Formatted_view");
 	      view = nView;
@@ -217,6 +250,8 @@ static View OpenView (Document document, char *viewName,
 		    
 		    /* force to see the view in the second frame */
 		    page_position = 2;
+		    /* close the preview displayed view */
+		    ClearPagePosition (window_id, page_id, page_position);
 
 		    OpenCreatedView (pDoc, nView, x, y, w, h, TRUE, TRUE,
                                      window_id, page_id, page_position, viewName);

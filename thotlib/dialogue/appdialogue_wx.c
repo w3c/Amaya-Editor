@@ -838,8 +838,9 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].WdFrame 	      = p_AmayaFrame;
   FrameTable[frame_id].WdScrollH      = p_AmayaFrame->GetScrollbarH();
   FrameTable[frame_id].WdScrollV      = p_AmayaFrame->GetScrollbarV();
-  FrameTable[frame_id].FrWindowId     = window_id; /* this attribut is set when TtaAttachFrame is called */
-  FrameTable[frame_id].FrPageId       = page_id; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrWindowId     = window_id; /* TtaAttachFrame sets it */
+  FrameTable[frame_id].FrPageId       = page_id; /* TtaAttachFrame sets it */
+  FrameTable[frame_id].FrPagePos      = page_position;
   FrameTable[frame_id].FrTopMargin    = 0; // TODO
   FrameTable[frame_id].FrScrollOrg    = 0; // TODO
   FrameTable[frame_id].FrScrollWidth  = width; // TODO
@@ -958,6 +959,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   /* update frame infos */
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
+  FrameTable[frame_id].FrPagePos        = position;
     
   // Popup the frame : bring it to top
   FrameTable[frame_id].WdFrame->RaiseFrame();
@@ -986,6 +988,7 @@ ThotBool TtaDetachFrame( int frame_id )
 #ifdef _WX
   int window_id        = FrameTable[frame_id].FrWindowId;
   int page_id          = FrameTable[frame_id].FrPageId;
+  int position         = FrameTable[frame_id].FrPagePos;
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   
   if (window_id < 0 || page_id < 0)
@@ -1009,9 +1012,7 @@ ThotBool TtaDetachFrame( int frame_id )
       if (!p_page)
 	return FALSE;
       
-      /* now detach the frame from this page */
-      int position = p_page->GetFramePosition( p_frame );
-      
+      /* now detach the frame from this page */      
       p_detached_frame = p_page->DetachFrame( position );
     }
 
@@ -1021,6 +1022,7 @@ ThotBool TtaDetachFrame( int frame_id )
       /* update frame infos */
       FrameTable[frame_id].FrWindowId   = -1;
       FrameTable[frame_id].FrPageId     = -1;
+      FrameTable[frame_id].FrPagePos    = 0;
       return TRUE;
     }
 
@@ -1232,6 +1234,7 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
 #ifdef _WX
   int        frame_id = 1;
   ThotBool   found = FALSE;
+
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == doc_id &&
@@ -1247,7 +1250,7 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
     }
 
   *page_id = FrameTable[frame_id].FrPageId;
-  *page_position = 0;
+  *page_position = FrameTable[frame_id].FrPagePos;
 
   if (FrameTable[frame_id].FrWindowId <= 0)
     return;

@@ -14,10 +14,10 @@ extern char *ParseCSSUnit ( char *cssRule,
 extern char *ParseClampedUnit ( char *cssRule,
                                 PresentationValue *pval );
 extern void ParseCSSImageCallback ( Document doc,
-				    Element element,
-				    char *file,
-				    void *extra,
-				    ThotBool isnew );
+                                    Element element,
+                                    char *file,
+                                    void *extra,
+                                    ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *cssRule );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      char *cssRule,
@@ -77,10 +77,10 @@ extern char *ParseCSSUnit ( char *cssRule,
 extern char *ParseClampedUnit ( char *cssRule,
                                   PresentationValue *pval );
 extern void ParseCSSImageCallback ( Document doc,
-				    Element element,
-				    char *file,
-				    void *extra,
-				    ThotBool isnew );
+                                      Element element,
+                                      char *file,
+                                      void *extra,
+                                      ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *cssRule );
 extern void ParseHTMLSpecificStyle ( Element el,
                                        char *cssRule,

@@ -29,6 +29,9 @@ extern void CloseDocumentView ( PtrDocument pDoc,
                                 int view,
                                 ThotBool closeDoc );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
+extern void CleanImageView ( int View,
+                             PtrDocument pDoc,
+                             ThotBool complete );
 extern void ChangeAbsBoxModif ( PtrElement pEl,
                                 Document document,
                                 ThotBool newAbsModif );
@@ -90,6 +93,9 @@ extern void CloseDocumentView ( PtrDocument pDoc,
                                   int view,
                                   ThotBool closeDoc );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
+extern void CleanImageView ( int View,
+                               PtrDocument pDoc,
+                               ThotBool complete );
 extern void ChangeAbsBoxModif ( PtrElement pEl,
                                   Document document,
                                   ThotBool newAbsModif );

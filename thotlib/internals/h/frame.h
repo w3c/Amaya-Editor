@@ -90,6 +90,7 @@ typedef struct _Frame_Ctl {
 
   int        FrWindowId;                /* Parent window id                  */
   int        FrPageId;                  /* Frame page id                     */
+  int        FrPagePos;                 /* Frame page position 1/2           */
   int        FrDoc;                     /* Document ID                       */
   int        FrView;                    /* Presentation schema View          */
   char       FrViewName[50];            /* The corresponding view name (Structure, Toc, Log ...) */
