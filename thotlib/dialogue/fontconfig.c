@@ -421,7 +421,7 @@ static FontScript **FontConfigLoad ()
       return NULL;
     }
 
-  /*Allocate the table */
+  /* Allocate the table */
   fontsscript_tab = (FontScript **)TtaGetMemory (31 * sizeof (FontScript *));
   memset(fontsscript_tab, 0, 31 * sizeof(FontScript *));
   /* load the first config file */
@@ -470,7 +470,7 @@ static FontScript **FontConfigLoad ()
 }
 
 /*----------------------------------------------------------------------
-   FontLoadFromConfig : GEt a font dame upon its characteristics
+   FontLoadFromConfig : Get a font name upon its characteristics
   ----------------------------------------------------------------------*/
 char *FontLoadFromConfig (char script, int face, int style)
 {
