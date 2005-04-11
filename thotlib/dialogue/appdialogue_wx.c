@@ -991,7 +991,7 @@ ThotBool TtaDetachFrame( int frame_id )
   int position         = FrameTable[frame_id].FrPagePos;
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
   
-  if (window_id < 0 || page_id < 0)
+  if (window_id < 0 || page_id < 0 || position == 0)
     return FALSE;
 
   AmayaWindow * p_window = WindowTable[window_id].WdWindow;
@@ -1018,7 +1018,7 @@ ThotBool TtaDetachFrame( int frame_id )
 
   if (p_frame == p_detached_frame)
     {
-      /* a frame hs been detached so update the FrameTable */
+      /* a frame has been detached so update the FrameTable */
       /* update frame infos */
       FrameTable[frame_id].FrWindowId   = -1;
       FrameTable[frame_id].FrPageId     = -1;

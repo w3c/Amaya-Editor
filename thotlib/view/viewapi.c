@@ -96,11 +96,14 @@ static void ClearPagePosition (int window_id, int page_id, int position)
     }
   if (found)
     {
-      TtaDetachFrame (frame);
+      //TtaDetachFrame( frame_id );
       pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
       /* free abstract boxes */
       view = FrameTable[frame].FrView;
       CleanImageView (view, pDoc, TRUE);
+      FrameTable[frame].FrWindowId   = -1;
+      FrameTable[frame].FrPageId     = -1;
+      FrameTable[frame].FrPagePos    = 0;
     }
 #endif /* _WX */
 }
