@@ -8175,11 +8175,10 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   ----------------------------------------------------------------------*/
 void InitStringForCombobox ()
 {
-  unsigned char     *urlstring, c, *ptr;
+  unsigned char     *urlstring, c;
   char              *app_home;
-  CHAR_T             wc;
   FILE              *file;
-  int                i, nb, len, l;
+  int                i, nb, len;
   CHARSET            encoding;
 
   /* remove the previous list */
