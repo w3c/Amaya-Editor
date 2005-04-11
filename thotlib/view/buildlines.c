@@ -4084,7 +4084,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	  {
 	    /* it's an extensible block of lines */
 	    width = pBox->BxMaxWidth;
-	    if (pAb->AbFloat == 'N')
+	    if (pAb->AbFloat == 'N' && pBox->BxMinWidth < pBox->BxW)
 	      /* don't update the enclosing block */
 	      {
 		h = 0;
