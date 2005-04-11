@@ -2378,9 +2378,11 @@ void TtcChangeFormat (Document document, View view)
    int                 i;
 #if defined(_WINGUI) || defined(_WX)
    int                 alignNum;
-   int                 lineSpacingNum;
    int                 indentNum;
-#endif /* #if defined(_WINGUI) || defined(_WX) */
+#endif /* _WINGUI || _WX */
+#ifdef _WINGUI
+   int                 lineSpacingNum;
+#endif /* _WINGUI */
 #ifdef _GTK
    char                string[MAX_TXT_LEN];
 #endif /* _GTK */

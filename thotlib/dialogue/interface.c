@@ -147,8 +147,10 @@ void TtaHandlePendingEvents ()
 void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
+#ifndef _WX
   ThotEvent           ev;
-  
+#endif /* _WX */
+
   UserErrorCode = 0;
   /* Sets the current locale according to the program environment */
 #if defined(_WX) || defined(_GTK)

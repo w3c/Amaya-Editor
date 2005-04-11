@@ -713,8 +713,10 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
-   int                i;
 #endif /* _GTK || _WX */
+#ifdef _GTK
+   int                i;
+#endif /* _GTK */
 
    if (LastURLImage[0] == EOS)
      {
@@ -1011,7 +1013,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   Element          elSRC, el;
   ElementType      elType;
   Document         doc;
-  char            *text, *pathimage;
+  char            *text;
   char            *utf8value;
   int              length;
   ThotBool         newAttr, isObject;

@@ -1731,9 +1731,9 @@ void ApplyClass (Document doc, View view)
   char                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
-#ifndef _WINGUI
+#ifdef _GTK
   char                bufMenu[MAX_TXT_LEN];
-#endif /* _WINGUI */
+#endif /* _GTK */
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */

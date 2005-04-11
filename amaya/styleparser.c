@@ -1862,7 +1862,7 @@ static char *SetCSSImage (Element element, PSchema tsch,
   CSSImageCallbackPtr        callblock;
   Element                    el;
   char                      *url;
-  PresentationValue          image, value;
+  PresentationValue          image;
   char                      *bg_image;
   char                       tempname[MAX_LENGTH];
   char                       imgname[MAX_LENGTH];

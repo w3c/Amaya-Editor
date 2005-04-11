@@ -844,11 +844,11 @@ void SetupAndPrint (Document doc, View view)
     int orientation;
     int disposition;
     int paper_print;
-    bool manual_feed;
-    bool with_toc;
-    bool with_links;
-    bool with_url;
-    bool ignore_css;
+    ThotBool manual_feed;
+    ThotBool with_toc;
+    ThotBool with_links;
+    ThotBool with_url;
+    ThotBool ignore_css;
 
     /* Paper format submenu */
     if (PageSize == PP_US)
@@ -1104,10 +1104,10 @@ static void CloseMakeBook (Document document)
   /* update internal links */
   SetInternalLinks (document);
   /* if the document changed force the browser mode */
-  if (SubDocs)
-    /* send a warning to the user to avoid to save this document */;
-  /* remove registered  sub-documents */
-  FreeSubDocTable ();
+  if (SubDocs == NULL)
+    /* send a warning to the user to avoid to save this document */
+    /* remove registered  sub-documents */
+    FreeSubDocTable ();
   DocBook = 0;
   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 }

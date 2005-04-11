@@ -918,9 +918,9 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
-  unsigned char       text[10], *tmp;
+  unsigned char       text[10];
   char               *name;
-  int                 dVol, len, view, i;
+  int                 dVol, len, view;
   ThotBool            selInAttr;
 
   /* cherche le document auquel appartient le pave */

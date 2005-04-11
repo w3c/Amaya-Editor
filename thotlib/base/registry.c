@@ -1181,10 +1181,9 @@ void TtaInitializeAppRegistry (char *appArgv0)
   DWORD       dwSize;
   ThotBool    status;
   char       *ptr2, *ptr3;
-#else /*  _WINGUI */
-  struct stat stat_buf;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #ifdef _UNIX
+  struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
   char        c_filename[MAX_LENGTH];
   char       *c_end;

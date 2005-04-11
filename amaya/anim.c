@@ -39,17 +39,17 @@
 
 #ifdef _SVG
 #include "Timeline.h"
-
-#ifdef _WINGUI
-#include "wininclude.h"
-#else
-#define min(A,B) ((A<B)?A:B)
-#define max(A,B) ((B>A)?B:A)
-#endif /* _WINGUI */
-
 #ifdef _WINDOWS
 	#include <commctrl.h>
 #endif /* _WINDOWS */
+#ifdef _WINGUI
+#include "wininclude.h"
+#endif /* _WINGUI */
+#ifdef _UNIX
+#define min(A,B) ((A<B)?A:B)
+#define max(A,B) ((B>A)?B:A)
+#endif /* _UNIX */
+
 
 #ifdef _WX
   #include "appdialogue_wx.h"

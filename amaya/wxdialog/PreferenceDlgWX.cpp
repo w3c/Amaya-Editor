@@ -147,7 +147,7 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
   int          page_id    = 0;
   bool         found      = false;
 
-  while (!found && page_id < p_notebook->GetPageCount() )
+  while (!found && page_id < (int) p_notebook->GetPageCount() )
     {
       if ( p_page == p_notebook->GetPage(page_id))
 	found = true;

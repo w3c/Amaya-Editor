@@ -1229,6 +1229,9 @@ void SelectOneOption (Document doc, Element el)
 #ifdef _WINGUI
   int                 nbOldEntries = 20;
 #endif /* _WINGUI */
+#if defined (_WINGUI) || defined (_GTK)
+  int                 i;
+#endif /* _WINGUI || _GTK */
   ElementType         elType;
   Element	      elText, menuEl, parent;
   ThotBool	      selected[MAX_OPTIONS];
@@ -1238,14 +1241,14 @@ void SelectOneOption (Document doc, Element el)
   char                text[MAX_LABEL_LENGTH + 1];
   char               *tmp;
   Language            lang;
-  int                 length, nbitems, i;
+  int                 length, nbitems;
   int                 modified;
   ThotBool	      multipleOptions, sel;
 
   if (el == NULL)
     return;
 
-#ifdef _WINGUI  
+#ifdef _WINGUI
    opDoc = doc;
 #endif /* _WINGUI */
    htmlSch = TtaGetSSchema ("HTML", doc);
