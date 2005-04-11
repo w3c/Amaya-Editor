@@ -1035,7 +1035,7 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
   /*    return TRUE; */
   if (GL_prepare (frame))
     {
-      if ( g_NeedRedisplayAllTheFrame[frame] && (glhard () || GetBadCard ()) )
+      if ( g_NeedRedisplayAllTheFrame[frame] /*&& (glhard () || GetBadCard ())*/ )
 	{
 	  // we need to recalculate the glcanvas only once : after the RESIZE event
 	  // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
@@ -1121,12 +1121,12 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       GL_SwapEnable (frame);
       GL_Swap (frame);
 
-#if !defined(_MACOS) && !defined(_WINDOWS)
+//#if !defined(_MACOS) && !defined(_WINDOWS)
       // we need to recalculate the glcanvas after the RESIZE event
       // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
       // (it appends only on some hardware opengl implementations on Linux)
       g_NeedRedisplayAllTheFrame[frame] = TRUE;
-#endif /* !defined(_MACOS) && !defined(_WINDOWS) */
+//#endif /* !defined(_MACOS) && !defined(_WINDOWS) */
 
     }
 #else /* _GL*/
