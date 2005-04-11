@@ -1,10 +1,10 @@
 
 #font script 1-17 iso, then unicode,symbol,stix...;
-#1 = serif;normale face;bold face;italic face  
-#2 = sans-serif;normale face;bold face;italic face  
-#3 = monospace;normale face;bold face;italic face  
-#4 = cursive;normale face;bold face;italic face  
-#5 = fantasy;normale face;bold face;italic face  
+#1 = serif;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#2 = sans-serif;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#3 = monospace;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#4 = cursive;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#5 = fantasy;1=normale face;2=bold face;3=italic face;4=bold-italic face
 
 
 1;#Latin1 (West European)
