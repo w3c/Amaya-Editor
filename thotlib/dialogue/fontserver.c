@@ -24,11 +24,11 @@
 #include "application.h"
 #include "fontconfig.h"
 
-
-#if defined(_WX) && !defined(_WINDOWS)
+#if defined(_WX) && (!defined(_WINDOWS) && !defined(_MACOS))
 //  #include "wx/gdicmn.h"
 //  #include "wx/font.h"
   #include <ft2build.h>
+  #include "Xft.h"
 #endif /* defined(_WX) && !defined(_WINDOWS) */
 
 #if defined(_WX) && defined(_WINDOWS)
@@ -72,23 +72,25 @@ static int GetFontFilenameFromConfig (char script, int family, int highlight,
 int GetFontFilename (char script, int family, int highlight, int size, 
 		     char *filename)
 {
-
-#if defined(_WX) && !defined(_WINDOWS)
+#if defined(_WX) && defined(_MACOS)
      if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
        return 1;
      return 0;
-#endif /* defined(_WX) && !defined(_WINDOWS) */
+#endif
 
-#if defined(_GTK)
+#if defined(_GTK) || (defined(_WX) && !defined(_WINDOWS))
   XftPattern	*match, *pat;
   XftResult     result;
   char	        *s;
   int           ok = 0;
 
-  if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
-    return 1;
-
-  pat = XftgPatternCreate ();
+#ifndef _GL
+  if (!Printing)
+#endif /* _GL */
+    if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
+      return 1;
+  
+  pat = XftPatternCreate ();
   if (!pat)
     return ok;  
   /*Directs Xft to use client-side fonts*/
@@ -400,7 +402,12 @@ int GetFontFilename (char script, int family, int highlight, int size,
   if (script != 'E')
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
+#if defined _WX 
+  match = XftFontMatch ((Display*)wxGetDisplay(), 0, pat, &result); 
+#endif /* _WX */
+#ifdef _GTK
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result);   
+#endif /* _GTK */
   if (match) 
     {
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
@@ -421,7 +428,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   XftPatternDestroy (pat); 
   return ok;
-#endif /* defined(_GTK)  */
+#endif /* (_GTK) || (defined(_WX) && !defined(_WINDOWS) && !defined(_MACOS)) */
 
 #ifdef _WINDOWS
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
