@@ -2005,7 +2005,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  else
 	    {
 	      /* it's not the root box */
-	      inLine = (/*pAb->AbFloat == 'N' &&*/!pAb->AbNotInLine &&
+	      inLine = (!pAb->AbNotInLine &&
 			(pAb->AbDisplay == 'I' ||
 			 pParentAb->AbBox->BxType == BoBlock ||
 			 pParentAb->AbBox->BxType == BoFloatBlock ||
@@ -2031,6 +2031,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  else
 		    {
 		      pColumn = NULL;
+		      /* Detect when a block included within another block
+		       with auto and takes the width of the content */
+		      if (pDimAb->DimUnit != UnAuto && inLine &&
+			  pAb->AbFloat == 'N' &&
+			  (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost) &&
+			  pParentAb->AbWidth.DimAbRef)
+			pDimAb->DimUnit = UnAuto;
+
 		      /* check if the relative box is not already dead */
 		      if (pDimAb->DimUnit == UnAuto)
 			{
@@ -2056,15 +2064,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
 			    }
-#ifdef IV
-			  else if (pAb->AbDisplay == 'B')
-			    {
-			      /* inherit from the parent box */
-			      pDimAb->DimAbRef = pAb->AbEnclosing;
-			      pDimAb->DimValue = 0;		  
-			      pBox->BxContentWidth = FALSE;
-			    }
-#endif
 			  else if (pParentAb->AbWidthChange &&
 				   pParentAb->AbWidth.DimUnit == UnAuto)
 			    {
