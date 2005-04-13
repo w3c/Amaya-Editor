@@ -1425,68 +1425,63 @@ RULES
    MTEXT:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top =  Previous . Top;
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: Enclosed . Width;
 		END;
 	END;
 
    MI:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	Style: Italics;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
 		Style: Enclosing =;
+		VertPos: Top =  Previous . Top;
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: Enclosed . Width;
 		END;
 	END;
 
    MF:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	Height: 1;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top =  Previous . Top;
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: Enclosed . Width;
 		END;
 	END;
 
    MO:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top =  Previous . Top;
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: Enclosed . Width;
 		END;
 	END;
 
    MN:
 	BEGIN
 	CreateBefore(ElementName);
-	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top =  Previous . Top;
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: Enclosed . Width;
 		END;
 	END;
 
