@@ -965,22 +965,30 @@ void GetAbstractBox (PtrAbstractBox *pAb)
 void FreeAbstractBox (PtrAbstractBox pAb)
 {
 
-  if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
+  if (pAb->AbLeafType == LtCompound)
     {
-      TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
-      CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
-      TtaFreeMemory (pAb->AbPictBackground);
-      pAb->AbPictBackground = NULL;
-    }
-  if (pAb->AbLeafType == LtCompound && pAb->AbPictListStyle)
-    {
-      TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
-      CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
-      TtaFreeMemory (pAb->AbPictListStyle);
-      pAb->AbPictListStyle = NULL;
+      if (pAb->AbPictBackground)
+	{
+	  TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
+	  CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
+	  TtaFreeMemory (pAb->AbPictBackground);
+	  pAb->AbPictBackground = NULL;
+	}
+      if (pAb->AbPictListStyle)
+	{
+	  TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
+	  CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
+	  TtaFreeMemory (pAb->AbPictListStyle);
+	  pAb->AbPictListStyle = NULL;
+	}
+      if (pAb->AbPositioning)
+	{
+	  TtaFreeMemory (pAb->AbPositioning);
+	  pAb->AbPositioning = NULL;
+	}
     }
 #ifdef DEBUG_MEMORY
-       TtaFreeMemory (pAb);
+   TtaFreeMemory (pAb);
 #else
    pAb->AbElement = NULL;
    pAb->AbEnclosing = NULL;

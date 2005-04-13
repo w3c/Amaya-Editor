@@ -30,7 +30,8 @@ typedef enum
      UnPoint,
      UnPixel,
      UnPercent,
-     UnAuto
+     UnAuto,
+     UnUndefined
   }
 TypeUnit;
 #define MAX_DOCUMENTS 20  /* max. number of simultaneous open documents */

@@ -38,12 +38,17 @@
 #define C_PIV_DOC_END 28	/* document ending mark */
 
 /* specific presentation rule type codes */
+#define C_PR_POSITION '0'
 #define C_PR_BREAK1 '1'
 #define C_PR_BREAK2 '2'
 /*      C_PR_VERTOVERFLOW '3'        defined in constprs.h */
 #define C_PR_LISTSTYLETYPE '4'
 #define C_PR_LISTSTYLEIMAGE '5'
 #define C_PR_LISTSTYLEPOSITION '6'
+#define C_PR_TOP '7'
+#define C_PR_RIGHT '8'
+#define C_PR_BOTTOM '9'
+#define C_PR_LEFT ':'
 #define C_PR_BORDERLEFTSTYLE '<'
 #define C_PR_BORDERRIGHTSTYLE '>'
 #define C_PR_ADJUST 'A'
@@ -105,6 +110,7 @@
 #define C_PR_DISPLAY 'z'
 #define C_PR_CLEAR '|'
 #define C_PR_FLOAT '~'
+#define C_PR_
 /* more presentation rule types are defined in constprs.h */
 
 /* picture presentation codes */
@@ -130,6 +136,7 @@
 #define C_PIV_PT 'P'
 #define C_PIV_PX 'x'
 #define C_PIV_PERCENT '%'
+#define C_PIV_AUTO 'A'
 
 /* arithmetic signs codes */
 #define C_PIV_PLUS '+'

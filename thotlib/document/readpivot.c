@@ -308,6 +308,9 @@ static TypeUnit     ReadUnit (BinFile file)
 	    case C_PIV_PX:
 	       return UnPixel;
 	       break;
+	    case C_PIV_AUTO:
+	       return UnAuto;
+	       break;
 	    default:
 	       return UnRelative;
 	 }
@@ -1321,6 +1324,18 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_YRADIUS:
       TypeRP = PtYRadius;
       break;
+    case C_PR_TOP:
+      TypeRP = PtTop;
+      break;
+    case C_PR_RIGHT:
+      TypeRP = PtRight;
+      break;
+    case C_PR_BOTTOM:
+      TypeRP = PtBottom;
+      break;
+    case C_PR_LEFT:
+      TypeRP = PtLeft;
+      break;
     case C_PR_HYPHENATE:
       TypeRP = PtHyphenate;
       break;
@@ -1377,6 +1392,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       break;
     case C_PR_CLEAR:
       TypeRP = PtClear;
+      break;
+    case C_PR_POSITION:
+      TypeRP = PtPosition;
       break;
     case C_PR_VISIBILITY:
       TypeRP = PtVisibility;
@@ -1450,6 +1468,10 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtBorderLeftWidth:
       case PtXRadius:
       case PtYRadius:
+      case PtTop:
+      case PtRight:
+      case PtBottom:
+      case PtLeft:
 	immed = ReadBoolean (pivFile);
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
@@ -1502,6 +1524,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtListStylePosition:
       case PtFloat:
       case PtClear:
+      case PtPosition:
       case PtVisibility:
       case PtBorderTopStyle:
       case PtBorderRightStyle:
@@ -1649,6 +1672,10 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtBorderLeftWidth:
           case PtXRadius:
           case PtYRadius:
+	  case PtTop:
+	  case PtRight:
+	  case PtBottom:
+	  case PtLeft:
 	    if (immed)
 	      {
 		pPRule->PrMinAttr = FALSE;
@@ -1735,6 +1762,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtListStylePosition:
 	  case PtFloat:
 	  case PtClear:
+          case PtPosition:
  	  case PtVisibility:
 	  case PtBorderTopStyle:
           case PtBorderRightStyle:

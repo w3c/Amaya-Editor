@@ -406,7 +406,6 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbBottomBorder = 0;
    pAb->AbLeftBorder = 0;
 
-
    pAb->AbFont = 1;
    pAb->AbLineStyle = 'S';
    pAb->AbDisplay = 'U';
@@ -1495,7 +1494,7 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
-  PtrAbstractBox   return the abstract box representing element pEl
+  ListItemAbsBox   return the abstract box representing element pEl
   in the main view of document pDoc.
   ----------------------------------------------------------------------*/
 static PtrAbstractBox ListItemAbsBox (PtrElement pEl, PtrDocument pDoc)

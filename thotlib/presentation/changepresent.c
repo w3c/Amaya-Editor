@@ -469,6 +469,18 @@ int          NumTypePRuleAPI (PtrPRule pRule)
             case PtYRadius:
                return PRYRadius;
                break;
+	    case PtTop:
+	       return PRTop;
+	       break;
+	    case PtRight:
+	       return PRRight;
+	       break;
+	    case PtBottom:
+	       return PRBottom;
+	       break;
+	    case PtLeft:
+	       return PRLeft;
+	       break;
             case PtBorderTopColor:
                return PRBorderTopColor;
                break;
@@ -510,6 +522,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	       break;
 	    case PtClear:
 	       return PRClear;
+	       break;
+	    case PtPosition:
+	       return PRPosition;
 	       break;
 	    case PtSize:
 	       return PRSize;
@@ -1120,6 +1135,40 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
 			       }
 			     ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP,
 						     pSPR);
+			   }
+			 else if (remove && pAb->AbLeafType == LtCompound &&
+				  pAb->AbPositioning)
+			   {
+			   if (ruleType == PtPosition)
+			     {
+			       TtaFreeMemory (pAb->AbPositioning);
+			       pAb->AbPositioning = NULL;
+			       pAb->AbPositionChange = TRUE;
+			     }
+			   else if (ruleType == PtTop)
+			     {
+			       pAb->AbPositioning->PnTopDistance = 0;
+			       pAb->AbPositioning->PnTopUnit = UnUndefined;
+			       pAb->AbVertPosChange = TRUE;
+			     }
+			   else if (ruleType == PtRight)
+			     {
+			       pAb->AbPositioning->PnRightDistance = 0;
+			       pAb->AbPositioning->PnRightUnit = UnUndefined;
+			       pAb->AbHorizPosChange = TRUE;
+			     }
+			   else if (ruleType == PtBottom)
+			     {
+			       pAb->AbPositioning->PnBottomDistance = 0;
+			       pAb->AbPositioning->PnBottomUnit = UnUndefined;
+			       pAb->AbVertPosChange = TRUE;
+			     }
+			   else if (ruleType == PtLeft)
+			     {
+			       pAb->AbPositioning->PnLeftDistance = 0;
+			       pAb->AbPositioning->PnLeftUnit = UnUndefined;
+			       pAb->AbHorizPosChange = TRUE;
+			     }
 			   }
 		       }
 		   }

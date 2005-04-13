@@ -199,6 +199,16 @@ typedef enum
 } BAlignment;	/* AlignLeftDots = aligned to the left, the last
 		   line is filled with dots */
 
+/* Positioning algorithm */
+typedef enum
+  {
+    PnStatic,
+    PnRelative,
+    PnAbsolute,
+    PnFixed,
+    PnInherit
+  } PosAlgorithm;
+
 /* type of a presentation rule */
 typedef enum
 {
@@ -218,10 +228,11 @@ typedef enum
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
   PtOpacity, PtFillOpacity, PtStrokeOpacity,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
-  PtXRadius, PtYRadius, PtFloat, PtClear,
+  PtXRadius, PtYRadius,
+  PtPosition, PtTop, PtRight, PtBottom, PtLeft, PtFloat, PtClear,
   PtDisplay, /* PtDisplay must be at the end. If the value is ListItem, this
                 makes sure that the marker box can inherit properties from
-		the creator box (see CreateListItemMarker). */
+		the creator box (see function CreateListItemMarker). */
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -495,7 +506,7 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtListStyleType, PtListStylePosition, PtDisplay,
                                PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtDirection, PtUnicodeBidi,
-                               PtLineStyle, PtFloat, PtClear,
+                               PtLineStyle, PtFloat, PtClear, PtPosition,
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{
@@ -506,7 +517,8 @@ typedef struct _PresRule
 		PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft
 	        PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
                 PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
-                PtBorderLeftWidth, PtXRadius, PtYRadius */
+                PtBorderLeftWidth, PtXRadius, PtYRadius,
+                PtTop, PtRight, PtBottom, PtLeft */
 	{
 	  TypeUnit _PrMinUnit_;	/* the distance is expressed in picas,
 				   1/10 of a character, etc. */
@@ -553,7 +565,6 @@ typedef struct _PresRule
 #define PrAttrValue u.s2.u.s0._PrAttrValue_
 #define PrIntValue u.s2.u.s0._PrIntValue_
 #define PrChrValue u.s2.u.s1._PrChrValue_
-#define PrAuto u.s2.u.s2._PrAuto_
 #define PrMinUnit u.s2.u.s2._PrMinUnit_
 #define PrMinAttr u.s2.u.s2._PrMinAttr_
 #define PrMinValue u.s2.u.s2._PrMinValue_

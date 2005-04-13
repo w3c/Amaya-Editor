@@ -676,6 +676,10 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			  pPRule->PrType == PtBorderLeftWidth ||
 			  pPRule->PrType == PtXRadius ||
 			  pPRule->PrType == PtYRadius ||
+			  pPRule->PrType == PtTop ||
+			  pPRule->PrType == PtRight ||
+			  pPRule->PrType == PtBottom ||
+			  pPRule->PrType == PtLeft ||
 			  pPRule->PrType == PtOpacity ||
 			  pPRule->PrType == PtFillOpacity ||
 			  pPRule->PrType == PtStrokeOpacity)
@@ -895,6 +899,58 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		    val = pAbb->AbRy;
 		    *unit = pAbb->AbRyUnit;
 		    break;
+		  case PtTop:
+		    if (pAb->AbLeafType != LtCompound ||
+			pAbb->AbPositioning == NULL)
+		      {
+			val = 0;
+			*unit = UnUndefined;
+		      }
+		    else
+		      {
+			val = pAbb->AbPositioning->PnTopDistance;
+			*unit = pAbb->AbPositioning->PnTopUnit;
+		      }
+		    break;
+		  case PtRight:
+		    if (pAb->AbLeafType != LtCompound ||
+			pAbb->AbPositioning == NULL)
+		      {
+			val = 0;
+			*unit = UnUndefined;
+		      }
+		    else
+		      {
+			val = pAbb->AbPositioning->PnRightDistance;
+			*unit = pAbb->AbPositioning->PnRightUnit;
+		      }
+		    break;
+		  case PtBottom:
+		    if (pAb->AbLeafType != LtCompound ||
+			pAbb->AbPositioning == NULL)
+		      {
+			val = 0;
+			*unit = UnUndefined;
+		      }
+		    else
+		      {
+			val = pAbb->AbPositioning->PnBottomDistance;
+			*unit = pAbb->AbPositioning->PnBottomUnit;
+		      }
+		    break;
+		  case PtLeft:
+		    if (pAb->AbLeafType != LtCompound ||
+			pAbb->AbPositioning == NULL)
+		      {
+			val = 0;
+			*unit = UnUndefined;
+		      }
+		    else
+		      {
+			val = pAbb->AbPositioning->PnLeftDistance;
+			*unit = pAbb->AbPositioning->PnLeftUnit;
+		      }
+		    break;
 		  default:
 		    break;
 		  }
@@ -1006,7 +1062,11 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		     pPRule->PrType == PtBorderBottomWidth ||
 		     pPRule->PrType == PtBorderLeftWidth ||
 		     pPRule->PrType == PtXRadius ||
-		     pPRule->PrType == PtYRadius)
+		     pPRule->PrType == PtYRadius ||
+		     pPRule->PrType == PtTop ||
+		     pPRule->PrType == PtRight ||
+		     pPRule->PrType == PtBottom ||
+		     pPRule->PrType == PtLeft)
 	      {
                 if (pPRule->PrMinAttr)
 		  /* c'est la valeur d'un attribut */
@@ -3162,6 +3222,24 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 }
 
 /*----------------------------------------------------------------------
+  NewAbPositioning
+  create and intializes a Positioning block for abstract box pAb.
+  ----------------------------------------------------------------------*/
+static void NewAbPositioning (PtrAbstractBox pAb)
+{
+  pAb->AbPositioning = (Positioning *) TtaGetMemory (sizeof (Positioning));
+  pAb->AbPositioning->PnAlgorithm = PnStatic;
+  pAb->AbPositioning->PnTopDistance = 0;
+  pAb->AbPositioning->PnTopUnit = UnUndefined;
+  pAb->AbPositioning->PnRightDistance = 0;
+  pAb->AbPositioning->PnRightUnit = UnUndefined;
+  pAb->AbPositioning->PnBottomDistance = 0;
+  pAb->AbPositioning->PnBottomUnit = UnUndefined;
+  pAb->AbPositioning->PnLeftDistance = 0;
+  pAb->AbPositioning->PnLeftUnit = UnUndefined;
+}
+
+/*----------------------------------------------------------------------
    	ApplyRule   applique au pave pointe par pAb la regle pointee par
    		pPRule dans le schema de presentation pointe par pSchP.	
    		Si pAttr n'est pas NULL, c'est un pointeur sur le bloc	
@@ -3185,6 +3263,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            insidePage, afterPageBreak;
   AbPosition         *pPavP1;
   ThotPictInfo       *image;
+  PtrAbstractBox      pAbb;
 
   appl = FALSE;
   if (pPRule && pAb && pAb->AbElement)
@@ -3988,6 +4067,46 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 				   &appl, &unit, pAttr, pAb);
 	  pAb->AbRyUnit = unit;
 	  break;
+	case PtTop:
+	  if (pAb->AbLeafType == LtCompound)
+	    {
+	      if (pAb->AbPositioning == NULL)
+		NewAbPositioning (pAb);
+	      pAb->AbPositioning->PnTopDistance = IntegerRule (pPRule,
+		    pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+	      pAb->AbPositioning->PnTopUnit = unit;
+	    }
+	  break;
+	case PtRight:
+	  if (pAb->AbLeafType == LtCompound)
+	    {
+	      if (pAb->AbPositioning == NULL)
+		NewAbPositioning (pAb);
+	      pAb->AbPositioning->PnRightDistance = IntegerRule (pPRule,
+	             pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+	      pAb->AbPositioning->PnRightUnit = unit;
+	    }
+	  break;
+	case PtBottom:
+	  if (pAb->AbLeafType == LtCompound)
+	    {
+	      if (pAb->AbPositioning == NULL)
+		NewAbPositioning (pAb);
+	      pAb->AbPositioning->PnBottomDistance = IntegerRule (pPRule,
+	             pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+	      pAb->AbPositioning->PnBottomUnit = unit;
+	    }
+	  break;
+	case PtLeft:
+	  if (pAb->AbLeafType == LtCompound)
+	    {
+	      if (pAb->AbPositioning == NULL)
+		NewAbPositioning (pAb);
+	      pAb->AbPositioning->PnLeftDistance = IntegerRule (pPRule,
+	             pAb->AbElement, pAb->AbDocView, &appl, &unit, pAttr, pAb);
+	      pAb->AbPositioning->PnLeftUnit = unit;
+	    }
+	  break;
 	case PtDisplay:
 	  pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				     &appl);
@@ -4145,9 +4264,71 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  pAb->AbClear = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				   &appl);
 	  break;
+        case PtPosition:
+	  if (pAb->AbLeafType == LtCompound &&
+	      pPRule->PrPresMode == PresInherit)
+	    {
+	      pAbb = AbsBoxInherit (pPRule, pAb->AbElement, pAb->AbDocView);
+	      if (pAbb == NULL)
+		appl = FALSE;
+	      else
+		{
+		  if (pAbb->AbPositioning)
+		    {
+		      if (!pAb->AbPositioning)
+			NewAbPositioning (pAb);
+		      pAb->AbPositioning->PnAlgorithm =
+                                   pAbb->AbPositioning->PnAlgorithm;
+		    }
+		  else
+		    {
+		      if (pAb->AbPositioning)
+			{
+			  TtaFreeMemory (pAb->AbPositioning);
+			  pAb->AbPositioning = NULL;
+			}
+		    }
+		  appl = TRUE;
+		}
+	    } 
+	  else
+	    {
+	      if (pPRule->PrChrValue == 'S')  /* position: static */
+		{
+		  if (pAb->AbLeafType == LtCompound && pAb->AbPositioning)
+		    {
+		      TtaFreeMemory (pAb->AbPositioning);
+		      pAb->AbPositioning = NULL;
+		    }
+		  appl = TRUE;
+		}
+	      else if (pAb->AbLeafType == LtCompound)
+		{
+		  if (!pAb->AbPositioning)
+		    NewAbPositioning (pAb);
+		  switch (pPRule->PrChrValue)
+		    {
+		    case 'R':
+		      pAb->AbPositioning->PnAlgorithm = PnRelative;
+		      appl = TRUE;
+		      break;
+		    case 'A':
+		      pAb->AbPositioning->PnAlgorithm = PnAbsolute;
+		      appl = TRUE;
+		      break;
+		    case 'F':
+		      pAb->AbPositioning->PnAlgorithm = PnFixed;
+		      appl = TRUE;
+		      break;
+		    default:
+		      break;
+		    }
+		}
+	    }
+	  break;
 	default:
 	  break;
-	}	
+	}
     }
   return appl;
 }

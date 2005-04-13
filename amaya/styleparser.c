@@ -4552,28 +4552,41 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
    ParseCSSPosition: parse a CSS Position attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSPosition (Element element, PSchema tsch,
-			       PresentationContext ctxt,
-			       char *cssRule, CSSInfoPtr css,
-			       ThotBool isHTML)
+			       PresentationContext ctxt, char *cssRule,
+			       CSSInfoPtr css, ThotBool isHTML)
 {
-  char     *ptr;
+  char               *ptr;
+  PresentationValue   pval;
 
+  pval.typed_data.value = 0;
+  pval.typed_data.unit = UNIT_BOX;
+  pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   if (!strncasecmp (cssRule, "static", 6))
-    cssRule = SkipWord (cssRule);
+    pval.typed_data.value = PositionStatic;
   else if (!strncasecmp (cssRule, "relative", 7))
-    cssRule = SkipWord (cssRule);
+    pval.typed_data.value = PositionRelative;
   else if (!strncasecmp (cssRule, "absolute", 8))
-    cssRule = SkipWord (cssRule);
+    pval.typed_data.value = PositionAbsolute;
   else if (!strncasecmp (cssRule, "fixed", 5))
-    cssRule = SkipWord (cssRule);
+    pval.typed_data.value = PositionFixed;
   else if (!strncasecmp (cssRule, "inherit", 7))
-    cssRule = SkipWord (cssRule);
+    pval.typed_data.unit = VALUE_INHERIT;
+
+  if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
+    {
+      cssRule = SkipValue ("Invalid position value", ptr);
+      cssRule = CheckImportantRule (cssRule, ctxt);
+      cssRule = SkipValue (NULL, cssRule);
+    }
   else
-    cssRule = SkipValue ("Invalid Position value", ptr);
-  /* check if it's an important rule */
-  cssRule = CheckImportantRule (cssRule, ctxt);
+    {
+      cssRule = SkipValue (NULL, cssRule);
+      cssRule = CheckImportantRule (cssRule, ctxt);
+      if (DoApply)
+	TtaSetStylePresentation (PRPosition, element, tsch, ctxt, pval);
+    }
   return (cssRule);
 }
 
@@ -4589,13 +4602,17 @@ static char *ParseCSSTop (Element element, PSchema tsch,
 
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
-  /* first parse the attribute string */
-  if (!strncasecmp (cssRule, "auto", 4) ||
-      !strncasecmp (cssRule, "inherit", 7))
+  /* first parse the value */
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
     }
   else
@@ -4608,10 +4625,8 @@ static char *ParseCSSTop (Element element, PSchema tsch,
       val.typed_data.unit = UNIT_PX;
     }
   cssRule = CheckImportantRule (cssRule, context);
-  /***
   if (DoApply)
-    TtaSetStylePresentation (PR, element, tsch, context, val);
-  ***/
+    TtaSetStylePresentation (PRTop, element, tsch, context, val);
   return (cssRule);
 }
 
@@ -4628,12 +4643,16 @@ static char *ParseCSSRight (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
-  if (!strncasecmp (cssRule, "auto", 4) ||
-      !strncasecmp (cssRule, "inherit", 7))
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
     }
   else
@@ -4646,10 +4665,8 @@ static char *ParseCSSRight (Element element, PSchema tsch,
       val.typed_data.unit = UNIT_PX;
     }
   cssRule = CheckImportantRule (cssRule, context);
-  /***
   if (DoApply)
-    TtaSetStylePresentation (PR, element, tsch, context, val);
-  ***/
+    TtaSetStylePresentation (PRRight, element, tsch, context, val);
   return (cssRule);
 }
 
@@ -4666,12 +4683,16 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
-  if (!strncasecmp (cssRule, "auto", 4) ||
-      !strncasecmp (cssRule, "inherit", 7))
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
     }
   else
@@ -4684,10 +4705,8 @@ static char *ParseCSSBottom (Element element, PSchema tsch,
       val.typed_data.unit = UNIT_PX;
     }
   cssRule = CheckImportantRule (cssRule, context);
-  /***
   if (DoApply)
-    TtaSetStylePresentation (PR, element, tsch, context, val);
-  ***/
+    TtaSetStylePresentation (PRBottom, element, tsch, context, val);
   return (cssRule);
 }
 
@@ -4704,12 +4723,16 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
-  if (!strncasecmp (cssRule, "auto", 4) ||
-      !strncasecmp (cssRule, "inherit", 7))
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
     }
   else
@@ -4722,10 +4745,8 @@ static char *ParseCSSLeft (Element element, PSchema tsch,
       val.typed_data.unit = UNIT_PX;
     }
   cssRule = CheckImportantRule (cssRule, context);
-  /***
   if (DoApply)
-    TtaSetStylePresentation (PR, element, tsch, context, val);
-  ***/
+    TtaSetStylePresentation (PRLeft, element, tsch, context, val);
   return (cssRule);
 }
 

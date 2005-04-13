@@ -677,7 +677,7 @@ XmlEntity XhtmlEntityTable[] =
 {"kappa", 954},   /* greek small letter kappa, U+03BA ISOgrk3 */
 {"lArr", 8656},   /* leftwards double arrow, U+21D0 ISOtech */
 {"lambda", 955},  /* greek small letter lambda, U+03BB ISOgrk3 */
-{"lang", 9001},   /* left-pointing angle bracket = bra, U+2329 ISOtech */
+{"lang", 0x27E8}, /* mathematical left angle bracket, U+27E8 */
 {"laquo", 171},   /* left-pointing double angle quotation mark = */
                         /* left pointing guillemet, U+00AB ISOnum */
 {"larr", 8592},   /* leftwards arrow, U+2190 ISOnum */
@@ -743,7 +743,7 @@ XmlEntity XhtmlEntityTable[] =
 {"quot", 34},     /* quotation mark = APL quote, U+0022 ISOnum */
 {"rArr", 8658},   /* rightwards double arrow, U+21D2 ISOtech */
 {"radic", 8730},  /* square root = radical sign, U+221A ISOtech */
-{"rang", 9002},   /* right-pointing angle bracket = ket, U+232A ISOtech */
+{"rang", 0x27E9}, /* mathematical right angle bracket, U+27E9 */
 {"raquo", 187},   /* right-pointing double angle quotation mark = */
                         /* right pointing guillemet, U+00BB ISOnum */
 {"rarr", 8594},   /* rightwards arrow, U+2192 ISOnum */

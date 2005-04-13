@@ -64,29 +64,34 @@ typedef int        *PRule;
 #define PRFillPattern 47
 #define PRBackground 48
 #define PRForeground 49
-#define PRHyphenate 50
+#define PROpacity 50
+#define PRFillOpacity 51
+#define PRStrokeOpacity 52
+#define PRHyphenate 53
 /* PtPageBreak, PtLineBreak, PtGather */
-#define PRXRadius 54
-#define PRYRadius 55
-#define PRNoBreak1 56
-#define PRNoBreak2 57
-/* PtPictInfo, PRLine */
-#define PRCreateEnclosing 60
-#define PRShowBox 61
-#define PRBackgroundPicture 62
-#define PRPictureMode 63
-#define PRNotInLine 64
-#define PRNone 65
-#define PRPageBefore 66
-#define PRPageAfter 67
-#define PRPageInside 68
-#define PROpacity 69
-#define PRFillOpacity 70
-#define PRStrokeOpacity 71
-#define PRFloat 72
-#define PRClear 73
-#define PRDisplay 74
-#define LAST_PRES_RULE_TYPE 74
+#define PRXRadius 57
+#define PRYRadius 58
+#define PRPosition 59
+#define PRTop 60
+#define PRRight 61
+#define PRBottom 62
+#define PRLeft 63
+#define PRFloat 64
+#define PRClear 65
+#define PRDisplay 66
+#define PRNoBreak1 67
+#define PRNoBreak2 68
+#define PRCreateEnclosing 69
+#define PRShowBox 70
+#define PRBackgroundPicture 71
+#define PRPictureMode 72
+#define PRNotInLine 73
+#define PRNone 74
+#define PRPageBefore 75
+#define PRPageAfter 76
+#define PRPageInside 77
+/* PtPictInfo */
+#define LAST_PRES_RULE_TYPE 77
 
 /*
  * A bunch of constants describing the most common values for presentation
@@ -131,6 +136,12 @@ typedef int        *PRule;
 #define ClearLeft          2
 #define ClearRight	   3
 #define ClearBoth	   4
+
+/* values for rule PRPosition */
+#define PositionStatic     1
+#define PositionRelative   2
+#define PositionAbsolute   3
+#define PositionFixed      4
 
 /* values for PRHorizPos and PRVertPos */
 #define PositionTop 1

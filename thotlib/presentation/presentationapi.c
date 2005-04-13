@@ -1344,6 +1344,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width in points).
    PRXRadius, PRYRadius: an integer (radius in points)
+   PRTop, PRRight, PRBottom, PRLeft: an integer (distance)
    PRVertPos, PRHorizPos: an integer (distance in points)
    PRWidth, PRHeight: an integer (size in points)
    PRHyphenate: Hyphenation, NoHyphenation.
@@ -1727,6 +1728,34 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	     }
 	   break;
 
+         case PtPosition:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case PnStatic:
+	       ((PtrPRule) pRule)->PrChrValue = 'S';
+	       break;
+	     case PnRelative:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     case PnAbsolute:
+	       ((PtrPRule) pRule)->PrChrValue = 'A';
+	       break;
+	     case PnFixed:
+	       ((PtrPRule) pRule)->PrChrValue = 'F';
+	       break;
+	     case PnInherit:
+	       ((PtrPRule) pRule)->PrChrValue = 'I';
+	       break;
+             default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
 	 case PtBreak1:
 	 case PtBreak2:
 	 case PtIndent:
@@ -1747,6 +1776,10 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	 case PtBorderLeftWidth:
 	 case PtXRadius:
 	 case PtYRadius:
+	 case PtTop:
+	 case PtRight:
+         case PtBottom:
+         case PtLeft:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -1869,6 +1902,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
    PRXRadius, PRYRadius: a positive integer (radius)
+   PRTop, PRRight, PRBottom, PRLeft: an integer (distance)
    PRVertPos, PRHorizPos: an integer (distance)
    PRWidth, PRHeight: an integer (width or height)
   ----------------------------------------------------------------------*/
@@ -1915,6 +1949,10 @@ void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
 	 case PtBorderLeftWidth:
          case PtXRadius:
          case PtYRadius:
+         case PtTop:
+         case PtRight:
+         case PtBottom:
+         case PtLeft:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   ((PtrPRule) pRule)->PrMinUnit = unit;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -2582,6 +2620,7 @@ int                 TtaGetPRuleType (PRule pRule)
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
    PRXRadius, PRYRadius: radius
+   PRTop, PRRight, PRBottom, PRLeft: distance
    PtVertPos, PtHorizPos: distance
    PtWidth, PtHeight: distance
    PRHyphenate: Hyphenation, NoHyphenation.
@@ -2874,6 +2913,28 @@ int TtaGetPRuleValue (PRule pRule)
 	    break;
 	  }
 	break;
+
+      case PtPosition:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'S':
+	    value = PnStatic;
+	    break;
+	  case 'R':
+	    value = PnRelative;
+	    break;
+	  case 'A':
+	    value = PnAbsolute;
+	    break;
+	  case 'F':
+	    value = PnFixed;
+	    break;
+	  case 'I':
+	    value = PnInherit;
+	    break;
+	  }
+	break;
+
       case PtBreak1:
       case PtBreak2:
       case PtIndent:
@@ -2894,6 +2955,10 @@ int TtaGetPRuleValue (PRule pRule)
       case PtBorderLeftWidth:
       case PtXRadius:
       case PtYRadius:
+      case PtTop:
+      case PtRight:
+      case PtBottom:
+      case PtLeft:
 	value = ((PtrPRule) pRule)->PrMinValue;
 	break;
 
@@ -2989,6 +3054,7 @@ int TtaGetPositionPRuleDelta (PRule pRule)
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth,
    PRBorderLeftWidth,
    PRXRadius, PRYRadius,
+   PRTop, PRRight, PRBottom, PRLeft,
    PRVertPos, PRHorizPos, PRWidth, PRHeight.
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
    Return UnRelative in other cases.
@@ -3024,6 +3090,10 @@ int TtaGetPRuleUnit (PRule pRule)
       case PtBorderLeftWidth:
       case PtXRadius:
       case PtYRadius:
+      case PtTop:
+      case PtRight:
+      case PtBottom:
+      case PtLeft:
 	value = ((PtrPRule) pRule)->PrMinUnit;
 	break;
       case PtHeight:
@@ -3152,6 +3222,10 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtBorderLeftWidth:
 			    case PtXRadius:
 			    case PtYRadius:
+			    case PtTop:
+			    case PtRight:
+			    case PtBottom:
+			    case PtLeft:
 			      if (pR1->PrMinUnit == pR2->PrMinUnit)
 				if (pR1->PrMinAttr == pR2->PrMinAttr)
 				  if (pR1->PrMinValue == pR2->PrMinValue)

@@ -119,6 +119,10 @@ static void PutUnit (BinFile pivFile, TypeUnit unit)
       TtaWriteByte (pivFile, C_PIV_PT);
    else if (unit == UnPixel)
       TtaWriteByte (pivFile, C_PIV_PX);
+   else if (unit == UnAuto)
+      TtaWriteByte (pivFile, C_PIV_AUTO);
+   else if (unit == UnPercent)
+      TtaWriteByte (pivFile, C_PIV_PERCENT);
    else
       TtaWriteByte (pivFile, C_PIV_EM);
 }
@@ -423,6 +427,8 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtBorderBottomWidth ||
 	rType == PtBorderLeftWidth ||
 	rType == PtXRadius || rType == PtYRadius ||
+        rType == PtTop || rType == PtRight || rType == PtBottom ||
+	rType == PtLeft ||
 	rType == PtBorderTopColor ||
 	rType == PtBorderRightColor ||
 	rType == PtBorderBottomColor ||
@@ -437,6 +443,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtListStylePosition ||
 	rType == PtFloat ||
 	rType == PtClear ||
+	rType == PtPosition ||
 	rType == PtVisibility ||
 	rType == PtSize || rType == PtStyle ||
 	rType == PtWeight || rType == PtFont ||
@@ -465,7 +472,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtPaddingBottom || rType == PtPaddingLeft ||
 	rType == PtBorderTopWidth || rType == PtBorderRightWidth ||
 	rType == PtBorderBottomWidth || rType == PtBorderLeftWidth ||
-	rType == PtXRadius || rType == PtYRadius)))
+	rType == PtXRadius || rType == PtYRadius ||
+	rType == PtTop || rType == PtRight || rType == PtBottom ||
+	rType == PtLeft)))
     {
       /* ecrit la marque de regle */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
@@ -548,6 +557,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtClear:
 	  TtaWriteByte (pivFile, C_PR_CLEAR);
 	  break;
+	case PtPosition:
+	  TtaWriteByte (pivFile, C_PR_POSITION);
+	  break;
 	case PtVisibility:
 	  TtaWriteByte (pivFile, C_PR_VISIBILITY);
 	  break;
@@ -622,6 +634,18 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  break;
         case PtYRadius:
 	  TtaWriteByte (pivFile, C_PR_YRADIUS);
+	  break;
+        case PtTop:
+	  TtaWriteByte (pivFile, C_PR_TOP);
+	  break;
+        case PtRight:
+	  TtaWriteByte (pivFile, C_PR_RIGHT);
+	  break;
+        case PtBottom:
+	  TtaWriteByte (pivFile, C_PR_BOTTOM);
+	  break;
+        case PtLeft:
+	  TtaWriteByte (pivFile, C_PR_LEFT);
 	  break;
 	case PtHyphenate:
 	  TtaWriteByte (pivFile, C_PR_HYPHENATE);
@@ -715,6 +739,10 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtBorderLeftWidth:
         case PtXRadius:
         case PtYRadius:
+	case PtTop:
+	case PtRight:
+	case PtBottom:
+	case PtLeft:
 	  PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
 	  if (pPRule->PrPresMode == PresImmediate)
 	    {
@@ -789,6 +817,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtListStylePosition:
 	case PtFloat:
 	case PtClear:
+	case PtPosition:
         case PtBorderTopStyle:
         case PtBorderRightStyle:
         case PtBorderBottomStyle:

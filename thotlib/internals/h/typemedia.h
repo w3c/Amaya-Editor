@@ -428,6 +428,19 @@ typedef struct _DelayedPRule
   PtrDelayedPRule DpNext;	/* Next element */
 } DelayedPRule;
 
+typedef struct _Positioning
+{
+  PosAlgorithm    PnAlgorithm;
+  int             PnTopDistance;
+  TypeUnit        PnTopUnit;
+  int             PnRightDistance;
+  TypeUnit        PnRightUnit;
+  int             PnBottomDistance;
+  TypeUnit        PnBottomUnit;
+  int             PnLeftDistance;
+  TypeUnit        PnLeftUnit;
+} Positioning;
+
 /* Description of an abstract images of a document view */
 typedef struct _AbstractBox
 {
@@ -555,19 +568,21 @@ typedef struct _AbstractBox
 				         color, pattern, line style */
   ThotBool        AbMBPChange;	      /* Change margins, borders, paddings */
   ThotBool        AbFloatChange;      /* Change the floatting information */
+  ThotBool        AbPositionChange;   /* Change positioning algorithm */
   ThotBool        AbChange;	      /* Change of another type */
   LeafType        AbLeafType;
   union
   {
     struct /* AbLeafType = LtCompound */
     {
-      int       *_AbPictBackground_;    /* background picture */
-      int       *_AbPictListStyle_;     /* list-style image */
-      ThotBool   _AbFillBox_;           /* True: a fill box is displayed */
-      ThotBool	 _AbInLine_;
+      int         *_AbPictBackground_;    /* background picture */
+      int         *_AbPictListStyle_;     /* list-style image */
+      Positioning *_AbPositioning_;       /* 0 if normal flow (static) */
+      ThotBool     _AbFillBox_;           /* True: a fill box is displayed */
+      ThotBool	   _AbInLine_;
       /* The following two fields only make sense if AbInLine = False */
-      ThotBool	 _AbTruncatedHead_; /* Beginning of box contents is missing */
-      ThotBool	 _AbTruncatedTail_; /* End of box contents is missing */
+      ThotBool	   _AbTruncatedHead_; /* Beginning of box contents is missing*/
+      ThotBool	   _AbTruncatedTail_; /* End of box contents is missing */
     } s0;
     struct /* AbLeafType = LtText */
     {
@@ -602,6 +617,7 @@ typedef struct _AbstractBox
 
 #define AbPictBackground u.s0._AbPictBackground_
 #define AbPictListStyle u.s0._AbPictListStyle_
+#define AbPositioning u.s0._AbPositioning_
 #define AbFillBox u.s0._AbFillBox_
 #define AbInLine u.s0._AbInLine_
 #define AbTruncatedHead u.s0._AbTruncatedHead_

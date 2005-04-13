@@ -283,6 +283,18 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtYRadius:
       fprintf (fileDescriptor, "YRadius");
       break;
+    case PtTop:
+      fprintf (fileDescriptor, "Top");
+      break;
+    case PtRight:
+      fprintf (fileDescriptor, "Right");
+      break;
+    case PtBottom:
+      fprintf (fileDescriptor, "Bottom");
+      break;
+    case PtLeft:
+      fprintf (fileDescriptor, "Left");
+      break;
     case PtDisplay:
       fprintf (fileDescriptor, "Display");
       break;
@@ -300,6 +312,9 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtClear:
       fprintf (fileDescriptor, "Clear");
+      break;
+    case PtPosition:
+      fprintf (fileDescriptor, "Position");
       break;
     case PtBreak1:
       fprintf (fileDescriptor, "NoBr1");
@@ -1476,6 +1491,10 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	   fprintf (fileDescriptor, " AspectChange");
 	if (pAb->AbMBPChange)
 	   fprintf (fileDescriptor, " MBPChange");
+	if (pAb->AbFloatChange)
+	   fprintf (fileDescriptor, " FloatChange");
+	if (pAb->AbPositionChange)
+	   fprintf (fileDescriptor, " PositionChange");
 	if (pAb->AbChange)
 	   fprintf (fileDescriptor, " OtherChange");
 	if (pAb->AbOnPageBreak)
@@ -1532,6 +1551,75 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
 	fprintf (fileDescriptor, " Float:%c", pAb->AbFloat);
 	fprintf (fileDescriptor, " Clear:%c", pAb->AbClear);
+	if (pAb->AbLeafType == LtCompound && pAb->AbPositioning)
+	  {
+	    fprintf (fileDescriptor, "\n");
+	    for (j = 1; j <= Indent + 6; j++)
+	      fprintf (fileDescriptor, " ");
+	    fprintf (fileDescriptor, "position: ");
+	    if (pAb->AbPositioning->PnAlgorithm == PnStatic)
+	      fprintf (fileDescriptor, "static");
+	    else if (pAb->AbPositioning->PnAlgorithm == PnRelative)
+	      fprintf (fileDescriptor, "relative");
+	    else if (pAb->AbPositioning->PnAlgorithm == PnAbsolute)
+	      fprintf (fileDescriptor, "absolute");
+	    else if (pAb->AbPositioning->PnAlgorithm == PnFixed)
+	      fprintf (fileDescriptor, "fixed");
+	    else
+	      fprintf (fileDescriptor, "???");
+	    if (pAb->AbPositioning->PnTopUnit != UnUndefined)
+	      {
+		fprintf (fileDescriptor, " top:");
+		if (pAb->AbPositioning->PnTopUnit == UnAuto)
+		  fprintf (fileDescriptor, "auto");
+		else
+		  {
+		    fprintf (fileDescriptor, "%d",
+			     pAb->AbPositioning->PnTopDistance);
+		    wrTypeUnit (pAb->AbPositioning->PnTopUnit,
+				fileDescriptor);
+		  }
+	      }
+	    if (pAb->AbPositioning->PnRightUnit != UnUndefined)
+	      {
+		fprintf (fileDescriptor, " right:");
+		if (pAb->AbPositioning->PnRightUnit == UnAuto)
+		  fprintf (fileDescriptor, "auto");
+		else
+		  {
+		    fprintf (fileDescriptor, "%d",
+			     pAb->AbPositioning->PnRightDistance);
+		    wrTypeUnit (pAb->AbPositioning->PnRightUnit,
+				fileDescriptor);
+		  }
+	      }
+	    if (pAb->AbPositioning->PnBottomUnit != UnUndefined)
+	      {
+		fprintf (fileDescriptor, " bottom:");
+		if (pAb->AbPositioning->PnBottomUnit == UnAuto)
+		  fprintf (fileDescriptor, "auto");
+		else
+		  {
+		    fprintf (fileDescriptor, "%d",
+			     pAb->AbPositioning->PnBottomDistance);
+		    wrTypeUnit (pAb->AbPositioning->PnBottomUnit,
+				fileDescriptor);
+		  }
+	      }
+	    if (pAb->AbPositioning->PnLeftUnit != UnUndefined)
+	      {
+		fprintf (fileDescriptor, " left:");
+		if (pAb->AbPositioning->PnLeftUnit == UnAuto)
+		  fprintf (fileDescriptor, "auto");
+		else
+		  {
+		    fprintf (fileDescriptor, "%d",
+			     pAb->AbPositioning->PnLeftDistance);
+		    wrTypeUnit (pAb->AbPositioning->PnLeftUnit,
+				fileDescriptor);
+		  }
+	      }
+	  }
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	  fprintf (fileDescriptor, " ");
@@ -2658,6 +2746,25 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 	    fprintf (fileDescriptor, "none");
 	    break;
 	  }
+      else if (pR->PrType == PtPosition)
+	switch (pR->PrChrValue)
+	  {
+	  case 'S':
+	    fprintf (fileDescriptor, "static");
+	    break;
+	  case 'R':
+	    fprintf (fileDescriptor, "relative");
+	    break;
+	  case 'A':
+	    fprintf (fileDescriptor, "absolute");
+	    break;
+	  case 'F':
+	    fprintf (fileDescriptor, "fixed");
+	    break;
+	  case 'I':
+	    fprintf (fileDescriptor, "inherit");
+	    break;
+	  }
       else if (pR->PrType == PtLineStyle ||
 	       pR->PrType == PtBorderTopStyle ||
 	       pR->PrType == PtBorderRightStyle ||
@@ -2703,7 +2810,6 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
     fprintf (fileDescriptor, "??????");
   fprintf (fileDescriptor, ";");
 }
-
 
 /*----------------------------------------------------------------------
    wrnbherit ecrit au terminal la regle d'heritage ou la valeur    
@@ -3512,6 +3618,22 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
 	    fprintf (fileDescriptor, "YRadius: ");
 	    wrminind (RP, fileDescriptor);
 	    break;
+	  case PtTop:
+	    fprintf (fileDescriptor, "Top: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtRight:
+	    fprintf (fileDescriptor, "Right: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtBottom:
+	    fprintf (fileDescriptor, "Bottom: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
+	  case PtLeft:
+	    fprintf (fileDescriptor, "Left: ");
+	    wrminind (RP, fileDescriptor);
+	    break;
 	  case PtDisplay:
 	    fprintf (fileDescriptor, "Display: ");
 	    wrfontstyle (RP, fileDescriptor);
@@ -3552,6 +3674,10 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
 	    break;
 	  case PtClear:
 	    fprintf (fileDescriptor, "Clear: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtPosition:
+	    fprintf (fileDescriptor, "Position: ");
 	    wrfontstyle (RP, fileDescriptor);
 	    break;
 	  case PtBreak1:

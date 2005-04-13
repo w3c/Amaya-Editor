@@ -1403,7 +1403,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           type == PtLineWeight ||        type == PtThickness ||
 	  type == PtIndent ||            type == PtLineSpacing ||
           type == PtBreak1 ||            type == PtBreak2 ||
-          type == PtXRadius ||           type == PtYRadius)
+          type == PtXRadius ||           type == PtYRadius ||
+	  type == PtTop ||               type == PtRight ||
+          type == PtBottom ||            type == PtLeft)
 	value *= 10;
       break;
     case UNIT_EM:
@@ -1682,6 +1684,26 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  break;
 	}
       break;
+    case PtPosition:
+      switch (value)
+	{
+	case PositionStatic:
+	  rule->PrChrValue = 'S';
+	  break;
+	case PositionRelative:
+	  rule->PrChrValue = 'R';
+	  break;
+	case PositionAbsolute:
+	  rule->PrChrValue = 'A';
+	  break;
+	case PositionFixed:
+	  rule->PrChrValue = 'F';
+	  break;
+	default:
+	  rule->PrChrValue = 'S';
+	  break;
+	}
+      break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
@@ -1735,6 +1757,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtPaddingRight:
     case PtXRadius:
     case PtYRadius:
+    case PtTop:
+    case PtRight:
+    case PtBottom:
+    case PtLeft:
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
       rule->PrMinAttr = FALSE;
@@ -2370,7 +2396,26 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	  break;
 	}
       break;
- 
+    case PtPosition:
+      switch (rule->PrChrValue)
+	{
+	  case 'S':
+	    value = PnStatic;
+	    break;
+	  case 'R':
+	    value = PnRelative;
+	    break;
+	  case 'A':
+	    value = PnAbsolute;
+	    break;
+	  case 'F':
+	    value = PnFixed;
+	    break;
+	  case 'I':
+	    value = PnInherit;
+	    break;
+	}
+      break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
@@ -2429,6 +2474,10 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderLeftWidth:
     case PtXRadius:
     case PtYRadius:
+    case PtTop:
+    case PtRight:
+    case PtBottom:
+    case PtLeft:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
       break;
@@ -2457,7 +2506,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtHeight:
     case PtWidth:
       int_unit = rule->PrDimRule.DrUnit;
-      if (int_unit == 0)
+      if (int_unit == -1)
 	int_unit = UnPixel;
 
       value = rule->PrDimRule.DrValue;
@@ -2791,6 +2840,22 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       *intRule = PtYRadius;
       *absolute = TRUE;
       break;
+    case PRTop:
+      *intRule = PtTop;
+      *absolute = TRUE;
+      break;
+    case PRRight:
+      *intRule = PtRight;
+      *absolute = TRUE;
+      break;
+    case PRBottom:
+      *intRule = PtBottom;
+      *absolute = TRUE;
+      break;
+    case PRLeft:
+      *intRule = PtLeft;
+      *absolute = TRUE;
+      break;
     case PRDisplay:
       *intRule = PtDisplay;
       break;
@@ -2808,6 +2873,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRClear:
       *intRule = PtClear;
+      break;
+    case PRPosition:
+      *intRule = PtPosition;
       break;
     default:
       *intRule = PtFunction;
@@ -3050,6 +3118,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     case PtClear:
       setting->type = PRClear;
       break;
+    case PtPosition:
+      setting->type = PRPosition;
+      break;
     case PtSize:
       setting->type = PRSize;
       break;
@@ -3097,6 +3168,18 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtYRadius:
       setting->type = PRYRadius;
+      break;
+    case PtTop:
+      setting->type = PRTop;
+      break;
+    case PtRight:
+      setting->type = PRRight;
+      break;
+    case PtBottom:
+      setting->type = PRBottom;
+      break;
+    case PtLeft:
+      setting->type = PRLeft;
       break;
     case PtHeight:
       setting->type = PRHeight;
@@ -3344,6 +3427,78 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
     {
     case PRVisibility:
       break;
+    case PRListStyleType:
+      switch (settings->value.typed_data.value)
+	{
+	case Disc:
+	  strcpy (buffer, "list-style-type: disc");
+	  break;
+	case Circle:
+	  strcpy (buffer, "list-style-type: circle");
+	  break;
+	case Square:
+	  strcpy (buffer, "list-style-type: square");
+	  break;
+	case Decimal:
+	  strcpy (buffer, "list-style-type: decimal");
+	  break;
+	case DecimalLeadingZero:
+	  strcpy (buffer, "list-style-type: decimal-leading-zero");
+	  break;
+	case LowerRoman:
+	  strcpy (buffer, "list-style-type: lower-roman");
+	  break;
+	case UpperRoman:
+	  strcpy (buffer, "list-style-type: upper-roman");
+	  break;
+	case LowerGreek:
+	  strcpy (buffer, "list-style-type: lower-greek");
+	  break;
+	case LowerLatin:
+	  strcpy (buffer, "list-style-type: lower-latin");
+	  break;
+	case UpperLatin:
+	  strcpy (buffer, "list-style-type: upper-latin");
+	  break;
+	case ListStyleTypeNone:
+	  strcpy (buffer, "list-style-type: none");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRListStyleImage:
+      if (settings->value.pointer != NULL)
+	sprintf (buffer, "list-style-image: url(%s)",
+		 (char*)(settings->value.pointer));
+      else
+	strcpy (buffer, "list-style-image: none");
+      break;
+    case PRListStylePosition:
+      switch (settings->value.typed_data.value)
+	{
+	case Inside:
+	  strcpy (buffer, "list-style-position: inside");
+	  break;
+	case Outside:
+	  strcpy (buffer, "list-style-position: outside");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRVertOverflow:
+    case PRHorizOverflow:
+    case PRVertRef:
+      break;
+    case PRHorizRef:
+      strcpy (buffer, "vertical-align: ");
+      if (real)
+	sprintf (buffer, "vertical-align: %g", fval);
+      else
+	sprintf (buffer, "vertical-align: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
     case PRHeight:
       if (unit == VALUE_AUTO)
 	strcpy (buffer, "height: ");
@@ -3362,13 +3517,8 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case PRHorizRef:
-      strcpy (buffer, "vertical-align: ");
-      if (real)
-	sprintf (buffer, "vertical-align: %g", fval);
-      else
-	sprintf (buffer, "vertical-align: %d", settings->value.typed_data.value);
-      add_unit = 1;
+    case PRVertPos:
+    case PRHorizPos:
       break;
     case PRMarginTop:
       if (unit == VALUE_AUTO)
@@ -3377,6 +3527,15 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "margin-top: %g", fval);
       else
 	sprintf (buffer, "margin-top: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRMarginRight:
+      if (unit == VALUE_AUTO)
+	strcpy (buffer, "margin-right: ");
+      else if (real)
+	sprintf (buffer, "margin-right: %g", fval);
+      else
+	sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginBottom:
@@ -3398,20 +3557,19 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case PRMarginRight:
-      if (unit == VALUE_AUTO)
-	strcpy (buffer, "margin-right: ");
-      else if (real)
-	sprintf (buffer, "margin-right: %g", fval);
-      else
-	sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
-      add_unit = 1;
-      break;
     case PRPaddingTop:
       if (real)
 	sprintf (buffer, "padding-top: %g", fval);
       else
 	sprintf (buffer, "padding-top: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRPaddingRight:
+      if (real)
+	sprintf (buffer, "padding-right: %g", fval);
+      else
+	sprintf (buffer, "padding-right: %d",
+		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingBottom:
@@ -3429,19 +3587,19 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "padding-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
-    case PRPaddingRight:
-      if (real)
-	sprintf (buffer, "padding-right: %g", fval);
-      else
-	sprintf (buffer, "padding-right: %d",
-		  settings->value.typed_data.value);
-      add_unit = 1;
-      break;
     case PRBorderTopWidth:
       if (real)
 	sprintf (buffer, "border-top-width: %g", fval);
       else
 	sprintf (buffer, "border-top-width: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderRightWidth:
+      if (real)
+	sprintf (buffer, "border-right-width: %g", fval);
+      else
+	sprintf (buffer, "border-right-width: %d",
 		 settings->value.typed_data.value);
       add_unit = 1;
       break;
@@ -3458,14 +3616,6 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "border-left-width: %g", fval);
       else
 	sprintf (buffer, "border-left-width: %d",
-		 settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRBorderRightWidth:
-      if (real)
-	sprintf (buffer, "border-right-width: %g", fval);
-      else
-	sprintf (buffer, "border-right-width: %d",
 		 settings->value.typed_data.value);
       add_unit = 1;
       break;
@@ -3687,87 +3837,111 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
       break;
     case PRLineStyle:
       break;
-    case PRDisplay:
-      switch (settings->value.typed_data.value)
+    case PRLineWeight:
+      elType = TtaGetElementType(el);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
 	{
-	case Inline:
-	  strcpy (buffer, "display: inline");
-	  break;
-	case Block:
-	  strcpy (buffer, "display: block");
-	  break;
-	case ListItem:
-	  strcpy (buffer, "display: list-item");
-	  break;
-	case RunIn:
-	  strcpy (buffer, "display: runin");
-	  break;
-	case InlineBlock:
-	  strcpy (buffer, "display: inlineblock");
-	  break;
-	default:
-	  break;
+	  if (real)
+	    sprintf (buffer, "stroke-width: %g", fval);
+	  else
+	    sprintf (buffer, "stroke-width: %d",
+		      settings->value.typed_data.value);
 	}
+      add_unit = 1;
       break;
-    case PRListStyleType:
-      switch (settings->value.typed_data.value)
-	{
-	case Disc:
-	  strcpy (buffer, "list-style-type: disc");
-	  break;
-	case Circle:
-	  strcpy (buffer, "list-style-type: circle");
-	  break;
-	case Square:
-	  strcpy (buffer, "list-style-type: square");
-	  break;
-	case Decimal:
-	  strcpy (buffer, "list-style-type: decimal");
-	  break;
-	case DecimalLeadingZero:
-	  strcpy (buffer, "list-style-type: decimal-leading-zero");
-	  break;
-	case LowerRoman:
-	  strcpy (buffer, "list-style-type: lower-roman");
-	  break;
-	case UpperRoman:
-	  strcpy (buffer, "list-style-type: upper-roman");
-	  break;
-	case LowerGreek:
-	  strcpy (buffer, "list-style-type: lower-greek");
-	  break;
-	case LowerLatin:
-	  strcpy (buffer, "list-style-type: lower-latin");
-	  break;
-	case UpperLatin:
-	  strcpy (buffer, "list-style-type: upper-latin");
-	  break;
-	case ListStyleTypeNone:
-	  strcpy (buffer, "list-style-type: none");
-	  break;
-	default:
-	  break;
-	}
+    case PRFillPattern:
       break;
-    case PRListStylePosition:
-      switch (settings->value.typed_data.value)
-	{
-	case Inside:
-	  strcpy (buffer, "list-style-position: inside");
-	  break;
-	case Outside:
-	  strcpy (buffer, "list-style-position: outside");
-	  break;
-	default:
-	  break;
-	}
-      break;
-    case PRListStyleImage:
-      if (settings->value.pointer != NULL)
-	sprintf (buffer, "list-style-image: url(%s)",
-		 (char*)(settings->value.pointer));
+    case PRBackground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
       else
-	strcpy (buffer, "list-style-image: none");
+         sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
+		   blue);
+      break;
+    case PRForeground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
+      else
+	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PROpacity:
+      sprintf (buffer, "opacity: %g", fval);
+      break;
+    case PRFillOpacity:
+      sprintf (buffer, "fill-opacity: %g", fval);
+      break;
+    case PRStrokeOpacity:
+      sprintf (buffer, "stroke-opacity: %g", fval);
+      break;
+    case PRHyphenate:
+    /*
+    case PRPageBreak:
+    case PRLineBreak:
+    case PRGather: */
+    case PRXRadius:
+    case PRYRadius:
+      break;
+    case PRPosition:
+      switch (settings->value.typed_data.value)
+	{
+	case PnStatic:
+	  strcpy (buffer, "position: static");
+	  break;
+	case PnRelative:
+	  strcpy (buffer, "position: relative");
+	  break;
+	case PnAbsolute:
+	  strcpy (buffer, "position: absolute");
+	  break;
+	case PnFixed:
+	  strcpy (buffer, "position: fixed");
+	  break;
+	case PnInherit:
+	  strcpy (buffer, "position: inherit");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRTop:
+      if (unit == VALUE_AUTO)
+	sprintf (buffer, "top: ");
+      else if (real)
+	sprintf (buffer, "top: %g", fval);
+      else
+	sprintf (buffer, "top: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRRight:
+      if (unit == VALUE_AUTO)
+	sprintf (buffer, "right: ");
+      else if (real)
+	sprintf (buffer, "right: %g", fval);
+      else
+	sprintf (buffer, "right: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBottom:
+      if (unit == VALUE_AUTO)
+	sprintf (buffer, "bottom: ");
+      else if (real)
+	sprintf (buffer, "bottom: %g", fval);
+      else
+	sprintf (buffer, "bottom: %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRLeft:
+      if (unit == VALUE_AUTO)
+	sprintf (buffer, "left: ");
+      else if (real)
+	sprintf (buffer, "left: %g", fval);
+      else
+	sprintf (buffer, "left: %d", settings->value.typed_data.value);
+      add_unit = 1;
       break;
     case PRFloat:
       switch (settings->value.typed_data.value)
@@ -3804,50 +3978,33 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
 	}
       break;
-    case PRLineWeight:
-      elType = TtaGetElementType(el);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    case PRDisplay:
+      switch (settings->value.typed_data.value)
 	{
-	  if (real)
-	    sprintf (buffer, "stroke-width: %g", fval);
-	  else
-	    sprintf (buffer, "stroke-width: %d",
-		      settings->value.typed_data.value);
+	case Inline:
+	  strcpy (buffer, "display: inline");
+	  break;
+	case Block:
+	  strcpy (buffer, "display: block");
+	  break;
+	case ListItem:
+	  strcpy (buffer, "display: list-item");
+	  break;
+	case RunIn:
+	  strcpy (buffer, "display: runin");
+	  break;
+	case InlineBlock:
+	  strcpy (buffer, "display: inlineblock");
+	  break;
+	default:
+	  break;
 	}
-      add_unit = 1;
       break;
-    case PRFillPattern:
+      /*
+    case PRBreak1:
+    case PRBreak2:
       break;
-    case PRBackground:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
-	sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
-      else
-         sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
-		   blue);
-      break;
-    case PRForeground:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      elType = TtaGetElementType(el);
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
-	sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
-      else
-	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
-      break;
-    case PRHyphenate:
-    case PRVertOverflow:
-    case PRHorizOverflow:
-      break;
-    case PROpacity:
-      sprintf (buffer, "opacity: %g", fval);
-      break;
-    case PRStrokeOpacity:
-      sprintf (buffer, "stroke-opacity: %g", fval);
-      break;
-    case PRFillOpacity:
-      sprintf (buffer, "fill-opacity: %g", fval);
-      break;
+      */
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
 	sprintf (buffer, "background-image: url(%s)",

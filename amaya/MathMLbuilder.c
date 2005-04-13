@@ -77,12 +77,14 @@ static ThotBool IsStretchyFence (CHAR_T character, char script)
 				    consider this character as a fence */
       (
        (character == 0x2329 || /* LeftAngleBracket */
+        character == 0x27E8 || /* MathematicalLeftAngleBracket */
         /* LeftBracketingBar ??? */
 	character == 0x2308 || /* LeftCeiling */
 	character == 0x301A || /* LeftDoubleBracket */
 	/* LeftDoubleBracketingBar ??? */
 	character == 0x230A || /* LeftFloor */
 	character == 0x232A || /* RightAngleBracket */
+        character == 0x27E9 || /* MathematicalRightAngleBracket */
 	/* RightBracketingBar ??? */
 	character == 0x2309 || /* RightCeiling */
 	character == 0x301B || /* RightDoubleBracket */

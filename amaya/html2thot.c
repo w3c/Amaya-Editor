@@ -252,6 +252,8 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* clubs    */ {9827, 167}, /* black club suit = shamrock,  U+2663 ISOpub */
 /* hearts   */ {9829, 169}, /* black heart suit = valentine,  U+2665 ISOpub */
 /* diams    */ {9830, 168}, /* black diamond suit, U+2666 ISOpub */
+/* lang     */ {0x27E8, 225},/* U+27E8 Mathematical left angle bracket */
+/* rang     */ {0x27E9, 241},/* U+27E9 Mathematical right angle bracket */
 /* And      */ {10835, 217}, /* U+2A53 */
 /* Or       */ {10836, 218}, /* U+2A54 */
 /* Equal    */ {10869, 1061},/*  */
