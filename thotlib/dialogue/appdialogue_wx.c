@@ -490,7 +490,8 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
   wxMenu *      p_top_menu = NULL;
   int           top_menu_pos = 0;
 
-  /* do nothing if there is no menubar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  /* do nothing if there is no menubar : it's the case of
+     AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_menu_bar)
     return;
 
@@ -510,9 +511,11 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 	{
 	  // find the corrsponding menu position in the Top Menubar
 	  top_menu_pos = 0;
-	  while (top_menu_pos < p_menu_bar->GetMenuCount() && p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+	  while (top_menu_pos < p_menu_bar->GetMenuCount() &&
+		 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
         top_menu_pos++;
-	  // we must check that the menu has been found because the contextual menu do not have a title
+	  // we must check that the menu has been found because
+	  // the contextual menu do not have a title
 	  if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
 	    {
 	      // it has been found, update it
@@ -1217,9 +1220,34 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
 }
 
 /*----------------------------------------------------------------------
+  TtaUniqueTabInWindow returns TRUE if only one tab in the window
+  params:
+    + doc_id : the document
+ ----------------------------------------------------------------------*/
+ThotBool TtaUniqueTabInWindow( Document doc_id )
+{
+#ifdef _WX
+  int        frame_id = 1;
+  int        window_id = 0;
+  ThotBool   found = FALSE;
+
+  window_id = TtaGetDocumentWindowId( doc_id, -1 );
+  while (frame_id <= MAX_FRAME && !found)
+    {
+      found = (FrameTable[frame_id].FrWindowId == window_id &&
+	       FrameTable[frame_id].FrDoc != doc_id &&
+	       FrameTable[frame_id].FrPagePos == 1);
+      if (!found)
+        frame_id++;
+    }
+  return !found;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaGetDocumentPageId returns the current document+view page_id + page_position
   params:
-    + doc_id : the docuemnt
+    + doc_id : the document
     + schView the document schema view
       (if view == -1, just the doc_id is checked )
     (the view is needed because a document could have 2 view into 2 differents pages)

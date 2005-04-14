@@ -49,6 +49,7 @@ extern int TtaGetFreePageId ( int window_id );
 extern int TtaGetFreeWindowId ( void );
 extern int TtaGetDocumentWindowId ( Document doc_id,
                                     int schView );
+extern ThotBool TtaUniqueTabInWindow ( Document doc_id );
 extern void TtaGetDocumentPageId ( Document doc_id,
                                    int schView,
                                    int * page_id,
@@ -137,6 +138,7 @@ extern int TtaGetFreePageId ( int window_id );
 extern int TtaGetFreeWindowId ( void );
 extern int TtaGetDocumentWindowId ( Document doc_id,
                                       int schView );
+extern ThotBool TtaUniqueTabInWindow ( Document doc_id );
 extern void TtaGetDocumentPageId ( Document doc_id,
                                      int schView,
                                      int * page_id,

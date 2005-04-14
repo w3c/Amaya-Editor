@@ -58,6 +58,13 @@ extern int TtaGetDocumentWindowId ( Document doc_id,
                                     int view );
 
 /*----------------------------------------------------------------------
+  TtaUniqueTabInWindow returns TRUE if only one tab in the window
+  params:
+    + doc_id : the document
+ ----------------------------------------------------------------------*/
+extern ThotBool TtaUniqueTabInWindow( Document doc_id );
+
+/*----------------------------------------------------------------------
   TtaGetDocumentPageId returns the current document+view page_id + page_position
   params:
     + doc_id : the docuemnt

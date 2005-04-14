@@ -7998,13 +7998,19 @@ void AmayaCloseTab (Document doc, View view)
   int page_position = 0;
   int window_id     = 0;
   
-  /* Get the window id and page id of current document and close the corresponding page */
-  TtaGetDocumentPageId( doc, view, &page_id, &page_position );
   window_id = TtaGetDocumentWindowId( doc, view );
-  TtaClosePage( window_id, page_id );
+  if (TtaUniqueTabInWindow (doc))
+    TtaCloseWindow( window_id );
+  else
+    {
+      /* Get the window id and page id of current document and
+	 close the corresponding page */
+      TtaGetDocumentPageId( doc, view, &page_id, &page_position );
+      TtaClosePage( window_id, page_id );
 
-  /* Close the windows if it contains no more page */
-  TtaCleanUpWindow( window_id );
+      /* Close the windows if it contains no more page */
+      TtaCleanUpWindow( window_id );
+    }
 #endif /* _WX */
 }
 
