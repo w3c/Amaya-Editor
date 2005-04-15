@@ -809,8 +809,8 @@ RULES
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: Helvetica;
-		BorderTopWidth: Enclosing =;
-		BorderLeftWidth: Enclosing =;
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
 		PaddingLeft: Enclosing =;
 		MarginLeft: Enclosing =;
 		END;
