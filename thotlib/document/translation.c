@@ -1407,7 +1407,7 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
    int                 i, nCond;
    ThotBool            ret, possibleRef, typeOK, stop;
 
-   if (pBlock->TbNConditions == 0)
+   if (pBlock == NULL || pBlock->TbNConditions == 0)
      /* no condition */
      ret = TRUE;
    else

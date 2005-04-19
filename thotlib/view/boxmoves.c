@@ -2393,6 +2393,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   SpecFont            font;
+  Propagation         savpropage;
   int                 i, j, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraT, extraB;
@@ -2509,6 +2510,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
+	  savpropage = Propagate;
+	  Propagate = ToAll;
 	  while (pPosRel)
 	    {
 	      i = 0;
@@ -2610,6 +2613,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* next relations block */
 	      pPosRel = pPosRel->PosRNext;
 	    }
+	  Propagate = savpropage;
 	  
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
@@ -3193,6 +3197,8 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        * and it's not a stretchable box.
        * In other cases, move also enclosed boxes.
        */
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L90"))
+  printf ("Ymove y=%d delta=%d\n", pBox->BxYOrg, delta);
       if (absoluteMove)
 	{
 	  if (pBox->BxVertFlex)

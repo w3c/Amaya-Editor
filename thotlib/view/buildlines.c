@@ -2858,11 +2858,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       else
 	left = -left + box->BxLMargin;
       x = left + orgX;
-      if  (boxPrevR && pLine->LiYOrg + pLine->LiHeight < boxPrevR->BxYOrg &&
-	   y + box->BxHeight > boxPrevR->BxYOrg)
-	/* a line can be inserted before a previous float but not
-	   the current float */
-	w -= boxPrevR->BxWidth;
     }
   else
     {
@@ -2872,12 +2867,15 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       else
 	right = -right + box->BxRMargin;
       x = pBlock->BxWidth - right - box->BxWidth + orgX;
-      if  (boxPrevL && pLine->LiYOrg + pLine->LiHeight < boxPrevL->BxYOrg &&
-	   y + box->BxHeight > boxPrevL->BxYOrg)
-	/* a line can be inserted before a previous float but not
-	   the current float */
-	w -= boxPrevL->BxWidth;
     }
+  if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
+       y + box->BxHeight > boxPrevL->BxYOrg)
+    /* can be inserted next to this previous float ? */
+    w -= boxPrevL->BxWidth;
+  if  (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
+       y + box->BxHeight >= boxPrevR->BxYOrg)
+    /* can be inserted next to this previous float ? */
+    w -= boxPrevR->BxWidth;
 
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
