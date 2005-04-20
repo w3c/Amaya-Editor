@@ -91,7 +91,9 @@ typedef int        *PRule;
 #define PRPageAfter 76
 #define PRPageInside 77
 /* PtPictInfo */
-#define LAST_PRES_RULE_TYPE 77
+#define PRCreateFirst 78
+#define PRCreateLast 79
+#define LAST_PRES_RULE_TYPE 79
 
 /*
  * A bunch of constants describing the most common values for presentation

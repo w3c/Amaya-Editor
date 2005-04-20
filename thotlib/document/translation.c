@@ -2410,8 +2410,7 @@ static void ApplyPresTRules (TOrder position, PtrElement pEl,
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];
 
-#ifdef IV /* prevent a crash with new P rules */
-   if (*ignoreEl)
+   if (*ignoreEl || !pEl->ElFirstPRule)
       return;
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch == NULL)
@@ -2433,114 +2432,110 @@ static void ApplyPresTRules (TOrder position, PtrElement pEl,
    /* parcourt les regles de presentation specifique de l'element */
    while (pPRule != NULL && !*ignoreEl)
      {
-     pPRuleTr = &pTSch->TsPresTRule[pPRule->PrType];
-     if (pPRuleTr->RtExist)
-       /* il y a des regles de traduction pour cette presentation */
-       {
-       /* cherche le premier bloc de regles correspondant a ce */
-       /* type de regle de presentation */
-       pBlock = NULL;
-       if (pTSch != NULL)
+       pPRuleTr = &pTSch->TsPresTRule[pPRule->PrType];
+       if (pPRuleTr->RtExist)
+	 /* il y a des regles de traduction pour cette presentation */
 	 {
-	 if (pPRule->PrType == PtSize ||
-	     pPRule->PrType == PtIndent ||
-	     pPRule->PrType == PtLineSpacing ||
-	     pPRule->PrType == PtLineWeight)
-	   {
-	   i = 0;
-	   while (pBlock == NULL && i < pPRuleTr->RtNCase)
-	     {
-	     pTCase = &pPRuleTr->RtCase[i++];
-	     if (pPRule->PrMinValue <= pTCase->TaUpperBound &&
-		 pPRule->PrMinValue >= pTCase->TaLowerBound)
-	       pBlock = pTCase->TaTRuleBlock;
-	     }
-	   }
-	 else if (pPRule->PrType == PtFillPattern ||
-		  pPRule->PrType == PtBackground ||
-		  pPRule->PrType == PtForeground)
-	   {
-	   i = 0;
-	   while (pBlock == NULL && i < pPRuleTr->RtNCase)
-	     {
-	     pTCase = &pPRuleTr->RtCase[i++];
-	     if (pPRule->PrIntValue <= pTCase->TaUpperBound &&
-		 pPRule->PrIntValue >= pTCase->TaLowerBound)
-	       pBlock = pTCase->TaTRuleBlock;
-	     }
-	   }
-	 else
-	   {
-	   /* cherche si cette valeur de la presentation a un bloc de regles */
-	   /* Calcule d'abord la valeur caractere de la presentation */
-	   val = PresRuleValue (pPRule);
+	   /* cherche le premier bloc de regles correspondant a ce */
+	   /* type de regle de presentation */
 	   pBlock = NULL;
-	   i = 1;
-	   while (pBlock == NULL && pPRuleTr->RtPRuleValue[i] != EOS &&
-		  i <= MAX_TRANSL_PRES_VAL + 1)
+	   if (pPRule->PrType == PtIndent ||
+	       pPRule->PrType == PtSize ||
+	       pPRule->PrType == PtLineSpacing ||
+	       pPRule->PrType == PtLineWeight)
 	     {
-	     if (pPRuleTr->RtPRuleValue[i] == val)
-	       pBlock = pPRuleTr->RtPRuleValueBlock[i];
-	     i++;
+	       i = 0;
+	       while (pBlock == NULL && i < pPRuleTr->RtNCase)
+		 {
+		   pTCase = &pPRuleTr->RtCase[i++];
+		   if (pPRule->PrMinValue <= pTCase->TaUpperBound &&
+		       pPRule->PrMinValue >= pTCase->TaLowerBound)
+		     pBlock = pTCase->TaTRuleBlock;
+		 }
 	     }
-	   if (pBlock == NULL)
-	     /* pas de regles de traduction pour cette valeur, on */
-	     /* prend les regles qui s'appliquent a toute valeur */
-	     pBlock = pPRuleTr->RtPRuleValueBlock[0];
-	   }
-	 }
-       /* parcourt les blocs de regles de la valeur de la presentation */
-       while (pBlock != NULL && !*ignoreEl)
-	 {
-	 if (ConditionIsTrue (pBlock, pEl, NULL, doc))
-	   /* la condition du bloc est verifiee */
-	   {
-	   pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
-	   /* parcourt les regles du bloc */
-	   while (pTRule != NULL && !*ignoreEl)
+	   else if (pPRule->PrType == PtFillPattern ||
+		    pPRule->PrType == PtBackground ||
+		    pPRule->PrType == PtForeground)
 	     {
-	     if (pTRule->TrOrder == position)
-	       {
-	       /* c'est une regle a appliquer a cette position */
-	       if (pTRule->TrType == TRemove)
-		 *removeEl = TRUE;
-	       else if (pTRule->TrType == TIgnore)
-		 *ignoreEl = TRUE;
-	       else if (pTRule->TrType == TNoTranslation)
-		 *transChar = FALSE;
-	       else if (pTRule->TrType == TNoLineBreak)
-		 *lineBreak = FALSE;
-	       else
-		 /* on applique la regle */
-		 ApplyTRule (pTRule, pTSch, pEl->ElStructSchema, pEl,
-			     transChar, lineBreak, removeEl, ignoreEl,
-			     pPRule, pAttr, doc, recordLineNb);
-	       }
-	     /* passe a la regle suivante */
-	     pTRule = pTRule->TrNextTRule;
+	       i = 0;
+	       while (pBlock == NULL && i < pPRuleTr->RtNCase)
+		 {
+		   pTCase = &pPRuleTr->RtCase[i++];
+		   if (pPRule->PrIntValue <= pTCase->TaUpperBound &&
+		       pPRule->PrIntValue >= pTCase->TaLowerBound)
+		     pBlock = pTCase->TaTRuleBlock;
+		 }
 	     }
-	   }
-	 /* passe au bloc suivant */
-	 pBlock = pBlock->TbNextBlock;
+	   else
+	     {
+	       /* cherche si cette valeur de la presentation a un bloc de regles */
+	       /* Calcule d'abord la valeur caractere de la presentation */
+	       val = PresRuleValue (pPRule);
+	       pBlock = NULL;
+	       i = 1;
+	       while (pBlock == NULL && pPRuleTr->RtPRuleValue[i] != EOS &&
+		      i <= MAX_TRANSL_PRES_VAL + 1)
+		 {
+		   if (pPRuleTr->RtPRuleValue[i] == val)
+		     pBlock = pPRuleTr->RtPRuleValueBlock[i];
+		   i++;
+		 }
+	       if (pBlock == NULL)
+		 /* pas de regles de traduction pour cette valeur, on */
+		 /* prend les regles qui s'appliquent a toute valeur */
+		 pBlock = pPRuleTr->RtPRuleValueBlock[0];
+	     }
+	   /* parcourt les blocs de regles de la valeur de la presentation */
+	   while (pBlock != NULL && !*ignoreEl)
+	     {
+	       if (ConditionIsTrue (pBlock, pEl, NULL, doc))
+		 /* la condition du bloc est verifiee */
+		 {
+		   pTRule = pBlock->TbFirstTRule;  /* premiere regle du bloc */
+		   /* parcourt les regles du bloc */
+		   while (pTRule != NULL && !*ignoreEl)
+		     {
+		       if (pTRule->TrOrder == position)
+			 {
+			   /* c'est une regle a appliquer a cette position */
+			   if (pTRule->TrType == TRemove)
+			     *removeEl = TRUE;
+			   else if (pTRule->TrType == TIgnore)
+			     *ignoreEl = TRUE;
+			   else if (pTRule->TrType == TNoTranslation)
+			     *transChar = FALSE;
+			   else if (pTRule->TrType == TNoLineBreak)
+			     *lineBreak = FALSE;
+			   else
+			     /* on applique la regle */
+			     ApplyTRule (pTRule, pTSch, pEl->ElStructSchema,
+				   pEl, transChar, lineBreak, removeEl,
+				   ignoreEl, pPRule, pAttr, doc, recordLineNb);
+			 }
+		       /* passe a la regle suivante */
+		       pTRule = pTRule->TrNextTRule;
+		     }
+		 }
+	       /* passe au bloc suivant */
+	       pBlock = pBlock->TbNextBlock;
+	     }
 	 }
-       }
      
-     if (position == TAfter)
-       /* passe a la regle de presentation precedente de l'element */
-       {
-       if (nPRules > 0)
+       if (position == TAfter)
+	 /* passe a la regle de presentation precedente de l'element */
 	 {
-	 nPRules--;
-	 pPRule = PRuleTable[nPRules];
+	   if (nPRules > 0)
+	     {
+	       nPRules--;
+	       pPRule = PRuleTable[nPRules];
+	     }
+	   else
+	     pPRule = NULL;
 	 }
        else
-	 pPRule = NULL;
-       }
-     else
-       /* passe a la regle de presentation suivante de l'element */
-       pPRule = pPRule->PrNextPRule;
+	 /* passe a la regle de presentation suivante de l'element */
+	 pPRule = pPRule->PrNextPRule;
      }
-#endif
 }
 
 

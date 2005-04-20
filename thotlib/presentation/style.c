@@ -257,7 +257,7 @@ static void BuildBoxName (GenericContext ctxt, Name *boxname)
   for (i = 0; i < MAX_ANCESTORS && ctxt->name[i]; i++)
     {
       if (ctxt->names_nb[i] > 1)
-	sprintf (&buffer[len], "%d:%d/", ctxt->name[i], ctxt->names_nb[i]);
+	sprintf (&buffer[len], "%d*%d/", ctxt->name[i], ctxt->names_nb[i]);
       else
 	sprintf (&buffer[len], "%d/", ctxt->name[i]);
       len = strlen (buffer);
@@ -267,6 +267,11 @@ static void BuildBoxName (GenericContext ctxt, Name *boxname)
   len = strlen (buffer);
   if (ctxt->attrType[0])
     sprintf (&buffer[len], "%d.%s,", ctxt->attrType[0], ctxt->attrText[0]);
+  len = strlen (buffer);
+  if (ctxt->pseudo == PbBefore)
+    sprintf (&buffer[len], ":before");
+  else if (ctxt->pseudo == PbAfter)
+    sprintf (&buffer[len], ":after");
   len = strlen (buffer);
   strncpy (*boxname, buffer, sizeof (Name));
 }
@@ -282,10 +287,10 @@ static PtrPRule BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
 
   BuildBoxName (ctxt, &boxname);
   
-  /* search for the BOXE in the Presentation Schema */
+  /* search for the BOX in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!strcmp (ctxt->attrText[0], tsch->PsPresentBox->PresBox[i - 1]->PbName))
+      if (!strcmp (boxname, tsch->PsPresentBox->PresBox[i - 1]->PbName))
 	{
 	  ctxt->box = i;
 	  return (tsch->PsPresentBox->PresBox[i - 1]->PbFirstPRule);
@@ -487,6 +492,8 @@ static PtrPRule *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   PtrPresentationBox  box;
   int                 i, size;
   Name                boxname;
+  PtrPSchema          pSP;
+  PtrPRule            pPRule, pPRuleCopy, pPrevCopy;
 
   BuildBoxName (ctxt, &boxname);
 
@@ -543,6 +550,32 @@ static PtrPRule *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   box->PbPageCounter = 0;
   box->PbContent = FreeContent;
   box->PbContVariable = 0;
+
+  if (!tsch->PsFirstDefaultPRule)
+    /* copy the default presentation rules from the main PSchema, to
+       make sure that the presentation box has at least one rule for each
+       property. */
+    {
+      pSP = PresentationSchema (tsch->PsSSchema, LoadedDocument[ctxt->doc-1]);
+      if (pSP)
+	{
+	  pPRule = pSP->PsFirstDefaultPRule;
+	  pPrevCopy = NULL;
+	  while (pPRule)
+	    {
+	      GetPresentRule (&pPRuleCopy);
+	      *pPRuleCopy = *pPRule;
+	      pPRuleCopy->PrNextPRule = NULL;
+	      if (!pPrevCopy)
+		tsch->PsFirstDefaultPRule = pPRuleCopy;
+	      else
+		pPrevCopy->PrNextPRule = pPRuleCopy;
+	      pPrevCopy = pPRuleCopy;
+	      pPRule = pPRule->PrNextPRule;
+	    }
+	}
+    }
+
   return (&tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes - 1]->PbFirstPRule);
 }
 
@@ -1142,7 +1175,7 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
   in an attribute chain or an element chain.
   ----------------------------------------------------------------------*/
 static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
-				PRuleType pres, unsigned int extra,
+				PRuleType pres, FunctionType extra,
 				PtrPRule **chain)
 {
   PtrPRule            pRule;
@@ -1193,11 +1226,11 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
       if (pRule->PrType > pres ||
 	  (pRule->PrType == pres && pRule->PrViewNum > 1) ||
 	  (pRule->PrType == pres && pres == PtFunction &&
-	   pRule->PrPresFunction >  (FunctionType) extra))
+	   pRule->PrPresFunction > extra))
 	  pRule = NULL;
       else if (pRule->PrType != pres ||
 	       (pres == PtFunction &&
-		pRule->PrPresFunction != (FunctionType) extra))
+		pRule->PrPresFunction != extra))
 	/* check for extra specification in case of function rule */
 	{
 	  *chain = &(pRule->PrNextPRule);
@@ -1238,7 +1271,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
   int                 i, att;
 
   /* Search presentation rule */
-  pRule = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
+  pRule = PresRuleSearch (tsch, ctxt, pres, (FunctionType) extra, &chain);
   if (pRule == NULL &&
       (pres != PRFunction || extra != FnShowBox ||
        !TypeHasException (ExcNoShowBox, ctxt->type, (PtrSSchema) ctxt->schema)))
@@ -1254,35 +1287,40 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
 	  pRule->PrSpecifAttrSSchema = NULL;
-      
-	  /* In case of an attribute rule, add the Attr condition */
-	  att = 0;
-	  while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
-	  att++;
-	  if (att == 0 && ctxt->type)
-	    /* the attribute is attached to that element like a selector "a#id" */
-	    PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0);
-	  /* add other conditions ... */
-	  i = 0;
-	  while (i < MAX_ANCESTORS)
+
+	  if (ctxt->box == 0)
+	    /* rules associated to a presentation box do not have conditions */
 	    {
-	      if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
-		  ctxt->rel[i] != RelPrevious)
-		/* it's an ancestor like a selector "li a" */
-		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
-					 ctxt->names_nb[i]);
-	      if (ctxt->attrType[i]  && i != att)
-		/* it's another attribute */
+	      /* In case of an attribute rule, add the Attr condition */
+	      att = 0;
+	      while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
+		att++;
+	      if (att == 0 && ctxt->type)
+		/* the attribute is attached to that element like a
+		   selector "a#id" */
+		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0);
+	      /* add other conditions ... */
+	      i = 0;
+	      while (i < MAX_ANCESTORS)
 		{
-		  attType.AttrSSchema = ctxt->schema;
-		  attType.AttrTypeNum = ctxt->attrType[i];
-		  PresRuleAddAttrCond (pRule, attType, ctxt->attrLevel[i],
+		if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
+		    ctxt->rel[i] != RelPrevious)
+		  /* it's an ancestor like a selector "li a" */
+		  PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
+					   ctxt->names_nb[i]);
+		if (ctxt->attrType[i]  && i != att)
+		  /* it's another attribute */
+		  {
+		    attType.AttrSSchema = ctxt->schema;
+		    attType.AttrTypeNum = ctxt->attrType[i];
+		    PresRuleAddAttrCond (pRule, attType, ctxt->attrLevel[i],
 			     ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
+		  }
+		i++;
 		}
-	      i++;
+	      /* Add the order / conditions .... */
 	    }
 
-	  /* Add the order / conditions .... */
 	  /* chain in the rule */
 	  if (chain)
 	    {
@@ -1320,7 +1358,7 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
   int               presBox;
 
   /* Search presentation rule */
-  cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
+  cur = PresRuleSearch (tsch, ctxt, pres, (FunctionType) extra, &chain);
   if (cur != NULL)
     {
       if (chain != NULL)
@@ -2069,8 +2107,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	case FnCreateAfter:
 	case FnCreateEnclosing:
 	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrNPresBoxes = 0;
-	  rule->PrElement = TRUE;
+	  rule->PrNPresBoxes = 1;
+	  rule->PrPresBox[0] = value;
+	  rule->PrElement = FALSE;
 	  break;
 	case FnShowBox:
 	  rule->PrPresFunction = (FunctionType) funcType;
@@ -2666,6 +2705,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRVisibility:
       *intRule = PtVisibility;
       break;
+    case PRFunction:
+      *intRule = PtFunction;
+      break;
     case PRShowBox:
       *intRule = PtFunction;
       *func = FnShowBox;
@@ -2877,6 +2919,14 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRPosition:
       *intRule = PtPosition;
       break;
+    case PRCreateFirst:
+      *intRule = PtFunction;
+      *func = FnCreateFirst;
+      break;
+    case PRCreateLast:
+      *intRule = PtFunction;
+      *func = FnCreateLast;
+      break;
     default:
       *intRule = PtFunction;
     }
@@ -2952,7 +3002,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	       v.typed_data.value != 0))
 	    {
 	      if (!generic)
-		tsch = (PSchema) PresentationSchema (LoadedDocument[doc - 1]->DocSSchema, LoadedDocument[doc - 1]);
+		tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
 	      cst = PresConstInsert (tsch, (char *)v.pointer);
 	      v.typed_data.unit = UNIT_REL;
 	      v.typed_data.value = cst;
@@ -2965,6 +3015,12 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      if (ctxt->type > 0 &&
 	          (type == PRVertPos || type == PRHorizPos))
 		func = ctxt->type;
+	      if (type == PRCreateFirst || type == PRCreateLast)
+		/* create the presentation box */
+		{
+		  BoxRuleInsert ((PtrPSchema)tsch, ctxt);
+		  v.typed_data.value = ctxt->box;
+		}
 	      PresentationValueToPRule (v, intRule, pRule, func, absolute,
 					generic, minValue);
 	    }
@@ -2974,7 +3030,9 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      if (ctxt->box && intRule == PtFunction)
 		BuildBoxName (ctxt, &pRule->PrPresBoxName);
 	      /*  select the good starting point depending on the context */
-	      if (ctxt->box)
+	      if (ctxt->box && !(intRule == PtFunction &&
+				 (type == PRCreateFirst ||
+				  type == PRCreateLast)))
 		pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
 	      if (pRule)
 		{
@@ -3010,7 +3068,7 @@ int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
   generic = (el == NULL);
   if (generic)
     rule = PresRuleSearch ((PtrPSchema) tsch, (GenericContext) c, intRule,
-			   func, &chain);
+			   (FunctionType) func, &chain);
   else
     rule = SearchElementPRule ((PtrElement) el, intRule, func);
   if (rule == NULL)

@@ -335,16 +335,43 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	 /* pas encore rencontre' de regles pour cette presentation */
 	 {
 	   pPresTrans->RtExist = True;
-	   if (TypeRPres == PtSize
-	       || TypeRPres == PtIndent
-	       || TypeRPres == PtLineSpacing
-	       || TypeRPres == PtLineWeight
-	       || TypeRPres == PtFillPattern
-	       || TypeRPres == PtOpacity
-	       || TypeRPres == PtFillOpacity
-	       || TypeRPres == PtStrokeOpacity
-	       || TypeRPres == PtBackground
-	       || TypeRPres == PtForeground)
+	   if (TypeRPres == PtBreak1 ||
+	       TypeRPres == PtBreak2 ||
+	       TypeRPres == PtIndent ||
+	       TypeRPres == PtSize ||
+	       TypeRPres == PtLineSpacing ||
+	       TypeRPres == PtLineWeight ||
+	       TypeRPres == PtMarginTop ||
+	       TypeRPres == PtMarginRight ||
+	       TypeRPres == PtMarginBottom ||
+	       TypeRPres == PtMarginLeft ||
+	       TypeRPres == PtPaddingTop ||
+	       TypeRPres == PtPaddingRight ||
+	       TypeRPres == PtPaddingBottom ||
+	       TypeRPres == PtPaddingLeft ||
+	       TypeRPres == PtBorderTopWidth ||
+	       TypeRPres == PtBorderRightWidth ||
+	       TypeRPres == PtBorderBottomWidth,
+	       TypeRPres == PtBorderLeftWidth ||
+	       TypeRPres == PtXRadius ||
+	       TypeRPres == PtYRadius ||
+	       TypeRPres == PtTop ||
+	       TypeRPres == PtRight ||
+	       TypeRPres == PtBottom ||
+	       TypeRPres == PtLeft ||
+	       TypeRPres == PtVisibility ||
+	       TypeRPres == PtListStyleImage ||
+	       TypeRPres == PtDepth ||
+	       TypeRPres == PtFillPattern ||
+	       TypeRPres == PtBackground ||
+	       TypeRPres == PtForeground ||
+	       TypeRPres == PtBorderTopColor ||
+	       TypeRPres == PtBorderRightColor ||
+	       TypeRPres == PtBorderBottomColor ||
+	       TypeRPres == PtBorderLeftColor ||
+	       TypeRPres == PtOpacity ||
+	       TypeRPres == PtFillOpacity ||
+	       TypeRPres == PtStrokeOpacity)
 	     /* Presentation a valeur numerique */
 	     {
 	       pPresTrans->RtNCase = 0;
@@ -365,16 +392,43 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
 	 }
        CurBlock = NULL;
        CurTRule = NULL;
-       if (TypeRPres == PtSize
-	   || TypeRPres == PtIndent
-	   || TypeRPres == PtLineSpacing
-	   || TypeRPres == PtLineWeight
-	   || TypeRPres == PtFillPattern
-	   || TypeRPres == PtOpacity
-	   || TypeRPres == PtStrokeOpacity
-	   || TypeRPres == PtFillOpacity
-	   || TypeRPres == PtBackground
-	   || TypeRPres == PtForeground)
+       if (TypeRPres == PtBreak1 ||
+	   TypeRPres == PtBreak2 ||
+	   TypeRPres == PtIndent ||
+	   TypeRPres == PtSize ||
+	   TypeRPres == PtLineSpacing ||
+	   TypeRPres == PtLineWeight ||
+	   TypeRPres == PtMarginTop ||
+	   TypeRPres == PtMarginRight ||
+	   TypeRPres == PtMarginBottom ||
+	   TypeRPres == PtMarginLeft ||
+	   TypeRPres == PtPaddingTop ||
+	   TypeRPres == PtPaddingRight ||
+	   TypeRPres == PtPaddingBottom ||
+	   TypeRPres == PtPaddingLeft ||
+	   TypeRPres == PtBorderTopWidth ||
+	   TypeRPres == PtBorderRightWidth ||
+	   TypeRPres == PtBorderBottomWidth,
+	   TypeRPres == PtBorderLeftWidth ||
+	   TypeRPres == PtXRadius ||
+	   TypeRPres == PtYRadius ||
+	   TypeRPres == PtTop ||
+	   TypeRPres == PtRight ||
+	   TypeRPres == PtBottom ||
+	   TypeRPres == PtLeft ||
+	   TypeRPres == PtVisibility ||
+	   TypeRPres == PtListStyleImage ||
+	   TypeRPres == PtDepth ||
+	   TypeRPres == PtFillPattern ||
+	   TypeRPres == PtBackground ||
+	   TypeRPres == PtForeground ||
+	   TypeRPres == PtBorderTopColor ||
+	   TypeRPres == PtBorderRightColor ||
+	   TypeRPres == PtBorderBottomColor ||
+	   TypeRPres == PtBorderLeftColor ||
+	   TypeRPres == PtOpacity ||
+	   TypeRPres == PtFillOpacity ||
+	   TypeRPres == PtStrokeOpacity)
 	 /* Presentation a valeur numerique */
 	 {
 	 if (pPresTrans->RtNCase >= MAX_TRANSL_PRES_CASE)
@@ -393,11 +447,43 @@ static void PresentationName (PRuleType TypeRPres, SyntRuleNum pr, int wi)
        i = CurBlock->TbNConditions - 1;
        CurBlock->TbCondition[i].TcCondition = TcondPRule;
        CurBlock->TbCondition[i].TcAttr = TypeRPres;
-       if (TypeRPres == PtSize || TypeRPres == PtIndent ||
-	   TypeRPres == PtLineSpacing || TypeRPres == PtLineWeight ||
-	   TypeRPres == PtFillPattern || TypeRPres == PtBackground ||
-	   TypeRPres == PtOpacity  || TypeRPres == PtStrokeOpacity || 
-	   TypeRPres == PtFillOpacity || TypeRPres == PtForeground)
+       if (TypeRPres == PtBreak1 ||
+	   TypeRPres == PtBreak2 ||
+	   TypeRPres == PtIndent ||
+	   TypeRPres == PtSize ||
+	   TypeRPres == PtLineSpacing ||
+	   TypeRPres == PtLineWeight ||
+	   TypeRPres == PtMarginTop ||
+	   TypeRPres == PtMarginRight ||
+	   TypeRPres == PtMarginBottom ||
+	   TypeRPres == PtMarginLeft ||
+	   TypeRPres == PtPaddingTop ||
+	   TypeRPres == PtPaddingRight ||
+	   TypeRPres == PtPaddingBottom ||
+	   TypeRPres == PtPaddingLeft ||
+	   TypeRPres == PtBorderTopWidth ||
+	   TypeRPres == PtBorderRightWidth ||
+	   TypeRPres == PtBorderBottomWidth,
+	   TypeRPres == PtBorderLeftWidth ||
+	   TypeRPres == PtXRadius ||
+	   TypeRPres == PtYRadius ||
+	   TypeRPres == PtTop ||
+	   TypeRPres == PtRight ||
+	   TypeRPres == PtBottom ||
+	   TypeRPres == PtLeft ||
+	   TypeRPres == PtVisibility ||
+	   TypeRPres == PtListStyleImage ||
+	   TypeRPres == PtDepth ||
+	   TypeRPres == PtFillPattern ||
+	   TypeRPres == PtBackground ||
+	   TypeRPres == PtForeground ||
+	   TypeRPres == PtBorderTopColor ||
+	   TypeRPres == PtBorderRightColor ||
+	   TypeRPres == PtBorderBottomColor ||
+	   TypeRPres == PtBorderLeftColor ||
+	   TypeRPres == PtOpacity ||
+	   TypeRPres == PtFillOpacity ||
+	   TypeRPres == PtStrokeOpacity)
 	 /* Presentation a valeur numerique */
 	 {
 	   CurBlock->TbCondition[i].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
@@ -624,16 +710,43 @@ static void NewRuleBlock ()
        /* bloc de regles associe' a une presentation */
        {
 	 pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
-	 if (CurPres == PtSize + 1
-	     || CurPres == PtIndent + 1
-	     || CurPres == PtLineSpacing + 1
-	     || CurPres == PtLineWeight + 1
-	     || CurPres == PtFillPattern + 1
-	     || CurPres == PtBackground + 1
-	     || CurPres == PtOpacity + 1
-	     || CurPres == PtStrokeOpacity + 1
-	     || CurPres == PtFillOpacity + 1
-	     || CurPres == PtForeground + 1)
+	 if (CurPres == PtBreak1 + 1 ||
+	     CurPres == PtBreak2 + 1 ||
+	     CurPres == PtIndent + 1 ||
+	     CurPres == PtSize + 1 ||
+	     CurPres == PtLineSpacing + 1 ||
+	     CurPres == PtLineWeight + 1 ||
+	     CurPres == PtMarginTop + 1 ||
+	     CurPres == PtMarginRight + 1 ||
+	     CurPres == PtMarginBottom + 1 ||
+	     CurPres == PtMarginLeft + 1 ||
+	     CurPres == PtPaddingTop + 1 ||
+	     CurPres == PtPaddingRight + 1 ||
+	     CurPres == PtPaddingBottom + 1 ||
+	     CurPres == PtPaddingLeft + 1 ||
+	     CurPres == PtBorderTopWidth + 1 ||
+	     CurPres == PtBorderRightWidth + 1 ||
+	     CurPres == PtBorderBottomWidth,
+	     CurPres == PtBorderLeftWidth + 1 ||
+	     CurPres == PtXRadius + 1 ||
+	     CurPres == PtYRadius + 1 ||
+	     CurPres == PtTop + 1 ||
+	     CurPres == PtRight + 1 ||
+	     CurPres == PtBottom + 1 ||
+	     CurPres == PtLeft + 1 ||
+	     CurPres == PtVisibility + 1 ||
+	     CurPres == PtListStyleImage + 1 ||
+	     CurPres == PtDepth + 1 ||
+	     CurPres == PtFillPattern + 1 ||
+	     CurPres == PtBackground + 1 ||
+	     CurPres == PtForeground + 1 ||
+	     CurPres == PtBorderTopColor + 1 ||
+	     CurPres == PtBorderRightColor + 1 ||
+	     CurPres == PtBorderBottomColor + 1 ||
+	     CurPres == PtBorderLeftColor + 1 ||
+	     CurPres == PtOpacity + 1 ||
+	     CurPres == PtFillOpacity + 1 ||
+	     CurPres == PtStrokeOpacity + 1)
 	   pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaTRuleBlock = pBlock;
 	 else
 	   pPresTrans->RtPRuleValueBlock[CurPresVal] = pBlock;

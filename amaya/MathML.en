@@ -38,7 +38,7 @@ MERROR: merror
 MPADDED: mpadded
 MPHANTOM: mphantom
 MFENCED: mfenced
-MF: mo(fence)
+MF: mo
 MSUB: msub
 MSUP: msup
 MSUBSUP: msubsup

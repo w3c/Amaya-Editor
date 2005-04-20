@@ -43,6 +43,13 @@ typedef enum
   RelPrevious
 } ElemRel;
 
+typedef enum
+{
+  PbNone,
+  PbBefore,
+  PbAfter
+} PseudoBox;
+
 /* two different contexts for generic and specific presentation */
 typedef struct struct_GenericContext
   {
@@ -59,6 +66,7 @@ typedef struct struct_GenericContext
      * below is the context description.
      */
     int           box;	                 /* specific presentation box if any */
+    PseudoBox     pseudo;                   /* pseudo box in selector */
     int           name[MAX_ANCESTORS];      /* ancestors type */
     int           names_nb[MAX_ANCESTORS];  /* number of occurences    */
     int           attrType[MAX_ANCESTORS];  /* type of the attribute   */

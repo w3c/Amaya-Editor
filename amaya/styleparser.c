@@ -4039,7 +4039,7 @@ char *GetCSSBackgroundURL (char *cssRule)
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSContent: parse a CSS content value    
+   ParseCSSContent: parse the value of property "content"
   ----------------------------------------------------------------------*/
 static char *ParseCSSContent (Element element, PSchema tsch,
 			      PresentationContext context, char *cssRule,
@@ -4888,8 +4888,8 @@ static CSSProperty CSSProperties[] =
 
 /*----------------------------------------------------------------------
    ParseCSSRule: parse a CSS Style string                        
-   we expect the input string describing the style to be of the  
-   form: PRORPERTY: DESCRIPTION [ ; PROPERTY: DESCRIPTION ] * 
+   we expect the input string describing the style to be of the form
+     property: value [ ; property: value ]* 
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 static void  ParseCSSRule (Element element, PSchema tsch,
@@ -5109,6 +5109,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                att, kind;
   int                specificity, xmlType;
   int                skippedNL;
+  PresentationValue  pval;
   ThotBool           isHTML;
   ThotBool           level, quoted;
 
@@ -5133,6 +5134,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       ctxt->attrMatch[i] = Txtmatch;
     }
   ctxt->box = 0;
+  ctxt->pseudo = PbNone;
   ctxt->type = 0;
   /* the specificity of the rule depends on the selector */
   ctxt->cssSpecificity = 0;
@@ -5235,7 +5237,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      *cur++ = *selector++;
 	    /* close the word */
 	    *cur++ = EOS;
-	    /* point to the pseudoclass in sel[] if it's valid name */
+	    /* point to the pseudoclass in sel[] if it's a valid name */
 	    if (deb[0] <= 64)
 	      {
 		CSSPrintError ("Invalid pseudoclass", deb);
@@ -5245,15 +5247,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      {
 		if (!strcmp (deb, "first-letter") ||
 		    !strcmp (deb, "first-line") ||
-		    !strcmp (deb, "before") ||
-		    !strcmp (deb, "after") ||
 		    !strcmp (deb, "hover") ||
 		    !strcmp (deb, "focus"))
 		  /* not supported */
 		  DoApply = FALSE;
 		else
 		  specificity += 10;
-		if (!strncmp (deb, "lang", 4))
+		if (!strncmp (deb, "before", 6) || !strncmp (deb, "after", 5))
+		  pseudoclasses[0] = deb;
+		else if (!strncmp (deb, "lang", 4))
 		  /* it's the lang pseudo-class */
 		  {
 		    if (deb[4] != '(' || deb[strlen(deb)-1] != ')')
@@ -5263,7 +5265,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 			DoApply = FALSE;
 		      }
 		    else
-		      /* simulate selector [lang|="xxx"] if there no
+		      /* simulate selector [lang|="xxx"] if there is no
 		         attribute yet in the selector */
 		      if (!attrs[0])
 			{
@@ -5706,19 +5708,26 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (pseudoclasses[i])
 	{
 	  ctxt->attrText[j] = pseudoclasses[i];
-	  if (xmlType == SVG_TYPE)
-	    ctxt->attrType[j] = SVG_ATTR_PseudoClass;
-	  else if (xmlType == MATH_TYPE)
-	    ctxt->attrType[j] = MathML_ATTR_PseudoClass;
-	  else if (xmlType == XHTML_TYPE)
-	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	  if (!strncmp (deb, "before", 6))
+	    ctxt->pseudo = PbBefore;
+	  else if (!strncmp (deb, "after", 5))
+	    ctxt->pseudo = PbAfter;
 	  else
+	    {
+	      if (xmlType == SVG_TYPE)
+		ctxt->attrType[j] = SVG_ATTR_PseudoClass;
+	      else if (xmlType == MATH_TYPE)
+		ctxt->attrType[j] = MathML_ATTR_PseudoClass;
+	      else if (xmlType == XHTML_TYPE)
+		ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	      else
 #ifdef XML_GENERIC
-	    ctxt->attrType[j] = XML_ATTR_PseudoClass;
+		ctxt->attrType[j] = XML_ATTR_PseudoClass;
 #else /* XML_GENERIC */
-	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	        ctxt->attrType[j] = HTML_ATTR_PseudoClass;
 #endif /* XML_GENERIC */
-	  ctxt->attrMatch[j] = Txtmatch;
+	      ctxt->attrMatch[j] = Txtmatch;
+	    }
 	  /* add a new entry */
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
@@ -5845,6 +5854,21 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   schemaName = TtaGetSSchemaName (ctxt->schema);
   isHTML = (strcmp (schemaName, "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css, link);
+
+  if (tsch && ctxt->pseudo != PbNone && DoApply)
+    /* there is a pseudo element :before or :after. Generate a function rule
+       CreateFirst or CreateLast */
+    {
+      pval.typed_data.unit = UNIT_REL;
+      pval.typed_data.real = FALSE;
+      pval.typed_data.value = (int) ctxt->pseudo;
+      if (ctxt->pseudo == PbBefore)
+	TtaSetStylePresentation (PRCreateFirst, NULL, tsch,
+				 (PresentationContext) ctxt, pval);
+      else if (ctxt->pseudo == PbAfter)
+	TtaSetStylePresentation (PRCreateLast, NULL, tsch,
+				 (PresentationContext) ctxt, pval);
+    }
   skippedNL = NewLineSkipped;
   if (tsch && cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
@@ -6467,7 +6491,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		    {
 		      /*
 			Do we have to accept single quotes?
-			Double quotes are acceted here.
+			Double quotes are accepted here.
 			Escaped quotes are not handled. See function SkipQuotedString
 		      */
 		      cssRule++;

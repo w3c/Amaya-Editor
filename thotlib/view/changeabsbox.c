@@ -395,7 +395,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
 	      pR = NULL;
-	      if (presBox && pSP->PsPresentBox)
+	      if (presBox && pSP == pSchP && pSP->PsPresentBox)
 		{
 		  if (presNum > 0)
 		    pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;

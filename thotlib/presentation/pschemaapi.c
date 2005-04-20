@@ -95,6 +95,8 @@ PSchema TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 	   else
 	     pSchPres->PsOrigin = Author;
 	   pSS = (PtrSSchema) nature;
+
+           pSchPres->PsSSchema = pSS;
 	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);
 	   if (pSchPres->PsAttrPRule)

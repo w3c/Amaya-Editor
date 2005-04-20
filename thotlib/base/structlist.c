@@ -3762,7 +3762,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		   fprintf (fileDescriptor, "???");
 		 fprintf (fileDescriptor, ";\n");
 
-		 /* les constantes */
+		 /* print constants */
 		 if (pSc1->PsNConstants > 0)
 		   {
 		     fprintf (fileDescriptor, "\n");
@@ -3808,6 +3808,28 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 fprintf (fileDescriptor, "\';\n");
 		       }
 		   }
+		 /* print default presentation rules */
+                 if (pSc1->PsFirstDefaultPRule)
+		   {
+		     fprintf (fileDescriptor, "\nDEFAULT\n\n");
+		     wrprules (pSc1->PsFirstDefaultPRule, fileDescriptor,
+			       pSc1);
+		   }
+
+		 /* print presentation boxes */
+		 if (pSc1->PsNPresentBoxes > 0)
+		   {
+		     fprintf (fileDescriptor, "\nBOXES\n\n");
+		     for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
+		       {
+			 fprintf (fileDescriptor, pSc1->PsPresentBox->PresBox[i-1]->PbName);
+			 fprintf (fileDescriptor, ":\n");
+			 fprintf (fileDescriptor, "   BEGIN\n");
+			 wrprules (pSc1->PsPresentBox->PresBox[i-1]->PbFirstPRule, fileDescriptor, pSc1);
+			 fprintf (fileDescriptor, "   END;\n");
+			 fprintf (fileDescriptor, "\n");
+		       }
+		   }
 
 		 /* les regles de presentation des elements structure's */
 		 fprintf (fileDescriptor, "\nRULES\n\n");
@@ -3834,9 +3856,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		 /* les regles de presentation des attributs */
 		 if (pSchemaStr->SsNAttributes > 0)
 		   {
-		     fprintf (fileDescriptor, "\n");
-		     fprintf (fileDescriptor, "ATTRIBUTES\n");
-		     fprintf (fileDescriptor, "\n");
+		     fprintf (fileDescriptor, "\nATTRIBUTES\n\n");
 		     for (attr = 0; attr < pSchemaStr->SsNAttributes; attr++)
 		       {
 			 pAt1 = pSchemaStr->SsAttribute->TtAttr[attr];

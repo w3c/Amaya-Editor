@@ -1360,6 +1360,7 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
   else
     {
       GetSchPres (&pPSch);
+      pPSch->PsSSchema = pSS;
       /* this schema is considered as the User Agent default stylesheet */
       pPSch->PsOrigin = Agent;
       /* acquiert un bloc pour la prochaine regle lue */
