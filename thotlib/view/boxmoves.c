@@ -1883,6 +1883,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   ViewSelection      *pViewSel;
+  Propagation         savpropage;
   int                 i, j, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   int                 extraL, extraR;
@@ -2001,6 +2002,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
+	  /* move sibling boxes with their content */
+	  savpropage = Propagate;
+	  Propagate = ToAll;
 	  while (pPosRel)
 	    {
 	      i = 0;
@@ -2098,6 +2102,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* next relations block */
 	      pPosRel = pPosRel->PosRNext;
 	    }
+	  /* restore the value */
+	  Propagate = savpropage;
 	  
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsXPosComplete (pBox);
@@ -2510,6 +2516,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* Moving sibling boxes and the parent? */
 	  pPosRel = pBox->BxPosRelations;
+	  /* move sibling boxes with their content */
 	  savpropage = Propagate;
 	  Propagate = ToAll;
 	  while (pPosRel)
@@ -2613,6 +2620,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      /* next relations block */
 	      pPosRel = pPosRel->PosRNext;
 	    }
+	  /* restore the value */
 	  Propagate = savpropage;
 	  
 	  /* Keep in mind if the box positionning is absolute or not */
@@ -3197,8 +3205,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        * and it's not a stretchable box.
        * In other cases, move also enclosed boxes.
        */
-if (!strcmp (pCurrentAb->AbElement->ElLabel, "L90"))
-  printf ("Ymove y=%d delta=%d\n", pBox->BxYOrg, delta);
       if (absoluteMove)
 	{
 	  if (pBox->BxVertFlex)
