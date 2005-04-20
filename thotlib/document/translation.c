@@ -2403,14 +2403,14 @@ static void ApplyPresTRules (TOrder position, PtrElement pEl,
    PtrTSchema          pTSch;
    PtrTRule            pTRule;
    PRuleTransl        *pPRuleTr;
-   PtrTRuleBlock       pBlock;
+   PtrTRuleBlock       pBlock = NULL;
    TranslNumAttrCase  *pTCase;
    int                 i, nPRules = 0;
    char                val;
-
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];
 
+#ifdef IV /* prevent a crash with new P rules */
    if (*ignoreEl)
       return;
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
@@ -2540,6 +2540,7 @@ static void ApplyPresTRules (TOrder position, PtrElement pEl,
        /* passe a la regle de presentation suivante de l'element */
        pPRule = pPRule->PrNextPRule;
      }
+#endif
 }
 
 
