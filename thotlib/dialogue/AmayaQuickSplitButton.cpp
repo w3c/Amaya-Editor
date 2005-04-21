@@ -123,7 +123,7 @@ void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
 BEGIN_EVENT_TABLE(AmayaQuickSplitButton, wxPanel)
   EVT_ENTER_WINDOW(AmayaQuickSplitButton::OnEnterWindow)
   EVT_LEAVE_WINDOW(AmayaQuickSplitButton::OnLeaveWindow)
-  EVT_LEFT_UP(     AmayaQuickSplitButton::OnActivate)
+  EVT_LEFT_DCLICK(AmayaQuickSplitButton::OnActivate)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */ 
