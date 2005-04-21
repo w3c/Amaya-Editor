@@ -135,6 +135,9 @@ void AmayaNotebook::UpdatePageId()
  */
 void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 {
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
+                 event.GetOldSelection(),
+                 event.GetSelection() );
   event.Skip();
 }
 
