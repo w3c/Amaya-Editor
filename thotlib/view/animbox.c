@@ -1201,9 +1201,10 @@ ThotBool Animate_boxes (int frame, AnimTime current_time)
   SetBaseClipping ();
   isfinished = TRUE;
   while (current)
-    {
-      if (animate_box (current->El, current_time))
-	isfinished = FALSE;
+    {      
+      if (GL_prepare (frame)) // to be sure the canvas is current one
+        if (animate_box (current->El, current_time))
+          isfinished = FALSE;
       current = current->Next;
     }
   if (isfinished)

@@ -40,6 +40,8 @@
 #include "frame.h"
 
 #ifdef _WX
+  #include "AmayaPage.h"
+  #include "AmayaFrame.h"
   #include "wxAmayaTimer.h"
 #endif /* _WX */
 
@@ -299,8 +301,13 @@ ThotBool GL_DrawAll ()
 	      if (FrameTable[frame].WdFrame != 0)
 #endif /* _WX */
 		{
-		  if (FrameTable[frame].Animated_Boxes &&
-		      FrameTable[frame].Anim_play)
+		  if ( FrameTable[frame].Animated_Boxes
+           && FrameTable[frame].Anim_play
+#ifdef _WX
+           // do not play animation if the animated canvas is not current
+           && FrameTable[frame].WdFrame->GetPageParent()->IsSelected()
+#endif /* _WX */
+           )
 		    {
 		      current_time = ComputeThotCurrentTime (frame);  
 		      if ((current_time + 1) > 0.0001)
