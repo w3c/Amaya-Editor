@@ -1829,6 +1829,13 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   pAb = pFrame->FrAbstractBox;
   if (pAb == NULL)
     return;
+
+#ifdef _GL
+  // to be sure the canvas is ready to draw something
+  if (!GL_prepare (frame))
+    return;
+#endif /*_GL*/
+
   GetSizesFrame (frame, &l, &h);
   pBox = pAb->AbBox;
   if (pBox == NULL)
