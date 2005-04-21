@@ -780,8 +780,9 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view, Thot
 	  MenuActionList[i].Call_Action)
 	(*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
 
-      // to be sure the focus is not lost
-      TtaCheckLostFocus();
+      // redirect focus to the canvas because when an action is done 
+	  // it's more probable that the user wants to type some characteres after executing the action
+      TtaRedirectFocus();
 #else /* _WX */
       if (i > 0 && i < MaxMenuAction &&
 	  (MenuActionList[i].ActionActive[frame] || force)&&
