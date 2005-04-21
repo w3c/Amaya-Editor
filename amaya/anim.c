@@ -45,10 +45,10 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
-#ifdef _UNIX
-#define min(A,B) ((A<B)?A:B)
-#define max(A,B) ((B>A)?B:A)
-#endif /* _UNIX */
+#if defined(_UNIX) || defined(_WINDOWS)
+#define max(a,b)	((a) > (b) ? (a) : (b))
+#define min(a,b)	((a) < (b) ? (a) : (b))
+#endif /* _UNIX || _WINDOWS */
 
 
 #ifdef _WX
