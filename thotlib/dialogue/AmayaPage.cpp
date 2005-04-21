@@ -717,29 +717,29 @@ void AmayaPage::SetSelected( bool isSelected )
   if (isSelected)
     {
       for ( int frame_pos = 1; frame_pos<=2; frame_pos++ )
-	{
-	  if ( GetFrame(frame_pos) )
-	    {
-	      // post a size event to force frame refresh
-	      // to canvas
-	      AmayaCanvas * p_canvas = GetFrame(frame_pos)->GetCanvas();
-	      if ( p_canvas )
-		{
-		  wxSizeEvent event_canvas( p_canvas->GetSize() );
-		  wxPostEvent( p_canvas, event_canvas );
-		}
-	      // to page
-	      //	      wxSizeEvent event_page( GetSize() );
-	      //	      wxPostEvent( this, event_page );
-	    }
-	}
-
+        {
+          if ( GetFrame(frame_pos) )
+            {
+              // post a size event to force frame refresh
+              // to canvas
+              AmayaCanvas * p_canvas = GetFrame(frame_pos)->GetCanvas();
+              if ( p_canvas )
+                {
+                  wxSizeEvent event_canvas( p_canvas->GetSize() );
+                  wxPostEvent( p_canvas, event_canvas );
+                }
+              // to page
+              //	      wxSizeEvent event_page( GetSize() );
+              //	      wxPostEvent( this, event_page );
+            }
+        }
+      
       // if there is an active frame
       if ( GetActiveFrame() )
-	{
-	  // activate it : setup the corresponding menu and update internal boolean
-	  GetActiveFrame()->SetActive( TRUE );
-	}
+        {
+          // activate it : setup the corresponding menu and update internal boolean
+          GetActiveFrame()->SetActive( TRUE );
+        }
     }
 }
 
