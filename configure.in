@@ -190,16 +190,17 @@ esac
 
 AC_ARG_WITH(GL,              [  --with-gl               enable Opengl canvas (experimental) ])
 dnl
-dnl GL canvas is disabled by default
-dnl
-dnl needs Opengl, glu, Xft (xfree 4 font server)
-dnl needs GTK
-dnl text WILL need freetype2, ftgl
+dnl GL canvas is disabled by default in 8.7.x
+dnl GL canvas is enabled by default in 9.x
+dnl - 8.7.x needs : GL, GLX, GLU, freetype2, gtkgl
+dnl - 9.x needs : GL, GLX, GLU, freetype2, wxGLCanvas
 dnl GL is for opengl
-dnl Glu is for text drawing (until we switch) 
+dnl GlX is for XWindow integration
 dnl GLU is for tesselation algortihms (until we extract it from this lib)
 dnl (tesselation is used for polygons with holes in it...)
 dnl gtkgl is for integration of opengl in GTK
+dnl freetype2 is for text drawing (fonts ...)
+dnl wxGLCanvas is for integration of opengl in wxWidgets (WX)
 if test "$with_gl" = "" ; then
  if test "$enable_gl" = "yes" ; then
     with_gl="yes"
@@ -229,7 +230,7 @@ if test "$with_mac" = "" ; then
 fi
 
 # check for mesa library (OpenGL)
-AC_ARG_WITH(MESA,              [  --with-mesa             enable OpenGL canvas with internal MesaLib (only used with wxWidgets GUI) ])
+AC_ARG_WITH(MESA,              [  --with-mesa             enable canvas with software OpenGL implementation (Mesa) ])
 if test "$with_mesa" = "" ; then
  if test "$enable_mesa" = "yes" ; then
     with_mesa="yes"
@@ -246,14 +247,10 @@ if test "$with_wx" = "yes" -o "$enable_wx" = "yes" ; then
     with_wx="no"
   else
     with_wx="yes"
-    # force mesa or opengl with wxWidgets (mesa is used in priority)
-    if test "$with_gl" = "no" ; then
-      with_mesa="yes"
-    fi
   fi
 fi
 
-# Check if iat least one GUI toolkit is enabled
+# Check if at least one GUI toolkit is enabled
 if test "$with_wx" = "no" -o "$with_wx" = "" ; then
   if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
     # Nothing is enable so force the default GUI toolkit (GTK)
@@ -262,8 +259,15 @@ if test "$with_wx" = "no" -o "$with_wx" = "" ; then
   fi
 fi
 
+# hardware gl implementation is default with wxWidgets (mesa is can be choosen if necessary)
+if test "$with_wx" = "yes" ; then
+  if test "$with_mesa" = "no" ; then
+    with_gl="yes"
+  fi
+fi
+
 # check if no gui is enable
-AC_ARG_WITH(nogui, [  --with-nogui            do not use GUI toolkit ])
+AC_ARG_WITH(nogui, [  --with-nogui            do not use GUI toolkit (not maintained) ])
 if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
   with_nogui="yes"
   with_gtk="no"
