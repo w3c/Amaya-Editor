@@ -403,24 +403,64 @@ SectionEnd
 
 SubSection "File association" SecFileAss
 
+; --> .html
 Section /o ".html (HyperText Markup Language)" SecAssHTML
+  ReadRegStr $R0 HKCR ".html" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".html" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".html" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .htm
+Section /o ".htm (HyperText Markup Language)" SecAssHTM
+  ReadRegStr $R0 HKCR ".htm" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".htm" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".htm" "" "Amaya"
+  allready_amaya:
+SectionEnd
+
+; --> .xml
 Section /o ".xml (eXtensible Markup Language)" SecAssXML
+  ReadRegStr $R0 HKCR ".xml" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".xml" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".xml" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .svg
 Section /o ".svg (Scalable Vector Graphics)" SecAssSVG
+  ReadRegStr $R0 HKCR ".svg" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".svg" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".svg" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .mml
 Section /o ".mml (MathML)" SecAssMML
+  ReadRegStr $R0 HKCR ".mml" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".mml" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".mml" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .css
 Section /o ".css (Cascading Style Sheets)" SecAssCSS
+  ReadRegStr $R0 HKCR ".css" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".css" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".css" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
 SubSectionEnd
@@ -441,7 +481,7 @@ FunctionEnd
 
   ;Assign descriptions to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Amaya."
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Install main Amaya program (mandatory)."
     !insertmacro MUI_DESCRIPTION_TEXT ${SecFileAss} "Selects Amaya as the default application for files of these types."
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -464,7 +504,7 @@ Section "Uninstall"
   DetailPrint "Deleting Files..."
   SetDetailsPrint listonly
 
-  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX" "Start Menu Folder"
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX-debug" "Start Menu Folder"
   IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
     Goto amaya_smp_notinstalled
   amaya_smp_installed:
@@ -484,6 +524,37 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\AmayaWX"
   DeleteRegKey HKCR "Amaya"
   DeleteRegKey HKCU "Software\AmayaWX"
+  ; uninstall files associations
+  ; --> .html
+  ReadRegStr $R0 HKCR ".html" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".html" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".html" "" $R0
+  ; --> .htm
+  ReadRegStr $R0 HKCR ".htm" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".htm" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".htm" "" $R0
+  ; --> .css
+  ReadRegStr $R0 HKCR ".css" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".css" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".css" "" $R0
+  ; --> .svg
+  ReadRegStr $R0 HKCR ".svg" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".svg" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".svg" "" $R0
+  ; --> .mml
+  ReadRegStr $R0 HKCR ".mml" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".mml" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".mml" "" $R0
+  ; --> .xml
+  ReadRegStr $R0 HKCR ".xml" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".xml" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".xml" "" $R0
 
 SectionEnd
 

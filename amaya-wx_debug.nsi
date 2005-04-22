@@ -10,7 +10,7 @@
   ;Name and file
   !define VERSION "9.1"
   Name "Amaya WX ${VERSION} (debug)"
-  OutFile "Amaya-WX-${VERSION}-debug.exe"
+  OutFile "amaya-WinXP-${VERSION}-debug.exe"
   
   ;Use lzma to compress (better than zip)
   SetCompressor lzma
@@ -211,6 +211,7 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxbase*ud_vc_custom.dll
   File WindowsWX\bin\wxbase*ud_xml_vc_custom.dll
   File WindowsWX\bin\thotprinter.dll
+  File WindowsWX\bin\MSVCRTD.DLL
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya resources : icons, dialogues"
@@ -404,24 +405,64 @@ SectionEnd
 
 SubSection "File association" SecFileAss
 
+; --> .html
 Section /o ".html (HyperText Markup Language)" SecAssHTML
-  WriteRegStr HKCR ".html" "" "Amaya"
+  ReadRegStr $R0 HKCR ".html" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".html" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".html" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .htm
+Section /o ".htm (HyperText Markup Language)" SecAssHTM
+  ReadRegStr $R0 HKCR ".htm" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".htm" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".htm" "" "Amaya"
+  allready_amaya:
+SectionEnd
+
+; --> .xml
 Section /o ".xml (eXtensible Markup Language)" SecAssXML
-  WriteRegStr HKCR ".xml" "" "Amaya"
+  ReadRegStr $R0 HKCR ".xml" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".xml" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".xml" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .svg
 Section /o ".svg (Scalable Vector Graphics)" SecAssSVG
-  WriteRegStr HKCR ".svg" "" "Amaya"
+  ReadRegStr $R0 HKCR ".svg" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".svg" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".svg" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .mml
 Section /o ".mml (MathML)" SecAssMML
-  WriteRegStr HKCR ".mml" "" "Amaya"
+  ReadRegStr $R0 HKCR ".mml" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".mml" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".mml" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
+; --> .css
 Section /o ".css (Cascading Style Sheets)" SecAssCSS
-  WriteRegStr HKCR ".css" "" "Amaya"
+  ReadRegStr $R0 HKCR ".css" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".css" "AM_OLD_VALUE" $R0
+    WriteRegStr HKCR ".css" "" "Amaya"
+  allready_amaya:
 SectionEnd
 
 SubSectionEnd
@@ -442,7 +483,7 @@ FunctionEnd
 
   ;Assign descriptions to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Amaya."
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Install main Amaya program (mandatory)."
     !insertmacro MUI_DESCRIPTION_TEXT ${SecFileAss} "Selects Amaya as the default application for files of these types."
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
  
@@ -485,6 +526,38 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\AmayaWX-debug"
   DeleteRegKey HKCR "Amaya"
   DeleteRegKey HKCU "Software\AmayaWX-debug"
+
+  ; uninstall files associations
+  ; --> .html
+  ReadRegStr $R0 HKCR ".html" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".html" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".html" "" $R0
+  ; --> .htm
+  ReadRegStr $R0 HKCR ".htm" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".htm" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".htm" "" $R0
+  ; --> .css
+  ReadRegStr $R0 HKCR ".css" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".css" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".css" "" $R0
+  ; --> .svg
+  ReadRegStr $R0 HKCR ".svg" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".svg" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".svg" "" $R0
+  ; --> .mml
+  ReadRegStr $R0 HKCR ".mml" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".mml" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".mml" "" $R0
+  ; --> .xml
+  ReadRegStr $R0 HKCR ".xml" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".xml" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".xml" "" $R0
 
 SectionEnd
 
