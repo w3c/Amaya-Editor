@@ -266,9 +266,11 @@
 // If enabled (1), compiles wxWidgets streams classes
 #define wxUSE_STREAMS       1
 
-// Use standard C++ streams if 1. If 0, use wxWin streams implementation.
+// Use standard C++ streams if 1. If 0, use wxWin streams implementation only.
 #define wxUSE_STD_IOSTREAM  0
 
+// Enable conversion to  standard C++ string if 1.
+#define wxUSE_STD_STRING  0
 // ----------------------------------------------------------------------------
 // non GUI features selection
 // ----------------------------------------------------------------------------
@@ -868,7 +870,7 @@
 //
 // Recommended setting: 1 (wxHTML is great!), set to 0 if you want compile a
 // smaller library.
-#define wxUSE_HTML          0
+#define wxUSE_HTML          1
 
 // Setting wxUSE_GLCANVAS to 1 enables OpenGL support. You need to have OpenGL
 // headers and libraries to be able to compile the library with wxUSE_GLCANVAS

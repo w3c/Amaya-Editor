@@ -51,8 +51,8 @@ FREETYPE=freetype-2.1.9
 ZIP="zip -l $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
 ZIPB="zip $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
 
-echo "Generating the minimum source tar file from $AMAYADIR and $LIBWWWDIR"
-rm -f $DEST/amaya-src-$AMAYAVERSION.zip
+echo "Generating the full source zip file from $AMAYADIR, $LIBWWWDIR, $REDLANDDIR, $WXWIDGETS, $MESA and $FREETYPE"
+rm -f $DEST/amaya-fullsrc-$AMAYAVERSION.zip
 $ZIPB ${AMAYADIR}/resources/icons/16x16/*.ico
 $ZIPB ${AMAYADIR}/resources/icons/22x22/*.ico
 $ZIPB ${AMAYADIR}/resources/icons/misc/*.ico
@@ -97,6 +97,7 @@ $ZIP ${AMAYADIR}/WindowsWX/Compilers/*.dsp
 $ZIP ${AMAYADIR}/WindowsWX/Compilers/*.dsw
 $ZIP ${AMAYADIR}/WindowsWX/LibThotEditor/*.dsp
 $ZIP ${AMAYADIR}/WindowsWX/LibThotKernel/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/davlib/*.dsp
 $ZIP ${AMAYADIR}/WindowsWX/app/*.dsp
 $ZIP ${AMAYADIR}/WindowsWX/cpp/*.dsp
 $ZIP ${AMAYADIR}/WindowsWX/libjpeg/*.dsp
