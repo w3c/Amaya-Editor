@@ -13,8 +13,6 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
-static int MyRef;
-
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -47,7 +45,6 @@ HRefDlgWX::HRefDlgWX( int ref,
   m_Filter(filter)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("HRefDlgWX"));
-  MyRef = ref;
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -75,7 +72,7 @@ HRefDlgWX::HRefDlgWX( int ref,
 HRefDlgWX::~HRefDlgWX()
 {
   /* do not call this one because it cancel the link creation */
-  /*  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);*/
+  /*  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);*/
 }
 
 /*----------------------------------------------------------------------
@@ -96,7 +93,7 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, (char *)buffer);
   // create or load the new document
-  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
@@ -145,7 +142,7 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
 {
   // this callback is called into AmayaDialog::OnClose
   // usefull to cancel the link creation process
-  //  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  //  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
   Close();
 }
 
@@ -156,7 +153,7 @@ void HRefDlgWX::OnCancel( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void HRefDlgWX::OnClick( wxCommandEvent& event )
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 3);
 }
 
 /*----------------------------------------------------------------------
@@ -166,7 +163,7 @@ void HRefDlgWX::OnClick( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void HRefDlgWX::OnClear( wxCommandEvent& event )
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 4);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 4);
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( _T("") );
 }
 
