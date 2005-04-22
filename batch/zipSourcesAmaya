@@ -1,0 +1,437 @@
+#!/bin/sh
+#
+# This script builds the Source tarfile for amaya
+#
+#       amaya-src-$AMAYAVERSION.zip
+#
+# And the associated Librairies for supported versions.
+#
+# Usage:    ./zipSourcesAmaya amayaversion [dest_path]
+# Default : ./zipSourcesAmaya
+# (AMAYAVERSION variable is used by default)
+#
+
+# default parameters
+AMAYAVERSION="9.0"
+DEST=$HOME
+
+# Check argument number on the command line
+ARGS=2
+E_MAUVAISARGS=65
+if [ $# -le 0 ]
+then
+  echo "Usage: `basename $0` amayaversion [dest_path]"
+  echo "Default: `basename $0` $AMAYAVERSION"
+else
+  # amayaversion is the first parameter
+  AMAYAVERSION=$1
+  # destination directory is the second parameter
+  if [ -z $2 ]
+  then
+    DEST=$HOME
+  else
+    DEST=$2
+  fi
+fi
+
+# search directories to tar (Amaya and libwww)
+PWD=`pwd`
+AMAYADIR=$PWD/..
+TARDIR=$PWD/../..
+cd $AMAYADIR
+AMAYADIR=$PWD
+cd $TARDIR
+TARDIR=$PWD/
+AMAYADIR=${AMAYADIR#$TARDIR}
+LIBWWWDIR=libwww
+REDLANDDIR=redland
+WXWIDGETS=wxWidgets
+MESA=Mesa
+ZIP="zip -l $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
+ZIPB="zip $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
+
+echo "Generating the minimum source tar file from $AMAYADIR and $LIBWWWDIR"
+rm -f $DEST/amaya-src-$AMAYAVERSION.zip
+$ZIPB ${AMAYADIR}/resources/icons/16x16/*.ico
+$ZIPB ${AMAYADIR}/resources/icons/22x22/*.ico
+$ZIPB ${AMAYADIR}/resources/icons/misc/*.ico
+$ZIPB ${AMAYADIR}/resources/icons/16x16/*.gif
+$ZIPB ${AMAYADIR}/resources/icons/22x22/*.gif
+$ZIPB ${AMAYADIR}/resources/icons/misc/*.gif
+$ZIPB ${AMAYADIR}/resources/icons/16x16/*.png
+$ZIPB ${AMAYADIR}/resources/icons/22x22/*.png
+$ZIPB ${AMAYADIR}/resources/icons/misc/*.png
+$ZIP ${AMAYADIR}/resources/xrc/*.xrc
+$ZIP ${AMAYADIR}/Windows/*.mak
+$ZIP ${AMAYADIR}/Windows/*.dsp
+$ZIP ${AMAYADIR}/Windows/*.dsw
+$ZIP ${AMAYADIR}/Windows/amaya/*.mkf
+$ZIP ${AMAYADIR}/Windows/annotlib/*.dsp
+$ZIP ${AMAYADIR}/Windows/Compilers/*.mak
+$ZIP ${AMAYADIR}/Windows/Compilers/*.dsp
+$ZIP ${AMAYADIR}/Windows/Compilers/*.dsw
+$ZIP ${AMAYADIR}/Windows/LibThotEditor/*.dsp
+$ZIP ${AMAYADIR}/Windows/LibThotKernel/*.dsp
+$ZIP ${AMAYADIR}/Windows/app/*.dsp
+$ZIP ${AMAYADIR}/Windows/cpp/*.dsp
+$ZIP ${AMAYADIR}/Windows/davlib/*.dsp
+$ZIP ${AMAYADIR}/Windows/libjpeg/*.dsp
+$ZIP ${AMAYADIR}/Windows/libpng/*.dsp
+$ZIP ${AMAYADIR}/Windows/libwww/*.dsp
+$ZIP ${AMAYADIR}/Windows/libwww/*.dev
+$ZIP ${AMAYADIR}/Windows/printlib/*.dsp
+$ZIP ${AMAYADIR}/Windows/libraptor/*.dsp
+$ZIP ${AMAYADIR}/Windows/librdf/*.dsp
+$ZIP ${AMAYADIR}/Windows/prs/*.dsp
+$ZIP ${AMAYADIR}/Windows/str/*.dsp
+$ZIP ${AMAYADIR}/Windows/thotprinter/*.dsp
+$ZIP ${AMAYADIR}/Windows/tra/*.dsp
+$ZIP ${AMAYADIR}/Windows/zlib/*.dsp
+$ZIP ${AMAYADIR}/Windows/zlib/*.dev
+$ZIP ${AMAYADIR}/WindowsWX/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/*.dsw
+$ZIP ${AMAYADIR}/WindowsWX/amaya/*.mkf
+$ZIP ${AMAYADIR}/WindowsWX/annotlib/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/Compilers/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/Compilers/*.dsw
+$ZIP ${AMAYADIR}/WindowsWX/LibThotEditor/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/LibThotKernel/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/app/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/cpp/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/libjpeg/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/libpng/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/libwww/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/printlib/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/libraptor/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/librdf/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/prs/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/str/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/thotprinter/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/tra/*.dsp
+$ZIP ${AMAYADIR}/WindowsWX/zlib/*.dsp
+$ZIP ${AMAYADIR}/libjpeg/Makefile.in
+$ZIP ${AMAYADIR}/libjpeg/Makefile
+$ZIP ${AMAYADIR}/libjpeg/README
+$ZIP ${AMAYADIR}/libjpeg/*.1
+$ZIP ${AMAYADIR}/libjpeg/*.c
+$ZIP ${AMAYADIR}/libjpeg/*.h
+$ZIP ${AMAYADIR}/libjpeg/*.log
+$ZIP ${AMAYADIR}/libjpeg/*.doc
+$ZIP ${AMAYADIR}/libjpeg/configure
+$ZIP ${AMAYADIR}/libjpeg/jconfig.bcc
+$ZIP ${AMAYADIR}/libjpeg/jconfig.cfg
+$ZIP ${AMAYADIR}/libjpeg/jconfig.dj
+$ZIP ${AMAYADIR}/libjpeg/jconfig.manx
+$ZIP ${AMAYADIR}/libjpeg/jconfig.mc6
+$ZIP ${AMAYADIR}/libjpeg/jconfig.sas
+$ZIP ${AMAYADIR}/libjpeg/jconfig.st
+$ZIP ${AMAYADIR}/libjpeg/jconfig.vms
+$ZIP ${AMAYADIR}/libjpeg/jconfig.wat
+$ZIP ${AMAYADIR}/libjpeg/jmemdosa.asm
+$ZIP ${AMAYADIR}/libjpeg/makcjpeg.st
+$ZIP ${AMAYADIR}/libjpeg/makdjpeg.st
+$ZIP ${AMAYADIR}/libjpeg/makefile.ansi
+$ZIP ${AMAYADIR}/libjpeg/makefile.bcc
+$ZIP ${AMAYADIR}/libjpeg/makefile.cfg
+$ZIP ${AMAYADIR}/libjpeg/makefile.dj
+$ZIP ${AMAYADIR}/libjpeg/makefile.manx
+$ZIP ${AMAYADIR}/libjpeg/makefile.mc6
+$ZIP ${AMAYADIR}/libjpeg/makefile.mms
+$ZIP ${AMAYADIR}/libjpeg/makefile.sas
+$ZIP ${AMAYADIR}/libjpeg/makefile.unix
+$ZIP ${AMAYADIR}/libjpeg/makefile.vms
+$ZIP ${AMAYADIR}/libjpeg/makefile.wat
+$ZIP ${AMAYADIR}/libjpeg/makljpeg.st
+$ZIP ${AMAYADIR}/libjpeg/maktjpeg.st
+$ZIP ${AMAYADIR}/libjpeg/makvms.opt
+$ZIPB ${AMAYADIR}/libjpeg/testimg.gif
+$ZIPB ${AMAYADIR}/libjpeg/testimg.jpg
+$ZIPB ${AMAYADIR}/libjpeg/testimg.ppm
+$ZIPB ${AMAYADIR}/libjpeg/testimgp.jpg
+$ZIPB ${AMAYADIR}/libjpeg/testorig.jpg
+$ZIPB ${AMAYADIR}/libjpeg/testprog.jpg
+$ZIP ${AMAYADIR}/libpng/Makefile.in
+$ZIP ${AMAYADIR}/libpng/*.c
+$ZIP ${AMAYADIR}/libpng/*.h
+$ZIP ${AMAYADIR}/libpng/zlib/ChangeLog
+$ZIP ${AMAYADIR}/libpng/zlib/Make_vms.com
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile.in
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile.bor
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile.msc
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile.qnx
+$ZIP ${AMAYADIR}/libpng/zlib/Makefile.tc
+$ZIP ${AMAYADIR}/libpng/zlib/README
+$ZIP ${AMAYADIR}/libpng/zlib/*.c
+$ZIP ${AMAYADIR}/libpng/zlib/*.h
+$ZIP ${AMAYADIR}/libpng/zlib/descrip.mms
+$ZIP ${AMAYADIR}/pluginlib/Makefile.in
+$ZIP ${AMAYADIR}/pluginlib/COPYRIGHT*
+$ZIP ${AMAYADIR}/pluginlib/Makefile.plugin
+$ZIP ${AMAYADIR}/pluginlib/*.h
+$ZIP ${AMAYADIR}/pluginlib/*.c
+$ZIP ${AMAYADIR}/pluginlib/f/*.h
+$ZIP ${AMAYADIR}/README.amaya
+$ZIP ${AMAYADIR}/README
+$ZIP ${AMAYADIR}/README.gl
+$ZIP ${AMAYADIR}/README.wx
+$ZIP ${AMAYADIR}/config.guess
+$ZIP ${AMAYADIR}/config.h.in
+$ZIP ${AMAYADIR}/config.sub
+$ZIP ${AMAYADIR}/configure
+$ZIP ${AMAYADIR}/configure.in
+$ZIP ${AMAYADIR}/Makefile.in
+$ZIP ${AMAYADIR}/install-sh
+$ZIP ${AMAYADIR}/stamp-h.in
+$ZIP ${AMAYADIR}/Options.in
+$ZIP ${AMAYADIR}/batch/Makefile.in
+$ZIP ${AMAYADIR}/batch/tarAmaya
+$ZIP ${AMAYADIR}/amaya/COPYRIGHT*
+$ZIP ${AMAYADIR}/amaya/Makefile.*
+$ZIP ${AMAYADIR}/amaya/AmayaPage.html*
+$ZIP ${AMAYADIR}/amaya/AmayaPage_WX.html*
+$ZIP ${AMAYADIR}/amaya/Amaya.svg
+$ZIP ${AMAYADIR}/amaya/Text_SGML.inc
+$ZIP ${AMAYADIR}/amaya/*.A
+$ZIP ${AMAYADIR}/amaya/*.P
+$ZIP ${AMAYADIR}/amaya/*.S
+$ZIP ${AMAYADIR}/amaya/*.T
+$ZIP ${AMAYADIR}/amaya/amaya.css
+$ZIP ${AMAYADIR}/amaya*.spec
+$ZIP ${AMAYADIR}/amaya/*.c
+$ZIP ${AMAYADIR}/amaya/*.conf
+$ZIP ${AMAYADIR}/amaya/*.en
+$ZIP ${AMAYADIR}/amaya/*.h
+$ZIP ${AMAYADIR}/amaya/*.trans*
+$ZIP ${AMAYADIR}/amaya/greek.sgml
+$ZIPB ${AMAYADIR}/amaya/*.bmp
+$ZIPB ${AMAYADIR}/amaya/*.gif
+$ZIPB ${AMAYADIR}/amaya/*.png
+$ZIP ${AMAYADIR}/amaya/*.rc
+$ZIPB ${AMAYADIR}/amaya/*.ico
+$ZIPB ${AMAYADIR}/amaya/*.cur
+$ZIP ${AMAYADIR}/amaya/wxdialog/*.h
+$ZIP ${AMAYADIR}/amaya/wxdialog/*.cpp
+$ZIP ${AMAYADIR}/amaya/f/*.h
+$ZIP ${AMAYADIR}/amaya/xpm/*.xpm
+$ZIP ${AMAYADIR}/annotlib/Makefile.*
+$ZIP ${AMAYADIR}/annotlib/*.A
+$ZIP ${AMAYADIR}/annotlib/*.S
+$ZIP ${AMAYADIR}/annotlib/*.P
+$ZIP ${AMAYADIR}/annotlib/*.T
+$ZIP ${AMAYADIR}/annotlib/*.en
+$ZIP ${AMAYADIR}/annotlib/*.c
+$ZIP ${AMAYADIR}/annotlib/*.h
+$ZIP ${AMAYADIR}/annotlib/f/*.h
+$ZIPB ${AMAYADIR}/annotlib/selected.gif
+$ZIPB ${AMAYADIR}/annotlib/closed.png
+$ZIPB ${AMAYADIR}/annotlib/open.png
+$ZIP ${AMAYADIR}/batch/COPYRIGHT*
+$ZIP ${AMAYADIR}/batch/*.LAN
+$ZIP ${AMAYADIR}/batch/*.GRM
+$ZIP ${AMAYADIR}/batch/MachineType
+$ZIP ${AMAYADIR}/batch/*.rc
+$ZIP ${AMAYADIR}/batch/resource.h
+$ZIPB ${AMAYADIR}/batch/comp_ico.ico
+$ZIPB ${AMAYADIR}/batch/comp_toolbar.bmp
+$ZIP ${AMAYADIR}/batch/*.c
+$ZIP ${AMAYADIR}/batch/f/*.h
+$ZIP ${AMAYADIR}/config/amaya.kb
+$ZIP ${AMAYADIR}/config/amaya.keyboard
+$ZIP ${AMAYADIR}/config/amaya.emacs
+$ZIP ${AMAYADIR}/config/amaya.profiles
+$ZIP ${AMAYADIR}/config/gtkrc
+$ZIP ${AMAYADIR}/config/*-amayadialogue
+$ZIP ${AMAYADIR}/config/*-amayamsg
+$ZIP ${AMAYADIR}/config/*-libdialogue
+$ZIP ${AMAYADIR}/config/en-appdialogue
+$ZIP ${AMAYADIR}/config/en-compildialogue
+$ZIP ${AMAYADIR}/config/en-grmdialogue
+$ZIP ${AMAYADIR}/config/en-prsdialogue
+$ZIP ${AMAYADIR}/config/en-strdialogue
+$ZIP ${AMAYADIR}/config/en-tradialogue
+$ZIP ${AMAYADIR}/config/XKeysymDB
+$ZIP ${AMAYADIR}/config/*thot.rc
+$ZIP ${AMAYADIR}/config/thot.color
+$ZIP ${AMAYADIR}/config/*rdf
+$ZIP ${AMAYADIR}/config/annot.schemas
+$ZIP ${AMAYADIR}/config/fonts.*
+$ZIP ${AMAYADIR}/config/lib_files.dat
+$ZIP ${AMAYADIR}/config/libconfig/*.css
+$ZIPB ${AMAYADIR}/config/libconfig/*.png
+$ZIP ${AMAYADIR}/config/libconfig/*.lhtml
+$ZIP ${AMAYADIR}/config/libconfig/*.svg
+$ZIP ${AMAYADIR}/cpp/winnt/*.bat
+$ZIP ${AMAYADIR}/cpp/*.c
+$ZIP ${AMAYADIR}/cpp/*.h
+$ZIP ${AMAYADIR}/cpp/winnt/*.sed
+$ZIP ${AMAYADIR}/cpp/winnt/*.c
+$ZIP ${AMAYADIR}/cpp/winnt/*.h
+$ZIP ${AMAYADIR}/cpp/i386/*.c
+$ZIP ${AMAYADIR}/cpp/i386/*.h
+$ZIP ${AMAYADIR}/cpp/i386/*.sed
+$ZIP ${AMAYADIR}/cpp/i386/*.md
+$ZIP ${AMAYADIR}/cpp/i386/*.asm
+$ZIP ${AMAYADIR}/cpp/i386/*.ifile
+$ZIP ${AMAYADIR}/cpp/i386/t-*
+$ZIP ${AMAYADIR}/cpp/i386/x-*
+$ZIP ${AMAYADIR}/davlib/Makefile.in
+$ZIP ${AMAYADIR}/davlib/*.c
+$ZIP ${AMAYADIR}/davlib/f/*.h
+$ZIP ${AMAYADIR}/davlib/h/*.h
+$ZIP ${AMAYADIR}/davlib/tree/*.c
+$ZIP ${AMAYADIR}/davlib/tree/h/*.h
+$ZIPB ${AMAYADIR}/dicopar/*.dic
+$ZIP ${AMAYADIR}/dicopar/*.ptn
+$ZIP ${AMAYADIR}/dicopar/alphabet
+$ZIP ${AMAYADIR}/dicopar/clavier
+$ZIP ${AMAYADIR}/doc/html/*.html*
+$ZIP ${AMAYADIR}/doc/html/*/*.html*
+$ZIP ${AMAYADIR}/doc/html/*.css
+$ZIP ${AMAYADIR}/doc/WX/*.html*
+$ZIP ${AMAYADIR}/doc/WX/*.css
+$ZIP ${AMAYADIR}/doc/WX/HTML-elements/*.html*
+$ZIPB ${AMAYADIR}/doc/images/*.gif
+$ZIPB ${AMAYADIR}/doc/images/*.png
+$ZIPB ${AMAYADIR}/doc/images/*.jpg
+$ZIPB ${AMAYADIR}/doc/images/w3c_home
+$ZIP ${AMAYADIR}/fonts/Families.list
+$ZIP ${AMAYADIR}/fonts/fonts.dir
+$ZIPB ${AMAYADIR}/fonts/icones*
+$ZIPB ${AMAYADIR}/fonts/*.ttf
+$ZIPB ${AMAYADIR}/fonts/*.TTF
+$ZIP ${AMAYADIR}/thotlib/Makefile.in
+$ZIP ${AMAYADIR}/thotlib/include/Makefile.in
+$ZIP ${AMAYADIR}/thotlib/base/*.c
+$ZIP ${AMAYADIR}/thotlib/base/*.cpp
+$ZIP ${AMAYADIR}/thotlib/content/*.c
+$ZIP ${AMAYADIR}/thotlib/dialogue/*.c
+$ZIP ${AMAYADIR}/thotlib/dialogue/*.cpp
+$ZIP ${AMAYADIR}/thotlib/document/*.c
+$ZIP ${AMAYADIR}/thotlib/editing/*.c
+$ZIP ${AMAYADIR}/thotlib/image/*.c
+$ZIP ${AMAYADIR}/thotlib/include/*.h
+$ZIP ${AMAYADIR}/thotlib/internals/f/*.h
+$ZIP ${AMAYADIR}/thotlib/internals/h/*.h
+$ZIP ${AMAYADIR}/thotlib/internals/h/*.xpm
+$ZIP ${AMAYADIR}/thotlib/internals/h/*.xbm
+$ZIP ${AMAYADIR}/thotlib/internals/var/*.h
+$ZIP ${AMAYADIR}/thotlib/presentation/*.c
+$ZIP ${AMAYADIR}/thotlib/tree/*.c
+$ZIP ${AMAYADIR}/thotlib/unicode/*.c
+$ZIP ${AMAYADIR}/thotlib/view/*.c
+$ZIP ${AMAYADIR}/tools/Makefile.in
+$ZIP ${AMAYADIR}/tools/mkdep/Makefile.in
+$ZIP ${AMAYADIR}/tools/mkdep/Makefile
+$ZIP ${AMAYADIR}/tools/mkdep/mkdep.c
+$ZIP ${AMAYADIR}/tools/cextract-1.7/Makefile.in
+$ZIP ${AMAYADIR}/tools/cextract-1.7/HPUX.Install
+$ZIP ${AMAYADIR}/tools/cextract-1.7/INSTALL
+$ZIP ${AMAYADIR}/tools/cextract-1.7/INSTALL.VMS
+$ZIP ${AMAYADIR}/tools/cextract-1.7/Imakefile
+$ZIP ${AMAYADIR}/tools/cextract-1.7/MANIFEST
+$ZIP ${AMAYADIR}/tools/cextract-1.7/Makefile
+$ZIP ${AMAYADIR}/tools/cextract-1.7/Makefile.clm
+$ZIP ${AMAYADIR}/tools/cextract-1.7/Makefile.cln
+$ZIP ${AMAYADIR}/tools/cextract-1.7/README
+$ZIP ${AMAYADIR}/tools/cextract-1.7/README.LUCS
+$ZIP ${AMAYADIR}/tools/cextract-1.7/TODO
+$ZIP ${AMAYADIR}/tools/cextract-1.7/build.com
+$ZIP ${AMAYADIR}/tools/cextract-1.7/cextdoc.1
+$ZIPB ${AMAYADIR}/tools/cextract-1.7/cextract.doc
+$ZIPB ${AMAYADIR}/tools/cextract-1.7/cextract.hlp
+$ZIP ${AMAYADIR}/tools/cextract-1.7/cextract.man
+$ZIP ${AMAYADIR}/tools/cextract-1.7/cextrc.5
+$ZIPB ${AMAYADIR}/tools/cextract-1.7/cextrc.doc
+$ZIP ${AMAYADIR}/tools/cextract-1.7/io.c
+$ZIP ${AMAYADIR}/tools/cextract-1.7/main.c
+$ZIP ${AMAYADIR}/tools/cextract-1.7/main.c.cln
+$ZIP ${AMAYADIR}/tools/cextract-1.7/newbuild.com
+$ZIP ${AMAYADIR}/tools/cextract-1.7/parse.c
+$ZIP ${AMAYADIR}/tools/cextract-1.7/patchlevel.h
+$ZIP ${AMAYADIR}/tools/cextract-1.7/proto.h
+$ZIP ${AMAYADIR}/tools/cextract-1.7/xtract.h 
+$ZIP ${LIBWWWDIR}/COPYRIGH
+$ZIP ${LIBWWWDIR}/README.html
+$ZIP ${LIBWWWDIR}/LICENSE.html
+$ZIP ${LIBWWWDIR}/Makefile.am
+$ZIP ${LIBWWWDIR}/Makefile.in
+$ZIP ${LIBWWWDIR}/aclocal.m4
+$ZIP ${LIBWWWDIR}/libwww-config.in
+$ZIP ${LIBWWWDIR}/wwwconf.h.in
+$ZIP ${LIBWWWDIR}/w3c-libwww.spec.in
+$ZIP ${LIBWWWDIR}/configure
+$ZIP ${LIBWWWDIR}/configure.ac
+$ZIP ${LIBWWWDIR}/wwwconf.h.in
+$ZIP ${LIBWWWDIR}/Library/Makefile.am
+$ZIP ${LIBWWWDIR}/Library/Makefile.in
+$ZIP ${LIBWWWDIR}/Library/src/Makefile.in
+$ZIP ${LIBWWWDIR}/Library/src/Makefile.am
+$ZIP ${LIBWWWDIR}/Library/src/vms/COPYING.LIB
+$ZIP ${LIBWWWDIR}/Library/src/vms/Makefile.am
+$ZIP ${LIBWWWDIR}/Library/src/vms/Makefile.in
+$ZIP ${LIBWWWDIR}/Library/src/vms/build_multinet.com
+$ZIP ${LIBWWWDIR}/Library/src/vms/descrip.mms
+$ZIP ${LIBWWWDIR}/Library/src/*.c
+$ZIP ${LIBWWWDIR}/Library/src/*.h
+$ZIP ${LIBWWWDIR}/Library/src/windows/Makefile.am
+$ZIP ${LIBWWWDIR}/Library/src/windows/Makefile.in
+$ZIP ${LIBWWWDIR}/Library/src/windows/*.c
+$ZIP ${LIBWWWDIR}/Library/src/windows/*.h
+$ZIP ${LIBWWWDIR}/Library/src/windows/*.def
+$ZIP ${LIBWWWDIR}/Library/src/windows/*.files
+$ZIP ${LIBWWWDIR}/modules/Makefile.am
+$ZIP ${LIBWWWDIR}/modules/Makefile.in
+$ZIP ${LIBWWWDIR}/modules/md5/Makefile.am
+$ZIP ${LIBWWWDIR}/modules/md5/Makefile.in
+$ZIP ${LIBWWWDIR}/modules/md5/*.c
+$ZIP ${LIBWWWDIR}/modules/md5/*.h
+$ZIP ${LIBWWWDIR}/modules/expat/COPYING
+$ZIP ${LIBWWWDIR}/modules/expat/MANIFEST
+$ZIP ${LIBWWWDIR}/modules/expat/README
+$ZIP ${LIBWWWDIR}/modules/expat/conftools/*
+$ZIP ${LIBWWWDIR}/modules/expat/vms/*
+$ZIP ${LIBWWWDIR}/modules/expat/Makefile.am
+$ZIP ${LIBWWWDIR}/modules/expat/configure
+$ZIP ${LIBWWWDIR}/modules/expat/expat_config.h.in
+$ZIP ${LIBWWWDIR}/modules/expat/win32/*
+$ZIP ${LIBWWWDIR}/modules/expat/Changes
+$ZIP ${LIBWWWDIR}/modules/expat/Makefile.in
+$ZIP ${LIBWWWDIR}/modules/expat/configure.in
+$ZIP ${LIBWWWDIR}/modules/expat/lib/*.h
+$ZIP ${LIBWWWDIR}/modules/expat/lib/*.c
+$ZIP ${LIBWWWDIR}/config/Makefile.am
+$ZIP ${LIBWWWDIR}/config/Makefile.in
+$ZIP ${LIBWWWDIR}/config/config.guess
+$ZIP ${LIBWWWDIR}/config/config.sub
+$ZIP ${LIBWWWDIR}/config/install-sh
+$ZIP ${LIBWWWDIR}/config/ltmain.sh
+$ZIP ${LIBWWWDIR}/config/ltconfig
+$ZIP ${LIBWWWDIR}/config/makedefs.pl
+$ZIP ${LIBWWWDIR}/config/makeindx.pl
+$ZIP ${LIBWWWDIR}/config/makexprt.pl
+$ZIP ${LIBWWWDIR}/config/missing
+$ZIP ${LIBWWWDIR}/config/mkinstalldirs
+$ZIP ${LIBWWWDIR}/config/winConfigure.pl
+$ZIP ${LIBWWWDIR}/config/depcomp
+$ZIP -r ${REDLANDDIR}
+$ZIP -r ${WXWIDGETS}/art
+$ZIP -r ${WXWIDGETS}/build
+$ZIP -r ${WXWIDGETS}/debian
+$ZIP -r ${WXWIDGETS}/distrib
+$ZIP -r ${WXWIDGETS}/include
+$ZIP -r ${WXWIDGETS}/lib
+$ZIP ${WXWIDGETS}/locale/*.po
+$ZIP ${WXWIDGETS}/locale/Makefile
+$ZIP -r ${WXWIDGETS}/src
+$ZIP ${WXWIDGETS}/*.in
+$ZIP ${WXWIDGETS}/mkinstalldirs
+$ZIP ${WXWIDGETS}/*.spec
+$ZIP ${WXWIDGETS}/*.m4
+$ZIP ${WXWIDGETS}/*_vms
+$ZIP ${WXWIDGETS}/*.pl
+$ZIP ${WXWIDGETS}/install-sh
+$ZIP ${WXWIDGETS}/config*
+$ZIP ${WXWIDGETS}/*.txt
+$ZIP ${WXWIDGETS}/*.sh
+$ZIP -r ${MESA}
