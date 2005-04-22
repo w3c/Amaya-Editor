@@ -17,9 +17,9 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(TitleDlgWX, AmayaDialog)
-  EVT_BUTTON(     XRCID("wxID_CONFIRMBUTTON"), TitleDlgWX::OnConfirmButton )
-  EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"),  TitleDlgWX::OnCancelButton )
-  EVT_TEXT_ENTER( XRCID("wxID_TITLE"),         TitleDlgWX::OnConfirmButton )
+  EVT_BUTTON(     XRCID("wxID_OK"),      TitleDlgWX::OnConfirmButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"),  TitleDlgWX::OnCancelButton )
+  EVT_TEXT_ENTER( XRCID("wxID_TITLE"),   TitleDlgWX::OnConfirmButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -41,15 +41,13 @@ END_EVENT_TABLE()
   SetTitle( title );
 
   // update dialog labels
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_CANCEL) ));
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(doc_title);
 
-  // Give focus to ...
-  //  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetInsertionPointEnd();
 
-  Layout();
-  
   SetAutoLayout( TRUE );
 }
 
