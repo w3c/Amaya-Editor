@@ -47,6 +47,7 @@ LIBWWWDIR=libwww
 REDLANDDIR=redland
 WXWIDGETS=wxWidgets
 MESA=Mesa
+FREETYPE=freetype-2.1.9
 ZIP="zip -l $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
 ZIPB="zip $DEST/amaya-fullsrc-$AMAYAVERSION.zip"
 
@@ -435,3 +436,5 @@ $ZIP ${WXWIDGETS}/config*
 $ZIP ${WXWIDGETS}/*.txt
 $ZIP ${WXWIDGETS}/*.sh
 $ZIP -r ${MESA}
+$ZIP -r ${FREETYPE}
+
