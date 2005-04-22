@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE(PrintDlgWX, AmayaDialog)
   EVT_RADIOBOX( XRCID("wxID_OUTPUT_BOX"),       PrintDlgWX::OnOutputBox )
   EVT_CHECKBOX( XRCID("wxID_MANUAL_CHK"),       PrintDlgWX::OnManualChkBox )
   EVT_TEXT( XRCID("wxID_FILE_TXT_CTRL"),        PrintDlgWX::OnTypePrinter )
-#endif _WINDOWS
+#endif /* _WINDOWS */
   EVT_CHECKBOX( XRCID("wxID_TOC_CHK"),          PrintDlgWX::OnTocChkBox )
   EVT_CHECKBOX( XRCID("wxID_LINKS_CHK"),        PrintDlgWX::OnLinksChkBox )
   EVT_CHECKBOX( XRCID("wxID_PRINT_URL_CHK"),    PrintDlgWX::OnPrintUrlChkBox )
