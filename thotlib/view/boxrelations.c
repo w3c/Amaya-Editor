@@ -88,19 +88,12 @@ static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb,
 
 
 /*----------------------------------------------------------------------
-   InsertPosRelation etablit les liens de dependance entre les deux  
-   repers des boites :                                     
-   - double sens dans le cas du positionnement entre deux  
-   soeurs.                                                 
-   - sens unique dans le cas du positionnement entre fille 
-   et mere.                                                
-   - sens repere vers axe pour la definition des axes de   
-   reference (un deplacement du repere de pTargetBox       
-   modifie l'axe de reference de pOrginBox).               
-   - sens inverse dans le cas d'une dimension elastique    
-   (un deplacement du repere de pTargetBox modifie la      
-   dimension de pOrginBox).                                
-  ----------------------------------------------------------------------*/
+  InsertPosRelation stores position relations between box edges.
+  - One relation from Enclosing box to child box (OpHorizInc or OpVertInc).
+  - Two relations for sibling boxes (OpHorizDep or OpVertDep).
+  - One relation for Alignment axes (OpHorizRef or OpVertRef).
+  - Reverse relation for strechable dimensions (OpWidth or OpHeight).
+   ----------------------------------------------------------------------*/
 static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 			       OpRelation op, BoxEdge originEdge,
 			       BoxEdge targetEdge)
@@ -849,12 +842,201 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
      }
 }
 
+
 /*----------------------------------------------------------------------
-  ComputePosRelation applies the vertical/horizontal positionning rule
+  GetEnclosingViewport returns the enclosing abstractbox that defines
+  the viewport.
+  ----------------------------------------------------------------------*/
+static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
+{
+  if (pAb)
+    {
+      pAb = pAb->AbEnclosing;
+      while (pAb &&
+	     (pAb->AbLeafType != LtCompound ||
+	      pAb->AbPositioning == NULL ||
+	      pAb->AbPositioning->PnAlgorithm == PnInherit ||
+	      pAb->AbPositioning->PnAlgorithm == PnStatic ||
+	      pAb->AbPositioning->PnAlgorithm == PnRelative))
+	pAb = pAb->AbEnclosing;
+    }
+  return pAb;
+}
+
+
+/*----------------------------------------------------------------------
+  ComputePosRelation applies fixed and absolute positioning rules.
+  Return TRUE if the box is the box position is out of the standard flow.
+ ----------------------------------------------------------------------*/
+ThotBool ComputePositioning (PtrBox pBox, int frame)
+{
+  PtrAbstractBox      pAb, pRefAb;
+  PtrBox              pRefBox;
+  Positioning        *pos;
+  int                 x, y, w, h;
+  int                 l, t, r, b;
+
+#ifdef POSITIONING
+  if (pBox && pBox->BxAbstractBox)
+    {
+      if (pBox->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+	return FALSE;
+
+      pAb = pBox->BxAbstractBox;
+      pos = pAb->AbPositioning;
+      if (pAb->AbLeafType == LtCompound && pos &&
+	  (pos->PnAlgorithm == PnAbsolute || pos->PnAlgorithm == PnFixed))
+	{
+	  if (pBox->BxType == BoRow || pBox->BxType == BoColumn ||
+	      pBox->BxType == BoCell)
+	    {
+	      pos->PnAlgorithm = PnStatic;
+	      return FALSE;
+	    }
+
+	  // get the enclosing viewport
+	  pRefAb = GetEnclosingViewport (pAb);
+	  GetSizesFrame (frame, &w, &h);
+	  if (pos->PnAlgorithm == PnFixed)
+	    {
+	      // refer the frame
+	      x = ViewFrameTable[frame - 1].FrXOrg;
+	      y = ViewFrameTable[frame - 1].FrYOrg;
+	    }
+	  else
+	    x = y = 0;
+	  if (pRefAb == NULL)
+	    pRefBox = NULL;
+	  else if (pRefAb->AbBox)
+	    {
+	      // refer another box
+	      pRefBox = pRefAb->AbBox;
+	      w = pRefBox->BxW;
+	      h = pRefBox->BxH;
+	      x = pRefBox->BxXOrg
+		+ pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
+	      y = pRefBox->BxYOrg
+		+ pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
+	    }
+
+	  /* negative values don't apply */
+	  l = t = r = b = -1;
+	  if (pos->PnLeftUnit == UnAuto)
+	    {
+	      if (pos->PnRightUnit == UnAuto || pos->PnRightUnit == UnUndefined)
+		l = 0;
+	    }
+	  else if (pos->PnLeftUnit == UnPercent)
+	    l = PixelValue (pos->PnLeftDistance, UnPercent, (PtrAbstractBox) w, 0);
+	  else if (pos->PnLeftUnit != UnUndefined)
+	    l = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  if (pos->PnRightUnit != UnAuto && pos->PnRightUnit != UnUndefined)
+	    {
+	      if (pos->PnRightUnit == UnPercent)
+		r = PixelValue (pos->PnRightDistance, UnPercent,
+				(PtrAbstractBox) w, 0);
+	      else
+		r = PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
+				ViewFrameTable[frame - 1].FrMagnification);
+	    }
+	  if (pos->PnTopUnit == UnAuto)
+	    {
+	      if (pos->PnBottomUnit == UnAuto || pos->PnBottomUnit == UnUndefined)
+		t = 0;
+	    }
+	  else if (pos->PnTopUnit == UnPercent)
+	    t = PixelValue (pos->PnTopDistance, UnPercent, (PtrAbstractBox) h, 0);
+	  else if (pos->PnTopUnit != UnUndefined)
+	    t = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  if (pos->PnBottomUnit != UnAuto && pos->PnBottomUnit != UnUndefined)
+	    {
+	      if (pos->PnBottomUnit == UnPercent)
+		b = PixelValue (pos->PnBottomDistance, UnPercent,
+				(PtrAbstractBox) h, 0);
+	      else
+		b = PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	    }
+
+	  /* Move also enclosed boxes */
+	  pAb->AbHorizPosChange = FALSE;
+	  pAb->AbVertPosChange = FALSE;
+	  if (l >= 0)
+	    {
+	      //if (!IsXPosComplete (pBox))
+	      pBox->BxXToCompute = TRUE;
+	      pBox->BxXOutOfStruct = TRUE;
+	       XMove (pBox, NULL, x + l, frame);
+	       if (pRefBox)
+		 InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
+	       if (r >= 0)
+		 ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxWidth, 0, 0, 0, frame);
+	     }
+	   else if (r >= 0)
+	     {
+	       //if (!IsXPosComplete (pBox))
+	       pBox->BxXToCompute = TRUE;
+	       pBox->BxXOutOfStruct = TRUE;
+	       XMove (pBox, NULL, x + w - r - pBox->BxWidth, frame);
+	       if (pRefBox)
+		 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
+	       else
+		 // link to the root instead of the window
+		 InsertPosRelation (pBox,
+				    ViewFrameTable[frame -1].FrAbstractBox->AbBox,
+				    OpHorizDep, Right, Right);
+	       pBox->BxHorizEdge = Right;
+	     }
+	  else
+	    ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
+
+
+	   if (t >= 0)
+	     {
+	       //if (!IsYPosComplete (pBox))
+	       pBox->BxYToCompute = TRUE;
+	       pBox->BxYOutOfStruct = TRUE;
+	       YMove (pBox, NULL, y + t, frame);
+	       if (pRefBox)
+		 InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
+	       if (b >= 0)
+		 ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxHeight, 0, 0, frame);
+	     }
+	   else if (b >= 0)
+	     {
+	       //if (!IsYPosComplete (pBox))
+	       pBox->BxYToCompute = TRUE;
+	       pBox->BxYOutOfStruct = TRUE;
+	       YMove (pBox, NULL, y + h - b - pBox->BxHeight, frame);
+	       if (pRefBox)
+		 InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
+	       else
+		 // link to the root instead of the window
+		 InsertPosRelation (pBox,
+				    ViewFrameTable[frame -1].FrAbstractBox->AbBox,
+				    OpVertDep, Bottom, Bottom);
+	       pBox->BxVertEdge = Bottom;
+	     }
+	   else
+	     ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
+	  return TRUE;
+	}
+      else
+	return FALSE;
+    }
+  else
+#endif /* POSITIONING */
+    return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  ComputePosRelation applies the vertical/horizontal positioning rule
   according to the parameter horizRef for the box pBox. 
   The box origin BxXOrg or BxYOrg is updated and dependencies between 
   boxes are registered.  
-  Relation between values:
   ^
   BxXOrg
   <-LMargin-><-LBorder-><-LPadding-><-W-><-RPadding-><-RBorder-><-LRargin->
@@ -883,6 +1065,19 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
     }
+#ifdef POSITIONING
+  else if (pRefAb && !IsParentBox (pRefAb->AbBox, pBox))
+    /* ignore previous absolute positioning */
+    while (pRefAb && pRefAb->AbPositioning &&
+	   pRefAb->AbLeafType == LtCompound &&
+	   (pRefAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+	    pRefAb->AbPositioning->PnAlgorithm == PnFixed))
+      {
+	pRefAb = pRefAb->AbPrevious;
+	pAb->AbHorizPos.PosAbRef = pRefAb;
+      }
+#endif /* POSITIONING */
+	   
   if (pAb->AbFloat != 'N' &&
       (pAb->AbLeafType == LtPicture ||
        (pAb->AbLeafType == LtCompound &&
@@ -1760,6 +1955,28 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   /* Check the box visibility */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
+#ifdef POSITIONING
+      /* check if the width is set by positioning rules */
+      if (pAb->AbLeafType == LtCompound &&
+	  pAb->AbPositioning && horizRef &&
+	  pAb->AbPositioning->PnAlgorithm != PnStatic &&
+	  pAb->AbPositioning->PnAlgorithm != PnRelative &&
+	  pAb->AbPositioning->PnLeftUnit != UnAuto &&
+	   pAb->AbPositioning->PnLeftUnit != UnUndefined &&
+	  pAb->AbPositioning->PnRightUnit != UnAuto &
+	  pAb->AbPositioning->PnRightUnit != UnUndefined)
+	return FALSE;
+      if (pAb->AbLeafType == LtCompound &&
+	  pAb->AbPositioning && !horizRef &&
+	  pAb->AbPositioning->PnAlgorithm != PnStatic &&
+	  pAb->AbPositioning->PnAlgorithm != PnRelative &&
+	  pAb->AbPositioning->PnTopUnit != UnAuto &&
+	  pAb->AbPositioning->PnTopUnit != UnUndefined &&
+	  pAb->AbPositioning->PnBottomUnit != UnAuto &&
+	  pAb->AbPositioning->PnBottomUnit != UnUndefined)
+	return FALSE;
+#endif /* POSITIONING */
+
       pParentAb = pAb->AbEnclosing;
       /* Check validity of rules */
       if (horizRef && pAb->AbWidth.DimIsPosition)
@@ -1944,8 +2161,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
-	  dy = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding + t + b;
+	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding
+	    + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
+	  dy = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding
+	    + pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding + t + b;
 	  if (pParentAb == NULL)
 	    {
 	      /* It's the root box */
@@ -3179,14 +3398,12 @@ void ClearOutOfStructRelation (PtrBox pBox)
 
 
 /*----------------------------------------------------------------------
-  ClearPosRelation recherche la boite dont depend la position horizontale
-  (si horizRef est Vrai) sinon verticale de pBox :
-  - Elle peut dependre de son englobante (relation OpInclus chez elle).
-  - Elle peut dependre d'une voisine (deux relations OpLie).
-  - Elle peut avoir une relation hors-structure (deux relations OpLie).
-  Si cette dependance existe encore, on detruit les relations entre les
-  deux boites. L'indicateur BtX(Y)HorsStruct indique que la relation est
-  hors-structure.
+  ClearPosRelation looks for horizontal or vertical position relations
+  of the box.
+  - It could depend on the enclosing box (OpHorizInc or OpVertInc).
+  - It could depend on a sibling box (2 OpHorizDep or OpVertDep).
+  - It could depend on another box (2 OpHorizDep + BtXOutOfStruct
+    or OpVertDep + BtXOutOfStruct).
   ----------------------------------------------------------------------*/
 void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
 {

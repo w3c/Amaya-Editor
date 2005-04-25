@@ -1285,7 +1285,6 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   else
     {
       /* It's a geometrical composition */
-      
       /* Initially the inside left and the inside right are the equal */
       x = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin +
 	  pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
@@ -1296,10 +1295,11 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       *height = y;
       /* Move misplaced boxes */
       pChildAb = pFirstAb;
-      while (pChildAb != NULL)
+      while (pChildAb)
 	{
 	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox != NULL)
+	  if (!pChildAb->AbDead && pChildBox &&
+	      !ExtraFlow (pChildBox, frame))
 	    {
 	      if ((hMin || pCurrentBox->BxContentWidth) &&
 		  pChildAb->AbHorizEnclosing &&
@@ -1344,10 +1344,11 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
        * by the bottom edge of the extra lower enclosed box.
        */
       pChildAb = pFirstAb;
-      while (pChildAb != NULL)
+      while (pChildAb)
 	{
 	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox)
+	  if (!pChildAb->AbDead && pChildBox &&
+	      !ExtraFlow (pChildBox, frame))
 	    {
 	      if (pChildAb->AbHorizEnclosing &&
 		  (pChildAb->AbWidth.DimAbRef != pAb ||
@@ -1356,8 +1357,9 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		   pChildBox->BxType == BoTable))
 		{
 		  /* the width of that box doesn't depend on the enclosing */
-		  if (pChildBox->BxXOrg < 0)
-		    val = pChildBox->BxWidth;
+		  if (pChildBox->BxXOrg < x ||
+		      pChildAb->AbHorizPos.PosDistance < 0)
+		    val = x + pChildBox->BxWidth;
 		  else
 		    val = pChildBox->BxXOrg + pChildBox->BxWidth;
 		  if (val > *width)
@@ -1368,8 +1370,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		   pChildBox->BxContentHeight))
 		{
 		  /* the height of that box doesn't depend on the enclosing */
-		  if (pChildBox->BxYOrg < 0)
-		    val = pChildBox->BxHeight;
+		  if (pChildBox->BxYOrg < y)
+		    val = y + pChildBox->BxHeight;
 		  else
 		    val = pChildBox->BxYOrg + pChildBox->BxHeight;
 		  if (val > *height)
@@ -1977,7 +1979,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   int                 height;
   ThotBool            enclosedWidth, directParent;
   ThotBool            enclosedHeight, uniqueChild;
-  ThotBool            inlineChildren, inlineFloatC, dummyChild;
+  ThotBool            inlineChildren, inlineFloatC;
+  ThotBool            dummyChild, positioning;
 
   if (pAb->AbDead)
     return (NULL);
@@ -2027,7 +2030,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pCurrentBox->BxFont = font;
       pCurrentBox->BxUnderline = pAb->AbUnderline;
       pCurrentBox->BxThickness = pAb->AbThickness;
-      if (boxType == BoRow || boxType == BoColumn || boxType == BoCell)
+      if (boxType == BoRow || boxType == BoColumn || boxType == BoCell ||
+	  ExtraFlow (pCurrentBox, frame))
 	{
 	  /* float and inlines are not allowed for rows and cells */
 	  inLine = FALSE;
@@ -2370,33 +2374,36 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* recheck auto and % margins */
       CheckMBP (pAb, pCurrentBox, frame, TRUE);
       
-      /* Positionnement des origines de la boite construite */
+      /* Positioning of the created box */
       i = 0;
-      if (!inLine && !inLineFloat &&
-	  pCurrentBox->BxType != BoFloatGhost &&
-	  pCurrentBox->BxType != BoGhost)
+      positioning = ComputePositioning (pCurrentBox, frame);
+      if (!positioning)
 	{
-	  ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	  ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
-	}
-      else
-	{
-	  if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
-	    /* the inline rule doesn't act on this box */
-	    ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	  if (!inLine && !inLineFloat &&
+	      pCurrentBox->BxType != BoFloatGhost &&
+	      pCurrentBox->BxType != BoGhost)
+	    {
+	      ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	      ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	    }
 	  else
-	    /* the real position of the box depends of its horizontal
-	       reference axis */
-	    SetPositionConstraint (VertRef, pCurrentBox, &i);
-	  if (!pAb->AbVertEnclosing)
-	    /* the inline rule doesn't act on this box */
-	    ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
-	  else if (pAb->AbNotInLine)
-	    /* the inline rule doesn't act on this box */
-	    ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
-	  else
-	    /* the real position of the box depends of its horizontal reference axis */
-	    SetPositionConstraint (HorizRef, pCurrentBox, &i);
+	    {
+	      if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
+		/* the inline rule doesn't act on this box */
+		ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	      else
+		/* the box position depends of its horizontal reference axis */
+		SetPositionConstraint (VertRef, pCurrentBox, &i);
+	      if (!pAb->AbVertEnclosing)
+		/* the inline rule doesn't act on this box */
+		ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+	      else if (pAb->AbNotInLine)
+		/* the inline rule doesn't act on this box */
+		ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	      else
+		/* the box position depends of its horizontal reference axis */
+		SetPositionConstraint (HorizRef, pCurrentBox, &i);
+	    }
 	}
      
 #ifdef _GL
@@ -2825,9 +2832,11 @@ static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 	{
 	  /* On recherche le pave suivant ayant la meme regle par defaut */
 	  pNextAb = pAb->AbNext;
-	  while (pNextAb != NULL)
+	  while (pNextAb)
 	    {
-	      if (pNextAb->AbHorizPos.PosAbRef == NULL)
+	      if (ExtraFlow (pNextAb->AbBox, frame))
+		pNextAb = pNextAb->AbNext;
+	      else if (pNextAb->AbHorizPos.PosAbRef == NULL)
 		{
 		  /* Reevalue la regle du premier pave suivant non mort */
 		  if (!pNextAb->AbDead && pNextAb->AbBox
@@ -2850,9 +2859,11 @@ static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 	{
 	  /* On recherche le pave suivant ayant la meme regle par defaut */
 	  pNextAb = pAb->AbNext;
-	  while (pNextAb != NULL)
+	  while (pNextAb)
 	    {
-	      if (pNextAb->AbVertPos.PosAbRef == NULL)
+	      if (ExtraFlow (pNextAb->AbBox, frame))
+		pNextAb = pNextAb->AbNext;
+	      else if (pNextAb->AbVertPos.PosAbRef == NULL)
 		{
 		  /* Reevalue la regle du premier pave suivant non mort */
 		  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
@@ -4327,21 +4338,6 @@ void RebuildConcreteImage (int frame)
 	     /* unlock table formatting */
 	     TtaUnlockTableFormatting ();
 	   
-	   /* On elimine le scroll horizontal */
-	   /*GetSizesFrame (frame, &width, &height);*/
-	   //CheckScrollingWidth (frame);
-	   //if (pFrame->FrXOrg != FrameTable[frame].FrScrollOrg)
-	   // {
-	   //   pFrame->FrXOrg = FrameTable[frame].FrScrollOrg;
-	       /* enforce redrawing of the whole frame */
-	   //   DefClip (frame, -1, -1, -1, -1);
-	   //  }
-	   //if (!pAb->AbTruncatedHead && pFrame->FrYOrg != 0)
-	   //  {
-	   //    pFrame->FrYOrg = 0;
-	       /* enforce redrawing of the whole frame */
-	   //    DefClip (frame, -1, -1, -1, -1);
-	   //  }
 	   /* La frame est affichable */
 	   pFrame->FrReady = status;
 	   /* Traitement des englobements retardes */
@@ -4445,6 +4441,7 @@ ThotBool IsDead (PtrAbstractBox pAb)
 void ClearConcreteImage (int frame)
 {
   ViewFrame          *pFrame;
+  PtrFlow             pFlow;
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pFrame->FrAbstractBox != NULL)
@@ -4452,11 +4449,17 @@ void ClearConcreteImage (int frame)
       pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
       /* Faut-il retirer les marques de selection dans la fenetre */
       CloseTextInsertion ();
-      /*ClearViewSelection (frame);*/
       /* Liberation de la hierarchie */
       RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
       pFrame->FrAbstractBox = NULL;
-      pFrame->FrReady = TRUE;	/* La frame est affichable */
+      /* free all extra flows */
+      while (pFrame->FrFlow)
+	{
+	  pFlow = pFrame->FrFlow;
+	  pFrame->FrFlow = pFlow->FlNext;
+	  TtaFreeMemory (pFlow);
+	}
+      pFrame->FrReady = TRUE;	/* the window is now ready */
       DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 		      &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
@@ -4804,49 +4807,47 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    ThotBool            lock = TRUE;
 
 #ifdef _WINGUI
-     WIN_GetDeviceContext (frame);
+   WIN_GetDeviceContext (frame);
 #endif /* _WINGUI */
-
    doc = FrameTable[frame].FrDoc;
    if (doc == 0)
      return result;
 
    pLine = NULL;
-   /* Pas de pave Engen parametre */
    if (pAb && frame >= 1 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL &&
 	    (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
+	  /* The view has another root element */
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
-	/* On detruit toute la vue */
 	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
 	  {
+	    /* Remove the view content */
 	     if (pAb == pFrame->FrAbstractBox)
-		ClearConcreteImage (frame);
+	       ClearConcreteImage (frame);
 	     else
 		TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
 	  }
-	/* La vue est deja cree */
 	else if (pFrame->FrAbstractBox && pAb->AbEnclosing == NULL && pAb->AbNew)
+	  /* The view is already created */
 	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
-	/* Dans les autres cas */
-	/* nothing to be done if in mode NoComputedDisplay */
 	else if (documentDisplayMode[doc - 1] != NoComputedDisplay)
 	  {
-	     /* Traitement de la premiere creation */
+	    /* Other cases without NoComputedDisplay mode */
 	     if (pFrame->FrAbstractBox == NULL)
 	       {
-		  DefClip (frame, 0, 0, 0, 0);
-		  pFrame->FrXOrg = 0;
-		  pFrame->FrYOrg = 0;
-		  pFrame->FrAbstractBox = pAb;
-		  pFrame->FrSelectOneBox = FALSE;
-		  pFrame->FrSelectionBegin.VsBox = NULL;
-		  pFrame->FrSelectionEnd.VsBox = NULL;
-		  pFrame->FrReady = TRUE;
-		  pFrame->FrSelectShown = FALSE;
+		 /* first creation */
+		 DefClip (frame, 0, 0, 0, 0);
+                 pFrame->FrXOrg = 0;
+                 pFrame->FrYOrg = 0;
+                 pFrame->FrAbstractBox = pAb;
+		 pFrame->FrSelectOneBox = FALSE;
+                 pFrame->FrSelectionBegin.VsBox = NULL;
+                 pFrame->FrSelectionEnd.VsBox = NULL;
+                 pFrame->FrSelectShown = FALSE;
+		 pFrame->FrReady = TRUE;
+		 pFrame->FrFlow = NULL;
 	       }
 
 	     saveMode = documentDisplayMode[doc - 1];

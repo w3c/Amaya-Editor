@@ -286,7 +286,8 @@ BOXES
 	Height: Enclosing . Height;
 	Width: SqrtBase . Width + ROOT_OFFSET;
 	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;
+	HorizPos: Left = Enclosing . Left;
+	{HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;}
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
 	Background: Creator =;

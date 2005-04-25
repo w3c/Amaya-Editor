@@ -51,19 +51,19 @@ void VerticalScroll (int frame, int delta, int selection)
    int                 max, width;
    int                 lframe, hframe;
    PtrBox              srcbox;
-   ThotBool            add;
    ViewFrame          *pFrame;
-   PtrAbstractBox      pAbb;
+   PtrAbstractBox      pAb;
+   ThotBool            add;
 
    if (delta != 0)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-	if (pFrame->FrReady && pFrame->FrAbstractBox != NULL)
+	if (pFrame->FrReady && pFrame->FrAbstractBox)
 	  {
-	     pAbb = pFrame->FrAbstractBox;
+	     pAb = pFrame->FrAbstractBox;
 	     /* On termine l'insertion courante */
 	     CloseTextInsertion ();
-	     srcbox = pAbb->AbBox;
+	     srcbox = pAb->AbBox;
 	     /* Limites du scroll */
 	     if (srcbox != NULL)
 	       {
@@ -71,12 +71,12 @@ void VerticalScroll (int frame, int delta, int selection)
 		  add = FALSE;
 		  /* Au plus, la limite du document + le debordement vertical*/
 		  GetSizesFrame (frame, &lframe, &hframe);
-		  if (pAbb->AbTruncatedTail)
+		  if (pAb->AbTruncatedTail)
 		     max = delta;
 		  else
 		     max = srcbox->BxYOrg + srcbox->BxHeight -
 		                            pFrame->FrYOrg - hframe;
-		  if (pAbb->AbTruncatedHead)
+		  if (pAb->AbTruncatedHead)
 		     y = delta;
 		  else
 		    {
@@ -97,7 +97,11 @@ void VerticalScroll (int frame, int delta, int selection)
 			     delta = max;
 			  y = delta;
 			  height = hframe - y;
-			  width = lframe + 1;
+			  if (lframe > srcbox->BxWidth)
+			    /* pay attention to positioning boxes */
+			    width = srcbox->BxWidth;
+			  else
+			    width = lframe + 1;
 			  Scroll (frame, width, height, 0, y, 0, 0);
 			  height = pFrame->FrYOrg + hframe;
 			  DefClip (frame, pFrame->FrXOrg, height,
@@ -111,7 +115,11 @@ void VerticalScroll (int frame, int delta, int selection)
 			  if (delta < y)
 			     delta = y;
 			  height = hframe + delta;
-			  width = lframe + 1;
+			  if (lframe > srcbox->BxWidth)
+			    /* pay attention to positioning boxes */
+			    width = srcbox->BxWidth;
+			  else
+			    width = lframe + 1;
 			  y = -delta;
 			  Scroll (frame, width, height, 0, 0, 0, y);
 			  height = pFrame->FrYOrg;

@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool ExtraFlow ( PtrBox pBox,
+                            int frame );
 extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                            int frame );
 extern int FloatToInt ( float e );
@@ -54,6 +56,8 @@ extern void EncloseInLine ( PtrBox pBox,
 
 #else /* __STDC__ */
 
+extern ThotBool ExtraFlow ( PtrBox pBox,
+                              int frame );
 extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                              int frame );
 extern int FloatToInt ( float e );

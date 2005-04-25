@@ -1941,11 +1941,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
-	    {
-	      toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
-			pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
-			pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
-	    }
+	    toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
+		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	  
 	  /* check positionning constraints */
 	  if (!toMove ||
@@ -2004,7 +2002,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  pPosRel = pBox->BxPosRelations;
 	  /* move sibling boxes with their content */
 	  savpropage = Propagate;
-	  Propagate = ToAll;
 	  while (pPosRel)
 	    {
 	      i = 0;
@@ -2012,6 +2009,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      while (i < MAX_RELAT_POS && notEmpty)
 		{
 		  pRelation = &pPosRel->PosRTable[i];
+		  /* move all if the related box position is computed */
+		  if (pRelation->ReBox->BxXToCompute)
+		    Propagate = ToAll;
 		  if (pRelation->ReBox->BxAbstractBox)
 		    /* Ignore the back relation of a stretchable box */
 		    if (!pBox->BxHorizFlex ||
@@ -2463,7 +2463,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
-	  /* Check the validity of dependency rules */
+
+	  /* check positionning constraints */
 	  if (!toMove || pBox->BxVertEdge == Top ||
 	      pBox->BxVertEdge == HorizRef)
 	    {
@@ -2518,7 +2519,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  pPosRel = pBox->BxPosRelations;
 	  /* move sibling boxes with their content */
 	  savpropage = Propagate;
-	  Propagate = ToAll;
 	  while (pPosRel)
 	    {
 	      i = 0;
@@ -2526,6 +2526,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      while (i < MAX_RELAT_POS && notEmpty)
 		{
 		  pRelation = &pPosRel->PosRTable[i];
+		  /* move all if the related box position is computed */
+		  if (pRelation->ReBox->BxYToCompute)
+		    Propagate = ToAll;
 		  if (pRelation->ReBox->BxAbstractBox)
 		    /* Ignore the back relation of a stretchable box */
 		    if (!pBox->BxVertFlex ||
@@ -3435,10 +3438,11 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        * by the right edge of the righter enclosed box.
        */
       pChildAb = pAb->AbFirstEnclosed;
-      while (pChildAb != NULL)
+      while (pChildAb)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
+	      !ExtraFlow (pChildBox, frame) &&
 	      pChildAb->AbHorizEnclosing &&
 	      (pChildAb->AbWidth.DimAbRef != pAb ||
 	       pChildBox->BxContentWidth ||
@@ -3484,7 +3488,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			else
 			  i = pChildBox->BxXOrg + pChildBox->BxWidth;
 		      }
-		    else if (pChildBox->BxXOrg < x)
+		    else if (pChildBox->BxXOrg < x ||
+			     pChildAb->AbHorizPos.PosDistance < 0)
 		      /* don't take into account negative origins */
 		      i = x + pChildBox->BxWidth;
 		    else
@@ -3510,10 +3515,12 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        */
       pChildAb = pAb->AbFirstEnclosed;
       if (movingChild && val != 0)
-	while (pChildAb != NULL)
+	while (pChildAb)
 	  {
 	    pChildBox = pChildAb->AbBox;
-	    if (!pChildAb->AbDead && pChildBox && pChildAb->AbHorizEnclosing)
+	    if (!pChildAb->AbDead && pChildBox &&
+		!ExtraFlow (pChildBox, frame) &&
+		pChildAb->AbHorizEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */
 		pRelativeBox = GetHPosRelativeBox (pChildBox, NULL);
@@ -3669,13 +3676,14 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        * by the bottom edge of the lower enclosed box.
        */
       pChildAb = pAb->AbFirstEnclosed;
-      while (pChildAb != NULL)
+      while (pChildAb)
 	{
 	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead
-	      && pChildBox != NULL
-	      && pChildAb->AbVertEnclosing
-	      && (pChildAb->AbHeight.DimAbRef != pAb || pChildBox->BxContentHeight))
+	  if (!pChildAb->AbDead && pChildBox &&
+	      !ExtraFlow (pChildBox, frame) &&
+	      pChildAb->AbVertEnclosing &&
+	      (pChildAb->AbHeight.DimAbRef != pAb ||
+	       pChildBox->BxContentHeight))
 	    {
 	      /* look for the box which relies the box to its enclosing */
 	      pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);
@@ -3751,10 +3759,12 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
        */
       pChildAb = pAb->AbFirstEnclosed;
       if (movingChild && val != 0)
-	while (pChildAb != NULL)
+	while (pChildAb)
 	  {
 	    pChildBox = pChildAb->AbBox;
-	    if (!pChildAb->AbDead && pChildBox != NULL && pChildAb->AbVertEnclosing)
+	    if (!pChildAb->AbDead && pChildBox &&
+		!ExtraFlow (pChildBox, frame) &&
+		pChildAb->AbVertEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */
 		pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);

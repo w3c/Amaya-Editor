@@ -1769,7 +1769,7 @@ void FreeDifferedRule (PtrDelayedPRule pRR)
 }
 
 /*----------------------------------------------------------------------
-   InitKernelMemory initialise l'allocation memoire pour le kernel   
+   InitKernelMemory initialize memory for the kernel   
   ----------------------------------------------------------------------*/
 void InitKernelMemory ()
 {
@@ -1777,16 +1777,10 @@ void InitKernelMemory ()
    ViewFrame          *pFrame;
 
    /* Toutes les frames sont libres */
-   for (i = 1; i <= MAX_FRAME; i++)
+   for (i = 0; i < MAX_FRAME; i++)
      {
-	pFrame = &ViewFrameTable[i - 1];
-	pFrame->FrAbstractBox = NULL;
-	pFrame->FrXOrg = 0;
-	pFrame->FrYOrg = 0;
-	pFrame->FrClipXBegin = 0;
-	pFrame->FrClipXEnd = 0;
-	pFrame->FrClipYBegin = 0;
-	pFrame->FrClipYEnd = 0;
+	pFrame = &ViewFrameTable[i];
+	memset (pFrame, 0, sizeof (ViewFrame));
      }
    /* Aucune boite allouee et liberee */
    PtFree_Box = NULL;
@@ -1828,7 +1822,7 @@ void GetPosBlock (PtrPosRelations * pBlock)
    if (pNewBlock)
      {
        memset (pNewBlock, 0, sizeof (PosRelations));
-        NbUsed_PosB++;
+       NbUsed_PosB++;
      }
 }
 

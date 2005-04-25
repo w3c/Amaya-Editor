@@ -430,14 +430,14 @@ typedef struct _DelayedPRule
 
 typedef struct _Positioning
 {
-  PosAlgorithm    PnAlgorithm;
   int             PnTopDistance;
-  TypeUnit        PnTopUnit;
   int             PnRightDistance;
-  TypeUnit        PnRightUnit;
   int             PnBottomDistance;
-  TypeUnit        PnBottomUnit;
   int             PnLeftDistance;
+  PosAlgorithm    PnAlgorithm;
+  TypeUnit        PnTopUnit;
+  TypeUnit        PnRightUnit;
+  TypeUnit        PnBottomUnit;
   TypeUnit        PnLeftUnit;
 } Positioning;
 
@@ -636,9 +636,22 @@ typedef struct _AbstractBox
 #define AbPolyLineShape u.s4._AbPolyLineShape_
 #define AbFirstPathSeg u.s5._AbFirstPathSeg_
 
+typedef struct _Flow *PtrFlow;
+typedef struct _Flow
+{
+  PtrAbstractBox  FlRootBox;  /* Pointer to the associated root abstract box */
+  PtrFlow         FlPrevious; /* Previous Flow */
+  PtrFlow         FlNext;     /* Next Flow */
+  PosAlgorithm    FlType;     /* Flow type: PnRelative, PnAbsolute, PnFixed */
+  int             FlXStart;   /* Clipping zone of this flow */
+  int             FlXEnd;
+  int             FlYStart;
+  int             FlYEnd;
+}Flow;
+
 typedef struct _ViewFrame
 {
-  PtrAbstractBox         FrAbstractBox;	/* Pointer on the root abstract box of the View */
+  PtrAbstractBox  FrAbstractBox;/* Pointer on the root abstract box of the View */
   int             FrXOrg;	/* X origin from root */
   int             FrYOrg;       /* Y origin from root */
 #ifdef _GL
@@ -658,6 +671,7 @@ typedef struct _ViewFrame
   ViewSelection   FrSelectionEnd;	/* End mark of the selection */
   int             FrVisibility;		/* Window visibility threshold */
   int             FrMagnification;	/* Window zoom factor */
+  PtrFlow         FrFlow;       /* Pointer to extra flows */
 } ViewFrame;
 
 typedef struct _VueDeDoc
