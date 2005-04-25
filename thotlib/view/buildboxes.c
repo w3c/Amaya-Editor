@@ -4457,9 +4457,6 @@ void ClearConcreteImage (int frame)
       RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
       pFrame->FrAbstractBox = NULL;
       pFrame->FrReady = TRUE;	/* La frame est affichable */
-#ifdef _WX
-      pFrame->FrMagnification = 0; /* reset the zoom factor */
-#endif /* _WX */
       DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 		      &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,

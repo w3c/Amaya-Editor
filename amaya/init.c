@@ -2743,29 +2743,35 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 #ifdef _WX
        /* init the internal default documents menus states : enable/disable, toggle/untoggle
-	* need to be done before frame creation because the active frame will use it to refresh the menus */
+        * need to be done before frame creation because the active frame will use it to refresh the menus */
        if (!replaceOldDoc || !isOpen)
-	 TtaInitMenuItemStats(doc);
+         TtaInitMenuItemStats(doc);
        TtaInitTopMenuStats(doc);
 #endif /* _WX */
 
        /* open the main view */
        if (docType == docLog)
-	 /* without menu bar */
-	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, FALSE,
-	                             window_id, page_id, page_position);
+         /* without menu bar */
+         mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, FALSE,
+                                     window_id, page_id, page_position);
        else if (docType == docLibrary && method == CE_RELATIVE)
-	 /* without menu bar */
-	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE,
-	                             window_id, page_id, page_position);
+         /* without menu bar */
+         mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE,
+                                     window_id, page_id, page_position);
        else
-	 mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE,
-	                             window_id, page_id, page_position);
+         mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE,
+                                     window_id, page_id, page_position);
        if (mainView == 0)
-	 {
-	   TtaCloseDocument (doc);
-	   return (0);
-	 }
+         {
+           TtaCloseDocument (doc);
+           return (0);
+         }
+
+#ifdef _WX
+       /* init the zoom factor to 0 if the document isn't replaced */
+       if (!replaceOldDoc/* && docType!=docSource*/)
+         TtaSetZoom (doc, -1, 0);
+#endif /* _WX */
 
        /* update the menus according to the profile */
        /* By default no log file */

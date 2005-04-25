@@ -390,13 +390,13 @@ void TtaSetSensibility (Document document, View view, int value)
      {
        frame = GetWindowNumber (document, view);
        if (frame != 0)
-	 {
-	   GetFrameParams (frame, &valvisib, &valzoom);
-	   /* Translation of the sensibility into threshold */
-	   SetFrameParams (frame, value, valzoom);
-	 }
+         {
+           GetFrameParams (frame, &valvisib, &valzoom);
+           /* Translation of the sensibility into threshold */
+           SetFrameParams (frame, value, valzoom);
+         }
        else
-	 TtaError (ERR_invalid_parameter);
+         TtaError (ERR_invalid_parameter);
      }
 }
 
@@ -408,7 +408,7 @@ void TtaSetSensibility (Document document, View view, int value)
    view of a given document.
    Parameters:
    document: the document. Cannot be 0.
-   view: the view.
+   view: the view. (-1 to set all views)
    value: new value of the zoom.
   ----------------------------------------------------------------------*/
 void TtaSetZoom (Document document, View view, int value)
@@ -416,19 +416,31 @@ void TtaSetZoom (Document document, View view, int value)
   int                 frame;
   int                 valvisib, valzoom;
 
+  /* if view == -1, loop on every views */
+  if (view == -1)
+    {
+      view = 1;
+      while( view <= MAX_VIEW_DOC )
+        {
+          TtaSetZoom(document, view, value);
+          view++;
+        }
+      return;
+    }
+  
   UserErrorCode = 0;
   frame = GetWindowNumber (document, view);
   if (frame != 0)
     {
       GetFrameParams (frame, &valvisib, &valzoom);
       if (valzoom < -10 || valzoom > 10)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else
-	{
-	  /* Translation of the sensibility into threshold */
-	  valzoom = value;
-	  SetFrameParams (frame, valvisib, valzoom);
-	}
+        {
+          /* Translation of the sensibility into threshold */
+          valzoom = value;
+          SetFrameParams (frame, valvisib, valzoom);
+        }
     }
 }
 
