@@ -31,7 +31,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #define PARAM_INCREMENT 50
-#define MAX_OPTIONS 200
+#define MAX_OPTIONS 2000
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
 
