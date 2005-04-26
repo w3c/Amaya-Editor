@@ -470,6 +470,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 {
    Element             elFound;
    AttributeType       attrType;
+   char               *name;
 
    /* search all elements having an attribute NAME */
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
@@ -522,6 +523,26 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 	  }
      }
 #endif /* ANNOTATIONS */
+#ifdef XML_GENERIC
+   if (!elFound)
+     {
+       /* search all elements having an attribute ID (defined in the
+	  XML DTD) */
+       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+       if (attrType.AttrSSchema)
+	  {
+	    name = TtaGetSSchemaName (attrType.AttrSSchema);
+	    if (strcmp(name, "HTML") &&
+		strcmp(name, "MathML") &&
+		strcmp(name, "SVG"))
+	      {
+		attrType.AttrTypeNum = XML_ATTR_xmlid;
+		elFound = GetElemWithAttr (doc, attrType, nameVal,
+					   ignoreAtt, ignoreEl);
+	      }
+	  }
+     }
+#endif /* XML_GENERIC */
 
    return (elFound);
 }
@@ -3108,7 +3129,8 @@ void CheckSynchronize (NotifyElement *event)
 	       (DocumentTypes[SelectionDoc] == docHTML ||
 		DocumentTypes[SelectionDoc] == docSVG ||
 		DocumentTypes[SelectionDoc] == docLibrary ||
-		DocumentTypes[SelectionDoc] == docMath)))
+		DocumentTypes[SelectionDoc] == docMath ||
+		DocumentTypes[SelectionDoc] == docXml)))
 	    {
 	      if (event->info == 1)
 		/* an undo operation was done in event->document */

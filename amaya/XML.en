@@ -24,6 +24,8 @@ xmlcomment_line: \0
 xmlid: xml:id
 xmlpi: PI
 xmlpi_line: \0
+xml_space_default: default
+xml_space_preserve: preserve
 xml_space: xml:space
 doctype_line: \0
 cdata_line: \0

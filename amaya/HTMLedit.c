@@ -1646,7 +1646,7 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
   AttributeType     attrType;
   Attribute         attr;
   Element	    image, elFound;
-  char             *value;
+  char             *value, *name;
   char              url[MAX_LENGTH];
   int               length, i;
   ThotBool          change, checkID, checkNAME, result = FALSE;
@@ -1654,7 +1654,8 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   checkID = checkNAME = FALSE;
-  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp(name, "HTML"))
     {
       /* it's an element from the XHTML namespace */
       if (elType.ElTypeNum == HTML_EL_Anchor ||
@@ -1680,12 +1681,12 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 	/* Look for an ID attribute */
 	attrType.AttrTypeNum = HTML_ATTR_ID;
     }
-  else if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+  else if (!strcmp(name, "MathML"))
     /* it's an element from the MathML namespace, look for the
        id attribute from the same namespace */
     attrType.AttrTypeNum = MathML_ATTR_id;
 #ifdef _SVG
-  else if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+  else if (!strcmp(name, "SVG"))
     /* it's an element from the SVG namespace, look for the
        id attribute from the same namespace */
     attrType.AttrTypeNum = SVG_ATTR_id;
@@ -1715,17 +1716,17 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 		{
 		  /* skip form elements */
 		  foundType = TtaGetElementType (elFound);
-		  if (!strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") &&
-		      foundType.ElTypeNum != HTML_EL_Input &&
-		      foundType.ElTypeNum != HTML_EL_Text_Input &&
-		      foundType.ElTypeNum != HTML_EL_Password_Input &&
-		      foundType.ElTypeNum != HTML_EL_File_Input &&
-		      foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
-		      foundType.ElTypeNum != HTML_EL_Radio_Input &&
-		      foundType.ElTypeNum != HTML_EL_Submit_Input &&
-		      foundType.ElTypeNum != HTML_EL_Reset_Input &&
-		      foundType.ElTypeNum != HTML_EL_Button_Input &&
-		      foundType.ElTypeNum != HTML_EL_Hidden_Input)
+		  if (strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") ||
+		      (foundType.ElTypeNum != HTML_EL_Input &&
+		       foundType.ElTypeNum != HTML_EL_Text_Input &&
+		       foundType.ElTypeNum != HTML_EL_Password_Input &&
+		       foundType.ElTypeNum != HTML_EL_File_Input &&
+		       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
+		       foundType.ElTypeNum != HTML_EL_Radio_Input &&
+		       foundType.ElTypeNum != HTML_EL_Submit_Input &&
+		       foundType.ElTypeNum != HTML_EL_Reset_Input &&
+		       foundType.ElTypeNum != HTML_EL_Button_Input &&
+		       foundType.ElTypeNum != HTML_EL_Hidden_Input))
 		    {
 		      /* Not a form element, the NAME must be changed */
 		      change = TRUE;
@@ -1928,8 +1929,10 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
     }
   else if (!strcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
+#ifdef _SVG
   else if (!strcmp (schema_name, "SVG"))
     attrType.AttrTypeNum = SVG_ATTR_id;
+#endif /* _SVG */
 
   /* we didn't find an attribute or we can't put an ID attribute
      in this element */

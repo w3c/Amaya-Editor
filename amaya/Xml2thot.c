@@ -3038,7 +3038,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
    int		    attrKind, val;
    unsigned char    msgBuffer[MaxMsgLength];
    int              length;
-   char            *buffer;
+   char            *buffer, *name;
    Language         lang;
 
    TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
@@ -3107,6 +3107,26 @@ static void EndOfXmlAttributeValue (char *attrValue)
 		   XMLcontext.language = lang;
 		   SetLanguagInXmlStack (lang);
 		 }
+	     }
+	   else
+	     {
+	       /* check id attributes */
+	       name = TtaGetSSchemaName (attrType.AttrSSchema);
+	       if ((!strcmp(name, "MathML") &&
+		    attrType.AttrTypeNum == MathML_ATTR_id)
+#ifdef _SVG
+		   || (!strcmp(name, "SVG") &&
+		       attrType.AttrTypeNum == SVG_ATTR_id)
+#endif /* _SVG */
+#ifdef XML_GENERIC
+		   || (strcmp(name, "HTML") &&
+		       strcmp(name, "MathML") &&
+		       strcmp(name, "SVG") &&
+		       attrType.AttrTypeNum == XML_ATTR_xmlid)
+#endif /* XML_GENERIC */
+		   )
+		 CheckUniqueName (XMLcontext.lastElement, XMLcontext.doc,
+				  currentAttribute, attrType);
 	     }
 	 }
        break;
