@@ -96,7 +96,7 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
 wxString TtaGetHomeDir()
 {
 #ifdef _WINDOWS
-	wxChar      buffer[MAX_PATH+1];
+	wxChar      buffer[1000];
 	DWORD       dwSize;
 
    typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
