@@ -1595,21 +1595,21 @@ void TtaRaiseView (Document document, View view)
       
       /* TODO: the page position should depends of the current active view */
       if (page_position == 0)
-	page_position = 2;
+        page_position = 2;
       
       TtaAttachFrame( frame_id,
-		      window_id,
-		      page_id,
-		      page_position );
+                      window_id,
+                      page_id,
+                      page_position );
 #endif /* _WX */
 #ifdef _GTK
       if (w != 0)
-	gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
+        gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
 #ifdef _WINGUI
       {
-	OpenIcon (FrMainRef[frame_id]);
-	SetForegroundWindow (FrMainRef[frame_id]);
+        OpenIcon (FrMainRef[frame_id]);
+        SetForegroundWindow (FrMainRef[frame_id]);
       }
 #endif /* _WINGUI */
     }
@@ -1624,16 +1624,15 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
   int                 doc;
   int                 view;
 
-
   if (ActiveFrame &&
       pDoc && pDoc->DocSSchema &&
       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect) &&
       strcmp (pDoc->DocSSchema->SsName, "TextFile"))
     {
       /* recupere le document concerne */
-      doc = FrameTable[ActiveFrame].FrDoc;
+      doc = IdentDocument(pDoc);
       for (view = 1; view <= MAX_VIEW_DOC; view++)
-	TtaSetStatus ((Document) doc, view, text, NULL);
+        TtaSetStatus ((Document) doc, view, text, NULL);
       /* sel old message */
       strncpy (OldMsgSelect, text, MAX_TXT_LEN);
       OldDocMsgSelect = pDoc;     
@@ -1661,61 +1660,60 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
       frame = GetWindowNumber (document, view);
       if (frame == 0)
-	/* try to display in document 1 */
-	frame = GetWindowNumber (1, view);
+        /* try to display in document 1 */
+        frame = GetWindowNumber (1, view);
       if (frame != 0)
 #ifndef _WX
-	if (FrameTable[frame].WdStatus != 0)
+        if (FrameTable[frame].WdStatus != 0)
 #endif /* _WX */
-	  {
-	    length = strlen (text) + 1;
-	    if (name)
-	      length += strlen (name);
-	    s = (char *)TtaGetMemory (length);
+          {
+            length = strlen (text) + 1;
+            if (name)
+              length += strlen (name);
+            s = (char *)TtaGetMemory (length);
 #ifdef _WINGUI
-	    if (name)
-	      /* text est un format */
-	      sprintf (s, text, name);
-	    else
-	      strncpy (s, text, length);
-
-	    SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
-	    SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+            if (name)
+              /* text est un format */
+              sprintf (s, text, name);
+            else
+              strncpy (s, text, length);
+            
+            SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
+            SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #endif /* _WINGUI */
 #ifdef _GTK
-	    if (name)
-	      {
-		/* text est un format */
-		sprintf (s, text, name);
-		title_string = s;
-	      }
-	    else
-	      title_string = text;
-	    gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-			       (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
-	    gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
-				title_string);
-	    gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
+            if (name)
+              {
+                /* text est un format */
+                sprintf (s, text, name);
+                title_string = s;
+              }
+            else
+              title_string = text;
+            gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+                               (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+            gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+                                (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+                                title_string);
+            gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* _GTK */
-
+            
 #ifdef _WX
-	    if (name)
-	      /* text est un format */
-	      sprintf (s, text, name);
-	    else
-	      strncpy (s, text, length);
-
-	    /* 
-	     * do not use the FrameTable[frame].WdStatus field because it's simplier
-	     * to update only the frame's parent window
-	     */
-	    FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
+            if (name)
+              /* text est un format */
+              sprintf (s, text, name);
+            else
+              strncpy (s, text, length);
+            
+            /* 
+             * do not use the FrameTable[frame].WdStatus field because it's simplier
+             * to update only the frame's parent window
+             */
+            FrameTable[frame].WdFrame->SetStatusBarText( TtaConvMessageToWX( s ) );
 #endif /* _WX */
-	    
-	    TtaFreeMemory (s);
-	  }
-      
+            
+            TtaFreeMemory (s);
+          }
     }
 }
 

@@ -679,9 +679,7 @@ void AmayaFrame::SetActive( bool active )
     return;
 
   // the main statusbar text is replaced by the current frame one
-  wxStatusBar * p_statusbar = p_window->GetStatusBar();
-  if ( p_statusbar )
-      p_statusbar->SetStatusText( m_StatusBarText );
+  RefreshStatusBarText();
 
   // update the window title
   SetFrameTitle( GetFrameTitle() );
@@ -741,6 +739,18 @@ void AmayaFrame::RaiseFrame()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
+ *      Method:  RefreshStatusBarText
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFrame::RefreshStatusBarText()
+{
+  SetStatusBarText( m_StatusBarText );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
  *      Method:  SetStatusBarText
  * Description:  
  *--------------------------------------------------------------------------------------
@@ -757,14 +767,14 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
       // the window's menubar must be updated with the new active frame's one
       AmayaWindow * p_window = GetWindowParent();
       if ( !p_window )
-	return;
+        return;
       
       // the main statusbar text is replaced by the current frame one
       wxStatusBar * p_statusbar = p_window->GetStatusBar();
       if ( p_statusbar )
-	{
-	  p_statusbar->SetStatusText( m_StatusBarText );
-	}
+        {
+          p_statusbar->SetStatusText( m_StatusBarText );
+        }
     }
 }
 

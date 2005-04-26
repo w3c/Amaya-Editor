@@ -96,6 +96,7 @@ class AmayaNormalWindow : public AmayaWindow
   void OnMenuItem( wxCommandEvent& event );
   void OnMenuClose( wxMenuEvent& event );
   void OnMenuOpen( wxMenuEvent& event );
+  void OnMenuHighlight( wxMenuEvent& event );
   void OnSplitterUnsplit( wxSplitterEvent& event );
   void OnSplitterDClick( wxSplitterEvent& event );
   void OnSplitterPosChanged( wxSplitterEvent& event );

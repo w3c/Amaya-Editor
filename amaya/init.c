@@ -5216,9 +5216,12 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
       return (0);
     }
+#ifndef _WX
   else
     /* clean up the status line */
     TtaSetStatus (baseDoc, 1, " ", NULL);
+#endif /* _WX */
+
   ok = TRUE;
   target       = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);

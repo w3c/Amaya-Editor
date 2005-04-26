@@ -516,6 +516,21 @@ void AmayaNormalWindow::OnMenuClose( wxMenuEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
+ *      Method:  OnMenuHighlight
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::OnMenuHighlight( wxMenuEvent& event )
+{
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuHighlight - menu_id=%d"), event.GetMenuId() );
+  AmayaFrame * p_frame = GetActiveFrame();
+  if (p_frame)
+    p_frame->RefreshStatusBarText();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
  *      Method:  OnSplitterPosChanged
  * Description:  this method is called when the splitter position has changed
  *--------------------------------------------------------------------------------------
@@ -728,6 +743,7 @@ void AmayaNormalWindow::RefreshFullScreenToggleMenu()
 BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_OPEN(  AmayaNormalWindow::OnMenuOpen )
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
+  EVT_MENU_HIGHLIGHT_ALL( AmayaNormalWindow::OnMenuHighlight )
   EVT_MENU( -1,   AmayaNormalWindow::OnMenuItem ) 
   EVT_CLOSE(      AmayaNormalWindow::OnClose )
 

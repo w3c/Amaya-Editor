@@ -79,6 +79,7 @@ public:
   void HideScrollbar( int scrollbar_id );  
 
   void SetStatusBarText( const wxString & text );
+  void RefreshStatusBarText();
 
   void     SetWindowTitle( const wxString & window_name );
   wxString GetWindowTitle();
