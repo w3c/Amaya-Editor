@@ -5094,6 +5094,7 @@ void ParseExternalDocument (char     *fileName,
 	  /* Move the target element of the external document
 	     as a sub-tree of the element extEl in the source document */
 	  /* Search the target element */
+#ifdef _SVG
 	  extAttrType.AttrSSchema = TtaGetSSchema ("SVG", externalDoc);
 	  if (extAttrType.AttrSSchema)
 	    /* This document uses the SVG schema */
@@ -5102,7 +5103,7 @@ void ParseExternalDocument (char     *fileName,
 	      idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL, NULL);
 	    }
 	  /* Do the actual copy */
-	  if (idEl != NULL)
+	  if (idEl)
 	    {
 	      elType = TtaGetElementType (extEl);
 	      if (elType.ElTypeNum == SVG_EL_tref &&
@@ -5116,6 +5117,7 @@ void ParseExternalDocument (char     *fileName,
 		  TtaInsertFirstChild (&copy, extEl, doc);
 		}
 	    }
+#endif /* _SVG */
 	}
       else
 	{

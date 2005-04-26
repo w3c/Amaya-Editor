@@ -570,10 +570,6 @@ void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnApply( wxCommandEvent& event )
 {
-  if (!IsFreezed())
-    if (m_pAttrList->GetSelection() < 0 || !m_pAttrList->IsChecked(m_pAttrList->GetSelection()))
-      return;
-
   switch (m_CurrentAttType)
     {
     case wxATTR_TYPE_TEXT:

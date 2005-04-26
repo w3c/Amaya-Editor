@@ -11,7 +11,7 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
    Highlight = Yes_;    { to show the XML element corresponding to the
 			  current selection in the source view }
-   id = Text;			{ id }
+   xmlid = Text;			{ id }
    class = Text;		{ class }
    PseudoClass = Text;
 

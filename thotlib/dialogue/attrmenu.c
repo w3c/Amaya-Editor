@@ -1462,6 +1462,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
       isACCESS = (!strcmp (tmp, "accesskey") &&
 		  !strcmp (SchCurrentAttr->SsName, "HTML"));
       isID = (!strcmp (tmp, "id") ||
+	      !strcmp (tmp, "xml:id") ||
 	      (!strcmp (tmp, "name") &&
 	       !strcmp (SchCurrentAttr->SsName, "HTML")));
       if ((isACCESS || isID) && TextAttrValue[0] == EOS)

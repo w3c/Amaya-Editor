@@ -21,8 +21,10 @@ PAGE_BREAK: Page_break
 Language: xml:lang
 xmlcomment: comment
 xmlcomment_line: \0
+xmlid: xml:id
 xmlpi: PI
 xmlpi_line: \0
+xml_space: xml:space
 doctype_line: \0
 cdata_line: \0
 XML_Element: \0

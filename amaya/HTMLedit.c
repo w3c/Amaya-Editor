@@ -1691,7 +1691,11 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
     attrType.AttrTypeNum = SVG_ATTR_id;
 #endif /* _SVG */
   else
+#ifdef XML_GENERIC
+    attrType.AttrTypeNum = XML_ATTR_xmlid;
+#else /* XML_GENERIC */
     attrType.AttrTypeNum = 0;
+#endif /* XML_GENERIC */
   
   if (attrType.AttrTypeNum != 0)
     {
@@ -1713,17 +1717,17 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 		  foundType = TtaGetElementType (elFound);
 		  if (!strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") &&
 		      foundType.ElTypeNum != HTML_EL_Input &&
-		       foundType.ElTypeNum != HTML_EL_Text_Input &&
-		       foundType.ElTypeNum != HTML_EL_Password_Input &&
-		       foundType.ElTypeNum != HTML_EL_File_Input &&
-		       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
-		       foundType.ElTypeNum != HTML_EL_Radio_Input &&
-		       foundType.ElTypeNum != HTML_EL_Submit_Input &&
-		       foundType.ElTypeNum != HTML_EL_Reset_Input &&
-		       foundType.ElTypeNum != HTML_EL_Button_Input &&
-		       foundType.ElTypeNum != HTML_EL_Hidden_Input)
+		      foundType.ElTypeNum != HTML_EL_Text_Input &&
+		      foundType.ElTypeNum != HTML_EL_Password_Input &&
+		      foundType.ElTypeNum != HTML_EL_File_Input &&
+		      foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
+		      foundType.ElTypeNum != HTML_EL_Radio_Input &&
+		      foundType.ElTypeNum != HTML_EL_Submit_Input &&
+		      foundType.ElTypeNum != HTML_EL_Reset_Input &&
+		      foundType.ElTypeNum != HTML_EL_Button_Input &&
+		      foundType.ElTypeNum != HTML_EL_Hidden_Input)
 		    {
-		      /* Yes. Avoid duplicate NAMEs */
+		      /* Not a form element, the NAME must be changed */
 		      change = TRUE;
 		      i++;
 		      sprintf (&value[length], "%d", i);
@@ -1903,7 +1907,11 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
     }
   /* in function of the target elType, we choose the correct
      ATTR_ID value and schema */
+#ifdef XML_GENERIC
+  attrType.AttrTypeNum = XML_ATTR_xmlid;
+#else /* XML_GENERIC */
   attrType.AttrTypeNum = 0;
+#endif /* XML_GENERIC */
   schema_name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (schema_name, "HTML"))
     {

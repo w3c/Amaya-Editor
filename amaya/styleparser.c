@@ -5744,7 +5744,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 	  else
 #ifdef XML_GENERIC
-	    ctxt->attrType[j] = XML_ATTR_id;
+	    ctxt->attrType[j] = XML_ATTR_xmlid;
 #else /* XML_GENERIC */
 	    ctxt->attrType[j] = HTML_ATTR_ID;
 #endif /* XML_GENERIC */

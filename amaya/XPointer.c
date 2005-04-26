@@ -342,12 +342,18 @@ static char * GetIdValue (Element el)
     return NULL;
   else if (!strcmp (schema_name, "MathML"))
     attrType.AttrTypeNum = MathML_ATTR_id;
+#ifdef _SVG
   else if (!strcmp (schema_name, "SVG"))
     attrType.AttrTypeNum = SVG_ATTR_id;
+#endif /* _SVG */
   else if (!strcmp (schema_name, "HTML") || !strcmp (schema_name, "XHTML"))
     attrType.AttrTypeNum = HTML_ATTR_ID;
   else /* assume it is generic XML */
-    attrType.AttrTypeNum = XML_ATTR_id;
+#ifdef XML_GENERIC
+    attrType.AttrTypeNum = XML_ATTR_xmlid;
+#else /* XML_GENERIC */
+    attrType.AttrTypeNum = 0;
+#endif /* XML_GENERIC */
 
   attr = TtaGetAttribute (el, attrType);
   if (attr != NULL)
@@ -454,16 +460,8 @@ static Element AGetParent (Element el)
 
   parent = el;
   do
-    {
-      parent = TtaGetParent (parent);
-    }
+    parent = TtaGetParent (parent);
   while (parent && ElIsHidden (parent));
-
-#if 0
-  if (parent  && !TtaGetParent (parent))
-    parent = NULL;
-#endif
-
   return parent;
 }
 
@@ -477,10 +475,8 @@ static Element AGetLastChild (Element el)
   Element child;
 
   if (!el)
-    return NULL;
-  
+    return NULL;  
   child = el;
-
   while (child)
     {
       child = TtaGetLastChild (child);

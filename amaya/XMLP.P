@@ -484,7 +484,7 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;
-  id:
+  xmlid:
         BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
