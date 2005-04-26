@@ -614,7 +614,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 	    }
 
 	  /* refresh the corresponding toolbar tool */
-	  TtaRefreshToolbarStats( item_action );
+	  TtaRefreshToolbarStats( item_action, doc_id );
 	}
       return;
     }
@@ -638,7 +638,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 	      item_enable  = MenuActionList[item_action].ActionActive[doc_id];
 	      p_menu_bar->Enable(item_id, item_enable);
 	      /* refresh the corresponding toolbar tool */
-	      TtaRefreshToolbarStats( item_action );
+	      TtaRefreshToolbarStats( item_action, doc_id );
 	      break;
 	      	      
 	    case 'T': /* a toggle menu item (checkbox) */
@@ -648,7 +648,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 	      p_menu_bar->Check(item_id, item_toggle);
 	      p_menu_bar->Enable(item_id, item_enable);
 	      /* refresh the corresponding toolbar tool */
-	      TtaRefreshToolbarStats( item_action );
+	      TtaRefreshToolbarStats( item_action, doc_id );
 	      break;
 	      
 	    case 'M': /* a submenu */
@@ -675,13 +675,9 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 /*----------------------------------------------------------------------
   TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar items widgets for the given doc
  ----------------------------------------------------------------------*/
-void TtaRefreshToolbarStats( int changed_action_id )
+void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 {
 #ifdef _WX
-  Document      doc_id;
-  View          view;
-  FrameToView(TtaGiveActiveFrame(), &doc_id, &view);
-
   int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
   AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
   wxASSERT(p_window);
