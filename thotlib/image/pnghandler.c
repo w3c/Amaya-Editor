@@ -720,7 +720,7 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
       h = *yif;
     }
 #endif /*_GL*/
-#endif /* _WINPRINT */
+#endif /* _WIN_PRINT */
     
   if (buffer == NULL)
     {

@@ -425,7 +425,6 @@ static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width,
 			       int *percent)
 {
   PtrAttribute        pAttr;
-  PtrAbstractBox      pParent;
   ThotBool            found;
 
   *width = 0;

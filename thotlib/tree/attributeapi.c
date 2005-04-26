@@ -975,7 +975,6 @@ ThotBool TtaIsValidID (Attribute attr, ThotBool update)
 {
   PtrAttribute        pAttr = (PtrAttribute)attr;
   CHAR_T        *s;
-  unsigned char *tmp;
   int            i;
   ThotBool       ok;
 
