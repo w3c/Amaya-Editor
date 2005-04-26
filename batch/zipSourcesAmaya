@@ -402,6 +402,7 @@ $ZIP ${LIBWWWDIR}/modules/expat/Makefile.in
 $ZIP ${LIBWWWDIR}/modules/expat/configure.in
 $ZIP ${LIBWWWDIR}/modules/expat/lib/*.h
 $ZIP ${LIBWWWDIR}/modules/expat/lib/*.c
+$ZIP -r ${LIBWWWDIR}/modules/idn
 $ZIP ${LIBWWWDIR}/config/Makefile.am
 $ZIP ${LIBWWWDIR}/config/Makefile.in
 $ZIP ${LIBWWWDIR}/config/config.guess
@@ -422,6 +423,7 @@ $ZIP -r ${WXWIDGETS}/build
 $ZIP -r ${WXWIDGETS}/debian
 $ZIP -r ${WXWIDGETS}/distrib
 $ZIP -r ${WXWIDGETS}/include
+$ZIPB ${WXWIDGETS}/include/wx/msw/*.cur
 $ZIP -r ${WXWIDGETS}/lib
 $ZIP ${WXWIDGETS}/locale/*.po
 $ZIP ${WXWIDGETS}/locale/Makefile
