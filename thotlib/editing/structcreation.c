@@ -959,6 +959,7 @@ void NewContent (PtrAbstractBox pAb)
 		pAb->AbText->BuContent[1] = EOS;
 	      CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
 	      if (!strcmp (name, "id") ||
+		  !strcmp (name, "xml:id") ||
 		  (!strcmp (name, "name") &&
 		   !strcmp (pAttr->AeAttrSSchema->SsName, "HTML")))
 		TtaIsValidID ((Attribute)pNewAttr, TRUE);
