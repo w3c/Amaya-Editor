@@ -242,7 +242,7 @@ void ChangeDocumentName (PtrDocument pDoc, char *newName)
    strncpy (pDoc->DocDName, newName, MAX_NAME_LENGTH);
    pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
    len = strlen (newName);
-   if (strcmp (newName + len - 4, ".PIV") == 0)
+   if (len > 4 && strcmp (newName + len - 4, ".PIV") == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;

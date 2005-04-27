@@ -902,7 +902,7 @@ static void ApplyPRuleAndRedisplay (PtrAbstractBox pAb, PtrDocument pDoc,
 				    PtrAttribute pAttr, PtrPRule pRP,
 				    PtrPSchema pSPR)
 {
-  PtrAbstractBox   pAbRedisp;
+  PtrAbstractBox   pAbRedisp = NULL;
   
   if (pRP == NULL)
      return;

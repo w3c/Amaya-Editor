@@ -509,6 +509,7 @@ static ThotBool ChildrenMatch (strNode * n, strSymbDesc * p)
 static ThotBool MatchAttributes (strSymbDesc *pSymb, Element elem)
 {
    ThotBool            result;
+   ElementType         elType;
    strAttrDesc        *pAttr = NULL;
    AttributeType       AttrTyp;
    Attribute           attr = NULL;
@@ -516,7 +517,8 @@ static ThotBool MatchAttributes (strSymbDesc *pSymb, Element elem)
    int                 AttrKind, length;
 
    buf = (char *)TtaGetMemory (MAX_LENGTH);
-   AttrTyp.AttrSSchema = TtaGetElementType (elem).ElSSchema;
+   elType = TtaGetElementType (elem);
+   AttrTyp.AttrSSchema = elType.ElSSchema;
    result = TRUE;
    pAttr = pSymb->Attributes;
    while (pAttr != NULL && result)
@@ -806,17 +808,20 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
   ----------------------------------------------------------------------*/
 static void RemoveFragment (Element elem, Document doc)
 {
-  Element parent;
-  SSchema parSch, elSch;
+  Element      parent;
+  ElementType  elType;
+  SSchema      parSch = NULL, elSch;
   
-  elSch = (TtaGetElementType (elem)).ElSSchema;
+  elType = TtaGetElementType (elem);
+  elSch = elType.ElSSchema;
   parent = TtaGetParent (elem);
-  if (parent !=NULL)
+  if (parent)
     {
-      if (TtaGetParent(parent)!=NULL)
-	parSch = (TtaGetElementType (TtaGetParent(parent))).ElSSchema;
+      if (TtaGetParent(parent))
+        elType = TtaGetElementType (TtaGetParent(parent));
       else
-	parSch = (TtaGetElementType (parent)).ElSSchema;
+        elType = TtaGetElementType (parent);
+      parSch = elType.ElSSchema;
       
       while (parent != NULL && 
 	     TtaSameSSchemas (parSch, elSch) &&
@@ -825,12 +830,13 @@ static void RemoveFragment (Element elem, Document doc)
 	{
 	  elem = parent;
 	  parent = TtaGetParent (parent);
-	  if (parent !=NULL)
+	  if (parent)
 	    {
-	    if (TtaGetParent(parent)!=NULL)
-	      parSch = (TtaGetElementType (TtaGetParent(parent))).ElSSchema;
-	    else
-	      parSch = (TtaGetElementType (parent)).ElSSchema;
+        if (TtaGetParent(parent))
+          elType = TtaGetElementType (TtaGetParent(parent));
+        else
+          elType = TtaGetElementType (parent);
+        parSch = elType.ElSSchema;
 	    }
 	}
     }
@@ -852,6 +858,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
    SSchema             selSch, courSch;
    Attribute           heritAttr;
    Element             elAttr;
+   ElementType         elType;
    Language            language;
    char               *attrValue;
    int                 l;
@@ -862,7 +869,8 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
    myFirstSelect = DMatch->MatchNode->Elem;
    /* init an history sequence */
    TtaOpenUndoSequence (doc, myFirstSelect, myLastSelect, 0, 0);
-   selSch = (TtaGetElementType (myFirstSelect)).ElSSchema;
+   elType = TtaGetElementType (myFirstSelect);
+   selSch = elType.ElSSchema;
    courEl = myFirstSelect;
    /* PreviousHTMLSibling (&myFirstSelect);*/
    TtaPreviousSibling (&myFirstSelect);
@@ -871,10 +879,11 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
    while (myFirstSelect == NULL)
      {
        courEl = TtaGetParent (courEl);
-       if (TtaGetParent (courEl) != NULL)
-	 courSch = (TtaGetElementType (TtaGetParent (courEl))).ElSSchema;
+       if (TtaGetParent (courEl))
+         elType = TtaGetElementType (TtaGetParent (courEl));
        else
-	 courSch = (TtaGetElementType (courEl)).ElSSchema;
+         elType = TtaGetElementType (courEl);
+	   courSch = elType.ElSSchema;
        if (TtaSameSSchemas (courSch, selSch) &&
            !strcmp ((char *)GetXMLElementName (TtaGetElementType (courEl), doc), "???"))
 	 {
@@ -1722,6 +1731,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 {
   SSchema              sch;
   Element              elParent, elFound;
+  ElementType          elType;
   CHARSET              charset;
   Attribute            attr;
   AttributeType        attrType;
@@ -1815,7 +1825,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 	{
 	  /* transformation was succesful */
 	  ResultTrans = TRUE;
-	  sch = TtaGetElementType (myFirstSelect).ElSSchema;
+	  elType = TtaGetElementType (myFirstSelect);
+	  sch = elType.ElSSchema;
 	  name = (char *)TtaGetSSchemaName (sch);
 	  if (!strcmp (name, "MathML"))
 	    {
@@ -1860,6 +1871,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 	    TtaNextSibling (&myFirstSelect);
 	  else
 	    myFirstSelect = TtaGetFirstChild (myFirstSelect);
+
 	  if (strcmp ((char *)TtaGetSSchemaName (sch), "HTML") == 0)
 	    {
 	      /* displaying the images */
@@ -1887,7 +1899,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 	    }
 	  /* selecting the new elements */
 	  /* or setting the selction to the specified node */
-	  attrType.AttrSSchema = TtaGetElementType (myFirstSelect).ElSSchema;
+	  elType = TtaGetElementType (myFirstSelect);
+	  attrType.AttrSSchema = elType.ElSSchema;
 	  if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "HTML"))
 	    attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
 	  else if (!strcmp ((char *)TtaGetSSchemaName (attrType.AttrSSchema), "MathML"))
@@ -2557,15 +2570,21 @@ void TransformType (Document doc, View view)
 	  
 		  elemSelect = sm->MatchChildren->MatchNode->Elem;
 		  TtaPreviousSibling (&elemSelect);
-		  if (elemSelect != NULL)
-		    strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
+		  if (elemSelect)
+		  {
+		    elType = TtaGetElementType (elemSelect);
+		    strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
+		  }
 		  while (elemSelect != NULL &&
 			 (!strcmp ((char *)tag, "???") ||
 			  !strcmp ((char *)tag, "none")))
 		    {
 		      TtaPreviousSibling (&elemSelect);
-		      if (elemSelect != NULL)
-			strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
+		      if (elemSelect)
+			  {
+		    elType = TtaGetElementType (elemSelect);
+			strcpy ((char *)tag, (char *)GetXMLElementName (elType, TransDoc));
+			  }
 		    }
 		  if (elemSelect == NULL)
 		    strcpy ((char *)tag, (char *)"");
