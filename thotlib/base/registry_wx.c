@@ -96,7 +96,7 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
 wxString TtaGetHomeDir()
 {
 #ifdef _WINDOWS
-	wxChar      buffer[1000];
+	wxChar      buffer[2000];
 	DWORD       dwSize;
 
    typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
@@ -122,7 +122,8 @@ wxString TtaGetHomeDir()
 
    wxString wx_win_profiles_dir(buffer);
 
-   wxGetUserName(buffer, sizeof(buffer));
+   dwSize = MAX_PATH;
+   wxGetUserName(buffer, dwSize);
    wxString wx_win_username(buffer);
 
    wxString wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;

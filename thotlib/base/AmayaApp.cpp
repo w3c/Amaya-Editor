@@ -206,7 +206,7 @@ bool AmayaApp::OnInit()
   m_pDocImageList = new wxImageList( 16, 16 );
   /* add the default document icon */
 
-#ifdef _WINDOWS
+#ifdef _WINDOWS_IV
   wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.gif"), wxBITMAP_TYPE_GIF );
 #else /* _WINDOWS */
   wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.png"), wxBITMAP_TYPE_PNG );
