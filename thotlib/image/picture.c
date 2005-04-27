@@ -474,7 +474,10 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 			   Mode, GL_UNSIGNED_BYTE,
 			   (GLvoid *) img->PicPixmap);    
 	  if (img->PicPixmap != PictureLogo && !Printing)
+	  {
 	    TtaFreeMemory (img->PicPixmap);
+		img->PicPixmap = NULL;
+	  }
 
 #else/*  POWER2TEXSUBIMAGE */
 	  GL_MakeTextureSize (img, p2_w, p2_h);
@@ -1987,6 +1990,11 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 #endif /*_GL*/
 	    {
 	      /* need to load or to rescale the picture */
+		  if (imageDesc->PicPixmap != None)
+		  {
+			TtaFreeMemory (imageDesc->PicPixmap);
+			imageDesc->PicPixmap = None;
+		  }
 	      LoadPicture (frame, box, imageDesc);
 	      w = picWArea = imageDesc->PicWArea;
 	      h = picHArea = imageDesc->PicHArea;

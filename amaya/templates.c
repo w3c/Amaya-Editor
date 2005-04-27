@@ -84,6 +84,9 @@ void OpenTemplateDocument (Document doc)
 						  TtaGetDefaultCharset ());
 	      TtaFreeMemory (utf8path);
               found = !strcmp (path, META_TEMPLATE_NAME);
+	      /* free previous path if necessary */
+          TtaFreeMemory (path);
+		  path = NULL;
             }
         }
     }

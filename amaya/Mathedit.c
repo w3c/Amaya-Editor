@@ -4237,6 +4237,7 @@ void MathStringModified (NotifyOnTarget *event)
       TtaSetStylePresentation (PRSize, event->target, NULL, ctxt, pval);
       /* analyze the new content of the text element */
       ParseMathString (event->target, event->element, event->document);
+	  TtaFreeMemory (ctxt);
     }
 }
 

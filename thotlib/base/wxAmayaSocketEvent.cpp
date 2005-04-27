@@ -323,9 +323,8 @@ bool wxAmayaSocketEvent::RemoveSocketEntry( int entry )
     }
   else
     {
-      memcpy( &m_UsedSocket[id_entry],
-	      &m_UsedSocket[id_entry+1],
-	      sizeof(int) * (m_NbRegistredSocket-1-id_entry) );
+      for (int i = id_entry ; i < m_NbRegistredSocket; i++)
+        m_UsedSocket[i] = m_UsedSocket[i+1];
     }
   m_NbRegistredSocket--;
 

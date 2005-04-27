@@ -3302,24 +3302,14 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
 GenericContext TtaGetGenericStyleContext (Document doc)
 {
   GenericContext      ctxt;
-  int                 i;
 
   ctxt = (GenericContext) TtaGetMemory (sizeof (GenericContextBlock));
   if (ctxt == NULL)
     return (NULL);
+  memset (ctxt, 0, sizeof (GenericContextBlock));
   ctxt->doc = doc;
-  ctxt->type = 0;
   ctxt->schema = TtaGetDocumentSSchema (doc);
-  ctxt->destroy = 0;
-  ctxt->box = 0;
-  for (i = 0; i < MAX_ANCESTORS; i++)
-    {
-      ctxt->name[i] = 0;
-      ctxt->names_nb[i] = 0;
-      ctxt->attrType[i] = 0;
-      ctxt->attrText[i] = NULL;
-    }
-   return (ctxt);
+  return (ctxt);
 }
 
 
@@ -3334,12 +3324,9 @@ PresentationContext TtaGetSpecificStyleContext (Document doc)
    ctxt = (PresentationContext) TtaGetMemory (sizeof (PresentationContextBlock));
    if (ctxt == NULL)
       return (NULL);
+  memset (ctxt, 0, sizeof (PresentationContextBlock));
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
-   ctxt->type = 0;
-   ctxt->cssSpecificity = 0;
-   ctxt->important = FALSE;
-   ctxt->destroy = 0;
    return (ctxt);
 }
 
