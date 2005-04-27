@@ -3108,26 +3108,19 @@ static void EndOfXmlAttributeValue (char *attrValue)
 		   SetLanguagInXmlStack (lang);
 		 }
 	     }
+#ifdef XML_GENERIC
 	   else
 	     {
-	       /* check id attributes */
+	       /* check xml:id attributes */
 	       name = TtaGetSSchemaName (attrType.AttrSSchema);
-	       if ((!strcmp(name, "MathML") &&
-		    attrType.AttrTypeNum == MathML_ATTR_id)
-#ifdef _SVG
-		   || (!strcmp(name, "SVG") &&
-		       attrType.AttrTypeNum == SVG_ATTR_id)
-#endif /* _SVG */
-#ifdef XML_GENERIC
-		   || (strcmp(name, "HTML") &&
-		       strcmp(name, "MathML") &&
-		       strcmp(name, "SVG") &&
-		       attrType.AttrTypeNum == XML_ATTR_xmlid)
-#endif /* XML_GENERIC */
-		   )
+	       if (strcmp (name, "HTML") &&
+		   strcmp (name, "MathML") &&
+		   strcmp (name, "SVG") &&
+		   attrType.AttrTypeNum == XML_ATTR_xmlid)
 		 CheckUniqueName (XMLcontext.lastElement, XMLcontext.doc,
 				  currentAttribute, attrType);
 	     }
+#endif /* XML_GENERIC */
 	 }
        break;
      case 3:       /* reference */
