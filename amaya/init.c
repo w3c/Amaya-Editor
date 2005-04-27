@@ -2991,7 +2991,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 			   TRUE, (Proc)TextURL, URL_list);
 #endif /* _WX */
 
-#ifdef _GTK
+#if defined(_GTK) || defined(_WINGUI)
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);
 	   TtaSetItemOff (doc, 1, File, BForward);
@@ -3032,7 +3032,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetStatus (oldDoc, 1, " ", NULL);
 	       ActiveTransfer (doc);
 	     }
-#endif /* _GTK */
+#endif /* _GTK || _WINGUI */
 
 
 #ifdef BOOKMARKS
