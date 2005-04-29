@@ -2504,6 +2504,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       positioning = ComputePositioning (pCurrentBox, frame);
       if (positioning ||
 	  (pAb->AbPositioning &&
+	   pAb->AbLeafType == LtCompound &&
 	   pAb->AbPositioning->PnAlgorithm == PnRelative))
  	AddFlow (pAb, frame);
       if (!positioning)
