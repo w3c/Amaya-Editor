@@ -103,6 +103,17 @@ typedef enum
     OpHeight
   } OpRelation;
 
+/* Type of dim relation between boxes:
+   OpSame    -> Relation on the same dimension
+   OpReverse -> Relation between a width and a height
+   OpIgnore  -> Just keep the reverse relation (necessary to update) */
+typedef enum
+  {
+    OpSame,
+    OpReverse, 
+    OpIgnore
+  } OpDim;
+
 /* Domain of propagation of the modifications between boxes */
 typedef enum
   {
@@ -172,7 +183,7 @@ typedef struct _DimRelations
 {
   PtrDimRelations DimRNext;	/* Next block */
   PtrBox          DimRTable[MAX_RELAT_DIM];
-  ThotBool        DimRSame[MAX_RELAT_DIM]; /* Description of a displayed box */
+  OpDim           DimROp[MAX_RELAT_DIM]; /* Description of the relation */
 } DimRelations;
 
 /* Structure to store table information */
@@ -644,9 +655,7 @@ typedef struct _Flow
   PtrFlow         FlNext;     /* Next Flow */
   PosAlgorithm    FlType;     /* Flow type: PnRelative, PnAbsolute, PnFixed */
   int             FlXStart;   /* Clipping zone of this flow */
-  int             FlXEnd;
   int             FlYStart;
-  int             FlYEnd;
 }Flow;
 
 typedef struct _ViewFrame

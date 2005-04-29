@@ -317,15 +317,9 @@ bool wxAmayaSocketEvent::RemoveSocketEntry( int entry )
     return false;
 
   /* remove the index entry */
-  if ( id_entry == m_NbRegistredSocket-1 )
-    {
-      m_UsedSocket[id_entry] = 0;
-    }
-  else
-    {
-      for (int i = id_entry ; i < m_NbRegistredSocket; i++)
-        m_UsedSocket[i] = m_UsedSocket[i+1];
-    }
+  for (int i = id_entry ; i < m_NbRegistredSocket - 1; i++)
+    m_UsedSocket[i] = m_UsedSocket[i + 1];
+  m_UsedSocket[m_NbRegistredSocket - 1] = 0;
   m_NbRegistredSocket--;
 
   /* remove the real entry */

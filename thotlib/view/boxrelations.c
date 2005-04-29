@@ -203,14 +203,15 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 /*----------------------------------------------------------------------
   InsertDimRelation registers vertical or horizontal links between two
   boxes (from pOrginBox to pTargetBox).
-  The parameter sameDimension is FALSE when the height depends on a width
-  or vise versa.
+  The parameter op gives the relation:
+  - OpSame, if the relation concerns the same dimension.
+  - OpReverse, if the Width will change the Height or vice versa.
+  - OpIgnore, keeps in moind the box that has a relation.
   The parameter inLine is TRUE when the pOrginBox box is displayed within
   a block of lines.
   ----------------------------------------------------------------------*/
 static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
-			       ThotBool sameDimension, ThotBool horizRef,
-			       ThotBool inLine)
+			       OpDim op, ThotBool horizRef, ThotBool inLine)
 {
   PtrDimRelations     pPreviousDimRel, pNext;
   PtrDimRelations     pDimRel;
@@ -218,25 +219,24 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   ThotBool            loop;
   ThotBool            empty;
 
-  if (!sameDimension)
-    horizRef = !horizRef;
   if (inLine && IsParentBox (pTargetBox, pOrginBox))
     /* dont register the relation in this case */
     return;
-  i = 0;
-  /* add a relation from origin to target */
-  if (horizRef)
-    {
-      if (sameDimension)
-	pDimRel = pOrginBox->BxWidthRelations;
-      else
-	pDimRel = pOrginBox->BxHeightRelations;
-    }
-  else if (sameDimension)
-    pDimRel = pOrginBox->BxHeightRelations;
-  else
-    pDimRel = pOrginBox->BxWidthRelations;
 
+  if (op != OpIgnore)
+    /* register in pTargetBox that pOrginBox has a relation with it */
+    InsertDimRelation (pTargetBox, pOrginBox, OpIgnore, horizRef, inLine);
+
+  /* add a relation from origin to target */
+  i = 0;
+  if (op == OpReverse)
+    /* store the back releation in the other dimension list */
+    horizRef = !horizRef;
+  if (horizRef)
+    pDimRel = pOrginBox->BxWidthRelations;
+  else
+    pDimRel = pOrginBox->BxHeightRelations;
+ 
   /* look for an empty entry */
   pPreviousDimRel = NULL;
   loop = TRUE;
@@ -279,9 +279,8 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	pPreviousDimRel->DimRNext = pDimRel;
       i = 0;
      }
-
    pDimRel->DimRTable[i] = pTargetBox;
-   pDimRel->DimRSame[i] = sameDimension;
+   pDimRel->DimROp[i] = op;
 }
 
 
@@ -877,15 +876,15 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
   int                 l, t, r, b;
 
 #ifdef POSITIONING
-  if (pBox && pBox->BxAbstractBox)
+  if (pBox && pBox->BxAbstractBox &&
+      pBox->BxAbstractBox->AbLeafType == LtCompound &&
+      pBox->BxAbstractBox->AbPositioning &&
+      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
-      if (pBox->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-	return FALSE;
 
       pAb = pBox->BxAbstractBox;
       pos = pAb->AbPositioning;
-      if (pAb->AbLeafType == LtCompound && pos &&
-	  (pos->PnAlgorithm == PnAbsolute || pos->PnAlgorithm == PnFixed))
+      if (pos->PnAlgorithm == PnAbsolute || pos->PnAlgorithm == PnFixed)
 	{
 	  if (pBox->BxType == BoRow || pBox->BxType == BoColumn ||
 	      pBox->BxType == BoCell)
@@ -1024,7 +1023,20 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	  return TRUE;
 	}
       else
-	return FALSE;
+	{
+	  if (pos->PnAlgorithm == PnRelative &&
+	      (pos->PnTopUnit == UnAuto ||
+	       pos->PnTopUnit == UnUndefined) &&
+	      (pos->PnBottomUnit == UnAuto ||
+	       pos->PnBottomUnit == UnUndefined) &&
+	      (pos->PnLeftUnit == UnAuto ||
+	       pos->PnLeftUnit == UnUndefined) &&
+	      (pos->PnRightUnit == UnAuto ||
+	       pos->PnRightUnit == UnUndefined))
+	    /* ignore this relative position */
+	    pos->PnAlgorithm = PnStatic;
+	  return FALSE;
+	}
     }
   else
 #endif /* POSITIONING */
@@ -2240,7 +2252,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      else
 			pColumn = pAb->AbHorizPos.PosAbRef;
 		      if (pColumn)
-			InsertDimRelation (pColumn->AbBox, pBox, TRUE, TRUE, FALSE);
+			InsertDimRelation (pColumn->AbBox, pBox, OpSame, TRUE, FALSE);
 		      if (pDimAb->DimUnit == UnAuto)
 			{
 			  pDimAb->DimAbRef = NULL;
@@ -2359,9 +2371,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				val = val - dx;
 				}
 			      if (pParentAb)
-				InsertDimRelation (pParentAb->AbBox, pBox,
-						   pDimAb->DimSameDimension, horizRef,
-						   inLine);
+				{
+				  if (pDimAb->DimSameDimension)
+				    InsertDimRelation (pParentAb->AbBox, pBox,
+						       OpSame, horizRef, inLine);
+				  else
+				    InsertDimRelation (pParentAb->AbBox, pBox,
+						       OpReverse, horizRef, inLine);
+				}
 			    }
 			  else
 			    {
@@ -2467,7 +2484,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
 						   ViewFrameTable[frame - 1].FrMagnification);
 			      /* the rule gives the outside value */
-			      val = val - dx;
+			      if (val >= dx)
+				val = val - dx;
 			      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 			      /* Marks out of structure relations */
 			      if (pDimAb->DimAbRef != pParentAb
@@ -2476,8 +2494,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      
 			      /* Store dependencies */
 			      if (pBox->BxType != BoCell)
-				InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
-						   pDimAb->DimSameDimension, horizRef, inLine);
+				{
+				  if (pDimAb->DimSameDimension)
+				    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						       OpSame, horizRef, inLine);
+				  else
+				    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						       OpReverse, horizRef, inLine);
+				}
 			    }
 			}
 		    }
@@ -2528,10 +2552,17 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 						(PtrAbstractBox) i, 0);
 			    }
 			  /* the rule gives the outside value */
-			  val = val - dy;
+			  if (val >= dy)
+			    val = val - dy;
 			  if (pParentAb)
-			    InsertDimRelation (pParentAb->AbBox, pBox,
-					       pDimAb->DimSameDimension, horizRef, inLine);
+			    {
+			      if (pDimAb->DimSameDimension)
+				InsertDimRelation (pParentAb->AbBox, pBox,
+						   OpSame, horizRef, inLine);
+			      else
+				InsertDimRelation (pParentAb->AbBox, pBox,
+						   OpReverse, horizRef, inLine);
+			    }
 			}
 		      else
 			/* explicit value */
@@ -2634,8 +2665,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				      else
 					fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb, TRUE));
 				    }
-				  InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
-						     pDimAb->DimSameDimension, horizRef, inLine);
+				  if (pDimAb->DimSameDimension)
+				    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						       OpSame, horizRef, inLine);
+				  else
+				    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox,
+						       OpReverse, horizRef, inLine);
 				}
 			    }
 			}
@@ -3244,80 +3279,156 @@ static ThotBool RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   int                 i, found;
   ThotBool            loop;
   ThotBool            notEmpty;
-  ThotBool            result;
 
   i = 0;
-  /* Cela peut etre une dimension elastique */
-  if ((horizRef && pTargetBox->BxHorizFlex) ||
-      (!horizRef && pTargetBox->BxVertFlex))
-    result = RemovePosRelation (pOrginBox, pTargetBox, NULL, FALSE, FALSE, horizRef);
+  /* look for the removed entry and the last entry */
+  found = 0;
+  pFoundDimRel = NULL;
+  if (horizRef)
+    pDimRel = pOrginBox->BxWidthRelations;
   else
-    {
-      /* On recherche l'entree a detruire et la derniere entree occupee */
-      found = 0;
-      pFoundDimRel = NULL;
-      if (horizRef)
-	pDimRel = pOrginBox->BxWidthRelations;
-      else
-	pDimRel = pOrginBox->BxHeightRelations;
-      pPreviousDimRel = NULL;
-      loop = TRUE;
-      if (pDimRel != NULL)
-	while (loop)
+    pDimRel = pOrginBox->BxHeightRelations;
+  pPreviousDimRel = NULL;
+  loop = TRUE;
+  if (pDimRel != NULL)
+    while (loop)
+      {
+	i = 1;
+	notEmpty = pDimRel->DimRTable[i - 1] != NULL;
+	while (i <= MAX_RELAT_DIM && notEmpty)
 	  {
-	    i = 1;
-	    notEmpty = pDimRel->DimRTable[i - 1] != NULL;
-	    while (i <= MAX_RELAT_DIM && notEmpty)
+	    /* Is it the right entry? */
+	    if (pDimRel->DimRTable[i - 1] == pTargetBox)
 	      {
-		/* Est-ce l'entree a detruire ? */
-		if (pDimRel->DimRTable[i - 1] == pTargetBox)
-		  {
-		    found = i;
-		    pFoundDimRel = pDimRel;
-		  }
-		i++;
-		if (i <= MAX_RELAT_DIM)
-		  notEmpty = pDimRel->DimRTable[i - 1] != NULL;
+		found = i;
+		pFoundDimRel = pDimRel;
 	      }
-	    
-	    if (pDimRel->DimRNext == NULL)
-	      loop = FALSE;
-	    else
-	      {
-		pPreviousDimRel = pDimRel;
-		/* Bloc suivant */
-		pDimRel = pDimRel->DimRNext;
-	      }
+	    i++;
+	    if (i <= MAX_RELAT_DIM)
+	      notEmpty = pDimRel->DimRTable[i - 1] != NULL;
 	  }
+	
+	if (pDimRel->DimRNext == NULL)
+	  loop = FALSE;
+	else
+	  {
+	    pPreviousDimRel = pDimRel;
+	    /* next block */
+	    pDimRel = pDimRel->DimRNext;
+	  }
+      }
+  
+  /* Relation found, compact the list */
+  if (found > 0)
+    {
+      i--;
+      pFoundDimRel->DimRTable[found - 1] = pDimRel->DimRTable[i - 1];
+      pFoundDimRel->DimROp[found - 1] = pDimRel->DimROp[i - 1];
       
-      /* On a trouve -> on retasse la liste */
-      if (found > 0)
+      /* Is the block now empty? */
+      if (i == 1)
 	{
-	  i--;
-	  pFoundDimRel->DimRTable[found - 1] = pDimRel->DimRTable[i - 1];
-	  pFoundDimRel->DimRSame[found - 1] = pDimRel->DimRSame[i - 1];
-	  
-	  /* Faut-il liberer le dernier bloc de relations ? */
-	  if (i == 1)
-	    {
-	      if (pPreviousDimRel == NULL)
-		if (horizRef)
-		  pOrginBox->BxWidthRelations = NULL;
-		else
-		  pOrginBox->BxHeightRelations = NULL;
-	      else
-		pPreviousDimRel->DimRNext = NULL;
-	      FreeDimBlock (&pDimRel);
-	    }
+	  if (pPreviousDimRel == NULL)
+	    if (horizRef)
+	      pOrginBox->BxWidthRelations = NULL;
+	    else
+	      pOrginBox->BxHeightRelations = NULL;
 	  else
-	    pDimRel->DimRTable[i - 1] = NULL;
-	  result = TRUE;
+	    pPreviousDimRel->DimRNext = NULL;
+	  FreeDimBlock (&pDimRel);
 	}
       else
-	/* On n'a pas trouve */
-	result = FALSE;
+	pDimRel->DimRTable[i - 1] = NULL;
+      return TRUE;
     }
-  return result;
+  else
+    /* Not found */
+    return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  CheckDimRelation look for the box that contraints its dimension
+  and if found removes it.
+  The parameter horizRef is TRUE when it concerns the width, FALSE
+  when it concerns the height.
+  Return TRUE if there is a registered relation.
+  ----------------------------------------------------------------------*/
+static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
+{
+  PtrDimRelations     pFoundDimRel;
+  PtrDimRelations     pPreviousDimRel;
+  PtrDimRelations     pDimRel;
+  int                 i, found;
+  ThotBool            loop;
+  ThotBool            notEmpty;
+
+  i = 0;
+  /* look for the removed entry and the last entry */
+  found = 0;
+  pFoundDimRel = NULL;
+  if (horizRef)
+    pDimRel = pBox->BxWidthRelations;
+  else
+    pDimRel = pBox->BxHeightRelations;
+  pPreviousDimRel = NULL;
+  loop = TRUE;
+  if (pDimRel)
+    while (loop)
+      {
+	i = 1;
+	notEmpty = pDimRel->DimRTable[i - 1] != NULL;
+	while (i <= MAX_RELAT_DIM && notEmpty)
+	  {
+	    /* Is it the right entry? */
+	    if (pDimRel->DimROp[i - 1] == OpIgnore)
+	      {
+		found = i;
+		pFoundDimRel = pDimRel;
+	      }
+	    i++;
+	    if (i <= MAX_RELAT_DIM)
+	      notEmpty = pDimRel->DimRTable[i - 1] != NULL;
+	  }
+	
+	if (pDimRel->DimRNext == NULL)
+	  loop = FALSE;
+	else
+	  {
+	    pPreviousDimRel = pDimRel;
+	    /* next block */
+	    pDimRel = pDimRel->DimRNext;
+	  }
+      }
+  
+  /* Relation found, compact the list */
+  if (found > 0)
+    {
+      /* remove the relation */
+      RemoveDimRelation (pFoundDimRel->DimRTable[found - 1],
+			 pBox, horizRef);
+      /* clean up the reverse info */
+      i--;
+      pFoundDimRel->DimRTable[found - 1] = pDimRel->DimRTable[i - 1];
+      pFoundDimRel->DimROp[found - 1] = pDimRel->DimROp[i - 1];
+      /* Is the block now empty? */
+      if (i == 1)
+	{
+	  if (pPreviousDimRel == NULL)
+	    if (horizRef)
+	      pBox->BxWidthRelations = NULL;
+	    else
+	      pBox->BxHeightRelations = NULL;
+	  else
+	    pPreviousDimRel->DimRNext = NULL;
+	  FreeDimBlock (&pDimRel);
+	}
+      else
+	pDimRel->DimRTable[i - 1] = NULL;
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 
@@ -3331,68 +3442,61 @@ void ClearOutOfStructRelation (PtrBox pBox)
   PtrAbstractBox      pAb;
 
   pAb = pBox->BxAbstractBox;
-  /* On detruit la relation de position horizontale hors-structure */
+  /* Remove horizontal out of structure relations */
   if (pBox->BxXOutOfStruct)
     {
       if (pAb->AbHorizPos.PosAbRef == NULL)
 	pOrginBox = NULL;
       else
 	pOrginBox = pAb->AbHorizPos.PosAbRef->AbBox;
-      if (pOrginBox != NULL)
+      if (pOrginBox)
 	RemovePosRelation (pOrginBox, pBox, NULL, TRUE, FALSE, TRUE);
-      /* Annule les relations hors-structure */
+      /* Clean up out of structure info */
       PropagateXOutOfStruct (pAb, FALSE, pAb->AbHorizEnclosing);
     }
   
-  /* On detruit la relation de position verticale hors-structure */
+  /* Remove vertical out of structure relations */
   if (pBox->BxYOutOfStruct)
     {
       if (pAb->AbVertPos.PosAbRef == NULL)
 	pOrginBox = NULL;
       else
 	pOrginBox = pAb->AbVertPos.PosAbRef->AbBox;
-      if (pOrginBox != NULL)
+      if (pOrginBox)
 	RemovePosRelation (pOrginBox, pBox, NULL, TRUE, FALSE, FALSE);
-      /* Annule les relations hors-structure */
+      /* Clean up out of structure info */
       PropagateYOutOfStruct (pAb, FALSE, pAb->AbVertEnclosing);
     }
 
-  /* On detruit la relation de largeur hors-structure */
+  /* Remove out of structure width constraints */
+  pOrginBox = NULL;
   if (pBox->BxWOutOfStruct)
     {
-      /* Est-ce une dimension elastique ? */
+      /* Streched box? */
       if (pBox->BxHorizFlex)
 	{
 	  pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
-	  if (pOrginBox != NULL)
+	  if (pOrginBox)
 	    RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
 	}
       else
-	{
-	  pOrginBox = pAb->AbWidth.DimAbRef->AbBox;
-	  if (pOrginBox != NULL)
-	    RemoveDimRelation (pOrginBox, pBox, TRUE);
-	}
+	CheckDimRelation (pBox, TRUE);
     }
-  /* On detruit la relation de hauteur hors-structure */
+
+  /* Remove out of structure height constraints */
   pOrginBox = NULL;
   if (pBox->BxHOutOfStruct)
     {
-      /* Est-ce une dimension elastique ? */
+      /* Streched box? */
       if (pBox->BxVertFlex)
 	{
-	  if (pAb->AbHeight.DimPosition.PosAbRef != NULL)
+	  if (pAb->AbHeight.DimPosition.PosAbRef)
 	    pOrginBox = pAb->AbHeight.DimPosition.PosAbRef->AbBox;
-	  if (pOrginBox != NULL)
+	  if (pOrginBox)
 	    RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
 	}
       else
-	{
-	  if (pAb->AbHeight.DimAbRef != NULL)
-	    pOrginBox = pAb->AbHeight.DimAbRef->AbBox;
-	   if (pOrginBox != NULL)
-	     RemoveDimRelation (pOrginBox, pBox, FALSE);
-	}
+	CheckDimRelation (pBox, FALSE);
     }
 }
 
@@ -3522,36 +3626,36 @@ void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
   ----------------------------------------------------------------------*/
 void ClearAxisRelation (PtrBox pBox, ThotBool horizRef)
 {
-   PtrAbstractBox      pAb;
-   PtrAbstractBox      pRefAb;
-   ThotBool            loop;
-
-   pRefAb = pBox->BxAbstractBox;
-   loop = TRUE;
-   /* On recherche dans la descendance la dependance de l'axe de reference */
-   pAb = pRefAb;
-   while (loop && pAb != NULL)
-     {
-	if (pAb->AbBox != NULL)
-	   loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, TRUE, horizRef);
-	if (pAb == pRefAb)
-	   pAb = pAb->AbFirstEnclosed;
-	else
-	   pAb = pAb->AbNext;
-     }
-
-   /* On recherche chez les voisines la dependance de l'axe de reference */
-   pAb = pRefAb->AbEnclosing;
-   if (pAb != NULL)
-     {
+  PtrAbstractBox      pAb;
+  PtrAbstractBox      pRefAb;
+  ThotBool            loop;
+  
+  pRefAb = pBox->BxAbstractBox;
+  loop = TRUE;
+  /* On recherche dans la descendance la dependance de l'axe de reference */
+  pAb = pRefAb;
+  while (loop && pAb)
+    {
+      if (pAb->AbBox)
+	loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, TRUE, horizRef);
+      if (pAb == pRefAb)
 	pAb = pAb->AbFirstEnclosed;
-	while (loop && pAb != NULL)
-	  {
-	     if (pAb != pRefAb && pAb->AbBox != NULL)
-		loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, TRUE, horizRef);
-	     pAb = pAb->AbNext;
-	  }
-     }
+      else
+	pAb = pAb->AbNext;
+    }
+  
+  /* On recherche chez les voisines la dependance de l'axe de reference */
+  pAb = pRefAb->AbEnclosing;
+  if (pAb)
+    {
+      pAb = pAb->AbFirstEnclosed;
+      while (loop && pAb)
+	{
+	  if (pAb != pRefAb && pAb->AbBox)
+	    loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, TRUE, horizRef);
+	  pAb = pAb->AbNext;
+	}
+    }
 }
 
 
@@ -3625,153 +3729,41 @@ void ClearAllRelations (PtrBox pBox, int frame)
   ----------------------------------------------------------------------*/
 void ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
 {
-  PtrAbstractBox      pRefAb;
+  PtrBox              pOrginBox;
   PtrAbstractBox      pAb;
   ThotBool            loop;
 
-  if (!pBox)
+  if (pBox == NULL)
     return;
-  pRefAb = pBox->BxAbstractBox;
-  pAb = pRefAb->AbEnclosing;
-  loop = FALSE;
-  if ((horizRef && pBox->BxWOutOfStruct) ||
-      (!horizRef && pBox->BxHOutOfStruct))
+  loop = !CheckDimRelation (pBox, horizRef);
+  /* Remove out of structure width constraints */
+  pOrginBox = NULL;
+  pAb = pBox->BxAbstractBox;
+  if (loop && pAb)
     {
-      /* relation out of structure */
-      if (!IsDead (pRefAb))
-	{
-	  /* got to the root abstract box */
-	  if (pAb)
-	    while (pAb->AbEnclosing)
-	      pAb = pAb->AbEnclosing;
-	  
-	  /* look every where the invert relation */
-	  loop = TRUE;
-	  if (horizRef)
-	    {
-	      if (pBox->BxHorizFlex)
-		{
-		  /* strechable box */
-		  while (loop && pAb)
-		    {
-		      if (pAb->AbBox)
-			loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, FALSE, horizRef);
-		      if (pAb)
-			pAb = NextAbToCheck (pAb, pRefAb);
-		    }
-		  
-		  /* Il faut retablir le point fixe */
-		  pBox->BxHorizEdge = pBox->BxAbstractBox->AbHorizPos.PosEdge;
-		  /* La boite n'est pas inversee */
-		  pBox->BxHorizInverted = FALSE;
-		  /* La dimension n'est plus elastique */
-		  pBox->BxHorizFlex = FALSE;
-		  /* Annule la largeur de la boite */
-		  ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
-		}
-	      else
-		/* not strechable box */
-		while (loop && pAb)
-		  {
-		    if (pAb->AbBox)
-		      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-		    if (pAb)
-		      pAb = NextAbToCheck (pAb, pRefAb);
-		  }
-
-	      /* not out of structure relations now */
-	      pBox->BxWOutOfStruct = FALSE;
-	    }
-	  else
-	    {
-	      if (pBox->BxVertFlex)
-		{
-		  /* strechable box */
-		  while (loop && pAb)
-		    {
-		      if (pAb->AbBox)
-			loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, FALSE, horizRef);
-		      if (pAb)
-			pAb = NextAbToCheck (pAb, pRefAb);
-		    }
-		  
-		  /* Il faut retablir le point fixe */
-		  pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
-		  /* La boite n'est pas inversee */
-		  pBox->BxVertInverted = FALSE;
-		  /* La dimension n'est plus elastique */
-		  pBox->BxVertFlex = FALSE;
-		  /* Annule la hauteur de la boite */
-		  ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
-		}
-	      else
-		/* not strechable box */
-		while (loop && pAb)
-		  {
-		    if (pAb->AbBox)
-		      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-		    if (pAb)
-		      pAb = NextAbToCheck (pAb, pRefAb);
-		  }
-	    }
-	}
-    }
-  else
-    {
-      /* Remove a possible relation from the enclosing boxe */
-      if (pAb)
-	{
-	  loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-	  if (loop)
-	    pAb = pAb->AbFirstEnclosed;
-	}
-
-      /* Remove a pposible relation from sibling boxes */
-      while (loop && pAb)
-	{
-	  if (pAb->AbBox && pAb != pRefAb)
-	    {
-	      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-	      if (loop)
-		pAb = pAb->AbNext;
-	    }
-	  else
-	    pAb = pAb->AbNext;
-	}
-      
-      /* La dimension est elastique en X ? */
       if (horizRef && pBox->BxHorizFlex)
 	{
-	  /* La boite n'est pas inversee */
+	  /* Streched box? */
+	  pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
+	  if (pOrginBox)
+	    RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
+	  /* Restore the fixed edge */
+	  pBox->BxHorizEdge = pAb->AbHorizPos.PosEdge;
 	  pBox->BxHorizInverted = FALSE;
-	  /* La dimension n'est plus elastique */
 	  pBox->BxHorizFlex = FALSE;
-	  /* Il faut retablir le point fixe */
-	  pBox->BxHorizEdge = pBox->BxAbstractBox->AbHorizPos.PosEdge;
-	  /* Annule la largeur de la boite */
 	  ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
 	}
-      
-      /* La dimension est elastique en Y ? */
-      if (!horizRef && pBox->BxVertFlex)
+      else if (!horizRef && pBox->BxVertFlex)
 	{
-	  /* La boite n'est pas inversee */
+	  if (pAb->AbHeight.DimPosition.PosAbRef)
+	    pOrginBox = pAb->AbHeight.DimPosition.PosAbRef->AbBox;
+	  if (pOrginBox)
+	    RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, FALSE);
+	  /* Restore the fixed edge */
+	  pBox->BxVertEdge = pAb->AbVertPos.PosEdge;
 	  pBox->BxVertInverted = FALSE;
-	  /* La dimension n'est plus elastique */
 	  pBox->BxVertFlex = FALSE;
-	  /* Il faut retablir le point fixe */
-	  pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
-	  /* Annule la hauteur de la boite */
 	  ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
 	}
-    }
-
-  /* remove a possible dim relation from the root box */
-  pAb = pRefAb->AbEnclosing;
-  if (pAb)
-    {
-      while (pAb->AbEnclosing)
-	pAb = pAb->AbEnclosing;
-      RemoveDimRelation (pAb->AbBox, pBox, horizRef);
     }
 }

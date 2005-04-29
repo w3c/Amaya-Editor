@@ -2222,9 +2222,9 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			  for (j = 1; j <= Indent + 6; j++)
 			     fprintf (fileDescriptor, " ");
 			  fprintf (fileDescriptor, "Width changes ");
-			  if (pDimRel->DimRSame[i - 1])
+			  if (pDimRel->DimROp[i - 1] == OpSame)
 			     fprintf (fileDescriptor, "Width of ");
-			  else
+			  else if (pDimRel->DimROp[i - 1] == OpReverse)
 			     fprintf (fileDescriptor, "Height of ");
 			  if (pDimRel->DimRTable[i - 1]->BxAbstractBox != NULL)
 			     wrnumber (pDimRel->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);
@@ -2252,9 +2252,9 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			  for (j = 1; j <= Indent + 6; j++)
 			     fprintf (fileDescriptor, " ");
 			  fprintf (fileDescriptor, "Height changes ");
-			  if (pDimRel->DimRSame[i - 1])
+			  if (pDimRel->DimROp[i - 1] == OpSame)
 			     fprintf (fileDescriptor, "Height of ");
-			  else
+			  else if (pDimRel->DimROp[i - 1] == OpReverse)
 			     fprintf (fileDescriptor, "Width of ");
 			  if (pDimRel->DimRTable[i - 1]->BxAbstractBox != NULL)
 			     wrnumber (pDimRel->DimRTable[i - 1]->BxAbstractBox->AbNum, fileDescriptor);

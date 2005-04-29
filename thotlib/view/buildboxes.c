@@ -1852,6 +1852,131 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
 }
 
 /*----------------------------------------------------------------------
+  AddFlow registers the new flow.
+  ----------------------------------------------------------------------*/
+static void AddFlow (PtrAbstractBox pAb, int frame)
+{
+#ifdef POSITIONING
+  ViewFrame          *pFrame;
+  PtrFlow             pFlow, prev = NULL;
+  Positioning        *pos;
+  int                 w, h;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox && pAb &&
+      pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pAb->AbPositioning)
+    {
+      /* check if the flow is already registered */
+      pFlow = pFrame->FrFlow;
+      while (pFlow)
+	{
+	  if (pFlow->FlRootBox == pAb)
+	    return;
+	  prev = pFlow;
+	  pFlow = pFlow->FlNext;
+	}
+
+      /* create a new flow */
+      pFlow = (PtrFlow) TtaGetMemory (sizeof (Flow));
+      if (prev)
+	{
+	  pFlow->FlNext = prev->FlNext;
+	  prev->FlNext = pFlow;
+	}
+      else
+	{
+	  pFlow->FlNext = NULL;
+	  pFrame->FrFlow = pFlow;
+	}
+      if (pFlow->FlNext)
+	pFlow->FlNext->FlPrevious = pFlow;
+      pFlow->FlPrevious = prev;
+      pFlow->FlRootBox = pAb;
+      pFlow->FlType = pAb->AbPositioning->PnAlgorithm;
+      pFlow->FlXStart = pFlow->FlYStart = 0;
+      if (pFlow->FlType == PnRelative)
+	{
+	  /* store the current shift */
+	  pos = pAb->AbPositioning;
+	  if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+	    {
+	      w = pAb->AbEnclosing->AbBox->BxW;
+	      h = pAb->AbEnclosing->AbBox->BxH;
+	    }
+	  else
+	    w = h = 0;
+	  
+	  if (pos->PnLeftUnit == UnPercent)
+	    pFlow->FlXStart = PixelValue (pos->PnLeftDistance, UnPercent,
+					  (PtrAbstractBox) w, 0);
+	  else if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
+	    pFlow->FlXStart = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  else if (pos->PnRightUnit == UnPercent)
+	    pFlow->FlXStart = -PixelValue (pos->PnRightDistance, UnPercent,
+			    (PtrAbstractBox) w, 0);
+	  else if (pos->PnRightUnit != UnUndefined && pos->PnRightUnit != UnAuto)
+	    pFlow->FlXStart = -PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	  if (pos->PnTopUnit == UnPercent)
+	    pFlow->FlYStart = PixelValue (pos->PnTopDistance, UnPercent,
+					  (PtrAbstractBox) h, 0);
+	  else if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
+	    pFlow->FlYStart = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  else if (pos->PnBottomUnit == UnPercent)
+	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, UnPercent,
+			    (PtrAbstractBox) h, 0);
+	  else if (pos->PnBottomUnit != UnUndefined && pos->PnBottomUnit != UnAuto)
+	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	}
+printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+    }
+#endif /* POSITIONING */
+}
+
+/*----------------------------------------------------------------------
+  RemoveFlow removes a flow.
+  ----------------------------------------------------------------------*/
+static void RemoveFlow (PtrAbstractBox pAb, int frame)
+{
+#ifdef POSITIONING
+  ViewFrame          *pFrame;
+  PtrFlow             pFlow, prev = NULL;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox && pAb)
+    {
+      /* check if the flow is already registered */
+      pFlow = pFrame->FrFlow;
+      while (pFlow)
+	{
+	  if (pFlow->FlRootBox == pAb)
+	    {
+printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+	      /* remove the current flow */  
+	      if (prev)
+		prev->FlNext = pFlow->FlNext;
+	      else
+		pFrame->FrFlow = pFlow->FlNext;
+	      if (pFlow->FlNext)
+		pFlow->FlNext->FlPrevious = prev;
+	      TtaFreeMemory (pFlow);
+	      return;
+	    }
+	  else
+	    {
+	      prev = pFlow;
+	      pFlow = pFlow->FlNext;
+	    }
+	}
+    }
+#endif /* POSITIONING */
+}
+
+/*----------------------------------------------------------------------
   AddFloatingBox registers the floating box in the parent block.
   ----------------------------------------------------------------------*/
 static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
@@ -2377,6 +2502,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* Positioning of the created box */
       i = 0;
       positioning = ComputePositioning (pCurrentBox, frame);
+      if (positioning ||
+	  (pAb->AbPositioning &&
+	   pAb->AbPositioning->PnAlgorithm == PnRelative))
+ 	AddFlow (pAb, frame);
       if (!positioning)
 	{
 	  if (!inLine && !inLineFloat &&
@@ -2733,6 +2862,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  ClearOutOfStructRelation (pBox);
 	  if (pAb->AbLeafType == LtCompound)
 	    {
+	      if (pAb->AbPositioning)
+		RemoveFlow (pAb, frame);
 	      /* unregister the box */
 	      pBox->BxDisplay = FALSE;
 	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
@@ -2909,8 +3040,10 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
       pPreviousDimRel = pDimRel;
       while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
 	{
-	  if (pDimRel->DimRSame[i] == horizRef)
+	  if ((pDimRel->DimROp[i] == OpSame && horizRef) ||
+	      (pDimRel->DimROp[i] == OpReverse && !horizRef))
 	    {
+	      /* The right dimension */
 	      if (pBox == pDimRel->DimRTable[i])
 		/* The box is already registered */
 		return;
@@ -2941,7 +3074,10 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 
   pDimRel->DimRTable[i] = pBox;
   /* packing the width or the height */
-  pDimRel->DimRSame[i] = horizRef;
+  if (horizRef)
+    pDimRel->DimROp[i] = OpSame;
+  else
+    pDimRel->DimROp[i] = OpReverse;
 }
 
 
@@ -4237,9 +4373,9 @@ void ComputeEnclosing (int frame)
 		i = MAX_RELAT_DIM;
 	     else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
 		;		/* doesn't exist anymore */
-	     else if (pDimRel->DimRSame[i])
+	     else if (pDimRel->DimROp[i] == OpSame)
 		WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-	     else
+	     else if (pDimRel->DimROp[i] == OpReverse)
 		HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
 	     /* next entry */
 	     i++;

@@ -1663,7 +1663,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrAbstractBox      pAb, pAbRef = NULL;
   PtrBox              box;
   int                 bottomL = 0, bottomR = 0, y;
-  int                 orgX, orgY, width, max;
+  int                 orgX, orgY, width;
   int                 t, b, l, r, lbmp, rbmp;
   ThotBool            clearL, clearR;
   ThotBool            clearl, clearr;
@@ -1752,7 +1752,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     variable = TRUE;
 
   /* minimum width needed to format the line */
-  if (variable && (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
+  if (variable &&
+      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock ||
+       pBox->BxType == BoTable))
     {
       width = pBox->BxMinWidth;
       if (width == 0)
@@ -2161,7 +2163,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 		  if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
 		    val = val * pNextBox->BxAbstractBox->AbWidth.DimValue / 100;
 		  else if ((pNextBox->BxType == BoBlock ||
-			    pNextBox->BxType == BoFloatBlock) &&
+			    pNextBox->BxType == BoFloatBlock ||
+			    pNextBox->BxType == BoTable) &&
 			   pNextBox->BxAbstractBox->AbDisplay == 'I' &&
 			   pNextBox->BxMaxWidth < val)
 		    {
@@ -2288,8 +2291,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 	    {
 	      /* the whole box can be inserted in the line */
 	      if (pNextBox->BxType == BoBlock ||
-		  pNextBox->BxType == BoFloatBlock ||
-		  pNextBox->BxType == BoTable)
+		  pNextBox->BxType == BoFloatBlock)
 		wordWidth = pNextBox->BxMinWidth;
 	      else if (pNextBox->BxAbstractBox->AbLeafType != LtText &&
 		       !pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
@@ -2330,7 +2332,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 		still = FALSE;
 	      else if (((pBox->BxAbstractBox->AbFloat == 'N' &&
 			 !ExtraFlow (pBox, frame) &&
-			 pBox->BxAbstractBox->AbDisplay == 'B' &&
+			 (pBox->BxAbstractBox->AbDisplay == 'B' ||
+			  pBox->BxType == BoTable) &&
 			 pBox->BxAbstractBox->AbLeafType == LtCompound) ||
 			(pNextBox && pNextBox->BxAbstractBox &&
 			 pNextBox->BxAbstractBox->AbFloat == 'N' &&
@@ -2386,8 +2389,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 	      /* cannot break the box */
 	      pBox = pNextBox;	/* it's also the last box */
 	      if (pBox->BxType == BoBlock ||
-		  pBox->BxType == BoFloatBlock ||
-		  pBox->BxType == BoTable)
+		  pBox->BxType == BoFloatBlock)
 		wordWidth = pBox->BxMinWidth;
 	      else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition &&
 		       pBox->BxAbstractBox->AbHorizEnclosing &&

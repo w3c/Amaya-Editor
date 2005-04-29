@@ -1937,7 +1937,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      TtaFreeMemory ((STRING) pBox->BxPictInfo);
 	      pBox->BxPictInfo = NULL;
 	    }
-	    
+
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
@@ -2225,7 +2225,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  if (pAb)
 		    {
 		      /* Is it the same dimension? */
-		      if (pDimRel->DimRSame[i])
+		      if (pDimRel->DimROp[i] == OpSame)
 			{
 			  /* Changing the width */
 			  if (pAb->AbWidth.DimUnit == UnPercent)
@@ -2250,11 +2250,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				/* refer the outside width */
 				val = val + diff + addL + addR;
 			    }
+
 			  /* avoid cycles on the same box */
 			  if (box != pBox)
 			    ChangeWidth (box, pSourceBox, pBox, val, 0, frame);
 			}
-		      else
+		      else if (pDimRel->DimROp[i] == OpReverse)
 			{
 			  /* Changing the height */
 			  if (pAb->AbHeight.DimUnit == UnPercent)
@@ -2746,7 +2747,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  box = pDimRel->DimRTable[i];
 		  pAb = box->BxAbstractBox;		    
 		  /* Is it the same dimension? */
-		  if (pDimRel->DimRSame[i] && pAb)
+		  if (pDimRel->DimROp[i] == OpSame && pAb)
 		    {
 		      /* Changing the height */
 		      if (pAb->AbHeight.DimUnit == UnPercent)
@@ -2787,7 +2788,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      if (box != pBox)
 			ChangeHeight (box, pSourceBox, pBox, val, frame);
 		    }
-		  else
+		  else if (pDimRel->DimROp[i] == OpReverse && pAb)
 		    {
 		      /* Changing the width */
 		      if (pAb->AbWidth.DimUnit == UnPercent)
@@ -3654,7 +3655,6 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
     {
       /* register that we're preforming the job */
       pBox->BxPacking += 1;
-      
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsYPosComplete (pBox);
       if (absoluteMove)

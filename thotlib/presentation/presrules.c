@@ -3264,6 +3264,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition         *pPavP1;
   ThotPictInfo       *image;
   PtrAbstractBox      pAbb;
+  ThotBool            ignorefix = FALSE;
 
   appl = FALSE;
   if (pPRule && pAb && pAb->AbElement)
@@ -4249,11 +4250,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      else
 		{
 		  if (pAb->AbEnclosing)
-		    {
-		      /* rule gather on the parent box */
-		      pAb->AbEnclosing->AbBuildAll = TRUE;
-		      pAb->AbEnclosing->AbBuildAll = TRUE;
-		    }
+		    /* rule gather on the parent box */
+		    pAb->AbEnclosing->AbBuildAll = TRUE;
 		  pAb->AbAcceptLineBreak = FALSE;
 		  pAb->AbBuildAll = TRUE;
 		  pAb->AbNotInLine = FALSE;
@@ -4313,10 +4311,20 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      appl = TRUE;
 		      break;
 		    case 'A':
+		      if (pAb->AbEnclosing)
+			/* rule gather on the parent box */
+			pAb->AbEnclosing->AbBuildAll = TRUE;
 		      pAb->AbPositioning->PnAlgorithm = PnAbsolute;
 		      appl = TRUE;
 		      break;
 		    case 'F':
+		      //TtaGetEnvBoolean ("IGNORE_FIXED_POS", &ignorefix);
+		      if (!ignorefix)
+			{
+			  if (pDoc->DocViewRootAb[pAb->AbDocView - 1])
+			    /* rule gather on the root box */
+			    pDoc->DocViewRootAb[pAb->AbDocView - 1]->AbBuildAll = TRUE;
+			}
 		      pAb->AbPositioning->PnAlgorithm = PnFixed;
 		      appl = TRUE;
 		      break;

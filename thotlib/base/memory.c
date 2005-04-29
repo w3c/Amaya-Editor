@@ -1852,7 +1852,6 @@ void FreePosBlock (PtrPosRelations * pBlock)
   ----------------------------------------------------------------------*/
 void GetDimBlock (PtrDimRelations * pBlock)
 {
-   int                 i;
    PtrDimRelations     pNewBlock;
 
    if (PtFree_BDim == NULL)
@@ -1869,8 +1868,6 @@ void GetDimBlock (PtrDimRelations * pBlock)
    if (pNewBlock)
      {
        memset (pNewBlock, 0, sizeof (DimRelations));
-       for (i = 0; i < MAX_RELAT_DIM; i++)
-	 pNewBlock->DimRSame[i] = TRUE;
        NbUsed_BDim++;
      }
 }
