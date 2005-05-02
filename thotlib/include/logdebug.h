@@ -21,7 +21,8 @@ enum {
   TTA_LOG_SOCKET    = 1 << 7,
   TTA_LOG_CLIPBOARD = 1 << 8,
   TTA_LOG_FONT      = 1 << 9,
-  TTA_LOG_MAX       = 1 << 10,
+  TTA_LOG_SVGEDIT   = 1 << 10,
+  TTA_LOG_MAX       = 1 << 11,
 };
 
 #if !defined(__WXDEBUG__)
@@ -35,6 +36,10 @@ enum {
 #define TTALOGDEBUG_7( filter, message, p1, p2, p3, p4, p5, p6, p7 ) ;
 #define TTALOGDEBUG_8( filter, message, p1, p2, p3, p4, p5, p6, p7, p8 ) ;
 #define TTALOGDEBUG_9( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9 ) ;
+#define TTALOGDEBUG_10( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 ) ;
+#define TTALOGDEBUG_11( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 ) ;
+#define TTALOGDEBUG_12( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 ) ;
+#define TTALOGDEBUG_13( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13 ) ;
 #endif /* __WXDEBUG__ */
 
 #ifdef _WX
@@ -50,6 +55,10 @@ enum {
 #define TTALOGDEBUG_7( filter, message, p1, p2, p3, p4, p5, p6, p7 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7 );
 #define TTALOGDEBUG_8( filter, message, p1, p2, p3, p4, p5, p6, p7, p8 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8 );
 #define TTALOGDEBUG_9( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8, p9 );
+#define TTALOGDEBUG_10( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 );
+#define TTALOGDEBUG_11( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 );
+#define TTALOGDEBUG_12( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 );
+#define TTALOGDEBUG_13( filter, message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13 ) if ((filter) & g_logdebug_filter) wxLogDebug( message, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13 );
 #endif /* __WXDEBUG__ */
 #endif /* _WX */
 

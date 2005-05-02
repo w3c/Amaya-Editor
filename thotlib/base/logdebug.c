@@ -21,5 +21,6 @@ tta_logdebug_filter_names g_logdebug_filter_names[] = {
   {"Socket",    "LOGDEBUG_SOCKET"},    /* TTA_LOG_SOCKET */
   {"Clipboard", "LOGDEBUG_CLIPBOARD"}, /* TTA_LOG_CLIPBOARD */
   {"Font",      "LOGDEBUG_FONT"},      /* TTA_LOG_FONT */
+  {"SVGEdit",   "LOGDEBUG_SVGEDIT"},   /* TTA_LOG_SVGEDIT */
   {"",          ""}                    /* dont remove this entry */
 };

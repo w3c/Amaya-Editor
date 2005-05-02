@@ -61,7 +61,10 @@ static int          GridSize = 1;
 #endif /*_GTK*/
 
 #ifdef _WX
+  #include "logdebug.h"
   #include "message_wx.h"
+  #include "AmayaFrame.h"
+  #include "AmayaAddPointEvtHandler.h"
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -118,6 +121,14 @@ void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
   DeleteDC (hdc);
 }
 #endif /* _WINGUI */
+
+/*----------------------------------------------------------------------
+  TtaGridDoAlign export the macro DO_ALIGN used to align points on a grid
+  ----------------------------------------------------------------------*/
+int TtaGridDoAlign(int value)
+{
+  return DO_ALIGN(value);
+}
 
 /*----------------------------------------------------------------------
   VideoInvert switch to inverse video the area of frame located at
@@ -337,14 +348,20 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
 #ifdef _WX
-  /* TODO: WX ... */
-  wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-  messagedialog.ShowModal();
-#else /* defined(_WX) */
-#if defined(_WINGUI) || defined(_GTK)
+  TTALOGDEBUG_13( TTA_LOG_SVGEDIT, _T("AddPoints: frame=%d x=%d y=%d x1=%d y1=%d x3=%d y3=%d lastx=%d lasty=%d point=%d maxPoints=%d width=%d height=%d"), frame, x, y, x1, y1, x3, y3, lastx, lasty, point, maxPoints, width, height );
+  
+  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+  AmayaAddPointEvtHandler * p_addPointEvtHandler = new AmayaAddPointEvtHandler( p_frame,
+										x, y, x1, y1, x3, y3, lastx, lasty, point,
+										nbpoints, maxPoints, width, height,
+										Pbuffer, Bbuffer );
+  // now wait for the polygon creation end
+  ThotEvent ev;
+  while(!p_addPointEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_addPointEvtHandler;
+#else /* _WX */
   ThotWindow          w;
 #ifdef _GTK
    ThotEvent         *event;
@@ -704,7 +721,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   ThotUngrab ();  
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
-#endif /* #if defined(_WINGUI) || defined(_GTK) */
 #endif /* _WX */
 }
 

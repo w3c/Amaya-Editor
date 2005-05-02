@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int TtaGridDoAlign ( int value );
 extern int PolyLineCreation ( int frame,
                               int *xOrg,
                               int *yOrg,
@@ -81,6 +82,7 @@ extern void GeometryCreate ( int frame,
 
 #else /* __STDC__ */
 
+extern int TtaGridDoAlign ( int value );
 extern int PolyLineCreation ( int frame,
                                 int *xOrg,
                                 int *yOrg,

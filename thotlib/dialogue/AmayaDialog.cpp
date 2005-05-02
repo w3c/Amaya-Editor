@@ -65,7 +65,7 @@ AmayaDialog::~AmayaDialog()
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaDialog::~AmayaDialog"));
 
-  TtaDestroyDialogue( m_Ref );
+  //  TtaDestroyDialogue( m_Ref );
 
   /* then give focus to canvas */
   //  TtaRedirectFocus();

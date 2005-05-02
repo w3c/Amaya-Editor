@@ -203,6 +203,7 @@ EDITOR_OBJ = \
 	content/search.o \
 	content/searchref.o \
 	content/word.o \
+	dialogue/AmayaAddPointEvtHandler.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaWindowIterator.o \

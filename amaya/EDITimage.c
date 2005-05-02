@@ -415,14 +415,6 @@ static void GetAlt (Document document, View view)
   ----------------------------------------------------------------------*/
 static void CreateAreaMap (Document doc, View view, char *shape)
 {
-#ifdef _WX
-  /* TODO: WX ... */
-  wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-  messagedialog.ShowModal();
-#else /* defined(_WX) */
    Element             el, map, parent, image, child;
    Element             newMap, newElem;
    ElementType         elType;
@@ -637,32 +629,39 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	/* Compute coords attribute */
 	SetAreaCoords (doc, el, 0);
 
-	/* create the attribute ALT */
-	attrType.AttrTypeNum = HTML_ATTR_ALT;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
-	GetAlt (doc, view);
-	if (ImgAlt[0] == EOS)
-	  {
-	    /* abandon the creation of the area */
-	    if (newMap)
-	      TtaDeleteTree (newMap, doc);
-	    else
-	      TtaDeleteTree (el, doc);
-	    TtaCancelLastRegisteredSequence (doc);
-	    if (!docModified)
-	      TtaSetDocumentUnmodified (doc);
-	    TtaSelectElement (doc, image);
-	    return;
-	  }
+  /* check the attribute ALT is not allready present 
+   * it should surely be allready created because of mandatory attributs auto-creation */
+  attrType.AttrTypeNum = HTML_ATTR_ALT;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == 0)
+    {
+      /* create the attribute ALT */
+      attrType.AttrTypeNum = HTML_ATTR_ALT;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      GetAlt (doc, view);
+      if (ImgAlt[0] == EOS)
+        {
+          /* abandon the creation of the area */
+          if (newMap)
+            TtaDeleteTree (newMap, doc);
+          else
+            TtaDeleteTree (el, doc);
+          TtaCancelLastRegisteredSequence (doc);
+          if (!docModified)
+            TtaSetDocumentUnmodified (doc);
+          TtaSelectElement (doc, image);
+          return;
+        }
 #ifdef _WX
-	TtaSetAttributeText (attr, ImgAlt, el, doc);
+      TtaSetAttributeText (attr, ImgAlt, el, doc);
 #else /* _WX */
-	utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
-					   TtaGetDefaultCharset ());
-	TtaSetAttributeText (attr, utf8value, el, doc);
-	TtaFreeMemory (utf8value);
+      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+                                               TtaGetDefaultCharset ());
+      TtaSetAttributeText (attr, utf8value, el, doc);
+      TtaFreeMemory (utf8value);
 #endif /* _WX */
+    }
 	ImgAlt[0] = EOS;
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
@@ -678,7 +677,6 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    if (attrRefimg)
       TtaRegisterAttributeCreate (attrRefimg, map, doc);
    TtaCloseUndoSequence (doc);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
