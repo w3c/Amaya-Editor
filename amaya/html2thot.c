@@ -2876,6 +2876,17 @@ static void EndOfAttrName (char c)
 	   if (elType.ElTypeNum == HTML_EL_Table_)
 	     tableEntry = NULL;
 	 }
+       else if (tableEntry->ThotAttribute == HTML_ATTR_xmlid)
+	 {
+	   if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
+	     inputBuffer[MaxMsgLength - 30] = EOS;
+	   sprintf (msgBuffer, "Invalid attribute \"%s\"(removed when saving)", inputBuffer);
+	   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
+	   /* attach an Invalid_attribute to the current element */
+	   tableEntry = &pHTMLAttributeMapping[0];
+	   schema = DocumentSSchema;
+	   UnknownAttr = TRUE;
+	 }
      }
    
    if (!tableEntry)
@@ -2890,10 +2901,10 @@ static void EndOfAttrName (char c)
 	       lastAttrEntry = NULL;
 	       /**** register this namespace ****/;
 	     }
-	   else if (strcasecmp ((char *)inputBuffer, "xml:lang") == 0)
+	   //else if (strcasecmp ((char *)inputBuffer, "xml:lang") == 0)
 	     /* attribute xml:lang is not considered as invalid, but it is
 		ignored */
-	     lastAttrEntry = NULL;
+	   //  lastAttrEntry = NULL;
 	   else
 	     {
 	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)

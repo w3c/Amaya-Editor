@@ -11,7 +11,7 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
    Highlight = Yes_;    { to show the XML element corresponding to the
 			  current selection in the source view }
-   xmlid = Text;			{ id }
+   xmlid = Text;		{ id }
    class = Text;		{ class }
    PseudoClass = Text;
 
@@ -49,4 +49,5 @@ EXCEPT
    cdata_line:          Hidden;
    XML_Element:         Hidden, IsPlaceholder;
    xml_space:           SpacePreserve;
+   xmlid:		CssId;
 END

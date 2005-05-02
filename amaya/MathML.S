@@ -16,6 +16,7 @@ ATTR
    id = TEXT;
    xref = TEXT;
    other = TEXT;
+   xmlid = Text;		{ xml:id }
    xml_space = xml_space_default, xml_space_preserve;
 
    { generic attributes for internal use }
@@ -488,7 +489,7 @@ EXCEPT
    C_Empty:		Hidden, NoSelect;
    C_Space:		Hidden, NoSelect;
 
-   id:			CssId;
+   id:			CssId; {Default id attribute}
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
    { attributes for internal use }

@@ -655,6 +655,14 @@ ATTRIBUTES
 	create '"';
 	end;
   
+   xmlid:
+	begin
+	create SAN;
+	create 'xml:id="';
+	create xmlid;
+	create '"';
+	end;
+  
    xref:
 	begin
 	create SAN;

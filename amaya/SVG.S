@@ -12,7 +12,7 @@ ATTR
    {stdAttrs}
    id = text;
    xml_base = text;
-
+   xmlid = Text;		{ xml:id }
    xml_space = xml_space_default, xml_space_preserve;
 
    { attributes for internal processing }
@@ -22,6 +22,7 @@ ATTR
    Highlight = Yes_;        { to show the SVG element corresponding to the
 			      current selection in the source view }
    Namespace = text;        { for children of element foreignObject }
+
 
 CONST
 
@@ -2512,7 +2513,7 @@ EXCEPT
    XMLcomment:	        ReturnCreateNL, NoReplicate;
 
    { exceptions for attributes }
-   id:                  CssId;
+   id:                  CssId; {Default id attribute}
    class:               CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
    Unknown_attribute:   Invisible;
@@ -2661,5 +2662,5 @@ EXCEPT
    strikethrough_thickness:	Invisible;
    overline_position:	Invisible;
    overline_thickness:	Invisible;
-   xml_space:      SpacePreserve;
+   xml_space:		SpacePreserve;
 END

@@ -32,6 +32,7 @@ ATTR
 			  current selection in the source view }
    IntEntity = Yes_;	{ do not translate & into &amp; in output file }
    EntityName = Text;   { the content of the element is the name of an entity }
+   xmlid = Text;		{ xml:id }
    xml_space = xml_space_default, xml_space_preserve; { xml:space }
    NoImages = Yes_;
    NoObjects = Yes_;
@@ -992,7 +993,7 @@ EXCEPT
 	onreset:	EventAttr;
 	onchange:	EventAttr;
 	onselect:	EventAttr;
-	ID :		CssId;
+	ID :		CssId; {Default id attribute}
 	Class:		CssClass;
 	External_Object_Content: Hidden;
 	Embed_Content:  Hidden, NoSelect;

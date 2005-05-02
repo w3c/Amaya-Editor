@@ -377,6 +377,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"xlink:title", "", 'A', SVG_ATTR_xlink_title, L_OtherValue},
    {"xlink:type", "", 'A', SVG_ATTR_xlink_type, L_OtherValue},
    {"xml:base", "", 'A', SVG_ATTR_xml_base, L_OtherValue},
+   {"xml:id", "", 'A', SVG_ATTR_xmlid, L_OtherValue},
    {"xml:space", "", 'A', SVG_ATTR_xml_space, L_OtherValue},
    {"y", "", 'A', SVG_ATTR_y, L_OtherValue},
    {"y1", "", 'A', SVG_ATTR_y1, L_OtherValue},

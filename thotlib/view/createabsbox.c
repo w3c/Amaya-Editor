@@ -2740,12 +2740,13 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   PtrPRule            pRule;
   PtrAttribute        pAt2;
   PtrElement          pElAttr;
+  PtrSSchema	      pSSattr;
   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
   NumAttrCase        *pCase;
   char                buffer[400];
   char               *attrValue, *ptr, *wordEnd;
   unsigned int        len;
-  int                 i, j, k;
+  int                 i, j, k, attrNum;
   CHAR_T             *refVal;
   ThotBool            found, ok;
 
@@ -2765,17 +2766,17 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       return (NULL);
     }
 
-  pAPRule = pSchP->PsAttrPRule->AttrPres[pAttr->AeAttrNum - 1];
-
+  pPRdef = pPRinherit = NULL;
+  len = 0;
+  attrValue = NULL;
+  attrNum = pAttr->AeAttrNum;
+  pSSattr = pAttr->AeAttrSSchema;
+  pAPRule = pSchP->PsAttrPRule->AttrPres[attrNum - 1];
   /* on cherche quel est le paquet de regles qui s'applique */
   /* pPRdef designera le paquet de regles s'appliquant a tous les elements */
   /* c'est a dire celui pour lequel pAPRule->ApElemType = 0  */
   /* pPRinherit  designera le paquet pour lequel
      pAPRule->ApElemType = pEl->ElTypeNumber */
-
-  pPRdef = pPRinherit = NULL;
-  len = 0;
-  attrValue = NULL;
 
   if (pAttr->AeAttrType != AtTextAttr)
     *valueNum = 0;
@@ -2787,7 +2788,20 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	attrValue = buffer;
       }
 
-    if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
+    if (pSSattr->SsAttribute &&
+	!pSSattr->SsIsXml && /* not a generic xml schema */
+	pSSattr->SsAttribute->TtAttr[attrNum - 1] &&
+	!strcmp (pSSattr->SsAttribute->TtAttr[attrNum - 1]->AttrName, "xml:id"))
+      {
+	if (pAPRule == NULL)
+	  {
+	    /* look for rules applied to the default id attribute */
+	    attrNum = GetAttrWithException(ExcCssId, pSSattr);
+	    pAPRule = pSchP->PsAttrPRule->AttrPres[attrNum - 1];
+	  }
+      }
+
+    if (!AttrHasException (ExcCssClass, attrNum, pSSattr))
       /* the content of the attribute is considered as a single value */
       {
       *valueNum = 0;
@@ -2838,7 +2852,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       }
     }
     
-  for (i = pSchP->PsNAttrPRule->Num[pAttr->AeAttrNum - 1]; i-- > 0;
+  for (i = pSchP->PsNAttrPRule->Num[attrNum - 1]; i-- > 0;
        pAPRule = pAPRule->ApNextAttrPres)
     {
       if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == AnyType +1 ||
@@ -2862,8 +2876,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			   attribute value */
 			{
 			  while (attrValue[j] != EOS &&
-				 SameChar (attrValue[j], refVal[j],
-					   pAttr->AeAttrNum) &&
+				 SameChar (attrValue[j], refVal[j], attrNum) &&
 				 refVal[j] != EOS)
 			    j++;
 			  ok = (refVal[j] == EOS &&
@@ -2875,7 +2888,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			    k = 0;
 			    while (refVal[k] != EOS &&
 				   SameChar (attrValue[j + k], refVal[k],
-					     pAttr->AeAttrNum))
+					     attrNum))
 			      k++;
 			    ok = (refVal[k] == EOS);
 			    if (ok)
@@ -2966,7 +2979,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		      pAt2 = pAttrComp;
 		    else
 		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
-					   pAttr->AeAttrSSchema, &pElAttr);
+					   pSSattr, &pElAttr);
 		    if (pAt2 != NULL)
 		      if (pAttr->AeAttrValue == pAt2->AeAttrValue)
 			{
@@ -2981,7 +2994,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		      pAt2 = pAttrComp;
 		    else
 		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaUpperBound,
-					   pAttr->AeAttrSSchema, &pElAttr);
+					   pSSattr, &pElAttr);
 		    if (pAt2 != NULL)
 		      if (pAttr->AeAttrValue < pAt2->AeAttrValue)
 			{
@@ -2996,7 +3009,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		      pAt2 = pAttrComp;
 		    else
 		      pAt2 = GetTypedAttrAncestor (pEl, pCase->CaLowerBound,
-					   pAttr->AeAttrSSchema, &pElAttr);
+					   pSSattr, &pElAttr);
 		    if (pAt2 != NULL)
 		      if (pAttr->AeAttrValue > pAt2->AeAttrValue)
 			{
@@ -3017,7 +3030,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       case AtEnumAttr:
 	/* on verifie que la valeur est correcte */
 	if (pAttr->AeAttrValue < 0 ||
-	    pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues < pAttr->AeAttrValue)
+	    pSSattr->SsAttribute->TtAttr[attrNum - 1]->AttrNEnumValues < pAttr->AeAttrValue)
 	  /* valeur incorrecte, on prend les regles qui s'appliquent a */
 	  /* n'importe quelle valeur */
 	  pRule = pAPRule->ApEnumFirstPRule[0];
@@ -4348,7 +4361,7 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
 				 pAttr->AeAttrSSchema) ||
 	       AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
 				 pAttr->AeAttrSSchema)))
-	    pSSattr = pDoc->DocSSchema;
+	      pSSattr = pDoc->DocSSchema;
 	  /* process all values of the attribute, in case of a
 	     text attribute with a list of values */
 	  valNum = 1;
@@ -4719,7 +4732,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				       pAttr->AeAttrSSchema) ||
 		     AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
 				       pAttr->AeAttrSSchema)))
-		    pSSattr = pDoc->DocSSchema;
+		      pSSattr = pDoc->DocSSchema;
 		  /* process all values of the attribute, in case of a text
 		     attribute with multiple values */
 		  valNum = 1;

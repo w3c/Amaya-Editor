@@ -3684,11 +3684,34 @@ static void      CreateXmlComment (char *commentValue)
 void  LoadXmlStyleSheet  (Document doc)
 {
   int           i;
+  char         *ptr;
+  ThotBool      loadcss;
   
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (!loadcss)
+    return;
   for (i = 0; i < XML_CSS_Level; i++)
-    LoadStyleSheet (XML_CSS_Href [i], XML_CSS_Doc [i],
-		    XML_CSS_El [i], NULL, NULL,
-		    XML_CSS_Media [i], FALSE);
+    {
+      if (XML_CSS_Href[i] && !strncasecmp (XML_CSS_Href[i], "data:", 5))
+	{
+	  ptr = &XML_CSS_Href[i][5];
+	  if (!strncasecmp (ptr, "text/css", 8))
+	    /* confirm that it's a CSS stylesheet (see rfc2397) */
+	    ptr += 8;
+	  if (*ptr == ';')
+	    do
+	      ptr++;
+	    while (*ptr != ',' && *ptr != EOS);
+	  if (*ptr == ',')
+	    ReadCSSRules (XML_CSS_Doc[i], NULL, &ptr[9], NULL,
+			  TtaGetElementLineNumber (XML_CSS_El[i]), FALSE,
+			  XML_CSS_El[i]);
+	}
+      else
+	LoadStyleSheet (XML_CSS_Href[i], XML_CSS_Doc[i],
+			XML_CSS_El[i], NULL, NULL,
+			XML_CSS_Media[i], FALSE);
+    }
 }
 
 /*----------------------------------------------------------------------

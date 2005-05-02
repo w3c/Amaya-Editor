@@ -92,6 +92,13 @@ ATTRIBUTES
         AttrDelete.Post -> UpdateAttrID;
         END;
 
+   xmlid:
+        BEGIN
+        AttrCreate.Post -> UpdateAttrID;
+        AttrModify.Post -> UpdateAttrID;
+        AttrDelete.Post -> UpdateAttrID;
+        END;
+
    class:
         BEGIN
         AttrCreate.Post -> AttrClassChanged;

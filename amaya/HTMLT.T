@@ -2789,6 +2789,13 @@ ATTRIBUTES
 	Remove;	{ do no output the element content }
 	END;
 
+ xmlid:	BEGIN
+        create SAN;
+	Create 'xml:id="';
+	Create xmlid;
+	Create DoubleQuote;
+	END;
+
  xml_space = xml_space_default:
 	 Create ' xml:space="default"';
  xml_space = xml_space_preserve:

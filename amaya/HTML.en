@@ -291,6 +291,7 @@ polygon: poly
 default_: default
 ltr_: ltr
 rtl_: rtl
+xmlid: xml:id
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space

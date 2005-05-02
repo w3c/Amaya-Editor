@@ -65,6 +65,7 @@ Construct1: \0
 
 Language: xml:lang
 style\240: style
+xmlid: xml:id
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space

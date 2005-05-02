@@ -482,6 +482,12 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
        /* search all elements having an attribute ID */
        attrType.AttrTypeNum = HTML_ATTR_ID;
        elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+       if (!elFound)
+	 {
+	   /* search all elements having an attribute ID */
+	   attrType.AttrTypeNum = HTML_ATTR_xmlid;
+	   elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+	 }
      }
    if (!elFound)
      {
@@ -493,6 +499,12 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 	  {
           attrType.AttrTypeNum = MathML_ATTR_id;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+	  if (!elFound)
+	    {
+	      /* search all elements having an attribute ID */
+	      attrType.AttrTypeNum = MathML_ATTR_xmlid;
+	      elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+	    }
 	  }
      }
 #ifdef _SVG
@@ -506,6 +518,12 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 	  {
           attrType.AttrTypeNum = SVG_ATTR_id;
           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+	  if (!elFound)
+	    {
+	      /* search all elements having an attribute ID */
+	      attrType.AttrTypeNum = SVG_ATTR_xmlid;
+	      elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+	    }
 	  }
      }
 #endif /* _SVG */

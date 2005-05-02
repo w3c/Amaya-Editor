@@ -1688,12 +1688,20 @@ ATTRIBUTES
 	end;
 
    id:
-        begin
+        BEGIN
         create SAN;
         create 'id="';
         create id;
         create DoubleQuote;
-        end;
+        END;
+
+   xmlid:
+	BEGIN
+        create SAN;
+	Create 'xml:id="';
+	Create xmlid;
+	Create DoubleQuote;
+	END;
 
    xml_base:
 	BEGIN

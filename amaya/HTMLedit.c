@@ -1643,20 +1643,27 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 {
   ElementType	    elType, foundType;
-  AttributeType     attrType;
-  Attribute         attr;
+  AttributeType     attrType, attrIDType;
+  Attribute         attr, attrID;
   Element	    image, elFound;
   char             *value, *name;
   char              url[MAX_LENGTH];
   int               length, i;
-  ThotBool          change, checkID, checkNAME, result = FALSE;
+  ThotBool          change, checkID, checkNAME, checkXMLID;
+  ThotBool          result = FALSE;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  checkID = checkNAME = FALSE;
+  attrIDType.AttrSSchema = elType.ElSSchema;
+  checkID = checkNAME = checkXMLID = FALSE;
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp(name, "HTML"))
     {
+      attrIDType.AttrTypeNum = HTML_ATTR_xmlid;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+	/* the element has a xml:id attribute. Check it too */
+	checkXMLID = TRUE;
       /* it's an element from the XHTML namespace */
       if (elType.ElTypeNum == HTML_EL_Anchor ||
 	  elType.ElTypeNum == HTML_EL_MAP ||
@@ -1682,14 +1689,28 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 	attrType.AttrTypeNum = HTML_ATTR_ID;
     }
   else if (!strcmp(name, "MathML"))
-    /* it's an element from the MathML namespace, look for the
+    {
+      /* it's an element from the MathML namespace, look for the
        id attribute from the same namespace */
-    attrType.AttrTypeNum = MathML_ATTR_id;
+      attrIDType.AttrTypeNum = MathML_ATTR_xmlid;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+	/* the element has a xml:id attribute. Check it too */
+	checkXMLID = TRUE;
+      attrType.AttrTypeNum = MathML_ATTR_id;
+    }
 #ifdef _SVG
   else if (!strcmp(name, "SVG"))
-    /* it's an element from the SVG namespace, look for the
+    {
+      /* it's an element from the SVG namespace, look for the
        id attribute from the same namespace */
-    attrType.AttrTypeNum = SVG_ATTR_id;
+       attrIDType.AttrTypeNum = SVG_ATTR_xmlid;
+       attrID = TtaGetAttribute (el, attrIDType);
+       if (attrID)
+	 /* the element has a xml:id attribute. Check it too */
+	 checkXMLID = TRUE;
+       attrType.AttrTypeNum = SVG_ATTR_id;
+    }
 #endif /* _SVG */
   else
 #ifdef XML_GENERIC
@@ -1812,6 +1833,12 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 	      TtaSetAttributeText (attr, value, el, doc);
 	      if (!change)
 		TtaRegisterAttributeCreate (attr, el, doc);
+	    }
+	  if (checkXMLID && doIt)
+	    {
+	      /* Change or insert an ID attribute accordingly */
+	      TtaRegisterAttributeReplace (attrID, el, doc);
+	      TtaSetAttributeText (attrID, value, el, doc);
 	    }
 	  TtaFreeMemory (value);
 	}
@@ -3493,6 +3520,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
    ElementType         elType, parentType;
    Element             parent;
    char               *attr;
+   ThotBool            edit_xmlid;
 
    elType = TtaGetElementType (event->element);
 
@@ -3533,6 +3561,19 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
    attr = GetXMLAttributeName (event->attributeType, elType, event->document);
    if (attr[0] == EOS)
       return TRUE;	/* don't put an invalid attribute in the menu */
+
+   /* do we have to show xml:id in the menu? */
+   if (DocumentTypes[event->document] == docXml)
+     edit_xmlid = TRUE;
+   else
+     TtaGetEnvBoolean ("SHOW_XMLID", &edit_xmlid);
+   if (!edit_xmlid && event->attributeType.AttrTypeNum == HTML_ATTR_xmlid)
+     return TRUE;	/* don't show xml:id in the menu */
+   else if ((DocumentMeta[event->document] == NULL ||
+	     !DocumentMeta[event->document]->xmlformat) &&
+	    (event->attributeType.AttrTypeNum == HTML_ATTR_xml_space ||
+	     event->attributeType.AttrTypeNum == HTML_ATTR_xmlid))
+     return TRUE;	/* don't put xml attributes in the menu */
 
    /* handle only Global attributes */
    if (event->attributeType.AttrTypeNum != HTML_ATTR_ID &&

@@ -37,6 +37,7 @@ XMLPI: PI
 XMLPI_line: \0
 
 Language: xml:lang
+xmlid: xml:id
 xml_base: xml:base
 xml_space: xml:space
 xml_space_default: default
