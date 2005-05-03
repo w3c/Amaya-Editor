@@ -163,6 +163,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaMathMLPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaMovingBoxEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaNormalWindow.cpp
 # End Source File
 # Begin Source File
