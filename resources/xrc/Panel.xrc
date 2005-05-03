@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxPanel" name="wxID_TITLEPANEL">
+  <object class="wxPanel" name="wxID_PANEL">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -26,16 +26,21 @@
             <flag>wxALIGN_CENTRE</flag>
           </object>
         </object>
-        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
-      </object>
-      <object class="spacer">
-        <size>0,2</size>
+        <border>4</border>
       </object>
       <object class="sizeritem">
         <object class="wxStaticLine"/>
-        <flag>wxEXPAND</flag>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxScrolledWindow" name="wxID_PANEL_SWIN"/>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL|wxRAISED_BORDER</style>
   </object>
 </resource>

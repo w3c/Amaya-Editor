@@ -93,10 +93,8 @@ class AmayaPanel : public wxPanel
   int          m_PanelId;        // amaya panel id
   int          m_ParentWindowId; // amaya parent window id
   AmayaNormalWindow * m_pParentNWindow ;
-  AmayaSubPanel *        m_aPanelList[WXAMAYA_PANEL_TYPE_NB];
-
-  wxPanel *          m_pTitlePanel;
-  wxScrolledWindow * m_pScrolledWindow;
+  AmayaSubPanel *     m_aPanelList[WXAMAYA_PANEL_TYPE_NB];
+  wxScrolledWindow *  m_pScrolledWindow;
 };
 
 #endif // __AMAYAPANEL_H__

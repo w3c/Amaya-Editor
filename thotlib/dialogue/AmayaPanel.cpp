@@ -60,8 +60,8 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 			,const wxSize&  size
 			,long style
 			)
-  :  wxPanel( wxDynamicCast( p_parent_window, wxWindow ),
-	      id, pos, size, style )
+  :  wxPanel(/* wxDynamicCast( p_parent_window, wxWindow ),
+                id, pos, size, style*/ )
      ,m_pParentNWindow(p_parent_nwindow)
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::AmayaPanel") );
@@ -69,9 +69,10 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   // init the panel list
   memset( m_aPanelList, 0, WXAMAYA_PANEL_TYPE_NB * sizeof(AmayaSubPanel *));
 
-  // load title area
-  m_pTitlePanel = wxXmlResource::Get()->LoadPanel(this, _T("wxID_TITLEPANEL"));
-  m_pScrolledWindow = new wxScrolledWindow( this );
+  // load resource
+  wxXmlResource::Get()->LoadPanel(this, p_parent_window, _T("wxID_PANEL"));
+  // get reference of usefull child
+  m_pScrolledWindow = XRCCTRL(*this, "wxID_PANEL_SWIN", wxScrolledWindow);
   m_pScrolledWindow->SetScrollRate( 5, 5 );
 
   // load static sub-panels  
@@ -84,12 +85,6 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_aPanelList[WXAMAYA_PANEL_COLORS]     = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_CHARSTYLE]  = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
-
-  // attach subpanels & title to the panel
-  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
-  SetSizer(p_TopSizer);
-  p_TopSizer->Add( m_pTitlePanel,       0, wxALL | wxEXPAND, 5 );
-  p_TopSizer->Add( m_pScrolledWindow,   1, wxALL | wxEXPAND, 5 );
 
   wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
   m_pScrolledWindow->SetSizer(p_PanelSizer);
