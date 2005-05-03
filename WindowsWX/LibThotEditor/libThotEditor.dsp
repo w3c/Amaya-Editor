@@ -103,6 +103,10 @@ SOURCE=..\..\thotlib\base\actions.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaAddPointEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\AmayaApp.cpp
 # End Source File
 # Begin Source File
