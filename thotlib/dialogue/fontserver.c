@@ -437,7 +437,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
   wxChar buff[MAX_PATH];
   GetWindowsDirectory (buff , MAX_PATH);
   wxString winpath = buff;
-  sprintf( filename, "%s", winpath.mb_str(*wxConvCurrent));
+  sprintf( filename, "%s", (const char *)winpath.mb_str(*wxConvCurrent));
 #else /* _WX */
   GetWindowsDirectory (filename , 1024);
 #endif /* _WX */

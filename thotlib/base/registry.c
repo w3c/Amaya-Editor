@@ -1568,7 +1568,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #if defined(_WX) && defined(_WINDOWS)
    wxString wx_win_homedir = TtaGetHomeDir();
    sprintf (app_home, "%s%c%s", 
-			wx_win_homedir.mb_str(wxConvUTF8), DIR_SEP,	AppNameW);
+			(const char*)wx_win_homedir.mb_str(wxConvUTF8), DIR_SEP, AppNameW);
 #endif /* _WX && _WINDOWS */
 
 #endif /* _UNIX */
