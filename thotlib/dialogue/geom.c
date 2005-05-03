@@ -65,6 +65,7 @@ static int          GridSize = 1;
   #include "message_wx.h"
   #include "AmayaFrame.h"
   #include "AmayaAddPointEvtHandler.h"
+  #include "AmayaMovingBoxEvtHandler.h"
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -351,10 +352,11 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   TTALOGDEBUG_13( TTA_LOG_SVGEDIT, _T("AddPoints: frame=%d x=%d y=%d x1=%d y1=%d x3=%d y3=%d lastx=%d lasty=%d point=%d maxPoints=%d width=%d height=%d"), frame, x, y, x1, y1, x3, y3, lastx, lasty, point, maxPoints, width, height );
   
   AmayaFrame * p_frame = FrameTable[frame].WdFrame;
-  AmayaAddPointEvtHandler * p_addPointEvtHandler = new AmayaAddPointEvtHandler( p_frame,
-										x, y, x1, y1, x3, y3, lastx, lasty, point,
-										nbpoints, maxPoints, width, height,
-										Pbuffer, Bbuffer );
+  AmayaAddPointEvtHandler * p_addPointEvtHandler =
+    new AmayaAddPointEvtHandler( p_frame,
+                                 x, y, x1, y1, x3, y3, lastx, lasty, point,
+                                 nbpoints, maxPoints, width, height,
+                                 Pbuffer, Bbuffer );
   // now wait for the polygon creation end
   ThotEvent ev;
   while(!p_addPointEvtHandler->IsFinish())
@@ -2246,7 +2248,7 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		    int xm, int ym)
-{
+{  
 #ifdef _WINGUI
    ThotEvent           event;
    POINT               cursorPos;
@@ -2310,6 +2312,27 @@ static void Moving (int frame, int *x, int *y, int width, int height,
     InvertEllipse (frame, *x, *y, width, height, *x + xref, *y + yref);
   else
     BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
+
+
+#ifdef _WX
+
+  TTALOGDEBUG_10( TTA_LOG_SVGEDIT, _T("Moving frame=%d width=%d height=%d box=%d xmin=%d xmax=%d ymin=%d ymax=%d xm=%d ym=%d"), frame, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+
+  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+  AmayaMovingBoxEvtHandler * p_movingBoxEvtHandler =
+    new AmayaMovingBoxEvtHandler( p_frame,
+                                  x, y, width, height,
+                                  box, xmin, xmax, ymin, ymax,
+                                  xm, ym, xref, yref );
+  // now wait for the polygon creation end
+  ThotEvent ev;
+  while(!p_movingBoxEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_movingBoxEvtHandler;
+
+#else /* _WX */
+
   /* Loop on user interraction */
   ret = 0;
   while (ret == 0)
@@ -2569,6 +2592,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	}
 #endif /* _GTK */
     }
+#endif /* _WX */
 
   /* erase the box drawing */
   if (isEllipse)
@@ -2624,6 +2648,10 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
    /* restore the Thot Library state */
   ThotUngrab ();
 #endif /*_GTK*/
+
+#ifdef _WX
+  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+#endif /* _WX */
 }
 
 

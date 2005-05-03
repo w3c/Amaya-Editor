@@ -204,6 +204,7 @@ EDITOR_OBJ = \
 	content/searchref.o \
 	content/word.o \
 	dialogue/AmayaAddPointEvtHandler.o \
+	dialogue/AmayaMovingBoxEvtHandler.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaWindowIterator.o \
