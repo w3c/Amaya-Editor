@@ -191,56 +191,56 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       ThotBool value;
       TtaGetEnvBoolean ("OPEN_PANEL", &value);
       if (value)
-	p_window->OpenPanel();
+        p_window->OpenPanel();
       else
-	p_window->ClosePanel();
+        p_window->ClosePanel();
       TtaGetEnvBoolean ("OPEN_PANEL_XHTML", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_XHTML );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_XHTML );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_XHTML );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_XHTML );
       TtaGetEnvBoolean ("OPEN_PANEL_ATTRIBUTE", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
       TtaGetEnvBoolean ("OPEN_PANEL_XML", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_XML );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_XML );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_XML );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_XML );
       TtaGetEnvBoolean ("OPEN_PANEL_MATHML", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_MATHML );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_MATHML );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_MATHML );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_MATHML );
       TtaGetEnvBoolean ("OPEN_PANEL_COLORS", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_COLORS );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_COLORS );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_COLORS );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_COLORS );
       TtaGetEnvBoolean ("OPEN_PANEL_CHARSTYLE", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_CHARSTYLE );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_CHARSTYLE );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_CHARSTYLE );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_CHARSTYLE );
       TtaGetEnvBoolean ("OPEN_PANEL_FORMAT", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_FORMAT );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_FORMAT );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
       TtaGetEnvBoolean ("OPEN_PANEL_APPLYCLASS", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_APPLYCLASS );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_APPLYCLASS );
       TtaGetEnvBoolean ("OPEN_PANEL_SPECHAR", &value);
       if (value)
-	p_panel->OpenSubPanel( WXAMAYA_PANEL_SPECHAR );
+        p_panel->OpenSubPanel( WXAMAYA_PANEL_SPECHAR );
       else
-	p_panel->CloseSubPanel( WXAMAYA_PANEL_SPECHAR );
+        p_panel->CloseSubPanel( WXAMAYA_PANEL_SPECHAR );
     }
-
+  
   /* do not create menus for a simple window */
   if (kind != WXAMAYAWINDOW_SIMPLE)
     TtaMakeWindowMenuBar( window_id );
@@ -946,9 +946,9 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
       AmayaFrame * p_oldframe = NULL;
       p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
       
-      /* hide the previous frame */
+      /* close the previous frame : should be allready closed ! (lines to remove) */
       if (p_oldframe)
-	p_oldframe->Hide();
+        wxASSERT(false);
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
     {
@@ -1050,8 +1050,6 @@ ThotBool TtaDestroyFrame( int frame_id )
   if (!p_frame)
     return FALSE;
   
-  TtaDetachFrame( frame_id );
-  TtaHandlePendingEvents();
   p_frame->FreeFrame();
 
   return TRUE;
@@ -1075,17 +1073,17 @@ void TtaCleanUpWindow( int window_id )
       /* check every existing windows */
       window_id = 1;
       while ( window_id < MAX_WINDOW )
-	{
-	  TtaCleanUpWindow( window_id );
-	  window_id++;
-	}
+        {
+          TtaCleanUpWindow( window_id );
+          window_id++;
+        }
     }
   else
     {
       /* check only one window */
       p_window = TtaGetWindowFromId( window_id );
       if (p_window)
-	p_window->CleanUp();
+        p_window->CleanUp();
     }
 #endif /* _WX */
 }
@@ -1202,7 +1200,7 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == doc_id &&
-	       (schView == -1 || FrameTable[frame_id].FrView == schView));
+               (schView == -1 || FrameTable[frame_id].FrView == schView));
       if (!found)
         frame_id++;
     }
@@ -1252,8 +1250,8 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
     + int page_position : the document's view page position
   ----------------------------------------------------------------------*/
 void TtaGetDocumentPageId( Document doc_id, int schView,
-			   int * page_id,
-			   int * page_position )
+                           int * page_id,
+                           int * page_position )
 {
 #ifdef _WX
   int        frame_id = 1;
@@ -1418,74 +1416,6 @@ int TtaGetWindowNumber( )
 }
 
 /*----------------------------------------------------------------------
-  TtaMakePanel create a panel (container)
-  notice : a panel needs to be attached to a window
-  returns:
- 	+ the panel id
-        + -1 if too much created panels
-  ----------------------------------------------------------------------*/
-int TtaMakePanel( const char * panel_title )
-{
-#ifdef _WX
-  return -1;
-#else
-  return -1;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
-  TtaAttachPanel attachs a panel to a window
-  notice : a panel needs to be attached to a window
-  returns:
- 	+ the panel id
-        + -1 if too much created panels
-  ----------------------------------------------------------------------*/
-int TtaAttachPanel( int window_id )
-{
-#ifdef _WX
-  return -1;
-#else
-  return -1;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
-  TtaDetachPanel detachs a panel from a window
-  params:
-    + panel_id : the panel identifier
-    + window_id : windows identifier (if -1, the panel is
-                  searched into the windows table)
-  returns:
-    + true if ok
-    + false if it's impossible to attach the frame to the window
-  ----------------------------------------------------------------------*/
-ThotBool TtaDetachPanel( int panel_id, int window_id )
-{
-#ifdef _WX
-  return FALSE;
-#else
-  return FALSE;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
-  TtaFrameIsActive check if the frame is active or not
-  active = the frame has the focus
-  params:
-    + frame_id : frame identifier
-  returns:
-    + true if active
-  ----------------------------------------------------------------------*/
-ThotBool TtaFrameIsActive( int frame_id )
-{
-#ifdef _WX
-  return TRUE;
-#else
-  return FALSE;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
   TtaFrameIsClosed check if the frame is closed or not
   closed = not current document associated
   params:
@@ -1561,160 +1491,6 @@ void TtaSetURLBar( int frame_id,
 }
 
 /*----------------------------------------------------------------------
-  APP_Callback_URLActivate - Callback to set url in box when Enter key pressed
-  params:
-    + frame_id : frame identifier
-    + text : the new url text (UTF-8 encoding)
-  returns:
-  ----------------------------------------------------------------------*/
-void APP_Callback_URLActivate (int frame_id, const char *text)
-{
-#if 0
-#ifdef _WX
-  Document            doc;
-  View                view;
-
-  CloseTextInsertion ();
-  if (text && strlen(text) > 0)
-    {
-      FrameToView (frame_id, &doc, &view);
-      PtrDocument pDoc = LoadedDocument[doc-1];
-      if (pDoc->Call_Text)
-	(*(Proc3)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)text);
-    }
-#endif /* _WX */
-#endif /* 0 */
-}
-
-/*----------------------------------------------------------------------
-  APP_Callback_ToolBarButtonActivate - this callback is activated when a toolbar button has been pressed
-  params:
-    + frame_id : frame identifier (current active frame)
-    + button_id : the button position
-  returns:
-  ----------------------------------------------------------------------*/
-void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
-{
-#if 0
-#ifdef _WX
-  Document            document;
-  View                view;
-
-  if ( button_id < MAX_BUTTON &&
-       button_id > 0 )
-    {
-      int doc_id = TtaGetFrameDocumentId( frame_id );
-      PtrDocument pDoc = LoadedDocument[doc_id-1];
-
-      if ( !pDoc->EnabledButton[button_id] )
-	  return; /* the button is not active */
-
-      // get the parent window
-      int window_id = FrameTable[frame_id].FrWindowId;
-      if ( window_id < 0 )
-	return; /* there is no parents */
-
-      CloseTextInsertion ();
-      FrameToView (frame_id, &document, &view);
-      TtaSetButtonActivatedStatus (TRUE);
-      if (WindowTable[window_id].Call_Button[button_id])
-	(*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);
-      TtaSetButtonActivatedStatus (FALSE);
-
-      /* then give focus to canvas */
-      TtaRedirectFocus();
-    }
-#endif /* _WX */
-#endif /* 0 */
-}
-
-#if 0
-/*----------------------------------------------------------------------
-  TtaAddToolBarButton - 
-  add a toolbar button to a window
-  params:
-    + window_id : window identifier
-  returns:
-    + int button_id : the button identifier used to change its state or bitmap
-                      0 is an invalide value
-  ----------------------------------------------------------------------*/
-int TtaAddToolBarButton( int window_id,
-			 ThotIcon picture,
-			 char * tooltip,
-			 char * functionName,
-			 void (*procedure) (),
-			 ThotBool status )
-{
-#ifdef _WX
-  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
-  wxASSERT( p_window );
-  if ( !p_window || p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
-    return 0;
-
-  /* get the window's toolbar */
-  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
-  if ( !p_toolbar )
-    return 0;
-
-  // Setup callback into the window callback list
-  int button_id = 1;
-  while ( button_id < MAX_BUTTON && WindowTable[window_id].Call_Button[button_id])
-    button_id++;
-  if ( button_id >= MAX_BUTTON )
-    {
-      wxASSERT_MSG(FALSE, _T("Too much toolbar buttons !"));
-      return 0;
-    }
-
-  // Init existing window's frames default values
-  int        frame_id = 1;
-  while (frame_id <= MAX_FRAME)
-    {
-      if ( FrameTable[frame_id].FrWindowId == window_id )
-	{
-	  int doc_id = TtaGetFrameDocumentId( frame_id );
-	  PtrDocument pDoc = LoadedDocument[doc_id-1];
-	  pDoc->EnabledButton[button_id] = status;
-	  /*FrameTable[frame_id].CheckedButton[button_id] = ??? ;*/
-	}
-      frame_id++;
-    }
-  
-  // Add a new tool to the toolbar
-  if ( picture )
-    {
-      wxBitmapButton * p_button = new wxBitmapButton( p_toolbar
-						      ,button_id /* the id used to identify the button when clicked */
-						      ,*picture
-						      ,wxDefaultPosition
-						      ,wxDefaultSize
-						      /* with CVSHEAD, wxNO_BORDER style is not correctly rendered, the bitmap is cropped */
-						      /* when setting wxBU_AUTODRAW flag on windows, wxNO_BORDER flag is ignore ... */
-							  /* but when setting only wxNO_BORDER button enable/disable states are not correctly displayed on window */
-						      ,wxBU_AUTODRAW | wxNO_BORDER );
-      p_button->SetToolTip( TtaConvMessageToWX( tooltip ) );
-      p_toolbar->AddTool( p_button );
-      WindowTable[window_id].Button[button_id]               = p_button;
-      WindowTable[window_id].Button[button_id]->Enable( status );
-      WindowTable[window_id].Call_Button[button_id]          = procedure;
-      p_window->Layout();
-    }
-  else
-    {
-      // no picture ? it's a separator
-      p_toolbar->AddSeparator();
-      WindowTable[window_id].Button[button_id] = NULL;
-    }
-
-  return button_id;
-#else /* _WX */
-  return 0;
-#endif /* _WX */
-  return 0;
-}
-#endif /* 0 */
-
-/*----------------------------------------------------------------------
   TtaRefreshPanelButton - 
   refresh the button widgets of the frame's panel
   params:
@@ -1731,39 +1507,39 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
     {
       frame_id = GetWindowNumber (doc, view);
       if (frame_id <= 0 || frame_id > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame_id].WdFrame != 0 && FrameTable[frame_id].WdFrame->IsActive())
-	{
-	  /* get the frame's window parent */
-	  AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
-	  wxASSERT( p_window );
-	  if ( !p_window )
-	    return;
-	  /* get the window's panel */
-	  AmayaPanel * p_panel = p_window->GetAmayaPanel();
-      /* it is possible to have no panel, for example with AmayaSimpleWindow (ShowAppliedStyle) */
-	  if ( !p_panel )
-	    return;
-
-	  /* get the subpanel depending on panel_type */
-	  AmayaSubPanel * p_subpanel = NULL;
-	  bool * p_checked_array     = NULL;
-	  switch (panel_type)
-	    {
-	    case WXAMAYA_PANEL_XHTML:
-	      p_subpanel      = p_panel->GetXHTMLPanel();
-	      p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
-	      break;
-	    }
-	  wxASSERT( p_subpanel );
-	  if (!p_subpanel)
-	    return;
-
-	  /* refresh the subpanel with button stats */
-	  AmayaParams p;
-	  p.param1 = (void*)p_checked_array;
-	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
-	}
+        {
+          /* get the frame's window parent */
+          AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
+          wxASSERT( p_window );
+          if ( !p_window )
+            return;
+          /* get the window's panel */
+          AmayaPanel * p_panel = p_window->GetAmayaPanel();
+          /* it is possible to have no panel, for example with AmayaSimpleWindow (ShowAppliedStyle) */
+          if ( !p_panel )
+            return;
+          
+          /* get the subpanel depending on panel_type */
+          AmayaSubPanel * p_subpanel = NULL;
+          bool * p_checked_array     = NULL;
+          switch (panel_type)
+            {
+            case WXAMAYA_PANEL_XHTML:
+              p_subpanel      = p_panel->GetXHTMLPanel();
+              p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
+              break;
+            }
+          wxASSERT( p_subpanel );
+          if (!p_subpanel)
+            return;
+          
+          /* refresh the subpanel with button stats */
+          AmayaParams p;
+          p.param1 = (void*)p_checked_array;
+          AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
+        }
     }
 #endif /* _WX */
 }
@@ -1776,9 +1552,9 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
   returns:
   ----------------------------------------------------------------------*/
 void TtaSwitchPanelButton( Document doc, View view,
-			   int panel_type,
-			   int button_id,
-			   ThotBool value )
+                           int panel_type,
+                           int button_id,
+                           ThotBool value )
 {
 #ifdef _WX
   int frame_id = -1;
@@ -1813,92 +1589,6 @@ void TtaSwitchPanelButton( Document doc, View view,
     }
 #endif /* _WX */
 }
-
-
-#if 0
-/*----------------------------------------------------------------------
-  TtaSetupPanel - 
-  init the panel for the given window
-  params:
-    + type : the panel type
-    + window_id : window identifier
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaSetupPanel( int panel_type,
-		    int button_id,
-		    const char * tooltip,
-		    void (*procedure) () )
-{
-#ifdef _WX
-  wxASSERT( button_id >= 0 && button_id < MAX_BUTTON );
-  // register the callback & tooltips
-  PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel[button_id] = tooltip;
-  PanelTable[WXAMAYA_PANEL_XHTML].Call_Panel[button_id]    = procedure;
-#endif /* _WX */
-}
-#endif /* 0 */
-
-#if 0
-/*----------------------------------------------------------------------
-  TtaRefreshPanelTooltips
-  this function refresh the window's panel tooltips because the tooltips
-  tables is filled after windows (and panel) creation
-  params:
-    + window_id : the window to refresh (1 window = 1 panel)
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaRefreshPanelTooltips( int window_id )
-{
-#ifdef _WX
-  /* get window */
-  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
-  wxASSERT( p_window );
-  if ( !p_window )
-    return;
-  
-  /* get panel's window */
-  AmayaPanel * p_panel = p_window->GetAmayaPanel();
-  wxASSERT( p_panel );
-  if ( !p_panel )
-    return;  
-  
-  /* refresh panel tooltips */
-  p_panel->RefreshToolTips();
-#endif /* _WX */
-}
-#endif /* 0 */
-
-#if 0
-/*----------------------------------------------------------------------
-  APP_Callback_PanelButtonActivate - this callback is activated when a tool has been pressed
-  params:
-    + frame_id : frame identifier (current active frame)
-    + button_id : the button position
-  returns:
-  ----------------------------------------------------------------------*/
-void APP_Callback_PanelButtonActivate (int type, int frame_id, int button_id)
-{
-#ifdef _WX
-  Document            document;
-  View                view;
-
-  if ( button_id < MAX_BUTTON &&
-       button_id >= 0 )
-    {
-      CloseTextInsertion ();
-      FrameToView (frame_id, &document, &view);
-      TtaSetButtonActivatedStatus (TRUE);
-      Proc2 p_callback = (Proc2)PanelTable[WXAMAYA_PANEL_XHTML].Call_Panel[button_id];
-      if (p_callback)
-	(*(Proc2)p_callback) ((void *)document, (void *)view);
-      TtaSetButtonActivatedStatus (FALSE);
-
-      /* give focus to canvas */
-      TtaRedirectFocus();
-    }
-#endif /* _WX */
-}
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
   TtaRegisterWidgetWX - 
@@ -1965,62 +1655,6 @@ wxMenu * TtaGetContextMenu( int window_id )
     return NULL;
 }
 #endif /* _WX */
-
-#if 0
-#ifdef _WX
-/*----------------------------------------------------------------------
-  TtaRefreshMenuStats - 
-  this function should be called to synchronize the menu states (enable/disable)
-  with FrameTable.EnabledMenus array.
-  params:
-    + p_menu_bar : the menu bar to synchronize
-  returns:
-  ----------------------------------------------------------------------*/
-void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
-{
-  wxASSERT_MSG(FALSE, _T("TtaRefreshMenuStats: to remove"));
-  // find the frame owner
-  int        frame_id = 1;
-  ThotBool   found = FALSE;
-  while (frame_id <= MAX_FRAME && !found)
-    {
-      found = (FrameTable[frame_id].WdFrame && FrameTable[frame_id].WdFrame->GetMenuBar() == p_menu_bar);
-      if (!found)
-        frame_id++;
-    }
-  if (!found)
-    {
-      wxASSERT_MSG(FALSE, _T("Trying to refresh an orphan menubar"));
-      return;
-    }
-
-  int doc_id       = TtaGetFrameDocumentId( frame_id );
-  PtrDocument pDoc = LoadedDocument[doc_id-1];
-  int window_id    = TtaGetFrameWindowParentId(frame_id);
-
-  // the frame owner has been found, update it !
-  int menu_id = 0;
-  int top_menu_id = 0;
-  wxMenu * p_menu = NULL;
-  while ( menu_id < MAX_MENU )
-    {
-      p_menu = WindowTable[window_id].WdMenus[menu_id];
-      if (p_menu)
-	{
-	  // find the corrsponding menu position in the Top Menubar
-	  top_menu_id = p_menu_bar->FindMenu(p_menu->GetTitle());
-	  // we must check that the menu has been found because the contextual menu do not have a title
-	  if (top_menu_id >= 0)
-	    {
-	      // it has been found, update it
-	      p_menu_bar->EnableTop(top_menu_id, pDoc->EnabledMenus[menu_id]);
-	    }
-	}
-      menu_id++;
-    }
-}
-#endif /* _WX */
-#endif /* 0 */
 
 /*----------------------------------------------------------------------
   TtaToggleOnOffSidePanel

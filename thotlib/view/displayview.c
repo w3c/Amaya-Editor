@@ -74,6 +74,10 @@
 #include "undo_f.h"
 #include "views_f.h"
 
+#ifdef _WX
+#include "appdialogue_wx_f.h"
+#endif /* _WX */
+
 #ifdef _GL
 #include "animbox_f.h"
 #include "displaybox_f.h"
@@ -523,11 +527,14 @@ void CloseAllViewsDoc (PtrDocument pDoc)
     {
       /* detruit les vues de l'arbre principal */
       for (view = 0; view < MAX_VIEW_DOC; view++)
-	if (pDoc->DocView[view].DvPSchemaView != 0)
-	  {
-	    DestroyFrame (pDoc->DocViewFrame[view]);
-	    CloseDocumentView (pDoc, view + 1, FALSE);
-	  }
+        if (pDoc->DocView[view].DvPSchemaView != 0)
+          {
+#ifdef _WX
+            TtaDetachFrame(pDoc->DocViewFrame[view]);
+#endif /* _WX */
+            DestroyFrame (pDoc->DocViewFrame[view]);
+            CloseDocumentView (pDoc, view + 1, FALSE);
+          }
     }
 }
 
@@ -1055,10 +1062,6 @@ void TtaFreeView (Document document, View view)
       /* parameters look OK */
      {
        pDoc = LoadedDocument[document - 1];
-#ifdef _WX
-       /* free widgets and fonts */
-       DestroyFrame (pDoc->DocViewFrame[view - 1]);
-#endif /* _WX */
        CleanImageView (view, pDoc, TRUE);
      }
 }

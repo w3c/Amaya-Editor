@@ -512,3 +512,8 @@ void TtaSendStatsInfo()
 }
 
 #endif /* _WX */
+
+ThotBool TtaDetachFrame( int frame_id )
+{
+  return TRUE;
+}

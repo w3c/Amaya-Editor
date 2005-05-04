@@ -2555,78 +2555,78 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     /* the new document will replace another document in the same window */
     {
 #ifdef _WX
-       /* get the old document window */
-       window_id = TtaGetDocumentWindowId( doc, -1 );
-       /* get the old document page id */
-       TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
-       /* force the document's page position because sometime oldDoc is
-	  a source document placed on the bottom part of the page */
-       page_position = 1;
+      /* get the old document window */
+      window_id = TtaGetDocumentWindowId( doc, -1 );
+      /* get the old document page id */
+      TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
+      /* force the document's page position because sometime oldDoc is
+         a source document placed on the bottom part of the page */
+      page_position = 1;
 #endif /* _WX */
       if (DocumentTypes[doc] == docHTML ||
-	  DocumentTypes[doc] == docSVG ||
-	  DocumentTypes[doc] == docXml ||
-	  DocumentTypes[doc] == docMath ||
-	  DocumentTypes[doc] == docLibrary)
-	{
-	  /* close the Alternate view if it is open */
-	  altView = TtaGetViewFromName (doc, "Alternate_view");
-	  if (altView != 0 && TtaIsViewOpen (doc, altView))
-	    TtaCloseView (doc, altView);
-	  /* close the Structure view if it is open */
-	  structView = TtaGetViewFromName (doc, "Structure_view");
-	  if (structView != 0 && TtaIsViewOpen (doc, structView))
-	    TtaCloseView (doc, structView);
-	  /* close the Links view if it is open */
-	  linksView = TtaGetViewFromName (doc, "Links_view");
-	  if (linksView != 0 && TtaIsViewOpen (doc, linksView))
-	    TtaCloseView (doc, linksView);
-	  /* close the Table_of_contents view if it is open */
-	  tocView = TtaGetViewFromName (doc, "Table_of_contents");
-	  if (tocView != 0 && TtaIsViewOpen (doc, tocView))
-	    TtaCloseView (doc, tocView);
-	}
-        /* remove the current selection */
-	TtaUnselect (doc);
-	UpdateContextSensitiveMenus (doc);
-	TtaFreeView (doc, 1);
-	isOpen = TRUE;
-	/* use the same document identifier */
-	requested_doc = doc;
-	oldDoc = 0;	/* the previous document doesn't exist any more */
-	/* The toolkit has to do its job now */
-	TtaHandlePendingEvents ();
-     }
-   else if (inNewWindow)
-     {
-       /* open the new document in a fresh window */
-       isOpen = FALSE;
-       requested_doc = 0;
-     }
-   else
-     {
-       /* open the new document in the same window but in a fresh page */
-       requested_doc = 0;
+          DocumentTypes[doc] == docSVG ||
+          DocumentTypes[doc] == docXml ||
+          DocumentTypes[doc] == docMath ||
+          DocumentTypes[doc] == docLibrary)
+        {
+          /* close the Alternate view if it is open */
+          altView = TtaGetViewFromName (doc, "Alternate_view");
+          if (altView != 0 && TtaIsViewOpen (doc, altView))
+            TtaCloseView (doc, altView);
+          /* close the Structure view if it is open */
+          structView = TtaGetViewFromName (doc, "Structure_view");
+          if (structView != 0 && TtaIsViewOpen (doc, structView))
+            TtaCloseView (doc, structView);
+          /* close the Links view if it is open */
+          linksView = TtaGetViewFromName (doc, "Links_view");
+          if (linksView != 0 && TtaIsViewOpen (doc, linksView))
+            TtaCloseView (doc, linksView);
+          /* close the Table_of_contents view if it is open */
+          tocView = TtaGetViewFromName (doc, "Table_of_contents");
+          if (tocView != 0 && TtaIsViewOpen (doc, tocView))
+            TtaCloseView (doc, tocView);
+        }
+      /* remove the current selection */
+      TtaUnselect (doc);
+      UpdateContextSensitiveMenus (doc);
+      TtaFreeView (doc, 1);
+      isOpen = TRUE;
+      /* use the same document identifier */
+      requested_doc = doc;
+      oldDoc = 0;	/* the previous document doesn't exist any more */
+      /* The toolkit has to do its job now */
+      TtaHandlePendingEvents ();
+    }
+  else if (inNewWindow)
+    {
+      /* open the new document in a fresh window */
+      isOpen = FALSE;
+      requested_doc = 0;
+    }
+  else
+    {
+      /* open the new document in the same window but in a fresh page */
+      requested_doc = 0;
 #ifdef _WX
-       isOpen = TRUE;
-       if (docType == docSource)
-	 {
-	   /* if the document is a source view, open it into the same page as formatted view */
-	   window_id = TtaGetDocumentWindowId( doc, -1 );
-	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
-	   page_position = 2;
-	 }
-       else
-	 {
-	   window_id = TtaGetDocumentWindowId( doc, -1 );
-	   wxASSERT(window_id > 0);
-	   page_id   = TtaGetFreePageId( window_id );
-	   page_position = 1;
-	 }
+      isOpen = TRUE;
+      if (docType == docSource)
+        {
+          /* if the document is a source view, open it into the same page as formatted view */
+          window_id = TtaGetDocumentWindowId( doc, -1 );
+          TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
+          page_position = 2;
+        }
+      else
+        {
+          window_id = TtaGetDocumentWindowId( doc, -1 );
+          wxASSERT(window_id > 0);
+          page_id   = TtaGetFreePageId( window_id );
+          page_position = 1;
+        }
 #else /* _WX */
-       isOpen = FALSE; /* the menu and icons are already created */
+      isOpen = FALSE; /* the menu and icons are already created */
 #endif /* _WX */
-     }
+    }
 
    /* Init the new document */
    if (docType == docText || docType == docCSS ||

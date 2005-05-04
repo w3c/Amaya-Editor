@@ -76,39 +76,6 @@
 static char           nameBuffer[MAX_NAME_LENGTH];
 
 /*----------------------------------------------------------------------
-  ClearPagePosition close the preview displayed view.
-  ----------------------------------------------------------------------*/
-static void ClearPagePosition (int window_id, int page_id, int position)
-{
-#ifdef _WX
-  PtrDocument         pDoc;
-  int                 frame = 1;
-  int                 view;
-  ThotBool            found = FALSE;
-
-  while (frame <= MAX_FRAME && !found)
-    {
-      found = (FrameTable[frame].FrWindowId == window_id &&
-	       FrameTable[frame].FrPageId == page_id &&
-	       FrameTable[frame].FrPagePos == position);
-      if (!found)
-        frame++;
-    }
-  if (found)
-    {
-      //TtaDetachFrame( frame_id );
-      pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
-      /* free abstract boxes */
-      view = FrameTable[frame].FrView;
-      CleanImageView (view, pDoc, TRUE);
-      FrameTable[frame].FrWindowId   = -1;
-      FrameTable[frame].FrPageId     = -1;
-      FrameTable[frame].FrPagePos    = 0;
-    }
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
   TtaOpenMainView
 
   Opens the main view of a document. This document must have a PSchema
@@ -154,11 +121,9 @@ View TtaOpenMainView ( Document document,
 	    {
 	      /* Add a pagebreak probably missed at the end of the document */
 	      if (pPS->PsPaginatedView[0])
-		AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
+          AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
 	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
-					   TRUE, NULL);
-	      /* close the preview displayed view */
-	      ClearPagePosition (window_id, page_id, page_position);
+                                     TRUE, NULL);
 	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
 		               window_id, page_id, page_position, "Formatted_view");
 	      view = nView;
@@ -253,11 +218,8 @@ static View OpenView (Document document, char *viewName,
 		    
 		    /* force to see the view in the second frame */
 		    page_position = 2;
-		    /* close the preview displayed view */
-		    ClearPagePosition (window_id, page_id, page_position);
-
 		    OpenCreatedView (pDoc, nView, x, y, w, h, TRUE, TRUE,
-                                     window_id, page_id, page_position, viewName);
+                         window_id, page_id, page_position, viewName);
 		    view = nView;
 		  }
 	      }

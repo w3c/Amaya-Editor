@@ -182,11 +182,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
   /* p_frame is the new top frame */  
   *pp_frame_container = p_frame;
 
-#ifndef _MACOS
- /* do not reparent because on MacOSX it is not implemented */
-  /* the frame needs a new parent ! */
-  p_frame->Reparent( m_pSplitterWindow );
-#endif /* _MACOS */
   bool ok = false;
   if (oldframe != NULL)
     ok = m_pSplitterWindow->ReplaceWindow( oldframe, p_frame );
@@ -281,14 +276,8 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       wxASSERT_MSG( isReplaced, _T("La frame n'a pas pu etre remplacee") );
     }
 
-  // update old and new AmayaFrame parents
   if (oldframe)
-    {
-      oldframe->SetActive( FALSE );
-      // no more parents
-      //      oldframe->Reparent( NULL );
-      //      oldframe->SetPageParent( NULL ); 
-    }
+    oldframe->SetActive( FALSE );
 
   *pp_frame_container = NULL;
 
@@ -406,7 +395,9 @@ void AmayaPage::DoSplitUnsplit()
   else
     {
       // unsplit the page
-      DetachFrame(2);
+      AmayaFrame * p_frame = DetachFrame(2);
+      // then destroy it
+      p_frame->Close();
     }
 }
 
@@ -630,10 +621,6 @@ void AmayaPage::OnPaint( wxPaintEvent& event )
  */
 void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
 {
-  /* notebook is a new parent for the page
-   * warning: AmayaPage original parent must be a wxNotbook */
-  //Reparent( p_notebook ); /* do not reparent becaus on MacOSX it is not implemented */
-
   m_pNoteBookParent = p_notebook;
 
   if (m_pNoteBookParent->GetWindowParent() != GetWindowParent())

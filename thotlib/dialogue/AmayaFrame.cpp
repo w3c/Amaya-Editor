@@ -38,6 +38,7 @@
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
 #include "input_f.h"
+#include "displayview_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
@@ -647,10 +648,17 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
   if ( GetPageParent() )
     GetPageParent()->RaisePage();
 
-  PtrDocument         pDoc;
-  int                 view;
-  GetDocAndView (m_FrameId, &pDoc, &view);
-  CloseView (pDoc, view);
+  int doc, view;
+  FrameToView(m_FrameId, &doc, &view);
+  
+  TtaDetachFrame( m_FrameId );
+  DestroyFrame( m_FrameId );
+  TtaFreeView( doc, view );
+
+  //PtrDocument         pDoc;
+  //int                 view;
+  //  GetDocAndView (m_FrameId, &pDoc, &view);
+  //  CloseView (pDoc, view);
 }
 
 void AmayaFrame::SetActive( bool active )
@@ -797,7 +805,6 @@ void AmayaFrame::FreeFrame()
 
   memset(&FrameTable[GetFrameId()], 0, sizeof(Frame_Ctl));
 
-  // do not delete realy the frame because there is a strange bug
   Destroy();
 }
 
