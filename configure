@@ -13357,10 +13357,10 @@ if test "$with_wx" = "no" -o "$with_wx" = "" ; then
   fi
 fi
 
-# hardware gl implementation is default with wxWidgets (mesa is can be choosen if necessary)
+# mesa (software) gl implementation is default with wx (hardware gl implem can be choosen with --with-gl option)
 if test "$with_wx" = "yes" ; then
-  if test "$with_mesa" = "no" ; then
-    with_gl="yes"
+  if test "$with_gl" = "no" ; then
+    with_mesa="yes"
   fi
 fi
 
