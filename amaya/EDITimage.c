@@ -1014,7 +1014,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   char            *text;
   char            *utf8value;
   int              length;
-  ThotBool         newAttr, isObject;
+  ThotBool         newAttr, isObject = FALSE;
 
   el = event->element;
   doc = event->document;
@@ -1037,16 +1037,16 @@ void UpdateSRCattribute (NotifyOnTarget *event)
       attr = TtaGetAttribute (elSRC, attrType);
       UserMimeType[0] = EOS;
       if (attr)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  utf8value = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, utf8value, &length);
-	  text = (char *)TtaConvertByteToMbs ((unsigned char *)utf8value,
-					      TtaGetDefaultCharset ());
-	  TtaFreeMemory (utf8value);
-	  strcpy (UserMimeType, text);
-	  TtaFreeMemory (text);
-	}
+        {
+          length = TtaGetTextAttributeLength (attr);
+          utf8value = (char *)TtaGetMemory (length + 1);
+          TtaGiveTextAttributeValue (attr, utf8value, &length);
+          text = (char *)TtaConvertByteToMbs ((unsigned char *)utf8value,
+                                              TtaGetDefaultCharset ());
+          TtaFreeMemory (utf8value);
+          strcpy (UserMimeType, text);
+          TtaFreeMemory (text);
+        }
     }
   else
     {
