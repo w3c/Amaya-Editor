@@ -638,27 +638,21 @@ AmayaWindow * AmayaFrame::GetWindowParent()
   return TtaGetWindowFromId( TtaGetFrameWindowParentId(GetFrameId()) );
 }
 
-void AmayaFrame::OnClose(wxCloseEvent& event)
+void AmayaFrame::DoClose( bool & veto)
 {
-  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::OnClose: frame=%d"), m_FrameId);
-
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::DoClose: frame=%d"), m_FrameId);
+  
   // activate the frame just before closing it
   // so the user can see what it's beeing closed 
   SetActive( TRUE );
   if ( GetPageParent() )
     GetPageParent()->RaisePage();
 
-  int doc, view;
-  FrameToView(m_FrameId, &doc, &view);
-  
-  TtaDetachFrame( m_FrameId );
-  DestroyFrame( m_FrameId );
-  TtaFreeView( doc, view );
+  PtrDocument         pDoc;
+  int                 view;
+  GetDocAndView (m_FrameId, &pDoc, &view);
+  CloseView (pDoc, view);
 
-  //PtrDocument         pDoc;
-  //int                 view;
-  //  GetDocAndView (m_FrameId, &pDoc, &view);
-  //  CloseView (pDoc, view);
 }
 
 void AmayaFrame::SetActive( bool active )
@@ -871,7 +865,7 @@ int AmayaFrame::GetMasterFrameId()
  *    + AmayaFrame::OnScroll is assigned to a scroll event 
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
-  EVT_CLOSE( 		AmayaFrame::OnClose )
+  //  EVT_CLOSE( 		AmayaFrame::OnClose )
   //  EVT_SIZE( 		AmayaFrame::OnSize )
   EVT_IDLE(             AmayaFrame::OnIdle ) // Process a wxEVT_IDLE event
   EVT_CONTEXT_MENU(     AmayaFrame::OnContextMenu )

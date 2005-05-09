@@ -230,11 +230,12 @@ bool AmayaNormalWindow::DetachPage( int position )
  */
 bool AmayaNormalWindow::ClosePage( int page_id )
 {
+  bool dummy = false;
   AmayaPage * p_page  = NULL;
   int old_page_id = m_pNotebook->GetSelection(); 
   p_page = GetPage( page_id );
   // close it
-  p_page->Close();
+  p_page->DoClose(dummy);
   if (p_page->IsClosed())
     {
       m_pNotebook->DeletePage(page_id);
@@ -304,17 +305,17 @@ int AmayaNormalWindow::GetPageCount() const
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
- *      Method:  OnClose
- * Description:  just close the contained AmayaPage
+ *      Method:  DoClose
+ * Description:  close every pages contained by the notebook
  *--------------------------------------------------------------------------------------
  */
-void AmayaNormalWindow::OnClose(wxCloseEvent& event)
+void AmayaNormalWindow::DoClose(ThotBool & veto)
 {
   m_IsClosing = TRUE;
 
   // Ask the notebook to close its pages
   if (m_pNotebook)
-    m_pNotebook->OnClose( event );
+    m_pNotebook->DoClose( veto );
 
   // simulate a idle event to force the windows to be closed
   // (maybe a bug in wxWindow)
@@ -326,6 +327,9 @@ void AmayaNormalWindow::OnClose(wxCloseEvent& event)
   // !! DO NOT SKIP THE EVENT !!
   // the event is skiped or vetoed into childs widgets (notebook) depending of document modification status
 }
+
+
+
 
 /*
  *--------------------------------------------------------------------------------------
@@ -464,6 +468,7 @@ AmayaToolBar * AmayaNormalWindow::GetAmayaToolBar()
  */
 void AmayaNormalWindow::CleanUp()
 {
+  bool dummy = false;
   int         page_id = 0;
   AmayaPage * p_page  = NULL;
   while ( page_id < GetPageCount() )
@@ -473,7 +478,7 @@ void AmayaNormalWindow::CleanUp()
 	{
 	  // the page do not have anymore frames !
 	  // close it
-	  p_page->Close();
+	  p_page->DoClose(dummy);
 	  m_pNotebook->DeletePage(page_id);
 	  m_pNotebook->UpdatePageId();
 	  TtaHandlePendingEvents ();
@@ -484,7 +489,7 @@ void AmayaNormalWindow::CleanUp()
 
   // now check that notebook is not empty
   if (GetPageCount() == 0)
-    Close();
+    DoClose(dummy);
 }
 
 /*
@@ -745,7 +750,7 @@ BEGIN_EVENT_TABLE(AmayaNormalWindow, AmayaWindow)
   EVT_MENU_CLOSE( AmayaNormalWindow::OnMenuClose )
   EVT_MENU_HIGHLIGHT_ALL( AmayaNormalWindow::OnMenuHighlight )
   EVT_MENU( -1,   AmayaNormalWindow::OnMenuItem ) 
-  EVT_CLOSE(      AmayaNormalWindow::OnClose )
+  //  EVT_CLOSE(      AmayaNormalWindow::OnClose )
 
   EVT_SPLITTER_SASH_POS_CHANGED( -1, 	AmayaNormalWindow::OnSplitterPosChanged )
   EVT_SPLITTER_DCLICK( -1, 		AmayaNormalWindow::OnSplitterDClick )

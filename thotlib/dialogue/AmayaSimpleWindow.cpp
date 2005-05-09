@@ -94,53 +94,51 @@ AmayaSimpleWindow::~AmayaSimpleWindow()
  */
 void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
 {
+  bool dummy = false;
   // just close this window
   if (m_pFrame)
-    Close( );
+    DoClose(dummy);
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaSimpleWindow
- *      Method:  OnClose
+ *      Method:  DoClose
  * Description:  just close the window
  *--------------------------------------------------------------------------------------
  */
-void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
+void AmayaSimpleWindow::DoClose(ThotBool& veto)
 {
   // do nothing if the windows is allready closing itself
   if ( m_IsClosing )
-      return;
-
+    return;
+  
   m_IsClosing = TRUE;
-
+  
   // try to close the contained frame
   if ( m_pFrame )
     {
       // Ask the notebook to close its pages
       int frame_id     = m_pFrame->GetFrameId();  
       // try to close the frame : the user can choose to close or not with a dialog
-      m_pFrame->OnClose( event );
+      m_pFrame->DoClose( veto );
       
       // if the user don't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
-	{
-	  // if the frame didnt die, just re-attach it
-	  AttachFrame( m_pFrame );
-	}
+        {
+          // if the frame didnt die, just re-attach it
+          AttachFrame( m_pFrame );
+        }
       else
-	{
-	  m_pFrame = NULL;
-	  event.Skip();
-	}
+        {
+          m_pFrame = NULL;
+          veto = FALSE;
+        }
     }
   else
-    event.Skip();
+    veto = FALSE;
   
-  m_IsClosing = FALSE;
-
-  // !! DO NOT SKIP THE EVENT !!
-  // the event is skiped or vetoed into childs widgets (notebook) depending of document modification status
+  m_IsClosing = FALSE; 
 }
 
 /*
@@ -213,9 +211,8 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
 
   // if we detach the frame form a simple window, it's because we want to kill the window
   // so close it
-  Close();
-  //  TtaHandlePendingEvents();
-  //m_ShouldCleanUp = true;
+  bool dummy = false;
+  DoClose(dummy);
 
   return p_frame;
 }
@@ -229,9 +226,10 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
  */
 void AmayaSimpleWindow::CleanUp()
 {
+  bool dummy = false;
   // now check that the frame exist
   if (!m_pFrame)
-    Close();
+    DoClose(dummy);
 }
 
 /*----------------------------------------------------------------------
@@ -239,7 +237,7 @@ void AmayaSimpleWindow::CleanUp()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaSimpleWindow, AmayaWindow)
-  EVT_CLOSE(      AmayaSimpleWindow::OnClose )
+  //  EVT_CLOSE(      AmayaSimpleWindow::OnClose )
   //  EVT_BUTTON( -1, AmayaSimpleWindow::OnCloseButton )
 END_EVENT_TABLE()
 

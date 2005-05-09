@@ -109,7 +109,7 @@ public:
   void RefreshShowPanelToggleMenu();
 
  public:
-  void OnClose( wxCloseEvent& event );
+  void DoClose( bool & veto );
   
  protected:
   DECLARE_EVENT_TABLE()

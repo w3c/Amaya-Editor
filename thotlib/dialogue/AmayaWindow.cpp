@@ -775,11 +775,40 @@ void AmayaWindow::SetWindowEnableToolBarButtons( int frame_id )
 }
 #endif /* 0 */
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  DoClose
+ * Description:  basic abstract implementation to override
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::DoClose( bool & veto )
+{
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnClose
+ * Description:  just close the window
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnClose(wxCloseEvent& event)
+{
+  bool veto = false;
+  DoClose( veto );
+  if (veto)
+    event.Veto();
+  else
+    event.Skip();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
+  EVT_CLOSE(     AmayaWindow::OnClose )
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )

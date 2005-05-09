@@ -857,67 +857,67 @@ void BuildViewList (PtrDocument pDoc, char *buffer, int *nItems)
   ----------------------------------------------------------------------*/
 void CloseView (PtrDocument pDoc, int viewNb)
 {
-   NotifyDialog        notifyDoc;
-   ThotBool            ok, Save;
-   View                view;
-   Document            document;
-
-   if (pDoc != NULL)
-      {
+  NotifyDialog        notifyDoc;
+  ThotBool            ok, Save;
+  View                view;
+  Document            document;
+  
+  if (pDoc != NULL)
+    {
       document = (Document) IdentDocument (pDoc);
       view = viewNb;
-        
+      
       notifyDoc.event = TteViewClose;
       notifyDoc.document = document;
       notifyDoc.view = view;
       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	 {
-	 if (NumberOfOpenViews (pDoc) <= 1)
-	    {
-	    /* On va detruire la derniere vue du document, on laisse */
-	    /* a l'utilisateur la possibilite de sauver le document */
-	    if (pDoc->DocModified)
-	       {
-	       ok = TRUE;
-	       /* Faut-il creer le formulaire TtcCloseDocument */
-	       if (ThotLocalActions[T_confirmclose] == NULL)
-		  {
-		  /* Connecte le traitement de la TtcCloseDocument */
-		  TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
-		  TteConnectAction (T_rconfirmclose,
-				    (Proc) CallbackCloseDocMenu);
-		  }
-	       (*(Proc5)ThotLocalActions[T_confirmclose]) (
-			(void*)pDoc,
-		       	(void*)document,
-			(void*)view,
-			(void*)&ok,
-			(void*)&Save);
-	       if (Save)
-		  ok = (*(Func2)ThotLocalActions[T_writedocument]) (
-		      (void*)pDoc,
-		      (void*)0);
-	       }
-	    else
-	       ok = TRUE;
-	    }
-	 else
-	    ok = TRUE;
-	 if (ok)
-	    {
-	    /* desactive la vue si elle est active */
-	    DeactivateView (pDoc, viewNb);
-	    /* free widgets and fonts */
-	    DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
-	    notifyDoc.event = TteViewClose;
-	    notifyDoc.document = (Document) IdentDocument (pDoc);
-	    notifyDoc.view = view;
-	    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	    /* detruit le contexte de la vue */
-	    CloseDocumentView (pDoc, viewNb, TRUE);
-	    }
-	 }
-      }
+        {
+          if (NumberOfOpenViews (pDoc) <= 1)
+            {
+              /* On va detruire la derniere vue du document, on laisse */
+              /* a l'utilisateur la possibilite de sauver le document */
+              if (pDoc->DocModified)
+                {
+                  ok = TRUE;
+                  /* Faut-il creer le formulaire TtcCloseDocument */
+                  if (ThotLocalActions[T_confirmclose] == NULL)
+                    {
+                      /* Connecte le traitement de la TtcCloseDocument */
+                      TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
+                      TteConnectAction (T_rconfirmclose,
+                                        (Proc) CallbackCloseDocMenu);
+                    }
+                  (*(Proc5)ThotLocalActions[T_confirmclose]) (
+                                                              (void*)pDoc,
+                                                              (void*)document,
+                                                              (void*)view,
+                                                              (void*)&ok,
+                                                              (void*)&Save);
+                  if (Save)
+                    ok = (*(Func2)ThotLocalActions[T_writedocument]) (
+                                                                      (void*)pDoc,
+                                                                      (void*)0);
+                }
+              else
+                ok = TRUE;
+            }
+          else
+            ok = TRUE;
+          if (ok)
+            {
+              /* desactive la vue si elle est active */
+              DeactivateView (pDoc, viewNb);
+              /* free widgets and fonts */
+              DestroyFrame (pDoc->DocViewFrame[viewNb - 1]);
+              notifyDoc.event = TteViewClose;
+              notifyDoc.document = (Document) IdentDocument (pDoc);
+              notifyDoc.view = view;
+              CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+              /* detruit le contexte de la vue */
+              CloseDocumentView (pDoc, viewNb, TRUE);
+            }
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

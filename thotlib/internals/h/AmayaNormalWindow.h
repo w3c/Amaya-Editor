@@ -90,9 +90,10 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void RefreshShowPanelToggleMenu();
   virtual void RefreshFullScreenToggleMenu();
 
+  virtual void DoClose( bool & veto );
+
  protected:
   DECLARE_EVENT_TABLE()
-  void OnClose( wxCloseEvent& event );
   void OnMenuItem( wxCommandEvent& event );
   void OnMenuClose( wxMenuEvent& event );
   void OnMenuOpen( wxMenuEvent& event );

@@ -52,8 +52,9 @@ class AmayaSimpleWindow : public AmayaWindow
   bool         AttachFrame( AmayaFrame * p_frame );
   AmayaFrame * DetachFrame();
 
+  virtual void DoClose( bool & veto );
+
  protected:
-  void OnClose( wxCloseEvent& event );
   void OnCloseButton(wxCommandEvent& event);
   void OnSplitterUnsplit( wxSplitterEvent& event );
   void OnSize( wxSizeEvent& event );

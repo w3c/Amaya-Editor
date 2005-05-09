@@ -381,23 +381,23 @@ void AmayaPage::DoSplitUnsplit()
       View view         = FrameTable[p_frame->GetFrameId()].FrView;
       
       if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
-	TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Links_view") )
-	TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
-	TtaExecuteMenuAction ("ShowAlternate", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowAlternate", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Table_of_contents") )
-	TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
       else // if ( !strcmp(m_LastOpenViewName, "Structure_view") )
-	TtaExecuteMenuAction ("ShowStructure", document, view, FALSE);
-
+        TtaExecuteMenuAction ("ShowStructure", document, view, FALSE); 
     }
   else
     {
+      bool dummy = false;
       // unsplit the page
       AmayaFrame * p_frame = DetachFrame(2);
       // then destroy it
-      p_frame->Close();
+      p_frame->DoClose(dummy);
     }
 }
 
@@ -546,21 +546,21 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  OnClose
+ *      Method:  DoClose
  * Description:  called when the AmayaPage is closed.
  *               just call generic callbacks to close top frame and bottom frame
  *--------------------------------------------------------------------------------------
  */
-void AmayaPage::OnClose(wxCloseEvent& event)
+void AmayaPage::DoClose(bool & veto)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
-		m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
-		m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
-
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::DoClose topframe=%d bottomframe=%d"),
+                 m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
+                 m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
+  
   /* I suppose the page will be closed */
   /* but it can be override to FALSE if the top or bottom frame has been modified */
   m_IsClosed = TRUE;
-
+  
   int frame_id = 0;
   AmayaFrame * p_AmayaFrame = NULL;
   // Kill top frame
@@ -568,34 +568,34 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     {
       p_AmayaFrame = m_pTopFrame;
       frame_id     = m_pTopFrame->GetFrameId();
-
+      
       // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->OnClose( event );
+      p_AmayaFrame->DoClose( veto );
       
       // if the user don't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
-	{
-	  // if the frame didnt die, just re-attach it
-	  AttachFrame(p_AmayaFrame, 1);
-	  m_IsClosed = FALSE;
-	}
+        {
+          // if the frame didnt die, just re-attach it
+          AttachFrame(p_AmayaFrame, 1);
+          m_IsClosed = FALSE;
+        }
     }
-
+  
   // Kill bottom frame
   if ( m_pBottomFrame )
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
       // try to close the frame : the user can choose to close or not with a dialog
-      p_AmayaFrame->OnClose( event );
+      p_AmayaFrame->DoClose( veto );
       
       // if the user don't want to close then just reattach the frame
       if ( !TtaFrameIsClosed (frame_id) )
-	{
-	  // if the frame didnt die, just re-attach it
-	  AttachFrame(p_AmayaFrame, 2);
-	  m_IsClosed = FALSE;
-	}
+        {
+          // if the frame didnt die, just re-attach it
+          AttachFrame(p_AmayaFrame, 2);
+          m_IsClosed = FALSE;
+        }
       
     }
 }
@@ -968,7 +968,7 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
   
   EVT_SIZE( 				AmayaPage::OnSize )
-  EVT_CLOSE( 				AmayaPage::OnClose )
+  //  EVT_CLOSE( 				AmayaPage::OnClose )
   //  EVT_PAINT(                            AmayaPage::OnPaint )  
 
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)

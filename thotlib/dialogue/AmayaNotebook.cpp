@@ -53,48 +53,49 @@ AmayaNotebook::~AmayaNotebook()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNotebook
- *      Method:  OnClose
+ *      Method:  DoClose
  * Description:  called when the AmayaNotebook is closed.
  *               just forward close event to each AmayaPage
  *--------------------------------------------------------------------------------------
  */
-void AmayaNotebook::OnClose(wxCloseEvent& event)
+void AmayaNotebook::DoClose(bool & veto)
 {
   /* if this boolean is set to false, the window must not be closed */
   bool close_window = true; 
 
   unsigned int page_id = 0;
   while ( page_id < GetPageCount() )
-  {
-    AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
-    p_page->OnClose(event);
-    close_window &= p_page->IsClosed();
-
-    /* really delete the page if the document has been closed */
-    if (p_page->IsClosed())
-      {
-	//RemovePage(page_id);
-	DeletePage(page_id);
-
-	// maybe something has been removed so update the ids
-	UpdatePageId();
-
-	/* wait for pending events :
-	   if a page is deleted, it throws notebookevent */
-	while ( wxTheApp->Pending() )
-	  wxTheApp->Dispatch();
-      }
-    else
-      page_id++;
-  }
+    {
+      AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+      p_page->DoClose(veto);
+      close_window &= p_page->IsClosed();
+      
+      /* really delete the page if the document has been closed */
+      if (p_page->IsClosed())
+        {
+          //RemovePage(page_id);
+          DeletePage(page_id);
+          
+          // maybe something has been removed so update the ids
+          UpdatePageId();
+          
+          /* wait for pending events :
+             if a page is deleted, it throws notebookevent */
+          TtaHandlePendingEvents();
+          /*
+            while ( wxTheApp->Pending() )
+            wxTheApp->Dispatch();
+          */
+        }
+      else
+        page_id++;
+    }
   
   /* there is still open pages ? */
   if (close_window)
-    {
-      event.Skip(); /* everything is closed => close the window */
-    }
+    veto = FALSE; /* everything is closed => close the window */
   else
-      event.Veto(); /* still an opened page => keep the window open */
+    veto = TRUE; /* still an opened page => keep the window open */
 }
 
 /*
@@ -259,7 +260,7 @@ void AmayaNotebook::OnChar(wxKeyEvent& event)
 
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
-  EVT_CLOSE(	                  AmayaNotebook::OnClose )
+  //  EVT_CLOSE(	                  AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
   EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )

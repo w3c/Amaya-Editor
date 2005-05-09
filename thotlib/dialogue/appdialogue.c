@@ -3464,6 +3464,7 @@ void DestroyFrame (int frame)
       ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
 
 #ifdef _WX
+      TtaDetachFrame( frame );
       TtaDestroyFrame( frame );
       FrameTable[frame].WdFrame = 0;
 #endif /* _WX */

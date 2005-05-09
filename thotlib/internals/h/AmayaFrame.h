@@ -114,7 +114,7 @@ public:
   bool SwapBuffers();
 #endif // #ifdef _GL
 
-  void OnClose(wxCloseEvent& event);
+  void DoClose( bool& veto );
 
 protected:
   DECLARE_EVENT_TABLE()

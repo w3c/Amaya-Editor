@@ -75,14 +75,14 @@ class AmayaWindow : public wxFrame
   DECLARE_DYNAMIC_CLASS(AmayaWindow)
 
   AmayaWindow ( int             window_id = -1
-      		,wxWindow *     frame = NULL
-	        ,const wxPoint& pos  = wxDefaultPosition
-	        ,const wxSize&  size = wxDefaultSize
-		,int kind = WXAMAYAWINDOW_UNKNOWN
-		,long style = wxDEFAULT_FRAME_STYLE | wxWANTS_CHARS | wxTAB_TRAVERSAL
-	      );
+                ,wxWindow *     frame = NULL
+                ,const wxPoint& pos  = wxDefaultPosition
+                ,const wxSize&  size = wxDefaultSize
+                ,int kind = WXAMAYAWINDOW_UNKNOWN
+                ,long style = wxDEFAULT_FRAME_STYLE | wxWANTS_CHARS | wxTAB_TRAVERSAL
+                );
   virtual ~AmayaWindow();
-
+  
   bool          IsClosing();
   int		GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
@@ -95,6 +95,8 @@ class AmayaWindow : public wxFrame
   virtual AmayaFrame * GetActiveFrame() const;
 
   virtual void ToggleFullScreen();
+
+  virtual void DoClose( bool & veto );
 
   // --------------------------------------------- //
   // WXAMAYAWINDOW_NORMAL interface
@@ -136,6 +138,7 @@ class AmayaWindow : public wxFrame
   
  protected:
   DECLARE_EVENT_TABLE()
+  void OnClose( wxCloseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );

@@ -70,8 +70,8 @@ class AmayaNotebook : public wxNotebook
 
   void UpdatePageId();
 
-  // OnClose must be public because AmayaNormalWindow call it
-  void OnClose(wxCloseEvent& event);
+  // DoClose must be public because AmayaNormalWindow call it
+  void DoClose( bool & veto );
 
  protected:
   DECLARE_EVENT_TABLE()
