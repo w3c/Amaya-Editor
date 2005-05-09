@@ -198,7 +198,7 @@ static View OpenView (Document document, char *viewName,
 	    
 	    /* Open the view */
 	    /* Add a page break probably missed at the end */
-	    if (pPS->PsPaginatedView[allViews[v].VdView])
+	    if (pPS->PsPaginatedView[allViews[v].VdView-1])
 	      AddLastPageBreak (pDoc->DocDocElement, allViews[v].VdView,
 				pDoc, FALSE);
 	    nView = CreateAbstractImage (pDoc, allViews[v].VdView,
