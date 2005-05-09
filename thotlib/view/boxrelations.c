@@ -3308,7 +3308,7 @@ static ThotBool RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	      notEmpty = pDimRel->DimRTable[i - 1] != NULL;
 	  }
 	
-	if (pDimRel->DimRNext == NULL)
+	if (pDimRel->DimRNext == NULL || found)
 	  loop = FALSE;
 	else
 	  {
@@ -3330,11 +3330,11 @@ static ThotBool RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	{
 	  if (pPreviousDimRel == NULL)
 	    if (horizRef)
-	      pOrginBox->BxWidthRelations = NULL;
+	      pOrginBox->BxWidthRelations = pDimRel->DimRNext;
 	    else
-	      pOrginBox->BxHeightRelations = NULL;
+	      pOrginBox->BxHeightRelations = pDimRel->DimRNext;
 	  else
-	    pPreviousDimRel->DimRNext = NULL;
+	    pPreviousDimRel->DimRNext = pDimRel->DimRNext;
 	  FreeDimBlock (&pDimRel);
 	}
       else
@@ -3391,7 +3391,7 @@ static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
 	      notEmpty = pDimRel->DimRTable[i - 1] != NULL;
 	  }
 	
-	if (pDimRel->DimRNext == NULL)
+	if (pDimRel->DimRNext == NULL || found)
 	  loop = FALSE;
 	else
 	  {
@@ -3405,7 +3405,12 @@ static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
   if (found > 0)
     {
       /* remove the relation */
-      RemoveDimRelation (pFoundDimRel->DimRTable[found - 1],
+	  if (pFoundDimRel->DimRTable[found - 1] == pBox)
+		/* change the horiz ref */
+        RemoveDimRelation (pFoundDimRel->DimRTable[found - 1],
+			 pBox, !horizRef);
+	  else
+        RemoveDimRelation (pFoundDimRel->DimRTable[found - 1],
 			 pBox, horizRef);
       /* clean up the reverse info */
       i--;
@@ -3416,11 +3421,11 @@ static ThotBool CheckDimRelation (PtrBox pBox, ThotBool horizRef)
 	{
 	  if (pPreviousDimRel == NULL)
 	    if (horizRef)
-	      pBox->BxWidthRelations = NULL;
+	      pBox->BxWidthRelations = pDimRel->DimRNext;
 	    else
-	      pBox->BxHeightRelations = NULL;
+	      pBox->BxHeightRelations = pDimRel->DimRNext;
 	  else
-	    pPreviousDimRel->DimRNext = NULL;
+	    pPreviousDimRel->DimRNext = pDimRel->DimRNext;
 	  FreeDimBlock (&pDimRel);
 	}
       else

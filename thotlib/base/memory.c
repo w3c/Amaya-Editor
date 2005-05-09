@@ -1838,7 +1838,6 @@ void FreePosBlock (PtrPosRelations * pBlock)
   TtaFreeMemory (*pBlock);
 #else
    /* Insere le bloc en tete de la chaine des libres */
-  memset (*pBlock, 0, sizeof (PosRelations));
    (*pBlock)->PosRNext = PtFree_PosB;
    PtFree_PosB = *pBlock;
    NbFree_PosB++;
@@ -1884,7 +1883,6 @@ void FreeDimBlock (PtrDimRelations * pBlock)
   TtaFreeMemory (*pBlock);
 #else
    /* Insere le bloc en tete de la chaine des libres */
-  memset (*pBlock, 0, sizeof (DimRelations));
    (*pBlock)->DimRNext = PtFree_BDim;
    PtFree_BDim = *pBlock;
    NbFree_BDim++;

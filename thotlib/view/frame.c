@@ -429,7 +429,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   int                 wbg, hbg;
   int                 w, h, view;
   int                 t, b, l, r;
-  ThotBool            setWindow, isLast, start;
+  ThotBool            setWindow, isLast;
 
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
