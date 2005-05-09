@@ -309,7 +309,7 @@ int AmayaNormalWindow::GetPageCount() const
  * Description:  close every pages contained by the notebook
  *--------------------------------------------------------------------------------------
  */
-void AmayaNormalWindow::DoClose(ThotBool & veto)
+void AmayaNormalWindow::DoClose(bool & veto)
 {
   m_IsClosing = TRUE;
 

@@ -492,7 +492,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 
   /* do nothing if there is no menubar : it's the case of
      AmayaSimpleWindow (log, show apply style ...)*/
-  if(!p_menu_bar)
+  if(!p_menu_bar || doc_id<=0)
     return;
 
   /* check that the current menu correspond to the current document

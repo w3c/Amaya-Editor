@@ -107,7 +107,7 @@ void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
  * Description:  just close the window
  *--------------------------------------------------------------------------------------
  */
-void AmayaSimpleWindow::DoClose(ThotBool& veto)
+void AmayaSimpleWindow::DoClose(bool& veto)
 {
   // do nothing if the windows is allready closing itself
   if ( m_IsClosing )
