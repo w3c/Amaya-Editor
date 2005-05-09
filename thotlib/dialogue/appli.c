@@ -1035,22 +1035,20 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
   /*    return TRUE; */
   if (GL_prepare (frame))
     {
-      if ( g_NeedRedisplayAllTheFrame[frame] /*&& (glhard () || GetBadCard ())*/ )
-	{
-	  // we need to recalculate the glcanvas only once : after the RESIZE event
-	  // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
-	  // (it appends only on some hardware opengl implementations on Linux)
-	  g_NeedRedisplayAllTheFrame[frame] = FALSE;
-
-	  // redraw the whole frame content
-	  x = pFrame->FrXOrg;
-	  y = pFrame->FrYOrg;
-	  w = FrameTable[frame].FrWidth;
-	  h = FrameTable[frame].FrHeight;
-	  DefClip (frame, x, y, x + w, y + h);
-	  RedrawFrameBottom (frame, 0, NULL);
-	}
-
+      if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
+        {
+          // we need to recalculate the glcanvas only once : after the RESIZE event
+          // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
+          // (it appends only on some hardware opengl implementations on Linux)
+          g_NeedRedisplayAllTheFrame[frame] = FALSE;
+          
+          // refresh the invalide frame content
+          x += pFrame->FrXOrg;
+          y += pFrame->FrYOrg;
+          DefClip (frame, x, y, x + w, y + h);
+          RedrawFrameBottom (frame, 0, NULL);
+        }
+      
       // display the backbuffer
       GL_Swap (frame);
     }
