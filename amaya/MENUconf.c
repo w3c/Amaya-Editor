@@ -161,6 +161,7 @@ static int         BrowseBase;
 static Prop_Browse GProp_Browse;
 static int         CurrentScreen;
 static int         InitOpeningLocation;
+static ThotBool    InitWarnCTab;
 static ThotBool    InitLoadImages;
 static ThotBool    InitLoadObjects;
 static ThotBool    InitLoadCss;
@@ -2753,6 +2754,7 @@ void GetBrowseConf (void)
   TtaGetEnvBoolean ("LOAD_CSS", &(GProp_Browse.LoadCss));
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   TtaGetEnvBoolean ("ENABLE_FTP", &(GProp_Browse.EnableFTP));
+  TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_Browse.WarnCTab));
   AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
@@ -2776,6 +2778,7 @@ void SetBrowseConf (void)
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &(GProp_Browse.DoubleClick));
   /* @@@ */
   TtaSetEnvBoolean ("ENABLE_FTP", GProp_Browse.EnableFTP, TRUE);
+  TtaSetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", GProp_Browse.WarnCTab, TRUE);
   AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
   TtaSetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType, TRUE);
   TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg, TRUE);
@@ -2937,6 +2940,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* action buttons */
 	case ID_APPLY:
 	  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+        InitWarnCTab != GProp_Browse.WarnCTab ||
 	      InitOpeningLocation != GProp_Browse.OpeningLocation ||
 	      InitLoadImages != GProp_Browse.LoadImages ||
 	      InitLoadObjects != GProp_Browse.LoadObjects ||	      
@@ -2949,6 +2953,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	      InitLoadImages = GProp_Browse.LoadImages;
 	      InitLoadObjects = GProp_Browse.LoadObjects;	      
 	      InitLoadCss = GProp_Browse.LoadCss;
+        InitWarnCTab = GProp_Browse.WarnCTab;
 	    }
 	  else
 	    SetBrowseConf ();
@@ -3059,15 +3064,17 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      strcpy (NewScreen, GProp_Browse.ScreenType);
 #endif /* _WX */
 	      if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
-		  InitOpeningLocation != GProp_Browse.OpeningLocation ||
-		  InitLoadImages != GProp_Browse.LoadImages ||
-		  InitLoadObjects != GProp_Browse.LoadObjects ||
-		  InitBgImages != GProp_Browse.BgImages ||
-		  InitLoadCss != GProp_Browse.LoadCss)
+            InitWarnCTab != GProp_Browse.WarnCTab ||
+            InitOpeningLocation != GProp_Browse.OpeningLocation ||
+            InitLoadImages != GProp_Browse.LoadImages ||
+            InitLoadObjects != GProp_Browse.LoadObjects ||
+            InitBgImages != GProp_Browse.BgImages ||
+            InitLoadCss != GProp_Browse.LoadCss)
 		{
 		  strcpy (GProp_Browse.ScreenType, NewScreen);
 		  SetBrowseConf ();
 		  ApplyConfigurationChanges ();
+      InitWarnCTab = GProp_Browse.WarnCTab;
 		  InitOpeningLocation = GProp_Browse.OpeningLocation;
 		  InitLoadImages = GProp_Browse.LoadImages;
 		  InitLoadObjects = GProp_Browse.LoadObjects;
@@ -3152,6 +3159,7 @@ void BrowseConfMenu (Document document, View view)
   InitLoadObjects = GProp_Browse.LoadObjects;
   InitBgImages = GProp_Browse.BgImages;
   InitLoadCss = GProp_Browse.LoadCss;
+  InitWarnCTab = GProp_Browse.WarnCTab;
 #ifdef _GTK
   /* Create the dialogue form */
   i = 0;
@@ -4459,7 +4467,8 @@ void PreferenceMenu (Document document, View view)
   InitLoadObjects =GProp_Browse. LoadObjects;
   InitBgImages = GProp_Browse.BgImages;
   InitLoadCss = GProp_Browse.LoadCss;
-  
+  InitWarnCTab = GProp_Browse.WarnCTab;
+
   /* ---> Publish Tab */
   GetPublishConf ();
   SafePutStatus = 0;  /* reset the modified flag */

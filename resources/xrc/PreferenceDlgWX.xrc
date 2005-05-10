@@ -239,6 +239,11 @@
                         <label>*Support FTP*</label>
                       </object>
                     </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_WARNCTAB">
+                        <label>*Avertir quand plusieurs onglets sont fermes*</label>
+                      </object>
+                    </object>
                   </object>
                   <option>0</option>
                   <flag>wxBOTTOM|wxLEFT|wxEXPAND</flag>

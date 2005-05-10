@@ -4216,6 +4216,10 @@
 	<message xml:lang="fr">Endroit d'ouverture</message>
 	<message xml:lang="hu">Hely megnyitása</message>
 </label>
+<label define="AM_WARNCTAB">
+	<message xml:lang="en">Warn when closing multiple tabs</message>
+	<message xml:lang="fr">Avertir avant de fermer plusieurs onglets</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -109,6 +109,7 @@ typedef struct Prop_Browse_t
   ThotBool DoubleClick;
   ThotBool EnableFTP;
   ThotBool BgImages;
+  ThotBool WarnCTab;
   char     ScreenType[MAX_LENGTH];
   char     LanNeg[MAX_LENGTH];
   int      DoubleClickDelay; /* not used ? */

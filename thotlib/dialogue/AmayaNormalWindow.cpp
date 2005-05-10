@@ -323,9 +323,6 @@ void AmayaNormalWindow::DoClose(bool & veto)
   wxPostEvent(this, idle_event);
 
   m_IsClosing = FALSE;
-
-  // !! DO NOT SKIP THE EVENT !!
-  // the event is skiped or vetoed into childs widgets (notebook) depending of document modification status
 }
 
 

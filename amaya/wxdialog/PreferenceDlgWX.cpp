@@ -321,6 +321,7 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_DOUBLECLICK)) );
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_FTP)) );
   XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
+  XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_WARNCTAB)) );
 }
 
 /*----------------------------------------------------------------------
@@ -338,6 +339,7 @@ void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
   XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetValue( prop.LoadCss );
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetValue( prop.DoubleClick );
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetValue( prop.EnableFTP );
+  XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetValue( prop.WarnCTab );
   
   XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.ScreenType) );
   XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
@@ -362,6 +364,7 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   prop.LoadCss = XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->GetValue();
   prop.DoubleClick = XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->GetValue();
   prop.EnableFTP = XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->GetValue();
+  prop.WarnCTab = XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->GetValue();
   
   value = XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->GetStringSelection();
   strcpy( prop.ScreenType, (const char*)value.mb_str(wxConvUTF8) );

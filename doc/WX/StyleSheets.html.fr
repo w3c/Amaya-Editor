@@ -219,8 +219,8 @@ comme un autre attribut).</p>
   </li>
 </ul>
 
-<h3 id="L288"><a name="Creating" id="Creating">Créer et mettre à jour un
-attribut de style</a></h3>
+<h3 id="L288">Créer et mettre à jour un
+attribut de style</h3>
 
 <p>Amaya fournit des outils qui vous permettent d'associer un attribut style
 aux éléments sélectionnés :</p>
@@ -381,8 +381,8 @@ image de fond et sont mode de répétition.</p>
   </li>
 </ul>
 
-<h4 id="L554"><a name="Creating," id="Creating,">Créer un style générique
-pour un élément ou une classe</a></h4>
+<h4 id="L554">Créer un style générique
+pour un élément ou une classe</h4>
 
 <p>Quand un attribut <strong>style</strong> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle

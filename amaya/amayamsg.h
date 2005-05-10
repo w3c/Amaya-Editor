@@ -368,4 +368,5 @@
 #define AM_DATE		365
 #define AM_NEWDOCLOC		366
 #define AM_OPENLOC		367
-#define AMAYA_MSG_MAX		368
+#define AM_WARNCTAB		368
+#define AMAYA_MSG_MAX		369

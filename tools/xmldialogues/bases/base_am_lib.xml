@@ -2419,6 +2419,18 @@
 	<message xml:lang="ru">Таблица</message>
 	<message xml:lang="hu">Táblázat</message>
 </label>
+<label define="TMSG_LIB_WARNCTAB_INFO">
+	<message xml:lang="en">You are about to close %d open tabs. Are you sure you want to continue?</message>
+	<message xml:lang="fr">Etes vous certain de vouloir fermer %d onglets?</message>
+</label>
+<label define="TMSG_LIB_WARNCTAB_CHECK">
+	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
+	<message xml:lang="fr">M'avertir quand je ferme plusieurs onglets</message>
+</label>
+<label define="TMSG_LIB_CLOSETABS">
+	<message xml:lang="en">Close tabs</message>
+	<message xml:lang="fr">Fermer les onglets</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>

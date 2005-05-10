@@ -25,6 +25,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaApp.h"
+#include "AmayaConfirmCloseTab.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
 
@@ -62,6 +63,17 @@ void AmayaNotebook::DoClose(bool & veto)
 {
   /* if this boolean is set to false, the window must not be closed */
   bool close_window = true; 
+
+  /* show a warning if there is more than one tab */
+  if (GetPageCount() > 1 && AmayaConfirmCloseTab::DoesUserWantToShowMe())
+    {
+      AmayaConfirmCloseTab dlg(this, GetPageCount());
+      if (dlg.ShowModal() != wxID_OK)
+        {
+          veto = TRUE; /* user do not want to close */
+          return;
+        }        
+    }
 
   unsigned int page_id = 0;
   while ( page_id < GetPageCount() )

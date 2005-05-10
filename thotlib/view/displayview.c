@@ -529,9 +529,6 @@ void CloseAllViewsDoc (PtrDocument pDoc)
       for (view = 0; view < MAX_VIEW_DOC; view++)
         if (pDoc->DocView[view].DvPSchemaView != 0)
           {
-#ifdef _WX
-            TtaDetachFrame(pDoc->DocViewFrame[view]);
-#endif /* _WX */
             DestroyFrame (pDoc->DocViewFrame[view]);
             CloseDocumentView (pDoc, view + 1, FALSE);
           }
