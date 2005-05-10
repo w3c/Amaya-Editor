@@ -606,13 +606,13 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       /* on ne s'occupe pas de la hauteur de page */
       h = 0;
       if (schView == 1)
-	/* it's a main view. Set a minimum volume for this view, to make sure
-	   that the whole abstract image get generated for relatively small
-	   documents. This allows these small documents to scroll smoothly */
-	{
-	  if (volume < 10000)
-	    volume = 10000;
-	}
+        /* it's a main view. Set a minimum volume for this view, to make sure
+           that the whole abstract image get generated for relatively small
+           documents. This allows these small documents to scroll smoothly */
+        {
+          if (volume < 10000)
+            volume = 10000;
+        }
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
       ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
@@ -620,36 +620,30 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
 	  
       /* Update Paste entry in menu */
-#ifdef _WINGUI
-	  if (pDoc->DocReadOnly)
-	SwitchPaste (pDoc, FALSE);
+      /* do not disable paste entry for editable documents because 
+       * the external clipboard buffer can contains something */
+      if (pDoc->DocReadOnly)
+        SwitchPaste (pDoc, FALSE);
       else
-	SwitchPaste(pDoc, TRUE);
-#else /* _WINGUI */
-      if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
-	  pDoc->DocReadOnly)
-	SwitchPaste (pDoc, FALSE);
-      else
-	SwitchPaste(pDoc, TRUE);
-#endif /* _WINGUI */
-
+        SwitchPaste(pDoc, TRUE);
+      
       /* check the Undo state of the document */
       if (pDoc->DocNbEditsInHistory == 0)
-	SwitchUndo (pDoc, FALSE);
+        SwitchUndo (pDoc, FALSE);
       else
-	SwitchUndo (pDoc, TRUE);
+        SwitchUndo (pDoc, TRUE);
       
       /* check the Redo state of the document */
       if (pDoc->DocNbUndone == 0)
-	SwitchRedo (pDoc, FALSE);
+        SwitchRedo (pDoc, FALSE);
       else
-	SwitchRedo (pDoc, TRUE);
+        SwitchRedo (pDoc, TRUE);
       
       /* met a jour les menus de la fenetre */
       if (ThotLocalActions[T_chselect] != NULL)
-	(*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
+        (*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
-	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
+        (*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
 
 #ifdef _WX
       TtaDoPostFrameCreation( frame );
