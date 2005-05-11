@@ -1201,8 +1201,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	}
       else if (pBox->BxAbstractBox)
 	{
-if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L64"))
-  printf ("YMoveAll L64 y=%d delta=%d\n", pBox->BxYOrg, delta);
 #ifdef _GL
 	  pBox->VisibleModification = TRUE;
 #endif /* _GL */

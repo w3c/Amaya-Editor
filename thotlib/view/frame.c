@@ -59,7 +59,7 @@
 #include <math.h>
 #include "glwindowdisplay.h"
 
-//static int counter=0;
+static int counter=0;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void IfPushMatrix (PtrAbstractBox pAb)
@@ -768,7 +768,6 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
   int                 plane;
   int                 nextplane;
   int                 l, h;
-  ThotBool            FrameUpdatingStatus, FormattedFrame;
   int                 OldXOrg, OldYOrg, 
                       ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
 
@@ -778,8 +777,9 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
   double              model_view[16];
   int                 base_y;
   ThotBool            is_transformed = FALSE;
+  ThotBool            updateStatus, formatted;
 
-  FrameUpdatingStatus = FrameUpdating;
+  updateStatus = FrameUpdating;
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
   pAb = pFrame->FrAbstractBox;
@@ -795,10 +795,10 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 		pAb->AbPSchema &&
 		pAb->AbPSchema->PsStructName &&
 		(strcmp (pAb->AbPSchema->PsStructName, "TextFile") != 0))
-    FormattedFrame = TRUE;
+    formatted = TRUE;
   else
     {
-      FormattedFrame = FALSE;
+      formatted = FALSE;
       *lowerx += pFrame->FrXOrg;
       *higherx += pFrame->FrXOrg;
       *y += pFrame->FrYOrg;
@@ -825,7 +825,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 	      pBox = pAb->AbBox;
 	      if (pAb->AbElement && pAb->AbDepth == plane)
 		{ 
-		  if (FormattedFrame)
+		  if (formatted)
 		    {
 		      /* If the coord sys origin is translated, 
 			 it must be before any other transfromation*/
@@ -882,7 +882,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 	  else
 	    {
 	      /* close the current element */
-	      if (FormattedFrame)
+	      if (formatted && pAb->AbDepth == plane)
 		{
 		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  IfPopMatrix (pAb);
@@ -899,7 +899,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 			 pAb->AbEnclosing->AbNext == NULL)
 		    {
 		      pAb = pAb->AbEnclosing;
-		      if (FormattedFrame)
+		      if (formatted && pAb->AbDepth == plane)
 			{
 			  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 			  IfPopMatrix (pAb);
@@ -910,7 +910,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 		  pAb = pAb->AbEnclosing;
 		  if (pAb)
 		    {
-		      if (FormattedFrame)
+		      if (formatted && pAb->AbDepth == plane)
 			{	
 			  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 			  IfPopMatrix (pAb);
@@ -923,7 +923,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 	    }
 	}
     } 
-  FrameUpdating = FrameUpdatingStatus;
+  FrameUpdating = updateStatus;
 
   if (is_transformed)
     {
@@ -1760,7 +1760,6 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 			  OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
 					    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 			}
-		      not_g_opacity_displayed = TRUE;
 #else /* _GL */
 		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
 					       ymax, FALSE);
@@ -1780,7 +1779,6 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 			  OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
 					    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 			}
-		      not_g_opacity_displayed = TRUE;
 #else /* _GL */
 		      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax,
 					       ymin, ymax, FALSE);
