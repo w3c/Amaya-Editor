@@ -829,7 +829,7 @@ ThotBool IsBoxTransformed (PtrBox box)
 {
   PtrAbstractBox pAb;
 
-  pAb = box->BxAbstractBox;  
+  pAb = box->BxAbstractBox;
   while (pAb)
     {
       if (pAb->AbElement)
@@ -849,7 +849,6 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
 
-  glPushMatrix ();
   while (Trans)
     {
       switch (Trans->TransType)
@@ -942,7 +941,6 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
     
   if (IsTransformed (Trans))
     {
-      glPushMatrix ();
       DisplayViewBoxTransformation (Trans, Width, Height);
       while (Trans)
 	{
@@ -1049,15 +1047,6 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 #endif /* _GL */
 }
 
-/*----------------------------------------------------------------------
-  DisplayTransformationExit :
-  ----------------------------------------------------------------------*/
-void DisplayTransformationExit ()
-{
-#ifdef _GL
-  glPopMatrix ();
-#endif /* _GL */
-}
 
 /*----------------------------------------------------------------------
  print2DVertex: Write contents of one vertex to stdout
@@ -1103,7 +1092,6 @@ void printBuffer (GLint size, GLfloat *buffer)
 	   
 	case GL_POINT_TOKEN:
 	  {
-	     
 	    /*pour les points*/
 	    printf ("GL_POINT_TOKEN\n");
 	    print2DVertex (size, &count, buffer);
@@ -1719,8 +1707,6 @@ void PickObject (int frame, int x, int y)
   /*For name's stack (integers)*/
   glInitNames ();
 
-  /* glPushName(0); */
-
   /*create a clip around the mouse cursor
     and gets objects in it*/
   glMatrixMode (GL_PROJECTION);  
@@ -1735,9 +1721,7 @@ void PickObject (int frame, int x, int y)
   glMatrixMode (GL_MODELVIEW); 
   glLoadIdentity ();
 
-
   DrawSelect ();
-
 
   glMatrixMode (GL_PROJECTION);
   glPopMatrix ();
@@ -1745,9 +1729,7 @@ void PickObject (int frame, int x, int y)
   hits = glRenderMode (GL_RENDER);
   printf ("%i hits\n", hits);
   if (hits != 0)
-    {
       processHits2 (hits, selectBuf, 0);
-    }
   glMatrixMode (GL_MODELVIEW);
   mode = RENDER;
 }
@@ -1813,23 +1795,23 @@ int make_carre ()
 
   /*(glScalef (1-l, 1-l, 1.0);*/
   glPushMatrix();
-         k += 15.0;
-         k = k > 500.0 ? 0 : k;
-	 l += 0.05;
-	 l = l > 1.0 ? 0 : l;
-	 glTranslatef( 0.0, k, 0.0);
-	 glBegin(GL_QUADS);
-	 glColor4f(1.0-l, 0.0, 1.0, 1-l);
-	 glVertex2i(  0, 20 );/* haut gauche*/
-	 glColor4f(1.0, 0.0, 1.0-l, 0.75-l);
-	 glVertex2i( 20, 20);/* haut droit*/
-	 glColor4f(0.5, 0.5, 1.0-l, 0.75-l);
-	 glVertex2i( 20, 0);/* bas droit*/
-	 glColor4f(0.5, 0.5, 1.0-l, 0.25-l);
-	 glVertex2i(  0, 0);/* bas gauche */
-	 glEnd();
-   glPopMatrix(); 
-   return 0;
+  k += 15.0;
+  k = k > 500.0 ? 0 : k;
+  l += 0.05;
+  l = l > 1.0 ? 0 : l;
+  glTranslatef( 0.0, k, 0.0);
+  glBegin(GL_QUADS);
+  glColor4f(1.0-l, 0.0, 1.0, 1-l);
+  glVertex2i(  0, 20 );/* haut gauche*/
+  glColor4f(1.0, 0.0, 1.0-l, 0.75-l);
+  glVertex2i( 20, 20);/* haut droit*/
+  glColor4f(0.5, 0.5, 1.0-l, 0.75-l);
+  glVertex2i( 20, 0);/* bas droit*/
+  glColor4f(0.5, 0.5, 1.0-l, 0.25-l);
+  glVertex2i(  0, 0);/* bas gauche */
+  glEnd();
+  glPopMatrix(); 
+  return 0;
 }
 
 /*----------------------------------------------------------------------

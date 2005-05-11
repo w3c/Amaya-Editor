@@ -67,7 +67,8 @@ extern void RemoveBoxes ( PtrAbstractBox pAb,
 extern void RecordEnclosing ( PtrBox pBox,
                               ThotBool horizRef );
 extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
-                                 int frame );
+                                 int frame,
+                                 ThotBool *computeBBoxes );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern ThotBool IsDead ( PtrAbstractBox pAb );
@@ -140,7 +141,8 @@ extern void RemoveBoxes ( PtrAbstractBox pAb,
 extern void RecordEnclosing ( PtrBox pBox,
                                 ThotBool horizRef );
 extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
-                                   int frame );
+                                   int frame,
+                                   ThotBool *computeBBoxes );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern ThotBool IsDead ( PtrAbstractBox pAb );

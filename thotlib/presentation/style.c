@@ -820,7 +820,7 @@ static void PresRuleAddAttrCond (PtrPRule rule, AttributeType attType,
    kind = TtaGetAttributeKind (attType);
    if (kind == 0 || kind == 1)
      /* enumerated or integer value */
-     cond->CoAttrValue = (int)value;
+     cond->CoAttrValue = (long int)value;
    else if (kind == 2)
      /* character string value */
      {
@@ -942,7 +942,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	      ppRule = &(attrs->ApRefFirstPRule);
 	      break;
 	    case AtEnumAttr:
-	      val = (int) attrVal;
+	      val = (long int) attrVal;
 	      if (val)
 		ppRule = &(attrs->ApEnumFirstPRule[val]);
 	      else
@@ -1037,7 +1037,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  break;
 	case AtEnumAttr:
 	  /* get the attribute value */
-	  val = (int) attrVal;
+	  val = (long int) attrVal;
 	  if (val > 0)
 	    {
 	      new_->ApEnumFirstPRule[val] = NULL;

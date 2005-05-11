@@ -1172,7 +1172,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 	      }
 	    if (isnotfinished)
 	      {
-		ComputeABoundingBox (pAb, Animated_Frame);
+		//ComputeChangedBoundingBoxes (Animated_Frame);
 		UpdateClipping (pAb, w, h);
 	      }
 	  }
@@ -1188,9 +1188,9 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 ThotBool Animate_boxes (int frame, AnimTime current_time)
 {
 #ifdef _GL 
-  ViewFrame          *pFrame;
-  Animated_Cell      *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
-  ThotBool            isfinished;
+  ViewFrame        *pFrame;
+  Animated_Cell    *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
+  ThotBool          isfinished;
 
   /* Time update
      RefreshAnimBoxes ()
@@ -1207,6 +1207,7 @@ ThotBool Animate_boxes (int frame, AnimTime current_time)
           isfinished = FALSE;
       current = current->Next;
     }
+  ComputeChangedBoundingBoxes (Animated_Frame);
   if (isfinished)
     return TRUE;
 

@@ -893,7 +893,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 #endif /* _WIN_PRINT */
       break;
     case UnPercent:
-      i = val * (int) pAb;
+      i = val * (long int) pAb;
       dist = (i + 50) / 100;
       break;
     case UnAuto:
@@ -970,7 +970,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        else
 	 {
 	   i = val * 100;
-	   dist = i / (int) pAb;
+	   dist = i / (long int) pAb;
 	 }
        break;
      case UnAuto:

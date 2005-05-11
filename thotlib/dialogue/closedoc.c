@@ -50,7 +50,7 @@ static ThotBool     SaveBeforeClosing;
   ----------------------------------------------------------------------*/
 void CallbackCloseDocMenu (int ref, int typedata, char *data)
 {
-  switch ((int) data)
+  switch ((long int) data)
     {
     case 0:
       /* abandon du formulaire */

@@ -98,7 +98,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
   PtrPathSeg          pPa, pNextPa;
   PtrDelayedPRule     pDelPR, pNextDelPR;
   ThotPictInfo       *image;
-  ThotBool            libAb;
+  ThotBool            libAb, computeBBoxes = FALSE;
 
   if (pAb != NULL)
     {
@@ -116,7 +116,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 
       if (pAb->AbBox && frame > 0)
 	/* remove the box before freeing the abstract box */
-	ComputeUpdates (pAb, frame);
+	ComputeUpdates (pAb, frame, &computeBBoxes);
 
       /* dechaine pAb des autres paves */
       if (pAb->AbNext != NULL)

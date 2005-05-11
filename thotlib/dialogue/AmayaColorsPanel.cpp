@@ -177,7 +177,7 @@ void AmayaColorsPanel::OnSwitchColors( wxCommandEvent& event )
 void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
 {
   // update button background colors
-  m_ThotBGColor = (int)p.param1;
+  m_ThotBGColor = (long int)p.param1;
   if (m_ThotBGColor >= 0)
     {
       wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
@@ -191,7 +191,7 @@ void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
     }
 
-  m_ThotFGColor = (int)p.param2;
+  m_ThotFGColor = (long int)p.param2;
   if (m_ThotFGColor >= 0)
     {
       wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);

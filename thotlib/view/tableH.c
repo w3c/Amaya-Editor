@@ -480,7 +480,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
   int                 i, j, irow;
   int                 sum, delta;
   int                 attrHeight = 0;
-  ThotBool            modified;
+  ThotBool            modified, computeBBoxes = FALSE;
 
   if (table->AbBox == NULL ||
       table->AbBox->BxCycles != 0 || table->AbBox->BxSpans == NULL)
@@ -522,7 +522,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
 		  row->AbHeight.DimAbRef = NULL;
 		  row->AbHeight.DimValue = -1;
 		  row->AbHeightChange = TRUE;
-		  ComputeUpdates (row, frame);
+		  ComputeUpdates (row, frame, &computeBBoxes);
 		  pAttr = NULL;
 		}
 	      else
@@ -607,7 +607,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
 		      AttachAttrWithValue (row->AbElement, pDoc, pAttr, FALSE);
 		      DeleteAttribute (NULL, pAttr);
 		      /* update the row box */
-		      ComputeUpdates (row, frame);
+		      ComputeUpdates (row, frame, &computeBBoxes);
 		    }
 		}
 	    }

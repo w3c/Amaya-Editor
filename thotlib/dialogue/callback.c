@@ -410,7 +410,7 @@ ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
   /* A menu entry is selected */
   if (catalogue->Cat_Widget)
     {
-      if ((int) catalogue->Cat_Widget == -1)
+      if ((long int) catalogue->Cat_Widget == -1)
 	/*** back to a simple button ***/
 	(*(Proc3)CallbackDialogueProc) (
 		(void *)catalogue->Cat_Ref,

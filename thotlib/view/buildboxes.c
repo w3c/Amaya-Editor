@@ -1218,7 +1218,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   PtrBox              pCurrentBox;
   int                 val, x, y;
   int                 t, l, r, b;
-  ThotBool            still, hMin, vMin;
+  ThotBool            still, hMin, vMin, isExtra;
 
   pBox = NULL;
   pCurrentBox = pAb->AbBox;
@@ -1293,13 +1293,15 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       y = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin +
           pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
       *height = y;
+      /* the box itself is positioned */
+      isExtra = ExtraFlow (pCurrentBox, frame);
       /* Move misplaced boxes */
       pChildAb = pFirstAb;
       while (pChildAb)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      !ExtraFlow (pChildBox, frame))
+	      (isExtra || !ExtraFlow (pChildBox, frame)))
 	    {
 	      if ((hMin || pCurrentBox->BxContentWidth) &&
 		  pChildAb->AbHorizEnclosing &&
@@ -1348,7 +1350,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      !ExtraFlow (pChildBox, frame))
+	      (isExtra || !ExtraFlow (pChildBox, frame)))
 	    {
 	      if (pChildAb->AbHorizEnclosing &&
 		  (pChildAb->AbWidth.DimAbRef != pAb ||
@@ -1863,7 +1865,7 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
   int                 w, h;
 
   pFrame = &ViewFrameTable[frame - 1];
-  if (pFrame->FrAbstractBox && pAb &&
+  if (pFrame->FrAbstractBox && pAb && pAb->AbLeafType == LtCompound &&
       pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
       pAb->AbPositioning)
     {
@@ -1947,7 +1949,8 @@ static void RemoveFlow (PtrAbstractBox pAb, int frame)
   PtrFlow             pFlow, prev = NULL;
 
   pFrame = &ViewFrameTable[frame - 1];
-  if (pFrame->FrAbstractBox && pAb)
+  if (pFrame->FrAbstractBox && pAb && pAb->AbLeafType == LtCompound &&
+      pAb->AbPositioning)
     {
       /* check if the flow is already registered */
       pFlow = pFrame->FrFlow;
@@ -2503,8 +2506,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       i = 0;
       positioning = ComputePositioning (pCurrentBox, frame);
       if (positioning ||
-	  (pAb->AbPositioning &&
-	   pAb->AbLeafType == LtCompound &&
+	  (pAb->AbLeafType == LtCompound &&
+	   pAb->AbPositioning &&
 	   pAb->AbPositioning->PnAlgorithm == PnRelative))
  	AddFlow (pAb, frame);
       if (!positioning)
@@ -2513,23 +2516,23 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      pCurrentBox->BxType != BoFloatGhost &&
 	      pCurrentBox->BxType != BoGhost)
 	    {
-	      ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	      ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+	      ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+	      ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
 	    }
 	  else
 	    {
 	      if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
 		/* the inline rule doesn't act on this box */
-		ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+		ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
 	      else
 		/* the box position depends of its horizontal reference axis */
 		SetPositionConstraint (VertRef, pCurrentBox, &i);
 	      if (!pAb->AbVertEnclosing)
 		/* the inline rule doesn't act on this box */
-		ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+		ComputePosRelation (&pAb->AbHorizRef, pCurrentBox, frame, FALSE);
 	      else if (pAb->AbNotInLine)
 		/* the inline rule doesn't act on this box */
-		ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
+		ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
 	      else
 		/* the box position depends of its horizontal reference axis */
 		SetPositionConstraint (HorizRef, pCurrentBox, &i);
@@ -2977,7 +2980,7 @@ static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 		    {
 		      /* Nouvelle position horizontale */
 		      ClearPosRelation (pNextAb->AbBox, TRUE);
-		      ComputePosRelation (pNextAb->AbHorizPos, pNextAb->AbBox,
+		      ComputePosRelation (&pNextAb->AbHorizPos, pNextAb->AbBox,
 					  frame, TRUE);
 		    }
 		  pNextAb = NULL;
@@ -3004,7 +3007,7 @@ static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 		    {
 		      /* Nouvelle position verticale */
 		      ClearPosRelation (pNextAb->AbBox, FALSE);
-		      ComputePosRelation (pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
+		      ComputePosRelation (&pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
 		    }
 		  pNextAb = NULL;
 		}
@@ -3088,7 +3091,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   The parameter inLine is TRUE is the parent was previously a block.
   ----------------------------------------------------------------------*/
 static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
-			 ThotBool inLine, int frame)
+			 ThotBool inLine, int frame, ThotBool *computeBBoxes)
 {
   PtrBox              pBox, pBlock;
   PtrAbstractBox      pChild;
@@ -3130,7 +3133,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 	      pChild->AbHeightChange = TRUE;
 	      pChild->AbHorizPosChange = TRUE;
 	      pChild->AbVertPosChange = TRUE;
-	      ComputeUpdates (pChild, frame);
+	      ComputeUpdates (pChild, frame, computeBBoxes);
 	    }
 	  pChild = pChild->AbNext;
 	}
@@ -3190,7 +3193,7 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
 		      pChild->AbHeightChange = TRUE;
 		      pChild->AbHorizPosChange = TRUE;
 		      pChild->AbVertPosChange = TRUE;
-		      ComputeUpdates (pChild, frame);
+		      ComputeUpdates (pChild, frame, computeBBoxes);
 		    }
 		  pChild = pChild->AbNext;
 		}
@@ -3233,8 +3236,10 @@ static void TransmitDeadStatus (PtrAbstractBox pAb, ThotBool status)
 /*----------------------------------------------------------------------
   ComputeUpdates checks what is changing in the current Abstract Box.
   Return TRUE if there is at least one change.
+  The parameter computeBBoxes is set TRUE if this bounding boxe should
+  be recomputed else it's unchanged.
   ----------------------------------------------------------------------*/
-ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
+ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 {
   PtrLine             pLine;
   PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent, curr, table;
@@ -3260,7 +3265,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   ThotBool            FrameUpdatingStatus;
 
   FrameUpdatingStatus = FrameUpdating;
-  FrameUpdating = TRUE;  
+  FrameUpdating = TRUE;
 #endif /* _GL */
   pFrame = &ViewFrameTable[frame - 1];
   pLastBox = NULL;
@@ -3381,8 +3386,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		DefClip (frame, -1, -1, -1, -1);
 	      else
 		{
-		  /* Compute Bounding Box*/
-		  ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
+		  if (NeedToComputeABoundingBox (pCurrentBox->BxAbstractBox, frame))
+		    {
+		      /* need to recompute almost this bounding box */
+		      *computeBBoxes = TRUE;
+		      pCurrentBox->BxBoundinBoxComputed = FALSE;
+		    }
 		  /* the whole box */
 		  DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 		}
@@ -3528,6 +3537,25 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
 				  !orgXComplete, !orgYComplete);
 	    }
+#ifdef _GL
+	  else
+	    {
+	      if (FrameTable[frame].FrView == 1 &&
+		  (pBox->BxXOrg || pBox->BxYOrg) &&
+		  pAb->AbElement->ElSystemOrigin)
+		{
+		  pBox->BxClipX = 0;
+		  pBox->BxClipY = 0;
+		}
+	      else
+		{
+		  pBox->BxClipX = pBox->BxXOrg;
+		  pBox->BxClipY = pBox->BxYOrg;
+		}
+	      pBox->BxClipW = pBox->BxW;
+	      pBox->BxClipH = pBox->BxH;
+	    }
+#endif /* _GL */
 
 	  /* On prepare le reaffichage */
 	  if (pAb->AbNotInLine || (!inLine && !inLineFloat))
@@ -3769,7 +3797,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	{
 	  Propagate = ToChildren;
 	  pAb->AbFloatChange = FALSE;
-	  UpdateFloat (pAb, pParent, inLine || inLineFloat, frame);
+	  UpdateFloat (pAb, pParent, inLine || inLineFloat, frame, computeBBoxes);
 	  /* Restore the propagation */
 	  Propagate = savpropage;
 	}
@@ -3985,10 +4013,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		{
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
 			     adjustDelta, height, frame, FALSE);
-		  ComputeABoundingBox (pAb, frame);
+		  if (NeedToComputeABoundingBox (pAb, frame))
+		    {
+		      /* need to recompute almost this bounding box */
+		      *computeBBoxes = TRUE;
+		      pBox->BxBoundinBoxComputed = FALSE;
+		    }
 		  if (pAb->AbLeafType == LtPicture)
 		    {
-		      //ComputeABoundingBox (pAb, frame);
 		      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 		      if (pBlock)
 			{
@@ -4223,6 +4255,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  Propagate = savpropage;
 	  result = TRUE;
 	}
+
+      if (ExtraFlow (pBox, frame))
+	{
+	  /* ignore position rules */
+	  pAb->AbHorizPosChange = FALSE;
+	  pAb->AbVertPosChange = FALSE;
+	}
       /* CHANGE HORIZONTAL POSITION */
       if (pAb->AbHorizPosChange)
 	{
@@ -4256,7 +4295,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      /* remove the old horizontal position */
 	      ClearPosRelation (pBox, TRUE);
 	      /* new horizontal position */
-	      ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
+	      ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
 	      result = TRUE;
 	    }
 	  else
@@ -4321,7 +4360,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      /* remove the old vertical position */
 	      ClearPosRelation (pBox, FALSE);
 	      /* new vertical position */
-	      ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
+	      ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
 	      result = TRUE;
 	    }
 	  else
@@ -4468,8 +4507,8 @@ void RebuildConcreteImage (int frame)
 	     }
 	   
 	   /* check constraints */
-	   ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
-	   ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
+	   ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+	   ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
 
 	   if (!lock)
 	     /* unlock table formatting */
@@ -4606,10 +4645,13 @@ void ClearConcreteImage (int frame)
 
 
 /*----------------------------------------------------------------------
-   IsAbstractBoxUpdated rend la valeur Vrai si les changements ont 
-   une re'percution sur le pave englobant.                 
+  IsAbstractBoxUpdated checks the list of updates.
+  Return TRUE if there is at least one change.
+  The parameter computeBBoxes is set TRUE if this bounding boxe should
+  be recomputed else it's unchanged.
   ----------------------------------------------------------------------*/
-static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
+static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
+				      ThotBool *computeBBoxes)
 {
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pFirstAb;
@@ -4620,8 +4662,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
    Propagation         propStatus;
    int                 index;
    ThotBool            toUpdate;
-   ThotBool            result;
-   ThotBool            change;
+   ThotBool            result, change;
 
    change = FALSE;
    /* avoid to manage two times the same box update */
@@ -4652,7 +4693,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 		       /* the current box will become a block */
 		       pAb->AbDead = TRUE;
 		       /* remove boxes */
-		       ComputeUpdates (pAb, frame);
+		       ComputeUpdates (pAb, frame, computeBBoxes);
 		       /* regenerate boxes */
 		       pAb->AbDead = FALSE;
 		       TransmitDeadStatus (pAb, FALSE);
@@ -4671,7 +4712,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 	 {
 	   /* work in progress in this new abstract box (index = BiwIndex) */
 	   BoxInWork[BiwIndex++] = pAb;
-	   result = ComputeUpdates (pAb, frame);
+	   result = ComputeUpdates (pAb, frame, computeBBoxes);
 	   /* work is done */
 	   BoxInWork[BiwIndex--] = NULL;
 	   propStatus = Propagate;
@@ -4697,7 +4738,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 		   /* On marque le pave qui vient d'etre cree */
 		   /* pour eviter sa reinterpretation         */
 		   pChildAb->AbNum = 1;
-		   change = IsAbstractBoxUpdated (pChildAb, frame);
+		   change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
 		   /* Une modification a repercurter sur l'englobante */
 		   if (change && !toUpdate)
 		     {
@@ -4717,7 +4758,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 	     {
 	       /* On evite la reinterpretation des paves crees */
 	       if (pChildAb->AbNum == 0)
-		 change = IsAbstractBoxUpdated (pChildAb, frame);
+		 change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
 
 	       /* On enregistre le premier pave cree ou modifie */
 	       if (pNewAb == pChildAb && pFirstAb == NULL)
@@ -4755,7 +4796,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 	   /* Faut-il reevaluer la boite composee ? */
 	   /* work in progress in this new abstract box (index = BiwIndex) */
 	   BoxInWork[BiwIndex++] = pAb;
-	   result = ComputeUpdates (pAb, frame);
+	   result = ComputeUpdates (pAb, frame, computeBBoxes);
 	   /* work is done */
 	   BoxInWork[BiwIndex--] = NULL;
 	   if (toUpdate || result)
@@ -4939,7 +4980,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    int                 doc;
    int                 savevisu = 0;
    int                 savezoom = 0;
-   ThotBool            change;
+   ThotBool            change, computeBBoxes = FALSE;
    ThotBool            result = TRUE;
    ThotBool            lock = TRUE;
 
@@ -5067,9 +5108,10 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     /* ces anciennes boites elastiques de l'image abstraite    */
 	     ClearFlexibility (pAb, frame);
 
-	     /* On traite toutes les modifications signalees */
-	     change = IsAbstractBoxUpdated (pAb, frame);
-       
+	     /* Manage all changes */
+	     change = IsAbstractBoxUpdated (pAb, frame, &computeBBoxes);
+	     if (computeBBoxes)
+	       ComputeChangedBoundingBoxes (frame);
 	     /* Les modifications sont traitees */
 	     Propagate = ToAll;	/* On passe en mode normal de propagation */
 	     /* Traitement des englobements retardes */

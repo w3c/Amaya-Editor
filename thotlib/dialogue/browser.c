@@ -59,7 +59,7 @@ void TtaExtractSuffix (char *aName, char *aSuffix)
 	}
       while (ptr);
 
-      i = (int) (oldptr) - (int) (aName);	/* name length */
+      i = (long int) (oldptr) - (long int) (aName);	/* name length */
       if (i > 1)
 	{
 	  aName[i - 1] = EOS;

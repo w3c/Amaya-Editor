@@ -131,7 +131,7 @@
     <!-- End of the new document-->
     <!-- XML document in a foreign object-->
     <g opacity="0">
-      <animate id="test" attributeName="opacity" attributeType="CSS" from="0"
+      <animate id="test1" attributeName="opacity" attributeType="CSS" from="0"
                to="1" begin="24s" dur="2s" fill="freeze" repeatCount="1"/>
       <animateTransform attributeName="transform" attributeType="XML"
                         type="scale" from="0" to="1" begin="24s" dur="5s"
@@ -273,7 +273,7 @@
     <animateTransform attributeName="transform" attributeType="XML"
                       type="skewX" from="0" to="-50" begin="0s" dur="2s"
                       fill="freeze"/>
-    <image x="600" id="backgroundImage" xlink:href="amaya.png">
+    <image x="600" id="backgroundImage2" xlink:href="amaya.png">
       <desc>Leading the Web to its full potential</desc>
     </image>
   </g>

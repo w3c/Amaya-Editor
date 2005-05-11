@@ -684,7 +684,7 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
        while (ptr != NULL);
 
        /* the length of the directory part */
-       i = ((int) (oldptr) - (int) (text)) / sizeof (char);
+       i = ((long int) (oldptr) - (long int) (text)) / sizeof (char);
        if (i > 1)
 	 {
 	   strncpy (aDirectory, text, i);

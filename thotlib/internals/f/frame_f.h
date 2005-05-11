@@ -45,6 +45,7 @@ extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                      int *x,
                                      int *y );
 extern PtrBox DisplayAllBoxes ( int frame,
+                                PtrAbstractBox root,
                                 int xmin,
                                 int xmax,
                                 int ymin,
@@ -52,8 +53,9 @@ extern PtrBox DisplayAllBoxes ( int frame,
                                 PtrBox *create,
                                 int *tVol,
                                 int *bVol );
-extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
-                                  int frame );
+extern ThotBool NeedToComputeABoundingBox ( PtrAbstractBox pAb,
+                                            int frame );
+extern void ComputeChangedBoundingBoxes ( int frame );
 extern ThotBool RedrawFrameTop ( int frame,
                                  int scroll );
 extern ThotBool RedrawFrameBottom ( int frame,
@@ -102,6 +104,7 @@ extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                        int *x,
                                        int *y );
 extern PtrBox DisplayAllBoxes ( int frame,
+                                  PtrAbstractBox root,
                                   int xmin,
                                   int xmax,
                                   int ymin,
@@ -109,8 +112,9 @@ extern PtrBox DisplayAllBoxes ( int frame,
                                   PtrBox *create,
                                   int *tVol,
                                   int *bVol );
-extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
-                                    int frame );
+extern ThotBool NeedToComputeABoundingBox ( PtrAbstractBox pAb,
+                                              int frame );
+extern void ComputeChangedBoundingBoxes ( int frame );
 extern ThotBool RedrawFrameTop ( int frame,
                                    int scroll );
 extern ThotBool RedrawFrameBottom ( int frame,

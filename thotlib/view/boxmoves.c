@@ -1201,6 +1201,8 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	}
       else if (pBox->BxAbstractBox)
 	{
+if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L64"))
+  printf ("YMoveAll L64 y=%d delta=%d\n", pBox->BxYOrg, delta);
 #ifdef _GL
 	  pBox->VisibleModification = TRUE;
 #endif /* _GL */
@@ -2312,7 +2314,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       */
 	      if ((Propagate == ToAll || externalRef) &&
 		  !IsSiblingBox (pBox, pFromBox) &&
-		  !IsSiblingBox (pBox, pSourceBox))
+		  !IsSiblingBox (pBox, pSourceBox) &&
+		  /* doesn't check enclosing of a positioned box */
+		  !ExtraFlow (pBox, frame))
 		{
 		  /* Within a block of line */
 		  if (pAb->AbBox != pSourceBox &&
@@ -2847,7 +2851,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       */
 	      if ((Propagate == ToAll || externalRef) &&
 		  !IsSiblingBox (pBox, pFromBox) &&
-		  !IsSiblingBox (pBox, pSourceBox))
+		  !IsSiblingBox (pBox, pSourceBox) &&
+		  /* doesn't check enclosing of a positioned box */
+		  !ExtraFlow (pBox, frame))
 		{
 		  if (pAb->AbBox->BxType == BoBlock ||
 		      pAb->AbBox->BxType == BoFloatBlock)
@@ -3392,7 +3398,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   int                 x, i, j;
   ThotBool            movingChild;
   ThotBool            toMove;
-  ThotBool            absoluteMove;
+  ThotBool            absoluteMove, isExtra;
 
   /*
    * Check if the width depends on the box contents
@@ -3415,7 +3421,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	   pBox->BxType == BoColumn)
     /* don't pack a column head or a ghost element */
     return;
-  else if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
+  else if (pBox->BxContentWidth ||
+	   (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
     {
       /* register that we're preforming the job */
       pBox->BxCycles += 1;
@@ -3433,6 +3440,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
+      /* the box itself is positioned */
+      isExtra = ExtraFlow (pBox, frame);
       /*
        * The left edge of the lefter enclosed box must be stuck
        * to the inside left edge and the inside width is delimited
@@ -3443,7 +3452,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      !ExtraFlow (pChildBox, frame) &&
+	      (isExtra || !ExtraFlow (pChildBox, frame)) &&
 	      pChildAb->AbHorizEnclosing &&
 	      (pChildAb->AbWidth.DimAbRef != pAb ||
 	       pChildBox->BxContentWidth ||
@@ -3520,7 +3529,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	  {
 	    pChildBox = pChildAb->AbBox;
 	    if (!pChildAb->AbDead && pChildBox &&
-		!ExtraFlow (pChildBox, frame) &&
+		(isExtra || !ExtraFlow (pChildBox, frame)) &&
 		pChildAb->AbHorizEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */
@@ -3588,23 +3597,16 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	  else if (pAb->AbEnclosing->AbBox->BxType != BoBlock &&
 		   pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
 		   pAb->AbEnclosing->AbBox->BxType != BoGhost &&
-		   pAb->AbEnclosing->AbBox->BxType != BoFloatGhost)
+		   pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
+		   !isExtra /* doesn't check enclosing of a positioned box */)
 	    WidthPack (pAb->AbEnclosing, pSourceBox, frame);
 	}
       /* the job is performed */
       pBox->BxCycles -= 1;
     }
-  else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum)
-    {
-      /*
-       * the minimum rule is applied, we need to check whether
-       * that minimum is still true.
-       */
-      GiveEnclosureSize (pAb, frame, &width, &val);
-      ChangeDefaultWidth (pBox, pSourceBox, width, 0, frame);
-    }
-  else if (!pDimAb->DimIsPosition && pDimAb->DimAbRef == pAb->AbEnclosing &&
-	   pAb->AbEnclosing != NULL &&
+  else if (!pDimAb->DimIsPosition &&
+	   pDimAb->DimAbRef == pAb->AbEnclosing &&
+	   pAb->AbEnclosing &&
 	   !pAb->AbEnclosing->AbWidth.DimIsPosition &&
 	   pAb->AbEnclosing->AbWidth.DimMinimum)
     {
@@ -3633,7 +3635,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   int                 val, height;
   int                 y, i, j, top;
   ThotBool            movingChild;
-  ThotBool            toMove;
+  ThotBool            toMove, isExtra;
   ThotBool            absoluteMove;
 
   /*
@@ -3651,7 +3653,8 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
     HeightPack (pAb->AbEnclosing, pSourceBox, frame);
   else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
     return;
-  else if (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
+  else if (pBox->BxContentHeight ||
+	   (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
     {
       /* register that we're preforming the job */
       pBox->BxPacking += 1;
@@ -3669,7 +3672,8 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
-      
+      /* the box itself is positioned */
+      isExtra = ExtraFlow (pBox, frame);      
       /*
        * The top edge of the upper enclosed box must be stuck
        * to the inside top edge and the inside height is delimited
@@ -3680,7 +3684,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      !ExtraFlow (pChildBox, frame) &&
+	      (isExtra || !ExtraFlow (pChildBox, frame)) &&
 	      pChildAb->AbVertEnclosing &&
 	      (pChildAb->AbHeight.DimAbRef != pAb ||
 	       pChildBox->BxContentHeight))
@@ -3763,7 +3767,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	  {
 	    pChildBox = pChildAb->AbBox;
 	    if (!pChildAb->AbDead && pChildBox &&
-		!ExtraFlow (pChildBox, frame) &&
+		(isExtra || !ExtraFlow (pChildBox, frame)) &&
 		pChildAb->AbVertEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */
@@ -3839,32 +3843,10 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	      pAb = pAb->AbEnclosing;
 	    EncloseInLine (pBox, frame, pAb->AbEnclosing);
 	  }
-	else
+	else if (!isExtra /* doesn't check enclosing of a positioned box */)
 	  HeightPack (pAb->AbEnclosing, pSourceBox, frame);
 	}
       /* the job is performed */
       pBox->BxPacking -= 1;
-    }
-  else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum)
-    {
-      /*
-       * the minimum rule is applied, we need to check whether
-       * that minimum is still true.
-       */
-      GiveEnclosureSize (pAb, frame, &val, &height);
-      ChangeDefaultHeight (pBox, pSourceBox, height, frame);
-    }
-  else if (!pDimAb->DimIsPosition && pDimAb->DimAbRef == pAb->AbEnclosing &&
-	   pAb->AbEnclosing != NULL &&
-	   !pAb->AbEnclosing->AbHeight.DimIsPosition &&
-	   pAb->AbEnclosing->AbHeight.DimMinimum &&
-	   pAb->AbEnclosing->AbBox != pSourceBox)
-    {
-      /*
-       * the box height depends on the parent box for which the minimum rule
-       * is applied, we need to check whether that minimum is still true.
-       */
-      GiveEnclosureSize (pAb, frame, &val, &height);
-      ChangeDefaultHeight (pAb->AbEnclosing->AbBox, pSourceBox, height, frame);
     }
 }

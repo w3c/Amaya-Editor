@@ -524,7 +524,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	    fprintf (fileDescriptor, " Name=NULL");
 	  else
 	    fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
-		     (unsigned int)pNode->ElStructSchema);
+		     (unsigned long int)pNode->ElStructSchema);
 	}
       /* ecrit l'URI associee au schema de structure */
       if (pNode->ElStructSchema->SsUriName == NULL)
