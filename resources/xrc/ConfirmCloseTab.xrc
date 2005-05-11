@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="ConfirmCloseTab">
+    <title>*Comfirm close*</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticBitmap">
+              <bitmap stock_id="wxART_WARNING"></bitmap>
+              <size>32,32</size>
+            </object>
+            <flag>wxALL|wxALIGN_CENTRE</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_Q">
+                  <label>*You are about to close X open tabs. Are you sure you want to continue ?*</label>
+                </object>
+                <flag>wxBOTTOM</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxCheckBox" name="wxID_CHECK_W">
+                  <label>*Warn me when I attempt to close multiple tabs*</label>
+                  <checked>1</checked>
+                </object>
+                <flag>wxTOP</flag>
+                <border>4</border>
+              </object>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <border>5</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL|wxALIGN_RIGHT</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*Cancel*</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL|wxALIGN_RIGHT</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_OK">
+              <label>*Close tabs*</label>
+              <default>1</default>
+              <focused>1</focused>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>
