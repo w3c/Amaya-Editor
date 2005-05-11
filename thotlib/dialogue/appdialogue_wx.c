@@ -54,6 +54,7 @@
 #include "AmayaSimpleWindow.h"
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
+#include "AmayaStatusBar.h"
 #include "AmayaNotebook.h"
 #include "AmayaPanel.h"
 #include "AmayaSubPanel.h"
@@ -61,6 +62,7 @@
 #include "AmayaSubPanelManager.h"
 #include "AmayaStatsThread.h"
 
+static int g_logerror_action_id = -1;
 static int g_back_action_id = -1;
 static int g_forward_action_id = -1;
 static int g_reload_action_id = -1;
@@ -281,9 +283,9 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
     {
       item_id       = ptritem[item_nb].ItemID;
       item_label    = TtaGetMessage (THOT, item_id);
-     item_label_lg = strlen(item_label);
+      item_label_lg = strlen(item_label);
       if ( max_item_label_lg < item_label_lg )
-	max_item_label_lg = item_label_lg;
+        max_item_label_lg = item_label_lg;
       item_nb++;
     }
   
@@ -295,97 +297,98 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
       item_label   = TtaGetMessage (THOT, item_id);
       item_type    = ptritem[item_nb].ItemType;
       item_icon    = ptritem[item_nb].ItemIconName;
-
+      
       label = TtaConvMessageToWX(item_label);
       label.Pad(max_item_label_lg-strlen(item_label)+1, wxChar(' '));
-
+      
       switch (item_type)
-	{
-	case 'B': /* a normal menu item */
-	  item_action  = ptritem[item_nb].ItemAction;
-	  item_equiv   = MenuActionList[item_action].ActionEquiv;
-	  label += TtaConvMessageToWX(item_equiv);
-	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL);
-	  break;
-
-	case 'S': /* a separator */
-	  item_action  = -1;
-	  if (item_nb+1<ptrmenu->ItemsNb)
-	    p_menu_item = new wxMenuItem(p_menu, wxID_SEPARATOR, _T(""), _T(""), wxITEM_SEPARATOR);
-	  else
-	    p_menu_item = NULL; /* do not add a separator if it's the last menu item */
-	  break;
-
-	case 'T': /* a toggle menu item (checkbox) */
-	  item_action  = ptritem[item_nb].ItemAction;
-	  item_equiv   = MenuActionList[item_action].ActionEquiv;
-	  label += TtaConvMessageToWX(item_equiv);
-	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_CHECK);
-	  break;
-
-	case 'M': /* a submenu */
-	  item_action  = -1;
-	  item_submenu = ptritem[item_nb].SubMenu;
-	  if (item_submenu->ItemsNb>0)
-	    {
-	      p_submenu = new wxMenu();
-	      BuildPopdownWX( window_id, item_submenu, p_submenu );
-	      p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL, p_submenu);
-	    }
-	  else
-	    p_menu_item = NULL;
-	  break;
-
-	default: /* a unknown type */
-	  item_action  = -1;
-	  p_menu_item = NULL;
-	  wxASSERT_MSG(FALSE, _T("Unknown menu item type"));
-	  break;
-	}
-
+        {
+        case 'B': /* a normal menu item */
+          item_action  = ptritem[item_nb].ItemAction;
+          item_equiv   = MenuActionList[item_action].ActionEquiv;
+          label += TtaConvMessageToWX(item_equiv);
+          p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL);
+          break;
+          
+        case 'S': /* a separator */
+          item_action  = -1;
+          if (item_nb+1<ptrmenu->ItemsNb)
+            p_menu_item = new wxMenuItem(p_menu, wxID_SEPARATOR, _T(""), _T(""), wxITEM_SEPARATOR);
+          else
+            p_menu_item = NULL; /* do not add a separator if it's the last menu item */
+          break;
+          
+        case 'T': /* a toggle menu item (checkbox) */
+          item_action  = ptritem[item_nb].ItemAction;
+          item_equiv   = MenuActionList[item_action].ActionEquiv;
+          label += TtaConvMessageToWX(item_equiv);
+          p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_CHECK);
+          break;
+          
+        case 'M': /* a submenu */
+          item_action  = -1;
+          item_submenu = ptritem[item_nb].SubMenu;
+          if (item_submenu->ItemsNb>0)
+            {
+              p_submenu = new wxMenu();
+              BuildPopdownWX( window_id, item_submenu, p_submenu );
+              p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL, p_submenu);
+            }
+          else
+            p_menu_item = NULL;
+          break;
+          
+        default: /* a unknown type */
+          item_action  = -1;
+          p_menu_item = NULL;
+          wxASSERT_MSG(FALSE, _T("Unknown menu item type"));
+          break;
+        }
+      
       if (item_action != -1)
-	{
-	  /* Is it the "Show/Hide panel" command */
-	  if (!strcmp (MenuActionList[item_action].ActionName, "ShowPanel"))
-	    WindowTable[window_id].MenuItemShowPanelID = item_id;
-	  /* Is it the "Split/Unsplit view" command */
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "SplitUnsplitPage"))
-	    WindowTable[window_id].MenuItemSplitViewID = item_id;
-	  /* Is it the "Fullscreen on/off" command */
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "FullScreen"))
-	    WindowTable[window_id].MenuItemFullScreenID = item_id;
-	  /* Is it the "Paste" command */
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "PasteBuffer"))
-	    WindowTable[window_id].MenuItemPaste = item_id;
-	  /* Is it the "Undo" command */
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcUndo"))
-	    WindowTable[window_id].MenuItemUndo = item_id;
-	  /* Is it the "Redo" command */
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
-	    WindowTable[window_id].MenuItemRedo = item_id;
+        {
+          /* Is it the "Show/Hide panel" command */
+          if (!strcmp (MenuActionList[item_action].ActionName, "ShowPanel"))
+            WindowTable[window_id].MenuItemShowPanelID = item_id;
+          /* Is it the "Split/Unsplit view" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "SplitUnsplitPage"))
+            WindowTable[window_id].MenuItemSplitViewID = item_id;
+          /* Is it the "Fullscreen on/off" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "FullScreen"))
+            WindowTable[window_id].MenuItemFullScreenID = item_id;
+          /* Is it the "Paste" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "PasteBuffer"))
+            WindowTable[window_id].MenuItemPaste = item_id;
+          /* Is it the "Undo" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "TtcUndo"))
+            WindowTable[window_id].MenuItemUndo = item_id;
+          /* Is it the "Redo" command */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
+            WindowTable[window_id].MenuItemRedo = item_id;
 #ifdef _MACOS
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "HelpAmaya"))
-	    wxApp::s_macAboutMenuItemId = item_id;
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "ConfigAmaya"))
-	    wxApp::s_macPreferencesMenuItemId = item_id;
-	  else if (!strcmp (MenuActionList[item_action].ActionName, "AmayaClose"))
-	    wxApp::s_macExitMenuItemId = item_id;
+          /* this is for the MacOSX default lookandfeel */
+          else if (!strcmp (MenuActionList[item_action].ActionName, "HelpAmaya"))
+            wxApp::s_macAboutMenuItemId = item_id;
+          else if (!strcmp (MenuActionList[item_action].ActionName, "ConfigAmaya"))
+            wxApp::s_macPreferencesMenuItemId = item_id;
+          else if (!strcmp (MenuActionList[item_action].ActionName, "AmayaClose"))
+            wxApp::s_macExitMenuItemId = item_id;
 #endif /* _MACOS */
- 	}
-
+        }
+      
       if ( p_menu_item &&
-	   item_icon[0] != '\0' &&
-	   item_action != -1 &&
-	   item_type != 'T' )
-	{
-	  wxBitmap menu_icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG);
-	  if (menu_icon.Ok())
-	    p_menu_item->SetBitmap( menu_icon );
-	}
-
+           item_icon[0] != '\0' &&
+           item_action != -1 &&
+           item_type != 'T' )
+        {
+          wxBitmap menu_icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16,item_icon), wxBITMAP_TYPE_PNG);
+          if (menu_icon.Ok())
+            p_menu_item->SetBitmap( menu_icon );
+        }
+      
       if (p_menu_item)
-	p_menu->Append(p_menu_item);
-
+        p_menu->Append(p_menu_item);
+      
       item_nb++;
     }
 #endif /* _WX */
@@ -402,45 +405,45 @@ static void TtaMakeWindowMenuBar( int window_id )
   AmayaWindow        *p_window = TtaGetWindowFromId( window_id );
   Menu_Ctl           *ptrmenu = DocumentMenuList; /* this is the menus model */
   wxMenuBar          *p_menu_bar = p_window->GetMenuBar();
-
+  
   if (p_menu_bar)
     /* destroy the old menubar, because we are rebuilding a new one */
     p_menu_bar->Destroy();
   p_menu_bar = new wxMenuBar( wxMB_DOCKABLE );
-
+  
   while (ptrmenu)
     {
       /* Check if a menu has to be displayed. */
       if ( Prof_ShowMenu (ptrmenu) )
-	{
-	  wxMenu * p_menu = new wxMenu();
-	  
-	  /* remember the top menubar widgets because wxMenu doesn't have ids to identify it */
-	  WindowTable[window_id].WdMenus[ptrmenu->MenuID] = p_menu;
-
-	  /* remember specials menus */
-	  if (ptrmenu->MenuContext) 
-	    WindowTable[window_id].MenuContext = ptrmenu->MenuID;
-	  else if (ptrmenu->MenuAttr)
-	    WindowTable[window_id].MenuAttr = ptrmenu->MenuID;
-	  else if (ptrmenu->MenuSelect) 
-	    WindowTable[window_id].MenuSelect = ptrmenu->MenuID;
-	  else if (ptrmenu->MenuHelp) 
-	    WindowTable[window_id].MenuHelp = ptrmenu->MenuID;
-	  
-	  /* Now create the menu's widgets and hangs it to our p_menu */
-	  BuildPopdownWX( window_id, ptrmenu, p_menu );
-	  
-	  /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
-	  /* il sera affiche qd le boutton droit de la souris sera active */
-	  if (!ptrmenu->MenuContext)
-	    p_menu_bar->Append( p_menu,
-				TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
- 
-	}
+        {
+          wxMenu * p_menu = new wxMenu();
+          
+          /* remember the top menubar widgets because wxMenu doesn't have ids to identify it */
+          WindowTable[window_id].WdMenus[ptrmenu->MenuID] = p_menu;
+          
+          /* remember specials menus */
+          if (ptrmenu->MenuContext) 
+            WindowTable[window_id].MenuContext = ptrmenu->MenuID;
+          else if (ptrmenu->MenuAttr)
+            WindowTable[window_id].MenuAttr = ptrmenu->MenuID;
+          else if (ptrmenu->MenuSelect) 
+            WindowTable[window_id].MenuSelect = ptrmenu->MenuID;
+          else if (ptrmenu->MenuHelp) 
+            WindowTable[window_id].MenuHelp = ptrmenu->MenuID;
+          
+          /* Now create the menu's widgets and hangs it to our p_menu */
+          BuildPopdownWX( window_id, ptrmenu, p_menu );
+          
+          /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+          /* il sera affiche qd le boutton droit de la souris sera active */
+          if (!ptrmenu->MenuContext)
+            p_menu_bar->Append( p_menu,
+                                TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
+          
+        }
       ptrmenu = ptrmenu->NextMenu;
     }
-
+  
   p_window->SetMenuBar( p_menu_bar );
 #endif /* _WX */
 }
@@ -489,12 +492,12 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
   PtrDocument   pDoc       = LoadedDocument[doc_id-1];
   wxMenu *      p_top_menu = NULL;
   int           top_menu_pos = 0;
-
+  
   /* do nothing if there is no menubar : it's the case of
-     AmayaSimpleWindow (log, show apply style ...)*/
+   * AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_menu_bar || doc_id<=0)
     return;
-
+  
   /* check that the current menu correspond to the current document
    * do nothing if the current document is not the refreshed one */
   Document      active_doc_id;
@@ -502,51 +505,51 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
   FrameToView(TtaGiveActiveFrame(), &active_doc_id, &view);
   if (active_doc_id != doc_id)
     return;
-
+  
   /* refresh only one menu ? */
   if (menu_id >= 0 && menu_id < MAX_MENU)
     {
       p_top_menu = WindowTable[window_id].WdMenus[menu_id];
       if (p_top_menu)
-	{
-	  // find the corrsponding menu position in the Top Menubar
-	  top_menu_pos = 0;
-	  while (top_menu_pos < p_menu_bar->GetMenuCount() &&
-		 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
-        top_menu_pos++;
-	  // we must check that the menu has been found because
-	  // the contextual menu do not have a title
-	  if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
-	    {
-	      // it has been found, update it
-	      p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
-	    }
-	  else
-	  {
-		  wxASSERT_MSG(FALSE,_T("didn't find the top menu"));
-	  }
-	}
+        {
+          // find the corrsponding menu position in the Top Menubar
+          top_menu_pos = 0;
+          while (top_menu_pos < p_menu_bar->GetMenuCount() &&
+                 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+            top_menu_pos++;
+          // we must check that the menu has been found because
+          // the contextual menu do not have a title
+          if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
+            {
+              // it has been found, update it
+              p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+            }
+          else
+            {
+              wxASSERT_MSG(FALSE,_T("didn't find the top menu"));
+            }
+        }
       return;
     }
-
+  
   /* refresh every menus in the menubar */
   menu_id = 0;
   while (menu_id < MAX_MENU)
     {
       p_top_menu = WindowTable[window_id].WdMenus[menu_id];
       if (p_top_menu)
-	{
-	  // find the corrsponding menu position in the Top Menubar
-	  top_menu_pos = 0;
-	  while (top_menu_pos < p_menu_bar->GetMenuCount() && p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
-        top_menu_pos++;
-	  // we must check that the menu has been found because the contextual menu do not have a title
-	  if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
-	    {
-	      // it has been found, update it
-	      p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
-	    }
-	}
+        {
+          // find the corrsponding menu position in the Top Menubar
+          top_menu_pos = 0;
+          while (top_menu_pos < p_menu_bar->GetMenuCount() && p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+            top_menu_pos++;
+          // we must check that the menu has been found because the contextual menu do not have a title
+          if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
+            {
+              // it has been found, update it
+              p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
+            }
+        }
       menu_id++;
     }
 #endif /* _WX */
@@ -564,8 +567,8 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   AmayaWindow * p_window   = TtaGetWindowFromId(window_id);
   
   if (!p_window)
-	return;
-
+    return;
+  
   wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
   wxMenuItem *  p_menu_item = NULL;
   Item_Ctl *    ptritem = NULL;
@@ -576,11 +579,11 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   int           item_action = 0;
   ThotBool      item_enable = FALSE;
   ThotBool      item_toggle = FALSE;
-
+  
   /* do nothing if there is no menubar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_menu_bar)
     return;
-
+  
   /* check that the current menu correspond to the current document
    * do nothing if the current document is not the refreshed one */
   Document      active_doc_id;
@@ -591,81 +594,84 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   
   if (ptrmenu == NULL)
     ptrmenu = DocumentMenuList; /* this is the menus model */
-
+  
   /* try to refresh only the given menu item */
   if (menu_item_id != -1)
     {
       p_menu_item = p_menu_bar->FindItem(item_id);
       item_action = FindMenuActionFromMenuItemID(ptrmenu, item_id);
       if (item_action != -1)
-	{
-	  p_menu_item = p_menu_bar->FindItem(item_id);
-	  wxASSERT(p_menu_item);
-
-	  /* enable or disable the item */
-	  item_enable = MenuActionList[item_action].ActionActive[doc_id];
-	  p_menu_item->Enable(item_enable);
-
-	  /* check or uncheck a checkable item */
-	  if (p_menu_item->GetKind() == wxITEM_CHECK)
-	    {
-	      item_toggle = MenuActionList[item_action].ActionToggle[doc_id];	      
-	      p_menu_item->Check(item_toggle);
-	    }
-
-	  /* refresh the corresponding toolbar tool */
-	  TtaRefreshToolbarStats( item_action, doc_id );
-	}
+        {
+          p_menu_item = p_menu_bar->FindItem(item_id);
+          wxASSERT(p_menu_item);
+          
+          /* enable or disable the item */
+          item_enable = MenuActionList[item_action].ActionActive[doc_id];
+          p_menu_item->Enable(item_enable);
+          
+          /* check or uncheck a checkable item */
+          if (p_menu_item->GetKind() == wxITEM_CHECK)
+            {
+              item_toggle = MenuActionList[item_action].ActionToggle[doc_id];	      
+              p_menu_item->Check(item_toggle);
+            }
+          
+          /* refresh the corresponding toolbar/statusbar tool */
+          TtaRefreshToolbarStats( item_action, doc_id );
+          TtaRefreshStatusBarStats( item_action, doc_id );
+        }
       return;
     }
-
-
+  
+  
   /* refresh every entry */
   while (ptrmenu)
     {
       ptritem = ptrmenu->ItemsList;
-
+      
       item_nb = 0;      
       while (item_nb < ptrmenu->ItemsNb)
-	{
-	  item_id      = ptritem[item_nb].ItemID;
-	  item_type    = ptritem[item_nb].ItemType;
-	  
-	  switch (item_type)
-	    {
-	    case 'B': /* a normal menu item */
-	      item_action  = ptritem[item_nb].ItemAction;
-	      item_enable  = MenuActionList[item_action].ActionActive[doc_id];
-	      p_menu_bar->Enable(item_id, item_enable);
-	      /* refresh the corresponding toolbar tool */
-	      TtaRefreshToolbarStats( item_action, doc_id );
-	      break;
-	      	      
-	    case 'T': /* a toggle menu item (checkbox) */
-	      item_action  = ptritem[item_nb].ItemAction;
-	      item_enable  = MenuActionList[item_action].ActionActive[doc_id];
-	      item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
-	      p_menu_bar->Check(item_id, item_toggle);
-	      p_menu_bar->Enable(item_id, item_enable);
-	      /* refresh the corresponding toolbar tool */
-	      TtaRefreshToolbarStats( item_action, doc_id );
-	      break;
-	      
-	    case 'M': /* a submenu */
-	      item_submenu = ptritem[item_nb].SubMenu;
-	      TtaRefreshMenuItemStats( doc_id, item_submenu, menu_item_id );
-	      break;
-
-	    case 'S': /* a separator */
-	      break;
-
-	    default: /* a unknown type */
-	      wxASSERT(FALSE);
-	      break;
-	    }
-	  
-	  item_nb++;
-	}
+        {
+          item_id      = ptritem[item_nb].ItemID;
+          item_type    = ptritem[item_nb].ItemType;
+          
+          switch (item_type)
+            {
+            case 'B': /* a normal menu item */
+              item_action  = ptritem[item_nb].ItemAction;
+              item_enable  = MenuActionList[item_action].ActionActive[doc_id];
+              p_menu_bar->Enable(item_id, item_enable);
+              /* refresh the corresponding toolbar/statusbar tool */
+              TtaRefreshToolbarStats( item_action, doc_id );
+              TtaRefreshStatusBarStats( item_action, doc_id );
+              break;
+              
+            case 'T': /* a toggle menu item (checkbox) */
+              item_action  = ptritem[item_nb].ItemAction;
+              item_enable  = MenuActionList[item_action].ActionActive[doc_id];
+              item_toggle  = MenuActionList[item_action].ActionToggle[doc_id];
+              p_menu_bar->Check(item_id, item_toggle);
+              p_menu_bar->Enable(item_id, item_enable);
+              /* refresh the corresponding toolbar/statusbar tool */
+              TtaRefreshToolbarStats( item_action, doc_id );
+              TtaRefreshStatusBarStats( item_action, doc_id );
+              break;
+              
+            case 'M': /* a submenu */
+              item_submenu = ptritem[item_nb].SubMenu;
+              TtaRefreshMenuItemStats( doc_id, item_submenu, menu_item_id );
+              break;
+              
+            case 'S': /* a separator */
+              break;
+              
+            default: /* a unknown type */
+              wxASSERT(FALSE);
+              break;
+            }
+          
+          item_nb++;
+        }
       
       ptrmenu = ptrmenu->NextMenu;
     }
@@ -753,6 +759,36 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
     {
       action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
       p_toolbar->EnableTool(_T("wxID_TOOL_LOGO"), action_enable);
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar items widgets for the given doc
+  (there is only logerror button)
+ ----------------------------------------------------------------------*/
+void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
+{
+#ifdef _WX
+  int            window_id = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow *   p_window = TtaGetWindowFromId(window_id);
+  wxASSERT(p_window);
+  AmayaStatusBar * p_sbar = p_window->GetAmayaStatusBar();
+  ThotBool   action_enable = FALSE;
+
+  /* do nothing if there is no sbar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  if(!p_sbar)
+    return;
+
+  /* initialize toolbar actions id */
+  if ( g_logerror_action_id == -1 )
+    g_logerror_action_id = FindMenuAction("ShowLogFile");
+
+  /* refresh the specified tool */
+  if (changed_action_id == g_logerror_action_id)
+    {
+      action_enable = MenuActionList[changed_action_id].ActionActive[doc_id];
+      p_sbar->EnableLogError(action_enable);
     }
 #endif /* _WX */
 }

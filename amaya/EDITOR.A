@@ -82,7 +82,7 @@ MENUS
 	File.Charset1 button:BISO_2022_JP -> ReadAsISO_2022_JP;
 	File.Charset1 button:BEUC_JP -> ReadAsEUC_JP;
 	File.Charset1 button:BSHIFT_JIS -> ReadAsSHIFT_JIS;
-	File button:BShowLogFile -> ShowLogFile icon:error.png;
+	File button:BShowLogFile -> ShowLogFile icon:ledred.png;
 	File button:BDocInfo -> DocumentInfo icon:document_info.png;
 	File Separator;
 	File button:BSetUpandPrint -> SetupAndPrint icon:setup_and_print.png;

@@ -42,7 +42,7 @@ class AmayaQuickSplitButton;
  * ||              | |+--------------------------------+| |
  * |+--------------+ +----------------------------------+ |
  * |+----------------------------------------------------+|
- * || StatusBar                                          ||
+ * || AmayaStatusBar                                     ||
  * |+----------------------------------------------------+|
  * +------------------------------------------------------+
  *       Author:  Stephane GULLY
@@ -75,6 +75,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual int            GetPageCount() const;
 
   virtual AmayaToolBar * GetAmayaToolBar();
+  virtual AmayaStatusBar * GetAmayaStatusBar();
 
 
   // url bar control
@@ -119,6 +120,7 @@ class AmayaNormalWindow : public AmayaWindow
   AmayaToolBar *     m_pToolBar;
 
   AmayaQuickSplitButton * m_pSplitPanelButton;
+  AmayaStatusBar * m_pStatusBar;
 };
 
 #endif // __AMAYANORMALWINDOW_H__

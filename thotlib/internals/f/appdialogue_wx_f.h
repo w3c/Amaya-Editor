@@ -23,6 +23,8 @@ extern void TtaRefreshMenuItemStats ( int doc_id,
                                       int menu_item_id );
 extern void TtaRefreshToolbarStats ( int changed_action_id,
                                      Document doc_id );
+extern void TtaRefreshStatusBarStats ( int changed_action_id,
+                                       Document doc_id );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -62,19 +64,10 @@ extern int TtaGetFrameId ( int window_id,
                            int position );
 extern void TtaCloseWindow ( int window_id );
 extern int TtaGetWindowNumber ( void );
-extern int TtaMakePanel ( const char * panel_title );
-extern int TtaAttachPanel ( int window_id );
-extern ThotBool TtaDetachPanel ( int panel_id,
-                                 int window_id );
-extern ThotBool TtaFrameIsActive ( int frame_id );
 extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,
                            const char * listUrl,
                            void (* procedure)() );
-extern void APP_Callback_URLActivate ( int frame_id,
-                                       const char *text );
-extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
-                                                 int button_id );
 extern void TtaRefreshPanelButton ( Document doc,
                                     View view,
                                     int panel_type );
@@ -113,6 +106,8 @@ extern void TtaRefreshMenuItemStats ( int doc_id,
                                         int menu_item_id );
 extern void TtaRefreshToolbarStats ( int changed_action_id,
                                        Document doc_id );
+extern void TtaRefreshStatusBarStats ( int changed_action_id,
+                                         Document doc_id );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,
@@ -152,19 +147,10 @@ extern int TtaGetFrameId ( int window_id,
                              int position );
 extern void TtaCloseWindow ( int window_id );
 extern int TtaGetWindowNumber ( void );
-extern int TtaMakePanel ( const char * panel_title );
-extern int TtaAttachPanel ( int window_id );
-extern ThotBool TtaDetachPanel ( int panel_id,
-                                   int window_id );
-extern ThotBool TtaFrameIsActive ( int frame_id );
 extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,
                              const char * listUrl,
                              void (* procedure)() );
-extern void APP_Callback_URLActivate ( int frame_id,
-                                         const char *text );
-extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
-                                                   int button_id );
 extern void TtaRefreshPanelButton ( Document doc,
                                       View view,
                                       int panel_type );

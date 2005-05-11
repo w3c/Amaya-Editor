@@ -48,6 +48,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
 #include "AmayaToolBar.h"
+#include "AmayaStatusBar.h"
 #include "AmayaPanel.h"
 #include "AmayaApp.h"
 #include "AmayaLogDebug.h"
@@ -325,6 +326,18 @@ void AmayaWindow::OnSize( wxSizeEvent& event )
  *--------------------------------------------------------------------------------------
  */
 AmayaToolBar * AmayaWindow::GetAmayaToolBar()
+{
+  return NULL;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetAmayaStatusBar
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+AmayaStatusBar * AmayaWindow::GetAmayaStatusBar()
 {
   return NULL;
 }

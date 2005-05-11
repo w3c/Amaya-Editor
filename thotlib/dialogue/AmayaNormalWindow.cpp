@@ -48,6 +48,7 @@
 #include "AmayaToolBar.h"
 #include "AmayaQuickSplitButton.h"
 #include "AmayaSubPanelManager.h"
+#include "AmayaStatusBar.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNormalWindow, AmayaWindow)
 
@@ -135,8 +136,9 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
   p_TopLayoutSizer->Prepend( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
 
   // Creation of the statusbar
-  CreateStatusBar( 1 );
-
+  m_pStatusBar = new AmayaStatusBar(this);
+  SetStatusBar(m_pStatusBar);
+  
   SetAutoLayout(TRUE);
 }
 
@@ -149,6 +151,19 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
  */
 AmayaNormalWindow::~AmayaNormalWindow()
 {
+  delete m_pStatusBar;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  GetAmayaStatusBar
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+AmayaStatusBar * AmayaNormalWindow::GetAmayaStatusBar()
+{
+  return m_pStatusBar;
 }
 
 /*

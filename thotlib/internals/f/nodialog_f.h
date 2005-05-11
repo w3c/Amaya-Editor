@@ -158,6 +158,7 @@ extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
 extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
+extern ThotBool TtaDetachFrame ( int frame_id );
 
 #else /* __STDC__ */
 
@@ -313,6 +314,7 @@ extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern ThotBool OpenParsingErrors ( Document document );
 extern int TtaGiveActiveFrame ( void );
 extern ThotBool GL_DrawAll ( void );
+extern ThotBool TtaDetachFrame ( int frame_id );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

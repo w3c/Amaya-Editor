@@ -20,6 +20,7 @@ class AmayaCParam;
 class AmayaURLBar;
 class AmayaToolBar;
 class AmayaPanel;
+class AmayaStatusBar;
 
 #include "windowtypes_wx.h"
 
@@ -115,6 +116,7 @@ class AmayaWindow : public wxFrame
   virtual int            GetPageCount() const;
 
   virtual AmayaToolBar * GetAmayaToolBar();
+  virtual AmayaStatusBar * GetAmayaStatusBar();
 
   // url bar control
   virtual wxString GetURL();

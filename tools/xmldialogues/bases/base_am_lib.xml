@@ -2431,6 +2431,22 @@
 	<message xml:lang="en">Close tabs</message>
 	<message xml:lang="fr">Fermer les onglets</message>
 </label>
+<label define="TMSG_LIB_NOERROR_DOC">
+	<message xml:lang="en">No error detected</message>
+	<message xml:lang="fr">Aucune erreur détectée</message>
+</label>
+<label define="TMSG_LIB_ERROR_DOC">
+	<message xml:lang="en">Show parsing errors</message>
+  <message xml:lang="fr">Montrer les erreurs</message>
+	<message xml:lang="de">Parserfehler anzeigen</message>
+	<message xml:lang="it">Mostra le errore</message>
+	<message xml:lang="es">Mostrar errores sintácticos</message>
+	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Näytä käännösvirheet</message>
+	<message xml:lang="tr">Pars hatalarını göster</message>
+	<message xml:lang="ru">Показать разбор ошибок</message>
+	<message xml:lang="hu">Elemzési hibák mutatása</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
