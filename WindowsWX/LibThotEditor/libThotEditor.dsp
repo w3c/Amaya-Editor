@@ -135,6 +135,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaColorsPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaConfirmCloseTab.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaDialog.cpp
 # End Source File
 # Begin Source File
@@ -208,6 +212,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaSpeCharPanel.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaStatsThread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaStatusBar.cpp
 # End Source File
 # Begin Source File
 

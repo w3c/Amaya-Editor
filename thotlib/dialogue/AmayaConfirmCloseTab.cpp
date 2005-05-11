@@ -63,11 +63,8 @@ AmayaConfirmCloseTab::AmayaConfirmCloseTab( wxWindow * p_parent, int nb_tab ) : 
   XRCCTRL(*this, "wxID_CHECK_W",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LIB_WARNCTAB_CHECK)));
 
   // check if the user doesn't want to show the dialog
-  ThotBool value;
-  TtaSetEnvBoolean("SHOW_CONFIRM_CLOSE_TAB", TRUE, FALSE);
-  TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &value);
   wxCheckBox * p_cbox = XRCCTRL(*this, "wxID_CHECK_W", wxCheckBox);
-  p_cbox->SetValue( value );
+  p_cbox->SetValue( DoesUserWantToShowMe() );
 }
 
 /*----------------------------------------------------------------------
@@ -109,6 +106,7 @@ void AmayaConfirmCloseTab::OnCancel( wxCommandEvent& event )
 bool AmayaConfirmCloseTab::DoesUserWantToShowMe()
 {
   ThotBool value;
+  TtaSetEnvBoolean("SHOW_CONFIRM_CLOSE_TAB", TRUE, FALSE);
   TtaGetEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &value);
   return value;
 }
