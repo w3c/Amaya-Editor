@@ -137,7 +137,11 @@ void AmayaSimpleWindow::DoClose(bool& veto)
     }
   else
     veto = FALSE;
-  
+
+  // the frame is closed, just close the window
+  if (!veto)
+    Close();
+
   m_IsClosing = FALSE; 
 }
 
