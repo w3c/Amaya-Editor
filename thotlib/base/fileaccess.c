@@ -658,48 +658,48 @@ ThotBool TtaWriteInteger (BinFile file, int lval)
   ----------------------------------------------------------------------*/
 void TtaExtractName (char *text, char *aDirectory, char *aName)
 {
-   int                lg, i, j;
-   char              *ptr;
-   char              *oldptr;
-
-   if (text == NULL || aDirectory == NULL || aName == NULL)
-     /* No input text or error in input parameters */
-      return;
-   aDirectory[0] = EOS;
-   aName[0] = EOS;
-   lg = strlen (text);
-   if (lg)
-     {
-       /* the text is not empty */
-       ptr = oldptr = &text[0];
-       do
-	 {
-	   ptr = strrchr (oldptr, '/');
-	   if (ptr == NULL)
-	     /* check erroneous Windows files */
-	     ptr = strrchr (oldptr, '\\');
-	   if (ptr != NULL)
-	     oldptr = &ptr[1];
-	 }
-       while (ptr != NULL);
-
-       /* the length of the directory part */
-       i = ((long int) (oldptr) - (long int) (text)) / sizeof (char);
-       if (i > 1)
-	 {
-	   strncpy (aDirectory, text, i);
-	   j = i - 1;
-	   /* Suppresses the / or  \ characters at the end of the path */
-	   while (aDirectory[j] == '/' || aDirectory[j] == '\\')
-	     aDirectory[j--] = EOS;
-	 }
-       if (i != lg)
-          strcpy (aName, oldptr);
-     }
+  int                lg, i, j;
+  char              *ptr;
+  char              *oldptr;
+  
+  if (text == NULL || aDirectory == NULL || aName == NULL)
+    /* No input text or error in input parameters */
+    return;
+  aDirectory[0] = EOS;
+  aName[0] = EOS;
+  lg = strlen (text);
+  if (lg)
+    {
+      /* the text is not empty */
+      ptr = oldptr = &text[0];
+      do
+        {
+          ptr = strrchr (oldptr, '/');
+          if (ptr == NULL)
+            /* check erroneous Windows files */
+            ptr = strrchr (oldptr, '\\');
+          if (ptr != NULL)
+            oldptr = &ptr[1];
+        }
+      while (ptr != NULL);
+      
+      /* the length of the directory part */
+      i = (long int)(oldptr - text) / sizeof (char);
+      if (i > 1)
+        {
+          strncpy (aDirectory, text, i);
+          j = i - 1;
+          /* Suppresses the / or  \ characters at the end of the path */
+          while (aDirectory[j] == '/' || aDirectory[j] == '\\')
+            aDirectory[j--] = EOS;
+        }
+      if (i != lg)
+        strcpy (aName, oldptr);
+    }
 #ifdef _WINDOWS
-     lg = strlen (aName);
-     if (!strcasecmp (&aName[lg - 4], ".exe"))
-        aName[lg - 4] = EOS;
+  lg = strlen (aName);
+  if (!strcasecmp (&aName[lg - 4], ".exe"))
+    aName[lg - 4] = EOS;
 #endif /* _WINDOWS */
 }
 
