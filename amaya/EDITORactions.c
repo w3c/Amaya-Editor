@@ -3364,16 +3364,15 @@ static void CreateInputElement (Document doc, View view, int elInput)
 	   if (input)
 	     {
 	       elType = TtaGetElementType (input);
-	       if (elInput == HTML_EL_Text_Area)
-		 {
-		   AddRowsColumns (input, doc);
-		   TtaSetStructureChecking (oldStructureChecking, doc);
-		 }
 	       while (input && elType.ElTypeNum != elInput)
 		 {
 		   input = TtaGetParent (input);
 		   elType = TtaGetElementType (input);
 		 }
+	       if (input && (elInput == HTML_EL_Text_Area) && (elType.ElTypeNum == elInput))
+		 AddRowsColumns (input, doc);
+	       if (elInput == HTML_EL_Text_Area)
+		 TtaSetStructureChecking (oldStructureChecking, doc);
 	       /* add a text before if needed */
 	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	       el = input;
