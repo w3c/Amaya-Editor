@@ -70,6 +70,7 @@ KEY;
 #include "memory_f.h"
 #include "message_f.h"
 #include "registry_f.h"
+#include "spellchecker_f.h" //function SetCapital
 #include "structcommands_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
@@ -1638,7 +1639,6 @@ void InitTranslations (char *appliname)
   char               *addr;
   char                transText[MAX_LENGTH];
   char                ch[80];
-  char                line[200];  /* ligne en construction pour motif */
   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
   int                 e, i, j;
@@ -1695,22 +1695,19 @@ void InitTranslations (char *appliname)
 	  /* Initialisations */
 	  mod1 = mod2 = THOT_NO_MOD;
 	  key1 = key2 = 0;
-	  strcpy (line, "!");	/* initialisation de la ligne */
-	  
+	  equiv[0] = EOS;
 	  /* Est-ce la fin de fichier ? */
 	  if (strlen (ch) == 0 || EndOfString (ch, "^"))
 	    e = 0;
 	  else if (ch[0] != '#')
 	    {
-#ifdef _MACOS
 	      /* it is not a comment */
 	      /* -------> Lecture des autres champs */
+#ifdef _MACOS
               /* copie modifieur */
 	      strcpy (equiv, "\t");
 	      strcat (equiv, ch);
 	      strcat (equiv, "-");
-	      strcat (line, ch);
-	      strcat (line, "-");
 
 	      /* Lecture de la cle */
 	      ch[0] = 0;
@@ -1720,7 +1717,6 @@ void InitTranslations (char *appliname)
 	      if (name[0] != EOS)
 		{
 		  /* copie de la cle */
-		  strcat (line, "<Key>");
 		  i = strlen (transText);
 		  /* Elimine le : a la fin du nom */
 		  if ((transText[i - 1] == ':') && i != 1)
@@ -1731,28 +1727,19 @@ void InitTranslations (char *appliname)
 		    }
 		  else
 		    i = 0;
-		  /* copie le nom normalise */
-		  strcat (line, NameCode (transText));
-		  if (i == 1)
-		    strcat (line, ": ");
-		  else
-		    strcat (line, " ");
 		}
 	      strcat (equiv, transText);
 
    	      /* Lecture de l'action */
 	      fscanf (file, "%80s", transText);
 #else /* _MACOS */
-	      /* it is not a comment */
-	      /* -------> Lecture des autres champs */
+	      strcpy (equiv, " ");
 	      if (!strcasecmp (ch, "shift"))
 		{
 		  mod1 = THOT_MOD_SHIFT;
 		  /* copie 1er modifieur */
-		  strcpy (equiv, "Shift");
+		  strcat (equiv, "Shift");
 		  strcat (equiv, " ");
-		  strcat (line, "Shift");
-		  strcat (line, " ");
 		  /* Lecture enventuelle d'un deuxieme modifieur */
 		  ch[0] = 0;
 		  fscanf (file, "%80s", ch);
@@ -1760,7 +1747,7 @@ void InitTranslations (char *appliname)
 	      else
 		{
 		  mod1 = THOT_NO_MOD;
-		  equiv[0] = EOS;
+		  //equiv[0] = EOS;
 		}
 	      
 	      if (!strcasecmp (ch, "ctrl"))
@@ -1769,8 +1756,6 @@ void InitTranslations (char *appliname)
 		  /* copie 2eme modifieur */
 		  strcat (equiv, "Ctrl");
 		  strcat (equiv, " ");
-		  strcat (line, "Ctrl");
-		  strcat (line, " ");
 		  /* Lecture de la cle */
 		  ch[0] = 0;
 		  fscanf (file, "%80s", ch);
@@ -1781,8 +1766,6 @@ void InitTranslations (char *appliname)
 		  /* copie 2eme modifieur */
 		  strcat (equiv, "Alt");
 		  strcat (equiv, " ");
-		  strcat (line, "Alt");
-		  strcat (line, " ");
 		  /* Lecture de la cle */
 		  ch[0] = 0;
 		  fscanf (file, "%80s", ch);
@@ -1793,7 +1776,6 @@ void InitTranslations (char *appliname)
 	      if (name[0] != EOS)
 		{
 		  /* copie de la cle */
-		  strcat (line, "<Key>");
 		  i = strlen (transText);
 		  /* Elimine le : a la fin du nom */
 		  if ((transText[i - 1] == ':') && i != 1)
@@ -1804,24 +1786,23 @@ void InitTranslations (char *appliname)
 		    }
 		  else
 		    i = 0;
-		  /* copie le nom normalise */
-		  strcat (line, NameCode (transText));
-		  if (i == 1)
-		    strcat (line, ": ");
-		  else
-		    strcat (line, " ");
 		}
 
 	      /* convert to keysym for the automata */
 	      key1 = SpecialKey (transText, mod1 & THOT_MOD_SHIFT, &isSpecialKey1);
+	      if (transText[0] >= 'a' && transText[0] <= 'z')
+		SetCapital (transText);
 	      strcat (equiv, transText);
 
 	      /* Lecture eventuelle d'une deuxieme composition */
 	      fscanf (file, "%80s", transText);
 	      if (transText[0] == ',')
 		{
+                  strcat (equiv, " ");
+#ifdef _WX
+		  strcat (equiv, "\t");
+#endif /* _WX */
 		  /* copie du separateur */
-		  strcat (line, ", ");
 		  ch[0] = 0;
 		  fscanf (file, "%80s", ch);
 		      
@@ -1829,54 +1810,40 @@ void InitTranslations (char *appliname)
 		    {
 		      mod2 = THOT_MOD_SHIFT;
 		      /* copie du 2eme modifieur */
-		      strcat (equiv, "Shift");
-		      strcat (equiv, " ");
-		      strcat (line, "Shift");
-		      strcat (line, " ");
+		      //strcat (equiv, "Shift");
+		      //strcat (equiv, " ");
 		      /* Lecture enventuelle d'un deuxieme modifieur */
 		      ch[0] = 0;
 		      fscanf (file, "%80s", ch);
 		    }
 		  else
-		    {
-                      mod2 = THOT_NO_MOD;
-                      strcat (equiv, " ");
-		    }
+		    mod2 = THOT_NO_MOD;
 
 		  if (!strcasecmp (ch, "ctrl"))
 		    {
 		      mod2 += THOT_MOD_CTRL;
 		      /* copie 2eme modifieur */
-		      strcat (equiv, "Ctrl");
-		      strcat (equiv, " ");
-		      strcat (line, "Ctrl");
-		      strcat (line, " ");
+		      //strcat (equiv, "Ctrl");
+		      //strcat (equiv, " ");
 		      /* copie de la cle */
 		      ch[0] = 0;
 		      fscanf (file, "%80s", ch);
-		      strcat (line, ch);
-		      strcat (line, " ");
 		    }
 		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
 		    {
                       mod2 += THOT_MOD_ALT;
                       /* copie 2eme modifieur */
-                      strcat (equiv, "Alt");
-                      strcat (equiv, " ");
-                      strcat (line, "Alt");
-                      strcat (line, " ");
+                      //strcat (equiv, "Alt");
+                      //strcat (equiv, " ");
                       /* copie de la cle */
 		      ch[0] = 0;
                       fscanf (file, "%80s", ch);
-                      strcat (line, ch);
-                      strcat (line, " ");
 		    }
 
 		  /* Extrait la valeur de la cle */
 		  sscanf (ch, "<Key>%80s", transText);
 		  if (transText [0] != EOS)
 		    {
-		      strcat (line, "<Key>");   /* copie de la cle */
 		      i = strlen (transText);
 		      /* Elimine le : a la fin du nom */
 		      if (transText[i - 1] == ':' && i != 1)
@@ -1887,19 +1854,21 @@ void InitTranslations (char *appliname)
 			}
 		      else
                         i = 0;
-		      /* copie le nom normalise */
-		      strcat (line, NameCode (transText));
-		      if (i == 1)
-			strcat (line, ": ");
-		      else
-			strcat (line, " ");
-		    } 
+		    }
 		  key2 = SpecialKey (transText, mod2 & THOT_MOD_SHIFT, &isSpecialKey2);
-		  strcat (equiv, transText);
-
+		  if (transText[0] != EOS)
+		    {
+		      if (transText[0] >= 'a' && transText[0] <= 'z')
+			SetCapital (transText);
+		      strcat (equiv, transText);
+		    }
 		  /* Lecture de l'action */
 		  fscanf (file, "%80s", transText);
 		}
+#ifdef _WX
+	      else
+		equiv[0] = '\t';
+#endif /* _WX */
 #endif /* _MACOS */
 	      /* Isole l'intitule de la commande */
 	      strncpy (ch, transText, 80);
@@ -1921,7 +1890,6 @@ void InitTranslations (char *appliname)
 	      if (i <= 8)
 		{
 		  /* Prepare translations */
-		  strcat (text, line);
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {
 		      strcat (text, "insert-string(");

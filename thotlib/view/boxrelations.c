@@ -34,6 +34,7 @@
 #include "absboxes_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
+#include "boxpositions_f.h"
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "exceptions_f.h"
@@ -976,7 +977,12 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      if (r >= 0)
 		{
 		  pAb->AbWidthChange = FALSE;
-		  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxWidth, 0, 0, 0, frame);
+		  r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+		  if (pBox->BxContentWidth)
+		    {
+		      pBox->BxContentWidth = FALSE;
+		    }
+		  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
 		}
 	    }
 	  else if (r >= 0)
@@ -1003,7 +1009,12 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      if (b >= 0)
 		{
 		  pAb->AbHeightChange = FALSE;
-		   ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxHeight, 0, 0, frame);
+		  b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+		  if (pBox->BxContentHeight)
+		    {
+		      pBox->BxContentHeight = FALSE;
+		    }
+		  ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
 		}
 	    }
 	  else if (b >= 0)
@@ -1977,9 +1988,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     {
 #ifdef POSITIONING
       /* check if the width is set by positioning rules */
-      if (pAb->AbLeafType == LtCompound && pAb->AbPositioning &&
-	  pAb->AbPositioning->PnAlgorithm != PnStatic &&
-	  pAb->AbPositioning->PnAlgorithm != PnRelative)
+      if (ExtraFlow (pBox, frame))
 	{
 	  if (horizRef)
 	    {
@@ -1987,7 +1996,15 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  pAb->AbPositioning->PnLeftUnit != UnUndefined &&
 		  pAb->AbPositioning->PnRightUnit != UnAuto &
 		  pAb->AbPositioning->PnRightUnit != UnUndefined)
-		return FALSE;
+		{
+		  /* inherit from an enclosing box */
+		  pAb->AbWidth.DimIsPosition = FALSE;
+		  pAb->AbWidth.DimAbRef = pParentAb;
+		  pAb->AbWidth.DimValue = 0;
+		  pAb->AbWidth.DimSameDimension = TRUE;
+		  pAb->AbWidth.DimUserSpecified = FALSE;
+		  return FALSE;
+		}
 	      else if (!pAb->AbWidth.DimIsPosition &&
 		       pAb->AbWidth.DimAbRef == pParentAb)
 		pAb->AbWidth.DimAbRef = GetEnclosingViewport (pAb);
@@ -1998,7 +2015,15 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  pAb->AbPositioning->PnTopUnit != UnUndefined &&
 		  pAb->AbPositioning->PnBottomUnit != UnAuto &&
 		  pAb->AbPositioning->PnBottomUnit != UnUndefined)
-		return FALSE;
+		{
+		  /* inherit from an enclosing box */
+		  pAb->AbHeight.DimIsPosition = FALSE;
+		  pAb->AbHeight.DimAbRef = pParentAb;
+		  pAb->AbHeight.DimValue = 0;
+		  pAb->AbHeight.DimSameDimension = TRUE;
+		  pAb->AbHeight.DimUserSpecified = FALSE;
+		  return FALSE;
+		}
 	      else if (!pAb->AbHeight.DimIsPosition &&
 		       pAb->AbHeight.DimAbRef == pParentAb)
 		pAb->AbHeight.DimAbRef = GetEnclosingViewport (pAb);
@@ -2149,14 +2174,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 	  else if (horizRef && pDimAb->DimAbRef &&
 		   pDimAb->DimUnit != UnAuto &&
-		   pDimAb->DimAbRef == pAb->AbEnclosing &&
-		   pAb->AbEnclosing->AbWidth.DimAbRef == NULL &&
-		   pAb->AbEnclosing->AbWidth.DimValue == -1)
+		   pDimAb->DimAbRef == pParentAb &&
+		   pParentAb->AbWidth.DimAbRef == NULL &&
+		   pParentAb->AbWidth.DimValue == -1)
 	    {
 		  /* the width depends on the parent width
 		     when the parent width depends on its contents */
-	      pChildAb = pAb->AbEnclosing->AbFirstEnclosed;
-	      while (pChildAb && pChildAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+	      pChildAb = pParentAb->AbFirstEnclosed;
+	      while (pChildAb && pChildAb->AbWidth.DimAbRef == pParentAb)
 		pChildAb = pChildAb->AbNext;
 	      if (pChildAb == NULL)
 		{
@@ -2167,9 +2192,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 	  else if (!horizRef && pDimAb->DimAbRef &&
 		   pDimAb->DimUnit != UnAuto &&
-		   pDimAb->DimAbRef == pAb->AbEnclosing &&
-		   pAb->AbEnclosing->AbHeight.DimAbRef == NULL &&
-		   pAb->AbEnclosing->AbHeight.DimValue == -1)
+		   pDimAb->DimAbRef == pParentAb &&
+		   pParentAb->AbHeight.DimAbRef == NULL &&
+		   pParentAb->AbHeight.DimValue == -1)
 	    {
 	      /* the height depends on the parent height
 		 when the parent height depends on its contents */
@@ -2177,14 +2202,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		/* this cannnot work */
 		pChildAb = NULL;
 	      else
-		pChildAb = pAb->AbEnclosing->AbFirstEnclosed;
+		pChildAb = pParentAb->AbFirstEnclosed;
 	      while (pChildAb && pChildAb->AbHeight.DimAbRef == pAb->AbEnclosing)
 		pChildAb = pChildAb->AbNext;
 	      if (pChildAb == NULL ||
-		  (pAb->AbEnclosing->AbBox &&
-		   (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-		    pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-		    pAb->AbEnclosing->AbBox->BxType == BoGhost)))
+		  (pParentAb->AbBox &&
+		   (pParentAb->AbBox->BxType == BoBlock ||
+		    pParentAb->AbBox->BxType == BoFloatBlock ||
+		    pParentAb->AbBox->BxType == BoGhost)))
 		{
 		  /* all child heights depend on the parent height */
 		  pDimAb->DimAbRef = NULL;

@@ -321,7 +321,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
         case 'T': /* a toggle menu item (checkbox) */
           item_action  = ptritem[item_nb].ItemAction;
           item_equiv   = MenuActionList[item_action].ActionEquiv;
-          label += TtaConvMessageToWX(item_equiv);
+          label +=  TtaConvMessageToWX(item_equiv);
           p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_CHECK);
           break;
           
@@ -397,7 +397,8 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 
 
 /*----------------------------------------------------------------------
-  TtaMakeWindowMenuBar creates the window menu bar widgets from the model (DocumentMenuList)
+  TtaMakeWindowMenuBar creates the window menu bar widgets from the
+  model (DocumentMenuList)
   ----------------------------------------------------------------------*/
 static void TtaMakeWindowMenuBar( int window_id )
 {
@@ -418,7 +419,8 @@ static void TtaMakeWindowMenuBar( int window_id )
         {
           wxMenu * p_menu = new wxMenu();
           
-          /* remember the top menubar widgets because wxMenu doesn't have ids to identify it */
+          /* remember the top menubar widgets because wxMenu doesn't have
+	     ids to identify it */
           WindowTable[window_id].WdMenus[ptrmenu->MenuID] = p_menu;
           
           /* remember specials menus */
@@ -449,7 +451,8 @@ static void TtaMakeWindowMenuBar( int window_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaInitMenuItemStats enable/disable, toggle/untoggle menu items for the given doc
+  TtaInitMenuItemStats enable/disable, toggle/untoggle menu items for
+  the given doc
  ----------------------------------------------------------------------*/
 void TtaInitMenuItemStats( int doc_id )
 {
@@ -468,7 +471,8 @@ void TtaInitMenuItemStats( int doc_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaInitTopMenuStats enable/disable, toggle/untoggle top menu for the given doc
+  TtaInitTopMenuStats enable/disable, toggle/untoggle top menu for the
+  given doc
  ----------------------------------------------------------------------*/
 void TtaInitTopMenuStats( int doc_id )
 {
@@ -491,7 +495,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
   wxMenuBar *   p_menu_bar = p_window->GetMenuBar();
   PtrDocument   pDoc       = LoadedDocument[doc_id-1];
   wxMenu *      p_top_menu = NULL;
-  int           top_menu_pos = 0;
+  int           top_menu_pos = 0, top_menu_count;
   
   /* do nothing if there is no menubar : it's the case of
    * AmayaSimpleWindow (log, show apply style ...)*/
@@ -507,6 +511,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
     return;
   
   /* refresh only one menu ? */
+  top_menu_count = (int)p_menu_bar->GetMenuCount();
   if (menu_id >= 0 && menu_id < MAX_MENU)
     {
       p_top_menu = WindowTable[window_id].WdMenus[menu_id];
@@ -514,12 +519,12 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
         {
           // find the corrsponding menu position in the Top Menubar
           top_menu_pos = 0;
-          while (top_menu_pos < p_menu_bar->GetMenuCount() &&
+          while (top_menu_pos < top_menu_count &&
                  p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
             top_menu_pos++;
           // we must check that the menu has been found because
           // the contextual menu do not have a title
-          if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
+          if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
             {
               // it has been found, update it
               p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
@@ -541,10 +546,12 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
         {
           // find the corrsponding menu position in the Top Menubar
           top_menu_pos = 0;
-          while (top_menu_pos < p_menu_bar->GetMenuCount() && p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+          while (top_menu_pos < top_menu_count &&
+		 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
             top_menu_pos++;
-          // we must check that the menu has been found because the contextual menu do not have a title
-          if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
+          // we must check that the menu has been found because the
+	  // contextual menu do not have a title
+          if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
             {
               // it has been found, update it
               p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
@@ -555,10 +562,10 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 #endif /* _WX */
 }
 
-  /* ---------------------------------------------------------------- */
 
 /*----------------------------------------------------------------------
-  TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items widgets for the given doc
+  TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items
+  widgets for the given doc
  ----------------------------------------------------------------------*/
 void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 {
@@ -580,7 +587,8 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
   ThotBool      item_enable = FALSE;
   ThotBool      item_toggle = FALSE;
   
-  /* do nothing if there is no menubar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  /* do nothing if there is no menubar: it's the case of
+     AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_menu_bar)
     return;
   
@@ -679,7 +687,8 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar items widgets for the given doc
+  TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar
+  items widgets for the given doc
  ----------------------------------------------------------------------*/
 void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 {
@@ -690,7 +699,8 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
   AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
   ThotBool   action_enable = FALSE;
 
-  /* do nothing if there is no toolbar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  /* do nothing if there is no toolbar: it's the case of
+     AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_toolbar)
     return;
 
@@ -764,7 +774,8 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 }
 
 /*----------------------------------------------------------------------
-  TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar items widgets for the given doc
+  TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar
+  items widgets for the given doc
   (there is only logerror button)
  ----------------------------------------------------------------------*/
 void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
@@ -776,7 +787,8 @@ void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
   AmayaStatusBar * p_sbar = p_window->GetAmayaStatusBar();
   ThotBool   action_enable = FALSE;
 
-  /* do nothing if there is no sbar : it's the case of AmayaSimpleWindow (log, show apply style ...)*/
+  /* do nothing if there is no sbar: it's the case of
+     AmayaSimpleWindow (log, show apply style ...)*/
   if(!p_sbar)
     return;
 
@@ -852,7 +864,8 @@ int TtaMakeFrame( const char * schema_name,
       AmayaWindow * p_AmayaWindow = TtaGetWindowFromId(window_id);
       wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
-      /* on MacOSX Reparenting is forbidden, so we must give the right parent to the frame at creation */
+      /* on MacOSX Reparenting is forbidden, so we must give the
+	 right parent to the frame at creation */
       AmayaPage * p_page = p_AmayaWindow->GetPage(page_id);
       wxWindow * p_real_parent = NULL;
       if (p_page)
@@ -1001,7 +1014,8 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
-  /* notice: no not use safe yield here because it use a wxWindowDisabler and it makes menus blinking */
+  /* notice: no not use safe yield here because it use a
+     wxWindowDisabler and it makes menus blinking */
   wxYield();
   return TRUE;
 #else
@@ -1323,7 +1337,8 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
 }
 
 /*----------------------------------------------------------------------
-  TtaGetFrameDocumentId returns the correspondig document id for the given frame id
+  TtaGetFrameDocumentId returns the correspondig document id for the
+  given frame id
   params:
     + frame_id : the frameid to lookfor corresponding document id
   returns:
@@ -1342,7 +1357,8 @@ int TtaGetFrameDocumentId( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaGetFrameWindowParentId returns the correspondig parent window id for the given frame id
+  TtaGetFrameWindowParentId returns the correspondig parent window id
+  for the given frame id
   params:
     + frame_id : the frameid to lookfor
   returns:
@@ -1544,7 +1560,8 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
       frame_id = GetWindowNumber (doc, view);
       if (frame_id <= 0 || frame_id > MAX_FRAME)
         TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame_id].WdFrame != 0 && FrameTable[frame_id].WdFrame->IsActive())
+      else if (FrameTable[frame_id].WdFrame != 0 &&
+	       FrameTable[frame_id].WdFrame->IsActive())
         {
           /* get the frame's window parent */
           AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
@@ -1553,7 +1570,8 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
             return;
           /* get the window's panel */
           AmayaPanel * p_panel = p_window->GetAmayaPanel();
-          /* it is possible to have no panel, for example with AmayaSimpleWindow (ShowAppliedStyle) */
+          /* it is possible to have no panel, for example with
+	     AmayaSimpleWindow (ShowAppliedStyle) */
           if ( !p_panel )
             return;
           

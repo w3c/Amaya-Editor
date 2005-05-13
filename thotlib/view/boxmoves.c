@@ -1990,7 +1990,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       pCurrentAb->AbPictBackground))
 	    /* update the clipping region */
 	    UpdateBoxRegion (frame, pBox, orgTrans, 0, delta, 0);
-
 	  /* inside width */
 	  pBox->BxW += delta;
 	  /* outside width */
