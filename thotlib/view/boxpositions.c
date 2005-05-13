@@ -48,6 +48,24 @@
 #include "tableH_f.h"
 #include "units_f.h"
 
+/*----------------------------------------------------------------------
+  ExtraFlow returns TRUE if the box is ignored by the standard flow.
+ ----------------------------------------------------------------------*/
+ThotBool ExtraFlow (PtrBox pBox, int frame)
+{
+#ifdef POSITIONING
+  if (pBox && pBox->BxAbstractBox &&
+      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pBox->BxAbstractBox->AbLeafType == LtCompound &&
+      pBox->BxAbstractBox->AbPositioning &&
+      (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
+    return TRUE;
+  else
+#endif /* POSITIONING */
+    return FALSE;
+}
+
 
 /*----------------------------------------------------------------------
   SetYCompleteForOutOfStruct checks if an external box has a Y position
@@ -399,9 +417,9 @@ ThotBool SetPageBreakPosition (PtrAbstractBox pAb, int *page)
   AddBoxTranslations updates all included boxes of the abstract box
   pAb. The function adds the box position to enclosing box positions.
   Paramaters horizRef and vertRef are TRUE when the functions updates
-  respectively the horizontal and the vertical position of chirdren.
+  respectively the horizontal and the vertical position of children.
   The function checks also the status of the child box to know if the
-  update is allowde or not.
+  update is allowed or not.
   If necessary the enclosing of boxes is checked after the update.
   ----------------------------------------------------------------------*/
 void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
@@ -415,15 +433,10 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   PtrPosRelations     pPosRel;
   int                 width, height;
   int                 x, y, i;
-  ThotBool            eclate;
-  ThotBool            Peclate;
-  ThotBool            notEmpty;
-  ThotBool            newX;
-  ThotBool            newY;
-  ThotBool            placeenX;
-  ThotBool            placeenY;
-  ThotBool            reenglobx;
-  ThotBool            reengloby;
+  ThotBool            ghost, notEmpty;
+  ThotBool            newX, newY;
+  ThotBool            x_move, y_move;
+  ThotBool            checkWidth, checkHeight;
 
   /* Origine de la boite du pave le plus englobant */
   pBox = pAb->AbBox;
@@ -451,16 +464,14 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 
   width = pBox->BxW;
   height = pBox->BxH;
-  Peclate = (pBox->BxType == BoGhost);
   pChildAb = pAb->AbFirstEnclosed;
   
-  /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
-  reenglobx = FALSE;
-  reengloby = FALSE;
+  /* By default don't recheck parent sizes */
+  checkWidth = FALSE;
+  checkHeight = FALSE;
   /* horizRef et vertRef indiquent que la boite mere (pBox) transmet son decalage */
   /* newX et newY indiquent que la boite fille (pChildBox) accepte le decalage */
-  /* placeenX et placeenY indiquent que la boite fille transmet son decalage */
-
+  /* x_move et y_move indiquent que la boite fille transmet son decalage */
   /* Transforme origines relatives des boites filles en origines absolues */
   if (pAb->AbVisibility >= visibility)
     while (pChildAb)
@@ -468,8 +479,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	pChildBox = pChildAb->AbBox;
 	if (pChildBox)
 	  {
-	    eclate = Peclate || pChildBox->BxType == BoGhost;
-	    
+	    ghost = pBox->BxType == BoGhost || pChildBox->BxType == BoGhost;
 	    /* Decale boites englobees dont l'origine depend de l'englobante */
 	    /* La boite est coupee, on decale les boites de coupure */
 	    if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
@@ -496,82 +506,94 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	      }
 	    else
 	      {
-		/* S'il s'agit d'un bloc de ligne elastique */
-		/* il faut reevaluer l'englobement vertical */
 		if (pChildBox->BxHorizFlex &&
 		    (pChildBox->BxType == BoBlock ||
 		     pChildBox->BxType == BoFloatBlock))
-		  reengloby = TRUE;
-		/* Regarde si la boite est positionnee en X dans l'englobante */
-		box1 = GetHPosRelativeBox (pChildBox, NULL);
-		placeenX = pChildBox->BxXToCompute;
-		if (box1 == NULL)
-		  newX = TRUE;
-		else if (pChildBox->BxXOutOfStruct)
-		  newX = FALSE;
-		else if (box1->BxHorizFlex && box1 != pChildBox)
-		  /* Le decalage des boites voisines liees a la boite elastique */
-		  /* est deja effectue par l'appel de MoveBoxEdge */
-		  newX = FALSE;
-		else
-		  newX = TRUE;
-		
-		/* regarde si la boite doit etre placee en X absolu */
+		  /* need to recheck the parent height */
+		  checkHeight = TRUE;
+
 		if (horizRef)
 		  {
-		    if (newX)
+		    if (pChildBox->BxXOutOfStruct)
 		      {
-			/* Si le deplacement est nul on ne peut executer XMove */
-			if (x == 0)
+			/* the box doesn't depend on the enclosing */
+			newX = FALSE;
+#ifdef IV
+			if (pChildAb->AbHorizPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
+			  /* boxes attached to the root box should be managed too */
+			  x_move = TRUE;
+			else
+#endif
+			  x_move = FALSE;
+		      }
+		    else
+		      {
+			/* streched boxes are already moved */
+			if (pChildBox->BxHorizFlex)
+			  x_move = FALSE;
+			else
+			  x_move = pChildBox->BxXToCompute;
+
+			/* Check if the box should be moved horizontally */
+			newX = TRUE;
+			box1 = GetHPosRelativeBox (pChildBox, NULL);
+			if (box1 == NULL)
+			  newX = TRUE;
+			else if (box1->BxHorizFlex && box1 != pChildBox)
+			  /* the box is moved with related boxes by MoveBoxEdge */
+			  newX = FALSE;
+			if (newX && x == 0)
+			  /* no move requested */
 			  newX = FALSE;
 		      }
-		    /* Il faut placer les boites positionnees par rapport la racine */
-		    else if (pChildAb->AbHorizPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
-		      placeenX = TRUE;
 		  }
 		else
-		  placeenX = FALSE;
-
-		/* regarde si la boite est positionnee en Y dans l'englobante */
-		box1 = GetVPosRelativeBox (pChildBox, NULL);
-		placeenY = pChildBox->BxYToCompute;
-		if (box1 == NULL)
-		  newY = TRUE;
-		else if (pChildBox->BxYOutOfStruct)
-		  newY = FALSE;
-		else if (box1->BxVertFlex && box1 != pChildBox)
-		  /* Le decalage des boites voisines liees a la boite elastique */
-		  /* est deja effectue par l'appel de MoveBoxEdge */
-		  newY = FALSE;
-		else
-		  newY = TRUE;
+		  {
+		    x_move = FALSE;
+		    newX = FALSE;
+		  }
 
 		/* regarde si la boite doit etre placee en Y absolu */
 		if (vertRef)
 		  {
-		    if (newY)
+		    if (pChildBox->BxYOutOfStruct)
 		      {
-			/* Si le deplacement est nul on ne peut executer YMove */
-			if (y == 0)
+			/* the box doesn't depend on enclosing */
+			newY = FALSE;
+#ifdef IV
+			if (pChildAb->AbVertPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
+			  /* boxes attached to the root box should be managed too */
+			  y_move = TRUE;
+			else
+#endif
+			  y_move = FALSE;
+		      }
+		    else
+		      {
+			if (pChildBox->BxVertFlex)
+			  y_move = FALSE;
+			else
+			  y_move = pChildBox->BxYToCompute;
+			/* Check if the box should be moved vertically */
+			box1 = GetVPosRelativeBox (pChildBox, NULL);
+			if (box1 == NULL)
+			  newY = TRUE;
+			else if (box1->BxVertFlex && box1 != pChildBox)
+			  /* the box is moved with related boxes by MoveBoxEdge */
+			  newY = FALSE;
+			else
+			  newY = TRUE;
+			
+			if (newY && y == 0)
+			  /* no move requested */
 			  newY = FALSE;
 		      }
-		    /* Il faut placer les boites positionnee par rapport la racine */
-		    else if (pChildAb->AbVertPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
-		      placeenY = TRUE;
 		  }
 		else
-		  placeenY = FALSE;
-		
-		/* Le contenu des boites elastiques et hors-structures est deja place */
-		if (pChildBox->BxHorizFlex || pChildBox->BxXOutOfStruct)
 		  {
-		    placeenX = FALSE;
-		    /*if (pChildBox->BxType == BoBlock) */
-		    /* La reevaluation du bloc de lignes place le contenu en Y */
-		    /*placeenY = FALSE; */
+		    y_move = FALSE;
+		    newY = FALSE;
 		  }
-		if (pChildBox->BxVertFlex || pChildBox->BxYOutOfStruct)
-		  placeenY = FALSE;
 		
 		/* decale la boite positionnee en X dans l'englobante */
 		if (horizRef && newX)
@@ -587,7 +609,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 			/*  dependent de la boite elastique             */
 			MoveBoxEdge (pChildBox, box1, OpHorizDep, x, frame, TRUE);
 		      }
-		    else if (!placeenX)
+		    else if (!x_move)
 		      /* il faut deplacer tout le contenu de la boite */
 		      XMoveAllEnclosed (pChildBox, x, frame);
 		    else
@@ -596,7 +618,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		    pChildBox->BxXToCompute = FALSE;	/* La boite est placee */
 		    /* detecte les debordements de la boite englobante */
 		    if (pChildAb->AbHorizEnclosing
-			&& !eclate
+			&& !ghost
 			&& i > 1
 			&& !pChildBox->BxHorizFlex
 			&& !pBox->BxHorizFlex)
@@ -653,10 +675,10 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		/* l'englobante sans deplacer une englobee peut        */
 		/* modifier la largeur de la boite englobante.         */
 		else if (horizRef && pChildBox->BxXOutOfStruct)
-		  reenglobx = TRUE;
+		  checkWidth = TRUE;
 		/* traite les relations hors-structures des boites non */
 		/* decalees mais qui doivent etre placees en X absolu     */
-		if (placeenX && !newX)
+		if (x_move && !newX)
 		  {
 		    SetXCompleteForOutOfStruct (pChildBox, visibility, x, frame);
 		    /* La boite est placee */
@@ -677,7 +699,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 			/*  dependent de la boite elastique */
 			MoveBoxEdge (pChildBox, box1, OpVertDep, y, frame, FALSE);
 		      }
-		    else if (!placeenY)
+		    else if (!y_move)
 		      /* il faut deplacer tout le contenu de la boite */
 		      YMoveAllEnclosed (pChildBox, y, frame);
 		    else
@@ -686,7 +708,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		    pChildBox->BxYToCompute = FALSE;
 		    /* detecte les debordements en Y de la boite englobante */
 		    if (pChildAb->AbVertEnclosing
-			&& !eclate
+			&& !ghost
 			&& i > 1
 			&& !pChildBox->BxVertFlex
 			&& !pBox->BxVertFlex)
@@ -743,19 +765,19 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		/* l'englobante sans deplacer une englobee peut        */
 		/* modifier la hauteur de la boite englobante.         */
 		else if (vertRef && pChildBox->BxYOutOfStruct)
-		  reengloby = TRUE;
+		  checkHeight = TRUE;
 		
 		/* traite les relations hors-structures des boites non */
 		/* decalees mais qui doivent etre placees en Y absolu     */
-		if (placeenY && !newY)
+		if (y_move && !newY)
 		  {
 		    SetYCompleteForOutOfStruct (pChildBox, visibility, y, frame);
 		    /* La boite est placee */
 		    pChildBox->BxYToCompute = FALSE;
 		  }
 		/* traite les origines des boites de niveau inferieur */
-		if (placeenX || placeenY)
-		  AddBoxTranslations (pChildAb, visibility, frame, placeenX, placeenY);
+		if (x_move || y_move)
+		  AddBoxTranslations (pChildAb, visibility, frame, x_move, y_move);
 	      }
 	  }
 #ifdef _GL
@@ -777,9 +799,9 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   /* Si une dimension de la boite depend du contenu et qu'une des  */
   /* boites filles est positionnee par une relation hors-structure */
   /* --> il faut reevaluer la dimension correspondante.            */
-  if (reenglobx && pBox->BxContentWidth)
+  if (checkWidth && pBox->BxContentWidth)
     RecordEnclosing (pBox, TRUE);
-  if (reengloby && pBox->BxContentHeight)
+  if (checkHeight && pBox->BxContentHeight)
     RecordEnclosing (pBox, FALSE);
 }
 

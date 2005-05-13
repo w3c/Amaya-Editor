@@ -461,12 +461,12 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     {
       if (!xmlformat && ptr == XHTMLAttributeMappingTable &&
 	  (strcasecmp (ptr[i].XMLattribute, attrName) ||
-	   (ptr[i].XMLelement[0] != EOS &&
+	   (ptr[i].XMLelement[0] != EOS && elementName &&
 	    strcasecmp (ptr[i].XMLelement, elementName))))
 	i++;
       else if ((xmlformat || ptr != XHTMLAttributeMappingTable) &&
 	  (strcmp (ptr[i].XMLattribute, attrName) ||
-	   (ptr[i].XMLelement[0] != EOS &&
+	   (ptr[i].XMLelement[0] != EOS && elementName &&
 	    strcmp (ptr[i].XMLelement, elementName))))
 	i++;
       else if (profile != L_Other && !(ptr[i].Level & profile))
@@ -479,7 +479,7 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 	  /* Special case for the 'name' attribute for 
 	     elements 'a' and 'map' in xhtml1.1 profile */
 	  if ((profile == L_Xhtml11) &&
-	      !strcmp (attrName, "name") &&
+	      !strcmp (attrName, "name") && elementName &&
 	      (!strcmp (elementName, "a") || !strcmp (elementName, "map")))
 	    *checkProfile = FALSE;
 	  else

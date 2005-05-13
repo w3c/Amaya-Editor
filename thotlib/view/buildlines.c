@@ -24,6 +24,7 @@
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
+#include "boxpositions_f.h"
 #include "buildboxes_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
@@ -46,25 +47,6 @@
 #define SPACE_VALUE_MAX  6
 /* max number of consecutive hyphens */
 #define MAX_SIBLING_HYPHENS 2
-
-
-/*----------------------------------------------------------------------
-  ExtraFlow returns TRUE if the box is ignored by the standard flow.
- ----------------------------------------------------------------------*/
-ThotBool ExtraFlow (PtrBox pBox, int frame)
-{
-#ifdef POSITIONING
-  if (pBox && pBox->BxAbstractBox &&
-      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
-      pBox->BxAbstractBox->AbLeafType == LtCompound &&
-      pBox->BxAbstractBox->AbPositioning &&
-      (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
-       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
-    return TRUE;
-  else
-#endif /* POSITIONING */
-    return FALSE;
-}
 
 
 /*----------------------------------------------------------------------

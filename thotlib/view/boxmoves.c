@@ -29,6 +29,7 @@
 #include "content_f.h"
 #include "contentapi_f.h"
 #include "boxmoves_f.h"
+#include "boxpositions_f.h"
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
@@ -1270,10 +1271,8 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 
 	      /* Move inclused boxes which depend on it */
 	      pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
-
 	      /* Traite le niveau inferieur */
 	      toVertPack = FALSE;
-	      
 	      while (pChildAb != NULL)
 		{
 		  if (pChildAb->AbBox != NULL)
@@ -3450,7 +3449,6 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      (isExtra || !ExtraFlow (pChildBox, frame)) &&
 	      pChildAb->AbHorizEnclosing &&
 	      (pChildAb->AbWidth.DimAbRef != pAb ||
 	       pChildBox->BxContentWidth ||
@@ -3527,7 +3525,6 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	  {
 	    pChildBox = pChildAb->AbBox;
 	    if (!pChildAb->AbDead && pChildBox &&
-		(isExtra || !ExtraFlow (pChildBox, frame)) &&
 		pChildAb->AbHorizEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */
@@ -3682,7 +3679,6 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	{
 	  pChildBox = pChildAb->AbBox;
 	  if (!pChildAb->AbDead && pChildBox &&
-	      (isExtra || !ExtraFlow (pChildBox, frame)) &&
 	      pChildAb->AbVertEnclosing &&
 	      (pChildAb->AbHeight.DimAbRef != pAb ||
 	       pChildBox->BxContentHeight))
@@ -3765,7 +3761,6 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	  {
 	    pChildBox = pChildAb->AbBox;
 	    if (!pChildAb->AbDead && pChildBox &&
-		(isExtra || !ExtraFlow (pChildBox, frame)) &&
 		pChildAb->AbVertEnclosing)
 	      {
 		/* look for the box which relies the box to its enclosing */

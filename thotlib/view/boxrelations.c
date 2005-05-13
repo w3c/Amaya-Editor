@@ -905,7 +905,10 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	  else
 	    x = y = 0;
 	  if (pRefAb == NULL)
-	    pRefBox = NULL;
+	    {
+	      pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
+	      pRefBox = pRefAb->AbBox;
+	    }
 	  else if (pRefAb->AbBox)
 	    {
 	      // refer another box
@@ -956,7 +959,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 				(PtrAbstractBox) h, 0);
 	      else
 		b = PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
+				ViewFrameTable[frame - 1].FrMagnification);
 	    }
 
 	  /* Move also enclosed boxes */
@@ -965,65 +968,56 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	  if (l >= 0)
 	    {
 	      pBox->BxXToCompute = TRUE;
+	      pAb->AbHorizEnclosing = FALSE;
 	      pBox->BxXOutOfStruct = TRUE;
-	       XMove (pBox, NULL, x + l, frame);
-	       if (pRefBox)
-		 InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
-	       if (r >= 0)
-		 {
-		   pAb->AbWidthChange = FALSE;
-		   ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxWidth, 0, 0, 0, frame);
-		 }
-	     }
-	   else if (r >= 0)
-	     {
-	       pBox->BxXToCompute = TRUE;
-	       pBox->BxXOutOfStruct = TRUE;
-	       XMove (pBox, NULL, x + w - r - pBox->BxWidth, frame);
-	       if (pRefBox)
-		 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
-	       else
-		 // link to the root instead of the window
-		 InsertPosRelation (pBox,
-				    ViewFrameTable[frame -1].FrAbstractBox->AbBox,
-				    OpHorizDep, Right, Right);
-	       pBox->BxHorizEdge = Right;
-	     }
+	      XMoveAllEnclosed (pBox, x + l, frame);
+	      if (pRefBox)
+		InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
+	      if (r >= 0)
+		{
+		  pAb->AbWidthChange = FALSE;
+		  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxWidth, 0, 0, 0, frame);
+		}
+	    }
+	  else if (r >= 0)
+	    {
+	      pBox->BxXToCompute = TRUE;
+	      pAb->AbHorizEnclosing = FALSE;
+	      pBox->BxXOutOfStruct = TRUE;
+	      XMoveAllEnclosed (pBox, x + w - r - pBox->BxWidth, frame);
+	      if (pRefBox)
+		InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
+	      pBox->BxHorizEdge = Right;
+	    }
 	  else
 	    ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
-
-
-	   if (t >= 0)
-	     {
-	       //if (!IsYPosComplete (pBox))
-	       pBox->BxYToCompute = TRUE;
-	       pBox->BxYOutOfStruct = TRUE;
-	       YMove (pBox, NULL, y + t, frame);
-	       if (pRefBox)
-		 InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
-	       if (b >= 0)
-		 {
-		   pAb->AbHeightChange = FALSE;
+	  
+	  if (t >= 0)
+	    {
+	      pBox->BxYToCompute = TRUE;
+	      pAb->AbVertEnclosing = FALSE;
+	      pBox->BxYOutOfStruct = TRUE;
+	      YMoveAllEnclosed (pBox, y + t, frame);
+	      if (pRefBox)
+		InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
+	      if (b >= 0)
+		{
+		  pAb->AbHeightChange = FALSE;
 		   ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxHeight, 0, 0, frame);
-		 }
-	     }
-	   else if (b >= 0)
-	     {
-	       //if (!IsYPosComplete (pBox))
-	       pBox->BxYToCompute = TRUE;
-	       pBox->BxYOutOfStruct = TRUE;
-	       YMove (pBox, NULL, y + h - b - pBox->BxHeight, frame);
-	       if (pRefBox)
-		 InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
-	       else
-		 // link to the root instead of the window
-		 InsertPosRelation (pBox,
-				    ViewFrameTable[frame -1].FrAbstractBox->AbBox,
-				    OpVertDep, Bottom, Bottom);
-	       pBox->BxVertEdge = Bottom;
-	     }
-	   else
-	     ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+		}
+	    }
+	  else if (b >= 0)
+	    {
+	      pBox->BxYToCompute = TRUE;
+	      pAb->AbVertEnclosing = FALSE;
+	      pBox->BxYOutOfStruct = TRUE;
+	      YMoveAllEnclosed (pBox, y + h - b - pBox->BxHeight, frame);
+	      if (pRefBox)
+		InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
+	      pBox->BxVertEdge = Bottom;
+	    }
+	  else
+	    ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
 	  return TRUE;
 	}
       else
@@ -1391,9 +1385,9 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
 	    op = OpVertInc;
 	  else
 	    {
-	      op = OpVertDep;
 	      /* new position */
 	      pBox->BxYToCompute = FALSE;
+	      op = OpVertDep;
 	      if (pRefAb->AbEnclosing != pAb->AbEnclosing)
 		{
 		  /* it's a relation out of structure */
@@ -1654,7 +1648,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
 	 {
 	   x = x + dist - pBox->BxXOrg;
 	   ClearBoxMoved (pBox);
-	   if (x == 0 && pBox->BxXToCompute)
+	   if (pBox->BxXToCompute)
 	     /* Force le placement des boites filles */
 	     XMoveAllEnclosed (pBox, x, frame);
 	   else
@@ -1669,7 +1663,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
 	 {
 	   y = y + dist - pBox->BxYOrg;
 	   ClearBoxMoved (pBox);
-	   if (y == 0 && pBox->BxYToCompute)
+	   if (pBox->BxYToCompute)
 	     /* Force le placement des boites filles */
 	     YMoveAllEnclosed (pBox, y, frame);
 	   else

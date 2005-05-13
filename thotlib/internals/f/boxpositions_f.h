@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool ExtraFlow ( PtrBox pBox,
+                            int frame );
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                        int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
@@ -23,6 +25,8 @@ extern void SetBoxToTranslate ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
+extern ThotBool ExtraFlow ( PtrBox pBox,
+                              int frame );
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                          int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
