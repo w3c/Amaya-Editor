@@ -3386,12 +3386,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 		DefClip (frame, -1, -1, -1, -1);
 	      else
 		{
+#ifdef _GL
 		  if (NeedToComputeABoundingBox (pCurrentBox->BxAbstractBox, frame))
 		    {
 		      /* need to recompute almost this bounding box */
 		      *computeBBoxes = TRUE;
 		      pCurrentBox->BxBoundinBoxComputed = FALSE;
 		    }
+#endif /* _GL */
 		  /* the whole box */
 		  DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
 		}
@@ -4013,12 +4015,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 		{
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
 			     adjustDelta, height, frame, FALSE);
+#ifdef _GL
 		  if (NeedToComputeABoundingBox (pAb, frame))
 		    {
 		      /* need to recompute almost this bounding box */
 		      *computeBBoxes = TRUE;
 		      pBox->BxBoundinBoxComputed = FALSE;
 		    }
+#endif /* _GL */
 		  if (pAb->AbLeafType == LtPicture)
 		    {
 		      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
