@@ -1799,9 +1799,6 @@ void InitTranslations (char *appliname)
 	      if (transText[0] == ',')
 		{
                   strcat (equiv, " ");
-#ifdef _WX
-		  strcat (equiv, "\t");
-#endif /* _WX */
 		  /* copie du separateur */
 		  ch[0] = 0;
 		  fscanf (file, "%80s", ch);
@@ -1865,10 +1862,6 @@ void InitTranslations (char *appliname)
 		  /* Lecture de l'action */
 		  fscanf (file, "%80s", transText);
 		}
-#ifdef _WX
-	      else
-		equiv[0] = '\t';
-#endif /* _WX */
 #endif /* _MACOS */
 	      /* Isole l'intitule de la commande */
 	      strncpy (ch, transText, 80);
