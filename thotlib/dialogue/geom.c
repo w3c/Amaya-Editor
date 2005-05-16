@@ -65,6 +65,7 @@ static int          GridSize = 1;
   #include "message_wx.h"
   #include "AmayaFrame.h"
   #include "AmayaAddPointEvtHandler.h"
+  #include "AmayaMovePointEvtHandler.h"
   #include "AmayaMovingBoxEvtHandler.h"
 #endif /* _WX */
 
@@ -366,8 +367,8 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #else /* _WX */
   ThotWindow          w;
 #ifdef _GTK
-   ThotEvent         *event;
-   GdkWindowPrivate  *xwindow;
+  ThotEvent         *event;
+  GdkWindowPrivate  *xwindow;
   int                 e, f;
 #endif /*_GTK*/
   float               ratioX, ratioY;
@@ -387,11 +388,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #endif /* _WINGUI */
 
   /* need the window to change the cursor */
-#ifndef _WX
   w = FrRef[frame];
-#else /* _WX */
-  w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* _WX */
   /* trasformation factor between the box and the abstract box */
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
   /* trasformation factor between the box and the abstract box */
@@ -431,291 +428,291 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
     {
 #ifdef _WINGUI
       GetMessage (&event, NULL, 0, 0);
-	  SetCursor (cross);
+      SetCursor (cross);
       if (event.message == WM_MOUSEMOVE)
-	{
-	  GetCursorPos (&cursorPos);
-	  /* current pointer position */
-	  /* coordinate checking */
-	  newx = DO_ALIGN (cursorPos.x -rect.left - x);
-	  newx += x;
-	  newy = DO_ALIGN (cursorPos.y -rect.top - y);
-	  newy += y;
-	  if (newx < x || newx > x + width ||
-	      newy < y || newy > y + height)
-	    {
-	      /* CHKR_LIMIT to size of the box */
-	      /* new X valid position */
-	      if (newx < x)
-		newx = x;
-	      else if (newx > x + width)
-		newx = x + width;
-	      
-	      /* new Y valid position */
-	      if (newy < y)
-		newy = y;
-	      else if (newy > y + height)
-		newy = y + height;
-	  
-	      if (!SetCursorPos (newx + rect.left, newy + rect.top))
-		WinErrorBox (w, "AddPoints (2)");
-	    }
-
-         /* refresh the display of teh two adjacent segments */
-	  if (newx != lastx || newy != lasty)
-	    {
-	      if (x1 != -1)
-		{
-		  /* remove previous line */
-		  ptCur.x = lastx;
-		  ptCur.y = lasty;
-		  DrawOutline (w, ptBeg, ptCur);
-		  /* add a new line */
-		  ptCur.x = newx;
-		  ptCur.y = newy;
-		  DrawOutline (w, ptBeg, ptCur);
-		}
-	      if (x3 != -1)
-		{
-		  /* remove previous line */
-		  ptCur.x = lastx;
-		  ptCur.y = lasty;
-		  DrawOutline (w, ptCur, ptEnd);
-		  /* add a new line */
-		  ptCur.x = newx;
-		  ptCur.y = newy;
-		  DrawOutline (w, ptCur, ptEnd);
-		}	     
-	   }
-         lastx = newx;
-         lasty = newy;
-	}
+        {
+          GetCursorPos (&cursorPos);
+          /* current pointer position */
+          /* coordinate checking */
+          newx = DO_ALIGN (cursorPos.x -rect.left - x);
+          newx += x;
+          newy = DO_ALIGN (cursorPos.y -rect.top - y);
+          newy += y;
+          if (newx < x || newx > x + width ||
+              newy < y || newy > y + height)
+            {
+              /* CHKR_LIMIT to size of the box */
+              /* new X valid position */
+              if (newx < x)
+                newx = x;
+              else if (newx > x + width)
+                newx = x + width;
+              
+              /* new Y valid position */
+              if (newy < y)
+                newy = y;
+              else if (newy > y + height)
+                newy = y + height;
+              
+              if (!SetCursorPos (newx + rect.left, newy + rect.top))
+                WinErrorBox (w, "AddPoints (2)");
+            }
+          
+          /* refresh the display of teh two adjacent segments */
+          if (newx != lastx || newy != lasty)
+            {
+              if (x1 != -1)
+                {
+                  /* remove previous line */
+                  ptCur.x = lastx;
+                  ptCur.y = lasty;
+                  DrawOutline (w, ptBeg, ptCur);
+                  /* add a new line */
+                  ptCur.x = newx;
+                  ptCur.y = newy;
+                  DrawOutline (w, ptBeg, ptCur);
+                }
+              if (x3 != -1)
+                {
+                  /* remove previous line */
+                  ptCur.x = lastx;
+                  ptCur.y = lasty;
+                  DrawOutline (w, ptCur, ptEnd);
+                  /* add a new line */
+                  ptCur.x = newx;
+                  ptCur.y = newy;
+                  DrawOutline (w, ptCur, ptEnd);
+                }	     
+            }
+          lastx = newx;
+          lasty = newy;
+        }
       else
-	{
-	  /* coordinate checking */
-	  newx = x + DO_ALIGN ((int) cursorPos.x - rect.left - x);
-	  newy = y + DO_ALIGN ((int) cursorPos.y -rect.top - y);
-	  /* CHKR_LIMIT to size of the box */
-	  /* new X valid position */
-	  if (newx < x)
-	    {
-	      lastx = x;
-	      wrap = TRUE;
-	    }
-	  else if (newx > x + width)
-	    {
-	      lastx = x + width;
-	      wrap = TRUE;
-	    }
-	  else
-	    lastx = newx;
-	
-	  /* new Y valid position */
-	  if (newy < y)
-	    {
-	      lasty = y;
-	      wrap = TRUE;
-	    }
-	  else if (newy > y + height)
-	    {
-	      lasty = y + height;
-	      wrap = TRUE;
-	    }
-	  else
-	    lasty = newy;
-	  
-	  switch (event.message)
-	    {
-	    case WM_ENTER:
+        {
+          /* coordinate checking */
+          newx = x + DO_ALIGN ((int) cursorPos.x - rect.left - x);
+          newy = y + DO_ALIGN ((int) cursorPos.y -rect.top - y);
+          /* CHKR_LIMIT to size of the box */
+          /* new X valid position */
+          if (newx < x)
+            {
+              lastx = x;
+              wrap = TRUE;
+            }
+          else if (newx > x + width)
+            {
+              lastx = x + width;
+              wrap = TRUE;
+            }
+          else
+            lastx = newx;
+          
+          /* new Y valid position */
+          if (newy < y)
+            {
+              lasty = y;
+              wrap = TRUE;
+            }
+          else if (newy > y + height)
+            {
+              lasty = y + height;
+              wrap = TRUE;
+            }
+          else
+            lasty = newy;
+          
+          switch (event.message)
+            {
+            case WM_ENTER:
             case WM_SYSKEYDOWN:
-	    case WM_KEYDOWN:
-	      /* stop the creation of the polyline */
-	      ret = 1;
-	      break;
-
-	    case WM_LBUTTONDOWN:
-	    case WM_MBUTTONDOWN:
-	    case WM_RBUTTONDOWN:
-	      /* it's a press button event */
-	      input = TRUE;
-	      if (wrap)
-		{
-		  /* align the cursor position */
-		  if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-		    WinErrorBox (w, "AddPoints (3)");
-		  wrap = FALSE;		  
-		}
-	      break;
-	      
-	    case WM_LBUTTONUP:
-	    case WM_MBUTTONUP:
-	    case WM_RBUTTONUP:
-	      if (input)
-		{
-		  input = FALSE;
-		  /* left button keep the last segment built */
-		  /* keep the new segment first point coordinates */
-		  x1 = lastx;
-		  y1 = lasty;
-		  ptBeg.x = x1;
-		  ptBeg.y = y1;
-		  (*nbpoints)++;
-		  point++;
-
-		  /* update the box buffer */
-		  newx = LogicalValue (lastx - x, UnPixel, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification);
-		  newy = LogicalValue (lasty - y, UnPixel, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification);
-		  AddPointInPolyline (Bbuffer, point, newx, newy);
-		  /* update the abstract box buffer */
-		  newx1 = (int) ((float) newx * ratioX);
-		  newy1 = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, point, newx1, newy1);
-		  if (*nbpoints > maxPoints && maxPoints != 0)
-		    /* we have the right number of points */
-		    ret = 1;
-		  else if (maxPoints == 0 && event.message != WM_LBUTTONUP)
-		    /* any other button : end of user input */
-		    ret = 1;
-		}
-	      else
-		{
-		  newx = lastx;
-		  newy = lasty;
-		}
-	      break;
-
-	    case WM_PAINT:
-	      WIN_HandleExpose (w, frame, event.wParam, event.lParam);
-	    default: break;
-	    }
-	}
+            case WM_KEYDOWN:
+              /* stop the creation of the polyline */
+              ret = 1;
+              break;
+              
+            case WM_LBUTTONDOWN:
+            case WM_MBUTTONDOWN:
+            case WM_RBUTTONDOWN:
+              /* it's a press button event */
+              input = TRUE;
+              if (wrap)
+                {
+                  /* align the cursor position */
+                  if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
+                    WinErrorBox (w, "AddPoints (3)");
+                  wrap = FALSE;		  
+                }
+              break;
+              
+            case WM_LBUTTONUP:
+            case WM_MBUTTONUP:
+            case WM_RBUTTONUP:
+              if (input)
+                {
+                  input = FALSE;
+                  /* left button keep the last segment built */
+                  /* keep the new segment first point coordinates */
+                  x1 = lastx;
+                  y1 = lasty;
+                  ptBeg.x = x1;
+                  ptBeg.y = y1;
+                  (*nbpoints)++;
+                  point++;
+                  
+                  /* update the box buffer */
+                  newx = LogicalValue (lastx - x, UnPixel, NULL,
+                                       ViewFrameTable[frame - 1].FrMagnification);
+                  newy = LogicalValue (lasty - y, UnPixel, NULL,
+                                       ViewFrameTable[frame - 1].FrMagnification);
+                  AddPointInPolyline (Bbuffer, point, newx, newy);
+                  /* update the abstract box buffer */
+                  newx1 = (int) ((float) newx * ratioX);
+                  newy1 = (int) ((float) newy * ratioY);
+                  AddPointInPolyline (Pbuffer, point, newx1, newy1);
+                  if (*nbpoints > maxPoints && maxPoints != 0)
+                    /* we have the right number of points */
+                    ret = 1;
+                  else if (maxPoints == 0 && event.message != WM_LBUTTONUP)
+                    /* any other button : end of user input */
+                    ret = 1;
+                }
+              else
+                {
+                  newx = lastx;
+                  newy = lasty;
+                }
+              break;
+              
+            case WM_PAINT:
+              WIN_HandleExpose (w, frame, event.wParam, event.lParam);
+            default: break;
+            }
+        }
 #endif /* !_WINGUI */
 #ifdef _GTK
       event = gdk_event_get ();
       if (event)
-	{
-	  /* we only deal with button press events */
-	  switch (event->type)
-	    {	 	      
-	    case GDK_KEY_PRESS:
-	      /* stop the creation of the polyline */
-	      ret = 1;
-	      break;
-	    case GDK_BUTTON_PRESS:
-	      /* it's a press button event */
-	      input = TRUE;
-	      break;
-	    case  GDK_BUTTON_RELEASE:
-	      if (input)
-		{
-		  /* left button keep the last segment built */
-		  /* keep the new segment first point coordinates */
-		  x1 = lastx;
-		  y1 = lasty;
-		  (*nbpoints)++;
-		  point++;
-		  /* points are registered */
-		  input = TRUE;
-		  
-		  /* update the box buffer */
-		  newx = LogicalValue (lastx - x, UnPixel, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification);
-		  newy = LogicalValue (lasty - y, UnPixel, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification);
-		  AddPointInPolyline (Bbuffer, point, newx, newy);
-		  /* update the abstract box buffer */
-		  newx1 = (int) ((float) newx * ratioX);
-		  newy1 = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, point, newx1, newy1);
-		  
-		  if (*nbpoints > maxPoints && maxPoints != 0)
-		    /* we have the right number of points */
-		    ret = 1;
-		  else if (maxPoints == 0 && (int) ((GdkEventButton *)event)->button != 1)
-		    /* any other button : end of user input */
-		    ret = 1;
-		  
-		  input = FALSE;
-		}
-	      break;
-	    case GDK_EXPOSE:
-	      f = GetWindowFrame (((GdkEventExpose *)event)->window);
-	      if (f <= MAX_FRAME + 1)
-		FrameToRedisplay (((GdkEventExpose *)event)->window, 
-				  f, 
-				  (GdkEventExpose *) & event);
-	      break;
-	    case GDK_MOTION_NOTIFY:
-	      /* Check for window ID */
-	      if (((GdkEventMotion *)event)->window == w)
-		{
-		  /* check the coordinates */
-		  newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
-		  newy = y + DO_ALIGN ((int) ((GdkEventMotion *)event)->y - y);
-		  /* Update the X position */
-		  if (newx < x)
-		    {
-		      newx = x;
-		      wrap = TRUE;
-		    }
-		  else if (newx > x + width)
-		    {
-		      newx = x + width;
-		      wrap = TRUE;
-		    }
-		  
-		  /* Update the Y position */
-		  if (newy < y)
-		    {
-		      newy = y;
-		      wrap = TRUE;
-		    }
-		  else if (newy > y + height)
-		    {
-		      newy = y + height;
-		      wrap = TRUE;
-		    } 
-	   
-		  /* shows the new adjacent segment position */
-		  if (1 || newx != lastx || newy != lasty)
-		    {
-		      if (x1 != -1)
-			{
-			  gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
-			  gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
-			}
-		      if (x3 != -1)
-			{
-			  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
-			  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
-			}
-		    }
-		  lastx = newx;
-		  lasty = newy;
-		  if (wrap)
-		    {
-		      xwindow = (GdkWindowPrivate*) w;
-		      XWarpPointer (GDK_DISPLAY(), 
-				    None, 
-				    xwindow->xwindow,
-				    0, 0, 0, 0, lastx, lasty);
-		      wrap = FALSE;
-		    }
-		}
-	      break;
-	    default: 
-	      break;
-	    }
+        {
+          /* we only deal with button press events */
+          switch (event->type)
+            {	 	      
+            case GDK_KEY_PRESS:
+              /* stop the creation of the polyline */
+              ret = 1;
+              break;
+            case GDK_BUTTON_PRESS:
+              /* it's a press button event */
+              input = TRUE;
+              break;
+            case  GDK_BUTTON_RELEASE:
+              if (input)
+                {
+                  /* left button keep the last segment built */
+                  /* keep the new segment first point coordinates */
+                  x1 = lastx;
+                  y1 = lasty;
+                  (*nbpoints)++;
+                  point++;
+                  /* points are registered */
+                  input = TRUE;
+                  
+                  /* update the box buffer */
+                  newx = LogicalValue (lastx - x, UnPixel, NULL,
+                                       ViewFrameTable[frame - 1].FrMagnification);
+                  newy = LogicalValue (lasty - y, UnPixel, NULL,
+                                       ViewFrameTable[frame - 1].FrMagnification);
+                  AddPointInPolyline (Bbuffer, point, newx, newy);
+                  /* update the abstract box buffer */
+                  newx1 = (int) ((float) newx * ratioX);
+                  newy1 = (int) ((float) newy * ratioY);
+                  AddPointInPolyline (Pbuffer, point, newx1, newy1);
+                  
+                  if (*nbpoints > maxPoints && maxPoints != 0)
+                    /* we have the right number of points */
+                    ret = 1;
+                  else if (maxPoints == 0 && (int) ((GdkEventButton *)event)->button != 1)
+                    /* any other button : end of user input */
+                    ret = 1;
+                  
+                  input = FALSE;
+                }
+              break;
+            case GDK_EXPOSE:
+              f = GetWindowFrame (((GdkEventExpose *)event)->window);
+              if (f <= MAX_FRAME + 1)
+                FrameToRedisplay (((GdkEventExpose *)event)->window, 
+                                  f, 
+                                  (GdkEventExpose *) & event);
+              break;
+            case GDK_MOTION_NOTIFY:
+              /* Check for window ID */
+              if (((GdkEventMotion *)event)->window == w)
+                {
+                  /* check the coordinates */
+                  newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
+                  newy = y + DO_ALIGN ((int) ((GdkEventMotion *)event)->y - y);
+                  /* Update the X position */
+                  if (newx < x)
+                    {
+                      newx = x;
+                      wrap = TRUE;
+                    }
+                  else if (newx > x + width)
+                    {
+                      newx = x + width;
+                      wrap = TRUE;
+                    }
+                  
+                  /* Update the Y position */
+                  if (newy < y)
+                    {
+                      newy = y;
+                      wrap = TRUE;
+                    }
+                  else if (newy > y + height)
+                    {
+                      newy = y + height;
+                      wrap = TRUE;
+                    } 
+                  
+                  /* shows the new adjacent segment position */
+                  if (1 || newx != lastx || newy != lasty)
+                    {
+                      if (x1 != -1)
+                        {
+                          gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
+                          gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
+                        }
+                      if (x3 != -1)
+                        {
+                          gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
+                          gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
+                        }
+                    }
+                  lastx = newx;
+                  lasty = newy;
+                  if (wrap)
+                    {
+                      xwindow = (GdkWindowPrivate*) w;
+                      XWarpPointer (GDK_DISPLAY(), 
+                                    None, 
+                                    xwindow->xwindow,
+                                    0, 0, 0, 0, lastx, lasty);
+                      wrap = FALSE;
+                    }
+                }
+              break;
+            default: 
+              break;
+            }
 #ifdef _GL
-	  FrameTable[frame].DblBuffNeedSwap = TRUE;
-	  GL_Swap (frame);
+          FrameTable[frame].DblBuffNeedSwap = TRUE;
+          GL_Swap (frame);
 #endif /* _GL */
-	}
+        }
 #endif /* _GTK */
     }
-
+  
 #ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #endif /* *_WINGUI */
@@ -738,12 +735,31 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
      Box buffer.
   ----------------------------------------------------------------------*/
 static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
-			int x1, int y1, int x3, int y3,
-			int lastx, int lasty, int point,
+                        int x1, int y1, int x3, int y3,
+                        int lastx, int lasty, int point,
                         int x, int y, int width, int height,
-			PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer,
-			int pointselect)
+                        PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer,
+                        int pointselect)
 {
+#ifdef _WX
+  TTALOGDEBUG_15( TTA_LOG_SVGEDIT, _T("MoveApoint: frame=%d x=%d y=%d x1=%d y1=%d x3=%d y3=%d firstx=%d firsty=%d lastx=%d lasty=%d point=%d pointselect=%d width=%d height=%d"), frame, x, y, x1, y1, x3, y3, firstx, firsty, lastx, lasty, point, pointselect, width, height );
+  
+  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+  AmayaMovePointEvtHandler * p_movePointEvtHandler =
+    new AmayaMovePointEvtHandler( p_frame, box,
+                                  firstx, firsty,
+                                  x1, y1, x3, y3,
+                                  lastx, lasty, point,
+                                  x, y, width, height,
+                                  Pbuffer, Bbuffer,
+                                  pointselect );
+  // now wait for the polygon creation end
+  ThotEvent ev;
+  while(!p_movePointEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+  
+  delete p_movePointEvtHandler;
+#else /* _WX */
   ThotWindow          w;
 #if defined(_WINGUI)
   ThotEvent           event;
@@ -768,19 +784,15 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   POINT               ptCur;
   HCURSOR             cross;
 #endif /* _WINGUI */
-
+  
   /* need the window to change the cursor */
-#ifndef _WX 
   w = FrRef[frame];
-#else /* #ifndef _WX */
-  w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* #ifndef _WX */
   newx = newy = 0;
   /* trasformation factor between the box and the abstract box */
   ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
   /* trasformation factor between the box and the abstract box */
   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
-
+  
 #ifdef _WINGUI
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
@@ -797,11 +809,11 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   ThotGrab (w, HVCurs, e, 0);
   xwindow = (GdkWindowPrivate*) w;
   XWarpPointer (GDK_DISPLAY(), 
-		None, 
-		xwindow->xwindow,
-		0, 0, 0, 0, lastx, lasty);
+                None, 
+                xwindow->xwindow,
+                0, 0, 0, 0, lastx, lasty);
 #endif /* !_GTK */
-
+  
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
   /* loop waiting for the user input */
@@ -809,14 +821,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   /* take into account release button events that follow a press button event */
   input = FALSE;
   wrap = FALSE;
-#ifdef _WX
-  /* TODO: WX ... */
-  wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-  messagedialog.ShowModal();
-#else /* defined(_WX) */
   while (ret == 0)
     {
 #ifdef _WINGUI
@@ -828,269 +832,267 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
       newy = DO_ALIGN (cursorPos.y - rect.top - y);
       newy += y;
       if (newx < x || newx > x + width ||
-	  newy < y || newy > y + height)
-	{
-	  /* CHKR_LIMIT to size of the box */
-	  /* new X valid position */
-	  if (newx < x)
-	    newx = x;
-	  else if (newx > x + width)
-	    newx = x + width;
-	      
-	  /* new Y valid position */
-	  if (newy < y)
-	    newy = y;
-	  else if (newy > y + height)
-	    newy = y + height;
-	  /*SetCursorPos (newx, newy);*/
-	}
-	  
+          newy < y || newy > y + height)
+        {
+          /* CHKR_LIMIT to size of the box */
+          /* new X valid position */
+          if (newx < x)
+            newx = x;
+          else if (newx > x + width)
+            newx = x + width;
+          
+          /* new Y valid position */
+          if (newy < y)
+            newy = y;
+          else if (newy > y + height)
+            newy = y + height;
+          /*SetCursorPos (newx, newy);*/
+        }
+      
       GetMessage (&event, NULL, 0, 0);
-	  SetCursor (cross);
+      SetCursor (cross);
       switch (event.message)
-	{
-	case WM_LBUTTONUP:
-	  lastx = newx;
-	  lasty = newy;
-	  /* update the box buffer */
-	  newx = LogicalValue (lastx - firstx, UnPixel, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  newy = LogicalValue (lasty - firsty, UnPixel, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
-	  /* update the abstract box buffer */
-	  newx1 = (int) ((float) newx * ratioX);
-	  newy1 = (int) ((float) newy * ratioY);
-	  ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
-	  ret = 1;
-	  break;
-
-	case WM_MOUSEMOVE:
-	  /* refresh the display of teh two adjacent segments */
-	  if (newx != lastx || newy != lasty)
-	    {
-	      if (x1 != -1)
-		{
-		  /* remove previous line */
-		  ptCur.x = lastx /*- rect.left*/;
-		  ptCur.y = lasty /*- rect.top*/;
-		  DrawOutline (w, ptBeg, ptCur);
-		  /* add a new line */
-		  ptCur.x = newx /*- rect.left*/;
-		  ptCur.y = newy /*- rect.top*/;
-		  DrawOutline (w, ptBeg, ptCur);
-		}
-	      if (x3 != -1)
-		{
-		  /* remove previous line */
-		  ptCur.x = lastx;
-		  ptCur.y = lasty;
-		  DrawOutline (w, ptCur, ptEnd);
-		  /* add a new line */
-		  ptCur.x = newx;
-		  ptCur.y = newy;
-		  DrawOutline (w, ptCur, ptEnd);
-		}	     
-	   }
-	  lastx = newx;
-	  lasty = newy;
-	  break;
-
-	case WM_PAINT:
-	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
-	default: break;
-	}
+        {
+        case WM_LBUTTONUP:
+          lastx = newx;
+          lasty = newy;
+          /* update the box buffer */
+          newx = LogicalValue (lastx - firstx, UnPixel, NULL,
+                               ViewFrameTable[frame - 1].FrMagnification);
+          newy = LogicalValue (lasty - firsty, UnPixel, NULL,
+                               ViewFrameTable[frame - 1].FrMagnification);
+          ModifyPointInPolyline (Bbuffer, point, newx, newy);
+          /* update the abstract box buffer */
+          newx1 = (int) ((float) newx * ratioX);
+          newy1 = (int) ((float) newy * ratioY);
+          ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
+          ret = 1;
+          break;
+          
+        case WM_MOUSEMOVE:
+          /* refresh the display of teh two adjacent segments */
+          if (newx != lastx || newy != lasty)
+            {
+              if (x1 != -1)
+                {
+                  /* remove previous line */
+                  ptCur.x = lastx /*- rect.left*/;
+                  ptCur.y = lasty /*- rect.top*/;
+                  DrawOutline (w, ptBeg, ptCur);
+                  /* add a new line */
+                  ptCur.x = newx /*- rect.left*/;
+                  ptCur.y = newy /*- rect.top*/;
+                  DrawOutline (w, ptBeg, ptCur);
+                }
+              if (x3 != -1)
+                {
+                  /* remove previous line */
+                  ptCur.x = lastx;
+                  ptCur.y = lasty;
+                  DrawOutline (w, ptCur, ptEnd);
+                  /* add a new line */
+                  ptCur.x = newx;
+                  ptCur.y = newy;
+                  DrawOutline (w, ptCur, ptEnd);
+                }	     
+            }
+          lastx = newx;
+          lasty = newy;
+          break;
+          
+        case WM_PAINT:
+          WIN_HandleExpose (w, frame, event.wParam, event.lParam);
+        default: break;
+        }
 #endif /* !_WINGUI */
 #ifdef _GTK
       event = gdk_event_get ();
       if (event)
-	{
-	  if (event->type == GDK_MOTION_NOTIFY)	
-	    {
-	      /* We take only the last position update */
-	      while (gdk_events_pending ()) 
-		{
-		  event_tmp = gdk_event_get ();
-		  if (event_tmp)
-		    event = event_tmp;
-		}
-	      if (event->type == GDK_MOTION_NOTIFY) 
-		{
-		  if (((GdkEventMotion *)event)->window == w)
-		    {
-		      /* check the coordinates */
-		      newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
-		      newy = y + DO_ALIGN ((int)((GdkEventMotion *)event)->y - y);
-
+        {
+          if (event->type == GDK_MOTION_NOTIFY)	
+            {
+              /* We take only the last position update */
+              while (gdk_events_pending ()) 
+                {
+                  event_tmp = gdk_event_get ();
+                  if (event_tmp)
+                    event = event_tmp;
+                }
+              if (event->type == GDK_MOTION_NOTIFY) 
+                {
+                  if (((GdkEventMotion *)event)->window == w)
+                    {
+                      /* check the coordinates */
+                      newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
+                      newy = y + DO_ALIGN ((int)((GdkEventMotion *)event)->y - y);
+                      
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("Before boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+                      printf("Before boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-
-		      /* are limited to the box size */
-		      /* Update the X position */
-		      if (newx < x)
-			{
-			  newx = x;
-			  wrap = TRUE;
-			}
-		      else if (newx > x + width)
-			{
-			  newx = x + width;
-			  wrap = TRUE;
-			}
-
-		      /* Update the Y position */
-		      if (newy < y)
-			{
-			  newy = y;
-			  wrap = TRUE;
-			}
-		      else if (newy > y + height)
-			{
-			  newy = y + height;
-			  wrap = TRUE;
-			} 
-		    }
-
+                      
+                      /* are limited to the box size */
+                      /* Update the X position */
+                      if (newx < x)
+                        {
+                          newx = x;
+                          wrap = TRUE;
+                        }
+                      else if (newx > x + width)
+                        {
+                          newx = x + width;
+                          wrap = TRUE;
+                        }
+                      
+                      /* Update the Y position */
+                      if (newy < y)
+                        {
+                          newy = y;
+                          wrap = TRUE;
+                        }
+                      else if (newy > y + height)
+                        {
+                          newy = y + height;
+                          wrap = TRUE;
+                        } 
+                    }
+                  
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("After boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+                  printf("After boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-		  
-		  /* shows the new adjacent segment position */
-		  if (newx != lastx || newy != lasty)
-		    {
+                  
+                  /* shows the new adjacent segment position */
+                  if (newx != lastx || newy != lasty)
+                    {
 #ifndef _GL
-		      if (x1 != -1)
-			{
-			  gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
-			  gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
-			}
-		      if (x3 != -1)
-			{
-			  gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
-			  gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
-			}
-		      lastx = newx;
-		      lasty = newy;		      
+                      if (x1 != -1)
+                        {
+                          gdk_draw_line (w, TtInvertGC, x1, y1, lastx, lasty);
+                          gdk_draw_line (w, TtInvertGC, x1, y1, newx, newy);
+                        }
+                      if (x3 != -1)
+                        {
+                          gdk_draw_line (w, TtInvertGC, lastx, lasty, x3, y3);
+                          gdk_draw_line (w, TtInvertGC, newx, newy, x3, y3);
+                        }
+                      lastx = newx;
+                      lasty = newy;		      
 #else /* _GL */
-		      
+                      
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("Before LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+                      printf("Before LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-		      lastx = newx;
-		      lasty = newy;
-		      /* update the box buffer */
-		      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
-					   ViewFrameTable[frame - 1].FrMagnification);
-		      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
-					   ViewFrameTable[frame - 1].FrMagnification);
+                      lastx = newx;
+                      lasty = newy;
+                      /* update the box buffer */
+                      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
+                                           ViewFrameTable[frame - 1].FrMagnification);
+                      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
+                                           ViewFrameTable[frame - 1].FrMagnification);
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("After LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+                      printf("After LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-		      
-		      if (pointselect == 0)
-			/* it's really a polyline, not a line */
-			{
-			  if (lastx - firstx > box->BxWidth)
-			    {
-			      box->BxWidth = lastx - firstx;
-			      box->BxW = box->BxWidth;
-			    }
-			  if (lasty - firsty > box->BxHeight)
-			    {
-			      box->BxHeight = lasty - firsty;
-			      box->BxH  = box->BxHeight;
-			    }
-			  if (lastx < box->BxClipX + EXTRA_GRAPH)
-			    box->BxClipX = lastx - EXTRA_GRAPH;
-			  if (lasty < box->BxClipY + EXTRA_GRAPH)
-			    box->BxClipY = lasty - EXTRA_GRAPH;
-			}
-
-		      ModifyPointInPolyline (Bbuffer, point, newx, newy);
-
-		      /* update the abstract box buffer */
-		      newx1 = (int) ((float) newx * ratioX);
-		      newy1 = (int) ((float) newy * ratioY);
-		      
-		      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
+                      
+                      if (pointselect == 0)
+                        /* it's really a polyline, not a line */
+                        {
+                          if (lastx - firstx > box->BxWidth)
+                            {
+                              box->BxWidth = lastx - firstx;
+                              box->BxW = box->BxWidth;
+                            }
+                          if (lasty - firsty > box->BxHeight)
+                            {
+                              box->BxHeight = lasty - firsty;
+                              box->BxH  = box->BxHeight;
+                            }
+                          if (lastx < box->BxClipX + EXTRA_GRAPH)
+                            box->BxClipX = lastx - EXTRA_GRAPH;
+                          if (lasty < box->BxClipY + EXTRA_GRAPH)
+                            box->BxClipY = lasty - EXTRA_GRAPH;
+                        }
+                      
+                      ModifyPointInPolyline (Bbuffer, point, newx, newy);
+                      
+                      /* update the abstract box buffer */
+                      newx1 = (int) ((float) newx * ratioX);
+                      newy1 = (int) ((float) newy * ratioY);
+                      
+                      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("After Ratio : \tnewx1=%d\tnewy1=%d\tratiox=%f\tratioy=%f\n",newx1,newy1,ratioX,ratioY);
+                      printf("After Ratio : \tnewx1=%d\tnewy1=%d\tratiox=%f\tratioy=%f\n",newx1,newy1,ratioX,ratioY);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-
-		      if (pointselect == 0)
-			{
-			  if (box->BxPictInfo != NULL)
-			    {
-			      /* we have to recompute the current spline */
-			      free ((STRING) box->BxPictInfo);
-			      box->BxPictInfo = NULL;
-			    }
-			}
-
-		      DefBoxRegion (frame, box, 0, 0, width, height);
-		      RedrawFrameBottom (frame, 0, NULL);
-		      FrameTable[frame].DblBuffNeedSwap = TRUE;
-		      GL_Swap (frame);		      
+                      
+                      if (pointselect == 0)
+                        {
+                          if (box->BxPictInfo != NULL)
+                            {
+                              /* we have to recompute the current spline */
+                              free ((STRING) box->BxPictInfo);
+                              box->BxPictInfo = NULL;
+                            }
+                        }
+                      
+                      DefBoxRegion (frame, box, 0, 0, width, height);
+                      RedrawFrameBottom (frame, 0, NULL);
+                      FrameTable[frame].DblBuffNeedSwap = TRUE;
+                      GL_Swap (frame);		      
 #ifdef _TRACE_GL_MOVEAPOINT
-	printf("After GLSwap : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
+                      printf("After GLSwap : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
 #endif /* _GL */
-		      if (wrap)
-			{
-			  xwindow = (GdkWindowPrivate*) w;
-			  XWarpPointer (GDK_DISPLAY(), 
-					None, 
-					xwindow->xwindow,
-					0, 0, 0, 0, lastx, lasty);
-			  wrap = FALSE;
-			}
-		    }
-		}
-	    }
-	  if (event->type == GDK_BUTTON_RELEASE)
-	    {
+                      if (wrap)
+                        {
+                          xwindow = (GdkWindowPrivate*) w;
+                          XWarpPointer (GDK_DISPLAY(), 
+                                        None, 
+                                        xwindow->xwindow,
+                                        0, 0, 0, 0, lastx, lasty);
+                          wrap = FALSE;
+                        }
+                    }
+                }
+            }
+          if (event->type == GDK_BUTTON_RELEASE)
+            {
 #ifdef _GL
-	      if (box->BxAbstractBox->AbEnclosing &&
-		  box->BxAbstractBox->AbEnclosing->AbBox)
-		/* suppose the enclosing box has the same width and height as
-		   the polyline box */
-		{
-		  box->BxAbstractBox->AbEnclosing->AbBox->BxHeight = box->BxHeight;
-		  box->BxAbstractBox->AbEnclosing->AbBox->BxH = box->BxH;
-		  box->BxAbstractBox->AbEnclosing->AbBox->BxWidth = box->BxWidth;
-		  box->BxAbstractBox->AbEnclosing->AbBox->BxW = box->BxW;
-		}
+              if (box->BxAbstractBox->AbEnclosing &&
+                  box->BxAbstractBox->AbEnclosing->AbBox)
+                /* suppose the enclosing box has the same width and height as
+                   the polyline box */
+                {
+                  box->BxAbstractBox->AbEnclosing->AbBox->BxHeight = box->BxHeight;
+                  box->BxAbstractBox->AbEnclosing->AbBox->BxH = box->BxH;
+                  box->BxAbstractBox->AbEnclosing->AbBox->BxWidth = box->BxWidth;
+                  box->BxAbstractBox->AbEnclosing->AbBox->BxW = box->BxW;
+                }
 #else /* _GL */
-	      lastx = newx - firstx;
-	      lasty = newy - firsty;
-	      /* update the box buffer */
-	      newx = LogicalValue (lastx, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      newy = LogicalValue (lasty, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      ModifyPointInPolyline (Bbuffer, point, newx, newy);
-	      /* update the abstract box buffer */
-	      newx1 = (int) ((float) newx * ratioX);
-	      newy1 = (int) ((float) newy * ratioY);
-	      ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
+              lastx = newx - firstx;
+              lasty = newy - firsty;
+              /* update the box buffer */
+              newx = LogicalValue (lastx, UnPixel, NULL,
+                                   ViewFrameTable[frame - 1].FrMagnification);
+              newy = LogicalValue (lasty, UnPixel, NULL,
+                                   ViewFrameTable[frame - 1].FrMagnification);
+              ModifyPointInPolyline (Bbuffer, point, newx, newy);
+              /* update the abstract box buffer */
+              newx1 = (int) ((float) newx * ratioX);
+              newy1 = (int) ((float) newy * ratioY);
+              ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
 #endif /* _GL */
-	      ret = 1;
-	    }
-	   
-	  if (event->type == GDK_EXPOSE)
-	    {
-	      f = GetWindowFrame (((GdkEventExpose *)event)->window);
-	      if (f <= MAX_FRAME + 1)
-		FrameToRedisplay (((GdkEventExpose *)event)->window, 
-				  f, 
-				  (GdkEventExpose *) & event);
-	    }
-	}
+              ret = 1;
+            }
+          
+          if (event->type == GDK_EXPOSE)
+            {
+              f = GetWindowFrame (((GdkEventExpose *)event)->window);
+              if (f <= MAX_FRAME + 1)
+                FrameToRedisplay (((GdkEventExpose *)event)->window, 
+                                  f, 
+                                  (GdkEventExpose *) & event);
+            }
+        }
 #endif /* _GTK */
-    }
-#endif /* _WX */
-
+    }  
 #ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #endif /* *_WINGUI */
@@ -1098,6 +1100,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   ThotUngrab ();
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* _GTK */
+#endif /* _WX */
 }
 
 
@@ -1148,7 +1151,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   lastx = x; 
   lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
-	     Pbuffer, Bbuffer);
+             Pbuffer, Bbuffer);
 
 #if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -1223,9 +1226,9 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
-  &x1, &y1, &lastx, &lasty, &x3, &y3);
+                  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, *xOrg, *yOrg, x1, y1, x3, y3, lastx, lasty, point, x, y, width, height, Pbuffer, Bbuffer, 0);
-
+  
 #ifdef _TRACE_GL_POLYMODIF
 	printf("Bbuffer (after MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
 	    Pbuffer->BuPoints[0].XCoord,

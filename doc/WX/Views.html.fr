@@ -162,23 +162,22 @@ correspondante :</p>
 </table>
 
 <p class="Note"><strong>Note :</strong> <code>Ctrl v</code> est remplacé par
-<code>Ctrl u</code> sous Windows car <code>Ctrl v</code> est utilisé pour la
-commande <strong>Copier</strong>.</p>
+<code>Ctrl u</code> sous Windows car <code>Ctrl v</code> est déjà utilisé
+pour la commande <strong>Copier</strong>.</p>
 
 <p class="Note"><strong>Astuce 1 :</strong> vous pouvez ouvrir rapidement la
-vue source en cliquant à la souris sur le bandeau rouge en bas de votre
-document.</p>
+vue source (ou la dernière vue active) en cliquant à la souris sur le boutton
+rouge en bas de votre document.</p>
 
 <p class="Note"><strong>Astuce 2</strong> : Les commandes <strong>Montrer
 ...</strong> du menu <strong>Vues</strong> peuvent être également utilisées
-pour redonner le focus clavier à une vue. (Ceci est très utile quand le focus
-est bloqué dans les outils)</p>
+pour redonner le focus clavier à une vue.</p>
 
 <h3>Fermer une vue</h3>
 
 <p>Pour fermer une vue choisissez la commande <strong>Partager la
 vue</strong> du menu <strong>Vues</strong>. Une autre façon de fermer une vue
-est de cliquer avec la souris sur le bandeau rouge en bas de votre page.</p>
+est de cliquer avec la souris sur le boutton rouge en bas de votre page.</p>
 
 <p>Vous pouvez aussi fermer l'onglet (clique droit sur l'onglet ou menu
 <strong>Fichier</strong>) si vous voulez fermer votre document ainsi que
@@ -210,14 +209,14 @@ agissent sur la totalité de la sélection.</p>
 <p>La vue source se comporte différemment : vous devez demander la
 synchronisation explicitement, en utilisant la commande
 <strong>Synchroniser</strong> du menu <strong>Fichier</strong> ou bien en
-cliquant dans une autre vue ce qui aura pour effet d'effectuer une
-synchronisation automatique. Quand vous avez effectué une série d'éditions
-dans la vue source, vous devez entrer la commande
-<strong>Synchroniser</strong> depuis cette vue pour mettre à jour toutes les
-autres vues du document, ou bien tout simplement cliquer avec votre souris
-dans une autre vue. Inversement, quand vous avez effectué des changements
-dans une autre vue, entrez la commande <strong>Synchroniser</strong> pour
-mettre à jour la vue source ou bien cliquez simplement dans la vue source.</p>
+cliquant dans une autre vue ce qui aura pour effet d'effectuer la
+synchronisation. Quand vous avez effectué une série d'éditions dans la vue
+source, vous devez entrer la commande <strong>Synchroniser</strong> depuis
+cette vue pour mettre à jour toutes les autres vues du document, ou bien tout
+simplement cliquer avec votre souris dans une autre vue. Inversement, quand
+vous avez effectué des changements dans une autre vue, entrez la commande
+<strong>Synchroniser</strong> pour mettre à jour la vue source ou bien
+cliquez simplement dans la vue source.</p>
 
 <p>Synchroniser un document depuis la Vue source fera re-valider le document
 par Amaya. Si des erreurs de balisage ont été introduites dans la vue source,

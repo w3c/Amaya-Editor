@@ -206,6 +206,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaStatusBar.o \
 	dialogue/AmayaConfirmCloseTab.o \
 	dialogue/AmayaAddPointEvtHandler.o \
+	dialogue/AmayaMovePointEvtHandler.o \
 	dialogue/AmayaMovingBoxEvtHandler.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \

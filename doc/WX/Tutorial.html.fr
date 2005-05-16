@@ -3,7 +3,7 @@
        "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Amaya - Guide utilisateur</title>
   <style type="text/css">
 
@@ -16,7 +16,8 @@ body {background-color: #F9F7F4; color: #666666; font-family: helvetica; }
 .head {margin: 1em 0 3em 0}
 h1 {font-size: 24pt}
 body {padding-left: 2em}</style>
-  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.1.1, see http://www.w3.org/Amaya/"
+  />
 </head>
 
 <body xml:lang="fr">
@@ -25,7 +26,7 @@ body {padding-left: 2em}</style>
 <h1 id="Amaya">Amaya - Guide utilisateur</h1>
 
 <p class="head"><span class="author">Irène Vatton</span> <br />
-Dernière mise à jour : <!--$date=-->23-02-2005 - 15:36<!--$-->
+Dernière mise à jour : <!--$date=-->16-05-2005 - 09:16<!--$-->
 </p>
 </div>
 
@@ -1262,16 +1263,18 @@ attribut.</p>
 
 <p>Au chargement d'un document, Amaya peut détecter des erreurs de HTML. Le
 parseur est très tolérant pour les documents HTML mais plus strict pour les
-documents XHTML.</p>
+documents XHTML. Si une erreur est détectée, une pastille rouge s'allume dans
+la barre de statut en bas à droite.</p>
 </div>
 
 <div>
 <h4>On peut corriger les erreurs</h4>
 
 <p>On affiche le détail des erreurs détectées en sélectionnant l'entrée
-<strong>Montrer les erreurs</strong> du menu <strong>Fichier</strong>. Pour
-corriger ces erreurs, on active le lien vers la vue source du document pour
-visualiser la position de l'erreur dans le source.</p>
+<strong>Montrer les erreurs</strong> du menu <strong>Fichier</strong> ou en
+cliquant sur la pastille rouge en bas à droite. Pour corriger ces erreurs, on
+active le lien vers la vue source du document pour visualiser la position de
+l'erreur dans le source.</p>
 
 <p>Une fois les erreurs corrigées on synchronise pour voir si tout est
 correct, on peut alors sauver le document corrigé.</p>
