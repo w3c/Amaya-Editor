@@ -2499,98 +2499,98 @@ void ApplyDirectResize (int frame, int xm, int ym)
       /* designation style Grenoble */
       GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
       if (pBox == NULL)
-	pAb = NULL;
+        pAb = NULL;
       else
-	pAb = pBox->BxAbstractBox;
-
+        pAb = pBox->BxAbstractBox;
+      
       /* ctrlClick */
       still = TRUE;
       /* On boucle tant que l'on ne trouve pas une boite modifiable */
       while (still)
-	{
-	  if (pAb == NULL)
-	    pBox = NULL;
-	  else
-	    pBox = pAb->AbBox;
-
-	  if (pBox == NULL)
-	    still = FALSE;	/* Il n'y a pas de boite */
-	  /* On regarde si les modifications sont autorisees */
-	  else
-	    {
-	      okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
-	      okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
-	      if (okH || okV)
-		still = FALSE;
-	    }
-
-	  /* Si on n'a pas trouve, il faut remonter */
-	  if (still)
-	    {
-	      /* On passe a la boite englobante */
-	      if (pAb != NULL)
-		pAb = pAb->AbEnclosing;
-	      else
-		{
-		  pBox = NULL;
-		  still = FALSE;
-		}
-	    }
-	}
-
+        {
+          if (pAb == NULL)
+            pBox = NULL;
+          else
+            pBox = pAb->AbBox;
+          
+          if (pBox == NULL)
+            still = FALSE;	/* Il n'y a pas de boite */
+          /* On regarde si les modifications sont autorisees */
+          else
+            {
+              okH = CanBeResized (pAb, frame, TRUE, &xmin, &xmax);
+              okV = CanBeResized (pAb, frame, FALSE, &ymin, &ymax);
+              if (okH || okV)
+                still = FALSE;
+            }
+          
+          /* Si on n'a pas trouve, il faut remonter */
+          if (still)
+            {
+              /* On passe a la boite englobante */
+              if (pAb != NULL)
+                pAb = pAb->AbEnclosing;
+              else
+                {
+                  pBox = NULL;
+                  still = FALSE;
+                }
+            }
+        }
+      
       /* Est-ce que l'on a trouve une boite ? */
       if (pBox != NULL)
-	{
-	  x = pBox->BxXOrg - pFrame->FrXOrg;
-	  y = pBox->BxYOrg - pFrame->FrYOrg;
-	  width = pBox->BxWidth;
-	  height = pBox->BxHeight;
-	  /* On retablit les positions par rapport a la fenetre */
-	  xmin -= pFrame->FrXOrg;
-	  if (okH)
-	    xmax -= pFrame->FrXOrg;
-	  else
-	    xmax = xmin;
-	  ymin -= pFrame->FrYOrg;
-	  if (okV)
-	    ymax -= pFrame->FrYOrg;
-	  else
-	    ymax = ymin;
-	  /* On initialise la boite fantome */
-	  percentW = 0;
-	  percentH = 0;
-	  pAb = pBox->BxAbstractBox;
-	  if (!pAb->AbWidth.DimUserSpecified &&
-	      !pAb->AbWidth.DimIsPosition &&
-	      !pAb->AbWidth.DimSameDimension &&
-	      pAb->AbWidth.DimAbRef == pAb)
-	    {
-	      if (pAb->AbWidth.DimUnit == UnPercent)
-		percentW = pAb->AbWidth.DimValue;
-	      else if (pAb->AbWidth.DimValue == 0)
-		percentW = 100;
-	    }
-	  else if (!pAb->AbHeight.DimUserSpecified &&
-		   !pAb->AbHeight.DimIsPosition &&
-		   !pAb->AbHeight.DimSameDimension &&
-		   pAb->AbHeight.DimAbRef == pAb)
-	    {
-	      if (pAb->AbHeight.DimUnit == UnPercent)
-		percentH = pAb->AbHeight.DimValue;
-	      else if (pAb->AbHeight.DimValue == 0)
-		percentH = 100;
-	    }
-	  GeometryResize (frame, x, y, &width, &height, pBox,
-			  xmin, xmax, ymin, ymax, xm, ym,
-			  percentW, percentH);
-	  /* Notify changes */
-	  if (percentW)
-	    NewDimension (pAb, 0, height, frame, TRUE);
-	  else if (percentH)
-	    NewDimension (pAb, width, 0, frame, TRUE);
-	  else
-	    NewDimension (pAb, width, height, frame, TRUE);
-	}
+        {
+          x = pBox->BxXOrg - pFrame->FrXOrg;
+          y = pBox->BxYOrg - pFrame->FrYOrg;
+          width = pBox->BxWidth;
+          height = pBox->BxHeight;
+          /* On retablit les positions par rapport a la fenetre */
+          xmin -= pFrame->FrXOrg;
+          if (okH)
+            xmax -= pFrame->FrXOrg;
+          else
+            xmax = xmin;
+          ymin -= pFrame->FrYOrg;
+          if (okV)
+            ymax -= pFrame->FrYOrg;
+          else
+            ymax = ymin;
+          /* On initialise la boite fantome */
+          percentW = 0;
+          percentH = 0;
+          pAb = pBox->BxAbstractBox;
+          if (!pAb->AbWidth.DimUserSpecified &&
+              !pAb->AbWidth.DimIsPosition &&
+              !pAb->AbWidth.DimSameDimension &&
+              pAb->AbWidth.DimAbRef == pAb)
+            {
+              if (pAb->AbWidth.DimUnit == UnPercent)
+                percentW = pAb->AbWidth.DimValue;
+              else if (pAb->AbWidth.DimValue == 0)
+                percentW = 100;
+            }
+          else if (!pAb->AbHeight.DimUserSpecified &&
+                   !pAb->AbHeight.DimIsPosition &&
+                   !pAb->AbHeight.DimSameDimension &&
+                   pAb->AbHeight.DimAbRef == pAb)
+            {
+              if (pAb->AbHeight.DimUnit == UnPercent)
+                percentH = pAb->AbHeight.DimValue;
+              else if (pAb->AbHeight.DimValue == 0)
+                percentH = 100;
+            }
+          GeometryResize (frame, x, y, &width, &height, pBox,
+                          xmin, xmax, ymin, ymax, xm, ym,
+                          percentW, percentH);
+          /* Notify changes */
+          if (percentW)
+            NewDimension (pAb, 0, height, frame, TRUE);
+          else if (percentH)
+            NewDimension (pAb, width, 0, frame, TRUE);
+          else
+            NewDimension (pAb, width, height, frame, TRUE);
+        }
     }
 }
 

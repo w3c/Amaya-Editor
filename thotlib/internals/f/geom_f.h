@@ -7,6 +7,20 @@
 #ifdef __STDC__
 
 extern int TtaGridDoAlign ( int value );
+extern void BoxGeometry ( int frame,
+                          int x,
+                          int y,
+                          int width,
+                          int height,
+                          int xr,
+                          int yr );
+extern void InvertEllipse ( int frame,
+                            int x,
+                            int y,
+                            int width,
+                            int height,
+                            int xr,
+                            int yr );
 extern int PolyLineCreation ( int frame,
                               int *xOrg,
                               int *yOrg,
@@ -83,6 +97,20 @@ extern void GeometryCreate ( int frame,
 #else /* __STDC__ */
 
 extern int TtaGridDoAlign ( int value );
+extern void BoxGeometry ( int frame,
+                            int x,
+                            int y,
+                            int width,
+                            int height,
+                            int xr,
+                            int yr );
+extern void InvertEllipse ( int frame,
+                              int x,
+                              int y,
+                              int width,
+                              int height,
+                              int xr,
+                              int yr );
 extern int PolyLineCreation ( int frame,
                                 int *xOrg,
                                 int *yOrg,

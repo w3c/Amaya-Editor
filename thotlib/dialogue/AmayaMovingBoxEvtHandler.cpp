@@ -64,9 +64,9 @@ AmayaMovingBoxEvtHandler::AmayaMovingBoxEvtHandler() : wxEvtHandler()
 }
 
 AmayaMovingBoxEvtHandler::AmayaMovingBoxEvtHandler( AmayaFrame * p_frame,
-                                                        int *x, int *y, int width, int height,
-                                                        PtrBox box, int xmin, int xmax, int ymin, int ymax,
-                                                        int xm, int ym, int xref, int yref )
+                                                    int *x, int *y, int width, int height,
+                                                    PtrBox box, int xmin, int xmax, int ymin, int ymax,
+                                                    int xm, int ym, int xref, int yref )
   : wxEvtHandler()
     ,m_IsFinish(false)
     ,m_pFrame(p_frame)

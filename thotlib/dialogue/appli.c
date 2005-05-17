@@ -2558,78 +2558,78 @@ ThotBool FrameButtonDownCallback(
     }
 
   switch( thot_button_id )
-  {
+    {
     case THOT_LEFT_BUTTON:
-    {
-      /* stop any current insertion of text */
-      CloseTextInsertion ();
-
-      /* Est-ce que la touche modifieur de geometrie est active ? */
-      if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
       {
-	/* moving a box */     
-	ApplyDirectTranslate (frame, x, y);
-      }
-      else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
-      {
-	/* a selection extension */
-	TtaAbortShowDialogue ();
-	LocateSelectionInView (frame, x, y, 0);
+        /* stop any current insertion of text */
+        CloseTextInsertion ();
+        
+        /* Est-ce que la touche modifieur de geometrie est active ? */
+        if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
+          {
+            /* moving a box */     
+            ApplyDirectTranslate (frame, x, y);
+          }
+        else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
+          {
+            /* a selection extension */
+            TtaAbortShowDialogue ();
+            LocateSelectionInView (frame, x, y, 0);
 #ifndef _WINDOWS
-	FrameToView (frame, &document, &view);
-	TtcCopyToClipboard (document, view);
+            FrameToView (frame, &document, &view);
+            TtcCopyToClipboard (document, view);
 #endif /* _WINDOWS */
+          }
+        else
+          {
+            /* a simple selection */
+            ClickFrame = frame;
+            ClickX = x;
+            ClickY = y;
+            /* it's important to setup Selecting before the call of LocateSelectionInView 
+             * because LocateSelectionInView will handle gui events (keyup) and Selecting variable
+             * will not be unset => cause a infinit selection ! */
+            Selecting = TRUE;
+            LocateSelectionInView (frame, ClickX, ClickY, 2);
+          }
       }
-      else
-      {
-	/* a simple selection */
-	ClickFrame = frame;
-	ClickX = x;
-	ClickY = y;
-	/* it's important to setup Selecting before the call of LocateSelectionInView 
-	 * because LocateSelectionInView will handle gui events (keyup) and Selecting variable
-	 * will not be unset => cause a infinit selection ! */
-	Selecting = TRUE;
-	LocateSelectionInView (frame, ClickX, ClickY, 2);
-      }
-    }
-    break;
-    
+      break;
+      
     case THOT_MIDDLE_BUTTON:
-    {
-      if (thot_mod_mask & THOT_MOD_CTRL)
       {
-	/* resizing a box */
-	ApplyDirectResize (frame, x, y);
+        if (thot_mod_mask & THOT_MOD_CTRL)
+          {
+            /* resizing a box */
+            ApplyDirectResize (frame, x, y);
+          }
+        else
+          {
+            ClickFrame = frame;
+            ClickX = x;
+            ClickY = y;
+            LocateSelectionInView (frame, ClickX, ClickY, 5);	     
+          }
       }
-      else
-      {
-	ClickFrame = frame;
-	ClickX = x;
-	ClickY = y;
-	LocateSelectionInView (frame, ClickX, ClickY, 5);	     
-      }
-    }
-    break;
-
+      break;
+      
     case THOT_RIGHT_BUTTON:
-    {
-      if (thot_mod_mask & THOT_MOD_CTRL)
       {
-	/* resize a box */
-	ApplyDirectResize (frame, x, y);
+        if (thot_mod_mask & THOT_MOD_CTRL)
+          {
+            /* resize a box */
+            ApplyDirectResize (frame, x, y);
+          }
+        else
+          {
+            ClickFrame = frame;
+            ClickX = x;
+            ClickY = y;
+            LocateSelectionInView (frame, ClickX, ClickY, 6);
+          }
       }
-      else
-      {
-	ClickFrame = frame;
-	ClickX = x;
-	ClickY = y;
-	LocateSelectionInView (frame, ClickX, ClickY, 6);
-      }
+      break;
     }
-    break;
-  }
-
+  
 #endif /* _WX */
   return TRUE;
 }
