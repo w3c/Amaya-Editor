@@ -3774,13 +3774,13 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case FontHelvetica:
-	  strcpy (buffer, "font-family: helvetica");
+	  strcpy (buffer, "font-family: sans-serif");
 	  break;
 	case FontTimes:
-	  strcpy (buffer, "font-family: times");
+	  strcpy (buffer, "font-family: serif");
 	  break;
 	case FontCourier:
-	  strcpy (buffer, "font-family: courier");
+	  strcpy (buffer, "font-family: monospace");
 	  break;
 	}
       break;

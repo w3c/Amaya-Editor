@@ -518,13 +518,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		      {
 			/* the box doesn't depend on the enclosing */
 			newX = FALSE;
-#ifdef IV
-			if (pChildAb->AbHorizPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
-			  /* boxes attached to the root box should be managed too */
-			  x_move = TRUE;
-			else
-#endif
-			  x_move = FALSE;
+			x_move = FALSE;
 		      }
 		    else
 		      {
@@ -560,13 +554,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		      {
 			/* the box doesn't depend on enclosing */
 			newY = FALSE;
-#ifdef IV
-			if (pChildAb->AbVertPos.PosAbRef == ViewFrameTable[frame - 1].FrAbstractBox)
-			  /* boxes attached to the root box should be managed too */
-			  y_move = TRUE;
-			else
-#endif
-			  y_move = FALSE;
+			y_move = FALSE;
 		      }
 		    else
 		      {
