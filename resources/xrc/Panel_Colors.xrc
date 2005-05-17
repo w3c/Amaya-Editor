@@ -62,7 +62,7 @@
                                       <pos>0,26</pos>
                                       <size>24,24</size>
                                       <style>wxNO_BORDER</style>
-                                      <tooltip>*Deault colors*</tooltip>
+                                      <tooltip>*Default colors*</tooltip>
                                       <bitmap>../icons/misc/black_white.png</bitmap>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">

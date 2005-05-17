@@ -70,9 +70,9 @@
                                         <object class="sizeritem">
                                           <object class="wxChoice" name="wxID_CHOICE_FONTFAMILY">
                                             <content>
-                                              <item>*Times*</item>
-                                              <item>*Helvetica*</item>
-                                              <item>*Courier*</item>
+                                              <item>*Serif*</item>
+                                              <item>*Sans-serif*</item>
+                                              <item>*Monospace*</item>
                                               <item>*Default*</item>
                                             </content>
                                           </object>
