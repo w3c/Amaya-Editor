@@ -1899,7 +1899,7 @@ void TtaRedirectFocus()
 #ifdef _WX
 ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
 {
-  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) && !event.ControlDown() && !event.AltDown())
+  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) && !event.CmdDown() && !event.AltDown())
     {
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
@@ -1907,38 +1907,38 @@ ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
       wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
       // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
       if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
-	{
-	  wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
-	  wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
-	  // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
-	  if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
-	    {
-	      int thot_keysym = event.GetUnicodeKey();  
-	      int thotMask = 0;
-	      if (event.ControlDown())
-		thotMask |= THOT_MOD_CTRL;
-	      if (event.AltDown())
-		thotMask |= THOT_MOD_ALT;
-	      if (event.ShiftDown())
-		thotMask |= THOT_MOD_SHIFT; 
-
-	      if ( ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym) == 3 )
-		/* if a simple caractere has been entred, give focus to canvas
-		 * it resolves accesibility problems when the focus is blocked on a panel */
-		TtaRedirectFocus();
-	      
-	      // try to redraw something because when a key in pressed a long time
-	      // the ThotInput action is repeted but nothing is shown on the screen 
-	      // before the user release the key.
-	      GL_DrawAll();
-	      
-	      return true;
-	    }
-	  else
-	    event.Skip();	  
-	}
+        {
+          wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
+          wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
+          // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
+          if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
+            {
+              int thot_keysym = event.GetUnicodeKey();  
+              int thotMask = 0;
+              if (event.CmdDown())
+                thotMask |= THOT_MOD_CTRL;
+              if (event.AltDown())
+                thotMask |= THOT_MOD_ALT;
+              if (event.ShiftDown())
+                thotMask |= THOT_MOD_SHIFT; 
+              
+              if ( ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym) == 3 )
+                /* if a simple caractere has been entred, give focus to canvas
+                 * it resolves accesibility problems when the focus is blocked on a panel */
+                TtaRedirectFocus();
+              
+              // try to redraw something because when a key in pressed a long time
+              // the ThotInput action is repeted but nothing is shown on the screen 
+              // before the user release the key.
+              GL_DrawAll();
+              
+              return true;
+            }
+          else
+            event.Skip();	  
+        }
       else
-	event.Skip();
+        event.Skip();
     }
   return false;
 }
@@ -1959,7 +1959,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxChar thot_keysym = event.GetKeyCode();  
   
   int thotMask = 0;
-  if (event.ControlDown())
+  if (event.CmdDown())
     thotMask |= THOT_MOD_CTRL;
   if (event.AltDown())
     thotMask |= THOT_MOD_ALT;
@@ -1970,94 +1970,94 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   /* on windows, +/= key generate '+' key code, but is should generates '=' value */
   if (thot_keysym == '+' && !event.ShiftDown())
     thot_keysym = '=';
-
+  
   /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
   wxWindow *       p_win_focus         = wxWindow::FindFocus();
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
   if (( p_text_ctrl || p_combo_box || p_spinctrl )
-	  && (event.ControlDown() && (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V')) )
-  {
-    event.Skip();
-    return true;      
-  }
+      && (event.CmdDown() && (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V')) )
+    {
+      event.Skip();
+      return true;      
+    }
 #endif /* _WINDOWS */
-
+  
   // on windows, CTRL+ALT is equivalent to ALTGR key
-  if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown()))
+  if ( ((event.CmdDown() && !event.AltDown()) || (event.AltDown() && !event.CmdDown()))
        && !TtaIsSpecialKey(thot_keysym)
        // this is for the Windows menu shortcuts, 
        // ALT+F => should open File menu
-       && !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.ControlDown())  
+       && !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.CmdDown())  
        )
     {
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
       // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
       if (!event.ShiftDown())
-	{
-	  // shift key was not pressed
-	  // force the lowercase
-	  wxString s(thot_keysym);
-	  if (s.IsAscii())
-	    {
-	      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
-	      s.MakeLower();
-	      thot_keysym = s.GetChar(0);
-	    }
-	}
+        {
+          // shift key was not pressed
+          // force the lowercase
+          wxString s(thot_keysym);
+          if (s.IsAscii())
+            {
+              TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+              s.MakeLower();
+              thot_keysym = s.GetChar(0);
+            }
+        }
       // Call the generic function for key events management
       ThotInput (TtaGiveActiveFrame(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
-
+      
       // try to redraw something because when a key in pressed a long time
       // the ThotInput action is repeted but nothing is shown on the screen 
       // before the user release the key.
       GL_DrawAll();
-
+      
       return true;
     }
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
-  else if ((event.ControlDown() || event.AltDown()) &&
-	   (thot_keysym == WXK_RIGHT ||
-	    thot_keysym == WXK_LEFT ||
-	    thot_keysym == WXK_RETURN ||
-	    thot_keysym == WXK_DOWN ||
-	    thot_keysym == WXK_UP ||
-	    thot_keysym == WXK_HOME ||
-	    thot_keysym == WXK_END))
+  else if ((event.CmdDown() || event.AltDown()) &&
+           (thot_keysym == WXK_RIGHT ||
+            thot_keysym == WXK_LEFT ||
+            thot_keysym == WXK_RETURN ||
+            thot_keysym == WXK_DOWN ||
+            thot_keysym == WXK_UP ||
+            thot_keysym == WXK_HOME ||
+            thot_keysym == WXK_END))
     {
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
-
+      
       // try to redraw something because when a key in pressed a long time
       // the ThotInput action is repeted but nothing is shown on the screen 
       // before the user release the key.
       GL_DrawAll();
-
+      
       return true;
     }
-    else if ( thot_keysym == WXK_F2 ||
-	      /*	      thot_keysym == WXK_F3 ||*/
-	      /*	      thot_keysym == WXK_F4 ||*/
-	      thot_keysym == WXK_F5 ||
-	      /*	      thot_keysym == WXK_F6 ||*/
-	      thot_keysym == WXK_F7 ||
-	      /*	      thot_keysym == WXK_F8 ||*/
-	      /*	      thot_keysym == WXK_F9 ||*/
-	      /*	      thot_keysym == WXK_F10 ||*/
-	      thot_keysym == WXK_F11 ||
-	      thot_keysym == WXK_F12 )
-      {
-	ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
-
-	// try to redraw something because when a key in pressed a long time
-	// the ThotInput action is repeted but nothing is shown on the screen 
-	// before the user release the key.
-	GL_DrawAll();
-
-	return true;
-      }
+  else if ( thot_keysym == WXK_F2 ||
+            /*	      thot_keysym == WXK_F3 ||*/
+            /*	      thot_keysym == WXK_F4 ||*/
+            thot_keysym == WXK_F5 ||
+            /*	      thot_keysym == WXK_F6 ||*/
+            thot_keysym == WXK_F7 ||
+            /*	      thot_keysym == WXK_F8 ||*/
+            /*	      thot_keysym == WXK_F9 ||*/
+            /*	      thot_keysym == WXK_F10 ||*/
+            thot_keysym == WXK_F11 ||
+            thot_keysym == WXK_F12 )
+    {
+      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+      
+      // try to redraw something because when a key in pressed a long time
+      // the ThotInput action is repeted but nothing is shown on the screen 
+      // before the user release the key.
+      GL_DrawAll();
+      
+      return true;
+    }
   else
     return false;
 }
@@ -2071,29 +2071,28 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   returns:
    - true if the charactere has been handled by the frame
    - false if the event must be forwarded to parents (event.Skip())
-  ----------------------------------------------------------------------*/
+   ----------------------------------------------------------------------*/
 #ifdef _WX
 ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 {
-  if ( !event.ControlDown() && !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
+  if ( !event.CmdDown() && !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
     {
       int thot_keysym = event.GetKeyCode();  
       
-      bool proceed_key = (
-			  thot_keysym == WXK_INSERT ||
-			  thot_keysym == WXK_DELETE ||
-			  thot_keysym == WXK_HOME   ||
-			  thot_keysym == WXK_PRIOR  ||
-			  thot_keysym == WXK_NEXT   ||
-			  thot_keysym == WXK_END    ||
-			  thot_keysym == WXK_LEFT   ||
-			  thot_keysym == WXK_RIGHT  ||
-			  thot_keysym == WXK_UP     ||
-			  thot_keysym == WXK_DOWN   ||
-			  thot_keysym == WXK_ESCAPE ||
-			  thot_keysym == WXK_BACK   ||
-			  thot_keysym == WXK_RETURN ||
-			  thot_keysym == WXK_TAB );
+      bool proceed_key = ( thot_keysym == WXK_INSERT ||
+                           thot_keysym == WXK_DELETE ||
+                           thot_keysym == WXK_HOME   ||
+                           thot_keysym == WXK_PRIOR  ||
+                           thot_keysym == WXK_NEXT   ||
+                           thot_keysym == WXK_END    ||
+                           thot_keysym == WXK_LEFT   ||
+                           thot_keysym == WXK_RIGHT  ||
+                           thot_keysym == WXK_UP     ||
+                           thot_keysym == WXK_DOWN   ||
+                           thot_keysym == WXK_ESCAPE ||
+                           thot_keysym == WXK_BACK   ||
+                           thot_keysym == WXK_RETURN ||
+                           thot_keysym == WXK_TAB );
       
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
@@ -2107,62 +2106,62 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #if 0
       /* allow other widgets to handel special keys only when the key is not F2 */
       if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
-	{
-	  event.Skip();
-	  return true;
-	}
+        {
+          event.Skip();
+          return true;
+        }
 #endif /* 0 */
-
+      
       if (p_win_focus)
-	TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
-      else
-	TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
-
-      /* do not allow special key outside the canvas */
-      if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
-	{
-	  event.Skip();
-	  return true;      
-	}
+        TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
+          else
+            TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
+              
+              /* do not allow special key outside the canvas */
+              if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
+                {
+                  event.Skip();
+                  return true;      
+                }
       
 #if 0
-	  /* j'ai supprime cette partir du code car qd le notebook a le focus (c'est assez aleatoire...),
-	   * tous les caracteres speciaux ne peuvent pas etre entres car il sont captures par le notbook
-	   * en commentant cette partie du code, je laisse passer touts les caracteres qd le notebook a le focus. */
+      /* j'ai supprime cette partir du code car qd le notebook a le focus (c'est assez aleatoire...),
+       * tous les caracteres speciaux ne peuvent pas etre entres car il sont captures par le notbook
+       * en commentant cette partie du code, je laisse passer touts les caracteres qd le notebook a le focus. */
 #ifdef _WINDOWS
       /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
-	 we must ignore it */
+         we must ignore it */
       if ( p_notebook && proceed_key )
-	{
-	  event.Skip();
-	  return true;
-	}
+        {
+          event.Skip();
+          return true;
+        }
 #endif /* _WINDOWS */
 #endif /* 0 */
-
+      
       if ( proceed_key )
-	{
-	  int thotMask = 0;
-	  if (event.ControlDown())
-	    thotMask |= THOT_MOD_CTRL;
-	  if (event.AltDown())
-	    thotMask |= THOT_MOD_ALT;
-	  if (event.ShiftDown())
-	    thotMask |= THOT_MOD_SHIFT;
-
-	  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
-
-	  ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
-
-	  // try to redraw something because when a key in pressed a long time
-	  // the ThotInput action is repeted but nothing is shown on the screen 
-	  // before the user release the key.
-	  GL_DrawAll();
-
-	  return true;
-	}
+        {
+          int thotMask = 0;
+          if (event.CmdDown())
+            thotMask |= THOT_MOD_CTRL;
+          if (event.AltDown())
+            thotMask |= THOT_MOD_ALT;
+          if (event.ShiftDown())
+            thotMask |= THOT_MOD_SHIFT;
+          
+          TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
+          
+          ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+          
+          // try to redraw something because when a key in pressed a long time
+          // the ThotInput action is repeted but nothing is shown on the screen 
+          // before the user release the key.
+          GL_DrawAll();
+          
+          return true;
+        }
       else
-	return false;
+        return false;
     }
   else
     return false;
@@ -2180,13 +2179,13 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 ThotBool TtaIsSpecialKey( int wx_keycode )
 {
   return ( wx_keycode == WXK_BACK ||
-	   wx_keycode == WXK_TAB  ||
+           wx_keycode == WXK_TAB  ||
            wx_keycode == WXK_RETURN ||
            wx_keycode == WXK_ESCAPE ||
            /*wx_keycode == WXK_SPACE  ||*/
            wx_keycode == WXK_DELETE ||
-	   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
-	   );
+           (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
+           );
 }
 #endif /* _WX */
 
