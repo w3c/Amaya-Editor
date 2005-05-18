@@ -1844,21 +1844,24 @@ void CloseLogs (Document doc)
   int		     i;
 
   /* is there log documents linked to this document? */
-  for (i = 1; i < DocumentTableLength; i++)
-    if (DocumentURLs[i] && DocumentSource[i] == doc &&
-	DocumentTypes[i] == docLog)
-      {
-	/* close the window of the log file attached to the
-	   current document */
-	TtaCloseDocument (i);
-	TtaFreeMemory (DocumentURLs[i]);
-	DocumentURLs[i] = NULL;
-	/* switch off the button Show Log file */
-	TtaSetItemOff (doc, 1, File, BShowLogFile);
-	DocumentSource[i] = 0;
-	/* restore the default document type */
-	DocumentTypes[i] = docFree;
-      }
+  if (doc)
+    {
+      for (i = 1; i < DocumentTableLength; i++)
+	if (DocumentURLs[i] && DocumentSource[i] == doc &&
+	    DocumentTypes[i] == docLog)
+	  {
+	    /* close the window of the log file attached to the
+	       current document */
+	    TtaCloseDocument (i);
+	    TtaFreeMemory (DocumentURLs[i]);
+	    DocumentURLs[i] = NULL;
+	    /* switch off the button Show Log file */
+	    TtaSetItemOff (doc, 1, File, BShowLogFile);
+	    DocumentSource[i] = 0;
+	    /* restore the default document type */
+	    DocumentTypes[i] = docFree;
+	  }
+    }
 }
 
 /*----------------------------------------------------------------------

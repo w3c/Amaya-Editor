@@ -1276,14 +1276,29 @@ ThotBool OpenParsingErrors (Document document)
 {  
   char       fileName [100];
 
-  sprintf (fileName, "%s%c%d%cPARSING.ERR",
-	   TempFileDirectory, DIR_SEP, document, DIR_SEP); 
-  ErrFile = TtaWriteOpen (fileName);
-  if ((ErrFile == NULL))
+  if (document == 0)
     return FALSE;
+
+  sprintf (fileName, "%s%c%d%cPARSING.ERR",
+	   TempFileDirectory, DIR_SEP, document, DIR_SEP);
+  /* check what error file is open */
+  if (DocumentTypes[document] == docCSS)
+    {
+      CSSErrFile = TtaWriteOpen (fileName);
+      if ((CSSErrFile == NULL))
+	return FALSE;
+      else
+	fprintf (CSSErrFile, TtaGetMessage (AMAYA, AM_LINK_LINE));      
+    }
   else
-    fprintf (ErrFile, TtaGetMessage (AMAYA, AM_LINK_LINE));      
-  return TRUE;
+    {
+    ErrFile = TtaWriteOpen (fileName);
+    if ((ErrFile == NULL))
+      return FALSE;
+    else
+      fprintf (ErrFile, TtaGetMessage (AMAYA, AM_LINK_LINE));      
+    }
+   return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -7249,6 +7264,7 @@ void InitAmaya (NotifyEvent * event)
    /* initialize status */
    SelectionDoc = 0;
    ParsedDoc = 0;
+   ParsedCSS = 0;
    SelectionInPRE = FALSE;
    SelectionInComment = FALSE;
    SelectionInEM = FALSE;

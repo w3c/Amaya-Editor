@@ -388,7 +388,8 @@ THOT_EXPORT Document   SavingObject;
 THOT_EXPORT Document   AttrHREFdocument;
 THOT_EXPORT Document   DocBook;
 THOT_EXPORT Document   IncludedDocument;
-THOT_EXPORT Document   ParsedDoc; /* The document to which CSS are to be applied */
+THOT_EXPORT Document   ParsedDoc; /* The document to which CSS are applied */
+THOT_EXPORT Document   ParsedCSS; /* The CSS document currently parsed */
 THOT_EXPORT Element    AttrHREFelement;
 THOT_EXPORT char      *AttrHREFvalue;
 THOT_EXPORT Document   SelectionDoc;
@@ -445,6 +446,7 @@ THOT_EXPORT ThotBool   Synchronizing;
 THOT_EXPORT ThotBool   AmayaUniqueInstance;
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
+THOT_EXPORT FILE      *CSSErrFile;
 typedef enum
 {
   docFree,

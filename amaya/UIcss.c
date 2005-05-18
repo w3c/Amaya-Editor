@@ -391,6 +391,8 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 	  if (css->localName && tempdoc)
 	    TtaFileCopy (tempdoc, css->localName);
 	  doc = 1;
+	  /* current parsed CSS file */
+	  ParsedCSS = css->doc;
 	  while (doc < DocumentTableLength)
 	    {
 	      /* don't manage a document used by make book */
@@ -418,6 +420,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			    TtaSetDisplayMode (doc, NoComputedDisplay);
 			  /* invalidate current logs */
 			  CloseLogs (doc);
+			  CloseLogs (ParsedCSS);
 			  if (refcss && refcss->infos[doc])
 			    {
 			      refInfo = refcss->infos[doc];
@@ -438,6 +441,12 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 				  TtaWriteClose (ErrFile);
 				  ErrFile = NULL;
 				  TtaSetItemOn (doc, 1, File, BShowLogFile);
+				  if (ParsedCSS)
+				    {
+				      TtaWriteClose (CSSErrFile);
+				      ErrFile = NULL;
+				      TtaSetItemOn (ParsedCSS, 1, File, BShowLogFile);
+				    }
 				  CSSErrorsFound = FALSE;
 				  InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
 				}
@@ -447,6 +456,7 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			      if (dispMode == DisplayImmediately)
 				TtaSetDisplayMode (doc, dispMode);
 			    }
+			  ParsedCSS = 0;
 			  /* restore the current position in the document */
 			  el = ElementAtPosition (doc, position);
 			  TtaShowElement (doc, 1, el, distance);

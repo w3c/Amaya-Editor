@@ -70,6 +70,7 @@ static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
 static ThotBool      DoApply = TRUE;
 
+
 /*----------------------------------------------------------------------
    SkipWord:                                                  
   ----------------------------------------------------------------------*/
@@ -172,6 +173,10 @@ static void CSSPrintError (char *msg, char *value)
 	    return;
 	}
 
+      /* check if a CSS error file shoulb be updated too */
+      if (ParsedCSS > 0 && !CSSErrFile)
+	OpenParsingErrors (ParsedCSS);
+
       if (DocURL)
 	{
 	  fprintf (ErrFile, "\n*** Errors/warnings in %s\n", DocURL);
@@ -182,8 +187,13 @@ static void CSSPrintError (char *msg, char *value)
       if (LineNumber < 0)
 	fprintf (ErrFile, "  In style attribute, %s \"%s\"\n", msg, value);
       else
-	fprintf (ErrFile, "@  line %d: %s \"%s\"\n", LineNumber+NewLineSkipped,
-		 msg, value);
+	{
+	  fprintf (ErrFile, "@  line %d: %s \"%s\"\n",
+		   LineNumber+NewLineSkipped, msg, value);
+	  if (CSSErrFile)
+	    fprintf (CSSErrFile, "@  line %d: %s \"%s\"\n",
+		     LineNumber+NewLineSkipped, msg, value);
+	}
     }
 }
 
@@ -5447,7 +5457,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  if (*next == EOS)
 	    /* nothing after the comma. Invalid selector */
 	    {
-	      CSSPrintError ("Syntax error:", selector);
+	      /*CSSPrintError ("Syntax error:", selector);*/
 	      return NULL;
 	    }
 	  break;
