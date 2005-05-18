@@ -13,6 +13,10 @@ DEFAULT
 	ElemSelect.Post -> SelectionChanged;
    END;
 
+ELEMENTS
+
+   TEXT_UNIT:
+	ElemTextModify.Post -> CheckNewLines;
 ATTRIBUTES
 
    Language:

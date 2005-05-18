@@ -2691,13 +2691,21 @@ void CheckNewLines (NotifyOnTarget *event)
   CHAR_T      *content, *sibContent;
   int         firstSelChar, lastSelChar, length, i, j, sibLength, start;
   Language    lang;
+  char       *name;
   ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
               prevCharEOL;
   ThotBool    PasteLineByLine;
 
-  TtaGetEnvBoolean ("PRESERVE_SPACE", &pre);
-  if (pre)
-    return;
+  doc = event->document;
+  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
+      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docLog)
+    pre = FALSE;
+  else
+    {
+      TtaGetEnvBoolean ("PRESERVE_SPACE", &pre);
+      if (pre)
+	return;
+    }
   if (!event->target)
     return;
   leaf = event->target;
@@ -2705,10 +2713,6 @@ void CheckNewLines (NotifyOnTarget *event)
   if (length == 0)
     return;
   firstLeaf = leaf;
-  doc = event->document;
-  if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
-      DocumentTypes[doc] == docSource || DocumentTypes[doc] == docLog)
-    return;
   undoSeqExtended = FALSE;
 
   /* is there a preformatted or paragraph (or equivalent) ancestor? */
@@ -2724,21 +2728,66 @@ void CheckNewLines (NotifyOnTarget *event)
       else
 	{
 	  elType = TtaGetElementType (ancestor);
-	  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-	    ancestor = NULL;  /* not an HTML element */
-	  else if (elType.ElTypeNum == HTML_EL_STYLE_ ||
-		   elType.ElTypeNum == HTML_EL_SCRIPT_ ||
-		   elType.ElTypeNum == HTML_EL_Preformatted ||
-		   elType.ElTypeNum == HTML_EL_Text_Area)
-	    pre = TRUE;
-	  else if (elType.ElTypeNum == HTML_EL_Paragraph ||
-		   elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	  name = TtaGetSSchemaName (elType.ElSSchema);
+	  if (!strcmp(name, "HTML"))
 	    {
-	      para = TRUE;
-	      firstParag = ancestor;
+	      if (elType.ElTypeNum == HTML_EL_STYLE_ ||
+		  elType.ElTypeNum == HTML_EL_SCRIPT_ ||
+		  elType.ElTypeNum == HTML_EL_Preformatted ||
+		  elType.ElTypeNum == HTML_EL_Text_Area)
+		pre = TRUE;
+	      else if (elType.ElTypeNum == HTML_EL_Paragraph ||
+		       elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		{
+		  para = TRUE;
+		  firstParag = ancestor;
+		}
+	      else
+		ancestor = TtaGetParent (ancestor);
+	    }
+	  else if (!strcmp(name, "TextFile"))
+	    {
+	      TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
+	      if (selEl != leaf)
+		/* the current selection is not within this element. Don't care about
+		   the selection */
+		selEl = NULL;
+	      length++;
+	      content = (CHAR_T *)TtaGetMemory (length * sizeof(CHAR_T));
+	      TtaGiveBufferContent (leaf, content, length, &lang);
+	      j = 0;
+	      prev = NULL;
+	      for (i = 0; i < length; i++)
+		{
+		  if (content[i] == EOL)
+		    {
+		      /* the current character is a newline */
+		      content[i] = EOS;
+		      TtaSetBufferContent (leaf, &content[j], lang, doc);
+		      el = TtaNewTree (doc, elType, "");
+		      TtaInsertSibling (el, ancestor, FALSE, doc);
+		      if (!undoSeqExtended)
+			{
+			  TtaExtendUndoSequence (doc);
+			  undoSeqExtended = TRUE;
+			}
+		      if (prev)
+			TtaRegisterElementCreate (prev, doc);
+		      leaf = TtaGetFirstChild (el);
+		      prev = ancestor = el;
+		      j = i + 1;
+		    }
+		}
+	      if (prev)
+		{
+		  TtaSetBufferContent (leaf, &content[j], lang, doc);
+		  TtaRegisterElementCreate (prev, doc);
+		  TtaSelectString (doc, leaf, i, i-1);
+		}
+	      return;
 	    }
 	  else
-	    ancestor = TtaGetParent (ancestor);
+	    ancestor = NULL;  /* not an HTML element */
 	}
     }
   if (pre)
