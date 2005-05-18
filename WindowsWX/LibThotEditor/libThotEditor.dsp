@@ -203,6 +203,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaQuickSplitButton.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaResizingBoxEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaScrollBar.cpp
 # End Source File
 # Begin Source File
