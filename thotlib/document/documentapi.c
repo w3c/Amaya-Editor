@@ -32,6 +32,7 @@
 #include "platform_tv.h"
 #include "undo_f.h"
 #ifndef NODISPLAY
+#include "dialogapi.h"
 #include "dialogapi_tv.h"
 #include "modif_tv.h"
 #include "print_tv.h"
