@@ -74,6 +74,7 @@
 int          PRINT;	/* Identification des messages */
 ThotFont     PostscriptFont;
 int          ColorPs;
+int          ShowReturn = 0;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
