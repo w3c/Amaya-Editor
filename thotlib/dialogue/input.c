@@ -1871,7 +1871,8 @@ void InitTranslations (char *appliname)
 	  else
 	    {
 	      /* comment line */
-	      if (!strcasecmp (ch, "#no-sequence"))
+	      fscanf (file, "%80s", ch);
+	      if (!strcasecmp (ch, "no-sequence"))
 		no_sequence = TRUE;
 	      /* skip this line */
 	      do
