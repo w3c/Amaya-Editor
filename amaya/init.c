@@ -1143,9 +1143,9 @@ void UpdateEditorMenus (Document doc)
 	  /* update specific menu entries */
 #ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
-#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
+#endif /* _WX */
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1165,10 +1165,8 @@ void UpdateEditorMenus (Document doc)
 	  /* update specific menu entries */
 #ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
-#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
-#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1194,10 +1192,8 @@ void UpdateEditorMenus (Document doc)
 	  /* update specific menu entries */
 #ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
-#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
-#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1227,10 +1223,8 @@ void UpdateEditorMenus (Document doc)
 	  /* update specific menu entries */
 #ifndef _WX
 	  TtaUpdateMenus (doc, view, FALSE);
-#endif /* _WX */
 	  TtaSetItemOff (doc, view, File, BShowLogFile);
 	  TtaSetItemOff (doc, view, File, BSynchro);
-#ifndef _WX
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1336,10 +1330,10 @@ void CheckParsingErrors (Document doc)
 {
   char      *ptr, *reload;
   ThotBool   closeLog = FALSE;
-#ifndef _PARSING
+#ifndef _WX
   char       profile [200];
   int        prof;
-#endif /*_PARSING*/
+#endif /* _WX */
 
 #ifndef _WINGUI
   CloseLogs (doc);
@@ -1399,10 +1393,9 @@ void CheckParsingErrors (Document doc)
 		}
 	    }
 	}
-#ifndef _PARSING
+#ifndef _WX
       else if (XMLErrorsFoundInProfile)
 	{
-
 	  /* Some elements or attributes are not supported */
 	  /* in the current document profile */
 	  prof = TtaGetDocumentProfile (doc);
@@ -1452,21 +1445,19 @@ void CheckParsingErrors (Document doc)
 	      ShowSource (doc, 1);
 	    }
 	}
-#endif /*_PARSING*/
+#endif /* _WX */
       CleanUpParsingErrors ();
-   if (!closeLog)
-   {
+      if (!closeLog)
+	{
 	  CloseLogs (doc);
-       TtaSetItemOn (doc, 1, File, BShowLogFile);
-   }
- 
+	  TtaSetItemOn (doc, 1, File, BShowLogFile);
+	}
     }
   else
   {
-  CloseLogs (doc);
-   TtaSetItemOff (doc, 1, File, BShowLogFile);
+    CloseLogs (doc);
+    TtaSetItemOff (doc, 1, File, BShowLogFile);
   }
-
 }
 
 
