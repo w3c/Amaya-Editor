@@ -298,18 +298,19 @@ MENUS
 	Views button:BShowAlternate -> ShowAlternate;
 	Views button:BShowToC -> ShowToC;
 	Views button:BShowTimeLine -> ShowTimeLineWindow;
-	Views toggle:TSplitUnsplitPage -> SplitUnsplitPage icon:split_on_off.png;
+	Views button:BSplitHorizontaly -> SplitHorizontaly icon:split_horizontaly.png;
+	Views button:BSplitVerticaly -> SplitVerticaly icon:split_verticaly.png;
 
-        Style button:BCharacterStyle -> TtcChangeCharacters;
-        Style button:BColors -> TtcChangeColors;
-        Style button:BFormat -> TtcChangeFormat;
+  Style button:BCharacterStyle -> TtcChangeCharacters;
+  Style button:BColors -> TtcChangeColors;
+  Style button:BFormat -> TtcChangeFormat;
 	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;
 
 	Style button:BCreateClass -> CreateClass;
 	Style button:BApplyClass -> ApplyClass;
 	Style button:BShowAppliedStyle -> ShowAppliedStyle;
-        Style Separator;
+  Style Separator;
 	Style button:BLinkCSS -> LinkCSS;
 	Style button:BOpenCSS -> OpenCSS;
 	Style button:BDisableCSS -> DisableCSS;

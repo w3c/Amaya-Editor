@@ -43,8 +43,9 @@ extern void TtaSwitchPanelButton( Document doc, View view,
 				  ThotBool value );
 
 extern void TtaToggleOnOffSidePanel( int frame_id );
-extern void TtaToggleOnOffSplitView( int frame_id );
 extern void TtaToggleOnOffFullScreen( int frame_id );
+extern void TtaSplitViewVerticaly( int frame_id );
+extern void TtaSplitViewHorizontaly( int frame_id );
 extern int GetWindowNumber (Document doc, View view);
 extern void TtaRegisterOpenURLCallback( void (*callback) (void *) );
 

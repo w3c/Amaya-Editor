@@ -258,67 +258,68 @@
 256 Show &alternate
 257 Show table &of contents
 258 Show timeline
-259 &Split view
-260 C&haracter style...
-261 C&olors...
-262 &Format...
-263 &Background image...
-264 Create &rule...
-265 Apply &class...
-266 Show applied style...
-267 Lin&k...
-268 Ope&n...
-269 &Disable...
-270 &Enable...
-271 Remo&ve...
-272 Annotate selection
-273 Annotate document
-274 Move to selection
-275 Store selection as &XPointer
-276 Move to stored XPointer
-277 Reply to annotation
-278 Post to server
-279 Delete
-280 Load
-281 Customize query...
-282 Local filter...
-283 View Bookmarks
-284 New Bookmark
-285 New Topic
-286 New Separator
-287 Move Item
-288 Lock resource...
-289 Unlock resource...
-290 View resource properties...
-291 Copy lock information...
-292 Locked?
-293 About Amaya
-294 About Amaya at W3C
-295 Index
-296 Browsing
-297 Views
-298 Selecting
-299 Document
-300 Creating elements
-301 Attributes
-302 Characters
-303 Restructuring
-304 Links
-305 Tables
-306 Image maps
-307 Math
-308 Graphics
-309 XML support
-310 Style sheets
-311 Searching
-312 Spell Checking
-313 Publishing
-314 WebDAV
-315 Printing
-316 Numbering
-317 Making books
-318 Annotations
-319 &Bookmarks
-320 Configuring Amaya
-321 ShortCuts
-322 Accessibility in Amaya
+259 Split view horizontaly
+260 Split view verticaly
+261 C&haracter style...
+262 C&olors...
+263 &Format...
+264 &Background image...
+265 Create &rule...
+266 Apply &class...
+267 Show applied style...
+268 Lin&k...
+269 Ope&n...
+270 &Disable...
+271 &Enable...
+272 Remo&ve...
+273 Annotate selection
+274 Annotate document
+275 Move to selection
+276 Store selection as &XPointer
+277 Move to stored XPointer
+278 Reply to annotation
+279 Post to server
+280 Delete
+281 Load
+282 Customize query...
+283 Local filter...
+284 View Bookmarks
+285 New Bookmark
+286 New Topic
+287 New Separator
+288 Move Item
+289 Lock resource...
+290 Unlock resource...
+291 View resource properties...
+292 Copy lock information...
+293 Locked?
+294 About Amaya
+295 About Amaya at W3C
+296 Index
+297 Browsing
+298 Views
+299 Selecting
+300 Document
+301 Creating elements
+302 Attributes
+303 Characters
+304 Restructuring
+305 Links
+306 Tables
+307 Image maps
+308 Math
+309 Graphics
+310 XML support
+311 Style sheets
+312 Searching
+313 Spell Checking
+314 Publishing
+315 WebDAV
+316 Printing
+317 Numbering
+318 Making books
+319 Annotations
+320 &Bookmarks
+321 Configuring Amaya
+322 ShortCuts
+323 Accessibility in Amaya

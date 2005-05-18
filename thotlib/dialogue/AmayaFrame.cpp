@@ -642,9 +642,8 @@ void AmayaFrame::DoClose( bool & veto)
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::DoClose: frame=%d"), m_FrameId);
   
-  // activate the frame just before closing it
+  // raise the frame just before closing it
   // so the user can see what it's beeing closed 
-  SetActive( TRUE );
   if ( GetPageParent() )
     GetPageParent()->RaisePage();
 

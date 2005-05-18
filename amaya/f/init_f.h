@@ -151,8 +151,10 @@ extern void ShowPanel ( Document doc,
                         View view );
 extern void FullScreen ( Document doc,
                          View view );
-extern void SplitUnsplitPage ( Document doc,
+extern void SplitHorizontaly ( Document doc,
                                View view );
+extern void SplitVerticaly ( Document doc,
+                             View view );
 extern void ShowMapAreas ( Document doc,
                            View view );
 extern void ShowButtons ( Document doc,
@@ -330,8 +332,10 @@ extern void ShowPanel ( Document doc,
                           View view );
 extern void FullScreen ( Document doc,
                            View view );
-extern void SplitUnsplitPage ( Document doc,
+extern void SplitHorizontaly ( Document doc,
                                  View view );
+extern void SplitVerticaly ( Document doc,
+                               View view );
 extern void ShowMapAreas ( Document doc,
                              View view );
 extern void ShowButtons ( Document doc,

@@ -79,7 +79,8 @@ extern void TtaSwitchPanelButton ( Document doc,
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                       void * p_widget );
 extern void TtaToggleOnOffSidePanel ( int frame_id );
-extern void TtaToggleOnOffSplitView ( int frame_id );
+extern void TtaSplitViewHorizontaly ( int frame_id );
+extern void TtaSplitViewVerticaly ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
@@ -162,7 +163,8 @@ extern void TtaSwitchPanelButton ( Document doc,
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                         void * p_widget );
 extern void TtaToggleOnOffSidePanel ( int frame_id );
-extern void TtaToggleOnOffSplitView ( int frame_id );
+extern void TtaSplitViewHorizontaly ( int frame_id );
+extern void TtaSplitViewVerticaly ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );

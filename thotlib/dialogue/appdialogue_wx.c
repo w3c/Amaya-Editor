@@ -350,9 +350,6 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
           /* Is it the "Show/Hide panel" command */
           if (!strcmp (MenuActionList[item_action].ActionName, "ShowPanel"))
             WindowTable[window_id].MenuItemShowPanelID = item_id;
-          /* Is it the "Split/Unsplit view" command */
-          else if (!strcmp (MenuActionList[item_action].ActionName, "SplitUnsplitPage"))
-            WindowTable[window_id].MenuItemSplitViewID = item_id;
           /* Is it the "Fullscreen on/off" command */
           else if (!strcmp (MenuActionList[item_action].ActionName, "FullScreen"))
             WindowTable[window_id].MenuItemFullScreenID = item_id;
@@ -1737,13 +1734,12 @@ void TtaToggleOnOffSidePanel( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaToggleOnOffSplitView
-  execute the split/unsplit action
+  TtaSplitViewHorizontaly
   this methode is directly connected to a menu item action
   params:
   returns:
   ----------------------------------------------------------------------*/
-void TtaToggleOnOffSplitView( int frame_id )
+void TtaSplitViewHorizontaly( int frame_id )
 {
 #ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
@@ -1761,7 +1757,35 @@ void TtaToggleOnOffSplitView( int frame_id )
     }
 
   // simulate a split action
-  p_page->DoSplitUnsplit();
+  p_page->DoBottomSplitButtonAction();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaSplitViewVerticaly
+  this methode is directly connected to a menu item action
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaSplitViewVerticaly( int frame_id )
+{
+#ifdef _WX
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  if (!p_frame)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  AmayaPage * p_page = p_frame->GetPageParent();
+  if (!p_page)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  // simulate a split action
+  p_page->DoRightSplitButtonAction();
 #endif /* _WX */
 }
 

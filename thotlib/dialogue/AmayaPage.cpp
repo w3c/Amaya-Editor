@@ -73,8 +73,11 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
      ,m_MasterFrameId(-1)
 {
   // Insert a forground sizer
-  m_pSizerTop = new wxBoxSizer ( wxVERTICAL );
-  SetSizer( m_pSizerTop );
+  wxBoxSizer * p_sizerTop = new wxBoxSizer ( wxHORIZONTAL );
+  SetSizer( p_sizerTop );
+
+  wxBoxSizer * p_sizerTop2 = new wxBoxSizer ( wxVERTICAL );
+  p_sizerTop->Add( p_sizerTop2, 1, wxEXPAND, 0 );
  
   // Insert a windows splitter 
   m_pSplitterWindow = new wxSplitterWindow( this, -1
@@ -89,14 +92,18 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
 					    /*| wxSP_PERMIT_UNSPLIT*/
 #endif /* 0 */
 					    );
-  m_pSizerTop->Add( m_pSplitterWindow, 1, wxEXPAND, 0 );
+  p_sizerTop2->Add( m_pSplitterWindow, 1, wxEXPAND, 0 );
 
 
   // Split button creation
-  // this button is used to quickly split the page 
+  // this button is used to quickly split the page horizontaly
   m_pSplitButtonBottom = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_HORIZONTAL, 4 );
-  m_pSizerTop->Add( m_pSplitButtonBottom, 0, wxEXPAND, 0 );
+  p_sizerTop2->Add( m_pSplitButtonBottom, 0, wxEXPAND, 0 );
   m_pSplitButtonBottom->ShowQuickSplitButton( true );
+  // this button is used to quickly split the page verticaly
+  m_pSplitButtonRight = new AmayaQuickSplitButton( this, AmayaQuickSplitButton::wxAMAYA_QS_VERTICAL, 4 );
+  p_sizerTop->Add( m_pSplitButtonRight, 0, wxEXPAND, 0 );
+  m_pSplitButtonRight->ShowQuickSplitButton( true );
 
   /// Insert to area : Top / bottom
   m_pTopFrame     = NULL;
@@ -193,7 +200,10 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     }
   else
     {
-      ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+      if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
+        ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
+      else
+        ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
       AdjustSplitterPos();
     }
   wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
@@ -335,21 +345,83 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
+ *      Method:  DoBottomSplitButtonAction
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::DoBottomSplitButtonAction()
+{
+  // check if we must switch the split orientation
+  if ( m_pSplitterWindow->IsSplit() &&
+       m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL )
+    {
+      DoSwitchHoriVert();
+    }
+  else
+    {
+      // store the wanted orientation for the next split action
+      SetSplitMode(wxSPLIT_HORIZONTAL);
+      // do the split/unsplit action
+      DoSplitUnsplit();
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  DoRightSplitButtonAction
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::DoRightSplitButtonAction()
+{
+  // check if we must switch the split orientation
+  if ( m_pSplitterWindow->IsSplit() &&
+       m_pSplitterWindow->GetSplitMode() == wxSPLIT_HORIZONTAL )
+    {
+      DoSwitchHoriVert();
+    }
+  else
+    {
+      // store the wanted orientation for the next split action
+      SetSplitMode(wxSPLIT_VERTICAL);
+      // do the split/unsplit action
+      DoSplitUnsplit();
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
  *      Method:  OnSplitButton
  * Description:  this method is called when the button for quickly split is pushed
  *--------------------------------------------------------------------------------------
  */
 void AmayaPage::OnSplitButton( wxCommandEvent& event )
 {
-  if ( event.GetId() != m_pSplitButtonBottom->GetId() )
+  // do nothing if the button is not a quicksplit one
+  if ( event.GetId() == m_pSplitButtonBottom->GetId() )
+    DoBottomSplitButtonAction();
+  else if ( event.GetId() == m_pSplitButtonRight->GetId() )
+    DoRightSplitButtonAction();
+  else 
     {
       event.Skip();
       return;
     }
+}
 
-  DoSplitUnsplit();
 
-  //  event.Skip();
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetSplitMode
+ * Description:  used to control the split orientation (call it just before DoSplitUnsplit())
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetSplitMode( int mode )
+{
+  m_pSplitterWindow->SetSplitMode(mode);
 }
 
 /*
@@ -398,6 +470,28 @@ void AmayaPage::DoSplitUnsplit()
       AmayaFrame * p_frame = DetachFrame(2);
       // then destroy it
       p_frame->DoClose(dummy);
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  DoSwitchHoriVert
+ * Description:  switch horizontal/vertical split direction
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::DoSwitchHoriVert()
+{
+  if (m_pSplitterWindow->IsSplit())
+    {
+      m_pSplitterWindow->Unsplit();
+      m_pTopFrame->Show(true);
+      m_pBottomFrame->Show(true); 
+      if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
+        m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
+      else
+        m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
+      AdjustSplitterPos();
     }
 }
 
@@ -481,7 +575,7 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
   // we should show the quick split bar when frames are unsplited
   //  m_pSplitButtonBottom->ShowQuickSplitButton( true );
 
-  event.Skip();  
+  event.Skip();
 }
 
 /*

@@ -56,7 +56,8 @@ ZoomOut
 HelpLocal
 ShowPanel
 FullScreen
-SplitUnsplitPage
+SplitHorizontaly
+SplitVerticaly
 ZoomIn
 ZoomOut
 &TransformType

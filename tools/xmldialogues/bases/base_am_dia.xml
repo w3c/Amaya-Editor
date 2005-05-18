@@ -2987,13 +2987,13 @@
 	<message xml:lang="ru">Шкала времени</message>
 	<message xml:lang="hu">Idővonal mutatása</message>
 </label>
-<label define="TSplitUnsplitPage">
-	<message xml:lang="en">&amp;Split view</message>
-	<message xml:lang="fr">P&amp;artager la vue</message>
-	<message xml:lang="de">&amp;Ansicht teilen</message>
-	<message xml:lang="es">&amp;Dividir vista</message>
-	<message xml:lang="ru">лМНЦННЙНММШИ БХД</message>
-	<message xml:lang="hu">&amp;Osztott nézet</message>
+<label define="BSplitHorizontaly">
+	<message xml:lang="en">Split view horizontaly</message>
+	<message xml:lang="fr">Partager la vue horizontalement</message>
+</label>
+<label define="BSplitVerticaly">
+	<message xml:lang="en">Split view verticaly</message>
+  <message xml:lang="fr">Partager la vue verticalement</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>

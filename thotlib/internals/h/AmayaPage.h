@@ -72,7 +72,11 @@ public:
   AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
   AmayaFrame * DetachFrame( int position );
 
+  void SetSplitMode( int mode );
+  void DoRightSplitButtonAction();
+  void DoBottomSplitButtonAction();
   void DoSplitUnsplit();
+  void DoSwitchHoriVert();
 
   bool IsClosed();
   bool IsSelected();
@@ -124,9 +128,9 @@ public:
 
   void OnContextMenu( wxContextMenuEvent & event );
   
-  wxBoxSizer *       m_pSizerTop;
   wxSplitterWindow * m_pSplitterWindow;
-  AmayaQuickSplitButton * m_pSplitButtonBottom; // button used to quickly split the frame
+  AmayaQuickSplitButton * m_pSplitButtonBottom; // button used to quickly split the frame horizontaly
+  AmayaQuickSplitButton * m_pSplitButtonRight; // button used to quickly split the frame verticaly
   wxPanel *          m_DummyPanel;
   AmayaFrame *       m_pTopFrame;
   AmayaFrame *       m_pBottomFrame;
