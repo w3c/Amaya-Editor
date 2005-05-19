@@ -5001,8 +5001,11 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	pFrame = &ViewFrameTable[frame - 1];
 	if (pFrame->FrAbstractBox == NULL &&
 	    (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
-	  /* The view has another root element */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+    {
+      /* The view has another root element */
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+      return FALSE;
+    }
 	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
 	  {
 	    /* Remove the view content */

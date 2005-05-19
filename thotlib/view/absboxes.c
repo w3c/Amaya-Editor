@@ -844,27 +844,27 @@ void IncreaseVolume (ThotBool head, int dVol, int frame)
   /* met a jour la nouvelle capacite de la vue, indique dans le contexte */
   /* du document le volume des paves a creer et cherche le pave racine de */
   /* la vue */
-  if (pDoc != NULL)
+  if (pDoc != NULL && pDoc->DocViewRootAb[view - 1])
     {
       /* element de l'arbre principal */
       pAb = pDoc->DocViewRootAb[view - 1];
       pDoc->DocViewVolume[view - 1] = pAb->AbVolume + dVol;
       pDoc->DocViewFreeVolume[view - 1] = dVol;
       if (IsBreakable (pAb, pDoc))
-	{
-	  /* cree les paves de la partie qui va apparaitre */
-	  AddAbsBoxes (pAb, pDoc, head);
-	  
-	  /* signale au Mediateur les paves crees et detruits */
-	  h = PageHeight;
-	  if (pDoc->DocViewModifiedAb[view - 1] != NULL)
-	    {
-	      pAb = pDoc->DocViewModifiedAb[view - 1];
-	      pDoc->DocViewModifiedAb[view - 1] = NULL;
-	      (void) ChangeConcreteImage (frame, &h, pAb);
-	      FreeDeadAbstractBoxes (pAb, pDoc->DocViewFrame[view - 1]);
-	    }
-	}
+        {
+          /* cree les paves de la partie qui va apparaitre */
+          AddAbsBoxes (pAb, pDoc, head);
+          
+          /* signale au Mediateur les paves crees et detruits */
+          h = PageHeight;
+          if (pDoc->DocViewModifiedAb[view - 1] != NULL)
+            {
+              pAb = pDoc->DocViewModifiedAb[view - 1];
+              pDoc->DocViewModifiedAb[view - 1] = NULL;
+              (void) ChangeConcreteImage (frame, &h, pAb);
+              FreeDeadAbstractBoxes (pAb, pDoc->DocViewFrame[view - 1]);
+            }
+        }
     }
 }
 

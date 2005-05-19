@@ -210,7 +210,7 @@ RULES
 #else
 	MarginRight: 1 em;
 	MarginBottom: 1 em;
-	HorizPos: Left = Enclosing . Left + 1;
+	HorizPos: Left = Enclosing . Left;
 	Width: Enclosed . Width;
 #endif
 	END;
