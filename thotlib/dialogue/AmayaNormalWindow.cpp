@@ -737,18 +737,18 @@ void AmayaNormalWindow::RefreshFullScreenToggleMenu()
   int action    = FindMenuActionFromMenuItemID(NULL, itemID);
   ThotBool on   = IsFullScreen();
 
-  while ( doc_id < MAX_DOCUMENTS )
+  while ( action >= 0 && doc_id < MAX_DOCUMENTS )
     {
       if (LoadedDocument[doc_id-1])
-	{
-	  frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
-	  if (FrameTable[frame_id].FrWindowId == window_id)
-	    {
-	      /* toggle the menu item of every documents */
-	      MenuActionList[action].ActionToggle[doc_id] = on;
-	      TtaRefreshMenuItemStats( doc_id, NULL, itemID );
-	    }
-	}
+        {
+          frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
+          if (FrameTable[frame_id].FrWindowId == window_id)
+            {
+              /* toggle the menu item of every documents */
+              MenuActionList[action].ActionToggle[doc_id] = on;
+              TtaRefreshMenuItemStats( doc_id, NULL, itemID );
+            }
+        }
       doc_id++;
     }
 }
