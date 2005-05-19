@@ -2145,9 +2145,21 @@ void         SimplifyUrl (char **url)
       /* Doesn't need to do any more */
       return;
     }
-   
 
-  if ((p = path))
+  /* remove initial multiple /'s */
+  p = path - 1;
+  if (path != *url && *p == used_sep && *path == used_sep)
+    {
+      while (*path == used_sep)
+	{
+	  orig = path;
+	  dest = path + 1;
+	  while ((*orig++ = *dest++));  /* Remove multiple /'s */
+	  end = orig-1;
+	}
+    }
+
+  if (path)
     {
       if (!((end = strchr (path, ';')) || (end = strchr (path, '?')) ||
 	    (end = strchr (path, '#'))))
