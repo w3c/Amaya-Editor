@@ -3572,7 +3572,7 @@ static void SetEnvGeom (const char *view_name, Document doc)
 {
   int x, y, w, h;
   int view;
-
+  
 #ifdef _WX
   view = 1;
 #else /* _WX */
@@ -3582,17 +3582,28 @@ static void SetEnvGeom (const char *view_name, Document doc)
     {
       view = TtaGetViewFromName (doc, (char *)view_name);
       if (view == 0 || !TtaIsViewOpen (doc, view))
-	return;
+        return;
     }
   else
     /* takes the current size and position of the main view */
     view = 1;
 #endif /* _WX */
-
+  
   /* get current geometry */
-  TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
-  sprintf (s, "%d %d %d %d", x, y, w, h);
-  TtaSetEnvString ((char *)view_name, s, TRUE);
+  if (!TtaGetViewMaximized(doc, view))
+    {
+      // do not save the window size if the window is maximized 
+      // because this is a separated state
+      TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
+      sprintf(s, "%d %d %d %d", x, y, w, h);
+      TtaSetEnvString((char *)view_name, s, TRUE);
+
+      TtaSetEnvBoolean("WINDOW_MAXIMIZED", FALSE, TRUE);
+    }
+  else
+    {
+      TtaSetEnvBoolean("WINDOW_MAXIMIZED", TRUE, TRUE);      
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3645,28 +3656,28 @@ static void SetEnvCurrentGeometry (int doc, const char * view_name)
       DocumentTypes[doc] != docLibrary)
     {
       if (!view_name)
-	{
-	  if (DocumentTypes[doc] == docAnnot)
-	    SetEnvGeom ("Annot_Formatted_view", doc);
-	  else if (DocumentTypes[doc] == docBookmark)
-	      SetEnvGeom ("Topics_Formatted_view", doc);
-	  else
-	    {
+        {
+          if (DocumentTypes[doc] == docAnnot)
+            SetEnvGeom ("Annot_Formatted_view", doc);
+          else if (DocumentTypes[doc] == docBookmark)
+            SetEnvGeom ("Topics_Formatted_view", doc);
+          else
+            {
 #ifdef _WX
-	      SetEnvGeom ("Wx_Window", doc);
+              SetEnvGeom ("Wx_Window", doc);
 #else /* _WX */
-	      SetEnvGeom ("Formatted_view", doc);
-	      SetEnvGeom ("Structure_view", doc);
-	      SetEnvGeom ("Alternate_view", doc);
-	      SetEnvGeom ("Links_view", doc);
-	      SetEnvGeom ("Table_of_contents", doc);
-	      if (DocumentSource[doc])
-		SetEnvGeom ("Source_view", DocumentSource[doc]);
+              SetEnvGeom ("Formatted_view", doc);
+              SetEnvGeom ("Structure_view", doc);
+              SetEnvGeom ("Alternate_view", doc);
+              SetEnvGeom ("Links_view", doc);
+              SetEnvGeom ("Table_of_contents", doc);
+              if (DocumentSource[doc])
+                SetEnvGeom ("Source_view", DocumentSource[doc]);
 #endif /* _WX */
-	    }
-	}
+            }
+        }
       else
-	SetEnvGeom (view_name, doc);
+        SetEnvGeom (view_name, doc);
     }
 }
 

@@ -1404,16 +1404,31 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 }
 
 /*----------------------------------------------------------------------
+   TtaGetViewMaximize returns true if the current window is maximized
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewMaximized(Document doc, int view)
+{
+#ifdef _WX
+  int window_id = TtaGetDocumentWindowId( doc, -1 ); 
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  if (p_window)
+    return p_window->IsMaximized();
+  else
+    return FALSE;
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
    TtaGetViewXYWH returns the current geometry (x, y, width, and height)
    values associated with the frame where a view is displayed
   ----------------------------------------------------------------------*/
 void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
-		     int *height)
+                     int *height)
 {
 #ifdef _WX
-  int window_id = -1;;
- 
-  window_id = TtaGetDocumentWindowId( doc, -1 );
+  int window_id = TtaGetDocumentWindowId( doc, -1 );
   if (window_id < 0)
     {
       *xmm = 0;
@@ -1422,10 +1437,10 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       *height = 600;
       return;
     }
-
+  
   *width = WindowTable[window_id].FrWidth;
   *height = WindowTable[window_id].FrHeight;
-
+  
   AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   p_window->GetPosition( xmm, ymm );
 #endif /* _WX */

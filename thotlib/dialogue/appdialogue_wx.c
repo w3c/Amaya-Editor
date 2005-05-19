@@ -152,20 +152,25 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
     {
     case WXAMAYAWINDOW_NORMAL:
       p_window = new AmayaNormalWindow( window_id,
-					p_parent_window,
-					window_pos,
-					window_size );
+                                        p_parent_window,
+                                        window_pos,
+                                        window_size );
       break;
     case WXAMAYAWINDOW_SIMPLE:
       p_window = new AmayaSimpleWindow( window_id,
-					p_parent_window,
-				        window_pos,
-					window_size );
+                                        p_parent_window,
+                                        window_pos,
+                                        window_size );
       break;
     }    
-
+  
   if (!p_window)
     return -1; /* no enough memory */
+
+  // setup the maximized state
+  ThotBool maximized;
+  TtaGetEnvBoolean("WINDOW_MAXIMIZED", &maximized);
+  p_window->Maximize(maximized);
 
   /* save the window reference into the global array */ 
   WindowTable[window_id].WdWindow = p_window;

@@ -81,6 +81,11 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int * page_position );
 
 /*----------------------------------------------------------------------
+   TtaGetViewMaximize returns true if the current window is maximized
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewMaximized(Document doc, int view);
+
+/*----------------------------------------------------------------------
    TtaGetViewXYWH 
    returns the current x, y, width, and height values associated
    with the frame where a view is displayed
