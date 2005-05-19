@@ -65,7 +65,6 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 					,const wxSize&  size
 					) : 
   AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL )
-  ,m_pDummyMenuBar( NULL )
 {
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);

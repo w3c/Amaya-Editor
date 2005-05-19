@@ -79,7 +79,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_Kind( kind ),
   m_ShouldCleanUp( false ),
   m_ActiveFrameId( 0 ),
-  m_MustCheckFocusIsNotLost( false )
+  m_MustCheckFocusIsNotLost( false ),
+  m_pMenuBar(NULL)
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
@@ -281,19 +282,18 @@ bool AmayaWindow::IsClosing()
   return m_IsClosing;
 }
 
-#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  SetMenuBar
- * Description:  override the wxFrame::SetMenuBar methode and check if the menu bar is NULL
- *               if NULL then replace the menubar with a dummy menu bar to avoid ugly effects when closing a frame
+ * Description:  override the wxFrame::SetMenuBar methode to remember the menubar for fullscreen mode
  *--------------------------------------------------------------------------------------
  */
 void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
 {
+  m_pMenuBar = p_menu_bar;
+  wxFrame::SetMenuBar(p_menu_bar);
 }
-#endif /* 0 */
 
 
 /*
@@ -511,10 +511,28 @@ void AmayaWindow::RefreshShowPanelToggleMenu()
  */
 void AmayaWindow::ToggleFullScreen()
 {
+  // SG: on gtk (maybe on other plateforms) it should be possible to hide the notebook tabs
+  //     but it require to contribute to wxwidgets (submit a patch)
+  //     it's possible with this function gtk_notebook_set_show_tabs()
+  //     (http://developer.gnome.org/doc/API/2.0/gtk/GtkNotebook.html#gtk-notebook-set-show-tabs)
   if (IsFullScreen())
-    ShowFullScreen(false, wxFULLSCREEN_ALL);
+    {
+      wxFrame::SetMenuBar(m_pMenuBar);
+      if (GetStatusBar())
+        GetStatusBar()->Show();
+      if (GetAmayaToolBar())
+        GetAmayaToolBar()->Show();
+      ShowFullScreen(false);
+    }
   else
-    ShowFullScreen(true, wxFULLSCREEN_ALL);
+    {
+      wxFrame::SetMenuBar(NULL);
+      if (GetStatusBar())
+        GetStatusBar()->Hide();
+      if (GetAmayaToolBar())
+        GetAmayaToolBar()->Hide();
+      ShowFullScreen(true);
+    }
 }
 
 /*

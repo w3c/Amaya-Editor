@@ -115,7 +115,6 @@ class AmayaNormalWindow : public AmayaWindow
   wxMenuItem * m_pMenuItemToggleFullScreen;
   wxMenuItem * m_pMenuItemToggleToolTip;
 
-  wxMenuBar *        m_pDummyMenuBar;
   wxSplitterWindow * m_pSplitterWindow;  
   AmayaToolBar *     m_pToolBar;
 

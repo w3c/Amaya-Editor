@@ -84,8 +84,9 @@ class AmayaWindow : public wxFrame
                 );
   virtual ~AmayaWindow();
   
+  void          SetMenuBar( wxMenuBar * p_menu_bar );
   bool          IsClosing();
-  int		GetWindowId() { return m_WindowId; }
+  int		        GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
   int           GetKind() const { return m_Kind; }
   static int    GetActiveWindowId() { return m_ActiveWindowId; }
@@ -153,6 +154,7 @@ class AmayaWindow : public wxFrame
   static int        m_ActiveWindowId;
   int               m_ActiveFrameId;
   bool              m_MustCheckFocusIsNotLost;
+  wxMenuBar *       m_pMenuBar;
 };
 
 #endif // __AMAYAWINDOW_H__
