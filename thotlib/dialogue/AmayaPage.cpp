@@ -114,9 +114,6 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
   m_DummyPanel = new wxPanel( m_pSplitterWindow );
   m_pSplitterWindow->Initialize( m_DummyPanel );
 
-  // refresh the correspondig menu item state
-  RefreshSplitToggleMenu();
-
   // initialize the last open view name
   strcpy(m_LastOpenViewName, "Formatted_view");
 
@@ -229,9 +226,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 
   SetAutoLayout(TRUE);
 
-  // refresh the correspondig menu item state
-  RefreshSplitToggleMenu();
-
   // remember the last open view
   strcpy(m_LastOpenViewName, FrameTable[p_frame->GetFrameId()].FrViewName);
 
@@ -329,9 +323,6 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
       wxPostEvent(p_other_frame->GetCanvas(), event );
     }
-
-  // refresh the correspondig menu item state
-  RefreshSplitToggleMenu();
 
   // check if there is no more frame in the page
   // if there is no more frame, the master frame must be erased 
@@ -982,44 +973,6 @@ void AmayaPage::RaisePage()
 void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
 {
   event.Skip();
-}
-
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  RefreshSplitToggleMenu
- * Description:  is called to toggle on/off the "split/unsplit view" menu item depeding on
- *               the page split state.
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::RefreshSplitToggleMenu()
-{
-  int window_id = GetWindowParent()->GetWindowId();
-  int page_id   = GetPageId();
-
-  // update menu items of each documents
-  int doc_id    = 1;
-  int frame_id  = 0;
-  int itemID    = WindowTable[window_id].MenuItemSplitViewID;
-  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
-  ThotBool on   = m_pSplitterWindow->IsSplit();
-
-  while ( doc_id < MAX_DOCUMENTS )
-    {
-      if (LoadedDocument[doc_id-1])
-	{
-	  frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
-	  if (FrameTable[frame_id].FrWindowId == window_id &&
-	      FrameTable[frame_id].FrPageId == page_id)
-	    {
-	      /* toggle the menu item of every documents */
-	      MenuActionList[action].ActionToggle[doc_id] = on;
-	      TtaRefreshMenuItemStats( doc_id, NULL, itemID );
-	    }
-	}
-      doc_id++;
-    }
 }
 
 /*

@@ -109,7 +109,6 @@ public:
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
-  void RefreshSplitToggleMenu();
   void RefreshShowPanelToggleMenu();
 
  public:
