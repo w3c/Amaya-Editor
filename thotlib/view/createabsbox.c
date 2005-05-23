@@ -820,31 +820,31 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 		    /* la procedure ApplyRule modifie pAb, on le retablit */
 		    pAbb = pAb;
 		    GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
-		    if (pRule)
-		      if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
-			if (pAbb->AbElement != pEl && !pAbb->AbNew)
-			  switch (pRule->PrType)
-			    {
-			    case PtWidth:
-			      pAbb->AbWidthChange = TRUE;
-			      break;
-			    case PtHeight:
-			      pAbb->AbHeightChange = TRUE;
-			      break;
-			    case PtHorizPos:
-			      pAbb->AbHorizPosChange = TRUE;
-			      break;
-			    case PtVertPos:
-			      pAbb->AbVertPosChange = TRUE;
-			      break;
-			    case PtHorizRef:
-			      pAbb->AbHorizRefChange = TRUE;
-			      break;
-			    case PtVertRef:
-			      pAbb->AbVertRefChange = TRUE;
-			      break;
-			    default: break;
-			    }
+		    if (pRule &&
+			ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, pAb))
+		      if (pAbb->AbElement != pEl && !pAbb->AbNew)
+			switch (pRule->PrType)
+			  {
+			  case PtWidth:
+			    pAbb->AbWidthChange = TRUE;
+			    break;
+			  case PtHeight:
+			    pAbb->AbHeightChange = TRUE;
+			    break;
+			  case PtHorizPos:
+			    pAbb->AbHorizPosChange = TRUE;
+			    break;
+			  case PtVertPos:
+			    pAbb->AbVertPosChange = TRUE;
+			    break;
+			  case PtHorizRef:
+			    pAbb->AbHorizRefChange = TRUE;
+			    break;
+			  case PtVertRef:
+			    pAbb->AbVertRefChange = TRUE;
+			    break;
+			  default: break;
+			  }
 		  }
 		while (pRule);
 	     }
@@ -1877,45 +1877,45 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
       
       pRule = SearchRuleListItemMarker (PtVisibility, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       /* the direction rule must be applied before position and margin rules,
 	 as the horizontal position and margins depend on the direction */
       pRule = SearchRuleListItemMarker (PtDirection, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtVertPos, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtHorizPos, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtMarginRight, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtMarginLeft, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtSize, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtStyle, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtWeight, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtFont, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtBackground, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtForeground, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
       pRule = SearchRuleListItemMarker (PtOpacity, pEl, pDoc);
       if (pRule)
-	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL, pMarkerAb);
 
       done = False;
       if (pAb->AbListStyleImage == 'Y' && pAb->AbLeafType == LtCompound)
@@ -2587,7 +2587,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			       /* et le pave cree herite du createur, on */
 			       /* differe l'application de la regle */
 			       Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
-			     else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc, NULL))
+			     else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc,
+						  NULL, pAbbCreated))
 			       /* on n'a pas pu appliquer la regle, on */
 			       /* l'appliquera lorsque le pave pere */
 			       /* sera  termine' */
@@ -2636,9 +2637,9 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 {
 		   pAbb1 = pAbbCreated;
 		   GetDelayedRule (&pR, &pSP, &pAbb1, &pSelAttr);
-		   if (pR != NULL)
-		     if (!ApplyRule (pR, pSP, pAbb1, pDoc, pSelAttr))
-		       Delay (pR, pSP, pAbb1, pSelAttr, pAbbCreated);
+		   if (pR &&
+		       !ApplyRule (pR, pSP, pAbb1, pDoc, pSelAttr, pAbb1))
+		     Delay (pR, pSP, pAbb1, pSelAttr, pAbbCreated);
 		 }
 	       while (pR != NULL);
 	       /* retablit AbPresentationBox qui a ete modifie' pour les boites de */
@@ -3140,7 +3141,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
      {
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginTop, FnAny, TRUE,
 			    &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbTopMargin != 0)
        {
 	 ApplyInherit (PtMarginTop, pAb, pDoc, FALSE);
@@ -3148,7 +3149,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
        }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderTopWidth, FnAny, TRUE,
 			    &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbTopBorder != 0)
        {
 	 ApplyInherit (PtBorderTopWidth, pAb, pDoc, FALSE);
@@ -3156,7 +3157,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
        }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingTop, FnAny, TRUE,
 			    &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbTopPadding != 0)
        {
 	 ApplyInherit (PtPaddingTop, pAb, pDoc, FALSE);
@@ -3168,7 +3169,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
      {
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginBottom, FnAny, TRUE,
 			    &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbBottomMargin != 0)
        {
 	 ApplyInherit (PtMarginBottom, pAb, pDoc, FALSE);
@@ -3176,7 +3177,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
        }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderBottomWidth, FnAny,
 			    TRUE, &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbBottomBorder != 0)
        {
 	 ApplyInherit (PtBorderBottomWidth, pAb, pDoc, FALSE);
@@ -3184,7 +3185,7 @@ static void  SetVerticalSpace (PtrAbstractBox pAb, ThotBool head,
        }
      pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingBottom, FnAny, TRUE,
 			    &pAttr);
-     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
      if (pAb->AbBottomPadding != 0)
        {
 	 ApplyInherit (PtPaddingBottom, pAb, pDoc, FALSE);
@@ -4408,7 +4409,7 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
 		      else if (fileDescriptor)
 			DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
 		      else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
-					   pAttr))
+					   pAttr, pNewAbbox))
 			/* not the main view, apply the rule now */
 			WaitingRule (pRule, pNewAbbox, pSchPres, pAttr,
 				   queuePA, queuePS, queuePP, queuePR, lqueue);
@@ -4517,7 +4518,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    }
 		  else if (fileDescriptor)
 		    DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP);
-		  else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
+		  else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL, pNewAbbox))
 		    /* it's a presentation function, apply the rule now */
 		    WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
 				 queuePA, queuePS, queuePP, queuePR, lqueue);
@@ -4577,7 +4578,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    if (!ApplCrRule (pRule, pSchS, pSchPres, NULL, pAbbReturn,
 			  viewNb, pDoc, pEl, forward, lqueue, queuePR, queuePP,
 			  queuePS, queuePA, pNewAbbox, fileDescriptor))
-		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
+		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL, pNewAbbox))
 			WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
 				     queuePS, queuePP, queuePR, lqueue);
 		}
@@ -4640,7 +4641,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		    if (!ApplCrRule (pRule, pSchS, pSchPres, NULL, pAbbReturn,
 			  viewNb, pDoc, pEl, forward, lqueue, queuePR, queuePP,
 			  queuePS, queuePA, pNewAbbox, fileDescriptor))
-		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL))
+		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL, pNewAbbox))
 			WaitingRule (pRule, pNewAbbox, pSchPres,
 				     NULL, queuePA, queuePS, queuePP,
 				     queuePR, lqueue);
@@ -4780,8 +4781,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				}
 			      else if (fileDescriptor)
 				DisplayPRule (pRule, fileDescriptor, pEl, pSchPattr);
-			      else if (!ApplyRule (pRule, pSchPattr,
-						   pNewAbbox, pDoc, pAttr))
+			      else if (!ApplyRule (pRule, pSchPattr, pNewAbbox,
+						   pDoc, pAttr, pNewAbbox))
 				/* not the main view, apply the rule now */
 				WaitingRule (pRule, pNewAbbox,
 					     pSchPattr, pAttr, queuePA, queuePS,
@@ -4823,7 +4824,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      {
 		if (fileDescriptor)
 		  DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
-		else if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL))
+		else if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL, pNewAbbox))
 		  /* not the main view, apply the rule now */
 		  WaitingRule (pRule, pNewAbbox, pSchP, NULL,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
@@ -4866,7 +4867,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	if (fileDescriptor)
 	  DisplayPRule (selectedRule[i], fileDescriptor, pEl, schemaOfSelectedRule[i]);
 	else if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
-			     pDoc, attrOfSelectedRule[i]))
+			     pDoc, attrOfSelectedRule[i], pNewAbbox))
 	  WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
 		       attrOfSelectedRule[i], queuePA, queuePS, queuePP,
 		       queuePR, lqueue);
@@ -5824,7 +5825,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 			 }
 		       if (!crAbsBox)
 			 /* ce n'est pas une regle de creation */
-			 if (!ApplyRule (pRule, pSPres, pAb, pDoc, pAttr))
+			 if (!ApplyRule (pRule, pSPres, pAb, pDoc, pAttr, pAb))
 			   Delay (pRule, pSPres, pAb, pAttr, pAb);
 		     }
 		 }
@@ -5852,7 +5853,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		     pPRP = pAb;
 		     GetDelayedRule (&pRule, &pSPres, &pPRP, &pAttr);
 		     if (pRule != NULL)
-		       if (!ApplyRule (pRule, pSPres, pPRP, pDoc, pAttr))
+		       if (!ApplyRule (pRule, pSPres, pPRP, pDoc, pAttr, pAb))
 			 /* cette regle n'a pas pu etre appliquee. C'est  */
 			 /* une regle correspondant a un attribut, on */
 			 /* l'appliquera lorsque l'englobant sera complete */

@@ -8,12 +8,12 @@ VIEWS
 
 #ifdef US_PAPER
 #define PAGE
-#endif { US_PAPER }
+#endif
 
 #ifdef PAGE
 PRINT
    Formatted_view;
-#endif  { PAGE }
+#endif
 
 #define LINE_NUMBER_Color DarkGrey2
 #define MARKUP_Color DarkIndigo1
@@ -139,7 +139,7 @@ BOXES
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { US_PAPER }
+#endif
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
@@ -147,7 +147,7 @@ BOXES
 	IF Not One(PageCounter) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
-#else { PAGE }
+#else
 
   IndexBox: BEGIN
         Content: Picture 'AmayaSrcSyncIndex.gif';
@@ -165,7 +165,7 @@ BOXES
 	Content: (Value (LineCounter, Arabic));
 	END;
 
-#endif { PAGE }
+#endif
 
 RULES
 

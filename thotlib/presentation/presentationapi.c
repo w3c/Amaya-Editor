@@ -317,7 +317,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	    {
 	      /* the document is modified */
 	      SetDocumentModified (pDoc, TRUE, 0);
-	      if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttrV))
+	      if (ApplyRule (pRuleV, pSPR, pAb, pDoc, pAttrV, pAb))
 		{
 		  pAb->AbVertPosChange = TRUE;
 		  if (!isPos)
@@ -327,7 +327,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR,
 					FALSE, 0, NULL, viewSch, PtHeight,
 					FnAny, FALSE, TRUE, &pAttrV);
-		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
+		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV, pAb);
 		      pAb->AbHeightChange = TRUE;
 		    }	       
 		  reDisp = TRUE;
@@ -467,7 +467,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	    {
 	      /* the document is modified */
 	      SetDocumentModified (pDoc, TRUE, 0);
-	      if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttrH))
+	      if (ApplyRule (pRuleH, pSPR, pAb, pDoc, pAttrH, pAb))
 		{
 		  pAb->AbHorizPosChange = TRUE;
 		  if (!isPos)
@@ -477,7 +477,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR,
 				      FALSE, 0, NULL, viewSch, PtWidth, FnAny,
 				      FALSE, TRUE, &pAttrH);
-		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
+		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH, pAb);
 		      pAb->AbWidthChange = TRUE;
 		    }	       
 		  reDisp = TRUE;
@@ -915,7 +915,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
      {
        /* the document is modified */
        SetDocumentModified (pDoc, TRUE, 0);
-       if (doitH && ApplyRule (pRuleH, pSPRH, pAb, pDoc, pAttrH))
+       if (doitH && ApplyRule (pRuleH, pSPRH, pAb, pDoc, pAttrH, pAb))
 	 {
 	   pAb->AbWidthChange = TRUE;
 	   if (!isDimH)
@@ -925,12 +925,12 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, FALSE, 0,
 			               NULL, viewSch, PtHorizPos, FnAny, FALSE,
 				       TRUE, &pAttrH);
-	       ApplyRule (pRStd, pSPRH, pAb, pDoc, pAttrH);
+	       ApplyRule (pRStd, pSPRH, pAb, pDoc, pAttrH, pAb);
 	       pAb->AbHorizPosChange = TRUE;
 	     }	       
 	   reDisp = TRUE;
 	 }	   
-       if (doitV && ApplyRule (pRuleV, pSPRV, pAb, pDoc, pAttrV))
+       if (doitV && ApplyRule (pRuleV, pSPRV, pAb, pDoc, pAttrV, pAb))
 	 {
 	   pAb->AbHeightChange = TRUE;
 	   if (!isDimV)
@@ -940,7 +940,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, FALSE, 0,
 				      NULL, viewSch, PtVertPos, FnAny, FALSE,
 				      TRUE, &pAttrV);
-	       ApplyRule (pRStd, pSPRV, pAb, pDoc, pAttrV);
+	       ApplyRule (pRStd, pSPRV, pAb, pDoc, pAttrV, pAb);
 	       pAb->AbVertPosChange = TRUE;
 	     }
 	   reDisp = TRUE;

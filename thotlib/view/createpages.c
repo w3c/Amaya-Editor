@@ -141,9 +141,9 @@ int GetPageCounter (PtrElement pEl, PtrDocument pDoc, int viewNb,
 }
 
 /*----------------------------------------------------------------------
-   ApplPage    ApplyRule les regles de presentation au pave            
-   cree quand c'est une marque de page TypeP                    
-   et pSchPPage ont ete initialises dans ChercheVisib           
+   ApplPage applies presentation rules to abstract boxes created by
+   the page rule.
+   TypeP gives the page type difined in the pSchPPage presentation schema.
   ----------------------------------------------------------------------*/
 void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 	       int viewSch, int TypeP, PtrPSchema pSchPPage,
@@ -201,7 +201,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 				   NULL, viewNb, pSchPPage, TRUE);
 		/*else
 		  {
-		    if (ApplyRule (pRule, pSchPPage, pNewAbbox, pDoc, NULL))
+		    if (ApplyRule (pRule, pSchPPage, pNewAbbox, pDoc, NULL, pNewAbbox))
 		      pNewAbbox->AbAspectChange = TRUE;
 		  }*/
 	     }
@@ -221,7 +221,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 			if (pRegleV == NULL)
 			   pRegleV = pRule;
 			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc,
-					NULL))
+					NULL, pNewAbbox))
 			   if (pRegleV->PrType == PtVisibility)
 			     pAbbChild->AbVisibility = pNewAbbox->AbVisibility;
 		     }

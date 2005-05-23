@@ -1852,11 +1852,12 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
 	       presentation */
 	    dispMode = TtaGetDisplayMode (doc);
 	    if (dispMode == DisplayImmediately)
-	      {
+	     {
+		/* @@@@@@@@@@@@ force the redisplay of this box */
 		TtaSetDisplayMode (doc, NoComputedDisplay);
 		/* Restore the display mode */
 		TtaSetDisplayMode (doc, dispMode);
-	      }
+	     }
 	  }
     }
 }

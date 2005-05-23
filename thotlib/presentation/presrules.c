@@ -2060,12 +2060,13 @@ static ThotBool CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-  ApplyPos applies the pos rule pRule  to the abstract box pAb.
+  ApplyPos applies the pos rule pRule to the abstract box pAb.
+  The parameter pRefAb points to the abstract box that submits the apply.
   Returns TRUE in appl if the rule is applied.
   ----------------------------------------------------------------------*/
 static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 		      PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1,
-		      PtrDocument pDoc, ThotBool *appl)
+		      PtrAbstractBox pRefAb, PtrDocument pDoc, ThotBool *appl)
 {
    PtrAbstractBox      pAbbPos;
    ThotBool            pageBreak;
@@ -2339,7 +2340,10 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       }
 	     /* on pourra reessayer d'appliquer la regle plus tard : */
 	     /* le precedent existera peut etre, alors */
-	     *appl = FALSE;
+	     if (pRefAb == pAbb1->AbEnclosing)
+	       *appl = TRUE;
+	     else
+	       *appl = FALSE;
 	     PPos->PosUnit = pPosRule->PoDistUnit;
 	     PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
 	     if (FirstCreation)
@@ -2372,7 +2376,8 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
   Returns TRUE in appl if the rule is applied.
   ----------------------------------------------------------------------*/
 static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
-		      PtrPSchema pSchP, PtrAttribute pAttr, ThotBool *appl,
+		      PtrAbstractBox pRefAb, PtrPSchema pSchP,
+		      PtrAttribute pAttr, ThotBool *appl,
 		      PtrPRule pPRule, PtrDocument pDoc)
 {
   PtrAbstractBox      pAbbRef;
@@ -2401,7 +2406,7 @@ static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
     {
       /* Stretched box, the dimension is defined by a pos rule */
       ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr,
-		pSchP, pAb, pDoc, appl);
+		pSchP, pAb, pRefAb, pDoc, appl);
       if (*appl)
 	/* the stretch rule is now applied */
 	pdimAb->DimIsPosition = TRUE;
@@ -3240,17 +3245,16 @@ static void NewAbPositioning (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
-   	ApplyRule   applique au pave pointe par pAb la regle pointee par
-   		pPRule dans le schema de presentation pointe par pSchP.	
-   		Si pAttr n'est pas NULL, c'est un pointeur sur le bloc	
-   		attribut auquel correspond la regle a appliquer.	
-   		Retourne true si la regle a ete appliquee ou ne pourra	
-   		jamais etre appliquee, false si elle n'a pas pu etre	
-   		appliquee mais qu'elle pourra etre appliquee quand	
-   		d'autres paves seront construits.			
+  ApplyRule applies the pRule rule to the pAb abstract box.
+  The parameter pSchP points to the presentation schema.
+  If pAttr is not null, it points to the attribute which generates the rule.
+  The parameter pRefAb points to the abstract box that submits the apply.
+  Returns TRUE if the rule is applied or will be never applied, FALSE it
+  it's not applied and can be applied later when other abstract boxes will
+  be created.
   ----------------------------------------------------------------------*/
 ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
-		    PtrDocument pDoc, PtrAttribute pAttr)
+		    PtrDocument pDoc, PtrAttribute pAttr, PtrAbstractBox pRefAb)
 {
   TypeUnit            unit;
   AbPosition          Posit;
@@ -3429,20 +3433,20 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	case PtVertRef:
 	  Posit = pAb->AbVertRef;
 	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		    pDoc, &appl);
+		    pRefAb, pDoc, &appl);
 	  pAb->AbVertRef = Posit;
 	  break;
 	case PtHorizRef:
 	  Posit = pAb->AbHorizRef;
 	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		    pDoc, &appl);
+		    pRefAb, pDoc, &appl);
 	  pAb->AbHorizRef = Posit;
 	  break;
 	case PtHeight:
-	  ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	  ApplyDim (&pAb->AbHeight, pAb, pRefAb, pSchP, pAttr, &appl, pPRule, pDoc);
 	  break;
 	case PtWidth:
-	  ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	  ApplyDim (&pAb->AbWidth, pAb, pRefAb, pSchP, pAttr, &appl, pPRule, pDoc);
 	  break;
 	case PtVertPos:
 	  /* erreur : ce n'est pas a l'editeur d'interpreter */
@@ -3531,7 +3535,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		{
 		  Posit = pAb->AbVertPos;
 		  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
-			    pSchP, pAb, pDoc, &appl);
+			    pSchP, pAb, pRefAb, pDoc, &appl);
 		  pAb->AbVertPos = Posit;
 		}
 	    }
@@ -3539,7 +3543,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	case PtHorizPos:
 	  Posit = pAb->AbHorizPos;
 	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
-		    pAb, pDoc, &appl);
+		    pAb, pRefAb, pDoc, &appl);
 	  pAb->AbHorizPos = Posit;
 	  break;
 	case PtMarginTop:

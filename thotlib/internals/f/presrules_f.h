@@ -44,7 +44,8 @@ extern ThotBool ApplyRule ( PtrPRule pPRule,
                             PtrPSchema pSchP,
                             PtrAbstractBox pAb,
                             PtrDocument pDoc,
-                            PtrAttribute pAttr );
+                            PtrAttribute pAttr,
+                            PtrAbstractBox pRefAb );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
                                  FunctionType funcType,
@@ -94,7 +95,8 @@ extern ThotBool ApplyRule ( PtrPRule pPRule,
                               PtrPSchema pSchP,
                               PtrAbstractBox pAb,
                               PtrDocument pDoc,
-                              PtrAttribute pAttr );
+                              PtrAttribute pAttr,
+                              PtrAbstractBox pRefAb );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                    PRuleType ruleType,
                                    FunctionType funcType,

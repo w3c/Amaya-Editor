@@ -984,6 +984,14 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        /* only do a redirect using a network protocol understood by Amaya */
        strncpy (urlAdr, new_anchor->parent->address, MAX_LENGTH - 1);
        urlAdr[MAX_LENGTH - 1] = EOS;
+       if (me->urlName && !strcmp (me->urlName, urlAdr))
+	 {
+	   /* redirect to itself */
+	   me->reqStatus = HT_ABORT;
+	   /* and we return HT_OK so that the terminate_handler
+	      will be called */
+	   return HT_OK;
+	 }
        if (IsValidProtocol (urlAdr))
 	 {
 	   /* if it's a valid URL, we try to normalize it */

@@ -932,7 +932,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	    case AtTextAttr:
 	      if (attrVal && attrs->ApString &&
 		  !strcmp (attrs->ApString, attrVal) &&
-		  attrs->ApMatch == match)
+		  attrs->ApMatch == (int)match)
 		ppRule = &(attrs->ApTextFirstPRule);
 	      else if (attrVal == NULL &&
 		       attrs->ApString == NULL)
@@ -3050,6 +3050,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
     }
   return (0);
 }
+
 
 /*----------------------------------------------------------------------
   TtaGetStylePresentation returns the style rule attached to an element

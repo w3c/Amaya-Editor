@@ -730,19 +730,19 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 	      {
 	      case PtVertRef:
 		abPosit = pAb->AbVertRef;
-		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		ret = IsDiffPosition (pAb->AbVertRef, &abPosit, FALSE);
 		break;
 	      case PtHorizRef:
 		abPosit = pAb->AbHorizRef;
-		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		ret = IsDiffPosition (pAb->AbHorizRef, &abPosit, FALSE);
 		break;
 	      case PtVertPos:
 		if (!pAb->AbHeight.DimIsPosition)
 		  {
 		    abPosit = pAb->AbVertPos;
-		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		    ret = IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE);
 		  }
 		else
@@ -754,12 +754,12 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 		    abPosit = pAb->AbVertPos;
 		    abDimElast = pAb->AbHeight.DimPosition;
 		    /* applique la regle de position */
-		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		    /* cherche et applique la regle de dimension */
 		    pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
 					       PtHeight, FnAny, TRUE, &pAttrDim);
 		    (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
-				      pAttrDim);
+				      pAttrDim, pAb);
 		    /* compare la position et la dimension d'origine avec
 		       celles qui viennent d'etre calculees */
 		    if (pAb->AbBox != NULL)
@@ -811,7 +811,7 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 		if (!pAb->AbWidth.DimIsPosition)
 		  {
 		    abPosit = pAb->AbHorizPos;
-		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		    ret = IsDiffPosition (pAb->AbHorizPos, &abPosit, FALSE);
 		  }
 		else
@@ -823,12 +823,12 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 		    abPosit = pAb->AbHorizPos;
 		    abDimElast = pAb->AbWidth.DimPosition;
 		    /* applique la regle de position */
-		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		    (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		    /* cherche et applique la regle de dimension */
 		    pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
 					       PtWidth, FnAny, TRUE, &pAttrDim);
 		    (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
-				      pAttrDim);
+				      pAttrDim, pAb);
 		    /* compare la position et la dimension d'origine avec
 		       celles qui viennent d'etre calculees */
 		    if (pAb->AbBox != NULL)
@@ -898,7 +898,7 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 		/* pave non elastique */
 		/* on applique la regle */
 		{
-		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		  ret = TRUE;
 		}
 	    }
@@ -914,13 +914,13 @@ static ThotBool IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR,
 	      if (pR->PrType == PtHeight)
 		/* hauteur */
 		{
-		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		  ret = IsDiffDimension (pAb->AbHeight, &Dimens);
 		}
 	      else
 		/* largeur */
 		{
-		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+		  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 		  ret = IsDiffDimension (pAb->AbWidth, &Dimens);
 		}
 	    }
@@ -961,7 +961,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertRef, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbVertRefChange = TRUE;
 	ret = TRUE;
      }
@@ -976,7 +976,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizRef, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbHorizRefChange = TRUE;
 	ret = TRUE;
      }
@@ -992,7 +992,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	     pPosAb->PosAbRef = NULL;
 	     pPosAb->PosUserSpecified = FALSE;
 	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
-	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	     pAbbox1->AbHeightChange = TRUE;
 	     /* force la reevaluation de la position verticale : lorsqu'on */
 	     /* change la dimension d'une boite elastique, il faut aussi */
@@ -1010,7 +1010,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pDimAb->DimSameDimension = TRUE;
 	pDimAb->DimUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbHeightChange = TRUE;
 	ret = TRUE;
      }
@@ -1026,7 +1026,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	     pPosAb->PosAbRef = NULL;
 	     pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
 	     pPosAb->PosUserSpecified = FALSE;
-	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	     pAbbox1->AbWidthChange = TRUE;
 	     /* force la reevaluation de la position horizontale : lorsqu'on */
 	     /* change la dimension d'une boite elastique, il faut aussi */
@@ -1044,7 +1044,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pDimAb->DimSameDimension = TRUE;
 	pDimAb->DimUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbWidthChange = TRUE;
 	ret = TRUE;
      }
@@ -1058,7 +1058,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbVertPosChange = TRUE;
 	if (pAbbox1->AbHeight.DimIsPosition)
 	   /* force la reevaluation de la hauteur : lorsqu'on */
@@ -1077,7 +1077,7 @@ static ThotBool ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb,
 	pPosAb->PosAbRef = NULL;
 	pPosAb->PosUserSpecified = FALSE;
 	pR = SearchRulepAb (pDoc, pAb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
-	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+	(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr, pAb);
 	pAbbox1->AbHorizPosChange = TRUE;
 	if (pAbbox1->AbWidth.DimIsPosition)
 	   /* force la reevaluation de la largeur : lorsqu'on */
@@ -2259,7 +2259,7 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 			  }
 			if (!same)
 			   /* contenus differents, applique la regle de copie */
-			   if (ApplyRule (pRule, pSPR, pPavRef, pDocRef, pAttr))
+			   if (ApplyRule (pRule, pSPR, pPavRef, pDocRef, pAttr, pPavRef))
 			      redisp = TRUE;
 		     }
 		}
@@ -3407,7 +3407,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
 	pRPres = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, FnAny, TRUE, &pA);
 	if (pRPres->PrPresMode == PresInherit)
 	   /* c'est une regle d'heritage, on l'applique au pave' */
-	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA))
+	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA, pAb))
 	      /* le pave est modifie' */
 	     {
 	       SetChange (pAb, pDoc, typeRule, (FunctionType)0);
@@ -3443,7 +3443,7 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
   ThotBool            ret;
 
   /* applique la regle a` appliquer */
-  ret = ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+  ret = ApplyRule (pRule, pSchP, pAb, pDoc, pAttr, pAb);
   /* verifie si c'est une regle de dimension ou de position */
   /* qui s'applique a un pave' elastique dont la boite a ete */
   /* inversee. Dans ce cas reapplique la regle de position ou */
@@ -3466,7 +3466,7 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
 		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHeight,
 					   FnAny, TRUE, &pAttr2);
 		  if (pRegle2 != NULL)
-		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, pAb))
 		      pAb->AbHeightChange = TRUE;
 		}
 	      else
@@ -3474,7 +3474,7 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
 		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtVertPos,
 					   FnAny, TRUE, &pAttr2);
 		  if (pRegle2 != NULL)
-		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, pAb))
 		      pAb->AbVertPosChange = TRUE;
 		}
 	    }
@@ -3495,7 +3495,7 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
 		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtWidth,
 					   FnAny, TRUE, &pAttr2);
 		  if (pRegle2 != NULL)
-		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, pAb))
 		      pAb->AbWidthChange = TRUE;
 		}
 	      else
@@ -3503,7 +3503,7 @@ static ThotBool ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP,
 		  pRegle2 = SearchRulepAb (pDoc, pAb, &pSchP2, PtHorizPos,
 					   FnAny, TRUE, &pAttr2);
 		  if (pRegle2 != NULL)
-		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2))
+		    if (ApplyRule (pRegle2, pSchP2, pAb, pDoc, pAttr2, pAb))
 		      pAb->AbHorizPosChange = TRUE;
 		}
 	    }
