@@ -68,8 +68,9 @@ CSSProperty;
 static char         *DocURL = NULL; /* The parsed CSS file */
 static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
+static ThotBool      Style_parsing = FALSE; /* TRUE when parsing a set of CSS rules */
+static ThotBool      RedisplayBGImage = FALSE; /* TRUE when a BG image is inserted */
 static ThotBool      DoApply = TRUE;
-
 
 /*----------------------------------------------------------------------
    SkipWord:                                                  
@@ -1833,8 +1834,9 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, dispMode);
     }
-  else if (css)
+  else if (css && !Style_parsing)
     {
+      /* all background images are now loaded */
       for (doc = 1; doc < DocumentTableLength; doc++)
 	if (css->infos[doc] &&
 	    /* don't manage a document used by make book */
@@ -1860,6 +1862,8 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
 	     }
 	  }
     }
+  else
+    RedisplayBGImage = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -6215,6 +6219,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   c = SPACE;
   index = 0;
   base = NULL;
+  /* entering the CSS parsing */
+  Style_parsing = TRUE;
   screentype = TtaGetEnvString ("SCREEN_TYPE");
   /* number of new lines parsed */
   newlines = 0;
@@ -6558,9 +6564,19 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	  CSSindex = 0;
         }
     }
+  /* closing the CSS parsing */
+  Style_parsing = FALSE;
+
   /* restore the display mode */
+  if (RedisplayBGImage)
+    {
+      RedisplayBGImage = FALSE;
+      TtaSetDisplayMode (docRef, NoComputedDisplay);
+    }
   if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (docRef, dispMode);
+    {
+      TtaSetDisplayMode (docRef, dispMode);
+    }
 
   /* Prepare the context for style attributes */
   DocURL = DocumentURLs[docRef];

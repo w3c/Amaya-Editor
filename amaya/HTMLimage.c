@@ -915,8 +915,7 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
       /* update the stop button status */
       ResetStop (doc);
 #ifdef _GL
-      if (FilesLoading[doc] == 0 &&
-	  TtaGetViewFrame (doc, 1) != 0)
+      if (FilesLoading[doc] == 0 && TtaGetViewFrame (doc, 1) != 0)
 	/* all files included in this document have been loaded and the
 	   document is displayed. Animations can be played now */
 	TtaPlay (doc, 1);
@@ -1034,7 +1033,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 	 that begins with the string  'data:' */
 #ifdef _BASE64     
       update = FALSE;
-      if (imageName) 
+      if (imageName)
 	{
 	  if (strncasecmp (imageName, "data:", 5) == 0)
 	    {
@@ -1043,7 +1042,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
 	    }
 	  else
 	    update = TRUE;
-	}      
+	}
 
       if (update)
 	{
