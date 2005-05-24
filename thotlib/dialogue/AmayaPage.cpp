@@ -92,6 +92,7 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_w
 					    /*| wxSP_PERMIT_UNSPLIT*/
 #endif /* 0 */
 					    );
+  SetSplitMode( wxSPLIT_HORIZONTAL );
   p_sizerTop2->Add( m_pSplitterWindow, 1, wxEXPAND, 0 );
 
 
