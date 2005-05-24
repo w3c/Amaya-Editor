@@ -1636,7 +1636,7 @@ void InitTranslations (char *appliname)
   char                home[200], name[80];
   char               *text, *addr, *sep = "+";
   char                transText[MAX_LENGTH], ch[MAX_LENGTH];
-  char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+  char                equiv[MAX_LENGTH]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
   int                 e, i, j;
   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */

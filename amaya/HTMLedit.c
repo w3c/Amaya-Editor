@@ -2784,6 +2784,7 @@ void CheckNewLines (NotifyOnTarget *event)
 		  TtaRegisterElementCreate (prev, doc);
 		  TtaSelectString (doc, leaf, i, i-1);
 		}
+          TtaFreeMemory (content);
 	      return;
 	    }
 	  else
