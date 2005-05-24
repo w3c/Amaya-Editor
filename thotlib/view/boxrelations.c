@@ -676,8 +676,11 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	   pAb->AbRightBorderUnit == UnPercent))
 	dim = GetGhostSize (pBox, horizRef, pBlock);
       else if (pAb->AbWidth.DimUnit == UnPercent && pParent)
-	dim = PixelValue (pAb->AbWidth.DimValue, UnPercent,
-			  (PtrAbstractBox)pParent->BxW , 0);
+	/* when box dimension and margins are expressed in percent
+	   they both refer the enclosing box */
+	//dim = PixelValue (pAb->AbWidth.DimValue, UnPercent,
+	//		  (PtrAbstractBox)pParent->BxW , 0);
+	dim = pParent->BxW;
       else
 	dim = pBox->BxW;
 
@@ -847,7 +850,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
   GetEnclosingViewport returns the enclosing abstractbox that defines
   the viewport.
   ----------------------------------------------------------------------*/
-static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
+static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb, PosAlgorithm algo)
 {
   if (pAb)
     {
@@ -858,7 +861,15 @@ static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
 	      pAb->AbPositioning->PnAlgorithm == PnInherit ||
 	      pAb->AbPositioning->PnAlgorithm == PnStatic ||
 	      pAb->AbPositioning->PnAlgorithm == PnRelative))
-	pAb = pAb->AbEnclosing;
+	{
+	  if (algo == PnAbsolute &&
+	      TypeHasException (ExcSetWindowBackground,
+				pAb->AbElement->ElTypeNumber,
+				pAb->AbElement->ElStructSchema))
+	    return pAb;
+	  else
+	    pAb = pAb->AbEnclosing;
+	}
     }
   return pAb;
 }
@@ -895,7 +906,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	    }
 
 	  // get the enclosing viewport
-	  pRefAb = GetEnclosingViewport (pAb);
+	  pRefAb = GetEnclosingViewport (pAb, pos->PnAlgorithm);
 	  GetSizesFrame (frame, &w, &h);
 	  if (pos->PnAlgorithm == PnFixed)
 	    {
@@ -905,6 +916,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	    }
 	  else
 	    x = y = 0;
+
 	  if (pRefAb == NULL)
 	    {
 	      pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
@@ -2007,7 +2019,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		}
 	      else if (!pAb->AbWidth.DimIsPosition &&
 		       pAb->AbWidth.DimAbRef == pParentAb)
-		pAb->AbWidth.DimAbRef = GetEnclosingViewport (pAb);
+		pAb->AbWidth.DimAbRef = GetEnclosingViewport (pAb,
+							      pAb->AbPositioning->PnAlgorithm);
 	    }
 	  if (!horizRef)
 	    {
@@ -2026,7 +2039,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		}
 	      else if (!pAb->AbHeight.DimIsPosition &&
 		       pAb->AbHeight.DimAbRef == pParentAb)
-		pAb->AbHeight.DimAbRef = GetEnclosingViewport (pAb);
+		pAb->AbHeight.DimAbRef = GetEnclosingViewport (pAb,
+							       pAb->AbPositioning->PnAlgorithm);
 	    }
 	}
 #endif /* POSITIONING */

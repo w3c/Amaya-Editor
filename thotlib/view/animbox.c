@@ -1171,10 +1171,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 		animated = animated->next;	      
 	      }
 	    if (isnotfinished)
-	      {
-		//ComputeChangedBoundingBoxes (Animated_Frame);
-		UpdateClipping (pAb, w, h);
-	      }
+	      UpdateClipping (pAb, w, h);
 	  }
       }
   return (isnotfinished || willbenotfinished);    
@@ -1192,11 +1189,7 @@ ThotBool Animate_boxes (int frame, AnimTime current_time)
   Animated_Cell    *current = (Animated_Cell *)FrameTable[frame].Animated_Boxes;
   ThotBool          isfinished;
 
-  /* Time update
-     RefreshAnimBoxes ()
-     Get Clipping Box ()
-     DefFrame ()
-     RedrawFrameBottom ()   */ 
+  /* Time update */ 
   Animated_Frame = frame;
   SetBaseClipping ();
   isfinished = TRUE;

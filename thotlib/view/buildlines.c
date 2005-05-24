@@ -1245,8 +1245,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   Return TRUE if the whole box can be inserted in the line with compression.
   ----------------------------------------------------------------------*/
 static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
-			     int l, int r,
-			     PtrAbstractBox pRootAb)
+			     int l, int r, PtrAbstractBox pRootAb)
 {
   PtrBox              ibox2, pNextBox;
   PtrTextBuffer       pNewBuff;
@@ -1385,9 +1384,8 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   pRootAb = the root abstract box for updating the chain of leaf boxes.
   Return TRUE if the whole box can be inserted in the line with compression.
   ----------------------------------------------------------------------*/
-static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
-			      int l, int r,
-			      PtrAbstractBox pRootAb, ThotBool force)
+static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
+			      int r, PtrAbstractBox pRootAb, ThotBool force)
 {
   PtrBox              ibox1, ibox2;
   PtrBox              pPreviousBox, pNextBox;
@@ -2449,6 +2447,10 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 			pBox = pNextBox;
 		    }
 		}
+	      else if (pBox->BxType == BoScript &&
+		       pBox != pBox->BxAbstractBox->AbBox->BxNexChild &&
+		       pBox->BxPrevious)
+		pBox = pBox->BxPrevious;
 	      else
 		pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
 	      toCut = FALSE;
@@ -3441,8 +3443,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiXOrg = left;
 	      if (prevLine || pAb->AbTruncatedHead || indent >= width)
 		indent = 0;
-	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = pBoxToBreak;
+	      if (pNextBox && pNextBox->BxType == BoScript)
+		{
+		  pLine->LiFirstPiece = pNextBox;
+		  pLine->LiFirstBox = pNextBox->BxAbstractBox->AbBox;
+		}
+	      else
+		pLine->LiFirstBox = pNextBox;
 	      /* Fill the line */
 	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, extensibleBox,
 				   xAbs, yAbs, pAb->AbTruncatedTail,
