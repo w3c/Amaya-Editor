@@ -602,12 +602,12 @@ fi # with_wx = no
 # the wx version
 AMAYAWX_MAJVER=9
 AMAYAWX_MINVER=1
-AMAYAWX_SUBVER=1
+AMAYAWX_SUBVER=4
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
 AMAYA_MINVER=7
-AMAYA_SUBVER=3
+AMAYA_SUBVER=4
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
