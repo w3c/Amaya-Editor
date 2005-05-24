@@ -2046,7 +2046,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    {
 	      if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
 		  pAb->AbPositioning->PnLeftUnit != UnUndefined &&
-		  pAb->AbPositioning->PnRightUnit != UnAuto &
+		  pAb->AbPositioning->PnRightUnit != UnAuto &&
 		  pAb->AbPositioning->PnRightUnit != UnUndefined)
 		{
 		  /* inherit from an enclosing box */
