@@ -2388,7 +2388,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
   if (GL_prepare (frame))
     {
       imageDesc = (ThotPictInfo *)malloc (sizeof (ThotPictInfo));  
-      imageDesc->PicFileName = "testing";
+      imageDesc->PicFileName = TtaStrdup("testing");
       imageDesc->RGBA = TRUE;
       imageDesc->PicWidth = width;
       imageDesc->PicHeight = height;

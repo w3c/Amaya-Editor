@@ -968,46 +968,48 @@ void FreeAbstractBox (PtrAbstractBox pAb)
   if (pAb->AbLeafType == LtCompound)
     {
       if (pAb->AbPictBackground)
-	{
-	  TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
-	  CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
-	  TtaFreeMemory (pAb->AbPictBackground);
-	  pAb->AbPictBackground = NULL;
-	}
+        {
+          if (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName[0] != EOS)
+            TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
+          CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
+          TtaFreeMemory (pAb->AbPictBackground);
+          pAb->AbPictBackground = NULL;
+        }
       if (pAb->AbPictListStyle)
-	{
-	  TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
-	  CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
-	  TtaFreeMemory (pAb->AbPictListStyle);
-	  pAb->AbPictListStyle = NULL;
-	}
+        {
+          if (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName[0] != EOS)
+            TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
+          CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
+          TtaFreeMemory (pAb->AbPictListStyle);
+          pAb->AbPictListStyle = NULL;
+        }
       if (pAb->AbPositioning)
-	{
-	  TtaFreeMemory (pAb->AbPositioning);
-	  pAb->AbPositioning = NULL;
-	}
+        {
+          TtaFreeMemory (pAb->AbPositioning);
+          pAb->AbPositioning = NULL;
+        }
     }
 #ifdef DEBUG_MEMORY
-   TtaFreeMemory (pAb);
+  TtaFreeMemory (pAb);
 #else
-   pAb->AbElement = NULL;
-   pAb->AbEnclosing = NULL;
-   if (pAb->AbPrevious)
-     {
-       if (pAb->AbPrevious->AbNext == pAb)
-	 pAb->AbPrevious->AbNext = NULL;
-       pAb->AbPrevious = NULL;
-     }
-   pAb->AbFirstEnclosed = NULL;
-   pAb->AbNextRepeated = NULL;
-   pAb->AbPreviousRepeated = NULL;
-   if (pAb->AbNext && pAb->AbNext->AbPrevious == pAb)
-     pAb->AbNext->AbPrevious = NULL;
-   pAb->AbNext = PtFree_AbsBox;
-   PtFree_AbsBox = pAb;
-   NbFree_AbsBox++;
+  pAb->AbElement = NULL;
+  pAb->AbEnclosing = NULL;
+  if (pAb->AbPrevious)
+    {
+      if (pAb->AbPrevious->AbNext == pAb)
+        pAb->AbPrevious->AbNext = NULL;
+      pAb->AbPrevious = NULL;
+    }
+  pAb->AbFirstEnclosed = NULL;
+  pAb->AbNextRepeated = NULL;
+  pAb->AbPreviousRepeated = NULL;
+  if (pAb->AbNext && pAb->AbNext->AbPrevious == pAb)
+    pAb->AbNext->AbPrevious = NULL;
+  pAb->AbNext = PtFree_AbsBox;
+  PtFree_AbsBox = pAb;
+  NbFree_AbsBox++;
 #endif
-   NbUsed_AbsBox--;
+  NbUsed_AbsBox--;
 }
 
 /*----------------------------------------------------------------------

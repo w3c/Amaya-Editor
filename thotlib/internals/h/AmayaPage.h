@@ -101,8 +101,6 @@ public:
   AmayaFrame * GetFrame( int frame_position ) const;
   int GetFramePosition( const AmayaFrame * p_frame ) const;
 
-  void DeletedFrame( AmayaFrame * p_frame );
-
   int GetMasterFrameId();
 
   wxSplitterWindow * GetSplitterWindow();

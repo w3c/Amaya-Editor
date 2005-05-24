@@ -535,9 +535,7 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
-  DetachFrame(2);
-  // dont forward this event because childs slitterwindows dont must catch this event (AmayaPanel for exemple)
-  //  event.Skip();  
+  DoSplitUnsplit();
 }
 
 /*
@@ -562,9 +560,6 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
       m_pBottomFrame = NULL;
       break;
     }
-
-  // we should show the quick split bar when frames are unsplited
-  //  m_pSplitButtonBottom->ShowQuickSplitButton( true );
 
   event.Skip();
 }
@@ -761,17 +756,6 @@ bool AmayaPage::IsClosed()
  */
 bool AmayaPage::IsSelected()
 {
-#if 0
-
-  if (m_pNoteBookParent)
-  {
-    int page_id = m_pNoteBookParent->GetPageId( this );
-    return (page_id == m_pNoteBookParent->GetSelection());
-  }
-  else
-    return FALSE;
-
-#endif /* 0 */
   return m_IsSelected;
 }
 
@@ -890,26 +874,6 @@ int AmayaPage::GetFramePosition( const AmayaFrame * p_frame ) const
     return 2;
   else
     return 0;
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaPage
- *      Method:  DeletedFrame
- * Description:  force the frame to be detached from the page when the frame
- *               is deleted by itself
- *--------------------------------------------------------------------------------------
- */
-void AmayaPage::DeletedFrame( AmayaFrame * p_frame )
-{
-  if ( p_frame == GetFrame(1) )
-    {
-      DetachFrame(1);
-    }
-  if ( p_frame == GetFrame(2) )
-    {
-      DetachFrame(2);
-    }
 }
 
 /*
