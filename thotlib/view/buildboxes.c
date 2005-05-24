@@ -1858,7 +1858,7 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
   ----------------------------------------------------------------------*/
 static void AddFlow (PtrAbstractBox pAb, int frame)
 {
-#ifdef POSITIONING
+  //#ifdef POSITIONING
   ViewFrame          *pFrame;
   PtrFlow             pFlow, prev = NULL;
   Positioning        *pos;
@@ -1934,9 +1934,9 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
 	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
 			    ViewFrameTable[frame - 1].FrMagnification);
 	}
-printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+      //printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
     }
-#endif /* POSITIONING */
+  //#endif /* POSITIONING */
 }
 
 /*----------------------------------------------------------------------
@@ -1944,7 +1944,7 @@ printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
   ----------------------------------------------------------------------*/
 static void RemoveFlow (PtrAbstractBox pAb, int frame)
 {
-#ifdef POSITIONING
+  //#ifdef POSITIONING
   ViewFrame          *pFrame;
   PtrFlow             pFlow, prev = NULL;
 
@@ -1958,7 +1958,7 @@ static void RemoveFlow (PtrAbstractBox pAb, int frame)
 	{
 	  if (pFlow->FlRootBox == pAb)
 	    {
-printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+	      //printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
 	      /* remove the current flow */  
 	      if (prev)
 		prev->FlNext = pFlow->FlNext;
@@ -1976,7 +1976,7 @@ printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
 	    }
 	}
     }
-#endif /* POSITIONING */
+  //#endif /* POSITIONING */
 }
 
 /*----------------------------------------------------------------------

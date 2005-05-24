@@ -4140,13 +4140,18 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pAb->AbNotInLine = FALSE;
 		}
 	      else if (pAb->AbDisplay == 'L')
-		/* display: list-item */
-		appl = CreateListItemMarker (pAb, pDoc, pAttr);
+		{
+		  /* display: list-item */
+		  appl = CreateListItemMarker (pAb, pDoc, pAttr);
+		}
 	      else if (pAb->AbDisplay != 'U')
 		{
 		  /* display: block */
 		  if (pAb->AbFloat != 'N')
 		    pAb->AbNotInLine = FALSE;
+		  if (viewSch == 1)
+		    /* force inline only in the formatted view */
+		    pAb->AbInLine = TRUE;
 		  pAb->AbAcceptLineBreak = FALSE;
 		}
 	    }

@@ -1811,7 +1811,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  pLine->LiXOrg = left + indent;
 	  bottomL = pLine->LiYOrg;
 	}
-      else if (pBlock->BxType == BoFloatBlock)
+      else //if (pBlock->BxType == BoFloatBlock)
 	{
 	  /* keep the CSS2 minimun of margins and the current shift */
 	  if (pLine->LiXOrg > left + l)
@@ -1865,7 +1865,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
 	  bottomR = pLine->LiYOrg;
 	}
-      else if (pBlock->BxType == BoFloatBlock)
+      else //if (pBlock->BxType == BoFloatBlock)
 	{
 	  /* keep the CSS2 minimun of margins and the current shift */
 #ifdef IV

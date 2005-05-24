@@ -160,10 +160,11 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
 }
 
 /*----------------------------------------------------------------------
-  ApplyInherit  On vient d'appliquer la regle de presentation de type	
-   		ruleType au pave pAb. Verifie si les paves environnants	
-   		heritent de cette regle et si oui leur applique		
-   		l'heritage et on les r'eaffiche si display est TRUE
+  ApplyInherit 
+  The ruleType presentation rule has been applied, check if sibling
+  or children inherit from this rule.
+  The parameter display is TRUE when boxes should be redisplayed after
+  any change.
   ----------------------------------------------------------------------*/
 void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		   PtrDocument pDoc, ThotBool display)
@@ -177,12 +178,12 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 
    pEl = pAb->AbElement;
    view = pAb->AbDocView;
-   if (pEl->ElNext != NULL)
+   if (pEl->ElNext)
      {
 	/* l'element a un frere suivant. Celui-ci herite-t-il de son
 	   precedent ? */
 	pAbCur = NULL;
-	while (pEl->ElNext != NULL && pAbCur == NULL)
+	while (pEl->ElNext && pAbCur == NULL)
 	  {
 	     pEl = pEl->ElNext;
 	     pAbCur = pEl->ElAbstractBox[view - 1];
@@ -216,9 +217,8 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 	  }
 	pEl = pAb->AbElement;
      }
-   if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
-      /* l'element a des descendants. Ceux-ci heritent-t-il de leur */
-      /* ascendant ? */
+   if (!pEl->ElTerminal && pEl->ElFirstChild)
+      /* check if children inherit some rules? */
       ApplyRuleSubTree (pEl, ruleType, pDoc, &pRule, view, display);
    if (pEl->ElParent)
      {
@@ -228,13 +228,12 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 	while (pEl->ElParent && !pAbCur)
 	  {
 	     pEl = pEl->ElParent;
-	     /* saute les paves de presentation */
+	     /* skip presentation boxes */
 	     pAbCur = pEl->ElAbstractBox[view - 1];
 	     while (pAbCur && pAbCur->AbPresentationBox)
 	        pAbCur = pAbCur->AbNext;
-	     if (pAbCur)
-		if (pAbCur->AbDead)
-		   pAbCur = NULL;
+	     if (pAbCur && pAbCur->AbDead)
+	       pAbCur = NULL;
 	  }
 	if (pAbCur)
 	  {
@@ -249,9 +248,9 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		else
 		  {
 		    GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
-		    if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr, pPRP))
+		    if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr, pAbCur))
 		      {
-			/* this rule cannot be applied */
+			/* this rule cannot be applied yet */
 			Delay (pRule, pSchP, pPRP, pAttr, pAbCur->AbFirstEnclosed);
 			if (checkedRule == NULL)
 			  /* first rule already checked and re-inserted
