@@ -926,11 +926,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                       /* check the coordinates */
                       newx = x + DO_ALIGN ((int) ((GdkEventMotion *)event)->x - x);
                       newy = y + DO_ALIGN ((int)((GdkEventMotion *)event)->y - y);
-                      
-#ifdef _TRACE_GL_MOVEAPOINT
-                      printf("Before boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-                      
+                                            
                       /* are limited to the box size */
                       /* Update the X position */
                       if (newx < x)
@@ -956,11 +952,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                           wrap = TRUE;
                         } 
                     }
-                  
-#ifdef _TRACE_GL_MOVEAPOINT
-                  printf("After boxwraping : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
-                  
+                                    
                   /* shows the new adjacent segment position */
                   if (newx != lastx || newy != lasty)
                     {
@@ -979,9 +971,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                       lasty = newy;		      
 #else /* _GL */
                       
-#ifdef _TRACE_GL_MOVEAPOINT
-                      printf("Before LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
                       lastx = newx;
                       lasty = newy;
                       /* update the box buffer */
@@ -989,9 +978,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                                            ViewFrameTable[frame - 1].FrMagnification);
                       newy = LogicalValue (lasty - firsty, UnPixel, NULL,
                                            ViewFrameTable[frame - 1].FrMagnification);
-#ifdef _TRACE_GL_MOVEAPOINT
-                      printf("After LogicalValue : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
                       
                       if (pointselect == 0)
                         /* it's really a polyline, not a line */
@@ -1019,9 +1005,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                       newy1 = (int) ((float) newy * ratioY);
                       
                       ModifyPointInPolyline (Pbuffer, point, newx1, newy1);
-#ifdef _TRACE_GL_MOVEAPOINT
-                      printf("After Ratio : \tnewx1=%d\tnewy1=%d\tratiox=%f\tratioy=%f\n",newx1,newy1,ratioX,ratioY);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
                       
                       if (pointselect == 0)
                         {
@@ -1037,9 +1020,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                       RedrawFrameBottom (frame, 0, NULL);
                       FrameTable[frame].DblBuffNeedSwap = TRUE;
                       GL_Swap (frame);		      
-#ifdef _TRACE_GL_MOVEAPOINT
-                      printf("After GLSwap : \tnewx=%d\tnewy=%d\tlastx=%d\tlasty=%d\n",newx,newy,lastx,lasty);
-#endif /* #ifdef _TRACE_GL_MOVEAPOINT */
 #endif /* _GL */
                       if (wrap)
                         {
@@ -1215,30 +1195,20 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINGUI */
 
-#ifdef _TRACE_GL_POLYMODIF
-	printf("Bbuffer (before MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
-	    Pbuffer->BuPoints[0].XCoord,
-	    Pbuffer->BuPoints[0].YCoord,
-	    Pbuffer->BuPoints[1].XCoord,
-	    Pbuffer->BuPoints[1].YCoord,
-	    Pbuffer->BuPoints[2].XCoord,
-	    Pbuffer->BuPoints[2].YCoord );
-#endif /* #ifdef _TRACE_GL_LINEMODIF */
-
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
                   &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, *xOrg, *yOrg, x1, y1, x3, y3, lastx, lasty, point, x, y, width, height, Pbuffer, Bbuffer, 0);
-  
-#ifdef _TRACE_GL_POLYMODIF
-	printf("Bbuffer (after MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
-	    Pbuffer->BuPoints[0].XCoord,
-	    Pbuffer->BuPoints[0].YCoord,
-	    Pbuffer->BuPoints[1].XCoord,
-	    Pbuffer->BuPoints[1].YCoord,
-	    Pbuffer->BuPoints[2].XCoord,
-	    Pbuffer->BuPoints[2].YCoord );
-#endif /* #ifdef _TRACE_GL_LINEMODIF */
+
+#ifdef _GL
+  /* we need to delete old opengl display list because
+   * the polyline has been modified
+   * if you dont delete the displaylist, it wont be rebuild 
+   * and the old displaylist will be used to display the polyline */
+  if (glIsList (pBox->DisplayList))
+    glDeleteLists (pBox->DisplayList, 1);
+  pBox->DisplayList = 0;
+#endif /* _GL */
 
 #if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -1522,49 +1492,39 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   pBox->BxAbstractBox->AbPolyLineShape = 'p';
   pBox->BxNChars = 3;
   pBox->BxBuffer = pBuffer;
-
-#ifdef _TRACE_GL_LINEMODIF
-	printf("Bbuffer (before MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
-	    pBuffer->BuPoints[0].XCoord,
-	    pBuffer->BuPoints[0].YCoord,
-	    pBuffer->BuPoints[1].XCoord,
-	    pBuffer->BuPoints[1].YCoord,
-	    pBuffer->BuPoints[2].XCoord,
-	    pBuffer->BuPoints[2].YCoord );
-#endif /* #ifdef _TRACE_GL_LINEMODIF */
   
   RedrawPolyLine (frame, *xi, *yi, pBuffer, 3, 1, FALSE,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3);
+                  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (	pBox,
-     		frame,
-		*xi, *yi,			/* the bounding box position */
-		x1, y1, x3, y3, lastx, lasty,	/* the pos of selected point, prev point and next points */
-	       	1,				/* the selected point, 1 for a line */
-	      	xorg, yorg, width, height, 	/* the parent box pos & size */
-		pBuffer, pBuffer,
-		0/* point*/			/* 0 because we simulate a polyline */
-     		);
+                frame,
+                *xi, *yi,			/* the bounding box position */
+                x1, y1, x3, y3, lastx, lasty,	/* the pos of selected point, prev point and next points */
+                1,				/* the selected point, 1 for a line */
+                xorg, yorg, width, height, 	/* the parent box pos & size */
+                pBuffer, pBuffer,
+                0/* point*/			/* 0 because we simulate a polyline */
+                );
+
+#ifdef _GL
+  /* we need to delete old opengl display list because
+   * the line has been modified
+   * if you dont delete the displaylist, it wont be rebuild 
+   * and the old displaylist will be used to display the line */
+  if (glIsList (pBox->DisplayList))
+    glDeleteLists (pBox->DisplayList, 1);
+  pBox->DisplayList = 0;
+#endif /* _GL */
+
+  /* now get the new selected point position */
+  *xi = PixelValue (pBox->BxXOrg+pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
+                    ViewFrameTable[frame - 1].FrMagnification);
+  *yi = PixelValue (pBox->BxYOrg+pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
+                    ViewFrameTable[frame - 1].FrMagnification);
   
-#ifdef _TRACE_GL_LINEMODIF
-	printf("Bbuffer (after MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
-	    pBuffer->BuPoints[0].XCoord,
-	    pBuffer->BuPoints[0].YCoord,
-	    pBuffer->BuPoints[1].XCoord,
-	    pBuffer->BuPoints[1].YCoord,
-	    pBuffer->BuPoints[2].XCoord,
-	    pBuffer->BuPoints[2].YCoord );
-#endif /* #ifdef _TRACE_GL_LINEMODIF */
-
-/* now get the new selected point position */
-*xi = PixelValue (pBox->BxXOrg+pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
-*yi = PixelValue (pBox->BxYOrg+pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
-
 #if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINGUI */
-
+  
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
 
@@ -2628,41 +2588,41 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 		   PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		   int xm, int ym)
 {
+#if defined(_GTK) || defined(_WINGUI)
    ThotWindow          w;
+#endif /* defined(_GTK) || defined(_WINGUI) */
 #ifdef _GTK
    int                 e;
 #endif /* _GTK */
 
-#ifndef _WX 
-  w = FrRef[frame];
-#else /* #ifndef _WX */
-  w = (ThotWindow)FrameTable[frame].WdFrame;
-#endif /* #ifndef _WX */
+
 #ifdef _WINGUI
+   w = FrRef[frame];
 #ifndef _GL
-  Gdc = GetDC (w);
+   Gdc = GetDC (w);
 #endif /*_GL*/
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
-  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
+   SetCursor (LoadCursor (NULL, IDC_CROSS));
+   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #ifndef _GL
-  ReleaseDC (w, Gdc);
+   ReleaseDC (w, Gdc);
 #endif _GL
 #endif /* _WINGUI */
-
+   
 #ifdef _GTK
- e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
- if ((xmin >= *x) && (xmax <= *x + width))
-    ThotGrab (w, VCurs, e, 0);
-  else if ((ymin >= *y) && (ymax <= *y + height))
-    ThotGrab (w, HCurs, e, 0);
-  else
-    ThotGrab (w, HVCurs, e, 0);
-  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+   w = FrRef[frame];
+   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
+   if ((xmin >= *x) && (xmax <= *x + width))
+     ThotGrab (w, VCurs, e, 0);
+   else if ((ymin >= *y) && (ymax <= *y + height))
+     ThotGrab (w, HCurs, e, 0);
+   else
+     ThotGrab (w, HVCurs, e, 0);
+   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
    /* restore the Thot Library state */
-  ThotUngrab ();
+   ThotUngrab ();
 #endif /*_GTK*/
-
+   
 #ifdef _WX
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
 #endif /* _WX */

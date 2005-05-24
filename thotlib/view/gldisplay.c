@@ -1102,12 +1102,12 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   ThotPoint          *points;
   int                 i, j;
   PtrTextBuffer       adbuff;
-
+  
   /* fill the included polygon */
   DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
   if (thick == 0 || fg < 0)
     return;
-
+  
   /* Allocate a table of points */
   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
   adbuff = buffer;
@@ -1116,43 +1116,44 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   for (i = 1; i < nb; i++)
     {
       if (j >= adbuff->BuLength &&
-	  adbuff->BuNext != NULL)
-	{
-	  /* Next buffer */
-	  adbuff = adbuff->BuNext;
-	  j = 0;
-	}
+          adbuff->BuNext != NULL)
+        {
+          /* Next buffer */
+          adbuff = adbuff->BuNext;
+          j = 0;
+        }
       points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+                                        UnPixel, NULL,
+                                        ViewFrameTable[frame - 1].FrMagnification);
       points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+                                        UnPixel, NULL,
+                                        ViewFrameTable[frame - 1].FrMagnification);
+      //      printf("nb=%d XCoord=%d YCoord=%d\n", j, adbuff->BuPoints[j].XCoord, adbuff->BuPoints[j].YCoord );
       j++;
     }
-
+  
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
     ArrowDrawing (frame,
-		  (int)points[1].x, (int)points[1].y,
-		  (int)points[0].x, (int)points[0].y,
-		  thick, fg);
+                  (int)points[1].x, (int)points[1].y,
+                  (int)points[0].x, (int)points[0].y,
+                  thick, fg);
   
   /* Draw the border */
   InitDrawing (style, thick, fg);
   for (k=0; k< nb-2; k++)
     GL_DrawLine((int)points[k].x, (int)points[k].y,
-		 (int)points[k+1].x, (int)points[k+1].y, TRUE);
-
+                (int)points[k+1].x, (int)points[k+1].y, TRUE);
+  
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
     ArrowDrawing (frame,
-		  (int)points[nb - 3].x, (int)points[nb - 3].y,
-		  (int)points[nb - 2].x, (int)points[nb - 2].y,
-		  thick, fg);
-
+                  (int)points[nb - 3].x, (int)points[nb - 3].y,
+                  (int)points[nb - 2].x, (int)points[nb - 2].y,
+                  thick, fg);
+  
   /* free the table of points */
-  free (points);
+  TtaFreeMemory (points);
 }
 
 /*----------------------------------------------------------------------
@@ -1223,7 +1224,7 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   points[nb - 1].y = points[0].y;
   DoDrawLines (frame, thick, style, points, nb, fg, bg, pattern);
   /* free the table of points */
-  free (points);
+  TtaFreeMemory (points);
 }
 
 /*----------------------------------------------------------------------
@@ -1339,7 +1340,7 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 		  thick, fg);
 
   /* free the table of points */
-  free (points);
+  TtaFreeMemory (points);
 }
 
 /*----------------------------------------------------------------------
@@ -1449,7 +1450,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
     }
 
   /* free the table of points */
-  free (points);
+  TtaFreeMemory (points);
 }
 
 

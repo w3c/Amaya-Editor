@@ -1110,7 +1110,7 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 static void UnsplitBox (PtrBox pBox)
 {
   PtrBox              box;
-
+  
   if (pBox->BxType == BoComplete)
     return;
   box = pBox->BxNexChild;
@@ -1121,14 +1121,14 @@ static void UnsplitBox (PtrBox pBox)
 #ifdef _GL
 #ifdef _WX
       wxASSERT_MSG( !box->DisplayList ||
-		    glIsList(box->DisplayList),
-		    _T("GLBUG - UnsplitBox : glIsList returns false"));
+                    glIsList(box->DisplayList),
+                    _T("GLBUG - UnsplitBox : glIsList returns false"));
 #endif /* _WX */
       if (glIsList (box->DisplayList))
-	{
-	  glDeleteLists (box->DisplayList, 1);
-	  box->DisplayList = 0;
-	}
+        {
+          glDeleteLists (box->DisplayList, 1);
+          box->DisplayList = 0;
+        }
 #endif /* _GL */
       box = FreeBox (box);
     }
@@ -2928,8 +2928,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 #ifdef _GL
 #ifdef _WX
 	  wxASSERT_MSG( !pAb->AbBox->DisplayList ||
-			glIsList (pAb->AbBox->DisplayList),
-			_T("GLBUG - RemoveBoxes : glIsList returns false"));
+                  glIsList (pAb->AbBox->DisplayList),
+                  _T("GLBUG - RemoveBoxes : glIsList returns false"));
 #endif /* _WX */
 	  if (glIsList (pAb->AbBox->DisplayList))
 	    {

@@ -70,6 +70,9 @@ class AmayaMovePointEvtHandler : public wxEvtHandler
   PtrTextBuffer m_Pbuffer;
   PtrTextBuffer m_Bbuffer;
   PtrBox        m_Box;
+  
+  int * m_pXCoord;
+  int * m_pYCoord;
 };
 
 #endif // __AMAYAMOVEPOINTEVTHANDLER_H__

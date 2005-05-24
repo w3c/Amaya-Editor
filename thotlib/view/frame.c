@@ -60,14 +60,15 @@
 #include <math.h>
 #include "glwindowdisplay.h"
 
-static int counter=0;
+//static int counter=0;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void IfPushMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
-      //printf ("%s glPushMatrix %d\n", pAb->AbElement->ElLabel, ++counter);
+      //      if (!strcmp(pAb->AbElement->ElLabel,"L25"))
+      //        printf ("%s glPushMatrix %d\n", pAb->AbElement->ElLabel, ++counter);
       glPushMatrix ();
     }
 }
@@ -78,7 +79,8 @@ static void IfPopMatrix (PtrAbstractBox pAb)
 {
   if (pAb->AbElement->ElSystemOrigin || pAb->AbElement->ElTransform)
     {
-      //printf ("%s glPopMatrix %d\n", pAb->AbElement->ElLabel, counter--);
+      //      if (!strcmp(pAb->AbElement->ElLabel,"L25"))
+      //        printf ("%s glPopMatrix %d\n", pAb->AbElement->ElLabel, counter--);
       glPopMatrix ();
     }
 }
@@ -657,8 +659,15 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 
       imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
-	/* draw the box selection */
-	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
+        {
+#ifdef _GL
+          if (pFrom->AbElement->ElSystemOrigin)
+            DrawRectangle (frame, 0, 0, 0, 0, width, height, 0, BgSelColor, 2);
+          else
+#endif /* _GL */  
+            /* draw the box selection */
+            DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
+        }
       else if (!selected)
 	{
 	  /* don't fill the background when an enclosing box is selected */
@@ -694,30 +703,30 @@ static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, int frame,
       pAb->AbBox)
     {
       if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-			    pAb->AbElement->ElStructSchema) && 
-	  pAb->AbOpacity != 1000 && pAb->AbOpacity != 0 &&
-	  activate_opacity &&
-	  ((xmax - xmin) > 0) && 
-	  ((ymax - ymin) > 0))
-	{
-	  if (!pAb->AbBox->VisibleModification && 
-	      pAb->AbBox->Post_computed_Pic)
-	    /* display the group image has it is */
-	    DisplayOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax, FALSE);
-	  else
-	    {
-	      if (pAb->AbBox->Pre_computed_Pic)
-		{
-		  OpaqueGroupTexturize (pAb, frame, xmin, xmax, ymin, ymax, FALSE);
-		  ClearOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax);
-		  DisplayOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax, TRUE);
-		  /* Unless we can know when 
-		     a box gets its picture or 
-		     when changes are efffective */
-		  OpaqueGroupTextureFree (pAb, frame);	
-		}
-	    }
-	}     
+                            pAb->AbElement->ElStructSchema) && 
+          pAb->AbOpacity != 1000 && pAb->AbOpacity != 0 &&
+          activate_opacity &&
+          ((xmax - xmin) > 0) && 
+          ((ymax - ymin) > 0))
+        {
+          if (!pAb->AbBox->VisibleModification && 
+              pAb->AbBox->Post_computed_Pic)
+            /* display the group image has it is */
+            DisplayOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax, FALSE);
+          else
+            {
+              if (pAb->AbBox->Pre_computed_Pic)
+                {
+                  OpaqueGroupTexturize (pAb, frame, xmin, xmax, ymin, ymax, FALSE);
+                  ClearOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax);
+                  DisplayOpaqueGroup (pAb, frame, xmin, xmax, ymin, ymax, TRUE);
+                  /* Unless we can know when 
+                     a box gets its picture or 
+                     when changes are efffective */
+                  OpaqueGroupTextureFree (pAb, frame);	
+                }
+            }
+        }     
     }
 #endif /* _GL */
 }
@@ -731,7 +740,7 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
 			 int ClipXOfFirstCoordSys, int ClipYOfFirstCoordSys)
 {
   PtrBox              pBox;
-
+  
   pBox = pAb->AbBox;
   if (pAb->AbElement->ElSystemOrigin && 
       plane == pAb->AbDepth &&
@@ -739,17 +748,17 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
     {
       //DisplayTransformationExit ();
       if (pBox && 
-	  (OldXOrg != 0 || OldYOrg != 0) &&
-	  (ClipXOfFirstCoordSys == pBox->BxClipX &&
-	  ClipYOfFirstCoordSys == pBox->BxClipY))
-	{
-	  pFrame->FrXOrg = *OldXOrg;
-	  pFrame->FrYOrg = *OldYOrg;
-	  pFrame->OldFrXOrg = 0;
-	  pFrame->OldFrYOrg = 0;
-	  *OldXOrg = 0;
-	  *OldYOrg = 0;
-	}
+          (OldXOrg != 0 || OldYOrg != 0) &&
+          (ClipXOfFirstCoordSys == pBox->BxClipX &&
+           ClipYOfFirstCoordSys == pBox->BxClipY))
+        {
+          pFrame->FrXOrg = *OldXOrg;
+          pFrame->FrYOrg = *OldYOrg;
+          pFrame->OldFrXOrg = 0;
+          pFrame->OldFrYOrg = 0;
+          *OldXOrg = 0;
+          *OldYOrg = 0;
+        }
       /*  GL_PopClip (); */
     }
 }

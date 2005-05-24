@@ -1003,20 +1003,20 @@ void ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
    pBuf = firstBuffer;
    while (rank > pBuf->BuLength && pBuf->BuNext != NULL)
      {
-	rank -= pBuf->BuLength;
-	pBuf = pBuf->BuNext;
+       rank -= pBuf->BuLength;
+       pBuf = pBuf->BuNext;
      }
    if (rank > pBuf->BuLength)
-      /* on va remplacer le dernier point */
-      rank = pBuf->BuLength;
+     /* on va remplacer le dernier point */
+     rank = pBuf->BuLength;
    /* met le nouveau point a sa place */
    pBuf->BuPoints[rank - 1].XCoord = x;
    pBuf->BuPoints[rank - 1].YCoord = y;
    /* verifie le point limite */
    if (x > firstBuffer->BuPoints[0].XCoord)
-      firstBuffer->BuPoints[0].XCoord = x;
+     firstBuffer->BuPoints[0].XCoord = x;
    if (y > firstBuffer->BuPoints[0].YCoord)
-      firstBuffer->BuPoints[0].YCoord = y;
+     firstBuffer->BuPoints[0].YCoord = y;
 }
 
 

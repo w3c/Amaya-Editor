@@ -882,7 +882,7 @@ static void PolyTransform (PtrBox pBox, int frame)
   int                 j, val;
   int                 width, height;
   int                 zoom;
-
+  
   /* box sizes have to be positive */
   width = pBox->BxW;
   if (width < 0)
@@ -905,7 +905,7 @@ static void PolyTransform (PtrBox pBox, int frame)
     }
   else
     xRatio = 1.0;
-
+  
   /* Compute ratio for axis Y */
   val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
   if (val != height && pBox->BxBuffer->BuPoints[0].YCoord > 0)
@@ -920,27 +920,27 @@ static void PolyTransform (PtrBox pBox, int frame)
     }
   else
     yRatio = 1.0;
-
+  
   if (xRatio != 1 || yRatio != 1)
     {
       j = 1;
       adbuff = pBox->BxBuffer;
       val = pBox->BxNChars;
       for (i = 1; i < val; i++)
-	{
-	  if (j >= adbuff->BuLength)
-	    {
-	      if (adbuff->BuNext != NULL)
-		{
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-		}
-	    }
-	  adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
-	  adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
-	  j++;
-	}
+        {
+          if (j >= adbuff->BuLength)
+            {
+              if (adbuff->BuNext != NULL)
+                {
+                  /* Next buffer */
+                  adbuff = adbuff->BuNext;
+                  j = 0;
+                }
+            }
+          adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
+          adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
+          j++;
+        }
     }
 }
 
@@ -2233,31 +2233,31 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   yd = box->BxYOrg + box->BxTMargin + t;
   width = box->BxWidth - box->BxLMargin - box->BxRMargin - l - r;
   height = box->BxHeight - box->BxTMargin - box->BxBMargin - t - b;
-
+  
   if (Printing)
     {
       /* clipping on the origin */
       if (xd < x)
-	{
-	  width = width - x + xd;
-	  xd = x;
-	}
+        {
+          width = width - x + xd;
+          xd = x;
+        }
       if (yd < y)
-	{
-	  height = height - y + yd;
-	  yd = y;
-	}
+        {
+          height = height - y + yd;
+          yd = y;
+        }
       /* clipping on the width */
       if (xd + width > xmax)
-	width = xmax - xd;
+        width = xmax - xd;
       /* clipping on the height */
       if (yd + height > ymax)
-	height = ymax - yd;
+        height = ymax - yd;
 #ifdef _GL
       InitPrintBox ();
 #endif /* _GL */
     }
-
+  
   /* is the box selected? */
   selfsel = pAb->AbSelected;
   /* Search for the enclosing box */
@@ -2268,80 +2268,80 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       /* get the visible enclosing box */
       mbox = pAb->AbEnclosing->AbBox;
       if (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost)
-	{
-	  selfsel = selfsel || mbox->BxAbstractBox->AbSelected;
-	  while (mbox->BxAbstractBox->AbEnclosing &&
-		 (mbox->BxType == BoGhost ||
-		  mbox->BxType == BoFloatGhost))
-	    {
-	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-	      selfsel = selfsel ||
-		(mbox->BxAbstractBox->AbSelected &&
-		 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
-	    }
-	}
+        {
+          selfsel = selfsel || mbox->BxAbstractBox->AbSelected;
+          while (mbox->BxAbstractBox->AbEnclosing &&
+                 (mbox->BxType == BoGhost ||
+                  mbox->BxType == BoFloatGhost))
+            {
+              mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
+              selfsel = selfsel ||
+                (mbox->BxAbstractBox->AbSelected &&
+                 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
+            }
+        }
     }
-
+  
 #ifdef _GL 
   /*does box need to be recomputed in a new display list*/
   if (FrameTable[frame].FrView == 1 && !Printing)
     {
       /* box->VisibleModification = TRUE; */
       if ((pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath) &&
-	  !selected)
-	{
+          !selected)
+        {
 #ifdef _WX
-	  wxASSERT_MSG( !box->DisplayList ||
-			glIsList(box->DisplayList),
-			_T("GLBUG - DisplayBox : glIsList returns false"));
+          wxASSERT_MSG( !box->DisplayList ||
+                        glIsList(box->DisplayList),
+                        _T("GLBUG - DisplayBox : glIsList returns false"));
 #endif /* _WX */
-	  if (!(box->VisibleModification) && 
-	      box->DisplayList && glIsList (box->DisplayList))
-	    {
-	      glCallList (box->DisplayList);
-	      return;
-	    }
-	  else if (GL_NotInFeedbackMode ())
-	    {      
-	      if (glIsList (box->DisplayList))
-		glDeleteLists (box->DisplayList, 1);
-	        box->DisplayList = glGenLists (1);
-	      glNewList (box->DisplayList, GL_COMPILE_AND_EXECUTE);
-	      isOpenList = TRUE;
-	    }
-	}
+          if (!(box->VisibleModification) && 
+              box->DisplayList && glIsList (box->DisplayList))
+            {
+              glCallList (box->DisplayList);
+              return;
+            }
+          else if (GL_NotInFeedbackMode ())
+            {      
+              if (glIsList (box->DisplayList))
+                glDeleteLists (box->DisplayList, 1);
+              box->DisplayList = glGenLists (1);
+              glNewList (box->DisplayList, GL_COMPILE_AND_EXECUTE);
+              isOpenList = TRUE;
+            }
+        }
       GL_SetFillOpacity (pAb->AbFillOpacity);
       GL_SetStrokeOpacity (pAb->AbStrokeOpacity);
       if ((pAb->AbLeafType == LtPolyLine ||
-	   pAb->AbLeafType == LtGraphics ||
-	   pAb->AbLeafType == LtPath) &&
-	  (pAb->AbElement->ElParent) &&
-	  (pAb->AbElement->ElParent->ElGradient))
-	{
-	  if (DisplayGradient (pAb, box, frame, selfsel, t, b, l, r))
-	    return;          
-	}
+           pAb->AbLeafType == LtGraphics ||
+           pAb->AbLeafType == LtPath) &&
+          (pAb->AbElement->ElParent) &&
+          (pAb->AbElement->ElParent->ElGradient))
+        {
+          if (DisplayGradient (pAb, box, frame, selfsel, t, b, l, r))
+            return;          
+        }
     }
 #endif /*_GL*/
-      
+  
   if (pAb->AbVolume == 0 ||
       (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
     {
       /* Empty */
       selfsel = (box == pFrame->FrSelectionBegin.VsBox &&
-		 box == pFrame->FrSelectionEnd.VsBox);
+                 box == pFrame->FrSelectionEnd.VsBox);
       
       if (pAb->AbLeafType == LtSymbol)
-	DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
+        DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
       else if (pAb->AbLeafType != LtPolyLine &&
-	       pAb->AbLeafType != LtGraphics &&
-	       pAb->AbLeafType != LtPath)
-	{
-	  if (selfsel)
-	    DisplayStringSelection (frame, 0, box->BxW, t, box);
-	  else
-	    /*DisplayEmptyBox (box, frame, selfsel, t, b, l, r)*/;
-	}
+               pAb->AbLeafType != LtGraphics &&
+               pAb->AbLeafType != LtPath)
+        {
+          if (selfsel)
+            DisplayStringSelection (frame, 0, box->BxW, t, box);
+          else
+            /*DisplayEmptyBox (box, frame, selfsel, t, b, l, r)*/;
+        }
     }
   else if (pAb->AbLeafType == LtText)
     /* Display a Text box */
@@ -2349,7 +2349,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   else if (box->BxType == BoPicture || pAb->AbLeafType == LtPicture)
     /* Picture */
     DisplayImage (box, frame, xmin, xmax, ymin, ymax, selfsel,
-		  t, b, l, r);
+                  t, b, l, r);
   else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
     if (pAb->AbShape == EOS)
@@ -2368,8 +2368,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   else if (pAb->AbLeafType == LtPath)
     /* Path */
     DisplayPath (box, frame, selfsel, t, b, l, r);
-
-
+  
+  
   /* then display borders */
   if (box->BxDisplay &&
       yd + height >= ymin && yd <= ymax &&
@@ -2380,19 +2380,19 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       t += box->BxTMargin;
       r += box->BxRMargin;
       DisplayBorders (box, pAb, frame, xd - x, yd - y, width, height,
-		      t, b, l, r, TRUE, TRUE, TRUE);
+                      t, b, l, r, TRUE, TRUE, TRUE);
     }
 #ifdef _GL
   if (Printing)
     FinishPrintBox ();
   else if (FrameTable[frame].FrView == 1)
-      {
-	GL_SetFillOpacity (1000);
-	GL_SetStrokeOpacity (1000);
-	box->VisibleModification = FALSE;  
-	if (isOpenList)
-	  glEndList ();
-      }
+    {
+      GL_SetFillOpacity (1000);
+      GL_SetStrokeOpacity (1000);
+      box->VisibleModification = FALSE;  
+      if (isOpenList)
+        glEndList ();
+    }
 #endif /*_GL*/
 }
 

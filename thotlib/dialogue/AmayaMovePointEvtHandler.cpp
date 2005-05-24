@@ -85,8 +85,6 @@ AmayaMovePointEvtHandler::AmayaMovePointEvtHandler(AmayaFrame * p_frame,
     ,m_Y3(y3)
     ,m_FirstX(firstx)
     ,m_FirstY(firsty)
-    ,m_LastX(lastx)
-    ,m_LastY(lasty)
     ,m_Point(point)
     ,m_PointSelect(pointselect)
     ,m_Pbuffer(Pbuffer)
@@ -95,10 +93,35 @@ AmayaMovePointEvtHandler::AmayaMovePointEvtHandler(AmayaFrame * p_frame,
 {
   TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaMovePointEvtHandler::AmayaMovePointEvtHandler"));
 
-  /* trasformation factor between the box and the abstract box */
+  /* transformation factor between the box and the abstract box */
   m_RatioX = (float) m_Pbuffer->BuPoints[0].XCoord / (float) m_Bbuffer->BuPoints[0].XCoord;
-  /* trasformation factor between the box and the abstract box */
+  /* transformation factor between the box and the abstract box */
   m_RatioY = (float) m_Pbuffer->BuPoints[0].YCoord / (float) m_Bbuffer->BuPoints[0].YCoord;
+
+  // record the current mouse position (should correspond to the edited point position)
+  wxPoint mouse_pos = wxGetMousePosition();
+  m_LastX = mouse_pos.x;
+  m_LastY = mouse_pos.y;
+
+
+  // ****** //
+  /* calculate the memory adresses of the point position,
+   * used to quickly update the buffer */
+  PtrTextBuffer pBuf = m_Box->BxBuffer;
+  int rank = m_Point+1;
+  while (rank > pBuf->BuLength && pBuf->BuNext != NULL)
+    {
+      rank -= pBuf->BuLength;
+      pBuf = pBuf->BuNext;
+    }
+  // check that the rank is not too high
+  if (rank > pBuf->BuLength)
+    rank = pBuf->BuLength;
+  // ok we can save the address of the edited point
+  m_pXCoord = &pBuf->BuPoints[rank - 1].XCoord;
+  m_pYCoord = &pBuf->BuPoints[rank - 1].YCoord;
+  // ****** //
+
 
   if (m_pFrame)
     {
@@ -201,73 +224,31 @@ void AmayaMovePointEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 void AmayaMovePointEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
   int newx, newy, newx1, newy1;
-  ThotBool wrap;
-  
+  int deltax, deltay;
+
   /* check the coordinates */
-  newx = m_X + TtaGridDoAlign( (int)(event.GetX() - m_X) );
-  newy = m_Y + TtaGridDoAlign( (int)(event.GetY() - m_Y) );
+  wxPoint mouse_pos = wxGetMousePosition();
+  deltax = mouse_pos.x - m_LastX;
+  deltay = mouse_pos.y - m_LastY;
+  //  printf("deltax=%d deltay=%d\n", deltax, deltay);
   
-  /* are limited to the box size */
-  /* Update the X position */
-  if (newx < m_X)
-    {
-      newx = m_X;
-      wrap = TRUE;
-    }
-  else if (newx > m_X + m_Width)
-    {
-      newx = m_X + m_Width;
-      wrap = TRUE;
-    }
-  
-  /* Update the Y position */
-  if (newy < m_Y)
-    {
-      newy = m_Y;
-      wrap = TRUE;
-    }
-  else if (newy > m_Y + m_Height)
-    {
-      newy = m_Y + m_Height;
-      wrap = TRUE;
-    } 
-                  
   /* shows the new adjacent segment position */
-  if (newx != m_LastX || newy != m_LastY)
+  if (deltax != 0 || deltay != 0)
     {
-      m_LastX = newx;
-      m_LastY = newy;		      
-      /* update the box buffer */
-      newx = LogicalValue (m_LastX - m_FirstX, UnPixel, NULL,
-                           ViewFrameTable[m_FrameId - 1].FrMagnification);
-      newy = LogicalValue (m_LastY - m_FirstY, UnPixel, NULL,
-                           ViewFrameTable[m_FrameId - 1].FrMagnification);
-      
-      if (m_PointSelect == 0)
-        /* it's really a polyline, not a line */
-        {
-          if (m_LastX - m_FirstX > m_Box->BxWidth)
-            {
-              m_Box->BxWidth = m_LastX - m_FirstX;
-              m_Box->BxW = m_Box->BxWidth;
-            }
-          if (m_LastY - m_FirstY > m_Box->BxHeight)
-            {
-              m_Box->BxHeight = m_LastY - m_FirstY;
-              m_Box->BxH  = m_Box->BxHeight;
-            }
-          if (m_LastX < m_Box->BxClipX + EXTRA_GRAPH)
-            m_Box->BxClipX = m_LastX - EXTRA_GRAPH;
-          if (m_LastY < m_Box->BxClipY + EXTRA_GRAPH)
-            m_Box->BxClipY = m_LastY - EXTRA_GRAPH;
-        }
-      
+      m_LastX = mouse_pos.x;
+      m_LastY = mouse_pos.y;
+
+      /* calculate the real polygon's point position (relative to the point in the buffer) */
+      newx = *m_pXCoord + deltax;
+      newy = *m_pYCoord + deltay;
+      //      printf("XCoord=%d XCoord=%d\n", *m_pXCoord, *m_pYCoord);
+      //      printf("newx=%d newy=%d\n", newx, newy);
       ModifyPointInPolyline (m_Bbuffer, m_Point, newx, newy);
       
       /* update the abstract box buffer */
       newx1 = (int) ((float) newx * m_RatioX);
       newy1 = (int) ((float) newy * m_RatioY);
-      
+      //      printf("newx1=%d newy1=%d\n", newx1, newy1);      
       ModifyPointInPolyline (m_Pbuffer, m_Point, newx1, newy1);
       
       if (m_PointSelect == 0)
@@ -284,18 +265,7 @@ void AmayaMovePointEvtHandler::OnMouseMove( wxMouseEvent& event )
       RedrawFrameBottom (m_FrameId, 0, NULL);
       FrameTable[m_FrameId].DblBuffNeedSwap = TRUE;
       GL_Swap (m_FrameId);
-
-      if (wrap)
-        {
-          /*          xwindow = (GdkWindowPrivate*) w;
-          XWarpPointer (GDK_DISPLAY(), 
-                        None, 
-                        xwindow->xwindow,
-                        0, 0, 0, 0, lastx, lasty);*/
-          wrap = FALSE;
-        }
-    }
-  
+    }  
   m_pFrame->GetCanvas()->Refresh();
 }
 
