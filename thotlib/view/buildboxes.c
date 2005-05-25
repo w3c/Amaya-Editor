@@ -1934,7 +1934,9 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
 	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
 			    ViewFrameTable[frame - 1].FrMagnification);
 	}
-      //printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+#ifdef POSITIONING
+      printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+#endif /* POSITIONING */
     }
   //#endif /* POSITIONING */
 }
@@ -1958,7 +1960,9 @@ static void RemoveFlow (PtrAbstractBox pAb, int frame)
 	{
 	  if (pFlow->FlRootBox == pAb)
 	    {
-	      //printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+#ifdef POSITIONING
+	      printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+#endif /* POSITIONING */
 	      /* remove the current flow */  
 	      if (prev)
 		prev->FlNext = pFlow->FlNext;

@@ -68,7 +68,9 @@ CSSProperty;
 static char         *DocURL = NULL; /* The parsed CSS file */
 static int           LineNumber = -1; /* The line where the error occurs */
 static int           NewLineSkipped = 0;
-static ThotBool      Style_parsing = FALSE; /* TRUE when parsing a set of CSS rules */
+static int           RedisplayImages = 0; /* number of BG images loading */
+static int           RedisplayDoc = 0; /* document to be redisplayed */
+static int           Style_parsing = 0; /* > 0 when parsing a set of CSS rules */
 static ThotBool      RedisplayBGImage = FALSE; /* TRUE when a BG image is inserted */
 static ThotBool      DoApply = TRUE;
 
@@ -1828,39 +1830,41 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
     }
 
   TtaFreeMemory (callblock);
-  /* restore the display mode */
+  RedisplayImages--;
   if (doc)
     {
       if (dispMode == DisplayImmediately)
+	/* restore the display mode */
 	TtaSetDisplayMode (doc, dispMode);
     }
-  else if (css && !Style_parsing)
+  else if (css && Style_parsing == 0 && RedisplayImages == 0 && RedisplayDoc)
     {
       /* all background images are now loaded */
-      for (doc = 1; doc < DocumentTableLength; doc++)
-	if (css->infos[doc] &&
-	    /* don't manage a document used by make book */
-	    (DocumentMeta[doc] == NULL ||
-	     DocumentMeta[doc]->method != CE_MAKEBOOK))
-	  {
-	    pInfo = css->infos[doc];
-	    enabled = FALSE;
-	    while (pInfo && !enabled)
-	      {
-		enabled = pInfo->PiEnabled;
-		pInfo = pInfo->PiNext;
-	      }
-	    /* Change the Display Mode to take into account the new
-	       presentation */
-	    dispMode = TtaGetDisplayMode (doc);
-	    if (dispMode == DisplayImmediately)
-	     {
-		/* @@@@@@@@@@@@ force the redisplay of this box */
-		TtaSetDisplayMode (doc, NoComputedDisplay);
-		/* Restore the display mode */
-		TtaSetDisplayMode (doc, dispMode);
-	     }
-	  }
+      //for (doc = 1; doc < DocumentTableLength; doc++)
+      doc = RedisplayDoc;
+      if (css->infos[doc] &&
+	  /* don't manage a document used by make book */
+	  (DocumentMeta[doc] == NULL ||
+	   DocumentMeta[doc]->method != CE_MAKEBOOK))
+	{
+	  pInfo = css->infos[doc];
+	  enabled = FALSE;
+	  while (pInfo && !enabled)
+	    {
+	      enabled = pInfo->PiEnabled;
+	      pInfo = pInfo->PiNext;
+	    }
+	  /* Change the Display Mode to take into account the new
+	     presentation */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    {
+	      /* force the redisplay of this box */
+	      TtaSetDisplayMode (doc, NoComputedDisplay);
+	      TtaSetDisplayMode (doc, dispMode);
+	    }
+	  RedisplayBGImage = FALSE;
+	}
     }
   else
     RedisplayBGImage = TRUE;
@@ -1912,9 +1916,11 @@ static char *SetCSSImage (Element element, PSchema tsch,
 	      callblock->ruleType = ruleType;
 	      /* new use of the context */
 	      ctxt->uses += 1;
+	      RedisplayImages++;
 	      /* check if the image url is related to an external CSS */
 	      if (css)
 		{
+		  RedisplayDoc = ctxt->doc;
 		  if (css->url)
 		    /* the image concerns a CSS file */
 		    NormalizeURL (url, 0, tempname, imgname, css->url);
@@ -6220,7 +6226,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   index = 0;
   base = NULL;
   /* entering the CSS parsing */
-  Style_parsing = TRUE;
+  Style_parsing++;
   screentype = TtaGetEnvString ("SCREEN_TYPE");
   /* number of new lines parsed */
   newlines = 0;
@@ -6565,18 +6571,18 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
         }
     }
   /* closing the CSS parsing */
-  Style_parsing = FALSE;
-
-  /* restore the display mode */
-  if (RedisplayBGImage)
+  Style_parsing--;
+  if (Style_parsing == 0 && RedisplayImages == 0 && RedisplayBGImage)
     {
+      /* CSS parsing finishes after a BG image was loaded */
       RedisplayBGImage = FALSE;
+      RedisplayDoc = 0;
       TtaSetDisplayMode (docRef, NoComputedDisplay);
-    }
-  if (dispMode == DisplayImmediately)
-    {
       TtaSetDisplayMode (docRef, dispMode);
     }
+  else if (dispMode == DisplayImmediately)
+    /* restore the display mode */
+    TtaSetDisplayMode (docRef, dispMode);
 
   /* Prepare the context for style attributes */
   DocURL = DocumentURLs[docRef];
