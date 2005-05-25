@@ -7848,8 +7848,8 @@ void ShowMapAreas (Document doc, View view)
   
 #if defined(_GTK) || defined(_WX)  
   MapAreas[doc] = !MapAreas[doc];
-#endif /* #if  defined(_GTK) || defined(_WX) */
-  
+  TtaSetToggleItem (doc, view, Views, TShowMapAreas, MapAreas[doc]);
+#endif /* _GTK || _WX */
   ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 }
 
