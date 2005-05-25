@@ -1634,7 +1634,7 @@ void InitTranslations (char *appliname)
   char               *appHome;	   /* fichier de translation */
   char                fullName[200];  /* ligne en construction pour motif */
   char                home[200], name[80];
-  char               *text, *addr, *sep = "+";
+  char               *addr, *sep = "+";
   char                transText[MAX_LENGTH], ch[MAX_LENGTH];
   char                equiv[MAX_LENGTH]; /* equivalents caracteres pour motif */
   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
