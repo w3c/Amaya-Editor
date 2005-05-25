@@ -1835,24 +1835,24 @@ void InitTranslations (char *appliname)
 	      if (i == 0)
 		{
 		  /* action insert-string */
-		  if (transText[len] == '&' && transText[len + 1] == '#')
+		  if (ch[len] == '&' && ch[len + 1] == '#')
 		    {
 		      /* it's an entity */
 		      j = 2;
-		      while (transText[len + j] != EOS &&
-			     transText[len + j] != ';' &&
-			     transText[len + j] != ')' &&
-			     transText[len + j] != '"')
+		      while (ch[len + j] != EOS &&
+			     ch[len + j] != ';' &&
+			     ch[len + j] != ')' &&
+			     ch[len + j] != '"')
 			j++;
-		      transText[len + j] = EOS;
-		      if (transText[len + 2] == 'x')
-			sscanf (&transText[len + 3], "%x", &value);
+		      ch[len + j] = EOS;
+		      if (ch[len + 2] == 'x')
+			sscanf (&ch[len + 3], "%x", &value);
 		      else
-			sscanf (&transText[len + 2], "%d", &value);
+			sscanf (&ch[len + 2], "%d", &value);
 		    }
 		  else
 		    {
-		      addr = (char *)AsciiTranslate (&transText[len]);
+		      addr = (char *)AsciiTranslate (&ch[len]);
 		      value = (unsigned char) addr[0];
 		    }
 		  MemoKey (mod1, key1, isSpecialKey1,
