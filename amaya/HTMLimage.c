@@ -176,7 +176,7 @@ LoadedImageDesc *SearchLoadedDocImage (Document doc, char *url)
    SetAreaCoords computes the coords attribute value from x, y,       
    width and height of the box.                           
   ----------------------------------------------------------------------*/
-void SetAreaCoords (Document document, Element element, int attrNum)
+void SetAreaCoords (Document document, Element element, int attrNum, Element image)
 {
    ElementType         elType;
    Element             child, map;
@@ -190,11 +190,15 @@ void SetAreaCoords (Document document, Element element, int attrNum)
 
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
-   if (elType.ElTypeNum != HTML_EL_AREA)
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+       elType.ElTypeNum != HTML_EL_AREA)
       return;
    /* get size of the map */
    map = TtaGetParent (element);
-   TtaGiveBoxSize (map, document, 1, UnPixel, &w, &h);
+   if (image)
+     TtaGiveBoxSize (image, document, 1, UnPixel, &w, &h);
+   else
+     TtaGiveBoxSize (map, document, 1, UnPixel, &w, &h);
    /* Search the coords attribute */
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_coords;
@@ -211,7 +215,8 @@ void SetAreaCoords (Document document, Element element, int attrNum)
    /* prepare the coords string */
    length = 2000;
    text = (char *)TtaGetMemory (length);
-   if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
+   if (shape == HTML_ATTR_shape_VAL_rectangle ||
+       shape == HTML_ATTR_shape_VAL_circle)
      {
 	/* Search the x_coord attribute */
 	attrType.AttrTypeNum = HTML_ATTR_x_coord;
@@ -500,13 +505,13 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 		      /* update area coords */
 		      if (deltax && deltay)
 			/* both width and height */
-			SetAreaCoords (doc, el, 0);
+			SetAreaCoords (doc, el, 0, image);
 		      else if (deltax)
 			/* only width */
-			SetAreaCoords (doc, el, HTML_ATTR_IntWidthPxl);
+			SetAreaCoords (doc, el, HTML_ATTR_IntWidthPxl, image);
 		      else
 			/* only height */
-			SetAreaCoords (doc, el, HTML_ATTR_IntHeightPxl);
+			SetAreaCoords (doc, el, HTML_ATTR_IntHeightPxl, image);
 		    }
 	       }
 	     TtaNextSibling (&el);

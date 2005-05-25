@@ -2753,14 +2753,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   /* Loop on user input to keep the first point */
   ret = 0;
-#ifdef _WX
-  /* TODO: WX ... */
-  wxMessageDialog messagedialog( NULL,
-				 TtaConvMessageToWX("Not implemented yet"), 
-				 _T("Warning"),
-				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-  messagedialog.ShowModal();
-#else /* defined(_WX) */
+#ifndef _WX
   while (ret == 0)
     {
 #ifdef _WINGUI
@@ -2966,6 +2959,14 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   *y = ym; 
 #endif /* _GTK */
   
+#ifdef _WX
+  /*wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX("Not implemented yet"), 
+				 _T("Warning"),
+				 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+				 messagedialog.ShowModal();*/
+#else /* _WX */
+#endif /* _WX */
   Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 #ifdef _WINGUI 
 #ifndef _GL

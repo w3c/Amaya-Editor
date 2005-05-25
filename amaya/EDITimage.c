@@ -107,6 +107,7 @@ void CallbackImage (int ref, int typedata, char *data)
     case FormAlt:
       if (val == 1 && ImgAlt[0] == EOS)
 	strcpy (ImgAlt, "Alt");
+      TtaDestroyDialogue (ref);
       break;
     case FormImage:
     case FormObject:
@@ -415,268 +416,291 @@ static void GetAlt (Document document, View view)
   ----------------------------------------------------------------------*/
 static void CreateAreaMap (Document doc, View view, char *shape)
 {
-   Element             el, map, parent, image, child;
-   Element             newMap, newElem;
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
-   char                *url;
+  Element             el, map, parent, image, child;
+  Element             newMap, newElem;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
+  char                *url;
 #ifndef _WX
-   char                *utf8value;
+  char                *utf8value;
 #endif /* _WX */
-   int                 length, w, h;
-   int                 firstchar, lastchar;
-   int                 docModified;
-   DisplayMode         dispMode;
+  int                 length, w, h;
+  int                 firstchar, lastchar;
+  int                 docModified;
+  DisplayMode         dispMode;
+  ThotBool            oldStructureChecking;
+  ThotBool            lock = TRUE;
 
-   /* get the first selected element */
-   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-   if (el == NULL)
-     {
-       /* no selection. Nothing to do */
-       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-       return;
-     }
-
-   elType = TtaGetElementType (el);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
-     /* not within an HTML element. Nothing to do */
-     return;
-
-   docModified = TtaIsDocumentModified (doc);
-   /* ask Thot to stop displaying changes made in the document */
-   dispMode = TtaGetDisplayMode (doc);
-   /*if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);*/
-
-   TtaOpenUndoSequence (doc, el, el, 0, 0);
-   newElem = NULL;
-   attrRefimg = NULL;
-   newuseMap = NULL;
-   newMap = NULL;
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-     /* an image is selected. Create an area for it */
-     {
-        url = (char *)TtaGetMemory (MAX_LENGTH);
-	image = el;
-	/* Search the USEMAP attribute */
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-	attr = TtaGetAttribute (image, attrType);
-	map = NULL;
-	if (attr != NULL)
-	  {
-	     /* Search the MAP element associated with IMG element */
-	     length = TtaGetTextAttributeLength (attr) + 1;
-	     TtaGiveTextAttributeValue (attr, url, &length);
-	     if (url[0] == '#')
-		map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
-	  }
-	if (map == NULL)
-	  {
-	     /* create the MAP element */
-	     elType.ElTypeNum = HTML_EL_MAP;
-	     map = TtaNewElement (doc, elType);
-	     newMap = map;
-	     newElem = map;
-	     parent = image;
-	     do
-	       {
-		 el = parent;
-		 parent = TtaGetParent (el);
-		 if (parent)
-		   elType = TtaGetElementType (parent);
-	       }
-	     while (parent && elType.ElTypeNum != HTML_EL_BODY &&
-		    elType.ElTypeNum != HTML_EL_Division );
-	     TtaInsertSibling (map, el, FALSE, doc);
-	     CreateTargetAnchor (doc, map, FALSE, FALSE);
-	     attrType.AttrTypeNum = HTML_ATTR_NAME;
-	     attr = TtaGetAttribute (map, attrType);
-
-	     /* create the USEMAP attribute for the image */
-	     length = TtaGetTextAttributeLength (attr) + 1;
-	     url[0] = '#';
-	     TtaGiveTextAttributeValue (attr, &url[1], &length);
-	     attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-	     attr = TtaGetAttribute (image, attrType);
-	     if (attr == NULL)
-	       {
-		 attr = TtaNewAttribute (attrType);
-		 newuseMap = attr;
-		 TtaAttachAttribute (image, attr, doc);
-	         TtaSetAttributeText (attr, url, image, doc);
-		 TtaRegisterAttributeCreate (attr, image, doc);
-	       }
-	     else
-	       {
-		 TtaRegisterAttributeReplace (attr, image, doc);
-	         TtaSetAttributeText (attr, url, image, doc);
-	       }
-	     /* create the Ref_IMG attribute */
-	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-	     attrRefimg = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (map, attrRefimg, doc);
-	     TtaSetAttributeReference (attrRefimg, map, doc, image);
-	  }
-	TtaFreeMemory (url);
-     }
-   else
-     /* the selected element is not an image */
-     {
-	/* is the selection within a MAP element ? */
-	if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
-	  {
-	     el = TtaGetParent (el);
-	     map = TtaGetParent (el);
-	  }
-	else if (elType.ElTypeNum == HTML_EL_AREA)
-	   map = TtaGetParent (el);
-	else if (elType.ElTypeNum == HTML_EL_MAP)
-	   map = el;
-	else
-	   /* cannot create the AREA */
-	   map = NULL;
-
-	if (map)
-	  {
-	    /* Search the Ref_IMG attribute */
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-	    attr = TtaGetAttribute (map, attrType);
-	    image = NULL;
-	    if (attr != NULL)
-	      {
-		/* Search the IMAGE element associated with the MAP */
-		TtaGiveReferenceAttributeValue (attr, &image);
-	      }
-	  }
-     }
-
-   if (map == NULL || image == NULL)
-     /* Nothing to do. Just reset display mode */
-     TtaSetDisplayMode (doc, dispMode);
-   else
-     /* Create an AREA element */
-     {
-	elType.ElTypeNum = HTML_EL_AREA;
-	/* Should we ask the user to give coordinates */
-	if (shape[0] == 'R' || shape[0] == 'a')
-	   TtaAskFirstCreation ();
-
-	el = TtaNewTree (doc, elType, "");
-	if (!newElem)
-	   newElem = el;
-	child = TtaGetLastChild (map);
-	if (child == NULL)
-	   TtaInsertFirstChild (&el, map, doc);
-	else
-	   TtaInsertSibling (el, child, FALSE, doc);
-	child = TtaGetFirstChild (el);
-	/* For polygons, sets the value after the Ref_IMG attribute is
-	   created */
-	if (shape[0] != 'p')
-	   TtaSetGraphicsShape (child, shape[0], doc);
-
-	/* create the shape attribute */
-	attrType.AttrTypeNum = HTML_ATTR_shape;
-	attrShape = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attrShape, doc);
-
-	/* Create the coords attribute */
-	attrType.AttrTypeNum = HTML_ATTR_coords;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
-
-	if (shape[0] == 'R')
-	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
-				 el, doc);
-	else if (shape[0] == 'a')
-	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
-				 el, doc);
-	else if (shape[0] == 'p')
-	  {
-	     /* create the AreaRef_IMG attribute */
-	     attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
-	     attrRef = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attrRef, doc);
-	     TtaSetAttributeReference (attrRef, el, doc, image);
-	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
-				   el, doc);
-	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
-	     TtaChangeBoxSize (child, doc, 1, w, h, UnPixel);
-	  }
-	/* ask Thot to display changes made in the document */
-	TtaSetDisplayMode (doc, dispMode);
-	TtaSelectElement (doc, child);
-	if (shape[0] == 'p')
-	  {
-	    TtcInsertGraph (doc, 1, 'p');
-	    if (TtaGetElementVolume (child) < 3)
-	      {
-		/* the polyline doesn't have enough points */
-		if (newMap)
-		  TtaDeleteTree (newMap, doc);
-		else
-		  TtaDeleteTree (el, doc);
-		TtaCancelLastRegisteredSequence (doc);
-		if (!docModified)
-		  TtaSetDocumentUnmodified (doc);
-		TtaSelectElement (doc, image);
-		return;
-	      }
-	  }
-	/* Compute coords attribute */
-	SetAreaCoords (doc, el, 0);
-
-  /* check the attribute ALT is not allready present 
-   * it should surely be allready created because of mandatory attributs auto-creation */
-  attrType.AttrTypeNum = HTML_ATTR_ALT;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == 0)
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el == NULL)
     {
-      /* create the attribute ALT */
-      attrType.AttrTypeNum = HTML_ATTR_ALT;
+      /* no selection. Nothing to do */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+
+  elType = TtaGetElementType (el);
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    /* not within an HTML element. Nothing to do */
+    return;
+
+  /* first force the display of areas */
+  if (!MapAreas[doc])
+    ShowMapAreas (doc, view);
+
+  docModified = TtaIsDocumentModified (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  dispMode = TtaGetDisplayMode (doc);
+  TtaOpenUndoSequence (doc, el, el, 0, 0);
+  newElem = NULL;
+  attrRefimg = NULL;
+  newuseMap = NULL;
+  newMap = NULL;
+
+  /* lock the table formatting */
+  TtaGiveTableFormattingLock (&lock);
+  if (!lock)
+    /* table formatting is not loked, lock it now */
+    TtaLockTableFormatting ();
+
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  /* Avoid generation of popup dialog for mandatory attributes */
+  TtaSetStructureChecking (FALSE, doc);
+  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+    /* an image is selected. Create an area for it */
+    {
+      url = (char *)TtaGetMemory (MAX_LENGTH);
+      image = el;
+      /* Search the USEMAP attribute */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+      attr = TtaGetAttribute (image, attrType);
+      map = NULL;
+      if (attr != NULL)
+	{
+	  /* Search the MAP element associated with IMG element */
+	  length = TtaGetTextAttributeLength (attr) + 1;
+	  TtaGiveTextAttributeValue (attr, url, &length);
+	  if (url[0] == '#')
+	    map = SearchNAMEattribute (doc, &url[1], NULL, NULL);
+	}
+      if (map == NULL)
+	{
+	  /* create the MAP element */
+	  elType.ElTypeNum = HTML_EL_MAP;
+	  map = TtaNewElement (doc, elType);
+	  newMap = map;
+	  newElem = map;
+	  parent = image;
+	  do
+	    {
+	      el = parent;
+	      parent = TtaGetParent (el);
+	      if (parent)
+		elType = TtaGetElementType (parent);
+	    }
+	  while (parent && elType.ElTypeNum != HTML_EL_BODY &&
+		 elType.ElTypeNum != HTML_EL_Division );
+	  TtaInsertSibling (map, el, FALSE, doc);
+	  CreateTargetAnchor (doc, map, FALSE, FALSE);
+	  attrType.AttrTypeNum = HTML_ATTR_NAME;
+	  attr = TtaGetAttribute (map, attrType);
+	  
+	  /* create the USEMAP attribute for the image */
+	  length = TtaGetTextAttributeLength (attr) + 1;
+	  url[0] = '#';
+	  TtaGiveTextAttributeValue (attr, &url[1], &length);
+	  attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	  attr = TtaGetAttribute (image, attrType);
+	  if (attr == NULL)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      newuseMap = attr;
+	      TtaAttachAttribute (image, attr, doc);
+	      TtaSetAttributeText (attr, url, image, doc);
+	      TtaRegisterAttributeCreate (attr, image, doc);
+	    }
+	  else
+	    {
+	      TtaRegisterAttributeReplace (attr, image, doc);
+	      TtaSetAttributeText (attr, url, image, doc);
+	    }
+	  /* create the Ref_IMG attribute */
+	  attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	  attrRefimg = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (map, attrRefimg, doc);
+	  TtaSetAttributeReference (attrRefimg, map, doc, image);
+	}
+      TtaFreeMemory (url);
+    }
+  else
+    /* the selected element is not an image */
+    {
+      /* is the selection within a MAP element ? */
+      if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
+	{
+	  el = TtaGetParent (el);
+	  map = TtaGetParent (el);
+	}
+      else if (elType.ElTypeNum == HTML_EL_AREA)
+	map = TtaGetParent (el);
+      else if (elType.ElTypeNum == HTML_EL_MAP)
+	map = el;
+      else
+	/* cannot create the AREA */
+	map = NULL;
+      
+      if (map)
+	{
+	  /* Search the Ref_IMG attribute */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	  attr = TtaGetAttribute (map, attrType);
+	  image = NULL;
+	  if (attr)
+	    /* Search the IMAGE element associated with the MAP */
+	    TtaGiveReferenceAttributeValue (attr, &image);
+	}
+    }
+  if (!lock)
+    /* unlock table formatting */
+    TtaUnlockTableFormatting ();
+  /* restore the structure checking */
+  TtaSetStructureChecking (oldStructureChecking, doc);
+
+  if (map == NULL || image == NULL)
+    /* Nothing to do. Just reset display mode */
+    TtaSetDisplayMode (doc, dispMode);
+  else
+    /* Create an AREA element */
+    {
+      TtaSetStructureChecking (FALSE, doc);
+      elType.ElTypeNum = HTML_EL_AREA;
+      /* Should we ask the user to give coordinates */
+      if (shape[0] == 'R' || shape[0] == 'a')
+	TtaAskFirstCreation ();
+
+      el = TtaNewTree (doc, elType, "");
+      if (!newElem)
+	newElem = el;
+      child = TtaGetLastChild (map);
+      if (child == NULL)
+	TtaInsertFirstChild (&el, map, doc);
+      else
+	TtaInsertSibling (el, child, FALSE, doc);
+      TtaSetStructureChecking (oldStructureChecking, doc);
+      child = TtaGetFirstChild (el);
+      /* For polygons, sets the value after the Ref_IMG attribute is
+	 created */
+      if (shape[0] != 'p')
+	TtaSetGraphicsShape (child, shape[0], doc);
+
+      /* create the shape attribute */
+      attrType.AttrTypeNum = HTML_ATTR_shape;
+      attrShape = TtaGetAttribute (el, attrType);
+      if (attrShape == NULL)
+	{
+	  attrShape = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attrShape, doc);
+	}
+      
+      /* Create the coords attribute */
+      attrType.AttrTypeNum = HTML_ATTR_coords;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      GetAlt (doc, view);
-      if (ImgAlt[0] == EOS)
-        {
-          /* abandon the creation of the area */
-          if (newMap)
-            TtaDeleteTree (newMap, doc);
-          else
-            TtaDeleteTree (el, doc);
-          TtaCancelLastRegisteredSequence (doc);
-          if (!docModified)
-            TtaSetDocumentUnmodified (doc);
-          TtaSelectElement (doc, image);
-          return;
-        }
+      
+      if (shape[0] == 'R')
+	TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
+			      el, doc);
+      else if (shape[0] == 'a')
+	TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
+			      el, doc);
+      else if (shape[0] == 'p')
+	{
+	  /* create the AreaRef_IMG attribute */
+	  attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
+	  attrRef = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attrRef, doc);
+	  TtaSetAttributeReference (attrRef, el, doc, image);
+	  TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
+				el, doc);
+	  TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
+	  TtaChangeBoxSize (child, doc, 1, w, h, UnPixel);
+	}
+
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (doc, dispMode);
+      TtaSelectElement (doc, child);
+      if (shape[0] == 'p')
+	{
+	  TtcInsertGraph (doc, 1, 'p');
+	  if (TtaGetElementVolume (child) < 3)
+	    {
+	      /* the polyline doesn't have enough points */
+	      if (newMap)
+		TtaDeleteTree (newMap, doc);
+	      else
+		TtaDeleteTree (el, doc);
+	      TtaCancelLastRegisteredSequence (doc);
+	      if (!docModified)
+		TtaSetDocumentUnmodified (doc);
+	      TtaSelectElement (doc, image);
+	      return;
+	    }
+	}
+      /* Compute coords attribute */
+      SetAreaCoords (doc, el, 0, image);
+
+      /* check the attribute ALT is not allready present 
+       * it should surely be allready created because of mandatory attributs auto-creation */
+      attrType.AttrTypeNum = HTML_ATTR_ALT;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == 0)
+	{
+	  /* create the attribute ALT */
+	  attrType.AttrTypeNum = HTML_ATTR_ALT;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  GetAlt (doc, view);
+	  if (ImgAlt[0] == EOS)
+	    {
+	      /* abandon the creation of the area */
+	      if (newMap)
+		TtaDeleteTree (newMap, doc);
+	      else
+		TtaDeleteTree (el, doc);
+	      TtaCancelLastRegisteredSequence (doc);
+	      if (!docModified)
+		TtaSetDocumentUnmodified (doc);
+	      TtaSelectElement (doc, image);
+	      return;
+	    }
 #ifdef _WX
-      TtaSetAttributeText (attr, ImgAlt, el, doc);
+	  TtaSetAttributeText (attr, ImgAlt, el, doc);
 #else /* _WX */
-      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
-                                               TtaGetDefaultCharset ());
-      TtaSetAttributeText (attr, utf8value, el, doc);
-      TtaFreeMemory (utf8value);
+	  utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
+						   TtaGetDefaultCharset ());
+	  TtaSetAttributeText (attr, utf8value, el, doc);
+	  TtaFreeMemory (utf8value);
 #endif /* _WX */
+	}
+      ImgAlt[0] = EOS;
+      /* The link element is a new created one */
+      IsNewAnchor = TRUE;
+      /* FrameUpdating creation of Area and selection of destination */
+      SelectDestination (doc, el, FALSE, FALSE);
     }
-	ImgAlt[0] = EOS;
-	/* The link element is a new created one */
-	IsNewAnchor = TRUE;
-	/* FrameUpdating creation of Area and selection of destination */
-	SelectDestination (doc, el, FALSE, FALSE);
-     }
-   if (newElem)
-      TtaRegisterElementCreate (newElem, doc);
-   /* if a map has been created, register its Ref_IMG attribute to
-      avoid troubles when Undoing the command: function DeleteMap
-      would delete the USEMAP attribute from the IMG otherwise.
-      Undo already deletes this attribute! */
-   if (attrRefimg)
-      TtaRegisterAttributeCreate (attrRefimg, map, doc);
-   TtaCloseUndoSequence (doc);
+  if (newElem)
+    TtaRegisterElementCreate (newElem, doc);
+  /* if a map has been created, register its Ref_IMG attribute to
+     avoid troubles when Undoing the command: function DeleteMap
+     would delete the USEMAP attribute from the IMG otherwise.
+     Undo already deletes this attribute! */
+  if (attrRefimg)
+    TtaRegisterAttributeCreate (attrRefimg, map, doc);
+  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------

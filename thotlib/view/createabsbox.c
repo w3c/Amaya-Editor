@@ -3982,7 +3982,6 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    /* cherche les regles de visibilite du schema de presentation */
    pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
    /* pointeur sur la 1ere regle a appliquer */
-
    /* la premiere regle est la regle de visiblite pour la vue 1 */
    *vis = 0;
    /* parcourt toutes les vues definies dans le schema de presentation */
@@ -4008,11 +4007,12 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	   /* is there a display rule with value none? */
 	   pRuleDisplay = GetRuleView (pRSpec, pRDef, PtDisplay, view, pEl,
 				       NULL, pEl->ElStructSchema, pDoc);
-	   if (pRuleDisplay)
-	     if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N')
-	       if (ok)
-		 /* display: none */
-		 *vis = 0;
+	   if (pRuleDisplay &&
+	       CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N' && ok)
+	     /* display: none */
+	     *vis = 0;
+	   /* not necessary to continue? */
+	   //view = MAX_VIEW;
 	  }
      }
 

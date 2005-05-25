@@ -16,7 +16,8 @@ extern LoadedImageDesc *SearchLoadedDocImage ( Document doc,
                                                char *url );
 extern void SetAreaCoords ( Document document,
                             Element element,
-                            int attrNum );
+                            int attrNum,
+                            Element image );
 extern void UpdateImageMap ( Element image,
                              Document doc,
                              int oldWidth,
@@ -53,7 +54,8 @@ extern LoadedImageDesc *SearchLoadedDocImage ( Document doc,
                                                  char *url );
 extern void SetAreaCoords ( Document document,
                               Element element,
-                              int attrNum );
+                              int attrNum,
+                              Element image );
 extern void UpdateImageMap ( Element image,
                                Document doc,
                                int oldWidth,

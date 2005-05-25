@@ -3265,7 +3265,8 @@ void GraphicsModified (NotifyAttribute * event)
 	 elType = TtaGetElementType (el);
 	 }
        if (elType.ElTypeNum == HTML_EL_AREA)
-	 SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
+	 SetAreaCoords (event->document, el,
+			event->attributeType.AttrTypeNum, NULL);
      }
 }
 
