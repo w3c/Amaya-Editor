@@ -504,7 +504,7 @@ Section "Uninstall"
   DetailPrint "Deleting Files..."
   SetDetailsPrint listonly
 
-  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX-debug" "Start Menu Folder"
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX" "Start Menu Folder"
   IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
     Goto amaya_smp_notinstalled
   amaya_smp_installed:
