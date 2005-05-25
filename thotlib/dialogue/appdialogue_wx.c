@@ -1271,10 +1271,10 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
  ----------------------------------------------------------------------*/
 ThotBool TtaUniqueTabInWindow( Document doc_id )
 {
+  ThotBool   found = FALSE;
 #ifdef _WX
   int        frame_id = 1;
   int        window_id = 0;
-  ThotBool   found = FALSE;
 
   window_id = TtaGetDocumentWindowId( doc_id, -1 );
   while (frame_id <= MAX_FRAME && !found)
@@ -1285,8 +1285,8 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
       if (!found)
         frame_id++;
     }
-  return !found;
 #endif /* #ifdef _WX */
+  return !found;
 }
 
 /*----------------------------------------------------------------------
