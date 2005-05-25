@@ -363,6 +363,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
    int                 deltax, deltay, val;
    DisplayMode         dispMode;
    ThotBool            newMap;
+   ThotBool      oldStructureChecking;
 
    dispMode = TtaGetDisplayMode (doc);
    /* Search the USEMAP attribute */
@@ -371,6 +372,9 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
    attr = TtaGetAttribute (image, attrType);
    if (attr != NULL)
      {
+        /* Disable structure checking */
+        oldStructureChecking = TtaGetStructureChecking (doc);
+        TtaSetStructureChecking (FALSE, doc);
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
 	length++;
@@ -507,7 +511,9 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 	       }
 	     TtaNextSibling (&el);
 	  }
-     }
+	/* Restore the structure checking */
+	TtaSetStructureChecking (oldStructureChecking, doc);
+    }
 
    /* ask Thot to display changes made in the document */
    TtaSetDisplayMode (doc, dispMode);
