@@ -744,119 +744,116 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   FT_BitmapGlyph  bitmap;
   FT_Bitmap       *source;
   FT_Glyph        Glyph;
-  unsigned        char *data, *ptr, *src;
-  int             err;
-  register unsigned int y,w,h,p, i;
+  unsigned        char *data = NULL, *ptr = NULL, *src = NULL;
+  int             err = 0;
+  register unsigned int y = 0, w = 0, h = 0, p = 0, i = 0;
+  int             advance = 9; /* default value (used when no glyph has been found)*/
 
-  data = NULL;
   err = 0;
-  if (g != 0)
-    /*use of FT_LOAD_DEFAULT when quality will be ok*/
+  if ( g != 0 &&
+       !FT_Load_Glyph (font->face, g, thot_ft_load_mode) &&
+       !FT_Get_Glyph (font->face->glyph, &Glyph) )
     {
-      if (!FT_Load_Glyph (font->face, g, thot_ft_load_mode))
-        {
-          if (!FT_Get_Glyph (font->face->glyph, &Glyph))
-            {
-              /*Last parameter tells that we destroy font's bitmap
-                So we MUST cache it    */
-              if (Glyph->format != ft_glyph_format_bitmap)
-                err = FT_Glyph_To_Bitmap (&Glyph, thot_ft_render_mode, 0, 1);
-              if (err)
-                FT_Done_Glyph (Glyph);
-              else
-                {
-                  bitmap = (FT_BitmapGlyph) Glyph;
-                  source = &bitmap->bitmap;
-                  w = (unsigned int) source->width;     
-                  h = (unsigned int) source->rows;
-                  if (w && h)
-                    {
-                      p = w * h;
-                      data = (unsigned char *)TtaGetMemory (p);
-                      if (data)
-                        {
-                          memset (data, 0, p);
-                          ptr = data;
-                          src = source->buffer;
-                          switch (source->pixel_mode)
-                            {
-                              /* 1 bit per pixel, expand the bitmap */
-                            case ft_pixel_mode_mono:
-                              for (y=0; y<h; y++)
-                                {
-                                  unsigned char *bptr = src;
-                                  unsigned char b = 0;
-                                  for (i=0; i<w; i++)
-                                    {
-                                      if (i%8==0) b = *bptr++;
-                                      *ptr++ = b&0x80 ? 0xFF : 0;
-                                      b <<= 1;
-                                    }
-                                  src += source->pitch;
-                                }
-                              break;
-                              /* one byte per pixel, just copy the bitmap */
-                            case ft_pixel_mode_grays:
-                              memcpy (ptr, src, p);
-                              break;
-                            default:
-                              ; /* currently unused by freetype */
-                            }
-                        }
-                    }
-                  else
-                    {
-#ifdef _WX
-                      TTALOGDEBUG_1( TTA_LOG_FONT, _T("MakeBitmapGlyph(Warning): the bitmap glyph is empty (g = %d)"), g );
-#endif /* _WX */
-                      /* the bitmap glyph is empty -> generate a rectangle */
-                      w = 7;     
-                      h = font->height;
-                      p = w * h;		  
-                      data = (unsigned char *)TtaGetMemory (p);
-                      if (data)
-                        {
-                          ptr = data;
-                          memset (ptr, 0xFF, w);
-                          ptr += w;
-                          while (ptr < data + p - w)
-                            {
-                              memset (ptr++, 0xFF, 1);
-                              memset (ptr, 0, w - 2);
-                              ptr = ptr + w - 2;
-                              memset (ptr++, 0xFF, 1);
-                            }
-                          memset (ptr, 0xFF, w);
-                        }
-                    }
-                  
-                  FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
-                  BitmapGlyph->data = data;
-                  BitmapGlyph->data_type = GL_GLYPH_DATATYPE_FTBITMAP; /* must be freed with TtaFreeMemory */
-                  BitmapGlyph->advance = (int) (Glyph->advance.x >> 16);
-                  BitmapGlyph->pos.x = bitmap->left;
-                  BitmapGlyph->pos.y = source->rows - bitmap->top;   
-                  BitmapGlyph->dimension.x = w;
-                  BitmapGlyph->dimension.y = h;  	  
-                  FT_Done_Glyph (Glyph);
-                  return;	      
-                }
-            }
-        }
+      if (Glyph->format != ft_glyph_format_bitmap)
+        /* Last parameter tells that we destroy font's bitmap
+         * So we MUST cache it */
+        err = FT_Glyph_To_Bitmap (&Glyph, thot_ft_render_mode, 0, 1);
+      if (err)
+        FT_Done_Glyph (Glyph);
       else
         {
-#ifdef _WX
-          TTALOGDEBUG_0( TTA_LOG_FONT, _T("MakeBitmapGlyph(Error): FT_Load_Glyph error") );
-#endif /* _WX */
+          /* when the glyph is found into the font, we must come here */
+          bitmap = (FT_BitmapGlyph) Glyph;
+          source = &bitmap->bitmap;
+          w = (unsigned int) source->width;
+          h = (unsigned int) source->rows;
+          advance = (int)(Glyph->advance.x >> 16);
+          if (w && h)
+            {
+              p = w * h;
+              data = (unsigned char *)TtaGetMemory (p);
+              if (data)
+                {
+                  memset (data, 0, p);
+                  ptr = data;
+                  src = source->buffer;
+                  switch (source->pixel_mode)
+                    {
+                      /* 1 bit per pixel, expand the bitmap */
+                    case ft_pixel_mode_mono:
+                      for (y=0; y<h; y++)
+                        {
+                          unsigned char *bptr = src;
+                          unsigned char b = 0;
+                          for (i=0; i<w; i++)
+                            {
+                              if (i%8==0) b = *bptr++;
+                              *ptr++ = b&0x80 ? 0xFF : 0;
+                              b <<= 1;
+                            }
+                          src += source->pitch;
+                        }
+                      break;
+                      /* one byte per pixel, just copy the bitmap */
+                    case ft_pixel_mode_grays:
+                      memcpy (ptr, src, p);
+                      break;
+                    default:
+                      ; /* currently unused by freetype */
+                    }
+                }
+            }
+          else
+            err = 1;
         }
     }
-  BitmapGlyph->data_type = GL_GLYPH_DATATYPE_NONE;
-  BitmapGlyph->data = NULL;
-  BitmapGlyph->advance = 0;
-  BitmapGlyph->pos.x = 0;
-  BitmapGlyph->pos.y = 0;   
-  BitmapGlyph->dimension.x = 0;
-  BitmapGlyph->dimension.y = 0; 
+  else
+    err = 1;
+  
+  if (err == 0)
+    {
+      // a glyph has been found, store it
+      FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
+      BitmapGlyph->data = data;
+      BitmapGlyph->data_type = GL_GLYPH_DATATYPE_FTBITMAP; /* must be freed with TtaFreeMemory */
+      BitmapGlyph->advance = advance;
+      BitmapGlyph->pos.x = bitmap->left;
+      BitmapGlyph->pos.y = source->rows - bitmap->top;   
+      BitmapGlyph->dimension.x = w;
+      BitmapGlyph->dimension.y = h;  	  
+      FT_Done_Glyph (Glyph);
+    }
+  else
+    {
+      // no glyph has been found just draw a small black rectangle
+      // to indicate the caractere is not available in amaya's fonts
+      w = 7;     
+      h = font->height;
+      p = w * h;		  
+      data = (unsigned char *)TtaGetMemory (p);
+      if (data)
+        {
+          ptr = data;
+          memset (ptr, 0xFF, w);
+          ptr += w;
+          while (ptr < data + p - w)
+            {
+              memset (ptr++, 0xFF, 1);
+              memset (ptr, 0, w - 2);
+              ptr = ptr + w - 2;
+              memset (ptr++, 0xFF, 1);
+            }
+          memset (ptr, 0xFF, w);
+        }
+      
+      BitmapGlyph->data = data;
+      BitmapGlyph->data_type = GL_GLYPH_DATATYPE_FTBITMAP; /* must be freed with TtaFreeMemory */
+      BitmapGlyph->advance = advance;
+      BitmapGlyph->pos.x = 1;
+      BitmapGlyph->pos.y = 4;
+      BitmapGlyph->dimension.x = w;
+      BitmapGlyph->dimension.y = h;  	  
+    }
 }
 
 /*----------------------------------------------------------------------

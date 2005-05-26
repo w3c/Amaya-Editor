@@ -3,7 +3,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Entrer des caracteres ISO-Latin-1 et Unicode dans Amaya</title>
   <style type="text/css">
 .name { background-color : #FFF6C1}</style>
@@ -337,7 +337,7 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>227</td>
       <td>a</td>
       <td>tilde</td>
-      <td>ã2</td>
+      <td>ã</td>
     </tr>
     <tr>
       <td class="name">auml</td>
