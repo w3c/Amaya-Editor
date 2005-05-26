@@ -460,46 +460,46 @@ typedef struct _AbstractBox
   PtrAbstractBox  AbEnclosing;	/* Linking towards the enclosing asbstr. box */
   PtrAbstractBox  AbNext;	/* Linking towards the next sibling abstract box */
   PtrAbstractBox  AbPrevious;	/* Linking towards the previous abstract box */
-  PtrAbstractBox  AbFirstEnclosed;    /* Linking towards the first child
-					 abstract box */
-  PtrAbstractBox  AbNextRepeated;/* Linking towards the next repeated
-					   abstract box (laid out??) */
+  PtrAbstractBox  AbFirstEnclosed;  /* Linking towards the first child
+				       abstract box */
+  PtrAbstractBox  AbNextRepeated;   /* Linking towards the next repeated
+				       abstract box (laid out??) */
   PtrAbstractBox  AbPreviousRepeated; /* Linking towards the previous
 					 repeated abstract box */
-  PtrPSchema      AbPSchema;	/* Presentation schema of the abstract box */
-  int             AbDocView;	/* Document view number */
-  PtrCopyDescr	  AbCopyDescr;	/* Descriptor of the copied element if the
-				   abstract box is produced by a Copy rule */
-  PtrAttribute    AbCreatorAttr;/* Pointer on the attribute that created the
-				    abstract box, if it is an attribute-created
-				    presentation abstract box */
-  PtrDelayedPRule AbDelayedPRule;       /* Used by the editor */
-  int             AbVolume;	/* Equivalent characters number */
-  int	          AbTypeNum;	/* Type number/presentation box */
-  int	          AbNum;	/* Abstract box number for debug */
-  AbPosition      AbVertRef;	/* Vertical reference mark position */
-  AbPosition      AbHorizRef;	/* Horizontal reference mark position */
-  AbPosition      AbVertPos;	/* Vertical position in the box */
-  AbPosition      AbHorizPos;	/* Horizontal position in the box */
-  AbDimension     AbHeight;	/* Box height */
-  AbDimension     AbWidth;	/* Box width */
-  int             AbUnderline;	/* Underlining type */
-  int             AbThickness;	/* Underlining thickness */
-  int             AbIndent;	/* Indentation for line breaking */
-  int             AbDepth;	/* Abstract box display plane */
-  int	          AbVisibility; /* Abstract box visibility degree */
-  int             AbFont;	/* Font family: index in the family table */
-  int             AbFontStyle;	/* Font style: roman, italic, oblique */
-  int             AbFontWeight;	/* Font weight: normal, bold */
-  int             AbSize;	/* Character logical/real size */
-  int             AbLineWeight; /* Line thickness */
-  int             AbLineSpacing;/* Interlining */
-  int             AbFillPattern;/* Fill pattern */	
-  int             AbBackground; /* Background color */
-  int             AbForeground; /* Drawing color */
-  int             AbFillOpacity;    /* opacity of the fill part of element*/
-  int             AbStrokeOpacity;    /* opacity of the stroke part element*/
-  int             AbOpacity;    /* opacity of all the element*/
+  PtrPSchema      AbPSchema;	   /* Presentation schema of the abstract box*/
+  int             AbDocView;	   /* Document view number */
+  PtrCopyDescr	  AbCopyDescr;	   /* Descriptor of the copied element if the
+				      abstract box is produced by a Copy rule*/
+  PtrAttribute    AbCreatorAttr;   /* Pointer on the attribute that created the
+				      abstract box, if it is an attribute
+				      created presentation abstract box */
+  PtrDelayedPRule AbDelayedPRule;  /* Used by the editor */
+  int             AbVolume;	   /* Equivalent characters number */
+  int	          AbTypeNum;	   /* Type number/presentation box */
+  int	          AbNum;	   /* Abstract box number for debug */
+  AbPosition      AbVertRef;	   /* Vertical reference mark position */
+  AbPosition      AbHorizRef;	   /* Horizontal reference mark position */
+  AbPosition      AbVertPos;	   /* Vertical position in the box */
+  AbPosition      AbHorizPos;	   /* Horizontal position in the box */
+  AbDimension     AbHeight;	   /* Box height */
+  AbDimension     AbWidth;	   /* Box width */
+  int             AbUnderline;	   /* Underlining type */
+  int             AbThickness;	   /* Underlining thickness */
+  int             AbIndent;	   /* Indentation for line breaking */
+  int             AbDepth;	   /* Abstract box display plane */
+  int	          AbVisibility;    /* Abstract box visibility degree */
+  int             AbFont;	   /* Font family: index in the family table */
+  int             AbFontStyle;	   /* Font style: roman, italic, oblique */
+  int             AbFontWeight;	   /* Font weight: normal, bold */
+  int             AbSize;	   /* Character logical/real size */
+  int             AbLineWeight;    /* Line thickness */
+  int             AbLineSpacing;   /* Linespacing */
+  int             AbFillPattern;   /* Fill pattern */	
+  int             AbBackground;    /* Background color */
+  int             AbForeground;    /* Drawing color */
+  int             AbFillOpacity;   /* opacity of the fill part of element*/
+  int             AbStrokeOpacity; /* opacity of the stroke part element*/
+  int             AbOpacity;       /* opacity of all the element*/
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */
   int             AbBottomBColor;  /* Border Bottom color */
@@ -549,6 +549,10 @@ typedef struct _AbstractBox
   TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
   TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
 
+  ThotBool        AbPseudoElBefore;   /* CSS pseudo-element generated by
+					 :before */
+  ThotBool        AbPseudoElAfter;    /* CSS pseudo-element generated by
+					 :after */
   ThotBool        AbBuildAll;         /* All descendant abstract boxes must
 					 always be built */
   ThotBool        AbAcceptLineBreak;  /* Can be split in lines */

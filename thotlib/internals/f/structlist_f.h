@@ -25,7 +25,8 @@ extern void TtaListStyleSchemas ( Document document,
 extern void DisplayPRule ( PtrPRule rule,
                            FILE *fileDescriptor,
                            PtrElement pEl,
-                           PtrPSchema pSchP );
+                           PtrPSchema pSchP,
+			   int indent );
 extern int TtaListStyleOfCurrentElement ( Document document,
                                           FILE *fileDescriptor );
 
@@ -50,7 +51,8 @@ extern void TtaListStyleSchemas ( Document document,
 extern void DisplayPRule ( PtrPRule rule,
                              FILE *fileDescriptor,
                              PtrElement pEl,
-                             PtrPSchema pSchP );
+                             PtrPSchema pSchP,
+			     int indent );
 extern int TtaListStyleOfCurrentElement ( Document document,
                                             FILE *fileDescriptor );
 

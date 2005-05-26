@@ -33,7 +33,7 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
   DisplayPRule displays the presentation rule pointed by RP.
   ----------------------------------------------------------------------*/
 void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
-		   PtrElement pEl, PtrPSchema pSchP)
+		   PtrElement pEl, PtrPSchema pSchP, int indent)
 {
 }
 

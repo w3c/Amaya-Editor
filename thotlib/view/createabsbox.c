@@ -61,6 +61,42 @@
 #include "animbox_f.h"
 #endif /* _GL */
 
+typedef struct _AllRules
+{
+  /* for each type of presentation property, selectedRule[i] records the
+     latest rule selected while applying the cascade.
+     schemaOfSelectedRule records the presentation schema the corresponding
+     rule comes from */
+  PtrPRule           selectedRule[PtPictInfo];
+  PtrPSchema         schemaOfSelectedRule[PtPictInfo];
+  PtrAttribute       attrOfSelectedRule[PtPictInfo];
+  PtrAttributePres   attrBlockOfSelectedRule[PtPictInfo];  
+} AllRules;
+
+typedef struct _Cascade
+{
+  AllRules     MainElement;
+
+  PtrPRule     ContentRuleBefore;
+  PtrPSchema   schemaOfContentRuleBefore;
+  PtrAttribute attrOfContentRuleBefore;
+  AllRules     BeforePseudoEl;
+
+  PtrPRule     ContentRuleAfter;
+  PtrPSchema   schemaOfContentRuleAfter;
+  PtrAttribute attrOfContentRuleAfter;
+  AllRules     AfterPseudoEl;
+} Cascade;
+
+typedef struct _RuleQueue
+{
+  PtrPRule         queuePR[MAX_QUEUE_LEN];
+  PtrPSchema       queuePS[MAX_QUEUE_LEN];
+  PtrAttribute     queuePA[MAX_QUEUE_LEN];
+  PtrAbstractBox   queuePP[MAX_QUEUE_LEN];
+  AllRules*        rulesPseudo[MAX_QUEUE_LEN];
+} RuleQueue;
+
 static PresRule ListItemVisibility, ListItemListStyleType, ListItemListStyleImage, ListItemListStylePosition, ListItemVertPos, ListItemHorizPos, ListItemMarginRight, ListItemMarginLeft, ListItemSize, ListItemStyle, ListItemPtWeight, ListItemFont, ListItemOpacity, ListItemDirection, ListItemBackground, ListItemForeground;
 
 /*----------------------------------------------------------------------
@@ -2033,24 +2069,26 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
 PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			       PtrPRule pRCre, PtrSSchema pSS,
 			       PtrAttribute pAttr, DocViewNumber viewNb,
-			       PtrPSchema pSchP, ThotBool completeCreator)
+			       PtrPSchema pSchP, void* rulesPseudo, 
+			       ThotBool completeCreator)
 {
   PtrPRule            pRD, pRS;
   PtrPRule            pR, pR1, pRV;
   PtrAbstractBox      pAb, pAbb1, pAbbNext;
   PtrAbstractBox      pAbbCreated;
   PtrElement          pE, pER, pElSibling;
-  PtrPRule            queuePR[MAX_QUEUE_LEN];
   PtrPSchema          pSP;
   PtrAttribute        pSelAttr;
   PtrPresentationBox  pBox;
   FunctionType        funct;
   TypeUnit            unit;
   ThotPictInfo       *image;
-  int                 view, vis;
+  int                 view, vis, i;
   int                 viewSch, viewIndex;
-  int                 lqueue, pqueue;
-  ThotBool            ok, stop, volok;
+  PresVariable       *pVar;
+  PresVarItem        *pItem;
+  PresConstant       *pConst;
+  ThotBool            ok, stop, volok, done;
 
   pAbbCreated = NULL;
   pAb = NULL;
@@ -2079,7 +2117,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   funct = pRCre->PrPresFunction;
   if (ok)
     if (pEl->ElHolophrast || pEl->ElTerminal)
-      if (funct == FnCreateFirst || funct == FnCreateLast)
+      if (funct == FnCreateFirst || funct == FnCreateLast ||
+	  funct == FnContent)
 	ok = FALSE;
   /* on ne cree pas de pave de presentation qui soit un frere ou le pere du */
   /* pave racine de la vue. */
@@ -2104,15 +2143,22 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	 }
 
   if (ok)
-    if (pSchP->PsPresentBox == NULL)
-      ok = FALSE;
-    else
-      if (pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1] == NULL)
+    {
+      if (pRCre->PrPresBox[0] == 0)
 	ok = FALSE;
+      else if (pSchP->PsPresentBox == NULL)
+	ok = FALSE;
+      else if (funct != FnContent &&
+	       pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1] == NULL)
+	/* for function FnContent, pRCre->PrPresBox[0] is the number of the
+	   presentation variable that will generate content, not the number
+	   of the presentation box to be created */
+	ok = FALSE;
+    }
 
   /* si c'est une boite de haut de page et qu'il s'agit de la derniere */
   /* marque de page du document, on ne cree pas la boite */
-  if (ok)
+  if (ok && funct != FnContent)
     if (pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1]->PbPageHeader)
       /* c'est une boite de haut de page */
       {
@@ -2171,521 +2217,559 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	/* on ne cree pas le pave' de presentation */
 	ok = FALSE;
 
-   if (ok)
-     {
-       /* on cree le pave (ou non, selon sa visibilite) */
-       /* pRS : premiere regle de presentation */
-       /* specifique de la boite a creer */
-       pRS = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1]->PbFirstPRule;
-       /* pRD : premiere regle de presentation par defaut du schema de */
-       /* presentation */
-       pRD = pSchP->PsFirstDefaultPRule;
-       /* le volume des paves englobant ne comprend pas le volume du pave */
-       /* que l'on va creer */
-       volok = FALSE;
-       /* parcourt toutes les vues pour trouver toutes les regles de */
-       /* visibilite */
-       vis = 0;
-       pR1 = NULL;
-       for (view = 1; view <= MAX_VIEW; view++)
-	 {
-	   if (view == 1)
-	     {
-	       /* vue principale */
-	       pR1 = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema, pDoc);
-	       /* regle de visibilite pour la vue 1 */
-	       pR = pR1;
-	     }
-	   else
-	     {
-	       /* if there is a visibility rule for that view, take it */
-	       /* no need to check a display rule: presentation boxes don't
-		  use that kind of rule */
-	       pR = GetRuleView (&pRS, &pRD, PtVisibility, view, pEl, pAttr,
-				 pEl->ElStructSchema, pDoc);
-	       if (pR == NULL)
-		 /* sinon, on prend celle de la vue 1 */
-		 pR = pR1;
-	     }
-	   if (view == viewSch)
-	     {
-	       /* c'est la regle de la vue traitee */
-	       vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL, NULL);
-	       /* si la regle de visibilite n'a pas pu etre appliquee, */
-	       /* on prend la visibilite du pave de l'element createur */
-	       if (!ok)
-		 vis = pEl->ElAbstractBox[viewIndex]->AbVisibility;
-	     }
-	 }
+  if (ok)
+    {
+      /* on cree le pave (ou non, selon sa visibilite) */
+      /* pRS : premiere regle de presentation specifique de la boite a creer */
+      if (funct == FnContent)
+	/* the first presentation box in a Pschema is the prototype of all
+	   CSS pseudo-elements generated by :before and :after */
+	pRS = pSchP->PsPresentBox->PresBox[0]->PbFirstPRule;
+      else
+        pRS = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0]-1]->PbFirstPRule;
+      /* pRD : premiere regle de presentation par defaut du schema de */
+      /* presentation */
+      pRD = pSchP->PsFirstDefaultPRule;
+      /* le volume des paves englobant ne comprend pas le volume du pave */
+      /* que l'on va creer */
+      volok = FALSE;
+      /* parcourt toutes les vues pour trouver toutes les regles de */
+      /* visibilite */
+      vis = 0;
+      pR1 = NULL;
+      for (view = 1; view <= MAX_VIEW; view++)
+	{
+	  if (view == 1)
+	    {
+	      /* vue principale */
+	      pR1 = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema, pDoc);
+	      /* regle de visibilite pour la vue 1 */
+	      pR = pR1;
+	    }
+	  else
+	    {
+	      /* if there is a visibility rule for that view, take it */
+	      /* no need to check a display rule: presentation boxes don't
+		 use that kind of rule */
+	      pR = GetRuleView (&pRS, &pRD, PtVisibility, view, pEl, pAttr,
+				pEl->ElStructSchema, pDoc);
+	      if (pR == NULL)
+		/* sinon, on prend celle de la vue 1 */
+		pR = pR1;
+	    }
+	  if (view == viewSch)
+	    {
+	      /* c'est la regle de la vue traitee */
+	      vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL, NULL);
+	      /* si la regle de visibilite n'a pas pu etre appliquee, */
+	      /* on prend la visibilite du pave de l'element createur */
+	      if (!ok)
+		vis = pEl->ElAbstractBox[viewIndex]->AbVisibility;
+	    }
+	}
 
-       if (vis >= 1)
-	 /* le pave a creer est visible dans la vue */
-	 {
-	   lqueue = 0;
-	   pqueue = 0;
-	   pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
-	   /* pAb: pave cree */
-	   pAbbCreated = pAb;
-	   pAb->AbPresentationBox = TRUE;
-	   /* c'est un pave de presentation */
-	   pAb->AbCreatorAttr = pAttr;
-	   /* on se souvient de l'attribut qui a cree' le pave' */
-	   pAb->AbTypeNum = pRCre->PrPresBox[0];
-	   pAb->AbCanBeModified = FALSE;
-	   pAb->AbPSchema = pSchP;
-	   pAbb1 = pEl->ElAbstractBox[viewIndex];
-	   /* pAbb1: 1er pave de l'element createur */
-	   /* chaine le pave cree */
-	   switch (funct)
-	     {
+      if (vis >= 1)
+	/* le pave a creer est visible dans la vue */
+	{
+	  pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
+	  /* pAb: pave cree */
+	  pAbbCreated = pAb;
+	  pAb->AbPresentationBox = TRUE;
+	  /* c'est un pave de presentation */
+	  pAb->AbCreatorAttr = pAttr;
+	  /* on se souvient de l'attribut qui a cree' le pave' */
+	  if (funct == FnContent)
+	    /* the first presentation box in a Pschema is the prototype of all
+	       CSS pseudo-elements generated by :before and :after */
+	    pAb->AbTypeNum = 1;
+	  else
+	    pAb->AbTypeNum = pRCre->PrPresBox[0];
+	  pAb->AbCanBeModified = FALSE;
+	  pAb->AbPSchema = pSchP;
+	  pAbb1 = pEl->ElAbstractBox[viewIndex];
+	  /* pAbb1: 1er pave de l'element createur */
 
-	     case FnCreateFirst:
-	       pAb->AbSelected = FALSE;
-	       /* saute les paves de presentation deja crees */
-	       /* avec la regle CreateBefore */
-	       while (pAbb1->AbPresentationBox)
-		 pAbb1 = pAbb1->AbNext;
-	       pAb->AbEnclosing = pAbb1;
-	       pAb->AbReadOnly = pAbb1->AbReadOnly;
-	       if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
-		 /* c'est le premier pave englobe' */
-		 pAb->AbEnclosing->AbFirstEnclosed = pAb;
-	       else
-		 /* il y a deja des paves englobes */
-		 {
-		   pAbb1 = pAb->AbEnclosing->AbFirstEnclosed;
-		   /* saute les paves deja crees par une regle */
-		   /* FnCreateFirst et les paves des marques de page */
-		   /* de debut d'element */
-		   /* et verifie si le pave de presentation existe deja */
-		   stop = FALSE;
-		   do
-		     if ((pAbb1->AbPresentationBox && pAbb1->AbElement == pEl)
-			 || (pAbb1->AbElement->ElTypeNumber == PageBreak + 1
-			     && pAbb1->AbElement->ElPageType == PgBegin))
-		       {
-			 /* c'est un pave de presentation de l'element ou */
-			 /* un saut de page de debut d'element */
-			 if (pAbb1->AbPresentationBox &&
-			     pAbb1->AbTypeNum == pAb->AbTypeNum &&
-			     pAbb1->AbPSchema == pSchP &&
-			     (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
-			     && !pAbb1->AbDead)
-			   /* c'est le meme que celui qu'on veut creer */
-			   {
-			     pAbbCreated = NULL;
-			     stop = TRUE;
-			   }
-			 else if (pAbb1->AbNext == NULL ||
-				  AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
-			   /* le nouveau pave attache a un attribut doit
-			      s'inserer avant ceux d'un attribut suivant */
-			   stop = TRUE;
-			 else			   
-			   pAbb1 = pAbb1->AbNext;
-		       }
-		     else
-		       /* ce n'est ni pave de presentation de l'element */
-		       /* ni un saut de page de debut d'element */
-		       stop = TRUE;
-		   while (!stop);
-		   if (pAbbCreated != NULL)
-		     {
-		     if (pAbb1->AbElement == pEl
-			 || (pAbb1->AbElement->ElTypeNumber == PageBreak + 1
-			     && pAbb1->AbElement->ElPageType == PgBegin))
-		       /* chaine le nouveau pave apres le dernier pave */
-		       /* de presentation cree par une regle FnCreateFirst */
-		       /* ou la derniere marque de page de debut d'elem. */
-		       {
-			 pAb->AbPrevious = pAbb1;
-			 pAb->AbNext = pAbb1->AbNext;
-			 pAb->AbPrevious->AbNext = pAb;
-			 if (pAb->AbNext != NULL)
-			   pAb->AbNext->AbPrevious = pAb;
-		       }
-		     else
-		       /* chaine le nouveau pave avant le premier pave */
-		       /* du premier fils du createur */
-		       {
-			 pAb->AbNext = pAbb1;
-			 pAb->AbPrevious = pAbb1->AbPrevious;
-			 pAb->AbNext->AbPrevious = pAb;
-			 if (pAb->AbPrevious != NULL)
-			   pAb->AbPrevious->AbNext = pAb;
-			 if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
-			   pAb->AbEnclosing->AbFirstEnclosed = pAb;
-		       }
-		     }
-		 }
-	       break;
+	  /* chaine le pave cree */
+	  if (funct == FnCreateFirst ||
+	      (funct == FnContent && pRCre->PrBoxType == BtBefore))
+	    {
+	      pAb->AbSelected = FALSE;
+	      /* saute les paves de presentation deja crees */
+	      /* avec la regle CreateBefore */
+	      while (pAbb1->AbPresentationBox)
+		pAbb1 = pAbb1->AbNext;
+	      pAb->AbEnclosing = pAbb1;
+	      pAb->AbReadOnly = pAbb1->AbReadOnly;
+	      if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
+		/* c'est le premier pave englobe' */
+		pAb->AbEnclosing->AbFirstEnclosed = pAb;
+	      else
+		/* il y a deja des paves englobes */
+		{
+		  pAbb1 = pAb->AbEnclosing->AbFirstEnclosed;
+		  /* saute les paves deja crees par une regle */
+		  /* FnCreateFirst et les paves des marques de page */
+		  /* de debut d'element */
+		  /* et verifie si le pave de presentation existe deja */
+		  stop = FALSE;
+		  do
+		    if ((pAbb1->AbPresentationBox && pAbb1->AbElement == pEl)||
+			(pAbb1->AbElement->ElTypeNumber == PageBreak + 1 &&
+			 pAbb1->AbElement->ElPageType == PgBegin))
+		      {
+			/* c'est un pave de presentation de l'element ou */
+			/* un saut de page de debut d'element */
+			if (pAbb1->AbPresentationBox &&
+			    pAbb1->AbTypeNum == pAb->AbTypeNum &&
+			    pAbb1->AbPSchema == pSchP &&
+			    (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
+			    && !pAbb1->AbDead &&
+			    /* all CSS pseudo-elements generated by :before
+			       and :after have the same box number: 1. Check
+			       that it is a :before pseudo-element */
+			    (funct != FnContent ||
+			     (funct == FnContent && pAb->AbPseudoElBefore)))
+			  /* c'est le meme que celui qu'on veut creer */
+			  {
+			    pAbbCreated = NULL;
+			    stop = TRUE;
+			  }
+			else if (pAbb1->AbNext == NULL ||
+				 AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
+			  /* le nouveau pave attache a un attribut doit
+			     s'inserer avant ceux d'un attribut suivant */
+			  stop = TRUE;
+			else			   
+			  pAbb1 = pAbb1->AbNext;
+		      }
+		    else
+		      /* ce n'est ni pave de presentation de l'element */
+		      /* ni un saut de page de debut d'element */
+		      stop = TRUE;
+		  while (!stop);
+		  if (pAbbCreated != NULL)
+		    {
+		      if (pAbb1->AbElement == pEl ||
+			  (pAbb1->AbElement->ElTypeNumber == PageBreak + 1 &&
+			   pAbb1->AbElement->ElPageType == PgBegin))
+			/* chaine le nouveau pave apres le dernier pave */
+			/* de presentation cree par une regle FnCreateFirst */
+			/* ou la derniere marque de page de debut d'elem. */
+			{
+			  pAb->AbPrevious = pAbb1;
+			  pAb->AbNext = pAbb1->AbNext;
+			  pAb->AbPrevious->AbNext = pAb;
+			  if (pAb->AbNext != NULL)
+			    pAb->AbNext->AbPrevious = pAb;
+			}
+		      else
+			/* chaine le nouveau pave avant le premier pave */
+			/* du premier fils du createur */
+			{
+			  pAb->AbNext = pAbb1;
+			  pAb->AbPrevious = pAbb1->AbPrevious;
+			  pAb->AbNext->AbPrevious = pAb;
+			  if (pAb->AbPrevious != NULL)
+			    pAb->AbPrevious->AbNext = pAb;
+			  if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
+			    pAb->AbEnclosing->AbFirstEnclosed = pAb;
+			}
+		      if (funct == FnContent && pRCre->PrBoxType == BtBefore)
+			pAb->AbPseudoElBefore = TRUE;
+		    }
+		}
+	    }
+	  else if (funct == FnCreateLast ||
+		   (funct == FnContent && pRCre->PrBoxType == BtAfter))
+	    {
+	      pAb->AbSelected = FALSE;
+	      /* saute les paves de presentation deja crees */
+	      /* avec la regle CreateBefore */
+	      while (pAbb1->AbPresentationBox)
+		pAbb1 = pAbb1->AbNext;
+	      pAb->AbEnclosing = pAbb1;
+	      pAb->AbReadOnly = pAbb1->AbReadOnly;
+	      if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
+		pAb->AbEnclosing->AbFirstEnclosed = pAb;
+	      else
+		{
+		  pAbb1 = pAb->AbEnclosing->AbFirstEnclosed;
+		  /* cherche le dernier fils du pave createur */
+		  /* et verifie si le pave de presentation existe deja */
+		  stop = FALSE;
+		  do
+		    if (pAbb1->AbPresentationBox == pAb->AbPresentationBox &&
+			pAbb1->AbTypeNum == pAb->AbTypeNum &&
+			pAbb1->AbPSchema == pSchP &&
+			(pAttr == NULL || pAttr == pAbb1->AbCreatorAttr) &&
+			!pAbb1->AbDead &&
+			/* all CSS pseudo-elements generated by :before
+			   and :after have the same box number: 1. Check
+			   that it is a :after pseudo-element */
+			(funct != FnContent ||
+			 (funct == FnContent && pAb->AbPseudoElAfter)))
+		      /* ce pave de presentation existe deja */
+		      {
+			pAbbCreated = NULL;
+			stop = TRUE;
+		      }
+		    else if (pAbb1->AbNext == NULL ||
+			     AttrIsAfter (pAbb1->AbNext->AbCreatorAttr,pAttr))
+		      /* le nouveau pave attache a un attribut doit s'inserer
+			 avant ceux d'un attribut suivant */
+		      stop = TRUE;
+		    else
+		      pAbb1 = pAbb1->AbNext;
+		  while (!stop);
+		  /* chaine le nouveau pave apres le dernier pave */
+		  /* fils du pave createur */
+		  if (pAbbCreated != NULL)
+		    {
+		      pAb->AbPrevious = pAbb1;
+		      pAb->AbNext = pAbb1->AbNext;
+		      pAb->AbPrevious->AbNext = pAb;
+		      if (funct == FnContent && pRCre->PrBoxType == BtAfter)
+			pAb->AbPseudoElAfter = TRUE;
+		    }
+		}
+	    }
+	  else if (funct ==  FnCreateBefore)
+	    {
+	      /* saute les paves de presentation deja crees */
+	      /* avec la regle CreateBefore */
+	      stop = FALSE;
+	      do
+		if (pAbb1->AbTypeNum == pAb->AbTypeNum &&
+		    pAbb1->AbPresentationBox == pAb->AbPresentationBox &&
+		    pAbb1->AbPSchema == pSchP &&
+		    (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr) &&
+		    !pAbb1->AbDead)
+		  /* ce pave de presentation existe deja */
+		  {
+		    pAbbCreated = NULL;
+		    stop = TRUE;
+		  }
+		else if ((pAbb1->AbNext == NULL) ||
+			 (!pAbb1->AbPresentationBox && !pAbb1->AbDead) ||
+			 AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
+		  /* le nouveau pave attache a un attribut doit
+		     s'inserer avant ceux d'un attribut suivant */
+		  stop = TRUE;
+		else
+		  pAbb1 = pAbb1->AbNext;
+	      while (!stop);
+	      if (pAbbCreated != NULL)
+		{
+		  pAb->AbReadOnly = pAbb1->AbReadOnly;
+		  pAb->AbEnclosing = pAbb1->AbEnclosing;
+		  if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
+		    pAb->AbEnclosing->AbFirstEnclosed = pAb;
+		  pAb->AbNext = pAbb1;
+		  pAb->AbPrevious = pAbb1->AbPrevious;
+		  pAbb1->AbPrevious = pAb;
+		  if (pAb->AbPrevious != NULL)
+		    {
+		      pAb->AbPrevious->AbNext = pAb;
+		      if (pAb->AbPrevious->AbElement != pEl)
+			pEl->ElAbstractBox[viewIndex] = pAb;
+		    }
+		  else
+		    pEl->ElAbstractBox[viewIndex] = pAb;
+		}
+	    }
+	  else if (funct == FnCreateAfter || funct == FnCreateWith)
+	    {
+	      stop = FALSE;
+	      do
+		if (pAbb1->AbNext == NULL)
+		  stop = TRUE;
+		else if (pAbb1->AbNext->AbElement != pEl)
+		  stop = TRUE;
+		else if (pAbb1->AbNext->AbPresentationBox &&
+			 pAbb1->AbNext->AbTypeNum == pAb->AbTypeNum &&
+			 pAbb1->AbNext->AbPresentationBox == pAb->AbPresentationBox &&
+			 pAbb1->AbNext->AbPSchema == pSchP &&
+			 (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr) &&
+			 !pAbb1->AbNext->AbDead)
+		  /* ce pave de presentation existe deja */
+		  {
+		    pAbbCreated = NULL;
+		    stop = TRUE;
+		  }
+		else if (AttrIsAfter (pAbb1->AbNext->AbCreatorAttr, pAttr))
+		  /* le nouveau pave attache a un attribut doit s'inserer
+		     avant ceux d'un attribut suivant */
+		  stop = TRUE;
+		else
+		  pAbb1 = pAbb1->AbNext;
+	      while (!stop);
+	      if (pAbbCreated != NULL)
+		{
+		  pAb->AbReadOnly = pAbb1->AbReadOnly;
+		  pAb->AbEnclosing = pAbb1->AbEnclosing;
+		  pAb->AbNext = pAbb1->AbNext;
+		  pAb->AbPrevious = pAbb1;
+		  pAbb1->AbNext = pAb;
+		  if (pAb->AbNext != NULL)
+		    pAb->AbNext->AbPrevious = pAb;
+		}
+	    }
+	  else if (funct == FnCreateEnclosing)
+	    {
+	      if (pAbb1->AbEnclosing != NULL &&
+		  pAbb1->AbEnclosing->AbPresentationBox &&
+		  pAbb1->AbEnclosing->AbElement == pEl)
+		/* l'element a deja un pave de presentation englobant. */
+		/* on refuse d'en creer un autre */
+		pAbbCreated = NULL;
+	      if (pAbbCreated != NULL)
+		{
+		  pAb->AbReadOnly = pAbb1->AbReadOnly;
+		  pAb->AbEnclosing = pAbb1->AbEnclosing;
+		  if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
+		    pAb->AbEnclosing->AbFirstEnclosed = pAb;
+		  pAb->AbPrevious = pAbb1->AbPrevious;
+		  pAbb1->AbPrevious = NULL;
+		  if (pAb->AbPrevious != NULL)
+		    pAb->AbPrevious->AbNext = pAb;
+		  pAb->AbFirstEnclosed = pAbb1;
+		  /* traite les paves de presentation deja crees par les */
+		  /* regles CreateBefore et CreateAfter */
+		  stop = FALSE;
+		  while (!stop)
+		    {
+		      pAbb1->AbEnclosing = pAb;
+		      if (pAbb1->AbNext == NULL)
+			stop = TRUE;
+		      else if (pAbb1->AbNext->AbElement != pEl)
+			stop = TRUE;
+		      else
+			pAbb1 = pAbb1->AbNext;
+		    }
+		  /* traite le dernier pave' de l'element */
+		  pAb->AbNext = pAbb1->AbNext;
+		  pAbb1->AbNext = NULL;
+		  if (pAb->AbNext != NULL)
+		    pAb->AbNext->AbPrevious = pAb;
+		}
+	    }
 
-	     case FnCreateLast:
-	       pAb->AbSelected = FALSE;
-	       /* saute les paves de presentation deja crees */
-	       /* avec la regle CreateBefore */
-	       while (pAbb1->AbPresentationBox)
-		 pAbb1 = pAbb1->AbNext;
-	       pAb->AbEnclosing = pAbb1;
-	       pAb->AbReadOnly = pAbb1->AbReadOnly;
-	       if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
-		 pAb->AbEnclosing->AbFirstEnclosed = pAb;
-	       else
-		 {
-		   pAbb1 = pAb->AbEnclosing->AbFirstEnclosed;
-		   /* cherche le dernier fils du pave createur */
-		   /* et verifie si le pave de presentation existe deja */
-		   stop = FALSE;
-		   do
-		     if (pAbb1->AbPresentationBox == pAb->AbPresentationBox
-			 && pAbb1->AbTypeNum == pAb->AbTypeNum
-			 && pAbb1->AbPSchema == pSchP
-			 && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
-			 && !pAbb1->AbDead)
-		       /* ce pave de presentation existe deja */
-		       {
-			 pAbbCreated = NULL;
-			 stop = TRUE;
-		       }
-		     else if (pAbb1->AbNext == NULL ||
-			      AttrIsAfter (pAbb1->AbNext->AbCreatorAttr,pAttr))
-		       /* le nouveau pave attache a un attribut doit s'inserer
-			  avant ceux d'un attribut suivant */
-		       stop = TRUE;
-		     else
-		       pAbb1 = pAbb1->AbNext;
-		   while (!stop);
-		   /* chaine le nouveau pave apres le dernier pave */
-		   /* fils du pave createur */
-		   if (pAbbCreated != NULL)
-		     {
-		       pAb->AbPrevious = pAbb1;
-		       pAb->AbNext = pAbb1->AbNext;
-		       pAb->AbPrevious->AbNext = pAb;
-		     }
-		 }
-	       break;
+	  if (pAbbCreated == NULL)	/* pave deja cree' */
+	    {
+	      if (pAb->AbBox &&
+		  pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
+		{
+		  image = (ThotPictInfo *)pAb->AbPictInfo;
+		  CleanPictInfo (image);
+		  TtaFreeMemory (pAb->AbPictInfo);
+		  pAb->AbPictInfo = NULL;
+		}
 
-	     case FnCreateBefore:
-	       /* saute les paves de presentation deja crees */
-	       /* avec la regle CreateBefore */
-	       stop = FALSE;
-	       do
-		 if (pAbb1->AbTypeNum == pAb->AbTypeNum
-		     && pAbb1->AbPresentationBox == pAb->AbPresentationBox
-		     && pAbb1->AbPSchema == pSchP
-		     && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
-		     && !pAbb1->AbDead)
-		   /* ce pave de presentation existe deja */
-		   {
-		     pAbbCreated = NULL;
-		     stop = TRUE;
-		   }
-		 else if ((pAbb1->AbNext == NULL) ||
-			  (!pAbb1->AbPresentationBox && !pAbb1->AbDead) ||
-			  AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
-		   /* le nouveau pave attache a un attribut doit
-		      s'inserer avant ceux d'un attribut suivant */
-		   stop = TRUE;
-		 else
-		   pAbb1 = pAbb1->AbNext;
-	       while (!stop);
-	       if (pAbbCreated != NULL)
-		 {
-		   pAb->AbReadOnly = pAbb1->AbReadOnly;
-		   pAb->AbEnclosing = pAbb1->AbEnclosing;
-		   if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
-		     pAb->AbEnclosing->AbFirstEnclosed = pAb;
-		   pAb->AbNext = pAbb1;
-		   pAb->AbPrevious = pAbb1->AbPrevious;
-		   pAbb1->AbPrevious = pAb;
-		   if (pAb->AbPrevious != NULL)
-		     {
-		       pAb->AbPrevious->AbNext = pAb;
-		       if (pAb->AbPrevious->AbElement != pEl)
-			 pEl->ElAbstractBox[viewIndex] = pAb;
-		     }
-		   else
-		     pEl->ElAbstractBox[viewIndex] = pAb;
-		 }
-	       break;
+	      if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
+		{
+		  /* in this particular case we need to free filename */
+		  image = (ThotPictInfo *)pAb->AbPictBackground;
+		  TtaFreeMemory (image->PicFileName);
+		  CleanPictInfo (image);
+		  TtaFreeMemory (pAb->AbPictBackground);
+		  pAb->AbPictBackground = NULL;
+		}
 
-	     case FnCreateAfter:
-	     case FnCreateWith:
-	       stop = FALSE;
-	       do
-		 if (pAbb1->AbNext == NULL)
-		   stop = TRUE;
-		 else if (pAbb1->AbNext->AbElement != pEl)
-		   stop = TRUE;
-		 else if (pAbb1->AbNext->AbPresentationBox
-			  && pAbb1->AbNext->AbTypeNum == pAb->AbTypeNum
-			  && pAbb1->AbNext->AbPresentationBox == pAb->AbPresentationBox
-			  && pAbb1->AbNext->AbPSchema == pSchP
-			  && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
-			  && !pAbb1->AbNext->AbDead)
-		   /* ce pave de presentation existe deja */
-		   {
-		     pAbbCreated = NULL;
-		     stop = TRUE;
-		   }
-		 else if (AttrIsAfter (pAbb1->AbNext->AbCreatorAttr, pAttr))
-		   /* le nouveau pave attache a un attribut doit s'inserer
-		      avant ceux d'un attribut suivant */
-		   stop = TRUE;
-		 else
-		   pAbb1 = pAbb1->AbNext;
-	       while (!stop);
-	       if (pAbbCreated != NULL)
-		 {
-		   pAb->AbReadOnly = pAbb1->AbReadOnly;
-		   pAb->AbEnclosing = pAbb1->AbEnclosing;
-		   pAb->AbNext = pAbb1->AbNext;
-		   pAb->AbPrevious = pAbb1;
-		   pAbb1->AbNext = pAb;
-		   if (pAb->AbNext != NULL)
-		     pAb->AbNext->AbPrevious = pAb;
-		 }
-	       break;
+	      if (pAb->AbLeafType == LtCompound && pAb->AbPictListStyle)
+		{
+		  image = (ThotPictInfo *)pAb->AbPictBackground;
+		  CleanPictInfo (image);
+		  TtaFreeMemory (pAb->AbPictListStyle);
+		  pAb->AbPictListStyle = NULL;
+		}
 
-	     case FnCreateEnclosing:
-	       if (pAbb1->AbEnclosing != NULL &&
-		   pAbb1->AbEnclosing->AbPresentationBox &&
-		   pAbb1->AbEnclosing->AbElement == pEl)
-		 /* l'element a deja un pave de presentation englobant. */
-		 /* on refuse d'en creer un autre */
-		 pAbbCreated = NULL;
-	       if (pAbbCreated != NULL)
-		 {
-		   pAb->AbReadOnly = pAbb1->AbReadOnly;
-		   pAb->AbEnclosing = pAbb1->AbEnclosing;
-		   if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
-		     pAb->AbEnclosing->AbFirstEnclosed = pAb;
-		   pAb->AbPrevious = pAbb1->AbPrevious;
-		   pAbb1->AbPrevious = NULL;
-		   if (pAb->AbPrevious != NULL)
-		     pAb->AbPrevious->AbNext = pAb;
-		   pAb->AbFirstEnclosed = pAbb1;
-		   /* traite les paves de presentation deja crees par les */
-		   /* regles CreateBefore et CreateAfter */
-		   stop = FALSE;
-		   while (!stop)
-		     {
-		       pAbb1->AbEnclosing = pAb;
-		       if (pAbb1->AbNext == NULL)
-			 stop = TRUE;
-		       else if (pAbb1->AbNext->AbElement != pEl)
-			 stop = TRUE;
-		       else
-			 pAbb1 = pAbb1->AbNext;
-		     }
-		   /* traite le dernier pave' de l'element */
-		   pAb->AbNext = pAbb1->AbNext;
-		   pAbb1->AbNext = NULL;
-		   if (pAb->AbNext != NULL)
-		     pAb->AbNext->AbPrevious = pAb;
-		 }
-	       break;
-	     default:
-	       break;
-	     }
+	      /* free the abstract box */
+	      FreeAbstractBox (pAb);
+	    }
+	  else
+	    /* rend non modifiable le pave de presentation */
+	    {
+	      pAb->AbCanBeModified = FALSE;
+	      pAb->AbLeafType = LtCompound;
+	      pAb->AbVolume = 0;
+	      pAb->AbInLine = FALSE;
+	      pAb->AbTruncatedHead = FALSE;
+	      pAb->AbTruncatedTail = FALSE;
+	    }
 
-	   if (pAbbCreated == NULL)	/* pave deja cree' */
-	     {
-	       if (pAb->AbBox &&
-		   pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
-		 {
-		   image = (ThotPictInfo *)pAb->AbPictInfo;
-		   CleanPictInfo (image);
-		   TtaFreeMemory (pAb->AbPictInfo);
-		   pAb->AbPictInfo = NULL;
-		 }
+	  if (pAbbCreated != NULL)
+	    {
+	      if (pER != NULL)
+		/* change le pointeur de pave de l'element englobant les */
+		/* elements associes a mettre dans la boite */
+		{
+		  pER->ElParent->ElAbstractBox[viewIndex] = pAbbCreated;
+		  pAbbCreated->AbPresentationBox = FALSE;
+		}
+	      /* applique les regles de presentation de la boite creee. */
+	      do
+		{
+		  pR = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema,
+				pDoc);
+		  /* pointeur sur la regle a  appliquer pour la vue 1 */
+		  if (pR != NULL)
+		    /* cherche et applique les regles de tous les types */
+		    /* pour la vue */
+		    for (view = 1; view <= MAX_VIEW; view++)
+		      {
+			if (view == 1)
+			  pRV = NULL;
+			else
+			  pRV = GetRuleView (&pRS, &pRD, pR->PrType, view, pEl,
+					     pAttr, pEl->ElStructSchema, pDoc);
+			if (view == viewSch)
+			  /* applique la regle au pave cree'. */
+			  {
+			    if (pRV == NULL)
+			      pRV = pR;
+			    if (rulesPseudo)
+			      {
+				if (((AllRules*)rulesPseudo)->selectedRule[pRV->PrType])
+				  pRV = ((AllRules*)rulesPseudo)->selectedRule[pRV->PrType];
+			      }
+			    if (pRV->PrType == PtFunction &&
+				(pRV->PrPresFunction == FnCreateFirst ||
+				 pRV->PrPresFunction == FnCreateLast))
+			      /* le pave cree' cree un pave de presentation */
+			      {
+				/* sauve le pointeur de pave de l'element */
+				pAbbNext = pEl->ElAbstractBox[viewIndex];
+				/* change le pointeur de pave de l'element */
+				/* pour un chainage correct du pave a creer */
+				pEl->ElAbstractBox[viewIndex] = pAbbCreated;
+				pAbbCreated->AbPresentationBox = FALSE;
+				/* cree le pave de presentation */
+				pAbb1 = CrAbsBoxesPres (pEl, pDoc, pRV, pSS,
+					      NULL, viewNb, pSchP, NULL, TRUE);
+				/* restaure le pointeur de pave de l'elem */
+				pEl->ElAbstractBox[viewIndex] = pAbbNext;
+			      }
+			    else if (!completeCreator &&
+				     pRV->PrPresMode == PresInherit &&
+				     pRV->PrInheritMode == InheritCreator)
+			      /* toutes les regles de presentation n'ont */
+			      /* pas encore ete appliquees au pave */
+			      /* et le pave cree herite du createur, on */
+			      /* differe l'application de la regle */
+			      Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
+			    else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc,
+						 NULL, pAbbCreated))
+			      /* on n'a pas pu appliquer la regle, on */
+			      /* l'appliquera lorsque le pave pere */
+			      /* sera  termine' */
+			      Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
+			  }
+		      }
+		}
+	      while (pR != NULL);
 
-	       if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
-		 {
-		   /* in this particular case we need to free filename */
-		   image = (ThotPictInfo *)pAb->AbPictBackground;
-		   TtaFreeMemory (image->PicFileName);
-		   CleanPictInfo (image);
-		   TtaFreeMemory (pAb->AbPictBackground);
-		   pAb->AbPictBackground = NULL;
-		 }
-
-	       if (pAb->AbLeafType == LtCompound && pAb->AbPictListStyle)
-		 {
-		   image = (ThotPictInfo *)pAb->AbPictBackground;
-		   CleanPictInfo (image);
-		   TtaFreeMemory (pAb->AbPictListStyle);
-		   pAb->AbPictListStyle = NULL;
-		 }
-
-	       /* free the abstract box */
-	       FreeAbstractBox (pAb);
-	     }
-	   else
-	     /* rend non modifiable le pave de presentation */
-	     {
-	       pAb->AbCanBeModified = FALSE;
-	       pAb->AbLeafType = LtCompound;
-	       pAb->AbVolume = 0;
-	       pAb->AbInLine = FALSE;
-	       pAb->AbTruncatedHead = FALSE;
-	       pAb->AbTruncatedTail = FALSE;
-	     }
-
-	   if (pAbbCreated != NULL)
-	     {
-	       if (pER != NULL)
-		 /* change le pointeur de pave de l'element englobant les */
-		 /* elements associes a mettre dans la boite */
-		 {
-		   pER->ElParent->ElAbstractBox[viewIndex] = pAbbCreated;
-		   pAbbCreated->AbPresentationBox = FALSE;
-		 }
-	       /* applique les regles de presentation de la boite creee. */
-	       do
-		 {
-		   pR = GetRule (&pRS, &pRD, pEl, pAttr, pEl->ElStructSchema,
+	      pAbbCreated->AbPresentationBox = TRUE;
+	      /* met le contenu dans le pave cree */
+	      if (funct == FnContent)
+		/* for a rule that generates a CSS pseudo-element,
+		   pRCre->PrPresBox refers to the variable to be generated */
+		{
+		  done = FALSE;
+		  pVar = &pSchP->PsVariable[pRCre->PrPresBox[0] - 1];
+		  if (pVar->PvNItems == 1)
+		    /* there is 1 and only 1 item in this variable */
+		    {
+		      pItem = &pVar->PvItem[0];
+		      if (pItem->ViType == VarText)
+			{
+			  /* this item contains a character string */
+			  pConst = &pSchP->PsConstant[pItem->ViConstant - 1];
+			  if (pConst->PdType == tt_Picture)
+			    /* the char. string is a picture name */
+			    {
+			      pAb->AbLeafType = LtPicture;
+			      NewPictInfo (pAb, pConst->PdString,
+					   UNKNOWN_FORMAT, False);
+			      pAb->AbVolume = 100;
+			      done = TRUE;
+			    }
+			}
+		    }
+		  if (!done)
+		    NewVariable (pRCre->PrPresBox[0], pSS, pSchP, pAb, pAttr,
 				 pDoc);
-		   /* pointeur sur la regle a  appliquer pour la vue 1 */
-		   if (pR != NULL)
-		     /* cherche et applique les regles de tous les types */
-		     /* pour la vue */
-		     for (view = 1; view <= MAX_VIEW; view++)
-		       {
-			 if (view == 1)
-			   pRV = NULL;
-			 else
-			   pRV = GetRuleView (&pRS, &pRD, pR->PrType, view, pEl,
-					      pAttr, pEl->ElStructSchema, pDoc);
-			 if (view == viewSch)
-			   /* applique la regle au pave cree'. */
-			   {
-			     if (pRV == NULL)
-			       pRV = pR;
-			     if (pRV->PrType == PtFunction
-				 && (pRV->PrPresFunction == FnCreateFirst ||
-				     pRV->PrPresFunction == FnCreateLast))
-			       /* le pave cree' cree un pave de presentation */
-			       {
-				 /* sauve le pointeur de pave de l'element */
-				 pAbbNext = pEl->ElAbstractBox[viewIndex];
-				 /* change le pointeur de pave de l'element */
-				 /* pour un chainage correct du pave a creer */
-				 pEl->ElAbstractBox[viewIndex] = pAbbCreated;
-				 pAbbCreated->AbPresentationBox = FALSE;
-				 /* cree le pave de presentation */
-				 pAbb1 = CrAbsBoxesPres (pEl, pDoc, pRV, pSS, NULL,
-							 viewNb, pSchP, TRUE);
-				 /* restaure le pointeur de pave de l'elem */
-				 pEl->ElAbstractBox[viewIndex] = pAbbNext;
-			       }
-			     else if (!completeCreator && pRV->PrPresMode == PresInherit
-				      && pRV->PrInheritMode == InheritCreator)
-			       /* toutes les regles de presentation n'ont */
-			       /* pas encore ete appliquees au pave */
-			       /* et le pave cree herite du createur, on */
-			       /* differe l'application de la regle */
-			       Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
-			     else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc,
-						  NULL, pAbbCreated))
-			       /* on n'a pas pu appliquer la regle, on */
-			       /* l'appliquera lorsque le pave pere */
-			       /* sera  termine' */
-			       Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
-			   }
-		       }
-		 }
-	       while (pR != NULL);
+                }
+	      else
+		{
+		  pBox = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1];
+		  switch (pBox->PbContent)
+		    {
+		    case FreeContent:
+		      break;
+		    case ContVariable:
+		      NewVariable (pBox->PbContVariable, pSS, pSchP, pAb,
+				   pAttr, pDoc);
+		      break;
+		    case ContConst:
+		      ConstantCopy (pBox->PbContConstant, pSchP, pAb);
+		      break;
+		    }
+		}
+	      while (pR != NULL);
+	      do		/* applique les regles retardees */
+		{
+		  pAbb1 = pAbbCreated;
+		  GetDelayedRule (&pR, &pSP, &pAbb1, &pSelAttr);
+		  if (pR != NULL)
+		    if (!ApplyRule (pR, pSP, pAbb1, pDoc, pSelAttr,
+				    pAbbCreated))
+		      Delay (pR, pSP, pAbb1, pSelAttr, pAbbCreated);
+		}
+	      while (pR != NULL);
+	      /* retablit AbPresentationBox qui a ete modifie' pour les boites de */
+	      /* haut ou de bas de page qui regroupent des elements associes */
+	      pAbbCreated->AbPresentationBox = TRUE;
+	      /* ajoute le volume du pave cree' a celui de tous ses */
+	      /* englobants */
+	      if (pAbbCreated->AbVolume > 0 && !volok)
+		{
+		  pAbb1 = pAbbCreated->AbEnclosing;
+		  while (pAbb1 != NULL)
+		    {
+		      pAbb1->AbVolume += pAbbCreated->AbVolume;
+		      pAbb1 = pAbb1->AbEnclosing;
+		    }
+		}
+	      /* met a jour le volume libre restant dans la vue */
+	      UpdateFreeVol (pAbbCreated, pDoc);
+	      if (pEl->ElTypeNumber == PageBreak + 1)
+		/* c'est une boite de haut ou bas de page. Sa creation */
+		/* affecte peut-etre les autres boites de haut ou bas de */
+		/* page deja creees. */
+		ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
 
-	       pAbbCreated->AbPresentationBox = TRUE;
-	       /* met le contenu dans le pave cree */
-	       pBox = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1];
-	       switch (pBox->PbContent)
-		 {
-		 case FreeContent:
-		   break;
-		 case ContVariable:
-		   ok = NewVariable (pBox->PbContVariable, pSS, pSchP, pAb,
-				     pAttr, pDoc);
-		   break;
-		 case ContConst:
-		   ConstantCopy (pBox->PbContConstant, pSchP, pAb);
-		   break;
-		 }
-	       do
-		 if (pqueue >= lqueue)
-		   pR = NULL;
-		 else
-		   {
-		     pqueue++;
-		     pR = queuePR[pqueue - 1];
-		     /* sauve le pointeur de pave de l'element */
-		     pAbbNext = pEl->ElAbstractBox[viewIndex];
-		     /* change le pointeur de pave de l'element, pour un */
-		     /* chainage correct du pave a creer */
-		     pEl->ElAbstractBox[viewIndex] = pAbbCreated;
-		     pAbbCreated->AbPresentationBox = FALSE;
-		     /* cree le pave de presentation */
-		     pAbb1 = CrAbsBoxesPres (pEl, pDoc, pR, pSS, NULL, viewNb,
-					     pSchP, TRUE);
-		     /* restaure le pointeur de pave de l'element */
-		     pEl->ElAbstractBox[viewIndex] = pAbbNext;
-		   }
-	       while (pR != NULL);
-	       do		/* applique les regles retardees */
-		 {
-		   pAbb1 = pAbbCreated;
-		   GetDelayedRule (&pR, &pSP, &pAbb1, &pSelAttr);
-		   if (pR &&
-		       !ApplyRule (pR, pSP, pAbb1, pDoc, pSelAttr, pAbb1))
-		     Delay (pR, pSP, pAbb1, pSelAttr, pAbbCreated);
-		 }
-	       while (pR != NULL);
-	       /* retablit AbPresentationBox qui a ete modifie' pour les boites de */
-	       /* haut ou de bas de page qui regroupent des elements associes */
-	       pAbbCreated->AbPresentationBox = TRUE;
-	       /* ajoute le volume du pave cree' a celui de tous ses */
-	       /* englobants */
-	       if (pAbbCreated->AbVolume > 0 && !volok)
-		 {
-		   pAbb1 = pAbbCreated->AbEnclosing;
-		   while (pAbb1 != NULL)
-		     {
-		       pAbb1->AbVolume += pAbbCreated->AbVolume;
-		       pAbb1 = pAbb1->AbEnclosing;
-		     }
-		 }
-	       /* met a jour le volume libre restant dans la vue */
-	       UpdateFreeVol (pAbbCreated, pDoc);
-	       if (pEl->ElTypeNumber == PageBreak + 1)
-		 /* c'est une boite de haut ou bas de page. Sa creation */
-		 /* affecte peut-etre les autres boites de haut ou bas de */
-		 /* page deja creees. */
-		 ApplyRefAbsBoxNew (pAbbCreated, pAbbCreated, &pAbb1, pDoc);
-
-	       /* si c'est une boite contenant une image, choisit le mode */
-	       /* de presentation de l'image en accord avec les regle de */
-	       /* dimensions du pave */
-	       if (pAbbCreated->AbLeafType == LtPicture)
-		 {
-		   /* a priori l'image prendra les dimensions de son pave' */
-		   ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = ReScale;
-		   if (!pAbbCreated->AbWidth.DimIsPosition
-		       && pAbbCreated->AbWidth.DimValue < 0
-		       && pAbbCreated->AbWidth.DimAbRef == NULL
-		       && !pAbbCreated->AbHeight.DimIsPosition
-		       && pAbbCreated->AbHeight.DimValue < 0
-		       && pAbbCreated->AbHeight.DimAbRef == NULL)
-		     /* le pave prend la hauteur et la largeur de son
-			contenu */
-		     /* l'image doit etre affichee telle quelle */
-		     ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = RealSize;
-		 }
-	     }
-	 }
-     }
-   return (pAbbCreated);
+	      /* si c'est une boite contenant une image, choisit le mode */
+	      /* de presentation de l'image en accord avec les regle de */
+	      /* dimensions du pave */
+	      if (pAbbCreated->AbLeafType == LtPicture)
+		{
+		  /* a priori l'image prendra les dimensions de son pave' */
+		  ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent =
+		                                                       ReScale;
+		  if (!pAbbCreated->AbWidth.DimIsPosition &&
+		      pAbbCreated->AbWidth.DimValue < 0 &&
+		      pAbbCreated->AbWidth.DimAbRef == NULL &&
+		      pAbbCreated->AbHeight.DimIsPosition &&
+		      pAbbCreated->AbHeight.DimValue < 0 &&
+		      pAbbCreated->AbHeight.DimAbRef == NULL)
+		    /* le pave prend la hauteur et la largeur de son contenu */
+		    /* l'image doit etre affichee telle quelle */
+		    ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = RealSize;
+		}
+	    }
+	}
+    }
+  return (pAbbCreated);
 }
 
 /*----------------------------------------------------------------------
@@ -3094,15 +3178,18 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
 	/* on appelle la procedure de creation systematiquement */
 	if ((head &&
 	     (pRule->PrPresFunction == FnCreateBefore ||
-	      pRule->PrPresFunction == FnCreateFirst)) ||
+	      pRule->PrPresFunction == FnCreateFirst ||
+	      (pRule->PrPresFunction == FnContent &&
+	       pRule->PrBoxType == BtBefore))) ||
 	    (!head &&
 	     (pRule->PrPresFunction == FnCreateAfter ||
-	      pRule->PrPresFunction == FnCreateLast)))
+	      pRule->PrPresFunction == FnCreateLast ||
+	      (pRule->PrPresFunction == FnContent &&
+	       pRule->PrBoxType == BtAfter))))
 	  {
 	    pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule, pSS, pAttr,
-				   pAb->AbDocView, pSP, TRUE);
+				   pAb->AbDocView, pSP, NULL, TRUE);
 	    if (pAbb != NULL)
-	      /* TODO : valeur de pAbb si plusieurs paves crees avec Rep ?? */
 	      {
 		if (!head)
 		  *pAbbCreated = pAbb;
@@ -3110,10 +3197,7 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
 		  *pAbbCreated = pAbb;
 		/* modifie les paves environnant */
 		/* qui dependent du pave cree */
-		/* TODO : si Rep est vrai, plusieurs paves ont ete crees */
-		/* faut-il appeler ApplyRefAbsBoxNew dans CrAbsBoxesPres ?? */
 		ApplyRefAbsBoxNew (*pAbbCreated, *pAbbCreated, &pAbbR, pDoc);
-		/* passe a la regle suivante */
 	      }
 	  }
 	pRule = pRule->PrNextPRule;
@@ -3515,21 +3599,20 @@ ThotBool IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
    pA est l'attribut auquel correspond la regle (NULL si   
    ce n'est pas une regle d'attribut).                     
   ----------------------------------------------------------------------*/
-void WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP,
-		  PtrAttribute pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
-		  PtrPSchema queuePS[MAX_QUEUE_LEN],
-		  PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-		  PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue)
+static void WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP,
+			 PtrAttribute pA, AllRules* rulesPseudoEl,
+			 RuleQueue* queue, int *lqueue)
 {
    if (*lqueue >= MAX_QUEUE_LEN)
       printf ("Increase MAX_QUEUE_LEN\n");
    else
      {
 	(*lqueue)++;
-	queuePR[*lqueue - 1] = pR;
-	queuePP[*lqueue - 1] = pAbb;
-	queuePS[*lqueue - 1] = pSP;
-	queuePA[*lqueue - 1] = pA;
+	queue->queuePR[*lqueue - 1] = pR;
+	queue->queuePS[*lqueue - 1] = pSP;
+	queue->queuePA[*lqueue - 1] = pA;
+	queue->queuePP[*lqueue - 1] = pAbb;
+	queue->rulesPseudo[*lqueue - 1] = rulesPseudoEl;
      }
 }
 
@@ -3537,26 +3620,26 @@ void WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP,
    GetAtt recupere une regle de presentation qui etait en attente. 
   ----------------------------------------------------------------------*/
 static void GetAtt (PtrPRule *pR, PtrAbstractBox *pAbb, PtrPSchema *pSP,
-		    PtrAttribute *pA, PtrAttribute queuePA[MAX_QUEUE_LEN],
-		    PtrPSchema queuePS[MAX_QUEUE_LEN],
-		    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-		    PtrPRule queuePR[MAX_QUEUE_LEN], int *lqueue, int *pqueue)
+		    PtrAttribute *pA, AllRules** rPseudo, RuleQueue* queue,
+		    int *lqueue, int *pqueue)
 {
    *pR = NULL;
-   while (*pR == NULL && *pqueue < *lqueue)
-     {
-	(*pqueue)++;
-	*pR = queuePR[*pqueue - 1];
-	*pAbb = queuePP[*pqueue - 1];
-	*pSP = queuePS[*pqueue - 1];
-	*pA = queuePA[*pqueue - 1];
-     }
+   if (queue)
+     while (*pR == NULL && *pqueue < *lqueue)
+       {
+	 (*pqueue)++;
+	 *pR = queue->queuePR[*pqueue - 1];
+	 *pSP = queue->queuePS[*pqueue - 1];
+	 *pA = queue->queuePA[*pqueue - 1];
+	 *pAbb = queue->queuePP[*pqueue - 1];
+	 *rPseudo = queue->rulesPseudo[*pqueue - 1];
+       }
 }
 
 /*----------------------------------------------------------------------
    ApplCrRule checks if the rule pRuleCr of the the presentation schema
    pSchPres (associated to the structure schema pSS), is a creation rule.
-   If TRUE tries to apply if fileDescriptor is NULL or displays the rule
+   If TRUE tries to apply it if fileDescriptor is NULL or displays the rule
    and returns TRUE else returns FALSE.
    The parameter pA gives the attribute which generates the rule or NULL.
   ----------------------------------------------------------------------*/
@@ -3564,32 +3647,27 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 			    PtrPSchema pSchPres, PtrAttribute pA,
 			    PtrAbstractBox *pAbbReturn, DocViewNumber viewNb,
 			    PtrDocument pDoc, PtrElement pEl,
-			    ThotBool forward, int *lqueue,
-			    PtrPRule queuePR[MAX_QUEUE_LEN],
-			    PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-			    PtrPSchema queuePS[MAX_QUEUE_LEN],
-			    PtrAttribute queuePA[MAX_QUEUE_LEN],
+			    ThotBool forward, int *lqueue, RuleQueue* queue,
 			    PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
 {
    ThotBool            result, toCreate;
    PtrAbstractBox      pAbb;
 
-   if (pRuleCr->PrType != PtFunction)
-     /* ce n'est pas une regle de creation */
-     result = FALSE;
-   else
+   result = FALSE;
+   if (pRuleCr->PrType == PtFunction &&
+       (pRuleCr->PrPresFunction == FnCreateFirst ||
+	pRuleCr->PrPresFunction == FnCreateLast ||
+	pRuleCr->PrPresFunction == FnCreateBefore ||
+	pRuleCr->PrPresFunction == FnCreateWith ||
+	pRuleCr->PrPresFunction == FnCreateAfter ||
+	pRuleCr->PrPresFunction == FnCreateEnclosing))
+     /* it's a creation rule */
      {
-       /* c'est une fonction de presentation */
-       result = pRuleCr->PrPresFunction == FnCreateFirst ||
-	        pRuleCr->PrPresFunction == FnCreateLast ||
-	        pRuleCr->PrPresFunction == FnCreateBefore ||
-	        pRuleCr->PrPresFunction == FnCreateWith ||
-	        pRuleCr->PrPresFunction == FnCreateAfter ||
-	        pRuleCr->PrPresFunction == FnCreateEnclosing;
+       result = TRUE;
        toCreate = FALSE;	/* by default no creation */
-       if (fileDescriptor && result)
-	 DisplayPRule (pRuleCr, fileDescriptor, pEl, pSchPres);
-       else if (pNewAbbox && result)
+       if (fileDescriptor)
+	 DisplayPRule (pRuleCr, fileDescriptor, pEl, pSchPres, 0);
+       else if (pNewAbbox)
 	 switch (pRuleCr->PrPresFunction)
 	   {
 	   case FnCreateFirst:
@@ -3602,8 +3680,8 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 		 pNewAbbox->AbInLine || !pNewAbbox->AbTruncatedTail)
 	       /* on appliquera la regle de creation quand tous les paves */
 	       /* descendants de l'element seront crees */
-	       WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, queuePA, queuePS,
-			    queuePP, queuePR, lqueue);
+	       WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, NULL, queue,
+			    lqueue);
 	     break;
 	   case FnCreateBefore:
 	     if (forward)
@@ -3619,8 +3697,8 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 	       /* on appliquera la regle de creation quand */
 	       /* tous les paves descendants de l'element */
 	       /* seront crees */
-	       WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, queuePA, queuePS,
-			    queuePP, queuePR, lqueue);
+	       WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, NULL, queue,
+			    lqueue);
 	     break;
 	   case FnCreateWith:
 	   case FnCreateEnclosing:
@@ -3633,8 +3711,8 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 		     pNewAbbox->AbInLine)
 		   /* on appliquera la regle de creation quand tous les */
 		   /* paves  descendants de l'element seront crees */
-		   WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, queuePA,
-				queuePS, queuePP, queuePR, lqueue);
+		   WaitingRule (pRuleCr, pNewAbbox, pSchPres, pA, NULL, queue,
+				lqueue);
 	       }
 	     else
 	       /* on ne cree le pave de presentation que si */
@@ -3651,7 +3729,7 @@ static ThotBool ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 	 /* on cree le pave de presentation */
 	 {
 	   pAbb = CrAbsBoxesPres (pEl, pDoc, pRuleCr, pSS, pA, viewNb,
-				  pSchPres, FALSE);
+				  pSchPres, NULL, FALSE);
 	   if (pAbb != NULL)
 	     /* le pave de presentation a ete cree */
 	     if (pRuleCr->PrPresFunction == FnCreateBefore ||
@@ -3871,7 +3949,9 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 		  *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
 				      pAttr, NULL);
 	      }
-	    if (pR->PrType == PtDisplay)
+	    if (pR->PrType == PtDisplay && pR->PrBoxType == BtElement)
+	      /* this is a Display rule that applies to the element itslef,
+		 not to a pseudo belement generated by :before or :after */
 	      {
 		if (pR->PrViewNum == view &&
 		    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
@@ -3912,10 +3992,10 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
    Met a jour vis, pRSpec, pRDef, TypeP et pSchPPage          
   ----------------------------------------------------------------------*/
 static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
-			  DocViewNumber viewNb, int viewSch, PtrPRule * pRSpec,
-			  PtrPRule * pRDef, int *vis,
-			  ThotBool * ignoreDescent, ThotBool * complete,
-			  int *TypeP, PtrPSchema * pSchPPage)
+			  DocViewNumber viewNb, int viewSch, PtrPRule *pRSpec,
+			  PtrPRule *pRDef, int *vis,
+			  ThotBool *ignoreDescent, ThotBool *complete,
+			  int *TypeP, PtrPSchema *pSchPPage)
 {
    int                 view, l;
    PtrPRule            pRule, pRuleV, pRuleDisplay;
@@ -3965,7 +4045,10 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	     }
 	   if (pRule->PrType == PtVisibility)
 	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
-	   else if (pRule->PrType == PtDisplay)
+	   else if (pRule->PrType == PtDisplay &&
+		    pRule->PrBoxType == BtElement)
+	     /* this is a Display rule that applies to the element itslef,
+		not to a pseudo belement generated by :before or :after */
 	     {
 	       if (CharRule (pRule, pEl, viewNb, &ok) == 'N')
 		 /* display: none */
@@ -4007,10 +4090,15 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	   /* is there a display rule with value none? */
 	   pRuleDisplay = GetRuleView (pRSpec, pRDef, PtDisplay, view, pEl,
 				       NULL, pEl->ElStructSchema, pDoc);
-	   if (pRuleDisplay &&
-	       CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N' && ok)
-	     /* display: none */
-	     *vis = 0;
+	   if (pRuleDisplay && pRuleDisplay->PrBoxType == BtElement)
+	     /* this is a Display rule that applies to the element itslef,
+		not to a pseudo belement generated by :before or :after */
+	     {
+	       if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N')
+		 if (ok)
+		   /* display: none */
+		   *vis = 0;
+	     }
 	   /* not necessary to continue? */
 	   //view = MAX_VIEW;
 	  }
@@ -4319,22 +4407,82 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 }
 
 /*----------------------------------------------------------------------
+  CascRegistered
+  If rule pRule is a candidate for the cascade, register it and return TRUE.
+  ----------------------------------------------------------------------*/
+static ThotBool CascRegistered (PtrPRule pRule, PtrPSchema pSchP,
+				PtrAttribute pAttr, PtrAttributePres pAttrBlk,
+				Cascade *casc)
+{
+  AllRules    *table;
+  ThotBool    ret = FALSE;
+
+  if (pRule->PrType == PtFunction && pRule->PrPresFunction == FnContent)
+    {
+      if (pRule->PrBoxType == BtBefore)
+	{
+	  if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+		 casc->ContentRuleBefore, casc->schemaOfContentRuleBefore, NULL))
+	  {
+	    casc->ContentRuleBefore = pRule;
+	    casc->schemaOfContentRuleBefore = pSchP;
+	    casc->attrOfContentRuleBefore = pAttr;
+	  }
+	}
+      else if (pRule->PrBoxType == BtAfter)
+	{
+	  if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+		 casc->ContentRuleAfter, casc->schemaOfContentRuleAfter, NULL))
+	  {
+	    casc->ContentRuleAfter = pRule;
+	    casc->schemaOfContentRuleAfter = pSchP;
+	    casc->attrOfContentRuleAfter = pAttr;
+	  }
+	}
+      ret = TRUE;
+    }
+  else
+    /* presentation function are applied immediately */
+    /* except BackgroundPicture */
+    if (pRule->PrType != PtFunction ||
+	(pRule->PrType == PtFunction &&
+	 pRule->PrPresFunction == FnBackgroundPicture))
+      {
+	if (pRule->PrBoxType == BtElement)
+	  table = &(casc->MainElement);
+	else if (pRule->PrBoxType == BtBefore)
+	  table = &(casc->BeforePseudoEl);
+	else if (pRule->PrBoxType == BtAfter)
+	  table = &(casc->AfterPseudoEl);
+	else
+	  return FALSE;
+	if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+				table->selectedRule[pRule->PrType],
+				table->schemaOfSelectedRule[pRule->PrType],
+				table->attrBlockOfSelectedRule[pRule->PrType]))
+	  {
+	    /* register the rule in the appropriate rule table */
+	    table->selectedRule[pRule->PrType] = pRule;
+	    table->schemaOfSelectedRule[pRule->PrType] = pSchP;      
+	    table->attrOfSelectedRule[pRule->PrType] = pAttr;
+	    table->attrBlockOfSelectedRule[pRule->PrType] = pAttrBlk;
+	  }
+	ret = TRUE;
+      }
+  return ret;
+}
+
+/*----------------------------------------------------------------------
   GetRulesFromInheritedAttributes
   get all presentation rules that element El inherits from attribute l
-  belonging to ist ancestors, startin at element pFirstAncest
+  belonging to ist ancestors, starting at element pFirstAncest
   ----------------------------------------------------------------------*/
 static void GetRulesFromInheritedAttributes (PtrElement pEl,
                        PtrElement pFirstAncest, int l, DocViewNumber viewNb,
-		       int viewSch, PtrDocument pDoc, PtrPSchema pSchPres, ThotBool extens,
-                       PtrPRule selectedRule[PtPictInfo],
-                       PtrPSchema schemaOfSelectedRule[PtPictInfo],
-                       PtrAttribute attrOfSelectedRule[PtPictInfo],
-		       PtrAttributePres attrBlockOfSelectedRule[PtPictInfo],
+		       int viewSch, PtrDocument pDoc, PtrPSchema pSchPres,
+		       ThotBool extens, Cascade *casc,
 		       PtrAbstractBox *pAbbReturn, ThotBool forward,
-		       int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
-		       PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-		       PtrPSchema queuePS[MAX_QUEUE_LEN],
-		       PtrAttribute queuePA[MAX_QUEUE_LEN],
+		       int *lqueue, RuleQueue* queue,
 		       PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
 {
   PtrAttribute       pAttr;
@@ -4378,9 +4526,8 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
 		  if (!pR->PrDuplicate &&
 		      /* if it's a creation rule, apply it now */
 		      !ApplCrRule (pR, pSSattr, pSchPres, pAttr, pAbbReturn,
-				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
-				   queuePP, queuePS, queuePA, pNewAbbox,
-				   fileDescriptor))
+				   viewNb, pDoc, pEl, forward, lqueue, queue,
+				   pNewAbbox, fileDescriptor))
 		    /* not a creation rule, get the right rule*/
 		    pRule = GetNextAttrPresRule (&pR, pAttr->AeAttrSSchema,
 						 pAttr, pElAttr, pDoc, pEl,
@@ -4388,31 +4535,17 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
 		  if (pRule && DoesViewExist (pEl, pDoc, viewNb))
 		    /* this rule applies to the element */
 		    {
-		      if (viewSch == 1 &&
-			  (pRule->PrType != PtFunction ||
-			   (pRule->PrType == PtFunction &&
-			    pRule->PrPresFunction == FnBackgroundPicture)))
-			/* main view. Record the rule for cascade but apply
-			   presentation function immediately */
-			{
-			  if (RuleHasHigherPriority (pRule, pSchPres,attrBlock,
-				       selectedRule[pRule->PrType],
-				       schemaOfSelectedRule[pRule->PrType],
-				       attrBlockOfSelectedRule[pRule->PrType]))
-			    {
-			      selectedRule[pRule->PrType] = pRule;
-			      schemaOfSelectedRule[pRule->PrType] = pSchPres;
-			      attrOfSelectedRule[pRule->PrType] = pAttr;
-			      attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
-			    }
-			}
-		      else if (fileDescriptor)
-			DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
-		      else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
-					   pAttr, pNewAbbox))
-			/* not the main view, apply the rule now */
-			WaitingRule (pRule, pNewAbbox, pSchPres, pAttr,
-				   queuePA, queuePS, queuePP, queuePR, lqueue);
+		      if (viewSch != 1 ||
+			  !CascRegistered (pRule, pSchPres, pAttr, attrBlock,
+					   casc))
+			if (fileDescriptor)
+			  DisplayPRule (pRule, fileDescriptor, pEl, pSchPres,
+					0);
+			else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
+					     pAttr, pNewAbbox))
+			  /* not the main view, apply the rule now */
+			  WaitingRule (pRule, pNewAbbox, pSchPres, pAttr, NULL,
+				       queue, lqueue);
 		    }
 		  /* next rule associated with this value of the attribute */
 		  pR = pR->PrNextPRule;
@@ -4444,19 +4577,10 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		     int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
 		     PtrPRule *pRSpec, PtrPRule *pRDef,
 		     PtrAbstractBox *pAbbReturn, ThotBool forward,
-		     int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
-		     PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-		     PtrPSchema queuePS[MAX_QUEUE_LEN],
-		     PtrAttribute queuePA[MAX_QUEUE_LEN],
-		     PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
+		     int *lqueue, void* rQueue,
+		     PtrAbstractBox pNewAbbox, void* CSScasc,
+		     FILE *fileDescriptor)
 {
-  /* for each type of presentation property, selectedRule[i] records the
-     latest selected rule while applying the cascade and schemaOfSelectedRule
-     records the presentation schema the corresponding rule comes from */
-  PtrPRule           selectedRule[PtPictInfo];
-  PtrPSchema         schemaOfSelectedRule[PtPictInfo];
-  PtrAttribute       attrOfSelectedRule[PtPictInfo];
-  PtrAttributePres   attrBlockOfSelectedRule[PtPictInfo];
   int                i, view, l, valNum;
   PtrPRule           pRuleView, pRule, pR;
   PtrHandlePSchema   pHd;
@@ -4466,15 +4590,37 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrSSchema	     pSSattr;
   PtrAttributePres   attrBlock;
   InheritAttrTable   *inheritTable;
+  Cascade            *casc;
+  Cascade            casc1;
+  RuleQueue          *queue;
   ThotBool           stop, apply;
 
-  /* no rule selected yet */
+  queue = (RuleQueue*)rQueue;
+  /* initialize the cascade: no rule selected yet */
+  if (!CSScasc)
+    casc = &casc1;
+  else
+    casc = (Cascade*)CSScasc;
+  casc->ContentRuleBefore = NULL;
+  casc->schemaOfContentRuleBefore = NULL;
+  casc->attrOfContentRuleBefore = NULL;
+  casc->ContentRuleAfter = NULL;
+  casc->schemaOfContentRuleAfter = NULL;
+  casc->attrOfContentRuleAfter = NULL;
   for (i = 0; i < PtPictInfo; i++)
     {
-      selectedRule[i] = NULL;
-      schemaOfSelectedRule[i] = NULL;
-      attrOfSelectedRule[i] = NULL;
-      attrBlockOfSelectedRule[i] = NULL;
+      casc->MainElement.selectedRule[i] = NULL;
+      casc->MainElement.schemaOfSelectedRule[i] = NULL;
+      casc->MainElement.attrOfSelectedRule[i] = NULL;
+      casc->MainElement.attrBlockOfSelectedRule[i] = NULL;
+      casc->BeforePseudoEl.selectedRule[i] = NULL;
+      casc->BeforePseudoEl.schemaOfSelectedRule[i] = NULL;
+      casc->BeforePseudoEl.attrOfSelectedRule[i] = NULL;
+      casc->BeforePseudoEl.attrBlockOfSelectedRule[i] = NULL;
+      casc->AfterPseudoEl.selectedRule[i] = NULL;
+      casc->AfterPseudoEl.schemaOfSelectedRule[i] = NULL;
+      casc->AfterPseudoEl.attrOfSelectedRule[i] = NULL;
+      casc->AfterPseudoEl.attrBlockOfSelectedRule[i] = NULL;
     }
 
   /* get all rules associated with the element type in the main presentation */
@@ -4486,9 +4632,9 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS, pDoc);
       if (pRule)
 	/* if its a rule that creates a presentation box, apply it */
-	if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb,
-			      pDoc, pEl, forward, lqueue, queuePR, queuePP,
-			      queuePS, queuePA, pNewAbbox, fileDescriptor))
+	if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb, pDoc,
+			 pEl, forward, lqueue, queue, pNewAbbox,
+			 fileDescriptor))
 	  /* it's not a creation rule */
 	  /* get the rules for the same property in all other views */
 	  for (view = 1; view <= MAX_VIEW; view++)
@@ -4504,24 +4650,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  if (pRuleView == NULL)
 		    /* no rule for this view. Take the rule for view 1 */
 		    pRuleView = pRule;
-		  /* if it's the main view, record the rule for the cascade */
-		  /* but presentation function are applied immediately */
-		  /* except BackgroundPicture */
-		  if (pRuleView->PrType != PtFunction ||
-		      (pRuleView->PrType == PtFunction &&
-		       pRuleView->PrPresFunction == FnBackgroundPicture))
-		    {
-		      selectedRule[pRuleView->PrType] = pRuleView;
-		      schemaOfSelectedRule[pRuleView->PrType] = pSchP;      
-		      attrOfSelectedRule[pRuleView->PrType] = NULL;
-		      attrBlockOfSelectedRule[pRuleView->PrType] = NULL;
-		    }
-		  else if (fileDescriptor)
-		    DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP);
-		  else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL, pNewAbbox))
-		    /* it's a presentation function, apply the rule now */
-		    WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
-				 queuePA, queuePS, queuePP, queuePR, lqueue);
+		  /* if it's the main view, register the rule for the cascade*/
+		  if (!CascRegistered (pRuleView, pSchP, NULL, NULL, casc))
+		    if (fileDescriptor)
+		      DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP, 0);
+		    else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc,
+					 NULL, pNewAbbox))
+		      /* it's a presentation function, apply the rule now */
+		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, NULL,
+				   queue, lqueue);
 		}
 	    }
     }
@@ -4556,31 +4693,18 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  /* keep that rule only if it has a higher priority than the
 		     the rule for the same property we have already
 		     encountered */
-		  if (pRule->PrType != PtFunction ||
-		      (pRule->PrType == PtFunction &&
-		       pRule->PrPresFunction == FnBackgroundPicture))
-		    {
-		      if (RuleHasHigherPriority (pRule, pSchPres, NULL,
-				       selectedRule[pRule->PrType],
-				       schemaOfSelectedRule[pRule->PrType],
-				       attrBlockOfSelectedRule[pRule->PrType]))
-			{
-			  selectedRule[pRule->PrType] = pRule;
-			  schemaOfSelectedRule[pRule->PrType] = pSchPres;
-			  attrOfSelectedRule[pRule->PrType] = NULL;
-			  attrBlockOfSelectedRule[pRule->PrType] = NULL;
-			}
-		    }
-		  else if (fileDescriptor)
-		    DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
-		  else 
-                    /* if it's a creation rule, apply it now */
-		    if (!ApplCrRule (pRule, pSchS, pSchPres, NULL, pAbbReturn,
-			  viewNb, pDoc, pEl, forward, lqueue, queuePR, queuePP,
-			  queuePS, queuePA, pNewAbbox, fileDescriptor))
-		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL, pNewAbbox))
-			WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
-				     queuePS, queuePP, queuePR, lqueue);
+		  if (!CascRegistered (pRule, pSchPres, NULL, NULL, casc))
+		    if (fileDescriptor)
+		      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
+		    else 
+		      /* if it's a creation rule, apply it now */
+		      if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
+				       viewNb, pDoc, pEl, forward, lqueue,
+				       queue, pNewAbbox, fileDescriptor))
+			if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL,
+					pNewAbbox))
+			  WaitingRule (pRule, pNewAbbox, pSchPres, NULL, NULL,
+				       queue, lqueue);
 		}
 	      /* next rule for all element types in the same P schema
 		 extension */
@@ -4619,32 +4743,18 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		{
 		  /* keep that rule only if it has a higher priority than the
 		     rule for the same property we have already encountered */
-		  if (pRule->PrType != PtFunction ||
-		      (pRule->PrType == PtFunction &&
-		       pRule->PrPresFunction == FnBackgroundPicture))
-		    {
-		      if (RuleHasHigherPriority (pRule, pSchPres, NULL,
-				   selectedRule[pRule->PrType],
-				   schemaOfSelectedRule[pRule->PrType],
-				   attrBlockOfSelectedRule[pRule->PrType]))
-			{
-			  selectedRule[pRule->PrType] = pRule;
-			  schemaOfSelectedRule[pRule->PrType] = pSchPres;
-			  attrOfSelectedRule[pRule->PrType] = NULL;
-			  attrBlockOfSelectedRule[pRule->PrType] = NULL;
-			}
-		    }
-		  else if (fileDescriptor)
-		    DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
-		  else
-                    /* if it's a creation rule, apply it now */
-		    if (!ApplCrRule (pRule, pSchS, pSchPres, NULL, pAbbReturn,
-			  viewNb, pDoc, pEl, forward, lqueue, queuePR, queuePP,
-			  queuePS, queuePA, pNewAbbox, fileDescriptor))
-		      if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL, pNewAbbox))
-			WaitingRule (pRule, pNewAbbox, pSchPres,
-				     NULL, queuePA, queuePS, queuePP,
-				     queuePR, lqueue);
+		  if (!CascRegistered (pRule, pSchPres, NULL, NULL, casc))
+		    if (fileDescriptor)
+		      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
+		    else
+		      /* if it's a creation rule, apply it now */
+		      if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
+			  viewNb, pDoc, pEl, forward, lqueue, queue, pNewAbbox,
+				       fileDescriptor))
+			if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL,
+					pNewAbbox))
+			  WaitingRule (pRule, pNewAbbox, pSchPres, NULL, NULL,
+				       queue, lqueue);
 		}
 	      /* next rule for the element type in the same P schema extens. */
 	      pRule = pRule->PrNextPRule;
@@ -4677,7 +4787,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  else
 		    pFirstAncest = pEl->ElParent;
 		  /* look for all ancestors having this attribute */
-		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), selectedRule, schemaOfSelectedRule, attrOfSelectedRule, attrBlockOfSelectedRule, pAbbReturn, forward, lqueue, queuePR, queuePP, queuePS, queuePA, pNewAbbox, fileDescriptor);
+		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), casc, pAbbReturn, forward, lqueue, queue, pNewAbbox, fileDescriptor);
 		  }
 	    }
 
@@ -4703,7 +4813,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  else
 		    pFirstAncest = pEl->ElParent;
 		  /* look for all ancestors having this attribute */
-		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), selectedRule, schemaOfSelectedRule, attrOfSelectedRule, attrBlockOfSelectedRule, pAbbReturn, forward, lqueue, queuePR, queuePP, queuePS, queuePA, pNewAbbox, fileDescriptor);
+		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), casc, pAbbReturn, forward, lqueue, queue, pNewAbbox, fileDescriptor);
 		  }
 	    }
 
@@ -4750,8 +4860,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			      /* if it's a creation rule, apply it now */
 			      !ApplCrRule (pR, pSSattr, pSchPattr, pAttr,
 				   pAbbReturn, viewNb, pDoc, pEl, forward,
-                                   lqueue, queuePR, queuePP, queuePS, queuePA,
-                                   pNewAbbox, fileDescriptor))
+                                   lqueue, queue, pNewAbbox, fileDescriptor))
 			    /* not a creation rule, get the right rule */
 			    pRule = GetNextAttrPresRule (&pR,
 					          pSSattr, pAttr,
@@ -4759,34 +4868,17 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  if (pRule && DoesViewExist (pEl, pDoc, viewNb))
 			    /* this rule applies to the element */
 			    {
-			      if (viewSch == 1 &&
-				  (pRule->PrType != PtFunction ||
-				   (pRule->PrType == PtFunction &&
-				    pRule->PrPresFunction == FnBackgroundPicture)))
-				/* main view. Record the rule for the cascade*/
-				/* but apply presentation functions
-				   immediately */
-				{
-				  if (RuleHasHigherPriority (pRule,
-					   pSchPattr, attrBlock,
-					   selectedRule[pRule->PrType],
-					   schemaOfSelectedRule[pRule->PrType],
-					   attrBlockOfSelectedRule[pRule->PrType]))
-				    {
-				      selectedRule[pRule->PrType] = pRule;
-				      schemaOfSelectedRule[pRule->PrType] = pSchPattr;
-				      attrOfSelectedRule[pRule->PrType] = pAttr;
-				      attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
-				    }
-				}
-			      else if (fileDescriptor)
-				DisplayPRule (pRule, fileDescriptor, pEl, pSchPattr);
-			      else if (!ApplyRule (pRule, pSchPattr, pNewAbbox,
-						   pDoc, pAttr, pNewAbbox))
-				/* not the main view, apply the rule now */
-				WaitingRule (pRule, pNewAbbox,
-					     pSchPattr, pAttr, queuePA, queuePS,
-					     queuePP, queuePR, lqueue);
+			      if (viewSch != 1 ||
+				  !CascRegistered (pRule, pSchPattr, pAttr,
+						   attrBlock, casc))
+				if (fileDescriptor)
+				  DisplayPRule (pRule, fileDescriptor, pEl,
+						pSchPattr, 0);
+				else if (!ApplyRule (pRule, pSchPattr,
+					    pNewAbbox, pDoc, pAttr, pNewAbbox))
+				  /* not the main view, apply the rule now */
+				  WaitingRule (pRule, pNewAbbox, pSchPattr,
+					       pAttr, NULL, queue, lqueue);
 			    }
 			  /* next rule associated with this value of the attr*/
 			  pR = pR->PrNextPRule;
@@ -4823,17 +4915,18 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	    if (viewSch != 1 || pRule->PrType == PtFunction)
 	      {
 		if (fileDescriptor)
-		  DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
-		else if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL, pNewAbbox))
+		  DisplayPRule (pRule, fileDescriptor, pEl, pSchP, 0);
+		else if (!ApplyRule (pRule, pSchP, pNewAbbox, pDoc, NULL,
+				     pNewAbbox))
 		  /* not the main view, apply the rule now */
-		  WaitingRule (pRule, pNewAbbox, pSchP, NULL,
-			       queuePA, queuePS, queuePP, queuePR, lqueue);
+		  WaitingRule (pRule, pNewAbbox, pSchP, NULL, NULL, queue,
+			       lqueue);
 	      }
-	    else if (!selectedRule[pRule->PrType] ||
+	    else if (!casc->MainElement.selectedRule[pRule->PrType] ||
 		     RuleHasHigherPriority (pRule, NULL, NULL,
-				       selectedRule[pRule->PrType],
-				       schemaOfSelectedRule[pRule->PrType],
-				       attrBlockOfSelectedRule[pRule->PrType]))
+		      casc->MainElement.selectedRule[pRule->PrType],
+		      casc->MainElement.schemaOfSelectedRule[pRule->PrType],
+		      casc->MainElement.attrBlockOfSelectedRule[pRule->PrType]))
 	      {
 		if (pRule->PrSpecifAttr == 0)
 		  /* this rule does not depend on an attribute */
@@ -4851,10 +4944,10 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      else
 			pAttr = pAttr->AeNext;
 		  }
-		selectedRule[pRule->PrType] = pRule;
-		schemaOfSelectedRule[pRule->PrType] = pSchP;
-		attrOfSelectedRule[pRule->PrType] = pAttr;
-		attrBlockOfSelectedRule[pRule->PrType] = NULL;
+		casc->MainElement.selectedRule[pRule->PrType] = pRule;
+		casc->MainElement.schemaOfSelectedRule[pRule->PrType] = pSchP;
+		casc->MainElement.attrOfSelectedRule[pRule->PrType] = pAttr;
+		casc->MainElement.attrBlockOfSelectedRule[pRule->PrType] = NULL;
 	      }
 	  }
       pRule = pRule->PrNextPRule;
@@ -4862,16 +4955,67 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 
   /* apply all selected rules */
   for (i = 0; i < PtPictInfo; i++)
-    if (selectedRule[i])
+    if (casc->MainElement.selectedRule[i])
       {
 	if (fileDescriptor)
-	  DisplayPRule (selectedRule[i], fileDescriptor, pEl, schemaOfSelectedRule[i]);
-	else if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
-			     pDoc, attrOfSelectedRule[i], pNewAbbox))
-	  WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
-		       attrOfSelectedRule[i], queuePA, queuePS, queuePP,
-		       queuePR, lqueue);
+	  DisplayPRule (casc->MainElement.selectedRule[i], fileDescriptor, pEl,
+			casc->MainElement.schemaOfSelectedRule[i], 0);
+	else if (!ApplyRule (casc->MainElement.selectedRule[i],
+			     casc->MainElement.schemaOfSelectedRule[i],
+			     pNewAbbox,
+			     pDoc, casc->MainElement.attrOfSelectedRule[i],
+			     pNewAbbox))
+	  WaitingRule (casc->MainElement.selectedRule[i], pNewAbbox,
+		       casc->MainElement.schemaOfSelectedRule[i],
+		       casc->MainElement.attrOfSelectedRule[i], 
+		       NULL, queue, lqueue);
       }
+  if (fileDescriptor)
+    {
+      if (casc->ContentRuleBefore && casc->ContentRuleBefore->PrPresBox[0] > 0)
+	{
+	  fprintf (fileDescriptor, ":before\n");
+	  DisplayPRule (casc->ContentRuleBefore, fileDescriptor, pEl,
+			casc->schemaOfContentRuleBefore, 3);
+	  for (i = 0; i < PtPictInfo; i++)
+	    DisplayPRule (casc->BeforePseudoEl.selectedRule[i], fileDescriptor,
+			  pEl, casc->BeforePseudoEl.schemaOfSelectedRule[i], 3);
+	}
+      if (casc->ContentRuleAfter && casc->ContentRuleAfter->PrPresBox[0] > 0)
+	{
+	  fprintf (fileDescriptor, ":after\n");
+	  DisplayPRule (casc->ContentRuleAfter, fileDescriptor, pEl,
+			casc->schemaOfContentRuleAfter, 3);
+	  for (i = 0; i < PtPictInfo; i++)
+	    DisplayPRule (casc->AfterPseudoEl.selectedRule[i], fileDescriptor,
+			  pEl, casc->AfterPseudoEl.schemaOfSelectedRule[i], 3);
+	}
+    }
+  else if (pNewAbbox)
+    {
+      if (casc->ContentRuleBefore && casc->ContentRuleBefore->PrPresBox[0] > 0)
+	/* create a :before pseudo-element if element pEl is complete */
+	{
+	  if (pNewAbbox->AbLeafType != LtCompound ||
+	      pNewAbbox->AbInLine || !pNewAbbox->AbTruncatedHead)
+	    CrAbsBoxesPres (pEl, pDoc, casc->ContentRuleBefore, pSchS,
+			    casc->attrOfContentRuleBefore, viewNb,
+			    casc->schemaOfContentRuleBefore,
+			    &(casc->BeforePseudoEl), FALSE);
+	}
+      if (casc->ContentRuleAfter && casc->ContentRuleAfter->PrPresBox[0] > 0)
+	/* create a :after pseudo-element if element pEl is complete */
+	{
+	  if (pNewAbbox->AbLeafType != LtCompound ||
+	      pNewAbbox->AbInLine || !pNewAbbox->AbTruncatedTail)
+	    /* on appliquera la regle de creation quand tous les paves */
+	    /* descendants de l'element seront crees */
+	    WaitingRule (casc->ContentRuleAfter, pNewAbbox,
+			 casc->schemaOfContentRuleAfter,
+			 casc->attrOfContentRuleAfter,
+			 &(casc->AfterPseudoEl), queue, lqueue);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -5157,10 +5301,9 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
    PtrAbstractBox      pPRP, pAb, pAbParent;
    PtrSSchema          pSchS, savePSS;
    PtrAttribute        pAttr;
-   PtrPRule            queuePR[MAX_QUEUE_LEN];
-   PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-   PtrPSchema          queuePS[MAX_QUEUE_LEN];
-   PtrAttribute        queuePA[MAX_QUEUE_LEN];
+   RuleQueue           queue;
+   Cascade             casc;
+   AllRules*           rulesPseudo;
    int                 vis, typePres;
    int                 viewSch;
    int                 index;
@@ -5270,7 +5413,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		  pNewAbbox = pEl->ElAbstractBox[viewNb - 1];
 		  pNewAbbox->AbVisibility = vis;
 		  /* Si c'est un element racine qui n'a pas de descendants, */
-		  /* alors son pave est complete */
+		  /* alors son pave est complet */
 		  if (descent &&
 		      pEl->ElParent == NULL &&
 		      (pEl->ElTerminal || pEl->ElFirstChild == NULL))
@@ -5413,7 +5556,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		/* on applique toutes les regles de presentation pertinentes */
 		ApplyPresRules (pEl, pDoc, viewNb, viewSch, pSchS, pSchP,
 				&pRSpec, &pRDef, &pAbReturn, forward, &lqueue,
-				queuePR, queuePP, queuePS, queuePA, pNewAbbox, NULL);
+				&queue, pNewAbbox, &casc, NULL);
 		
 		/* traitement particulier aux sauts de page (il faut prendre */
 		/* le bon schema de presentation) */
@@ -5774,8 +5917,8 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	       /* applique les regles en attente */
 	       do
 		 {
-		   GetAtt (&pRule, &pAb, &pSPres, &pAttr, queuePA, queuePS,
-			   queuePP, queuePR, &lqueue, &pqueue);
+		   GetAtt (&pRule, &pAb, &pSPres, &pAttr, &rulesPseudo, &queue,
+			   &lqueue, &pqueue);
 		   /* recupere une regle en attente */
 		   if (pRule != NULL)
 		     {
@@ -5786,22 +5929,23 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 			    on a verifie' lors de la mise en attente que le pave
 			    createur n'etait pas coupe'. */
 			 {
-			   if (pRule->PrPresFunction == FnCreateBefore
-			       || pRule->PrPresFunction == FnCreateWith
-			       || pRule->PrPresFunction == FnCreateAfter
-			       || pRule->PrPresFunction == FnCreateEnclosing
-			       || pRule->PrPresFunction == FnCreateFirst
-			       || pRule->PrPresFunction == FnCreateLast)
+			   if (pRule->PrPresFunction == FnCreateBefore ||
+			       pRule->PrPresFunction == FnCreateWith ||
+			       pRule->PrPresFunction == FnCreateAfter ||
+			       pRule->PrPresFunction == FnCreateEnclosing ||
+			       pRule->PrPresFunction == FnCreateFirst ||
+			       pRule->PrPresFunction == FnCreateLast ||
+			       pRule->PrPresFunction == FnContent)
 			     {
 			       crAbsBox = TRUE;
 			       if (pAttr != NULL)
 				 pAbPres = CrAbsBoxesPres (pEl, pDoc, pRule,
-				                   pAttr->AeAttrSSchema, pAttr,
-						   viewNb, pSPres, TRUE);
+					    pAttr->AeAttrSSchema, pAttr,
+					    viewNb, pSPres, rulesPseudo, TRUE);
 			       else
 				 pAbPres = CrAbsBoxesPres (pEl, pDoc, pRule,
-						   pEl->ElStructSchema, NULL,
-						   viewNb, pSPres, TRUE);
+					    pEl->ElStructSchema, NULL,
+					    viewNb, pSPres, rulesPseudo, TRUE);
 			     }
 			   switch (pRule->PrPresFunction)
 			     {

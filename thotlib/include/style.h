@@ -66,6 +66,7 @@ typedef struct struct_GenericContext
      * below is the context description.
      */
     int           box;	                 /* specific presentation box if any */
+    int           var;                      /* variable number for pseudo box*/
     PseudoBox     pseudo;                   /* pseudo box in selector */
     int           name[MAX_ANCESTORS];      /* ancestors type */
     int           names_nb[MAX_ANCESTORS];  /* number of occurences    */

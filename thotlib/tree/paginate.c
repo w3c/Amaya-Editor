@@ -1022,7 +1022,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	     WorkingPage->ElAbstractBox[nbView - 1] = pP1;
 	     topPageAbsBox = CrAbsBoxesPres (WorkingPage, pDoc, PageCreateRule,
 				  WorkingPage->ElStructSchema, NULL, nbView,
-					     PageSchPresRule, TRUE);
+					     PageSchPresRule, NULL, TRUE);
 	     WorkingPage->ElAbstractBox[nbView - 1] = savePageAbsBox;
 	     if (topPageAbsBox != NULL)
 		/* signale ces paves au Mediateur, sans faire reevaluer

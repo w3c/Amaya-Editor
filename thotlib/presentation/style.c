@@ -243,66 +243,94 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 }
 
 /*----------------------------------------------------------------------
-  BuildBoxName : generate an unique name encoding for the given context.
-  Assume the ancestor list has been sorted.
+  PresBoxInsert
+  Add a new presentation box to schema tsch.
   ----------------------------------------------------------------------*/
-static void BuildBoxName (GenericContext ctxt, Name *boxname)
+static void PresBoxInsert (PtrPSchema tsch, GenericContext ctxt)
 {
-  int               i;
-  int               len;
-  char              buffer[100];
+  PtrPresentationBox  box;
+  int                 i, size;
+  PtrPSchema          pSP;
+  PtrPRule            pPRule, pPRuleCopy, pPrevCopy;
 
-  buffer[0] = 0;
-  len = 0;
-  for (i = 0; i < MAX_ANCESTORS && ctxt->name[i]; i++)
+  if (tsch->PsPresentBox)
+    /* there is already a presentation box for pseudo-elements */
+    return;
+
+  if (tsch->PsNPresentBoxes >= tsch->PsPresentBoxTableSize)
+    /* the presentation box table is full. Extend it */
     {
-      if (ctxt->names_nb[i] > 1)
-	sprintf (&buffer[len], "%d*%d/", ctxt->name[i], ctxt->names_nb[i]);
+      /* add 10 new entries */
+      size = tsch->PsNPresentBoxes + 10;
+      i = size * sizeof (PtrPresentationBox);
+      if (!tsch->PsPresentBox)
+	tsch->PsPresentBox = (PresBoxTable*) malloc (i);
       else
-	sprintf (&buffer[len], "%d/", ctxt->name[i]);
-      len = strlen (buffer);
-    }
-  if (ctxt->type)
-    sprintf (&buffer[len], "%d,", ctxt->type);
-  len = strlen (buffer);
-  if (ctxt->attrType[0])
-    sprintf (&buffer[len], "%d.%s,", ctxt->attrType[0], ctxt->attrText[0]);
-  len = strlen (buffer);
-  if (ctxt->pseudo == PbBefore)
-    sprintf (&buffer[len], ":before");
-  else if (ctxt->pseudo == PbAfter)
-    sprintf (&buffer[len], ":after");
-  len = strlen (buffer);
-  strncpy (*boxname, buffer, sizeof (Name));
-}
-
-/*----------------------------------------------------------------------
- BoxRuleSearch : look in the array of boxes for an entry
-        corresponding to the current context.
-  ----------------------------------------------------------------------*/
-static PtrPRule BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
-{
-  int                 i;
-  Name                boxname;
-
-  BuildBoxName (ctxt, &boxname);
-  
-  /* search for the BOX in the Presentation Schema */
-  for (i = 1; i <= tsch->PsNPresentBoxes; i++)
-    {
-      if (!strcmp (boxname, tsch->PsPresentBox->PresBox[i - 1]->PbName))
+	tsch->PsPresentBox = (PresBoxTable*) realloc (tsch->PsPresentBox, i);
+      if (!tsch->PsPresentBox)
+	ctxt->box = 0;
+      else
 	{
-	  ctxt->box = i;
-	  return (tsch->PsPresentBox->PresBox[i - 1]->PbFirstPRule);
+	  tsch->PsPresentBoxTableSize = size;
+	  for (i = tsch->PsNPresentBoxes; i < size; i++)
+	    tsch->PsPresentBox->PresBox[i] = NULL;
 	}
     }
+  /* allocate and initialize the new presentation box */
+  box = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+  if (box == NULL)
+      /* can't allocate a new box */
+      return;
+  tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes] = box;
+  memset (box, 0, sizeof (PresentationBox));
+  tsch->PsNPresentBoxes++;
+  ctxt->box = tsch->PsNPresentBoxes;
+  strcpy (box->PbName, "Pseudo-element");
+  box->PbFirstPRule = NULL;
+  box->PbPageFooter = FALSE;
+  box->PbPageHeader = FALSE;
+  box->PbPageBox = FALSE;
+  box->PbFooterHeight = 0;
+  box->PbHeaderHeight = 0;
+  box->PbPageCounter = 0;
+  box->PbContent = FreeContent;
+  box->PbContVariable = 0;
 
-  ctxt->box = 0;
-  return (NULL);
+  if (!tsch->PsFirstDefaultPRule)
+    /* copy the default presentation rules from the main PSchema, to
+       make sure that the presentation box has at least one rule for each
+       property. */
+    {
+      pSP = PresentationSchema (tsch->PsSSchema, LoadedDocument[ctxt->doc-1]);
+      if (pSP)
+	{
+	  pPRule = pSP->PsFirstDefaultPRule;
+	  pPrevCopy = NULL;
+	  while (pPRule)
+	    {
+	      GetPresentRule (&pPRuleCopy);
+	      *pPRuleCopy = *pPRule;
+
+	      /* inheritance from the parent element in the default PSchema
+		 is changed into inheritance from the creating element */
+	      if (pPRuleCopy->PrPresMode == PresInherit)
+		if (pPRuleCopy->PrInheritMode == InheritParent)
+		  pPRuleCopy->PrInheritMode = InheritCreator;
+
+	      pPRuleCopy->PrNextPRule = NULL;
+	      if (!pPrevCopy)
+		tsch->PsFirstDefaultPRule = pPRuleCopy;
+	      else
+		pPrevCopy->PrNextPRule = pPRuleCopy;
+	      pPrevCopy = pPRuleCopy;
+	      pPRule = pPRule->PrNextPRule;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
-   Function used to to search all specific presentation rules
+   SearchElementPRule is used to to search all specific presentation rules
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int extra)
@@ -335,7 +363,7 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
 	/* jump to next and keep track of previous */
 	cur = cur->PrNextPRule;
     }
-  return (cur);
+  return cur;
 }
 
 /*----------------------------------------------------------------------
@@ -397,7 +425,7 @@ static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
 	      /* copy the standard rule */
 	      *pRule = *stdRule;
 	    else
-		pRule->PrType = type;
+	      pRule->PrType = type;
 	    pRule->PrCond = NULL;
 	    pRule->PrSpecifAttr = 0;
 	    pRule->PrSpecificity = specificity;
@@ -484,106 +512,10 @@ static void RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extr
 }
 
 /*----------------------------------------------------------------------
-  BoxRuleInsert looks in the array of boxes for an entry corresponding
-  to the current context. If not found we add a new one to the array.
-  ----------------------------------------------------------------------*/
-static PtrPRule *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
-{
-  PtrPresentationBox  box;
-  int                 i, size;
-  Name                boxname;
-  PtrPSchema          pSP;
-  PtrPRule            pPRule, pPRuleCopy, pPrevCopy;
-
-  BuildBoxName (ctxt, &boxname);
-
-  /* search for the BOX in the Presentation Schema */
-  for (i = 1; i <= tsch->PsNPresentBoxes; i++)
-    {
-      if (!strcmp (boxname, tsch->PsPresentBox->PresBox[i - 1]->PbName))
-	{
-	  ctxt->box = i;
-	  return (&tsch->PsPresentBox->PresBox[i - 1]->PbFirstPRule);
-	}
-    }
-
-  if (tsch->PsNPresentBoxes >= tsch->PsPresentBoxTableSize)
-    /* the presentation box table is full. Extend it */
-    {
-      /* add 10 new entries */
-      size = tsch->PsNPresentBoxes + 10;
-      i = size * sizeof (PtrPresentationBox);
-      if (!tsch->PsPresentBox)
-	tsch->PsPresentBox = (PresBoxTable*) malloc (i);
-      else
-	tsch->PsPresentBox = (PresBoxTable*) realloc (tsch->PsPresentBox, i);
-      if (!tsch->PsPresentBox)
-	{
-	  ctxt->box = 0;
-	  return (NULL);
-	}
-      else
-	{
-	  tsch->PsPresentBoxTableSize = size;
-	  for (i = tsch->PsNPresentBoxes; i < size; i++)
-	    tsch->PsPresentBox->PresBox[i] = NULL;
-	}
-    }
-  /* allocate and initialize the new presentation box */
-  box = (PtrPresentationBox) malloc (sizeof (PresentationBox));
-  if (box == NULL)
-    {
-      ctxt->box = 0;
-      return (NULL);
-    }
-  tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes] = box;
-  memset (box, 0, sizeof (PresentationBox));
-  tsch->PsNPresentBoxes++;
-  ctxt->box = tsch->PsNPresentBoxes;
-  strncpy (box->PbName, boxname, sizeof (box->PbName));
-  box->PbFirstPRule = NULL;
-  box->PbPageFooter = FALSE;
-  box->PbPageHeader = FALSE;
-  box->PbPageBox = FALSE;
-  box->PbFooterHeight = 0;
-  box->PbHeaderHeight = 0;
-  box->PbPageCounter = 0;
-  box->PbContent = FreeContent;
-  box->PbContVariable = 0;
-
-  if (!tsch->PsFirstDefaultPRule)
-    /* copy the default presentation rules from the main PSchema, to
-       make sure that the presentation box has at least one rule for each
-       property. */
-    {
-      pSP = PresentationSchema (tsch->PsSSchema, LoadedDocument[ctxt->doc-1]);
-      if (pSP)
-	{
-	  pPRule = pSP->PsFirstDefaultPRule;
-	  pPrevCopy = NULL;
-	  while (pPRule)
-	    {
-	      GetPresentRule (&pPRuleCopy);
-	      *pPRuleCopy = *pPRule;
-	      pPRuleCopy->PrNextPRule = NULL;
-	      if (!pPrevCopy)
-		tsch->PsFirstDefaultPRule = pPRuleCopy;
-	      else
-		pPrevCopy->PrNextPRule = pPRuleCopy;
-	      pPrevCopy = pPRuleCopy;
-	      pPRule = pPRule->PrNextPRule;
-	    }
-	}
-    }
-
-  return (&tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes - 1]->PbFirstPRule);
-}
-
-/*----------------------------------------------------------------------
   PresConstInsert : add a constant to the constant array of a
   Presentation Schema and returns the associated index.
   ----------------------------------------------------------------------*/
-static int          PresConstInsert (PSchema tcsh, char *value)
+static int PresConstInsert (PSchema tcsh, char *value, BasicType constType)
 {
   PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
   int i;
@@ -603,7 +535,7 @@ static int          PresConstInsert (PSchema tcsh, char *value)
   if (pSchemaPrs->PsNConstants >= MAX_PRES_CONST)
     return (-1);
   i = pSchemaPrs->PsNConstants;
-  pSchemaPrs->PsConstant[i].PdType = CharString;
+  pSchemaPrs->PsConstant[i].PdType = constType;
   pSchemaPrs->PsConstant[i].PdScript = 'L';
   strncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
   pSchemaPrs->PsNConstants++;
@@ -1165,8 +1097,24 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 	 }
        i++;
      }
-
-  /* all conditions are the same */
+  /* all conditions are the same. Compare the pseudo-elements */
+  if (rule->PrBoxType == BtElement)
+    {
+      if (ctxt->pseudo != PbNone)
+	return (-1);
+    }
+  else if (rule->PrBoxType == BtBefore)
+    {
+      if (ctxt->pseudo == PbNone)
+	return (1);
+      else if (ctxt->pseudo == PbAfter)
+	return (-1);
+    }
+  else if (rule->PrBoxType == BtAfter)
+    {
+      if (ctxt->pseudo == PbNone || ctxt->pseudo == PbBefore)
+	return (1);
+    }
   return (0);
 }
 
@@ -1187,31 +1135,24 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
   /* by default the rule doesn't concern any attribute */
   attrType = 0;
   att = MAX_ANCESTORS;
-
-  /* select the good starting point depending on the context */
-  if (ctxt->box != 0)
-    *chain = BoxRuleInsert (tsch, ctxt);
-  else
+  /*
+    detect whether there is an attribute in the selector to generate
+    an attribute rule with conditions on the current element or
+    ancestor elements.
+  */
+  att = 0;
+  while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
+    att++;
+  if (att < MAX_ANCESTORS)
     {
-      /*
-	detect whether there is an attribute in the selector to generate
-	an attribute rule with conditions on the current element or
-	ancestor elements.
-      */
-      att = 0;
-      while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
-	att++;
-      if (att < MAX_ANCESTORS)
-	{
-	  attrType = ctxt->attrType[att];
-	  *chain = PresAttrChainInsert (tsch, attrType, ctxt, att);
-	}
-      else if (ctxt->type)
-	/* we are now sure that only elements are concerned */
-	*chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
-      else
-	return (NULL);
+      attrType = ctxt->attrType[att];
+      *chain = PresAttrChainInsert (tsch, attrType, ctxt, att);
     }
+  else if (ctxt->type)
+    /* we are now sure that only elements are concerned */
+    *chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
+  else
+    return (NULL);
 
   /*
    * scan the chain of presentation rules looking for an existing
@@ -1240,7 +1181,7 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
 	{
 	  condCheck = TstRuleContext (pRule, ctxt, pres, att);
 	  if (condCheck == 0)
-	    /* this rule already exists */
+	    /* there is already a rule of this type for this context */
 	    found = TRUE;
 	  else if (condCheck > 0)
 	    {
@@ -2105,6 +2046,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	case FnCreateFirst:
 	case FnCreateLast:
 	case FnCreateAfter:
+        case FnContent:
 	case FnCreateEnclosing:
 	  rule->PrPresFunction = (FunctionType) funcType;
 	  rule->PrNPresBoxes = 1;
@@ -2919,16 +2861,65 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRPosition:
       *intRule = PtPosition;
       break;
-    case PRCreateFirst:
+    case PRContent:
       *intRule = PtFunction;
-      *func = FnCreateFirst;
-      break;
-    case PRCreateLast:
-      *intRule = PtFunction;
-      *func = FnCreateLast;
+      *func = FnContent;
       break;
     default:
       *intRule = PtFunction;
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetVariableItem
+  Add a new item to a Thot presentation variable.
+  ----------------------------------------------------------------------*/
+static void SetVariableItem (unsigned int type, PSchema tsch,
+			     PresentationContext c, PresentationValue v)
+{
+  GenericContext     ctxt = (GenericContext) c;
+  PresVariable       *pVar;
+  int                cst;
+
+  if (c->destroy)
+    return;
+  cst = -1;
+  if (type == PRContentString)
+    cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
+  else if (type == PRContentURL)
+    cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
+  if (cst >= 0 && ctxt->var > 0)
+    {
+      pVar = &(((PtrPSchema)tsch)->PsVariable[ctxt->var - 1]);
+      if (pVar->PvNItems < MAX_PRES_VAR_ITEM)
+	{
+	  if (type == PRContentString || type == PRContentURL)
+	    {
+	      pVar->PvItem[pVar->PvNItems].ViType = VarText;
+	      pVar->PvItem[pVar->PvNItems].ViConstant = cst;
+	    }
+	  pVar->PvNItems ++;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  VariableInsert
+  Add a new variable to a presentation schema.
+  ----------------------------------------------------------------------*/
+static void VariableInsert (PtrPSchema tsch, GenericContext c)
+{
+  GenericContext     ctxt = (GenericContext) c;
+  int                var;
+
+  if (c->destroy)
+    return;
+  if (tsch->PsNVariables < MAX_PRES_VARIABLE)
+    {
+      tsch->PsNVariables++;
+      var = tsch->PsNVariables;
+      tsch->PsVariable[var - 1].PvNItems = 0;
+      ctxt->var = var;
     }
 }
 
@@ -2950,102 +2941,113 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
 int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 			     PresentationContext c, PresentationValue v)
 {
-  GenericContext    ctxt = (GenericContext) c;
-  PtrPRule          pRule;
-  PRuleType         intRule;
-  ElementType       elType;
-  unsigned int      func = 0;
-  int               cst = 0;
-  int               i;
-  int               attrType;
-  int               doc = c->doc;
-  ThotBool          absolute, generic, minValue;
+  GenericContext     ctxt = (GenericContext) c;
+  PtrPRule           pRule;
+  PRuleType          intRule;
+  ElementType        elType;
+  unsigned int       func = 0;
+  int                cst;
+  int                i;
+  int                attrType;
+  int                doc = c->doc;
+  PtrPresentationBox pBox;
+  ThotBool           absolute, generic, minValue;
 
-  TypeToPresentation (type, &intRule, &func, &absolute);
-  generic = (el == NULL);
-  if (type == PRHeight)
-    {
-      /* check if the height is a minimum value or not */
-      if (!generic)
-	{
-	  elType = TtaGetElementType (el);
-	  i = elType.ElTypeNum;
-	}
-      else
-	i = ctxt->type;
-      /* apply a min value for all compound element */
-      minValue = (i == 0 || i >= PageBreak);
-    }
-  else
-    minValue = FALSE;
-
-  if (c->destroy)
-    {
-      if (generic)
-	PresRuleRemove ((PtrPSchema) tsch, ctxt, intRule, func);
-      else
-	RemoveElementPRule ((PtrElement) el, intRule, func);
-    }
+  if (type == PRContentString || type == PRContentURL)
+    /* it is a value in a CSS content rule. Generate the corresponding
+       Thot presentation variable item */
+    SetVariableItem (type, tsch, c, v);
   else
     {
-      attrType = 0;
-      if (generic)
-	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
-      else
-	pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc - 1],
-				    intRule, func, c->cssSpecificity,
-				    c->cssLine);
-      if (pRule)
+      TypeToPresentation (type, &intRule, &func, &absolute);
+      generic = (el == NULL);
+      if (type == PRHeight)
 	{
-	  if (type == PRBackgroundPicture ||
-	      (type == PRListStyleImage &&
-	       v.typed_data.value != 0))
+	  /* check if the height is a minimum value or not */
+	  if (!generic)
 	    {
-	      if (!generic)
-		tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
-	      cst = PresConstInsert (tsch, (char *)v.pointer);
-	      v.typed_data.unit = UNIT_REL;
-	      v.typed_data.value = cst;
-	      v.typed_data.real = FALSE;
-	      v.typed_data.mainValue = TRUE;
-	    }
-	  /* avoid to override an important rule by a non-important rule */
-	  if (ctxt->important || !pRule->PrImportant)
-	    {
-	      if (ctxt->type > 0 &&
-	          (type == PRVertPos || type == PRHorizPos))
-		func = ctxt->type;
-	      if (type == PRCreateFirst || type == PRCreateLast)
-		/* create the presentation box */
-		{
-		  BoxRuleInsert ((PtrPSchema)tsch, ctxt);
-		  v.typed_data.value = ctxt->box;
-		}
-	      PresentationValueToPRule (v, intRule, pRule, func, absolute,
-					generic, minValue);
-	    }
-	  if (generic)
-	    {
-	      pRule->PrViewNum = 1;
-	      if (ctxt->box && intRule == PtFunction)
-		BuildBoxName (ctxt, &pRule->PrPresBoxName);
-	      /*  select the good starting point depending on the context */
-	      if (ctxt->box && !(intRule == PtFunction &&
-				 (type == PRCreateFirst ||
-				  type == PRCreateLast)))
-		pRule = BoxRuleSearch ((PtrPSchema) tsch, ctxt);
-	      if (pRule)
-		{
-		  i = 0;
-		  while (attrType == 0 && i < MAX_ANCESTORS)
-		    attrType = ctxt->attrType[i++];
-		  ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema,
-					  ctxt->type, attrType, ctxt->box, pRule, FALSE);
-		}
+	      elType = TtaGetElementType (el);
+	      i = elType.ElTypeNum;
 	    }
 	  else
-	    ApplyASpecificStyleRule (pRule, (PtrElement) el,
-				     LoadedDocument[doc - 1], FALSE);
+	    i = ctxt->type;
+	  /* apply a min value for all compound element */
+	  minValue = (i == 0 || i >= PageBreak);
+	}
+      else
+	minValue = FALSE;
+
+      if (c->destroy)
+	{
+	  if (generic)
+	    PresRuleRemove ((PtrPSchema) tsch, ctxt, intRule, func);
+	  else
+	    RemoveElementPRule ((PtrElement) el, intRule, func);
+	}
+      else
+	{
+	  attrType = 0;
+	  pRule = NULL;
+	  if (generic)
+	    pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
+	  else
+	    pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc-1],
+					intRule, func, c->cssSpecificity,
+					c->cssLine);
+	  if (pRule)
+	    {
+	      if (ctxt->pseudo == PbBefore)
+		pRule->PrBoxType = BtBefore;
+	      else if (ctxt->pseudo == PbAfter)
+		pRule->PrBoxType = BtAfter;
+	      cst = 0;
+	      if (type == PRBackgroundPicture ||
+		  (type == PRListStyleImage &&
+		   v.typed_data.value != 0 &&
+		   v.typed_data.unit != VALUE_INHERIT))
+		{
+		  if (!generic)
+		    tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
+		  cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
+		  v.typed_data.unit = UNIT_REL;
+		  v.typed_data.value = cst;
+		  v.typed_data.real = FALSE;
+		  v.typed_data.mainValue = TRUE;
+		}
+	      /* avoid to override an important rule by a non-important rule */
+	      if (ctxt->important || !pRule->PrImportant)
+		{
+		  if (type == PRVertPos || type == PRHorizPos)
+		    {
+		      if (ctxt->type > 0)
+			func = ctxt->type;
+		    }
+		  else if (type == PRContent)
+	 	    /* create a presentation variable */
+                    {
+		      PresBoxInsert ((PtrPSchema)tsch, ctxt);
+		      VariableInsert ((PtrPSchema)tsch, ctxt);
+		      v.typed_data.value = ctxt->var;
+		    }
+		  PresentationValueToPRule (v, intRule, pRule, func, absolute,
+					    generic, minValue);
+		}
+	      if (generic)
+		{
+		  pRule->PrViewNum = 1;
+		  if (pRule)
+		    {
+		      i = 0;
+		      while (attrType == 0 && i < MAX_ANCESTORS)
+			attrType = ctxt->attrType[i++];
+		      ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema,
+				ctxt->type, attrType, ctxt->box, pRule, FALSE);
+		    }
+		}
+	      else
+		ApplyASpecificStyleRule (pRule, (PtrElement) el,
+					 LoadedDocument[doc - 1], FALSE);
+	    }
 	}
     }
   return (0);
@@ -3270,6 +3272,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
 	case FnPage:
 	  setting->type = PRPageBefore;
 	  break;
+	case FnContent:
+	  setting->type = PRContent;
+	  break;
 	default:
 	  /* not yet supported by the driver */
 	  setting->type = PRNone;
@@ -3448,7 +3453,8 @@ static void AddBorderStyleValue (char *buffer, int value)
   All the possible values returned by the presentation drivers are
   described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
-void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
+void TtaPToCss (PresentationSetting settings, char *buffer, int len,
+		Element el)
 {
   ElementType         elType;
   float               fval = 0;
@@ -4049,6 +4055,8 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
       /*
     case PRBreak1:
     case PRBreak2:
+    case PRCreateEnclosing:
+    case PRShowBox:
       break;
       */
     case PRBackgroundPicture:
@@ -4074,6 +4082,18 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  sprintf (buffer, "background-repeat: repeat-x");
 	  break;
 	}
+      break;
+    case PRNotInLine:
+    case PRNone:
+    case PRPageBefore:
+    case PRPageAfter:
+    case PRPageInside:
+      break;
+    case PRContentString:
+    case PRContentURL:
+      break;
+    case PRContent:
+      sprintf (buffer, "content:");
       break;
     default:
       break;

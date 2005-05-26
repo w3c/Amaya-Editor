@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2004
+ *  (c) COPYRIGHT INRIA, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -255,8 +255,8 @@ typedef enum
 typedef enum
 {
   FnLine, FnPage, FnCreateBefore, FnCreateWith, FnCreateFirst, FnCreateLast,
-  FnCreateAfter, FnColumn, FnCopy, FnContentRef, FnSubColumn, FnNoLine,
-  FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
+  FnCreateAfter, FnContent, FnColumn, FnCopy, FnContentRef, FnSubColumn,
+  FnNoLine, FnCreateEnclosing, FnShowBox, FnBackgroundPicture, FnPictureMode,
   FnNotInLine, FnAny
 } FunctionType;
 
@@ -422,6 +422,11 @@ typedef struct _Condition
 #define CoAttrTextValue u.s3.u.s1._CoAttrTextValue_
 #define CoTextMatch u.s3.u.s1._CoTextMatch_
 
+typedef enum
+{
+  BtElement, BtBefore, BtAfter
+} GenBoxType;
+
 /* The presentation rules relative to an object are linked by means of
    the pointer PrNextPRule. This way the presentation rules of a type
    defined in the structure schema are linked, as well as the presentation
@@ -447,7 +452,9 @@ typedef struct _PresRule
   int           PrSpecificity;  /* Specificity of the corresponding CSS rule.
 				   0 if the rule belongs to the default
 				   P Schema */
-  ThotBool      PrImportant;    /* the corresponding CSS rule has flag
+  GenBoxType    PrBoxType;      /* this rule is for the element itself or one
+				   of its pseudo-element (generated content) */
+  ThotBool      PrImportant;    /* the corresponding CSS rule has a flag
                                    !important */
   ThotBool      PrDuplicate;    /* duplicate of a conditional rule for an
 				   inherited attribute */

@@ -1310,7 +1310,9 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	  {
 	  case LtCompound:
 	    pBox = pAb->AbBox;
-	    if (pBox->BxType == BoGhost)
+	    if (pBox == NULL)
+	      fprintf (fileDescriptor, " NO BOX");
+	    else if (pBox->BxType == BoGhost)
 	      fprintf (fileDescriptor, " GHOST");
 	    else if (pBox->BxType == BoFloatGhost)
 	      fprintf (fileDescriptor, " FLOAT_GHOST");
@@ -3203,6 +3205,9 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 	    case FnCreateAfter:
 	       fprintf (fileDescriptor, "CreateAfter");
 	       break;
+	    case FnContent:
+	       fprintf (fileDescriptor, "Content");
+	       break;
 	    case FnCreateEnclosing:
 	       fprintf (fileDescriptor, "CreateEnclosing");
 	       break;
@@ -3267,14 +3272,19 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 	       break;		    
 	 }
    if (pR->PrPresFunction != FnLine &&
-            pR->PrPresFunction != FnContentRef &&
-            pR->PrPresFunction != FnShowBox &&
-            pR->PrPresFunction != FnBackgroundPicture &&
-            pR->PrPresFunction != FnPictureMode &&
-	    pR->PrPresFunction != FnNoLine)
+       pR->PrPresFunction != FnContentRef &&
+       pR->PrPresFunction != FnShowBox &&
+       pR->PrPresFunction != FnBackgroundPicture &&
+       pR->PrPresFunction != FnPictureMode &&
+       pR->PrPresFunction != FnNoLine)
      {
 	fprintf (fileDescriptor, "(");
-	if (pR->PrNPresBoxes == 0)
+        if (pR->PrPresFunction == FnContent)
+	  {
+	    fprintf (fileDescriptor, "Var");
+	    wrnumber (pR->PrPresBox[0], fileDescriptor);
+	  }
+	else if (pR->PrNPresBoxes == 0)
 	  {
 	     fprintf (fileDescriptor, pR->PrPresBoxName);
 	     if (pR->PrExternal || !pR->PrElement)
@@ -3692,6 +3702,10 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
 	    break;
 	  }
 	fprintf (fileDescriptor, " {-- ");
+        if (RP->PrBoxType == BtBefore)
+	  fprintf (fileDescriptor, ":before ");
+        else if (RP->PrBoxType == BtAfter)
+	  fprintf (fileDescriptor, ":after ");
 	if (RP->PrImportant)
 	  fprintf (fileDescriptor, "!important ");
 	fprintf (fileDescriptor, "specificity=%d,", RP->PrSpecificity);
@@ -3716,6 +3730,8 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
   PtrDocSchemasDescr  pPfS;
   PtrHandlePSchema    pHd;
   PresConstant       *pPr1;
+  PresVariable       *pVar;
+  PresVarItem        *pItem;
   PtrTtAttribute      pAt1;
   AttributePres      *pRP1;
   NumAttrCase        *pCa1;
@@ -3808,6 +3824,43 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 fprintf (fileDescriptor, "\';\n");
 		       }
 		   }
+
+		 /* print variables */
+		 if (pSc1->PsNVariables > 0)
+		   {
+		     fprintf (fileDescriptor, "\n");
+		     fprintf (fileDescriptor, "\nVARIABLES\n");
+		     for (i = 0; i < pSc1->PsNVariables; i++)
+		       {
+			 pVar = &pSc1->PsVariable[i];
+			 fprintf (fileDescriptor, "   Var");
+			 wrnumber (i+1, fileDescriptor);
+			 fprintf (fileDescriptor, "= ");
+			 for (j = 0; j < pVar->PvNItems; j++)
+			   {
+			     pItem = &pVar->PvItem[j];
+			     switch (pItem->ViType)
+			       {
+			       case VarText:
+				 fprintf (fileDescriptor, " Cste");
+				 wrnumber (pItem->ViConstant, fileDescriptor);
+				 break;
+			       case VarCounter:
+			       case VarDate:
+			       case VarFDate:
+			       case VarDirName:
+			       case VarDocName:
+			       case VarElemName:
+			       case VarAttrName:
+			       case VarAttrValue:
+			       case VarPageNumber:
+				 break;
+			       } 
+			   }
+			 fprintf (fileDescriptor, ";\n");
+		       }
+		   }
+
 		 /* print default presentation rules */
                  if (pSc1->PsFirstDefaultPRule)
 		   {
@@ -4023,11 +4076,14 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
   DisplayPRule displays the presentation rule in the CSS format.
   ----------------------------------------------------------------------*/
 void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
-		   PtrElement pEl, PtrPSchema pSchP)
+		   PtrElement pEl, PtrPSchema pSchP, int indent)
 {
   PresentationSettingBlock setting;
   char                     buffer[200];
-  int                      l;
+  int                      l, i;
+  PtrPRule                 boxRule;
+  PresVariable             *var;
+  PresVarItem              *item;
 
   if (rule == NULL)
     return;
@@ -4040,23 +4096,64 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   if (buffer[0] == EOS)
     return;
   /* display the rule */
-  fprintf (fileDescriptor, "@%s", buffer);
+  fprintf (fileDescriptor, "@");
+  for (i = 0; i < indent; i++)
+    fprintf (fileDescriptor, " ");
+  fprintf (fileDescriptor, "%s", buffer);
+  l = strlen (buffer) + indent;
   DisplayedRuleCounter++;
+
+  if (rule->PrType == PtFunction && rule->PrPresFunction == FnContent)
+    /* it's a content rule. List all rules of the created box */
+    {
+      var = &pSchP->PsVariable[rule->PrPresBox[0] - 1];
+      for (i = 0; i < var->PvNItems; i++)
+	{
+	  item = &var->PvItem[i];
+	  switch (item->ViType)
+	    {
+	    case VarText:
+	      if (pSchP->PsConstant[item->ViConstant - 1].PdType == CharString)
+		{
+		  fprintf (fileDescriptor, " \"%s\"", pSchP->PsConstant[item->ViConstant - 1].PdString);
+		  l += 3+strlen(pSchP->PsConstant[item->ViConstant - 1].PdString);
+		}
+	      else if (pSchP->PsConstant[item->ViConstant - 1].PdType == tt_Picture)
+		{
+		  fprintf (fileDescriptor, " url(\"%s\")", pSchP->PsConstant[item->ViConstant - 1].PdString);
+		  l += 8+strlen(pSchP->PsConstant[item->ViConstant - 1].PdString);
+		}
+	      break;
+	    case VarCounter:
+	      fprintf (fileDescriptor, " counter(Cnt%d)", pSchP->PsCounter[item->ViCounter - 1]);
+	      l += 14;
+	      break;
+	    case VarAttrValue:
+	      fprintf (fileDescriptor, " attr(%s)", pSchP->PsSSchema->SsAttribute->TtAttr[item->ViAttr - 1]->AttrName);
+	      break;
+	    }
+	}
+    }
   if (rule->PrImportant)
-    fprintf (fileDescriptor, "!important");
+    {
+      fprintf (fileDescriptor, " !important");
+      l += 11;
+    }
   fprintf (fileDescriptor, "; ");
-  l = strlen (buffer);
-  while (l < 29)
+  l += 2;
+
+  while (l < 30)
     {
       fprintf (fileDescriptor, " ");
       l++;
     }
   if (rule->PrSpecificity == 200)
-    fprintf (fileDescriptor, " line %d, style attribute\n", rule->PrCSSLine);
+    fprintf (fileDescriptor, "line %d, style attribute\n", rule->PrCSSLine);
   else if (rule->PrCSSURL)
-    fprintf (fileDescriptor, " line %d, file %s\n", rule->PrCSSLine, rule->PrCSSURL);
+    fprintf (fileDescriptor, "line %d, file %s\n", rule->PrCSSLine,
+	     rule->PrCSSURL);
   else
-    fprintf (fileDescriptor, " line %d, style element\n", rule->PrCSSLine);
+    fprintf (fileDescriptor, "line %d, style element\n", rule->PrCSSLine);
 }
 
 /*----------------------------------------------------------------------
@@ -4078,10 +4175,6 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
   Element             El;
   PtrElement          pEl;
   PtrPRule            pRDef, pRSpec;
-  PtrPRule            queuePR[MAX_QUEUE_LEN];
-  PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-  PtrPSchema          queuePS[MAX_QUEUE_LEN];
-  PtrAttribute        queuePA[MAX_QUEUE_LEN];
   PtrAbstractBox      pAb, pNew;
   int                 lqueue = 0, f, l;
   int                 index, viewSch;
@@ -4121,9 +4214,8 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
 	      pAb = pEl->ElAbstractBox[0];
 	      pNew = pAb;
 	      ApplyPresRules (pEl, pDoc, 1, viewSch, pSchS, pSchP,
-			      &pRSpec, &pRDef, &pAb, FALSE, &lqueue,
-			      queuePR, queuePP, queuePS, queuePA, pNew,
-			      fileDescriptor);
+			      &pRSpec, &pRDef, &pAb, FALSE, &lqueue, NULL,
+			      pNew, NULL, fileDescriptor);
 	    }
 	}
     }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2004
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -91,9 +91,10 @@ typedef int        *PRule;
 #define PRPageAfter 76
 #define PRPageInside 77
 /* PtPictInfo */
-#define PRCreateFirst 78
-#define PRCreateLast 79
-#define LAST_PRES_RULE_TYPE 79
+#define PRContent 78
+#define PRContentString 79
+#define PRContentURL 80
+#define LAST_PRES_RULE_TYPE 80
 
 /*
  * A bunch of constants describing the most common values for presentation

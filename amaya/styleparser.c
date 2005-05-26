@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2004
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4063,31 +4063,114 @@ char *GetCSSBackgroundURL (char *cssRule)
    ParseCSSContent: parse the value of property "content"
   ----------------------------------------------------------------------*/
 static char *ParseCSSContent (Element element, PSchema tsch,
-			      PresentationContext context, char *cssRule,
+			      PresentationContext ctxt, char *cssRule,
 			      CSSInfoPtr css, ThotBool isHTML)
 {
-  char      *p, quoteChar, *url;
+  PresentationValue   value;
+  char                *p, quoteChar;
+  ThotBool            repeat;
 
+  value.typed_data.unit = UNIT_REL;
+  value.typed_data.real = FALSE;
+  value.typed_data.value = 0;
+  TtaSetStylePresentation (PRContent, element, tsch, ctxt, value);
   cssRule = SkipBlanksAndComments (cssRule);
-  p = cssRule;
-  if (!strncasecmp (cssRule, "url", 3))
-    {  
-      cssRule += 3;
-      cssRule = ParseCSSUrl (cssRule, &url);
-      TtaFreeMemory (url);
+  repeat = TRUE;
+  while (repeat)
+    {
+      p = cssRule;
+      if (!strncasecmp (cssRule, "normal", 6))
+	/* The pseudo-element is not generated */
+	{
+	  /* @@@@@@ */
+	  cssRule += 6;
+	  repeat = FALSE;
+	}
+      else if (*cssRule == '"' || *cssRule == '\'')
+	/* It's a string */
+	{
+	  quoteChar = *cssRule;
+	  cssRule++;
+	  p = cssRule;
+	  /**** escape characters are not handled.
+		See function SkipQuotedString ******/
+	  while (*cssRule != EOS && *cssRule != quoteChar)
+	    cssRule++;
+	  if (*cssRule != quoteChar)
+	    cssRule = SkipProperty (cssRule, FALSE);
+	  else
+	    {
+	      *cssRule = EOS;
+	      value.typed_data.unit = UNIT_REL;
+	      value.typed_data.real = FALSE;
+	      value.pointer = p;
+	      TtaSetStylePresentation (PRContentString, element, tsch, ctxt,
+				       value);
+	      *cssRule = quoteChar;
+	      cssRule++;
+	    }
+	}
+      else if (!strncasecmp (cssRule, "url", 3))
+	{  
+	  cssRule += 3;
+	  cssRule = SetCSSImage (element, tsch, ctxt, cssRule, css, PRContentURL);
+	}
+      else if (!strncasecmp (cssRule, "counter", 7))
+	{
+	  cssRule += 7;
+	  /* @@@@@@ */
+	  cssRule = SkipProperty (cssRule, FALSE);
+	}
+      else if (!strncasecmp (cssRule, "counters", 8))
+	{
+	  cssRule += 8;
+	  /* @@@@@@ */
+	  cssRule = SkipProperty (cssRule, FALSE);
+	}
+      else if (!strncasecmp (cssRule, "attr", 4))
+	{
+	  cssRule += 4;
+	  /* @@@@@@ */
+	  cssRule = SkipProperty (cssRule, FALSE);
+	}
+      else if (!strncasecmp (cssRule, "open-quote", 10))
+	{
+	  cssRule += 10;
+	  /* @@@@@@ */
+	}
+      else if (!strncasecmp (cssRule, "close-quote", 11))
+	{
+	  cssRule += 11;
+	  /* @@@@@@ */
+	}
+      else if (!strncasecmp (cssRule, "no-open-quote", 13))
+	{
+	  cssRule += 13;
+	  /* @@@@@@ */
+	}
+      else if (!strncasecmp (cssRule, "no-close-quote", 14))
+	{
+	  cssRule += 14;
+	  /* @@@@@@ */
+	}
+      else if (!strncasecmp (cssRule, "inherit", 7))
+	{
+	  cssRule += 7;
+	  /* @@@@@@ */
+	  repeat = FALSE;
+	}
+      else
+	{
+	  CSSParseError ("Invalid content value", p, cssRule);
+	  cssRule = SkipProperty (cssRule, FALSE);
+	}
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (repeat)
+	if (*cssRule == ';' || *cssRule == '}' || *cssRule == EOS ||
+	    *cssRule == '!')
+	  repeat = FALSE;
     }
-   else if (*cssRule == '"' || *cssRule == '\'')
-     {
-       quoteChar = *cssRule;
-       cssRule++;
-       cssRule = SkipQuotedString (cssRule, quoteChar);
-       cssRule = SkipBlanksAndComments (cssRule);
-       if (*cssRule != EOS && *cssRule !=';')
-	 cssRule = SkipProperty (cssRule, FALSE);
-     }
-  else
-    cssRule = SkipProperty (cssRule, FALSE);
-  cssRule = CheckImportantRule (cssRule, context);
+  cssRule = CheckImportantRule (cssRule, ctxt);
   return (cssRule);
 }
 
@@ -4918,7 +5001,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   DisplayMode         dispMode;
-  char               *p = NULL, *next;
+  char               *p = NULL, *next, *end;
   char               *valueStart;
   int                 lg;
   unsigned int        i;
@@ -4948,6 +5031,20 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		  found = TRUE;
 		  i--;
 		}
+	    }
+
+	  if (i < NB_CSSSTYLEATTRIBUTE &&
+	      !strcasecmp (CSSProperties[i].name, "content") &&
+	      ((GenericContext)ctxt)->pseudo != PbBefore &&
+	      ((GenericContext)ctxt)->pseudo != PbAfter)
+	    /* property content is allowed only for pseudo-elements before and
+	       after */
+	    {
+	      end = cssRule;
+	      end = SkipProperty (end, TRUE);
+	      CSSParseError ("content is allowed only for pseudo-elements",
+			     cssRule, end);
+	      i = NB_CSSSTYLEATTRIBUTE;
 	    }
 	  if (i == NB_CSSSTYLEATTRIBUTE)
 	    cssRule = SkipProperty (cssRule, TRUE);
@@ -5155,6 +5252,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       ctxt->attrMatch[i] = Txtmatch;
     }
   ctxt->box = 0;
+  ctxt->var = 0;
   ctxt->pseudo = PbNone;
   ctxt->type = 0;
   /* the specificity of the rule depends on the selector */
@@ -5869,27 +5967,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	/* use the document schema */
 	ctxt->schema = TtaGetDocumentSSchema (doc);
     }
+  ctxt->important = FALSE;
   /* set the selector specificity */
   ctxt->cssSpecificity = specificity;
   /* Get the schema name of the main element */
   schemaName = TtaGetSSchemaName (ctxt->schema);
   isHTML = (strcmp (schemaName, "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css, link);
-
-  if (tsch && ctxt->pseudo != PbNone && DoApply)
-    /* there is a pseudo element :before or :after. Generate a function rule
-       CreateFirst or CreateLast */
-    {
-      pval.typed_data.unit = UNIT_REL;
-      pval.typed_data.real = FALSE;
-      pval.typed_data.value = (int) ctxt->pseudo;
-      if (ctxt->pseudo == PbBefore)
-	TtaSetStylePresentation (PRCreateFirst, NULL, tsch,
-				 (PresentationContext) ctxt, pval);
-      else if (ctxt->pseudo == PbAfter)
-	TtaSetStylePresentation (PRCreateLast, NULL, tsch,
-				 (PresentationContext) ctxt, pval);
-    }
   skippedNL = NewLineSkipped;
   if (tsch && cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);

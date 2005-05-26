@@ -198,7 +198,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 		if (pRule->PrPresFunction == FnCreateBefore ||
 		    pRule->PrPresFunction == FnCreateAfter)
 		   CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
-				   NULL, viewNb, pSchPPage, TRUE);
+				   NULL, viewNb, pSchPPage, NULL, TRUE);
 		/*else
 		  {
 		    if (ApplyRule (pRule, pSchPPage, pNewAbbox, pDoc, NULL, pNewAbbox))

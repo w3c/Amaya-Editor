@@ -1136,6 +1136,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    /* de la variable */
    GetConstantBuffer (pAb);
    pAb->AbVolume = 0;
+   pAb->AbLeafType = LtText;
    pA = NULL;
    /* remplit le buffer avec le contenu defini par la variable */
    pPr1 = &pSchP->PsVariable[varNum - 1];
@@ -1149,11 +1150,12 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  case VarText:
 	    /* constante textuelle */
 	    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
-	    CopyStringToBuffer ((unsigned char *)pPres1->PdString, pAb->AbText, &l);
+	    CopyStringToBuffer ((unsigned char *)pPres1->PdString,
+				pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    pAb->AbLang = 0; /* default */
 	    break;
-	    
+
 	  case VarAttrValue:
 	    /* valeur d'un attribut */
 	    found = FALSE;
@@ -1376,7 +1378,6 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    if (PresAbsBoxUserEditable (pAb))
      /* le contenu de ce pave de presentation est donc modifiable */
       pAb->AbCanBeModified = TRUE;
-   pAb->AbLeafType = LtText;
    if (isOld == NULL)
       equal = FALSE;		/* la variable n'avait pas de valeur */
    else
