@@ -4149,9 +4149,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  /* display: block */
 		  if (pAb->AbFloat != 'N')
 		    pAb->AbNotInLine = FALSE;
-		  if (viewSch == 1)
-		    /* force inline only in the formatted view */
-		    pAb->AbInLine = TRUE;
 		  pAb->AbAcceptLineBreak = FALSE;
 		}
 	    }
