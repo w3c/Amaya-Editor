@@ -26,6 +26,7 @@ BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
   EVT_COMBOBOX( XRCID("wxID_COMBOBOX"),          OpenDocDlgWX::OnURLSelected )
   EVT_TEXT_ENTER( XRCID("wxID_FILENAME"),        OpenDocDlgWX::OnOpenButton )
   EVT_TEXT_ENTER( XRCID("wxID_DIR"),             OpenDocDlgWX::OnOpenButton )
+  EVT_COMBOBOX( XRCID("wxID_PROFILE"),           OpenDocDlgWX::OnProfileSelected )
 
   EVT_TEXT( XRCID("wxID_FILENAME"), OpenDocDlgWX::OnText_Filename )
   EVT_TEXT( XRCID("wxID_DIR"),      OpenDocDlgWX::OnText_Dir )
@@ -48,7 +49,8 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 			    const wxArrayString & urlList,
 			    const wxString & urlToOpen,
 			    const wxString & filter,
-			    int * p_last_used_filter ) :
+			    int * p_last_used_filter,
+			    const wxString & profiles) :
   AmayaDialog( parent, ref )
   ,m_Filter(filter)
   ,m_LockUpdateFlag(false)
@@ -69,6 +71,17 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWWINDOW)));
+
+  if (profiles.IsEmpty())
+    {
+      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
+      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
+    }
+  else
+    {
+      XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
+      XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
+    }
 
   // set the default WHERE_TO_OPEN value : in new tab
   int where_to_open_doc = 1;
@@ -168,9 +181,9 @@ void OpenDocDlgWX::UpdateComboboxFromDirAndFilename()
       if (dir_value.IsEmpty())
         dir_value = _T("C:\\");
 #endif /* _WINDOWS */
-	  if (dir_value.Last() != m_DirSep)
+      if (dir_value.Last() != m_DirSep)
         dir_value += m_DirSep;
-	  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + filename_value );
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( dir_value + filename_value );
       m_LockUpdateFlag = false;
     }
 }
@@ -227,6 +240,14 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)buffer );
 
+  // get the combobox profile
+  wxString profile = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
+  if (!profile.IsEmpty())
+    {
+      strcpy( buffer, (const char*)profile.mb_str(wxConvUTF8) );
+      // give the profile to amaya
+      ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
+    }
   // create or load the new document
   ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 }
@@ -253,50 +274,51 @@ void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  OpenDocDlgWX
- *      Method:  OnURLSelected
- * Description:  update the filename and dir fields
- *--------------------------------------------------------------------------------------
- */
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnURLSelected
+  Description:  update the filename and dir fields
+  ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
 {
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  OpenDocDlgWX
- *      Method:  OnText_Filename
- * Description:  
- *--------------------------------------------------------------------------------------
- */
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnProfileSelected
+  Description:  select the profile
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::OnProfileSelected( wxCommandEvent& event )
+{
+}
+
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnText_Filename
+  Description:  update the filename
+  ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnText_Filename( wxCommandEvent& event )
 {
   UpdateComboboxFromDirAndFilename();
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  OpenDocDlgWX
- *      Method:  OnText_Dir
- * Description:  
- *--------------------------------------------------------------------------------------
- */
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnText_Dir
+  Description:  update the dir
+  ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnText_Dir( wxCommandEvent& event )
 {
   UpdateComboboxFromDirAndFilename();
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  OpenDocDlgWX
- *      Method:  OnText_Combobox
- * Description:  
- *--------------------------------------------------------------------------------------
- */
+/*----------------------------------------------------------------------
+  Class:  OpenDocDlgWX
+  Method:  OnText_Combobox
+  Description: select an URL
+  ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnText_Combobox( wxCommandEvent& event )
 {
   UpdateDirAndFilenameFromString( XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue() );

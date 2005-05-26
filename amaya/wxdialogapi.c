@@ -143,7 +143,8 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 			      const char *docName,
 			      int doc_select,
 			      int dir_select,
-			      DocumentType doc_type )
+			      DocumentType doc_type,
+			      ThotBool newfile)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -154,9 +155,15 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
   wxString wx_docName   = TtaConvMessageToWX( docName );
   wxString wx_urlToOpen = TtaConvMessageToWX( urlToOpen );
   wxString wx_filter;
+  wxString wx_profiles = _T("");
 
   if (doc_type == docHTML)
+    {
     wx_filter = APPHTMLNAMEFILTER;
+    if (newfile)
+      /* create a new HTML document: activat the list of profiles */
+      wx_profiles = _T("XHTML 1.1");
+    }
   else if (doc_type == docMath)
     wx_filter = APPMATHNAMEFILTER;
   else if (doc_type == docSVG)
@@ -178,7 +185,8 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 					   BuildWX_URL_List(urlList),
 					   wx_urlToOpen,
 					   wx_filter,
-					   &g_Last_used_filter );
+					   &g_Last_used_filter,
+					   wx_profiles);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */

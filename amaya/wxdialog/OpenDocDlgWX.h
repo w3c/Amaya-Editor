@@ -26,7 +26,8 @@ public:
 		const wxArrayString & urlList,
 		const wxString & urlToOpen,
 		const wxString & filter,
-		int * p_last_used_filter );
+		int * p_last_used_filter,
+		const wxString & profiles );
     
   // Destructor.                  
   virtual ~OpenDocDlgWX();
@@ -43,6 +44,7 @@ private:
   void OnText_Filename( wxCommandEvent& event );
   void OnText_Dir( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );
+  void OnProfileSelected( wxCommandEvent& event );
 
 
  private:

@@ -116,6 +116,7 @@ static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
 static int          NewDocProfile = 0;
+static ThotBool     NewXML = TRUE;
 static ThotBool     BADMimeType = FALSE;
 static ThotBool     CriticConfirm = FALSE;
 /* the open document is the Amaya default page */
@@ -2165,7 +2166,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
     /* here we pass also 'URL_list', because we want generate a combobox choice list */
     created = CreateOpenDocDlgWX( BaseDialog + OpenForm,
 				  TtaGetViewFrame (doc, view), title, URL_list, s, name,
-				  DocSelect, DirSelect, docType );
+				  DocSelect, DirSelect, docType, NewFile );
     if (created)
       {
 	TtaSetDialoguePosition ();
@@ -2225,7 +2226,7 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   NewFile = TRUE;
   NewDocType = docType;
   NewDocProfile = docProfile;
-
+  NewXML = TRUE;
   if (NewDocType == docHTML)
     {
       /* will scan html documents */
@@ -2236,12 +2237,12 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       else if (docProfile == L_Strict)
 	InitOpenDocForm (document, view, "New.html",
 			 TtaGetMessage (AMAYA, AM_NEW_HTML_STRICT), docHTML);
-      else if (docProfile == L_Xhtml11)
-	InitOpenDocForm (document, view, "New.html",
-			 TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
-      else
+      else if (docProfile == L_Transitional)
 	InitOpenDocForm (document, view, "New.html",
 			 TtaGetMessage (AMAYA, AM_NEW_HTML_TRANSITIONAL), docHTML);
+      else
+	InitOpenDocForm (document, view, "New.html",
+			 TtaGetMessage (AMAYA, AM_NEW_HTML11), docHTML);
    }
   else if (NewDocType == docMath)
     {
@@ -5767,9 +5768,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      /* update the list of URLs */
 	      if (NewFile)
 #ifdef _WX
-		InitializeNewDoc (LastURLName, NewDocType, CurrentDocument /*it was 0*/ , NewDocProfile);
+		InitializeNewDoc (LastURLName, NewDocType, CurrentDocument,
+				  NewDocProfile, NewXML);
 #else /* _WX */
-		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
+		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile, NewXML);
 #endif /* _WX */
 	      /* load an URL */ 
 	      else if (DontReplaceOldDoc)
@@ -5779,9 +5781,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  Document document;
 		  View     view;
 		  TtaGiveActiveView (&document,&view);
-		  document = DocumentSource[document] ? DocumentSource[document] : document;
+		  document = DocumentSource[document] ? DocumentSource[document]: document;
 
-		  GetAmayaDoc (LastURLName, NULL, document /* it was 0 */, document /* it was 0 */, (ClickEvent)Loading_method,
+		  GetAmayaDoc (LastURLName, NULL, document, document,
+			       (ClickEvent)Loading_method,
 			       FALSE, NULL, NULL);
 		}
 #else /* _WX */
@@ -5808,7 +5811,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		    GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
 				 FALSE, NULL, NULL);
 #else /* _WX */
-		    GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument, (ClickEvent)Loading_method,
+		    GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument,
+				 (ClickEvent)Loading_method,
 				 FALSE, NULL, NULL);
 #endif /* _WX */
 		  else
@@ -5818,9 +5822,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		}
 	      else if (NewFile)
 #ifdef _WX
-		InitializeNewDoc (tempfile, NewDocType, CurrentDocument /*it was 0*/, NewDocProfile);
+		InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
+				  NewDocProfile, NewXML);
 #else /* _WX */
-		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
+		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile, NewXML);
 #endif /* _WX */
 	      else
 		{
@@ -5840,7 +5845,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _SVG */
 		  else
 		    NewDocType = docHTML;
-		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
+		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
+				    NewDocProfile, NewXML);
 		}
 	    }
 	  else if (DocumentName[0] != EOS)
@@ -5935,7 +5941,24 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  }
       }
       break;
-
+    case DocInfoDocType:
+      /* only used by WX version to get back the new profile */
+      if (NewDocType == docHTML)
+	{
+	  if (!strstr (data, "XHTML"))
+	      NewXML = FALSE;
+	  if (strstr (data, "Strict"))
+	    NewDocProfile = L_Strict;
+	  else if (strstr (data, "Basic"))
+	    NewDocProfile = L_Basic;
+	  else if (strstr (data, "Transitional"))
+	    NewDocProfile = L_Transitional;
+	  else if (NewXML)
+	    NewDocProfile = L_Xhtml11;
+	  else
+	    NewDocProfile = L_Transitional;	    
+	}
+      break;
     case URLName:
       RemoveNewLines (data);
       ptr = data;

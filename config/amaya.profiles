@@ -456,10 +456,7 @@ HelpPublishing
 HelpAccess
 HelpXml
 #&MenuAttribute
-&NewXHTML11
-&NewXHTMLTransitional
-&NewXHTMLStrict
-&NewXHTMLBasic
+&NewXHTML
 &NewMathML
 #&NewSVG
 &NewCss

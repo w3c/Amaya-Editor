@@ -73,6 +73,14 @@
 
 
 /*----------------------------------------------------------------------
+  NewXHTML: Create a new XHTML document
+  ----------------------------------------------------------------------*/
+void NewXHTML (Document document, View view)
+{
+  OpenNew (document, view, docHTML, 0);
+}
+
+/*----------------------------------------------------------------------
   NewXHTMLBasic: Create a new Basic XHTML document
   ----------------------------------------------------------------------*/
 void NewXHTMLBasic (Document document, View view)
@@ -299,7 +307,8 @@ void CreateDoctype (Document doc, Element doctype, int profile,
   When the parameter doc is 0 the function creates a new document window.
   The url is coded with the default charset.
   ----------------------------------------------------------------------*/
-void InitializeNewDoc (char *url, int docType, Document doc, int profile)
+void InitializeNewDoc (char *url, int docType, Document doc, int profile,
+		       ThotBool isXML)
 {
   ElementType          elType;
   Element              docEl, root, title, text, el, head, child, meta, body;
@@ -382,7 +391,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
     {
       /*-------------  New XHTML document ------------*/
       /* force the XML parsing */
-      DocumentMeta[doc]->xmlformat = TRUE;
+      DocumentMeta[doc]->xmlformat = isXML;
       TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
       if (xhtml_mimetype)
 	DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);

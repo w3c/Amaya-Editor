@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void NewXHTML ( Document document,
+                       View view );
 extern void NewXHTMLBasic ( Document document,
                             View view );
 extern void NewXHTMLStrict ( Document document,
@@ -28,7 +30,8 @@ extern void CreateDoctype ( Document doc,
 extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
-                               int profile );
+                               int profile,
+                               ThotBool isXML );
 extern void RemoveDoctype ( Document document,
                             View view );
 extern void HasNatures ( Document document,
@@ -270,6 +273,8 @@ extern void LockIndicator ( Document document,
 
 #else /* __STDC__ */
 
+extern void NewXHTML ( Document document,
+                         View view );
 extern void NewXHTMLBasic ( Document document,
                               View view );
 extern void NewXHTMLStrict ( Document document,
@@ -292,7 +297,8 @@ extern void CreateDoctype ( Document doc,
 extern void InitializeNewDoc ( char *url,
                                  int docType,
                                  Document doc,
-                                 int profile );
+                                 int profile,
+                                 ThotBool isXML );
 extern void RemoveDoctype ( Document document,
                               View view );
 extern void HasNatures ( Document document,

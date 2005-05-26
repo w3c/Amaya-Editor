@@ -31,11 +31,11 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-	File.New1 button:BHtml11 -> NewXHTML11 icon:default_document.png;
-	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional icon:default_document.png;
-	File.New1 button:BHtmlStrict -> NewXHTMLStrict icon:default_document.png;
-	File.New1 button:BHtmlBasic -> NewXHTMLBasic icon:default_document.png;
-	File.New1 Separator;
+	File.New1 button:BHtml -> NewXHTML icon:default_document.png;
+	File.New1 button:BHtml11 -> NewXHTML11;
+	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional;
+	File.New1 button:BHtmlStrict -> NewXHTMLStrict;
+	File.New1 button:BHtmlBasic -> NewXHTMLBasic;
 	File.New1 button:BMathml -> NewMathML icon:default_document.png;
 	File.New1 button:BSvg -> NewSVG icon:default_document.png;
 	File.New1 button:BCss -> NewCss icon:default_document.png;

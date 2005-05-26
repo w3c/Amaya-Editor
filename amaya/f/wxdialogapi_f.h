@@ -22,7 +22,8 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
                                      const char *docName,
                                      int doc_select,
                                      int dir_select,
-                                     DocumentType doc_type );
+                                     DocumentType doc_type,
+                                     ThotBool newfile );
 extern ThotBool CreateImageDlgWX ( int ref,
                                    ThotWindow parent,
                                    const char *title,
@@ -155,7 +156,8 @@ extern ThotBool CreateOpenDocDlgWX ( int ref,
                                        const char *docName,
                                        int doc_select,
                                        int dir_select,
-                                       DocumentType doc_type );
+                                       DocumentType doc_type,
+                                       ThotBool newfile );
 extern ThotBool CreateImageDlgWX ( int ref,
                                      ThotWindow parent,
                                      const char *title,

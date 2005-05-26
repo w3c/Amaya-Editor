@@ -11,7 +11,6 @@
 #define APPIMAGENAMEFILTER _T("All files (*)|*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif|Image files (*.bmp)|*.bmp")
 #define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*)|*")
 #define APPALLFILESFILTER _T("All files (*)|*")
-
 #endif /* __FILE_FILTERS_H__ */
 
 #endif /* _WX */

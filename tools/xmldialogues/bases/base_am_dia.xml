@@ -179,6 +179,18 @@
 	<message xml:lang="ru">Новый</message>
 	<message xml:lang="hu">&amp;Új</message>
 </label>
+<label define="BHtml">
+	<message xml:lang="en">New &amp;XHTML document...</message>
+	<message xml:lang="fr">Nouveau document &amp;XHTML...</message>
+	<message xml:lang="de">XHTML 1.1...</message>
+	<message xml:lang="it">Nuovo documento XHTML...</message>
+	<message xml:lang="es">Nuevo documento &amp;XHTML...</message>
+	<message xml:lang="pt">Novo documento XHTML...</message>
+	<message xml:lang="fi">Uusi XHTML dokumentti...</message>
+	<message xml:lang="tr">Yeni XHTML dosyası...</message>
+	<message xml:lang="ru">Новый &amp;XHTML документ...</message>
+	<message xml:lang="hu">Új &amp;XHTML dokumentum...</message>
+</label>
 <label define="BHtml11">
 	<message xml:lang="en">New &amp;XHTML 1.1 document...</message>
 	<message xml:lang="fr">Nouveau document &amp;XHTML 1.1...</message>
