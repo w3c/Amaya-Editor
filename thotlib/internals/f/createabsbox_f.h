@@ -103,8 +103,9 @@ extern void ApplyPresRules ( PtrElement pEl,
                              int *lqueue,
                              void* rQueue,
                              PtrAbstractBox pNewAbbox,
-                             void* CSScasc,
-                             FILE *fileDescriptor );
+			     void* CSScasc,
+                             FILE *fileDescriptor,
+			     ThotBool pseudoElOnly);
 extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        DocViewNumber viewNb,
@@ -211,8 +212,9 @@ extern void ApplyPresRules ( PtrElement pEl,
                                int *lqueue,
                                void* rQueue,
                                PtrAbstractBox pNewAbbox,
-                               void* CSScasc,
-                               FILE *fileDescriptor );
+			       void* CSScasc,
+			       FILE *fileDescriptor,
+			       ThotBool pseudoElOnly);
 extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          DocViewNumber viewNb,

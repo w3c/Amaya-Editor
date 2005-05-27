@@ -4215,7 +4215,7 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
 	      pNew = pAb;
 	      ApplyPresRules (pEl, pDoc, 1, viewSch, pSchS, pSchP,
 			      &pRSpec, &pRDef, &pAb, FALSE, &lqueue, NULL,
-			      pNew, NULL, fileDescriptor);
+			      pNew, NULL, fileDescriptor, FALSE);
 	    }
 	}
     }

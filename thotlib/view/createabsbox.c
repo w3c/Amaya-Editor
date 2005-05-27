@@ -3136,13 +3136,16 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
-   ApplCrPresRule determine les regles de creation a appliquer    
-   au pave pAb en fonction de head                        
+   ApplCrPresRule determine et applique les regles de creation a appliquer    
+   au pave pAb en fonction de head.
+   S'il y a des regles de creation de pseudo-elements CSS, met
+   pseudoElem a TRUE.
   ----------------------------------------------------------------------*/
 static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
 			    PtrAbstractBox * pAbbCreated,
 			    PtrAttribute pAttr, PtrDocument pDoc,
-			    PtrAbstractBox pAb, ThotBool head, PtrPRule pRule)
+			    PtrAbstractBox pAb, ThotBool head, PtrPRule pRule,
+			    ThotBool *pseudoElem)
 {
   PtrAbstractBox      pAbb, pAbbR;
   ThotBool            stop;
@@ -3153,16 +3156,18 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
     if (pRule == NULL)
       stop = TRUE;
     else if (pRule->PrType > PtFunction)
+      /* pas de fonction de presentation */
       {
 	stop = TRUE;
 	pRule = NULL;
-	/* pas de fonction de presentation */
       }
     else if (pRule->PrType == PtFunction)
+      /* first presentation function */
       stop = TRUE;
     else
       pRule = pRule->PrNextPRule;
   while (!stop);
+
   /* cherche toutes les fonctions de creation */
   stop = FALSE;
   do
@@ -3172,20 +3177,21 @@ static void ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP,
       stop = TRUE;
     else
       {
-	/* applique les fonctions de creation qui correspondent a */
-	/* l'extremite concernee */
-	/* si la regle de creation possede l'indication de repetition */
-	/* on appelle la procedure de creation systematiquement */
-	if ((head &&
-	     (pRule->PrPresFunction == FnCreateBefore ||
-	      pRule->PrPresFunction == FnCreateFirst ||
-	      (pRule->PrPresFunction == FnContent &&
-	       pRule->PrBoxType == BtBefore))) ||
-	    (!head &&
-	     (pRule->PrPresFunction == FnCreateAfter ||
-	      pRule->PrPresFunction == FnCreateLast ||
-	      (pRule->PrPresFunction == FnContent &&
-	       pRule->PrBoxType == BtAfter))))
+	/*  */
+	if (pRule->PrPresFunction == FnContent)
+	  /* it's a rule creating a CSS pseudo-element */
+	  {
+	    if ((head && pRule->PrBoxType == BtBefore) ||
+		(!head && pRule->PrBoxType == BtAfter))
+	      *pseudoElem = TRUE;
+	  }
+	else if ((head &&
+		  (pRule->PrPresFunction == FnCreateBefore ||
+		   pRule->PrPresFunction == FnCreateFirst)) ||
+		 (!head &&
+		  (pRule->PrPresFunction == FnCreateAfter ||
+		   pRule->PrPresFunction == FnCreateLast)))
+	  /* it's a creation function for the end of interest. Apply it. */
 	  {
 	    pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule, pSS, pAttr,
 				   pAb->AbDocView, pSP, NULL, TRUE);
@@ -3296,16 +3302,19 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 					 ThotBool head, PtrDocument pDoc)
 {
    PtrPRule            pRule;
-   PtrPSchema          pSchP, pSchPattr;
+   PtrPSchema          pSchP, pSchPattr, pSchPSav;
    int                 index;
    PtrSSchema          pSchS, pSSattr;
-   PtrAbstractBox      pAbbCreated;
+   PtrAbstractBox      pAbbCreated, pAbbReturn;
    PtrAttribute        pAttr;
    PtrElement          pEl, pElAttr, pFirstAncest;
-   int                 l, valNum;
+   int                 l, valNum, lqueue;
    InheritAttrTable   *inheritTable;
    PtrHandlePSchema    pHd;
    PtrAttributePres    attrBlock;
+   PtrPRule            pRSpec, pRDef;
+   RuleQueue           rQueue;
+   ThotBool            pseudoElem;
 
    pAbbCreated = NULL;
    if (pAb != NULL)
@@ -3373,6 +3382,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 	       /* Cree les paves de presentation a` cette extremite. */
 	       /* cherche la 1ere regle de presentation associee a ce type */
 	       /* d'element */
+	       pseudoElem = FALSE;
 	       pEl = pAb->AbElement;
 	       SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
 	       if (pSchS != NULL && pSchS != pEl->ElStructSchema)
@@ -3385,10 +3395,11 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		     pSchP = PresentationSchema (pSchS, pDoc);
 		     index = pEl->ElTypeNumber;
 		   }
+	       pSchPSav = pSchP;
 	       /* handle creation rules associated with the element type */
 	       pRule = pSchP->PsElemPRule->ElemPres[index - 1];
        	       ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc, pAb,
-			       head, pRule);
+			       head, pRule, &pseudoElem);
 	       /* handle creation rules associated with any element type in
 		  all schema extensions */
 	       /* We need to do that only if the element is not a basic or
@@ -3403,7 +3414,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       pSchP = pHd->HdPSchema;
 		       pRule = pSchP->PsElemPRule->ElemPres[AnyType];
 		       ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
-				       pAb, head, pRule);
+				       pAb, head, pRule, &pseudoElem);
 		       pHd = pHd->HdNextPSchema;
 		     }
 		 }
@@ -3419,7 +3430,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		   {
 		     pRule = pSchP->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
 		     ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
-				     pAb, head, pRule);
+				     pAb, head, pRule, &pseudoElem);
 		   }
 
 		 /* handle the rules associated with attributes of ancestors
@@ -3457,7 +3468,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				 if (pRule && !pRule->PrDuplicate)
 				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 						   &pAbbCreated, pAttr, pDoc,
-						   pAb, head, pRule);
+						   pAb, head, pRule, &pseudoElem);
 			       }
 			     while (valNum > 0);
 			   }
@@ -3498,7 +3509,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				 if (pRule && !pRule->PrDuplicate)
 				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 						   &pAbbCreated, pAttr, pDoc,
-						   pAb, head, pRule);
+						   pAb, head, pRule, &pseudoElem);
 			       }
 			     while (valNum > 0);
 			   }
@@ -3539,7 +3550,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				               pSchPattr, &valNum, &attrBlock);
 			 ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 					 &pAbbCreated, pAttr, pDoc, pAb, head,
-					 pRule);
+					 pRule, &pseudoElem);
 		       }
 		     while (valNum > 0);
 		     /* get the next attribute of the element */
@@ -3565,6 +3576,31 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		   pSchP = NULL;
 		 else
 		   pSchP = pHd->HdPSchema;
+		 }
+	       if (pseudoElem)
+		 /* A CSS pseudo-element has to be created for this end of
+		    the box */
+		 {
+		   if (head)
+		     pAb->AbTruncatedHead = truncate;
+		   else
+		     pAb->AbTruncatedTail = truncate;
+		   pSchP = pSchPSav;
+		   /* pRSpec: premiere regle de presentation associee au type
+		      de l'element */
+		   pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
+		   /* premiere regle de presentation par defaut */
+		   pRDef = pSchP->PsFirstDefaultPRule;
+		   /* initialise la file des regles qui n'ont pas pu etre
+		      appliquees*/
+		   lqueue = 0;
+		   pAbbReturn = NULL;
+		   ApplyPresRules (pEl, pDoc, pAb->AbDocView,
+			       pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+			       pSchS, pSchP, &pRSpec, &pRDef, &pAbbReturn,
+			       !head, &lqueue, &rQueue, pAb, NULL, NULL, TRUE);
+		   pAbbCreated = pAbbReturn;
+		   /***********/;
 		 }
 	     }
 	   if (head)
@@ -4579,7 +4615,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		     PtrAbstractBox *pAbbReturn, ThotBool forward,
 		     int *lqueue, void* rQueue,
 		     PtrAbstractBox pNewAbbox, void* CSScasc,
-		     FILE *fileDescriptor)
+		     FILE *fileDescriptor, ThotBool pseudoElOnly)
 {
   int                i, view, l, valNum;
   PtrPRule           pRuleView, pRule, pR;
@@ -4954,22 +4990,23 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
     }
 
   /* apply all selected rules */
-  for (i = 0; i < PtPictInfo; i++)
-    if (casc->MainElement.selectedRule[i])
-      {
-	if (fileDescriptor)
-	  DisplayPRule (casc->MainElement.selectedRule[i], fileDescriptor, pEl,
-			casc->MainElement.schemaOfSelectedRule[i], 0);
-	else if (!ApplyRule (casc->MainElement.selectedRule[i],
-			     casc->MainElement.schemaOfSelectedRule[i],
-			     pNewAbbox,
-			     pDoc, casc->MainElement.attrOfSelectedRule[i],
-			     pNewAbbox))
-	  WaitingRule (casc->MainElement.selectedRule[i], pNewAbbox,
-		       casc->MainElement.schemaOfSelectedRule[i],
-		       casc->MainElement.attrOfSelectedRule[i], 
-		       NULL, queue, lqueue);
-      }
+  if (!pseudoElOnly)
+    for (i = 0; i < PtPictInfo; i++)
+      if (casc->MainElement.selectedRule[i])
+	{
+	  if (fileDescriptor)
+	    DisplayPRule (casc->MainElement.selectedRule[i], fileDescriptor,
+			  pEl, casc->MainElement.schemaOfSelectedRule[i], 0);
+	  else if (!ApplyRule (casc->MainElement.selectedRule[i],
+			       casc->MainElement.schemaOfSelectedRule[i],
+			       pNewAbbox, pDoc,
+			       casc->MainElement.attrOfSelectedRule[i],
+			       pNewAbbox))
+	    WaitingRule (casc->MainElement.selectedRule[i], pNewAbbox,
+			 casc->MainElement.schemaOfSelectedRule[i],
+			 casc->MainElement.attrOfSelectedRule[i], 
+			 NULL, queue, lqueue);
+	}
   if (fileDescriptor)
     {
       if (casc->ContentRuleBefore && casc->ContentRuleBefore->PrPresBox[0] > 0)
@@ -4993,7 +5030,9 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
     }
   else if (pNewAbbox)
     {
-      if (casc->ContentRuleBefore && casc->ContentRuleBefore->PrPresBox[0] > 0)
+      if (casc->ContentRuleBefore &&
+	  casc->ContentRuleBefore->PrPresBox[0] > 0 &&
+	  (!pseudoElOnly || !forward))
 	/* create a :before pseudo-element if element pEl is complete */
 	{
 	  if (pNewAbbox->AbLeafType != LtCompound ||
@@ -5003,11 +5042,20 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			    casc->schemaOfContentRuleBefore,
 			    &(casc->BeforePseudoEl), FALSE);
 	}
-      if (casc->ContentRuleAfter && casc->ContentRuleAfter->PrPresBox[0] > 0)
+      if (casc->ContentRuleAfter &&
+	  casc->ContentRuleAfter->PrPresBox[0] > 0)
 	/* create a :after pseudo-element if element pEl is complete */
 	{
-	  if (pNewAbbox->AbLeafType != LtCompound ||
-	      pNewAbbox->AbInLine || !pNewAbbox->AbTruncatedTail)
+	  if (pseudoElOnly)
+	    {
+	      if (forward)
+		CrAbsBoxesPres (pEl, pDoc, casc->ContentRuleAfter, pSchS,
+				casc->attrOfContentRuleAfter, viewNb,
+				casc->schemaOfContentRuleAfter,
+				&(casc->AfterPseudoEl), FALSE);
+	    }
+	  else if (pNewAbbox->AbLeafType != LtCompound ||
+		   pNewAbbox->AbInLine || !pNewAbbox->AbTruncatedTail)
 	    /* on appliquera la regle de creation quand tous les paves */
 	    /* descendants de l'element seront crees */
 	    WaitingRule (casc->ContentRuleAfter, pNewAbbox,
@@ -5556,7 +5604,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		/* on applique toutes les regles de presentation pertinentes */
 		ApplyPresRules (pEl, pDoc, viewNb, viewSch, pSchS, pSchP,
 				&pRSpec, &pRDef, &pAbReturn, forward, &lqueue,
-				&queue, pNewAbbox, &casc, NULL);
+				&queue, pNewAbbox, &casc, NULL, FALSE);
 		
 		/* traitement particulier aux sauts de page (il faut prendre */
 		/* le bon schema de presentation) */
