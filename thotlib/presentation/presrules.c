@@ -2340,7 +2340,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       }
 	     /* on pourra reessayer d'appliquer la regle plus tard : */
 	     /* le precedent existera peut etre, alors */
-	     if (pRefAb == pAbb1->AbEnclosing)
+       	     if (pRefAb == pAbb1->AbEnclosing)
 	       *appl = TRUE;
 	     else
 	       *appl = FALSE;

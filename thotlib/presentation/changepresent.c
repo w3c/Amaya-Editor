@@ -248,7 +248,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		else
 		  {
 		    GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
-		    if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr, pAbCur))
+		    if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr, NULL))
 		      {
 			/* this rule cannot be applied yet */
 			Delay (pRule, pSchP, pPRP, pAttr, pAbCur->AbFirstEnclosed);
