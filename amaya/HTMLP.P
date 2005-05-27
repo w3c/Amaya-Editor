@@ -2863,7 +2863,7 @@ RULES
 	   ListStyleType: Square;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -2890,7 +2890,7 @@ RULES
 	ListStyleType: Decimal;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
