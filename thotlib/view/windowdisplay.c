@@ -382,13 +382,12 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	       |             I                  |
 	      \|/____________I_________________\|/_ bottom
   ----------------------------------------------------------------------*/
-void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
+void DisplayUnderline (int frame, int x, int y, int h, int type,
 		       int lg, int fg)
 {
-  int                 fheight;	/* font height           */
-  int                 bottom;	/* underline position    */
-  int                 middle;	/* cross-over position   */
-  int                 thickness;	/* thickness of drawing */
+  int         bottom;	/* underline position    */
+  int         middle;	/* cross-over position   */
+  int         thickness;	/* thickness of drawing */
 
   if (fg < 0)
     return;
@@ -401,10 +400,9 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
   y += FrameTable[frame].FrTopMargin;
   if (lg > 0)
     {
-      fheight = FontHeight (font);
-      thickness = (fheight / 20) + 1;
-      bottom = fheight - thickness;
-      middle = fheight / 2;
+      thickness = (h / 20) + 1;
+      bottom = h - thickness;
+      middle = h / 2;
       /*
        * for an underline independant of the font add
        * the following lines here :

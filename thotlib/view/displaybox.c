@@ -1677,6 +1677,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  width -= w;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
+		  if (pBox->BxUnderline)
+		    DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, 7, fg);
 		  width -= 6;
 		  xpos = x;
 		}
@@ -1871,15 +1873,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 				     bl, hyphen, blockbegin, fg);
 		}
-	      if (pBox->BxUnderline != 0)
+	      if (pBox->BxUnderline)
 		{
 #ifdef _GL
 		  int tex_underline_id = SetTextureScale (IsBoxDeformed(pBox));
-#endif /* _GL */
-		  DisplayUnderline (frame, x, y, nextfont,
-				    pBox->BxUnderline, width, fg);
-#ifdef _GL
-		  StopTextureScale ( tex_underline_id );
+		  DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, width, fg);
+		  StopTextureScale (tex_underline_id);
+#else /* _GL */
+		  DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, width, fg);
 #endif /* _GL */
 		}
 	      nbcar = 0;
@@ -2502,14 +2503,19 @@ int GetArabFontAndIndex (CHAR_T c, CHAR_T prev, CHAR_T next,
 {
   int    i, j, k;
  
-  *font=NULL;
- 
+  *font = NULL;
   LoadingArabicFont (fontset, font);
-  if ( c == 0x061F ) 
+#ifdef _GTK
+  if (*font == fontset->Font_1)
+    /* the arabic font was not found:
+       avoid to select an invalid position in this font */
+    return UNDISPLAYED_UNICODE;
+#endif /* _GTK */
+  if (c == 0x061F) 
     return 0x061F ;
-  if ( c == 0x060C ) 
+  if (c == 0x060C) 
     return 0x060C ;
-  if ( c == 0x061B ) 
+  if (c == 0x061B) 
     return 0x061B ;
   i = FindIndex (c, 0, Unicode_length - 1); 
   if (i == -1)

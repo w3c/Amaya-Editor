@@ -708,7 +708,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 
   box = pAb->AbBox;
   font = box->BxFont;
-  hfont = BoxFontHeight (font);
+  hfont = BoxFontHeight (font, 'G');
   GetMathFontFromChar (pAb->AbShape, font, (void **) &pfont,
 		       font->FontSize);
   if (pfont)
@@ -811,7 +811,8 @@ void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
   box = pAb->AbBox;
   font = box->BxFont;
   *width = BoxCharacterWidth (109, font);	/*'m' */
-  hfont = BoxFontHeight (font);
+    /* use the Symbols font if possible */
+  hfont = BoxFontHeight (font, 'G');
   *height = hfont * 2;
   switch (pAb->AbShape)
     {
@@ -962,8 +963,8 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox1->BxUnderline = box->BxUnderline;
       ibox1->BxThickness = box->BxThickness;
       ibox1->BxHorizRef = box->BxHorizRef;
-      ibox1->BxH = height;
-      ibox1->BxHeight = height + v;
+      ibox1->BxH = BoxFontHeight (box->BxFont, script);
+      ibox1->BxHeight = ibox1->BxH + v;
       ibox1->BxW = width;
       ibox1->BxWidth = width + l;
       ibox1->BxTMargin = box->BxTMargin;
@@ -1054,8 +1055,14 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxHorizRef = box->BxHorizRef;
       ibox2->BxH = height;
       ibox2->BxHeight = height + v;
-      ibox2->BxW = box->BxW - width;
-      ibox2->BxWidth = box->BxWidth - width - l;
+      if (box->BxW - width > 0)
+	ibox2->BxW = box->BxW - width;
+      else
+	ibox2->BxW = 0;
+      if (box->BxWidth - width - l > 0)
+	ibox2->BxWidth = box->BxWidth - width - l;
+      else
+	ibox2->BxWidth = 0;
       ibox2->BxTMargin = box->BxTMargin;
       ibox2->BxTBorder = box->BxTBorder;
       ibox2->BxTPadding = box->BxTPadding;
@@ -1151,7 +1158,7 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
 
   box = pAb->AbBox;
   font = box->BxFont;
-  *height = BoxFontHeight (font);
+  *height = BoxFontHeight (font, box->BxScript);
   /* Est-ce que le pave est vide ? */
   nChars = pAb->AbVolume;
   if (nChars == 0)
@@ -1199,6 +1206,9 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
 	      box->BxWidth = bwidth + l;
 	      box->BxNChars = lg;
 	      box->BxNSpaces = spaces;
+	      box->BxScript = script;
+	      box->BxH = BoxFontHeight (font, script);
+	      box->BxHeight = box->BxH + box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
 	    }
 	}
     }
@@ -1452,7 +1462,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       if (*width == 0)
 	*width = 2;
       if (*height == 0)
-	*height = BoxFontHeight (pAb->AbBox->BxFont);
+	*height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
     }
 }
 

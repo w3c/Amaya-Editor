@@ -1576,7 +1576,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 
   font = pBox->BxFont;
   width = BoxCharacterWidth (109, font);
-  height = BoxFontHeight (font);
+  height = BoxFontHeight (font, pBox->BxScript);
   if (pAb->AbVolume == 0)
     DefClip (frame, 0, 0, 0, 0);
   else
@@ -1854,7 +1854,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 
    font = pBox->BxFont;
    width = 2; /* see GiveTextSize function */
-   height = BoxFontHeight (font);
+   height = BoxFontHeight (font, pBox->BxScript);
 
    switch (pAb->AbLeafType)
 	 {

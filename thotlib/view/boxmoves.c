@@ -3753,7 +3753,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       if (movingChild)
 	height += val; /* Nex position of the extra bottom edge */
       if (height == y && pAb->AbVolume == 0)
-	height = BoxFontHeight (pAb->AbBox->BxFont);
+	height = BoxFontHeight (pAb->AbBox->BxFont, pAb->AbBox->BxScript);
       else
 	height -= y;
       y = height - pBox->BxH; /* heights difference */

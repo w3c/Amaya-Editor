@@ -786,10 +786,15 @@ static int XFontAscent (SpecFont specfont)
   ThotFont        font;
   unsigned char   car;
 
-  car = GetFontAndIndexFromSpec (120, specfont, &font);
-  if (font == NULL)
-    font = DialogFont;
-  return CharacterAscent ('x', font);
+  if (specfont->Font_1)
+    return FontHeight (specfont->Font_1);
+  else
+    {
+      car = GetFontAndIndexFromSpec (120, specfont, &font);
+      if (font == NULL)
+	font = DialogFont;
+      return CharacterAscent ('x', font);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -811,10 +816,6 @@ int FontHeight (ThotFont font)
 #ifdef _GTK
     h = font->ascent + font->descent;
 #endif /* _GTK */
-#ifdef _WX
-    /* TODO : a faire si on desir porter la version non opengl de wxwindows */
-    h = 0;
-#endif /* _WX */ 
 #endif /*_GL*/
   return h;
 }
@@ -822,13 +823,26 @@ int FontHeight (ThotFont font)
 /*----------------------------------------------------------------------
   BoxFontHeight returns the height of a given font.
   ----------------------------------------------------------------------*/
-int BoxFontHeight (SpecFont specfont)
+int BoxFontHeight (SpecFont specfont, char code)
 {
   ThotFont        font;
-  int             car;
-
-  car = GetFontAndIndexFromSpec (120, specfont, &font);
-  return FontHeight (font);
+  int             car, h = 0;
+  if (code == 'A' && specfont->Font_6) /* Arabic */
+    h = FontHeight (specfont->Font_6);
+  else if (code == 'G' && specfont->Font_7) /* Graphic */
+    h = FontHeight (specfont->Font_7);
+  else if (code == 'H' && specfont->Font_8) /* Hebrew */
+    h = FontHeight (specfont->Font_8);
+  else if (code == 'Z' && specfont->Font_17) /* Unicode */
+    h = FontHeight (specfont->Font_17);
+  else if (specfont->Font_1)
+    h = FontHeight (specfont->Font_1);
+  if (h == 0)
+    {
+      car = GetFontAndIndexFromSpec (120, specfont, &font);
+      h = FontHeight (font);
+    }
+  return h;
 }
 
 /*----------------------------------------------------------------------
@@ -848,7 +862,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 	  pAb->AbBox->BxFont == NULL)
 	dist = 0;
       else
-	dist = (val * BoxFontHeight (pAb->AbBox->BxFont) + 5) / 10;
+	dist = (val * BoxFontHeight (pAb->AbBox->BxFont, EOS) + 5) / 10;
       break;
     case UnXHeight:
       if (pAb == NULL || pAb->AbBox == NULL ||
@@ -920,7 +934,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 	   pAb->AbBox->BxFont == NULL)
 	 dist = 0;
        else
-	 dist = val * 10 / BoxFontHeight (pAb->AbBox->BxFont);
+	 dist = val * 10 / BoxFontHeight (pAb->AbBox->BxFont, EOS);
        break;
      case UnXHeight:
        if (pAb == NULL || pAb->AbBox == NULL || 
@@ -2824,11 +2838,15 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
     return 6;
   else
     {
+#ifdef _GTK
+      if (font == specfont->Font_1)
+	/* the arabic font was not found:
+	   avoid to select an invalid position in this font */
+	l = 6;
+      else
+#endif /* _GTK */
       l = CharacterWidth (car, font);
-      Put_Char_Width ( car , l );
+      Put_Char_Width (car , l);
       return l;
     }
 }
-
-
-

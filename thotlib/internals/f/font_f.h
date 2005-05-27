@@ -20,7 +20,8 @@ extern int CharacterAscent ( int c,
                              ThotFont font );
 extern int FontAscent ( ThotFont font );
 extern int FontHeight ( ThotFont font );
-extern int BoxFontHeight ( SpecFont specfont );
+extern int BoxFontHeight ( SpecFont specfont,
+                           char code );
 extern int PixelValue ( int val,
                         TypeUnit unit,
                         PtrAbstractBox pAb,
@@ -103,7 +104,8 @@ extern int CharacterAscent ( int c,
                                ThotFont font );
 extern int FontAscent ( ThotFont font );
 extern int FontHeight ( ThotFont font );
-extern int BoxFontHeight ( SpecFont specfont );
+extern int BoxFontHeight ( SpecFont specfont,
+                             char code );
 extern int PixelValue ( int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb,

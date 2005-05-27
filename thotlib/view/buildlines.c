@@ -3321,7 +3321,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   else
     lineSpacing = 0;
   /* space added at the top and bottom of the paragraph */
-  spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
+  spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
   standard = (spacing >= 0);
   spacing = 0;
   if (pBox->BxW > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
@@ -4648,7 +4648,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
       UpdateBlockWithFloat (frame, pBlock, TRUE, TRUE, FALSE, &h);
       /* compute the line spacing */
       /* space added at the top and bottom of the paragraph */
-      spacing = linespacing - BoxFontHeight (pBlock->BxFont);
+      spacing = linespacing - BoxFontHeight (pBlock->BxFont, EOS);
       if (spacing > 0)
 	spacing /= 2;
       else

@@ -26,7 +26,7 @@ extern void DisplayPRule ( PtrPRule rule,
                            FILE *fileDescriptor,
                            PtrElement pEl,
                            PtrPSchema pSchP,
-			   int indent );
+                           int indent );
 extern int TtaListStyleOfCurrentElement ( Document document,
                                           FILE *fileDescriptor );
 
@@ -52,7 +52,7 @@ extern void DisplayPRule ( PtrPRule rule,
                              FILE *fileDescriptor,
                              PtrElement pEl,
                              PtrPSchema pSchP,
-			     int indent );
+                             int indent );
 extern int TtaListStyleOfCurrentElement ( Document document,
                                             FILE *fileDescriptor );
 

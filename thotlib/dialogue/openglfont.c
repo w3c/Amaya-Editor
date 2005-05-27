@@ -836,7 +836,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
           ptr = data;
           memset (ptr, 0xFF, w);
           ptr += w;
-          while (ptr < data + p - w)
+          while (ptr < data + p - 2*w)
             {
               memset (ptr++, 0xFF, 1);
               memset (ptr, 0, w - 2);
@@ -844,6 +844,8 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
               memset (ptr++, 0xFF, 1);
             }
           memset (ptr, 0xFF, w);
+	  ptr = ptr + w;
+	  memset (ptr, 0, w);
         }
       
       BitmapGlyph->data = data;

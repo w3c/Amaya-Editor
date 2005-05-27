@@ -515,11 +515,10 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 /*----------------------------------------------------------------------
    DisplayUnderline draw the underline, overline or cross line
   ----------------------------------------------------------------------*/
-void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
+void DisplayUnderline (int frame, int x, int y, int h, int type,
 		       int lg, int fg)
 {
 #ifndef _WX
-  int                 fheight;	/* font height           */
   int                 bottom;	/* underline position    */
   int                 middle;	/* cross-over position   */
   int                 thickness;	/* thickness of drawing */
@@ -535,10 +534,9 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
   /* The last box must be finished */
   if (SameBox == 0)
     {
-      fheight = FontHeight (font);
-      thickness = (fheight / 20) + 1;
-      bottom = y + fheight - thickness;
-      middle = y + fheight / 2;
+      thickness = (h / 20) + 1;
+      bottom = y + h - thickness;
+      middle = y + h / 2;
       l_start = X;		/* get current X value (cf DrawString) */
       l_end = X + lg;	/* compute the end coordinate */
       

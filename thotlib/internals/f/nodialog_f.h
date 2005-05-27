@@ -13,7 +13,8 @@ extern void TtaExecuteMenuAction ( const char *actionName,
 extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
-                           PtrPSchema pSchP );
+                           PtrPSchema pSchP,
+                           int indent );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
@@ -169,7 +170,8 @@ extern void TtaExecuteMenuAction ( const char *actionName,
 extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,
-                             PtrPSchema pSchP );
+                             PtrPSchema pSchP,
+                             int indent );
 extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                         PtrBox pBox,
