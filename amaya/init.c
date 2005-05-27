@@ -8173,22 +8173,24 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   nb = 1;
   URL_list_len = URL_list_len + len + 1;
   URL_list = (char *)TtaGetMemory (URL_list_len);  
-  //if (keep)
-  file = TtaWriteOpen (urlstring);
+  if (keep)
+    file = TtaWriteOpen (urlstring);
   *urlstring = EOS;
   if (!keep || file)
     {
       /* put the new url */
       strcpy (URL_list, url);
       if (keep)
-        if (encoding != UTF_8)
-	  {
-	    localname = TtaConvertMbsToByte ((unsigned char *)url, encoding);
-	    fprintf (file, "\"%s\"\n", localname);
-	    TtaFreeMemory (localname);
-	  }
+	{
+	  if (encoding != UTF_8)
+	    {
+	      localname = TtaConvertMbsToByte ((unsigned char *)url, encoding);
+	      fprintf (file, "\"%s\"\n", localname);
+	      TtaFreeMemory (localname);
+	    }
 	else
           fprintf (file, "\"%s\"\n", url);
+	}
       if (ptr && *ptr != EOS)
 	{
 	  /* now write other urls */
@@ -8201,14 +8203,16 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 		  /* add the newline between two urls */
 		  strcpy (&URL_list[j], &ptr[i]);
 		  if (keep)
-		    if (encoding != UTF_8)
-		      {
-			localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
-			fprintf (file, "\"%s\"\n", localname);
-			TtaFreeMemory (localname);
-		      }
-		    else
-		      fprintf (file, "\"%s\"\n", &ptr[i]);
+		    {
+		      if (encoding != UTF_8)
+			{
+			  localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
+			  fprintf (file, "\"%s\"\n", localname);
+			  TtaFreeMemory (localname);
+			}
+		      else
+			fprintf (file, "\"%s\"\n", &ptr[i]);
+		    }
 		  j += end;
 		  nb++;
 		}
@@ -8218,8 +8222,8 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 	  
       URL_list[j] = EOS;
       URL_list_keep = keep;
-      //if (keep)
-      TtaWriteClose (file);
+      if (keep)
+	TtaWriteClose (file);
     }
   TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);

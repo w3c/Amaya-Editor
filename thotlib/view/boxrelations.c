@@ -2455,7 +2455,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
-			      //if (pDimAb->DimUnit != UnAuto)
+			      if (pAb->AbDisplay != 'L')
 				{
 				  /* skip parents which depend on content */
 				  while (pParentAb &&
@@ -2474,10 +2474,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 						  (PtrAbstractBox) i, 0);
 			      else /* UnAuto */
 				{
-				val = PixelValue (100, UnPercent, 
-						  (PtrAbstractBox) i, 0);
-			      /* the rule gives the outside value */
-				val = val - dx;
+				  val = PixelValue (100, UnPercent, 
+						    (PtrAbstractBox) i, 0);
+				  /* the rule gives the outside value */
+				  val = val - dx;
 				}
 			      if (pParentAb)
 				{
