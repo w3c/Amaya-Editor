@@ -2,7 +2,7 @@
 #define ANNOTATIONS_H
 /* 
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2004.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2005.
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */

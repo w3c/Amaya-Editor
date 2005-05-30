@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1998-2004
+ *  (c) COPYRIGHT INRIA 1998-2005
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */

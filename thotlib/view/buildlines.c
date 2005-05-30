@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2004
+ *  (c) COPYRIGHT INRIA, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3248,6 +3248,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
  /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
+  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L29"))
+  // printf ("ComputeLines \n");
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
@@ -3401,7 +3403,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      (pNextBox->BxAbstractBox->AbNotInLine &&
 	       pNextBox->BxAbstractBox->AbDisplay != 'U')))
 	    {
-	      /* The current box escape the rule line */
+	      /* The current box escape the line rule */
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiLastBox = pNextBox;
 	      pLine->LiFirstPiece = NULL;

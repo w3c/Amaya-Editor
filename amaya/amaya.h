@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2004
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2005
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -635,7 +635,7 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 #define DOCTYPE2_XHTML11_PLUS_MATHML_PLUS_SVG  "      \"http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd\">"
 #define DOCTYPE2_XHTML10_TRANSITIONAL "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
 #define DOCTYPE2_MATHML20             "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\">"
-#define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">"
+#define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd\">"
 
 #define MATHML_XSLT_NAME     "pmathml.xsl"
 #define MATHML_XSLT_URI      "xml-stylesheet type=\"text/xsl\" href=\""
