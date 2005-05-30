@@ -101,7 +101,6 @@
                   <selection>1</selection>
                   <size>150,-1</size>
                   <style>wxCB_READONLY</style>
-                  <focused>1</focused>
                 </object>
                 <flag>wxTOP|wxEXPAND</flag>
               </object>
