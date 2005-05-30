@@ -3815,9 +3815,11 @@ void   SetDisplaystyleMathElement (Element el, Document doc)
 	      display = MathML_ATTR_IntDisplaystyle_VAL_false;
 	      if (parentType.ElTypeNum == HTML_EL_BODY ||
 		  parentType.ElTypeNum == HTML_EL_Division)
+		/* the <math> element is a child of a <body> or <div> */
 		display = MathML_ATTR_IntDisplaystyle_VAL_true;
 	      else if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
 		       parentType.ElTypeNum == HTML_EL_Paragraph)
+		/* the <math> element is a child of a <p> or equivalent */
 		{
 		  sibling = el;
 		  TtaPreviousSibling (&sibling);
@@ -3826,6 +3828,7 @@ void   SetDisplaystyleMathElement (Element el, Document doc)
 		      sibling = el;
 		      TtaNextSibling (&sibling);
 		      if (!sibling)
+			/* the <math> element is alone in its paragraph */
 			display = MathML_ATTR_IntDisplaystyle_VAL_true;
 		    }
 		}

@@ -707,7 +707,7 @@ static void PutInt (int n, int fnum, char *outBuf, Document doc,
 static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
 					 ScriptTransl **pTransAlph)
 {
-  PtrTSchema   pTSch;
+  PtrTSchema   pTSch, pTSch1;
   PtrSSchema   pSS;
   PtrElement   pAncestor;
   int          i;
@@ -730,39 +730,45 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
         {
 	  pSS = pAncestor->ElStructSchema;
 	  /* schema de traduction de cette structure */
-	  pTSch = GetTranslationSchema (pSS);
-	  if (pTSch != NULL)
-	    switch (leafType)
-              {
-	      case LtText:
-		if (pTSch->TsNTranslScripts > 0)
-		  /* il y a au moins un script a traduire */
-		  /* cherche les regles de traduction pour l'script */
-		  /* de la feuille */
-		  {
-		    i = 0;
-		    do
-		      {
-			*pTransAlph = &pTSch->TsTranslScript[i++];
-			if ((*pTransAlph)->AlScript == script &&
-			    (*pTransAlph)->AlBegin > 0)
-			  transExist = TRUE;
-			else
-			  *pTransAlph = NULL;
-		      }
-		    while (!transExist && i < pTSch->TsNTranslScripts);
-		  }
-		break;
-	      case LtSymbol:
-		transExist = pTSch->TsSymbolFirst != 0;
-		break;
-	      case LtGraphics:
-	      case LtPolyLine:
-		transExist = pTSch->TsGraphicsFirst != 0;
-		break;
-	      default:
-		break;
-	      }
+	  pTSch1 = GetTranslationSchema (pSS);
+	  if (pTSch1)
+	    /* there is a translation schema for this structure */
+	    {
+	      /* if we don't find any other translation schema, we will return
+		 that one */
+	      pTSch = pTSch1;
+	      switch (leafType)
+		{
+		case LtText:
+		  if (pTSch->TsNTranslScripts > 0)
+		    /* il y a au moins un script a traduire */
+		    /* cherche les regles de traduction pour l'script */
+		    /* de la feuille */
+		    {
+		      i = 0;
+		      do
+			{
+			  *pTransAlph = &pTSch->TsTranslScript[i++];
+			  if ((*pTransAlph)->AlScript == script &&
+			      (*pTransAlph)->AlBegin > 0)
+			    transExist = TRUE;
+			  else
+			    *pTransAlph = NULL;
+			}
+		      while (!transExist && i < pTSch->TsNTranslScripts);
+		    }
+		  break;
+		case LtSymbol:
+		  transExist = pTSch->TsSymbolFirst != 0;
+		  break;
+		case LtGraphics:
+		case LtPolyLine:
+		  transExist = pTSch->TsGraphicsFirst != 0;
+		  break;
+		default:
+		  break;
+		}
+	    }
         }
       pAncestor = pAncestor->ElParent;
     }

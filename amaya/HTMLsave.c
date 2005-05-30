@@ -267,7 +267,7 @@ ThotBool CheckValidEntity (NotifyAttribute *event)
   /* this function applies only to MathML elements */
   attr = TtaGetAttribute (event->element, attrType);
   if (attr)
-     /* there is an entity attribute and the document doesn't have a DocType */
+     /* there is an EntityName attribute and the document has no DocType */
      {
        /* replace the entity name by its value */
        length = 2;

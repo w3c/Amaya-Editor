@@ -67,7 +67,7 @@ static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
   menuBuf[0] = EOS;
   menuInd = 0;
   len = 0;
-  for (typeNum = pSS->SsRootElem + 1; typeNum <= pSS->SsNRules; typeNum++)
+  for (typeNum = pSS->SsRootElem; typeNum <= pSS->SsNRules; typeNum++)
     if (!TypeHasException (ExcIsPlaceholder, typeNum, pSS) &&
 	!TypeHasException (ExcNoCreate, typeNum, pSS) &&
 	!TypeHasException (ExcHidden, typeNum, pSS) &&

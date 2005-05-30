@@ -140,7 +140,7 @@ STRUCT
 	  = BEGIN
 	    Numerator = LIST OF (Construct);
 	    Denominator = LIST OF (Construct);
-	    END with IntDisplaystyle = false; 
+	    END; 
 
       BevelledMFRAC
 	  (ATTR linethickness; numalign; denomalign; bevelled)

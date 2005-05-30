@@ -3465,6 +3465,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
     }
   else
     /* the modified character string is not empty. Parse it */
+    {
     leadingSpace = (text[0] == ' ');
     for (i = 1; i <= totLen; i++)
       {
@@ -3580,7 +3581,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	if (newSelEl != NULL)
 	  {
 	  newSelEl = textEl;
-	  if (newSelChar <= j)
+	  if (newSelChar <= j || (newSelChar == j+1 && text[j] == EOS))
 	    {
 	     if (newSelChar < start)
 		newSelChar = 1;
@@ -3617,6 +3618,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  }
         }
       }
+    }
 
   /* try to merge the first element processed with its previous sibling */
   if (prevEl != NULL && firstEl != NULL)
@@ -3889,14 +3891,19 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
       TtaRegisterElementDelete (delEl, document);
       TtaDeleteTree (delEl, document);
     }
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_EntityName;
-  attr =  TtaNewAttribute (attrType);
-  TtaAttachAttribute (el, attr, document);
-  strcpy (buffer, "&");
-  strcat ((char *)buffer, (char *)entityName);
-  strcat (buffer, ";");
-  TtaSetAttributeText (attr, buffer, el, document);
+  if (!strncmp ((char *)entityName, "ApplyFunction", 13) ||
+      !strncmp ((char *)entityName, "InvisibleTimes", 14))
+    /* make invisible operators visible in the structure view */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_EntityName;
+      attr =  TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, document);
+      strcpy (buffer, "&");
+      strcat ((char *)buffer, (char *)entityName);
+      strcat (buffer, ";");
+      TtaSetAttributeText (attr, buffer, el, document);
+    }
   SetContentAfterEntity ((char *)entityName, el, document);
   len = TtaGetElementVolume (el);
   TtaSelectString (document, el, len + 1, len);
@@ -4226,9 +4233,6 @@ void MathStringModified (NotifyOnTarget *event)
      the user just want to split that character string */
   if (event->targetdocument != 0)
     {
-      /* if there is an EntityName associated with the old content of the
-	 text element, remove it */
-      RemoveAttr (event->target, event->document, MathML_ATTR_EntityName);
       /* if the old text was a large operator, remove the pRule that
 	 made this text bigger */
       ctxt = TtaGetSpecificStyleContext (event->document);
@@ -4248,7 +4252,7 @@ void MathStringModified (NotifyOnTarget *event)
  -----------------------------------------------------------------------*/
 void NewMathString (NotifyElement *event)
 {
-   RemoveAttr (event->element, event->document, MathML_ATTR_EntityName);
+  /* RemoveAttr (event->element, event->document, MathML_ATTR_EntityName); */
    if (TtaGetElementVolume (event->element) > 0)
       ParseMathString (event->element, TtaGetParent (event->element),
 		       event->document);
