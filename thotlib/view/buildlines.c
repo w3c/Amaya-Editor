@@ -1890,15 +1890,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	  if (clearL || clearR)
 	    {
 	      if (clearL && pLine->LiYOrg < bottomL)
-		{
-		  //printf ("Clear left\n");
 		pLine->LiYOrg = bottomL;
-		}
 	      if (clearR && pLine->LiYOrg < bottomR)
-		{
-		  //printf ("Clear right\n");
 		pLine->LiYOrg = bottomR;
-		}
 	    }
 	  else if (!newFloat)
 	    {
@@ -2047,7 +2041,10 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
   InitLine (pLine, pBlock, frame, indent, *floatL, *floatR, pNextBox,
 	    top, bottom, left, right, xAbs, yAbs);
   pLine->LiLastPiece = NULL;
-  pBox = NULL;
+  if (pLine->LiFirstPiece)
+    pBox = pLine->LiFirstPiece;
+  else
+    pBox = pLine->LiFirstBox;
   if (pNextBox)
     {
       /* pNextBox is the current box we're managing */
@@ -2197,6 +2194,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 		   !IsFloatSet (lastbox, *floatR, pBlock)))
 		{
 		  pLine->LiRealLength = xi;
+		  pLine->LiMinLength = minWidth;
 		  /* handle a new floating box and rebuild the line */
 		  return SetFloat (lastbox, pBlock, pLine, pRootAb,
 				   extensibleBlock, xAbs, yAbs,
@@ -2833,11 +2831,13 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 {
   PtrBox              boxPrevL, boxPrevR;
   PtrBox              pNextBox;
-  int                 x, y, w;
+  int                 x, y, w, minWidth, ret, h;
   int                 orgX, orgY;
 
   boxPrevL = *floatL;
   boxPrevR = *floatR;
+  minWidth = pLine->LiMinLength;
+  h = pLine->LiHeight;
   orgX = 0;
   orgY = 0;
   if (xAbs)
@@ -2956,9 +2956,16 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   else
     *floatR = box;
   pNextBox = GetNextBox (box->BxAbstractBox, frame);
-  return FillLine (pLine, pNextBox, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
-		   notComplete, full, adjust, breakLine, frame, indent,
-		   top, bottom, left, right, floatL, floatR);
+  ret=  FillLine (pLine, pNextBox, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
+		  notComplete, full, adjust, breakLine, frame, indent,
+		  top, bottom, left, right, floatL, floatR);
+  /* integrate information about previous inserted boxes */
+  if (h > pLine->LiHeight)
+    pLine->LiHeight = h;
+  if (minWidth > ret)
+    return minWidth;
+  else
+    return ret;
 }
 
 
