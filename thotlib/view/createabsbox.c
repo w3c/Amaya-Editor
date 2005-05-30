@@ -2083,7 +2083,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   FunctionType        funct;
   TypeUnit            unit;
   ThotPictInfo       *image;
-  int                 view, vis, i;
+  int                 view, vis;
   int                 viewSch, viewIndex;
   PresVariable       *pVar;
   PresVarItem        *pItem;
