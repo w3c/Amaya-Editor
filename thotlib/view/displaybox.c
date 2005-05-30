@@ -1963,13 +1963,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       switch (pFrom->AbTopStyle)
 	{
 	case 10: /* outset */
-	  break;
 	case 9: /* inset */
-	  break;
 	case 8: /* ridge */
-	  break;
 	case 7: /* groove */
-	  break;
 	case 6: /* double */
 	  /* top line */
 	  DrawHorizontalLine (frame, 1, 5,
@@ -2013,13 +2009,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       switch (pFrom->AbTopStyle)
 	{
 	case 10: /* outset */
-	  break;
 	case 9: /* inset */
-	  break;
 	case 8: /* ridge */
-	  break;
 	case 7: /* groove */
-	  break;
 	case 6: /* double */
 	  /* left line */
 	  DrawVerticalLine (frame, 1, 5,
@@ -2062,13 +2054,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       switch (pFrom->AbBottomStyle)
 	{
 	case 10: /* outset */
-	  break;
 	case 9: /* inset */
-	  break;
 	case 8: /* ridge */
-	  break;
 	case 7: /* groove */
-	  break;
 	case 6: /* double */
 	  /* top line */
 	  /* the width of the bottom line depends on the visibility of
@@ -2113,13 +2101,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       switch (pFrom->AbRightStyle)
 	{
 	case 10: /* outset */
-	  break;
 	case 9: /* inset */
-	  break;
 	case 8: /* ridge */
-	  break;
 	case 7: /* groove */
-	  break;
 	case 6: /* double */
 	  /* the width of the left line depends on the visibility of
 	     horizontal borders */
