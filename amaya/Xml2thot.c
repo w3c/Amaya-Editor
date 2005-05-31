@@ -2438,8 +2438,7 @@ void PutInXmlElement (char *data, int length)
 	   else
 	     {
 	       /* create a TEXT element */
-	       if (currentParserCtxt->XMLSSchema != NULL &&
-		   currentParserCtxt != GenericXmlParserCtxt)
+	       if (currentParserCtxt->XMLSSchema != NULL)
 		 elType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       elType.ElTypeNum = 1;
 	       elText = TtaNewElement (XMLcontext.doc, elType);
