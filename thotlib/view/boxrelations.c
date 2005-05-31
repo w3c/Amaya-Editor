@@ -2455,6 +2455,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
+#ifdef IV
+			      // don't work with ul, ol and dd
 			      if (pAb->AbDisplay != 'L')
 				{
 				  /* skip parents which depend on content */
@@ -2464,6 +2466,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 					 pParentAb->AbWidth.DimAbRef == NULL)
 				    pParentAb = pParentAb->AbEnclosing;
 				}
+#endif
 			      /* inherited from the parent */
 			      if (pParentAb)
 				i = pParentAb->AbBox->BxW;
