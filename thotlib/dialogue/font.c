@@ -82,7 +82,7 @@ static SpecFont   FirstFontSel = NULL;
 #ifdef _GTK
     #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
 #include <glu.h>
 #else /* _MACOS */
 #include <GL/glu.h>

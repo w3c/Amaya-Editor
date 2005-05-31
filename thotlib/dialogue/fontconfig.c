@@ -395,7 +395,7 @@ static FontScript **FontConfigLoad ()
 #else /* _GL */
 
 #ifdef _UNIX
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
   strcpy (word, "fonts.gl.mac");  
 #else /* _MACOS */
   strcpy (word, "fonts.gl");  
@@ -431,7 +431,7 @@ static FontScript **FontConfigLoad ()
   if (!complete)
     {
       /* try a second font file */
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX) 
       strcpy (word1, word);
       strcat (word1, ".def");
       strcpy (fname1, fname);

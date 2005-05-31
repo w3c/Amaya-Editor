@@ -1657,7 +1657,7 @@ void InitTranslations (char *appliname)
 #endif /* _WX */
 #endif  /* _WINDOWS */
 #if defined(_UNIX)
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX) 
   strcat (name, ".kb-mac");
 #else /* _MACOS */
   strcat (name, ".keyboard");

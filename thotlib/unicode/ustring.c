@@ -459,7 +459,7 @@ CHARSET TtaGetLocaleCharset ()
 #endif /* _MACOS */
   if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
       (LocaleSystemCharset == UNDEFINED_CHARSET))
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX) 
     /* default macosx charset is utf-8 */
     LocaleSystemCharset = UTF_8;
 #else /* _MACOS */

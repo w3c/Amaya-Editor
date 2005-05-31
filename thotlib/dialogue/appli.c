@@ -40,9 +40,9 @@
   #include <gdk/gdkx.h>
 #endif /*_GTK*/
 #ifdef _GL
-  #ifdef _MACOS
+  #if defined (_MACOS) && defined (_WX) 
     #include <gl.h>
-  #else /* _MACOS */
+  #else /* _MACOS  && _WX */
     #include <GL/gl.h>
   #endif /* _MACOS */
   #include "glwindowdisplay.h"
