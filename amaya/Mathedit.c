@@ -3897,7 +3897,11 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
       TtaDeleteTree (delEl, document);
     }
   if (!strncmp ((char *)entityName, "ApplyFunction", 13) ||
-      !strncmp ((char *)entityName, "InvisibleTimes", 14))
+      !strncmp ((char *)entityName, "af", 2) ||
+      !strncmp ((char *)entityName, "InvisibleTimes", 14) ||
+      !strncmp ((char *)entityName, "it", 2) ||
+      !strncmp ((char *)entityName, "InvisibleComma", 14) ||
+      !strncmp ((char *)entityName, "ic", 2))
     /* make invisible operators visible in the structure view */
     {
       attrType.AttrSSchema = elType.ElSSchema;
