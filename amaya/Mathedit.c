@@ -3196,7 +3196,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   Attribute     attr;
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
-		start;
+		start, trailingSpaces;
   char	        script;
   CHAR_T        c;
   Language	lang;
@@ -3569,9 +3569,13 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
           }
 	while (text[start] == ' ')
 	  start++;
+        trailingSpaces = 0;
 	j = i - 1;
 	while (text[j] == ' ' && j > start)
-	  j--;
+	  {
+	    j--;
+	    trailingSpaces++;
+	  }
 	j++;
 	c = text[j];
 	text[j] = EOS;
@@ -3581,12 +3585,13 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	if (newSelEl != NULL)
 	  {
 	  newSelEl = textEl;
-	  if (newSelChar <= j || (newSelChar == j+1 && text[j] == EOS))
+	  if (newSelChar <= j || (newSelChar - trailingSpaces == j+1 &&
+				  text[newSelChar - 1] == EOS))
 	    {
 	     if (newSelChar < start)
 		newSelChar = 1;
 	     else
-		newSelChar -= start;
+		newSelChar -= (start + trailingSpaces);
 	    }
 	  }
 	MathSetAttributes (newEl, doc, &newSelEl);
