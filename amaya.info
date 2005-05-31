@@ -1,12 +1,12 @@
 Package: 	amaya
-Version:	8.7.2
-Revision:	5
+Version:	8.7.4
+Revision:	1
 Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
 Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
 BuildDepends:   glib, gtk+, imlib (>= 1.9.14-2), libjpeg, libpng3, gettext-bin, gettext-dev, autoconf2.5
 Conflicts:	amaya-gtk
 Replaces:	amaya-gtk
-Source:		mirror:custom:amaya-fullsrc-9.1.tgz
+Source:		mirror:custom:amaya-fullsrc-9.1.4.tgz
 CustomMirror: <<
 	Primary:  http://www.w3.org/Amaya/Distribution
 	ftp-US:   ftp://ftp.w3.org/pub/amaya
@@ -44,4 +44,4 @@ DescPackaging: <<
 <<
 License:	OSI-Approved
 Homepage:	http://www.w3.org/Amaya/
-Source-MD5:	453fc74b79acb013e64a380865970773
+Source-MD5:	a2da0ce524c8393806c485a358fbfb8a
