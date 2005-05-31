@@ -109,7 +109,7 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
       JumpIntoView (m_ParentFrameID, 0);
     }
 
-  GL_DrawAll();
+  GL_Swap(m_ParentFrameID);
 
   event.Skip();
 }
@@ -130,7 +130,7 @@ void AmayaScrollBar::OnBottom( wxScrollEvent& event )
       JumpIntoView (m_ParentFrameID, 100);
     }
 
-  GL_DrawAll();
+  GL_Swap(m_ParentFrameID);
 
   event.Skip();
 }
@@ -164,7 +164,7 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
   // but becareful the events orders could change in future wxWidgets releases or can be platform specific
   m_IgnoreNextScrollEvent = TRUE;
 
-  GL_DrawAll();
+  GL_Swap(m_ParentFrameID);
 
   event.Skip();
 }
@@ -198,7 +198,7 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
   // but becareful the events orders could change in future wxWidgets releases or can be platform specific
   m_IgnoreNextScrollEvent = TRUE;
 
-  GL_DrawAll();
+  GL_Swap(m_ParentFrameID);
 
   event.Skip();
 }
@@ -237,7 +237,7 @@ void AmayaScrollBar::OnScroll( wxScrollEvent& event )
    }
   
   /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-  GL_DrawAll();
+  GL_Swap(m_ParentFrameID);
 
   event.Skip();
 }
