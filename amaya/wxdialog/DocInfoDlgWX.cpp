@@ -16,7 +16,7 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(DocInfoDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_DONEBUTTON"), DocInfoDlgWX::OnDoneButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"), DocInfoDlgWX::OnDoneButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -86,7 +86,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_LOCATION_CONTENT", wxStaticText)->SetLabel(TtaConvMessageToWX(content));
 
   // update dialog labels
-  XRCCTRL(*this, "wxID_DONEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_DONE)));
 
   Layout();
   

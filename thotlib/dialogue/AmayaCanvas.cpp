@@ -434,6 +434,9 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
  */
 void AmayaCanvas::OnIdle( wxIdleEvent& event )
 {
+  // idle events are no more used for animation. 
+  // animation is managed by a timer
+#if 0
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
@@ -444,7 +447,7 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
 #ifdef _GL
   GL_DrawAll();
 #endif /* _GL */
-
+#endif /* 0 */
   event.Skip();
 }
 

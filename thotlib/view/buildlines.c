@@ -4033,7 +4033,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
    ViewSelection      *pSelBegin;
    ViewSelection      *pSelEnd;
    int                 w, h, height, width;
-   int                 t, b, l, r;
    ThotBool            changeSelectBegin;
    ThotBool            changeSelectEnd;
    ThotBool            status;

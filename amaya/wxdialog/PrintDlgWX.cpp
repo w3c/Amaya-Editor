@@ -16,8 +16,8 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(PrintDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_PRINTBUTTON"),        PrintDlgWX::OnPrintButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),       PrintDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"),        PrintDlgWX::OnPrintButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),       PrintDlgWX::OnCancelButton )
 #ifndef _WINDOWS
   EVT_RADIOBOX( XRCID("wxID_PAPER_FORMAT_BOX"), PrintDlgWX::OnPaperFormatBox )
   EVT_RADIOBOX( XRCID("wxID_ORIENTATION_BOX"),  PrintDlgWX::OnPaperOrientationBox )
@@ -113,8 +113,8 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetValue(ignore_css);
 
   // buttons
-  XRCCTRL(*this, "wxID_PRINTBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_PRINT) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_PRINT) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   Layout();
   SetAutoLayout( TRUE );

@@ -158,14 +158,52 @@ void MyAnimTimerProcWX( void * data )
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
+  TtaDestroyAnimTimer : destroy anim timer if necessary (necessary = no more animation running)
+  check_other_animation is true if the function must check if there isn't running animations.
+  check_other_animation is false if you know that there isn't running animations (to optimize)
+  ----------------------------------------------------------------------*/
+static void TtaDestroyAnimTimer( ThotBool check_other_animation )
+{
+  int frame;
+  ThotBool other_animation;
+
+  if (AnimTimer)
+  {
+    other_animation = FALSE;
+	if (check_other_animation)
+	{
+	  for (frame = 0; frame < MAX_FRAME; frame++)
+	  {
+	    if (FrameTable[frame].Anim_play)
+	      other_animation = TRUE;
+	  }
+	}
+	if (!other_animation)
+	{
+#ifdef _GTK
+		gtk_timeout_remove (AnimTimer); 	
+#endif /* #ifdef _GTK */
+      
+#ifdef _WINGUI
+		KillTimer (NULL, AnimTimer);
+#endif /*_WINGUI*/
+
+#ifdef _WX
+		AnimTimer->Stop();
+		delete AnimTimer;
+#endif /* _WX */
+
+		AnimTimer = 0; 
+	}
+  }
+}
+
+/*----------------------------------------------------------------------
   TtaChangePlay : Activate Animation
   ----------------------------------------------------------------------*/
 void TtaChangePlay (int frame)
 {
-  ThotBool other_animation;
-
-  if (frame && frame <= MAX_FRAME)
-    if (FrameTable[frame].Animated_Boxes)
+  if (frame && frame <= MAX_FRAME && FrameTable[frame].Animated_Boxes)
       {
 	FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
 	if (FrameTable[frame].Anim_play)
@@ -206,37 +244,9 @@ void TtaChangePlay (int frame)
 	    FrameTable[frame].LastTime = 0;
 	  }
 	else
-	  if (AnimTimer)
-	    {
-	      other_animation = FALSE;
-	      for (frame = 0; frame < MAX_FRAME; frame++)
-		{
-		  if (FrameTable[frame].Anim_play)
-		    other_animation = TRUE;
-		}
-	      if (!other_animation)
-		{
-
-#ifdef _GTK
-		  gtk_timeout_remove (AnimTimer); 	
-#endif /* #ifdef _GTK */
-      
-#ifdef _WINGUI
-		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
-		  KillTimer (NULL, AnimTimer);
-#endif /*_WINGUI*/
-
-#ifdef _WX
-		  delete AnimTimer;
-#endif /* _WX */
-
-		  AnimTimer = 0; 
-		}
-	    }
+		TtaDestroyAnimTimer( TRUE );
       }  
 }
-
-
 
 
 /*----------------------------------------------------------------------
@@ -286,6 +296,7 @@ ThotBool GL_DrawAll ()
   unsigned int     i;
   static ThotBool  frame_animating = FALSE;  
   static double    lastime;
+  int              nb_animated_frame = 0;
 
   if (!FrameUpdating)
     {
@@ -302,13 +313,9 @@ ThotBool GL_DrawAll ()
 #endif /* _WX */
 		{
 		  if ( FrameTable[frame].Animated_Boxes
-           && FrameTable[frame].Anim_play
-#ifdef _WX
-           // do not play animation if the animated canvas is not current
-           && FrameTable[frame].WdFrame->GetPageParent()->IsSelected()
-#endif /* _WX */
-           )
+               && FrameTable[frame].Anim_play )
 		    {
+			  nb_animated_frame++;
 		      current_time = ComputeThotCurrentTime (frame);  
 		      if ((current_time + 1) > 0.0001)
 			{
@@ -330,6 +337,10 @@ ThotBool GL_DrawAll ()
 		      FrameTable[frame].FrDoc &&
 		      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 		    {
+#ifdef _WX
+           // do not draw anything if the animated canvas page is not raidsed
+		   if (FrameTable[frame].WdFrame->GetPageParent()->IsSelected())
+#endif /* _WX */
 		      if (GL_prepare (frame))
 			{
 			  if (BadGLCard)
@@ -367,6 +378,11 @@ ThotBool GL_DrawAll ()
 	    while (gtk_events_pending ())
 	      gtk_main_iteration ();
 #endif /*_GTK*/
+
+      /* stop the animation timer if there is no animated frame */
+	  if (nb_animated_frame == 0)
+		TtaDestroyAnimTimer( FALSE );
+
 	  frame_animating  = FALSE;      
 	}  
       FrameUpdating = FALSE;     

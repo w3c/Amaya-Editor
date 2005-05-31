@@ -19,8 +19,8 @@ static int      MyRef;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(CreateTableDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"), CreateTableDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),  CreateTableDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"), CreateTableDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),  CreateTableDlgWX::OnCancelButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -61,8 +61,8 @@ END_EVENT_TABLE()
       XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->Hide();
     }
   // update button labels
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   // Gives the focus to the first spin control
   //  XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl )->SetFocus();

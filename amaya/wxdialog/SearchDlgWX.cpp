@@ -15,8 +15,8 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SearchDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"),     SearchDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),      SearchDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"),     SearchDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),      SearchDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_NOREPLACEBUTTON"),   SearchDlgWX::OnNoReplaceButton )
   EVT_RADIOBOX( XRCID("wxID_REPLACE_BOX"),     SearchDlgWX::OnReplaceBox )
   EVT_RADIOBOX( XRCID("wxID_SEARCH_AREA_BOX"), SearchDlgWX::OnSearchAreaBox )
@@ -65,8 +65,8 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetString(3, TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_IN_WHOLE_DOC) ));
 
   // update button labels
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_NOREPLACEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_DO_NOT_REPLACE) ));
 
   // Default values

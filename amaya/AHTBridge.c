@@ -752,6 +752,7 @@ void TimerCallbackWX( void * p_context )
       HTList_quickRemoveElement(cur, last);
 
       /* delete explicitely the AmayaTimer */
+	  wxDynamicCast(me->xt_timer, wxAmayaTimer)->Stop();
       delete wxDynamicCast(me->xt_timer, wxAmayaTimer);
 
       TtaFreeMemory (me);
@@ -809,6 +810,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
 	  me->xt_timer = (guint) 0;
 #endif /* !_GTK */
 #ifdef _WX
+	  wxDynamicCast(me->xt_timer, wxTimer)->Stop();
 	  delete wxDynamicCast(me->xt_timer, wxTimer);
 	  me->xt_timer = NULL;
 #endif /* _WX */
@@ -866,6 +868,7 @@ void AMAYA_DeleteTimer (HTTimer *libwww_timer)
       gtk_timeout_remove (me->xt_timer);
 #endif /* _GTK */
 #ifdef _WX
+	  wxDynamicCast(me->xt_timer, wxTimer)->Stop();
       delete wxDynamicCast(me->xt_timer, wxTimer);
 #endif /* _WX */
 

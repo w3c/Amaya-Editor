@@ -17,14 +17,19 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxButton" name="wxID_SELECTED_TXT">
+                      
                       <label>*Selected text*</label>
+                      
                       <size>250,-1</size>
                     </object>
+                    
                     <flag>wxBOTTOM|wxEXPAND</flag>
+                    
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxListBox" name="wxID_PROPOSALS_LIST">
+                      
                       <content>
                         <item>*</item>
                         <item>*</item>
@@ -32,33 +37,50 @@
                         <item>*</item>
                         <item>*</item>
                       </content>
+                      
                       <selection>0</selection>
+                      
                       <style>wxLB_NEEDED_SB</style>
                     </object>
+                    
                     <option>1</option>
+                    
                     <flag>wxBOTTOM|wxEXPAND</flag>
+                    
                     <border>2</border>
+                    
                     <minsize>-1,160</minsize>
                   </object>
                   <object class="sizeritem">
                     <object class="wxTextCtrl" name="wxID_FIRST_PROPOSAL">
+                      
                       <value></value>
+                      
                       <size>250,-1</size>
                     </object>
+                    
                     <option>0</option>
+                    
                     <flag>wxBOTTOM|wxEXPAND</flag>
+                    
                     <border>2</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_SPELL_LANGUAGE_TXT">
+                      
                       <label>*Lang: French*</label>
+                      
                       <size>250,-1</size>
                     </object>
+                    
                     <option>0</option>
+                    
                     <flag>wxEXPAND</flag>
                   </object>
                 </object>
+                
                 <flag>wxRIGHT</flag>
+                
                 <border>6</border>
               </object>
               <object class="sizeritem">
@@ -69,25 +91,30 @@
                       <orient>wxVERTICAL</orient>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_IGNORE_TXT">
+                          
                           <label>*Ignore*</label>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticLine"/>
+                        
                         <flag>wxEXPAND</flag>
                       </object>
                       <object class="sizeritem">
                         <object class="wxCheckBox" name="wxID_IGNORE1_CHK">
+                          
                           <label>*words that are all caps*</label>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxCheckBox" name="wxID_IGNORE2_CHK">
+                          
                           <label>*words with digits*</label>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxCheckBox" name="wxID_IGNORE3_CHK">
+                          
                           <label>*Roman numerals*</label>
                         </object>
                       </object>
@@ -96,43 +123,59 @@
                           <orient>wxHORIZONTAL</orient>
                           <object class="sizeritem">
                             <object class="wxCheckBox" name="wxID_IGNORE4_CHK">
+                              
                               <label>*words containing:*</label>
                             </object>
                           </object>
                           <object class="sizeritem">
                             <object class="wxTextCtrl" name="wxID_IGNORE_CHAR">
+                              
                               <value>*@#$&amp;+~*</value>
                             </object>
+                            
                             <option>1</option>
+                            
                             <flag>wxLEFT|wxEXPAND</flag>
+                            
                             <border>2</border>
                           </object>
                         </object>
+                        
                         <flag>wxEXPAND</flag>
                       </object>
                     </object>
+                    
                     <flag>wxBOTTOM|wxEXPAND</flag>
+                    
                     <border>4</border>
                   </object>
                   <object class="sizeritem">
                     <object class="wxRadioBox" name="wxID_CHECKING_AREA">
+                      
                       <label>*Checking*</label>
+                      
                       <content>
                         <item>*Before Selection*</item>
                         <item>*Within Selection*</item>
                         <item>*After Selection*</item>
                         <item>*In the whole document*</item>
                       </content>
+                      
                       <size>250,-1</size>
+                      
                       <style>wxRA_SPECIFY_COLS</style>
                     </object>
+                    
                     <flag>wxEXPAND</flag>
                   </object>
                 </object>
+                
                 <option>1</option>
+                
                 <flag>wxEXPAND</flag>
               </object>
             </object>
+            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
@@ -143,52 +186,69 @@
               <object class="sizeritem">
                 <flag>wxALL</flag>
                 <object class="wxButton" name="wxID_SEARCH_SKIP_BUTTON">
+                  
                   <label>*Search / Skip*</label>
+                  
                   <default>1</default>
                 </object>
               </object>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_SKIP_DIC_BUTTON">
+                  
                   <label>*Skip (+dic)*</label>
                 </object>
+                
                 <flag>wxALL</flag>
               </object>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_REPLACE_NEXT_BUTTON">
+                  
                   <label>*Replace and Next*</label>
                 </object>
+                
                 <flag>wxALL</flag>
               </object>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <object class="wxButton" name="wxID_REPLACE_DIC_BUTTON">
+                  
                   <label>*Replace (+dic)*</label>
                 </object>
+                
                 <flag>wxALL</flag>
               </object>
               <object class="spacer">
+                
                 <size>5,0</size>
               </object>
               <object class="sizeritem">
                 <flag>wxALL</flag>
-                <object class="wxButton" name="wxID_CANCEL_BUTTON">
+                <object class="wxButton" name="wxID_CANCEL">
+                  
                   <label>*Cancel*</label>
                 </object>
               </object>
             </object>
+            
             <border>4</border>
           </object>
         </object>
+        
         <option>1</option>
+        
         <flag>wxALL|wxEXPAND</flag>
+        
         <border>4</border>
       </object>
     </object>

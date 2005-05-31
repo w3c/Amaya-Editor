@@ -11,74 +11,107 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NUMBER_COL_TXT">
+              
               <label>Number of columns   </label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxSpinCtrl" name="wxID_NUMBER_COL">
+              
               <value>2</value>
+              
               <min>1</min>
+              
               <max>50</max>
+              
               <focused>1</focused>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NUMBER_ROW_TXT">
+              
               <label>Number of raws</label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxSpinCtrl" name="wxID_NUMBER_ROW">
+              
               <value>2</value>
+              
               <min>1</min>
+              
               <max>50</max>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_TABLE_BORDER_TXT">
+              
               <label>Border</label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
+            
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxSpinCtrl" name="wxID_TABLE_BORDER">
+              
               <value>1</value>
+              
               <min>0</min>
+              
               <max>50</max>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
           </object>
         </object>
+        
         <flag>wxALL|wxEXPAND</flag>
+        
         <border>5</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
-            <object class="wxButton" name="wxID_CONFIRMBUTTON">
+            <object class="wxButton" name="wxID_OK">
+              
               <label>  Confirm    </label>
+              
               <default>1</default>
             </object>
+            
             <flag>wxALL</flag>
+            
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxButton" name="wxID_CANCELBUTTON">
+            <object class="wxButton" name="wxID_CANCEL">
+              
               <label>  Cancel  </label>
             </object>
+            
             <flag>wxALL</flag>
+            
             <border>5</border>
           </object>
         </object>
+        
         <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        
         <border>5</border>
       </object>
     </object>

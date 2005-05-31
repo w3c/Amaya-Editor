@@ -19,8 +19,8 @@ int MyRef;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(SaveAsDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"),       SaveAsDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),        SaveAsDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"),       SaveAsDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),        SaveAsDlgWX::OnCancelButton )
   EVT_BUTTON( XRCID("wxID_BROWSEBUTTON"),        SaveAsDlgWX::OnBrowseButton )
   EVT_BUTTON( XRCID("wxID_CLEARBUTTON"),         SaveAsDlgWX::OnClearButton )
   EVT_RADIOBOX( XRCID("wxID_DOC_FORMAT"),        SaveAsDlgWX::OnDocFormatBox )
@@ -236,8 +236,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( wx_mime_type );
 
   // buttons
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_SAVE) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_SAVE) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CLEARBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   

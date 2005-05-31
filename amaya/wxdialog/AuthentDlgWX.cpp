@@ -18,8 +18,8 @@ static int      MyRef;
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(AuthentDlgWX, AmayaDialog)
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"),       AuthentDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),        AuthentDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"),       AuthentDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"),        AuthentDlgWX::OnCancelButton )
   EVT_TEXT( XRCID("wxID_AU"),                    AuthentDlgWX::OnName )
   EVT_TEXT( XRCID("wxID_PASSWD"),                AuthentDlgWX::OnPassword )
 END_EVENT_TABLE()
@@ -66,8 +66,8 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
 
   // buttons
-  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetFocus();

@@ -25,7 +25,6 @@ class AmayaDialog : public wxDialog
 
  private:
   void OnClose( wxCloseEvent& event );
-  void OnKeyDown(wxKeyEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

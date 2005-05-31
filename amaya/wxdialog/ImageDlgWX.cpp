@@ -21,7 +21,7 @@ static int      MyRef;
 BEGIN_EVENT_TABLE(ImageDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   ImageDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), ImageDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"), ImageDlgWX::OnCancelButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"), ImageDlgWX::OnCancelButton )
   EVT_TEXT_ENTER( XRCID("wxID_COMBOBOX"),     ImageDlgWX::OnOpenButton )
 END_EVENT_TABLE()
 
@@ -53,7 +53,7 @@ ImageDlgWX::ImageDlgWX( int ref,
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
   XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );

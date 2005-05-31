@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(BgImageDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OPENBUTTON"),   BgImageDlgWX::OnOpenButton )
   EVT_BUTTON(     XRCID("wxID_CLEARBUTTON"),  BgImageDlgWX::OnClearButton )
   EVT_BUTTON(     XRCID("wxID_BROWSEBUTTON"), BgImageDlgWX::OnBrowseButton )
-  EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"), BgImageDlgWX::OnCancelButton )
+  EVT_BUTTON(     XRCID("wxID_CANCEL"), BgImageDlgWX::OnCancelButton )
   EVT_TEXT_ENTER( XRCID("wxID_URL"),          BgImageDlgWX::OnOpenButton )
 
   EVT_BUTTON(     XRCID("wxID_BBT_REPEAT"),   BgImageDlgWX::OnRepeatButton )
@@ -50,7 +50,7 @@ BgImageDlgWX::BgImageDlgWX( int ref, wxWindow* parent, const wxString & urlToOpe
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CLEARBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CLEAR) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxBitmapButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
-  XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   XRCCTRL(*this, "wxID_LABEL_REPEATMODE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPEAT_MODE)));
   XRCCTRL(*this, "wxID_BBT_REPEAT", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_REPEAT)));

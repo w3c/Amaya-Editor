@@ -2950,7 +2950,6 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   int                i;
   int                attrType;
   int                doc = c->doc;
-  PtrPresentationBox pBox;
   ThotBool           absolute, generic, minValue;
 
   if (type == PRContentString || type == PRContentURL)
@@ -2996,9 +2995,9 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 					c->cssLine);
 	  if (pRule)
 	    {
-	      if (ctxt->pseudo == PbBefore)
+	      if (generic && ctxt->pseudo == PbBefore)
 		pRule->PrBoxType = BtBefore;
-	      else if (ctxt->pseudo == PbAfter)
+	      else if (generic && ctxt->pseudo == PbAfter)
 		pRule->PrBoxType = BtAfter;
 	      cst = 0;
 	      if (type == PRBackgroundPicture ||

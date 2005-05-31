@@ -11,8 +11,10 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_URL">
+              
               <label>*Get the Image name*</label>
             </object>
+            
             <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
@@ -20,22 +22,32 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_URL">
+                  
                   <focused>1</focused>
                 </object>
+                
                 <option>1</option>
+                
                 <flag>wxALIGN_CENTRE</flag>
+                
                 <minsize>250,-1</minsize>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
+                  
                   <tooltip>*Browse*</tooltip>
+                  
                   <bitmap stock_id="wxART_FOLDER"></bitmap>
                 </object>
+                
                 <option>0</option>
+                
                 <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                
                 <border>5</border>
               </object>
             </object>
+            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
@@ -46,11 +58,13 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_LABEL_REPEATMODE">
+                      
                       <label>*Repeat mode*</label>
                     </object>
                   </object>
                   <object class="sizeritem">
                     <object class="wxStaticLine"/>
+                    
                     <flag>wxEXPAND</flag>
                   </object>
                   <object class="sizeritem">
@@ -58,39 +72,52 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT">
+                          
                           <bitmap>../icons/22x22/BG_repeat.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT_X">
+                          
                           <bitmap>../icons/22x22/BG_repeat_x.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_REPEAT_Y">
+                          
                           <bitmap>../icons/22x22/BG_repeat_y.png</bitmap>
                         </object>
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BBT_NOREPEAT">
+                          
                           <bitmap>../icons/22x22/BG_norepeat.png</bitmap>
                         </object>
                       </object>
                     </object>
+                    
                     <flag>wxTOP|wxEXPAND</flag>
+                    
                     <border>4</border>
                   </object>
                 </object>
+                
                 <flag>wxTOP</flag>
+                
                 <border>5</border>
               </object>
             </object>
+            
             <option>1</option>
+            
             <flag>wxEXPAND</flag>
           </object>
         </object>
+        
         <option>1</option>
+        
         <flag>wxALL|wxEXPAND</flag>
+        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -99,13 +126,16 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="spacer">
+            
             <option>1</option>
           </object>
           <object class="sizeritem">
             <flag>wxRIGHT</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OPENBUTTON">
+              
               <label>*Open*</label>
+              
               <default>1</default>
             </object>
           </object>
@@ -113,11 +143,13 @@
             <flag>wxRIGHT</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CLEARBUTTON">
+              
               <label>*Clear*</label>
             </object>
           </object>
           <object class="sizeritem">
-            <object class="wxButton" name="wxID_CANCELBUTTON">
+            <object class="wxButton" name="wxID_CANCEL">
+              
               <label>*Cancel*</label>
             </object>
           </object>

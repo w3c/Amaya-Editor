@@ -43,7 +43,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaDialog, wxDialog)
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(AmayaDialog, wxDialog)
-  EVT_KEY_DOWN( AmayaDialog::OnKeyDown )
   EVT_CLOSE( AmayaDialog::OnClose )
 END_EVENT_TABLE()
 
@@ -89,19 +88,6 @@ void AmayaDialog::OnClose( wxCloseEvent& event )
   TtaDestroyDialogue( m_Ref );
 
   //  forward the event to parents
-  event.Skip();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaDialog
- *      Method:  OnKeyDown
- *--------------------------------------------------------------------------------------
- */
-void AmayaDialog::OnKeyDown(wxKeyEvent& event)
-{
-  if (event.GetKeyCode() == WXK_ESCAPE)
-    Close();
   event.Skip();
 }
 

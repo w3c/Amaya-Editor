@@ -16,8 +16,8 @@
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(InitConfirmDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_EXTRABUTTON"), InitConfirmDlgWX::OnExtraButton )
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"), InitConfirmDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"), InitConfirmDlgWX::OnCancelButton )
+  EVT_BUTTON( XRCID("wxID_OK"), InitConfirmDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCEL"), InitConfirmDlgWX::OnCancelButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -66,18 +66,18 @@ wxString cancelbutton;
     XRCCTRL(*this, "wxID_EXTRABUTTON", wxButton)->SetLabel( extrabutton );
   if (confirmbutton.IsEmpty())
     {
-    p_sizer->Show(XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton), false);
+    p_sizer->Show(XRCCTRL(*this, "wxID_OK", wxButton), false);
     cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
     }
   else
     {
-    XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( confirmbutton );
+    XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( confirmbutton );
     cancelbutton = TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL));
     }
   if (cancelbutton.IsEmpty())
     p_sizer->Show(XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton), false);
   else
-    XRCCTRL(*this, "wxID_CANCELBUTTON",  wxButton)->SetLabel( cancelbutton );
+    XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( cancelbutton );
   p_sizer->Layout();
   
   // give default focus to ... 
