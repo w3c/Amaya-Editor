@@ -1237,13 +1237,13 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  ThotPixmap              pixmap = (ThotPixmap) NULL;
   ThotColorStruct     colrs[256];
 #ifdef _GL
   unsigned char      *ptr, *cols;
   unsigned short      red, green, blue;
   int                 x, y;
 #else /* _GL */
+  ThotPixmap          pixmap = (ThotPixmap) NULL;
 #ifdef _WINGUI
   unsigned short      red, green, blue;
 #endif /* _WINGUI */
@@ -1335,8 +1335,14 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 	}
     }
   TtaFreeMemory (buffer);
-  buffer = cols;
-  pixmap = (ThotPixmap) buffer;
+  if (cols)
+    {
+      *wif = w;
+      *hif = h;
+      *xif = 0;
+      *yif = 0;
+    }
+  return (ThotDrawable) cols;
 #else /* _GL */
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   if (GifTransparent >= 0)
@@ -1363,8 +1369,7 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 #endif /* _GTK */
     }
   TtaFreeMemory (buffer);
-#endif /*_GL*/
-  
+
   if (pixmap != None)
     {
       *wif = w;
@@ -1373,6 +1378,7 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
       *yif = 0;
     }
   return (ThotDrawable) pixmap;
+#endif /*_GL*/
 }
 
 

@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.14  2005-02-04 12:18:24  vatton
+ ** Revision 1.15  2005-06-01 13:48:48  cvs
+ ** Fixing some memory leaks.
+ ** IV + SG
+ **
+ ** Revision 1.14  2005/02/04 12:18:24  vatton
  ** Improve the transformation into a table
  ** + typo in the WebDAV documentation.
  ** Irene
@@ -161,7 +165,8 @@ void InitDAV (void)
         modified = TRUE;
      }
     
-
+    TtaFreeMemory (fqdn);
+	fqdn = NULL;
     /* getting lock scope. If there is an entry DAV_LOCK_SCOPE in
      * thot.rc and it is valid, use it. Otherwise, assume "exclusive" scope */
     ptr = NULL; 

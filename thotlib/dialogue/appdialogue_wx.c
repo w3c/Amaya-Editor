@@ -284,6 +284,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
   int          max_item_label_lg = 0;
   wxString     label;
   
+  wxASSERT (p_menu);
   /* first of all check for the largest menuitem label */
   while (item_nb < ptrmenu->ItemsNb)
     {

@@ -804,7 +804,10 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
                 }
             }
           else
+		  {
             err = 1;
+            FT_Done_Glyph (Glyph);
+		  }
         }
     }
   else
