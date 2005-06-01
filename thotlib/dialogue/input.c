@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2004
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1657,7 +1657,7 @@ void InitTranslations (char *appliname)
 #endif /* _WX */
 #endif  /* _WINDOWS */
 #if defined(_UNIX)
-#if defined (_MACOS) && defined (_WX) 
+#ifdef _MACOS
   strcat (name, ".kb-mac");
 #else /* _MACOS */
   strcat (name, ".keyboard");
@@ -1694,23 +1694,20 @@ void InitTranslations (char *appliname)
 	  else if (ch[0] != '#')
 	    {
 	      /* it is not a comment */
-	      if (!strcmp (ch, "Shift"))
-		{
-		  mod1 = THOT_MOD_SHIFT;
-		  ch[0] = EOS;
-		  fscanf (file, "%80s", ch);
-		}	      
-	      if (!strcmp (ch, "Ctrl"))
-		mod1 += THOT_MOD_CTRL;
-	      if (!strcmp (ch, "Alt"))
-		mod1 += THOT_MOD_ALT;
+              while ((!strcmp (ch, "Shift")) || 
+                     (!strcmp (ch, "Ctrl")) ||
+                     (!strcmp (ch, "Alt")) )
+              {
+	        if (!strcmp (ch, "Shift"))
+		  mod1 += THOT_MOD_SHIFT;
+  	        if (!strcmp (ch, "Ctrl"))
+		  mod1 += THOT_MOD_CTRL;
+	        if (!strcmp (ch, "Alt"))
+		  mod1 += THOT_MOD_ALT;
+		ch[0] = EOS;
+		fscanf (file, "%80s", ch);
+               }
 
-	      if (mod1 != THOT_NO_MOD)
-		{
-		  /* read the key */
-		  ch[0] = EOS;
-		  fscanf (file, "%80s", ch);
-		}
 	      /* remove the end colon */
 	      sscanf (ch, "<Key>%80s", transText);
 	      if (transText[0] != EOS)
@@ -1761,6 +1758,7 @@ void InitTranslations (char *appliname)
 	      if (transText[0] >= 'a' && transText[0] <= 'z')
 		SetCapital (transText);
 	      strcat (equiv, transText);
+	      printf ("\nequiv='%s'", equiv);
 
 	      if (!no_sequence && ch[0] == ',')
 		{
@@ -1768,24 +1766,20 @@ void InitTranslations (char *appliname)
 		  ch[0] = EOS;
 		  fscanf (file, "%80s", ch);
 		      
-		  if (!strcmp (ch, "Shift"))
-		    {
-		      mod2 = THOT_MOD_SHIFT;
-		      ch[0] = EOS;
-		      fscanf (file, "%80s", ch);
-		    }
+                  while ((!strcmp (ch, "Shift")) || 
+                         (!strcmp (ch, "Ctrl")) ||
+                         (!strcmp (ch, "Alt")) )
+                  {
+	            if (!strcmp (ch, "Shift"))
+		      mod1 += THOT_MOD_SHIFT;
+  	            if (!strcmp (ch, "Ctrl"))
+		      mod1 += THOT_MOD_CTRL;
+	            if (!strcmp (ch, "Alt"))
+		      mod1 += THOT_MOD_ALT;
+		    ch[0] = EOS;
+		    fscanf (file, "%80s", ch);
+                   }
 
-		  if (!strcmp (ch, "Ctrl"))
-		    mod2 += THOT_MOD_CTRL;
-		  else if (!strcmp (ch, "Alt"))
-		    mod2 += THOT_MOD_ALT;
-
-		  if (mod2 != THOT_NO_MOD)
-		    {
-		      /* read the key */
-		      ch[0] = EOS;
-		      fscanf (file, "%80s", ch);
-		    }
 		  /* remove the end colon */
 		  sscanf (ch, "<Key>%80s", transText);
 		  if (transText[0] != EOS)
