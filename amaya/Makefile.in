@@ -522,7 +522,6 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 @NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
 install : all @NOPRINT@../bin/print
-	@(if test $(AMAYA_INSTALLDIR) = "MACOSX" ; then echo "YOOOOOOOOOOOOOOOO" ; fi)
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR) ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR) ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; fi)
@@ -599,6 +598,12 @@ install : all @NOPRINT@../bin/print
 			$(MKDIR) $(prefix)/amaya.app/Contents/Resources ; \
 			$(MV) $(prefix)/$(AMAYA_INSTALLDIR) $(prefix)/amaya.app/Contents/MacOS/ ; \
 			cd $(prefix)/amaya.app/Contents/MacOS/ && $(LN_S) $(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya . && cd - ; \
+			sed -e "s/IDENTIFIER/`echo $(AMAYA_INSTALLDIR) | sed -e 's,\.\./,,g' | sed -e 's,/,.,g'`/" \
+					-e "s/EXECUTABLE/amaya/" \
+					-e "s/VERSION/@APP_VER@/" \
+					$(THOTDIR)/resources/bundle/Info.plist.in >$(prefix)/amaya.app/Contents/Info.plist ; \
+			echo -n "APPL????" >$(prefix)/amaya.app/Contents/PkgInfo ; \
+			$(CP) -f $(THOTDIR)/resources/bundle/amaya.icns $(prefix)/amaya.app/Contents/Resources/amaya.icns ; \
 	fi)
 
 uninstall :
