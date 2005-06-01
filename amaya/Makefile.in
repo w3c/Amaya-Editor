@@ -522,6 +522,7 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 @NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
 install : all @NOPRINT@../bin/print
+	@(if test $(AMAYA_INSTALLDIR) = "MACOSX" ; then echo "YOOOOOOOOOOOOOOOO" ; fi)
 	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR) ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR) ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; fi)
@@ -590,10 +591,22 @@ install : all @NOPRINT@../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; \
 	  done ; done)
+	@(if test $(AMAYAOS) = "MACOSX" ; then \
+			$(RM) -r $(prefix)/amaya.app ; \
+			$(MKDIR) $(prefix)/amaya.app ; \
+			$(MKDIR) $(prefix)/amaya.app/Contents ; \
+			$(MKDIR) $(prefix)/amaya.app/Contents/MacOS ; \
+			$(MKDIR) $(prefix)/amaya.app/Contents/Resources ; \
+			$(MV) $(prefix)/$(AMAYA_INSTALLDIR) $(prefix)/amaya.app/Contents/MacOS/ ; \
+			cd $(prefix)/amaya.app/Contents/MacOS/ && $(LN_S) $(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya . && cd - ; \
+	fi)
 
 uninstall :
 	$(RM) -r $(prefix)/$(AMAYA_INSTALLDIR)
 	$(RM) $(bindir)/amaya*
+	@(if test $(AMAYAOS) = "MACOSX" ; then \
+			$(RM) -r $(prefix)/amaya.app ; \
+	fi)
 
 CEXTRACT= ../bin/cextract
 

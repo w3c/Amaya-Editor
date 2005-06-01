@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WX_SRCDIR WX_BUILDDIR WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES PRINTIFNOTGL NOPRINT APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF EGREP ALLOCA LIBOBJS AMAYAOS AMAYAGUI GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES GL_BUILDDIR GL_INCLUDES GL_LIBRARIES WX_SRCDIR WX_BUILDDIR WX_INCLUDES WX_LIBRARIES WX_LINKDEPS LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GTK_GL_INCLUDES GTK_GL_LIBRARIES FREETYPE_INCLUDES FREETYPE_LIBRARIES XFT_INCLUDES XFT_LIBRARIES PRINTIFNOTGL NOPRINT APP_MAJVER APP_MINVER APP_SUBVER APP_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='plugin_frag www_frag math_frag svg_frag annot_frag dav_frag'
 
 # Initialize some variables set by options.
@@ -878,6 +878,7 @@ Optional Packages:
   --with-wxdebug          compiles wxWidgets with debuging options
   --with-wxsrcdir=...     compiles Amaya with a specific wxWidgets sources path
   --with-graphiclibs      use static libjpeg, libpng.
+  --with-debug          compiles Amaya with debuging options (-g)
   --with-dav              enable WebDAV support (experimental)
 
 Some influential environment variables:
@@ -13251,26 +13252,40 @@ done
 #
 # Check for operating system (UNIX / WINDOWS / MACOSX )
 # ---------->
-# canonicalize the target OS : default UNIX
-OS_OPTIONS="-D_UNIX"
+# canonicalize the target OS
+AMAYAOS="LINUX"
 case $target_os in
-  aix*)       OS_OPTIONS="-D_UNIX" ;;
-  cygwin*)    OS_OPTIONS="-D_UNIX" ;;
-  darwin*)    OS_OPTIONS="-D_UNIX -D_MACOS" ;;
-  freebsd2*)  OS_OPTIONS="-D_UNIX" ;;
-  freebsd*)   OS_OPTIONS="-D_UNIX" ;;
-  hpux*)      OS_OPTIONS="-D_UNIX" ;;
-  irix*)      OS_OPTIONS="-D_UNIX" ;;
-  linuxaout*) OS_OPTIONS="-D_UNIX" ;;
-  linux*)     OS_OPTIONS="-D_UNIX" ;;
-  mingw32*)   OS_OPTIONS="-D_UNIX" ;;
-  netbsd*)    OS_OPTIONS="-D_UNIX" ;;
-  openbsd*)   OS_OPTIONS="-D_UNIX" ;;
-  osf12*)   OS_OPTIONS="-D_UNIX" ;;
-  osf*)       OS_OPTIONS="-D_UNIX" ;;
-  solaris2*)  OS_OPTIONS="-D_UNIX" ;;
-  sunos4*)    OS_OPTIONS="-D_UNIX" ;;
-  ultrix*)    OS_OPTIONS="-D_UNIX" ;;
+  aix*)       AMAYAOS="LINUX" ;;
+  cygwin*)    AMAYAOS="WINDOWS" ;;
+  darwin*)    AMAYAOS="MACOSX" ;;
+  freebsd2*)  AMAYAOS="LINUX" ;;
+  freebsd*)   AMAYAOS="LINUX" ;;
+  hpux*)      AMAYAOS="LINUX" ;;
+  irix*)      AMAYAOS="LINUX" ;;
+  linuxaout*) AMAYAOS="LINUX" ;;
+  linux*)     AMAYAOS="LINUX" ;;
+  mingw32*)   AMAYAOS="WINDOWS" ;;
+  netbsd*)    AMAYAOS="LINUX" ;;
+  openbsd*)   AMAYAOS="LINUX" ;;
+  osf12*)   AMAYAOS="LINUX" ;;
+  osf*)       AMAYAOS="LINUX" ;;
+  solaris2*)  AMAYAOS="LINUX" ;;
+  sunos4*)    AMAYAOS="LINUX" ;;
+  ultrix*)    AMAYAOS="LINUX" ;;
+esac
+
+
+if test "$AMAYAOS" = "WINDOWS" ; then
+  { { echo "$as_me:$LINENO: error: Windows port do not use configure - not yet tested." >&5
+echo "$as_me: error: Windows port do not use configure - not yet tested." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+OS_OPTIONS="-D_UNIX" # default is UNIX
+case $AMAYAOS in
+  LINUX)       OS_OPTIONS="-D_UNIX" ;;
+  WINDOWS)     OS_OPTIONS="-D_WINDOWS" ;; # not tested (cygwin or mingw)
+  MACOSX)      OS_OPTIONS="-D_UNIX -D_MACOS" ;;
 esac
 
 
@@ -13601,7 +13616,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
   #   --disable-sound
   WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-sound"
 
-  if test "$OS_OPTIONS" = "-D_UNIX" ; then
+  if test "$AMAYAOS" = "LINUX" ; then
     # LINUX
     #   --enable-gtk2           use GTK+ 2.0 if available (EXPERIMENTAL)
     #   --disable-shared        create only static library (.a)
@@ -13610,7 +13625,7 @@ echo "$as_me: error: wxWidgets library sources not found. Please download wxWidg
     #   --with-opengl           use OpenGL (or Mesa)
     WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
-  if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+  if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
     # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
     # --with-mac              use Mac OS X
@@ -13665,7 +13680,7 @@ echo "$as_me: error: Cannot find wx-config. Please download wxWidgets (http://ww
   if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
-    if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+    if test "$AMAYAOS" = "MACOSX" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
@@ -13822,9 +13837,22 @@ echo "#endif /* __APPVERSION_H__ */" >> $APPVERSION_H
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
 
+# Check if debug is enable
 
-CFLAGS="-O2"
-CXXFLAGS="-O2"
+# Check whether --with-debug or --without-debug was given.
+if test "${with_debug+set}" = set; then
+  withval="$with_debug"
+
+fi;
+if test "$with_debug" = "yes" ; then
+  with_debug="yes"
+  CFLAGS="-g"
+  CXXFLAGS="-g"
+else
+  with_debug="no"
+  CFLAGS="-O2"
+  CXXFLAGS="-O2"
+fi
 
 if test "${CC}" = "gcc" ; then
  CFLAGS="${CFLAGS} -W"
@@ -13851,7 +13879,7 @@ CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
 # for exemple it's possible to install libwww with fink (fink install libwww)
 # to avoid conflicts, we just force the linker to search for specified amaya path first
-if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+if test "$AMAYAOS" = "MACOSX" ; then
   LDFLAGS="-Wl,-search_paths_first"
 else
   LDFLAGS=""
@@ -15498,6 +15526,7 @@ s,@DIFF@,$DIFF,;t t
 s,@EGREP@,$EGREP,;t t
 s,@ALLOCA@,$ALLOCA,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
+s,@AMAYAOS@,$AMAYAOS,;t t
 s,@AMAYAGUI@,$AMAYAGUI,;t t
 s,@GTKCONFIG_FOUND@,$GTKCONFIG_FOUND,;t t
 s,@GTK_INCLUDES@,$GTK_INCLUDES,;t t

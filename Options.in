@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.14
+# Version : 1.15
 #
 
 SHELL	= /bin/sh
@@ -49,8 +49,9 @@ EXPAT_OPTIONS=-DXML_DTD -DXML_NS
 
 AMAYA_INSTALLDIR=Amaya-@APP_VER@
 
-# used to identify amaya gui when 'make install' is called.
+# used to identify amaya gui/os when 'make install' is called.
 AMAYAGUI=@AMAYAGUI@
+AMAYAOS=@AMAYAOS@
 
 # GUI libraries
 

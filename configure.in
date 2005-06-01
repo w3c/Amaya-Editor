@@ -166,26 +166,38 @@ AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select 
 #
 # Check for operating system (UNIX / WINDOWS / MACOSX )
 # ---------->
-# canonicalize the target OS : default UNIX
-OS_OPTIONS="-D_UNIX"
+# canonicalize the target OS
+AMAYAOS="LINUX"
 case $target_os in
-  aix*)       OS_OPTIONS="-D_UNIX" ;;
-  cygwin*)    OS_OPTIONS="-D_UNIX" ;;
-  darwin*)    OS_OPTIONS="-D_UNIX -D_MACOS" ;;
-  freebsd2*)  OS_OPTIONS="-D_UNIX" ;;
-  freebsd*)   OS_OPTIONS="-D_UNIX" ;;
-  hpux*)      OS_OPTIONS="-D_UNIX" ;;
-  irix*)      OS_OPTIONS="-D_UNIX" ;;
-  linuxaout*) OS_OPTIONS="-D_UNIX" ;;
-  linux*)     OS_OPTIONS="-D_UNIX" ;;
-  mingw32*)   OS_OPTIONS="-D_UNIX" ;;
-  netbsd*)    OS_OPTIONS="-D_UNIX" ;;
-  openbsd*)   OS_OPTIONS="-D_UNIX" ;;
-  osf[12]*)   OS_OPTIONS="-D_UNIX" ;;
-  osf*)       OS_OPTIONS="-D_UNIX" ;;
-  solaris2*)  OS_OPTIONS="-D_UNIX" ;;
-  sunos4*)    OS_OPTIONS="-D_UNIX" ;;
-  ultrix*)    OS_OPTIONS="-D_UNIX" ;;
+  aix*)       AMAYAOS="LINUX" ;;
+  cygwin*)    AMAYAOS="WINDOWS" ;;
+  darwin*)    AMAYAOS="MACOSX" ;;
+  freebsd2*)  AMAYAOS="LINUX" ;;
+  freebsd*)   AMAYAOS="LINUX" ;;
+  hpux*)      AMAYAOS="LINUX" ;;
+  irix*)      AMAYAOS="LINUX" ;;
+  linuxaout*) AMAYAOS="LINUX" ;;
+  linux*)     AMAYAOS="LINUX" ;;
+  mingw32*)   AMAYAOS="WINDOWS" ;;
+  netbsd*)    AMAYAOS="LINUX" ;;
+  openbsd*)   AMAYAOS="LINUX" ;;
+  osf[12]*)   AMAYAOS="LINUX" ;;
+  osf*)       AMAYAOS="LINUX" ;;
+  solaris2*)  AMAYAOS="LINUX" ;;
+  sunos4*)    AMAYAOS="LINUX" ;;
+  ultrix*)    AMAYAOS="LINUX" ;;
+esac
+AC_SUBST(AMAYAOS)
+
+if test "$AMAYAOS" = "WINDOWS" ; then
+  AC_MSG_ERROR(Windows port do not use configure - not yet tested.)
+fi
+
+OS_OPTIONS="-D_UNIX" # default is UNIX
+case $AMAYAOS in
+  LINUX)       OS_OPTIONS="-D_UNIX" ;;
+  WINDOWS)     OS_OPTIONS="-D_WINDOWS" ;; # not tested (cygwin or mingw)
+  MACOSX)      OS_OPTIONS="-D_UNIX -D_MACOS" ;;
 esac
 
 AC_ARG_WITH(GL,              [  --with-gl               enable Opengl canvas (experimental) ])
@@ -447,7 +459,7 @@ if test "$with_wx" = "yes" ; then
   #   --disable-sound
   WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-sound"
   
-  if test "$OS_OPTIONS" = "-D_UNIX" ; then
+  if test "$AMAYAOS" = "LINUX" ; then
     # LINUX
     #   --enable-gtk2           use GTK+ 2.0 if available (EXPERIMENTAL)
     #   --disable-shared        create only static library (.a)
@@ -456,7 +468,7 @@ if test "$with_wx" = "yes" ; then
     #   --with-opengl           use OpenGL (or Mesa)
     WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-ipc --disable-shared  --with-libpng=builtin --with-libjpeg=builtin --with-libtiff=builtin $WXCONFIGURE_TUNNING_OPTION"
   fi
-  if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+  if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
     # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
     # --with-mac              use Mac OS X
@@ -507,7 +519,7 @@ if test "$with_wx" = "yes" ; then
   if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
-    if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+    if test "$AMAYAOS" = "MACOSX" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
@@ -647,13 +659,17 @@ dnl
 CEXTRACT_VER="1.7"
 CEXTRACT_FLAGS="+O"
 
-
-dnl
-dnl Adjust the some variables depending on the host and compiler
-dnl Thotlib NEED signed chars !!!
-dnl The configure default is -g -O2 and we force -O2
-CFLAGS="-O2"
-CXXFLAGS="-O2"
+# Check if debug is enable
+AC_ARG_WITH(debug,              [  --with-debug          compiles Amaya with debuging options (-g) ])
+if test "$with_debug" = "yes" ; then
+  with_debug="yes"
+  CFLAGS="-g"
+  CXXFLAGS="-g"
+else
+  with_debug="no"
+  CFLAGS="-O2"
+  CXXFLAGS="-O2"
+fi
 
 if test "${CC}" = "gcc" ; then
  CFLAGS="${CFLAGS} -W"
@@ -680,7 +696,7 @@ CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
 # for exemple it's possible to install libwww with fink (fink install libwww)
 # to avoid conflicts, we just force the linker to search for specified amaya path first
-if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+if test "$AMAYAOS" = "MACOSX" ; then
   LDFLAGS="-Wl,-search_paths_first"
 else
   LDFLAGS=""
