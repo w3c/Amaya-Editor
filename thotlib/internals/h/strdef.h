@@ -113,7 +113,8 @@
 #define KWD_IsPlaceholder 	1192
 #define KWD_StartCounter 	1193
 #define KWD_SetCounter 	1194
-#define KWD_Root 	1195
+#define KWD_PreserveEntities 	1195
+#define KWD_Root 	1196
 
 /*  RULES  */
 

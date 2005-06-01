@@ -132,6 +132,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'NoShowBox' / 'SetWindowBackground' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
+                 'PreserveEntities' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

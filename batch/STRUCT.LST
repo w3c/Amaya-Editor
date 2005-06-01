@@ -138,6 +138,7 @@ number
 			 'NoShowBox' / 'SetWindowBackground' /
 			 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 			 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
+	                 'PreserveEntities' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -270,7 +271,8 @@ code  key-word      numbers of rules using the key-word
 1192  IsPlaceholder        51
 1193  StartCounter         51
 1194  SetCounter           51
-1195  Root                 54
+1195  PreserveEntities     51
+1196  Root                 54
 
 
 

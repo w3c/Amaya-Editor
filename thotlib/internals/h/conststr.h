@@ -69,6 +69,7 @@
 #define ExcStartCounter 43
 #define ExcSetCounter 44
 #define ExcCanCut 45
+#define ExcPreserveEntities 46
 
 /* Draw exceptions */
 #define ExcSelectParent 310

@@ -1876,6 +1876,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_SetCounter:
 	 ExceptionNum (ExcSetCounter, False, True, True, wi);
 	 break;
+       case KWD_PreserveEntities:
+	 /* PreserveEntities */
+	 ExceptionNum (ExcPreserveEntities, True, False, False, wi);
+	 break;
        case KWD_Root:
 	 CurExtensRule = NewExtensionRule (wi, 0);
 	 CurExtensRule->SrName[0] = '\0';

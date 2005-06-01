@@ -882,8 +882,8 @@ EXCEPT
 	Definitions:	Hidden;
         XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
 	Comment\240:	ReturnCreateNL, NoReplicate;
-	Comment_line:	Hidden;
-	PI_line:	Hidden;
+	Comment_line:	Hidden, PreserveEntities;
+	PI_line:	Hidden, PreserveEntities;
 	DOCTYPE:	NoCut, NoSpellCheck;
 	DOCTYPE_line:	Hidden, NoCut;
         CDATA_line:     Hidden;
