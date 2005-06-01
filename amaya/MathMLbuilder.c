@@ -1219,8 +1219,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			      else if (text[i] == 0x2193)
 				c = 'V';
 			      symbolEl = TtaNewElement (doc, elType);
-			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 			      TtaSetGraphicsShape (symbolEl, c, doc);
+			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 			      TtaRegisterElementCreate (symbolEl, doc);
 			      if (selEl != NULL)
 				if (*selEl == textEl)

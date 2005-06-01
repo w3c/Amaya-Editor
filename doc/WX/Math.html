@@ -4,7 +4,7 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Editing Mathematics in Amaya</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
@@ -436,7 +436,7 @@ specification</a> for more details.</p>
   </mfrac>
 </math></p>
 
-<p>typing the sequence <code>f(x)=</code> would lead to:</p>
+<p>typing the sequence <code>f(x)= ...</code> would lead to:</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>f</mi>
@@ -451,18 +451,27 @@ specification</a> for more details.</p>
 </math></p>
 
 <p>Instead, choose <strong>Math Constructs/Parentheses</strong> from the
-<strong>XML</strong> menu or select the Parentheses option on the Maths
+<strong>XML</strong> menu or select the Parentheses button on the Maths
 palette to enter the parentheses properly.</p>
 
 <h3 id="Special">Special Characters</h3>
 
 <p>You can use the <strong><a href="#next">Character</a></strong> command
-from the <strong>XML/Basic Math Elements</strong> menu to enter mathematical
-characters and symbols that are not available on the keyboard. You can also
-use the <strong>Special Characters</strong> palette. The first two rows of
-buttons allow you to choose a group of characters, which are then available
-in the pull down below. Choose a character in the list and insert it in the
-formula by clicking the insertion button</p>
+from the <strong>XML/Basic math Elements</strong> menu to enter mathematical
+characters and symbols that are not available on the keyboard. Type in the
+name of the character, as defined in the <a
+href="http://www.w3.org/TR/2003/REC-MathML2-20031021/byalpha.html">MathML
+specification</a>. You may choose to type the Unicode value of the character
+instead. For entering this value in decimal, start with a '#'. For entering
+the value in hexadecimal, start with '#x'. To type faster, you can also enter
+the hexadecimal value without any leading '#x', but note that this may be
+ambiguous (like 'af', for instance). In case of ambiguity, the string is
+interpreted as a character name.</p>
+
+<p>You can also use the <strong>Special characters</strong> palette. The
+first two rows of buttons allow you to choose a group of characters, which
+are then available in the pull down below. Choose a character in the list and
+insert it in the formula by clicking the insertion button</p>
 
 <h3 id="Changing">Changing the Expression Structure</h3>
 
@@ -487,10 +496,10 @@ the math elements, and their contents.</p>
 view.</p>
 
 <p>The Structure view is especially helpful to avoid ambiguity. For example,
-in the equation below, placing the cursor after character“ <math
+in the equation below, placing the cursor after character <math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>b</mi>
-</math>,” it is not clear whether you wish to add something within the square
+</math>, it is not clear whether you wish to add something within the square
 root or after it.</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">

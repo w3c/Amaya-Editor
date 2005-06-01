@@ -3715,13 +3715,69 @@ void SetAttrParseMe (Element el, Document doc)
 static void SetContentAfterEntity (char *entityName, Element el, Document doc)
 {
   char	         bufEntity[10];
-  ThotBool       found;
+  ThotBool       found, error;
   int            value;
   Language       lang;
   unsigned char *ptr;
   int            i;
 
-  found = MapXMLEntity (MATH_TYPE, entityName, &value);
+  found = FALSE;
+  if (entityName[0] == '#')
+    /* it's a character reference */
+    {
+      error = FALSE;
+      if (entityName[1] == 'x')
+	/* it's a hexadecimal number */
+	{
+	  for (i = 2; entityName[i] != EOS && !error; i++)
+	    if (entityName[i] < '0' ||
+		(entityName[i] > '9' && entityName[i] < 'A') ||
+		(entityName[i] > 'F' && entityName[i] < 'a') ||
+		entityName[i] > 'f')
+	      error = TRUE;
+	  if (!error)
+	    {
+	      sscanf (&entityName[2], "%x", &value);
+	      found = TRUE;
+	    }
+	}
+      else
+	/* it's a decimal number */
+	{
+	  for (i = 2; entityName[i] != EOS && !error; i++)
+	    if (entityName[i] < '0' || entityName[i] > '9')
+	      error = TRUE;
+	  if (!error)
+	    {
+	      sscanf (&entityName[1], "%d", &value);
+	      found = TRUE;
+	    }
+	}
+    }
+  else
+    /* it's supposed to be the name of the character */
+    {
+      /* Look first at the MathML entities table */
+      found = MapXMLEntity (MATH_TYPE, entityName, &value);
+      if (!found)
+	/* it's not a known character name. It may be the hex code of the
+	   character without the leading '#x' */
+	{
+	  error = FALSE;
+	  for (i = 0; entityName[i] != EOS && !error; i++)
+	    if (entityName[i] < '0' ||
+		(entityName[i] > '9' && entityName[i] < 'A') ||
+		(entityName[i] > 'F' && entityName[i] < 'a') ||
+		entityName[i] > 'f')
+	      error = TRUE;
+	  if (!error)
+	    /* only hexadecimal digits */
+	    {
+	      sscanf (entityName, "%x", &value);
+	      found = TRUE;
+	    }
+	}
+    }
   if (!found)
     {
       /* Unknown entity */

@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -339,14 +340,24 @@ palette.</p>
 <h3 id="Caract1"><a id="Caract">Caractères spéciaux</a></h3>
 
 <p>Pour entrer les caractères et symboles mathématiques qui ne sont pas
-disponibles au clavier, on peut utiliser la commande <a
+disponibles au clavier, vous pouvez utiliser la commande <a
 href="#Caract">Caractères</a> du menu <strong>XML/Eléments math de
-base</strong>, si on connaît le nom du caractère à entrer. On peut aussi
-utiliser la palette Caractères spéciaux qui se trouve en-dessous de la
-palette Math. Les boutons de la partie supérieure de cette palette permettent
-de choisir un groupe de caractères qui sont alors disponibles dans le menu
-qui se trouve en-dessous. On choisit le caractère voulu dans ce menu, puis on
-l'insère dans le document à l'aide du bouton voisin.</p>
+base</strong>. Tapez le nom du caractère (la liste des noms est disponible
+dans la <a
+href="http://www.w3.org/TR/2003/REC-MathML2-20031021/byalpha.html">spécification
+MathML</a>). Au lieu du nom, vous pouvez entrer la valeur Unicode du
+caractère. Pour entrer cette valeur en décimal, commencez par '#'. Pour
+l'entrer en hexadécimal, commencez par '#x'. Pour accélérer la frappe, vous
+pouvez entrer directement une valeur hexadécimal, sans la faire précéder de
+'#x', mais cela peut donner une ambiguïté (comme 'af', par exemple). En cas
+d'ambiguïté, la alpes saisie est interprétée comme un nom de caractère.</p>
+
+<p>Vous pouvez aussi utiliser la palette Caractères spéciaux qui se trouve
+en-dessous de la palette Math. Les boutons de la partie supérieure de cette
+palette permettent de choisir un groupe de caractères qui sont alors
+disponibles dans le menu qui se trouve en-dessous. Choisissez le caractère
+voulu dans ce menu, puis insérez-le dans le document à l'aide du bouton
+voisin.</p>
 
 <h3 id="Editer1"><a id="Structure">Editer la structure</a></h3>
 
