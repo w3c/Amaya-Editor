@@ -1758,7 +1758,6 @@ void InitTranslations (char *appliname)
 	      if (transText[0] >= 'a' && transText[0] <= 'z')
 		SetCapital (transText);
 	      strcat (equiv, transText);
-	      printf ("\nequiv='%s'", equiv);
 
 	      if (!no_sequence && ch[0] == ',')
 		{
