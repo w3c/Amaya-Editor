@@ -1700,9 +1700,9 @@ void InitTranslations (char *appliname)
               {
 	        if (!strcmp (ch, "Shift"))
 		  mod1 += THOT_MOD_SHIFT;
-  	        if (!strcmp (ch, "Ctrl"))
+  	        else if (!strcmp (ch, "Ctrl"))
 		  mod1 += THOT_MOD_CTRL;
-	        if (!strcmp (ch, "Alt"))
+	        else if (!strcmp (ch, "Alt"))
 		  mod1 += THOT_MOD_ALT;
 		ch[0] = EOS;
 		fscanf (file, "%80s", ch);
@@ -1770,11 +1770,11 @@ void InitTranslations (char *appliname)
                          (!strcmp (ch, "Alt")) )
                   {
 	            if (!strcmp (ch, "Shift"))
-		      mod1 += THOT_MOD_SHIFT;
-  	            if (!strcmp (ch, "Ctrl"))
-		      mod1 += THOT_MOD_CTRL;
-	            if (!strcmp (ch, "Alt"))
-		      mod1 += THOT_MOD_ALT;
+		      mod2 += THOT_MOD_SHIFT;
+  	            else if (!strcmp (ch, "Ctrl"))
+		      mod2 += THOT_MOD_CTRL;
+	            else if (!strcmp (ch, "Alt"))
+		      mod2 += THOT_MOD_ALT;
 		    ch[0] = EOS;
 		    fscanf (file, "%80s", ch);
                    }
