@@ -60,7 +60,9 @@ KEY;
   #include "appli_f.h"
   #include "input_f.h"
 #endif /* #if defined(_WINGUI) */
-
+#ifdef _WX
+  #include "appdialogue_wx.h"
+#endif /* _WX */
 /* Actions table */
 #include "applicationapi_f.h"
 #include "callback_f.h"
@@ -1295,7 +1297,12 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 	{
 	  if (key/*value*/ == THOT_KEY_Escape)
 	    {
-	      TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+        // check the fullscreen state is enable or not
+        // if yes, just disable fullscreen
+        if (TtaGetFullScreenState(frame))
+          TtaToggleOnOffFullScreen(frame);
+        else
+          TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
 	      return 0;
 	    }
 	  else if (value == 8 || value == 127)

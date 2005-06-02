@@ -1826,8 +1826,8 @@ void TtaDoPostFrameCreation( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaToggleOnOffSplitView
-  execute the split/unsplit action
+  TtaToggleOnOffFullScreen
+  execute the fullscreen action
   this methode is directly connected to a menu item action
   params:
   returns:
@@ -1850,6 +1850,35 @@ void TtaToggleOnOffFullScreen( int frame_id )
     }
 
   p_window->ToggleFullScreen();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetFullScreenState()
+  return the fullscreen state of a frame's window
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetFullScreenState(int frame_id )
+{
+#ifdef _WX
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  if (!p_frame)
+    {
+      wxASSERT(false);
+      return FALSE;
+    }
+
+  AmayaWindow * p_window = p_frame->GetWindowParent();
+  if (!p_window)
+    {
+      wxASSERT(false);
+      return FALSE;
+    }
+
+  return p_window->IsFullScreen();
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
