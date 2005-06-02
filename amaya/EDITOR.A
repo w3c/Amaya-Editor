@@ -283,7 +283,7 @@ MENUS
 	Links button:BMakeID -> MakeIDMenu;
 
 	Views toggle:TShowPanel -> ShowPanel icon:panel_on_off.png;
-	Views toggle:BFullScreen -> FullScreen icon:fullscreen.png;
+	Views button:BFullScreen -> FullScreen icon:fullscreen.png;
 	Views toggle:TShowButtonbar -> ShowButtons;
 	Views toggle:TShowTextZone -> ShowAddress;
 	Views toggle:TShowMapAreas -> ShowMapAreas;
