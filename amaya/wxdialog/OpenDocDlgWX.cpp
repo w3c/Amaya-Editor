@@ -157,6 +157,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
     {
       *m_pLastUsedFilter = p_dlg->GetFilterIndex();
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
+	  UpdateDirAndFilenameFromString( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
   else
