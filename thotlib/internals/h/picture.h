@@ -39,28 +39,21 @@ typedef struct
   PictureScaling PicPresent;
   int            PicType;
   char          *PicFileName; 
-#ifndef _GL
+  ThotPixmap     PicPixmap;
 #ifdef _GTK
   GdkImlibImage *im;
-  ThotPixmap     PicPixmap;
-#else /* _GTK*/
-  ThotPixmap     PicPixmap;
+  ThotPixmap     PicMask;        /* Bitmap Mask */
 #endif /*_GTK*/
 #ifdef _WINGUI
   int            PicBgMask;      /* Color Mask */
-#endif /* _WINGUI */
   ThotPixmap     PicMask;        /* Bitmap Mask */
-#else /*_GL*/
+#endif /* _WINGUI */
+#ifdef _GL
   unsigned int   TextureBind; /* integer name of video card memory pointer*/
-  ThotPixmap     PicPixmap;
-  ThotBool       RGBA;
   float          TexCoordW;
   float          TexCoordH;  
+  ThotBool       RGBA;
 #endif /* _GL */
-  ThotBool       mapped;         /* Used for ExtraHandlers */
-  ThotBool       created;        /* Used for ExtraHandlers */
-  ThotWidget     wid;            /* Used for ExtraHandlers */
-  void          *pluginInstance; /* Used for ExtraHandlers */
 } ThotPictInfo;
 
 typedef enum

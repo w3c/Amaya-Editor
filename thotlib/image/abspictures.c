@@ -36,13 +36,16 @@
   ----------------------------------------------------------------------*/
 void CleanPictInfo (ThotPictInfo *imageDesc)
 {
+  ThotPixmap pixmap;
+
   if (imageDesc)
     {
 #ifndef _GL
-      if (imageDesc->PicPixmap != None)
+      if (imageDesc->PicPixmap)
 	{
+	  pixmap = imageDesc->PicPixmap;
+	  imageDesc->PicPixmap = NULL;
 	  FreePixmap (imageDesc->PicPixmap);
-	  imageDesc->PicPixmap = None;
 #ifdef _WINGUI
 	  FreePixmap (imageDesc->PicMask);
 #endif /* _WINGUI */ 

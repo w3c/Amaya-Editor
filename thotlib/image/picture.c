@@ -1190,9 +1190,9 @@ static ThotBool Match_Format (int typeImage, char *fileName)
   ----------------------------------------------------------------------*/
 void FreePixmap (ThotPixmap pixmap)
 {
-  if (pixmap != None 
-      && pixmap != (ThotPixmap) PictureLogo 
-      && pixmap != EpsfPictureLogo)
+  if (pixmap != NULL &&
+      pixmap != (ThotPixmap) PictureLogo &&
+      pixmap != EpsfPictureLogo)
 #ifdef _GL
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
@@ -1936,11 +1936,13 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
   picXOrg = 0;
   picYOrg = 0;
 
+#ifndef _GL
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
       (box->BxAbstractBox->AbLeafType == LtCompound &&
-#ifndef _GL
        imageDesc->PicPixmap == PictureLogo))
 #else /*_GL*/
+  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
+      (box->BxAbstractBox->AbLeafType == LtCompound &&
        strcmp (imageDesc->PicFileName, LostPicturePath) == 0))
 #endif /* _GL */
     return;
@@ -1979,35 +1981,30 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
       else
 	{
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+	  if (imageDesc->TextureBind)
+	    printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
+#ifdef _GL
           if ((pres == ReScale &&
 	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
-#ifdef _GL
-	       !glIsTexture (imageDesc->TextureBind))	    
+	      !glIsTexture (imageDesc->TextureBind))	    
 #else /*_GL*/
-               (imageDesc->PicPixmap == None))
+          if ((pres == ReScale &&
+	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
+	      (imageDesc->PicPixmap == None))
 #endif /*_GL*/
 	    {
-	      /* need to load or to rescale the picture */
-		  if (imageDesc->PicPixmap != None)
-		  {
-			TtaFreeMemory (imageDesc->PicPixmap);
-			imageDesc->PicPixmap = None;
-		  }
 	      LoadPicture (frame, box, imageDesc);
 	      w = picWArea = imageDesc->PicWArea;
 	      h = picHArea = imageDesc->PicHArea;
-	      SetPictureClipping (&picWArea, &picHArea, 
-				  w, h, imageDesc);
+	      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
 	    }
 	  
 	  if (pres == RealSize && 
 	      box->BxAbstractBox->AbLeafType == LtPicture)
 	    /* Center real sized images wihin their picture boxes */
 	    Picture_Center (picWArea, picHArea, w, h, 
-			    pres, &xTranslate, &yTranslate,
-			    &picXOrg, &picYOrg);
+			    pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
 	  
 	  if (typeImage < InlineHandlers)
             LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
@@ -2017,45 +2014,45 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 	}
     }
   else if (typeImage < InlineHandlers && typeImage > -1)
-   {
+    {
     /* for the moment we didn't consider plugin printing */
 #ifdef _WINGUI
-    if (TtPrinterDC)
-      {
+      if (TtPrinterDC)
+	{
 #ifdef _WIN_PRINT
-	/* load the device context into TtDisplay */
-	WIN_GetDeviceContext (frame);
-	LoadPicture (frame, box, imageDesc);
-	if (imageDesc->PicPixmap == None) 
-	  WinErrorBox (NULL, "DrawPicture (1)");
-	else
-	  {
-	    /* Retrieve the bitmap's color format, width, and height. */ 
-	    if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
-			    sizeof(BITMAP), (LPSTR)&bmp))
-	      WinErrorBox (NULL, "DrawPicture (1)");
-	    else
-	      {
-		/* Convert the color format to a count of bits. */ 
-		cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
-		if (cClrBits != 1)
-		  { 
-		    if (cClrBits <= 4) 
-		      cClrBits = 4;
-		    else if (cClrBits <= 8) 
-		      cClrBits = 8;
-		    else if (cClrBits <= 16) 
-		      cClrBits = 16;
-		    else if (cClrBits <= 24) 
-		      cClrBits = 24;
-		    else 
-		      cClrBits = 32;
-		  }
-		/* 
-		 * Allocate memory for the BITMAPINFO structure. (This structure 
-		 * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-		 * structures.) 
-		 */ 
+	  /* load the device context into TtDisplay */
+	  WIN_GetDeviceContext (frame);
+	  LoadPicture (frame, box, imageDesc);
+	  if (imageDesc->PicPixmap == NULL) 
+	    WinErrorBox (NULL, "DrawPicture (1)");
+	  else
+	    {
+	      /* Retrieve the bitmap's color format, width, and height. */ 
+	      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
+			      sizeof(BITMAP), (LPSTR)&bmp))
+		WinErrorBox (NULL, "DrawPicture (1)");
+	      else
+		{
+		  /* Convert the color format to a count of bits. */ 
+		  cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
+		  if (cClrBits != 1)
+		    { 
+		      if (cClrBits <= 4) 
+			cClrBits = 4;
+		      else if (cClrBits <= 8) 
+			cClrBits = 8;
+		      else if (cClrBits <= 16) 
+			cClrBits = 16;
+		      else if (cClrBits <= 24) 
+			cClrBits = 24;
+		      else 
+			cClrBits = 32;
+		    }
+		  /* 
+		   * Allocate memory for the BITMAPINFO structure. (This structure 
+		   * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+		   * structures.) 
+		   */ 
 		if (cClrBits != 24) 
 		  pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
 						   sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
@@ -2104,34 +2101,34 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 		      }
 		    LocalFree (pbmi);
 		  }
-	      }
-	  }
-	WIN_ReleaseDeviceContext ();
+		}
+	    }
+	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-      }
+	}
 #endif /* _WINGUI */
     
 #if defined(_GTK) || defined(_WX)
-  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
-	(void *)fileName,
-	(void *)pres,
-	(void *)x,
-       	(void *)y,
-       	(void *)w,
-       	(void *)h,
-	(void *)(FILE *) drawable,
-	(void *)bgColor,
-	(void *)0,
-	(void *)0);  
+      (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
+							      (void *)fileName,
+							      (void *)pres,
+							      (void *)x,
+							      (void *)y,
+							      (void *)w,
+							      (void *)h,
+							      (void *)(FILE *) drawable,
+							      (void *)bgColor,
+							      (void *)0,
+							      (void *)0);  
 #endif /* #if defined(_GTK) || defined(_WX) */
-   }
-
+    }
+  
 #ifdef _GL
   if (PrintingGL)
-  {
-    PrintingGL = FALSE;
-    Printing = TRUE;
-  }
+    {
+      PrintingGL = FALSE;
+      Printing = TRUE;
+    }
 #endif /* _GL */
 }
 
@@ -2611,6 +2608,10 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 		yBox = h;
 	    }
 	  /* intrinsic width and height */
+
+	  /* free the previous pixmap */
+	  TtaFreeMemory (imageDesc->PicPixmap);
+	  imageDesc->PicPixmap = NULL;
 	  imageDesc->PicPixmap = (ThotPixmap) 
 	    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			 (void *)fileName,
@@ -2721,9 +2722,9 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   PathBuffer          fileName;
   PictureScaling      pres;
 #ifdef _GTK
-  GdkImlibImage      *im = None;
+  GdkImlibImage      *im = NULL;
 #endif /* _GTK */
-  ThotPixmap		drw = None;
+  ThotPixmap	      drw = NULL;
   PtrAbstractBox      pAb;
   Picture_Report      status;
 #ifndef _WX
@@ -2907,7 +2908,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 	  if (yBox == 0)
 	    yBox = im->rgb_height;
 	  
-	  gdk_imlib_render(im, (gint) xBox, (gint) yBox);
+	  gdk_imlib_render (im, (gint) xBox, (gint) yBox);
 	  drw = (ThotPixmap) gdk_imlib_move_image (im);
 	  imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);	  
 	}
@@ -2916,7 +2917,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 #endif /* _GTK */
       redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
        
-      if (drw == None)
+      if (drw == NULL)
 	{
 #if defined (_GTK) || defined (_WINGUI)
 	  if (PictureLogo == None)
@@ -2971,7 +2972,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 	  imageDesc->PicHArea = h;
 	}
     }
-  imageDesc->PicPixmap = drw;
+  if (drw)
+    imageDesc->PicPixmap = drw;
 #ifdef _GTK
   if (im)
     imageDesc->im = im;
