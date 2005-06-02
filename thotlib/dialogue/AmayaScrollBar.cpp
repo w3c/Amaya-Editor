@@ -255,6 +255,8 @@ BEGIN_EVENT_TABLE(AmayaScrollBar, wxScrollBar)
   EVT_SCROLL_PAGEDOWN( AmayaScrollBar::OnScroll )
   EVT_SCROLL_THUMBTRACK( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBTRACK thumbtrack events (frequent events sent as the user drags the thumbtrack). */
   EVT_SCROLL_THUMBRELEASE( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBRELEASE thumb release events.*/
+
+  /* TODO : a renommer en EVT_SCROLL_CHANGED qd on se mettra a jour avec la tete de CVS */
   EVT_SCROLL_ENDSCROLL( AmayaScrollBar::OnScroll )
 
   EVT_SET_FOCUS( AmayaScrollBar::OnSetFocus )

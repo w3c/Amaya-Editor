@@ -2842,7 +2842,7 @@
 	<message xml:lang="ru">оНЙЮГЮРЭ ХМЯРПСЛ&amp;ЕМРШ</message>
 	<message xml:lang="hu">&amp;Eszközsor mutatása</message>
 </label>
-<label define="TFullScreen">
+<label define="BFullScreen">
 	<message xml:lang="en">&amp;Fullscreen</message>
 	<message xml:lang="fr">&amp;Plein écran</message>
 	<message xml:lang="es">&amp;Pantalla completa</message>

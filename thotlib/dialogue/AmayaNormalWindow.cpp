@@ -716,42 +716,6 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
     }
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaNormalWindow
- *      Method:  RefreshFullScreenToggleMenu
- * Description:  is called to toggle on/off the "fullscreen" menu item depeding on
- *               the window fullscreen state.
- *--------------------------------------------------------------------------------------
- */
-void AmayaNormalWindow::RefreshFullScreenToggleMenu()
-{
-  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::RefreshFullScreenToggleMenu"));
-
-  // update menu items of each documents
-  int doc_id    = 1;
-  int frame_id  = 0;
-  int window_id = GetWindowId();
-  int itemID    = WindowTable[window_id].MenuItemFullScreenID;
-  int action    = FindMenuActionFromMenuItemID(NULL, itemID);
-  ThotBool on   = IsFullScreen();
-
-  while ( action >= 0 && doc_id < MAX_DOCUMENTS )
-    {
-      if (LoadedDocument[doc_id-1])
-        {
-          frame_id = LoadedDocument[doc_id-1]->DocViewFrame[0];
-          if (FrameTable[frame_id].FrWindowId == window_id)
-            {
-              /* toggle the menu item of every documents */
-              MenuActionList[action].ActionToggle[doc_id] = on;
-              TtaRefreshMenuItemStats( doc_id, NULL, itemID );
-            }
-        }
-      doc_id++;
-    }
-}
-
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

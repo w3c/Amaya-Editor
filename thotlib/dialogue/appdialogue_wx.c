@@ -1825,7 +1825,6 @@ void TtaDoPostFrameCreation( int frame_id )
     }
   /* refresh specific menu item states */
   p_window->RefreshShowPanelToggleMenu();
-  p_window->RefreshFullScreenToggleMenu();
 #endif /* _WX */
 }
 

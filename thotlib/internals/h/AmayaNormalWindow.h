@@ -89,7 +89,6 @@ class AmayaNormalWindow : public AmayaWindow
   void ClosePanel();
   void OpenPanel();
   virtual void RefreshShowPanelToggleMenu();
-  virtual void RefreshFullScreenToggleMenu();
 
   virtual void DoClose( bool & veto );
 
@@ -108,9 +107,6 @@ class AmayaNormalWindow : public AmayaWindow
   AmayaNotebook *   m_pNotebook;         // tabs container
   wxPanel *         m_pNotebookPanel;
   int               m_SlashPos;          // the slash pos in pixel
-
-  bool         m_IsFullScreenEnable;
-  bool         m_IsToolTipEnable;
 
   wxMenuItem * m_pMenuItemToggleFullScreen;
   wxMenuItem * m_pMenuItemToggleToolTip;

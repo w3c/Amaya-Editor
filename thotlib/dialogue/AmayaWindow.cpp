@@ -538,18 +538,6 @@ void AmayaWindow::ToggleFullScreen()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  RefreshFullScreenToggleMenu
- * Description:  is called to toggle on/off the "fullscreen" menu item depeding on
- *               the window fullscreen state.
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::RefreshFullScreenToggleMenu()
-{
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  OnChar
  * Description:  manage keyboard events comming from somewhere in this window
  *--------------------------------------------------------------------------------------
