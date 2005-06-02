@@ -1985,6 +1985,7 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   Fields LiLastBox, LiLastPiece will be set by the function.
   Parameters floatL and floatR point to last left an right floating
   boxes managed in the current block.
+  Parameter maxLineWidth gives the max width of the line.
   Parameters top, bottom, left, and right give the summ of
   margin/border/padding of the block.
   Work with absolute positions when xAbs and yAbs are TRUE.
@@ -1997,7 +1998,8 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   - notComplete = TRUE if all enclosed boxes are not managed yet.
   - breakLine = TRUE if the end of the line correspond to a break element.
   ----------------------------------------------------------------------*/
-static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox pRootAb,
+static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
+		     PtrAbstractBox pRootAb, int maxWidth,
 		     ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
 		     ThotBool notComplete, ThotBool *full, ThotBool *adjust,
 		     ThotBool *breakLine, int frame, int indent,
@@ -2143,20 +2145,16 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 			    pNextBox->BxType == BoFloatBlock ||
 			    pNextBox->BxType == BoTable) &&
 			   pNextBox->BxAbstractBox->AbDisplay == 'I' &&
-			   pNextBox->BxMaxWidth < val)
+			   maxWidth < val)
 		    {
 		      /* use the max between the enclosed and the enclosing widths */
 		      pNextBox->BxContentWidth = TRUE;
-		      val =  pNextBox->BxMaxWidth;
+		      val =  maxWidth;
 		    }
 		  else
 		    pNextBox->BxContentWidth = FALSE;
 		  ResizeWidth (pNextBox, pBlock, NULL,
 			       val - pNextBox->BxWidth, 0, 0, 0, frame);
-		  /* recheck the line */
-		  //InitLine (pLine, pBlock, frame, indent,
-		  //    *floatL, *floatR, pNextBox,
-		  //	top, bottom, left, right, xAbs, yAbs);
 		}
 	    }
 	}
@@ -2197,7 +2195,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 		  pLine->LiMinLength = minWidth;
 		  /* handle a new floating box and rebuild the line */
 		  return SetFloat (lastbox, pBlock, pLine, pRootAb,
-				   extensibleBlock, xAbs, yAbs,
+				   maxWidth, extensibleBlock, xAbs, yAbs,
 				   notComplete, full, adjust, breakLine,
 				   frame, indent, top, bottom, left, right,
 				   floatL, floatR);
@@ -2282,8 +2280,10 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox 
 	      /* evaluate the temporary height of the line */
 	      if (pLine->LiHeight < pBox->BxHeight && pBox->BxWidth)
 		pLine->LiHeight = pBox->BxHeight;
-
-	      /* dont'take into account the width of the bulet */
+	      if (pBlock->BxMaxWidth < pBox->BxMaxWidth)
+		/* transmit the max width of the box */
+		pBlock->BxMaxWidth = pBox->BxMaxWidth;
+	      /* dont'take into account the width of the bullet */
 	      if (!pBox->BxAbstractBox->AbPresentationBox ||
 		  pBox->BxAbstractBox->AbTypeNum != 0)
 		xi += pNextBox->BxWidth;
@@ -2719,8 +2719,9 @@ static void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL,
   updateWidth is TRUE.
   Returns the updated height.
   ----------------------------------------------------------------------*/
-static void UpdateBlockWithFloat (int frame, PtrBox pBlock, ThotBool xAbs,
-				  ThotBool yAbs, ThotBool updateWidth, int *height)
+static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
+				  ThotBool xAbs, ThotBool yAbs,
+				  ThotBool updateWidth, int *height)
 {
   PtrFloat            pfloat;
   int                 y, x, x1, x2;
@@ -2823,7 +2824,7 @@ static void MoveFloatingBoxes (PtrBox pBlock, int y, int delta, int frame)
   boxes in the current block.
   ----------------------------------------------------------------------*/
 int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
-	      ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
+	      int maxWidth, ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
 	      ThotBool notComplete, ThotBool *full, ThotBool *adjust,
 	      ThotBool *breakLine, int frame, int indent,
 	      int top, int bottom, int left, int right,
@@ -2956,7 +2957,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   else
     *floatR = box;
   pNextBox = GetNextBox (box->BxAbstractBox, frame);
-  ret=  FillLine (pLine, pNextBox, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
+  ret=  FillLine (pLine, pNextBox, pBlock, pRootAb, maxWidth,
+		  extensibleBlock, xAbs, yAbs,
 		  notComplete, full, adjust, breakLine, frame, indent,
 		  top, bottom, left, right, floatL, floatR);
   /* integrate information about previous inserted boxes */
@@ -3248,19 +3250,19 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
  /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
-  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L29"))
-  // printf ("ComputeLines \n");
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
       /* limit to the enclosing box */
       if (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
-	while (pParent && pParent->AbBox &&
-	       ((pParent->AbWidth.DimAbRef == NULL &&
-		 pParent->AbWidth.DimValue == -1) ||
-		pParent->AbBox->BxType == BoGhost ||
-		pParent->AbBox->BxType == BoFloatGhost))
-	  pParent = pParent->AbEnclosing;
+	{
+	  while (pParent && pParent->AbBox &&
+		 ((pParent->AbWidth.DimAbRef == NULL &&
+		   pParent->AbWidth.DimValue == -1) ||
+		  pParent->AbBox->BxType == BoGhost ||
+		  pParent->AbBox->BxType == BoFloatGhost))
+	    pParent = pParent->AbEnclosing;
+	}
       if (pParent && pParent->AbBox &&
 	  pParent->AbBox->BxType != BoCell)
 	/* keep the box width */
@@ -3333,6 +3335,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
   standard = (spacing >= 0);
   spacing = 0;
+  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L138"))
+  // printf ("=======>ComputeLines w=%d max=%d \n",pBox->BxW,pBox->BxMaxWidth);
   if (pBox->BxW > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
     {
       /* compute the indent */
@@ -3461,7 +3465,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      else
 		pLine->LiFirstBox = pNextBox;
 	      /* Fill the line */
-	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, extensibleBox,
+	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
+				   extensibleBox,
 				   xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   indent, top, bottom, left, right,
@@ -3632,6 +3637,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* compute minimum and maximum width of the paragraph
 	 with no limit as an extensible line*/
       pBox->BxW = maxWidth;
+      maxWidth =  30 * DOT_PER_INCH;
+      extensibleBox = TRUE;
       if (pNextBox && !pNextBox->BxAbstractBox->AbHorizEnclosing)
 	do
 	  if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
@@ -3644,15 +3651,15 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	{
 	  GetLine (&pLine);
 	  do
-	    {	      
+	    {
 	      /* no limit as an extensible line */
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = NULL;
 	      pLine->LiLastBox = NULL;
 	      pLine->LiLastPiece = NULL;
 	      pLine->LiYOrg = *height;
-	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, extensibleBox,
-				   xAbs, yAbs, pAb->AbTruncatedTail,
+	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
+				   extensibleBox, xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   0, top, bottom, left, right,
 				   &floatL, &floatR);
@@ -3667,7 +3674,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  else
 		    pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox, frame);
 		}
-	      noWrappedWidth = pLine->LiRealLength;
+	      noWrappedWidth += pLine->LiRealLength;
 	      if (noWrappedWidth > pBox->BxMaxWidth)
 		pBox->BxMaxWidth = noWrappedWidth;
 	      pLine->LiRealLength = 0;
@@ -3695,6 +3702,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
   *height = *height + spacing;
+  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L138"))
+  //printf ("<======ComputeLines w=%d max=%d \n",pBox->BxW,pBox->BxMaxWidth);
+
   /* restore the value */
   pBox->BxCycles--;
 }

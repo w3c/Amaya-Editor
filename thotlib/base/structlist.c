@@ -1843,9 +1843,9 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	       {
 		 fprintf (fileDescriptor, " Rule-Width:");
 		 wrnumber (pBox->BxRuleWidth, fileDescriptor);
-		 fprintf (fileDescriptor, " Content-Width:");
-		 wrnumber (pBox->BxMaxWidth, fileDescriptor);
 	       }
+	     fprintf (fileDescriptor, " Max-Width:");
+	     wrnumber (pBox->BxMaxWidth, fileDescriptor);
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)

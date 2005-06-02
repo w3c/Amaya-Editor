@@ -951,20 +951,21 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
   int                 hfont;
 
   hfont = FontHeight (pfont);
-  *height = hfont * 2;
+  //*height = hfont * 2;
+  *height = hfont;
   switch (pAb->AbShape)
     {
     case 'd':	/* double integral */
       *width = StixIntegralWidth (*height, 2);
-      *height *= 2;
+      //*height *= 2;
       break;
     case 'i':	/* integral */
       *width = StixIntegralWidth (*height, 0);
-      *height *= 2;
+      //*height *= 2;
       break;
     case 'c':	/* circle integral */
       *width = StixIntegralWidth (*height, 1);
-      *height *= 2;
+      //*height *= 2;
       break;
     case '(':
     case ')':

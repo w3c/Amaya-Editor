@@ -2262,12 +2262,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    {
 	      /* the height depends on the parent height
 		 when the parent height depends on its contents */
-	      if (pAb->AbVertPos.PosAbRef != pAb->AbEnclosing)
+	      if (pAb->AbVertPos.PosAbRef != pParentAb)
 		/* this cannnot work */
 		pChildAb = NULL;
 	      else
 		pChildAb = pParentAb->AbFirstEnclosed;
-	      while (pChildAb && pChildAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+	      while (pChildAb &&
+		     (pChildAb->AbDead ||
+		      pChildAb->AbHeight.DimAbRef == pAb->AbEnclosing))
 		pChildAb = pChildAb->AbNext;
 	      if (pChildAb == NULL ||
 		  (pParentAb->AbBox &&
@@ -2276,8 +2278,40 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		    pParentAb->AbBox->BxType == BoGhost)))
 		{
 		  /* all child heights depend on the parent height */
-		  pDimAb->DimAbRef = NULL;
-		  pDimAb->DimValue = -1;
+		  if (pAb->AbLeafType == LtSymbol)
+		    {
+		      pParentAb->AbHeight.DimValue = 10;
+		      pParentAb->AbHeight.DimUnit = UnRelative;
+		      ResizeHeight (pParentAb->AbBox, pParentAb->AbBox,NULL,
+				    BoxFontHeight (pBox->BxFont, 'G') - pParentAb->AbBox->BxH,
+				    0, 0, frame);
+		    }
+		  else
+		    {
+		      pDimAb->DimAbRef = NULL;
+		      pDimAb->DimValue = -1;
+		    }
+		}
+	    }
+	  else if (!horizRef && pDimAb->DimAbRef == NULL &&
+		   pDimAb->DimUnit != UnAuto &&
+		   pDimAb->DimValue == -1 &&
+		   pAb->AbLeafType == LtCompound)
+	    {
+	      /* the height depends on its contents, check if it only
+		 includes one child which takes the encosing height */
+	      pChildAb = pAb->AbFirstEnclosed;
+	      while (pChildAb &&
+		     (pChildAb->AbDead || pChildAb->AbHeight.DimAbRef == pAb))
+		pChildAb = pChildAb->AbNext;
+	      if (pAb->AbFirstEnclosed && pChildAb == NULL &&
+		  (pAb->AbFirstEnclosed->AbLeafType == LtSymbol ||
+		   pAb->AbFirstEnclosed->AbLeafType == LtText) &&
+		  pAb->AbFirstEnclosed->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+		  pAb->AbFirstEnclosed->AbHeight.DimAbRef == pAb)
+		{
+		  pDimAb->DimValue = 10;
+		  pDimAb->DimUnit = UnRelative;
 		}
 	    }
 

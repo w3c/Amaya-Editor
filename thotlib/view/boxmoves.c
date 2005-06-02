@@ -3690,60 +3690,59 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	    {
 	      /* look for the box which relies the box to its enclosing */
 	      pRelativeBox = GetVPosRelativeBox (pChildBox, NULL);
-	      if (pRelativeBox != NULL)
-		if (pRelativeBox->BxAbstractBox != NULL)
-		  {
-		    pRelativeAb = pRelativeBox->BxAbstractBox;
-		    /* register the abstract box which gives the height */
-		    pRefAb = pChildAb->AbHeight.DimAbRef;
-		    if (pRelativeAb->AbVertPos.PosAbRef == NULL)
-		      {
-			/* mobile box */
-			movingChild = TRUE;
-			/* minimum value */
-			if (pChildBox->BxYOrg < top)
-			  top = pChildBox->BxYOrg;
-			i = pChildBox->BxYOrg + pChildBox->BxHeight;
-		      }
-		    /* the box position depends on the enclosing height? */
-		    else if (pRelativeAb->AbVertPos.PosAbRef == pAb
-			     && (pRelativeAb->AbVertPos.PosRefEdge != Top
-				 || (pRelativeAb->AbHeight.DimAbRef == pAb
-				     && !pRelativeAb->AbHeight.DimIsPosition
-				     && pChildAb->AbVertPos.PosRefEdge != Top)))
-		      i = y + pChildBox->BxHeight;
-		    /* the box height depends on a not included box? */
-		    else if (pChildBox->BxHOutOfStruct)
-		      {
-			/* which itself inherits form the enclosing? */
-			if (IsParentBox (pRefAb->AbBox, pBox)
-			    && pRefAb->AbHeight.DimAbRef == NULL
-			    && pRefAb->AbHeight.DimValue < 0
-			    && pRefAb->AbBox->BxHeight == pBox->BxHeight)
-			  i = y;
-			else if (pChildBox->BxYOrg < y)
-			  /* don't take into account negative origins */
-			  i = y + pChildBox->BxHeight;
-			else
-			  i = pChildBox->BxYOrg + pChildBox->BxHeight;
-		      }
-		    else if (pChildBox->BxYOrg < y)
-		      /* don't take into account negative origins */
-		      i = y + pChildBox->BxHeight;
-		    else
+	      if (pRelativeBox && pRelativeBox->BxAbstractBox)
+		{
+		  pRelativeAb = pRelativeBox->BxAbstractBox;
+		  /* register the abstract box which gives the height */
+		  pRefAb = pChildAb->AbHeight.DimAbRef;
+		  if (pRelativeAb->AbVertPos.PosAbRef == NULL)
+		    {
+		      /* mobile box */
+		      movingChild = TRUE;
+		      /* minimum value */
+		      if (pChildBox->BxYOrg < top)
+			top = pChildBox->BxYOrg;
 		      i = pChildBox->BxYOrg + pChildBox->BxHeight;
-		    if (pChildAb->AbNext == NULL &&
-			pBox->BxBBorder + pBox->BxBPadding == 0)
-		      {
-			/* collapsing margins */
-			if (pChildBox->BxBMargin > pBox->BxBMargin)
-			  i -= pBox->BxBMargin;
-			else
-			  i -= pChildBox->BxBMargin;
-		      }
-		    if (i > height)
-		      height = i;
-		  }
+		    }
+		  /* the box position depends on the enclosing height? */
+		  else if (pRelativeAb->AbVertPos.PosAbRef == pAb &&
+			   (pRelativeAb->AbVertPos.PosRefEdge != Top ||
+			    (pRelativeAb->AbHeight.DimAbRef == pAb &&
+			     !pRelativeAb->AbHeight.DimIsPosition &&
+			     pChildAb->AbVertPos.PosRefEdge != Top)))
+		    i = y + pChildBox->BxHeight;
+		  /* the box height depends on a not included box? */
+		  else if (pChildBox->BxHOutOfStruct)
+		    {
+		      /* which itself inherits form the enclosing? */
+		      if (IsParentBox (pRefAb->AbBox, pBox)
+			  && pRefAb->AbHeight.DimAbRef == NULL
+			  && pRefAb->AbHeight.DimValue < 0
+			  && pRefAb->AbBox->BxHeight == pBox->BxHeight)
+			i = y;
+		      else if (pChildBox->BxYOrg < y)
+			/* don't take into account negative origins */
+			i = y + pChildBox->BxHeight;
+		      else
+			i = pChildBox->BxYOrg + pChildBox->BxHeight;
+		    }
+		  else if (pChildBox->BxYOrg < y)
+		    /* don't take into account negative origins */
+		    i = y + pChildBox->BxHeight;
+		  else
+		    i = pChildBox->BxYOrg + pChildBox->BxHeight;
+		  if (pChildAb->AbNext == NULL &&
+		      pBox->BxBBorder + pBox->BxBPadding == 0)
+		    {
+		      /* collapsing margins */
+		      if (pChildBox->BxBMargin > pBox->BxBMargin)
+			i -= pBox->BxBMargin;
+		      else
+			i -= pChildBox->BxBMargin;
+		    }
+		  if (i > height)
+		    height = i;
+		}
 	    }
 	  pChildAb = pChildAb->AbNext;
 	}

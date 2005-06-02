@@ -1184,16 +1184,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		  if (stretchable)
 		    /* the operator contains only stretchable symbols */
 		    {
-		      /* attach a IntVertStretch attribute */
-		      attrType.AttrSSchema = MathMLSSchema;
-		      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-		      attr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (el, attr, doc);
-		      TtaSetAttributeValue (attr,
-					   MathML_ATTR_IntVertStretch_VAL_yes_,
-					   el, doc);
-		      TtaRegisterAttributeCreate (attr, el, doc);
-		      
 		      /* replace the stretchable characters by a Thot SYMBOL
 			 element. If there are several such characters in
 			 the mo (multiple integral for instance), replace
@@ -1265,6 +1255,16 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			}
 		      while (textEl);
 		      
+
+		      /* attach a IntVertStretch attribute */
+		      attrType.AttrSSchema = MathMLSSchema;
+		      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr,
+					   MathML_ATTR_IntVertStretch_VAL_yes_,
+					   el, doc);
+		      TtaRegisterAttributeCreate (attr, el, doc);
 		      if (inbase)
 			/* it's within a Base or UnderOverBase element */
 			{
@@ -1296,12 +1296,11 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 					 reformatted and to take into account
 					 its new next sibling */
 				      TtaRemoveTree (parent, doc);
-				      TtaInsertSibling (parent, sibling, TRUE,
-							doc);
+				      TtaInsertSibling (parent, sibling, TRUE, doc);
 				    }
 				}
 			    }
-			} 
+			}
 		    }
 		}
 	    }
