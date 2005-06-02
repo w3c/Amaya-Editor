@@ -1574,6 +1574,30 @@ TextTRANSLATE
 	'\76' -> '&gt;'; 	{ greater-than sign, U+003E ISOnum }
 	END;
 
+SymbTRANSLATE
+        BEGIN
+	'c'  -> '&conint;';	{ U+222E  contour integral }
+	'd'  -> '&Int;';	{ U+222C  double integral }
+	'h'  -> '&OverBar;';	{ U+00AF  overline }
+	'i'  -> '&int;';	{ U+222B  integral }
+	'o'  -> '&OverBrace;';	{ U+FE37  over brace }
+	'r'  -> '&Sqrt;';	{ U+221A  square root }
+	'u'  -> '&UnderBrace;';	{ U+FE38  under brace }
+	'v'  -> '&vert;';	{ U+007C  vertical line }
+	'D'  -> '&DoubleVerticalBar;';	{ U+2225  double vertical line }
+	'I'  -> '&Intersection;';	{ U+22C2  n-ary intersection }
+	'L'  -> '&LeftArrow;';	{ U+2190  leftwards arrow }
+	'P'  -> '&Product;';	{ U+220F  n-ary product }
+	'R'  -> '&RightArrow;';	{ U+2192  rightwards arrow }
+	'S'  -> '&Sum;';	{ U+2211  n-ary summation }
+	'U'  -> '&Union;';	{ U+22C3  n-ary union }
+	'V'  -> '&DownArrow;';	{ U+2193  downwards arrow }
+	'^'  -> '&UpArrow;';	{ U+2191  upwards arrow }
+	'|'  -> '&VerticalBar;';	{ U+2223  divides }
+	'<'  -> '&#x27E8;';	{ U+27E8  mathematical left angle bracket }
+	'>'  -> '&#x27E9;';	{ U+27E9  mathematical right angle bracket }
+	END;
+
 GRAPHTRANSLATE
 	BEGIN
 	'v'	-> '|';

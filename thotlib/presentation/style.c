@@ -1150,7 +1150,12 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
     }
   else if (ctxt->type)
     /* we are now sure that only elements are concerned */
-    *chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
+    {
+      if (tsch->PsElemPRule)
+	*chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
+      else
+	return (NULL);
+    }
   else
     return (NULL);
 
