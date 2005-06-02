@@ -136,7 +136,6 @@ typedef struct _Window_Ctl {
   int        MenuItemUndo;              /* Menu including the Undo command or -1  */
   int        MenuItemRedo;              /* Menu including the Redo command or -1  */
   int        MenuItemShowPanelID;       /* show/hide panel menu item ID or -1     */
-  int        MenuItemFullScreenID;      /* fullscreen on/off menu item ID or -1   */
 
 } Window_Ctl;
 

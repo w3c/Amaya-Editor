@@ -357,9 +357,6 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
           /* Is it the "Show/Hide panel" command */
           if (!strcmp (MenuActionList[item_action].ActionName, "ShowPanel"))
             WindowTable[window_id].MenuItemShowPanelID = item_id;
-          /* Is it the "Fullscreen on/off" command */
-          else if (!strcmp (MenuActionList[item_action].ActionName, "FullScreen"))
-            WindowTable[window_id].MenuItemFullScreenID = item_id;
           /* Is it the "Paste" command */
           else if (!strcmp (MenuActionList[item_action].ActionName, "PasteBuffer"))
             WindowTable[window_id].MenuItemPaste = item_id;
