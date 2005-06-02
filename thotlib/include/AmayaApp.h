@@ -29,6 +29,8 @@ public:
   void RegisterOpenURLCallback( OpenURLCallback callback );
   void CallOpenURLCallback( char * url );
 
+  int FilterEvent(wxEvent& event);
+
 #ifdef _GL
   static int * GetGL_AttrList();
 #endif /* _GL */

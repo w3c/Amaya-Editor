@@ -518,6 +518,25 @@ void AmayaApp::DestroyAmayaLogDebug()
 
 #endif /* #ifdef __WXDEBUG__ */
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  FilterEvent
+ * Description:  This function is called before processing any event and allows the 
+ *               application to preempt the processing of some events. If this method
+ *               returns -1 the event is processed normally, otherwise either true or
+ *               false should be returned and the event processing stops immediately
+ *               considering that the event had been already processed (for the former
+ *               return value) or that it is not going to be processed at all
+ *               (for the latter one).
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaApp::FilterEvent(wxEvent& event)
+{
+  //  if (event.GetEventType() == wxEVT_CHAR)
+  //    TTALOGDEBUG_1( TTA_LOG_MISC, _T("AmayaApp::FilterEvent type=%d"), event.GetEventType());
+  return -1;
+}
 
   
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
