@@ -2089,20 +2089,25 @@ void TtaUnlockTableFormatting ()
 	  while (i >= 0)
 	    {
 	      table = pLockRel->LockRTable[i];
-	      if (table && table->AbElement)
+	      if (table && table->AbElement &&
+		  table->AbLeafType == LtCompound &&
+		  table->AbBox && table->AbBox->BxType == BoTable)
 		{
 		  cell = pLockRel->LockRCell[i];
 		  if (IsDead (table))
 		    /* nothing to do more on this table */
 		    pLockRel->LockRTable[i] = NULL;
-		  /* there is a change within a specific cell */
-		  CheckedTable = table;
-		  if (cell && cell->AbBox)
-		    /* there is a change within a specific cell */
-		    SetCellWidths (cell, table, pLockRel->LockRFrame[i]);
 		  else
-		    SetTableWidths (table, pLockRel->LockRFrame[i]);
-		  CheckedTable = NULL;
+		    {
+		      /* there is a change within a specific cell */
+		      CheckedTable = table;
+		      if (cell && cell->AbBox)
+			/* there is a change within a specific cell */
+			SetCellWidths (cell, table, pLockRel->LockRFrame[i]);
+		      else
+			SetTableWidths (table, pLockRel->LockRFrame[i]);
+		      CheckedTable = NULL;
+		    }
 		}
 	      /* next entry */
 	      i--;
@@ -2125,7 +2130,9 @@ void TtaUnlockTableFormatting ()
 	  while (i < MAX_RELAT_DIM)
 	    {
 	      table = pLockRel->LockRTable[i];
-	      if (table && table->AbElement)
+	      if (table && table->AbElement &&
+		  table->AbLeafType == LtCompound &&
+		  table->AbBox && table->AbBox->BxType == BoTable)
 		{
 		  CheckedTable = table;
 		  CheckTableWidths (table, pLockRel->LockRFrame[i], FALSE);
@@ -2156,8 +2163,11 @@ void TtaUnlockTableFormatting ()
 	  while (i >= 0)
 	    {
 	      table = pLockRel->LockRTable[i];
-	      if (table && table->AbElement)
+	      if (table && table->AbElement &&
+		  table->AbLeafType == LtCompound &&
+		  table->AbBox && table->AbBox->BxType == BoTable)
 		{
+		  /* it's still a table */
 		  cell = pLockRel->LockRCell[i];
 		  if (cell)
 		    HeightPack (cell, cell->AbBox,

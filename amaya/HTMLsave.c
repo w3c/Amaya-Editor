@@ -1463,6 +1463,7 @@ void RestartParser (Document doc, char *localFile,
   TtaCancelSelection (doc);
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
+  TtaClearUndoHistory (doc);
   /* Store the document profile if it has been modified */
   profile = TtaGetDocumentProfile (doc);
   if (profile != parsingLevel)
