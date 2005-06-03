@@ -78,7 +78,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
      return 0;
 #endif
 
-#if defined(_GTK) || (defined(_WX) && !defined(_WINDOWS))
+#if defined(_GTK) || (defined(_WX) && !defined(_WINDOWS) && !defined(_MACOS))
   XftPattern	*match, *pat;
   XftResult     result;
   char	        *s;

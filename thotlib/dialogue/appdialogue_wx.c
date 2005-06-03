@@ -366,7 +366,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
           /* Is it the "Redo" command */
           else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
             WindowTable[window_id].MenuItemRedo = item_id;
-#if defined (_MACOS) && defined (_WX) 
+#if defined (_MACOS) 
           /* this is for the MacOSX default lookandfeel */
           else if (!strcmp (MenuActionList[item_action].ActionName, "HelpAmaya"))
             wxApp::s_macAboutMenuItemId = item_id;
@@ -374,7 +374,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
             wxApp::s_macPreferencesMenuItemId = item_id;
           else if (!strcmp (MenuActionList[item_action].ActionName, "AmayaClose"))
             wxApp::s_macExitMenuItemId = item_id;
-#endif /* _MACOS && _WX */
+#endif /* _MACOS */
         }
       
       if ( p_menu_item &&

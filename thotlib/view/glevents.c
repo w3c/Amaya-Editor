@@ -22,7 +22,7 @@
 #include <gtkgl/gtkglarea.h>
 #endif /* _WINGUI*/
 
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
 #include <gl.h>
 #else /* _MACOS */
 #include <GL/gl.h>

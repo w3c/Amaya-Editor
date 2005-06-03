@@ -119,7 +119,7 @@ static ThotBool PrintingGL = FALSE;
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
 
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
 #include <gl.h>
 #else /* _MACOS */
 #include <GL/gl.h>

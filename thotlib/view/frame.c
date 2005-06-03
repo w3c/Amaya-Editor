@@ -49,7 +49,7 @@
 #include "buildlines_f.h"
 #include "memory_f.h"
 
-#ifdef _GL
+#if defined (_MACOS) && defined (_WX)
 #ifdef _MACOS
 #include <gl.h>
 #include <glu.h>
@@ -1415,12 +1415,7 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
                       clipXOfFirstCoordSys, clipYOfFirstCoordSys;
   ThotBool            updatingStatus, formatted;
   ThotBool            not_g_opacity_displayed, not_in_feedback;
-  static int          i;
 
-#ifdef _MACOS
-  i++;
-  printf ("\nDisplayAllBoxes %d\n", i);
-#endif /* _MACOS */
   updatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
 #endif /* _GL */

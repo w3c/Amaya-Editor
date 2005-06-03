@@ -81,8 +81,13 @@
   #include "AmayaFrame.h"
 #endif /* _WX */
 
+#if defined (_MACOS) && defined (_WX)
+#include <gl.h>
+#include <glu.h>
+#else /* _MACOS */
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif /* _MACOS */
 
 #ifndef CALLBACK
 #define CALLBACK
@@ -1269,8 +1274,10 @@ AnimTime ComputeThotCurrentTime (int frame)
       /* while (gtk_events_pending ()) */
       /*   gtk_main_iteration (); */
 
-#if !defined(_MACOS)
+#if defined (_MACOS) && defined (_WX)
       /* TODO: trouver une fonction equivalente sous macosx, ftime n'existe pas sur mac */
+      /* gettimeofday (&after);*/
+#else /* _MACOS */
       ftime (&after);
 #endif /* _MACOS */
 

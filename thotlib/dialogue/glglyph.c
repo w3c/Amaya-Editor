@@ -48,7 +48,7 @@
 #endif /*_SUPERS*/
 
 #define ANTIALIASINGDEPTH 0
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
 #include <glu.h>
 #else /* _MACOS */
 #include <GL/glu.h>

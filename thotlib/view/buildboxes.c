@@ -39,7 +39,7 @@
 #include "appdialogue_tv.h"
 
 #ifdef _GL
-#ifdef _MACOS
+#if defined (_MACOS) && defined (_WX)
 #include <gl.h>
 #else /* _MACOS */
 #include <GL/gl.h>
