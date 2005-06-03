@@ -20,7 +20,7 @@
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_CLOSE">
               <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
-              <style>wxNO_BORDER</style>
+              <style platform="unix|win">wxNO_BORDER</style>
             </object>
             <option>0</option>
             <flag>wxALIGN_CENTRE</flag>
