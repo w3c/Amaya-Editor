@@ -45,7 +45,6 @@
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaCallback.h"
-//#include "AmayaTextGraber.h"
 #include "AmayaScrollBar.h"
 #include "AmayaFileDropTarget.h"
 
