@@ -24,7 +24,7 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	  @LIBS@ @EXTRA_LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
           $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
-CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.profiles\
+CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles\
 	    *-amayadialogue *-amayamsg *-libdialogue \
 	    amaya.emacs annot.schemas *.rdf fonts.* gtkrc
 
