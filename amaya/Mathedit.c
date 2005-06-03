@@ -2420,7 +2420,8 @@ static ThotBool MathMoveForward ()
   elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     return (FALSE);
-  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
     /* the caret is in a character string */
     {
       len = TtaGetElementVolume (el);
@@ -2526,7 +2527,8 @@ static ThotBool MathMoveForward ()
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+			  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
 			/* put the caret before the first character in the
 			   string */
 			TtaSelectString (doc, leaf, 1, 0);
@@ -2569,7 +2571,8 @@ static ThotBool MathMoveBackward ()
   elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     return (FALSE);
-  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
     /* the caret is in a text string */
     {
       if (firstChar > 1)
@@ -2667,7 +2670,8 @@ static ThotBool MathMoveBackward ()
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+			  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
 			/* put the caret at the end of the string */
 			{
 			  len = TtaGetElementVolume (leaf);

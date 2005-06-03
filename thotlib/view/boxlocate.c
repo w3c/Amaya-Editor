@@ -282,6 +282,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			nChars = LastSelectedElement->ElVolume + 1;
 		    }
 		}
+	      else if (pAb->AbLeafType == LtSymbol && !extend)
+		{
+		  pos = x - xOrg;
+		if (pos < width/2)
+		  nChars = 1;
+		else
+		  nChars = 2;
+		}
 	    }
 	  else
 	    {

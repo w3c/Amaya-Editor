@@ -546,8 +546,8 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
-  if(!TtaHandleUnicodeKey(event))
-    if(!TtaHandleSpecialKey(event))
+  if (!TtaHandleUnicodeKey(event))
+    if (!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
 	event.Skip();
 }
@@ -564,10 +564,10 @@ bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
 {
   if ((event.GetUnicodeKey()!=0) && !IsSpecialKey(event.GetKeyCode()) && !event.ControlDown() && !event.AltDown())
     {
-      wxWindow *       p_win_focus         = wxWindow::FindFocus();
-      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-	  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      wxWindow *   p_win_focus         = wxWindow::FindFocus();
+      wxTextCtrl * p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox * p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl * p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
       // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
       if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
 	{

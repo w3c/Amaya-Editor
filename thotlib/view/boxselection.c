@@ -526,6 +526,11 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	      else if (firstChar > 1 && lastChar == 0)
 		lastChar = pAb->AbVolume;
 	    }
+	  else if (pAb->AbLeafType == LtSymbol)
+	    {
+	      if (SelPosition)
+		lastChar = firstChar - 1;
+	    }
 	  else if (!graphSel && pAb->AbLeafType != LtPicture)
 	    firstChar = 0;
 	  
@@ -535,7 +540,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	  pViewSel = &pFrame->FrSelectionBegin;
 	  pViewSelEnd = &pFrame->FrSelectionEnd;
 	  if (firstChar == 0 || pAb->AbVolume == 0 ||
-	      graphSel || pAb->AbLeafType == LtPicture)
+	      graphSel || pAb->AbLeafType == LtPicture ||
+	      pAb->AbLeafType == LtSymbol)
 	    {
 	      /* selection of a whole box or one position within
 		 a picture or a polyline */
@@ -550,7 +556,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	      if (startSelection)
 		{
 		  pViewSel->VsBox = pBox;
-		  if (endSelection && !graphSel && pAb->AbLeafType != LtPicture)
+		  if (endSelection && !graphSel &&
+		      pAb->AbLeafType != LtPicture && pAb->AbLeafType != LtSymbol)
 		    /* select the whole box */
 		    pViewSel->VsIndBox = 0;
 		  else
@@ -559,6 +566,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  pViewSel->VsBuffer = pBuffer;
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
+		    pViewSel->VsXPos = l + pBox->BxW;
+		  else if (pAb->AbLeafType == LtSymbol && firstChar > 1)
 		    pViewSel->VsXPos = l + pBox->BxW;
 		  else if (pAb->AbLeafType == LtCompound)
 		    /* select the whole compound box including paddings, etc. */
@@ -590,9 +599,14 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  else if (pAb->AbLeafType == LtSymbol && firstChar == 0)
 		    /* select the right side of the picture or symbol */
 		    pViewSelEnd->VsXPos = l + pBox->BxW;
-		  else if (!SelPosition && pAb->AbLeafType == LtSymbol)
-		    /* select the right side of the picture or symbol */
-		    pViewSelEnd->VsXPos = l + pBox->BxW;
+		  else if (pAb->AbLeafType == LtSymbol)
+		    {
+		      if (!SelPosition)
+			/* select the right side of the picture or symbol */
+			pViewSelEnd->VsXPos = l + pBox->BxW;
+		      else
+			pViewSelEnd->VsXPos = pViewSel->VsXPos + 2;
+		    }
 		  else if (pAb->AbLeafType == LtCompound)
 		    /* select the whole compound box including paddings, etc. */
 		    pViewSelEnd->VsXPos = pBox->BxWidth - r;

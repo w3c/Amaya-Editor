@@ -1389,6 +1389,10 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
 	      FirstSelectedChar > 1 && pEl->ElTextLength > 0)
 	    /* the text leaf is partly selected */
 	    partialSel = TRUE;
+	  else if (pEl->ElLeafType == LtSymbol &&
+	      FirstSelectedChar >= 1 && pEl->ElVolume > 0)
+	    /* the text leaf is partly selected */
+	    partialSel = TRUE;
 	  else if ((pEl->ElLeafType == LtPolyLine ||
 		    pEl->ElLeafType == LtPath ||
 		    pEl->ElLeafType == LtGraphics) &&
@@ -1424,6 +1428,10 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
 	      LastSelectedChar < pEl->ElTextLength &&
 	      pEl->ElTextLength > 0 && LastSelectedChar > 0)
 	    /* that text leaf is partly selected */
+	    partialSel = TRUE;
+	  else if (pEl->ElLeafType == LtSymbol &&
+	      FirstSelectedChar >= 1 && pEl->ElVolume > 0)
+	    /* the text leaf is partly selected */
 	    partialSel = TRUE;
 	  else if ((pEl->ElLeafType == LtPolyLine ||
 		    pEl->ElLeafType == LtPath ||
@@ -1467,7 +1475,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
       /* indicate that this abstract box is selected to the display module */
       if (pEl == FirstSelectedElement)
 	{
-	  if (pEl->ElLeafType == LtText)
+	  if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
 	    firstChar = FirstSelectedChar;
 	  else if (pEl->ElLeafType == LtPolyLine ||
 		   pEl->ElLeafType == LtPath ||
@@ -1483,7 +1491,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
       
       if (pAb->AbElement == LastSelectedElement)
 	{
-	  if (pEl->ElLeafType == LtText)
+	  if (pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol)
 	    lastChar = LastSelectedChar;
 	  else if (pEl->ElLeafType == LtPolyLine ||
 		   pEl->ElLeafType == LtPath ||
@@ -1983,7 +1991,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
       FixedChar = 0;
       /* If the selected element is empty or is a picture, the new */
       /* selection is simply considered as an insertion position */
-      if ((pEl->ElTerminal && pEl->ElLeafType != LtSymbol &&
+      if ((pEl->ElTerminal &&
 	   (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
 	  (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
 	{
@@ -3074,6 +3082,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	     }
 	   else if (rank > 0 && pEl->ElTerminal &&
 		    (pEl->ElLeafType == LtText ||
+		     pEl->ElLeafType == LtSymbol ||
 		     pEl->ElLeafType == LtPolyLine ||
 		     pEl->ElLeafType == LtPath ||
 		     pEl->ElLeafType == LtGraphics ||

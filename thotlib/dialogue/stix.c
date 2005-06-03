@@ -479,28 +479,34 @@ static int StixIntegralWidth (int height, int type)
   if (height < LOW_CHAR)
     {
       if (type == 0 || type == 2)
-	i = CharacterWidth (0x45, font);
-      if (type == 2)
-	i += i/4; /* double integral, drawn as 2 single integrals */
-      if (type == 1)
+	{
+	  i = CharacterWidth (0x45, font);
+	  if (type == 2)
+	    i += i/4; /* double integral, drawn as 2 single integrals */
+	}
+      else if (type == 1)
 	i = CharacterWidth (0x46, font);
     }
   else if (height < MID_CHAR)
     {
       if (type == 0 || type == 2)
-	i = CharacterWidth (0x21, font);
-      if (type == 2)
-	i += i/4;
-      if (type == 1)
+	{
+	  i = CharacterWidth (0x21, font);
+	  if (type == 2)
+	    i += i/4;
+	}
+      else if (type == 1)
 	i = CharacterWidth (0x23, font);
     }
   else 
     {
       if (type == 0 || type == 2)
-	i = CharacterWidth (0x34, font);
-      if (type == 2)
-	i += i/4;
-      if (type == 1)
+	{
+	  i = CharacterWidth (0x34, font);
+	  if (type == 2)
+	    i += i/4;
+	}
+      else if (type == 1)
 	i = CharacterWidth (0x35, font);
     }
   return i;

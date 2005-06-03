@@ -1544,6 +1544,17 @@ void TtaRemoveAccessKey (Document doc, unsigned int key)
 }
 
 /*----------------------------------------------------------------------
+   TtaCloseShortcutSequence
+   Reset any open shortcut sequence.
+  ----------------------------------------------------------------------*/
+void TtaCloseShortcutSequence ()
+{
+  if (Automata_current)
+    printf ("Close the current sequence\n");
+  Automata_current = NULL;
+}
+
+/*----------------------------------------------------------------------
    TtaListShortcuts
    Produces in a file a human-readable the list of current shortcuts.  
   ----------------------------------------------------------------------*/

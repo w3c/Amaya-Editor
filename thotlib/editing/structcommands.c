@@ -1984,6 +1984,8 @@ void CutCommand (ThotBool save, ThotBool replace)
 			  /* Select the first character or the whole element */
 			  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
 			    SelectPositionWithEvent (pSelDoc, pSel, 1);
+			  else if (pSel->ElTerminal && pSel->ElLeafType == LtSymbol)
+			    SelectPositionWithEvent (pSelDoc, pSel, 1);
 			  else
 			    SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
 			}

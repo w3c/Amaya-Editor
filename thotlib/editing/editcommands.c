@@ -76,6 +76,7 @@ static ThotBool     NewInsert;
 #include "font_f.h"
 #include "frame_f.h"
 #include "geom_f.h"
+#include "input_f.h"
 #include "language_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
@@ -368,6 +369,8 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
   int                 frame;
   ThotBool            notified;
 
+  /* force the end of current shortcut sequence */
+  TtaCloseShortcutSequence ();
   /* No more enclosing cell */
   LastInsertCell = NULL;
   /* current frame for the selection */

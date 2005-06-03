@@ -1933,7 +1933,7 @@ void TtaCheckLostFocus()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void TtaRedirectFocus()
+void TtaRedirectFocus ()
 {
 #ifdef _WX
   int active_frame_id = TtaGiveActiveFrame();
@@ -1953,21 +1953,24 @@ void TtaRedirectFocus()
    - false if the event must be forwarded to parents (event.Skip())
   ----------------------------------------------------------------------*/
 #ifdef _WX
-ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
+ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
 {
-  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) && !event.CmdDown() && !event.AltDown())
+  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) &&
+      !event.CmdDown() && !event.AltDown())
     {
-      wxWindow *       p_win_focus         = wxWindow::FindFocus();
-      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-      wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      wxWindow *p_win_focus = wxWindow::FindFocus();
+      wxTextCtrl *p_text_ctrl = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *p_combo_box = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl *p_spinctrl = wxDynamicCast(p_win_focus, wxSpinCtrl);
       // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
       if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
         {
-          wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
-          wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
+          wxButton *p_button = wxDynamicCast(p_win_focus, wxButton);
+          wxCheckListBox *p_check_listbox = wxDynamicCast(p_win_focus, wxCheckListBox);
           // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
-          if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
+	  int thot_keycode = event.GetKeyCode();
+          if (!(thot_keycode == WXK_SPACE &&
+		 (p_button || p_check_listbox)))
             {
               int thot_keysym = event.GetUnicodeKey();  
               int thotMask = 0;
@@ -1978,7 +1981,7 @@ ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
               
-              if ( ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym) == 3 )
+              if (ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode) == 3)
                 /* if a simple caractere has been entred, give focus to canvas
                  * it resolves accesibility problems when the focus is blocked on a panel */
                 TtaRedirectFocus();
@@ -1987,7 +1990,6 @@ ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
               // the ThotInput action is repeted but nothing is shown on the screen 
               // before the user release the key.
               GL_DrawAll();
-              
               return true;
             }
           else
