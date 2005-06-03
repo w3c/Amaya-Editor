@@ -44,8 +44,8 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
+#ifdef _GL
 #if defined (_MACOS) && defined (_WX)
-#ifdef _MACOS
 #include <gl.h>
 #else /* _MACOS */
 #include <GL/gl.h>
