@@ -60,10 +60,8 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "default.png" ), wxBITMAP_TYPE_PNG );
   m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
 
-#ifndef _MACOS
   XRCCTRL(*this, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
   XRCCTRL(*this, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-#endif /*  _MACOS */
 
   // on windows, the color selector dialog must be complete.
   m_ColourData.SetChooseFull(true);
