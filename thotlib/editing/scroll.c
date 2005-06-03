@@ -47,103 +47,107 @@
   ----------------------------------------------------------------------*/
 void VerticalScroll (int frame, int delta, int selection)
 {
-   int                 y, height;
-   int                 max, width;
-   int                 lframe, hframe;
-   PtrBox              srcbox;
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb;
-   ThotBool            add;
-
-   if (delta != 0)
-     {
-	pFrame = &ViewFrameTable[frame - 1];
-	if (pFrame->FrReady && pFrame->FrAbstractBox)
-	  {
-	     pAb = pFrame->FrAbstractBox;
-	     /* On termine l'insertion courante */
-	     CloseTextInsertion ();
-	     srcbox = pAb->AbBox;
-	     /* Limites du scroll */
-	     if (srcbox != NULL)
-	       {
-		  /* A priori pas de paves ajoutes */
-		  add = FALSE;
-		  /* Au plus, la limite du document + le debordement vertical*/
-		  GetSizesFrame (frame, &lframe, &hframe);
-		  if (pAb->AbTruncatedTail)
-		     max = delta;
-		  else
-		     max = srcbox->BxYOrg + srcbox->BxHeight -
-		                            pFrame->FrYOrg - hframe;
-		  if (pAb->AbTruncatedHead)
-		     y = delta;
-		  else
-		    {
-		       y = -pFrame->FrYOrg;
-		       /* Il faut respecter la marge initiale si elle est
-			  positive */
-		       if (srcbox->BxYOrg < 0)
-			  y += srcbox->BxYOrg;
-		    }
-
-		  /* Le Scroll est possible --> Calcule l'amplitude du Scroll*/
-		  if ((delta > 0 && max > 0) || (delta < 0 && y < 0))
-		    {
-		     if (delta > 0)
-		       {
-			  /* SCROLL forward */
-			  if (delta > max)
-			     delta = max;
-			  y = delta;
-			  height = hframe - y;
-			  if (lframe > srcbox->BxWidth)
-			    /* pay attention to positioning boxes */
-			    width = srcbox->BxWidth;
-			  else
-			    width = lframe + 1;
-			  Scroll (frame, width, height, 0, y, 0, 0);
-			  height = pFrame->FrYOrg + hframe;
-			  DefClip (frame, pFrame->FrXOrg, height,
-				   pFrame->FrXOrg + lframe, 
-				   height + delta);
-			  add = RedrawFrameBottom (frame, delta, NULL);
-		       }
-		     else
-		       {
-			  /* SCROLL backward */
-			  if (delta < y)
-			     delta = y;
-			  height = hframe + delta;
-			  if (lframe > srcbox->BxWidth)
-			    /* pay attention to positioning boxes */
-			    width = srcbox->BxWidth;
-			  else
-			    width = lframe + 1;
-			  y = -delta;
-			  Scroll (frame, width, height, 0, 0, 0, y);
-			  height = pFrame->FrYOrg;
-			  DefClip (frame, pFrame->FrXOrg, height + delta,
-				   pFrame->FrXOrg + lframe, height);
-			  add = RedrawFrameTop (frame, -delta);
-		       }
-		     /* recompute scrolls */
-		     CheckScrollingWidth (frame);
-		     UpdateScrollbars (frame);
-		    }
-
-		  if (selection != 0)
-		     if (add)
-		       {
-			  ClearViewSelMarks (frame);
-			  /* On supprime l'ancienne selection */
-			  ShowSelection (pFrame->FrAbstractBox, FALSE);
-			  /* On reprend la nouvelle */
-			  /* On reallume la selection deja visualisee */
-		       }
-	       }
-	  }
-     }
+  int                 y, height;
+  int                 max, width;
+  int                 lframe, hframe;
+  PtrBox              srcbox;
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb;
+  ThotBool            add;
+  
+  if (delta != 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pFrame->FrReady && pFrame->FrAbstractBox)
+        {
+          pAb = pFrame->FrAbstractBox;
+          /* On termine l'insertion courante */
+          CloseTextInsertion ();
+          srcbox = pAb->AbBox;
+          /* Limites du scroll */
+          if (srcbox != NULL)
+            {
+              /* A priori pas de paves ajoutes */
+              add = FALSE;
+              /* Au plus, la limite du document + le debordement vertical*/
+              GetSizesFrame (frame, &lframe, &hframe);
+              if (pAb->AbTruncatedTail)
+                max = delta;
+              else
+                max = srcbox->BxYOrg + srcbox->BxHeight -
+                  pFrame->FrYOrg - hframe;
+              if (pAb->AbTruncatedHead)
+                y = delta;
+              else
+                {
+                  y = -pFrame->FrYOrg;
+                  /* Il faut respecter la marge initiale si elle est
+                     positive */
+                  if (srcbox->BxYOrg < 0)
+                    y += srcbox->BxYOrg;
+                }
+              
+              /* Le Scroll est possible --> Calcule l'amplitude du Scroll*/
+              if ((delta > 0 && max > 0) || (delta < 0 && y < 0))
+                {
+                  if (delta > 0)
+                    {
+                      /* SCROLL forward */
+                      if (delta > max)
+                        delta = max;
+                      y = delta;
+                      height = hframe - y;
+                      if (lframe > srcbox->BxWidth)
+                        /* pay attention to positioning boxes */
+                        width = srcbox->BxWidth;
+                      else
+                        width = lframe + 1;
+                      Scroll (frame, width, height, 0, y, 0, 0);
+                      height = pFrame->FrYOrg + hframe;
+                      DefClip (frame, pFrame->FrXOrg, height,
+                               pFrame->FrXOrg + lframe, 
+                               height + delta);
+                      add = RedrawFrameBottom (frame, delta, NULL);
+                    }
+                  else
+                    {
+                      /* SCROLL backward */
+                      if (delta < y)
+                        delta = y;
+                      height = hframe + delta;
+                      if (lframe > srcbox->BxWidth)
+                        /* pay attention to positioning boxes */
+                        width = srcbox->BxWidth;
+                      else
+                        width = lframe + 1;
+                      y = -delta;
+                      Scroll (frame, width, height, 0, 0, 0, y);
+                      height = pFrame->FrYOrg;
+                      DefClip (frame, pFrame->FrXOrg, height + delta,
+                               pFrame->FrXOrg + lframe, height);
+                      add = RedrawFrameTop (frame, -delta);
+                    }
+                  /* recompute scrolls */
+                  CheckScrollingWidth (frame);
+                  UpdateScrollbars (frame);
+                }
+              
+              if (selection != 0)
+                if (add)
+                  {
+                    ClearViewSelMarks (frame);
+                    /* On supprime l'ancienne selection */
+                    ShowSelection (pFrame->FrAbstractBox, FALSE);
+                    /* On reprend la nouvelle */
+                    /* On reallume la selection deja visualisee */
+                  }
+            }
+#ifdef _GL
+          /* to be sure the scrolled page has been displayed */
+          GL_Swap( frame );
+#endif /* _GL */
+        }
+    }
 }
 
 
@@ -162,61 +166,65 @@ void HorizontalScroll (int frame, int delta, int selection)
   int                 lframe, hframe;
   PtrBox              srcbox;
   ViewFrame          *pFrame;
-
+  
   if (delta != 0)
     {
       pFrame = &ViewFrameTable[frame - 1];
       if (pFrame->FrReady && pFrame->FrAbstractBox != NULL)
-	{
-	  CloseTextInsertion ();
-	  /* finish the current insertion */
-	  srcbox = pFrame->FrAbstractBox->AbBox;
-	  GetSizesFrame (frame, &lframe, &hframe);
-	  /* FrameTable[frame].FrScrollOrg is negative or null */
-	  min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
-	  /* Right limit is the current scroll width + extra */
-	  max = min + FrameTable[frame].FrScrollWidth - lframe;
-	  /* Left limit is the current scroll width - extra */
-	  /* keep the right margin if the document is smaller than the window*/
-	  if (srcbox->BxXOrg  < 0)
-	    min += srcbox->BxXOrg;
+        {
+          CloseTextInsertion ();
+          /* finish the current insertion */
+          srcbox = pFrame->FrAbstractBox->AbBox;
+          GetSizesFrame (frame, &lframe, &hframe);
+          /* FrameTable[frame].FrScrollOrg is negative or null */
+          min = FrameTable[frame].FrScrollOrg - pFrame->FrXOrg;
+          /* Right limit is the current scroll width + extra */
+          max = min + FrameTable[frame].FrScrollWidth - lframe;
+          /* Left limit is the current scroll width - extra */
+          /* keep the right margin if the document is smaller than the window*/
+          if (srcbox->BxXOrg  < 0)
+            min += srcbox->BxXOrg;
 
-	  if ((delta > 0 && max > 0) || (delta < 0 && min < 0))
-	    {
-	      /* Scroll is possible -> compute the delta */
-	      height = hframe + 1;
-	      if (delta > 0)
-		{
-		  /* Scroll right */
-		  if (delta > max)
-		    delta = max;
-		  x = delta;
-		  width = lframe - x + 1;
-		  Scroll (frame, width, height, x, 0, 0, 0);
-		  width = pFrame->FrXOrg + lframe;
-		  DefClip (frame, width, pFrame->FrYOrg, width + x,
-			   pFrame->FrYOrg + hframe);
-		}
-	      else
-		{
-		  /* Scroll left */
-		  if (delta < min)
-		    delta = min;
-		  x = -delta;
-		  width = lframe - x + 1;
-		  Scroll (frame, width, height, 0, 0, x, 0);
-		  width = pFrame->FrXOrg;
-		  DefClip (frame, width - x, pFrame->FrYOrg, width,
-			   pFrame->FrYOrg + hframe);
-		}
-
-	      /* display the rest of the window */
-	      pFrame->FrXOrg += delta;
-	      RedrawFrameBottom (frame, 0, NULL);
-	      /* recompute the scroll bars */
-	      UpdateScrollbars (frame);
-	    }
-	}
+          if ((delta > 0 && max > 0) || (delta < 0 && min < 0))
+            {
+              /* Scroll is possible -> compute the delta */
+              height = hframe + 1;
+              if (delta > 0)
+                {
+                  /* Scroll right */
+                  if (delta > max)
+                    delta = max;
+                  x = delta;
+                  width = lframe - x + 1;
+                  Scroll (frame, width, height, x, 0, 0, 0);
+                  width = pFrame->FrXOrg + lframe;
+                  DefClip (frame, width, pFrame->FrYOrg, width + x,
+                           pFrame->FrYOrg + hframe);
+                }
+              else
+                {
+                  /* Scroll left */
+                  if (delta < min)
+                    delta = min;
+                  x = -delta;
+                  width = lframe - x + 1;
+                  Scroll (frame, width, height, 0, 0, x, 0);
+                  width = pFrame->FrXOrg;
+                  DefClip (frame, width - x, pFrame->FrYOrg, width,
+                           pFrame->FrYOrg + hframe);
+                }
+              
+              /* display the rest of the window */
+              pFrame->FrXOrg += delta;
+              RedrawFrameBottom (frame, 0, NULL);
+              /* recompute the scroll bars */
+              UpdateScrollbars (frame);
+            }
+#ifdef _GL
+          /* to be sure the scrolled page has been displayed */
+          GL_Swap( frame );
+#endif /* _GL */
+        }
     }
 }
 

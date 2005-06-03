@@ -108,10 +108,6 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
     {
       JumpIntoView (m_ParentFrameID, 0);
     }
-
-  GL_Swap(m_ParentFrameID);
-
-  event.Skip();
 }
 
 /*
@@ -129,10 +125,6 @@ void AmayaScrollBar::OnBottom( wxScrollEvent& event )
     {
       JumpIntoView (m_ParentFrameID, 100);
     }
-
-  GL_Swap(m_ParentFrameID);
-
-  event.Skip();
 }
 
 /*
@@ -163,10 +155,6 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
   // this hack works because OnLineDown is called before OnScroll,
   // but becareful the events orders could change in future wxWidgets releases or can be platform specific
   m_IgnoreNextScrollEvent = TRUE;
-
-  GL_Swap(m_ParentFrameID);
-
-  event.Skip();
 }
 
 /*
@@ -197,10 +185,6 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
   // this hack works because OnLineDown is called before OnScroll,
   // but becareful the events orders could change in future wxWidgets releases or can be platform specific
   m_IgnoreNextScrollEvent = TRUE;
-
-  GL_Swap(m_ParentFrameID);
-
-  event.Skip();
 }
 
 /*
@@ -221,25 +205,20 @@ void AmayaScrollBar::OnScroll( wxScrollEvent& event )
       event.Skip();
       return;
     }
-
+  
   if (event.GetOrientation() == wxHORIZONTAL)
-   {
-     TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxHORIZONTAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );
-     FrameHScrolledCallback( m_ParentFrameID,
-			     event.GetPosition(),
-			     GetPageSize() );
-   }
+    {
+      TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxHORIZONTAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );
+      FrameHScrolledCallback( m_ParentFrameID,
+                              event.GetPosition(),
+                              GetPageSize() );
+    }
   else if (event.GetOrientation() == wxVERTICAL)
     {
       TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxVERTICAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );
       FrameVScrolledCallback( m_ParentFrameID,
-			      event.GetPosition() );
-   }
-  
-  /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-  GL_Swap(m_ParentFrameID);
-
-  event.Skip();
+                              event.GetPosition() );
+    }
 }
 
 /*----------------------------------------------------------------------

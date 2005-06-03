@@ -484,39 +484,39 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
    of the window (coordinate 0) to the bottom (coordinate 100,
    whatever the actual height of the window), position is the
    desired y coordinate of the top of the element.
-  ----------------------------------------------------------------------*/
+   ----------------------------------------------------------------------*/
 void TtaShowElement (Document document, View view, Element element, int position)
 {
   PtrElement          pEl;
   int                 frame;
   int                 aView;
-
+  
   UserErrorCode = 0;
   frame = GetWindowNumber (document, view);
   if (frame != 0)
     {
       if (element == NULL)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else
-	{
-	  if (view < 100)
-	    aView = view;
-	  else
-	    aView = 1;
-	  pEl = (PtrElement) element;
-	  /* If the first abstract box of the element is incomplete,
-	     it is suppressed */
-	  if (pEl->ElAbstractBox[aView - 1] != NULL &&
-	      pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound &&
-	      pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
-	    /* Destroying the abstract box of the element in this view */
-	    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
-				 aView);
-	  /* and CheckAbsBox will rebuild it at the beginning of the element */
-	  CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, TRUE);
-	  if (pEl->ElAbstractBox[aView - 1] != NULL)
-	    ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
-	}
+        {
+          if (view < 100)
+            aView = view;
+          else
+            aView = 1;
+          pEl = (PtrElement) element;
+          /* If the first abstract box of the element is incomplete,
+             it is suppressed */
+          if (pEl->ElAbstractBox[aView - 1] != NULL &&
+              pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound &&
+              pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
+            /* Destroying the abstract box of the element in this view */
+            DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
+                                 aView);
+          /* and CheckAbsBox will rebuild it at the beginning of the element */
+          CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, TRUE);
+          if (pEl->ElAbstractBox[aView - 1] != NULL)
+            ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
+        }
     }
 }
 
