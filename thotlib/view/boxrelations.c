@@ -2452,7 +2452,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				  parent->AbBox->BxType != BoCell &&
 				  ((parent->AbWidth.DimAbRef == NULL &&
 				    parent->AbWidth.DimValue == -1) ||
-				   (parent->AbInLine &&
+				   (inLine &&
 				    pAb->AbDisplay != 'B' &&
 				    pAb->AbDisplay != 'L')))
 				{
