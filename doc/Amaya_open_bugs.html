@@ -10,8 +10,6 @@ body       { background: #fffbf0; color: #000; }
 caption    { font-family: helvetica; font-size: 18;
              font-weight: Bold; text-align: left;}
 tr.title   {  background-color: #FFE9C1; }
-tr.fixed   {  background-color: #aaffaa; }
-tr.done    {  background-color: #aaffaa; }
 th         { width: 80px; }
 th.summary { width: 450px; }
 td.categ   { width: 200px; }
@@ -19,7 +17,8 @@ h1         { font-size: 14;
              text-align: center; }
 p.date     { font-size: 14; 
              text-align: center; }
-h2         {  font-size: 12; }</style>
+h2         {  font-size: 12; }
+.fixed {background-color: #E5E5E5; color: #7F7F7F}</style>
 </head>
 
 <body>
@@ -121,7 +120,7 @@ h2         {  font-size: 12; }</style>
       <td>Bartolomé Sintes Marco</td>
       <td>2005-03-02</td>
     </tr>
-    <tr class="fixed">
+    <tr class="fixed" style="color: #7F7F7F; background-color: #E5E5E5">
       <td>When there is no map created and the first area is created, the
         alternate text attribute of the area is not saved (a window is shown
         to introduce the alt value, but this value is lost).</td>
@@ -154,7 +153,7 @@ h2         {  font-size: 12; }</style>
         position, shape and size as when it was created.</td>
       <td>2004-11-17</td>
       <td>Bartolomé Sintes Marco</td>
-      <td>2005--5-26</td>
+      <td>2005--05-26</td>
     </tr>
     <tr>
       <td>When two areas overlap, the common area links in Amaya to the
@@ -193,7 +192,18 @@ h2         {  font-size: 12; }</style>
       apparently.</td>
       <td>2005-03-18</td>
       <td>Philipp Hoschka</td>
-      <td>2005-034-14</td>
+      <td>2005-04-14</td>
+    </tr>
+    <tr class="fixed">
+      <td>I cannot insert a s with caron.
+
+        <p>When pressed while in the text/source editor, behaves as a hot key
+        to toggle visibility of 'Tools' and thus it's impossible to type it
+        into the text.</p>
+      </td>
+      <td>2005--03</td>
+      <td>Jakub Holý</td>
+      <td>2005-06-03</td>
     </tr>
   </tbody>
   <tbody>
@@ -260,13 +270,6 @@ h2         {  font-size: 12; }</style>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>Bugs associated with the valig attribute within tables (see
-        tablebug4.html)</td>
-      <td>2004-11-30</td>
-      <td>Marius Amado Alves</td>
-      <td>?????</td>
     </tr>
   </tbody>
   <tbody>

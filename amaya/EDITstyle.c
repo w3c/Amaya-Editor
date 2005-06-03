@@ -1067,6 +1067,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
   ----------------------------------------------------------------------*/
 static void UpdateClass (Document doc)
 {
+  DisplayMode         dispMode;
   Attribute           attr;
   AttributeType       attrType;
   Element             el, root, child, title, head, line, prev, styleEl;
@@ -1387,14 +1388,18 @@ static void UpdateClass (Document doc)
        len++;
       }
     TtaInsertTextContent (child, len, (unsigned char *)stylestring, doc);
+
     /* parse and apply this new CSS to the current document */
+    dispMode = TtaGetDisplayMode (doc);
+    TtaSetDisplayMode (doc, NoComputedDisplay);
     ReadCSSRules (doc, NULL, stylestring, NULL,
 		  TtaGetElementLineNumber (child), TRUE, styleEl);
+    TtaSetDisplayMode (doc, dispMode);
     }
   /* free the stylestring now */
   TtaFreeMemory (stylestring);
   stylestring = NULL;
-
+  
   if (!found && el)
     /* Register the created STYLE or child element in the Undo queue */
     TtaRegisterElementCreate (el, doc);
