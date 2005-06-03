@@ -1297,12 +1297,16 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 	{
 	  if (key/*value*/ == THOT_KEY_Escape)
 	    {
+#ifdef _WX
         // check the fullscreen state is enable or not
         // if yes, just disable fullscreen
         if (TtaGetFullScreenState(frame))
           TtaToggleOnOffFullScreen(frame);
         else
           TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+#else /* _WX */
+        TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+#endif /* _WX */
 	      return 0;
 	    }
 	  else if (value == 8 || value == 127)
