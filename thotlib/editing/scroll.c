@@ -373,10 +373,10 @@ int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
   ----------------------------------------------------------------------*/
 void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *height)
 {
-   PtrBox              pBoxFirst;
-   PtrBox              pBoxLast;
+   PtrBox              pBoxFirst, pBoxLast;
    PtrBox              pBox;
    ViewFrame          *pFrame;
+   PtrFlow             pFlow;
    int                 upFrameLimit, lowFrameLimit;
    int                 min, max;
    int                 h, l, htotal;
@@ -513,20 +513,28 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
 		abstraite */
 	     VolumeTree (pFrame->FrAbstractBox, pBoxFirst->BxAbstractBox,
 			 pBoxLast->BxAbstractBox, &min, &max, &vtotal);
-	     /* min donne le volume qui precede l'Picture Concrete */
-	     /* max donne le volume qui suit l'Picture Concrete */
-
-	     /* Calcule le nombre de caracteres representes par un pixel */
+	     /* min gives the volume before the displayed part */
+	     /* max gives the volume after the displayed part */
+	     /* Compute the number of characters represented by a pixel height */
 	     carparpix = (float) vtotal / (float) h;
 	     if (min > 0)
 	       min = (int) ((float) min / carparpix);
 	     if (max > 0)
 	       max = (int) ((float) max / carparpix);
-	     /* Portion du scroll occupee par l'Picture Concrete */
+	     /* slider height representing the displayed part */
 	     h = h - min - max;
 	  }
      }
 
+   /* check if there are extra flow */
+   pFlow = pFrame->FrFlow;
+   while (pFlow)
+     {
+       if (pFlow->FlRootBox && pFlow->FlRootBox->AbBox &&
+	   pFlow->FlRootBox->AbBox->BxHeight > pBox->BxHeight)
+	 pBox->BxHeight = pFlow->FlRootBox->AbBox->BxHeight;
+       pFlow = pFlow->FlNext;
+     }
    /* Rapport hauteur Picture Concrete sur hauteur portion du scroll */
    ratio = (float) h / (float) pBox->BxHeight;
    if (upFrameLimit > 0)

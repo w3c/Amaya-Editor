@@ -2002,8 +2002,8 @@ ThotBool RedrawFrameTop (int frame, int scroll)
   PtrFlow             pFlow;
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
-  int                 xmin, xmax;
-  int                 ymin, ymax;
+  int                 xmin, xmax, xFrame;
+  int                 ymin, ymax, yFrame;
   int                 delta, t, b;
   ThotBool            toadd;  
 
@@ -2050,13 +2050,21 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 					&create, &tVol, &bVol);
 	      /* now display extra flows */
 	      pFlow = pFrame->FrFlow;
+	      /* save current frame origin */
+	      xFrame = pFrame->FrXOrg;
+	      yFrame = pFrame->FrYOrg;
 	      while (pFlow)
 		{
+		  //pFrame->FrXOrg = xFrame + pFlow->FlXStart;
+		  //pFrame->FrYOrg = yFrame + pFlow->FlYStart;
 		  DisplayAllBoxes (frame, pFlow->FlRootBox,
 				   xmin, xmax, ymin, ymax,
 				   &xbox, &t, &b);
 		  pFlow = pFlow->FlNext;
 		}
+	      /* restore current frame origin */
+	      pFrame->FrXOrg = xFrame;
+	      pFrame->FrYOrg = yFrame;
 	    }
 	  
 	  /* The updated area is redrawn */
@@ -2189,8 +2197,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 delta, t, b;
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
-  int                 xmin, xmax;
-  int                 ymin, ymax;
+  int                 xmin, xmax, xFrame;
+  int                 ymin, ymax, yFrame;
   ThotBool            toadd;
 
   /* are new abstract boxes needed */
@@ -2246,13 +2254,21 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 					ymax, &create, &tVol, &bVol);
 	      /* now display extra flows */
 	      pFlow = pFrame->FrFlow;
+	      /* save current frame origin */
+	      xFrame = pFrame->FrXOrg;
+	      yFrame = pFrame->FrYOrg;
 	      while (pFlow)
 		{
+		  //pFrame->FrXOrg = xFrame + pFlow->FlXStart;
+		  //pFrame->FrYOrg = yFrame + pFlow->FlYStart;
 		  DisplayAllBoxes (frame, pFlow->FlRootBox,
 				   xmin, xmax, ymin, ymax,
 				   &xbox, &t, &b);
 		  pFlow = pFlow->FlNext;
 		}
+	      /* restore current frame origin */
+	      pFrame->FrXOrg = xFrame;
+	      pFrame->FrYOrg = yFrame;
 	      /* The updated area is redrawn */
 	      DefClip (frame, 0, 0, 0, 0);
 	      RemoveClipping (frame);

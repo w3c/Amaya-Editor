@@ -1857,17 +1857,18 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
 	  /* Change the Display Mode to take into account the new
 	     presentation */
 	  dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode == DisplayImmediately)
-	    {
-	      /* force the redisplay of this box */
-	      TtaSetDisplayMode (doc, NoComputedDisplay);
-	      TtaSetDisplayMode (doc, dispMode);
-	    }
+	  //printf ("ParseCSSImageCallback Show BGimages\n");
+          /* force the redisplay of this box */
+          TtaSetDisplayMode (doc, NoComputedDisplay);
+	  TtaSetDisplayMode (doc, dispMode);
 	  RedisplayBGImage = FALSE;
 	}
     }
   else
-    RedisplayBGImage = TRUE;
+    {
+      //printf ("ParseCSSImageCallback parsing=%d Images=%d Doc=%d\n", Style_parsing,RedisplayImages,RedisplayDoc);
+      RedisplayBGImage = TRUE;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -6661,6 +6662,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       /* CSS parsing finishes after a BG image was loaded */
       RedisplayBGImage = FALSE;
       RedisplayDoc = 0;
+      //printf ("ReadCSS Show BGimages\n");
       TtaSetDisplayMode (docRef, NoComputedDisplay);
       TtaSetDisplayMode (docRef, dispMode);
     }
