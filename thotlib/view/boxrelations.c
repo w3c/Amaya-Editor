@@ -922,7 +922,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 ThotBool ComputePositioning (PtrBox pBox, int frame)
 {
   PtrAbstractBox      pAb, pRefAb;
-  PtrBox              pRefBox;
+  PtrBox              pRefBox = NULL;
   Positioning        *pos;
   int                 x, y, w, h;
   int                 l, t, r, b;
@@ -933,123 +933,123 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
       pBox->BxAbstractBox->AbPositioning &&
       pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
-
+      
       pAb = pBox->BxAbstractBox;
       pos = pAb->AbPositioning;
       if (pos->PnAlgorithm == PnAbsolute || pos->PnAlgorithm == PnFixed)
-	{
-	  if (pBox->BxType == BoRow || pBox->BxType == BoColumn ||
-	      pBox->BxType == BoCell)
-	    {
-	      pos->PnAlgorithm = PnStatic;
-	      return FALSE;
-	    }
+        {
+          if (pBox->BxType == BoRow || pBox->BxType == BoColumn ||
+              pBox->BxType == BoCell)
+            {
+              pos->PnAlgorithm = PnStatic;
+              return FALSE;
+            }
 
-	  // get the enclosing viewport
-	  pRefAb = GetEnclosingViewport (pAb);
-	  GetSizesFrame (frame, &w, &h);
-	  if (pos->PnAlgorithm == PnFixed)
-	    {
-	      // refer the frame
-	      x = ViewFrameTable[frame - 1].FrXOrg;
-	      y = ViewFrameTable[frame - 1].FrYOrg;
-	    }
-	  else
-	    x = y = 0;
-
-	  if (pRefAb == NULL)
-	    {
-	      pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
-	      pRefBox = pRefAb->AbBox;
-	    }
-	  else if (pRefAb->AbBox)
-	    {
-	      // refer another box
-	      pRefBox = pRefAb->AbBox;
-	      w = pRefBox->BxW;
-	      h = pRefBox->BxH;
-	      x = pRefBox->BxXOrg
-		+ pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
-	      y = pRefBox->BxYOrg
-		+ pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
-	    }
-
-	  /* negative values don't apply */
-	  l = t = r = b = -1;
-	  if (pos->PnLeftUnit == UnAuto)
-	    {
-	      if (pos->PnRightUnit == UnAuto || pos->PnRightUnit == UnUndefined)
-		l = 0;
-	    }
-	  else if (pos->PnLeftUnit == UnPercent)
-	    l = PixelValue (pos->PnLeftDistance, UnPercent, (PtrAbstractBox) w, 0);
-	  else if (pos->PnLeftUnit != UnUndefined)
-	    l = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  if (pos->PnRightUnit != UnAuto && pos->PnRightUnit != UnUndefined)
-	    {
-	      if (pos->PnRightUnit == UnPercent)
-		r = PixelValue (pos->PnRightDistance, UnPercent,
-				(PtrAbstractBox) w, 0);
-	      else
-		r = PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
-				ViewFrameTable[frame - 1].FrMagnification);
-	    }
-	  if (pos->PnTopUnit == UnAuto)
-	    {
-	      if (pos->PnBottomUnit == UnAuto || pos->PnBottomUnit == UnUndefined)
-		t = 0;
-	    }
-	  else if (pos->PnTopUnit == UnPercent)
-	    t = PixelValue (pos->PnTopDistance, UnPercent, (PtrAbstractBox) h, 0);
-	  else if (pos->PnTopUnit != UnUndefined)
-	    t = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  if (pos->PnBottomUnit != UnAuto && pos->PnBottomUnit != UnUndefined)
-	    {
-	      if (pos->PnBottomUnit == UnPercent)
-		b = PixelValue (pos->PnBottomDistance, UnPercent,
-				(PtrAbstractBox) h, 0);
-	      else
-		b = PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-				ViewFrameTable[frame - 1].FrMagnification);
-	    }
-
-	  /* Move also enclosed boxes */
-	  pAb->AbHorizPosChange = FALSE;
-	  pAb->AbVertPosChange = FALSE;
-	  if (l >= 0)
-	    {
-	      pBox->BxXToCompute = TRUE;
-	      pAb->AbHorizEnclosing = FALSE;
-	      pBox->BxXOutOfStruct = TRUE;
-	      XMoveAllEnclosed (pBox, x + l, frame);
-	      if (pRefBox)
-		InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
-	      if (r >= 0)
-		{
-		  pAb->AbWidthChange = FALSE;
-		  r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-		  if (pBox->BxContentWidth)
-		    {
-		      pBox->BxContentWidth = FALSE;
-		    }
-		  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
-		}
-	    }
-	  else if (r >= 0)
-	    {
-	      pBox->BxXToCompute = TRUE;
-	      pAb->AbHorizEnclosing = FALSE;
-	      pBox->BxXOutOfStruct = TRUE;
-	      XMoveAllEnclosed (pBox, x + w - r - pBox->BxWidth, frame);
-	      if (pRefBox)
-		InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
-	      pBox->BxHorizEdge = Right;
-	    }
-	  else
-	    ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
-	  
+          // get the enclosing viewport
+          pRefAb = GetEnclosingViewport (pAb);
+          GetSizesFrame (frame, &w, &h);
+          if (pos->PnAlgorithm == PnFixed)
+            {
+              // refer the frame
+              x = ViewFrameTable[frame - 1].FrXOrg;
+              y = ViewFrameTable[frame - 1].FrYOrg;
+            }
+          else
+            x = y = 0;
+          
+          if (pRefAb == NULL)
+            {
+              pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
+              pRefBox = pRefAb->AbBox;
+            }
+          else if (pRefAb->AbBox)
+            {
+              // refer another box
+              pRefBox = pRefAb->AbBox;
+              w = pRefBox->BxW;
+              h = pRefBox->BxH;
+              x = pRefBox->BxXOrg
+                + pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
+              y = pRefBox->BxYOrg
+                + pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
+            }
+          
+          /* negative values don't apply */
+          l = t = r = b = -1;
+          if (pos->PnLeftUnit == UnAuto)
+            {
+              if (pos->PnRightUnit == UnAuto || pos->PnRightUnit == UnUndefined)
+                l = 0;
+            }
+          else if (pos->PnLeftUnit == UnPercent)
+            l = PixelValue (pos->PnLeftDistance, UnPercent, (PtrAbstractBox) w, 0);
+          else if (pos->PnLeftUnit != UnUndefined)
+            l = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
+                            ViewFrameTable[frame - 1].FrMagnification);
+          if (pos->PnRightUnit != UnAuto && pos->PnRightUnit != UnUndefined)
+            {
+              if (pos->PnRightUnit == UnPercent)
+                r = PixelValue (pos->PnRightDistance, UnPercent,
+                                (PtrAbstractBox) w, 0);
+              else
+                r = PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
+                                ViewFrameTable[frame - 1].FrMagnification);
+            }
+          if (pos->PnTopUnit == UnAuto)
+            {
+              if (pos->PnBottomUnit == UnAuto || pos->PnBottomUnit == UnUndefined)
+                t = 0;
+            }
+          else if (pos->PnTopUnit == UnPercent)
+            t = PixelValue (pos->PnTopDistance, UnPercent, (PtrAbstractBox) h, 0);
+          else if (pos->PnTopUnit != UnUndefined)
+            t = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
+                            ViewFrameTable[frame - 1].FrMagnification);
+          if (pos->PnBottomUnit != UnAuto && pos->PnBottomUnit != UnUndefined)
+            {
+              if (pos->PnBottomUnit == UnPercent)
+                b = PixelValue (pos->PnBottomDistance, UnPercent,
+                                (PtrAbstractBox) h, 0);
+              else
+                b = PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
+                                ViewFrameTable[frame - 1].FrMagnification);
+            }
+          
+          /* Move also enclosed boxes */
+          pAb->AbHorizPosChange = FALSE;
+          pAb->AbVertPosChange = FALSE;
+          if (l >= 0)
+            {
+              pBox->BxXToCompute = TRUE;
+              pAb->AbHorizEnclosing = FALSE;
+              pBox->BxXOutOfStruct = TRUE;
+              XMoveAllEnclosed (pBox, x + l, frame);
+              if (pRefBox)
+                InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
+              if (r >= 0)
+                {
+                  pAb->AbWidthChange = FALSE;
+                  r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+                  if (pBox->BxContentWidth)
+                    {
+                      pBox->BxContentWidth = FALSE;
+                    }
+                  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
+                }
+            }
+          else if (r >= 0)
+            {
+              pBox->BxXToCompute = TRUE;
+              pAb->AbHorizEnclosing = FALSE;
+              pBox->BxXOutOfStruct = TRUE;
+              XMoveAllEnclosed (pBox, x + w - r - pBox->BxWidth, frame);
+              if (pRefBox)
+                InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
+              pBox->BxHorizEdge = Right;
+            }
+          else
+            ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+          
 	  if (t >= 0)
 	    {
 	      pBox->BxYToCompute = TRUE;
@@ -1057,17 +1057,17 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      pBox->BxYOutOfStruct = TRUE;
 	      YMoveAllEnclosed (pBox, y + t, frame);
 	      if (pRefBox)
-		InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
+          InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
 	      if (b >= 0)
-		{
-		  pAb->AbHeightChange = FALSE;
-		  b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-		  if (pBox->BxContentHeight)
-		    {
-		      pBox->BxContentHeight = FALSE;
-		    }
-		  ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
-		}
+          {
+            pAb->AbHeightChange = FALSE;
+            b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+            if (pBox->BxContentHeight)
+              {
+                pBox->BxContentHeight = FALSE;
+              }
+            ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
+          }
 	    }
 	  else if (b >= 0)
 	    {
@@ -1076,28 +1076,28 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      pBox->BxYOutOfStruct = TRUE;
 	      YMoveAllEnclosed (pBox, y + h - b - pBox->BxHeight, frame);
 	      if (pRefBox)
-		InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
+          InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
 	      pBox->BxVertEdge = Bottom;
 	    }
 	  else
 	    ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
 	  return TRUE;
-	}
+        }
       else
-	{
-	  if (pos->PnAlgorithm == PnRelative &&
-	      (pos->PnTopUnit == UnAuto ||
-	       pos->PnTopUnit == UnUndefined) &&
-	      (pos->PnBottomUnit == UnAuto ||
-	       pos->PnBottomUnit == UnUndefined) &&
-	      (pos->PnLeftUnit == UnAuto ||
-	       pos->PnLeftUnit == UnUndefined) &&
-	      (pos->PnRightUnit == UnAuto ||
-	       pos->PnRightUnit == UnUndefined))
-	    /* ignore this relative position */
-	    pos->PnAlgorithm = PnStatic;
-	  return FALSE;
-	}
+        {
+          if (pos->PnAlgorithm == PnRelative &&
+              (pos->PnTopUnit == UnAuto ||
+               pos->PnTopUnit == UnUndefined) &&
+              (pos->PnBottomUnit == UnAuto ||
+               pos->PnBottomUnit == UnUndefined) &&
+              (pos->PnLeftUnit == UnAuto ||
+               pos->PnLeftUnit == UnUndefined) &&
+              (pos->PnRightUnit == UnAuto ||
+               pos->PnRightUnit == UnUndefined))
+            /* ignore this relative position */
+            pos->PnAlgorithm = PnStatic;
+          return FALSE;
+        }
     }
   else
     //#endif /* POSITIONING */

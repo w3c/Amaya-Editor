@@ -440,8 +440,8 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   selected is TRUE when a parent box or the box itself is selected.
   ----------------------------------------------------------------------*/
 void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
-		    int xmin, int xmax, int ymin, int ymax, ThotBool selected,
-		    ThotBool first, ThotBool last, ThotBool topdown)
+                    int xmin, int xmax, int ymin, int ymax, ThotBool selected,
+                    ThotBool first, ThotBool last, ThotBool topdown)
 {
   PtrBox              from;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
@@ -449,22 +449,22 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   ViewFrame          *pFrame;
   ThotPictInfo       *imageDesc;
   PictureScaling      pres;
-  int                 x, y, xd, yd;
+  int                 x, y, xd = 0, yd = 0;
   int                 xbg, ybg;
-  int                 width, height;
+  int                 width = 0, height = 0;
   int                 wbg, hbg;
   int                 w, h, view;
   int                 t, b, l, r;
   ThotBool            setWindow, isLast;
-
+  
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
   else if (pFrom->AbElement == NULL ||
-	   (FrameTable[frame].FrView == 1 &&
-	    TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
-			      pFrom->AbElement->ElStructSchema)))
+           (FrameTable[frame].FrView == 1 &&
+            TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
+                              pFrom->AbElement->ElStructSchema)))
     return;
-
+  
   pFrame = &ViewFrameTable[frame - 1];
   x = pFrame->FrXOrg;
   y = pFrame->FrYOrg;
@@ -477,79 +477,79 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
     {
       /* check the block type to detect what border to apply */
       if (pBox == from && pBox->BxType == BoGhost)
-	{
-	  pParent = pAb->AbEnclosing;
-	  while (pParent && pParent->AbBox &&
-		 pParent->AbBox->BxType == BoGhost)
-	    pParent = pParent->AbEnclosing;
-	  topdown = (pParent && pParent->AbBox &&
-		       pParent->AbBox->BxType == BoFloatBlock);
-	}
+        {
+          pParent = pAb->AbEnclosing;
+          while (pParent && pParent->AbBox &&
+                 pParent->AbBox->BxType == BoGhost)
+            pParent = pParent->AbEnclosing;
+          topdown = (pParent && pParent->AbBox &&
+                     pParent->AbBox->BxType == BoFloatBlock);
+        }
       /* display all children */
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
-	{
-	  /* skip presentation boxes */
-	  pNext = pChild->AbNext;
-	  while (pNext && pNext->AbPresentationBox)
-	    pNext = pNext->AbNext;
-	  isLast = (last && pNext == NULL);
-	  if (pChild->AbBox && !pChild->AbPresentationBox)
-	    {
-	      /* draw each child boxes */
-	      DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin,
-			     ymax, selected, first, isLast, topdown);
-	      first = FALSE;
-	    }
-	  pChild = pNext;
-	}
-     return;
+        {
+          /* skip presentation boxes */
+          pNext = pChild->AbNext;
+          while (pNext && pNext->AbPresentationBox)
+            pNext = pNext->AbNext;
+          isLast = (last && pNext == NULL);
+          if (pChild->AbBox && !pChild->AbPresentationBox)
+            {
+              /* draw each child boxes */
+              DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin,
+                             ymax, selected, first, isLast, topdown);
+              first = FALSE;
+            }
+          pChild = pNext;
+        }
+      return;
     }
   else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
     {
       pBox = pBox->BxNexChild;
       while (pBox)
-	{
-	  isLast = (last && pBox->BxNexChild == NULL);
-	  DrawFilledBox (pBox, pFrom, frame, xmin, xmax, ymin, ymax,
-			 selected, first, isLast, topdown);
-	  pBox = pBox->BxNexChild;
-	  first = FALSE;
-	}
+        {
+          isLast = (last && pBox->BxNexChild == NULL);
+          DrawFilledBox (pBox, pFrom, frame, xmin, xmax, ymin, ymax,
+                         selected, first, isLast, topdown);
+          pBox = pBox->BxNexChild;
+          first = FALSE;
+        }
       return;
     }
-
+  
   if (pBox->BxType == BoGhost && pAb->AbDisplay == 'B')
     {
       GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
       pParent = pAb->AbEnclosing;
       while (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
-	pParent = pParent->AbEnclosing;
+        pParent = pParent->AbEnclosing;
       /* the default area to be painted with the background */
       if (pParent && pParent->AbBox)
-	{
-	  l += pParent->AbBox->BxLMargin;
-	  b += pParent->AbBox->BxBMargin;
-	  t += pParent->AbBox->BxTMargin;
-	  r += pParent->AbBox->BxRMargin;
-	  xd = pParent->AbBox->BxXOrg + l;
-	  yd = pParent->AbBox->BxYOrg + t;
-	  width = pParent->AbBox->BxWidth - l - r;
-	  height = pParent->AbBox->BxHeight - t - b;
-	}
+        {
+          l += pParent->AbBox->BxLMargin;
+          b += pParent->AbBox->BxBMargin;
+          t += pParent->AbBox->BxTMargin;
+          r += pParent->AbBox->BxRMargin;
+          xd = pParent->AbBox->BxXOrg + l;
+          yd = pParent->AbBox->BxYOrg + t;
+          width = pParent->AbBox->BxWidth - l - r;
+          height = pParent->AbBox->BxHeight - t - b;
+        }
     }
   else
     {
       if (pBox == from)
-	{
-	  /* display borders and fill of the current box */
-	  l = pBox->BxLMargin;
-	  b = pBox->BxBMargin;
-	  t = pBox->BxTMargin;
-	  r = pBox->BxRMargin;
-	}
+        {
+          /* display borders and fill of the current box */
+          l = pBox->BxLMargin;
+          b = pBox->BxBMargin;
+          t = pBox->BxTMargin;
+          r = pBox->BxRMargin;
+        }
       else
-	GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
+        GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
       /* the default area to be painted with the background */
       xd = pBox->BxXOrg + l;
       yd = pBox->BxYOrg + t;
@@ -575,38 +575,38 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   /* clipping on the height */
   if (yd + height > ymax)
     height = ymax - yd + 1;
-
+  
   setWindow = (pAb == pFrame->FrAbstractBox);
   if (!setWindow &&
       TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-			pAb->AbElement->ElStructSchema))
+                        pAb->AbElement->ElStructSchema))
     {
       /* paint the whole window background when the fill applies to the document */
       pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
       view = pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView;
       setWindow = (view == 1 &&
-		   (pAb->AbEnclosing == NULL || /* document */
-		    pAb->AbEnclosing->AbEnclosing == NULL || /* html */
-		    (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
-		     pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
+                   (pAb->AbEnclosing == NULL || /* document */
+                    pAb->AbEnclosing->AbEnclosing == NULL || /* html */
+                    (!pAb->AbEnclosing->AbEnclosing->AbFillBox &&
+                     pAb->AbEnclosing->AbEnclosing->AbEnclosing == NULL)) /* body */);
     }
   if (setWindow)
     {
       /* get the maximum of the window size and the root box size */
       if (pBox->BxWidth > w)
-	w = pBox->BxWidth;
+        w = pBox->BxWidth;
       if (pBox->BxHeight > h)
-	h = pBox->BxHeight;
+        h = pBox->BxHeight;
       /* background area */
       wbg = w + 1;
       hbg = h + 1;
       xbg = xmin;
       ybg = ymin;
       if (pFrom->AbFillBox && !selected)
-	/* draw the window background */
-	DrawRectangle (frame, 0, 0, xbg - x, ybg - y, wbg, hbg,
-		       pFrom->AbForeground, pFrom->AbBackground,
-		       pFrom->AbFillPattern);
+        /* draw the window background */
+        DrawRectangle (frame, 0, 0, xbg - x, ybg - y, wbg, hbg,
+                       pFrom->AbForeground, pFrom->AbBackground,
+                       pFrom->AbFillPattern);
     }
   else
     {
@@ -615,48 +615,48 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
       wbg = width;
       hbg = height;
     }
-
+  
   if (setWindow ||
       (width && height &&
        yd + height >= ymin && yd <= ymax &&
        xd + width >= xmin && xd <= xmax))
     {
       DisplayBorders (pBox, pFrom, frame, xd - x, yd - y, width, height,
-		      t, b, l, r, topdown, first, last);
+                      t, b, l, r, topdown, first, last);
       /* draw over the default background and background image */
       if (!topdown || first)
-	t += from->BxTBorder;
+        t += from->BxTBorder;
       if (!topdown || last)
-	b += from->BxBBorder;
+        b += from->BxBBorder;
       if (topdown || first)
-	l += from->BxLBorder;
+        l += from->BxLBorder;
       if (topdown || last)
-	r += from->BxRBorder;
+        r += from->BxRBorder;
       if (!setWindow || pFrom->AbSelected)
-	{
-	  xd = pBox->BxXOrg + l;
-	  yd = pBox->BxYOrg + t;
-	  width = pBox->BxWidth - l - r;
-	  height = pBox->BxHeight - t - b;
-	  /* clipping on the origin */
-	  if (xd < x)
-	    {
-	      width = width - x + xd;
-	      xd = x;
-	    }
-	  if (yd < y)
-	    {
-	      height = height - y + yd;
-	      yd = y;
-	    }
-	  /* clipping on the width */
-	  if (xd + width > xmax)
-	    width = xmax - xd + 1;
-	  /* clipping on the height */
-	  if (yd + height > ymax)
-	    height = ymax - yd + 1;
-	}
-
+        {
+          xd = pBox->BxXOrg + l;
+          yd = pBox->BxYOrg + t;
+          width = pBox->BxWidth - l - r;
+          height = pBox->BxHeight - t - b;
+          /* clipping on the origin */
+          if (xd < x)
+            {
+              width = width - x + xd;
+              xd = x;
+            }
+          if (yd < y)
+            {
+              height = height - y + yd;
+              yd = y;
+            }
+          /* clipping on the width */
+          if (xd + width > xmax)
+            width = xmax - xd + 1;
+          /* clipping on the height */
+          if (yd + height > ymax)
+            height = ymax - yd + 1;
+        }
+      
       imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
         {
@@ -669,24 +669,24 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
         }
       else if (!selected)
-	{
-	  /* don't fill the background when an enclosing box is selected */
-	  if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
-	    /* draw the box background */
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
-			   pFrom->AbForeground, pFrom->AbBackground,
-			   pFrom->AbFillPattern);
-	  if (imageDesc)
-	    {
-	      /* draw the background image the default presentation is repeat */
-	      pres = imageDesc->PicPresent;
-	      if (pres == DefaultPres)
-		pres = FillFrame;
-	      if (pres == YRepeat || pres == FillFrame || !pFrom->AbTruncatedHead)
-		DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
-			     wbg, hbg, t, l);
-	    }
-	}
+        {
+          /* don't fill the background when an enclosing box is selected */
+          if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
+            /* draw the box background */
+            DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
+                           pFrom->AbForeground, pFrom->AbBackground,
+                           pFrom->AbFillPattern);
+          if (imageDesc)
+            {
+              /* draw the background image the default presentation is repeat */
+              pres = imageDesc->PicPresent;
+              if (pres == DefaultPres)
+                pres = FillFrame;
+              if (pres == YRepeat || pres == FillFrame || !pFrom->AbTruncatedHead)
+                DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
+                             wbg, hbg, t, l);
+            }
+        }
     }
 }
 

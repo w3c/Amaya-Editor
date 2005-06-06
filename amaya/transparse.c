@@ -1965,7 +1965,7 @@ static void TRANSparse (BinFile infile)
   unsigned char       charRead, oldcharRead;
   ThotBool            match, readOk;
   PtrTransition       trans;
-
+  
   /* initialize automaton */
   /* parse the input file    */
   readOk = FALSE;
@@ -1980,140 +1980,140 @@ static void TRANSparse (BinFile infile)
       /* read one character from the input file, if the character read */
       /* previously has already been processed */
       if (charRead == EOS)
-	readOk = TtaReadByte(infile,&charRead);
+        readOk = TtaReadByte(infile,&charRead);
       if (readOk)
-	{
-	  if (charRead == '!' && numberOfCharRead == 0)
-	    {
-	      /* reading a comment */
-	      do
-		readOk = TtaReadByte(infile, &charRead);
-	      while (charRead != EOL && readOk);
-	    }
-	}
-
+        {
+          if (charRead == '!' && numberOfCharRead == 0)
+            {
+              /* reading a comment */
+              do
+                readOk = TtaReadByte(infile, &charRead);
+              while (charRead != EOL && readOk);
+            }
+        }
+      
       if (readOk)
-	{
-	  if (charRead == EOL)
-	    {
-	      /* new line in file */
-	      numberOfLinesRead++;
-	      numberOfCharRead = 0;
-	    }
-	  else
-	    numberOfCharRead++;
-	  
-	  /* Check the character read */
-	  /* Ignore end of line , non printable */
-	  if ((int) charRead < 32 ||
-	      ((int) charRead >= 127 && (int) charRead <= 143))
-	    charRead = EOS;
-	  if (charRead != EOS)
-	    {
-	      /* a valid character has been read */
-	      /* first transition of the automaton for the current state */
-	      trans = automaton[CurrentState].firstTransition;
-	      /* search a transition triggered by the character read */
-	      while (trans)
-		{
-		  match = FALSE;
-		  if (charRead == trans->trigger)	/* the char is the trigger */
-		    match = TRUE;
-		  else if (trans->trigger == EOS)	/* any char is a trigger */
-		    match = TRUE;
-		  else if (trans->trigger == SPACE)	/* any space is a trigger */
-		    if ((int) charRead == 9 || (int) charRead == 10 ||
-			(int) charRead == 12 || (int) charRead == 13)	/* a delimiter has been read */
-		      match = TRUE;
-		  if (match)
-		    {
-		      /* transition found. Activate the transition */
-		      /* call the procedure associated with the transition */
-		      normalTransition = TRUE;
-		      if (trans->action)
-			(*(Proc1)(trans->action)) ((void *)charRead);
-		      if (normalTransition)
-			{
-			  /* the input character has been processed */
-			  charRead = EOS;
-			  /* the procedure associated with the transition has not */
-			  /* changed state explicitely */
-			  /* change current automaton state */
-			  if (trans->newState >= 0)
-			    CurrentState = trans->newState;
-			  else if (trans->newState == -1)
-			    /* return form subautomaton */
-			    CurrentState = ReturnState;
-			  else
-			    {
-			      /* calling a subautomaton */
-			      ReturnState = CurrentState;
-			      CurrentState = -trans->newState;
-			    }
-			}
-		      else
-			{
-			  /* an error has been found skiParseding the transformation */
-			  readOk = TtaReadByte (infile, &oldcharRead);
-			  if (readOk)
-			    readOk = TtaReadByte (infile, &charRead);
-			  while (readOk && (charRead != '}' || oldcharRead != ';'))
-			    {
-			      oldcharRead = charRead;
-			      readOk = TtaReadByte (infile, &charRead);
-			      while (readOk  && ((int) charRead == 9 ||
-						 (int) charRead == 10 || 
-						 (int) charRead == 12 || 
-						 (int) charRead == 13 ||
-						 (int) charRead == 32 ))
-				readOk = TtaReadByte (infile, &charRead);
-			    }
-			  if (readOk)
-			    {
-			      if (ParsedTrans)
-				{
+        {
+          if (charRead == EOL)
+            {
+              /* new line in file */
+              numberOfLinesRead++;
+              numberOfCharRead = 0;
+            }
+          else
+            numberOfCharRead++;
+          
+          /* Check the character read */
+          /* Ignore end of line , non printable */
+          if ((int) charRead < 32 ||
+              ((int) charRead >= 127 && (int) charRead <= 143))
+            charRead = EOS;
+          if (charRead != EOS)
+            {
+              /* a valid character has been read */
+              /* first transition of the automaton for the current state */
+              trans = automaton[CurrentState].firstTransition;
+              /* search a transition triggered by the character read */
+              while (trans)
+                {
+                  match = FALSE;
+                  if (charRead == trans->trigger)	/* the char is the trigger */
+                    match = TRUE;
+                  else if (trans->trigger == EOS)	/* any char is a trigger */
+                    match = TRUE;
+                  else if (trans->trigger == SPACE)	/* any space is a trigger */
+                    if ((int) charRead == 9 || (int) charRead == 10 ||
+                        (int) charRead == 12 || (int) charRead == 13)	/* a delimiter has been read */
+                      match = TRUE;
+                  if (match)
+                    {
+                      /* transition found. Activate the transition */
+                      /* call the procedure associated with the transition */
+                      normalTransition = TRUE;
+                      if (trans->action)
+                        (*(Proc1)(trans->action)) ((void *)(int)charRead);
+                      if (normalTransition)
+                        {
+                          /* the input character has been processed */
+                          charRead = EOS;
+                          /* the procedure associated with the transition has not */
+                          /* changed state explicitely */
+                          /* change current automaton state */
+                          if (trans->newState >= 0)
+                            CurrentState = trans->newState;
+                          else if (trans->newState == -1)
+                            /* return form subautomaton */
+                            CurrentState = ReturnState;
+                          else
+                            {
+                              /* calling a subautomaton */
+                              ReturnState = CurrentState;
+                              CurrentState = -trans->newState;
+                            }
+                        }
+                      else
+                        {
+                          /* an error has been found skiParseding the transformation */
+                          readOk = TtaReadByte (infile, &oldcharRead);
+                          if (readOk)
+                            readOk = TtaReadByte (infile, &charRead);
+                          while (readOk && (charRead != '}' || oldcharRead != ';'))
+                            {
+                              oldcharRead = charRead;
+                              readOk = TtaReadByte (infile, &charRead);
+                              while (readOk  && ((int) charRead == 9 ||
+                                                 (int) charRead == 10 || 
+                                                 (int) charRead == 12 || 
+                                                 (int) charRead == 13 ||
+                                                 (int) charRead == 32 ))
+                                readOk = TtaReadByte (infile, &charRead);
+                            }
+                          if (readOk)
+                            {
+                              if (ParsedTrans)
+                                {
 #ifdef AMAYA_DEBUG
-				  fprintf (stderr, "skip transformation %s\n", ParsedTrans->NameTrans);
+                                  fprintf (stderr, "skip transformation %s\n", ParsedTrans->NameTrans);
 #endif
-				  FreeTrans (ParsedTrans);
-				  ParsedTrans = NULL;
-				}
-			      else
+                                  FreeTrans (ParsedTrans);
+                                  ParsedTrans = NULL;
+                                }
+                              else
 #ifdef AMAYA_DEBUG
-				fprintf (stderr, "skip transformation\n");
+                                fprintf (stderr, "skip transformation\n");
 #endif
-			      if (ParsedChoice != NULL)
-				FreeChoice (ParsedChoice);
-			      ParsedChoice = NULL;
-			      ParsedError = FALSE;
-			      CurrentState = 0;
-			      ParsedLgBuffer = 0;
-			      charRead = EOS;
-			      ParsedOptional = FALSE;
-			      ParsedIterTag = FALSE;
-			      ParsedAttr = NULL;
-			      ParsedNode = NULL;
-			      ParsedRule = NULL;
-			      ParsedIsNamed = FALSE;
-			      strcpy ((char *)ParsedName, "");
-			      opStack[0] = EOS;
-			      symbolStack[0] = NULL;
-			      choiceStack[0] = NULL;
-			      sizeStack = 1;
-			    }
-			}	/* done */
-		      trans = NULL;
-		    }
-		  else
-		    {
-		      /* access next transition from the same state */
-		      trans = trans->nextTransition;
-		      if (trans == NULL)
-			charRead = EOS;
-		    }
-		}
-	    }
-	}
+                              if (ParsedChoice != NULL)
+                                FreeChoice (ParsedChoice);
+                              ParsedChoice = NULL;
+                              ParsedError = FALSE;
+                              CurrentState = 0;
+                              ParsedLgBuffer = 0;
+                              charRead = EOS;
+                              ParsedOptional = FALSE;
+                              ParsedIterTag = FALSE;
+                              ParsedAttr = NULL;
+                              ParsedNode = NULL;
+                              ParsedRule = NULL;
+                              ParsedIsNamed = FALSE;
+                              strcpy ((char *)ParsedName, "");
+                              opStack[0] = EOS;
+                              symbolStack[0] = NULL;
+                              choiceStack[0] = NULL;
+                              sizeStack = 1;
+                            }
+                        }	/* done */
+                      trans = NULL;
+                    }
+                  else
+                    {
+                      /* access next transition from the same state */
+                      trans = trans->nextTransition;
+                      if (trans == NULL)
+                        charRead = EOS;
+                    }
+                }
+            }
+        }
     }
   while (readOk && !ParsedError);
 }

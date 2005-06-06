@@ -956,7 +956,7 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
   ThotInput handles the unicode character v and the command command.
   The parameter PicMask gives current modifiers.
   Returns:
-   - 0 when nothing is done
+  - 0 when nothing is done
    - 1 when an access key is handled
    - 2 when an action is done
    - 3 when a character is inserted
@@ -969,15 +969,15 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   int                 modtype;
   int                 mainframe;
   int                 index = -1, ret = 0;
-  ThotBool            found, done;
-
+  ThotBool            found, done = FALSE;
+  
 #ifdef _WX
   TTALOGDEBUG_5( TTA_LOG_KEYINPUT, _T("ThotInput: frame=%d\tvalue=%d\tcommand=%d\tPicMask=%d\tkey=%d"),
-		 frame,
-		 value,
-		 command,
-		 PicMask,
-		 key  );
+                 frame,
+                 value,
+                 command,
+                 PicMask,
+                 key  );
 #endif /* _WX */
   
   modtype = THOT_NO_MOD;
@@ -991,390 +991,384 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   else
     {
       if (ClickIsDone == 1 &&
-	  (key == THOT_KEY_Escape || key == THOT_KEY_Delete))
-	/* Amaya is waiting for a clickselection */
-	{
-	  ClickIsDone = 0;
-	  ClickFrame = 0;
-	  ClickX = 0;
-	  ClickY = 0;
-	  return 0;
-	}
+          (key == THOT_KEY_Escape || key == THOT_KEY_Delete))
+        /* Amaya is waiting for a clickselection */
+        {
+          ClickIsDone = 0;
+          ClickFrame = 0;
+          ClickX = 0;
+          ClickY = 0;
+          return 0;
+        }
       command = 0;	   
       /* Set the right indicator */
       if (PicMask & THOT_MOD_CTRL)
-	{
-	if (PicMask & THOT_MOD_SHIFT)
-	  modtype = THOT_MOD_S_CTRL;
-	else
-	  modtype = THOT_MOD_CTRL;
-	}
+        {
+          if (PicMask & THOT_MOD_SHIFT)
+            modtype = THOT_MOD_S_CTRL;
+          else
+            modtype = THOT_MOD_CTRL;
+        }
       else if (PicMask & THOT_MOD_ALT)
-	{
-	if (PicMask & THOT_MOD_SHIFT)
-	  modtype = THOT_MOD_S_ALT;
-	else
-	  modtype = THOT_MOD_ALT;
-	}
+        {
+          if (PicMask & THOT_MOD_SHIFT)
+            modtype = THOT_MOD_S_ALT;
+          else
+            modtype = THOT_MOD_ALT;
+        }
       else if (PicMask & THOT_MOD_SHIFT)
-	modtype = THOT_MOD_SHIFT;
+        modtype = THOT_MOD_SHIFT;
       else
-	modtype = THOT_NO_MOD;
-    
+        modtype = THOT_NO_MOD;
+      
       /* Is it a second level of the current automata? */
       if (Automata_current != NULL)
-	{
-	  /* search a second level entry */
-	  ptr = Automata_current;
-	  Automata_current = NULL;
-	  while (!found && ptr != NULL)
-	    {
-	      if (ptr != NULL)
-		{
-		  if (ptr->K_EntryCode == key &&
+        {
+          /* search a second level entry */
+          ptr = Automata_current;
+          Automata_current = NULL;
+          while (!found && ptr != NULL)
+            {
+              if (ptr != NULL)
+                {
+                  if (ptr->K_EntryCode == key &&
 #ifdef _WINGUI
-		      ptr->K_Special == Special &&
+                      ptr->K_Special == Special &&
 #endif /* _WINGUI */
-		      modtype == ptr->K_Modifier)
-		    found = TRUE;
-		  else
-		    ptr = ptr->K_Other;
-		}
-	    }
-      
-	  if (found)
-	    {
-	      value = ptr->K_Value;
-	      command = ptr->K_Command;
-	    }
-	}
+                      modtype == ptr->K_Modifier)
+                    found = TRUE;
+                  else
+                    ptr = ptr->K_Other;
+                }
+            }
+          
+          if (found)
+            {
+              value = ptr->K_Value;
+              command = ptr->K_Command;
+            }
+        }
       else
-	{
-	  /* Search a first level entry? */
-	  if (modtype == THOT_MOD_S_CTRL)
-	    ptr = Automata_CTRL;
-	  else if (modtype == THOT_MOD_CTRL)
-	    {
-	      /* check if it's an access key */
-	      if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "ctrl") &&
-		  AccessKeyFunction && document && DocAccessKey[document - 1])
-		{
-		  ptr = DocAccessKey[document - 1];
-		  while (ptr != NULL && ptr->K_EntryCode != key)
-		    ptr = ptr->K_Other;
-		  if (ptr)
-		    {
-		      /* close the current insertion */
-		      CloseTextInsertion ();
-		      (*(Proc2)AccessKeyFunction) (
-				(void *)document,
-				(void *)ptr->K_Param);
-		      return 1;
-		    }
-		}
-	      ptr = Automata_ctrl;
-	    }
-	  else if (modtype == THOT_MOD_S_ALT)
-	    ptr = Automata_ALT;
-	  else if (modtype == THOT_MOD_ALT)
-	    {
-	      /* check if it's an access key */
-	      if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "alt") &&
-		  AccessKeyFunction && document && DocAccessKey[document - 1])
-		{
-		  ptr = DocAccessKey[document - 1];
-		  while (ptr != NULL && ptr->K_EntryCode != key)
-		    ptr = ptr->K_Other;
-		  if (ptr)
-		    {
-		      /* close the current insertion */
-		      CloseTextInsertion ();
-		      (*(Proc2)AccessKeyFunction) (
-				(void *)document,
-				(void *)ptr->K_Param);
-		      return 1;
-		    }
-		}
-	      ptr = Automata_alt;
-	    }
-	  else if (modtype == THOT_MOD_SHIFT)
-	    ptr = Automata_SHIFT;
-	  else
-	    ptr = Automata_normal;
-
-	  while (!found && ptr != NULL)
-	    {
-	      if (ptr != NULL)
-		{
+        {
+          /* Search a first level entry? */
+          if (modtype == THOT_MOD_S_CTRL)
+            ptr = Automata_CTRL;
+          else if (modtype == THOT_MOD_CTRL)
+            {
+              /* check if it's an access key */
+              if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "ctrl") &&
+                  AccessKeyFunction && document && DocAccessKey[document - 1])
+                {
+                  ptr = DocAccessKey[document - 1];
+                  while (ptr != NULL && ptr->K_EntryCode != key)
+                    ptr = ptr->K_Other;
+                  if (ptr)
+                    {
+                      /* close the current insertion */
+                      CloseTextInsertion ();
+                      (*(Proc2)AccessKeyFunction) ((void *)document,
+                                                   (void *)ptr->K_Param);
+                      return 1;
+                    }
+                }
+              ptr = Automata_ctrl;
+            }
+          else if (modtype == THOT_MOD_S_ALT)
+            ptr = Automata_ALT;
+          else if (modtype == THOT_MOD_ALT)
+            {
+              /* check if it's an access key */
+              if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "alt") &&
+                  AccessKeyFunction && document && DocAccessKey[document - 1])
+                {
+                  ptr = DocAccessKey[document - 1];
+                  while (ptr != NULL && ptr->K_EntryCode != key)
+                    ptr = ptr->K_Other;
+                  if (ptr)
+                    {
+                      /* close the current insertion */
+                      CloseTextInsertion ();
+                      (*(Proc2)AccessKeyFunction) ((void *)document,
+                                                   (void *)ptr->K_Param);
+                      return 1;
+                    }
+                }
+              ptr = Automata_alt;
+            }
+          else if (modtype == THOT_MOD_SHIFT)
+            ptr = Automata_SHIFT;
+          else
+            ptr = Automata_normal;
+          
+          while (!found && ptr != NULL)
+            {
+              if (ptr != NULL)
+                {
 #ifdef _WINGUI
-		  if (ptr->K_EntryCode == key
-		      && ptr->K_Special == Special)
+                  if (ptr->K_EntryCode == key
+                      && ptr->K_Special == Special)
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX)
-		  if (ptr->K_EntryCode == key)
+                    if (ptr->K_EntryCode == key)
 #endif /* #if defined(_GTK) || defined(_WX) */
-		    {
-		      /* first level entry found */
-		      found = TRUE;
-		      Automata_current = ptr->K_Next;
-		      if (Automata_current == NULL)
-			{
-			  /* one key shortcut */
-			  value = ptr->K_Value;
-			  command = ptr->K_Command;
-			}
-		    }
+                      {
+                        /* first level entry found */
+                        found = TRUE;
+                        Automata_current = ptr->K_Next;
+                        if (Automata_current == NULL)
+                          {
+                            /* one key shortcut */
+                            value = ptr->K_Value;
+                            command = ptr->K_Command;
+                          }
+                      }
 #if defined(_GTK) || defined(_WINGUI) || defined(_WX)
-		  else
-		    ptr = ptr->K_Other;
+                    else
+                      ptr = ptr->K_Other;
 #endif /* #if defined(_GTK) || defined(_WINGUI) || defined(_WX) */
-		}
-	    }
-	}
+                }
+            }
+        }
     }
   /* found, key */
-
+  
   /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 #ifdef _WINGUI
   if (Special && !found)
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX)
-  if (!found)
+    if (!found)
 #endif /* #if defined(_GTK) || defined(_WX) */
-    {
-      /* Handling special keys */
-      switch (key)
-	{
-	case THOT_KEY_Up:
-	  index = MY_KEY_Up;
-	  break;
-	case THOT_KEY_Return:
-	  index = MY_KEY_Return;
-	  break;
-	case THOT_KEY_Left:
-	  index = MY_KEY_Left;
-	  break;
-	case THOT_KEY_Right:
-	  index = MY_KEY_Right;
-	  break;
-	case THOT_KEY_Down:
-	  index = MY_KEY_Down;
-	  break;
-	case THOT_KEY_Prior:
-	  index = MY_KEY_Prior;
-	  break;
-	case THOT_KEY_Next:
-	  index = MY_KEY_Next;
-	  break;
-	case THOT_KEY_Home:
-	  index = MY_KEY_Home;
-	  break;
-	case THOT_KEY_End:
-	  index = MY_KEY_End;
-	  break;
-	case THOT_KEY_BackSpace:
-	  index = MY_KEY_BackSpace;
-	  break;
-	case THOT_KEY_Delete:
-	  index = MY_KEY_Delete;
-	 break;
-	case THOT_KEY_Insert:
-	  index = MY_KEY_Insert;
-	 break;
-	default:
-	  index = -1;
+      {
+        /* Handling special keys */
+        switch (key)
+          {
+          case THOT_KEY_Up:
+            index = MY_KEY_Up;
+            break;
+          case THOT_KEY_Return:
+            index = MY_KEY_Return;
+            break;
+          case THOT_KEY_Left:
+            index = MY_KEY_Left;
+            break;
+          case THOT_KEY_Right:
+            index = MY_KEY_Right;
+            break;
+          case THOT_KEY_Down:
+            index = MY_KEY_Down;
+            break;
+          case THOT_KEY_Prior:
+            index = MY_KEY_Prior;
+            break;
+          case THOT_KEY_Next:
+            index = MY_KEY_Next;
+            break;
+          case THOT_KEY_Home:
+            index = MY_KEY_Home;
+            break;
+          case THOT_KEY_End:
+            index = MY_KEY_End;
+            break;
+          case THOT_KEY_BackSpace:
+            index = MY_KEY_BackSpace;
+            break;
+          case THOT_KEY_Delete:
+            index = MY_KEY_Delete;
+            break;
+          case THOT_KEY_Insert:
+            index = MY_KEY_Insert;
+            break;
+          default:
+            index = -1;
 #ifdef _WINGUI
-	 /* Nothing to do */ 
-	  Automata_current = NULL;
-	  return 0;
+            /* Nothing to do */ 
+            Automata_current = NULL;
+            return 0;
 #endif /* _WINGUI */
-	  break;
-	}
-      if (index >= 0)
-	{
-	  found = TRUE;
-	  if (modtype == THOT_MOD_SHIFT)
-	    command = SpecialShiftKeys[index];
-	  else if (modtype == THOT_MOD_CTRL)
-	    command = SpecialCtrlKeys[index];
-	  else if (modtype == THOT_MOD_S_CTRL)
-	    command = SpecialShiftCtrlKeys[index];
-	  else
-	    command = SpecialKeys[index];
-	  Automata_current = NULL;
-	  if (command == -1)
-		  /* NOP */
-		  return 0;
-	}
-    }
-
+            break;
+          }
+        if (index >= 0)
+          {
+            found = TRUE;
+            if (modtype == THOT_MOD_SHIFT)
+              command = SpecialShiftKeys[index];
+            else if (modtype == THOT_MOD_CTRL)
+              command = SpecialCtrlKeys[index];
+            else if (modtype == THOT_MOD_S_CTRL)
+              command = SpecialShiftCtrlKeys[index];
+            else
+              command = SpecialKeys[index];
+            Automata_current = NULL;
+            if (command == -1)
+              /* NOP */
+              return 0;
+          }
+      }
+  
   /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
   if (Automata_current == NULL)
     {
       /* don't accept to insert a character when there is CTRL
-	 or ALT active and no shortcut is found */
+         or ALT active and no shortcut is found */
       if (!found &&
-	  (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL ||
-	   modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT))
-	return 0;
-	  
+          (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL ||
+           modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT))
+        return 0;
+      
       /* Appel d'une action Thot */
       mainframe = GetWindowNumber (document, 1);
       if (command > 0)
-	{
-	  if (command != CMD_DeletePrevChar &&
-	      command != CMD_DeleteSelection &&
-	      command != CMD_PasteFromClipboard &&
-	      command != CMD_Paste)
-	    /* It's not a delete, close the current insertion */
-	    CloseTextInsertion ();
-
-	  /* ***Check events TteElemReturn and TteElemTab*** */
-	  if (LoadedDocument[document - 1] == SelectedDocument &&
-	      command == CMD_CreateElement)
-	    /* check if the application wants to handle the return */
-	    done = APPKey (TteElemReturn, FirstSelectedElement, document,
-			   TRUE);
-	  else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-	      command == CMD_CreateElement)
-	    /* check if the application wants to handle the return */
-	    done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
-			   document, TRUE);
-	  else if (LoadedDocument[document - 1] == SelectedDocument &&
-		   value == TAB)
-	    /* check if the application wants to handle the Tab */
-	    done = APPKey (TteElemTab, FirstSelectedElement, document, TRUE);
-	  else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-		   value == TAB)
-	    /* check if the application wants to handle the Tab */
-	    done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement,
-			   document, TRUE);
-	  else
-	    done = FALSE;
-	  /* Call action if it's active */
-	  if (!done &&
+        {
+          if (command != CMD_DeletePrevChar &&
+              command != CMD_DeleteSelection &&
+              command != CMD_PasteFromClipboard &&
+              command != CMD_Paste)
+            /* It's not a delete, close the current insertion */
+            CloseTextInsertion ();
+          
+          /* ***Check events TteElemReturn and TteElemTab*** */
+          if (LoadedDocument[document - 1] == SelectedDocument &&
+              command == CMD_CreateElement)
+            /* check if the application wants to handle the return */
+            done = APPKey (TteElemReturn, FirstSelectedElement, document,
+                           TRUE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   command == CMD_CreateElement)
+            /* check if the application wants to handle the return */
+            done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
+                           document, TRUE);
+          else if (LoadedDocument[document - 1] == SelectedDocument &&
+                   value == TAB)
+            /* check if the application wants to handle the Tab */
+            done = APPKey (TteElemTab, FirstSelectedElement, document, TRUE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   value == TAB)
+            /* check if the application wants to handle the Tab */
+            done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement,
+                           document, TRUE);
+          else
+            done = FALSE;
+          /* Call action if it's active */
+          if (!done &&
 #ifdef _WX
-	      MenuActionList[command].ActionActive[document])
+              MenuActionList[command].ActionActive[document])
 #else /* _WX */
-	      (MenuActionList[command].ActionActive[frame] ||
-	       MenuActionList[command].ActionActive[mainframe]))
+            (MenuActionList[command].ActionActive[frame] ||
+             MenuActionList[command].ActionActive[mainframe]))
 #endif /* _WX */
-	    {
-	      /* available action for this frame or the main frame */
-	      if (MenuActionList[command].Call_Action)
-		{
-		  (*(Proc2)MenuActionList[command].Call_Action) (
-			(void *)document,
-			(void *)view);
-		  done = TRUE;
-		}
-
-	      /* ***Check events TteElemReturn and TteElemTab*** */
-	      if (LoadedDocument[document - 1] == SelectedDocument &&
-		  command == CMD_CreateElement)
-		/* post treatment for the application */
-		done = APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
-	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-		       command == CMD_CreateElement)
-		/* check if the application wants to handle the return */
-		done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
-			document, FALSE);
-	      else if (LoadedDocument[document - 1] == SelectedDocument &&
-		       value == TAB)
-		/* post treatment for the application */
-		done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
-	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-		       value == TAB)
-		/* check if the application wants to handle the Tab */
-		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
-			FALSE);
-	    }
-	  if (done)
-	    return 2;
-	}
-      /* Traitement des caracteres au cas par cas */
-      else
-	{
-	  if (key/*value*/ == THOT_KEY_Escape)
-	    {
-#ifdef _WX
-        // check the fullscreen state is enable or not
-        // if yes, just disable fullscreen
-        if (TtaGetFullScreenState(frame))
-          TtaToggleOnOffFullScreen(frame);
-        else
-          TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
-#else /* _WX */
-        TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
-#endif /* _WX */
-	      return 0;
-	    }
-	  else if (value == 8 || value == 127)
-	    {
-	      /* Par defaut BackSpace detruit le caractere precedent */
-	      /* sans se soucier de la langue courante */
-	      if (MenuActionList[CMD_DeletePrevChar].Call_Action)
-		{
-		  (*(Proc2)MenuActionList[CMD_DeletePrevChar].Call_Action) (
-			(void *)document,
-			(void *)view);
-		  return 2;
-		}
-	      else
-		return 0;
-	    }
-      
-	  /*** Sequence de traitement des espaces ***/
-	  if (value == BREAK_LINE || value == THIN_SPACE ||
-	      value == FOUR_PER_EM || value == UNBREAKABLE_SPACE)
-	    {
-	      if (MenuActionList[0].Call_Action)
-		{
-		  (*(Proc3)MenuActionList[0].Call_Action) (
-			(void *)document,
-			(void *)view,
-			(void *)value);
-		  done = TRUE;
-		}
-	    }
-	  else if (value == 9 || value >= 32)
-	    {
-	      if (LoadedDocument[document - 1] == SelectedDocument &&
-		  value == TAB)
-		/* check if the application wants to handle the Tab */
-		done = APPKey (TteElemTab, FirstSelectedElement, document,
-			       TRUE);
-	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-		       value == TAB)
-		/* check if the application wants to handle the TAB */
-		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement,
-			       document, TRUE);
-	      else
-		done = FALSE;
-	      /* on insere un caractere valide quelque soit la langue */
-	      if (!done && MenuActionList[0].Call_Action)
-		{
-		  (*(Proc3)MenuActionList[0].Call_Action) (
-			(void *)document,
-			(void *)view,
-			(void *)value);
-		  done = TRUE;
-		}
-	      if (LoadedDocument[document - 1] == SelectedDocument &&
-		  value == TAB)
-		/* post treatment for the application */
-		done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
-	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
-		       value == TAB)
-		/* check if the application wants to handle the TAB */
-		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
-			FALSE);
-	    }
-	  if (done)
-	    return 3;
-	}
+        {
+          /* available action for this frame or the main frame */
+          if (MenuActionList[command].Call_Action)
+            {
+              (*(Proc2)MenuActionList[command].Call_Action) ((void *)document,
+                                                             (void *)view);
+              done = TRUE;
+            }
+          
+          /* ***Check events TteElemReturn and TteElemTab*** */
+          if (LoadedDocument[document - 1] == SelectedDocument &&
+              command == CMD_CreateElement)
+            /* post treatment for the application */
+            done = APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   command == CMD_CreateElement)
+            /* check if the application wants to handle the return */
+            done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement,
+                           document, FALSE);
+          else if (LoadedDocument[document - 1] == SelectedDocument &&
+                   value == TAB)
+            /* post treatment for the application */
+            done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   value == TAB)
+            /* check if the application wants to handle the Tab */
+            done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
+                           FALSE);
+        }
+      if (done)
+        return 2;
     }
-  return 0;
+  /* Traitement des caracteres au cas par cas */
+  else
+    {
+      if (key/*value*/ == THOT_KEY_Escape)
+        {
+#ifdef _WX
+          // check the fullscreen state is enable or not
+          // if yes, just disable fullscreen
+          if (TtaGetFullScreenState(frame))
+            TtaToggleOnOffFullScreen(frame);
+          else
+            TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+#else /* _WX */
+          TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_USE_F2));
+#endif /* _WX */
+          return 0;
+        }
+      else if (value == 8 || value == 127)
+        {
+          /* Par defaut BackSpace detruit le caractere precedent */
+          /* sans se soucier de la langue courante */
+          if (MenuActionList[CMD_DeletePrevChar].Call_Action)
+            {
+              (*(Proc2)MenuActionList[CMD_DeletePrevChar].Call_Action) ((void *)document,
+                                                                        (void *)view);
+              return 2;
+            }
+          else
+            return 0;
+        }
+      
+      /*** Sequence de traitement des espaces ***/
+      if (value == BREAK_LINE || value == THIN_SPACE ||
+          value == FOUR_PER_EM || value == UNBREAKABLE_SPACE)
+        {
+          if (MenuActionList[0].Call_Action)
+            {
+              (*(Proc3)MenuActionList[0].Call_Action) ((void *)document,
+                                                       (void *)view,
+                                                       (void *)value);
+              done = TRUE;
+            }
+        }
+      else if (value == 9 || value >= 32)
+        {
+          if (LoadedDocument[document - 1] == SelectedDocument &&
+              value == TAB)
+            /* check if the application wants to handle the Tab */
+            done = APPKey (TteElemTab, FirstSelectedElement, document,
+                           TRUE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   value == TAB)
+            /* check if the application wants to handle the TAB */
+            done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement,
+                           document, TRUE);
+          else
+            done = FALSE;
+          /* on insere un caractere valide quelque soit la langue */
+          if (!done && MenuActionList[0].Call_Action)
+            {
+              (*(Proc3)MenuActionList[0].Call_Action) ((void *)document,
+                                                       (void *)view,
+                                                       (void *)value);
+              done = TRUE;
+            }
+          if (LoadedDocument[document - 1] == SelectedDocument &&
+              value == TAB)
+            /* post treatment for the application */
+            done = APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+          else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+                   value == TAB)
+            /* check if the application wants to handle the TAB */
+            done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document,
+                           FALSE);
+        }
+      if (done)
+        return 3;
+    }
+}
+return 0;
 }
 
 

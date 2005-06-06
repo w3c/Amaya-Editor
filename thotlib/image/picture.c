@@ -1275,15 +1275,15 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
 {
    if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
        (imageDesc->PicWArea > MAX_PICT_SIZE ||
-	imageDesc->PicHArea > MAX_PICT_SIZE))
+        imageDesc->PicHArea > MAX_PICT_SIZE))
      {
-	*picWArea = wFrame;
-	*picHArea = hFrame;
+       *picWArea = wFrame;
+       *picHArea = hFrame;
      }
    else
      {
-	*picWArea = imageDesc->PicWArea;
-	*picHArea = imageDesc->PicHArea;
+       *picWArea = imageDesc->PicWArea;
+       *picHArea = imageDesc->PicHArea;
      }
 }
 
@@ -1295,15 +1295,15 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   Parameters t l give top and left extra margins.
   ----------------------------------------------------------------------*/
 static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg,
-			   int picYOrg, int w, int h, int xFrame, int yFrame,
-			   int t, int l, int frame, ThotPictInfo *imageDesc,
-			   PtrBox box)
+                           int picYOrg, int w, int h, int xFrame, int yFrame,
+                           int t, int l, int frame, ThotPictInfo *imageDesc,
+                           PtrBox box)
 {
   ViewFrame*        pFrame;
   PtrAbstractBox    pAb;
   PictureScaling    picPresent;
   int               x, y, ix, jy;
-  int               clipWidth, clipHeight;
+  int               clipWidth = 0, clipHeight = 0;
   int               delta, dx, dy;
   int               i, j, iw, jh;
 #if !defined(_GL) && defined(_WINGUI)
@@ -1316,7 +1316,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   HDC               hOrigDC;
   HRGN              hrgn;
 #endif /* !GL  && _WINGUI */
-
+  
 #ifdef _GL
   if (!glIsTexture (imageDesc->TextureBind))
     return;
@@ -1324,7 +1324,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   if (pixmap == None)
     return;
 #endif /* _GL */
-
+  
   if (picXOrg < 0)
     {
       xFrame = xFrame - picXOrg;
@@ -1335,7 +1335,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       yFrame = yFrame - picYOrg;
       picYOrg = 0;
     }
-
+  
 #if !defined(_GL) && defined(_WINGUI)
   if (!TtIsTrueColor)
     {
@@ -1343,7 +1343,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       nbPalColors = RealizePalette (TtDisplay);
     }
 #endif /* !_GL && _WINGUI */
-
+  
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
   /* the default presentation depends on the box type */
@@ -1351,13 +1351,13 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   if (picPresent == DefaultPres)
     {
       if (box->BxType == BoPicture)
-	/* an image is rescaled */
-	picPresent = ReScale;
+        /* an image is rescaled */
+        picPresent = ReScale;
       else
-	/* a background image is repeated */
-	picPresent = FillFrame;
+        /* a background image is repeated */
+        picPresent = FillFrame;
     }
-
+  
   if ((picPresent == ReScale || picPresent == RealSize) &&
       pAb->AbLeafType != LtCompound)
     {
@@ -1366,52 +1366,52 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 #else /*_GL*/
 #ifdef _GTK
       if (imageDesc->PicMask)
-	{
-	  gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
-				  yFrame - picYOrg);
-	  gdk_gc_set_clip_mask (TtGraphicGC, 
-				(ThotPixmap) imageDesc->PicMask);
-	}
+        {
+          gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
+                                  yFrame - picYOrg);
+          gdk_gc_set_clip_mask (TtGraphicGC, 
+                                (ThotPixmap) imageDesc->PicMask);
+        }
       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-		       (ThotPixmap) imageDesc->PicPixmap, 
-		       picXOrg, picYOrg, xFrame, yFrame, w, h);
+                       (ThotPixmap) imageDesc->PicPixmap, 
+                       picXOrg, picYOrg, xFrame, yFrame, w, h);
       /*Restablish to normal clip*/
       if (imageDesc->PicMask)
-	{
-	  gdk_gc_set_clip_mask (TtGraphicGC, (ThotPixmap)None);
-	  gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-	}
+        {
+          gdk_gc_set_clip_mask (TtGraphicGC, (ThotPixmap)None);
+          gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
+        }
 #endif /* _GTK */
 #ifdef _WINGUI
       if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
-	{
-	  TransparentPicture (pixmap, xFrame, yFrame,
-			      imageDesc->PicWArea, imageDesc->PicHArea,
-			      imageDesc->PicBgMask);
-	}
+        {
+          TransparentPicture (pixmap, xFrame, yFrame,
+                              imageDesc->PicWArea, imageDesc->PicHArea,
+                              imageDesc->PicBgMask);
+        }
       else
-	{
-	  /* No color transparence */
-      /* size of the copied zone */
-      clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
-      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
-      /* shift in the source image */
-      x = pFrame->FrClipXBegin - box->BxXOrg - l;
-      y = pFrame->FrClipYBegin - box->BxYOrg - t;
-	  hMemDC = CreateCompatibleDC (TtDisplay);
-	  SetMapMode (hMemDC, GetMapMode (TtDisplay));
-	  GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
-	  if (x > 0 && clipWidth > bm.bmWidth - x)
-	    clipWidth = bm.bmWidth - x;
-	  if (y > 0 && clipHeight > bm.bmHeight - y)
-	    clipHeight = bm.bmHeight - y;
-	  bitmap = SelectObject (hMemDC, pixmap);
-	  BitBlt (TtDisplay, xFrame + x, yFrame + y,
-		  clipWidth, clipHeight, hMemDC, x, y, SRCCOPY);
-	  SelectObject (hMemDC, bitmap);
-	  if (hMemDC)
-	    DeleteDC (hMemDC);
-	}
+        {
+          /* No color transparence */
+          /* size of the copied zone */
+          clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
+          clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
+          /* shift in the source image */
+          x = pFrame->FrClipXBegin - box->BxXOrg - l;
+          y = pFrame->FrClipYBegin - box->BxYOrg - t;
+          hMemDC = CreateCompatibleDC (TtDisplay);
+          SetMapMode (hMemDC, GetMapMode (TtDisplay));
+          GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
+          if (x > 0 && clipWidth > bm.bmWidth - x)
+            clipWidth = bm.bmWidth - x;
+          if (y > 0 && clipHeight > bm.bmHeight - y)
+            clipHeight = bm.bmHeight - y;
+          bitmap = SelectObject (hMemDC, pixmap);
+          BitBlt (TtDisplay, xFrame + x, yFrame + y,
+                  clipWidth, clipHeight, hMemDC, x, y, SRCCOPY);
+          SelectObject (hMemDC, bitmap);
+          if (hMemDC)
+            DeleteDC (hMemDC);
+        }
 #endif /* _WINGUI */
 #endif /* _GL */
     }
@@ -1422,81 +1422,81 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       dy = pFrame->FrClipYBegin;
       x = xFrame - picXOrg + pFrame->FrXOrg;
       if (x < dx)
-	x = dx;
+        x = dx;
       y = yFrame - picYOrg + pFrame->FrYOrg;
       if (y < dy)
-	y = dy;
+        y = dy;
       clipWidth  = pFrame->FrClipXEnd - x;
       clipHeight = pFrame->FrClipYEnd - y;
-
+      
       /* compute the shift in the source image */
       dx = x;
       dy = y;
       if (pAb &&
-	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-			     pAb->AbElement->ElStructSchema))
-	{
-	  dx = dx - box->BxXOrg - l;
-	  dy = dy - box->BxYOrg - t; 
-	}
-
+          !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+                             pAb->AbElement->ElStructSchema))
+        {
+          dx = dx - box->BxXOrg - l;
+          dy = dy - box->BxYOrg - t; 
+        }
+      
       if (picPresent == FillFrame || picPresent == XRepeat)
-	{
-	  if (imageDesc->PicWidth)
-	    while (dx >= imageDesc->PicWidth)
-	      dx -= imageDesc->PicWidth;
-	  if (clipWidth > w)
-	    clipWidth = w;
-	}
+        {
+          if (imageDesc->PicWidth)
+            while (dx >= imageDesc->PicWidth)
+              dx -= imageDesc->PicWidth;
+          if (clipWidth > w)
+            clipWidth = w;
+        }
       else
-	{
-	  /* clipping width is done by the image width */
-	  if (w > imageDesc->PicWidth)
-	    w = imageDesc->PicWidth;
-	  delta = imageDesc->PicWidth - dx;
-	  if (delta <= 0)
-	    {
-	      clipWidth = 0;
-	      dx = 0;
-	      w = 0;
-	    }
-	  else
-	    {
-	      if (clipWidth > delta)
-		clipWidth = delta;
-	      if (w > delta)
-		w = delta;
-	    }
-	}
-
+        {
+          /* clipping width is done by the image width */
+          if (w > imageDesc->PicWidth)
+            w = imageDesc->PicWidth;
+          delta = imageDesc->PicWidth - dx;
+          if (delta <= 0)
+            {
+              clipWidth = 0;
+              dx = 0;
+              w = 0;
+            }
+          else
+            {
+              if (clipWidth > delta)
+                clipWidth = delta;
+              if (w > delta)
+                w = delta;
+            }
+        }
+      
       if (picPresent == FillFrame || picPresent == YRepeat)
-	{
-	  if (imageDesc->PicHeight)
-	    while (dy >= imageDesc->PicHeight)
-	      dy -= imageDesc->PicHeight;
-	  if (clipHeight > h)
-	    clipHeight = h;
-	}
+        {
+          if (imageDesc->PicHeight)
+            while (dy >= imageDesc->PicHeight)
+              dy -= imageDesc->PicHeight;
+          if (clipHeight > h)
+            clipHeight = h;
+        }
       else
-	{
-	  /* clipping height is done by the image height */
-	  if (h > imageDesc->PicHeight)
-	    h = imageDesc->PicHeight;
-	  delta = imageDesc->PicHeight - dy;
-	  if (delta <= 0)
-	    {
-	      clipHeight = 0;
-	      dy = 0;
-	      h = 0;
-	    }
-	  else
-	    {
-	      if (clipHeight > delta)
-		clipHeight = delta;
-	      if (h > delta)
-		h = delta;
-	    }
-	}
+        {
+          /* clipping height is done by the image height */
+          if (h > imageDesc->PicHeight)
+            h = imageDesc->PicHeight;
+          delta = imageDesc->PicHeight - dy;
+          if (delta <= 0)
+            {
+              clipHeight = 0;
+              dy = 0;
+              h = 0;
+            }
+          else
+            {
+              if (clipHeight > delta)
+                clipHeight = delta;
+              if (h > delta)
+                h = delta;
+            }
+        }
       /* compute the clipping in the drawing area */
       x -= pFrame->FrXOrg;
       y -= pFrame->FrYOrg;
@@ -1510,66 +1510,66 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       pBitmapTiled = SelectObject (hMemDC, bitmapTiled);
 #endif /* !_GL && _WINGUI */
       if (w > 0 && h > 0)
-	{
-	  j = 0;
-	  /* initial shift */
-	  jy = dy;
-	  do
-	    {
-	      i = 0;
-	      /* initial shift */
-	      ix = dx;
-	      do
-		{
-		  /* check if the limits of the copied zone */
-		  iw = imageDesc->PicWidth - ix;
-		  if (i + iw > w)
-		    iw = w - i;
-		  jh = imageDesc->PicHeight - jy;
-		  if (j + jh > h)
-		    jh = h - j;
+        {
+          j = 0;
+          /* initial shift */
+          jy = dy;
+          do
+            {
+              i = 0;
+              /* initial shift */
+              ix = dx;
+              do
+                {
+                  /* check if the limits of the copied zone */
+                  iw = imageDesc->PicWidth - ix;
+                  if (i + iw > w)
+                    iw = w - i;
+                  jh = imageDesc->PicHeight - jy;
+                  if (j + jh > h)
+                    jh = h - j;
 #ifdef _GL
-		  GL_TexturePartialMap (imageDesc, ix, jy, x+i, y+j, iw+ix, jh+jy, frame);
+                  GL_TexturePartialMap (imageDesc, ix, jy, x+i, y+j, iw+ix, jh+jy, frame);
 #else /* _GL */
 #ifdef _GTK
-		  if (imageDesc->PicMask)
-		    {
-		      gdk_gc_set_clip_origin (TtGraphicGC, x+i-ix, y+j-jy);
-		      gdk_gc_set_clip_mask (TtGraphicGC, 
-					    (ThotPixmap) imageDesc->PicMask);
-		    }
-		  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-				   (ThotPixmap) imageDesc->PicPixmap, 
-				   ix, jy, x+i, y+j, iw, jh);
+                  if (imageDesc->PicMask)
+                    {
+                      gdk_gc_set_clip_origin (TtGraphicGC, x+i-ix, y+j-jy);
+                      gdk_gc_set_clip_mask (TtGraphicGC, 
+                                            (ThotPixmap) imageDesc->PicMask);
+                    }
+                  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+                                   (ThotPixmap) imageDesc->PicPixmap, 
+                                   ix, jy, x+i, y+j, iw, jh);
 #endif /* _GTK */
 #ifdef _WINGUI
-		  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
+                  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
 #endif /* _WINGUI */
 #endif /* _GL */
-		  i += iw;
-		  ix = 0;
-		} while (i < w);
-	      j += jh;
-	      jy = 0;
-	    }
-	  while (j < h);
-	}
-
+                  i += iw;
+                  ix = 0;
+                } while (i < w);
+              j += jh;
+              jy = 0;
+            }
+          while (j < h);
+        }
+      
 #if !defined(_GL) && defined(_WINGUI)
       if (w > 0 && h > 0)
-	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+        BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
       SelectObject (hOrigDC, bitmap);
       SelectObject (hMemDC, pBitmapTiled);
       SelectClipRgn(TtDisplay, NULL);
       
       if (hMemDC)
-	DeleteDC (hMemDC);
+        DeleteDC (hMemDC);
       if (hOrigDC)
-	DeleteDC (hOrigDC);
+        DeleteDC (hOrigDC);
       if (bitmapTiled)
-	DeleteObject (bitmapTiled);
+        DeleteObject (bitmapTiled);
       if (hrgn)
-	DeleteObject (hrgn);
+        DeleteObject (hrgn);
 #endif /* !_GL && _WINGUI */
     }
 }

@@ -471,43 +471,43 @@ void DrawStixIntegral (int frame, int x, int y, int l, int h,
   ----------------------------------------------------------------------*/
 static int StixIntegralWidth (int height, int type)
 {
-  int i, size;
+  int i = 0, size;
   ThotFont        font;
-
+  
   size = CharRelSize (height, 0x21, 6);
   font = (ThotFont)LoadStixFont (6, size);  
   if (height < LOW_CHAR)
     {
       if (type == 0 || type == 2)
-	{
-	  i = CharacterWidth (0x45, font);
-	  if (type == 2)
-	    i += i/4; /* double integral, drawn as 2 single integrals */
-	}
+        {
+          i = CharacterWidth (0x45, font);
+          if (type == 2)
+            i += i/4; /* double integral, drawn as 2 single integrals */
+        }
       else if (type == 1)
-	i = CharacterWidth (0x46, font);
+        i = CharacterWidth (0x46, font);
     }
   else if (height < MID_CHAR)
     {
       if (type == 0 || type == 2)
-	{
-	  i = CharacterWidth (0x21, font);
-	  if (type == 2)
-	    i += i/4;
-	}
+        {
+          i = CharacterWidth (0x21, font);
+          if (type == 2)
+            i += i/4;
+        }
       else if (type == 1)
-	i = CharacterWidth (0x23, font);
+        i = CharacterWidth (0x23, font);
     }
   else 
     {
       if (type == 0 || type == 2)
-	{
-	  i = CharacterWidth (0x34, font);
-	  if (type == 2)
-	    i += i/4;
-	}
+        {
+          i = CharacterWidth (0x34, font);
+          if (type == 2)
+            i += i/4;
+        }
       else if (type == 1)
-	i = CharacterWidth (0x35, font);
+        i = CharacterWidth (0x35, font);
     }
   return i;
 }

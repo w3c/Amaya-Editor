@@ -1644,14 +1644,14 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 {
   ElementType	    elType, foundType;
   AttributeType     attrType, attrIDType;
-  Attribute         attr, attrID;
+  Attribute         attr, attrID = NULL;
   Element	    image, elFound;
   char             *value, *name;
   char              url[MAX_LENGTH];
   int               length, i;
   ThotBool          change, checkID, checkNAME, checkXMLID;
   ThotBool          result = FALSE;
-
+  
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   attrIDType.AttrSSchema = elType.ElSSchema;
@@ -1662,186 +1662,186 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
       attrIDType.AttrTypeNum = HTML_ATTR_xmlid;
       attrID = TtaGetAttribute (el, attrIDType);
       if (attrID)
-	/* the element has a xml:id attribute. Check it too */
-	checkXMLID = TRUE;
+        /* the element has a xml:id attribute. Check it too */
+        checkXMLID = TRUE;
       /* it's an element from the XHTML namespace */
       if (elType.ElTypeNum == HTML_EL_Anchor ||
-	  elType.ElTypeNum == HTML_EL_MAP ||
-	  elType.ElTypeNum == HTML_EL_map)
-	/* it's an anchor or a map. Look for a NAME attribute */
-	{
-	  attrType.AttrTypeNum = HTML_ATTR_NAME;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr)
-	    /* the element has a NAME attribute. Check it and then check
-	       if there is an ID too */
-	    checkID = TRUE;
-	  else
-	    {
-	      /* no NAME. Look for an ID */
-	      attrType.AttrTypeNum = HTML_ATTR_ID;
-	      if (TtaGetDocumentProfile (doc) != L_Xhtml11)
-		checkNAME = TRUE;
-	    }
-	}
+          elType.ElTypeNum == HTML_EL_MAP ||
+          elType.ElTypeNum == HTML_EL_map)
+        /* it's an anchor or a map. Look for a NAME attribute */
+        {
+          attrType.AttrTypeNum = HTML_ATTR_NAME;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            /* the element has a NAME attribute. Check it and then check
+               if there is an ID too */
+            checkID = TRUE;
+          else
+            {
+              /* no NAME. Look for an ID */
+              attrType.AttrTypeNum = HTML_ATTR_ID;
+              if (TtaGetDocumentProfile (doc) != L_Xhtml11)
+                checkNAME = TRUE;
+            }
+        }
       else
-	/* Look for an ID attribute */
-	attrType.AttrTypeNum = HTML_ATTR_ID;
+        /* Look for an ID attribute */
+        attrType.AttrTypeNum = HTML_ATTR_ID;
     }
   else if (!strcmp(name, "MathML"))
     {
       /* it's an element from the MathML namespace, look for the
-       id attribute from the same namespace */
+         id attribute from the same namespace */
       attrIDType.AttrTypeNum = MathML_ATTR_xmlid;
       attrID = TtaGetAttribute (el, attrIDType);
       if (attrID)
-	/* the element has a xml:id attribute. Check it too */
-	checkXMLID = TRUE;
+        /* the element has a xml:id attribute. Check it too */
+        checkXMLID = TRUE;
       attrType.AttrTypeNum = MathML_ATTR_id;
     }
 #ifdef _SVG
   else if (!strcmp(name, "SVG"))
     {
       /* it's an element from the SVG namespace, look for the
-       id attribute from the same namespace */
-       attrIDType.AttrTypeNum = SVG_ATTR_xmlid;
-       attrID = TtaGetAttribute (el, attrIDType);
-       if (attrID)
-	 /* the element has a xml:id attribute. Check it too */
-	 checkXMLID = TRUE;
-       attrType.AttrTypeNum = SVG_ATTR_id;
+         id attribute from the same namespace */
+      attrIDType.AttrTypeNum = SVG_ATTR_xmlid;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+        /* the element has a xml:id attribute. Check it too */
+        checkXMLID = TRUE;
+      attrType.AttrTypeNum = SVG_ATTR_id;
     }
 #endif /* _SVG */
   else
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;
 #else /* XML_GENERIC */
-    attrType.AttrTypeNum = 0;
+  attrType.AttrTypeNum = 0;
 #endif /* XML_GENERIC */
   
   if (attrType.AttrTypeNum != 0)
     {
       attr = TtaGetAttribute (el, attrType);
       if (attr)
-	/* the element has an attribute NAME or ID. Check it */
-	{
-	  length = TtaGetTextAttributeLength (attr) + 10;
-	  value = (char *)TtaGetMemory (length);
-	  change = FALSE;
-	  if (value)
-	    {
-	      TtaGiveTextAttributeValue (attr, value, &length);
-	      i = 0;
-	      elFound = SearchNAMEattribute (doc, value, attr, el);
-	      while (elFound)
-		{
-		  /* skip form elements */
-		  foundType = TtaGetElementType (elFound);
-		  if (strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") ||
-		      (foundType.ElTypeNum != HTML_EL_Input &&
-		       foundType.ElTypeNum != HTML_EL_Text_Input &&
-		       foundType.ElTypeNum != HTML_EL_Password_Input &&
-		       foundType.ElTypeNum != HTML_EL_File_Input &&
-		       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
-		       foundType.ElTypeNum != HTML_EL_Radio_Input &&
-		       foundType.ElTypeNum != HTML_EL_Submit_Input &&
-		       foundType.ElTypeNum != HTML_EL_Reset_Input &&
-		       foundType.ElTypeNum != HTML_EL_Button_Input &&
-		       foundType.ElTypeNum != HTML_EL_Hidden_Input))
-		    {
-		      /* Not a form element, the NAME must be changed */
-		      change = TRUE;
-		      i++;
-		      sprintf (&value[length], "%d", i);
-		      result = TRUE;
-		      /* recheck the new value */
-		      elFound = SearchNAMEattribute (doc, value, attr, el);
-		    }
-		  else
-		    elFound = NULL;
-		}
-	      
-	      if (change && doIt)
-		{
-		  /* copy the element Label into the NAME attribute */
-		  TtaSetAttributeText (attr, value, el, doc);
-		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-		      elType.ElTypeNum == HTML_EL_MAP)
-		    /* it's a MAP element */
-		    {
-		      /* Search backward the refered image */
-		      attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-		      TtaSearchAttribute (attrType, SearchBackward, el,
-					  &image, &attr);
-		      if (!attr)
-			/* Not found. Search forward the refered image */
-			TtaSearchAttribute (attrType, SearchForward, el,
-					    &image, &attr);
-		      if (attr && image)
-			/* referred image found */
-			{
-			  i = MAX_LENGTH;
-			  TtaGiveTextAttributeValue (attr, url, &i);
-			  if (i == length+1 &&
-			      !strncmp (&url[1], value, length))
-			    {
-			      /* Change the USEMAP attribute of the image */
-			      attr = TtaGetAttribute (image, attrType);
-			      strcpy (&url[1], value);
-			      TtaSetAttributeText (attr, url, image, doc);
-			    }
-			}
-		    }
-		}
-	    }
-	  if (checkID && doIt)
-	    {
-	      /* Change or insert an ID attribute accordingly */
-	      attrType.AttrTypeNum = HTML_ATTR_ID;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
-		{
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (el, attr, doc);
-		  change = FALSE;
-		}
-	      else
-		{
-		  change = TRUE;
-		  TtaRegisterAttributeReplace (attr, el, doc);
-		}
-	      TtaSetAttributeText (attr, value, el, doc);
-	      if (!change)
-		TtaRegisterAttributeCreate (attr, el, doc);
-	    }
-	  else if (checkNAME && doIt)
-	    {
-	      /* Change or insert a NAME attribute accordingly */
-	      attrType.AttrTypeNum = HTML_ATTR_NAME;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
-		{
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (el, attr, doc);
-		  change = FALSE;
-		}
-	      else
-		{
-		  change = TRUE;
-		  TtaRegisterAttributeReplace (attr, el, doc);
-		}
-	      TtaSetAttributeText (attr, value, el, doc);
-	      if (!change)
-		TtaRegisterAttributeCreate (attr, el, doc);
-	    }
-	  if (checkXMLID && doIt)
-	    {
-	      /* Change or insert an ID attribute accordingly */
-	      TtaRegisterAttributeReplace (attrID, el, doc);
-	      TtaSetAttributeText (attrID, value, el, doc);
-	    }
-	  TtaFreeMemory (value);
-	}
+        /* the element has an attribute NAME or ID. Check it */
+        {
+          length = TtaGetTextAttributeLength (attr) + 10;
+          value = (char *)TtaGetMemory (length);
+          change = FALSE;
+          if (value)
+            {
+              TtaGiveTextAttributeValue (attr, value, &length);
+              i = 0;
+              elFound = SearchNAMEattribute (doc, value, attr, el);
+              while (elFound)
+                {
+                  /* skip form elements */
+                  foundType = TtaGetElementType (elFound);
+                  if (strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") ||
+                      (foundType.ElTypeNum != HTML_EL_Input &&
+                       foundType.ElTypeNum != HTML_EL_Text_Input &&
+                       foundType.ElTypeNum != HTML_EL_Password_Input &&
+                       foundType.ElTypeNum != HTML_EL_File_Input &&
+                       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
+                       foundType.ElTypeNum != HTML_EL_Radio_Input &&
+                       foundType.ElTypeNum != HTML_EL_Submit_Input &&
+                       foundType.ElTypeNum != HTML_EL_Reset_Input &&
+                       foundType.ElTypeNum != HTML_EL_Button_Input &&
+                       foundType.ElTypeNum != HTML_EL_Hidden_Input))
+                    {
+                      /* Not a form element, the NAME must be changed */
+                      change = TRUE;
+                      i++;
+                      sprintf (&value[length], "%d", i);
+                      result = TRUE;
+                      /* recheck the new value */
+                      elFound = SearchNAMEattribute (doc, value, attr, el);
+                    }
+                  else
+                    elFound = NULL;
+                }
+              
+              if (change && doIt)
+                {
+                  /* copy the element Label into the NAME attribute */
+                  TtaSetAttributeText (attr, value, el, doc);
+                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                      elType.ElTypeNum == HTML_EL_MAP)
+                    /* it's a MAP element */
+                    {
+                      /* Search backward the refered image */
+                      attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+                      TtaSearchAttribute (attrType, SearchBackward, el,
+                                          &image, &attr);
+                      if (!attr)
+                        /* Not found. Search forward the refered image */
+                        TtaSearchAttribute (attrType, SearchForward, el,
+                                            &image, &attr);
+                      if (attr && image)
+                        /* referred image found */
+                        {
+                          i = MAX_LENGTH;
+                          TtaGiveTextAttributeValue (attr, url, &i);
+                          if (i == length+1 &&
+                              !strncmp (&url[1], value, length))
+                            {
+                              /* Change the USEMAP attribute of the image */
+                              attr = TtaGetAttribute (image, attrType);
+                              strcpy (&url[1], value);
+                              TtaSetAttributeText (attr, url, image, doc);
+                            }
+                        }
+                    }
+                }
+            }
+          if (checkID && doIt)
+            {
+              /* Change or insert an ID attribute accordingly */
+              attrType.AttrTypeNum = HTML_ATTR_ID;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                  change = FALSE;
+                }
+              else
+                {
+                  change = TRUE;
+                  TtaRegisterAttributeReplace (attr, el, doc);
+                }
+              TtaSetAttributeText (attr, value, el, doc);
+              if (!change)
+                TtaRegisterAttributeCreate (attr, el, doc);
+            }
+          else if (checkNAME && doIt)
+            {
+              /* Change or insert a NAME attribute accordingly */
+              attrType.AttrTypeNum = HTML_ATTR_NAME;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                  change = FALSE;
+                }
+              else
+                {
+                  change = TRUE;
+                  TtaRegisterAttributeReplace (attr, el, doc);
+                }
+              TtaSetAttributeText (attr, value, el, doc);
+              if (!change)
+                TtaRegisterAttributeCreate (attr, el, doc);
+            }
+          if (checkXMLID && doIt)
+            {
+              /* Change or insert an ID attribute accordingly */
+              TtaRegisterAttributeReplace (attrID, el, doc);
+              TtaSetAttributeText (attrID, value, el, doc);
+            }
+          TtaFreeMemory (value);
+        }
     }
   return result;
 }

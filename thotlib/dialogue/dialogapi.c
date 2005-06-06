@@ -887,83 +887,83 @@ static void ClearChildren (struct Cat_Context *parentCatalogue)
   ----------------------------------------------------------------------*/
 int DestContenuMenu (struct Cat_Context *catalogue)
 {
-   register int        ent;
-   struct E_List      *adbloc;
-   ThotWidget          w;
-
-   if (catalogue == NULL)
-      return (1);
-   else if (catalogue->Cat_Widget == 0)
-      return (1);
-   else
-     {
-	if (catalogue->Cat_Type == CAT_LABEL)
-	  {
-	     /* Recupere le widget parent du widget detruit */
+  register int        ent;
+  struct E_List      *adbloc;
+  ThotWidget          w = NULL;
+  
+  if (catalogue == NULL)
+    return (1);
+  else if (catalogue->Cat_Widget == 0)
+    return (1);
+  else
+    {
+      if (catalogue->Cat_Type == CAT_LABEL)
+        {
+          /* Recupere le widget parent du widget detruit */
 #ifdef _GTK
-	     w = GTK_WIDGET(catalogue->Cat_Widget)->parent;
-	     gtk_widget_destroy (catalogue->Cat_Widget);
+          w = GTK_WIDGET(catalogue->Cat_Widget)->parent;
+          gtk_widget_destroy (catalogue->Cat_Widget);
 #endif /* _GTK */
 #ifdef _WINGUI
-	     w = GetParent (catalogue->Cat_Widget);
-	     DestroyWindow (w);
+          w = GetParent (catalogue->Cat_Widget);
+          DestroyWindow (w);
 #endif /* _WINGUI */
-	     catalogue->Cat_Widget = 0;
-	  }
-	else
-	  {
-	     /* Ce sont des menus */
-	     adbloc = catalogue->Cat_Entries;
-	     /* On saute les entrees 0 et 1 */
-	     ent = 2;
-	     w = 0;
-	     if (adbloc)
-		/* Liberation de toutes les entrees du menu */
-		while (adbloc->E_ThotWidget[ent])
-		  {
-		     /* Recuperation du widget parent en sautant le widget titre */
+          catalogue->Cat_Widget = 0;
+        }
+      else
+        {
+          /* Ce sont des menus */
+          adbloc = catalogue->Cat_Entries;
+          /* On saute les entrees 0 et 1 */
+          ent = 2;
+          w = 0;
+          if (adbloc)
+            /* Liberation de toutes les entrees du menu */
+            while (adbloc->E_ThotWidget[ent])
+              {
+                /* Recuperation du widget parent en sautant le widget titre */
 #ifdef _WINGUI
-		     if (w == 0 && ent)
-			w = GetParent (adbloc->E_ThotWidget[ent]);
-		     DestroyWindow (adbloc->E_ThotWidget[ent]);
+                if (w == 0 && ent)
+                  w = GetParent (adbloc->E_ThotWidget[ent]);
+                DestroyWindow (adbloc->E_ThotWidget[ent]);
 #endif  /* _WINGUI */
 #ifdef _GTK
-		     if (w == 0 && ent)
-		       w = GTK_WIDGET(adbloc->E_ThotWidget[ent])->parent;
-
-		     /* Libere les widgets */
-		     gtk_widget_hide (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
-		     gtk_widget_destroy (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
+                if (w == 0 && ent)
+                  w = GTK_WIDGET(adbloc->E_ThotWidget[ent])->parent;
+                
+                /* Libere les widgets */
+                gtk_widget_hide (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
+                gtk_widget_destroy (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
 #endif /* _GTK */
 #ifdef _WX
-		     /* nothing is done here because the menu items widgets are destroyed later */
+                /* nothing is done here because the menu items widgets are destroyed later */
 #endif /* _WX */
-		     adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
-		     /* Faut-il changer de bloc d'entrees ? */
-		     ent++;
-		     if (ent >= C_NUMBER)
-		       {
-			  if (adbloc->E_Next)
-			     adbloc = adbloc->E_Next;
-			  ent = 0;
-		       }
-		  }
-	     /* delete all children */
-	     if (catalogue->Cat_Type == CAT_POPUP
-		 || catalogue->Cat_Type == CAT_SCRPOPUP
-		 || catalogue->Cat_Type == CAT_PULL
-		 || catalogue->Cat_Type == CAT_MENU)
-	       ClearChildren (catalogue);
-	     
-	     /* Libere les blocs des entrees */
-	     adbloc = catalogue->Cat_Entries->E_Next;
-	     FreeEList (adbloc);
-	     catalogue->Cat_Entries->E_Next = NULL;
-	  }
-	/* On memorise le widget parent des entrees a recreer */
-	catalogue->Cat_XtWParent = w;
-	return (0);
-     }
+                adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
+                /* Faut-il changer de bloc d'entrees ? */
+                ent++;
+                if (ent >= C_NUMBER)
+                  {
+                    if (adbloc->E_Next)
+                      adbloc = adbloc->E_Next;
+                    ent = 0;
+                  }
+              }
+          /* delete all children */
+          if (catalogue->Cat_Type == CAT_POPUP
+              || catalogue->Cat_Type == CAT_SCRPOPUP
+              || catalogue->Cat_Type == CAT_PULL
+              || catalogue->Cat_Type == CAT_MENU)
+            ClearChildren (catalogue);
+          
+          /* Libere les blocs des entrees */
+          adbloc = catalogue->Cat_Entries->E_Next;
+          FreeEList (adbloc);
+          catalogue->Cat_Entries->E_Next = NULL;
+        }
+      /* On memorise le widget parent des entrees a recreer */
+      catalogue->Cat_XtWParent = w;
+      return (0);
+    }
 }
 
 /*----------------------------------------------------------------------
