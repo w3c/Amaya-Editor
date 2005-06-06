@@ -14,31 +14,23 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_LABEL_FILENAME">
-                  
                   <label>*File name*</label>
                 </object>
-                
                 <flag>wxRIGHT</flag>
-                
                 <border>4</border>
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_FILENAME"/>
-                
                 <option>1</option>
-                
                 <flag>wxEXPAND</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
-                  
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
               </object>
             </object>
-            
             <flag>wxBOTTOM|wxEXPAND</flag>
-            
             <border>4</border>
           </object>
           <object class="sizeritem">
@@ -46,43 +38,31 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_LABEL_DIR">
-                  
                   <label>*Directory*</label>
                 </object>
-                
                 <flag>wxRIGHT</flag>
-                
                 <border>4</border>
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_DIR"/>
-                
                 <option>1</option>
-                
                 <flag>wxEXPAND</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
-                  
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
                 </object>
               </object>
             </object>
-            
             <flag>wxBOTTOM|wxEXPAND</flag>
-            
             <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxComboBox" name="wxID_COMBOBOX">
-              
               <content/>
-              
               <size>400,-1</size>
-              
               <focused>1</focused>
             </object>
-            
             <flag>wxEXPAND</flag>
           </object>
           <object class="sizeritem">
@@ -90,37 +70,27 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_RADIOBOX">
-                  
                   <label></label>
-                  
                   <content>
                     <item>*In new tab*</item>
                     <item>*Repleace current one*</item>
                     <item>*In new window*</item>
                   </content>
-                  
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
-                
                 <flag>wxEXPAND</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_PROFILE_LABEL">
-                  
                   <label>*profile*</label>
-                  
                   <style>wxALIGN_RIGHT</style>
                 </object>
-                
                 <option>1</option>
-                
                 <flag>wxRIGHT|wxALIGN_CENTRE</flag>
-                
                 <border>4</border>
               </object>
               <object class="sizeritem">
                 <object class="wxComboBox" name="wxID_PROFILE">
-                  
                   <content>
                     <item>XHTML 1.1</item>
                     <item>XHTML Transitional</item>
@@ -128,26 +98,18 @@
                     <item>XHTML Basic</item>
                     <item>HTML Transitional</item>
                   </content>
-                  
                   <selection>1</selection>
-                  
                   <size>150,-1</size>
-                  
                   <style>wxCB_READONLY</style>
                 </object>
-                
                 <flag>wxTOP|wxEXPAND</flag>
               </object>
             </object>
-            
             <flag>wxBOTTOM|wxEXPAND</flag>
-            
             <border>4</border>
           </object>
         </object>
-        
         <flag>wxALL|wxEXPAND</flag>
-        
         <border>5</border>
       </object>
       <object class="sizeritem">
@@ -158,17 +120,14 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_OK">
-              
               <label>*Open*</label>
-              
               <default>1</default>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_BUTTON_CLEAR">
-              
+            <object class="wxButton" name="wxID_CLEAR">
               <label>*Clear*</label>
             </object>
           </object>
@@ -176,7 +135,6 @@
             <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CANCEL">
-              
               <label>*Cancel*</label>
             </object>
           </object>

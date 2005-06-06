@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),              OpenDocDlgWX::OnOpenButton )
-  EVT_BUTTON(     XRCID("wxID_BUTTON_CLEAR"),    OpenDocDlgWX::OnClearButton )
+  EVT_BUTTON(     XRCID("wxID_CLEAR"),           OpenDocDlgWX::OnClearButton )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),          OpenDocDlgWX::OnCancelButton )
   EVT_BUTTON(     XRCID("wxID_BUTTON_DIR"),      OpenDocDlgWX::OnDirButton )
   EVT_BUTTON(     XRCID("wxID_BUTTON_FILENAME"), OpenDocDlgWX::OnFilenameButton )
@@ -62,7 +62,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   SetTitle( title );
   //  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
-  XRCCTRL(*this, "wxID_BUTTON_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
+  XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
   XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
   XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
