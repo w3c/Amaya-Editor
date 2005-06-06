@@ -187,7 +187,7 @@ MENUS
 	Types.AreaMap button:BRectangle -> CreateAreaRect icon:rectangle.png;
 
 	Types.StructTypes button:BStyle -> CreateStyle;
-	Types.StructTypes button:BComment -> CreateComment;
+	Types.StructTypes button:BComment -> CreateComment icon:XHTML_Comment.png;
 	Types.StructTypes button:BBase -> CreateBase;
 	Types.StructTypes button:BMeta -> CreateMeta;
 	Types.StructTypes button:BLink -> CreateLinkInHead;
@@ -197,14 +197,15 @@ MENUS
 	Types button:BParagraph -> CreateParagraph;
 	Types button:BPreformatted -> CreatePreformatted;
 	Types button:BAddress -> CreateAddress;
-	Types button:BRule -> CreateHorizontalRule;
+	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
 	Types button:BImage -> CreateImage icon:XHTML_Image.png;
-	Types button:BBreak -> CreateBreak;
+	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
 	Types button:BDivision -> CreateDivision;
-	Types button:BBlockQuote -> CreateBlockQuote;
+	Types button:BBlockQuote -> CreateBlockQuote icon:XHTML_quote.png;
 	Types button:BIFrame -> CreateIFrame;
 	Types button:BRuby -> CreateRuby;
-        Types Separator;
+  Types Separator;
+
 	Types button:TSectionNumber -> SectionNumbering;
 	Types button:BMakeToc -> MakeToc;
 	Types button:BDate -> CreateDate;
@@ -234,7 +235,7 @@ MENUS
     Types.Font toggle:TQuotation -> SetOnOffQuotation;
     Types.Font toggle:TBDO -> SetOnOffBDO;
 
-	XMLTypes button:BDisplayMath -> CreateMath;
+	XMLTypes button:BDisplayMath -> CreateMath icon:MATHML_Bmath.png;
 	XMLTypes.MathElement button:BMText -> CreateMTEXT;
 	XMLTypes.MathElement button:BMIdentifier -> CreateMI;
 	XMLTypes.MathElement button:BMNumber -> CreateMN;
@@ -273,13 +274,13 @@ MENUS
         XMLTypes button:BShowLibrary -> ShowLibrary;
 	XMLTypes button:BAddNewModel -> AddNewModelIntoLibraryForm;
 	XMLTypes Separator;
-	XMLTypes button:BXMLComment -> CreateComment;
+	XMLTypes button:BXMLComment -> CreateComment icon:XHTML_Comment.png;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
 
 	Links button:BLinkTarget -> LinkToPreviousTarget;
 	Links button:BCreateLink -> CreateOrChangeLink icon:XHTML_Link.png;
-	Links button:BCreateTarget -> CreateTarget;
-	Links button:BDeleteAnchor -> DeleteAnchor;
+	Links button:BCreateTarget -> CreateTarget icon:XHTML_Target.png;
+	Links button:BDeleteAnchor -> DeleteAnchor icon:XHTML_DelTarget.png;
 	Links button:BMakeID -> MakeIDMenu;
 
 	Views toggle:TShowPanel -> ShowPanel icon:panel_on_off.png;
