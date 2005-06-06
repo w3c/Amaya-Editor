@@ -1098,6 +1098,9 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 #endif /* DAV */
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+
+  // then just close the dialog
+  OnCancel(event);
 }
 
 /*----------------------------------------------------------------------

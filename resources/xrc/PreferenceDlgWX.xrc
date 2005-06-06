@@ -10,7 +10,6 @@
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <usenotebooksizer>1</usenotebooksizer>
           <style platform="unix">wxNB_LEFT</style>
-          <focused>1</focused>
           <object class="notebookpage">
             <label>*Generale/Editeur*</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
@@ -32,7 +31,6 @@
                     <object class="sizeritem">
                       <object class="wxComboBox" name="wxID_COMBOBOX_HOMEPAGE">
                         <content/>
-                        <focused>1</focused>
                       </object>
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>
@@ -179,7 +177,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
             <selected>1</selected>
           </object>
@@ -301,7 +298,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -409,7 +405,6 @@
                   <border>10</border>
                 </object>
               </object>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -540,7 +535,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -612,7 +606,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -739,7 +732,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -779,7 +771,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -878,7 +869,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
@@ -1016,7 +1006,6 @@
                 </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
-              <focused>1</focused>
             </object>
           </object>
         </object>
@@ -1035,6 +1024,7 @@
             <object class="wxButton" name="wxID_OK">
               <label>*OK*</label>
               <default>1</default>
+              <focused>1</focused>
             </object>
           </object>
           <object class="spacer">
@@ -1059,6 +1049,5 @@
         <border>5</border>
       </object>
     </object>
-    <focused>1</focused>
   </object>
 </resource>
