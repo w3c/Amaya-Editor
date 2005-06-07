@@ -257,6 +257,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
    int            length;
    SSchema        htmlSchema;
    ThotBool       isImage, isInline;
+   char           msgBuffer[MaxMsgLength];
+   int            lineNum;
 
    *error = 0;
    doc = context->doc;
@@ -915,6 +917,24 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 }
        while (prev);
        break;
+
+     case HTML_EL_FIELDSET:
+       
+       childType.ElTypeNum = 0;
+       child = TtaGetFirstChild (el);
+       if (child != NULL)
+	   childType = TtaGetElementType (child);
+       if (childType.ElTypeNum != HTML_EL_LEGEND)
+	 {
+	   sprintf (msgBuffer, "The <fieldset> element requires <legend> as first child element");
+	   lineNum = TtaGetElementLineNumber(el);
+	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	     XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+	   else
+	     HTMLParseError (doc, msgBuffer, lineNum);
+
+	 }
+      break;
 
      default:
        break;
