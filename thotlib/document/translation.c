@@ -1013,15 +1013,15 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
   ScriptTransl       *pTransAlph;
   StringTransl       *pTrans;
   PtrElement          pParent;
-  CHAR_T              c;
+  CHAR_T              c = 0;
   char                ci;
   int                 i, j, b, ft, lt;
   ThotBool            entityName, encode;
-
+  
   pTransAlph = NULL;
   lt = 0;
   if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
-	pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPolyLine) ||
+        pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPolyLine) ||
       !transChar)
     pTSch = GetTranslationSchema (pEl->ElStructSchema);
   else
@@ -1032,223 +1032,223 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
     {
     case LtText /* traitement d'une feuille de texte */ :
       if (pEl->ElTextLength > 0)
-	/* la feuille n'est pas vide */
-	{
-	  pBufT = pEl->ElText;	/* 1er buffer a traiter */
-	  /* characters are encoded
-	     except for hidden (internal) elements */
-	  pParent = pEl->ElParent;
-	  if (pParent)
-	    encode = !TypeHasException (ExcHidden, pParent->ElTypeNumber,
-					pParent->ElStructSchema);
-	  else
-	    encode = TRUE;
-	  entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
-	  if (!pTransAlph || !transChar)
-	    /* on ne traduit pas quand la table de traduction est vide */
-	    /* parcourt les buffers de l'element */
-	    while (pBufT)
-	      {
-		i = 0;
-		while (pBufT->BuContent[i] != EOS)
-		  {
-		    c = pBufT->BuContent[i++];
-		    if (encode)
-		      PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, TRUE,
-			       entityName);
-		    else
-		      PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, FALSE,
-			       entityName);
-		  }
-		pBufT = pBufT->BuNext;
-	      }
-	  else if (pTSch != NULL)
-	    /* effectue les traductions de caracteres selon la table */
-	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum,
-			   doc, FALSE, entityName);
-	}
+        /* la feuille n'est pas vide */
+        {
+          pBufT = pEl->ElText;	/* 1er buffer a traiter */
+          /* characters are encoded
+             except for hidden (internal) elements */
+          pParent = pEl->ElParent;
+          if (pParent)
+            encode = !TypeHasException (ExcHidden, pParent->ElTypeNumber,
+                                        pParent->ElStructSchema);
+          else
+            encode = TRUE;
+          entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
+          if (!pTransAlph || !transChar)
+            /* on ne traduit pas quand la table de traduction est vide */
+            /* parcourt les buffers de l'element */
+            while (pBufT)
+              {
+                i = 0;
+                while (pBufT->BuContent[i] != EOS)
+                  {
+                    c = pBufT->BuContent[i++];
+                    if (encode)
+                      PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, TRUE,
+                               entityName);
+                    else
+                      PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, FALSE,
+                               entityName);
+                  }
+                pBufT = pBufT->BuNext;
+              }
+          else if (pTSch != NULL)
+            /* effectue les traductions de caracteres selon la table */
+            TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum,
+                           doc, FALSE, entityName);
+        }
       break;
     case LtSymbol:
     case LtGraphics:
     case LtPolyLine:
       /* if it's an Unicode character, output its code */
       if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
-	PutChar ((wchar_t) pEl->ElWideChar, fnum, NULL, doc, lineBreak, TRUE,
-		 FALSE);
+        PutChar ((wchar_t) pEl->ElWideChar, fnum, NULL, doc, lineBreak, TRUE,
+                 FALSE);
       else if (pTSch != NULL)
-	{
-	  if (!transChar)
-	    ft = 0;
-	  else if (pEl->ElLeafType == LtSymbol)
-	    /* cherche la premiere et la derniere regle de traduction */
-	    /* a appliquer a l'element */
-	    {
-	      ft = pTSch->TsSymbolFirst;
-	      lt = pTSch->TsSymbolLast;
-	    }
-	  else
-	    {
-	      ft = pTSch->TsGraphicsFirst;
-	      lt = pTSch->TsGraphicsLast;
-	    }
-	  /* prend dans c le caractere qui represente la forme graphique */
-	  if (pEl->ElLeafType == LtPolyLine)
-	    ci = pEl->ElPolyLineType;
-	  else
-	    ci = pEl->ElGraph;
-	  if (ft == 0)
-	    /* pas de traduction */
-	    {
-	      if (ci != EOS)
-		{
-		  if (pEl->ElLeafType != LtSymbol)
-		    PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
-		  else
-		    switch (ci)
-		      {
-		      case 'c':
-			c = 0x222E; /* contour integral */
-			break;
-		      case 'd':
-			c = 0x222C; /* double integral */
-			break;
-		      case 'h':
-			c = 0x00AF; /* overline */
-			break;
-		      case 'i':
-			c = 0x222B; /* integral */
-			break;
-		      case 'o':
-			c = 0xFE37; /* over brace */
-			break;
-		      case 'r':
-			c = 0x221A; /* square root */
-			break;
-		      case 'u':
-			c = 0xFE38; /* under brace */
-			break;
-		      case 'v':
-			c = 0x007C; /* vertical line */
-			break;
-		      case 'D':
-			c = 0x2225; /* double vertical line */
-			break;
-		      case 'I':
-			c = 0x22C2; /* n-ary intersection */
-			break;
-		      case 'L':
-			c = 0x2190; /* leftwards arrow */
-			break;
-		      case 'P':
-			c = 0x220F; /* n-ary product */
-			break;
-		      case 'R':
-			c = 0x2192; /* rightwards arrow */
-			break;
-		      case 'S':
-			c = 0x2211; /* n-ary summation */
-			break;
-		      case 'U':
-			c = 0x22C3; /* n-ary union */
-			break;
-		      case 'V':
-			c = 0x2193; /* downwards arrow */
-			break;
-		      case '^':
-			c = 0x2191; /* upwards arrow */
-			break;
-		      case '<':
-			c = 0x27E8; /* mathematical left angle bracket */
-			break;
-		      case '>':
-			c = 0x27E9; /* mathematical right angle bracket */
-			break;
-		      case '|':
-			c = 0x2223; /* divides */
-			break;
-		      default:
-			c = (CHAR_T)ci;
-		      }
-		    PutChar (c, fnum, NULL, doc, lineBreak, TRUE, FALSE);
-		}
-	    }
-	  else
-	    /* on traduit l'element */
-	    /* cherche le symbole dans les chaines sources de la */
-	    /* table de traduction */
-	    {
-	      while (pTSch->TsCharTransl[ft - 1].StSource[0] < ci && ft < lt)
-		ft++;
-	      if (pTSch->TsCharTransl[ft - 1].StSource[0] == ci)
-		/* il y a une regle de traduction pour ce symbole */
-		{
-		  b = 0;
-		  pTrans = &pTSch->TsCharTransl[ft - 1];
-		  while (pTrans->StTarget[b] != EOS)
-		    {
-		      ci = pTrans->StTarget[b];
-		      PutChar ((wchar_t) ci, fnum, NULL, doc,
-			       lineBreak, TRUE, FALSE);
-		      b++;
-		    }
-		}
-	      else
-		/* ce symbole ne se traduit pas */
-		if (ci != EOS)
-		  PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
-	    }
-	  if (pEl->ElLeafType == LtPolyLine && pEl->ElNPoints > 0)
-	    /* la ligne a au moins un point de controle */
-	    /* on ecrit les coordonnees des points de controle */
-	    {
-	      pBufT = pEl->ElPolyLineBuffer;	/* 1er buffer a traiter */
-	      /* parcourt les buffers de l'element */
-	      while (pBufT != NULL)
-		{
-		  for (i = 0; i < pBufT->BuLength; i++)
-		    {
-		      PutChar ((wchar_t) ' ', fnum, NULL, doc, lineBreak,
-			       FALSE, FALSE);
-		      PutInt (pBufT->BuPoints[i].XCoord, fnum, NULL, doc,
-			      lineBreak);
-		      PutChar ((wchar_t) ',', fnum, NULL, doc, lineBreak,
-			       FALSE, FALSE);
-		      PutInt (pBufT->BuPoints[i].YCoord, fnum, NULL, doc,
-			      lineBreak);
-		    }
-		  pBufT = pBufT->BuNext;
-		}
-	    }
-	}
+        {
+          if (!transChar)
+            ft = 0;
+          else if (pEl->ElLeafType == LtSymbol)
+            /* cherche la premiere et la derniere regle de traduction */
+            /* a appliquer a l'element */
+            {
+              ft = pTSch->TsSymbolFirst;
+              lt = pTSch->TsSymbolLast;
+            }
+          else
+            {
+              ft = pTSch->TsGraphicsFirst;
+              lt = pTSch->TsGraphicsLast;
+            }
+          /* prend dans c le caractere qui represente la forme graphique */
+          if (pEl->ElLeafType == LtPolyLine)
+            ci = pEl->ElPolyLineType;
+          else
+            ci = pEl->ElGraph;
+          if (ft == 0)
+            /* pas de traduction */
+            {
+              if (ci != EOS)
+                {
+                  if (pEl->ElLeafType != LtSymbol)
+                    PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+                  else
+                    switch (ci)
+                      {
+                      case 'c':
+                        c = 0x222E; /* contour integral */
+                        break;
+                      case 'd':
+                        c = 0x222C; /* double integral */
+                        break;
+                      case 'h':
+                        c = 0x00AF; /* overline */
+                        break;
+                      case 'i':
+                        c = 0x222B; /* integral */
+                        break;
+                      case 'o':
+                        c = 0xFE37; /* over brace */
+                        break;
+                      case 'r':
+                        c = 0x221A; /* square root */
+                        break;
+                      case 'u':
+                        c = 0xFE38; /* under brace */
+                        break;
+                      case 'v':
+                        c = 0x007C; /* vertical line */
+                        break;
+                      case 'D':
+                        c = 0x2225; /* double vertical line */
+                        break;
+                      case 'I':
+                        c = 0x22C2; /* n-ary intersection */
+                        break;
+                      case 'L':
+                        c = 0x2190; /* leftwards arrow */
+                        break;
+                      case 'P':
+                        c = 0x220F; /* n-ary product */
+                        break;
+                      case 'R':
+                        c = 0x2192; /* rightwards arrow */
+                        break;
+                      case 'S':
+                        c = 0x2211; /* n-ary summation */
+                        break;
+                      case 'U':
+                        c = 0x22C3; /* n-ary union */
+                        break;
+                      case 'V':
+                        c = 0x2193; /* downwards arrow */
+                        break;
+                      case '^':
+                        c = 0x2191; /* upwards arrow */
+                        break;
+                      case '<':
+                        c = 0x27E8; /* mathematical left angle bracket */
+                        break;
+                      case '>':
+                        c = 0x27E9; /* mathematical right angle bracket */
+                        break;
+                      case '|':
+                        c = 0x2223; /* divides */
+                        break;
+                      default:
+                        c = (CHAR_T)ci;
+                      }
+                  PutChar (c, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+                }
+            }
+          else
+            /* on traduit l'element */
+            /* cherche le symbole dans les chaines sources de la */
+            /* table de traduction */
+            {
+              while (pTSch->TsCharTransl[ft - 1].StSource[0] < ci && ft < lt)
+                ft++;
+              if (pTSch->TsCharTransl[ft - 1].StSource[0] == ci)
+                /* il y a une regle de traduction pour ce symbole */
+                {
+                  b = 0;
+                  pTrans = &pTSch->TsCharTransl[ft - 1];
+                  while (pTrans->StTarget[b] != EOS)
+                    {
+                      ci = pTrans->StTarget[b];
+                      PutChar ((wchar_t) ci, fnum, NULL, doc,
+                               lineBreak, TRUE, FALSE);
+                      b++;
+                    }
+                }
+              else
+                /* ce symbole ne se traduit pas */
+                if (ci != EOS)
+                  PutChar ((wchar_t) ci, fnum, NULL, doc, lineBreak, TRUE, FALSE);
+            }
+          if (pEl->ElLeafType == LtPolyLine && pEl->ElNPoints > 0)
+            /* la ligne a au moins un point de controle */
+            /* on ecrit les coordonnees des points de controle */
+            {
+              pBufT = pEl->ElPolyLineBuffer;	/* 1er buffer a traiter */
+              /* parcourt les buffers de l'element */
+              while (pBufT != NULL)
+                {
+                  for (i = 0; i < pBufT->BuLength; i++)
+                    {
+                      PutChar ((wchar_t) ' ', fnum, NULL, doc, lineBreak,
+                               FALSE, FALSE);
+                      PutInt (pBufT->BuPoints[i].XCoord, fnum, NULL, doc,
+                              lineBreak);
+                      PutChar ((wchar_t) ',', fnum, NULL, doc, lineBreak,
+                               FALSE, FALSE);
+                      PutInt (pBufT->BuPoints[i].YCoord, fnum, NULL, doc,
+                              lineBreak);
+                    }
+                  pBufT = pBufT->BuNext;
+                }
+            }
+        }
       break;
-
+      
     case LtPicture:
       /* Si le schema de traduction comporte un buffer */
       /* pour les images, le nom du fichier contenant l'image */
       /* est range' dans ce buffer */
       if (pTSch != NULL && pTSch->TsPictureBuffer > 0)
-	{
-	  b = pTSch->TsPictureBuffer;
-	  pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
-	  if (pEl->ElTextLength > 0)
-	    /* la feuille n'est pas vide */
-	    {
-	      j = 0;
-	      pBufT = pEl->ElText;	/* 1er buffer a traiter */
-	      /* parcourt les buffers de l'element */
-	      while (pBufT != NULL)
-		{
-		  i = 0;
-		  do
-		    pTSch->TsBuffer[b - 1][j++] = (char) pBufT->BuContent[i++];
-		  while (pBufT->BuContent[i - 1] != EOS &&
-			 b < MAX_TRANSL_BUFFER_LEN);
-		  pBufT = pBufT->BuNext;
-		}
-	      if (j > 0)
-		pTSch->TsBuffer[b - 1][j - 1] = EOS;
-	    }
-	}
+        {
+          b = pTSch->TsPictureBuffer;
+          pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
+          if (pEl->ElTextLength > 0)
+            /* la feuille n'est pas vide */
+            {
+              j = 0;
+              pBufT = pEl->ElText;	/* 1er buffer a traiter */
+              /* parcourt les buffers de l'element */
+              while (pBufT != NULL)
+                {
+                  i = 0;
+                  do
+                    pTSch->TsBuffer[b - 1][j++] = (char) pBufT->BuContent[i++];
+                  while (pBufT->BuContent[i - 1] != EOS &&
+                         b < MAX_TRANSL_BUFFER_LEN);
+                  pBufT = pBufT->BuNext;
+                }
+              if (j > 0)
+                pTSch->TsBuffer[b - 1][j - 1] = EOS;
+            }
+        }
       break;
     default:
       break;

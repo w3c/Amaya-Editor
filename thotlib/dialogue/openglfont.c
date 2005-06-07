@@ -742,14 +742,17 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
                              GL_glyph *BitmapGlyph)
 {
   FT_BitmapGlyph  bitmap;
-  FT_Bitmap       *source;
+  FT_Bitmap       *source = NULL;
   FT_Glyph        Glyph;
   unsigned        char *data = NULL, *ptr = NULL, *src = NULL;
   int             err = 0;
   register unsigned int y = 0, w = 0, h = 0, p = 0, i = 0;
   int             advance = 9; /* default value (used when no glyph has been found)*/
 
-  err = 0;
+  /* just to be sure bitmap is empty */
+  memset( &bitmap, 0, sizeof(BitmapGlyph) );
+
+  err = 1; /* by default suppose the process doesn't find a bitmap glyph */
   if ( g != 0 &&
        !FT_Load_Glyph (font->face, g, thot_ft_load_mode) &&
        !FT_Get_Glyph (font->face->glyph, &Glyph) )
@@ -804,10 +807,10 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
                 }
             }
           else
-		  {
-            err = 1;
-            FT_Done_Glyph (Glyph);
-		  }
+            {
+              err = 1;
+              FT_Done_Glyph (Glyph);
+            }
         }
     }
   else

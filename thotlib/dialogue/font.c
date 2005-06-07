@@ -1769,402 +1769,402 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 {
   ThotFont           lfont, *pfont;
   CHARSET            encoding;
-  char               code;
+  char               code = ' ';
   int                car;
   int                frame;
   unsigned int       mask;
-
+  
   *font = NULL;
   car = EOS;
   if (fontset)
     {
       if (c == ZERO_SPACE ||
-	  c == EOL || c == BREAK_LINE ||
-	  c == SPACE || c == TAB ||
-	  c == NEW_LINE || c == UNBREAKABLE_SPACE ||
-	  c == EN_QUAD || c == EM_QUAD ||
-	  c == EN_SPACE || c == EM_SPACE ||
-	  c == THICK_SPACE || c == FOUR_PER_EM ||
-	  c == SIX_PER_EM || c == FIG_SPACE ||
-	  c == PUNC_SPACE || c == THIN_SPACE ||
-	  c == HAIR_SPACE || c == MEDIUM_SPACE)
-	{
-	  /* various spaces */
-	  *font = fontset->Font_1;
-	  car = (int) c;
-	}
+          c == EOL || c == BREAK_LINE ||
+          c == SPACE || c == TAB ||
+          c == NEW_LINE || c == UNBREAKABLE_SPACE ||
+          c == EN_QUAD || c == EM_QUAD ||
+          c == EN_SPACE || c == EM_SPACE ||
+          c == THICK_SPACE || c == FOUR_PER_EM ||
+          c == SIX_PER_EM || c == FIG_SPACE ||
+          c == PUNC_SPACE || c == THIN_SPACE ||
+          c == HAIR_SPACE || c == MEDIUM_SPACE)
+        {
+          /* various spaces */
+          *font = fontset->Font_1;
+          car = (int) c;
+        }
       else if (c <= 0xFF)
-	{
-	  /* 0 -> FF */
-	  *font = fontset->Font_1;
-	  car = (int) c;
-	}
+        {
+          /* 0 -> FF */
+          *font = fontset->Font_1;
+          car = (int) c;
+        }
       else if (c == 0x202A /* lre */ || c == 0x200B /* zwsp*/ ||
-	       c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
-	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
-	       c == 0x202B /* rle */ || c == 0x202C /* pdf */ || 
-	       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
-	       c == 0x2061 /*ApplyFunction*/ || c == 0x2062 /*InvisibleTimes*/)
-	car =  INVISIBLE_CHAR;
+               c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
+               c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+               c == 0x202B /* rle */ || c == 0x202C /* pdf */ || 
+               c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
+               c == 0x2061 /*ApplyFunction*/ || c == 0x2062 /*InvisibleTimes*/)
+        car =  INVISIBLE_CHAR;
       else
-	{
-	  if (c >= 0x370 && c < 0x3FF)
-	    {
-	      /* Greek characters */
+        {
+          if (c >= 0x370 && c < 0x3FF)
+            {
+              /* Greek characters */
 #ifdef _GL
-	      /* use STIX fonts here */
-	      code = 'E';
-	      car = GetStixFontAndIndex (c, fontset, &pfont);
-	      if (pfont == NULL)
-		{
-		  code = GreekFontScript;
-		  if (code == '7')
-		    {
-		      pfont = &(fontset->Font_7);
+              /* use STIX fonts here */
+              code = 'E';
+              car = GetStixFontAndIndex (c, fontset, &pfont);
+              if (pfont == NULL)
+                {
+                  code = GreekFontScript;
+                  if (code == '7')
+                    {
+                      pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
-		      encoding = WINDOWS_1253;
+                      encoding = WINDOWS_1253;
 #else /* _WINDOWS */
-		      encoding = ISO_8859_7;
+                      encoding = ISO_8859_7;
 #endif /* _WINDOWS */
-		    }
-		  else
-		    {
-		      pfont = &(fontset->Font_16);
-		      encoding = ISO_SYMBOL;
-		    }
-		}
+                    }
+                  else
+                    {
+                      pfont = &(fontset->Font_16);
+                      encoding = ISO_SYMBOL;
+                    }
+                }
 #else /* _GL */
-	      code = GreekFontScript;
-	      if (c == 0x3C2 || c == 0x3D1 ||
-		  c == 0x3D2 || c == 0x3D5 ||
-		  c == 0x3D6)
-		/* final sigma, thetasym, upsih, phi, piv */
-		/* use the Symbol font */
-		{
-		  code = 'G';
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
-		}
-	      else if (code == '7')
-		{
-		  pfont = &(fontset->Font_7);
+              code = GreekFontScript;
+              if (c == 0x3C2 || c == 0x3D1 ||
+                  c == 0x3D2 || c == 0x3D5 ||
+                  c == 0x3D6)
+                /* final sigma, thetasym, upsih, phi, piv */
+                /* use the Symbol font */
+                {
+                  code = 'G';
+                  pfont = &(fontset->Font_16);
+                  encoding = ISO_SYMBOL;
+                }
+              else if (code == '7')
+                {
+                  pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
-		  encoding = WINDOWS_1253;
+                  encoding = WINDOWS_1253;
 #else /* _WINDOWS */
-		  encoding = ISO_8859_7;
+                  encoding = ISO_8859_7;
 #endif /* _WINDOWS */
-		}
-	      else
-		{
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
-		}
+                }
+              else
+                {
+                  pfont = &(fontset->Font_16);
+                  encoding = ISO_SYMBOL;
+                }
 #endif /* _GL */
-	    }
-	  else if (c == 0x210E /* planckh */ ||
-		   c == 0x2146 /* DifferentialD */ ||
-		   c == 0x2147 /* ExponentialE */ ||
-		   c == 0x2148 /* ImaginaryI */)
-	    {
+            }
+          else if (c == 0x210E /* planckh */ ||
+                   c == 0x2146 /* DifferentialD */ ||
+                   c == 0x2147 /* ExponentialE */ ||
+                   c == 0x2148 /* ImaginaryI */)
+            {
 #ifdef _GL
-	      /* use STIX fonts here */
-	      code = 'E';
-	      car = GetStixFontAndIndex (c, fontset, &pfont);
-	      if (pfont == NULL )
-		{
-		  code = '1'; /* West Europe Latin */
-		  pfont = &(fontset->Font_1);
-		  if (c == 0x2148 /* ImaginaryI */)
-		    car = 105;
-		  else if (c == 0x2146 /* DifferentialD */)
-		    car = 100;
-		  else if (c == 0x210E /* planckh */)
-		    car = 104;
-		  else /* ExponentialE */
-		    car = 101;
-		}
+              /* use STIX fonts here */
+              code = 'E';
+              car = GetStixFontAndIndex (c, fontset, &pfont);
+              if (pfont == NULL )
+                {
+                  code = '1'; /* West Europe Latin */
+                  pfont = &(fontset->Font_1);
+                  if (c == 0x2148 /* ImaginaryI */)
+                    car = 105;
+                  else if (c == 0x2146 /* DifferentialD */)
+                    car = 100;
+                  else if (c == 0x210E /* planckh */)
+                    car = 104;
+                  else /* ExponentialE */
+                    car = 101;
+                }
 #else /* _GL */
-	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->Font_1);
+              code = '1'; /* West Europe Latin */
+              pfont = &(fontset->Font_1);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1252;
+              encoding = WINDOWS_1252;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_1;
+              encoding = ISO_8859_1;
 #endif /* _WINDOWS */
-	      if (c == 0x2148 /* ImaginaryI */)
-		c = 105;
-	      else if (c == 0x2146 /* DifferentialD */)
-		c = 100;
-	      else if (c == 0x210E /* planckh */)
-		c = 104;
-	      else /* ExponentialE */
-		c = 101;
+              if (c == 0x2148 /* ImaginaryI */)
+                c = 105;
+              else if (c == 0x2146 /* DifferentialD */)
+                c = 100;
+              else if (c == 0x210E /* planckh */)
+                c = 104;
+              else /* ExponentialE */
+                c = 101;
 #endif /* _GL */
-	    }
-	  else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
-		   c == 0x178  /*ydiaeresis*/ ||
-		   c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
-		   c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
-		   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
-		   c == 0x2026 /*hellip*/ ||
-		   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
-		   c == 0x20AC /*euro*/)
-	    {
+            }
+          else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
+                   c == 0x178  /*ydiaeresis*/ ||
+                   c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
+                   c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
+                   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
+                   c == 0x2026 /*hellip*/ ||
+                   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
+                   c == 0x20AC /*euro*/)
+            {
 #ifdef _GL
-	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->Font_1);
+              code = '1'; /* West Europe Latin */
+              pfont = &(fontset->Font_1);
 #else /* _GL */
 #ifdef _WINDOWS
-	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->Font_1);
-	      encoding = WINDOWS_1252;
+              code = '1'; /* West Europe Latin */
+              pfont = &(fontset->Font_1);
+              encoding = WINDOWS_1252;
 #else /* _WINDOWS */
-	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
-		  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
-		{
-		  if (Printing)
-		    {
-		      code = '1'; /* Extended Latin */
-		      pfont = &(fontset->Font_1);
-		      encoding = ISO_8859_1;
-		      if (c == 0x152)
-			c = 75;
-		      else if (c == 0x153)
-			c = 76;
-		      else if (c == 0x178)
-			c = 255;
-		      else
-			c = 128;
-		    }
-		  else
-		    {
-		      code = 'F'; /* Extended Latin */
-		      pfont = &(fontset->Font_15);
-		      encoding = ISO_8859_15;
-		    }
-		}
-	      else
-		{
-		  /* use an approaching character */
-		  encoding = ISO_8859_1;
-		  code = '1';
-		  pfont = &(fontset->Font_1);
-		  if (c == 0x2C6)       /*circ*/
-		    c = 94;
-		  else if (c == 0x2DC)  /*tilde*/
-		    c = 126;
-		  else if (c == 0x2018 || c == 0x201C)
-		    c = 96;
-		  else if (c == 0x2019 || c == 0x201D)
-		    c = 39;
-		  else if (c == 0x201A || c == 0x201E)
-		    c = 44;
-		  else if (c == 0x2039)
-		    c = 60;
-		  else if (c == 0x203A)
-		    c = 62;
-		  else
-		    {
-		      code = 'G';
-		      pfont = &(fontset->Font_16);
-		      if (c == 0x2013)  /* en dash */
-			c = 45;
-		      else if (c == 0x2014) /* em dash */
-			c = 190;
-		      else if (c == 0x2026) /* horizontal ellipsis */
-			c = 188;
-		    }
-		}
+              if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
+                  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
+                {
+                  if (Printing)
+                    {
+                      code = '1'; /* Extended Latin */
+                      pfont = &(fontset->Font_1);
+                      encoding = ISO_8859_1;
+                      if (c == 0x152)
+                        c = 75;
+                      else if (c == 0x153)
+                        c = 76;
+                      else if (c == 0x178)
+                        c = 255;
+                      else
+                        c = 128;
+                    }
+                  else
+                    {
+                      code = 'F'; /* Extended Latin */
+                      pfont = &(fontset->Font_15);
+                      encoding = ISO_8859_15;
+                    }
+                }
+              else
+                {
+                  /* use an approaching character */
+                  encoding = ISO_8859_1;
+                  code = '1';
+                  pfont = &(fontset->Font_1);
+                  if (c == 0x2C6)       /*circ*/
+                    c = 94;
+                  else if (c == 0x2DC)  /*tilde*/
+                    c = 126;
+                  else if (c == 0x2018 || c == 0x201C)
+                    c = 96;
+                  else if (c == 0x2019 || c == 0x201D)
+                    c = 39;
+                  else if (c == 0x201A || c == 0x201E)
+                    c = 44;
+                  else if (c == 0x2039)
+                    c = 60;
+                  else if (c == 0x203A)
+                    c = 62;
+                  else
+                    {
+                      code = 'G';
+                      pfont = &(fontset->Font_16);
+                      if (c == 0x2013)  /* en dash */
+                        c = 45;
+                      else if (c == 0x2014) /* em dash */
+                        c = 190;
+                      else if (c == 0x2026) /* horizontal ellipsis */
+                        c = 188;
+                    }
+                }
 #endif /* _WINDOWS */
 #endif /* _GL */
-	    }
-	  else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
-	    {
-	      code = '9'; /* Turkish */
-	      pfont = &(fontset->Font_9);
+            }
+          else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
+            {
+              code = '9'; /* Turkish */
+              pfont = &(fontset->Font_9);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1254;
+              encoding = WINDOWS_1254;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_9;
+              encoding = ISO_8859_9;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x17F)
-	    {
-	      code = '2'; /* Central Europe */
-	      pfont = &(fontset->Font_2);
+            }
+          else if (c < 0x17F)
+            {
+              code = '2'; /* Central Europe */
+              pfont = &(fontset->Font_2);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1250;
+              encoding = WINDOWS_1250;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_2;
+              encoding = ISO_8859_2;
 #endif /* _WINDOWS */
-	    }
-	  else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
-		   (c < 0x2018 || c > 0x201D) && /* Windows quotations */
-		   c != 0x20AC) || /* euro */
-		   c == 0x25CA ||  /* lozenge */
+            }
+          else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
+                    (c < 0x2018 || c > 0x201D) && /* Windows quotations */
+                    c != 0x20AC) || /* euro */
+                   c == 0x25CA ||  /* lozenge */
                    c == 0x2660 ||  /* black spade suit */
                    c == 0x2663 ||  /* black club suit */
                    c == 0x2665 ||  /* black heart suit */
-		   c == 0x2666 ||  /* black diamond suit */
-		   c == 0x192)     /* latin small letter f with hook */
-	    {
+                   c == 0x2666 ||  /* black diamond suit */
+                   c == 0x192)     /* latin small letter f with hook */
+            {
 #ifdef _GL
-	      if (c == 0x220F || c == 0x2211)
-		/* an oversized product or summation sign. Use the Symbol
-		   font: these characters are ill-aligned in Esstix */
-		{
-		  code = GreekFontScript;
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
-		}
-	      else
-		{
-		  /* use Esstix fonts */
-		  code = 'E';
-		  car = GetStixFontAndIndex (c, fontset, &pfont);
-		  if (pfont == NULL )
-		    {
-		      code = '7';
-		      pfont = &(fontset->Font_7);
+              if (c == 0x220F || c == 0x2211)
+                /* an oversized product or summation sign. Use the Symbol
+                   font: these characters are ill-aligned in Esstix */
+                {
+                  code = GreekFontScript;
+                  pfont = &(fontset->Font_16);
+                  encoding = ISO_SYMBOL;
+                }
+              else
+                {
+                  /* use Esstix fonts */
+                  code = 'E';
+                  car = GetStixFontAndIndex (c, fontset, &pfont);
+                  if (pfont == NULL )
+                    {
+                      code = '7';
+                      pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
-		      encoding = WINDOWS_1253;
+                      encoding = WINDOWS_1253;
 #else /* _WINDOWS */
-		      encoding = ISO_8859_7;
+                      encoding = ISO_8859_7;
 #endif /* _WINDOWS */
-		    }
-		}
+                    }
+                }
 #else /* _GL */
 		  /* Symbols */
-		  code = 'G';
-		  pfont = &(fontset->Font_16);
-		  encoding = ISO_SYMBOL;
+              code = 'G';
+              pfont = &(fontset->Font_16);
+              encoding = ISO_SYMBOL;
 #endif /* _GL */
-	    }
-	  else if (c < 0x24F)
-	    {
-	      code = '3';
-	      pfont = &(fontset->Font_3);
+            }
+          else if (c < 0x24F)
+            {
+              code = '3';
+              pfont = &(fontset->Font_3);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1250;
+              encoding = WINDOWS_1250;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_3;
+              encoding = ISO_8859_3;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x2AF)
-	    {
-	      code = '4'; /* Baltic RIM */
-	      pfont = &(fontset->Font_4);
+            }
+          else if (c < 0x2AF)
+            {
+              code = '4'; /* Baltic RIM */
+              pfont = &(fontset->Font_4);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1257;
+              encoding = WINDOWS_1257;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_4;
+              encoding = ISO_8859_4;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x45F)
-	    {
-	      code = '5'; /* Cyrillic */
-	      pfont = &(fontset->Font_5);
+            }
+          else if (c < 0x45F)
+            {
+              code = '5'; /* Cyrillic */
+              pfont = &(fontset->Font_5);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1251;
+              encoding = WINDOWS_1251;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_5;
+              encoding = ISO_8859_5;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x5FF)
-	    {
-	      code = '8'; /* Hebrew */
-	      pfont = &(fontset->Font_8);
+            }
+          else if (c < 0x5FF)
+            {
+              code = '8'; /* Hebrew */
+              pfont = &(fontset->Font_8);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1255;
+              encoding = WINDOWS_1255;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_8;
+              encoding = ISO_8859_8;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x5FF)
-	    {
-	      code = '9'; /* Turkish */
-	      pfont = &(fontset->Font_9);
+            }
+          else if (c < 0x5FF)
+            {
+              code = '9'; /* Turkish */
+              pfont = &(fontset->Font_9);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1254;        
+              encoding = WINDOWS_1254;        
 #else /* _WINDOWS */
-	      encoding = ISO_8859_9;
+              encoding = ISO_8859_9;
 #endif /* _WINDOWS */
-	    }
-	  else if (c < 0x65F)
-	    {
-	      code = '6'; /* Arabic */
-	      pfont = &(fontset->Font_17);
+            }
+          else if (c < 0x65F)
+            {
+              code = '6'; /* Arabic */
+              pfont = &(fontset->Font_17);
 #ifdef _WINDOWS
-	      encoding = WINDOWS_1256;
+              encoding = WINDOWS_1256;
 #else /* _WINDOWS */
-	      encoding = UNICODE_1_1;
+              encoding = UNICODE_1_1;
 #endif /* _WINDOWS */
-	    }
+            }
 #ifdef _GL
-	  else if (c >= 0x25A0 && c <= 0x25F7)
-	    /* geometric shapes */
-	    {
-	      /* use Esstix fonts */
-	      code = 'E';
-	      car = GetStixFontAndIndex (c, fontset, &pfont);
-	      if (pfont == NULL)
-		{
-		  code = 'Z'; /* Unicode */
-		  pfont = &(fontset->Font_17);
-		  encoding = UNICODE_1_1;
-		}
-	    }
+          else if (c >= 0x25A0 && c <= 0x25F7)
+            /* geometric shapes */
+            {
+              /* use Esstix fonts */
+              code = 'E';
+              car = GetStixFontAndIndex (c, fontset, &pfont);
+              if (pfont == NULL)
+                {
+                  code = 'Z'; /* Unicode */
+                  pfont = &(fontset->Font_17);
+                  encoding = UNICODE_1_1;
+                }
+            }
 #endif /* GL */
-	  else
-	    {
-	      code = 'Z'; /* Unicode */
-	      pfont = &(fontset->Font_17);
-	      encoding = UNICODE_1_1;
-	    }
-      
-	  if (pfont)
-	    {
-	      /* attach that font to the current frame */
-	      lfont = *pfont;
-	      if (code != 'E')
-		{
-		  for (frame = 1; frame <= MAX_FRAME; frame++)
-		    {
-		      mask = 1 << (frame - 1);
-		      if (fontset->FontMask & mask)
-			{
-			  lfont = LoadNearestFont (code, fontset->FontFamily,
-						   fontset->FontHighlight,
-						   fontset->FontSize, fontset->FontSize,
-						   frame, TRUE, TRUE);
-			  if (code == '7' && GreekFontScript == 'G')
-			    /* use the font Symbol instead of a greek font */
-			    encoding = ISO_SYMBOL;
-			}
-		    }
-		  /* even if the font is not found avoid to retry later */
-		  *pfont = lfont;
-		}
-	      *font = lfont;
-	    }
-	  else
-	    *font = NULL;
-  
-	  if (*font == NULL ||
-	      (*font == DialogFont && code != '1'))
-	    {
-	      car = UNDISPLAYED_UNICODE;
-	      *font = NULL;
-	    }
-	  else if (code == 'Z' || code == '6')
-	    car = c;
-	  else if (code != 'E')
+          else
+            {
+              code = 'Z'; /* Unicode */
+              pfont = &(fontset->Font_17);
+              encoding = UNICODE_1_1;
+            }
+          
+          if (pfont)
+            {
+              /* attach that font to the current frame */
+              lfont = *pfont;
+              if (code != 'E')
+                {
+                  for (frame = 1; frame <= MAX_FRAME; frame++)
+                    {
+                      mask = 1 << (frame - 1);
+                      if (fontset->FontMask & mask)
+                        {
+                          lfont = LoadNearestFont (code, fontset->FontFamily,
+                                                   fontset->FontHighlight,
+                                                   fontset->FontSize, fontset->FontSize,
+                                                   frame, TRUE, TRUE);
+                          if (code == '7' && GreekFontScript == 'G')
+                            /* use the font Symbol instead of a greek font */
+                            encoding = ISO_SYMBOL;
+                        }
+                    }
+                  /* even if the font is not found avoid to retry later */
+                  *pfont = lfont;
+                }
+              *font = lfont;
+            }
+          else
+            *font = NULL;
+          
+          if (*font == NULL ||
+              (*font == DialogFont && code != '1'))
+            {
+              car = UNDISPLAYED_UNICODE;
+              *font = NULL;
+            }
+          else if (code == 'Z' || code == '6')
+            car = c;
+          else if (code != 'E')
 #ifdef _GL
-	    car = c;
+            car = c;
 #else /* _GL */
-	    car = (int)TtaGetCharFromWC (c, encoding);
+          car = (int)TtaGetCharFromWC (c, encoding);
 #endif /* _GL */
-	}
+        }
     }   
   if (car == EOS)
     {
@@ -2173,7 +2173,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
       *font = NULL;
     }
   
-		  
+  
 #ifdef _GL
   if (code == 'E' || code == 'G')
     return car;

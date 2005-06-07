@@ -69,7 +69,7 @@ void TtaLaunchTestCase( const char * filename )
 {
   int active_doc_id, view;
   FrameToView(TtaGiveActiveFrame(), &active_doc_id, &view);
-
+  
   // start a timer
   int bench_id = TtaStartBenchmarkTimer( "testcase" );
   
@@ -80,61 +80,61 @@ void TtaLaunchTestCase( const char * filename )
   ThotBool found_marker;
   char  command[MAX_TXT_LEN];
   char  nb_command[MAX_TXT_LEN];
-  int nb_cmd;
+  int nb_cmd = 0;
   int i, c;
   while ((c = fgetc(fp)) != EOF)
     {
       found_marker = FALSE;
-
+      
       // first : read how many time to repeat the command
       i = 0;
       do
-	{
-	  nb_command[i] = c;
-	  c = fgetc(fp);
-	  i++;
-	}
+        {
+          nb_command[i] = c;
+          c = fgetc(fp);
+          i++;
+        }
       while (c != '\t' && c != EOL && c != EOF);
       if (nb_command[0] == 'm')
-	{
-	  // found a marker
-	  found_marker = TRUE;
-	}
+        {
+          // found a marker
+          found_marker = TRUE;
+        }
       else
-	{
-	  nb_command[i] = '\0';
-	  nb_cmd = atoi(nb_command);
-	}
+        {
+          nb_command[i] = '\0';
+          nb_cmd = atoi(nb_command);
+        }
       c = fgetc(fp);
-
+      
       // secondly : read the command name
       i = 0;
       do
-	{
-	  command[i] = c;
-	  c = fgetc(fp);
-	  i++;
-	}
+        {
+          command[i] = c;
+          c = fgetc(fp);
+          i++;
+        }
       while (c != EOL && c != EOF);
       command[i] = '\0';
       if (found_marker)
-	{
-	  // set the marker
-	  TtaSetBenchmarkMark( bench_id, command );
-	}
+        {
+          // set the marker
+          TtaSetBenchmarkMark( bench_id, command );
+        }
       else
-	{
-	  // execute the commands
-	  while(nb_cmd>0)
-	    {
-	      TtaExecuteMenuAction (command, active_doc_id, view, FALSE);
-	      TtaHandlePendingEvents();
+        {
+          // execute the commands
+          while(nb_cmd>0)
+            {
+              TtaExecuteMenuAction (command, active_doc_id, view, FALSE);
+              TtaHandlePendingEvents();
 #ifdef _GL
-	      GL_DrawAll();
+              GL_DrawAll();
 #endif /* _GL */
-	      nb_cmd--;
-	    }
-	}
+              nb_cmd--;
+            }
+        }
     }
   TtaReadClose (fp);
   

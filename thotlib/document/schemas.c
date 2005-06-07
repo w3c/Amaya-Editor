@@ -1254,7 +1254,7 @@ int CreateNature (char *SSchURI, char *SSchName, char *PSchName,
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
 void LoadSchemas (char *SSchName, char *PSchName, PtrSSchema *pSS,
-		  PtrDocument pDoc, PtrSSchema pLoadedSS, ThotBool extension)
+                  PtrDocument pDoc, PtrSSchema pLoadedSS, ThotBool extension)
 {
   char         *schName;
 #ifndef NODISPLAY

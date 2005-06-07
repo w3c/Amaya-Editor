@@ -619,44 +619,43 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
   TtaConvertJisToWC convert a jis 2 byte character to a unicode
   wide character.
   -------------------------------------------------------------*/
-wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2,
-			   CHARSET charset)
+wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2, CHARSET charset)
 {
   wchar_t wc;
-
+  
   wc = EOS;
   switch (charset)
     {
     case JIS_X_0201_ROMAN:
       if (b1 < sizeof (JIS_X_0201_ROMAN_Map) / sizeof (wchar_t))
-	wc = JIS_X_0201_ROMAN_Map[b1];
+        wc = JIS_X_0201_ROMAN_Map[b1];
       break;
     case JIS_X_0201_KANA:
       if (b1 < sizeof (JIS_X_0201_KANA_Map) / sizeof (wchar_t))
-	wc = JIS_X_0201_KANA_Map[b1];
+        wc = JIS_X_0201_KANA_Map[b1];
       break;
     case JIS_X_0208:
       if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
-	wc = JIS_X_0208_Map[b1 - 33][b2 - 33];
+        wc = JIS_X_0208_Map[b1 - 33][b2 - 33];
       break;
     case JIS_X_0212:
       if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
-	wc = JIS_X_0212_Map[b1 - 33][b2 - 33];
+        wc = JIS_X_0212_Map[b1 - 33][b2 - 33];
       break;
     case GB_2312:
       if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
-	wc = GB_2312_Map[b1 - 33][b2 - 33];
+        wc = GB_2312_Map[b1 - 33][b2 - 33];
       break;
     case KSC_5601:
       if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
-	wc = KSC_5601_Map[b1 - 33][b2 - 33];
+        wc = KSC_5601_Map[b1 - 33][b2 - 33];
       break;
     case ISO_8859_1:
       wc = b1 | 0x80;
       break;
     case ISO_8859_7:
       if (b1 < ISO_SYMBOL_length)
-	wc = ISO_SYMBOL_Map [b1];
+        wc = ISO_SYMBOL_Map [b1];
       break;
     default:
       wc = b1;
