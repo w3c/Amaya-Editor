@@ -59,7 +59,7 @@ extern SSchema TtaGetSSchema ( char *name,
 extern SSchema TtaGetSSchemaByUri ( char *uriName,
                                     Document document );
 extern ThotBool TtaSameSSchemas ( SSchema schema1,
-                             SSchema schema2 );
+                                  SSchema schema2 );
 extern void TtaGiveSchemasOfDocument ( char *documentName,
                                        char *structureName,
                                        char *presentationName );
@@ -167,7 +167,7 @@ extern SSchema TtaGetSSchema ( char *name,
 extern SSchema TtaGetSSchemaByUri ( char *uriName,
                                       Document document );
 extern ThotBool TtaSameSSchemas ( SSchema schema1,
-                               SSchema schema2 );
+                                    SSchema schema2 );
 extern void TtaGiveSchemasOfDocument ( char *documentName,
                                          char *structureName,
                                          char *presentationName );

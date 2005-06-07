@@ -89,7 +89,7 @@ extern void TtaGiveTypeFromName ( ElementType * elementType,
 extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
                                           char *name );
 extern ThotBool TtaSameTypes ( ElementType type1,
-                          ElementType type2 );
+                               ElementType type2 );
 extern char *TtaGetElementLabel ( Element element );
 extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );
@@ -223,7 +223,7 @@ extern void TtaGiveTypeFromName ( ElementType * elementType,
 extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
                                             char *name );
 extern ThotBool TtaSameTypes ( ElementType type1,
-                            ElementType type2 );
+                                 ElementType type2 );
 extern char *TtaGetElementLabel ( Element element );
 extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );

@@ -12,8 +12,8 @@ extern int MapThotAttr ( char* attrName,
 extern void DoInitAutomaton ( void );
 extern void FreeTransform ( void );
 extern ThotBool DoStartParser ( char *name,
-                           SSchema tStrSchema,
-                           strTransSet **resTrSet );
+                                SSchema tStrSchema,
+                                strTransSet **resTrSet );
 
 #else /* __STDC__ */
 
@@ -23,8 +23,8 @@ extern int MapThotAttr ( char* attrName,
 extern void DoInitAutomaton ( void );
 extern void FreeTransform ( void );
 extern ThotBool DoStartParser ( char *name,
-                             SSchema tStrSchema,
-                             strTransSet **resTrSet );
+                                  SSchema tStrSchema,
+                                  strTransSet **resTrSet );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
