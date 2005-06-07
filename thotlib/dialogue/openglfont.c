@@ -1081,7 +1081,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   GL_glyph           *glyph;
   Char_Cache_index   *cache;
   unsigned char      *data;
-  float		      maxy, miny, shift;
+  float		      maxy, miny, shift, xorg;
   int                 Width, Height, width, bitmap_alloc;
   register int        pen_x, n;
  
@@ -1092,6 +1092,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
 
   if (size > MAX_STRING)
     {
+      xorg = x;
       while (size > MAX_STRING)
 	{
 	  x += (float) UnicodeFontRender (gl_font, text, x, y, MAX_STRING);
@@ -1100,7 +1101,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
 	}
       if (size)
 	x += (float) UnicodeFontRender (gl_font, text, x, y, size);
-      return ((int) (x));
+      return ((int) (x - xorg));
     }
   
   font = (GL_font *) gl_font;    
