@@ -1733,7 +1733,7 @@ void InitTranslations (char *appliname)
 		    transText[i] = EOS;
 		}
 	      /* convert to keysym for the automata */
-	      key1 = SpecialKey (transText, mod1 & THOT_MOD_SHIFT, &isSpecialKey1);
+	      key1 = SpecialKey (transText, (mod1 & THOT_MOD_SHIFT) != 0, &isSpecialKey1);
 
 	      /* Get the following word in the line */
 	      ch[0] = EOS;
@@ -1803,7 +1803,7 @@ void InitTranslations (char *appliname)
 		      if (i > 0 && transText[i] == ':')
 			transText[i] = EOS;
 		    }
-		  key2 = SpecialKey (transText, mod2 & THOT_MOD_SHIFT, &isSpecialKey2);
+		  key2 = SpecialKey (transText, (mod2 & THOT_MOD_SHIFT) != 0, &isSpecialKey2);
 		  /* register the equiv string */
 		  strcat (equiv, " ");
 		  if (mod2 & THOT_MOD_CTRL)

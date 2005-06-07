@@ -4574,11 +4574,13 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
   cssRule = SkipWord (cssRule);
   /* check if it's an important rule */
   cssRule = CheckImportantRule (cssRule, ctxt);
+#if 0
   /* install the new presentation */
   if (DoApply &&
       (page.typed_data.unit == UNIT_REL ||
        page.typed_data.unit == VALUE_INHERIT))
     /* TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page) */;
+#endif /* 0 */
   return (cssRule);
 }
 
@@ -5228,7 +5230,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                att, kind;
   int                specificity, xmlType;
   int                skippedNL;
-  PresentationValue  pval;
   ThotBool           isHTML;
   ThotBool           level, quoted;
 

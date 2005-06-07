@@ -4081,7 +4081,6 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   PresentationSettingBlock setting;
   char                     buffer[200];
   int                      l, i;
-  PtrPRule                 boxRule;
   PresVariable             *var;
   PresVarItem              *item;
 

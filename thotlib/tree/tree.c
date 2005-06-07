@@ -735,7 +735,7 @@ static PtrElement   BackSearchEmptyInSubtree (PtrElement pEl, int Kind)
    If it finds an element, it returns a pointer to it. Otherwise, it
    returns NULL.
   ----------------------------------------------------------------------*/
-PtrElement BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
+PtrElement BackSearchRefOrEmptyElem (PtrElement pEl, int Kind)
 {
    PtrElement          pRet, pCur;
 

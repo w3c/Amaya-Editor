@@ -23,7 +23,7 @@ extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
 extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                             int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
-                                             ThotBool Kind );
+                                             int Kind );
 extern void ChangeLanguageLeaves ( PtrElement pEl,
                                    Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
@@ -239,7 +239,7 @@ extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
 extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                               int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
-                                               ThotBool Kind );
+                                               int Kind );
 extern void ChangeLanguageLeaves ( PtrElement pEl,
                                      Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,

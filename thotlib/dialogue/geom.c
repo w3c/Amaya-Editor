@@ -2224,20 +2224,22 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    int xm, int ym)
 {  
 #ifdef _WINGUI
-   ThotEvent           event;
-   POINT               cursorPos;
+  ThotEvent           event;
+  POINT               cursorPos;
 #endif /* _WINGUI */
 #ifdef _GTK
-   ThotEvent           *event_tmp;
-   ThotEvent           *event;
-   GdkWindowPrivate    *xwindow;
+  ThotEvent           *event_tmp;
+  ThotEvent           *event;
+  GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
-   ThotWindow          w;
-   PtrAbstractBox      pAb;
-   int                 ret, dx, dy, newx, newy;
-   int                 warpx, warpy;
-   int                 xref, yref;
-  ThotBool           isEllipse;
+  ThotWindow          w;
+  PtrAbstractBox      pAb;
+#ifndef _WX
+  int                 ret, dx, dy, newx, newy;
+  int                 warpx, warpy;
+#endif /* _WX */
+  int                 xref, yref;
+  ThotBool            isEllipse;
 
   pAb = box->BxAbstractBox;
   if (pAb && pAb->AbLeafType == LtCompound)
@@ -2665,7 +2667,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   int                 xm, ym;
   int                 dx, dy;
   int                 ret;
+#ifndef _WX
   int                 newx, newy;
+#endif /* _WX */
   int                 xref, yref;
   ThotBool            isEllipse;
 

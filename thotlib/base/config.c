@@ -226,7 +226,7 @@ static void getStringAfterColon (unsigned char *line, char *text)
    1 si on trouve le 1er mot,                           
    2 si on trouve le 2eme mot.                          
   ----------------------------------------------------------------------*/
-static ThotBool readUntil (FILE *file, char *word1, char *word2)
+static int readUntil (FILE *file, char *word1, char *word2)
 {
    ThotBool            stop;
    int                 ret;

@@ -1069,16 +1069,16 @@ SSchema TtaGetSSchemaByUri (char *uriName, Document document)
    Return value:
    0 if both schemas are different, 1 if they are identical.
   ----------------------------------------------------------------------*/
-int TtaSameSSchemas (SSchema schema1, SSchema schema2)
+ThotBool TtaSameSSchemas (SSchema schema1, SSchema schema2)
 {
-  int                 result;
+  ThotBool result;
 
   UserErrorCode = 0;
-  result = 0;
+  result = FALSE;
   if (schema1 == NULL || schema2 == NULL)
     TtaError (ERR_invalid_parameter);
   else if (!strcmp (((PtrSSchema) schema1)->SsName, ((PtrSSchema) schema2)->SsName))
-    result = 1;
+    result = TRUE;
   return result;
 }
 
@@ -1326,20 +1326,20 @@ void  TtaNextNature (Document document, SSchema * nature)
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-int TtaIsDocumentModified (Document document)
+ThotBool TtaIsDocumentModified (Document document)
 {
-   int                 modified;
+   ThotBool modified;
 
    UserErrorCode = 0;
    /* verifies the parameter document */
-   modified = 0;
+   modified = FALSE;
    if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
      TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1]->DocModified)
      /* parameter document is correct */
-      modified = 1;
+      modified = TRUE;
    return modified;
 }
 
@@ -1356,20 +1356,20 @@ int TtaIsDocumentModified (Document document)
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-int TtaIsDocumentUpdated (Document document)
+ThotBool TtaIsDocumentUpdated (Document document)
 {
-   int                 updated;
+   ThotBool updated;
 
    UserErrorCode = 0;
    /* verifies the parameter document */
-   updated = 0;
+   updated = FALSE;
    if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
      TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1]->DocUpdated)
      /* parameter document is correct */
-      updated = 1;
+      updated = TRUE;
    return updated;
 }
 

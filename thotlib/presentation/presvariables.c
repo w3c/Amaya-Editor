@@ -283,11 +283,9 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 			   /* Saut de page d'une view squelette */
 			   /* on ne que compte les pages etrangeres au schema */
 			   /* principal */
-			   pstop = strcmp (pEl->ElStructSchema->SsName,
-					    pSSpr->SsName);
+			   pstop = (strcmp (pEl->ElStructSchema->SsName, pSSpr->SsName) != 0);
 			 else
-			   pstop = !strcmp (pEl->ElStructSchema->SsName,
-					     pSSpr->SsName);
+			   pstop = (strcmp (pEl->ElStructSchema->SsName, pSSpr->SsName) == 0);
 
 			 /* on ignore les pages qui ne concernent pas la view */
 			 if ((pEl->ElViewPSchema == view) && (pstop))
@@ -547,11 +545,9 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		       if (strcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
 			  /* Saut de page d'une view squelette */
 			  /*on ne que compte les pages etrangeres au schema principal */
-			  pstop = strcmp (pEl->ElStructSchema->SsName,
-					   pSSpr->SsName);
+			  pstop = (strcmp(pEl->ElStructSchema->SsName, pSSpr->SsName) != 0);
 		       else
-			  pstop = !strcmp (pEl->ElStructSchema->SsName,
-					    pSSpr->SsName);
+			  pstop = (strcmp(pEl->ElStructSchema->SsName, pSSpr->SsName) == 0);
 
 		       /* on ignore les pages qui ne concernent pas la view */
 		       /* on ignore les pages qui ne concernent pas la view */

@@ -816,8 +816,8 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   AnnotMeta         *annot;
   XPointerContextPtr ctx;
   char              *xptr;
-  ThotBool           useDocRoot = mode & ANNOT_useDocRoot;
-  ThotBool           isReplyTo = mode & ANNOT_isReplyTo;
+  ThotBool           useDocRoot = (mode & ANNOT_useDocRoot) != 0;
+  ThotBool           isReplyTo = (mode & ANNOT_isReplyTo) != 0;
 
   /* we can only annotate some types of documents and saved documents */
   if (!ANNOT_CanAnnotate (doc))

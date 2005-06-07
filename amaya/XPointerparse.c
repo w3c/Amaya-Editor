@@ -764,7 +764,7 @@ ThotBool XPointer_isStringRange (nodeInfo *node)
   if (!node)
     return FALSE;
 
-  return (node->type & STRING_RANGE);
+  return (node->type & STRING_RANGE) != 0;
 }
 
 /*----------------------------------------------------------------------

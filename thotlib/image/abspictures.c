@@ -36,7 +36,9 @@
   ----------------------------------------------------------------------*/
 void CleanPictInfo (ThotPictInfo *imageDesc)
 {
+#ifndef _GL
   ThotPixmap pixmap;
+#endif /* _GL */
 
   if (imageDesc)
     {

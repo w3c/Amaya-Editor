@@ -536,7 +536,7 @@ SSchema TtaGetSSchemaByUri (char *uriName, Document document);
    Return value:
    0 if both schemas are different, 1 if they are identical.
   ----------------------------------------------------------------------*/
-extern int TtaSameSSchemas (SSchema schema1, SSchema schema2);
+extern ThotBool TtaSameSSchemas (SSchema schema1, SSchema schema2);
 
 /*----------------------------------------------------------------------
    TtaGiveSchemasOfDocument
@@ -600,7 +600,7 @@ extern void TtaNextNature (Document document, /*INOUT*/ SSchema *nature);
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-extern int TtaIsDocumentModified (Document document);
+extern ThotBool TtaIsDocumentModified (Document document);
 
 /*----------------------------------------------------------------------
    TtaIsDocumentUpdated
@@ -615,7 +615,7 @@ extern int TtaIsDocumentModified (Document document);
    1 if the document has been modified by the user since it has been saved,
    loaded or created, 0 if it has not been modified.
   ----------------------------------------------------------------------*/
-extern int TtaIsDocumentUpdated (Document document);
+extern ThotBool TtaIsDocumentUpdated (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentAccessMode

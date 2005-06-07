@@ -795,7 +795,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    attrType.AttrTypeNum = 0;
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
    if (HTMLSSchema)
-     isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
+     isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) != 0);
    else
      isHTML = FALSE;
 
@@ -1075,16 +1075,14 @@ static ThotBool ActivateElement (Element element, Document document)
    isSVG = FALSE;
    isXLink = FALSE;
    if (HTMLschema)
-     isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+     isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLschema) != 1);
    else
      isHTML = FALSE;
    if (!isHTML)
      {
-       isXLink = TtaSameSSchemas (elType.ElSSchema, 
-				  TtaGetSSchema ("XLink", document));
+       isXLink = (TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("XLink", document)) != 1);
        if (!isXLink)
-	 isSVG = TtaSameSSchemas (elType.ElSSchema, 
-				  TtaGetSSchema ("SVG", document));
+	       isSVG = (TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("SVG", document)) != 1);
      }
 
    /* Check if the current element is interested in double clicks */

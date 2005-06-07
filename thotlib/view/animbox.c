@@ -91,20 +91,20 @@ static float Clipx, Clipy, ClipxMax, ClipyMax;
    ----------------------------------------------------------------------*/
 static float T_atof (char *ptr)
 {
-  float    val = 0.;
+  float   val = 0.;
   char    *c;
 
-  val = atof (".5");
+  val = (float)atof (".5");
   if (val == 0.5)
-    val = atof (ptr);
+    val = (float)atof (ptr);
   else
     {
       c = strstr (ptr, ".");
       if (c)
-	*c = ',';
-      val = atof (ptr);
+        *c = ',';
+      val = (float)atof (ptr);
       if (c)
-	*c = '.';
+        *c = '.';
     }
   return val;
 }
@@ -133,9 +133,9 @@ static void ComputePropandAngle (AnimPath   *pop_path)
   proportion[0] = 0;
   for (i = 1; i < npoints; i++)
     {
-      x = points[i].x - points[i-1].x;
-      y = points[i].y - points[i-1].y;
-	  length = sqrt ((double) x*x + y*y);
+      x = (float)(points[i].x - points[i-1].x);
+      y = (float)(points[i].y - points[i-1].y);
+      length = (float)sqrt(x*x + y*y);
 	/*
 	             /|
                 / |
@@ -156,9 +156,9 @@ static void ComputePropandAngle (AnimPath   *pop_path)
 		angle[i] = 90;
 	  */
       if (fabs (y) < 0.0001)
-	angle[i] = ARCTAN (x/y);
+	angle[i] = (float)ARCTAN (x/y);
       else
-	angle[i] = 90;
+	angle[i] = 90.;
 
       totallength +=  length;
       proportion[i] = totallength;
@@ -976,10 +976,10 @@ static void animate_box_motion (PtrElement El,
     }
   if (i > 0)
     {
-      x2 = pop_path->Path[i].x;
-      y2 = pop_path->Path[i].y;      
-      x1 = pop_path->Path[i-1].x;
-      y1 = pop_path->Path[i-1].y;            
+      x2 = (float)pop_path->Path[i].x;
+      y2 = (float)pop_path->Path[i].y;      
+      x1 = (float)pop_path->Path[i-1].x;
+      y1 = (float)pop_path->Path[i-1].y;            
       result = (result - proportion[i-1]) / (proportion[i] - proportion[i-1]);      
       x = x1 + (result*(x2 -x1));
       y = y1 + (result*(y2 -y1));

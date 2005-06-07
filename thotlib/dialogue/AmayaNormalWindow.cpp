@@ -260,7 +260,7 @@ bool AmayaNormalWindow::ClosePage( int page_id )
       old_page_id--; // a page has been deleted so the old page position should be -1
       if (old_page_id < 0)
 	old_page_id = 0;
-      if (old_page_id >= m_pNotebook->GetPageCount())
+      if (old_page_id >= (int)m_pNotebook->GetPageCount())
 	old_page_id = m_pNotebook->GetPageCount()-1;
       if (old_page_id >= 0)
 	m_pNotebook->SetSelection( old_page_id );

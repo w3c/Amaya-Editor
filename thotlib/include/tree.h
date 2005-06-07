@@ -682,7 +682,7 @@ extern void TtaGiveTypeFromOriginalName (/*OUT*/ ElementType *elementType,
    Return value:
    0 if both types are different, 1 if they are identical.
    ---------------------------------------------------------------------- */
-extern int TtaSameTypes (ElementType type1, ElementType type2);
+extern ThotBool TtaSameTypes (ElementType type1, ElementType type2);
 
 /* ----------------------------------------------------------------------
    TtaGetElementLabel
@@ -751,7 +751,7 @@ extern int TtaIsConstant (ElementType elementType);
    Return value:
    1 if the type is a leaf, 0 if the type is not a leaf.
    ---------------------------------------------------------------------- */
-extern int          TtaIsLeaf (ElementType elementType);
+extern ThotBool          TtaIsLeaf (ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGetConstructOfType

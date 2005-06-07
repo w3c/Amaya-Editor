@@ -165,7 +165,7 @@ void CallbackImage (int ref, int typedata, char *data)
 		el = first;
 		elType = TtaGetElementType (el);
 		if (HTMLschema)
-		  isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+		  isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLschema) != 0);
 		else
 		  isHTML = FALSE;
 		if (isHTML && elType.ElTypeNum == HTML_EL_HTML)

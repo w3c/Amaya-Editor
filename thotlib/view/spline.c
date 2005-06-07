@@ -152,8 +152,8 @@ ThotBool PolyNewPoint (double x, double y, ThotPoint **points, int *npoints,
       return (FALSE);
 #endif/*  _GL */
 
-   (*points)[*npoints].x = x;
-   (*points)[*npoints].y = y;
+   (*points)[*npoints].x = (long)x;
+   (*points)[*npoints].y = (long)y;
    (*npoints)++;
    return (TRUE);
 }

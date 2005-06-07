@@ -431,7 +431,7 @@ void TtaQuit ()
   ----------------------------------------------------------------------*/
 void TtaSetErrorMessages (int on)
 {
-   PrintErrorMessages = (ThotBool) on;
+   PrintErrorMessages = (on != 0);
 }
 
 /*----------------------------------------------------------------------

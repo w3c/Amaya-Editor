@@ -1832,7 +1832,7 @@ void ComputeChangedBoundingBoxes (int frame)
   int                 plane;
   int                 nextplane;
   int                 l, h;
-  ThotBool            updateStatus, formatted;
+  ThotBool            updateStatus;
   int                 OldXOrg, OldYOrg, ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
    
   updateStatus = FrameUpdating;

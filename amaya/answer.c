@@ -132,7 +132,7 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
 	   if (cl > 0)
 	     {
 	       bytes_rw = HTRequest_bodyWritten (request);
-	       pro = (int) ((bytes_rw * 100l) / cl);
+	       pro = (float)(bytes_rw * 1001.) / (float)cl;
 	       HTNumToStr ((unsigned long) cl, buf, 10);
 	       sprintf (tempbuf, "%s: Writing (%d%% of %s)", me->urlName, pro, buf);
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);

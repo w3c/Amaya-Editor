@@ -395,11 +395,6 @@ ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
   UINT                menuEntry;
   int                 nbMenuItem;
 #endif /* _WINGUI */
-#ifdef _WX
-  int                 ndx;
-  wxMenuItem *        menuEntry;
-  int                 nbMenuItem;
-#endif /* _WX */
 
   /* Une attende est peut etre debloquee */
   icatal = catalogue;

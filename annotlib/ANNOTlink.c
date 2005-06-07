@@ -331,7 +331,7 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 
   if (previous[0] == EOS || strcasecmp (iconName, previous))
     {
-      int docModified;
+      ThotBool docModified;
 
       docModified = TtaIsDocumentModified (source_doc);
       TtaSetPictureContent (el, (unsigned char *)iconName, SPACE, source_doc, "image/png");

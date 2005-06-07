@@ -434,19 +434,21 @@ char *GetRealFileName (CONST char *name)
 gzFile TtaGZOpen (CONST char *filename)
 {
   gzFile   file;
+#ifndef _WX
   char *   name;
+#endif /* _WX */
 
   if (filename && filename[0] != EOS)
     {
 #ifdef _WX
-	  wxFile wx_file(TtaConvMessageToWX(filename));
+      wxFile wx_file(TtaConvMessageToWX(filename));
       int fd = wx_file.fd();
-	  wx_file.Detach();
-	  file = gzdopen (fd, "r");
+      wx_file.Detach();
+      file = gzdopen (fd, "r");
 #else /* _WX */
       name = GetRealFileName (filename);
       file = gzopen (name, "r");
-	  TtaFreeMemory (name);
+      TtaFreeMemory (name);
 #endif /* _WX */
       return file;
     }
@@ -470,7 +472,9 @@ void TtaGZClose (gzFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaReadOpen (CONST char *filename)
 {
-  char    *name;
+#ifndef _WX
+  char *   name;
+#endif /* _WX */
   BinFile  file;
 
   if (filename && filename[0] != EOS)
@@ -517,7 +521,9 @@ void TtaReadClose (BinFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaWriteOpen (CONST char *filename)
 {
-  char    *name;
+#ifndef _WX
+  char *   name;
+#endif /* _WX */
   BinFile  file;
 
   if (filename && filename[0] != EOS)
@@ -563,7 +569,9 @@ void TtaWriteClose (BinFile file)
   ----------------------------------------------------------------------*/
 BinFile TtaRWOpen (CONST char *filename)
 {
-  char    *name;
+#ifndef _WX
+  char *   name;
+#endif /* _WX */
   BinFile  file;
 
   if (filename && filename[0] != EOS)

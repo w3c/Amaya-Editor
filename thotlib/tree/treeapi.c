@@ -1842,37 +1842,37 @@ void TtaGiveTypeFromOriginalName (ElementType * elementType, char *name)
    Return value:
    0 if both types are different, 1 if they are identical.
    ---------------------------------------------------------------------- */
-int TtaSameTypes (ElementType type1, ElementType type2)
+ThotBool TtaSameTypes (ElementType type1, ElementType type2)
 {
-   int                 result;
+   ThotBool                 result;
 
    UserErrorCode = 0;
-   result = 0;
+   result = FALSE;
    if (type1.ElTypeNum < 1 || type2.ElTypeNum < 1)
       TtaError (ERR_invalid_element_type);
    else if (type1.ElSSchema == NULL)
       if (type1.ElTypeNum > MAX_BASIC_TYPE)
 	 TtaError (ERR_invalid_element_type);
       else if (type1.ElTypeNum == type2.ElTypeNum)
-	 result = 1;
+	 result = TRUE;
       else
-	 result = 0;
+	 result = FALSE;
    else if (type1.ElTypeNum > ((PtrSSchema) (type1.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else if (type1.ElTypeNum != type2.ElTypeNum)
-      result = 0;
+      result = FALSE;
    else if (type2.ElSSchema == NULL)
       if (type2.ElTypeNum > MAX_BASIC_TYPE)
 	 TtaError (ERR_invalid_element_type);
       else
-	 result = 1;
+	 result = TRUE;
    else if (type2.ElTypeNum > ((PtrSSchema) (type2.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
    else if (!strcmp (((PtrSSchema) (type1.ElSSchema))->SsName,
 		      ((PtrSSchema) (type2.ElSSchema))->SsName))
-      result = 1;
+      result = TRUE;
    else
-      result = 0;
+      result = FALSE;
    return result;
 }
 
@@ -1982,12 +1982,12 @@ int TtaIsConstant (ElementType elementType)
    Return value:
    1 if the type is a leaf, 0 if the type is not a leaf.
    ---------------------------------------------------------------------- */
-int TtaIsLeaf (ElementType elementType)
+ThotBool TtaIsLeaf (ElementType elementType)
 {
-  int                 result;
+  ThotBool result;
 
   UserErrorCode = 0;
-  result = 0;
+  result = FALSE;
   if (elementType.ElSSchema == NULL)
     TtaError (ERR_invalid_parameter);
   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
@@ -1999,7 +1999,7 @@ int TtaIsLeaf (ElementType elementType)
 	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsReference) ||
 	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsPairedElement) ||
 	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsBasicElement))
-	result = 1;
+	result = TRUE;
     }
   return result;
 }

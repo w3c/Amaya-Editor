@@ -638,9 +638,6 @@ static void         WriteIncludeFile (FILE * dotHFile, FILE * dialogueFile)
 void                GenerateApplication (char *fname, PtrEventsSet pAppli)
 {
    int                 i;
-   int                 lg, ht;
-   char              **ptr;
-   unsigned char      *bits;
    char               *fileSuffix;
    FILE               *dotHFile;
    FILE               *infoFILE;
@@ -668,46 +665,6 @@ void                GenerateApplication (char *fname, PtrEventsSet pAppli)
 	WriteIncludeFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
-#if 0
-	if (!TtaFileExist ("logo.xpm"))
-	  {
-	     /* create the file logo.xpm */
-	     infoFILE = fopen ("logo.xpm", "w");
-	     fprintf (infoFILE, "/* XPM */\nstatic char * logo_xpm[] = {\n");
-	     ptr = logo_xpm;
-	     lg = sizeof (logo_xpm) / sizeof (char *) - 1;
-
-	     for (i = 0; i < lg; i++)
-	       {
-		  fprintf (infoFILE, "\"%s\",\n", ptr[i]);
-	       }
-	     fprintf (infoFILE, "\"%s\"};\n", ptr[i]);
-	     fclose (infoFILE);
-	  }
-	if (!TtaFileExist ("logo.xbm"))
-	  {
-	     /* cree le fichier logo.xbm */
-	     infoFILE = fopen ("logo.xbm", "w");
-	     lg = logo_width;
-	     ht = logo_height;
-	     fprintf (infoFILE, "#define logo_width %d\n", lg);
-	     fprintf (infoFILE, "#define logo_height %d\n", ht);
-	     fprintf (infoFILE, "static unsigned char logo_bits[] = {\n");
-	     bits = logo_bits;
-	     lg = sizeof (logo_bits) / sizeof (unsigned char) - 1;
-
-	     i = 0;
-	     while (i < lg)
-	       {
-		  fprintf (infoFILE, " 0x%.2x,", (unsigned int) bits[i]);
-		  i++;
-		  if (i % 12 == 0)
-		     fprintf (infoFILE, "\n");
-	       }
-	     fprintf (infoFILE, " 0x%.2x, };\n", (unsigned int) bits[i]);
-	     fclose (infoFILE);
-	  }
-#endif /* 0 */
      }
    TtaFreeMemory (fileSuffix);
 }

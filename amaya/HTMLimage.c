@@ -568,7 +568,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   ElementType         elType;
   ElementType         parentType;
   Element             parent;
-  int                 modified, i;
+  ThotBool            modified;
+  int                 i;
   ThotBool            is_svg, is_mml, is_html, htmlok;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;

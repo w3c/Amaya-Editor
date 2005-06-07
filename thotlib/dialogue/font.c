@@ -2330,11 +2330,11 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 void InitDialogueFonts (char *name)
 {
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
   int              ndir, ncurrent;
   char            FONT_PATH[128];
   char            *fontpath;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
   char            *value;

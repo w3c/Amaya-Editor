@@ -4379,7 +4379,7 @@ ThotBool Model_queryState (int ref,
   librdf_statement_set_predicate (partial_statement, predicate);
   librdf_statement_set_object (partial_statement, object);
 
-  res =  librdf_model_contains_statement (model, partial_statement);
+  res = (librdf_model_contains_statement (model, partial_statement) != 0);
 
   librdf_free_statement (partial_statement);
 

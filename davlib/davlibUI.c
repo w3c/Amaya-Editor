@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.20  2004-09-30 07:23:42  vatton
+ ** Revision 1.21  2005-06-07 13:37:11  gully
+ ** code cleaning + warning fixes
+ ** S. GULLY
+ **
+ ** Revision 1.20  2004/09/30 07:23:42  vatton
  ** New message info.
  ** Irene
  **
@@ -145,8 +149,7 @@ static HWND     DAVDlg;
 void DAVSetLockIndicator (Document docid) 
 {
   /* updates Lock indicator*/ 
-  TtaSetToggleItem (docid, DAV_VIEW,Cooperation_,
-		    BLockIndicator, DAVLockIndicatorState);  
+  TtaSetToggleItem (docid, DAV_VIEW,Cooperation_, BLockIndicator, DAVLockIndicatorState);  
 }
 
 

@@ -1126,14 +1126,13 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
   if (prompt)
     {
       if (me->method == METHOD_GET)
-	{
-	  /* @@@@ IV */
-	  (*prompt) (request, HT_A_CONFIRM, status, NULL, NULL, NULL);
-	  force_put = NO;
-	}
+	    {
+	      /* @@@@ IV */
+	      (*prompt) (request, HT_A_CONFIRM, status, NULL, NULL, NULL);
+	      force_put = NO;
+	    }
       else
-	force_put = (*prompt) (request, HT_A_CONFIRM, HT_MSG_RULES,
-			       NULL, NULL, NULL);
+	      force_put = ((*prompt)(request, HT_A_CONFIRM, HT_MSG_RULES, NULL, NULL, NULL) != 0);
     }
   else
     force_put = NO;
@@ -1288,10 +1287,9 @@ static int check_handler (HTRequest * request, HTResponse * response,
   else 
     {
       if (prompt)
-	  force_put = (*prompt) (request, HT_A_CONFIRM, HT_MSG_FILE_REPLACE,
-				 NULL, NULL, NULL);
+	      force_put = ((*prompt)(request, HT_A_CONFIRM, HT_MSG_FILE_REPLACE, NULL, NULL, NULL) != 0);
       else
-	force_put = FALSE;
+	      force_put = FALSE;
 
       if (force_put)
 	{
@@ -2242,19 +2240,21 @@ int i;
       strcpy (cache_lockfile, real_dir);
       strcat (cache_lockfile, ".lock");
       cache_locked = FALSE;
-      if (TtaFileExist (cache_lockfile) && !(cache_locked = test_cachelock (cache_lockfile)))
-	{
+      if ( TtaFileExist(cache_lockfile) &&
+           !(cache_locked = (test_cachelock(cache_lockfile) != 0))
+         )
+	    {
 #ifdef DEBUG_LIBWWW
-	  fprintf (stderr, "found a stale cache, removing it\n");
+	      fprintf (stderr, "found a stale cache, removing it\n");
 #endif /* DEBUG_LIBWWW */
-	  /* remove the lock and clean the cache (the clean cache 
-	     will remove all, making the following call unnecessary */
-	  /* little trick to win some memory */
-	  strptr = strrchr (cache_lockfile, '.');
-	  *strptr = EOS;
-	  RecCleanCache (cache_lockfile);
-	  *strptr = '.';
-	}
+	      /* remove the lock and clean the cache (the clean cache 
+	         will remove all, making the following call unnecessary */
+	      /* little trick to win some memory */
+	      strptr = strrchr (cache_lockfile, '.');
+	      *strptr = EOS;
+	      RecCleanCache (cache_lockfile);
+	      *strptr = '.';
+	    }
 
       if (!cache_locked) 
 	{

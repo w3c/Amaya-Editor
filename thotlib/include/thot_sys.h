@@ -31,8 +31,8 @@ and must be removed at the end of the debug */
 #include <math.h>
 
 #ifndef M_PI
-#define M_PI            3.14159265358979323846  /* pi */
-#define M_PI_2          1.57079632679489661923  /* pi/2 */
+  #define M_PI            3.14159265358979323846  /* pi */
+  #define M_PI_2          1.57079632679489661923  /* pi/2 */
 #endif
 /*
   A charater that starts an entity that Amaya cannot convert.
@@ -46,21 +46,19 @@ and must be removed at the end of the debug */
 #define UNDISPLAYED_UNICODE 27
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
+  #include <errno.h>
+  #include <limits.h>
+  #include <fcntl.h>
+  #include <io.h>
 
-#include <errno.h>
-#include <limits.h>
-#include <fcntl.h>
-#include <io.h>
+  /* MS-Windows platform */
+  #ifndef WWW_MSWINDOWS
+    #define WWW_MSWINDOWS
+  #endif /* !WWW_MSWINDOWS */
 
-/* MS-Windows platform */
-#ifndef WWW_MSWINDOWS
-#define WWW_MSWINDOWS
-#endif /* !WWW_MSWINDOWS */
-
-#ifndef _WINDOWS
-#define _WINDOWS
-#endif /* !_WINDOWS */
-
+  #ifndef _WINDOWS
+    #define _WINDOWS
+  #endif /* !_WINDOWS */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 /**********************************************************/
 
@@ -70,147 +68,170 @@ and must be removed at the end of the debug */
 
 /* If const does work, or hasn't been redefined before */
 #ifndef CONST
-#define CONST const
+  #define CONST const
 #endif
 
 #ifndef MAX_PATH
-#define MAX_PATH HT_MAX_PATH	/* nombre de caracteres par liste de path */
+  #define MAX_PATH HT_MAX_PATH	/* nombre de caracteres par liste de path */
 #endif
 
 #ifndef FALSE
-#define FALSE 0
+  #ifdef __cplusplus
+    #define FALSE false
+  #else /* #ifdef __cplusplus */
+    #define FALSE 0
+  #endif /* #ifdef __cplusplus */
 #endif
+
 #ifndef TRUE
-#define TRUE  (!FALSE)
+  #ifdef __cplusplus
+    #define TRUE true
+  #else /* #ifdef __cplusplus */
+    #define TRUE (!FALSE)
+  #endif /* #ifdef __cplusplus */
 #endif
 
-/********************************************************WINDOWS**/
+
+
 #ifdef _WINDOWS
-#define open   _open
-#define stat   _stat
-#define rmdir  _rmdir
+  #define open   _open
+  #define stat   _stat
+  #define rmdir  _rmdir
 
-#define WM_ENTER (WM_USER)
+  #define WM_ENTER (WM_USER)
 
-#include <direct.h>
-/*------------------------------------------------------GNUC--*/
-#if defined(__GNUC__) || defined(__GNUWIN32)
-#ifndef EXTERN
-#define EXTERN extern
-#endif
+  #include <direct.h>
+  /*------------------------------------------------------GNUC--*/
+  #if defined(__GNUC__) || defined(__GNUWIN32)
+    #ifndef EXTERN
+      #define EXTERN extern
+    #endif
 
-/* Constants for PATHs */
-#define DIR_SEP  '/'
-#define PATH_SEP ':'
-#define DIR_STR  "/"
-#define PATH_STR ":"
+    /* Constants for PATHs */
+    #define DIR_SEP  '/'
+    #define PATH_SEP ':'
+    #define DIR_STR  "/"
+    #define PATH_STR ":"
 
-#define WC_DIR_SEP  '/'
-#define WC_PATH_SEP ':'
-#define WC_DIR_STR  "/"
-#define WC_PATH_STR ":"
+    #define WC_DIR_SEP  '/'
+    #define WC_PATH_SEP ':'
+    #define WC_DIR_STR  "/"
+    #define WC_PATH_STR ":"
+  #else /* __GNUC__ */ /*---------------------------------GNUC--*/
+    /* Ugly patches to cope with Visual C++ */
+    /* preproccessor flags */
+    #undef NOERROR
 
-#else /* __GNUC__ */ /*---------------------------------GNUC--*/
-/* Ugly patches to cope with Visual C++ */
-/* preproccessor flags */
-#undef NOERROR
+    /* lacking types */
+    typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
+    /* added functions */
+    void bzero (void *s, size_t n);
+    #if !defined(_WX) && !defined(_WINDOWS) /* SG there is warnings if I define this function */
+      int _getpid (void);
+    #endif /* _WX */
+    #ifdef __STDC__ // allready defined if __STDC__ is not defined
+      #define isascii(c) __isascii(c)
+    #endif /* #ifdef __STDC__ */
+    #define strcasecmp(a, b) _stricmp(a, b)
+    #define index(str, ch) strchr(str, ch)
+    /* function mappings */
+    #define stat _stat /* stat(a,b), struct stat and probably everything else */
+    #define fstat(fileno, buf) _fstat(fileno, buf)
+    #define getcwd(buffer, len) _getcwd(buffer, len)
+    #define access(f,m) _access((f),(m))
+    #define unlink(f) _unlink((f))
+    #define snprintf _snprintf
 
-/* lacking types */
-typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
-/* added functions */
-void bzero (void *s, size_t n);
-#if !defined(_WX) && !defined(_WINDOWS) /* SG there is warnings if I define this function */
-int _getpid (void);
-#endif /* _WX */
-#ifdef __STDC__ // allready defined if __STDC__ is not defined
-#define isascii(c) __isascii(c)
-#endif /* #ifdef __STDC__ */
-#define strcasecmp(a, b) _stricmp(a, b)
-#define index(str, ch) strchr(str, ch)
-/* function mappings */
-#define stat _stat /* stat(a,b), struct stat and probably everything else */
-#define fstat(fileno, buf) _fstat(fileno, buf)
-#define getcwd(buffer, len) _getcwd(buffer, len)
-#define access(f,m) _access((f),(m))
-#define unlink(f) _unlink((f))
-#define snprintf _snprintf
+    /* Constants for PATHs */
+    #define DIR_SEP  '\\'
+    #define PATH_SEP ';'
+    #define DIR_STR  "\\"
+    #define PATH_STR ";"
 
-/* Constants for PATHs */
-#define DIR_SEP  '\\'
-#define PATH_SEP ';'
-#define DIR_STR  "\\"
-#define PATH_STR ";"
+    #define WC_DIR_SEP  '\\'
+    #define WC_PATH_SEP ';'
+    #define WC_DIR_STR  "\\"
+    #define WC_PATH_STR ";"
+  #endif /* ! __GNUC__ */
+  /*------------------------------------------------------GNUC--*/
 
-#define WC_DIR_SEP  '\\'
-#define WC_PATH_SEP ';'
-#define WC_DIR_STR  "\\"
-#define WC_PATH_STR ";"
+  /* type mappings */
+  #ifdef __cplusplus
+    typedef bool      Boolean;	/* X11/Intrinsic.h */
+    #define HAVE_BOOLEAN
+    typedef bool      ThotBool;
+    #define Bool	    bool	/* X11/Xlib.h */
+    #define None	    0L	/* X11/X.h */
+  #else /* #ifdef __cplusplus */
+    typedef BOOL        Boolean;	/* X11/Intrinsic.h */
+    #define HAVE_BOOLEAN
+    typedef BOOL        ThotBool;
+    #define Bool	    int	/* X11/Xlib.h */
+    #define None	    0L	/* X11/X.h */
+  #endif /* #ifdef __cplusplus */
 
-#endif /* ! __GNUC__ */
-/*------------------------------------------------------GNUC--*/
+  #define Dimension int
 
-/* type mappings */
-typedef BOOL        Boolean;	/* X11/Intrinsic.h */
-#define HAVE_BOOLEAN
-typedef BOOL        ThotBool;
-#define Bool	    int	/* X11/Xlib.h */
-#define None	    0L	/* X11/X.h */
-#define Bool	    int	/* X11/Xlib.h */
+  #ifndef R_OK
+    #define R_OK 4
+  #endif
+  #ifndef W_OK
+    #define W_OK 2
+  #endif
+  #ifndef X_OK
+    #define X_OK 0
+  #endif
 
-#ifndef R_OK
-#define R_OK 4
-#endif
-#ifndef W_OK
-#define W_OK 2
-#endif
-#ifndef X_OK
-#define X_OK 0
-#endif
+  /* added functions */
+  #define ThotPid_get()	_getpid()
+  #define ThotPid		int
 
-/* added functions */
-#define ThotPid_get()	_getpid()
-#define ThotPid		int
+  #ifdef __cplusplus /* WX use C++ */
+    #ifndef False
+      #define False false
+    #endif
+    #ifndef True
+      #define True true
+    #endif
+  #else /* #ifdef __cplusplus */
+    #ifndef False
+      #define False 0
+    #endif
+    #ifndef True
+      #define True 1
+    #endif
+  #endif /* #ifdef __cplusplus */
 
-#ifndef False
-#define False 0
-#endif
-#ifndef True
-#define True 1
-#endif
+#endif /* _WINDOWS */
 
-#define Dimension int
-
-#endif /* _WINDOWS *//***********************************WINDOWS**/
 
 #if defined(_UNIX)
+  /* Unix definitions */
+  #define None	    0L	/* X11/X.h */
+  #ifdef __cplusplus
+    typedef bool ThotBool;
+  #else /* #ifdef __cplusplus */
+    typedef unsigned char   ThotBool;
+  #endif /* #ifdef __cplusplus */
+  typedef ThotBool BOOL;
+  #define ThotPid_get()	getpid()
+  #define ThotPid		pid_t
 
-/* Unix definitions */
-#define None	    0L	/* X11/X.h */
-#ifndef _WX
-typedef unsigned char   ThotBool;
-#else /* _WX */
-typedef bool ThotBool;
-#endif /* _WX */
-typedef ThotBool BOOL;
-#define ThotPid_get()	getpid()
-#define ThotPid		pid_t
+  /* Constants for PATHs */
+  #define DIR_SEP  '/'
+  #define DIR_STR  "/"
+  #define PATH_SEP ':'
+  #define PATH_STR ":"
 
-/* Constants for PATHs */
-#define DIR_SEP  '/'
-#define DIR_STR  "/"
-#define PATH_SEP ':'
-#define PATH_STR ":"
-
-#define WC_DIR_SEP  '/'
-#define WC_PATH_SEP ':'
-#define WC_DIR_STR  "/"
-#define WC_PATH_STR ":"
-
+  #define WC_DIR_SEP  '/'
+  #define WC_PATH_SEP ':'
+  #define WC_DIR_STR  "/"
+  #define WC_PATH_STR ":"
 #endif /* #if defined(_UNIX) */
 
 #define ___TEXT___(str) L##str
 #ifndef TEXT
-#define TEXT(str) ___TEXT___(str)
+  #define TEXT(str) ___TEXT___(str)
 #endif  /* TEXT */
 
 #define __CR__  '\r'

@@ -58,7 +58,7 @@ extern SSchema TtaGetSSchema ( char *name,
                                Document document );
 extern SSchema TtaGetSSchemaByUri ( char *uriName,
                                     Document document );
-extern int TtaSameSSchemas ( SSchema schema1,
+extern ThotBool TtaSameSSchemas ( SSchema schema1,
                              SSchema schema2 );
 extern void TtaGiveSchemasOfDocument ( char *documentName,
                                        char *structureName,
@@ -67,8 +67,8 @@ extern void TtaNextSchemaExtension ( Document document,
                                      SSchema * extension );
 extern void TtaNextNature ( Document document,
                             SSchema * nature );
-extern int TtaIsDocumentModified ( Document document );
-extern int TtaIsDocumentUpdated ( Document document );
+extern ThotBool TtaIsDocumentModified ( Document document );
+extern ThotBool TtaIsDocumentUpdated ( Document document );
 extern int TtaGetDocumentAccessMode ( Document document );
 extern int TtaGetDocumentBackUpInterval ( void );
 extern int TtaGetNotificationMode ( Document document );
@@ -166,7 +166,7 @@ extern SSchema TtaGetSSchema ( char *name,
                                  Document document );
 extern SSchema TtaGetSSchemaByUri ( char *uriName,
                                       Document document );
-extern int TtaSameSSchemas ( SSchema schema1,
+extern ThotBool TtaSameSSchemas ( SSchema schema1,
                                SSchema schema2 );
 extern void TtaGiveSchemasOfDocument ( char *documentName,
                                          char *structureName,
@@ -175,8 +175,8 @@ extern void TtaNextSchemaExtension ( Document document,
                                        SSchema * extension );
 extern void TtaNextNature ( Document document,
                               SSchema * nature );
-extern int TtaIsDocumentModified ( Document document );
-extern int TtaIsDocumentUpdated ( Document document );
+extern ThotBool TtaIsDocumentModified ( Document document );
+extern ThotBool TtaIsDocumentUpdated ( Document document );
 extern int TtaGetDocumentAccessMode ( Document document );
 extern int TtaGetDocumentBackUpInterval ( void );
 extern int TtaGetNotificationMode ( Document document );

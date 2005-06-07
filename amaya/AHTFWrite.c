@@ -118,7 +118,7 @@ static int AHTFWriter_put_string (HTStream *me, const char* s)
   ----------------------------------------------------------------------*/
 static int AHTFWriter_write (HTStream *me, const char *s, int l)
 {
-  ThotBool           status;
+  int                 status;
   AHTReqContext      *reqcont;
 
   if (me->fp == NULL)

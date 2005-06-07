@@ -5672,12 +5672,12 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 	       buffer = (char *)TtaConvertByteToMbs ((unsigned char *)&bufferRead[i], charset);
 	       if (buffer)
 		 {
-		   okay = XML_Parse (Parser, buffer, strlen ((char *)buffer), endOfFile);
+		   okay = (XML_Parse(Parser, buffer, strlen ((char *)buffer), endOfFile) != XML_STATUS_ERROR);
 		   TtaFreeMemory (buffer);
 		 }
 	     }
 	   else
-	     okay = XML_Parse (Parser, &bufferRead[i], res, endOfFile);
+	     okay = (XML_Parse(Parser, &bufferRead[i], res, endOfFile) != XML_STATUS_ERROR);
 	   if (!okay)
 	     XmlParseError (errorNotWellFormed,
 			    (unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);

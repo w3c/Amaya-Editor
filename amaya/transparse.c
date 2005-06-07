@@ -2142,7 +2142,7 @@ static void InitDoParse (void)
 /*----------------------------------------------------------------------
   DoStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
-int DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
+ThotBool DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 {
    BinFile             infile = (BinFile)0;
    char                msg[200];

@@ -1320,17 +1320,17 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 	  i = *buffer2++;
 	  if (GifTransparent == i)
 	    {
-	      *ptr++ = colrs[i].red;
-	      *ptr++ = colrs[i].green;
-	      *ptr++ = colrs[i].blue;	
-	      *ptr++ = 0;
+	      *ptr++ = (unsigned char)colrs[i].red;
+	      *ptr++ = (unsigned char)colrs[i].green;
+	      *ptr++ = (unsigned char)colrs[i].blue;	
+	      *ptr++ = (unsigned char)0;
 	    }
 	  else
 	    {
-	      *ptr++ = colrs[i].red;
-	      *ptr++ = colrs[i].green;
-	      *ptr++ = colrs[i].blue;	
-	      *ptr++ = 255;
+	      *ptr++ = (unsigned char)colrs[i].red;
+	      *ptr++ = (unsigned char)colrs[i].green;
+	      *ptr++ = (unsigned char)colrs[i].blue;	
+	      *ptr++ = (unsigned char)255;
 	    }
 	}
     }

@@ -5753,10 +5753,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifdef _WINGUI
   POINT               curPoint;
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#if defined(_GTK)
   int                 n;  
   ThotBool            usedoubleclick;  
-#endif /* _GTK || _WX */
+#endif /* _GTK */
   ThotWidget          w;
   struct Cat_Context *catalogue;
 
@@ -5954,7 +5954,7 @@ void TtaWaitShowDialogue ()
   ----------------------------------------------------------------------*/
 ThotBool TtaTestWaitShowDialogue ()
 {
-   return (CurrentWait);
+   return (CurrentWait != 0);
 }
 
 /*----------------------------------------------------------------------

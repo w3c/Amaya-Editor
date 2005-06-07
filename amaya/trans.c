@@ -1036,7 +1036,7 @@ static ThotBool FlattenAndInsertElement (Element elSource, Element elDest,
 	   TtaInsertSibling (elCour, elPreced, FALSE, doc);
 	else
 	   TtaInsertFirstChild (&elCour, elDest, doc);
-	res = !(ThotBool) TtaGetErrorCode ();
+	res = (TtaGetErrorCode() == 0); /* 0 is no error */
 	if (res)
 	  {
 	     elPreced = elCour;

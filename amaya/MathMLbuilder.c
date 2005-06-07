@@ -1818,7 +1818,7 @@ void SetFontstyleAttr (Element el, Document doc)
  -----------------------------------------------------------------------*/
 void SetIntAddSpaceAttr (Element el, Document doc)
 {
-  Element	textEl, previous, ancestor;
+  Element	textEl, previous;
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr, formAttr;

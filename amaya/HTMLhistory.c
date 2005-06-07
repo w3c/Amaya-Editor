@@ -198,7 +198,7 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
   char              *documentname;
   char              *parameters;
   char              *pathname;
-  ThotBool           loaded;
+  int                loaded;
 
   if (url == NULL)
     return FALSE;

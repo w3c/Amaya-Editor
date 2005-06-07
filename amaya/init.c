@@ -666,7 +666,7 @@ static ThotBool     FileExistTarget (char *filename)
   ptr = strrchr (filename, '#');
   if (ptr)
     *ptr = EOS;
-  result = TtaFileExist (filename);
+  result = (TtaFileExist(filename) != 0);
   if (ptr)
     *ptr = '#';
   return result;
@@ -6639,8 +6639,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       switch (val)
 	{
 	case 1:
-	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
-				   (IdApplyToSelection) ? TRUE: FALSE);
+	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, IdApplyToSelection);
 #if defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
@@ -6649,8 +6648,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* #if defined(_GTK) || defined(_WX) */
 	  break;
 	case 2:
-	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
-				   (IdApplyToSelection) ? TRUE: FALSE);
+	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, IdApplyToSelection);
 #if defined(_GTK) || defined(_WX) 
 	  /* and show the status */
 	  TtaNewLabel (BaseDialog + mIdStatus,
@@ -6665,7 +6663,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       IdElemName[MAX_LENGTH - 1] = EOS;
       break;
     case mIdUseSelection:
-      IdApplyToSelection = val;
+      IdApplyToSelection = (val != 0);
       break;
       /* Charset Save As menu */
     case CharsetForm:

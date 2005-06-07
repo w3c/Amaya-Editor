@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.8  2003-11-19 12:33:16  gully
+ ** Revision 1.9  2005-06-07 13:37:11  gully
+ ** code cleaning + warning fixes
+ ** S. GULLY
+ **
+ ** Revision 1.8  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -148,7 +152,7 @@ WEBDAV_EXPORT char DAVFullHostName[DAV_LINE_MAX];
 /*
  * State of the LockIndicator toggle
  */
-WEBDAV_EXPORT BOOL DAVLockIndicatorState;
+WEBDAV_EXPORT ThotBool DAVLockIndicatorState;
 
 
 /*----------------------------------------------------------------------

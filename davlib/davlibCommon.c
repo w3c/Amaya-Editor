@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.11  2003-11-19 12:33:16  gully
+ ** Revision 1.12  2005-06-07 13:37:11  gully
+ ** code cleaning + warning fixes
+ ** S. GULLY
+ **
+ ** Revision 1.11  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -199,7 +203,7 @@ BOOL DAVAddResource (char *new_resource, char *list, char sep, int len)
             i--; 
         buf[++i] = '\0';
 
-        if (strlen(buf)<len)
+        if ((int)strlen(buf)<len)
          {
             strcat (list, buf);
             status = YES;

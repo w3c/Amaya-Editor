@@ -88,13 +88,13 @@ extern void TtaGiveTypeFromName ( ElementType * elementType,
                                   char *name );
 extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
                                           char *name );
-extern int TtaSameTypes ( ElementType type1,
+extern ThotBool TtaSameTypes ( ElementType type1,
                           ElementType type2 );
 extern char *TtaGetElementLabel ( Element element );
 extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
-extern int TtaIsLeaf ( ElementType elementType );
+extern ThotBool TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
 extern int TtaGetCardinalOfType ( ElementType elementType );
 extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
@@ -222,13 +222,13 @@ extern void TtaGiveTypeFromName ( ElementType * elementType,
                                     char *name );
 extern void TtaGiveTypeFromOriginalName ( ElementType * elementType,
                                             char *name );
-extern int TtaSameTypes ( ElementType type1,
+extern ThotBool TtaSameTypes ( ElementType type1,
                             ElementType type2 );
 extern char *TtaGetElementLabel ( Element element );
 extern int TtaGetElementLineNumber ( Element element );
 extern int TtaGetElementLevel ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
-extern int TtaIsLeaf ( ElementType elementType );
+extern ThotBool TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
 extern int TtaGetCardinalOfType ( ElementType elementType );
 extern void TtaGiveConstructorsOfType ( ElementType **typesArray,

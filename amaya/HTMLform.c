@@ -52,7 +52,7 @@ static char        *FormBuf;    /* temporary buffer used to build the query
 static int          FormLength;  /* size of the temporary buffer */
 static int          FormBufIndex; /* gives the index of the last char + 1 added to
 					 the buffer (only used in AddBufferWithEos) */
-static int          documentStatus;
+static ThotBool     documentStatus;
 static Element      Option [MAX_OPTIONS];
 
 #ifdef _WINGUI 
@@ -507,7 +507,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
   char               *value = NULL;
   char               *text;
   int                 length;
-  int                 modified = FALSE;
+  ThotBool            modified = FALSE;
 
   if (!el || !ancestor)
     return;
@@ -1074,7 +1074,7 @@ void SelectCheckbox (Document doc, Element el)
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   int                 modified;
+   ThotBool            modified = FALSE;
 
    if (el == NULL)
       return;
@@ -1125,7 +1125,8 @@ void SelectOneRadio (Document doc, Element el)
   Element             elForm;
   Attribute           attr, attrN;
   AttributeType       attrType, attrTypeN;
-  int                 modified, length;
+  ThotBool            modified = FALSE;
+  int                 length;
   char                name[MAX_LENGTH], *buffer = NULL;
 
   if (el == NULL)
@@ -1233,17 +1234,17 @@ void SelectOneOption (Document doc, Element el)
   int                 i;
 #endif /* _WINGUI || _GTK */
   ElementType         elType;
-  Element	      elText, menuEl, parent;
-  ThotBool	      selected[MAX_OPTIONS];
+  Element	            elText, menuEl, parent;
+  ThotBool	          selected[MAX_OPTIONS];
   AttributeType       attrType;
-  Attribute	      attr;
-  SSchema	      htmlSch;
+  Attribute	          attr;
+  SSchema	            htmlSch;
   char                text[MAX_LABEL_LENGTH + 1];
   char               *tmp;
   Language            lang;
   int                 length, nbitems;
-  int                 modified;
-  ThotBool	      multipleOptions, sel;
+  ThotBool            modified = FALSE;
+  ThotBool     	      multipleOptions, sel;
 
   if (el == NULL)
     return;

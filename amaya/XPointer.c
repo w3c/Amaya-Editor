@@ -377,15 +377,15 @@ static char * GetIdValue (Element el)
   ----------------------------------------------------------------------*/
 static ThotBool TestIdValue (Element el, char *val)
 {
-  char *id_value;
-  int result = FALSE;
+  char *   id_value;
+  ThotBool result = FALSE;
 
   id_value = GetIdValue (el);
 
   if (id_value && val)
     {
       if (!strcmp (id_value, val))
-	result = TRUE;
+	      result = TRUE;
       TtaFreeMemory (id_value);
     }
 

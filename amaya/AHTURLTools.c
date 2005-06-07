@@ -2313,7 +2313,7 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
    /* remove /../ and /./ */
    SimplifyUrl (&target);
    if (!change)
-     change = strcmp (src, target);
+     change = (strcmp (src, target) != 0);
    return (change);
 }
 
