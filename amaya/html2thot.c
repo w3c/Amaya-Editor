@@ -4650,6 +4650,19 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	      TtaAttachAttribute (el, attr, doc);
 	      TtaSetAttributeValue (attr, val, el, doc);
 	    }
+	  /* display PI or XML comments */
+	  else if (withinMarkup &&
+		   DocumentTypes[doc] != docCSS &&
+		   DocumentTypes[doc] != docLog &&
+		   DocumentTypes[doc] != docText &&
+		   charRead == '!' &&
+		   !withinString &&
+		   LgBuffer > 0 && inputBuffer[LgBuffer-1] == '<')
+	    {
+	      withinMarkup = FALSE;
+	      /* add the current character */
+	      inputBuffer[LgBuffer++] = charRead;
+	    }
 	  else if (!withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
@@ -4663,6 +4676,19 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		withinString = !withinString;
 	      if (withinString)
 		{
+		  if (withinMarkup)
+		    {
+		      /* close the previous markup string */
+		    attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+		    attr = TtaGetAttribute (el, attrType);
+		    if (attr == NULL)
+		      {
+			attr = TtaNewAttribute (attrType);
+			val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+			TtaAttachAttribute (el, attr, doc);
+			TtaSetAttributeValue (attr, val, el, doc);
+		      }
+		    }
 		  /* generate a new IsString element */
 		  el = GetANewText (el, elType, doc);
 		  attrType.AttrTypeNum = TextFile_ATTR_IsString;
@@ -4720,6 +4746,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
+#ifdef IV
 	  else if (withinTag && LgBuffer == 1 && inputBuffer[0] == '<')
 	    {
 	      /* set the IsMarkup element */
@@ -4775,7 +4802,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-	  else if (!withinString &&!withinQuote &&
+#endif
+	  else if (!withinString && !withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
@@ -4787,10 +4815,14 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		withinMarkup = !withinMarkup;
 	      if (charRead == '<')
 		{
+#ifdef IV
 		  /* close the previous element */
 		  el = GetANewText (el, elType, doc);
 		  /* it should start a tag element */
 		  withinTag = TRUE;
+#else
+		  withinMarkup = TRUE;
+#endif
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
 		}
