@@ -914,8 +914,10 @@ ThotBool IsImageType (const char *type)
      i = sizeof ("image/") - 1;
    else
      i = 0;
-   if (!strcmp (&temptype[i], "gif") || !strcmp (&temptype[i], "x-xbitmap") ||
-       !strcmp (&temptype[i], "x-xpixmap") || !strcmp (&temptype[i], "jpeg") ||
+   if (!strcmp (&temptype[i], "gif") ||
+       !strcmp (&temptype[i], "x-xbitmap") ||
+       !strcmp (&temptype[i], "x-xpixmap") ||
+       !strcmp (&temptype[i], "jpeg") ||
        !strcmp (&temptype[i], "png"))
      ret = TRUE;
    else
@@ -951,7 +953,8 @@ ThotBool IsTextName (const char *path)
      }
    nsuffix[i] = EOS;
 
-   if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
+   if (!strcmp (nsuffix, "txt") ||
+       !strcmp (nsuffix, "dtd"))
       ret = TRUE;
    else if (!strcmp (nsuffix, "gz"))
      {
@@ -965,7 +968,8 @@ ThotBool IsTextName (const char *path)
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
+       if (!strcmp (nsuffix, "txt") ||
+	   !strcmp (nsuffix, "dtd"))
 	 ret = TRUE;
        else
 	 ret = FALSE;

@@ -482,7 +482,6 @@ ThotBool CreateSaveObject ( int ref, ThotWindow parent, char* objectname)
 
   // do not force the directory, let wxWidgets choose for the current one
   // p_dlg->SetDirectory(wxGetHomeDir());
-  
   if (p_dlg->ShowModal() == wxID_OK)
     {
       wxString url = p_dlg->GetPath();

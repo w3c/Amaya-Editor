@@ -3816,7 +3816,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	       unknown = FALSE;
 	     }
 	   else if (contentApplication &&
-		    !strncasecmp (&content_type[i+1], "x-sh", 4))
+		    (!strncasecmp (&content_type[i+1], "x-sh", 4) ||
+		     !strncasecmp (&content_type[i+1], "x-javascript", 12)))
 	     {
 	       docType = docText;
 	       docProfile = L_Other;
@@ -3830,7 +3831,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	       docProfile = L_Other;
 	       unknown = FALSE;
 	     }
-	   else if (MultipleBookmarks () && !strncasecmp (&content_type[i+1], "rdf+xml", 7))
+	   else if (MultipleBookmarks() &&
+		    !strncasecmp (&content_type[i+1], "rdf+xml", 7))
 	     {
 	       /* it's an RDF document. By default we assume we will
 		  parse it as generic XML */
