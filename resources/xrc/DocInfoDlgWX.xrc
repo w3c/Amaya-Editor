@@ -7,8 +7,9 @@
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
+        <object class="wxFlexGridSizer">
+          <cols>2</cols>
+          <rows>2</rows>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_URL_LABEL">
               <label>*URL*</label>
@@ -19,18 +20,12 @@
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_URL_CONTENT">
               <size>400,-1</size>
-              <style></style>
+              <style>wxTE_READONLY</style>
             </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_DOCUMENT_TYPE_LABEL">
               <label>*Document type*</label>
@@ -39,17 +34,14 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_DOCUMENT_TYPE_CONTENT"/>
+            <object class="wxTextCtrl" name="wxID_DOCUMENT_TYPE_CONTENT">
+              <style>wxTE_READONLY</style>
+            </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
+          <growablecols>1</growablecols>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_MIME_TYPE_LABEL">
               <label>*MIME Type*</label>
@@ -58,17 +50,13 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_MIME_TYPE_CONTENT"/>
+            <object class="wxTextCtrl" name="wxID_MIME_TYPE_CONTENT">
+              <style>wxTE_READONLY</style>
+            </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_CHARSET_LABEL">
               <label>*Charset*</label>
@@ -77,17 +65,13 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_CHARSET_CONTENT"/>
+            <object class="wxTextCtrl" name="wxID_CHARSET_CONTENT">
+              <style>wxTE_READONLY</style>
+            </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LENGTH_LABEL">
               <label>*Document length*</label>
@@ -96,17 +80,13 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_LENGTH_CONTENT"/>
+            <object class="wxTextCtrl" name="wxID_LENGTH_CONTENT">
+              <style>wxTE_READONLY</style>
+            </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
-        </object>
-        <flag>wxEXPAND</flag>
-      </object>
-      <object class="sizeritem">
-        <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LOCATION_LABEL">
               <label>*Location*</label>
@@ -115,9 +95,11 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_LOCATION_CONTENT"/>
+            <object class="wxTextCtrl" name="wxID_LOCATION_CONTENT">
+              <style>wxTE_READONLY</style>
+            </object>
             <option>1</option>
-            <flag>wxALL</flag>
+            <flag>wxALL|wxEXPAND</flag>
             <border>5</border>
           </object>
         </object>
