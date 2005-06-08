@@ -58,26 +58,13 @@ extern void DisplayBorders ( PtrBox box,
                              ThotBool topdown,
                              ThotBool first,
                              ThotBool last );
-extern void DisplayViewBox ( PtrTransform Trans,
-                             int Width,
-                             int Height );
-extern void DisplayTransformation ( int frame,
-                                    PtrTransform Trans,
-                                    int Width,
-                                    int Height );
-extern void DisplayTransformationExit ( void );
-extern void ComputeBoundingBox ( PtrBox box,
-                                 int frame,
-                                 int xmin,
-                                 int xmax,
-                                 int ymin,
-                                 int ymax );
 extern void DisplayBox ( PtrBox box,
                          int frame,
                          int xmin,
                          int xmax,
                          int ymin,
                          int ymax,
+                         PtrFlow pFlow,
                          ThotBool selected );
 extern int GetArabFontAndIndex ( CHAR_T c,
                                  CHAR_T prev,
@@ -139,26 +126,13 @@ extern void DisplayBorders ( PtrBox box,
                                ThotBool topdown,
                                ThotBool first,
                                ThotBool last );
-extern void DisplayViewBox ( PtrTransform Trans,
-                               int Width,
-                               int Height );
-extern void DisplayTransformation ( int frame,
-                                      PtrTransform Trans,
-                                      int Width,
-                                      int Height );
-extern void DisplayTransformationExit ( void );
-extern void ComputeBoundingBox ( PtrBox box,
-                                   int frame,
-                                   int xmin,
-                                   int xmax,
-                                   int ymin,
-                                   int ymax );
 extern void DisplayBox ( PtrBox box,
                            int frame,
                            int xmin,
                            int xmax,
                            int ymin,
                            int ymax,
+                           PtrFlow pFlow,
                            ThotBool selected );
 extern int GetArabFontAndIndex ( CHAR_T c,
                                    CHAR_T prev,

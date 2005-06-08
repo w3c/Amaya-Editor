@@ -193,6 +193,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 		   int ystart, int ystop)
 {
   ViewFrame          *pFrame;
+  PtrFlow             pFlow;
   int                 x1, x2, y1, y2, k;
 
   k = 0;
@@ -229,6 +230,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	}
 #endif /* _GL */
       pFrame = &ViewFrameTable[frame - 1];
+      /* take into account the positioning */
+      pFlow = GetRelativeFlow (pBox, frame);
       if (pBox->BxAbstractBox &&
 	  (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
 	   pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
@@ -252,6 +255,11 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	  x1 += xstart;
 	  x2 += xstop;
 	}
+      if (pFlow)
+	{
+	  x1 += pFlow->FlXStart;
+	  x2 += pFlow->FlXStart;
+	}
       y1 = pBox->BxYOrg;
       y2 = y1;
       if (ystart == -1 && ystop == -1)
@@ -264,6 +272,11 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	{
 	  y1 += ystart;
 	  y2 += ystop;
+	}
+      if (pFlow)
+	{
+	  y1 += pFlow->FlYStart;
+	  y2 += pFlow->FlYStart;
 	}
 #ifdef CLIP_TRACE
 printf ("ClipBoxRegion x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
@@ -291,6 +304,7 @@ printf ("ClipBoxRegion x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
 void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 {
   ViewFrame          *pFrame;
+  PtrFlow             pFlow;
   int                 x1, x2, y1, y2, cpoints, caret;
 
   cpoints = 0;
@@ -322,6 +336,8 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	}
 #endif /* _GL */
       pFrame = &ViewFrameTable[frame - 1];
+      /* take into account the positioning */
+      pFlow = GetRelativeFlow (pBox, frame);
       if (pBox->BxAbstractBox &&
 	  (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
 	   pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
@@ -337,11 +353,15 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
       else
 	caret = 0;
       x1 = pBox->BxXOrg;
+      if (pFlow)
+	 x1 += pFlow->FlXStart;
       x2 = x1 + pBox->BxWidth;
       /* take into account the negative left margin */
       if (pBox->BxLMargin < 0)
 	x1 += pBox->BxLMargin;
       y1 = pBox->BxYOrg;
+      if (pFlow)
+	 y1 += pFlow->FlYStart;
       y2 = y1 + pBox->BxHeight;
       if (dx >= 0)
 	x2 += dx; /* the box will be moved to the right */
@@ -434,14 +454,15 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   DrawFilledBox draws a box with background or borders.
   The parameter pForm points the box that generates the border or fill.
   Clipping is done by xmin, xmax, ymin, ymax.
+  pFlow points to the displayed flow or NULL when it's the main flow.
   Parameters first and last are TRUE when the box pBox is respectively
   at the first position and/or the last position of pFrom (they must be
   TRUE for pFrom itself).
   selected is TRUE when a parent box or the box itself is selected.
   ----------------------------------------------------------------------*/
-void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
-                    int xmin, int xmax, int ymin, int ymax, ThotBool selected,
-                    ThotBool first, ThotBool last, ThotBool topdown)
+void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
+		    int xmin, int xmax, int ymin, int ymax, ThotBool selected,
+		    ThotBool first, ThotBool last, ThotBool topdown)
 {
   PtrBox              from;
   PtrAbstractBox      pChild, pAb, pParent, pNext;
@@ -450,7 +471,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   ThotPictInfo       *imageDesc;
   PictureScaling      pres;
   int                 x, y, xd = 0, yd = 0;
-  int                 xbg, ybg;
+  int                 xbg, ybg, xorg, yorg;;
   int                 width = 0, height = 0;
   int                 wbg, hbg;
   int                 w, h, view;
@@ -469,7 +490,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   x = pFrame->FrXOrg;
   y = pFrame->FrYOrg;
   GetSizesFrame (frame, &w, &h);
-  t = b = l = r = 0;
+  xd = yd = width = height = t = b = l = r = 0;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;
   if ((pBox->BxType == BoGhost /*&& pAb->AbDisplay != 'B'*/) ||
@@ -488,37 +509,49 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
       /* display all children */
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
-        {
-          /* skip presentation boxes */
-          pNext = pChild->AbNext;
-          while (pNext && pNext->AbPresentationBox)
-            pNext = pNext->AbNext;
-          isLast = (last && pNext == NULL);
-          if (pChild->AbBox && !pChild->AbPresentationBox)
-            {
-              /* draw each child boxes */
-              DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin,
-                             ymax, selected, first, isLast, topdown);
-              first = FALSE;
-            }
-          pChild = pNext;
-        }
-      return;
+	{
+	  /* skip presentation boxes */
+	  pNext = pChild->AbNext;
+	  while (pNext && pNext->AbPresentationBox)
+	    pNext = pNext->AbNext;
+	  isLast = (last && pNext == NULL);
+	  if (pChild->AbBox && !pChild->AbPresentationBox)
+	    {
+	      /* draw each child boxes */
+	      DrawFilledBox (pChild->AbBox, pFrom, frame, pFlow,
+			     xmin, xmax, ymin, ymax,
+			     selected, first, isLast, topdown);
+	      first = FALSE;
+	    }
+	  pChild = pNext;
+	}
+     return;
     }
   else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
     {
       pBox = pBox->BxNexChild;
       while (pBox)
-        {
-          isLast = (last && pBox->BxNexChild == NULL);
-          DrawFilledBox (pBox, pFrom, frame, xmin, xmax, ymin, ymax,
-                         selected, first, isLast, topdown);
-          pBox = pBox->BxNexChild;
-          first = FALSE;
-        }
+	{
+	  isLast = (last && pBox->BxNexChild == NULL);
+	  DrawFilledBox (pBox, pFrom, frame, pFlow,
+			 xmin, xmax, ymin, ymax,
+			 selected, first, isLast, topdown);
+	  pBox = pBox->BxNexChild;
+	  first = FALSE;
+	}
       return;
     }
-  
+
+  /* save the box orign */
+  xorg = pBox->BxXOrg;
+  yorg = pBox->BxYOrg;
+  if (pFlow)
+    {
+      /* apply the box shift */
+      pBox->BxXOrg += pFlow->FlXStart;
+      pBox->BxYOrg += pFlow->FlYStart;
+    }
+
   if (pBox->BxType == BoGhost && pAb->AbDisplay == 'B')
     {
       GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
@@ -688,6 +721,9 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
             }
         }
     }
+  /* restore the box orign */
+  pBox->BxXOrg = xorg;
+  pBox->BxYOrg = yorg;
 }
 
 /*----------------------------------------------------------------------
@@ -746,7 +782,6 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
       plane == pAb->AbDepth &&
       pAb->AbBox)
     {
-      //DisplayTransformationExit ();
       if (pBox && 
           (OldXOrg != 0 || OldYOrg != 0) &&
           (ClipXOfFirstCoordSys == pBox->BxClipX &&
@@ -759,7 +794,6 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
           *OldXOrg = 0;
           *OldYOrg = 0;
         }
-      /*  GL_PopClip (); */
     }
 }
 #endif /* _GL */
@@ -1388,17 +1422,18 @@ ThotBool NoBoxModif (PtrAbstractBox pinitAb)
 /*----------------------------------------------------------------------
   DisplayAllBoxes crosses the Abstract tree from the root top to bottom
   and left to rigth to display all visible boxes.
+  pFlow points to the displayed flow or NULL when it's the main flow.
   Parameters xmin, xmax, ymin, ymax give the clipped area.
   The parameter create returns the box that must be interactively
   created by the user.
   tVol and bVol return the volume of not displayed boxes on thetop and
   on the bottom of the window.
   ----------------------------------------------------------------------*/
-PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
+PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 			int xmin, int xmax, int ymin, int ymax,
 			PtrBox *create, int *tVol, int *bVol)
 {
-  PtrAbstractBox      pAb, specAb;
+  PtrAbstractBox      pAb, specAb, root;
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
@@ -1421,6 +1456,10 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 #endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
+  if (pFlow)
+    root = pFlow->FlRootBox;
+  else
+    root = pFrame->FrAbstractBox;
   pAb = root;
   pBox = pAb->AbBox;
   if (pBox == NULL)
@@ -1454,8 +1493,8 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 
   selected = pAb->AbSelected;
   if (pBox->BxDisplay || selected)
-    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, selected,
-		   TRUE, TRUE, TRUE);
+    DrawFilledBox (pBox, pAb, frame, pFlow, xmin, xmax, ymin, ymax,
+		   selected, TRUE, TRUE, TRUE);
   while (plane != nextplane)
     /* there is a new plane to display */
     {
@@ -1471,8 +1510,8 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 	      /* don't display the document element */
 	      pAb != pFrame->FrAbstractBox &&
 	      pAb->AbBox &&
-	      /* skip child extra folws */
-	      (pAb != root || !ExtraFlow (pAb->AbBox, frame)))
+	      /* skip extra flow child */
+	      (pAb == root || !IsFlow (pAb->AbBox, frame)))
 	    {
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
@@ -1565,7 +1604,8 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 		    {
 		      if (pAb->AbVisibility >= pFrame->FrVisibility &&
 			  (pBox->BxDisplay || pAb->AbSelected))
-			DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax,
+			DrawFilledBox (pBox, pAb, frame, pFlow,
+				       xmin, xmax, ymin, ymax,
 				       selected, TRUE, TRUE, TRUE);
 		      if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
 			{
@@ -1688,7 +1728,7 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 					pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 					pBox->BxXOrg <= xmax)
 #endif /* _GL */
-				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
+				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
 				  }
 #ifdef _GL
 			      else if (bb >= y_min  &&
@@ -1701,7 +1741,7 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 				       pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 				       pBox->BxXOrg <= xmax)
 #endif /* _GL */
-				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
+				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
 			    }
 			}
 		    }  	      
@@ -1719,13 +1759,11 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 	    }
 
 	  /* get next abstract box */
-#ifdef _GL
 	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed &&
-	      not_g_opacity_displayed)
-#else /* _GL */
-	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+#ifdef _GL
+	      not_g_opacity_displayed &&
 #endif /* _GL */
-	    /* get the first child */
+	      (pAb == root || !IsFlow (pAb->AbBox, frame)))
 	    pAb = pAb->AbFirstEnclosed;
 	  else
 	    {
@@ -1743,15 +1781,16 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
 				       ymax, FALSE);
 #endif /* _GL */
-	      /* get the next sibling */
 	      if (pAb->AbSelected)
 		selected = FALSE;
+
 	      if (pAb->AbNext)
 		pAb = pAb->AbNext;
 	      else
 		{
 		  /* go up in the tree */
-		  while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
+		  while (pAb->AbEnclosing && pAb->AbEnclosing != root &&
+			 pAb->AbEnclosing->AbNext == NULL)
 		    {
 		      if (pAb->AbSelected)
 			selected = FALSE;
@@ -1773,7 +1812,10 @@ PtrBox DisplayAllBoxes (int frame, PtrAbstractBox root,
 		  if (pAb->AbSelected)
 		    selected = FALSE;
 		  pAb = pAb->AbEnclosing;
-		  if (pAb)
+		  if (pAb == root)
+		    /* all boxes are now managed: stop the loop */
+		    pAb = NULL;
+		  else if (pAb)
 		    {
 #ifdef _GL
 		      if (formatted && pAb->AbDepth == plane)
@@ -2002,8 +2044,8 @@ ThotBool RedrawFrameTop (int frame, int scroll)
   PtrFlow             pFlow;
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
-  int                 xmin, xmax, xFrame;
-  int                 ymin, ymax, yFrame;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
   int                 delta, t, b;
   ThotBool            toadd;  
 
@@ -2045,26 +2087,16 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 	  /* Is there a need to redisplay part of the frame ? */
 	  if (xmin < xmax && ymin < ymax)
 	    {
-	      topBox = DisplayAllBoxes (frame, pFrame->FrAbstractBox,
-					xmin, xmax, ymin, ymax,
+	      topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
 					&create, &tVol, &bVol);
 	      /* now display extra flows */
 	      pFlow = pFrame->FrFlow;
-	      /* save current frame origin */
-	      xFrame = pFrame->FrXOrg;
-	      yFrame = pFrame->FrYOrg;
 	      while (pFlow)
 		{
-		  //pFrame->FrXOrg = xFrame + pFlow->FlXStart;
-		  //pFrame->FrYOrg = yFrame + pFlow->FlYStart;
-		  DisplayAllBoxes (frame, pFlow->FlRootBox,
-				   xmin, xmax, ymin, ymax,
+		  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax,
 				   &xbox, &t, &b);
 		  pFlow = pFlow->FlNext;
 		}
-	      /* restore current frame origin */
-	      pFrame->FrXOrg = xFrame;
-	      pFrame->FrYOrg = yFrame;
 	    }
 	  
 	  /* The updated area is redrawn */
@@ -2197,8 +2229,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 delta, t, b;
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
-  int                 xmin, xmax, xFrame;
-  int                 ymin, ymax, yFrame;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
   ThotBool            toadd;
 
   /* are new abstract boxes needed */
@@ -2249,26 +2281,16 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 			      &xmin, &ymin, &xmax, &ymax, 1);
 	      
-	      topBox = DisplayAllBoxes (frame, pFrame->FrAbstractBox,
-					xmin, xmax, ymin,
+	      topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin,
 					ymax, &create, &tVol, &bVol);
 	      /* now display extra flows */
 	      pFlow = pFrame->FrFlow;
-	      /* save current frame origin */
-	      xFrame = pFrame->FrXOrg;
-	      yFrame = pFrame->FrYOrg;
 	      while (pFlow)
 		{
-		  //pFrame->FrXOrg = xFrame + pFlow->FlXStart;
-		  //pFrame->FrYOrg = yFrame + pFlow->FlYStart;
-		  DisplayAllBoxes (frame, pFlow->FlRootBox,
-				   xmin, xmax, ymin, ymax,
+		  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax,
 				   &xbox, &t, &b);
 		  pFlow = pFlow->FlNext;
 		}
-	      /* restore current frame origin */
-	      pFrame->FrXOrg = xFrame;
-	      pFrame->FrYOrg = yFrame;
 	      /* The updated area is redrawn */
 	      DefClip (frame, 0, 0, 0, 0);
 	      RemoveClipping (frame);

@@ -9,11 +9,13 @@
 extern int GetDistance ( int value,
                          int delta );
 extern int GetBoxDistance ( PtrBox pBox,
+                            PtrFlow pFlow,
                             int xRef,
                             int yRef,
                             int ratio,
                             int frame );
 extern void GetClickedBox ( PtrBox *result,
+                            PtrFlow *pFlow,
                             PtrAbstractBox pRootAb,
                             int frame,
                             int x,
@@ -26,11 +28,13 @@ extern void GetClickedBox ( PtrBox *result,
 extern int GetDistance ( int value,
                            int delta );
 extern int GetBoxDistance ( PtrBox pBox,
+                              PtrFlow pFlow,
                               int xRef,
                               int yRef,
                               int ratio,
                               int frame );
 extern void GetClickedBox ( PtrBox *result,
+                              PtrFlow *pFlow,
                               PtrAbstractBox pRootAb,
                               int frame,
                               int x,

@@ -27,13 +27,15 @@ extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                                        int lowerX,
                                        int y,
                                        int frame,
-                                       int *pointselect );
+                                       int *pointselect,
+                                       PtrFlow *pFlow );
 extern PtrBox GetLeafBox ( PtrBox pSourceBox,
                            int frame,
                            int *x,
                            int *y,
                            int xDelta,
-                           int yDelta );
+                           int yDelta,
+                           PtrFlow *pFlow );
 extern int GetShapeDistance ( int xRef,
                               int yRef,
                               PtrBox pBox,
@@ -41,7 +43,8 @@ extern int GetShapeDistance ( int xRef,
                               int frame );
 extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
-                                  int yRef );
+                                  int yRef,
+                                  PtrFlow *pFlow );
 extern void ApplyDirectTranslate ( int frame,
                                    int xm,
                                    int ym );
@@ -81,13 +84,15 @@ extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                                          int lowerX,
                                          int y,
                                          int frame,
-                                         int *pointselect );
+                                         int *pointselect,
+                                         PtrFlow *pFlow );
 extern PtrBox GetLeafBox ( PtrBox pSourceBox,
                              int frame,
                              int *x,
                              int *y,
                              int xDelta,
-                             int yDelta );
+                             int yDelta,
+                             PtrFlow *pFlow );
 extern int GetShapeDistance ( int xRef,
                                 int yRef,
                                 PtrBox pBox,
@@ -95,7 +100,8 @@ extern int GetShapeDistance ( int xRef,
                                 int frame );
 extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
-                                    int yRef );
+                                    int yRef,
+                                    PtrFlow *pFlow );
 extern void ApplyDirectTranslate ( int frame,
                                      int xm,
                                      int ym );

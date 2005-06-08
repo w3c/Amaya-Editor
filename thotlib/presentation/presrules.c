@@ -4314,6 +4314,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    {
 		    case 'R':
 		      pAb->AbPositioning->PnAlgorithm = PnRelative;
+		      /* rule gather on it */
+		      pAb->AbBuildAll = TRUE;
 		      appl = TRUE;
 		      break;
 		    case 'A':

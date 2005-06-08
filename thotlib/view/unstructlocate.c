@@ -37,10 +37,11 @@
 #include "font_f.h"
 #include "geom_f.h"
 #include "absboxes_f.h"
+#include "boxpositions_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
 #include "changepresent_f.h"
-#include "boxselection_f.h"
 
 
 #define MAX_DISTANCE THOT_MAXINT
@@ -64,7 +65,8 @@ int GetDistance (int value, int delta)
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio, int frame)
+int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
+		    int ratio, int frame)
 {
   PtrAbstractBox      pCell;
   PtrDocument         pDoc;
@@ -114,6 +116,22 @@ int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio, int frame)
       hcell = pCell->AbBox->BxHeight;
     }
 #endif /*_GL */
+  /* take into account the positioning */
+  if (pFlow)
+    {
+      x += pFlow->FlXStart;
+      y += pFlow->FlYStart;
+    }
+  if (pCell && pCell->AbBox)
+    {
+      pFlow = GetRelativeFlow (pCell->AbBox, frame);
+      if (pFlow)
+	{
+	  xcell += pFlow->FlXStart;
+	  ycell += pFlow->FlYStart;
+	}
+    }
+
   /* get the middle of the current box */
   width /= 2;
   x += width;
@@ -136,19 +154,20 @@ int GetBoxDistance (PtrBox pBox, int xRef, int yRef, int ratio, int frame)
    Between a box and its child the function choses the child.
    The parameter ration fixes penalities of the vertical proximity.
   ----------------------------------------------------------------------*/
-void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
-		      int x, int y, int ratio, int *pointselect)
+void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
+		    int frame, int x, int y, int ratio, int *pointselect)
 {
   PtrAbstractBox      pAb;
   PtrBox              pSelBox, pBox;
   PtrBox              graphicBox;
+  ViewFrame          *pFrame;
   int                 dist;
   int                 pointIndex;
-  ViewFrame          *pFrame;
-  int                 d;
+  int                 d, bx, by, bw;
 
   pBox = NULL;
   pSelBox = NULL;
+  *pFlow = NULL;
   /* dist gives the previous distance of the selected box
      MAX_DISTANCE when no box is selected */
   dist = MAX_DISTANCE;
@@ -168,6 +187,22 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 	    {
 #endif /* _GL */
 	      pAb = pBox->BxAbstractBox;
+#ifdef _GL  
+	      bx = pBox->BxClipX;
+	      by = pBox->BxClipY;
+	      bw = pBox->BxClipW;
+#else  /* _GL */
+	      bx = pBox->BxXOrg;
+	      by = pBox->BxYOrg;
+	      bw = pBox->BxWidth;
+#endif  /* _GL */
+	      *pFlow = GetRelativeFlow (pBox, frame);
+	      if (*pFlow)
+		{
+		  /* apply the box shift */
+		  bx += (*pFlow)->FlXStart;
+		  by += (*pFlow)->FlYStart;
+		}
 	      if (pAb->AbVisibility >= pFrame->FrVisibility)
 		{
 		  pointIndex = 0;
@@ -178,13 +213,11 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		      pAb->AbLeafType == LtPath)
 		    {
 #ifdef _GL  
-		      if (pBox->BxClipX <= x &&
-			  pBox->BxClipX + pBox->BxClipW >= x &&
-			  pBox->BxClipY <= y &&
-			  pBox->BxClipY + pBox->BxClipH >= y)
+		      if (bx <= x && bx + pBox->BxClipW >= x &&
+			  by <= y && by + pBox->BxClipH >= y)
 #endif  /* _GL */
 			graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-							     &pointIndex);
+							     &pointIndex, pFlow);
 		      if (graphicBox == NULL)
 			/* eliminate this box */
 			d = dist + 1;
@@ -203,15 +236,11 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		      if (pAb->AbLeafType == LtPicture)
 			{
 			  /* check if the right side of the picture is selected */
-#ifdef _GL
-			  d = pBox->BxClipX + (pBox->BxClipW / 2);
-#else /*_GL */
-			  d = pBox->BxXOrg + (pBox->BxWidth / 2);
-#endif /*_GL */
+			  d = bx + (bw / 2);
 			  if (x > d)
 			    pointIndex = 1;
 			}
-		      d = GetBoxDistance (pBox, x, y, ratio, frame);
+		      d = GetBoxDistance (pBox, *pFlow, x, y, ratio, frame);
 		      if (d > dist && dist == MAX_DISTANCE)
 			/* it's the first box selected */
 			dist = d;

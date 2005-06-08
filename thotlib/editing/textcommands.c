@@ -180,6 +180,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
    PtrBox              pBox, endBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
+   PtrFlow             pFlow = NULL;
    int                 index;
    int                 nbbl;
    int                 nChars, org;
@@ -262,7 +263,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
        x -= pFrame->FrXOrg;
        y -= pFrame->FrYOrg;
 #endif /* _GL */
-     pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
+     pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta, &pFlow);
      }
 
    if (pBox)

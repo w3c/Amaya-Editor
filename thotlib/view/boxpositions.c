@@ -53,17 +53,67 @@
  ----------------------------------------------------------------------*/
 ThotBool ExtraFlow (PtrBox pBox, int frame)
 {
-#ifdef POSITIONING
-  if (pBox && pBox->BxAbstractBox &&
+  //#ifdef POSITIONING
+  if (pBox && pBox->BxAbstractBox && frame > 0 &&
       pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
       pBox->BxAbstractBox->AbLeafType == LtCompound &&
       pBox->BxAbstractBox->AbPositioning &&
+      (pBox->BxAbstractBox->AbPositioning->PnLeftUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnRightUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnTopUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnBottomUnit != UnUndefined) &&
       (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
        pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed))
     return TRUE;
   else
-#endif /* POSITIONING */
+    //#endif /* POSITIONING */
     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  IsFlow returns TRUE if the box is an extra flow or a relative flow.
+ ----------------------------------------------------------------------*/
+ThotBool IsFlow (PtrBox pBox, int frame)
+{
+  //#ifdef POSITIONING
+  if (pBox && pBox->BxAbstractBox && frame > 0 &&
+      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
+      pBox->BxAbstractBox->AbLeafType == LtCompound &&
+      pBox->BxAbstractBox->AbPositioning &&
+      (pBox->BxAbstractBox->AbPositioning->PnLeftUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnRightUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnTopUnit != UnUndefined ||
+       pBox->BxAbstractBox->AbPositioning->PnBottomUnit != UnUndefined) &&
+      (pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnFixed ||
+       pBox->BxAbstractBox->AbPositioning->PnAlgorithm == PnRelative))
+    return TRUE;
+  else
+    //#endif /* POSITIONING */
+    return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  GetRelativeFlow returns TRUE if the box is an extra flow or a relative flow.
+ ----------------------------------------------------------------------*/
+PtrFlow GetRelativeFlow (PtrBox pBox, int frame)
+{
+  PtrFlow             pFlow;
+
+  //#ifdef POSITIONING
+  if (pBox && pBox->BxAbstractBox && frame > 0)
+    {
+      pFlow = ViewFrameTable[frame - 1].FrFlow;
+      while (pFlow)
+ 	{
+	  if (pFlow->FlRootBox && pFlow->FlRootBox->AbBox &&
+	      IsParentBox (pFlow->FlRootBox->AbBox, pBox))
+	    return pFlow;
+	  pFlow = pFlow->FlNext;
+	}     
+    }
+  //#endif /* POSITIONING */
+  return NULL;
 }
 
 

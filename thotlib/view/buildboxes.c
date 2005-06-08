@@ -2209,9 +2209,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		  inlineChildren = pAb->AbInLine;
 		}
 
-	      if (((inLine && pAb->AbClear == 'N') ||
-		   (inLineFloat && !dummyChild)) &&
+	      if (((inLine && pAb->AbClear == 'N') || (inLineFloat && !dummyChild)) &&
 		  (!inlineFloatC || uniqueChild) &&
+		  //!IsFlow (pCurrentBox, frame) &&
 		  pAb->AbFloat == 'N' &&
 		  (pAb->AbAcceptLineBreak || inlineFloatC) &&
 		  !pAb->AbHeight.DimIsPosition &&

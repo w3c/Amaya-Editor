@@ -375,7 +375,7 @@ static void PrintPageFooter (FILE *fout, int frame, PtrAbstractBox pPage)
   while (pBox != NULL && IsParentBox (pPage->AbBox, pBox))
     {
       if (pBox->BxYOrg < h)
-	DisplayBox (pBox, frame, 0, 32000, 0, h, FALSE);
+	DisplayBox (pBox, frame, 0, 32000, 0, h, NULL, FALSE);
       pBox = pBox->BxNext;
     }
 }
@@ -416,7 +416,7 @@ static void PrintPageHeader (FILE *fout, int frame, PtrAbstractBox pPage, int or
   /* print all boxes of the current page*/
   while (pBox && IsParentBox (pPage->AbBox, pBox))
     {
-      DisplayBox (pBox, frame, framexmin, framexmax, y, h, FALSE);
+      DisplayBox (pBox, frame, framexmin, framexmax, y, h, NULL, FALSE);
       pBox = pBox->BxNext;
     }
 

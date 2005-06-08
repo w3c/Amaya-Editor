@@ -2136,72 +2136,19 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
 	}
     }
 }
-#ifndef _GL
-/*----------------------------------------------------------------------
-  DisplayViewBox :
-  ----------------------------------------------------------------------*/
-void DisplayViewBox (PtrTransform Trans, int Width, int Height)
-{
-  return;
-}
-/*----------------------------------------------------------------------
-  DisplayTransformation :
-  ----------------------------------------------------------------------*/
-void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)
-{
-  while (Trans)
-    {
-      switch (Trans->TransType)
-	{
-	case PtElScale:
-	  break;
-	case PtElTranslate:
-	  break;
-	case PtElRotate:
-	  break;
-	case PtElMatrix:
-	  break;
-	case PtElSkewX:
-	  break;
-	case PtElSkewY:
-	  break;
-	default:
-	  break;	  
-	}
-      Trans = Trans->Next;
-    }
-
-}
-
-/*----------------------------------------------------------------------
-  DisplayTransformationExit :
-  ----------------------------------------------------------------------*/
-void DisplayTransformationExit ()
-{
-}
-
-/*----------------------------------------------------------------------
-  ComputeBoundingBox :
-  ----------------------------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
-			 int ymin, int ymax)
-{
-}
-#else /*_GL*/
-
-#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
+  pFlow points to the displayed flow or NULL when it's the main flow.
   selected is TRUE when an eclosing box or the box itself is selected.
   ----------------------------------------------------------------------*/
 void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
-		 int ymax, ThotBool selected)
+		 int ymax, PtrFlow pFlow, ThotBool selected)
 {
   ViewFrame         *pFrame;
   PtrBox             mbox;
   PtrAbstractBox     pAb;
-  int                x, y;
+  int                x, y, xorg, yorg;
   int                xd, yd, width, height;
   int                t, b, l, r;
   ThotBool           selfsel;
@@ -2209,6 +2156,15 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   ThotBool           isOpenList = FALSE;
 #endif  /* _GL */
 
+  /* save the box orign */
+  xorg = box->BxXOrg;
+  yorg = box->BxYOrg;
+  if (pFlow)
+    {
+      /* apply the box shift */
+      box->BxXOrg += pFlow->FlXStart;
+      box->BxYOrg += pFlow->FlYStart;
+    }
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
   GetExtraMargins (box, NULL, &t, &b, &l, &r);
@@ -2218,7 +2174,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   yd = box->BxYOrg + box->BxTMargin + t;
   width = box->BxWidth - box->BxLMargin - box->BxRMargin - l - r;
   height = box->BxHeight - box->BxTMargin - box->BxBMargin - t - b;
-  
   if (Printing)
     {
       /* clipping on the origin */
@@ -2284,7 +2239,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
               box->DisplayList && glIsList (box->DisplayList))
             {
               glCallList (box->DisplayList);
-              return;
+	      /* restore the box orign */
+	      box->BxXOrg = xorg;
+	      box->BxYOrg = yorg;
+	      return;
             }
           else if (GL_NotInFeedbackMode ())
             {      
@@ -2304,7 +2262,12 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
           (pAb->AbElement->ElParent->ElGradient))
         {
           if (DisplayGradient (pAb, box, frame, selfsel, t, b, l, r))
-            return;          
+	    {
+	      /* restore the box orign */
+	      box->BxXOrg = xorg;
+	      box->BxYOrg = yorg;
+	      return;
+	    } 
         }
     }
 #endif /*_GL*/
@@ -2379,6 +2342,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
         glEndList ();
     }
 #endif /*_GL*/
+  /* restore the box orign */
+  box->BxXOrg = xorg;
+  box->BxYOrg = yorg;
 }
 
 

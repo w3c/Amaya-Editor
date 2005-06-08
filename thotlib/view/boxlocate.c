@@ -188,6 +188,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   PtrElement          el = NULL;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
+  PtrFlow             pFlow = NULL;
   int                 nChars;
   int                 nSpaces;
   int                 index, pos;
@@ -222,14 +223,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	{
 	  extend = (button == 0 || button == 1);
 	  /* get the selected box */
-	  GetClickedBox (&pBox, pAb, frame, x, y, Y_RATIO, &nChars);
+	  GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
 	  /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
 	  if (extend)
 	    {
 	      if (pBox != pViewSel->VsBox &&
 		  IsParentBox (pBox, pViewSel->VsBox))
-		pBox = GetClickedLeafBox (frame, x, y);
+		pBox = GetClickedLeafBox (frame, x, y, &pFlow);
 	    }
 	  if (pBox)
 	    {
@@ -244,6 +245,12 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      width = pBox->BxClipW;
 	      height = pBox->BxClipH;
 #endif /* _GL */
+	      if (pFlow)
+		{
+		  /* apply the box shift */
+		  xOrg += pFlow->FlXStart;
+		  yOrg += pFlow->FlYStart;
+		}
 	      pAb = pBox->BxAbstractBox;
 	      if (pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
@@ -275,7 +282,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			/* extension until the beginning of this box
 			   select the end of the previous box */
 			nChars--;
-		      else if (y > pBox->BxYOrg + pBox->BxHeight &&
+		      else if (y > yOrg + height &&
 			       pEl == LastSelectedElement &&
 			       LastSelectedElement &&
 			       nChars <= LastSelectedChar)
@@ -1281,16 +1288,18 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
 {
   ViewFrame          *pFrame;
   PtrBox              pBox;
+  PtrFlow             pFlow = NULL;
   int                 pointselect;
 
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
 #ifndef _GL
-    GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
+    GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
+		   frame, xRef + pFrame->FrXOrg,
 		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
 #else /* _GL */
-  GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef,
+  GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox, frame, xRef,
 		   yRef, Y_RATIO, &pointselect);
 #endif /* _GL */
 
@@ -1307,11 +1316,11 @@ PtrAbstractBox GetClickedAbsBox (int frame, int xRef, int yRef)
   ----------------------------------------------------------------------*/
 PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 			       int lowerX, int y, int frame,
-			       int *pointselect)
+			       int *pointselect, PtrFlow *pFlow)
 {
   PtrBox              pBox;
   PtrElement          pParent;
-  int                 i, x;
+  int                 i, x, orgx, orgy;
   ThotPoint           *points = NULL;
   int                 npoints, sub;
   int                 *subpathStart = NULL;
@@ -1331,15 +1340,31 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 #endif /* _GL */
 
       /* Is there a piece of split box? */
+      orgx = pBox->BxXOrg;
+      orgy = pBox->BxYOrg;
+      if (*pFlow)
+	{
+	  /* apply the box shift */
+	  orgx += (*pFlow)->FlXStart;
+	  orgy += (*pFlow)->FlYStart;
+	}
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	    {
+	      orgx = pBox->BxXOrg;
+	      orgy = pBox->BxYOrg;
+	      if (*pFlow)
+		{
+		  /* apply the box shift */
+		  orgx += (*pFlow)->FlXStart;
+		  orgy += (*pFlow)->FlYStart;
+		}
 	      if (pBox->BxNChars > 0 &&
-		  pBox->BxXOrg <= lowerX &&
-		  pBox->BxXOrg + pBox->BxWidth >= higherX &&
-		  pBox->BxYOrg <= y &&
-		  pBox->BxYOrg + pBox->BxHeight >= y)
+		  orgx <= lowerX &&
+		  orgx + pBox->BxWidth >= higherX &&
+		  orgy <= y &&
+		  orgy + pBox->BxHeight >= y)
 		return (pBox);
 
 	    }
@@ -1361,10 +1386,10 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
 	       /* If the box is not a polyline or a path, it must include
 		  the point */
-	       (pBox->BxXOrg <= lowerX &&
-		pBox->BxXOrg + pBox->BxWidth >= higherX &&
-		pBox->BxYOrg <= y &&
-		pBox->BxYOrg + pBox->BxHeight >= y))
+	       (orgx <= lowerX &&
+		orgx + pBox->BxWidth >= higherX &&
+		orgy <= y &&
+		orgy + pBox->BxHeight >= y))
 	{
 	  pParent = pAb->AbElement->ElParent;
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
@@ -1480,7 +1505,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
    y+yDelta from pSourceBox box.
   ----------------------------------------------------------------------*/
 PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
-		   int xDelta, int yDelta)
+		   int xDelta, int yDelta, PtrFlow *pFlow)
 {
   int                 i;
   PtrBox              pBox, pLimitBox;
@@ -1503,13 +1528,13 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
       /* locate the last box in the line */
       if (xDelta > 0)
 	{
-	  pLimitBox = GetClickedLeafBox (frame, max, *y);
+	  pLimitBox = GetClickedLeafBox (frame, max, *y, pFlow);
 	  if (pLimitBox == NULL)
 	    pLimitBox = pSourceBox;
 	}
       else if (xDelta < 0)
 	{
-	  pLimitBox = GetClickedLeafBox (frame, 0, *y);
+	  pLimitBox = GetClickedLeafBox (frame, 0, *y, pFlow);
 	  if (pLimitBox == NULL)
 	    pLimitBox = pSourceBox;
 	}
@@ -1524,7 +1549,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 	  *x += xDelta;
 	  *y += yDelta;
 	  /* Take the leaf box here */
-	  pBox = GetClickedLeafBox (frame, *x, *y);
+	  pBox = GetClickedLeafBox (frame, *x, *y, pFlow);
 	  if (pBox == NULL)
 	    pBox = pSourceBox;
 	  else if (pBox->BxAbstractBox->AbElement)
@@ -1830,11 +1855,11 @@ int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value, int frame)
   GetClickedLeafBox looks for a leaf box located at a reference point
    xRef, yRef.
   ----------------------------------------------------------------------*/
-PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
+PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
 {
   PtrAbstractBox      pAb;
   PtrBox              pSelBox, pBox;
-  PtrBox              pCurrentBox;
+  PtrBox              box;
   int                 max;
   int                 pointIndex;
   int                 d;
@@ -1861,9 +1886,9 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		  pAb->AbLeafType == LtPolyLine ||
 		  pAb->AbLeafType == LtPath)
 		{
-		  pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef,
-							frame, &pointIndex);
-		  if (pCurrentBox == NULL)
+		  box = GetEnclosingClickedBox (pAb, xRef, xRef, yRef,
+						frame, &pointIndex, pFlow);
+		  if (box == NULL)
 		    d = max + 1;
 		  else
 		    d = 0;
@@ -1881,7 +1906,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 			   pBox->BxType == BoBlock || pBox->BxNChars == 0)
 #endif /* _GL */
 		       )
-		d = GetBoxDistance (pBox, xRef, yRef, Y_RATIO, frame);
+		d = GetBoxDistance (pBox, *pFlow, xRef, yRef, Y_RATIO, frame);
 	      else
 		d = max + 1;
 
@@ -1917,8 +1942,8 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 /*----------------------------------------------------------------------
   GiveMovingArea get limits of the box moving.
   ----------------------------------------------------------------------*/
-static void         GiveMovingArea (PtrAbstractBox pAb, int frame,
-				    ThotBool horizRef, int *min, int *max)
+static void GiveMovingArea (PtrAbstractBox pAb, int frame,
+			    ThotBool horizRef, int *min, int *max)
 {
 #ifdef IV
    PtrAbstractBox      pParentAb;
@@ -2164,6 +2189,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   PtrAbstractBox      pAb;
   PtrElement	      pEl;
   ViewFrame          *pFrame;
+  PtrFlow             pFlow = NULL;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
@@ -2193,7 +2219,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
       y = ym;
 #endif /* _GL */
       /* Look for the box displayed at that point */
-      GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
+      GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
+		     frame, x, y, Y_RATIO, &pointselect);
       if (pBox)
         {
           pAb = pBox->BxAbstractBox;
@@ -2236,18 +2263,8 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
           if (pBox != NULL)
             {
               /* A box is found */
-#ifdef IV
-              if (pBox->BxBoundinBoxComputed)
-                {
-                  x = pBox->BxClipX;
-                  y = pBox->BxClipY;
-                }
-              else
-#endif /* IV */
-                {
-                  x = pBox->BxXOrg - pFrame->FrXOrg;
-                  y = pBox->BxYOrg - pFrame->FrYOrg;
-                }
+	      x = pBox->BxXOrg - pFrame->FrXOrg;
+	      y = pBox->BxYOrg - pFrame->FrYOrg;
               width = pBox->BxWidth;
               height = pBox->BxHeight;
               pEl = pBox->BxAbstractBox->AbElement;
@@ -2482,6 +2499,7 @@ void ApplyDirectResize (int frame, int xm, int ym)
   PtrBox              pBox;
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
+  PtrFlow             pFlow;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
@@ -2505,7 +2523,8 @@ void ApplyDirectResize (int frame, int xm, int ym)
 #endif /* _GL */
       /* On recherche la boite englobant le point designe */
       /* designation style Grenoble */
-      GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
+      GetClickedBox (&pBox, &pFlow, pFrame->FrAbstractBox,
+		     frame, x, y, Y_RATIO, &pointselect);
       if (pBox == NULL)
         pAb = NULL;
       else

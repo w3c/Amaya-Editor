@@ -16,13 +16,12 @@
  *
  */
 #ifdef _GL
-
 #ifdef _WINGUI
   #include <windows.h>
 #endif /* _WINGUI */
 
 #ifdef _GTK
-  #include <gtkgl/gtkglarea.h>
+#include <gtkgl/gtkglarea.h>
 #endif /* _GTK */
 
 #ifdef _WX
@@ -32,7 +31,7 @@
 #else /* _WX */
   #include <GL/gl.h>
 #endif /* _WX */
-
+#endif /* _GL */
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -64,9 +63,9 @@
 #include "displaybox_f.h"
 #include "frame_f.h"
 #include "tesse_f.h"
-
 #include "glwindowdisplay.h"
 
+#ifdef _GL
 /*
  * Math Macros conversion from
  * degrees to radians and so on...
@@ -787,16 +786,17 @@ void WinGL_Swap (HDC hDC)
   SwapBuffers (hDC);
 }
 #endif /*_WINGUI*/
+#endif /* _GL */
 
 /*----------------------------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
   ----------------------------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, 
-			 int xmin, int xmax, 
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, 
 			 int ymin, int ymax)
 {
+#ifdef _GL
   GLfloat    feedBuffer[FEEDBUFFERSIZE];
   GLint      size;
   ViewFrame  *pFrame;
@@ -808,7 +808,7 @@ void ComputeBoundingBox (PtrBox box, int frame,
       NotFeedBackMode = FALSE;  
       glRenderMode (GL_FEEDBACK);
       /* display the box with transformation and clipping */
-      DisplayBox (box, frame, xmin, xmax, ymin, ymax, FALSE);
+      DisplayBox (box, frame, xmin, xmax, ymin, ymax, NULL, FALSE);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
@@ -839,8 +839,10 @@ void ComputeBoundingBox (PtrBox box, int frame,
 	  box->BxBoundinBoxComputed = FALSE; 
 	}   
     }
+#endif /* _GL */
 }
 
+#ifdef _GL
 /*----------------------------------------------------------------------
   ComputeFilledBox :
   Modify Bounding Box according to opengl feedback mechanism
@@ -857,7 +859,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
       glFeedbackBuffer (2048, GL_2D, feedBuffer);
       NotFeedBackMode = FALSE;
       glRenderMode (GL_FEEDBACK);
-      DrawFilledBox (box, box->BxAbstractBox, frame,
+      DrawFilledBox (box, box->BxAbstractBox, frame, NULL,
 		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, TRUE);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;

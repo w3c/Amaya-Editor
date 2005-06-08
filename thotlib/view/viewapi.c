@@ -428,6 +428,7 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
   PtrElement          pEl;
   PtrAbstractBox      pRootAb;
   PtrBox              pBox;
+  PtrFlow             pFlow = NULL;
   int                 frame;
   int                 x, y, charsNumber;
   int                 width, height;
@@ -450,7 +451,8 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
 	{
 	  charsNumber = 0;
 	  /* recupere la boite selectionnee */
-	  GetClickedBox (&pBox, pRootAb, frame, x, y, 1, &charsNumber);
+	  GetClickedBox (&pBox, &pFlow, pRootAb, frame,
+			 x, y, 1, &charsNumber);
 	  if (pBox && pBox->BxAbstractBox)
 	    {
 	      if (pBox->BxType == BoPiece ||
@@ -462,7 +464,10 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
 	      /* width and height of the frame */
 	      GetSizesFrame (frame, &width, &height);
 	      /* position of the box top in the frame in % */
-	      *position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
+	      y = pBox->BxYOrg - pFrame->FrYOrg;
+	      if (pFlow)
+		y += pFlow->FlYStart;
+	      *position = (y) * 100 / height;
 	    }
 	}
 

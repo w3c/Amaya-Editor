@@ -1946,9 +1946,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* check positionning constraints */
 	  if (!toMove ||
 	      pCurrentAb->AbFloat == 'L' ||
-	      (pCurrentAb->AbFloat != 'R' &&
-	       (pBox->BxHorizEdge == Left ||
-		pBox->BxHorizEdge == VertRef)))
+	      ((pCurrentAb->AbFloat != 'R' || ExtraFlow (pBox, frame)) &&
+	       (pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)))
 	    {
 	      /*====> The left is fixed */
 	      /* Move the middle and the right */

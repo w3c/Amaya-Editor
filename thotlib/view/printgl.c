@@ -413,7 +413,7 @@ void FinishPrintBox ()
       NotFeedBackMode = TRUE;
     }
 }
-
+#ifdef IV
 /*----------------------------------------------------------------------
   PrintBox :  	     
   ----------------------------------------------------------------------*/
@@ -424,13 +424,13 @@ void PrintBox (PtrBox box, int frame, int xmin, int xmax,
   glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
   NotFeedBackMode = FALSE;  
   glRenderMode (GL_FEEDBACK);
-  DisplayBox (box, frame, xmin, xmax, ymin, ymax, FALSE);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax, NULL, FALSE);
   NotFeedBackMode = TRUE;
   GLParseFeedbackBuffer (feedBuffer);
   NotFeedBackMode = TRUE;
   CompBoundingBox = FALSE;
 }
-
+#endif
 /*----------------------------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
