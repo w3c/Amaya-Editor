@@ -55,21 +55,25 @@
 #define MAX_ARGS 20
 
 static ThotWindow   Color_Window = 0;
-static ThotWidget   Color_Palette;
 #ifdef _GTK
+static ThotWidget   Color_Palette;
 static ThotWidget   Color_Animation_Popup = NULL;
 static ThotWindow   Color_Window2 = 0;
 static ThotWidget   Color_Palette_Extended = NULL;
 static ThotBool     ApplyFg = FALSE;
 static ThotBool     ApplyBg = FALSE;
-#endif /* _GTK */
-#ifdef _WINGUI
-static ThotGC       GCkey;
-#endif /* _WINGUI */
 static int          LastBg;
 static int          LastFg;
-static int          FgColor = -1, BgColor = -1; /* init fg/bg colors with default color */
 static ThotBool     applyToSelection = TRUE;
+#endif /* _GTK */
+#ifdef _WINGUI
+static ThotWidget   Color_Palette;
+static ThotGC       GCkey;
+static int          LastBg;
+static int          LastFg;
+static ThotBool     applyToSelection = TRUE;
+#endif /* _WINGUI */
+static int          FgColor = -1, BgColor = -1; /* init fg/bg colors with default color */
 
 #ifdef _WINGUI
 /* @@ JK: a quick, ugly hack just for selecting the messages drawn on the

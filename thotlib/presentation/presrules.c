@@ -2300,25 +2300,25 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	   {
 	     PPos->PosAbRef = pAbb1->AbEnclosing;
 	     if (pPRule->PrType == PtHorizPos &&
-		 pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right &&
-		 pAbb1->AbAdjust != AlignLeft)
+           pPosRule->PoPosDef == Left && pPosRule->PoPosRef == Right &&
+           pAbb1->AbAdjust != AlignLeft)
 	       {
-		 /* check the text_align rule */
-		 if (pAbb1->AbAdjust = AlignCenter)
-		   {
-		     PPos->PosEdge = VertMiddle;
-		     PPos->PosRefEdge = VertMiddle;
-		   }
-		 else
-		   {
-		     PPos->PosEdge = Right;
-		     PPos->PosRefEdge = Right;
-		   }
+           /* check the text_align rule */
+           if (pAbb1->AbAdjust == AlignCenter)
+             {
+               PPos->PosEdge = VertMiddle;
+               PPos->PosRefEdge = VertMiddle;
+             }
+           else
+             {
+               PPos->PosEdge = Right;
+               PPos->PosRefEdge = Right;
+             }
 	       }
 	     else
 	       {
-		 PPos->PosEdge = pPosRule->PoPosDef;
-		 PPos->PosRefEdge = pPosRule->PoPosDef;
+           PPos->PosEdge = pPosRule->PoPosDef;
+           PPos->PosRefEdge = pPosRule->PoPosDef;
 	       }
 	     /* s'agit-il d'une regle de presentation specifique ? */
 	     pRSpec = pAbb1->AbElement->ElFirstPRule;
@@ -2328,19 +2328,19 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 	       /* c'est une regle de presentation specifique */
 	       /* on prend le decalage en compte */
 	       {
-		 PPos->PosDistance = pPosRule->PoDistance;
-		 PPos->PosDistDelta = pPosRule->PoDistDelta;
+           PPos->PosDistance = pPosRule->PoDistance;
+           PPos->PosDistDelta = pPosRule->PoDistDelta;
 	       }
 	     else
 	       /* c'est une regle generique */
 	       /* on se positionne tout contre l'englobant */
 	       {
-		 PPos->PosDistance = 0;
-		 PPos->PosDistDelta = 0;
+           PPos->PosDistance = 0;
+           PPos->PosDistDelta = 0;
 	       }
 	     /* on pourra reessayer d'appliquer la regle plus tard : */
 	     /* le precedent existera peut etre, alors */
-       	     if (pRefAb == pAbb1->AbEnclosing)
+       if (pRefAb == pAbb1->AbEnclosing)
 	       *appl = TRUE;
 	     else
 	       *appl = FALSE;

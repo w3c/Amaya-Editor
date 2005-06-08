@@ -39,7 +39,9 @@
 #include "units_tv.h"
 
 ThotColorStruct  cblack;
-static ThotColorStruct  cwhite;
+#ifdef _GTK
+  static ThotColorStruct  cwhite;
+#endif /* _GTK */
 /*extern int              errno; allready declared ... do not compile with g++ */
 
 #include "appli_f.h"
@@ -410,11 +412,11 @@ void InitDocContexts ()
 int ApproximateDotPerInch( int dpi )
 {
   static int dpi_table[] = { 75, 96, 100, 120, 120 /* terminal value is doubled */ };
-  int i = 0;
+  unsigned int i = 0;
   while ( i < sizeof(dpi_table)-1 )
     {
       if (dpi <= (dpi_table[i]+dpi_table[i+1] + 1)/2 )
-	return dpi_table[i];
+        return dpi_table[i];
       i++;
     }
   return dpi;

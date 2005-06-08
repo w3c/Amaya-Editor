@@ -31,9 +31,11 @@
 
 #define THOT_EXPORT extern
 #include "edit_tv.h"
+
+#ifdef THOT_DEBUG
  /* Identification des messages */
 static ThotBool            PrintErrorMessages;
-
+#endif /* #ifdef THOT_DEBUG */
 
 /*----------------------------------------------------------------------
    TtaError affiche les messsges d'erreur de l'API.                

@@ -74,7 +74,9 @@
 #endif /* _GL */
 
 static ThotPixmap PictureLogo;
-static ThotGC     tiledGC;
+#ifdef _GTK
+  static ThotGC     tiledGC;
+#endif /* _GTK */
 static ThotBool   RedoDone = FALSE;
 
 static unsigned char MirrorBytes[0x100] = {

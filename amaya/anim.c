@@ -299,6 +299,7 @@ static void Build_path_to_help_dir(char* buffer)
 
 
 
+#if 0 /* these functions seems to not being used anymore */
 /*----------------------------------------------------------------------
   Init_tmapping_animations_struct
   ----------------------------------------------------------------------*/
@@ -309,7 +310,6 @@ static void Init_tmapping_animations_struct(tmapping_animations * m)
   m->period = NULL;
 }
 #endif /* _SVG */
-
 
 /*----------------------------------------------------------------------
   Init_tmapping_animated_struct
@@ -324,6 +324,7 @@ static void Init_tmapping_animated_struct(tmapping_animated * m)
   m->nb_periods = 0;
 }
 #endif /* _SVG */
+#endif /* 0 */
 
 
 /*----------------------------------------------------------------------

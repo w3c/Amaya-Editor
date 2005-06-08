@@ -209,9 +209,7 @@ void SpellCheckDlgWX::OnReplaceWithButton( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void SpellCheckDlgWX::OnChangeProposals ( wxCommandEvent& event )
 {
-  int i = XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetSelection();
-  wxString selected_item = 
-    XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
+  wxString selected_item = XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->GetStringSelection();
   if ( !selected_item.IsEmpty() )
     {  
       // allocate a temporary buffer

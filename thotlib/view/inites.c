@@ -45,10 +45,11 @@
   #include "wx/memory.h"
 #endif /* _WX */
 
+#ifndef _WX
 static ThotColorStruct def_colrs[256];
 static int             allocation_index[256];
 static int             have_colors = 0;
-
+#endif /* _WX */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------

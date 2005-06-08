@@ -50,13 +50,16 @@ typedef struct _item
 ITEM;
 
 
-static ThotWidget   Keyboards[MAX_KEYBOARD];
-static ThotFont     KbFonts[MAX_KEYBOARD];
-static int          KbX = 800;
-static int          KbY = 100;
 #ifdef _WINGUI
 static ThotGC       GCkey;
 #endif /* _WINGUI */
+
+static ThotWidget   Keyboards[MAX_KEYBOARD];
+
+#ifndef _WX
+static ThotFont     KbFonts[MAX_KEYBOARD];
+static int          KbX = 800;
+static int          KbY = 100;
 
 /* data for the keyboards */
 /*iso */
@@ -360,6 +363,7 @@ static ITEM         Items_Graph[] =
    {'D', 'D', NULL},		/* <> beziers */
    {'s', 's', NULL}		/* closed bezier */
 };
+#endif /* _WX */
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -389,16 +393,16 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
 }
 #endif /* _WINGUI */
 
+#ifdef _GTK
 /*----------------------------------------------------------------------
    KbdEndDisplay
    Ends the display of a keyboard.
   ----------------------------------------------------------------------*/
 static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 {
-#ifdef _GTK
    gtk_widget_hide (GTK_WIDGET(Keyboards[index]));
-#endif /* _GTK */
 }
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   KbdCallbackHandler handles the keyboard keys.

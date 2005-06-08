@@ -13,6 +13,10 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "message.h"
@@ -101,46 +105,47 @@ int BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
   ----------------------------------------------------------------------*/
 void                UpdateSelectMenu (PtrDocument pDoc)
 {
-   int                 NbItemSel;
-   char                BufMenuSel[MAX_TXT_LEN];
-   int                 vue, menu, menuID;
-   int                 frame, ref;
-   Document            document;
-   Menu_Ctl           *ptrmenu;
-
-   if (pDoc == SelectedDocument)
-      NbItemSel = BuildSelectMenu (BufMenuSel);
-   else
-      NbItemSel = 0;
-
-   document = (Document) IdentDocument (pDoc);
-   /* Traite toutes les vues de l'arbre principal */
-   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-     {
-	frame = pDoc->DocViewFrame[vue - 1];
-#ifndef _WX // TODO
-
-	if (frame != 0 && FrameTable[frame].MenuSelect != -1)
-	  {
-	     menuID = FrameTable[frame].MenuSelect;
-	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
-	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	     if (NbItemSel == 0)
-	       {
-		  /* le menu Selection contient au moins un item */
-		  TtaSetMenuOff (document, vue, menuID);
-		  TtaDestroyDialogue (ref);
-	       }
-	     else
-	       {
-		  TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
-				  NbItemSel, BufMenuSel, 0, NULL);
-		  TtaSetMenuOn (document, vue, menuID);
-	       }
-	  }
-#endif //#ifndef _WX // TODO
-	
-     }
+#ifdef _WX
+  wxASSERT(FALSE); // unused function ?
+  return;
+#else /* _WX */
+  int                 NbItemSel;
+  char                BufMenuSel[MAX_TXT_LEN];
+  int                 vue, menu, menuID;
+  int                 frame, ref;
+  Document            document;
+  Menu_Ctl           *ptrmenu;
+  
+  if (pDoc == SelectedDocument)
+    NbItemSel = BuildSelectMenu (BufMenuSel);
+  else
+    NbItemSel = 0;
+  
+  document = (Document) IdentDocument (pDoc);
+  /* Traite toutes les vues de l'arbre principal */
+  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
+    {
+      frame = pDoc->DocViewFrame[vue - 1];
+      if (frame != 0 && FrameTable[frame].MenuSelect != -1)
+        {
+          menuID = FrameTable[frame].MenuSelect;
+          menu = FindMenu (frame, menuID, &ptrmenu) - 1;
+          ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+          if (NbItemSel == 0)
+            {
+              /* le menu Selection contient au moins un item */
+              TtaSetMenuOff (document, vue, menuID);
+              TtaDestroyDialogue (ref);
+            }
+          else
+            {
+              TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
+                              NbItemSel, BufMenuSel, 0, NULL);
+              TtaSetMenuOn (document, vue, menuID);
+            }
+        }	
+    }
+#endif /* _WX */
 }
 
 

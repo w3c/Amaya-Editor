@@ -57,75 +57,77 @@ unsigned char *AsciiTranslate (char *pBuffer)
   unsigned char       number[4];
   int                 uniteid, dixid, centid;
   int                 i = 0, j = 0, k;
+#if !defined(_WINDOWS) && !defined(_WX)
   ThotBool            skipAmp = TRUE;
-
+#endif /* #if !defined(_WINDOWS) && !defined(_WX) */
+  
   while (pBuffer[i] != EOS)
     {
       /* On lit jusqu'au premier backslash rencontre */
       while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
-	{
+        {
 #if !defined(_WINDOWS) && !defined(_WX)
-	  if (skipAmp && pBuffer[i] == '&')
-	    {
-	      i++;
-	      skipAmp = FALSE;
-	    }
-	  else
+          if (skipAmp && pBuffer[i] == '&')
+            {
+              i++;
+              skipAmp = FALSE;
+            }
+          else
 #endif /* #if !defined(_WINDOWS) && !defined(_WX) */
-	    result[j++] = pBuffer[i++];
-	}
-
+            result[j++] = pBuffer[i++];
+        }
+      
       /* Teste si on est en presence de deux backslashs ou */
       /* si on se trouve devant un caractere special */
       if (pBuffer[i] != EOS)
-	{
-	  if (pBuffer[i + 1] == '\\')
-	    {
-	      /* On est dans le cas de deux backslashs consecutifs;
-		 on les prend */
-	      result[j++] = pBuffer[i++];
-	      result[j++] = pBuffer[i++];
-	    }
-	  else if (pBuffer[i + 1] == 'n')
-	    {
-	      /* On est dans le cas d'un \n */
-	      i += 2;
-	      result[j++] = '\n';
-	    }
-	  else
-	    {
-	      /* on saute le backslash */
-	      i++;
-	      /* on construit le number correspondant au caractere */
-	      k = 0;
-	      while (pBuffer[i] >= '0' && pBuffer[i] <= '9' &&
-		     pBuffer[i] != EOS && k <= 2)
-		number[k++] = pBuffer[i++];
-	      number[k] = EOS;
-
-	      switch (strlen ((const char *)number))
-		{
-		case 0:
-		  result[j++] = pBuffer[i++];
-		  break;
-		case 1:
-		  uniteid = number[0] - '0';
-		  result[j++] = uniteid;
-		  break;
-		case 2:
-		  uniteid = number[1] - '0';
-		  dixid = number[0] - '0';
-		  result[j++] = uniteid + 8 * dixid;
-		  break;
-		case 3:
-		  uniteid = number[2] - '0';
-		  dixid = number[1] - '0';
-		  centid = number[0] - '0';
-		  result[j++] = uniteid + 8 * dixid + 64 * centid;
-		  break;
-		}
-	    }
-	}
+        {
+          if (pBuffer[i + 1] == '\\')
+            {
+              /* On est dans le cas de deux backslashs consecutifs;
+                 on les prend */
+              result[j++] = pBuffer[i++];
+              result[j++] = pBuffer[i++];
+            }
+          else if (pBuffer[i + 1] == 'n')
+            {
+              /* On est dans le cas d'un \n */
+              i += 2;
+              result[j++] = '\n';
+            }
+          else
+            {
+              /* on saute le backslash */
+              i++;
+              /* on construit le number correspondant au caractere */
+              k = 0;
+              while (pBuffer[i] >= '0' && pBuffer[i] <= '9' &&
+                     pBuffer[i] != EOS && k <= 2)
+                number[k++] = pBuffer[i++];
+              number[k] = EOS;
+              
+              switch (strlen ((const char *)number))
+                {
+                case 0:
+                  result[j++] = pBuffer[i++];
+                  break;
+                case 1:
+                  uniteid = number[0] - '0';
+                  result[j++] = uniteid;
+                  break;
+                case 2:
+                  uniteid = number[1] - '0';
+                  dixid = number[0] - '0';
+                  result[j++] = uniteid + 8 * dixid;
+                  break;
+                case 3:
+                  uniteid = number[2] - '0';
+                  dixid = number[1] - '0';
+                  centid = number[0] - '0';
+                  result[j++] = uniteid + 8 * dixid + 64 * centid;
+                  break;
+                }
+            }
+        }
     }
   result[j] = EOS;
   return (result);

@@ -159,7 +159,9 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 /* ============> Browse menu options */
 static int         BrowseBase;
 static Prop_Browse GProp_Browse;
-static int         CurrentScreen;
+#ifndef _WX
+  static int         CurrentScreen;
+#endif /* _WX */
 static int         InitOpeningLocation;
 static ThotBool    InitWarnCTab;
 static ThotBool    InitLoadImages;
@@ -167,9 +169,11 @@ static ThotBool    InitLoadObjects;
 static ThotBool    InitLoadCss;
 static ThotBool    InitBgImages;
 static char        NewScreen[MAX_LENGTH];
+#ifndef _WX
 static char       *ScreensTxt[]={
   "handheld", "print", "projection", "screen", "tty", "tv"
 };
+#endif /* _WX */
 #ifdef _WINGUI
 static HWND        BrowseHwnd =  NULL;
 static HWND        ScreensList;
@@ -1740,6 +1744,7 @@ static void UpdateShowTargets ()
     }
 }
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   UpdateShowButtons
   Sets the show buttons on all documents
@@ -1751,19 +1756,18 @@ static void UpdateShowButtons ()
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc] &&
-	  SButtons[doc] != GProp_General.S_Buttons &&
-	  (DocumentTypes[doc] == docHTML ||
-	   DocumentTypes[doc] == docSVG ||
-	   DocumentTypes[doc] == docXml ||
-	   DocumentTypes[doc] == docMath))
-	/* generate numbers */
-	ShowButtons (doc, 1);
+          SButtons[doc] != GProp_General.S_Buttons &&
+          (DocumentTypes[doc] == docHTML ||
+           DocumentTypes[doc] == docSVG ||
+           DocumentTypes[doc] == docXml ||
+           DocumentTypes[doc] == docMath))
+        /* generate numbers */
+        ShowButtons (doc, 1);
       else
-	/* update only the indicator */
-	SButtons[doc] = GProp_General.S_Buttons;
+        /* update only the indicator */
+        SButtons[doc] = GProp_General.S_Buttons;
     }
 }
-
 
 /*----------------------------------------------------------------------
   UpdateShowAddress
@@ -1772,22 +1776,23 @@ static void UpdateShowButtons ()
 static void UpdateShowAddress ()
 {
   int               doc;
-
+  
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc] &&
-	  SAddress[doc] != GProp_General.S_Address &&
-	  (DocumentTypes[doc] == docHTML ||
-	   DocumentTypes[doc] == docSVG ||
-	   DocumentTypes[doc] == docXml ||
-	   DocumentTypes[doc] == docMath))
-	/* generate numbers */
-	ShowAddress (doc, 1);
+          SAddress[doc] != GProp_General.S_Address &&
+          (DocumentTypes[doc] == docHTML ||
+           DocumentTypes[doc] == docSVG ||
+           DocumentTypes[doc] == docXml ||
+           DocumentTypes[doc] == docMath))
+        /* generate numbers */
+        ShowAddress (doc, 1);
       else
-	/* update only the indicator */
-	SAddress[doc] = GProp_General.S_Address;
+        /* update only the indicator */
+        SAddress[doc] = GProp_General.S_Address;
     }
 }
+#endif /* _WX */
 
 
 /*----------------------------------------------------------------------
@@ -2978,6 +2983,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 }
 
 #else /* WINDOWS */
+#ifndef _WX
 /*----------------------------------------------------------------------
   BuildScreenSelector builds the list allowing to select a screen type
   (for unix)
@@ -2989,7 +2995,7 @@ static void BuildScreenSelector (void)
   int         indx, length;
   char       *entry;
   char        BufMenu[MAX_LENGTH];
-
+  
   /* recopy the propositions  */
   indx = 0;
   CurrentScreen = -1;
@@ -2998,24 +3004,25 @@ static void BuildScreenSelector (void)
       entry =  ScreensTxt[i];
       /* keep in mind the current selected entry */
       if (GProp_Browse.ScreenType &&
-	  !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
-	CurrentScreen = i;
+          !strcmp (GProp_Browse.ScreenType, ScreensTxt[i]))
+        CurrentScreen = i;
       length = strlen (entry) + 1;
       if (length + indx < MAX_LENGTH)  
-	{
-	  strcpy (&BufMenu[indx], entry);
+        {
+          strcpy (&BufMenu[indx], entry);
 	  indx += length;
-	}
+        }
     }
   
   /* Fill in the screen list form  */
   TtaNewSizedSelector (BrowseBase + mScreenSelector, BrowseBase + BrowseMenu,
-		       TtaGetMessage (AMAYA, AM_SCREEN_TYPE), nbscreens,
-		       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
+                       TtaGetMessage (AMAYA, AM_SCREEN_TYPE), nbscreens,
+                       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
   strcpy (NewScreen, GProp_Browse.ScreenType);
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   RefreshBrowseMenu

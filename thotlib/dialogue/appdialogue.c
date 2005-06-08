@@ -116,8 +116,12 @@ CallbackCTX;
 
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
-static  ThotPixmap  wind_pixmap;
-static  Proc 	    LastProcedure = NULL;   
+#ifdef _GTK
+  static  ThotPixmap  wind_pixmap;
+#endif /* _GTK */
+#ifndef _WX
+  static  Proc 	    LastProcedure = NULL;
+#endif /* _WX */
 static  ThotBool    ActivatedButton = FALSE;   
 
 void InitClue (ThotWidget toplevel);
@@ -1021,20 +1025,16 @@ void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName
 }
 
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   BuildSubmenu builds or updates a submenu attached to the item in a
   pulldown menu ref.
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
-			  int frame, Document doc, ThotBool update,
-			  ThotBool RO)
+                          int frame, Document doc, ThotBool update,
+                          ThotBool RO)
 {
-#ifdef _WX
-  wxASSERT_MSG(FALSE, _T("Unused function"));
-#endif /* _WX */
-
-#ifndef _WX
   char                string[MENU_VAL_LENGTH];
   char                equiv[MaxEquivLen];
   Item_Ctl           *ptritem;
@@ -1168,8 +1168,8 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
     TtaNewSubmenu (sref, ref, entry, NULL, entries, string, equiv, max_lg, FALSE);
   else
     TtaNewSubmenu (sref, ref, entry, NULL, entries, string, NULL, max_lg, FALSE);
-#endif /* _WX */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   BuildPopdown builds or updates a pulldown menu ref attached to the
@@ -3501,8 +3501,6 @@ static Menu_Ctl *GetMenu_Ctl (int frame, int menu)
    int                 i;
    Menu_Ctl           *ptrmenu;
 #ifdef _WX
-   int doc_id       = TtaGetFrameDocumentId(frame);
-   PtrDocument pDoc = LoadedDocument[doc_id-1];
    ptrmenu = DocumentMenuList;
 #else /* _WX */
    ptrmenu = FrameTable[frame].FrMenus;
@@ -3530,8 +3528,6 @@ int FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
    m = 1;			/* menu index */
    /* look for that menu in the menu list */
 #ifdef _WX
-   int doc_id       = TtaGetFrameDocumentId(frame);
-   PtrDocument pDoc = LoadedDocument[doc_id-1];
    ptrmenu = DocumentMenuList;
 #else /* _WX */
    ptrmenu = FrameTable[frame].FrMenus;
@@ -4459,7 +4455,6 @@ void ThotCallback (int ref, int typedata, char *data)
 	  if (document == 0)
 	    return;
 #ifdef _WX
-	  PtrDocument pDoc      = LoadedDocument[document-1];
 	  int         window_id = TtaGetDocumentWindowId( document, -1 );
 	  menuThot = FindMenu (frame, WindowTable[window_id].MenuAttr, &ptrmenu) - 1;
 #else /* _WX */

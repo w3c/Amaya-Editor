@@ -48,9 +48,9 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaAttributePanel, AmayaSubPanel)
  */
 AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_ATTRIBUTE") )
+  ,m_pRBEnum(NULL)
   ,m_NbAttr(0)
   ,m_NbAttr_evt(0)
-  ,m_pRBEnum(NULL)
 {
   m_pVPanelParent       = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
@@ -258,6 +258,9 @@ void AmayaAttributePanel::RemoveCurrentAttribute()
     case wxATTR_TYPE_LANG:
       CallbackLanguageMenu(NumFormLanguage, 2, NULL);
       break;
+    case wxATTR_TYPE_NONE:
+      wxASSERT(FALSE); /* should not append ? */
+      break;
     }
   
   /* try to redirect focus to canvas */
@@ -275,28 +278,31 @@ void AmayaAttributePanel::CreateCurrentAttribute()
     {
     case wxATTR_TYPE_TEXT:
       {
-	/* default value is a empty buffer */
-	CallbackValAttrMenu (NumMenuAttrText, -1, "");
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        /* default value is a empty buffer */
+        CallbackValAttrMenu (NumMenuAttrText, -1, "");
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       }
       break;
     case wxATTR_TYPE_ENUM:
       {
-	CallbackValAttrMenu (NumMenuAttrEnum, 0, NULL);
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        CallbackValAttrMenu (NumMenuAttrEnum, 0, NULL);
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       }
       break;
     case wxATTR_TYPE_NUM:
       {
-	CallbackValAttrMenu (NumMenuAttrNumber, 0, NULL);
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        CallbackValAttrMenu (NumMenuAttrNumber, 0, NULL);
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       }
       break;
     case wxATTR_TYPE_LANG:
       {
-	CallbackLanguageMenu(NumSelectLanguage, -1, "");
-	CallbackLanguageMenu(NumFormLanguage, 1, NULL);
+        CallbackLanguageMenu(NumSelectLanguage, -1, "");
+        CallbackLanguageMenu(NumFormLanguage, 1, NULL);
       }
+      break;
+    case wxATTR_TYPE_NONE:
+      wxASSERT(FALSE); /* should not append ? */
       break;
     }
 }
@@ -574,53 +580,56 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
     {
     case wxATTR_TYPE_TEXT:
       {
-	char buffer[MAX_LENGTH];
-	wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
-	wxString value = p_text_ctrl->GetValue();
-	strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
-	CallbackValAttrMenu (NumMenuAttrText, -1, buffer);
-	/* create/modify attribute */
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
-
-	/* try to redirect focus to canvas */
-	TtaRedirectFocus();  
+        char buffer[MAX_LENGTH];
+        wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
+        wxString value = p_text_ctrl->GetValue();
+        strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
+        CallbackValAttrMenu (NumMenuAttrText, -1, buffer);
+        /* create/modify attribute */
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        
+        /* try to redirect focus to canvas */
+        TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_ENUM:
       {
-	CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
-	/* create/modify attribute */
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
-
-	/* try to redirect focus to canvas */
-	TtaRedirectFocus();  
+        CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
+        /* create/modify attribute */
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        
+        /* try to redirect focus to canvas */
+        TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_NUM:
       {
-	wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
-	int value = p_spin_ctrl->GetValue();
-	CallbackValAttrMenu (NumMenuAttrNumber, value, NULL);
-	/* create/modify attribute */
-	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
-
-	/* try to redirect focus to canvas */
-	TtaRedirectFocus();  
+        wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
+        int value = p_spin_ctrl->GetValue();
+        CallbackValAttrMenu (NumMenuAttrNumber, value, NULL);
+        /* create/modify attribute */
+        CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+        
+        /* try to redirect focus to canvas */
+        TtaRedirectFocus();  
       }
       break;
     case wxATTR_TYPE_LANG:
       {
-	wxComboBox * p_cb = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxComboBox);
-	wxString value = p_cb->GetValue();
-	char buffer[MAX_LENGTH];
-	strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
-	CallbackLanguageMenu(NumSelectLanguage, -1, buffer);
-	/* create/modify attribute */
-	CallbackLanguageMenu(NumFormLanguage, 1, NULL);
-
-	/* try to redirect focus to canvas */
-	TtaRedirectFocus();  
+        wxComboBox * p_cb = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxComboBox);
+        wxString value = p_cb->GetValue();
+        char buffer[MAX_LENGTH];
+        strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
+        CallbackLanguageMenu(NumSelectLanguage, -1, buffer);
+        /* create/modify attribute */
+        CallbackLanguageMenu(NumFormLanguage, 1, NULL);
+        
+        /* try to redirect focus to canvas */
+        TtaRedirectFocus();  
       }
+      break;
+    case wxATTR_TYPE_NONE:
+      wxASSERT(FALSE); /* should not append ? */
       break;
     }
 }

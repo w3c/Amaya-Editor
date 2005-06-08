@@ -24,10 +24,13 @@
 #define NAME_LENGTH	200
 #define MAX_NAME	 80
 #define SELECTOR_NB_ITEMS 5
-static char         ls_unixDirs[MAX_NAME * NAME_LENGTH];
-static int          ls_dirNbr;
-static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
-static int          ls_fileNbr;
+
+#ifdef _GTK
+  static char         ls_unixDirs[MAX_NAME * NAME_LENGTH];
+  static int          ls_dirNbr;
+  static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
+  static int          ls_fileNbr;
+#endif /* _GTK */
 
 #include "browser_f.h"
 #include "fileaccess_f.h"

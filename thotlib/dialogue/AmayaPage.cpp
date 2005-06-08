@@ -63,14 +63,14 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
  */
 AmayaPage::AmayaPage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
   :  wxPanel( p_parent_window, -1 )
-     ,m_SlashRatio( 0.5 )
-     ,m_IsClosed( FALSE )
-     ,m_pNoteBookParent( NULL )
-     ,m_pWindowParent( p_amaya_parent_window )
-     ,m_PageId(-1)
-     ,m_ActiveFrame(1) // by default, frame 1 is selected
-     ,m_IsSelected(false)
-     ,m_MasterFrameId(-1)
+  ,m_pNoteBookParent( NULL )
+  ,m_pWindowParent( p_amaya_parent_window )
+  ,m_SlashRatio( 0.5 )
+  ,m_PageId(-1)
+  ,m_IsClosed( FALSE )
+  ,m_ActiveFrame(1) // by default, frame 1 is selected
+  ,m_IsSelected(false)
+  ,m_MasterFrameId(-1)
 {
   // Insert a forground sizer
   wxBoxSizer * p_sizerTop = new wxBoxSizer ( wxHORIZONTAL );
@@ -277,7 +277,11 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       // The frame is alone and can't be unsplit
       // => replace it with a dummy panel
       m_DummyPanel = new wxPanel( m_pSplitterWindow );
+#ifdef __WXDEBUG__
       bool isReplaced = m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
+#else /* __WXDEBUG__ */
+      m_pSplitterWindow->ReplaceWindow( oldframe, m_DummyPanel );
+#endif /* __WXDEBUG__ */
       wxASSERT_MSG( isReplaced, _T("La frame n'a pas pu etre remplacee") );
     }
 

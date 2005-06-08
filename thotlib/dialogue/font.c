@@ -2334,9 +2334,9 @@ void InitDialogueFonts (char *name)
   int              ndir, ncurrent;
   char            FONT_PATH[128];
   char            *fontpath;
-#endif /* #if defined(_GTK) */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
+#endif /* #if defined(_GTK) */
   char            *value;
   char             script;
   int              f3;

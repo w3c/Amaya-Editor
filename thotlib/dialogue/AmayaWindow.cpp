@@ -66,17 +66,17 @@ int AmayaWindow::m_ActiveWindowId = -1;
  *--------------------------------------------------------------------------------------
  */
 AmayaWindow::AmayaWindow (  int            window_id
-			    ,wxWindow *     p_parent_window
-			    ,const wxPoint& pos
-			    ,const wxSize&  size
-			    ,int kind
-			    ,long style
-		       ) : 
+                            ,wxWindow *     p_parent_window
+                            ,const wxPoint& pos
+                            ,const wxSize&  size
+                            ,int kind
+                            ,long style
+                            ) : 
   wxFrame( wxDynamicCast(p_parent_window, wxWindow),
-	   -1, _T(""), pos, size, style ),
+           -1, _T(""), pos, size, style ),
+  m_Kind( kind ),
   m_WindowId( window_id ),
   m_IsClosing( FALSE ),
-  m_Kind( kind ),
   m_ShouldCleanUp( false ),
   m_ActiveFrameId( 0 ),
   m_MustCheckFocusIsNotLost( false ),

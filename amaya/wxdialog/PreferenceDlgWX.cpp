@@ -732,38 +732,37 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
   strcpy(buffer, (const char*)value.mb_str(wxConvUTF8) );
   TtaGiveRGB (buffer, &red, &green, &blue);
   colour_data.SetColour( wxColour( red, green, blue ) );
-
+  
   // open the color dialog and ask user to select a color.
   wxColourDialog dialog(this, &colour_data);
   if (dialog.ShowModal() == wxID_OK)
-  {
-    colour_data = dialog.GetColourData();
-    wxColour col = colour_data.GetColour();
-
-    char color_string[7];
-    sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
-    wxComboBox *     p_combo  = NULL;
-    wxBitmapButton * p_button = NULL;
-    if (event.GetId() == textcolor_id)
-	p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
-    else if (event.GetId() == backcolor_id)
-	p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
-    else if (event.GetId() == selcolor_id)
-	p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
-    else if (event.GetId() == selbackcolor_id)
-	p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);    
-    if (p_combo)
-      {
-	p_combo->Append( TtaConvMessageToWX(color_string) );
-	p_combo->SetValue( TtaConvMessageToWX(color_string) );
+    {
+      colour_data = dialog.GetColourData();
+      wxColour col = colour_data.GetColour();
+      
+      char color_string[7];
+      sprintf( color_string, "#%02x%02x%02x", col.Red(), col.Green(), col.Blue() );
+      wxComboBox *     p_combo  = NULL;
+      if (event.GetId() == textcolor_id)
+        p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
+      else if (event.GetId() == backcolor_id)
+        p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
+      else if (event.GetId() == selcolor_id)
+        p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
+      else if (event.GetId() == selbackcolor_id)
+        p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);    
+      if (p_combo)
+        {
+          p_combo->Append( TtaConvMessageToWX(color_string) );
+          p_combo->SetValue( TtaConvMessageToWX(color_string) );
 #ifdef _WINDOWS
-	// on windows, the TextChanged event is not generated automaticaly when SetValue is called
-	// just simulate it.
-	wxCommandEvent event;
-	OnColorTextChanged(event);
+          // on windows, the TextChanged event is not generated automaticaly when SetValue is called
+          // just simulate it.
+          wxCommandEvent event;
+          OnColorTextChanged(event);
 #endif /* _WINDOWS */
-      }
-  }
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

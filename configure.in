@@ -672,7 +672,7 @@ else
 fi
 
 if test "${CC}" = "gcc" ; then
- CFLAGS="${CFLAGS} -W"
+ CFLAGS="${CFLAGS} -Wall"
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
@@ -690,7 +690,7 @@ CFLAGS="${CFLAGS} -x c"
 
 # C++ options (-x c++)
 CXX_OPTIONS="-D__cplusplus"
-CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
+CXXFLAGS="${CXXFLAGS} -Wall -x c++ ${CXX_OPTIONS}"
 
 # setup LDFLAGS
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww

@@ -165,6 +165,8 @@ static KEY         *DocAccessKey[MAX_DOCUMENTS];
 static ThotBool    Special;
 #endif /* _WINGUI */
 
+
+#if 0 /* This function is not used, could be removed ??? */
 /*----------------------------------------------------------------------
    NameCode
    translates the keynames not supported by the interpreter of
@@ -190,7 +192,7 @@ static char *NameCode (char* name)
    else
       return (name);
 }
-
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
    KeyName translates a key value into a key name.
@@ -968,7 +970,7 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   View                view;
   int                 modtype;
   int                 mainframe;
-  int                 index = -1, ret = 0;
+  int                 index = -1;
   ThotBool            found, done = FALSE;
   
 #ifdef _WX

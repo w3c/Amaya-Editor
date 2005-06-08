@@ -380,7 +380,6 @@ static FontScript **FontConfigLoad ()
 #ifdef _UNIX
   char                fname1[MAX_TXT_LEN];
   char                word1[50];
-  int                 script;
 #endif /* _UNIX */
   ThotBool            complete;
 

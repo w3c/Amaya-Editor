@@ -1095,11 +1095,10 @@ ThotBool TtaDestroyFrame( int frame_id )
 #ifdef _WX
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("TtaDestroyFrame: frame_id=%d"), frame_id );
 
-  int          window_id = FrameTable[frame_id].FrWindowId;
-  AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;
-  
+  AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;  
+  wxASSERT(p_frame);
   if (!p_frame)
-    return FALSE;
+      return FALSE;
   
   p_frame->FreeFrame();
 
@@ -1619,28 +1618,27 @@ void TtaSwitchPanelButton( Document doc, View view,
     {
       frame_id = GetWindowNumber (doc, view);
       if (frame_id <= 0 || frame_id > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame_id].WdFrame != 0)
-	{
-	  bool * p_enable_array  = NULL;
-	  bool * p_checked_array = NULL;
-
-	  switch (panel_type)
-	    {
-	    case WXAMAYA_PANEL_XHTML:
-	      p_enable_array  = FrameTable[frame_id].EnabledButton_Panel_XHTML;
-	      p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
-	      break;
-	    }
-
-	  /* switch the button */
-	  if (p_checked_array)
-	    {
-	      bool status = p_checked_array[button_id];
-	      p_checked_array[button_id] = value;
-	      TtaRefreshPanelButton( doc, view, panel_type );
-	    }
-	}
+        {
+          bool * p_enable_array  = NULL;
+          bool * p_checked_array = NULL;
+          
+          switch (panel_type)
+            {
+            case WXAMAYA_PANEL_XHTML:
+              p_enable_array  = FrameTable[frame_id].EnabledButton_Panel_XHTML;
+              p_checked_array = FrameTable[frame_id].CheckedButton_Panel_XHTML;
+              break;
+            }
+          
+          /* switch the button */
+          if (p_checked_array)
+            {
+              p_checked_array[button_id] = value;
+              TtaRefreshPanelButton( doc, view, panel_type );
+            }
+        }
     }
 #endif /* _WX */
 }
@@ -2153,22 +2151,10 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
                            thot_keysym == WXK_TAB );
       
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
-      wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
       wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
-      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-      wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
       wxSplitterWindow * p_splitter        = wxDynamicCast(p_win_focus, wxSplitterWindow);
       wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
       wxScrollBar *    p_scrollbar         = wxDynamicCast(p_win_focus, wxScrollBar);
-#if 0
-      /* allow other widgets to handel special keys only when the key is not F2 */
-      if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
-        {
-          event.Skip();
-          return true;
-        }
-#endif /* 0 */
       
       if (p_win_focus)
         TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())

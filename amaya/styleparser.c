@@ -555,8 +555,6 @@ static char *ParseABorderValue (char *cssRule, PresentationValue *border)
   ----------------------------------------------------------------------*/
 static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
 {
-  char *ptr = cssRule;
-
   /* first parse the attribute string */
    border->typed_data.value = 0;
    border->typed_data.unit = UNIT_PX;
@@ -4260,16 +4258,13 @@ static char *ParseACSSBackgroundRepeat (Element element, PSchema tsch,
   ParseCSSBackgroundRepeat: parse a CSS BackgroundRepeat attribute string.
   ----------------------------------------------------------------------*/
 static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
-				       PresentationContext ctxt,
-				       char *cssRule, CSSInfoPtr css,
-				       ThotBool isHTML)
+                                       PresentationContext ctxt,
+                                       char *cssRule, CSSInfoPtr css,
+                                       ThotBool isHTML)
 {
-  char     *ptr;
-
-  ptr = cssRule;
   cssRule = ParseACSSBackgroundRepeat (element, tsch, ctxt,
-				       cssRule, css, isHTML);
-  if (ptr = cssRule)
+                                       cssRule, css, isHTML);
+  if (cssRule)
     {
       cssRule = SkipValue ("Invalid background-repeat value", cssRule);
       /* check if it's an important rule */

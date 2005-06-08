@@ -53,9 +53,6 @@ PrintDlgWX::PrintDlgWX( int ref,
 			bool ignore_css ) :
   AmayaDialog( parent, ref )
 {
-#ifndef _WINDOWS
-  int  page_size;
-#endif /* _WINDOWS */
   m_Printer = printer_file;
   m_PS = ps_file;
 

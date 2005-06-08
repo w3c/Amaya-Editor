@@ -57,8 +57,10 @@ static ThotIcon   iconMathNo;
 #include "greek.xpm"
 #endif /* defined(_GTK) */
 
-static int      MathButton;
-static ThotIcon mIcons[14];
+#ifndef _WX
+  static int      MathButton;
+  static ThotIcon mIcons[14];
+#endif /* _WX */
 static ThotBool	InitMaths;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
@@ -1730,6 +1732,7 @@ gboolean CloseMathMenu (GtkWidget *widget,
 }
 #endif /* _GTK */
 
+#ifndef _WX
 /*----------------------------------------------------------------------
    CreateMathMenu creates the maths menus.           
   ----------------------------------------------------------------------*/
@@ -1777,6 +1780,7 @@ static void CreateMathMenu (Document doc, View view)
   CreateMathDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINGUI */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    AddMathButton        

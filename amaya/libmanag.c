@@ -99,7 +99,9 @@ static int height_box = 0;
 #endif /* _GTK */
 
 static ThotIcon   iconLibsvg;
+#ifndef _WX
 static ThotIcon   iconLibsvgNo;
+#endif /* _WX */
 static int      LibSVGButton;
 
 #ifdef _WINGUI

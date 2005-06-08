@@ -47,17 +47,17 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaSubPanel, wxPanel)
  *--------------------------------------------------------------------------------------
  */
 AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
-			      ,AmayaNormalWindow * p_parent_nwindow
-			      ,const wxString& panel_xrcid
-			      ,wxWindowID     id
-			      ,const wxPoint& pos
-			      ,const wxSize&  size
-			      ,long style
-			      )
+                              ,AmayaNormalWindow * p_parent_nwindow
+                              ,const wxString& panel_xrcid
+                              ,wxWindowID     id
+                              ,const wxPoint& pos
+                              ,const wxSize&  size
+                              ,long style
+                              )
   :  wxPanel()
+     ,m_pParentNWindow(p_parent_nwindow)
      ,m_State( (wxAMAYA_SPANEL_EXPANDED & ~wxAMAYA_SPANEL_FLOATING) )
      ,m_DoUnfloat_Lock(false)
-     ,m_pParentNWindow(p_parent_nwindow)
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::AmayaSubPanel"));
 
