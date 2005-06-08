@@ -4539,7 +4539,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   unsigned char       charRead;
   int		      val;
   ThotBool            endOfTextFile;
-  ThotBool            withinMarkup = FALSE, withinTag = FALSE;
+  ThotBool            withinMarkup = FALSE;
   ThotBool            withinQuote = FALSE, withinString = FALSE;
   ThotBool            withinComment = FALSE;
 
@@ -4634,9 +4634,21 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  if (LgBuffer != 0)
 	    TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
 	  LgBuffer = 0;
+	  if (withinMarkup)
+	    {
+	      /* attach the markup attribute */
+	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr, val, el, doc);
+		}
+	    }
 	  el = NULL; /* generate a new line */
 	  charRead = EOS;
-	  withinTag = FALSE;
 	}
 
       if (charRead != EOS)
@@ -4655,9 +4667,12 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
-		   charRead == '!' &&
+		   charRead == '-' &&
 		   !withinString &&
-		   LgBuffer > 0 && inputBuffer[LgBuffer-1] == '<')
+		   LgBuffer > 2 &&
+		   inputBuffer[LgBuffer-1] == '-' &&
+		   inputBuffer[LgBuffer-2] == '!' &&
+		   inputBuffer[LgBuffer-3] == '<')
 	    {
 	      withinMarkup = FALSE;
 	      /* add the current character */
@@ -4678,16 +4693,16 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		{
 		  if (withinMarkup)
 		    {
-		      /* close the previous markup string */
-		    attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
-		    attr = TtaGetAttribute (el, attrType);
-		    if (attr == NULL)
-		      {
-			attr = TtaNewAttribute (attrType);
-			val = TextFile_ATTR_IsMarkup_VAL_Yes_;
-			TtaAttachAttribute (el, attr, doc);
-			TtaSetAttributeValue (attr, val, el, doc);
-		      }
+		      /* attach the markup attribute */
+		      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+		      attr = TtaGetAttribute (el, attrType);
+		      if (attr == NULL)
+			{
+			  attr = TtaNewAttribute (attrType);
+			  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+			  TtaAttachAttribute (el, attr, doc);
+			  TtaSetAttributeValue (attr, val, el, doc);
+			}
 		    }
 		  /* generate a new IsString element */
 		  el = GetANewText (el, elType, doc);
@@ -4746,88 +4761,24 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-#ifdef IV
-	  else if (withinTag && LgBuffer == 1 && inputBuffer[0] == '<')
-	    {
-	      /* set the IsMarkup element */
-	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
-		{
-		  attr = TtaNewAttribute (attrType);
-		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
-		  TtaAttachAttribute (el, attr, doc);
-		  TtaSetAttributeValue (attr, val, el, doc);
-		}
-	      if (isalpha (charRead) || charRead == '/')
-		{
-		  /* generate a new IsTag element */
-		  el = GetANewText (el, elType, doc);
-		  /* set the IsTag element */
-		  attrType.AttrTypeNum = TextFile_ATTR_IsTag;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr == NULL)
-		    {
-		      attr = TtaNewAttribute (attrType);
-		      val = TextFile_ATTR_IsTag_VAL_Yes_;
-		      TtaAttachAttribute (el, attr, doc);
-		      TtaSetAttributeValue (attr, val, el, doc);
-		    }
-		}
-	      else
-		withinTag = FALSE;
-	      /* add the current character */
-	      inputBuffer[LgBuffer++] = charRead;
-	    }
-	  else if (withinTag && (charRead == SPACE || charRead == '>'))
-	    {
-	      withinTag = FALSE;
-	      /* generate a new IsMarkup element */
-	      el = GetANewText (el, elType, doc);
-	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
-		{
-		  attr = TtaNewAttribute (attrType);
-		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
-		  TtaAttachAttribute (el, attr, doc);
-		  TtaSetAttributeValue (attr, val, el, doc);
-		  }
-	      /* add the current character */
-	      inputBuffer[LgBuffer++] = charRead;
-	      if (charRead == '>')
-		{
-		  withinMarkup = FALSE;
-		  /* close the IsMarkup element */
-		  el = GetANewText (el, elType, doc);
-		}
-	    }
-#endif
 	  else if (!withinString && !withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
-		   (charRead == '<' || 
-		    (charRead == '>' && withinMarkup) ||
-		    (LgBuffer == 0 && withinMarkup)))
+		   (charRead == '<' ||
+		    (charRead == '>' && withinMarkup)))
 	    {
-	      if (charRead == '<' || charRead == '>')
-		withinMarkup = !withinMarkup;
 	      if (charRead == '<')
 		{
-#ifdef IV
+		  withinMarkup = TRUE;
 		  /* close the previous element */
 		  el = GetANewText (el, elType, doc);
-		  /* it should start a tag element */
-		  withinTag = TRUE;
-#else
-		  withinMarkup = TRUE;
-#endif
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
 		}
 	      else
 		{
+		  withinMarkup = FALSE;
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
 		  attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
