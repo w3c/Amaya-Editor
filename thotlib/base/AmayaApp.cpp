@@ -76,6 +76,7 @@ int AmayaApp::AttrList[] =
   WX_GL_MIN_ALPHA, 0, /* don't change the position of the entry (8) */
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
+  WX_GL_NOT_ACCELERATED,
   0
 };
 
