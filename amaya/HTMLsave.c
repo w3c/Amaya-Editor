@@ -1190,6 +1190,7 @@ void SetNamespacesAndDTD (Document doc)
 		      attribute to be created, otherwise mandatory attributes
 		      will prompt the user with no reason */
 		   insertMeta = TRUE;
+		   attr = NULL;
 		 }
 	       if (!attr)
 		 {
