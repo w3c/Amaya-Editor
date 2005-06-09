@@ -3248,6 +3248,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   right += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
+if (!strcmp(pAb->AbElement->ElLabel, "L138"))
+  printf ("Computelines L138 w=%d\n", pBox->BxW);
  /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
@@ -3263,13 +3265,13 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  pParent->AbBox->BxType == BoFloatGhost))
 	    pParent = pParent->AbEnclosing;
 	}
+      pCell = GetParentCell (pBox);
       if (pParent && pParent->AbBox &&
 	  pParent->AbBox->BxType != BoCell)
 	/* keep the box width */
 	maxWidth = pParent->AbBox->BxW - left - right;
       else
 	{
-	  pCell = GetParentCell (pBox);
 	  if (pCell && pCell->AbBox)
 	    /* keep the box width */
 	    maxWidth = pCell->AbBox->BxW - left - right;
@@ -3335,9 +3337,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
   standard = (spacing >= 0);
   spacing = 0;
-  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L138"))
-  // printf ("=======>ComputeLines w=%d max=%d \n",pBox->BxW,pBox->BxMaxWidth);
+#ifdef IV
   if (pBox->BxW > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
+#endif
     {
       /* compute the indent */
       if (extensibleBox)
@@ -3631,6 +3633,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 			pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
 	}
     }
+#ifdef IV
   else
     {
       *height = spacing;
@@ -3697,6 +3700,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* restore the initial width */
       pBox->BxW = width;
     }
+#endif
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;

@@ -1111,8 +1111,6 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
   ThotBool            skip;
 
   box = cell->AbBox;
-if (!strcmp (cell->AbElement->ElLabel, "L134"))
-   printf ("GiveCellWidths \n");
   /* take into account the left margin, border and padding */
   mbp = box->BxLBorder + box->BxLPadding;
   if (cell->AbLeftMarginUnit != UnAuto)

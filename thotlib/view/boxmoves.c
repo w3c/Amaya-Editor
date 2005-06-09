@@ -1935,7 +1935,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      TtaFreeMemory ((STRING) pBox->BxPictInfo);
 	      pBox->BxPictInfo = NULL;
 	    }
-
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
