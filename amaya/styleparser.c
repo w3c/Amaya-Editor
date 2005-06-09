@@ -228,12 +228,12 @@ static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
 {
   char        c = EOS;
   if (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
-      *endvalue != ';' && *endvalue != '}' && *endvalue != EOL && *endvalue != TAB &&
-      *endvalue !=  __CR__)
+      *endvalue != ';' && *endvalue != '}' && *endvalue != EOL && 
+      *endvalue != TAB && *endvalue !=  __CR__)
     {
       while (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
-	     *endvalue != ';' && *endvalue != '}' && *endvalue != EOL && *endvalue != TAB &&
-	     *endvalue !=  __CR__)
+	     *endvalue != ';' && *endvalue != '}' && *endvalue != EOL &&
+	     *endvalue != TAB && *endvalue !=  __CR__)
 	endvalue++;
       /* close the string here */
       c = *endvalue;
@@ -2045,7 +2045,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
-	  skippedNL = NewLineSkipped;
+      skippedNL = NewLineSkipped;
       /* perhaps a list-style-image */
       if (!strncasecmp (cssRule, "url", 3))
 	cssRule = ParseCSSListStyleImage (element, tsch, ctxt, cssRule, css,

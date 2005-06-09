@@ -3340,9 +3340,9 @@ static void CreateHTMLContainer (char *pathname, char *docname,
   file = TtaWriteOpen (tempfile);
   fprintf (file, "<html><head><title>%s</title></head><body>", docname);
   if (local)
-    fprintf (file, "<img src=\"%s\">", pathname);
+    fprintf (file, "<img src=\"%s\" alt=\"iamge\">", pathname);
   else
-    fprintf (file, "<img src=\"internal:%s\">", pathname);
+    fprintf (file, "<img src=\"internal:%s\" alt=\"iamge\">", pathname);
   fprintf (file, "</body></html>");
   TtaWriteClose (file);
 }
