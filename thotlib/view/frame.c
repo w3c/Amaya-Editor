@@ -471,7 +471,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   ThotPictInfo       *imageDesc;
   PictureScaling      pres;
   int                 x, y, xd = 0, yd = 0;
-  int                 xbg, ybg, xorg, yorg;;
+  int                 xbg, ybg, shiftx, shifty;
   int                 width = 0, height = 0;
   int                 wbg, hbg;
   int                 w, h, view;
@@ -542,16 +542,21 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       return;
     }
 
-  /* save the box orign */
-  xorg = pBox->BxXOrg;
-  yorg = pBox->BxYOrg;
+  /* add shift due to relative positioning */
   if (pFlow)
     {
       /* apply the box shift */
-      pBox->BxXOrg += pFlow->FlXStart;
-      pBox->BxYOrg += pFlow->FlYStart;
+      shiftx = pFlow->FlXStart;
+      shifty = pFlow->FlYStart;
     }
-
+  else
+    shiftx = shifty = 0;
+#ifdef _GL
+  pBox->BxClipX += shiftx;
+  pBox->BxClipY += shifty;
+#endif /*_GL*/
+  pBox->BxXOrg += shiftx;
+  pBox->BxYOrg += shifty;
   if (pBox->BxType == BoGhost && pAb->AbDisplay == 'B')
     {
       GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
@@ -721,9 +726,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             }
         }
     }
-  /* restore the box orign */
-  pBox->BxXOrg = xorg;
-  pBox->BxYOrg = yorg;
+
+  /* remove shift due to relative positioning */
+#ifdef _GL
+  pBox->BxClipX -= shiftx;
+  pBox->BxClipY -= shifty;
+#endif /*_GL*/
+  pBox->BxXOrg -= shiftx;
+  pBox->BxYOrg -= shifty;
 }
 
 /*----------------------------------------------------------------------
@@ -1442,10 +1452,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   int                 winTop, winBottom;
   int                 bt, bb;
   int                 l, h;
+  int                 x_min, x_max, y_min, y_max;
   ThotBool            userSpec = FALSE, selected;
 #ifdef _GL
   PtrBox              systemOriginRoot = NULL;
-  int                 x_min, x_max, y_min, y_max;
   int                 xOrg, yOrg, 
                       clipXOfFirstCoordSys, clipYOfFirstCoordSys;
   ThotBool            updatingStatus, formatted;
@@ -1489,7 +1499,19 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 #else /* _GL */
   winTop = pFrame->FrYOrg;
   winBottom = winTop + h;
+  x_min = xmin;
+  x_max = xmax;
+  y_min = ymin;
+  y_max = ymax;
 #endif /* _GL */
+  if (pFlow)
+    {
+      /* take into account relative positioning */
+      x_min -= pFlow->FlXStart;
+      x_max -= pFlow->FlXStart;
+      y_min -= pFlow->FlYStart;
+      y_max -= pFlow->FlYStart;
+    }
 
   selected = pAb->AbSelected;
   if (pBox->BxDisplay || selected)
@@ -1723,10 +1745,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 					pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc>= x_min &&
 					pBox->BxClipX <= x_max)
 #else /* _GL */
-				    if (pBox->BxYOrg + pBox->BxHeight >= ymin  &&
-					pBox->BxYOrg <= ymax && 
-					pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
-					pBox->BxXOrg <= xmax)
+				    if (pBox->BxYOrg + pBox->BxHeight >= y_min  &&
+					pBox->BxYOrg <= y_max && 
+					pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
+					pBox->BxXOrg <= x_max)
 #endif /* _GL */
 				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
 				  }
@@ -1736,10 +1758,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 				       pBox->BxClipX + pBox->BxClipW >= x_min &&
 				       pBox->BxClipX <= x_max)
 #else /* _GL */
-			      else if (bb >= ymin  &&
-				       bt <= ymax && 
-				       pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
-				       pBox->BxXOrg <= xmax)
+			      else if (bb >= y_min  &&
+				       bt <= y_max && 
+				       pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
+				       pBox->BxXOrg <= x_max)
 #endif /* _GL */
 				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
 			    }

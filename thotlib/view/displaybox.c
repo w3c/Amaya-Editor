@@ -2148,7 +2148,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   ViewFrame         *pFrame;
   PtrBox             mbox;
   PtrAbstractBox     pAb;
-  int                x, y, xorg, yorg;
+  int                x, y, shiftx, shifty;
   int                xd, yd, width, height;
   int                t, b, l, r;
   ThotBool           selfsel;
@@ -2156,22 +2156,21 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   ThotBool           isOpenList = FALSE;
 #endif  /* _GL */
 
-  /* save the box orign */
-  xorg = box->BxXOrg;
-  yorg = box->BxYOrg;
   if (pFlow)
     {
-      /* apply the box shift */
-      box->BxXOrg += pFlow->FlXStart;
-      box->BxYOrg += pFlow->FlYStart;
+      /* shift due to relative positioning */
+      shiftx = pFlow->FlXStart;
+      shifty = pFlow->FlYStart;
     }
+  else
+    shiftx = shifty = 0;
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
   GetExtraMargins (box, NULL, &t, &b, &l, &r);
   x = ViewFrameTable[frame - 1].FrXOrg;
   y = ViewFrameTable[frame - 1].FrYOrg;
-  xd = box->BxXOrg + box->BxLMargin + l;
-  yd = box->BxYOrg + box->BxTMargin + t;
+  xd = box->BxXOrg + box->BxLMargin + l + shiftx;
+  yd = box->BxYOrg + box->BxTMargin + t + shifty;
   width = box->BxWidth - box->BxLMargin - box->BxRMargin - l - r;
   height = box->BxHeight - box->BxTMargin - box->BxBMargin - t - b;
   if (Printing)
@@ -2239,9 +2238,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
               box->DisplayList && glIsList (box->DisplayList))
             {
               glCallList (box->DisplayList);
-	      /* restore the box orign */
-	      box->BxXOrg = xorg;
-	      box->BxYOrg = yorg;
 	      return;
             }
           else if (GL_NotInFeedbackMode ())
@@ -2262,15 +2258,16 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
           (pAb->AbElement->ElParent->ElGradient))
         {
           if (DisplayGradient (pAb, box, frame, selfsel, t, b, l, r))
-	    {
-	      /* restore the box orign */
-	      box->BxXOrg = xorg;
-	      box->BxYOrg = yorg;
-	      return;
-	    } 
+	    return;
         }
     }
+
+  /* add shift due to relative positioning */
+  box->BxClipX += shiftx;
+  box->BxClipY += shifty;
 #endif /*_GL*/
+  box->BxXOrg += shiftx;
+  box->BxYOrg += shifty;
   
   if (pAb->AbVolume == 0 ||
       (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
@@ -2341,10 +2338,13 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
       if (isOpenList)
         glEndList ();
     }
+
+  /* remove shift due to relative positioning */
+  box->BxClipX -= shiftx;
+  box->BxClipY -= shifty;
 #endif /*_GL*/
-  /* restore the box orign */
-  box->BxXOrg = xorg;
-  box->BxYOrg = yorg;
+  box->BxXOrg -= shiftx;
+  box->BxYOrg -= shifty;
 }
 
 
