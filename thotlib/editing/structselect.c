@@ -339,8 +339,15 @@ ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
 	*lastChar = 0;
      }
    else
-      /* no current selection */
-      ret = FALSE;
+     {
+       /* no current selection */
+       ret = FALSE;
+       *pDoc = NULL;
+       *firstEl = NULL;
+       *lastEl = NULL;
+       *firstChar = 0;
+       *lastChar = 0;
+     }
    return ret;
 }
 

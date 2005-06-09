@@ -107,10 +107,10 @@ static int BuildElementSelector (PtrDocument pDoc, PtrSSchema pSS,
 void TtaShowElementMenu (Document doc, View view)
 {
   PtrDocument    pSelDoc, pDoc;
-  PtrElement     firstSel, lastSel;
+  PtrElement     firstSel = NULL, lastSel = NULL;
   PtrSSchema     pSS;
   char           menuBuf[MAX_MENU_LENGTH];
-  int            nbItem, height, firstChar, lastChar;
+  int            nbItem, height, firstChar = 0, lastChar = 0;
   ThotBool       withTextInput = FALSE;
 
   UserErrorCode = 0;
