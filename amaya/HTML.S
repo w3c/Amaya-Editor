@@ -882,11 +882,11 @@ EXCEPT
 	Definitions:	Hidden;
         XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
 	Comment\240:	ReturnCreateNL, NoReplicate;
-	Comment_line:	Hidden, PreserveEntities;
-	PI_line:	Hidden, PreserveEntities;
+	Comment_line:	Hidden, MarkupPreserve;
+	PI_line:	Hidden, MarkupPreserve;
 	DOCTYPE:	NoCut, NoSpellCheck;
 	DOCTYPE_line:	Hidden, NoCut;
-        CDATA_line:     Hidden;
+        CDATA_line:     Hidden, MarkupPreserve;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;

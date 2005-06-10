@@ -42,11 +42,11 @@ EXCEPT
    RealLang:	        Invisible;
    xmlpi:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
    xmlcomment:	        ReturnCreateNL, NoReplicate;
-   xmlcomment_line:     Hidden;
-   xmlpi_line:          Hidden;
+   xmlcomment_line:     Hidden, MarkupPreserve;
+   xmlpi_line:          Hidden, MarkupPreserve;
    doctype_line:        Hidden, NoCut;
    doctype:             NoCut;
-   cdata_line:          Hidden;
+   cdata_line:          Hidden, MarkupPreserve;
    XML_Element:         Hidden, IsPlaceholder;
    xml_space:           SpacePreserve;
    xmlid:		CssId;

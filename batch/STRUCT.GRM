@@ -107,7 +107,7 @@ SpacePreserve 1191
 IsPlaceholder 1192
 StartCounter 1193
 SetCounter 1194
-PreserveEntities 1195
+MarkupPreserve 1195
 Root 1196
 
    1 1101 2001 1102 2002    2 1001 1103    3 1001 2001 1104    4 2002 2001 1105 

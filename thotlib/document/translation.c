@@ -782,11 +782,13 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   table.
   When the parameter attrVal is TRUE doublequotes are translated into
   the entity &quot;.
+  entityName is TRUE when displaying an entity string.
+  markupPreserve is TRUE when <,>, and & should be preserved.
   ----------------------------------------------------------------------*/
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   ScriptTransl *pTransAlph, ThotBool lineBreak,
 			   int fnum, Document doc, ThotBool attrVal,
-			   ThotBool entityName)
+			   ThotBool entityName, ThotBool markupPreserve)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
   CHAR_T              c, cs;
@@ -812,165 +814,173 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
     /* rangees par ordre scriptique. On cherche une chaine */
     /* source qui commence par le caractere a traduire. */
     {
-      while (c > (CHAR_T) (pTSch->TsCharTransl[ft - 1].StSource[b]) &&
-	     ft < lt)
-	ft++;
-      pTrans = &pTSch->TsCharTransl[ft - 1];
-      if (c == (CHAR_T) pTrans->StSource[b])
+      if (markupPreserve &&
+	  (c == 0x26 || c == 0x3C || c == 0x3E))
+	/* preserve the markup <, >, and & */
+	PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, FALSE, entityName);
+      else
 	{
-	  /* le caractere correspond au caractere courant de la */
-	  /* chaine source de la regle ft */
-	  if (pTrans->StSource[b + 1] == EOS)
-	    /* chaine complete */
-	    /* cette regle de traduction s'applique, on traduit */
-	    /* cherche si les regles suivantes ne peuvent pas egalement */
-	    /* s'appliquer: recherche la plus longue chaine a traduire */
+	  while (c > (CHAR_T) (pTSch->TsCharTransl[ft - 1].StSource[b]) &&
+		 ft < lt)
+	    ft++;
+	  pTrans = &pTSch->TsCharTransl[ft - 1];
+	  if (c == (CHAR_T) pTrans->StSource[b])
 	    {
-	      continu = ft < textTransEnd;
-	      while (continu)
+	      /* le caractere correspond au caractere courant de la */
+	      /* chaine source de la regle ft */
+	      if (pTrans->StSource[b + 1] == EOS)
+		/* chaine complete */
+		/* cette regle de traduction s'applique, on traduit */
+		/* cherche si les regles suivantes ne peuvent pas egalement */
+		/* s'appliquer: recherche la plus longue chaine a traduire */
 		{
-		  j = 0;
-		  equal = TRUE;
-		  /* compare la regle ft avec la suivante */
-		  do
+		  continu = ft < textTransEnd;
+		  while (continu)
 		    {
-		    if (pTSch->TsCharTransl[ft - 1].StSource[j] ==
-			pTSch->TsCharTransl[ft].StSource[j])
-		      j++;
-		    else
-		      equal = FALSE;
-		    }
-		  while (equal && j <= b);
-
-		  if (!equal)
-		    /* le debut de la regle suivante est different */
-		    /* de la regle courante */
-		    continu = FALSE;
-		  else
-		    /* la fin de la regle suivante est-il identique */
-		    /* a la suite du texte a traduire ? */
-		    {
-		      k = i;
-		      cs = c;
-		      pNextBufT = pBufT;
-		      /* cherche le caractere suivant du texte */
-		      stop = FALSE;
+		      j = 0;
+		      equal = TRUE;
+		      /* compare la regle ft avec la suivante */
 		      do
 			{
-			  if (cs != EOS)
-			    cs = (CHAR_T) pNextBufT->BuContent[k++];
-			  if (cs == EOS)
-			    /* passe au buffer suivant du meme texte */
-			    if (pNextBufT->BuNext != NULL)
-			      {
-				pNextBufT = pNextBufT->BuNext;
-				k = 1;
-				cs = pNextBufT->BuContent[0];
-			      }
-			  if (cs == EOS)
-			    continu = FALSE;	/* fin du texte */
+			  if (pTSch->TsCharTransl[ft - 1].StSource[j] ==
+			      pTSch->TsCharTransl[ft].StSource[j])
+			    j++;
 			  else
+			    equal = FALSE;
+			}
+		      while (equal && j <= b);
+		      
+		      if (!equal)
+			/* le debut de la regle suivante est different */
+			/* de la regle courante */
+			continu = FALSE;
+		      else
+			/* la fin de la regle suivante est-il identique */
+			/* a la suite du texte a traduire ? */
+			{
+			  k = i;
+			  cs = c;
+			  pNextBufT = pBufT;
+			  /* cherche le caractere suivant du texte */
+			  stop = FALSE;
+			  do
 			    {
-			      continu = FALSE;
-			      if (cs == (CHAR_T) pTSch->TsCharTransl[ft].StSource[j])
+			      if (cs != EOS)
+				cs = (CHAR_T) pNextBufT->BuContent[k++];
+			      if (cs == EOS)
+				/* passe au buffer suivant du meme texte */
+				if (pNextBufT->BuNext != NULL)
+				  {
+				    pNextBufT = pNextBufT->BuNext;
+				    k = 1;
+				    cs = pNextBufT->BuContent[0];
+				  }
+			      if (cs == EOS)
+				continu = FALSE;	/* fin du texte */
+			      else
 				{
-				  stop = FALSE;
-				  continu = TRUE;
-				  j++;
-				}
-			      if (pTSch->TsCharTransl[ft].StSource[j] == EOS)
-				{
-				  ft++;
-				  b = j - 1;
-				  i = k;
-				  c = cs;
-				  pBufT = pNextBufT;
-				  continu = ft < textTransEnd;
-				  stop = TRUE;
+				  continu = FALSE;
+				  if (cs == (CHAR_T) pTSch->TsCharTransl[ft].StSource[j])
+				    {
+				      stop = FALSE;
+				      continu = TRUE;
+				      j++;
+				    }
+				  if (pTSch->TsCharTransl[ft].StSource[j] == EOS)
+				    {
+				      ft++;
+				      b = j - 1;
+				      i = k;
+				      c = cs;
+				      pBufT = pNextBufT;
+				      continu = ft < textTransEnd;
+				      stop = TRUE;
+				    }
 				}
 			    }
+			  while (!stop && continu);
 			}
-		      while (!stop && continu);
 		    }
+
+		  /* on applique la regle de traduction ft */
+		  j = 0;
+		  while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
+		    {
+		      cs = pTSch->TsCharTransl[ft - 1].StTarget[j];
+		      PutChar ((wchar_t) cs, fnum, NULL, doc, lineBreak,
+			       FALSE, entityName);
+		      j++;
+		    }
+		  /* prepare la prochaine recherche dans la table */
+		  b = 0;
+		  ft = textTransBegin;
+		  lt = textTransEnd;
+		}
+	      else
+		/* ce n'est pas le dernier caractere de la chaine */
+		/* source de la table de traduction, on restreint la */
+		/* partie de la table de traduction dans laquelle on */
+		/* cherchera les caracteres suivants */
+		{
+		  j = ft;
+		  /* cherche parmi les regles suivantes la derniere */
+		  /* qui contienne ce caractere a cette position dans */
+		  /* la chaine source. On ne cherchera pas au-dela de */
+		  /* cette regle. */
+		  while (c == (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b] &&
+			 j < lt)
+		    j++;
+		  if (c != (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b])
+		    lt = j - 1;
+		  /* passe au caractere suivant de la chaine source */
+		  /* de la table de traduction */
+		  b++;
+		}
+	    }
+	  else if (b == 0)
+	    /* le caractere ne se trouve au debut d'aucune chaine source de */
+	    /* la table de traduction, on ne le traduit donc pas */
+	    {
+	      ft = textTransBegin;
+	      if (attrVal &&
+		  (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0))
+		entityName = TRUE;
+	      if (c != EOS)
+		PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, TRUE,
+			 entityName);
+	    }
+	  else
+	    /* on avait commence' a analyser une sequence de caracteres. */
+	    /* Cette sequence ne se traduit pas, on sort le premier */
+	    /* caractere de la sequence et on cherche une sequence */
+	    /* traduisible a partir du caractere suivant. */
+	    {
+	      if (i - b >= 1)
+		/* le premier caractere de la sequence est dans */
+		/* le buffer courant */
+		i -= b;
+	      else
+		/* le premier caractere de la sequence est dans */
+		/* le buffer precedent */
+		{
+		  pBufT = pPrevBufT;
+		  i = pBufT->BuLength + i - b;
 		}
 
-	      /* on applique la regle de traduction ft */
-	      j = 0;
-	      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
+	      if (c != EOS)
 		{
-		  cs = pTSch->TsCharTransl[ft - 1].StTarget[j];
-		  PutChar ((wchar_t) cs, fnum, NULL, doc, lineBreak,
-			   FALSE, entityName);
-		  j++;
+		  cs = (CHAR_T) pBufT->BuContent[i - 1];
+		  if (attrVal &&
+		      (cs == 0x22 || cs == 0x26 || cs == 0x3C ||
+		       cs == 0x3E || cs == 0xA0))
+		    entityName = TRUE;
+		  PutChar ((wchar_t) cs, fnum, NULL, doc, lineBreak, TRUE,
+			   entityName);
 		}
-	      /* prepare la prochaine recherche dans la table */
 	      b = 0;
 	      ft = textTransBegin;
 	      lt = textTransEnd;
 	    }
-	  else
-	    /* ce n'est pas le dernier caractere de la chaine */
-	    /* source de la table de traduction, on restreint la */
-	    /* partie de la table de traduction dans laquelle on */
-	    /* cherchera les caracteres suivants */
-	    {
-	      j = ft;
-	      /* cherche parmi les regles suivantes la derniere */
-	      /* qui contienne ce caractere a cette position dans */
-	      /* la chaine source. On ne cherchera pas au-dela de */
-	      /* cette regle. */
-	      while (c == (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b] &&
-		     j < lt)
-		j++;
-	      if (c != (CHAR_T) pTSch->TsCharTransl[j - 1].StSource[b])
-		lt = j - 1;
-	      /* passe au caractere suivant de la chaine source */
-	      /* de la table de traduction */
-	      b++;
-	    }
-	}
-      else if (b == 0)
-	/* le caractere ne se trouve au debut d'aucune chaine source de */
-	/* la table de traduction, on ne le traduit donc pas */
-	{
-	  ft = textTransBegin;
-	  if (attrVal &&
-	      (c == 0x22 || c == 0x26 || c == 0x3C || c == 0x3E || c == 0xA0))
-	    entityName = TRUE;
-	  if (c != EOS)
-	    PutChar ((wchar_t) c, fnum, NULL, doc, lineBreak, TRUE,
-		     entityName);
-	}
-      else
-	/* on avait commence' a analyser une sequence de caracteres. */
-	/* Cette sequence ne se traduit pas, on sort le premier */
-	/* caractere de la sequence et on cherche une sequence */
-	/* traduisible a partir du caractere suivant. */
-	{
-	  if (i - b >= 1)
-	    /* le premier caractere de la sequence est dans */
-	    /* le buffer courant */
-	    i -= b;
-	  else
-	    /* le premier caractere de la sequence est dans */
-	    /* le buffer precedent */
-	    {
-	      pBufT = pPrevBufT;
-	      i = pBufT->BuLength + i - b;
-	    }
-
-	  if (c != EOS)
-	    {
-	      cs = (CHAR_T) pBufT->BuContent[i - 1];
-	      if (attrVal &&
-		  (cs == 0x22 || cs == 0x26 || cs == 0x3C || cs == 0x3E || cs == 0xA0))
-		entityName = TRUE;
-	      PutChar ((wchar_t) cs, fnum, NULL, doc, lineBreak, TRUE,
-		       entityName);
-	    }
-	  b = 0;
-	  ft = textTransBegin;
-	  lt = textTransEnd;
 	}
 
       /* cherche le caractere suivant a traiter */
@@ -1016,7 +1026,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
   CHAR_T              c = 0;
   char                ci;
   int                 i, j, b, ft, lt;
-  ThotBool            entityName, encode;
+  ThotBool            entityName, encode, markupPreserve;
   
   pTransAlph = NULL;
   lt = 0;
@@ -1043,6 +1053,9 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
                                         pParent->ElStructSchema);
           else
             encode = TRUE;
+	  markupPreserve = TypeHasException (ExcMarkupPreserve,
+					     pParent->ElTypeNumber,
+					     pParent->ElStructSchema);
           entityName = !strcmp (pEl->ElStructSchema->SsName, "MathML");
           if (!pTransAlph || !transChar)
             /* on ne traduit pas quand la table de traduction est vide */
@@ -1065,7 +1078,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
           else if (pTSch != NULL)
             /* effectue les traductions de caracteres selon la table */
             TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum,
-                           doc, FALSE, entityName);
+                           doc, FALSE, entityName, markupPreserve);
         }
       break;
     case LtSymbol:
@@ -2926,7 +2939,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		    else
 		      /* translate the attribute value */
 		      TranslateText (pBuf, pTransTextSch, pTransAlph, FALSE,
-				     fnum, doc, encode, entityName);
+				     fnum, doc, encode, entityName, FALSE);
 		  }
 		break;
 	      case AtReferenceAttr:

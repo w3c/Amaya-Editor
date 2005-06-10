@@ -4571,7 +4571,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       if (pathURL != NULL && prev != NULL)
         {
           el = TtaGetFirstChild (prev);
-          TtaSetTextContent (el, (unsigned char *)pathURL, HTMLcontext.language, doc);
+          TtaSetTextContent (el, (unsigned char *)pathURL,
+			     HTMLcontext.language, doc);
         }
       /* insert the BODY element */
       elType.ElTypeNum = TextFile_EL_BODY;
@@ -4631,22 +4632,39 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	{
 	  /* LF = end of line */
 	  inputBuffer[LgBuffer] = EOS;
-	  if (LgBuffer != 0)
-	    TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
-	  LgBuffer = 0;
-	  if (withinMarkup)
+	  if (LgBuffer > 0)
 	    {
-	      /* attach the markup attribute */
-	      attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+	      TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
+	      LgBuffer = 0;
+	      if (withinMarkup)
+		{
+		  /* attach the markup attribute */
+		  attrType.AttrTypeNum = TextFile_ATTR_IsMarkup;
+		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
+		}
+	      else if (withinComment)
+		{
+		  /* attach the markup attribute */
+		  attrType.AttrTypeNum = TextFile_ATTR_IsComment;
+		  val = TextFile_ATTR_IsComment_VAL_Yes_;
+		}
+	      else if (withinString)
+		{
+		  /* attach the markup attribute */
+		  attrType.AttrTypeNum = TextFile_ATTR_IsString;
+		  val = TextFile_ATTR_IsString_VAL_Yes_;
+		}
 	      attr = TtaGetAttribute (el, attrType);
 	      if (attr == NULL)
 		{
 		  attr = TtaNewAttribute (attrType);
-		  val = TextFile_ATTR_IsMarkup_VAL_Yes_;
 		  TtaAttachAttribute (el, attr, doc);
 		  TtaSetAttributeValue (attr, val, el, doc);
 		}
 	    }
+	  else
+	    /* the last text string is empty */
+	    TtaDeleteTree (el, doc);
 	  el = NULL; /* generate a new line */
 	  charRead = EOS;
 	}
@@ -4662,7 +4680,6 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	      TtaAttachAttribute (el, attr, doc);
 	      TtaSetAttributeValue (attr, val, el, doc);
 	    }
-	  /* display PI or XML comments */
 	  else if (withinMarkup &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
@@ -4674,11 +4691,40 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		   inputBuffer[LgBuffer-2] == '!' &&
 		   inputBuffer[LgBuffer-3] == '<')
 	    {
+	      /* start a XML comment */
 	      withinMarkup = FALSE;
+	      withinComment = TRUE;
 	      /* add the current character */
 	      inputBuffer[LgBuffer++] = charRead;
 	    }
-	  else if (!withinQuote &&
+	  else if (withinComment &&
+		   DocumentTypes[doc] != docCSS &&
+		   DocumentTypes[doc] != docLog &&
+		   DocumentTypes[doc] != docText &&
+		   charRead == '>' &&
+		   !withinString &&
+		   LgBuffer > 1 &&
+		   inputBuffer[LgBuffer-1] == '-' &&
+		   inputBuffer[LgBuffer-2] == '-')
+	    {
+	      /* end a XML comment */
+	      withinComment = FALSE;
+	      /* add the current character */
+	      inputBuffer[LgBuffer++] = charRead;
+	      /* attach the markup attribute */
+	      attrType.AttrTypeNum = TextFile_ATTR_IsComment;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr == NULL)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  val = TextFile_ATTR_IsComment_VAL_Yes_;
+		  TtaAttachAttribute (el, attr, doc);
+		  TtaSetAttributeValue (attr, val, el, doc);
+		}
+	      /* generate a new IsString element */
+	      el = GetANewText (el, elType, doc);
+	    }
+	  else if (!withinQuote && !withinComment &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
@@ -4726,7 +4772,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-	  else if (!withinString &&
+	  else if (!withinString && !withinComment &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&
@@ -4762,6 +4808,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		}
 	    }
 	  else if (!withinString && !withinQuote &&
+		   !withinComment &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   DocumentTypes[doc] != docText &&

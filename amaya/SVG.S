@@ -2506,9 +2506,9 @@ EXCEPT
    Unknown_namespace:   NoCreate;
    DOCTYPE:             NoCut, NoSpellCheck;
    DOCTYPE_line:        Hidden, NoCut;
-   XMLcomment_line:     Hidden;
-   XMLPI_line:          Hidden;
-   CDATA_line:          Hidden;
+   XMLcomment_line:     Hidden, MarkupPreserve;
+   XMLPI_line:          Hidden, MarkupPreserve;
+   CDATA_line:          Hidden, MarkupPreserve;
    XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
    XMLcomment:	        ReturnCreateNL, NoReplicate;
 
