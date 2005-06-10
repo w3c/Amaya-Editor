@@ -1188,6 +1188,9 @@ void TtaInitializeAppRegistry (char *appArgv0)
   char        c_filename[MAX_LENGTH];
   char       *c_end;
 #endif /* _UNIX */
+#ifdef _MACOS
+  char        realexecname[MAX_LENGTH];
+#endif /* _MACOS */
   int         execname_len;
   int         len, round;
   ThotBool    found, ok;
@@ -1211,7 +1214,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif /* _WINGUI */
       ThotExit (1);
     }
-
   /*
    * We are looking for the absolute pathname to the binary of the
    * application.
@@ -1219,6 +1221,21 @@ void TtaInitializeAppRegistry (char *appArgv0)
    * First case, the argv[0] indicate that it's an absolute path name.
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
+#ifdef _MACOS
+   /* for MACOS, 'getcws' returns the path to the current bundle if it exists */
+   /* In this case, we append the real directory to the path */
+   getcwd (&execname[0], sizeof (execname) / sizeof (char));
+   strcat (execname, DIR_STR);
+   strcat (execname, "amaya.app");
+   strcat (execname, DIR_STR);
+   strcat (execname, "Contents");
+   strcat (execname, DIR_STR);
+   strcat (execname, "MacOS");
+   strcat (execname, DIR_STR);
+   strcpy (realexecname, execname);
+   strcat (realexecname, appArgv0);
+   printf ("realexecname '%s' \n", realexecname);
+#endif _MACOS
 #ifdef _WINDOWS
   if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
      strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (char));
@@ -1236,6 +1253,10 @@ void TtaInitializeAppRegistry (char *appArgv0)
       strcat (execname, DIR_STR);
       strcat (execname, appArgv0);
     }
+#ifdef _MACOS
+  else if (TtaFileExist (realexecname))
+   	strcpy (execname, realexecname);
+#endif /* _MACOS */
   else
     {
       /*
