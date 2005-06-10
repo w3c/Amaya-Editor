@@ -5933,8 +5933,15 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  }
 	else if (val == 1) /* in new tab */
 	  {
+#ifdef _MACOS 
+	    /* to prevent a crash in wx
+               the doc is opened in a new window */
+	    DontReplaceOldDoc = TRUE;
+	    InNewWindow       = TRUE;
+#else /* _MACOS */
 	    DontReplaceOldDoc = TRUE;
 	    InNewWindow       = FALSE;
+#endif /* _MACOS */
 	  }
 	else if (val == 2) /* in new window */
 	  {
