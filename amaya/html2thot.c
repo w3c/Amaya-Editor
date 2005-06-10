@@ -4655,7 +4655,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  val = TextFile_ATTR_IsString_VAL_Yes_;
 		}
 	      attr = TtaGetAttribute (el, attrType);
-	      if (attr == NULL)
+	      if ((withinMarkup || withinComment || withinString) &&
+		  attr == NULL)
 		{
 		  attr = TtaNewAttribute (attrType);
 		  TtaAttachAttribute (el, attr, doc);
@@ -4691,7 +4692,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		   inputBuffer[LgBuffer-2] == '!' &&
 		   inputBuffer[LgBuffer-3] == '<')
 	    {
-	      /* start a XML comment */
+	      /* Start a XML comment */
 	      withinMarkup = FALSE;
 	      withinComment = TRUE;
 	      /* add the current character */
@@ -4707,7 +4708,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		   inputBuffer[LgBuffer-1] == '-' &&
 		   inputBuffer[LgBuffer-2] == '-')
 	    {
-	      /* end a XML comment */
+	      /* End a XML comment */
 	      withinComment = FALSE;
 	      /* add the current character */
 	      inputBuffer[LgBuffer++] = charRead;
@@ -4733,6 +4734,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		     LgBuffer > 0 && inputBuffer[LgBuffer-1] == '=') ||
 		    (LgBuffer == 0 && withinString)))
 	    {
+	      /* Start/end a string */
 	      if (charRead == '"')
 		withinString = !withinString;
 	      if (withinString)
@@ -4817,6 +4819,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	    {
 	      if (charRead == '<')
 		{
+		  /* Start a markup */
 		  withinMarkup = TRUE;
 		  /* close the previous element */
 		  el = GetANewText (el, elType, doc);
@@ -4825,6 +4828,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		}
 	      else
 		{
+		  /* End a markup */
 		  withinMarkup = FALSE;
 		  /* add the current character */
 		  inputBuffer[LgBuffer++] = charRead;
@@ -4837,9 +4841,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		      TtaAttachAttribute (el, attr, doc);
 		      TtaSetAttributeValue (attr, val, el, doc);
 		    }
-		  if (charRead == '>')
-		    /* close the IsMarkup element */
-		    el = GetANewText (el, elType, doc);
+		  el = GetANewText (el, elType, doc);
 		}
 	    }
 	  else if ((DocumentTypes[doc] == docCSS ||
