@@ -4184,6 +4184,11 @@
 	<message xml:lang="fr">Dans un nouvel onglet</message>
 	<message xml:lang="hu">Új lapon</message>
 </label>
+<label define="AM_INNEWTAB_MACOS">
+	<message xml:lang="en">In new tab (not yet available on Mac OSX)</message>
+	<message xml:lang="fr">Dans un nouvel onglet (pas encore disponible sous Mac OSX)</message>
+	<message xml:lang="hu">Új lapon</message>
+</label>
 <label define="AM_INNEWWINDOW">
 	<message xml:lang="en">In new Window</message>
 	<message xml:lang="fr">Dans une nouvelle fenêtre</message>

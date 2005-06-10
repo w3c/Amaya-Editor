@@ -362,9 +362,10 @@
 360 File
 361 Replace current
 362 In new tab
-363 In new Window
-364 Anti-aliasing
-365 ISO format for date
-366 New documents location
-367 Opening location
-368 Warn when closing multiple tabs
+363 In new tab (not yet available on Mac OSX)
+364 In new Window
+365 Anti-aliasing
+366 ISO format for date
+367 New documents location
+368 Opening location
+369 Warn when closing multiple tabs
