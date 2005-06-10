@@ -4663,9 +4663,6 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  TtaSetAttributeValue (attr, val, el, doc);
 		}
 	    }
-	  else
-	    /* the last text string is empty */
-	    TtaDeleteTree (el, doc);
 	  el = NULL; /* generate a new line */
 	  charRead = EOS;
 	}
