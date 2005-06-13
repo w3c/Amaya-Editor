@@ -3248,8 +3248,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   right += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
-if (!strcmp(pAb->AbElement->ElLabel, "L138"))
-  printf ("Computelines L138 w=%d\n", pBox->BxW);
  /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
@@ -3337,377 +3335,303 @@ if (!strcmp(pAb->AbElement->ElLabel, "L138"))
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
   standard = (spacing >= 0);
   spacing = 0;
-#ifdef IV
-  if (pBox->BxW > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
-#endif
-    {
-      /* compute the indent */
-      if (extensibleBox)
-	indent = 0;
-      else if (pAb->AbIndentUnit == UnPercent)
-	indent = PixelValue (pAb->AbIndent, UnPercent,
-				 (PtrAbstractBox) width, 0);
-      else
-	indent = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
-				 ViewFrameTable[frame - 1].FrMagnification);
-      if (pBox->BxFirstLine == NULL)
-	{
-	  if (pNextBox == NULL)
-	    /* Nothing to add in the line */
-	    full = FALSE;
-	  else
-	    {
-	      GetLine (&pLine);
-	      pBox->BxFirstLine = pLine;
-	    }
-	  
-	  pBoxToBreak = NULL;
-	  prevLine = NULL;
-	  /* height of the block box */
-	  *height = spacing;
-	}
-      else
-	{
-	  /* Partial building of the block */
-	  prevLine = pBox->BxLastLine;
-	  pChildAb = prevLine->LiLastBox->BxAbstractBox;
-	  /* height of the block box */
-	  *height = prevLine->LiYOrg + prevLine->LiHeight - top;
-	  pBoxToBreak = prevLine->LiLastPiece;
-	  pNextBox = prevLine->LiLastBox;
-	  if (pBoxToBreak && pBoxToBreak->BxNexChild)
-	    pBoxToBreak = pBoxToBreak->BxNexChild;
-	  else
-	    {
-	      pNextBox = GetNextBox (pChildAb, frame);
-	      pBoxToBreak = NULL;
-	    }
-	  
-	  if (pNextBox == NULL)
-	    /* nothing else */
-	    full = FALSE;
-	  else
-	    {
-	      /* prepare the next line */
-	      GetLine (&pLine);
-	      prevLine->LiNext = pLine;
-	      /* look for previous floating boxes */
-	      InitFloats (pBox, prevLine, &floatL, &floatR, top, yAbs);
-	    }
-	}
-
-      /* Insert new lines as long as they are full */
-      /* ----------------------------------------- */
-      while (full)
-	{
-	  /* Initialize a new line */
-	  pLine->LiPrevious = prevLine;
-	  pLine->LiYOrg = *height + top;
-	  if (pNextBox->BxAbstractBox->AbFloat == 'N' &&
-	      !ExtraFlow (pNextBox, frame) &&
-	      (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
-	      (pNextBox->BxAbstractBox->AbNotInLine &&
-	       pNextBox->BxAbstractBox->AbDisplay != 'U')))
-	    {
-	      /* The current box escape the line rule */
-	      pLine->LiFirstBox = pNextBox;
-	      pLine->LiLastBox = pNextBox;
-	      pLine->LiFirstPiece = NULL;
-	      pLine->LiLastPiece = NULL;
-	      /* It's placed under the previous line */
-	      InitLine (pLine, pBox, frame, indent, floatL, floatR, pNextBox,
-			top, bottom, left, right, xAbs, yAbs);
-	      if (extensibleBox)
-		/* no limit for an extensible line */
-		pLine->LiXMax = maxWidth;
-	      pLine->LiHeight = pNextBox->BxHeight;
-	      pLine->LiRealLength = pNextBox->BxWidth;
-	      /* the paragraph should be large enough
-		 ( for math with display:block by example) */
-	      if (pNextBox->BxAbstractBox->AbNotInLine &&
-		   pNextBox->BxAbstractBox->AbDisplay != 'U')
-		{
-		  if (pNextBox->BxWidth > pBox->BxMaxWidth)
-		    pBox->BxMaxWidth = pNextBox->BxWidth;
-		  if (pBox->BxMinWidth < pNextBox->BxWidth)
-		    pBox->BxMinWidth = pNextBox->BxWidth;
-		  pLine->LiXOrg = left;
-		  x = left;
-		  if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-		      pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
-		      pBox->BxWidth > pNextBox->BxWidth)
-		    x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
-		  if (Propagate != ToSiblings || pBox->BxVertFlex)
-		    x += pBox->BxXOrg;
-		  XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
-		}
-	      else
-		pLine->LiXOrg = pBox->BxXOrg + left;
-
-	      if (Propagate != ToSiblings || pBox->BxVertFlex)
-		org = pBox->BxYOrg + *height + top;
-	      else
-		org = *height + top;
-	      YMove (pNextBox, pBox, org - pNextBox->BxYOrg, frame);
-	      *height += pLine->LiHeight;
-	      pBoxToBreak = NULL;
-	    }
-	  else if (!pNextBox->BxAbstractBox->AbNotInLine)
-	    {
-	      /* line indent */
-	      pLine->LiXOrg = left;
-	      if (prevLine || pAb->AbTruncatedHead || indent >= width)
-		indent = 0;
-	      pLine->LiFirstPiece = pBoxToBreak;
-	      if (pNextBox && pNextBox->BxType == BoScript)
-		{
-		  pLine->LiFirstPiece = pNextBox;
-		  pLine->LiFirstBox = pNextBox->BxAbstractBox->AbBox;
-		}
-	      else
-		pLine->LiFirstBox = pNextBox;
-	      /* Fill the line */
-	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
-				   extensibleBox,
-				   xAbs, yAbs, pAb->AbTruncatedTail,
-				   &full, &toAdjust, &breakLine, frame,
-				   indent, top, bottom, left, right,
-				   &floatL, &floatR);
-	      if (pBox->BxMinWidth < minWidth)
-		pBox->BxMinWidth = minWidth;
-	      if (prevLine)
-		{
-		  /* initial position */
-		  org = prevLine->LiYOrg + prevLine->LiHeight;
-		  if (pLine->LiYOrg == org  && pBox->BxType == BoBlock)
-		    {
-		      /* line position not updated by floating boxes */
-		      /* position when line spacing applies */
-		      org = prevLine->LiYOrg + prevLine->LiHorizRef
-			+ lineSpacing - pLine->LiHorizRef;
-		      if (org > pLine->LiYOrg ||
-			  (!prevLine->LiNoOverlap && !standard))
-			/* apply the rule of line spacing */
-			pLine->LiYOrg = org;
-		    }
-		}
-	      /* prepare information for the next line */
-	      *height = pLine->LiYOrg + pLine->LiHeight - top;
-
-	      /* is there a broken box? */
-	      if (pLine->LiLastPiece)
-		pBoxToBreak = pLine->LiLastPiece->BxNexChild;
-	      else
-		pBoxToBreak = NULL;
-	      /* Update the no wrapped width of the block */
-	      noWrappedWidth += pLine->LiRealLength;
-	      if (!breakLine && pBoxToBreak)
-		{
-		  /* take undisplayed spaces into account */
-		  lostPixels = pBoxToBreak->BxFirstChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxFirstChar;
-		  if (lostPixels != 0)
-		    {
-		      lostPixels = lostPixels * BoxCharacterWidth (SPACE, pBoxToBreak->BxFont);
-		      noWrappedWidth += lostPixels;
-		    }
-		  if (pLine->LiLastPiece->BxType == BoDotted)
-		    /* remove the dash width */
-		    noWrappedWidth -= BoxCharacterWidth (173, pBoxToBreak->BxFont);
-		}
-	      if (breakLine || !full)
-		{
-		  if (noWrappedWidth > pBox->BxMaxWidth)
-		    pBox->BxMaxWidth = noWrappedWidth;
-		  noWrappedWidth = 0;
-		}
-
-	      /* Take into account the text-align */
-	      if (toAdjust &&
-		  (full || pAb->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax) &&
-		  pAb->AbAdjust == AlignJustify)
-		Adjust (pBox, pLine, frame, xAbs, yAbs);
-	      else
-		{
-		  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&
-		      pLine->LiRealLength > pBox->BxW)
-		    {
-		      pBox->BxContentWidth = TRUE;
-		      pLine->LiXMax = pLine->LiRealLength;
-		    }
-		  if (/*!pBox->BxContentWidth &&*/ !extensibleBox)
-		    Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
-		  else
-		    Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
-		}
-	    }
-
-	  if (pLine->LiLastBox)
-	    {
-	      pNextBox = pLine->LiLastBox;
-	      do
-		if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
-		  /* get the next child */
-		  pNextBox = pNextBox->BxNexChild;
-		else
-		  pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
-	      while (pNextBox &&
-		     pNextBox->BxAbstractBox->AbFloat == 'N' &&
-		     !ExtraFlow (pNextBox, frame) &&
-		     pNextBox->BxAbstractBox->AbNotInLine &&
-		     pNextBox->BxAbstractBox->AbDisplay == 'U');
-	    }
-	  else
-	    pNextBox = NULL;
-	  
-	  /* is there a breaked box */
-	  if (pBoxToBreak)
-	    {
-	    /* is it empty ? */
-	    if (pBoxToBreak->BxNChars > 0 || breakLine)
-	      pNextBox = pLine->LiLastBox;
-	    else if (pNextBox == NULL)
-	      pNextBox = pLine->LiLastBox;
-	    }
-
-	  if (full)
-	    {
-	      /* It's the last line */
-	      if (pNextBox == NULL)
-		{
-		  /* Il n'y a plus de boite a traiter */
-		  full = FALSE;
-		  pBox->BxLastLine = pLine;
-		}
-	      else
-		{
-		  /* prepare la ligne suivante */
-		  prevLine = pLine;
-		  GetLine (&pLine);
-		  prevLine->LiNext = pLine;
-		}
-	    }
-	  else
-	    {
-	      pBox->BxLastLine = pLine;
-	      /* Note la largeur de la fin de bloc si le remplissage est demande */
-	      if (pAb->AbAdjust == AlignLeftDots)
-		{
-		  if (pLine->LiLastPiece != NULL)
-		    pNextBox = pLine->LiLastPiece;
-		  else
-		    {
-		      pNextBox = pLine->LiLastBox;
-		      /* regarde si la derniere boite est invisible */
-		      while (pNextBox->BxWidth == 0 &&
-			     pNextBox != pLine->LiFirstBox &&
-			     pNextBox != pLine->LiFirstPiece)
-			pNextBox = pNextBox->BxPrevious;
-		    }
-		  pNextBox->BxEndOfBloc = pBox->BxXOrg + width - pNextBox->BxXOrg - pNextBox->BxW;
-		}
-	    }
-	}
-
-      if (noWrappedWidth > pBox->BxMaxWidth)
-	pBox->BxMaxWidth = noWrappedWidth;
-      noWrappedWidth = 0;
-      /* met a jour la base du bloc de lignes   */
-      /* s'il depend de la premiere boite englobee */
-      if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine)
-	{
-	  pPosAb = &pAb->AbHorizRef;
-	  if (pPosAb->PosUnit == UnPercent)
-	    x = PixelValue (pPosAb->PosDistance, UnPercent,
-			    (PtrAbstractBox) (pAb->AbBox->BxW), 0);
-	  else
-	    x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
-			    ViewFrameTable[frame - 1].FrMagnification);
-	  if (pPosAb->PosDeltaUnit == UnPercent)
-	    x += PixelValue (pPosAb->PosDistDelta, UnPercent,
-			    (PtrAbstractBox) (pAb->AbBox->BxW), 0);
-	  else
-	    x += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
-			  ViewFrameTable[frame - 1].FrMagnification);
-	  x += top;
-	  MoveHorizRef (pBox, NULL,
-			pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
-	}
-    }
-#ifdef IV
+  /* compute the indent */
+  if (extensibleBox)
+    indent = 0;
+  else if (pAb->AbIndentUnit == UnPercent)
+    indent = PixelValue (pAb->AbIndent, UnPercent,
+			 (PtrAbstractBox) width, 0);
   else
+    indent = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
+			 ViewFrameTable[frame - 1].FrMagnification);
+  if (pBox->BxFirstLine == NULL)
     {
-      *height = spacing;
-      /* compute minimum and maximum width of the paragraph
-	 with no limit as an extensible line*/
-      pBox->BxW = maxWidth;
-      maxWidth =  30 * DOT_PER_INCH;
-      extensibleBox = TRUE;
-      if (pNextBox && !pNextBox->BxAbstractBox->AbHorizEnclosing)
-	do
-	  if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
-	    /* get the next child */
-	    pNextBox = pNextBox->BxNexChild;
-	  else
-	    pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
-	while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine);
-      if (pNextBox)
+      if (pNextBox == NULL)
+	/* Nothing to add in the line */
+	full = FALSE;
+      else
 	{
 	  GetLine (&pLine);
-	  do
+	  pBox->BxFirstLine = pLine;
+	}
+      
+      pBoxToBreak = NULL;
+      prevLine = NULL;
+      /* height of the block box */
+      *height = spacing;
+    }
+  else
+    {
+      /* Partial building of the block */
+      prevLine = pBox->BxLastLine;
+      pChildAb = prevLine->LiLastBox->BxAbstractBox;
+      /* height of the block box */
+      *height = prevLine->LiYOrg + prevLine->LiHeight - top;
+      pBoxToBreak = prevLine->LiLastPiece;
+      pNextBox = prevLine->LiLastBox;
+      if (pBoxToBreak && pBoxToBreak->BxNexChild)
+	pBoxToBreak = pBoxToBreak->BxNexChild;
+      else
+	{
+	  pNextBox = GetNextBox (pChildAb, frame);
+	  pBoxToBreak = NULL;
+	}
+      
+      if (pNextBox == NULL)
+	/* nothing else */
+	full = FALSE;
+      else
+	{
+	  /* prepare the next line */
+	  GetLine (&pLine);
+	  prevLine->LiNext = pLine;
+	  /* look for previous floating boxes */
+	  InitFloats (pBox, prevLine, &floatL, &floatR, top, yAbs);
+	}
+    }
+
+  /* Insert new lines as long as they are full */
+  /* ----------------------------------------- */
+  while (full)
+    {
+      /* Initialize a new line */
+      pLine->LiPrevious = prevLine;
+      pLine->LiYOrg = *height + top;
+      if (pNextBox->BxAbstractBox->AbFloat == 'N' &&
+	  !ExtraFlow (pNextBox, frame) &&
+	  (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
+	   (pNextBox->BxAbstractBox->AbNotInLine &&
+	    pNextBox->BxAbstractBox->AbDisplay != 'U')))
+	{
+	  /* The current box escape the line rule */
+	  pLine->LiFirstBox = pNextBox;
+	  pLine->LiLastBox = pNextBox;
+	  pLine->LiFirstPiece = NULL;
+	  pLine->LiLastPiece = NULL;
+	  /* It's placed under the previous line */
+	  InitLine (pLine, pBox, frame, indent, floatL, floatR, pNextBox,
+		    top, bottom, left, right, xAbs, yAbs);
+	  if (extensibleBox)
+	    /* no limit for an extensible line */
+	    pLine->LiXMax = maxWidth;
+	  pLine->LiHeight = pNextBox->BxHeight;
+	  pLine->LiRealLength = pNextBox->BxWidth;
+	  /* the paragraph should be large enough
+	     ( for math with display:block by example) */
+	  if (pNextBox->BxAbstractBox->AbNotInLine &&
+	      pNextBox->BxAbstractBox->AbDisplay != 'U')
 	    {
-	      /* no limit as an extensible line */
-	      pLine->LiFirstBox = pNextBox;
-	      pLine->LiFirstPiece = NULL;
-	      pLine->LiLastBox = NULL;
-	      pLine->LiLastPiece = NULL;
-	      pLine->LiYOrg = *height;
-	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
-				   extensibleBox, xAbs, yAbs, pAb->AbTruncatedTail,
-				   &full, &toAdjust, &breakLine, frame,
-				   0, top, bottom, left, right,
-				   &floatL, &floatR);
-	      if (pBox->BxMinWidth < minWidth)
-		pBox->BxMinWidth = minWidth;
-	      if (breakLine)
+	      if (pNextBox->BxWidth > pBox->BxMaxWidth)
+		pBox->BxMaxWidth = pNextBox->BxWidth;
+	      if (pBox->BxMinWidth < pNextBox->BxWidth)
+		pBox->BxMinWidth = pNextBox->BxWidth;
+	      pLine->LiXOrg = left;
+	      x = left;
+	      if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
+		  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
+		  pBox->BxWidth > pNextBox->BxWidth)
+		x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
+	      if (Propagate != ToSiblings || pBox->BxVertFlex)
+		x += pBox->BxXOrg;
+	      XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
+	    }
+	  else
+	    pLine->LiXOrg = pBox->BxXOrg + left;
+	  
+	  if (Propagate != ToSiblings || pBox->BxVertFlex)
+	    org = pBox->BxYOrg + *height + top;
+	  else
+	    org = *height + top;
+	  YMove (pNextBox, pBox, org - pNextBox->BxYOrg, frame);
+	  *height += pLine->LiHeight;
+	  pBoxToBreak = NULL;
+	}
+      else if (!pNextBox->BxAbstractBox->AbNotInLine)
+	{
+	  /* line indent */
+	  pLine->LiXOrg = left;
+	  if (prevLine || pAb->AbTruncatedHead || indent >= width)
+	    indent = 0;
+	  pLine->LiFirstPiece = pBoxToBreak;
+	  if (pNextBox && pNextBox->BxType == BoScript)
+	    {
+	      pLine->LiFirstPiece = pNextBox;
+	      pLine->LiFirstBox = pNextBox->BxAbstractBox->AbBox;
+	    }
+	  else
+	    pLine->LiFirstBox = pNextBox;
+	  /* Fill the line */
+	  minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
+			       extensibleBox,
+			       xAbs, yAbs, pAb->AbTruncatedTail,
+			       &full, &toAdjust, &breakLine, frame,
+			       indent, top, bottom, left, right,
+			       &floatL, &floatR);
+	  if (pBox->BxMinWidth < minWidth)
+	    pBox->BxMinWidth = minWidth;
+	  if (prevLine)
+	    {
+	      /* initial position */
+	      org = prevLine->LiYOrg + prevLine->LiHeight;
+	      if (pLine->LiYOrg == org  && pBox->BxType == BoBlock)
 		{
-		  if (pLine->LiLastBox->BxType == BoScript &&
-		      pLine->LiLastBox->BxNexChild)
-		    /* get the next child */
-		    pNextBox = pLine->LiLastBox->BxNexChild;
-		  else
-		    pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox, frame);
-		}
-	      noWrappedWidth += pLine->LiRealLength;
-	      if (noWrappedWidth > pBox->BxMaxWidth)
-		pBox->BxMaxWidth = noWrappedWidth;
-	      pLine->LiRealLength = 0;
-	      if (pLine->LiHeight > *height)
-		*height += pLine->LiHeight;
-	      Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
-	      if (full)
-		{
-		  /* the last box has been broken */
-		  full = FALSE;
-		  still = FALSE;
-		  RemoveBreaks (pLine->LiLastBox, frame, FALSE, &full, &still);
+		  /* line position not updated by floating boxes */
+		  /* position when line spacing applies */
+		  org = prevLine->LiYOrg + prevLine->LiHorizRef
+		    + lineSpacing - pLine->LiHorizRef;
+		  if (org > pLine->LiYOrg ||
+		      (!prevLine->LiNoOverlap && !standard))
+		    /* apply the rule of line spacing */
+		    pLine->LiYOrg = org;
 		}
 	    }
-	  while (breakLine && pNextBox);
-
-	  FreeLine (pLine);
-	  pLine = NULL;
+	  /* prepare information for the next line */
+	  *height = pLine->LiYOrg + pLine->LiHeight - top;
+	  
+	  /* is there a broken box? */
+	  if (pLine->LiLastPiece)
+	    pBoxToBreak = pLine->LiLastPiece->BxNexChild;
+	  else
+	    pBoxToBreak = NULL;
+	  /* Update the no wrapped width of the block */
+	  noWrappedWidth += pLine->LiRealLength;
+	  if (!breakLine && pBoxToBreak)
+	    {
+	      /* take undisplayed spaces into account */
+	      lostPixels = pBoxToBreak->BxFirstChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxFirstChar;
+	      if (lostPixels != 0)
+		{
+		  lostPixels = lostPixels * BoxCharacterWidth (SPACE, pBoxToBreak->BxFont);
+		  noWrappedWidth += lostPixels;
+		}
+	      if (pLine->LiLastPiece->BxType == BoDotted)
+		/* remove the dash width */
+		noWrappedWidth -= BoxCharacterWidth (173, pBoxToBreak->BxFont);
+	    }
+	  if (breakLine || !full)
+	    {
+	      if (noWrappedWidth > pBox->BxMaxWidth)
+		pBox->BxMaxWidth = noWrappedWidth;
+	      noWrappedWidth = 0;
+	    }
+	  
+	  /* Take into account the text-align */
+	  if (toAdjust &&
+	      (full || pAb->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax) &&
+	      pAb->AbAdjust == AlignJustify)
+	    Adjust (pBox, pLine, frame, xAbs, yAbs);
+	  else
+	    {
+	      if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&
+		  pLine->LiRealLength > pBox->BxW)
+		{
+		  pBox->BxContentWidth = TRUE;
+		  pLine->LiXMax = pLine->LiRealLength;
+		}
+	      if (/*!pBox->BxContentWidth &&*/ !extensibleBox)
+		Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
+	      else
+		Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
+	    }
 	}
-      /* restore the initial width */
-      pBox->BxW = width;
+
+      if (pLine->LiLastBox)
+	{
+	  pNextBox = pLine->LiLastBox;
+	  do
+	    if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
+	      /* get the next child */
+	      pNextBox = pNextBox->BxNexChild;
+	    else
+	      pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
+	  while (pNextBox &&
+		 pNextBox->BxAbstractBox->AbFloat == 'N' &&
+		 !ExtraFlow (pNextBox, frame) &&
+		 pNextBox->BxAbstractBox->AbNotInLine &&
+		 pNextBox->BxAbstractBox->AbDisplay == 'U');
+	}
+      else
+	pNextBox = NULL;
+      
+      /* is there a breaked box */
+      if (pBoxToBreak)
+	{
+	  /* is it empty ? */
+	  if (pBoxToBreak->BxNChars > 0 || breakLine)
+	    pNextBox = pLine->LiLastBox;
+	  else if (pNextBox == NULL)
+	    pNextBox = pLine->LiLastBox;
+	}
+      
+      if (full)
+	{
+	  /* It's the last line */
+	  if (pNextBox == NULL)
+	    {
+	      /* Il n'y a plus de boite a traiter */
+	      full = FALSE;
+	      pBox->BxLastLine = pLine;
+	    }
+	  else
+	    {
+	      /* prepare la ligne suivante */
+	      prevLine = pLine;
+	      GetLine (&pLine);
+	      prevLine->LiNext = pLine;
+	    }
+	}
+      else
+	{
+	  pBox->BxLastLine = pLine;
+	  /* Note la largeur de la fin de bloc si le remplissage est demande */
+	  if (pAb->AbAdjust == AlignLeftDots)
+	    {
+	      if (pLine->LiLastPiece != NULL)
+		pNextBox = pLine->LiLastPiece;
+	      else
+		{
+		  pNextBox = pLine->LiLastBox;
+		  /* regarde si la derniere boite est invisible */
+		  while (pNextBox->BxWidth == 0 &&
+			 pNextBox != pLine->LiFirstBox &&
+			 pNextBox != pLine->LiFirstPiece)
+		    pNextBox = pNextBox->BxPrevious;
+		}
+	      pNextBox->BxEndOfBloc = pBox->BxXOrg + width - pNextBox->BxXOrg - pNextBox->BxW;
+	    }
+	}
     }
-#endif
+  
+  if (noWrappedWidth > pBox->BxMaxWidth)
+    pBox->BxMaxWidth = noWrappedWidth;
+  noWrappedWidth = 0;
+  /* met a jour la base du bloc de lignes   */
+  /* s'il depend de la premiere boite englobee */
+  if (pAb->AbHorizRef.PosAbRef == pAb->AbFirstEnclosed && pBox->BxFirstLine)
+    {
+      pPosAb = &pAb->AbHorizRef;
+      if (pPosAb->PosUnit == UnPercent)
+	x = PixelValue (pPosAb->PosDistance, UnPercent,
+			(PtrAbstractBox) (pAb->AbBox->BxW), 0);
+      else
+	x = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
+			ViewFrameTable[frame - 1].FrMagnification);
+      if (pPosAb->PosDeltaUnit == UnPercent)
+	x += PixelValue (pPosAb->PosDistDelta, UnPercent,
+			 (PtrAbstractBox) (pAb->AbBox->BxW), 0);
+      else
+	x += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
+			 ViewFrameTable[frame - 1].FrMagnification);
+      x += top;
+      MoveHorizRef (pBox, NULL,
+		    pBox->BxFirstLine->LiHorizRef + x - pBox->BxHorizRef, frame);
+    }
+
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
   *height = *height + spacing;
-  //if (!strcmp (pBox->BxAbstractBox->AbElement->ElLabel, "L138"))
-  //printf ("<======ComputeLines w=%d max=%d \n",pBox->BxW,pBox->BxMaxWidth);
 
   /* restore the value */
   pBox->BxCycles--;

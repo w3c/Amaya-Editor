@@ -1792,6 +1792,33 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  InlineTextChildren returns TRUE if the block element encloses
+  a simple text which must be set in lines.
+  ----------------------------------------------------------------------*/
+static ThotBool InlineTextChildren (PtrAbstractBox pAb)
+{
+  PtrAbstractBox      pChildAb;
+
+  if (pAb && !pAb->AbDead && !pAb->AbInLine &&
+      pAb->AbBox && pAb->AbBox->BxType != BoGhost &&
+      (pAb->AbDisplay == 'U' || pAb->AbDisplay == 'B') &&
+      !pAb->AbWidth.DimIsPosition &&
+      (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
+    {
+      /* check all enclosed boxes */
+      pChildAb = pAb->AbFirstEnclosed;
+      /* stop as soon as we know the result */
+      while (pChildAb)
+	{
+	  if (pChildAb->AbLeafType == LtText &&
+	      !pChildAb->AbPresentationBox)
+	    return TRUE;
+	  pChildAb = pChildAb->AbNext;
+	}
+    }
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
   HasFloatingChild returns TRUE if a child is a floating box.
@@ -2175,6 +2202,26 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pCurrentBox->BxFont = font;
       pCurrentBox->BxUnderline = pAb->AbUnderline;
       pCurrentBox->BxThickness = pAb->AbThickness;
+
+      /* Dimensionnement de la boite par contraintes */
+      /* Il faut initialiser le trace reel et l'indication */
+      /* des reperes inverses (en cas de boite elastique)  */
+      /* avant d'evaluer la dimension de la boite si elle  */
+      /* est de type graphique */
+      if (pAb->AbLeafType == LtGraphics)
+	{
+	  pAb->AbRealShape = pAb->AbShape;
+	  pCurrentBox->BxHorizInverted = FALSE;
+	  pCurrentBox->BxVertInverted = FALSE;
+	}
+      /* New values of margins, paddings and borders */
+      pAb->AbMBPChange = FALSE;
+      ComputeMBP (pAb, frame, TRUE, FALSE);
+      ComputeMBP (pAb, frame, FALSE, FALSE);
+      pCurrentBox->BxXToCompute = FALSE;
+      pCurrentBox->BxYToCompute = FALSE;
+      enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
+      enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
       if (boxType == BoRow || boxType == BoColumn || boxType == BoCell ||
 	  ExtraFlow (pCurrentBox, frame))
 	{
@@ -2206,12 +2253,12 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		{
 		  inlineFloatC = HasFloatingChild (pAb, &directParent,
 						   &uniqueChild, &dummyChild);
-		  inlineChildren = pAb->AbInLine;
+		  inlineChildren = pAb->AbInLine || InlineTextChildren (pAb);
 		}
 
-	      if (((inLine && pAb->AbClear == 'N') || (inLineFloat && !dummyChild)) &&
+	      if (((inLine && pAb->AbClear == 'N') ||
+		   (inLineFloat && !dummyChild)) &&
 		  (!inlineFloatC || uniqueChild) &&
-		  //!IsFlow (pCurrentBox, frame) &&
 		  pAb->AbFloat == 'N' &&
 		  (pAb->AbAcceptLineBreak || inlineFloatC) &&
 		  !pAb->AbHeight.DimIsPosition &&
@@ -2262,25 +2309,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	}
 
-      /* Dimensionnement de la boite par contraintes */
-      /* Il faut initialiser le trace reel et l'indication */
-      /* des reperes inverses (en cas de boite elastique)  */
-      /* avant d'evaluer la dimension de la boite si elle  */
-      /* est de type graphique */
-      if (pAb->AbLeafType == LtGraphics)
-	{
-	  pAb->AbRealShape = pAb->AbShape;
-	  pCurrentBox->BxHorizInverted = FALSE;
-	  pCurrentBox->BxVertInverted = FALSE;
-	}
-      /* New values of margins, paddings and borders */
-      pAb->AbMBPChange = FALSE;
-      ComputeMBP (pAb, frame, TRUE, FALSE);
-      ComputeMBP (pAb, frame, FALSE, FALSE);
-      pCurrentBox->BxXToCompute = FALSE;
-      pCurrentBox->BxYToCompute = FALSE;
-      enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
-      enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
       if (pAb->AbLeafType != LtCompound)
 	{
 	  /* Positionnement des axes de la boite construite */
