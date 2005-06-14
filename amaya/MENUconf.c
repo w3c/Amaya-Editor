@@ -3071,17 +3071,26 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      strcpy (NewScreen, GProp_Browse.ScreenType);
 #endif /* _WX */
 	      if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
-            InitWarnCTab != GProp_Browse.WarnCTab ||
-            InitOpeningLocation != GProp_Browse.OpeningLocation ||
-            InitLoadImages != GProp_Browse.LoadImages ||
-            InitLoadObjects != GProp_Browse.LoadObjects ||
-            InitBgImages != GProp_Browse.BgImages ||
-            InitLoadCss != GProp_Browse.LoadCss)
+		  InitWarnCTab != GProp_Browse.WarnCTab ||
+		  InitOpeningLocation != GProp_Browse.OpeningLocation ||
+		  InitLoadImages != GProp_Browse.LoadImages ||
+		  InitLoadObjects != GProp_Browse.LoadObjects ||
+		  InitBgImages != GProp_Browse.BgImages ||
+		  InitLoadCss != GProp_Browse.LoadCss)
 		{
-		  strcpy (GProp_Browse.ScreenType, NewScreen);
-		  SetBrowseConf ();
-		  ApplyConfigurationChanges ();
-      InitWarnCTab = GProp_Browse.WarnCTab;
+		  /* there is almost a change */
+		  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+		      InitLoadImages != GProp_Browse.LoadImages ||
+		      InitLoadObjects != GProp_Browse.LoadObjects ||
+		      InitBgImages != GProp_Browse.BgImages ||
+		      InitLoadCss != GProp_Browse.LoadCss)
+		    {
+		      /* redisplay documents after these changes */
+		      strcpy (GProp_Browse.ScreenType, NewScreen);
+		      SetBrowseConf ();
+		      ApplyConfigurationChanges ();
+		    }
+		  InitWarnCTab = GProp_Browse.WarnCTab;
 		  InitOpeningLocation = GProp_Browse.OpeningLocation;
 		  InitLoadImages = GProp_Browse.LoadImages;
 		  InitLoadObjects = GProp_Browse.LoadObjects;
