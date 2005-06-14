@@ -87,6 +87,7 @@ private:
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
   void OnPageChanged( wxNotebookEvent& event );
+  void OnClose(wxCloseEvent& event);
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
@@ -97,6 +98,8 @@ private:
   // "Color" tab
   wxColourData colour_data;
 
+  static bool m_OnApplyLock;
+  
   bool m_IsInitialized;
 };
 

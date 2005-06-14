@@ -19,6 +19,8 @@
 
 #include "PreferenceDlgWX.h"
 
+bool PreferenceDlgWX::m_OnApplyLock = FALSE;
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -51,6 +53,8 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_BUTTON_GEOMSAVE"),    PreferenceDlgWX::OnGeomSave )
   EVT_BUTTON( XRCID("wxID_BUTTON_GEOMRESTOR"),  PreferenceDlgWX::OnGeomRestor )
   
+
+  EVT_CLOSE( PreferenceDlgWX::OnClose )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -1064,6 +1068,9 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 {
+  m_OnApplyLock = TRUE;
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->Disable();
+  
   Prop_General prop_gen = GetValueDialog_General();
   SetProp_General( &prop_gen );
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 1);
@@ -1101,6 +1108,9 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 #endif /* DAV */
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->Enable();
+  m_OnApplyLock = FALSE;
 
   // then just close the dialog
   OnCancel(event);
@@ -1178,6 +1188,9 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 {
+  if (m_OnApplyLock)
+    return;
+
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
@@ -1192,6 +1205,18 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 0);
 #endif /* DAV */
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
+}
+
+/*----------------------------------------------------------------------
+  OnClose
+  called when the window manager closes the dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnClose(wxCloseEvent& event)
+{
+  if (!m_OnApplyLock)
+    event.Skip(); // let wxWidgets close the dialog
 }
 
 #endif /* _WX */
