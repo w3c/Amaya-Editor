@@ -1091,14 +1091,18 @@ static void InitEnviron ()
      }
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
+
+   /* browsing default values */
 #ifndef _WINDOWS
    TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
    pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
      DoubleClickDelay = atoi (pT);
    else 
-       DoubleClickDelay = 500;
+     DoubleClickDelay = 500;
 #endif /* _WINDOWS */
+   TtaSetDefEnvString ("OPENING_LOCATION", "0", TRUE);
+   TtaSetDefEnvString ("SHOW_CONFIRM_CLOSE_TAB", "yes", TRUE);
 
    /* The base of the Thot directory */
    Thot_Dir = TtaGetEnvString ("THOTDIR");
@@ -1154,7 +1158,7 @@ static void InitEnviron ()
      {
        fprintf (stderr, "Couldn't create directory %s\n", pT);
        ThotExit (1);
-     }	 
+     }
 }
 
 /*----------------------------------------------------------------------

@@ -2837,6 +2837,8 @@ void GetDefaultBrowseConf ()
   GetDefEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
+  TtaGetDefEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_Browse.WarnCTab));
+  TtaGetDefEnvInt ("OPENING_LOCATION", &(GProp_Browse.OpeningLocation));
 }
 
 #ifdef _WINGUI
