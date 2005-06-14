@@ -68,13 +68,13 @@ AmayaFrame::AmayaFrame(
 #endif /* _WINDOWS */
   )
      ,m_FrameId( frame_id )
+     ,m_IsActive( FALSE )
+     ,m_ToDestroy( FALSE )
      ,m_FrameTitle()
      ,m_WindowTitle()
-     ,m_pPageParent( NULL )
-     ,m_IsActive( FALSE )
      ,m_HOldPosition( 0 )
      ,m_VOldPosition( 0 )
-     ,m_ToDestroy( FALSE )
+     ,m_pPageParent( NULL )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::AmayaFrame() - frame_id=%d"), m_FrameId );
 
