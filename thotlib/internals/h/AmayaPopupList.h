@@ -19,7 +19,7 @@ class AmayaPopupList : public wxMenu
  public:
   DECLARE_DYNAMIC_CLASS(AmayaPopupList)
 
-  AmayaPopupList ( int ref = 0 );
+  AmayaPopupList ( wxWindow * p_parent = NULL, int ref = 0 );
   virtual ~AmayaPopupList();
 
  protected:

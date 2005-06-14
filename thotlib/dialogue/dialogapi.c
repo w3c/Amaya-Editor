@@ -1779,7 +1779,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 	listBox = NULL;
 #endif /* _WINGUI */
 #ifdef _WX
-      menu = (ThotWindow)new AmayaPopupList( ref );
+      menu = (ThotWindow)new AmayaPopupList( parent, ref );
 #endif /* _WX */
 #ifdef _GTK      
       menu =  gtk_window_new (GTK_WINDOW_POPUP);
@@ -1894,7 +1894,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 #endif /* _WINGUI */
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
-		    ((AmayaPopupList *)menu)->Append(i, TtaConvMessageToWX(menu_item));
+		    ((AmayaPopupList*)menu)->Append(i, TtaConvMessageToWX(menu_item));
 		    w = (ThotWidget) i;
 #endif /* _WX */
 #ifdef _GTK        
@@ -2026,6 +2026,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 #endif /* _GTK */
 }
 
+#ifndef _WX
 /*----------------------------------------------------------------------
    AddInFormulary recherche une entree libre dans le formulaire  
    et cre'e e'ventuellement un nouveau bloc d'entre'es et un nouveau  
@@ -2038,9 +2039,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 				  int *entry, struct E_List **adbloc)
 {
-#ifndef _WX
    ThotWidget          row;
-#endif /* _WX */
    ThotWidget          w;
 
    /* Il faut sauter la 1ere entree allouee a un Row-Column */
@@ -2101,6 +2100,7 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
    *index += C_NUMBER;
    return (w);
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :
@@ -3790,6 +3790,7 @@ void TtaSetDefaultButton (int ref, int button)
 #endif /* #if defined(_GTK) || defined(_WX) */
 }
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
@@ -3991,6 +3992,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
      }
 #endif /* _GTK */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
@@ -4635,6 +4637,7 @@ void TtaSetSelector (int ref, int entry, char *text)
 #endif /* #if defined(_GTK) */
 }
 
+#ifndef _WX
 /*----------------------------------------------------------------------
   NewLabel
   Common code for both TtaNewLabel and TtaNewPaddedLabel.
@@ -4734,6 +4737,7 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
      }
 #endif /* #if defined(_GTK) */
 }
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
@@ -5803,10 +5807,28 @@ void TtaShowDialogue (int ref, ThotBool remanent)
   else if (catalogue->Cat_Type == CAT_SCRPOPUP)
     {
       /* this is a HTML form selector */
+
+      /* this is the code to use with AmayaPopupList2.cpp 
+       * it has a better look but there is a annoying bug in wxwidgets :
+       * I didn't found how to activate an element in the bottom part of the popuplist
+       * So maybe this code is to try later when the bug will be fixed on wxWidgets side */
+      /*
+        if (!remanent)
+        {
+        ShowReturn = 1;
+        ShowCat = catalogue;
+        }        
+        AmayaPopupList * p_popup = wxDynamicCast(catalogue->Cat_Widget, AmayaPopupList);
+        wxASSERT(p_popup);
+        p_popup->Popup();
+      */
+
+      /* this is the code to use with AmayaPopupList.cpp */
       wxWindow * p_parent = wxDynamicCast(catalogue->Cat_ParentWidget, wxWindow);
-      wxMenu * p_menu = (wxMenu *)catalogue->Cat_Widget;
+      AmayaPopupList * p_popup = (AmayaPopupList*)catalogue->Cat_Widget;
+      wxASSERT(p_popup);
       wxPoint pos = wxGetMousePosition();
-      p_parent->PopupMenu(p_menu, p_parent->ScreenToClient(pos));
+      p_parent->PopupMenu(p_popup, p_parent->ScreenToClient(pos));
     }      
 #endif /* _WX */
 

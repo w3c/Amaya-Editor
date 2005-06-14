@@ -771,7 +771,7 @@ ThotBool IsCSSLink (Element el, Document doc)
   The parameter doc is the document that contains the origin element.
   ----------------------------------------------------------------------*/
 static ThotBool FollowTheLink (Element anchor, Element elSource,
-			       Attribute HrefAttr, Document doc)
+                               Attribute HrefAttr, Document doc)
 {
    AttributeType          attrType;
    Attribute              PseudoAttr, attr;
@@ -786,13 +786,13 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    FollowTheLink_context *ctx;
    ThotBool		  isHTML, history;
 
-  if (Follow_exclusive)
+   if (Follow_exclusive)
      return FALSE;
    else
      Follow_exclusive = TRUE;
    if (anchor == NULL || HrefAttr == NULL)
      return FALSE;
-
+   
    info = pathname = NULL;
    elType = TtaGetElementType (anchor);
    attrType.AttrTypeNum = 0;
@@ -807,26 +807,26 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
      {
        elType = TtaGetElementType (anchor);
        if (isHTML && elType.ElTypeNum == HTML_EL_Anchor)
-	 {
-	   /* it's an HTML anchor */
-	   /* attach an attribute PseudoClass = active */
-	   attrType.AttrSSchema = HTMLSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-	   PseudoAttr = TtaGetAttribute (anchor, attrType);
-	   if (PseudoAttr == NULL)
-	     {
-	       PseudoAttr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (anchor, PseudoAttr, doc);
-	     }
-	   TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
-	 }
+         {
+           /* it's an HTML anchor */
+           /* attach an attribute PseudoClass = active */
+           attrType.AttrSSchema = HTMLSSchema;
+           attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+           PseudoAttr = TtaGetAttribute (anchor, attrType);
+           if (PseudoAttr == NULL)
+             {
+               PseudoAttr = TtaNewAttribute (attrType);
+               TtaAttachAttribute (anchor, PseudoAttr, doc);
+             }
+           TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
+         }
        /* get the URL itself */
        TtaGiveTextAttributeValue (HrefAttr, utf8path, &length);
        /* suppress white spaces at the end */
        length--;
        while (utf8path[length] == ' ')
-	 utf8path[length--] = EOS;
-
+         utf8path[length--] = EOS;
+       
        /* save the context */
        ctx = (FollowTheLink_context*)TtaGetMemory (sizeof (FollowTheLink_context));
        ctx->anchor = anchor;
@@ -837,112 +837,112 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
        ctx->sourceDocUrl = TtaStrdup (DocumentURLs[doc]);
        TtaSetSelectionMode (TRUE);
        if (utf8path[0] == '#')
-	 {
-	   /* the target element is part of the same document */
-	   targetDocument = doc;
-	   /* manually invoke the callback */
-	   FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
+         {
+           /* the target element is part of the same document */
+           targetDocument = doc;
+           /* manually invoke the callback */
+           FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
 				   (void *) ctx);
-	 }
+         }
        else
-	 /* the target element seems to be in another document */
-	 {
-	   /* is the source element an image map? */
-	   if (HTMLSSchema)
-	     {
-	       attrType.AttrSSchema = HTMLSSchema;
-	       attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-	       attr = TtaGetAttribute (elSource, attrType);
-	       if (attr)
-		 {
-		   /* it's an image map */
-		   utf8value = GetActiveImageInfo (doc, elSource);
-		   info = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
-						 TtaGetDefaultCharset ());
-		   TtaFreeMemory (utf8value);
-		 }
-	     }
-
-	   if (info)
-	     length += strlen (info);
-	   if (length < MAX_LENGTH)
-	     length = MAX_LENGTH;
-	   s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
-						 TtaGetDefaultCharset ());
-	   pathname = (char *)TtaGetMemory (length);
-	   strcpy (pathname, s);
-	   TtaFreeMemory (s);
-	   if (info)
-	     {
-	       /* @@ what do we do with the precedent parameters?*/
-	       strcat (pathname, info);
-	       TtaFreeMemory (info);
-	     }
-	   /* interrupt current transfer */
-	   StopTransfer (doc, 1);	   
-	   /* get the referred document */
-	   if (!strncmp (pathname, "mailto:", 7))
-	     {
-	       TtaSetStatus (doc, 1,
-			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   pathname);
-	       TtaFreeMemory (pathname);
-	       TtaFreeMemory (utf8path);
-	       TtaFreeMemory (ctx);
-	       Follow_exclusive = FALSE;
-	       return (FALSE);
-	     }
+         /* the target element seems to be in another document */
+         {
+           /* is the source element an image map? */
+           if (HTMLSSchema)
+             {
+               attrType.AttrSSchema = HTMLSSchema;
+               attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+               attr = TtaGetAttribute (elSource, attrType);
+               if (attr)
+                 {
+                   /* it's an image map */
+                   utf8value = GetActiveImageInfo (doc, elSource);
+                   info = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+                                                       TtaGetDefaultCharset ());
+                   TtaFreeMemory (utf8value);
+                 }
+             }
+           
+           if (info)
+             length += strlen (info);
+           if (length < MAX_LENGTH)
+             length = MAX_LENGTH;
+           s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+                                            TtaGetDefaultCharset ());
+           pathname = (char *)TtaGetMemory (length);
+           strcpy (pathname, s);
+           TtaFreeMemory (s);
+           if (info)
+             {
+               /* @@ what do we do with the precedent parameters?*/
+               strcat (pathname, info);
+               TtaFreeMemory (info);
+             }
+           /* interrupt current transfer */
+           StopTransfer (doc, 1);	   
+           /* get the referred document */
+           if (!strncmp (pathname, "mailto:", 7))
+             {
+               TtaSetStatus (doc, 1,
+                             TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+                             pathname);
+               TtaFreeMemory (pathname);
+               TtaFreeMemory (utf8path);
+               TtaFreeMemory (ctx);
+               Follow_exclusive = FALSE;
+               return (FALSE);
+             }
 #ifdef ANNOTATIONS
-	   /* is it an annotation link? */
-	   else if (elType.ElSSchema == TtaGetSSchema ("XLink", doc) &&
-	       elType.ElTypeNum == XLink_EL_XLink)
-	     {
-	       /* loading an annotation */
-	       reldoc = 0;
-	       method = CE_ANNOT;
-	       history = FALSE;
-	     }
+           /* is it an annotation link? */
+           else if (elType.ElSSchema == TtaGetSSchema ("XLink", doc) &&
+                    elType.ElTypeNum == XLink_EL_XLink)
+             {
+               /* loading an annotation */
+               reldoc = 0;
+               method = CE_ANNOT;
+               history = FALSE;
+             }
 #endif /* ANNOTATIONS */
-	   else
-	     {
-	       reldoc = doc;
-	       method = CE_RELATIVE;
-	       history = TRUE;
-	       if (isHTML && elType.ElTypeNum == HTML_EL_LINK &&
-		   IsCSSLink (anchor, doc))
-		 {
-		   /* opening a CSS */
-		   reldoc = 0;
-		   method = CE_CSS;
-		   history = FALSE;
-		   /* normalize the URL */
-		   s = (char *)TtaGetMemory (length);
-		   strcpy (s, pathname);
-		   NormalizeURL (s, doc, pathname, documentname, NULL);
-		   TtaFreeMemory (s);
-		 }
-	     }
-
-	   if (method != CE_RELATIVE || DontReplaceOldDoc ||
-	       CanReplaceCurrentDocument (doc, 1))
-	     {
-	       if (IsUndisplayedName (pathname))
-		 /* it's not necessary to open a new window */
-		 DontReplaceOldDoc = FALSE;
-
-	       /* Load the new document */
-	       targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
-					     (ClickEvent)method, history, 
-					     (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
-					     (void *) ctx);
-	     }
-	   else
-	     {
-	       TtaFreeMemory (utf8path);
-	       TtaFreeMemory (ctx);
-	     }
-	   TtaFreeMemory (pathname);
-	 }
+           else
+             {
+               reldoc = doc;
+               method = CE_RELATIVE;
+               history = TRUE;
+               if (isHTML && elType.ElTypeNum == HTML_EL_LINK &&
+                   IsCSSLink (anchor, doc))
+                 {
+                   /* opening a CSS */
+                   reldoc = 0;
+                   method = CE_CSS;
+                   history = FALSE;
+                   /* normalize the URL */
+                   s = (char *)TtaGetMemory (length);
+                   strcpy (s, pathname);
+                   NormalizeURL (s, doc, pathname, documentname, NULL);
+                   TtaFreeMemory (s);
+                 }
+             }
+           
+           if (method != CE_RELATIVE || DontReplaceOldDoc ||
+               CanReplaceCurrentDocument (doc, 1))
+             {
+               if (IsUndisplayedName (pathname))
+                 /* it's not necessary to open a new window */
+                 DontReplaceOldDoc = FALSE;
+               
+               /* Load the new document */
+               targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
+                                             (ClickEvent)method, history, 
+                                             (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
+                                             (void *) ctx);
+             }
+           else
+             {
+               TtaFreeMemory (utf8path);
+               TtaFreeMemory (ctx);
+             }
+           TtaFreeMemory (pathname);
+         }
        Follow_exclusive = FALSE;
        return (TRUE);
      }

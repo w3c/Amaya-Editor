@@ -48,10 +48,9 @@ END_EVENT_TABLE()
  * Description:  
  *--------------------------------------------------------------------------------------
  */
-AmayaPopupList::AmayaPopupList ( int ref ) :  wxMenu()
+AmayaPopupList::AmayaPopupList ( wxWindow * p_parent, int ref ) :  wxMenu()
 					      ,m_Ref(ref)
 {
-  wxLogDebug( _T("AmayaPopupList::AmayaPopupList") );
 }
 
 /*
@@ -63,7 +62,6 @@ AmayaPopupList::AmayaPopupList ( int ref ) :  wxMenu()
  */
 AmayaPopupList::~AmayaPopupList()
 {
-  wxLogDebug( _T("AmayaPopupList::~AmayaPopupList") );
   TtaDestroyDialogue( m_Ref );
 }
 
