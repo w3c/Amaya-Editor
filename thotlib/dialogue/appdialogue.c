@@ -2584,10 +2584,6 @@ void selection_handle (GtkWidget        *widget,
   ----------------------------------------------------------------------*/
 void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
-#ifdef _WX
-  wxASSERT_MSG(FALSE, _T("Unused function"));
-#endif /* _WX */
-
 #ifndef _WX
   Menu_Ctl           *ptrmenu;
   int                 frame;
