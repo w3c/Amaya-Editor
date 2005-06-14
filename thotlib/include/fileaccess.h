@@ -68,7 +68,7 @@ typedef long ThotFileOffset;
 
 #ifndef __CEXTRACT__
 extern int TtaDirExists ( CONST char *dirpath );
-extern int TtaFileExist ( CONST char *filename );
+extern ThotBool TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotBool TtaFileRename( const char * oldname, const char * newname );
 extern unsigned long TtaGetFileSize (char *filename);

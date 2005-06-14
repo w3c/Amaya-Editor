@@ -7032,7 +7032,7 @@ int main (int argc, char **argv)
        strcat (fname, ".SCH");
        
        /* does the file to compile exist */
-       if (TtaFileExist (srceFileName) == 0)
+       if (!TtaFileExist(srceFileName))
          TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
        else
 	 {

@@ -225,15 +225,15 @@ static int TestDictionary (char *dictName, char *dictDirectory)
   char                tempbuffer[THOT_MAX_CHAR];
 
   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
-  if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
+  if (!TtaFileExist (tempbuffer))	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
       FindCompleteName (dictName, "DCT", dictDirectory, tempbuffer, &i);
-      if (TtaFileExist (tempbuffer) == 0)
+      if (!TtaFileExist(tempbuffer))
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
 	  FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
-	  if (TtaFileExist (tempbuffer) == 0)
+	  if (!TtaFileExist(tempbuffer))
 	    /* unknown file */
 	    ret = -1;
 	  else

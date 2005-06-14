@@ -257,7 +257,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 			   fileNameBuffer, &i);
 	 pEl = NULL;
 	 /* teste si le fichier '.STR' existe */
-	 if (TtaFileExist (fileNameBuffer) == 0)
+	 if (!TtaFileExist (fileNameBuffer))
 	    {
 	    strncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
 	    strcat (fileNameBuffer, ".STR");

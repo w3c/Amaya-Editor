@@ -2198,7 +2198,7 @@ ThotBool DoStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 	if (!TtaFileExist(fileName))
 	  /* remove the language specificity */
 	  fileName[len] = EOS;
-	found = (TtaFileExist(fileName) == 1);
+	found = TtaFileExist(fileName);
 	if (!found)
 	  {
 	   if (next == NULL)

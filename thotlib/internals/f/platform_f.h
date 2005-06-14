@@ -9,7 +9,7 @@
 extern int ThotDirExists ( CONST char *name );
 extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
-extern int TtaFileExist ( CONST char *filename );
+extern ThotBool TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotBool TtaFileRename ( const char * oldname,
                                 const char * newname );
@@ -24,7 +24,7 @@ extern ThotBool TtaCompareFiles ( CONST char *file1,
 extern int ThotDirExists ( CONST char *name );
 extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
-extern int TtaFileExist ( CONST char *filename );
+extern ThotBool TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
 extern ThotBool TtaFileRename ( const char * oldname,
                                   const char * newname );

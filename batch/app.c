@@ -1601,7 +1601,7 @@ int       main (int argc, char **argv)
 	  pwd = TtaGetEnvString ("PWD");
 	  
 	  /* does the file to compile exist */
-	  if (TtaFileExist (srceFileName) == 0)
+	  if (!TtaFileExist (srceFileName))
 	    TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
 	  else
 	    {

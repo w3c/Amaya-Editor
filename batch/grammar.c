@@ -754,7 +754,7 @@ int main (int argc, char **argv)
       /* ajoute le suffixe .LAN */
       strcat (fileName, ".LAN");
       
-      if (TtaFileExist (fileName) == 0)
+      if (!TtaFileExist(fileName))
 	TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);
       else
 	/* le fichier d'entree existe, on l'ouvre */

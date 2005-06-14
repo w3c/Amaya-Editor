@@ -382,7 +382,7 @@ static GL_font *FontOpen (const char* fontname)
     init_done = TRUE;
   }
 
-  if (TtaFileExist (fontname) == 0)
+  if (!TtaFileExist (fontname))
     return NULL;
   font = (GL_font *) TtaGetMemory (sizeof (GL_font));
   err = FT_New_Face (FTlib, fontname, 0, &(font->face));

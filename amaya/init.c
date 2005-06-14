@@ -666,7 +666,7 @@ static ThotBool     FileExistTarget (char *filename)
   ptr = strrchr (filename, '#');
   if (ptr)
     *ptr = EOS;
-  result = (TtaFileExist(filename) != 0);
+  result = TtaFileExist(filename);
   if (ptr)
     *ptr = '#';
   return result;
@@ -1541,7 +1541,7 @@ static ThotBool  CompleteUrl(char **url)
       && !IsFilePath (*url)
       && (strlen (*url) + 8) < MAX_LENGTH)
   {
-      if (TtaFileExist (*url) == 0)
+      if (!TtaFileExist(*url))
       {
 	  s = (char *)TtaGetMemory (MAX_LENGTH);
 	  strcpy (s, "http://");

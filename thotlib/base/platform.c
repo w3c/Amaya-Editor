@@ -135,10 +135,10 @@ int ThotFileExist (CONST char *name)
 
 /*----------------------------------------------------------------------
    TtaFileExist teste l'existence d'un fichier.                       
-   Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
-   Si filename est un repertoire, on retourne 0.           
+   Rend TRUE si le fichier a e't'e trouve' et FALSE sinon.        
+   Si filename est un repertoire, on retourne FALSE.
   ----------------------------------------------------------------------*/
-int TtaFileExist (CONST char *filename)
+ThotBool TtaFileExist (CONST char *filename)
 {
 #ifdef _WX
   return wxFile::Exists(TtaConvMessageToWX(filename));
