@@ -1746,7 +1746,7 @@ void InitTranslations (char *appliname)
 	      if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
 		/* the shortcut is not a sequence */
 		strcpy (equiv, "\t");
-	      if (mod1 & THOT_MOD_CTRL & THOT_MOD_ALT)
+	      if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
 		/* specific to MacOS */
 		strcat (equiv, "Ctrl-Alt");
 	      else
