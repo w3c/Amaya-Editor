@@ -584,16 +584,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
   if (attr)
     {
       name = GetXMLAttributeName (attrType, elType, doc);
-      if (MakeUniqueName (el, doc, FALSE))
-	{
-	  sprintf (msgBuffer, "Duplicate attribute value %s", name);
-	  lineNum = TtaGetElementLineNumber(el);
-	  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-	    XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
-	  else
-	    HTMLParseError (doc, msgBuffer, lineNum);
-	}
-      else if (!strcmp (name, "id"))
+      if (!strcmp (name, "id"))
 	{
 	  if (!TtaIsValidID (attr, FALSE))
 	    {
@@ -609,6 +600,18 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
 	      TtaFreeMemory (name);
 	    }
 	}
+#ifdef IV
+      // this function should be optional because it increases the loading time
+      else if (MakeUniqueName (el, doc, FALSE))
+	{
+	  sprintf (msgBuffer, "Duplicate attribute value %s", name);
+	  lineNum = TtaGetElementLineNumber(el);
+	  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	    XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+	  else
+	    HTMLParseError (doc, msgBuffer, lineNum);
+	}
+#endif
     }
 }
 
@@ -794,11 +797,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    elType = TtaGetElementType (anchor);
    attrType.AttrTypeNum = 0;
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
-   if (HTMLSSchema)
-     isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema) != 0);
-   else
-     isHTML = FALSE;
-
+   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
    targetDocument = 0;
    PseudoAttr = NULL;
    /* get a buffer for the target URL */
@@ -1067,23 +1066,20 @@ static ThotBool ActivateElement (Element element, Document document)
    Attribute           attr, HrefAttr;
    Element             anchor, elFound;
    ElementType         elType, elType1;
-   SSchema             HTMLschema;
+   char               *name;
    ThotBool	       ok, isHTML, isXLink, isSVG;
 
    elType = TtaGetElementType (element);
-   HTMLschema = TtaGetSSchema ("HTML", document);
+   name = TtaGetSSchemaName(elType.ElSSchema);
    isSVG = FALSE;
    isXLink = FALSE;
-   if (HTMLschema)
-     isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLschema) != 1);
-   else
-     isHTML = FALSE;
-   if (!isHTML)
-     {
-       isXLink = (TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("XLink", document)) != 1);
-       if (!isXLink)
-	       isSVG = (TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("SVG", document)) != 1);
-     }
+   isHTML = FALSE;
+   if (!strcmp (name, "HTML"))
+     isHTML = TRUE;
+   else if (!strcmp (name, "XLink"))
+     isXLink = TRUE;
+   else if (!strcmp (name, "SVG"))
+     isSVG = TRUE;
 
    /* Check if the current element is interested in double clicks */
    ok = FALSE;

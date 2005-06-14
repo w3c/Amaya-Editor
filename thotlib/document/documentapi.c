@@ -1067,7 +1067,7 @@ SSchema TtaGetSSchemaByUri (char *uriName, Document document)
    schema1: first structure schema.
    schema2: second structure schema.
    Return value:
-   0 if both schemas are different, 1 if they are identical.
+   FALSE if schemas are different, TRUE if they are identical.
   ----------------------------------------------------------------------*/
 ThotBool TtaSameSSchemas (SSchema schema1, SSchema schema2)
 {

@@ -1092,7 +1092,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  
 	  fprintf (PSfile, "/ENDEPSFILE {%%def\n");
 	  fprintf (PSfile, "  EPSFsave restore\n");
-	  fprintf (PSfile, "} bind def\n\n");
+	  fprintf (PSfile, "} bind def\n");
 	  
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%% Encoding of font dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 	  
@@ -1417,8 +1417,9 @@ static void ClosePSFile (int frame)
   if (frame == 1 && PSfile)
     {
       /* Oui -> on ferme le fichier */
-      fprintf (PSfile, "grestore\n%%%%Trailer\n");
+      fprintf (PSfile, "grestore\n");
       fprintf (PSfile, "end end end %%close all open dict\n");
+      fprintf (PSfile, "showpage\n%%%%Trailer\n");
       fprintf (PSfile, "%%%%Pages: %d\n%%%%EOF\n", NumberOfPages);
       TtaReadClose (PSfile);
     }

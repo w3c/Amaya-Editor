@@ -96,6 +96,7 @@ void CallbackImage (int ref, int typedata, char *data)
   LoadedImageDesc    *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
+  char              *name;
   int                i, c1, cN;
   int                val;
   ThotBool           change, isHTML;
@@ -158,16 +159,13 @@ void CallbackImage (int ref, int typedata, char *data)
 	    TtaGiveFirstSelectedElement (document, &first, &c1, &i);
 	    TtaGiveLastSelectedElement (document, &last, &i, &cN);
 	    TtaOpenUndoSequence (document, first, last, c1, cN);
-	    HTMLschema = TtaGetSSchema ("HTML", document);
 	    el = NULL;
 	    if (first)
 	      {
 		el = first;
 		elType = TtaGetElementType (el);
-		if (HTMLschema)
-		  isHTML = (TtaSameSSchemas (elType.ElSSchema, HTMLschema) != 0);
-		else
-		  isHTML = FALSE;
+		name = TtaGetSSchemaName (elType.ElSSchema);
+		isHTML = !strcmp (name, "HTML");
 		if (isHTML && elType.ElTypeNum == HTML_EL_HTML)
 		  {
 		    elType.ElTypeNum = HTML_EL_BODY;

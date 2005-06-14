@@ -1671,7 +1671,7 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
 		      else if (attrType.AttrTypeNum == HTML_ATTR_ID ||
 			       attrType.AttrTypeNum == HTML_ATTR_NAME)
 			CheckUniqueName (lastAttrElement, context->doc,
-					 currentAttribute, attrType);
+			  currentAttribute, attrType);
 		      else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
 			TtaAddAccessKey (context->doc, (unsigned int)attrValue[0],
 					 lastAttrElement);

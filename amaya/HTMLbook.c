@@ -582,6 +582,7 @@ void CallbackPrint (int ref, int typedata, char *data)
 	  TtaSetPsFile (PSfile);
 	  /* update the environment variable */
 	  TtaSetEnvString ("THOTPRINT", PPrinter, TRUE);
+	  TtaSaveAppRegistry ();
 	  PrintDocument (DocPrint, 1);
 	  break;
 	default:

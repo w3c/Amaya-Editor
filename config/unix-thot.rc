@@ -6,7 +6,7 @@ DICOPAR=$(THOTDIR)/dicopar
 THOTDOC=$(THOTDIR)/doc
 ; THOTPRINT=lp -c -dprintername -nnbex -trealname
 ; THOTPRINT=lpr -Pprintername -#nbex -Trealname
-THOTPRINT=lpr
+THOTPRINT=lpr -l
 ENABLE_GRAPH_ANTI_ALIASING=yes
 
 [amaya]
