@@ -3090,6 +3090,8 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		      SetBrowseConf ();
 		      ApplyConfigurationChanges ();
 		    }
+		  else
+		    SetBrowseConf ();
 		  InitWarnCTab = GProp_Browse.WarnCTab;
 		  InitOpeningLocation = GProp_Browse.OpeningLocation;
 		  InitLoadImages = GProp_Browse.LoadImages;
