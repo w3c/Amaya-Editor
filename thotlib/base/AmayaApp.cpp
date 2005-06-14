@@ -73,10 +73,10 @@ int AmayaApp::AttrList[] =
   WX_GL_MIN_RED, 1,
   WX_GL_MIN_GREEN , 1,
   WX_GL_MIN_BLUE, 1,
-  WX_GL_MIN_ALPHA, 0, /* don't change the position of the entry (8) */
+  WX_GL_MIN_ALPHA, 0, /* don't change the position of this entry (8) */
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
-  WX_GL_NOT_ACCELERATED,
+  WX_GL_NOT_ACCELERATED, /* don't change the position of this entry (12) */
   0
 };
 
@@ -118,16 +118,16 @@ bool AmayaApp::OnInit()
 #ifdef _GL
   // try to find a good configuration for opengl
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - Try to find a valide opengl configuration."));
-  if ( !InitGLVisual(AttrList) )
+  if ( !InitGLVisual(GetGL_AttrList()) )
     {
       TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - ERROR -> Try to find another valide opengl configuration (simplier: without ALPHA channel)."));
       // error : try another configuration => wxWidgets default one
       if ( !InitGLVisual(NULL) )
-	{
-	  // error !
-	  wxPrintf(_T("FATAL ERROR : Your OpenGL implementation does not support needed features!\n"));
-	  wxExit();
-	}
+        {
+          // error !
+          wxPrintf(_T("FATAL ERROR : Your OpenGL implementation does not support needed features!\n"));
+          wxExit();
+        }
     }
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - A valide opengl configuration has been found."));
 #endif /* _GL */
@@ -386,6 +386,18 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
  */
 int * AmayaApp::GetGL_AttrList()
 {
+  // depending on thot.rc option set/unset OpenGL hardware acceleration
+
+  // default is no acceleration because of strange bugs on
+  // MSWindows platformes with buggy video card drivers
+  TtaSetEnvBoolean("GL_ACCELERATED", FALSE, FALSE);
+  // now check the user thot.rc state and adjust the opengl's attribute list
+  ThotBool gl_accelerated;
+  TtaGetEnvBoolean("GL_ACCELERATED", &gl_accelerated);
+  if (gl_accelerated)
+    AttrList[12] = 0; /* ok enable opengl hardware acceleration */
+  else
+    AttrList[12] = WX_GL_NOT_ACCELERATED; /* disable opengl hardware acceleration */
   return AttrList;
 }
 #endif /* _GL */
