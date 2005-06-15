@@ -1586,12 +1586,12 @@ static char *ParseCSSLetterSpacing (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleType: parse a CSS list-style-type
+   ParseACSSListStyleType: parse a CSS list-style-type
    attribute string.                                          
   ----------------------------------------------------------------------*/
-static char *ParseCSSListStyleType (Element element, PSchema tsch,
-				    PresentationContext context, char *cssRule,
-				    CSSInfoPtr css, ThotBool isHTML)
+static char *ParseACSSListStyleType (Element element, PSchema tsch,
+				     PresentationContext context, char *cssRule,
+				     CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
   char               *ptr = cssRule;
@@ -1688,8 +1688,22 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
   cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRListStyleType, element, tsch, context, pval);
-  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-type value");
   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSListStyleType: parse a CSS list-style-type
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+static char *ParseCSSListStyleType (Element element, PSchema tsch,
+				    PresentationContext context, char *cssRule,
+				    CSSInfoPtr css, ThotBool isHTML)
+{
+  char               *ptr = cssRule;
+  cssRule = ParseACSSListStyleType (element, tsch, context, cssRule, css,
+				    isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-type value");
+  return cssRule;
 }
 
 /*----------------------------------------------------------------------
@@ -1942,13 +1956,13 @@ static char *SetCSSImage (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleImage: parse a CSS list-style-image
+   ParseACSSListStyleImage: parse a CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
-static char *ParseCSSListStyleImage (Element element, PSchema tsch,
-				     PresentationContext ctxt,
-				     char *cssRule, CSSInfoPtr css,
-				     ThotBool isHTML)
+static char *ParseACSSListStyleImage (Element element, PSchema tsch,
+				      PresentationContext ctxt,
+				      char *cssRule, CSSInfoPtr css,
+				      ThotBool isHTML)
 {
   char               *url;
   char               *ptr = cssRule;
@@ -1979,7 +1993,6 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
       cssRule = CheckImportantRule (cssRule, ctxt);
       if (DoApply)
 	TtaSetStylePresentation (PRListStyleImage, element, tsch, ctxt, pval);
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-image value");
      }
   else
     {
@@ -1990,13 +2003,29 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStylePosition: parse a CSS list-style-position
+   ParseCSSListStyleImage: parse a CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
-static char *ParseCSSListStylePosition (Element element, PSchema tsch,
-					PresentationContext context,
-					char *cssRule, CSSInfoPtr css,
-					ThotBool isHTML)
+static char *ParseCSSListStyleImage (Element element, PSchema tsch,
+				     PresentationContext ctxt,
+				     char *cssRule, CSSInfoPtr css,
+				     ThotBool isHTML)
+{
+  char               *ptr = cssRule;
+  cssRule = ParseACSSListStyleImage (element, tsch, ctxt, cssRule, css,
+				     isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-image value");
+  return cssRule;
+}
+
+/*----------------------------------------------------------------------
+   ParseACSSListStylePosition: parse a CSS list-style-position
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+static char *ParseACSSListStylePosition (Element element, PSchema tsch,
+					 PresentationContext context,
+					 char *cssRule, CSSInfoPtr css,
+					 ThotBool isHTML)
 {
   PresentationValue   pval;
   char               *ptr = cssRule;
@@ -2029,8 +2058,23 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
   cssRule = CheckImportantRule (cssRule, context);
   if (DoApply)
     TtaSetStylePresentation (PRListStylePosition, element, tsch, context, pval);
-  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-position value");
  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSListStylePosition: parse a CSS list-style-position
+   attribute string.                                          
+  ----------------------------------------------------------------------*/
+static char *ParseCSSListStylePosition (Element element, PSchema tsch,
+					PresentationContext context,
+					char *cssRule, CSSInfoPtr css,
+					ThotBool isHTML)
+{
+  char               *ptr = cssRule;
+  cssRule = ParseACSSListStylePosition (element, tsch, context, cssRule, css,
+					isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-position value");
+  return cssRule;
 }
 
 /*----------------------------------------------------------------------
@@ -2040,7 +2084,8 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 				PresentationContext ctxt, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  int   skippedNL;
+  char               *ptr = cssRule;
+  int                 skippedNL;
 
   cssRule = SkipBlanksAndComments (cssRule);
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
@@ -2048,13 +2093,13 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
       skippedNL = NewLineSkipped;
       /* perhaps a list-style-image */
       if (!strncasecmp (cssRule, "url", 3))
-	cssRule = ParseCSSListStyleImage (element, tsch, ctxt, cssRule, css,
-					  isHTML);
+	cssRule = ParseACSSListStyleImage (element, tsch, ctxt, cssRule, css,
+					   isHTML);
       /* perhaps a list-style-position */
       else if (!strncasecmp (cssRule, "inside", 6) ||
                !strncasecmp (cssRule, "outside", 7))
-	cssRule = ParseCSSListStylePosition (element, tsch, ctxt, cssRule,
-					     css, isHTML);
+	cssRule = ParseACSSListStylePosition (element, tsch, ctxt, cssRule,
+					      css, isHTML);
       /* perhaps a list-style-type */
       else if (!strncasecmp (cssRule, "disc", 4) ||
 	       !strncasecmp (cssRule, "circle", 6) ||
@@ -2072,8 +2117,8 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 	       !strncasecmp (cssRule, "georgian", 8) ||
 	       !strncasecmp (cssRule, "none", 4) ||
 	       !strncasecmp (cssRule, "inherit", 7))
-	cssRule = ParseCSSListStyleType (element, tsch, ctxt, cssRule, css,
-					 isHTML);
+	cssRule = ParseACSSListStyleType (element, tsch, ctxt, cssRule, css,
+					  isHTML);
       else
 	{
 	  NewLineSkipped = skippedNL;
@@ -2082,6 +2127,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
 	}
       cssRule = SkipBlanksAndComments (cssRule);
     }
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style value");
   return (cssRule);
 }
 
