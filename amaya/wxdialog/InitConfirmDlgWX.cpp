@@ -18,6 +18,7 @@ BEGIN_EVENT_TABLE(InitConfirmDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_EXTRABUTTON"), InitConfirmDlgWX::OnExtraButton )
   EVT_BUTTON( XRCID("wxID_OK"), InitConfirmDlgWX::OnConfirmButton )
   EVT_BUTTON( XRCID("wxID_CANCEL"), InitConfirmDlgWX::OnCancelButton )
+  EVT_CLOSE(InitConfirmDlgWX::OnClose )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -124,6 +125,17 @@ void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
   OnCancelButton called when clicking on cancelbutton
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
+{
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
+}
+
+/*----------------------------------------------------------------------
+  OnClose
+  called when the window manager closes the dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void InitConfirmDlgWX::OnClose(wxCloseEvent& event)
 {
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0); 
 }

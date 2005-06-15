@@ -6052,7 +6052,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* *********Confirm********* */
       UserAnswer = (val == 1);
       ExtraChoice = (val == 2);
+#ifndef _WX
       TtaDestroyDialogue (BaseDialog + ConfirmForm);
+#else
+      TtaUnmapDialogue (BaseDialog + ConfirmForm);
+#endif /* _WX */
       break;
 
     case FilterText:
@@ -7037,6 +7041,7 @@ static ThotBool RestoreAmayaDocs ()
 	    TtaFileUnlink (tempname);
 	}
     }
+  TtaDestroyDialogue (BaseDialog + ConfirmForm);   
   return (aDoc);
 }
 
