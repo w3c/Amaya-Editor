@@ -689,8 +689,8 @@ void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
 
   if (pBox != NULL)
     {
-      minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
-		     && pBox->BxAbstractBox->AbWidth.DimMinimum);
+      minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition &&
+		     (pBox->BxAbstractBox->AbWidth.DimMinimum));
       /* Regarde si la largeur reelle actuelle depend du contenu */
       if (pBox->BxContentWidth)
 	{
@@ -1945,7 +1945,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* check positionning constraints */
 	  if (!toMove ||
 	      pCurrentAb->AbFloat == 'L' ||
-	      ((pCurrentAb->AbFloat != 'R' || ExtraFlow (pBox, frame)) &&
+	      (pCurrentAb->AbFloat != 'R' &&
 	       (pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)))
 	    {
 	      /*====> The left is fixed */
@@ -2983,7 +2983,6 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    /* update the clipping region */
 	    UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
 	}
-      
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsXPosComplete (pBox);
       /*

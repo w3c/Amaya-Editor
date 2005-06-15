@@ -1938,14 +1938,12 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
   picXOrg = 0;
   picYOrg = 0;
 
-#ifndef _GL
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
       (box->BxAbstractBox->AbLeafType == LtCompound &&
-       imageDesc->PicPixmap == PictureLogo))
+#ifdef _GL
+       !strcmp (imageDesc->PicFileName, LostPicturePath)))
 #else /*_GL*/
-  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
-      (box->BxAbstractBox->AbLeafType == LtCompound &&
-       strcmp (imageDesc->PicFileName, LostPicturePath) == 0))
+       imageDesc->PicPixmap == PictureLogo))
 #endif /* _GL */
     return;
 
@@ -1986,14 +1984,12 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 	  if (imageDesc->TextureBind)
 	    printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-#ifdef _GL
-          if ((pres == ReScale &&
+          if ((pres == ReScale && 
 	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
+#ifdef _GL
 	      !glIsTexture (imageDesc->TextureBind))	    
 #else /*_GL*/
-          if ((pres == ReScale &&
-	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
-	      (imageDesc->PicPixmap == None))
+	      imageDesc->PicPixmap == NULL)
 #endif /*_GL*/
 	    {
 	      LoadPicture (frame, box, imageDesc);
@@ -2277,6 +2273,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
   imageDesc->PicHeight = height;
   oldw = imageDesc->PicWArea;
   oldh = imageDesc->PicHArea;
+  //if (pAb->AbLeafType == LtCompound && imageDesc->PicPresent == RealSize)
+  //printf ("Apply ratio %s w=%d/%d h=%d/%d\n", imageDesc->PicFileName, width, w, height, h);
   if (w == 0)
     imageDesc->PicWArea = width;
   else
@@ -2630,6 +2628,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 			 (void *)&width,
 			 (void *)&height,
 			 (void *)zoom);
+	  /* ratio doesn't apply to background images */
 	  if (w == 0 && h == 0 && zoom)
 	    {
 	      /* GL version doesn't take into account the zoom
@@ -2714,7 +2713,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       RedoDone = FALSE;
     }
 }
-
 #else /* _GL */
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    

@@ -966,13 +966,11 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               // refer another box
               pRefBox = pRefAb->AbBox;
-              w = pRefBox->BxW;
-              h = pRefBox->BxH;
-              x = pRefBox->BxXOrg
-                + pRefBox->BxLMargin + pRefBox->BxLBorder + pRefBox->BxLPadding;
-              y = pRefBox->BxYOrg
-                + pRefBox->BxTMargin + pRefBox->BxTBorder + pRefBox->BxTPadding;
-            }
+              w = pRefBox->BxWidth;
+              h = pRefBox->BxHeight;
+              x = pRefBox->BxXOrg;
+              y = pRefBox->BxYOrg;
+             }
           
           /* negative values don't apply */
           l = t = r = b = -1;
@@ -1042,6 +1040,8 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pBox->BxXToCompute = TRUE;
               pAb->AbHorizEnclosing = FALSE;
               pBox->BxXOutOfStruct = TRUE;
+	      pBox->BxHorizEdge = Right;
+	      r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
               XMoveAllEnclosed (pBox, x + w - r - pBox->BxWidth, frame);
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
@@ -1057,7 +1057,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      pBox->BxYOutOfStruct = TRUE;
 	      YMoveAllEnclosed (pBox, y + t, frame);
 	      if (pRefBox)
-          InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
+		InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
 	      if (b >= 0)
           {
             pAb->AbHeightChange = FALSE;
@@ -1074,9 +1074,11 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      pBox->BxYToCompute = TRUE;
 	      pAb->AbVertEnclosing = FALSE;
 	      pBox->BxYOutOfStruct = TRUE;
+	      pBox->BxVertEdge = Bottom;
+	      b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 	      YMoveAllEnclosed (pBox, y + h - b - pBox->BxHeight, frame);
 	      if (pRefBox)
-          InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
+		InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
 	      pBox->BxVertEdge = Bottom;
 	    }
 	  else
@@ -2030,7 +2032,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   int                 val, delta, i;
   int                 dx, dy, dim;
   int                 t, b, l, r;
-  ThotBool            inLine;
+  ThotBool            inLine, isExtraFlow;
   ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
@@ -2040,7 +2042,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     {
       //#ifdef POSITIONING
       /* check if the width is set by positioning rules */
-      if (ExtraFlow (pBox, frame))
+      isExtraFlow = ExtraFlow (pBox, frame);
+      if (isExtraFlow)
 	{
 	  if (horizRef)
 	    {
@@ -2426,9 +2429,16 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
 			    }
+			  if (dx > pParentAb->AbBox->BxW &&
+			      isExtraFlow)
+			    {
+			      /* cannot inherit from the enclosing */
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = -1;		  
+			      pBox->BxContentWidth = TRUE;
+			    }
 			  /* if the parent inherits from contents */
 			  else if (!pParentAb->AbWidthChange &&
-			       //pParentAb->AbWidth.DimUnit == UnAuto &&
 				   pParentAb->AbBox->BxType != BoCell &&
 				   pParentAb->AbWidth.DimAbRef == NULL &&
 				   pParentAb->AbWidth.DimValue == -1)
@@ -2712,6 +2722,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 						(PtrAbstractBox) i, 0);
 			    }
 			  /* the rule gives the outside value */
+			  //if (pAb->AbVertEnclosing)
 			  if (val >= dy)
 			    val = val - dy;
 			  if (pParentAb)
