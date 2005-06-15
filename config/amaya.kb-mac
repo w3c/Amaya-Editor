@@ -1,11 +1,11 @@
 # no-sequence
-# Keyboard configuration file for WindowsMac OSX
+# Keyboard configuration file for Mac OSX
 
 # Unlike Windows and Linux versions, shortcuts 
 # for Mac OSX are not managed by the application
 # but by the toolkit (wxWidgets in this case) 
 # So, the syntax to define user's specific shortcuts
-# in this file has to follow some rules :
+# has to follow some rules :
 # - The Modifier key 'Command' (with the Apple
 # logo) is named 'Ctrl'.
 # - The Modifier key 'Option' is named 'Alt'.
@@ -20,53 +20,53 @@
 
 # personal keyboard file for Amaya
 #moving around 
-#<Key>Delete:        TtcDeleteSelection() 
-#<Key>Backspace:     TtcDeletePreviousChar() 
-#<Key>Return:        TtcCreateElement() 
-#<Key>End:           TtcEndOfLine()
-#<Key>Home:          TtcStartOfLine() 
-#Ctrl <Key>K:        TtcParentElement()
+<Key>Delete:        TtcDeleteSelection() 
+<Key>Backspace:     TtcDeletePreviousChar() 
+<Key>Return:        TtcCreateElement() 
+<Key>End:           TtcEndOfLine()
+<Key>Home:          TtcStartOfLine() 
+Ctrl <Key>a:        TtcParentElement()
 
 #Following commented out to remember default actions
-#<Key>Up:           TtcPreviousLine() 
-#<Key>Down:         TtcNextLine() 
+<Key>Up:           TtcPreviousLine() 
+<Key>Down:         TtcNextLine() 
+Ctrl <Key>Up:      TtcLineUp()
+Ctrl <Key>Down:    TtcLineDown()
 #<Key>Right:        TtcNextChar() 
 #<Key>Left:         TtcPreviousChar() 
-#Ctrl <Key>Up:      TtcLineUp()
-#Ctrl <Key>Down:    TtcLineDown()
 #<Key>Tab:           NextLinkOrFormElement()
 #Shift <Key>Tab:     PreviousLinkOrFormElement()
 #Ctrl <Key>a:        TtcStartOfLine() 
-#Shift Ctrl <Key>A:  TtcSelStartOfLine() 
+#Shift Ctrl <Key>a:  TtcSelStartOfLine() 
 #Ctrl <Key>e:        TtcEndOfLine() 
-#Shift Ctrl <Key>E:  TtcSelEndOfLine() 
+#Shift Ctrl <Key>e:  TtcSelEndOfLine() 
 #Ctrl <Key>Home:     TtcPageTop() 
 #Ctrl <Key>End:      TtcPageEnd() 
 #Alt <Key>Return:    DoAction() 
 #Alt <Key>Home:      GoToHome()
 
 #File menu 
-Ctrl <Key>O:                        OpenDoc() 
-Ctrl <Key>R:			    Reload() 
-Ctrl <Key>S:                        SaveDocument() 
-Shift Ctrl <Key>S:                  SaveDocumentAs() 
-Shift Ctrl <Key>P:                  PrintAs() 
-Ctrl <Key>P:                        SetupAndPrint() 
+Ctrl <Key>o:                        OpenDoc() 
+Ctrl <Key>r:			    Reload() 
+Ctrl <Key>s:                        SaveDocument() 
+Shift Ctrl <Key>s:                  SaveDocumentAs() 
+Shift Ctrl <Key>p:                  PrintAs() 
+Ctrl <Key>p:                        SetupAndPrint() 
 #Ctrl <Key>b , Ctrl <Key>b:         GotoPreviousHTML() 
 #Ctrl <Key>b , Ctrl <Key>f:         GotoNextHTML() 
 #Ctrl <Key>b , Ctrl <Key>y:         Synchronize()
-Shift Ctrl <Key>Q:                  AmayaCloseTab() 
-Ctrl <Key>Q:                        AmayaClose()
+Shift Ctrl <Key>q:                  AmayaCloseTab() 
+Ctrl <Key>q:                        AmayaClose() 
 
 #Edit menu 
-Ctrl <Key>Z:                        TtcUndo() 
-Shift Ctrl <Key>Z:                  TtcRedo() 
-Ctrl <Key>C:                        TtcCopySelection() 
-Ctrl <Key>V:	                    PasteBuffer()
-Ctrl <Key>X:	                    TtcCutSelection()
+Ctrl <Key>z:                        TtcUndo() 
+Shift Ctrl <Key>z:                  TtcRedo() 
+Ctrl <Key>c:                        TtcCopySelection() 
+Ctrl <Key>v:	                    PasteBuffer()
+Ctrl <Key>x:	                    TtcCutSelection()
 #Ctrl <Key>d:                       TtcDeleteSelection() 
-Ctrl <Key>F:	                    TtcSearchText()
-Shift Ctrl <Key>F:		    SpellCheck()
+Ctrl <Key>f:	                    TtcSearchText()
+Shift Ctrl <Key>f:		    SpellCheck()
 
 #Headings sbmenu
 Ctrl <Key>1:                        CreateHeading1() 
@@ -75,33 +75,34 @@ Ctrl <Key>3:                        CreateHeading3()
 Ctrl <Key>4:                        CreateHeading4() 
 Ctrl <Key>5:                        CreateHeading5() 
 Ctrl <Key>6:                        CreateHeading6()
+
 # BR and &nbsp;
-#Ctrl <Key>Return:                   CreateBreak("\212") 
-#Ctrl <Key>Space:                    TtcInsertChar("\240")
+Ctrl <Key>Return:                   CreateBreak("\212") 
+Ctrl <Key>Space:                    TtcInsertChar("\240")
 
 #Types 
 Ctrl Alt <Key>Return:    CreateParagraph() 
-Ctrl Alt <Key>A:         CreateAddress() 
-Ctrl Alt <Key>Z:         CreateComment() 
-Ctrl Alt <Key>D:         CreateDefinitionList() 
-Ctrl Alt <Key>R:         CreateHorizontalRule() 
-Ctrl Alt <Key>I:         CreateImage() 
-Ctrl Alt <Key>L:         CreateList() 
-Ctrl Alt <Key>M:         CreateMap()
-Ctrl Alt <Key>N:         CreateNumberedList() 
-Ctrl Alt <Key>O:         CreateObject() 
-Ctrl Alt <Key>F:         CreatePreformatted() 
-Ctrl Alt <Key>Q:         CreateBlockQuote() 
-Ctrl Alt <Key>Y:         CreateRuby() 
-Ctrl Alt <Key>T:         ChangeTitle()
-Ctrl Alt <Key>V:         CreateDivision() 
-Ctrl Alt <Key>W:         CreateParameter() 
+Ctrl Alt <Key>a:         CreateAddress() 
+Ctrl Alt <Key>d:         CreateDefinitionList() 
+Ctrl Alt <Key>f:         CreatePreformatted() 
+Ctrl Alt <Key>i:         CreateImage() 
+Ctrl Alt <Key>r:         CreateHorizontalRule() 
+Ctrl Alt <Key>l:         CreateList() 
+Ctrl Alt <Key>m:         CreateMap()
+Ctrl Alt <Key>n:         CreateNumberedList() 
+Ctrl Alt <Key>o:         CreateObject() 
+Ctrl Alt <Key>q:         CreateBlockQuote() 
+Ctrl Alt <Key>t:         ChangeTitle()
+Ctrl Alt <Key>v:         CreateDivision() 
+Ctrl Alt <Key>w:         CreateParameter() 
+Ctrl Alt <Key>y:         CreateRuby() 
+Ctrl Alt <Key>z:         CreateComment() 
 
 #Links
-Ctrl Alt <Key>H:         DeleteAnchor() 
-Ctrl Alt <Key>C:         CreateOrChangeLink() 
-Ctrl Alt <Key>K:         LinkToPreviousTarget() 
-Ctrl Alt <Key>G:         CreateTarget()
+Ctrl Alt <Key>c:         CreateOrChangeLink() 
+Ctrl Alt <Key>g:         CreateTarget()
+Ctrl Alt <Key>h:         DeleteAnchor() 
+Ctrl Alt <Key>k:         LinkToPreviousTarget() 
 
 #Style menu and Information types
 #Ctrl <Key>i , Ctrl <Key>a:         ApplyClass() 
@@ -144,18 +145,18 @@ Ctrl Alt <Key>G:         CreateTarget()
 #Transform and Tables
 
 #View Menu
-#<Key>F12:          ShowPanel()
-Alt <Key>A:         ShowAlternate()
-Alt <Key>B:         ShowButtons() 
-Alt <Key>D:         ShowAddress()
-Alt <Key>L:         ShowLinks() 
-Alt <Key>M:         ShowMapAreas() 
-Alt <Key>O:         ShowToC() 
-Alt <Key>U:         ShowStructure()
-Alt <Key>T:         ShowTargets() 
-Alt <Key>S:         ShowSource()
-Alt <Key>P:         SplitUnsplitPage()
-Alt <Key>F:         ShowFormatted()
+<Key>F8:            ShowPanel()
+Alt <Key>b:         ShowButtons() 
+Alt <Key>d:         ShowAddress()
+Alt <Key>f:         ShowFormatted()
+Alt <Key>l:         ShowLinks() 
+Alt <Key>m:         ShowMapAreas() 
+Alt <Key>n:         ShowAlternate()
+Alt <Key>o:         ShowToC() 
+Alt <Key>p:         SplitUnsplitPage()
+Alt <Key>s:         ShowSource()
+Alt <Key>t:         ShowTargets() 
+Alt <Key>u:         ShowStructure()
 Alt <Key>-:         ZoomOut()
 Alt <Key>=:         ZoomIn()
 
