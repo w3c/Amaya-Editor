@@ -1796,11 +1796,12 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   InlineTextChildren returns TRUE if the block element encloses
   a simple text which must be set in lines.
   ----------------------------------------------------------------------*/
-static ThotBool InlineTextChildren (PtrAbstractBox pAb)
+static ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
 {
   PtrAbstractBox      pChildAb;
 
   if (pAb && !pAb->AbDead && !pAb->AbInLine &&
+      FrameTable[frame].FrView == 1 && /* only in formatted view */
       pAb->AbBox && pAb->AbBox->BxType != BoGhost &&
       (pAb->AbDisplay == 'U' || pAb->AbDisplay == 'B') &&
       !pAb->AbWidth.DimIsPosition &&
@@ -2253,7 +2254,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		{
 		  inlineFloatC = HasFloatingChild (pAb, &directParent,
 						   &uniqueChild, &dummyChild);
-		  inlineChildren = pAb->AbInLine || InlineTextChildren (pAb);
+		  inlineChildren = pAb->AbInLine || InlineTextChildren (pAb, frame);
 		}
 
 	      if (((inLine && pAb->AbClear == 'N') ||
