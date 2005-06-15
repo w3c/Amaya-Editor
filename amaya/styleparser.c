@@ -5212,7 +5212,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   PSchema            tsch;
   AttributeType      attrType;
   char              *deb, *cur, *sel, *next, c;
-  char              *schemaName, *mappedName;
+  char              *schemaName, *mappedName, *saveURL;
   char              *names[MAX_ANCESTORS];
   char              *ids[MAX_ANCESTORS];
   char              *classes[MAX_ANCESTORS];
@@ -5973,7 +5973,20 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   tsch = GetPExtension (doc, ctxt->schema, css, link);
   skippedNL = NewLineSkipped;
   if (tsch && cssRule)
+    {
+      if (css)
+	{
+	  /* point the right URL for loaded images */
+	  saveURL = css->url;
+	  css->url = url;
+	}
+      else
+	saveURL = NULL;
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
+      if (css)
+	/* restore previous url */
+	css->url = saveURL;
+    }
   /* future CSS rules should apply */
   DoApply = TRUE;
   if (selector)
