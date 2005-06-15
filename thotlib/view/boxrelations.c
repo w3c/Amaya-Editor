@@ -2429,8 +2429,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
 			    }
-			  if (dx > pParentAb->AbBox->BxW &&
-			      isExtraFlow)
+			  else if (dx > pParentAb->AbBox->BxW &&
+				   isExtraFlow)
 			    {
 			      /* cannot inherit from the enclosing */
 			      pDimAb->DimAbRef = NULL;
