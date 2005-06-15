@@ -132,13 +132,13 @@ bool AmayaApp::OnInit()
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - A valide opengl configuration has been found."));
 #endif /* _GL */
   
-  // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
-  InitAmayaArgs();
-
   //#ifndef _GLPRINT
 
   /* initialize the Registry */
-  TtaInitializeAppRegistry (amaya_argv[0]);
+  wxString wx_appname(argv[0]);
+  char appname[512];
+  strcpy(appname, (const char *)wx_appname.mb_str(wxConvUTF8));
+  TtaInitializeAppRegistry((char *)appname);
 
 #ifndef _GLPRINT
   // Initialize all the XRC handlers. Always required (unless you feel like
@@ -274,54 +274,12 @@ int AmayaApp::OnExit()
   delete m_pDocImageList;
   m_pDocImageList = NULL;
 
-  // free arguments
-  ClearAmayaArgs();
-
   // free internal amaya ressources
   TtaQuit();
 
   return 0;
 }
   
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaApp
- *      Method:  InitAmayaArgs
- * Description:  this methode convert wxApp::argc and wxApp::argv to amaya format
- *               amaya_argv must be free when closing application
- *--------------------------------------------------------------------------------------
- */
-void AmayaApp::InitAmayaArgs()
-{
-  // convert argc and argv in order to be compatible with amaya
-  amaya_argc = wxApp::argc;
-  amaya_argv = new char*[amaya_argc];
-
-  for ( int i = 0; i < amaya_argc; i++ )
-  {
-    // unicode to ascii convertion of every arguments
-    wxString amaya_arg( wxApp::argv[i] );
-    amaya_argv[i] = new char[amaya_arg.Length()+1];
-    sprintf(amaya_argv[i], "%s", (const char*) amaya_arg.mb_str(*wxConvCurrent));
-  }
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaApp
- *      Method:  ClearAmayaArgs
- * Description:  free arguments -> must be called when appli exit
- *--------------------------------------------------------------------------------------
- */
-void AmayaApp::ClearAmayaArgs()
-{
-  for ( int i = 0; i < amaya_argc; i++ )
-  {
-    delete [] amaya_argv[i];
-  }  
-  delete [] amaya_argv;
-}
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaApp
@@ -341,7 +299,7 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
       m_AmayaIsLaunched = TRUE;
 #ifndef _GLPRINT
 	  // just call amaya main from EDITORAPP.c or print.c
-      amaya_main( amaya_argc, amaya_argv );
+      amaya_main( wxApp::argc, (char **)wxApp::argv );
 #else /* _GLPRINT */
 	  /* TODO */
 #endif /* _GLPRINT */

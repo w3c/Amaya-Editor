@@ -89,10 +89,9 @@ ThotBool DeleteMap (NotifyElement * event)
 void CallbackImage (int ref, int typedata, char *data)
 {
   Document           document;
-  SSchema            HTMLschema;
   Element            el, parent;
   Element            first, last;
-  ElementType	     elType, parentType;
+  ElementType	       elType, parentType;
   LoadedImageDesc    *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
