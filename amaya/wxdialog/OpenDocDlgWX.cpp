@@ -88,9 +88,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
     }
 
   // set the default OPENING_LOCATION value : in new tab
-  int where_to_open_doc = 1;
+  int where_to_open_doc = 0;
   TtaSetEnvInt("OPENING_LOCATION", where_to_open_doc, FALSE);
   TtaGetEnvInt("OPENING_LOCATION", &where_to_open_doc);
+  where_to_open_doc++; // ++ because this must match the Preference dialog values
   if (where_to_open_doc < 0 || where_to_open_doc > 2)
     where_to_open_doc = 1;
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
@@ -230,7 +231,7 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   // remember the last OPENING_LOCATION value
   int where_to_open_doc = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
-  TtaSetEnvInt("OPENING_LOCATION", where_to_open_doc, TRUE);
+  TtaSetEnvInt("OPENING_LOCATION", where_to_open_doc>0 ? where_to_open_doc-1 : 0, TRUE);
 
   // get the "where to open" indicator
   int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
