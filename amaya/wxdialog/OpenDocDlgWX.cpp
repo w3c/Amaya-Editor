@@ -87,10 +87,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
     }
 
-  // set the default WHERE_TO_OPEN value : in new tab
+  // set the default OPENING_LOCATION value : in new tab
   int where_to_open_doc = 1;
-  TtaSetEnvInt("WHERE_TO_OPEN_DOC", where_to_open_doc, FALSE);
-  TtaGetEnvInt("WHERE_TO_OPEN_DOC", &where_to_open_doc);
+  TtaSetEnvInt("OPENING_LOCATION", where_to_open_doc, FALSE);
+  TtaGetEnvInt("OPENING_LOCATION", &where_to_open_doc);
   if (where_to_open_doc < 0 || where_to_open_doc > 2)
     where_to_open_doc = 1;
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
@@ -228,9 +228,9 @@ void OpenDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_path )
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 {
-  // remember the last WHERE_TO_OPEN_DOC value
+  // remember the last OPENING_LOCATION value
   int where_to_open_doc = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
-  TtaSetEnvInt("WHERE_TO_OPEN_DOC", where_to_open_doc, TRUE);
+  TtaSetEnvInt("OPENING_LOCATION", where_to_open_doc, TRUE);
 
   // get the "where to open" indicator
   int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
