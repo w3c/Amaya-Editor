@@ -995,9 +995,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
       /* now attach the frame to this page */
       AmayaFrame * p_oldframe = NULL;
       p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
-      
-      /* close the previous frame : should be allready closed ! (lines to remove) */
-      wxASSERT(p_oldframe);
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
     {

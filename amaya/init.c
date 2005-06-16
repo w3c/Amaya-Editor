@@ -6052,11 +6052,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* *********Confirm********* */
       UserAnswer = (val == 1);
       ExtraChoice = (val == 2);
-#ifndef _WX
       TtaDestroyDialogue (BaseDialog + ConfirmForm);
-#else
-      TtaUnmapDialogue (BaseDialog + ConfirmForm);
-#endif /* _WX */
       break;
 
     case FilterText:
@@ -6894,154 +6890,153 @@ static ThotBool RestoreAmayaDocs ()
       restore = UserAnswer;
       f = TtaReadOpen (tempname);
       if (f != NULL)
-	{
-	  DontReplaceOldDoc = TRUE;
-	  i = 0;
-	  line[i] = EOS;
-	  fread (&line[i], 1, 1, f);
-	  while (line[0] == '"')
-	    {
-	      /* get the temp name */
-	      do
-		{
-		  i++;
-		  fread (&line[i], 1, 1, f);
-		}
-	      while (line[i] != '"');
-	      line[i] = EOS;
-	      strcpy (tempdoc, &line[1]);
-	      /* skip spaces and the next first " */
-	      do
-		{
-		  i++;
-		  fread (&line[i], 1, 1, f);
-		}
-	      while (line[i] != '"');
-	      /* get the origin name */
-	      j = i + 1;
-	      do
-		{
-		  i++;
-		  fread (&line[i], 1, 1, f);
-		}
-	      while (line[i] != '"');
-	      line[i] = EOS;
-	      strcpy (docname, &line[j]);
-	      /* skip spaces */
-	      do
-		{
-		  i++;
-		  fread (&line[i], 1, 1, f);
-		}
-	      while (line[i] == ' ');
-	      /* get the docType */
-	      j = i;
-	      do
-		{
-		  i++;
-		  fread (&line[i], 1, 1, f);
-		}
-	      while (line[i] != '\n');
-	      line[i] = EOS;
-	      sscanf (&line[j], "%d",  &docType);
-	      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
-		{
-		  if (restore)
-		    {
-		      if (RestoreOneAmayaDoc (0, tempdoc, docname,
-					      (DocumentType) docType, iscrash))
-			aDoc = TRUE;
-		    }
-		  else
-		    /* unlink this saved file */
-		    TtaFileUnlink (tempdoc);
-		}
-	      /* next saved file */
-	      i = 0;
-	      line[i] = EOS;
-	      fread (&line[i], 1, 1, f);
-	    }
-	  DontReplaceOldDoc = FALSE;	  
-	  TtaReadClose (f);
-	}
+        {
+          DontReplaceOldDoc = TRUE;
+          i = 0;
+          line[i] = EOS;
+          fread (&line[i], 1, 1, f);
+          while (line[0] == '"')
+            {
+              /* get the temp name */
+              do
+                {
+                  i++;
+                  fread (&line[i], 1, 1, f);
+                }
+              while (line[i] != '"');
+              line[i] = EOS;
+              strcpy (tempdoc, &line[1]);
+              /* skip spaces and the next first " */
+              do
+                {
+                  i++;
+                  fread (&line[i], 1, 1, f);
+                }
+              while (line[i] != '"');
+              /* get the origin name */
+              j = i + 1;
+              do
+                {
+                  i++;
+                  fread (&line[i], 1, 1, f);
+                }
+              while (line[i] != '"');
+              line[i] = EOS;
+              strcpy (docname, &line[j]);
+              /* skip spaces */
+              do
+                {
+                  i++;
+                  fread (&line[i], 1, 1, f);
+                }
+              while (line[i] == ' ');
+              /* get the docType */
+              j = i;
+              do
+                {
+                  i++;
+                  fread (&line[i], 1, 1, f);
+                }
+              while (line[i] != '\n');
+              line[i] = EOS;
+              sscanf (&line[j], "%d",  &docType);
+              if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
+                {
+                  if (restore)
+                    {
+                      if (RestoreOneAmayaDoc (0, tempdoc, docname,
+                                              (DocumentType) docType, iscrash))
+                        aDoc = TRUE;
+                    }
+                  else
+                    /* unlink this saved file */
+                    TtaFileUnlink (tempdoc);
+                }
+              /* next saved file */
+              i = 0;
+              line[i] = EOS;
+              fread (&line[i], 1, 1, f);
+            }
+          DontReplaceOldDoc = FALSE;	  
+          TtaReadClose (f);
+        }
 
       if (iscrash)
-	{
-	  TtaFileUnlink (tempname);
-	  sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
-	  if (TtaFileExist (tempname))
-	    {
-	      f = TtaReadOpen (tempname);
-	      if (f != NULL)
-		{
-		  i = 0;
-		  line[i] = EOS;
-		  fread (&line[i], 1, 1, f);
-		  while (line[0] == '"')
-		    {
-		      /* get the temp name */
-		      do
-			{
-			  i++;
-			  fread (&line[i], 1, 1, f);
-			}
-		      while (line[i] != '"');
-		      line[i] = EOS;
-		      strcpy (tempdoc, &line[1]);
-		      /* skip spaces and the next first " */
-		      do
-			{
-			  i++;
-			  fread (&line[i], 1, 1, f);
-			}
-		      while (line[i] != '"');
-		      /* get the origin name */
-		      j = i + 1;
-		      do
-			{
-			  i++;
-			  fread (&line[i], 1, 1, f);
-			}
-		      while (line[i] != '"');
-		      line[i] = EOS;
-		      strcpy (docname, &line[j]);
-		      /* skip spaces */
-		      do
-			{
-			  i++;
-			  fread (&line[i], 1, 1, f);
-			}
-		      while (line[i] == ' ');
-		      /* get the docType */
-		      j = i;
-		      do
-			{
-			  i++;
-			  fread (&line[i], 1, 1, f);
-			}
-		      while (line[i] != '\n');
-		      line[i] = EOS;
-		      sscanf (&line[j], "%d",  &docType);
-		      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
-			  /* unlink the auto-saved file */
-			  TtaFileUnlink (tempdoc);
-		      /*next auto-saved file */
-		      i = 0;
-		      line[i] = EOS;
-		      fread (&line[i], 1, 1, f);
-		    }
-		  TtaReadClose (f);
-		}
-	      TtaFileUnlink (tempname);
-	    }
-	}
+        {
+          TtaFileUnlink (tempname);
+          sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
+          if (TtaFileExist (tempname))
+            {
+              f = TtaReadOpen (tempname);
+              if (f != NULL)
+                {
+                  i = 0;
+                  line[i] = EOS;
+                  fread (&line[i], 1, 1, f);
+                  while (line[0] == '"')
+                    {
+                      /* get the temp name */
+                      do
+                        {
+                          i++;
+                          fread (&line[i], 1, 1, f);
+                        }
+                      while (line[i] != '"');
+                      line[i] = EOS;
+                      strcpy (tempdoc, &line[1]);
+                      /* skip spaces and the next first " */
+                      do
+                        {
+                          i++;
+                          fread (&line[i], 1, 1, f);
+                        }
+                      while (line[i] != '"');
+                      /* get the origin name */
+                      j = i + 1;
+                      do
+                        {
+                          i++;
+                          fread (&line[i], 1, 1, f);
+                        }
+                      while (line[i] != '"');
+                      line[i] = EOS;
+                      strcpy (docname, &line[j]);
+                      /* skip spaces */
+                      do
+                        {
+                          i++;
+                          fread (&line[i], 1, 1, f);
+                        }
+                      while (line[i] == ' ');
+                      /* get the docType */
+                      j = i;
+                      do
+                        {
+                          i++;
+                          fread (&line[i], 1, 1, f);
+                        }
+                      while (line[i] != '\n');
+                      line[i] = EOS;
+                      sscanf (&line[j], "%d",  &docType);
+                      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
+                        /* unlink the auto-saved file */
+                        TtaFileUnlink (tempdoc);
+                      /*next auto-saved file */
+                      i = 0;
+                      line[i] = EOS;
+                      fread (&line[i], 1, 1, f);
+                    }
+                  TtaReadClose (f);
+                }
+              TtaFileUnlink (tempname);
+            }
+        }
       else
-	{
-	  if (!UserAnswer)
-	    TtaFileUnlink (tempname);
-	}
+        {
+          if (!UserAnswer)
+            TtaFileUnlink (tempname);
+        }
     }
-  TtaDestroyDialogue (BaseDialog + ConfirmForm);   
   return (aDoc);
 }
 

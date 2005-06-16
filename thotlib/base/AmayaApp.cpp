@@ -99,6 +99,12 @@ bool AmayaApp::OnInit()
 {
   m_AmayaIsInit = false;
 
+  // do not let wxWidgets exit Amaya when there is no opened windows
+  // ** it can append after a crash when the backup restore dialog                    **
+  // ** is popup before the main Window is created                                    **
+  // ** this problem occured on MacOSX only but to be sure, just disable this feature **
+  SetExitOnFrameDelete(FALSE);
+
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr );
 
@@ -345,6 +351,9 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
 #else /* _GLPRINT */
 	  /* TODO */
 #endif /* _GLPRINT */
+
+      // now let wxWidgets exit Amaya when there is no opened windows
+      SetExitOnFrameDelete(TRUE);
 
       TtaSendStatsInfo();
     }
