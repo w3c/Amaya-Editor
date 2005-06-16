@@ -997,8 +997,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
       p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
       
       /* close the previous frame : should be allready closed ! (lines to remove) */
-      if (p_oldframe)
-        wxASSERT(false);
+      wxASSERT(p_oldframe);
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
     {
@@ -1006,7 +1005,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
     }
 
   /* update frame infos */
-  FrameTable[frame_id].FrWindowId   	= window_id;
+  FrameTable[frame_id].FrWindowId   	  = window_id;
   FrameTable[frame_id].FrPageId         = page_id;
   FrameTable[frame_id].FrPagePos        = position;
     

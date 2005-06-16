@@ -4316,7 +4316,7 @@ Document BM_printStatements (int ref, char *subject_url)
   librdf_model *model; 
   librdf_storage *storage;
   
-  int count;
+  int count = 0;
 
   if (!BM_Context_get (ref, &world, &model, &storage))
     return FALSE;
