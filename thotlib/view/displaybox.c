@@ -1678,7 +1678,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
 		  if (pBox->BxUnderline)
-		    DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, 7, fg);
+		    DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, 7, fg);
 		  width -= 6;
 		  xpos = x;
 		}
@@ -1877,10 +1877,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		{
 #ifdef _GL
 		  int tex_underline_id = SetTextureScale (IsBoxDeformed(pBox));
-		  DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, width, fg);
+		  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
 		  StopTextureScale (tex_underline_id);
 #else /* _GL */
-		  DisplayUnderline (frame, x, y, pBox->BxH, pBox->BxUnderline, width, fg);
+		  DisplayUnderline (frame, x, y+t, pBox->BxH, pBox->BxUnderline, width, fg);
 #endif /* _GL */
 		}
 	      nbcar = 0;
