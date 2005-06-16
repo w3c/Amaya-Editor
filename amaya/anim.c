@@ -3065,6 +3065,9 @@ void Set_slider_position_from_doc (Document basedoc,  double f)
   int      x = (int) (f*time_sep + ct_left_bar - 6);
  
   Get_timeline_of_doc (basedoc, &timelinedoc, &timelineview);
+  if (timelinedoc == 0)
+    return;
+
   /* Modulo */
   if (x > ct_left_bar + current_timeline_width)
     {
