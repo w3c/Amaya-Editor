@@ -2452,7 +2452,7 @@ DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 #endif /* _WX */
 #else  /* _WINDOWS */
 #ifdef _WX
-int amaya_main (int argc, wxChar **argv)
+int amaya_main (int argc, char **argv)
 #else /* _WX */
 int main (int argc, char **argv)
 #endif /* _WX */

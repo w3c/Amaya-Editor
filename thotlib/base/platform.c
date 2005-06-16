@@ -141,9 +141,7 @@ int ThotFileExist (CONST char *name)
 ThotBool TtaFileExist (CONST char *filename)
 {
 #ifdef _WX
-  wxString wxfilename = TtaConvMessageToWX(filename);
-  return wxFileExists(wxfilename);
-  //return wxFile::Exists(TtaConvMessageToWX(filename));
+  return wxFile::Exists(TtaConvMessageToWX(filename));
 #else /* _WX */
   char       *name;
   int         status = 0;

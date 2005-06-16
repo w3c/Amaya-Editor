@@ -7655,12 +7655,8 @@ void InitAmaya (NotifyEvent * event)
    int arg_doc_id = 1;
    while (arg_doc_id < appArgc)
      {
-       wxString wxurl((wxChar *)appArgv[arg_doc_id]);
-       char url[1024];
-       strcpy(url, (const char *)wxurl.mb_str(wxConvUTF8));
-       s = (char *)url;
+       s = appArgv[arg_doc_id];
        OpenNewDocFromArgv(s);
-       s = NULL;
        arg_doc_id++;
      }
    /* load the homepage if nothing has been found in the command line */

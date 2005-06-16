@@ -59,6 +59,11 @@ public:
   static int AttrList[];
 #endif /* _GL */
 
+  int		amaya_argc;
+  char ** 	amaya_argv;
+  void InitAmayaArgs();
+  void ClearAmayaArgs();
+
   static wxImageList * m_pDocImageList; /* this is the list where documents icons are stored */
   static wxIcon m_AppIcon;
 
