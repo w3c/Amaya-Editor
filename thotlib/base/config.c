@@ -1404,6 +1404,40 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 }
 
 /*----------------------------------------------------------------------
+   TtaGetViewFullscreen returns true if the current window is fullscreen
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewFullscreen(Document doc, int view)
+{
+#ifdef _WX
+  int window_id = TtaGetDocumentWindowId( doc, -1 ); 
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  if (p_window)
+    return p_window->IsFullScreen();
+  else
+    return FALSE;
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+   TtaGetViewIconized returns true if the current window is maximized
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewIconized(Document doc, int view)
+{
+#ifdef _WX
+  int window_id = TtaGetDocumentWindowId( doc, -1 ); 
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  if (p_window)
+    return p_window->IsIconized();
+  else
+    return FALSE;
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
    TtaGetViewMaximize returns true if the current window is maximized
   ----------------------------------------------------------------------*/
 ThotBool TtaGetViewMaximized(Document doc, int view)

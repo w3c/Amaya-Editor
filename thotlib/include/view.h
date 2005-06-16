@@ -81,6 +81,16 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int * page_position );
 
 /*----------------------------------------------------------------------
+   TtaGetViewFullscreen returns true if the current window is fullscreen
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewFullscreen(Document doc, int view);
+
+/*----------------------------------------------------------------------
+   TtaGetViewIconized returns true if the current window is maximized
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetViewIconized(Document doc, int view);
+
+/*----------------------------------------------------------------------
    TtaGetViewMaximize returns true if the current window is maximized
   ----------------------------------------------------------------------*/
 ThotBool TtaGetViewMaximized(Document doc, int view);
