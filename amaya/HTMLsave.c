@@ -1072,11 +1072,14 @@ void SetNamespacesAndDTD (Document doc)
 		   mathPI = FALSE;
 		   elFound = NULL;
 		 }
-	       else if (strstr (buffer, "xml version="))
+	       else
 		 {
-		   /* it's not necessary to generate the XML declaration */
-		   xmlDecl = FALSE;
-		   /* next PI ? */
+		   if (strstr (buffer, "xml version="))
+		     /* it's not necessary to generate the XML declaration */
+		     xmlDecl = FALSE;
+
+		   /* check next PI ? */
+		   elFound = NULL;
 		   TtaNextSibling (&el);
 		   if (el)
 		     {
@@ -1084,12 +1087,8 @@ void SetNamespacesAndDTD (Document doc)
 		       if (elType.ElTypeNum == HTML_EL_XMLPI)
 			 /* get PI lines */
 			 elFound = TtaGetFirstChild (el);
-		       else
-			 elFound = NULL;
 		     }
 		 }
-	       else
-		 TtaNextSibling (&el);
 	     }
 	 }
 
