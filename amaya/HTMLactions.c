@@ -1907,10 +1907,12 @@ void FreeDocumentResource (Document doc)
 	}
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
+
       if (DocumentTypes[doc] == docLog)
 	DocumentSource[doc] = 0;
       else
 	{
+	  RemoveDocCSSs (doc);
 	  /* free access keys table */
 	  TtaRemoveDocAccessKeys (doc);
 	  if (!Synchronizing && DocumentSource[doc])
@@ -1936,7 +1938,6 @@ void FreeDocumentResource (Document doc)
 		    TtaSetItemOff (doc, 1, File, BShowLogFile);
 		  }
 	      }
-	  RemoveDocCSSs (doc);
 	  /* avoid to free images of backup documents */
 	  if (BackupDocument != doc)
 	    RemoveDocumentImages (doc);
