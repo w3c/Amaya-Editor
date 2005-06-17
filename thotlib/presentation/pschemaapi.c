@@ -160,8 +160,11 @@ void TtaMoveDocumentExtensionsToElement (Document document, Element element)
     return;
   else
     {
-      /* link document descriptors to the hierarchy */
+      /* link document descriptors to the element hierarchy */
       pPfS = LoadedDocument[document - 1]->DocFirstSchDescr;
+#ifdef IV
+      // don't release structure schemas as they are used to remove CSS
+      first = pPfS;
       while (pPfS)
 	{
 	  pNextPfS = pPfS->PfNext;
@@ -170,6 +173,7 @@ void TtaMoveDocumentExtensionsToElement (Document document, Element element)
 				    LoadedDocument[document - 1]);
 	  pPfS = pNextPfS;
 	}
+#endif
       LoadedDocument[document - 1]->DocFirstSchDescr = NULL;
       SetElSchemasExtens ((PtrElement) element, pPfS);
     }
