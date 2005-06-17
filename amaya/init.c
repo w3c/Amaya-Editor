@@ -1258,15 +1258,20 @@ void ShowLogFile (Document doc, View view)
   char     fileName [100];
   int      newdoc;
 
-  sprintf (fileName, "%s%c%d%cPARSING.ERR",
-	   TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
-			NULL, NULL);
-  /* store the relation with the original document */
-  if (newdoc)
+  if (DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
+  if (doc)
     {
-      DocumentSource[newdoc] = doc;
-      TtaSetStatus (newdoc, 1, "   ", NULL);
+      sprintf (fileName, "%s%c%d%cPARSING.ERR",
+	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
+			    NULL, NULL);
+      /* store the relation with the original document */
+      if (newdoc)
+	{
+	  DocumentSource[newdoc] = doc;
+	  TtaSetStatus (newdoc, 1, "   ", NULL);
+	}
     }
 }
 
@@ -1366,6 +1371,10 @@ void CheckParsingErrors (Document doc)
     {
       /* Active the menu entry */
       TtaSetItemOn (doc, 1, File, BShowLogFile);
+      if (DocumentSource[doc])
+	/* update the document source too */
+	TtaSetItemOn (DocumentSource[doc], 1, File, BShowLogFile);
+	
       if (XMLCharacterNotSupported || XMLInvalidToken)
 	{
 	  /* Invalid characters */
@@ -1467,12 +1476,18 @@ void CheckParsingErrors (Document doc)
 	{
 	  CloseLogs (doc);
 	  TtaSetItemOn (doc, 1, File, BShowLogFile);
+	  if (DocumentSource[doc])
+	    /* update the document source too */
+	    TtaSetItemOn (DocumentSource[doc], 1, File, BShowLogFile);
 	}
     }
   else
   {
     CloseLogs (doc);
     TtaSetItemOff (doc, 1, File, BShowLogFile);
+    if (DocumentSource[doc])
+      /* update the document source too */
+      TtaSetItemOff (DocumentSource[doc], 1, File, BShowLogFile);
   }
 }
 
@@ -4708,6 +4723,12 @@ void ShowSource (Document doc, View view)
 	 event.element = NULL;
 	 UpdateEditorMenus (sourceDoc);
 	 SetCharsetMenuOff (sourceDoc, 1);
+
+	 // check if a parsing error is detected
+	 sprintf (tempdir, "%s%c%d%cPARSING.ERR",
+		  TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	 if (TtaFileExist (tempdir))
+	   TtaSetItemOn (sourceDoc, 1, File, BShowLogFile);
 	 SynchronizeSourceView (&event);
        }
      TtaFreeMemory (localFile);

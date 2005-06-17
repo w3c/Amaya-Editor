@@ -335,7 +335,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    /* the application asks Thot to do nothing */
 		    return;
 		  ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
-		  NotifyClick (TteElemLClick, FALSE, el, doc);
+		  // the document can be reloaded
+		  pAb = pFrame->FrAbstractBox;
+		  nChars = 0;
+		  GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
+		  if (pBox && pBox->BxAbstractBox)
+		    {
+		      el = pBox->BxAbstractBox->AbElement;
+		      NotifyClick (TteElemLClick, FALSE, el, doc);
+		    }
 		  break;
 		case 3:
 		  if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&

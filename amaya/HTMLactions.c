@@ -1851,6 +1851,8 @@ void CloseLogs (Document doc)
 	    DocumentURLs[i] = NULL;
 	    /* switch off the button Show Log file */
 	    TtaSetItemOff (doc, 1, File, BShowLogFile);
+	    if (DocumentSource[doc])
+	      TtaSetItemOff (DocumentSource[doc], 1, File, BShowLogFile);
 	    DocumentSource[i] = 0;
 	    /* restore the default document type */
 	    DocumentTypes[i] = docFree;

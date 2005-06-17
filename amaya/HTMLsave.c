@@ -942,7 +942,7 @@ void SetNamespacesAndDTD (Document doc)
    char                *charsetname = NULL;
    char		        buffer[300];
    char                *attrText;
-   int                  length, profile;
+   int                  length, profile, pi_type;
    ThotBool		useMathML, useSVG, useHTML, useXML, mathPI;
    ThotBool             xmlDecl, xhtml_mimetype, insertMeta;
 
@@ -1005,15 +1005,27 @@ void SetNamespacesAndDTD (Document doc)
      elType = TtaGetElementType (docEl);
    s = TtaGetSSchemaName (elType.ElSSchema);
    if (strcmp (s, "HTML") == 0)
-     elType.ElTypeNum = HTML_EL_DOCTYPE;
+     {
+       elType.ElTypeNum = HTML_EL_DOCTYPE;
+       pi_type = HTML_EL_XMLPI;
+     }
 #ifdef _SVG
    else if (strcmp (s, "SVG") == 0)
-     elType.ElTypeNum = SVG_EL_DOCTYPE;
+     {
+       elType.ElTypeNum = SVG_EL_DOCTYPE;
+       pi_type = SVG_EL_XMLPI;
+     }
 #endif /* _SVG */
    else if (strcmp (s, "MathML") == 0)
-     elType.ElTypeNum = MathML_EL_DOCTYPE;
+     {
+       elType.ElTypeNum = MathML_EL_DOCTYPE;
+       pi_type = MathML_EL_XMLPI;
+     }
    else
-     elType.ElTypeNum = XML_EL_doctype;
+     {
+       elType.ElTypeNum = XML_EL_doctype;
+       pi_type = XML_EL_xmlpi;
+     }
    doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
 
        /* check if the compound document requests a DOCTYPE declaration */
@@ -1054,7 +1066,7 @@ void SetNamespacesAndDTD (Document doc)
        xmlDecl = DocumentMeta[doc]->xmlformat;
        el = TtaGetFirstChild (docEl);
        elType = TtaGetElementType (el);
-       if (elType.ElTypeNum == HTML_EL_XMLPI)
+       if (elType.ElTypeNum == pi_type)
 	 {
 	   /* get PI lines */
 	   elFound = TtaGetFirstChild (el);
@@ -1084,7 +1096,7 @@ void SetNamespacesAndDTD (Document doc)
 		   if (el)
 		     {
 		       elType = TtaGetElementType (el);
-		       if (elType.ElTypeNum == HTML_EL_XMLPI)
+		       if (elType.ElTypeNum == pi_type)
 			 /* get PI lines */
 			 elFound = TtaGetFirstChild (el);
 		     }
