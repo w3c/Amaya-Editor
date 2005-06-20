@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource>
+  <object class="wxDialog" name="NewTemplateDocDlgWX">
+    <title>*Open template and create instance*</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxWANTS_CHARS</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_TEMPLATENAME">
+                  <label>*Template name*</label>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_TEMPLATENAME">
+                  <content/>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+            </object>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_TEMPLATENAME_BROWSE">
+                  <label>*Browse for template*</label>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_TEMPLATENAME_BROWSE"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_TEMPLATENAME_BROWSE">
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine"/>
+            <flag>wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_FILENAME">
+                  <label>*File Name*</label>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_FILENAME"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxEXPAND|wxALIGN_BOTTOM</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticText" name="wxID_LABEL_DIR">
+                  <label>*Directory*</label>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_DIR"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
+                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxBOTTOM|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_OK">
+              <label>*Create document*</label>
+              <default>1</default>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CLEAR">
+              <label>*Clear*</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>*Cancel*</label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <flag>wxALL|wxALIGN_RIGHT</flag>
+      </object>
+    </object>
+  </object>
+</resource>
