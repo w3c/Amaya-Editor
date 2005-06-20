@@ -2999,12 +2999,12 @@
 	<message xml:lang="ru">Шкала времени</message>
 	<message xml:lang="hu">Idővonal mutatása</message>
 </label>
-<label define="BSplitHorizontaly">
-	<message xml:lang="en">Split view horizontaly</message>
+<label define="BSplitHorizontally">
+	<message xml:lang="en">Split view horizontally</message>
 	<message xml:lang="fr">Partager la vue horizontalement</message>
 </label>
-<label define="BSplitVerticaly">
-	<message xml:lang="en">Split view verticaly</message>
+<label define="BSplitVertically">
+	<message xml:lang="en">Split view vertically</message>
   <message xml:lang="fr">Partager la vue verticalement</message>
 </label>
 <label define="BCharacterStyle">

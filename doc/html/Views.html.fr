@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,11 +18,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Browsing.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Selecting.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Selecting.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -109,7 +110,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v&nbsp;Ctrl s</code></p>
+        class="TableText"><code>Ctrl v Ctrl s</code></p>
       </td>
     </tr>
     <tr>
@@ -119,7 +120,7 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl i</code></p>
+        class="TableText"><code>Ctrl v Ctrl a</code></p>
       </td>
     </tr>
     <tr>
@@ -149,15 +150,15 @@ premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
       </td>
       <td
       style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl h</code></p>
+        class="TableText"><code>Ctrl v Ctrl o</code></p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p><strong>Note&nbsp;:</strong> <code>Ctrl v</code> est remplacé par
-<code>Ctrl u</code> sous Windows parce que <code>Ctrl v</code> est utilisé
-pour la commande <strong>Copier</strong>.</p>
+<p><strong>Note :</strong> <code>Ctrl v</code> est remplacé par <code>Ctrl
+u</code> sous Windows parce que <code>Ctrl v</code> est utilisé pour la
+commande <strong>Copier</strong>.</p>
 
 <h3><a name="Closing">Fermer une vue</a></h3>
 

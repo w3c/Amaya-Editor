@@ -4,8 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -141,14 +142,14 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
         <code>CreateOptGroup</code>, <code>CreateToggle</code>,
         <code>CreateRadio</code>, <code>CreateOption</code>,
         <code>CreateTextInput</code>, <code>CreateTextArea</code>,
-        <code>CreateSubmit</code>,
-        <code>CreateReset</code>,<code>CreateHeading1</code>,
-        <code>CreateHeading2</code>, <code>CreateHeading3</code>,
-        <code>CreateHeading4</code>, <code>CreateHeading5</code>,
-        <code>CreateHeading6</code><code>, CreateList</code>,
-        <code>CreateNumberedList</code>, <code>CreateDefinitionList</code>,
-        <code>CreateDefinitionTerm</code>, <code>CreateDefinitionDef</code>,
-        <code>CreateObject</code>, <code>CreateParameter</code></li>
+        <code>CreateSubmit</code>, <code>CreateReset</code>,
+        <code>CreateHeading1</code>, <code>CreateHeading2</code>,
+        <code>CreateHeading3</code>, <code>CreateHeading4</code>,
+        <code>CreateHeading5</code>, <code>CreateHeading6</code><code>,
+        CreateList</code>, <code>CreateNumberedList</code>,
+        <code>CreateDefinitionList</code>, <code>CreateDefinitionTerm</code>,
+        <code>CreateDefinitionDef</code>, <code>CreateObject</code>,
+        <code>CreateParameter</code></li>
       <li>Sous-menu Table: <code>CreateTable</code>,
         <code>CreateCaption</code>, <code>CreateTHead</code>,
         <code>CreateTBody</code>, <code>CreateTFoot</code>,
@@ -186,12 +187,12 @@ href="http://www.w3.org/Amaya/User/SourceDist.html">sources d'Amaya</a> :
     <code>MakeID</code>.</p>
   </li>
   <li>Dans le menu <code>Vues</code> :
-    <p><code>ShowPanel</code>,<code>FullScreen</code>,<code>ShowMapAreas</code>,
-    <code>ShowTargets</code>, <code>ZoomIn</code>, <code>ZoomOut</code>,
-    <code>ShowFormatted</code>, <code>ShowStructure</code>,
-    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
-    <code>ShowSource</code>,
-    <code>ShowTimeLineWindow</code>,<code>SplitUnsplitPage</code>.</p>
+    <p><code>ShowPanel</code>, <code>FullScreen</code>,
+    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
+    <code>ZoomOut</code>, <code>ShowFormatted</code>,
+    <code>ShowStructure</code>, <code>ShowAlternate</code>,
+    <code>ShowLinks</code>, <code>ShowToC</code>, <code>ShowSource</code>,
+    <code>SplitHorizontally</code>, <code>SplitVertically</code>.</p>
   </li>
   <li>Dans le menu <code>Style</code> :
     <p><code>TtcChangeCharacters</code>, <code>TtcChangeColors</code>,

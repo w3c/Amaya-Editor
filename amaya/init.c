@@ -7846,26 +7846,26 @@ void FullScreen (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  SplitHorizontaly
-  split horizontaly the view
+  SplitHorizontally
+  split horizontally the view
   ----------------------------------------------------------------------*/
-void SplitHorizontaly (Document doc, View view)
+void SplitHorizontally (Document doc, View view)
 {
 #ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
-  TtaSplitViewHorizontaly( frame_id );
+  TtaSplitViewHorizontally( frame_id );
 #endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
-  SplitVerticaly
-  split verticaly the view
+  SplitVertically
+  split vertically the view
   ----------------------------------------------------------------------*/
-void SplitVerticaly (Document doc, View view)
+void SplitVertically (Document doc, View view)
 {
 #ifdef _WX
   int frame_id = GetWindowNumber (doc, view);
-  TtaSplitViewVerticaly( frame_id );
+  TtaSplitViewVertically( frame_id );
 #endif /* _WX */
 }
 

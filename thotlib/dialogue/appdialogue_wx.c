@@ -1732,12 +1732,12 @@ void TtaToggleOnOffSidePanel( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaSplitViewHorizontaly
+  TtaSplitViewHorizontally
   this methode is directly connected to a menu item action
   params:
   returns:
   ----------------------------------------------------------------------*/
-void TtaSplitViewHorizontaly( int frame_id )
+void TtaSplitViewHorizontally( int frame_id )
 {
 #ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
@@ -1760,12 +1760,12 @@ void TtaSplitViewHorizontaly( int frame_id )
 }
 
 /*----------------------------------------------------------------------
-  TtaSplitViewVerticaly
+  TtaSplitViewVertically
   this methode is directly connected to a menu item action
   params:
   returns:
   ----------------------------------------------------------------------*/
-void TtaSplitViewVerticaly( int frame_id )
+void TtaSplitViewVertically( int frame_id )
 {
 #ifdef _WX
   AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;

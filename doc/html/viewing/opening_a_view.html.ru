@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
   <title>&#xce;&#xf2;&#xea;&#xf0;&#xfb;&#xf2;&#xfc; &#xe2;&#xe8;&#xe4;</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -64,7 +65,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v&nbsp;Ctrl s</code></p>
+            class="TableText"><code>Ctrl v Ctrl s</code></p>
           </td>
         </tr>
         <tr>
@@ -74,7 +75,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl i</code></p>
+            class="TableText"><code>Ctrl v Ctrl a</code></p>
           </td>
         </tr>
         <tr>
@@ -104,7 +105,7 @@
           </td>
           <td
           style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl h</code></p>
+            class="TableText"><code>Ctrl v Ctrl o</code></p>
           </td>
         </tr>
       </tbody>
@@ -112,8 +113,8 @@
     <p><strong>Примечание:</strong> На Windows платформах <code>Ctrl v</code>
     замещается на <code>Ctrl u</code> потому что <code>Ctrl v</code>
     используется для команды <strong>Вставить</strong>.</p>
-    <p>&nbsp;</p>
-    <p class="Note"><strong>Примечание</strong>:&nbsp;Также, вы можете
+    <p> </p>
+    <p class="Note"><strong>Примечание</strong>: Также, вы можете
     использовать <strong>Показать команды</strong> из меню
     <strong>Вид</strong> выводя вперёд соответствующее окно, находящееся на
     заднем плане..</p>

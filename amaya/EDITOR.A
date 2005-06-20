@@ -299,8 +299,8 @@ MENUS
 	Views button:BShowAlternate -> ShowAlternate;
 	Views button:BShowToC -> ShowToC;
 	Views button:BShowTimeLine -> ShowTimeLineWindow;
-	Views button:BSplitHorizontaly -> SplitHorizontaly icon:split_horizontaly.png;
-	Views button:BSplitVerticaly -> SplitVerticaly icon:split_verticaly.png;
+	Views button:BSplitHorizontally -> SplitHorizontally icon:split_horizontaly.png;
+	Views button:BSplitVertically -> SplitVertically icon:split_verticaly.png;
 
   Style button:BCharacterStyle -> TtcChangeCharacters;
   Style button:BColors -> TtcChangeColors;

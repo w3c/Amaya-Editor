@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Abrir una Vista</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
+  />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -54,13 +55,13 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
         <tr>
           <td><p class="TableText">Estructura</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl s</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl s </kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Alternativo</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl i</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl a</kbd></p>
           </td>
         </tr>
         <tr>
@@ -78,12 +79,12 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
         <tr>
           <td><p class="TableText">Fuente</p>
           </td>
-          <td><p class="TableText"><kbd>Ctrl v Ctrl h</kbd></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl o</kbd></p>
           </td>
         </tr>
       </tbody>
     </table>
-    <p class="Note">&nbsp;<strong>Nota</strong>: En Windows debes utilizar
+    <p class="Note"> <strong>Nota</strong>: En Windows debes utilizar
     <kbd>Ctrl u</kbd> en vez de <kbd>Ctrl v</kbd>, ya que <kbd>Ctrl v</kbd>
     corresponde a la orden <strong>Pegar</strong>.</p>
     <p class="Note"><strong>Nota:</strong> También puedes emplear el comando

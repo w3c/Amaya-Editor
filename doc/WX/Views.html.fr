@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Vues d'un document</title>
-  <meta name="GENERATOR" content="amaya 9.1.1, see http://www.w3.org/Amaya/"
+  <meta name="GENERATOR" content="amaya 9.1.4, see http://www.w3.org/Amaya/"
   />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -125,7 +125,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl i</code></p>
+        class="TableText"><code>Ctrl v Ctrl a</code></p>
       </td>
     </tr>
     <tr>
@@ -155,7 +155,7 @@ correspondante :</p>
       </td>
       <td
       style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>Ctrl v Ctrl h</code></p>
+        class="TableText"><code>Ctrl v Ctrl o</code></p>
       </td>
     </tr>
   </tbody>
@@ -167,7 +167,8 @@ pour la commande <strong>Copier</strong>.</p>
 
 <p class="Note"><strong>Astuce 1 :</strong> vous pouvez ouvrir rapidement la
 vue source (ou la dernière vue active) en cliquant à la souris sur le boutton
-rouge en bas de votre document.</p>
+rouge en bas (partage horizontal) ou à droite (partage vertical) de votre
+document.</p>
 
 <p class="Note"><strong>Astuce 2</strong> : Les commandes <strong>Montrer
 ...</strong> du menu <strong>Vues</strong> peuvent être également utilisées
@@ -175,9 +176,10 @@ pour redonner le focus clavier à une vue.</p>
 
 <h3>Fermer une vue</h3>
 
-<p>Pour fermer une vue choisissez la commande <strong>Partager la
-vue</strong> du menu <strong>Vues</strong>. Une autre façon de fermer une vue
-est de cliquer avec la souris sur le boutton rouge en bas de votre page.</p>
+<p>Pour fermer une vue choisissez la commande <strong>Partager la vue
+horizontalement</strong> ou <strong>Partager la vue verticalement</strong> du
+menu <strong>Vues</strong>. Une autre façon de fermer une vue est de cliquer
+avec la souris sur le boutton rouge en bas ou à droite de votre page.</p>
 
 <p>Vous pouvez aussi fermer l'onglet (clique droit sur l'onglet ou menu
 <strong>Fichier</strong>) si vous voulez fermer votre document ainsi que

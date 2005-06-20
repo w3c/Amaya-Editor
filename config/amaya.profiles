@@ -56,8 +56,8 @@ ZoomOut
 HelpLocal
 ShowPanel
 FullScreen
-SplitHorizontaly
-SplitVerticaly
+SplitHorizontally
+SplitVertically
 ZoomIn
 ZoomOut
 &TransformType
@@ -310,7 +310,6 @@ DocumentInfo
 DoAction
 HelpAmaya
 HelpAtW3C
-HelpIndex
 HelpSearching
 HelpSelecting
 GoToHome
