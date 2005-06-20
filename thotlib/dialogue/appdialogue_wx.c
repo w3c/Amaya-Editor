@@ -61,6 +61,7 @@
 #include "AmayaXHTMLPanel.h"
 #include "AmayaSubPanelManager.h"
 #include "AmayaStatsThread.h"
+#include "AmayaQuickSplitButton.h"
 
 static int g_logerror_action_id = -1;
 static int g_back_action_id = -1;
@@ -1755,7 +1756,9 @@ void TtaSplitViewHorizontally( int frame_id )
     }
 
   // simulate a split action
-  p_page->DoBottomSplitButtonAction();
+  wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
+  wxPostEvent( p_page->GetQuickSplitButton ( TRUE ), event_mouse );
+  //p_page->DoBottomSplitButtonAction();
 #endif /* _WX */
 }
 
@@ -1783,7 +1786,9 @@ void TtaSplitViewVertically( int frame_id )
     }
 
   // simulate a split action
-  p_page->DoRightSplitButtonAction();
+  wxMouseEvent event_mouse( wxEVT_LEFT_DCLICK );
+  wxPostEvent( p_page->GetQuickSplitButton ( FALSE ), event_mouse );
+  //p_page->DoRightSplitButtonAction();
 #endif /* _WX */
 }
 

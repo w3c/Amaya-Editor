@@ -81,6 +81,7 @@ public:
   bool IsClosed();
   bool IsSelected();
   void SetSelected( bool isSelected );
+  AmayaQuickSplitButton * GetQuickSplitButton (ThotBool horizontal);
 
   void         SetActiveFrame( const AmayaFrame * p_frame );
   AmayaFrame * GetActiveFrame() const;

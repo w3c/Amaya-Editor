@@ -136,6 +136,21 @@ AmayaPage::~AmayaPage()
 /*
  *--------------------------------------------------------------------------------------
  *       Class: AmayaPage 
+ *      Method: GetQuickSplitButton
+ * Description: destructor of AmayaPage (do nothing)
+ *--------------------------------------------------------------------------------------
+ */
+AmayaQuickSplitButton * AmayaPage::GetQuickSplitButton (ThotBool horizontal)
+{
+  if (horizontal)
+	 return m_pSplitButtonBottom;
+  else
+     return m_pSplitButtonRight;
+}
+
+ /*
+ *--------------------------------------------------------------------------------------
+ *       Class: AmayaPage 
  *      Method: AttachFrame
  * Description: attache a AmayaFrame to the page (top or bottom)
  *      params:
