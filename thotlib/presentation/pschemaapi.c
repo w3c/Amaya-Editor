@@ -154,7 +154,7 @@ PSchema TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
   ----------------------------------------------------------------------*/
 void TtaMoveDocumentExtensionsToElement (Document document, Element element)
 {
-  PtrDocSchemasDescr  pPfS, pNextPfS;
+  PtrDocSchemasDescr  pPfS;
 
   if (!LoadedDocument[document - 1] || element == NULL)
     return;
