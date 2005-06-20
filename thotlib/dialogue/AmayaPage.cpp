@@ -488,6 +488,7 @@ void AmayaPage::DoSwitchHoriVert()
       else
         m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
       AdjustSplitterPos();
+      TtaCheckLostFocus(); // sometimes the focus is lost at this point
     }
 }
 
