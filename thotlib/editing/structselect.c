@@ -2076,8 +2076,9 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
   If drag is TRUE, only the minimum processing is done.
   If checkSelection is TRUE the coherence of the selection is checked.
   ----------------------------------------------------------------------*/
-void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
-			ThotBool drag, ThotBool checkSelection)
+static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
+			       ThotBool begin, ThotBool drag,
+			       ThotBool checkSelection)
 {
   PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell, pColHead,
                       pNext;
@@ -2283,7 +2284,7 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		{
 		  FirstSelectedElement = FixedElement;
 		  FirstSelectedChar = FixedChar;
-		  if (rank == 1)
+		  if (rank == 1 && drag)
 		    {
 		      pElP = pEl;
 		      /* move the end of the selection to the end of the 

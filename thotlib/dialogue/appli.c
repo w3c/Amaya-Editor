@@ -2071,7 +2071,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
-LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam,
+				LPARAM lParam)
 {
   char         DroppedFileName [MAX_PATH + 1];
   POINT        ptCursor;
@@ -2150,7 +2151,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 		  X_Pos = 0;
 		  TtcScrollLeft (document, view);
 		}
-	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+	      LocateSelectionInView (frame, X_Pos, Y_Pos, 1);
 	    }
 	  else
 	    {
@@ -2162,7 +2163,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 		  if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
 		      (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
 		    {
-		      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+		      LocateSelectionInView (frame, X_Pos, Y_Pos, 1);
 		      oldXPos = X_Pos;
 		      oldYPos = Y_Pos;
 		    }
@@ -2317,7 +2318,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       oldYPos = ClickY = HIWORD (lParam);
       status = GetKeyState (VK_SHIFT);
       if (HIBYTE (status))
-	LocateSelectionInView (frame, ClickX, ClickY, 0);
+	LocateSelectionInView (frame, ClickX, ClickY, 1);
       else
 	{
 	  status = GetKeyState (VK_CONTROL);
@@ -2574,7 +2575,7 @@ ThotBool FrameButtonDownCallback(
           {
             /* a selection extension */
             TtaAbortShowDialogue ();
-            LocateSelectionInView (frame, x, y, 0);
+            LocateSelectionInView (frame, x, y, 1);
 #ifndef _WINDOWS
             FrameToView (frame, &document, &view);
             TtcCopyToClipboard (document, view);
@@ -2777,10 +2778,7 @@ ThotBool FrameButtonDClickCallback(
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
   ----------------------------------------------------------------------*/
-ThotBool FrameMotionCallback( 
-    int frame,
-    int thot_mod_mask,
-    int x, int y )
+ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
   if ( Selecting )
@@ -2855,7 +2853,7 @@ ThotBool FrameMotionCallback(
 	    }
 	  if (Selecting)
 	    {
-	      LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
+	      LocateSelectionInView (frame,  Motion_x, Motion_y, 1);
 #ifndef _WINDOWS
 	      TtcCopyToClipboard (doc, view);
 #endif /* _WINDOWS */
@@ -3003,7 +3001,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
 	    {
 	      /* a selection extension */
 	      TtaAbortShowDialogue ();
-	      LocateSelectionInView (frame, (int)event->x, (int)event->y, 0);
+	      LocateSelectionInView (frame, (int)event->x, (int)event->y, 1);
 	      FrameToView (frame, &document, &view);
 	      TtcCopyToClipboard (document, view);
 	    }

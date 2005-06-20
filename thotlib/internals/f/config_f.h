@@ -29,6 +29,10 @@ extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                     int *y,
                                     int *width,
                                     int *height );
+extern ThotBool TtaGetViewFullscreen ( Document doc,
+                                       int view );
+extern ThotBool TtaGetViewIconized ( Document doc,
+                                     int view );
 extern ThotBool TtaGetViewMaximized ( Document doc,
                                       int view );
 extern void TtaGetViewXYWH ( Document doc,
@@ -91,6 +95,10 @@ extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                       int *y,
                                       int *width,
                                       int *height );
+extern ThotBool TtaGetViewFullscreen ( Document doc,
+                                         int view );
+extern ThotBool TtaGetViewIconized ( Document doc,
+                                       int view );
 extern ThotBool TtaGetViewMaximized ( Document doc,
                                         int view );
 extern void TtaGetViewXYWH ( Document doc,
