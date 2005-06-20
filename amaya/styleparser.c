@@ -511,42 +511,47 @@ static char *ParseABorderValue (char *cssRule, PresentationValue *border)
   char             *ptr = cssRule;
 
   /* first parse the attribute string */
-   border->typed_data.value = 0;
-   border->typed_data.unit = UNIT_INVALID;
-   border->typed_data.real = FALSE;
-   if (!strncasecmp (cssRule, "thin", 4))
-     {
-       border->typed_data.unit = UNIT_PX;
-       border->typed_data.value = 1;
-       cssRule += 4;
-     }
-   else if (!strncasecmp (cssRule, "medium", 6))
-     {
-       border->typed_data.unit = UNIT_PX;
-       border->typed_data.value = 3;
-       cssRule += 6;
-     }
-   else if (!strncasecmp (cssRule, "thick", 5))
-     {
-       border->typed_data.unit = UNIT_PX;
-       border->typed_data.value = 5;
-       cssRule += 5;
-     }
-   else if (isdigit (*cssRule) || *cssRule == '.')
-     {
-       cssRule = ParseCSSUnit (cssRule, border);
-       if (border->typed_data.value == 0)
-	 border->typed_data.unit = UNIT_PX;
-       else if (border->typed_data.unit == UNIT_INVALID ||
-		border->typed_data.unit == UNIT_BOX ||
-		border->typed_data.unit == UNIT_PERCENT)
-	 {
-	   border->typed_data.unit = UNIT_INVALID;
-	   border->typed_data.value = 0;
-	   CSSParseError ("Invalid border-width value", ptr, cssRule);
-	 }
-     }
-   return (cssRule);
+  border->typed_data.value = 0;
+  border->typed_data.unit = UNIT_INVALID;
+  border->typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "thin", 4))
+    {
+      border->typed_data.unit = UNIT_PX;
+      border->typed_data.value = 1;
+      cssRule += 4;
+    }
+  else if (!strncasecmp (cssRule, "medium", 6))
+    {
+      border->typed_data.unit = UNIT_PX;
+      border->typed_data.value = 3;
+      cssRule += 6;
+    }
+  else if (!strncasecmp (cssRule, "thick", 5))
+    {
+      border->typed_data.unit = UNIT_PX;
+      border->typed_data.value = 5;
+      cssRule += 5;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      border->typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else if (isdigit (*cssRule) || *cssRule == '.')
+    {
+      cssRule = ParseCSSUnit (cssRule, border);
+      if (border->typed_data.value == 0)
+	border->typed_data.unit = UNIT_PX;
+      else if (border->typed_data.unit == UNIT_INVALID ||
+	       border->typed_data.unit == UNIT_BOX ||
+	       border->typed_data.unit == UNIT_PERCENT)
+	{
+	  border->typed_data.unit = UNIT_INVALID;
+	  border->typed_data.value = 0;
+	  CSSParseError ("Invalid border-width value", ptr, cssRule);
+	}
+    }
+  return (cssRule);
 }
 
 
