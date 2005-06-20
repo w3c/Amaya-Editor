@@ -238,6 +238,7 @@ AMAYA_OBJ = \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/ListDlgWX.o \
 	wxdialog/ListEditDlgWX.o \
+	wxdialog/NewTemplateDocDlgWX.o \
 	wxdialog/NumDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \

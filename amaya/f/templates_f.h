@@ -11,6 +11,7 @@ extern void NewTemplate ( Document doc,
 extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                    ClickEvent *method );
+extern void InitTemplateList ( void );
 
 #else /* __STDC__ */
 
@@ -19,6 +20,7 @@ extern void NewTemplate ( Document doc,
 extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                      ClickEvent *method );
+extern void InitTemplateList ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

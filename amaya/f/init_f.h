@@ -184,6 +184,10 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
+extern int CreateInstanceOfTemplate ( Document doc,
+                                      char *templatename,
+                                      char *docname,
+                                      DocumentType docType );
 
 #else /* __STDC__ */
 
@@ -365,6 +369,10 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                    const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
+extern int CreateInstanceOfTemplate ( Document doc,
+                                        char *templatename,
+                                        char *docname,
+                                        DocumentType docType );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

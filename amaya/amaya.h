@@ -162,6 +162,7 @@ typedef enum _ClickEvent {
 #define OpenLocation    53
 /* do not add items before this entry */
 #define OptionMenu	54
+#define OpenTemplate    55
 
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
@@ -516,6 +517,11 @@ THOT_EXPORT Document                 BackupDocument; /* the current backup */
 THOT_EXPORT char                    *URL_list;
 THOT_EXPORT int                      URL_list_len;
 THOT_EXPORT ThotBool                 URL_list_keep;
+
+/* list of templates */
+THOT_EXPORT char                    *Template_list;
+THOT_EXPORT int                      Template_list_len;
+
 #ifdef _SVG
 THOT_EXPORT char                    *SVGlib_list;
 #endif /* _SVG */

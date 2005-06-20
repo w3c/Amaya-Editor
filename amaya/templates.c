@@ -19,7 +19,8 @@
 #include "css.h"
 #include "document.h"
 #include "view.h"
-
+#include "wxdialogapi_f.h"
+#include "appdialogue_wx.h"
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
 #define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
@@ -29,28 +30,55 @@ static char   *script_URL;
 
 
 /*----------------------------------------------------------------------
-   NewTemplate: Opens a template form on the remote template server
+   NewTemplate: Create the new document from template's dialog
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
-  char       *url;
+  char *templateDir ;
+  char *amaya_home ;
 
-  url = TtaGetEnvString ("TEMPLATE_URL");
-  if (url && TtaCheckDirectory (url))
+  templateDir = (char *) TtaGetMemory (MAX_LENGTH);
+  amaya_home = TtaGetEnvString ("THOTDIR");
+
+  // Amaya's templates directory (only french yet)
+  sprintf ((char *)templateDir, "%s%ctemplates%ctemplates%cfr%c", amaya_home,DIR_SEP,DIR_SEP,DIR_SEP,DIR_SEP);
+  
+  char s [MAX_LENGTH];
+  
+  TtaExtractName (DocumentURLs[doc], s, DocumentName);
+  strcpy (DirectoryName, s);
+
+  int window_id  = TtaGetDocumentWindowId( doc, view );
+  ThotWindow p_window = (ThotWindow) TtaGetWindowFromId(window_id);
+
+  
+  /* Definir un label pour AM_OPEN_TEMPLATE */
+
+  ThotBool created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
+					       p_window,
+					       doc,
+					       TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT),
+					       templateDir,
+					       s);
+  
+  if (created)
     {
-      /*TtaNewScrollPopup (BaseDialog + xxx, TtaGetViewFrame (doc, 1),
-			 NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
-      InitOpenDocForm (doc, view, "New.html",
-      "xxx", docHTML);*/
-      /*GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);*/
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
+
+
 }
+
+
+
 
 /*----------------------------------------------------------------------
    OpenTemplateDocument: Process the meta of a template document,
      changes the URL, try to save it and warn the user if it cannot be
      saved.
   ----------------------------------------------------------------------*/
+
 void OpenTemplateDocument (Document doc)
 {
   ElementType         metaElType;
@@ -148,4 +176,75 @@ void ReloadTemplateParams (char **docURL, ClickEvent *method)
    *method = CE_FORM_GET;
    TtaFreeMemory (*docURL);
    *docURL = TtaStrdup (script_URL); 
+}
+
+
+/*------------------------------------------------------------------------
+  InitTemplateList : fills template list with HTML files in 
+  the templates directory
+  ----------------------------------------------------------------------*/
+void InitTemplateList ()
+{
+  int i, nb,len;
+  unsigned char *urlstring,c;
+  char          *app_home;
+  FILE          *file;
+  CHARSET       encoding;
+  
+  TtaFreeMemory(Template_list);
+  
+  urlstring = (unsigned char *) TtaGetMemory (MAX_LENGTH);
+  
+  /* open the file list_url.dat into APP_HOME directory */
+  app_home = TtaGetEnvString ("APP_HOME");
+
+  sprintf ((char *)urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
+  encoding = UTF_8;
+  
+  file = TtaReadOpen ((char *)urlstring);
+
+  *urlstring = EOS;
+  if (file)
+    {
+      /* get the size of the file */
+      fseek (file, 0L, 2);	
+      /* end of the file */
+      Template_list_len = (ftell (file) * 4) + MAX_URL_list + 4;
+      Template_list = (char *)TtaGetMemory (Template_list_len);
+      Template_list[0] = EOS;
+      fseek (file, 0L, 0);	/* beginning of the file */
+      /* initialize the list by reading the file */
+      i = 0;
+      nb = 0;
+      while (TtaReadByte (file, &c))
+	{
+	  if (c == '"')
+	    {
+	      len = 0;
+	      urlstring[len] = EOS;
+	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+		{
+		  if (c == '"')
+		    urlstring[len] = EOS;
+		  else if (c == 13) /* Carriage return */
+		    urlstring[len] = EOS;
+		  else
+		    urlstring[len++] = (char)c;
+		}
+	      urlstring[len] = EOS;
+	      if (i > 0 && len)
+		/* add an EOS between two urls */
+		URL_list[i++] = EOS;
+	      if (len)
+		{
+		  nb++;
+		  strcpy ((char *)&Template_list[i], (char *)urlstring);
+		  i += len;
+		}
+	    }
+	}
+      Template_list[i + 1] = EOS;
+      TtaReadClose (file);
+    }
+  TtaFreeMemory (urlstring);
 }

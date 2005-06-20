@@ -39,7 +39,7 @@ MENUS
 	File.New1 button:BMathml -> NewMathML icon:default_document.png;
 	File.New1 button:BSvg -> NewSVG icon:default_document.png;
 	File.New1 button:BCss -> NewCss icon:default_document.png;
-	File.New1 button:BTemplate -> NewTemplate;
+	File.New1 button:BTemplate -> NewTemplate icon:default_document.png;
 
 	File button:BOpenDoc -> OpenDoc icon:open.png;
 	File button:BOpenInNewWindow -> OpenDocInNewWindow icon:open.png;

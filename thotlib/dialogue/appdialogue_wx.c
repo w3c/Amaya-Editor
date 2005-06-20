@@ -1230,7 +1230,7 @@ int TtaGetFreeWindowId()
 /*----------------------------------------------------------------------
   TtaGetDocumentWindowId returns the current document window id
   params:
-    + doc_id : the dcuemnt
+    + doc_id : the document
     + schView the document schema view
       (if view == -1, just the doc_id is checked )
     (the view is needed because a document could have 2 view into 2 differents windows)

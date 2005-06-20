@@ -11,6 +11,7 @@
 #include "wxdialog/file_filters.h"
 
 #ifdef _WX
+  #include "wxdialog/NewTemplateDocDlgWX.h"
   #include "wxdialog/AuthentDlgWX.h"
   #include "wxdialog/BgImageDlgWX.h"
   #include "wxdialog/CheckedListDlgWX.h"
@@ -32,6 +33,7 @@
   #include "wxdialog/SpellCheckDlgWX.h"
   #include "wxdialog/TextDlgWX.h"
   #include "wxdialog/TitleDlgWX.h"
+
 #endif /* _WX */
 
 // this global is used to remember the last filter when using a filebrowser
@@ -54,6 +56,7 @@ wxArrayString BuildWX_URL_List( const char * url_list )
   return wx_items;
 }
 #endif /* _WX */
+
 
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes
@@ -201,6 +204,66 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
   return FALSE;
 #endif /* _WX */
 }
+
+
+/*----------------------------------------------------------------------
+  CreateNewTemplateDocDlgWX create the dialog for creating new documents from
+  template
+  params:
+    + parent : parent window
+    + title : dialog title
+    + templateList : template list to show in the combobox
+    + templateToOpen : user defined template
+    + docName : place to store the template's instance
+
+
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateNewTemplateDocDlgWX ( int ref, 
+				     ThotWindow parent,
+				     Document doc,
+				     const char *title,
+				     const char *templateDir,
+				     const char *docName
+				   )
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+  
+  wxString wx_title          = TtaConvMessageToWX( title );
+  wxString wx_templateDir    = TtaConvMessageToWX( templateDir );
+  wxString wx_docName        = TtaConvMessageToWX( docName );
+  wxString wx_filter         = APPHTMLNAMEFILTER;
+  
+  NewTemplateDocDlgWX * p_dlg =
+    new NewTemplateDocDlgWX( ref,
+			     parent,
+			     doc,
+			     wx_title,
+			     wx_docName,
+			     wx_templateDir,
+			     wx_filter,
+			     &g_Last_used_filter
+	          	   );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+
+
 
 /*----------------------------------------------------------------------
   CreateImageDlgWX create the dialog for creating new image
