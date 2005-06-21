@@ -84,6 +84,8 @@ class AmayaWindow : public wxFrame
                 );
   virtual ~AmayaWindow();
   
+  static void   DoAmayaAction( int command, int doc, int view );
+  
   void          SetMenuBar( wxMenuBar * p_menu_bar );
   bool          IsClosing();
   int		        GetWindowId() { return m_WindowId; }
@@ -144,6 +146,7 @@ class AmayaWindow : public wxFrame
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );
+  void OnAmayaAction( wxCommandEvent& event );
 
  protected:
   int               m_Kind;               // window kind

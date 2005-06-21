@@ -14,6 +14,7 @@ extern void          ThotCallback ( int ref, int typedata, char *data );
 extern int           NumberOfColors ( void );
 extern char *        ColorName ( int num );
 
+extern int           TtaGetFrameWindowParentId( int frame_id );
 extern int           TtaGetWindowNumber( );
 extern AmayaWindow * TtaGetWindowFromId( int window_id );
 extern AmayaFrame *  TtaGetFrameFromId( int frame_id );

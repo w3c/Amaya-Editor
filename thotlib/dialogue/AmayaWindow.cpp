@@ -58,6 +58,9 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 /* contains the last activated window id. */
 int AmayaWindow::m_ActiveWindowId = -1;
 
+DECLARE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT, -1)
+DEFINE_EVENT_TYPE(wxEVT_AMAYA_ACTION_EVENT)
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -822,6 +825,49 @@ void AmayaWindow::OnClose(wxCloseEvent& event)
     event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  DnAmayaAction
+ * Description:  will add the wanted action on the window's eventhandler stack,
+ *               this event will be treated durring next idle event (see wxWidgets doc)
+ *               Using a differed action will prevent Amaya to
+ *               delete widgets when it should not be.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::DoAmayaAction( int command, int doc, int view )
+{
+  int frame_id = GetWindowNumber(doc, view);
+  int window_id = TtaGetFrameWindowParentId(frame_id);
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+
+  // create the event
+  wxCommandEvent evt( wxEVT_AMAYA_ACTION_EVENT, command );
+  // Give it some contents
+  evt.SetExtraLong( doc );
+  evt.SetInt( view );
+  /* post the event on the window's event hander */
+  wxPostEvent( p_window, evt );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnAmayaAction
+ * Description:  catch a previously generated event by DoAmayaAction
+ *               it will really execute the action
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnAmayaAction( wxCommandEvent& event )
+{
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::OnAmayaAction : text=")+event.GetString() );
+  
+  int action_id = event.GetId();
+  int doc       = event.GetExtraLong();
+  int view      = event.GetInt();  
+  TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -836,6 +882,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
 #else /* _WINDOWS */
   //  EVT_CHAR( AmayaWindow::OnChar )
 #endif /* _WINDOWS */
+  EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

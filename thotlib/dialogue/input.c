@@ -62,6 +62,7 @@ KEY;
 #endif /* #if defined(_WINGUI) */
 #ifdef _WX
   #include "appdialogue_wx.h"
+  #include "AmayaWindow.h"
 #endif /* _WX */
 /* Actions table */
 #include "applicationapi_f.h"
@@ -79,6 +80,7 @@ KEY;
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
 #include "ustring_f.h"
+#include "appdialogue_f.h"
 
 /* Default actions for XK_Up, XK_Left, XK_Right, XK_Down keys */
 #define MY_KEY_Up        0
@@ -1263,8 +1265,16 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
           /* available action for this frame or the main frame */
           if (MenuActionList[command].Call_Action)
             {
+#ifdef _WX
+              /* I just generate an event which contains "command, doc, and view"
+               * then I post it on current window eventhandler in order
+               * to differe the shortcut action to avoid crash which can occurs 
+               * when an action destroy something which is used further by wxWidgets. */
+              AmayaWindow::DoAmayaAction( command, document, view );
+#else /* _WX */
               (*(Proc2)MenuActionList[command].Call_Action) ((void *)document,
                                                              (void *)view);
+#endif /* _WX */
               done = TRUE;
             }
           

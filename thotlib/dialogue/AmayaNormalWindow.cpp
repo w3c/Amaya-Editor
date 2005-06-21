@@ -339,21 +339,19 @@ void AmayaNormalWindow::DoClose(bool & veto)
   m_IsClosing = FALSE;
 }
 
-
-
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNormalWindow
  *      Method:  OnMenuItem
- * Description:  TODO
+ * Description:  this method is called when a menu item is pressed
+ *               it will generate an event to differe the menu item action
  *--------------------------------------------------------------------------------------
  */
 void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
 {
   wxMenu * p_menu = (wxMenu *)event.GetEventObject();
   long     id     = event.GetId();
-  int action_id = -1;
+  int action_id   = -1;
 
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
 
@@ -363,12 +361,11 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   wxMenu *   p_context_menu = TtaGetContextMenu( GetWindowId() );
   Document   doc;
   View       view;
-  if (p_menu == p_context_menu)
+  if (p_menu && p_menu == p_context_menu)
     FrameToView (m_pNotebook->GetMContextFrame(), &doc, &view);
   else
     FrameToView (TtaGiveActiveFrame(), &doc, &view);
-  TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
-
+  AmayaWindow::DoAmayaAction( action_id, doc, view );
 }
 
 /*
