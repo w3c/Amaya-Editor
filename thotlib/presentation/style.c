@@ -690,7 +690,7 @@ static void AddCond (PtrCondition *base, PtrCondition cond, SSchema sch)
   PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
   ----------------------------------------------------------------------*/
 static void PresRuleAddAncestorCond (PtrPRule rule, SSchema sch, int type,
-				     int nr)
+				     int nr, ThotBool immediate)
 {
    PtrCondition        cond = NULL;
 
@@ -717,7 +717,7 @@ static void PresRuleAddAncestorCond (PtrPRule rule, SSchema sch, int type,
        /* as it's greater we register the number of ancestors - 1 */
        cond->CoRelation = nr - 1;
        cond->CoTypeAncestor = type;
-       cond->CoImmediate = FALSE;
+       cond->CoImmediate = immediate;
        cond->CoAncestorRel = CondGreater;
        cond->CoAncestorName = NULL;
        cond->CoSSchemaName[0] = EOS;
@@ -1215,6 +1215,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
   PtrPRule            pRule = NULL;
   AttributeType       attType;
   int                 i, att;
+  ThotBool            immediate;
 
   /* Search presentation rule */
   pRule = PresRuleSearch (tsch, ctxt, pres, (FunctionType) extra, &chain);
@@ -1244,7 +1245,8 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	      if (att == 0 && ctxt->type)
 		/* the attribute is attached to that element like a
 		   selector "a#id" */
-		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0);
+		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0,
+					 FALSE);
 	      /* add other conditions ... */
 	      i = 0;
 	      while (i < MAX_ANCESTORS)
@@ -1252,8 +1254,17 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 		if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
 		    ctxt->rel[i] != RelPrevious)
 		  /* it's an ancestor like a selector "li a" */
-		  PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
-					   ctxt->names_nb[i]);
+		  {
+		   if (i == 1 && ctxt->rel[i] == RelImmediat)
+		     /* due to a (current) limitation of Thot, immediate child
+			(denoted by '>' in CSS selectors) can be taken into
+			account only for the first ancestor **********  */
+		     immediate = true;
+		   else
+		     immediate = false;
+		   PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
+					    ctxt->names_nb[i], immediate);
+		  }
 		if (ctxt->attrType[i]  && i != att)
 		  /* it's another attribute */
 		  {

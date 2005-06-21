@@ -5355,6 +5355,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       attrs[0] = NULL;
       attrvals[0] = NULL;
       attrmatch[0] = Txtmatch;
+      rel[0] = RelAncestor;
 
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
