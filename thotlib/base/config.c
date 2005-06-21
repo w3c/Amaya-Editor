@@ -1288,13 +1288,13 @@ void             ConfigKeyboard (int *x, int *y)
 }
 
 /*----------------------------------------------------------------------
-   getXYWidthHeight        
-   Lit les 4 entiers x, y, width, height qui suivent les deux-points 
-   dans une ligne de la section open ou geometry d'un fichier .conf                     
-   Retourne TRUE si succes.                                
+  getXYWidthHeight        
+  Lit les 4 entiers x, y, width, height qui suivent les deux-points 
+  dans une ligne de la section open ou geometry d'un fichier .conf                     
+  Retourne TRUE si succes.                                
   ----------------------------------------------------------------------*/
 static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
-				  int *y, int *width, int *height)
+                                  int *y, int *width, int *height)
 {
   char       seqLine[MAX_TXT_LEN];
   int        nbIntegers;
@@ -1308,11 +1308,20 @@ static ThotBool getXYWidthHeight (char *line, PtrDocument pDoc, int *x,
       /* extrait les 4 entiers */
       nbIntegers = sscanf (seqLine, "%d %d %d %d", x, y, width, height);
       if (nbIntegers != 4)
-	fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
-		 pDoc->DocSSchema->SsName, line);
+        fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
+                 pDoc->DocSSchema->SsName, line);
       else
-	result = TRUE;
+        result = TRUE;
     }
+  /* check the position/size is coherent */
+  if (*x<0)
+    *x = 0;
+  if (*y<0)
+    *y = 0;
+  if (*width<0)
+    *width = 800;
+  if (*height<0)
+    *height = 600;
   return result;
 }
 
@@ -1349,58 +1358,58 @@ void ConfigOpenFirstViews (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   ConfigGetViewGeometry retourne la position (x, y) et les        
-   dimensions (width, height) de la fenetre ou doit        
-   s'afficher la vue de non view pour le document pDoc.     
+  ConfigGetViewGeometry retourne la position (x, y) et les        
+  dimensions (width, height) de la fenetre ou doit        
+  s'afficher la vue de non view pour le document pDoc.     
   ----------------------------------------------------------------------*/
 void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
-			     int *y, int *width, int *height)
+                             int *y, int *width, int *height)
 {
-   FILE               *file;
-   char               line[MAX_TXT_LEN];
-   char               nameview[MAX_TXT_LEN];
-   ThotBool           found;
+  FILE               *file;
+  char               line[MAX_TXT_LEN];
+  char               nameview[MAX_TXT_LEN];
+  ThotBool           found;
 
-   *x = 0;
-   *y = 0;
-   *width = 0;
-   *height = 0;
+  *x = 0;
+  *y = 0;
+  *width = 0;
+  *height = 0;
 
-   /* ouvre le fichier .conf du document et avance jusqu'a la section 
-      "open" */
-   file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
-   if (file != NULL)
-     {
-       /* on a trouve' le debut de la section open. On lit le fichier 
-	  .conf ligne par ligne, jusqu'a la ligne qui commence par le 
-	  name de la vue */
-       found = FALSE;
-       while (!found && getNextLineInSection (file, line))
-	 {
-	   /* le 1er mot de la ligne est le nom d'une vue */
-	   getFirstWord ((unsigned char*)line, nameview);
-	   /* est-ce le nom de la vue cherchee ? */
-	   found = (strcmp (nameview, view) == 0);
-	 }
-       if (!found)
-	 /* on n'a pas trouve' dans la section "open". On cherche dans la
-	    section "geometry" */
-	 {
-	   TtaReadClose (file);
-	   file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
-	   if (file != NULL)
-	       while (!found && getNextLineInSection (file, line))
-		 {
-		   /* le 1er mot de la ligne est le nom d'une vue */
-		   getFirstWord ((unsigned char*)line, nameview);
-		   /* est-ce le nom de la vue cherchee ? */
-		   found = (strcmp (nameview, view) == 0);
-		 }
-	 }
-       TtaReadClose (file);
-       if (found)
-	 getXYWidthHeight (line, pDoc, x, y, width, height);
-     }
+  /* ouvre le fichier .conf du document et avance jusqu'a la section 
+     "open" */
+  file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
+  if (file != NULL)
+    {
+      /* on a trouve' le debut de la section open. On lit le fichier 
+         .conf ligne par ligne, jusqu'a la ligne qui commence par le 
+         name de la vue */
+      found = FALSE;
+      while (!found && getNextLineInSection (file, line))
+        {
+          /* le 1er mot de la ligne est le nom d'une vue */
+          getFirstWord ((unsigned char*)line, nameview);
+          /* est-ce le nom de la vue cherchee ? */
+          found = (strcmp (nameview, view) == 0);
+        }
+      if (!found)
+        /* on n'a pas trouve' dans la section "open". On cherche dans la
+           section "geometry" */
+        {
+          TtaReadClose (file);
+          file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
+          if (file != NULL)
+            while (!found && getNextLineInSection (file, line))
+              {
+                /* le 1er mot de la ligne est le nom d'une vue */
+                getFirstWord ((unsigned char*)line, nameview);
+                /* est-ce le nom de la vue cherchee ? */
+                found = (strcmp (nameview, view) == 0);
+              }
+        }
+      TtaReadClose (file);
+      if (found)
+        getXYWidthHeight (line, pDoc, x, y, width, height);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1477,6 +1486,16 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   
   AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   p_window->GetPosition( xmm, ymm );
+
+  /* check the position/size is coherent */
+  if (*xmm<0)
+    *xmm = 0;
+  if (*ymm<0)
+    *ymm = 0;
+  if (*width<0)
+    *width = 800;
+  if (*height<0)
+    *height = 600;
 #endif /* _WX */
 
 #ifdef _GTK
@@ -1534,7 +1553,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
 void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
-			 int *width, int *height)
+                         int *width, int *height)
 {
   PtrDocument pDoc;
   char        line[MAX_TXT_LEN];
@@ -1548,18 +1567,18 @@ void TtaGetViewGeometry (Document document, char *name, int *x, int *y,
   *height = 0;;
 
   if (document < 1 || document > MAX_DOCUMENTS)
-     TtaError (ERR_invalid_document_parameter);
+    TtaError (ERR_invalid_document_parameter);
   else if (document != 0)
     {
       pDoc = LoadedDocument[document - 1];
       ptr = TtaGetEnvString (name);
       if (!ptr || ptr[0] == EOS)
-	ConfigGetViewGeometry (pDoc, name, x, y, width, height);
+        ConfigGetViewGeometry (pDoc, name, x, y, width, height);
       else
-	{
-	  sprintf (line, ":%s", ptr);
-	  getXYWidthHeight (line, pDoc, x, y, width, height);
-	}
+        {
+          sprintf (line, ":%s", ptr);
+          getXYWidthHeight (line, pDoc, x, y, width, height);
+        }
     } 
 }
 
