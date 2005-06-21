@@ -12,6 +12,10 @@ extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                    ClickEvent *method );
 extern void InitTemplateList ( void );
+extern int CreateInstanceOfTemplate ( Document doc,
+                                      char *templatename,
+                                      char *docname,
+                                      DocumentType docType );
 
 #else /* __STDC__ */
 
@@ -21,6 +25,10 @@ extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                      ClickEvent *method );
 extern void InitTemplateList ( void );
+extern int CreateInstanceOfTemplate ( Document doc,
+                                        char *templatename,
+                                        char *docname,
+                                        DocumentType docType );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

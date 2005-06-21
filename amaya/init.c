@@ -3545,7 +3545,7 @@ static void DisplaySVGtitle (Document doc)
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
-static Document LoadDocument (Document doc, char *pathname,
+Document LoadDocument (Document doc, char *pathname,
 			      char *form_data, char *initial_url,
 			      int method, char *tempfile,
 			      char *documentname, AHTHeaders *http_headers,
@@ -7650,10 +7650,6 @@ void InitAmaya (NotifyEvent * event)
    URL_list = NULL;
    URL_list_len = 0;
    InitStringForCombobox ();
-   
-   Template_list = NULL;
-   Template_list_len = 0;
-   InitTemplateList();
 
    AutoSave_list = NULL;
    AutoSave_list_len = 0;
@@ -8596,64 +8592,3 @@ void LoadDefaultOpeningLocation()
 }
 
 
-
-/*---------------------------------------------------------------
-Load a template and create the instance file
----------------------------------------------------------------*/
-
-int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
-				     DocumentType docType)
-{
-  char          templateFile[MAX_LENGTH];
-  int           newdoc, len;
-  ThotBool      stopped_flag;
-
-  W3Loading = doc;
-  BackupDocument = doc;
-  TtaExtractName (templatename, DirectoryName, DocumentName);
-  AddURLInCombobox (docname, NULL, TRUE);
-  newdoc = InitDocAndView (doc,
-                           FALSE /* replaceOldDoc */,
-                           FALSE /* inNewWindow */,
-                           DocumentName, (DocumentType)docType, 0, FALSE,
-			   L_Other, (ClickEvent)CE_ABSOLUTE);
-   if (newdoc != 0)
-    {
-      /* load the saved file */
-      W3Loading = newdoc;
-
-      templateFile[0] = EOS;
-      /* load the temporary file */
-
-      /* Le fichier template est detruit a la ligne suivante */
-      LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
-		    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
-      /* change its URL */
-      TtaFreeMemory (DocumentURLs[newdoc]);
-      len = strlen (docname) + 1;
-      DocumentURLs[newdoc] = TtaStrdup (docname);
-      DocumentSource[newdoc] = 0;
-      /* add the URI in the combobox string */
-      AddURLInCombobox (docname, NULL, FALSE);
-      TtaSetTextZone (newdoc, 1, URL_list);
-      /* change its directory name */
-      TtaSetDocumentDirectory (newdoc, DirectoryName);
-
-      TtaSetDocumentModified (newdoc);
-      W3Loading = 0;		/* loading is complete now */
-      DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
-      if (!stopped_flag)
-	{
-	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
-	  /* almost one file is restored */
-	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-			NULL);
-	}
-      /* check parsing errors */
-      CheckParsingErrors (newdoc);
-      /* unlink this saved file */
-    }
-  BackupDocument = 0;
-  return (newdoc);
-}

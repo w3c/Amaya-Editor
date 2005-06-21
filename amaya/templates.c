@@ -14,6 +14,8 @@
  */
 
 /* Included headerfiles */
+
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -21,6 +23,9 @@
 #include "view.h"
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
+#include "init_f.h"
+#include "tree.h"
+#include "HTMLimage_f.h"
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
 #define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
@@ -34,6 +39,7 @@ static char   *script_URL;
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
+#ifdef _WX
   char *templateDir ;
   char *amaya_home ;
 
@@ -67,7 +73,7 @@ void NewTemplate (Document doc, View view)
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
 
-
+#endif // _WX
 }
 
 
@@ -248,3 +254,70 @@ void InitTemplateList ()
     }
   TtaFreeMemory (urlstring);
 }
+
+
+
+/*---------------------------------------------------------------
+  Load a template and create the instance file - Copy images and 
+  stylesheets related to the template.
+  ---------------------------------------------------------------*/
+
+int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
+				     DocumentType docType)
+{
+  char          templateFile[MAX_LENGTH];
+  int           newdoc, len;
+  ThotBool      stopped_flag;
+  Element       img;
+  Element       css;
+
+  W3Loading = doc;
+  BackupDocument = doc;
+  TtaExtractName (templatename, DirectoryName, DocumentName);
+  AddURLInCombobox (docname, NULL, TRUE);
+  newdoc = InitDocAndView (doc,
+                           FALSE /* replaceOldDoc */,
+                           FALSE /* inNewWindow */,
+                           DocumentName, (DocumentType)docType, 0, FALSE,
+			   L_Other, (ClickEvent)CE_ABSOLUTE);
+   if (newdoc != 0)
+    {
+      /* load the saved file */
+      W3Loading = newdoc;
+
+      templateFile[0] = EOS;
+      
+      LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
+		    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+      /* change its URL */
+      TtaFreeMemory (DocumentURLs[newdoc]);
+      len = strlen (docname) + 1;
+      DocumentURLs[newdoc] = TtaStrdup (docname);
+      DocumentSource[newdoc] = 0;
+      /* add the URI in the combobox string */
+      AddURLInCombobox (docname, NULL, FALSE);
+      TtaSetTextZone (newdoc, 1, URL_list);
+      /* change its directory name */
+      TtaSetDocumentDirectory (newdoc, DirectoryName);
+
+      TtaSetDocumentModified (newdoc);
+      W3Loading = 0;		/* loading is complete now */
+      DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
+      stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
+      if (!stopped_flag)
+	{
+	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
+	  /* almost one file is restored */
+	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+			NULL);
+	}
+      /* check parsing errors */
+      CheckParsingErrors (newdoc);
+      /* unlink this saved file */
+      
+    }
+  BackupDocument = 0;
+  return (newdoc);
+}
+
+

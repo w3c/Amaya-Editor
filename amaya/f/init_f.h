@@ -94,6 +94,16 @@ extern void ReparseAs ( Document doc,
                         CHARSET charset );
 extern void ParseAsHTML ( Document doc,
                           View view );
+extern Document LoadDocument ( Document doc,
+                               char *pathname,
+                               char *form_data,
+                               char *initial_url,
+                               int method,
+                               char *tempfile,
+                               char *documentname,
+                               AHTHeaders *http_headers,
+                               ThotBool history,
+                               ThotBool *inNewWindow );
 extern void Reload_callback ( int doc,
                               int status,
                               char *urlName,
@@ -151,10 +161,10 @@ extern void ShowPanel ( Document doc,
                         View view );
 extern void FullScreen ( Document doc,
                          View view );
-extern void SplitHorizontaly ( Document doc,
-                               View view );
-extern void SplitVerticaly ( Document doc,
-                             View view );
+extern void SplitHorizontally ( Document doc,
+                                View view );
+extern void SplitVertically ( Document doc,
+                              View view );
 extern void ShowMapAreas ( Document doc,
                            View view );
 extern void ShowButtons ( Document doc,
@@ -184,10 +194,6 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
-extern int CreateInstanceOfTemplate ( Document doc,
-                                      char *templatename,
-                                      char *docname,
-                                      DocumentType docType );
 
 #else /* __STDC__ */
 
@@ -279,6 +285,16 @@ extern void ReparseAs ( Document doc,
                           CHARSET charset );
 extern void ParseAsHTML ( Document doc,
                             View view );
+extern Document LoadDocument ( Document doc,
+                                 char *pathname,
+                                 char *form_data,
+                                 char *initial_url,
+                                 int method,
+                                 char *tempfile,
+                                 char *documentname,
+                                 AHTHeaders *http_headers,
+                                 ThotBool history,
+                                 ThotBool *inNewWindow );
 extern void Reload_callback ( int doc,
                                 int status,
                                 char *urlName,
@@ -336,10 +352,10 @@ extern void ShowPanel ( Document doc,
                           View view );
 extern void FullScreen ( Document doc,
                            View view );
-extern void SplitHorizontaly ( Document doc,
-                                 View view );
-extern void SplitVerticaly ( Document doc,
-                               View view );
+extern void SplitHorizontally ( Document doc,
+                                  View view );
+extern void SplitVertically ( Document doc,
+                                View view );
 extern void ShowMapAreas ( Document doc,
                              View view );
 extern void ShowButtons ( Document doc,
@@ -369,10 +385,6 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                    const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
-extern int CreateInstanceOfTemplate ( Document doc,
-                                        char *templatename,
-                                        char *docname,
-                                        DocumentType docType );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

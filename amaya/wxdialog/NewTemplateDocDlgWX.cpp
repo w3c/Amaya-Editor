@@ -37,7 +37,6 @@ BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_TEMPLATENAME_BROWSE"),   NewTemplateDocDlgWX::OnText_Templatename_Browse )
   EVT_TEXT( XRCID("wxID_FILENAME"),              NewTemplateDocDlgWX::OnText_Filename )
   EVT_TEXT( XRCID("wxID_DIR"),                   NewTemplateDocDlgWX::OnText_Dirname )
-  /*  EVT_TEXT( XRCID("wxID_TEMPLATENAME"),          NewTemplateDocDlgWX::OnText_Combobox ) */
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -227,9 +226,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 
   wxString instanceFileUrl = XRCCTRL (*this, "wxID_FILENAME", wxTextCtrl)->GetValue();
   wxString instanceDirUrl = XRCCTRL (*this, "wxID_DIR", wxTextCtrl)->GetValue();
-  wxString instanceUrl = instanceDirUrl + instanceFileUrl;
-  
-  
+  wxString instanceUrl = instanceDirUrl + m_DirSep + instanceFileUrl;
+
+
   // allocate a temporary buffer to copy the 'const char *' template and instance url buffer   
   char bufferTemplate[512];
   wxASSERT( templateUrl.Len() < 512 );
