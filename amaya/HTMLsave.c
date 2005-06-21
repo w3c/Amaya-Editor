@@ -2404,11 +2404,6 @@ void SaveDocument (Document doc, View view)
     return;
   else if (DocumentURLs[doc] == 0)
     return;
-  else if (!TtaIsDocumentModified (doc))
-    {
-      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
-      return;
-    }
 
   TextFormat = (DocumentTypes[doc] == docText ||
 		DocumentTypes[doc] == docCSS ||
@@ -2418,6 +2413,12 @@ void SaveDocument (Document doc, View view)
      xmlDoc = GetDocFromSource (doc);
   else
      xmlDoc = 0;
+  if (!TtaIsDocumentModified (doc) &&
+      (xmlDoc == 0 || !TtaIsDocumentModified (xmlDoc)))
+    {
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
+      return;
+    }
   SavingDocument = doc;
   ok = FALSE;
   /* attempt to save through network if possible */
