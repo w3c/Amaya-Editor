@@ -14,6 +14,7 @@
 #include "message_wx.h"
 #include "thot_sys.h"
 #include "init_f.h"
+#include "templates_f.h"
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
