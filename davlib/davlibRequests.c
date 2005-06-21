@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.13  2004-05-27 15:47:56  cvs
+ ** Revision 1.14  2005-06-21 13:29:35  gully
+ ** compilation fix
+ ** S. GULLY
+ **
+ ** Revision 1.13  2004/05/27 15:47:56  cvs
  ** Irene
  **
  ** Revision 1.12  2003/11/19 12:33:16  gully
@@ -1519,7 +1523,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?(AHTDAVContext *)context->dav_context:NULL;
 #ifdef DEBUG_DAV
-    char          *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+    const char    *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
 #endif /* DEBUG_DAV */
     HTList        *matches = NULL;
     char *lockdiscovery    = NULL;
@@ -1732,7 +1736,7 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?(AHTDAVContext *)context->dav_context:NULL;
 #ifdef DEBUG_DAV
-    char          *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+    const char    *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
 #endif /* DEBUG_DAV*/
     char *out, *deb;
 
@@ -1791,7 +1795,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
     AHTReqContext *context  = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx   = (context)?(AHTDAVContext *)context->dav_context:NULL;
 #ifdef DEBUG_DAV
-    char          *format   = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+    const char    *format   = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
 #endif /* DEBUG_DAV */
     LockLine      *lockinfo = NULL;
     char owner[DAV_LINE_MAX];
