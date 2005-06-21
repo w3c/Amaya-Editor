@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.15  2005-06-01 13:48:48  cvs
+ ** Revision 1.16  2005-06-21 16:02:06  cvs
+ ** Bug fix: a double free in davlib code caused the
+ ** wx version built with dav option to crash.
+ ** LC + SG
+ **
+ ** Revision 1.15  2005/06/01 13:48:48  cvs
  ** Fixing some memory leaks.
  ** IV + SG
  **
@@ -165,8 +170,6 @@ void InitDAV (void)
         modified = TRUE;
      }
     
-    TtaFreeMemory (fqdn);
-	fqdn = NULL;
     /* getting lock scope. If there is an entry DAV_LOCK_SCOPE in
      * thot.rc and it is valid, use it. Otherwise, assume "exclusive" scope */
     ptr = NULL; 
