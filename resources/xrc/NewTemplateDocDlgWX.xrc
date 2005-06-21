@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="NewTemplateDocDlgWX">
     <title>*Open template and create instance*</title>
     <centered>1</centered>
