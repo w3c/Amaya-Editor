@@ -3408,7 +3408,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		   !TypeHasException (ExcHidden, pEl->ElTypeNumber,
 				      pEl->ElStructSchema))
 		 {
-		   pHd = FirstPSchemaExtension (pSchS, pDoc, NULL);
+		   pHd = FirstPSchemaExtension (pSchS, pDoc, pEl);
 		   while (pHd)
 		     {
 		       pSchP = pHd->HdPSchema;
@@ -4712,7 +4712,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
     {
       /* get the first P schema extension */
-      pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, NULL);
+      pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, pEl);
       while (pHd)
 	{
 	  pSchPres = pHd->HdPSchema;
