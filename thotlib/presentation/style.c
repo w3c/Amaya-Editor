@@ -1287,15 +1287,6 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	}
     }
 
-  if (pRule)
-    {
-      pRule->PrImportant = ctxt->important;
-      /* store the rule priority */
-      pRule->PrSpecificity = ctxt->cssSpecificity;
-      /* origin of the CSS rule */
-      pRule->PrCSSLine = ctxt->cssLine;
-      pRule->PrCSSURL = ctxt->cssURL;
-    }
   return (pRule);
 }
 
@@ -3032,6 +3023,13 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      /* avoid to override an important rule by a non-important rule */
 	      if (ctxt->important || !pRule->PrImportant)
 		{
+		  pRule->PrImportant = ctxt->important;
+		  /* store the rule priority */
+		  pRule->PrSpecificity = ctxt->cssSpecificity;
+		  /* origin of the CSS rule */
+		  pRule->PrCSSLine = ctxt->cssLine;
+		  pRule->PrCSSURL = ctxt->cssURL;
+
 		  if (type == PRVertPos || type == PRHorizPos)
 		    {
 		      if (ctxt->type > 0)
