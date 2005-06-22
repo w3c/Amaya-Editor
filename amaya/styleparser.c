@@ -1269,24 +1269,40 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
   char           *ptr;
+  ThotBool        style, width;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  /* register given values */
+  style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
-	cssRule = ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
 	{
-	  /* rule not found */
-	  cssRule = SkipValue ("Invalid border value", cssRule);
-	  cssRule = CheckImportantRule (cssRule, context);
+	cssRule = ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSBorderColorTop (element, tsch, context, cssRule, css, isHTML);
+	else
+	  width = TRUE;
+	if (ptr == cssRule)
+	  {
+	    /* rule not found */
+	    cssRule = SkipValue ("Invalid border value", cssRule);
+	    cssRule = CheckImportantRule (cssRule, context);
+	    return (cssRule);
+	  }
 	}
+      else
+	style = TRUE;
       cssRule = SkipBlanksAndComments (cssRule);
     }
+
+  if (!width)
+    ParseCSSBorderTopWidth (element, tsch, context, "medium", css, isHTML);
+  if (!style)
+    ParseCSSBorderStyleTop (element, tsch, context, "none", css, isHTML);
+  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1299,24 +1315,40 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
   char           *ptr;
+  ThotBool        style, width;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  /* register given values */
+  style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
-	cssRule = ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
 	{
-	  /* rule not found */
-	  cssRule = SkipValue ("Invalid border value", cssRule);
-	  cssRule = CheckImportantRule (cssRule, context);
+	cssRule = ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSBorderColorLeft (element, tsch, context, cssRule, css, isHTML);
+	else
+	  width = TRUE;
+	if (ptr == cssRule)
+	  {
+	    /* rule not found */
+	    cssRule = SkipValue ("Invalid border value", cssRule);
+	    cssRule = CheckImportantRule (cssRule, context);
+	    return (cssRule);
+	  }
 	}
+      else
+	style = TRUE;
      cssRule = SkipBlanksAndComments (cssRule);
     }
+
+  if (!width)
+    ParseCSSBorderLeftWidth (element, tsch, context, "medium", css, isHTML);
+  if (!style)
+    ParseCSSBorderStyleLeft (element, tsch, context, "none", css, isHTML);
+  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1329,21 +1361,40 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 				   CSSInfoPtr css, ThotBool isHTML)
 {
   char           *ptr;
+  ThotBool        style, width;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  /* register given values */
+  style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
+	{
 	cssRule = ParseCSSBorderBottomWidth (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	/* rule not found */
-	cssRule = SkipValue ("Invalid border value", cssRule);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSBorderColorBottom (element, tsch, context, cssRule, css, isHTML);
+	else
+	  width = TRUE;
+	if (ptr == cssRule)
+	  {
+	    /* rule not found */
+	    cssRule = SkipValue ("Invalid border value", cssRule);
+	    cssRule = CheckImportantRule (cssRule, context);
+	    return (cssRule);
+	  }
+	}
+      else
+	style = TRUE;
       cssRule = SkipBlanksAndComments (cssRule);
     }
+
+  if (!width)
+    ParseCSSBorderBottomWidth (element, tsch, context, "medium", css, isHTML);
+  if (!style)
+    ParseCSSBorderStyleBottom (element, tsch, context, "none", css, isHTML);
+  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
@@ -1356,24 +1407,40 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
   char            *ptr;
+  ThotBool        style, width;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  /* register given values */
+  style = width = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
-	cssRule = ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
 	{
-	  /* rule not found */
-	  cssRule = SkipValue ("Invalid border value", cssRule);
-	  cssRule = CheckImportantRule (cssRule, context);
+	cssRule = ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSBorderColorRight (element, tsch, context, cssRule, css, isHTML);
+	else
+	  width = TRUE;
+	if (ptr == cssRule)
+	  {
+	    /* rule not found */
+	    cssRule = SkipValue ("Invalid border value", cssRule);
+	    cssRule = CheckImportantRule (cssRule, context);
+	    return (cssRule);
+	  }
 	}
+      else
+	style = TRUE;
       cssRule = SkipBlanksAndComments (cssRule);
     }
+
+  if (!width)
+    ParseCSSBorderRightWidth (element, tsch, context, "medium", css, isHTML);
+  if (!style)
+    ParseCSSBorderStyleRight (element, tsch, context, "none", css, isHTML);
+  cssRule = CheckImportantRule (cssRule, context);
   return (cssRule);
 }
 
