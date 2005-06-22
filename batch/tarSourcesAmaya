@@ -61,6 +61,9 @@ ${AMAYADIR}/resources/icons/16x16/*.png \
 ${AMAYADIR}/resources/icons/22x22/*.png \
 ${AMAYADIR}/resources/icons/misc/*.png \
 ${AMAYADIR}/resources/xrc/*.xrc \
+${AMAYADIR}/resources/bundle/Info.plist.in \
+${AMAYADIR}/resources/bundle/amaya.icns \
+${AMAYADIR}/resources/bundle/logo.png \
 ${AMAYADIR}/Windows/*.mak \
 ${AMAYADIR}/Windows/*.dsp \
 ${AMAYADIR}/Windows/*.dsw \
@@ -448,6 +451,9 @@ ${AMAYADIR}/resources/icons/16x16/*.png \
 ${AMAYADIR}/resources/icons/22x22/*.png \
 ${AMAYADIR}/resources/icons/misc/*.png \
 ${AMAYADIR}/resources/xrc/*.xrc \
+${AMAYADIR}/resources/bundle/Info.plist.in \
+${AMAYADIR}/resources/bundle/amaya.icns \
+${AMAYADIR}/resources/bundle/logo.png \
 ${AMAYADIR}/Windows/*.mak \
 ${AMAYADIR}/Windows/*.dsp \
 ${AMAYADIR}/Windows/*.dsw \
