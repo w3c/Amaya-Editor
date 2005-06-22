@@ -70,6 +70,7 @@ CSSmedia CheckMediaCSS (char *buff)
 		  (!strncasecmp (screentype, "tv", 2) &&
 		   !strncasecmp (ptr, "tv", 2)))
 		{
+		  /* the current screen type matches */
 		  if (media == CSS_PRINT)
 		    media = CSS_ALL;
 		  else if (media == CSS_OTHER)
@@ -78,6 +79,7 @@ CSSmedia CheckMediaCSS (char *buff)
 	      else if (!strncasecmp (screentype, "print", 5) &&
 		       !strncasecmp (ptr, "print", 5))
 		{
+		  /* the current screen type matches */
 		  if (media == CSS_SCREEN)
 		    media = CSS_ALL;
 		  else if (media == CSS_OTHER)
@@ -86,6 +88,7 @@ CSSmedia CheckMediaCSS (char *buff)
 	    }
 	  else if (!strncasecmp (ptr, "screen", 6))
 	    {
+	      /* no screen type and media type equals screen */
 	      if (media == CSS_PRINT)
 		media = CSS_ALL;
 	      else if (media == CSS_OTHER)
@@ -93,6 +96,7 @@ CSSmedia CheckMediaCSS (char *buff)
 	    }
 	  else if (!strncasecmp (ptr, "print", 5))
 	    {
+	      /* no screen type and media type equals screen */
 	      if (media == CSS_SCREEN)
 		media = CSS_ALL;
 	      else if (media == CSS_OTHER)
@@ -100,7 +104,11 @@ CSSmedia CheckMediaCSS (char *buff)
 	    }
 	  /* look for a separator */
 	  while (*ptr != EOS && *ptr != ',')
-	    ptr++;
+	    {
+	      if (*ptr == ';' || *ptr == '{')
+		return media;
+	      ptr++;
+	    }
 	  if (*ptr == ',')
 	    ptr++;
 	}
@@ -883,6 +891,7 @@ void RemoveStyle (char *url, Document doc, ThotBool disabled,
     }
 }
 
+
 /*----------------------------------------------------------------------
   GetStyleContents returns a buffer that contains the whole text of the
   style element el. It returns NULL if the element is empty.
@@ -892,8 +901,11 @@ char *GetStyleContents (Element el)
 {
   ElementType         elType;
   Element             text;
+  Attribute           attr;
+  AttributeType       attrType;
+  CSSmedia            media = CSS_ALL;
   Language            lang;
-  char               *buffer;
+  char               *buffer, *name;
   int                 length, i, j;
   ThotBool            loadcss;
 
@@ -901,16 +913,39 @@ char *GetStyleContents (Element el)
 
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
-  if (loadcss)
+  if (loadcss && el)
     {
+      /* check the media type of the element */
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      name = TtaGetSSchemaName (attrType.AttrSSchema);
+      if (!strcmp (name, "HTML"))
+	attrType.AttrTypeNum = HTML_ATTR_media;
+#ifdef _SVG
+      else if (!strcmp (name, "HTML"))
+	attrType.AttrTypeNum = SVG_ATTR_media;
+#endif /* _SVG */
+      else
+	attrType.AttrTypeNum = 0;
+      if (attrType.AttrTypeNum)
+	{
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      length = TtaGetTextAttributeLength (attr);
+	      name = (char *)TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attr, name, &length);
+	      media = CheckMediaCSS (name);
+	      TtaFreeMemory (name);
+	    }
+	}
       /* get enough space to store UTF-8 characters */
       length = TtaGetElementVolume (el) * 6 + 1;
-      if (length > 1)
+      if ((media == CSS_ALL || media == CSS_SCREEN) && length > 1)
 	{
 	  /* get the length of the included text */
 	  buffer = (char *)TtaGetMemory (length);
 	  /* fill the buffer */
-	  elType = TtaGetElementType (el);
 	  elType.ElTypeNum = 1 /* 1 = TEXT_UNIT element */;
 	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
 	  i = 0;
@@ -946,7 +981,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   FILE               *res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
-  char               *tmpBuff, *screentype;
+  char               *tmpBuff;
   CSSCategory         category;
   int                 len;
   ThotBool            import, printing;
@@ -956,11 +991,8 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
   printing = TtaIsPrinting ();
   if (!printing && media == CSS_PRINT)
-  {
-    screentype = TtaGetEnvString ("SCREEN_TYPE");
-	if (screentype && !strncasecmp (screentype, "print", 5))
-      printing = TRUE;
-  }
+    printing = TRUE;
+
   if (!loadcss && !printing)
     return;
   import = (css != NULL);

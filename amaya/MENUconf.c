@@ -168,7 +168,7 @@ static ThotBool    InitLoadImages;
 static ThotBool    InitLoadObjects;
 static ThotBool    InitLoadCss;
 static ThotBool    InitBgImages;
-static char        NewScreen[MAX_LENGTH];
+static char        InitScreen[MAX_LENGTH];
 #ifndef _WX
 static char       *ScreensTxt[]={
   "handheld", "print", "projection", "screen", "tty", "tv"
@@ -2606,7 +2606,6 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1:
 #ifdef _WX
-	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
 	      strcpy (NewCharset, GProp_Publish.CharsetType);
 	      /* force SafePut refresh */
 	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
@@ -2938,7 +2937,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_SCREENLIST:
 	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
 	  CurrentScreen = SendMessage (ScreensList, LB_GETTEXT, CurrentScreen,
-				   (LPARAM) NewScreen);
+				   (LPARAM) InitScreen);
 	case IDC_LANNEG:
 	  GetDlgItemText (hwnDlg, IDC_LANNEG, GProp_Browse.LanNeg,
 			  sizeof (GProp_Browse.LanNeg) - 1);
@@ -2946,14 +2945,14 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
-	  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
-        InitWarnCTab != GProp_Browse.WarnCTab ||
+	  if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
+	      InitWarnCTab != GProp_Browse.WarnCTab ||
 	      InitOpeningLocation != GProp_Browse.OpeningLocation ||
 	      InitLoadImages != GProp_Browse.LoadImages ||
 	      InitLoadObjects != GProp_Browse.LoadObjects ||	      
 	      InitLoadCss != GProp_Browse.LoadCss)
 	    {
-	      strcpy (GProp_Browse.ScreenType, NewScreen);
+	      strcpy (InitScreen, GProp_Browse.ScreenType);
 	      SetBrowseConf ();
 	      ApplyConfigurationChanges ();
 	      InitOpeningLocation = GProp_Browse.OpeningLocation;
@@ -3022,7 +3021,6 @@ static void BuildScreenSelector (void)
                        ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
-  strcpy (NewScreen, GProp_Browse.ScreenType);
 }
 #endif /* _WX */
 
@@ -3068,11 +3066,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-#ifdef _WX
-	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
-	      strcpy (NewScreen, GProp_Browse.ScreenType);
-#endif /* _WX */
-	      if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+	      if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
 		  InitWarnCTab != GProp_Browse.WarnCTab ||
 		  InitOpeningLocation != GProp_Browse.OpeningLocation ||
 		  InitLoadImages != GProp_Browse.LoadImages ||
@@ -3081,14 +3075,14 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		  InitLoadCss != GProp_Browse.LoadCss)
 		{
 		  /* there is almost a change */
-		  if (strcmp (GProp_Browse.ScreenType, NewScreen) ||
+		  if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
 		      InitLoadImages != GProp_Browse.LoadImages ||
 		      InitLoadObjects != GProp_Browse.LoadObjects ||
 		      InitBgImages != GProp_Browse.BgImages ||
 		      InitLoadCss != GProp_Browse.LoadCss)
 		    {
 		      /* redisplay documents after these changes */
-		      strcpy (GProp_Browse.ScreenType, NewScreen);
+		      strcpy (InitScreen, GProp_Browse.ScreenType);
 		      SetBrowseConf ();
 		      ApplyConfigurationChanges ();
 		    }
@@ -3141,7 +3135,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	  break;
 	case mScreenSelector:
 	  /* Get the desired screen type from the item number */
-	  strcpy (NewScreen, data);
+	  strcpy (GProp_Browse.ScreenType, data);
 	  break;
 
 	case mLanNeg:
@@ -3180,6 +3174,7 @@ void BrowseConfMenu (Document document, View view)
   InitBgImages = GProp_Browse.BgImages;
   InitLoadCss = GProp_Browse.LoadCss;
   InitWarnCTab = GProp_Browse.WarnCTab;
+  strcpy (InitScreen, GProp_Browse.ScreenType);
 #ifdef _GTK
   /* Create the dialogue form */
   i = 0;
@@ -3205,6 +3200,7 @@ void BrowseConfMenu (Document document, View view)
 		    NULL,
 		    FALSE);
   BuildScreenSelector ();
+  strcpy (InitScreen, GProp_Browse.ScreenType);
   /* last line */
   TtaNewTextForm (BrowseBase + mLanNeg, BrowseBase + BrowseMenu,
 		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),

@@ -3680,7 +3680,7 @@ static void      CreateXmlComment (char *commentValue)
 /*----------------------------------------------------------------------
    LoadXmlStyleSheet
   ---------------------------------------------------------------------*/
-void  LoadXmlStyleSheet  (Document doc)
+static void LoadXmlStyleSheet (Document doc)
 {
   int           i;
   char         *ptr;
@@ -3824,18 +3824,18 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 		   css_info = NULL;
 		   /* get the CSS URI in UTF-8 */
 		   /*css_href = ReallocUTF8String (css_href, XMLcontext.doc);*/
-	       /* load the stylesheet file found here ! */
-	       ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css_href,
-					     TtaGetDefaultCharset ());
-	       if (ptr)
-		   {
-             TtaFreeMemory (css_href);
-			 css_href = ptr;
-		   }
+		   /* load the stylesheet file found here ! */
+		   ptr = (char *)TtaConvertMbsToByte ((unsigned char *)css_href,
+						      TtaGetDefaultCharset ());
+		   if (ptr)
+		     {
+		       TtaFreeMemory (css_href);
+		       css_href = ptr;
+		     }
 		   /* Don't apply immediately the style sheet for XML schemas */
 		   elType = TtaGetElementType (piEl);
 		   if (((strcmp (TtaGetSSchemaName (elType.ElSSchema), "XML") == 0) ||
-		       TtaIsXmlSSchema (elType.ElSSchema)) &&
+			TtaIsXmlSSchema (elType.ElSSchema)) &&
 		       XML_CSS_Level < MAX_NS_TABLE)
 		     {
 		       XML_CSS_Href [XML_CSS_Level] = TtaStrdup (css_href); 

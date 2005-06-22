@@ -1599,7 +1599,6 @@ static char *ParseACSSListStyleType (Element element, PSchema tsch,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
-  char               *ptr = cssRule;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
@@ -1970,7 +1969,6 @@ static char *ParseACSSListStyleImage (Element element, PSchema tsch,
 				      ThotBool isHTML)
 {
   char               *url;
-  char               *ptr = cssRule;
   PresentationValue   pval;
 
   pval.typed_data.unit = UNIT_REL;
@@ -2033,7 +2031,6 @@ static char *ParseACSSListStylePosition (Element element, PSchema tsch,
 					 ThotBool isHTML)
 {
   PresentationValue   pval;
-  char               *ptr = cssRule;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
@@ -3879,9 +3876,9 @@ static char *ParseCSSPadding (Element element, PSchema tsch,
    ParseCSSForeground: parse a CSS foreground attribute 
   ----------------------------------------------------------------------*/
 static char *ParseCSSForeground (Element element, PSchema tsch,
-					  PresentationContext context,
-					  char *cssRule,
-					  CSSInfoPtr css, ThotBool isHTML)
+				 PresentationContext context,
+				 char *cssRule,
+				 CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   best;
   char               *p;
@@ -6340,8 +6337,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 {
   DisplayMode         dispMode;
   CSSInfoPtr          refcss = NULL;
+  CSSmedia            css_media = CSS_ALL;
   PInfoPtr            pInfo;
-  char                c, *screentype;
+  char                c;
   char               *cssRule, *base, *saveDocURL, *ptr;
   int                 index;
   int                 CSSindex;
@@ -6373,7 +6371,6 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   base = NULL;
   /* entering the CSS parsing */
   Style_parsing++;
-  screentype = TtaGetEnvString ("SCREEN_TYPE");
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */
@@ -6521,14 +6518,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			{
 			  /* is it the screen concerned? */
 			  CSSbuffer[CSSindex+1] = EOS;
+			  css_media = CheckMediaCSS (&CSSbuffer[import+7]);
 			  if (TtaIsPrinting ())
-			    base = strstr (&CSSbuffer[import], "print");
+			    ignore = (css_media != CSS_ALL && css_media != CSS_PRINT);
 			  else
-			    base = strstr (&CSSbuffer[import], screentype);
-			  if (base == NULL)
-			    base = strstr (&CSSbuffer[import], "all");
-			  if (base == NULL)
-			    ignore = TRUE;
+			    ignore = (css_media != CSS_ALL && css_media != CSS_SCREEN);
 			  noRule = TRUE;
 			}
 		      else if (!strncasecmp (&CSSbuffer[import+1], "page", 4))
@@ -6678,12 +6672,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		  cssRule = TtaSkipBlanks (cssRule);
 		  if (*cssRule != ';')
 		    {
+		      css_media = CheckMediaCSS (cssRule);
 		      if (TtaIsPrinting ())
-			ignoreImport = (strncasecmp (cssRule, "print", 5) &&
-					strncasecmp (cssRule, "all", 3));
+			ignoreImport = (css_media != CSS_ALL && css_media != CSS_PRINT);
 		      else
-			ignoreImport = (strncasecmp (cssRule, "screen", 6) &&
-					strncasecmp (cssRule, "all", 3));
+			ignoreImport = (css_media != CSS_ALL && css_media != CSS_SCREEN);
 		    }
 		  if (!ignoreImport)
 		    {
