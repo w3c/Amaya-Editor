@@ -14,7 +14,7 @@
               <orient>wxVERTICAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_DOC_LOCATION">
-                  <label>Adresse du document        </label>
+                  <label>*Adresse du document*</label>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
@@ -23,7 +23,6 @@
               </object>
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_DOC_LOCATION_CTRL">
-                  <value></value>
                   <focused>1</focused>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
@@ -38,7 +37,7 @@
               <orient>wxVERTICAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_IMG_LOCATION">
-                  <label>Repertoire des images          </label>
+                  <label>*Repertoire des images*</label>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
@@ -46,10 +45,7 @@
                 <size>0,5</size>
               </object>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL">
-                  <value></value>
-                  <size></size>
-                </object>
+                <object class="wxTextCtrl" name="wxID_IMG_LOCATION_CTRL"/>
                 <flag>wxALL|wxEXPAND</flag>
               </object>
             </object>
@@ -65,7 +61,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxRadioBox" name="wxID_DOC_FORMAT">
-                      <label>Document Format         </label>
+                      <label>*Document Format*</label>
                       <content>
                         <item>HTML</item>
                         <item>XML</item>
@@ -85,7 +81,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_OPTIONS">
-                      <label>Options</label>
+                      <label>*Options*</label>
                     </object>
                     <option>0</option>
                     <flag>wxALL|wxEXPAND</flag>
@@ -94,7 +90,7 @@
                     <size>0,4</size>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxStaticLine"/>
+                    <object class="wxStaticLine" name="wxID_STATICLINE"/>
                     <flag>wxALL|wxEXPAND</flag>
                   </object>
                   <object class="spacer">
@@ -102,13 +98,13 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_CPY_IMAGES_CHK">
-                      <label>Copier images</label>
+                      <label>*Copier images*</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                   </object>
                   <object class="sizeritem">
                     <object class="wxCheckBox" name="wxID_TRANSFORM_URLS_CHK">
-                      <label>Transformer les URL</label>
+                      <label>*Transformer les URL*</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                   </object>
@@ -125,7 +121,7 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_CHARSET">
-                  <label>Charset :</label>
+                  <label>*Charset :*</label>
                 </object>
                 <option>0</option>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -145,7 +141,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_MIME_TYPE">
-                  <label>MIME Type :</label>
+                  <label>*MIME Type :*</label>
                 </object>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -177,7 +173,7 @@
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_SAVE">
-              <label>Confirm</label>
+              <label>*Confirm*</label>
               <default>1</default>
             </object>
           </object>
@@ -186,7 +182,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_BROWSE">
-              <label>Browse</label>
+              <label>*Browse*</label>
             </object>
             <flag>wxALL</flag>
           </object>
@@ -195,7 +191,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CLEAR">
-              <label>Clear</label>
+              <label>*Clear*</label>
             </object>
             <flag>wxALL</flag>
           </object>
@@ -205,7 +201,7 @@
           <object class="sizeritem">
             <flag>wxALL</flag>
             <object class="wxButton" name="wxID_CANCEL">
-              <label>Cancel</label>
+              <label>*Cancel*</label>
             </object>
           </object>
         </object>
