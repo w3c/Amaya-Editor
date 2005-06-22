@@ -16,10 +16,10 @@
   SetCompressor lzma
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\AmayaWX"
+  InstallDir "$PROGRAMFILES\AmayaWX-${VERSION}"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\AmayaWX" ""
+  InstallDirRegKey HKCU "Software\AmayaWX-${VERSION}" ""
 
 ;--------------------------------
 ;Variables
@@ -36,7 +36,7 @@
 
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\AmayaWX" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\AmayaWX-${VERSION}" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
 ;--------------------------------
@@ -48,7 +48,7 @@
 
   ;Start Menu Folder Page Configuration
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
-  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\AmayaWX" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\AmayaWX-${VERSION}" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
   !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
 
@@ -368,13 +368,13 @@ Section "Amaya" SecAmaya
   SetDetailsPrint listonly
 
   ;Store installation folder
-  WriteRegStr HKCU "Software\AmayaWX" "" $INSTDIR 
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "UninstallString" '"$INSTDIR\Uninstall.exe"'
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayName" "Amaya"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX" "URLInfoAbout" "http://www.w3.org/Amaya"
+  WriteRegStr HKCU "Software\AmayaWX-${VERSION}" "" $INSTDIR 
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "DisplayName" "Amaya"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}" "URLInfoAbout" "http://www.w3.org/Amaya"
 
   ; Associate files to amaya
   WriteRegStr HKCR "Amaya" "" "Amaya Files"
@@ -388,6 +388,9 @@ Section "Amaya" SecAmaya
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
+  ;Install Amaya for all users
+  SetShellVarContext all
+
   ;Start Menu
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application   
     ;Create shortcuts
@@ -397,7 +400,7 @@ Section "Amaya" SecAmaya
   !insertmacro MUI_STARTMENU_WRITE_END
 
   ;Create desktop link
-  CreateShortCut "$DESKTOP\AmayaWX.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  CreateShortCut "$DESKTOP\Amaya-${VERSION}.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
 SectionEnd
 
 
@@ -503,15 +506,17 @@ Section "Uninstall"
   SetDetailsPrint textonly
   DetailPrint "Deleting Files..."
   SetDetailsPrint listonly
-
-  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX" "Start Menu Folder"
+  ;Uninstall Amaya for all users
+  SetShellVarContext all
+  
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX-${VERSION}" "Start Menu Folder"
   IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
     Goto amaya_smp_notinstalled
   amaya_smp_installed:
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk"
   Delete "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk"
   RMDir "$SMPROGRAMS\$STARTMENU_FOLDER"
-  Delete "$DESKTOP\AmayaWX.lnk"
+  Delete "$DESKTOP\Amaya-${VERSION}.lnk"
   amaya_smp_notinstalled:
 
   RMDir /r "$INSTDIR"
@@ -520,10 +525,10 @@ Section "Uninstall"
   DetailPrint "Deleting Registry Keys..."
   SetDetailsPrint listonly
 
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX"
-  DeleteRegKey HKLM "Software\AmayaWX"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}"
+  DeleteRegKey HKLM "Software\AmayaWX-${VERSION}"
   DeleteRegKey HKCR "Amaya"
-  DeleteRegKey HKCU "Software\AmayaWX"
+  DeleteRegKey HKCU "Software\AmayaWX-${VERSION}"
   ; uninstall files associations
   ; --> .html
   ReadRegStr $R0 HKCR ".html" ""
