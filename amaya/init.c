@@ -6110,7 +6110,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
 
     case PasswordText:
-#if defined(_WINGUI) || defined(_WX) 
+#ifdef _WX
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
 	{
@@ -6132,7 +6132,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	}
       else
 	Answer_password[NAME_LENGTH - 1] = EOS;
-#endif /*  defined(_WINGUI) || defined(_WX) */
+#endif /* _WX */
 #ifdef _GTK
       strncpy (Answer_password, data, NAME_LENGTH);
       Answer_password[NAME_LENGTH - 1] = EOS;
