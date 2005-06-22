@@ -6114,19 +6114,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
 	{
-	  if (Lg_password < i)
+	  Lg_password = 0;
+	  while (Lg_password < i)
 	    {
 	      /* a new char */
 	      Answer_password[Lg_password] = data[Lg_password];
 	      Display_password[Lg_password] = '*';
 	      Answer_password[++Lg_password] = EOS;
-	      Display_password[Lg_password] = EOS;
-	    }
-	  else if (Lg_password > i)
-	    {
-	      /* a valid backspace */
-	      Lg_password--;
-	      Answer_password[Lg_password] = EOS;
 	      Display_password[Lg_password] = EOS;
 	    }
 	}
