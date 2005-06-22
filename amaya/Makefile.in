@@ -541,6 +541,8 @@ install : all @NOPRINT@../bin/print
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/davlib ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/davlib ; fi)
 	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/config/libconfig ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/config/libconfig ; fi)
+	@(if test ! -d $(prefix)/share/pixmaps ; then $(MKDIR) $(prefix)/share/pixmaps ; fi)
+	@(if test ! -d $(prefix)/share/applications ; then $(MKDIR) $(prefix)/share/applications ; fi)
 	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin
 @NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin
@@ -591,6 +593,22 @@ install : all @NOPRINT@../bin/print
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; \
 	  done ; done)
+
+# GNOME/KDE integration
+	echo "[Desktop Entry]" > $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Encoding=UTF-8" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Name=Amaya @APP_VER@" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Comment=Edit the Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Comment[fr]=Editez le Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Categories=Application;Network;Development;" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Exec=$(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya %u" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Icon=amaya-@APP_VER@.png" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Terminal=false" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "Type=Application" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	echo "MimeType=text/html;text/xml;application/xhtml+xml;application/xml" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	$(CP) $(THOTDIR)/resources/bundle/logo.png $(prefix)/share/pixmaps/amaya-@APP_VER@.png
+
+# MACOSX bundelization
 	@(if test $(AMAYAOS) = "MACOSX" ; then \
 			$(RM) -r $(prefix)/amaya.app ; \
 			$(MKDIR) $(prefix)/amaya.app ; \
@@ -610,6 +628,10 @@ install : all @NOPRINT@../bin/print
 uninstall :
 	$(RM) -r $(prefix)/$(AMAYA_INSTALLDIR)
 	$(RM) $(bindir)/amaya*
+# Remove GNOME/KDE integration stuff
+	$(RM) $(prefix)/share/applications/amaya-@APP_VER@.desktop
+	$(RM) $(prefix)/share/pixmaps/amaya-@APP_VER@.png
+# Remove MACOSX budelization stuff
 	@(if test $(AMAYAOS) = "MACOSX" ; then \
 			$(RM) -r $(prefix)/amaya.app ; \
 	fi)
