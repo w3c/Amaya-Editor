@@ -1808,7 +1808,7 @@ void TtaDoPostFrameCreation( int frame_id )
   TtaHandlePendingEvents();
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
-  wxSafeYield();
+  wxYield();
   /* fix accessibility problem : force the created frame to get the focus */
   TtaRedirectFocus();
 

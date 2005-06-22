@@ -354,7 +354,6 @@ bool AmayaFrame::SetCurrent()
  */
 bool AmayaFrame::DisplayIsReady()
 {
-  wxASSERT(m_pCanvas && m_pCanvas->IsInit());
   return (m_pCanvas && m_pCanvas->IsInit());
 }
 

@@ -477,10 +477,7 @@ void AmayaPage::DoSplitUnsplit()
   else
     {
       bool dummy = false;
-      // unsplit the page
-      AmayaFrame * p_frame = DetachFrame(2);
-      // then destroy it
-      p_frame->DoClose(dummy);
+      m_pBottomFrame->DoClose(dummy);
     }
 }
 

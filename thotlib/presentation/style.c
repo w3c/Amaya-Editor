@@ -1256,12 +1256,12 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 		  /* it's an ancestor like a selector "li a" */
 		  {
 		   if (i == 1 && ctxt->rel[i] == RelImmediat)
-		     /* due to a (current) limitation of Thot, immediate child
-			(denoted by '>' in CSS selectors) can be taken into
-			account only for the first ancestor **********  */
-		     immediate = true;
+        /* due to a (current) limitation of Thot, immediate child
+         * (denoted by '>' in CSS selectors) can be taken into
+         * account only for the first ancestor **********  */
+		     immediate = TRUE;
 		   else
-		     immediate = false;
+		     immediate = FALSE;
 		   PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
 					    ctxt->names_nb[i], immediate);
 		  }

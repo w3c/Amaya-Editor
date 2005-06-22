@@ -246,7 +246,7 @@ static View OpenView (Document document, char *viewName,
   ----------------------------------------------------------------------*/
 View TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
 {
-   return OpenView (document, viewName, x, y, w, h, NULL);
+  return OpenView (document, viewName, x, y, w, h, NULL);
 }
 
 /*----------------------------------------------------------------------

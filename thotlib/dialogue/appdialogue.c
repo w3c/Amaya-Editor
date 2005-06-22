@@ -123,6 +123,7 @@ static int          FreeMenuAction;
   static  Proc 	    LastProcedure = NULL;
 #endif /* _WX */
 static  ThotBool    ActivatedButton = FALSE;   
+static ThotBool     g_DoingAction = FALSE;
 
 void InitClue (ThotWidget toplevel);
 
@@ -768,6 +769,11 @@ int FindMenuActionFromMenuItemID (Menu_Ctl * ptrmenu, int item_id)
 void TtaExecuteMenuAction (const char *actionName, Document doc, View view, ThotBool force)
 {
   int                 i, frame;
+
+  // prevent recursive call
+  if (g_DoingAction)
+    return;
+  g_DoingAction = TRUE;
   
   UserErrorCode = 0;
   /* verifie le parametre document */
@@ -794,6 +800,7 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view, Thot
         (*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
 #endif /* _WX */
     }
+  g_DoingAction = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -803,29 +810,35 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc, View view, T
 {
   int frame_id;
   
+  // prevent recursive call
+  if (g_DoingAction)
+    return;
+  g_DoingAction = TRUE;
+
   UserErrorCode = 0;
   if (doc == 0 || view == 0 || action_id <= 0)
     TtaError (ERR_invalid_parameter);
   else
-    {
-      frame_id = GetWindowNumber (doc, view);
-      CloseTextInsertion ();
+  {
+    frame_id = GetWindowNumber (doc, view);
+    CloseTextInsertion ();
 #ifdef _WX
-      if (action_id > 0 && action_id < MaxMenuAction &&
-          (MenuActionList[action_id].ActionActive[doc] || force)&&
-          MenuActionList[action_id].Call_Action)
-        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+    if (action_id > 0 && action_id < MaxMenuAction &&
+        (MenuActionList[action_id].ActionActive[doc] || force)&&
+        MenuActionList[action_id].Call_Action)
+      (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
 
-      // redirect focus to the canvas because when an action is done 
-      // it's more probable that the user wants to type some characteres after executing the action
-      TtaRedirectFocus();
+    // redirect focus to the canvas because when an action is done 
+    // it's more probable that the user wants to type some characteres after executing the action
+    TtaRedirectFocus();
 #else /* _WX */
-      if (action_id > 0 && action_id < MaxMenuAction &&
-          (MenuActionList[action_id].ActionActive[frame_id] || force)&&
-          MenuActionList[action_id].Call_Action)
-        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+    if (action_id > 0 && action_id < MaxMenuAction &&
+        (MenuActionList[action_id].ActionActive[frame_id] || force)&&
+        MenuActionList[action_id].Call_Action)
+      (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
 #endif /* _WX */
-    }
+  }
+  g_DoingAction = FALSE;
 }
 
 /*----------------------------------------------------------------------

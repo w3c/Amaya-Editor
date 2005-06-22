@@ -558,7 +558,6 @@ void OpenCreatedView (PtrDocument pDoc, int view,
         if (frame_id>0)
           {
             FrameToView(frame_id, &doc, &view);
-            TtaDetachFrame(frame_id);
             DestroyFrame(frame_id);
             TtaFreeView (doc, view);
           }
