@@ -1059,18 +1059,13 @@ if test "$with_generic_xml" = "" ; then
     fi
 fi
 
+dnl
+dnl WebDAV support enabled by default
+dnl
 AC_ARG_WITH(dav,            [  --with-dav              enable WebDAV support (experimental) ])
-dnl
-dnl DAV support disabled by default
-dnl
 if test "$with_dav" = "" ; then
-  if test "$enable_dav" = "yes" ; then
-    with_dav="yes"
-  else
-    with_dav="no"
-  fi
-fi  
-
+  with_dav="yes"
+fi
 if test "$with_dav" = "yes" ; then
    DAV_OPTIONS=-DDAV
    DAVDIR="davlib"
@@ -1491,10 +1486,10 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with OpenGL Canvas Rendering \(System library\) \(experimental\)
     fi
     if test "$with_mesa" = "yes" ; then
-	echo Amaya configured with OpenGL Canvas Rendering \(MesaLib\) \(experimental\)
+	echo Amaya configured with OpenGL Canvas Rendering \(MesaLib\)
     fi
     if test "$with_dav" = "yes" ; then
-	echo Amaya configured with WebDAV support \(experimental\)
+	echo Amaya configured with WebDAV support
     fi
 fi
 
@@ -1516,9 +1511,9 @@ fi
 
 if test "$with_wx" = "yes" ; then
   if test "$with_wxdebug" = "yes" ; then
-    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (debug) (experimental)"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (debug)"
   else
-    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR} (experimental)"
+    echo "Amaya configured with wxWidgets {srcdir=$WX_SRCDIR}"
   fi
 fi
 
