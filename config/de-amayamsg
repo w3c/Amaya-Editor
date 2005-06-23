@@ -358,14 +358,14 @@
 356 Einstellungen
 357 Zeichen (&xxx;)
 358 Objekt erzeugen
-359 **Directory
-360 **File
-361 **Replace current
-362 **In new tab
-363 **In new tab (not yet available on Mac OSX)
-364 **In new Window
+359 Verzeichnis
+360 Datei
+361 Aktuelle Seite ersetzen
+362 In neuer Seite
+363 In neuer Seite (noch nicht verfügbar in Mac OSX)
+364 In neuem Fenster
 365 Anti-aliasing
-366 **ISO format for date
-367 **New documents location
-368 **Opening location
-369 **Warn when closing multiple tabs
+366 ISO-Datumsformat
+367 Ort für neue Dokumente
+368 Ort zum Öffnen
+369 Warnen, wenn mehrere Seiten geschlossen werden

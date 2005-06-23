@@ -172,7 +172,7 @@
 170 Cornice (iframe)
 171 ruby
 172 Numerazione delle sezioni
-173 **&Generate Table of contents
+173 Genera Indice (Table of contents)
 174 Inserisci timestamp
 175 Crea libro
 176 Tipo di informazione
@@ -244,23 +244,23 @@
 242 Crea obiettivo
 243 Cancella ancora
 244 Aggiungi/Togli ID...
-245 **Show &tools
-246 **&Fullscreen
+245 Mostra strumenti
+246 Schermo intero
 247 Mostra barra dei pulsanti
 248 Mostra indirizzo
 249 Mostra le zone attive
 250 Mostra obiettivi
 251 Ingrandisci
 252 Rimpicciolisci
-253 **Show &formatted view
+253 Mostra la vista formattata
 254 Mostra struttura
 255 Mostra sorgente
 256 Mostra collegamenti
 257 Mostra la vista alternativa
 258 Mostra sommario
 259 Mostra la timeline
-260 **Split view horizontally
-261 **Split view vertically
+260 Dividi la vista in orizzontale
+261 Dividi la vista in verticale
 262 Stile dei caratteri...
 263 Colori...
 264 Formattazione...

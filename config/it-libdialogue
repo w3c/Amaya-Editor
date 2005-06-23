@@ -35,7 +35,7 @@
 33 Predefinito
 34 Allineamento
 35 Indentazione
-36 **Printing in progress
+36 Stampa in corso
 37 Stampa
 38 Alimentazione manuale
 39 Opzioni
@@ -141,10 +141,10 @@
 139 Encora ...
 140 Usa colori
 141 Colore
-142 **Background color
-143 **Foreground color
-144 **Switch colors
-145 **Select a generic XML structure
+142 Colore di sfondo
+143 Colore per il testo
+144 Scambia colori
+145 Scegli una struttura XML generica
 146 Controlla
 147 Cerca
 148 Sostituisci (+ diz)
@@ -166,27 +166,27 @@
 164 Controllo ortografico interrotto
 165 Seleziona un documento
 166 Dizionario del documento salvato: %s
-167 **Not available in this version
-168 **Enable/Disable palette
-169 **Tools
-170 **Mandatory attribute, it can't be removed
-171 **Refresh
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
+167 Non disponibile in questa versione
+168 Abilita/Disabilita la paletta colori
+169 Strumenti
+170 Attributo obbligatorio, non si pu rimuovere
+171 Aggiorna
+172 Sinistra
+173 Destra
+174 Centro
+175 Giustifica
 176 Applica la classe
 177 Seleziona una classe o una pseudoclasse
 178 Seleziona
-179 **Use F2 key to select the parent element
+179 Usa il tasto F2 per selezionare l'elemento padre
 180 Formule matematiche
-181 **Misc
-182 **Binary relations
-183 **Binary relations of negation
-184 **Operators
-185 **Greek alphabet (capital)
-186 **Arrows
-187 **Special characters
+181 Varie
+182 Relazioni binarie
+183 Relazioni binarie di negazione
+184 Operatori
+185 Alfabeto greco (maiuscolo)
+186 Frecce
+187 Caratteri speciali
 188 Interrompi trasferimento
 189 Documento precedente
 190 Documento successivo
@@ -207,8 +207,8 @@
 205 Lista di definizioni
 206 Collegamento
 207 Tabella
-208 **You are about to close %d open tabs. Are you sure you want to continue?
-209 **Warn me when I attempt to close multiple tabs
-210 **Close tabs
-211 **No error detected
+208 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
+209 Avvisami quando cerco di chiudere pi tab
+210 Chiudi tab
+211 Nessun errore trovato
 212 Mostra le errore

@@ -358,14 +358,14 @@
 356 Preferencias
 357 Carácter (&xxx;)
 358 Crear Objeto
-359 **Directory
-360 **File
-361 **Replace current
-362 **In new tab
-363 **In new tab (not yet available on Mac OSX)
-364 **In new Window
+359 Carpeta
+360 Archivo
+361 Reemplazar actual
+362 En nueva pestañas
+363 En nueva pestañas (an no disponible para Mac OSX)
+364 En nueva ventana
 365 Anti-aliasing
-366 **ISO format for date
-367 **New documents location
-368 **Opening location
-369 **Warn when closing multiple tabs
+366 Formato de fecha ISO
+367 Ubicación de nuevos documentos
+368 Abrir localización
+369 Avisar cuando se cierren mútiples pestañas

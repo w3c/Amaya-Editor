@@ -348,24 +348,24 @@
 346 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
 347 Carica oggetti (object, embed, iframe)
 348 Nessuna regola di stile per questo elemento
-349 **No insert position defined. Please select first
-350 **Document information
-351 **Document Type
-352 **MIME Type
-353 **Charset
-354 **Content Length
-355 **Content Location
+349 Nessuna posizione di inserimenti definita. Selezionala prima
+350 Informazioni sul documento
+351 Tipo di documento
+352 MIME Type
+353 Charset
+354 Content Length
+355 Content Location
 356 Preferenze
 357 Carattere (&xxx;)
-358 **Create Object
-359 **Directory
-360 **File
-361 **Replace current
-362 **In new tab
-363 **In new tab (not yet available on Mac OSX)
-364 **In new Window
+358 Crea oggetto
+359 Directory
+360 File
+361 Sostituisci l'attuale
+362 In un nuovo tab
+363 n un nuovo tab (non ancora disponibile su Mac OSX)
+364 In una nuova finestra
 365 Anti-aliasing
-366 **ISO format for date
-367 **New documents location
-368 **Opening location
-369 **Warn when closing multiple tabs
+366 Formato ISO per la data
+367 Locazione per i nuovi documenti
+368 Locazione per aprire documenti
+369 Avviso quando si chiudono pi tab
