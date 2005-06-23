@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char * DAVFQDN ( void );
+extern const char * DAVFQDN ( void );
 extern char * DAVDefaultEmail ( void );
 extern char * DAVBreakString ( char *original );
 extern BOOL DAVAddResource ( char *new_resource,
@@ -39,7 +39,7 @@ extern AHTReqContext * DAVCopyContext ( AHTReqContext *context );
 
 #else /* __STDC__ */
 
-extern char * DAVFQDN ( void );
+extern const char * DAVFQDN ( void );
 extern char * DAVDefaultEmail ( void );
 extern char * DAVBreakString ( char *original );
 extern BOOL DAVAddResource ( char *new_resource,

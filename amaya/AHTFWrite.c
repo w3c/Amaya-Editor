@@ -173,7 +173,7 @@ int AHTFWriter_FREE (HTStream *me)
   if (me)
     {
       if (me->leave_open != YES && me->fp != stdout)
-	fclose (me->fp);
+        fclose (me->fp);
       HTRequest_setOutputStream (me->request, NULL);
       HT_FREE (me);
     }

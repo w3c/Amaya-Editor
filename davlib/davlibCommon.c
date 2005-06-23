@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.12  2005-06-07 13:37:11  gully
+ ** Revision 1.13  2005-06-23 15:00:48  cvs
+ ** fix 2 memory leak.
+ ** (I hope it can help for MacOSX crash on http://www.w3.org/People/all ?)
+ ** S. GULLY
+ **
+ ** Revision 1.12  2005/06/07 13:37:11  gully
  ** code cleaning + warning fixes
  ** S. GULLY
  **
@@ -99,15 +104,15 @@
 /*----------------------------------------------------------------------
    Returns the local hostname with full qualify domain name
   ----------------------------------------------------------------------*/
-char * DAVFQDN (void) 
+const char * DAVFQDN (void) 
 {
     HTRequest *request = HTRequest_new();    
     HTUserProfile *user = HTRequest_userProfile (request);
-    char *fqdn = (user)?HTUserProfile_fqdn(user):NULL;
+    const char *fqdn = (user)?HTUserProfile_fqdn(user):NULL;
     
     HTRequest_delete(request);
     
-    if (!fqdn) StrAllocCopy (fqdn,"localhost.localdomain");
+    if (!fqdn) fqdn = "localhost.localdomain";
     
     return fqdn;
 }
@@ -303,6 +308,8 @@ BOOL DAVAllowResource (char *davlist, char *url)
       }
     if (rel)
       HT_FREE (rel);
+    if (host)
+      HT_FREE (host);
     return match;
 }
 

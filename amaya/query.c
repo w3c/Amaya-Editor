@@ -1038,25 +1038,25 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        /* @@ verify if this is important */
        /* @@@ new libwww doesn't need this free stream while making
 	  a PUT. Is it the case everywhere or just for PUT? */
-       if (me->method != METHOD_PUT &&
-	   me->request->orig_output_stream != NULL)
-	 {
-	   AHTFWriter_FREE (me->request->orig_output_stream);
-	   me->request->orig_output_stream = NULL;
-	   if (me->output != stdout)
-	     {
-	       /* Are we writing to a file? */
+      if (me->method != METHOD_PUT &&
+          me->request->orig_output_stream != NULL)
+      {
+        AHTFWriter_FREE (me->request->orig_output_stream);
+        me->request->orig_output_stream = NULL;
+        if (me->output != stdout)
+        {
+          /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
-	       fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
+          fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
 #endif 
-	       TtaReadClose (me->output);
-	       me->output = NULL;
-	     }
-	 }
+          TtaReadClose (me->output);
+          me->output = NULL;
+        }
+      }
        
        /* tell the user what we're doing */
        TtaSetStatus (me->docid, 1,
-		     TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
+       TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
        /*
        ** launch the request
        */

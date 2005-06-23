@@ -14,7 +14,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.16  2005-06-21 16:02:06  cvs
+ ** Revision 1.17  2005-06-23 15:00:48  cvs
+ ** fix 2 memory leak.
+ ** (I hope it can help for MacOSX crash on http://www.w3.org/People/all ?)
+ ** S. GULLY
+ **
+ ** Revision 1.16  2005/06/21 16:02:06  cvs
  ** Bug fix: a double free in davlib code caused the
  ** wx version built with dav option to crash.
  ** LC + SG
@@ -125,7 +130,7 @@ void InitDAV (void)
 {
     char *ptr = NULL;
     BOOL modified = FALSE;
-    char *fqdn = NULL;
+    const char *fqdn = NULL;
     char *email = NULL;
 
     /* DAV support is enabled */
