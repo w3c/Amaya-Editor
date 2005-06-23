@@ -2031,6 +2031,7 @@
 	<message xml:lang="es">&amp;Generar índice de materias</message>
 	<message xml:lang="ru">Создать оглавление</message>
 	<message xml:lang="de">Inhaltsverzeichnis erzeugen</message>
+	<message xml:lang="it">Genera Indice (Table of contents)</message>
 	<message xml:lang="hu">&amp;Tartalomjegyzék létrehozása</message>
 </label>
 <label define="BDate">
@@ -2839,6 +2840,7 @@
 	<message xml:lang="fr">&amp;Montrer outils</message>
 	<message xml:lang="es">Ventana de &amp;herramientas</message>
 	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
+	<message xml:lang="it">Mostra strumenti</message>
 	<message xml:lang="ru">оНЙЮГЮРЭ ХМЯРПСЛ&amp;ЕМРШ</message>
 	<message xml:lang="hu">&amp;Eszközsor mutatása</message>
 </label>
@@ -2847,6 +2849,7 @@
 	<message xml:lang="fr">&amp;Plein écran</message>
 	<message xml:lang="es">&amp;Pantalla completa</message>
 	<message xml:lang="de">&amp;Vollbildanzeige</message>
+	<message xml:lang="it">Schermo intero</message>
 	<message xml:lang="ru">оНКМШИ ЩЙП&amp;ЮМ</message>
 	<message xml:lang="hu">&amp;Teljes képenyő</message>
 </label>
@@ -2926,6 +2929,8 @@
 	<message xml:lang="en">Show &amp;formatted view</message>
 	<message xml:lang="fr">Montrer la vue &amp;formatée</message>
 	<message xml:lang="es">&amp;Vista formateada</message>
+	<message xml:lang="de">Layoutansicht</message>
+	<message xml:lang="it">Mostra la vista formattata</message>
 	<message xml:lang="hu">&amp;Formázott nézet</message>
 </label>
 <label define="BShowStructure">
@@ -3002,10 +3007,16 @@
 <label define="BSplitHorizontally">
 	<message xml:lang="en">Split view horizontally</message>
 	<message xml:lang="fr">Partager la vue horizontalement</message>
+<message xml:lang="es">Dividir vista horizontalmente</message>
+	<message xml:lang="de">Ansicht horizontal teilen</message>
+	<message xml:lang="it">Dividi la vista in orizzontale</message>
 </label>
 <label define="BSplitVertically">
 	<message xml:lang="en">Split view vertically</message>
   <message xml:lang="fr">Partager la vue verticalement</message>
+	<message xml:lang="es">Dividir vista verticalmente</message>
+	<message xml:lang="de">Ansicht vertikal teilen</message>
+	<message xml:lang="it">Dividi la vista in verticale</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>

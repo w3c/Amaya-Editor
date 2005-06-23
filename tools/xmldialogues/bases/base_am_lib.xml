@@ -451,6 +451,7 @@
 	<message xml:lang="es">Imprimiendo</message>
 	<message xml:lang="ru">Идёт печать</message>
 	<message xml:lang="de">Druckvorgang läuft</message>
+	<message xml:lang="it">Stampa in corso</message>
 	<message xml:lang="hu">Nyomtatás folyamatban</message>
 </label>
 <label define="TMSG_LIB_PRINT">
@@ -1718,6 +1719,7 @@
 	<message xml:lang="fr">Couleur de l'arrière-plan</message>
 	<message xml:lang="es">Color del fondo</message>
 	<message xml:lang="de">Hintergrundfarbe</message>
+	<message xml:lang="it">Colore di sfondo</message>
 	<message xml:lang="ru">жБЕР ТНМЮ</message>
 	<message xml:lang="hu">Háttérszín</message>
 </label>
@@ -1726,6 +1728,7 @@
 	<message xml:lang="fr">Couleur du premier plan</message>
 	<message xml:lang="es">Color del texto</message>
 	<message xml:lang="de">Vordergrundfarbe</message>
+	<message xml:lang="it">Colore per il testo</message>
 	<message xml:lang="ru">жБЕР НЯМНБМШУ ЯХЛБНКНБ</message>
 	<message xml:lang="hu">Szín</message>
 </label>
@@ -1734,6 +1737,7 @@
 	<message xml:lang="fr">Echanger les couleurs</message>
 	<message xml:lang="es">Intercambiar colores</message>
 	<message xml:lang="de">Farben wechseln</message>
+	<message xml:lang="it">Scambia colori</message>
 	<message xml:lang="ru">жБЕР БШЙКЧВЮРЕКЪ</message>
 	<message xml:lang="hu">Színek cseréje</message>
 </label>
@@ -1742,6 +1746,7 @@
 	<message xml:lang="fr">Séléctionner une structure XML générique</message>
 	<message xml:lang="es">Seleccione una estructura genérica</message>
 	<message xml:lang="de">Wählen Sie eine generische XML-Struktur</message>
+	<message xml:lang="it">Scegli una struttura XML generica</message>
 	<message xml:lang="ru">бШАПЮРЭ ПНДЯРБЕММСЧ ЯРПСЙРСПС XML</message>
 	<message xml:lang="hu">Adjon meg egy általános XML szerkezetet</message>
 </label>
@@ -2002,6 +2007,7 @@
 	<message xml:lang="fr">Pas disponible dans cette version</message>
 	<message xml:lang="es">No disponible en esta versión</message>
 	<message xml:lang="de">In dieser Version nicht verfügbar</message>
+	<message xml:lang="it">Non disponibile in questa versione</message>
 	<message xml:lang="ru">мЕДНЯРСОМН Б ЩРНИ БЕПЯХХ</message>
 	<message xml:lang="hu">Ebben a változatban nem elérhető</message>
 </label>
@@ -2010,6 +2016,7 @@
 	<message xml:lang="fr">Activer/Desactiver palette</message>
 	<message xml:lang="es">Activar/Desactivar paleta</message>
 	<message xml:lang="de">Palette aktivieren/deaktivieren</message>
+	<message xml:lang="it">Abilita/Disabilita la paletta colori</message>
 	<message xml:lang="ru">бЙКЧВХРЭ/бШЙКЧВХРЭ ОЮКХРПС</message>
 	<message xml:lang="hu">Dokkoló rögzítése/úsztatása</message>
 </label>
@@ -2018,6 +2025,7 @@
 	<message xml:lang="fr">Outils</message>
 	<message xml:lang="es">Herramientas</message>
 	<message xml:lang="de">Hilfsmittel</message>
+	<message xml:lang="it">Strumenti</message>
 	<message xml:lang="ru">хМЯРПСЛЕМРШ</message>
 	<message xml:lang="hu">Eszközök</message>
 </label>
@@ -2026,6 +2034,7 @@
 	<message xml:lang="fr">Cet attribut est obligatoire, il ne peut pas être supprimé</message>
 	<message xml:lang="es">Atributo obligatorio, no puede eliminarse</message>
 	<message xml:lang="de">Obligatorisches Attribut, kann nicht entfernt werden</message>
+	<message xml:lang="it">Attributo obbligatorio, non si pu rimuovere</message>
 	<message xml:lang="ru">щРН НАЪГЮРЕКЭМШИ ЮРПХАСР, НМ МЕ ЛНФЕР АШРЭ СДЮК╦М</message>
 	<message xml:lang="hu">Kötelező attribútum, nem távolítható el</message>
 </label>
@@ -2034,6 +2043,7 @@
 	<message xml:lang="fr">Actualiser</message>
 	<message xml:lang="es">Actualizar</message>
 	<message xml:lang="de">Erneuern</message>
+	<message xml:lang="it">Aggiorna</message>
 	<message xml:lang="ru">нАМНБХРЭ</message>
 	<message xml:lang="hu">Frissítés</message>
 </label>
@@ -2042,6 +2052,7 @@
 	<message xml:lang="fr">Gauche</message>
 	<message xml:lang="es">Izquierda</message>
 	<message xml:lang="de">Links</message>
+	<message xml:lang="it">Sinistra</message>
 	<message xml:lang="ru">оН КЕБНЛС ЙПЮЧ</message>
 	<message xml:lang="hu">Balra zárt</message>
 </label>
@@ -2050,6 +2061,7 @@
 	<message xml:lang="fr">Droite</message>
 	<message xml:lang="es">Derecha</message>
 	<message xml:lang="de">Rechts</message>
+	<message xml:lang="it">Destra</message>
 	<message xml:lang="ru">оН ОПЮБНЛС ЙПЮЧ</message>
 	<message xml:lang="hu">Jobbra zárt</message>
 </label>
@@ -2058,6 +2070,7 @@
 	<message xml:lang="fr">Centré</message>
 	<message xml:lang="es">Centrado</message>
 	<message xml:lang="de">Zentrieren</message>
+	<message xml:lang="it">Centro</message>
 	<message xml:lang="ru">оН ЖЕМРПС</message>
 	<message xml:lang="hu">Középre zárt</message>
 </label>
@@ -2066,6 +2079,7 @@
 	<message xml:lang="fr">Justifié</message>
 	<message xml:lang="es">Justificado</message>
 	<message xml:lang="de">Ausrichten</message>
+	<message xml:lang="it">Giustifica</message>
 	<message xml:lang="ru">бШПНБМЪРЭ</message>
 	<message xml:lang="hu">Sorkizárt</message>
 </label>
@@ -2110,6 +2124,7 @@
 	<message xml:lang="fr">Utiliser la touche F2 pour sélectionner l'élément englobant</message>
 	<message xml:lang="es">Utilice la tecla F2 para seleccionar el elemento padre</message>
 	<message xml:lang="de">Verwenden Sie die F2 Taste, um das Elternelement auszuwählen</message>
+	<message xml:lang="it">Usa il tasto F2 per selezionare l'elemento padre</message>
 	<message xml:lang="ru">дКЪ БШАНПЮ ПНДХРЕКЭЯЙНЦН ЩКЕЛЕМРЮ ХЯОНКЭГСИРЕ F2</message>
 	<message xml:lang="hu">Az F2 billentyűvel jelölhető ki az elődelem</message>
 </label>
@@ -2130,6 +2145,7 @@
 	<message xml:lang="fr">Divers</message>
 	<message xml:lang="es">Miscelánea</message>
 	<message xml:lang="de">Verschiedene</message>
+	<message xml:lang="it">Varie</message>
 	<message xml:lang="ru">оПНВЕЕ</message>
 	<message xml:lang="hu">Egyéb</message>
 </label>
@@ -2138,6 +2154,7 @@
 	<message xml:lang="fr">Relations binaires</message>
 	<message xml:lang="es">Relaciones binarias</message>
 	<message xml:lang="de">Binäre Relationen</message>
+	<message xml:lang="it">Relazioni binarie</message>
 	<message xml:lang="ru">дБНХВМШЕ ЯБЪГХ</message>
 	<message xml:lang="hu">Bináris műveletek</message>
 </label>
@@ -2146,6 +2163,7 @@
 	<message xml:lang="fr">Relations binaires de négation</message>
 	<message xml:lang="es">Relaciones de negación binarias</message>
 	<message xml:lang="de">Binäre negierte Relationen</message>
+	<message xml:lang="it">Relazioni binarie di negazione</message>
 	<message xml:lang="ru">дБНХВМШЕ ЯБЪГХ НРПХЖЮМХЪ</message>
 	<message xml:lang="hu">Bináris műveletek vagy negálás</message>
 </label>
@@ -2154,6 +2172,7 @@
 	<message xml:lang="fr">Opérateurs</message>
 	<message xml:lang="es">Operadores</message>
 	<message xml:lang="de">Operatoren</message>
+	<message xml:lang="it">Operatori</message>
 	<message xml:lang="ru">гМЮЙХ НОЕПЮЖХИ</message>
 	<message xml:lang="hu">Máveletek</message>
 </label>
@@ -2162,6 +2181,7 @@
 	<message xml:lang="fr">Alphabet grec (majuscules)</message>
 	<message xml:lang="es">Alfabeto griego (mayúsculas)</message>
 	<message xml:lang="de">Griechisches Alphabet (Großbuchstaben)</message>
+	<message xml:lang="it">Alfabeto greco (maiuscolo)</message>
 	<message xml:lang="ru">цПЕВЕЯЙХИ ЮКТЮБХР (ОПНОХЯМНИ)</message>
 	<message xml:lang="hu">Görög ábécé (nagybetűs)</message>
 </label>
@@ -2170,6 +2190,7 @@
 	<message xml:lang="fr">Flèches</message>
 	<message xml:lang="es">Flechas</message>
 	<message xml:lang="de">Pfeile</message>
+	<message xml:lang="it">Frecce</message>
 	<message xml:lang="ru">яРПЕКЙХ</message>
 	<message xml:lang="hu">Nyilak</message>
 </label>
@@ -2177,6 +2198,8 @@
 	<message xml:lang="en">Special characters</message>
 	<message xml:lang="fr">Caractères spéciaux</message>
 	<message xml:lang="es">Caracteres especiales</message>
+	<message xml:lang="de">Sonderzeichen</message>
+	<message xml:lang="it">Caratteri speciali</message>
 	<message xml:lang="hu">Különleges karakterek</message>
 </label>
 <label define="TMSG_BUTTON_INTERRUPT">
@@ -2422,18 +2445,30 @@
 <label define="TMSG_LIB_WARNCTAB_INFO">
 	<message xml:lang="en">You are about to close %d open tabs. Are you sure you want to continue?</message>
 	<message xml:lang="fr">Etes vous certain de vouloir fermer %d onglets?</message>
+	<message xml:lang="es">Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?</message>
+	<message xml:lang="de">Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?</message>
+	<message xml:lang="it">Stai per chiudere %d tab aperti. Vuoi proprio proseguire?</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
 	<message xml:lang="fr">M'avertir quand je ferme plusieurs onglets</message>
+	<message xml:lang="es">Avisarme cuando intente cerrar múltiples pestañas</message>
+	<message xml:lang="de">Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen</message>
+	<message xml:lang="it">Avvisami quando cerco di chiudere pi tab</message>
 </label>
 <label define="TMSG_LIB_CLOSETABS">
 	<message xml:lang="en">Close tabs</message>
 	<message xml:lang="fr">Fermer les onglets</message>
+	<message xml:lang="es">Cerrar pestañas</message>
+	<message xml:lang="de">Seiten schließen</message>
+	<message xml:lang="it">Chiudi tab</message>
 </label>
 <label define="TMSG_LIB_NOERROR_DOC">
 	<message xml:lang="en">No error detected</message>
 	<message xml:lang="fr">Aucune erreur détectée</message>
+	<message xml:lang="es">Ningún error detectado</message>
+	<message xml:lang="de">Kein Fehler gefunden</message>
+	<message xml:lang="it">Nessun errore trovato</message>
 </label>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>
