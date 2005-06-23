@@ -602,7 +602,7 @@ install : all @NOPRINT@../bin/print
 		echo "Comment=Edit the Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
 		echo "Comment[fr]=Editez le Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
 		echo "Categories=Application;Network;Development;" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Exec=$(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya %u" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
+		echo "Exec=@datadir@/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya %u" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
 		echo "Icon=amaya-@APP_VER@.png" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
 		echo "Terminal=false" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
 		echo "Type=Application" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
