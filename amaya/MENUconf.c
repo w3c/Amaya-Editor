@@ -2937,7 +2937,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_SCREENLIST:
 	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
 	  CurrentScreen = SendMessage (ScreensList, LB_GETTEXT, CurrentScreen,
-				   (LPARAM) InitScreen);
+				   (LPARAM) GProp_Browse.ScreenType);
 	case IDC_LANNEG:
 	  GetDlgItemText (hwnDlg, IDC_LANNEG, GProp_Browse.LanNeg,
 			  sizeof (GProp_Browse.LanNeg) - 1);
