@@ -923,6 +923,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 {
   PtrAbstractBox      pAb, pRefAb;
   PtrBox              pRefBox = NULL;
+  AbPosition         *pPosAb;
   Positioning        *pos;
   int                 x, y, w, h;
   int                 l, t, r, b;
@@ -1018,25 +1019,40 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           pAb->AbVertPosChange = FALSE;
           if (l >= 0)
             {
+	      /* left positioning */
               pBox->BxXToCompute = TRUE;
               pAb->AbHorizEnclosing = FALSE;
               pBox->BxXOutOfStruct = TRUE;
-              XMoveAllEnclosed (pBox, x + l, frame);
-              if (pRefBox)
-                InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
               if (r >= 0)
                 {
-                  pAb->AbWidthChange = FALSE;
+		  /* stretchable width */
+		  pAb->AbWidthChange = FALSE;
                   r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+		  pPosAb = &pAb->AbWidth.DimPosition;
+		  pAb->AbWidth.DimIsPosition = TRUE;
+		  pPosAb->PosAbRef = pRefAb;
+		  pPosAb->PosUnit = pos->PnRightUnit;
+		  pPosAb->PosDistance = -pos->PnRightDistance;
+		  pPosAb->PosRefEdge = Right;
+		  pPosAb->PosEdge = Right;
+		  pBox->BxWOutOfStruct = TRUE;
                   if (pBox->BxContentWidth)
-                    {
-                      pBox->BxContentWidth = FALSE;
-                    }
-                  ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
+		    pBox->BxContentWidth = FALSE;
+		  InsertPosRelation (pBox, pRefBox, OpWidth, pPosAb->PosEdge, pPosAb->PosRefEdge);
+		  /* The box is now set stretchable */
+		  pBox->BxHorizFlex = TRUE;
+		  pRefBox->BxMoved = NULL;
+		  MoveBoxEdge (pBox, pRefBox, OpWidth, x + w - r, frame, TRUE);
+		  //ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
                 }
+	      
+	      XMoveAllEnclosed (pBox, x + l, frame);
+              if (pRefBox)
+                InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
             }
           else if (r >= 0)
             {
+	      /* right positioning */
               pBox->BxXToCompute = TRUE;
               pAb->AbHorizEnclosing = FALSE;
               pBox->BxXOutOfStruct = TRUE;
@@ -1052,6 +1068,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           
 	  if (t >= 0)
 	    {
+	      /* top positioning */
 	      pBox->BxYToCompute = TRUE;
 	      pAb->AbVertEnclosing = FALSE;
 	      pBox->BxYOutOfStruct = TRUE;
@@ -1059,18 +1076,20 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      if (pRefBox)
 		InsertPosRelation (pBox, pRefBox, OpVertDep, Top, Top);
 	      if (b >= 0)
-          {
-            pAb->AbHeightChange = FALSE;
-            b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-            if (pBox->BxContentHeight)
-              {
-                pBox->BxContentHeight = FALSE;
-              }
-            ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
-          }
+		{
+		  /* stretchable height */
+		  pAb->AbHeightChange = FALSE;
+		  b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+		  if (pBox->BxContentHeight)
+		    {
+		      pBox->BxContentHeight = FALSE;
+		    }
+		  ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
+		}
 	    }
 	  else if (b >= 0)
 	    {
+	      /* bottom positioning */
 	      pBox->BxYToCompute = TRUE;
 	      pAb->AbVertEnclosing = FALSE;
 	      pBox->BxYOutOfStruct = TRUE;
