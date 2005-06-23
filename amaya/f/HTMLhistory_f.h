@@ -12,6 +12,8 @@ extern Element ElementAtPosition ( Document doc,
                                    int pos );
 extern int RelativePosition ( Document doc,
                               int *distance );
+extern ThotBool HasPreviousDoc ( Document doc );
+extern ThotBool HasNextDoc ( Document doc );
 extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
                                         char *urlName,
@@ -104,6 +106,8 @@ extern Element ElementAtPosition ( Document doc,
                                      int pos );
 extern int RelativePosition ( Document doc,
                                 int *distance );
+extern ThotBool HasPreviousDoc ( Document doc );
+extern ThotBool HasNextDoc ( Document doc );
 extern void GotoPreviousHTML_callback ( int newdoc,
                                           int status,
                                           char *urlName,

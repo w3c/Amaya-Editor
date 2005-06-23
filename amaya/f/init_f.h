@@ -15,7 +15,7 @@ extern Document IsDocumentLoaded ( char *documentURL,
                                    char *form_data );
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
-extern void SetArrowButton ( Document document,
+extern void SetArrowButton ( Document doc,
                              ThotBool back,
                              ThotBool on );
 extern void ResetStop ( Document document );
@@ -206,7 +206,7 @@ extern Document IsDocumentLoaded ( char *documentURL,
                                      char *form_data );
 extern void ExtractParameters ( char *aName,
                                   char *parameters );
-extern void SetArrowButton ( Document document,
+extern void SetArrowButton ( Document doc,
                                ThotBool back,
                                ThotBool on );
 extern void ResetStop ( Document document );

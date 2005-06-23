@@ -249,6 +249,45 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
 }
 
 /*----------------------------------------------------------------------
+   HasPreviousDoc
+   This function returns TRUE if there is a previous document
+  ----------------------------------------------------------------------*/
+ThotBool HasPreviousDoc (Document doc)
+{
+  int prev;
+
+  if (doc == 0)
+    return FALSE;
+  /* check if the request comes from the source document */
+  if (doc && DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
+  prev = DocHistoryIndex[doc];
+  if (prev ==  0)
+    prev = DOC_HISTORY_SIZE - 1;
+  else
+    prev--;
+  return (DocHistory[doc][prev].HistUrl != NULL);
+}
+
+/*----------------------------------------------------------------------
+   HasNextDoc
+   This function returns TRUE if there is a next document
+  ----------------------------------------------------------------------*/
+ThotBool HasNextDoc (Document doc)
+{
+  int next;
+
+  if (doc == 0)
+    return FALSE;
+  /* check if the request comes from the source document */
+  if (doc && DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
+  next = DocHistoryIndex[doc] + 1;
+  next %= DOC_HISTORY_SIZE;
+  return (DocHistory[doc][next].HistUrl != NULL);
+}
+
+/*----------------------------------------------------------------------
    GotoPreviousHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
@@ -306,6 +345,10 @@ void GotoPreviousHTML (Document doc, View view)
   ThotBool             hist = FALSE;
   ThotBool             same_form_data;
   ThotBool             next_doc_loaded = FALSE;
+
+  /* check if the request comes from the source document */
+  if (doc && DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
 
   if (doc < 0 || doc >= DocumentTableLength)
     return;
@@ -491,9 +534,13 @@ void GotoNextHTML (Document doc, View view)
   char                 *initial_url = NULL;
   char                 *form_data = NULL;
   int                   method;
-  int		         next, i;
+  int		        next, i;
   ThotBool              same_form_data;
   ThotBool              next_doc_loaded = FALSE;
+
+  /* check if the request comes from the source document */
+  if (doc && DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
 
   if (doc < 0 || doc >= DocumentTableLength)
     return;

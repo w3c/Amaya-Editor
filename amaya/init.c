@@ -676,7 +676,7 @@ static ThotBool     FileExistTarget (char *filename)
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
   ----------------------------------------------------------------------*/
-void SetArrowButton (Document document, ThotBool back, ThotBool on)
+void SetArrowButton (Document doc, ThotBool back, ThotBool on)
 {
   int		index;
   ThotBool      state;
@@ -689,13 +689,19 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
 	{
 	  state   = TRUE;
 	  picture = iconBack;
-	  TtaSetItemOn (document, 1, File, BBack);
+	  TtaSetItemOn (doc, 1, File, BBack);
+	  if (DocumentSource[doc])
+	    /* update the document source too */
+	    TtaSetItemOn (DocumentSource[doc], 1, File, BBack);
 	}
       else
 	{
           state = FALSE;
 	  picture = iconBackNo;
-	  TtaSetItemOff (document, 1, File, BBack);
+	  TtaSetItemOff (doc, 1, File, BBack);
+	  if (DocumentSource[doc])
+	    /* update the document source too */
+	    TtaSetItemOff (DocumentSource[doc], 1, File, BBack);
 	}
     }
   else
@@ -705,17 +711,25 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
 	{
 	  state = TRUE;
 	  picture = iconForward;
-	  TtaSetItemOn (document, 1, File, BForward);
+	  TtaSetItemOn (doc, 1, File, BForward);
+	  if (DocumentSource[doc])
+	    /* update the document source too */
+	    TtaSetItemOn (DocumentSource[doc], 1, File, BForward);
         }
       else
 	{
 	  state = FALSE;
 	  picture = iconForwardNo;
-	  TtaSetItemOff (document, 1, File, BForward);
+	  TtaSetItemOff (doc, 1, File, BForward);
+	  if (DocumentSource[doc])
+	    /* update the document source too */
+	    TtaSetItemOff (DocumentSource[doc], 1, File, BForward);
 	}
     }
 #ifndef _WX
-  TtaChangeButton (document, 1, index, picture, state);
+  TtaChangeButton (doc, 1, index, picture, state);
+  if (DocumentSource[doc])
+    TtaChangeButton (DocumentSource[doc], 1, index, picture, state);
 #endif /* _WX */
 }
 
@@ -4721,6 +4735,15 @@ void ShowSource (Document doc, View view)
 	 event.element = NULL;
 	 UpdateEditorMenus (sourceDoc);
 	 SetCharsetMenuOff (sourceDoc, 1);
+	 /* update back/forward buttons */
+	 if (HasPreviousDoc (doc))
+	   SetArrowButton (DocumentSource[doc], TRUE, TRUE);
+	 else
+	   SetArrowButton (DocumentSource[doc], TRUE, FALSE);
+	 if (HasNextDoc (doc))
+	   SetArrowButton (DocumentSource[doc], FALSE, TRUE);
+	 else
+	   SetArrowButton (DocumentSource[doc], FALSE, FALSE);
 
 	 // check if a parsing error is detected
 	 sprintf (tempdir, "%s%c%d%cPARSING.ERR",
@@ -5250,6 +5273,9 @@ Document GetAmayaDoc (char *urlname, char *form_data,
     TtaSetStatus (baseDoc, 1, " ", NULL);
 #endif /* _WX */
 
+  /* check if the request comes from the source document */
+  if (doc && DocumentTypes[doc] == docSource)
+    doc = GetDocFromSource (doc);
   ok = TRUE;
   target       = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
