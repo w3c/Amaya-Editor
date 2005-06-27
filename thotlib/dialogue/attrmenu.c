@@ -1200,6 +1200,10 @@ void UpdateAttrMenu (PtrDocument pDoc)
     {
       nbItemAttr = 0;
       nbEvent = 0;
+      PrevDoc = NULL;
+      PrevStructSchema = NULL;
+      PrevElTypeNumber = 0;
+      PrevElAttr = FALSE;
     }
 
 #ifdef _WX
