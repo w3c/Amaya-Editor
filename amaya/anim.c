@@ -2516,18 +2516,18 @@ static void Build_timeline (Document basedoc, char* timelineName)
   /* create the document */
   dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", "Timeline", 0);
   TtaSetPSchema (dt[basedoc].timelinedoc, "TimelineP");
-
+  
   /* get customizable default position & size*/
   TtaGetViewGeometry (dt[basedoc].timelinedoc, 
-		      "Timeline_view", 
-		      &x_timeline, &y_timeline, &w_timeline, &h_timeline);
+                      "Timeline_view", 
+                      &x_timeline, &y_timeline, &w_timeline, &h_timeline);
 
   Compute_global_anim_period_of_doc (basedoc, 
-				     &t_debut_toutes_anim, 
-				     &t_fin_toutes_anim);
+                                     &t_debut_toutes_anim, 
+                                     &t_fin_toutes_anim);
 	
   period_w_size = max( w_timeline-ct_left_bar - ct_vscrollbar_w, 
-		       (int) (3/2.0 * ct_left_bar));
+                       (int) (3/2.0 * ct_left_bar));
   time_sep = period_w_size / t_fin_toutes_anim;
   current_timeline_width = period_w_size;
 	
@@ -2544,20 +2544,20 @@ static void Build_timeline (Document basedoc, char* timelineName)
   /* document independant code */
   /* line */
   dt[basedoc].line1 = Insert_tline (dt[basedoc].timelinedoc, root, "black",
-				    ct_left_bar, ct_top, ct_left_bar+period_w_size,
-				    ct_top, 1);
+                                    ct_left_bar, ct_top, ct_left_bar+period_w_size,
+                                    ct_top, 1);
   dt[basedoc].line2 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line1,
-				    "white", ct_left_bar, ct_top+1,
-				    ct_left_bar+period_w_size, ct_top+1, 0);
+                                    "white", ct_left_bar, ct_top+1,
+                                    ct_left_bar+period_w_size, ct_top+1, 0);
   dt[basedoc].line3 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line2,
-				    "gray", ct_left_bar, ct_top+2,
-				    ct_left_bar+period_w_size, ct_top+2, 0);
+                                    "gray", ct_left_bar, ct_top+2,
+                                    ct_left_bar+period_w_size, ct_top+2, 0);
   dt[basedoc].line4 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line3,
-				    "black", ct_left_bar, ct_top+3,
-				    ct_left_bar+period_w_size, ct_top+3, 0);
+                                    "black", ct_left_bar, ct_top+3,
+                                    ct_left_bar+period_w_size, ct_top+3, 0);
   dt[basedoc].line5 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line4,
-				    "silver", ct_left_bar, ct_top+4,
-				    ct_left_bar+period_w_size, ct_top+4, 0);
+                                    "silver", ct_left_bar, ct_top+4,
+                                    ct_left_bar+period_w_size, ct_top+4, 0);
   dt[basedoc].current_el = dt[basedoc].line5;
 
   /* document dependant code */
@@ -2568,9 +2568,9 @@ static void Build_timeline (Document basedoc, char* timelineName)
       /* animated element */
       parent = TtaGetParent (found);
       /* increase nb_relations_animated here to be able to access 
-	 partly built mapping inside Create_collapsed group
-	 following access to number of relations in this function 
-	 should be nb_relations_animated-1*/
+         partly built mapping inside Create_collapsed group
+         following access to number of relations in this function 
+         should be nb_relations_animated-1*/
 		
       dt[basedoc].nb_relations_animated++;
       mapping = &(dt[basedoc].mapping_animated[dt[basedoc].nb_relations_animated-1]);
@@ -2586,9 +2586,9 @@ static void Build_timeline (Document basedoc, char* timelineName)
       /* maps collapsed group*/
       /* warning :  if only one animation then maps expanded group else maps collapsed group :*/
       if (mapping->nb_periods==1)
-	mapping->exp_group = dt[basedoc].current_el;
+        mapping->exp_group = dt[basedoc].current_el;
       else
-	mapping->col_group = dt[basedoc].current_el;
+        mapping->col_group = dt[basedoc].current_el;
 	
       h_current += ct_collapsed_group_height+2;
     }
@@ -2599,48 +2599,48 @@ static void Build_timeline (Document basedoc, char* timelineName)
   Build_path_to_image_dir (buffer);
   strcat(buffer, ct_image_toolbar);
   temp_el = Insert_image (dt[basedoc].timelinedoc, dt[basedoc].current_el,
-			  buffer, ct_left_bar - ct_w_image_toolbar,
-			  ct_top_toolbar , ct_w_image_toolbar, ct_h_image_toolbar,
-			  0, Timeline_EL_image_toolbar);
+                          buffer, ct_left_bar - ct_w_image_toolbar,
+                          ct_top_toolbar , ct_w_image_toolbar, ct_h_image_toolbar,
+                          0, Timeline_EL_image_toolbar);
 
   /* buttons */	
   left = ct_left_buttons;
   Build_path_to_image_dir (buffer);
   strcat(buffer, ct_image_anim_help);
   Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, left, ct_top_buttons,
-		ct_w_image_help, ct_h_image_help, 0,Timeline_EL_image_help);
+                ct_w_image_help, ct_h_image_help, 0,Timeline_EL_image_help);
 
   left += ct_w_image_help + ct_sep_buttons;
   Build_path_to_image_dir (buffer);
   strcat(buffer, ct_image_anim_motion_disabled);
   dt[basedoc].image_motion = Insert_image (dt[basedoc].timelinedoc, temp_el,
-					   buffer, left, ct_top_buttons,
-					   ct_w_image_motion, ct_h_image_motion,
-					   0, Timeline_EL_image_motion);
+                                           buffer, left, ct_top_buttons,
+                                           ct_w_image_motion, ct_h_image_motion,
+                                           0, Timeline_EL_image_motion);
 
   left += ct_w_image_motion + ct_sep_buttons;
   Build_path_to_image_dir (buffer);
   strcat(buffer, ct_image_anim_color_disabled);
   dt[basedoc].image_color = Insert_image (dt[basedoc].timelinedoc, temp_el,
-					  buffer, left, ct_top_buttons ,
-					  ct_w_image_color, ct_h_image_color,
-					  0, Timeline_EL_image_color);
+                                          buffer, left, ct_top_buttons ,
+                                          ct_w_image_color, ct_h_image_color,
+                                          0, Timeline_EL_image_color);
 
   left += ct_w_image_color + ct_sep_buttons;
   /*	Build_path_to_image_dir (buffer);
-	strcat(buffer, ct_image_anim_help);
-	dt[basedoc].image_interp = Insert_image (dt[basedoc].timelinedoc,
-	temp_el, buffer, left, ct_top_buttons , ct_w_image_help,
-	ct_h_image_help, 0, Timeline_EL_image_help);
+      strcat(buffer, ct_image_anim_help);
+      dt[basedoc].image_interp = Insert_image (dt[basedoc].timelinedoc,
+      temp_el, buffer, left, ct_top_buttons , ct_w_image_help,
+      ct_h_image_help, 0, Timeline_EL_image_help);
   */
 
   /* timing info */
   sprintf (buffer, "%.2fs", (float) 0.0);	
   dt[basedoc].timing_text = Insert_text ( dt[basedoc].timelinedoc, temp_el, "black",
-					  buffer, ct_elem_font_family, 
-					  ct_elem_font_size,
-					  ct_left_bar - ct_w_image_toolbar + 32, 10,
-					  0, Timeline_EL_timing_text);
+                                          buffer, ct_elem_font_family, 
+                                          ct_elem_font_size,
+                                          ct_left_bar - ct_w_image_toolbar + 32, 10,
+                                          0, Timeline_EL_timing_text);
 
   /* graduation */
   temp_el = Draw_graduation (dt[basedoc].timelinedoc, temp_el, 0.0, t_fin_toutes_anim);
@@ -2650,9 +2650,9 @@ static void Build_timeline (Document basedoc, char* timelineName)
   Build_path_to_image_dir (buffer);
   strcat(buffer, ct_image_slider_filename);
   dt[basedoc].slider = Insert_image (dt[basedoc].timelinedoc, temp_el,
-				     buffer, ct_left_bar-6, ct_top-3,
-				     ct_w_image_slider, ct_h_image_slider, 0,
-				     Timeline_EL_image_slider);
+                                     buffer, ct_left_bar-6, ct_top-3,
+                                     ct_w_image_slider, ct_h_image_slider, 0,
+                                     Timeline_EL_image_slider);
 
   /* Amaya should not ask the user to save Timeline document because of modifications*/
   TtaSetDocumentUnmodified (dt[basedoc].timelinedoc);
@@ -2671,16 +2671,17 @@ static void Build_timeline (Document basedoc, char* timelineName)
 
   /* Now build the frame to contains this view */
   dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc,
-					      x_timeline, y_timeline,
-					      w_timeline, h_timeline,
-					      FALSE, FALSE,
-					      window_id, /* window_id */
-					      page_id, /* page_id */
-					      page_position /* page_position */ );
+                                              "timeline",
+                                              x_timeline, y_timeline,
+                                              w_timeline, h_timeline,
+                                              FALSE, FALSE,
+                                              window_id, /* window_id */
+                                              page_id, /* page_id */
+                                              page_position /* page_position */ );
 
   if (dt[basedoc].timelineView)
     TtaChangeWindowTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView,
-			  timelineName, TtaGetDefaultCharset ());
+                          timelineName, TtaGetDefaultCharset ());
   else
     {
       TtaCloseDocument (dt[basedoc].timelinedoc);

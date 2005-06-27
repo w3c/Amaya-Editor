@@ -39,9 +39,9 @@ DisplayMode;
   Return value:
   the view opened or 0 if the view cannot be opened.
    ----------------------------------------------------------------------*/
-extern View TtaOpenMainView (Document document, int x, int y, int w, int h,
-			     ThotBool withMenu, ThotBool withButton,
-			     int window_id, int page_id, int page_position);
+extern View TtaOpenMainView (Document document, const char * doctypename, int x, int y, int w, int h,
+                             ThotBool withMenu, ThotBool withButton,
+                             int window_id, int page_id, int page_position);
 
 /*----------------------------------------------------------------------
   TtaGetDocumentWindowId returns the current document window id

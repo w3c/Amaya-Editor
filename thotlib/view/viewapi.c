@@ -82,6 +82,7 @@ static char           nameBuffer[MAX_NAME_LENGTH];
   (see TtaSetPSchema).
   Parameters:
   document: the document for which a window must be open.
+  doctypename: the document type name used later to configure WX interface (icon tabs)
   x, y: coordinate (in millimeters) of the upper left corner of the
   window that will display the view.
   w, h: width and height (in millimeters) of the upper left corner of the
@@ -91,10 +92,10 @@ static char           nameBuffer[MAX_NAME_LENGTH];
   Return value:
   the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-View TtaOpenMainView ( Document document,
+View TtaOpenMainView ( Document document, const char * doctypename,
                        int x, int y, int w, int h,
-		       ThotBool withMenu, ThotBool withButton,
-		       int window_id, int page_id, int page_position )
+                       ThotBool withMenu, ThotBool withButton,
+                       int window_id, int page_id, int page_position )
 {
   PtrDocument         pDoc;
   PtrPSchema          pPS;
@@ -113,22 +114,24 @@ View TtaOpenMainView ( Document document,
     {
       pDoc = LoadedDocument[document - 1];
       if (pDoc->DocSSchema != NULL)
-	{
-	  pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
-	  if (pPS == NULL)
-	    TtaError (ERR_no_presentation_schema);
-	  else
-	    {
-	      /* Add a pagebreak probably missed at the end of the document */
-	      if (pPS->PsPaginatedView[0])
-          AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
-	      nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
-                                     TRUE, NULL);
-	      OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
-		               window_id, page_id, page_position, "Formatted_view");
-	      view = nView;
-	    }
-     }
+        {
+          pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
+          if (pPS == NULL)
+            TtaError (ERR_no_presentation_schema);
+          else
+            {
+              /* store the document type name */
+              pDoc->DocTypeName = doctypename;
+              /* Add a pagebreak probably missed at the end of the document */
+              if (pPS->PsPaginatedView[0])
+                AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);
+              nView = CreateAbstractImage (pDoc, 1, pDoc->DocSSchema, 1,
+                                           TRUE, NULL);
+              OpenCreatedView (pDoc, nView, x, y, w, h, withMenu, withButton,
+                               window_id, page_id, page_position, "Formatted_view");
+              view = nView;
+            }
+        }
     }
   return view;
 }

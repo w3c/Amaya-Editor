@@ -2338,7 +2338,7 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       root = TtaGetMainRoot (newSVGDoc);
       elType = TtaGetElementType (root);
 
-     /* create the SVG DOCTYPE element */
+      /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, root);
       CreateDoctype (newSVGDoc, doctype, L_SVG, FALSE, FALSE);
@@ -2363,67 +2363,67 @@ Document CreateNewSVGFileofSVGSelected (char *url)
 
       /* search the svg root element */
       elType.ElTypeNum = SVG_EL_SVG;
-/*      elFound = TtaSearchTypedElement(elType, SearchForward, TtaGetMainRoot (newSVGDoc));*/
+      /*      elFound = TtaSearchTypedElement(elType, SearchForward, TtaGetMainRoot (newSVGDoc));*/
       elFound = TtaGetRootElement (newSVGDoc);
       if (elFound)
-	{
-	  /* Copy all the svg selected elements in the current document */
-	  selDoc = TtaGetSelectedDocument();
-	  TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
-	  TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
+        {
+          /* Copy all the svg selected elements in the current document */
+          selDoc = TtaGetSelectedDocument();
+          TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
+          TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
 	  
-	  /* Insert a group element with unique Id */
-	  elType.ElTypeNum = SVG_EL_g;
-	  newEl = TtaNewElement (newSVGDoc, elType);
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = SVG_ATTR_id;
-	  newAttr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (newEl, newAttr, newSVGDoc);
-	  TtaSetStructureChecking (FALSE, newSVGDoc);
-	  TtaInsertFirstChild(&newEl, elFound, newSVGDoc);
+          /* Insert a group element with unique Id */
+          elType.ElTypeNum = SVG_EL_g;
+          newEl = TtaNewElement (newSVGDoc, elType);
+          attrType.AttrSSchema = elType.ElSSchema;
+          attrType.AttrTypeNum = SVG_ATTR_id;
+          newAttr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (newEl, newAttr, newSVGDoc);
+          TtaSetStructureChecking (FALSE, newSVGDoc);
+          TtaInsertFirstChild(&newEl, elFound, newSVGDoc);
 	  
-	  /* insert the copy of an element in the same order than selection */
-	  copiedEl = TtaCopyTree (firstSelEl, selDoc, newSVGDoc, newEl);
-	  TtaInsertFirstChild (&copiedEl, newEl, newSVGDoc);
-	  CheckSVGRoot (newSVGDoc, copiedEl);
-	  /* check "use" element in copied element */
-	  MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
-	  /* save SVG geometry to adjust screenshot */
-	  GiveSVGXYWidthAndHeight (firstSelEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
+          /* insert the copy of an element in the same order than selection */
+          copiedEl = TtaCopyTree (firstSelEl, selDoc, newSVGDoc, newEl);
+          TtaInsertFirstChild (&copiedEl, newEl, newSVGDoc);
+          CheckSVGRoot (newSVGDoc, copiedEl);
+          /* check "use" element in copied element */
+          MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
+          /* save SVG geometry to adjust screenshot */
+          GiveSVGXYWidthAndHeight (firstSelEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
 
-	  currentEl = firstSelEl;
-	  siblingEl = copiedEl;
-	  TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
-	  while (currentEl)
-	    {
-	      copiedEl = TtaCopyTree (currentEl, selDoc, newSVGDoc, newEl);
-	      TtaInsertSibling (copiedEl, siblingEl, FALSE, newSVGDoc);
-	      /* check SVG root attribute width and height */
-	      CheckSVGRoot (newSVGDoc, copiedEl);
-	      MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
-	      GiveSVGXYWidthAndHeight (currentEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
+          currentEl = firstSelEl;
+          siblingEl = copiedEl;
+          TtaGiveNextSelectedElement (selDoc, &currentEl, &i, &i);
+          while (currentEl)
+            {
+              copiedEl = TtaCopyTree (currentEl, selDoc, newSVGDoc, newEl);
+              TtaInsertSibling (copiedEl, siblingEl, FALSE, newSVGDoc);
+              /* check SVG root attribute width and height */
+              CheckSVGRoot (newSVGDoc, copiedEl);
+              MakeStaticCopy (copiedEl, selDoc, newSVGDoc, url);
+              GiveSVGXYWidthAndHeight (currentEl, selDoc, 1, &x_box, &y_box, &width_box, &height_box);
 
-	      if (currentEl == lastSelEl)
-		currentEl = NULL;
-	      else
-		{
-		  siblingEl = copiedEl;
-		  TtaGiveNextSelectedElement (newSVGDoc, &currentEl, &i, &i);
-		}
-	    }
-	  /* initialize id attribute text content of the groupe element*/
-	  TtaSetAttributeText (newAttr, "object", newEl, newSVGDoc);
-	  MakeUniqueName (newEl, newSVGDoc, TRUE);
-	}
+              if (currentEl == lastSelEl)
+                currentEl = NULL;
+              else
+                {
+                  siblingEl = copiedEl;
+                  TtaGiveNextSelectedElement (newSVGDoc, &currentEl, &i, &i);
+                }
+            }
+          /* initialize id attribute text content of the groupe element*/
+          TtaSetAttributeText (newAttr, "object", newEl, newSVGDoc);
+          MakeUniqueName (newEl, newSVGDoc, TRUE);
+        }
 
       TtaSetStructureChecking (oldStructureChecking, newSVGDoc);
       /* get the width and height before opening the svg file */
 
-      SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box,
-				 height_box - y_box, FALSE, TRUE,
-				 1, /* window_id */
-				 0, /* page_id */
-				 2 /* page_position */ );
+      SVGView = TtaOpenMainView (newSVGDoc, "svg", 0, 0, width_box - x_box,
+                                 height_box - y_box, FALSE, TRUE,
+                                 1, /* window_id */
+                                 0, /* page_id */
+                                 2 /* page_position */ );
     }
 #endif /* _SVG */
   return newSVGDoc;

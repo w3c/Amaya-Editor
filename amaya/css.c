@@ -15,6 +15,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT 
+#define THOT_INITGLOBALVAR
 #include "amaya.h"
 
 #undef THOT_EXPORT

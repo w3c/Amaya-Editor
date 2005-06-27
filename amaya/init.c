@@ -2787,14 +2787,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* open the main view */
        if (docType == docLog)
          /* without menu bar */
-         mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, FALSE,
+         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, FALSE,
                                      window_id, page_id, page_position);
        else if (docType == docLibrary && method == CE_RELATIVE)
          /* without menu bar */
-         mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE,
+         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, TRUE,
                                      window_id, page_id, page_position);
        else
-         mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE,
+         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, TRUE, TRUE,
                                      window_id, page_id, page_position);
        if (mainView == 0)
          {

@@ -36,6 +36,7 @@ public:
 #endif /* _GL */
 
   static wxImageList * GetDocumentIconList();
+  static int GetDocumentIconId(const char * p_name);
   static wxIcon GetAppIcon();
 
 #ifdef __WXDEBUG__
@@ -50,6 +51,8 @@ public:
   void OnIdle( wxIdleEvent& event );
   void OnChar( wxKeyEvent& event );
   void OnKeyDown( wxKeyEvent& event );
+
+  static void SetupDocumentIconList();
 
   bool m_AmayaIsLaunched;
 
@@ -70,7 +73,6 @@ public:
   AmayaAppInstance * m_pAmayaInstance;
 
   bool m_AmayaIsInit;
-
 
 #ifdef __WXDEBUG__
   static AmayaLogDebug * m_pAmayaLogDebug;

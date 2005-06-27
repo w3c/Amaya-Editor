@@ -30,8 +30,10 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "frame_tv.h"
 #include "select_tv.h"
+
 #include "appli_f.h"
 #include "views_f.h"
 #include "structselect_f.h"
@@ -47,6 +49,7 @@
 #include "AmayaCallback.h"
 #include "AmayaScrollBar.h"
 #include "AmayaFileDropTarget.h"
+#include "AmayaApp.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
 
@@ -58,15 +61,15 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaFrame, wxPanel)
  *--------------------------------------------------------------------------------------
  */
 AmayaFrame::AmayaFrame(
-                 int             frame_id
-		 ,wxWindow * p_parent /* the final parent : the page splitter window */
-		 ,AmayaWindow *   p_amaya_parent_window
-	      )
+                       int             frame_id
+                       ,wxWindow * p_parent /* the final parent : the page splitter window */
+                       ,AmayaWindow *   p_amaya_parent_window
+                       )
   :  wxPanel( p_parent, -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL
 #ifndef _WINDOWS
-  | wxRAISED_BORDER
+              | wxRAISED_BORDER
 #endif /* _WINDOWS */
-  )
+              )
      ,m_FrameId( frame_id )
      ,m_IsActive( FALSE )
      ,m_ToDestroy( FALSE )
@@ -88,13 +91,13 @@ AmayaFrame::AmayaFrame(
   // it will receive every keybord events in order to handle unicode.
   // do not hide this widget because it can't get events when hidden
   /*  m_pTextGraber = new AmayaTextGraber( GetFrameId(),
-				       this,
-				       -1,
-				       _T(""),
-				       wxPoint(-10,-10),
-				       wxSize(0,0),
-				       wxNO_BORDER | wxTRANSPARENT_WINDOW | wxNO_FULL_REPAINT_ON_RESIZE |
-				       wxWANTS_CHARS | wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
+      this,
+      -1,
+      _T(""),
+      wxPoint(-10,-10),
+      wxSize(0,0),
+      wxNO_BORDER | wxTRANSPARENT_WINDOW | wxNO_FULL_REPAINT_ON_RESIZE |
+      wxWANTS_CHARS | wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
   */
 
   // create horizontal siser and vertical sizer
@@ -138,10 +141,10 @@ AmayaFrame::~AmayaFrame()
 
   /* destroy the canvas (it should be automaticaly destroyed by 
      wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
-/*  if (m_pCanvas)
-    m_pCanvas->Destroy();
-  m_pCanvas = NULL;
-*/
+  /*  if (m_pCanvas)
+      m_pCanvas->Destroy();
+      m_pCanvas = NULL;
+  */
   // it's possible to fall here if a frame is a child of a page but is not deleted
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
@@ -191,10 +194,10 @@ void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
 
   // detach scrollbar and canvas (delete canvas)
   if (m_pCanvas)
-  {
-    m_pCanvas->Hide();
-    m_pHSizer->Remove(0);
-  }
+    {
+      m_pCanvas->Hide();
+      m_pHSizer->Remove(0);
+    }
   m_pHSizer->Detach(0); // the scroll bar 
 
   // assign the new canvas
@@ -244,24 +247,24 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::HideScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
-   {
+    {
     case 1:
-       {
-	 // do not remove the scrollbar if it doesnt exist
-	 if (!m_pScrollBarV) return;
+      {
+        // do not remove the scrollbar if it doesnt exist
+        if (!m_pScrollBarV) return;
 
-	 m_pHSizer->Show(m_pScrollBarV, false);
-       }
+        m_pHSizer->Show(m_pScrollBarV, false);
+      }
       break;
     case 2:
-       {
-	 // do not remove the scrollbar if it doesnt exist
-	 if (!m_pScrollBarH) return;
+      {
+        // do not remove the scrollbar if it doesnt exist
+        if (!m_pScrollBarH) return;
 
-	 m_pVSizer->Show(m_pScrollBarH, false);
-       }
+        m_pVSizer->Show(m_pScrollBarH, false);
+      }
       break;
-   }
+    }
   Layout();
 }
 
@@ -280,41 +283,41 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::ShowScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
-   {
+    {
     case 1:
-       {
-	 // do not create the scrollbar if it always exist
-	 if (!m_pScrollBarV)
-	   {
+      {
+        // do not create the scrollbar if it always exist
+        if (!m_pScrollBarV)
+          {
         
-	     // Create vertical scrollbar
-	     m_pScrollBarV = new AmayaScrollBar( this, GetFrameId(), wxSB_VERTICAL );
-	     m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
-	   }
-	 else
-	   {
-	     m_pHSizer->Show(m_pScrollBarV, true);
-	   }
-	 Layout();
-       }
-      break;
-    case 2:
-       {
-	 // do not create the scrollbar if it always exist
-	 if (!m_pScrollBarH)
-	   {
-	     // Create vertical and horizontal scrollbars
-	     m_pScrollBarH = new AmayaScrollBar( this, GetFrameId(), wxSB_HORIZONTAL );
-	     m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
-	   }
-	 else
-	   {
-	     m_pVSizer->Show(m_pScrollBarH, true);
-	   }
-	 Layout();
+            // Create vertical scrollbar
+            m_pScrollBarV = new AmayaScrollBar( this, GetFrameId(), wxSB_VERTICAL );
+            m_pHSizer->Add( m_pScrollBarV, 0, wxEXPAND );
+          }
+        else
+          {
+            m_pHSizer->Show(m_pScrollBarV, true);
+          }
+        Layout();
       }
       break;
-   }
+    case 2:
+      {
+        // do not create the scrollbar if it always exist
+        if (!m_pScrollBarH)
+          {
+            // Create vertical and horizontal scrollbars
+            m_pScrollBarH = new AmayaScrollBar( this, GetFrameId(), wxSB_HORIZONTAL );
+            m_pVSizer->Add( m_pScrollBarH, 0, wxEXPAND );
+          }
+        else
+          {
+            m_pVSizer->Show(m_pScrollBarH, true);
+          }
+        Layout();
+      }
+      break;
+    }
 }
 
 
@@ -331,16 +334,16 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 bool AmayaFrame::SetCurrent()
 {
   if ( DisplayIsReady() )
-  {
-    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
-    m_pCanvas->SetCurrent();
-    return TRUE;
-  }
+    {
+      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
+      m_pCanvas->SetCurrent();
+      return TRUE;
+    }
   else
-  {
-    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
-    return FALSE;
-  }
+    {
+      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
+      return FALSE;
+    }
 }
 
 /*
@@ -391,11 +394,11 @@ bool AmayaFrame::SwapBuffers()
 void AmayaFrame::OnSize( wxSizeEvent& event )
 {
   TTALOGDEBUG_5( TTA_LOG_DIALOG, _T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
-		 m_FrameId,
-		 event.GetSize().GetWidth(),
-		 event.GetSize().GetHeight(),
-		 m_pHSizer->GetSize().GetWidth(),
-		 m_pHSizer->GetSize().GetHeight() );
+                 m_FrameId,
+                 event.GetSize().GetWidth(),
+                 event.GetSize().GetHeight(),
+                 m_pHSizer->GetSize().GetWidth(),
+                 m_pHSizer->GetSize().GetHeight() );
  
   // forward current event to parent widgets
   event.Skip();
@@ -419,28 +422,52 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 
   AmayaPage * p_page = GetPageParent();
   if (p_page)
-  {
-    AmayaNotebook * p_notebook = p_page->GetNotebookParent();
-    if (p_notebook)
-      {
-	int page_id = p_notebook->GetPageId(p_page);
-	if (page_id >= 0)
-	  {
-	    // setup the page tooltip
-	    // the tooltip should be shown only when the mouse is over the tab,
-	    // maybe hook the tooltip to an image which could be shown into each tab. (as mozilla do)
-	    // p_page->SetToolTip( m_FrameTitle );
+    {
+      AmayaNotebook * p_notebook = p_page->GetNotebookParent();
+      if (p_notebook)
+        {
+          int page_id = p_notebook->GetPageId(p_page);
+          if (page_id >= 0)
+            {
+              // setup the page tooltip
+              // the tooltip should be shown only when the mouse is over the tab,
+              // maybe hook the tooltip to an image which could be shown into each tab. (as mozilla do)
+              // p_page->SetToolTip( m_FrameTitle );
 
-	    // setup the tab title
-	    wxString frame_title = GetFrameTitle();
-	    p_notebook->SetPageText( page_id,
-				     wxString(frame_title).Truncate(15) + (frame_title.Len() > 15 ? _T("...") : _T("")) );
-	  }
-      }
-  }
+              // setup the tab title
+              wxString frame_title = GetFrameTitle();
+              p_notebook->SetPageText( page_id,
+                                       wxString(frame_title).Truncate(15) + (frame_title.Len() > 15 ? _T("...") : _T("")) );
+            }
+        }
+    }
 
   // update also the window title
   SetWindowTitle( m_FrameTitle );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  UpdateFrameIcon
+ * Description:  set the frame's icon. icon depends on frame's document type (html, css, xml ...)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFrame::UpdateFrameIcon()
+{
+  AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
+  wxASSERT(p_frame);
+  int doc_id = FrameTable[p_frame->GetFrameId()].FrDoc;
+  wxASSERT(doc_id > 0);
+  const char * icon_type = LoadedDocument[doc_id-1]->DocTypeName;
+  wxASSERT(icon_type);
+
+  AmayaPage * p_page = p_frame->GetPageParent();
+  wxASSERT(p_page);
+  AmayaNotebook * p_notebook = p_page->GetNotebookParent();
+  wxASSERT(p_notebook);
+  int page_id = p_notebook->GetPageId(p_page);
+  p_notebook->SetPageImage(page_id, AmayaApp::GetDocumentIconId(icon_type));
 }
 
 /*
@@ -459,9 +486,9 @@ wxString AmayaFrame::GetFrameTitle()
     {
       AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
       if (p_frame)
-	return p_frame->m_FrameTitle;
+        return p_frame->m_FrameTitle;
       else
-	return m_FrameTitle;
+        return m_FrameTitle;
     }
 }
 
@@ -485,12 +512,12 @@ void AmayaFrame::SetWindowTitle(const wxString & window_name)
       // check if this frame's page is active or not
       AmayaPage * p_page = GetPageParent();
       if ( !p_page || !p_page->IsSelected() )
-	return;
+        return;
     }
 
   p_window->SetTitle( m_WindowTitle +
-		      _T(" - Amaya ") +
-		      TtaConvMessageToWX(TtaGetAppVersion()) );
+                      _T(" - Amaya ") +
+                      TtaConvMessageToWX(TtaGetAppVersion()) );
 }
 
 /*
@@ -521,9 +548,9 @@ void AmayaFrame::UpdateFrameURL( const wxString & new_url )
     {
       AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
       if (p_frame)
-	p_frame->m_FrameUrl = new_url;
+        p_frame->m_FrameUrl = new_url;
       else
-	m_FrameUrl = new_url;
+        m_FrameUrl = new_url;
     }
 }
 
@@ -537,7 +564,7 @@ void AmayaFrame::UpdateFrameURL( const wxString & new_url )
 void AmayaFrame::SetFrameURL( const wxString & new_url )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::SetFrameURL - frame=%d")+
-		 wxString(_T(" url="))+new_url, GetFrameId() );
+                 wxString(_T(" url="))+new_url, GetFrameId() );
   m_FrameUrl = new_url;
   
   // update the window url if the frame is active
@@ -561,9 +588,9 @@ wxString AmayaFrame::GetFrameURL()
     {
       AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
       if (p_frame)
-	return p_frame->m_FrameUrl;
+        return p_frame->m_FrameUrl;
       else
-	return m_FrameUrl;
+        return m_FrameUrl;
     }
 }
 
@@ -601,9 +628,9 @@ bool AmayaFrame::GetFrameEnableURL( )
     {
       AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
       if (p_frame)
-	return p_frame->m_FrameUrlEnable;
+        return p_frame->m_FrameUrlEnable;
       else
-	return m_FrameUrlEnable;
+        return m_FrameUrlEnable;
     }
 }
 #endif /* 0 */
@@ -680,9 +707,10 @@ void AmayaFrame::SetActive( bool active )
   // the main statusbar text is replaced by the current frame one
   RefreshStatusBarText();
 
-  // update the window title
+  // update the window title and frame's icon
   SetFrameTitle( GetFrameTitle() );
-  
+  UpdateFrameIcon();
+
   // this frame is active update its page
   AmayaPage *   p_page   = GetPageParent();
   if (p_page && p_window)
@@ -720,12 +748,12 @@ void AmayaFrame::RaiseFrame()
       // raise the page parent
       AmayaPage * p_page = GetPageParent();
       if (p_page)
-	{
-	  // first : the page must be warnned this frame is now active
-	  p_page->SetActiveFrame( this );
-	  // now we can raise it
-	  p_page->RaisePage();
-	}
+        {
+          // first : the page must be warnned this frame is now active
+          p_page->SetActiveFrame( this );
+          // now we can raise it
+          p_page->RaisePage();
+        }
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE)
     {
@@ -811,7 +839,7 @@ void AmayaFrame::OnIdle( wxIdleEvent& event )
   //  if ( m_ToDestroy )
   //    Destroy();
   //  else
-    event.Skip();
+  event.Skip();
 }
 
 /*
@@ -824,8 +852,8 @@ void AmayaFrame::OnIdle( wxIdleEvent& event )
 void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
 {
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaFrame::OnContextMenu - (x,y)=(%d,%d)"),
-	      event.GetPosition().x,
-	      event.GetPosition().y );
+                 event.GetPosition().x,
+                 event.GetPosition().y );
 
   // no contextual menu into a frame
 

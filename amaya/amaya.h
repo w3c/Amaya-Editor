@@ -462,9 +462,30 @@ typedef enum
   docMath,
   docXml,
   docLibrary,
-  docBookmark
+  docBookmark,
+  docTypeMax
 } DocumentType;
 
+THOT_EXPORT const char *DocumentTypeNames[docTypeMax]
+#ifdef THOT_INITGLOBALVAR
+= 
+{
+  "free",    /* docFree */
+  "html",    /* docHTML */
+  "text",    /* docText */
+  "image",   /* docImage */
+  "css",     /* docCSS */
+  "source",  /* docSource */
+  "annot",   /* docAnnot */
+  "log",     /* docLog */
+  "svg",     /* docSVG */
+  "math",    /* docMath */
+  "xml",     /* docXml */
+  "library", /* docLibrary */
+  "bookmark",/* docBookmark */
+}
+#endif /* THOT_INITGLOBALVAR */
+; /* do not remove this ; */
 
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement

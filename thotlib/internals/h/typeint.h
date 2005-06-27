@@ -865,6 +865,9 @@ typedef struct _DocumentDescr
   ThotBool   EnabledMenus[MAX_MENU];    /* Enabled top menus in the menubar  */
   Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
 #endif /* _WX */
+
+  const char * DocTypeName; /* this is the document type name given by amaya 
+                             * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
   
 } DocumentDescr;
 

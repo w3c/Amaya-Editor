@@ -80,6 +80,7 @@ public:
 
   void SetStatusBarText( const wxString & text );
   void RefreshStatusBarText();
+  void UpdateFrameIcon();
 
   void     SetWindowTitle( const wxString & window_name );
   wxString GetWindowTitle();

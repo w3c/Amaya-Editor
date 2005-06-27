@@ -210,17 +210,6 @@ bool AmayaApp::OnInit()
   m_SocketEventLoop = new wxAmayaSocketEventLoop( 10 );
   wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
 
-  /* setup the documents image list
-   * this is where the document's icons are stored (as mozilla) */
-  m_pDocImageList = new wxImageList( 16, 16 );
-  /* add the default document icon */
-
-#ifdef _WINDOWS
-  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.gif"), wxBITMAP_TYPE_GIF );
-#else /* _WINDOWS */
-  wxBitmap default_icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "default_document.png"), wxBITMAP_TYPE_PNG );
-#endif /* _WINDOWS */
-  m_pDocImageList->Add( default_icon );
 
 
   /* setup the app icon */
@@ -229,6 +218,9 @@ bool AmayaApp::OnInit()
 #else /* _WINDOWS */
   m_AppIcon = wxIcon( TtaGetResourcePathWX( WX_RESOURCES_ICON_22X22, "logo.png"), wxBITMAP_TYPE_PNG );
 #endif /* _WINDOWS */
+
+  // fill the icons list
+  SetupDocumentIconList();
 
 #endif /* _GLPRINT */
 
@@ -423,6 +415,88 @@ int * AmayaApp::GetGL_AttrList()
 wxImageList * AmayaApp::GetDocumentIconList()
 {
   return m_pDocImageList;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  SetupDocumentIconList
+ * Description:  fill the image list with icons (order is important)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaApp::SetupDocumentIconList()
+{
+  /* setup the documents image list
+   * this is where the document's icons are stored (as mozilla) */
+  m_pDocImageList = new wxImageList( 16, 16 );
+
+  const char * icon_array[] = { "default",
+                                "html",
+                                "text",
+                                "image",
+                                "css",
+                                "source",
+                                "annot",
+                                "log",
+                                "svg",
+                                "math",
+                                "xml",
+                                "library",
+                                "bookmark",
+                                "" };
+  int i = 0;
+  while ( icon_array[i][0] != '\0' )
+    {
+      char gif_filename[128];
+      char png_filename[128];
+      sprintf(gif_filename, "document_%s.gif", icon_array[i] );
+      sprintf(png_filename, "document_%s.png", icon_array[i] );
+#ifdef _WINDOWS
+      wxBitmap icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, gif_filename), wxBITMAP_TYPE_GIF );
+#else /* _WINDOWS */
+      wxBitmap icon( TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, png_filename), wxBITMAP_TYPE_PNG );
+#endif /* _WINDOWS */
+      m_pDocImageList->Add( icon );
+      i++;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  GetDocumentIconId
+ * Description:  Returns the icon id corresponding to the document type name
+ *               (see amaya.h => DocumentTypeNames)
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaApp::GetDocumentIconId(const char * p_name)
+{
+  if (!strcmp(p_name, "html"))
+    return 1;
+  else if (!strcmp(p_name, "text"))
+    return 2;
+  else if (!strcmp(p_name, "image"))
+    return 3;
+  else if (!strcmp(p_name, "css"))
+    return 4;
+  else if (!strcmp(p_name, "source"))
+    return 5;
+  else if (!strcmp(p_name, "annot"))
+    return 6;
+  else if (!strcmp(p_name, "log"))
+    return 7;
+  else if (!strcmp(p_name, "svg"))
+    return 8;
+  else if (!strcmp(p_name, "math"))
+    return 9;
+  else if (!strcmp(p_name, "xml"))
+    return 10;
+  else if (!strcmp(p_name, "library"))
+    return 11;
+  else if (!strcmp(p_name, "bookmark"))
+    return 12;
+  else
+    return 0;
 }
 
 /*
