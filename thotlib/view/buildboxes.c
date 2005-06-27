@@ -2915,6 +2915,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    {
 	      if (pAb->AbPositioning)
 		RemoveFlow (pAb, frame);
+	      if (pAb->AbFloat != 'N')
+		ClearAFloat (pAb);
 	      /* unregister the box */
 	      pBox->BxDisplay = FALSE;
 	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
@@ -4724,7 +4726,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
      result = FALSE;
    else
      {
-       /* rebuild of abstract box withe a new floating child */
+       /* rebuild of abstract box with a new floating child */
        if (!pAb->AbDead && pAb->AbEnclosing)
 	 {
 	   pChildAb = pAb->AbFirstEnclosed;

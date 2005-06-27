@@ -10,6 +10,7 @@ extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                            int frame );
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
+extern void ClearAFloat ( PtrAbstractBox pAb );
 extern int SetFloat ( PtrBox box,
                       PtrBox pBlock,
                       PtrLine pLine,
@@ -59,6 +60,7 @@ extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                              int frame );
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
+extern void ClearAFloat ( PtrAbstractBox pAb );
 extern int SetFloat ( PtrBox box,
                         PtrBox pBlock,
                         PtrLine pLine,

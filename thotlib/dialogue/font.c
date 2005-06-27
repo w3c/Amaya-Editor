@@ -910,8 +910,8 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
       i = val * (long int) pAb;
       dist = (i + 50) / 100;
       break;
-    case UnAuto:
-      /* should not occur: reserved for margins */
+    default:
+      /* should not occur: auto reserved for margins */
       break;
     }
   return (dist);
@@ -987,7 +987,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 	   dist = i / (long int) pAb;
 	 }
        break;
-     case UnAuto:
+     default:
        /* Should not occur. Auto is reserved for margins */
        break;
      }

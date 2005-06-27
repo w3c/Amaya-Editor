@@ -4637,6 +4637,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
     casc = &casc1;
   else
     casc = (Cascade*)CSScasc;
+  memset (casc, 0, sizeof (Cascade));
+#ifdef IV
   casc->ContentRuleBefore = NULL;
   casc->schemaOfContentRuleBefore = NULL;
   casc->attrOfContentRuleBefore = NULL;
@@ -4658,7 +4660,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       casc->AfterPseudoEl.attrOfSelectedRule[i] = NULL;
       casc->AfterPseudoEl.attrBlockOfSelectedRule[i] = NULL;
     }
-
+#endif
   /* get all rules associated with the element type in the main presentation */
   /* schema (default stylesheet of the user agent in CSS terms) */
   pRuleView = NULL;

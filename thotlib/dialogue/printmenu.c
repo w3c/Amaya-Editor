@@ -625,7 +625,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifdef _PCLDEBUG
    printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
 #else /* _PCLDEBUG */
-   res = system (cmd); 
+   res = system (cmd);
 #endif /* _PCLDEBUG */
    if (res == -1) 
      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);

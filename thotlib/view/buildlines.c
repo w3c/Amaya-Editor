@@ -1593,6 +1593,58 @@ void ClearFloats (PtrBox pBox)
 
 
 /*----------------------------------------------------------------------
+   ClearAFloat
+   Remove the left or a right floated box
+  ----------------------------------------------------------------------*/
+void ClearAFloat (PtrAbstractBox pAb)
+{
+  PtrFloat            pfloat, pPrev;
+  PtrBox              box;
+  ThotBool            left;
+
+  if (pAb && pAb->AbBox)
+    {
+      box = pAb->AbBox;
+      left = pAb->AbFloat == 'L';
+      /* look for the floated context in enclosing block */
+      pAb = pAb->AbEnclosing;
+      while (pAb && pAb->AbBox &&
+	     pAb->AbBox->BxType != BoBlock &&
+	     pAb->AbBox->BxType != BoFloatBlock)
+	pAb = pAb->AbEnclosing;
+      if (pAb && pAb->AbBox)
+	{
+	  pPrev = NULL;
+	  if (left)
+	    pfloat = pAb->AbBox->BxLeftFloat;
+	  else
+	    pfloat = pAb->AbBox->BxRightFloat;
+	  while (pfloat)
+	    {
+	      if (pfloat->FlBox == box)
+		{
+		  /* the box is found */
+		  if (pPrev)
+		    pPrev->FlNext = pfloat->FlNext;
+		  else if (left)
+		    pAb->AbBox->BxLeftFloat = pfloat->FlNext;
+		  else
+		    pAb->AbBox->BxRightFloat = pfloat->FlNext;
+		  TtaFreeMemory (pfloat);
+		  return;
+		}
+	      else
+		{
+		  pPrev = pfloat;
+		  pfloat = pfloat->FlNext;
+		}
+	    }
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
   SetClear returns clearL and clearR of the box.
   ----------------------------------------------------------------------*/
 static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)

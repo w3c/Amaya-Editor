@@ -3206,8 +3206,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    /* update the clipping region */
 	    UpdateBoxRegion (frame, pBox, 0, delta, 0, 0);
 	}
-      //if (!strcmp(pCurrentAb->AbElement->ElLabel, "L81"))
-      //printf("YMove L81 y=%d clipY=%d delta=%d\n",pBox->BxYOrg, pBox->BxClipY, delta);
+
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsYPosComplete (pBox);
       /*
