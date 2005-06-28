@@ -456,18 +456,19 @@ void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 void AmayaFrame::UpdateFrameIcon()
 {
   AmayaFrame * p_frame = TtaGetFrameFromId(GetMasterFrameId());
-  wxASSERT(p_frame);
-  int doc_id = FrameTable[p_frame->GetFrameId()].FrDoc;
-  wxASSERT(doc_id > 0);
-  const char * icon_type = LoadedDocument[doc_id-1]->DocTypeName;
-  wxASSERT(icon_type);
-
-  AmayaPage * p_page = p_frame->GetPageParent();
-  wxASSERT(p_page);
-  AmayaNotebook * p_notebook = p_page->GetNotebookParent();
-  wxASSERT(p_notebook);
-  int page_id = p_notebook->GetPageId(p_page);
-  p_notebook->SetPageImage(page_id, AmayaApp::GetDocumentIconId(icon_type));
+  if (p_frame)
+    {
+      int doc_id = FrameTable[p_frame->GetFrameId()].FrDoc;
+      wxASSERT(doc_id > 0);
+      const char * icon_type = LoadedDocument[doc_id-1]->DocTypeName;
+      wxASSERT(icon_type);
+      AmayaPage * p_page = p_frame->GetPageParent();
+      wxASSERT(p_page);
+      AmayaNotebook * p_notebook = p_page->GetNotebookParent();
+      wxASSERT(p_notebook);
+      int page_id = p_notebook->GetPageId(p_page);
+      p_notebook->SetPageImage(page_id, AmayaApp::GetDocumentIconId(icon_type));
+    }
 }
 
 /*
