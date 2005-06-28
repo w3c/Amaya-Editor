@@ -2527,20 +2527,20 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
 }
 
 /*----------------------------------------------------------------------
-   InitDocAndView prepares the main view of a new document.
-   logFile is TRUE if the new view is created to display a log file
-   sourceOfDoc is not zero when we're opening the source view of a document.
-   params:
-     + Document oldDoc: the old document id
-     + ThotBool replaceOldDoc: true if the new doc should replace the old one
-     + ThotBool inNewWindow: true if the new doc should be created in a new window
-     + ...
+  InitDocAndView prepares the main view of a new document.
+  logFile is TRUE if the new view is created to display a log file
+  sourceOfDoc is not zero when we're opening the source view of a document.
+  params:
+  + Document oldDoc: the old document id
+  + ThotBool replaceOldDoc: true if the new doc should replace the old one
+  + ThotBool inNewWindow: true if the new doc should be created in a new window
+  + ...
   ----------------------------------------------------------------------*/
 Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
-			 ThotBool inNewWindow,
+                         ThotBool inNewWindow,
                          char *docname, DocumentType docType,
-			 Document sourceOfDoc, ThotBool readOnly, int profile,
-			 ClickEvent method)
+                         Document sourceOfDoc, ThotBool readOnly, int profile,
+                         ClickEvent method)
 {
   Document      doc; /* the new doc */
   View          mainView, structView, altView, linksView, tocView;
@@ -2663,446 +2663,446 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #endif /* _WX */
     }
 
-   /* Init the new document */
-   if (docType == docText || docType == docCSS ||
-       docType == docSource || docType == docLog)
-     doc = TtaInitDocument ("TextFile", docname, requested_doc);
-   else if (docType == docAnnot)
-     doc = TtaInitDocument ("Annot", docname, requested_doc);
+  /* Init the new document */
+  if (docType == docText || docType == docCSS ||
+      docType == docSource || docType == docLog)
+    doc = TtaInitDocument ("TextFile", docname, requested_doc);
+  else if (docType == docAnnot)
+    doc = TtaInitDocument ("Annot", docname, requested_doc);
 #ifdef BOOKMARKS
-   else if (docType == docBookmark)
-     doc = TtaInitDocument ("Topics", docname, requested_doc);
+  else if (docType == docBookmark)
+    doc = TtaInitDocument ("Topics", docname, requested_doc);
 #endif /* BOOKMARKS */
-   else if (docType == docSVG)
-     doc = TtaInitDocument ("SVG", docname, requested_doc);
-   else if (docType == docMath)
-     doc = TtaInitDocument ("MathML", docname, requested_doc);
+  else if (docType == docSVG)
+    doc = TtaInitDocument ("SVG", docname, requested_doc);
+  else if (docType == docMath)
+    doc = TtaInitDocument ("MathML", docname, requested_doc);
 #ifdef XML_GENERIC      
-   else if (docType == docXml)
-     doc = TtaInitDocument ("XML", docname, requested_doc);
+  else if (docType == docXml)
+    doc = TtaInitDocument ("XML", docname, requested_doc);
 #endif /* XML_GENERIC */
-   else
-     doc = TtaInitDocument ("HTML", docname, requested_doc);
-   if (doc >= DocumentTableLength)
-     {
-       TtaCloseDocument (doc);
-       doc = 0;
-     }
-   else if (doc > 0)
-     {
-       /* assign a presentation model to the document */
-       if (docType == docText || docType == docCSS ||
-           docType == docSource || docType == docLog)
-	   TtaSetPSchema (doc, "TextFileP");
-       else if (docType == docAnnot)
-	 {
-	   TtaSetPSchema (doc, "AnnotP");
-	   profile = L_Annot; /* force the profile */
-	 }
+  else
+    doc = TtaInitDocument ("HTML", docname, requested_doc);
+  if (doc >= DocumentTableLength)
+    {
+      TtaCloseDocument (doc);
+      doc = 0;
+    }
+  else if (doc > 0)
+    {
+      /* assign a presentation model to the document */
+      if (docType == docText || docType == docCSS ||
+          docType == docSource || docType == docLog)
+        TtaSetPSchema (doc, "TextFileP");
+      else if (docType == docAnnot)
+        {
+          TtaSetPSchema (doc, "AnnotP");
+          profile = L_Annot; /* force the profile */
+        }
 #ifdef BOOKMARKS
-       else if (docType == docBookmark)
-	 {
-	   TtaSetPSchema (doc, "TopicsP");
-	   profile = L_Bookmarks; /* force the profile */
-	 }
+      else if (docType == docBookmark)
+        {
+          TtaSetPSchema (doc, "TopicsP");
+          profile = L_Bookmarks; /* force the profile */
+        }
 #endif /* BOOKMARKS */
-       else if (docType == docSVG)
-	 TtaSetPSchema (doc, "SVGP");
-       else if (docType == docMath)
-	 TtaSetPSchema (doc, "MathMLP");
+      else if (docType == docSVG)
+        TtaSetPSchema (doc, "SVGP");
+      else if (docType == docMath)
+        TtaSetPSchema (doc, "MathMLP");
 #ifdef XML_GENERIC      
-       else if (docType == docXml)
-	   TtaSetPSchema (doc, "XMLP");
+      else if (docType == docXml)
+        TtaSetPSchema (doc, "XMLP");
 #endif /* XML_GENERIC */
        /* @@ shouldn't we have a Color and BW case for annots too? */
-       else
-	 {
-	   if (TtaGetScreenDepth () > 1)
-	     TtaSetPSchema (doc, "HTMLP");
-	   else
-	     TtaSetPSchema (doc, "HTMLPBW");
-	   /* set attribute dir on the Document element. */
-	   AddDirAttributeToDocEl (doc);
-	 }
-       if (docType == docSVG || docType == docMath)
-	 /* add a comment proudly claiming that the document was created by
-	    Amaya */
-	 {
-	   root = TtaGetRootElement (doc);
-	   elType = TtaGetElementType (root);
-	   if (docType == docSVG)
-	     elType.ElTypeNum = SVG_EL_XMLcomment;
-	   else
-	     elType.ElTypeNum = MathML_EL_XMLcomment;
-	   comment = TtaNewTree (doc, elType, "");
-	   TtaSetStructureChecking (FALSE, doc);
-	   TtaInsertSibling (comment, root, TRUE, doc);
-	   TtaSetStructureChecking (TRUE, doc);
-	   strcpy (buffer, " Created by ");
-	   strcat (buffer, TtaGetAppName());
-	   strcat (buffer, " ");
-	   strcat (buffer, TtaGetAppVersion());
-	   strcat (buffer, ", see http://www.w3.org/Amaya/ ");
-	   leaf = TtaGetFirstLeaf (comment);
-	   lang = TtaGetLanguageIdFromScript('L');
-	   TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
-	 }
-       if (docType == docBookmark)
-	 TtaSetNotificationMode (doc, 0); /* we don't need notif. in bookmarks */
-       else
-	 TtaSetNotificationMode (doc, 1);
+      else
+        {
+          if (TtaGetScreenDepth () > 1)
+            TtaSetPSchema (doc, "HTMLP");
+          else
+            TtaSetPSchema (doc, "HTMLPBW");
+          /* set attribute dir on the Document element. */
+          AddDirAttributeToDocEl (doc);
+        }
+      if (docType == docSVG || docType == docMath)
+        /* add a comment proudly claiming that the document was created by
+           Amaya */
+        {
+          root = TtaGetRootElement (doc);
+          elType = TtaGetElementType (root);
+          if (docType == docSVG)
+            elType.ElTypeNum = SVG_EL_XMLcomment;
+          else
+            elType.ElTypeNum = MathML_EL_XMLcomment;
+          comment = TtaNewTree (doc, elType, "");
+          TtaSetStructureChecking (FALSE, doc);
+          TtaInsertSibling (comment, root, TRUE, doc);
+          TtaSetStructureChecking (TRUE, doc);
+          strcpy (buffer, " Created by ");
+          strcat (buffer, TtaGetAppName());
+          strcat (buffer, " ");
+          strcat (buffer, TtaGetAppVersion());
+          strcat (buffer, ", see http://www.w3.org/Amaya/ ");
+          leaf = TtaGetFirstLeaf (comment);
+          lang = TtaGetLanguageIdFromScript('L');
+          TtaSetTextContent (leaf, (unsigned char *)buffer, lang, doc);
+        }
+      if (docType == docBookmark)
+        TtaSetNotificationMode (doc, 0); /* we don't need notif. in bookmarks */
+      else
+        TtaSetNotificationMode (doc, 1);
        
-       /* store the profile of the new document */
-       TtaSetDocumentProfile (doc, profile);
-       /* gets registered window parameters */
-       GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
+      /* store the profile of the new document */
+      TtaSetDocumentProfile (doc, profile);
+      /* gets registered window parameters */
+      GiveWindowGeometry (doc, docType, method, &x, &y, &w, &h);
 #ifdef _WX
-       /* create a new window if needed */
-       if (window_id == -1)
-	 {
-	   /* get the window parent because the log should stay on top of his parent */
-	   int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
-	   if (docType == docLog)
-	     {
-	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
-	     }
-	   else
-	     {
-	       /* a normal window should never had a parent ! */
-	       window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
-	     }
-	   page_id = TtaGetFreePageId( window_id );
-	   page_position = 1;
-	 }
+      /* create a new window if needed */
+      if (window_id == -1)
+        {
+          /* get the window parent because the log should stay on top of his parent */
+          int parent_window_id = TtaGetDocumentWindowId( oldDoc, -1 );
+          if (docType == docLog)
+            {
+              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_SIMPLE, parent_window_id );
+            }
+          else
+            {
+              /* a normal window should never had a parent ! */
+              window_id = TtaMakeWindow(x, y, w, h, WXAMAYAWINDOW_NORMAL, 0 );
+            }
+          page_id = TtaGetFreePageId( window_id );
+          page_position = 1;
+        }
 #endif /* _WX */
 
 #ifdef _WX
-       /* init the internal default documents menus states : enable/disable, toggle/untoggle
-        * need to be done before frame creation because the active frame will use it to refresh the menus */
-       if (!replaceOldDoc || !isOpen)
-         TtaInitMenuItemStats(doc);
-       TtaInitTopMenuStats(doc);
+      /* init the internal default documents menus states : enable/disable, toggle/untoggle
+       * need to be done before frame creation because the active frame will use it to refresh the menus */
+      if (!replaceOldDoc || !isOpen)
+        TtaInitMenuItemStats(doc);
+      TtaInitTopMenuStats(doc);
 #endif /* _WX */
 
        /* open the main view */
-       if (docType == docLog)
-         /* without menu bar */
-         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, FALSE,
-                                     window_id, page_id, page_position);
-       else if (docType == docLibrary && method == CE_RELATIVE)
-         /* without menu bar */
-         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, TRUE,
-                                     window_id, page_id, page_position);
-       else
-         mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, TRUE, TRUE,
-                                     window_id, page_id, page_position);
-       if (mainView == 0)
-         {
-           TtaCloseDocument (doc);
-           return (0);
-         }
+      if (docType == docLog)
+        /* without menu bar */
+        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, FALSE,
+                                    window_id, page_id, page_position);
+      else if (docType == docLibrary && method == CE_RELATIVE)
+        /* without menu bar */
+        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, FALSE, TRUE,
+                                    window_id, page_id, page_position);
+      else
+        mainView = TtaOpenMainView (doc, DocumentTypeNames[docType], x, y, w, h, TRUE, TRUE,
+                                    window_id, page_id, page_position);
+      if (mainView == 0)
+        {
+          TtaCloseDocument (doc);
+          return (0);
+        }
 
 #ifdef _WX
-       /* init the zoom factor to 0 if the document isn't replaced */
-       if (!replaceOldDoc/* && docType!=docSource*/)
-         TtaSetZoom (doc, -1, 0);
+      /* init the zoom factor to 0 if the document isn't replaced */
+      if (!replaceOldDoc/* && docType!=docSource*/)
+        TtaSetZoom (doc, -1, 0);
 #endif /* _WX */
 
        /* update the menus according to the profile */
        /* By default no log file */
-       TtaSetItemOff (doc, 1, File, BShowLogFile);
+      TtaSetItemOff (doc, 1, File, BShowLogFile);
 #ifndef BOOKMARKS
-       /* if bookmarks are not enabled, disable the menu */
-       TtaSetMenuOff (doc, 1, Bookmarks_);
+      /* if bookmarks are not enabled, disable the menu */
+      TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
-       TtaSetMenuOff (doc, 1, Cooperation_);
-       TtaSetItemOff (doc, 1, Edit_, BCoopConfig);
+      TtaSetMenuOff (doc, 1, Cooperation_);
+      TtaSetItemOff (doc, 1, Edit_, BCoopConfig);
 #endif  /* DAV */
 
-       /* do we have to redraw buttons and menus? */
-       reinitialized = (docType != DocumentTypes[doc]);
-       if (docType == docLog || docType == docLibrary || docType == docSource)
-	 {
+      /* do we have to redraw buttons and menus? */
+      reinitialized = (docType != DocumentTypes[doc]);
+      if (docType == docLog || docType == docLibrary || docType == docSource)
+        {
 #ifdef _WX
 #ifdef _SVG
-	   if (docType == docLibrary)
-	     {
-	       /* Initialize SVG Library Buffer string */
-	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
-	     }
+          if (docType == docLibrary)
+            {
+              /* Initialize SVG Library Buffer string */
+              TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                              FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+            }
 #endif /* _SVG */
 #endif /* _WX */
 
 #ifndef _WX
-	   TtcSwitchButtonBar (doc, 1); /* no button bar */
-	   if (docType != docLibrary)
-	     TtcSwitchCommands (doc, 1); /* no command open */
-	   else
-	     {
+          TtcSwitchButtonBar (doc, 1); /* no button bar */
+          if (docType != docLibrary)
+            TtcSwitchCommands (doc, 1); /* no command open */
+          else
+            {
 #ifdef _SVG
-	       /* Initialize SVG Library Buffer string */
-	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			       FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
+              /* Initialize SVG Library Buffer string */
+              TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                              FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
 #endif /* _SVG */
-	     }
+            }
 #endif /* _WX */
-	 }
-       else if (!isOpen)
-	 /* if isOpen is true, it means that a new window has been opened for this document 
-	  * we must initialize each things that must be initialized once for the window */
-	 {
+        }
+      else if (!isOpen)
+        /* if isOpen is true, it means that a new window has been opened for this document 
+         * we must initialize each things that must be initialized once for the window */
+        {
 #ifdef _WX
 #if 0
-	   /* Init panels */
+          /* Init panels */
 
-	   /* XHTML */
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
-	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
-	   TtaRefreshPanelTooltips( window_id );
+          /* XHTML */
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_STRONG, TtaGetMessage(AMAYA,AM_BUTTON_BOLD), (Proc)SetOnOffStrong );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_CODE, TtaGetMessage(AMAYA,AM_BUTTON_CODE), (Proc)SetOnOffCode );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H1, TtaGetMessage(AMAYA,AM_BUTTON_H1), (Proc)CreateHeading1 );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H2, TtaGetMessage(AMAYA,AM_BUTTON_H2), (Proc)CreateHeading2 );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_H3, TtaGetMessage(AMAYA,AM_BUTTON_H3), (Proc)CreateHeading3 );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_BULLET, TtaGetMessage(AMAYA,AM_BUTTON_UL), (Proc)CreateList );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_NL, TtaGetMessage(AMAYA,AM_BUTTON_OL), (Proc)CreateNumberedList );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DL, TtaGetMessage(AMAYA,AM_BUTTON_DL), (Proc)CreateDefinitionList );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
+          TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
+          TtaRefreshPanelTooltips( window_id );
 #endif /* 0 */
 #endif /* _WX */
 
-	   /* create the  button bar */
+          /* create the  button bar */
 #ifdef _WX
 #if 0
-	   iBack = TtaAddToolBarButton( window_id,
-					iconBack,
-					TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
-					"GotoPreviousHTML",
-					(Proc)GotoPreviousHTML,
-					FALSE );
-	   iForward = TtaAddToolBarButton( window_id,
-					   iconForward,
-					   TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
-					   "GotoNextHTML",
-					   (Proc)GotoNextHTML,
-					   FALSE );
-	   iReload = TtaAddToolBarButton( window_id,
-					  iconReload,
-					  TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
-					  "Reload",
-					  (Proc)Reload,
-					  TRUE );
-	   iStop = TtaAddToolBarButton( window_id,
-					stopR,
-					TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
-					"StopTransfer",
-					(Proc)StopTransfer,
-					FALSE );
-	   iHome = TtaAddToolBarButton( window_id,
-					iconHome,
-					TtaGetMessage (AMAYA, AM_BUTTON_HOME),
-					"GoToHome",
-					(Proc)GoToHome,
-					TRUE );
-	   /* SEPARATOR */
-	   TtaAddToolBarButton( window_id, NULL, NULL, NULL, NULL, FALSE );
-	   iSave = TtaAddToolBarButton( window_id,
-					iconSave,
-					TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-					"SaveDocument",
-					(Proc)SaveDocument,
-					FALSE );
-	   iPrint = TtaAddToolBarButton( window_id,
-					 iconPrint,
-					 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
-					 "SetupAndPrint",
-					 (Proc)SetupAndPrint,
-					 TRUE );
-	   iFind = TtaAddToolBarButton( window_id,
-					iconFind,
-					TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
-					"TtcSearchText",
-					(Proc)TtcSearchText,
-					TRUE );
+          iBack = TtaAddToolBarButton( window_id,
+                                       iconBack,
+                                       TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
+                                       "GotoPreviousHTML",
+                                       (Proc)GotoPreviousHTML,
+                                       FALSE );
+          iForward = TtaAddToolBarButton( window_id,
+                                          iconForward,
+                                          TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
+                                          "GotoNextHTML",
+                                          (Proc)GotoNextHTML,
+                                          FALSE );
+          iReload = TtaAddToolBarButton( window_id,
+                                         iconReload,
+                                         TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+                                         "Reload",
+                                         (Proc)Reload,
+                                         TRUE );
+          iStop = TtaAddToolBarButton( window_id,
+                                       stopR,
+                                       TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
+                                       "StopTransfer",
+                                       (Proc)StopTransfer,
+                                       FALSE );
+          iHome = TtaAddToolBarButton( window_id,
+                                       iconHome,
+                                       TtaGetMessage (AMAYA, AM_BUTTON_HOME),
+                                       "GoToHome",
+                                       (Proc)GoToHome,
+                                       TRUE );
+          /* SEPARATOR */
+          TtaAddToolBarButton( window_id, NULL, NULL, NULL, NULL, FALSE );
+          iSave = TtaAddToolBarButton( window_id,
+                                       iconSave,
+                                       TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+                                       "SaveDocument",
+                                       (Proc)SaveDocument,
+                                       FALSE );
+          iPrint = TtaAddToolBarButton( window_id,
+                                        iconPrint,
+                                        TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+                                        "SetupAndPrint",
+                                        (Proc)SetupAndPrint,
+                                        TRUE );
+          iFind = TtaAddToolBarButton( window_id,
+                                       iconFind,
+                                       TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+                                       "TtcSearchText",
+                                       (Proc)TtcSearchText,
+                                       TRUE );
 #endif /* 0 */
 #else /* _WX */
-	   /* use a new window: Create all buttons */
-	   iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
-				TtaGetMessage (LIB,TMSG_BUTTON_INTERRUPT),
-				TBSTYLE_BUTTON, FALSE);
-	   iBack = TtaAddButton (doc, 1, iconBackNo, (Proc)GotoPreviousHTML,
-				 "GotoPreviousHTML",
-				 TtaGetMessage (LIB,TMSG_BUTTON_PREVIOUS),
-				 TBSTYLE_BUTTON, FALSE);
-	   iForward = TtaAddButton (doc, 1, iconForwardNo, (Proc)GotoNextHTML,
-				    "GotoNextHTML",
-				    TtaGetMessage (LIB,TMSG_BUTTON_NEXT),
-				    TBSTYLE_BUTTON, FALSE);
-	   iReload = TtaAddButton (doc, 1, iconReload, (Proc)Reload, "Reload",
-				   TtaGetMessage (LIB,TMSG_BUTTON_RELOAD),
-				   TBSTYLE_BUTTON, TRUE);
-	   iHome = TtaAddButton (doc, 1, iconHome, (Proc)GoToHome, "GoToHome",
-				 TtaGetMessage (LIB,TMSG_BUTTON_HOME),
-				 TBSTYLE_BUTTON, TRUE);
-	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iSave = TtaAddButton (doc, 1, iconSaveNo, (Proc)SaveDocument,
-				 "SaveDocument",
-				 TtaGetMessage (LIB,TMSG_BUTTON_SAVE),
-				 TBSTYLE_BUTTON, FALSE);
-	   iPrint = TtaAddButton (doc, 1, iconPrint, (Proc)SetupAndPrint,  "SetupAndPrint",
-				  TtaGetMessage (LIB,TMSG_BUTTON_PRINT),
-				  TBSTYLE_BUTTON, TRUE);
-	   iFind = TtaAddButton (doc, 1, iconFind, (Proc)TtcSearchText,
-				 "TtcSearchText", 
-				 TtaGetMessage (LIB,TMSG_BUTTON_SEARCH),
-				 TBSTYLE_BUTTON, TRUE);
-	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iI =  TtaAddButton (doc, 1, iconI, (Proc)SetOnOffEmphasis,
-			       "SetOnOffEmphasis",
-			       TtaGetMessage (LIB,TMSG_BUTTON_ITALICS),
-			       TBSTYLE_CHECK, TRUE);
-	   iB =  TtaAddButton (doc, 1, iconB, (Proc)SetOnOffStrong, "SetOnOffStrong",
-			       TtaGetMessage (LIB,TMSG_BUTTON_BOLD),
-			       TBSTYLE_CHECK, TRUE);
-	   iT = TtaAddButton (doc, 1, iconT, (Proc)SetOnOffCode, "SetOnOffCode",
-			      TtaGetMessage (LIB,TMSG_BUTTON_CODE),
-			      TBSTYLE_CHECK, TRUE);
-	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iImage = TtaAddButton (doc, 1, iconImage, (Proc)CreateImage,
-				  "CreateImage", 
-				  TtaGetMessage (LIB,TMSG_BUTTON_IMG),
-				  TBSTYLE_BUTTON, TRUE);
-	   iH1 = TtaAddButton (doc, 1, iconH1, (Proc)CreateHeading1,
-			       "CreateHeading1", 
-			       TtaGetMessage (LIB,TMSG_BUTTON_H1),
-			       TBSTYLE_BUTTON, TRUE);
-	   iH2 = TtaAddButton (doc, 1, iconH2, (Proc)CreateHeading2,
-			       "CreateHeading2", 
-			       TtaGetMessage (LIB,TMSG_BUTTON_H2),
-			       TBSTYLE_BUTTON, TRUE);
-	   iH3 = TtaAddButton (doc, 1, iconH3, (Proc)CreateHeading3,
-			       "CreateHeading3", 
-			       TtaGetMessage (LIB,TMSG_BUTTON_H3),
-			       TBSTYLE_BUTTON, TRUE);
-	   iBullet = TtaAddButton (doc, 1, iconBullet, (Proc)CreateList,
-				   "CreateList",
-				   TtaGetMessage (LIB,TMSG_BUTTON_UL),
-				   TBSTYLE_BUTTON, TRUE);
-	   iNum = TtaAddButton (doc, 1, iconNum, (Proc)CreateNumberedList,
-				"CreateNumberedList",
-				TtaGetMessage (LIB,TMSG_BUTTON_OL),
-				TBSTYLE_BUTTON, TRUE);
-	   iDL = TtaAddButton (doc, 1, iconDL, (Proc)CreateDefinitionList,
-			       "CreateDefinitionList",
-			       TtaGetMessage (LIB,TMSG_BUTTON_DL),
-			       TBSTYLE_BUTTON, TRUE);
-	   iLink = TtaAddButton (doc, 1, iconLink, (Proc)CreateOrChangeLink,
-				 "CreateOrChangeLink",
-				 TtaGetMessage (LIB,TMSG_BUTTON_LINK),
-				 TBSTYLE_BUTTON, TRUE);
-	   iTable = TtaAddButton (doc, 1, iconTable, (Proc)CreateTable,
-				  "CreateTable",
-				  TtaGetMessage (LIB,TMSG_BUTTON_TABLE),
-				  TBSTYLE_BUTTON, TRUE);
-	   AddMathButton (doc, 1);
+          /* use a new window: Create all buttons */
+          iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
+                               TtaGetMessage (LIB,TMSG_BUTTON_INTERRUPT),
+                               TBSTYLE_BUTTON, FALSE);
+          iBack = TtaAddButton (doc, 1, iconBackNo, (Proc)GotoPreviousHTML,
+                                "GotoPreviousHTML",
+                                TtaGetMessage (LIB,TMSG_BUTTON_PREVIOUS),
+                                TBSTYLE_BUTTON, FALSE);
+          iForward = TtaAddButton (doc, 1, iconForwardNo, (Proc)GotoNextHTML,
+                                   "GotoNextHTML",
+                                   TtaGetMessage (LIB,TMSG_BUTTON_NEXT),
+                                   TBSTYLE_BUTTON, FALSE);
+          iReload = TtaAddButton (doc, 1, iconReload, (Proc)Reload, "Reload",
+                                  TtaGetMessage (LIB,TMSG_BUTTON_RELOAD),
+                                  TBSTYLE_BUTTON, TRUE);
+          iHome = TtaAddButton (doc, 1, iconHome, (Proc)GoToHome, "GoToHome",
+                                TtaGetMessage (LIB,TMSG_BUTTON_HOME),
+                                TBSTYLE_BUTTON, TRUE);
+          /* SEPARATOR */
+          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
+          iSave = TtaAddButton (doc, 1, iconSaveNo, (Proc)SaveDocument,
+                                "SaveDocument",
+                                TtaGetMessage (LIB,TMSG_BUTTON_SAVE),
+                                TBSTYLE_BUTTON, FALSE);
+          iPrint = TtaAddButton (doc, 1, iconPrint, (Proc)SetupAndPrint,  "SetupAndPrint",
+                                 TtaGetMessage (LIB,TMSG_BUTTON_PRINT),
+                                 TBSTYLE_BUTTON, TRUE);
+          iFind = TtaAddButton (doc, 1, iconFind, (Proc)TtcSearchText,
+                                "TtcSearchText", 
+                                TtaGetMessage (LIB,TMSG_BUTTON_SEARCH),
+                                TBSTYLE_BUTTON, TRUE);
+          /* SEPARATOR */
+          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
+          iI =  TtaAddButton (doc, 1, iconI, (Proc)SetOnOffEmphasis,
+                              "SetOnOffEmphasis",
+                              TtaGetMessage (LIB,TMSG_BUTTON_ITALICS),
+                              TBSTYLE_CHECK, TRUE);
+          iB =  TtaAddButton (doc, 1, iconB, (Proc)SetOnOffStrong, "SetOnOffStrong",
+                              TtaGetMessage (LIB,TMSG_BUTTON_BOLD),
+                              TBSTYLE_CHECK, TRUE);
+          iT = TtaAddButton (doc, 1, iconT, (Proc)SetOnOffCode, "SetOnOffCode",
+                             TtaGetMessage (LIB,TMSG_BUTTON_CODE),
+                             TBSTYLE_CHECK, TRUE);
+          /* SEPARATOR */
+          TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
+          iImage = TtaAddButton (doc, 1, iconImage, (Proc)CreateImage,
+                                 "CreateImage", 
+                                 TtaGetMessage (LIB,TMSG_BUTTON_IMG),
+                                 TBSTYLE_BUTTON, TRUE);
+          iH1 = TtaAddButton (doc, 1, iconH1, (Proc)CreateHeading1,
+                              "CreateHeading1", 
+                              TtaGetMessage (LIB,TMSG_BUTTON_H1),
+                              TBSTYLE_BUTTON, TRUE);
+          iH2 = TtaAddButton (doc, 1, iconH2, (Proc)CreateHeading2,
+                              "CreateHeading2", 
+                              TtaGetMessage (LIB,TMSG_BUTTON_H2),
+                              TBSTYLE_BUTTON, TRUE);
+          iH3 = TtaAddButton (doc, 1, iconH3, (Proc)CreateHeading3,
+                              "CreateHeading3", 
+                              TtaGetMessage (LIB,TMSG_BUTTON_H3),
+                              TBSTYLE_BUTTON, TRUE);
+          iBullet = TtaAddButton (doc, 1, iconBullet, (Proc)CreateList,
+                                  "CreateList",
+                                  TtaGetMessage (LIB,TMSG_BUTTON_UL),
+                                  TBSTYLE_BUTTON, TRUE);
+          iNum = TtaAddButton (doc, 1, iconNum, (Proc)CreateNumberedList,
+                               "CreateNumberedList",
+                               TtaGetMessage (LIB,TMSG_BUTTON_OL),
+                               TBSTYLE_BUTTON, TRUE);
+          iDL = TtaAddButton (doc, 1, iconDL, (Proc)CreateDefinitionList,
+                              "CreateDefinitionList",
+                              TtaGetMessage (LIB,TMSG_BUTTON_DL),
+                              TBSTYLE_BUTTON, TRUE);
+          iLink = TtaAddButton (doc, 1, iconLink, (Proc)CreateOrChangeLink,
+                                "CreateOrChangeLink",
+                                TtaGetMessage (LIB,TMSG_BUTTON_LINK),
+                                TBSTYLE_BUTTON, TRUE);
+          iTable = TtaAddButton (doc, 1, iconTable, (Proc)CreateTable,
+                                 "CreateTable",
+                                 TtaGetMessage (LIB,TMSG_BUTTON_TABLE),
+                                 TBSTYLE_BUTTON, TRUE);
+          AddMathButton (doc, 1);
 #ifdef _SVG
-	   AddGraphicsButton (doc, 1);
-	   AddLibraryButton (doc, 1);
+          AddGraphicsButton (doc, 1);
+          AddLibraryButton (doc, 1);
 #ifdef _GL
-	   AddAnimPlayButton (doc, 1);
+          AddAnimPlayButton (doc, 1);
 #endif /*_GL*/
 #endif /* _SVG */
 #endif /* _WX */
 
 #ifndef _WX
-	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			   TRUE, (Proc)TextURL, URL_list);
+          TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+                          TRUE, (Proc)TextURL, URL_list);
 #endif /* _WX */
 
 #if defined(_GTK) || defined(_WINGUI)
-	   /* initial state for menu entries */
-	   TtaSetItemOff (doc, 1, File, BBack);
-	   TtaSetItemOff (doc, 1, File, BForward);
-	   TtaSetItemOff (doc, 1, File, BSave);
-	   TtaSetItemOff (doc, 1, File, BSynchro);
+          /* initial state for menu entries */
+          TtaSetItemOff (doc, 1, File, BBack);
+          TtaSetItemOff (doc, 1, File, BForward);
+          TtaSetItemOff (doc, 1, File, BSave);
+          TtaSetItemOff (doc, 1, File, BSynchro);
 
-	   /* button bar On/Off => TODO for WX */
-	   if (SButtons[doc] && docType != docBookmark)
-	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
-	   else
-	     /* hide buttons */
-	     TtcSwitchButtonBar (doc, 1);
+          /* button bar On/Off => TODO for WX */
+          if (SButtons[doc] && docType != docBookmark)
+            TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
+          else
+            /* hide buttons */
+            TtcSwitchButtonBar (doc, 1);
 	   
-	   /* Url bar On/Off => TODO for WX */
-	   if (SAddress[doc])
-	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
-	   else
-	     /* hide the address */
-	     TtcSwitchCommands (doc, 1);
+          /* Url bar On/Off => TODO for WX */
+          if (SAddress[doc])
+            TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
+          else
+            /* hide the address */
+            TtcSwitchCommands (doc, 1);
 
-	   /* MapArea menu item */
-	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+          /* MapArea menu item */
+          TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
 
-	   /* ShowTarget menu item */
-	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
-	   if (show)
-	     ShowTargets (doc, 1);
-	   else
-	     TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
-	   TtaSetMenuOff (doc, 1, Attributes_);
+          /* ShowTarget menu item */
+          TtaGetEnvBoolean ("SHOW_TARGET", &show);
+          if (show)
+            ShowTargets (doc, 1);
+          else
+            TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
+          TtaSetMenuOff (doc, 1, Attributes_);
 
-	   /* if we open the new document in a new view, control */
-	   /* is transferred from previous document to new document */
-	   if (oldDoc != doc && oldDoc != 0)
-	     {
-	       ResetStop (oldDoc);
-	       /* clear the status line of previous document */
-	       TtaSetStatus (oldDoc, 1, " ", NULL);
-	       ActiveTransfer (doc);
-	     }
+          /* if we open the new document in a new view, control */
+          /* is transferred from previous document to new document */
+          if (oldDoc != doc && oldDoc != 0)
+            {
+              ResetStop (oldDoc);
+              /* clear the status line of previous document */
+              TtaSetStatus (oldDoc, 1, " ", NULL);
+              ActiveTransfer (doc);
+            }
 #endif /* _GTK || _WINGUI */
 
 
 #ifdef BOOKMARKS
-	   /* if there are multiple instances of Amaya, disable the bookmark menu */
-	   if (!GetBookmarksEnabled ())
-	     TtaSetMenuOff (doc, 1, Bookmarks_);
+          /* if there are multiple instances of Amaya, disable the bookmark menu */
+          if (!GetBookmarksEnabled ())
+            TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */   
-	 } /* isOpen */
+        } /* isOpen */
 	 
-     }
+    }
 
-   if (!replaceOldDoc || !isOpen)
-     {
+  if (!replaceOldDoc || !isOpen)
+    {
 #ifdef _WX
-       /* initial state for menu entries */
-       TtaSetItemOff (doc, 1, File, BBack);
-       TtaSetItemOff (doc, 1, File, BForward);
-       TtaSetItemOff (doc, 1, File, BSave);
-       TtaSetItemOff (doc, 1, File, BSynchro);
-       TtaSetMenuOff (doc, 1, Attributes_);
+      /* initial state for menu entries */
+      TtaSetItemOff (doc, 1, File, BBack);
+      TtaSetItemOff (doc, 1, File, BForward);
+      TtaSetItemOff (doc, 1, File, BSave);
+      TtaSetItemOff (doc, 1, File, BSynchro);
+      TtaSetMenuOff (doc, 1, Attributes_);
 
-       /* init MapAreas menu item */
-       TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
-       /* init show target menu item */
-       TtaGetEnvBoolean ("SHOW_TARGET", &show);
-       if (show)
-	 ShowTargets (doc, 1);
-       else
-	 TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
+      /* init MapAreas menu item */
+      TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
+      /* init show target menu item */
+      TtaGetEnvBoolean ("SHOW_TARGET", &show);
+      if (show)
+        ShowTargets (doc, 1);
+      else
+        TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 #endif /* _WX */
-     }
+    }
 
 #if _WX
 #if 0
-   /* only if it's the first document open in this frame */
+  /* only if it's the first document open in this frame */
   if (!replaceOldDoc)
     {
       /* initialize the enable/disable buttons states */
@@ -3128,7 +3128,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       strcpy (buffer, "Amaya ");
       strcat (buffer, TtaGetAppVersion());
       iLogo = TtaAddToolBarButton( window_id, iconLogo, buffer,
-				   "HelpLocal", (Proc)HelpLocal, TRUE );
+                                   "HelpLocal", (Proc)HelpLocal, TRUE );
     }
   /* force the logo to be enable */
   TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
@@ -3136,200 +3136,200 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 #endif /* _WX */
 
-   /* store the new document type */
-   DocumentTypes[doc] = docType;
-   if (reinitialized || !isOpen)
-     {
-       /* now update menus and buttons according to the document status */
-       if (DocumentTypes[doc] == docLog ||
-	   DocumentTypes[doc] == docLibrary ||
-	   DocumentTypes[doc] == docBookmark)
-	 {
-	   if (DocumentTypes[doc] == docBookmark)
-	     {
+  /* store the new document type */
+  DocumentTypes[doc] = docType;
+  if (reinitialized || !isOpen)
+    {
+      /* now update menus and buttons according to the document status */
+      if (DocumentTypes[doc] == docLog ||
+          DocumentTypes[doc] == docLibrary ||
+          DocumentTypes[doc] == docBookmark)
+        {
+          if (DocumentTypes[doc] == docBookmark)
+            {
 #ifdef BOOKMARKS
-	       TtaSetItemOn (doc, 1, Bookmarks_, BMoveItem);
-	       TtaSetItemOff (doc, 1, Bookmarks_, BViewBookmarks);
-	       TtaSetItemOn (doc, 1, Bookmarks_, BAddSeparator);
+              TtaSetItemOn (doc, 1, Bookmarks_, BMoveItem);
+              TtaSetItemOff (doc, 1, Bookmarks_, BViewBookmarks);
+              TtaSetItemOn (doc, 1, Bookmarks_, BAddSeparator);
 #endif /* BOOKMARKS */
-	     }
-	   else
-	     {
-	       TtaSetItemOff (doc, 1, File, BHtmlBasic);
-	       TtaSetItemOff (doc, 1, File, BHtmlStrict);
-	       TtaSetItemOff (doc, 1, File, BHtml11);
-	       TtaSetItemOff (doc, 1, File, BHtmlTransitional);
-	       TtaSetItemOff (doc, 1, File, BMathml);
-	       TtaSetItemOff (doc, 1, File, BSvg);
-	       TtaSetItemOff (doc, 1, File, BTemplate);
-	       TtaSetItemOff (doc, 1, File, BCss);
-	       TtaSetItemOff (doc, 1, File, BOpenDoc);
-	       TtaSetItemOff (doc, 1, File, BReload);
-	       TtaSetItemOff (doc, 1, File, BBack);
-	       TtaSetItemOff (doc, 1, File, BForward);
+            }
+          else
+            {
+              TtaSetItemOff (doc, 1, File, BHtmlBasic);
+              TtaSetItemOff (doc, 1, File, BHtmlStrict);
+              TtaSetItemOff (doc, 1, File, BHtml11);
+              TtaSetItemOff (doc, 1, File, BHtmlTransitional);
+              TtaSetItemOff (doc, 1, File, BMathml);
+              TtaSetItemOff (doc, 1, File, BSvg);
+              TtaSetItemOff (doc, 1, File, BTemplate);
+              TtaSetItemOff (doc, 1, File, BCss);
+              TtaSetItemOff (doc, 1, File, BOpenDoc);
+              TtaSetItemOff (doc, 1, File, BReload);
+              TtaSetItemOff (doc, 1, File, BBack);
+              TtaSetItemOff (doc, 1, File, BForward);
 #ifdef ANNOTATIONS
-	       TtaSetMenuOff (doc, 1, Annotations_);
-	       TtaSetItemOff (doc, 1, Edit_, BConfigAnnotations);
+              TtaSetMenuOff (doc, 1, Annotations_);
+              TtaSetItemOff (doc, 1, Edit_, BConfigAnnotations);
 #endif /* ANNOTATIONS */
 #ifdef BOOKMARKS
-	       TtaSetMenuOff (doc, 1, Bookmarks_);
+              TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
-	     }
-	   TtaSetItemOff (doc, 1, File, BSave);
-	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetItemOff (doc, 1, File, BDocInfo);
-	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
-	   TtaSetItemOff (doc, 1, File, BPrint);
-	   SetCharsetMenuOff (doc, 1); /* no charset commands */
-	   /* invalid the DoctypeMenu */
-	   TtaSetItemOff (doc, 1, File, BRemoveDoctype);
-	   TtaSetItemOff (doc, 1, File, BAddDoctype);
-	   TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
-	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
-	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
-	   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
-	   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
-	   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
-	   TtaSetItemOff (doc, 1, Edit_, BTransform);
-	   TtaSetMenuOff (doc, 1, Types);
-	   TtaSetMenuOff (doc, 1, XMLTypes);
-	   TtaSetMenuOff (doc, 1, Links);
-	   TtaSetMenuOff (doc, 1, Views);
-	   TtaSetMenuOff (doc, 1, Style);
-	   TtaSetMenuOff (doc, 1, Attributes_);
-	   TtaSetMenuOff (doc, 1, Help_);
-	   if (docType != docBookmark)
-	     {
-	       TtaSetItemOff (doc, 1, File, BExit);
-	       TtaSetMenuOff (doc, 1, Edit_);
-	       if (docType != docLibrary)
-		 TtaSetDocumentAccessMode (doc, 0);
-	     }
-	 }
-       else if (DocumentTypes[doc] == docText ||
-	   DocumentTypes[doc] == docSource ||
-	   DocumentTypes[doc] == docCSS ||
-	   DocumentTypes[doc] == docMath)
-	 {
+            }
+          TtaSetItemOff (doc, 1, File, BSave);
+          TtaSetItemOff (doc, 1, File, BSynchro);
+          TtaSetItemOff (doc, 1, File, BDocInfo);
+          TtaSetItemOff (doc, 1, File, BSetUpandPrint);
+          TtaSetItemOff (doc, 1, File, BPrint);
+          SetCharsetMenuOff (doc, 1); /* no charset commands */
+          /* invalid the DoctypeMenu */
+          TtaSetItemOff (doc, 1, File, BRemoveDoctype);
+          TtaSetItemOff (doc, 1, File, BAddDoctype);
+          TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+          TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+          TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+          TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+          TtaSetItemOff (doc, 1, Edit_, BTransform);
+          TtaSetMenuOff (doc, 1, Types);
+          TtaSetMenuOff (doc, 1, XMLTypes);
+          TtaSetMenuOff (doc, 1, Links);
+          TtaSetMenuOff (doc, 1, Views);
+          TtaSetMenuOff (doc, 1, Style);
+          TtaSetMenuOff (doc, 1, Attributes_);
+          TtaSetMenuOff (doc, 1, Help_);
+          if (docType != docBookmark)
+            {
+              TtaSetItemOff (doc, 1, File, BExit);
+              TtaSetMenuOff (doc, 1, Edit_);
+              if (docType != docLibrary)
+                TtaSetDocumentAccessMode (doc, 0);
+            }
+        }
+      else if (DocumentTypes[doc] == docText ||
+               DocumentTypes[doc] == docSource ||
+               DocumentTypes[doc] == docCSS ||
+               DocumentTypes[doc] == docMath)
+        {
 #ifndef _WX
-	   TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-	   TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-	   TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-	   TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-	   TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-	   TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-	   TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-	   TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
-	   TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
-	   TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
-	   TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-	   TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+          TtaChangeButton (doc, 1, iI, iconINo, FALSE);
+          TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
+          TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
+          TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
+          TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
+          TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
+          TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
+          TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
+          TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
+          TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+          TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
+          TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 #endif /* _WX */
-	   TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	   TtaSetItemOff (doc, 1, Views, TShowTargets);
-	   TtaSetMenuOff (doc, 1, Doctype1);
-	   TtaSetMenuOff (doc, 1, Types);
-	   TtaSetMenuOff (doc, 1, Links);
-	   if (DocumentTypes[doc] == docMath)
-	     {
-	       TtaSetItemOff (doc, 1, XMLTypes, BShowLibrary);
-	       TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
-	       TtaSetMenuOn (doc, 1, XMLTypes);
-	       TtaSetMenuOn (doc, 1, Views);
-	       TtaSetMenuOn (doc, 1, Style);
-	       TtaSetMenuOn (doc, 1, Attributes_);
+          TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+          TtaSetItemOff (doc, 1, Views, TShowTargets);
+          TtaSetMenuOff (doc, 1, Doctype1);
+          TtaSetMenuOff (doc, 1, Types);
+          TtaSetMenuOff (doc, 1, Links);
+          if (DocumentTypes[doc] == docMath)
+            {
+              TtaSetItemOff (doc, 1, XMLTypes, BShowLibrary);
+              TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
+              TtaSetMenuOn (doc, 1, XMLTypes);
+              TtaSetMenuOn (doc, 1, Views);
+              TtaSetMenuOn (doc, 1, Style);
+              TtaSetMenuOn (doc, 1, Attributes_);
 #ifdef _SVG
-	       SwitchIconGraph (doc, 1, FALSE);
-	       SwitchIconLibrary (doc, 1, FALSE);
+              SwitchIconGraph (doc, 1, FALSE);
+              SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVG */
-	     }
-	   else
-	     {
+            }
+          else
+            {
 #ifdef _WX
-	       if (DocumentTypes[doc] != docSource)
+              if (DocumentTypes[doc] != docSource)
 #endif /* _WX */
-		 TtaSetMenuOff (doc, 1, Views);
-	       TtaSetItemOff (doc, 1, Edit_, BTransform);
-	       SwitchIconMath (doc, 1, FALSE);
-	       TtaSetMenuOff (doc, 1, XMLTypes);
-	       TtaSetMenuOff (doc, 1, Style);
-	       TtaSetMenuOff (doc, 1, Attributes_);
+                TtaSetMenuOff (doc, 1, Views);
+              TtaSetItemOff (doc, 1, Edit_, BTransform);
+              SwitchIconMath (doc, 1, FALSE);
+              TtaSetMenuOff (doc, 1, XMLTypes);
+              TtaSetMenuOff (doc, 1, Style);
+              TtaSetMenuOff (doc, 1, Attributes_);
 #ifdef BOOKMARKS
-	       TtaSetMenuOff (doc, 1, Bookmarks_);
+              TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 #ifdef ANNOTATIONS
-	       TtaSetMenuOff (doc, 1, Annotations_);
+              TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
-	     }
-	 }
-       else if (DocumentTypes[doc] == docAnnot)
-	 {
+            }
+        }
+      else if (DocumentTypes[doc] == docAnnot)
+        {
 #ifndef _WX
-	   TtcSwitchCommands (doc, 1); /* no command open */
+          TtcSwitchCommands (doc, 1); /* no command open */
 #endif /* _WX */
-	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	   TtaSetItemOff (doc, 1, Views, BShowToC);
-	   TtaSetItemOff (doc, 1, Views, BShowSource);
-	   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
+          TtaSetItemOff (doc, 1, Views, BShowAlternate);
+          TtaSetItemOff (doc, 1, Views, BShowToC);
+          TtaSetItemOff (doc, 1, Views, BShowSource);
+          TtaSetItemOff (doc, 1, Views, BShowTimeLine);
 #ifdef BOOKMARKS
-	   TtaSetMenuOff (doc, 1, Bookmarks_);
+          TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
-	 }
-       else
-	 {
+        }
+      else
+        {
 #ifdef BOOKMARKS
-	   TtaSetItemOff (doc, 1, Bookmarks_, BMoveItem);
-	   TtaSetItemOn (doc, 1, Bookmarks_, BViewBookmarks);
-	   TtaSetItemOff (doc, 1, Bookmarks_, BAddSeparator);
+          TtaSetItemOff (doc, 1, Bookmarks_, BMoveItem);
+          TtaSetItemOn (doc, 1, Bookmarks_, BViewBookmarks);
+          TtaSetItemOff (doc, 1, Bookmarks_, BAddSeparator);
 #endif /* BOOKMARKS */
-	   TtaSetMenuOn (doc, 1, Views);
-	   TtaSetItemOn (doc, 1, Views, TShowTargets);
-	   TtaSetItemOn (doc, 1, Views, BShowLinks);
-	   /* turn off the assign annotation buttons (should be
-	      contextual */
-	   TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
-	   TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotSel);
-	   TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotXPtr);
-	   TtaSetItemOff (doc, 1, Annotations_, BPostAnnot);
-	   if (DocumentTypes[doc] == docHTML)
-	     {
-	       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
-	       TtaSetItemOn (doc, 1, Views, BShowAlternate);
-	       TtaSetItemOn (doc, 1, Views, BShowToC);
-	       TtaSetItemOn (doc, 1, Types, BTitle);
-	       if (profile == L_Strict || profile == L_Basic)
-		 {
-		   TtaSetMenuOff (doc, 1, XMLTypes);
-		   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
-		 }
-	       else
-		 TtaSetItemOn (doc, 1, Views, BShowTimeLine);
-	     }
-	   else
-	     {
-	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
-	       TtaSetItemOff (doc, 1, Views, BShowToC);
-	       if (DocumentTypes[doc] == docSVG)
-		 {
-		   TtaSetItemOn (doc, 1, Views, BShowAlternate);
-		   TtaSetItemOff (doc, 1, Types, BTitle);
-		   TtaSetItemOn (doc, 1, Views, BShowTimeLine);
-		 }
-	       else
-		 {
-		   TtaSetItemOff (doc, 1, Views, BShowAlternate);
-		   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
-		 }
-	     }
-	 }
-     }
+          TtaSetMenuOn (doc, 1, Views);
+          TtaSetItemOn (doc, 1, Views, TShowTargets);
+          TtaSetItemOn (doc, 1, Views, BShowLinks);
+          /* turn off the assign annotation buttons (should be
+             contextual */
+          TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
+          TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotSel);
+          TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotXPtr);
+          TtaSetItemOff (doc, 1, Annotations_, BPostAnnot);
+          if (DocumentTypes[doc] == docHTML)
+            {
+              TtaSetItemOn (doc, 1, Views, TShowMapAreas);
+              TtaSetItemOn (doc, 1, Views, BShowAlternate);
+              TtaSetItemOn (doc, 1, Views, BShowToC);
+              TtaSetItemOn (doc, 1, Types, BTitle);
+              if (profile == L_Strict || profile == L_Basic)
+                {
+                  TtaSetMenuOff (doc, 1, XMLTypes);
+                  TtaSetItemOff (doc, 1, Views, BShowTimeLine);
+                }
+              else
+                TtaSetItemOn (doc, 1, Views, BShowTimeLine);
+            }
+          else
+            {
+              TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+              TtaSetItemOff (doc, 1, Views, BShowToC);
+              if (DocumentTypes[doc] == docSVG)
+                {
+                  TtaSetItemOn (doc, 1, Views, BShowAlternate);
+                  TtaSetItemOff (doc, 1, Types, BTitle);
+                  TtaSetItemOn (doc, 1, Views, BShowTimeLine);
+                }
+              else
+                {
+                  TtaSetItemOff (doc, 1, Views, BShowAlternate);
+                  TtaSetItemOff (doc, 1, Views, BShowTimeLine);
+                }
+            }
+        }
+    }
 
 #ifdef _WX
-   // show the window if it's not allready done
-   TtaShowWindow( window_id, TRUE );
+  // show the window if it's not allready done
+  TtaShowWindow( window_id, TRUE );
 #endif /* _WX */
 
-   return (doc);
+  return (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -5795,174 +5795,195 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case OpenForm:
       /* *********Load URL or local document********* */
       if (val == 1)
-	/* Confirm */
-	{
+        /* Confirm */
+        {
 #ifdef _WX
-	  if ( (CurrentDocument == 0) || /* this is the first loaded doc */
-	       (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
-	       (InNewWindow) || /* in a new window */
-	       (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
-	       )
-	    {
+          if ( (CurrentDocument == 0) || /* this is the first loaded doc */
+               (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
+               (InNewWindow) || /* in a new window */
+               (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
+               )
+            {
 #endif /* _WX */
-	  TtaDestroyDialogue (BaseDialog + OpenForm);
-	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-	  if (LastURLName[0] != EOS)
-	    {
-	      TtaSetStatus (CurrentDocument, 1,
-			    TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			    DocumentName);
-	      /* update the list of URLs */
-	      if (NewFile)
+              TtaDestroyDialogue (BaseDialog + OpenForm);
+              TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+              if (LastURLName[0] != EOS)
+                {
+                  TtaSetStatus (CurrentDocument, 1,
+                                TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+                                DocumentName);
+                  /* update the list of URLs */
+                  if (NewFile)
 #ifdef _WX
-		InitializeNewDoc (LastURLName, NewDocType, CurrentDocument,
-				  NewDocProfile, NewXML);
+                    InitializeNewDoc (LastURLName, NewDocType, CurrentDocument,
+                                      NewDocProfile, NewXML);
 #else /* _WX */
-		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile, NewXML);
+                  InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile, NewXML);
 #endif /* _WX */
-	      /* load an URL */ 
-	      else if (DontReplaceOldDoc)
+                  /* load an URL */ 
+                  else if (DontReplaceOldDoc)
 #ifdef _WX
-		{
-		  /* get the current document (CurrentDocument global variable is not usable) */
-		  Document document;
-		  View     view;
-		  TtaGiveActiveView (&document,&view);
-		  document = DocumentSource[document] ? DocumentSource[document]: document;
+                    {
+                      /* get the current document (CurrentDocument global variable is not usable) */
+                      Document document;
+                      View     view;
+                      TtaGiveActiveView (&document,&view);
+                      document = DocumentSource[document] ? DocumentSource[document]: document;
 
-		  GetAmayaDoc (LastURLName, NULL, document, document,
-			       (ClickEvent)Loading_method,
-			       FALSE, NULL, NULL);
-		}
+                      GetAmayaDoc (LastURLName, NULL, document, document,
+                                   (ClickEvent)Loading_method,
+                                   FALSE, NULL, NULL);
+                    }
 #else /* _WX */
-		GetAmayaDoc (LastURLName, NULL, 0 , 0, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL);
+                  GetAmayaDoc (LastURLName, NULL, 0 , 0, (ClickEvent)Loading_method,
+                               FALSE, NULL, NULL);
 #endif /* _WX */
-	      else
-		GetAmayaDoc (LastURLName, NULL, CurrentDocument,
-			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
-			     NULL, NULL);
-	    }
-	  else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
-	    {
-	      /* load a local file */
-	      strcpy (tempfile, DirectoryName);
-	      strcat (tempfile, DIR_STR);
-	      strcat (tempfile, DocumentName);
-	      /* update the list of URLs */
-	      NormalizeFile (tempfile, tempname, AM_CONV_ALL);
-	      if (FileExistTarget (tempname))
-		{
-		  if (DontReplaceOldDoc)
+                  else
+                    GetAmayaDoc (LastURLName, NULL, CurrentDocument,
+                                 CurrentDocument, (ClickEvent)Loading_method, TRUE,
+                                 NULL, NULL);
+                }
+              else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
+                {
+                  /* load a local file */
+                  strcpy (tempfile, DirectoryName);
+                  strcat (tempfile, DIR_STR);
+                  strcat (tempfile, DocumentName);
+                  /* update the list of URLs */
+                  NormalizeFile (tempfile, tempname, AM_CONV_ALL);
+                  if (FileExistTarget (tempname))
+                    {
+                      if (DontReplaceOldDoc)
 #ifndef  _WX
-		    GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
-				 FALSE, NULL, NULL);
+                        GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
+                                     FALSE, NULL, NULL);
 #else /* _WX */
-		    GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument,
-				 (ClickEvent)Loading_method,
-				 FALSE, NULL, NULL);
+                      GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument,
+                                   (ClickEvent)Loading_method,
+                                   FALSE, NULL, NULL);
 #endif /* _WX */
-		  else
-		    GetAmayaDoc (tempfile, NULL, CurrentDocument,
-				 CurrentDocument, (ClickEvent)Loading_method,
-				 TRUE, NULL, NULL);
-		}
-	      else if (NewFile)
+                      else
+                        GetAmayaDoc (tempfile, NULL, CurrentDocument,
+                                     CurrentDocument, (ClickEvent)Loading_method,
+                                     TRUE, NULL, NULL);
+                    }
+                  else if (NewFile)
 #ifdef _WX
-		InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
-				  NewDocProfile, NewXML);
+                    InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
+                                      NewDocProfile, NewXML);
 #else /* _WX */
-		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile, NewXML);
+                  InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile, NewXML);
 #endif /* _WX */
-	      else
-		{
-		  if (IsMathMLName (tempfile))
-		    NewDocType = docMath;
-		  else if (IsSVGName (tempfile))
-		    NewDocType = docSVG;
-		  else if (IsCSSName (tempfile))
-		    NewDocType = docCSS;
+                  else
+                    {
+                      if (IsMathMLName (tempfile))
+                        NewDocType = docMath;
+                      else if (IsSVGName (tempfile))
+                        NewDocType = docSVG;
+                      else if (IsCSSName (tempfile))
+                        NewDocType = docCSS;
 #ifdef XML_GENERIC
-		  else if (IsXMLName (tempfile))
-		    NewDocType = docXml;
+                      else if (IsXMLName (tempfile))
+                        NewDocType = docXml;
 #endif /* XML_GENERIC */
 #ifdef _SVG
-		  else if (IsLibraryName (tempfile))
-		    NewDocType = docLibrary;
+                      else if (IsLibraryName (tempfile))
+                        NewDocType = docLibrary;
 #endif /* _SVG */
-		  else
-		    NewDocType = docHTML;
-		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
-				    NewDocProfile, NewXML);
-		}
-	    }
-	  else if (DocumentName[0] != EOS)
-	    {
-	      ptr = DocumentName;
-	      updated = CompleteUrl (&ptr);
-	      if (updated)
-		{
-		  strcpy (DocumentName, ptr);
-		  TtaFreeMemory (ptr);
-		}
-	      /* update the list of URLs */
-	      if (DontReplaceOldDoc)
-#ifndef _WX
-		GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL);
-#else /* _WX */
-		GetAmayaDoc (DocumentName, NULL, CurrentDocument, CurrentDocument, (ClickEvent)Loading_method,
-			     FALSE, NULL, NULL);
-#endif /* _WX */
-	      else
-		GetAmayaDoc (DocumentName, NULL, CurrentDocument,
-			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
-			     NULL, NULL);
-	    }
-	  else if (DirectoryName[0] != EOS)
-	    TtaSetStatus (CurrentDocument, 1,
-			  TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			  DirectoryName);
-	  else
-	    TtaSetStatus (CurrentDocument, 1,
-			  TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
-	  NewFile = FALSE;
-	  CurrentDocument = 0;
+                      else
+                        NewDocType = docHTML;
 #ifdef _WX
-	    }
+                      {
+                        /* get the current document (CurrentDocument global variable is not usable) */
+                        Document document;
+                        View     view;
+                        TtaGiveActiveView (&document,&view);
+                        document = DocumentSource[document] ? DocumentSource[document]: document;
+                        InitializeNewDoc (tempfile, NewDocType, document,
+                                          NewDocProfile, NewXML);
+                      }
+#else /* _WX */
+                      InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
+                                        NewDocProfile, NewXML);
 #endif /* _WX */
-	}
+                    }
+                }
+              else if (DocumentName[0] != EOS)
+                {
+                  ptr = DocumentName;
+                  updated = CompleteUrl (&ptr);
+                  if (updated)
+                    {
+                      strcpy (DocumentName, ptr);
+                      TtaFreeMemory (ptr);
+                    }
+                  /* update the list of URLs */
+                  if (DontReplaceOldDoc)
+#ifdef _WX
+                    {
+                      /* get the current document (CurrentDocument global variable is not usable) */
+                      Document document;
+                      View     view;
+                      TtaGiveActiveView (&document,&view);
+                      document = DocumentSource[document] ? DocumentSource[document]: document;
+                      
+                      GetAmayaDoc (DocumentName, NULL, document, document,
+                                   (ClickEvent)Loading_method,
+                                   FALSE, NULL, NULL);
+                    }
+#else /* _WX */
+                  GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
+                               FALSE, NULL, NULL);
+#endif /* _WX */
+                  else
+                    GetAmayaDoc (DocumentName, NULL, CurrentDocument,
+                                 CurrentDocument, (ClickEvent)Loading_method, TRUE,
+                                 NULL, NULL);
+                }
+              else if (DirectoryName[0] != EOS)
+                TtaSetStatus (CurrentDocument, 1,
+                              TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+                              DirectoryName);
+              else
+                TtaSetStatus (CurrentDocument, 1,
+                              TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
+              NewFile = FALSE;
+              CurrentDocument = 0;
+#ifdef _WX
+            }
+#endif /* _WX */
+        }
       else if (val == 2)
-	{
-	  /* Browse button */
+        {
+          /* Browse button */
 #if defined(_GTK) || defined(_WX) 
-	  WidgetParent = OpenDocBrowser;
-	  BrowserForm (CurrentDocument, 1, &LastURLName[0]);
+          WidgetParent = OpenDocBrowser;
+          BrowserForm (CurrentDocument, 1, &LastURLName[0]);
 #endif /* defined(_GTK) || defined(_WX) */
-	}
+        }
       else if (val == 3)
-	{
-	  /* Clear button */
-	  LastURLName[0] = EOS;
-	  DirectoryName[0] = EOS;
-	  DocumentName[0] = EOS;
+        {
+          /* Clear button */
+          LastURLName[0] = EOS;
+          DirectoryName[0] = EOS;
+          DocumentName[0] = EOS;
 #if defined(_GTK) || defined(_WX) 
-	  TtaSetTextForm (BaseDialog + URLName, LastURLName);
+          TtaSetTextForm (BaseDialog + URLName, LastURLName);
 #endif /* defined(_GTK) || defined(_WX) */
-	}
+        }
 #ifdef _WX
       else if (val == 0)
-	{
-	  /* if the user has clicked on Cancel button, just destroy the dialog */
-	  TtaDestroyDialogue ( ref );
-	}
+        {
+          /* if the user has clicked on Cancel button, just destroy the dialog */
+          TtaDestroyDialogue ( ref );
+        }
 #endif /* _WX */
       else if (NewFile)
-	{
-	  /* the command is aborted */
-	  CheckAmayaClosed ();
-	  NewFile = FALSE;
-	}
+        {
+          /* the command is aborted */
+          CheckAmayaClosed ();
+          NewFile = FALSE;
+        }
       break;
 
       /* this callback is used to select a destination for the new open document :
@@ -5971,81 +5992,81 @@ void CallbackDialogue (int ref, int typedata, char *data)
        * 2 = in new window */
     case OpenLocation:
       {
-	if (val == 0) /* replace old doc */
-	  {
-	    DontReplaceOldDoc = FALSE;
-	    InNewWindow       = FALSE;
-	  }
-	else if (val == 1) /* in new tab */
-	  {
+        if (val == 0) /* replace old doc */
+          {
+            DontReplaceOldDoc = FALSE;
+            InNewWindow       = FALSE;
+          }
+        else if (val == 1) /* in new tab */
+          {
 #ifdef _MACOS 
-	    /* to prevent a crash in wx
+            /* to prevent a crash in wx
                the doc is opened in a new window */
-	    DontReplaceOldDoc = TRUE;
-	    InNewWindow       = TRUE;
+            DontReplaceOldDoc = TRUE;
+            InNewWindow       = TRUE;
 #else /* _MACOS */
-	    DontReplaceOldDoc = TRUE;
-	    InNewWindow       = FALSE;
+            DontReplaceOldDoc = TRUE;
+            InNewWindow       = FALSE;
 #endif /* _MACOS */
-	  }
-	else if (val == 2) /* in new window */
-	  {
-	    DontReplaceOldDoc = TRUE;
-	    InNewWindow       = TRUE;
-	  }
+          }
+        else if (val == 2) /* in new window */
+          {
+            DontReplaceOldDoc = TRUE;
+            InNewWindow       = TRUE;
+          }
       }
       break;
     case DocInfoDocType:
       /* only used by WX version to get back the new profile */
       if (NewDocType == docHTML)
-	{
-	  if (!strstr (data, "XHTML"))
-	      NewXML = FALSE;
-	  if (strstr (data, "Strict"))
-	    NewDocProfile = L_Strict;
-	  else if (strstr (data, "Basic"))
-	    NewDocProfile = L_Basic;
-	  else if (strstr (data, "Transitional"))
-	    NewDocProfile = L_Transitional;
-	  else if (NewXML)
-	    NewDocProfile = L_Xhtml11;
-	  else
-	    NewDocProfile = L_Transitional;	    
-	}
+        {
+          if (!strstr (data, "XHTML"))
+            NewXML = FALSE;
+          if (strstr (data, "Strict"))
+            NewDocProfile = L_Strict;
+          else if (strstr (data, "Basic"))
+            NewDocProfile = L_Basic;
+          else if (strstr (data, "Transitional"))
+            NewDocProfile = L_Transitional;
+          else if (NewXML)
+            NewDocProfile = L_Xhtml11;
+          else
+            NewDocProfile = L_Transitional;	    
+        }
       break;
     case URLName:
       RemoveNewLines (data);
       ptr = data;
       updated = CompleteUrl (&ptr);
       if (IsW3Path (ptr))
-	{
-	  /* save the URL name */
-	  strcpy (LastURLName, ptr);
-	  DocumentName[0] = EOS;
-	}
+        {
+          /* save the URL name */
+          strcpy (LastURLName, ptr);
+          DocumentName[0] = EOS;
+        }
       else
-	{
-	  LastURLName[0] = EOS;
-	  change = NormalizeFile (ptr, tempfile, AM_CONV_NONE);
-	  if (!IsW3Path (tempfile))
-	    {
-	      if (TtaCheckDirectory (tempfile))
-		{
-		  strcpy (DirectoryName, tempfile);
-		  DocumentName[0] = EOS;
-		}
-	      else
-		TtaExtractName (tempfile, DirectoryName, DocumentName);
-	    }
-	  else 
-	    {
-	      /* save the URL name */
-	      strcpy (LastURLName, tempfile);
-	      DocumentName[0] = EOS;
-	    }
-	}
+        {
+          LastURLName[0] = EOS;
+          change = NormalizeFile (ptr, tempfile, AM_CONV_NONE);
+          if (!IsW3Path (tempfile))
+            {
+              if (TtaCheckDirectory (tempfile))
+                {
+                  strcpy (DirectoryName, tempfile);
+                  DocumentName[0] = EOS;
+                }
+              else
+                TtaExtractName (tempfile, DirectoryName, DocumentName);
+            }
+          else 
+            {
+              /* save the URL name */
+              strcpy (LastURLName, tempfile);
+              DocumentName[0] = EOS;
+            }
+        }
       if (updated)
-	TtaFreeMemory (ptr);
+        TtaFreeMemory (ptr);
       break;
 
     case DirSelect:
@@ -6054,33 +6075,33 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _WINGUI */      
 #if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
-	{
-	  if (!strcmp (data, ".."))
-	    {
-	      /* suppress last directory */
-	      strcpy (tempname, DirectoryName);
-	      TtaExtractName (tempname, DirectoryName, tempfile);
-	    }
-	  else
-	    {
-	      strcat (DirectoryName, DIR_STR);
-	      strcat (DirectoryName, data);
-	    }
-	  TtaSetTextForm (BaseDialog + URLName, DirectoryName);
-	  TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			    TtaGetMessage (LIB, TMSG_DOC_DIR),
-			    BaseDialog + DirSelect, ScanFilter,
-			    TtaGetMessage (AMAYA, AM_FILES),
-			    BaseDialog + DocSelect);
-	  DocumentName[0] = EOS;
-	}
+        {
+          if (!strcmp (data, ".."))
+            {
+              /* suppress last directory */
+              strcpy (tempname, DirectoryName);
+              TtaExtractName (tempname, DirectoryName, tempfile);
+            }
+          else
+            {
+              strcat (DirectoryName, DIR_STR);
+              strcat (DirectoryName, data);
+            }
+          TtaSetTextForm (BaseDialog + URLName, DirectoryName);
+          TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+                            TtaGetMessage (LIB, TMSG_DOC_DIR),
+                            BaseDialog + DirSelect, ScanFilter,
+                            TtaGetMessage (AMAYA, AM_FILES),
+                            BaseDialog + DocSelect);
+          DocumentName[0] = EOS;
+        }
 #endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case DocSelect:
       if (DirectoryName[0] == EOS)
-	/* set path on current directory */
-	getcwd (DirectoryName, MAX_LENGTH);
+        /* set path on current directory */
+        getcwd (DirectoryName, MAX_LENGTH);
       /* Extract suffix from document name */
       strcpy (DocumentName, data);
       LastURLName[0] = EOS;
@@ -6103,25 +6124,25 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case FilterText:
       /* Filter value */
       if (strlen (data) <= NAME_LENGTH)
-	strcpy (ScanFilter, data);
+        strcpy (ScanFilter, data);
 #if defined(_GTK) || defined(_WX) 
       else
-	TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+        TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
 #endif /* defined(_GTK) || defined(_WX) */
       break;
 
     case FormAnswer:
       /* *********Get an answer********* */
       if (val == 0)
-	{
-	  /* no answer */
-	  Answer_text[0] = EOS;
-	  Answer_name[0] = EOS;
-	  Answer_password[0] = EOS;
-	  UserAnswer = 0;
-	}
+        {
+          /* no answer */
+          Answer_text[0] = EOS;
+          Answer_name[0] = EOS;
+          Answer_password[0] = EOS;
+          UserAnswer = 0;
+        }
       else
-	UserAnswer = 1;
+        UserAnswer = 1;
       TtaDestroyDialogue (BaseDialog + FormAnswer);
       break;
 
@@ -6139,19 +6160,19 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifdef _WX
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
-	{
-	  Lg_password = 0;
-	  while (Lg_password < i)
-	    {
-	      /* a new char */
-	      Answer_password[Lg_password] = data[Lg_password];
-	      Display_password[Lg_password] = '*';
-	      Answer_password[++Lg_password] = EOS;
-	      Display_password[Lg_password] = EOS;
-	    }
-	}
+        {
+          Lg_password = 0;
+          while (Lg_password < i)
+            {
+              /* a new char */
+              Answer_password[Lg_password] = data[Lg_password];
+              Display_password[Lg_password] = '*';
+              Answer_password[++Lg_password] = EOS;
+              Display_password[Lg_password] = EOS;
+            }
+        }
       else
-	Answer_password[NAME_LENGTH - 1] = EOS;
+        Answer_password[NAME_LENGTH - 1] = EOS;
 #endif /* _WX */
 #ifdef _GTK
       strncpy (Answer_password, data, NAME_LENGTH);
@@ -6159,252 +6180,252 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _GTK */
       break;
 
-    /* *********Save document as********* */
+      /* *********Save document as********* */
     case RadioSave:
       /* Output format */
       switch (val)
-	{
-	case 0:	/* "Save as HTML" button */
-	  SaveAsHTML = TRUE;
-	  SaveAsXML = FALSE;
-	  SaveAsText = FALSE;
-	  UpdateSaveAsButtons ();
-	  SetFileSuffix ();
-	  break;
-	case 1:	/* "Save as XML" button */
-	  SaveAsXML = TRUE;
-	  SaveAsHTML = FALSE;
-	  SaveAsText = FALSE;
-	  UpdateSaveAsButtons ();
-	  SetFileSuffix ();
-	  /* Set the document charset */
-	  if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
-	    TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
-	  break;
-	case 2:	/* "Save as Text" button */
-	  SaveAsText = TRUE;
-	  SaveAsHTML = FALSE;
-	  SaveAsXML = FALSE;
+        {
+        case 0:	/* "Save as HTML" button */
+          SaveAsHTML = TRUE;
+          SaveAsXML = FALSE;
+          SaveAsText = FALSE;
+          UpdateSaveAsButtons ();
+          SetFileSuffix ();
+          break;
+        case 1:	/* "Save as XML" button */
+          SaveAsXML = TRUE;
+          SaveAsHTML = FALSE;
+          SaveAsText = FALSE;
+          UpdateSaveAsButtons ();
+          SetFileSuffix ();
+          /* Set the document charset */
+          if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
+            TtaSetDocumentCharset (SavingDocument, ISO_8859_1, FALSE);
+          break;
+        case 2:	/* "Save as Text" button */
+          SaveAsText = TRUE;
+          SaveAsHTML = FALSE;
+          SaveAsXML = FALSE;
 #if defined(_GTK)
-	  TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
-	  TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-	  UpdateSaveAsButtons ();
+          TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+          TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+          UpdateSaveAsButtons ();
 #endif /* defined(_GTK) */
     
-	  SetFileSuffix ();
-	  break;
-	}
+          SetFileSuffix ();
+          break;
+        }
       break;
 
     case ToggleSave:
       switch (val)
-	{
-	case 0:	/* "Copy Images" button */
-	  CopyImages = !CopyImages;
-	  break;
-	case 1:	/* "Transform URLs" button */
-	  UpdateURLs = !UpdateURLs;
-	  break; 
-	}
+        {
+        case 0:	/* "Copy Images" button */
+          CopyImages = !CopyImages;
+          break;
+        case 1:	/* "Transform URLs" button */
+          UpdateURLs = !UpdateURLs;
+          break; 
+        }
       break;
     case SaveForm:
       if (val == 1)
-	/* "Confirm" Button */
-	{
-	  /* protect against saving without a MIME type */
-	  if (SavingDocument != 0)
-	    {
-	      if (DocumentTypes[SavingDocument] == docHTML &&
-		  DocumentMeta[SavingDocument])
-		{
-		  if (DocumentMeta[SavingDocument]->xmlformat && SaveAsHTML)
-		    /* XHTML -> HTML */
-		    ChangeDoctype (FALSE);
-		  if (!DocumentMeta[SavingDocument]->xmlformat && SaveAsXML)
-		    /* HTML -> XHTML */
-		    ChangeDoctype (TRUE);
-		}
+        /* "Confirm" Button */
+        {
+          /* protect against saving without a MIME type */
+          if (SavingDocument != 0)
+            {
+              if (DocumentTypes[SavingDocument] == docHTML &&
+                  DocumentMeta[SavingDocument])
+                {
+                  if (DocumentMeta[SavingDocument]->xmlformat && SaveAsHTML)
+                    /* XHTML -> HTML */
+                    ChangeDoctype (FALSE);
+                  if (!DocumentMeta[SavingDocument]->xmlformat && SaveAsXML)
+                    /* HTML -> XHTML */
+                    ChangeDoctype (TRUE);
+                }
 	      
-	      if ((!DocumentMeta[SavingDocument] 
-		   || !DocumentMeta[SavingDocument]->content_type
-		   || DocumentMeta[SavingDocument]->content_type[0] == EOS)
-		  && (UserMimeType[0] == EOS))
-		{
+              if ((!DocumentMeta[SavingDocument] 
+                   || !DocumentMeta[SavingDocument]->content_type
+                   || DocumentMeta[SavingDocument]->content_type[0] == EOS)
+                  && (UserMimeType[0] == EOS))
+                {
 
 #if defined(_GTK) || defined(_WX) 
-		  TtaNewLabel (BaseDialog + SaveFormStatus,
-			       BaseDialog + SaveForm,
-			       TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+                  TtaNewLabel (BaseDialog + SaveFormStatus,
+                               BaseDialog + SaveForm,
+                               TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
-		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINGUI */
-		  break;
-		}
-	    }
-	  TtaDestroyDialogue (BaseDialog + SaveForm);
-	  if (SavingDocument != 0)
-	    DoSaveAs (UserCharset, UserMimeType);
-	  else if (SavingObject != 0)
-	    DoSaveObjectAs ();
-	  /* Move the information into LastURLName or DirectoryName */
-	  if (IsW3Path (SavePath))
-	    {
-	      strcpy (LastURLName, SavePath);
-	      strcat (LastURLName, "/");
-	      strcat (LastURLName, SaveName);
-	      DirectoryName[0] = EOS;
-	    }
-	  else
-	    {
-	      LastURLName[0] = EOS;
-	      strcpy (DirectoryName, SavePath);
-	      strcat (DocumentName, SaveName);
-	    }
-	}
+                  break;
+                }
+            }
+          TtaDestroyDialogue (BaseDialog + SaveForm);
+          if (SavingDocument != 0)
+            DoSaveAs (UserCharset, UserMimeType);
+          else if (SavingObject != 0)
+            DoSaveObjectAs ();
+          /* Move the information into LastURLName or DirectoryName */
+          if (IsW3Path (SavePath))
+            {
+              strcpy (LastURLName, SavePath);
+              strcat (LastURLName, "/");
+              strcat (LastURLName, SaveName);
+              DirectoryName[0] = EOS;
+            }
+          else
+            {
+              LastURLName[0] = EOS;
+              strcpy (DirectoryName, SavePath);
+              strcat (DocumentName, SaveName);
+            }
+        }
       else if (val == 2)
-	/* "Browse" button */
-	{
+        /* "Browse" button */
+        {
 #if defined(_GTK) || defined(_WX) 
-	  WidgetParent = DocSaveBrowser;
-	  strcpy (LastURLName, SavePath);
-	  strcat (LastURLName, DIR_STR);
-	  strcat (LastURLName, SaveName);
-	  BrowserForm (SavingDocument, 1, LastURLName);
+          WidgetParent = DocSaveBrowser;
+          strcpy (LastURLName, SavePath);
+          strcat (LastURLName, DIR_STR);
+          strcat (LastURLName, SaveName);
+          BrowserForm (SavingDocument, 1, LastURLName);
 #endif /* defined(_GTK) || defined(_WX) */
-	}
+        }
       else if (val == 3)
-	/* "Clear" button */
-	{
-	  if (SavingDocument != 0)
-	    {
-	      SavePath[0] = EOS;
-	      SaveImgsURL[0] = EOS;
-	      SaveName[0] = EOS;
+        /* "Clear" button */
+        {
+          if (SavingDocument != 0)
+            {
+              SavePath[0] = EOS;
+              SaveImgsURL[0] = EOS;
+              SaveName[0] = EOS;
 #if defined(_GTK)
-	      TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
-	      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+              TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
+              TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
 #endif /* defined(_GTK) */
-	    }
-	}
+            }
+        }
       else if (val == 4)
-	/* "Charset" button */
-	{
-	  if (SavingDocument != 0)
-	    {
-	      if (DocumentTypes[SavingDocument] != docImage)
-		{
-		  /* clear the status message */
+        /* "Charset" button */
+        {
+          if (SavingDocument != 0)
+            {
+              if (DocumentTypes[SavingDocument] != docImage)
+                {
+                  /* clear the status message */
 #if defined(_GTK)
-		  TtaNewLabel (BaseDialog + SaveFormStatus,
-			       BaseDialog + SaveForm, " ");
+                  TtaNewLabel (BaseDialog + SaveFormStatus,
+                               BaseDialog + SaveForm, " ");
 #endif /* defined(_GTK) */
 #ifdef _WINGUI      
-		  SaveAsDlgStatus ("");
+                  SaveAsDlgStatus ("");
 #endif /* _WINGUI */
-		  InitCharset (SavingDocument, 1, SavePath);
-		  if (SaveFormTmp[0] != EOS)
-		    {
-		      strcpy (UserCharset, SaveFormTmp);
+                  InitCharset (SavingDocument, 1, SavePath);
+                  if (SaveFormTmp[0] != EOS)
+                    {
+                      strcpy (UserCharset, SaveFormTmp);
 #if defined(_GTK)
-		      TtaNewLabel (BaseDialog + CharsetSave,  
-				   BaseDialog + SaveForm, UserCharset);
+                      TtaNewLabel (BaseDialog + CharsetSave,  
+                                   BaseDialog + SaveForm, UserCharset);
 #endif /* #if defined(_GTK) */
-		    }
-		}
-	      else
-		{
+                    }
+                }
+              else
+                {
 #if defined(_GTK) || defined(_WX) 
-		  TtaNewLabel (BaseDialog + SaveFormStatus,
-			       BaseDialog + SaveForm,
-			       TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
+                  TtaNewLabel (BaseDialog + SaveFormStatus,
+                               BaseDialog + SaveForm,
+                               TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI
-		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
+                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #endif /* _WINGUI */
-		}
-	    }
-	}
+                }
+            }
+        }
       else if (val == 5)
-	/* "MIME type" button */
-	{
-	  if (SavingDocument != 0)
-	    {
-	      if (SavePath[0])
-		{
-		  /* clear the status message */
+        /* "MIME type" button */
+        {
+          if (SavingDocument != 0)
+            {
+              if (SavePath[0])
+                {
+                  /* clear the status message */
 
 #if defined(_GTK) || defined(_WX) 
-		  TtaNewLabel (BaseDialog + SaveFormStatus,
-			       BaseDialog + SaveForm,
-			       " ");
+                  TtaNewLabel (BaseDialog + SaveFormStatus,
+                               BaseDialog + SaveForm,
+                               " ");
 #endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
-		  SaveAsDlgStatus ("");
+                  SaveAsDlgStatus ("");
 #endif /* _WINGUI */
-		  InitMimeType (SavingDocument, 1, SavePath, NULL);
-		  if (SaveFormTmp[0] != EOS)
-		    {
-		      strcpy (UserMimeType, SaveFormTmp);   
+                  InitMimeType (SavingDocument, 1, SavePath, NULL);
+                  if (SaveFormTmp[0] != EOS)
+                    {
+                      strcpy (UserMimeType, SaveFormTmp);   
 #if defined(_GTK) || defined(_WX) 
-		      TtaNewLabel (BaseDialog + MimeTypeSave,  
-				   BaseDialog + SaveForm, UserMimeType);
+                      TtaNewLabel (BaseDialog + MimeTypeSave,  
+                                   BaseDialog + SaveForm, UserMimeType);
 #endif /* #if defined(_GTK) || defined(_WX) */
-		    }
-		}
-	      else
-		{
+                    }
+                }
+              else
+                {
 #if defined(_GTK) || defined(_WX) 
-		  TtaNewLabel (BaseDialog + SaveFormStatus,
-			       BaseDialog + SaveForm,
-			       TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
+                  TtaNewLabel (BaseDialog + SaveFormStatus,
+                               BaseDialog + SaveForm,
+                               TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #endif /* #if defined(_GTK) || defined(_WX) */
 #ifdef _WINGUI      
-		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
+                  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #endif /* _WINGUI */
-		}
-	    }
-	}
+                }
+            }
+        }
       else
-	/* "Cancel" button */
-	{
-	  TtaDestroyDialogue (BaseDialog + SaveForm);
-	  if (SavingObject != 0)
-	    /* delete temporary file */
-	    DeleteTempObjectFile ();
-	  SavingDocument = 0;
-	  SavingObject = 0;
-	}
+        /* "Cancel" button */
+        {
+          TtaDestroyDialogue (BaseDialog + SaveForm);
+          if (SavingObject != 0)
+            /* delete temporary file */
+            DeleteTempObjectFile ();
+          SavingDocument = 0;
+          SavingObject = 0;
+        }
       break;
 
     case NameSave:
       /* Document location */
       if (!IsW3Path (data))
-	change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+        change = NormalizeFile (data, tempfile, AM_CONV_NONE);
       else
-	strcpy (tempfile, data);
+        strcpy (tempfile, data);
       
       if (*tempfile && tempfile[strlen (tempfile) - 1] == sep)
-	{
-	  strcpy (SavePath, tempfile);
-	  SaveName[0] = EOS;
-	}
+        {
+          strcpy (SavePath, tempfile);
+          SaveName[0] = EOS;
+        }
       else
-	{
-	  /* Extract document name */
-	  if (SavingDocument != 0)
-	    TtaExtractName (tempfile, SavePath, SaveName);
-	  else
-	    TtaExtractName (tempfile, SavePath, ObjectName);
-	}
+        {
+          /* Extract document name */
+          if (SavingDocument != 0)
+            TtaExtractName (tempfile, SavePath, SaveName);
+          else
+            TtaExtractName (tempfile, SavePath, ObjectName);
+        }
       break;
 
     case ImgDirSave:
       /* Image directory */
       if (!IsW3Path (data))
-	change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
+        change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
       else
-	strcpy (SaveImgsURL, data);
+        strcpy (SaveImgsURL, data);
       break;
 
     case ConfirmSave:
@@ -6412,165 +6433,165 @@ void CallbackDialogue (int ref, int typedata, char *data)
       UserAnswer = (val == 1);
       TtaDestroyDialogue (BaseDialog + ConfirmSave);
       if (!UserAnswer)
-	{
-	  SavingDocument = 0;
-	  SavingObject = 0;
-	}
+        {
+          SavingDocument = 0;
+          SavingObject = 0;
+        }
       break;
        
     case AttrHREFForm:
       /* *********HREF Attribute*********** */
       if (val == 1)
-	{
-	  /* Confirm button */
-	  if (AttrHREFvalue[0] != EOS)
-	      /* create an attribute HREF for the Link_Anchor */
-	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
-			       AttrHREFvalue, NULL);
-	  TtaDestroyDialogue (BaseDialog + AttrHREFForm);
-	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-	}
+        {
+          /* Confirm button */
+          if (AttrHREFvalue[0] != EOS)
+            /* create an attribute HREF for the Link_Anchor */
+            SetREFattribute (AttrHREFelement, AttrHREFdocument,
+                             AttrHREFvalue, NULL);
+          TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+          TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+        }
       else if (val == 2)
-	/* Browse button */
-	{
+        /* Browse button */
+        {
 #if defined(_GTK) || defined(_WX) 
-	  if (LinkAsXmlCSS || LinkAsCSS)
-	    strcpy (ScanFilter, "*.css");
-	  else if (!strcmp (ScanFilter, "*.css"))
-	    strcpy (ScanFilter, "*");
-	  WidgetParent = HrefAttrBrowser;
-	  BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
+          if (LinkAsXmlCSS || LinkAsCSS)
+            strcpy (ScanFilter, "*.css");
+          else if (!strcmp (ScanFilter, "*.css"))
+            strcpy (ScanFilter, "*");
+          WidgetParent = HrefAttrBrowser;
+          BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
 #endif /* #if defined(_GTK) || defined(_WX) */
-	}
+        }
       else if (val == 3)
-	/* allow one to click the target */
-	SelectDestination (AttrHREFdocument, AttrHREFelement, AttrHREFundoable, TRUE);
+        /* allow one to click the target */
+        SelectDestination (AttrHREFdocument, AttrHREFelement, AttrHREFundoable, TRUE);
       else if (val == 4)
-	{
-	  /* Clear button */
-	  AttrHREFvalue[0] = EOS;
+        {
+          /* Clear button */
+          AttrHREFvalue[0] = EOS;
 #if defined(_GTK) || defined(_WX) 
-	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+          TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 #endif /* #if defined(_GTK) || defined(_WX) */
-	}
+        }
       else 
-	/* Cancel button */
-	if (IsNewAnchor)
-	  {
-	    LinkAsCSS = FALSE;
-	    LinkAsXmlCSS = FALSE;
-	    /* remove the link if it was just created */
-	    TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-	    DeleteAnchor (AttrHREFdocument, 1);
-	    TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-	  }
+        /* Cancel button */
+        if (IsNewAnchor)
+          {
+            LinkAsCSS = FALSE;
+            LinkAsXmlCSS = FALSE;
+            /* remove the link if it was just created */
+            TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+            DeleteAnchor (AttrHREFdocument, 1);
+            TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+          }
       break;
 
     case AttrHREFText:
       /* save the HREF name */
       RemoveNewLines (data);
       if (IsW3Path (data))
-	{
-	  /* save the URL name */
-	  strcpy (AttrHREFvalue, data);
-	  DocumentName[0] = EOS;
-	}
+        {
+          /* save the URL name */
+          strcpy (AttrHREFvalue, data);
+          DocumentName[0] = EOS;
+        }
       else
-	{
-	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	  if (TtaCheckDirectory (tempfile))
-	    {
-	      strcpy (DirectoryName, tempfile);
-	      DocumentName[0] = EOS;
-	    }
-	  else
-	    TtaExtractName (tempfile, DirectoryName, DocumentName);
-	  strcpy (AttrHREFvalue, tempfile);
-	}       
+        {
+          change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+          if (TtaCheckDirectory (tempfile))
+            {
+              strcpy (DirectoryName, tempfile);
+              DocumentName[0] = EOS;
+            }
+          else
+            TtaExtractName (tempfile, DirectoryName, DocumentName);
+          strcpy (AttrHREFvalue, tempfile);
+        }       
       break;
       
       /* *********File Browser*********** */
     case FileBrowserForm:
       if (val == 1)
-	{
-	  /* Confirm button */
-	  /* it's no longer the default Welcome page */
-	  WelcomePage = FALSE;
+        {
+          /* Confirm button */
+          /* it's no longer the default Welcome page */
+          WelcomePage = FALSE;
 #if defined(_GTK) || defined(_WX) 
-	  /* this code is only valid under Unix. */
-	  /* In Windows, we're using a system widget */
-	  strcpy (tempfile, DirectoryName);
-	  strcat (tempfile, DIR_STR);
-	  strcat (tempfile, DocumentName);
-	  if (WidgetParent == HrefAttrBrowser)
-	    {
-	      TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
-	      strcpy (AttrHREFvalue, tempfile);
-	      CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
-	    }
-	  else if (WidgetParent == OpenDocBrowser)
-	    {
-	      TtaSetTextForm (BaseDialog + URLName, tempfile);
-	      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	    }
-	  else if (WidgetParent == DocSaveBrowser)
-	    {
-	      TtaSetTextForm (BaseDialog + NameSave, tempfile);
-	      CallbackDialogue (BaseDialog + NameSave, STRING_DATA, tempfile);
-	    }
-	  /* remove the browsing dialogue */
-	  TtaDestroyDialogue (ref);
+          /* this code is only valid under Unix. */
+          /* In Windows, we're using a system widget */
+          strcpy (tempfile, DirectoryName);
+          strcat (tempfile, DIR_STR);
+          strcat (tempfile, DocumentName);
+          if (WidgetParent == HrefAttrBrowser)
+            {
+              TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+              strcpy (AttrHREFvalue, tempfile);
+              CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
+            }
+          else if (WidgetParent == OpenDocBrowser)
+            {
+              TtaSetTextForm (BaseDialog + URLName, tempfile);
+              CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+            }
+          else if (WidgetParent == DocSaveBrowser)
+            {
+              TtaSetTextForm (BaseDialog + NameSave, tempfile);
+              CallbackDialogue (BaseDialog + NameSave, STRING_DATA, tempfile);
+            }
+          /* remove the browsing dialogue */
+          TtaDestroyDialogue (ref);
 #endif /* defined(_GTK) || defined(_WX) */
-	}
+        }
       else if (val == 2)
-	/* Clear button */
-	{
-	  if (WidgetParent == OpenDocBrowser)
-	    {
-	      LastURLName[0] = EOS;
+        /* Clear button */
+        {
+          if (WidgetParent == OpenDocBrowser)
+            {
+              LastURLName[0] = EOS;
 #if defined(_GTK) || defined(_WX) 
-	      TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
+              TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
 #endif /* #if defined(_GTK) || defined(_WX) */
         
-	    }
-	  else if (WidgetParent == HrefAttrBrowser)
-	    {
-	      tempname[0] = EOS; 	       
+            }
+          else if (WidgetParent == HrefAttrBrowser)
+            {
+              tempname[0] = EOS; 	       
 #if defined(_GTK) || defined(_WX) 
-	      TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
+              TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
 #endif /* #if defined(_GTK) || defined(_WX) */
-	    }
-	}
+            }
+        }
       else if (val == 3)
-	/* Filter button */
-	{
-	  /* reinitialize directories and document lists */
-	  TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
-			    TtaGetMessage (LIB, TMSG_DOC_DIR),
-			    BaseDialog + BrowserDirSelect,
-			    ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
-			    BaseDialog + BrowserDocSelect);
-	}
+        /* Filter button */
+        {
+          /* reinitialize directories and document lists */
+          TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+                            TtaGetMessage (LIB, TMSG_DOC_DIR),
+                            BaseDialog + BrowserDirSelect,
+                            ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+                            BaseDialog + BrowserDocSelect);
+        }
       break;
       
     case FileBrowserText:
       RemoveNewLines (data);
       if (IsW3Path (data))
-	{
-	  DocumentName[0] = EOS;
-	}
+        {
+          DocumentName[0] = EOS;
+        }
       else
-	{
-	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	  if (TtaCheckDirectory (tempfile))
-	    {
-	      strcpy (DirectoryName, tempfile);
-	      DocumentName[0] = EOS;
-	    }
-	  else
-	    TtaExtractName (tempfile, DirectoryName, DocumentName);
-	  strcpy (AttrHREFvalue, tempfile);
-	}       
+        {
+          change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+          if (TtaCheckDirectory (tempfile))
+            {
+              strcpy (DirectoryName, tempfile);
+              DocumentName[0] = EOS;
+            }
+          else
+            TtaExtractName (tempfile, DirectoryName, DocumentName);
+          strcpy (AttrHREFvalue, tempfile);
+        }       
       break;
       
       /* *********Browser DirSelect*********** */
@@ -6580,32 +6601,32 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
-	{
-	  if (!strcmp (data, ".."))
-	    {
-	      /* suppress last directory */
-	      strcpy (tempname, DirectoryName);
-	      TtaExtractName (tempname, DirectoryName, tempfile);
-	      if (DirectoryName[0] == EOS)
-		strcpy (DirectoryName, DIR_STR);
-	    }
-	  else
-	    {
-	      strcat (DirectoryName, DIR_STR);
-	      strcat (DirectoryName, data);
-	    }
+        {
+          if (!strcmp (data, ".."))
+            {
+              /* suppress last directory */
+              strcpy (tempname, DirectoryName);
+              TtaExtractName (tempname, DirectoryName, tempfile);
+              if (DirectoryName[0] == EOS)
+                strcpy (DirectoryName, DIR_STR);
+            }
+          else
+            {
+              strcat (DirectoryName, DIR_STR);
+              strcat (DirectoryName, data);
+            }
 	  
-	  if (WidgetParent == OpenDocBrowser)
-	    LastURLName[0] = EOS;
+          if (WidgetParent == OpenDocBrowser)
+            LastURLName[0] = EOS;
 	  
-	  TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
-	  TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
-			    TtaGetMessage (LIB, TMSG_DOC_DIR),
-			    BaseDialog + BrowserDirSelect, ScanFilter,
-			    TtaGetMessage (AMAYA, AM_FILES),
-			    BaseDialog + BrowserDocSelect);
-	  DocumentName[0] = EOS;
-	}
+          TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
+          TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+                            TtaGetMessage (LIB, TMSG_DOC_DIR),
+                            BaseDialog + BrowserDirSelect, ScanFilter,
+                            TtaGetMessage (AMAYA, AM_FILES),
+                            BaseDialog + BrowserDocSelect);
+          DocumentName[0] = EOS;
+        }
 #endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
@@ -6613,11 +6634,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case BrowserDocSelect:
       /* set path on current directory */
       if (DirectoryName[0] == EOS)
-	getcwd (DirectoryName, MAX_LENGTH);
+        getcwd (DirectoryName, MAX_LENGTH);
       /* Extract suffix from document name */
       strcpy (DocumentName, data);
       if (WidgetParent == OpenDocBrowser)
-	LastURLName[0] = EOS;
+        LastURLName[0] = EOS;
       /* construct the document full name */
       strcpy (tempfile, DirectoryName);
       strcat (tempfile, DIR_STR);
@@ -6631,10 +6652,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case FileBrowserFilter:
       /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
-	strcpy (ScanFilter, data);
+        strcpy (ScanFilter, data);
 #if defined(_GTK) || defined(_WX) 
       else
-	TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
+        TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
 #endif /* #if defined(_GTK) || defined(_WX) */
       break;
       
@@ -6642,7 +6663,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* ********Change the document title*********** */
       TtaDestroyDialogue (BaseDialog + TitleForm);
       if (val == 1)
-	SetNewTitle (CurrentDocument);
+        SetNewTitle (CurrentDocument);
       break;
       
     case TitleText:
@@ -6675,8 +6696,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case MathEntityForm:
       /* ********* MathML entity form ********* */
       if (val == 0)
-	/* no answer */
-	MathMLEntityName[0] = EOS;
+        /* no answer */
+        MathMLEntityName[0] = EOS;
       TtaDestroyDialogue (ref);
       break;
     case MathEntityText:
@@ -6685,26 +6706,26 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
     case MakeIdMenu:
       switch (val)
-	{
-	case 1:
-	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, IdApplyToSelection);
+        {
+        case 1:
+          CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, IdApplyToSelection);
 #if defined(_GTK) || defined(_WX) 
-	  /* and show the status */
-	  TtaNewLabel (BaseDialog + mIdStatus,
-		       BaseDialog + MakeIdMenu,
-		       IdStatus);
+          /* and show the status */
+          TtaNewLabel (BaseDialog + mIdStatus,
+                       BaseDialog + MakeIdMenu,
+                       IdStatus);
 #endif /* #if defined(_GTK) || defined(_WX) */
-	  break;
-	case 2:
-	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, IdApplyToSelection);
+          break;
+        case 2:
+          CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, IdApplyToSelection);
 #if defined(_GTK) || defined(_WX) 
-	  /* and show the status */
-	  TtaNewLabel (BaseDialog + mIdStatus,
-		       BaseDialog + MakeIdMenu,
-		       IdStatus);
+          /* and show the status */
+          TtaNewLabel (BaseDialog + mIdStatus,
+                       BaseDialog + MakeIdMenu,
+                       IdStatus);
 #endif /* #if defined(_GTK) || defined(_WX) */
-	  break;
-	}
+          break;
+        }
       break;
     case mElemName:
       strncpy (IdElemName, data, MAX_LENGTH);
@@ -6716,95 +6737,95 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* Charset Save As menu */
     case CharsetForm:
       {
-	switch (val)
-	  {
-	  case 0:
-	    SaveFormTmp[0] = EOS;
-	    TtaDestroyDialogue (ref);
-	    break;
-	  case 1:
-	    TtaDestroyDialogue (ref);
-	    break;
-	  }
+        switch (val)
+          {
+          case 0:
+            SaveFormTmp[0] = EOS;
+            TtaDestroyDialogue (ref);
+            break;
+          case 1:
+            TtaDestroyDialogue (ref);
+            break;
+          }
       }
       break;
     case CharsetSel:
       switch (val)
-	{
-	case 0:
-	  strcpy (SaveFormTmp, "us-ascii");
-	  break;
-	case 1:
-	  strcpy (SaveFormTmp, "UTF-8");
-	  break;
-	case 2:
-	  strcpy (SaveFormTmp, "iso-8859-1");
-	  break;
-	case 3:
-	  strcpy (SaveFormTmp, "iso-8859-2");
-	  break;
-	}
+        {
+        case 0:
+          strcpy (SaveFormTmp, "us-ascii");
+          break;
+        case 1:
+          strcpy (SaveFormTmp, "UTF-8");
+          break;
+        case 2:
+          strcpy (SaveFormTmp, "iso-8859-1");
+          break;
+        case 3:
+          strcpy (SaveFormTmp, "iso-8859-2");
+          break;
+        }
       break;
 
       /* MIME type Save As menu */
     case MimeTypeForm:
       {
-	switch (val)
-	  {
-	  case 0:
-	    SaveFormTmp[0] = EOS;
-	    TtaDestroyDialogue (ref);
-	    break;
-	  case 1:
-	    {
-	      char *src, *dst;
-	      /* filter the UserMimeType */
-	      src = dst = SaveFormTmp;
-	      while (*src)
-		{
-		  if (!isascii (*src) 
-		      || (!isalnum (*src) && *src != '/' && *src != '-'
-			  && *src != '+'))
-		    {
-		      /* skip the character */
-		      src++;
-		      continue;;
-		    }
+        switch (val)
+          {
+          case 0:
+            SaveFormTmp[0] = EOS;
+            TtaDestroyDialogue (ref);
+            break;
+          case 1:
+            {
+              char *src, *dst;
+              /* filter the UserMimeType */
+              src = dst = SaveFormTmp;
+              while (*src)
+                {
+                  if (!isascii (*src) 
+                      || (!isalnum (*src) && *src != '/' && *src != '-'
+                          && *src != '+'))
+                    {
+                      /* skip the character */
+                      src++;
+                      continue;;
+                    }
 		  
-		  if (isupper (*src))
-		    /* convert to lower case */
-		    *dst = tolower (*src);
-		  else
-		    *dst = *src;
-		  src++;
-		  dst++;
-		}
-	      *dst = EOS;
-	      /* validate the mime type */
-	      if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
-		{
-		  SaveFormTmp[0] = EOS;
+                  if (isupper (*src))
+                    /* convert to lower case */
+                    *dst = tolower (*src);
+                  else
+                    *dst = *src;
+                  src++;
+                  dst++;
+                }
+              *dst = EOS;
+              /* validate the mime type */
+              if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
+                {
+                  SaveFormTmp[0] = EOS;
 #if defined(_GTK)
-		  InitMimeType (SavingDocument, 1, SavePath,
-				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+                  InitMimeType (SavingDocument, 1, SavePath,
+                                TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _GTK */
 #ifdef _WINGUI
-      /* the Window dialog won't be closed */
-		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+                  /* the Window dialog won't be closed */
+                  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINGUI */
-		}
-	      else
-		TtaDestroyDialogue (ref);
-	    }
-	    break;
-	  }
+                }
+              else
+                TtaDestroyDialogue (ref);
+            }
+            break;
+          }
       }
       break;
     case MimeTypeSel:
       if (data)
-	strcpy (SaveFormTmp, data);
+        strcpy (SaveFormTmp, data);
       else
-	SaveFormTmp[0] = EOS;
+        SaveFormTmp[0] = EOS;
       break;
     }
 }
