@@ -2081,7 +2081,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
   still = FALSE;
   minWidth = 0;
   wordWidth = 0;
-  xi = 0;
+  xi = pLine->LiRealLength;
   ascent = 0;
   descent = 0;
   /* the first managed box */
