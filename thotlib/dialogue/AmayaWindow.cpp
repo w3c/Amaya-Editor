@@ -840,14 +840,16 @@ void AmayaWindow::DoAmayaAction( int command, int doc, int view )
   int frame_id = GetWindowNumber(doc, view);
   int window_id = TtaGetFrameWindowParentId(frame_id);
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
-
-  // create the event
-  wxCommandEvent evt( wxEVT_AMAYA_ACTION_EVENT, command );
-  // Give it some contents
-  evt.SetExtraLong( doc );
-  evt.SetInt( view );
-  /* post the event on the window's event hander */
-  wxPostEvent( p_window, evt );
+  if (p_window)
+    {
+      // create the event
+      wxCommandEvent evt( wxEVT_AMAYA_ACTION_EVENT, command );
+      // Give it some contents
+      evt.SetExtraLong( doc );
+      evt.SetInt( view );
+      /* post the event on the window's event hander */
+      wxPostEvent( p_window, evt );
+    }
 }
 
 /*
