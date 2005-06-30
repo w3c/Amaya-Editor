@@ -1781,7 +1781,8 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
     {
       pAb->AbBox->BxVertRef += lt;
       /* not already updated by the table formatter */
-      if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
+      if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef ||
+	  (pAb->AbWidth.DimValue == 100 && pAb->AbWidth.DimUnit == UnPercent))
 	/* the outside width is constrained */
 	ResizeWidth (pBox, pBox, NULL, -lt -rb, lt, rb, 0, frame);
       else

@@ -2549,8 +2549,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      else
 				GetSizesFrame (frame, &i, &val);
 			      if (pDimAb->DimUnit == UnPercent)
+				{
 				val = PixelValue (pDimAb->DimValue, UnPercent,
 						  (PtrAbstractBox) i, 0);
+				if (pDimAb->DimValue == 100)
+				  /* the rule gives the outside value */
+				  val = val - dx;
+				}
 			      else /* UnAuto */
 				{
 				  val = PixelValue (100, UnPercent, 
