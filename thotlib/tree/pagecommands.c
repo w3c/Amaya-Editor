@@ -20,10 +20,13 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "page_tv.h"
+#include "frame_tv.h"
 
 
 #include "absboxes_f.h"
@@ -209,6 +212,7 @@ void KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int viewNb,
     }
 }
 
+
 /*----------------------------------------------------------------------
    KillAbsBoxBeforePage detruit tous les paves qui precedent le filet  
    marquant la frontiere de page qui est a l'interieur du pave Marque
@@ -220,28 +224,13 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
 			       PtrDocument pDoc, int viewNb, int *clipOrg)
 {
   PtrAbstractBox    pAb, RedispAbsBox, rootAbsBox;
-  PtrAbstractBox    pPageTable, pTable, pNext, pPageLine;
+  PtrAbstractBox    pGather, pNext, pPageLine;
   int               h, yTop, NbCar, yThread;
   ThotBool          stop, ret;
 
   *clipOrg = 0;
   /* is there an enclosing table? */
-  pPageTable = NULL;
-  pTable = SearchEnclosingType (pPage, BoTable, BoTable);
-  while (pTable != NULL)
-    {
-      /* get the most enclosing table */
-      pPageTable = pTable;
-      pTable = SearchEnclosingType (pPageTable->AbEnclosing, BoTable, BoTable);
-    }
-
-  /* look for the root abstract box in the view */
-  rootAbsBox = pPage;
-  while (rootAbsBox->AbEnclosing != NULL)
-    rootAbsBox = rootAbsBox->AbEnclosing;
-
-  /* remove all AbAfterPageBreak and AbOnPageBreak indicators in the view */
-  TagAbsBoxInPage (rootAbsBox);
+  pGather = GetEnclosingGather (pPage);
   /* remove page footer boxes (above the page break line) within this page element */
   pAb = pPage->AbFirstEnclosed;
   stop = FALSE;
@@ -264,36 +253,27 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
       }
   while (!stop);
 
-  /* remove all abstract boxes above the page element or the table element
-     that includes the page element */
-  if (pPageTable == NULL)
-    pAb = pPage;
+  /* remove all abstract boxes above the page element or gather element
+     that includes the page */
+  if (pGather)
+    pAb = pGather;
   else
-    pAb = pPageTable;
-  while (pAb != NULL)
+    pAb = pPage;
+  while (pAb)
     {
-      while (pAb->AbPrevious != NULL)
+      while (pAb->AbPrevious)
 	{
 	  pAb = pAb->AbPrevious;
-	  if (pPageTable != NULL)
-	    pTable = SearchEnclosingType (pAb, BoTable, BoTable);
-	  else
-	    pTable = NULL;
-
 	  /* avoid to kill abstract boxes linked to the current table */
-	  if (pPageTable == NULL || pPageTable != pTable)
+	  if (pGather && pGather->AbElement == pAb->AbElement &&
+	      pAb->AbPresentationBox)
 	    {
-	      if (pTable != NULL)
-		DestroyAbsBoxesView (pTable->AbElement, pDoc, FALSE, viewNb);
-	      else if (pAb->AbPresentationBox)
-		{
-		  /* Kill all presentation abstract boxes */
-		  SetDeadAbsBox (pAb);
-		  ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
-		}
-	      else
-		DestroyAbsBoxesView (pAb->AbElement, pDoc, FALSE, viewNb);
+	      /* Kill all presentation abstract boxes */
+	      SetDeadAbsBox (pAb);
+	      ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
 	    }
+	  else if (!pAb->AbOnPageBreak && !pAb->AbAfterPageBreak)
+	    DestroyAbsBoxesView (pAb->AbElement, pDoc, FALSE, viewNb);
 	}
       pAb = pAb->AbEnclosing;
       /* set AbOnPageBreak to all enclosing abstract boxes of the page element */
@@ -301,24 +281,22 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
 	pAb->AbOnPageBreak = TRUE;
     }
 
-  /* check whether abstract boxes after the page element or the table element
+  /* remove all AbAfterPageBreak and AbOnPageBreak indicators in the view */
+  rootAbsBox = ViewFrameTable[frame - 1].FrAbstractBox;
+  TagAbsBoxInPage (rootAbsBox);
+  /* check whether abstract boxes after the page element or the gather element
      are displayed above the page break line */
-  if (pPageTable == NULL)
-    pAb = pPage;
+  if (pGather)
+    pAb = pGather;
   else
-    pAb = pPageTable;
-  while (pAb != NULL)
+    pAb = pPage;
+  while (pAb)
     {
       pNext = pAb->AbNext;
-      while (pNext != NULL)
+      while (pNext)
 	{
-	  if (pPageTable != NULL)
-	    pTable = SearchEnclosingType (pNext, BoTable, BoTable);
-	  else
-	    pTable = NULL;
-
 	  /* avoid to kill abstract boxes linked to the current table */
-	  if (pPageTable == NULL || pPageTable != pTable)
+	  if (pGather == NULL || pGather->AbElement != pNext->AbElement)
 	    {
 	      if (!pNext->AbDead)
 		{

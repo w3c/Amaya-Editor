@@ -12,6 +12,7 @@ extern ThotBool IsFlow ( PtrBox pBox,
                          int frame );
 extern PtrFlow GetRelativeFlow ( PtrBox pBox,
                                  int frame );
+extern PtrAbstractBox GetEnclosingGather ( PtrAbstractBox pAb );
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                        int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
@@ -35,6 +36,7 @@ extern ThotBool IsFlow ( PtrBox pBox,
                            int frame );
 extern PtrFlow GetRelativeFlow ( PtrBox pBox,
                                    int frame );
+extern PtrAbstractBox GetEnclosingGather ( PtrAbstractBox pAb );
 extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                          int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,

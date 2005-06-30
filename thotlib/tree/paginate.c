@@ -1216,7 +1216,6 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
   return ret;
 }
 
-
 /*----------------------------------------------------------------------
   SetMark place dans l'arbre de racine pAb la marque de page en fonction
   de la position des paves relativement a la limite de page.

@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern View TtaOpenMainView ( Document document,
+                              const char * doctypename,
                               int x,
                               int y,
                               int w,
@@ -92,6 +93,7 @@ extern void RedispNewGeometry ( Document document,
 #else /* __STDC__ */
 
 extern View TtaOpenMainView ( Document document,
+                                const char * doctypename,
                                 int x,
                                 int y,
                                 int w,

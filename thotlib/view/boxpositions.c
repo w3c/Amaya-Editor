@@ -222,6 +222,25 @@ static void OnPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakChange
 
 
 /*----------------------------------------------------------------------
+  GetEnclosingGather
+  Returns the highest enclosing abstract box that forces a build all.
+  ----------------------------------------------------------------------*/
+PtrAbstractBox GetEnclosingGather (PtrAbstractBox pAb)
+{
+  PtrAbstractBox found = NULL;
+
+  while (pAb)
+    {
+      if (pAb->AbBuildAll)
+	found = pAb;
+      pAb = pAb->AbEnclosing;
+    }
+  if (found && found->AbFloat != 'N')
+    found = found->AbEnclosing;
+  return found;
+}
+
+/*----------------------------------------------------------------------
    OutOfPage marque tous les paves ascendants comme coupe's     
    par la limite de page s'ils ne sont pas de'ja`          
    marque's comme sur la page ou hors de la page et si     
@@ -353,8 +372,8 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
 		       OnPage (pAb, height, isPageBreakChanged);
 		     toContinue = FALSE;
 		   }
-		 else
-		   { 
+		 else if (GetEnclosingGather (pAb) == NULL)
+		   {
 		     /* La boite est sur la limite de page */
 		     /* deplace la limite de page sur l'origine de la boite */
 		     *height = org;
