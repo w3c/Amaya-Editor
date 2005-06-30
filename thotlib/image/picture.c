@@ -1921,14 +1921,6 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
   WORD                cClrBits;
 #endif /* _WIN_PRINT */
   
-#ifdef _GL
-  if (Printing)
-    {
-      PrintingGL = TRUE;
-      Printing = FALSE;
-    }
-#endif /* _GL */
-
   if (w == 0 && h == 0)
     /* the picture is not visible */
     return;
@@ -1946,6 +1938,14 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
        imageDesc->PicPixmap == PictureLogo))
 #endif /* _GL */
     return;
+
+#ifdef _GL
+  if (Printing)
+    {
+      PrintingGL = TRUE;
+      Printing = FALSE;
+    }
+#endif /* _GL */
 
   drawable = (ThotDrawable)TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);

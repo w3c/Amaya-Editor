@@ -187,6 +187,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 	 /* return the last script box */
 	 while (result->BxNexChild &&
 		(result->BxNexChild->BxType == BoScript ||
+		 result->BxNexChild->BxType == BoDotted ||
 		 result->BxNexChild->BxType == BoPiece))
 	   if (result->BxNexChild->BxAbstractBox != pNextAb)
 	     // should not occur
@@ -2541,6 +2542,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
 		  /* break on the last space of the box*/
 		  GetExtraMargins (pNextBox, NULL, &t, &b, &l, &r);
 		  if (pNextBox->BxType == BoPiece ||
+		      pNextBox->BxType == BoDotted ||
 		      pNextBox->BxType == BoScript)
 		    {
 		      BreakPieceOfBox (pLine, pNextBox, pNextBox->BxW - 1, l, r, pRootAb);
@@ -3504,14 +3506,23 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  pLine->LiXOrg = left;
 	  if (prevLine || pAb->AbTruncatedHead || indent >= width)
 	    indent = 0;
-	  pLine->LiFirstPiece = pBoxToBreak;
-	  if (pNextBox && pNextBox->BxType == BoScript)
+	  if (pNextBox && (pNextBox->BxType == BoScript ||
+			   pNextBox->BxType == BoPiece ||
+			   pNextBox->BxType == BoDotted))
 	    {
 	      pLine->LiFirstPiece = pNextBox;
 	      pLine->LiFirstBox = pNextBox->BxAbstractBox->AbBox;
 	    }
 	  else
-	    pLine->LiFirstBox = pNextBox;
+	    {
+	      pLine->LiFirstBox = pNextBox;
+	      if (pBoxToBreak && pBoxToBreak->BxAbstractBox &&
+		  pBoxToBreak->BxAbstractBox->AbBox == pNextBox)
+		pLine->LiFirstPiece = pBoxToBreak;
+	      else
+		pLine->LiFirstPiece = NULL;
+	    }
+
 	  /* Fill the line */
 	  minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, maxWidth,
 			       extensibleBox,
@@ -3587,32 +3598,21 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    }
 	}
 
-      if (pLine->LiLastBox)
+      /* is there a breaked box */
+      pNextBox = pLine->LiLastBox;
+      if (pNextBox &&
+	  (pBoxToBreak == NULL ||
+	   (pBoxToBreak->BxNChars == 0 && !breakLine)))
 	{
-	  pNextBox = pLine->LiLastBox;
+	  /* skip to the next box */
+	  pBoxToBreak = NULL;
 	  do
-	    if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
-	      /* get the next child */
-	      pNextBox = pNextBox->BxNexChild;
-	    else
-	      pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
+	    pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 	  while (pNextBox &&
 		 pNextBox->BxAbstractBox->AbFloat == 'N' &&
 		 !ExtraFlow (pNextBox, frame) &&
 		 pNextBox->BxAbstractBox->AbNotInLine &&
 		 pNextBox->BxAbstractBox->AbDisplay == 'U');
-	}
-      else
-	pNextBox = NULL;
-      
-      /* is there a breaked box */
-      if (pBoxToBreak)
-	{
-	  /* is it empty ? */
-	  if (pBoxToBreak->BxNChars > 0 || breakLine)
-	    pNextBox = pLine->LiLastBox;
-	  else if (pNextBox == NULL)
-	    pNextBox = pLine->LiLastBox;
 	}
       
       if (full)
