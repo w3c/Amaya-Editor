@@ -1419,7 +1419,7 @@ static void ClosePSFile (int frame)
       /* Oui -> on ferme le fichier */
       fprintf (PSfile, "grestore\n");
       fprintf (PSfile, "end end end %%close all open dict\n");
-      fprintf (PSfile, "showpage\n%%%%Trailer\n");
+      fprintf (PSfile, "%%%%Trailer\n");
       fprintf (PSfile, "%%%%Pages: %d\n%%%%EOF\n", NumberOfPages);
       TtaReadClose (PSfile);
     }
