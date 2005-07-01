@@ -273,9 +273,14 @@ fi
 
 # mesa (software) gl implementation is default with wx (hardware gl implem can be choosen with --with-gl option)
 if test "$with_wx" = "yes" ; then
+ if test "$AMAYAOS" = "MACOSX" ; then
+    with_mesa="no"
+    with_gl="yes"
+ else
   if test "$with_gl" = "no" ; then
     with_mesa="yes"
   fi
+ fi
 fi
 
 # check if no gui is enable
@@ -733,7 +738,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 	LDFLAGS="-L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib"
   	AC_MSG_CHECKING([OpenGL])
 	for ac_dir in               		\
-		/usr/include 			\
+		/usr/include			\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
 		; \
@@ -751,8 +756,8 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 	
   	AC_MSG_CHECKING([GLU])	
 	for ac_dir in               		\
-		/usr/include 			\
-		/usr/X11R6/include 		\
+		/usr/include		\
+		/usr/X11R6/include		\
 		/usr/local/include		\
 		; \
 	do  if test -r "$ac_dir/GL/glu.h" ; then
@@ -795,8 +800,9 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 
     if test "$with_mac" = "yes" ; then
       GL_OPTIONS="-D_GL"	
-      GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/"	
+      GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers/"	
       GL_LIBRARIES=""
+      GL_BUILDDIR=""
     else
       GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
       GL_OPTIONS="-D_GL"
