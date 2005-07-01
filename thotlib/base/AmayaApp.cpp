@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/clipbrd.h"
 #include "wx/image.h"
+#include "wx/imaglist.h"
 #include "wx/snglinst.h"
 #ifndef _GLPRINT
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
