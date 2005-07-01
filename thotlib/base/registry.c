@@ -1225,7 +1225,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    * First case, the argv[0] indicate that it's an absolute path name.
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
-#ifdef _MACOS
+#if defined(_WX) && defined(_MACOS)
    /* for MACOS, 'getcws' returns the path to the current bundle if it exists */
    /* In this case, we append the real directory to the path */
    getcwd (&execname[0], sizeof (execname) / sizeof (char));
@@ -1239,7 +1239,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    strcpy (realexecname, execname);
    strcat (realexecname, appArgv0);
    printf ("realexecname '%s' \n", realexecname);
-#endif _MACOS
+#endif /* _MACOS & _WX */
 #ifdef _WINDOWS
   if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
      strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (char));
