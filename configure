@@ -13135,6 +13135,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 
   # if with_gl is on then test system opengl library (GL & GLU)
   if test "$with_gl" = "yes" ; then
+    if test "$AMAYAOS" = "LINUX" ; then
 	# setup a list of standard paths int LDFLAGS
 	# for AC_CHECK_LIB library existance checks
 	LIBS_OLD=$LIBS
@@ -13408,6 +13409,7 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
       GL_LIBRARIES=
       exit 1;
     fi
+    fi # AMAYAOS = LINUX
 
     if test "$with_mac" = "yes" ; then
       GL_OPTIONS="-D_GL"
