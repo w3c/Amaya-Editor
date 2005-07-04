@@ -733,7 +733,7 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
    is already loaded.
    Return NULL if schema can't be loaded.
   ----------------------------------------------------------------------*/
-PtrSSchema LoadStructureSchema (char *schemaURI, Name schemaName,
+PtrSSchema LoadStructureSchema (char *schemaURI, char * schemaName,
 				PtrDocument pDoc)
 {
    PtrSSchema           pSSchema;

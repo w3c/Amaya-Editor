@@ -346,11 +346,11 @@ static ThotBool ReadConstants (BinFile file, PtrSSchema pSS)
    ReadStructureSchema                                             
    lit un fichier contenant un schema de structure et charge       
    ce schema en memoire.                                           
-   fileName: nom du fichier a lire, sans le suffixe .STR       	
+   fileName: nom du fichier a lire, sans le suffixe .STR (la chaine peut etre modifiee par cette fonction)
    pSS: schema de structure en memoire a remplir.               	
    Retourne VRAI si chargement reussi, FAUX si echec.              
   ----------------------------------------------------------------------*/
-ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
+ThotBool ReadStructureSchema (char * fileName, PtrSSchema pSS)
 { 
    BinFile             file;
    PathBuffer          buf;

@@ -36,7 +36,7 @@ extern void UnlinkAllSchemasExtens ( PtrElement pEl );
 extern PtrPSchema PresentationSchema ( PtrSSchema pSS,
                                        PtrDocument pDoc );
 extern PtrSSchema LoadStructureSchema ( char *schemaURI,
-                                        Name schemaName,
+                                        char *schemaName,
                                         PtrDocument pDoc );
 extern void ReleaseStructureSchema ( PtrSSchema pSS,
                                      PtrDocument pDoc );
@@ -141,7 +141,7 @@ extern void UnlinkAllSchemasExtens ( PtrElement pEl );
 extern PtrPSchema PresentationSchema ( PtrSSchema pSS,
                                          PtrDocument pDoc );
 extern PtrSSchema LoadStructureSchema ( char *schemaURI,
-                                          Name schemaName,
+                                          char *schemaName,
                                           PtrDocument pDoc );
 extern void ReleaseStructureSchema ( PtrSSchema pSS,
                                        PtrDocument pDoc );
