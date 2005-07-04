@@ -225,7 +225,7 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
 {
   PtrAbstractBox    pAb, RedispAbsBox, rootAbsBox;
   PtrAbstractBox    pGather, pNext, pPageLine;
-  int               h, yTop, NbCar, yThread;
+  int               h, yTop, NbCar, yRef;
   ThotBool          stop, ret;
 
   *clipOrg = 0;
@@ -244,7 +244,7 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
 	stop = TRUE;
 	/* get the new page break line position */
 	pPageLine = pAb;
-	SetPageHeight (pAb, &h, &yThread, &NbCar);
+	SetPageHeight (pAb, &h, &yRef, &NbCar);
       }
     else
       {
@@ -264,26 +264,37 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
       while (pAb->AbPrevious)
 	{
 	  pAb = pAb->AbPrevious;
-	  /* avoid to kill abstract boxes linked to the current table */
-	  if (pGather && pGather->AbElement == pAb->AbElement &&
-	      pAb->AbPresentationBox)
+	  /* avoid to kill abstract boxes linked to the current gather */
+	  if (pGather == NULL || pGather->AbElement != pAb->AbElement)
 	    {
-	      /* Kill all presentation abstract boxes */
-	      SetDeadAbsBox (pAb);
-	      ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
+	      if (pAb->AbPresentationBox)
+		{
+		  /* Kill all presentation abstract boxes */
+		  SetDeadAbsBox (pAb);
+		  ApplyRefAbsBoxSupp (pAb, &RedispAbsBox, pDoc);
+		}
+	      else if (!pAb->AbOnPageBreak && !pAb->AbAfterPageBreak)
+		DestroyAbsBoxesView (pAb->AbElement, pDoc, FALSE, viewNb);
+	      else
+		{
+		  /* clear previous indicators */
+		  pAb->AbOnPageBreak = FALSE;
+		  pAb->AbAfterPageBreak = FALSE;
+		}
 	    }
-	  else if (!pAb->AbOnPageBreak && !pAb->AbAfterPageBreak)
-	    DestroyAbsBoxesView (pAb->AbElement, pDoc, FALSE, viewNb);
+	  else
+	    {
+	      /* clear previous indicators */
+	      pAb->AbOnPageBreak = FALSE;
+	      pAb->AbAfterPageBreak = FALSE;
+	    }
 	}
       pAb = pAb->AbEnclosing;
       /* set AbOnPageBreak to all enclosing abstract boxes of the page element */
-      if (pAb != NULL)
+      if (pAb)
 	pAb->AbOnPageBreak = TRUE;
     }
 
-  /* remove all AbAfterPageBreak and AbOnPageBreak indicators in the view */
-  rootAbsBox = ViewFrameTable[frame - 1].FrAbstractBox;
-  TagAbsBoxInPage (rootAbsBox);
   /* check whether abstract boxes after the page element or the gather element
      are displayed above the page break line */
   if (pGather)
@@ -295,39 +306,58 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
       pNext = pAb->AbNext;
       while (pNext)
 	{
-	  /* avoid to kill abstract boxes linked to the current table */
+	  /* avoid to kill abstract boxes linked to the current gather */
 	  if (pGather == NULL || pGather->AbElement != pNext->AbElement)
 	    {
 	      if (!pNext->AbDead)
 		{
 		  /* get the new page break line position */
 		  SetPageHeight (pNext, &h, &yTop, &NbCar);
-		  if (yTop < yThread)
+		  if (yTop < yRef)
 		    {
-		    if (yTop + h <= yThread && !pNext->AbOnPageBreak)
-		      {
-			/* the top of that box is above the page break */
-			if (pNext->AbPresentationBox)
-			  {
-			    /* Kill all presentation abstract boxes */
-			    SetDeadAbsBox (pNext);
-			    ApplyRefAbsBoxSupp (pNext, &RedispAbsBox, pDoc);
-			  }
-			else
-			  DestroyAbsBoxesView (pNext->AbElement, pDoc, FALSE, viewNb);
-		      }
-		    else
-		      /* the page break line crosses that box */
-		      KillAbsBoxAboveLimit (pNext, yThread, viewNb, pDoc, &RedispAbsBox);
+		      if (yTop + h <= yRef && !pNext->AbOnPageBreak)
+			{
+			  /* the top of that box is above the page break */
+			  if (pNext->AbPresentationBox)
+			    {
+			      /* Kill all presentation abstract boxes */
+			      SetDeadAbsBox (pNext);
+			      ApplyRefAbsBoxSupp (pNext, &RedispAbsBox, pDoc);
+			    }
+			  else
+			    DestroyAbsBoxesView (pNext->AbElement, pDoc, FALSE, viewNb);
+			}
+		      else
+			{
+			  /* the page break line crosses that box */
+			  KillAbsBoxAboveLimit (pNext, yRef, viewNb, pDoc, &RedispAbsBox);
+			  /* clear previous indicators */
+			  //pNext->AbOnPageBreak = FALSE;
+			  pNext->AbAfterPageBreak = FALSE;
+			}
+		    }
+		  else
+		    {
+		      /* clear previous indicators */
+		      pNext->AbOnPageBreak = FALSE;
+		      pNext->AbAfterPageBreak = FALSE;
 		    }
 		}
 	    }
+	  else
+	    {
+	      /* clear previous indicators */
+	      pNext->AbOnPageBreak = FALSE;
+	      pNext->AbAfterPageBreak = FALSE;
+	    }
+	    
 	  pNext = pNext->AbNext;
 	}
       pAb = pAb->AbEnclosing;
     }
   /* take killed abstract boxes into account in the Concrete Image */
   RealPageHeight = 0;
+  rootAbsBox = ViewFrameTable[frame - 1].FrAbstractBox;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
   /* free killed abstract boxes */
   FreeDeadAbstractBoxes (rootAbsBox, frame);

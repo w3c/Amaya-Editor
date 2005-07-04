@@ -681,12 +681,8 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-GLint GLText (const char *str,
-	      const int fg,
-	      const void *font,
-	      const unsigned int fontsize, 
-	      const int x, 
-	      const int y,
+GLint GLText (const char *str, const int fg, const void *font,
+	      const unsigned int fontsize, const int x, const int y,
 	      const int length)
 {
   char fontname[35];

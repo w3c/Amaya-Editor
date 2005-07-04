@@ -2912,12 +2912,13 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  pBox = pAb->AbBox;
 	  /* Remove out of structure relations */
 	  ClearOutOfStructRelation (pBox);
+	  if (pAb->AbFloat != 'N')
+	    ClearAFloat (pAb);
+
 	  if (pAb->AbLeafType == LtCompound)
 	    {
 	      if (pAb->AbPositioning)
 		RemoveFlow (pAb, frame);
-	      if (pAb->AbFloat != 'N')
-		ClearAFloat (pAb);
 	      /* unregister the box */
 	      pBox->BxDisplay = FALSE;
 	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
@@ -5108,7 +5109,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     pParentAb = pAb->AbEnclosing;
 
 	     /* On prepare la mise a jour d'un bloc de lignes */
-	     if ((pParentAb != NULL) && (pParentAb->AbBox != NULL))
+	     if (pParentAb && pParentAb->AbBox)
 	       {
 		  /* differ enclosing rules for ancestor boxes */
 		  PackBoxRoot = pParentAb->AbBox;

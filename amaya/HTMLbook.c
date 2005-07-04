@@ -678,7 +678,7 @@ void CallbackPrint (int ref, int typedata, char *data)
 	}
       break;
     case PPrinterName:
-      if (data[0] != '\0')
+      if (data[0] != EOS)
 	{
 	if (PaperPrint == PP_PRINTER)
 	    /* text capture zone for the printer name */

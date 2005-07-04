@@ -1528,9 +1528,12 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
 	else
 	  pAb = pAb->AbFirstEnclosed;
       }
-    else
+    else if (pAb->AbNext)
       /* see the next abstract box */
       pAb = pAb->AbNext;
+    else if (pAb->AbEnclosing)
+      /* see the next abstract box */
+      pAb = pAb->AbEnclosing->AbNext;
   while (origCutAbsBox == NULL && pAb);
 
   if (origCutAbsBox == NULL && possibleCut)
