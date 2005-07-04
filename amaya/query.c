@@ -1041,7 +1041,9 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
       if (me->method != METHOD_PUT &&
           me->request->orig_output_stream != NULL)
       {
+#ifndef _MACOS
         AHTFWriter_FREE (me->request->orig_output_stream);
+#endif /* _MACOS */
         me->request->orig_output_stream = NULL;
         if (me->output != stdout)
         {

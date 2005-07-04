@@ -1371,11 +1371,11 @@ void SetGlPipelineState ()
     /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
     printf ("\n  GLU Version : %s", 
 	    (char *)gluGetString (GLU_VERSION));
-    glGetIntegerv (GL_AUX_BUFFERS,      &auxnumBuffers);
-    glGetIntegerv (GL_ACCUM_RED_BITS,   &acred);
-    glGetIntegerv (GL_ACCUM_GREEN_BITS, &acgreen); 
-    glGetIntegerv (GL_ACCUM_BLUE_BITS,  &acblue); 
-    glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
+    glGetIntegerv (GL_AUX_BUFFERS,      (GLint*) &auxnumBuffers);
+    glGetIntegerv (GL_ACCUM_RED_BITS,   (GLint*) &acred);
+    glGetIntegerv (GL_ACCUM_GREEN_BITS, (GLint*) &acgreen); 
+    glGetIntegerv (GL_ACCUM_BLUE_BITS,  (GLint*) &acblue); 
+    glGetIntegerv (GL_ACCUM_ALPHA_BITS, (GLint*)&acalpha);
     printf ("\n  Aux buffers count %d", auxnumBuffers);
     printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
     printf ("\n");

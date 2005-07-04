@@ -91,7 +91,7 @@ ThotPixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 {
 #ifdef _WX
    ThotPixmap pixmap;
-   pixmap = new wxBitmap( bits, wxBITMAP_TYPE_XPM, width, height );
+   pixmap = new wxBitmap( bits, (int)wxBITMAP_TYPE_XPM, width, height );
    return pixmap;
 #endif /* _WX */
 #ifdef _GTK

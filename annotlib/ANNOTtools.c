@@ -2282,7 +2282,7 @@ char *StrdupDate (void)
 #ifdef _WINGUI
   UTCoffset = _timezone;	/* global, set by localtime() */
 #else
-  UTCoffset = timezone;		/* global, set by localtime() */
+  UTCoffset = (int)timezone;		/* global, set by localtime() */
 #endif /* _WINGUI */
 
   UTChourOffset = UTCminOffset = abs(UTCoffset)/60; /* UTCoffset is seconds */
@@ -2385,7 +2385,7 @@ time_t StrDateToCalTime (char *strDate)
 #ifdef _WINGUI
       UTCoffset = _timezone;	/* global, set by localtime() */
 #else
-      UTCoffset = timezone;	/* global, set by localtime() */
+      UTCoffset = (int)timezone;	/* global, set by localtime() */
 #endif /* _WINGUI */
 
       cal_date -= UTCoffset;

@@ -2090,13 +2090,13 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
     }
   /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
   else if ((event.CmdDown() || event.AltDown()) &&
-           (thot_keysym == WXK_RIGHT ||
-            thot_keysym == WXK_LEFT ||
-            thot_keysym == WXK_RETURN ||
-            thot_keysym == WXK_DOWN ||
-            thot_keysym == WXK_UP ||
-            thot_keysym == WXK_HOME ||
-            thot_keysym == WXK_END))
+           (thot_keysym == (int) WXK_RIGHT ||
+            thot_keysym == (int) WXK_LEFT ||
+            thot_keysym == (int) WXK_RETURN ||
+            thot_keysym == (int) WXK_DOWN ||
+            thot_keysym == (int) WXK_UP ||
+            thot_keysym == (int) WXK_HOME ||
+            thot_keysym == (int) WXK_END))
     {
       TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
@@ -2108,17 +2108,11 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       
       return true;
     }
-  else if ( thot_keysym == WXK_F2 ||
-            /*	      thot_keysym == WXK_F3 ||*/
-            /*	      thot_keysym == WXK_F4 ||*/
-            thot_keysym == WXK_F5 ||
-            /*	      thot_keysym == WXK_F6 ||*/
-            thot_keysym == WXK_F7 ||
-            /*	      thot_keysym == WXK_F8 ||*/
-            /*	      thot_keysym == WXK_F9 ||*/
-            /*	      thot_keysym == WXK_F10 ||*/
-            thot_keysym == WXK_F11 ||
-            thot_keysym == WXK_F12 )
+  else if ( thot_keysym == (int) WXK_F2 ||
+            thot_keysym == (int) WXK_F5 ||
+            thot_keysym == (int) WXK_F7 ||
+            thot_keysym == (int) WXK_F11 ||
+            thot_keysym == (int) WXK_F12 )
     {
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       

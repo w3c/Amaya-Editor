@@ -988,7 +988,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
       if (GL_TRUE == gluUnProject (winx, winy, 0.0,
 				   model_view,
 				   projection_view,
-				   viewport,
+				   (GLint*) viewport,
 				   &finalx, &finaly, &finalz))
 	{
 	  base_y = FloatToInt ((float) finaly);
@@ -1000,7 +1000,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
 	      gluUnProject (winx, winy, 0.0,
 			    model_view,
 			    projection_view,
-			    viewport,
+			    (GLint*) viewport,
 			    &finalx, &finaly, &finalz);
 
 	      *higherx = FloatToInt ((float) finalx);
