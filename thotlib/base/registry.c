@@ -130,6 +130,15 @@ static char *SkipToEqual (char *ptr)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static char *SkipToEndValue (char *ptr)
+{
+  while (*ptr != EOS && *ptr != EOL && *ptr != __CR__)
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
    TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
    beginning of the string and returns the pointer to the new position. 
   ----------------------------------------------------------------------*/
@@ -1061,7 +1070,7 @@ static void ImportRegistryFile (char *filename, RegistryLevel level)
       *str++ = EOS;
       str = TtaSkipBlanks (str);
       value = str;
-      str = SkipToEqual (str);
+      str = SkipToEndValue (str);
       *str = EOS;
       AddRegisterEntry (appli, name, value, level, TRUE);
     }
