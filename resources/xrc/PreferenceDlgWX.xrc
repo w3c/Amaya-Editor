@@ -183,6 +183,7 @@
           <object class="notebookpage">
             <label>*Navigation*</label>
             <object class="wxPanel" name="wxID_PAGE_BROWSE">
+              <style>wxTAB_TRAVERSAL</style>
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
@@ -278,14 +279,13 @@
                 </object>
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
-                    <orient>wxVERTICAL</orient>
+                    <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
                         <label>*Liste des langues preferees comme fr en   :*</label>
                       </object>
-                    </object>
-                    <object class="spacer">
-                      <size>0,5</size>
+                      <flag>wxRIGHT</flag>
+                      <border>2</border>
                     </object>
                     <object class="sizeritem">
                       <object class="wxTextCtrl" name="wxID_VALUE_LANNEGLISTLG"/>
@@ -296,8 +296,34 @@
                   <flag>wxLEFT|wxEXPAND</flag>
                   <border>10</border>
                 </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_MAXURL">
+                        <label>*Urls number in history :*</label>
+                      </object>
+                      <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                      <border>5</border>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxSpinCtrl" name="wxID_VALUE_MAXURL">
+                        <min>0</min>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxButton" name="wxID_BUTTON_CLEARURL">
+                        <label>*Clear url history*</label>
+                      </object>
+                      <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                      <border>5</border>
+                    </object>
+                  </object>
+                  <flag>wxALL</flag>
+                  <border>10</border>
+                </object>
               </object>
-              <style>wxTAB_TRAVERSAL</style>
             </object>
           </object>
           <object class="notebookpage">

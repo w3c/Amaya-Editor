@@ -7764,7 +7764,7 @@ void OpenNewDocFromArgv( char * url )
     {
       /* no argument and no Home: display the previous open URI */
       for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
-	ptr[i] = URL_list[i];
+        ptr[i] = URL_list[i];
       ptr[i] = EOS;
       s = ptr;
     }
@@ -7784,35 +7784,35 @@ void OpenNewDocFromArgv( char * url )
     {
       NormalizeFile (s, LastURLName, AM_CONV_NONE);
       if (IsW3Path (LastURLName))
-	{
-	  /* if the command line paremeter 
-	     is a url without http://
-	     it's a remote document or 
-	     a new file (doesn't exist yet )
-	     in the current path */
-	  strcpy (s, LastURLName);
-	  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	}
+        {
+          /* if the command line paremeter 
+             is a url without http://
+             it's a remote document or 
+             a new file (doesn't exist yet )
+             in the current path */
+          strcpy (s, LastURLName);
+          CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+        }
       else
-	{
-	  /* check if it is an absolute or a relative name */
+        {
+          /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
-	  if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
+          if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
 #else /* _WINDOWS */
-	    if (LastURLName[0] == DIR_SEP)
+            if (LastURLName[0] == DIR_SEP)
 #endif /* _WINDOWS */
 	     /* it is an absolute name */
-	      TtaExtractName (LastURLName, DirectoryName, DocumentName);
-	    else
-	      {
-		/* it is a relative name */
-		getcwd (DirectoryName, MAX_LENGTH);
-		strcpy (DocumentName, LastURLName);
-	      }
-	  /* start with the local document */
-	  LastURLName[0] = EOS;
-	  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	}
+              TtaExtractName (LastURLName, DirectoryName, DocumentName);
+            else
+              {
+                /* it is a relative name */
+                getcwd (DirectoryName, MAX_LENGTH);
+                strcpy (DocumentName, LastURLName);
+              }
+          /* start with the local document */
+          LastURLName[0] = EOS;
+          CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+        }
     }
 }
 
@@ -8225,7 +8225,7 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
 #ifdef _WX
-   /* force url encoding to utf8 */
+  /* force url encoding to utf8 */
   sprintf (urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
   encoding = UTF_8;
 #else /* _WX */
@@ -8249,49 +8249,49 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
       /* put the new url */
       strcpy (URL_list, url);
       if (keep)
-	{
-	  if (encoding != UTF_8)
-	    {
-	      localname = TtaConvertMbsToByte ((unsigned char *)url, encoding);
-	      fprintf (file, "\"%s\"\n", localname);
-	      TtaFreeMemory (localname);
-	    }
-	else
-          fprintf (file, "\"%s\"\n", url);
-	}
+        {
+          if (encoding != UTF_8)
+            {
+              localname = TtaConvertMbsToByte ((unsigned char *)url, encoding);
+              fprintf (file, "\"%s\"\n", localname);
+              TtaFreeMemory (localname);
+            }
+          else
+            fprintf (file, "\"%s\"\n", url);
+        }
       if (ptr && *ptr != EOS)
-	{
-	  /* now write other urls */
-	  while (ptr[i] != EOS && nb < MAX_URL_list)
-	    {
-	      end = strlen (&ptr[i]) + 1;
-	      if ((URL_list_keep || i != 0) &&
-		  (end != len || strncmp (url, &ptr[i], len)))
-		{
-		  /* add the newline between two urls */
-		  strcpy (&URL_list[j], &ptr[i]);
-		  if (keep)
-		    {
-		      if (encoding != UTF_8)
-			{
-			  localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
-			  fprintf (file, "\"%s\"\n", localname);
-			  TtaFreeMemory (localname);
-			}
-		      else
-			fprintf (file, "\"%s\"\n", &ptr[i]);
-		    }
-		  j += end;
-		  nb++;
-		}
-	      i += end;
-	    }
-	}
+        {
+          /* now write other urls */
+          while (ptr[i] != EOS && nb < GetMaxURLList())
+            {
+              end = strlen (&ptr[i]) + 1;
+              if ((URL_list_keep || i != 0) &&
+                  (end != len || strncmp (url, &ptr[i], len)))
+                {
+                  /* add the newline between two urls */
+                  strcpy (&URL_list[j], &ptr[i]);
+                  if (keep)
+                    {
+                      if (encoding != UTF_8)
+                        {
+                          localname = TtaConvertMbsToByte ((unsigned char *)&ptr[i], encoding);
+                          fprintf (file, "\"%s\"\n", localname);
+                          TtaFreeMemory (localname);
+                        }
+                      else
+                        fprintf (file, "\"%s\"\n", &ptr[i]);
+                    }
+                  j += end;
+                  nb++;
+                }
+              i += end;
+            }
+        }
 	  
       URL_list[j] = EOS;
       URL_list_keep = keep;
       if (keep)
-	TtaWriteClose (file);
+        TtaWriteClose (file);
     }
   TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);
@@ -8318,7 +8318,7 @@ void InitStringForCombobox ()
   app_home = TtaGetEnvString ("APP_HOME");
 
 #ifdef _WX
-   /* force url encoding to utf8 */
+  /* force url encoding to utf8 */
   sprintf ((char *)urlstring, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
   encoding = UTF_8;
 #else /* _WX */
@@ -8332,7 +8332,7 @@ void InitStringForCombobox ()
     {
       /* get the size of the file */
       fseek (file, 0L, 2);	/* end of the file */
-      URL_list_len = (ftell (file) * 4) + MAX_URL_list + 4;
+      URL_list_len = (ftell (file) * 4) + GetMaxURLList() + 4;
       URL_list = (char *)TtaGetMemory (URL_list_len);
       URL_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
@@ -8340,32 +8340,32 @@ void InitStringForCombobox ()
       i = 0;
       nb = 0;
       while (TtaReadByte (file, &c))
-	{
-	  if (c == '"')
-	    {
-	      len = 0;
-	      urlstring[len] = EOS;
-	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
-		{
-		  if (c == '"')
-		    urlstring[len] = EOS;
-		  else if (c == 13)
-		    urlstring[len] = EOS;
-		  else
-		    urlstring[len++] = (char)c;
-		}
-	      urlstring[len] = EOS;
-	      if (i > 0 && len)
-		/* add an EOS between two urls */
-		URL_list[i++] = EOS;
-	      if (len)
-		{
-		  nb++;
-		  strcpy ((char *)&URL_list[i], (char *)urlstring);
-		  i += len;
-		}
-	    }
-	}
+        {
+          if (c == '"')
+            {
+              len = 0;
+              urlstring[len] = EOS;
+              while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+                {
+                  if (c == '"')
+                    urlstring[len] = EOS;
+                  else if (c == 13)
+                    urlstring[len] = EOS;
+                  else
+                    urlstring[len++] = (char)c;
+                }
+              urlstring[len] = EOS;
+              if (i > 0 && len)
+                /* add an EOS between two urls */
+                URL_list[i++] = EOS;
+              if (len)
+                {
+                  nb++;
+                  strcpy ((char *)&URL_list[i], (char *)urlstring);
+                  i += len;
+                }
+            }
+        }
       URL_list[i + 1] = EOS;
       TtaReadClose (file);
     }
@@ -8564,7 +8564,7 @@ void InitAutoSave ()
     {
       /* get the size of the file */
       fseek (file, 0L, 2);	/* end of the file */
-      AutoSave_list_len = ftell (file) + MAX_URL_list + 4;
+      AutoSave_list_len = ftell (file) + GetMaxURLList() + 4;
       AutoSave_list = (char *)TtaGetMemory (AutoSave_list_len);
       URL_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
@@ -8632,4 +8632,58 @@ void LoadDefaultOpeningLocation()
   ThotCallback(BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
 }
 
+/*----------------------------------------------------------------------
+  GetMaxURLList()
+  returns the max urls which can be stored
+  ----------------------------------------------------------------------*/
+int GetMaxURLList()
+{
+  int max;
+  TtaSetDefEnvString ("MAX_URL_LIST", "20", FALSE); // by default 20 urls
+  TtaGetEnvInt ("MAX_URL_LIST", &max);
+  return max;
+}
 
+/*----------------------------------------------------------------------
+  SetMaxURLList()
+  set a new limit for : max urls which can be stored
+  ----------------------------------------------------------------------*/
+void SetMaxURLList(int max)
+{
+  TtaSetEnvInt ("MAX_URL_LIST", max, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ClearURLList()
+  empty the url list
+  ----------------------------------------------------------------------*/
+void ClearURLList()
+{
+  char * app_home;
+  char   filename[MAX_LENGTH];
+  FILE * file = NULL;
+
+  /* cleanup the urllist variable */
+  URL_list[0] = EOS;
+
+  /* cleanup the urllist file */ 
+  app_home = TtaGetEnvString ("APP_HOME");
+#ifdef _WX
+  /* force url encoding to utf8 */
+  sprintf ((char *)filename, "%s%clist_url_utf8.dat", app_home, DIR_SEP);
+#else /* _WX */
+  sprintf ((char *)filename, "%s%clist_url.dat", app_home, DIR_SEP);
+#endif /* _WX */
+  file = TtaWriteOpen(filename);
+  TtaWriteClose(file);
+
+#ifdef _WX
+  /* then cleanup the combobox widget */
+  AmayaWindowIterator it;
+  for( it.first(); !it.isDone(); it.next() )
+    {
+      /* empty url list on each windows */
+      TtaEmptyURLBar( it.currentWindowId() );
+    }
+#endif /* _WX */
+}

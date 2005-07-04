@@ -38,6 +38,7 @@ private:
   void SetupLabelDialog_Browse();
   void SetupDialog_Browse( const Prop_Browse & prop );
   Prop_Browse GetValueDialog_Browse();
+  void OnClearUrlList( wxCommandEvent& event );
 
   // "Publish" tab
   void SetupLabelDialog_Publish();

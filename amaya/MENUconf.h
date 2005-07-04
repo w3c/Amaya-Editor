@@ -113,6 +113,7 @@ typedef struct Prop_Browse_t
   char     ScreenType[MAX_LENGTH];
   char     LanNeg[MAX_LENGTH];
   int      DoubleClickDelay; /* not used ? */
+  int      MaxURL;
 } Prop_Browse;
 
 typedef struct Prop_Publish_t

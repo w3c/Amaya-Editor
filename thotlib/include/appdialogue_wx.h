@@ -19,6 +19,7 @@ extern int           TtaGetWindowNumber( );
 extern AmayaWindow * TtaGetWindowFromId( int window_id );
 extern AmayaFrame *  TtaGetFrameFromId( int frame_id );
 extern void          TtaCloseWindow( int window_id );
+extern void          TtaEmptyURLBar( int window_id );
 extern ThotBool      TtaClosePage( int window_id, int page_id );
 extern void          TtaCleanUpWindow( int window_id );
 extern int           TtaGetFrameId( int window_id, int page_id, int position );

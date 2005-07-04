@@ -1443,6 +1443,20 @@ void TtaCloseWindow( int window_id )
 }
 
 /*----------------------------------------------------------------------
+  TtaEmptyURLBar cleanup url list in window's combobox
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaEmptyURLBar( int window_id )
+{
+#ifdef _WX
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+  if (p_window)
+    p_window->EmptyURLBar();
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaGetWindowFromId returns total number of open windows
   params:
   returns:

@@ -2763,6 +2763,7 @@ void GetBrowseConf (void)
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
+  TtaGetEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
 }
 
 /*----------------------------------------------------------------------
@@ -2788,6 +2789,7 @@ void SetBrowseConf (void)
   TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg, TRUE);
   /* change the current settings */
   libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+  TtaSetEnvInt ("MAX_URL_LIST", GProp_Browse.MaxURL, TRUE);
   TtaSaveAppRegistry ();
 }
 
@@ -2799,19 +2801,19 @@ void ApplyConfigurationChanges (void)
 {
   DisplayMode       dispMode;
   int               doc;
-
+  
   for (doc = 1; doc < MAX_DOCUMENTS; doc++)
     {
       if (DocumentURLs[doc] &&
-	  (DocumentTypes[doc] == docHTML ||
-	   DocumentTypes[doc] == docSVG ||
-	   DocumentTypes[doc] == docMath))
-	{
-	  dispMode = TtaGetDisplayMode (doc);
-	  TtaSetDisplayMode (doc, NoComputedDisplay);
-	  RedisplayDoc (doc);
-	  TtaSetDisplayMode (doc, dispMode);
-	}
+          (DocumentTypes[doc] == docHTML ||
+           DocumentTypes[doc] == docSVG ||
+           DocumentTypes[doc] == docMath))
+        {
+          dispMode = TtaGetDisplayMode (doc);
+          TtaSetDisplayMode (doc, NoComputedDisplay);
+          RedisplayDoc (doc);
+          TtaSetDisplayMode (doc, dispMode);
+        }
     }
 }
 
@@ -2838,6 +2840,7 @@ void GetDefaultBrowseConf ()
   GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
   TtaGetDefEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_Browse.WarnCTab));
   TtaGetDefEnvInt ("OPENING_LOCATION", &(GProp_Browse.OpeningLocation));
+  TtaGetDefEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
 }
 
 #ifdef _WINGUI
@@ -3058,96 +3061,104 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
       /* has the user changed the options? */
       val = (int) data;
       switch (ref - BrowseBase)
-	{
-	case BrowseMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
-		  InitWarnCTab != GProp_Browse.WarnCTab ||
-		  InitOpeningLocation != GProp_Browse.OpeningLocation ||
-		  InitLoadImages != GProp_Browse.LoadImages ||
-		  InitLoadObjects != GProp_Browse.LoadObjects ||
-		  InitBgImages != GProp_Browse.BgImages ||
-		  InitLoadCss != GProp_Browse.LoadCss)
-		{
-		  /* there is almost a change */
-		  if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
-		      InitLoadImages != GProp_Browse.LoadImages ||
-		      InitLoadObjects != GProp_Browse.LoadObjects ||
-		      InitBgImages != GProp_Browse.BgImages ||
-		      InitLoadCss != GProp_Browse.LoadCss)
-		    {
-		      /* redisplay documents after these changes */
-		      strcpy (InitScreen, GProp_Browse.ScreenType);
-		      SetBrowseConf ();
-		      ApplyConfigurationChanges ();
-		    }
-		  else
-		    SetBrowseConf ();
-		  InitWarnCTab = GProp_Browse.WarnCTab;
-		  InitOpeningLocation = GProp_Browse.OpeningLocation;
-		  InitLoadImages = GProp_Browse.LoadImages;
-		  InitLoadObjects = GProp_Browse.LoadObjects;
-		  InitBgImages = GProp_Browse.BgImages;
-		  InitLoadCss = GProp_Browse.LoadCss;
-		}
-	      else
-		SetBrowseConf ();
+        {
+        case BrowseMenu:
+          switch (val) 
+            {
+
+            case 0:
+              TtaDestroyDialogue (ref);
+              break;
+
+            case 1:
+              if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
+                  InitWarnCTab != GProp_Browse.WarnCTab ||
+                  InitOpeningLocation != GProp_Browse.OpeningLocation ||
+                  InitLoadImages != GProp_Browse.LoadImages ||
+                  InitLoadObjects != GProp_Browse.LoadObjects ||
+                  InitBgImages != GProp_Browse.BgImages ||
+                  InitLoadCss != GProp_Browse.LoadCss )
+                {
+                  /* there is almost a change */
+                  if (strcmp (GProp_Browse.ScreenType, InitScreen) ||
+                      InitLoadImages != GProp_Browse.LoadImages ||
+                      InitLoadObjects != GProp_Browse.LoadObjects ||
+                      InitBgImages != GProp_Browse.BgImages ||
+                      InitLoadCss != GProp_Browse.LoadCss)
+                    {
+                      /* redisplay documents after these changes */
+                      strcpy (InitScreen, GProp_Browse.ScreenType);
+                      SetBrowseConf ();
+                      ApplyConfigurationChanges ();
+                    }
+                  else
+                    SetBrowseConf ();
+                  InitWarnCTab = GProp_Browse.WarnCTab;
+                  InitOpeningLocation = GProp_Browse.OpeningLocation;
+                  InitLoadImages = GProp_Browse.LoadImages;
+                  InitLoadObjects = GProp_Browse.LoadObjects;
+                  InitBgImages = GProp_Browse.BgImages;
+                  InitLoadCss = GProp_Browse.LoadCss;
+                }
+              else
+                SetBrowseConf ();
 #ifndef _WX
-	      TtaDestroyDialogue (ref);
+              TtaDestroyDialogue (ref);
 #endif /* _WX */
-	      break;
-	    case 2:
-	      GetDefaultBrowseConf ();
-	      RefreshBrowseMenu ();
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
+              break;
 
-	case mToggleBrowse:
-	  switch (val) 
-	    {
-	    case 0:
-	      GProp_Browse.LoadImages = !(GProp_Browse.LoadImages);
-	      break;
-	    case 1:
-	      GProp_Browse.LoadObjects = !(GProp_Browse.LoadObjects);
-	      break;
-	    case 2:
-	      GProp_Browse.BgImages = !(GProp_Browse.BgImages);
-	      break;
-	    case 3:
-	      GProp_Browse.LoadCss = !(GProp_Browse.LoadCss);
-	      break;
-	    case 4:
-	      GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
-	      break;
-	    case 5:
-	      GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
-	      break;
-	    }
-	  break;
-	case mScreenSelector:
-	  /* Get the desired screen type from the item number */
-	  strcpy (GProp_Browse.ScreenType, data);
-	  break;
+            case 2:
+              GetDefaultBrowseConf ();
+              RefreshBrowseMenu ();
+              break;
 
-	case mLanNeg:
-	  if (data)
-	    strcpy (GProp_Browse.LanNeg, data);
-	  else
-	    GProp_Browse.LanNeg[0] = EOS;
-	  break;
+            case 3:
+              ClearURLList();
+              break;
 
-	default:
-	  break;
-	}
+            default:
+              break;
+            }
+          break;
+
+        case mToggleBrowse:
+          switch (val) 
+            {
+            case 0:
+              GProp_Browse.LoadImages = !(GProp_Browse.LoadImages);
+              break;
+            case 1:
+              GProp_Browse.LoadObjects = !(GProp_Browse.LoadObjects);
+              break;
+            case 2:
+              GProp_Browse.BgImages = !(GProp_Browse.BgImages);
+              break;
+            case 3:
+              GProp_Browse.LoadCss = !(GProp_Browse.LoadCss);
+              break;
+            case 4:
+              GProp_Browse.DoubleClick = !(GProp_Browse.DoubleClick);
+              break;
+            case 5:
+              GProp_Browse.EnableFTP = !(GProp_Browse.EnableFTP);
+              break;
+            }
+          break;
+        case mScreenSelector:
+          /* Get the desired screen type from the item number */
+          strcpy (GProp_Browse.ScreenType, data);
+          break;
+
+        case mLanNeg:
+          if (data)
+            strcpy (GProp_Browse.LanNeg, data);
+          else
+            GProp_Browse.LanNeg[0] = EOS;
+          break;
+
+        default:
+          break;
+        }
     }
 }
 #endif /* _WINGUI */

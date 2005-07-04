@@ -63,6 +63,7 @@ extern int TtaGetFrameId ( int window_id,
                            int page_id,
                            int position );
 extern void TtaCloseWindow ( int window_id );
+extern void TtaEmptyURLBar ( int window_id );
 extern int TtaGetWindowNumber ( void );
 extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,
@@ -148,6 +149,7 @@ extern int TtaGetFrameId ( int window_id,
                              int page_id,
                              int position );
 extern void TtaCloseWindow ( int window_id );
+extern void TtaEmptyURLBar ( int window_id );
 extern int TtaGetWindowNumber ( void );
 extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaSetURLBar ( int frame_id,

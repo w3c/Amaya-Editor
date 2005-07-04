@@ -47,6 +47,10 @@ ShowAddress
 ZoomIn
 ZoomOut
 &TransformType
+TtcParentElement
+TtcChildElement
+TtcPreviousElement
+TtcNextElement
 
 <Editor_WX>
 +config_WX
@@ -61,6 +65,10 @@ SplitVertically
 ZoomIn
 ZoomOut
 &TransformType
+TtcParentElement
+TtcChildElement
+TtcPreviousElement
+TtcNextElement
 
 ################# AMAYA BROWSER
 <Browser>

@@ -982,6 +982,26 @@
 	<message xml:lang="ru">Преобразоват&amp;ь...</message>
 	<message xml:lang="hu">&amp;Átalakítás...</message>
 </label>
+<label define="NavGoto">
+	<message xml:lang="en">Goto</message>
+	<message xml:lang="fr">Aller à</message>
+</label>
+<label define="BParentElement">
+	<message xml:lang="en">Parent element</message>
+	<message xml:lang="fr">Élément parent</message>
+</label>
+<label define="BChildElement">
+	<message xml:lang="en">First child</message>
+	<message xml:lang="fr">Premier enfant</message>
+</label>
+<label define="BPreviousElement">
+	<message xml:lang="en">Previous element</message>
+	<message xml:lang="fr">Élément précédent</message>
+</label>
+<label define="BNextElement">
+	<message xml:lang="en">Next element</message>
+	<message xml:lang="fr">Élément suivant</message>
+</label>
 <label define="BConfigure">
 	<message xml:lang="en">&amp;Preferences</message>
 	<message xml:lang="fr">&amp;Préférences</message>

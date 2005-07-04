@@ -194,6 +194,9 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
+extern int GetMaxURLList ( void );
+extern void SetMaxURLList ( int max );
+extern void ClearURLList ( void );
 
 #else /* __STDC__ */
 
@@ -385,6 +388,9 @@ extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                    const char * view_name );
 extern void LoadDefaultOpeningLocation ( void );
+extern int GetMaxURLList ( void );
+extern void SetMaxURLList ( int max );
+extern void ClearURLList ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

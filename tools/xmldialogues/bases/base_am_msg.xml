@@ -4263,6 +4263,14 @@
 	<message xml:lang="de">Warnen, wenn mehrere Seiten geschlossen werden</message>
 	<message xml:lang="it">Avviso quando si chiudono pi tab</message>
 </label>
+<label define="AM_MAXURLLIST">
+	<message xml:lang="en">Max url number in history</message>
+	<message xml:lang="fr">Nombre max d'url dans l'historique</message>
+</label>
+<label define="AM_CLEARURLLIST">
+	<message xml:lang="en">Clear url list</message>
+	<message xml:lang="fr">Vider la liste des urls</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

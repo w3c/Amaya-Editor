@@ -32,9 +32,12 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
 
+  // Clear url list callback
+  EVT_BUTTON(     XRCID("wxID_BUTTON_CLEARURL"), PreferenceDlgWX::OnClearUrlList )
+
   // Cache tab callbacks
   EVT_BUTTON(     XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
-
+  
   // Color tab callbacks
   EVT_BUTTON(     XRCID("wxID_BUTTON_TEXTCOLOR"),    PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON(     XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
@@ -330,6 +333,8 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_FTP)) );
   XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
   XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_WARNCTAB)) );
+  XRCCTRL(*this, "wxID_LABEL_MAXURL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_MAXURLLIST)) );
+  XRCCTRL(*this, "wxID_BUTTON_CLEARURL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_CLEARURLLIST)) );
 }
 
 /*----------------------------------------------------------------------
@@ -348,9 +353,9 @@ void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetValue( prop.DoubleClick );
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetValue( prop.EnableFTP );
   XRCCTRL(*this, "wxID_CHECK_WARNCTAB", wxCheckBox)->SetValue( prop.WarnCTab );
-  
   XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.ScreenType) );
   XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
+  XRCCTRL(*this, "wxID_VALUE_MAXURL", wxSpinCtrl)->SetValue( prop.MaxURL );
 }
 
 /*----------------------------------------------------------------------
@@ -379,6 +384,8 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
 
   value = XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG",  wxTextCtrl)->GetValue();
   strcpy( prop.LanNeg, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.MaxURL = XRCCTRL(*this, "wxID_VALUE_MAXURL", wxSpinCtrl)->GetValue();
 
   return prop;
 }
@@ -547,6 +554,17 @@ void PreferenceDlgWX::OnEmptyCache( wxCommandEvent& event )
 {
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 3);
 }
+
+/*----------------------------------------------------------------------
+  OnClearUrlList is called when the user click on clear url button (Browse tab)
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnClearUrlList( wxCommandEvent& event )
+{
+  ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 3);
+}
+
 
 /************************************************************************/
 /* Proxy tab                                                            */

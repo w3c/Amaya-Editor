@@ -215,7 +215,7 @@ void InitTemplateList ()
       /* get the size of the file */
       fseek (file, 0L, 2);	
       /* end of the file */
-      Template_list_len = (ftell (file) * 4) + MAX_URL_list + 4;
+      Template_list_len = (ftell (file) * 4) + GetMaxURLList() + 4;
       Template_list = (char *)TtaGetMemory (Template_list_len);
       Template_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */

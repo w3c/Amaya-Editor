@@ -108,6 +108,10 @@ MENUS
 	Edit_ button:BFind -> TtcSearchText icon:find.png;
 	Edit_ button:BSpellCheck -> SpellCheck icon:spellcheck.png;
 	Edit_ button:BTransform -> TransformType;
+	Edit_.NavGoto button:BParentElement -> TtcParentElement;
+	Edit_.NavGoto button:BChildElement -> TtcChildElement;
+	Edit_.NavGoto button:BPreviousElement -> TtcPreviousElement;
+	Edit_.NavGoto button:BNextElement -> TtcNextElement;
 	Edit_ Separator;
 	Edit_ button:BConfigure -> ConfigAmaya icon:preferences.png;
 	Edit_.Coptions button:BConfigGeneral -> ConfigGeneral;
