@@ -184,6 +184,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	      {
 		/* c'est une boite de presentation image */
 		image = (ThotPictInfo *)pAb->AbPictInfo;
+    TtaFreeMemory (image->PicFileName);
 		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictInfo);
 		pAb->AbPictInfo = NULL;
@@ -202,6 +203,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	    if (pAb->AbPictListStyle != NULL)
 	      {
 		image = (ThotPictInfo *)pAb->AbPictListStyle;
+    TtaFreeMemory (image->PicFileName);
 		/* ce n'est pas un element image */
 		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictListStyle);

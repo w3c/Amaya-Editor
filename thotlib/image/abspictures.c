@@ -82,7 +82,7 @@ void CleanPictInfo (ThotPictInfo *imageDesc)
   procedure commence par creer le descripteur.
   if liststyleimage, the picture is a list-style picture
   ----------------------------------------------------------------------*/
-void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
+void NewPictInfo (PtrAbstractBox pAb, const char * filename, int imagetype,
                   ThotBool liststyleimage)
 {
   ThotPictInfo       *imageDesc = NULL;
@@ -109,7 +109,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
           pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
           return;
         }
-      ptr = filename;
+      ptr = TtaStrdup(filename);
     }
   else if (pAb->AbPresentationBox)
     {
@@ -124,7 +124,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
       else
         /* don't reset the presentation value */
         picPresent = imageDesc->PicPresent;
-      ptr = filename;
+      ptr = TtaStrdup(filename);
     }
   else if (pAb->AbLeafType == LtCompound)
     {

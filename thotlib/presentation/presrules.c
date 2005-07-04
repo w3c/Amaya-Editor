@@ -1764,6 +1764,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	      text = (char *)TtaGetMemory (lg);
 	      CopyBuffer2MBs (pEl->ElText, 0, (unsigned char *)text, lg);
 	      NewPictInfo (pAb, text, UNKNOWN_FORMAT, False);
+        TtaFreeMemory(text);
 	    }
 	  pAb->AbVolume = pEl->ElTextLength;
 	  break;
