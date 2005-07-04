@@ -44,46 +44,46 @@ void CleanPictInfo (ThotPictInfo *imageDesc)
     {
 #ifndef _GL
       if (imageDesc->PicPixmap)
-	{
-	  pixmap = imageDesc->PicPixmap;
-	  imageDesc->PicPixmap = NULL;
-	  FreePixmap (imageDesc->PicPixmap);
+        {
+          pixmap = imageDesc->PicPixmap;
+          imageDesc->PicPixmap = NULL;
+          FreePixmap (imageDesc->PicPixmap);
 #ifdef _WINGUI
-	  FreePixmap (imageDesc->PicMask);
+          FreePixmap (imageDesc->PicMask);
 #endif /* _WINGUI */ 
 #ifdef _GTK
-	  /*Frees imlib struct that contains the real ref to pics */
-	  if (imageDesc->im)
-	    gdk_imlib_destroy_image (imageDesc->im);
-	  imageDesc->im = NULL;
+          /*Frees imlib struct that contains the real ref to pics */
+          if (imageDesc->im)
+            gdk_imlib_destroy_image (imageDesc->im);
+          imageDesc->im = NULL;
 #endif /* _GTK */
-	  imageDesc->PicMask = None;
-	}
+          imageDesc->PicMask = None;
+        }
 #ifdef _WINGUI
-	imageDesc->PicBgMask = -1;
+      imageDesc->PicBgMask = -1;
 #endif /* _WINGUI */
 #else /*_GL*/
-	FreeGlTexture (imageDesc);
+      FreeGlTexture (imageDesc);
 #endif /*_GL*/
-	imageDesc->PicWArea = 0;
-	imageDesc->PicHArea = 0;
-	imageDesc->PicWidth = 0;
-	imageDesc->PicHeight = 0;
+      imageDesc->PicWArea = 0;
+      imageDesc->PicHArea = 0;
+      imageDesc->PicWidth = 0;
+      imageDesc->PicHeight = 0;
     }
 }
 
 
 /*----------------------------------------------------------------------
-   NewPictInfo cree un descripteur par element image.       
-   Si le pointeur sur le descripteur existe deja (champ    
-   ElPictInfo dans l'element), la procedure recopie 
-   le champ ElPictInfo dans le pave.                
-   Si le pointeur sur le descripteur n'existe pas, la      
-   procedure commence par creer le descripteur.
-   if liststyleimage, the picture is a list-style picture
+  NewPictInfo cree un descripteur par element image.       
+  Si le pointeur sur le descripteur existe deja (champ    
+  ElPictInfo dans l'element), la procedure recopie 
+  le champ ElPictInfo dans le pave.                
+  Si le pointeur sur le descripteur n'existe pas, la      
+  procedure commence par creer le descripteur.
+  if liststyleimage, the picture is a list-style picture
   ----------------------------------------------------------------------*/
 void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
-		  ThotBool liststyleimage)
+                  ThotBool liststyleimage)
 {
   ThotPictInfo       *imageDesc = NULL;
   char               *ptr = NULL;
@@ -96,19 +96,19 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
       /* image element -> attach the element descriptor to the abtract box */
       imageDesc = (ThotPictInfo *) pAb->AbElement->ElPictInfo;
       if (imageDesc == NULL)
-	{
-	  /* Create the element descriptor */
-	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
-	  memset (imageDesc, 0, sizeof (ThotPictInfo));
-	  pAb->AbElement->ElPictInfo = (int *) imageDesc;
-	  pAb->AbPictInfo = (int *) imageDesc;
-	}
+        {
+          /* Create the element descriptor */
+          imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+          memset (imageDesc, 0, sizeof (ThotPictInfo));
+          pAb->AbElement->ElPictInfo = (int *) imageDesc;
+          pAb->AbPictInfo = (int *) imageDesc;
+        }
       else
-	{
-	  /* don't reset the presentation value */
-	  pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
-	  return;
-	}
+        {
+          /* don't reset the presentation value */
+          pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
+          return;
+        }
       ptr = filename;
     }
   else if (pAb->AbPresentationBox)
@@ -116,61 +116,61 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
       /*  It's a presentation box -> Create the descriptor */
       imageDesc = (ThotPictInfo *) pAb->AbPictInfo;
       if (imageDesc == NULL)
-	{
-	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
-	  memset (imageDesc, 0, sizeof (ThotPictInfo));
-	  pAb->AbPictInfo = (int *) imageDesc;
-	}
+        {
+          imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+          memset (imageDesc, 0, sizeof (ThotPictInfo));
+          pAb->AbPictInfo = (int *) imageDesc;
+        }
       else
-	/* don't reset the presentation value */
-	picPresent = imageDesc->PicPresent;
+        /* don't reset the presentation value */
+        picPresent = imageDesc->PicPresent;
       ptr = filename;
     }
   else if (pAb->AbLeafType == LtCompound)
     {
       /*  It's a background image or a list-style image.
-	  Create the descriptor */
+          Create the descriptor */
       if (liststyleimage)
-	imageDesc = (ThotPictInfo *) pAb->AbPictListStyle;
+        imageDesc = (ThotPictInfo *) pAb->AbPictListStyle;
       else
-	imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
+        imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
       if (imageDesc == NULL)
-	{
-	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
-	  memset (imageDesc, 0, sizeof (ThotPictInfo));
-	  if (liststyleimage)
-	    pAb->AbPictListStyle = (int *) imageDesc;
-	  else
-	    pAb->AbPictBackground = (int *) imageDesc;
-	}
+        {
+          imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+          memset (imageDesc, 0, sizeof (ThotPictInfo));
+          if (liststyleimage)
+            pAb->AbPictListStyle = (int *) imageDesc;
+          else
+            pAb->AbPictBackground = (int *) imageDesc;
+        }
       else
-	{
-	  /* don't reset the presentation value */
-	  picPresent = imageDesc->PicPresent;
-	  ptr = imageDesc->PicFileName;
-	}
+        {
+          /* don't reset the presentation value */
+          picPresent = imageDesc->PicPresent;
+          ptr = imageDesc->PicFileName;
+        }
  
-       /* create the text buffer */
+      /* create the text buffer */
       if (filename == NULL)
-	{
-	  if (ptr)
-	    {
-	      TtaFreeMemory (ptr);
-	      ptr = NULL;
-	    }
-	}
+        {
+          if (ptr)
+            {
+              TtaFreeMemory (ptr);
+              ptr = NULL;
+            }
+        }
       else
-	{
-	  len = strlen (filename) + 1;
-	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
-	    {
-	      if (imageDesc->PicFileName == ptr)
-		imageDesc->PicFileName = NULL;
-	      TtaFreeMemory (ptr);
-	      ptr = (char *)TtaGetMemory (len);
-	    }
-	  strcpy (ptr, filename);
-	}
+        {
+          len = strlen (filename) + 1;
+          if (ptr == NULL || len > (int) strlen (ptr) + 1)
+            {
+              if (imageDesc->PicFileName == ptr)
+                imageDesc->PicFileName = NULL;
+              TtaFreeMemory (ptr);
+              ptr = (char *)TtaGetMemory (len);
+            }
+          strcpy (ptr, filename);
+        }
     }
   else
     return;
@@ -187,23 +187,23 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype,
 
 
 /*----------------------------------------------------------------------
-   Copie d'un PictInfo                                      
+  Copie d'un PictInfo                                      
   ----------------------------------------------------------------------*/
 void CopyPictInfo (int *Imdcopie, int *Imdsource)
 {
-   ThotPictInfo           *imagec;
-   ThotPictInfo           *images;
+  ThotPictInfo           *imagec;
+  ThotPictInfo           *images;
 
-   imagec = (ThotPictInfo *) Imdcopie;
-   images = (ThotPictInfo *) Imdsource;
-   imagec->PicWArea = images->PicWArea;
-   imagec->PicHArea = images->PicHArea;
-   imagec->PicWidth = images->PicWidth;
-   imagec->PicHeight = images->PicHeight;
-   imagec->PicPresent = images->PicPresent;
-   imagec->PicType = images->PicType;
+  imagec = (ThotPictInfo *) Imdcopie;
+  images = (ThotPictInfo *) Imdsource;
+  imagec->PicWArea = images->PicWArea;
+  imagec->PicHArea = images->PicHArea;
+  imagec->PicWidth = images->PicWidth;
+  imagec->PicHeight = images->PicHeight;
+  imagec->PicPresent = images->PicPresent;
+  imagec->PicType = images->PicType;
 #ifdef _GL
-   imagec->TextureBind = images->TextureBind;
+  imagec->TextureBind = images->TextureBind;
 #endif /*_GL*/
 }
 
