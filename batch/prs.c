@@ -1006,7 +1006,7 @@ static void         GenerateRPresAttribute (indLine wi)
 
     case AtTextAttr:
       if (CurTextDefined)
-        pPRuleA->ApString = TtaStrdup (CurTextEqual);
+        pPRuleA->ApString = TtaStrdup ((char *)CurTextEqual);
       else
 	pPRuleA->ApString = NULL;
       CurTextDefined = False;
@@ -1208,7 +1208,7 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  break;
         case AtTextAttr:
 	  if (pCond->CoTestAttrValue)
-	    pPRuleAttr->ApString = TtaStrdup (pCond->CoAttrTextValue);
+	    pPRuleAttr->ApString = TtaStrdup ((char *)pCond->CoAttrTextValue);
 	  else
 	    pPRuleAttr->ApString = NULL;
 	  PtrPtrPRule = &pPRuleAttr->ApTextFirstPRule;
@@ -1259,7 +1259,7 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  else
 	    {
 	      pCond2->CoTestAttrValue = TRUE;
-	      pCond->CoAttrTextValue = TtaStrdup (CurAttrPRule->ApString);
+	      pCond->CoAttrTextValue = TtaStrdup ((char *)CurAttrPRule->ApString);
 	    }
 	  break;
         case AtReferenceAttr:
@@ -4464,7 +4464,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     Initialize ();
 	     if (pPSchema->PsStructName)
 	       TtaFreeMemory (pPSchema->PsStructName);
-	     pPSchema->PsStructName = TtaStrdup (n);
+	     pPSchema->PsStructName = TtaStrdup ((char *)n);
 	     }
 	  }
        else if (prevRule == RULE_ExtStruct)

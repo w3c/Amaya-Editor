@@ -207,7 +207,7 @@ http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vx
 
 #endif /*_DEBUG*/
 
-extern char*     TtaStrdup (char* str);
+extern char*     TtaStrdup (const char* str);
 
 #endif /* __CEXTRACT__ */
 

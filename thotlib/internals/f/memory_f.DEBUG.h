@@ -46,7 +46,7 @@ http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vx
 #endif /*_DEBUG*/
 
 extern void FreeAll ( void );
-extern char *TtaStrdup ( char* str );
+extern char *TtaStrdup ( const char* str );
 extern void InitEditorMemory ( void );
 extern void GetTextBuffer ( PtrTextBuffer *pBT );
 extern void FreeTextBuffer ( PtrTextBuffer pBT );
@@ -117,7 +117,7 @@ extern void FreeDictionary ( PtrDict pDict );
 extern void *TtaGetMemory (/* unsigned int n */);
 extern void TtaFreeMemory (/* void *ptr */);
 extern void FreeAll (/* void */);
-extern char *TtaStrdup (/* char* str */);
+extern char *TtaStrdup (/* const char* str */);
 extern void *TtaRealloc (/* void *ptr,
                             unsigned int n */);
 extern void InitEditorMemory (/* void */);

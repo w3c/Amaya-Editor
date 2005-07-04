@@ -121,7 +121,7 @@ View TtaOpenMainView ( Document document, const char * doctypename,
           else
             {
               /* store the document type name */
-              pDoc->DocTypeName = doctypename;
+              pDoc->DocTypeName = TtaStrdup(doctypename);
               /* Add a pagebreak probably missed at the end of the document */
               if (pPS->PsPaginatedView[0])
                 AddLastPageBreak (pDoc->DocDocElement, 1, pDoc, FALSE);

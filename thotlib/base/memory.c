@@ -482,7 +482,7 @@ void                FreeAll ()
    See also:
    TtaGetMemory.
   ----------------------------------------------------------------------*/
-char *TtaStrdup (char* str)
+char *TtaStrdup (const char* str)
 {
    char *res;
 

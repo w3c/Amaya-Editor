@@ -268,6 +268,9 @@ void UnloadDocument (PtrDocument * pDoc)
 	  if (PrintingDoc == d+1)
 	    PrintingDoc = 0;
 #endif /* NODISPLAY */
+    /* free the doc type name */
+    if ((*pDoc)->DocTypeName)
+      TtaFreeMemory((*pDoc)->DocTypeName);
 	  *pDoc = NULL;
 	  /* clean up freed contexts */
 	  FreeAll ();

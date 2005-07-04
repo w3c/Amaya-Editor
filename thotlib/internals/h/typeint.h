@@ -866,8 +866,8 @@ typedef struct _DocumentDescr
   Proc       Call_Text;                 /* This is the callback which is called when a url is activated */
 #endif /* _WX */
 
-  const char * DocTypeName; /* this is the document type name given by amaya 
-                             * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
+  char * DocTypeName; /* this is the document type name given by amaya 
+                       * see amaya/amaya.h:DocumentTypeNames table for a complet enumeration */
   
 } DocumentDescr;
 
