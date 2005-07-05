@@ -149,20 +149,7 @@ DISPLAY_OBJ = \
 	image/jpeghandler.o \
 	image/picture.o \
 	image/pnghandler.o \
-	image/xpmattrib.o \
-	image/xpmcreate.o \
-	image/xpmcrifrdata.o \
-	image/xpmcrpfrdata.o \
-	image/xpmcrpfri.o \
-	image/xpmdata.o \
 	image/xpmhandler.o \
-	image/xpmhashtab.o \
-	image/xpmimage.o \
-	image/xpminfo.o \
-	image/xpmmisc.o \
-	image/xpmparse.o \
-	image/xpmrdftoi.o \
-	image/xpmrdftop.o \
 	presentation/attrpresent.o \
 	presentation/changepresent.o \
 	presentation/presrules.o \
