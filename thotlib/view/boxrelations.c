@@ -2531,18 +2531,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
-#ifdef IV
-			      // don't work with ul, ol and dd
-			      if (pAb->AbDisplay != 'L')
-				{
-				  /* skip parents which depend on content */
-				  while (pParentAb &&
-					 !pParentAb->AbWidth.DimIsPosition &&
-					 pParentAb->AbWidth.DimValue < 0 &&
-					 pParentAb->AbWidth.DimAbRef == NULL)
-				    pParentAb = pParentAb->AbEnclosing;
-				}
-#endif
 			      /* inherited from the parent */
 			      if (pParentAb)
 				i = pParentAb->AbBox->BxW;
@@ -3943,7 +3931,8 @@ void ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
       if (horizRef && pBox->BxHorizFlex)
 	{
 	  /* Streched box? */
-	  pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
+	  if (pAb->AbWidth.DimPosition.PosAbRef)
+	    pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
 	  if (pOrginBox)
 	    RemovePosRelation (pOrginBox, pBox, NULL, FALSE, FALSE, TRUE);
 	  /* Restore the fixed edge */
