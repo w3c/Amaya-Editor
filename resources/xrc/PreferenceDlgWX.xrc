@@ -53,9 +53,6 @@
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
-                        <object class="spacer">
-                          <size>10,0</size>
-                        </object>
                         <object class="sizeritem">
                           <object class="wxChoice" name="wxID_CHOICE_LG">
                             <content>
@@ -71,6 +68,8 @@
                               <item>tr</item>
                             </content>
                           </object>
+                          <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                          <border>5</border>
                         </object>
                       </object>
                       <option>0</option>
@@ -79,11 +78,12 @@
                     </object>
                     <object class="sizeritem">
                       <object class="wxBoxSizer">
-                        <orient>wxVERTICAL</orient>
+                        <orient>wxHORIZONTAL</orient>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_CHARZOOM">
                             <label>*Zoom caracteres*</label>
                           </object>
+                          <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxSpinCtrl" name="wxID_CHARZOOM_VALUE">
@@ -91,8 +91,8 @@
                             <min>10</min>
                             <max>1000</max>
                           </object>
-                          <option>1</option>
-                          <flag>wxALL|wxEXPAND</flag>
+                          <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
+                          <border>5</border>
                         </object>
                       </object>
                       <option>1</option>
