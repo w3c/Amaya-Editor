@@ -350,6 +350,7 @@ THOT_EXPORT char      *DirectoryName;	/* local path of the document       */
 THOT_EXPORT char      *DocumentName;	/* document name                    */
 THOT_EXPORT char      *SavePath;	/* saving path                      */
 THOT_EXPORT char      *SaveName;	/* saving name of the document      */
+THOT_EXPORT char       SaveFileName[MAX_LENGTH];	/* concatenation of SavePath+SaveName */
 THOT_EXPORT char      *ObjectName;	/* document name                    */
 THOT_EXPORT char      *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char      *TargetName;

@@ -33,20 +33,20 @@ BEGIN_EVENT_TABLE(SaveAsDlgWX, AmayaDialog)
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),      SaveAsDlgWX::OnMimeTypeCbx )
 END_EVENT_TABLE()
 
-/*----------------------------------------------------------------------
-  SaveAsDlgWX create the SaveAs dialog 
-  params:
+  /*----------------------------------------------------------------------
+    SaveAsDlgWX create the SaveAs dialog 
+    params:
     + parent : parent window
     + pathname : document location
-  ----------------------------------------------------------------------*/
+    ----------------------------------------------------------------------*/
 SaveAsDlgWX::SaveAsDlgWX( int ref,
-			  wxWindow* parent,
-			  const wxString & pathname,
-			  int doc ) :
+                          wxWindow* parent,
+                          const wxString & pathname,
+                          int doc ) :
   AmayaDialog( parent, ref )
 {
   int  doc_type;
-
+  
   doc_type = DocumentTypes[doc];
   MyRef = ref;
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
@@ -290,10 +290,10 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
   wxString wx_filter;
 
   /*  if (doc_type == docHTML)
-    wx_filter = APPHTMLNAMEFILTER;
-  else 
+      wx_filter = APPHTMLNAMEFILTER;
+      else 
   */
-    wx_filter = APPFILENAMEFILTER;
+  wx_filter = APPFILENAMEFILTER;
 
   // Create a generic filedialog
   wxFileDialog * p_dlg = new wxFileDialog
@@ -318,7 +318,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
       p_dlg->Destroy();
     }
   else
-      p_dlg->Destroy();
+    p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
@@ -329,7 +329,7 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
   XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
-  }
+}
 
 /*----------------------------------------------------------------------
   OnCharsetCbx called when selecting a Charset Combobox entry
@@ -359,7 +359,10 @@ void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
 {
   ThotCallback (BaseDialog + RadioSave, INTEGER_DATA,
-		(char*) (XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->GetSelection( )));
+                (char*) (XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->GetSelection( )));
+  if (SaveFileName[0] != EOS)
+    // update the filename (the suffix can change)
+    XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(SaveFileName));
 }
 
 /*---------------------------------------------------------------
