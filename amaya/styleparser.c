@@ -6441,7 +6441,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   char               *cssRule, *base, *saveDocURL, *ptr;
   int                 index;
   int                 CSSindex;
-  int                 CSScomment;
+  int                 CSScomment, CSSlinecomment;
   int                 import;
   int                 openRule;
   int                 newlines;
@@ -6450,7 +6450,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   ThotBool            ignore, media, page;
   ThotBool            noRule, ignoreImport, fontface;
 
-  CSScomment = MAX_CSS_LENGTH;
+  CSScomment = CSSlinecomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
   CSSindex = 0;
   toParse = FALSE;
@@ -6514,8 +6514,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       c = buffer[index++];
       eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
-      if (CSScomment == MAX_CSS_LENGTH ||
-	       c == '*' || c == '/' || c == '<' || c == EOL)
+      if (CSScomment == MAX_CSS_LENGTH || CSSlinecomment == MAX_CSS_LENGTH ||
+	  c == '*' || c == '/' || c == '<' || c == EOL)
 	{
 	  /* we're not within a comment or we're parsing * or / */
 	  switch (c)
@@ -6544,22 +6544,15 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      if (!quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
 		  CSSbuffer[CSSindex - 1] == '*')
 		{
-		  /* clean up the buffer */
-		  if (newlines && CSSindex > 0)
-		    while (CSSindex > 0 &&
-			   (CSSbuffer[CSSindex] == SPACE ||
-			    CSSbuffer[CSSindex] == BSPACE ||
-			    CSSbuffer[CSSindex] == EOL ||
-			    CSSbuffer[CSSindex] == TAB ||
-			    CSSbuffer[CSSindex] == __CR__))
-		      {
-			if ( CSSbuffer[CSSindex] == EOL)
-			  {
-			    LineNumber ++;
-			      newlines --;
-			  }
+		  while (CSSindex > 0 && CSSindex >= CSScomment)
+		    {
+		      if ( CSSbuffer[CSSindex] == EOL)
+			{
+			  LineNumber ++;
+			  newlines --;
+			}
 		      CSSindex--;
-		      }
+		    }
 		  CSSindex = CSScomment - 1; /* will be incremented later */
 		  CSScomment = MAX_CSS_LENGTH;
 		  /* clean up the buffer */
@@ -6587,6 +6580,12 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		  CSSindex -= 2; /* remove </ from the CSS string */
 		  noRule = TRUE;
 		} 
+	      else if (!quoted && CSScomment == MAX_CSS_LENGTH &&
+		       CSSlinecomment == MAX_CSS_LENGTH &&
+		       CSSindex > 0 &&
+		       CSSbuffer[CSSindex - 1] == '/')
+		/* start a comment */
+		CSSlinecomment = CSSindex - 1;
 	      break;
 	    case '<':
 	      if (!fontface && !page && !quoted &&
@@ -6687,7 +6686,23 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      break;
 	    default:
 	      if (c == EOL)
-		newlines++;
+		{
+		  newlines++;
+		  if (CSSlinecomment != MAX_CSS_LENGTH)
+		    {
+		      while (CSSindex > 0 && CSSindex >= CSSlinecomment)
+			{
+			  if ( CSSbuffer[CSSindex] == EOL)
+			    {
+			      LineNumber ++;
+			      newlines --;
+			    }
+			  CSSindex--;
+			}
+		      CSSindex = CSSlinecomment - 1; /* will be incremented later */
+		      CSSlinecomment = MAX_CSS_LENGTH;
+		    }
+		}
 	      break;
 	    }
         }
