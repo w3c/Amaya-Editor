@@ -1226,14 +1226,14 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pFirstAb;
   PtrAbstractBox      pCurrentAb;
-  PtrBox              pChildBox, pBox;
-  PtrBox              pCurrentBox;
+  PtrBox              pChildBox, box;
+  PtrBox              pBox;
   int                 val, x, y;
   int                 t, l, r, b;
   ThotBool            still, hMin, vMin, isExtra;
 
-  pBox = NULL;
-  pCurrentBox = pAb->AbBox;
+  box = NULL;
+  pBox = pAb->AbBox;
   /* PcFirst fils vivant */
   pFirstAb = pAb->AbFirstEnclosed;
   still = TRUE;
@@ -1247,7 +1247,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
     else
       still = FALSE;
 
-  if (pCurrentBox->BxType == BoGhost || pCurrentBox->BxType == BoFloatGhost)
+  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
     {
       /* This box doesn't really exist */
       *width = 0;
@@ -1255,8 +1255,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       if (pAb->AbInLine)
 	{
 	  /* the block of line is ignored */
-	  pCurrentBox->BxFirstLine = NULL;
-	  pCurrentBox->BxLastLine = NULL;
+	  pBox->BxFirstLine = NULL;
+	  pBox->BxLastLine = NULL;
 	}
     }
   else if (pFirstAb == NULL)
@@ -1265,48 +1265,48 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       *width = 0;
       *height = 0;
     }
-  else if (pCurrentBox->BxType == BoBlock || pCurrentBox->BxType == BoFloatBlock)
+  else if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
     {
       /* It's a block of lines */
-      if (pCurrentBox->BxFirstLine)
+      if (pBox->BxFirstLine)
 	{
 	  /* we have to reformat the block of lines */
 	  RecomputeLines (pAb, NULL, NULL, frame);
-	  *height = pCurrentBox->BxH;
+	  *height = pBox->BxH;
 	}
       else
 	{
-	  pCurrentBox->BxFirstLine = NULL;
-	  pCurrentBox->BxLastLine = NULL;
-	  ComputeLines (pCurrentBox, frame, height);
-	  if (pCurrentBox->BxContentWidth ||
-	      (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW))
+	  pBox->BxFirstLine = NULL;
+	  pBox->BxLastLine = NULL;
+	  ComputeLines (pBox, frame, height);
+	  if (pBox->BxContentWidth ||
+	      (hMin && pBox->BxMaxWidth > pBox->BxW))
 	    {
 	    /* it's an extensible line */
-	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
-	    GetExtraMargins (pCurrentBox, NULL, &t, &b, &l, &r);
-	    l += pCurrentBox->BxLMargin + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
-	    r += pCurrentBox->BxRMargin + pCurrentBox->BxRBorder + pCurrentBox->BxRPadding;
-	    pCurrentBox->BxWidth = pCurrentBox->BxW + l + r;
+	    pBox->BxW = pBox->BxMaxWidth;
+	    GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+	    l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	    r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	    pBox->BxWidth = pBox->BxW + l + r;
 	    /* make sure this update is taken into account */
-	    DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
+	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	    }
 	}
-      *width = pCurrentBox->BxW;
+      *width = pBox->BxW;
     }
   else
     {
       /* It's a geometrical composition */
       /* Initially the inside left and the inside right are the equal */
-      x = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin +
-	  pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
+      x = pBox->BxXOrg + pBox->BxLMargin +
+	  pBox->BxLBorder + pBox->BxLPadding;
       *width = x;
       /* Initially the inside top and the inside bottom are the equal */
-      y = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin +
-          pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
+      y = pBox->BxYOrg + pBox->BxTMargin +
+          pBox->BxTBorder + pBox->BxTPadding;
       *height = y;
       /* the box itself is positioned */
-      isExtra = ExtraFlow (pCurrentBox, frame);
+      isExtra = ExtraFlow (pBox, frame);
       /* Move misplaced boxes */
       pChildAb = pFirstAb;
       while (pChildAb)
@@ -1315,32 +1315,32 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	  if (!pChildAb->AbDead && pChildBox &&
 	      (isExtra || !ExtraFlow (pChildBox, frame)))
 	    {
-	      if ((hMin || pCurrentBox->BxContentWidth) &&
+	      if ((hMin || pBox->BxContentWidth) &&
 		  pChildAb->AbHorizEnclosing &&
 		  pChildBox->BxXOrg < x &&
 		  pChildAb->AbWidth.DimAbRef != pAb)
 		{
 		  /* the child box is misplaced */
-		  pBox = GetHPosRelativeBox (pChildBox, NULL);
-		  if (pBox != NULL)
+		  box = GetHPosRelativeBox (pChildBox, NULL);
+		  if (box != NULL)
 		    {
 		      /* mobile box */
-		      pCurrentAb = pBox->BxAbstractBox;
+		      pCurrentAb = box->BxAbstractBox;
 		      if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
 			XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
 		    }
 		}
-	      if ((vMin || pCurrentBox->BxContentHeight) &&
+	      if ((vMin || pBox->BxContentHeight) &&
 		  pChildAb->AbVertEnclosing &&
 		  pChildBox->BxYOrg < y &&
 		  pChildAb->AbHeight.DimAbRef != pAb)
 		{
 		  /* the child box is misplaced */
-		  pBox = GetVPosRelativeBox (pChildBox, NULL);
-		  if (pBox != NULL)
+		  box = GetVPosRelativeBox (pChildBox, NULL);
+		  if (box != NULL)
 		    {
 		      /* mobile box */
-		      pCurrentAb = pBox->BxAbstractBox;
+		      pCurrentAb = box->BxAbstractBox;
 		      if (pCurrentAb->AbVertPos.PosAbRef == NULL)
 			YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
 		    }
@@ -1409,8 +1409,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	    pChildBox = pChildAb->AbBox;
 	    if (!pChildAb->AbDead && pChildBox != NULL)
 	      {
-		if (pCurrentBox->BxContentWidth &&
-		    !IsXPosComplete (pCurrentBox) &&
+		if (pBox->BxContentWidth &&
+		    !IsXPosComplete (pBox) &&
 		    pChildAb->AbHorizPos.PosAbRef == pAb)
 		  {
 		    /* update the box position */
@@ -1432,8 +1432,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 		      }
 		  }
 		
-		if (pCurrentBox->BxContentHeight &&
-		    !IsYPosComplete (pCurrentBox) &&
+		if (pBox->BxContentHeight &&
+		    !IsYPosComplete (pBox) &&
 		    pChildAb->AbVertPos.PosAbRef == pAb)
 		  {
 		    /* update the box position */

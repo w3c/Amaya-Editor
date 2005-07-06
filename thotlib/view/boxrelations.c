@@ -1027,8 +1027,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                 {
 		  /* stretchable width */
 		  pAb->AbWidthChange = FALSE;
-                  r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-		  pPosAb = &pAb->AbWidth.DimPosition;
+ 		  pPosAb = &pAb->AbWidth.DimPosition;
 		  pAb->AbWidth.DimIsPosition = TRUE;
 		  pPosAb->PosAbRef = pRefAb;
 		  pPosAb->PosUnit = pos->PnRightUnit;
@@ -1043,7 +1042,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 		  pBox->BxHorizFlex = TRUE;
 		  pRefBox->BxMoved = NULL;
 		  MoveBoxEdge (pBox, pRefBox, OpWidth, x + w - r, frame, TRUE);
-		  //ResizeWidth (pBox, pBox, NULL, w - r - pBox->BxW, 0, 0, 0, frame);
                 }
 	      
 	      XMoveAllEnclosed (pBox, x + l, frame);
@@ -1057,7 +1055,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pAb->AbHorizEnclosing = FALSE;
               pBox->BxXOutOfStruct = TRUE;
 	      pBox->BxHorizEdge = Right;
-	      r += pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
               XMoveAllEnclosed (pBox, x + w - r - pBox->BxWidth, frame);
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
@@ -1079,11 +1076,9 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 		{
 		  /* stretchable height */
 		  pAb->AbHeightChange = FALSE;
-		  b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+		  //b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 		  if (pBox->BxContentHeight)
-		    {
 		      pBox->BxContentHeight = FALSE;
-		    }
 		  ResizeHeight (pBox, pBox, NULL, h - b - pBox->BxH, 0, 0, frame);
 		}
 	    }
@@ -1094,7 +1089,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
 	      pAb->AbVertEnclosing = FALSE;
 	      pBox->BxYOutOfStruct = TRUE;
 	      pBox->BxVertEdge = Bottom;
-	      b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+	      //b += pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
 	      YMoveAllEnclosed (pBox, y + h - b - pBox->BxHeight, frame);
 	      if (pRefBox)
 		InsertPosRelation (pBox, pRefBox, OpVertDep, Bottom, Bottom);
@@ -2080,13 +2075,33 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  return FALSE;
 		}
 	      else if (!pAb->AbWidth.DimIsPosition &&
-		       pAb->AbWidth.DimAbRef == pParentAb)
+		       (pAb->AbWidth.DimAbRef == pParentAb ||
+			pAb->AbWidth.DimUnit == UnAuto))
 		{
 		  pParentAb = GetEnclosingViewport (pAb);
 		  if (pParentAb == NULL)
 		    pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
-		  pAb->AbWidth.DimAbRef = pParentAb;
+		  if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
+		      pAb->AbPositioning->PnLeftUnit != UnUndefined &&
+		      pAb->AbPositioning->PnLeftDistance != 0)
+		    {
+		      pAb->AbPositioning->PnRightUnit = UnPixel;
+		      pAb->AbPositioning->PnRightDistance = 0;
+		  /* inherit from an enclosing box */
 		  pAb->AbWidth.DimIsPosition = FALSE;
+		  pAb->AbWidth.DimAbRef = pParentAb;
+		  pAb->AbWidth.DimValue = 0;
+		  pAb->AbWidth.DimSameDimension = TRUE;
+		  pAb->AbWidth.DimUserSpecified = FALSE;
+		  return FALSE;
+		    }
+		  else
+		    {
+		      pAb->AbWidth.DimAbRef = pParentAb;
+		      pAb->AbWidth.DimIsPosition = FALSE;
+		      //pAb->AbPositioning->PnLeftUnit = UnPixel;
+		      //pAb->AbPositioning->PnLeftDistance = 0;
+		    }
 		}
 	    }
 	  if (!horizRef)
