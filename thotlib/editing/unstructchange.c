@@ -1440,7 +1440,7 @@ void TtcInsertLineBreak (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CopyClassAttr (PtrElement newEl, PtrElement oldEl)
 {
-  PtrAttribute        pAttr, pAttr2;;
+  PtrAttribute        pAttr, pAttr2;
   int                 len;
 
   pAttr = oldEl->ElFirstAttr;
