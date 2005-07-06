@@ -1434,6 +1434,49 @@ void TtcInsertLineBreak (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CopyClassAttr
+  If element oldEl has an attribute with exception ExcCssClass, element
+  newEl receives a copy of this attribute.
+  ----------------------------------------------------------------------*/
+static void CopyClassAttr (PtrElement newEl, PtrElement oldEl)
+{
+  PtrAttribute        pAttr, pAttr2;;
+  int                 len;
+
+  pAttr = oldEl->ElFirstAttr;
+  pAttr2 = NULL;
+  while (pAttr && !pAttr2)
+    {
+      if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+			    pAttr->AeAttrSSchema))
+	{
+	  GetAttribute (&pAttr2);	
+	  /* copy the attribute */
+	  *pAttr2 = *pAttr;	
+	  if (pAttr2->AeAttrType == AtTextAttr)
+	    /* it's a text attribute and it does not yet have a buffer */
+	    pAttr2->AeAttrText = NULL;
+	  pAttr2->AeNext = NULL;
+	}
+      else
+	pAttr = pAttr->AeNext;
+    }
+  if (pAttr2)
+    {
+      if (pAttr2->AeAttrType == AtTextAttr)
+	/* it's a text attribute, we attach a text buffer to it */
+	if (pAttr->AeAttrText != NULL)
+	  {
+	    GetTextBuffer (&pAttr2->AeAttrText);
+	    CopyTextToText (pAttr->AeAttrText, pAttr2->AeAttrText, &len);
+	  }
+      /* attach the attribute to its element */
+      pAttr2->AeNext = newEl->ElFirstAttr;
+      newEl->ElFirstAttr = pAttr2;
+    }
+}
+
+/*----------------------------------------------------------------------
   TtcCreateElement handles the key "Return".
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
@@ -2010,6 +2053,7 @@ void TtcCreateElement (Document doc, View view)
 		  pNew = NewSubtree (lastSel->ElTypeNumber,
 				     lastSel->ElStructSchema, pDoc,
 				     TRUE, TRUE, TRUE, TRUE);
+		  CopyClassAttr (pNew, lastSel);
 		  pE = lastSel;
 		  while (pE->ElParent != pListEl)
 		    {
