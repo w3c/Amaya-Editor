@@ -992,21 +992,25 @@
 <label define="BParentElement">
 	<message xml:lang="en">Parent element</message>
 	<message xml:lang="fr">Élément parent</message>
+	<message xml:lang="de">Vorfahrenelement</message>
 	<message xml:lang="it">Elemento padre</message>
 </label>
 <label define="BChildElement">
 	<message xml:lang="en">First child</message>
 	<message xml:lang="fr">Premier fils</message>
+	<message xml:lang="de">Erster Nachfahre</message>
 	<message xml:lang="it">Primo figlio</message>
 </label>
 <label define="BPreviousElement">
 	<message xml:lang="en">Previous element</message>
 	<message xml:lang="fr">Élément précédent</message>
+	<message xml:lang="de">Vorhergehendes Element</message>
 	<message xml:lang="it">Elemento precedente</message>
 </label>
 <label define="BNextElement">
 	<message xml:lang="en">Next element</message>
 	<message xml:lang="fr">Élément suivant</message>
+	<message xml:lang="de">Nächstes Element</message>
 	<message xml:lang="it">Elemento successivo</message>
 </label>
 <label define="BConfigure">

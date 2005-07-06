@@ -4266,11 +4266,13 @@
 <label define="AM_MAXURLLIST">
 	<message xml:lang="en">Max url number in history</message>
 	<message xml:lang="fr">Nombre max d'url dans l'historique</message>
+	<message xml:lang="de">Die maximale Anzahl an URLs in der History ist erreicht</message>
 	<message xml:lang="it">Numero max di url nella cronologia</message>
 </label>
 <label define="AM_CLEARURLLIST">
 	<message xml:lang="en">Clear url list</message>
 	<message xml:lang="fr">Vider la liste des urls</message>
+	<message xml:lang="de">URL-Liste löschen</message>
 	<message xml:lang="it">Cancella l'elenco degli url</message>
 </label>
 <label define="AMAYA_MSG_MAX">
