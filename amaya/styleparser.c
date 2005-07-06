@@ -4540,28 +4540,39 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 				 PresentationContext ctxt, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
-  char     *ptr;
-  int   skippedNL;
+  char           *ptr;
+  int             skippedNL;
+  ThotBool        img, repeat, position, attach, color;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  img = repeat = position = attach = color = FALSE;
   while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Background Image */
       if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))
-         cssRule = ParseCSSBackgroundImage (element, tsch, ctxt, cssRule,
-					    css, isHTML);
+	{
+	  cssRule = ParseCSSBackgroundImage (element, tsch, ctxt, cssRule,
+					     css, isHTML);
+	  img = TRUE;
+	}
       /* perhaps a Background Attachment */
       else if (!strncasecmp (cssRule, "scroll", 6) ||
                !strncasecmp (cssRule, "fixed", 5))
-	cssRule = ParseACSSBackgroundAttachment (element, tsch, ctxt,
-						cssRule, css, isHTML);
+	{
+	  cssRule = ParseACSSBackgroundAttachment (element, tsch, ctxt,
+						   cssRule, css, isHTML);
+	  attach = TRUE;
+	}
       /* perhaps a Background Repeat */
       else if (!strncasecmp (cssRule, "no-repeat", 9) ||
                !strncasecmp (cssRule, "repeat-y", 8)  ||
                !strncasecmp (cssRule, "repeat-x", 8)  ||
                !strncasecmp (cssRule, "repeat", 6))
-	cssRule = ParseACSSBackgroundRepeat (element, tsch, ctxt,
-					     cssRule, css, isHTML);
+	{
+	  cssRule = ParseACSSBackgroundRepeat (element, tsch, ctxt,
+					       cssRule, css, isHTML);
+	  repeat = TRUE;
+	}
       /* perhaps a Background Position */
       else if (!strncasecmp (cssRule, "left", 4)   ||
                !strncasecmp (cssRule, "right", 5)  ||
@@ -4569,11 +4580,29 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
                !strncasecmp (cssRule, "top", 3)    ||
                !strncasecmp (cssRule, "bottom", 6) ||
                isdigit (*cssRule) || *cssRule == '.' || *cssRule == '-')
+	{
            cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
 						 cssRule, css, isHTML);
+	   position = TRUE;
+	}
       /* perhaps a Background Color */
-      else
+      else if (!color)
 	{
+	  if (!img)
+	    {
+	      img = TRUE;
+	      ParseCSSBackgroundImage (element, tsch, ctxt, "none",
+				       css, isHTML);
+	      if (!repeat)
+		ParseACSSBackgroundRepeat (element, tsch, ctxt,
+					   "repeat", css, isHTML);
+	      if (!position)
+		ParseACSSBackgroundPosition (element, tsch, ctxt,
+					     "0% 0%", css, isHTML);
+	      if (!attach)
+		ParseACSSBackgroundAttachment (element, tsch, ctxt,
+					       "scroll", css, isHTML);
+	    }
 	  skippedNL = NewLineSkipped;
 	  /* check if the rule has been found */
 	  ptr = cssRule;
@@ -4585,6 +4614,8 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 	      /* rule not found */
 	      cssRule = SkipProperty (cssRule, FALSE);
 	    }
+	  else
+	    color = TRUE;
 	}
       cssRule = SkipBlanksAndComments (cssRule);
     }
@@ -6513,7 +6544,22 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      if (!quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
 		  CSSbuffer[CSSindex - 1] == '*')
 		{
-		  /* close a comment and ignore its contents */
+		  /* clean up the buffer */
+		  if (newlines && CSSindex > 0)
+		    while (CSSindex > 0 &&
+			   (CSSbuffer[CSSindex] == SPACE ||
+			    CSSbuffer[CSSindex] == BSPACE ||
+			    CSSbuffer[CSSindex] == EOL ||
+			    CSSbuffer[CSSindex] == TAB ||
+			    CSSbuffer[CSSindex] == __CR__))
+		      {
+			if ( CSSbuffer[CSSindex] == EOL)
+			  {
+			    LineNumber ++;
+			      newlines --;
+			  }
+		      CSSindex--;
+		      }
 		  CSSindex = CSScomment - 1; /* will be incremented later */
 		  CSScomment = MAX_CSS_LENGTH;
 		  /* clean up the buffer */

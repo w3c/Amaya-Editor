@@ -985,22 +985,29 @@
 <label define="NavGoto">
 	<message xml:lang="en">Goto</message>
 	<message xml:lang="fr">Aller à</message>
+	<message xml:lang="de">Gehe zu</message>
+	<message xml:lang="it">Vai a</message>
+	<message xml:lang="es">Ir a</message>
 </label>
 <label define="BParentElement">
 	<message xml:lang="en">Parent element</message>
 	<message xml:lang="fr">Élément parent</message>
+	<message xml:lang="it">Elemento padre</message>
 </label>
 <label define="BChildElement">
 	<message xml:lang="en">First child</message>
-	<message xml:lang="fr">Premier enfant</message>
+	<message xml:lang="fr">Premier fils</message>
+	<message xml:lang="it">Primo figlio</message>
 </label>
 <label define="BPreviousElement">
 	<message xml:lang="en">Previous element</message>
 	<message xml:lang="fr">Élément précédent</message>
+	<message xml:lang="it">Elemento precedente</message>
 </label>
 <label define="BNextElement">
 	<message xml:lang="en">Next element</message>
 	<message xml:lang="fr">Élément suivant</message>
+	<message xml:lang="it">Elemento successivo</message>
 </label>
 <label define="BConfigure">
 	<message xml:lang="en">&amp;Preferences</message>
