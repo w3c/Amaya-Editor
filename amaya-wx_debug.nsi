@@ -9,17 +9,17 @@
 
   ;Name and file
   !define VERSION "9.2"
-  Name "Amaya WX ${VERSION} (debug)"
+  Name "Amaya ${VERSION} (debug)"
   OutFile "amaya-WinXP-${VERSION}-debug.exe"
   
   ;Use lzma to compress (better than zip)
   SetCompressor lzma
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\AmayaWX-${VERSION}-debug"
+  InstallDir "$PROGRAMFILES\Amaya-${VERSION}-debug"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\AmayaWX-${VERSION}-debug" ""
+  InstallDirRegKey HKCU "Software\Amaya-${VERSION}-debug" ""
 
 ;--------------------------------
 ;Variables
@@ -36,7 +36,7 @@
 
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\AmayaWX-${VERSION}-debug" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\Amaya-${VERSION}-debug" 
   !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
 
 ;--------------------------------
@@ -48,7 +48,7 @@
 
   ;Start Menu Folder Page Configuration
   !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
-  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\AmayaWX-${VERSION}-debug" 
+  !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Amaya-${VERSION}-debug" 
   !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
   !insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER
 
@@ -369,13 +369,13 @@ Section "Amaya" SecAmaya
   SetDetailsPrint listonly
 
   ;Store installation folder
-  WriteRegStr HKCU "Software\AmayaWX-${VERSION}-debug" "" $INSTDIR 
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "UninstallString" '"$INSTDIR\Uninstall.exe"'
-  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "InstallLocation" "$INSTDIR"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "DisplayName" "Amaya"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug" "URLInfoAbout" "http://www.w3.org/Amaya"
+  WriteRegStr HKCU "Software\Amaya-${VERSION}-debug" "" $INSTDIR 
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+  WriteRegExpandStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "DisplayName" "Amaya ${VERSION} (debug)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "DisplayIcon" "$INSTDIR\WindowsWX\bin\amaya.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug" "URLInfoAbout" "http://www.w3.org/Amaya"
 
   ; Associate files to amaya
   WriteRegStr HKCR "Amaya" "" "Amaya Files"
@@ -511,7 +511,7 @@ Section "Uninstall"
   ;Uninstall Amaya for all users
   SetShellVarContext all
 
-  ReadRegStr $STARTMENU_FOLDER HKCU "Software\AmayaWX-${VERSION}-debug" "Start Menu Folder"
+  ReadRegStr $STARTMENU_FOLDER HKCU "Software\Amaya-${VERSION}-debug" "Start Menu Folder"
   IfFileExists "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" amaya_smp_installed
     Goto amaya_smp_notinstalled
   amaya_smp_installed:
@@ -527,10 +527,10 @@ Section "Uninstall"
   DetailPrint "Deleting Registry Keys..."
   SetDetailsPrint listonly
 
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\AmayaWX-${VERSION}-debug"
-  DeleteRegKey HKLM "Software\AmayaWX-${VERSION}-debug"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya-${VERSION}-debug"
+  DeleteRegKey HKLM "Software\Amaya-${VERSION}-debug"
   DeleteRegKey HKCR "Amaya"
-  DeleteRegKey HKCU "Software\AmayaWX-${VERSION}-debug"
+  DeleteRegKey HKCU "Software\Amaya-${VERSION}-debug"
 
   ; uninstall files associations
   ; --> .html
