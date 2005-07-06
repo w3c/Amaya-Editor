@@ -2163,7 +2163,9 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
               FirstSelectedChar = 0;
               LastSelectedElement = pEl;
               LastSelectedChar = 0;
-              if (FixedChar > 0)
+              if (FixedChar > 0 ||
+		  pEl->ElLeafType == LtPicture ||
+		  pEl->ElLeafType == LtSymbol)
                 {
                   if (rank > 0 && rank < FixedChar)
                     {
