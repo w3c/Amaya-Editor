@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
   <title>Добро пожаловать в Amaya</title>
-  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 9.2, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -74,7 +74,7 @@
 </svg>
 </div>
 
-<h1>Добро пожаловать в Amaya 9.1</h1>
+<h1>Добро пожаловать в Amaya 9.2</h1>
 
 <p>Amaya является веб клиентом и может использоваться и как браузер и как
 инструмент авторского редактирования. Он создан <a
