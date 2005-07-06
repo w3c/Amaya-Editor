@@ -4617,6 +4617,9 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 	  else
 	    color = TRUE;
 	}
+      else {
+	cssRule = SkipProperty (cssRule, FALSE);
+      }
       cssRule = SkipBlanksAndComments (cssRule);
     }
    return (cssRule);
