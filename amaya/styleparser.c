@@ -6517,8 +6517,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       c = buffer[index++];
       eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
-      if (CSScomment == MAX_CSS_LENGTH || CSSlinecomment == MAX_CSS_LENGTH ||
-	  c == '*' || c == '/' || c == '<' || c == EOL)
+      if ((CSScomment == MAX_CSS_LENGTH &&
+           CSSlinecomment == MAX_CSS_LENGTH) ||
+          c == '*' || c == '/' || c == '<' || c == EOL)
 	{
 	  /* we're not within a comment or we're parsing * or / */
 	  switch (c)
