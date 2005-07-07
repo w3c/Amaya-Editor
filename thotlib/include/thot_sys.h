@@ -208,11 +208,16 @@ and must be removed at the end of the debug */
 #if defined(_UNIX)
   /* Unix definitions */
   #define None	    0L	/* X11/X.h */
+#ifdef _MACOS/
+  // Amaya crashes on http redirect when ThotBool is not an unsigned char
+  typedef  unsigned char   ThotBool;
+#else /* _MACOS */
   #ifdef __cplusplus
     typedef bool ThotBool;
   #else /* #ifdef __cplusplus */
     typedef unsigned char   ThotBool;
   #endif /* #ifdef __cplusplus */
+#endif /* _MACOS */
   typedef ThotBool BOOL;
   #define ThotPid_get()	getpid()
   #define ThotPid		pid_t
