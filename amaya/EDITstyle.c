@@ -575,15 +575,15 @@ static void DoApplyClass (Document doc)
 {
   Element             firstSelectedEl, lastSelectedEl, curEl, el, span, next,
 		      firstChild, lastChild, parent, child;
-  ElementType	      elType;
+  ElementType	        elType;
   Attribute           attr;
   AttributeType       attrType;
-  char               *a_class = CurrentClass;
-  int		      firstSelectedChar, lastSelectedChar, i, lg, min, max;
+  char               *a_class = CurrentClass, *s;
+  int		              firstSelectedChar, lastSelectedChar, i, lg, min, max;
   Language            lang;
   CHAR_T              *buffer;
   DisplayMode         dispMode;
-  ThotBool	      setClassAttr, empty;
+  ThotBool	          setClassAttr, empty;
 
   if (!a_class)
     return;
@@ -594,6 +594,13 @@ static void DoApplyClass (Document doc)
   if (*a_class == EOS)
     return;
 
+#ifdef _WX
+  /* work with the current selected document */
+  doc = TtaGetSelectedDocument ();
+  if (DocumentTypes[doc] == docSource || DocumentTypes[doc] == docText ||
+      DocumentTypes[doc] == docCSS)
+    return;
+#endif /* _WX */
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
   if (firstSelectedEl == NULL)
      return;
@@ -619,135 +626,134 @@ static void DoApplyClass (Document doc)
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      /* it's a text element */
      {
-     if (lastSelectedChar < firstSelectedChar &&
-	 firstSelectedEl == lastSelectedEl)
-       /* it's a caret */
-       {
-	 empty = TRUE;
-	 lastSelectedChar = firstSelectedChar;
-       }
-     lg = TtaGetElementVolume (lastSelectedEl);
-     if (lastSelectedChar <= lg && lastSelectedChar > 1)
-       /* the last selected element is only partly selected. Split it */
-       {
-	 /* exclude trailing spaces from the anchor */
-	 if (lg > 0)
-	   {
-	     lg++;
-	     buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
-	     TtaGiveBufferContent (lastSelectedEl, buffer, lg, &lang);
-	     if (lastSelectedEl == firstSelectedEl)
-	       min = firstSelectedChar;
-	     else
-	       min = 1;
-	     while (lastSelectedChar > min &&
-		    buffer[lastSelectedChar - 2] == SPACE)
-	       lastSelectedChar--;
-	     TtaFreeMemory (buffer);
-	   }
-	 if (lastSelectedChar > 1)
-	   {
-	     TtaRegisterElementReplace (lastSelectedEl, doc);
-	     TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
-	     next = lastSelectedEl;
-	     TtaNextSibling (&next);
-	     TtaRegisterElementCreate (next, doc);
-	   }
-       }
-     else
-	/* selection ends at the end of the text element */
-	if (lastSelectedEl != firstSelectedEl ||
-	    (lastSelectedEl == firstSelectedEl && firstSelectedChar <= 1))
-	   /* this text element is entirely selected */
-	   {
-	   parent = TtaGetParent (lastSelectedEl);
-	   elType = TtaGetElementType (parent);
-	   if (elType.ElTypeNum == HTML_EL_Span &&
-	       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	      /* the parent element is a SPAN */
-	      if (lastSelectedEl == TtaGetFirstChild (parent) &&
-	          lastSelectedEl == TtaGetLastChild (parent))
-	         /* this text element is the only child of the SPAN */
-	         /* Process the SPAN instead of the text element */
-	         {
-	         lastSelectedEl = parent;
-	         if (firstSelectedEl == lastSelectedEl)
-		    firstSelectedEl = parent;
-	         }
-	}
+       if (lastSelectedChar < firstSelectedChar &&
+           firstSelectedEl == lastSelectedEl)
+         /* it's a caret */
+         {
+           empty = TRUE;
+           lastSelectedChar = firstSelectedChar;
+         }
+       lg = TtaGetElementVolume (lastSelectedEl);
+       if (lastSelectedChar <= lg && lastSelectedChar > 1)
+         /* the last selected element is only partly selected. Split it */
+         {
+           /* exclude trailing spaces from the anchor */
+           if (lg > 0)
+             {
+               lg++;
+               buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
+               TtaGiveBufferContent (lastSelectedEl, buffer, lg, &lang);
+               if (lastSelectedEl == firstSelectedEl)
+                 min = firstSelectedChar;
+               else
+                 min = 1;
+               while (lastSelectedChar > min &&
+                      buffer[lastSelectedChar - 2] == SPACE)
+                 lastSelectedChar--;
+               TtaFreeMemory (buffer);
+             }
+           if (lastSelectedChar > 1)
+             {
+               TtaRegisterElementReplace (lastSelectedEl, doc);
+               TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
+               next = lastSelectedEl;
+               TtaNextSibling (&next);
+               TtaRegisterElementCreate (next, doc);
+             }
+         }
+       else if (lastSelectedEl != firstSelectedEl ||
+                /* selection ends at the end of the text element */
+                (lastSelectedEl == firstSelectedEl && firstSelectedChar <= 1))
+         /* this text element is entirely selected */
+         {
+           parent = TtaGetParent (lastSelectedEl);
+           elType = TtaGetElementType (parent);
+           if (elType.ElTypeNum == HTML_EL_Span &&
+               !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+             /* the parent element is a SPAN */
+             if (lastSelectedEl == TtaGetFirstChild (parent) &&
+                 lastSelectedEl == TtaGetLastChild (parent))
+               /* this text element is the only child of the SPAN */
+               /* Process the SPAN instead of the text element */
+               {
+                 lastSelectedEl = parent;
+                 if (firstSelectedEl == lastSelectedEl)
+                   firstSelectedEl = parent;
+               }
+         }
      }
-
+  
   /* process the first selected element */
   elType = TtaGetElementType (firstSelectedEl);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     {
       /* it's a text element */
       if (firstSelectedChar <= 1)
-	/* selection starts at the beginning of the element */
-	/* this text element is then entirely selected */
-	{
-	  parent = TtaGetParent (firstSelectedEl);
-	  elType = TtaGetElementType (parent);
-	  if (elType.ElTypeNum == HTML_EL_Span &&
-	      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	    /* parent is a SPAN element */
-	    if (firstSelectedEl == TtaGetFirstChild (parent) &&
-		firstSelectedEl == TtaGetLastChild (parent))
-	      /* this text element is the only child of the SPAN */
-	      /* Process the SPAN instead of the text element */
-	      {
-		firstSelectedEl = parent;
-		if (lastSelectedEl == firstSelectedEl)
-		  lastSelectedEl = parent;
-	      }
-	}
+        /* selection starts at the beginning of the element */
+        /* this text element is then entirely selected */
+        {
+          parent = TtaGetParent (firstSelectedEl);
+          elType = TtaGetElementType (parent);
+          if (elType.ElTypeNum == HTML_EL_Span &&
+              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+            /* parent is a SPAN element */
+            if (firstSelectedEl == TtaGetFirstChild (parent) &&
+                firstSelectedEl == TtaGetLastChild (parent))
+              /* this text element is the only child of the SPAN */
+              /* Process the SPAN instead of the text element */
+              {
+                firstSelectedEl = parent;
+                if (lastSelectedEl == firstSelectedEl)
+                  lastSelectedEl = parent;
+              }
+        }
       else
-	/* that element is only partly selected. Split it */
-	{
-	el = firstSelectedEl;
-	lg = TtaGetElementVolume (firstSelectedEl);
-	if (firstSelectedChar > lg)
-	  {
-	    /* insert an empty box */
-	    child = TtaNewTree (doc, elType, "");
-	    TtaInsertSibling (child, firstSelectedEl, FALSE, doc);
-	    TtaRegisterElementCreate (child, doc);
-	    firstSelectedChar = 0;
-	    lastSelectedChar = 0;
-	    firstSelectedEl = child;
-	    lastSelectedEl = child;
-	  }
-	else
-	  {
-	    /* exclude leading spaces from the selection */
-	    if (lg > 0)
-	      {
-		lg++;
-		buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
-		TtaGiveBufferContent (firstSelectedEl, buffer, lg, &lang);
-		if (lastSelectedEl == firstSelectedEl)
-		  max = lastSelectedChar;
-		else
-		  max = lg;
-		while (firstSelectedChar < max &&
-		       buffer[firstSelectedChar - 1] == SPACE)
-		  firstSelectedChar++;
-		TtaFreeMemory (buffer);
-	      }
-	    if (firstSelectedChar <= lg)
-	      {
-		TtaRegisterElementReplace (firstSelectedEl, doc);
-		TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
-		TtaNextSibling (&firstSelectedEl);
-		if (lastSelectedEl == el)
-		  {
-		    /* we have to change the end of selection because the last
-		       selected element was split */
-		    lastSelectedEl = firstSelectedEl;
-		  }
-	      }
-	  }
-	}
+        /* that element is only partly selected. Split it */
+        {
+          el = firstSelectedEl;
+          lg = TtaGetElementVolume (firstSelectedEl);
+          if (firstSelectedChar > lg)
+            {
+              /* insert an empty box */
+              child = TtaNewTree (doc, elType, "");
+              TtaInsertSibling (child, firstSelectedEl, FALSE, doc);
+              TtaRegisterElementCreate (child, doc);
+              firstSelectedChar = 0;
+              lastSelectedChar = 0;
+              firstSelectedEl = child;
+              lastSelectedEl = child;
+            }
+          else
+            {
+              /* exclude leading spaces from the selection */
+              if (lg > 0)
+                {
+                  lg++;
+                  buffer = (CHAR_T *)TtaGetMemory (lg * sizeof(CHAR_T));
+                  TtaGiveBufferContent (firstSelectedEl, buffer, lg, &lang);
+                  if (lastSelectedEl == firstSelectedEl)
+                    max = lastSelectedChar;
+                  else
+                    max = lg;
+                  while (firstSelectedChar < max &&
+                         buffer[firstSelectedChar - 1] == SPACE)
+                    firstSelectedChar++;
+                  TtaFreeMemory (buffer);
+                }
+              if (firstSelectedChar <= lg)
+                {
+                  TtaRegisterElementReplace (firstSelectedEl, doc);
+                  TtaSplitText (firstSelectedEl, firstSelectedChar, doc);
+                  TtaNextSibling (&firstSelectedEl);
+                  if (lastSelectedEl == el)
+                    {
+                      /* we have to change the end of selection because the last
+                         selected element was split */
+                      lastSelectedEl = firstSelectedEl;
+                    }
+                }
+            }
+        }
     }
 
   /* process all selected elements */
@@ -755,94 +761,114 @@ static void DoApplyClass (Document doc)
   while (curEl != NULL)
      {
       /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
-	 first the next element to be processed */
-      if (curEl == lastSelectedEl)
+         first the next element to be processed */
+       if (curEl == lastSelectedEl)
          next = NULL;
-      else
-	 {
-         next = curEl;
-         TtaGiveNextElement (doc, &next, lastSelectedEl);
-	 }
-
-      if (!setClassAttr)
-	 {
-	 DeleteSpanIfNoAttr (curEl, doc, &firstChild, &lastChild);
-	 if (firstChild)
-	    {
-	    if (curEl == firstSelectedEl)
-	        firstSelectedEl = firstChild;
-	    if (curEl == lastSelectedEl)
-		lastSelectedEl = lastChild;
-	    }
-	 }
-      else
-	 {
-	  elType = TtaGetElementType (curEl);
-	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-	      elType.ElTypeNum == HTML_EL_Basic_Elem)
-	    {
-	      /* that's a text element */
-	      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-		/* not a HTML element, move to the parent element */
-		curEl = TtaGetParent (curEl);
-	      else
-	        /* we are in a HTML element. Create an enclosing SPAN element*/
-	        {
-		  MakeASpan (curEl, &span, doc, NULL);
-		  if (span)
-		    /* a SPAN element was created */
-		    {
-		      if (!empty)
-			{
-			  if (curEl == firstSelectedEl)
-			    {
-			      firstSelectedEl = span;
-			      if (firstSelectedEl == lastSelectedEl)
-				lastSelectedEl = span;
-			    }
-			  else if (curEl == lastSelectedEl)
-			    lastSelectedEl = span;
-			}
-		      curEl = span;
-		    }
-	        }
-	    }
-	  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-	    {
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = MathML_ATTR_class;
-	    }
-	  else
+       else
+         {
+           next = curEl;
+           TtaGiveNextElement (doc, &next, lastSelectedEl);
+         }
+       
+       if (!setClassAttr)
+         {
+           DeleteSpanIfNoAttr (curEl, doc, &firstChild, &lastChild);
+           if (firstChild)
+             {
+               if (curEl == firstSelectedEl)
+                 firstSelectedEl = firstChild;
+               if (curEl == lastSelectedEl)
+                 lastSelectedEl = lastChild;
+             }
+           else
+             {
+               elType = TtaGetElementType (curEl);
+               s = TtaGetSSchemaName (elType.ElSSchema);
+               /* remove the current class attribute */
+               attrType.AttrSSchema = elType.ElSSchema;
+               if (!strcmp (s, "MathML"))
+                 attrType.AttrTypeNum = MathML_ATTR_class;
 #ifdef _SVG
-	    if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-	      {
-		attrType.AttrSSchema = elType.ElSSchema;
-		attrType.AttrTypeNum = SVG_ATTR_class;
-	      }
-	    else
+               else if (!strcmp (s, "SVG"))
+                 attrType.AttrTypeNum = SVG_ATTR_class;
 #endif
-	      {
-		attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-		attrType.AttrTypeNum = HTML_ATTR_Class;
-	      }
-	  /* set the Class attribute of the element */
-	  attr = TtaGetAttribute (curEl, attrType);
-	  if (!attr)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (curEl, attr, doc);
-	      TtaSetAttributeText (attr, a_class, curEl, doc);
-	      TtaRegisterAttributeCreate (attr, curEl, doc);
-	     }
-	  else
-	     {
-	     TtaRegisterAttributeReplace (attr, curEl, doc);
-	     TtaSetAttributeText (attr, a_class, curEl, doc);
-	     }
-	  TtaSetDocumentModified (doc);
-	 }
-      /* jump to the next element */
-      curEl = next;
+               else
+                 {
+                   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+                   attrType.AttrTypeNum = HTML_ATTR_Class;
+                 }
+               /* set the Class attribute of the element */
+               attr = TtaGetAttribute (curEl, attrType);
+               if (attr)
+                 {
+                   TtaRegisterAttributeDelete (attr, curEl, doc);
+                   TtaRemoveAttribute (curEl, attr, doc);
+                }
+             }
+         }
+       else
+         {
+           elType = TtaGetElementType (curEl);
+           s = TtaGetSSchemaName (elType.ElSSchema);
+           if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+               elType.ElTypeNum == HTML_EL_Basic_Elem)
+             {
+               /* that's a text element */
+               if (strcmp (s, "HTML"))
+                 /* not a HTML element, move to the parent element */
+                 curEl = TtaGetParent (curEl);
+               else
+                 /* we are in a HTML element. Create an enclosing SPAN element*/
+                 {
+                   MakeASpan (curEl, &span, doc, NULL);
+                   if (span)
+                     /* a SPAN element was created */
+                     {
+                       if (!empty)
+                         {
+                           if (curEl == firstSelectedEl)
+                             {
+                               firstSelectedEl = span;
+                               if (firstSelectedEl == lastSelectedEl)
+                                 lastSelectedEl = span;
+                             }
+                           else if (curEl == lastSelectedEl)
+                             lastSelectedEl = span;
+                         }
+                       curEl = span;
+                     }
+                 }
+             }
+           attrType.AttrSSchema = elType.ElSSchema;
+           if (!strcmp (s, "MathML"))
+             attrType.AttrTypeNum = MathML_ATTR_class;
+#ifdef _SVG
+           else if (!strcmp (s, "SVG"))
+             attrType.AttrTypeNum = SVG_ATTR_class;
+#endif
+           else
+             {
+               attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+               attrType.AttrTypeNum = HTML_ATTR_Class;
+             }
+           /* set the Class attribute of the element */
+           attr = TtaGetAttribute (curEl, attrType);
+           if (!attr)
+             {
+               attr = TtaNewAttribute (attrType);
+               TtaAttachAttribute (curEl, attr, doc);
+               TtaSetAttributeText (attr, a_class, curEl, doc);
+               TtaRegisterAttributeCreate (attr, curEl, doc);
+             }
+           else
+             {
+               TtaRegisterAttributeReplace (attr, curEl, doc);
+               TtaSetAttributeText (attr, a_class, curEl, doc);
+             }
+           TtaSetDocumentModified (doc);
+         }
+       /* jump to the next element */
+       curEl = next;
      }
   TtaCloseUndoSequence (doc);
 
@@ -1086,36 +1112,36 @@ static void UpdateClass (Document doc)
     {
       ok = FALSE;
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	{
-	  if (selType.ElTypeNum == HTML_EL_Input)
-	    /* the user has chosen element imput */
-	    {
-	      if (elType.ElTypeNum == HTML_EL_Text_Input ||
-		  elType.ElTypeNum == HTML_EL_Password_Input ||
-		  elType.ElTypeNum == HTML_EL_File_Input ||
-		  elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-		  elType.ElTypeNum == HTML_EL_Radio_Input ||
-		  elType.ElTypeNum == HTML_EL_Submit_Input ||
-		  elType.ElTypeNum == HTML_EL_Reset_Input ||
-		  elType.ElTypeNum == HTML_EL_Button_Input)
-		/* the selected element is a variant of the imput element. */
-		ok = TRUE;
-	    }
-	  else if (selType.ElTypeNum == HTML_EL_ruby)
-	    /* the user has chosen element ruby */
-	    {
-	      if (elType.ElTypeNum == HTML_EL_simple_ruby ||
-		  elType.ElTypeNum == HTML_EL_complex_ruby)
-	        /* the selected element is a variant of the ruby element. */
-		ok = TRUE;
-	    }
-	}
+        {
+          if (selType.ElTypeNum == HTML_EL_Input)
+            /* the user has chosen element imput */
+            {
+              if (elType.ElTypeNum == HTML_EL_Text_Input ||
+                  elType.ElTypeNum == HTML_EL_Password_Input ||
+                  elType.ElTypeNum == HTML_EL_File_Input ||
+                  elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+                  elType.ElTypeNum == HTML_EL_Radio_Input ||
+                  elType.ElTypeNum == HTML_EL_Submit_Input ||
+                  elType.ElTypeNum == HTML_EL_Reset_Input ||
+                  elType.ElTypeNum == HTML_EL_Button_Input)
+                /* the selected element is a variant of the imput element. */
+                ok = TRUE;
+            }
+          else if (selType.ElTypeNum == HTML_EL_ruby)
+            /* the user has chosen element ruby */
+            {
+              if (elType.ElTypeNum == HTML_EL_simple_ruby ||
+                  elType.ElTypeNum == HTML_EL_complex_ruby)
+                /* the selected element is a variant of the ruby element. */
+                ok = TRUE;
+            }
+        }
       if (!ok)
         /* it's an invalid element type */
-	{
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
-	  return;
-	}
+        {
+          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
+          return;
+        }
     }
 
   /* locate the style element in the document head */
@@ -1150,40 +1176,40 @@ static void UpdateClass (Document doc)
       /* is there any style element? */
       el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
       if (el)
-	{
-	  /* does this style element have an attribute type="text/css" ? */
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr)
-	    {
-	      len = TtaGetTextAttributeLength (attr);
-	      a_class = (char *)TtaGetMemory (len + 1);
-	      TtaGiveTextAttributeValue (attr, a_class, &len);
-	      found = (!strcmp (a_class, "text/css"));
-	      TtaFreeMemory (a_class);
-	    }
-	}
+        {
+          /* does this style element have an attribute type="text/css" ? */
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+            {
+              len = TtaGetTextAttributeLength (attr);
+              a_class = (char *)TtaGetMemory (len + 1);
+              TtaGiveTextAttributeValue (attr, a_class, &len);
+              found = (!strcmp (a_class, "text/css"));
+              TtaFreeMemory (a_class);
+            }
+        }
     }
   if (!found && head)
     /* the STYLE element doesn't exist. Create it */
     {
       el = TtaNewTree (doc, elType, "");
       if (strcmp (schName, "HTML"))
-	title = NULL;
+        title = NULL;
       else
-	{
-	  /* It's a HTML document. Insert the new style element after the
-	     title if it exists */
-	  elType.ElTypeNum = HTML_EL_TITLE;
-	  title = TtaSearchTypedElementInTree (elType, SearchForward, head,
-					       head);
-	}
-
+        {
+          /* It's a HTML document. Insert the new style element after the
+             title if it exists */
+          elType.ElTypeNum = HTML_EL_TITLE;
+          title = TtaSearchTypedElementInTree (elType, SearchForward, head,
+                                               head);
+        }
+      
       /* do not check mandatory attributes */
       TtaSetStructureChecking (FALSE, doc);
       if (title)
-	TtaInsertSibling (el, title, FALSE, doc);
+        TtaInsertSibling (el, title, FALSE, doc);
       else
-	TtaInsertFirstChild (&el, head, doc);
+        TtaInsertFirstChild (&el, head, doc);
       TtaSetStructureChecking (TRUE, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
@@ -1229,11 +1255,11 @@ static void UpdateClass (Document doc)
     {
       /* it's not an element type */
       if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
-	{
-	  /* it's an invalid class name, insert a dot */
-	  strcat (stylestring, ".");
-	  base++;
-	}
+        {
+          /* it's an invalid class name, insert a dot */
+          strcat (stylestring, ".");
+          base++;
+        }
     }
   strcat (stylestring, CurrentClass);
   strcat (stylestring, " {");
@@ -1251,7 +1277,7 @@ static void UpdateClass (Document doc)
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
-	 a_class++;
+        a_class++;
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
@@ -1272,17 +1298,17 @@ static void UpdateClass (Document doc)
 	 }
       attr = TtaGetAttribute (ClassReference, attrType);
       if (!attr)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (ClassReference, attr, doc);
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (ClassReference, attr, doc);
           TtaSetAttributeText (attr, a_class, ClassReference, doc);
-	  TtaRegisterAttributeCreate (attr, ClassReference, doc);
-	}
+          TtaRegisterAttributeCreate (attr, ClassReference, doc);
+        }
       else
-	{
-	  TtaRegisterAttributeReplace (attr, ClassReference, doc);
+        {
+          TtaRegisterAttributeReplace (attr, ClassReference, doc);
           TtaSetAttributeText (attr, a_class, ClassReference, doc);
-	}
+        }
       TtaSetDocumentModified (doc);
     }
 
@@ -1306,72 +1332,72 @@ static void UpdateClass (Document doc)
     elType = TtaGetElementType (child);
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
       /* if the last child of the STYLE element is an empty text leaf,
-	 skip it */
+         skip it */
       {
-	len = TtaGetTextLength (child) + 1;
-	text = (char *)TtaGetMemory (len);
-	TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
-	empty = TRUE;
-	insertNewLine = TRUE;
-	for (i = len - 1; i >= 0 && empty; i--)
-	  {
-	  empty = text[i] <= SPACE;
-          if ((int) text[i] == EOL || (int) text[i] == __CR__)
-	     insertNewLine = FALSE;
-	  }
-	TtaFreeMemory (text);
-	if (empty)
-	  {
-	    prev = child;
-	    TtaPreviousSibling (&prev);
-	    if (prev)
-	      {
-		child = prev;
-	        elType = TtaGetElementType (child);
-	      }
-	  }
+        len = TtaGetTextLength (child) + 1;
+        text = (char *)TtaGetMemory (len);
+        TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
+        empty = TRUE;
+        insertNewLine = TRUE;
+        for (i = len - 1; i >= 0 && empty; i--)
+          {
+            empty = text[i] <= SPACE;
+            if ((int) text[i] == EOL || (int) text[i] == __CR__)
+              insertNewLine = FALSE;
+          }
+        TtaFreeMemory (text);
+        if (empty)
+          {
+            prev = child;
+            TtaPreviousSibling (&prev);
+            if (prev)
+              {
+                child = prev;
+                elType = TtaGetElementType (child);
+              }
+          }
       }
     if (!strcmp (schName, "HTML") && elType.ElTypeNum != HTML_EL_TEXT_UNIT)
       {
-	if (elType.ElTypeNum != HTML_EL_Comment_)
-	  /* the last child of the STYLE element is neither a text leaf nor
-	     a comment. Don't do anything */
-	  child = NULL;
-	else
-	  /* the last child of the STYLE element is a comment */
-	  /* insert the new style rule within the Comment_line */
-	  {
-	    line = TtaGetLastChild (child);
-	    if (line)
-	      /* there is already a Comment_line */
-	      {
-		child = TtaGetLastChild (line);
-		len = TtaGetTextLength (child) + 1;
-		text = (char *)TtaGetMemory (len);
-		TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
-		empty = TRUE;
-		insertNewLine = TRUE;
-		for (i = len - 1; i >= 0 && empty; i--)
-		  {
-		    empty = text[i] <= SPACE;
-		    if ((int) text[i] == EOL || (int) text[i] == __CR__)
-		      insertNewLine = FALSE;
-		  }
-		TtaFreeMemory (text);
-	      }
-	    else
-	      /* create a Comment_line within the Comment */
-	      {
-		elType.ElTypeNum = HTML_EL_Comment_line;
-		line = TtaNewTree (doc, elType, "");
-		TtaInsertFirstChild (&line, child, doc);
-		child = TtaGetLastChild (line);
-		insertNewLine = FALSE;
-		/* remember the element to register in the undo queue */
-		found = FALSE;
-		el = line;
-	      }
-	  }
+        if (elType.ElTypeNum != HTML_EL_Comment_)
+          /* the last child of the STYLE element is neither a text leaf nor
+             a comment. Don't do anything */
+          child = NULL;
+        else
+          /* the last child of the STYLE element is a comment */
+          /* insert the new style rule within the Comment_line */
+          {
+            line = TtaGetLastChild (child);
+            if (line)
+              /* there is already a Comment_line */
+              {
+                child = TtaGetLastChild (line);
+                len = TtaGetTextLength (child) + 1;
+                text = (char *)TtaGetMemory (len);
+                TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
+                empty = TRUE;
+                insertNewLine = TRUE;
+                for (i = len - 1; i >= 0 && empty; i--)
+                  {
+                    empty = text[i] <= SPACE;
+                    if ((int) text[i] == EOL || (int) text[i] == __CR__)
+                      insertNewLine = FALSE;
+                  }
+                TtaFreeMemory (text);
+              }
+            else
+              /* create a Comment_line within the Comment */
+              {
+                elType.ElTypeNum = HTML_EL_Comment_line;
+                line = TtaNewTree (doc, elType, "");
+                TtaInsertFirstChild (&line, child, doc);
+                child = TtaGetLastChild (line);
+                insertNewLine = FALSE;
+                /* remember the element to register in the undo queue */
+                found = FALSE;
+                el = line;
+              }
+          }
       }
     }
 
@@ -1914,13 +1940,12 @@ void StyleCallbackDialogue (int ref, int typedata, char  *data)
       break;
     case AClassSelect:
       strcpy (CurrentClass, data);
-      /*DoApplyClass (ApplyClassDoc);*/
       break;
     case AClassForm:
       if (val == 1)
-	DoApplyClass (ApplyClassDoc);
+          DoApplyClass (ApplyClassDoc);
       else
-	TtaDestroyDialogue (BaseDialog + AClassForm);
+        TtaDestroyDialogue (BaseDialog + AClassForm);
       break;
     default:
       break;
