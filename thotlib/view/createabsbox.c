@@ -1165,25 +1165,32 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 		  /* on compte les ancetres successifs de ce type */
 		  while (pAsc != NULL)
 		    {
-		      if (pCond->CoTypeAncestor != 0)
-			equal = ((pCond->CoTypeAncestor == AnyType+1 ||
-				  pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
-				 !strcmp (pAsc->ElStructSchema->SsName,
-					  pSS->SsName));
+		      if (TypeHasException (ExcHidden, pAsc->ElTypeNumber,
+					    pAsc->ElStructSchema))
+			/* this ancestor is hidden. it does not count */
+			pAsc = pAsc->ElParent;
 		      else
-			equal = (pCond->CoAncestorName &&
-				 pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName &&
-				 !strcmp (pCond->CoAncestorName,
-					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
-				 !strcmp (pCond->CoSSchemaName,
-					  pAsc->ElStructSchema->SsName));
-		      if (equal)
 			{
-			  i++;
-			  pAsc = pAsc->ElParent;
+			  if (pCond->CoTypeAncestor != 0)
+			    equal = ((pCond->CoTypeAncestor == AnyType+1 ||
+				      pAsc->ElTypeNumber == pCond->CoTypeAncestor) &&
+				     !strcmp (pAsc->ElStructSchema->SsName,
+					      pSS->SsName));
+			  else
+			    equal = (pCond->CoAncestorName &&
+				     pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName &&
+				     !strcmp (pCond->CoAncestorName,
+					      pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
+				     !strcmp (pCond->CoSSchemaName,
+					      pAsc->ElStructSchema->SsName));
+			  if (equal)
+			    {
+			      i++;
+			      pAsc = pAsc->ElParent;
+			    }
+			  else
+			    pAsc = NULL;
 			}
-		      else
-			pAsc = NULL;
 		    }
 		else
 		  /* Condition: If within n element-type */
