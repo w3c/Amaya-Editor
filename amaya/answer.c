@@ -29,14 +29,14 @@
 
 /* libwww's interface needs this */
 struct _HTError
-  {
-     HTErrorElement      element;	/* Index number into HTError */
-     HTSeverity          severity;	/* A la VMS */
-     BOOL                ignore;	/* YES if msg should not go to user */
-     void               *par;	        /* Explanation, e.g. filename  */
-     int                 length;	/* For copying by generic routine */
-     char               *where;	        /* Which function */
-  };
+{
+  HTErrorElement      element;	/* Index number into HTError */
+  HTSeverity          severity;	/* A la VMS */
+  BOOL                ignore;	/* YES if msg should not go to user */
+  void               *par;	        /* Explanation, e.g. filename  */
+  int                 length;	/* For copying by generic routine */
+  char               *where;	        /* Which function */
+};
 
 
 
@@ -45,130 +45,129 @@ struct _HTError
   displays in the status bar the current state of a request   
   ----------------------------------------------------------------------*/
 BOOL AHTProgress (HTRequest *request, HTAlertOpcode op, 
-		  int msgnum, const char *dfault,
-		  void *input, HTAlertPar *reply)
+                  int msgnum, const char *dfault,
+                  void *input, HTAlertPar *reply)
 {
-   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
-   HTParentAnchor     *anchor;
-   char                text[MAX_LENGTH];
-   char                tempbuf[MAX_LENGTH];
-   char                buf[11];
-   long                cl, bytes_rw;
-   float               pro;
-   int                *raw_rw;
+  AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
+  HTParentAnchor     *anchor;
+  char                text[MAX_LENGTH];
+  char                tempbuf[MAX_LENGTH];
+  char                buf[11];
+  long                cl, bytes_rw;
+  float               pro;
+  int                *raw_rw;
 
-   if (request && HTRequest_internal (request))
-     return NO;
-   if (!me)
-     return NO;
-   if (input) 
-     strcpy (text, (char *) input);
-   else 
-     text[0] = EOS;
-   switch (op)
-     {
-     case HT_PROG_TIMEOUT:
-       /*
-	 Message temporarily suppresed as it appears when pressing the Stop button
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_TIMEOUT), NULL);
-       */
-       break;
-     case HT_PROG_DNS:
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), text);
-       break;
-     case HT_PROG_CONNECT:
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), text);
-       break;
-     case HT_PROG_ACCEPT:
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
-       break;
-     case HT_PROG_DONE:
-       /* a message is displayed elsewhere */
-       break;
-     case HT_PROG_READ:
-       if ((me->method != METHOD_PUT) && (me->method != METHOD_POST))
-	 {
-	   cl = HTAnchor_length (HTRequest_anchor (request));
-	   if (cl > 0)
-	     {
-	       bytes_rw = HTRequest_bodyRead (request);
-	       pro = (float)(bytes_rw * 100.) / (float)cl;
-	       
-	       if (pro > 100.)		/* libwww reports > 100! */
-		 pro = 100.;
-	       HTNumToStr ((unsigned long) cl, buf, 10);
-	       sprintf (tempbuf, "%s (%d%% of %s)", me->status_urlName, (int) pro, buf);
-	     }
-	   else 
-	     {
-	       bytes_rw = HTRequest_bytesRead(request);
-	       raw_rw = input ? (int *) input : NULL;
-	       if (bytes_rw > 0)
-		 {
-		   HTNumToStr(bytes_rw, buf, 10); 
-		   sprintf (tempbuf, "%s bytes", buf);
-		 } 
-	       else if (raw_rw && *raw_rw>0) 
-		 {
-		   HTNumToStr(*raw_rw, buf, 10);
-		   sprintf (tempbuf, "%s bytes", buf);
-		 } 
-	       else 
-		 buf[0] = EOS;
-	     }
-	   /* update the message on the status bar */
-	   if (buf[0]) 
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
-	   else
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->status_urlName);
-	 }
-       break;
+  if (request && HTRequest_internal (request))
+    return NO;
+  if (!me)
+    return NO;
+  if (input) 
+    strcpy (text, (char *) input);
+  else 
+    text[0] = EOS;
+  switch (op)
+    {
+    case HT_PROG_TIMEOUT:
+      /*
+        Message temporarily suppresed as it appears when pressing the Stop button
+        TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_TIMEOUT), NULL);
+      */
+      break;
+    case HT_PROG_DNS:
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), text);
+      break;
+    case HT_PROG_CONNECT:
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), text);
+      break;
+    case HT_PROG_ACCEPT:
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
+      break;
+    case HT_PROG_DONE:
+      /* a message is displayed elsewhere */
+      break;
+    case HT_PROG_READ:
+      if ((me->method != METHOD_PUT) && (me->method != METHOD_POST))
+        {
+          cl = HTAnchor_length (HTRequest_anchor (request));
+          if (cl > 0)
+            {
+              bytes_rw = HTRequest_bodyRead (request);
+              pro = (float)(bytes_rw * 100.) / (float)cl;
+              if (pro > 100.)		/* libwww reports > 100! */
+                pro = 100.;
+              HTNumToStr ((unsigned long) cl, buf, 10);
+              sprintf (tempbuf, "%s (%d%% of %s)", me->status_urlName, (int)pro, buf);
+            }
+          else 
+            {
+              bytes_rw = HTRequest_bytesRead(request);
+              raw_rw = input ? (int *) input : NULL;
+              if (bytes_rw > 0)
+                {
+                  HTNumToStr(bytes_rw, buf, 10); 
+                  sprintf (tempbuf, "%s bytes", buf);
+                } 
+              else if (raw_rw && *raw_rw>0) 
+                {
+                  HTNumToStr(*raw_rw, buf, 10);
+                  sprintf (tempbuf, "%s bytes", buf);
+                } 
+              else 
+                buf[0] = EOS;
+            }
+          /* update the message on the status bar */
+          if (buf[0]) 
+            TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
+          else
+            TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->status_urlName);
+        }
+      break;
        
-     case HT_PROG_WRITE:
-       if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
-	 {
-	   anchor = HTRequest_anchor (HTRequest_source (request));
-	   cl = HTAnchor_length (anchor);
-	   if (cl > 0)
-	     {
-	       bytes_rw = HTRequest_bodyWritten (request);
-	       pro = (float)(bytes_rw * 1001.) / (float)cl;
-	       HTNumToStr ((unsigned long) cl, buf, 10);
-	       sprintf (tempbuf, "%s: Writing (%d%% of %s)", me->urlName, (int)pro, buf);
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
-	     }
-	   else  
-	     {
-	       bytes_rw = HTRequest_bytesWritten(request);
-	       raw_rw = input ? (int *) input : NULL;
-	       if (bytes_rw > 0)
-		 {
-		   HTNumToStr(bytes_rw, buf, 10);
-		   sprintf (tempbuf, "%s bytes ", buf);
-		 } 
-	       else if (raw_rw && *raw_rw >0) 
-		 {
-		   HTNumToStr(*raw_rw, buf, 10);
-		   sprintf (tempbuf, "%s bytes ", buf);
-		 } 
-	       else 
-		 buf[0] = EOS;
-	     }
-	   /* update the message on the status bar */
-	   /****
-		if (buf[0]) 
-		TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
-		else
-	   ***/
-	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
-	 }
-       break;
+    case HT_PROG_WRITE:
+      if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
+        {
+          anchor = HTRequest_anchor (HTRequest_source (request));
+          cl = HTAnchor_length (anchor);
+          if (cl > 0)
+            {
+              bytes_rw = HTRequest_bodyWritten (request);
+              pro = (float)(bytes_rw * 1001.) / (float)cl;
+              HTNumToStr ((unsigned long) cl, buf, 10);
+              sprintf (tempbuf, "%s: Writing (%d%% of %s)", me->urlName, (int)pro, buf);
+              TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
+            }
+          else  
+            {
+              bytes_rw = HTRequest_bytesWritten(request);
+              raw_rw = input ? (int *) input : NULL;
+              if (bytes_rw > 0)
+                {
+                  HTNumToStr(bytes_rw, buf, 10);
+                  sprintf (tempbuf, "%s bytes ", buf);
+                } 
+              else if (raw_rw && *raw_rw >0) 
+                {
+                  HTNumToStr(*raw_rw, buf, 10);
+                  sprintf (tempbuf, "%s bytes ", buf);
+                } 
+              else 
+                buf[0] = EOS;
+            }
+          /* update the message on the status bar */
+          /****
+               if (buf[0]) 
+               TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
+               else
+          ***/
+          TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
+        }
+      break;
        
-     default:
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_STATUS), NULL);
-       break;
-     }
-   return YES;
+    default:
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_STATUS), NULL);
+      break;
+    }
+  return YES;
 }
 
 
@@ -177,16 +176,16 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
   opens a form to request user confirmation on an action.
   ----------------------------------------------------------------------*/
 BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
-		 const char *dfault,
-		 void *input, HTAlertPar *reply)
+                 const char *dfault,
+                 void *input, HTAlertPar *reply)
 {
   ThotBool         answer;
   char            *tmp_buf;
   AHTReqContext   *me = (AHTReqContext *)HTRequest_context (request);
   AHTReqStatus     old_reqStatus = (AHTReqStatus)NULL;
 
-    /* for the moment, we only take into account confirmation for
-       authentication */
+  /* for the moment, we only take into account confirmation for
+     authentication */
   if (op != HT_A_CONFIRM)
     return TRUE;
 
@@ -220,15 +219,15 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       break;
     default:
       if (msgnum < 0)
-	{
-	  /* @@@@ IV */
-	  tmp_buf = (char *)TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
-	  sprintf (tmp_buf, "%s %d", TtaGetMessage (AMAYA, AM_ERROR), msgnum);
-	  InitConfirm3L (0, 0, me ? me->urlName : (char *)"", tmp_buf, NULL, FALSE);
-	  TtaFreeMemory (tmp_buf);
-	}
+        {
+          /* @@@@ IV */
+          tmp_buf = (char *)TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
+          sprintf (tmp_buf, "%s %d", TtaGetMessage (AMAYA, AM_ERROR), msgnum);
+          InitConfirm3L (0, 0, me ? me->urlName : (char *)"", tmp_buf, NULL, FALSE);
+          TtaFreeMemory (tmp_buf);
+        }
       else
-	return TRUE;
+        return TRUE;
     }
 
   if (UserAnswer)
@@ -247,50 +246,50 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
   prompts for a text answer and returns this answer.
   ----------------------------------------------------------------------*/
 BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
-		void *input, HTAlertPar * reply)
+                void *input, HTAlertPar * reply)
 {
   /* JK: removed temporarily this prompt as it should be rewritten for
      use by the FTP module to save a file */
 #if 1
   return NO;
 #else
-   AHTReqContext      *me = HTRequest_context (request);
-   char               *result = NULL;
+  AHTReqContext      *me = HTRequest_context (request);
+  char               *result = NULL;
 
 #ifndef _WINGUI
-   TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (me->docid, 1), 
-      TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
+  TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (me->docid, 1), 
+              TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
 
-   if (input)
-      TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) input);
+  if (input)
+    TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) input);
 
-   else if (dfault)
-      TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) dfault);
-   else
-     TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, 
-		  TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
-   TtaNewTextForm (BaseDialog + AnswerText, BaseDialog + FormAnswer,
-		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
+  else if (dfault)
+    TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) dfault);
+  else
+    TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, 
+                 TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+  TtaNewTextForm (BaseDialog + AnswerText, BaseDialog + FormAnswer,
+                  TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    
-   if (reply && msgnum >= 0)
-     {
-       TtaSetTextForm (BaseDialog + AnswerText, "");
-       TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
-       TtaWaitShowDialogue ();
+  if (reply && msgnum >= 0)
+    {
+      TtaSetTextForm (BaseDialog + AnswerText, "");
+      TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+      TtaWaitShowDialogue ();
 
-	/* give back the reply to the libwww */
-	if (*Answer_name)
-	  {
-	     StrAllocCopy (result, Answer_name);
-	     HTAlert_setReplyMessage (reply, result);
-	     return YES;
-	  }
-     }
+      /* give back the reply to the libwww */
+      if (*Answer_name)
+        {
+          StrAllocCopy (result, Answer_name);
+          HTAlert_setReplyMessage (reply, result);
+          return YES;
+        }
+    }
 #else /* _WINGUI */
-   /* it could be a problem to use this form */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
+  /* it could be a problem to use this form */
+  CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
 #endif /* _WINGUI */
-   return NO;
+  return NO;
 #endif
 }
 
@@ -305,53 +304,53 @@ BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *d
   Initial value of *password is completely discarded.	
   ----------------------------------------------------------------------*/
 BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op, int msgnum,
-					    const char *dfault, 
-					    void *input, HTAlertPar * reply)
+                                   const char *dfault, 
+                                   void *input, HTAlertPar * reply)
 {
-   AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
-   const char         *realm = HTRequest_realm (request);
-   char               *server;
-   AHTReqStatus        old_reqStatus;
+  AHTReqContext      *me = (AHTReqContext *)HTRequest_context (request);
+  const char         *realm = HTRequest_realm (request);
+  char               *server;
+  AHTReqStatus        old_reqStatus;
 
-   if (reply && msgnum >= 0) 
-     {
-       /* initialise */
-       Answer_name[0] = EOS;
-       Lg_password = 0;
-       Answer_password[0] = EOS;
+  if (reply && msgnum >= 0) 
+    {
+      /* initialise */
+      Answer_name[0] = EOS;
+      Lg_password = 0;
+      Answer_password[0] = EOS;
 
-       /* prepare the authentication realm message */
-       server = AmayaParseUrl (me->urlName, "", AMAYA_PARSE_HOST);
-       /* protection against having a stop kill this thread */
-       old_reqStatus = me->reqStatus;
-       me->reqStatus = HT_BUSY;
-       /* show the popup */
-       InitFormAnswer (me->docid, 1, realm, server);
-       if (me->reqStatus != HT_ABORT)
-	 me->reqStatus = old_reqStatus;
-       /* free allocated memory */
-       if (server)
-	 TtaFreeMemory (server);
+      /* prepare the authentication realm message */
+      server = AmayaParseUrl (me->urlName, "", AMAYA_PARSE_HOST);
+      /* protection against having a stop kill this thread */
+      old_reqStatus = me->reqStatus;
+      me->reqStatus = HT_BUSY;
+      /* show the popup */
+      InitFormAnswer (me->docid, 1, realm, server);
+      if (me->reqStatus != HT_ABORT)
+        me->reqStatus = old_reqStatus;
+      /* free allocated memory */
+      if (server)
+        TtaFreeMemory (server);
 
-       /* handle the user's answers back to the library */
-       if (UserAnswer)
-	 {
-	   /* set the user name */
-	   HTAlert_setReplyMessage (reply, Answer_name);
-	   /* set the password */
-	   HTAlert_setReplySecret (reply, Answer_password);
-	   return YES;
-	 }
-       else
-	 return NO;
-     }
-   return NO;
+      /* handle the user's answers back to the library */
+      if (UserAnswer)
+        {
+          /* set the user name */
+          HTAlert_setReplyMessage (reply, Answer_name);
+          /* set the password */
+          HTAlert_setReplySecret (reply, Answer_password);
+          return YES;
+        }
+      else
+        return NO;
+    }
+  return NO;
 }
 
 /*----------------------------------------------------------------------
-   IsHTTP09Error
-   Returns TRUE if libwww forced a downgrade to 0.9 while fulfilling
-   the request. FALSE, otherwise.
+  IsHTTP09Error
+  Returns TRUE if libwww forced a downgrade to 0.9 while fulfilling
+  the request. FALSE, otherwise.
   ----------------------------------------------------------------------*/
 ThotBool IsHTTP09Error (HTRequest *request)
 {
@@ -365,32 +364,32 @@ ThotBool IsHTTP09Error (HTRequest *request)
     {
       index = HTError_index (pres);
       if (index == HTERR_HTTP09) 
-	{
-	  found = TRUE;
-	  if (WWWTRACE)
-	    HTTrace ("IsHTTP09Error..... Detected 0.9 backward compatibility\n");
-	  /* we set up a more explicit message, as I don't know what may be
-	     before this error. */
-	  HTRequest_addError (request, ERR_FATAL, NO, HTERR_BAD_REPLY,
-			      (void *)"Error: Server sent an unexpected reply.", 0,
-			      NULL);
-	  break;
-	}
+        {
+          found = TRUE;
+          if (WWWTRACE)
+            HTTrace ("IsHTTP09Error..... Detected 0.9 backward compatibility\n");
+          /* we set up a more explicit message, as I don't know what may be
+             before this error. */
+          HTRequest_addError (request, ERR_FATAL, NO, HTERR_BAD_REPLY,
+                              (void *)"Error: Server sent an unexpected reply.", 0,
+                              NULL);
+          break;
+        }
     }
   return (found);
 }
 
 
 /*----------------------------------------------------------------------
-   AHTError_print (hacked from HTError_print)
-   default function that creates an error message using
-   HTAlert() to put out the contents of the error_stack messages.
-   Furthermore, the error_info structure contains a name of a 
-   help file that might be put up as a link. This file can then be
-   multi-linguistic.                            
+  AHTError_print (hacked from HTError_print)
+  default function that creates an error message using
+  HTAlert() to put out the contents of the error_stack messages.
+  Furthermore, the error_info structure contains a name of a 
+  help file that might be put up as a link. This file can then be
+  multi-linguistic.                            
   ----------------------------------------------------------------------*/
 BOOL AHTError_print (HTRequest *request, HTAlertOpcode op, int msgnum,
-		     const char *dfault, void *input, HTAlertPar *reply)
+                     const char *dfault, void *input, HTAlertPar *reply)
 {
   HTList             *cur = (HTList *) input;
   HTError            *pres;
@@ -405,36 +404,36 @@ BOOL AHTError_print (HTRequest *request, HTAlertOpcode op, int msgnum,
     {
       index = HTError_index (pres);
       switch (index)
-	{
-	case HTERR_UNAUTHORIZED:
-	  TtaSetStatus (me->docid, 1,
-			TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
-	  break;
-	case HTERR_FORBIDDEN:
-	  TtaSetStatus (me->docid, 1,
-			TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
-	  break;
-	case HTERR_SYSTEM:
-	  if (!strcmp ("connect",  HTError_location (pres)))
-	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
-	  else
-	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
-	  break;
-	case HTERR_NO_REMOTE_HOST:
-	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
-	  break;
-	default:
-	  break;
-	}
+        {
+        case HTERR_UNAUTHORIZED:
+          TtaSetStatus (me->docid, 1,
+                        TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+          break;
+        case HTERR_FORBIDDEN:
+          TtaSetStatus (me->docid, 1,
+                        TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+          break;
+        case HTERR_SYSTEM:
+          if (!strcmp ("connect",  HTError_location (pres)))
+            TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
+          else
+            TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
+          break;
+        case HTERR_NO_REMOTE_HOST:
+          TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), NULL);
+          break;
+        default:
+          break;
+        }
     }
   return YES;
 }
 
 /*----------------------------------------------------------------------
-   AHTError_MemPrint (hacked from HTError_print)      
-   takes an error message from a request, writes it to a memory pointer,
-   then uses it as the actual server response (useful for displaying
-   errors as HTML code). 
+  AHTError_MemPrint (hacked from HTError_print)      
+  takes an error message from a request, writes it to a memory pointer,
+  then uses it as the actual server response (useful for displaying
+  errors as HTML code). 
   ----------------------------------------------------------------------*/
 void AHTError_MemPrint (HTRequest *request)
 {
@@ -456,36 +455,36 @@ void AHTError_MemPrint (HTRequest *request)
     {
       index = HTError_index (pres);
       {			/* Error number */
-	switch (index)
-	  {
-	  case HTERR_NO_REMOTE_HOST:
-	  case HTERR_NO_HOST:
-	  case HTERR_SYSTEM:
-	  case HTERR_INTERNAL:
-	  case HTERR_CSO_SERVER:
-	    if (pres->par != NULL)
-	      {
-		if (me->method == METHOD_PUT) 
-		  {
-		    sprintf (buffer, "Error: Server is unavailable or doesn't exist");
-		    StrAllocCat (me->error_stream, buffer);
-		  }
-	      }
-	    return;
-	    break;
-	  case HTERR_TIME_OUT:
-	    if (me->method == METHOD_PUT)
-	      {
-		sprintf (buffer, "Error: Server is unavailable or doesn't exist");
-		StrAllocCat (me->error_stream, buffer);
-	      }
-	    break;	   
-	  default:
-	    if (pres->par)
-	      StrAllocCat (me->error_stream, (char *)pres->par);
-	    return;
-	    break;
-	  }
+        switch (index)
+          {
+          case HTERR_NO_REMOTE_HOST:
+          case HTERR_NO_HOST:
+          case HTERR_SYSTEM:
+          case HTERR_INTERNAL:
+          case HTERR_CSO_SERVER:
+            if (pres->par != NULL)
+              {
+                if (me->method == METHOD_PUT) 
+                  {
+                    sprintf (buffer, "Error: Server is unavailable or doesn't exist");
+                    StrAllocCat (me->error_stream, buffer);
+                  }
+              }
+            return;
+            break;
+          case HTERR_TIME_OUT:
+            if (me->method == METHOD_PUT)
+              {
+                sprintf (buffer, "Error: Server is unavailable or doesn't exist");
+                StrAllocCat (me->error_stream, buffer);
+              }
+            break;	   
+          default:
+            if (pres->par)
+              StrAllocCat (me->error_stream, (char *)pres->par);
+            return;
+            break;
+          }
       }
     }
 }
@@ -497,26 +496,26 @@ void AHTError_MemPrint (HTRequest *request)
   ----------------------------------------------------------------------*/
 void AHTPrintPendingRequestStatus (Document docid, BOOL last_seconds_of_life)
 {
-   int                 waiting_count = 0;
-   AHTDocId_Status    *docid_status;
-   char              buffer[120];
+  int                 waiting_count = 0;
+  AHTDocId_Status    *docid_status;
+  char              buffer[120];
 
-   /* verify if there are any requests at all associated with docid */
+  /* verify if there are any requests at all associated with docid */
 
-   docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
-						      Amaya->docid_status);
+  docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
+                                                     Amaya->docid_status);
 
-   if (docid_status == (AHTDocId_Status *) NULL)
-      return;
+  if (docid_status == (AHTDocId_Status *) NULL)
+    return;
 
-   waiting_count = (last_seconds_of_life) ? (docid_status->counter - 1) : docid_status->counter;
+  waiting_count = (last_seconds_of_life) ? (docid_status->counter - 1) : docid_status->counter;
 
-   if (waiting_count > 0)
-     {
-	sprintf (buffer, TtaGetMessage (AMAYA, AM_WAITING_REQUESTS), waiting_count);
-	TtaSetStatus (docid, 1, buffer, NULL);
+  if (waiting_count > 0)
+    {
+      sprintf (buffer, TtaGetMessage (AMAYA, AM_WAITING_REQUESTS), waiting_count);
+      TtaSetStatus (docid, 1, buffer, NULL);
 
-     }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -539,80 +538,80 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
-		  TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED),
-		  me->status_urlName);
+                  TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED),
+                  me->status_urlName);
   else if (status == 201)
     TtaSetStatus (me->docid, 1, 
-		  TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE),
-		  me->status_urlName);
+                  TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE),
+                  me->status_urlName);
   else if (status == 204 && me->method == METHOD_PUT)
     TtaSetStatus (me->docid, 1,
-		  TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE),
-		  me->status_urlName);
+                  TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE),
+                  me->status_urlName);
   else if (status == 204 && me->method == METHOD_PUT)
     TtaSetStatus (me->docid, 1, 
-		  TtaGetMessage (AMAYA, AM_NO_DATA), 
-		  NULL);
+                  TtaGetMessage (AMAYA, AM_NO_DATA), 
+                  NULL);
   else if (status == -400 || status == 505)
     {
       TtaSetStatus (me->docid, 1, 
-		    TtaGetMessage (AMAYA, 
-				   AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
-		    NULL);
+                    TtaGetMessage (AMAYA, 
+                                   AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX),
+                    NULL);
       sprintf (AmayaLastHTTPErrorMsg, 
-	       TtaGetMessage (AMAYA,
-			      AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
+               TtaGetMessage (AMAYA,
+                              AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX));
     }
   else if (status == -401) 
     {
       TtaSetStatus (me->docid, 1,
-		    TtaGetMessage (AMAYA, 
-				   AM_AUTHENTICATION_FAILURE), 
-		    me->status_urlName);
+                    TtaGetMessage (AMAYA, 
+                                   AM_AUTHENTICATION_FAILURE), 
+                    me->status_urlName);
       sprintf (AmayaLastHTTPErrorMsg, 
-	       TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
-	       me->status_urlName);
+               TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
+               me->status_urlName);
     }
   else if (status == -403)
     {
       TtaSetStatus (me->docid, 1,
-		    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
-		    me->status_urlName);
+                    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
+                    me->status_urlName);
       sprintf (AmayaLastHTTPErrorMsg, 
-	       TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
-	       me->urlName);
+               TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
+               me->urlName);
     }
   else if (status == -405)
     {
       TtaSetStatus (me->docid, 1, 
-		    TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
-		    NULL);
+                    TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED),
+                    NULL);
       sprintf(AmayaLastHTTPErrorMsg, 
-	      TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
+              TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED));
     }
   else if (status == -409)
     {
       TtaSetStatus (me->docid, 1,
-		    "Conflict with the current state of the resource", NULL);
+                    "Conflict with the current state of the resource", NULL);
       sprintf(AmayaLastHTTPErrorMsg, "409: Conflict with the current state of the resource");
     }
   else if (status == -902)
     {
       TtaSetStatus (me->docid, 1,
-		    "Transfer interrupted", NULL);
+                    "Transfer interrupted", NULL);
       sprintf(AmayaLastHTTPErrorMsg, "902: Transfer interrupted");
     }
 #ifdef DAV
   else if (status == -423 || status == 207 || status == -424 ) 
-   {
+    {
       /* WebDAV status - there are filters that handle this 
        * status codes. We don't need to deal with this here. 
        * change status value to prevent any message to the user.
        */	  
 #ifdef DEBUG_DAV
-       fprintf (stderr, "PrintTerminateStatus.... WebDAV code %d\n",status); 
+      fprintf (stderr, "PrintTerminateStatus.... WebDAV code %d\n",status); 
 #endif	 
-       status =  200;
+      status =  200;
     }
 #endif  /* DAV */ 
   else if (status < 0)
@@ -623,7 +622,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
       */
 
 #ifdef DEBUG_DAV
-       fprintf (stderr, "PrintTerminateStatus.... unknown code %d\n",status); 
+      fprintf (stderr, "PrintTerminateStatus.... unknown code %d\n",status); 
 #endif	  
        
       /* get a pointer to the server's status message */
@@ -648,136 +647,136 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
         }
 
       if (error == (HTError *) NULL)
-	/* there's no error context */
-	{
-	  sprintf (msg_status, "%d", status);
-	  strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
-	  if (status == -905)
-	    strcat (msg_error, " : Connection timeout");
-	  else if (status == -906)
-	    strcat (msg_error, " : Can't locate host");
-	  else if (status == -904)
-	    strcat (msg_error, " : Recover pipe line");
-	  TtaSetStatus (me->docid, 1, msg_error, msg_status);
-	  sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
-	  return;
-	}
+        /* there's no error context */
+        {
+          sprintf (msg_status, "%d", status);
+          strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
+          if (status == -905)
+            strcat (msg_error, " : Connection timeout");
+          else if (status == -906)
+            strcat (msg_error, " : Can't locate host");
+          else if (status == -904)
+            strcat (msg_error, " : Recover pipe line");
+          TtaSetStatus (me->docid, 1, msg_error, msg_status);
+          sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
+          return;
+        }
       else
-	errorElement = error->element;	
+        errorElement = error->element;	
 
       if (errorElement == HTERR_INTERRUPTED)
-	{
-	  TtaSetStatus (me->docid, 1,
-			"Transfer interrupted by user", NULL);
-	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        "Transfer interrupted by user", NULL);
+          sprintf (AmayaLastHTTPErrorMsg, "%s", "Transfer interrupted by user");
+        }
       else if (errorElement == HTERR_PRECON_FAILED) 
-	{
-	  TtaSetStatus (me->docid, 1,
-			"Document has changed (412)", NULL);
-	  sprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
-	  status = -412;
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        "Document has changed (412)", NULL);
+          sprintf (AmayaLastHTTPErrorMsg, "%s", "Document has changed (412)");
+          status = -412;
+        }
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
-	{
-	  TtaSetStatus (me->docid, 1,
-			"Connection Timeout", NULL);
-	  sprintf (AmayaLastHTTPErrorMsg,
-		    "Connection Timeout");
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        "Connection Timeout", NULL);
+          sprintf (AmayaLastHTTPErrorMsg,
+                   "Connection Timeout");
+        }
       else if (errorElement == HTERR_NOT_IMPLEMENTED)
-	{
-	  TtaSetStatus (me->docid, 1,
-			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
-			NULL);
-	  sprintf (AmayaLastHTTPErrorMsg, 
-		    TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
-	  status = -501;
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
+                        NULL);
+          sprintf (AmayaLastHTTPErrorMsg, 
+                   TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
+          status = -501;
+        }
       else if (errorElement == HTERR_NO_REMOTE_HOST)
-	{
-	  TtaSetStatus (me->docid, 1,
-			"Host %s doesn't exist", (char *) error->par);
-	  sprintf (AmayaLastHTTPErrorMsg, 
-		    "Host %s doesn't exist", (char *) error->par);
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        "Host %s doesn't exist", (char *) error->par);
+          sprintf (AmayaLastHTTPErrorMsg, 
+                   "Host %s doesn't exist", (char *) error->par);
+        }
       else if (errorElement == HTERR_INTERNAL)
-	{
-	  if ((error->length > 0) && (error->length <= 25) &&
-	      (error->par) && (((char *) error->par)[0] != EOS)) 
-	    {
-	      TtaSetStatus (me->docid, 1, 
-			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			    (char *)error->par);
-	      sprintf (AmayaLastHTTPErrorMsg, 
-			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			error->par);
-	    }
-	  else
-	    {
-	      TtaSetStatus (me->docid, 1, 
-			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
-			    NULL);
-	      sprintf (AmayaLastHTTPErrorMsg, 
-			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
-	    }
-	  status = -500; 
-	}
+        {
+          if ((error->length > 0) && (error->length <= 25) &&
+              (error->par) && (((char *) error->par)[0] != EOS)) 
+            {
+              TtaSetStatus (me->docid, 1, 
+                            TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
+                            (char *)error->par);
+              sprintf (AmayaLastHTTPErrorMsg, 
+                       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
+                       error->par);
+            }
+          else
+            {
+              TtaSetStatus (me->docid, 1, 
+                            TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
+                            NULL);
+              sprintf (AmayaLastHTTPErrorMsg, 
+                       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
+            }
+          status = -500; 
+        }
       /* JK: not used anymore, but left here for debugging reasons */
 #if 0
       else if (errorElement == HTERR_HTTP09)
-	{
-	  TtaSetStatus (me->docid, 1,
-			"Server or network forced libwww to downgrade to HTTP/0.9.",
-			NULL);
-	  sprintf (AmayaLastHTTPErrorMsg,
-		    "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
-	}
+        {
+          TtaSetStatus (me->docid, 1,
+                        "Server or network forced libwww to downgrade to HTTP/0.9.",
+                        NULL);
+          sprintf (AmayaLastHTTPErrorMsg,
+                   "Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit.");
+        }
 #endif
       else if (server_status)
-	{
-	  wc_tmp = TtaStrdup (server_status);
-	  /* let's output whatever the server or libwww reports as an error */
-	  TtaSetStatus (me->docid, 1, wc_tmp, NULL);
-	  strcpy (AmayaLastHTTPErrorMsg, wc_tmp);
-	  TtaFreeMemory (wc_tmp);
-	}
+        {
+          wc_tmp = TtaStrdup (server_status);
+          /* let's output whatever the server or libwww reports as an error */
+          TtaSetStatus (me->docid, 1, wc_tmp, NULL);
+          strcpy (AmayaLastHTTPErrorMsg, wc_tmp);
+          TtaFreeMemory (wc_tmp);
+        }
       else
-	{
-	  /* we don't have anything else, except for the status code */
-	  sprintf (msg_status, "%d", status);
-	  strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
-	  if (status == -905)
-	    strcat (msg_error, " : Connection timeout");
-	  else if (status == -906)
-	    strcat (msg_error, " : Can't locate host");
-	  else if (status == -904)
-	    strcat (msg_error, " : Recover pipe line");
-	  TtaSetStatus (me->docid, 1, msg_error, msg_status);
-	  sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
-	}
+        {
+          /* we don't have anything else, except for the status code */
+          sprintf (msg_status, "%d", status);
+          strcpy (msg_error, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS));
+          if (status == -905)
+            strcat (msg_error, " : Connection timeout");
+          else if (status == -906)
+            strcat (msg_error, " : Can't locate host");
+          else if (status == -904)
+            strcat (msg_error, " : Recover pipe line");
+          TtaSetStatus (me->docid, 1, msg_error, msg_status);
+          sprintf (AmayaLastHTTPErrorMsg, msg_error, msg_status);
+        }
     }
   /* set the reason string */
   if (status < 0 && status != -902 )
     {
       if (me->http_headers.reason && *me->http_headers.reason)
-	  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
-		   me->http_headers.reason);
+        sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+                 me->http_headers.reason);
       else
-	{
-	  response = HTRequest_response (me->request);
-	  if (response)
-	    {
-	      server_status = HTResponse_reason (response);
-	      if (server_status && *server_status)
-		{
-		  wc_tmp = TtaStrdup (server_status);
-		  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
-			   wc_tmp);
-		  TtaFreeMemory (wc_tmp);
-		}
-	    }
-	}
+        {
+          response = HTRequest_response (me->request);
+          if (response)
+            {
+              server_status = HTResponse_reason (response);
+              if (server_status && *server_status)
+                {
+                  wc_tmp = TtaStrdup (server_status);
+                  sprintf (AmayaLastHTTPErrorMsgR, "Server reason: %s", 
+                           wc_tmp);
+                  TtaFreeMemory (wc_tmp);
+                }
+            }
+        }
     }
 }
 
