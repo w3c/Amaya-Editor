@@ -1,0 +1,173 @@
+	{ Presentation Schema for Templates.
+	  A. Tollenaere		July 2005 }
+
+
+PRESENTATION Template;
+
+VIEWS
+   Formatted_view,
+   Structure_view merge with Structure_view;
+
+#define TAG_FONTSIZE 12 pt
+#define ATTR_Font Helvetica
+#define ATTR_Style Roman
+#define ATTR_Weight Normal
+#define ATTR_Visibility 6
+#define INVALID_Style Roman
+#define INVALID_Weight Normal
+#define INVALID_Visibility 7
+#define INVALID_Font Helvetica
+#ifdef BLACK_WHITE
+#define ATTR_Color Black
+#define ATTRVALUE_Color Black
+#define INVALID_Color Black
+#else
+#define ATTR_Color DarkIndigo1
+#define ATTRVALUE_Color DarkMagenta2
+#define INVALID_Color Red
+#endif
+
+DEFAULT
+
+   BEGIN
+   Visibility: Enclosing =;
+   VertRef: * . Left ;
+   HorizRef: Enclosed . HRef;
+   Height: Enclosed . Height;
+   Width: Enclosed . Width;
+   VertPos: HRef = Previous . HRef;
+   HorizPos: Left = Previous . Right;
+   LineBreak: No;
+   Font: Enclosing =;
+   Style: Roman;
+   Weight: Enclosing =;
+   Size: Enclosing =;
+   Indent: 0;
+   Adjust: Left;
+   LineSpacing: 1;
+   Depth : Enclosing =;
+   UnderLine: Enclosing =;
+   Thickness: Enclosing =;
+   LineStyle: Enclosing =;
+   LineWeight: Enclosing =;
+   Background: Enclosing =;
+   Foreground: Enclosing =;
+   FillPattern: Enclosing =;
+   IN Structure_view BEGIN
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	END;
+   END;
+
+BOXES
+
+  AttrName: BEGIN
+	Content: (Text ' template:' AttributeName Text '=');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: ATTR_Visibility;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Foreground: ATTR_Color;
+		END;
+	END;
+
+  AttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: ATTR_Visibility;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		END;
+	END;
+
+  AttrNameAndValue: BEGIN
+        Content: (Text ' template:' AttributeName Text '=' AttributeValue);
+        Visibility: 0;
+        IN Structure_view BEGIN
+		Visibility: ATTR_Visibility;
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Foreground: ATTR_Color;
+                END;
+        END;
+
+  UnknownAttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+                Font: INVALID_Font;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: INVALID_Color;
+		END;	
+	END;
+
+ Unknown_End: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: Creator =;
+		END;
+	END;
+
+
+RULES
+
+ Template:	BEGIN
+	IN Structure_view BEGIN
+		Visibility: 0;
+		END;
+	END;
+
+ PICTURE_UNIT: BEGIN
+ 	{Visibility: 0;}
+	Depth: Enclosing - 1;
+        HorizRef: * . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: 16 px;
+	Height: 16 px;
+	END;
+
+ATTRIBUTES
+
+  Unknown_attribute:
+	BEGIN
+	CreateBefore(UnknownAttrValue);
+	if LastAttr
+	   CreateAfter(Unknown_End);
+	END;
+
+{****
+   role = TEXT;
+
+   arcrole = TEXT;
+
+   title = TEXT;
+
+   show = new, replace, embed, other, none_;
+
+   actuate = onLoad, onRequest, other, none_;
+
+   from = TEXT;
+
+   to = TEXT;
+****}
+
+END
