@@ -80,29 +80,49 @@
                 </object>
                 <flag>wxEXPAND</flag>
               </object>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_PROFILE_LABEL">
-                  <label>*profile*</label>
-                  <style>wxALIGN_RIGHT</style>
-                </object>
-                <option>1</option>
-                <flag>wxRIGHT|wxALIGN_CENTRE</flag>
-                <border>4</border>
+              <object class="spacer">
+                <size>10,0</size>
               </object>
               <object class="sizeritem">
-                <object class="wxComboBox" name="wxID_PROFILE">
-                  <content>
-                    <item>XHTML 1.1</item>
-                    <item>XHTML Transitional</item>
-                    <item>XHTML Strict</item>
-                    <item>XHTML Basic</item>
-                    <item>HTML Transitional</item>
-                  </content>
-                  <selection>1</selection>
-                  <size>150,-1</size>
-                  <style>wxCB_READONLY</style>
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="spacer">
+                    <size>10,10</size>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_PROFILE_LABEL">
+                      <label>*profile*</label>
+                      <size>200,-1</size>
+                      <style>wxALIGN_LEFT</style>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND|wxALIGN_BOTTOM</flag>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxComboBox" name="wxID_PROFILE">
+                      <content>
+                        <item>XHTML 1.1</item>
+                        <item>XHTML Transitional</item>
+                        <item>XHTML Strict</item>
+                        <item>XHTML Basic</item>
+                        <item>HTML Transitional</item>
+                      </content>
+                      <selection>1</selection>
+                      <size>150,-1</size>
+                      <style>wxCB_READONLY</style>
+                    </object>
+                    <option>1</option>
+                    <flag>wxTOP|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="spacer">
+                    <size>10,10</size>
+                    <option>1</option>
+                    <flag>wxALL</flag>
+                  </object>
                 </object>
-                <flag>wxTOP|wxEXPAND</flag>
+                <option>1</option>
+                <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
               </object>
             </object>
             <flag>wxBOTTOM|wxEXPAND</flag>

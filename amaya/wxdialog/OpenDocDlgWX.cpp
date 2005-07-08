@@ -60,14 +60,10 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 
   // update dialog labels with given ones
   SetTitle( title );
-  //  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
+  //XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_LOCATION) ));
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
-  XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-  XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-  XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
-  XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
 #ifdef _MACOS
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB_MACOS)));
@@ -76,13 +72,25 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
 #endif /*  _MACOS */
   XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWWINDOW)));
 
+  XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
+  XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
   if (profiles.IsEmpty())
     {
+      // Open document
+      XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+      //XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->Hide();
+      //XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->Hide();
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->Hide();
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->Hide();
     }
   else
     {
+      // New document
+      //XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->Hide();
+      //XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Hide();
+      XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->Hide();
+      XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
     }
@@ -123,6 +131,7 @@ OpenDocDlgWX::~OpenDocDlgWX()
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
 {
+  // Create a generic filedialog
   wxDirDialog * p_dlg = new wxDirDialog(this);
   p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
   p_dlg->SetPath(XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->GetValue());
@@ -147,14 +156,12 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
 {
   // Create a generic filedialog
   wxFileDialog * p_dlg = new wxFileDialog
-    (
-     this,
+    (this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
      _T(""), 
      m_Filter,
-     wxOPEN | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
-     );
+     wxOPEN | wxCHANGE_DIR /*| wxCHANGE_DIR remember last directory*/);
   p_dlg->SetPath(XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue());
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
 
