@@ -1,0 +1,60 @@
+#
+# Makefile.templates
+# Autoconf Fragment when using templates
+# Irene Vatton 1998-2003
+#
+
+AMAYA_TEMPLATES_OPTIONS= -DTEMPLATES
+
+AMAYA_TEMPLATES_OBJ= \
+
+AMAYA_TEMPLATES_SRC= \
+
+AMAYA_TEMPLATES_INCLUDES= 
+
+TEMPLATES_SCHEMAS= $(AMAYA)/Template.S $(AMAYA)/TemplateP.P $(AMAYA)/TemplateT.T \
+
+template_schema= compTemplate compTemplateP compTemplateT \
+
+#
+# Structure schema compilation.
+#
+compTemplate : $(AMAYA)/Template.STR
+$(AMAYA)/Template.STR : $(AMAYA)/Template.S ../bin/str ../bin/prs ../bin/tra
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) Template ; \
+	$$PRS $(ALL_AMAYA_OPTIONS) TemplateP ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML TemplateT TemplateTX ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) TemplateT
+
+#
+# Presentation schemas compilation
+#
+compTemplateP : $(AMAYA)/TemplateP.PRS
+$(AMAYA)/TemplateP.PRS : $(AMAYA)/TemplateP.P ../bin/prs
+	PRS=`pwd`/../bin/prs;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$PRS $(ALL_AMAYA_OPTIONS) TemplateP
+
+#
+# Traduction schemas compilation
+#
+compTemplateT : $(AMAYA)/TemplateT.TRA
+$(AMAYA)/TemplateT.TRA : $(AMAYA)/TemplateT.T ../bin/tra
+	TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML TemplateT TemplateTX ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) TemplateT
+
+#
+# Interface schemas compilation
+#
+Template.h TemplateAPP.c : $(AMAYA)/Template.STR $(AMAYA)/Template.A ../bin/app
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
+	    $(CP) $(AMAYA)/Template.A .  ; \
+	    $(CP) $(AMAYA)/Template.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) Template.A
+
