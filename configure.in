@@ -975,6 +975,7 @@ AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations suppo
 AC_ARG_ENABLE(redland,       [  --disable-redland       disable the redland RDF library ])
 AC_ARG_ENABLE(system-redland,       [  --enable-system-redland try the redland RDF system library ])
 AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental bookmark support ])
+AC_ARG_ENABLE(templates,     [  --enable-templates      enables experimental templates support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 
 dnl
@@ -1053,6 +1054,25 @@ if test "$with_bookmarks" = "" ; then
     fi
 else
     with_bookmarks="no"
+fi
+
+dnl
+dnl The templates support is disabled by default
+dnl
+if test "$with_templates" = "" ; then
+   if test "$with_wx" = "yes"; then
+       if test "$enable_templates" = "yes" ; then
+	  with_templates="yes"
+       else
+          with_templates="no"
+       fi
+   else	
+      AC_MSG_WARN(Templates are only available in WX version !!)
+      AC_MSG_WARN(Disabling templates)
+      with_templates="no"
+   fi
+else
+    with_templates="no"
 fi
 
 dnl
@@ -1211,6 +1231,10 @@ if test "$build_amaya" = "yes" ; then
 	ANNOTLIB_COMPILE_BM=['#']
     fi
 
+    if test "$with_templates" = "yes" ; then
+	TEMPLATES_OPTIONS= 
+    fi
+
     if test "$with_plugin" = "yes" ; then
         AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
 	AC_MSG_WARN(Disabling plugin build !)
@@ -1239,9 +1263,9 @@ dnl
 
 THOT_OPTIONS="$OS_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 if test "$with_debug" = "yes" ; then
-  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS -DAMAYA_DEBUG"
+  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS $TEMPLATES_OPTIONS -DAMAYA_DEBUG"
 else
-  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+  AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS $TEMPLATES_OPTIONS"
 fi
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
@@ -1393,6 +1417,11 @@ if test "$with_dav" = "yes" ; then
     dav_frag=$srcdir/davlib/Makefile.dav
 fi
 
+if test "$with_templates" = "yes" ; then
+    AC_SUBST_FILE(templates_frag)
+    templates_frag=$srcdir/amaya/Makefile.templates
+fi
+
 dnl  ***************************************************************
 dnl
 dnl      FINAL STEP : PRODUCE ALL THE MAKEFILES AND CONFIG FILES
@@ -1486,6 +1515,9 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_bookmarks" = "yes" ; then
 	echo Amaya configured with bookmarks support \(experimental\)
+    fi
+    if test "$with_templates" = "yes" ; then
+	echo Amaya configured with templates support \(experimental\)
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
