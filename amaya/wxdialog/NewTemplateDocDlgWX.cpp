@@ -1,4 +1,4 @@
-#ifdef _WX
+#ifdef TEMPLATES
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
@@ -19,6 +19,7 @@
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
+
 BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),              NewTemplateDocDlgWX::OnCreateButton )
   EVT_BUTTON(     XRCID("wxID_CLEAR"),           NewTemplateDocDlgWX::OnClearButton )
@@ -26,16 +27,16 @@ BEGIN_EVENT_TABLE(NewTemplateDocDlgWX, AmayaDialog)
 
   EVT_BUTTON(     XRCID("wxID_BUTTON_FILENAME"), NewTemplateDocDlgWX::OnFilenameButton )
   EVT_BUTTON(     XRCID("wxID_BUTTON_DIR"),      NewTemplateDocDlgWX::OnDirButton )
-  EVT_BUTTON( XRCID("wxID_BUTTON_TEMPLATENAME_BROWSE"), NewTemplateDocDlgWX::OnTemplatename_BrowseButton )
+  EVT_BUTTON( XRCID("wxID_BUTTON_TEMPLATEDIRNAME"), NewTemplateDocDlgWX::OnTemplateDirNameButton )
 
   EVT_TEXT_ENTER( XRCID("wxID_FILENAME"),        NewTemplateDocDlgWX::OnCreateButton )
   EVT_TEXT_ENTER( XRCID("wxID_DIR"),             NewTemplateDocDlgWX::OnCreateButton )
 
-  EVT_TEXT_ENTER( XRCID("wxID_TEMPLATENAME_BROWSE"),    NewTemplateDocDlgWX::OnCreateButton )
-  EVT_COMBOBOX( XRCID("wxID_TEMPLATENAME"),      NewTemplateDocDlgWX::OnTemplatenameSelected )
+  EVT_TEXT_ENTER( XRCID("wxID_TEMPLATEDIRNAME"),    NewTemplateDocDlgWX::OnCreateButton )
+  EVT_COMBOBOX( XRCID("wxID_TEMPLATEFILENAME"),      NewTemplateDocDlgWX::OnTemplatenameSelected )
   
-
-  EVT_TEXT( XRCID("wxID_TEMPLATENAME_BROWSE"),   NewTemplateDocDlgWX::OnText_Templatename_Browse )
+  
+  EVT_TEXT( XRCID("wxID_TEMPLATEDIRNAME"),   NewTemplateDocDlgWX::OnText_TemplateDirName )
   EVT_TEXT( XRCID("wxID_FILENAME"),              NewTemplateDocDlgWX::OnText_Filename )
   EVT_TEXT( XRCID("wxID_DIR"),                   NewTemplateDocDlgWX::OnText_Dirname )
 END_EVENT_TABLE()
@@ -69,13 +70,28 @@ END_EVENT_TABLE()
 
   // update dialog labels with given ones
   SetTitle( title );
+
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATEFILENAME", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_FILE) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_DIRECTORY) ));
+  
+  XRCCTRL(*this, "wxID_LABEL_INSTANCE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE_INSTANCE) ));
+  XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
+  XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
+  XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+  XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
+
+  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_REPLACECURRENT)));
+#ifdef _MACOS
+  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB_MACOS)));
+#else /* _MACOS */
+  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWTAB)));
+#endif /*  _MACOS */
+  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetString(2, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_INNEWWINDOW)));
+
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
-  XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-  XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
-  XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
-  XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
 
   // set the default WHERE_TO_OPEN value : in new tab
   int where_to_open_doc = 1;
@@ -83,10 +99,10 @@ END_EVENT_TABLE()
   TtaGetEnvInt("WHERE_TO_OPEN_DOC", &where_to_open_doc);
   if (where_to_open_doc < 0 || where_to_open_doc > 2)
     where_to_open_doc = 1;
-
+  //  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
 
   // set the default templates directory
-  XRCCTRL(*this, "wxID_TEMPLATENAME_BROWSE", wxTextCtrl)->SetValue(templateDir);
+  XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue(templateDir);
   // Update the template combobox with templates in directory "templateDir"
   UpdateTemplateFromDir ();
   
@@ -145,7 +161,7 @@ void NewTemplateDocDlgWX::OnFilenameButton( wxCommandEvent& event )
      m_Filter,
      wxOPEN | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
      );
-  p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATENAME", wxComboBox)->GetValue());
+  p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue());
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
 
   if (p_dlg->ShowModal() == wxID_OK)
@@ -170,7 +186,7 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
   if (!m_LockUpdateFlag)
     {
       m_LockUpdateFlag = true;
-      wxString dir_value      = XRCCTRL(*this, "wxID_TEMPLATENAME_BROWSE", wxTextCtrl)->GetValue();
+      wxString dir_value      = XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue();
 #ifdef _WINDOWS
       if (dir_value.IsEmpty())
         dir_value = _T("C:\\");
@@ -182,8 +198,8 @@ void NewTemplateDocDlgWX::UpdateTemplateFromDir ()
       
       wxArrayString templateList;
       wxDir::GetAllFiles(dir_value, &templateList, _T("*.html"), wxDIR_FILES);
-      XRCCTRL(*this, "wxID_TEMPLATENAME", wxComboBox)->Clear();
-      XRCCTRL(*this, "wxID_TEMPLATENAME", wxComboBox)->Append( templateList );
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Clear();
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->Append( templateList );
       
     }
 }
@@ -223,7 +239,7 @@ void NewTemplateDocDlgWX::UpdateDirAndFilenameFromString( const wxString & full_
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 {
-  wxString templateUrl = XRCCTRL(*this, "wxID_TEMPLATENAME", wxComboBox)->GetValue( );
+  wxString templateUrl = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
 
   wxString instanceFileUrl = XRCCTRL (*this, "wxID_FILENAME", wxTextCtrl)->GetValue();
   wxString instanceDirUrl = XRCCTRL (*this, "wxID_DIR", wxTextCtrl)->GetValue();
@@ -256,9 +272,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void NewTemplateDocDlgWX::OnClearButton( wxCommandEvent& event )
 {
-  XRCCTRL(*this, "wxID_TEMPLATENAME", wxComboBox)->SetValue(_T(""));
+  XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(_T(""));
   XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Clear();
-  XRCCTRL(*this, "wxID_TEMPLATENAME_BROWSE", wxTextCtrl)->Clear();
+  XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->Clear();
   XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->Clear();
 }
 
@@ -310,20 +326,20 @@ void NewTemplateDocDlgWX::OnText_Dirname( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 
 
-void NewTemplateDocDlgWX::OnText_Templatename_Browse (wxCommandEvent& event )
+void NewTemplateDocDlgWX::OnText_TemplateDirName (wxCommandEvent& event )
 {
   UpdateTemplateFromDir ();
   event.Skip();
 }
 
-void NewTemplateDocDlgWX::OnTemplatename_BrowseButton (wxCommandEvent& event)
+void NewTemplateDocDlgWX::OnTemplateDirNameButton (wxCommandEvent& event)
 {
   wxDirDialog * p_dlg = new wxDirDialog(this);
   p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
-  p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATENAME_BROWSE", wxTextCtrl)->GetValue());
+  p_dlg->SetPath(XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->GetValue());
   if (p_dlg->ShowModal() == wxID_OK)
     {
-      XRCCTRL(*this, "wxID_TEMPLATENAME_BROWSE", wxTextCtrl)->SetValue( p_dlg->GetPath() );
+      XRCCTRL(*this, "wxID_TEMPLATEDIRNAME", wxTextCtrl)->SetValue( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
   else
@@ -332,4 +348,4 @@ void NewTemplateDocDlgWX::OnTemplatename_BrowseButton (wxCommandEvent& event)
     }
 }
 
-#endif /* _WX */
+#endif /* TEMPLATES */

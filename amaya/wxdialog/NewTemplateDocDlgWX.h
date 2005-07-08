@@ -42,11 +42,11 @@ private:
 
   void OnFilenameButton( wxCommandEvent& event );
   void OnDirButton( wxCommandEvent& event );
-  void OnTemplatename_BrowseButton ( wxCommandEvent& event );
+  void OnTemplateDirNameButton ( wxCommandEvent& event );
 
   void OnTemplatenameSelected ( wxCommandEvent& event );
 
-  void OnText_Templatename_Browse( wxCommandEvent& event );
+  void OnText_TemplateDirName( wxCommandEvent& event );
   void OnText_Filename( wxCommandEvent& event );
   void OnText_Dirname( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );

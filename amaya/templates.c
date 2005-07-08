@@ -39,7 +39,7 @@ static char   *script_URL;
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
-#ifdef _WX
+#ifdef TEMPLATES
   char *templateDir ;
   char *amaya_home ;
 
@@ -58,12 +58,10 @@ void NewTemplate (Document doc, View view)
   ThotWindow p_window = (ThotWindow) TtaGetWindowFromId(window_id);
 
   
-  /* Definir un label pour AM_OPEN_TEMPLATE */
-
   ThotBool created = CreateNewTemplateDocDlgWX(BaseDialog + OpenTemplate,
 					       p_window,
 					       doc,
-					       TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT),
+					       TtaGetMessage (AMAYA, AM_NEW_TEMPLATE),
 					       templateDir,
 					       s);
   
@@ -73,7 +71,7 @@ void NewTemplate (Document doc, View view)
       TtaShowDialogue (BaseDialog + OpenTemplate, TRUE);
     }
 
-#endif // _WX
+#endif // TEMPLATES
 }
 
 
@@ -268,8 +266,6 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
   char          templateFile[MAX_LENGTH];
   int           newdoc, len;
   ThotBool      stopped_flag;
-  Element       img;
-  Element       css;
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -313,7 +309,6 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 	}
       /* check parsing errors */
       CheckParsingErrors (newdoc);
-      /* unlink this saved file */
       
     }
   BackupDocument = 0;
@@ -321,3 +316,15 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 }
 
 
+/*-----------------------------------------------
+void LockFixedAreas
+Parse the template file, set read-only access to
+all elements excepts those between editable tags
+------------------------------------------------*/
+
+/*
+void LockFixedAreas (Element el)
+{
+  el = TtaGetMainRoot (doc);
+  
+  */

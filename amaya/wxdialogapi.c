@@ -219,6 +219,8 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 
   returns:
   ----------------------------------------------------------------------*/
+
+
 ThotBool CreateNewTemplateDocDlgWX ( int ref, 
 				     ThotWindow parent,
 				     Document doc,
@@ -227,7 +229,7 @@ ThotBool CreateNewTemplateDocDlgWX ( int ref,
 				     const char *docName
 				   )
 {
-#ifdef _WX
+#ifdef TEMPLATES
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
@@ -257,9 +259,9 @@ ThotBool CreateNewTemplateDocDlgWX ( int ref,
       p_dlg->Destroy();
       return FALSE;
     }
-#else /* _WX */
+#else /* TEMPLATES */
   return FALSE;
-#endif /* _WX */
+#endif /* TEMPLATES */
 }
 
 
