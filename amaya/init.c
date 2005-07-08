@@ -5783,6 +5783,7 @@ static void SetFileSuffix ()
   ----------------------------------------------------------------------*/
 void CallbackDialogue (int ref, int typedata, char *data)
 {
+  Document          doc = 0;
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
   char              sep, *ptr;
@@ -5808,10 +5809,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
         /* Confirm */
         {
 #ifdef _WX
-          if ( (CurrentDocument == 0) || /* this is the first loaded doc */
-               (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
-               (InNewWindow) || /* in a new window */
-               (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
+          /* get the current document (CurrentDocument not valid) */
+          TtaGiveActiveView (&doc, &i);
+          CurrentDocument = doc;
+          if ((CurrentDocument == 0) || /* this is the first loaded doc */
+              (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
+              (InNewWindow) || /* in a new window */
+              (!DontReplaceOldDoc && CanReplaceCurrentDocument(CurrentDocument, 1)) /* wants to replace the current document */
                )
             {
 #endif /* _WX */
@@ -5824,34 +5828,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
                                 DocumentName);
                   /* update the list of URLs */
                   if (NewFile)
-#ifdef _WX
-                    InitializeNewDoc (LastURLName, NewDocType, CurrentDocument,
-                                      NewDocProfile, NewXML);
-#else /* _WX */
-                  InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile, NewXML);
-#endif /* _WX */
+                    InitializeNewDoc (LastURLName, NewDocType,
+                                      doc, NewDocProfile, NewXML);
                   /* load an URL */ 
                   else if (DontReplaceOldDoc)
-#ifdef _WX
-                    {
-                      /* get the current document (CurrentDocument global variable is not usable) */
-                      Document document;
-                      View     view;
-                      TtaGiveActiveView (&document,&view);
-                      document = DocumentSource[document] ? DocumentSource[document]: document;
-
-                      GetAmayaDoc (LastURLName, NULL, document, document,
-                                   (ClickEvent)Loading_method,
-                                   FALSE, NULL, NULL);
-                    }
-#else /* _WX */
-                  GetAmayaDoc (LastURLName, NULL, 0 , 0, (ClickEvent)Loading_method,
-                               FALSE, NULL, NULL);
-#endif /* _WX */
+                    GetAmayaDoc (LastURLName, NULL, doc, doc,
+                                 (ClickEvent)Loading_method,
+                                 FALSE, NULL, NULL);
                   else
                     GetAmayaDoc (LastURLName, NULL, CurrentDocument,
-                                 CurrentDocument, (ClickEvent)Loading_method, TRUE,
-                                 NULL, NULL);
+                                 CurrentDocument, (ClickEvent)Loading_method,
+                                 TRUE, NULL, NULL);
                 }
               else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
                 {
@@ -5861,29 +5848,21 @@ void CallbackDialogue (int ref, int typedata, char *data)
                   strcat (tempfile, DocumentName);
                   /* update the list of URLs */
                   NormalizeFile (tempfile, tempname, AM_CONV_ALL);
-                  if (FileExistTarget (tempname))
+                  if (NewFile)
+                    InitializeNewDoc (tempfile, NewDocType,
+                                      doc, NewDocProfile, NewXML);
+                  else if (FileExistTarget (tempname))
                     {
                       if (DontReplaceOldDoc)
-#ifndef  _WX
-                        GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
+                        GetAmayaDoc (tempfile, NULL,
+                                     doc, doc,
+                                     (ClickEvent)Loading_method,
                                      FALSE, NULL, NULL);
-#else /* _WX */
-                      GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument,
-                                   (ClickEvent)Loading_method,
-                                   FALSE, NULL, NULL);
-#endif /* _WX */
                       else
                         GetAmayaDoc (tempfile, NULL, CurrentDocument,
                                      CurrentDocument, (ClickEvent)Loading_method,
                                      TRUE, NULL, NULL);
                     }
-                  else if (NewFile)
-#ifdef _WX
-                    InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
-                                      NewDocProfile, NewXML);
-#else /* _WX */
-                  InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile, NewXML);
-#endif /* _WX */
                   else
                     {
                       if (IsMathMLName (tempfile))
@@ -5902,20 +5881,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #endif /* _SVG */
                       else
                         NewDocType = docHTML;
-#ifdef _WX
-                      {
-                        /* get the current document (CurrentDocument global variable is not usable) */
-                        Document document;
-                        View     view;
-                        TtaGiveActiveView (&document,&view);
-                        document = DocumentSource[document] ? DocumentSource[document]: document;
-                        InitializeNewDoc (tempfile, NewDocType, document,
-                                          NewDocProfile, NewXML);
-                      }
-#else /* _WX */
                       InitializeNewDoc (tempfile, NewDocType, CurrentDocument,
                                         NewDocProfile, NewXML);
-#endif /* _WX */
                     }
                 }
               else if (DocumentName[0] != EOS)
@@ -5929,26 +5896,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
                     }
                   /* update the list of URLs */
                   if (DontReplaceOldDoc)
-#ifdef _WX
-                    {
-                      /* get the current document (CurrentDocument global variable is not usable) */
-                      Document document;
-                      View     view;
-                      TtaGiveActiveView (&document,&view);
-                      document = DocumentSource[document] ? DocumentSource[document]: document;
-                      
-                      GetAmayaDoc (DocumentName, NULL, document, document,
-                                   (ClickEvent)Loading_method,
-                                   FALSE, NULL, NULL);
-                    }
-#else /* _WX */
-                  GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
-                               FALSE, NULL, NULL);
-#endif /* _WX */
+                    GetAmayaDoc (DocumentName, NULL, doc, doc,
+                                 (ClickEvent)Loading_method,
+                                 FALSE, NULL, NULL);
                   else
                     GetAmayaDoc (DocumentName, NULL, CurrentDocument,
-                                 CurrentDocument, (ClickEvent)Loading_method, TRUE,
-                                 NULL, NULL);
+                                 CurrentDocument, (ClickEvent)Loading_method,
+                                 TRUE, NULL, NULL);
                 }
               else if (DirectoryName[0] != EOS)
                 TtaSetStatus (CurrentDocument, 1,

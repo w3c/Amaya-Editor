@@ -131,6 +131,7 @@ OpenDocDlgWX::~OpenDocDlgWX()
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
 {
+#ifdef IV
   // Create a generic filedialog
   wxDirDialog * p_dlg = new wxDirDialog(this);
   p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
@@ -138,6 +139,24 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   if (p_dlg->ShowModal() == wxID_OK)
     {
       XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue( p_dlg->GetPath() );
+      p_dlg->Destroy();
+    }
+#endif
+  wxFileDialog * p_dlg = new wxFileDialog
+    (this,
+     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+     _T(""),
+     _T(""), 
+     m_Filter,
+     wxOPEN | wxCHANGE_DIR /* remember last directory */);
+  p_dlg->SetPath(XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue());
+  p_dlg->SetFilterIndex(*m_pLastUsedFilter);
+
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
+	  UpdateDirAndFilenameFromString( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
   else
@@ -161,7 +180,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
      _T(""),
      _T(""), 
      m_Filter,
-     wxOPEN | wxCHANGE_DIR /*| wxCHANGE_DIR remember last directory*/);
+     wxOPEN | wxCHANGE_DIR /* remember last directory */);
   p_dlg->SetPath(XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue());
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
 
