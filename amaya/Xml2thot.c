@@ -45,6 +45,9 @@
 #ifdef XML_GENERIC
 #include "Xmlbuilder_f.h"
 #endif /* XML_GENERIC */
+//#ifdef TEMPLATES
+#include "Templatebuilder_f.h"
+//#endif /* TEMPLATES */
 #include "XLinkbuilder_f.h"
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -390,6 +393,40 @@ static void    InitXmlParserContexts (void)
   ctxt->PreserveTrailingSpace = FALSE;  
   ctxt->PreserveContiguousSpace = FALSE;
   prevCtxt = ctxt;
+
+#ifdef TEMPLATES
+   /* create and initialize a context for Templates */
+   ctxt = (XMLparserContext*)TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;
+   ctxt->SSchemaName = (char *)TtaGetMemory (NAME_LENGTH);
+   strcpy ((char *)ctxt->SSchemaName, "Template");
+   ctxt->UriName = (char *)TtaGetMemory (MAX_URI_NAME_LENGTH);
+   strcpy ((char *)ctxt->UriName, (char *)Template_URI);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = Template_TYPE;
+   ctxt->MapAttribute = (Proc) MapTemplateAttribute;
+   ctxt->MapAttributeValue = (Proc) MapTemplateAttributeValue;
+   ctxt->CheckContext = (Proc) XmlCheckContext;
+   ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementCreated = NULL;
+   ctxt->ElementComplete = (Proc) TemplateElementComplete;
+   ctxt->AttributeComplete = (Proc) TemplateAttributeComplete;
+   ctxt->GetDTDName = (Proc) TemplateGetDTDName;
+   ctxt->UnknownNameSpace = (Proc)UnknownTemplateNameSpace;
+   ctxt->DefaultLineBreak = TRUE;
+   ctxt->DefaultLeadingSpace = TRUE;   
+   ctxt->DefaultTrailingSpace = TRUE;  
+   ctxt->DefaultContiguousSpace = TRUE;
+   ctxt->PreserveLineBreak = TRUE;    
+   ctxt->PreserveLeadingSpace = FALSE;   
+   ctxt->PreserveTrailingSpace = FALSE;  
+   ctxt->PreserveContiguousSpace = FALSE;
+   prevCtxt = ctxt;
+#endif /* TEMPLATES */
 
   /* create and initialize a context for XLink */
   ctxt = (XMLparserContext*)TtaGetMemory (sizeof (XMLparserContext));
