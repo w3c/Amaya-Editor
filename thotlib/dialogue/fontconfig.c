@@ -386,21 +386,19 @@ static FontScript **FontConfigLoad ()
 #else /* _WINDOWS */
   strcpy (word, "fonts.unix");  
 #endif /* _WINDOWS */
-
 #else /* _GL */
 
 #ifdef _UNIX
-#if defined (_MACOS) && defined (_WX)
+#ifdef _MACOS
   strcpy (word, "fonts.gl.mac");  
 #else /* _MACOS */
   strcpy (word, "fonts.gl");  
 #endif /* _MACOS */  
-#else /* _UNIX */
-#ifdef _WINDOWS
-  strcpy (word, "fonts.gl.win");  
-#endif /* _WINDOWS */  
 #endif /* _UNIX */
 
+#ifdef _WINDOWS
+  strcpy (word, "fonts.gl.win");  
+#endif /* _WINDOWS */
 #endif /* _GL */
 
   strcpy (fname, appHome);
@@ -422,45 +420,55 @@ static FontScript **FontConfigLoad ()
   /* load the first config file */
   complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
-#ifdef _UNIX
   if (!complete)
     {
-      /* try a second font file */
-#if defined (_MACOS) && defined (_WX) 
+#ifdef _UNIX
+#if defined (_MACOS) && defined (_GL) 
+      /* try a default font file */
       strcpy (word1, word);
       strcat (word1, ".def");
       strcpy (fname1, fname);
       strcat (fname1, ".def");
-#else /* _MACOS */
+#else /* _MACOS && _GL */
+      /* try a redhat font file */
       strcpy (word1, word);
       strcat (word1, ".rd");
       strcpy (fname1, fname);
       strcat (fname1, ".rd");
 #endif /* _MACOS */  
-      if (!SearchFile (fname1, 0, name))
-        SearchFile (word1, 2, name);
-      /* open the fonts definition file */
-      file = TtaReadOpen (name);
-      if (file)
-        complete = FontLoadFile (file, fontsscript_tab);
-    }
-#ifndef _MACOS
-  if (!complete)
-    {
-      /* try a last font file */
-      strcpy (word1, word);
-      strcat (word1, ".deb");
-      strcpy (fname1, fname);
-      strcat (fname1, ".deb");
-      if (!SearchFile (fname1, 0, name))
-        SearchFile (word1, 2, name);
-      /* open the fonts definition file */
-      file = TtaReadOpen (name);
-      if (file)
-        complete = FontLoadFile (file, fontsscript_tab);
-    }
-#endif /* _MACOS */  
 #endif /* _UNIX */
+#if defined(_WINDOWS) && defined (_GL) 
+      /* try a redhat font file */
+      strcpy (word1, word);
+      strcat (word1, ".nt");
+      strcpy (fname1, fname);
+      strcat (fname1, ".nt");
+#endif /* _WINDOWS && _GL */
+      if (!SearchFile (fname1, 0, name))
+        SearchFile (word1, 2, name);
+      /* open the fonts definition file */
+      file = TtaReadOpen (name);
+      if (file)
+        complete = FontLoadFile (file, fontsscript_tab);
+
+      //Not complete yet
+#if defined (_UNIX) && !defined (_MACOS) 
+      if (!complete)
+        {
+          /* try a debian font file */
+          strcpy (word1, word);
+          strcat (word1, ".deb");
+          strcpy (fname1, fname);
+          strcat (fname1, ".deb");
+          if (!SearchFile (fname1, 0, name))
+            SearchFile (word1, 2, name);
+          /* open the fonts definition file */
+          file = TtaReadOpen (name);
+          if (file)
+            complete = FontLoadFile (file, fontsscript_tab);
+        }
+#endif /* _UNIX && !_MACOS*/
+    }
   return fontsscript_tab;
 }
 
