@@ -231,16 +231,6 @@ if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
   fi
 fi
 
-# check if mac version is used
-AC_ARG_WITH(mac, [  --with-mac              generate mac version ])
-if test "$with_mac" = "" ; then
- if test "$enable_mac" = "yes" ; then
-    with_mac="yes"
-  else
-    with_mac="no"
-  fi
-fi
-
 # check for mesa library (OpenGL)
 AC_ARG_WITH(MESA,              [  --with-mesa             enable canvas with software OpenGL implementation (Mesa) ])
 if test "$with_mesa" = "" ; then
@@ -476,9 +466,6 @@ if test "$with_wx" = "yes" ; then
   fi
   if test "$AMAYAOS" = "MACOSX" ; then
     # MACOSX
-    # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
-    # --with-mac              use Mac OS X
-      with_mac="yes"
     WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode --with-libpng=builtin --with-libjpeg=builtin"
   fi
   if test $with_wxdebug = yes ; then
@@ -529,7 +516,7 @@ if test "$with_wx" = "yes" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
- if test "$with_mac" = "yes" ; then
+ if test "$AMAYAOS" = "MACOSX" ; then
    WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},html"
  fi
 
@@ -801,7 +788,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     fi
     fi # AMAYAOS = LINUX
 
-    if test "$with_mac" = "yes" ; then
+    if test "$AMAYAOS" = "MACOSX" ; then
       GL_OPTIONS="-D_GL"	
       GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers/"	
       GL_LIBRARIES=""
@@ -815,7 +802,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     AC_SUBST(GL_LIBRARIES)
   fi # if with_gl
 	
-  # check for gtkglarea.h only if gtk gui is selected
+  # ---------- Check for gtkglarea.h only if gtk gui is selected
   if test "$with_gtk" = "yes" ; then
     AC_MSG_CHECKING([GTKGLAREA])
     for ac_dir in               		\
@@ -849,23 +836,58 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
     fi
     AC_SUBST(GTK_GL_INCLUDES)
     AC_SUBST(GTK_GL_LIBRARIES)
-  fi
+  fi # "$with_gtk" = "yes"
 
-  # checking for freetype lib (fonts library)
-  if test "$with_mac" = "yes" ; then
+  # ---------- Checking for freetype lib (fonts library)
+  if test "$AMAYAOS" = "MACOSX" ; then
      # we use a static version of freetype lib for mac osx
-     FREETYPE_INCLUDES="-I/opt/local/include -I/opt/local/include/freetype2 -I/usr/X11R6/include/freetype2/freetype"
-     FREETYPE_LIBRARIES="-lfreetype"
-  else
+     # ** search for includes (freetype.h)
+     for ac_dir in               \
+         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/include/  \
+         ; \
+         do
+         if test -r "$ac_dir/ft2build.h"; then
+            FREETYPE_INCLUDES="${FREETYPE_INCLUDES} -I$ac_dir"
+            break
+         fi
+     done
+     # ** search for binary (libfreetype.a)
+     for ac_dir in               \
+         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/lib/  \
+         ; \
+         do
+         if test -r "$ac_dir/libfreetype.a"; then
+            FREETYPE_LIBRARIES="$ac_dir"
+            break
+         fi
+     done
+  else # "$AMAYAOS" = "MACOSX"
      if test ! -f $(which freetype-config) ; then
        AC_MSG_ERROR(Cannot find freetype library (font load/display routines). Please install it.)
      fi
      FREETYPE_INCLUDES=`freetype-config --cflags`
      FREETYPE_LIBRARIES=`freetype-config --libs`
-   fi
-    AC_SUBST(FREETYPE_INCLUDES)
-    AC_SUBST(FREETYPE_LIBRARIES)
+  fi # "$AMAYAOS" = "MACOSX"
+  AC_SUBST(FREETYPE_INCLUDES)
+  AC_SUBST(FREETYPE_LIBRARIES)
 
+
+
+  # ----------- START CHECKING XFT
+  # checking for Xft which is only used on GTK version (not wxWidgets)
+if test "$with_gtk" = "yes" ; then
 
   # checking for xft lib
   # (not used because xft-config doesn't exist on debian stable)
@@ -877,9 +899,6 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
   #AC_SUBST(XFT_INCLUDES)
   #AC_SUBST(XFT_LIBRARIES)
 
-  # START CHECKING XFT #
-  # checking for Xft (old way)
-if test "$with_mac" = "no" ; then
   AC_MSG_CHECKING([Xft])
   for ac_dir in               		\
 		/usr/include 			\
@@ -934,7 +953,7 @@ if test "$with_mac" = "no" ; then
   AC_SUBST(XFT_INCLUDES)
   AC_SUBST(XFT_LIBRARIES)
   # END CHECKING XFT #
-fi
+fi # "$with_gtk" = "yes"
 
 
   AC_MSG_CHECKING([gcc3])	
@@ -1281,7 +1300,7 @@ EXTRA_INCLUDES=
 
 # check for malloc.h
 # on macosx, this file is not at the right place
-if test "$with_mac" = "yes" ; then
+if test "$AMAYAOS" = "MACOSX" ; then
 for ac_dir in               \
   /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/objc/   \
   /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/sys/    \
@@ -1297,7 +1316,7 @@ do
     break
   fi
 done
-else
+else # "$AMAYAOS" = "MACOSX"
 for ac_dir in               \
   /usr/include/malloc/      \
   /sw/include/malloc/       \
@@ -1309,7 +1328,7 @@ do
     break
   fi
 done
-fi
+fi # "$AMAYAOS" = "MACOSX"
 
 dnl
 dnl Set up the PATHs needed
