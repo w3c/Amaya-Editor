@@ -5,7 +5,7 @@
  *
  */
 
- /*
+/*
  * 
  * Module for keyboard input handling.
  * Authors: I. Vatton (INRIA)
@@ -15,7 +15,7 @@
  *          P. Cheyrou-Lagreze (INRIA) - gtk input
  */
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -53,16 +53,16 @@ KEY;
 #include "select_tv.h"
 
 #ifdef _GTK
-  #include "gtk-functions.h"
-  #include "absboxes_f.h" 
+#include "gtk-functions.h"
+#include "absboxes_f.h" 
 #endif /* _GTK */
 #if defined(_WINGUI)
-  #include "appli_f.h"
-  #include "input_f.h"
+#include "appli_f.h"
+#include "input_f.h"
 #endif /* #if defined(_WINGUI) */
 #ifdef _WX
-  #include "appdialogue_wx.h"
-  #include "AmayaWindow.h"
+#include "appdialogue_wx.h"
+#include "AmayaWindow.h"
 #endif /* _WX */
 /* Actions table */
 #include "applicationapi_f.h"
@@ -170,34 +170,34 @@ static ThotBool    Special;
 
 #if 0 /* This function is not used, could be removed ??? */
 /*----------------------------------------------------------------------
-   NameCode
-   translates the keynames not supported by the interpreter of
-   Motif translations.
+  NameCode
+  translates the keynames not supported by the interpreter of
+  Motif translations.
   ----------------------------------------------------------------------*/
 static char *NameCode (char* name)
 {
-   if (strlen (name) < 5)
-      if (name[0] == ',')
-	 return ("0x2c");
-      else
-	 return (name);
-   else if (!strcasecmp (name, "Return"))
-      return ("0x0d");
-   else if (!strcasecmp (name, "Backspace"))
-      return ("0x08");
-   else if (!strcasecmp (name, "Space"))
-      return ("0x20");
-   else if (!strcasecmp (name, "Escape"))
-      return ("0x18");
-   else if (!strcasecmp (name, "Delete"))
-      return ("0x7f");
-   else
+  if (strlen (name) < 5)
+    if (name[0] == ',')
+      return ("0x2c");
+    else
       return (name);
+  else if (!strcasecmp (name, "Return"))
+    return ("0x0d");
+  else if (!strcasecmp (name, "Backspace"))
+    return ("0x08");
+  else if (!strcasecmp (name, "Space"))
+    return ("0x20");
+  else if (!strcasecmp (name, "Escape"))
+    return ("0x18");
+  else if (!strcasecmp (name, "Delete"))
+    return ("0x7f");
+  else
+    return (name);
 }
 #endif /* 0 */
 
 /*----------------------------------------------------------------------
-   KeyName translates a key value into a key name.
+  KeyName translates a key value into a key name.
   ----------------------------------------------------------------------*/
 static char *KeyName (unsigned int key)
 {
@@ -280,378 +280,378 @@ static char *KeyName (unsigned int key)
 }
 
 /*----------------------------------------------------------------------
-   SpecialKey
-   translates the name given by the file thot.keyboard into a key value
-   which Thot can use.
-   The parameter shifted is TRUE when a shifted key is selected.
-   Returns TRUE in the parameter isSpecial when it's a special key.
+  SpecialKey
+  translates the name given by the file thot.keyboard into a key value
+  which Thot can use.
+  The parameter shifted is TRUE when a shifted key is selected.
+  Returns TRUE in the parameter isSpecial when it's a special key.
   ----------------------------------------------------------------------*/
 static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecial)
 {
-   *isSpecial = TRUE;
-   /* is it the name of a special character? */
-   if (!strcasecmp (name, "Return"))
-     {
-       strcpy (name, "Enter");
-       return (unsigned int) THOT_KEY_Return;
-     }
-   else if (!strcasecmp (name, "Backspace"))
-     return (unsigned int) THOT_KEY_BackSpace;
-   else if (!strcasecmp (name, "Space"))
-   {
-     *isSpecial = FALSE;
-     return 32;
-   }
-   else if (!strcasecmp (name, "Tab"))
-   {
-     *isSpecial = FALSE;
-     if (shifted)
-       return (unsigned int) THOT_KEY_TAB;
-     else
-       return (unsigned int) THOT_KEY_Tab;
-   }
-   else if (!strcasecmp (name, "Escape"))
-     return (unsigned int) THOT_KEY_Escape;
-   else if (!strcasecmp (name, "Delete"))
-     return (unsigned int) THOT_KEY_Delete;
-   else if (!strcasecmp (name, "F1"))
-      return (unsigned int) THOT_KEY_F1;
-   else if (!strcasecmp (name, "F2"))
-      return (unsigned int) THOT_KEY_F2;
-   else if (!strcasecmp (name, "F3"))
-      return (unsigned int) THOT_KEY_F3;
-   else if (!strcasecmp (name, "F4"))
-      return (unsigned int) THOT_KEY_F4;
-   else if (!strcasecmp (name, "F5"))
-      return (unsigned int) THOT_KEY_F5;
-   else if (!strcasecmp (name, "F6"))
-      return (unsigned int) THOT_KEY_F6;
-   else if (!strcasecmp (name, "F7"))
-      return (unsigned int) THOT_KEY_F7;
-   else if (!strcasecmp (name, "F8"))
-      return (unsigned int) THOT_KEY_F8;
-   else if (!strcasecmp (name, "F9"))
-      return (unsigned int) THOT_KEY_F9;
-   else if (!strcasecmp (name, "F10"))
-      return (unsigned int) THOT_KEY_F10;
-   else if (!strcasecmp (name, "F11") || !strcasecmp (name, "l1"))
-      return (unsigned int) THOT_KEY_F11;
-   else if (!strcasecmp (name, "F12") || !strcasecmp (name, "l2"))
-      return (unsigned int) THOT_KEY_F12;
-   else if (!strcasecmp (name, "F13") || !strcasecmp (name, "l3"))
-      return (unsigned int) THOT_KEY_F13;
-   else if (!strcasecmp (name, "F14") || !strcasecmp (name, "l4"))
-      return (unsigned int) THOT_KEY_F14;
-   else if (!strcasecmp (name, "F15") || !strcasecmp (name, "l5"))
-      return (unsigned int) THOT_KEY_F15;
-   else if (!strcasecmp (name, "F16") || !strcasecmp (name, "l6"))
-      return (unsigned int) THOT_KEY_F16;
-   else if (!strcasecmp (name, "F17") || !strcasecmp (name, "l7"))
-      return (unsigned int) THOT_KEY_F17;
-   else if (!strcasecmp (name, "F18") || !strcasecmp (name, "l8"))
-      return (unsigned int) THOT_KEY_F18;
-   else if (!strcasecmp (name, "F19") || !strcasecmp (name, "l9"))
-      return (unsigned int) THOT_KEY_F19;
-   else if (!strcasecmp (name, "F20") || !strcasecmp (name, "l10"))
-      return (unsigned int) THOT_KEY_F20;
-   else if (!strcasecmp (name, "Up"))
-     return (unsigned int) THOT_KEY_Up;
-   else if (!strcasecmp (name, "Down"))
-     return (unsigned int) THOT_KEY_Down;
-   else if (!strcasecmp (name, "Left"))
-     return (unsigned int) THOT_KEY_Left;
-   else if (!strcasecmp (name, "Right"))
-     return (unsigned int) THOT_KEY_Right;
-   else if (!strcasecmp (name, "Home"))
-     return (unsigned int) THOT_KEY_Home;
-   else if (!strcasecmp (name, "End"))
-     return (unsigned int) THOT_KEY_End;
-   else
-   {
-     *isSpecial = FALSE;
-     return (unsigned int) name[0];
-   }
+  *isSpecial = TRUE;
+  /* is it the name of a special character? */
+  if (!strcasecmp (name, "Return"))
+    {
+      strcpy (name, "Enter");
+      return (unsigned int) THOT_KEY_Return;
+    }
+  else if (!strcasecmp (name, "Backspace"))
+    return (unsigned int) THOT_KEY_BackSpace;
+  else if (!strcasecmp (name, "Space"))
+    {
+      *isSpecial = FALSE;
+      return 32;
+    }
+  else if (!strcasecmp (name, "Tab"))
+    {
+      *isSpecial = FALSE;
+      if (shifted)
+        return (unsigned int) THOT_KEY_TAB;
+      else
+        return (unsigned int) THOT_KEY_Tab;
+    }
+  else if (!strcasecmp (name, "Escape"))
+    return (unsigned int) THOT_KEY_Escape;
+  else if (!strcasecmp (name, "Delete"))
+    return (unsigned int) THOT_KEY_Delete;
+  else if (!strcasecmp (name, "F1"))
+    return (unsigned int) THOT_KEY_F1;
+  else if (!strcasecmp (name, "F2"))
+    return (unsigned int) THOT_KEY_F2;
+  else if (!strcasecmp (name, "F3"))
+    return (unsigned int) THOT_KEY_F3;
+  else if (!strcasecmp (name, "F4"))
+    return (unsigned int) THOT_KEY_F4;
+  else if (!strcasecmp (name, "F5"))
+    return (unsigned int) THOT_KEY_F5;
+  else if (!strcasecmp (name, "F6"))
+    return (unsigned int) THOT_KEY_F6;
+  else if (!strcasecmp (name, "F7"))
+    return (unsigned int) THOT_KEY_F7;
+  else if (!strcasecmp (name, "F8"))
+    return (unsigned int) THOT_KEY_F8;
+  else if (!strcasecmp (name, "F9"))
+    return (unsigned int) THOT_KEY_F9;
+  else if (!strcasecmp (name, "F10"))
+    return (unsigned int) THOT_KEY_F10;
+  else if (!strcasecmp (name, "F11") || !strcasecmp (name, "l1"))
+    return (unsigned int) THOT_KEY_F11;
+  else if (!strcasecmp (name, "F12") || !strcasecmp (name, "l2"))
+    return (unsigned int) THOT_KEY_F12;
+  else if (!strcasecmp (name, "F13") || !strcasecmp (name, "l3"))
+    return (unsigned int) THOT_KEY_F13;
+  else if (!strcasecmp (name, "F14") || !strcasecmp (name, "l4"))
+    return (unsigned int) THOT_KEY_F14;
+  else if (!strcasecmp (name, "F15") || !strcasecmp (name, "l5"))
+    return (unsigned int) THOT_KEY_F15;
+  else if (!strcasecmp (name, "F16") || !strcasecmp (name, "l6"))
+    return (unsigned int) THOT_KEY_F16;
+  else if (!strcasecmp (name, "F17") || !strcasecmp (name, "l7"))
+    return (unsigned int) THOT_KEY_F17;
+  else if (!strcasecmp (name, "F18") || !strcasecmp (name, "l8"))
+    return (unsigned int) THOT_KEY_F18;
+  else if (!strcasecmp (name, "F19") || !strcasecmp (name, "l9"))
+    return (unsigned int) THOT_KEY_F19;
+  else if (!strcasecmp (name, "F20") || !strcasecmp (name, "l10"))
+    return (unsigned int) THOT_KEY_F20;
+  else if (!strcasecmp (name, "Up"))
+    return (unsigned int) THOT_KEY_Up;
+  else if (!strcasecmp (name, "Down"))
+    return (unsigned int) THOT_KEY_Down;
+  else if (!strcasecmp (name, "Left"))
+    return (unsigned int) THOT_KEY_Left;
+  else if (!strcasecmp (name, "Right"))
+    return (unsigned int) THOT_KEY_Right;
+  else if (!strcasecmp (name, "Home"))
+    return (unsigned int) THOT_KEY_Home;
+  else if (!strcasecmp (name, "End"))
+    return (unsigned int) THOT_KEY_End;
+  else
+    {
+      *isSpecial = FALSE;
+      return (unsigned int) name[0];
+    }
 }
 
 
 
 /*----------------------------------------------------------------------
-   MemoKey
-   memorizes a keyboard shortcut inside the automata.
-   mod1 = 1st modifier                                   
-   key1 = 1st key                                         
-   key2 = 2nd modifier
-   key2 = 2nd key                                       
-   key  = keysym value or 0
-   command = number of the command in MyActions
+  MemoKey
+  memorizes a keyboard shortcut inside the automata.
+  mod1 = 1st modifier                                   
+  key1 = 1st key                                         
+  key2 = 2nd modifier
+  key2 = 2nd key                                       
+  key  = keysym value or 0
+  command = number of the command in MyActions
   ----------------------------------------------------------------------*/
 static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
-		     ThotBool spec2, int key, int command)
+                     ThotBool spec2, int key, int command)
 {
-   ThotBool            exists;
-   KEY                *ptr = NULL;
-   KEY                *oldptr;
-   KEY               **addFirst;
+  ThotBool            exists;
+  KEY                *ptr = NULL;
+  KEY                *oldptr;
+  KEY               **addFirst;
 
-   if (key1 == 0)
+  if (key1 == 0)
+    return;
+
+  /* Entry point into the automata */
+  switch (mod1)
+    {
+    case THOT_NO_MOD:
+      addFirst = &Automata_normal;
+      break;
+    case THOT_MOD_SHIFT:
+      addFirst = &Automata_SHIFT;
+      break;
+    case THOT_MOD_CTRL:
+      addFirst = &Automata_ctrl;
+      break;
+    case THOT_MOD_ALT:
+      addFirst = &Automata_alt;
+      break;
+    case THOT_MOD_S_CTRL:
+      addFirst = &Automata_CTRL;
+      break;
+    case THOT_MOD_S_ALT:
+      addFirst = &Automata_ALT;
+      break;
+    default:
       return;
+    }
 
-   /* Entry point into the automata */
-   switch (mod1)
-	 {
-	    case THOT_NO_MOD:
-	       addFirst = &Automata_normal;
-	       break;
-	    case THOT_MOD_SHIFT:
-	       addFirst = &Automata_SHIFT;
-	       break;
-	    case THOT_MOD_CTRL:
-	       addFirst = &Automata_ctrl;
-	       break;
-	    case THOT_MOD_ALT:
-	       addFirst = &Automata_alt;
-	       break;
-	    case THOT_MOD_S_CTRL:
-	       addFirst = &Automata_CTRL;
-	       break;
-	    case THOT_MOD_S_ALT:
-	       addFirst = &Automata_ALT;
-	       break;
-	    default:
-	       return;
-	 }
+  /* Initializations */
+  ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+  oldptr = *addFirst;		/* debut chainage entrees existantes */
+  /* Verifies if we already have a ctrl key */
+  if (oldptr == NULL)
+    {
+      /* It's the first ctrl key we'll create */
+      *addFirst = ptr;
+      exists = FALSE;		/* key1 isn't yet known */
+    }
+  else
+    {
+      /* verifies if this key is already recorded */
+      exists = FALSE;
+      do
+        {
+          /* is it the same entry key ? */
+          if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
+            exists = TRUE;	/* the key1 entry already exists */
+          else if (oldptr->K_Other != NULL)
+            {
+              oldptr = oldptr->K_Other;
+              if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
+                exists = TRUE;	/* we must also verify the last entry */
+            }
+        }
+      while (oldptr->K_Other != NULL && !exists);
+    }
 
-   /* Initializations */
-   ptr = (KEY *) TtaGetMemory (sizeof (KEY));
-   oldptr = *addFirst;		/* debut chainage entrees existantes */
-   /* Verifies if we already have a ctrl key */
-   if (oldptr == NULL)
-     {
-	/* It's the first ctrl key we'll create */
-	*addFirst = ptr;
-	exists = FALSE;		/* key1 isn't yet known */
-     }
-   else
-     {
-	/* verifies if this key is already recorded */
-	exists = FALSE;
-	do
-	  {
-	     /* is it the same entry key ? */
-	     if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
-		exists = TRUE;	/* the key1 entry already exists */
-	     else if (oldptr->K_Other != NULL)
-	       {
-		  oldptr = oldptr->K_Other;
-		  if (oldptr->K_EntryCode == key1 && oldptr->K_Special == spec1)
-		     exists = TRUE;	/* we must also verify the last entry */
-	       }
-	  }
-	while (oldptr->K_Other != NULL && !exists);
-     }
+  /* is it a two key sequence with a modifier on the first one? */
+  if ((key2 != 0) && (mod1 != THOT_NO_MOD))
+    {
+      /* Does the first level entry already exists ? */
+      if (!exists)
+        {
+          /* Creation d'une entree d'automate de 1er niveau */
+          ptr->K_EntryCode = key1;
+          ptr->K_Special = spec1;
+          ptr->K_Next = NULL;
+          ptr->K_Other = NULL;
+          ptr->K_Command = 0;
+          ptr->K_Value = 0;
 
-   /* is it a two key sequence with a modifier on the first one? */
-   if ((key2 != 0) && (mod1 != THOT_NO_MOD))
-     {
-	/* Does the first level entry already exists ? */
-	if (!exists)
-	  {
-	     /* Creation d'une entree d'automate de 1er niveau */
-	     ptr->K_EntryCode = key1;
-		 ptr->K_Special = spec1;
-	     ptr->K_Next = NULL;
-	     ptr->K_Other = NULL;
-	     ptr->K_Command = 0;
-	     ptr->K_Value = 0;
+          /* Chainage a l'entree precedente */
+          if (oldptr != NULL)
+            oldptr->K_Other = ptr;
 
-	     /* Chainage a l'entree precedente */
-	     if (oldptr != NULL)
-		oldptr->K_Other = ptr;
+          oldptr = ptr;
+          ptr = NULL;
+        }
 
-	     oldptr = ptr;
-	     ptr = NULL;
-	  }
+      /* Il faut parcourir les entrees de 2eme niveau */
+      if (oldptr->K_Next == NULL)
+        {
+          /* creation d'une 1ere entree de 2eme niveau */
+          if (ptr == NULL)
+            ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+          ptr->K_EntryCode = key2;
+          ptr->K_Special = spec2;
+          ptr->K_Modifier = mod2;
+          ptr->K_Other = NULL;
+          ptr->K_Command = command;
+          ptr->K_Value = key;
+          oldptr->K_Next = ptr;
+          exists = TRUE;
+        }
+      else
+        {
+          oldptr = oldptr->K_Next;
+          exists = FALSE;
+          do
+            {
+              /* Est-ce la meme cle d'entree */
+              if (oldptr->K_EntryCode == key2)
+                /* L'entree existe deja */
+                exists = TRUE;
+              else if (oldptr->K_Other != NULL)
+                {
+                  oldptr = oldptr->K_Other;
+                  /* Il faut en plus verifier la derniere entree */
+                  if (oldptr->K_EntryCode == key2)
+                    exists = TRUE;
+                }
+            }
+          while (oldptr->K_Other != NULL && !exists);
+        }
 
-	/* Il faut parcourir les entrees de 2eme niveau */
-	if (oldptr->K_Next == NULL)
-	  {
-	     /* creation d'une 1ere entree de 2eme niveau */
-	     if (ptr == NULL)
-	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
-	     ptr->K_EntryCode = key2;
-		 ptr->K_Special = spec2;
-	     ptr->K_Modifier = mod2;
-	     ptr->K_Other = NULL;
-	     ptr->K_Command = command;
-	     ptr->K_Value = key;
-	     oldptr->K_Next = ptr;
-	     exists = TRUE;
-	  }
-	else
-	  {
-	     oldptr = oldptr->K_Next;
-	     exists = FALSE;
-	     do
-	       {
-		  /* Est-ce la meme cle d'entree */
-		  if (oldptr->K_EntryCode == key2)
-		     /* L'entree existe deja */
-		     exists = TRUE;
-		  else if (oldptr->K_Other != NULL)
-		    {
-		       oldptr = oldptr->K_Other;
-		       /* Il faut en plus verifier la derniere entree */
-		       if (oldptr->K_EntryCode == key2)
-			  exists = TRUE;
-		    }
-	       }
-	     while (oldptr->K_Other != NULL && !exists);
-	  }
+      /* Si l'entree de 2eme niveau n'existe pas deja ? */
+      if (!exists)
+        {
+          /* Creation d'une entree d'automate de 2eme niveau */
+          if (ptr == NULL)
+            ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+          ptr->K_EntryCode = key2;
+          ptr->K_Special = spec2;
+          ptr->K_Modifier = mod2;
+          ptr->K_Other = NULL;
+          ptr->K_Command = command;
+          ptr->K_Value = key;
 
-	/* Si l'entree de 2eme niveau n'existe pas deja ? */
-	if (!exists)
-	  {
-	     /* Creation d'une entree d'automate de 2eme niveau */
-	     if (ptr == NULL)
-	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
-	     ptr->K_EntryCode = key2;
-		 ptr->K_Special = spec2;
-	     ptr->K_Modifier = mod2;
-	     ptr->K_Other = NULL;
-	     ptr->K_Command = command;
-	     ptr->K_Value = key;
+          /* Chainage a l'entree precedente */
+          if (oldptr != NULL)
+            oldptr->K_Other = ptr;
+        }
+    }
+  else if (!exists)
+    {
+      /* on cree une entree de premier niveau */
+      ptr->K_EntryCode = key1;
+      ptr->K_Special = spec1;
+      ptr->K_Other = NULL;
+      ptr->K_Next = NULL;
+      ptr->K_Command = command;
+      ptr->K_Value = key;
 
-	     /* Chainage a l'entree precedente */
-	     if (oldptr != NULL)
-		oldptr->K_Other = ptr;
-	  }
-     }
-   else if (!exists)
-     {
-	/* on cree une entree de premier niveau */
-	ptr->K_EntryCode = key1;
-	ptr->K_Special = spec1;
-	ptr->K_Other = NULL;
-	ptr->K_Next = NULL;
-	ptr->K_Command = command;
-	ptr->K_Value = key;
-
-	/* Chainage a l'entree precedente */
-	if (oldptr != NULL)
-	   oldptr->K_Other = ptr;
-     }
+      /* Chainage a l'entree precedente */
+      if (oldptr != NULL)
+        oldptr->K_Other = ptr;
+    }
 }
 
 
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
-   MSCharTranslation
-   MS-Window front-end to the character translation and handling.
-   Decodes the MS-Window callback parameters and calls the
-   generic character handling function.
-   Returns TRUE if an access key was executed.
+  MSCharTranslation
+  MS-Window front-end to the character translation and handling.
+  Decodes the MS-Window callback parameters and calls the
+  generic character handling function.
+  Returns TRUE if an access key was executed.
   ----------------------------------------------------------------------*/
 ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
-			      LPARAM lParam, ThotBool isSpecial)
+                              LPARAM lParam, ThotBool isSpecial)
 {
-   int  keyboard_mask = 0;   
-   int  status, ret;
+  int  keyboard_mask = 0;   
+  int  status, ret;
 
-   if (frame < 0)
-     return FALSE;
-   status = GetKeyState (VK_CONTROL);
-   if (HIBYTE (status))
-     /* the Control key is pressed */
-     keyboard_mask |= THOT_MOD_CTRL;
-   /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
-   /* usulally we have not to trap this event and let Windows do.  In our case, */
-   /* we do not use the standard accelerator tables as in common Windows appli. */
-   /* Is the Alt key pressed ?? */
-   status = GetKeyState (VK_MENU);
-   if (HIBYTE (status))
-   {
+  if (frame < 0)
+    return FALSE;
+  status = GetKeyState (VK_CONTROL);
+  if (HIBYTE (status))
+    /* the Control key is pressed */
+    keyboard_mask |= THOT_MOD_CTRL;
+  /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
+  /* usulally we have not to trap this event and let Windows do.  In our case, */
+  /* we do not use the standard accelerator tables as in common Windows appli. */
+  /* Is the Alt key pressed ?? */
+  status = GetKeyState (VK_MENU);
+  if (HIBYTE (status))
+    {
       if (keyboard_mask == THOT_MOD_CTRL)
-		/* ctrl + alt = altgr */
-		keyboard_mask = 0;
-	  else
-       /* the Alt key is pressed */
-       keyboard_mask |= THOT_MOD_ALT;
-   }
+        /* ctrl + alt = altgr */
+        keyboard_mask = 0;
+      else
+        /* the Alt key is pressed */
+        keyboard_mask |= THOT_MOD_ALT;
+    }
 
-   status = GetKeyState (VK_SHIFT);
-   if (HIBYTE (status)) 
-     /* the Shift key is pressed */
-     keyboard_mask |= THOT_MOD_SHIFT;
+  status = GetKeyState (VK_SHIFT);
+  if (HIBYTE (status)) 
+    /* the Shift key is pressed */
+    keyboard_mask |= THOT_MOD_SHIFT;
 
-   if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
-       !(keyboard_mask & THOT_MOD_ALT))
-     return FALSE;
+  if (msg == WM_KEYDOWN && wParam == VK_RETURN && 
+      !(keyboard_mask & THOT_MOD_ALT))
+    return FALSE;
 
-   /* check if it's a special key */
-   Special = isSpecial;
+  /* check if it's a special key */
+  Special = isSpecial;
 #ifdef OLD_VERSION
-   if (HIBYTE (GetKeyState (VK_UP)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_LEFT)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_RIGHT)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_UP)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_DOWN)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_BACK)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_DELETE)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_PRIOR)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_NEXT)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_HOME)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_END)))
-     Special = TRUE;
-   else if (HIBYTE (GetKeyState (VK_RETURN)))
-       Special = TRUE;
-   else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
-     {
-       /* Windows translates Ctrl a-z */
-       if (keyboard_mask & THOT_MOD_SHIFT)
-         wParam += 64;
-       else
-	     wParam += 96;
-     }
+  if (HIBYTE (GetKeyState (VK_UP)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_LEFT)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_RIGHT)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_UP)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_DOWN)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_BACK)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_DELETE)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_PRIOR)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_NEXT)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_HOME)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_END)))
+    Special = TRUE;
+  else if (HIBYTE (GetKeyState (VK_RETURN)))
+    Special = TRUE;
+  else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
+    {
+      /* Windows translates Ctrl a-z */
+      if (keyboard_mask & THOT_MOD_SHIFT)
+        wParam += 64;
+      else
+        wParam += 96;
+    }
 #else /* OLD_VERSION */
-    if (HIBYTE (GetKeyState (VK_RETURN)))
-       Special = TRUE;
+  if (HIBYTE (GetKeyState (VK_RETURN)))
+    Special = TRUE;
 	else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
-	{
-        /* Windows translates Ctrl a-z */
-        if (keyboard_mask & THOT_MOD_SHIFT)
-          wParam += 64;
-        else
+    {
+      /* Windows translates Ctrl a-z */
+      if (keyboard_mask & THOT_MOD_SHIFT)
+        wParam += 64;
+      else
 	      wParam += 96;
-	}
+    }
 #endif /* OLD_VERSION */
 
-   if (msg != WM_SYSCHAR && msg != WM_SYSKEYDOWN &&
-       wParam == 0x0A)
-	 /* Return should generate a linefeed key
-        Removing this test will break Ctrl Return */
-	 wParam = 0x0D;
-   ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam);
-   return (ret == 1);
+  if (msg != WM_SYSCHAR && msg != WM_SYSKEYDOWN &&
+      wParam == 0x0A)
+    /* Return should generate a linefeed key
+       Removing this test will break Ctrl Return */
+    wParam = 0x0D;
+  ret = ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam);
+  return (ret == 1);
 }
 
 #endif /* _WINGUI */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
-   CharTranslationGTK
-   GTK front-end to the character translation and handling.
-   Decodes the GTK key press event  and calls the generic character
-   handling function.
+  CharTranslationGTK
+  GTK front-end to the character translation and handling.
+  Decodes the GTK key press event  and calls the generic character
+  handling function.
   ----------------------------------------------------------------------*/
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
@@ -683,14 +683,14 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   if (FrameTable[frame].Text_Zone)
     {
       if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone))
-	/* We're in the url zone*/
-	return FALSE;
+        /* We're in the url zone*/
+        return FALSE;
       else
-	{ 
-	  /* We're in the drawing so get the hidden textfield adress*/		 
-	  textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-	  gtk_widget_grab_focus (GTK_WIDGET(textzone));
-	}
+        { 
+          /* We're in the drawing so get the hidden textfield adress*/		 
+          textzone = (GtkEntry*)gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
+          gtk_widget_grab_focus (GTK_WIDGET(textzone));
+        }
     }
   status = 0;
   /* control, alt and mouse status bits of the state are ignored */
@@ -717,21 +717,21 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
       /******* Not sure this code makes sense */
       charset = TtaGetCharset (TtaGetEnvString ("Input_Charset"));
       if (charset != UNDEFINED_CHARSET)
-	{
-	  str = TtaConvertByteToWC ((unsigned char*)event->string, charset);
-	  p = str;
-	  while (*p)
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*(Proc3)MenuActionList[0].Call_Action) (
-			(void *)document,
-			(void *)view,
-			(void *)*p);
-	      p++;
-	    }
-	  TtaFreeMemory (str);
-	  return FALSE;
-	}
+        {
+          str = TtaConvertByteToWC ((unsigned char*)event->string, charset);
+          p = str;
+          while (*p)
+            {
+              if (MenuActionList[0].Call_Action)
+                (*(Proc3)MenuActionList[0].Call_Action) (
+                                                         (void *)document,
+                                                         (void *)view,
+                                                         (void *)*p);
+              p++;
+            }
+          TtaFreeMemory (str);
+          return FALSE;
+        }
     }
   if ( strlen(event->string) > 0 )
     {
@@ -752,23 +752,23 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   those functions are called by a timer each 100 ms
   in order to repeat user action until he released the button
   or move away from the widget.
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean GtkLiningDown (gpointer data)
 {
   int       frame;
   Document  doc; 
   int       view;
   
-   frame = (int) data; 
-   FrameToView (frame, &doc, &view);
-   TtcLineDown (doc, view);
-   /* As this is a timeout function, return TRUE so that it
+  frame = (int) data; 
+  FrameToView (frame, &doc, &view);
+  TtcLineDown (doc, view);
+  /* As this is a timeout function, return TRUE so that it
      continues to get called */
-   return TRUE;
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 gboolean GtkLiningUp (gpointer data)
 {
   int       frame;
@@ -784,11 +784,11 @@ gboolean GtkLiningUp (gpointer data)
 }
 
 /*----------------------------------------------------------------------
-   KeyScrolledGTK
-   Capture click on the scrollbar in order to enable
-   Crtl + click event, that let user go on top or bottom of the doc
-   Click on button in order to move only for one line and without calling
-   recursivly the FrameVScrolled callback.   
+  KeyScrolledGTK
+  Capture click on the scrollbar in order to enable
+  Crtl + click event, that let user go on top or bottom of the doc
+  Click on button in order to move only for one line and without calling
+  recursivly the FrameVScrolled callback.   
   ----------------------------------------------------------------------*/
 gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 {
@@ -817,57 +817,57 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
     {
       eventmouse = (GdkEventButton*) event;
       if (eventmouse->button == 1) 
-	{
-	  /* 16 is the pixel size of the scrollbar buttons*/
-	  height = w->allocation.height - 16;
-	  gdk_window_get_pointer (w->window, &x, &y, &state);
-	  if (eventmouse->state & GDK_CONTROL_MASK)
-	    {
-	      if (y > height)
-		JumpIntoView (frame, 100);			
-	      else if (y < 16)
-		JumpIntoView (frame, 0);
-	    }
-	  else if  (y > height){
-	    TtcLineDown (doc, view); 
-	    timer = gtk_timeout_add (100, GtkLiningDown, (gpointer) frame);
-	  }
-	  else if  (y < 16){
-	    TtcLineUp (doc, view);	    
-	    timer = gtk_timeout_add (100, GtkLiningUp, (gpointer) frame);
-	  }
-	  else
-	    return FALSE;
-	  /* this prevent GTK Callback to act !!*/
-	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "button_press_event");
-	  return TRUE;
-	}
+        {
+          /* 16 is the pixel size of the scrollbar buttons*/
+          height = w->allocation.height - 16;
+          gdk_window_get_pointer (w->window, &x, &y, &state);
+          if (eventmouse->state & GDK_CONTROL_MASK)
+            {
+              if (y > height)
+                JumpIntoView (frame, 100);			
+              else if (y < 16)
+                JumpIntoView (frame, 0);
+            }
+          else if  (y > height){
+            TtcLineDown (doc, view); 
+            timer = gtk_timeout_add (100, GtkLiningDown, (gpointer) frame);
+          }
+          else if  (y < 16){
+            TtcLineUp (doc, view);	    
+            timer = gtk_timeout_add (100, GtkLiningUp, (gpointer) frame);
+          }
+          else
+            return FALSE;
+          /* this prevent GTK Callback to act !!*/
+          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "button_press_event");
+          return TRUE;
+        }
 		 
     } 
   /* Code is here, but didn't manage to always catch those events..
-    But as CRTL + UP and CTRL + DOWN work like UP and DOWN should...
-    The problem is that Key event are catched before, by the Main Window 
-    In CharTranslation GTK... We need to redesign all Key catching if we 
-    wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event... */
+     But as CRTL + UP and CTRL + DOWN work like UP and DOWN should...
+     The problem is that Key event are catched before, by the Main Window 
+     In CharTranslation GTK... We need to redesign all Key catching if we 
+     wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event... */
   else if (event->type == GDK_KEY_PRESS)
     {
       eventkey = (GdkEventKey*) event;
       if (eventkey->keyval == GDK_Up) 
-	{ 
-	  TtcLineDown (doc, view); 
-	  timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
-	  /* this prevent GTK Callback to act !!*/
-	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
-	  return TRUE;
-	}
+        { 
+          TtcLineDown (doc, view); 
+          timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
+          /* this prevent GTK Callback to act !!*/
+          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
+          return TRUE;
+        }
       else if (eventkey->keyval == GDK_Down)
-	{ 
-	  TtcLineDown (doc, view); 
-	  timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
-	   /* this prevent GTK Callback to act !!*/
-	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
-	  return TRUE;
-	}
+        { 
+          TtcLineDown (doc, view); 
+          timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
+          /* this prevent GTK Callback to act !!*/
+          gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
+          return TRUE;
+        }
     }
 
   return FALSE;
@@ -875,13 +875,13 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   CharTranslationWX
-   WX front-end to the character translation and handling.
-   Decodes the WX key press event  and calls the generic character
-   handling function.
+  CharTranslationWX
+  WX front-end to the character translation and handling.
+  Decodes the WX key press event  and calls the generic character
+  handling function.
   ----------------------------------------------------------------------*/
 void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
-			 unsigned int value )
+                         unsigned int value )
 {
 #if 0
 #ifdef _WX
@@ -904,21 +904,21 @@ void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
       /******* Not sure this code makes sense */
       charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
       if (charset != UNDEFINED_CHARSET)
-	{
-	  str = TtaConvertByteToWC ((unsigned char*)&value, charset);
-	  p = str;
-	  while (*p)
-	    {
-	      if (MenuActionList[0].Call_Action)
-		(*(Proc3)MenuActionList[0].Call_Action) (
-			(void *)document,
-			(void *)view,
-			(void *)*p);
-	      p++;
-	    }
-	  TtaFreeMemory (str);
-	  return FALSE;
-	}
+        {
+          str = TtaConvertByteToWC ((unsigned char*)&value, charset);
+          p = str;
+          while (*p)
+            {
+              if (MenuActionList[0].Call_Action)
+                (*(Proc3)MenuActionList[0].Call_Action) (
+                                                         (void *)document,
+                                                         (void *)view,
+                                                         (void *)*p);
+              p++;
+            }
+          TtaFreeMemory (str);
+          return FALSE;
+        }
     }
 
   ThotInput (frame, value, 0, thot_mask, thot_keysym);
@@ -930,29 +930,29 @@ void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
 
 
 /*----------------------------------------------------------------------
-   APPKey send a message msg to the application.   
+  APPKey send a message msg to the application.   
   ----------------------------------------------------------------------*/
 static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 {
-   PtrElement          pParentEl;
-   NotifyOnTarget      notifyEl;
-   ThotBool            result;
-   ThotBool            ok;
+  PtrElement          pParentEl;
+  NotifyOnTarget      notifyEl;
+  ThotBool            result;
+  ThotBool            ok;
 
-   result = FALSE;
-   pParentEl = pEl;
-   notifyEl.event = (APPevent)msg;
-   notifyEl.document = doc;
-   notifyEl.targetdocument = doc;
-   while (pParentEl != NULL)
-     {
-       notifyEl.element = (Element) pParentEl;
-       notifyEl.target = (Element) pEl;
-       ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
-       result = result || ok;
-       pParentEl = pParentEl->ElParent;
-     }
-   return result;
+  result = FALSE;
+  pParentEl = pEl;
+  notifyEl.event = (APPevent)msg;
+  notifyEl.document = doc;
+  notifyEl.targetdocument = doc;
+  while (pParentEl != NULL)
+    {
+      notifyEl.element = (Element) pParentEl;
+      notifyEl.target = (Element) pEl;
+      ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
+      result = result || ok;
+      pParentEl = pParentEl->ElParent;
+    }
+  return result;
 }
 
 
@@ -961,9 +961,9 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
   The parameter PicMask gives current modifiers.
   Returns:
   - 0 when nothing is done
-   - 1 when an access key is handled
-   - 2 when an action is done
-   - 3 when a character is inserted
+  - 1 when an access key is handled
+  - 2 when an action is done
+  - 3 when a character is inserted
   ----------------------------------------------------------------------*/
 int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 {
@@ -1389,60 +1389,60 @@ return 0;
   ----------------------------------------------------------------------*/
 static void FreeOneTranslationsTable (KEY *current)
 {
-   KEY                *ptr, *subkey;
+KEY                *ptr, *subkey;
 
-   while (current != NULL)
-     {
-       ptr = current;
-       while (ptr->K_Next != NULL)
-	 {
-	   subkey = ptr->K_Next;
-	   ptr->K_Next = subkey->K_Other;
-	   TtaFreeMemory (subkey);
-	 }
-       current = ptr->K_Other;
-       TtaFreeMemory (ptr);
-     }
+while (current != NULL)
+{
+  ptr = current;
+  while (ptr->K_Next != NULL)
+    {
+      subkey = ptr->K_Next;
+      ptr->K_Next = subkey->K_Other;
+      TtaFreeMemory (subkey);
+    }
+  current = ptr->K_Other;
+  TtaFreeMemory (ptr);
+}
 }
 
 /*----------------------------------------------------------------------
-   FreeTranslations removes all translation structures.
+  FreeTranslations removes all translation structures.
   ----------------------------------------------------------------------*/
 void FreeTranslations ()
 {
-   int                 i;
+  int                 i;
 
-   /* free all document access keys */
-   for (i = 1; i <= MAX_DOCUMENTS; i++)
-     TtaRemoveDocAccessKeys (i);
-   FreeOneTranslationsTable (Automata_normal);
-   Automata_normal = NULL;
-   FreeOneTranslationsTable (Automata_ctrl);
-   Automata_ctrl = NULL;
-   FreeOneTranslationsTable (Automata_alt);
-   Automata_alt = NULL;
-   FreeOneTranslationsTable (Automata_SHIFT);
-   Automata_SHIFT = NULL;
-   FreeOneTranslationsTable (Automata_CTRL);
-   Automata_CTRL = NULL;
-   FreeOneTranslationsTable (Automata_ALT);
-   Automata_ALT = NULL;
+  /* free all document access keys */
+  for (i = 1; i <= MAX_DOCUMENTS; i++)
+    TtaRemoveDocAccessKeys (i);
+  FreeOneTranslationsTable (Automata_normal);
+  Automata_normal = NULL;
+  FreeOneTranslationsTable (Automata_ctrl);
+  Automata_ctrl = NULL;
+  FreeOneTranslationsTable (Automata_alt);
+  Automata_alt = NULL;
+  FreeOneTranslationsTable (Automata_SHIFT);
+  Automata_SHIFT = NULL;
+  FreeOneTranslationsTable (Automata_CTRL);
+  Automata_CTRL = NULL;
+  FreeOneTranslationsTable (Automata_ALT);
+  Automata_ALT = NULL;
 }
 
 
 /*----------------------------------------------------------------------
-   EndOfString check wether string end by suffix.
+  EndOfString check wether string end by suffix.
   ----------------------------------------------------------------------*/
 static int      EndOfString (char *string, char *suffix)
 {
-   int             string_lenght, suffix_lenght;
+  int             string_lenght, suffix_lenght;
 
-   string_lenght = strlen (string);
-   suffix_lenght = strlen (suffix);
-   if (string_lenght < suffix_lenght)
-      return 0;
-   else
-      return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
+  string_lenght = strlen (string);
+  suffix_lenght = strlen (suffix);
+  if (string_lenght < suffix_lenght)
+    return 0;
+  else
+    return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 
 
@@ -1472,26 +1472,26 @@ void TtaAddAccessKey (Document doc, unsigned int key, void *param)
       next = DocAccessKey[doc - 1];
       ptr = NULL;
       while (next != NULL && next->K_EntryCode != (int) k)
-	{
-	  ptr = next;
-	  next = next->K_Other;
-	}
+        {
+          ptr = next;
+          next = next->K_Other;
+        }
       if (next == NULL)
-	{
-	  /* not found: add a new entry */
-	  next = (KEY *) TtaGetMemory (sizeof (KEY));
-	  if (ptr)
-	    ptr->K_Other = next;
-	  else
-	    /* the first entry */
-	    DocAccessKey[doc - 1] = next;
-	  next->K_EntryCode = k;
-	  next->K_Special = FALSE;
-	  next->K_Other = NULL;
-	  next->K_Param = param;
-	  next->K_Command = -1;
-	  next->K_Value = key;
-	}
+        {
+          /* not found: add a new entry */
+          next = (KEY *) TtaGetMemory (sizeof (KEY));
+          if (ptr)
+            ptr->K_Other = next;
+          else
+            /* the first entry */
+            DocAccessKey[doc - 1] = next;
+          next->K_EntryCode = k;
+          next->K_Special = FALSE;
+          next->K_Other = NULL;
+          next->K_Param = param;
+          next->K_Command = -1;
+          next->K_Value = key;
+        }
     }
 }
 
@@ -1507,11 +1507,11 @@ void TtaRemoveDocAccessKeys (Document doc)
     {
       next = DocAccessKey[doc - 1];
       while (next != NULL)
-	{
-	  ptr = next;
-	  next = ptr->K_Other;
-	  TtaFreeMemory (ptr);
-	}
+        {
+          ptr = next;
+          next = ptr->K_Other;
+          TtaFreeMemory (ptr);
+        }
       DocAccessKey[doc - 1] = NULL;
     }
 }
@@ -1532,26 +1532,26 @@ void TtaRemoveAccessKey (Document doc, unsigned int key)
       next = DocAccessKey[doc - 1];
       ptr = NULL;
       while (next != NULL && next->K_EntryCode != (int) k)
-	{
-	  ptr = next;
-	  next = next->K_Other;
-	}
+        {
+          ptr = next;
+          next = next->K_Other;
+        }
       if (next)
-	{
-	  /* found: remove it */
-	  if (ptr)
-	    ptr->K_Other = next->K_Other;
-	  else
-	    /* the first entry */
-	    DocAccessKey[doc - 1] = next->K_Other;
-	  TtaFreeMemory (next);
-	}
+        {
+          /* found: remove it */
+          if (ptr)
+            ptr->K_Other = next->K_Other;
+          else
+            /* the first entry */
+            DocAccessKey[doc - 1] = next->K_Other;
+          TtaFreeMemory (next);
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   TtaCloseShortcutSequence
-   Reset any open shortcut sequence.
+  TtaCloseShortcutSequence
+  Reset any open shortcut sequence.
   ----------------------------------------------------------------------*/
 void TtaCloseShortcutSequence ()
 {
@@ -1561,8 +1561,8 @@ void TtaCloseShortcutSequence ()
 }
 
 /*----------------------------------------------------------------------
-   TtaListShortcuts
-   Produces in a file a human-readable the list of current shortcuts.  
+  TtaListShortcuts
+  Produces in a file a human-readable the list of current shortcuts.  
   ----------------------------------------------------------------------*/
 void TtaListShortcuts (Document doc, FILE *fileDescriptor)
 {
@@ -1578,84 +1578,84 @@ void TtaListShortcuts (Document doc, FILE *fileDescriptor)
       /* display current access keys table */
       next = DocAccessKey[doc - 1];
       if (next)
-	fprintf (fileDescriptor, "Access keys\n");
+        fprintf (fileDescriptor, "Access keys\n");
       while (next)
-	{
-	  /* display the access key */
-	  k1 = KeyName (next->K_EntryCode);
-	  fprintf (fileDescriptor, " %s %s\n", s, k1);
-	  next = next->K_Other;
-	}
+        {
+          /* display the access key */
+          k1 = KeyName (next->K_EntryCode);
+          fprintf (fileDescriptor, " %s %s\n", s, k1);
+          next = next->K_Other;
+        }
       fprintf (fileDescriptor, "\nShortcuts\n");
       i = 0;
       while (i < 6)
-	{
-	  if (i == 0)
-	    {
-	      next = Automata_SHIFT;
-	      s = "Shift ";
-	    }
-	  else if (i == 1)
-	    {
-	      next = Automata_normal;
-	      s = "";
-	    }
-	  else if (i == 2)
-	    {
-	      next = Automata_ALT;
-	      s = "Shift Alt ";
-	    }
-	  else if (i == 3)
-	    {
-	      next = Automata_alt;
-	      s = "Alt ";
-	    }
-	  else if (i == 4)
-	    {
-	      next = Automata_CTRL;
-	      s = "Shift Ctrl ";
-	    }
-	  else
-	    {
-	      next = Automata_ctrl;
-	      s = "Ctrl ";
-	    }
+        {
+          if (i == 0)
+            {
+              next = Automata_SHIFT;
+              s = "Shift ";
+            }
+          else if (i == 1)
+            {
+              next = Automata_normal;
+              s = "";
+            }
+          else if (i == 2)
+            {
+              next = Automata_ALT;
+              s = "Shift Alt ";
+            }
+          else if (i == 3)
+            {
+              next = Automata_alt;
+              s = "Alt ";
+            }
+          else if (i == 4)
+            {
+              next = Automata_CTRL;
+              s = "Shift Ctrl ";
+            }
+          else
+            {
+              next = Automata_ctrl;
+              s = "Ctrl ";
+            }
 
-	  while (next)
-	    {
-	      strcpy (k1, KeyName (next->K_EntryCode));
-	      ptr = next->K_Next;
-	      if (ptr == NULL)
-		{
-		  /* display the shortcut */
-		  if (MenuActionList[next->K_Command].ActionName)
-		    fprintf (fileDescriptor, " %s%s -> %s\n", s, k1,
-			     MenuActionList[next->K_Command].ActionName);
-		}
-	      else
-		/* two levels */
-		while (ptr)
-		  {
-		    /* display the shortcut sequence */
-		    if (MenuActionList[ptr->K_Command].ActionName)
-		      {
-			strcpy (k2, KeyName (ptr->K_EntryCode));
-			fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, k1,
-				 s, k2,
-				 MenuActionList[ptr->K_Command].ActionName);
-		      }
-		    ptr = ptr->K_Other;
-		  }
-	      next = next->K_Other;
-	    }
-	  i++;
-	}
+          while (next)
+            {
+              strcpy (k1, KeyName (next->K_EntryCode));
+              ptr = next->K_Next;
+              if (ptr == NULL)
+                {
+                  /* display the shortcut */
+                  if (MenuActionList[next->K_Command].ActionName)
+                    fprintf (fileDescriptor, " %s%s -> %s\n", s, k1,
+                             MenuActionList[next->K_Command].ActionName);
+                }
+              else
+                /* two levels */
+                while (ptr)
+                  {
+                    /* display the shortcut sequence */
+                    if (MenuActionList[ptr->K_Command].ActionName)
+                      {
+                        strcpy (k2, KeyName (ptr->K_EntryCode));
+                        fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, k1,
+                                 s, k2,
+                                 MenuActionList[ptr->K_Command].ActionName);
+                      }
+                    ptr = ptr->K_Other;
+                  }
+              next = next->K_Other;
+            }
+          i++;
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   InitTranslations
-   intializes the keybord encoding.
+  InitTranslations
+  intializes the keybord encoding.
   ----------------------------------------------------------------------*/
 void InitTranslations (char *appliname)
 {
@@ -1711,198 +1711,198 @@ void InitTranslations (char *appliname)
       ch[0] = EOS;
       fscanf (file, "%80s", ch);
       do
-	{
-	  /* Initialisation */
-	  mod1 = mod2 = THOT_NO_MOD;
-	  key1 = key2 = 0;
-	  equiv[0] = EOS;
-	  /* Est-ce la fin de fichier ? */
-	  if (strlen (ch) == 0 || EndOfString (ch, "^"))
-	    e = 0;
-	  else if (ch[0] != '#')
-	    {
-	      /* it is not a comment */
+        {
+          /* Initialisation */
+          mod1 = mod2 = THOT_NO_MOD;
+          key1 = key2 = 0;
+          equiv[0] = EOS;
+          /* Est-ce la fin de fichier ? */
+          if (strlen (ch) == 0 || EndOfString (ch, "^"))
+            e = 0;
+          else if (ch[0] != '#')
+            {
+              /* it is not a comment */
               while ((!strcmp (ch, "Shift")) || 
                      (!strcmp (ch, "Ctrl")) ||
                      (!strcmp (ch, "Alt")) )
-              {
-	        if (!strcmp (ch, "Shift"))
-		  mod1 += THOT_MOD_SHIFT;
-  	        else if (!strcmp (ch, "Ctrl"))
-		  mod1 += THOT_MOD_CTRL;
-	        else if (!strcmp (ch, "Alt"))
-		  mod1 += THOT_MOD_ALT;
-		ch[0] = EOS;
-		fscanf (file, "%80s", ch);
-               }
+                {
+                  if (!strcmp (ch, "Shift"))
+                    mod1 += THOT_MOD_SHIFT;
+                  else if (!strcmp (ch, "Ctrl"))
+                    mod1 += THOT_MOD_CTRL;
+                  else if (!strcmp (ch, "Alt"))
+                    mod1 += THOT_MOD_ALT;
+                  ch[0] = EOS;
+                  fscanf (file, "%80s", ch);
+                }
 
-	      /* remove the end colon */
-	      sscanf (ch, "<Key>%80s", transText);
-	      if (transText[0] != EOS)
-		{
-		  i = strlen (transText) - 1;
-		  if (i > 0 && transText[i] == ':')
-		    transText[i] = EOS;
-		}
-	      /* convert to keysym for the automata */
-	      key1 = SpecialKey (transText, (mod1 & THOT_MOD_SHIFT) != 0, &isSpecialKey1);
+              /* remove the end colon */
+              sscanf (ch, "<Key>%80s", transText);
+              if (transText[0] != EOS)
+                {
+                  i = strlen (transText) - 1;
+                  if (i > 0 && transText[i] == ':')
+                    transText[i] = EOS;
+                }
+              /* convert to keysym for the automata */
+              key1 = SpecialKey (transText, (mod1 & THOT_MOD_SHIFT) != 0, &isSpecialKey1);
 
-	      /* Get the following word in the line */
-	      ch[0] = EOS;
-	      fscanf (file, "%80s", ch);
+              /* Get the following word in the line */
+              ch[0] = EOS;
+              fscanf (file, "%80s", ch);
 
-	      /* Register the equiv string */
+              /* Register the equiv string */
 #ifdef _WX
-	      if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
-		/* the shortcut is not a sequence */
-		strcpy (equiv, "\t");
-	      if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
-		/* specific to MacOS */
-		strcat (equiv, "Ctrl-Alt");
-	      else
+              if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+                /* the shortcut is not a sequence */
+                strcpy (equiv, "\t");
+              if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
+                /* specific to MacOS */
+                strcat (equiv, "Ctrl-Alt");
+              else
 #endif /* _WX */
-	      if (mod1 & THOT_MOD_CTRL)
-		strcat (equiv, "Ctrl");
-	      else if (mod1 & THOT_MOD_ALT)
-		strcat (equiv, "Alt");
-	      if (mod1 & THOT_MOD_SHIFT)
-		{
+                if (mod1 & THOT_MOD_CTRL)
+                  strcat (equiv, "Ctrl");
+                else if (mod1 & THOT_MOD_ALT)
+                  strcat (equiv, "Alt");
+              if (mod1 & THOT_MOD_SHIFT)
+                {
 #ifdef _WX
-		if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
-		  strcat (equiv, "-");
-		else
+                  if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+                    strcat (equiv, "-");
+                  else
 #endif /* _WX */
-		  strcat (equiv, sep);
-		strcat (equiv, "Shift");
-		}
-	      if (mod1 != THOT_NO_MOD)
+                    strcat (equiv, sep);
+                  strcat (equiv, "Shift");
+                }
+              if (mod1 != THOT_NO_MOD)
 #ifdef _WX
-		if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
-		  strcat (equiv, "-");
-		else
+                if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+                  strcat (equiv, "-");
+                else
 #endif /* _WX */
-		  strcat (equiv, sep);
+                  strcat (equiv, sep);
 
-	      if (transText[0] >= 'a' && transText[0] <= 'z')
-		SetCapital (transText);
-	      strcat (equiv, transText);
+              if (transText[0] >= 'a' && transText[0] <= 'z')
+                SetCapital (transText);
+              strcat (equiv, transText);
 
-	      if (!no_sequence && ch[0] == ',')
-		{
-		  /* the shortcut is a sequence */
-		  ch[0] = EOS;
-		  fscanf (file, "%80s", ch);
+              if (!no_sequence && ch[0] == ',')
+                {
+                  /* the shortcut is a sequence */
+                  ch[0] = EOS;
+                  fscanf (file, "%80s", ch);
 		      
                   while ((!strcmp (ch, "Shift")) || 
                          (!strcmp (ch, "Ctrl")) ||
                          (!strcmp (ch, "Alt")) )
-                  {
-	            if (!strcmp (ch, "Shift"))
-		      mod2 += THOT_MOD_SHIFT;
-  	            else if (!strcmp (ch, "Ctrl"))
-		      mod2 += THOT_MOD_CTRL;
-	            else if (!strcmp (ch, "Alt"))
-		      mod2 += THOT_MOD_ALT;
-		    ch[0] = EOS;
-		    fscanf (file, "%80s", ch);
-                   }
+                    {
+                      if (!strcmp (ch, "Shift"))
+                        mod2 += THOT_MOD_SHIFT;
+                      else if (!strcmp (ch, "Ctrl"))
+                        mod2 += THOT_MOD_CTRL;
+                      else if (!strcmp (ch, "Alt"))
+                        mod2 += THOT_MOD_ALT;
+                      ch[0] = EOS;
+                      fscanf (file, "%80s", ch);
+                    }
 
-		  /* remove the end colon */
-		  sscanf (ch, "<Key>%80s", transText);
-		  if (transText[0] != EOS)
-		    {
-		      i = strlen (transText) - 1;
-		      if (i > 0 && transText[i] == ':')
-			transText[i] = EOS;
-		    }
-		  key2 = SpecialKey (transText, (mod2 & THOT_MOD_SHIFT) != 0, &isSpecialKey2);
-		  /* register the equiv string */
-		  strcat (equiv, " ");
-		  if (mod2 & THOT_MOD_CTRL)
-		    strcat (equiv, "Ctrl");
-		  else if (mod2 & THOT_MOD_ALT)
-		    strcat (equiv, "Alt");
-		  if (mod2 & THOT_MOD_SHIFT)
-		    {
-		      strcat (equiv, sep);
-		      strcat (equiv, "Shift");
-		    }
-		  if (mod2 != THOT_NO_MOD)
-		    strcat (equiv, sep);
-		  if (transText[0] >= 'a' && transText[0] <= 'z')
-		    SetCapital (transText);
-		  strcat (equiv, transText);
+                  /* remove the end colon */
+                  sscanf (ch, "<Key>%80s", transText);
+                  if (transText[0] != EOS)
+                    {
+                      i = strlen (transText) - 1;
+                      if (i > 0 && transText[i] == ':')
+                        transText[i] = EOS;
+                    }
+                  key2 = SpecialKey (transText, (mod2 & THOT_MOD_SHIFT) != 0, &isSpecialKey2);
+                  /* register the equiv string */
+                  strcat (equiv, " ");
+                  if (mod2 & THOT_MOD_CTRL)
+                    strcat (equiv, "Ctrl");
+                  else if (mod2 & THOT_MOD_ALT)
+                    strcat (equiv, "Alt");
+                  if (mod2 & THOT_MOD_SHIFT)
+                    {
+                      strcat (equiv, sep);
+                      strcat (equiv, "Shift");
+                    }
+                  if (mod2 != THOT_NO_MOD)
+                    strcat (equiv, sep);
+                  if (transText[0] >= 'a' && transText[0] <= 'z')
+                    SetCapital (transText);
+                  strcat (equiv, transText);
 
-		  /* Get the next word in the line */
-		  fscanf (file, "%80s", ch);
-		}
+                  /* Get the next word in the line */
+                  fscanf (file, "%80s", ch);
+                }
 
-	      /* Get the commande name */
-	      addr = strchr (ch, '(');
-	      if (addr == NULL)
-		addr = strchr (ch, SPACE);
-	      if (addr)
-		addr[0] = EOS;
-	      else
-		do
-		  i = fgetc (file);
-		while (i != ')');
+              /* Get the commande name */
+              addr = strchr (ch, '(');
+              if (addr == NULL)
+                addr = strchr (ch, SPACE);
+              if (addr)
+                addr[0] = EOS;
+              else
+                do
+                  i = fgetc (file);
+                while (i != ')');
 
-	      /* Selection de la bonne commande */
-	      for (i = 0; i < max; i++)
-		if (!strcmp (ch, MenuActionList[i].ActionName))
-		  break;
+              /* Selection de la bonne commande */
+              for (i = 0; i < max; i++)
+                if (!strcmp (ch, MenuActionList[i].ActionName))
+                  break;
 
-	      if (i == 0)
-		{
-		  /* action insert-string */
-		  if (ch[len] == '&' && ch[len + 1] == '#')
-		    {
-		      /* it's an entity */
-		      j = 2;
-		      while (ch[len + j] != EOS &&
-			     ch[len + j] != ';' &&
-			     ch[len + j] != ')' &&
-			     ch[len + j] != '"')
-			j++;
-		      ch[len + j] = EOS;
-		      if (ch[len + 2] == 'x')
-			sscanf (&ch[len + 3], "%x", &value);
-		      else
-			sscanf (&ch[len + 2], "%d", &value);
-		    }
-		  else
-		    {
-		      addr = (char *)AsciiTranslate (&ch[len]);
-		      value = (unsigned char) addr[0];
-		    }
-		  MemoKey (mod1, key1, isSpecialKey1,
-			   mod2, key2, isSpecialKey2, value, 0);
-		}
-	      else if (i < max)
-		{
-		  /* C'est une autre action Thot */
-		  MemoKey (mod1, key1, isSpecialKey1,
-			   mod2, key2, isSpecialKey2, /*255+i */ 0, i);
-		  /* On met a jour l'equivalent clavier */
-		  TtaFreeMemory (MenuActionList[i].ActionEquiv);
-		  MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
-		}
-	    }
-	  else
-	    {
-	      /* comment line */
-	      fscanf (file, "%80s", ch);
-	      if (!strcasecmp (ch, "no-sequence"))
-		no_sequence = TRUE;
-	      /* skip this line */
-	      do
-		i = fgetc (file);
-	      while (i != NEW_LINE);
-	    }
-	  ch[0] = 0;
-	  fscanf (file, "%80s", ch);
-	} while (e != 0);
+              if (i == 0)
+                {
+                  /* action insert-string */
+                  if (ch[len] == '&' && ch[len + 1] == '#')
+                    {
+                      /* it's an entity */
+                      j = 2;
+                      while (ch[len + j] != EOS &&
+                             ch[len + j] != ';' &&
+                             ch[len + j] != ')' &&
+                             ch[len + j] != '"')
+                        j++;
+                      ch[len + j] = EOS;
+                      if (ch[len + 2] == 'x')
+                        sscanf (&ch[len + 3], "%x", &value);
+                      else
+                        sscanf (&ch[len + 2], "%d", &value);
+                    }
+                  else
+                    {
+                      addr = (char *)AsciiTranslate (&ch[len]);
+                      value = (unsigned char) addr[0];
+                    }
+                  MemoKey (mod1, key1, isSpecialKey1,
+                           mod2, key2, isSpecialKey2, value, 0);
+                }
+              else if (i < max)
+                {
+                  /* C'est une autre action Thot */
+                  MemoKey (mod1, key1, isSpecialKey1,
+                           mod2, key2, isSpecialKey2, /*255+i */ 0, i);
+                  /* On met a jour l'equivalent clavier */
+                  TtaFreeMemory (MenuActionList[i].ActionEquiv);
+                  MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
+                }
+            }
+          else
+            {
+              /* comment line */
+              fscanf (file, "%80s", ch);
+              if (!strcasecmp (ch, "no-sequence"))
+                no_sequence = TRUE;
+              /* skip this line */
+              do
+                i = fgetc (file);
+              while (i != NEW_LINE);
+            }
+          ch[0] = 0;
+          fscanf (file, "%80s", ch);
+        } while (e != 0);
 
       TtaReadClose (file);
     }

@@ -25,7 +25,7 @@
 <Key>Return:        TtcCreateElement() 
 <Key>End:           TtcEndOfLine()
 <Key>Home:          TtcStartOfLine() 
-Ctrl <Key>a:        TtcParentElement()
+<Key>F2:            TtcParentElement()
 
 #Following commented out to remember default actions
 <Key>Up:           TtcPreviousLine() 
@@ -78,7 +78,7 @@ Ctrl <Key>6:                        CreateHeading6()
 
 # BR and &nbsp;
 Ctrl <Key>Return:                   CreateBreak("\212") 
-Ctrl <Key>Space:                    TtcInsertChar("\240")
+Shift <Key>Space:                    TtcInsertChar("\240")
 
 #Types 
 Ctrl Alt <Key>Return:    CreateParagraph() 
