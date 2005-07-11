@@ -11,15 +11,29 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              <label></label>
+              <label>*Insert the URI or browse*</label>
             </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>5</border>
+            <flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
           </object>
           <object class="sizeritem">
-            <object class="wxComboBox" name="wxID_COMBOBOX">
-              <content/>
-              <focused>1</focused>
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxStaticBitmap">
+                  <bitmap>../icons/22x22/XHTML_Link.png</bitmap>
+                </object>
+                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_COMBOBOX">
+                  <content/>
+                  <focused>1</focused>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
             </object>
             <flag>wxEXPAND</flag>
           </object>
