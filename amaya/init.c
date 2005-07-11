@@ -5811,6 +5811,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 #ifdef _WX
           /* get the current document (CurrentDocument not valid) */
           TtaGiveActiveView (&doc, &i);
+          if (DocumentSource[doc] && DocumentTypes[doc] != docSource)
+            /* it could be a log or show document */
+            doc = DocumentSource[doc];
           CurrentDocument = doc;
           if ((CurrentDocument == 0) || /* this is the first loaded doc */
               (!InNewWindow && DontReplaceOldDoc) || /* in a new tab */
@@ -8534,7 +8537,7 @@ void InitAutoSave ()
       fseek (file, 0L, 2);	/* end of the file */
       AutoSave_list_len = ftell (file) + GetMaxURLList() + 4;
       AutoSave_list = (char *)TtaGetMemory (AutoSave_list_len);
-      URL_list[0] = EOS;
+      AutoSave_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
       /* initialize the list by reading the file */
       i = 0;
