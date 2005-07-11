@@ -1847,7 +1847,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	      if (pfloatL)
 		floatL = pfloatL->FlBox;
 	    }
-	  if (pfloatL)
+	  if (pfloatL && floatL)
 	    {
 	      /* line at the right of a previous left float */
 	      //pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
@@ -1902,7 +1902,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 		floatR = pfloatR->FlBox;
 	    }
 
-	  if (pfloatR)
+	  if (pfloatR && floatR)
 	    {
 	      /* line extended to the left edge of a previous right float */
 	      pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
