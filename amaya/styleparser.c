@@ -1923,7 +1923,6 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
   else if (css && Style_parsing == 0 && RedisplayImages == 0 && RedisplayDoc)
     {
       /* all background images are now loaded */
-      //for (doc = 1; doc < DocumentTableLength; doc++)
       doc = RedisplayDoc;
       if (css->infos[doc] &&
           /* don't manage a document used by make book */
@@ -1940,7 +1939,7 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
           /* Change the Display Mode to take into account the new
              presentation */
           dispMode = TtaGetDisplayMode (doc);
-          //printf ("ParseCSSImageCallback Show BGimages\n");
+printf ("ParseCSSImageCallback Show BGimages\n");
           /* force the redisplay of this box */
           TtaSetDisplayMode (doc, NoComputedDisplay);
           TtaSetDisplayMode (doc, dispMode);
@@ -1948,10 +1947,7 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
         }
     }
   else
-    {
-      //printf ("ParseCSSImageCallback parsing=%d Images=%d Doc=%d\n", Style_parsing,RedisplayImages,RedisplayDoc);
-      RedisplayBGImage = TRUE;
-    }
+    RedisplayBGImage = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -4309,12 +4305,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
           image.pointer = NULL;
           TtaSetStylePresentation (PRBackgroundPicture, element, tsch, ctxt,
                                    image);
-          /* no background color */
-          value.typed_data.unit = UNIT_INVALID;
-          value.typed_data.real = FALSE;
-          value.typed_data.value = PATTERN_NONE;
-          value.typed_data.unit = UNIT_REL;
-          TtaSetStylePresentation (PRFillPattern, element, tsch, ctxt, value);
         }
     }
   else if (!strncasecmp (cssRule, "url", 3))
@@ -4397,21 +4387,13 @@ static char *ParseACSSBackgroundAttachment (Element element, PSchema tsch,
                                             char *cssRule, CSSInfoPtr css,
                                             ThotBool isHTML)
 {
-  char     *ptr;
-
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "scroll", 6))
     {
-      /* force no-repeat for that background image */
-      ptr = "no-repeat";
-      ParseACSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "fixed", 5))
     {
-      /* force no-repeat for that background image */
-      ptr = "no-repeat";
-      ParseACSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   return (cssRule);
@@ -4561,7 +4543,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
         {
           cssRule = ParseACSSBackgroundAttachment (element, tsch, ctxt,
                                                    cssRule, css, isHTML);
-          attach = TRUE;
+          attach = repeat = TRUE;
         }
       /* perhaps a Background Repeat */
       else if (!strncasecmp (cssRule, "no-repeat", 9) ||
@@ -4583,26 +4565,11 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
         {
           cssRule = ParseACSSBackgroundPosition (element, tsch, ctxt,
                                                  cssRule, css, isHTML);
-          position = TRUE;
+          position = repeat = TRUE;
         }
       /* perhaps a Background Color */
       else if (!color)
         {
-          if (!img)
-            {
-              img = TRUE;
-              ParseCSSBackgroundImage (element, tsch, ctxt, "none",
-                                       css, isHTML);
-              if (!repeat)
-                ParseACSSBackgroundRepeat (element, tsch, ctxt,
-                                           "repeat", css, isHTML);
-              if (!position)
-                ParseACSSBackgroundPosition (element, tsch, ctxt,
-                                             "0% 0%", css, isHTML);
-              if (!attach)
-                ParseACSSBackgroundAttachment (element, tsch, ctxt,
-                                               "scroll", css, isHTML);
-            }
           skippedNL = NewLineSkipped;
           /* check if the rule has been found */
           ptr = cssRule;
@@ -4617,11 +4584,24 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
           else
             color = TRUE;
         }
-      else {
+      else
         cssRule = SkipProperty (cssRule, FALSE);
-      }
+
       cssRule = SkipBlanksAndComments (cssRule);
     }
+
+  if (color && !img)
+    ParseCSSBackgroundImage (element, tsch, ctxt, "none", css, isHTML);
+  
+  if (img && !repeat)
+    ParseACSSBackgroundRepeat (element, tsch, ctxt,
+                               "repeat", css, isHTML);
+  if (img && !position)
+    ParseACSSBackgroundPosition (element, tsch, ctxt,
+                                 "0% 0%", css, isHTML);
+  if (img && !attach)
+    ParseACSSBackgroundAttachment (element, tsch, ctxt,
+                                   "scroll", css, isHTML);
   return (cssRule);
 }
 
@@ -6822,7 +6802,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     }
   /* closing the CSS parsing */
   Style_parsing--;
-  if (Style_parsing == 0 && RedisplayImages == 0 && RedisplayBGImage)
+  if (RedisplayImages == 0 && RedisplayBGImage)
     {
       /* CSS parsing finishes after a BG image was loaded */
       RedisplayBGImage = FALSE;
