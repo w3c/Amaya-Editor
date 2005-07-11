@@ -332,8 +332,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       TtaFreeMemory (s);
       if (!UserAnswer)
         return;
-      else
-        TtaFileUnlink (url);
     }
 
   pathname = (char *)TtaGetMemory (MAX_LENGTH);

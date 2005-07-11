@@ -87,9 +87,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref,
   else
     {
       // New document
-      //XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->Hide();
-      //XRCCTRL(*this, "wxID_FILENAME", wxTextCtrl)->Hide();
-      XRCCTRL(*this, "wxID_BUTTON_FILENAME", wxBitmapButton)->Hide();
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
       XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->SetValue( profiles );
       XRCCTRL(*this, "wxID_PROFILE_LABEL", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_XML_PROFILE)));
@@ -131,7 +128,6 @@ OpenDocDlgWX::~OpenDocDlgWX()
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
 {
-#ifdef IV
   // Create a generic filedialog
   wxDirDialog * p_dlg = new wxDirDialog(this);
   p_dlg->SetStyle(p_dlg->GetStyle() | wxDD_NEW_DIR_BUTTON);
@@ -141,28 +137,8 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
       XRCCTRL(*this, "wxID_DIR", wxTextCtrl)->SetValue( p_dlg->GetPath() );
       p_dlg->Destroy();
     }
-#endif
-  wxFileDialog * p_dlg = new wxFileDialog
-    (this,
-     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-     _T(""),
-     _T(""), 
-     m_Filter,
-     wxOPEN | wxCHANGE_DIR /* remember last directory */);
-  p_dlg->SetPath(XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue());
-  p_dlg->SetFilterIndex(*m_pLastUsedFilter);
-
-  if (p_dlg->ShowModal() == wxID_OK)
-    {
-      *m_pLastUsedFilter = p_dlg->GetFilterIndex();
-      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
-	  UpdateDirAndFilenameFromString( p_dlg->GetPath() );
-      p_dlg->Destroy();
-    }
   else
-    {
-      p_dlg->Destroy();
-    }
+    p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
@@ -192,9 +168,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       p_dlg->Destroy();
     }
   else
-    {
-      p_dlg->Destroy();
-    }
+    p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
