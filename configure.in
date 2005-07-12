@@ -1434,11 +1434,17 @@ fi
 if test "$with_dav" = "yes" ; then
     AC_SUBST_FILE(dav_frag)
     dav_frag=$srcdir/davlib/Makefile.dav
+else
+    AC_SUBST_FILE(dav_frag)
+    dav_frag=/dev/null
 fi
 
 if test "$with_templates" = "yes" ; then
     AC_SUBST_FILE(templates_frag)
     templates_frag=$srcdir/amaya/Makefile.templates
+else
+    AC_SUBST_FILE(templates_frag)
+    templates_frag=/dev/null
 fi
 
 dnl  ***************************************************************

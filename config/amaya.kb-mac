@@ -78,7 +78,7 @@ Ctrl <Key>6:                        CreateHeading6()
 
 # BR and &nbsp;
 Ctrl <Key>Return:                   CreateBreak("\212") 
-Shift <Key>Space:                    TtcInsertChar("\240")
+Ctrl <Key>Space:                    TtcInsertChar("\240")
 
 #Types 
 Ctrl Alt <Key>Return:    CreateParagraph() 
