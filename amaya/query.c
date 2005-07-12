@@ -1041,9 +1041,7 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
       if (me->method != METHOD_PUT &&
           me->request->orig_output_stream != NULL)
       {
-#ifndef _MACOS
         AHTFWriter_FREE (me->request->orig_output_stream);
-#endif /* _MACOS */
         me->request->orig_output_stream = NULL;
         if (me->output != stdout)
         {
@@ -3577,12 +3575,15 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    if (!tmp2 || !strcmp (tmp2, "www/unknown"))
      {
        HTAtom *tmp_atom;
+       char   *s = NULL;
        
        tmp_atom = AHTGuessAtom_for (me->urlName, contentType);
-       if (!tmp_atom || !strcmp (HTAtom_name (tmp_atom), "www/unknown"))
-	 {
-	   /* ask the user for a MIME type */
-	 }
+       if (tmp_atom)
+         s = HTAtom_name (tmp_atom);
+       if (!tmp_atom || (s && !strcmp (s, "www/unknown")))
+         {
+           /* ask the user for a MIME type */
+         }
        HTAnchor_setFormat (dest_anc_parent, tmp_atom);
        tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
      }
