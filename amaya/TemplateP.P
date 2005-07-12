@@ -130,10 +130,8 @@ BOXES
 RULES
 
  Template:	BEGIN
-	IN Structure_view BEGIN
-		Visibility: 0;
+		Visibility: Enclosing =;
 		END;
-	END;
 
  PICTURE_UNIT: BEGIN
  	{Visibility: 0;}

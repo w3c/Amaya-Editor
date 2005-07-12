@@ -1851,8 +1851,8 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
         }
       else
         {
-          /* Search the element inside a supported DTD */
-          elType->ElSSchema = currentParserCtxt->XMLSSchema;
+          /* Search the element inside a supported DTD */	  
+	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
           MapXMLElementType (currentParserCtxt->XMLtype, elementName, elType,
                              mappedName, content, level, XMLcontext.doc);
         }

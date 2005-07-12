@@ -16,7 +16,11 @@ USES
 #ifdef BOOKMARKS
        , Topics
 #endif
+#ifdef TEMPLATES
+       , Template
+#endif
        , MathML;
+
 
 
 DEFAULT

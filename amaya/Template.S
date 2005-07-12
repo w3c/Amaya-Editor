@@ -28,7 +28,6 @@ STRUCT
 	
 EXCEPT
 
-    Template:        Hidden;
     Unknown_attribute: Invisible;
 
 END

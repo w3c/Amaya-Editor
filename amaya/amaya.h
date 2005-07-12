@@ -500,6 +500,7 @@ typedef struct _DocumentMetaDataElement
   char      *content_length;   /* content length returned by the server */
   char      *content_location; /* simplified content location returned by the server */
   char      *full_content_location; /* full content location returned by the server */
+
   ClickEvent method;           /* method used to send this data */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
 #ifdef ANNOTATIONS
@@ -507,6 +508,13 @@ typedef struct _DocumentMetaDataElement
 				  this variable giveso the annoted document
 				  docid */
 #endif /* ANNOTATIONS */
+
+#ifdef TEMPLATES
+  char      *template_location;   /* if this document is derived from a template,
+				     The location of the template used to create the document 
+				     is stored in this variable */
+#endif /* TEMPLATES */
+  
 } DocumentMetaDataElement;
 
 

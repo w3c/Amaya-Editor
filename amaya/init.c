@@ -2811,6 +2811,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* update the menus according to the profile */
        /* By default no log file */
       TtaSetItemOff (doc, 1, File, BShowLogFile);
+#ifndef TEMPLATES
+      TtaSetItemOff (doc, 1, File, BTemplate);
+#endif /* TEMPLATES */
 #ifndef BOOKMARKS
       /* if bookmarks are not enabled, disable the menu */
       TtaSetMenuOff (doc, 1, Bookmarks_);
@@ -4146,6 +4149,10 @@ Document LoadDocument (Document doc, char *pathname,
       DocumentMeta[newdoc]->charset = NULL;
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
+
+#ifdef TEMPLATES
+      DocumentMeta[newdoc]->template_location = NULL;
+#endif /* TEMPLATES */
 
       if (httpcharset != UNDEFINED_CHARSET && charEncoding)
         {

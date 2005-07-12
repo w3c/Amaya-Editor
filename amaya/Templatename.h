@@ -1,12 +1,12 @@
 
-#ifdef TEMPLATE
-/* mapping table of template elements */
+#ifdef TEMPLATES
 #include "Template.h"
+/* mapping table of template elements */
 static ElemMapping    TemplateElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order  and in lower case */
-   {"free-content", SPACE, Template_EL_FreeContent, L_OtherValue, FALSE},
-   {"free-structure", SPACE, Template_EL_FreeStructure, L_OtherValue, FALSE},
+   {"free_content", SPACE, Template_EL_free_content, L_OtherValue, FALSE},
+   {"free_struct", SPACE, Template_EL_free_struct, L_OtherValue, FALSE},
    {"", SPACE, 0, L_OtherValue, FALSE} 	/* Last entry. Mandatory */
 };
 
@@ -23,9 +23,9 @@ static AttrValueMapping TemplateAttrValueMappingTable[] =
 {
    {0, "", 0}			/* Last entry. Mandatory */
 };
-#else /* TEMPLATE */
+#else /* TEMPLATES */
 /* there is no mapping table of Template elements */
 
 static ElemMapping *TemplateElemMappingTable = NULL;
 static AttributeMapping* TemplateAttributeMappingTable = NULL;
-#endif /* TEMPLATE */
+#endif /* TEMPLATES */
