@@ -852,7 +852,10 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/include/  \
-         ; \
+         /opt/local/include/  \
+         /opt/local/include/freetype2/  \
+         /usr/X11R6/include/freetype2/freetype/  \
+        ; \
          do
          if test -r "$ac_dir/ft2build.h"; then
             FREETYPE_INCLUDES="${FREETYPE_INCLUDES} -I$ac_dir"
@@ -866,6 +869,8 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.9.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.4.0.sdk/usr/X11R6/lib/  \
+         /opt/local/lib/  \
+         /usr/X11R6/lib/  \
          ; \
          do
          if test -r "$ac_dir/libfreetype.a"; then
