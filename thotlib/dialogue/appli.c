@@ -2151,7 +2151,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam,
                   X_Pos = 0;
                   TtcScrollLeft (document, view);
                 }
-              LocateSelectionInView (frame, X_Pos, Y_Pos, 1);
+              LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
             }
           else
             {
@@ -2163,7 +2163,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam,
                   if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
                       (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
                     {
-                      LocateSelectionInView (frame, X_Pos, Y_Pos, 1);
+                      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
                       oldXPos = X_Pos;
                       oldYPos = Y_Pos;
                     }
