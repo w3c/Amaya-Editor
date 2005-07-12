@@ -146,6 +146,10 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   else
     window_size = wxSize(800, 600);
 
+#ifdef _MACOS
+  if (y < 20)
+    y = 20;
+#endif /* _MACOS */
   wxPoint window_pos(x, y);
 
   /* Create the window */
