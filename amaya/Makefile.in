@@ -279,7 +279,6 @@ AMAYA_OBJ = \
 	XLinkbuilder.o \
 	XLinkedit.o \
 	templates.o \
-	Templatebuilder.o \
 	trans.o \
 	transparse.o \
 	UIcss.o \
