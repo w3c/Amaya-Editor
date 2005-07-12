@@ -12,7 +12,7 @@
  */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -119,10 +119,10 @@ PtrAbstractBox SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
     {
       /* the next sibling of the father */
       do
-	if (pAb->AbEnclosing != NULL && pAb->AbEnclosing != pRoot)
-	  pAb = pAb->AbEnclosing;
-	else
-	  return (NULL);
+        if (pAb->AbEnclosing != NULL && pAb->AbEnclosing != pRoot)
+          pAb = pAb->AbEnclosing;
+        else
+          return (NULL);
       while (pAb->AbNext == NULL);
       return (pAb->AbNext);
     }
@@ -133,20 +133,20 @@ PtrAbstractBox SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentTable (PtrBox pBox)
 {
-   PtrAbstractBox      pAb;
-   ThotBool            found;
+  PtrAbstractBox      pAb;
+  ThotBool            found;
 
-   /* check parents */
-   found = FALSE;
-   pAb = pBox->BxAbstractBox->AbEnclosing;
-   while (pAb != NULL && !found)
-     {
-       if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoTable)
-	 found = TRUE;
-       else
-	 pAb = pAb->AbEnclosing;
-     }
-   return (pAb);
+  /* check parents */
+  found = FALSE;
+  pAb = pBox->BxAbstractBox->AbEnclosing;
+  while (pAb != NULL && !found)
+    {
+      if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoTable)
+        found = TRUE;
+      else
+        pAb = pAb->AbEnclosing;
+    }
+  return (pAb);
 }
 
 
@@ -155,27 +155,27 @@ PtrAbstractBox GetParentTable (PtrBox pBox)
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentCell (PtrBox pBox)
 {
-   PtrAbstractBox      pAb;
-   ThotBool            found;
+  PtrAbstractBox      pAb;
+  ThotBool            found;
 
-   if (pBox == NULL || pBox->BxType == BoColumn ||  pBox->BxType == BoRow)
-     pAb = NULL;
-   else if (pBox->BxAbstractBox == NULL)
-     pAb = NULL;
-   else
-     {
-       /* check parents */
-       found = FALSE;
-       pAb = pBox->BxAbstractBox->AbEnclosing;
-       while (pAb != NULL && !found)
-	 {
-	   if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoCell)
-	     found = TRUE;
-	   else
-	     pAb = pAb->AbEnclosing;
-	 }
-     }
-   return (pAb);
+  if (pBox == NULL || pBox->BxType == BoColumn ||  pBox->BxType == BoRow)
+    pAb = NULL;
+  else if (pBox->BxAbstractBox == NULL)
+    pAb = NULL;
+  else
+    {
+      /* check parents */
+      found = FALSE;
+      pAb = pBox->BxAbstractBox->AbEnclosing;
+      while (pAb != NULL && !found)
+        {
+          if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoCell)
+            found = TRUE;
+          else
+            pAb = pAb->AbEnclosing;
+        }
+    }
+  return (pAb);
 }
 
 /*----------------------------------------------------------------------
@@ -183,194 +183,194 @@ PtrAbstractBox GetParentCell (PtrBox pBox)
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentDraw (PtrBox pBox)
 {
-   PtrAbstractBox      pAb;
-   ThotBool            found;
+  PtrAbstractBox      pAb;
+  ThotBool            found;
 
-   if (pBox == NULL)
-     pAb = NULL;
-   else if (pBox->BxAbstractBox == NULL)
-     pAb = NULL;
-   else
-     {
-       /* check parents */
-       found = FALSE;
-       pAb = pBox->BxAbstractBox->AbEnclosing;
-       while (pAb != NULL && !found)
-	 {
-	   if (TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
-				 pAb->AbElement->ElStructSchema))
-	     found = TRUE;
-	   else
-	     pAb = pAb->AbEnclosing;
-	 }
-     }
-   return (pAb);
+  if (pBox == NULL)
+    pAb = NULL;
+  else if (pBox->BxAbstractBox == NULL)
+    pAb = NULL;
+  else
+    {
+      /* check parents */
+      found = FALSE;
+      pAb = pBox->BxAbstractBox->AbEnclosing;
+      while (pAb != NULL && !found)
+        {
+          if (TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            found = TRUE;
+          else
+            pAb = pAb->AbEnclosing;
+        }
+    }
+  return (pAb);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void SetControlPoints (float x, float y, float l1, float l2,
-			      float theta1, float theta2, C_points * cp)
+                              float theta1, float theta2, C_points * cp)
 {
-   float               s, theta, r;
+  float               s, theta, r;
 
-   r = (float) (1.0 - 0.45);
-   /* 0 <= theta1, theta2 < 2PI */
-   theta = (theta1 + theta2) / 2;
+  r = (float) (1.0 - 0.45);
+  /* 0 <= theta1, theta2 < 2PI */
+  theta = (theta1 + theta2) / 2;
 
-   if (theta1 > theta2)
-     {
-	s = (float) sin ((double) (theta - theta2));
-	theta1 = theta + (float) M_PI_2;
-	theta2 = theta - (float) M_PI_2;
-     }
-   else
-     {
-	s = (float) sin ((double) (theta2 - theta));
-	theta1 = theta - (float) M_PI_2;
-	theta2 = theta + (float) M_PI_2;
-     }
+  if (theta1 > theta2)
+    {
+      s = (float) sin ((double) (theta - theta2));
+      theta1 = theta + (float) M_PI_2;
+      theta2 = theta - (float) M_PI_2;
+    }
+  else
+    {
+      s = (float) sin ((double) (theta2 - theta));
+      theta1 = theta - (float) M_PI_2;
+      theta2 = theta + (float) M_PI_2;
+    }
 
-   if (s > _1dSQR2)
-      s = (float) _SQR2 - s;
-   s *= r;
-   l1 *= s;
-   l2 *= s;
-   cp->lx = x + l1 * (float) cos ((double) theta1);
-   cp->ly = y - l1 * (float) sin ((double) theta1);
-   cp->rx = x + l2 * (float) cos ((double) theta2);
-   cp->ry = y - l2 * (float) sin ((double) theta2);
+  if (s > _1dSQR2)
+    s = (float) _SQR2 - s;
+  s *= r;
+  l1 *= s;
+  l2 *= s;
+  cp->lx = x + l1 * (float) cos ((double) theta1);
+  cp->ly = y - l1 * (float) sin ((double) theta1);
+  cp->rx = x + l2 * (float) cos ((double) theta2);
+  cp->ry = y - l2 * (float) sin ((double) theta2);
 }
 
 
 /*----------------------------------------------------------------------
-   ComputeControlPoints calcule les points de controle de la courbe.     
-   Le parametre nb contient le nombre de points + 1        
-   definis dans la polyline.                               
+  ComputeControlPoints calcule les points de controle de la courbe.     
+  Le parametre nb contient le nombre de points + 1        
+  definis dans la polyline.                               
   ----------------------------------------------------------------------*/
 C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 {
-   C_points           *controls;
-   PtrTextBuffer       pBuffer;
-   int                 i, j;
-   float               dx, dy;
-   float               x, y, x1, y1, x2, y2, x3, y3;
-   float               l1, l2, theta1, theta2;
+  C_points           *controls;
+  PtrTextBuffer       pBuffer;
+  int                 i, j;
+  float               dx, dy;
+  float               x, y, x1, y1, x2, y2, x3, y3;
+  float               l1, l2, theta1, theta2;
 
-   /* alloue la liste des points de controle */
-   controls = (C_points *) TtaGetMemory (sizeof (C_points) * nb);
+  /* alloue la liste des points de controle */
+  controls = (C_points *) TtaGetMemory (sizeof (C_points) * nb);
 
-   pBuffer = buffer;
-   j = 1;
-   x1 = (float) pBuffer->BuPoints[j].XCoord;
-   y1 = (float) pBuffer->BuPoints[j].YCoord;
-   j++;
-   x2 = (float) pBuffer->BuPoints[j].XCoord;
-   y2 = (float) pBuffer->BuPoints[j].YCoord;
-   if (nb < 3)
-     {
-	/* cas particulier des courbes avec 2 points */
-	x3 = x2;
-	y3 = y2;
-     }
-   else
-     {
-	j++;
-	x3 = (float) pBuffer->BuPoints[j].XCoord;
-	y3 = (float) pBuffer->BuPoints[j].YCoord;
-     }
+  pBuffer = buffer;
+  j = 1;
+  x1 = (float) pBuffer->BuPoints[j].XCoord;
+  y1 = (float) pBuffer->BuPoints[j].YCoord;
+  j++;
+  x2 = (float) pBuffer->BuPoints[j].XCoord;
+  y2 = (float) pBuffer->BuPoints[j].YCoord;
+  if (nb < 3)
+    {
+      /* cas particulier des courbes avec 2 points */
+      x3 = x2;
+      y3 = y2;
+    }
+  else
+    {
+      j++;
+      x3 = (float) pBuffer->BuPoints[j].XCoord;
+      y3 = (float) pBuffer->BuPoints[j].YCoord;
+    }
 
-   dx = x1 - x2;
-   dy = y2 - y1;
-   l1 = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l1 == 0.0)
-      theta1 = 0.0;
-   else
-      theta1 = (float) atan2 ((double) dy, (double) dx);
+  dx = x1 - x2;
+  dy = y2 - y1;
+  l1 = (float) sqrt ((double) (dx * dx + dy * dy));
+  if (l1 == 0.0)
+    theta1 = 0.0;
+  else
+    theta1 = (float) atan2 ((double) dy, (double) dx);
 
-   dx = x3 - x2;
-   dy = y2 - y3;
-   l2 = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l2 == 0.0)
-      theta2 = 0.0;
-   else
-      theta2 = (float) atan2 ((double) dy, (double) dx);
+  dx = x3 - x2;
+  dy = y2 - y3;
+  l2 = (float) sqrt ((double) (dx * dx + dy * dy));
+  if (l2 == 0.0)
+    theta2 = 0.0;
+  else
+    theta2 = (float) atan2 ((double) dy, (double) dx);
 
-   /* -PI <= theta1, theta2 <= PI */
-   /* 0 <= theta1, theta2 < 2PI */
-   if (theta1 < 0)
-      theta1 += (float) _2xPI;
-   if (theta2 < 0)
-      theta2 += (float) _2xPI;
-   SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[2]);
+  /* -PI <= theta1, theta2 <= PI */
+  /* 0 <= theta1, theta2 < 2PI */
+  if (theta1 < 0)
+    theta1 += (float) _2xPI;
+  if (theta2 < 0)
+    theta2 += (float) _2xPI;
+  SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[2]);
 
-   nb--;			/* dernier point */
-   x = x2;			/* memorise les points pour fermer la courbe */
-   y = y2;
-   for (i = 3; i <= nb; i++)
-     {
-	x2 = x3;
-	y2 = y3;
-	l1 = l2;
-	if (theta2 >= M_PI)
-	   theta1 = theta2 - (float) M_PI;
-	else
-	   theta1 = theta2 + (float) M_PI;
+  nb--;			/* dernier point */
+  x = x2;			/* memorise les points pour fermer la courbe */
+  y = y2;
+  for (i = 3; i <= nb; i++)
+    {
+      x2 = x3;
+      y2 = y3;
+      l1 = l2;
+      if (theta2 >= M_PI)
+        theta1 = theta2 - (float) M_PI;
+      else
+        theta1 = theta2 + (float) M_PI;
 
-	if (i == nb)
-	  {
-	     /* Traitement du dernier point */
-	     x3 = x1;
-	     y3 = y1;
-	  }
-	else
-	  {
-	     j++;
-	     if (j >= pBuffer->BuLength)
-	       {
-		  if (pBuffer->BuNext != NULL)
-		    {
-		       /* Changement de buffer */
-		       pBuffer = pBuffer->BuNext;
-		       j = 0;
-		    }
-	       }
-	     x3 = (float) pBuffer->BuPoints[j].XCoord;
-	     y3 = (float) pBuffer->BuPoints[j].YCoord;
-	  }
-	dx = x3 - x2;
-	dy = y2 - y3;
-	l2 = (float) sqrt ((double) (dx * dx + dy * dy));
-	if (l2 == 0.0)
-	   theta2 = 0.0;
-	else
-	   theta2 = (float) atan2 ((double) dy, (double) dx);
-	if (theta2 < 0)
-	   theta2 += (float) _2xPI;
-	SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[i]);
-     }
+      if (i == nb)
+        {
+          /* Traitement du dernier point */
+          x3 = x1;
+          y3 = y1;
+        }
+      else
+        {
+          j++;
+          if (j >= pBuffer->BuLength)
+            {
+              if (pBuffer->BuNext != NULL)
+                {
+                  /* Changement de buffer */
+                  pBuffer = pBuffer->BuNext;
+                  j = 0;
+                }
+            }
+          x3 = (float) pBuffer->BuPoints[j].XCoord;
+          y3 = (float) pBuffer->BuPoints[j].YCoord;
+        }
+      dx = x3 - x2;
+      dy = y2 - y3;
+      l2 = (float) sqrt ((double) (dx * dx + dy * dy));
+      if (l2 == 0.0)
+        theta2 = 0.0;
+      else
+        theta2 = (float) atan2 ((double) dy, (double) dx);
+      if (theta2 < 0)
+        theta2 += (float) _2xPI;
+      SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[i]);
+    }
 
-   /* Traitement du 1er point */
-   x2 = x3;
-   y2 = y3;
-   l1 = l2;
-   if (theta2 >= M_PI)
-      theta1 = theta2 - (float) M_PI;
-   else
-      theta1 = theta2 + (float) M_PI;
+  /* Traitement du 1er point */
+  x2 = x3;
+  y2 = y3;
+  l1 = l2;
+  if (theta2 >= M_PI)
+    theta1 = theta2 - (float) M_PI;
+  else
+    theta1 = theta2 + (float) M_PI;
 
-   dx = x - x2;
-   dy = y2 - y;
-   l2 = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l2 == 0.0)
-      theta2 = 0.0;
-   else
-      theta2 = (float) atan2 ((double) dy, (double) dx);
-   if (theta2 < 0)
-      theta2 += (float) _2xPI;
-   SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[1]);
+  dx = x - x2;
+  dy = y2 - y;
+  l2 = (float) sqrt ((double) (dx * dx + dy * dy));
+  if (l2 == 0.0)
+    theta2 = 0.0;
+  else
+    theta2 = (float) atan2 ((double) dy, (double) dx);
+  if (theta2 < 0)
+    theta2 += (float) _2xPI;
+  SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[1]);
 
-   return (controls);
+  return (controls);
 }
 
 /*----------------------------------------------------------------------
@@ -394,8 +394,8 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb)
   width returns the width of the text.
   ----------------------------------------------------------------------*/
 char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
-		     SpecFont font, int *width, int *nSpaces,
-		     char dir, char bidi, ThotBool *embedded, char prevscript)
+                     SpecFont font, int *width, int *nSpaces,
+                     char dir, char bidi, ThotBool *embedded, char prevscript)
 {
   char                script, sc;
   char                newscript, embed = '*';
@@ -428,241 +428,241 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
     {
       /* check the current character */
       while (*ind >= (*pBuffer)->BuLength)
-	{
-	  /* skip empty buffers */
-	  *pBuffer = (*pBuffer)->BuNext;
-	  if (*pBuffer == NULL)
-	    return script;
-	  *ind = 0;
-	}
+        {
+          /* skip empty buffers */
+          *pBuffer = (*pBuffer)->BuNext;
+          if (*pBuffer == NULL)
+            return script;
+          *ind = 0;
+        }
       car = (*pBuffer)->BuContent[*ind];
       if (bidi != 'O')
-	{
-	  /* the text must be analysed and may be split */
-	  newscript = TtaGetCharacterScript (car);
-	  if (newscript == ' ')
-	    {
-	      if (script == '*' && *ind == 0)
-		{
-		  if (!(*embedded))
-		    script = prevscript;
-		  else if (prevscript == 'A')
-		    script = 'L';
-		  else
-		    script = 'A';
-		}
-	      if (script == 'A')
-		{
-		  if (car >= 0x060C && car <= 0x06B0) /* arabic char */
-		    charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
-		  else
-		    charWidth = BoxCharacterWidth (car, font);
-		  *width += charWidth;
-		  if (car == 0x28 || car == 0x29 )
-		    *embedded = TRUE;
-		  if (car != EOS)
-		    pos++;
-		  /* next character */
-		  (*ind)++;
-		}
-	      else if (script == 'L')
-		{
-		  if (*embedded)  /* embedded script compute the next */
-		    {
-		      if (*ind == *nChars && (*pBuffer)->BuNext)
-			ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]);
-		      else if (*ind == *nChars -1)
-			{
-			  if (dir == 'R' )
-			    ss = 'A';
-			  else
-			    ss = 'L';
-			}
-		      else
-			ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]);
+        {
+          /* the text must be analysed and may be split */
+          newscript = TtaGetCharacterScript (car);
+          if (newscript == ' ')
+            {
+              if (script == '*' && *ind == 0)
+                {
+                  if (!(*embedded))
+                    script = prevscript;
+                  else if (prevscript == 'A')
+                    script = 'L';
+                  else
+                    script = 'A';
+                }
+              if (script == 'A')
+                {
+                  if (car >= 0x060C && car <= 0x06B0) /* arabic char */
+                    charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
+                  else
+                    charWidth = BoxCharacterWidth (car, font);
+                  *width += charWidth;
+                  if (car == 0x28 || car == 0x29 )
+                    *embedded = TRUE;
+                  if (car != EOS)
+                    pos++;
+                  /* next character */
+                  (*ind)++;
+                }
+              else if (script == 'L')
+                {
+                  if (*embedded)  /* embedded script compute the next */
+                    {
+                      if (*ind == *nChars && (*pBuffer)->BuNext)
+                        ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]);
+                      else if (*ind == *nChars -1)
+                        {
+                          if (dir == 'R' )
+                            ss = 'A';
+                          else
+                            ss = 'L';
+                        }
+                      else
+                        ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]);
 		      
-		      if ( ss  !='L')
-			{
-			  newscript = 'A';
-			  oldpos = pos;
-			  oldind = *ind;
-			  oldspaces = *nSpaces;
-			  oldwidth = *width;
-			  oldbuff = *pBuffer;
-			}
-		    }
-		}
-	      if (script == '*' && *embedded)
-		{
-		  script = newscript = 'A';
-		  *embedded = FALSE;
-		}
-	    }
+                      if ( ss  !='L')
+                        {
+                          newscript = 'A';
+                          oldpos = pos;
+                          oldind = *ind;
+                          oldspaces = *nSpaces;
+                          oldwidth = *width;
+                          oldbuff = *pBuffer;
+                        }
+                    }
+                }
+              if (script == '*' && *embedded)
+                {
+                  script = newscript = 'A';
+                  *embedded = FALSE;
+                }
+            }
   
-	  if (newscript == 'D')
-	    {
-	      if (script!='*' && embed !='*')
-		embed= 'E';
+          if (newscript == 'D')
+            {
+              if (script!='*' && embed !='*')
+                embed= 'E';
 
-	      if (oldbuff == NULL && pos)
-		{
-		  /* keep in memory a possible splitting position */
-		  oldpos = pos;
-		  oldind = *ind;
-		  oldspaces = *nSpaces;
-		  oldwidth = *width;
-		  oldbuff = *pBuffer;
-		}
+              if (oldbuff == NULL && pos)
+                {
+                  /* keep in memory a possible splitting position */
+                  oldpos = pos;
+                  oldind = *ind;
+                  oldspaces = *nSpaces;
+                  oldwidth = *width;
+                  oldbuff = *pBuffer;
+                }
 	    
-	      if (*ind == *nChars && (*pBuffer)->BuNext)
-		ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
-	      else if (*ind == *nChars -1) 
-		{
-		  if (dir == 'R' )
-		    ss = 'A'; 
-		  else
-		    ss = 'L';  
-		}
-	      else
-		ss = TtaGetCharacterScript ((*pBuffer)->BuContent[*ind +1]); 
+              if (*ind == *nChars && (*pBuffer)->BuNext)
+                ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
+              else if (*ind == *nChars -1) 
+                {
+                  if (dir == 'R' )
+                    ss = 'A'; 
+                  else
+                    ss = 'L';  
+                }
+              else
+                ss = TtaGetCharacterScript ((*pBuffer)->BuContent[*ind +1]); 
 
-	      if (ss == 'D' && script == '*')
-		script = newscript = 'L';
-	      if (ss == 'D' && script == 'A') 
-		{
-		  *nChars = max - oldpos;
-		  *ind = oldind;
-		  *nSpaces = oldspaces;
-		  *width = oldwidth;
-		  *pBuffer = oldbuff;
-		  return script; 
-		}
-	    }
+              if (ss == 'D' && script == '*')
+                script = newscript = 'L';
+              if (ss == 'D' && script == 'A') 
+                {
+                  *nChars = max - oldpos;
+                  *ind = oldind;
+                  *nSpaces = oldspaces;
+                  *width = oldwidth;
+                  *pBuffer = oldbuff;
+                  return script; 
+                }
+            }
 
-	  if (newscript == 'A')
-	    {
-	      if (*ind == *nChars && (*pBuffer)->BuNext)
-		ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
-	      else if (*ind == *nChars -1) 
-		{
-		  if (dir == 'R' )
-		    ss = 'A'; 
-		  else
-		    ss = 'L';  
-		}
-	      else
-		ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
+          if (newscript == 'A')
+            {
+              if (*ind == *nChars && (*pBuffer)->BuNext)
+                ss = TtaGetCharacterScript ((*pBuffer)->BuNext->BuContent[0]); 
+              else if (*ind == *nChars -1) 
+                {
+                  if (dir == 'R' )
+                    ss = 'A'; 
+                  else
+                    ss = 'L';  
+                }
+              else
+                ss = TtaGetCharacterScript((*pBuffer)->BuContent[*ind +1]); 
 
-	      if (ss != 'D' && newscript == 'D')
-		{
-		  if (prevscript == 'A')
-		    {
-		      oldpos = pos;
-		      oldind = *ind;
-		      oldspaces = *nSpaces;
-		      oldwidth = *width;
-		      oldbuff = *pBuffer;
-		      if (script == '*') script = 'L';
-		    }
-		  return script;
-		}
-	      if ( ss == 'D' )
-		{
-		  oldpos = pos;
-		  oldind = *ind;
-		  oldspaces = *nSpaces;
-		  oldwidth = *width;
-		  oldbuff = *pBuffer;
-		}
-	    }
+              if (ss != 'D' && newscript == 'D')
+                {
+                  if (prevscript == 'A')
+                    {
+                      oldpos = pos;
+                      oldind = *ind;
+                      oldspaces = *nSpaces;
+                      oldwidth = *width;
+                      oldbuff = *pBuffer;
+                      if (script == '*') script = 'L';
+                    }
+                  return script;
+                }
+              if ( ss == 'D' )
+                {
+                  oldpos = pos;
+                  oldind = *ind;
+                  oldspaces = *nSpaces;
+                  oldwidth = *width;
+                  oldbuff = *pBuffer;
+                }
+            }
 
-	  if (script == '*' && newscript != ' ' && newscript != 'D')
-	    {
-	      /* no script detected */
-	      if (oldbuff && bidi == 'E')
-		{
-		  /* neutral characters found before and direction requested */
-		  if (dir == 'R' && newscript != 'A' && newscript != 'H')
-		    script = embed = 'A';
-		  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
-		    script = embed = 'L';
-		  else
-		    {
-		      script = newscript;
-		      sc = script;
-		      if (embed == '*')
-			embed = script;
-		    }
-		}
-	      else
-		{
-		  /* the script is known now */
-		  script = newscript;
-		  if (embed == '*')
-		    embed = script;
-		}
-	    }
+          if (script == '*' && newscript != ' ' && newscript != 'D')
+            {
+              /* no script detected */
+              if (oldbuff && bidi == 'E')
+                {
+                  /* neutral characters found before and direction requested */
+                  if (dir == 'R' && newscript != 'A' && newscript != 'H')
+                    script = embed = 'A';
+                  else if (dir == 'L' && (newscript == 'A' || newscript == 'H'))
+                    script = embed = 'L';
+                  else
+                    {
+                      script = newscript;
+                      sc = script;
+                      if (embed == '*')
+                        embed = script;
+                    }
+                }
+              else
+                {
+                  /* the script is known now */
+                  script = newscript;
+                  if (embed == '*')
+                    embed = script;
+                }
+            }
 	  
-	  if (newscript == script && oldbuff)
-	    {
-	      /* keep in memory the current position */
-	      oldbuff = NULL;
-	      /* other scripts are enclosed */
-	    }
-	  else if (newscript != script &&
-		   (newscript == 'A' || newscript == 'H' ||
-		    newscript == 'L' || newscript == 'Z'))
-	    {
-	      /* the box must be split because the script changes */
-	      if (script == 'A' || script == 'H')
-		{
-		  if (oldbuff && dir == 'L')
-		    {
-		      /* attach neutral to the next substring */
-		      *nChars = max - oldpos;
-		      *ind = oldind;
-		      *nSpaces = oldspaces;
-		      *width = oldwidth;
-		      *pBuffer = oldbuff;
-		    }
-		  else
-		    /* attach neutral to the previous substring */
-		    *nChars = max - pos ;
-		}
-	      else if (script != 'A' && script != 'H')
-		{
-		  if (oldbuff && dir == 'R')
-		    {
-		      /* attach neutral to the next substring */
-		      *nChars = max - oldpos;
-		      *ind = oldind;
-		      *nSpaces = oldspaces;
-		      *width = oldwidth;
-		      *pBuffer = oldbuff;
-		    }
-		  else
-		    /* attach neutral to the previous substring */
-		    *nChars = max - pos ;
-		}
-	      else
-		/* split here */
-		*nChars = max - pos ;
-	      return script;
-	    }
-	}
+          if (newscript == script && oldbuff)
+            {
+              /* keep in memory the current position */
+              oldbuff = NULL;
+              /* other scripts are enclosed */
+            }
+          else if (newscript != script &&
+                   (newscript == 'A' || newscript == 'H' ||
+                    newscript == 'L' || newscript == 'Z'))
+            {
+              /* the box must be split because the script changes */
+              if (script == 'A' || script == 'H')
+                {
+                  if (oldbuff && dir == 'L')
+                    {
+                      /* attach neutral to the next substring */
+                      *nChars = max - oldpos;
+                      *ind = oldind;
+                      *nSpaces = oldspaces;
+                      *width = oldwidth;
+                      *pBuffer = oldbuff;
+                    }
+                  else
+                    /* attach neutral to the previous substring */
+                    *nChars = max - pos ;
+                }
+              else if (script != 'A' && script != 'H')
+                {
+                  if (oldbuff && dir == 'R')
+                    {
+                      /* attach neutral to the next substring */
+                      *nChars = max - oldpos;
+                      *ind = oldind;
+                      *nSpaces = oldspaces;
+                      *width = oldwidth;
+                      *pBuffer = oldbuff;
+                    }
+                  else
+                    /* attach neutral to the previous substring */
+                    *nChars = max - pos ;
+                }
+              else
+                /* split here */
+                *nChars = max - pos ;
+              return script;
+            }
+        }
 
       if (car == SPACE)
-	{
-	  (*nSpaces)++;	/* a space */
-	  charWidth = spaceWidth;
-	}
+        {
+          (*nSpaces)++;	/* a space */
+          charWidth = spaceWidth;
+        }
       else if (car >= 0x060C && car <= 0x06B0) /* arabic char */
-	charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
+        charWidth = BoxArabicCharacterWidth (car, pBuffer, ind, font);
       else
-	charWidth = BoxCharacterWidth (car, font);
+        charWidth = BoxCharacterWidth (car, font);
       *width += charWidth;
       if (car != EOS)
-	pos++;
+        pos++;
       /* next character */
       (*ind)++;
     }
@@ -676,7 +676,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
   GivePictureSize gives the internal size of a picture box.
   ----------------------------------------------------------------------*/
 static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
-			     int *height)
+                             int *height)
 {
   ThotPictInfo       *picture;
   PtrBox              box;
@@ -697,7 +697,7 @@ static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
 
 
 /*----------------------------------------------------------------------
-   GiveSymbolSize gives the internal size of a symbol box.
+  GiveSymbolSize gives the internal size of a symbol box.
   ----------------------------------------------------------------------*/
 void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 {
@@ -710,7 +710,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   font = box->BxFont;
   hfont = BoxFontHeight (font, 'G');
   GetMathFontFromChar (pAb->AbShape, font, (void **) &pfont,
-		       font->FontSize);
+                       font->FontSize);
   if (pfont)
     {
       GiveStixSize (pfont, pAb, width, height, font->FontSize);
@@ -728,75 +728,75 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
       //*height = hfont * 2;
       *height = hfont;
       switch (pAb->AbShape)
-	{
-	case 'c':	/*integrale curviligne */
-	case 'i':	/*integrale */
-	  *width = BoxCharacterWidth (243, font);
-	  //*height = hfont;
-	  break;
-	case 'd':	/*integrale double */
-	  *width = BoxCharacterWidth (243, font) +
-	           BoxCharacterWidth (243, font) / 2;
-	  //*height = hfont;
-	  break;
-	case 'r':	/* root */
-	  *width = hfont;
-	  //*height = hfont * 2;
-	  break;
-	case 'S':	/*sigma */
-	case 'P':	/*pi */
-	case 'I':	/*intersection */
-	case 'U':	/*union */
-	  *width = BoxCharacterWidth (229, font);
-	  //*height = hfont;
-	  break;
-	case 'L':       /* left arrow */
-	case 'h':       /* horizontal bar */
-	case 'R':       /* right arrow */
-	  *width = *height;
-	  *height = hfont / 2;
-	  break;
-	case 'o':       /* overbrace */
-	case 'u':       /* underbrace */
-	  *width = *height;
-	  *height = hfont / 2;
-	  break;
-	case '(':
-	case ')':
-	case '[':
-	case ']':
-	case '{':
-	case '}':
-	  *width = BoxCharacterWidth (230, font);
-	  //*height = hfont;
-	  break;
-	case '<':
-	case '>':
-	  *width = BoxCharacterWidth (241, font);
-	  //*height = hfont;
-	  break;
-	case '|':       /* vertical bar */
-	  *width = BoxCharacterWidth (124, font);  /* | */
-	  //*height = hfont;	  
-	  break;
+        {
+        case 'c':	/*integrale curviligne */
+        case 'i':	/*integrale */
+          *width = BoxCharacterWidth (243, font);
+          //*height = hfont;
+          break;
+        case 'd':	/*integrale double */
+          *width = BoxCharacterWidth (243, font) +
+            BoxCharacterWidth (243, font) / 2;
+          //*height = hfont;
+          break;
+        case 'r':	/* root */
+          *width = hfont;
+          //*height = hfont * 2;
+          break;
+        case 'S':	/*sigma */
+        case 'P':	/*pi */
+        case 'I':	/*intersection */
+        case 'U':	/*union */
+          *width = BoxCharacterWidth (229, font);
+          //*height = hfont;
+          break;
+        case 'L':       /* left arrow */
+        case 'h':       /* horizontal bar */
+        case 'R':       /* right arrow */
+          *width = *height;
+          *height = hfont / 2;
+          break;
+        case 'o':       /* overbrace */
+        case 'u':       /* underbrace */
+          *width = *height;
+          *height = hfont / 2;
+          break;
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '{':
+        case '}':
+          *width = BoxCharacterWidth (230, font);
+          //*height = hfont;
+          break;
+        case '<':
+        case '>':
+          *width = BoxCharacterWidth (241, font);
+          //*height = hfont;
+          break;
+        case '|':       /* vertical bar */
+          *width = BoxCharacterWidth (124, font);  /* | */
+          //*height = hfont;	  
+          break;
         case 'D':       /* double vertical bar */
-	  *width = 3 * BoxCharacterWidth (124, font);  /* | */
-	  //*height = hfont;	  
-	  break;
-	case '^':
-	case 'v':
-	case 'V':
-	  *width = BoxCharacterWidth (109, font);	/* 'm' */
-	  break;
-	case '?':
-	  *width = BoxCharacterWidth (63, font);   /* ? */
-	  //*height = hfont;
-	  break;
-	default:
-	  *width = BoxCharacterWidth (SPACE, font);
-	  //*height = hfont;
-	  break;
-	}
+          *width = 3 * BoxCharacterWidth (124, font);  /* | */
+          //*height = hfont;	  
+          break;
+        case '^':
+        case 'v':
+        case 'V':
+          *width = BoxCharacterWidth (109, font);	/* 'm' */
+          break;
+        case '?':
+          *width = BoxCharacterWidth (63, font);   /* ? */
+          //*height = hfont;
+          break;
+        default:
+          *width = BoxCharacterWidth (SPACE, font);
+          //*height = hfont;
+          break;
+        }
     }
 }
 
@@ -813,7 +813,7 @@ void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
   box = pAb->AbBox;
   font = box->BxFont;
   *width = BoxCharacterWidth (109, font);	/*'m' */
-    /* use the Symbols font if possible */
+  /* use the Symbols font if possible */
   hfont = BoxFontHeight (font, 'G');
   *height = hfont * 2;
   switch (pAb->AbShape)
@@ -849,7 +849,7 @@ void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
   GivePolylineSize gives the internal size of a polyline.  
   ----------------------------------------------------------------------*/
 static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
-			      int *height)
+                              int *height)
 {
   PtrTextBuffer       pBuffer;
   int                 max;
@@ -885,11 +885,11 @@ static void FreePolyline (PtrBox pBox)
       pBox->BxYRatio = 1;
       pBuffer = pBox->BxBuffer;
       while (pBuffer != NULL)
-	{
-	  pBox->BxBuffer = pBuffer->BuNext;
-	  FreeTextBuffer (pBuffer);
-	  pBuffer = pBox->BxBuffer;
-	}
+        {
+          pBox->BxBuffer = pBuffer->BuNext;
+          FreeTextBuffer (pBuffer);
+          pBuffer = pBox->BxBuffer;
+        }
     }
 
   if (pBox->BxPictInfo != NULL)
@@ -914,11 +914,11 @@ static void FreePath (PtrBox box)
       box->BxYRatio = 1;
       pPa = box->BxFirstPathSeg;
       while (pPa)
-	{
-	  pPaNext = pPa->PaNext;
-	  FreePathSeg (pPa);
-	  pPa = pPaNext;
-	}
+        {
+          pPaNext = pPa->PaNext;
+          FreePathSeg (pPa);
+          pPa = pPaNext;
+        }
     }
 }
 
@@ -934,8 +934,8 @@ static void FreePath (PtrBox box)
   Return the last generated box.
   ----------------------------------------------------------------------*/
 PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
-		       int width, int height, int spaces, int ind,
-		       PtrTextBuffer pBuffer, int frame)
+                       int width, int height, int spaces, int ind,
+                       PtrTextBuffer pBuffer, int frame)
 {
   PtrBox              ibox1, ibox2, pMainBox;
   PtrBox              pPreviousBox, pNextBox;
@@ -1013,12 +1013,12 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxNSpaces = box->BxNSpaces - spaces;
       if (pAb->AbDirection == 'L')
         {
-	  XMove (ibox1, ibox1, box->BxXOrg - ibox1->BxXOrg, frame);
+          XMove (ibox1, ibox1, box->BxXOrg - ibox1->BxXOrg, frame);
           XMove (ibox2, ibox2, ibox1->BxXOrg + ibox1->BxWidth - ibox2->BxXOrg, frame);
         }
       else
         {
-	  XMove (ibox2, ibox2, box->BxXOrg - ibox2->BxXOrg, frame);
+          XMove (ibox2, ibox2, box->BxXOrg - ibox2->BxXOrg, frame);
           XMove (ibox1, ibox1, ibox2->BxXOrg + ibox2->BxWidth - ibox1->BxXOrg, frame);
         }
       ibox2->BxYOrg = box->BxYOrg;
@@ -1026,17 +1026,17 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox1->BxNexChild = ibox2;
       ibox1->BxPrevious = pPreviousBox;
       if (pPreviousBox != NULL)
-	pPreviousBox->BxNext = ibox1;
+        pPreviousBox->BxNext = ibox1;
       else
-	pMainBox->BxNext = ibox1;
+        pMainBox->BxNext = ibox1;
       ibox1->BxNext = ibox2;
       ibox2->BxNexChild = NULL;
       ibox2->BxPrevious = ibox1;
       ibox2->BxNext = pNextBox;
       if (pNextBox != NULL)
-	pNextBox->BxPrevious = ibox2;
+        pNextBox->BxPrevious = ibox2;
       else
-	pMainBox->BxPrevious = ibox2;
+        pMainBox->BxPrevious = ibox2;
     }
   else
     {
@@ -1058,13 +1058,13 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxH = height;
       ibox2->BxHeight = height + v;
       if (box->BxW - width > 0)
-	ibox2->BxW = box->BxW - width;
+        ibox2->BxW = box->BxW - width;
       else
-	ibox2->BxW = 0;
+        ibox2->BxW = 0;
       if (box->BxWidth - width - l > 0)
-	ibox2->BxWidth = box->BxWidth - width - l;
+        ibox2->BxWidth = box->BxWidth - width - l;
       else
-	ibox2->BxWidth = 0;
+        ibox2->BxWidth = 0;
       ibox2->BxTMargin = box->BxTMargin;
       ibox2->BxTBorder = box->BxTBorder;
       ibox2->BxTPadding = box->BxTPadding;
@@ -1092,11 +1092,11 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       box->BxNChars = lg;
       box->BxNSpaces = spaces;
       if (pAb->AbDirection == 'L')
-	XMove (ibox2, ibox2, box->BxXOrg + box->BxWidth - ibox2->BxXOrg, frame);
+        XMove (ibox2, ibox2, box->BxXOrg + box->BxWidth - ibox2->BxXOrg, frame);
       else
         {
           XMove (ibox2, ibox2, box->BxXOrg - ibox2->BxXOrg, frame);
-	  XMove (box, box, ibox2->BxWidth, frame);
+          XMove (box, box, ibox2->BxWidth, frame);
         }
 
       /* update the chain of leaf boxes */
@@ -1106,9 +1106,9 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxPrevious = box;
       ibox2->BxNext = pNextBox;
       if (pNextBox)
-	pNextBox->BxPrevious = ibox2;
+        pNextBox->BxPrevious = ibox2;
       else
-	pMainBox->BxPrevious = ibox2;
+        pMainBox->BxPrevious = ibox2;
     }
   return ibox2;
 }
@@ -1147,7 +1147,7 @@ static void UnsplitBox (PtrBox pBox)
   GiveTextSize gives the internal width and height of a text box.
   ----------------------------------------------------------------------*/
 static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
-			  int *height, int *nSpaces)
+                          int *height, int *nSpaces)
 {
   PtrTextBuffer       pBuffer;
   SpecFont            font;
@@ -1171,8 +1171,8 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
   else
     {
       /*
-	There is a current text:
-	generate one complete box or several boxes if several scripts are used
+        There is a current text:
+        generate one complete box or several boxes if several scripts are used
       */
       /* first character to be handled */
       pBuffer = pAb->AbText;
@@ -1182,37 +1182,37 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
       pos = 1;
       dir = pAb->AbDirection;
       if (box->BxType == BoMulScript)
-	/* remove multi script boxes */
-	UnsplitBox (box);
+        /* remove multi script boxes */
+        UnsplitBox (box);
 
       while (nChars > 0)
-	{
-	  bwidth = 0;
-	  spaces = 0; /* format with the standard space width */
-	  lg = nChars;
-	  if (box->BxPrevious && box->BxPrevious->BxScript != EOS)
-	    prevscript = box->BxPrevious->BxScript;
-	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
-				   dir, pAb->AbUnicodeBidi, &EmbeddedScript, prevscript);
-	  box->BxScript = script;
-	  *width += bwidth;
-	  *nSpaces += spaces;
-	  lg -= nChars;
-	  if (nChars > 0)
-	    box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
-				  ind, pBuffer, frame);
-	  else if (box->BxType == BoScript)
-	    {
-	      box->BxW = bwidth;
-	      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
-	      box->BxWidth = bwidth + l;
-	      box->BxNChars = lg;
-	      box->BxNSpaces = spaces;
-	      box->BxScript = script;
-	      box->BxH = BoxFontHeight (font, script);
-	      box->BxHeight = box->BxH + box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
-	    }
-	}
+        {
+          bwidth = 0;
+          spaces = 0; /* format with the standard space width */
+          lg = nChars;
+          if (box->BxPrevious && box->BxPrevious->BxScript != EOS)
+            prevscript = box->BxPrevious->BxScript;
+          script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
+                                   dir, pAb->AbUnicodeBidi, &EmbeddedScript, prevscript);
+          box->BxScript = script;
+          *width += bwidth;
+          *nSpaces += spaces;
+          lg -= nChars;
+          if (nChars > 0)
+            box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
+                                  ind, pBuffer, frame);
+          else if (box->BxType == BoScript)
+            {
+              box->BxW = bwidth;
+              l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+              box->BxWidth = bwidth + l;
+              box->BxNChars = lg;
+              box->BxNSpaces = spaces;
+              box->BxScript = script;
+              box->BxH = BoxFontHeight (font, script);
+              box->BxHeight = box->BxH + box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
+            }
+        }
     }
 }
 
@@ -1221,7 +1221,7 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
   GiveEnclosureSize gives the size of a compound box.
   ----------------------------------------------------------------------*/
 void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
-			int *height)
+                        int *height)
 {
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pFirstAb;
@@ -1253,11 +1253,11 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       *width = 0;
       *height = 0;
       if (pAb->AbInLine)
-	{
-	  /* the block of line is ignored */
-	  pBox->BxFirstLine = NULL;
-	  pBox->BxLastLine = NULL;
-	}
+        {
+          /* the block of line is ignored */
+          pBox->BxFirstLine = NULL;
+          pBox->BxLastLine = NULL;
+        }
     }
   else if (pFirstAb == NULL)
     {
@@ -1269,29 +1269,29 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
     {
       /* It's a block of lines */
       if (pBox->BxFirstLine)
-	{
-	  /* we have to reformat the block of lines */
-	  RecomputeLines (pAb, NULL, NULL, frame);
-	  *height = pBox->BxH;
-	}
+        {
+          /* we have to reformat the block of lines */
+          RecomputeLines (pAb, NULL, NULL, frame);
+          *height = pBox->BxH;
+        }
       else
-	{
-	  pBox->BxFirstLine = NULL;
-	  pBox->BxLastLine = NULL;
-	  ComputeLines (pBox, frame, height);
-	  if (pBox->BxContentWidth ||
-	      (hMin && pBox->BxMaxWidth > pBox->BxW))
-	    {
-	    /* it's an extensible line */
-	    pBox->BxW = pBox->BxMaxWidth;
-	    GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
-	    l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-	    r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
-	    pBox->BxWidth = pBox->BxW + l + r;
-	    /* make sure this update is taken into account */
-	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-	    }
-	}
+        {
+          pBox->BxFirstLine = NULL;
+          pBox->BxLastLine = NULL;
+          ComputeLines (pBox, frame, height);
+          if (pBox->BxContentWidth ||
+              (hMin && pBox->BxMaxWidth > pBox->BxW))
+            {
+              /* it's an extensible line */
+              pBox->BxW = pBox->BxMaxWidth;
+              GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+              l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+              r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+              pBox->BxWidth = pBox->BxW + l + r;
+              /* make sure this update is taken into account */
+              DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+            }
+        }
       *width = pBox->BxW;
     }
   else
@@ -1299,55 +1299,55 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
       /* It's a geometrical composition */
       /* Initially the inside left and the inside right are the equal */
       x = pBox->BxXOrg + pBox->BxLMargin +
-	  pBox->BxLBorder + pBox->BxLPadding;
+        pBox->BxLBorder + pBox->BxLPadding;
       *width = x;
       /* Initially the inside top and the inside bottom are the equal */
       y = pBox->BxYOrg + pBox->BxTMargin +
-          pBox->BxTBorder + pBox->BxTPadding;
+        pBox->BxTBorder + pBox->BxTPadding;
       *height = y;
       /* the box itself is positioned */
       isExtra = ExtraFlow (pBox, frame);
       /* Move misplaced boxes */
       pChildAb = pFirstAb;
       while (pChildAb)
-	{
-	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox &&
-	      (isExtra || !ExtraFlow (pChildBox, frame)))
-	    {
-	      if ((hMin || pBox->BxContentWidth) &&
-		  pChildAb->AbHorizEnclosing &&
-		  pChildBox->BxXOrg < x &&
-		  pChildAb->AbWidth.DimAbRef != pAb)
-		{
-		  /* the child box is misplaced */
-		  box = GetHPosRelativeBox (pChildBox, NULL);
-		  if (box != NULL)
-		    {
-		      /* mobile box */
-		      pCurrentAb = box->BxAbstractBox;
-		      if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
-			XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
-		    }
-		}
-	      if ((vMin || pBox->BxContentHeight) &&
-		  pChildAb->AbVertEnclosing &&
-		  pChildBox->BxYOrg < y &&
-		  pChildAb->AbHeight.DimAbRef != pAb)
-		{
-		  /* the child box is misplaced */
-		  box = GetVPosRelativeBox (pChildBox, NULL);
-		  if (box != NULL)
-		    {
-		      /* mobile box */
-		      pCurrentAb = box->BxAbstractBox;
-		      if (pCurrentAb->AbVertPos.PosAbRef == NULL)
-			YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
-		    }
-		}
-	    }
-	  pChildAb = pChildAb->AbNext;
-	}
+        {
+          pChildBox = pChildAb->AbBox;
+          if (!pChildAb->AbDead && pChildBox &&
+              (isExtra || !ExtraFlow (pChildBox, frame)))
+            {
+              if ((hMin || pBox->BxContentWidth) &&
+                  pChildAb->AbHorizEnclosing &&
+                  pChildBox->BxXOrg < x &&
+                  pChildAb->AbWidth.DimAbRef != pAb)
+                {
+                  /* the child box is misplaced */
+                  box = GetHPosRelativeBox (pChildBox, NULL);
+                  if (box != NULL)
+                    {
+                      /* mobile box */
+                      pCurrentAb = box->BxAbstractBox;
+                      if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
+                        XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
+                    }
+                }
+              if ((vMin || pBox->BxContentHeight) &&
+                  pChildAb->AbVertEnclosing &&
+                  pChildBox->BxYOrg < y &&
+                  pChildAb->AbHeight.DimAbRef != pAb)
+                {
+                  /* the child box is misplaced */
+                  box = GetVPosRelativeBox (pChildBox, NULL);
+                  if (box != NULL)
+                    {
+                      /* mobile box */
+                      pCurrentAb = box->BxAbstractBox;
+                      if (pCurrentAb->AbVertPos.PosAbRef == NULL)
+                        YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
+                    }
+                }
+            }
+          pChildAb = pChildAb->AbNext;
+        }
 
       /*
        * The left edge of the extra left enclosed box must be stuck
@@ -1359,41 +1359,41 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
        */
       pChildAb = pFirstAb;
       while (pChildAb)
-	{
-	  pChildBox = pChildAb->AbBox;
-	  if (!pChildAb->AbDead && pChildBox &&
-	      (isExtra || !ExtraFlow (pChildBox, frame)))
-	    {
-	      if (pChildAb->AbHorizEnclosing &&
-		  (pChildAb->AbWidth.DimAbRef != pAb ||
-		   pChildBox->BxContentWidth ||
-		   /* Sometimes table width doesn't follow the rule */
-		   pChildBox->BxType == BoTable))
-		{
-		  /* the width of that box doesn't depend on the enclosing */
-		  if (pChildBox->BxXOrg < x ||
-		      pChildAb->AbHorizPos.PosDistance < 0)
-		    val = x + pChildBox->BxWidth;
-		  else
-		    val = pChildBox->BxXOrg + pChildBox->BxWidth;
-		  if (val > *width)
-		    *width = val;
-		}
-	      if (pChildAb->AbVertEnclosing &&
-		  (pChildAb->AbHeight.DimAbRef != pAb ||
-		   pChildBox->BxContentHeight))
-		{
-		  /* the height of that box doesn't depend on the enclosing */
-		  if (pChildBox->BxYOrg < y)
-		    val = y + pChildBox->BxHeight;
-		  else
-		    val = pChildBox->BxYOrg + pChildBox->BxHeight;
-		  if (val > *height)
-		    *height = val;
-		}
-	    }
-	  pChildAb = pChildAb->AbNext;
-	}
+        {
+          pChildBox = pChildAb->AbBox;
+          if (!pChildAb->AbDead && pChildBox &&
+              (isExtra || !ExtraFlow (pChildBox, frame)))
+            {
+              if (pChildAb->AbHorizEnclosing &&
+                  (pChildAb->AbWidth.DimAbRef != pAb ||
+                   pChildBox->BxContentWidth ||
+                   /* Sometimes table width doesn't follow the rule */
+                   pChildBox->BxType == BoTable))
+                {
+                  /* the width of that box doesn't depend on the enclosing */
+                  if (pChildBox->BxXOrg < x ||
+                      pChildAb->AbHorizPos.PosDistance < 0)
+                    val = x + pChildBox->BxWidth;
+                  else
+                    val = pChildBox->BxXOrg + pChildBox->BxWidth;
+                  if (val > *width)
+                    *width = val;
+                }
+              if (pChildAb->AbVertEnclosing &&
+                  (pChildAb->AbHeight.DimAbRef != pAb ||
+                   pChildBox->BxContentHeight))
+                {
+                  /* the height of that box doesn't depend on the enclosing */
+                  if (pChildBox->BxYOrg < y)
+                    val = y + pChildBox->BxHeight;
+                  else
+                    val = pChildBox->BxYOrg + pChildBox->BxHeight;
+                  if (val > *height)
+                    *height = val;
+                }
+            }
+          pChildAb = pChildAb->AbNext;
+        }
       
       /* New width and height */
       *width -= x;
@@ -1404,68 +1404,68 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
        */
       pChildAb = pFirstAb;
       if (Propagate == ToSiblings)
-	while (pChildAb != NULL)
-	  {
-	    pChildBox = pChildAb->AbBox;
-	    if (!pChildAb->AbDead && pChildBox != NULL)
-	      {
-		if (pBox->BxContentWidth &&
-		    !IsXPosComplete (pBox) &&
-		    pChildAb->AbHorizPos.PosAbRef == pAb)
-		  {
-		    /* update the box position */
-		    val = pChildBox->BxXOrg;
-		    if (pChildAb->AbHorizPos.PosEdge == VertMiddle)
-		      val += pChildBox->BxWidth / 2;
-		    else if (pChildAb->AbHorizPos.PosEdge == Right)
-		      val += pChildBox->BxWidth;
+        while (pChildAb != NULL)
+          {
+            pChildBox = pChildAb->AbBox;
+            if (!pChildAb->AbDead && pChildBox != NULL)
+              {
+                if (pBox->BxContentWidth &&
+                    !IsXPosComplete (pBox) &&
+                    pChildAb->AbHorizPos.PosAbRef == pAb)
+                  {
+                    /* update the box position */
+                    val = pChildBox->BxXOrg;
+                    if (pChildAb->AbHorizPos.PosEdge == VertMiddle)
+                      val += pChildBox->BxWidth / 2;
+                    else if (pChildAb->AbHorizPos.PosEdge == Right)
+                      val += pChildBox->BxWidth;
 		    
-		    if (pChildAb->AbHorizPos.PosRefEdge == VertMiddle)
-		      {
-			if (!pChildBox->BxHorizFlex)
-			  XMove (pChildBox, NULL, x + *width / 2 - val, frame);
-		      }
-		    else if (pChildAb->AbHorizPos.PosRefEdge == Right)
-		      {
-			if (!pChildBox->BxHorizFlex)
-			  XMove (pChildBox, NULL, x + *width - val, frame);
-		      }
-		  }
+                    if (pChildAb->AbHorizPos.PosRefEdge == VertMiddle)
+                      {
+                        if (!pChildBox->BxHorizFlex)
+                          XMove (pChildBox, NULL, x + *width / 2 - val, frame);
+                      }
+                    else if (pChildAb->AbHorizPos.PosRefEdge == Right)
+                      {
+                        if (!pChildBox->BxHorizFlex)
+                          XMove (pChildBox, NULL, x + *width - val, frame);
+                      }
+                  }
 		
-		if (pBox->BxContentHeight &&
-		    !IsYPosComplete (pBox) &&
-		    pChildAb->AbVertPos.PosAbRef == pAb)
-		  {
-		    /* update the box position */
-		    val = pChildBox->BxYOrg;
-		    if (pChildAb->AbVertPos.PosEdge == HorizMiddle)
-		      val += pChildBox->BxHeight / 2;
-		    else if (pChildAb->AbVertPos.PosEdge == Bottom)
-		      val += pChildBox->BxHeight;
+                if (pBox->BxContentHeight &&
+                    !IsYPosComplete (pBox) &&
+                    pChildAb->AbVertPos.PosAbRef == pAb)
+                  {
+                    /* update the box position */
+                    val = pChildBox->BxYOrg;
+                    if (pChildAb->AbVertPos.PosEdge == HorizMiddle)
+                      val += pChildBox->BxHeight / 2;
+                    else if (pChildAb->AbVertPos.PosEdge == Bottom)
+                      val += pChildBox->BxHeight;
 		    
-		    if (pChildAb->AbVertPos.PosRefEdge == HorizMiddle)
-		      {
-			if (!pChildBox->BxVertFlex)
-			  YMove (pChildBox, NULL, y + *height / 2 - val,frame);
-		      }
-		    else if (pChildAb->AbVertPos.PosRefEdge == Bottom)
-		      {
-			if (!pChildBox->BxVertFlex)
-			  YMove (pChildBox, NULL, y + *height - val, frame);
-		      }
-		  }
-	      }
-	    pChildAb = pChildAb->AbNext;
-	  }
+                    if (pChildAb->AbVertPos.PosRefEdge == HorizMiddle)
+                      {
+                        if (!pChildBox->BxVertFlex)
+                          YMove (pChildBox, NULL, y + *height / 2 - val,frame);
+                      }
+                    else if (pChildAb->AbVertPos.PosRefEdge == Bottom)
+                      {
+                        if (!pChildBox->BxVertFlex)
+                          YMove (pChildBox, NULL, y + *height - val, frame);
+                      }
+                  }
+              }
+            pChildAb = pChildAb->AbNext;
+          }
     }
   
   if (pFirstAb == NULL && pAb->AbVolume == 0)
     {
       /* Empty box */
       if (*width == 0)
-	*width = 2;
+        *width = 2;
       if (*height == 0)
-	*height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
+        *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
     }
 }
 
@@ -1474,140 +1474,140 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   ----------------------------------------------------------------------*/
 static ThotBool IsAbstractBoxEmpty (PtrAbstractBox pAb)
 {
-   PtrAbstractBox      pChildAb;
-   ThotBool            complete;
+  PtrAbstractBox      pChildAb;
+  ThotBool            complete;
 
-   pChildAb = pAb->AbFirstEnclosed;
-   complete = (pChildAb == NULL);
-   while (!complete)
-      if (pChildAb->AbDead)
-	{
-	   pChildAb = pChildAb->AbNext;
-	   complete = pChildAb == NULL;
-	}
-      else
-	 complete = TRUE;
+  pChildAb = pAb->AbFirstEnclosed;
+  complete = (pChildAb == NULL);
+  while (!complete)
+    if (pChildAb->AbDead)
+      {
+        pChildAb = pChildAb->AbNext;
+        complete = pChildAb == NULL;
+      }
+    else
+      complete = TRUE;
 
-   return (pChildAb == NULL);
+  return (pChildAb == NULL);
 }
 
 /*----------------------------------------------------------------------
-   PreviousLeafAbstractBox recherche le dernier pave terminal vivant 
-   avant le pave designe'.                                 
+  PreviousLeafAbstractBox recherche le dernier pave terminal vivant 
+  avant le pave designe'.                                 
   ----------------------------------------------------------------------*/
 static PtrAbstractBox PreviousLeafAbstractBox (PtrAbstractBox pAb)
 {
-   PtrAbstractBox      pPreviousAb;
-   PtrAbstractBox      pChildAb;
-   PtrAbstractBox      result;
-   ThotBool            still;
+  PtrAbstractBox      pPreviousAb;
+  PtrAbstractBox      pChildAb;
+  PtrAbstractBox      result;
+  ThotBool            still;
 
-   pPreviousAb = pAb->AbPrevious;
-   pChildAb = NULL;
-   still = TRUE;
+  pPreviousAb = pAb->AbPrevious;
+  pChildAb = NULL;
+  still = TRUE;
 
-   /* On recherche en arriere un pave vivant */
-   while (still)
-      if (pPreviousAb == NULL)
-	 still = FALSE;
-      else if (pPreviousAb->AbBox == NULL)
-	 pPreviousAb = pPreviousAb->AbPrevious;
-      else if (pPreviousAb->AbFirstEnclosed == NULL)
-	 still = FALSE;
+  /* On recherche en arriere un pave vivant */
+  while (still)
+    if (pPreviousAb == NULL)
+      still = FALSE;
+    else if (pPreviousAb->AbBox == NULL)
+      pPreviousAb = pPreviousAb->AbPrevious;
+    else if (pPreviousAb->AbFirstEnclosed == NULL)
+      still = FALSE;
+    else
+      {
+        /* On descend la hierarchie pour prendre son dernier fils */
+        pChildAb = pPreviousAb->AbFirstEnclosed;
+        while (pChildAb != NULL && pChildAb != pAb)
+          {
+            pPreviousAb = pChildAb;
+            pChildAb = pChildAb->AbNext;
+
+            /* On parcours la liste des fils */
+            while (pChildAb != NULL && pChildAb != pAb)
+              {
+                pPreviousAb = pChildAb;
+                pChildAb = pChildAb->AbNext;
+              }
+
+            /* On descend d'un niveau */
+            if (pPreviousAb->AbBox != NULL)
+              pChildAb = pPreviousAb->AbFirstEnclosed;
+          }
+
+        pChildAb = pPreviousAb->AbEnclosing;
+        if (pPreviousAb->AbBox != NULL)
+          still = FALSE;	/* On a trouve */
+        else
+          {
+            /* Si ce dernier fils est mort -> on prend le dernier */
+            /* pave vivant avant lui, ou a defaut l'englobant     */
+            while (still)
+              if (pPreviousAb->AbPrevious == NULL)
+                {
+                  still = FALSE;
+                  pPreviousAb = NULL;	/* C'est l'englobant */
+                }
+              else if (pPreviousAb->AbPrevious->AbBox != NULL)
+                still = FALSE;
+              else
+                pPreviousAb = pPreviousAb->AbPrevious;
+
+            if (pPreviousAb != NULL)
+              pPreviousAb = PreviousLeafAbstractBox (pPreviousAb);
+          }
+      }
+
+  /* Resultat de la recherche */
+  if (pPreviousAb != NULL)
+    result = pPreviousAb;
+  else if (pChildAb != NULL)
+    result = pChildAb;
+  else
+    {
+      /* On n'a pas trouve de precedent -> On remonte dans la hierarchie */
+      pChildAb = pAb->AbEnclosing;
+      if (pChildAb != NULL)
+        result = PreviousLeafAbstractBox (pChildAb);
       else
-	{
-	   /* On descend la hierarchie pour prendre son dernier fils */
-	   pChildAb = pPreviousAb->AbFirstEnclosed;
-	   while (pChildAb != NULL && pChildAb != pAb)
-	     {
-		pPreviousAb = pChildAb;
-		pChildAb = pChildAb->AbNext;
-
-		/* On parcours la liste des fils */
-		while (pChildAb != NULL && pChildAb != pAb)
-		  {
-		     pPreviousAb = pChildAb;
-		     pChildAb = pChildAb->AbNext;
-		  }
-
-		/* On descend d'un niveau */
-		if (pPreviousAb->AbBox != NULL)
-		   pChildAb = pPreviousAb->AbFirstEnclosed;
-	     }
-
-	   pChildAb = pPreviousAb->AbEnclosing;
-	   if (pPreviousAb->AbBox != NULL)
-	      still = FALSE;	/* On a trouve */
-	   else
-	     {
-		/* Si ce dernier fils est mort -> on prend le dernier */
-		/* pave vivant avant lui, ou a defaut l'englobant     */
-		while (still)
-		   if (pPreviousAb->AbPrevious == NULL)
-		     {
-			still = FALSE;
-			pPreviousAb = NULL;	/* C'est l'englobant */
-		     }
-		   else if (pPreviousAb->AbPrevious->AbBox != NULL)
-		      still = FALSE;
-		   else
-		      pPreviousAb = pPreviousAb->AbPrevious;
-
-		if (pPreviousAb != NULL)
-		   pPreviousAb = PreviousLeafAbstractBox (pPreviousAb);
-	     }
-	}
-
-   /* Resultat de la recherche */
-   if (pPreviousAb != NULL)
-      result = pPreviousAb;
-   else if (pChildAb != NULL)
-      result = pChildAb;
-   else
-     {
-	/* On n'a pas trouve de precedent -> On remonte dans la hierarchie */
-	pChildAb = pAb->AbEnclosing;
-	if (pChildAb != NULL)
-	   result = PreviousLeafAbstractBox (pChildAb);
-	else
-	   result = NULL;
-     }
-   return result;
+        result = NULL;
+    }
+  return result;
 }
 
 
 /*----------------------------------------------------------------------
-   FontStyleAndWeight
-   returns the Highlight value for abstract box pAb, according to its
-   FontStyle and FontWeight.
+  FontStyleAndWeight
+  returns the Highlight value for abstract box pAb, according to its
+  FontStyle and FontWeight.
   ----------------------------------------------------------------------*/
 static int FontStyleAndWeight (PtrAbstractBox pAb)
 {
-   int	i;
+  int	i;
 
-   i = 0;
-   if (pAb)
-     {
+  i = 0;
+  if (pAb)
+    {
       if (pAb->AbFontWeight == 1)	/* Weight: Bold */
-	 {
-	 if (pAb->AbFontStyle == 1)		/* Style: Italic */
-	    i = 4;
-	 else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
-	    i = 5;
-	 else					/* Style: Roman (default) */
-	    i = 1;
-	 }
+        {
+          if (pAb->AbFontStyle == 1)		/* Style: Italic */
+            i = 4;
+          else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
+            i = 5;
+          else					/* Style: Roman (default) */
+            i = 1;
+        }
       else				/* Weight: Normal */
-	 {
-	 if (pAb->AbFontStyle == 1)		/* Style: Italic */
-	    i = 2;
-	 else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
-	    i = 3;
-	 else					/* Style: Roman (default) */
-	    i = 0;	 
-	 }
-     }
-   return i;
+        {
+          if (pAb->AbFontStyle == 1)		/* Style: Italic */
+            i = 2;
+          else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
+            i = 3;
+          else					/* Style: Roman (default) */
+            i = 0;	 
+        }
+    }
+  return i;
 }
 
 
@@ -1621,18 +1621,18 @@ static void  MarkDisplayedBox (PtrBox pBox)
   pAb = pBox->BxAbstractBox;
   if (pBox->BxType != BoCell &&
       ((pAb->AbLeafType == LtCompound && pAb->AbFillBox) ||
-	(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
-	 pAb->AbTopBorder > 0) ||
-	(pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 &&
-	 pAb->AbLeftBorder > 0) ||
-	(pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 &&
-	 pAb->AbBottomBorder > 0) ||
-	(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
-	 pAb->AbRightBorder > 0)))
+       (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 &&
+        pAb->AbTopBorder > 0) ||
+       (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 &&
+        pAb->AbLeftBorder > 0) ||
+       (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 &&
+        pAb->AbBottomBorder > 0) ||
+       (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 &&
+        pAb->AbRightBorder > 0)))
     /* register the box */
     pBox->BxDisplay = TRUE;
   else
-     pBox->BxDisplay = FALSE;
+    pBox->BxDisplay = FALSE;
 }
 
 
@@ -1645,9 +1645,9 @@ static void  MarkDisplayedBox (PtrBox pBox)
   first and last are TRUE when applying to the first and/or the last child.
   ----------------------------------------------------------------------*/
 static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
-			 int i, int j,
-			 ThotBool horizontal, ThotBool inLineFloat,
-			 ThotBool first, ThotBool last)
+                         int i, int j,
+                         ThotBool horizontal, ThotBool inLineFloat,
+                         ThotBool first, ThotBool last)
 {
   PtrAbstractBox  pAb, pChild, pRefAb, pNext;
 
@@ -1661,68 +1661,68 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
       /* when it's a dummy box report changes to the children */
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
-	{ 
-	  /* skip presentation boxes */
-	  pNext = pChild->AbNext;
-	  while (pNext && pNext->AbPresentationBox)
-	    pNext = pNext->AbNext;
-	  if (pChild->AbBox && !pChild->AbPresentationBox)
-	    {
-	      if ((horizontal && inLineFloat) ||
-		  (!horizontal && !inLineFloat))
-		TransmitMBP (pChild->AbBox, pRefBox, frame, i, j,
-			     horizontal, inLineFloat, TRUE, TRUE);
-	      else if (first || (last && pChild->AbNext == NULL))
-		{
-		  /* the first and/or last element */
-		  TransmitMBP (pChild->AbBox, pRefBox, frame, i, j,
-			       horizontal, inLineFloat, first,
-			       (last && pNext == NULL));
-		}
-	      first = FALSE;
-	    }
-	  pChild = pNext;
-	}
+        { 
+          /* skip presentation boxes */
+          pNext = pChild->AbNext;
+          while (pNext && pNext->AbPresentationBox)
+            pNext = pNext->AbNext;
+          if (pChild->AbBox && !pChild->AbPresentationBox)
+            {
+              if ((horizontal && inLineFloat) ||
+                  (!horizontal && !inLineFloat))
+                TransmitMBP (pChild->AbBox, pRefBox, frame, i, j,
+                             horizontal, inLineFloat, TRUE, TRUE);
+              else if (first || (last && pChild->AbNext == NULL))
+                {
+                  /* the first and/or last element */
+                  TransmitMBP (pChild->AbBox, pRefBox, frame, i, j,
+                               horizontal, inLineFloat, first,
+                               (last && pNext == NULL));
+                }
+              first = FALSE;
+            }
+          pChild = pNext;
+        }
     }
   else
     {
       if (!inLineFloat)
-	{
-	  /* transmit i to the first and j to the last */
-	  if (!first)
-	    i = 0;
-	  if (!last)
-	    j = 0;
-	}
+        {
+          /* transmit i to the first and j to the last */
+          if (!first)
+            i = 0;
+          if (!last)
+            j = 0;
+        }
       if (horizontal && (i || j))
-	{
-	  /* add left and rigth */
-	  if (i || j)
-	    {
-	      if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
-		/* the outside width is constrained */
-		ResizeWidth (pBox, pBox, NULL, -i-j, i, j, 0, frame);
-	      else
-		/* the inside width is constrained */
-		ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
-	    }
-	}
+        {
+          /* add left and rigth */
+          if (i || j)
+            {
+              if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef)
+                /* the outside width is constrained */
+                ResizeWidth (pBox, pBox, NULL, -i-j, i, j, 0, frame);
+              else
+                /* the inside width is constrained */
+                ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
+            }
+        }
       else if (!horizontal && (i || j))
-	{
-	  /* add left and rigth */
-	  if (i)
-	    /* update the box base line before reformatting the block */
-	    pBox->BxHorizRef += i;
-	  if (i || j)
-	    {
-	      if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
-		/* the outside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, -i-j, i, j, frame);
-	      else
-		/* the inside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
-	    }
-	}
+        {
+          /* add left and rigth */
+          if (i)
+            /* update the box base line before reformatting the block */
+            pBox->BxHorizRef += i;
+          if (i || j)
+            {
+              if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
+                /* the outside height is constrained */
+                ResizeHeight (pBox, pBox, NULL, -i-j, i, j, frame);
+              else
+                /* the inside height is constrained */
+                ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
+            }
+        }
     }
 }
 
@@ -1751,8 +1751,8 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
       /* check the block type */
       pParent = pAb->AbEnclosing;
       while (pParent->AbEnclosing && pParent->AbBox &&
-	     pParent->AbBox->BxType == BoGhost)
-	     pParent = pParent->AbEnclosing;
+             pParent->AbBox->BxType == BoGhost)
+        pParent = pParent->AbEnclosing;
       inLineFloat = pParent->AbBox->BxType == BoFloatBlock;
     }
 
@@ -1761,11 +1761,11 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   else if (lt != 0 || rb != 0)
     {
       if (pAb->AbHeight.DimIsPosition || pAb->AbHeight.DimAbRef)
-	/* the outside height is constrained */
-	ResizeHeight (pBox, pBox, NULL, -lt -rb, lt, rb, frame);
+        /* the outside height is constrained */
+        ResizeHeight (pBox, pBox, NULL, -lt -rb, lt, rb, frame);
       else
-	/* the inside height is constrained */
-	ResizeHeight (pBox, pBox, NULL, 0, lt, rb, frame);
+        /* the inside height is constrained */
+        ResizeHeight (pBox, pBox, NULL, 0, lt, rb, frame);
     }
   
   /* update horizontal margins, borders and paddings */
@@ -1782,12 +1782,12 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
       pAb->AbBox->BxVertRef += lt;
       /* not already updated by the table formatter */
       if (pAb->AbWidth.DimIsPosition || pAb->AbWidth.DimAbRef ||
-	  (pAb->AbWidth.DimValue == 100 && pAb->AbWidth.DimUnit == UnPercent))
-	/* the outside width is constrained */
-	ResizeWidth (pBox, pBox, NULL, -lt -rb, lt, rb, 0, frame);
+          (pAb->AbWidth.DimValue == 100 && pAb->AbWidth.DimUnit == UnPercent))
+        /* the outside width is constrained */
+        ResizeWidth (pBox, pBox, NULL, -lt -rb, lt, rb, 0, frame);
       else
-	/* the inside width is constrained */
-	ResizeWidth (pBox, pBox, NULL, 0, lt, rb, 0, frame);
+        /* the inside width is constrained */
+        ResizeWidth (pBox, pBox, NULL, 0, lt, rb, 0, frame);
       return TRUE;
     }
   return FALSE;
@@ -1812,12 +1812,12 @@ static ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
       pChildAb = pAb->AbFirstEnclosed;
       /* stop as soon as we know the result */
       while (pChildAb)
-	{
-	  if (pChildAb->AbLeafType == LtText &&
-	      !pChildAb->AbPresentationBox)
-	    return TRUE;
-	  pChildAb = pChildAb->AbNext;
-	}
+        {
+          if (pChildAb->AbLeafType == LtText &&
+              !pChildAb->AbPresentationBox)
+            return TRUE;
+          pChildAb = pChildAb->AbNext;
+        }
     }
   return FALSE;
 }
@@ -1830,7 +1830,7 @@ static ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
   (a pseudo paragraph).
   ----------------------------------------------------------------------*/
 static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
-				  ThotBool *uniqueChild, ThotBool *dummyChild)
+                                  ThotBool *uniqueChild, ThotBool *dummyChild)
 {
   PtrAbstractBox      pChildAb;
   int                 nb;
@@ -1846,47 +1846,47 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *directParent,
       pChildAb = pAb->AbFirstEnclosed;
       /* stop as soon as we know the result */
       while (pChildAb)
-	{
-	  if (pChildAb->AbLeafType == LtCompound &&
-	      pChildAb->AbFloat == 'N' &&
-	      TypeHasException (ExcHidden, pChildAb->AbElement->ElTypeNumber,
-				pChildAb->AbElement->ElStructSchema))
-	    *dummyChild = TRUE;
-	  if (pChildAb->AbFloat != 'N' &&
-	      (pChildAb->AbLeafType == LtPicture ||
-	       (pChildAb->AbLeafType == LtCompound &&
-		!pChildAb->AbWidth.DimIsPosition &&
-		pChildAb->AbWidth.DimAbRef == NULL)))
-	    {
-	      /* it's a floating child */
-	      found = TRUE;
-	      *directParent = TRUE;
-	    }
-	  else if (pChildAb->AbBox &&
-	      pChildAb->AbBox->BxType == BoFloatGhost)
-	    /* it's a floating child */
-	    found = TRUE;
-	  else
-	    {
-	      if (!found)
-		{
-		  /* check if this element includes only one child and this
-		     child is a floated box or a ghost generated by a float */
-		  found = HasFloatingChild (pChildAb, directParent, &unique, &leaf);
-		  //if (!unique && !*directParent)
-		  if (found && !unique)
-		    /* the child should be a floatblock */
-		    found = FALSE;
-		  *directParent = FALSE;
-		}
-	      nb ++;
-	    }
-	  pChildAb = pChildAb->AbNext;
-	}
+        {
+          if (pChildAb->AbLeafType == LtCompound &&
+              pChildAb->AbFloat == 'N' &&
+              TypeHasException (ExcHidden, pChildAb->AbElement->ElTypeNumber,
+                                pChildAb->AbElement->ElStructSchema))
+            *dummyChild = TRUE;
+          if (pChildAb->AbFloat != 'N' &&
+              (pChildAb->AbLeafType == LtPicture ||
+               (pChildAb->AbLeafType == LtCompound &&
+                !pChildAb->AbWidth.DimIsPosition &&
+                pChildAb->AbWidth.DimAbRef == NULL)))
+            {
+              /* it's a floating child */
+              found = TRUE;
+              *directParent = TRUE;
+            }
+          else if (pChildAb->AbBox &&
+                   pChildAb->AbBox->BxType == BoFloatGhost)
+            /* it's a floating child */
+            found = TRUE;
+          else
+            {
+              if (!found)
+                {
+                  /* check if this element includes only one child and this
+                     child is a floated box or a ghost generated by a float */
+                  found = HasFloatingChild (pChildAb, directParent, &unique, &leaf);
+                  //if (!unique && !*directParent)
+                  if (found && !unique)
+                    /* the child should be a floatblock */
+                    found = FALSE;
+                  *directParent = FALSE;
+                }
+              nb ++;
+            }
+          pChildAb = pChildAb->AbNext;
+        }
     }
   if (nb < 1)
     /* there is almost one child which is not a floated box */
-      *uniqueChild = TRUE;
+    *uniqueChild = TRUE;
   else
     {
       *uniqueChild = FALSE;
@@ -1914,68 +1914,68 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
       /* check if the flow is already registered */
       pFlow = pFrame->FrFlow;
       while (pFlow)
-	{
-	  if (pFlow->FlRootBox == pAb)
-	    return;
-	  prev = pFlow;
-	  pFlow = pFlow->FlNext;
-	}
+        {
+          if (pFlow->FlRootBox == pAb)
+            return;
+          prev = pFlow;
+          pFlow = pFlow->FlNext;
+        }
 
       /* create a new flow */
       pFlow = (PtrFlow) TtaGetMemory (sizeof (Flow));
       if (prev)
-	{
-	  pFlow->FlNext = prev->FlNext;
-	  prev->FlNext = pFlow;
-	}
+        {
+          pFlow->FlNext = prev->FlNext;
+          prev->FlNext = pFlow;
+        }
       else
-	{
-	  pFlow->FlNext = NULL;
-	  pFrame->FrFlow = pFlow;
-	}
+        {
+          pFlow->FlNext = NULL;
+          pFrame->FrFlow = pFlow;
+        }
       if (pFlow->FlNext)
-	pFlow->FlNext->FlPrevious = pFlow;
+        pFlow->FlNext->FlPrevious = pFlow;
       pFlow->FlPrevious = prev;
       pFlow->FlRootBox = pAb;
       pFlow->FlType = pAb->AbPositioning->PnAlgorithm;
       pFlow->FlXStart = pFlow->FlYStart = 0;
       if (pFlow->FlType == PnRelative)
-	{
-	  /* store the current shift */
-	  pos = pAb->AbPositioning;
-	  if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
-	    {
-	      w = pAb->AbEnclosing->AbBox->BxW;
-	      h = pAb->AbEnclosing->AbBox->BxH;
-	    }
-	  else
-	    w = h = 0;
+        {
+          /* store the current shift */
+          pos = pAb->AbPositioning;
+          if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+            {
+              w = pAb->AbEnclosing->AbBox->BxW;
+              h = pAb->AbEnclosing->AbBox->BxH;
+            }
+          else
+            w = h = 0;
 	  
-	  if (pos->PnLeftUnit == UnPercent)
-	    pFlow->FlXStart = PixelValue (pos->PnLeftDistance, UnPercent,
-					  (PtrAbstractBox) w, 0);
-	  else if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
-	    pFlow->FlXStart = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  else if (pos->PnRightUnit == UnPercent)
-	    pFlow->FlXStart = -PixelValue (pos->PnRightDistance, UnPercent,
-			    (PtrAbstractBox) w, 0);
-	  else if (pos->PnRightUnit != UnUndefined && pos->PnRightUnit != UnAuto)
-	    pFlow->FlXStart = -PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
-			    ViewFrameTable[frame - 1].FrMagnification);
-	  if (pos->PnTopUnit == UnPercent)
-	    pFlow->FlYStart = PixelValue (pos->PnTopDistance, UnPercent,
-					  (PtrAbstractBox) h, 0);
-	  else if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
-	    pFlow->FlYStart = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
-			       ViewFrameTable[frame - 1].FrMagnification);
-	  else if (pos->PnBottomUnit == UnPercent)
-	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, UnPercent,
-			    (PtrAbstractBox) h, 0);
-	  else if (pos->PnBottomUnit != UnUndefined && pos->PnBottomUnit != UnAuto)
-	    pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
-			    ViewFrameTable[frame - 1].FrMagnification);
-	}
+          if (pos->PnLeftUnit == UnPercent)
+            pFlow->FlXStart = PixelValue (pos->PnLeftDistance, UnPercent,
+                                          (PtrAbstractBox) w, 0);
+          else if (pos->PnLeftUnit != UnUndefined && pos->PnLeftUnit != UnAuto)
+            pFlow->FlXStart = PixelValue (pos->PnLeftDistance, pos->PnLeftUnit, pAb,
+                                          ViewFrameTable[frame - 1].FrMagnification);
+          else if (pos->PnRightUnit == UnPercent)
+            pFlow->FlXStart = -PixelValue (pos->PnRightDistance, UnPercent,
+                                           (PtrAbstractBox) w, 0);
+          else if (pos->PnRightUnit != UnUndefined && pos->PnRightUnit != UnAuto)
+            pFlow->FlXStart = -PixelValue (pos->PnRightDistance, pos->PnRightUnit, pAb,
+                                           ViewFrameTable[frame - 1].FrMagnification);
+          if (pos->PnTopUnit == UnPercent)
+            pFlow->FlYStart = PixelValue (pos->PnTopDistance, UnPercent,
+                                          (PtrAbstractBox) h, 0);
+          else if (pos->PnTopUnit != UnUndefined && pos->PnTopUnit != UnAuto)
+            pFlow->FlYStart = PixelValue (pos->PnTopDistance, pos->PnTopUnit, pAb,
+                                          ViewFrameTable[frame - 1].FrMagnification);
+          else if (pos->PnBottomUnit == UnPercent)
+            pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, UnPercent,
+                                           (PtrAbstractBox) h, 0);
+          else if (pos->PnBottomUnit != UnUndefined && pos->PnBottomUnit != UnAuto)
+            pFlow->FlYStart = -PixelValue (pos->PnBottomDistance, pos->PnBottomUnit, pAb,
+                                           ViewFrameTable[frame - 1].FrMagnification);
+        }
 #ifdef POSITIONING
       printf ("Adding flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
 #endif /* POSITIONING */
@@ -1999,28 +1999,28 @@ static void RemoveFlow (PtrAbstractBox pAb, int frame)
       /* check if the flow is already registered */
       pFlow = pFrame->FrFlow;
       while (pFlow)
-	{
-	  if (pFlow->FlRootBox == pAb)
-	    {
+        {
+          if (pFlow->FlRootBox == pAb)
+            {
 #ifdef POSITIONING
-	      printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
+              printf ("Removing flow x=%d y=%d\n",pFlow->FlXStart,pFlow->FlYStart);
 #endif /* POSITIONING */
-	      /* remove the current flow */  
-	      if (prev)
-		prev->FlNext = pFlow->FlNext;
-	      else
-		pFrame->FrFlow = pFlow->FlNext;
-	      if (pFlow->FlNext)
-		pFlow->FlNext->FlPrevious = prev;
-	      TtaFreeMemory (pFlow);
-	      return;
-	    }
-	  else
-	    {
-	      prev = pFlow;
-	      pFlow = pFlow->FlNext;
-	    }
-	}
+              /* remove the current flow */  
+              if (prev)
+                prev->FlNext = pFlow->FlNext;
+              else
+                pFrame->FrFlow = pFlow->FlNext;
+              if (pFlow->FlNext)
+                pFlow->FlNext->FlPrevious = prev;
+              TtaFreeMemory (pFlow);
+              return;
+            }
+          else
+            {
+              prev = pFlow;
+              pFlow = pFlow->FlNext;
+            }
+        }
     }
   //#endif /* POSITIONING */
 }
@@ -2038,83 +2038,83 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
     {
       box = pAb->AbBox;
       if (pAb->AbLeafType == LtCompound &&
-	  (pAb->AbWidth.DimIsPosition ||
-	   pAb->AbWidth.DimAbRef))
-	/* cannot be a floated box */
-	pAb->AbFloat = 'N';
+          (pAb->AbWidth.DimIsPosition ||
+           pAb->AbWidth.DimAbRef))
+        /* cannot be a floated box */
+        pAb->AbFloat = 'N';
       else if (box)
-	{
-	  pParent = pAb->AbEnclosing;
-	  while (pParent && pParent->AbBox &&
-		 (pParent->AbBox->BxType == BoGhost ||
-		  pParent->AbBox->BxType == BoFloatGhost))
-	    pParent = pParent->AbEnclosing;
-	  while (pParent && pParent->AbBox &&
-		 (pParent->AbBox->BxType != BoFloatBlock &&
-		  pParent->AbBox->BxType != BoBlock &&
-		  pParent->AbBox->BxType != BoFloatGhost))
-	    {
-	      if (pParent->AbBox->BxType == BoCell)
-		{
-		  /* cannot be a floated box */
-		  pAb->AbFloat = 'N';
-		  return;
-		}
-	      else
-		pParent = pParent->AbEnclosing;
-	    }
-	  pBlock = pParent;
-	  pParent = pAb->AbEnclosing;
-	  if (pBlock == NULL)
-	    {
-	      /* cannot be a floated box */
-	      pAb->AbFloat = 'N';
-	      return;
-	    }
-	  while (pParent != pBlock)
-	    {
+        {
+          pParent = pAb->AbEnclosing;
+          while (pParent && pParent->AbBox &&
+                 (pParent->AbBox->BxType == BoGhost ||
+                  pParent->AbBox->BxType == BoFloatGhost))
+            pParent = pParent->AbEnclosing;
+          while (pParent && pParent->AbBox &&
+                 (pParent->AbBox->BxType != BoFloatBlock &&
+                  pParent->AbBox->BxType != BoBlock &&
+                  pParent->AbBox->BxType != BoFloatGhost))
+            {
+              if (pParent->AbBox->BxType == BoCell)
+                {
+                  /* cannot be a floated box */
+                  pAb->AbFloat = 'N';
+                  return;
+                }
+              else
+                pParent = pParent->AbEnclosing;
+            }
+          pBlock = pParent;
+          pParent = pAb->AbEnclosing;
+          if (pBlock == NULL)
+            {
+              /* cannot be a floated box */
+              pAb->AbFloat = 'N';
+              return;
+            }
+          while (pParent != pBlock)
+            {
               pParent->AbBox->BxType = BoFloatGhost;
-	      pParent = pParent->AbEnclosing;
-	    }
+              pParent = pParent->AbEnclosing;
+            }
 
-	  /* get a new float block */
-	  pBox = pParent->AbBox;
-	  new_ = (PtrFloat) TtaGetMemory (sizeof (BFloat));
-	  new_->FlBox = box;
-	  new_->FlNext = NULL;
-	  previous = NULL;
-	  if (left)
-	    {
-	      /* left side fixed */
-	      box->BxHorizEdge = Left;
-	      if (pBox->BxLeftFloat == NULL)
-		{
-		  new_->FlPrevious = NULL;
-		  pBox->BxLeftFloat = new_;
-		}
-	      else
-		previous = pBox->BxLeftFloat;
-	    }
-	  else
-	    {
-	      /* right side fixed */
-	      box->BxHorizEdge = Right;
-	      if (pBox->BxRightFloat == NULL)
-		{
-		  new_->FlPrevious = NULL;
-		  pBox->BxRightFloat = new_;
-		}
-	      else
-		previous = pBox->BxRightFloat;
-	    }
-	  if (previous)
-	    {
-	      while (previous->FlNext)
-		previous = previous->FlNext;
-	      previous->FlNext = new_;
-	      new_->FlPrevious = previous;
-	    }
-	}
+          /* get a new float block */
+          pBox = pParent->AbBox;
+          new_ = (PtrFloat) TtaGetMemory (sizeof (BFloat));
+          new_->FlBox = box;
+          new_->FlNext = NULL;
+          previous = NULL;
+          if (left)
+            {
+              /* left side fixed */
+              box->BxHorizEdge = Left;
+              if (pBox->BxLeftFloat == NULL)
+                {
+                  new_->FlPrevious = NULL;
+                  pBox->BxLeftFloat = new_;
+                }
+              else
+                previous = pBox->BxLeftFloat;
+            }
+          else
+            {
+              /* right side fixed */
+              box->BxHorizEdge = Right;
+              if (pBox->BxRightFloat == NULL)
+                {
+                  new_->FlPrevious = NULL;
+                  pBox->BxRightFloat = new_;
+                }
+              else
+                previous = pBox->BxRightFloat;
+            }
+          if (previous)
+            {
+              while (previous->FlNext)
+                previous = previous->FlNext;
+              previous->FlNext = new_;
+              new_->FlPrevious = previous;
+            }
+        }
     }
 }
 
@@ -2137,7 +2137,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
   Return the box address.
   ----------------------------------------------------------------------*/
 static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
-			 ThotBool inLineFloat, int *carIndex)
+                         ThotBool inLineFloat, int *carIndex)
 {
   PtrSSchema          pSS;
   PtrAbstractBox      pChildAb, pParent;
@@ -2163,14 +2163,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   pSS = pAb->AbElement->ElStructSchema;
   if (pAb->AbLeafType == LtCompound)
     {
-    if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS))
-      boxType = BoColumn;
-    else if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
-      boxType = BoTable;
-    else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
-      boxType = BoRow;
-    else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
-      boxType = BoCell;
+      if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS))
+        boxType = BoColumn;
+      else if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
+        boxType = BoTable;
+      else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
+        boxType = BoRow;
+      else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+        boxType = BoCell;
     }
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
@@ -2185,7 +2185,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
     script = 'L';
   /* teste l'unite */
   font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
-		       height, unit, frame);
+                       height, unit, frame);
 
   /* Creation */
   pCurrentBox = pAb->AbBox;
@@ -2198,7 +2198,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   if (pCurrentBox)
     {
       if (pAb->AbLeafType == LtCompound)
-	pCurrentBox->BxType = boxType;
+        pCurrentBox->BxType = boxType;
       /* pMainBox points to the root box of the view */
       pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
       pCurrentBox->BxFont = font;
@@ -2211,11 +2211,11 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* avant d'evaluer la dimension de la boite si elle  */
       /* est de type graphique */
       if (pAb->AbLeafType == LtGraphics)
-	{
-	  pAb->AbRealShape = pAb->AbShape;
-	  pCurrentBox->BxHorizInverted = FALSE;
-	  pCurrentBox->BxVertInverted = FALSE;
-	}
+        {
+          pAb->AbRealShape = pAb->AbShape;
+          pCurrentBox->BxHorizInverted = FALSE;
+          pCurrentBox->BxVertInverted = FALSE;
+        }
       /* New values of margins, paddings and borders */
       pAb->AbMBPChange = FALSE;
       ComputeMBP (pAb, frame, TRUE, FALSE);
@@ -2225,319 +2225,319 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
       if (boxType == BoRow || boxType == BoColumn || boxType == BoCell ||
-	  ExtraFlow (pCurrentBox, frame))
-	{
-	  /* float and inlines are not allowed for rows and cells */
-	  inLine = FALSE;
-	  inLineFloat = FALSE;
-	  inlineChildren = FALSE;
-	  inlineFloatC = FALSE;
-	  pAb->AbFloat = 'N';
-	}
+          ExtraFlow (pCurrentBox, frame))
+        {
+          /* float and inlines are not allowed for rows and cells */
+          inLine = FALSE;
+          inLineFloat = FALSE;
+          inlineChildren = FALSE;
+          inlineFloatC = FALSE;
+          pAb->AbFloat = 'N';
+        }
       else
-	{
-	  if (pAb->AbFloat == 'L')
-	    AddFloatingBox (pAb, TRUE);
-	  else if (pAb->AbFloat == 'R')
-	    AddFloatingBox (pAb, FALSE);
-	  if (pAb->AbLeafType == LtCompound)
-	    {
-	      if (pCurrentBox->BxType == BoFloatGhost)
-		{
-		  /* skipped element */
-		  inlineChildren = FALSE;
-		  inlineFloatC = FALSE;
-		  directParent = FALSE;
-		  uniqueChild = FALSE;
-		  dummyChild = FALSE;
-		}
-	      else
-		{
-		  inlineFloatC = HasFloatingChild (pAb, &directParent,
-						   &uniqueChild, &dummyChild);
-		  inlineChildren = pAb->AbInLine || InlineTextChildren (pAb, frame);
-		}
+        {
+          if (pAb->AbFloat == 'L')
+            AddFloatingBox (pAb, TRUE);
+          else if (pAb->AbFloat == 'R')
+            AddFloatingBox (pAb, FALSE);
+          if (pAb->AbLeafType == LtCompound)
+            {
+              if (pCurrentBox->BxType == BoFloatGhost)
+                {
+                  /* skipped element */
+                  inlineChildren = FALSE;
+                  inlineFloatC = FALSE;
+                  directParent = FALSE;
+                  uniqueChild = FALSE;
+                  dummyChild = FALSE;
+                }
+              else
+                {
+                  inlineFloatC = HasFloatingChild (pAb, &directParent,
+                                                   &uniqueChild, &dummyChild);
+                  inlineChildren = pAb->AbInLine || InlineTextChildren (pAb, frame);
+                }
 
-	      if (((inLine && pAb->AbClear == 'N') ||
-		   (inLineFloat && !dummyChild)) &&
-		  (!inlineFloatC || uniqueChild) &&
-		  pAb->AbFloat == 'N' &&
-		  (pAb->AbAcceptLineBreak || inlineFloatC) &&
-		  !pAb->AbHeight.DimIsPosition &&
-		  pAb->AbHeight.DimValue <= 0 &&
-		  !pAb->AbWidth.DimIsPosition &&
-		  pAb->AbWidth.DimValue <= 0 &&
-		  /* and not already registered as .... */
-		  pCurrentBox->BxType != BoFloatGhost &&
-		  pCurrentBox->BxType != BoFloatBlock)
-		{
-		  /* ignore this box if it's not empty */
-		  if (inlineFloatC)
-		    pCurrentBox->BxType = BoFloatGhost;
-		  if (pAb->AbFirstEnclosed)
-		      pCurrentBox->BxType = BoGhost;
-		  /* this element can be split */
-		  inlineChildren = inLine;
-		  inlineFloatC = inLineFloat;
-		}
-	      else if (inlineChildren)
-		{
-		  /* block of lines */
-		  boxType = BoBlock;
-		  inlineFloatC = FALSE;
-		  pCurrentBox->BxType = BoBlock;
-		  pCurrentBox->BxFirstLine = NULL;
-		  pCurrentBox->BxLastLine = NULL;
-		}
-	      else if (inlineFloatC)
-		{
-		  boxType = BoFloatBlock;
-		  inlineChildren = FALSE;
-		  pCurrentBox->BxType = BoFloatBlock;
-		  pCurrentBox->BxFirstLine = NULL;
-		  pCurrentBox->BxLastLine = NULL;
-		}
-	      else
-		{
-		  /* no inline indicator for children */
-		  inlineChildren = FALSE;
-		  inlineFloatC = FALSE;
-		}
-	    }
-	  else
-	    {
-	      inlineChildren = FALSE;
-	      inlineFloatC = FALSE;
-	    }
-	}
+              if (((inLine && pAb->AbClear == 'N') ||
+                   (inLineFloat && !dummyChild)) &&
+                  (!inlineFloatC || uniqueChild) &&
+                  pAb->AbFloat == 'N' &&
+                  (pAb->AbAcceptLineBreak || inlineFloatC) &&
+                  !pAb->AbHeight.DimIsPosition &&
+                  pAb->AbHeight.DimValue <= 0 &&
+                  !pAb->AbWidth.DimIsPosition &&
+                  pAb->AbWidth.DimValue <= 0 &&
+                  /* and not already registered as .... */
+                  pCurrentBox->BxType != BoFloatGhost &&
+                  pCurrentBox->BxType != BoFloatBlock)
+                {
+                  /* ignore this box if it's not empty */
+                  if (inlineFloatC)
+                    pCurrentBox->BxType = BoFloatGhost;
+                  if (pAb->AbFirstEnclosed)
+                    pCurrentBox->BxType = BoGhost;
+                  /* this element can be split */
+                  inlineChildren = inLine;
+                  inlineFloatC = inLineFloat;
+                }
+              else if (inlineChildren)
+                {
+                  /* block of lines */
+                  boxType = BoBlock;
+                  inlineFloatC = FALSE;
+                  pCurrentBox->BxType = BoBlock;
+                  pCurrentBox->BxFirstLine = NULL;
+                  pCurrentBox->BxLastLine = NULL;
+                }
+              else if (inlineFloatC)
+                {
+                  boxType = BoFloatBlock;
+                  inlineChildren = FALSE;
+                  pCurrentBox->BxType = BoFloatBlock;
+                  pCurrentBox->BxFirstLine = NULL;
+                  pCurrentBox->BxLastLine = NULL;
+                }
+              else
+                {
+                  /* no inline indicator for children */
+                  inlineChildren = FALSE;
+                  inlineFloatC = FALSE;
+                }
+            }
+          else
+            {
+              inlineChildren = FALSE;
+              inlineFloatC = FALSE;
+            }
+        }
 
       if (pAb->AbLeafType != LtCompound)
-	{
-	  /* Positionnement des axes de la boite construite */
-	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
-	  /* On traite differemment la base d'un bloc de lignes  */
-	  /* s'il depend de la premiere boite englobee           */
-	  ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
-	}
+        {
+          /* Positionnement des axes de la boite construite */
+          ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+          /* On traite differemment la base d'un bloc de lignes  */
+          /* s'il depend de la premiere boite englobee           */
+          ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+        }
       /* On construit le chainage des boites terminales pour affichage */
       /* et on calcule la position des paves dans le document.         */
       if (pAb->AbFirstEnclosed == NULL)
-	{
-	  /* On note pour l'affichage que cette boite est nouvelle */
-	  pCurrentBox->BxNew = TRUE;
+        {
+          /* On note pour l'affichage que cette boite est nouvelle */
+          pCurrentBox->BxNew = TRUE;
 	  
-	  /* Est-ce la boite racine ? */
-	  if (pMainBox == pCurrentBox)
-	    {
-	      pCurrentBox->BxPrevious = NULL;
-	      pCurrentBox->BxNext = NULL;
-	    }
-	  else
-	    {
-	      /* Add the new box at the end of the displayed boxes list */
-	      /* The list is pointed from the root box */
-	      /* BxNext(Root) -> First displayed box              */
-	      /* BxPrevious(Root) -> Last displayed box           */
-	      pBox = pMainBox->BxPrevious;
-	      pCurrentBox->BxPrevious = pBox;
-	      if (pBox)
-		{
-		  pBox->BxNext = pCurrentBox;
-		  if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
-		    /* update also the split parent box */
-		    pBox->BxAbstractBox->AbBox->BxNext = pCurrentBox;
-		}
-	      pMainBox->BxPrevious = pCurrentBox;
-	      if (pMainBox->BxNext == NULL)
-		pMainBox->BxNext = pCurrentBox;
-	    }
-	  pCurrentBox->BxIndChar = 0;
-	  *carIndex += pAb->AbVolume;
-	}
+          /* Est-ce la boite racine ? */
+          if (pMainBox == pCurrentBox)
+            {
+              pCurrentBox->BxPrevious = NULL;
+              pCurrentBox->BxNext = NULL;
+            }
+          else
+            {
+              /* Add the new box at the end of the displayed boxes list */
+              /* The list is pointed from the root box */
+              /* BxNext(Root) -> First displayed box              */
+              /* BxPrevious(Root) -> Last displayed box           */
+              pBox = pMainBox->BxPrevious;
+              pCurrentBox->BxPrevious = pBox;
+              if (pBox)
+                {
+                  pBox->BxNext = pCurrentBox;
+                  if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
+                    /* update also the split parent box */
+                    pBox->BxAbstractBox->AbBox->BxNext = pCurrentBox;
+                }
+              pMainBox->BxPrevious = pCurrentBox;
+              if (pMainBox->BxNext == NULL)
+                pMainBox->BxNext = pCurrentBox;
+            }
+          pCurrentBox->BxIndChar = 0;
+          *carIndex += pAb->AbVolume;
+        }
 
       /* manage shadow exception */
       if (pAb->AbPresentationBox)
-	pCurrentBox->BxShadow = FALSE;
+        pCurrentBox->BxShadow = FALSE;
       else if (TypeHasException (ExcShadow, pAb->AbElement->ElTypeNumber, pSS))
-	pCurrentBox->BxShadow = TRUE;
+        pCurrentBox->BxShadow = TRUE;
       else if (pCurrentBox->BxAbstractBox->AbEnclosing &&
-	       pCurrentBox->BxAbstractBox->AbEnclosing->AbBox &&
-	       pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
-	pCurrentBox->BxShadow = TRUE;
+               pCurrentBox->BxAbstractBox->AbEnclosing->AbBox &&
+               pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
+        pCurrentBox->BxShadow = TRUE;
       else
-	pCurrentBox->BxShadow = FALSE;
+        pCurrentBox->BxShadow = FALSE;
       /* Note if there is a border or a fill */
       MarkDisplayedBox (pCurrentBox);
       pAb->AbNew = FALSE;	/* The box is now created */
       
       /* Evaluation du contenu de la boite */
       switch (pAb->AbLeafType)
-	{
-	case LtPageColBreak:
-	  pCurrentBox->BxBuffer = NULL;
-	  pCurrentBox->BxNChars = pAb->AbVolume;
-	  width = 0;
-	  height = 0;
-	  break;
-	case LtText:
-	  pCurrentBox->BxBuffer = pAb->AbText;
-	  pCurrentBox->BxNChars = pAb->AbVolume;
-	  pCurrentBox->BxFirstChar = 1;
-	  pCurrentBox->BxSpaceWidth = 0;
-	  /* get the default script */
-	  pCurrentBox->BxScript = script;
-	  GiveTextSize (pAb, frame, &width, &height, &i);
-	  pCurrentBox->BxNSpaces = i;
-	  break;
-	case LtPicture:
-	  pCurrentBox->BxType = BoPicture;
-	  picture = (ThotPictInfo *) pAb->AbPictInfo;
-	  pCurrentBox->BxPictInfo = pAb->AbPictInfo;
-	  if (!pAb->AbPresentationBox && pAb->AbVolume &&
-	      pCurrentBox->BxPictInfo)
-	    {
-	      /* box size has to be positive */
-	      if (pCurrentBox->BxW < 0)
-		pCurrentBox->BxW = 0;
-	      if (pCurrentBox->BxH < 0)
-		pCurrentBox->BxH = 0;
-	    }
+        {
+        case LtPageColBreak:
+          pCurrentBox->BxBuffer = NULL;
+          pCurrentBox->BxNChars = pAb->AbVolume;
+          width = 0;
+          height = 0;
+          break;
+        case LtText:
+          pCurrentBox->BxBuffer = pAb->AbText;
+          pCurrentBox->BxNChars = pAb->AbVolume;
+          pCurrentBox->BxFirstChar = 1;
+          pCurrentBox->BxSpaceWidth = 0;
+          /* get the default script */
+          pCurrentBox->BxScript = script;
+          GiveTextSize (pAb, frame, &width, &height, &i);
+          pCurrentBox->BxNSpaces = i;
+          break;
+        case LtPicture:
+          pCurrentBox->BxType = BoPicture;
+          picture = (ThotPictInfo *) pAb->AbPictInfo;
+          pCurrentBox->BxPictInfo = pAb->AbPictInfo;
+          if (!pAb->AbPresentationBox && pAb->AbVolume &&
+              pCurrentBox->BxPictInfo)
+            {
+              /* box size has to be positive */
+              if (pCurrentBox->BxW < 0)
+                pCurrentBox->BxW = 0;
+              if (pCurrentBox->BxH < 0)
+                pCurrentBox->BxH = 0;
+            }
 	  
 #ifdef _GL
-	  if (!glIsTexture (picture->TextureBind))	    
+          if (!glIsTexture (picture->TextureBind))	    
 #else /*_GL*/
-	  if (picture->PicPixmap == None)
+            if (picture->PicPixmap == None)
 #endif /*_GL*/
-	    LoadPicture (frame, pCurrentBox, picture);
-	  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-			   &width, &height);
-	  break;
-	case LtSymbol:
-	  pCurrentBox->BxBuffer = NULL;
-	  pCurrentBox->BxNChars = pAb->AbVolume;
-	  /* Les reperes de la boite (elastique) ne sont pas inverses */
-	  pCurrentBox->BxHorizInverted = FALSE;
-	  pCurrentBox->BxVertInverted = FALSE;
-	  GiveSymbolSize (pAb, &width, &height);
-	  break;
-	case LtGraphics:
-	  pCurrentBox->BxBuffer = NULL;
-	  pCurrentBox->BxNChars = pAb->AbVolume;
-	  GiveGraphicSize (pAb, &width, &height);
-	  if (pAb->AbShape == 'C')
-	    {
-	      /* update radius of the rectangle with rounded corners */
-	      ComputeRadius (pAb, frame, TRUE);
-	      ComputeRadius (pAb, frame, FALSE);
-	    }
-	  break;
-	case LtPolyLine:
-	  /* Prend une copie des points de controle */
-	  pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-	  pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
-	  pCurrentBox->BxPictInfo = NULL;
-	  pCurrentBox->BxXRatio = 1;
-	  pCurrentBox->BxYRatio = 1;
-	  GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-			    &width, &height);
-	  break;
-	case LtPath:
-	  /* Prend une copie du path */
-	  pCurrentBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
-	  pCurrentBox->BxNChars = pAb->AbVolume;
-	  pCurrentBox->BxXRatio = 1;
-	  pCurrentBox->BxYRatio = 1;
-	  if (pAb->AbEnclosing)
-	    {
-	      /* the direct parent is the SVG path element */
-	      pParent = pAb->AbEnclosing->AbEnclosing;
-	      while (pParent &&
-		     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
-				       pParent->AbElement->ElStructSchema))
-		pParent = pParent->AbEnclosing;
-	      width = pParent->AbBox->BxWidth;
-	      height = pParent->AbBox->BxHeight;
-	      pAb->AbBox->BxWidth = width;
-	      pAb->AbBox->BxHeight = height;
-	      pParent = pAb->AbEnclosing;
-	      pParent->AbBox->BxWidth = width;
-	      pParent->AbBox->BxHeight = height;
-	    }
-	  else
-	    {
-	      width = 0;
-	      height = 0;
-	    }
-	  break;
-	case LtCompound:
-	  if (boxType == BoTable)
-	    {
-	      pCurrentBox->BxColumns = NULL;
-	      pCurrentBox->BxRows = NULL;
-	      pCurrentBox->BxMaxWidth = 0;
-	      pCurrentBox->BxMinWidth = 0;
-	    }
-	  else if (boxType == BoColumn)
-	    {
-	      pCurrentBox->BxTable = NULL;
-	      pCurrentBox->BxRows = NULL;
-	      pCurrentBox->BxMaxWidth = 0;
-	      pCurrentBox->BxMinWidth = 0;
-	    }
-	  else if (boxType == BoRow)
-	    {
-	      pCurrentBox->BxTable = NULL;
-	      pCurrentBox->BxRows = NULL;
-	      pCurrentBox->BxMaxWidth = 0;
-	      pCurrentBox->BxMinWidth = 0;
-	    }
-	  else if (boxType == BoCell)
-	    {
-	      pCurrentBox->BxTable = NULL;
-	      pCurrentBox->BxRows = NULL;
-	      pCurrentBox->BxMaxWidth = 0;
-	      pCurrentBox->BxMinWidth = 0;
-	    }
+              LoadPicture (frame, pCurrentBox, picture);
+          GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
+                           &width, &height);
+          break;
+        case LtSymbol:
+          pCurrentBox->BxBuffer = NULL;
+          pCurrentBox->BxNChars = pAb->AbVolume;
+          /* Les reperes de la boite (elastique) ne sont pas inverses */
+          pCurrentBox->BxHorizInverted = FALSE;
+          pCurrentBox->BxVertInverted = FALSE;
+          GiveSymbolSize (pAb, &width, &height);
+          break;
+        case LtGraphics:
+          pCurrentBox->BxBuffer = NULL;
+          pCurrentBox->BxNChars = pAb->AbVolume;
+          GiveGraphicSize (pAb, &width, &height);
+          if (pAb->AbShape == 'C')
+            {
+              /* update radius of the rectangle with rounded corners */
+              ComputeRadius (pAb, frame, TRUE);
+              ComputeRadius (pAb, frame, FALSE);
+            }
+          break;
+        case LtPolyLine:
+          /* Prend une copie des points de controle */
+          pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+          pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
+          pCurrentBox->BxPictInfo = NULL;
+          pCurrentBox->BxXRatio = 1;
+          pCurrentBox->BxYRatio = 1;
+          GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
+                            &width, &height);
+          break;
+        case LtPath:
+          /* Prend une copie du path */
+          pCurrentBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
+          pCurrentBox->BxNChars = pAb->AbVolume;
+          pCurrentBox->BxXRatio = 1;
+          pCurrentBox->BxYRatio = 1;
+          if (pAb->AbEnclosing)
+            {
+              /* the direct parent is the SVG path element */
+              pParent = pAb->AbEnclosing->AbEnclosing;
+              while (pParent &&
+                     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
+                                       pParent->AbElement->ElStructSchema))
+                pParent = pParent->AbEnclosing;
+              width = pParent->AbBox->BxWidth;
+              height = pParent->AbBox->BxHeight;
+              pAb->AbBox->BxWidth = width;
+              pAb->AbBox->BxHeight = height;
+              pParent = pAb->AbEnclosing;
+              pParent->AbBox->BxWidth = width;
+              pParent->AbBox->BxHeight = height;
+            }
+          else
+            {
+              width = 0;
+              height = 0;
+            }
+          break;
+        case LtCompound:
+          if (boxType == BoTable)
+            {
+              pCurrentBox->BxColumns = NULL;
+              pCurrentBox->BxRows = NULL;
+              pCurrentBox->BxMaxWidth = 0;
+              pCurrentBox->BxMinWidth = 0;
+            }
+          else if (boxType == BoColumn)
+            {
+              pCurrentBox->BxTable = NULL;
+              pCurrentBox->BxRows = NULL;
+              pCurrentBox->BxMaxWidth = 0;
+              pCurrentBox->BxMinWidth = 0;
+            }
+          else if (boxType == BoRow)
+            {
+              pCurrentBox->BxTable = NULL;
+              pCurrentBox->BxRows = NULL;
+              pCurrentBox->BxMaxWidth = 0;
+              pCurrentBox->BxMinWidth = 0;
+            }
+          else if (boxType == BoCell)
+            {
+              pCurrentBox->BxTable = NULL;
+              pCurrentBox->BxRows = NULL;
+              pCurrentBox->BxMaxWidth = 0;
+              pCurrentBox->BxMinWidth = 0;
+            }
 
-	  /* Is there a background image ? */
-	  if (pAb->AbPictBackground != NULL)
-	    {
-	      /* force filling */
-	      pAb->AbFillBox = TRUE;
-	      /* load the picture */
-	      picture = (ThotPictInfo *) pAb->AbPictBackground;
-	      if (picture->PicPixmap == None)
-		LoadPicture (frame, pCurrentBox, picture);
-	    }
+          /* Is there a background image ? */
+          if (pAb->AbPictBackground != NULL)
+            {
+              /* force filling */
+              pAb->AbFillBox = TRUE;
+              /* load the picture */
+              picture = (ThotPictInfo *) pAb->AbPictBackground;
+              if (picture->PicPixmap == None)
+                LoadPicture (frame, pCurrentBox, picture);
+            }
 
-	  if (pCurrentBox == pMainBox)
-	    {
-	      /* Set the right document background */
-	      if (pAb->AbFillBox)
-		SetMainWindowBackgroundColor (frame, pAb->AbBackground);
-	      else
-		SetMainWindowBackgroundColor (frame, DefaultBColor);
-	    }
-	  /* create enclosed boxes */
-	  pChildAb = pAb->AbFirstEnclosed;
-	  while (pChildAb)
-	    {
-	      pBox = CreateBox (pChildAb, frame, inlineChildren,
-				inlineFloatC, carIndex);
-	      pChildAb = pChildAb->AbNext;
-	    }
-	  GiveEnclosureSize (pAb, frame, &width, &height);
-	  /* Position of box axis */
-	  ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
-	  /* don't manage the baseline of blocks here */
-	  if ((pCurrentBox->BxType != BoFloatBlock &&
-	       pCurrentBox->BxType != BoBlock) ||
-	      pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
-	    ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
-	  break;
-	default:
-	  break;
-	}
+          if (pCurrentBox == pMainBox)
+            {
+              /* Set the right document background */
+              if (pAb->AbFillBox)
+                SetMainWindowBackgroundColor (frame, pAb->AbBackground);
+              else
+                SetMainWindowBackgroundColor (frame, DefaultBColor);
+            }
+          /* create enclosed boxes */
+          pChildAb = pAb->AbFirstEnclosed;
+          while (pChildAb)
+            {
+              pBox = CreateBox (pChildAb, frame, inlineChildren,
+                                inlineFloatC, carIndex);
+              pChildAb = pChildAb->AbNext;
+            }
+          GiveEnclosureSize (pAb, frame, &width, &height);
+          /* Position of box axis */
+          ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+          /* don't manage the baseline of blocks here */
+          if ((pCurrentBox->BxType != BoFloatBlock &&
+               pCurrentBox->BxType != BoBlock) ||
+              pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
+            ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+          break;
+        default:
+          break;
+        }
 
       /* Dimensionnement de la boite par le contenu ? */
       ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
@@ -2545,7 +2545,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* indirectement (parce que la boite contient un bloc de ligne) la  */
       /* hauteur du contenu de la boite.                                  */
       if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
-	GiveEnclosureSize (pAb, frame, &width, &height);
+        GiveEnclosureSize (pAb, frame, &width, &height);
       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
       /* recheck auto and % margins */
       CheckMBP (pAb, pCurrentBox, frame, TRUE);
@@ -2554,58 +2554,58 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       i = 0;
       positioning = ComputePositioning (pCurrentBox, frame);
       if (positioning ||
-	  (pAb->AbLeafType == LtCompound &&
-	   pAb->AbPositioning &&
-	   pAb->AbPositioning->PnAlgorithm == PnRelative))
- 	AddFlow (pAb, frame);
+          (pAb->AbLeafType == LtCompound &&
+           pAb->AbPositioning &&
+           pAb->AbPositioning->PnAlgorithm == PnRelative))
+        AddFlow (pAb, frame);
       if (!positioning)
-	{
-	  if (!inLine && !inLineFloat &&
-	      pCurrentBox->BxType != BoFloatGhost &&
-	      pCurrentBox->BxType != BoGhost)
-	    {
-	      ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	      ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
-	    }
-	  else
-	    {
-	      if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
-		/* the inline rule doesn't act on this box */
-		ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	      else
-		/* the box position depends of its horizontal reference axis */
-		SetPositionConstraint (VertRef, pCurrentBox, &i);
-	      if (!pAb->AbVertEnclosing)
-		/* the inline rule doesn't act on this box */
-		ComputePosRelation (&pAb->AbHorizRef, pCurrentBox, frame, FALSE);
-	      else if (pAb->AbNotInLine)
-		/* the inline rule doesn't act on this box */
-		ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
-	      else
-		/* the box position depends of its horizontal reference axis */
-		SetPositionConstraint (HorizRef, pCurrentBox, &i);
-	    }
-	}
+        {
+          if (!inLine && !inLineFloat &&
+              pCurrentBox->BxType != BoFloatGhost &&
+              pCurrentBox->BxType != BoGhost)
+            {
+              ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+              ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
+            }
+          else
+            {
+              if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
+                /* the inline rule doesn't act on this box */
+                ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+              else
+                /* the box position depends of its horizontal reference axis */
+                SetPositionConstraint (VertRef, pCurrentBox, &i);
+              if (!pAb->AbVertEnclosing)
+                /* the inline rule doesn't act on this box */
+                ComputePosRelation (&pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+              else if (pAb->AbNotInLine)
+                /* the inline rule doesn't act on this box */
+                ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
+              else
+                /* the box position depends of its horizontal reference axis */
+                SetPositionConstraint (HorizRef, pCurrentBox, &i);
+            }
+        }
      
 #ifdef _GL
       if (pAb->AbElement->ElAnimation)
-	{
-	  i = ActiveFrame;
-	  ActiveFrame = frame;
-	  AnimatedBoxAdd ((PtrElement)pAb->AbElement);
-	  ActiveFrame = i;
-	}   
+        {
+          i = ActiveFrame;
+          ActiveFrame = frame;
+          AnimatedBoxAdd ((PtrElement)pAb->AbElement);
+          ActiveFrame = i;
+        }   
 #endif /* _GL */
 
       /* manage table exceptions */
       if (boxType == BoTable)
-	UpdateTable (pAb, NULL, NULL, frame);
+        UpdateTable (pAb, NULL, NULL, frame);
       else if (boxType == BoColumn)
-	UpdateTable (NULL, pAb, NULL, frame);
+        UpdateTable (NULL, pAb, NULL, frame);
       else if (boxType == BoRow)
-	UpdateTable (NULL, NULL, pAb, frame);
+        UpdateTable (NULL, NULL, pAb, frame);
       else if (boxType == BoCell)
-	UpdateColumnWidth (pAb, NULL, frame);
+        UpdateColumnWidth (pAb, NULL, frame);
     }
 #ifdef _GL
   pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
@@ -2622,7 +2622,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   SearchEnclosingType look for the enclosing table, row or block.
   ----------------------------------------------------------------------*/
 PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
-				    BoxType type2)
+                                    BoxType type2)
 {
   ThotBool       still;
 
@@ -2630,18 +2630,18 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
   while (still)
     {
       if (pAb->AbBox == NULL)
-	{
-	  pAb = NULL;
-	  still = FALSE;
-	}
+        {
+          pAb = NULL;
+          still = FALSE;
+        }
       /* Is it the table box */
       else if (pAb->AbBox->BxType == type1 || pAb->AbBox->BxType == type2)
-	still = FALSE;
+        still = FALSE;
       else
-	{
-	  pAb = pAb->AbEnclosing;
-	  still = (pAb != NULL);
-	}
+        {
+          pAb = pAb->AbEnclosing;
+          still = (pAb != NULL);
+        }
     }
   return (pAb);
 }
@@ -2652,102 +2652,102 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
   ----------------------------------------------------------------------*/
 PtrLine SearchLine (PtrBox pBox, int frame)
 {
-   PtrLine             pLine;
-   PtrBox              pBoxPiece;
-   PtrBox              pBoxInLine;
-   PtrBox              pCurrentBox;
-   PtrAbstractBox      pAb;
-   ThotBool            still;
+  PtrLine             pLine;
+  PtrBox              pBoxPiece;
+  PtrBox              pBoxInLine;
+  PtrBox              pCurrentBox;
+  PtrAbstractBox      pAb;
+  ThotBool            still;
 
-   /* check enclosing element */
-   pLine = NULL;
-   pAb = NULL;
-   if (pBox)
-     {
-       pAb = pBox->BxAbstractBox;
+  /* check enclosing element */
+  pLine = NULL;
+  pAb = NULL;
+  if (pBox)
+    {
+      pAb = pBox->BxAbstractBox;
       if (pAb == NULL ||
-	  (pAb->AbNotInLine && pAb->AbDisplay == 'U'))
-	pAb = NULL;
+          (pAb->AbNotInLine && pAb->AbDisplay == 'U'))
+        pAb = NULL;
       else
-       pAb = pAb->AbEnclosing;
-     }
+        pAb = pAb->AbEnclosing;
+    }
 
-   /* look for an enclosing block of lines */
-   if (pAb)
-     {
-	if (pAb->AbBox == NULL)
-	   pAb = NULL;
-	else if (pAb->AbBox->BxType == BoGhost)
-	  {
-	     /* It's a ghost, look for the enclosing block */
-	     still = TRUE;
-	     while (still)
-	       {
-		  pAb = pAb->AbEnclosing;
-		  if (pAb == NULL)
-		     still = FALSE;
-		  else if (pAb->AbBox == NULL)
-		    {
-		       pAb = NULL;
-		       still = FALSE;
-		    }
-		  else if (pAb->AbBox->BxType != BoGhost)
-		     still = FALSE;
-	       }
-	  }
-	else if (pAb->AbBox->BxType == BoFloatGhost)
-	  pAb = pAb->AbEnclosing;
-	else if (pAb->AbBox->BxType != BoBlock &&
-		 pAb->AbBox->BxType != BoFloatBlock)
-	  /* the box in not within a block of lines */
-	   pAb = NULL;
-     }
+  /* look for an enclosing block of lines */
+  if (pAb)
+    {
+      if (pAb->AbBox == NULL)
+        pAb = NULL;
+      else if (pAb->AbBox->BxType == BoGhost)
+        {
+          /* It's a ghost, look for the enclosing block */
+          still = TRUE;
+          while (still)
+            {
+              pAb = pAb->AbEnclosing;
+              if (pAb == NULL)
+                still = FALSE;
+              else if (pAb->AbBox == NULL)
+                {
+                  pAb = NULL;
+                  still = FALSE;
+                }
+              else if (pAb->AbBox->BxType != BoGhost)
+                still = FALSE;
+            }
+        }
+      else if (pAb->AbBox->BxType == BoFloatGhost)
+        pAb = pAb->AbEnclosing;
+      else if (pAb->AbBox->BxType != BoBlock &&
+               pAb->AbBox->BxType != BoFloatBlock)
+        /* the box in not within a block of lines */
+        pAb = NULL;
+    }
 
-   if (pAb)
-     {
-	pCurrentBox = pAb->AbBox;
-	pLine = pCurrentBox->BxFirstLine;
-	/* Look for the line which includes the current box */
-	still = TRUE;
-	while (still && pLine)
-	  {
-	     /* Locate the box in the set of lines */
-	     if (pLine->LiFirstPiece)
-		pBoxInLine = pLine->LiFirstPiece;
-	     else
-		pBoxInLine = pLine->LiFirstBox;
-	     if (pBoxInLine)
-	       do
-		 {
-		  if (pBoxInLine->BxType == BoSplit ||
-		      pBoxInLine->BxType == BoMulScript)
-		     pBoxPiece = pBoxInLine->BxNexChild;
-		  else
-		     pBoxPiece = pBoxInLine;
-		  if (pBoxPiece == pBox)
-		    {
-		       /* the line is found */
-		       still = FALSE;
-		       pBoxPiece = pLine->LiLastBox;
-		    }
-		  /* else get next box */
-		  else if ((pBoxPiece->BxType == BoScript ||
-			    pBoxPiece->BxType == BoPiece) &&
-			   pBoxPiece->BxNexChild)
-		    pBoxInLine = pBoxPiece->BxNexChild;
-		  else
-		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox, frame);
-		 }
-	       while (pBoxPiece != pLine->LiLastBox
-		      && pBoxPiece != pLine->LiLastPiece
-		      && pBoxInLine);
+  if (pAb)
+    {
+      pCurrentBox = pAb->AbBox;
+      pLine = pCurrentBox->BxFirstLine;
+      /* Look for the line which includes the current box */
+      still = TRUE;
+      while (still && pLine)
+        {
+          /* Locate the box in the set of lines */
+          if (pLine->LiFirstPiece)
+            pBoxInLine = pLine->LiFirstPiece;
+          else
+            pBoxInLine = pLine->LiFirstBox;
+          if (pBoxInLine)
+            do
+              {
+                if (pBoxInLine->BxType == BoSplit ||
+                    pBoxInLine->BxType == BoMulScript)
+                  pBoxPiece = pBoxInLine->BxNexChild;
+                else
+                  pBoxPiece = pBoxInLine;
+                if (pBoxPiece == pBox)
+                  {
+                    /* the line is found */
+                    still = FALSE;
+                    pBoxPiece = pLine->LiLastBox;
+                  }
+                /* else get next box */
+                else if ((pBoxPiece->BxType == BoScript ||
+                          pBoxPiece->BxType == BoPiece) &&
+                         pBoxPiece->BxNexChild)
+                  pBoxInLine = pBoxPiece->BxNexChild;
+                else
+                  pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox, frame);
+              }
+            while (pBoxPiece != pLine->LiLastBox
+                   && pBoxPiece != pLine->LiLastPiece
+                   && pBoxInLine);
 
-	     if (still)
-	       /* get next line */
-	       pLine = pLine->LiNext;
-	  }
-     }
-   return pLine;
+          if (still)
+            /* get next line */
+            pLine = pLine->LiNext;
+        }
+    }
+  return pLine;
 }
 
 
@@ -2763,139 +2763,139 @@ PtrLine SearchLine (PtrBox pBox, int frame)
   algorithm that splits the ext in lines is called.
   ----------------------------------------------------------------------*/
 void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
-		int wDelta, int adjustDelta, int hDelta, int frame,
-		ThotBool splitBox)
+                int wDelta, int adjustDelta, int hDelta, int frame,
+                ThotBool splitBox)
 {
-   PtrBox              box1;
-   PtrBox              pMainBox;
-   Propagation         savpropage;
-   PtrAbstractBox      pAb;
-   AbPosition         *pPosAb;
-   AbDimension        *pDimAb;
-   int                 j;
+  PtrBox              box1;
+  PtrBox              pMainBox;
+  Propagation         savpropage;
+  PtrAbstractBox      pAb;
+  AbPosition         *pPosAb;
+  AbDimension        *pDimAb;
+  int                 j;
 
-   /* Traitement particulier aux boites de coupure */
-   if (pBox->BxType == BoPiece ||
-       pBox->BxType == BoScript ||
-       pBox->BxType == BoDotted)
-     {
-	/* Mise a jour de sa boite mere (boite coupee) */
-	pMainBox = pBox->BxAbstractBox->AbBox;
-	pMainBox->BxNChars += charDelta;
-	pMainBox->BxNSpaces += spaceDelta;
-	pMainBox->BxW += wDelta;
-	pMainBox->BxWidth += wDelta;
-	pMainBox->BxH += hDelta;
-	pMainBox->BxHeight += hDelta;
-	/* Faut-il mettre a jour la base ? */
-	pAb = pMainBox->BxAbstractBox;
-	pPosAb = &pAb->AbHorizRef;
-	if (pPosAb->PosAbRef == NULL)
-	  {
-	     j = BoxFontBase (pMainBox->BxFont) + pMainBox->BxTMargin + pMainBox->BxTBorder + pMainBox->BxTPadding - pMainBox->BxHorizRef;
-	     MoveHorizRef (pAb->AbBox, NULL, j, frame);
-	  }
-	else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
-	  {
-	   if (pPosAb->PosRefEdge == HorizMiddle)
-	      MoveHorizRef (pAb->AbBox, NULL, hDelta / 2, frame);
-	   else if (pPosAb->PosRefEdge == Bottom)
-	      MoveHorizRef (pAb->AbBox, NULL, hDelta, frame);
-	  }
+  /* Traitement particulier aux boites de coupure */
+  if (pBox->BxType == BoPiece ||
+      pBox->BxType == BoScript ||
+      pBox->BxType == BoDotted)
+    {
+      /* Mise a jour de sa boite mere (boite coupee) */
+      pMainBox = pBox->BxAbstractBox->AbBox;
+      pMainBox->BxNChars += charDelta;
+      pMainBox->BxNSpaces += spaceDelta;
+      pMainBox->BxW += wDelta;
+      pMainBox->BxWidth += wDelta;
+      pMainBox->BxH += hDelta;
+      pMainBox->BxHeight += hDelta;
+      /* Faut-il mettre a jour la base ? */
+      pAb = pMainBox->BxAbstractBox;
+      pPosAb = &pAb->AbHorizRef;
+      if (pPosAb->PosAbRef == NULL)
+        {
+          j = BoxFontBase (pMainBox->BxFont) + pMainBox->BxTMargin + pMainBox->BxTBorder + pMainBox->BxTPadding - pMainBox->BxHorizRef;
+          MoveHorizRef (pAb->AbBox, NULL, j, frame);
+        }
+      else if (pPosAb->PosAbRef == pMainBox->BxAbstractBox)
+        {
+          if (pPosAb->PosRefEdge == HorizMiddle)
+            MoveHorizRef (pAb->AbBox, NULL, hDelta / 2, frame);
+          else if (pPosAb->PosRefEdge == Bottom)
+            MoveHorizRef (pAb->AbBox, NULL, hDelta, frame);
+        }
 
-	/* Mise a jour des positions des boites suivantes */
-	box1 = pBox->BxNexChild;
-	while (box1)
-	  {
-	     box1->BxFirstChar += charDelta;
-	     box1 = box1->BxNexChild;
-	  }
-     }
+      /* Mise a jour des positions des boites suivantes */
+      box1 = pBox->BxNexChild;
+      while (box1)
+        {
+          box1->BxFirstChar += charDelta;
+          box1 = box1->BxNexChild;
+        }
+    }
 
-   /* Traitement sur la boite passee en parametre */
-   savpropage = Propagate;
-   pAb = pBox->BxAbstractBox;
-   /* update the box itself */
-   if (pAb->AbLeafType == LtText)
-     {
-       /* when a character between 2 boxes are removed the box is unchanged */
-	pBox->BxNSpaces += spaceDelta;
-	pBox->BxNChars += charDelta;
-     }
+  /* Traitement sur la boite passee en parametre */
+  savpropage = Propagate;
+  pAb = pBox->BxAbstractBox;
+  /* update the box itself */
+  if (pAb->AbLeafType == LtText)
+    {
+      /* when a character between 2 boxes are removed the box is unchanged */
+      pBox->BxNSpaces += spaceDelta;
+      pBox->BxNChars += charDelta;
+    }
 
-   /* Est-ce que la largeur de la boite depend de son contenu ? */
-   pDimAb = &(pBox->BxAbstractBox->AbWidth);
-   if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
-     /* Blanc entre deux boites de coupure */
-     if (splitBox && pLine)
-       {
-	 /* Il faut mettre a jour la largeur de la boite coupee */
-	 if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript || adjustDelta == 0)
-	   {
-	     pBox->BxW += wDelta;
-	     pBox->BxWidth += wDelta;
-	   }
-	 else
-	   {
-	     pBox->BxW += adjustDelta;
-	     pBox->BxWidth += adjustDelta;
-	   }
-	 /* Puis refaire la mise en lignes */
-	 RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
-       }
-     else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-       {
-	 /* Box coupee */
-	 Propagate = ToSiblings;
-	 if (wDelta != 0)
-	   ChangeDefaultWidth (pBox, pBox, pBox->BxW + wDelta, 0, frame);
-	 if (hDelta != 0)
-	   ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
-	 Propagate = savpropage;
-	 /* Faut-il mettre a jour le bloc de ligne englobant ? */
-	 if (Propagate == ToAll)
-	   {
-	     pLine = SearchLine (pBox->BxNexChild, frame);
-	     RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
-	   }
-       }
-     else
-       {
-	 /* Box entiere ou de coupure */
-	 if (adjustDelta != 0)
-	   ChangeDefaultWidth (pBox, pBox, pBox->BxW + adjustDelta, spaceDelta, frame);
-	 else if (wDelta != 0)
-	   {
-	     /*if (pBox->BxNChars == charDelta)
-	       ChangeDefaultWidth (pBox, pBox, wDelta + 2, spaceDelta, frame);
-	       else*/
-	       ChangeDefaultWidth (pBox, pBox, pBox->BxW + wDelta,
-				   spaceDelta, frame);
-	   }
-	 if (hDelta != 0)
-	   ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
-       }
-   else if (pBox->BxContentHeight || (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum))
-     {
-       /* La hauteur de la boite depend de son contenu */
-       if (hDelta != 0)
-	 ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
-     }
-   else if (pBox->BxW > 0 && pBox->BxH > 0)
-     /* if the box width doesn't depend on the contents
-	redisplay the whole box */
-     DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-   Propagate = savpropage;
+  /* Est-ce que la largeur de la boite depend de son contenu ? */
+  pDimAb = &(pBox->BxAbstractBox->AbWidth);
+  if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
+    /* Blanc entre deux boites de coupure */
+    if (splitBox && pLine)
+      {
+        /* Il faut mettre a jour la largeur de la boite coupee */
+        if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript || adjustDelta == 0)
+          {
+            pBox->BxW += wDelta;
+            pBox->BxWidth += wDelta;
+          }
+        else
+          {
+            pBox->BxW += adjustDelta;
+            pBox->BxWidth += adjustDelta;
+          }
+        /* Puis refaire la mise en lignes */
+        RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
+      }
+    else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+      {
+        /* Box coupee */
+        Propagate = ToSiblings;
+        if (wDelta != 0)
+          ChangeDefaultWidth (pBox, pBox, pBox->BxW + wDelta, 0, frame);
+        if (hDelta != 0)
+          ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
+        Propagate = savpropage;
+        /* Faut-il mettre a jour le bloc de ligne englobant ? */
+        if (Propagate == ToAll)
+          {
+            pLine = SearchLine (pBox->BxNexChild, frame);
+            RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
+          }
+      }
+    else
+      {
+        /* Box entiere ou de coupure */
+        if (adjustDelta != 0)
+          ChangeDefaultWidth (pBox, pBox, pBox->BxW + adjustDelta, spaceDelta, frame);
+        else if (wDelta != 0)
+          {
+            /*if (pBox->BxNChars == charDelta)
+              ChangeDefaultWidth (pBox, pBox, wDelta + 2, spaceDelta, frame);
+              else*/
+            ChangeDefaultWidth (pBox, pBox, pBox->BxW + wDelta,
+                                spaceDelta, frame);
+          }
+        if (hDelta != 0)
+          ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
+      }
+  else if (pBox->BxContentHeight || (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum))
+    {
+      /* La hauteur de la boite depend de son contenu */
+      if (hDelta != 0)
+        ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
+    }
+  else if (pBox->BxW > 0 && pBox->BxH > 0)
+    /* if the box width doesn't depend on the contents
+       redisplay the whole box */
+    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+  Propagate = savpropage;
 #ifdef _GL
-   pBox->VisibleModification = TRUE;
+  pBox->VisibleModification = TRUE;
 #endif /* _GL */
 }
 
 
 /*----------------------------------------------------------------------
-   RemoveBoxes removes the current box and all included boxes.
-   The parameter toRemake is TRUE when the box will be recreated
-   immediatly.
+  RemoveBoxes removes the current box and all included boxes.
+  The parameter toRemake is TRUE when the box will be recreated
+  immediatly.
   ----------------------------------------------------------------------*/
 void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 {
@@ -2907,101 +2907,101 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
   if (pAb != NULL)
     {
       if (pAb->AbBox)
-	{
-	  /* Liberation des lignes et boites coupees */
-	  pBox = pAb->AbBox;
-	  /* Remove out of structure relations */
-	  ClearOutOfStructRelation (pBox);
-	  if (pAb->AbFloat != 'N')
-	    ClearAFloat (pAb);
+        {
+          /* Liberation des lignes et boites coupees */
+          pBox = pAb->AbBox;
+          /* Remove out of structure relations */
+          ClearOutOfStructRelation (pBox);
+          if (pAb->AbFloat != 'N')
+            ClearAFloat (pAb);
 
-	  if (pAb->AbLeafType == LtCompound)
-	    {
-	      if (pAb->AbPositioning)
-		RemoveFlow (pAb, frame);
-	      /* unregister the box */
-	      pBox->BxDisplay = FALSE;
-	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
-		{
-		  /* free floating contexts */
-		  ClearFloats (pBox);
-		  RemoveLines (pBox, frame, pBox->BxFirstLine, TRUE,
-			       &changeSelectBegin, &changeSelectEnd);
-		}
-	      else if (pBox->BxType == BoTable)
-		ClearTable (pAb);
-	      else if (pBox->BxType == BoColumn)
-		UpdateTable (NULL, pAb, NULL, frame);
-	      else if (pBox->BxType == BoRow)
-		UpdateTable (NULL, NULL, pAb, frame);
-	    }
-	  else if (pAb->AbLeafType == LtPolyLine)
-	    FreePolyline (pBox);
-	  else if (pAb->AbLeafType == LtPath)
-	    FreePath (pBox);
-	  else if (pAb->AbLeafType == LtPicture)
-	    CleanPictInfo ((ThotPictInfo *)pBox->BxPictInfo);
-	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-	    /* free child boxes */
-	    UnsplitBox (pBox);
+          if (pAb->AbLeafType == LtCompound)
+            {
+              if (pAb->AbPositioning)
+                RemoveFlow (pAb, frame);
+              /* unregister the box */
+              pBox->BxDisplay = FALSE;
+              if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+                {
+                  /* free floating contexts */
+                  ClearFloats (pBox);
+                  RemoveLines (pBox, frame, pBox->BxFirstLine, TRUE,
+                               &changeSelectBegin, &changeSelectEnd);
+                }
+              else if (pBox->BxType == BoTable)
+                ClearTable (pAb);
+              else if (pBox->BxType == BoColumn)
+                UpdateTable (NULL, pAb, NULL, frame);
+              else if (pBox->BxType == BoRow)
+                UpdateTable (NULL, NULL, pAb, frame);
+            }
+          else if (pAb->AbLeafType == LtPolyLine)
+            FreePolyline (pBox);
+          else if (pAb->AbLeafType == LtPath)
+            FreePath (pBox);
+          else if (pAb->AbLeafType == LtPicture)
+            CleanPictInfo ((ThotPictInfo *)pBox->BxPictInfo);
+          else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+            /* free child boxes */
+            UnsplitBox (pBox);
 
-	  if (pAb->AbDead)
-	    pAb->AbNew = FALSE;
-	  else
-	    pAb->AbNew = rebuild;
-	  if (pAb->AbNew)
-	    {
-	      /* Faut-il restaurer les regles d'une boite elastique */
-	      if (pBox->BxHorizFlex && pBox->BxHorizInverted)
-		XEdgesExchange (pBox, OpHorizDep);
+          if (pAb->AbDead)
+            pAb->AbNew = FALSE;
+          else
+            pAb->AbNew = rebuild;
+          if (pAb->AbNew)
+            {
+              /* Faut-il restaurer les regles d'une boite elastique */
+              if (pBox->BxHorizFlex && pBox->BxHorizInverted)
+                XEdgesExchange (pBox, OpHorizDep);
 	      
-	      if (pBox->BxVertFlex && pBox->BxVertInverted)
-		YEdgesExchange (pBox, OpVertDep);
-	    }
+              if (pBox->BxVertFlex && pBox->BxVertInverted)
+                YEdgesExchange (pBox, OpVertDep);
+            }
 
-	  /* Liberation des boites des paves inclus */
-	  pChildAb = pAb->AbFirstEnclosed;
-	  while (pChildAb != NULL)
-	    {
-	      RemoveBoxes (pChildAb, rebuild, frame);
-	      pChildAb = pChildAb->AbNext;	/* while */
-	    }
+          /* Liberation des boites des paves inclus */
+          pChildAb = pAb->AbFirstEnclosed;
+          while (pChildAb != NULL)
+            {
+              RemoveBoxes (pChildAb, rebuild, frame);
+              pChildAb = pChildAb->AbNext;	/* while */
+            }
 
-	  /* Suppression des references a pBox dans la selection */
-	  if (ViewFrameTable[frame - 1].FrSelectionBegin.VsBox == pBox)
-	    ViewFrameTable[frame - 1].FrSelectionBegin.VsBox = NULL;
-	  if (ViewFrameTable[frame - 1].FrSelectionEnd.VsBox == pBox)
-	    ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
+          /* Suppression des references a pBox dans la selection */
+          if (ViewFrameTable[frame - 1].FrSelectionBegin.VsBox == pBox)
+            ViewFrameTable[frame - 1].FrSelectionBegin.VsBox = NULL;
+          if (ViewFrameTable[frame - 1].FrSelectionEnd.VsBox == pBox)
+            ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
-	  /* Liberation de la boite */
-	  if (pBox->BxType == BoTable)
-	    ClearTable (pAb);
+          /* Liberation de la boite */
+          if (pBox->BxType == BoTable)
+            ClearTable (pAb);
 #ifdef _GL
 #ifdef _WX
-	  wxASSERT_MSG( !pAb->AbBox->DisplayList ||
-                  glIsList (pAb->AbBox->DisplayList),
-                  _T("GLBUG - RemoveBoxes : glIsList returns false"));
+          wxASSERT_MSG( !pAb->AbBox->DisplayList ||
+                        glIsList (pAb->AbBox->DisplayList),
+                        _T("GLBUG - RemoveBoxes : glIsList returns false"));
 #endif /* _WX */
-	  if (glIsList (pAb->AbBox->DisplayList))
-	    {
-	      glDeleteLists (pAb->AbBox->DisplayList, 1);
-	      pAb->AbBox->DisplayList = 0;
-	    }
+          if (glIsList (pAb->AbBox->DisplayList))
+            {
+              glDeleteLists (pAb->AbBox->DisplayList, 1);
+              pAb->AbBox->DisplayList = 0;
+            }
 #endif /* _GL */
-	  ClearAllRelations (pAb->AbBox, frame);
-	  if (PackBoxRoot == pAb->AbBox)
-	    PackBoxRoot = NULL;
-	  pAb->AbBox = FreeBox (pAb->AbBox);
-	  pAb->AbBox = NULL;
-	}
+          ClearAllRelations (pAb->AbBox, frame);
+          if (PackBoxRoot == pAb->AbBox)
+            PackBoxRoot = NULL;
+          pAb->AbBox = FreeBox (pAb->AbBox);
+          pAb->AbBox = NULL;
+        }
     }
 }
 
 
 /*----------------------------------------------------------------------
-   CheckDefaultPositions reevalue les regles par defaut des paves  
-   suivants si le pave cree ou detruit est positionne par 
-   une regle par defaut.                                  
+  CheckDefaultPositions reevalue les regles par defaut des paves  
+  suivants si le pave cree ou detruit est positionne par 
+  une regle par defaut.                                  
   ----------------------------------------------------------------------*/
 static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 {
@@ -3015,63 +3015,63 @@ static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
       pAb->AbEnclosing->AbBox->BxType != BoFloatGhost)
     {
       if (pAb->AbHorizPos.PosAbRef == NULL)
-	{
-	  /* On recherche le pave suivant ayant la meme regle par defaut */
-	  pNextAb = pAb->AbNext;
-	  while (pNextAb)
-	    {
-	      if (ExtraFlow (pNextAb->AbBox, frame))
-		pNextAb = pNextAb->AbNext;
-	      else if (pNextAb->AbHorizPos.PosAbRef == NULL)
-		{
-		  /* Reevalue la regle du premier pave suivant non mort */
-		  if (!pNextAb->AbDead && pNextAb->AbBox
-		      /* si ce pave ne vient pas d'etre cree                */
-		      && pNextAb->AbNum == 0)
-		    {
-		      /* Nouvelle position horizontale */
-		      ClearPosRelation (pNextAb->AbBox, TRUE);
-		      ComputePosRelation (&pNextAb->AbHorizPos, pNextAb->AbBox,
-					  frame, TRUE);
-		    }
-		  pNextAb = NULL;
+        {
+          /* On recherche le pave suivant ayant la meme regle par defaut */
+          pNextAb = pAb->AbNext;
+          while (pNextAb)
+            {
+              if (ExtraFlow (pNextAb->AbBox, frame))
+                pNextAb = pNextAb->AbNext;
+              else if (pNextAb->AbHorizPos.PosAbRef == NULL)
+                {
+                  /* Reevalue la regle du premier pave suivant non mort */
+                  if (!pNextAb->AbDead && pNextAb->AbBox
+                      /* si ce pave ne vient pas d'etre cree                */
+                      && pNextAb->AbNum == 0)
+                    {
+                      /* Nouvelle position horizontale */
+                      ClearPosRelation (pNextAb->AbBox, TRUE);
+                      ComputePosRelation (&pNextAb->AbHorizPos, pNextAb->AbBox,
+                                          frame, TRUE);
+                    }
+                  pNextAb = NULL;
 		  
-		}
-	      else
-		pNextAb = pNextAb->AbNext;
-	    }
-	}
+                }
+              else
+                pNextAb = pNextAb->AbNext;
+            }
+        }
       if (pAb->AbVertPos.PosAbRef == NULL)
-	{
-	  /* On recherche le pave suivant ayant la meme regle par defaut */
-	  pNextAb = pAb->AbNext;
-	  while (pNextAb)
-	    {
-	      if (ExtraFlow (pNextAb->AbBox, frame))
-		pNextAb = pNextAb->AbNext;
-	      else if (pNextAb->AbVertPos.PosAbRef == NULL)
-		{
-		  /* Reevalue la regle du premier pave suivant non mort */
-		  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
-		      /* si ce pave ne vient pas d'etre cree                */
-		      && pNextAb->AbNum == 0)
-		    {
-		      /* Nouvelle position verticale */
-		      ClearPosRelation (pNextAb->AbBox, FALSE);
-		      ComputePosRelation (&pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
-		    }
-		  pNextAb = NULL;
-		}
-	      else
-		pNextAb = pNextAb->AbNext;
-	    }
-	}
+        {
+          /* On recherche le pave suivant ayant la meme regle par defaut */
+          pNextAb = pAb->AbNext;
+          while (pNextAb)
+            {
+              if (ExtraFlow (pNextAb->AbBox, frame))
+                pNextAb = pNextAb->AbNext;
+              else if (pNextAb->AbVertPos.PosAbRef == NULL)
+                {
+                  /* Reevalue la regle du premier pave suivant non mort */
+                  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
+                      /* si ce pave ne vient pas d'etre cree                */
+                      && pNextAb->AbNum == 0)
+                    {
+                      /* Nouvelle position verticale */
+                      ClearPosRelation (pNextAb->AbBox, FALSE);
+                      ComputePosRelation (&pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
+                    }
+                  pNextAb = NULL;
+                }
+              else
+                pNextAb = pNextAb->AbNext;
+            }
+        }
     }
 }
 
 
 /*----------------------------------------------------------------------
-   RecordEnclosing  registers differed packings.        
+  RecordEnclosing  registers differed packings.        
   ----------------------------------------------------------------------*/
 void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 {
@@ -3081,7 +3081,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   ThotBool            toCreate;
 
   if (horizRef && (pBox->BxType == BoCell || pBox->BxType == BoTable ||
-		   pBox->BxType == BoRow))
+                   pBox->BxType == BoRow))
     /* width of these elements is computed in tableH.c */
     return;
   /* Look for an empty entry */
@@ -3094,26 +3094,26 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
       i = 0;
       pPreviousDimRel = pDimRel;
       while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
-	{
-	  if ((pDimRel->DimROp[i] == OpSame && horizRef) ||
-	      (pDimRel->DimROp[i] == OpReverse && !horizRef))
-	    {
-	      /* The right dimension */
-	      if (pBox == pDimRel->DimRTable[i])
-		/* The box is already registered */
-		return;
-	      else
-		i++;
-	    }
-	  else
-	    i++;
-	}
+        {
+          if ((pDimRel->DimROp[i] == OpSame && horizRef) ||
+              (pDimRel->DimROp[i] == OpReverse && !horizRef))
+            {
+              /* The right dimension */
+              if (pBox == pDimRel->DimRTable[i])
+                /* The box is already registered */
+                return;
+              else
+                i++;
+            }
+          else
+            i++;
+        }
       
       if (i == MAX_RELAT_DIM)
-	/* next block */
-	pDimRel = pDimRel->DimRNext;
+        /* next block */
+        pDimRel = pDimRel->DimRNext;
       else
-	toCreate = FALSE;
+        toCreate = FALSE;
     }
 
   if (toCreate)
@@ -3122,9 +3122,9 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
       i = 0;
       GetDimBlock (&pDimRel);
       if (pPreviousDimRel == NULL)
-	DifferedPackBlocks = pDimRel;
+        DifferedPackBlocks = pDimRel;
       else
-	pPreviousDimRel->DimRNext = pDimRel;
+        pPreviousDimRel->DimRNext = pDimRel;
     }
 
   pDimRel->DimRTable[i] = pBox;
@@ -3142,7 +3142,7 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   The parameter inLine is TRUE is the parent was previously a block.
   ----------------------------------------------------------------------*/
 static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
-			 ThotBool inLine, int frame, ThotBool *computeBBoxes)
+                         ThotBool inLine, int frame, ThotBool *computeBBoxes)
 {
   PtrBox              pBox, pBlock;
   PtrAbstractBox      pChild;
@@ -3156,112 +3156,112 @@ static void UpdateFloat (PtrAbstractBox pAb, PtrAbstractBox pParent,
   if (pAb->AbFloat == 'L' || pAb->AbFloat == 'R')
     {
       if (pParent->AbFloat == 'N' && pParent->AbBox &&
-	  pParent->AbInLine &&
-	  pParent->AbEnclosing &&
-	  pAb->AbNext == NULL &&
-	  pAb->AbFloat != 'N' &&
-	  (pAb->AbLeafType == LtPicture ||
-	   (pAb->AbLeafType == LtCompound &&
-	    !pAb->AbWidth.DimIsPosition &&
-	    pAb->AbWidth.DimAbRef == NULL)))
-	{
-	  /* a block with only one floating child */
-	  pParent->AbBox->BxType = BoFloatGhost;
-	  pParent = pParent->AbEnclosing;
-	}
+          pParent->AbInLine &&
+          pParent->AbEnclosing &&
+          pAb->AbNext == NULL &&
+          pAb->AbFloat != 'N' &&
+          (pAb->AbLeafType == LtPicture ||
+           (pAb->AbLeafType == LtCompound &&
+            !pAb->AbWidth.DimIsPosition &&
+            pAb->AbWidth.DimAbRef == NULL)))
+        {
+          /* a block with only one floating child */
+          pParent->AbBox->BxType = BoFloatGhost;
+          pParent = pParent->AbEnclosing;
+        }
       if (pAb->AbFloat == 'L')
-	AddFloatingBox (pAb, TRUE);
+        AddFloatingBox (pAb, TRUE);
       else if (pAb->AbFloat == 'R')
-	AddFloatingBox (pAb, FALSE);
+        AddFloatingBox (pAb, FALSE);
 
       /* update all children of the new block */
       pChild = pParent->AbFirstEnclosed;
       while (pChild && !pChild->AbDead)
-	{
-	  if (pChild->AbBox)
-	    {
-	      pChild->AbWidthChange = TRUE;
-	      pChild->AbHeightChange = TRUE;
-	      pChild->AbHorizPosChange = TRUE;
-	      pChild->AbVertPosChange = TRUE;
-	      ComputeUpdates (pChild, frame, computeBBoxes);
-	    }
-	  pChild = pChild->AbNext;
-	}
+        {
+          if (pChild->AbBox)
+            {
+              pChild->AbWidthChange = TRUE;
+              pChild->AbHeightChange = TRUE;
+              pChild->AbHorizPosChange = TRUE;
+              pChild->AbVertPosChange = TRUE;
+              ComputeUpdates (pChild, frame, computeBBoxes);
+            }
+          pChild = pChild->AbNext;
+        }
       RecomputeLines (pParent, NULL, NULL, frame);
     }
   else if (inLine)
     {
       /* check if the float property is removed */
       while (pParent && pParent->AbBox &&
-	     pParent->AbBox->BxType == BoFloatGhost)
-	{
-	  if (pParent->AbInLine)
-	    pParent->AbBox->BxType = BoBlock;
-	  else
-	    pParent->AbBox->BxType = BoComplete;
-	  pParent = pParent->AbEnclosing;
-	}
+             pParent->AbBox->BxType == BoFloatGhost)
+        {
+          if (pParent->AbInLine)
+            pParent->AbBox->BxType = BoBlock;
+          else
+            pParent->AbBox->BxType = BoComplete;
+          pParent = pParent->AbEnclosing;
+        }
       if (pParent && pParent->AbBox)
-	{
-	  pBlock = pParent->AbBox;
-	  pfloat = pBlock->BxLeftFloat;
-	  while (pfloat && pfloat->FlBox != pBox)
-	    pfloat = pfloat->FlNext;
-	  if (pfloat == NULL)
-	    {
-	      pfloat = pBlock->BxRightFloat;
-	      while (pfloat && pfloat->FlBox != pBox)
-		pfloat = pfloat->FlNext;
-	    }
-	  if (pfloat)
-	    {
-	      /* the float is removed */
-	      if (pfloat->FlNext)
-		pfloat->FlNext->FlPrevious = pfloat->FlPrevious;
-	      if (pfloat == pBlock->BxLeftFloat)
-		pBlock->BxLeftFloat = pfloat->FlNext;
-	      else if (pfloat == pBlock->BxRightFloat)
-		pBlock->BxRightFloat = pfloat->FlNext;
-	      else
-		pfloat->FlPrevious->FlNext = pfloat->FlNext;
-	      TtaFreeMemory (pfloat);
-	      pfloat = NULL;
-	    }
+        {
+          pBlock = pParent->AbBox;
+          pfloat = pBlock->BxLeftFloat;
+          while (pfloat && pfloat->FlBox != pBox)
+            pfloat = pfloat->FlNext;
+          if (pfloat == NULL)
+            {
+              pfloat = pBlock->BxRightFloat;
+              while (pfloat && pfloat->FlBox != pBox)
+                pfloat = pfloat->FlNext;
+            }
+          if (pfloat)
+            {
+              /* the float is removed */
+              if (pfloat->FlNext)
+                pfloat->FlNext->FlPrevious = pfloat->FlPrevious;
+              if (pfloat == pBlock->BxLeftFloat)
+                pBlock->BxLeftFloat = pfloat->FlNext;
+              else if (pfloat == pBlock->BxRightFloat)
+                pBlock->BxRightFloat = pfloat->FlNext;
+              else
+                pfloat->FlPrevious->FlNext = pfloat->FlNext;
+              TtaFreeMemory (pfloat);
+              pfloat = NULL;
+            }
 
-	  if (pBlock->BxType == BoFloatBlock &&
-	      pBlock->BxLeftFloat == NULL &&
-	      pBlock->BxRightFloat == NULL)
-	    {
-	      pBlock->BxType = BoComplete;
-	      /* update all children of the old block */
-	      pChild = pParent->AbFirstEnclosed;
-	      while (pChild && !pChild->AbDead)
-		{
-		  if (pChild->AbBox)
-		    {
-		      pChild->AbWidthChange = TRUE;
-		      pChild->AbHeightChange = TRUE;
-		      pChild->AbHorizPosChange = TRUE;
-		      pChild->AbVertPosChange = TRUE;
-		      ComputeUpdates (pChild, frame, computeBBoxes);
-		    }
-		  pChild = pChild->AbNext;
-		}
-	      /* update the current box */
-	      pParent = pAb->AbEnclosing;
-	      if (pParent && pParent->AbBox && pParent->AbBox->BxType == BoBlock)
-		RecomputeLines (pParent, NULL, NULL, frame);
-	      else
-		{
-		  pAb->AbHorizPosChange = TRUE;
-		  pAb->AbVertPosChange = TRUE;
-		}
-	    }
-	  else if (pAb->AbClear != 'N' && pParent)
-	    /* probably a clear value changed */
-	    RecomputeLines (pParent, NULL, NULL, frame);
-	}
+          if (pBlock->BxType == BoFloatBlock &&
+              pBlock->BxLeftFloat == NULL &&
+              pBlock->BxRightFloat == NULL)
+            {
+              pBlock->BxType = BoComplete;
+              /* update all children of the old block */
+              pChild = pParent->AbFirstEnclosed;
+              while (pChild && !pChild->AbDead)
+                {
+                  if (pChild->AbBox)
+                    {
+                      pChild->AbWidthChange = TRUE;
+                      pChild->AbHeightChange = TRUE;
+                      pChild->AbHorizPosChange = TRUE;
+                      pChild->AbVertPosChange = TRUE;
+                      ComputeUpdates (pChild, frame, computeBBoxes);
+                    }
+                  pChild = pChild->AbNext;
+                }
+              /* update the current box */
+              pParent = pAb->AbEnclosing;
+              if (pParent && pParent->AbBox && pParent->AbBox->BxType == BoBlock)
+                RecomputeLines (pParent, NULL, NULL, frame);
+              else
+                {
+                  pAb->AbHorizPosChange = TRUE;
+                  pAb->AbVertPosChange = TRUE;
+                }
+            }
+          else if (pAb->AbClear != 'N' && pParent)
+            /* probably a clear value changed */
+            RecomputeLines (pParent, NULL, NULL, frame);
+        }
     }
 }
 
@@ -3276,11 +3276,11 @@ static void TransmitDeadStatus (PtrAbstractBox pAb, ThotBool status)
     {
       pChild = pAb->AbFirstEnclosed;
       while (pChild)
-	{ 
-	  pChild->AbDead = status;
-	  TransmitDeadStatus (pChild, status);
-	  pChild = pChild->AbNext;
-	}
+        { 
+          pChild->AbDead = status;
+          TransmitDeadStatus (pChild, status);
+          pChild = pChild->AbNext;
+        }
     }
 }
 
@@ -3338,34 +3338,34 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
   if (pParent && pParent->AbBox)
     {
       if (pParent->AbBox->BxType == BoBlock)
-	{
-	  /* within a block */
-	  inLine = TRUE;
-	  pBlock = pParent;
-	}
+        {
+          /* within a block */
+          inLine = TRUE;
+          pBlock = pParent;
+        }
       else if (pParent->AbBox->BxType == BoFloatBlock)
-	{
-	  /* within a block generated by a floating box */
-	  inLineFloat = TRUE;
-	  pBlock = pParent;
-	}
+        {
+          /* within a block generated by a floating box */
+          inLineFloat = TRUE;
+          pBlock = pParent;
+        }
       else if (pParent->AbBox->BxType == BoGhost ||
-	       pParent->AbBox->BxType == BoFloatGhost)
-	{
-	  pBlock = pParent->AbEnclosing;
-	  while (pBlock && pBlock->AbBox &&
-		 pBlock->AbBox->BxType != BoBlock &&
-		 pBlock->AbBox->BxType != BoFloatBlock)
-	    pBlock = pBlock->AbEnclosing;
-	  if (pBlock && pBlock->AbBox)
-	    {
-	      if (pBlock->AbBox->BxType == BoBlock)
-		/* within a block */
-		inLine = TRUE;
-	      else
-		inLineFloat = TRUE;
-	    }
-	}
+               pParent->AbBox->BxType == BoFloatGhost)
+        {
+          pBlock = pParent->AbEnclosing;
+          while (pBlock && pBlock->AbBox &&
+                 pBlock->AbBox->BxType != BoBlock &&
+                 pBlock->AbBox->BxType != BoFloatBlock)
+            pBlock = pBlock->AbEnclosing;
+          if (pBlock && pBlock->AbBox)
+            {
+              if (pBlock->AbBox->BxType == BoBlock)
+                /* within a block */
+                inLine = TRUE;
+              else
+                inLineFloat = TRUE;
+            }
+        }
     }
 
   /* Prepare the clipping */
@@ -3377,84 +3377,84 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
     {
       /* look at if the box or an enclosing box has a background */
       if (pAb->AbHorizEnclosing && pAb->AbVertEnclosing &&
-	  (pAb->AbNew || pAb->AbDead ||
-	   pAb->AbHorizPosChange || pAb->AbVertPosChange))
-	{
-	  pCurrentAb = pParent;
-	  curr = pCurrentAb;
-	  while (curr)
-	    {
-	      if (curr->AbPictBackground ||
-		  curr->AbFillBox ||
-		  (curr->AbTopStyle > 2 && curr->AbTopBColor != -2 &&
-		   curr->AbTopBorder > 0) ||
-		  (curr->AbLeftStyle > 2 && curr->AbLeftBColor != -2 &&
-		   curr->AbLeftBorder > 0) ||
-		  (curr->AbBottomStyle > 2 && curr->AbBottomBColor != -2 &&
-		   curr->AbBottomBorder > 0) ||
-		  (curr->AbRightStyle > 2 && curr->AbRightBColor != -2 &&
-		   curr->AbRightBorder > 0))
-		{
-		  pCurrentAb = curr;
-		  curr = NULL;
-		}
-	      else
-		curr = curr->AbEnclosing;
-	    }
-	  if (pCurrentAb == NULL)
-	    /* no background and no parent: clip the current box */
-	    pCurrentAb = pAb;
-	}
+          (pAb->AbNew || pAb->AbDead ||
+           pAb->AbHorizPosChange || pAb->AbVertPosChange))
+        {
+          pCurrentAb = pParent;
+          curr = pCurrentAb;
+          while (curr)
+            {
+              if (curr->AbPictBackground ||
+                  curr->AbFillBox ||
+                  (curr->AbTopStyle > 2 && curr->AbTopBColor != -2 &&
+                   curr->AbTopBorder > 0) ||
+                  (curr->AbLeftStyle > 2 && curr->AbLeftBColor != -2 &&
+                   curr->AbLeftBorder > 0) ||
+                  (curr->AbBottomStyle > 2 && curr->AbBottomBColor != -2 &&
+                   curr->AbBottomBorder > 0) ||
+                  (curr->AbRightStyle > 2 && curr->AbRightBColor != -2 &&
+                   curr->AbRightBorder > 0))
+                {
+                  pCurrentAb = curr;
+                  curr = NULL;
+                }
+              else
+                curr = curr->AbEnclosing;
+            }
+          if (pCurrentAb == NULL)
+            /* no background and no parent: clip the current box */
+            pCurrentAb = pAb;
+        }
       else
-	pCurrentAb = pAb;
+        pCurrentAb = pAb;
       
       pCurrentBox = pCurrentAb->AbBox;
       if (pCurrentBox)
-	{
-	  if (pCurrentBox->BxType == BoGhost ||
-	      pCurrentBox->BxType == BoFloatGhost)
-	    {
-	      /* move to the enclosing block */
-	      while (pCurrentAb && pCurrentAb->AbBox &&
-		     (pCurrentAb->AbBox->BxType == BoGhost ||
-		      pCurrentAb->AbBox->BxType == BoGhost))
-		pCurrentAb = pCurrentAb->AbEnclosing;
-	      if (pCurrentAb == NULL || pCurrentAb->AbBox == NULL)
-		pCurrentBox = pBox;
-	      else
-		pCurrentBox = pCurrentAb->AbBox;
-	    }
-	  if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
-	    /* get the first displayed box */
-	    pCurrentBox = pCurrentBox->BxNexChild;
-	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
-	      pCurrentBox->BxType == BoPicture)
-	    {
-	      /* mark the zone to be displayed */
-	      if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-				    pAb->AbElement->ElStructSchema))
-		/* the whole windows */
-		DefClip (frame, -1, -1, -1, -1);
-	      else
-		{
+        {
+          if (pCurrentBox->BxType == BoGhost ||
+              pCurrentBox->BxType == BoFloatGhost)
+            {
+              /* move to the enclosing block */
+              while (pCurrentAb && pCurrentAb->AbBox &&
+                     (pCurrentAb->AbBox->BxType == BoGhost ||
+                      pCurrentAb->AbBox->BxType == BoGhost))
+                pCurrentAb = pCurrentAb->AbEnclosing;
+              if (pCurrentAb == NULL || pCurrentAb->AbBox == NULL)
+                pCurrentBox = pBox;
+              else
+                pCurrentBox = pCurrentAb->AbBox;
+            }
+          if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
+            /* get the first displayed box */
+            pCurrentBox = pCurrentBox->BxNexChild;
+          if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
+              pCurrentBox->BxType == BoPicture)
+            {
+              /* mark the zone to be displayed */
+              if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+                                    pAb->AbElement->ElStructSchema))
+                /* the whole windows */
+                DefClip (frame, -1, -1, -1, -1);
+              else
+                {
 #ifdef _GL
-		  if (NeedToComputeABoundingBox (pCurrentBox->BxAbstractBox, frame))
-		    {
-		      /* need to recompute almost this bounding box */
-		      *computeBBoxes = TRUE;
-		      pCurrentBox->BxBoundinBoxComputed = FALSE;
-		    }
+                  if (NeedToComputeABoundingBox (pCurrentBox->BxAbstractBox, frame))
+                    {
+                      /* need to recompute almost this bounding box */
+                      *computeBBoxes = TRUE;
+                      pCurrentBox->BxBoundinBoxComputed = FALSE;
+                    }
 #endif /* _GL */
-		  /* the whole box */
-		  DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
-		}
-	    }
-	}
+                  /* the whole box */
+                  DefBoxRegion (frame, pCurrentBox, -1, -1, -1, -1);
+                }
+            }
+        }
 #ifdef _GL
       if (pCurrentBox)
-	pCurrentBox->VisibleModification = TRUE;
+        pCurrentBox->VisibleModification = TRUE;
       if (pBox)
-	pBox->VisibleModification = TRUE;
+        pBox->VisibleModification = TRUE;
 #endif /* _GL */
     }
 
@@ -3466,94 +3466,94 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
       pCurrentAb = PreviousLeafAbstractBox (pAb);
       /* Get the box just before */
       if (pCurrentAb)
-	pCurrentBox = pCurrentAb->AbBox;
+        pCurrentBox = pCurrentAb->AbBox;
       else
-	pCurrentBox = NULL;
+        pCurrentBox = NULL;
       i = 0; /* Position within the document */
       if (pCurrentBox)
-	{
-	  if (pCurrentBox->BxType == BoSplit ||
-	      pCurrentBox->BxType == BoMulScript)
-	    /* take the last split box */
-	    while (pCurrentBox->BxNexChild)
-	      pCurrentBox = pCurrentBox->BxNexChild;
-	  pNextBox = pCurrentBox->BxNext;
-	}
+        {
+          if (pCurrentBox->BxType == BoSplit ||
+              pCurrentBox->BxType == BoMulScript)
+            /* take the last split box */
+            while (pCurrentBox->BxNexChild)
+              pCurrentBox = pCurrentBox->BxNexChild;
+          pNextBox = pCurrentBox->BxNext;
+        }
       else
-	{
-	  if (pMainBox)
-	    pNextBox = pMainBox->BxNext;
-	  else
-	    pNextBox = NULL;
-	}
+        {
+          if (pMainBox)
+            pNextBox = pMainBox->BxNext;
+          else
+            pNextBox = NULL;
+        }
 
       /* Get the box just after */
       if (pParent && !inLine && !inLineFloat &&
-	  pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
-	  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
-	  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
-	   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-	   pParent->AbEnclosing->AbBox->BxType == BoGhost ||
-	   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost))
-	{
-	  if (pParent->AbEnclosing->AbBox->BxType == BoBlock)
-	    /* the parent was not set ghost because it was empty */
-	    inLine = TRUE;
-	  else if (pParent->AbEnclosing->AbBox->BxType == BoFloatBlock &&
-		   pAb->AbLeafType == LtCompound && pAb->AbInLine)
-	    /* the parent was not set ghost because it was empty */
-	    inLineFloat = FALSE;
-	  else if (pParent->AbEnclosing->AbBox->BxType == BoGhost ||
-		   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost)
-	    {
-	      pBlock = pParent->AbEnclosing;
-	      while (pBlock && pBlock->AbBox &&
-		     pBlock->AbBox->BxType != BoBlock &&
-		     pBlock->AbBox->BxType != BoFloatBlock)
-		pBlock = pBlock->AbEnclosing;
-	      if (pBlock && pBlock->AbBox)
-		{
-		  if (pBlock->AbBox->BxType == BoBlock)
-		    /* within a block */
-		    inLine = TRUE;
-		  else
-		    inLineFloat = FALSE;
-		}
-	    }
+          pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
+          pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
+          (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
+           pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+           pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+           pParent->AbEnclosing->AbBox->BxType == BoFloatGhost))
+        {
+          if (pParent->AbEnclosing->AbBox->BxType == BoBlock)
+            /* the parent was not set ghost because it was empty */
+            inLine = TRUE;
+          else if (pParent->AbEnclosing->AbBox->BxType == BoFloatBlock &&
+                   pAb->AbLeafType == LtCompound && pAb->AbInLine)
+            /* the parent was not set ghost because it was empty */
+            inLineFloat = FALSE;
+          else if (pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+                   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost)
+            {
+              pBlock = pParent->AbEnclosing;
+              while (pBlock && pBlock->AbBox &&
+                     pBlock->AbBox->BxType != BoBlock &&
+                     pBlock->AbBox->BxType != BoFloatBlock)
+                pBlock = pBlock->AbEnclosing;
+              if (pBlock && pBlock->AbBox)
+                {
+                  if (pBlock->AbBox->BxType == BoBlock)
+                    /* within a block */
+                    inLine = TRUE;
+                  else
+                    inLineFloat = FALSE;
+                }
+            }
 
-	  if (inLine || inLineFloat)
-	    {
-	      if (pParent->AbFloat == 'N' &&
-		  !pParent->AbHeight.DimIsPosition &&
-		  pParent->AbHeight.DimValue <= 0 &&
-		  !pParent->AbWidth.DimIsPosition &&
-		  pParent->AbWidth.DimValue <= 0 &&
-		  (!HasFloatingChild (pParent, &directParent, &uniqueChild, &dummyChild) ||
-		   uniqueChild) && !dummyChild)
-		{
-		  /* the parent becomes ghost */
-		  pParent->AbBox->BxType = BoGhost;
-		  /* the current box won't be displayed */
-		  if (pParent->AbFillBox)
-		    pParent->AbBox->BxDisplay = TRUE;
-		}
-	    }
-	}
+          if (inLine || inLineFloat)
+            {
+              if (pParent->AbFloat == 'N' &&
+                  !pParent->AbHeight.DimIsPosition &&
+                  pParent->AbHeight.DimValue <= 0 &&
+                  !pParent->AbWidth.DimIsPosition &&
+                  pParent->AbWidth.DimValue <= 0 &&
+                  (!HasFloatingChild (pParent, &directParent, &uniqueChild, &dummyChild) ||
+                   uniqueChild) && !dummyChild)
+                {
+                  /* the parent becomes ghost */
+                  pParent->AbBox->BxType = BoGhost;
+                  /* the current box won't be displayed */
+                  if (pParent->AbFillBox)
+                    pParent->AbBox->BxDisplay = TRUE;
+                }
+            }
+        }
 
       if (pParent && pNextBox && pNextBox == pParent->AbBox)
-	/* the new box will replace the previous one */
-	pNextBox = pNextBox->BxNext;
+        /* the new box will replace the previous one */
+        pNextBox = pNextBox->BxNext;
       /* On etablit le chainage pour inserer en fin les nouvelles boites */
       /* Faut-il dechainer la boite englobante ? */
       if (pMainBox)
-	{
-	  if (pCurrentBox == NULL)
-	    pMainBox->BxNext = NULL;	/* debut du chainage */
-	  pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
-	  pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
-	}
+        {
+          if (pCurrentBox == NULL)
+            pMainBox->BxNext = NULL;	/* debut du chainage */
+          pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
+          pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
+        }
       else
-	pLastBox = NULL;	/* memorise la derniere boite*/
+        pLastBox = NULL;	/* memorise la derniere boite*/
       
       /* Faut-il dechainer la boite englobante ? */
       ReadyToDisplay = FALSE;	/* On arrete l'evaluation du reaffichage */
@@ -3563,87 +3563,87 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
       ReadyToDisplay = TRUE;	/* On retablit l'evaluation du reaffichage */      
       /* Mise a jour de la liste des boites terminales */
       if (pMainBox && pNextBox)
-	{
-	  /* On ajoute en fin de chainage */
-	  pNextBox->BxPrevious = pMainBox->BxPrevious;
-	  /* derniere boite chainee */
-	  if (pMainBox->BxPrevious)
-	    pMainBox->BxPrevious->BxNext = pNextBox;
-	  pMainBox->BxPrevious = pLastBox;
-	  /* nouvelle fin de chainage */
-	  if (pMainBox->BxNext == NULL)
-	    pMainBox->BxNext = pNextBox;
-	}
+        {
+          /* On ajoute en fin de chainage */
+          pNextBox->BxPrevious = pMainBox->BxPrevious;
+          /* derniere boite chainee */
+          if (pMainBox->BxPrevious)
+            pMainBox->BxPrevious->BxNext = pNextBox;
+          pMainBox->BxPrevious = pLastBox;
+          /* nouvelle fin de chainage */
+          if (pMainBox->BxNext == NULL)
+            pMainBox->BxNext = pNextBox;
+        }
 
       if (pBox)
-	{
-	  /* set the box position in the concrete image */
-	  IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
-	  if (!orgXComplete || !orgYComplete)
-	    {
-	      /* si la boite n'a pas deja ete placee en absolu */
-	      /* Initialise le placement des boites creees */
-	      SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
-	      /* La boite racine va etre placee */
-	      pBox->BxXToCompute = FALSE;
-	      pBox->BxYToCompute = FALSE;
-	      AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
-				  !orgXComplete, !orgYComplete);
-	    }
+        {
+          /* set the box position in the concrete image */
+          IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
+          if (!orgXComplete || !orgYComplete)
+            {
+              /* si la boite n'a pas deja ete placee en absolu */
+              /* Initialise le placement des boites creees */
+              SetBoxToTranslate (pAb, !orgXComplete, !orgYComplete);
+              /* La boite racine va etre placee */
+              pBox->BxXToCompute = FALSE;
+              pBox->BxYToCompute = FALSE;
+              AddBoxTranslations (pAb, pFrame->FrVisibility, frame,
+                                  !orgXComplete, !orgYComplete);
+            }
 #ifdef _GL
-	  else
-	    {
-	      if (FrameTable[frame].FrView == 1 &&
-		  (pBox->BxXOrg || pBox->BxYOrg) &&
-		  pAb->AbElement->ElSystemOrigin)
-		{
-		  pBox->BxClipX = 0;
-		  pBox->BxClipY = 0;
-		}
-	      else
-		{
-		  pBox->BxClipX = pBox->BxXOrg;
-		  pBox->BxClipY = pBox->BxYOrg;
-		}
-	      pBox->BxClipW = pBox->BxW;
-	      pBox->BxClipH = pBox->BxH;
-	    }
+          else
+            {
+              if (FrameTable[frame].FrView == 1 &&
+                  (pBox->BxXOrg || pBox->BxYOrg) &&
+                  pAb->AbElement->ElSystemOrigin)
+                {
+                  pBox->BxClipX = 0;
+                  pBox->BxClipY = 0;
+                }
+              else
+                {
+                  pBox->BxClipX = pBox->BxXOrg;
+                  pBox->BxClipY = pBox->BxYOrg;
+                }
+              pBox->BxClipW = pBox->BxW;
+              pBox->BxClipH = pBox->BxH;
+            }
 #endif /* _GL */
 
-	  /* On prepare le reaffichage */
-	  if (pAb->AbNotInLine || (!inLine && !inLineFloat))
-	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+          /* On prepare le reaffichage */
+          if (pAb->AbNotInLine || (!inLine && !inLineFloat))
+            DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 	  
-	  pAb->AbChange = FALSE;
-	  pAb->AbFloatChange = FALSE;
-	  if (pBlock)
-	    {
-	      /* update the enclosing block of line */
-	      Propagate = ToChildren;
-	      RecomputeLines (pBlock, NULL, NULL, frame);
-	    }
-	  /* check enclosing cell */
-	  pCell = GetParentCell (pBox);
-	  if (pBox->BxType != BoCell &&
-	      TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
-				pAb->AbElement->ElStructSchema))
-	    pCell = pAb->AbNext;
-	  if (pCell)
-	    {
-	      Propagate = ToChildren;
-	      UpdateColumnWidth (pCell, NULL, frame);
-	    }
-	  result = TRUE;
-	  pAb->AbWidthChange = FALSE;
-	  pAb->AbHeightChange = FALSE;
-	  pAb->AbAspectChange = FALSE;
-	  pAb->AbSizeChange = FALSE;
-	  pAb->AbChange = FALSE;
-	  pAb->AbMBPChange = FALSE;
-	}
+          pAb->AbChange = FALSE;
+          pAb->AbFloatChange = FALSE;
+          if (pBlock)
+            {
+              /* update the enclosing block of line */
+              Propagate = ToChildren;
+              RecomputeLines (pBlock, NULL, NULL, frame);
+            }
+          /* check enclosing cell */
+          pCell = GetParentCell (pBox);
+          if (pBox->BxType != BoCell &&
+              TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            pCell = pAb->AbNext;
+          if (pCell)
+            {
+              Propagate = ToChildren;
+              UpdateColumnWidth (pCell, NULL, frame);
+            }
+          result = TRUE;
+          pAb->AbWidthChange = FALSE;
+          pAb->AbHeightChange = FALSE;
+          pAb->AbAspectChange = FALSE;
+          pAb->AbSizeChange = FALSE;
+          pAb->AbChange = FALSE;
+          pAb->AbMBPChange = FALSE;
+        }
 #ifdef _GL
       if (pBox)
-	  pBox->VisibleModification = TRUE;   
+        pBox->VisibleModification = TRUE;   
 #endif /* _GL */
       /* Restore the propagation */
       Propagate = savpropage;
@@ -3655,69 +3655,69 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
       TransmitDeadStatus (pAb, TRUE);
       AnyWidthUpdate = TRUE;
       if (pAb->AbLeafType == LtPolyLine)
-	FreePolyline (pBox);	/* libere la liste des buffers de la boite */
+        FreePolyline (pBox);	/* libere la liste des buffers de la boite */
       else if (pAb->AbLeafType == LtPath)
-	FreePath (pBox);	/* libere la liste des descripteurs de path */
+        FreePath (pBox);	/* libere la liste des descripteurs de path */
 
       /* On situe la boite dans le chainage des boites terminales */
       pCurrentAb = PreviousLeafAbstractBox (pAb);
 
       /* On recherche la derniere boite terminale avant */
       if (pCurrentAb == NULL)
-	pCurrentBox = pMainBox;	/* debut du chainage */
+        pCurrentBox = pMainBox;	/* debut du chainage */
       else
-	{
-	  pCurrentBox = pCurrentAb->AbBox;
-	  /* Est-ce que la boite est coupee ? */
-	  if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
-	    while (pCurrentBox->BxNexChild)
-	      pCurrentBox = pCurrentBox->BxNexChild;
-	}
+        {
+          pCurrentBox = pCurrentAb->AbBox;
+          /* Est-ce que la boite est coupee ? */
+          if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
+            while (pCurrentBox->BxNexChild)
+              pCurrentBox = pCurrentBox->BxNexChild;
+        }
 
       /* Est-ce que la boite englobante devient terminale ? */
       if (IsAbstractBoxEmpty (pParent))
-	{
-	  pNextBox = pParent->AbBox;
-	  /* Si la boite etait eclatee, elle ne l'est plus */
-	  if (pNextBox->BxType == BoGhost || pNextBox->BxType == BoFloatGhost)
-	    pNextBox->BxType = BoComplete;
+        {
+          pNextBox = pParent->AbBox;
+          /* Si la boite etait eclatee, elle ne l'est plus */
+          if (pNextBox->BxType == BoGhost || pNextBox->BxType == BoFloatGhost)
+            pNextBox->BxType = BoComplete;
 	  
-	  /* On ne chaine qu'une seule fois la boite englobante */
-	  if (pNextBox != pCurrentBox->BxNext)
-	    {
-	      if (pCurrentBox == pMainBox)
-		pNextBox->BxPrevious = NULL;
-	      else
-		pNextBox->BxPrevious = pCurrentBox;
+          /* On ne chaine qu'une seule fois la boite englobante */
+          if (pNextBox != pCurrentBox->BxNext)
+            {
+              if (pCurrentBox == pMainBox)
+                pNextBox->BxPrevious = NULL;
+              else
+                pNextBox->BxPrevious = pCurrentBox;
 	      
-	      /* On defait l'ancien chainage */
-	      pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
-	      pCurrentBox->BxNext = pNextBox;
-	    }
-	  pCurrentBox = pNextBox;
-	}
+              /* On defait l'ancien chainage */
+              pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
+              pCurrentBox->BxNext = pNextBox;
+            }
+          pCurrentBox = pNextBox;
+        }
       
       /* On recherche la premiere boite terminale apres */
       pCurrentAb = pAb;
       pNextBox = NULL;
       while (pNextBox == NULL)
-	{
-	  while (pCurrentAb->AbEnclosing && !pCurrentAb->AbNext)
-	    pCurrentAb = pCurrentAb->AbEnclosing;
-	  pCurrentAb = pCurrentAb->AbNext;
-	  if (pCurrentAb == NULL)
-	    pNextBox = pMainBox;	/* 1ere boite suivante */
-	  else
-	    {
-	      while (pCurrentAb->AbBox && pCurrentAb->AbFirstEnclosed)
-		pCurrentAb = pCurrentAb->AbFirstEnclosed;
-	      pNextBox = pCurrentAb->AbBox;
-	    }
-	}
+        {
+          while (pCurrentAb->AbEnclosing && !pCurrentAb->AbNext)
+            pCurrentAb = pCurrentAb->AbEnclosing;
+          pCurrentAb = pCurrentAb->AbNext;
+          if (pCurrentAb == NULL)
+            pNextBox = pMainBox;	/* 1ere boite suivante */
+          else
+            {
+              while (pCurrentAb->AbBox && pCurrentAb->AbFirstEnclosed)
+                pCurrentAb = pCurrentAb->AbFirstEnclosed;
+              pNextBox = pCurrentAb->AbBox;
+            }
+        }
 
       /* Est-ce que la boite est coupee ? */
       if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
-	pNextBox = pNextBox->BxNexChild;
+        pNextBox = pNextBox->BxNexChild;
 
       /* Destruction */
       pCell = GetParentCell (pCurrentBox);
@@ -3726,719 +3726,719 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
       
       /* update the list of leaf boxes */
       if (pCurrentBox == pMainBox)
-	/* first box in the list */
-	pNextBox->BxPrevious = NULL;
+        /* first box in the list */
+        pNextBox->BxPrevious = NULL;
       else
-	{
-	  /* backward link */
-	  pNextBox->BxPrevious = pCurrentBox;
-	  if ((pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript) &&
-	      pNextBox->BxAbstractBox->AbBox)
-	    {
-	      if (pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript)
-		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
-	      else
-		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
-	    }
-	}
+        {
+          /* backward link */
+          pNextBox->BxPrevious = pCurrentBox;
+          if ((pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript) &&
+              pNextBox->BxAbstractBox->AbBox)
+            {
+              if (pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript)
+                pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
+              else
+                pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
+            }
+        }
       if (pNextBox == pMainBox)
-	/* last box in the list */
-	pCurrentBox->BxNext = NULL;
+        /* last box in the list */
+        pCurrentBox->BxNext = NULL;
       else
-	{
-	  /* forward link */
-	  pCurrentBox->BxNext = pNextBox;
-	  if ((pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript) &&
-	      pCurrentBox->BxAbstractBox->AbBox)
-	    {
-	      if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
-		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
-	      else
-		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
-	    }
-	}
+        {
+          /* forward link */
+          pCurrentBox->BxNext = pNextBox;
+          if ((pCurrentBox->BxType == BoPiece || pCurrentBox->BxType == BoScript) &&
+              pCurrentBox->BxAbstractBox->AbBox)
+            {
+              if (pNextBox->BxType == BoPiece || pNextBox->BxType == BoScript)
+                pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
+              else
+                pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
+            }
+        }
       
       /* Check table consistency */
       if (isCell)
-	UpdateColumnWidth (pAb, NULL, frame);
+        UpdateColumnWidth (pAb, NULL, frame);
       /* check enclosing cell */
       else if (pCell && !IsDead (pAb) &&
-	       (pAb->AbNext == NULL ||
-		(!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
-	UpdateColumnWidth (pCell, NULL, frame);
+               (pAb->AbNext == NULL ||
+                (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
+        UpdateColumnWidth (pCell, NULL, frame);
       result = TRUE;
     }
   else
     {
       /* CHANGE BOX ASPECT */
       if (pAb->AbAspectChange)
-	{
-	  pAb->AbAspectChange = FALSE;
-	  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-	    {
-	      /* extend the clipping to the last piece when the box is split */
-	      pCurrentBox = pBox;
-	      result = TRUE;
-	      while (result)
-		{
-		  if (pCurrentBox->BxNexChild == NULL)
-		    result = FALSE;
-		  else if (pCurrentBox->BxNexChild->BxNChars == 0)
-		    result = FALSE;
-		  else
-		    pCurrentBox = pCurrentBox->BxNexChild;
-		}
-	    }
-	  else if (pAb->AbLeafType == LtCompound)
-	    {
-	      /* Is there a background image? */
-	      if (pAb->AbPictBackground != NULL)
-		{
-		  /* force filling */
-		  pAb->AbFillBox = TRUE;
-		  /* load the picture */
-		  LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
-		}
-	    }
-	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
-	    {
-	      /* update radius of the rectangle with rounded corners */
-	      ComputeRadius (pAb, frame, TRUE);
-	      ComputeRadius (pAb, frame, FALSE);
-	    }
+        {
+          pAb->AbAspectChange = FALSE;
+          if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+            {
+              /* extend the clipping to the last piece when the box is split */
+              pCurrentBox = pBox;
+              result = TRUE;
+              while (result)
+                {
+                  if (pCurrentBox->BxNexChild == NULL)
+                    result = FALSE;
+                  else if (pCurrentBox->BxNexChild->BxNChars == 0)
+                    result = FALSE;
+                  else
+                    pCurrentBox = pCurrentBox->BxNexChild;
+                }
+            }
+          else if (pAb->AbLeafType == LtCompound)
+            {
+              /* Is there a background image? */
+              if (pAb->AbPictBackground != NULL)
+                {
+                  /* force filling */
+                  pAb->AbFillBox = TRUE;
+                  /* load the picture */
+                  LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
+                }
+            }
+          else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+            {
+              /* update radius of the rectangle with rounded corners */
+              ComputeRadius (pAb, frame, TRUE);
+              ComputeRadius (pAb, frame, FALSE);
+            }
 
-	  /* Note if there is a border or a fill */
-	  MarkDisplayedBox (pBox);
-	  /* Is it a filled box? */
-	  if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell &&
-	      pAb->AbEnclosing == NULL)
-	    {
-	      /* root abstractbox */
-	      if (pBox->BxDisplay)
-		SetMainWindowBackgroundColor (frame, pAb->AbBackground);
-	      else
-		SetMainWindowBackgroundColor (frame, DefaultBColor);
-	    }
-	}
+          /* Note if there is a border or a fill */
+          MarkDisplayedBox (pBox);
+          /* Is it a filled box? */
+          if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell &&
+              pAb->AbEnclosing == NULL)
+            {
+              /* root abstractbox */
+              if (pBox->BxDisplay)
+                SetMainWindowBackgroundColor (frame, pAb->AbBackground);
+              else
+                SetMainWindowBackgroundColor (frame, DefaultBColor);
+            }
+        }
       /* CHANGE CHARACTER SIZE */
       if (pAb->AbSizeChange)
-	{
-	  /* check the effect */
-	  pDimAb = &pAb->AbWidth;
-	  if (!pDimAb->DimIsPosition)
-	    {
-	      if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
-		pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
-	      if (pAb->AbHorizPos.PosAbRef != NULL)
-		pAb->AbHorizPosChange = (pAb->AbHorizPos.PosUnit == UnRelative);
-	    }
+        {
+          /* check the effect */
+          pDimAb = &pAb->AbWidth;
+          if (!pDimAb->DimIsPosition)
+            {
+              if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
+                pAb->AbWidthChange = (pDimAb->DimUnit == UnRelative);
+              if (pAb->AbHorizPos.PosAbRef != NULL)
+                pAb->AbHorizPosChange = (pAb->AbHorizPos.PosUnit == UnRelative);
+            }
 	  
-	  pDimAb = &pAb->AbHeight;
-	  if (!pDimAb->DimIsPosition)
-	    {
-	      if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
-		  pAb->AbHeightChange = (pDimAb->DimUnit == UnRelative);
-	      if (pAb->AbVertPos.PosAbRef != NULL)
-		pAb->AbVertPosChange = (pAb->AbVertPos.PosUnit == UnRelative);
-	      }
+          pDimAb = &pAb->AbHeight;
+          if (!pDimAb->DimIsPosition)
+            {
+              if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+                pAb->AbHeightChange = (pDimAb->DimUnit == UnRelative);
+              if (pAb->AbVertPos.PosAbRef != NULL)
+                pAb->AbVertPosChange = (pAb->AbVertPos.PosUnit == UnRelative);
+            }
 	    
-	  pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
-	  pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
-	}
+          pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
+          pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
+        }
       /* CHANGE FLOAT/CLEAR */
       if (pAb->AbFloatChange)
-	{
-	  Propagate = ToChildren;
-	  pAb->AbFloatChange = FALSE;
-	  UpdateFloat (pAb, pParent, inLine || inLineFloat, frame, computeBBoxes);
-	  /* Restore the propagation */
-	  Propagate = savpropage;
-	}
+        {
+          Propagate = ToChildren;
+          pAb->AbFloatChange = FALSE;
+          UpdateFloat (pAb, pParent, inLine || inLineFloat, frame, computeBBoxes);
+          /* Restore the propagation */
+          Propagate = savpropage;
+        }
       /* CHANGE THE CONTENTS */
       if (pAb->AbChange || pAb->AbSizeChange)
-	{
-	  /* check the font of the abstract box */
-	  height = pAb->AbSize;
-	  unit = pAb->AbSizeUnit;
-	  if (pAb->AbLeafType == LtText)
-	    {
-	      if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
-		/* ElLanguage is actually a script */
-		pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
-					     pAb->AbFont,
-					     FontStyleAndWeight(pAb),
-					     height, unit, frame);
-	      else
-		pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
-					     FontStyleAndWeight(pAb),
-					     height, unit, frame);
-	    }
-	  else if (pAb->AbLeafType == LtSymbol)
-	    pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
-					 height, unit, frame);
-	  else
-	    pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
+        {
+          /* check the font of the abstract box */
+          height = pAb->AbSize;
+          unit = pAb->AbSizeUnit;
+          if (pAb->AbLeafType == LtText)
+            {
+              if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
+                /* ElLanguage is actually a script */
+                pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
+                                             pAb->AbFont,
+                                             FontStyleAndWeight(pAb),
+                                             height, unit, frame);
+              else
+                pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
+                                             FontStyleAndWeight(pAb),
+                                             height, unit, frame);
+            }
+          else if (pAb->AbLeafType == LtSymbol)
+            pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
+                                         height, unit, frame);
+          else
+            pBox->BxFont = ThotLoadFont ('L', 1, 0, height, unit, frame);
 	  
-	  /* transmit underline and thickness */
-	  pBox->BxUnderline = pAb->AbUnderline;
-	  pBox->BxThickness = pAb->AbThickness;
-	  if (pAb->AbLeafType == LtCompound)
-	    {
-	      /* update a compound element */
-	      if (pBox->BxType == BoBlock ||
-		  pBox->BxType == BoFloatBlock)
-		/* update the current block of lines */
-		RecomputeLines (pAb, NULL, pBox, frame);
-	    }
-	  else
-	    {
-	      /* update a leaf element */
-	      switch (pAb->AbLeafType)
-		{
-		case LtPageColBreak:
-		  width = 0;
-		  height = 0;
-		  break;
-		case LtText:
-		  GiveTextSize (pAb, frame, &width, &height, &nSpaces);
+          /* transmit underline and thickness */
+          pBox->BxUnderline = pAb->AbUnderline;
+          pBox->BxThickness = pAb->AbThickness;
+          if (pAb->AbLeafType == LtCompound)
+            {
+              /* update a compound element */
+              if (pBox->BxType == BoBlock ||
+                  pBox->BxType == BoFloatBlock)
+                /* update the current block of lines */
+                RecomputeLines (pAb, NULL, pBox, frame);
+            }
+          else
+            {
+              /* update a leaf element */
+              switch (pAb->AbLeafType)
+                {
+                case LtPageColBreak:
+                  width = 0;
+                  height = 0;
+                  break;
+                case LtText:
+                  GiveTextSize (pAb, frame, &width, &height, &nSpaces);
 		  
-		  /* Si la boite est justifiee */
-		  if (pBox->BxSpaceWidth != 0)
-		    {
-		      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, pBox->BxFont);
-		      /* On prend la largeur justifiee */
-		      width = width + i * nSpaces + pBox->BxNPixels;
-		      /* width shift */
-		      adjustDelta = width - pBox->BxW;
-		    }
-		  /* character shift */
-		  charDelta = pAb->AbVolume - pBox->BxNChars;
-		  /* space shift */
-		  nSpaces -= pBox->BxNSpaces;
-		  pBox->BxBuffer = pAb->AbText;
-		  break;
-		case LtPicture:
-		  if (pAb->AbChange)
-		    {
-		      /* the picture change, RAZ the structure */
-		      CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
-		      if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
-			{
-			  /* use the content width */
-			  pBox->BxWidth -= pBox->BxW;
-			  pBox->BxW = 0;
-			  pBox->BxVertRef = 0;
-			}
-		      if (pAb->AbHeight.DimAbRef == NULL &&  pAb->AbHeight.DimValue == -1)
-			{
-			  /* use the content height */
-			  pBox->BxHeight -= pBox->BxH;
-			  pBox->BxH = 0;
-			  pBox->BxHorizRef = 0;
-			}
-		      SetCursorWatch (frame);
-		      LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
-		      ResetCursorWatch (frame);
-		      GivePictureSize (pAb,
-				       ViewFrameTable[frame - 1].FrMagnification,
-				       &width, &height);
-		    }
-		  else
-		    {
-		      width = pBox->BxW;
-		      height = pBox->BxH;
-		    }
-		  break;
-		case LtSymbol:
-		  GiveSymbolSize (pAb, &width, &height);
-		  break;
-		case LtGraphics:
-		  /* Si le trace graphique a change */
-		  if (pAb->AbChange)
-		    {
-		      /* Si transformation polyline en graphique simple */
-		      pAb->AbRealShape = pAb->AbShape;
+                  /* Si la boite est justifiee */
+                  if (pBox->BxSpaceWidth != 0)
+                    {
+                      i = pBox->BxSpaceWidth - BoxCharacterWidth (SPACE, pBox->BxFont);
+                      /* On prend la largeur justifiee */
+                      width = width + i * nSpaces + pBox->BxNPixels;
+                      /* width shift */
+                      adjustDelta = width - pBox->BxW;
+                    }
+                  /* character shift */
+                  charDelta = pAb->AbVolume - pBox->BxNChars;
+                  /* space shift */
+                  nSpaces -= pBox->BxNSpaces;
+                  pBox->BxBuffer = pAb->AbText;
+                  break;
+                case LtPicture:
+                  if (pAb->AbChange)
+                    {
+                      /* the picture change, RAZ the structure */
+                      CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
+                      if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
+                        {
+                          /* use the content width */
+                          pBox->BxWidth -= pBox->BxW;
+                          pBox->BxW = 0;
+                          pBox->BxVertRef = 0;
+                        }
+                      if (pAb->AbHeight.DimAbRef == NULL &&  pAb->AbHeight.DimValue == -1)
+                        {
+                          /* use the content height */
+                          pBox->BxHeight -= pBox->BxH;
+                          pBox->BxH = 0;
+                          pBox->BxHorizRef = 0;
+                        }
+                      SetCursorWatch (frame);
+                      LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+                      ResetCursorWatch (frame);
+                      GivePictureSize (pAb,
+                                       ViewFrameTable[frame - 1].FrMagnification,
+                                       &width, &height);
+                    }
+                  else
+                    {
+                      width = pBox->BxW;
+                      height = pBox->BxH;
+                    }
+                  break;
+                case LtSymbol:
+                  GiveSymbolSize (pAb, &width, &height);
+                  break;
+                case LtGraphics:
+                  /* Si le trace graphique a change */
+                  if (pAb->AbChange)
+                    {
+                      /* Si transformation polyline en graphique simple */
+                      pAb->AbRealShape = pAb->AbShape;
 		      
-		      /* remonte a la recherche d'un ancetre elastique */
-		      pCurrentAb = pAb;
-		      while (pCurrentAb != NULL)
-			{
-			  pCurrentBox = pCurrentAb->AbBox;
-			  if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
-			    {
-			      MirrorShape (pAb, pCurrentBox->BxHorizInverted,
-					   pCurrentBox->BxVertInverted,
-					   FALSE);
-			      pCurrentAb = NULL;		/* on arrete */
-			    }
-			  else
-			    pCurrentAb = pCurrentAb->AbEnclosing;
-			}
-		    }
-		  GiveGraphicSize (pAb, &width, &height);
-		  break;
-		case LtPolyLine:
-		  if (pAb->AbChange)
-		    {
-		      /* Libere les anciens buffers */
-		      FreePolyline (pBox);
-		      /* Recopie les buffers du pave */
-		      pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-		      pBox->BxNChars = pAb->AbVolume;
+                      /* remonte a la recherche d'un ancetre elastique */
+                      pCurrentAb = pAb;
+                      while (pCurrentAb != NULL)
+                        {
+                          pCurrentBox = pCurrentAb->AbBox;
+                          if (pCurrentBox->BxHorizFlex || pCurrentBox->BxVertFlex)
+                            {
+                              MirrorShape (pAb, pCurrentBox->BxHorizInverted,
+                                           pCurrentBox->BxVertInverted,
+                                           FALSE);
+                              pCurrentAb = NULL;		/* on arrete */
+                            }
+                          else
+                            pCurrentAb = pCurrentAb->AbEnclosing;
+                        }
+                    }
+                  GiveGraphicSize (pAb, &width, &height);
+                  break;
+                case LtPolyLine:
+                  if (pAb->AbChange)
+                    {
+                      /* Libere les anciens buffers */
+                      FreePolyline (pBox);
+                      /* Recopie les buffers du pave */
+                      pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+                      pBox->BxNChars = pAb->AbVolume;
 		      
-		      /* remonte a la recherche d'un ancetre elastique */
-		      pCurrentAb = pAb;
-		      while (pCurrentAb != NULL)
-			{
-			  pCurrentBox = pCurrentAb->AbBox;
-			  if (pCurrentBox->BxHorizFlex ||
-			      pCurrentBox->BxVertFlex)
-			    {
-			      MirrorShape (pAb,
-					   pCurrentBox->BxHorizInverted,
-					   pCurrentBox->BxVertInverted,
-					   FALSE);
-			      /* on arrete */
-			      pCurrentAb = NULL;	
-			    }
-			  else
-			    pCurrentAb = pCurrentAb->AbEnclosing;
-			}
-		    }
-		  GivePolylineSize (pAb,
-				    ViewFrameTable[frame - 1].FrMagnification,
-				    &width, &height);
-		  break;
-		case LtPath:
-		  /* by default don't change the size */
-		  width = pAb->AbBox->BxWidth;
-		  height = pAb->AbBox->BxHeight;
-		  if (pAb->AbChange)
-		    {
-		      /* free the old path descriptor */
-		      FreePath (pBox);
-		      /* copy the new one from the abstract box */
-		      pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
-		      pBox->BxNChars = pAb->AbVolume;
-		      if (pAb->AbEnclosing)
-			{
-			  /* the direct parent is the SVG path element */
-			  pParent = pAb->AbEnclosing->AbEnclosing;
-			  while (pParent &&
-				 TypeHasException (ExcIsGroup,
-						   pParent->AbElement->ElTypeNumber,
-						   pParent->AbElement->ElStructSchema))
-			    pParent = pParent->AbEnclosing;
-			  width = pParent->AbBox->BxWidth;
-			  height = pParent->AbBox->BxHeight;
-			  pAb->AbBox->BxWidth = width;
-			  pAb->AbBox->BxHeight = height;
-			  pParent = pAb->AbEnclosing;
-			  pParent->AbBox->BxWidth = width;
-			  pParent->AbBox->BxHeight = height;
-			}
-		    }
-		  break;
-		default:
-		  break;
-		}
+                      /* remonte a la recherche d'un ancetre elastique */
+                      pCurrentAb = pAb;
+                      while (pCurrentAb != NULL)
+                        {
+                          pCurrentBox = pCurrentAb->AbBox;
+                          if (pCurrentBox->BxHorizFlex ||
+                              pCurrentBox->BxVertFlex)
+                            {
+                              MirrorShape (pAb,
+                                           pCurrentBox->BxHorizInverted,
+                                           pCurrentBox->BxVertInverted,
+                                           FALSE);
+                              /* on arrete */
+                              pCurrentAb = NULL;	
+                            }
+                          else
+                            pCurrentAb = pCurrentAb->AbEnclosing;
+                        }
+                    }
+                  GivePolylineSize (pAb,
+                                    ViewFrameTable[frame - 1].FrMagnification,
+                                    &width, &height);
+                  break;
+                case LtPath:
+                  /* by default don't change the size */
+                  width = pAb->AbBox->BxWidth;
+                  height = pAb->AbBox->BxHeight;
+                  if (pAb->AbChange)
+                    {
+                      /* free the old path descriptor */
+                      FreePath (pBox);
+                      /* copy the new one from the abstract box */
+                      pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
+                      pBox->BxNChars = pAb->AbVolume;
+                      if (pAb->AbEnclosing)
+                        {
+                          /* the direct parent is the SVG path element */
+                          pParent = pAb->AbEnclosing->AbEnclosing;
+                          while (pParent &&
+                                 TypeHasException (ExcIsGroup,
+                                                   pParent->AbElement->ElTypeNumber,
+                                                   pParent->AbElement->ElStructSchema))
+                            pParent = pParent->AbEnclosing;
+                          width = pParent->AbBox->BxWidth;
+                          height = pParent->AbBox->BxHeight;
+                          pAb->AbBox->BxWidth = width;
+                          pAb->AbBox->BxHeight = height;
+                          pParent = pAb->AbEnclosing;
+                          pParent->AbBox->BxWidth = width;
+                          pParent->AbBox->BxHeight = height;
+                        }
+                    }
+                  break;
+                default:
+                  break;
+                }
 	      
-	      /* update the box  */
-	      pDimAb = &pAb->AbWidth;
-	      if (pDimAb->DimIsPosition)
-		width = 0;
-	      else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
-		width = 0;
-	      else
-		width -= pBox->BxW;	/* width delta */
-	      pDimAb = &pAb->AbHeight;
-	      if (pDimAb->DimIsPosition)
-		height = 0;
-	      else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
-		height = 0;
-	      else
-		height -= pBox->BxH;	/* height delta */
-	      pLine = NULL;
-	      /* the picture box width changed but not the
-		 block of lines */
-	      if (pAb->AbLeafType == LtPicture || width || height ||
-		  pBox->BxType == BoMulScript)
-		{
-		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
-			     adjustDelta, height, frame, FALSE);
+              /* update the box  */
+              pDimAb = &pAb->AbWidth;
+              if (pDimAb->DimIsPosition)
+                width = 0;
+              else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
+                width = 0;
+              else
+                width -= pBox->BxW;	/* width delta */
+              pDimAb = &pAb->AbHeight;
+              if (pDimAb->DimIsPosition)
+                height = 0;
+              else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
+                height = 0;
+              else
+                height -= pBox->BxH;	/* height delta */
+              pLine = NULL;
+              /* the picture box width changed but not the
+                 block of lines */
+              if (pAb->AbLeafType == LtPicture || width || height ||
+                  pBox->BxType == BoMulScript)
+                {
+                  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
+                             adjustDelta, height, frame, FALSE);
 #ifdef _GL
-		  if (NeedToComputeABoundingBox (pAb, frame))
-		    {
-		      /* need to recompute almost this bounding box */
-		      *computeBBoxes = TRUE;
-		      pBox->BxBoundinBoxComputed = FALSE;
-		    }
+                  if (NeedToComputeABoundingBox (pAb, frame))
+                    {
+                      /* need to recompute almost this bounding box */
+                      *computeBBoxes = TRUE;
+                      pBox->BxBoundinBoxComputed = FALSE;
+                    }
 #endif /* _GL */
-		  if (pAb->AbLeafType == LtPicture)
-		    {
-		      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-		      if (pBlock)
-			{
-			  RecomputeLines (pBlock, NULL, NULL, frame);
-			  /* we will have to pack enclosing box */
-			  if (pBlock->AbEnclosing)
-			    RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
-			}
-		    }
-		  /* check enclosing cell */
-		  pCell = GetParentCell (pBox);
-		  if (pCell && width)
-		    UpdateColumnWidth (pCell, NULL, frame);
-		  result = TRUE;
-		}
-	      else
-		result = FALSE;
-	    }
+                  if (pAb->AbLeafType == LtPicture)
+                    {
+                      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+                      if (pBlock)
+                        {
+                          RecomputeLines (pBlock, NULL, NULL, frame);
+                          /* we will have to pack enclosing box */
+                          if (pBlock->AbEnclosing)
+                            RecordEnclosing (pBlock->AbEnclosing->AbBox, FALSE);
+                        }
+                    }
+                  /* check enclosing cell */
+                  pCell = GetParentCell (pBox);
+                  if (pCell && width)
+                    UpdateColumnWidth (pCell, NULL, frame);
+                  result = TRUE;
+                }
+              else
+                result = FALSE;
+            }
 
-	  if (pAb->AbChange)
-	    pAb->AbChange = FALSE;
-	  if (pAb->AbSizeChange)
-	    pAb->AbSizeChange = FALSE;
-	}
+          if (pAb->AbChange)
+            pAb->AbChange = FALSE;
+          if (pAb->AbSizeChange)
+            pAb->AbSizeChange = FALSE;
+        }
 
       /* keep in memory previous width and height of the box */
       savedW = pBox->BxW;
       savedH = pBox->BxH;
       if (pAb->AbLeafType == LtPicture &&
-	  (pAb->AbWidthChange || pAb->AbHeightChange))
-	{
-	  if (pAb->AbWidthChange &&
-	      !pAb->AbWidth.DimIsPosition &&
-	      pAb->AbWidth.DimValue == -1 &&
-	      pAb->AbWidth.DimAbRef == NULL)
-	    /* due to the ration, the width changes */
-	    pBox->BxW = 0;
-	  if (!pAb->AbHeightChange &&
-	      !pAb->AbHeight.DimIsPosition &&
-	      pAb->AbHeight.DimValue == -1 &&
-	      pAb->AbHeight.DimAbRef == NULL)
-	    /* due to the ration, the height changes */
-	    pBox->BxH = 0;
-	}
+          (pAb->AbWidthChange || pAb->AbHeightChange))
+        {
+          if (pAb->AbWidthChange &&
+              !pAb->AbWidth.DimIsPosition &&
+              pAb->AbWidth.DimValue == -1 &&
+              pAb->AbWidth.DimAbRef == NULL)
+            /* due to the ration, the width changes */
+            pBox->BxW = 0;
+          if (!pAb->AbHeightChange &&
+              !pAb->AbHeight.DimIsPosition &&
+              pAb->AbHeight.DimValue == -1 &&
+              pAb->AbHeight.DimAbRef == NULL)
+            /* due to the ration, the height changes */
+            pBox->BxH = 0;
+        }
       /* CHANGE WIDTH */
       if (pAb->AbWidthChange)
-	{
-	  AnyWidthUpdate = TRUE;
-	  /* Remove the old value */
-	  ClearDimRelation (pBox, TRUE, frame);
-	  /* New width */
-	  condition = ComputeDimRelation (pAb, frame, TRUE);
-	  if (condition || (!pAb->AbWidth.DimIsPosition &&
-			    pAb->AbWidth.DimMinimum))
-	    {
-	      switch (pAb->AbLeafType)
-		{
-		case LtText:
-		  GiveTextSize (pAb, frame, &width, &height, &i);
-		  break;
-		case LtPicture:
-		  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
-		  pBox->BxW = 0;
-		  LoadPicture (frame, pBox, imageDesc);
-		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
-				   &width, &height);
-		  break;
-		case LtSymbol:
-		  GiveSymbolSize (pAb, &width, &height);
-		  break;
-		case LtGraphics:
-		  GiveGraphicSize (pAb, &width, &height);
-		  break;
-		case LtCompound:
-		  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
-		    {
-		      RecomputeLines (pAb, NULL, NULL, frame);
-		      width = pBox->BxW;
-		    }
-		  else if (isCell)
-		    /* Check table consistency */
-		    UpdateColumnWidth (pAb, NULL, frame);
-		  else
-		    GiveEnclosureSize (pAb, frame, &width, &height);
-		  break;
-		default:
-		  width = pBox->BxW;
-		  break;
-		}
+        {
+          AnyWidthUpdate = TRUE;
+          /* Remove the old value */
+          ClearDimRelation (pBox, TRUE, frame);
+          /* New width */
+          condition = ComputeDimRelation (pAb, frame, TRUE);
+          if (condition || (!pAb->AbWidth.DimIsPosition &&
+                            pAb->AbWidth.DimMinimum))
+            {
+              switch (pAb->AbLeafType)
+                {
+                case LtText:
+                  GiveTextSize (pAb, frame, &width, &height, &i);
+                  break;
+                case LtPicture:
+                  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
+                  pBox->BxW = 0;
+                  LoadPicture (frame, pBox, imageDesc);
+                  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
+                                   &width, &height);
+                  break;
+                case LtSymbol:
+                  GiveSymbolSize (pAb, &width, &height);
+                  break;
+                case LtGraphics:
+                  GiveGraphicSize (pAb, &width, &height);
+                  break;
+                case LtCompound:
+                  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+                    {
+                      RecomputeLines (pAb, NULL, NULL, frame);
+                      width = pBox->BxW;
+                    }
+                  else if (isCell)
+                    /* Check table consistency */
+                    UpdateColumnWidth (pAb, NULL, frame);
+                  else
+                    GiveEnclosureSize (pAb, frame, &width, &height);
+                  break;
+                default:
+                  width = pBox->BxW;
+                  break;
+                }
 	      
-	      /* Change the width of the contents */
-	      result = width != savedW;
-	      ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-	      if (pAb->AbLeafType == LtPicture && height != savedH)
-		{
-		/* clear the ratio */
-		  pBox->BxH = savedH;
-		  ChangeDefaultHeight (pBox, NULL, height, frame);
-		}
-	    }
-	  else
-	    {
-	      /* the box width is constrained */
-	      if (pAb->AbLeafType == LtPicture)
-		LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
-	      result = TRUE;
-	    }
+              /* Change the width of the contents */
+              result = width != savedW;
+              ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+              if (pAb->AbLeafType == LtPicture && height != savedH)
+                {
+                  /* clear the ratio */
+                  pBox->BxH = savedH;
+                  ChangeDefaultHeight (pBox, NULL, height, frame);
+                }
+            }
+          else
+            {
+              /* the box width is constrained */
+              if (pAb->AbLeafType == LtPicture)
+                LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+              result = TRUE;
+            }
 
-	  /* check auto margins */
-	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
-	  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
-	      pAb->AbRxUnit == UnPercent)
-	    /* update radius of the rectangle with rounded corners */
-	    ComputeRadius (pAb, frame, TRUE);
+          /* check auto margins */
+          CheckMBP (pAb, pCurrentBox, frame, TRUE);
+          if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+              pAb->AbRxUnit == UnPercent)
+            /* update radius of the rectangle with rounded corners */
+            ComputeRadius (pAb, frame, TRUE);
 	  
-	  /* Check table consistency */
-	  if (pCurrentBox->BxType == BoColumn)
-	    UpdateTable (NULL, pAb, NULL, frame);
-	  else if (pCurrentBox->BxType == BoCell)
-	    UpdateColumnWidth (pAb, NULL, frame);
-	  /* check enclosing cell */
-	  pCell = GetParentCell (pCurrentBox);
-	  if (pCell)
-	    {
-	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
-	      if (pBlock != NULL)
-		RecomputeLines (pBlock, NULL, NULL, frame);
-	      UpdateColumnWidth (pCell, NULL, frame);
-	    }
-	}
+          /* Check table consistency */
+          if (pCurrentBox->BxType == BoColumn)
+            UpdateTable (NULL, pAb, NULL, frame);
+          else if (pCurrentBox->BxType == BoCell)
+            UpdateColumnWidth (pAb, NULL, frame);
+          /* check enclosing cell */
+          pCell = GetParentCell (pCurrentBox);
+          if (pCell)
+            {
+              pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+              if (pBlock != NULL)
+                RecomputeLines (pBlock, NULL, NULL, frame);
+              UpdateColumnWidth (pCell, NULL, frame);
+            }
+        }
       /* CHANGE HEIGHT */
       if (pAb->AbHeightChange)
-	{
-	  /* Remove the old value */
-	  ClearDimRelation (pBox, FALSE, frame);
-	  /* New height */
-	  condition = ComputeDimRelation (pAb, frame, FALSE);
-	  if (condition ||
-	      (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
-	    {
-	      switch (pAb->AbLeafType)
-		{
-		case LtText:
-		  GiveTextSize (pAb, frame, &width, &height, &i);
-		  break;
-		case LtPicture:
-		  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
-		  pBox->BxH = 0;
-		  LoadPicture (frame, pBox, imageDesc);
-		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
-		  break;
-		case LtSymbol:
-		  GiveSymbolSize (pAb, &width, &height);
-		  break;
-		case LtGraphics:
-		  GiveGraphicSize (pAb, &width, &height);
-		  break;
-		case LtCompound:
-		  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
-		    height = pBox->BxH;
-		  else
-		    GiveEnclosureSize (pAb, frame, &width, &height);
-		  break;
-		default:
-		  height = pBox->BxH;
-		  break;
-		}
+        {
+          /* Remove the old value */
+          ClearDimRelation (pBox, FALSE, frame);
+          /* New height */
+          condition = ComputeDimRelation (pAb, frame, FALSE);
+          if (condition ||
+              (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+            {
+              switch (pAb->AbLeafType)
+                {
+                case LtText:
+                  GiveTextSize (pAb, frame, &width, &height, &i);
+                  break;
+                case LtPicture:
+                  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
+                  pBox->BxH = 0;
+                  LoadPicture (frame, pBox, imageDesc);
+                  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
+                  break;
+                case LtSymbol:
+                  GiveSymbolSize (pAb, &width, &height);
+                  break;
+                case LtGraphics:
+                  GiveGraphicSize (pAb, &width, &height);
+                  break;
+                case LtCompound:
+                  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+                    height = pBox->BxH;
+                  else
+                    GiveEnclosureSize (pAb, frame, &width, &height);
+                  break;
+                default:
+                  height = pBox->BxH;
+                  break;
+                }
 
-	      /* Change the height of the contents */
-	      result = height != savedH;
-	      /* force the reevaluation of the baseline */
-	      ClearAxisRelation (pBox, FALSE);
-	      /* new horizontal */
-	      ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
-	      ChangeDefaultHeight (pBox, NULL, height, frame);
-	      if (pAb->AbLeafType == LtPicture && width != savedW)
-		{
-		  /* clear the ratio */
-		  pBox->BxW = savedW;
-		  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-		}
-	    }
-	  else
-	    {
-	      /* the box height is constrained */
-	      if (pAb->AbLeafType == LtPicture)
-		LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
-	      result = TRUE;
-	    }
+              /* Change the height of the contents */
+              result = height != savedH;
+              /* force the reevaluation of the baseline */
+              ClearAxisRelation (pBox, FALSE);
+              /* new horizontal */
+              ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
+              ChangeDefaultHeight (pBox, NULL, height, frame);
+              if (pAb->AbLeafType == LtPicture && width != savedW)
+                {
+                  /* clear the ratio */
+                  pBox->BxW = savedW;
+                  ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+                }
+            }
+          else
+            {
+              /* the box height is constrained */
+              if (pAb->AbLeafType == LtPicture)
+                LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
+              result = TRUE;
+            }
 
-	  /* recheck auto and % margins */
-	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
-	  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
-	      pAb->AbRyUnit == UnPercent)
-	    /* update radius of the rectangle with rounded corners */
-	    ComputeRadius (pAb, frame, FALSE);
-	}
+          /* recheck auto and % margins */
+          CheckMBP (pAb, pCurrentBox, frame, TRUE);
+          if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+              pAb->AbRyUnit == UnPercent)
+            /* update radius of the rectangle with rounded corners */
+            ComputeRadius (pAb, frame, FALSE);
+        }
       /* MARGIN PADDING BORDER */
       if (pAb->AbMBPChange)
-	{
-	  pAb->AbMBPChange = FALSE;
-	  Propagate = ToAll;	/* On passe en mode normal de propagation */
-	  if (CheckMBP (pAb, pBox, frame, TRUE))
-	    {
-	      /* Check table consistency */
-	      if (pCurrentBox->BxType == BoColumn)
-		UpdateTable (NULL, pAb, NULL, frame);
-	      else if (pCurrentBox->BxType == BoCell)
-		UpdateColumnWidth (pAb, NULL, frame);
-	      /* check enclosing cell */
-	      pCell = GetParentCell (pCurrentBox);
-	      if (pBlock)
-		{
-		  /* update the enclosing block of line */
-		  Propagate = ToChildren;
-		  RecomputeLines (pBlock, NULL, NULL, frame);
-		}
-	      if (pCell)
-		UpdateColumnWidth (pCell, NULL, frame);
-	      else
-		{
-		  table = GetParentTable (pCurrentBox);
-		  if (table)
-		    UpdateTable (table, NULL, NULL, frame);
-		}
-	    }
+        {
+          pAb->AbMBPChange = FALSE;
+          Propagate = ToAll;	/* On passe en mode normal de propagation */
+          if (CheckMBP (pAb, pBox, frame, TRUE))
+            {
+              /* Check table consistency */
+              if (pCurrentBox->BxType == BoColumn)
+                UpdateTable (NULL, pAb, NULL, frame);
+              else if (pCurrentBox->BxType == BoCell)
+                UpdateColumnWidth (pAb, NULL, frame);
+              /* check enclosing cell */
+              pCell = GetParentCell (pCurrentBox);
+              if (pBlock)
+                {
+                  /* update the enclosing block of line */
+                  Propagate = ToChildren;
+                  RecomputeLines (pBlock, NULL, NULL, frame);
+                }
+              if (pCell)
+                UpdateColumnWidth (pCell, NULL, frame);
+              else
+                {
+                  table = GetParentTable (pCurrentBox);
+                  if (table)
+                    UpdateTable (table, NULL, NULL, frame);
+                }
+            }
 
-	  /* do we have to register that box as filled box */
-	  if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
-	    MarkDisplayedBox (pBox);
-	  /* Restore the propagation */
-	  Propagate = savpropage;
-	  result = TRUE;
-	}
+          /* do we have to register that box as filled box */
+          if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
+            MarkDisplayedBox (pBox);
+          /* Restore the propagation */
+          Propagate = savpropage;
+          result = TRUE;
+        }
 
       if (ExtraFlow (pBox, frame))
-	{
-	  /* ignore position rules */
-	  pAb->AbHorizPosChange = FALSE;
-	  pAb->AbVertPosChange = FALSE;
-	}
+        {
+          /* ignore position rules */
+          pAb->AbHorizPosChange = FALSE;
+          pAb->AbVertPosChange = FALSE;
+        }
       /* CHANGE HORIZONTAL POSITION */
       if (pAb->AbHorizPosChange)
-	{
-	  AnyWidthUpdate = TRUE;
-	  /* Les cas de coherence sur les boites elastiques */
-	  /* Les reperes Position et Dimension doivent etre differents */
-	  /* Ces reperes ne peuvent pas etre l'axe de reference        */
-	  if (pAb->AbWidth.DimIsPosition
-	      && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
-		  || pAb->AbHorizPos.PosEdge == VertMiddle
-		  || pAb->AbHorizPos.PosEdge == VertRef))
-	    {
-	      if (pAb->AbWidth.DimPosition.PosEdge == Left)
-		pAb->AbHorizPos.PosEdge = Right;
-	      else if (pAb->AbWidth.DimPosition.PosEdge == Right)
-		pAb->AbHorizPos.PosEdge = Left;
-	      pAb->AbHorizPosChange = FALSE;
-	    }
-	  else if (pAb->AbEnclosing == NULL)
-	    condition = TRUE;
-	  else if (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-		   pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-		   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-		   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
-	    /* the positioning rule is ignored */
-	    condition = !pAb->AbHorizEnclosing;
-	  else
-	    condition = TRUE;
-	  if (condition)
-	    {
-	      /* remove the old horizontal position */
-	      ClearPosRelation (pBox, TRUE);
-	      /* new horizontal position */
-	      ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
-	      result = TRUE;
-	    }
-	  else
-	    pAb->AbHorizPosChange = FALSE;
-	}
+        {
+          AnyWidthUpdate = TRUE;
+          /* Les cas de coherence sur les boites elastiques */
+          /* Les reperes Position et Dimension doivent etre differents */
+          /* Ces reperes ne peuvent pas etre l'axe de reference        */
+          if (pAb->AbWidth.DimIsPosition
+              && (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
+                  || pAb->AbHorizPos.PosEdge == VertMiddle
+                  || pAb->AbHorizPos.PosEdge == VertRef))
+            {
+              if (pAb->AbWidth.DimPosition.PosEdge == Left)
+                pAb->AbHorizPos.PosEdge = Right;
+              else if (pAb->AbWidth.DimPosition.PosEdge == Right)
+                pAb->AbHorizPos.PosEdge = Left;
+              pAb->AbHorizPosChange = FALSE;
+            }
+          else if (pAb->AbEnclosing == NULL)
+            condition = TRUE;
+          else if (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                   pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+                   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+            /* the positioning rule is ignored */
+            condition = !pAb->AbHorizEnclosing;
+          else
+            condition = TRUE;
+          if (condition)
+            {
+              /* remove the old horizontal position */
+              ClearPosRelation (pBox, TRUE);
+              /* new horizontal position */
+              ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+              result = TRUE;
+            }
+          else
+            pAb->AbHorizPosChange = FALSE;
+        }
       /* CHANGE VERTICAL POSITION */
       if (pAb->AbVertPosChange)
-	{
-	  /* Les cas de coherence sur les boites elastiques */
-	  /* Les reperes Position et Dimension doivent etre differents */
-	  /* Ces reperes ne peuvent pas etre l'axe de reference        */
-	  if (pAb->AbHeight.DimIsPosition &&
-	      (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge ||
-	       pAb->AbVertPos.PosEdge == HorizMiddle ||
-	       pAb->AbVertPos.PosEdge == HorizRef))
-	    {
-	      if (pAb->AbHeight.DimPosition.PosEdge == Top)
-		pAb->AbVertPos.PosEdge = Bottom;
-	      else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
-		pAb->AbVertPos.PosEdge = Top;
-	      pAb->AbVertPosChange = FALSE;
-	    }
-	  else if (pAb->AbEnclosing == NULL)
-	    condition = TRUE;
-	  else if (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-		   pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-		   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-		   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
-	    {
-	      /* the positioning rule is ignored */
-	      if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
-		{
-		  pPosAb = &pAb->AbVertPos;
-		  pLine = SearchLine (pBox, frame);
-		  if (pLine)
-		    {
-		      if (pPosAb->PosUnit == UnPercent)
-			i = PixelValue (pPosAb->PosDistance, UnPercent,
-					(PtrAbstractBox) (pAb->AbBox->BxW), 0);
-		      else
-			i = PixelValue (pPosAb->PosDistance,
-					pPosAb->PosUnit, pAb,
-					ViewFrameTable[frame - 1].FrMagnification);
-		      if (pPosAb->PosDeltaUnit == UnPercent)
-			i += PixelValue (pPosAb->PosDistDelta, UnPercent,
-					(PtrAbstractBox) (pAb->AbBox->BxW), 0);
-		      else
-			i += PixelValue (pPosAb->PosDistDelta,
-					 pPosAb->PosDeltaUnit, pAb,
-					 ViewFrameTable[frame - 1].FrMagnification);
-		      pLine->LiYOrg += i;
-		      EncloseInLine (pBox, frame, pAb->AbEnclosing);
-		    }
-		}
-	      condition = FALSE;
-	    }
-	  else
-	    condition = TRUE;
+        {
+          /* Les cas de coherence sur les boites elastiques */
+          /* Les reperes Position et Dimension doivent etre differents */
+          /* Ces reperes ne peuvent pas etre l'axe de reference        */
+          if (pAb->AbHeight.DimIsPosition &&
+              (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge ||
+               pAb->AbVertPos.PosEdge == HorizMiddle ||
+               pAb->AbVertPos.PosEdge == HorizRef))
+            {
+              if (pAb->AbHeight.DimPosition.PosEdge == Top)
+                pAb->AbVertPos.PosEdge = Bottom;
+              else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
+                pAb->AbVertPos.PosEdge = Top;
+              pAb->AbVertPosChange = FALSE;
+            }
+          else if (pAb->AbEnclosing == NULL)
+            condition = TRUE;
+          else if (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+                   pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                   pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+            {
+              /* the positioning rule is ignored */
+              if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
+                {
+                  pPosAb = &pAb->AbVertPos;
+                  pLine = SearchLine (pBox, frame);
+                  if (pLine)
+                    {
+                      if (pPosAb->PosUnit == UnPercent)
+                        i = PixelValue (pPosAb->PosDistance, UnPercent,
+                                        (PtrAbstractBox) (pAb->AbBox->BxW), 0);
+                      else
+                        i = PixelValue (pPosAb->PosDistance,
+                                        pPosAb->PosUnit, pAb,
+                                        ViewFrameTable[frame - 1].FrMagnification);
+                      if (pPosAb->PosDeltaUnit == UnPercent)
+                        i += PixelValue (pPosAb->PosDistDelta, UnPercent,
+                                         (PtrAbstractBox) (pAb->AbBox->BxW), 0);
+                      else
+                        i += PixelValue (pPosAb->PosDistDelta,
+                                         pPosAb->PosDeltaUnit, pAb,
+                                         ViewFrameTable[frame - 1].FrMagnification);
+                      pLine->LiYOrg += i;
+                      EncloseInLine (pBox, frame, pAb->AbEnclosing);
+                    }
+                }
+              condition = FALSE;
+            }
+          else
+            condition = TRUE;
 	  
-	  if (condition)
-	    {
-	      /* remove the old vertical position */
-	      ClearPosRelation (pBox, FALSE);
-	      /* new vertical position */
-	      ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
-	      result = TRUE;
-	    }
-	  else
-	    pAb->AbVertPosChange = FALSE;
-	}
+          if (condition)
+            {
+              /* remove the old vertical position */
+              ClearPosRelation (pBox, FALSE);
+              /* new vertical position */
+              ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+              result = TRUE;
+            }
+          else
+            pAb->AbVertPosChange = FALSE;
+        }
       /* CHANGE HORIZONTAL AXIS */
       if (pAb->AbHorizRefChange)
-	{
-	  /* remove the old horizontal axis */
-	  ClearAxisRelation (pBox, FALSE);
-	  /* new horizontal */
-	  ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
-	  result = TRUE;
-	}
+        {
+          /* remove the old horizontal axis */
+          ClearAxisRelation (pBox, FALSE);
+          /* new horizontal */
+          ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
+          result = TRUE;
+        }
       /* CHANGE VERTICAL AXIS */
       if (pAb->AbVertRefChange)
-	{
-	  /* remove the vertical axis */
-	  ClearAxisRelation (pBox, TRUE);
-	  /* new vertical axis */
-	  ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
-	  result = TRUE;
-	}
+        {
+          /* remove the vertical axis */
+          ClearAxisRelation (pBox, TRUE);
+          /* new vertical axis */
+          ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
+          result = TRUE;
+        }
     }
 #ifdef _GL  
   FrameUpdating = FrameUpdatingStatus;  
@@ -4448,151 +4448,151 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 
 
 /*----------------------------------------------------------------------
-   ComputeEnclosing manages differed enclosing rules
+  ComputeEnclosing manages differed enclosing rules
   ----------------------------------------------------------------------*/
 void ComputeEnclosing (int frame)
 {
-   int                 i;
-   PtrDimRelations     pDimRel;
+  int                 i;
+  PtrDimRelations     pDimRel;
 
-   /* Apply all differed WidthPack and HeightPack  */
-   PackBoxRoot = NULL;
-   pDimRel = DifferedPackBlocks;
-   while (pDimRel != NULL)
-     {
-	/* On traite toutes les boites enregistrees */
-	i = 0;
-	while (i < MAX_RELAT_DIM)
-	  {
-	     if (pDimRel->DimRTable[i] == NULL)
-		i = MAX_RELAT_DIM;
-	     else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
-		;		/* doesn't exist anymore */
-	     else if (pDimRel->DimROp[i] == OpSame)
-		WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-	     else if (pDimRel->DimROp[i] == OpReverse)
-		HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-	     /* next entry */
-	     i++;
-	  }
+  /* Apply all differed WidthPack and HeightPack  */
+  PackBoxRoot = NULL;
+  pDimRel = DifferedPackBlocks;
+  while (pDimRel != NULL)
+    {
+      /* On traite toutes les boites enregistrees */
+      i = 0;
+      while (i < MAX_RELAT_DIM)
+        {
+          if (pDimRel->DimRTable[i] == NULL)
+            i = MAX_RELAT_DIM;
+          else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
+            ;		/* doesn't exist anymore */
+          else if (pDimRel->DimROp[i] == OpSame)
+            WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+          else if (pDimRel->DimROp[i] == OpReverse)
+            HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+          /* next entry */
+          i++;
+        }
 
-	/* next block */
-	pDimRel = pDimRel->DimRNext;
-     }
+      /* next block */
+      pDimRel = pDimRel->DimRNext;
+    }
 
-   /* Free allocated blocks */
-   while (DifferedPackBlocks != NULL)
-     {
-	pDimRel = DifferedPackBlocks;
-	DifferedPackBlocks = DifferedPackBlocks->DimRNext;
-	FreeDimBlock (&pDimRel);
-     }
+  /* Free allocated blocks */
+  while (DifferedPackBlocks != NULL)
+    {
+      pDimRel = DifferedPackBlocks;
+      DifferedPackBlocks = DifferedPackBlocks->DimRNext;
+      FreeDimBlock (&pDimRel);
+    }
 }
 
 /*----------------------------------------------------------------------
-   RebuildConcreteImage reevaluates the document view after a change
-   in the frame (size, zoom).
-   Redisplay within the frame supposed clean.
+  RebuildConcreteImage reevaluates the document view after a change
+  in the frame (size, zoom).
+  Redisplay within the frame supposed clean.
   ----------------------------------------------------------------------*/
 void RebuildConcreteImage (int frame)
 {
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb, pVisibleAb;
-   PtrBox              pBox;
-   int                 width, height;
-   int                 position = 0;
-   ThotBool            condition;
-   ThotBool            status;
-   ThotBool            lock = TRUE;
+  ViewFrame          *pFrame;
+  PtrAbstractBox      pAb, pVisibleAb;
+  PtrBox              pBox;
+  int                 width, height;
+  int                 position = 0;
+  ThotBool            condition;
+  ThotBool            status;
+  ThotBool            lock = TRUE;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox)
-     {
-       /* close any text editing in progress */
-       CloseTextInsertion ();
-       /* Box widths may change and the scroll must be recomputed */
-       AnyWidthUpdate = TRUE;
-       pAb = pFrame->FrAbstractBox;
-       if (pAb->AbBox)
-	 {
-	   /* get the first visible abstract box and its current position */
-	   GetSizesFrame (frame, &width, &height);
-	   pBox = pAb->AbBox;
-	   while (pBox->BxYOrg < pFrame->FrYOrg && pBox->BxNext != NULL)
-	     pBox = pBox->BxNext;
-	   if (pBox)
-	     {
-	       /* position of the box top in the frame given in % */
-	       position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
-	       pVisibleAb = pBox->BxAbstractBox;
-	     }
-	   else
-	     pVisibleAb = NULL;
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox)
+    {
+      /* close any text editing in progress */
+      CloseTextInsertion ();
+      /* Box widths may change and the scroll must be recomputed */
+      AnyWidthUpdate = TRUE;
+      pAb = pFrame->FrAbstractBox;
+      if (pAb->AbBox)
+        {
+          /* get the first visible abstract box and its current position */
+          GetSizesFrame (frame, &width, &height);
+          pBox = pAb->AbBox;
+          while (pBox->BxYOrg < pFrame->FrYOrg && pBox->BxNext != NULL)
+            pBox = pBox->BxNext;
+          if (pBox)
+            {
+              /* position of the box top in the frame given in % */
+              position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
+              pVisibleAb = pBox->BxAbstractBox;
+            }
+          else
+            pVisibleAb = NULL;
        
-	   /* lock tables formatting */
-	   TtaGiveTableFormattingLock (&lock);
-	   if (!lock)
-	     /* table formatting is not loked, lock it now */
-	     TtaLockTableFormatting ();
+          /* lock tables formatting */
+          TtaGiveTableFormattingLock (&lock);
+          if (!lock)
+            /* table formatting is not loked, lock it now */
+            TtaLockTableFormatting ();
  
-	   pBox = pAb->AbBox;
-	   status = pFrame->FrReady;
-	   pFrame->FrReady = FALSE;	/* lock the frame */
-	   if (!pBox->BxContentWidth
-	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
-	     {
-	       /* the width of the document depends on the window */
-	       condition = ComputeDimRelation (pAb, frame, TRUE);
-	       if (!condition)
-		 {
-		   GiveEnclosureSize (pAb, frame, &width, &height);
-		   ChangeDefaultWidth (pBox, pBox, width, 0, frame);
-		 }
-	     }
-	   if (!pBox->BxContentHeight
-	       || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
-	     {
-	       /* the height of the document depends on the window */
-	       condition = ComputeDimRelation (pAb, frame, FALSE);
-	       if (!condition)
-		 {
-		   GiveEnclosureSize (pAb, frame, &width, &height);
-		   ChangeDefaultHeight (pBox, pBox, height, frame);
-		 }
-	     }
+          pBox = pAb->AbBox;
+          status = pFrame->FrReady;
+          pFrame->FrReady = FALSE;	/* lock the frame */
+          if (!pBox->BxContentWidth
+              || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
+            {
+              /* the width of the document depends on the window */
+              condition = ComputeDimRelation (pAb, frame, TRUE);
+              if (!condition)
+                {
+                  GiveEnclosureSize (pAb, frame, &width, &height);
+                  ChangeDefaultWidth (pBox, pBox, width, 0, frame);
+                }
+            }
+          if (!pBox->BxContentHeight
+              || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+            {
+              /* the height of the document depends on the window */
+              condition = ComputeDimRelation (pAb, frame, FALSE);
+              if (!condition)
+                {
+                  GiveEnclosureSize (pAb, frame, &width, &height);
+                  ChangeDefaultHeight (pBox, pBox, height, frame);
+                }
+            }
 	   
-	   /* check constraints */
-	   ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
-	   ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
+          /* check constraints */
+          ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+          ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
 
-	   if (!lock)
-	     /* unlock table formatting */
-	     TtaUnlockTableFormatting ();
+          if (!lock)
+            /* unlock table formatting */
+            TtaUnlockTableFormatting ();
 	   
-	   /* La frame est affichable */
-	   pFrame->FrReady = status;
-	   /* Traitement des englobements retardes */
-	   ComputeEnclosing (frame);
+          /* La frame est affichable */
+          pFrame->FrReady = status;
+          /* Traitement des englobements retardes */
+          ComputeEnclosing (frame);
 
-	   /* redisplay the window */
-	   if (pVisibleAb)
-	     ShowBox (frame, pVisibleAb->AbBox, 0, position);
-	   else
-	     RedrawFrameBottom (frame, 0, NULL);
-	   /* if necessary show the selection */
-	   ShowSelection (pFrame->FrAbstractBox, TRUE);
+          /* redisplay the window */
+          if (pVisibleAb)
+            ShowBox (frame, pVisibleAb->AbBox, 0, position);
+          else
+            RedrawFrameBottom (frame, 0, NULL);
+          /* if necessary show the selection */
+          ShowSelection (pFrame->FrAbstractBox, TRUE);
 	   
-	   /* recompute scrolls */
-	   CheckScrollingWidth (frame);
-	   UpdateScrollbars (frame);
-	 }
-     }
+          /* recompute scrolls */
+          CheckScrollingWidth (frame);
+          UpdateScrollbars (frame);
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   ClearFlexibility remove the box stretching on the current box and
-   its children.
+  ClearFlexibility remove the box stretching on the current box and
+  its children.
   ----------------------------------------------------------------------*/
 static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 {
@@ -4606,68 +4606,68 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
       pBox = pAb->AbBox;
       /* Faut-il reevaluer les regles d'une boite elastique */
       if (pBox->BxHorizFlex && pAb->AbWidthChange)
-	{
-	  /* redisplay the whole box */
-	  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-	  /* clear previous position */
-	  if (pAb->AbHorizPosChange)
-	    {
-	      ClearPosRelation (pBox, TRUE);
-	      XMove (pBox, NULL, -pBox->BxXOrg, frame);
-	    }
+        {
+          /* redisplay the whole box */
+          DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+          /* clear previous position */
+          if (pAb->AbHorizPosChange)
+            {
+              ClearPosRelation (pBox, TRUE);
+              XMove (pBox, NULL, -pBox->BxXOrg, frame);
+            }
 
-	  /* clear previous width */
-	  ClearDimRelation (pBox, TRUE, frame);
-	  /* Reinitialisation of the shape */
-	  MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
-	}
+          /* clear previous width */
+          ClearDimRelation (pBox, TRUE, frame);
+          /* Reinitialisation of the shape */
+          MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+        }
 
       if (pBox->BxVertFlex && pAb->AbHeightChange)
-	{
-	  if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
-	    /* redisplay the whole box */
-	    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-	  /* clear previous position */
-	  if (pAb->AbVertPosChange)
-	    {
-	      ClearPosRelation (pBox, FALSE);
-	      YMove (pBox, NULL, -pBox->BxYOrg, frame);
-	    }
+        {
+          if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
+            /* redisplay the whole box */
+            DefBoxRegion (frame, pBox, -1, -1, -1, -1);
+          /* clear previous position */
+          if (pAb->AbVertPosChange)
+            {
+              ClearPosRelation (pBox, FALSE);
+              YMove (pBox, NULL, -pBox->BxYOrg, frame);
+            }
 
-	  /* clear previous height */
-	  ClearDimRelation (pBox, FALSE, frame);
-	  /* Reinitialisation of the shape */
-	  MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
-	}
+          /* clear previous height */
+          ClearDimRelation (pBox, FALSE, frame);
+          /* Reinitialisation of the shape */
+          MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+        }
 
       /* Traitement des paves fils */
       pChildAb = pAb->AbFirstEnclosed;
       while (pChildAb != NULL)
-	{
-	  ClearFlexibility (pChildAb, frame);
-	  pChildAb = pChildAb->AbNext;
-	}
+        {
+          ClearFlexibility (pChildAb, frame);
+          pChildAb = pChildAb->AbNext;
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   IsDead returns TRUE is the abstract box or a parent abstract box
-   has AbDead = TRUE.
+  IsDead returns TRUE is the abstract box or a parent abstract box
+  has AbDead = TRUE.
   ----------------------------------------------------------------------*/
 ThotBool IsDead (PtrAbstractBox pAb)
 {
   while (pAb)
     {
       if (pAb->AbDead)
-	return TRUE;
+        return TRUE;
       else
-	pAb = pAb->AbEnclosing;
+        pAb = pAb->AbEnclosing;
     }
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
-   ClearConcreteImage removes all concrete boxes in the view.
+  ClearConcreteImage removes all concrete boxes in the view.
   ----------------------------------------------------------------------*/
 void ClearConcreteImage (int frame)
 {
@@ -4685,17 +4685,17 @@ void ClearConcreteImage (int frame)
       pFrame->FrAbstractBox = NULL;
       /* free all extra flows */
       while (pFrame->FrFlow)
-	{
-	  pFlow = pFrame->FrFlow;
-	  pFrame->FrFlow = pFlow->FlNext;
-	  TtaFreeMemory (pFlow);
-	}
+        {
+          pFlow = pFrame->FrFlow;
+          pFrame->FrFlow = pFlow->FlNext;
+          TtaFreeMemory (pFlow);
+        }
       pFrame->FrReady = TRUE;	/* the window is now ready */
       DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
-		      &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
-		      &pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
-     }
+                      &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
+                      &pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
+    }
 }
 
 
@@ -4706,227 +4706,227 @@ void ClearConcreteImage (int frame)
   be recomputed else it's unchanged.
   ----------------------------------------------------------------------*/
 static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame,
-				      ThotBool *computeBBoxes)
+                                      ThotBool *computeBBoxes)
 {
-   PtrAbstractBox      pChildAb;
-   PtrAbstractBox      pFirstAb;
-   PtrAbstractBox      pNewAb;
-   PtrLine             pLine;
-   PtrBox              pBox;
-   PtrBox              pCurrentBox;
-   Propagation         propStatus;
-   int                 index;
-   ThotBool            toUpdate;
-   ThotBool            result, change;
+  PtrAbstractBox      pChildAb;
+  PtrAbstractBox      pFirstAb;
+  PtrAbstractBox      pNewAb;
+  PtrLine             pLine;
+  PtrBox              pBox;
+  PtrBox              pCurrentBox;
+  Propagation         propStatus;
+  int                 index;
+  ThotBool            toUpdate;
+  ThotBool            result, change;
 
-   change = FALSE;
-   /* avoid to manage two times the same box update */
-   for (index = 0; index < BiwIndex; index++)
-     if (BoxInWork[index] == pAb)
-       break;
-   if (index < BiwIndex)
-     result = FALSE;
-   else
-     {
-       /* rebuild of abstract box with a new floating child */
-       if (!pAb->AbDead && pAb->AbEnclosing)
-	 {
-	   pChildAb = pAb->AbFirstEnclosed;
-	   while (pChildAb)
-	     {
-	       if (pChildAb->AbNew && !pChildAb->AbDead &&
-		   pChildAb->AbFloat != 'N')
-		 {
-		   /* a new floating child is added */
-		   if (pAb->AbBox && 
-		       pAb->AbBox->BxType != BoCell && 
-		       pAb->AbBox->BxType != BoRow && 
-		       pAb->AbBox->BxType != BoTable && 
-		       pAb->AbBox->BxType != BoBlock && 
-		       pAb->AbBox->BxType != BoFloatBlock)
-		     {
-		       /* the current box will become a block */
-		       pAb->AbDead = TRUE;
-		       /* remove boxes */
-		       ComputeUpdates (pAb, frame, computeBBoxes);
-		       /* regenerate boxes */
-		       pAb->AbDead = FALSE;
-		       TransmitDeadStatus (pAb, FALSE);
-		       pAb->AbNew = TRUE;
-		     }
-		   pChildAb = NULL;
-		 }
-	       else
-		 pChildAb = pChildAb->AbNext;
-	     }
-	 }
+  change = FALSE;
+  /* avoid to manage two times the same box update */
+  for (index = 0; index < BiwIndex; index++)
+    if (BoxInWork[index] == pAb)
+      break;
+  if (index < BiwIndex)
+    result = FALSE;
+  else
+    {
+      /* rebuild of abstract box with a new floating child */
+      if (!pAb->AbDead && pAb->AbEnclosing)
+        {
+          pChildAb = pAb->AbFirstEnclosed;
+          while (pChildAb)
+            {
+              if (pChildAb->AbNew && !pChildAb->AbDead &&
+                  pChildAb->AbFloat != 'N')
+                {
+                  /* a new floating child is added */
+                  if (pAb->AbBox && 
+                      pAb->AbBox->BxType != BoCell && 
+                      pAb->AbBox->BxType != BoRow && 
+                      pAb->AbBox->BxType != BoTable && 
+                      pAb->AbBox->BxType != BoBlock && 
+                      pAb->AbBox->BxType != BoFloatBlock)
+                    {
+                      /* the current box will become a block */
+                      pAb->AbDead = TRUE;
+                      /* remove boxes */
+                      ComputeUpdates (pAb, frame, computeBBoxes);
+                      /* regenerate boxes */
+                      pAb->AbDead = FALSE;
+                      TransmitDeadStatus (pAb, FALSE);
+                      pAb->AbNew = TRUE;
+                    }
+                  pChildAb = NULL;
+                }
+              else
+                pChildAb = pChildAb->AbNext;
+            }
+        }
 
-       if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
-	 result = FALSE;
-       else if (pAb->AbDead || pAb->AbNew)
-	 {
-	   /* work in progress in this new abstract box (index = BiwIndex) */
-	   BoxInWork[BiwIndex++] = pAb;
-	   result = ComputeUpdates (pAb, frame, computeBBoxes);
-	   /* work is done */
-	   BoxInWork[BiwIndex--] = NULL;
-	   propStatus = Propagate;
-	   Propagate = ToAll;	/* standard propagation */
-	   CheckDefaultPositions (pAb, frame);
-	   Propagate = propStatus;
-	 }
-       /* On traite tous les paves descendants modifies avant le pave lui-meme */
-       else
-	 {
-	   /* On limite l'englobement a la boite courante */
-	   pBox = PackBoxRoot;
-	   PackBoxRoot = pAb->AbBox;
+      if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
+        result = FALSE;
+      else if (pAb->AbDead || pAb->AbNew)
+        {
+          /* work in progress in this new abstract box (index = BiwIndex) */
+          BoxInWork[BiwIndex++] = pAb;
+          result = ComputeUpdates (pAb, frame, computeBBoxes);
+          /* work is done */
+          BoxInWork[BiwIndex--] = NULL;
+          propStatus = Propagate;
+          Propagate = ToAll;	/* standard propagation */
+          CheckDefaultPositions (pAb, frame);
+          Propagate = propStatus;
+        }
+      /* On traite tous les paves descendants modifies avant le pave lui-meme */
+      else
+        {
+          /* On limite l'englobement a la boite courante */
+          pBox = PackBoxRoot;
+          PackBoxRoot = pAb->AbBox;
 	   
-	   /* Traitement des creations */
-	   pChildAb = pAb->AbFirstEnclosed;
-	   pNewAb = NULL;
-	   toUpdate = FALSE;
-	   while (pChildAb != NULL)
-	     {
-	       if (pChildAb->AbNew)
-		 {
-		   /* On marque le pave qui vient d'etre cree */
-		   /* pour eviter sa reinterpretation         */
-		   pChildAb->AbNum = 1;
-		   change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
-		   /* Une modification a repercurter sur l'englobante */
-		   if (change && !toUpdate)
-		     {
-		       toUpdate = TRUE;
-		       pNewAb = pChildAb;
-		     }
-		 }
-	       else
-		 pChildAb->AbNum = 0;
-	       pChildAb = pChildAb->AbNext;
-	     }
+          /* Traitement des creations */
+          pChildAb = pAb->AbFirstEnclosed;
+          pNewAb = NULL;
+          toUpdate = FALSE;
+          while (pChildAb != NULL)
+            {
+              if (pChildAb->AbNew)
+                {
+                  /* On marque le pave qui vient d'etre cree */
+                  /* pour eviter sa reinterpretation         */
+                  pChildAb->AbNum = 1;
+                  change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
+                  /* Une modification a repercurter sur l'englobante */
+                  if (change && !toUpdate)
+                    {
+                      toUpdate = TRUE;
+                      pNewAb = pChildAb;
+                    }
+                }
+              else
+                pChildAb->AbNum = 0;
+              pChildAb = pChildAb->AbNext;
+            }
 	   
-	   /* Traitement des autres modifications */
-	   pChildAb = pAb->AbFirstEnclosed;
-	   pFirstAb = NULL;
-	   while (pChildAb != NULL)
-	     {
-	       /* On evite la reinterpretation des paves crees */
-	       if (pChildAb->AbNum == 0)
-		 change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
+          /* Traitement des autres modifications */
+          pChildAb = pAb->AbFirstEnclosed;
+          pFirstAb = NULL;
+          while (pChildAb != NULL)
+            {
+              /* On evite la reinterpretation des paves crees */
+              if (pChildAb->AbNum == 0)
+                change = IsAbstractBoxUpdated (pChildAb, frame, computeBBoxes);
 
-	       /* On enregistre le premier pave cree ou modifie */
-	       if (pNewAb == pChildAb && pFirstAb == NULL)
-		 pFirstAb = pNewAb;
-	       else if (change)
-		 {
-		   /* Une modification a repercuter sur l'englobante */
-		   toUpdate = TRUE;
-		   if (pFirstAb == NULL)
-		     pFirstAb = pChildAb;
-		 }
+              /* On enregistre le premier pave cree ou modifie */
+              if (pNewAb == pChildAb && pFirstAb == NULL)
+                pFirstAb = pNewAb;
+              else if (change)
+                {
+                  /* Une modification a repercuter sur l'englobante */
+                  toUpdate = TRUE;
+                  if (pFirstAb == NULL)
+                    pFirstAb = pChildAb;
+                }
 
-	       pChildAb = pChildAb->AbNext;
-	     }
-	   /* Les liens entre boites filles ont peut-etre ete modifies */
-	   if (toUpdate)
-	     {
-	       pChildAb = pAb->AbFirstEnclosed;
-	       while (pChildAb != NULL)
-		 {
-		   if (pChildAb->AbBox != NULL)
-		     {
-		       pCurrentBox = pChildAb->AbBox;
-		       pCurrentBox->BxHorizInc = NULL;
-		       pCurrentBox->BxVertInc = NULL;
-		     }
+              pChildAb = pChildAb->AbNext;
+            }
+          /* Les liens entre boites filles ont peut-etre ete modifies */
+          if (toUpdate)
+            {
+              pChildAb = pAb->AbFirstEnclosed;
+              while (pChildAb != NULL)
+                {
+                  if (pChildAb->AbBox != NULL)
+                    {
+                      pCurrentBox = pChildAb->AbBox;
+                      pCurrentBox->BxHorizInc = NULL;
+                      pCurrentBox->BxVertInc = NULL;
+                    }
 
-		   pChildAb = pChildAb->AbNext;
-		 }
-	     }
+                  pChildAb = pChildAb->AbNext;
+                }
+            }
 
-	   /* On restaure l'ancienne limite de l'englobement */
-	   PackBoxRoot = pBox;
+          /* On restaure l'ancienne limite de l'englobement */
+          PackBoxRoot = pBox;
 
-	   /* Faut-il reevaluer la boite composee ? */
-	   /* work in progress in this new abstract box (index = BiwIndex) */
-	   BoxInWork[BiwIndex++] = pAb;
-	   result = ComputeUpdates (pAb, frame, computeBBoxes);
-	   /* work is done */
-	   BoxInWork[BiwIndex--] = NULL;
-	   if (toUpdate || result)
-	     {
-	       pCurrentBox = pAb->AbBox;
-	       result = TRUE;
-	       /* Mise a jour d'un bloc de lignes */
-	       if (pFirstAb &&
-		   (pCurrentBox->BxType == BoBlock ||
-		    pCurrentBox->BxType == BoFloatBlock))
-		 {
-		   if (pFirstAb == pNewAb || pFirstAb->AbDead)
-		     {
-		       /* On prend la derniere boite avant */
-		       pFirstAb = pFirstAb->AbPrevious;
-		       if (pFirstAb == NULL)
-			 pLine = NULL;		/* toutes les lignes */
-		       else
-			 {
-			   pBox = pFirstAb->AbBox;
-			   if (pBox)
-			     {
-			       /* S'il s'agit d'une boite de texte coupee */
-			       /* on recherche la derniere boite de texte */
-			       if (pBox->BxType == BoSplit ||
-				   pBox->BxType == BoMulScript)
-				 while (pBox->BxNexChild)
-				   pBox = pBox->BxNexChild;
-			       pLine = SearchLine (pBox, frame);
-			     }
-			   else
-			     pLine = NULL;
-			 }
-		     }
-		   else
-		     {
-		       /* On prend la derniere boite avant */
-		       pBox = pFirstAb->AbBox;
-		       if (pBox != NULL)
-			 {
-			   if ((pBox->BxType == BoSplit || pBox->BxType == BoMulScript) &&
-			       pBox->BxNexChild)
-			     pBox = pBox->BxNexChild;
-			   pLine = SearchLine (pBox, frame);
-			 }
-		       else
-			 pLine = NULL;
-		     }
+          /* Faut-il reevaluer la boite composee ? */
+          /* work in progress in this new abstract box (index = BiwIndex) */
+          BoxInWork[BiwIndex++] = pAb;
+          result = ComputeUpdates (pAb, frame, computeBBoxes);
+          /* work is done */
+          BoxInWork[BiwIndex--] = NULL;
+          if (toUpdate || result)
+            {
+              pCurrentBox = pAb->AbBox;
+              result = TRUE;
+              /* Mise a jour d'un bloc de lignes */
+              if (pFirstAb &&
+                  (pCurrentBox->BxType == BoBlock ||
+                   pCurrentBox->BxType == BoFloatBlock))
+                {
+                  if (pFirstAb == pNewAb || pFirstAb->AbDead)
+                    {
+                      /* On prend la derniere boite avant */
+                      pFirstAb = pFirstAb->AbPrevious;
+                      if (pFirstAb == NULL)
+                        pLine = NULL;		/* toutes les lignes */
+                      else
+                        {
+                          pBox = pFirstAb->AbBox;
+                          if (pBox)
+                            {
+                              /* S'il s'agit d'une boite de texte coupee */
+                              /* on recherche la derniere boite de texte */
+                              if (pBox->BxType == BoSplit ||
+                                  pBox->BxType == BoMulScript)
+                                while (pBox->BxNexChild)
+                                  pBox = pBox->BxNexChild;
+                              pLine = SearchLine (pBox, frame);
+                            }
+                          else
+                            pLine = NULL;
+                        }
+                    }
+                  else
+                    {
+                      /* On prend la derniere boite avant */
+                      pBox = pFirstAb->AbBox;
+                      if (pBox != NULL)
+                        {
+                          if ((pBox->BxType == BoSplit || pBox->BxType == BoMulScript) &&
+                              pBox->BxNexChild)
+                            pBox = pBox->BxNexChild;
+                          pLine = SearchLine (pBox, frame);
+                        }
+                      else
+                        pLine = NULL;
+                    }
 		   
-		   RecomputeLines (pAb, pLine, pAb->AbBox, frame);
-		 }
-	       /* Mise a jour d'une boite composee */
-	       else if (pAb->AbBox->BxType != BoBlock &&
-			pAb->AbBox->BxType != BoFloatBlock &&
-			pAb->AbBox->BxType != BoGhost &&
-			pAb->AbBox->BxType != BoFloatGhost &&
-			pAb->AbBox->BxType != BoCell &&
-			pAb->AbLeafType == LtCompound)
-		 {
-		   if (Propagate == ToAll)
-		     {
-		       WidthPack (pAb, pAb->AbBox, frame);
-		       HeightPack (pAb, pAb->AbBox, frame);
-		     }
-		   else
-		     {
-		       RecordEnclosing (pAb->AbBox, TRUE);
-		       RecordEnclosing (pAb->AbBox, FALSE);
-		     }
-		 }
-	     }
-	 }
-     }
-   /* On signale s'il y a eu modification du pave */
-   return result;
+                  RecomputeLines (pAb, pLine, pAb->AbBox, frame);
+                }
+              /* Mise a jour d'une boite composee */
+              else if (pAb->AbBox->BxType != BoBlock &&
+                       pAb->AbBox->BxType != BoFloatBlock &&
+                       pAb->AbBox->BxType != BoGhost &&
+                       pAb->AbBox->BxType != BoFloatGhost &&
+                       pAb->AbBox->BxType != BoCell &&
+                       pAb->AbLeafType == LtCompound)
+                {
+                  if (Propagate == ToAll)
+                    {
+                      WidthPack (pAb, pAb->AbBox, frame);
+                      HeightPack (pAb, pAb->AbBox, frame);
+                    }
+                  else
+                    {
+                      RecordEnclosing (pAb->AbBox, TRUE);
+                      RecordEnclosing (pAb->AbBox, FALSE);
+                    }
+                }
+            }
+        }
+    }
+  /* On signale s'il y a eu modification du pave */
+  return result;
 }
 
 
@@ -4948,316 +4948,316 @@ void CheckScrollingWidth (int frame)
       pAb = pFrame->FrAbstractBox;
       GetSizesFrame (frame, &w, &h);
       if (pAb && pAb->AbBox)
-	{
-	  /* check if the document inherits its contents */
-	  pBox = pAb->AbBox;
-	  max = pBox->BxWidth;
-	  org = pBox->BxXOrg;
-	  if (pBox->BxLMargin < 0)
-	    org += pBox->BxLMargin;
-	  if (!pBox->BxContentWidth)
-	    {
-	      /* take the first leaf box */
-	      pBox = pBox->BxNext;
-	      box = pBox;
-	      while (pBox)
-		{
-		  /* check if this box is displayed outside the document box */
+        {
+          /* check if the document inherits its contents */
+          pBox = pAb->AbBox;
+          max = pBox->BxWidth;
+          org = pBox->BxXOrg;
+          if (pBox->BxLMargin < 0)
+            org += pBox->BxLMargin;
+          if (!pBox->BxContentWidth)
+            {
+              /* take the first leaf box */
+              pBox = pBox->BxNext;
+              box = pBox;
+              while (pBox)
+                {
+                  /* check if this box is displayed outside the document box */
 #ifdef _GL
-		  if (pBox->BxBoundinBoxComputed)
-		    {
-		      if (pBox->BxClipX + pBox->BxClipW > max)
-			max = pBox->BxClipX + pBox->BxClipW;
-		      if (pBox->BxClipX < org)
-			org = pBox->BxClipX;
-		    }
-		  else
+                  if (pBox->BxBoundinBoxComputed)
+                    {
+                      if (pBox->BxClipX + pBox->BxClipW > max)
+                        max = pBox->BxClipX + pBox->BxClipW;
+                      if (pBox->BxClipX < org)
+                        org = pBox->BxClipX;
+                    }
+                  else
 #endif /*  _GL */
-		    {
-		      if (pBox->BxXOrg + pBox->BxWidth > max)
-			max = pBox->BxXOrg + pBox->BxWidth;
-		      if (pBox->BxXOrg < org)
-			org = pBox->BxXOrg;
-		      if (pBox->BxXOrg + pBox->BxLMargin < org)
-			org = pBox->BxXOrg + pBox->BxLMargin;
-		    }
-		  if (pBox->BxNext == box)
-		    printf ("Cycle\n");
-		  else
-		    pBox = pBox->BxNext;
-		}
-	    }
-	  FrameTable[frame].FrScrollOrg = org;
-	  FrameTable[frame].FrScrollWidth = max - org;
-	}
+                    {
+                      if (pBox->BxXOrg + pBox->BxWidth > max)
+                        max = pBox->BxXOrg + pBox->BxWidth;
+                      if (pBox->BxXOrg < org)
+                        org = pBox->BxXOrg;
+                      if (pBox->BxXOrg + pBox->BxLMargin < org)
+                        org = pBox->BxXOrg + pBox->BxLMargin;
+                    }
+                  if (pBox->BxNext == box)
+                    printf ("Cycle\n");
+                  else
+                    pBox = pBox->BxNext;
+                }
+            }
+          FrameTable[frame].FrScrollOrg = org;
+          FrameTable[frame].FrScrollWidth = max - org;
+        }
       else
-	{
-	  FrameTable[frame].FrScrollOrg = 0;
-	  FrameTable[frame].FrScrollWidth = w;
-	}
+        {
+          FrameTable[frame].FrScrollOrg = 0;
+          FrameTable[frame].FrScrollWidth = w;
+        }
       AnyWidthUpdate = FALSE;
     }
 }
 
 /*----------------------------------------------------------------------
-   ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
-   Pendant la creation d'une arborescence de boites on     
-   place chaque boite a` l'interieur de son englobante     
-   (Propagate=ToSiblings).                                   
-   Quand tous les placements relatifs sont termine's on    
-   place les boites dans la vue entiere du document en     
-   cumulant les placements relatifs.                       
-   Les autre modifications vont provoquer des mises a` jour
-   sur la descendance (Propagate = ToChildren) puis en fin de
-   traitement seulement, la mise a` jour des boites        
-   englobantes.                                            
-   En fonctionnement normal les modifications sont         
-   immediatement propagees sur toutes les boites           
-   (Propagate = ToAll).                                      
-   Si le parametre pageHeight est non nul, il indique la hauteur 
-   maximum d'une page (ce parametre est eventuellement mis 
-   a` jour au retour).                                     
-   La fonction ve'rifie que cette limite est respecte'e.   
-   Elle rend la valeur Vrai si l'image n'est pas coupee.   
-   Si le retour est Faux, tous les paves dont la boite     
-   coupe la limite ou de'borde sont marque's.              
+  ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
+  Pendant la creation d'une arborescence de boites on     
+  place chaque boite a` l'interieur de son englobante     
+  (Propagate=ToSiblings).                                   
+  Quand tous les placements relatifs sont termine's on    
+  place les boites dans la vue entiere du document en     
+  cumulant les placements relatifs.                       
+  Les autre modifications vont provoquer des mises a` jour
+  sur la descendance (Propagate = ToChildren) puis en fin de
+  traitement seulement, la mise a` jour des boites        
+  englobantes.                                            
+  En fonctionnement normal les modifications sont         
+  immediatement propagees sur toutes les boites           
+  (Propagate = ToAll).                                      
+  Si le parametre pageHeight est non nul, il indique la hauteur 
+  maximum d'une page (ce parametre est eventuellement mis 
+  a` jour au retour).                                     
+  La fonction ve'rifie que cette limite est respecte'e.   
+  Elle rend la valeur Vrai si l'image n'est pas coupee.   
+  Si le retour est Faux, tous les paves dont la boite     
+  coupe la limite ou de'borde sont marque's.              
   ----------------------------------------------------------------------*/
 ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 {
-   PtrAbstractBox      pParentAb;
-   PtrAbstractBox      pChildAb;
-   ViewFrame          *pFrame;
-   PtrLine             pLine;
-   PtrBox              pBox;
-   PtrBox              pParentBox;
-   PtrBox              pChildBox;
-   DisplayMode         saveMode;
-   int                 doc;
-   int                 savevisu = 0;
-   int                 savezoom = 0;
-   ThotBool            change, computeBBoxes = FALSE;
-   ThotBool            result = TRUE;
-   ThotBool            lock = TRUE;
+  PtrAbstractBox      pParentAb;
+  PtrAbstractBox      pChildAb;
+  ViewFrame          *pFrame;
+  PtrLine             pLine;
+  PtrBox              pBox;
+  PtrBox              pParentBox;
+  PtrBox              pChildBox;
+  DisplayMode         saveMode;
+  int                 doc;
+  int                 savevisu = 0;
+  int                 savezoom = 0;
+  ThotBool            change, computeBBoxes = FALSE;
+  ThotBool            result = TRUE;
+  ThotBool            lock = TRUE;
 
 #ifdef _WINGUI
-   WIN_GetDeviceContext (frame);
+  WIN_GetDeviceContext (frame);
 #endif /* _WINGUI */
-   doc = FrameTable[frame].FrDoc;
-   if (doc == 0)
-     return result;
+  doc = FrameTable[frame].FrDoc;
+  if (doc == 0)
+    return result;
 
-   pLine = NULL;
-   if (pAb && frame >= 1 && frame <= MAX_FRAME)
-     {
-	pFrame = &ViewFrameTable[frame - 1];
-	if (pFrame->FrAbstractBox == NULL &&
-	    (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
+  pLine = NULL;
+  if (pAb && frame >= 1 && frame <= MAX_FRAME)
     {
-      /* The view has another root element */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
-      return FALSE;
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pFrame->FrAbstractBox == NULL &&
+          (pAb->AbEnclosing || pAb->AbPrevious || pAb->AbNext))
+        {
+          /* The view has another root element */
+          TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+          return FALSE;
+        }
+      else if (pAb->AbEnclosing == NULL && pAb->AbDead)
+        {
+          /* Remove the view content */
+          if (pAb == pFrame->FrAbstractBox)
+            ClearConcreteImage (frame);
+          else
+            TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
+        }
+      else if (pFrame->FrAbstractBox && pAb->AbEnclosing == NULL && pAb->AbNew)
+        /* The view is already created */
+        TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
+      else if (documentDisplayMode[doc - 1] != NoComputedDisplay)
+        {
+          /* Other cases without NoComputedDisplay mode */
+          if (pFrame->FrAbstractBox == NULL)
+            {
+              /* first creation */
+              DefClip (frame, 0, 0, 0, 0);
+              pFrame->FrXOrg = 0;
+              pFrame->FrYOrg = 0;
+              pFrame->FrAbstractBox = pAb;
+              pFrame->FrSelectOneBox = FALSE;
+              pFrame->FrSelectionBegin.VsBox = NULL;
+              pFrame->FrSelectionEnd.VsBox = NULL;
+              pFrame->FrSelectShown = FALSE;
+              pFrame->FrReady = TRUE;
+              pFrame->FrFlow = NULL;
+            }
+
+          saveMode = documentDisplayMode[doc - 1];
+          if (saveMode == DisplayImmediately)
+            documentDisplayMode[doc - 1] = DeferredDisplay;
+
+          /* On prepare le traitement de l'englobement apres modification */
+          pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
+          if (*pageHeight != 0)
+            /* changement de la signification de la valeur de page */
+            /* si negatif : mode pagination sans evaluation de coupure */
+            /* si egal 0 : pas mode pagination */
+            /* si superieur a 0 : mode pagination et coupure demandee */
+            {
+              /* La pagination ignore le zoom et la visibilite courants */
+              savevisu = pFrame->FrVisibility;
+              pFrame->FrVisibility = 5;
+              savezoom = pFrame->FrMagnification;
+              pFrame->FrMagnification = 0;
+            }
+          Propagate = ToChildren;	/* Limite la propagation */
+          /* On note le premier pave a examiner pour l'englobante */
+          pParentAb = pAb->AbEnclosing;
+
+          /* On prepare la mise a jour d'un bloc de lignes */
+          if (pParentAb && pParentAb->AbBox)
+            {
+              /* differ enclosing rules for ancestor boxes */
+              PackBoxRoot = pParentAb->AbBox;
+              while (pParentAb->AbBox->BxType == BoGhost ||
+                     pParentAb->AbBox->BxType == BoFloatGhost)
+                /* get the enclosing block */
+                pParentAb = pParentAb->AbEnclosing;
+
+              /* On prepare la mise a jour d'un bloc de lignes */
+              if (pParentAb->AbBox->BxType == BoBlock ||
+                  pParentAb->AbBox->BxType == BoFloatBlock ||
+                  pParentAb->AbBox->BxType == BoGhost ||
+                  pParentAb->AbBox->BxType == BoFloatGhost)
+                {
+                  if (pAb->AbNew || pAb->AbDead)
+                    {
+                      /* need to rebuild lines starting form
+                         the previous box */
+                      pChildAb = pAb->AbPrevious;
+                      if (pChildAb == NULL || pChildAb->AbBox == NULL)
+                        /* all lines */
+                        pLine = NULL;
+                      else
+                        {
+                          pBox = pChildAb->AbBox;
+                          if (pBox->BxType == BoSplit ||
+                              pBox->BxType == BoMulScript)
+                            while (pBox->BxNexChild)
+                              pBox = pBox->BxNexChild;
+                          pLine = SearchLine (pBox, frame);
+                        }
+                    }
+                  else
+                    {
+                      /* Il faut refaire la mise en lignes sur la premiere boite contenue */
+                      pBox = pAb->AbBox;
+                      if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
+                        pBox = pBox->BxNexChild;
+                      pLine = SearchLine (pBox, frame);
+                    }
+                }
+            }
+
+          /* lock the table formatting */
+          TtaGiveTableFormattingLock (&lock);
+          if (!lock)
+            /* table formatting is not loked, lock it now */
+            TtaLockTableFormatting ();
+
+          /* Il faut annuler l'elasticite des boites dont les regles */
+          /* de position et de dimension sont a reevaluer, sinon on  */
+          /* risque d'alterer les nouvelles regles de position et de */
+          /* dimension en propageant les autres modifications sur    */
+          /* ces anciennes boites elastiques de l'image abstraite    */
+          ClearFlexibility (pAb, frame);
+
+          /* Manage all changes */
+          change = IsAbstractBoxUpdated (pAb, frame, &computeBBoxes);
+          if (computeBBoxes)
+            ComputeChangedBoundingBoxes (frame);
+          /* Les modifications sont traitees */
+          Propagate = ToAll;	/* On passe en mode normal de propagation */
+          /* Traitement des englobements retardes */
+          ComputeEnclosing (frame);
+
+          /* On ne limite plus le traitement de l'englobement */
+          PackBoxRoot = NULL;
+
+          /* Si l'image concrete est videe de son contenu */
+          if (pFrame->FrAbstractBox->AbBox->BxNext == NULL)
+            {
+              /* On annule le decalage de la fenetre dans l'image concrete */
+              pFrame->FrXOrg = 0;
+              pFrame->FrYOrg = 0;
+            }
+
+          /* Faut-il verifier l'englobement ? */
+          if (change && pParentAb)
+            {
+              /* On saute les boites fantomes de la mise en lignes */
+              if (pParentAb->AbBox->BxType == BoGhost ||
+                  pParentAb->AbBox->BxType == BoFloatGhost)
+                {
+                  while (pParentAb->AbBox->BxType == BoGhost ||
+                         pParentAb->AbBox->BxType == BoFloatGhost)
+                    pParentAb = pParentAb->AbEnclosing;
+                  pLine = pParentAb->AbBox->BxFirstLine;
+                }
+
+              pParentBox = pParentAb->AbBox;
+              /* Mise a jour d'un bloc de lignes */
+              if (pParentBox->BxType == BoBlock ||
+                  pParentBox->BxType == BoFloatBlock)
+                RecomputeLines (pParentAb, pLine, NULL, frame);
+
+              /* Mise a jour d'une boite composee */
+              else
+                {
+                  /* Les liens entre boites filles ont peut-etre ete modifies */
+                  pChildAb = pAb->AbFirstEnclosed;
+                  while (pChildAb != NULL)
+                    {
+                      if (pChildAb->AbBox != NULL)
+                        {
+                          pChildBox = pChildAb->AbBox;
+                          pChildBox->BxHorizInc = NULL;
+                          pChildBox->BxVertInc = NULL;
+                        }
+                      pChildAb = pChildAb->AbNext;
+                    }
+                  if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell)
+                    UpdateColumnWidth (pParentAb, NULL, frame);
+                  else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
+                    WidthPack (pParentAb, NULL, frame);
+                  HeightPack (pParentAb, NULL, frame);
+                }
+            }
+
+          /* restore the current mode and  update tables if necessary */
+          if (saveMode == DisplayImmediately)
+            documentDisplayMode[doc - 1] = saveMode;
+
+          if (!lock)
+            /* unlock table formatting */
+            TtaUnlockTableFormatting ();
+
+          /* Est-ce que l'on a de nouvelles boites dont le contenu est */
+          /* englobe et depend de relations hors-structure ?           */
+          ComputeEnclosing (frame);
+
+          /* Verification de la mise en page */
+          if (*pageHeight > 0)
+            /* changement de la signification de page */
+            /* si superieur a 0 : mode pagination et coupure demandee */
+            result = SetPageBreakPosition (pFrame->FrAbstractBox, pageHeight);
+          if (*pageHeight != 0)
+            {
+              /* retablit le zoom et la visibilite courants */
+              pFrame->FrVisibility = savevisu;
+              pFrame->FrMagnification = savezoom;
+            }
+          pFrame->FrReady = TRUE;	/* La frame est affichable */
+        }
     }
-	else if (pAb->AbEnclosing == NULL && pAb->AbDead)
-	  {
-	    /* Remove the view content */
-	     if (pAb == pFrame->FrAbstractBox)
-	       ClearConcreteImage (frame);
-	     else
-		TtaDisplaySimpleMessage (INFO, LIB, TMSG_VIEW_MODIFIED_BEFORE_CREATION);
-	  }
-	else if (pFrame->FrAbstractBox && pAb->AbEnclosing == NULL && pAb->AbNew)
-	  /* The view is already created */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_VIEW_NOT_REPLACED);
-	else if (documentDisplayMode[doc - 1] != NoComputedDisplay)
-	  {
-	    /* Other cases without NoComputedDisplay mode */
-	     if (pFrame->FrAbstractBox == NULL)
-	       {
-		 /* first creation */
-		 DefClip (frame, 0, 0, 0, 0);
-                 pFrame->FrXOrg = 0;
-                 pFrame->FrYOrg = 0;
-                 pFrame->FrAbstractBox = pAb;
-		 pFrame->FrSelectOneBox = FALSE;
-                 pFrame->FrSelectionBegin.VsBox = NULL;
-                 pFrame->FrSelectionEnd.VsBox = NULL;
-                 pFrame->FrSelectShown = FALSE;
-		 pFrame->FrReady = TRUE;
-		 pFrame->FrFlow = NULL;
-	       }
-
-	     saveMode = documentDisplayMode[doc - 1];
-	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[doc - 1] = DeferredDisplay;
-
-	     /* On prepare le traitement de l'englobement apres modification */
-	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-	     if (*pageHeight != 0)
-		/* changement de la signification de la valeur de page */
-		/* si negatif : mode pagination sans evaluation de coupure */
-		/* si egal 0 : pas mode pagination */
-		/* si superieur a 0 : mode pagination et coupure demandee */
-	       {
-		  /* La pagination ignore le zoom et la visibilite courants */
-		  savevisu = pFrame->FrVisibility;
-		  pFrame->FrVisibility = 5;
-		  savezoom = pFrame->FrMagnification;
-		  pFrame->FrMagnification = 0;
-	       }
-	     Propagate = ToChildren;	/* Limite la propagation */
-	     /* On note le premier pave a examiner pour l'englobante */
-	     pParentAb = pAb->AbEnclosing;
-
-	     /* On prepare la mise a jour d'un bloc de lignes */
-	     if (pParentAb && pParentAb->AbBox)
-	       {
-		  /* differ enclosing rules for ancestor boxes */
-		  PackBoxRoot = pParentAb->AbBox;
-		  while (pParentAb->AbBox->BxType == BoGhost ||
-			 pParentAb->AbBox->BxType == BoFloatGhost)
-		    /* get the enclosing block */
-		    pParentAb = pParentAb->AbEnclosing;
-
-		  /* On prepare la mise a jour d'un bloc de lignes */
-		  if (pParentAb->AbBox->BxType == BoBlock ||
-		      pParentAb->AbBox->BxType == BoFloatBlock ||
-		      pParentAb->AbBox->BxType == BoGhost ||
-		      pParentAb->AbBox->BxType == BoFloatGhost)
-		    {
-		     if (pAb->AbNew || pAb->AbDead)
-		       {
-			  /* need to rebuild lines starting form
-			     the previous box */
-			  pChildAb = pAb->AbPrevious;
-			  if (pChildAb == NULL || pChildAb->AbBox == NULL)
-			    /* all lines */
-			    pLine = NULL;
-			  else
-			    {
-			       pBox = pChildAb->AbBox;
-			       if (pBox->BxType == BoSplit ||
-				   pBox->BxType == BoMulScript)
-				  while (pBox->BxNexChild)
-				     pBox = pBox->BxNexChild;
-			       pLine = SearchLine (pBox, frame);
-			    }
-		       }
-		     else
-		       {
-			  /* Il faut refaire la mise en lignes sur la premiere boite contenue */
-			  pBox = pAb->AbBox;
-			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-			     pBox = pBox->BxNexChild;
-			  pLine = SearchLine (pBox, frame);
-		       }
-		    }
-	       }
-
-	     /* lock the table formatting */
-	     TtaGiveTableFormattingLock (&lock);
-	     if (!lock)
-	       /* table formatting is not loked, lock it now */
-	       TtaLockTableFormatting ();
-
-	     /* Il faut annuler l'elasticite des boites dont les regles */
-	     /* de position et de dimension sont a reevaluer, sinon on  */
-	     /* risque d'alterer les nouvelles regles de position et de */
-	     /* dimension en propageant les autres modifications sur    */
-	     /* ces anciennes boites elastiques de l'image abstraite    */
-	     ClearFlexibility (pAb, frame);
-
-	     /* Manage all changes */
-	     change = IsAbstractBoxUpdated (pAb, frame, &computeBBoxes);
-	     if (computeBBoxes)
-	       ComputeChangedBoundingBoxes (frame);
-	     /* Les modifications sont traitees */
-	     Propagate = ToAll;	/* On passe en mode normal de propagation */
-	     /* Traitement des englobements retardes */
-	     ComputeEnclosing (frame);
-
-	     /* On ne limite plus le traitement de l'englobement */
-	     PackBoxRoot = NULL;
-
-	     /* Si l'image concrete est videe de son contenu */
-	     if (pFrame->FrAbstractBox->AbBox->BxNext == NULL)
-	       {
-		  /* On annule le decalage de la fenetre dans l'image concrete */
-		  pFrame->FrXOrg = 0;
-		  pFrame->FrYOrg = 0;
-	       }
-
-	     /* Faut-il verifier l'englobement ? */
-	     if (change && pParentAb)
-	       {
-		  /* On saute les boites fantomes de la mise en lignes */
-		  if (pParentAb->AbBox->BxType == BoGhost ||
-		      pParentAb->AbBox->BxType == BoFloatGhost)
-		    {
-		       while (pParentAb->AbBox->BxType == BoGhost ||
-			      pParentAb->AbBox->BxType == BoFloatGhost)
-			  pParentAb = pParentAb->AbEnclosing;
-		       pLine = pParentAb->AbBox->BxFirstLine;
-		    }
-
-		  pParentBox = pParentAb->AbBox;
-		  /* Mise a jour d'un bloc de lignes */
-		  if (pParentBox->BxType == BoBlock ||
-		      pParentBox->BxType == BoFloatBlock)
-		     RecomputeLines (pParentAb, pLine, NULL, frame);
-
-		  /* Mise a jour d'une boite composee */
-		  else
-		    {
-		       /* Les liens entre boites filles ont peut-etre ete modifies */
-		       pChildAb = pAb->AbFirstEnclosed;
-		       while (pChildAb != NULL)
-			 {
-			    if (pChildAb->AbBox != NULL)
-			      {
-				 pChildBox = pChildAb->AbBox;
-				 pChildBox->BxHorizInc = NULL;
-				 pChildBox->BxVertInc = NULL;
-			      }
-			    pChildAb = pChildAb->AbNext;
-			 }
-		       if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell)
-			 UpdateColumnWidth (pParentAb, NULL, frame);
-		       else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
-			 WidthPack (pParentAb, NULL, frame);
-		       HeightPack (pParentAb, NULL, frame);
-		    }
-	       }
-
-	     /* restore the current mode and  update tables if necessary */
-	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[doc - 1] = saveMode;
-
-	      if (!lock)
-		/* unlock table formatting */
-		TtaUnlockTableFormatting ();
-
-	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
-	     /* englobe et depend de relations hors-structure ?           */
-	     ComputeEnclosing (frame);
-
-	     /* Verification de la mise en page */
-	     if (*pageHeight > 0)
-		/* changement de la signification de page */
-		/* si superieur a 0 : mode pagination et coupure demandee */
-		result = SetPageBreakPosition (pFrame->FrAbstractBox, pageHeight);
-	     if (*pageHeight != 0)
-	       {
-		  /* retablit le zoom et la visibilite courants */
-		  pFrame->FrVisibility = savevisu;
-		  pFrame->FrMagnification = savezoom;
-	       }
-	     pFrame->FrReady = TRUE;	/* La frame est affichable */
-	  }
-     }
 #ifdef _WINGUI
-     WIN_ReleaseDeviceContext ();
+  WIN_ReleaseDeviceContext ();
 #endif /* _WINGUI */
-   return result;
+  return result;
 }
 
 
