@@ -1754,8 +1754,14 @@ void InitTranslations (char *appliname)
               /* Register the equiv string */
 #ifdef _WX
               if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
-                /* the shortcut is not a sequence */
-                strcpy (equiv, "\t");
+                {
+#ifdef _MACOS
+                  if (!(mod1 & THOT_MOD_CTRL) ||
+                      (transText[0] != 'c' && transText[0] != 'v'))
+#endif /* _MACOS */
+                    /* the shortcut is not a sequence */
+                    strcpy (equiv, "\t");
+                }
               if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
                 /* specific to MacOS */
                 strcat (equiv, "Ctrl-Alt");

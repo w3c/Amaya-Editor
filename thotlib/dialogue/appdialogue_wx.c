@@ -1,8 +1,8 @@
 #ifdef _WX
-  #include "wx/wx.h"
-  #include "wx/bmpbuttn.h"
-  #include "wx/spinctrl.h"
-  #include "wx/socket.h"
+#include "wx/wx.h"
+#include "wx/bmpbuttn.h"
+#include "wx/spinctrl.h"
+#include "wx/socket.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -107,8 +107,8 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 /*----------------------------------------------------------------------
   TtaShowWindow show or hide a window
   params:
-    + int window_id
-    + bool show : if true then show, if false then hide the window
+  + int window_id
+  + bool show : if true then show, if false then hide the window
   ----------------------------------------------------------------------*/
 void TtaShowWindow( int window_id, ThotBool show )
 {
@@ -126,7 +126,7 @@ void TtaShowWindow( int window_id, ThotBool show )
   into WindowTable array
   returns:
  	+ the window id
-        + 0 if too much created windows
+  + 0 if too much created windows
   ----------------------------------------------------------------------*/
 int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 {
@@ -422,7 +422,7 @@ static void TtaMakeWindowMenuBar( int window_id )
           wxMenu * p_menu = new wxMenu();
           
           /* remember the top menubar widgets because wxMenu doesn't have
-	     ids to identify it */
+             ids to identify it */
           WindowTable[window_id].WdMenus[ptrmenu->MenuID] = p_menu;
           
           /* remember specials menus */
@@ -455,7 +455,7 @@ static void TtaMakeWindowMenuBar( int window_id )
 /*----------------------------------------------------------------------
   TtaInitMenuItemStats enable/disable, toggle/untoggle menu items for
   the given doc
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaInitMenuItemStats( int doc_id )
 {
 #ifdef _WX
@@ -475,7 +475,7 @@ void TtaInitMenuItemStats( int doc_id )
 /*----------------------------------------------------------------------
   TtaInitTopMenuStats enable/disable, toggle/untoggle top menu for the
   given doc
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaInitTopMenuStats( int doc_id )
 {
 #ifdef _WX
@@ -487,7 +487,7 @@ void TtaInitTopMenuStats( int doc_id )
 
 /*----------------------------------------------------------------------
   TtaRefreshMenuStats enable/disable top menubar menus for the given doc
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 {
 #ifdef _WX
@@ -549,10 +549,10 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
           // find the corrsponding menu position in the Top Menubar
           top_menu_pos = 0;
           while (top_menu_pos < top_menu_count &&
-		 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+                 p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
             top_menu_pos++;
           // we must check that the menu has been found because the
-	  // contextual menu do not have a title
+          // contextual menu do not have a title
           if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
             {
               // it has been found, update it
@@ -568,7 +568,7 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
 /*----------------------------------------------------------------------
   TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items
   widgets for the given doc
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 {
 #ifdef _WX
@@ -691,7 +691,7 @@ void TtaRefreshMenuItemStats( int doc_id, Menu_Ctl * ptrmenu, int menu_item_id )
 /*----------------------------------------------------------------------
   TtaRefreshToolbarStats enable/disable, toggle/untoggle toolbar
   items widgets for the given doc
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
 {
 #ifdef _WX
@@ -779,7 +779,7 @@ void TtaRefreshToolbarStats( int changed_action_id, Document doc_id)
   TtaRefreshStatusBarStats enable/disable, toggle/untoggle statusbar
   items widgets for the given doc
   (there is only logerror button)
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
 {
 #ifdef _WX
@@ -812,24 +812,24 @@ void TtaRefreshStatusBarStats( int changed_action_id, Document doc_id)
   TtaMakeFrame create a frame (view container)
   notice : a frame need to be attached to a window
   params:
-    + Document doc : the document id
-    + int schView : the view to attach (schema view)
-    + const char * doc_name : 
-    + int width, height :
+  + Document doc : the document id
+  + int schView : the view to attach (schema view)
+  + const char * doc_name : 
+  + int width, height :
   returns:
-    + int * volume : Window volume in characters
-    + the frame id
-    + 0 if too much created views 
- ----------------------------------------------------------------------*/
+  + int * volume : Window volume in characters
+  + the frame id
+  + 0 if too much created views 
+  ----------------------------------------------------------------------*/
 int TtaMakeFrame( const char * schema_name,
                   int schView,
-		  Document doc_id,
-		  const char * doc_name,
-		  int width,
-		  int height,
-		  int * volume,
-		  const char * viewName,
-		  int window_id, int page_id, int page_position )
+                  Document doc_id,
+                  const char * doc_name,
+                  int width,
+                  int height,
+                  int * volume,
+                  const char * viewName,
+                  int window_id, int page_id, int page_position )
 {
 #ifdef _WX
 
@@ -840,7 +840,7 @@ int TtaMakeFrame( const char * schema_name,
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == 0 &&
-	       FrameTable[frame_id].WdFrame != 0);
+               FrameTable[frame_id].WdFrame != 0);
       if (!found)
         frame_id++;
     }
@@ -848,12 +848,12 @@ int TtaMakeFrame( const char * schema_name,
     {
       frame_id = 1;
       while (frame_id <= MAX_FRAME && !found)
-	{
-	  /* finding a free frame id */
-	  found = (FrameTable[frame_id].WdFrame == 0);
-	  if (!found)
-	    frame_id++;
-	}
+        {
+          /* finding a free frame id */
+          found = (FrameTable[frame_id].WdFrame == 0);
+          if (!found)
+            frame_id++;
+        }
     }
 
   if (!found)
@@ -867,13 +867,13 @@ int TtaMakeFrame( const char * schema_name,
       wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
       /* on MacOSX Reparenting is forbidden, so we must give the
-	 right parent to the frame at creation */
+         right parent to the frame at creation */
       AmayaPage * p_page = p_AmayaWindow->GetPage(page_id);
       wxWindow * p_real_parent = NULL;
       if (p_page)
-	p_real_parent = p_page->GetSplitterWindow(); /* it's a AmayaNormalWindow */
+        p_real_parent = p_page->GetSplitterWindow(); /* it's a AmayaNormalWindow */
       else
-	p_real_parent = p_AmayaWindow; /* it's a AmayaSimpleWindow */
+        p_real_parent = p_AmayaWindow; /* it's a AmayaSimpleWindow */
 
       /* create the new frame */
       p_AmayaFrame = new AmayaFrame( frame_id, p_real_parent, p_AmayaWindow );
@@ -911,7 +911,7 @@ int TtaMakeFrame( const char * schema_name,
     {
       visilibity = atoi(visiStr);
       if (visilibity < 0 || visilibity > 10)
-	visilibity = 5;
+        visilibity = 5;
     }
   InitializeFrameParams (frame_id, visilibity, zoom);
 
@@ -935,12 +935,12 @@ int TtaMakeFrame( const char * schema_name,
 /*----------------------------------------------------------------------
   TtaMakePage create an empty page in the window
   params:
-    + window_id : the window where the page should be attached
-    + page_id : the page index into the window where the page must be inserted
+  + window_id : the window where the page should be attached
+  + page_id : the page index into the window where the page must be inserted
   returns:
-    + true if ok
-    + false if it's impossible to create this page because another
-      page exists at this place or the window is invalid
+  + true if ok
+  + false if it's impossible to create this page because another
+  page exists at this place or the window is invalid
   ----------------------------------------------------------------------*/
 ThotBool TtaMakePage( int window_id, int page_id )
 {
@@ -953,13 +953,13 @@ ThotBool TtaMakePage( int window_id, int page_id )
     {
       AmayaPage * p_page = p_window->GetPage(page_id);
       if (!p_page)
-	{
-	  /* the page does not exist yet, just create it */
-	  p_page = p_window->CreatePage();
-	  /* and link it to the window */
-	  p_window->AttachPage(page_id, p_page);
-	  return TRUE;
-	}      
+        {
+          /* the page does not exist yet, just create it */
+          p_page = p_window->CreatePage();
+          /* and link it to the window */
+          p_window->AttachPage(page_id, p_page);
+          return TRUE;
+        }      
     }
 #endif /* _WX */
   return FALSE;
@@ -968,12 +968,12 @@ ThotBool TtaMakePage( int window_id, int page_id )
 /*----------------------------------------------------------------------
   TtaAttachFrame attachs a frame to a window's page
   params:
-    + frame_id : the frame
-    + window_id : the window where the frame should be attached
-    + page_id : the page index into the window where the frame should be attached
+  + frame_id : the frame
+  + window_id : the window where the frame should be attached
+  + page_id : the page index into the window where the frame should be attached
   returns:
-    + true if ok
-    + false if it's impossible to attach the frame to the window
+  + true if ok
+  + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
 ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position )
 {
@@ -1024,11 +1024,11 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
 /*----------------------------------------------------------------------
   TtaDetachFrame detachs a frame from a window
   params:
-    + frame_id : the frame identifier
+  + frame_id : the frame identifier
 
   returns:
-    + true if ok
-    + false if it's impossible to detach the frame
+  + true if ok
+  + false if it's impossible to detach the frame
   ----------------------------------------------------------------------*/
 ThotBool TtaDetachFrame( int frame_id )
 {
@@ -1053,15 +1053,15 @@ ThotBool TtaDetachFrame( int frame_id )
       wxASSERT( p_detached_frame == p_frame || p_detached_frame == NULL );
     }
   else
-  if ( p_window->GetKind() == WXAMAYAWINDOW_NORMAL )
-    {
-      AmayaPage * p_page = p_window->GetPage(page_id);
-      if (!p_page)
-	return FALSE;
+    if ( p_window->GetKind() == WXAMAYAWINDOW_NORMAL )
+      {
+        AmayaPage * p_page = p_window->GetPage(page_id);
+        if (!p_page)
+          return FALSE;
       
-      /* now detach the frame from this page */      
-      p_detached_frame = p_page->DetachFrame( position );
-    }
+        /* now detach the frame from this page */      
+        p_detached_frame = p_page->DetachFrame( position );
+      }
 
   if (p_frame == p_detached_frame)
     {
@@ -1082,10 +1082,10 @@ ThotBool TtaDetachFrame( int frame_id )
 /*----------------------------------------------------------------------
   TtaDestroyFrame destroy a frame
   params:
-    + frame_id : the frame identifier
+  + frame_id : the frame identifier
   returns:
-    + true
-    + false
+  + true
+  + false
   ----------------------------------------------------------------------*/
 ThotBool TtaDestroyFrame( int frame_id )
 {
@@ -1095,7 +1095,7 @@ ThotBool TtaDestroyFrame( int frame_id )
   AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;  
   wxASSERT(p_frame);
   if (!p_frame)
-      return FALSE;
+    return FALSE;
   
   p_frame->FreeFrame();
 
@@ -1108,7 +1108,7 @@ ThotBool TtaDestroyFrame( int frame_id )
 /*----------------------------------------------------------------------
   TtaCleanUpWindow check that there is no empty pages
   params:
-    + int window_id : the window which contains the pages
+  + int window_id : the window which contains the pages
   returns:
   ----------------------------------------------------------------------*/
 void TtaCleanUpWindow( int window_id )
@@ -1138,16 +1138,16 @@ void TtaCleanUpWindow( int window_id )
 /*----------------------------------------------------------------------
   TtaClosePage close a page
   params:
-    + int window_id : the window which contains the pages
-    + int page_id : the page index (0 is the first one)
+  + int window_id : the window which contains the pages
+  + int page_id : the page index (0 is the first one)
   returns:
-    + true : page closed
-    + false: not closed
+  + true : page closed
+  + false: not closed
   ----------------------------------------------------------------------*/
 ThotBool TtaClosePage( int window_id, int page_id )
 {
 #ifdef _WX 
- AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
   if (p_window && page_id >= 0)
     return p_window->ClosePage( page_id );
   else
@@ -1161,7 +1161,7 @@ ThotBool TtaClosePage( int window_id, int page_id )
   TtaGetActiveWindowId returns the last active window id
   params:
   returns:
-    + int : last active window_id
+  + int : last active window_id
   ----------------------------------------------------------------------*/
 int TtaGetActiveWindowId()
 {
@@ -1176,7 +1176,7 @@ int TtaGetActiveWindowId()
   TtaGetActiveWindow returns the last active window
   params:
   returns:
-    + int : last active window_id
+  + int : last active window_id
   ----------------------------------------------------------------------*/
 #ifdef _WX 
 AmayaWindow * TtaGetActiveWindow()
@@ -1188,9 +1188,9 @@ AmayaWindow * TtaGetActiveWindow()
 /*----------------------------------------------------------------------
   TtaGetFreePageId returns a free page id for the given window
   params:
-    + int window_id : the window which contains the pages
+  + int window_id : the window which contains the pages
   returns:
-    + int : the free page id
+  + int : the free page id
   ----------------------------------------------------------------------*/
 int TtaGetFreePageId( int window_id )
 {
@@ -1210,7 +1210,7 @@ int TtaGetFreePageId( int window_id )
   TtaGetFreeWindowId returns a free window id
   params:
   returns:
-    + int : the new window id or -1 if too much created window
+  + int : the new window id or -1 if too much created window
   ----------------------------------------------------------------------*/
 int TtaGetFreeWindowId()
 {
@@ -1219,7 +1219,7 @@ int TtaGetFreeWindowId()
   while ( window_id < MAX_WINDOW )
     {
       if ( WindowTable[window_id].WdWindow == NULL )
-	return window_id;
+        return window_id;
       window_id++;
     }
   return -1;
@@ -1231,13 +1231,13 @@ int TtaGetFreeWindowId()
 /*----------------------------------------------------------------------
   TtaGetDocumentWindowId returns the current document window id
   params:
-    + doc_id : the document
-    + schView the document schema view
-      (if view == -1, just the doc_id is checked )
-    (the view is needed because a document could have 2 view into 2 differents windows)
+  + doc_id : the document
+  + schView the document schema view
+  (if view == -1, just the doc_id is checked )
+  (the view is needed because a document could have 2 view into 2 differents windows)
   returns:
-    + int : the document window id
-    + -1 if nothing is found
+  + int : the document window id
+  + -1 if nothing is found
   ----------------------------------------------------------------------*/
 int TtaGetDocumentWindowId( Document doc_id, int schView )
 {
@@ -1263,8 +1263,8 @@ int TtaGetDocumentWindowId( Document doc_id, int schView )
 /*----------------------------------------------------------------------
   TtaUniqueTabInWindow returns TRUE if only one tab in the window
   params:
-    + doc_id : the document
- ----------------------------------------------------------------------*/
+  + doc_id : the document
+  ----------------------------------------------------------------------*/
 ThotBool TtaUniqueTabInWindow( Document doc_id )
 {
   ThotBool   found = FALSE;
@@ -1276,8 +1276,8 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrWindowId == window_id &&
-	       FrameTable[frame_id].FrDoc != doc_id &&
-	       FrameTable[frame_id].FrPagePos == 1);
+               FrameTable[frame_id].FrDoc != doc_id &&
+               FrameTable[frame_id].FrPagePos == 1);
       if (!found)
         frame_id++;
     }
@@ -1288,13 +1288,13 @@ ThotBool TtaUniqueTabInWindow( Document doc_id )
 /*----------------------------------------------------------------------
   TtaGetDocumentPageId returns the current document+view page_id + page_position
   params:
-    + doc_id : the document
-    + schView the document schema view
-      (if view == -1, just the doc_id is checked )
-    (the view is needed because a document could have 2 view into 2 differents pages)
+  + doc_id : the document
+  + schView the document schema view
+  (if view == -1, just the doc_id is checked )
+  (the view is needed because a document could have 2 view into 2 differents pages)
   returns:
-    + int page_id : the document's view page id
-    + int page_position : the document's view page position
+  + int page_id : the document's view page id
+  + int page_position : the document's view page position
   ----------------------------------------------------------------------*/
 void TtaGetDocumentPageId( Document doc_id, int schView,
                            int * page_id,
@@ -1307,7 +1307,7 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
   while (frame_id <= MAX_FRAME && !found)
     {
       found = (FrameTable[frame_id].FrDoc == doc_id &&
-	       (schView == -1 || FrameTable[frame_id].FrView == schView));
+               (schView == -1 || FrameTable[frame_id].FrView == schView));
       if (!found)
         frame_id++;
     }
@@ -1337,10 +1337,10 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
   TtaGetFrameDocumentId returns the correspondig document id for the
   given frame id
   params:
-    + frame_id : the frameid to lookfor corresponding document id
+  + frame_id : the frameid to lookfor corresponding document id
   returns:
-    + int : the document id correspondig to the frame
-    + -1 if nothing is found
+  + int : the document id correspondig to the frame
+  + -1 if nothing is found
   ----------------------------------------------------------------------*/
 int TtaGetFrameDocumentId( int frame_id )
 {
@@ -1357,10 +1357,10 @@ int TtaGetFrameDocumentId( int frame_id )
   TtaGetFrameWindowParentId returns the correspondig parent window id
   for the given frame id
   params:
-    + frame_id : the frameid to lookfor
+  + frame_id : the frameid to lookfor
   returns:
-    + int : the parent window id correspondig to the frame
-    + -1 if nothing is found
+  + int : the parent window id correspondig to the frame
+  + -1 if nothing is found
   ----------------------------------------------------------------------*/
 int TtaGetFrameWindowParentId( int frame_id )
 {
@@ -1404,11 +1404,11 @@ AmayaFrame * TtaGetFrameFromId( int frame_id )
 /*----------------------------------------------------------------------
   TtaGetFrameId returns the frame id corresponding to a sepcific position
   params:
-    - window_id : in which window
-    - page_id : in which page 
-    - position : 1 or 2
+  - window_id : in which window
+  - page_id : in which page 
+  - position : 1 or 2
   returns:
-    - int : the frame id (0 if not found)
+  - int : the frame id (0 if not found)
   ----------------------------------------------------------------------*/
 int TtaGetFrameId( int window_id, int page_id, int position )
 {
@@ -1469,7 +1469,7 @@ int TtaGetWindowNumber( )
   while ( window_id < MAX_WINDOW )
     {
       if (TtaGetWindowFromId(window_id))
-	nb_window++;
+        nb_window++;
       window_id++;
     }
   return nb_window;
@@ -1482,9 +1482,9 @@ int TtaGetWindowNumber( )
   TtaFrameIsClosed check if the frame is closed or not
   closed = not current document associated
   params:
-    + frame_id : frame identifier
+  + frame_id : frame identifier
   returns:
-    + true if closed
+  + true if closed
   ----------------------------------------------------------------------*/
 ThotBool TtaFrameIsClosed( int frame_id )
 {
@@ -1498,14 +1498,14 @@ ThotBool TtaFrameIsClosed( int frame_id )
 /*----------------------------------------------------------------------
   TtaSetURLBar setup the urlbar with a given list of urls (destroy existing urls)
   params:
-    + frame_id : frame identifier
-    + listUrl : the url list
-    + procedure : the callback to activate when a url is selected
+  + frame_id : frame identifier
+  + listUrl : the url list
+  + procedure : the callback to activate when a url is selected
   returns:
   ----------------------------------------------------------------------*/
 void TtaSetURLBar( int frame_id,
-		   const char * listUrl,
-		   void (*      procedure)() )
+                   const char * listUrl,
+                   void (*      procedure)() )
 {
 #ifdef _WX
   if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
@@ -1533,14 +1533,14 @@ void TtaSetURLBar( int frame_id,
   if (listUrl)
     {
       while (*ptr != EOS)
-	{
-	  ptr1 = ptr;
-	  while (*ptr1 != EOS)
-	      ptr1++;
-	  urltoappend = TtaConvMessageToWX( ptr );
-	  p_window->AppendURL( urltoappend );
-	  ptr = ptr1 + 1;
-	}
+        {
+          ptr1 = ptr;
+          while (*ptr1 != EOS)
+            ptr1++;
+          urltoappend = TtaConvMessageToWX( ptr );
+          p_window->AppendURL( urltoappend );
+          ptr = ptr1 + 1;
+        }
     }
 
   /* the first url in the list is the used one for the current frame */
@@ -1557,7 +1557,7 @@ void TtaSetURLBar( int frame_id,
   TtaRefreshPanelButton - 
   refresh the button widgets of the frame's panel
   params:
-    + panel_type : the panel type
+  + panel_type : the panel type
   returns:
   ----------------------------------------------------------------------*/
 void TtaRefreshPanelButton( Document doc, View view, int panel_type )
@@ -1572,7 +1572,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
       if (frame_id <= 0 || frame_id > MAX_FRAME)
         TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame_id].WdFrame != 0 &&
-	       FrameTable[frame_id].WdFrame->IsActive())
+               FrameTable[frame_id].WdFrame->IsActive())
         {
           /* get the frame's window parent */
           AmayaWindow * p_window = TtaGetWindowFromId( FrameTable[frame_id].FrWindowId );
@@ -1582,7 +1582,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
           /* get the window's panel */
           AmayaPanel * p_panel = p_window->GetAmayaPanel();
           /* it is possible to have no panel, for example with
-	     AmayaSimpleWindow (ShowAppliedStyle) */
+             AmayaSimpleWindow (ShowAppliedStyle) */
           if ( !p_panel )
             return;
           
@@ -1613,7 +1613,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
   TtaSwitchPanelButton - 
   switch on/off a button in a given panel
   params:
-    + panel_type : the panel type
+  + panel_type : the panel type
   returns:
   ----------------------------------------------------------------------*/
 void TtaSwitchPanelButton( Document doc, View view,
@@ -1658,10 +1658,10 @@ void TtaSwitchPanelButton( Document doc, View view,
   TtaRegisterWidgetWX - 
   this function register a new widget into the corresponding thotlib catalog.
   params:
-    + ref : the catalogue reference
-    + p_widget : the widget pointer
+  + ref : the catalogue reference
+  + p_widget : the widget pointer
   returns:
-    + true/false
+  + true/false
   ----------------------------------------------------------------------*/
 ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
 {
@@ -1679,21 +1679,21 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
       TtaError (ERR_cannot_create_dialogue);
       return FALSE;
     }
-   else
-     {
-       /* this catalogue has already a associated widget ? */
-       if (catalogue->Cat_Widget)
-	 {
-	   /* yes ! destroy the old dialogue */
-	   TtaDestroyDialogue (ref);
-	 }
+  else
+    {
+      /* this catalogue has already a associated widget ? */
+      if (catalogue->Cat_Widget)
+        {
+          /* yes ! destroy the old dialogue */
+          TtaDestroyDialogue (ref);
+        }
 
-       /* now the catalogue is free , register the widget */
-       catalogue->Cat_Widget       = (ThotWindow)p_widget;
-       catalogue->Cat_ParentWidget = NULL;
-       catalogue->Cat_Ref          = ref;
-       catalogue->Cat_Type         = CAT_DIALOG;
-     }
+      /* now the catalogue is free , register the widget */
+      catalogue->Cat_Widget       = (ThotWindow)p_widget;
+      catalogue->Cat_ParentWidget = NULL;
+      catalogue->Cat_Ref          = ref;
+      catalogue->Cat_Type         = CAT_DIALOG;
+    }
   return TRUE;
 #else /* _WX */
   return FALSE;
@@ -1705,9 +1705,9 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
   TtaGetContextMenu - 
   this function returns the contextual menu of the given window
   params:
-    + window_id : the parent window of the active frame
+  + window_id : the parent window of the active frame
   returns:
-    + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
+  + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
   ----------------------------------------------------------------------*/
 wxMenu * TtaGetContextMenu( int window_id )
 {
@@ -1962,13 +1962,15 @@ void TtaRedirectFocus ()
   this function handle unicode characters
   params:
   returns:
-   - true if the charactere has been handled by the frame
-   - false if the event must be forwarded to parents (event.Skip())
+  - true if the charactere has been handled by the frame
+  - false if the event must be forwarded to parents (event.Skip())
   ----------------------------------------------------------------------*/
 #ifdef _WX
 ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
 {
-  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) &&
+  int thot_keycode = event.GetKeyCode();
+  int thot_keysym = event.GetUnicodeKey();  
+  if ((thot_keysym != 0) && !TtaIsSpecialKey(thot_keycode) &&
       !event.CmdDown() && !event.AltDown())
     {
       wxWindow *p_win_focus = wxWindow::FindFocus();
@@ -1981,11 +1983,9 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
           wxButton *p_button = wxDynamicCast(p_win_focus, wxButton);
           wxCheckListBox *p_check_listbox = wxDynamicCast(p_win_focus, wxCheckListBox);
           // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
-	  int thot_keycode = event.GetKeyCode();
           if (!(thot_keycode == WXK_SPACE &&
-		 (p_button || p_check_listbox)))
+                (p_button || p_check_listbox)))
             {
-              int thot_keysym = event.GetUnicodeKey();  
               int thotMask = 0;
               if (event.CmdDown())
                 thotMask |= THOT_MOD_CTRL;
@@ -1993,6 +1993,10 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 thotMask |= THOT_MOD_ALT;
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
+ #ifdef _MACOS
+             //if (event.ControlDown())
+              //  thotMask |= THOT_MOD_CTRL; 
+#endif /* _MACOS */
               
               if (ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode) == 3)
                 /* if a simple caractere has been entred, give focus to canvas
@@ -2021,8 +2025,8 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
   this function handle shortcuts
   params:
   returns:
-   - true if the charactere has been handled by the frame
-   - false if the event must be forwarded to parents (event.Skip())
+  - true if the charactere has been handled by the frame
+  - false if the event must be forwarded to parents (event.Skip())
   ----------------------------------------------------------------------*/
 #ifdef _WX
 ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
@@ -2054,6 +2058,18 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       return true;      
     }
 #endif /* _WINDOWS */
+#ifdef _MACOS
+  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ))
+    {
+      event.Skip();
+      return true;      
+    }
+#endif /* _MACOS */
   
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if ( ((event.CmdDown() && !event.AltDown()) || (event.AltDown() && !event.CmdDown()))
@@ -2134,9 +2150,9 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   proceed the special charactere ( F2, TAB ...) if it is one
   params:
   returns:
-   - true if the charactere has been handled by the frame
-   - false if the event must be forwarded to parents (event.Skip())
-   ----------------------------------------------------------------------*/
+  - true if the charactere has been handled by the frame
+  - false if the event must be forwarded to parents (event.Skip())
+  ----------------------------------------------------------------------*/
 #ifdef _WX
 ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 {
@@ -2167,15 +2183,15 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       
       if (p_win_focus)
         TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
-          else
-            TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
+        else
+          TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
               
-              /* do not allow special key outside the canvas */
-              if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
-                {
-                  event.Skip();
-                  return true;      
-                }
+            /* do not allow special key outside the canvas */
+            if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
+              {
+                event.Skip();
+                return true;      
+              }
       
 #if 0
       /* j'ai supprime cette partir du code car qd le notebook a le focus (c'est assez aleatoire...),
@@ -2201,7 +2217,11 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
             thotMask |= THOT_MOD_ALT;
           if (event.ShiftDown())
             thotMask |= THOT_MOD_SHIFT;
-          
+#ifdef _MACOS
+          //if (event.ControlDown())
+          // thotMask |= THOT_MOD_CTRL;
+#endif /* _MACOS */
+
           TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
           
           ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
@@ -2265,18 +2285,18 @@ void TtaSendStatsInfo()
     {
       TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo") );
       
-	  wxSocketBase::Initialize();
+      wxSocketBase::Initialize();
 
       AmayaStatsThread * pThread = new AmayaStatsThread();
       pThread->SetConcurrency(0);
       if ( pThread->Create() != wxTHREAD_NO_ERROR )
-	{
-	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't create thread") );      
-	}
+        {
+          TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't create thread") );      
+        }
       if ( pThread->Run() != wxTHREAD_NO_ERROR )
-	{
-	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't start thread") );
-	}
+        {
+          TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't start thread") );
+        }
       /* the stats request has been send, we desactivate the 
        * SEND_STATS flag to avoid counting a amaya user twice */
       TtaSetEnvBoolean ("SEND_STATS", FALSE, TRUE);
