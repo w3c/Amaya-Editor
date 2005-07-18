@@ -243,7 +243,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
 
   wxString instanceFileUrl = XRCCTRL (*this, "wxID_FILENAME", wxTextCtrl)->GetValue();
   wxString instanceDirUrl = XRCCTRL (*this, "wxID_DIR", wxTextCtrl)->GetValue();
-  wxString instanceUrl = instanceDirUrl + m_DirSep + instanceFileUrl;
+  wxString instanceUrl = instanceDirUrl + instanceFileUrl;
 
 
   // allocate a temporary buffer to copy the 'const char *' template and instance url buffer   
@@ -251,7 +251,7 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   wxASSERT( templateUrl.Len() < 512 );
   strcpy( bufferTemplate, (const char*)templateUrl.mb_str(wxConvUTF8) );
 
-    char bufferInstance[512];
+  char bufferInstance[512];
   wxASSERT( instanceUrl.Len() < 512 );
   strcpy( bufferInstance, (const char*)instanceUrl.mb_str(wxConvUTF8) );
 

@@ -61,6 +61,9 @@ DEFAULT
 
 BOXES
 
+
+
+	
   AttrName: BEGIN
 	Content: (Text ' template:' AttributeName Text '=');
 	Visibility: 0;
@@ -131,6 +134,39 @@ RULES
 
  Template:	BEGIN
 		Visibility: Enclosing =;
+		END;
+
+
+ free_struct:	
+		BEGIN	
+			BorderTopWidth: 1 pt;
+			BorderLeftWidth: 1 pt;
+			BorderBottomWidth: 1 pt;
+			BorderRightWidth: 1 pt;
+			BorderTopStyle: Dotted;
+			BorderLeftStyle: Dotted;
+			BorderBottomStyle: Dotted;
+			BorderRightStyle: Dotted;
+			BorderTopColor: Red;
+			BorderLeftColor: Red;
+			BorderBottomColor: Red;
+			BorderRightColor: Red;
+		END;
+
+ free_content:	
+		BEGIN	
+			BorderTopWidth: 1 pt;
+			BorderLeftWidth: 1 pt;
+			BorderBottomWidth: 1 pt;
+			BorderRightWidth: 1 pt;
+			BorderTopStyle: Dotted;
+			BorderLeftStyle: Dotted;
+			BorderBottomStyle: Dotted;
+			BorderRightStyle: Dotted;
+			BorderTopColor: Red;
+			BorderLeftColor: Red;
+			BorderBottomColor: Red;
+			BorderRightColor: Red;
 		END;
 
  PICTURE_UNIT: BEGIN

@@ -24,8 +24,13 @@
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
 #include "init_f.h"
+#include "parser.h"
 #include "tree.h"
 #include "HTMLimage_f.h"
+#ifdef TEMPLATES
+#include "Template.h"
+#endif /* TEMPLATES */
+#include "HTMLsave_f.h"
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
 #define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
@@ -253,19 +258,75 @@ void InitTemplateList ()
   TtaFreeMemory (urlstring);
 }
 
+/*-----------------------------------------------
+void UnlockSubtree
+Set read/write access to an element and all his
+children
+-----------------------------------------------*/
 
+void UnlockSubtree (Document doc, Element el)
+{
+  TtaSetAccessRight (el, ReadWrite, doc);
+  TtaNextSibling (&el);
+  if (el != NULL)
+    /* The element has at least one sibling */
+    UnlockSubtree (doc, el);
+}
+
+/*-----------------------------------------------
+void LockFixedAreas
+Parse the subtree from el, set read-only access to
+the element and his child when it's not a free_struct
+element.
+------------------------------------------------*/
+
+void LockFixedAreas (Document doc, Element el)
+{
+#ifdef TEMPLATES
+  ElementType elType;
+  char *s;
+  
+  TtaSetAccessRight (el, ReadOnly, doc);
+  elType = TtaGetElementType(el);
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (!TtaIsLeaf(elType))
+    {
+      /* The element is not a leaf */
+      if ((strcmp (s,"Template") != 0) ||
+	  ((elType.ElTypeNum != Template_EL_free_struct) &&
+	  (elType.ElTypeNum != Template_EL_free_content)))
+	  
+	{
+	  /* The element has a fixed structure */
+	  /* So we look for a free structure in
+	     the subtree */
+	  LockFixedAreas (doc, TtaGetFirstChild (el));
+	}
+      else 
+	{
+	  /* The element has a free structure or a free content */
+	  UnlockSubtree (doc, TtaGetFirstChild (el));
+	}
+    }
+  TtaNextSibling (&el);
+  if (el != NULL)
+    /* The element has at least one sibling */
+    LockFixedAreas (doc, el);
+#endif /* TEMPLATES */
+}
 
 /*---------------------------------------------------------------
-  Load a template and create the instance file - Copy images and 
+  Load a template and create the instance file - update images and 
   stylesheets related to the template.
   ---------------------------------------------------------------*/
 
 int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
-				     DocumentType docType)
+			      DocumentType docType)
 {
   char          templateFile[MAX_LENGTH];
   int           newdoc, len;
   ThotBool      stopped_flag;
+  Document      templatedoc;
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -285,6 +346,10 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
 		    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+
+      /* Update URLs of linked documents */
+      SetRelativeURLs (newdoc, docname);
+
       /* change its URL */
       TtaFreeMemory (DocumentURLs[newdoc]);
       len = strlen (docname) + 1;
@@ -301,30 +366,26 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
       stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
       if (!stopped_flag)
-	{
-	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
-	  /* almost one file is restored */
-	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
-			NULL);
-	}
+        {
+          DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
+          /* almost one file is restored */
+          TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED),
+                          NULL);
+        }
       /* check parsing errors */
       CheckParsingErrors (newdoc);
       
+
+
+      
+      /* Set elements access rights
+         according to free_* elements */
+      Element el = TtaGetMainRoot (newdoc);
+      LockFixedAreas (newdoc, el);
     }
   BackupDocument = 0;
   return (newdoc);
 }
 
 
-/*-----------------------------------------------
-void LockFixedAreas
-Parse the template file, set read-only access to
-all elements excepts those between editable tags
-------------------------------------------------*/
 
-/*
-void LockFixedAreas (Element el)
-{
-  el = TtaGetMainRoot (doc);
-  
-  */
