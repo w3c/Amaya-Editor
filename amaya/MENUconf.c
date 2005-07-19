@@ -3675,6 +3675,11 @@ static void RestoreDefaultGeometryConf (void)
 static void SetEnvCurrentGeometry (int doc, const char * view_name)
 {
   /* only do the processing if the document exists */
+#ifndef _WX
+  if (doc &&
+      DocumentTypes[doc] == docSource)
+    SetEnvGeom ("Source_view", doc);
+#endif /* _WX */
   if (doc &&
       DocumentURLs[doc] != NULL &&
       DocumentTypes[doc] != docSource &&
