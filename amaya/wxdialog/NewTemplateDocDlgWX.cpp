@@ -71,11 +71,11 @@ END_EVENT_TABLE()
   // update dialog labels with given ones
   SetTitle( title );
 
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATEFILENAME", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_FILE) ));
-  XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_DIRECTORY) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATEFILENAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_FILE) ));
+  XRCCTRL(*this, "wxID_LABEL_TEMPLATEDIRNAME", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_DIRECTORY) ));
   
-  XRCCTRL(*this, "wxID_LABEL_INSTANCE", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE_INSTANCE) ));
+  XRCCTRL(*this, "wxID_LABEL_INSTANCE", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_TEMPLATE_INSTANCE) ));
   XRCCTRL(*this, "wxID_LABEL_FILENAME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FILE)));
   XRCCTRL(*this, "wxID_LABEL_DIR", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DIRECTORY)));
   XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
