@@ -61,6 +61,16 @@ DEFAULT
 
 BOXES
 
+  
+ ElementName: BEGIN
+        Content: (ElemName);
+      	Visibility: 0;
+	END;
+
+ VerticalLine: BEGIN
+	Content: Graphics 'W';
+	Visibility: 0;
+	END;
 
 
 	
@@ -139,6 +149,13 @@ RULES
 
  free_struct:	
 		BEGIN	
+    	CreateBefore(ElementName);
+  	  CreateWith(VerticalLine);
+     	Width: auto{Enclosing . Width};
+    	Display: Block;
+    	VertPos: Top = Previous . Bottom;
+        MarginTop: 0;
+    	HorizPos: Left = Enclosing . Left; 
 			BorderTopWidth: 1 pt;
 			BorderLeftWidth: 1 pt;
 			BorderBottomWidth: 1 pt;
@@ -151,6 +168,7 @@ RULES
 			BorderLeftColor: Red;
 			BorderBottomColor: Red;
 			BorderRightColor: Red;
+
 		END;
 
  free_content:	
