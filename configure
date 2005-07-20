@@ -13486,7 +13486,7 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
          ; \
          do
          if test -r "$ac_dir/libfreetype.a"; then
-            FREETYPE_LIBRARIES="-L$ac_dir -lfreetype"
+            FREETYPE_LIBRARIES="$ac_dir/libfreetype.a"
             break
          fi
      done

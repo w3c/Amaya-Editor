@@ -876,7 +876,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          ; \
          do
          if test -r "$ac_dir/libfreetype.a"; then
-            FREETYPE_LIBRARIES="-L$ac_dir -lfreetype"
+            FREETYPE_LIBRARIES="$ac_dir/libfreetype.a"
             break
          fi
      done
