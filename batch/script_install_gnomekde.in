@@ -56,12 +56,6 @@ if test ! -d $GNOMEKDEDIR/applications ; then
   exit
 fi
 
-$ECHO "--> Checking binary existance"
-if test ! -f $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya ; then
-  $ECHO "$PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya does not exist"
-  exit
-fi
-
 # --- creating amaya-version.desktop
 $ECHO "--> Creating $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop file"
 $ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
