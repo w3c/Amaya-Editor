@@ -859,7 +859,9 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          do
          if test -r "$ac_dir/ft2build.h"; then
             FREETYPE_INCLUDES="${FREETYPE_INCLUDES} -I$ac_dir"
-            break
+         fi
+         if test -r "$ac_dir/freetype/config/ftheader.h"; then
+            FREETYPE_INCLUDES="${FREETYPE_INCLUDES} -I$ac_dir"
          fi
      done
      # ** search for binary (libfreetype.a)
@@ -874,7 +876,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
          ; \
          do
          if test -r "$ac_dir/libfreetype.a"; then
-            FREETYPE_LIBRARIES="$ac_dir"
+            FREETYPE_LIBRARIES="-L$ac_dir -lfreetype"
             break
          fi
      done
