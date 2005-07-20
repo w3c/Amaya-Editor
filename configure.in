@@ -1465,7 +1465,11 @@ make_output="Makefile Options.orig:Options.in tools/Makefile \
        libjpeg/Makefile libpng/Makefile libpng/zlib/Makefile \
        tools/mkdep/Makefile \
        tools/cextract-1.7/Makefile thotlib/Makefile \
-       thotlib/include/Makefile batch/Makefile"
+       thotlib/include/Makefile batch/Makefile \
+       script_install:../batch/script_install.in \
+       script_install_gnomekde:../batch/script_install_gnomekde.in \
+       script_install_macosxbundle:../batch/script_install_macosxbundle.in \
+       script_uninstall:../batch/script_uninstall.in"
 
 if test "$build_amaya" = "yes" ; then
 
@@ -1517,6 +1521,18 @@ if test -f Options ; then
        cp Options.orig Options
        exit 1
    fi
+fi
+if test -f script_install ; then
+   chmod a+x script_install
+fi
+if test -f script_install_gnomekde ; then
+   chmod a+x script_install_gnomekde
+fi
+if test -f script_install_macosxbundle ; then
+   chmod a+x script_install_macosxbundle
+fi
+if test -f script_uninstall ; then
+   chmod a+x script_uninstall
 fi
 ])
 

@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# This script install Gnome/Kde integration for Amaya
+# Stephane Gully, 2005
+#
+
+CP="@CP@"
+MV="@MV@"
+RM="@RM@ -f"
+LN_S="@LN_S@"
+MKDIR="@MKDIR@"
+ECHO="@ECHO@"
+
+# test parameters
+if [ $# -le 1 ]
+then
+  $ECHO "Usage: `basename $0` sourcebin_path gnomekde_path [prefix]"
+  $ECHO "Exemple: `basename $0` /home/gully/Amaya/WX/bin /usr/share /usr/share"
+  exit
+else
+  AMAYA_SOURCEBINDIR=$1
+  GNOMEKDEDIR=$2
+  if [ -z $3 ]
+      then
+      PREFIX=@prefix@
+  else
+      PREFIX=$3
+  fi
+fi
+
+INSTALL_DATA="@INSTALL@ -m 444"
+INSTALL_BIN="@INSTALL@ -m 755"
+AMAYA_INSTALLDIR="Amaya-@APP_VER@"
+AMAYAGUI="@AMAYAGUI@"
+AMAYAOS="@AMAYAOS@"
+
+$ECHO "-- Installing Gnome/Kde integration for $AMAYA_INSTALLDIR into $GNOMEKDEDIR --"
+
+# create empty directories
+$ECHO "--> Creating empty directories"
+if test ! -d $GNOMEKDEDIR ; then $MKDIR $GNOMEKDEDIR ; fi
+if test ! -d $GNOMEKDEDIR/pixmaps ; then $MKDIR $GNOMEKDEDIR/pixmaps ; fi
+if test ! -d $GNOMEKDEDIR/applications ; then $MKDIR $GNOMEKDEDIR/applications ; fi
+
+$ECHO "--> Checking directories existance"
+if test ! -d $GNOMEKDEDIR ; then
+  $ECHO "$GNOMEKDEDIR does not exist"
+  exit
+fi
+if test ! -d $GNOMEKDEDIR/pixmaps ; then
+  $ECHO "$GNOMEKDEDIR/pixmaps does not exist"
+  exit
+fi
+if test ! -d $GNOMEKDEDIR/applications ; then
+  $ECHO "$GNOMEKDEDIR/applications does not exist"
+  exit
+fi
+
+$ECHO "--> Checking binary existance"
+if test ! -f $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya ; then
+  $ECHO "$PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya does not exist"
+  exit
+fi
+
+# --- creating amaya-version.desktop
+$ECHO "--> Creating $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop file"
+$ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Encoding=UTF-8" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Name=Amaya @APP_VER@" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Comment=Edit the Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Comment[fr]=Editez le Web" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Categories=Application;Network;Development;" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Exec=$PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya %u" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Icon=amaya-@APP_VER@.png" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Terminal=false" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "Type=Application" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+$ECHO "MimeType=text/html;text/xml;application/xhtml+xml;application/xml" >> $GNOMEKDEDIR/applications/amaya-@APP_VER@.desktop
+
+# --- creating amaya-version.png
+$ECHO "--> Creating $GNOMEKDEDIR/pixmaps/amaya-@APP_VER@.png"
+$CP $AMAYA_SOURCEBINDIR/../../resources/bundle/logo.png $GNOMEKDEDIR/pixmaps/amaya-@APP_VER@.png
+
+$ECHO "-- Installing Gnome/Kde integration for $AMAYA_INSTALLDIR into $GNOMEKDEDIR done --"

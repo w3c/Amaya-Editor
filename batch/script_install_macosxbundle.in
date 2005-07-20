@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# This script create a MacOSX bundle for Amaya
+# Stephane Gully, 2005
+#
+
+CP="@CP@"
+MV="@MV@"
+RM="@RM@ -f"
+LN_S="@LN_S@"
+MKDIR="@MKDIR@"
+ECHO="@ECHO@"
+SED="@SED@"
+
+# test parameters
+if [ $# -le 1 ]
+then
+  $ECHO "Usage: `basename $0` sourcebin_path [prefix]"
+  $ECHO "Exemple: `basename $0` /home/gully/Amaya/WX/bin /usr/share"
+  exit
+else
+  AMAYA_SOURCEBINDIR=$1
+  if [ -z $2 ]
+      then
+      PREFIX=@prefix@
+  else
+      PREFIX=$2
+  fi
+fi
+
+INSTALL_DATA="@INSTALL@ -m 444"
+INSTALL_BIN="@INSTALL@ -m 755"
+AMAYA_INSTALLDIR="Amaya-@APP_VER@"
+AMAYAGUI="@AMAYAGUI@"
+AMAYAOS="@AMAYAOS@"
+
+if test $AMAYAOS != "MACOSX" ; then
+  $ECHO "--> Error: Current OS is not MACOSX, aborting `basename $0`"
+  exit
+fi
+
+$ECHO "-- Creating a MacOSX bundle for $AMAYA_INSTALLDIR into $PREFIX/Amaya.app --"
+
+# MACOSX bundelization
+if test $AMAYAOS = "MACOSX" ; then
+  $RM -r $PREFIX/Amaya.app
+  $MKDIR $PREFIX/Amaya.app
+  $MKDIR $PREFIX/Amaya.app/Contents
+  $MKDIR $PREFIX/Amaya.app/Contents/MacOS
+	$MKDIR $PREFIX/Amaya.app/Contents/Resources
+	$MV $PREFIX/$AMAYA_INSTALLDIR $PREFIX/Amaya.app/Contents/MacOS/
+	cd $PREFIX/Amaya.app/Contents/MacOS/ && $LN_S $AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya . && cd -
+	$SED -e "s/IDENTIFIER/`echo $AMAYA_INSTALLDIR | $SED -e 's,\.\./,,g' | $SED -e 's,/,.,g'`/" \
+		   -e "s/EXECUTABLE/amaya/" \
+			 -e "s/VERSION/@APP_VER@/" \
+			 $AMAYA_SOURCEBINDIR/../../resources/bundle/Info.plist.in >$PREFIX/Amaya.app/Contents/Info.plist
+	$ECHO -n "APPL????" >$PREFIX/Amaya.app/Contents/PkgInfo
+	$CP -f $AMAYA_SOURCEBINDIR/../../resources/bundle/amaya.icns $PREFIX/Amaya.app/Contents/Resources/amaya.icns
+fi
+
+$ECHO "-- Creating a MacOSX bundle for $AMAYA_INSTALLDIR into $PREFIX/Amaya.app done --"

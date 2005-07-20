@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# This script uninstall Amaya
+# Stephane Gully, 2005
+#
+
+RM="@RM@ -f"
+ECHO="@ECHO@"
+
+# test parameters
+$ECHO "Usage: `basename $0` [prefix [bindir]]"
+$ECHO "Exemple: `basename $0` /usr/share /usr/bin"
+if [ -z $1 ]
+then
+  PREFIX=@prefix@
+else
+  PREFIX=$1
+fi
+if [ -z $2 ]
+then
+  BINDIR=$PREFIX/bin
+else
+  BINDIR=$2
+fi
+
+AMAYA_INSTALLDIR="Amaya-@APP_VER@"
+AMAYAGUI="@AMAYAGUI@"
+AMAYAOS="@AMAYAOS@"
+
+$ECHO "-- Uninstalling $AMAYA_INSTALLDIR from $PREFIX and $BINDIR --"
+
+$RM -r $PREFIX/$AMAYA_INSTALLDIR
+$RM $BINDIR/amaya*
+
+$ECHO "-- Uninstalling $AMAYA_INSTALLDIR done --"

@@ -24,25 +24,6 @@ LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	  @LIBS@ @EXTRA_LIBS@ $(GL_LIBRARIES) $(GTK_GL_LIBRARIES) $(FREETYPE_LIBRARIES) $(XFT_LIBRARIES) \
           $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
-CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles\
-	    *-amayadialogue *-amayamsg *-libdialogue \
-	    amaya.emacs annot.schemas *.rdf fonts.* gtkrc
-
-LIBCONFIGFILES=*.css *.png *.lhtml *.svg 
-
-ANNOTFILES=*.STR *.PRS *.TRA *.en *.gif *.png 
-
-DICOFILES= *.ptn *.dic alphabet clavier
-
-AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
-           *.PRS *.TRA AmayaPage.html AmayaPage.html.* \
-           AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg
-
-RESOURCE_XRC_FILES= *.xrc
-RESOURCE_ICONS_FILES= *.png *.ico *.gif
-
-FONTSFILES=Families.list fonts.dir icones* *.ttf *.TTF
-
 AMAYA	= @top_srcdir@/amaya
 
 prefix = @prefix@
@@ -527,122 +508,10 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 @NOPRINT@	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" print)
 
 install : all @NOPRINT@../bin/print
-	@(if test ! -d $(prefix) ; then $(MKDIR) $(prefix) ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR) ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR) ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources/xrc ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources/xrc ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/16x16 ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/16x16 ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/22x22 ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/22x22 ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/misc ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/misc ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/config ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/config ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/annotlib ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/annotlib ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/dicopar ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/dicopar ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/doc ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/doc ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI) ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI) ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/davlib ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/davlib ; fi)
-	@(if test ! -d $(prefix)/$(AMAYA_INSTALLDIR)/config/libconfig ; then $(MKDIR) $(prefix)/$(AMAYA_INSTALLDIR)/config/libconfig ; fi)
-	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
-	$(INSTALL_BIN) ../bin/amaya $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin
-@NOPRINT@	$(INSTALL_BIN) ../bin/print $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin
-	$(RM) $(bindir)/amaya-$(AMAYAGUI)
-	$(LN_S) $(prefix)/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya $(bindir)/amaya-$(AMAYAGUI)
-	$(RM) $(bindir)/amaya
-	$(LN_S) $(bindir)/amaya-$(AMAYAGUI) $(bindir)/amaya
-	(for i in $(AMAYAFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/amaya ; \
-	  done ; done)
-	(for i in $(CONFIGFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/config 2>/dev/null || true ; \
-	  done ; done)
-	(for i in $(LIBCONFIGFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/config/libconfig/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/config/libconfig 2>/dev/null || true ; \
-	  done ; done)
-	(cd $(THOTDIR)/annotlib ; \
-          for i in $(ANNOTFILES) ; do \
-	  for file in `$(ECHO) $$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/annotlib 2>/dev/null || true ; \
-	  done ; done)
-	(for i in $(RESOURCE_XRC_FILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/resources/xrc/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/resources/xrc ; \
-	  done ; done)
-	(for i in $(RESOURCE_ICONS_FILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/resources/icons/16x16/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/16x16 ; \
-	  done ; \
-	  for file in `$(ECHO) $(THOTDIR)/resources/icons/22x22/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/22x22 ; \
-	  done ; \
-	  for file in `$(ECHO) $(THOTDIR)/resources/icons/misc/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/resources/icons/misc ; \
-	  done ; \
-	  done)
-	(for i in $(DICOFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/dicopar ; \
-	  done ; done)
-	$(CP) -r $(THOTDIR)/doc/images $(prefix)/$(AMAYA_INSTALLDIR)/doc
-	$(CP) -r $(THOTDIR)/doc/html $(prefix)/$(AMAYA_INSTALLDIR)/doc
-	$(CP) -r $(THOTDIR)/doc/WX $(prefix)/$(AMAYA_INSTALLDIR)/doc
-	(for i in $(FONTSFILES) ; do \
-	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
-	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; \
-	  done ; done)
-
-# GNOME/KDE integration (only for LINUX plateforms)
-	@(if test $(AMAYAOS) = "LINUX" ; then \
-		$(MKDIR) $(prefix)/share/pixmaps ; \
-		$(MKDIR) $(prefix)/share/applications ; \
-		echo "[Desktop Entry]" > $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Encoding=UTF-8" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Name=Amaya @APP_VER@" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Comment=Edit the Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Comment[fr]=Editez le Web" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Categories=Application;Network;Development;" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Exec=@datadir@/$(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya %u" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Icon=amaya-@APP_VER@.png" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Terminal=false" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "Type=Application" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		echo "MimeType=text/html;text/xml;application/xhtml+xml;application/xml" >> $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		$(CP) $(THOTDIR)/resources/bundle/logo.png $(prefix)/share/pixmaps/amaya-@APP_VER@.png ; \
-	fi)
-
-# MACOSX bundelization
-	@(if test $(AMAYAOS) = "MACOSX" ; then \
-			$(RM) -r $(prefix)/Amaya.app ; \
-			$(MKDIR) $(prefix)/Amaya.app ; \
-			$(MKDIR) $(prefix)/Amaya.app/Contents ; \
-			$(MKDIR) $(prefix)/Amaya.app/Contents/MacOS ; \
-			$(MKDIR) $(prefix)/Amaya.app/Contents/Resources ; \
-			$(MV) $(prefix)/$(AMAYA_INSTALLDIR) $(prefix)/Amaya.app/Contents/MacOS/ ; \
-			cd $(prefix)/Amaya.app/Contents/MacOS/ && $(LN_S) $(AMAYA_INSTALLDIR)/$(AMAYAGUI)/bin/amaya . && cd - ; \
-			sed -e "s/IDENTIFIER/`echo $(AMAYA_INSTALLDIR) | sed -e 's,\.\./,,g' | sed -e 's,/,.,g'`/" \
-					-e "s/EXECUTABLE/amaya/" \
-					-e "s/VERSION/@APP_VER@/" \
-					$(THOTDIR)/resources/bundle/Info.plist.in >$(prefix)/Amaya.app/Contents/Info.plist ; \
-			echo -n "APPL????" >$(prefix)/Amaya.app/Contents/PkgInfo ; \
-			$(CP) -f $(THOTDIR)/resources/bundle/Amaya.icns $(prefix)/Amaya.app/Contents/Resources/amaya.icns ; \
-	fi)
+	../script_install ../bin $(prefix) $(bindir)
 
 uninstall :
-	$(RM) -r $(prefix)/$(AMAYA_INSTALLDIR)
-	$(RM) $(bindir)/amaya*
-# Remove GNOME/KDE integration stuff
-	@(if test $(AMAYAOS) = "LINUX" ; then \
-		$(RM) $(prefix)/share/applications/amaya-@APP_VER@.desktop ; \
-		$(RM) $(prefix)/share/pixmaps/amaya-@APP_VER@.png ; \
-	fi)
-# Remove MACOSX budelization stuff
-	@(if test $(AMAYAOS) = "MACOSX" ; then \
-			$(RM) -r $(prefix)/Amaya.app ; \
-	fi)
+	../script_uninstall $(prefix) $(bindir)
 
 CEXTRACT= ../bin/cextract
 
