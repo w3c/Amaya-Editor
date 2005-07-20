@@ -186,6 +186,7 @@ ${AMAYADIR}/Makefile.in \
 ${AMAYADIR}/install-sh \
 ${AMAYADIR}/stamp-h.in \
 ${AMAYADIR}/Options.in \
+${AMAYADIR}/batch/script_*.in \
 ${AMAYADIR}/batch/Makefile.in \
 ${AMAYADIR}/batch/tarAmaya \
 ${AMAYADIR}/amaya/COPYRIGHT* \
@@ -576,6 +577,7 @@ ${AMAYADIR}/Makefile.in \
 ${AMAYADIR}/install-sh \
 ${AMAYADIR}/stamp-h.in \
 ${AMAYADIR}/Options.in \
+${AMAYADIR}/batch/script_*.in \
 ${AMAYADIR}/batch/Makefile.in \
 ${AMAYADIR}/batch/tarAmaya \
 ${AMAYADIR}/amaya/COPYRIGHT* \
