@@ -1,0 +1,170 @@
+#!/bin/sh
+#
+# This script install Amaya to a given location
+# Stephane Gully, 2005
+#
+
+CP="@CP@"
+MV="@MV@"
+RM="@RM@ -f"
+LN_S="@LN_S@"
+MKDIR="@MKDIR@"
+ECHO="@ECHO@"
+
+# test parameters
+if [ $# -le 0 ]
+then
+  $ECHO "Usage: `basename $0` sourcebin_path [prefix [bindir]]"
+  $ECHO "Exemple: `basename $0` /home/gully/Amaya/WX/bin /usr/share /usr/bin"
+  exit
+else
+  AMAYA_SOURCEBINDIR=$1
+  if [ -z $2 ]
+      then
+      PREFIX=@prefix@
+  else
+      PREFIX=$2
+  fi
+  if [ -z $3 ]
+      then
+      BINDIR=$PREFIX/bin
+  else
+      BINDIR=$3
+  fi
+fi
+
+INSTALL_DATA="@INSTALL@ -m 444"
+INSTALL_BIN="@INSTALL@ -m 755"
+AMAYA_INSTALLDIR="Amaya-@APP_VER@"
+AMAYAGUI="@AMAYAGUI@"
+AMAYAOS="@AMAYAOS@"
+
+$ECHO "-- Installing $AMAYA_INSTALLDIR into $PREFIX --"
+
+# create empty directories
+$ECHO "--> Creating empty directories"
+if test ! -d $PREFIX ; then $MKDIR $PREFIX ; fi
+if test ! -d $BINDIR ; then $MKDIR $BINDIR ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/amaya ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/amaya ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/xrc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/xrc ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/16x16 ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/16x16 ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/config ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/config ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/annotlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/annotlib ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/fonts ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/fonts ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/dicopar ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/dicopar ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/doc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/doc ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/davlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/davlib ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ; fi
+
+# install binaries
+$ECHO "--> Installing binaries"
+$INSTALL_BIN $AMAYA_SOURCEBINDIR/amaya $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin
+$INSTALL_BIN $AMAYA_SOURCEBINDIR/print $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin
+$RM $BINDIR/amaya-$AMAYAGUI
+$LN_S $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya $BINDIR/amaya-$AMAYAGUI
+$RM $BINDIR/amaya
+$LN_S $BINDIR/amaya-$AMAYAGUI $BINDIR/amaya
+
+$ECHO "--> Installing data"
+
+AMAYAFILES="*.STR *.conf *.trans* *.en *.gif *.png *.PRS *.TRA AmayaPage.html AmayaPage.html.* AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg"
+CONFIGFILES="XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles *-amayadialogue *-amayamsg *-libdialogue amaya.emacs annot.schemas *.rdf fonts.* gtkrc"
+LIBCONFIGFILES="*.css *.png *.lhtml *.svg"
+ANNOTFILES="*.STR *.PRS *.TRA *.en *.gif *.png"
+DICOFILES="*.ptn *.dic alphabet clavier"
+RESOURCE_XRC_FILES="*.xrc"
+RESOURCE_ICONS_FILES="*.png *.ico *.gif"
+FONTSFILES="Families.list fonts.dir icones* *.ttf *.TTF"
+
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/amaya"
+cd $AMAYA_SOURCEBINDIR/../../amaya
+for i in $AMAYAFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/amaya ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/config"
+cd $AMAYA_SOURCEBINDIR/../../config
+for i in $CONFIGFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/config ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/config/libconfig"
+cd $AMAYA_SOURCEBINDIR/../../config/libconfig
+for i in $LIBCONFIGFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/annotlib"
+cd $AMAYA_SOURCEBINDIR/../../annotlib
+for i in $ANNOTFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/annotlib ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/resources/xrc"
+cd $AMAYA_SOURCEBINDIR/../../resources/xrc
+for i in $RESOURCE_XRC_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/xrc ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/dicopar"
+cd $AMAYA_SOURCEBINDIR/../../dicopar
+for i in $DICOFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/dicopar ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/fonts"
+cd $AMAYA_SOURCEBINDIR/../../fonts
+for i in $FONTSFILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/fonts ;
+	  done ;
+done ;
+cd - > /dev/null
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/icons/..."
+cd $AMAYA_SOURCEBINDIR/../../resources/icons/16x16
+for i in $RESOURCE_ICONS_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/icons/16x16 ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/icons/22x22
+for i in $RESOURCE_ICONS_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/icons/misc
+for i in $RESOURCE_ICONS_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ;
+	  done ;
+done ;
+cd - > /dev/null
+
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/doc/..."
+$CP -r $AMAYA_SOURCEBINDIR/../../doc/images $PREFIX/$AMAYA_INSTALLDIR/doc/
+$CP -r $AMAYA_SOURCEBINDIR/../../doc/html $PREFIX/$AMAYA_INSTALLDIR/doc/
+$CP -r $AMAYA_SOURCEBINDIR/../../doc/WX $PREFIX/$AMAYA_INSTALLDIR/doc/
+
+$ECHO "-- Installing $AMAYA_INSTALLDIR done --"
