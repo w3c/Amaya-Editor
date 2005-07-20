@@ -333,23 +333,23 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
   TtaExtractName (templatename, DirectoryName, DocumentName);
   AddURLInCombobox (docname, NULL, TRUE);
   newdoc = InitDocAndView (doc,
-                           FALSE /* replaceOldDoc */,
-                           FALSE /* inNewWindow */,
+                           !DontReplaceOldDoc /* replaceOldDoc */,
+                           InNewWindow /* inNewWindow */,
                            DocumentName, (DocumentType)docType, 0, FALSE,
-			   L_Other, (ClickEvent)CE_ABSOLUTE);
-   if (newdoc != 0)
+                           L_Other, (ClickEvent)CE_ABSOLUTE);
+  if (newdoc != 0)
     {
       /* load the saved file */
       W3Loading = newdoc;
-
+      
       templateFile[0] = EOS;
       
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
-		    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
-
+                    "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+      
       /* Update URLs of linked documents */
       SetRelativeURLs (newdoc, docname);
-
+      
       /* change its URL */
       TtaFreeMemory (DocumentURLs[newdoc]);
       len = strlen (docname) + 1;
@@ -383,8 +383,8 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       Element el = TtaGetMainRoot (newdoc);
       LockFixedAreas (newdoc, el);
     }
-  BackupDocument = 0;
-  return (newdoc);
+   BackupDocument = 0;
+   return (newdoc);
 }
 
 
