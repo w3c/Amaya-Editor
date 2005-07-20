@@ -184,6 +184,8 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
     return GetSVGSSchema (doc);
   else if (XMLtype == XLINK_TYPE)
     return GetXLinkSSchema (doc);
+  else if (XMLtype == Template_TYPE)
+    return GetTemplateSSchema (doc);
   else
     return NULL;
 }
