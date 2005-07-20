@@ -2576,7 +2576,7 @@ ThotBool FrameButtonDownCallback(
             /* a selection extension */
             TtaAbortShowDialogue ();
             LocateSelectionInView (frame, x, y, 1);
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
             FrameToView (frame, &document, &view);
             TtcCopyToClipboard (document, view);
 #endif /* _WINDOWS */
@@ -2679,7 +2679,7 @@ ThotBool FrameButtonUpCallback(
   if ( Selecting )
     {
       Selecting = FALSE;
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
       FrameToView (frame, &document, &view);
       TtcCopyToClipboard (document, view);
 #endif /* _WINDOWS */
@@ -2734,7 +2734,7 @@ ThotBool FrameButtonDClickCallback(
         ClickX = x;
         ClickY = y;
         LocateSelectionInView (frame, ClickX, ClickY, 3);
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
         TtcCopyToClipboard (document, view);
@@ -2854,9 +2854,6 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
           if (Selecting)
             {
               LocateSelectionInView (frame,  Motion_x, Motion_y, 0);
-#ifndef _WINDOWS
-              TtcCopyToClipboard (doc, view);
-#endif /* _WINDOWS */
             }
         }      
     }
