@@ -2887,30 +2887,33 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       else
 	{
 	  /* load the picture using ImLib */
-	  im = gdk_imlib_load_image (fileName);	      
-	  if (pres == RealSize)
+	  im = gdk_imlib_load_image (fileName);
+	  if (im)
 	    {
-	      /* if it's a background, dont rescale the picture */
-	      wBox = im->rgb_width;
-	      hBox = im->rgb_height;
+	      if (pres == RealSize)
+		{
+		  /* if it's a background, dont rescale the picture */
+		  wBox = im->rgb_width;
+		  hBox = im->rgb_height;
+		}
+	      else
+		{
+		  if (wBox == 0)
+		    wBox = im->rgb_width;
+		  if (hBox == 0)
+		    hBox = im->rgb_height;
+		}
+	      /* if only one info interpolate 
+		 the other with a correct ratio*/
+	      if (xBox == 0)
+		xBox = im->rgb_width;
+	      if (yBox == 0)
+		yBox = im->rgb_height;
+	      
+	      gdk_imlib_render (im, (gint) xBox, (gint) yBox);
+	      drw = (ThotPixmap) gdk_imlib_move_image (im);
+	      imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
 	    }
-	  else
-	    {
-	      if (wBox == 0)
-		wBox = im->rgb_width;
-	      if (hBox == 0)
-		hBox = im->rgb_height;
-	    }
-	  /*if only one info interpolate 
-	    the other with a correct ratio*/
-	  if (xBox == 0)
-	    xBox = im->rgb_width;
-	  if (yBox == 0)
-	    yBox = im->rgb_height;
-	  
-	  gdk_imlib_render (im, (gint) xBox, (gint) yBox);
-	  drw = (ThotPixmap) gdk_imlib_move_image (im);
-	  imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);	  
 	}
       width = (gint) wBox;
       height = (gint) hBox;
