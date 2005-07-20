@@ -3605,14 +3605,15 @@ static void TranslateTree (PtrElement pEl, Document doc,
        { 
 	 if ((strcmp (pEl->ElStructSchema->SsName, "MathML") != 0) &&
 	     (strcmp (pEl->ElStructSchema->SsName, "SVG") != 0) &&
+	     (strcmp (pEl->ElStructSchema->SsName, "Template") != 0) &&
 	     (strcmp (pEl->ElStructSchema->SsName, "XLink") != 0))
 	   ExportXmlDocument (doc, pEl, TRUE);
 	 return;
        }
      
-     /* Is this element associated with a prefix ? */
-     /* We search for a prefix :
-           - when the structure schema of pEl is different from the parent's one
+     /* Is this element associated with a namespace prefix ? */
+     /* We search for a prefix in both cases :
+           - when the structure schema of pEl is different from the parent's schema
            - if pEl is the (main) root element 
      */ 
      if ((pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem) ||
@@ -4229,6 +4230,11 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
       else if (strcmp (pNode->ElStructSchema->SsName, "SVG") == 0)
 	{
 	  if (LoadTranslationSchema ("SVGT", pNode->ElStructSchema))
+	    TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
+	}
+      else if (strcmp (pNode->ElStructSchema->SsName, "Template") == 0)
+	{
+	  if (LoadTranslationSchema ("TemplateT", pNode->ElStructSchema))
 	    TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
 	}
       else
