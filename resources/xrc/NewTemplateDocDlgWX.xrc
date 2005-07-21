@@ -78,44 +78,23 @@
             <object class="wxBoxSizer">
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_FILENAME">
+                <object class="wxStaticText" name="wxID_LABEL_INSTANCEFILENAME">
                   <label>*File Name*</label>
                 </object>
                 <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>4</border>
               </object>
               <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_FILENAME"/>
+                <object class="wxTextCtrl" name="wxID_INSTANCEFILENAME"/>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
               </object>
               <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_FILENAME">
+                <object class="wxBitmapButton" name="wxID_BUTTON_INSTANCEFILENAME">
                   <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                  <style></style>
                 </object>
-              </object>
-            </object>
-            <flag>wxEXPAND|wxALIGN_BOTTOM</flag>
-            <border>4</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxHORIZONTAL</orient>
-              <object class="sizeritem">
-                <object class="wxStaticText" name="wxID_LABEL_DIR">
-                  <label>*Directory*</label>
-                </object>
-                <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxTextCtrl" name="wxID_DIR"/>
-                <option>1</option>
-                <flag>wxEXPAND</flag>
-              </object>
-              <object class="sizeritem">
-                <object class="wxBitmapButton" name="wxID_BUTTON_DIR">
-                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
-                </object>
+                <flag></flag>
               </object>
             </object>
             <flag>wxBOTTOM|wxEXPAND</flag>
@@ -123,6 +102,7 @@
           </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
@@ -148,7 +128,8 @@
             <border>4</border>
           </object>
         </object>
-        <flag>wxEXPAND</flag>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
       </object>
       <object class="sizeritem">
         <object class="wxBoxSizer">
@@ -182,7 +163,8 @@
             <flag>wxALL|wxALIGN_RIGHT</flag>
           </object>
         </object>
-        <flag>wxALIGN_RIGHT</flag>
+        <flag>wxALL|wxALIGN_RIGHT</flag>
+        <border>4</border>
       </object>
     </object>
   </object>
