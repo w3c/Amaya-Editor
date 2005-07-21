@@ -146,6 +146,8 @@ void NewTemplateDocDlgWX::OnInstanceFilenameButton( wxCommandEvent& event )
      wxSAVE | wxOVERWRITE_PROMPT | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
      );
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
+  
+  p_dlg->SetPath(XRCCTRL(*this, "wxID_INSTANCEFILENAME", wxTextCtrl)->GetValue());
 
   if (p_dlg->ShowModal() == wxID_OK)
     {
