@@ -1868,7 +1868,13 @@ void TtcCreateElement (Document doc, View view)
 		      !TypeHasException (ExcReturnCreateWithin,
 					 pListEl->ElTypeNumber,
 					 pListEl->ElStructSchema))
-		    pListEl = AncestorList (pListEl);
+		    {
+		      if (pListEl->ElParent &&
+			  GetElementConstruct (pListEl->ElParent, &nComp) == CsAny)
+			pListEl = pListEl->ElParent;
+		      else
+			pListEl = AncestorList (pListEl);
+		    }
 		}
 	      else
 		{
