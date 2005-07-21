@@ -40,7 +40,7 @@ static char   *script_URL;
 
 
 /*----------------------------------------------------------------------
-   NewTemplate: Create the new document from template's dialog
+   NewTemplate: Create the "new document from template's" dialog
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
@@ -52,7 +52,7 @@ void NewTemplate (Document doc, View view)
   amaya_home = TtaGetEnvString ("THOTDIR");
 
   // Amaya's templates directory (only french yet)
-  sprintf ((char *)templateDir, "%s%ctemplates%ctemplates%cfr%c", amaya_home,DIR_SEP,DIR_SEP,DIR_SEP,DIR_SEP);
+  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c", amaya_home,DIR_SEP,DIR_SEP,DIR_SEP);
   
   char s [MAX_LENGTH];
   
@@ -326,7 +326,6 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
   char          templateFile[MAX_LENGTH];
   int           newdoc, len;
   ThotBool      stopped_flag;
-  Document      templatedoc;
 
   W3Loading = doc;
   BackupDocument = doc;

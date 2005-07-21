@@ -40,21 +40,19 @@ private:
   void OnCancelButton( wxCommandEvent& event );
        
 
-  void OnFilenameButton( wxCommandEvent& event );
-  void OnDirButton( wxCommandEvent& event );
+  void OnInstanceFilenameButton( wxCommandEvent& event );
   void OnTemplateDirNameButton ( wxCommandEvent& event );
 
   void OnTemplatenameSelected ( wxCommandEvent& event );
 
   void OnText_TemplateDirName( wxCommandEvent& event );
-  void OnText_Filename( wxCommandEvent& event );
-  void OnText_Dirname( wxCommandEvent& event );
+  void OnText_InstanceFilename( wxCommandEvent& event );
   void OnText_Combobox( wxCommandEvent& event );
 
  private:
 
   void UpdateTemplateFromDir();
-  void UpdateDirAndFilenameFromString(const wxString & full_path);
+  void UpdateInstanceFilenameFromString(const wxString & full_path);
 
  private:
   wxString m_Filter;
