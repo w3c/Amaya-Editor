@@ -29,5 +29,7 @@ STRUCT
 EXCEPT
 
     Unknown_attribute: Invisible;
+    free_struct: NoCreate;
+		free_content: NoCreate;
 
 END

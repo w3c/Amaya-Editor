@@ -293,8 +293,8 @@ void LockFixedAreas (Document doc, Element el)
     {
       /* The element is not a leaf */
       if ((strcmp (s,"Template") != 0) ||
-	  ((elType.ElTypeNum != Template_EL_free_struct) &&
-	  (elType.ElTypeNum != Template_EL_free_content)))
+          ((elType.ElTypeNum != Template_EL_free_struct) &&
+           (elType.ElTypeNum != Template_EL_free_content)))
 	  
 	{
 	  /* The element has a fixed structure */
@@ -305,7 +305,7 @@ void LockFixedAreas (Document doc, Element el)
       else 
 	{
 	  /* The element has a free structure or a free content */
-	  UnlockSubtree (doc, TtaGetFirstChild (el));
+	  UnlockSubtree (doc, el);
 	}
     }
   TtaNextSibling (&el);
