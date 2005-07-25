@@ -752,7 +752,8 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   /* just to be sure bitmap is empty */
   memset( &bitmap, 0, sizeof(BitmapGlyph) );
 
-  err = 1; /* by default suppose the process doesn't find a bitmap glyph */
+  err = 0; /* by default suppose the process find a bitmap glyph */
+
   if ( g != 0 &&
        !FT_Load_Glyph (font->face, g, thot_ft_load_mode) &&
        !FT_Get_Glyph (font->face->glyph, &Glyph) )
@@ -850,9 +851,9 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
               memset (ptr++, 0xFF, 1);
             }
           memset (ptr, 0xFF, w);
-	  ptr = ptr + w;
-	  memset (ptr, 0, w);
-        }
+	        ptr = ptr + w;
+	        memset (ptr, 0, w);
+      }
       
       BitmapGlyph->data = data;
       BitmapGlyph->data_type = GL_GLYPH_DATATYPE_FTBITMAP; /* must be freed with TtaFreeMemory */
