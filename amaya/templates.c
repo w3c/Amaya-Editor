@@ -257,6 +257,45 @@ void InitTemplateList ()
     }
   TtaFreeMemory (urlstring);
 }
+/*-------------------------------------------------
+ Insert the meta element identifying the template's
+ instance
+----------------------------------------------------*/
+void insertTemplateMeta (Document newdoc)
+{
+  Element el = TtaGetMainRoot (newdoc);
+  Element meta;
+  Element head = NULL;
+  ElementType elType;
+  AttributeType	attrType;
+  Attribute attr;
+  
+  elType.ElSSchema = TtaGetSSchema ("HTML", newdoc);
+  elType.ElTypeNum = HTML_EL_HEAD;
+  head = TtaSearchTypedElement(elType, SearchInTree, el);
+  if (head)
+    {
+      el = TtaGetFirstChild(head);
+      elType.ElTypeNum = HTML_EL_META;
+      meta = TtaNewElement (newdoc, elType);
+
+      /* Create the "name" attribute */
+      attrType.AttrTypeNum = HTML_ATTR_meta_name;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, newdoc);
+      TtaSetAttributeText (attr, "template", meta, newdoc);
+
+      /* Create the "content" attribute */
+      attrType.AttrTypeNum = HTML_ATTR_meta_content;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (meta, attr, newdoc);
+      TtaSetAttributeText (attr, "version-modele", meta, newdoc);
+      
+      TtaInsertFirstChild (&meta, head, newdoc);
+    }
+  
+}
 
 /*-----------------------------------------------
 void UnlockSubtree
@@ -289,7 +328,7 @@ void LockFixedAreas (Document doc, Element el)
   TtaSetAccessRight (el, ReadOnly, doc);
   elType = TtaGetElementType(el);
   s = TtaGetSSchemaName (elType.ElSSchema);
-  if (!TtaIsLeaf(elType))
+  if (TtaGetFirstChild(el)!=NULL)
     {
       /* The element is not a leaf */
       if ((strcmp (s,"Template") != 0) ||
@@ -374,17 +413,14 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       /* check parsing errors */
       CheckParsingErrors (newdoc);
       
-
-
-      
       /* Set elements access rights
          according to free_* elements */
       Element el = TtaGetMainRoot (newdoc);
       LockFixedAreas (newdoc, el);
+      insertTemplateMeta(newdoc);
     }
    BackupDocument = 0;
    return (newdoc);
+
 }
-
-
 
