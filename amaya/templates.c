@@ -313,6 +313,31 @@ void UnlockSubtree (Document doc, Element el)
     UnlockSubtree (doc, el);
 }
 
+void UnlockContentElements (Document doc, Element el)
+{
+  ElementType elType;
+
+  if (el != NULL) 
+    {
+      elType = TtaGetElementType (el);
+      if (TtaIsLeaf (elType))
+        {
+          /* It's a content element */
+          TtaSetAccessRight(el, ReadWrite, doc);
+        }
+      else
+        {
+          TtaSetAccessRight(el, ReadOnly, doc);
+          UnlockContentElements(doc,TtaGetFirstChild(el));
+        }
+      TtaNextSibling(&el);
+      if (el != NULL)
+        {
+          UnlockContentElements(doc,el);
+        }
+    }
+}
+
 /*-----------------------------------------------
 void LockFixedAreas
 Parse the subtree from el, set read-only access to
@@ -332,21 +357,25 @@ void LockFixedAreas (Document doc, Element el)
   if (TtaGetFirstChild(el)!=NULL)
     {
       /* The element is not a leaf */
-      if ((strcmp (s,"Template") != 0) ||
-          ((elType.ElTypeNum != Template_EL_free_struct) &&
-           (elType.ElTypeNum != Template_EL_free_content)))
-	  
-	{
-	  /* The element has a fixed structure */
-	  /* So we look for a free structure in
-	     the subtree */
-	  LockFixedAreas (doc, TtaGetFirstChild (el));
-	}
-      else 
-	{
-	  /* The element has a free structure or a free content */
-	  UnlockSubtree (doc, el);
-	}
+      if ((strcmp (s,"Template") == 0) &&
+          (elType.ElTypeNum == Template_EL_free_struct))
+        {
+          /* The element has a free structure */
+          UnlockSubtree (doc, el);
+        }
+      else if ((strcmp (s,"Template") == 0) &&
+               (elType.ElTypeNum == Template_EL_free_content))
+        {
+          /* The element has free content */
+          UnlockContentElements (doc, el);
+        }
+      else 	  
+        {
+          /* The element has a fixed structure */
+          /* So we look for a free structure in
+             the subtree */
+          LockFixedAreas (doc, TtaGetFirstChild (el));
+        }
     }
   TtaNextSibling (&el);
   if (el != NULL)
