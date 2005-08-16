@@ -383,8 +383,6 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       
       templateFile[0] = EOS;
       
-      insertTemplateMeta(newdoc);
-      
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
                     "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
       
@@ -416,6 +414,12 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       /* check parsing errors */
       CheckParsingErrors (newdoc);
       
+      /* Set elements access rights
+         according to free_* elements */
+      Element el = TtaGetMainRoot (newdoc);
+      LockFixedAreas (newdoc, el);
+
+      insertTemplateMeta(newdoc);
     }
    BackupDocument = 0;
    return (newdoc);
