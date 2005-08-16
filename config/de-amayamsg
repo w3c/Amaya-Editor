@@ -46,26 +46,26 @@
 44 Anmeldungsfehler für %s
 45 %s geladen, aber leer
 46 Übertragung unterbrochen!
-47 %s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!
+47 %s ist im Moment nicht verfügbar. Bitte späternochmal versuchen!
 48 %s geladen
 49 Speichere: %s
 50 Kann nicht speichern unter %s
 51 Deutsche Systemfehlermeldungen
 52 Ein Anker kann dieses Element nicht enthalten
-53 Innerhalb eines Ankers kann kein Anker erstellt werden
-54 GET wird für URIs vom Typ %s noch nicht unterstützt
-55 PUT wird für URIs vom Typ %s noch nicht unterstützt
-56 Diese Funktion wird in dieser Version nicht unterstützt
+53 Innerhalb eines Ankers kann kein Anker erstelltwerden
+54 GET wird für URIs vom Typ %s noch nichtunterstützt
+55 PUT wird für URIs vom Typ %s noch nichtunterstützt
+56 Diese Funktion wird in dieser Version nichtunterstützt
 57 Schreiben auf %s beendet
 58 Normalisierung für %s nicht erfolgreich
-59 Temporäres Verzeichnis %s konnte nicht angelegt werden
-60 Für die Markierung ist keine Transformation anwendbar
+59 Temporäres Verzeichnis %s konnte nicht angelegtwerden
+60 Für die Markierung ist keine Transformationanwendbar
 61 Transformation fehlerhaft
-62 Syntaxfehler in der Datei HTML.trans, Zeile %s
+62 Syntaxfehler in der Datei HTML.trans, Zeile%s
 63 Formel
 64 Grafik (SVG)
 65 Speichern unter
-66 Bitte auf der Domäne \'%s\', Server \'%s\' einloggen:
+66 Bitte auf der Domäne \'%s\', Server \'%s\'einloggen:
 67 Domäne: %s
 68 Server: %s
 69 Editor/Browser
@@ -90,7 +90,7 @@
 88 Entfernen CSS
 89 Der W3C Browser und Editor für das Web
 90 (Probleme an www-amaya@w3.org senden)
-91 URI länger als %s Zeichen werden zur Zeit nicht unterstützt
+91 URI länger als %s Zeichen werden zur Zeit nichtunterstützt
 92 Nur Standardtyp erlaubt
 93 Aktualisierung der Verweise %s%% erfolgreich
 94 Nichts zu speichern
@@ -109,18 +109,18 @@
 107 %s wurde erzeugt
 108 %s wurde aktualisiert
 109 Operation wurde beendet mit Code %s
-110 Der Server konnte die Anfragesyntax nicht verstehen
-111 Der Server hat keine neue Informationen zurückzusenden
+110 Der Server konnte die Anfragesyntax nichtverstehen
+111 Der Server hat keine neue Informationenzurückzusenden
 112 Diese Methode ist nicht erlaubt
 113 Bitte für den Zugriff auf %s einloggen
 114 Überprüfe ...
-115 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
-116 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
+115 Speichern unter %s fehlerhaft, Speichern aufFestplatte?
+116 Speichern unter %s scheint fehlerhaft zu sein,Ignorieren?
 117 URI %s nach %s weitergeleitet, ignorieren?
 118 Aktualisierung von %s fehlerhaft, ignorieren?
 119 Der Server meldet einen 501-Fehler: %s
 120 Der Server meldet einen 501-Fehler
-121 Der Server unterstützt diese Anforderungsmethode nicht
+121 Der Server unterstützt diese Anforderungsmethodenicht
 122 Filter
 123 Aktive Übertragungen
 124 Wartende Übertragungen
@@ -129,7 +129,7 @@
 127 Wiederholungsmodus
 128 Wiederholung
 129 Wiederholung x
-130 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+130 Ihr letzter Amaya-Prozeß wurde abgebrochen. MöchtenSie Sicherungskopien laden?
 131 Login gescheitert. Wiederholen?
 132 Umleitung folgen?
 133 Zeilen:
@@ -177,15 +177,15 @@
 175 Fenstergeometrie
 176 Aktuelle Geometrie speichern
 177 Standardgeometrie einstellen
-178 Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.
+178 Änderungen werden erst beim Öffnen eines neuenFensters wirksam.
 179 Farben
 180 Schrift (Dokument)
 181 Hintergrund(Dokument)
 182 Schrift (Menüs)
 183 Hintergrund (Menüs)
-184 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+184 Kann den Cache nicht starten. Möglicherweise ist dasCacheverzeichnis ungültig, oder ein anderer Prozeß verwendet denCache.
 185 Bevorzugte Sprachen
-186 Änderungen werden erst bei einem Neustart wirksam
+186 Änderungen werden erst bei einem Neustartwirksam
 187 PUT automatisch an diese Domäne umleiten
 188 Formatvorlagen ignorieren
 189 Transformationstyp
@@ -210,14 +210,14 @@
 208 Hochformat
 209 Querformat
 210 FTP zulassen
-211 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
-212 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
-213 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
+211 XML-Dokument nicht wohlgeformt - als HTML laden oderParserfehler anzeigen?
+212 XML-Dokument nicht wohlgeformt - Parsefehleranzeigen?
+213 Verwenden Sie 'Datei/Zeichenkodierungerzwingen'
 214 Ungültige Zeichen
 215 Dokumenttyp:
 216 Anzeigen - siehe Datei/Parserfehler anzeigen
-217 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-218 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
+217 Die Codierung dieses Dokuments wird von Amaya nichtunterstützt
+218 Durch das Bearbeiten und Speichern ändert sich derDokumenttyp
 219 Nicht verfügbar
 220 Durchsuchen
 221 Durchsuchen
@@ -236,13 +236,13 @@
 234 Ignorieren
 235 Formatelement
 236 Kann XPointer nicht erzeugen
-237 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-238 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-239 Kein Ziel zum Verschieben der Anmerkung gefunden
-240 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-241 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
-242 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
-243 Für diese Anmerkung kann kein XPointer erzeugt werden
+237 Anbringen eines Start XPointer an ein interneszusätzliches Element nicht möglich
+238 Anbringen eines End XPointer an ein interneszusätzliches Element nicht möglich
+239 Kein Ziel zum Verschieben der Anmerkunggefunden
+240 Die Anmerkung kann nicht in ein anderes Dokumentverschoben werden
+241 Anmerkung an geändertes Dokument ist nicht möglich,bitte erst speichern
+242 Kein Ersteller für Anmerkung konfiguriert, bitte dasMenü "Anmerkungen/Konfiguration" öffnen
+243 Für diese Anmerkung kann kein XPointer erzeugtwerden
 244 Neue Anmerkung erzeugen
 245 Absenden der Anmerkung gescheitert
 246 Löschen der Anmerkung gescheitert
@@ -254,22 +254,22 @@
 252 Zeichenkodierung ändern
 253 MIME-Typ ändern
 254 Ändern
-255 Dieser Dokumenttyp unterstützt keine Zeichensätze
-256 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
+255 Dieser Dokumenttyp unterstützt keineZeichensätze
+256 Diese Option kann nur mit einem HTTP URI Zielverwendet werden
 257 Fehler: ungültiger MIME-Typ
 258 Unbekannt
-259 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
-260 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
-261 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-262 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
+259 Formatvorlagen wurden ignoriert - sieheAnsicht/Parserfehler anzeigen
+260 Dieses Dokument wird bereits in einem anderen Fensterangezeigt
+261 Beim Speichern dieser Instanz des Dokuments könnenÄnderungen in anderen Instanzen verloren gehen (lost updateproblem)
+262 Durch das Hinzufügen oder Ändern des Dokumententypsgehen Elemente oder Attribute verloren
 263 Soll die Operation ausgeführt werden ?
-264 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
+264 MIME-Typ application/xhtml+xml für XHTML-Dokumenteverwenden
 265 Standardzeichensatz für neue Dakumente
 266 Sperrung erfolgreich
 267 Sperrung fehlgeschlagen
 268 Sperre %s...
 269 Dokument %s ist gesperrt
-270 Dokument %s wurde von %s gesperrt (timeout %s)
+270 Dokument %s wurde von %s gesperrt (timeout%s)
 271 Sperrinformation überschreiben?
 272 Sperrinformation kopieren?
 273 Versuche Dokument zu entsperren...
@@ -280,13 +280,13 @@
 278 Dokument entsperren?
 279 Dokumenteigenschaften
 280 Dokumenteigenschaften nicht verfügbar
-281 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
+281 Dokumenteigenschaften momentan nicht verfügbar.Versuchen Sie es später...
 282 Suche nach Dokumenteigenschaften...
-283 Keine WebDAV-Unterstützung für URLs vom Typ %s
+283 Keine WebDAV-Unterstützung für URLs vom Typ%s
 284 Konnte Sperrinformation lokal nicht speichern
 285 Konnte Sperrinformation lokal nicht entfernen
 286 Operation nicht erlaubt für %s
-287 Anforderung fehlgeschlagen: keine Abhängigkeit
+287 Anforderung fehlgeschlagen: keineAbhängigkeit
 288 Anforderung fehlgeschlagen: %s
 289 Erneut versuchen?
 290 WebDAV
@@ -315,12 +315,12 @@
 313 Bibliothek erzeugen
 314 Bibliothek durchsuchen
 315 Bibliothek erzeugen oder suchen
-316 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
-317 Der Titel der Bibliothek muss angegeben werden
-318 Den Cursor an die neue Schlüsselposition bewegen...
-319 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+316 Die Markierung enthält nicht nur SVG-Elemente. Bitteneu markieren
+317 Der Titel der Bibliothek muss angegebenwerden
+318 Den Cursor an die neue Schlüsselpositionbewegen...
+319 Schlüsselposition definiert. Schieber bewegen um dieDauer der Animation festzulegen...
 320 Anfangsfarbe des Elements wählen...
-321 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+321 Anfangsfarbe definiert. Schieber bewegen um die Dauerder Animation festzulegen...
 322 Endfarbe wählen...
 323 Animation definiert.
 324 Animiertes Attribut
@@ -345,10 +345,10 @@
 343 Wählen Sie bitte ein Element aus
 344 CSS komplett
 345 CSS-Regeln, die für <%s> gelten\n
-346 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
+346 Blaue Linien sind Verweise, die durch einen Doppel-(oder Einfach-)klick aktiviert wurden.\n
 347 Objekte laden (object, embed, iframe)
-348 Für dieses Element gibt es keine Formatvorlage
-349 Keine Einfügeposition definiert. Bitte zuerst auswählen
+348 Für dieses Element gibt es keineFormatvorlage
+349 Keine Einfügeposition definiert. Bitte zuerstauswählen
 350 Dokumentinformation
 351 Documenttyp
 352 MIME Type
@@ -362,14 +362,14 @@
 360 Datei
 361 Aktuelle Seite ersetzen
 362 In neuer Seite
-363 In neuer Seite (noch nicht verfügbar in Mac OSX)
+363 In neuer Seite (noch nicht verfügbar in MacOSX)
 364 In neuem Fenster
 365 Anti-aliasing
 366 ISO-Datumsformat
 367 Ort für neue Dokumente
 368 Ort zum Öffnen
-369 Warnen, wenn mehrere Seiten geschlossen werden
-370 Die maximale Anzahl an URLs in der History ist erreicht
+369 Warnen, wenn mehrere Seiten geschlossenwerden
+370 Die maximale Anzahl an URLs in der History isterreicht
 371 URL-Liste löschen
 372 **Template
 373 **Save the document as...

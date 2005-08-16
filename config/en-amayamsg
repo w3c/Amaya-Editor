@@ -46,16 +46,16 @@
 44 Authorization failure for %s
 45 %s loaded but no data is available
 46 Transfer interrupted!
-47 %s is not available at the moment. Please retry later
+47 %s is not available at the moment. Please retrylater
 48 %s loaded
 49 Saving %s
 50 Cannot save in: %s
 51 English system errors messages
 52 An anchor cannot contain these elements
 53 Cannot create an anchor within an anchor
-54 Sorry, no GET support yet for URLs of this type: %s
-55 Sorry, no PUT support yet for URLs of this type: %s
-56 This version of Amaya does not support this feature
+54 Sorry, no GET support yet for URLs of this type:%s
+55 Sorry, no PUT support yet for URLs of this type:%s
+56 This version of Amaya does not support thisfeature
 57 Finished writing %s
 58 Could not normalize %s
 59 Could not create temporary file directory %s
@@ -65,7 +65,7 @@
 63 Maths
 64 Graphics
 65 Save as
-66 Please authenticate for realm \'%s\' at server \'%s\'
+66 Please authenticate for realm \'%s\' at server\'%s\'
 67 Realm: %s
 68 Server: %s
 69 Editor/Browser
@@ -129,7 +129,7 @@
 127 Repeat Mode
 128 repeat
 129 repeat-x
-130 Your previous Amaya session failed. Do you want to reload backup documents?
+130 Your previous Amaya session failed. Do you want toreload backup documents?
 131 Authentication failed. Retry?
 132 Operation will be redirected. Continue?
 133 Number of Rows
@@ -177,16 +177,16 @@
 175 Geometry
 176 Save current geometry
 177 Restore default geometry
-178 The change will be effective when you open a new window.
+178 The change will be effective when you open a newwindow.
 179 Colors
 180 Document foreground color
 181 Document background color
 182 Menu foreground color
 183 Menu background color
-184 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-185 List of preferred languages like "en, fr":
-186 These changes won't be effective until Amaya is restarted
-187 Allow automatic PUT redirections to these domains
+184 Couldn't start the cache. You may have specified aninvalid cache directory or another Amaya is using the cache.
+185 List of preferred languages like "en,fr":
+186 These changes won't be effective until Amaya isrestarted
+187 Allow automatic PUT redirections to thesedomains
 188 Ignore style sheets
 189 Transform type
 190 (separate each entry with a space)
@@ -203,21 +203,21 @@
 201 Annotation servers
 202 Autoload local annotations
 203 Autoload remote annotations
-204 Disable remote autoload at each startup (for off-line work)
+204 Disable remote autoload at each startup (for off-linework)
 205 Selection color
 206 Selection background color
 207 Orientation
 208 Portrait
 209 Landscape
 210 Enable FTP
-211 Not Well-Formed XML document - Reload as HTML or show parsing errors?
-212 Not Well-Formed XML document - Show parsing errors?
+211 Not Well-Formed XML document - Reload as HTML or showparsing errors?
+212 Not Well-Formed XML document - Show parsingerrors?
 213 Try the 'File/Force a Character Coding' entry
 214 Invalid characters
 215 Document profile:
-216 Errors detected - see File/Show parsing errors
-217 The encoding of this document is not supported by Amaya
-218 Editing and saving this document will change its type
+216 Errors detected - see File/Show parsingerrors
+217 The encoding of this document is not supported byAmaya
+218 Editing and saving this document will change itstype
 219 Not available
 220 Browse
 221 File Browser
@@ -236,13 +236,13 @@
 234 Ignore
 235 Style element
 236 Cannot create an XPointer
-237 Impossible to attach a start XPointer on an internal added element
-238 Impossible to attach an end XPointer on an internal added element
+237 Impossible to attach a start XPointer on an internaladded element
+238 Impossible to attach an end XPointer on an internaladded element
 239 Cannot find where to move the annotation
-240 Cannot move the annotation to a different document
-241 You cannot annotate a modified document. Please save it first.
-242 No annotation user declared. Please open the Annotations/Configure menu.
-243 Unable to build an XPointer for this annotation
+240 Cannot move the annotation to a differentdocument
+241 You cannot annotate a modified document. Please saveit first.
+242 No annotation user declared. Please open theAnnotations/Configure menu.
+243 Unable to build an XPointer for thisannotation
 244 Make a new annotation
 245 Failed to post the annotation
 246 Failed to delete the annotation
@@ -254,16 +254,16 @@
 252 Change Character Coding
 253 Change MIME type
 254 Change
-255 This type of document doesn't support charsets
-256 The target must be an HTTP URL to use this option
+255 This type of document doesn't supportcharsets
+256 The target must be an HTTP URL to use thisoption
 257 Error: invalid MIME type
 258 Unknown
-259 Styles are ignored - see Views/Show parsing errors
-260 This document is already loaded in another Window
-261 Saving that instance may cause a lost update problem
-262 Adding or changing the doctype will remove some elements or attributes
+259 Styles are ignored - see Views/Show parsingerrors
+260 This document is already loaded in anotherWindow
+261 Saving that instance may cause a lost updateproblem
+262 Adding or changing the doctype will remove someelements or attributes
 263 Please confirm operation
-264 Use the application/xhtml+xml MIME type for XHTML documents
+264 Use the application/xhtml+xml MIME type for XHTMLdocuments
 265 Charset for new documents
 266 Lock succeed!
 267 Lock failed!
@@ -271,24 +271,24 @@
 269 Document %s is locked!
 270 Document %s is locked by %s (timeout %s)
 271 Overwrite lock information?
-272 Copy the lock information? 
+272 Copy the lock information?
 273 Try to unlock the document before...
 274 Unlock succeed!
 275 Unlock failed!
 276 Unlocking %s...
 277 Document %s is unlocked!
-278 Unlock the document? 
+278 Unlock the document?
 279 Document properties
 280 Document properties are not available
-281 Document properties are temporarily unavailable. Try again later...
+281 Document properties are temporarily unavailable. Tryagain later...
 282 Looking for document properties...
-283 Sorry, no WebDAV support for URLs of this type %s
+283 Sorry, no WebDAV support for URLs of this type%s
 284 Failed to save lock info in the local base
 285 Failed to remove lok info from local base
 286 Sorry, this operation is not allowed for %s
 287 Request failed! Reason: Failed Dependency
 288 Request failed! Reason: %s
-289 Try again? 
+289 Try again?
 290 WebDAV
 291 User's Personal Reference (URL)
 292 User's WebDAV Resource List (URL URL)
@@ -315,12 +315,12 @@
 313 Create library
 314 Browse library
 315 Create or search library
-316 The selection includes no SVG elements. Please reselect
+316 The selection includes no SVG elements. Pleasereselect
 317 The library title is mandatory
-318 Move the position cursor in edited document to define a new key position...
-319 Key position defined. Move the slider to define animation duration...
+318 Move the position cursor in edited document to definea new key position...
+319 Key position defined. Move the slider to defineanimation duration...
 320 Select starting color of element...
-321 Starting color defined. Move the slider to define animation duration...
+321 Starting color defined. Move the slider to defineanimation duration...
 322 Select ending color...
 323 Animation defined.
 324 Animated attribute
@@ -344,11 +344,11 @@
 342 Description:
 343 Please select an element
 344 All CSS
-345 CSS style rules applied to the <%s> element\n
-346 Blue lines are links activated by a double (or a single) click\n
+345 CSS style rules applied to the <%s>element\n
+346 Blue lines are links activated by a double (or asingle) click\n
 347 Load objects (object, embed, iframe)
 348 No style rule for this element
-349 No insert position defined. Please select first
+349 No insert position defined. Please selectfirst
 350 Document information
 351 Document Type
 352 MIME Type

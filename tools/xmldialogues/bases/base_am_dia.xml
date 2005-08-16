@@ -276,8 +276,8 @@
 	<message xml:lang="hu">Új &amp;CSS stíluslap...</message>
 </label>
 <label define="BTemplate">
-	<message xml:lang="en">From t&amp;emplate</message>
-	<message xml:lang="fr">M&amp;odèle</message>
+	<message xml:lang="en">From t&amp;emplate...</message>
+	<message xml:lang="fr">A partir du M&amp;odèle...</message>
 	<message xml:lang="de">Schablone...</message>
 	<message xml:lang="it">Modello</message>
 	<message xml:lang="es">Desde &amp;plantilla</message>

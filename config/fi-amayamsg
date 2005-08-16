@@ -46,16 +46,16 @@
 44 Tunnistus ep‰onnistui %s
 45 %s ladattu, mutta ei luettavissa
 46 Tiedonsiirto keskeytetty!
-47 %s yhteytt‰ ei voi muodostaa. Yritt‰k‰‰ myˆhemmin uudelleen.
+47 %s yhteytt‰ ei voi muodostaa. Yritt‰k‰‰ myˆhemminuudelleen.
 48 %s ladattu
 49 Tallenetaan %s
 50 Ei voida tallentaa: %s
 51 Englantilaisen j‰rjestelm‰n virhesanomat.
-52 Linkin kohde ei voi sis‰lt‰‰ n‰it‰ elementtej‰
+52 Linkin kohde ei voi sis‰lt‰‰ n‰it‰elementtej‰
 53 Ei voida luoda kohdetta kohteen sis‰lle
 54 T‰lle URL:lle ei ole viel‰ GET-tukea: %s
 55 T‰lle URL:lle ei ole viel‰ PUT-tukea:: %s
-56 Amayan t‰m‰ versio ei tue viel‰ t‰t‰ ominaisuutta
+56 Amayan t‰m‰ versio ei tue viel‰ t‰t‰ominaisuutta
 57 Kirjoitus valmis %s
 58 Ei voinut normalisoida %s
 59 Ei voinut luoda v‰liaikaista hakemistoa %s
@@ -65,7 +65,7 @@
 63 Matematiikka
 64 Grafiikka
 65 Tallenna nimell‰
-66 Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'
+66 Anna tunnistetiedot alueelle \'%s\' palvelimella\'%s\'
 67 Alue: %s
 68 Palvelin: %s
 69 Muokkain/Selain
@@ -90,7 +90,7 @@
 88 Poista CSS
 89 W3C:n Internetin muokkain/selain
 90 (ilmoita virheist‰ www-amaya@w3.org)
-91 Ei voi k‰sitell‰ osoitteita joissa on enemm‰n kuin %s merkki‰
+91 Ei voi k‰sitell‰ osoitteita joissa on enemm‰n kuin%s merkki‰
 92 Vain oletus sallittu
 93 Linkkien p‰ivitys: %s%% onnistui
 94 Ei mit‰‰n tallennettavaa
@@ -100,11 +100,11 @@
 98 Ei CSS-tiedostoa saatavilla
 99 **Don't save
 100 ei toistoa
-101 Dokumentilla ei ole nime‰. Tallennetaan nimell‰:
+101 Dokumentilla ei ole nime‰. Tallennetaannimell‰:
 102 Pluginit
 103 Tuntematon virhe tallennettaessa URL:‰‰ %s
 104 Palvelinyhteyden muodostus ep‰onnistui
-105 P‰‰sy tietoon %s on kielletty palvelimen toimesta
+105 P‰‰sy tietoon %s on kielletty palvelimentoimesta
 106 Toiminto onnistui %s
 107 %s on luotu
 108 %s on p‰ivitetty
@@ -114,7 +114,7 @@
 112 T‰m‰ menettely on kielletty
 113 Tunnistus vaaditaan %s k‰sittelyyn
 114 Tarkistetaan ...
-115 Tallennus %s ep‰onnistui, Tallenetaanko levylle?
+115 Tallennus %s ep‰onnistui, Tallenetaankolevylle?
 116 Tallenne %s vaikuttaa virheelliselt‰, ohita?
 117 URL %s v‰litet‰‰n edelleen %s, ohita?
 118 %s p‰ivitys ep‰onnistui, ohita?
@@ -129,7 +129,7 @@
 127 Toistotila
 128 toista
 129 toista-x
-130 Amayan sammuttaminen ep‰onnistui. Haluatko palauttaa varmuuskopioidut dokumentit?
+130 Amayan sammuttaminen ep‰onnistui. Haluatko palauttaavarmuuskopioidut dokumentit?
 131 Tunnistus ep‰onnistui, Yrit‰ uudelleen?
 132 Toiminto v‰litet‰‰n. Haluatko jatkaa?
 133 Rivien lukum‰‰r‰
@@ -148,10 +148,10 @@
 146 Ohita vanhentumiset: header
 147 V‰limuistin sijainti
 148 V‰limuistin koko (Mb)
-149 V‰limuistiin tallennettavan tiedoston kokorajoitus (Mb)
+149 V‰limuistiin tallennettavan tiedoston kokorajoitus(Mb)
 150 V‰limuisti
 151 HTTP v‰lityspalvelin (e.g., www.w3.org:1234)
-152 V‰lityspalvelimen domain luettelo (e.g., lists.w3.org)
+152 V‰lityspalvelimen domain luettelo (e.g.,lists.w3.org)
 153 Yleiset
 154 Aloitussivu
 155 Painikevihjeen viive (ms)
@@ -183,15 +183,15 @@
 181 Dokumentin taustav‰ri
 182 Valikon piirtov‰ri
 183 Valikon taustav‰ri
-184 V‰limuistin k‰ynnistys ep‰onnistui.V‰limuistin hakemisto on viallinen tai toinen Amaya-prosessi k‰ytt‰‰ v‰limuistia.
-185 Luettelo valituista kielist‰ "fi, en":
-186 Muutokset tulevat voimaan Amayan uudelleenk‰ynnist‰misen j‰lkeen.
-187 Salli automaattinen PUT-komentojen v‰litys n‰iss‰ domaineissa
+184 V‰limuistin k‰ynnistys ep‰onnistui.V‰limuistinhakemisto on viallinen tai toinen Amaya-prosessi k‰ytt‰‰v‰limuistia.
+185 Luettelo valituista kielist‰ "fi,en":
+186 Muutokset tulevat voimaan Amayanuudelleenk‰ynnist‰misen j‰lkeen.
+187 Salli automaattinen PUT-komentojen v‰litys n‰iss‰domaineissa
 188 Ohita tyylitiedostot
 189 Muunnoksen tyyppi
 190 (erota syˆtteet v‰lilyˆnnein)
-191 ƒl‰ k‰yt‰ v‰lityspalvelinta n‰ihin domaineihin
-192 K‰yt‰ vain v‰lityspalvelinta n‰ihin domaineihin
+191 ƒl‰ k‰yt‰ v‰lityspalvelinta n‰ihindomaineihin
+192 K‰yt‰ vain v‰lityspalvelinta n‰ihindomaineihin
 193 Henkilˆn nimi
 194 Amaya k‰ytt‰j‰n hakemisto
 195 V‰liaikaisten tiedostojen hakemisto
@@ -203,21 +203,21 @@
 201 Palvelimien merkinn‰t
 202 Lataa paikalliset merkinn‰t automaattisesti
 203 Lataa et‰merkinn‰t automaattisesti
-204 Poista et‰lataus k‰ytˆst‰ k‰ynnistyksen yhteydess‰ (et‰tyˆt‰ varten)
+204 Poista et‰lataus k‰ytˆst‰ k‰ynnistyksenyhteydess‰ (et‰tyˆt‰ varten)
 205 Valintav‰ri
 206 **Selection background color
 207 Suunta
 208 Pysty
 209 Vaaka
 210 Ota FTP k‰yttˆˆn
-211 Huonosti muotoiltu XML-dokumentti - Ladataanko HTML:n‰ vai n‰ytet‰‰n virheellisen‰?
-212 Huonosti muotoiltu XML-dokumentti - N‰ytet‰‰nkˆ virheet?
+211 Huonosti muotoiltu XML-dokumentti - LadataankoHTML:n‰ vai n‰ytet‰‰n virheellisen‰?
+212 Huonosti muotoiltu XML-dokumentti - N‰ytet‰‰nkˆvirheet?
 213 **Try the 'File/Force a Character Coding' entry
 214 Virheellisi‰ merkkej‰
 215 Dokumentin profiili:
-216 Virhe - katso N‰yt‰/N‰yt‰ k‰‰nnˆsvirheet
+216 Virhe - katso N‰yt‰/N‰yt‰k‰‰nnˆsvirheet
 217 Amaya ei tue dokumentin tyyppi‰
-218 Muokkaus ja tallennus muuttavat dokumentin tyypin
+218 Muokkaus ja tallennus muuttavat dokumentintyypin
 219 Ei saatavilla
 220 Selaa
 221 Selaa tiedostoja
@@ -227,7 +227,7 @@
 225 Piilota
 226 N‰yt‰ kaikki
 227 Piilota kaikki
-228 * tarkoittaa piilotettua, - tarkoittaa osittain piilotettua
+228 * tarkoittaa piilotettua, - tarkoittaa osittainpiilotettua
 229 Suodatusvalinnat
 230 Tekij‰n mukaan
 231 Tyypin mukaan
@@ -236,13 +236,13 @@
 234 Ohita
 235 Tyyli elementti
 236 Ei voi luoda XPointeria
-237 Mahdotonta liitt‰‰ aloittavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
-238 Mahdotonta liitt‰‰ lopettavaa XPointeria sis‰isesti lis‰ttyyn elementtiin
+237 Mahdotonta liitt‰‰ aloittavaa XPointeria sis‰isestilis‰ttyyn elementtiin
+238 Mahdotonta liitt‰‰ lopettavaa XPointeria sis‰isestilis‰ttyyn elementtiin
 239 Merkinn‰n kohdepaikkaa ei lˆydy
-240 Merkint‰‰ ei voi siirt‰‰ toiseen dokumenttiin
-241 Et voi merkit‰ muutettua dokumenttia. Tallenna dokumentti ensin.
-242 Merkinn‰n k‰ytt‰j‰‰ ei valittu. Valitse k‰ytt‰j‰ Merkinn‰t/M‰‰rit‰ asetukset
-243 XPointerin luonti merkint‰‰ varten ep‰onnistui
+240 Merkint‰‰ ei voi siirt‰‰ toiseendokumenttiin
+241 Et voi merkit‰ muutettua dokumenttia. Tallennadokumentti ensin.
+242 Merkinn‰n k‰ytt‰j‰‰ ei valittu. Valitsek‰ytt‰j‰ Merkinn‰t/M‰‰rit‰ asetukset
+243 XPointerin luonti merkint‰‰ vartenep‰onnistui
 244 Uusi merkint‰
 245 Merkinn‰n l‰hetys ep‰onnistui
 246 Merkinn‰n poisto ep‰onnistui
@@ -255,21 +255,21 @@
 253 Muuta MIME tyypi
 254 Muuta
 255 T‰m‰ dokumenttityyppi ei tue charset:i‰
-256 Kohteen t‰ytyy olla HTTP URL t‰m‰n valinna kanssa
+256 Kohteen t‰ytyy olla HTTP URL t‰m‰n valinnakanssa
 257 Virhe: ep‰kelpo MIME tyyppi
 258 Tuntematon
-259 Tyylit ohitetaan - katso N‰yt‰/N‰yt‰ k‰‰nnˆsvirheet
-260 T‰m‰ dokumentti on avattu jo toiseen ikkunaan
-261 T‰m‰n instanssin tallennus saattaa aiheuttaa kadonneen p‰ivityksen ongelman
-262 **Adding or changing the doctype will remove some elements or attributes
+259 Tyylit ohitetaan - katso N‰yt‰/N‰yt‰k‰‰nnˆsvirheet
+260 T‰m‰ dokumentti on avattu jo toiseenikkunaan
+261 T‰m‰n instanssin tallennus saattaa aiheuttaakadonneen p‰ivityksen ongelman
+262 **Adding or changing the doctype will remove someelements or attributes
 263 **Please confirm operation
-264 K‰yt‰ application/xhtml+xml MIME tyypi‰ XHTML dokumenttien yhteydess‰
+264 K‰yt‰ application/xhtml+xml MIME tyypi‰ XHTMLdokumenttien yhteydess‰
 265 **Charset for new documents
 266 Lukitus onnistui!
 267 Lukitus ep‰onnistui!
 268 Lukitaan %s...
 269 Dokumentti %s on lukittu!
-270 Dokumentin %s on lukinnut %s (aikakatkaisu %s)
+270 Dokumentin %s on lukinnut %s (aikakatkaisu%s)
 271 Korvataanko lukitustiedot?
 272 Kopioidaanko lukitustiedot?
 273 Yrit‰ poistaa lukitus ensin...
@@ -280,18 +280,18 @@
 278 Poista lukitus dokumentista?
 279 Dokumentin ominaisuudet
 280 Dokumentin ominaisuuksia ei saatavilla
-281 Dokumentin ominaisuuksia ei ole v‰liaikaisesti saatavilla. Yrit‰ myˆhemmin uudelleen...
+281 Dokumentin ominaisuuksia ei ole v‰liaikaisestisaatavilla. Yrit‰ myˆhemmin uudelleen...
 282 Haetaan dokumentin ominaisuuksia...
 283 T‰lle URL:lle ei ole WebDav-tukea %s
-284 Lukitustietojen tallennus paikallisesti ep‰onnistui
-285 Lukitustietojen poisto paikallisesti ep‰onnistui
+284 Lukitustietojen tallennus paikallisestiep‰onnistui
+285 Lukitustietojen poisto paikallisestiep‰onnistui
 286 T‰m‰ toiminto ei ole k‰ytett‰viss‰ %s
-287 Pyyntˆ ep‰onnistui! Syy: Viallinen riippuvuus
+287 Pyyntˆ ep‰onnistui! Syy: Viallinenriippuvuus
 288 Pyyntˆ ep‰onnistui! Syy: %s
 289 Yrit‰ uudelleen?
 290 WebDAV
 291 K‰ytt‰j‰n henkilˆkohtainen linkki (URL)
-292 K‰ytt‰j‰n WebDAV resurssi luettelo (URL URL)
+292 K‰ytt‰j‰n WebDAV resurssi luettelo (URLURL)
 293 Lukituksen syvyys
 294 rajattomuus
 295 Lukituksen aikakatkaisu
@@ -315,12 +315,12 @@
 313 Luo kirjasto
 314 Selaa kirjastoa
 315 Luo tai etsi kirjasto
-316 Nykyinen valinta ei sis‰ll‰ pelk‰st‰‰n SVG elementtej‰. Valitse uudelleen.
+316 Nykyinen valinta ei sis‰ll‰ pelk‰st‰‰n SVGelementtej‰. Valitse uudelleen.
 317 Kirjaston otsikko on pakollinen
-318 Siirr‰ kursoria dokumentissa m‰‰ritt‰‰ksesi uuden avainkohdan...
-319 Avainkohta m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
+318 Siirr‰ kursoria dokumentissa m‰‰ritt‰‰ksesi uudenavainkohdan...
+319 Avainkohta m‰‰ritelty. Siirr‰ liukukytkint‰m‰‰ritt‰‰ksesi animaation keston...
 320 Valitse elementin alkuv‰ri...
-321 Alkuv‰ri m‰‰ritelty. Siirr‰ liukukytkint‰ m‰‰ritt‰‰ksesi animaation keston...
+321 Alkuv‰ri m‰‰ritelty. Siirr‰ liukukytkint‰m‰‰ritt‰‰ksesi animaation keston...
 322 Valitse loppuv‰ri...
 323 Animaatio m‰‰ritelty
 324 Animoitu m‰‰rittely
@@ -344,11 +344,11 @@
 342 **Description:
 343 **Please select an element
 344 **All CSS
-345 **CSS style rules applied to the <%s> element\n
-346 **Blue lines are links activated by a double (or a single) click\n
+345 **CSS style rules applied to the <%s>element\n
+346 **Blue lines are links activated by a double (or asingle) click\n
 347 **Load objects (object, embed, iframe)
 348 **No style rule for this element
-349 **No insert position defined. Please select first
+349 **No insert position defined. Please selectfirst
 350 **Document information
 351 **Document Type
 352 **MIME Type
