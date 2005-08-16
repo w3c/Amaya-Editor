@@ -510,8 +510,8 @@ typedef struct _DocumentMetaDataElement
 #endif /* ANNOTATIONS */
 
 #ifdef TEMPLATES
-  char      *template_location;   /* if this document is derived from a template,
-				     The location of the template used to create the document 
+  char      *template_version;   /* if this document is derived from a template,
+				     The name and the version of the template used to create the document 
 				     is stored in this variable */
 #endif /* TEMPLATES */
   

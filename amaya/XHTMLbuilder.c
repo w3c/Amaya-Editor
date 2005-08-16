@@ -190,10 +190,10 @@ void ParseTemplateMeta (Element el, Document doc)
 			}
 
 		      if (!DocumentMeta[doc])
-			DocumentMeta[doc] = DocumentMetaDataAlloc ();
-		      if (DocumentMeta[doc]->template_location == NULL)
+            DocumentMeta[doc] = DocumentMetaDataAlloc ();
+		      if (DocumentMeta[doc]->template_version == NULL)
 			{
-			  DocumentMeta[doc]->template_location = TtaStrdup (text2);
+			  DocumentMeta[doc]->template_version = TtaStrdup (text2);
 			}
 		      TtaFreeMemory (text2);
 		    }       

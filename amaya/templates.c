@@ -257,6 +257,7 @@ void InitTemplateList ()
     }
   TtaFreeMemory (urlstring);
 }
+
 /*-------------------------------------------------
  Insert the meta element identifying the template's
  instance
@@ -265,7 +266,7 @@ void insertTemplateMeta (Document newdoc)
 {
   Element el = TtaGetMainRoot (newdoc);
   Element meta;
-  Element head = NULL;
+  Element head;
   ElementType elType;
   AttributeType	attrType;
   Attribute attr;
@@ -382,6 +383,8 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       
       templateFile[0] = EOS;
       
+      insertTemplateMeta(newdoc);
+      
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
                     "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
       
@@ -413,14 +416,14 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       /* check parsing errors */
       CheckParsingErrors (newdoc);
       
-      /* Set elements access rights
-         according to free_* elements */
-      Element el = TtaGetMainRoot (newdoc);
-      LockFixedAreas (newdoc, el);
-      insertTemplateMeta(newdoc);
     }
    BackupDocument = 0;
    return (newdoc);
 
 }
 
+void LoadInstanceOfTemplate (Document doc)
+{
+  Element el = TtaGetMainRoot (doc);
+  LockFixedAreas (doc, el);
+}

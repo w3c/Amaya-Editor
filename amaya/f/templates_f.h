@@ -12,6 +12,7 @@ extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                    ClickEvent *method );
 extern void InitTemplateList ( void );
+extern void insertTemplateMeta ( Document newdoc );
 extern void UnlockSubtree ( Document doc,
                             Element el );
 extern void LockFixedAreas ( Document doc,
@@ -20,7 +21,7 @@ extern int CreateInstanceOfTemplate ( Document doc,
                                       char *templatename,
                                       char *docname,
                                       DocumentType docType );
-extern void insertTemplateMeta ( Document newdoc );
+extern void LoadInstanceOfTemplate ( Document doc );
 
 #else /* __STDC__ */
 
@@ -30,6 +31,7 @@ extern void OpenTemplateDocument ( Document doc );
 extern void ReloadTemplateParams ( char **docURL,
                                      ClickEvent *method );
 extern void InitTemplateList ( void );
+extern void insertTemplateMeta ( Document newdoc );
 extern void UnlockSubtree ( Document doc,
                               Element el );
 extern void LockFixedAreas ( Document doc,
@@ -38,7 +40,7 @@ extern int CreateInstanceOfTemplate ( Document doc,
                                         char *templatename,
                                         char *docname,
                                         DocumentType docType );
-extern void insertTemplateMeta ( Document newdoc );
+extern void LoadInstanceOfTemplate ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

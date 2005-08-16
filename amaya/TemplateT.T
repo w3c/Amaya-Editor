@@ -24,7 +24,6 @@ VAR
    SUA : '';                    { Start of unknown attribute }
 
 RULES
-
    Template: begin
   	Use HTMLTX for HTML;
     Use XLinkT for XLink;
