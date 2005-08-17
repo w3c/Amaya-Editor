@@ -775,6 +775,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 {
    AttributeType          attrType;
    Attribute              PseudoAttr, attr;
+   Element                root;
    ElementType            elType;
    Document               targetDocument, reldoc;
    SSchema                HTMLSSchema;
@@ -784,7 +785,7 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
    int                    length;
    int                    method;
    FollowTheLink_context *ctx;
-   ThotBool		  isHTML, history;
+   ThotBool		            isHTML, history, readonly = FALSE;
 
    if (Follow_exclusive)
      return FALSE;
@@ -930,11 +931,20 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
                  /* it's not necessary to open a new window */
                  DontReplaceOldDoc = FALSE;
                
+                 /* Set the Help document in ReadOnly mode */
+               root = TtaGetMainRoot (doc);
+               readonly = (TtaGetAccessRight (root) == ReadOnly);
                /* Load the new document */
                targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
                                              (ClickEvent)method, history, 
                                              (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) FollowTheLink_callback,
                                              (void *) ctx);
+               if (readonly)
+                 {
+                   /* transmit the ReadOnly mode */
+                   root = TtaGetMainRoot (targetDocument);
+                   TtaSetAccessRight (root, ReadOnly, targetDocument);
+                 }
              }
            else
              {
@@ -1900,7 +1910,6 @@ void FreeDocumentResource (Document doc)
       RemoveAutoSavedDoc (doc);
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
-      ReadOnlyDocument[doc] = FALSE;
       if (DocumentMeta[doc])
 	{
 	  DocumentMetaClear (DocumentMeta[doc]);

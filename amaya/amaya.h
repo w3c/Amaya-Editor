@@ -525,8 +525,6 @@ THOT_EXPORT char                    *DocumentURLs[DocumentTableLength];
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */
 THOT_EXPORT DocumentType             DocumentTypes[DocumentTableLength];
-/* Document is in read only mode */
-THOT_EXPORT ThotBool                 ReadOnlyDocument[DocumentTableLength];
 /* Document that shows buttons */
 THOT_EXPORT ThotBool                 SButtons[DocumentTableLength];
 /* Document that shows address */

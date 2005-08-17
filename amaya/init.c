@@ -7596,7 +7596,6 @@ void InitAmaya (NotifyEvent * event)
       DocumentTypes[i] = docHTML;
       DocumentSource[i] = 0;
       DocumentMeta[i] = NULL;
-      ReadOnlyDocument[i] = FALSE;
       MapAreas[i] = map;
       SButtons[i] = bt;
       SAddress[i] = add;

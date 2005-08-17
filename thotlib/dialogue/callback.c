@@ -599,7 +599,7 @@ ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
     {
       /* Prevent to unselect an element directly...
 	 you must select another one to unselect others  */
-      index = (guint) gtk_object_get_data (GTK_OBJECT (w), "toggled");
+      index = (int) gtk_object_get_data (GTK_OBJECT (w), "toggled");
       gtk_signal_handler_block (GTK_OBJECT(w), index);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
       gtk_signal_handler_unblock (GTK_OBJECT(w), index); 
@@ -635,7 +635,7 @@ ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 	    {
 	      if (adbloc->E_ThotWidget[i] != w) 
 		{
-		  index = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
+		  index = (int) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
 		  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), index);
 		  
 		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);

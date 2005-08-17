@@ -955,6 +955,7 @@ static void DisplayHelp (int doc, int index)
   char        localname[MAX_LENGTH];
   char       *s, *lang;
   char       *helpdir;
+  Element     root;
 
 #ifdef _WX
   helpdir = "WX";
@@ -982,6 +983,10 @@ static void DisplayHelp (int doc, int index)
   document = GetAmayaDoc (localname, NULL, 0, 0, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
 #endif /* _WX */
+  /* Set the Help document in ReadOnly mode */
+  root = TtaGetMainRoot (document);
+  TtaSetAccessRight (root, ReadOnly, document);
+
   InitDocHistory (document);
 }
 
