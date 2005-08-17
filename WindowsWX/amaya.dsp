@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                           ..\..\wxWidgets\lib\vc_dll\*.dll                           bin\ 
+PreLink_Cmds=copy                            ..\..\wxWidgets\lib\vc_dll\*.dll                            bin\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
@@ -74,7 +74,7 @@ PreLink_Cmds=copy                           ..\..\wxWidgets\lib\vc_dll\*.dll    
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "../libpng/zlib" /I "..\..\wxWidgets\lib\vc_dll\mswud" /I ".\\" /I "..\..\wxWidgets\include" /I "..\..\wxWidgets\contrib\include" /I "..\..\wxWidgets\src\jpeg" /I "..\..\wxWidgets\src\tiff" /I "..\..\wxWidgets\src\png" /I "..\..\freetype\include" /I "..\..\libwww\modules\expat\lib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "WWW_WIN_DLL" /D "SOCKS" /D "BOOKMARKS" /D "STDC_HEADERS" /D "XMD_H" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D wxUSE_GUI=1 /D "WXUSINGDLL" /FR /YX /FD /GZ /TP /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "../libpng/zlib" /I "..\..\wxWidgets\lib\vc_dll\mswud" /I ".\\" /I "..\..\wxWidgets\include" /I "..\..\wxWidgets\contrib\include" /I "..\..\wxWidgets\src\jpeg" /I "..\..\wxWidgets\src\tiff" /I "..\..\wxWidgets\src\png" /I "..\..\freetype\include" /I "..\..\libwww\modules\expat\lib" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "WWW_WIN_DLL" /D "SOCKS" /D "BOOKMARKS" /D "STDC_HEADERS" /D "XMD_H" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "TEMPLATES" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D wxUSE_GUI=1 /D "WXUSINGDLL" /FR /YX /FD /GZ /TP /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy                           ..\..\wxWidgets\lib\vc_dll\*.dll                           bin\ 
+PreLink_Cmds=copy                            ..\..\wxWidgets\lib\vc_dll\*.dll                            bin\ 
 # End Special Build Tool
 
 !ENDIF 

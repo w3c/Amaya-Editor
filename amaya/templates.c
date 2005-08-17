@@ -358,13 +358,13 @@ void LockFixedAreas (Document doc, Element el)
     {
       /* The element is not a leaf */
       if ((strcmp (s,"Template") == 0) &&
-          (elType.ElTypeNum == Template_EL_free_struct))
+          (elType.ElTypeNum == Template_EL_FREE_STRUCT))
         {
           /* The element has a free structure */
           UnlockSubtree (doc, el);
         }
       else if ((strcmp (s,"Template") == 0) &&
-               (elType.ElTypeNum == Template_EL_free_content))
+               (elType.ElTypeNum == Template_EL_FREE_CONTENT))
         {
           /* The element has free content */
           UnlockContentElements (doc, el);
