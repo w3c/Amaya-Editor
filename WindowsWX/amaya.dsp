@@ -439,6 +439,14 @@ SOURCE=..\amaya\SVGedit.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\amaya\TemplateAPP.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\Templatebuilder.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\templates.c
 # End Source File
 # Begin Source File
