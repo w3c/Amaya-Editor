@@ -24,6 +24,10 @@
 #ifdef _SVG
 #include "SVG.h"
 #endif /* _SVG */
+#ifdef TEMPLATES
+#include "Template.h"
+#endif /* TEMPLATES */
+
 #include "XML.h"
 
 #include "anim_f.h"
@@ -458,7 +462,7 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
 /*----------------------------------------------------------------------
    SearchNAMEattribute
    search in document doc an element having an attribut NAME or ID (defined
-   in DTD HTML, MathML or SVG) whose value is nameVal.         
+   in DTD HTML, MathML, SVG, Template or generic XML) whose value is nameVal.         
    Return that element or NULL if not found.               
    If ignoreAtt is not NULL, it is an attribute that should be ignored when
    comparing NAME attributes.              
@@ -541,25 +545,37 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 	  }
      }
 #endif /* ANNOTATIONS */
-#ifdef XML_GENERIC
+#ifdef TEMPLATES
    if (!elFound)
      {
-       /* search all elements having an attribute ID (defined in the
-	  XML DTD) */
-       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+       /* search all elements having an attribute ID (defined in the Template schema) */
+       attrType.AttrSSchema = TtaGetSSchema ("Template", doc);
        if (attrType.AttrSSchema)
-	  {
-	    name = TtaGetSSchemaName (attrType.AttrSSchema);
-	    if (strcmp(name, "HTML") &&
-		strcmp(name, "MathML") &&
-		strcmp(name, "SVG"))
-	      {
-		attrType.AttrTypeNum = XML_ATTR_xmlid;
-		elFound = GetElemWithAttr (doc, attrType, nameVal,
-					   ignoreAtt, ignoreEl);
-	      }
-	  }
+         {
+           attrType.AttrTypeNum = Template_ATTR_xmlid;
+           elFound = GetElemWithAttr (doc, attrType, nameVal, ignoreAtt, ignoreEl);
+         }
      }
+#endif /* TEMPLATES */          
+#ifdef XML_GENERIC
+   if (!elFound)
+           {
+             /* search all elements having an attribute ID (defined in the
+                XML DTD) */
+             attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+             if (attrType.AttrSSchema)
+               {
+                 name = TtaGetSSchemaName (attrType.AttrSSchema);
+                 if (strcmp(name, "HTML") &&
+                     strcmp(name, "MathML") &&
+                     strcmp(name, "SVG"))
+                   {
+                     attrType.AttrTypeNum = XML_ATTR_xmlid;
+                     elFound = GetElemWithAttr (doc, attrType, nameVal,
+                                                ignoreAtt, ignoreEl);
+                   }
+               }
+           }
 #endif /* XML_GENERIC */
 
    return (elFound);
@@ -2805,6 +2821,7 @@ void SynchronizeSourceView (NotifyElement *event)
 		     attrType.AttrTypeNum = MathML_ATTR_Highlight;
 		     val = MathML_ATTR_Highlight_VAL_Yes_;
 		   }
+#ifdef _SVG
 		 else if (DocumentTypes[otherDoc] == docSVG)
 		   {
 		     attrType.AttrSSchema = TtaGetSSchema ("SVG",
@@ -2821,7 +2838,6 @@ void SynchronizeSourceView (NotifyElement *event)
 		     attrType.AttrTypeNum = XML_ATTR_Highlight;
 		     val = XML_ATTR_Highlight_VAL_Yes_;
 		   }
-#ifdef _SVG
 		 else if (DocumentTypes[otherDoc] == docLibrary)
 		   {
 		     attrType.AttrSSchema = TtaGetSSchema ("HTML",

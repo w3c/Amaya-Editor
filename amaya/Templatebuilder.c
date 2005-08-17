@@ -17,11 +17,11 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "HTML.h"
+#include "Template.h"
 #include "parser.h"
 #include "registry.h"
 #include "style.h"
-#include "XLink.h"
+
 
 #define MaxMsgLength 200
 
@@ -33,6 +33,8 @@
 #include "HTMLactions_f.h"
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
+#include "XHTMLbuilder_f.h"
+
 
 /*----------------------------------------------------------------------
    TemplateGetDTDName
@@ -95,7 +97,18 @@ void    TemplateEntityCreated (unsigned char *entityValue, Language lang,
   ----------------------------------------------------------------------*/
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
+  Document       doc;
+  ElementType elType;
 
+  doc = context->doc;
+  elType = TtaGetElementType (el);
+  switch (elType.ElTypeNum)
+    {
+    case Template_EL_FREE_STRUCT:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_xmlid);
+    case Template_EL_FREE_CONTENT:
+      CheckMandatoryAttribute (el, doc, Template_ATTR_xmlid);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -108,138 +121,6 @@ void               UnknownTemplateNameSpace (ParserData *context,
 {
 }
 
-
-
-/*----------------------------------------------------------------------
-   GetNumber
-   Parse an integer or floating point number and skip to the next token.
-   Return the value of that number in number and moves ptr to the next
-   token to be parsed.
-   If the string to be parsed is not a valid number, set error to TRUE.
-  ----------------------------------------------------------------------*/
-static char *GetNumber (char *ptr, int* number, ThotBool *error)
-{
-  int      integer, nbdecimal, exponent, i;
-  char     *decimal;
-  ThotBool negative, negativeExp;
-
-  *number = 0;
-  *error = FALSE;
-  integer = 0;
-  nbdecimal = 0;
-  decimal = NULL;
-  negative = FALSE;
-  /* read the sign */
-  if (*ptr == '+')
-    ptr++;
-  else if (*ptr == '-')
-    {
-      ptr++;
-      negative = TRUE;
-    }
-
-  if (*ptr < '0' || *ptr > '9')
-    {
-      *error = TRUE;
-      ptr++;
-      return (ptr);
-    }
-  /* read the integer part */
-  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
-    {
-      integer *= 10;
-      integer += *ptr - '0';
-      ptr++;
-    }
-  if (*ptr == '.')
-    /* there is a decimal part */
-    {
-      ptr++;
-      decimal = ptr;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-	{
-	  nbdecimal++;
-	  ptr++;
-	}
-    }
-
-  if (*ptr != 'e' && *ptr != 'E')
-    /* no exponent */
-    {
-      if (nbdecimal > 0)
-	/* there are some digits after the decimal point */
-	{
-	  if (*decimal >= '5' && *decimal <= '9')
-	    /* the first digit after the point is 5 of greater
-	       round up the value to the next integer */
-	    integer++;
-	}
-    }
-  else
-    /* there is an exponent part, parse it */
-    {
-      ptr++;
-      negativeExp = FALSE;
-      /* read the sign of the exponent */
-      if (*ptr == '+')
-	ptr++;
-      else if (*ptr == '-')
-	{
-	  ptr++;
-	  negativeExp = TRUE;
-	}
-      exponent = 0;
-
-      if (*ptr < '0' || *ptr > '9')
-	{
-	  *error = TRUE;
-	  ptr++;
-	  return (ptr);
-	}
-
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-	{
-	  exponent *= 10;
-	  exponent += *ptr - '0';
-	  ptr++;
-	}
-      if (exponent > 0)
-	{
-	  if (negativeExp)
-	    {
-	      for (i = 0; i < exponent; i++)
-		integer /= 10;
-	    }
-	  else
-	    {
-	      for (i = 0; i < exponent; i++)
-		{
-		  integer *= 10;
-		  if (i < nbdecimal)
-		    {
-		      integer += *decimal - '0';
-		      decimal++;
-		    }
-		}
-	    }
-	}
-    }
-
-  if (negative)
-    *number = - integer;
-  else
-    *number = integer;
-
-  /* skip the following spaces */
-  while (*ptr != EOS &&
-         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-	  *ptr == EOL    || *ptr == TAB   || *ptr == CR))
-    ptr++;
-  return (ptr);
-}
-
-
-
 /*----------------------------------------------------------------------
    TemplateAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
@@ -247,10 +128,13 @@ static char *GetNumber (char *ptr, int* number, ThotBool *error)
 void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 {
    AttributeType	attrType;
-   int                  attrKind;
+   int            attrKind;
    TtaGiveAttributeType (attr, &attrType, &attrKind);
    switch (attrType.AttrTypeNum)
      {
+     case Template_ATTR_xmlid:
+       CheckUniqueName (el, doc, attr, attrType);
+       break;
      default:
        break;
      }

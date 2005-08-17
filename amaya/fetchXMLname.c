@@ -471,8 +471,13 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     ptr = MathMLAttributeMappingTable;
   else if (XMLtype == SVG_TYPE)
     ptr = SVGAttributeMappingTable;
+#ifdef TEMPLATES
+  else if (XMLtype == Template_TYPE)
+    ptr = TemplateAttributeMappingTable;
+#endif /* TEMPLATES */
   else if (XMLtype == XLINK_TYPE)
     ptr = XLinkAttributeMappingTable;
+
   else
     ptr = NULL;
   if (ptr == NULL)
@@ -554,11 +559,17 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
       /* Select the table which matches with the element schema */
       name = TtaGetSSchemaName (attrType.AttrSSchema);
       if (strcmp ("MathML", name) == 0)
-	ptr = MathMLAttributeMappingTable;
+        ptr = MathMLAttributeMappingTable;
+#ifdef _SVG
       else if (strcmp ("SVG", name) == 0)
-	ptr = SVGAttributeMappingTable;
+        ptr = SVGAttributeMappingTable;
+#endif /* _SVG */
       else if (strcmp ("XLink", name) == 0)
-	ptr = XLinkAttributeMappingTable;
+        ptr = XLinkAttributeMappingTable;
+#ifdef TEMPLATES
+      else if (strcmp ("Template",name) == 0)
+        ptr = TemplateAttributeMappingTable;
+#endif /* TEMPLATES */
       else
 	ptr = XHTMLAttributeMappingTable;
       

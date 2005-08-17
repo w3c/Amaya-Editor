@@ -26,7 +26,10 @@
 #include "MathML.h"
 #ifdef _SVG
 #include "SVG.h"
-#endif
+#endif /* SVG */
+#ifdef TEMPLATES
+#include "Template.h"
+#endif /* TEMPLATES */
 
 static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
@@ -1712,7 +1715,19 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
       attrType.AttrTypeNum = SVG_ATTR_id;
     }
 #endif /* _SVG */
+#ifdef TEMPLATES
+  else if (!strcmp(name, "Template"))
+    {
+      /* it's an element from Template namespace, look for the
+         id attribute from the same namespace */
+      attrIDType.AttrTypeNum = Template_ATTR_xmlid;
+      attrID = TtaGetAttribute (el, attrIDType);
+      if (attrID)
+        /* the element has a xml:id attribute. Check it too */
+        checkXMLID = TRUE;
+    }
   else
+#endif /* TEMPLATES */
 #ifdef XML_GENERIC
     attrType.AttrTypeNum = XML_ATTR_xmlid;
 #else /* XML_GENERIC */

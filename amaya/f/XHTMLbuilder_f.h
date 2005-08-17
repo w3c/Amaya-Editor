@@ -9,6 +9,9 @@
 extern void ParseCharsetAndContentType ( Element el,
                                          Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
+extern void CheckMandatoryAttribute ( Element el,
+                                      Document doc,
+                                      int attrNum );
 extern void AddRowsColumns ( Element el,
                              Document doc );
 extern void XhtmlElementComplete ( ParserData *context,
@@ -64,6 +67,9 @@ extern void MapHTMLAttributeValue ( char *attVal,
 extern void ParseCharsetAndContentType ( Element el,
                                            Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
+extern void CheckMandatoryAttribute ( Element el,
+                                        Document doc,
+                                        int attrNum );
 extern void AddRowsColumns ( Element el,
                                Document doc );
 extern void XhtmlElementComplete ( ParserData *context,

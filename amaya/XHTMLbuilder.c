@@ -236,7 +236,7 @@ ThotBool XhtmlCannotContainText (ElementType elType)
   If attribute attrNum is not present on element el, generate a
   parsing error message.
   ----------------------------------------------------------------------*/
-static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
+void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
 {
   ElementType    elType;
   Attribute      attr;

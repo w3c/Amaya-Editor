@@ -31,7 +31,7 @@ RULES
     Use MathMLT for MathML;
    end;
 
-  free_struct:
+  FREE_STRUCT:
     begin
     create SOT;
     create 'free_struct';
@@ -43,30 +43,39 @@ RULES
     create 'free_struct>\12' after;
   end;
 
-  free_content:
+  FREE_CONTENT:
     begin
     create SOT;
-    create 'free_struct';
+    create 'free_content';
     create Attributes;
     create tagend;
     indent +2;
     indent -2 after;
     create SCT after;
-    create 'free_struct>\12' after;
+    create 'free_content>\12' after;
   end;
 
 ATTRIBUTES
 
-      Unknown_attribute:
-	begin
+  xmlid:
+	  begin
+	    create SAN;
+	    create 'xml:id="';
+	    create xmlid;
+	    create '"';
+	  end;
+
+
+  Unknown_attribute:
+	  begin
         if Template begin
            remove;
            end;
         if NOT Template begin
            create SAN;
 	   create Unknown_attribute;
-	   end;
-	end;
+	  end;
+  end;  
 
 
 

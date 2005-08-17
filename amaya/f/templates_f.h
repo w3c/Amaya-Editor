@@ -15,6 +15,8 @@ extern void InitTemplateList ( void );
 extern void insertTemplateMeta ( Document newdoc );
 extern void UnlockSubtree ( Document doc,
                             Element el );
+extern void UnlockContentElements ( Document doc,
+                                    Element el );
 extern void LockFixedAreas ( Document doc,
                              Element el );
 extern int CreateInstanceOfTemplate ( Document doc,
@@ -34,6 +36,8 @@ extern void InitTemplateList ( void );
 extern void insertTemplateMeta ( Document newdoc );
 extern void UnlockSubtree ( Document doc,
                               Element el );
+extern void UnlockContentElements ( Document doc,
+                                      Element el );
 extern void LockFixedAreas ( Document doc,
                                Element el );
 extern int CreateInstanceOfTemplate ( Document doc,

@@ -9,7 +9,7 @@
 
 <body xml:lang="fr" lang="fr">
 
-<div id="logo">
+<div xml:id="logo">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
      width="230px">
   <title>Amaya logo</title>

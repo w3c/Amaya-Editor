@@ -1,0 +1,19 @@
+extension
+
+presentation
+
+ TemplateP:  Standard presentation
+
+export
+
+ TemplateT: XML
+
+translation
+
+C_Empty: \0
+TEXT_UNIT: \0
+
+FREE_STRUCT: free_struct
+FREE_CONTENT: free_content
+
+xmlid: xml:id

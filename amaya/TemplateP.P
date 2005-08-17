@@ -60,7 +60,41 @@ DEFAULT
    END;
 
 BOXES
+  AttrName: BEGIN
+        Content: (Text ' ' AttributeName Text '=');
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
 
+  AttrValue: BEGIN
+        Content: (AttributeValue);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+  AttrNameAndValue: BEGIN
+        Content: (Text ' ' AttributeName Text '=' AttributeValue);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
   
  ElementName: BEGIN
         Content: (ElemName);
@@ -73,44 +107,6 @@ BOXES
 	END;
 
 
-	
-  AttrName: BEGIN
-	Content: (Text ' template:' AttributeName Text '=');
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: ATTR_Visibility;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Foreground: ATTR_Color;
-		END;
-	END;
-
-  AttrValue: BEGIN
-	Content: (AttributeValue);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: ATTR_Visibility;
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		END;
-	END;
-
-  AttrNameAndValue: BEGIN
-        Content: (Text ' template:' AttributeName Text '=' AttributeValue);
-        Visibility: 0;
-        IN Structure_view BEGIN
-		Visibility: ATTR_Visibility;
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Foreground: ATTR_Color;
-                END;
-        END;
 
   UnknownAttrValue: BEGIN
 	Content: (AttributeValue);
@@ -147,7 +143,7 @@ RULES
 		END;
 
 
- free_struct:	
+ FREE_STRUCT:	
 		BEGIN	
     	CreateBefore(ElementName);
   	  CreateWith(VerticalLine);
@@ -171,7 +167,7 @@ RULES
 
 		END;
 
- free_content:	
+ FREE_CONTENT:	
 		BEGIN	
 			BorderTopWidth: 1 pt;
 			BorderLeftWidth: 1 pt;
@@ -199,12 +195,26 @@ RULES
 
 ATTRIBUTES
 
+  xmlid:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+  END;
+
   Unknown_attribute:
 	BEGIN
-	CreateBefore(UnknownAttrValue);
-	if LastAttr
+	if TEXT_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if PICTURE_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if Unknown_namespace
+	   CreateAfter(UnknownAttrValue);
+	if Unknown_namespace and LastAttr
 	   CreateAfter(Unknown_End);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+  	 CreateBefore(UnknownAttrValue);
 	END;
+
 
 {****
    role = TEXT;
