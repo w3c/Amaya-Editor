@@ -15,7 +15,13 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.23  2005-08-18 09:35:28  vatton
+** Revision 1.24  2005-08-18 10:26:00  cvs
+** Replace "intptr_t" by "long int" as "intptr_t" is not accepted by
+** Visual C++
+**
+** Irene
+**
+** Revision 1.23  2005/08/18 09:35:28  vatton
 ** Enable by default --with-templates with WX versions
 ** Display attributes of read-only elements
 **
@@ -1126,7 +1132,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
       switch (ref - DAVBase)
         {
         case DAVPreferencesDlg:
-          switch ((intptr_t)data) 
+          switch ((long int)data) 
             {
             case 1:
               SetDAVConf();
@@ -1151,7 +1157,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
 
         case DAVradioDepth :
-          switch ((intptr_t)data) 
+          switch ((long int)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioDepth, "0");
@@ -1163,7 +1169,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
                    
         case DAVradioTimeout :
-          switch ((intptr_t)data) 
+          switch ((long int)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioTimeout, "Infinite");
@@ -1179,7 +1185,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;                   
 	  
         case DAVradioLockScope :
-          switch ((intptr_t)data) 
+          switch ((long int)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioLockScope, "exclusive");
@@ -1191,7 +1197,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
 	  
         case DAVtoggleAwareness :
-          switch ((intptr_t)data) 
+          switch ((long int)data) 
             {
             case 0:
               GProp_DAV.toggleAwareness1 = !GProp_DAV.toggleAwareness1;

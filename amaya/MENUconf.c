@@ -1072,7 +1072,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void CacheCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t            val;
+  long int            val;
 
   if (ref == -1)
     {
@@ -1082,7 +1082,7 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - CacheBase)
 	{
 	case CacheMenu:
@@ -1394,7 +1394,7 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void ProxyCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t            val;
+  long int            val;
 
   if (ref == -1)
     {
@@ -1404,7 +1404,7 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - ProxyBase)
 	{
 	case ProxyMenu:
@@ -2102,7 +2102,7 @@ static void RefreshGeneralMenu ()
   ----------------------------------------------------------------------*/
 static void GeneralCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t            val;
+  long int            val;
 
   if (ref == -1)
     {
@@ -2112,7 +2112,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - GeneralBase)
 	{
 	case GeneralMenu:
@@ -2585,7 +2585,7 @@ static void BuildCharsetSelector (void)
   ----------------------------------------------------------------------*/
 static void PublishCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t            val;
+  long int            val;
 
   if (ref == -1)
     {
@@ -2595,7 +2595,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - PublishBase)
 	{
 	case PublishMenu:
@@ -3051,7 +3051,7 @@ static void RefreshBrowseMenu ()
   ----------------------------------------------------------------------*/
 static void BrowseCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t          val;
+  long int          val;
 
   if (ref == -1)
     /* removes the network conf menu */
@@ -3059,7 +3059,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - BrowseBase)
         {
         case BrowseMenu:
@@ -3415,7 +3415,7 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void ColorCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t val;
+  long int val;
 
   if (ref == -1)
     {
@@ -3425,7 +3425,7 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - ColorBase)
 	{
 	case ColorMenu:
@@ -3781,7 +3781,7 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void GeometryCallbackDialog (int ref, int typedata, char *data)
 {
-  intptr_t val;
+  long int val;
 
   TtaDestroyDialogue (GeometryBase + GeometryMenu);
   if (ref == -1)
@@ -3792,7 +3792,7 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
   else
     {
       /* has the user changed the options? */
-      val = (intptr_t) data;
+      val = (long int) data;
       switch (ref - GeometryBase)
 	{
 	case GeometryMenu:

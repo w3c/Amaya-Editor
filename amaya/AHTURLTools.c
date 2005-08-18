@@ -1296,7 +1296,7 @@ char *GetLocalPath (Document doc, char  *url)
   ----------------------------------------------------------------------*/
 void ExtractTarget (char *aName, char *target)
 {
-   intptr_t    lg, i;
+   long int    lg, i;
    char  *ptr;
    char  *oldptr;
 
@@ -1318,7 +1318,7 @@ void ExtractTarget (char *aName, char *target)
 	  }
 	while (ptr);
 
-	i = (intptr_t) (oldptr) - (intptr_t) (aName);	/* name length */
+	i = (long int) (oldptr) - (long int) (aName);	/* name length */
 	if (i > 1)
 	  {
 	     aName[i - 1] = EOS;

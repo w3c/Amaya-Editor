@@ -1918,9 +1918,9 @@ void DoJustify (Document doc, View view)
   ----------------------------------------------------------------------*/
 void StyleCallbackDialogue (int ref, int typedata, char  *data)
 {
-  intptr_t          val;
+  long int          val;
 
-  val = (intptr_t) data;
+  val = (long int) data;
 #ifdef DEBUG_CLASS_INTERF
   if (typedata == INTEGER_DATA)
     fprintf (stderr, "StyleCallbackDialogue(%d,%d) \n", ref, (int) data);

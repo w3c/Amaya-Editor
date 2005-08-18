@@ -2394,9 +2394,9 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
 void TransCallbackDialog (int ref, int typedata, char* data)
 {
   strTransDesc        *trans = NULL;
-  intptr_t             val;
+  long int             val;
 
-  val = (intptr_t) data;
+  val = (long int) data;
   switch (ref - TransBaseDialog)
     {
     case TransMenu:

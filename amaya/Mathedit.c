@@ -1681,7 +1681,7 @@ void MathElementCreated (NotifyElement *event)
 static void CallbackMaths (int ref, int typedata, char *data)
 {
   Document           doc;
-  intptr_t           val = (intptr_t) data;
+  long int           val = (long int) data;
 
   ref -= MathsDialogue;
   if (ref == MenuMaths1)
@@ -1727,7 +1727,7 @@ gboolean CloseMathMenu (GtkWidget *widget,
 			 gpointer   data )
 {
   InitMaths = FALSE;
-  TtaDestroyDialogue ((intptr_t) data);
+  TtaDestroyDialogue ((long int) data);
   return TRUE;
 }
 #endif /* _GTK */

@@ -2059,7 +2059,7 @@ static void CreateGroup ()
 static void CallbackGraph (int ref, int typedata, char *data)
 {
   Document           doc;
-  intptr_t           val = (intptr_t) data;
+  long int           val = (long int) data;
 
   ref -= GraphDialogue;
   if (ref == MenuGraph1)
@@ -2099,7 +2099,7 @@ gboolean CloseSvgPalette (GtkWidget *widget,
 			 gpointer   data )
 {
   PaletteDisplayed = FALSE;
-  TtaDestroyDialogue ((intptr_t) data);
+  TtaDestroyDialogue ((long int) data);
   return TRUE;
 }
 #endif /* _GTK */

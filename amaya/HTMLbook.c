@@ -568,9 +568,9 @@ void PrintAs (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CallbackPrint (int ref, int typedata, char *data)
 {
-  intptr_t            val;
+  long int            val;
 
-  val = (intptr_t) data;
+  val = (long int) data;
   switch (ref - BasePrint)
     {
     case FormPrint:

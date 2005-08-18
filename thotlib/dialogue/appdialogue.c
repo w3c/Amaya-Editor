@@ -1971,7 +1971,7 @@ gboolean APP_ComboEscape (GtkWidget *w,
 {
   GdkEventKey *event;
   GtkWidget *entry;
-  intptr_t frame;  
+  long int frame;  
   char *text;
   
   if (all_event->type == GDK_KEY_PRESS)
@@ -1979,7 +1979,7 @@ gboolean APP_ComboEscape (GtkWidget *w,
       event = (GdkEventKey *) all_event;      
       if (event->keyval == GDK_Escape)
 	{
-	  frame = (intptr_t) user_data;
+	  frame = (long int) user_data;
 	  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
 						     "entry");
 	  RemoveSignalGTK (GTK_OBJECT(entry), "activate");
@@ -2466,9 +2466,9 @@ void ConnectSignalAfterGTK (GtkObject *w, gchar *signal_name,
 -------------------------------------------------------------------------*/
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
-  intptr_t id;
+  long int id;
   id = 0;
-  id = (intptr_t)gtk_object_get_data (GTK_OBJECT (w), signal_name);
+  id = (long int)gtk_object_get_data (GTK_OBJECT (w), signal_name);
   if (id)
     {
       gtk_signal_disconnect (GTK_OBJECT (w), id);
@@ -3222,7 +3222,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
 			       (gpointer)gtk_statusbar_get_context_id(GTK_STATUSBAR (statusbar), "MainSerie"));
 	   gtk_statusbar_push(GTK_STATUSBAR(statusbar),
-			      (intptr_t)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
+			      (long int)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
 			      "");
 	   
 	   /* The hbox which includes the logo and Comboboxzone (URL) */
@@ -4295,23 +4295,23 @@ void ThotCallback (int ref, int typedata, char *data)
 	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
 		(void *)TRUE,
 		(void *)FALSE,
-		(void *)((intptr_t) data + 1) );
+		(void *)((long int) data + 1) );
 	break;
       case NumMenuPaste:
 	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
 		(void *)FALSE,
 		(void *)TRUE,
-	       	(void *)((intptr_t) data + 1));
+	       	(void *)((long int) data + 1));
 	break;
       case NumMenuInclude:
 	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
 		(void *)FALSE,
 		(void *)FALSE,
-	       	(void *)((intptr_t) data + 1));
+	       	(void *)((long int) data + 1));
 	break;
       case NumMenuElChoice:
 	(*(Proc2)ThotLocalActions[T_rchoice]) (
-		(void *)((intptr_t) data + 1),
+		(void *)((long int) data + 1),
 		(void *)NULL);
 	break;
       case NumSelectNatureName:
@@ -4326,7 +4326,7 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuAttrEnumNeeded:
 	(*(Proc3)ThotLocalActions[T_rattrreq]) (
 		(void *)ref,
-		(void *)((intptr_t) data),
+		(void *)((long int) data),
 		(void *)data);
 	break;
       case NumMenuAttr:
@@ -4335,7 +4335,7 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuAttrEnum:
 	(*(Proc3)ThotLocalActions[T_rattrval]) (
 		(void *)ref,
-		(void *)((intptr_t) data),
+		(void *)((long int) data),
 	       	(void *)data);
 	break;
 	
@@ -4349,7 +4349,7 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuAlphaLanguage:
 	(*(Proc3)ThotLocalActions[T_rattrlang]) (
 		(void *)ref,
-		(void *)((intptr_t) data),
+		(void *)((long int) data),
 		(void *)NULL);
 	break;
       case NumFormClose:
@@ -4380,7 +4380,7 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumTogglePatternUnchanged:
 	(*(Proc3)ThotLocalActions[T_present]) (
 		(void *)ref,
-		(void *)(intptr_t) data,
+		(void *)(long int) data,
 		(void *)NULL);
 	break;
       case NumSelectPattern:
@@ -4395,7 +4395,7 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuPresentStandard:
 	(*(Proc2)ThotLocalActions[T_presentstd]) (
 		(void *)ref,
-		(void *)((intptr_t) data));
+		(void *)((long int) data));
 	break;
       case NumFormSearchText:
       case NumMenuReplaceMode:
@@ -4404,7 +4404,7 @@ void ThotCallback (int ref, int typedata, char *data)
 	/* sous-menu mode de remplacement */
 	(*(Proc3)ThotLocalActions[T_searchtext]) (
 		(void *)ref,
-		(void *)((intptr_t) data),
+		(void *)((long int) data),
 	       	(void *)NULL);
 	break;
       case NumZoneTextSearch:
@@ -4420,10 +4420,10 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumMenuOrSearchText:
 	(*(Proc2)ThotLocalActions[T_locatesearch]) (
 		(void *)ref,
-		(void *)((intptr_t) data));
+		(void *)((long int) data));
 	break;  
       case NumFormElemToBeCreated:
-	CallbackElemToBeCreated (ref, (intptr_t)data, NULL);
+	CallbackElemToBeCreated (ref, (long int)data, NULL);
 	break;
       case NumSelectElemToBeCreated:
 	CallbackElemToBeCreated (ref, 0, data);
@@ -4438,7 +4438,7 @@ void ThotCallback (int ref, int typedata, char *data)
 #endif /* #if defined(_GTK) */
 	    (*(Proc3)ThotLocalActions[T_rattr]) (
 		(void *)ref,
-		(void *)((intptr_t) data),
+		(void *)((long int) data),
 		(void *)ActiveFrame);
 	  }
 	break;
@@ -4477,7 +4477,7 @@ void ThotCallback (int ref, int typedata, char *data)
 #endif /* #if defined(_GTK) */
 	      (*(Proc3)ThotLocalActions[T_rattr]) (
 			(void *)ref,
-			(void *)((intptr_t) data),
+			(void *)((long int) data),
 			(void *)frame);
 	      return;
 	    }
@@ -4493,7 +4493,7 @@ void ThotCallback (int ref, int typedata, char *data)
 	      TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) */
 	      (*(Proc3)ThotLocalActions[T_rselect]) ((void *)ref,
-						     (void *)((intptr_t) data + 1),
+						     (void *)((long int) data + 1),
 						     (void *)frame);
 	      return;
 	    }
@@ -4523,7 +4523,7 @@ void ThotCallback (int ref, int typedata, char *data)
 
       if (ptrmenu)
 	{
-	  item = (intptr_t) data;
+	  item = (long int) data;
 	  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
 	    {
 	      for (i = 0; i <= item; i++)
