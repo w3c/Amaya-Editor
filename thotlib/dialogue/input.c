@@ -665,9 +665,9 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   unsigned int        state, save;
   int                 status;
   int                 PicMask;
-  int                 frame;
+  intptr_t            frame;
 
-  frame = (int) data;
+  frame = (intptr_t) data;
   if (frame > MAX_FRAME)
     frame = 0;
   FrameToView (frame, &document, &view);
@@ -755,11 +755,11 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean GtkLiningDown (gpointer data)
 {
-  int       frame;
+  intptr_t  frame;
   Document  doc; 
   int       view;
   
-  frame = (int) data; 
+  frame = (intptr_t) data; 
   FrameToView (frame, &doc, &view);
   TtcLineDown (doc, view);
   /* As this is a timeout function, return TRUE so that it
@@ -771,11 +771,11 @@ gboolean GtkLiningDown (gpointer data)
   ----------------------------------------------------------------------*/
 gboolean GtkLiningUp (gpointer data)
 {
-  int       frame;
+  intptr_t  frame;
   Document  doc; 
   int       view;
   
-  frame = (int) data; 
+  frame = (intptr_t) data; 
   FrameToView (frame, &doc, &view);
   TtcLineUp (doc, view);
   /* As this is a timeout function, return TRUE so that it
@@ -792,7 +792,7 @@ gboolean GtkLiningUp (gpointer data)
   ----------------------------------------------------------------------*/
 gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 {
-  int                 frame;
+  intptr_t            frame;
   GdkEventKey         *eventkey;
   GdkEventButton      *eventmouse;
   Document            doc; 
@@ -803,7 +803,7 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   GdkModifierType state;
   GtkEntry           *textzone;
 
-  frame = (int) data; 
+  frame = (intptr_t) data; 
   FrameToView (frame, &doc, &view);
   textzone = 0;
   if (timer != None)

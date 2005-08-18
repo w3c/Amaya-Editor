@@ -620,7 +620,7 @@ Document IsDocumentLoaded (char *documentURL, char *form_data)
   ----------------------------------------------------------------------*/
 void ExtractParameters (char *aName, char *parameters)
 {
-  int            lg, i;
+  intptr_t            lg, i;
   char          *ptr;
   char          *oldptr;
 
@@ -642,7 +642,7 @@ void ExtractParameters (char *aName, char *parameters)
         }
       while (ptr);
 
-      i = (int) (oldptr) - (int) (aName);	/* name length */
+      i = (intptr_t) (oldptr) - (intptr_t) (aName);	/* name length */
       if (i > 1)
         {
           aName[i - 1] = EOS;
@@ -5847,7 +5847,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
   char              sep, *ptr;
-  int               val;
+  intptr_t          val;
 #if defined(_WINGUI) || defined(_WX) 
   int               i;
 #endif /* defined(_WINGUI) || defined(_WX) */
@@ -5857,7 +5857,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
     sep = URL_SEP;
   else
     sep = DIR_SEP;
-  val = (int) data;
+  val = (intptr_t) data;
   if (ref - BaseDialog == OptionMenu)
     /* a popup menu corresponding to a SELECT element */
     ReturnOption = val;

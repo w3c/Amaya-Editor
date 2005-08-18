@@ -121,7 +121,7 @@ static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputConditio
    int 		       socket;
    ms_t                now = HTGetTimeInMillis();
    
-   socket = (SOCKET) data;
+   socket = (SOCKET) ((intptr_t) data);
    v = HASH (socket);
 
    /* convert the FD into an HTEventType which will allow us to find the

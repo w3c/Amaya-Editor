@@ -669,11 +669,12 @@ static void CallbackCSS (int ref, int typedata, char *data)
   Element         firstSel, lastSel;
   char           *ptr = NULL, *localname = NULL;
   int             j, firstChar, lastChar;
-  int             val, sty;
+  intptr_t        val;
+  int             sty;
   CSSCategory     category;
   ThotBool        found;
 
-  val = (int) data;
+  val = (intptr_t) data;
   category = CSS_Unknown;
   sty = 0; /* document style order */
   switch (ref - BaseCSS)

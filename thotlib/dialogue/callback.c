@@ -591,15 +591,15 @@ ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
   register int        i;
-  register int        index;
-  register int        entry;
+  register intptr_t   index;
+  register intptr_t   entry;
   struct E_List      *adbloc;
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)) == FALSE)
     {
       /* Prevent to unselect an element directly...
 	 you must select another one to unselect others  */
-      index = (int) gtk_object_get_data (GTK_OBJECT (w), "toggled");
+      index = (intptr_t) gtk_object_get_data (GTK_OBJECT (w), "toggled");
       gtk_signal_handler_block (GTK_OBJECT(w), index);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
       gtk_signal_handler_unblock (GTK_OBJECT(w), index); 
@@ -635,7 +635,7 @@ ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 	    {
 	      if (adbloc->E_ThotWidget[i] != w) 
 		{
-		  index = (int) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
+		  index = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]), "toggled");
 		  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), index);
 		  
 		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
@@ -996,7 +996,7 @@ ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev,
   ----------------------------------------------------------------------*/
 void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
-  int               val, val1;
+  intptr_t          val, val1;
   char              text[11];
   ThotWidget        wtext;
 
@@ -1013,19 +1013,19 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 	    /* cas ou le caractere - a ete tape, on met val a 0 */
 	    val = 0;
 	  else
-	    sscanf (text, "%d", &val);
+	    sscanf (text, "%ld", &val);
 	  /* Est-ce une valeur valide ? */
-	  if (val < (int) catalogue->Cat_Entries->E_ThotWidget[2])
-	    val1 = (int) catalogue->Cat_Entries->E_ThotWidget[2];
-	  else if (val > (int) catalogue->Cat_Entries->E_ThotWidget[3])
-	    val1 = (int) catalogue->Cat_Entries->E_ThotWidget[3];
+	  if (val < (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2])
+	    val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2];
+	  else if (val > (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3])
+	    val1 = (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3];
 	  else
 	    val1 = val;	/* valeur inchangee */
 	  
 	  /* Est-ce qu'il faut changer le contenu du widget ? */
 	  if (val != val1)
 	    {
-	      sprintf (text, "%d", val1);
+	      sprintf (text, "%ld", val1);
 	      /* Desactive la procedure de Callback */
 	      if (catalogue->Cat_React)
 		RemoveSignalGTK (GTK_OBJECT(wtext), "changed"); 

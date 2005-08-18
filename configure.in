@@ -607,12 +607,12 @@ fi # with_wx = no
 # the wx version
 AMAYAWX_MAJVER=9
 AMAYAWX_MINVER=2
-AMAYAWX_SUBVER=1
+AMAYAWX_SUBVER=2
 
 #the old version (to remove when switching on wx)
 AMAYA_MAJVER=8
 AMAYA_MINVER=8
-AMAYA_SUBVER=1
+AMAYA_SUBVER=2
 
 if test "$with_wx" = "yes" ; then
   APP_MAJVER=$AMAYAWX_MAJVER
@@ -1001,7 +1001,7 @@ AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations suppo
 AC_ARG_ENABLE(redland,       [  --disable-redland       disable the redland RDF library ])
 AC_ARG_ENABLE(system-redland,       [  --enable-system-redland try the redland RDF system library ])
 AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental bookmark support ])
-AC_ARG_ENABLE(templates,     [  --enable-templates      enables experimental templates support ])
+AC_ARG_ENABLE(templates,     [  --disable-templates     disables experimental templates support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 
 dnl
@@ -1083,34 +1083,39 @@ else
 fi
 
 dnl
-dnl The templates support is disabled by default
+dnl The templates support is enabled by default
 dnl
 if test "$with_templates" = "" ; then
-   if test "$with_wx" = "yes"; then
-       if test "$enable_templates" = "yes" ; then
+   if test "$enable_templates" = "no" ; then
+      with_templates="no"
+   else
 	  with_templates="yes"
-       else
-          with_templates="no"
-       fi
-   else	
+   fi
+fi 
+if test "$with_templates" = "yes" ; then
+  if test "$with_wx" = "no"; then
       AC_MSG_WARN(Templates are only available in WX version !!)
       AC_MSG_WARN(Disabling templates)
       with_templates="no"
    fi
-else
-    with_templates="no"
 fi
+if test "$with_templates" = "yes" ; then
+    TEMPLATES_OPTIONS="-DTEMPLATES"
+else
+    TEMPLATES_OPTIONS=""
+fi
+
 
 dnl
 dnl Generic XML support enabled by default
 dnl
 if test "$with_generic_xml" = "" ; then
     if test "$enable_generic_xml" = "no" ; then
-	with_generic_xml="no"
-	GENERIC_XML_OPTIONS=
+	    with_generic_xml="no"
+	    GENERIC_XML_OPTIONS=
     else
-	with_generic_xml="yes"
-	GENERIC_XML_OPTIONS=-DXML_GENERIC
+	    with_generic_xml="yes"
+	    GENERIC_XML_OPTIONS=-DXML_GENERIC
     fi
 fi
 
@@ -1251,20 +1256,16 @@ if test "$build_amaya" = "yes" ; then
        with_bookmarks="no"
     fi
     if test "$with_bookmarks" = "yes" ; then
-	ANNOTLIB_COMPILE_BM=
-	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DBOOKMARKS"
+    	ANNOTLIB_COMPILE_BM=
+      	AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DBOOKMARKS"
     else
-	ANNOTLIB_COMPILE_BM=['#']
-    fi
-
-    if test "$with_templates" = "yes" ; then
-	TEMPLATES_OPTIONS= 
+    	ANNOTLIB_COMPILE_BM=['#']
     fi
 
     if test "$with_plugin" = "yes" ; then
         AC_MSG_WARN(The plugin library isn't supported anymore in Amaya !!)
-	AC_MSG_WARN(Disabling plugin build !)
-	with_plugin="no"
+        AC_MSG_WARN(Disabling plugin build !)
+        with_plugin="no"
     fi
 
 

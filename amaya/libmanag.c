@@ -606,7 +606,7 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
 void CallbackLibrary (int ref, int typedata, char *data)
 {
 #ifdef _SVG
-  int                 val;
+  intptr_t            val;
   Document            svgDoc, res, libDoc;
   char               *id, *buffer;
   char                tempname[MAX_LENGTH], pathname[MAX_LENGTH];
@@ -615,7 +615,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
   Element             copiedElement, el = NULL;
   PRule               PRuleSearch;
 
-  val = (int) data + 1;
+  val = (intptr_t) data + 1;
   switch (ref - BaseLibrary)
     {
     case FormLibrary:

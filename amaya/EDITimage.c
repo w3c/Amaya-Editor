@@ -97,11 +97,11 @@ void CallbackImage (int ref, int typedata, char *data)
   char               tempname[MAX_LENGTH];
   char              *name;
   int                i, c1, cN;
-  int                val;
+  intptr_t           val;
   ThotBool           change, isHTML;
 
   isHTML = FALSE;
-  val = (int) data;
+  val = (intptr_t) data;
   switch (ref - BaseImage)
     {
     case FormAlt:

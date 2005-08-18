@@ -161,7 +161,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
   ----------------------------------------------------------------------*/
 gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev, gpointer data)
 {
-  int color = (int) data;
+  intptr_t color = (intptr_t) data;
   GdkWindow *window = GTK_WIDGET(widget)->window;
   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (color));
   gdk_draw_rectangle (window, TtLineGC, TRUE, 0, 0, 20, 20);
@@ -228,7 +228,7 @@ void ButtonBgToggledGTK (GtkWidget *w, GdkEventButton *event, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean ColorsPressGTK (GtkWidget *widget, gpointer data)
 {
-  int color = (int)data;
+  intptr_t color = (intptr_t)data;
   
   if (ApplyFg)
     {

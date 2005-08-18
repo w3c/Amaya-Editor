@@ -402,7 +402,7 @@ void FrameKilled (int *w, int frame, int *info)
 #ifdef _GTK
 gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
 {
-  return KillFrameCallback( (int)f );
+  return KillFrameCallback( (intptr_t)f );
 }
 #endif /* _GTK */
 
@@ -870,10 +870,10 @@ static ThotBool  FrameResizedGTKInProgress = FALSE;
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   ViewFrame          *pFrame;
-  int            frame;
+  intptr_t            frame;
   int            width, height;
  
-  frame = (int) data;
+  frame = (intptr_t) data;
   width = event->width;
   height = event->height; 
   if (width <= 0 || height <= 0 || frame == 0 || frame > MAX_FRAME)
@@ -953,11 +953,11 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   ViewFrame           *pFrame;
-  int                  frame;
+  intptr_t             frame;
   unsigned int         x, y;
   unsigned int         w, h;
 
-  frame = (int) data;
+  frame = (intptr_t) data;
   x = event->area.x;
   y = event->area.y;
   w = event->area.width;
@@ -1689,9 +1689,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
             else
               title_string = text;
             gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-                               (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+                               (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
             gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
-                                (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+                                (intptr_t)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
                                 title_string);
             gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* _GTK */
@@ -2430,14 +2430,14 @@ gboolean GtkLiningSelection (gpointer data)
 {
   Document            doc; 
   ViewFrame          *pFrame;
-  int                 frame;
+  intptr_t            frame;
   int                 view;
   static int          Motion_y = 0;
   static int          Motion_x = 0;
   GdkModifierType state = (GdkModifierType)GDK_BUTTON1_MOTION_MASK;
   int x,y;
   
-  frame = (int) data;
+  frame = (intptr_t) data;
   if (frame < 1)
     return FALSE;
 
@@ -2927,17 +2927,17 @@ ThotBool FrameMouseWheelCallback(
 gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
                            gpointer data)
 {
-  int                 frame;
+  intptr_t            frame;
   GtkEntry            *textzone;
   static int          timer = None;
   Document            document;
   View                view;
 
-  frame = (int )data;
+  frame = (intptr_t)data;
 #ifdef _GL
   GL_prepare (frame);  
 #endif /* _GL */
-  frame = (int )data;
+  frame = (intptr_t)data;
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     /* don't manage a document with NoComputedDisplay mode */

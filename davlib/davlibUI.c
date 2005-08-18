@@ -15,7 +15,14 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.22  2005-08-17 10:28:16  vatton
+** Revision 1.23  2005-08-18 09:35:28  vatton
+** Enable by default --with-templates with WX versions
+** Display attributes of read-only elements
+**
+** PS: Don't forget to remove your old Options and amaya/*.o files.
+** Irene
+**
+** Revision 1.22  2005/08/17 10:28:16  vatton
 ** Make Help files read-only.
 **
 ** Irene
@@ -1119,7 +1126,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
       switch (ref - DAVBase)
         {
         case DAVPreferencesDlg:
-          switch ((int)data) 
+          switch ((intptr_t)data) 
             {
             case 1:
               SetDAVConf();
@@ -1144,7 +1151,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
 
         case DAVradioDepth :
-          switch ((int)data) 
+          switch ((intptr_t)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioDepth, "0");
@@ -1156,7 +1163,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
                    
         case DAVradioTimeout :
-          switch ((int)data) 
+          switch ((intptr_t)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioTimeout, "Infinite");
@@ -1172,7 +1179,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;                   
 	  
         case DAVradioLockScope :
-          switch ((int)data) 
+          switch ((intptr_t)data) 
             {
             case 0:
               strcpy (GProp_DAV.radioLockScope, "exclusive");
@@ -1184,7 +1191,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           break;
 	  
         case DAVtoggleAwareness :
-          switch ((int)data) 
+          switch ((intptr_t)data) 
             {
             case 0:
               GProp_DAV.toggleAwareness1 = !GProp_DAV.toggleAwareness1;

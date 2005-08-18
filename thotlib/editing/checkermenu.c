@@ -786,7 +786,7 @@ void CallbackChecker (int ref, int dataType, char *data)
     switch (ref - SpellingBase)
       {
       case ChkrMenuIgnore:
-	switch ((int) data)
+	switch ((intptr_t) data)
 	  {
 	  case 0:
 	    /* ignorer les mots ecrits en majuscule */
@@ -820,7 +820,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 	break;
       case ChkrMenuOR:
 	/* definition du sens de correction OU? */
-	switch ((int) data)
+	switch ((intptr_t) data)
 	  {
 	  case 0:	/* ElemIsBefore la selection */
 	    ChkrRange->SStartToEnd = FALSE;
@@ -838,7 +838,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 	/* La premiere fois on initialise le domaine de recherche */
 	if (FirstStep)
 	  {
-	    InitSearchDomain ((int) data, ChkrRange);
+	    InitSearchDomain ((intptr_t) data, ChkrRange);
 	    /* On prepare la recheche suivante */
 #ifdef _GTK
 	    if (ChkrRange->SStartToEnd)
@@ -878,7 +878,7 @@ void CallbackChecker (int ref, int dataType, char *data)
       case ChkrFormCorrect:
 	/* retour de la feuille de dialogue CORRECTION */
 	/* effectuer l'action demandee */
-	ApplyCommand ((int) data);
+	ApplyCommand ((intptr_t) data);
 	break;
       }
 }
