@@ -14,7 +14,6 @@ ATTR
 
    { generic attributes for internal use }
    Unknown_attribute = TEXT;	{ to store an unknown attribute }
-   Ghost_restruct = TEXT;	{ to help structure transformation }
 
 CONST
 

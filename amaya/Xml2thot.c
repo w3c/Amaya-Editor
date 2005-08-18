@@ -45,9 +45,10 @@
 #ifdef XML_GENERIC
 #include "Xmlbuilder_f.h"
 #endif /* XML_GENERIC */
-//#ifdef TEMPLATES
+#ifdef TEMPLATES
 #include "Templatebuilder_f.h"
-//#endif /* TEMPLATES */
+#include "templates_f.h"
+#endif /* TEMPLATES */
 #include "XLinkbuilder_f.h"
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -5898,7 +5899,13 @@ void StartXmlParser (Document doc, char *fileName,
       TtaSetStructureChecking (TRUE, doc);
       DocumentSSchema = NULL;
     }
+#ifdef TEMPLATES
+  if (IsTemplateInstance(doc))
+    LoadInstanceOfTemplate(doc);
+#endif /* TEMPLATES */
+
   TtaSetDocumentUnmodified (doc);
+
 }
 
 /* end of module */

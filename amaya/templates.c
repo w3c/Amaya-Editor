@@ -262,40 +262,76 @@ void InitTemplateList ()
  Insert the meta element identifying the template's
  instance
 ----------------------------------------------------*/
-void insertTemplateMeta (Document newdoc)
+void InsertInstanceMeta (Document newdoc)
 {
-  Element el = TtaGetMainRoot (newdoc);
+  Element head = TtaGetMainRoot (newdoc);
   Element meta;
-  Element head;
   ElementType elType;
   AttributeType	attrType;
   Attribute attr;
+  char *temp_id, *name;
+  int length;
+  ThotBool found = false;
   
   elType.ElSSchema = TtaGetSSchema ("HTML", newdoc);
   elType.ElTypeNum = HTML_EL_HEAD;
-  head = TtaSearchTypedElement(elType, SearchInTree, el);
+  head = TtaSearchTypedElement(elType, SearchInTree, head);
   if (head)
     {
-      el = TtaGetFirstChild(head);
-      elType.ElTypeNum = HTML_EL_META;
-      meta = TtaNewElement (newdoc, elType);
-
-      /* Create the "name" attribute */
       attrType.AttrTypeNum = HTML_ATTR_meta_name;
       attrType.AttrSSchema = elType.ElSSchema;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (meta, attr, newdoc);
-      TtaSetAttributeText (attr, "template", meta, newdoc);
 
-      /* Create the "content" attribute */
-      attrType.AttrTypeNum = HTML_ATTR_meta_content;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (meta, attr, newdoc);
-      TtaSetAttributeText (attr, "version-modele", meta, newdoc);
+      elType.ElTypeNum = HTML_EL_META;      
+      /* Search the template_id meta in the template document */
+      meta = TtaSearchTypedElement(elType, SearchInTree, head);
+      while (meta && !found)
+        {
+          attr = TtaGetAttribute (meta, attrType);
+          if (attr != NULL)
+            {
+              length = TtaGetTextAttributeLength (attr) + 1;
+              name = (char *) TtaGetMemory (length);
+              TtaGiveTextAttributeValue (attr, name, &length);
+              if (!strcmp (name, "template_id"))
+                {
+                  /* The element is the template ID meta */
+                  attrType.AttrTypeNum = HTML_ATTR_meta_content;
+                  attr = TtaGetAttribute (meta, attrType);
+                  
+                  if (attr)
+                    {
+                      length = TtaGetTextAttributeLength (attr) + 1;
+                      temp_id = (char *) TtaGetMemory (length);
+                      TtaGiveTextAttributeValue (attr, temp_id, &length);
+                      found = True;
+                    }
+                  TtaFreeMemory(name);
+                }
+            }
+          meta = TtaSearchTypedElement(elType, SearchForward, meta);
+        }
+      /* now "temp_id" should contain the content of template_id meta */
       
-      TtaInsertFirstChild (&meta, head, newdoc);
-    }
-  
+      if (found)
+        {
+          meta = TtaNewElement (newdoc, elType);
+          
+          /* Create the "name" attribute */
+          
+          attrType.AttrTypeNum = HTML_ATTR_meta_name;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (meta, attr, newdoc);
+          TtaSetAttributeText (attr, "template", meta, newdoc);
+
+          /* Create the "content" attribute */
+          attrType.AttrTypeNum = HTML_ATTR_meta_content;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (meta, attr, newdoc);
+          TtaSetAttributeText (attr, temp_id, meta, newdoc);
+          
+          TtaInsertFirstChild (&meta, head, newdoc);
+        }
+    }  
 }
 
 /*-----------------------------------------------
@@ -393,7 +429,6 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 			      DocumentType docType)
 {
   Element       el;
-  char          templateFile[MAX_LENGTH];
   int           newdoc, len;
   ThotBool      stopped_flag;
 
@@ -401,20 +436,18 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
   BackupDocument = doc;
   TtaExtractName (templatename, DirectoryName, DocumentName);
   AddURLInCombobox (docname, NULL, TRUE);
+  //  doc = TtaInitDocument("HTML", templatename, 0);
   newdoc = InitDocAndView (doc,
                            !DontReplaceOldDoc /* replaceOldDoc */,
-                           InNewWindow /* inNewWindow */,
+                           InNewWindow, /* inNewWindow */
                            DocumentName, (DocumentType)docType, 0, FALSE,
-                           L_Other, (ClickEvent)CE_ABSOLUTE);
+                           L_Other, (ClickEvent)CE_ABSOLUTE); 
   if (newdoc != 0)
     {
-      /* load the saved file */
-      W3Loading = newdoc;
-      
-      templateFile[0] = EOS;
-      
       LoadDocument (newdoc, templatename, NULL, NULL, CE_ABSOLUTE,
                     "", DocumentName, NULL, FALSE, &DontReplaceOldDoc);
+
+      InsertInstanceMeta(newdoc);
       
       /* Update URLs of linked documents */
       SetRelativeURLs (newdoc, docname);
@@ -449,15 +482,80 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       el = TtaGetMainRoot (newdoc);
       LockFixedAreas (newdoc, el);
 
-      insertTemplateMeta(newdoc);
+
     }
    BackupDocument = 0;
    return (newdoc);
 
 }
 
+/*---------------------------------------------------------------
+  Here we put all the actions to performs when we know a document 
+  is an instance
+ ---------------------------------------------------------------*/
+
 void LoadInstanceOfTemplate (Document doc)
 {
   Element el = TtaGetMainRoot (doc);
   LockFixedAreas (doc, el);
+}
+
+
+/*---------------------------------------------------------------
+  ThotBool isTemplateInstance (Document doc) 
+  Return true if the document is an instance 
+ ---------------------------------------------------------------*/
+
+ThotBool IsTemplateInstance (Document doc)
+{
+  Element el = TtaGetMainRoot (doc);
+  Element meta;
+  ElementType metaType;
+  AttributeType	attrType;
+  Attribute attr;
+  ThotBool found = false;
+  char* name,* version;
+  int length;
+  
+  /* metaType is first used to find a meta element */
+  metaType.ElSSchema = TtaGetSSchema ("HTML", doc);
+  metaType.ElTypeNum = HTML_EL_META;
+  meta = TtaSearchTypedElement(metaType, SearchInTree, el);
+
+  /* attrType will be used to find the name attribute of a meta */
+  attrType.AttrSSchema = metaType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_meta_name;
+  while (meta && !found)
+    {
+      attr = TtaGetAttribute (meta, attrType);
+      if (attr != NULL)
+        /* The element contains a name attribute */
+        {
+          length = TtaGetTextAttributeLength (attr) + 1;
+          name = (char *) TtaGetMemory (length);
+          TtaGiveTextAttributeValue (attr, name, &length);
+
+          if (!strcmp(name, "template"))
+            {
+              /* The element is the template meta, the document is a template instance */
+              attrType.AttrTypeNum = HTML_ATTR_meta_content;
+              attr = TtaGetAttribute (meta, attrType);
+              
+              if (attr)
+                {
+                  length = TtaGetTextAttributeLength (attr) + 1;
+                  version = (char *) TtaGetMemory (length);
+                  TtaGiveTextAttributeValue (attr, version, &length);
+                  
+                  DocumentMeta[doc]->template_version = version;
+                  TtaFreeMemory (version);
+                  found = True;
+                }
+            }
+          TtaFreeMemory(name);
+        }
+      meta = TtaSearchTypedElement(metaType, SearchForward, meta);
+    }
+  
+  return found;
 }

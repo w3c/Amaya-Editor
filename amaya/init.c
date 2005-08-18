@@ -4279,59 +4279,6 @@ Document LoadDocument (Document doc, char *pathname,
         ANNOT_bodyType_set (newdoc, annotBodyType);
 #endif /* ANNOTATIONS */
     }
-
-#ifdef TEMPLATES
-  Element el = TtaGetMainRoot (newdoc);
-  Element meta;
-  ElementType metaType;
-  AttributeType	attrType;
-  Attribute attr;
-  ThotBool found = false;
-  char* name,* version;
-  int length;
-  
-  /* metaType is first used to find a meta element */
-  metaType.ElSSchema = TtaGetSSchema ("HTML", newdoc);
-  metaType.ElTypeNum = HTML_EL_META;
-  meta = TtaSearchTypedElement(metaType, SearchInTree, el);
-
-  /* attrType will be used to find the name attribute of a meta */
-  attrType.AttrSSchema = metaType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_meta_name;
-  while (meta && !found)
-    {
-      /* el is a meta element */
-      attr = TtaGetAttribute (meta, attrType);
-      if (attr != NULL)
-        /* The element contains a name attribute */
-        {
-          length = TtaGetTextAttributeLength (attr) + 1;
-          name = (char *) TtaGetMemory (length);
-          TtaGiveTextAttributeValue (attr, name, &length);
-
-          if (!strcmp(name, "template"))
-            {
-              /* The element is the template meta, the document is a template instance */
-              attrType.AttrTypeNum = HTML_ATTR_meta_content;
-              attr = TtaGetAttribute (el, attrType);
-              
-              length = TtaGetTextAttributeLength (attr) + 1;
-              version = (char *) TtaGetMemory (length);
-              TtaGiveTextAttributeValue (attr, version, &length);
-
-              DocumentMeta[newdoc]->template_version = version;
-              TtaFreeMemory (version);
-              found = True;
-            }
-          TtaFreeMemory(name);
-        }
-      meta = TtaSearchTypedElement(metaType, SearchForward, meta);
-    }
-  
-  if (found)
-    LoadInstanceOfTemplate(newdoc);
-#endif /* TEMPLATES */
-
   TtaFreeMemory (content_type);
   TtaFreeMemory (localdoc);
   return (newdoc);
