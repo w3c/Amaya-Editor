@@ -236,19 +236,30 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
   wxASSERT( instanceUrl.Len() < 512 );
   strcpy( bufferInstance, (const char*)instanceUrl.mb_str(wxConvUTF8) );
   
-  // get the "where to open" indicator
-  int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
-  ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
+  if (TtaFileExist(bufferTemplate))
+    {
+      // get the "where to open" indicator
+      int where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
+      ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
   
-  // give the new url to amaya (to do url completion)
-  ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)bufferInstance );
+      // give the new url to amaya (to do url completion)
+      ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)bufferInstance );
   
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
+      ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
 
   
-  CreateInstanceOfTemplate (m_doc, bufferTemplate, bufferInstance,
-                            docHTML);
-  Close();
+      CreateInstanceOfTemplate (m_doc, bufferTemplate, bufferInstance,
+                                docHTML);
+      Close();
+    }
+  else
+    {
+      wxMessageDialog msgdlg (this, 
+                      TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BAD_TEMPLATE)),
+                      TtaConvMessageToWX(""),
+                      (long) wxOK | wxICON_EXCLAMATION);
+      msgdlg.ShowModal();
+    }
 }
 /*----------------------------------------------------------------------
   OnClearButton called when the user wants to clear each fields

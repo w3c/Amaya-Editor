@@ -4593,4 +4593,8 @@ erreicht</message>
 <label define="AM_TEMPLATE_INSTANCE">
 <message xml:lang="en">Save the document as...</message>
 <message xml:lang="fr">Enregistrer le document sous...</message></label>
+<label define="AM_BAD_TEMPLATE">
+<message xml:lang="en">Template not found</message>
+<message xml:lang="fr">Le modèle n'existe pas</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>
