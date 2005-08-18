@@ -5848,9 +5848,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *ptr;
   long int          val;
-#if defined(_WINGUI) || defined(_WX) 
+#ifdef _WX
   int               i;
-#endif /* defined(_WINGUI) || defined(_WX) */
+#endif /* _WX */
   ThotBool          change, updated;
 
   if (typedata == STRING_DATA && data && strchr (data, '/'))

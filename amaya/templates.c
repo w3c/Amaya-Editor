@@ -392,6 +392,7 @@ void LockFixedAreas (Document doc, Element el)
 int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 			      DocumentType docType)
 {
+  Element       el;
   char          templateFile[MAX_LENGTH];
   int           newdoc, len;
   ThotBool      stopped_flag;
@@ -445,7 +446,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
       
       /* Set elements access rights
          according to free_* elements */
-      Element el = TtaGetMainRoot (newdoc);
+      el = TtaGetMainRoot (newdoc);
       LockFixedAreas (newdoc, el);
 
       insertTemplateMeta(newdoc);
