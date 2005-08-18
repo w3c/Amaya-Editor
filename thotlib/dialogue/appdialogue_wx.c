@@ -164,7 +164,8 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       ThotBool maximized;
       TtaGetEnvBoolean("WINDOW_MAXIMIZED", &maximized);
 #ifndef _MACOS
-      p_window->Maximize(maximized);
+      if (maximized)
+        p_window->Maximize(maximized);
 #endif /* !_MACOS */
       break;
     case WXAMAYAWINDOW_SIMPLE:
