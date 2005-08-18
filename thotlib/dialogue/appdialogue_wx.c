@@ -486,7 +486,8 @@ void TtaInitTopMenuStats( int doc_id )
 #ifdef _WX
   /* enable every menu */
   PtrDocument pDoc = LoadedDocument[doc_id-1];
-  memset(pDoc->EnabledMenus, TRUE, sizeof(pDoc->EnabledMenus));
+  if (pDoc && pDoc->EnabledMenus)
+    memset(pDoc->EnabledMenus, TRUE, sizeof(pDoc->EnabledMenus));
 #endif /* _WX */
 }
 
