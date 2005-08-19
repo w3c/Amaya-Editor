@@ -1480,7 +1480,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    app_home[0] = EOS;
    /* IV 18/08/2003 Check the variable AMAYA_USER_HOME first */
    ptr = getenv ("AMAYA_USER_HOME");
-   if (ptr && ThotDirExists (ptr))
+   if (ptr && TtaDirExists (ptr))
      strncpy (app_home, ptr, MAX_PATH);
 
    if (app_home[0] == EOS)
