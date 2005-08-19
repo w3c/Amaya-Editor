@@ -112,9 +112,9 @@ DEFAULT
 	Indent: Enclosing =;
 	Depth: Enclosing =;
 	FillPattern: nopattern;
-        Opacity: Enclosing =;
-        FillOpacity: Enclosing =;
-        StrokeOpacity: Enclosing =;
+  Opacity: Enclosing =;
+  FillOpacity: Enclosing =;
+  StrokeOpacity: Enclosing =;
 	ListStyleType: Enclosing =;
 	END;
 
@@ -197,7 +197,7 @@ BOXES
 #endif
 
  ElementName: BEGIN
-        Content: (ElemName);
+  Content: (ElemName);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1744,8 +1744,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	if not within NOFRAMES BEGIN
-	        MarginLeft: 8 px;
-	        MarginRight: 8 px;
+	  MarginLeft: 8 px;
+	  MarginRight: 8 px;
 		MarginTop: 8 px;
 		MarginBottom: 8 px;
 		VertPos: Top = Previous AnyElem . Bottom;
@@ -3843,14 +3843,16 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
+	if not Immediately within Object and not IsInput
+		CreateBefore(ElementName);
+	if within Object_Content
+		CreateBefore(ElementName);
 	if ALT
-	        CreateBefore(IMG_ALT);
+	  CreateBefore(IMG_ALT);
 	if IsInput BEGIN
 		CreateBefore(IMG_in_S);
 		CreateBefore(IMG_type_image);
-	        END;
-	if not Immediately within Object and not IsInput
-		CreateBefore(ElementName);
+	END;
 	LineBreak: No;
 	PageBreak: No;
 	HorizRef: * . Bottom;
@@ -5051,9 +5053,9 @@ ATTRIBUTES
  NoImages(PICTURE_UNIT*):
 	BEGIN
 	Visibility: 1;
-	if ALT and not within Object and not within Embed_
-            CreateBefore(SHOW_ALT);
-	if Not ALT and not within Object and not within Embed_
+	if ALT and not Immediately within Object and not within Embed_
+      CreateBefore(SHOW_ALT);
+	if Not ALT and not Immediately within Object and not within Embed_
 	    CreateBefore(SHOW_IMG);
 	IN Alternate_view
 		Visibility: Enclosing =;
@@ -5094,38 +5096,38 @@ ATTRIBUTES
 	END;
  NoObjects(Object_Content):
 	BEGIN
- 	  if not within HEAD
+ 	if not within HEAD
 	    Visibility: Enclosing =;
 	END;
  NoObjects(Iframe_Src_Content):
 	BEGIN
- 	  if not within HEAD
+ 	if not within HEAD
 	    Visibility: 0;
 	END;
  NoObjects(Iframe_Content):
 	BEGIN
- 	  if not within HEAD
+ 	if not within HEAD
 	    Visibility: Enclosing =;
 	END;
 
  Language:
 	BEGIN
-        IF Root and RealLang
+  IF Root and RealLang
 	    BEGIN
-            CreateBefore(AttrName);
+      CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
         IF not Root
 	    BEGIN
-            CreateBefore(AttrName);
+      CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
 	END;
 
  HREF_:
 	BEGIN
-        CreateBefore(AttrName);
-        CreateBefore(AttrValue);
+  CreateBefore(AttrName);
+  CreateBefore(AttrValue);
 	if Anchor
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
@@ -5133,20 +5135,20 @@ ATTRIBUTES
 #ifdef PAGE
 	   Underline: Enclosing =;
 #else
-           Underline: Underlined;
+     Underline: Underlined;
 #endif
 	   END;
-        if AREA
+  if AREA
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
 #ifdef LINK_NUMBER
-        if Anchor and not InternalLink
-           BEGIN
-           CreateFirst(AnchorNumInLinkView);
-           CreateAfter(AnchorNumInFormattedView);
-           END;
+  if Anchor and not InternalLink
+     BEGIN
+     CreateFirst(AnchorNumInLinkView);
+     CreateAfter(AnchorNumInFormattedView);
+     END;
 #endif
 #ifdef PAGE
 	IN Links_view
@@ -5158,7 +5160,7 @@ ATTRIBUTES
 	IN Links_view BEGIN
 		Foreground: ATTRVALUE_Color;
 		if Anchor
-                   Underline: Enclosing =;
+       Underline: Enclosing =;
 		END;
 #endif
 	IN Structure_view BEGIN
