@@ -98,6 +98,7 @@ typedef struct Prop_General_t
   ThotBool S_Targets;
   ThotBool S_AutoSave;
   ThotBool S_Geometry;
+  ThotBool S_Templates;
 } Prop_General;
 
 typedef struct Prop_Browse_t

@@ -37,6 +37,7 @@
 /* URL of the script providing templates (for reload) */
 static char   *script_URL;
 #include "init_f.h"
+#include "css_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -46,13 +47,11 @@ void NewTemplate (Document doc, View view)
 {
 #ifdef TEMPLATES
   char *templateDir ;
-  char *amaya_home ;
 
   templateDir = (char *) TtaGetMemory (MAX_LENGTH);
-  amaya_home = TtaGetEnvString ("THOTDIR");
 
   // Amaya's templates directory (only french yet)
-  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c", amaya_home,DIR_SEP,DIR_SEP,DIR_SEP);
+  sprintf ((char *)templateDir, "%s%ctemplates%cfr%c", TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP,DIR_SEP);
   
   char s [MAX_LENGTH];
   
@@ -90,6 +89,7 @@ void NewTemplate (Document doc, View view)
 
 void OpenTemplateDocument (Document doc)
 {
+#ifdef TEMPLATES
   ElementType         metaElType;
   Element             metaEl;
   Attribute           metaAttr;
@@ -174,6 +174,7 @@ void OpenTemplateDocument (Document doc)
       SetWindowTitle (doc, doc, 0);
     }
   TtaFreeMemory (path);
+#endif /* TEMPLATES */
 }
   
 /*----------------------------------------------------------------------
@@ -194,6 +195,7 @@ void ReloadTemplateParams (char **docURL, ClickEvent *method)
   ----------------------------------------------------------------------*/
 void InitTemplateList ()
 {
+#ifdef TEMPLATES
   int i, nb,len;
   unsigned char *urlstring,c;
   char          *app_home;
@@ -226,36 +228,37 @@ void InitTemplateList ()
       i = 0;
       nb = 0;
       while (TtaReadByte (file, &c))
-	{
-	  if (c == '"')
-	    {
-	      len = 0;
-	      urlstring[len] = EOS;
-	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
-		{
-		  if (c == '"')
-		    urlstring[len] = EOS;
-		  else if (c == 13) /* Carriage return */
-		    urlstring[len] = EOS;
-		  else
-		    urlstring[len++] = (char)c;
-		}
-	      urlstring[len] = EOS;
-	      if (i > 0 && len)
-		/* add an EOS between two urls */
-		URL_list[i++] = EOS;
-	      if (len)
-		{
-		  nb++;
-		  strcpy ((char *)&Template_list[i], (char *)urlstring);
-		  i += len;
-		}
-	    }
-	}
+        {
+          if (c == '"')
+            {
+              len = 0;
+              urlstring[len] = EOS;
+              while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+                {
+                  if (c == '"')
+                    urlstring[len] = EOS;
+                  else if (c == 13) /* Carriage return */
+                    urlstring[len] = EOS;
+                  else
+                    urlstring[len++] = (char)c;
+                }
+              urlstring[len] = EOS;
+              if (i > 0 && len)
+                /* add an EOS between two urls */
+                URL_list[i++] = EOS;
+              if (len)
+                {
+                  nb++;
+                  strcpy ((char *)&Template_list[i], (char *)urlstring);
+                  i += len;
+                }
+            }
+        }
       Template_list[i + 1] = EOS;
       TtaReadClose (file);
     }
   TtaFreeMemory (urlstring);
+#endif /* TEMPLATES */
 }
 
 /*-------------------------------------------------
@@ -264,6 +267,7 @@ void InitTemplateList ()
 ----------------------------------------------------*/
 void InsertInstanceMeta (Document newdoc)
 {
+#ifdef TEMPLATES
   Element head = TtaGetMainRoot (newdoc);
   Element meta;
   ElementType elType;
@@ -332,6 +336,7 @@ void InsertInstanceMeta (Document newdoc)
           TtaInsertFirstChild (&meta, head, newdoc);
         }
     }  
+#endif /*TEMPLATES*/
 }
 
 /*-----------------------------------------------
@@ -342,15 +347,18 @@ children
 
 void UnlockSubtree (Document doc, Element el)
 {
+#ifdef TEMPLATES
   TtaSetAccessRight (el, ReadWrite, doc);
   TtaNextSibling (&el);
   if (el != NULL)
     /* The element has at least one sibling */
     UnlockSubtree (doc, el);
+#endif /*TEMPLATES*/
 }
 
 void UnlockContentElements (Document doc, Element el)
 {
+#ifdef TEMPLATES
   ElementType elType;
 
   if (el != NULL) 
@@ -372,6 +380,7 @@ void UnlockContentElements (Document doc, Element el)
           UnlockContentElements(doc,el);
         }
     }
+#endif /*TEMPLATES*/
 }
 
 /*-----------------------------------------------
@@ -428,6 +437,7 @@ void LockFixedAreas (Document doc, Element el)
 int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 			      DocumentType docType)
 {
+#ifdef TEMPLATES
   Element       el;
   int           newdoc, len;
   ThotBool      stopped_flag;
@@ -486,7 +496,7 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
     }
    BackupDocument = 0;
    return (newdoc);
-
+#endif /* TEMPLATES */
 }
 
 /*---------------------------------------------------------------
@@ -496,8 +506,33 @@ int CreateInstanceOfTemplate (Document doc, char *templatename, char *docname,
 
 void LoadInstanceOfTemplate (Document doc)
 {
-  Element el = TtaGetMainRoot (doc);
+#ifdef TEMPLATES
+  ThotBool   show;
+  Element    el = TtaGetMainRoot (doc);
+  char      *css_url;
+  PInfoPtr            pInfo;
+  CSSInfoPtr css;
+
   LockFixedAreas (doc, el);
+  TtaGetEnvBoolean ("SHOW_TEMPLATES", &show);
+  css_url = (char *) TtaGetMemory (MAX_LENGTH);
+  sprintf (css_url, "%s%camaya%chide_template.css", TtaGetEnvString ("THOTDIR"),DIR_SEP,DIR_SEP);
+  if (!show)
+    {
+      /* We don't want to show the frames around template's elements,
+         so we load a stylesheet with border: none for all template's 
+         elements */
+      
+      LoadStyleSheet (css_url, doc, NULL, NULL, NULL, CSS_ALL, FALSE);
+    }
+  else
+    {
+      css = SearchCSS (doc, css_url, NULL, &pInfo);
+      if (css)
+        RemoveStyle (css_url, doc, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
+    }
+  TtaFreeMemory(css_url);
+#endif /* TEMPLATES */
 }
 
 
@@ -508,6 +543,7 @@ void LoadInstanceOfTemplate (Document doc)
 
 ThotBool IsTemplateInstance (Document doc)
 {
+#ifdef TEMPLATES
   Element el = TtaGetMainRoot (doc);
   Element meta;
   ElementType metaType;
@@ -558,4 +594,7 @@ ThotBool IsTemplateInstance (Document doc)
     }
   
   return found;
+#else /* TEMPLATES */
+  return false;
+#endif /* TEMPLATES */
 }

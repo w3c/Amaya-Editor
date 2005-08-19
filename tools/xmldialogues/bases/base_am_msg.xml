@@ -4597,4 +4597,8 @@ erreicht</message>
 <message xml:lang="en">Template not found</message>
 <message xml:lang="fr">Le modèle n'existe pas</message>
 </label>
+<label define="AM_SHOW_TEMPLATES">
+<message xml:lang="en">Show template's boxes</message>
+<message xml:lang="fr">Montrer les cadres des modèles</message>
+</label>
 <label define="AMAYA_MSG_MAX"></label></messages></base>

@@ -9,9 +9,8 @@ DEFPRES TemplateP;
 
 ATTR
    { No global attributes for protected areas }
-
    xmlid = Text;		{ xml:id }
-
+   
    { generic attributes for internal use }
    Unknown_attribute = TEXT;	{ to store an unknown attribute }
 
@@ -32,5 +31,6 @@ EXCEPT
     Unknown_attribute: Invisible;
     FREE_STRUCT: NoCreate;
 		FREE_CONTENT: NoCreate;
+    xmlid: CssId;
 
 END
