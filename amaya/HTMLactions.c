@@ -26,6 +26,7 @@
 #endif /* _SVG */
 #ifdef TEMPLATES
 #include "Template.h"
+#include "templates_f.h"
 #endif /* TEMPLATES */
 
 #include "XML.h"
@@ -1355,110 +1356,176 @@ ThotBool AcceptTab (NotifyOnTarget *event)
  -----------------------------------------------------------------------*/
 void NextLinkOrFormElement (Document doc, View view)
 {
-  ElementType         elType;
-  Element             root, child, next, startEl, el;
+  ElementType         elType, elType1, elType2;
+  Element             root, child, next, startEl, el, el2;
   Attribute           attr;
   AttributeType       attrType1, attrType2;
-  SSchema             HTMLschema;
+  SSchema             schema;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
-
-  HTMLschema = TtaGetSSchema ("HTML", doc);
-  attrType1.AttrTypeNum = HTML_ATTR_NAME;
-  attrType1.AttrSSchema = HTMLschema;
-  attrType2.AttrTypeNum = HTML_ATTR_HREF_;
-  attrType2.AttrSSchema = HTMLschema;
-  root = TtaGetRootElement (doc);
-  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
-  if (el == NULL)
+  
+#ifdef TEMPLATES
+  if (!DocumentMeta[doc]->template_version)
     {
-      /* start from the root element */
-      el = root;
-      /* we don't accept to restart from the beginning */
-      cycle = TRUE;
-    }
-  else
-    cycle = FALSE;
-
-  /* don't manage this element */
-  startEl = el;
-  /* we're looking for a next element */
-  TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
-  found = FALSE;
-  while (!found)
-    {
+#endif /* TEMPLATES */    
+      schema = TtaGetSSchema ("HTML", doc);
+      attrType1.AttrTypeNum = HTML_ATTR_NAME;
+      attrType1.AttrSSchema = schema;
+      attrType2.AttrTypeNum = HTML_ATTR_HREF_;
+      attrType2.AttrSSchema = schema;
+      root = TtaGetRootElement (doc);
+      TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
       if (el == NULL)
-	{
-	  /* end of the document */
-	  el = NULL;
-	  attr = NULL;
-	  if (!cycle)
-	    {
-	      /* restart from the beginning of the document */
-	      cycle = TRUE;
-	      el = root;
-	    }
-	  else
-	    /* stop the search */
-	    found = TRUE;
-	}  
-      else if (el == startEl)
-	{
-	  /* we made a complete cycle and no other element was found */
-	  el = NULL;
-	  attr = NULL;
-	  found = TRUE;
-	}
-      else if (attr)
-	{
-	  elType = TtaGetElementType (el);
-	  switch (elType.ElTypeNum)
-	    {
-	    case HTML_EL_Option_Menu:
-	    case HTML_EL_Checkbox_Input:
-	    case HTML_EL_Radio_Input:
-	    case HTML_EL_Submit_Input:
-	    case HTML_EL_Reset_Input:
-	    case HTML_EL_Button_Input:
-	    case HTML_EL_BUTTON_:
-	    case HTML_EL_Anchor:
-	      /* no included text: select the element itself */
-	      TtaSelectElement (doc, el);
-	      found =TRUE;
-	      break;
+        {
+          /* start from the root element */
+          el = root;
+          /* we don't accept to restart from the beginning */
+          cycle = TRUE;
+        }
+      else
+        cycle = FALSE;
+
+      /* don't manage this element */
+      startEl = el;
+      /* we're looking for a next element */
+      TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
+      found = FALSE;
+      while (!found)
+        {
+          if (el == NULL)
+            {
+              /* end of the document */
+              el = NULL;
+              attr = NULL;
+              if (!cycle)
+                {
+                  /* restart from the beginning of the document */
+                  cycle = TRUE;
+                  el = root;
+                }
+              else
+                /* stop the search */
+                found = TRUE;
+            }  
+          else if (el == startEl)
+            {
+              /* we made a complete cycle and no other element was found */
+              el = NULL;
+              attr = NULL;
+              found = TRUE;
+            }
+          else if (attr)
+            {
+              elType = TtaGetElementType (el);
+              switch (elType.ElTypeNum)
+                {
+                case HTML_EL_Option_Menu:
+                case HTML_EL_Checkbox_Input:
+                case HTML_EL_Radio_Input:
+                case HTML_EL_Submit_Input:
+                case HTML_EL_Reset_Input:
+                case HTML_EL_Button_Input:
+                case HTML_EL_BUTTON_:
+                case HTML_EL_Anchor:
+                  /* no included text: select the element itself */
+                  TtaSelectElement (doc, el);
+                  found =TRUE;
+                  break;
 	      
-	    case HTML_EL_Text_Area:
-	    case HTML_EL_Text_Input:
-	    case HTML_EL_File_Input:
-	    case HTML_EL_Password_Input:
-	      /* look for the last included text */
-	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      child = TtaSearchTypedElement (elType, SearchForward, el);
-	      if (child)
-		{
-		  next = child;
-		  do
-		    {
-		      child = next;
-		      next = TtaSearchTypedElementInTree (elType,
-							  SearchForward,
-							  el, child);
-		    }
-		  while (next);
-		  i = TtaGetTextLength (child);
-		  TtaSelectString (doc, child, i+1, i);
-		}
-	      found =TRUE;
-	      break;
+                case HTML_EL_Text_Area:
+                case HTML_EL_Text_Input:
+                case HTML_EL_File_Input:
+                case HTML_EL_Password_Input:
+                  /* look for the last included text */
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  child = TtaSearchTypedElement (elType, SearchForward, el);
+                  if (child)
+                    {
+                      next = child;
+                      do
+                        {
+                          child = next;
+                          next = TtaSearchTypedElementInTree (elType,
+                                                              SearchForward,
+                                                              el, child);
+                        }
+                      while (next);
+                      i = TtaGetTextLength (child);
+                      TtaSelectString (doc, child, i+1, i);
+                    }
+                  found =TRUE;
+                  break;
 	      
-	    default:
-	      break;
-	    }
-	}
-      if (!found)
-	TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
+                default:
+                  break;
+                }
+            }
+          if (!found)
+            TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
+        }
+  
     }
+#ifdef TEMPLATES
+  else
+    {
+      /* The document is a template's instance
+       * The tab key is used to go to the next
+       * editable field */
+      schema = TtaGetSSchema ("Template", doc);
+      elType1.ElSSchema = schema;
+      elType1.ElTypeNum = Template_EL_FREE_STRUCT;
+      elType2.ElSSchema = schema;
+      elType2.ElTypeNum = Template_EL_FREE_CONTENT;
+      
+      root = TtaGetRootElement (doc);
+      TtaGiveFirstSelectedElement (doc, &startEl, &firstChar, &lastChar);
+      /* don't manage this element */
+      if (startEl == NULL)
+        {
+          /* start from the root element */
+          startEl = root;
+          /* we don't accept to restart from the beginning */
+          cycle = TRUE;
+        }
+      else
+        cycle = FALSE;
+      
+      el = TtaSearchTypedElement (elType1, SearchForward, startEl);
+      el2 = TtaSearchTypedElement (elType2, SearchForward, startEl);
+
+      if (el == NULL)
+        {
+          el = el2;
+          if (el == NULL && !cycle)
+            {
+              /* There was no other element - Search from the beginning*/
+              el = TtaSearchTypedElement (elType1, SearchForward, root);
+              el2 = TtaSearchTypedElement (elType2, SearchForward, root);
+              if (el == NULL)
+                el = el2;
+            }
+        }
+      if (el != NULL && el2 != NULL)
+        {
+          if(TtaIsBefore (el2, el))
+            {
+              el = el2;
+            }
+        }
+      if (el != NULL)
+        {
+          /* el must contain the first free_struct or free_content element */
+          elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          el = TtaSearchTypedElement (elType,SearchInTree,el);
+          if (el != NULL)
+            {
+              TtaSelectElement (doc, el);
+            }
+        }
+    }
+#endif /* TEMPLATES */
 }
 
 
@@ -1467,137 +1534,213 @@ void NextLinkOrFormElement (Document doc, View view)
  -----------------------------------------------------------------------*/
 void PreviousLinkOrFormElement (Document doc, View view)
 {
-  ElementType         elType;
-  Element             root, child, next, startEl, el;
+  ElementType         elType, elType1, elType2;
+  Element             root, child, next, startEl, el, el2;
   Attribute           attr;
   AttributeType       attrType1, attrType2;
-  SSchema             HTMLschema;
+  SSchema             schema;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
 
-  HTMLschema = TtaGetSSchema ("HTML", doc);
+  schema = TtaGetSSchema ("HTML", doc);
   attrType1.AttrTypeNum = HTML_ATTR_NAME;
-  attrType1.AttrSSchema = HTMLschema;
+  attrType1.AttrSSchema = schema;
   attrType2.AttrTypeNum = HTML_ATTR_HREF_;
-  attrType2.AttrSSchema = HTMLschema;
-  /* keep in mind the last element of the document */
-  root = TtaGetRootElement (doc);
-  el = TtaGetLastChild (root);
-  attr = NULL;
-  while (el)
+  attrType2.AttrSSchema = schema;
+
+#ifdef TEMPLATES
+  if (!DocumentMeta[doc]->template_version)
     {
-      root = el;
-      /* check if this element matches */
-      attr = TtaGetAttribute (el, attrType1);
-      if (attr == NULL)
-	attr = TtaGetAttribute (el, attrType2);
-      if (attr == NULL)
-	el = TtaGetLastChild (root);
+#endif /* TEMPLATES */    
+      /* keep in mind the last element of the document */
+      root = TtaGetRootElement (doc);
+      el = TtaGetLastChild (root);
+      attr = NULL;
+
+      while (el)
+        {
+          root = el;
+          /* check if this element matches */
+          attr = TtaGetAttribute (el, attrType1);
+          if (attr == NULL)
+            attr = TtaGetAttribute (el, attrType2);
+          if (attr == NULL)
+            el = TtaGetLastChild (root);
+          else
+            /* a right element is found */
+            el = NULL;
+        }
+      TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar);
+      if (el == NULL)
+        {
+          /* start from the end of the document */
+          el = root;
+          /* we don't accept to restart from the beginning */
+          cycle = TRUE;
+          /* attr != 0 if this element matches */
+          startEl = NULL;
+        }
       else
-	/* a right element is found */
-	el = NULL;
+        {
+          cycle = FALSE;
+          attr = NULL;
+          /* don't manage this element */
+          startEl = el;
+        }
+
+      if (attr == NULL)
+        /* we're looking for a next element */
+        TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
+      found = FALSE;
+      while (!found)
+        {
+          if (el == NULL)
+            {
+              /* begginning of the document */
+              el = NULL;
+              attr = NULL;
+              if (!cycle)
+                {
+                  /* restart from the end of the document */
+                  cycle = TRUE;
+                  el = root;
+                  /* check if this element matches */
+                  attr = TtaGetAttribute (el, attrType1);
+                  if (attr == NULL)
+                    attr = TtaGetAttribute (el, attrType2);
+                }
+              else
+                /* stop the search */
+                found = TRUE;
+            }  
+          else if (el == startEl)
+            {
+              /* we made a complete cycle and no other element was found */
+              el = NULL;
+              attr = NULL;
+              found = TRUE;
+            }
+          else if (attr)
+            {
+              elType = TtaGetElementType (el);
+              switch (elType.ElTypeNum)
+                {
+                case HTML_EL_Option_Menu:
+                case HTML_EL_Checkbox_Input:
+                case HTML_EL_Radio_Input:
+                case HTML_EL_Submit_Input:
+                case HTML_EL_Reset_Input:
+                case HTML_EL_Button_Input:
+                case HTML_EL_BUTTON_:
+                case HTML_EL_Anchor:
+                  /* no included text: select the element itself */
+                  TtaSelectElement (doc, el);
+                  found =TRUE;
+                  break;
+	      
+                case HTML_EL_Text_Area:
+                case HTML_EL_Text_Input:
+                case HTML_EL_File_Input:
+                case HTML_EL_Password_Input:
+                  /* look for the last included text */
+                  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+                  child = TtaSearchTypedElement (elType, SearchForward, el);
+                  if (child)
+                    {
+                      next = child;
+                      do
+                        {
+                          child = next;
+                          next = TtaSearchTypedElementInTree (elType,
+                                                              SearchForward,
+                                                              el, child);
+                        }
+                      while (next);
+                      i = TtaGetTextLength (child);
+                      TtaSelectString (doc, child, i+1, i);
+                    }
+                  found =TRUE;
+                  break;
+	      
+                default:
+                  attr = NULL;
+                  break;
+                }
+            }
+          if (!found && !attr)
+            TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
+        }
+#ifdef TEMPLATES
     }
-  TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar);
-  if (el == NULL)
-    {
-      /* start from the end of the document */
-      el = root;
-      /* we don't accept to restart from the beginning */
-      cycle = TRUE;
-      /* attr != 0 if this element matches */
-      startEl = NULL;
-     }
   else
     {
-      cycle = FALSE;
-      attr = NULL;
+      /* The document is a template's instance
+       * The tab key is used to go to the next
+       * editable field */
+      schema = TtaGetSSchema ("Template", doc);
+      elType1.ElSSchema = schema;
+      elType1.ElTypeNum = Template_EL_FREE_STRUCT;
+      elType2.ElSSchema = schema;
+      elType2.ElTypeNum = Template_EL_FREE_CONTENT;
+      
+      root = TtaGetRootElement (doc);
+      TtaGiveFirstSelectedElement (doc, &startEl, &firstChar, &lastChar);
       /* don't manage this element */
-      startEl = el;
-    }
+      if (startEl == NULL)
+        {
+          /* start from the root element */
+          startEl = TtaGetLastChild(root);
+          /* we don't accept to restart from the beginning */
+          cycle = TRUE;
+        }
+      else
+        cycle = FALSE;
+      
+      el = TtaSearchTypedElement (elType1, SearchBackward, startEl);
+      el2 = TtaSearchTypedElement (elType2, SearchBackward, startEl);
 
-  if (attr == NULL)
-    /* we're looking for a next element */
-    TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
-  found = FALSE;
-  while (!found)
-    {
       if (el == NULL)
-	{
-	  /* begginning of the document */
-	  el = NULL;
-	  attr = NULL;
-	  if (!cycle)
-	    {
-	      /* restart from the end of the document */
-	      cycle = TRUE;
-	      el = root;
-	      /* check if this element matches */
-	      attr = TtaGetAttribute (el, attrType1);
-	      if (attr == NULL)
-		attr = TtaGetAttribute (el, attrType2);
-	    }
-	  else
-	    /* stop the search */
-	    found = TRUE;
-	}  
-      else if (el == startEl)
-	{
-	  /* we made a complete cycle and no other element was found */
-	  el = NULL;
-	  attr = NULL;
-	  found = TRUE;
-	}
-      else if (attr)
-	{
-	  elType = TtaGetElementType (el);
-	  switch (elType.ElTypeNum)
-	    {
-	    case HTML_EL_Option_Menu:
-	    case HTML_EL_Checkbox_Input:
-	    case HTML_EL_Radio_Input:
-	    case HTML_EL_Submit_Input:
-	    case HTML_EL_Reset_Input:
-	    case HTML_EL_Button_Input:
-	    case HTML_EL_BUTTON_:
-	    case HTML_EL_Anchor:
-	      /* no included text: select the element itself */
-	      TtaSelectElement (doc, el);
-	      found =TRUE;
-	      break;
-	      
-	    case HTML_EL_Text_Area:
-	    case HTML_EL_Text_Input:
-	    case HTML_EL_File_Input:
-	    case HTML_EL_Password_Input:
-	      /* look for the last included text */
-	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      child = TtaSearchTypedElement (elType, SearchForward, el);
-	      if (child)
-		{
-		  next = child;
-		  do
-		    {
-		      child = next;
-		      next = TtaSearchTypedElementInTree (elType,
-							  SearchForward,
-							  el, child);
-		    }
-		  while (next);
-		  i = TtaGetTextLength (child);
-		  TtaSelectString (doc, child, i+1, i);
-		}
-	      found =TRUE;
-	      break;
-	      
-	    default:
-	      attr = NULL;
-	      break;
-	    }
-	}
-      if (!found && !attr)
-	TtaSearchAttributes (attrType1, attrType2, SearchBackward, el, &el, &attr);
+        {
+          el = el2;
+          if ((el == NULL && !cycle) || el == startEl)
+            {
+              /* There was no other element - Search from the beginning*/
+              el = TtaSearchTypedElement (elType1, SearchBackward, TtaGetLastChild(root));
+              el2 = TtaSearchTypedElement (elType2, SearchBackward, TtaGetLastChild(root));
+              if (el == NULL)
+                el = el2;
+            }
+
+        }
+      if (el == startEl)
+        {
+          /* There was no other element - Search from the beginning*/
+          el = TtaSearchTypedElement (elType1, SearchBackward, TtaGetLastChild(root));
+          el2 = TtaSearchTypedElement (elType2, SearchBackward, TtaGetLastChild(root));
+          if (el == NULL)
+            el = el2;
+        }
+      if (el != NULL && el2 != NULL)
+        {
+          if(TtaIsBefore (el, el2))
+            {
+              el = el2;
+            }
+        }
+      if (el != NULL)
+        {
+          /* el must contain the first free_struct or free_content element */
+          elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+          el = TtaSearchTypedElement (elType,SearchInTree,el);
+          if (el != NULL)
+            {
+              TtaSelectElement (doc, el);
+            }
+        }
     }
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
