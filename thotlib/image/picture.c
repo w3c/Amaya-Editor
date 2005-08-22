@@ -22,7 +22,7 @@
 #include "zlib.h"
 
 #ifdef _WINGUI
-  #include "lost.xpm"
+#include "lost.xpm"
 #endif /* _WINGUI */
 
 #include "picture.h"
@@ -33,7 +33,7 @@
 #include "png.h"
 #include "fileaccess.h"
 #ifdef _WINGUI
-  #include "winsys.h"
+#include "winsys.h"
 #endif /* _WINGUI */
 
 #undef THOT_EXPORT
@@ -75,43 +75,43 @@
 
 static ThotPixmap PictureLogo;
 #ifdef _GTK
-  static ThotGC     tiledGC;
+static ThotGC     tiledGC;
 #endif /* _GTK */
 static ThotBool   RedoDone = FALSE;
 
 static unsigned char MirrorBytes[0x100] = {
-   0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
-   0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
-   0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
-   0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
-   0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
-   0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
-   0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
-   0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
-   0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
-   0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
-   0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
-   0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
-   0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
-   0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
-   0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
-   0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
-   0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
-   0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
-   0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
-   0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
-   0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
-   0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
-   0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
-   0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
-   0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
-   0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
-   0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
-   0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
-   0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
-   0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
-   0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
-   0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
+  0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
+  0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
+  0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
+  0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
+  0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
+  0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
+  0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
+  0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
+  0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
+  0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
+  0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
+  0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
+  0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
+  0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
+  0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
+  0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
+  0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
+  0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
+  0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
+  0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
+  0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
+  0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
+  0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
+  0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
+  0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
+  0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
+  0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
+  0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
+  0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
+  0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
+  0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
+  0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
 #ifdef _GL
@@ -131,7 +131,7 @@ static ThotBool PrintingGL = FALSE;
 #define MESA
 #endif
 /* For now not software optimised but quality optimized...
- if too sloooooow we'll revert*/
+   if too sloooooow we'll revert*/
 #undef MESA
 
 #ifdef WITH_CACHE
@@ -152,7 +152,7 @@ typedef struct _PicCache {
 static Pic_Cache *PicCache = NULL;
 
 /*----------------------------------------------------------------------
- Free_Pic_Chache : really free a unique structure Cache  
+  Free_Pic_Chache : really free a unique structure Cache  
   ----------------------------------------------------------------------*/
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
@@ -168,7 +168,7 @@ static void Free_Pic_Chache (Pic_Cache *Cache)
 }
 
 /*----------------------------------------------------------------------
- Lookup for Free upon an unique index a unique Cache 
+  Lookup for Free upon an unique index a unique Cache 
   ----------------------------------------------------------------------*/
 static int FreeAPicCache (int texbind, int frame)
 {
@@ -181,24 +181,24 @@ static int FreeAPicCache (int texbind, int frame)
     {
       if (Cache->texbind == texbind
 #ifdef _NOSHARELIST
-	  && Cache->frame == frame 
+          && Cache->frame == frame 
 #endif /* _NOSHARELIST */
-	  )
-	break;
+          )
+        break;
       Before = Cache;
       Cache = Cache->next;      
     }
   if (Cache)
     {
       if (Cache->RefCount == -1)
-	     return 1;
-	  Cache->RefCount--;
-	  if (Cache->RefCount)
-	     return 1;	
+        return 1;
+      Cache->RefCount--;
+      if (Cache->RefCount)
+        return 1;	
       if (!Before)
-	PicCache = PicCache->next;
+        PicCache = PicCache->next;
       else
-	Before->next = Cache->next;
+        Before->next = Cache->next;
       Free_Pic_Chache (Cache);
       return 1;
     }
@@ -206,7 +206,7 @@ static int FreeAPicCache (int texbind, int frame)
 }
 
 /*----------------------------------------------------------------------
- Free index Cache freeing recursive function 
+  Free index Cache freeing recursive function 
   ----------------------------------------------------------------------*/
 static void FreePicCache (Pic_Cache *Cache)
 {
@@ -220,24 +220,24 @@ static void FreePicCache (Pic_Cache *Cache)
 }
 
 /*----------------------------------------------------------------------
- AddInPicCache : Add a new Pic
+  AddInPicCache : Add a new Pic
   ----------------------------------------------------------------------*/
 static void AddInPicCache (ThotPictInfo *Image, int frame, ThotBool forever)
 {
   Pic_Cache *Cache = PicCache;
 
- if (PicCache)
-   {
-     while (Cache->next)
-       Cache = Cache->next;
-     Cache->next = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
-     Cache = Cache->next;     
-   }
- else
-   {
-     PicCache = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
-     Cache = PicCache;      
-   }   
+  if (PicCache)
+    {
+      while (Cache->next)
+        Cache = Cache->next;
+      Cache->next = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
+      Cache = Cache->next;     
+    }
+  else
+    {
+      PicCache = (Pic_Cache *)TtaGetMemory (sizeof (Pic_Cache));
+      Cache = PicCache;      
+    }   
   Cache->next = NULL; 
   Cache->frame = frame;
   Cache->texbind = Image->TextureBind;
@@ -254,8 +254,8 @@ static void AddInPicCache (ThotPictInfo *Image, int frame, ThotBool forever)
 }
 
 /*----------------------------------------------------------------------
- LookupInPicCache : Look in cache, if find an image with the same filename
- in the same frame (Tex Id are frame dependant)
+  LookupInPicCache : Look in cache, if find an image with the same filename
+  in the same frame (Tex Id are frame dependant)
   ----------------------------------------------------------------------*/
 static int LookupInPicCache (ThotPictInfo *Image, int frame)
 {
@@ -266,21 +266,21 @@ static int LookupInPicCache (ThotPictInfo *Image, int frame)
     {
 #ifdef _NOSHARELIST
       if (strcasecmp (Cache->filename, filename) == 0 
-	  && frame == Cache->frame)
+          && frame == Cache->frame)
 #else /* _NOSHARELIST */
-      if (strcasecmp (Cache->filename, filename) == 0)
+        if (strcasecmp (Cache->filename, filename) == 0)
 #endif /* _NOSHARELIST */
-	{
-	  Image->PicWidth = (int) Cache->width;
-	  Image->PicHeight = (int) Cache->height;
-	  Image->TexCoordW = Cache->TexCoordW;
-	  Image->TexCoordH = Cache->TexCoordH;
-	  Image->TextureBind = Cache->texbind;  
+          {
+            Image->PicWidth = (int) Cache->width;
+            Image->PicHeight = (int) Cache->height;
+            Image->TexCoordW = Cache->TexCoordW;
+            Image->TexCoordH = Cache->TexCoordH;
+            Image->TextureBind = Cache->texbind;  
 #ifdef _PCLDEBUG
-	  printf ("\n Lookup succeed Image %s ", Image->PicFileName);      
+            printf ("\n Lookup succeed Image %s ", Image->PicFileName);      
 #endif /*_PCLDEBUG*/  
-	  return 1;
-	}      
+            return 1;
+          }      
       Cache = Cache->next; 
     }
 #ifdef _TRACE_GL_PICTURE
@@ -292,7 +292,7 @@ static int LookupInPicCache (ThotPictInfo *Image, int frame)
 #endif /* WITH_CACHE */
 
 /*----------------------------------------------------------------------
- FreeGlTextureNoCache : Free video card memory from this texture.
+  FreeGlTextureNoCache : Free video card memory from this texture.
   ----------------------------------------------------------------------*/
 void FreeGlTextureNoCache (void *imageDesc)
 {
@@ -313,8 +313,8 @@ void FreeGlTextureNoCache (void *imageDesc)
 }
 
 /*----------------------------------------------------------------------
- FreeGlTexture : Free amaya Picture cache 
- and video card memory from this texture.
+  FreeGlTexture : Free amaya Picture cache 
+  and video card memory from this texture.
   ----------------------------------------------------------------------*/
 void FreeGlTexture (void *imagedesc)
 {
@@ -328,19 +328,19 @@ void FreeGlTexture (void *imagedesc)
     {
 #ifdef _TRACE_GL_PICTURE
       printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d theight=%d\n\tTexU=%f TexV=%f TexBind=%d\n\n", 
-	       img->PicFileName,
-	       img->PicWidth,
-	       img->PicHeight,
-	       img->TexCoordW,
-	       img->TexCoordH,
-	       img->TextureBind );
+               img->PicFileName,
+               img->PicWidth,
+               img->PicHeight,
+               img->TexCoordW,
+               img->TexCoordH,
+               img->TextureBind );
 #endif /* _TRACE_GL_PICTURE */
 #ifdef WITH_CACHE
       /* cache inactive */
       if (FreeAPicCache (img->TextureBind, ActiveFrame) == 0)
 #endif /* WITH_CACHE */
-	/*not found in cache, we free it manually.*/
-	glDeleteTextures (1,  (GLuint*)&(img->TextureBind));
+        /*not found in cache, we free it manually.*/
+        glDeleteTextures (1,  (GLuint*)&(img->TextureBind));
 #ifdef _PCLDEBUG
       printf ("\n img %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -355,8 +355,8 @@ void FreeGlTexture (void *imagedesc)
   p2 :  Lowest power of two bigger than the argument.
   ----------------------------------------------------------------------*/
 /*All these work on UNSIGNED BITS !!! 
- if little-big endianess is involved,
- all those atre wrong !!!*/
+  if little-big endianess is involved,
+  all those atre wrong !!!*/
 #define lowest_bit(x) (x & -x)
 #define is_pow2(x) (x != 0 && x == lowest_bit(x))
 static int ceil_pow2_minus_1(unsigned int x)
@@ -370,23 +370,23 @@ static int ceil_pow2_minus_1(unsigned int x)
 #define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
   
 /* Don't know exactly wich is faster...
- this on is pretty good too...*/
+   this on is pretty good too...*/
 
 /* 
-int p2(p){
-p -= 1; 
-p |= p >> 16; 
-p |= p >> 8; 
-p |= p >> 4; 
-p |= p >> 2; 
-p |= p >> 1; 
-return p + 1;
+   int p2(p){
+   p -= 1; 
+   p |= p >> 16; 
+   p |= p >> 8; 
+   p |= p >> 4; 
+   p |= p >> 2; 
+   p |= p >> 1; 
+   return p + 1;
 
-otherwise, identical, formulical,
-but VERY VERY VERY slower 
-(int to float, log, ceil, and finally float to int...)
-return 1 << (int) ceilf(logf((float) p) / M_LN2);
-} 
+   otherwise, identical, formulical,
+   but VERY VERY VERY slower 
+   (int to float, log, ceil, and finally float to int...)
+   return 1 << (int) ceilf(logf((float) p) / M_LN2);
+   } 
 */
 
 #ifdef POWER2TEXSUBIMAGE
@@ -402,8 +402,8 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
     {
       nbpixel = GL_w * GL_h * ((img->RGBA)?4:3);
       /* In this algo, just remember that a 
-	 RGB pixel value is a list of 3 value in source data
-	 and 4 for destination RGBA texture */
+         RGB pixel value is a list of 3 value in source data
+         and 4 for destination RGBA texture */
       data = TtaGetMemory (sizeof (unsigned char) * nbpixel);
       /* Black transparent filling */
       memset (data, 0, sizeof (unsigned char) * nbpixel);
@@ -413,13 +413,13 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
       xdiff = (GL_w - img->PicWidth) * nbpixel;
       x = nbpixel * img->PicWidth;
       for (y = 0; y < img->PicHeight; y++)
-	{
-	  /* copy R,G,B,A */
-	  memcpy (ptr2, ptr1, x); 
-	  /* jump over the black transparent zone*/
-	  ptr1 += x;
-	  ptr2 += x + xdiff;
-	}
+        {
+          /* copy R,G,B,A */
+          memcpy (ptr2, ptr1, x); 
+          /* jump over the black transparent zone*/
+          ptr1 += x;
+          ptr2 += x + xdiff;
+        }
       FreePixmap (img->PicPixmap);
       img->PicPixmap = data;
     }
@@ -428,8 +428,8 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
 
 
 /*----------------------------------------------------------------------
- GL_TextureBind : Put Texture in video card's Memory at
- a power of 2 size for height and width 
+  GL_TextureBind : Put Texture in video card's Memory at
+  a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
 static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 {
@@ -443,13 +443,13 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
       (img->PicPixmap || !IsPixmap))
     {
       /* Another way is to split texture in 256x256 
-	 pieces and render them on different quads
-	 Declared to be the faster  */
+         pieces and render them on different quads
+         Declared to be the faster  */
       p2_w = p2 (img->PicWidth);
       p2_h = p2 (img->PicHeight);
       /* We have resized the picture to match a power of 2
-	 We don't want to see all the picture, just the w and h 
-	 portion*/
+         We don't want to see all the picture, just the w and h 
+         portion*/
       GL_w = (GLfloat) img->PicWidth/p2_w;
       GL_h = (GLfloat) img->PicHeight/p2_h;
       /* We give te texture to opengl Pipeline system */	    
@@ -462,53 +462,53 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
       /* does current Color modify texture no = GL_REPLACE, 
-	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+         else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
       glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       if (IsPixmap)
-	{
+        {
 #ifndef POWER2TEXSUBIMAGE
-	  /* create a texture whose sizes are power of 2*/
-	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
-			GL_UNSIGNED_BYTE, NULL);
-	  /* Map the texture wich isn't a power of two*/
-	  glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
-			   img->PicWidth, img->PicHeight, 
-			   Mode, GL_UNSIGNED_BYTE,
-			   (GLvoid *) img->PicPixmap);    
-	  if (img->PicPixmap != PictureLogo && !Printing)
-	  {
-	    TtaFreeMemory (img->PicPixmap);
-		img->PicPixmap = NULL;
-	  }
+          /* create a texture whose sizes are power of 2*/
+          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+                        GL_UNSIGNED_BYTE, NULL);
+          /* Map the texture wich isn't a power of two*/
+          glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
+                           img->PicWidth, img->PicHeight, 
+                           Mode, GL_UNSIGNED_BYTE,
+                           (GLvoid *) img->PicPixmap);    
+          if (img->PicPixmap != PictureLogo && !Printing)
+            {
+              TtaFreeMemory (img->PicPixmap);
+              img->PicPixmap = NULL;
+            }
 
 #else/*  POWER2TEXSUBIMAGE */
-	  GL_MakeTextureSize (img, p2_w, p2_h);
-	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
-			0, Mode, GL_UNSIGNED_BYTE,
-			(GLvoid *) img->PicPixmap);
-	  TtaFreeMemory (img->PicPixmap);
+          GL_MakeTextureSize (img, p2_w, p2_h);
+          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
+                        0, Mode, GL_UNSIGNED_BYTE,
+                        (GLvoid *) img->PicPixmap);
+          TtaFreeMemory (img->PicPixmap);
 #endif /* POWER2TEXSUBIMAGE */ 
-	}
+        }
       else
-	{
-	  /* create a texture whose sizes are power of 2*/
-	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
-			GL_UNSIGNED_BYTE, NULL);
-	}
+        {
+          /* create a texture whose sizes are power of 2*/
+          glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+                        GL_UNSIGNED_BYTE, NULL);
+        }
       if (!Printing)
-	img->PicPixmap = None;
+        img->PicPixmap = None;
       img->TexCoordW = GL_w;
       img->TexCoordH = GL_h;
 
 #ifdef _TRACE_GL_PICTURE
-	  printf ( "GL_TextureBind :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tIsPixMap=%s\n", 
-		   img->PicFileName,
-		   img->PicWidth,
-		   img->PicHeight,
-		   img->TexCoordW,
-		   img->TexCoordH,
-		   img->TextureBind,
-		   IsPixmap ? "yes" : "no" );
+      printf ( "GL_TextureBind :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tIsPixMap=%s\n", 
+               img->PicFileName,
+               img->PicWidth,
+               img->PicHeight,
+               img->TexCoordW,
+               img->TexCoordH,
+               img->TextureBind,
+               IsPixmap ? "yes" : "no" );
 #endif /* _TRACE_GL_PICTURE */
     }  
 }
@@ -516,7 +516,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void PrintPoscriptImage (ThotPictInfo *img, int x, int y, 
-				int w, int h, int frame)
+                                int w, int h, int frame)
 {
   unsigned char *pixels;  
   GLenum        Mode;
@@ -524,52 +524,52 @@ static void PrintPoscriptImage (ThotPictInfo *img, int x, int y,
   
   if (img->PicFileName)
     {
-    pixels = NULL;
-    if (img->PicPixmap == NULL)
-      {
-	xBox = yBox = wBox = hBox = width = height = 0;
-	img->PicPixmap = (ThotPixmap) 
-		  (*(PictureHandlerTable[img->PicType].Produce_Picture)) (
-			(void *)img->PicFileName,
-			(void *)img,
-			(void *)&xBox,
-			(void *)&yBox,
-			(void *)&wBox,
-			(void *)&hBox,
-			(void *)0,
-			(void *)&width,
-			(void *)&height,
-			(void *)0 );
-      }
-    if (w != img->PicWidth || h != img->PicHeight)
-      pixels = ZoomPicture ((unsigned char*)img->PicPixmap, 
-			    img->PicWidth, img->PicHeight, 
-			    w, h, (img->RGBA?4:3));
-    else
-      pixels = (unsigned char*)img->PicPixmap;
-    if (pixels)
-      {
+      pixels = NULL;
+      if (img->PicPixmap == NULL)
+        {
+          xBox = yBox = wBox = hBox = width = height = 0;
+          img->PicPixmap = (ThotPixmap) 
+            (*(PictureHandlerTable[img->PicType].Produce_Picture)) (
+                                                                    (void *)img->PicFileName,
+                                                                    (void *)img,
+                                                                    (void *)&xBox,
+                                                                    (void *)&yBox,
+                                                                    (void *)&wBox,
+                                                                    (void *)&hBox,
+                                                                    (void *)0,
+                                                                    (void *)&width,
+                                                                    (void *)&height,
+                                                                    (void *)0 );
+        }
+      if (w != img->PicWidth || h != img->PicHeight)
+        pixels = ZoomPicture ((unsigned char*)img->PicPixmap, 
+                              img->PicWidth, img->PicHeight, 
+                              w, h, (img->RGBA?4:3));
+      else
+        pixels = (unsigned char*)img->PicPixmap;
+      if (pixels)
+        {
 
-	Mode = (img->RGBA)?GL_RGBA:GL_RGB;
-	GLDrawPixelsPoscript (w, h, x, y, Mode, Mode, pixels, 
-			      0.0f, 0.0f);
-	if (w != img->PicWidth || h != img->PicHeight)
-	  TtaFreeMemory (pixels);
-	FreePixmap (img->PicPixmap);
-	img->PicPixmap = NULL;
-      }
+          Mode = (img->RGBA)?GL_RGBA:GL_RGB;
+          GLDrawPixelsPoscript (w, h, x, y, Mode, Mode, pixels, 
+                                0.0f, 0.0f);
+          if (w != img->PicWidth || h != img->PicHeight)
+            TtaFreeMemory (pixels);
+          FreePixmap (img->PicPixmap);
+          img->PicPixmap = NULL;
+        }
     }
 }
 
 /*----------------------------------------------------------------------
- GL_TexturePartialMap : map texture on a Quad (sort of a rectangle)
- Drawpixel Method for software implementation, as it's much faster for those
- Texture Method for hardware implementation as it's faster and better.
+  GL_TexturePartialMap : map texture on a Quad (sort of a rectangle)
+  Drawpixel Method for software implementation, as it's much faster for those
+  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
 static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
-				  int x, int y, int w, int h, int frame)
+                                  int x, int y, int w, int h, int frame)
 {
- float    texH, texW;
+  float    texH, texW;
     
   GL_SetPicForeground ();
   x -= dx;
@@ -579,20 +579,20 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
   else
     {
       if (GL_NotInFeedbackMode ())
-	{
-	  glBindTexture (GL_TEXTURE_2D, desc->TextureBind); 	
-	  glEnable (GL_TEXTURE_2D);
-	}
+        {
+          glBindTexture (GL_TEXTURE_2D, desc->TextureBind); 	
+          glEnable (GL_TEXTURE_2D);
+        }
 
       /* Not sure of the vertex order 
-	 (not the faster one, I think) */
+         (not the faster one, I think) */
       glBegin (GL_QUADS);
       /* Texture coordinates are unrelative 
-	 to the size of the square */      
+         to the size of the square */      
       /* lower left */
 
-      texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
-      texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
+      texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / (float)desc->PicHeight);
+      texW = desc->TexCoordW * ((float)(w) / (float)desc->PicWidth);
       /* Texture coordinates are unrelative
          to the size of the square */
       /* lower left */
@@ -602,23 +602,23 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
       glTexCoord2f (texW, texH);
       glVertex2i   (x + w, y + h);
       /* lower right */
-      glTexCoord2f (texW, (float)desc->TexCoordH);
+      glTexCoord2f (texW, desc->TexCoordH);
       glVertex2i   (x + w, y);
       /* upper left */
-      glTexCoord2f (0., (float)desc->TexCoordH);
+      glTexCoord2f (0., desc->TexCoordH);
       glVertex2i   (x, y);
       glEnd ();
 
       /* State disabling */
       if (GL_NotInFeedbackMode ())
-	glDisable (GL_TEXTURE_2D); 
+        glDisable (GL_TEXTURE_2D); 
     }
 }
 
 /*----------------------------------------------------------------------
- GL_TextureMap : map texture on a Quad (sort of a rectangle)
- Drawpixel Method for software implementation, as it's much faster for those
- Texture Method for hardware implementation as it's faster and better.
+  GL_TextureMap : map texture on a Quad (sort of a rectangle)
+  Drawpixel Method for software implementation, as it's much faster for those
+  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
 void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
 {  
@@ -629,25 +629,25 @@ void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
   else
     {
 #ifdef _TRACE_GL_PICTURE
-	  printf ( "GL_TextureMap :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tNotInFeedbackMode=%s\n", 
-		   desc->PicFileName,
-		   desc->PicWidth,
-		   desc->PicHeight,
-		   desc->TexCoordW,
-		   desc->TexCoordH,
-		   desc->TextureBind,
-		   GL_NotInFeedbackMode () ? "yes" : "no" );
+      printf ( "GL_TextureMap :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tNotInFeedbackMode=%s\n", 
+               desc->PicFileName,
+               desc->PicWidth,
+               desc->PicHeight,
+               desc->TexCoordW,
+               desc->TexCoordH,
+               desc->TextureBind,
+               GL_NotInFeedbackMode () ? "yes" : "no" );
 #endif /* _TRACE_GL_PICTURE */
       if (GL_NotInFeedbackMode ())
-	{
-	  glBindTexture (GL_TEXTURE_2D, desc->TextureBind);
-	  glEnable (GL_TEXTURE_2D);
-	}
+        {
+          glBindTexture (GL_TEXTURE_2D, desc->TextureBind);
+          glEnable (GL_TEXTURE_2D);
+        }
       /* Not sure of the vertex order 
-	 (not the faster one, I think) */
+         (not the faster one, I think) */
       glBegin (GL_QUADS);
       /* Texture coordinates are unrelative 
-	 to the size of the square */      
+         to the size of the square */      
       /* lower left */
       glTexCoord2i (0, 0); 
       glVertex2i (x, y + h);
@@ -663,7 +663,7 @@ void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
       glEnd ();	
       /* State disabling */
       if (GL_NotInFeedbackMode ())
-	glDisable (GL_TEXTURE_2D); 
+        glDisable (GL_TEXTURE_2D); 
     }
 }
 
@@ -671,7 +671,7 @@ void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
   GetBoundingBox : Get Bounding box of a group
   ----------------------------------------------------------------------*/
 static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
-				    int *width, int *height)
+                                    int *width, int *height)
 {
   PtrBox              box;
   int xprime, yprime, w, h;
@@ -679,41 +679,41 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
   while (pAb != NULL)
     { 
       if (pAb->AbLeafType != LtCompound)
-	{
-	  box = pAb->AbBox;
-	  xprime = box->BxXOrg + box->BxLMargin + box->BxLBorder +
-	    box->BxLPadding;
-	  yprime = box->BxYOrg + box->BxTMargin + box->BxTBorder +
-	    box->BxTPadding;
-	  if (xprime > 0)
-	    {	    
-	      if (*x == -1)
-		*x = xprime;
-	      else
-		if (xprime < *x)
-		  {
-		    *width += *x - xprime;
-		    *x = xprime;
-		  }
-	    }
-	  if (yprime > 0)
-	    {	   
-	      if (*y == -1)
-		*y = yprime;
-	      else
-		if (yprime < *y)
-		  {
-		    *height += *y - yprime;
-		    *y = yprime;
-		  }
-	    }
-	  w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
-	  h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
-	  if ((*x + *width) < w)
-	    *width = w - *x;
-	  if ((*y + *height) < h)
-	    *height = h - *y;
-	}      
+        {
+          box = pAb->AbBox;
+          xprime = box->BxXOrg + box->BxLMargin + box->BxLBorder +
+            box->BxLPadding;
+          yprime = box->BxYOrg + box->BxTMargin + box->BxTBorder +
+            box->BxTPadding;
+          if (xprime > 0)
+            {	    
+              if (*x == -1)
+                *x = xprime;
+              else
+                if (xprime < *x)
+                  {
+                    *width += *x - xprime;
+                    *x = xprime;
+                  }
+            }
+          if (yprime > 0)
+            {	   
+              if (*y == -1)
+                *y = yprime;
+              else
+                if (yprime < *y)
+                  {
+                    *height += *y - yprime;
+                    *y = yprime;
+                  }
+            }
+          w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
+          h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
+          if ((*x + *width) < w)
+            *width = w - *x;
+          if ((*y + *height) < h)
+            *height = h - *y;
+        }      
       GetRelativeBoundingBox (pAb->AbFirstEnclosed, x, y, width, height);
       pAb = pAb->AbNext;
     }
@@ -723,9 +723,9 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
   LimitBoundingBoxToClip : prevent accessing out of screen memory
   ----------------------------------------------------------------------*/
 static ThotBool LimitBoundingBoxToClip (int *x, int *y,
-                               int *width, int *height, 
-			       int Clipx, int Clipy,
-			       int ClipW, int ClipH)
+                                        int *width, int *height, 
+                                        int Clipx, int Clipy,
+                                        int ClipW, int ClipH)
 {
   if (*y > (Clipy+ClipH) || *x > (Clipx+ClipW))
     return FALSE;  
@@ -744,13 +744,13 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
       *y = Clipy;
     }  
   if ((*x + *width) > (Clipx+ClipW))
-      *width = (Clipx+ClipW) - *x;
+    *width = (Clipx+ClipW) - *x;
   if ((*y + *height) > (Clipy+ClipH))
-      *height = (Clipy+ClipH) - *y;  
+    *height = (Clipy+ClipH) - *y;  
 
   if (*x >= 0 && *y >= 0 && 
       *width > 0 && *height > 0)      
-      return TRUE;    
+    return TRUE;    
   else
     return FALSE;  
 }
@@ -759,13 +759,13 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
   GetBoundingBox : Get Bounding box of a group in absolute coord
   ----------------------------------------------------------------------*/
 static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb, 
-					int *x, int *y, 
-					int *width, int *height, 
-					int frame,
-					int xmin, int xmax, int ymin, int ymax)
+                                        int *x, int *y, 
+                                        int *width, int *height, 
+                                        int frame,
+                                        int xmin, int xmax, int ymin, int ymax)
 {
   ViewFrame          *pFrame;
-PtrBox              box;
+  PtrBox              box;
 
   pFrame = &ViewFrameTable[frame - 1];
   box = pAb->AbBox;
@@ -778,14 +778,14 @@ PtrBox              box;
   *height = box->BxClipH;
 
   if (LimitBoundingBoxToClip (x, y,
-			      width, height, 
-			      0, 0,
-			      FrameTable[frame].FrWidth, 
-			      FrameTable[frame].FrHeight))
+                              width, height, 
+                              0, 0,
+                              FrameTable[frame].FrWidth, 
+                              FrameTable[frame].FrHeight))
     return LimitBoundingBoxToClip (x, y,
-				   width, height, 
-				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
-				   xmax - xmin, ymax - ymin);
+                                   width, height, 
+                                   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
+                                   xmax - xmin, ymax - ymin);
   return FALSE;  
 }
 #endif /* _GL */
@@ -794,37 +794,37 @@ PtrBox              box;
   DisplayOpaqueGroup display a translucent Group
   ----------------------------------------------------------------------*/
 void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
-			 int xmin, int xmax, int ymin, int ymax, 
-			 ThotBool do_display_background)
+                         int xmin, int xmax, int ymin, int ymax, 
+                         ThotBool do_display_background)
 {
 #ifdef _GL
   int x, y, width, height; 
   double *m;
   
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
-			      frame, xmin, xmax, ymin, ymax))  
+                              frame, xmin, xmax, ymin, ymax))  
     {     
       m = (double *)TtaGetMemory (16 * sizeof (double));      
       glGetDoublev (GL_MODELVIEW_MATRIX, m);
       glLoadIdentity (); 
 
       if (do_display_background)
-	{
-	  GL_SetFillOpacity (1000);     
-	  GL_SetOpacity (1000);
-	  GL_SetStrokeOpacity (1000);
+        {
+          GL_SetFillOpacity (1000);     
+          GL_SetOpacity (1000);
+          GL_SetStrokeOpacity (1000);
 	  
-	  GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,  
-			 x, y, width, height, frame); 
+          GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,  
+                         x, y, width, height, frame); 
 	  
-	}
+        }
       GL_SetFillOpacity (pAb->AbOpacity);
       GL_SetOpacity (pAb->AbOpacity);
       GL_SetStrokeOpacity (pAb->AbOpacity);
 
      
       GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Post_computed_Pic,
-		     x, y, width, height, frame);
+                     x, y, width, height, frame);
 
       GL_SetFillOpacity (1000);
       GL_SetOpacity (1000);
@@ -848,10 +848,10 @@ void OpaqueGroupTextureFree (PtrAbstractBox pAb, int frame)
   if (box)
     {
       if (GL_prepare (frame))
-	{
-	  FreeGlTextureNoCache (pAb->AbBox->Pre_computed_Pic);
-	  FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
-	}  
+        {
+          FreeGlTextureNoCache (pAb->AbBox->Pre_computed_Pic);
+          FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+        }  
       TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
       TtaFreeMemory (pAb->AbBox->Post_computed_Pic); 
       pAb->AbBox->Pre_computed_Pic = NULL; 
@@ -864,32 +864,32 @@ void OpaqueGroupTextureFree (PtrAbstractBox pAb, int frame)
   ClearOpaqueGroup clear an area before displaying a non-opaque Group
   ----------------------------------------------------------------------*/
 void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, 
-		       int xmin, int xmax, int ymin, int ymax)
+                       int xmin, int xmax, int ymin, int ymax)
 {
 #ifdef _GL
   int x, y, width, height, org;
   int xclip, yclip, heightclip, widthclip;  
  
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
-			      frame, xmin, xmax, ymin, ymax))
+                              frame, xmin, xmax, ymin, ymax))
     {
       org = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (y + height);
       GL_GetCurrentClipping (&xclip, &yclip, &widthclip, &heightclip);
       /* limit to the current clipping */
       if (x < xclip)
-	{
-	  width = width + x - xclip;
-	  x = xclip;
-	}
+        {
+          width = width + x - xclip;
+          x = xclip;
+        }
       if (org < yclip)
-	{
-	  height = height + org - yclip;
-	  org = yclip;
-	}
+        {
+          height = height + org - yclip;
+          org = yclip;
+        }
       if (width > widthclip)
-	width = widthclip;
+        width = widthclip;
       if (height > heightclip)
-	height = heightclip;
+        height = heightclip;
       GL_SetClipping (x, org, width, height);
       glClear (GL_COLOR_BUFFER_BIT);
       /* restore the previous clipping */
@@ -902,24 +902,24 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
   OpaqueGroupTexturize display an non-opaque Group
   ----------------------------------------------------------------------*/
 void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
-			   int xmin, int xmax, int ymin, int ymax,
+                           int xmin, int xmax, int ymin, int ymax,
                            ThotBool Is_Pre)
 {
 #ifdef _GL
   int x, y, width, height;
   
   if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
-			      frame, xmin, xmax, ymin, ymax))
+                              frame, xmin, xmax, ymin, ymax))
     {
       y = FrameTable[frame].FrHeight
-	+ FrameTable[frame].FrTopMargin
-	- (y + height);
+        + FrameTable[frame].FrTopMargin
+        - (y + height);
       if (Is_Pre)
-	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y, width, height,
-						   frame, FALSE);
+        pAb->AbBox->Pre_computed_Pic = Group_shot (x, y, width, height,
+                                                   frame, FALSE);
       else 
-	pAb->AbBox->Post_computed_Pic = Group_shot (x, y, width, height,
-						    frame, TRUE);
+        pAb->AbBox->Post_computed_Pic = Group_shot (x, y, width, height,
+                                                    frame, TRUE);
     }
 #endif /*_GL*/
 }
@@ -930,8 +930,8 @@ void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
   t, b, l, and r give top, bottom, left and right extra margins.
   ----------------------------------------------------------------------*/
 ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
-			  int frame, ThotBool selected,
-			  int t, int b, int l, int r)
+                          int frame, ThotBool selected,
+                          int t, int b, int l, int r)
 {
 #ifdef _GL
   GradDef            *gradient;
@@ -954,11 +954,11 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
 
   /* if gradient pict not computed*/
   if (box->Pre_computed_Pic == NULL)
-  {
-    /*create the gradient pattern and put it on a texture*/
-    pattern = fill_linear_gradient_image (gradient->next, width, height);
-    box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
-  }
+    {
+      /*create the gradient pattern and put it on a texture*/
+      pattern = fill_linear_gradient_image (gradient->next, width, height);
+      box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
+    }
     
   /* GL_GetCurrentClipping (&clipx, &clipy, &clipw, &cliph); */
   /* if (box->BxClipW && box->BxClipH) */
@@ -1020,99 +1020,99 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   The color bg is an index in the thot color table.
   ----------------------------------------------------------------------*/
 static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
-				int w, int h, int bg)
+                                int w, int h, int bg)
 {
-   HDC            hMemDC, hOrDC;
-   HDC            hAndDC, hInvAndDC;
-   HDC            hDestDC;
-   HBITMAP        bitmap, bitmapOr;
-   HBITMAP        bitmapAnd, bitmapInvAnd;
-   HBITMAP        bitmapDest, pBitmapOr;
-   HBITMAP        pBitmapAnd, pBitmapInvAnd;
-   HBITMAP        pBitmapDest;
-   COLORREF       crColor;
-   COLORREF       crOldBkColor;
+  HDC            hMemDC, hOrDC;
+  HDC            hAndDC, hInvAndDC;
+  HDC            hDestDC;
+  HBITMAP        bitmap, bitmapOr;
+  HBITMAP        bitmapAnd, bitmapInvAnd;
+  HBITMAP        bitmapDest, pBitmapOr;
+  HBITMAP        pBitmapAnd, pBitmapInvAnd;
+  HBITMAP        pBitmapDest;
+  COLORREF       crColor;
+  COLORREF       crOldBkColor;
 
-   /* give the background color pixel */
-   crColor = ColorPixel (bg);
-   hMemDC = CreateCompatibleDC (TtDisplay);
-   bitmap = SelectObject (hMemDC, pixmap);
-   SetMapMode (hMemDC, GetMapMode (TtDisplay));
+  /* give the background color pixel */
+  crColor = ColorPixel (bg);
+  hMemDC = CreateCompatibleDC (TtDisplay);
+  bitmap = SelectObject (hMemDC, pixmap);
+  SetMapMode (hMemDC, GetMapMode (TtDisplay));
    
-   hOrDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hOrDC, GetMapMode (TtDisplay));
-   bitmapOr = CreateCompatibleBitmap (hMemDC, w, h);
-   pBitmapOr = SelectObject (hOrDC, bitmapOr);
-   /* hOrDC = */
-   BitBlt (hOrDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
+  hOrDC = CreateCompatibleDC (TtDisplay);
+  SetMapMode (hOrDC, GetMapMode (TtDisplay));
+  bitmapOr = CreateCompatibleBitmap (hMemDC, w, h);
+  pBitmapOr = SelectObject (hOrDC, bitmapOr);
+  /* hOrDC = */
+  BitBlt (hOrDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
 
-   hAndDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hAndDC, GetMapMode (TtDisplay));
-   bitmapAnd = CreateBitmap (w, h, 1, 1, NULL);
-   pBitmapAnd = SelectObject (hAndDC, bitmapAnd);
-   crOldBkColor = SetBkColor (hMemDC, crColor);
-   /* hAndDC = */
-   BitBlt (hAndDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
+  hAndDC = CreateCompatibleDC (TtDisplay);
+  SetMapMode (hAndDC, GetMapMode (TtDisplay));
+  bitmapAnd = CreateBitmap (w, h, 1, 1, NULL);
+  pBitmapAnd = SelectObject (hAndDC, bitmapAnd);
+  crOldBkColor = SetBkColor (hMemDC, crColor);
+  /* hAndDC = */
+  BitBlt (hAndDC, 0, 0, w, h, hMemDC, 0, 0, SRCCOPY);
 
-   SetBkColor (hMemDC, crOldBkColor);
-   hInvAndDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hInvAndDC, GetMapMode (TtDisplay));
-   bitmapInvAnd = CreateBitmap (w, h, 1, 1, NULL);
-   pBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
-   /* hInvAndDC = */
-   BitBlt (hInvAndDC, 0, 0, w, h, hAndDC, 0, 0, NOTSRCCOPY);
-   /* hOrDC = */
-   BitBlt (hOrDC, 0, 0, w, h, hInvAndDC, 0, 0, SRCAND);
-   hDestDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (hDestDC, GetMapMode (TtDisplay));
-   bitmapDest = CreateCompatibleBitmap (hMemDC, w, h);
-   pBitmapDest = SelectObject (hDestDC, bitmapDest);
-   /* hDEstDC = */
-   BitBlt (hDestDC, 0, 0, w, h, TtDisplay, xFrame, yFrame, SRCCOPY);
-   BitBlt (hDestDC, 0, 0, w, h, hAndDC, 0, 0, SRCAND);
-   BitBlt (hDestDC, 0, 0, w, h, hOrDC, 0, 0, SRCINVERT);
-   BitBlt (TtDisplay, xFrame, yFrame, w, h, hDestDC, 0, 0, SRCCOPY);
+  SetBkColor (hMemDC, crOldBkColor);
+  hInvAndDC = CreateCompatibleDC (TtDisplay);
+  SetMapMode (hInvAndDC, GetMapMode (TtDisplay));
+  bitmapInvAnd = CreateBitmap (w, h, 1, 1, NULL);
+  pBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
+  /* hInvAndDC = */
+  BitBlt (hInvAndDC, 0, 0, w, h, hAndDC, 0, 0, NOTSRCCOPY);
+  /* hOrDC = */
+  BitBlt (hOrDC, 0, 0, w, h, hInvAndDC, 0, 0, SRCAND);
+  hDestDC = CreateCompatibleDC (TtDisplay);
+  SetMapMode (hDestDC, GetMapMode (TtDisplay));
+  bitmapDest = CreateCompatibleBitmap (hMemDC, w, h);
+  pBitmapDest = SelectObject (hDestDC, bitmapDest);
+  /* hDEstDC = */
+  BitBlt (hDestDC, 0, 0, w, h, TtDisplay, xFrame, yFrame, SRCCOPY);
+  BitBlt (hDestDC, 0, 0, w, h, hAndDC, 0, 0, SRCAND);
+  BitBlt (hDestDC, 0, 0, w, h, hOrDC, 0, 0, SRCINVERT);
+  BitBlt (TtDisplay, xFrame, yFrame, w, h, hDestDC, 0, 0, SRCCOPY);
 
-   SelectObject (hDestDC, pBitmapDest);
-   SelectObject (hInvAndDC, pBitmapInvAnd);
-   SelectObject (hAndDC, pBitmapAnd);
-   SelectObject (hOrDC, pBitmapOr);
-   SelectObject (hMemDC, bitmap);
-   if (hDestDC)
-	   DeleteDC (hDestDC);
-   if (hInvAndDC)
-	   DeleteDC (hInvAndDC);
-   if (hAndDC)
-	   DeleteDC (hAndDC);
-   if (hOrDC)
-	   DeleteDC (hOrDC);
-   if (hMemDC)
-	   DeleteDC (hMemDC);
+  SelectObject (hDestDC, pBitmapDest);
+  SelectObject (hInvAndDC, pBitmapInvAnd);
+  SelectObject (hAndDC, pBitmapAnd);
+  SelectObject (hOrDC, pBitmapOr);
+  SelectObject (hMemDC, bitmap);
+  if (hDestDC)
+    DeleteDC (hDestDC);
+  if (hInvAndDC)
+    DeleteDC (hInvAndDC);
+  if (hAndDC)
+    DeleteDC (hAndDC);
+  if (hOrDC)
+    DeleteDC (hOrDC);
+  if (hMemDC)
+    DeleteDC (hMemDC);
 
-   if (bitmap)
-	   DeleteObject (bitmap);
-   if (bitmapOr)
-	   DeleteObject (bitmapOr);
-   if (pBitmapOr)
-	   DeleteObject (pBitmapOr);
-   if (bitmapAnd)
-	   DeleteObject (bitmapAnd);
-   if (pBitmapAnd)
-	   DeleteObject (pBitmapAnd);
-   if (bitmapInvAnd)
-	   DeleteObject (bitmapInvAnd);
-   if (pBitmapInvAnd)
-	   DeleteObject (pBitmapInvAnd);
-   if (bitmapDest)
-	   DeleteObject (bitmapDest);
-   if (pBitmapDest)
-	   DeleteObject (pBitmapDest);
+  if (bitmap)
+    DeleteObject (bitmap);
+  if (bitmapOr)
+    DeleteObject (bitmapOr);
+  if (pBitmapOr)
+    DeleteObject (pBitmapOr);
+  if (bitmapAnd)
+    DeleteObject (bitmapAnd);
+  if (pBitmapAnd)
+    DeleteObject (pBitmapAnd);
+  if (bitmapInvAnd)
+    DeleteObject (bitmapInvAnd);
+  if (pBitmapInvAnd)
+    DeleteObject (pBitmapInvAnd);
+  if (bitmapDest)
+    DeleteObject (bitmapDest);
+  if (pBitmapDest)
+    DeleteObject (pBitmapDest);
 }
 #endif /* _WINGUI */
 
-      /* cache inactive */
+/* cache inactive */
 /*----------------------------------------------------------------------
- Free All pics in video card memory and empty cache list in GL
+  Free All pics in video card memory and empty cache list in GL
   ----------------------------------------------------------------------*/
 void FreeAllPicCache ()
 {
@@ -1138,35 +1138,35 @@ void FreeAllPicCacheFromFrame (int frame)
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
 
- Before = NULL;  
- while (Cache)
-   {
-     if (Cache->frame == frame)
-       {
-	 if (GL_prepare (frame))
-	   {
-	     if (Before)
-	       {
-		 Before->next = Cache->next; 
-		 Free_Pic_Chache (Cache);
-		 Cache = Before->next;
-	       }
-	     else
-	       {
-		 /*we delete the first element 
-		   of the linked list*/		 
-		 PicCache = PicCache->next;
-		 Free_Pic_Chache (Cache);
-		 Cache = PicCache;
-	       }
-	   }
-       }
-     else
-       {
-	 Before = Cache; 
-	 Cache = Cache->next;
-       }     
-   }
+  Before = NULL;  
+  while (Cache)
+    {
+      if (Cache->frame == frame)
+        {
+          if (GL_prepare (frame))
+            {
+              if (Before)
+                {
+                  Before->next = Cache->next; 
+                  Free_Pic_Chache (Cache);
+                  Cache = Before->next;
+                }
+              else
+                {
+                  /*we delete the first element 
+                    of the linked list*/		 
+                  PicCache = PicCache->next;
+                  Free_Pic_Chache (Cache);
+                  Cache = PicCache;
+                }
+            }
+        }
+      else
+        {
+          Before = Cache; 
+          Cache = Cache->next;
+        }     
+    }
 #else /* _NOSHARELIST */
   return;
 #endif /* _NOSHARELIST */
@@ -1180,9 +1180,9 @@ void FreeAllPicCacheFromFrame (int frame)
   ----------------------------------------------------------------------*/
 static ThotBool Match_Format (int typeImage, char *fileName)
 {
-   if (PictureHandlerTable[typeImage].Match_Format != NULL)
-      return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
-   return FALSE;
+  if (PictureHandlerTable[typeImage].Match_Format != NULL)
+    return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
+  return FALSE;
 }
 
 
@@ -1199,11 +1199,11 @@ void FreePixmap (ThotPixmap pixmap)
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
 #ifdef _GTK 
-    gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
+  gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
 #endif /* _GTK */
 #ifdef _WINGUI
-    if (!DeleteObject ((HBITMAP)pixmap))
-      WinErrorBox (WIN_Main_Wd, "FreePixmap");
+  if (!DeleteObject ((HBITMAP)pixmap))
+    WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINGUI */
 #ifdef _WX
   return;
@@ -1225,9 +1225,9 @@ void FreePixmap (ThotPixmap pixmap)
   picXOrg or picYOrg are positive.                            
   ----------------------------------------------------------------------*/
 static void Picture_Center (int picWArea, int picHArea, int wFrame,
-			    int hFrame, PictureScaling pres,
-			    int *xTranslate, int *yTranslate,
-			    int *picXOrg, int *picYOrg)
+                            int hFrame, PictureScaling pres,
+                            int *xTranslate, int *yTranslate,
+                            int *picXOrg, int *picYOrg)
 {
   float               Rapw, Raph;
 
@@ -1244,9 +1244,9 @@ static void Picture_Center (int picWArea, int picHArea, int wFrame,
       Rapw = (float) wFrame / (float) picWArea;
       Raph = (float) hFrame / (float) picHArea;
       if (Rapw <= Raph)
-	*yTranslate = (int) ((hFrame - (picHArea * Rapw)) / 2);
+        *yTranslate = (int) ((hFrame - (picHArea * Rapw)) / 2);
       else
-	*xTranslate = (int) ((wFrame - (picWArea * Raph)) / 2);
+        *xTranslate = (int) ((wFrame - (picWArea * Raph)) / 2);
       break;
     case RealSize:
     case FillFrame:
@@ -1270,23 +1270,23 @@ static void Picture_Center (int picWArea, int picHArea, int wFrame,
 }
 
 /*----------------------------------------------------------------------
-   SetPictureClipping clips the picture into boundaries.              
+  SetPictureClipping clips the picture into boundaries.              
   ----------------------------------------------------------------------*/
 static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
-				int hFrame, ThotPictInfo *imageDesc)
+                                int hFrame, ThotPictInfo *imageDesc)
 {
-   if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
-       (imageDesc->PicWArea > MAX_PICT_SIZE ||
-        imageDesc->PicHArea > MAX_PICT_SIZE))
-     {
-       *picWArea = wFrame;
-       *picHArea = hFrame;
-     }
-   else
-     {
-       *picWArea = imageDesc->PicWArea;
-       *picHArea = imageDesc->PicHArea;
-     }
+  if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
+      (imageDesc->PicWArea > MAX_PICT_SIZE ||
+       imageDesc->PicHArea > MAX_PICT_SIZE))
+    {
+      *picWArea = wFrame;
+      *picHArea = hFrame;
+    }
+  else
+    {
+      *picWArea = imageDesc->PicWArea;
+      *picHArea = imageDesc->PicHArea;
+    }
 }
 
 
@@ -1577,8 +1577,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 }
 
 /*----------------------------------------------------------------------
-   GetPictureFormat returns the format of a file picture           
-   the file  fileName or unknown_type if not recognized          
+  GetPictureFormat returns the format of a file picture           
+  the file  fileName or unknown_type if not recognized          
   ----------------------------------------------------------------------*/
 static int GetPictureFormat (char *fileName)
 {
@@ -1588,9 +1588,9 @@ static int GetPictureFormat (char *fileName)
   while (i < HandlersCounter)
     {
       if (i >= InlineHandlers)
-	currentExtraHandler = i - InlineHandlers;
+        currentExtraHandler = i - InlineHandlers;
       if (Match_Format (i, fileName))
-	return i;
+        return i;
       ++i;
     }
   return unknown_type;
@@ -1598,12 +1598,12 @@ static int GetPictureFormat (char *fileName)
 
 
 /*----------------------------------------------------------------------
-   PictureFileOk returns Unsupported_Format if the file does not exist
-   - if typeImage is defined it returns Supported_Format if the 
-   file is of type typeImage, else Corrupted_File.            
-   - if typeImage is not defined, it is updated and we return   
-   Supported_Format is of an known type                       
-   and Corrupted_File in the other cases                      
+  PictureFileOk returns Unsupported_Format if the file does not exist
+  - if typeImage is defined it returns Supported_Format if the 
+  file is of type typeImage, else Corrupted_File.            
+  - if typeImage is not defined, it is updated and we return   
+  Supported_Format is of an known type                       
+  and Corrupted_File in the other cases                      
   ----------------------------------------------------------------------*/
 Picture_Report PictureFileOk (char *fileName, int *typeImage)
 {
@@ -1616,20 +1616,20 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   if (TtaFileExist (fileName))
     {
       if (*typeImage == unknown_type)
-	{
-	  *typeImage = GetPictureFormat (fileName);
-	  if (*typeImage == unknown_type)
-	    status = Corrupted_File;
-	  else
-	    status = Supported_Format;
-	}
+        {
+          *typeImage = GetPictureFormat (fileName);
+          if (*typeImage == unknown_type)
+            status = Corrupted_File;
+          else
+            status = Supported_Format;
+        }
       else
-	{
-	  if (Match_Format (*typeImage, fileName))
-	    status = Supported_Format;
-	  else
-	    status = Corrupted_File;
-	}
+        {
+          if (Match_Format (*typeImage, fileName))
+            status = Supported_Format;
+          else
+            status = Corrupted_File;
+        }
     }
   else
     status = Unsupported_Format;
@@ -1654,16 +1654,16 @@ void CreateGifLogo ()
   while (PictureIdType[index] != gif_type)
     index++;
   drw = (ThotPixmap)(*(PictureHandlerTable[index].Produce_Picture)) (
-      		(void *)LostPicturePath,
-		(void *)imageDesc,
-		(void *)&xBox,
-		(void *)&yBox,
-		(void *)&wBox,
-		(void *)&hBox,
-		(void *)Bgcolor,
-		(void *)&width,
-		(void *)&height,
-		(void *)0 );
+                                                                     (void *)LostPicturePath,
+                                                                     (void *)imageDesc,
+                                                                     (void *)&xBox,
+                                                                     (void *)&yBox,
+                                                                     (void *)&wBox,
+                                                                     (void *)&hBox,
+                                                                     (void *)Bgcolor,
+                                                                     (void *)&width,
+                                                                     (void *)&height,
+                                                                     (void *)0 );
   TtaFreeMemory (imageDesc);
   PictureLogo = drw;
 #else /* #if defined(_WINGUI) || defined (_GL)  */
@@ -1679,7 +1679,7 @@ void CreateGifLogo ()
 }
 
 /*----------------------------------------------------------------------
-   Private Initializations of picture handlers and the visual type 
+  Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
 void InitPictureHandlers (ThotBool printing)
 {
@@ -1704,7 +1704,7 @@ void InitPictureHandlers (ThotBool printing)
       gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
       gdk_rgb_gc_set_background (tiledGC, White_Color);
       gdk_gc_set_exposures (tiledGC,0);
-     /* special Graphic context to display bitmaps */
+      /* special Graphic context to display bitmaps */
       GCpicture = gdk_gc_new (DefaultDrawable);
       gdk_rgb_gc_set_foreground (GCpicture, Black_Color);
       gdk_rgb_gc_set_background (GCpicture, White_Color);
@@ -1713,187 +1713,187 @@ void InitPictureHandlers (ThotBool printing)
   theVisual = (Visual *) gdk_visual_get_system ();
 #endif /* _GTK */
    
-   Printing = printing;
-   HandlersCounter = 0;
-   currentExtraHandler = 0;
+  Printing = printing;
+  HandlersCounter = 0;
+  currentExtraHandler = 0;
   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture) NULL;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript) NULL;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format) NULL;
-   PictureIdType[HandlersCounter] = xbm_type;
-   HandlersCounter++;
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture) NULL;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript) NULL;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format) NULL;
+  PictureIdType[HandlersCounter] = xbm_type;
+  HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture )EpsCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript )EpsPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format )IsEpsFormat;
-   PictureIdType[HandlersCounter] = eps_type;
-   HandlersCounter++;
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, EpsName, MAX_FORMAT_NAMELENGHT);
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture )EpsCreate;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript )EpsPrint;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format )IsEpsFormat;
+  PictureIdType[HandlersCounter] = eps_type;
+  HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)XpmCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)XpmPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsXpmFormat;
-   PictureIdType[HandlersCounter] = xpm_type;
-   HandlersCounter++;
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XpmName, MAX_FORMAT_NAMELENGHT);
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)XpmCreate;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)XpmPrint;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsXpmFormat;
+  PictureIdType[HandlersCounter] = xpm_type;
+  HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)GifCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)GifPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsGifFormat;
-   PictureIdType[HandlersCounter] = gif_type;
-   HandlersCounter++;
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, GifName, MAX_FORMAT_NAMELENGHT);
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)GifCreate;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)GifPrint;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsGifFormat;
+  PictureIdType[HandlersCounter] = gif_type;
+  HandlersCounter++;
 
-   InitPngColors ();
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)PngCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)PngPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsPngFormat;
-   PictureIdType[HandlersCounter] = png_type;
-   HandlersCounter++;
+  InitPngColors ();
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)PngCreate;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)PngPrint;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsPngFormat;
+  PictureIdType[HandlersCounter] = png_type;
+  HandlersCounter++;
 
-   strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)JpegCreate;
-   PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)JpegPrint;
-   PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsJpegFormat;
-   PictureIdType[HandlersCounter] = jpeg_type;
-   HandlersCounter++;
-   InlineHandlers = HandlersCounter;
+  strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, JpegName, MAX_FORMAT_NAMELENGHT);
+  PictureHandlerTable[HandlersCounter].Produce_Picture = (PICHND_PROTO_Produce_Picture)JpegCreate;
+  PictureHandlerTable[HandlersCounter].Produce_Postscript = (PICHND_PROTO_Produce_Postscript)JpegPrint;
+  PictureHandlerTable[HandlersCounter].Match_Format = (PICHND_PROTO_Match_Format)IsJpegFormat;
+  PictureIdType[HandlersCounter] = jpeg_type;
+  HandlersCounter++;
+  InlineHandlers = HandlersCounter;
 }
 
 
 /*----------------------------------------------------------------------
-   DrawEpsBox draws the eps logo into the picture box.            
+  DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
 static void DrawEpsBox (PtrBox box, ThotPictInfo *imageDesc, int frame,
-			int wlogo, int hlogo)
+                        int wlogo, int hlogo)
 {
 #ifdef _WINGUI
-   ThotWindow          drawable;
-   ThotPixmap          pixmap;
-   float               scaleX, scaleY;
-   int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
-   int                 XOrg, YOrg, picXOrg, picYOrg;
-   HDC                 hDc, hMemDc;
-   POINT               lPt[2];
-   HBITMAP             hOldBitmap;
+  ThotWindow          drawable;
+  ThotPixmap          pixmap;
+  float               scaleX, scaleY;
+  int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
+  int                 XOrg, YOrg, picXOrg, picYOrg;
+  HDC                 hDc, hMemDc;
+  POINT               lPt[2];
+  HBITMAP             hOldBitmap;
 
-   /* Create the temporary picture */
-   scaleX = 0.0;
-   scaleY = 0.0;
-   x = 0;
-   y = 0;
-   w = 0;
-   h = 0;
+  /* Create the temporary picture */
+  scaleX = 0.0;
+  scaleY = 0.0;
+  x = 0;
+  y = 0;
+  w = 0;
+  h = 0;
 
-   drawable = TtaGetThotWindow (frame);
-   switch (imageDesc->PicPresent)
-     {
-     case RealSize:
-     case FillFrame:
-     case XRepeat:
-     case YRepeat:
-       w = imageDesc->PicWArea;
-       h = imageDesc->PicHArea;
-       break;
-     case ReScale:
-       /* what is the smallest scale */
-       scaleX = (float) box->BxW / (float) imageDesc->PicWArea;
-       scaleY = (float) box->BxH / (float) imageDesc->PicHArea;
-       if (scaleX <= scaleY)
-	 {
-	   w = box->BxW;
-	   h = (int) ((float) imageDesc->PicHArea * scaleX);
-	 }
-       else
-	 {
-	   h = box->BxH;
-	   w = (int) ((float) imageDesc->PicWArea * scaleY);
-	 }
-       break;
-     default:
-       break;
-     }
+  drawable = TtaGetThotWindow (frame);
+  switch (imageDesc->PicPresent)
+    {
+    case RealSize:
+    case FillFrame:
+    case XRepeat:
+    case YRepeat:
+      w = imageDesc->PicWArea;
+      h = imageDesc->PicHArea;
+      break;
+    case ReScale:
+      /* what is the smallest scale */
+      scaleX = (float) box->BxW / (float) imageDesc->PicWArea;
+      scaleY = (float) box->BxH / (float) imageDesc->PicHArea;
+      if (scaleX <= scaleY)
+        {
+          w = box->BxW;
+          h = (int) ((float) imageDesc->PicHArea * scaleX);
+        }
+      else
+        {
+          h = box->BxH;
+          w = (int) ((float) imageDesc->PicWArea * scaleY);
+        }
+      break;
+    default:
+      break;
+    }
 
-   pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
-   hDc    = GetDC (drawable);
-   hMemDc = CreateCompatibleDC (hDc);
-   hOldBitmap = SelectObject (hMemDc, pixmap);
-   Rectangle (hMemDc, 0, 0, w - 1, h - 1);
-   lPt[0].x = 0;
-   lPt[0].y = 0;
-   lPt[1].x = w - 1;
-   lPt[1].y = h - 2;
-   Polyline  (hMemDc, lPt, 2);
+  pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
+  hDc    = GetDC (drawable);
+  hMemDc = CreateCompatibleDC (hDc);
+  hOldBitmap = SelectObject (hMemDc, pixmap);
+  Rectangle (hMemDc, 0, 0, w - 1, h - 1);
+  lPt[0].x = 0;
+  lPt[0].y = 0;
+  lPt[1].x = w - 1;
+  lPt[1].y = h - 2;
+  Polyline  (hMemDc, lPt, 2);
 
-   lPt[0].x = w - 1;
-   lPt[0].y = 0;
-   lPt[1].x = 0;
-   lPt[1].y = h - 2;
-   Polyline  (hMemDc, lPt, 2);
+  lPt[0].x = w - 1;
+  lPt[0].y = 0;
+  lPt[1].x = 0;
+  lPt[1].y = h - 2;
+  Polyline  (hMemDc, lPt, 2);
 
-   lPt[0].x = 0;
-   lPt[0].y = 1;
-   lPt[1].x = w - 1;
-   lPt[1].y = h - 2;
-   Polyline  (hMemDc, lPt, 2);
+  lPt[0].x = 0;
+  lPt[0].y = 1;
+  lPt[1].x = w - 1;
+  lPt[1].y = h - 2;
+  Polyline  (hMemDc, lPt, 2);
 
-   lPt[0].x = 0;
-   lPt[0].y = w - 1;
-   lPt[1].x = 1;
-   lPt[1].y = h - 1;
-   Polyline  (hMemDc, lPt, 2);
-   SelectObject (hMemDc, hOldBitmap);
-   DeleteDC (hDc);
-   DeleteDC (hMemDc);
+  lPt[0].x = 0;
+  lPt[0].y = w - 1;
+  lPt[1].x = 1;
+  lPt[1].y = h - 1;
+  Polyline  (hMemDc, lPt, 2);
+  SelectObject (hMemDc, hOldBitmap);
+  DeleteDC (hDc);
+  DeleteDC (hMemDc);
 
-   /* copying the logo */
-   /* 2 pixels used by the enclosing rectangle */
-   if (wlogo > w - 2)
-     {
-       wFrame = w - 2;
-       xFrame = x + 1;
-       picXOrg = wlogo - w + 2;
-     }
-   else
-     {
-       wFrame = wlogo;
-       xFrame = x + w - 1 - wlogo;
-       picXOrg = 0;
-     }
-   /* 2 pixels used by the enclosing rectangle */
-   if (hlogo > h - 2)
-     {
-       hFrame = h - 2;
-       yFrame = y + 1;
-       picYOrg = hlogo - h + 2;
-     }
-   else
-     {
-       hFrame = hlogo;
-       yFrame = y + 1;
-       picYOrg = 0;
-     }
-   /* Drawing In the Picture Box */
-   GetXYOrg (frame, &XOrg, &YOrg);
-   xFrame = box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding - XOrg;
-   yFrame = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding + FrameTable[frame].FrTopMargin - YOrg;
-   wFrame = box->BxW;
-   hFrame = box->BxH;
-   Picture_Center (w, h, wFrame, hFrame, RealSize, &x, &y, &picXOrg, &picYOrg);
-   if (w > wFrame)
-     w = wFrame;
-   if (h > hFrame)
-     h = hFrame;
-   x += xFrame;
-   y += yFrame;
+  /* copying the logo */
+  /* 2 pixels used by the enclosing rectangle */
+  if (wlogo > w - 2)
+    {
+      wFrame = w - 2;
+      xFrame = x + 1;
+      picXOrg = wlogo - w + 2;
+    }
+  else
+    {
+      wFrame = wlogo;
+      xFrame = x + w - 1 - wlogo;
+      picXOrg = 0;
+    }
+  /* 2 pixels used by the enclosing rectangle */
+  if (hlogo > h - 2)
+    {
+      hFrame = h - 2;
+      yFrame = y + 1;
+      picYOrg = hlogo - h + 2;
+    }
+  else
+    {
+      hFrame = hlogo;
+      yFrame = y + 1;
+      picYOrg = 0;
+    }
+  /* Drawing In the Picture Box */
+  GetXYOrg (frame, &XOrg, &YOrg);
+  xFrame = box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding - XOrg;
+  yFrame = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding + FrameTable[frame].FrTopMargin - YOrg;
+  wFrame = box->BxW;
+  hFrame = box->BxH;
+  Picture_Center (w, h, wFrame, hFrame, RealSize, &x, &y, &picXOrg, &picYOrg);
+  if (w > wFrame)
+    w = wFrame;
+  if (h > hFrame)
+    h = hFrame;
+  x += xFrame;
+  y += yFrame;
 
 #ifndef _GL
-   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, 0, 0,
-		  frame, imageDesc, box);
+  LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, 0, 0,
+                 frame, imageDesc, box);
 #endif /*_GL*/
-   if (pixmap)
-	   DeleteObject (pixmap);
+  if (pixmap)
+    DeleteObject (pixmap);
 #endif /* _WINGUI */ 
 }
 
@@ -1904,7 +1904,7 @@ static void DrawEpsBox (PtrBox box, ThotPictInfo *imageDesc, int frame,
   Parameters t l give top and left extra margins.
   ----------------------------------------------------------------------*/
 void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
-		  int x, int y, int w, int h, int t, int l)
+                  int x, int y, int w, int h, int t, int l)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
@@ -1935,269 +1935,269 @@ void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 #ifdef _GL
        !strcmp (imageDesc->PicFileName, LostPicturePath)))
 #else /*_GL*/
-       imageDesc->PicPixmap == PictureLogo))
+    imageDesc->PicPixmap == PictureLogo))
 #endif /* _GL */
-    return;
+     return;
 
 #ifdef _GL
-  if (Printing)
-    {
-      PrintingGL = TRUE;
-      Printing = FALSE;
-    }
+     if (Printing)
+{
+PrintingGL = TRUE;
+Printing = FALSE;
+}
 #endif /* _GL */
 
-  drawable = (ThotDrawable)TtaGetThotWindow (frame);
-  GetXYOrg (frame, &xFrame, &yFrame);
-  typeImage = imageDesc->PicType;
-  GetPictureFileName (imageDesc->PicFileName, fileName);
+drawable = (ThotDrawable)TtaGetThotWindow (frame);
+GetXYOrg (frame, &xFrame, &yFrame);
+typeImage = imageDesc->PicType;
+GetPictureFileName (imageDesc->PicFileName, fileName);
 
-  /* the default presenation depends on the box type */
-  pres = imageDesc->PicPresent;
-  if (pres == DefaultPres)
-    {
-      if (box->BxType == BoPicture)
-	/* an image is rescaled */
-	pres = ReScale;
-      else
-	/* a background image is repeated */
-	pres = FillFrame;
-    }
-  /* resize plugins if necessary */
-  if (typeImage >= InlineHandlers)
-    {
-      imageDesc->PicWArea = w;
-      imageDesc->PicHArea = h;
-    }
-  picWArea = imageDesc->PicWArea;
-  picHArea = imageDesc->PicHArea;
-  bgColor = box->BxAbstractBox->AbBackground;
+/* the default presenation depends on the box type */
+pres = imageDesc->PicPresent;
+if (pres == DefaultPres)
+{
+  if (box->BxType == BoPicture)
+    /* an image is rescaled */
+    pres = ReScale;
+  else
+    /* a background image is repeated */
+    pres = FillFrame;
+}
+/* resize plugins if necessary */
+if (typeImage >= InlineHandlers)
+{
+  imageDesc->PicWArea = w;
+  imageDesc->PicHArea = h;
+}
+picWArea = imageDesc->PicWArea;
+picHArea = imageDesc->PicHArea;
+bgColor = box->BxAbstractBox->AbBackground;
   
-  SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
-  if (!Printing)
+SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
+if (!Printing)
+{
+  if (imageDesc->PicType == eps_type) 
+    DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
+  else
     {
-      if (imageDesc->PicType == eps_type) 
-	DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
-      else
-	{
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-	  if (imageDesc->TextureBind)
-	    printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+      if (imageDesc->TextureBind)
+        printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-          if ((pres == ReScale && 
-	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
+      if ((pres == ReScale && 
+           (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
 #ifdef _GL
-	      !glIsTexture (imageDesc->TextureBind))	    
+          !glIsTexture (imageDesc->TextureBind))	    
 #else /*_GL*/
 	      imageDesc->PicPixmap == NULL)
 #endif /*_GL*/
-	    {
-	      LoadPicture (frame, box, imageDesc);
-	      w = picWArea = imageDesc->PicWArea;
-	      h = picHArea = imageDesc->PicHArea;
-	      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
-	    }
-	  
-	  if (pres == RealSize && 
-	      box->BxAbstractBox->AbLeafType == LtPicture)
-	    /* Center real sized images wihin their picture boxes */
-	    Picture_Center (picWArea, picHArea, w, h, 
-			    pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
-	  
-	  if (typeImage < InlineHandlers)
-            LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
-		           picXOrg, picYOrg, w, h, 
-			   x + xTranslate, y + yTranslate, 
-		           t, l, frame, imageDesc, box);
-	}
-    }
-  else if (typeImage < InlineHandlers && typeImage > -1)
     {
-    /* for the moment we didn't consider plugin printing */
+      LoadPicture (frame, box, imageDesc);
+      w = picWArea = imageDesc->PicWArea;
+      h = picHArea = imageDesc->PicHArea;
+      SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
+    }
+	  
+  if (pres == RealSize && 
+      box->BxAbstractBox->AbLeafType == LtPicture)
+    /* Center real sized images wihin their picture boxes */
+    Picture_Center (picWArea, picHArea, w, h, 
+                    pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
+	  
+  if (typeImage < InlineHandlers)
+    LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
+                   picXOrg, picYOrg, w, h, 
+                   x + xTranslate, y + yTranslate, 
+                   t, l, frame, imageDesc, box);
+}
+}
+else if (typeImage < InlineHandlers && typeImage > -1)
+{
+/* for the moment we didn't consider plugin printing */
 #ifdef _WINGUI
-      if (TtPrinterDC)
-	{
+if (TtPrinterDC)
+{
 #ifdef _WIN_PRINT
-	  /* load the device context into TtDisplay */
-	  WIN_GetDeviceContext (frame);
-	  LoadPicture (frame, box, imageDesc);
-	  if (imageDesc->PicPixmap == NULL) 
-	    WinErrorBox (NULL, "DrawPicture (1)");
-	  else
-	    {
-	      /* Retrieve the bitmap's color format, width, and height. */ 
-	      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
-			      sizeof(BITMAP), (LPSTR)&bmp))
-		WinErrorBox (NULL, "DrawPicture (1)");
-	      else
-		{
-		  /* Convert the color format to a count of bits. */ 
-		  cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
-		  if (cClrBits != 1)
-		    { 
-		      if (cClrBits <= 4) 
-			cClrBits = 4;
-		      else if (cClrBits <= 8) 
-			cClrBits = 8;
-		      else if (cClrBits <= 16) 
-			cClrBits = 16;
-		      else if (cClrBits <= 24) 
-			cClrBits = 24;
-		      else 
-			cClrBits = 32;
-		    }
-		  /* 
-		   * Allocate memory for the BITMAPINFO structure. (This structure 
-		   * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
-		   * structures.) 
-		   */ 
-		if (cClrBits != 24) 
-		  pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
-						   sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
-		else
-		  /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
-		  pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
-		if (pbmi)
-		  {
-		    /* Initialize the fields in the BITMAPINFO structure. */
-		    pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
-		    pbmi->bmiHeader.biWidth    = bmp.bmWidth;
-		    pbmi->bmiHeader.biHeight   = bmp.bmHeight;
-		    pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
-		    pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
-		    if (cClrBits < 24)
-		      pbmi->bmiHeader.biClrUsed = 2^cClrBits;
-		    /* If the bitmap is not compressed, set the BI_RGB flag. */  
-		    pbmi->bmiHeader.biCompression = BI_RGB;
-		    /* 
-		     * Compute the number of bytes in the array of color 
-		     * indices and store the result in biSizeImage. 
-		     */
-		    pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
-		    /* 
-		     * Set biClrImportant to 0, indicating that all of the 
-		     * device colors are important. 
-		     */
-		    pbmi->bmiHeader.biClrImportant = 0;
-		    lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
-		    if (!lpBits) 
-		      WinErrorBox (NULL, "DrawPicture (2)");
-		    else
-		      {
-			if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-					(UINT)pbmi->bmiHeader.biHeight,
-					lpBits, pbmi, DIB_RGB_COLORS)) 
-			  WinErrorBox (NULL, "DrawPicture (3)");
-			else
-			  {
-			    StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
-					   pbmi->bmiHeader.biWidth,
-					   pbmi->bmiHeader.biHeight,
-					   lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
-			  }
-			GlobalFree (lpBits);
-		      }
-		    LocalFree (pbmi);
-		  }
-		}
-	    }
-	  WIN_ReleaseDeviceContext ();
+  /* load the device context into TtDisplay */
+  WIN_GetDeviceContext (frame);
+  LoadPicture (frame, box, imageDesc);
+  if (imageDesc->PicPixmap == NULL) 
+    WinErrorBox (NULL, "DrawPicture (1)");
+  else
+    {
+      /* Retrieve the bitmap's color format, width, and height. */ 
+      if (!GetObject ((HBITMAP)(imageDesc->PicPixmap),
+                      sizeof(BITMAP), (LPSTR)&bmp))
+        WinErrorBox (NULL, "DrawPicture (1)");
+      else
+        {
+          /* Convert the color format to a count of bits. */ 
+          cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
+          if (cClrBits != 1)
+            { 
+              if (cClrBits <= 4) 
+                cClrBits = 4;
+              else if (cClrBits <= 8) 
+                cClrBits = 8;
+              else if (cClrBits <= 16) 
+                cClrBits = 16;
+              else if (cClrBits <= 24) 
+                cClrBits = 24;
+              else 
+                cClrBits = 32;
+            }
+          /* 
+           * Allocate memory for the BITMAPINFO structure. (This structure 
+           * contains a BITMAPINFOHEADER structure and an array of RGBQUAD data 
+           * structures.) 
+           */ 
+          if (cClrBits != 24) 
+            pbmi = (LPBITMAPINFO) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
+                                             sizeof (BITMAPINFOHEADER) + (2^cClrBits) * sizeof (RGBQUAD));
+          else
+            /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
+            pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
+          if (pbmi)
+            {
+              /* Initialize the fields in the BITMAPINFO structure. */
+              pbmi->bmiHeader.biSize     = sizeof (BITMAPINFOHEADER);
+              pbmi->bmiHeader.biWidth    = bmp.bmWidth;
+              pbmi->bmiHeader.biHeight   = bmp.bmHeight;
+              pbmi->bmiHeader.biPlanes   = bmp.bmPlanes;
+              pbmi->bmiHeader.biBitCount = bmp.bmBitsPixel;
+              if (cClrBits < 24)
+                pbmi->bmiHeader.biClrUsed = 2^cClrBits;
+              /* If the bitmap is not compressed, set the BI_RGB flag. */  
+              pbmi->bmiHeader.biCompression = BI_RGB;
+              /* 
+               * Compute the number of bytes in the array of color 
+               * indices and store the result in biSizeImage. 
+               */
+              pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) / 8 * pbmi->bmiHeader.biHeight * cClrBits;
+              /* 
+               * Set biClrImportant to 0, indicating that all of the 
+               * device colors are important. 
+               */
+              pbmi->bmiHeader.biClrImportant = 0;
+              lpBits = GlobalAlloc (GMEM_FIXED, pbmi->bmiHeader.biSizeImage);
+              if (!lpBits) 
+                WinErrorBox (NULL, "DrawPicture (2)");
+              else
+                {
+                  if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+                                  (UINT)pbmi->bmiHeader.biHeight,
+                                  lpBits, pbmi, DIB_RGB_COLORS)) 
+                    WinErrorBox (NULL, "DrawPicture (3)");
+                  else
+                    {
+                      StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
+                                     pbmi->bmiHeader.biWidth,
+                                     pbmi->bmiHeader.biHeight,
+                                     lpBits, pbmi, DIB_RGB_COLORS, SRCCOPY);
+                    }
+                  GlobalFree (lpBits);
+                }
+              LocalFree (pbmi);
+            }
+        }
+    }
+  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-	}
+}
 #endif /* _WINGUI */
     
 #if defined(_GTK) || defined(_WX)
-      (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
-							      (void *)fileName,
-							      (void *)pres,
-							      (void *)x,
-							      (void *)y,
-							      (void *)w,
-							      (void *)h,
-							      (void *)(FILE *) drawable,
-							      (void *)bgColor,
-							      (void *)0,
-							      (void *)0);  
+ (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
+                                                         (void *)fileName,
+                                                         (void *)pres,
+                                                         (void *)x,
+                                                         (void *)y,
+                                                         (void *)w,
+                                                         (void *)h,
+                                                         (void *)(FILE *) drawable,
+                                                         (void *)bgColor,
+                                                         (void *)0,
+                                                         (void *)0);  
 #endif /* #if defined(_GTK) || defined(_WX) */
-    }
+}
   
 #ifdef _GL
-  if (PrintingGL)
-    {
-      PrintingGL = FALSE;
-      Printing = TRUE;
-    }
+if (PrintingGL)
+{
+  PrintingGL = FALSE;
+  Printing = TRUE;
+}
 #endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
-   Routine handling the zoom-in zoom-out of an image   
+  Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
-			    int eWIDE, int eHIGH, int bperpix)
+  int eWIDE, int eHIGH, int bperpix)
 {
-  int            cy, ex, ey;
-  int           *cxarr, *cxarrp;
-  unsigned char *clptr, *elptr, *epptr, *epic;
+int            cy, ex, ey;
+int           *cxarr, *cxarrp;
+unsigned char *clptr, *elptr, *epptr, *epic;
 
-  clptr = NULL;
-  cxarrp = NULL;
-  cy = 0;
-  /* check for size */
-  if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
-      (cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
-    return (NULL);
+clptr = NULL;
+cxarrp = NULL;
+cy = 0;
+/* check for size */
+if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
+(cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
+     return (NULL);
 
-  /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
-  if (eWIDE == cWIDE && eHIGH == cHIGH)
-    /* 1:1 expansion.  points destination pic at source pic */
-    epic = cpic;
-  else
-    {
-      /* run the rescaling algorithm */
-      /* create a new pic of the appropriate size */
-      epic = (unsigned char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
-      if (!epic)
-	printf(" unable to TtaGetMemory memory for zoomed image \n");
-      cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
-      if (!cxarr)
-	printf("unable to allocate cxarr for zoomed image \n");
-      for (ex = 0; ex < eWIDE; ex++) 
-	cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
+     /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
+     if (eWIDE == cWIDE && eHIGH == cHIGH)
+     /* 1:1 expansion.  points destination pic at source pic */
+     epic = cpic;
+     else
+{
+  /* run the rescaling algorithm */
+  /* create a new pic of the appropriate size */
+  epic = (unsigned char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
+  if (!epic)
+    printf(" unable to TtaGetMemory memory for zoomed image \n");
+  cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
+  if (!cxarr)
+    printf("unable to allocate cxarr for zoomed image \n");
+  for (ex = 0; ex < eWIDE; ex++) 
+    cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
       
-      elptr = epptr = epic;
-      for (ey = 0;  ey < eHIGH;  ey++, elptr += (eWIDE * bperpix))
-	{
-	  cy = (cHIGH * ey) / eHIGH;
-	  epptr = elptr;
-	  clptr = cpic + (cy * cWIDE * bperpix);
+  elptr = epptr = epic;
+  for (ey = 0;  ey < eHIGH;  ey++, elptr += (eWIDE * bperpix))
+    {
+      cy = (cHIGH * ey) / eHIGH;
+      epptr = elptr;
+      clptr = cpic + (cy * cWIDE * bperpix);
 	  
-	  if (bperpix == 1)
-	    {
-	      for (ex = 0, cxarrp = cxarr;  ex < eWIDE;  ex++, epptr++) 
-	      *epptr = clptr[*cxarrp++];
-	    }
-	  else
-	    {
-	      int j;  unsigned char *cp;
-	      for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
-		{
-		  cp = clptr + *cxarrp;
-		  for (j = 0; j < bperpix; j++) 
-		    *epptr++ = *cp++;
-		}
-	    }
-	}
-      TtaFreeMemory (cxarr);
+      if (bperpix == 1)
+        {
+          for (ex = 0, cxarrp = cxarr;  ex < eWIDE;  ex++, epptr++) 
+            *epptr = clptr[*cxarrp++];
+        }
+      else
+        {
+          int j;  unsigned char *cp;
+          for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
+            {
+              cp = clptr + *cxarrp;
+              for (j = 0; j < bperpix; j++) 
+                *epptr++ = *cp++;
+            }
+        }
     }
+  TtaFreeMemory (cxarr);
+}
   
-  return (epic);
+     return (epic);
 }
 
 /*----------------------------------------------------------------------
-   TtaFileCopyUncompress copies a source file into a target file and
-   uncompress if necessary
-   Return TRUE if the copy is done.
+  TtaFileCopyUncompress copies a source file into a target file and
+  uncompress if necessary
+  Return TRUE if the copy is done.
   ----------------------------------------------------------------------*/
 ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
 {
@@ -2211,27 +2211,27 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
   if (strcmp (sourceFile, targetFile) != 0)
     {
       if ((targetf = TtaWriteOpen (targetFile)) == NULL)
-	/* cannot write into the target file */
-	return FALSE;
+        /* cannot write into the target file */
+        return FALSE;
       else
-	{
-	  stream = TtaGZOpen (sourceFile);
-	  if (stream == 0)
-	    {
-	      /* cannot read the source file */
-	      TtaWriteClose (targetf);
-	      TtaFileUnlink (targetFile);
-	      return FALSE;
-	    }
-	  else
-	    {
-	      /* copy the file contents */
-	      while ((size = gzread (stream, buffer, 8192)) != 0)
-		fwrite (buffer, 1, size, targetf);
-	      TtaGZClose (stream);
-	    }
-	  TtaWriteClose (targetf);
-	}
+        {
+          stream = TtaGZOpen (sourceFile);
+          if (stream == 0)
+            {
+              /* cannot read the source file */
+              TtaWriteClose (targetf);
+              TtaFileUnlink (targetFile);
+              return FALSE;
+            }
+          else
+            {
+              /* copy the file contents */
+              while ((size = gzread (stream, buffer, 8192)) != 0)
+                fwrite (buffer, 1, size, targetf);
+              TtaGZClose (stream);
+            }
+          TtaWriteClose (targetf);
+        }
     }
   return TRUE;
 }
@@ -2263,7 +2263,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   Apply the image ratio when only one dimension is constained.
   ----------------------------------------------------------------------*/
 ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
-			  int width, int height, int w, int h, int frame)
+                          int width, int height, int w, int h, int frame)
 {
   PtrBox      box;
   int         oldw, oldh;
@@ -2289,47 +2289,47 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
     {
       constrained_Width = TRUE;
       if (!pAb->AbWidth.DimIsPosition &&
-	  pAb->AbWidth.DimValue == -1 &&
-	  pAb->AbWidth.DimAbRef == NULL)
-	constrained_Width = FALSE;
+          pAb->AbWidth.DimValue == -1 &&
+          pAb->AbWidth.DimAbRef == NULL)
+        constrained_Width = FALSE;
 
       constrained_Height = TRUE;
       if (!pAb->AbHeight.DimIsPosition &&
-	  pAb->AbHeight.DimValue == -1 &&
-	  pAb->AbHeight.DimAbRef == NULL)
-	constrained_Height = FALSE;
+          pAb->AbHeight.DimValue == -1 &&
+          pAb->AbHeight.DimAbRef == NULL)
+        constrained_Height = FALSE;
     
       if (!constrained_Width && constrained_Height && h)
-	{
-	  w = (width * h) / height;
-	  if (w != imageDesc->PicWArea)
-	    {
-	      change = TRUE;
-	      imageDesc->PicWArea = w;
-	      /* update the box size */
-	      ResizeWidth (box, box, NULL, w - box->BxW,
-			   0, 0, 0, frame);		  
-	    }
-	}
+        {
+          w = (width * h) / height;
+          if (w != imageDesc->PicWArea)
+            {
+              change = TRUE;
+              imageDesc->PicWArea = w;
+              /* update the box size */
+              ResizeWidth (box, box, NULL, w - box->BxW,
+                           0, 0, 0, frame);		  
+            }
+        }
       else if (constrained_Width && !constrained_Height && w)
-	{
-	  h = (height * w) / width;
-	  if (h != imageDesc->PicHArea)
-	    {
-	      change = TRUE;
-	      imageDesc->PicHArea = h;
-	      /* update the box size */
-	      ResizeHeight (box, box, NULL, h - box->BxH,
-			    0, 0, frame);
-	    }
-	}
+        {
+          h = (height * w) / width;
+          if (h != imageDesc->PicHArea)
+            {
+              change = TRUE;
+              imageDesc->PicHArea = h;
+              /* update the box size */
+              ResizeHeight (box, box, NULL, h - box->BxH,
+                            0, 0, frame);
+            }
+        }
 
       if (change || w != oldw || h != oldh)
-	{
-	  w = w + box->BxWidth - box->BxW;
-	  h = h + box->BxHeight - box->BxH;
-	  DefBoxRegion (frame, box, 0, 0, w, h);
-	}
+        {
+          w = w + box->BxWidth - box->BxW;
+          h = h + box->BxHeight - box->BxH;
+          DefBoxRegion (frame, box, 0, 0, w, h);
+        }
     }
   return change;
 }
@@ -2339,7 +2339,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
   Do you have to extend the clipping ?
   ----------------------------------------------------------------------*/
 void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
-		       int top, int bottom, int left, int right, int frame)
+                       int top, int bottom, int left, int right, int frame)
 {
   /* prepare the redisplay of the box */
   UpdateBoxRegion (frame, box, 0, 0, w, h);
@@ -2347,31 +2347,31 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
     {
       /* transmit picture dimensions */
       if (!pAb->AbWidth.DimIsPosition)
-	{
-	  if (pAb->AbWidth.DimMinimum)
-	    /* the rule min is applied to this box */
-	    ChangeDefaultWidth (box, box, w, 0, frame);
-	  else if (pAb->AbEnclosing &&
-		   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
-		   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-	    /* the parent box should inherit the picture width */
-	    ChangeWidth (pAb->AbEnclosing->AbBox,
-			 pAb->AbEnclosing->AbBox, NULL,
-			 w + left + right, 0, frame);
-	}
+        {
+          if (pAb->AbWidth.DimMinimum)
+            /* the rule min is applied to this box */
+            ChangeDefaultWidth (box, box, w, 0, frame);
+          else if (pAb->AbEnclosing &&
+                   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+                   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+            /* the parent box should inherit the picture width */
+            ChangeWidth (pAb->AbEnclosing->AbBox,
+                         pAb->AbEnclosing->AbBox, NULL,
+                         w + left + right, 0, frame);
+        }
       if (!pAb->AbHeight.DimIsPosition)
-	{
-	  if (pAb->AbHeight.DimMinimum)
-	    /* the rule min is applied to this box */
-	    ChangeDefaultHeight (box, box, h, frame);
-	  else if (pAb->AbEnclosing &&
-		   pAb->AbHeight.DimAbRef == pAb->AbEnclosing &&
-		   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
-	    /* the parent box should inherit the picture height */
-	    ChangeHeight (pAb->AbEnclosing->AbBox,
-			  pAb->AbEnclosing->AbBox, NULL,
-			  h + top + bottom + top + bottom, frame);
-	}
+        {
+          if (pAb->AbHeight.DimMinimum)
+            /* the rule min is applied to this box */
+            ChangeDefaultHeight (box, box, h, frame);
+          else if (pAb->AbEnclosing &&
+                   pAb->AbHeight.DimAbRef == pAb->AbEnclosing &&
+                   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+            /* the parent box should inherit the picture height */
+            ChangeHeight (pAb->AbEnclosing->AbBox,
+                          pAb->AbEnclosing->AbBox, NULL,
+                          h + top + bottom + top + bottom, frame);
+        }
     }
 }
 
@@ -2398,18 +2398,18 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
       glReadBuffer (GL_BACK);   
 
       if (1  /* && glhard () */)
-	{
-	  GL_TextureBind (imageDesc, FALSE);
-	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
-	}
+        {
+          GL_TextureBind (imageDesc, FALSE);
+          glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
+        }
       else
-	{
-	  imageDesc->PicPixmap = (ThotPixmap)TtaGetMemory (sizeof (unsigned char) * 
-					       width * height * 4);
-	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
-			imageDesc->PicPixmap);
-	  GL_TextureBind (imageDesc, TRUE);
-	}
+        {
+          imageDesc->PicPixmap = (ThotPixmap)TtaGetMemory (sizeof (unsigned char) * 
+                                                           width * height * 4);
+          glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
+                        imageDesc->PicPixmap);
+          GL_TextureBind (imageDesc, TRUE);
+        }
       return imageDesc;
     }
   else
@@ -2417,8 +2417,8 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 }
 
 /*----------------------------------------------------------------------
-   Requests the picture handlers to get the corresponding RGB or RGBA buffer
-   and make a Texture or it (aka load into video card memory)   
+  Requests the picture handlers to get the corresponding RGB or RGBA buffer
+  and make a Texture or it (aka load into video card memory)   
   ----------------------------------------------------------------------*/
 void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 {
@@ -2468,88 +2468,88 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   zoom = ViewFrameTable[frame - 1].FrMagnification;
 
 #ifdef _NOSHARELIST
- /* For the Sync Image*/
- if (frame != ActiveFrame)
-     GL_prepare (frame); 
+  /* For the Sync Image*/
+  if (frame != ActiveFrame)
+    GL_prepare (frame); 
 #endif /* _NOSHARELIST */
 #ifdef WITH_CACHE
- typeImage = LookupInPicCache (imageDesc, frame); 
- if (typeImage)
-   {  
-     typeImage = imageDesc->PicType;
-     pres = imageDesc->PicPresent;
-     if (pres == DefaultPres)
-       {
-	 if (box->BxType == BoPicture)
-	   /* an image is rescaled */
-	   pres = ReScale;
-	 else
-	   /* a background image is repeated */
-	   pres = FillFrame;
-       }
-     if (typeImage == xpm_type && pres == ReScale)
-       pres = imageDesc->PicPresent = RealSize;
-     /* picture dimension */
-     if (pAb->AbLeafType == LtCompound)
-       {
-	 /* a background image, draw over the whole box */
-	 w = box->BxWidth;
-	 h = box->BxHeight;
-       }
-     else
-       {
-	 /* draw within the inside box */
-	 w = box->BxW;
-	 h = box->BxH;
-       }
+  typeImage = LookupInPicCache (imageDesc, frame); 
+  if (typeImage)
+    {  
+      typeImage = imageDesc->PicType;
+      pres = imageDesc->PicPresent;
+      if (pres == DefaultPres)
+        {
+          if (box->BxType == BoPicture)
+            /* an image is rescaled */
+            pres = ReScale;
+          else
+            /* a background image is repeated */
+            pres = FillFrame;
+        }
+      if (typeImage == xpm_type && pres == ReScale)
+        pres = imageDesc->PicPresent = RealSize;
+      /* picture dimension */
+      if (pAb->AbLeafType == LtCompound)
+        {
+          /* a background image, draw over the whole box */
+          w = box->BxWidth;
+          h = box->BxHeight;
+        }
+      else
+        {
+          /* draw within the inside box */
+          w = box->BxW;
+          h = box->BxH;
+        }
 
       /* xBox and yBox get the box size if picture is */
       /* rescaled and receives the position of the picture */
       if (pres != ReScale || Printing)
-	{
-	  xBox = 0;
-	  yBox = 0;
-	}
+        {
+          xBox = 0;
+          yBox = 0;
+        }
       else
-	{
-	  if (box->BxW != 0)
-	    xBox = w;
-	  if(box->BxH != 0)
-	    yBox = h;
-	}
+        {
+          if (box->BxW != 0)
+            xBox = w;
+          if(box->BxH != 0)
+            yBox = h;
+        }
 
       if (w == 0 || h == 0)
-	{
-	  /* one of box size is unknown, keep the image size */
-	  if (w == 0)
-	    w = wBox = PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
-	  if (h == 0)
-	    h = hBox = PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
-	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
-	}
+        {
+          /* one of box size is unknown, keep the image size */
+          if (w == 0)
+            w = wBox = PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
+          if (h == 0)
+            h = hBox = PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
+          ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
+          imageDesc->PicWArea = w;
+          imageDesc->PicHArea = h;
+        }
 
       if (pres != ReScale || Printing)
-	{
-	  imageDesc->PicWArea = wBox;
-	  imageDesc->PicHArea = hBox;
-	}
+        {
+          imageDesc->PicWArea = wBox;
+          imageDesc->PicHArea = hBox;
+        }
       else
-	{
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
-	}
+        {
+          imageDesc->PicWArea = w;
+          imageDesc->PicHArea = h;
+        }
       /* Gif and Png handles transparency 
-	 so picture format is RGBA, 
-	 all others are RGB*/
+         so picture format is RGBA, 
+         all others are RGB*/
       if (typeImage != gif_type && typeImage != png_type)
-	imageDesc->RGBA = FALSE;
+        imageDesc->RGBA = FALSE;
       else
-	imageDesc->RGBA = TRUE;
+        imageDesc->RGBA = TRUE;
       /*
-	We succesfully get 
-	image from the cache so..
+        We succesfully get 
+        image from the cache so..
       */
       return;      
     }
@@ -2567,77 +2567,77 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       imageDesc->PicType = typeImage;
       pres = imageDesc->PicPresent;
       if (pres == DefaultPres)
-	{
-	  if (box->BxType == BoPicture)
-	    /* an image is rescaled */
-	    pres = ReScale;
-	  else
-	    /* a background image is repeated */
-	    pres = FillFrame;
-	}
+        {
+          if (box->BxType == BoPicture)
+            /* an image is rescaled */
+            pres = ReScale;
+          else
+            /* a background image is repeated */
+            pres = FillFrame;
+        }
       if (typeImage == xpm_type && pres == ReScale)
-	pres = imageDesc->PicPresent = RealSize;
+        pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
-	{
-	  /* a background image, draw over the whole box */
-	  w = box->BxWidth;
-	  h = box->BxHeight;
-	}
+        {
+          /* a background image, draw over the whole box */
+          w = box->BxWidth;
+          h = box->BxHeight;
+        }
       else
-	{
-	  w = box->BxW;
-	  h = box->BxH;
-	  /* draw within the inside box */
-	}
+        {
+          w = box->BxW;
+          h = box->BxH;
+          /* draw within the inside box */
+        }
       
       if (PictureHandlerTable[typeImage].Produce_Picture)
-	{
-	  /* xBox and yBox get the box size if picture is */
-	  /* rescaled and receives the position of the picture */
-	  if (pres != ReScale || Printing)
-	    {
-	      xBox = 0;
-	      yBox = 0;
-	    }
-	  else
-	    {
-	      if (box->BxW)
-		xBox = w;
-	      if(box->BxH)
-		yBox = h;
-	    }
-	  /* intrinsic width and height */
+        {
+          /* xBox and yBox get the box size if picture is */
+          /* rescaled and receives the position of the picture */
+          if (pres != ReScale || Printing)
+            {
+              xBox = 0;
+              yBox = 0;
+            }
+          else
+            {
+              if (box->BxW)
+                xBox = w;
+              if(box->BxH)
+                yBox = h;
+            }
+          /* intrinsic width and height */
 
-	  /* free the previous pixmap */
-	  TtaFreeMemory (imageDesc->PicPixmap);
-	  imageDesc->PicPixmap = NULL;
-	  imageDesc->PicPixmap = (ThotPixmap) 
-	    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			 (void *)fileName,
-			 (void *)imageDesc,
-			 (void *)&xBox,
-			 (void *)&yBox,
-			 (void *)&wBox,
-			 (void *)&hBox,
+          /* free the previous pixmap */
+          TtaFreeMemory (imageDesc->PicPixmap);
+          imageDesc->PicPixmap = NULL;
+          imageDesc->PicPixmap = (ThotPixmap) 
+            (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+                                                                 (void *)fileName,
+                                                                 (void *)imageDesc,
+                                                                 (void *)&xBox,
+                                                                 (void *)&yBox,
+                                                                 (void *)&wBox,
+                                                                 (void *)&hBox,
 #ifndef _WX		   
-			 (void *)Bgcolor,
+                                                                 (void *)Bgcolor,
 #else /* #ifdef _WX */
-			 (void *)&Bgcolor,
+                                                                 (void *)&Bgcolor,
 #endif /* #ifdef _WX */		   
-			 (void *)&width,
-			 (void *)&height,
-			 (void *)zoom);
-	  /* ratio doesn't apply to background images */
-	  if (w == 0 && h == 0 && zoom)
-	    {
-	      /* GL version doesn't take into account the zoom
-		 when returning image dimensions */
-	      w = PixelValue (width, UnPixel, NULL, zoom);
-	      h = PixelValue (height, UnPixel, NULL, zoom);
-	    }
-	  redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
-	}
+                                                                 (void *)&width,
+                                                                 (void *)&height,
+                                                                 (void *)zoom);
+          /* ratio doesn't apply to background images */
+          if (w == 0 && h == 0 && zoom)
+            {
+              /* GL version doesn't take into account the zoom
+                 when returning image dimensions */
+              w = PixelValue (width, UnPixel, NULL, zoom);
+              h = PixelValue (height, UnPixel, NULL, zoom);
+            }
+          redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
+        }
     }
 
   /* Picture didn't load (corrupted, don't exists...)
@@ -2645,8 +2645,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   if (imageDesc->PicPixmap == None && !glIsTexture (imageDesc->TextureBind))
     {
       if (PictureLogo == None)
-	/* create a special logo for lost pictures */
-	CreateGifLogo ();
+        /* create a special logo for lost pictures */
+        CreateGifLogo ();
       imageDesc->PicFileName = (char *)TtaGetMemory (strlen(LostPicturePath)+1);
       strcpy (imageDesc->PicFileName,TtaStrdup (LostPicturePath));
       imageDesc->PicType = 3;
@@ -2662,24 +2662,24 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     {
       /* one of box size is unknown, keep the image size */
       if (w == 0)
-	w = wBox = imageDesc->PicWidth;
+        w = wBox = imageDesc->PicWidth;
       if (h == 0)
-	h = hBox = imageDesc->PicHeight;
+        h = hBox = imageDesc->PicHeight;
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }
 
   if (imageDesc->PicWArea == 0 || imageDesc->PicHArea == 0)
     {
       if (pres != ReScale || Printing)
-	{
-	  imageDesc->PicWArea = wBox;
-	  imageDesc->PicHArea = hBox;
-	}
+        {
+          imageDesc->PicWArea = wBox;
+          imageDesc->PicHArea = hBox;
+        }
       else
-	{
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
-	}
+        {
+          imageDesc->PicWArea = w;
+          imageDesc->PicHArea = h;
+        }
     }
   /* Gif and Png handles transparency 
      so picture format is RGBA, 
@@ -2695,7 +2695,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 #ifdef WITH_CACHE
   /* desactive the cache of images */
   if (strcmp (imageDesc->PicFileName, LostPicturePath) == 0 ||
-	      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
+      strcasecmp ("AmayaSrcSyncIndex.gif", imageDesc->PicFileName) == 0)
     AddInPicCache (imageDesc, frame, TRUE); 
   else
     AddInPicCache (imageDesc, frame, FALSE);
@@ -2715,7 +2715,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 }
 #else /* _GL */
 /*----------------------------------------------------------------------
-   Requests the picture handlers to get the corresponding pixmaps    
+  Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
 void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 {
@@ -2781,17 +2781,17 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       pres = RealSize;
 #if defined (_GTK) || defined (_WINGUI)
       if (PictureLogo == None)
-	/* create a special logo for lost pictures */
-	CreateGifLogo ();
+        /* create a special logo for lost pictures */
+        CreateGifLogo ();
 #endif 
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
-	{
-	  /* load the device context into TtDisplay */
-	  WIN_GetDeviceContext (frame);
-	  releaseDC = TRUE;
-	}
+        {
+          /* load the device context into TtDisplay */
+          WIN_GetDeviceContext (frame);
+          releaseDC = TRUE;
+        }
 #else /* _WIN_PRINT */
       imageDesc->PicType = 3;
       imageDesc->PicHeight = 40;
@@ -2816,164 +2816,164 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       imageDesc->PicType = typeImage;
       pres = imageDesc->PicPresent;
       if (pres == DefaultPres)
-	{
-	  if (box->BxType == BoPicture)
-	    /* an image is rescaled */
-	    pres = ReScale;
-	  else
-	    /* a background image is repeated */
-	    pres = FillFrame;
-	}
+        {
+          if (box->BxType == BoPicture)
+            /* an image is rescaled */
+            pres = ReScale;
+          else
+            /* a background image is repeated */
+            pres = FillFrame;
+        }
       if (typeImage == xpm_type && pres == ReScale)
-	pres = imageDesc->PicPresent = RealSize;
+        pres = imageDesc->PicPresent = RealSize;
       /* picture dimension */
       if (pAb->AbLeafType == LtCompound)
-	{
-	  if (pres == ReScale)
-	  {
-	    /* a background image, draw over the whole box */
-	    w = box->BxWidth;
-	    h = box->BxHeight;
-	  }
-	}
+        {
+          if (pres == ReScale)
+            {
+              /* a background image, draw over the whole box */
+              w = box->BxWidth;
+              h = box->BxHeight;
+            }
+        }
       else
-	{
-	  /* draw within the inside box */
-	  w = box->BxW;
-	  h = box->BxH;
-	}
+        {
+          /* draw within the inside box */
+          w = box->BxW;
+          h = box->BxH;
+        }
 
       /* xBox and yBox get the box size if picture is */
       /* rescaled and receives the position of the picture */
       if (pres != ReScale || Printing)
-	{
-	  xBox = 0;
-	  yBox = 0;
-	}
+        {
+          xBox = 0;
+          yBox = 0;
+        }
       else
-	{
-	  if (box->BxW)
-	    xBox = w;
-	  if(box->BxH)
-	    yBox = h;
-	}
+        {
+          if (box->BxW)
+            xBox = w;
+          if(box->BxH)
+            yBox = h;
+        }
 
 #ifdef _WINGUI
       drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)fileName,
-			(void *)imageDesc,
-			(void *)&xBox,
-			(void *)&yBox,
-			(void *)&wBox,
-			(void *)&hBox,
-			(void *)Bgcolor,
-			(void *)&width,
-			(void *)&height,
-			(void *)ViewFrameTable[frame - 1].FrMagnification);
+                                                                 (void *)fileName,
+                                                                 (void *)imageDesc,
+                                                                 (void *)&xBox,
+                                                                 (void *)&yBox,
+                                                                 (void *)&wBox,
+                                                                 (void *)&hBox,
+                                                                 (void *)Bgcolor,
+                                                                 (void *)&width,
+                                                                 (void *)&height,
+                                                                 (void *)ViewFrameTable[frame - 1].FrMagnification);
 #endif /* _WINGUI */
 #ifdef _GTK
       if (typeImage == eps_type)
-	drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)fileName,
-			(void *)imageDesc,
-			(void *)&xBox,
-			(void *)&yBox,
-			(void *)&wBox,
-			(void *)&hBox,
-			(void *)Bgcolor,
-			(void *)&width,
-			(void *)&height,
-			(void *)ViewFrameTable[frame - 1].FrMagnification);
+        drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+                                                                                (void *)fileName,
+                                                                                (void *)imageDesc,
+                                                                                (void *)&xBox,
+                                                                                (void *)&yBox,
+                                                                                (void *)&wBox,
+                                                                                (void *)&hBox,
+                                                                                (void *)Bgcolor,
+                                                                                (void *)&width,
+                                                                                (void *)&height,
+                                                                                (void *)ViewFrameTable[frame - 1].FrMagnification);
       else
-	{
-	  /* load the picture using ImLib */
-	  im = gdk_imlib_load_image (fileName);
-	  if (im)
-	    {
-	      if (pres == RealSize)
-		{
-		  /* if it's a background, dont rescale the picture */
-		  wBox = im->rgb_width;
-		  hBox = im->rgb_height;
-		}
-	      else
-		{
-		  if (wBox == 0)
-		    wBox = im->rgb_width;
-		  if (hBox == 0)
-		    hBox = im->rgb_height;
-		}
-	      /* if only one info interpolate 
-		 the other with a correct ratio*/
-	      if (xBox == 0)
-		xBox = im->rgb_width;
-	      if (yBox == 0)
-		yBox = im->rgb_height;
+        {
+          /* load the picture using ImLib */
+          im = gdk_imlib_load_image (fileName);
+          if (im)
+            {
+              if (pres == RealSize)
+                {
+                  /* if it's a background, dont rescale the picture */
+                  wBox = im->rgb_width;
+                  hBox = im->rgb_height;
+                }
+              else
+                {
+                  if (wBox == 0)
+                    wBox = im->rgb_width;
+                  if (hBox == 0)
+                    hBox = im->rgb_height;
+                }
+              /* if only one info interpolate 
+                 the other with a correct ratio*/
+              if (xBox == 0)
+                xBox = im->rgb_width;
+              if (yBox == 0)
+                yBox = im->rgb_height;
 	      
-	      gdk_imlib_render (im, (gint) xBox, (gint) yBox);
-	      drw = (ThotPixmap) gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
-	    }
-	}
+              gdk_imlib_render (im, (gint) xBox, (gint) yBox);
+              drw = (ThotPixmap) gdk_imlib_move_image (im);
+              imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
+            }
+        }
       width = (gint) wBox;
       height = (gint) hBox;
 #endif /* _GTK */
       redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
        
       if (drw == NULL)
-	{
+        {
 #if defined (_GTK) || defined (_WINGUI)
-	  if (PictureLogo == None)
-	    /* create a special logo for lost pictures */
-	    CreateGifLogo ();
+          if (PictureLogo == None)
+            /* create a special logo for lost pictures */
+            CreateGifLogo ();
 #endif 
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
-	  if (TtDisplay == NULL)
-	    {
-	      /* load the device context into TtDisplay */
-	      WIN_GetDeviceContext (frame);
-	      releaseDC = TRUE;
-	    }
+          if (TtDisplay == NULL)
+            {
+              /* load the device context into TtDisplay */
+              WIN_GetDeviceContext (frame);
+              releaseDC = TRUE;
+            }
 #else /* _WIN_PRINT */
-	  imageDesc->PicType = 3;
-	  imageDesc->PicPresent = pres;
-	  drw = PictureLogo;
+          imageDesc->PicType = 3;
+          imageDesc->PicPresent = pres;
+          drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
 #ifdef _GTK 
-	  imageDesc->PicType = 3;
-	  imageDesc->PicPresent = pres;
-	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
-	  drw = (ThotPixmap) PictureLogo;
+          imageDesc->PicType = 3;
+          imageDesc->PicPresent = pres;
+          imageDesc->PicFileName = TtaStrdup (LostPicturePath);
+          drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/   
-	  wBox = w = 40;
-	  hBox = h = 40;
-	}
+          wBox = w = 40;
+          hBox = h = 40;
+        }
       else if (w == 0 || h == 0) 
-	{
-	  /* one of box size is unknown, keep the image size */
-	  if (w == 0)
-	    w = wBox =  PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
-	  if (h == 0)
-	    h = hBox =  PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
-	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
-	}
+        {
+          /* one of box size is unknown, keep the image size */
+          if (w == 0)
+            w = wBox =  PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
+          if (h == 0)
+            h = hBox =  PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
+          ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
+        }
     }
 
   if (imageDesc->PicWArea == 0 || imageDesc->PicHArea == 0)
     {
       /* need to initialize these values */
       if (pres != ReScale || Printing)
-	{
-	  imageDesc->PicWArea = wBox;
-	  imageDesc->PicHArea = hBox;
-	}
+        {
+          imageDesc->PicWArea = wBox;
+          imageDesc->PicHArea = hBox;
+        }
       else
-	{
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
-	}
+        {
+          imageDesc->PicWArea = w;
+          imageDesc->PicHArea = h;
+        }
     }
   if (drw)
     imageDesc->PicPixmap = drw;
@@ -2998,42 +2998,42 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 
 
 /*----------------------------------------------------------------------
-   GetPictureType returns the type of the image based on the index 
-   in the GUI form.                                        
+  GetPictureType returns the type of the image based on the index 
+  in the GUI form.                                        
   ----------------------------------------------------------------------*/
 int GetPictureType (int index)
 {
-   if (index == 0)
-      return unknown_type;
-   else
-      /* based on the function GetPictureHandlersList */
-      return PictureIdType[index];
+  if (index == 0)
+    return unknown_type;
+  else
+    /* based on the function GetPictureHandlersList */
+    return PictureIdType[index];
 
 }
 
 /*----------------------------------------------------------------------
-   GetPictTypeIndex returns the menu type index of the picture.    
-   		If the type is unkown we return 0.                      
+  GetPictTypeIndex returns the menu type index of the picture.    
+  If the type is unkown we return 0.                      
   ----------------------------------------------------------------------*/
 int GetPictTypeIndex (int picType)
 {
-   int                 i = 0;
+  int                 i = 0;
 
-   /* based on the function GetPictureHandlersList */
-   if (picType == unknown_type)
-      return 0;
+  /* based on the function GetPictureHandlersList */
+  if (picType == unknown_type)
+    return 0;
 
-   while (i <= HandlersCounter)
-     {
-	if (PictureIdType[i] == picType)
-	   return i;
-	i++;
-     }
-   return 0;
+  while (i <= HandlersCounter)
+    {
+      if (PictureIdType[i] == picType)
+        return i;
+      i++;
+    }
+  return 0;
 }
 /*----------------------------------------------------------------------
-   GetPictPresIndex returns the index of of the presentation.      
-   	If the presentation is unknown we return RealSize.      
+  GetPictPresIndex returns the index of of the presentation.      
+  If the presentation is unknown we return RealSize.      
   ----------------------------------------------------------------------*/
 int GetPictPresIndex (PictureScaling picPresent)
 {
@@ -3057,16 +3057,16 @@ int GetPictPresIndex (PictureScaling picPresent)
 }
 
 /*----------------------------------------------------------------------
-   LittleXBigEndian allows conversion between big and little endian  
+  LittleXBigEndian allows conversion between big and little endian  
   ----------------------------------------------------------------------*/
 void LittleXBigEndian (unsigned char *b, long n)
 {
-   do
-     {
-	*b = MirrorBytes[*b];
-	b++;
-     }
-   while (--n > 0);
+  do
+    {
+      *b = MirrorBytes[*b];
+      b++;
+    }
+  while (--n > 0);
 }
 
 
@@ -3116,27 +3116,27 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 #endif /* _GTK */
   
 #ifdef _WINGUI
-    GetClientRect (FrRef[frame], &rect);
-    widthb = rect.right;
-    heightb = rect.bottom;
-    SurfDC = GetDC (FrRef[frame]);
-    pixel = TtaGetMemory (heightb * widthb * 4);
-    memset (pixel, 255, sizeof (heightb * widthb * 4));
-    for (y = heightb; y > 0; y--)
-      for (x = 0; x < widthb; x++)
-	{
-	  RGBcolor = GetPixel(SurfDC, x - rect.left, y -rect.top);
-	  pixel [i++] = GetRValue (RGBcolor);
-	  pixel [i++] = GetGValue (RGBcolor);
-	  pixel [i++] = GetBValue (RGBcolor);
-	  i++; /*opacity*/
-	}
-    screenshot = pixel;
-    SavePng (pngurl,
-	     screenshot,
-	     (unsigned int) widthb,
-	     (unsigned int) heightb);
-    return screenshot;
+  GetClientRect (FrRef[frame], &rect);
+  widthb = rect.right;
+  heightb = rect.bottom;
+  SurfDC = GetDC (FrRef[frame]);
+  pixel = TtaGetMemory (heightb * widthb * 4);
+  memset (pixel, 255, sizeof (heightb * widthb * 4));
+  for (y = heightb; y > 0; y--)
+    for (x = 0; x < widthb; x++)
+      {
+        RGBcolor = GetPixel(SurfDC, x - rect.left, y -rect.top);
+        pixel [i++] = GetRValue (RGBcolor);
+        pixel [i++] = GetGValue (RGBcolor);
+        pixel [i++] = GetBValue (RGBcolor);
+        i++; /*opacity*/
+      }
+  screenshot = pixel;
+  SavePng (pngurl,
+           screenshot,
+           (unsigned int) widthb,
+           (unsigned int) heightb);
+  return screenshot;
     
 #endif /* _WINGUI */
   return NULL;
