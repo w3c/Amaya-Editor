@@ -595,6 +595,6 @@ ThotBool IsTemplateInstance (Document doc)
   
   return found;
 #else /* TEMPLATES */
-  return false;
+  return FALSE;
 #endif /* TEMPLATES */
 }

@@ -1356,16 +1356,18 @@ ThotBool AcceptTab (NotifyOnTarget *event)
  -----------------------------------------------------------------------*/
 void NextLinkOrFormElement (Document doc, View view)
 {
-  ElementType         elType, elType1, elType2;
-  Element             root, child, next, startEl, el, el2;
+  ElementType         elType;
+  Element             root, child, next, startEl, el;
   Attribute           attr;
   AttributeType       attrType1, attrType2;
   SSchema             schema;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
-  
 #ifdef TEMPLATES
+  ElementType         elType1, elType2;
+  Element             el2;
+
   if (!DocumentMeta[doc]->template_version)
     {
 #endif /* TEMPLATES */    
@@ -1465,8 +1467,8 @@ void NextLinkOrFormElement (Document doc, View view)
             TtaSearchAttributes (attrType1, attrType2, SearchForward, el, &el, &attr);
         }
   
-    }
 #ifdef TEMPLATES
+    }
   else
     {
       /* The document is a template's instance
@@ -1534,14 +1536,18 @@ void NextLinkOrFormElement (Document doc, View view)
  -----------------------------------------------------------------------*/
 void PreviousLinkOrFormElement (Document doc, View view)
 {
-  ElementType         elType, elType1, elType2;
-  Element             root, child, next, startEl, el, el2;
+  ElementType         elType;
+  Element             root, child, next, startEl, el;
   Attribute           attr;
   AttributeType       attrType1, attrType2;
   SSchema             schema;
   ThotBool            found, cycle;
   int                 i;
   int                 firstChar, lastChar;
+#ifdef TEMPLATES
+  ElementType         elType1, elType2;
+  Element             el2;
+#endif /* TEMPLATES */    
 
   schema = TtaGetSSchema ("HTML", doc);
   attrType1.AttrTypeNum = HTML_ATTR_NAME;
