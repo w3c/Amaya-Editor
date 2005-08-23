@@ -2239,6 +2239,11 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
    if (pParent == NULL || pSibling == NULL)
      return;
 
+   /* We do nothing if the parent or the sibling elements are read-only */
+
+   if (TtaIsReadOnly((Element) pParent) || TtaIsReadOnly((Element) pSibling))
+     return;
+
    /* determine the current selection */
    firstChar = 0;  lastChar= 0;
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
