@@ -1249,7 +1249,7 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINGUI */
 #endif /*_GL*/
   unsigned char      *buffer = NULL;
-  unsigned char      *buffer2 = NULL;
+  unsigned char      *data = NULL;
   int                 w, h;
   int                 i;
   int                 ncolors, cpp;
@@ -1287,10 +1287,10 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 	  *xif = i * *xif;
 	  *yif = i * *yif;
 	}
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+      data = ZoomPicture (buffer, w , h, *xif, *yif, 1);
       TtaFreeMemory (buffer);
-      buffer = buffer2;
-      buffer2 = NULL;
+      buffer = data;
+      data = NULL;
       w = *xif;
       h = *yif;
     }
@@ -1312,12 +1312,13 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
     }
   ptr = cols;
   y = h;
+  data = buffer;
   while (y--)
     {
-      buffer2 = buffer + y * w;
+    data = buffer+ y * w;
       for (x = 0; x < w; x++)
 	{		
-	  i = *buffer2++;
+	  i = *data++;
 	  if (GifTransparent == i)
 	    {
 	      *ptr++ = (unsigned char)colrs[i].red;

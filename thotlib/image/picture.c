@@ -363,7 +363,7 @@ static int ceil_pow2_minus_1(unsigned int x)
 {
   unsigned int i;
   
-  for (i=1; i; i <<= 1)
+  for (i = 1; i < 5; i++/*i <<= 1*/)
     x |= x >> i;
   return x;
 }
@@ -404,10 +404,10 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
       /* In this algo, just remember that a 
          RGB pixel value is a list of 3 value in source data
          and 4 for destination RGBA texture */
-      data = TtaGetMemory (sizeof (unsigned char) * nbpixel);
+      data = (unsigned char *)TtaGetMemory (sizeof (unsigned char) * nbpixel);
       /* Black transparent filling */
       memset (data, 0, sizeof (unsigned char) * nbpixel);
-      ptr1 = img->PicPixmap;
+      ptr1 = (unsigned char *) img->PicPixmap;
       ptr2 = data;
       nbpixel = ((img->RGBA)?4:3);
       xdiff = (GL_w - img->PicWidth) * nbpixel;
@@ -421,7 +421,7 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
           ptr2 += x + xdiff;
         }
       FreePixmap (img->PicPixmap);
-      img->PicPixmap = data;
+      img->PicPixmap = (ThotPixmap) data;
     }
 }
 #endif /* POWER2TEXSUBIMAGE */
@@ -433,9 +433,9 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
   ----------------------------------------------------------------------*/
 static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 {
-  int           p2_w, p2_h;
+  unsigned int  p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
-  GLint		Mode;
+  GLint		      Mode;
   
   /* Put texture in 3d card memory */
   if (!glIsTexture (img->TextureBind) &&
@@ -2653,8 +2653,11 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       imageDesc->PicPresent = RealSize;
       imageDesc->PicPixmap = PictureLogo;
       typeImage = gif_type;
-      wBox = w = 40;
-      hBox = h = 40;
+      w = 40;
+      wBox = 40;
+      
+      h = 40;
+      hBox = 40;
       imageDesc->PicWidth = w;
       imageDesc->PicHeight = h;
     }
@@ -2662,9 +2665,15 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
     {
       /* one of box size is unknown, keep the image size */
       if (w == 0)
-        w = wBox = imageDesc->PicWidth;
+        {
+        wBox = imageDesc->PicWidth;
+        w = wBox;
+      }
       if (h == 0)
-        h = hBox = imageDesc->PicHeight;
+        {
+        hBox = imageDesc->PicHeight;
+        h = hBox;
+      }
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }
 
