@@ -110,21 +110,21 @@ Except =	 ExceptType ':' ExValList .
 ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
 ExValList =	 ExceptVal < ',' ExceptVal > .
 ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
-                 'NoHMove' / 'NoVMove' / 'NoMove' /
+     'NoHMove' / 'NoVMove' / 'NoMove' /
 		 'NoHResize' / 'NoVResize' / 'NoResize' /
-                 'MoveResize' /
+     'MoveResize' /
 		 'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
 		 'NewHPos' / 'NewVPos' /
-                 'Invisible' / 'Hidden' /
-	         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
-	         'PageBreakRepetition' / 'PageBreakRepBefore' /
-                 'NoPaginate' / 'NoSpellCheck' /
+     'Invisible' / 'Hidden' /
+	   'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+	   'PageBreakRepetition' / 'PageBreakRepBefore' /
+     'NoPaginate' / 'NoSpellCheck' /
 		 'ActiveRef' /  'NoSelect' /
-                 'HighlightChildren' / 'ExtendedSelection' /
-                 'SelectParent' / 'ClickableSurface' /
+     'HighlightChildren' / 'ExtendedSelection' /
+     'SelectParent' / 'ClickableSurface' /
 		 'ParagraphBreak' / 'IsBreak' /
 		 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
-                 'ImportLine' / 'ImportParagraph' /
+     'ImportLine' / 'ImportParagraph' /
 		 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
 		 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
 		 'ColRef' / 'ColSpan' / 'RowSpan' /
@@ -132,7 +132,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'NoShowBox' / 'SetWindowBackground' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
-                 'MarkupPreserve' /
+     'MarkupPreserve' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

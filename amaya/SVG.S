@@ -2471,38 +2471,38 @@ STRUCT
 EXCEPT
 
    { exceptions for elements }
-   SVG:                 IsDraw, MoveResize, NoMove;
-   g:                   NoMove, NoResize, HighlightChildren, NoShowBox,
-                        NoCreate, IsGroup;
-   defs:                NoMove, NoResize, NoShowBox, NoCreate;
-   linearGradient:      NoMove, NoResize, NoShowBox, NoCreate;
+   SVG:           IsDraw, MoveResize, NoMove;
+   g:             NoMove, NoResize, HighlightChildren, NoShowBox,
+                  NoCreate, IsGroup;
+   defs:          NoMove, NoResize, NoShowBox, NoCreate;
+   linearGradient:NoMove, NoResize, NoShowBox, NoCreate;
    stop:	        NoMove, NoResize, NoShowBox, NoCreate;
-   rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   circle_:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   rect:          MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   circle_:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   ellipse:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   line_:         MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   polyline:      MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   polygon:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
    path:	        MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
+   text_:         MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
 	                NoCreate;
    tspan:	        NoShowBox; 
    use_:	        NoMove, NoResize, HighlightChildren, NoShowBox,
 	                NoCreate, IsGroup, EmptyGraphic;
    tref:	        EmptyGraphic;
    image:	        MoveResize, HighlightChildren, NoShowBox, EmptyGraphic;
-   symbol_:	        NoMove, NoResize,  HighlightChildren,NoShowBox,
-                        NoCreate;
-   a:	                NoMove, NoResize, HighlightChildren, NoShowBox,
-                        NoCreate;
-   script_:	        NoMove, NoResize, NoShowBox, NoCreate;
-   style__:             NoMove, NoResize, NoShowBox, NoCreate;
-   switch:              NoMove, NoResize, NoShowBox, NoCreate, HighlightChildren;
-   foreignObject:       MoveResize, HighlightChildren, NoCreate;
-   SVG_Image:           Hidden, SelectParent;
-   GRAPHICS:	        SelectParent;
-   PICTURE:             NoMove, NoResize, SelectParent;
-   TEXT:                NoMove, NoResize;
+   symbol_:	      NoMove, NoResize,  HighlightChildren,NoShowBox,
+                  NoCreate;
+   a:	            NoMove, NoResize, HighlightChildren, NoShowBox,
+                  NoCreate, ClickableSurface;
+   script_:	      NoMove, NoResize, NoShowBox, NoCreate;
+   style__:       NoMove, NoResize, NoShowBox, NoCreate;
+   switch:        NoMove, NoResize, NoShowBox, NoCreate, HighlightChildren;
+   foreignObject: MoveResize, HighlightChildren, NoCreate;
+   SVG_Image:     Hidden, SelectParent;
+   GRAPHICS:	    SelectParent;
+   PICTURE:       NoMove, NoResize, SelectParent;
+   TEXT:          NoMove, NoResize;
    Unknown_namespace:   NoCreate;
    DOCTYPE:             NoCut, NoSpellCheck;
    DOCTYPE_line:        Hidden, NoCut;
@@ -2510,50 +2510,50 @@ EXCEPT
    XMLPI_line:          Hidden, MarkupPreserve;
    CDATA_line:          Hidden, MarkupPreserve;
    XMLPI:	        ReturnCreateNL, NoSpellCheck, NoReplicate;
-   XMLcomment:	        ReturnCreateNL, NoReplicate;
+   XMLcomment:	  ReturnCreateNL, NoReplicate;
 
    { exceptions for attributes }
-   id:                  CssId; {Default id attribute}
-   class:               CssClass;
-   PseudoClass:	        Invisible, CssPseudoClass;
-   Unknown_attribute:   Invisible;
+   id:                CssId; {Default id attribute}
+   class:             CssClass;
+   PseudoClass:	      Invisible, CssPseudoClass;
+   Unknown_attribute: Invisible;
    Highlight:	        Invisible; 
-   Ghost_restruct:      Invisible;
+   Ghost_restruct:    Invisible;
    Namespace:	        Invisible;
    RealLang:	        Invisible;
-   Charset:	        Invisible;
-   Timeline_cross:      MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
+   Charset:	          Invisible;
+   Timeline_cross:    MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
    { the following attributes are made invisible to prevent the Attributes
      menu from becoming too long }
-   xml_base:		Invisible;
+   xml_base:		      Invisible;
    requiredFeatures:	Invisible;
-   requiredExtensions:	Invisible;
-   baseProfile:		Invisible;
+   requiredExtensions:Invisible;
+   baseProfile:		    Invisible;
    externalResourcesRequired:	Invisible;
    color_interpolation:	Invisible;
-   color_rendering:	Invisible;
+   color_rendering:	  Invisible;
    enable_background:	Invisible;
-   flood_color:		Invisible;
-   flood_opacity:	Invisible;
-   fill_rule:		Invisible;
+   flood_color:		    Invisible;
+   flood_opacity:	    Invisible;
+   fill_rule:		      Invisible;
    stroke_dasharray:	Invisible;
    stroke_dashoffset:	Invisible;
-   stroke_linecap:	Invisible;
-   stroke_linejoin:	Invisible;
+   stroke_linecap:	  Invisible;
+   stroke_linejoin:	  Invisible;
    stroke_miterlimit:	Invisible;
    color_interpolation_filters:	Invisible;
    font_size_adjust:	Invisible;
-   font_stretch:	Invisible;
-   font_variant:	Invisible;
-   stop_color:		Invisible;
-   stop_opacity:	Invisible;
-   clip_path:		Invisible;
-   clip_rule:		Invisible;
-   cursor_:		Invisible;
-   display_:		Invisible;
-   filter_:		Invisible;
-   image_rendering:	Invisible;
-   mask_:		Invisible;
+   font_stretch:	    Invisible;
+   font_variant:	    Invisible;
+   stop_color:		    Invisible;
+   stop_opacity:	    Invisible;
+   clip_path:		      Invisible;
+   clip_rule:		      Invisible;
+   cursor_:		        Invisible;
+   display_:		      Invisible;
+   filter_:		        Invisible;
+   image_rendering:	  Invisible;
+   mask_:		        Invisible;
    pointer_events:	Invisible;
    shape_rendering:	Invisible;
    text_rendering:	Invisible;

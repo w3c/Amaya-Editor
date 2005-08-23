@@ -9,8 +9,8 @@
 extern ThotBool TypeHasException ( int exceptNum,
                                    int typeNum,
                                    PtrSSchema pSS );
-extern PtrElement SearchTypeExcept ( PtrElement pElToCut,
-                                     PtrElement StopElem,
+extern PtrElement SearchTypeExcept ( PtrElement root,
+                                     PtrElement stopEl,
                                      int TypeExcept,
                                      ThotBool Restrict );
 extern ThotBool AttrHasException ( int exceptNum,
@@ -28,8 +28,8 @@ extern int GetElemWithException ( int exceptNum,
 extern ThotBool TypeHasException ( int exceptNum,
                                      int typeNum,
                                      PtrSSchema pSS );
-extern PtrElement SearchTypeExcept ( PtrElement pElToCut,
-                                       PtrElement StopElem,
+extern PtrElement SearchTypeExcept ( PtrElement root,
+                                       PtrElement stopEl,
                                        int TypeExcept,
                                        ThotBool Restrict );
 extern ThotBool AttrHasException ( int exceptNum,

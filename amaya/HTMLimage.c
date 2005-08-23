@@ -530,7 +530,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
   int attrNum	: the attribut identifier
   int value	: the attribut value
   ----------------------------------------------------------------------*/
-static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
+void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
 {
   AttributeType attrType;
   Attribute	attr;
@@ -1059,375 +1059,369 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
       if (update)
         {
 #else /*_BASE64*/
-          if (imageName && strncasecmp (imageName, "data:", 5) != 0)
-            {
-              update = TRUE;    
+      if (imageName && strncasecmp (imageName, "data:", 5) != 0)
+        {
+          update = TRUE;    
 #endif /*_BASE64*/
-              /* add BASE to image name, if necessary */
-              NormalizeURL (imageName, doc, pathname, imageName, NULL);
-              /* if it's not a remote URL, make any necessary file: conversions */
-              if (!IsW3Path (pathname))
-                {
-                  NormalizeFile (pathname, tempfile, AM_CONV_ALL);
-                  strcpy (pathname, tempfile);
-                  tempfile[0] = EOS;
-                }
-              /* is the image already loaded ? */
-              newImage = AddLoadedImage (imageName, pathname, doc, &desc);
-              if (newImage)
-                {
-                  /* the current element has to be updated when the image 
-                     will be loaded */
-                  ctxEl = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
-                  desc->elImage = ctxEl;
-                  ctxEl->currentElement = el;
-                  ctxEl->nextElement = NULL;
-                  ctxEl->callback = callback;
-                  ctxEl->extra = extra;
-                  update = FALSE;	/* the image is not loaded yet */
-                  /* store the context before downloading the images */
-                  FetchImage_ctx = (FetchImage_context*)TtaGetMemory (sizeof (FetchImage_context));
-                  FetchImage_ctx->desc = desc;
-                  FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
+          /* add BASE to image name, if necessary */
+          NormalizeURL (imageName, doc, pathname, imageName, NULL);
+          /* if it's not a remote URL, make any necessary file: conversions */
+          if (!IsW3Path (pathname))
+            {
+              NormalizeFile (pathname, tempfile, AM_CONV_ALL);
+              strcpy (pathname, tempfile);
+              tempfile[0] = EOS;
+            }
+          /* is the image already loaded ? */
+          newImage = AddLoadedImage (imageName, pathname, doc, &desc);
+          if (newImage)
+            {
+              /* the current element has to be updated when the image 
+                 will be loaded */
+              ctxEl = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+              desc->elImage = ctxEl;
+              ctxEl->currentElement = el;
+              ctxEl->nextElement = NULL;
+              ctxEl->callback = callback;
+              ctxEl->extra = extra;
+              update = FALSE;	/* the image is not loaded yet */
+              /* store the context before downloading the images */
+              FetchImage_ctx = (FetchImage_context*)TtaGetMemory (sizeof (FetchImage_context));
+              FetchImage_ctx->desc = desc;
+              FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
+              
+              UpdateTransfer(doc);
+              if (flags & AMAYA_MBOOK_IMAGE)
+                newflags = flags | AMAYA_SYNC;
+              else
+                newflags = flags | AMAYA_ASYNC;
 	      
-                  UpdateTransfer(doc);
-                  if (flags & AMAYA_MBOOK_IMAGE)
-                    newflags = flags | AMAYA_SYNC;
-                  else
-                    newflags = flags | AMAYA_ASYNC;
-	      
-                  /* Convert uri into utf8 */
-                  utf8pathname = (char *)TtaConvertByteToMbs ((unsigned char *)pathname,
-                                                              TtaGetDefaultCharset ());
-                  i = GetObjectWWW (doc, doc, utf8pathname, NULL, tempfile,
-                                    newflags, NULL, NULL,
-                                    (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
-                                    (void *) FetchImage_ctx, NO, NULL);
-                  if (i != -1) 
-                    desc->status = IMAGE_LOADED;
-                  else
-                    {
-                      update = TRUE;
-                      desc->status = IMAGE_NOT_LOADED;
-                    }
-                  TtaFreeMemory (utf8pathname);
-                }
-	  
-              /* display the image within the document */
-              if (update)
+              /* Convert uri into utf8 */
+              utf8pathname = (char *)TtaConvertByteToMbs ((unsigned char *)pathname,
+                                                          TtaGetDefaultCharset ());
+              i = GetObjectWWW (doc, doc, utf8pathname, NULL, tempfile,
+                                newflags, NULL, NULL,
+                                (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
+                                (void *) FetchImage_ctx, NO, NULL);
+              if (i != -1) 
+                desc->status = IMAGE_LOADED;
+              else
                 {
-                  if (desc == NULL)
+                  update = TRUE;
+                  desc->status = IMAGE_NOT_LOADED;
+                }
+              TtaFreeMemory (utf8pathname);
+            }
+          
+          /* display the image within the document */
+          if (update)
+            {
+              if (desc == NULL)
+                {
+                  /* it is a local image */
+                  if (callback)
                     {
-                      /* it is a local image */
-                      if (callback)
-                        {
-                          if (!strncmp (pathname, "file:/", 6))
-                            callback (doc, el, &pathname[6], extra, TRUE);
-                          else
-                            callback (doc, el, &pathname[0], extra, TRUE);
-                        }
+                      if (!strncmp (pathname, "file:/", 6))
+                        callback (doc, el, &pathname[6], extra, TRUE);
                       else
-                        DisplayImage (doc, el, NULL, pathname, NULL);
-                    }
-                  else if (desc->tempfile && TtaFileExist (desc->tempfile))
-                    {
-                      /* remote image, but already here */
-                      if (callback)
-                        callback (doc, el, desc->tempfile, extra, FALSE);
-                      else
-                        DisplayImage (doc, el, desc, NULL, desc->content_type);
+                        callback (doc, el, &pathname[0], extra, TRUE);
                     }
                   else
+                    DisplayImage (doc, el, NULL, pathname, NULL);
+                }
+              else if (desc->tempfile && TtaFileExist (desc->tempfile))
+                {
+                  /* remote image, but already here */
+                  if (callback)
+                    callback (doc, el, desc->tempfile, extra, FALSE);
+                  else
+                    DisplayImage (doc, el, desc, NULL, desc->content_type);
+                }
+              else
+                {
+                  /* chain this new element as waiting for this image */
+                  ctxEl = desc->elImage;
+                  if (ctxEl && ctxEl->currentElement != el)
                     {
-                      /* chain this new element as waiting for this image */
-                      ctxEl = desc->elImage;
-                      if (ctxEl && ctxEl->currentElement != el)
-                        {
-                          /* concerned elements are different */
-                          while (ctxEl->nextElement != NULL)
-                            ctxEl = ctxEl->nextElement;
-                          ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
-                          ctxEl = ctxEl->nextElement;
-                          ctxEl->callback = callback;
-                          ctxEl->extra = extra;
-                          ctxEl->currentElement = el;
-                          ctxEl->nextElement = NULL;
-                        }
-                      else if (callback)
-                        TtaFreeMemory (extra);
+                      /* concerned elements are different */
+                      while (ctxEl->nextElement != NULL)
+                        ctxEl = ctxEl->nextElement;
+                      ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+                      ctxEl = ctxEl->nextElement;
+                      ctxEl->callback = callback;
+                      ctxEl->extra = extra;
+                      ctxEl->currentElement = el;
+                      ctxEl->nextElement = NULL;
                     }
+                  else if (callback)
+                    TtaFreeMemory (extra);
                 }
             }
-          else if (callback)
-            TtaFreeMemory (extra);
-          if (attr && imageName)
-            TtaFreeMemory (imageName);
         }
+      else if (callback)
+        TtaFreeMemory (extra);
+      if (attr && imageName)
+        TtaFreeMemory (imageName);
+    }
+  TtaHandlePendingEvents ();
+}
+
+/*----------------------------------------------------------------------
+  FetchImages fetches images linked by attrType1 or attrType2 attributes.  
+  The flags may indicate extra transfer parameters, for example bypassing
+  the cache.
+  elSubTree indicates we are parsing an external image or object.
+  Returns TRUE if the the transfer succeeds without being stopped;
+  Otherwise, returns FALSE.
+  ----------------------------------------------------------------------*/
+static void FetchImages (Document doc, int flags, Element elSubTree,
+                         char *currentURL,
+                         AttributeType attrType1, AttributeType attrType2,
+                         ThotBool loadImages, ThotBool loadObjects)
+{
+  Attribute           attr, attrFound;
+  Element             el, elFound, pic, elNext;
+  Element             parent;
+  ElementType         elType, parentType;
+  char               *name;
+  char               *imageURI, *utf8value;
+  int                 length;
+
+  /* Start from the root element */
+  if (elSubTree == NULL)
+    {
+      el = TtaGetMainRoot (doc);
+      TtaSearchAttributes (attrType1,attrType2, SearchForward,
+                           el, &elFound, &attrFound);
+    }
+  else
+    TtaSearchAttributes (attrType1,attrType2, SearchInTree,
+                         elSubTree, &elFound, &attrFound);
+  el = elFound;
+  attr = attrFound;
+  do
+    {
       TtaHandlePendingEvents ();
-    }
-
-  /*----------------------------------------------------------------------
-    FetchAndDisplayImages   fetch and display all images referred   
-    by document doc. The flags may indicate extra transfer parameters,
-    for example bypassing the cache.
-    elSubTree indicates we ara paring an external SVG image
-    Returns TRUE if the the transfer succeeds without being stopped;
-    Otherwise, returns FALSE.
-    ----------------------------------------------------------------------*/
-  ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
-    {
-      AttributeType       attrType, attrType1, attrType2;
-      Attribute           attr, attrFound;
-      ElementType         elType;
-      Element             el, elFound, pic, elNext;
-      char               *currentURL, *imageURI, *utf8value;
-      int                 length;
-      ThotBool            stopped_flag, loadImages, loadObjects;
-      ElementType         parentType;
-      Element             parent;
-
-      TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
-      TtaGetEnvBoolean ("LOAD_OBJECTS", &loadObjects);
-
-      if (!loadObjects)
-        ChangeAttrOnRoot (doc, HTML_ATTR_NoObjects);
-
-      if (!loadImages)
-        ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
-    
-      /* JK: verify if StopTransfer was previously called */
+      /* verify if StopTransfer was called */
+      if (DocumentURLs[doc] == NULL ||
+          strcmp (currentURL, DocumentURLs[doc]))
+        /* the document has been removed */
+        break;
+          
       if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+        break;
+          
+      /* FetchImage increments FilesLoading[doc] for
+         each new get request */
+      if (el)
         {
-          /* transfer interrupted */
-          TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
-          DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-          return FALSE;
-        }
-      else if (DocumentTypes[doc] == docText ||
-               DocumentTypes[doc] == docCSS)
-        return FALSE;
-
-      /* register the current URL */
-      currentURL = TtaStrdup (DocumentURLs[doc]);
-
-      /* We are currently fetching images for this document */
-      /* during this time LoadImage has not to stop transfer */
-      /* prepare the attribute to be searched */
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-      if (attrType.AttrSSchema)
-        /* there are some HTML elements in this documents. 
-           Get all 'img' or 'object' or 'embed' elements */
-        {
-          /* search all elements having an attribute SRC */
-          attrType1.AttrSSchema = attrType.AttrSSchema;
-          attrType2.AttrSSchema = attrType.AttrSSchema;
-          attrType1.AttrTypeNum = HTML_ATTR_SRC;
-          attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
-          /* Start from the root element */
+          /* search the next element having an attribute SRC */
+          elNext = el;
           if (elSubTree == NULL)
-            {
-              el = TtaGetMainRoot (doc);
-              TtaSearchAttributes (attrType1,attrType2, SearchForward,
-                                   el, &elFound, &attr);
-            }
-          else
-            TtaSearchAttributes (attrType1,attrType2, SearchInTree,
-                                 elSubTree, &elFound, &attr);
-          el = elFound;
-          do
-            {
-              TtaHandlePendingEvents ();
-              /* verify if StopTransfer was called */
-              if (DocumentURLs[doc] == NULL ||
-                  strcmp (currentURL, DocumentURLs[doc]))
-                /* the document has been removed */
-                break;
-	  
-              if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-                break;
-
-              /* FetchImage increments FilesLoading[doc] for
-                 each new get request */
-              if (el != NULL)
+            TtaSearchAttributes (attrType1, attrType2,
+                                 SearchForward, elNext, &elFound, &attrFound);
+          if (elSubTree && elFound && !TtaIsAncestor (elFound, elSubTree))
+            elFound = NULL;
+              
+          /* Load only wanted elements (images, objects) :
+           * this could be changed into preferences menu (browsing) */
+          elType = TtaGetElementType (el);
+          name = TtaGetSSchemaName (elType.ElSSchema);
+          parent = TtaGetParent (el);
+          parentType = TtaGetElementType (parent);
+         if (!strcmp(name, "SVG"))
+           {
+#ifdef _SVG
+              if (elType.ElTypeNum == SVG_EL_a)
+                pic = NULL;
+              else if (elType.ElTypeNum == SVG_EL_use_ ||
+                       elType.ElTypeNum == SVG_EL_tref)
+                pic = el;
+              else
                 {
-                  /* search the next element having an attribute SRC */
-                  elNext = el;
-                  if (elSubTree == NULL)
-                    TtaSearchAttributes (attrType1, attrType2,
-                                         SearchForward, elNext, &elFound, &attr);
-                  if (elSubTree != NULL && elFound != NULL &&
-                      !TtaIsAncestor (elFound, elSubTree))
-                    elFound = NULL;
-
-                  /* Load only wanted elements (images, objects) :
-                   * this could be changed into preferences menu (browsing) */
-                  elType     = TtaGetElementType (el);
-                  parent     = TtaGetParent (el);
-                  parentType = TtaGetElementType (parent);
-                  if (parentType.ElTypeNum == HTML_EL_Object ||
-                      parentType.ElTypeNum == HTML_EL_Embed_)
-                    {
-                      /* this element is an OBJECT or an EMBED */
-                      if (loadObjects)
-                        FetchImage (doc, el, NULL, flags, NULL, NULL);
-                    }
-                  else if (elType.ElTypeNum == HTML_EL_IFRAME)
-                    {
-                      if (loadObjects)
-                        FetchImage (doc, el, NULL, flags, NULL, NULL);		  
-                    }
-                  else
-                    {
-                      /* this element is an IMAGE */
-                      if (loadImages)
-                        FetchImage (doc, el, NULL, flags, NULL, NULL);
-                    }
-	      
-                  el = elFound;
+                  elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+                  pic = TtaSearchTypedElement (elType, SearchInTree, el);
                 }
-            }
-          while (el);
-        }
-
-      /* Now, load all SVG images */
-      /* prepare the attribute to be searched */
-      attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
-      if (attrType.AttrSSchema)
-        {
-          attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-          /* Search the next element having an attribute xlink_href */
-          /* Start from the root element */
-          if (elSubTree == NULL)
-            {
-              el = TtaGetMainRoot (doc);
-              TtaSearchAttribute (attrType, SearchForward,
-                                  el, &elFound, &attrFound);
-            }
-          else
-            TtaSearchAttribute (attrType, SearchInTree,
-                                elSubTree, &elFound, &attrFound);
+             if (pic)
+                {
+                  /* get the attribute value */
+                  length = TtaGetTextAttributeLength (attr);
+                  if (length > 0)
+                    {
+                      /* allocate some memory */
+                      utf8value = (char *)TtaGetMemory (length + 7);
+                      TtaGiveTextAttributeValue (attr, utf8value, &length);
+                      imageURI = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
+                                                              TtaGetDefaultCharset ());
+                      TtaFreeMemory (utf8value);
+                      if (!( (imageURI[0] == '#')))
+                        /* don't handle internal links for a use element */
+                        FetchImage (doc, pic, imageURI, flags, NULL, NULL);
+                      TtaFreeMemory (imageURI);
+                    }
+                }
+#endif /* _SVG */
+           }
+         else
+           {
+             if (parentType.ElTypeNum == HTML_EL_Object ||
+                 parentType.ElTypeNum == HTML_EL_Embed_)
+               {
+                 /* this element is an OBJECT or an EMBED */
+                 if (loadObjects)
+                   {
+                     FetchImage (doc, el, NULL, flags, NULL, NULL);
+                     // Check included objects or images ???
+                   }
+               }
+             else if (elType.ElTypeNum == HTML_EL_IFRAME)
+               {
+                 if (loadObjects)
+                   FetchImage (doc, el, NULL, flags, NULL, NULL);		  
+               }
+             else
+               {
+                 /* this element is an IMAGE */
+                 if (loadImages)
+                   FetchImage (doc, el, NULL, flags, NULL, NULL);
+               }
+           }
+              
+          el = elFound;
           attr = attrFound;
-          el = elFound;
-          do
-            {
-              TtaHandlePendingEvents ();
-              /* verify if StopTransfer was called */
-              if (DocumentURLs[doc] == NULL ||
-                  strcmp (currentURL, DocumentURLs[doc]))
-                /* the document has been removed */
-                break;
-	  
-              if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-                break;
-	  
-              /* FetchImage increments FilesLoading[doc] for each new get request */
-              if (el != NULL)
-                {
-                  /* search the next element having an attribute xlink_href */
-                  TtaSearchAttribute (attrType, SearchForward,
-                                      el, &elFound, &attrFound);
-                  if (elSubTree != NULL && elFound != NULL &&
-                      !TtaIsAncestor (elFound, elSubTree))
-                    elFound = NULL;
-	      
-                  /* get the PICTURE_UNIT or use_ element within the image element */
-                  elType = TtaGetElementType (el);
-                  if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
-                      elType.ElTypeNum == SVG_EL_a)
-                    pic = NULL;
-                  else if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
-                           (elType.ElTypeNum == SVG_EL_use_ ||
-                            elType.ElTypeNum == SVG_EL_tref))
-                    pic = el;
-                  else
-                    {
-                      elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
-                      pic = TtaSearchTypedElement (elType, SearchInTree, el);
-                    }
-                  if (pic)
-                    {
-                      /* get the attribute value */
-                      length = TtaGetTextAttributeLength (attr);
-                      if (length > 0)
-                        {
-                          /* allocate some memory */
-                          utf8value = (char *)TtaGetMemory (length + 7);
-                          TtaGiveTextAttributeValue (attr, utf8value, &length);
-                          imageURI = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
-                                                                  TtaGetDefaultCharset ());
-                          TtaFreeMemory (utf8value);
-                          if (!( (imageURI[0] == '#')))
-                            /* don't handle internal links for a use element */
-                            FetchImage (doc, pic, imageURI, flags, NULL, NULL);
-                          TtaFreeMemory (imageURI);
-                        }
-                    }
-                  el = elFound;
-                  attr = attrFound;
-                }
-            }
-          while (el);
         }
-  
-      if (W3Loading != doc)
-        stopped_flag = FALSE;
-      else
-        stopped_flag = TRUE;
-  
-      /* Images fetching is now finished */
-      TtaFreeMemory (currentURL);
-  
-      return (stopped_flag);
     }
+  while (el);
+}
 
-  /*----------------------------------------------------------------------
-    SelectPicture
-    The user has clicked a PICTURE element. If it's the content of an
-    object element, select the object
-    -----------------------------------------------------------------------*/
-  ThotBool SelectPicture (NotifyElement *event)
+/*----------------------------------------------------------------------
+  FetchAndDisplayImages   fetch and display all images referred   
+  by document doc. The flags may indicate extra transfer parameters,
+  for example bypassing the cache.
+  elSubTree indicates we are parsing an external image or object
+  Returns TRUE if the the transfer succeeds without being stopped;
+  Otherwise, returns FALSE.
+  ----------------------------------------------------------------------*/
+ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
+{
+  AttributeType       attrType, attrType1, attrType2;
+  char               *currentURL;
+  int                 length;
+  ThotBool            stopped_flag, loadImages, loadObjects;
+
+  TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
+  TtaGetEnvBoolean ("LOAD_OBJECTS", &loadObjects);
+
+  if (!loadObjects)
+    ChangeAttrOnRoot (doc, HTML_ATTR_NoObjects);
+
+  if (!loadImages)
+    ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
+    
+  /* JK: verify if StopTransfer was previously called */
+  if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
     {
-      Element      parent;
-      ElementType  elType;
-
-      parent = TtaGetParent (event->element);
-      if (parent)
-        {
-          elType = TtaGetElementType (parent);
-          if (elType.ElTypeNum == HTML_EL_Object &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-            {
-              TtaSelectElement (event->document, parent);
-              return TRUE;  /* don't do anything else */
-            }
-        }
-      return FALSE; /* let Thot perform normal operation */
+      /* transfer interrupted */
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
+      DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+      return FALSE;
     }
+  else if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS)
+    return FALSE;
 
+  /* register the current URL */
+  currentURL = TtaStrdup (DocumentURLs[doc]);
 
-  /*----------------------------------------------------------------------
-    DeletePicture
-    The user wants to delete a PICTURE element. If it's the content of an
-    object element, cancel the operation
-    -----------------------------------------------------------------------*/
-  ThotBool DeletePicture (NotifyElement *event)
+  /* We are currently fetching images for this document */
+  /* during this time LoadImage has not to stop transfer */
+  /* prepare the attribute to be searched */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  if (attrType.AttrSSchema)
+    /* there are some HTML elements in this documents. 
+       Get all 'img' or 'object' or 'embed' elements */
     {
-      Element      parent, el;
-      ElementType  elType;
-      int          firstchar, lastchar;
-
-      parent = TtaGetParent (event->element);
-      if (parent)
-        {
-          elType = TtaGetElementType (parent);
-          if (elType.ElTypeNum == HTML_EL_Object &&
-              !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-            {
-              TtaGiveFirstSelectedElement (event->document, &el, &firstchar, &lastchar);
-              /* accept to delete the picture when the object itself is deleted */
-              if (el == event->element)
-                return TRUE;   /* don't delete this picture */
-            }
-        }
-      return FALSE; /* let Thot perform normal operation */
+      /* search all elements having an attribute SRC */
+      attrType1.AttrSSchema = attrType.AttrSSchema;
+      attrType2.AttrSSchema = attrType.AttrSSchema;
+      attrType1.AttrTypeNum = HTML_ATTR_SRC;
+      attrType2.AttrTypeNum = HTML_ATTR_FrameSrc;
+      FetchImages (doc, flags, elSubTree, currentURL,
+                   attrType1, attrType2, loadImages, loadObjects);
     }
+
+#ifdef _SVG
+  /* Now, load all SVG images */
+  /* prepare the attribute to be searched */
+  attrType.AttrSSchema = TtaGetSSchema ("SVG", doc);
+  if (attrType.AttrSSchema)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+      /* Search the next element having an attribute xlink_href */
+      /* Start from the root element */
+      FetchImages (doc, flags, elSubTree, currentURL,
+                   attrType, attrType, loadImages, loadObjects);
+    }
+#endif /* _SVG */
+
+  if (W3Loading != doc)
+    stopped_flag = FALSE;
+  else
+    stopped_flag = TRUE;
+  
+  /* Images fetching is now finished */
+  TtaFreeMemory (currentURL);
+  
+  return (stopped_flag);
+}
+
+ /*----------------------------------------------------------------------
+   SelectPicture
+   The user has clicked a PICTURE element. If it's the content of an
+   object element, select the object
+   -----------------------------------------------------------------------*/
+ ThotBool SelectPicture (NotifyElement *event)
+ {
+   Element      parent;
+   ElementType  elType;
+   
+   parent = TtaGetParent (event->element);
+   if (parent)
+     {
+       elType = TtaGetElementType (parent);
+       if (elType.ElTypeNum == HTML_EL_Object &&
+           !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+         {
+           TtaSelectElement (event->document, parent);
+           return TRUE;  /* don't do anything else */
+         }
+     }
+   return FALSE; /* let Thot perform normal operation */
+ }
+
+
+ /*----------------------------------------------------------------------
+   DeletePicture
+   The user wants to delete a PICTURE element. If it's the content of an
+   object element, cancel the operation
+   -----------------------------------------------------------------------*/
+ ThotBool DeletePicture (NotifyElement *event)
+ {
+   Element      parent, el;
+   ElementType  elType;
+   int          firstchar, lastchar;
+   
+   parent = TtaGetParent (event->element);
+   if (parent)
+     {
+       elType = TtaGetElementType (parent);
+       if (elType.ElTypeNum == HTML_EL_Object &&
+           !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+         {
+           TtaGiveFirstSelectedElement (event->document, &el, &firstchar, &lastchar);
+           /* accept to delete the picture when the object itself is deleted */
+           if (el == event->element)
+             return TRUE;   /* don't delete this picture */
+         }
+     }
+   return FALSE; /* let Thot perform normal operation */
+ }

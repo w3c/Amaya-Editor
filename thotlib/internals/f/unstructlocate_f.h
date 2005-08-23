@@ -14,6 +14,8 @@ extern int GetBoxDistance ( PtrBox pBox,
                             int yRef,
                             int ratio,
                             int frame );
+extern PtrAbstractBox GetParentWithException ( int exceptNum,
+                                               PtrAbstractBox pAb );
 extern void GetClickedBox ( PtrBox *result,
                             PtrFlow *pFlow,
                             PtrAbstractBox pRootAb,
@@ -33,6 +35,8 @@ extern int GetBoxDistance ( PtrBox pBox,
                               int yRef,
                               int ratio,
                               int frame );
+extern PtrAbstractBox GetParentWithException ( int exceptNum,
+                                                 PtrAbstractBox pAb );
 extern void GetClickedBox ( PtrBox *result,
                               PtrFlow *pFlow,
                               PtrAbstractBox pRootAb,

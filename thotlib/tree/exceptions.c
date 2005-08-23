@@ -26,65 +26,65 @@
 #include "structschema_f.h"
 
 /*----------------------------------------------------------------------
-   TypeHasException returns TRUE if the exception exceptNum is associated
-   to the element typeNum in the structure schema pSS.
+  TypeHasException returns TRUE if the exception exceptNum is associated
+  to the element typeNum in the structure schema pSS.
   ----------------------------------------------------------------------*/
 ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 {
-   ThotBool            ret;
-   int                 e;
-   PtrSRule            pSRule;
-   PtrSSchema          pExtSS;
+  ThotBool            ret;
+  int                 e;
+  PtrSRule            pSRule;
+  PtrSSchema          pExtSS;
 
-   ret = FALSE;
-   if (pSS != NULL && typeNum > 0)
-     {
-	pSRule = pSS->SsRule->SrElem[typeNum - 1];
-	if (pSRule->SrFirstExcept != 0)
-	   /* il y a des exceptions pour ce type d'element */
-	  {
-	     e = pSRule->SrFirstExcept;
-	     /* compare les exceptions de ce type d'element avec exceptNum */
-	     do
-		if (pSS->SsException[e - 1] == exceptNum)
-		   ret = TRUE;
-		else
-		   e++;
-	     while (!ret && e <= pSRule->SrLastExcept);
-	  }
-	if (!ret)
-	   /* on n'a pas trouve', on cherche dans les extensions du schema */
-	  {
-	     /* passe a la premiere extension du schema */
-	     pExtSS = pSS->SsNextExtens;
-	     /* on examine les extensions successives tant qu'on n'a pas trouve' */
-	     while (pExtSS != NULL && !ret)
-	       {
-		  /* cherche la regle d'extension du type d'element traite' */
-		  pSRule = ExtensionRule (pSS, typeNum, pExtSS);
-		  if (pSRule != NULL)
-		     /* examine les exceptions de cette regle d'extension */
-		     if (pSRule->SrFirstExcept != 0)
-		       {
-			  e = pSRule->SrFirstExcept;
-			  do
-			     if (pExtSS->SsException[e - 1] == exceptNum)
-				ret = TRUE;
-			     else
-				e++;
-			  while (!ret && e <= pSRule->SrLastExcept);
-		       }
-		  /* passe a l'extension de schema suivante */
-		  pExtSS = pExtSS->SsNextExtens;
-	       }
-	  }
-     }
-   return ret;
+  ret = FALSE;
+  if (pSS != NULL && typeNum > 0)
+    {
+      pSRule = pSS->SsRule->SrElem[typeNum - 1];
+      if (pSRule->SrFirstExcept != 0)
+        /* il y a des exceptions pour ce type d'element */
+        {
+          e = pSRule->SrFirstExcept;
+          /* compare les exceptions de ce type d'element avec exceptNum */
+          do
+            if (pSS->SsException[e - 1] == exceptNum)
+              ret = TRUE;
+            else
+              e++;
+          while (!ret && e <= pSRule->SrLastExcept);
+        }
+      if (!ret)
+        /* on n'a pas trouve', on cherche dans les extensions du schema */
+        {
+          /* passe a la premiere extension du schema */
+          pExtSS = pSS->SsNextExtens;
+          /* on examine les extensions successives tant qu'on n'a pas trouve' */
+          while (pExtSS != NULL && !ret)
+            {
+              /* cherche la regle d'extension du type d'element traite' */
+              pSRule = ExtensionRule (pSS, typeNum, pExtSS);
+              if (pSRule != NULL)
+                /* examine les exceptions de cette regle d'extension */
+                if (pSRule->SrFirstExcept != 0)
+                  {
+                    e = pSRule->SrFirstExcept;
+                    do
+                      if (pExtSS->SsException[e - 1] == exceptNum)
+                        ret = TRUE;
+                      else
+                        e++;
+                    while (!ret && e <= pSRule->SrLastExcept);
+                  }
+              /* passe a l'extension de schema suivante */
+              pExtSS = pExtSS->SsNextExtens;
+            }
+        }
+    }
+  return ret;
 }
 
 
 /*----------------------------------------------------------------------
-  SearchTypeExcept looks in the element pElToCut for an element with:
+  SearchTypeExcept looks in the element root for an element with:
   - exception TypeExcept
   - same schema
   - not a copy
@@ -92,78 +92,78 @@ ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
   - exception PageBreak
   - natures
   - copies
-  Stop the research on element StopElem if Restrict = TRUE
+  Stop the research on element stopEl if Restrict = TRUE
   Returns the pointer to the found element trouve or NULL.
   ----------------------------------------------------------------------*/
-PtrElement SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem,
-			     int TypeExcept, ThotBool Restrict)
+PtrElement SearchTypeExcept (PtrElement root, PtrElement stopEl,
+                             int TypeExcept, ThotBool Restrict)
 {
   PtrElement          pE, Repetition;
 
   Repetition = NULL;
-  if (pElToCut != NULL && !pElToCut->ElTerminal)
+  if (root != NULL && !root->ElTerminal)
     {
-      for (pE = pElToCut->ElFirstChild; pE != NULL; pE = pE->ElNext)
-	{
-	  if (Restrict && pE == StopElem)
-	    /* on arrete la recherche */
-	    break;
-	  else
-	    {
-	      if (pE->ElStructSchema == pElToCut->ElStructSchema &&
-		/* same schema and not a copy */
-		  pE->ElSource == NULL)
-		{
-		  if (TypeHasException (TypeExcept, pE->ElTypeNumber
-					, pE->ElStructSchema))
-		    /* exception ok */
-		    {
-		      Repetition = pE;
-		      /* c'est donc le bon */
-		      break;
-		    }
-		  else
-		    /* recursion */ 
-		    if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber,
-					   pE->ElStructSchema))
-		      SearchTypeExcept (pE, StopElem, TypeExcept, Restrict);
-		}
-	    }
-	}
+      for (pE = root->ElFirstChild; pE != NULL; pE = pE->ElNext)
+        {
+          if (Restrict && pE == stopEl)
+            /* on arrete la recherche */
+            break;
+          else
+            {
+              if (pE->ElStructSchema == root->ElStructSchema &&
+                  /* same schema and not a copy */
+                  pE->ElSource == NULL)
+                {
+                  if (TypeHasException (TypeExcept, pE->ElTypeNumber
+                                        , pE->ElStructSchema))
+                    /* exception ok */
+                    {
+                      Repetition = pE;
+                      /* c'est donc le bon */
+                      break;
+                    }
+                  else
+                    /* recursion */ 
+                    if (!TypeHasException (ExcPageBreak, pE->ElTypeNumber,
+                                           pE->ElStructSchema))
+                      SearchTypeExcept (pE, stopEl, TypeExcept, Restrict);
+                }
+            }
+        }
     }
   return Repetition;
 }
 
 
 /*----------------------------------------------------------------------
-   AttrHasException returns TRUE if the exception exceptNum is associated
-   to the attribute attr in the structure schema pSS.
+  AttrHasException returns TRUE if the exception exceptNum is associated
+  to the attribute attr in the structure schema pSS.
   ----------------------------------------------------------------------*/
 ThotBool AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 {
-   ThotBool            ret;
-   int                 e;
-   PtrTtAttribute         pAtt;
+  ThotBool            ret;
+  int                 e;
+  PtrTtAttribute         pAtt;
 
-   ret = FALSE;
-   if (pSS != NULL)
-     {
-	pAtt = pSS->SsAttribute->TtAttr[attr - 1];
-	if (pAtt->AttrFirstExcept != 0)
-	   /* il y a des exceptions pour cet attribut */
-	  {
-	     e = pAtt->AttrFirstExcept;
-	     /* compare les exceptions de cet attribut avec exceptNum */
-	     do
-		if (pSS->SsException[e - 1] == exceptNum)
-		   ret = TRUE;	/* trouve' */
-		else
-		   e++;
-	     /* exception suivante pour ce type d'element */
-	     while (!ret && e <= pAtt->AttrLastExcept);
-	  }
-     }
-   return ret;
+  ret = FALSE;
+  if (pSS != NULL)
+    {
+      pAtt = pSS->SsAttribute->TtAttr[attr - 1];
+      if (pAtt->AttrFirstExcept != 0)
+        /* il y a des exceptions pour cet attribut */
+        {
+          e = pAtt->AttrFirstExcept;
+          /* compare les exceptions de cet attribut avec exceptNum */
+          do
+            if (pSS->SsException[e - 1] == exceptNum)
+              ret = TRUE;	/* trouve' */
+            else
+              e++;
+          /* exception suivante pour ce type d'element */
+          while (!ret && e <= pAtt->AttrLastExcept);
+        }
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -179,10 +179,10 @@ PtrAttribute GetAttrElementWithException (int exceptNum, PtrElement pEl)
     {
       pAttr = pEl->ElFirstAttr;
       while (pAttr)
-	if (AttrHasException (exceptNum, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-	  return pAttr;
-	else
-	  pAttr = pAttr->AeNext;
+        if (AttrHasException (exceptNum, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+          return pAttr;
+        else
+          pAttr = pAttr->AeNext;
     }
   return NULL;
 }
@@ -194,20 +194,20 @@ PtrAttribute GetAttrElementWithException (int exceptNum, PtrElement pEl)
   ----------------------------------------------------------------------*/
 int GetAttrWithException (int exceptNum, PtrSSchema pSS)
 {
-   int                 attr, ret;
+  int                 attr, ret;
 
-   ret = 0;
-   attr = 0;
-   /* examine successivement tous les attributs definis dans le schema */
-   if (pSS != NULL && exceptNum > 0)
-      while (ret == 0 && attr < pSS->SsNAttributes)
-	{
-	   attr++;
-	   if (AttrHasException (exceptNum, attr, pSS))
-	      /* on a trouve' l'attribut cherche' */
-	      ret = attr;
-	}
-   return ret;
+  ret = 0;
+  attr = 0;
+  /* examine successivement tous les attributs definis dans le schema */
+  if (pSS != NULL && exceptNum > 0)
+    while (ret == 0 && attr < pSS->SsNAttributes)
+      {
+        attr++;
+        if (AttrHasException (exceptNum, attr, pSS))
+          /* on a trouve' l'attribut cherche' */
+          ret = attr;
+      }
+  return ret;
 }
 
 
@@ -218,17 +218,17 @@ int GetAttrWithException (int exceptNum, PtrSSchema pSS)
   ----------------------------------------------------------------------*/
 int GetElemWithException (int exceptNum, PtrSSchema pSS)
 {
-   int                 typ, ret;
+  int                 typ, ret;
 
-   ret = 0;
-   typ = 0;
-   /* examine successivement tous les types d'element definis dans le schema */
-   while (ret == 0 && typ < pSS->SsNRules)
-     {
-	typ++;
-	if (TypeHasException (exceptNum, typ, pSS))
-	   /* on a trouve' le type d'element cherche' */
-	   ret = typ;
-     }
-   return ret;
+  ret = 0;
+  typ = 0;
+  /* examine successivement tous les types d'element definis dans le schema */
+  while (ret == 0 && typ < pSS->SsNRules)
+    {
+      typ++;
+      if (TypeHasException (exceptNum, typ, pSS))
+        /* on a trouve' le type d'element cherche' */
+        ret = typ;
+    }
+  return ret;
 }
