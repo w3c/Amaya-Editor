@@ -406,7 +406,7 @@ void LockFixedAreas (Document doc, Element el)
           (elType.ElTypeNum == Template_EL_FREE_STRUCT))
         {
           /* The element has a free structure */
-          UnlockSubtree (doc, el);
+          UnlockSubtree (doc, TtaGetFirstChild(el));
         }
       else if ((strcmp (s,"Template") == 0) &&
                (elType.ElTypeNum == Template_EL_FREE_CONTENT))

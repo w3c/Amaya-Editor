@@ -1517,13 +1517,13 @@ void NextLinkOrFormElement (Document doc, View view)
         }
       if (el != NULL)
         {
-          /* el must contain the first free_struct or free_content element */
-          elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-          el = TtaSearchTypedElement (elType,SearchInTree,el);
+          /* el should contain the first free_struct or free_content element */
+          el = TtaGetLastLeaf (el);
           if (el != NULL)
             {
-              TtaSelectElement (doc, el);
+              firstChar = TtaGetTextLength(el) + 1;
+              TtaSelectString (doc, el, firstChar, 0 /* To just put the selector at position firstChar */);
+
             }
         }
     }
@@ -1684,6 +1684,7 @@ void PreviousLinkOrFormElement (Document doc, View view)
       /* The document is a template's instance
        * The tab key is used to go to the next
        * editable field */
+      found = false;
       schema = TtaGetSSchema ("Template", doc);
       elType1.ElSSchema = schema;
       elType1.ElTypeNum = Template_EL_FREE_STRUCT;
@@ -1692,11 +1693,32 @@ void PreviousLinkOrFormElement (Document doc, View view)
       
       root = TtaGetRootElement (doc);
       TtaGiveFirstSelectedElement (doc, &startEl, &firstChar, &lastChar);
+      el = TtaGetParent(startEl);
+      
+      while (!found && (el != NULL))
+        {
+          elType = TtaGetElementType(el);
+          if ((elType1.ElSSchema == elType.ElSSchema 
+               && elType1.ElTypeNum == elType.ElTypeNum) 
+              || (elType2.ElSSchema == elType.ElSSchema
+                  && elType.ElTypeNum == elType2.ElTypeNum))
+            {
+              found = true;
+            }
+          else
+            {
+              el = TtaGetParent(el);
+            }
+        }
+
+      if (el!=NULL)
+        startEl = el;
+      
       /* don't manage this element */
       if (startEl == NULL)
         {
           /* start from the root element */
-          startEl = TtaGetLastChild(root);
+          startEl = root;
           /* we don't accept to restart from the beginning */
           cycle = TRUE;
         }
@@ -1705,28 +1727,21 @@ void PreviousLinkOrFormElement (Document doc, View view)
       
       el = TtaSearchTypedElement (elType1, SearchBackward, startEl);
       el2 = TtaSearchTypedElement (elType2, SearchBackward, startEl);
-
+      
       if (el == NULL)
         {
           el = el2;
-          if ((el == NULL && !cycle) || el == startEl)
+          if (el == NULL && !cycle)
             {
               /* There was no other element - Search from the beginning*/
-              el = TtaSearchTypedElement (elType1, SearchBackward, TtaGetLastChild(root));
-              el2 = TtaSearchTypedElement (elType2, SearchBackward, TtaGetLastChild(root));
+              el = TtaSearchTypedElementInTree (elType1, SearchBackward, root, TtaGetLastLeaf(root));
+              el2 = TtaSearchTypedElementInTree (elType2, SearchBackward, root, TtaGetLastLeaf(root));
               if (el == NULL)
                 el = el2;
             }
 
         }
-      if (el == startEl)
-        {
-          /* There was no other element - Search from the beginning*/
-          el = TtaSearchTypedElement (elType1, SearchBackward, TtaGetLastChild(root));
-          el2 = TtaSearchTypedElement (elType2, SearchBackward, TtaGetLastChild(root));
-          if (el == NULL)
-            el = el2;
-        }
+
       if (el != NULL && el2 != NULL)
         {
           if(TtaIsBefore (el, el2))
@@ -1737,12 +1752,11 @@ void PreviousLinkOrFormElement (Document doc, View view)
       if (el != NULL)
         {
           /* el must contain the first free_struct or free_content element */
-          elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-          el = TtaSearchTypedElement (elType,SearchInTree,el);
+          el = TtaGetLastLeaf (el);
           if (el != NULL)
             {
-              TtaSelectElement (doc, el);
+              firstChar = TtaGetTextLength(el) + 1;
+              TtaSelectString (doc, el, firstChar, 0 /* To just put the selector at position firstChar */);
             }
         }
     }
