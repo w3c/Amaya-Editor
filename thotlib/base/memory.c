@@ -964,22 +964,25 @@ void GetAbstractBox (PtrAbstractBox *pAb)
   ----------------------------------------------------------------------*/
 void FreeAbstractBox (PtrAbstractBox pAb)
 {
+  ThotPictInfo *image;
 
   if (pAb->AbLeafType == LtCompound)
     {
       if (pAb->AbPictBackground)
         {
-          if (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName[0] != EOS)
-            TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
-          CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
+          image = (ThotPictInfo *)pAb->AbPictBackground;
+          if (image->PicFileName && image->PicFileName[0] != EOS)
+            TtaFreeMemory (image->PicFileName);
+          CleanPictInfo (image);
           TtaFreeMemory (pAb->AbPictBackground);
           pAb->AbPictBackground = NULL;
         }
       if (pAb->AbPictListStyle)
         {
-          if (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName[0] != EOS)
-            TtaFreeMemory (((ThotPictInfo *)pAb->AbPictListStyle)->PicFileName);
-          CleanPictInfo ((ThotPictInfo *)pAb->AbPictListStyle);
+          image = (ThotPictInfo *)pAb->AbPictListStyle;
+          if (image->PicFileName && image->PicFileName[0] != EOS)
+            TtaFreeMemory (image->PicFileName);
+          CleanPictInfo (image);
           TtaFreeMemory (pAb->AbPictListStyle);
           pAb->AbPictListStyle = NULL;
         }
