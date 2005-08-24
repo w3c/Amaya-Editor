@@ -989,7 +989,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
   char                pathname[MAX_LENGTH];
   char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
-  ThotBool            update;
+  ThotBool            update, ret;
   ThotBool            newImage;
   FetchImage_context *FetchImage_ctx;
 
@@ -1000,6 +1000,7 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
   FetchImage_ctx = NULL;
 
   update = FALSE;
+  ret = TRUE;
   if (el || extra)
     {
       if (imageURI == NULL)
@@ -1134,7 +1135,9 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                 {
                   /* remote image, but already here */
                   if (callback)
-                    callback (doc, el, desc->tempfile, extra, FALSE);
+                    {
+                      callback (doc, el, desc->tempfile, extra, FALSE);
+                    }
                   else
                     DisplayImage (doc, el, desc, NULL, desc->content_type);
                 }
@@ -1155,17 +1158,26 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                       ctxEl->nextElement = NULL;
                     }
                   else if (callback)
-                    TtaFreeMemory (extra);
+                    {
+                      /* an element is already connected */
+                      TtaFreeMemory (extra);
+                      ret = FALSE;
+                    }
                 }
             }
         }
       else if (callback)
-        TtaFreeMemory (extra);
-      if (attr && imageName)
+        {
+          /* no callback connected */
+          TtaFreeMemory (extra);
+          ret = FALSE;
+        }
+
+          if (attr && imageName)
         TtaFreeMemory (imageName);
     }
   TtaHandlePendingEvents ();
-  return update;
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -1308,7 +1320,6 @@ static void FetchImages (Document doc, int flags, Element elSubTree,
 {
   AttributeType       attrType, attrType1, attrType2;
   char               *currentURL;
-  int                 length;
   ThotBool            stopped_flag, loadImages, loadObjects;
 
   TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
