@@ -34,12 +34,12 @@ extern void DisplayImage ( Document doc,
 extern void SetContainerImageName ( char *imagefile );
 extern char *GetActiveImageInfo ( Document document,
                                   Element element );
-extern void FetchImage ( Document doc,
-                         Element el,
-                         char *imageURI,
-                         int flags,
-                         LoadedImageCallback callback,
-                         void *extra );
+extern ThotBool FetchImage ( Document doc,
+                             Element el,
+                             char *imageURI,
+                             int flags,
+                             LoadedImageCallback callback,
+                             void *extra );
 extern ThotBool FetchAndDisplayImages ( Document doc,
                                         int flags,
                                         Element elSubTree );
@@ -76,12 +76,12 @@ extern void DisplayImage ( Document doc,
 extern void SetContainerImageName ( char *imagefile );
 extern char *GetActiveImageInfo ( Document document,
                                     Element element );
-extern void FetchImage ( Document doc,
-                           Element el,
-                           char *imageURI,
-                           int flags,
-                           LoadedImageCallback callback,
-                           void *extra );
+extern ThotBool FetchImage ( Document doc,
+                               Element el,
+                               char *imageURI,
+                               int flags,
+                               LoadedImageCallback callback,
+                               void *extra );
 extern ThotBool FetchAndDisplayImages ( Document doc,
                                           int flags,
                                           Element elSubTree );

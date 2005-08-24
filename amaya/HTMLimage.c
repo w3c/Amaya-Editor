@@ -974,9 +974,10 @@ char *GetActiveImageInfo (Document document, Element element)
   The flags may indicate extra transfer parameters, for example bypassing
   the cache.
   The imageURI is encoded with the default charset.
+  Return TRUE if an action is done.
   ----------------------------------------------------------------------*/
-void FetchImage (Document doc, Element el, char *imageURI, int flags,
-                 LoadedImageCallback callback, void *extra)
+ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
+                     LoadedImageCallback callback, void *extra)
 {
   ElemImage          *ctxEl;
   ElementType         elType;
@@ -998,6 +999,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
   attr = NULL;
   FetchImage_ctx = NULL;
 
+  update = FALSE;
   if (el || extra)
     {
       if (imageURI == NULL)
@@ -1044,7 +1046,6 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
       /* Don't treat the  xlink:href attributes 
          that begins with the string  'data:' */
 #ifdef _BASE64     
-      update = FALSE;
       if (imageName)
         {
           if (strncasecmp (imageName, "data:", 5) == 0)
@@ -1164,6 +1165,7 @@ void FetchImage (Document doc, Element el, char *imageURI, int flags,
         TtaFreeMemory (imageName);
     }
   TtaHandlePendingEvents ();
+  return update;
 }
 
 /*----------------------------------------------------------------------
