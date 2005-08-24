@@ -496,18 +496,17 @@ void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
   /* avoid to close the same view twice */
   if (Closing_doc == pDoc && Closing_view == view)
     return;
-  else if (Closing_doc == NULL && Closing_view == 0)
-    {
-      Closing_doc = pDoc;
-      Closing_view = view;
-    }
   if (pDoc)
     {
       /* check if the document already exist */
       FreeView (pDoc, view);
-      if (closeDoc && NumberOfOpenViews (pDoc) < 1)
-        /* the last view of the document is closed */
-        TCloseDocument (pDoc);
+      if (closeDoc && NumberOfOpenViews (pDoc) < 1 && Closing_doc != pDoc)
+        {
+          /* the last view of the document is closed */
+          Closing_doc = pDoc;
+          Closing_view = view;
+          TCloseDocument (pDoc);
+      }
     }
   if (Closing_doc == pDoc && Closing_view == view)
     {
