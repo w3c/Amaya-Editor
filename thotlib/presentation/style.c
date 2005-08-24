@@ -40,38 +40,38 @@
 #include "tree_f.h"
 
 struct unit_def CSSUnitNames[] =
-{
-   {"pt", UNIT_PT},
-   {"pc", UNIT_PC},
-   {"in", UNIT_IN},
-   {"cm", UNIT_CM},
-   {"mm", UNIT_MM},
-   {"em", UNIT_EM},
-   {"px", UNIT_PX},
-   {"ex", UNIT_XHEIGHT},
-   {"%", UNIT_PERCENT},
-   {NULL, 0}
-};
+  {
+    {"pt", UNIT_PT},
+    {"pc", UNIT_PC},
+    {"in", UNIT_IN},
+    {"cm", UNIT_CM},
+    {"mm", UNIT_MM},
+    {"em", UNIT_EM},
+    {"px", UNIT_PX},
+    {"ex", UNIT_XHEIGHT},
+    {"%", UNIT_PERCENT},
+    {NULL, 0}
+  };
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 unsigned int TtaHexaVal (char c)
 {
-   if (c >= '0' && c <= '9')
-      return (c - '0');
-   if (c >= 'a' && c <= 'f')
-      return (c - 'a' + 10);
-   if (c >= 'A' && c <= 'F')
-      return (c - 'A' + 10);
-   return (0);
+  if (c >= '0' && c <= '9')
+    return (c - '0');
+  if (c >= 'a' && c <= 'f')
+    return (c - 'a' + 10);
+  if (c >= 'A' && c <= 'F')
+    return (c - 'A' + 10);
+  return (0);
 }
 
 
 /*----------------------------------------------------------------------
   Getan Amaya color
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static ThotBool ThotGiveRGB (char *colname, unsigned short *red,
-			     unsigned short *green, unsigned short *blue)
+                             unsigned short *green, unsigned short *blue)
 {
   int                  i;
   ThotBool             failed = TRUE;
@@ -80,10 +80,10 @@ static ThotBool ThotGiveRGB (char *colname, unsigned short *red,
   for (i = 0; i < NColors && failed; i++)
     if (!strcasecmp (ColorName (i), colname))
       {
-	failed = FALSE;
-	*red   = RGB_Table[i].red;
-	*green = RGB_Table[i].green;
-	*blue  = RGB_Table[i].blue;
+        failed = FALSE;
+        *red   = RGB_Table[i].red;
+        *green = RGB_Table[i].green;
+        *blue  = RGB_Table[i].blue;
       }
   return (failed);
 }
@@ -92,9 +92,9 @@ static ThotBool ThotGiveRGB (char *colname, unsigned short *red,
   TtaGiveRGB
   Returns the RGB of the color and the pointer to the following text in
   value if the parsing was finished.
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
-		    unsigned short *blue)
+                  unsigned short *blue)
 {
   char              colname[100];
   char             *ptr, *sptr;
@@ -111,76 +111,76 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
     {
       /* we expect an hexa encoding like F0F or FF00FF */
       if (isxdigit (ptr[1]) && isxdigit (ptr[2]) && isxdigit (ptr[3]))
-	{
-	  if (!isxdigit (ptr[4]))
-	    {
-	      /* encoded on 3 digits #F0F  */
-	      *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
-	      *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
-	      *blue = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[3]);
-	      ptr = &ptr[4];
-	      failed = FALSE;
-	    }
-	  else if (isxdigit (ptr[5]) && isxdigit (ptr[6]))
-	    {
-	      /* encoded on 6 digits #FF00FF */
-	      *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[2]);
-	      *green = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[4]);
-	      *blue = TtaHexaVal (ptr[5]) * 16 + TtaHexaVal (ptr[6]);
-	      ptr = &ptr[7];
-	      failed = FALSE;
-	    }
-	}
+        {
+          if (!isxdigit (ptr[4]))
+            {
+              /* encoded on 3 digits #F0F  */
+              *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
+              *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
+              *blue = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[3]);
+              ptr = &ptr[4];
+              failed = FALSE;
+            }
+          else if (isxdigit (ptr[5]) && isxdigit (ptr[6]))
+            {
+              /* encoded on 6 digits #FF00FF */
+              *red = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[2]);
+              *green = TtaHexaVal (ptr[3]) * 16 + TtaHexaVal (ptr[4]);
+              *blue = TtaHexaVal (ptr[5]) * 16 + TtaHexaVal (ptr[6]);
+              ptr = &ptr[7];
+              failed = FALSE;
+            }
+        }
     }
   else if (!strncasecmp (ptr, "rgb", 3))
     {
       ptr = &ptr[3];
       ptr = TtaSkipBlanks (ptr);
       if (*ptr == '(')
-	{
-	  ptr++;
-	  ptr = TtaSkipBlanks (ptr);
-	  failed = FALSE;
-	  /* encoded as rgb(red, green, blue) or rgb(red%, green%, blue%) */
-	  sscanf (ptr, "%d", &r);
-	  while (*ptr != EOS && *ptr != ',' && *ptr != '%')
-	    ptr++;
-	  if (*ptr == '%')
-	    {
-	      *red = (unsigned short)(r * 255 / 100);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	    }
-	  else
-	    *red = (unsigned short)r;
-	  ptr++;
-	  sscanf (ptr, "%d", &g);
-	  while (*ptr != EOS && *ptr != ',' && *ptr != '%')
-	    ptr++;
-	  if (*ptr == '%')
-	    {
-	      *green = (unsigned short)(g * 255 / 100);
-	      while (*ptr != EOS && *ptr != ',')
-		ptr++;
-	    }
-	  else
-	    *green = (unsigned short)g;
-	  ptr++;
-	  sscanf (ptr, "%d", &b);
-	  while (*ptr != EOS && *ptr != ')' && *ptr != '%')
-	    ptr++;
-	  if (*ptr == '%')
-	    {
-	      *blue = (unsigned short)(b * 255 / 100);
-	      while (*ptr != EOS && *ptr != ')')
-		ptr++;
-	    }
-	  else
-	    *blue = (unsigned short)b;
-	  /* search the rgb end */
-	  if (*ptr == ')')
-	    ptr++;
-	}
+        {
+          ptr++;
+          ptr = TtaSkipBlanks (ptr);
+          failed = FALSE;
+          /* encoded as rgb(red, green, blue) or rgb(red%, green%, blue%) */
+          sscanf (ptr, "%d", &r);
+          while (*ptr != EOS && *ptr != ',' && *ptr != '%')
+            ptr++;
+          if (*ptr == '%')
+            {
+              *red = (unsigned short)(r * 255 / 100);
+              while (*ptr != EOS && *ptr != ',')
+                ptr++;
+            }
+          else
+            *red = (unsigned short)r;
+          ptr++;
+          sscanf (ptr, "%d", &g);
+          while (*ptr != EOS && *ptr != ',' && *ptr != '%')
+            ptr++;
+          if (*ptr == '%')
+            {
+              *green = (unsigned short)(g * 255 / 100);
+              while (*ptr != EOS && *ptr != ',')
+                ptr++;
+            }
+          else
+            *green = (unsigned short)g;
+          ptr++;
+          sscanf (ptr, "%d", &b);
+          while (*ptr != EOS && *ptr != ')' && *ptr != '%')
+            ptr++;
+          if (*ptr == '%')
+            {
+              *blue = (unsigned short)(b * 255 / 100);
+              while (*ptr != EOS && *ptr != ')')
+                ptr++;
+            }
+          else
+            *blue = (unsigned short)b;
+          /* search the rgb end */
+          if (*ptr == ')')
+            ptr++;
+        }
     }
   else if (isalpha (*ptr) || isxdigit (*ptr))
     {
@@ -188,52 +188,52 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
       len = (sizeof (colname) / sizeof (char)) - 1;
       sptr = ptr;
       for (i = 0; i < len && isalnum (*ptr); i++)
-	{
-	  colname[i] = *ptr;
-	  ptr++;
-	}
+        {
+          colname[i] = *ptr;
+          ptr++;
+        }
       colname[i] = EOS;
       
       /* Look for the color name in our own color name database */
       for (i = 0; i < (int)NBCOLORNAME && failed; i++)
-	if (!strcasecmp (ColornameTable[i].name, colname))
-	  {
-	    *red = ColornameTable[i].red;
-	    *green = ColornameTable[i].green;
-	    *blue = ColornameTable[i].blue;
-	    failed = FALSE;
-	  }
+        if (!strcasecmp (ColornameTable[i].name, colname))
+          {
+            *red = ColornameTable[i].red;
+            *green = ColornameTable[i].green;
+            *blue = ColornameTable[i].blue;
+            failed = FALSE;
+          }
       if (failed)
-	failed = ThotGiveRGB (colname, red, green, blue);
+        failed = ThotGiveRGB (colname, red, green, blue);
 #ifdef IV
       if (failed)
-	/* it may be a sequence of 3 or 6 hex. digits with a missing
+        /* it may be a sequence of 3 or 6 hex. digits with a missing
            leading '#' */
-	{
-	  ptr = sptr;
-	  if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
-	  /* we expect an hexa encoding like F0F or FF00FF */
-	    {
-	      if (!isxdigit (ptr[3]))
-		{
-		  /* encoded on 3 digits #F0F  */
-		  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[0]);
-		  *green = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
-		  *blue = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
-		  ptr = &ptr[3];
-		  failed = FALSE;
-		}
-	      else if (isxdigit (ptr[4]) && isxdigit (ptr[5]))
-		{
-		  /* encoded on 6 digits #FF00FF */
-		  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[1]);
-		  *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[3]);
-		  *blue = TtaHexaVal (ptr[4]) * 16 + TtaHexaVal (ptr[5]);
-		  ptr = &ptr[6];
-		  failed = FALSE;
-		}
-	    }
-	}
+        {
+          ptr = sptr;
+          if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
+            /* we expect an hexa encoding like F0F or FF00FF */
+            {
+              if (!isxdigit (ptr[3]))
+                {
+                  /* encoded on 3 digits #F0F  */
+                  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[0]);
+                  *green = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
+                  *blue = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
+                  ptr = &ptr[3];
+                  failed = FALSE;
+                }
+              else if (isxdigit (ptr[4]) && isxdigit (ptr[5]))
+                {
+                  /* encoded on 6 digits #FF00FF */
+                  *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[1]);
+                  *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[3]);
+                  *blue = TtaHexaVal (ptr[4]) * 16 + TtaHexaVal (ptr[5]);
+                  ptr = &ptr[6];
+                  failed = FALSE;
+                }
+            }
+        }
 #endif /* _IV */
     }
   if (failed)
@@ -264,23 +264,23 @@ static void PresBoxInsert (PtrPSchema tsch, GenericContext ctxt)
       size = tsch->PsNPresentBoxes + 10;
       i = size * sizeof (PtrPresentationBox);
       if (!tsch->PsPresentBox)
-	tsch->PsPresentBox = (PresBoxTable*) malloc (i);
+        tsch->PsPresentBox = (PresBoxTable*) malloc (i);
       else
-	tsch->PsPresentBox = (PresBoxTable*) realloc (tsch->PsPresentBox, i);
+        tsch->PsPresentBox = (PresBoxTable*) realloc (tsch->PsPresentBox, i);
       if (!tsch->PsPresentBox)
-	ctxt->box = 0;
+        ctxt->box = 0;
       else
-	{
-	  tsch->PsPresentBoxTableSize = size;
-	  for (i = tsch->PsNPresentBoxes; i < size; i++)
-	    tsch->PsPresentBox->PresBox[i] = NULL;
-	}
+        {
+          tsch->PsPresentBoxTableSize = size;
+          for (i = tsch->PsNPresentBoxes; i < size; i++)
+            tsch->PsPresentBox->PresBox[i] = NULL;
+        }
     }
   /* allocate and initialize the new presentation box */
   box = (PtrPresentationBox) malloc (sizeof (PresentationBox));
   if (box == NULL)
-      /* can't allocate a new box */
-      return;
+    /* can't allocate a new box */
+    return;
   tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes] = box;
   memset (box, 0, sizeof (PresentationBox));
   tsch->PsNPresentBoxes++;
@@ -303,35 +303,35 @@ static void PresBoxInsert (PtrPSchema tsch, GenericContext ctxt)
     {
       pSP = PresentationSchema (tsch->PsSSchema, LoadedDocument[ctxt->doc-1]);
       if (pSP)
-	{
-	  pPRule = pSP->PsFirstDefaultPRule;
-	  pPrevCopy = NULL;
-	  while (pPRule)
-	    {
-	      GetPresentRule (&pPRuleCopy);
-	      *pPRuleCopy = *pPRule;
+        {
+          pPRule = pSP->PsFirstDefaultPRule;
+          pPrevCopy = NULL;
+          while (pPRule)
+            {
+              GetPresentRule (&pPRuleCopy);
+              *pPRuleCopy = *pPRule;
 
-	      /* inheritance from the parent element in the default PSchema
-		 is changed into inheritance from the creating element */
-	      if (pPRuleCopy->PrPresMode == PresInherit)
-		if (pPRuleCopy->PrInheritMode == InheritParent)
-		  pPRuleCopy->PrInheritMode = InheritCreator;
+              /* inheritance from the parent element in the default PSchema
+                 is changed into inheritance from the creating element */
+              if (pPRuleCopy->PrPresMode == PresInherit)
+                if (pPRuleCopy->PrInheritMode == InheritParent)
+                  pPRuleCopy->PrInheritMode = InheritCreator;
 
-	      pPRuleCopy->PrNextPRule = NULL;
-	      if (!pPrevCopy)
-		tsch->PsFirstDefaultPRule = pPRuleCopy;
-	      else
-		pPrevCopy->PrNextPRule = pPRuleCopy;
-	      pPrevCopy = pPRuleCopy;
-	      pPRule = pPRule->PrNextPRule;
-	    }
-	}
+              pPRuleCopy->PrNextPRule = NULL;
+              if (!pPrevCopy)
+                tsch->PsFirstDefaultPRule = pPRuleCopy;
+              else
+                pPrevCopy->PrNextPRule = pPRuleCopy;
+              pPrevCopy = pPRuleCopy;
+              pPRule = pPRule->PrNextPRule;
+            }
+        }
     }
 }
 
 /*----------------------------------------------------------------------
-   SearchElementPRule is used to to search all specific presentation rules
-   for a given type of rule associated to an element.
+  SearchElementPRule is used to to search all specific presentation rules
+  for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int extra)
 {
@@ -344,171 +344,171 @@ static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int 
     {
       /* shortcut : rules are sorted by type and view number */
       if (cur->PrType > type ||
-	  (cur->PrType == type && cur->PrViewNum > 1) ||
-	  (cur->PrType == type && type == PRFunction &&
-	   cur->PrPresFunction > (FunctionType) extra))
-	/* not found */
-	cur = NULL;
+          (cur->PrType == type && cur->PrViewNum > 1) ||
+          (cur->PrType == type && type == PRFunction &&
+           cur->PrPresFunction > (FunctionType) extra))
+        /* not found */
+        cur = NULL;
       else if (type == PRFunction)
-	{
-	  /* check for extra specification in case of function rule */
-	  if (cur->PrPresFunction == (FunctionType) extra)
-	    found = TRUE;
-	  else
-	    cur = cur->PrNextPRule;
-	}
+        {
+          /* check for extra specification in case of function rule */
+          if (cur->PrPresFunction == (FunctionType) extra)
+            found = TRUE;
+          else
+            cur = cur->PrNextPRule;
+        }
       else if (type == cur->PrType)
-	found = TRUE;
+        found = TRUE;
       else
-	/* jump to next and keep track of previous */
-	cur = cur->PrNextPRule;
+        /* jump to next and keep track of previous */
+        cur = cur->PrNextPRule;
     }
   return cur;
 }
 
 /*----------------------------------------------------------------------
-   Function used to to add a specific presentation rule
-   for a given type of rule associated to an element.
-   Parameter specificity is the specificity od the corresponding CSS rule.
+  Function used to to add a specific presentation rule
+  for a given type of rule associated to an element.
+  Parameter specificity is the specificity od the corresponding CSS rule.
   ----------------------------------------------------------------------*/
 static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
-				    PRuleType type, unsigned int extra,
-				    int specificity, int lineNum)
+                                    PRuleType type, unsigned int extra,
+                                    int specificity, int lineNum)
 {
-   PtrPSchema          pSPR;
-   PtrSSchema          pSSR;
-   PtrAttribute        pAttr;
-   PtrPRule            cur, prev, pRule, stdRule;
+  PtrPSchema          pSPR;
+  PtrSSchema          pSSR;
+  PtrAttribute        pAttr;
+  PtrPRule            cur, prev, pRule, stdRule;
 
-   cur = el->ElFirstPRule;
-   stdRule = NULL;
-   pRule = NULL;
-   prev = NULL;
-   while (cur != NULL)
-     {
-       /* shortcut : rules are sorted by type and view number */
-       if (cur->PrType > type ||
-	  (cur->PrType == type && type == PtFunction &&
-	   cur->PrPresFunction > (FunctionType) extra))
-	 cur = NULL;
-       else
-	 {
-	   /* last specific rule */
-	   prev = cur;
-	   if (cur->PrViewNum == 1 && cur->PrType == type &&
-	       (type != PRFunction ||
-	       /* check for extra specification in case of function rule */
-	       (type == PRFunction &&
-		cur->PrPresFunction == (FunctionType) extra)))
-	     {
-	       /* this specific rule already exists */
-	       pRule = cur;
-	       cur = NULL;
-	     }
-	   else 
-	     cur = cur->PrNextPRule;
-	 }
-     }
+  cur = el->ElFirstPRule;
+  stdRule = NULL;
+  pRule = NULL;
+  prev = NULL;
+  while (cur != NULL)
+    {
+      /* shortcut : rules are sorted by type and view number */
+      if (cur->PrType > type ||
+          (cur->PrType == type && type == PtFunction &&
+           cur->PrPresFunction > (FunctionType) extra))
+        cur = NULL;
+      else
+        {
+          /* last specific rule */
+          prev = cur;
+          if (cur->PrViewNum == 1 && cur->PrType == type &&
+              (type != PRFunction ||
+               /* check for extra specification in case of function rule */
+               (type == PRFunction &&
+                cur->PrPresFunction == (FunctionType) extra)))
+            {
+              /* this specific rule already exists */
+              pRule = cur;
+              cur = NULL;
+            }
+          else 
+            cur = cur->PrNextPRule;
+        }
+    }
 
-    if (pRule == NULL &&
-	(type != PRFunction ||
-	 extra != FnShowBox ||
-	 !TypeHasException (ExcNoShowBox, el->ElTypeNumber, el->ElStructSchema)))
-      {
-	/* not found, allocate it, fill it and insert it */
-	GetPresentRule (&pRule);
-	if (pRule != NULL)
-	  {
-	    stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, FALSE, 0,
-		      NULL, 1, type, (FunctionType)extra, FALSE, TRUE, &pAttr);
-	    if (stdRule != NULL)
-	      /* copy the standard rule */
-	      *pRule = *stdRule;
-	    else
-	      pRule->PrType = type;
-	    pRule->PrCond = NULL;
-	    pRule->PrSpecifAttr = 0;
-	    pRule->PrSpecificity = specificity;
-            pRule->PrCSSLine = lineNum;
-	    pRule->PrSpecifAttrSSchema = NULL;
-	    /* set it specific to view 1 */
-	    pRule->PrViewNum = 1;
+  if (pRule == NULL &&
+      (type != PRFunction ||
+       extra != FnShowBox ||
+       !TypeHasException (ExcNoShowBox, el->ElTypeNumber, el->ElStructSchema)))
+    {
+      /* not found, allocate it, fill it and insert it */
+      GetPresentRule (&pRule);
+      if (pRule != NULL)
+        {
+          stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, FALSE, 0,
+                                         NULL, 1, type, (FunctionType)extra, FALSE, TRUE, &pAttr);
+          if (stdRule != NULL)
+            /* copy the standard rule */
+            *pRule = *stdRule;
+          else
+            pRule->PrType = type;
+          pRule->PrCond = NULL;
+          pRule->PrSpecifAttr = 0;
+          pRule->PrSpecificity = specificity;
+          pRule->PrCSSLine = lineNum;
+          pRule->PrSpecifAttrSSchema = NULL;
+          /* set it specific to view 1 */
+          pRule->PrViewNum = 1;
 
-	    /* Add the order / conditions .... */
-	    /* chain in the rule */
-	    if (prev == NULL)
-	      {
-		pRule->PrNextPRule = el->ElFirstPRule;
-		el->ElFirstPRule = pRule;
-	      }
-	    else
-	      {
-		pRule->PrNextPRule = prev->PrNextPRule;
-		prev->PrNextPRule = pRule;
-	      }
-	  }
-      }
-    return (pRule);
+          /* Add the order / conditions .... */
+          /* chain in the rule */
+          if (prev == NULL)
+            {
+              pRule->PrNextPRule = el->ElFirstPRule;
+              el->ElFirstPRule = pRule;
+            }
+          else
+            {
+              pRule->PrNextPRule = prev->PrNextPRule;
+              prev->PrNextPRule = pRule;
+            }
+        }
+    }
+  return (pRule);
 }
 
 /*----------------------------------------------------------------------
-   Function used to to remove a specific presentation rule
-   for a given type of rule associated to an element.
+  Function used to to remove a specific presentation rule
+  for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
 static void RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extra)
 {
-    PtrPRule cur, prev;
-    Document doc;
+  PtrPRule cur, prev;
+  Document doc;
     
-    prev = NULL;
-    cur = el->ElFirstPRule;
+  prev = NULL;
+  cur = el->ElFirstPRule;
 
-    while (cur != NULL)
-      {
-	/* shortcut : rules are sorted by type and view number */
-	if (cur->PrType > type ||
-	    (cur->PrType == type && cur->PrViewNum > 1) ||
-	    ((cur->PrType == type && type == PRFunction &&
-	      cur->PrPresFunction > (FunctionType) extra)))
-	  {
-	    cur = NULL;
-	    break;
-	  }
+  while (cur != NULL)
+    {
+      /* shortcut : rules are sorted by type and view number */
+      if (cur->PrType > type ||
+          (cur->PrType == type && cur->PrViewNum > 1) ||
+          ((cur->PrType == type && type == PRFunction &&
+            cur->PrPresFunction > (FunctionType) extra)))
+        {
+          cur = NULL;
+          break;
+        }
 	
-	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) &&
-	    (cur->PrPresFunction != (FunctionType) extra))
-	  {
-	    prev = cur;
-	    cur = cur->PrNextPRule;
-	    continue;
-	  }
+      /* check for extra specification in case of function rule */
+      if ((type == PRFunction) &&
+          (cur->PrPresFunction != (FunctionType) extra))
+        {
+          prev = cur;
+          cur = cur->PrNextPRule;
+          continue;
+        }
 
-	/* check this rule */
-	if (type == cur->PrType)
-	  break;
+      /* check this rule */
+      if (type == cur->PrType)
+        break;
 
-	/* jump to next and keep track of previous */
-	prev = cur;
-	cur = cur->PrNextPRule;
-      }
-    if (cur == NULL)
-      return;
-
-    /* remove the rule from the chain */
-    if (prev == NULL)
-      el->ElFirstPRule = cur->PrNextPRule;
-    else
-      prev->PrNextPRule = cur->PrNextPRule;
-    cur->PrNextPRule = NULL;
-    
-    /* update the presentation */
-    doc = TtaGetDocument ((Element) el);
-    ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
-
-    /* Free the PRule */
-    FreePresentRule(cur, el->ElStructSchema);
+      /* jump to next and keep track of previous */
+      prev = cur;
+      cur = cur->PrNextPRule;
+    }
+  if (cur == NULL)
     return;
+
+  /* remove the rule from the chain */
+  if (prev == NULL)
+    el->ElFirstPRule = cur->PrNextPRule;
+  else
+    prev->PrNextPRule = cur->PrNextPRule;
+  cur->PrNextPRule = NULL;
+    
+  /* update the presentation */
+  doc = TtaGetDocument ((Element) el);
+  ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
+
+  /* Free the PRule */
+  FreePresentRule(cur, el->ElStructSchema);
+  return;
 }
 
 /*----------------------------------------------------------------------
@@ -527,8 +527,8 @@ static int PresConstInsert (PSchema tcsh, char *value, BasicType constType)
   for (i = 0; i < pSchemaPrs->PsNConstants; i++)
     {
       if (pSchemaPrs->PsConstant[i].PdType == CharString &&
-	  !strncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
-	return (i+1);
+          !strncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
+        return (i+1);
     }
 
   /* if not found, try to add it at the end */
@@ -575,71 +575,71 @@ static int CompareCond (PtrCondition c1, PtrCondition c2, SSchema sch)
     case PcOdd:
     case PcOne:
       if (c1->CoCounter < c2->CoCounter)
-	return (-1);
+        return (-1);
       if (c1->CoCounter > c2->CoCounter)
-	return (+1);
+        return (+1);
       else
-	return (0);
+        return (0);
     case PcWithin:
       if (c1->CoTypeAncestor < c2->CoTypeAncestor)
-	return (-1);
+        return (-1);
       if (c1->CoTypeAncestor > c2->CoTypeAncestor)
-	return (+1);
+        return (+1);
       if (c1->CoTypeAncestor == 0)
-	return (+1);
+        return (+1);
       if (c1->CoRelation < c2->CoRelation)
-	return (-1);
+        return (-1);
       if (c1->CoRelation > c2->CoRelation)
-	return (+1);
+        return (+1);
       return (0);
     case PcElemType:
       if (c1->CoTypeElem < c2->CoTypeElem)
-	return (-1);
+        return (-1);
       if (c1->CoTypeElem > c2->CoTypeElem)
-	return (+1);
+        return (+1);
       if (c1->CoTypeElem == 0)
-	return (+1);
+        return (+1);
       return (0);
     case PcAttribute:
     case PcInheritAttribute:
       if (c1->CoTypeAttr < c2->CoTypeAttr)
-	return (-1);
+        return (-1);
       if (c1->CoTypeAttr > c2->CoTypeAttr)
-	return (+1);
+        return (+1);
       if (c1->CoTypeAttr == 0 && c2->CoTypeAttr != 0)
-	return (+1);
+        return (+1);
       if (!c1->CoTestAttrValue && c2->CoTestAttrValue)
-	return (-1);
+        return (-1);
       if (c1->CoTestAttrValue && !c2->CoTestAttrValue)
-	return (+1);
+        return (+1);
       if (c1->CoTestAttrValue && c2->CoTestAttrValue)
-	{
-	  attType.AttrSSchema = sch;
-	  attType.AttrTypeNum = c1->CoTypeAttr;
-	  kind = TtaGetAttributeKind (attType);
-	  if (kind == 0 || kind == 1)
-	    /* enumerated or integer value */
-	    {
-	      if (c1->CoAttrValue < c2->CoAttrValue)
-		return (-1);
-	      if (c1->CoAttrValue > c2->CoAttrValue)
-		return (+1);
-	      return (0);
-	    }
-	  else if (kind == 2)
-	    /* character string value */
-	    {
-	      if (c1->CoTextMatch < c2->CoTextMatch)
-		return (-1);
-	      if (c1->CoTextMatch > c2->CoTextMatch)
-		return (+1);
-	      if (c1->CoAttrTextValue == NULL)
-		return (-1);
-	      if (c2->CoAttrTextValue == NULL)
-		return (+1);
-	      return (strcasecmp (c1->CoAttrTextValue, c2->CoAttrTextValue));
-	    }
-	}
+        {
+          attType.AttrSSchema = sch;
+          attType.AttrTypeNum = c1->CoTypeAttr;
+          kind = TtaGetAttributeKind (attType);
+          if (kind == 0 || kind == 1)
+            /* enumerated or integer value */
+            {
+              if (c1->CoAttrValue < c2->CoAttrValue)
+                return (-1);
+              if (c1->CoAttrValue > c2->CoAttrValue)
+                return (+1);
+              return (0);
+            }
+          else if (kind == 2)
+            /* character string value */
+            {
+              if (c1->CoTextMatch < c2->CoTextMatch)
+                return (-1);
+              if (c1->CoTextMatch > c2->CoTextMatch)
+                return (+1);
+              if (c1->CoAttrTextValue == NULL)
+                return (-1);
+              if (c2->CoAttrTextValue == NULL)
+                return (+1);
+              return (strcasecmp (c1->CoAttrTextValue, c2->CoAttrTextValue));
+            }
+        }
       return (0);
     default:
       return (+1);
@@ -653,118 +653,118 @@ static int CompareCond (PtrCondition c1, PtrCondition c2, SSchema sch)
   ----------------------------------------------------------------------*/
 static void AddCond (PtrCondition *base, PtrCondition cond, SSchema sch)
 {
-   PtrCondition        cour = *base;
-   PtrCondition        next;
+  PtrCondition        cour = *base;
+  PtrCondition        next;
 
-   if (cour == NULL)
-     {
-	*base = cond;
-	cond->CoNextCondition = NULL;
-	return;
-     }
-   if (CompareCond (cond, cour, sch) <= 0)
-     {
-	*base = cond;
-	cond->CoNextCondition = cour;
-	return;
-     }
-   next = cour->CoNextCondition;
-   while (next)
-     {
-	if (CompareCond (cond, next, sch) <= 0)
-	  {
-	     cond->CoNextCondition = next;
-	     cour->CoNextCondition = cond;
-	     return;
-	  }
+  if (cour == NULL)
+    {
+      *base = cond;
+      cond->CoNextCondition = NULL;
+      return;
+    }
+  if (CompareCond (cond, cour, sch) <= 0)
+    {
+      *base = cond;
+      cond->CoNextCondition = cour;
+      return;
+    }
+  next = cour->CoNextCondition;
+  while (next)
+    {
+      if (CompareCond (cond, next, sch) <= 0)
+        {
+          cond->CoNextCondition = next;
+          cour->CoNextCondition = cond;
+          return;
+        }
 
-	/* skip to next */
-	cour = next;
-	next = cour->CoNextCondition;
-     }
-   cour->CoNextCondition = cond;
-   cond->CoNextCondition = NULL;
+      /* skip to next */
+      cour = next;
+      next = cour->CoNextCondition;
+    }
+  cour->CoNextCondition = cond;
+  cond->CoNextCondition = NULL;
 }
 
 /*----------------------------------------------------------------------
   PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
   ----------------------------------------------------------------------*/
 static void PresRuleAddAncestorCond (PtrPRule rule, SSchema sch, int type,
-				     int nr, ThotBool immediate)
+                                     int nr, ThotBool immediate)
 {
-   PtrCondition        cond = NULL;
+  PtrCondition        cond = NULL;
 
-   GetPresentRuleCond (&cond);
-   if (cond == NULL)
-     {
-	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	return;
-     }
-   memset (cond, 0, sizeof (Condition));
-   if (nr == 0)
-     {
-       /* the current element type must be ... */
-       cond->CoCondition = PcElemType;
-       cond->CoNotNegative = TRUE;
-       cond->CoTarget = FALSE;
-       cond->CoTypeElem = type;
-     }
-   else
-     {
-       cond->CoCondition = PcWithin;
-       cond->CoTarget = FALSE;
-       cond->CoNotNegative = TRUE;
-       /* as it's greater we register the number of ancestors - 1 */
-       cond->CoRelation = nr - 1;
-       cond->CoTypeAncestor = type;
-       cond->CoImmediate = immediate;
-       cond->CoAncestorRel = CondGreater;
-       cond->CoAncestorName = NULL;
-       cond->CoSSchemaName[0] = EOS;
-     }
-   AddCond (&rule->PrCond, cond, sch);
+  GetPresentRuleCond (&cond);
+  if (cond == NULL)
+    {
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+      return;
+    }
+  memset (cond, 0, sizeof (Condition));
+  if (nr == 0)
+    {
+      /* the current element type must be ... */
+      cond->CoCondition = PcElemType;
+      cond->CoNotNegative = TRUE;
+      cond->CoTarget = FALSE;
+      cond->CoTypeElem = type;
+    }
+  else
+    {
+      cond->CoCondition = PcWithin;
+      cond->CoTarget = FALSE;
+      cond->CoNotNegative = TRUE;
+      /* as it's greater we register the number of ancestors - 1 */
+      cond->CoRelation = nr - 1;
+      cond->CoTypeAncestor = type;
+      cond->CoImmediate = immediate;
+      cond->CoAncestorRel = CondGreater;
+      cond->CoAncestorName = NULL;
+      cond->CoSSchemaName[0] = EOS;
+    }
+  AddCond (&rule->PrCond, cond, sch);
 }
 
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
 static void PresRuleAddAttrCond (PtrPRule rule, AttributeType attType,
-				 int level, char* value, CondMatch match)
+                                 int level, char* value, CondMatch match)
 {
-   PtrCondition        cond = NULL;
-   int                 kind;
+  PtrCondition        cond = NULL;
+  int                 kind;
 
-   GetPresentRuleCond (&cond);
-   memset (cond, 0, sizeof (Condition));
-   if (cond == NULL)
-     {
-	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	return;
-     }
-   if (level == 0)
-     cond->CoCondition = PcAttribute;
-   else
-      cond->CoCondition = PcInheritAttribute;
-   cond->CoNotNegative = TRUE;
-   cond->CoTarget = FALSE;
-   cond->CoTypeAttr = attType.AttrTypeNum;
-   cond->CoTestAttrValue = (value != NULL);
-   kind = TtaGetAttributeKind (attType);
-   if (kind == 0 || kind == 1)
-     /* enumerated or integer value */
-     cond->CoAttrValue = (long int)value;
-   else if (kind == 2)
-     /* character string value */
-     {
-       if (value)
-	 {
-	   cond->CoAttrTextValue = TtaStrdup (value);
-	   cond->CoTextMatch = match;
-	 }
-       else
-	 cond->CoAttrTextValue = NULL;
-     }
-   AddCond (&rule->PrCond, cond, attType.AttrSSchema);
+  GetPresentRuleCond (&cond);
+  memset (cond, 0, sizeof (Condition));
+  if (cond == NULL)
+    {
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+      return;
+    }
+  if (level == 0)
+    cond->CoCondition = PcAttribute;
+  else
+    cond->CoCondition = PcInheritAttribute;
+  cond->CoNotNegative = TRUE;
+  cond->CoTarget = FALSE;
+  cond->CoTypeAttr = attType.AttrTypeNum;
+  cond->CoTestAttrValue = (value != NULL);
+  kind = TtaGetAttributeKind (attType);
+  if (kind == 0 || kind == 1)
+    /* enumerated or integer value */
+    cond->CoAttrValue = (long int)value;
+  else if (kind == 2)
+    /* character string value */
+    {
+      if (value)
+        {
+          cond->CoAttrTextValue = TtaStrdup (value);
+          cond->CoTextMatch = match;
+        }
+      else
+        cond->CoAttrTextValue = NULL;
+    }
+  AddCond (&rule->PrCond, cond, attType.AttrSSchema);
 }
 
 static char ListOfValues[MAX_LENGTH];
@@ -783,13 +783,13 @@ char *TtaGetStyledAttributeValues (PSchema tsch, int attrType)
   while (attrs)
     {
       if (attrs->ApString)
-	{
-	  /* add that new value */
-	  len = strlen (attrs->ApString) + 1;
-	  if (i + len <= MAX_LENGTH)
-	    strncpy (&ListOfValues[i], attrs->ApString, len);
-	  i += len;
-	}
+        {
+          /* add that new value */
+          len = strlen (attrs->ApString) + 1;
+          if (i + len <= MAX_LENGTH)
+            strncpy (&ListOfValues[i], attrs->ApString, len);
+          i += len;
+        }
       attrs = attrs->ApNextAttrPres;
     }
   return ListOfValues;
@@ -801,8 +801,8 @@ char *TtaGetStyledAttributeValues (PSchema tsch, int attrType)
   When the rule is not found, attrblock points to the last block.
   ----------------------------------------------------------------------*/
 static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
-					  GenericContext ctxt, int att,
-					  AttributePres **attrblock)
+                                          GenericContext ctxt, int att,
+                                          AttributePres **attrblock)
 {
   PtrPRule           *ppRule;
   PtrSSchema          pSS;
@@ -826,64 +826,64 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   for (i = 0; i < nbrules && !ppRule && attrs; i++)
     {
       if ((att > 0 && attrs->ApElemType != (int)(ctxt->type)) ||
-	  (att == 0 && attrs->ApElemType != 0))
-	{
-	  if (ctxt->type == 0)
-	    /* this new rule is less specific and should be added before */
-	    attrs = NULL;
-	  else
-	    {
-	      *attrblock = attrs;
-	      attrs = attrs->ApNextAttrPres;
-	    }
-	}
+          (att == 0 && attrs->ApElemType != 0))
+        {
+          if (ctxt->type == 0)
+            /* this new rule is less specific and should be added before */
+            attrs = NULL;
+          else
+            {
+              *attrblock = attrs;
+              attrs = attrs->ApNextAttrPres;
+            }
+        }
       else
-	{
-	  switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
-	    {
-	    case AtNumAttr:
-	      if (attrVal)
-		sscanf (attrVal, "%d", &val);
-	      else
-		val = 0;
-	      if (val)
-		{
-		for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
-		  if (attrs->ApCase[j].CaComparType == ComparConstant &&
-		      attrs->ApCase[j].CaLowerBound == val &&
-		      attrs->ApCase[j].CaUpperBound == val)
-		    ppRule = &(attrs->ApCase[j].CaFirstPRule);
-		  else
-		    for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
-		      if (attrs->ApCase[j].CaComparType == ComparConstant &&
-			  attrs->ApCase[j].CaLowerBound < -MAX_INT_ATTR_VAL &&
-			  attrs->ApCase[j].CaUpperBound > MAX_INT_ATTR_VAL)
-			ppRule = &(attrs->ApCase[j].CaFirstPRule);
-		}
-	      break;
-	    case AtTextAttr:
-	      if (attrVal && attrs->ApString &&
-		  !strcmp (attrs->ApString, attrVal) &&
-		  attrs->ApMatch == (int)match)
-		ppRule = &(attrs->ApTextFirstPRule);
-	      else if (attrVal == NULL &&
-		       attrs->ApString == NULL)
-		ppRule = &(attrs->ApTextFirstPRule);
-	      break;
-	    case AtReferenceAttr:
-	      ppRule = &(attrs->ApRefFirstPRule);
-	      break;
-	    case AtEnumAttr:
-	      val = (long int) attrVal;
-	      if (val)
-		ppRule = &(attrs->ApEnumFirstPRule[val]);
-	      else
-		ppRule = &(attrs->ApEnumFirstPRule[0]);
-	      break;
-	    }
-	  *attrblock = attrs;
-	  attrs = attrs->ApNextAttrPres;
-	}
+        {
+          switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
+            {
+            case AtNumAttr:
+              if (attrVal)
+                sscanf (attrVal, "%d", &val);
+              else
+                val = 0;
+              if (val)
+                {
+                  for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
+                    if (attrs->ApCase[j].CaComparType == ComparConstant &&
+                        attrs->ApCase[j].CaLowerBound == val &&
+                        attrs->ApCase[j].CaUpperBound == val)
+                      ppRule = &(attrs->ApCase[j].CaFirstPRule);
+                    else
+                      for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
+                        if (attrs->ApCase[j].CaComparType == ComparConstant &&
+                            attrs->ApCase[j].CaLowerBound < -MAX_INT_ATTR_VAL &&
+                            attrs->ApCase[j].CaUpperBound > MAX_INT_ATTR_VAL)
+                          ppRule = &(attrs->ApCase[j].CaFirstPRule);
+                }
+              break;
+            case AtTextAttr:
+              if (attrVal && attrs->ApString &&
+                  !strcmp (attrs->ApString, attrVal) &&
+                  attrs->ApMatch == (int)match)
+                ppRule = &(attrs->ApTextFirstPRule);
+              else if (attrVal == NULL &&
+                       attrs->ApString == NULL)
+                ppRule = &(attrs->ApTextFirstPRule);
+              break;
+            case AtReferenceAttr:
+              ppRule = &(attrs->ApRefFirstPRule);
+              break;
+            case AtEnumAttr:
+              val = (long int) attrVal;
+              if (val)
+                ppRule = &(attrs->ApEnumFirstPRule[val]);
+              else
+                ppRule = &(attrs->ApEnumFirstPRule[0]);
+              break;
+            }
+          *attrblock = attrs;
+          attrs = attrs->ApNextAttrPres;
+        }
     }
   return (ppRule);
 }
@@ -894,7 +894,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   if not found we add a new one to the array.
   ----------------------------------------------------------------------*/
 static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
-				      GenericContext ctxt, int att)
+                                      GenericContext ctxt, int att)
 {
   AttributePres      *attrs, *new_;
   PtrSSchema          pSS;
@@ -913,75 +913,75 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
       GetAttributePres (&new_);
       tsch->PsNAttrPRule->Num[attrType - 1] = nbrules;
       if (att > 0 && ctxt->type)
-	{
-	  new_->ApElemType = ctxt->type;
-	  new_->ApElemInherits = FALSE;
-	  tsch->PsNInheritedAttrs->Num[ctxt->type - 1]++;
-	  tsch->PsNHeirElems->Num[attrType - 1]++;
-	}
+        {
+          new_->ApElemType = ctxt->type;
+          new_->ApElemInherits = FALSE;
+          tsch->PsNInheritedAttrs->Num[ctxt->type - 1]++;
+          tsch->PsNHeirElems->Num[attrType - 1]++;
+        }
       if (attrs)
-	{
-	  new_->ApNextAttrPres = attrs->ApNextAttrPres;
-	  attrs->ApNextAttrPres = new_;
-	}
+        {
+          new_->ApNextAttrPres = attrs->ApNextAttrPres;
+          attrs->ApNextAttrPres = new_;
+        }
       else
-	{
-	  new_->ApNextAttrPres = tsch->PsAttrPRule->AttrPres[attrType - 1];
-	  tsch->PsAttrPRule->AttrPres[attrType - 1] = new_;
-	}
+        {
+          new_->ApNextAttrPres = tsch->PsAttrPRule->AttrPres[attrType - 1];
+          tsch->PsAttrPRule->AttrPres[attrType - 1] = new_;
+        }
 
       attrVal = ctxt->attrText[att];
       match = ctxt->attrMatch[att];
       switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
-	{
-	case AtNumAttr:
-	  new_->ApNCases = 1;
-	  if (attrVal)
-	    sscanf (attrVal, "%d", &val);
-	  else
-	    val = 0;
-	  if (val)
-	    {
-	      new_->ApCase[0].CaLowerBound = val;
-	      new_->ApCase[0].CaUpperBound = val;
-	    }
-	  else
-	    {   
-	      new_->ApCase[0].CaLowerBound = -MAX_INT_ATTR_VAL - 1;
-	      new_->ApCase[0].CaUpperBound = MAX_INT_ATTR_VAL + 1;
-	    }
-	  new_->ApCase[0].CaComparType = ComparConstant;
-	  new_->ApCase[0].CaFirstPRule = NULL;
-	  return (&(new_->ApCase[0].CaFirstPRule));
-	  break;
-	case AtTextAttr:
-	  new_->ApMatch = (CondMatch)match;
-	  if (attrVal)
-	    new_->ApString = TtaStrdup (attrVal);
-	  else
-	    new_->ApString = NULL;
-	  new_->ApTextFirstPRule = NULL;
-	  return (&(new_->ApTextFirstPRule));
-	  break;
-	case AtReferenceAttr:
-	  new_->ApRefFirstPRule = NULL;
-	  return (&(new_->ApRefFirstPRule));
-	  break;
-	case AtEnumAttr:
-	  /* get the attribute value */
-	  val = (long int) attrVal;
-	  if (val > 0)
-	    {
-	      new_->ApEnumFirstPRule[val] = NULL;
-	      return (&(new_->ApEnumFirstPRule[val]));
-	    }
-	  else
-	    {
-	      new_->ApEnumFirstPRule[0] = NULL;
-	      return (&(new_->ApEnumFirstPRule[0]));
-	    }
-	  break;
-	}
+        {
+        case AtNumAttr:
+          new_->ApNCases = 1;
+          if (attrVal)
+            sscanf (attrVal, "%d", &val);
+          else
+            val = 0;
+          if (val)
+            {
+              new_->ApCase[0].CaLowerBound = val;
+              new_->ApCase[0].CaUpperBound = val;
+            }
+          else
+            {   
+              new_->ApCase[0].CaLowerBound = -MAX_INT_ATTR_VAL - 1;
+              new_->ApCase[0].CaUpperBound = MAX_INT_ATTR_VAL + 1;
+            }
+          new_->ApCase[0].CaComparType = ComparConstant;
+          new_->ApCase[0].CaFirstPRule = NULL;
+          return (&(new_->ApCase[0].CaFirstPRule));
+          break;
+        case AtTextAttr:
+          new_->ApMatch = (CondMatch)match;
+          if (attrVal)
+            new_->ApString = TtaStrdup (attrVal);
+          else
+            new_->ApString = NULL;
+          new_->ApTextFirstPRule = NULL;
+          return (&(new_->ApTextFirstPRule));
+          break;
+        case AtReferenceAttr:
+          new_->ApRefFirstPRule = NULL;
+          return (&(new_->ApRefFirstPRule));
+          break;
+        case AtEnumAttr:
+          /* get the attribute value */
+          val = (long int) attrVal;
+          if (val > 0)
+            {
+              new_->ApEnumFirstPRule[val] = NULL;
+              return (&(new_->ApEnumFirstPRule[val]));
+            }
+          else
+            {
+              new_->ApEnumFirstPRule[0] = NULL;
+              return (&(new_->ApEnumFirstPRule[0]));
+            }
+          break;
+        }
     }
 
   return (ppRule);
@@ -1003,7 +1003,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   * 1 if the rule has more conditions than neeeded
   ----------------------------------------------------------------------*/
 static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
-			   PRuleType pres, unsigned int att)
+                           PRuleType pres, unsigned int att)
 {
   PtrCondition        firstCond, cond;
   int                 nbcond, nbCtxtCond, prevAttr;
@@ -1032,25 +1032,25 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
     {
       /* count the number of conditions in the context */
       for (i = 1; i < MAX_ANCESTORS; i++)
-	{
-	  if (ctxt->name[i])
-	    nbCtxtCond++;
-	  if (ctxt->attrType[i])
-	    {
-	    if (prevAttr)
-	      nbCtxtCond++;
-	    else
-	      prevAttr = ctxt->attrType[i];
-	    }
-	}
+        {
+          if (ctxt->name[i])
+            nbCtxtCond++;
+          if (ctxt->attrType[i])
+            {
+              if (prevAttr)
+                nbCtxtCond++;
+              else
+                prevAttr = ctxt->attrType[i];
+            }
+        }
     }
   else
     /* the rule is associated with an element */
     {
       /* count the number of conditions in the context */
       for (i = 1; i < MAX_ANCESTORS; i++)
-	if (ctxt->name[i])
-	  nbCtxtCond++;
+        if (ctxt->name[i])
+          nbCtxtCond++;
     }
 
   if (nbCtxtCond < nbcond)
@@ -1062,58 +1062,58 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
   /* check if all ancestors are within the rule conditions */
   i = 1;
   while (i < MAX_ANCESTORS)
-     {
-       if (ctxt->names_nb[i] > 0)
-	 {
-	   cond = firstCond;
-	   while (cond &&
-		  (cond->CoCondition != PcWithin ||
-		   cond->CoTypeAncestor != ctxt->name[i] ||
-		   cond->CoRelation != ctxt->names_nb[i] - 1))
-	     cond = cond->CoNextCondition;
-	   if (cond == NULL)
-	     /* the ancestor is not found */
-	     return (1);
-	 }
-       if (ctxt->attrType[i] && i != att)
-	 {
-	   cond = firstCond;
-	   while (cond &&
-		  ((cond->CoCondition != PcInheritAttribute &&
-		    ctxt->attrLevel[i] != 0) ||
-		   (cond->CoCondition != PcAttribute &&
-		    ctxt->attrLevel[i] == 0) ||
-		   cond->CoTypeAttr != ctxt->attrType[i] ||
-		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
-		   (cond->CoTestAttrValue &&
-		    (cond->CoTextMatch != (CondMatch)(ctxt->attrMatch[i]) ||
-		    (cond->CoAttrTextValue &&
-		     ctxt->attrText[i] &&
-		     strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))))
-	     cond = cond->CoNextCondition;
-	   if (cond == NULL)
-	     /* conditions are different */
-	     return (1);
-	 }
-       i++;
-     }
+    {
+      if (ctxt->names_nb[i] > 0)
+        {
+          cond = firstCond;
+          while (cond &&
+                 (cond->CoCondition != PcWithin ||
+                  cond->CoTypeAncestor != ctxt->name[i] ||
+                  cond->CoRelation != ctxt->names_nb[i] - 1))
+            cond = cond->CoNextCondition;
+          if (cond == NULL)
+            /* the ancestor is not found */
+            return (1);
+        }
+      if (ctxt->attrType[i] && i != att)
+        {
+          cond = firstCond;
+          while (cond &&
+                 ((cond->CoCondition != PcInheritAttribute &&
+                   ctxt->attrLevel[i] != 0) ||
+                  (cond->CoCondition != PcAttribute &&
+                   ctxt->attrLevel[i] == 0) ||
+                  cond->CoTypeAttr != ctxt->attrType[i] ||
+                  cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
+                  (cond->CoTestAttrValue &&
+                   (cond->CoTextMatch != (CondMatch)(ctxt->attrMatch[i]) ||
+                    (cond->CoAttrTextValue &&
+                     ctxt->attrText[i] &&
+                     strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))))
+            cond = cond->CoNextCondition;
+          if (cond == NULL)
+            /* conditions are different */
+            return (1);
+        }
+      i++;
+    }
   /* all conditions are the same. Compare the pseudo-elements */
   if (rule->PrBoxType == BtElement)
     {
       if (ctxt->pseudo != PbNone)
-	return (-1);
+        return (-1);
     }
   else if (rule->PrBoxType == BtBefore)
     {
       if (ctxt->pseudo == PbNone)
-	return (1);
+        return (1);
       else if (ctxt->pseudo == PbAfter)
-	return (-1);
+        return (-1);
     }
   else if (rule->PrBoxType == BtAfter)
     {
       if (ctxt->pseudo == PbNone || ctxt->pseudo == PbBefore)
-	return (1);
+        return (1);
     }
   return (0);
 }
@@ -1123,8 +1123,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
   in an attribute chain or an element chain.
   ----------------------------------------------------------------------*/
 static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
-				PRuleType pres, FunctionType extra,
-				PtrPRule **chain)
+                                PRuleType pres, FunctionType extra,
+                                PtrPRule **chain)
 {
   PtrPRule            pRule;
   unsigned int        attrType, att;
@@ -1152,9 +1152,9 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
     /* we are now sure that only elements are concerned */
     {
       if (tsch->PsElemPRule)
-	*chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
+        *chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
       else
-	return (NULL);
+        return (NULL);
     }
   else
     return (NULL);
@@ -1168,39 +1168,39 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
   while (!found && pRule != NULL)
     {
       /* shortcut : rules are sorted by type and view number and
-	 Functions rules are sorted by number */
+         Functions rules are sorted by number */
       if (pRule->PrType > pres ||
-	  (pRule->PrType == pres && pRule->PrViewNum > 1) ||
-	  (pRule->PrType == pres && pres == PtFunction &&
-	   pRule->PrPresFunction > extra))
-	  pRule = NULL;
+          (pRule->PrType == pres && pRule->PrViewNum > 1) ||
+          (pRule->PrType == pres && pres == PtFunction &&
+           pRule->PrPresFunction > extra))
+        pRule = NULL;
       else if (pRule->PrType != pres ||
-	       (pres == PtFunction &&
-		pRule->PrPresFunction != extra))
-	/* check for extra specification in case of function rule */
-	{
-	  *chain = &(pRule->PrNextPRule);
-	  pRule = pRule->PrNextPRule;
-	}
+               (pres == PtFunction &&
+                pRule->PrPresFunction != extra))
+        /* check for extra specification in case of function rule */
+        {
+          *chain = &(pRule->PrNextPRule);
+          pRule = pRule->PrNextPRule;
+        }
       else
-	{
-	  condCheck = TstRuleContext (pRule, ctxt, pres, att);
-	  if (condCheck == 0)
-	    /* there is already a rule of this type for this context */
-	    found = TRUE;
-	  else if (condCheck > 0)
-	    {
-	      /* the new rule should be added after */
-	      *chain = &(pRule->PrNextPRule);
-	      /* jump to next */
-	      pRule = pRule->PrNextPRule;
-	    }
-	  else
-	      /* the new rule should be added before */
-	    pRule = NULL;
-	}
+        {
+          condCheck = TstRuleContext (pRule, ctxt, pres, att);
+          if (condCheck == 0)
+            /* there is already a rule of this type for this context */
+            found = TRUE;
+          else if (condCheck > 0)
+            {
+              /* the new rule should be added after */
+              *chain = &(pRule->PrNextPRule);
+              /* jump to next */
+              pRule = pRule->PrNextPRule;
+            }
+          else
+            /* the new rule should be added before */
+            pRule = NULL;
+        }
     }
-   return (pRule);
+  return (pRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1209,7 +1209,7 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
   In a chain all the rules are sorted by type and also by view.
   ----------------------------------------------------------------------*/
 static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
-				PRuleType pres, unsigned int extra)
+                                PRuleType pres, unsigned int extra)
 {
   PtrPRule           *chain;
   PtrPRule            pRule = NULL;
@@ -1226,65 +1226,65 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
       /* not found, allocate it, fill it and insert it */
       GetPresentRule (&pRule);
       if (pRule)
-	{
-	  pRule->PrType = pres;
-	  if (pres == PRFunction)
-	    pRule->PrPresFunction = (FunctionType)extra;
-	  pRule->PrCond = NULL;
-	  pRule->PrViewNum = 1;
-	  pRule->PrSpecifAttr = 0;
-	  pRule->PrSpecifAttrSSchema = NULL;
+        {
+          pRule->PrType = pres;
+          if (pres == PRFunction)
+            pRule->PrPresFunction = (FunctionType)extra;
+          pRule->PrCond = NULL;
+          pRule->PrViewNum = 1;
+          pRule->PrSpecifAttr = 0;
+          pRule->PrSpecifAttrSSchema = NULL;
 
-	  if (ctxt->box == 0)
-	    /* rules associated to a presentation box do not have conditions */
-	    {
-	      /* In case of an attribute rule, add the Attr condition */
-	      att = 0;
-	      while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
-		att++;
-	      if (att == 0 && ctxt->type)
-		/* the attribute is attached to that element like a
-		   selector "a#id" */
-		PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0,
-					 FALSE);
-	      /* add other conditions ... */
-	      i = 0;
-	      while (i < MAX_ANCESTORS)
-		{
-		if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
-		    ctxt->rel[i] != RelPrevious)
-		  /* it's an ancestor like a selector "li a" */
-		  {
-		   if (i == 1 && ctxt->rel[i] == RelImmediat)
-        /* due to a (current) limitation of Thot, immediate child
-         * (denoted by '>' in CSS selectors) can be taken into
-         * account only for the first ancestor **********  */
-		     immediate = TRUE;
-		   else
-		     immediate = FALSE;
-		   PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
-					    ctxt->names_nb[i], immediate);
-		  }
-		if (ctxt->attrType[i]  && i != att)
-		  /* it's another attribute */
-		  {
-		    attType.AttrSSchema = ctxt->schema;
-		    attType.AttrTypeNum = ctxt->attrType[i];
-		    PresRuleAddAttrCond (pRule, attType, ctxt->attrLevel[i],
-			     ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
-		  }
-		i++;
-		}
-	      /* Add the order / conditions .... */
-	    }
+          if (ctxt->box == 0)
+            /* rules associated to a presentation box do not have conditions */
+            {
+              /* In case of an attribute rule, add the Attr condition */
+              att = 0;
+              while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
+                att++;
+              if (att == 0 && ctxt->type)
+                /* the attribute is attached to that element like a
+                   selector "a#id" */
+                PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->type, 0,
+                                         FALSE);
+              /* add other conditions ... */
+              i = 0;
+              while (i < MAX_ANCESTORS)
+                {
+                  if (i != 0 && ctxt->name[i] && ctxt->names_nb[i] > 0 &&
+                      ctxt->rel[i] != RelPrevious)
+                    /* it's an ancestor like a selector "li a" */
+                    {
+                      if (i == 1 && ctxt->rel[i] == RelImmediat)
+                        /* due to a (current) limitation of Thot, immediate child
+                         * (denoted by '>' in CSS selectors) can be taken into
+                         * account only for the first ancestor **********  */
+                        immediate = TRUE;
+                      else
+                        immediate = FALSE;
+                      PresRuleAddAncestorCond (pRule, ctxt->schema, ctxt->name[i],
+                                               ctxt->names_nb[i], immediate);
+                    }
+                  if (ctxt->attrType[i]  && i != att)
+                    /* it's another attribute */
+                    {
+                      attType.AttrSSchema = ctxt->schema;
+                      attType.AttrTypeNum = ctxt->attrType[i];
+                      PresRuleAddAttrCond (pRule, attType, ctxt->attrLevel[i],
+                                           ctxt->attrText[i], (CondMatch)ctxt->attrMatch[i]);
+                    }
+                  i++;
+                }
+              /* Add the order / conditions .... */
+            }
 
-	  /* chain in the rule */
-	  if (chain)
-	    {
-	      pRule->PrNextPRule = *chain;
-	      *chain = pRule;
-	    }
-	}
+          /* chain in the rule */
+          if (chain)
+            {
+              pRule->PrNextPRule = *chain;
+              *chain = pRule;
+            }
+        }
     }
 
   return (pRule);
@@ -1295,7 +1295,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
   in a chain if it exists.
   ----------------------------------------------------------------------*/
 static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
-			    PRuleType pres, unsigned int extra)
+                            PRuleType pres, unsigned int extra)
 {
   PtrPRule         *chain;
   PtrPRule          cur;
@@ -1310,8 +1310,8 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
   if (cur != NULL)
     {
       if (chain != NULL)
-	/* found, remove it from the chain */
-	*chain = cur->PrNextPRule;
+        /* found, remove it from the chain */
+        *chain = cur->PrNextPRule;
 
       cur->PrNextPRule = NULL;
       /* update the rendering */
@@ -1328,15 +1328,15 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
 }
 
 /*----------------------------------------------------------------------
- PresentationValueToPRule : set up an internal Presentation Rule according
- to a Presentation Value for a given type of presentation property.
- funcType is an extra parameter needed when using a Function rule
- or a position rule (VertPos, HorizPos).
- ----------------------------------------------------------------------*/
+  PresentationValueToPRule : set up an internal Presentation Rule according
+  to a Presentation Value for a given type of presentation property.
+  funcType is an extra parameter needed when using a Function rule
+  or a position rule (VertPos, HorizPos).
+  ----------------------------------------------------------------------*/
 static void PresentationValueToPRule (PresentationValue val, int type,
-				      PtrPRule rule, int funcType,
-				      ThotBool absolute, ThotBool generic,
-				      ThotBool minValue)
+                                      PtrPRule rule, int funcType,
+                                      ThotBool absolute, ThotBool generic,
+                                      ThotBool minValue)
 {
   TypeUnit            int_unit;
   int                 value;
@@ -1379,20 +1379,20 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case UNIT_REL:
       int_unit = UnRelative;
       if (type == PtHeight ||            type == PtWidth ||
-	  type == PtVertPos ||           type == PtHorizPos ||
-	  type == PtMarginTop ||         type == PtMarginRight ||
-	  type == PtMarginBottom ||      type == PtMarginLeft ||
-	  type == PtPaddingTop ||        type == PtPaddingRight ||
-	  type == PtPaddingBottom ||     type == PtPaddingLeft ||
-	  type == PtBorderTopWidth ||    type == PtBorderRightWidth ||
-	  type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
+          type == PtVertPos ||           type == PtHorizPos ||
+          type == PtMarginTop ||         type == PtMarginRight ||
+          type == PtMarginBottom ||      type == PtMarginLeft ||
+          type == PtPaddingTop ||        type == PtPaddingRight ||
+          type == PtPaddingBottom ||     type == PtPaddingLeft ||
+          type == PtBorderTopWidth ||    type == PtBorderRightWidth ||
+          type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
           type == PtLineWeight ||        type == PtThickness ||
-	  type == PtIndent ||            type == PtLineSpacing ||
+          type == PtIndent ||            type == PtLineSpacing ||
           type == PtBreak1 ||            type == PtBreak2 ||
           type == PtXRadius ||           type == PtYRadius ||
-	  type == PtTop ||               type == PtRight ||
+          type == PtTop ||               type == PtRight ||
           type == PtBottom ||            type == PtLeft)
-	value *= 10;
+        value *= 10;
       break;
     case UNIT_EM:
       int_unit = UnRelative;
@@ -1437,13 +1437,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     }
 
-    if (real)
-      {
-	if (value > 0)
-	  value = (value + 500) / 1000;
-	else
-	  value = (value - 500) / 1000;
-      }
+  if (real)
+    {
+      if (value > 0)
+        value = (value + 500) / 1000;
+      else
+        value = (value - 500) / 1000;
+    }
   
   /* now, set-up the value */
   switch (type)
@@ -1465,268 +1465,268 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtFont:
       switch (value)
-	{
-	case FontHelvetica:
-	  rule->PrChrValue = 'H';
-	  break;
-	case FontTimes:
-	  rule->PrChrValue = 'T';
-	  break;
-	case FontCourier:
-	  rule->PrChrValue = 'C';
-	  break;
+        {
+        case FontHelvetica:
+          rule->PrChrValue = 'H';
+          break;
+        case FontTimes:
+          rule->PrChrValue = 'T';
+          break;
+        case FontCourier:
+          rule->PrChrValue = 'C';
+          break;
 #ifdef _WINGUI
-	case FontOther:
-	  rule->PrChrValue = -1;
-	  break;
+        case FontOther:
+          rule->PrChrValue = -1;
+          break;
 #endif /* _WINGUI */
-	}
+        }
       break;
     case PtStyle:
       switch (value)
-	{
-	case StyleRoman:
-	  rule->PrChrValue = 'R';
-	  break;
-	case StyleItalics:
-	  rule->PrChrValue = 'I';
-	  break;
-	case StyleOblique:
-	  rule->PrChrValue = 'O';
-	  break;
-	default:
-	  rule->PrChrValue = 'R';
-	  break;	   
-	}
+        {
+        case StyleRoman:
+          rule->PrChrValue = 'R';
+          break;
+        case StyleItalics:
+          rule->PrChrValue = 'I';
+          break;
+        case StyleOblique:
+          rule->PrChrValue = 'O';
+          break;
+        default:
+          rule->PrChrValue = 'R';
+          break;	   
+        }
       break;
     case PtWeight:
       switch (value)
-	{
-	case WeightNormal:
-	  rule->PrChrValue = 'N';
-	  break;
-	case WeightBold:
-	  rule->PrChrValue = 'B';
-	  break;
-	default:
-	  rule->PrChrValue = 'N';
-	  break;	   
-	}
+        {
+        case WeightNormal:
+          rule->PrChrValue = 'N';
+          break;
+        case WeightBold:
+          rule->PrChrValue = 'B';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;	   
+        }
       break;
     case PtUnderline:
       switch (value)
-	{
-	case Underline:
-	  rule->PrChrValue = 'U';
-	  break;
-	case Overline:
-	  rule->PrChrValue = 'O';
-	  break;
-	case CrossOut:
-	  rule->PrChrValue = 'C';
-	  break;
-	}
+        {
+        case Underline:
+          rule->PrChrValue = 'U';
+          break;
+        case Overline:
+          rule->PrChrValue = 'O';
+          break;
+        case CrossOut:
+          rule->PrChrValue = 'C';
+          break;
+        }
       break;
     case PtThickness:
       switch (value)
-	{
-	case ThinUnderline:
-	  rule->PrChrValue = 'N';
-	  break;
-	case ThickUnderline:
-	  rule->PrChrValue = 'T';
-	  break;
-	}
+        {
+        case ThinUnderline:
+          rule->PrChrValue = 'N';
+          break;
+        case ThickUnderline:
+          rule->PrChrValue = 'T';
+          break;
+        }
       break;
     case PtLineStyle:
       switch (value)
-	{
-	case SolidLine:
-	  rule->PrChrValue = 'S';
-	  break;
-	case DashedLine:
-	  rule->PrChrValue = '-';
-	  break;
-	case DottedLine:
-	  rule->PrChrValue = '.';
-	  break;
-	}
+        {
+        case SolidLine:
+          rule->PrChrValue = 'S';
+          break;
+        case DashedLine:
+          rule->PrChrValue = '-';
+          break;
+        case DottedLine:
+          rule->PrChrValue = '.';
+          break;
+        }
       break;
     case PtDisplay:
       switch (value)
-	{
-	case Undefined:
-	  rule->PrChrValue = 'U';
-	  break;
-	case DisplayNone:
-	  rule->PrChrValue = 'N';
-	  break;
-	case Inline:
-	  rule->PrChrValue = 'I';
-	  break;
-	case Block:
-	  rule->PrChrValue = 'B';
-	  break;
-	case ListItem:
-	  rule->PrChrValue = 'L';
-	  break;
-	case RunIn:
-	  rule->PrChrValue = 'R';
-	  break;
-	case InlineBlock:
-	  rule->PrChrValue = 'b';
-	  break;
-	default:
-	  rule->PrChrValue = 'U';
-	  break;
-	}
+        {
+        case Undefined:
+          rule->PrChrValue = 'U';
+          break;
+        case DisplayNone:
+          rule->PrChrValue = 'N';
+          break;
+        case Inline:
+          rule->PrChrValue = 'I';
+          break;
+        case Block:
+          rule->PrChrValue = 'B';
+          break;
+        case ListItem:
+          rule->PrChrValue = 'L';
+          break;
+        case RunIn:
+          rule->PrChrValue = 'R';
+          break;
+        case InlineBlock:
+          rule->PrChrValue = 'b';
+          break;
+        default:
+          rule->PrChrValue = 'U';
+          break;
+        }
       break;
     case PtListStyleType:
       switch (value)
-	{
-	case Disc:
-	  rule->PrChrValue = 'D';
-	  break;
-	case Circle:
-	  rule->PrChrValue = 'C';
-	  break;
-	case Square:
-	  rule->PrChrValue = 'S';
-	  break;
-	case Decimal:
-	  rule->PrChrValue = '1';
-	  break;
-	case DecimalLeadingZero:
-	  rule->PrChrValue = 'Z';
-	  break;
-	case LowerRoman:
-	  rule->PrChrValue = 'i';
-	  break;
-	case UpperRoman:
-	  rule->PrChrValue = 'I';
-	  break;
-	case LowerGreek:
-	  rule->PrChrValue = 'g';
-	  break;
-	case LowerLatin:
-	  rule->PrChrValue = 'a';
-	  break;
-	case UpperLatin:
-	  rule->PrChrValue = 'A';
-	  break;
-	case ListStyleTypeNone:
-	  rule->PrChrValue = 'N';
-	  break;
-	default:
-	  rule->PrChrValue = 'N';
-	  break;
-	}
+        {
+        case Disc:
+          rule->PrChrValue = 'D';
+          break;
+        case Circle:
+          rule->PrChrValue = 'C';
+          break;
+        case Square:
+          rule->PrChrValue = 'S';
+          break;
+        case Decimal:
+          rule->PrChrValue = '1';
+          break;
+        case DecimalLeadingZero:
+          rule->PrChrValue = 'Z';
+          break;
+        case LowerRoman:
+          rule->PrChrValue = 'i';
+          break;
+        case UpperRoman:
+          rule->PrChrValue = 'I';
+          break;
+        case LowerGreek:
+          rule->PrChrValue = 'g';
+          break;
+        case LowerLatin:
+          rule->PrChrValue = 'a';
+          break;
+        case UpperLatin:
+          rule->PrChrValue = 'A';
+          break;
+        case ListStyleTypeNone:
+          rule->PrChrValue = 'N';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;
+        }
       break;
     case PtListStylePosition:
       switch (value)
-	{
-	case Inside:
-	  rule->PrChrValue = 'I';
-	  break;
-	case Outside:
-	  rule->PrChrValue = 'O';
-	  break;
-	default:
-	  rule->PrChrValue = 'O';
-	  break;
-	}
+        {
+        case Inside:
+          rule->PrChrValue = 'I';
+          break;
+        case Outside:
+          rule->PrChrValue = 'O';
+          break;
+        default:
+          rule->PrChrValue = 'O';
+          break;
+        }
       break;
     case PtListStyleImage:
       rule->PrIntValue = value;
       break;
     case PtFloat:
       switch (value)
-	{
-	case FloatLeft:
-	  rule->PrChrValue = 'L';
-	  break;
-	case FloatRight:
-	  rule->PrChrValue = 'R';
-	  break;
-	default:
-	  rule->PrChrValue = 'N';
-	  break;
-	}
+        {
+        case FloatLeft:
+          rule->PrChrValue = 'L';
+          break;
+        case FloatRight:
+          rule->PrChrValue = 'R';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;
+        }
       break;
     case PtClear:
       switch (value)
-	{
-	case ClearLeft:
-	  rule->PrChrValue = 'L';
-	  break;
-	case ClearRight:
-	  rule->PrChrValue = 'R';
-	  break;
-	case ClearBoth:
-	  rule->PrChrValue = 'B';
-	  break;
-	default:
-	  rule->PrChrValue = 'N';
-	  break;
-	}
+        {
+        case ClearLeft:
+          rule->PrChrValue = 'L';
+          break;
+        case ClearRight:
+          rule->PrChrValue = 'R';
+          break;
+        case ClearBoth:
+          rule->PrChrValue = 'B';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;
+        }
       break;
     case PtPosition:
       switch (value)
-	{
-	case PositionStatic:
-	  rule->PrChrValue = 'S';
-	  break;
-	case PositionRelative:
-	  rule->PrChrValue = 'R';
-	  break;
-	case PositionAbsolute:
-	  rule->PrChrValue = 'A';
-	  break;
-	case PositionFixed:
-	  rule->PrChrValue = 'F';
-	  break;
-	default:
-	  rule->PrChrValue = 'S';
-	  break;
-	}
+        {
+        case PositionStatic:
+          rule->PrChrValue = 'S';
+          break;
+        case PositionRelative:
+          rule->PrChrValue = 'R';
+          break;
+        case PositionAbsolute:
+          rule->PrChrValue = 'A';
+          break;
+        case PositionFixed:
+          rule->PrChrValue = 'F';
+          break;
+        default:
+          rule->PrChrValue = 'S';
+          break;
+        }
       break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
     case PtBorderLeftStyle:
       switch (value)
-	{
-	case BorderStyleNone:
-	  rule->PrChrValue = '0';
-	  break;
-	case BorderStyleHidden:
-	  rule->PrChrValue = 'H';
-	  break;
-	case BorderStyleDotted:
-	  rule->PrChrValue = '.';
-	  break;
-	case BorderStyleDashed:
-	  rule->PrChrValue = '-';
-	  break;
-	case BorderStyleSolid:
-	  rule->PrChrValue = 'S';
-	  break;
-	case BorderStyleDouble:
-	  rule->PrChrValue = 'D';
-	  break;
-	case BorderStyleGroove:
-	  rule->PrChrValue = 'G';
-	  break;
-	case BorderStyleRidge:
-	  rule->PrChrValue = 'R';
-	  break;
-	case BorderStyleInset:
-	  rule->PrChrValue = 'I';
-	  break;
-	case BorderStyleOutset:
-	  rule->PrChrValue = 'O';
-	  break;
-	}
+        {
+        case BorderStyleNone:
+          rule->PrChrValue = '0';
+          break;
+        case BorderStyleHidden:
+          rule->PrChrValue = 'H';
+          break;
+        case BorderStyleDotted:
+          rule->PrChrValue = '.';
+          break;
+        case BorderStyleDashed:
+          rule->PrChrValue = '-';
+          break;
+        case BorderStyleSolid:
+          rule->PrChrValue = 'S';
+          break;
+        case BorderStyleDouble:
+          rule->PrChrValue = 'D';
+          break;
+        case BorderStyleGroove:
+          rule->PrChrValue = 'G';
+          break;
+        case BorderStyleRidge:
+          rule->PrChrValue = 'R';
+          break;
+        case BorderStyleInset:
+          rule->PrChrValue = 'I';
+          break;
+        case BorderStyleOutset:
+          rule->PrChrValue = 'O';
+          break;
+        }
       break;
     case PtBreak1:
     case PtBreak2:
@@ -1756,100 +1756,100 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtMarginBottom:
     case PtMarginRight:
       if (val.typed_data.unit == VALUE_AUTO)
-	{
-	  rule->PrMinUnit = UnAuto;
-	  rule->PrMinValue = 0;
-	}
+        {
+          rule->PrMinUnit = UnAuto;
+          rule->PrMinValue = 0;
+        }
       else
-	{
-	  rule->PrMinUnit = int_unit;
-	  rule->PrMinValue = value;
-	}
+        {
+          rule->PrMinUnit = int_unit;
+          rule->PrMinValue = value;
+        }
       rule->PrMinAttr = FALSE;
       break;
     case PtSize:
       if (int_unit == UnPercent)
-	{
-        rule->PrPresMode = PresInherit;
-        rule->PrInheritMode = InheritParent;
-        rule->PrInhPercent = True;
-        rule->PrInhAttr = False;
-        rule->PrInhDelta = value;
-        rule->PrMinMaxAttr = False;
-        rule->PrInhMinOrMax = 0;
-        rule->PrInhUnit = UnRelative;
-	}
+        {
+          rule->PrPresMode = PresInherit;
+          rule->PrInheritMode = InheritParent;
+          rule->PrInhPercent = True;
+          rule->PrInhAttr = False;
+          rule->PrInhDelta = value;
+          rule->PrMinMaxAttr = False;
+          rule->PrInhMinOrMax = 0;
+          rule->PrInhUnit = UnRelative;
+        }
       else
-	{
-        rule->PrMinUnit = int_unit;
-        rule->PrMinValue = value;
-        rule->PrMinAttr = FALSE;
+        {
+          rule->PrMinUnit = int_unit;
+          rule->PrMinValue = value;
+          rule->PrMinAttr = FALSE;
         }
       break;
     case PtAdjust:
       switch (value)
-	{
-	case AdjustLeft:
-	  rule->PrAdjust = AlignLeft;
-	  break;
-	case AdjustRight:
-	  rule->PrAdjust = AlignRight;
-	  break;
-	case Centered:
-	  rule->PrAdjust = AlignCenter;
-	  break;
-	case LeftWithDots:
-	  rule->PrAdjust = AlignLeftDots;
-	  break;
-	case Justify:
-	  rule->PrAdjust = AlignJustify;
-	  break;
-	default:
-	  rule->PrAdjust = AlignLeft;
-	  break;
-	}
+        {
+        case AdjustLeft:
+          rule->PrAdjust = AlignLeft;
+          break;
+        case AdjustRight:
+          rule->PrAdjust = AlignRight;
+          break;
+        case Centered:
+          rule->PrAdjust = AlignCenter;
+          break;
+        case LeftWithDots:
+          rule->PrAdjust = AlignLeftDots;
+          break;
+        case Justify:
+          rule->PrAdjust = AlignJustify;
+          break;
+        default:
+          rule->PrAdjust = AlignLeft;
+          break;
+        }
       break;
     case PtDirection:
       switch (value)
-	{
-	case LeftToRight:
-	  rule->PrChrValue = 'L';
-	  break;
-	case RightToLeft:
-	  rule->PrChrValue = 'R';
-	  break;
-	default:
-	  rule->PrChrValue = 'L';
-	  break;	  
-	}
+        {
+        case LeftToRight:
+          rule->PrChrValue = 'L';
+          break;
+        case RightToLeft:
+          rule->PrChrValue = 'R';
+          break;
+        default:
+          rule->PrChrValue = 'L';
+          break;	  
+        }
       break;
     case PtUnicodeBidi:
       switch (value)
-	{
-	case Normal:
-	  rule->PrChrValue = 'N';
-	  break;
-	case Embed:
-	  rule->PrChrValue = 'E';
-	  break;
-	case Override:
-	  rule->PrChrValue = 'O';
-	  break;
-	default:
-	  rule->PrChrValue = 'N';
-	  break;	  
-	}
+        {
+        case Normal:
+          rule->PrChrValue = 'N';
+          break;
+        case Embed:
+          rule->PrChrValue = 'E';
+          break;
+        case Override:
+          rule->PrChrValue = 'O';
+          break;
+        default:
+          rule->PrChrValue = 'N';
+          break;	  
+        }
       break;
     case PtHyphenate:
       switch (value)
-	{
-	case Hyphenation:
-	  rule->PrBoolValue = TRUE;
-	  break;
-	case NoHyphenation:
-	  rule->PrBoolValue = FALSE;
-	  break;
-	}
+        {
+        case Hyphenation:
+          rule->PrBoolValue = TRUE;
+          break;
+        case NoHyphenation:
+          rule->PrBoolValue = FALSE;
+          break;
+        }
       break;
     case PtVertRef:
     case PtHorizRef:
@@ -1858,185 +1858,185 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtVertPos:
       if (funcType == 0)
-	{
-	  if (val.typed_data.mainValue)
-	    {
-	      rule->PrPosRule.PoDistUnit = int_unit;
-	      rule->PrPosRule.PoDistance = value;
-	    }
-	  else
-	    {
-	      rule->PrPosRule.PoDeltaUnit = int_unit;
-	      rule->PrPosRule.PoDistDelta = value;
-	    }
-	}
+        {
+          if (val.typed_data.mainValue)
+            {
+              rule->PrPosRule.PoDistUnit = int_unit;
+              rule->PrPosRule.PoDistance = value;
+            }
+          else
+            {
+              rule->PrPosRule.PoDeltaUnit = int_unit;
+              rule->PrPosRule.PoDistDelta = value;
+            }
+        }
       else
-	/* funcType represents the axis used for positionning */
-	switch (funcType)
-	  {
-	  case PositionTop:
-	    rule->PrPosRule.PoPosDef = Top;
-	    break;
-	  case PositionBottom:
-	    rule->PrPosRule.PoPosDef = Bottom;
-	    break;
-	  case PositionHorizRef:
-	    rule->PrPosRule.PoPosDef = HorizRef;
-	    break;
-	  case PositionHorizMiddle:
-	    rule->PrPosRule.PoPosDef = HorizMiddle;
-	    break;
-	  default:
-	    break;
-	  }
+        /* funcType represents the axis used for positionning */
+        switch (funcType)
+          {
+          case PositionTop:
+            rule->PrPosRule.PoPosDef = Top;
+            break;
+          case PositionBottom:
+            rule->PrPosRule.PoPosDef = Bottom;
+            break;
+          case PositionHorizRef:
+            rule->PrPosRule.PoPosDef = HorizRef;
+            break;
+          case PositionHorizMiddle:
+            rule->PrPosRule.PoPosDef = HorizMiddle;
+            break;
+          default:
+            break;
+          }
       if (generic)
-	{
-	  /* generate a complete rule Top=Previous AnyElem.Bottom+value */
-	  rule->PrPosRule.PoPosDef = Top;
-	  rule->PrPosRule.PoPosRef = Bottom;
-	  rule->PrPosRule.PoRelation = RlPrevious;
-	  rule->PrPosRule.PoNotRel = FALSE;
-	  rule->PrPosRule.PoRefKind = RkAnyElem;
-	  rule->PrPosRule.PoUserSpecified = FALSE;
-	  rule->PrPosRule.PoRefIdent = 0;	  
-	}
+        {
+          /* generate a complete rule Top=Previous AnyElem.Bottom+value */
+          rule->PrPosRule.PoPosDef = Top;
+          rule->PrPosRule.PoPosRef = Bottom;
+          rule->PrPosRule.PoRelation = RlPrevious;
+          rule->PrPosRule.PoNotRel = FALSE;
+          rule->PrPosRule.PoRefKind = RkAnyElem;
+          rule->PrPosRule.PoUserSpecified = FALSE;
+          rule->PrPosRule.PoRefIdent = 0;	  
+        }
       break;
     case PtHorizPos:
       if (funcType == 0)
-	{
-	  if (val.typed_data.mainValue)
-	    {
-	      rule->PrPosRule.PoDistUnit = int_unit;
-	      rule->PrPosRule.PoDistance = value;
-	    }
-	  else
-	    {
-	      rule->PrPosRule.PoDeltaUnit = int_unit;
-	      rule->PrPosRule.PoDistDelta = value;
-	    }
-	}
+        {
+          if (val.typed_data.mainValue)
+            {
+              rule->PrPosRule.PoDistUnit = int_unit;
+              rule->PrPosRule.PoDistance = value;
+            }
+          else
+            {
+              rule->PrPosRule.PoDeltaUnit = int_unit;
+              rule->PrPosRule.PoDistDelta = value;
+            }
+        }
       else
-	/* funcType represents the axis used for positionning */
-	switch (funcType)
-	  {
-	  case PositionLeft:
-	    rule->PrPosRule.PoPosDef = Left;
-	    break;
-	  case PositionRight:
-	    rule->PrPosRule.PoPosDef = Right;
-	    break;
-	  case PositionVertRef:
-	    rule->PrPosRule.PoPosDef = VertRef;
-	    break;
-	  case PositionVertMiddle:
-	    rule->PrPosRule.PoPosDef = VertMiddle;
-	    break;
-	  default:
-	    break;
-	  }
+        /* funcType represents the axis used for positionning */
+        switch (funcType)
+          {
+          case PositionLeft:
+            rule->PrPosRule.PoPosDef = Left;
+            break;
+          case PositionRight:
+            rule->PrPosRule.PoPosDef = Right;
+            break;
+          case PositionVertRef:
+            rule->PrPosRule.PoPosDef = VertRef;
+            break;
+          case PositionVertMiddle:
+            rule->PrPosRule.PoPosDef = VertMiddle;
+            break;
+          default:
+            break;
+          }
       if (generic)
-	{
-	  /* generate a complete rule Left=Enclosing.left+value */
-	  rule->PrPosRule.PoPosDef = Left;
-	  rule->PrPosRule.PoPosRef = Left;
-	  rule->PrPosRule.PoRelation = RlEnclosing;
-	  rule->PrPosRule.PoNotRel = FALSE;
-	  rule->PrPosRule.PoRefKind = RkElType;
-	  rule->PrPosRule.PoUserSpecified = FALSE;
-	  rule->PrPosRule.PoRefIdent = 0;	  
-	}
+        {
+          /* generate a complete rule Left=Enclosing.left+value */
+          rule->PrPosRule.PoPosDef = Left;
+          rule->PrPosRule.PoPosRef = Left;
+          rule->PrPosRule.PoRelation = RlEnclosing;
+          rule->PrPosRule.PoNotRel = FALSE;
+          rule->PrPosRule.PoRefKind = RkElType;
+          rule->PrPosRule.PoUserSpecified = FALSE;
+          rule->PrPosRule.PoRefIdent = 0;	  
+        }
       break;
     case PtHeight:
       if (generic)
-	{
-	  /* generate a complete rule Height=Enclosed.Height */
-	  rule->PrDimRule.DrPosition = FALSE;
-	  rule->PrDimRule.DrAbsolute = FALSE;
-	  rule->PrDimRule.DrSameDimens = TRUE;
-	  rule->PrDimRule.DrUnit = int_unit;
-	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = minValue;
-	  rule->PrDimRule.DrUserSpecified = FALSE;
-	  rule->PrDimRule.DrRelation = RlEnclosed;
-	  rule->PrDimRule.DrNotRelat = FALSE;
-	  rule->PrDimRule.DrRefKind = RkElType;
-	  rule->PrDimRule.DrRefIdent = 0;	  
-	}
+        {
+          /* generate a complete rule Height=Enclosed.Height */
+          rule->PrDimRule.DrPosition = FALSE;
+          rule->PrDimRule.DrAbsolute = FALSE;
+          rule->PrDimRule.DrSameDimens = TRUE;
+          rule->PrDimRule.DrUnit = int_unit;
+          rule->PrDimRule.DrAttr = FALSE;
+          rule->PrDimRule.DrMin = minValue;
+          rule->PrDimRule.DrUserSpecified = FALSE;
+          rule->PrDimRule.DrRelation = RlEnclosed;
+          rule->PrDimRule.DrNotRelat = FALSE;
+          rule->PrDimRule.DrRefKind = RkElType;
+          rule->PrDimRule.DrRefIdent = 0;	  
+        }
       if (rule->PrDimRule.DrPosition)
-          {
-	  rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
-	  rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
-	  rule->PrDimRule.DrPosRule.PoDistance = value;
-	  }
+        {
+          rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
+          rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
+          rule->PrDimRule.DrPosRule.PoDistance = value;
+        }
       else
-	{
-	  rule->PrDimRule.DrUnit = int_unit;
-	  rule->PrDimRule.DrAttr = FALSE;
-	  if (absolute)
-	    {
-	      if (val.typed_data.unit == VALUE_AUTO)
-		/* it means "height: auto" */
-		{
-		  rule->PrDimRule.DrPosition = FALSE;
-		  rule->PrDimRule.DrAbsolute = FALSE;
-		  rule->PrDimRule.DrRelation = RlEnclosed;
-		}
-	      else
-		{
-		  rule->PrDimRule.DrAbsolute = TRUE;
-		  rule->PrDimRule.DrValue = value;
-		}
-	    }
-	  else
-	    rule->PrDimRule.DrValue = 0;
-	}
+        {
+          rule->PrDimRule.DrUnit = int_unit;
+          rule->PrDimRule.DrAttr = FALSE;
+          if (absolute)
+            {
+              if (val.typed_data.unit == VALUE_AUTO)
+                /* it means "height: auto" */
+                {
+                  rule->PrDimRule.DrPosition = FALSE;
+                  rule->PrDimRule.DrAbsolute = FALSE;
+                  rule->PrDimRule.DrRelation = RlEnclosed;
+                }
+              else
+                {
+                  rule->PrDimRule.DrAbsolute = TRUE;
+                  rule->PrDimRule.DrValue = value;
+                }
+            }
+          else
+            rule->PrDimRule.DrValue = 0;
+        }
       break;
     case PtWidth:
       if (generic)
-	{
-	  /* generate a complete rule Width=Enclosing.Width+value */
-	  rule->PrDimRule.DrPosition = FALSE;
-	  rule->PrDimRule.DrAbsolute = FALSE;
-	  rule->PrDimRule.DrSameDimens = TRUE;
-	  rule->PrDimRule.DrUnit = int_unit;
-	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = minValue;
-	  rule->PrDimRule.DrUserSpecified = FALSE;
-	  rule->PrDimRule.DrRelation = RlEnclosing;
-	  rule->PrDimRule.DrNotRelat = FALSE;
-	  rule->PrDimRule.DrRefKind = RkElType;
-	  rule->PrDimRule.DrRefIdent = 0;
-	}
+        {
+          /* generate a complete rule Width=Enclosing.Width+value */
+          rule->PrDimRule.DrPosition = FALSE;
+          rule->PrDimRule.DrAbsolute = FALSE;
+          rule->PrDimRule.DrSameDimens = TRUE;
+          rule->PrDimRule.DrUnit = int_unit;
+          rule->PrDimRule.DrAttr = FALSE;
+          rule->PrDimRule.DrMin = minValue;
+          rule->PrDimRule.DrUserSpecified = FALSE;
+          rule->PrDimRule.DrRelation = RlEnclosing;
+          rule->PrDimRule.DrNotRelat = FALSE;
+          rule->PrDimRule.DrRefKind = RkElType;
+          rule->PrDimRule.DrRefIdent = 0;
+        }
       if (rule->PrDimRule.DrPosition)
-          {
-	  rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
-	  rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
-	  rule->PrDimRule.DrPosRule.PoDistance = value;
-	  }
+        {
+          rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
+          rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
+          rule->PrDimRule.DrPosRule.PoDistance = value;
+        }
       else
-	{
-	  rule->PrDimRule.DrUnit = int_unit;
-	  rule->PrDimRule.DrAttr = FALSE;
-	  if (absolute)
-	    {
-	      if (val.typed_data.unit == VALUE_AUTO)
-		/* it means "width: auto" */
-		{
-		  rule->PrDimRule.DrPosition = FALSE;
-		  rule->PrDimRule.DrAbsolute = FALSE;
-		  rule->PrDimRule.DrRelation = RlEnclosed;
-		}
-	      else
-		{
-		  rule->PrDimRule.DrAbsolute = TRUE;
-		  rule->PrDimRule.DrValue = value;
-		}
-	    }
-	  else if (int_unit == UnPercent)
-	    rule->PrDimRule.DrValue = 100 - value;
-	  else
-	    rule->PrDimRule.DrValue = -value;
-	}
+        {
+          rule->PrDimRule.DrUnit = int_unit;
+          rule->PrDimRule.DrAttr = FALSE;
+          if (absolute)
+            {
+              if (val.typed_data.unit == VALUE_AUTO)
+                /* it means "width: auto" */
+                {
+                  rule->PrDimRule.DrPosition = FALSE;
+                  rule->PrDimRule.DrAbsolute = FALSE;
+                  rule->PrDimRule.DrRelation = RlEnclosed;
+                }
+              else
+                {
+                  rule->PrDimRule.DrAbsolute = TRUE;
+                  rule->PrDimRule.DrValue = value;
+                }
+            }
+          else if (int_unit == UnPercent)
+            rule->PrDimRule.DrValue = 100 - value;
+          else
+            rule->PrDimRule.DrValue = -value;
+        }
       break;
     case PtPictInfo:
       break;
@@ -2047,62 +2047,62 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtFunction:
       rule->PrPresMode = PresFunction;
       switch (funcType)
-	{
-	case FnCreateBefore:
-	case FnCreateWith:
-	case FnCreateFirst:
-	case FnCreateLast:
-	case FnCreateAfter:
+        {
+        case FnCreateBefore:
+        case FnCreateWith:
+        case FnCreateFirst:
+        case FnCreateLast:
+        case FnCreateAfter:
         case FnContent:
-	case FnCreateEnclosing:
-	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrNPresBoxes = 1;
-	  rule->PrPresBox[0] = value;
-	  rule->PrElement = FALSE;
-	  break;
-	case FnShowBox:
-	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrNPresBoxes = value;
-	  break;
-	case FnBackgroundPicture:
-	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrNPresBoxes = 1;
-	  rule->PrPresBox[0] = value;
-	  break;
-	case FnPictureMode:
-	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrNPresBoxes = 1;
-	  switch (value)
-	    {
-	    case REALSIZE:
-	      rule->PrPresBox[0] = RealSize;
-	      break;
-	    case SCALE:
-	      rule->PrPresBox[0] = ReScale;
-	      break;
-	    case REPEAT:
-	      rule->PrPresBox[0] = FillFrame;
-	      break;
-	    case XREPEAT:
-	      rule->PrPresBox[0] = XRepeat;
-	      break;
-	    case YREPEAT:
-	      rule->PrPresBox[0] = YRepeat;
-	      break;
-	    default:
-	      rule->PrPresBox[0] = RealSize;
-	    }
-	  break;
-	case FnPage:
-	  rule->PrPresFunction = (FunctionType) funcType;
-	  rule->PrPresBoxRepeat = FALSE;
-	  rule->PrExternal = FALSE;
-	  rule->PrElement = FALSE;
-	  rule->PrNPresBoxes = 0;
-	  rule->PrPresBox[0] = 0;
-	  rule->PrPresBoxName[0] = EOS;
-	  break;
-	}
+        case FnCreateEnclosing:
+          rule->PrPresFunction = (FunctionType) funcType;
+          rule->PrNPresBoxes = 1;
+          rule->PrPresBox[0] = value;
+          rule->PrElement = FALSE;
+          break;
+        case FnShowBox:
+          rule->PrPresFunction = (FunctionType) funcType;
+          rule->PrNPresBoxes = value;
+          break;
+        case FnBackgroundPicture:
+          rule->PrPresFunction = (FunctionType) funcType;
+          rule->PrNPresBoxes = 1;
+          rule->PrPresBox[0] = value;
+          break;
+        case FnPictureMode:
+          rule->PrPresFunction = (FunctionType) funcType;
+          rule->PrNPresBoxes = 1;
+          switch (value)
+            {
+            case REALSIZE:
+              rule->PrPresBox[0] = RealSize;
+              break;
+            case SCALE:
+              rule->PrPresBox[0] = ReScale;
+              break;
+            case REPEAT:
+              rule->PrPresBox[0] = FillFrame;
+              break;
+            case XREPEAT:
+              rule->PrPresBox[0] = XRepeat;
+              break;
+            case YREPEAT:
+              rule->PrPresBox[0] = YRepeat;
+              break;
+            default:
+              rule->PrPresBox[0] = RealSize;
+            }
+          break;
+        case FnPage:
+          rule->PrPresFunction = (FunctionType) funcType;
+          rule->PrPresBoxRepeat = FALSE;
+          rule->PrExternal = FALSE;
+          rule->PrElement = FALSE;
+          rule->PrNPresBoxes = 0;
+          rule->PrPresBox[0] = 0;
+          rule->PrPresBoxName[0] = EOS;
+          break;
+        }
       break;
     }
 }
@@ -2143,304 +2143,304 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
       break;
     case PtFont:
       switch (rule->PrChrValue)
-	{
-	case 'H':
-	  value = FontHelvetica;
-	  break;
-	case 'T':
-	  value = FontTimes;
-	  break;
-	case 'C':
-	  value = FontCourier;
-	  break;
+        {
+        case 'H':
+          value = FontHelvetica;
+          break;
+        case 'T':
+          value = FontTimes;
+          break;
+        case 'C':
+          value = FontCourier;
+          break;
 #ifdef _WINGUI
-	case -1:
-	  value = FontOther;
-	  break;
+        case -1:
+          value = FontOther;
+          break;
 #endif /* _WINGUI */
-	}
+        }
       break;
 
     case PtStyle:
       switch (rule->PrChrValue)
-	{
-	case 'R':
-	  value = StyleRoman;
-	  break;
-	case 'I':
-	  value = StyleItalics;
-	  break;
-	case 'O':
-	  value = StyleOblique;
-	  break;
-	default:
-	  value = StyleRoman;
-	  break;
-	}
+        {
+        case 'R':
+          value = StyleRoman;
+          break;
+        case 'I':
+          value = StyleItalics;
+          break;
+        case 'O':
+          value = StyleOblique;
+          break;
+        default:
+          value = StyleRoman;
+          break;
+        }
       break;
 
     case PtWeight:
       switch (rule->PrChrValue)
-	{
-	case 'B':
-	  value = WeightBold;
-	  break;
-	case 'N':
-	  value = WeightNormal;
-	  break;
-	default:
-	  value = WeightNormal;
-	  break;
-	}
+        {
+        case 'B':
+          value = WeightBold;
+          break;
+        case 'N':
+          value = WeightNormal;
+          break;
+        default:
+          value = WeightNormal;
+          break;
+        }
       break;
 
     case PtUnderline:
       switch (rule->PrChrValue)
-	{
-	case 'N':
-	  value = NoUnderline;
-	  break;
-	case 'U':
-	  value = Underline;
-	  break;
-	case 'O':
-	  value = Overline;
-	  break;
-	case 'C':
-	  value = CrossOut;
-	  break;
-	}
+        {
+        case 'N':
+          value = NoUnderline;
+          break;
+        case 'U':
+          value = Underline;
+          break;
+        case 'O':
+          value = Overline;
+          break;
+        case 'C':
+          value = CrossOut;
+          break;
+        }
       break;
 
     case PtThickness:
       switch (rule->PrChrValue)
-	{
-	case 'N':
-	  value = ThinUnderline;
-	  break;
-	case 'T':
-	  value = ThickUnderline;
-	  break;
-	}
+        {
+        case 'N':
+          value = ThinUnderline;
+          break;
+        case 'T':
+          value = ThickUnderline;
+          break;
+        }
       break;
 
     case PtDirection:
       switch (rule->PrChrValue)
-	{
-	case 'R':
-	  value = RightToLeft;
-	  break;
-	case 'L':
-	  value = LeftToRight;
-	  break;
-	}
+        {
+        case 'R':
+          value = RightToLeft;
+          break;
+        case 'L':
+          value = LeftToRight;
+          break;
+        }
       break;
 
     case PtUnicodeBidi:
       switch (rule->PrChrValue)
-	{
-	case 'N':
-	  value = Normal;
-	  break;
-	case 'E':
-	  value = Embed;
-	  break;
-	case 'O':
-	  value = Override;
-	  break;
-	}
+        {
+        case 'N':
+          value = Normal;
+          break;
+        case 'E':
+          value = Embed;
+          break;
+        case 'O':
+          value = Override;
+          break;
+        }
       break;
 
     case PtLineStyle:
       switch (rule->PrChrValue)
-	{
-	case 'S':
-	  value = SolidLine;
-	  break;
-	case '-':
-	  value = DashedLine;
-	  break;
-	case '.':
-	  value = DottedLine;
-	  break;
-	}
+        {
+        case 'S':
+          value = SolidLine;
+          break;
+        case '-':
+          value = DashedLine;
+          break;
+        case '.':
+          value = DottedLine;
+          break;
+        }
       break;
 
     case PtDisplay:
       switch (rule->PrChrValue)
-	{
-	case 'U':
-	  value = Undefined;
-	  break;
-	case 'N':
-	  value = DisplayNone;
-	  break;
-	case 'I':
-	  value = Inline;
-	  break;
-	case 'B':
-	  value = Block;
-	  break;
-	case 'L':
-	  value = ListItem;
-	  break;
-	case 'R':
-	  value = RunIn;
-	  break;
-	case 'b':
-	  value = InlineBlock;
-	  break;
-	default:
-	  value = Undefined;
-	  break;
-	}
+        {
+        case 'U':
+          value = Undefined;
+          break;
+        case 'N':
+          value = DisplayNone;
+          break;
+        case 'I':
+          value = Inline;
+          break;
+        case 'B':
+          value = Block;
+          break;
+        case 'L':
+          value = ListItem;
+          break;
+        case 'R':
+          value = RunIn;
+          break;
+        case 'b':
+          value = InlineBlock;
+          break;
+        default:
+          value = Undefined;
+          break;
+        }
       break;
     case PtListStyleType:
-       switch (rule->PrChrValue)
-	 {
-	 case 'D':
-	  value = Disc;
-	  break;
-	 case 'C':
-	  value = Circle;
-	  break;
-	 case 'S':
-	  value = Square;
-	  break;
-	 case '1':
-	  value = Decimal;
-	  break;
-	 case 'Z':
-	  value = DecimalLeadingZero;
-	  break;
-	 case 'i':
-	  value = LowerRoman;
-	  break;
-	 case 'I':
-	  value = UpperRoman;
-	  break;
-	 case 'g':
-	  value = LowerGreek;
-	  break;
-	 case 'a':
-	  value = LowerLatin;
-	  break;
-	 case 'A':
-	  value = UpperLatin;
-	  break;
-	 case 'N':
-	  value = ListStyleTypeNone;
-	  break;
-	 default:
-	  value = ListStyleTypeNone;
-	  break;
-	 }
-       break;
+      switch (rule->PrChrValue)
+        {
+        case 'D':
+          value = Disc;
+          break;
+        case 'C':
+          value = Circle;
+          break;
+        case 'S':
+          value = Square;
+          break;
+        case '1':
+          value = Decimal;
+          break;
+        case 'Z':
+          value = DecimalLeadingZero;
+          break;
+        case 'i':
+          value = LowerRoman;
+          break;
+        case 'I':
+          value = UpperRoman;
+          break;
+        case 'g':
+          value = LowerGreek;
+          break;
+        case 'a':
+          value = LowerLatin;
+          break;
+        case 'A':
+          value = UpperLatin;
+          break;
+        case 'N':
+          value = ListStyleTypeNone;
+          break;
+        default:
+          value = ListStyleTypeNone;
+          break;
+        }
+      break;
     case PtListStylePosition:
-       switch (rule->PrChrValue)
-	 {
-	 case 'I':
-	  value = Inside;
-	  break;
-	 case 'O':
-	  value = Outside;
-	  break;
-	 default:
-	  value = Outside;
-	  break;
-	 }
-       break;
+      switch (rule->PrChrValue)
+        {
+        case 'I':
+          value = Inside;
+          break;
+        case 'O':
+          value = Outside;
+          break;
+        default:
+          value = Outside;
+          break;
+        }
+      break;
     case PtListStyleImage:
-       value = rule->PrIntValue;
-       break;
+      value = rule->PrIntValue;
+      break;
     case PtFloat:
-       switch (rule->PrChrValue)
-	{
-	case 'L':
-	  value = FloatLeft;
-	  break;
-	case 'R':
-	  value = FloatRight;
-	  break;
-	default:
-	  value = FloatNone;
-	  break;
-	}
+      switch (rule->PrChrValue)
+        {
+        case 'L':
+          value = FloatLeft;
+          break;
+        case 'R':
+          value = FloatRight;
+          break;
+        default:
+          value = FloatNone;
+          break;
+        }
       break;
     case PtClear:
       switch (rule->PrChrValue)
-	{
-	case 'L':
-	  value = ClearLeft;
-	  break;
-	case 'R':
-	  value = ClearRight;
-	  break;
-	case 'B':
-	  value = ClearBoth;
-	  break;
-	default:
-	  value = ClearNone;
-	  break;
-	}
+        {
+        case 'L':
+          value = ClearLeft;
+          break;
+        case 'R':
+          value = ClearRight;
+          break;
+        case 'B':
+          value = ClearBoth;
+          break;
+        default:
+          value = ClearNone;
+          break;
+        }
       break;
     case PtPosition:
       switch (rule->PrChrValue)
-	{
-	  case 'S':
-	    value = PnStatic;
-	    break;
-	  case 'R':
-	    value = PnRelative;
-	    break;
-	  case 'A':
-	    value = PnAbsolute;
-	    break;
-	  case 'F':
-	    value = PnFixed;
-	    break;
-	  case 'I':
-	    value = PnInherit;
-	    break;
-	}
+        {
+        case 'S':
+          value = PnStatic;
+          break;
+        case 'R':
+          value = PnRelative;
+          break;
+        case 'A':
+          value = PnAbsolute;
+          break;
+        case 'F':
+          value = PnFixed;
+          break;
+        case 'I':
+          value = PnInherit;
+          break;
+        }
       break;
     case PtBorderTopStyle:
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
     case PtBorderLeftStyle:
       switch (rule->PrChrValue)
-	{
-	case '0':
-	  value = BorderStyleNone;
-	  break;
-	case 'H':
-	  value = BorderStyleHidden;
-	  break;
-	case '.':
-	  value = BorderStyleDotted;
-	  break;
-	case '-':
-	  value = BorderStyleDashed;
-	  break;
-	case 'S':
-	  value = BorderStyleSolid;
-	  break;
-	case 'D':
-	  value = BorderStyleDouble;
-	  break;
-	case 'G':
-	  value = BorderStyleGroove;
-	  break;
-	case 'R':
-	  value = BorderStyleRidge;
-	  break;
-	case 'I':
-	  value = BorderStyleInset;
-	  break;
-	case 'O':
-	  value = BorderStyleOutset;
-	  break;
-	}
+        {
+        case '0':
+          value = BorderStyleNone;
+          break;
+        case 'H':
+          value = BorderStyleHidden;
+          break;
+        case '.':
+          value = BorderStyleDotted;
+          break;
+        case '-':
+          value = BorderStyleDashed;
+          break;
+        case 'S':
+          value = BorderStyleSolid;
+          break;
+        case 'D':
+          value = BorderStyleDouble;
+          break;
+        case 'G':
+          value = BorderStyleGroove;
+          break;
+        case 'R':
+          value = BorderStyleRidge;
+          break;
+        case 'I':
+          value = BorderStyleInset;
+          break;
+        case 'O':
+          value = BorderStyleOutset;
+          break;
+        }
       break;
 
     case PtBreak1:
@@ -2472,15 +2472,15 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 
     case PtSize:
       if (rule->PrPresMode == PresInherit)
-	{
-        int_unit = UnPercent;
-        value = rule->PrInhDelta;
-	}
+        {
+          int_unit = UnPercent;
+          value = rule->PrInhDelta;
+        }
       else
-	{
-        int_unit = rule->PrMinUnit;
-        value = rule->PrMinValue;
-	}
+        {
+          int_unit = rule->PrMinUnit;
+          value = rule->PrMinValue;
+        }
       break;
 
     case PtVertRef:
@@ -2495,16 +2495,16 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtWidth:
       int_unit = rule->PrDimRule.DrUnit;
       if (int_unit == -1)
-	int_unit = UnPixel;
+        int_unit = UnPixel;
 
       value = rule->PrDimRule.DrValue;
       break;
 
     case PtHyphenate:
       if (rule->PrBoolValue)
-	value = Hyphenation;
+        value = Hyphenation;
       else
-	value = NoHyphenation;
+        value = NoHyphenation;
       break;
 
     case PtPictInfo:
@@ -2517,80 +2517,80 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 
     case PtAdjust:
       switch (rule->PrAdjust)
-	{
-	case AlignLeft:
-	  value = AdjustLeft;
-	  break;
-	case AlignRight:
-	  value = AdjustRight;
-	  break;
-	case AlignCenter:
-	  value = Centered;
-	  break;
-	case AlignLeftDots:
-	  value = LeftWithDots;
-	  break;
-	case AlignJustify:
-	  value = Justify;
-	  break;
-	default:
-	  value = AdjustLeft;
-	  break;
-	}
+        {
+        case AlignLeft:
+          value = AdjustLeft;
+          break;
+        case AlignRight:
+          value = AdjustRight;
+          break;
+        case AlignCenter:
+          value = Centered;
+          break;
+        case AlignLeftDots:
+          value = LeftWithDots;
+          break;
+        case AlignJustify:
+          value = Justify;
+          break;
+        default:
+          value = AdjustLeft;
+          break;
+        }
       break;
 
     case PtFunction:
       switch (rule->PrPresFunction)
-	{
-	case FnCreateBefore:
-	case FnCreateWith:
-	case FnCreateFirst:
-	case FnCreateLast:
-	case FnCreateAfter:
-	case FnCreateEnclosing:
-	  value = rule->PrNPresBoxes;
-	  unit = UNIT_BOX;
-	  break;
-	case FnShowBox:
-	  value = rule->PrNPresBoxes;
-	  unit = UNIT_REL;
-	  break;
-	case FnBackgroundPicture:
-	  value = rule->PrPresBox[0];
-	  unit = UNIT_REL;
-	  break;
-	case FnPictureMode:
-	  unit = UNIT_REL;
-	  value = REALSIZE;
-	  switch (rule->PrPresBox[0])
-	    {
-	    case RealSize:
-	      value = REALSIZE;
-	      break;
-	    case ReScale:
-	      value = SCALE;
-	      break;
-	    case FillFrame:
-	      value = REPEAT;
-	      break;
-	    case XRepeat:
-	      value = XREPEAT;
-	      break;
-	    case YRepeat:
-	      value = YREPEAT;
-	      break;
-	    default:
-	      unit = UNIT_INVALID;
-	      value = 0;
-	    }
-	  break;
-	case FnPage:
-	  value = PageAlways;
-	  unit = UNIT_REL;
-	  break;
-	default:
-	  break;
-	}
+        {
+        case FnCreateBefore:
+        case FnCreateWith:
+        case FnCreateFirst:
+        case FnCreateLast:
+        case FnCreateAfter:
+        case FnCreateEnclosing:
+          value = rule->PrNPresBoxes;
+          unit = UNIT_BOX;
+          break;
+        case FnShowBox:
+          value = rule->PrNPresBoxes;
+          unit = UNIT_REL;
+          break;
+        case FnBackgroundPicture:
+          value = rule->PrPresBox[0];
+          unit = UNIT_REL;
+          break;
+        case FnPictureMode:
+          unit = UNIT_REL;
+          value = REALSIZE;
+          switch (rule->PrPresBox[0])
+            {
+            case RealSize:
+              value = REALSIZE;
+              break;
+            case ReScale:
+              value = SCALE;
+              break;
+            case FillFrame:
+              value = REPEAT;
+              break;
+            case XRepeat:
+              value = XREPEAT;
+              break;
+            case YRepeat:
+              value = YREPEAT;
+              break;
+            default:
+              unit = UNIT_INVALID;
+              value = 0;
+            }
+          break;
+        case FnPage:
+          value = PageAlways;
+          unit = UNIT_REL;
+          break;
+        default:
+          break;
+        }
       break;
     }
 
@@ -2600,13 +2600,13 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case UnRelative:
       type = rule->PrType;
       if (type == PtBreak1 ||
-	  type == PtBreak2 ||
-	  type == PtIndent ||
-	  type == PtLineSpacing ||
-	  type == PtLineWeight)
-	unit = UNIT_REL;
+          type == PtBreak2 ||
+          type == PtIndent ||
+          type == PtLineSpacing ||
+          type == PtLineWeight)
+        unit = UNIT_REL;
       else
-	unit = UNIT_EM;
+        unit = UNIT_EM;
       break;
     case UnXHeight:
       unit = UNIT_XHEIGHT;
@@ -2645,7 +2645,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void TypeToPresentation (unsigned int type, PRuleType *intRule,
-				unsigned int *func, ThotBool *absolute)
+                                unsigned int *func, ThotBool *absolute)
 {
   *func = 0;
   *absolute = FALSE;
@@ -2882,7 +2882,7 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
   Add a new item to a Thot presentation variable.
   ----------------------------------------------------------------------*/
 static void SetVariableItem (unsigned int type, PSchema tsch,
-			     PresentationContext c, PresentationValue v)
+                             PresentationContext c, PresentationValue v)
 {
   GenericContext     ctxt = (GenericContext) c;
   PresVariable       *pVar;
@@ -2899,14 +2899,14 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
     {
       pVar = &(((PtrPSchema)tsch)->PsVariable[ctxt->var - 1]);
       if (pVar->PvNItems < MAX_PRES_VAR_ITEM)
-	{
-	  if (type == PRContentString || type == PRContentURL)
-	    {
-	      pVar->PvItem[pVar->PvNItems].ViType = VarText;
-	      pVar->PvItem[pVar->PvNItems].ViConstant = cst;
-	    }
-	  pVar->PvNItems ++;
-	}
+        {
+          if (type == PRContentString || type == PRContentURL)
+            {
+              pVar->PvItem[pVar->PvNItems].ViType = VarText;
+              pVar->PvItem[pVar->PvNItems].ViConstant = cst;
+            }
+          pVar->PvNItems ++;
+        }
     }
 }
 
@@ -2935,18 +2935,18 @@ static void VariableInsert (PtrPSchema tsch, GenericContext c)
   extended presentation schema.
   type: type of the presentation rule
   el: element to which the presentation rule must be attached. If NULL,
-      the rule is not attached to an element but included in an extended
-      P schema (generic rule).
+  the rule is not attached to an element but included in an extended
+  P schema (generic rule).
   tsch: extended P schema to which the rule will be attached. If NULL,
-        the rule is attached to element el (which must not be NULL).
+  the rule is attached to element el (which must not be NULL).
   c: context of the rule. For a position rule (type = PRVertPos or PRHorizPos)
-     ctxt->type indicates the edge whose position is set; ctxt->type = 0
-     indicates that only the distance is changed, not the edge.
+  ctxt->type indicates the edge whose position is set; ctxt->type = 0
+  indicates that only the distance is changed, not the edge.
   v: value for the rule. For a position rule (type = PRVertPos or PRHorizPos)
-     v indicates the distance; it is taken into account only if ctxt->type = 0.
+  v indicates the distance; it is taken into account only if ctxt->type = 0.
   ----------------------------------------------------------------------*/
 int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
-			     PresentationContext c, PresentationValue v)
+                             PresentationContext c, PresentationValue v)
 {
   GenericContext     ctxt = (GenericContext) c;
   PtrPRule           pRule;
@@ -2968,100 +2968,100 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
       TypeToPresentation (type, &intRule, &func, &absolute);
       generic = (el == NULL);
       if (type == PRHeight)
-	{
-	  /* check if the height is a minimum value or not */
-	  if (!generic)
-	    {
-	      elType = TtaGetElementType (el);
-	      i = elType.ElTypeNum;
-	    }
-	  else
-	    i = ctxt->type;
-	  /* apply a min value for all compound element */
-	  minValue = (i == 0 || i >= PageBreak);
-	}
+        {
+          /* check if the height is a minimum value or not */
+          if (!generic)
+            {
+              elType = TtaGetElementType (el);
+              i = elType.ElTypeNum;
+            }
+          else
+            i = ctxt->type;
+          /* apply a min value for all compound element */
+          minValue = (i == 0 || i >= PageBreak);
+        }
       else
-	minValue = FALSE;
+        minValue = FALSE;
 
       if (c->destroy)
-	{
-	  if (generic)
-	    PresRuleRemove ((PtrPSchema) tsch, ctxt, intRule, func);
-	  else
-	    RemoveElementPRule ((PtrElement) el, intRule, func);
-	}
+        {
+          if (generic)
+            PresRuleRemove ((PtrPSchema) tsch, ctxt, intRule, func);
+          else
+            RemoveElementPRule ((PtrElement) el, intRule, func);
+        }
       else
-	{
-	  attrType = 0;
-	  pRule = NULL;
-	  if (generic)
-	    pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
-	  else
-	    pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc-1],
-					intRule, func, c->cssSpecificity,
-					c->cssLine);
-	  if (pRule)
-	    {
-	      if (generic && ctxt->pseudo == PbBefore)
-		pRule->PrBoxType = BtBefore;
-	      else if (generic && ctxt->pseudo == PbAfter)
-		pRule->PrBoxType = BtAfter;
-	      cst = 0;
-	      if (type == PRBackgroundPicture ||
-		  (type == PRListStyleImage &&
-		   v.typed_data.value != 0 &&
-		   v.typed_data.unit != VALUE_INHERIT))
-		{
-		  if (!generic)
-		    tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
-		  cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
-		  v.typed_data.unit = UNIT_REL;
-		  v.typed_data.value = cst;
-		  v.typed_data.real = FALSE;
-		  v.typed_data.mainValue = TRUE;
-		}
-	      /* avoid to override an important rule by a non-important rule */
-	      if (ctxt->important || !pRule->PrImportant)
-		{
-		  pRule->PrImportant = ctxt->important;
-		  /* store the rule priority */
-		  pRule->PrSpecificity = ctxt->cssSpecificity;
-		  /* origin of the CSS rule */
-		  pRule->PrCSSLine = ctxt->cssLine;
-		  pRule->PrCSSURL = ctxt->cssURL;
+        {
+          attrType = 0;
+          pRule = NULL;
+          if (generic)
+            pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
+          else
+            pRule = InsertElementPRule ((PtrElement) el, LoadedDocument[doc-1],
+                                        intRule, func, c->cssSpecificity,
+                                        c->cssLine);
+          if (pRule)
+            {
+              if (generic && ctxt->pseudo == PbBefore)
+                pRule->PrBoxType = BtBefore;
+              else if (generic && ctxt->pseudo == PbAfter)
+                pRule->PrBoxType = BtAfter;
+              cst = 0;
+              if (type == PRBackgroundPicture ||
+                  (type == PRListStyleImage &&
+                   v.typed_data.value != 0 &&
+                   v.typed_data.unit != VALUE_INHERIT))
+                {
+                  if (!generic)
+                    tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
+                  cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
+                  v.typed_data.unit = UNIT_REL;
+                  v.typed_data.value = cst;
+                  v.typed_data.real = FALSE;
+                  v.typed_data.mainValue = TRUE;
+                }
+              /* avoid to override an important rule by a non-important rule */
+              if (ctxt->important || !pRule->PrImportant)
+                {
+                  pRule->PrImportant = ctxt->important;
+                  /* store the rule priority */
+                  pRule->PrSpecificity = ctxt->cssSpecificity;
+                  /* origin of the CSS rule */
+                  pRule->PrCSSLine = ctxt->cssLine;
+                  pRule->PrCSSURL = ctxt->cssURL;
 
-		  if (type == PRVertPos || type == PRHorizPos)
-		    {
-		      if (ctxt->type > 0)
-			func = ctxt->type;
-		    }
-		  else if (type == PRContent)
-	 	    /* create a presentation variable */
+                  if (type == PRVertPos || type == PRHorizPos)
                     {
-		      PresBoxInsert ((PtrPSchema)tsch, ctxt);
-		      VariableInsert ((PtrPSchema)tsch, ctxt);
-		      v.typed_data.value = ctxt->var;
-		    }
-		  PresentationValueToPRule (v, intRule, pRule, func, absolute,
-					    generic, minValue);
-		}
-	      if (generic)
-		{
-		  pRule->PrViewNum = 1;
-		  if (pRule)
-		    {
-		      i = 0;
-		      while (attrType == 0 && i < MAX_ANCESTORS)
-			attrType = ctxt->attrType[i++];
-		      ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema,
-				ctxt->type, attrType, ctxt->box, pRule, FALSE);
-		    }
-		}
-	      else
-		ApplyASpecificStyleRule (pRule, (PtrElement) el,
-					 LoadedDocument[doc - 1], FALSE);
-	    }
-	}
+                      if (ctxt->type > 0)
+                        func = ctxt->type;
+                    }
+                  else if (type == PRContent)
+                    /* create a presentation variable */
+                    {
+                      PresBoxInsert ((PtrPSchema)tsch, ctxt);
+                      VariableInsert ((PtrPSchema)tsch, ctxt);
+                      v.typed_data.value = ctxt->var;
+                    }
+                  PresentationValueToPRule (v, intRule, pRule, func, absolute,
+                                            generic, minValue);
+                }
+              if (generic)
+                {
+                  pRule->PrViewNum = 1;
+                  if (pRule)
+                    {
+                      i = 0;
+                      while (attrType == 0 && i < MAX_ANCESTORS)
+                        attrType = ctxt->attrType[i++];
+                      ApplyAGenericStyleRule (doc, (PtrSSchema) ctxt->schema,
+                                              ctxt->type, attrType, ctxt->box, pRule, FALSE);
+                    }
+                }
+              else
+                ApplyASpecificStyleRule (pRule, (PtrElement) el,
+                                         LoadedDocument[doc - 1], FALSE);
+            }
+        }
     }
   return (0);
 }
@@ -3072,7 +3072,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   or to an extended presentation schema.
   ----------------------------------------------------------------------*/
 int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
-			     PresentationContext c, PresentationValue *v)
+                             PresentationContext c, PresentationValue *v)
 {
   PtrPRule          rule, *chain;
   PRuleType         intRule;
@@ -3084,7 +3084,7 @@ int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
   generic = (el == NULL);
   if (generic)
     rule = PresRuleSearch ((PtrPSchema) tsch, (GenericContext) c, intRule,
-			   (FunctionType) func, &chain);
+                           (FunctionType) func, &chain);
   else
     rule = SearchElementPRule ((PtrElement) el, intRule, func);
   if (rule == NULL)
@@ -3104,7 +3104,7 @@ int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
   in a PRule to a valid PresentationSetting.
   ----------------------------------------------------------------------*/
 void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
-				 PtrPSchema pPS)
+                                 PtrPSchema pPS)
 {
   int                      cst;
 
@@ -3272,27 +3272,27 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtFunction:
       switch (rule->PrPresFunction)
-	{
-	case FnShowBox:
-	  setting->type = PRShowBox;
-	  break;
-	case FnBackgroundPicture:
-	  setting->type = PRBackgroundPicture;
-	  break;
-	case FnPictureMode:
-	  setting->type = PRPictureMode;
-	  break;
-	case FnPage:
-	  setting->type = PRPageBefore;
-	  break;
-	case FnContent:
-	  setting->type = PRContent;
-	  break;
-	default:
-	  /* not yet supported by the driver */
-	  setting->type = PRNone;
-	  return;
-	}
+        {
+        case FnShowBox:
+          setting->type = PRShowBox;
+          break;
+        case FnBackgroundPicture:
+          setting->type = PRBackgroundPicture;
+          break;
+        case FnPictureMode:
+          setting->type = PRPictureMode;
+          break;
+        case FnPage:
+          setting->type = PRPageBefore;
+          break;
+        case FnContent:
+          setting->type = PRContent;
+          break;
+        default:
+          /* not yet supported by the driver */
+          setting->type = PRNone;
+          return;
+        }
       break;
     default:
       /* not yet supported by the driver */
@@ -3308,9 +3308,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       /* get the string instead of the box index */
       cst = setting->value.typed_data.value;
       if (cst <= 0)
-	setting->value.pointer = NULL;
+        setting->value.pointer = NULL;
       else
-	setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
+        setting->value.pointer = &pPS->PsConstant[cst-1].PdString[0];
     }
 }
 
@@ -3338,15 +3338,15 @@ GenericContext TtaGetGenericStyleContext (Document doc)
   ----------------------------------------------------------------------*/
 PresentationContext TtaGetSpecificStyleContext (Document doc)
 {
-   PresentationContext     ctxt;
+  PresentationContext     ctxt;
 
-   ctxt = (PresentationContext) TtaGetMemory (sizeof (PresentationContextBlock));
-   if (ctxt == NULL)
-      return (NULL);
+  ctxt = (PresentationContext) TtaGetMemory (sizeof (PresentationContextBlock));
+  if (ctxt == NULL)
+    return (NULL);
   memset (ctxt, 0, sizeof (PresentationContextBlock));
-   ctxt->doc = doc;
-   ctxt->schema = TtaGetDocumentSSchema (doc);
-   return (ctxt);
+  ctxt->doc = doc;
+  ctxt->schema = TtaGetDocumentSSchema (doc);
+  return (ctxt);
 }
 
 /*----------------------------------------------------------------------
@@ -3372,7 +3372,7 @@ void TtaCleanElementPresentation (Element el, Document doc)
       nextRule = rule;
       TtaNextPRule (el, &nextRule);
       if (TtaIsCSSPRule (rule))
-	TtaRemovePRule (el, rule, doc);
+        TtaRemovePRule (el, rule, doc);
       rule = nextRule;
     }
   /* restore the display mode */
@@ -3387,7 +3387,7 @@ void TtaCleanElementPresentation (Element el, Document doc)
   structure, and calls the given handler for each one.
   ----------------------------------------------------------------------*/
 void TtaApplyAllSpecificSettings (Element el, Document doc,
-				  SettingsApplyHandler handler, void *param)
+                                  SettingsApplyHandler handler, void *param)
 {
   PtrPRule                 rule;
   PresentationSettingBlock setting;
@@ -3396,7 +3396,7 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
   if (el == NULL)
     return;
   pPS = PresentationSchema (((PtrElement) el)->ElStructSchema,
-			    LoadedDocument[doc - 1]);
+                            LoadedDocument[doc - 1]);
   rule = ((PtrElement) el)->ElFirstPRule;
   /*
    * for each rule corresponding to the same context i.e. identical
@@ -3406,19 +3406,19 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
   while (rule != NULL)
     {
       if (rule->PrSpecificity >= 100)
-	{
-	  /* the rule is the translation of a style attribute */
-	  /* fill in the PresentationSetting and call the handler */
-	  PRuleToPresentationSetting (rule, &setting, pPS);
-	  handler (el, doc, &setting, param);
-	}
+        {
+          /* the rule is the translation of a style attribute */
+          /* fill in the PresentationSetting and call the handler */
+          PRuleToPresentationSetting (rule, &setting, pPS);
+          handler (el, doc, &setting, param);
+        }
       rule = rule->PrNextPRule;
     }
 }
 
 /*----------------------------------------------------------------------
- AddBorderStyleValue
- -----------------------------------------------------------------------*/
+  AddBorderStyleValue
+  -----------------------------------------------------------------------*/
 static void AddBorderStyleValue (char *buffer, int value)
 {
   switch (value)
@@ -3457,17 +3457,17 @@ static void AddBorderStyleValue (char *buffer, int value)
 }
 
 /*----------------------------------------------------------------------
- TtaPToCss:  translate a PresentationSetting to the
-     equivalent CSS string, and add it to the buffer given as the
-     argument. It is used when extracting the CSS string from actual
-     presentation.
-     el is the element for which the style rule is generated
+  TtaPToCss:  translate a PresentationSetting to the
+  equivalent CSS string, and add it to the buffer given as the
+  argument. It is used when extracting the CSS string from actual
+  presentation.
+  el is the element for which the style rule is generated
  
   All the possible values returned by the presentation drivers are
   described in thotlib/include/presentation.h
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void TtaPToCss (PresentationSetting settings, char *buffer, int len,
-		Element el)
+                Element el)
 {
   ElementType         elType;
   float               fval = 0;
@@ -3494,63 +3494,63 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRListStyleType:
       switch (settings->value.typed_data.value)
-	{
-	case Disc:
-	  strcpy (buffer, "list-style-type: disc");
-	  break;
-	case Circle:
-	  strcpy (buffer, "list-style-type: circle");
-	  break;
-	case Square:
-	  strcpy (buffer, "list-style-type: square");
-	  break;
-	case Decimal:
-	  strcpy (buffer, "list-style-type: decimal");
-	  break;
-	case DecimalLeadingZero:
-	  strcpy (buffer, "list-style-type: decimal-leading-zero");
-	  break;
-	case LowerRoman:
-	  strcpy (buffer, "list-style-type: lower-roman");
-	  break;
-	case UpperRoman:
-	  strcpy (buffer, "list-style-type: upper-roman");
-	  break;
-	case LowerGreek:
-	  strcpy (buffer, "list-style-type: lower-greek");
-	  break;
-	case LowerLatin:
-	  strcpy (buffer, "list-style-type: lower-latin");
-	  break;
-	case UpperLatin:
-	  strcpy (buffer, "list-style-type: upper-latin");
-	  break;
-	case ListStyleTypeNone:
-	  strcpy (buffer, "list-style-type: none");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case Disc:
+          strcpy (buffer, "list-style-type: disc");
+          break;
+        case Circle:
+          strcpy (buffer, "list-style-type: circle");
+          break;
+        case Square:
+          strcpy (buffer, "list-style-type: square");
+          break;
+        case Decimal:
+          strcpy (buffer, "list-style-type: decimal");
+          break;
+        case DecimalLeadingZero:
+          strcpy (buffer, "list-style-type: decimal-leading-zero");
+          break;
+        case LowerRoman:
+          strcpy (buffer, "list-style-type: lower-roman");
+          break;
+        case UpperRoman:
+          strcpy (buffer, "list-style-type: upper-roman");
+          break;
+        case LowerGreek:
+          strcpy (buffer, "list-style-type: lower-greek");
+          break;
+        case LowerLatin:
+          strcpy (buffer, "list-style-type: lower-latin");
+          break;
+        case UpperLatin:
+          strcpy (buffer, "list-style-type: upper-latin");
+          break;
+        case ListStyleTypeNone:
+          strcpy (buffer, "list-style-type: none");
+          break;
+        default:
+          break;
+        }
       break;
     case PRListStyleImage:
       if (settings->value.pointer != NULL)
-	sprintf (buffer, "list-style-image: url(%s)",
-		 (char*)(settings->value.pointer));
+        sprintf (buffer, "list-style-image: url(%s)",
+                 (char*)(settings->value.pointer));
       else
-	strcpy (buffer, "list-style-image: none");
+        strcpy (buffer, "list-style-image: none");
       break;
     case PRListStylePosition:
       switch (settings->value.typed_data.value)
-	{
-	case Inside:
-	  strcpy (buffer, "list-style-position: inside");
-	  break;
-	case Outside:
-	  strcpy (buffer, "list-style-position: outside");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case Inside:
+          strcpy (buffer, "list-style-position: inside");
+          break;
+        case Outside:
+          strcpy (buffer, "list-style-position: outside");
+          break;
+        default:
+          break;
+        }
       break;
     case PRVertOverflow:
     case PRHorizOverflow:
@@ -3559,27 +3559,27 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
     case PRHorizRef:
       strcpy (buffer, "vertical-align: ");
       if (real)
-	sprintf (buffer, "vertical-align: %g", fval);
+        sprintf (buffer, "vertical-align: %g", fval);
       else
-	sprintf (buffer, "vertical-align: %d", settings->value.typed_data.value);
+        sprintf (buffer, "vertical-align: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRHeight:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "height: ");
+        strcpy (buffer, "height: ");
       else if (real)
-	sprintf (buffer, "height: %g", fval);
+        sprintf (buffer, "height: %g", fval);
       else
-	sprintf (buffer, "height: %d", settings->value.typed_data.value);
+        sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRWidth:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "width: ");
+        strcpy (buffer, "width: ");
       else if (real)
-	sprintf (buffer, "width: %g", fval);
+        sprintf (buffer, "width: %g", fval);
       else
-	sprintf (buffer, "width: %d", settings->value.typed_data.value);
+        sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRVertPos:
@@ -3587,101 +3587,101 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRMarginTop:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "margin-top: ");
+        strcpy (buffer, "margin-top: ");
       else if (real)
-	sprintf (buffer, "margin-top: %g", fval);
+        sprintf (buffer, "margin-top: %g", fval);
       else
-	sprintf (buffer, "margin-top: %d", settings->value.typed_data.value);
+        sprintf (buffer, "margin-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginRight:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "margin-right: ");
+        strcpy (buffer, "margin-right: ");
       else if (real)
-	sprintf (buffer, "margin-right: %g", fval);
+        sprintf (buffer, "margin-right: %g", fval);
       else
-	sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
+        sprintf (buffer, "margin-right: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginBottom:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "margin-bottom: ");
+        strcpy (buffer, "margin-bottom: ");
       else if (real)
-	sprintf (buffer, "margin-bottom: %g", fval);
+        sprintf (buffer, "margin-bottom: %g", fval);
       else
-	sprintf (buffer, "margin-bottom: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "margin-bottom: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginLeft:
       if (unit == VALUE_AUTO)
-	strcpy (buffer, "margin-left: ");
+        strcpy (buffer, "margin-left: ");
       else if (real)
-	sprintf (buffer, "margin-left: %g", fval);
+        sprintf (buffer, "margin-left: %g", fval);
       else
-	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
+        sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingTop:
       if (real)
-	sprintf (buffer, "padding-top: %g", fval);
+        sprintf (buffer, "padding-top: %g", fval);
       else
-	sprintf (buffer, "padding-top: %d", settings->value.typed_data.value);
+        sprintf (buffer, "padding-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingRight:
       if (real)
-	sprintf (buffer, "padding-right: %g", fval);
+        sprintf (buffer, "padding-right: %g", fval);
       else
-	sprintf (buffer, "padding-right: %d",
-		  settings->value.typed_data.value);
+        sprintf (buffer, "padding-right: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingBottom:
       if (real)
-	sprintf (buffer, "padding-bottom: %g", fval);
+        sprintf (buffer, "padding-bottom: %g", fval);
       else
-	sprintf (buffer, "padding-bottom: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "padding-bottom: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRPaddingLeft:
       if (real)
-	sprintf (buffer, "padding-left: %g", fval);
+        sprintf (buffer, "padding-left: %g", fval);
       else
-	sprintf (buffer, "padding-left: %d", settings->value.typed_data.value);
+        sprintf (buffer, "padding-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBorderTopWidth:
       if (real)
-	sprintf (buffer, "border-top-width: %g", fval);
+        sprintf (buffer, "border-top-width: %g", fval);
       else
-	sprintf (buffer, "border-top-width: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "border-top-width: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBorderRightWidth:
       if (real)
-	sprintf (buffer, "border-right-width: %g", fval);
+        sprintf (buffer, "border-right-width: %g", fval);
       else
-	sprintf (buffer, "border-right-width: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "border-right-width: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBorderBottomWidth:
       if (real)
-	sprintf (buffer, "border-bottom-width: %g", fval);
+        sprintf (buffer, "border-bottom-width: %g", fval);
       else
-	sprintf (buffer, "border-bottom-width: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "border-bottom-width: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBorderLeftWidth:
       if (real)
-	sprintf (buffer, "border-left-width: %g", fval);
+        sprintf (buffer, "border-left-width: %g", fval);
       else
-	sprintf (buffer, "border-left-width: %d",
-		 settings->value.typed_data.value);
+        sprintf (buffer, "border-left-width: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBorderTopColor:
@@ -3718,122 +3718,122 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRSize:
       if (unit == UNIT_REL)
-	{
-	  if (real)
-	    {
-	      sprintf (buffer, "font-size: %g", fval);
-	      add_unit = 1;
-	    }
-	  else
-	    switch (settings->value.typed_data.value)
-	      {
-	      case 1:
-		strcpy (buffer, "font-size: xx-small");
-		break;
-	      case 2:
-		strcpy (buffer, "font-size: x-small");
-		break;
-	      case 3:
-		strcpy (buffer, "font-size: small");
-		break;
-	      case 4:
-		strcpy (buffer, "font-size: medium");
-		break;
-	      case 5:
-		strcpy (buffer, "font-size: large");
-		break;
-	      case 6:
-		strcpy (buffer, "font-size: x-large");
-		break;
-	      case 7:
-	      case 8:
-	      case 9:
-	      case 10:
-	      case 11:
-	      case 12:
-		strcpy (buffer, "font-size: xx-large");
-		break;
-	      }
-	}
+        {
+          if (real)
+            {
+              sprintf (buffer, "font-size: %g", fval);
+              add_unit = 1;
+            }
+          else
+            switch (settings->value.typed_data.value)
+              {
+              case 1:
+                strcpy (buffer, "font-size: xx-small");
+                break;
+              case 2:
+                strcpy (buffer, "font-size: x-small");
+                break;
+              case 3:
+                strcpy (buffer, "font-size: small");
+                break;
+              case 4:
+                strcpy (buffer, "font-size: medium");
+                break;
+              case 5:
+                strcpy (buffer, "font-size: large");
+                break;
+              case 6:
+                strcpy (buffer, "font-size: x-large");
+                break;
+              case 7:
+              case 8:
+              case 9:
+              case 10:
+              case 11:
+              case 12:
+                strcpy (buffer, "font-size: xx-large");
+                break;
+              }
+        }
       else
-	{
-	  if (real)
-	    sprintf (buffer, "font-size: %g", fval);
-	  else
-	    sprintf (buffer, "font-size: %d",
-		      settings->value.typed_data.value);
-	  add_unit = 1;
-	}
+        {
+          if (real)
+            sprintf (buffer, "font-size: %g", fval);
+          else
+            sprintf (buffer, "font-size: %d",
+                     settings->value.typed_data.value);
+          add_unit = 1;
+        }
       break;
     case PRStyle:
       switch (settings->value.typed_data.value)
-	{
-	case StyleRoman:
-	  strcpy (buffer, "font-style: normal");
-	  break;
-	case StyleItalics:
-	  strcpy (buffer, "font-style: italic");
-	  break;
-	case StyleOblique:
-	  strcpy (buffer, "font-style: oblique");
-	  break;
-	}
+        {
+        case StyleRoman:
+          strcpy (buffer, "font-style: normal");
+          break;
+        case StyleItalics:
+          strcpy (buffer, "font-style: italic");
+          break;
+        case StyleOblique:
+          strcpy (buffer, "font-style: oblique");
+          break;
+        }
       break;
     case PRWeight:
       switch (settings->value.typed_data.value)
-	{
-	case WeightBold:
-	  strcpy (buffer, "font-weight: bold");
-	  break;
-	case WeightNormal:
-	  strcpy (buffer, "font-weight: normal");
-	  break;
-	}
+        {
+        case WeightBold:
+          strcpy (buffer, "font-weight: bold");
+          break;
+        case WeightNormal:
+          strcpy (buffer, "font-weight: normal");
+          break;
+        }
       break;
     case PRFont:
       switch (settings->value.typed_data.value)
-	{
-	case FontHelvetica:
-	  strcpy (buffer, "font-family: sans-serif");
-	  break;
-	case FontTimes:
-	  strcpy (buffer, "font-family: serif");
-	  break;
-	case FontCourier:
-	  strcpy (buffer, "font-family: monospace");
-	  break;
-	}
+        {
+        case FontHelvetica:
+          strcpy (buffer, "font-family: sans-serif");
+          break;
+        case FontTimes:
+          strcpy (buffer, "font-family: serif");
+          break;
+        case FontCourier:
+          strcpy (buffer, "font-family: monospace");
+          break;
+        }
       break;
     case PRUnderline:
       switch (settings->value.typed_data.value)
-	{
-	case Underline:
-	  strcpy (buffer, "text-decoration: underline");
-	  break;
-	case Overline:
-	  strcpy (buffer, "text-decoration: overline");
-	  break;
-	case CrossOut:
-	  strcpy (buffer, "text-decoration: line-through");
-	  break;
-	}
+        {
+        case Underline:
+          strcpy (buffer, "text-decoration: underline");
+          break;
+        case Overline:
+          strcpy (buffer, "text-decoration: overline");
+          break;
+        case CrossOut:
+          strcpy (buffer, "text-decoration: line-through");
+          break;
+        }
       break;
     case PRThickness:
       break;
     case PRIndent:
       if (real)
-	sprintf (buffer, "text-indent: %g", fval);
+        sprintf (buffer, "text-indent: %g", fval);
       else
-	sprintf (buffer, "text-indent: %d",
-		  settings->value.typed_data.value);
+        sprintf (buffer, "text-indent: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLineSpacing:
       if (real)
-	sprintf (buffer, "line-height: %g", fval);
+        sprintf (buffer, "line-height: %g", fval);
       else
-	sprintf (buffer, "line-height: %d",
-		  settings->value.typed_data.value);
+        sprintf (buffer, "line-height: %d",
+                 settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRDepth:
@@ -3841,77 +3841,77 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
     case PRAdjust:
       elType = TtaGetElementType(el);
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-	{
-	switch (settings->value.typed_data.value)
-	  {
-	  case AdjustLeft:
-	    strcpy (buffer, "text-anchor: start");
-	    break;
-	  case AdjustRight:
-	    strcpy (buffer, "text-anchor: end");
-	    break;
-	  case Centered:
-	    strcpy (buffer, "text-anchor: middle");
-	    break;
-	  }
-	}
+        {
+          switch (settings->value.typed_data.value)
+            {
+            case AdjustLeft:
+              strcpy (buffer, "text-anchor: start");
+              break;
+            case AdjustRight:
+              strcpy (buffer, "text-anchor: end");
+              break;
+            case Centered:
+              strcpy (buffer, "text-anchor: middle");
+              break;
+            }
+        }
       else
-	switch (settings->value.typed_data.value)
-	  {
-	  case AdjustLeft:
-	    strcpy (buffer, "text-align: left");
-	    break;
-	  case AdjustRight:
-	    strcpy (buffer, "text-align: right");
-	    break;
-	  case Centered:
-	    strcpy (buffer, "text-align: center");
-	    break;
-	  case LeftWithDots:
-	    strcpy (buffer, "text-align: left");
-	    break;
-	  case Justify:
-	    strcpy (buffer, "text-align: justify");
-	    break;
-	  }
+        switch (settings->value.typed_data.value)
+          {
+          case AdjustLeft:
+            strcpy (buffer, "text-align: left");
+            break;
+          case AdjustRight:
+            strcpy (buffer, "text-align: right");
+            break;
+          case Centered:
+            strcpy (buffer, "text-align: center");
+            break;
+          case LeftWithDots:
+            strcpy (buffer, "text-align: left");
+            break;
+          case Justify:
+            strcpy (buffer, "text-align: justify");
+            break;
+          }
       break;
     case PRDirection:
       switch (settings->value.typed_data.value)
-	{
-	case LeftToRight:
-	  strcpy (buffer, "direction: ltr");
-	  break;
-	case RightToLeft:
-	  strcpy (buffer, "direction: rtl");
-	  break;
-	}
+        {
+        case LeftToRight:
+          strcpy (buffer, "direction: ltr");
+          break;
+        case RightToLeft:
+          strcpy (buffer, "direction: rtl");
+          break;
+        }
       break;
     case PRUnicodeBidi:
       switch (settings->value.typed_data.value)
-	{
-	case Normal:
-	  strcpy (buffer, "unicode-bidi: normal");
-	  break;
-	case Embed:
-	  strcpy (buffer, "unicode-bidi: embed");
-	  break;
-	case Override:
-	  strcpy (buffer, "unicode-bidi: bidi-override");
-	  break;
-	}
+        {
+        case Normal:
+          strcpy (buffer, "unicode-bidi: normal");
+          break;
+        case Embed:
+          strcpy (buffer, "unicode-bidi: embed");
+          break;
+        case Override:
+          strcpy (buffer, "unicode-bidi: bidi-override");
+          break;
+        }
       break;
     case PRLineStyle:
       break;
     case PRLineWeight:
       elType = TtaGetElementType(el);
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-	{
-	  if (real)
-	    sprintf (buffer, "stroke-width: %g", fval);
-	  else
-	    sprintf (buffer, "stroke-width: %d",
-		      settings->value.typed_data.value);
-	}
+        {
+          if (real)
+            sprintf (buffer, "stroke-width: %g", fval);
+          else
+            sprintf (buffer, "stroke-width: %d",
+                     settings->value.typed_data.value);
+        }
       add_unit = 1;
       break;
     case PRFillPattern:
@@ -3920,18 +3920,18 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
-	sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
+        sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
       else
-         sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
-		   blue);
+        sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
+                 blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
-	sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
+        sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
       else
-	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+        sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case PROpacity:
       sprintf (buffer, "opacity: %g", fval);
@@ -3943,158 +3943,158 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       sprintf (buffer, "stroke-opacity: %g", fval);
       break;
     case PRHyphenate:
-    /*
-    case PRPageBreak:
-    case PRLineBreak:
-    case PRGather: */
+      /*
+        case PRPageBreak:
+        case PRLineBreak:
+        case PRGather: */
     case PRXRadius:
     case PRYRadius:
       break;
     case PRPosition:
       switch (settings->value.typed_data.value)
-	{
-	case PnStatic:
-	  strcpy (buffer, "position: static");
-	  break;
-	case PnRelative:
-	  strcpy (buffer, "position: relative");
-	  break;
-	case PnAbsolute:
-	  strcpy (buffer, "position: absolute");
-	  break;
-	case PnFixed:
-	  strcpy (buffer, "position: fixed");
-	  break;
-	case PnInherit:
-	  strcpy (buffer, "position: inherit");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case PnStatic:
+          strcpy (buffer, "position: static");
+          break;
+        case PnRelative:
+          strcpy (buffer, "position: relative");
+          break;
+        case PnAbsolute:
+          strcpy (buffer, "position: absolute");
+          break;
+        case PnFixed:
+          strcpy (buffer, "position: fixed");
+          break;
+        case PnInherit:
+          strcpy (buffer, "position: inherit");
+          break;
+        default:
+          break;
+        }
       break;
     case PRTop:
       if (unit == VALUE_AUTO)
-	sprintf (buffer, "top: ");
+        sprintf (buffer, "top: ");
       else if (real)
-	sprintf (buffer, "top: %g", fval);
+        sprintf (buffer, "top: %g", fval);
       else
-	sprintf (buffer, "top: %d", settings->value.typed_data.value);
+        sprintf (buffer, "top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRRight:
       if (unit == VALUE_AUTO)
-	sprintf (buffer, "right: ");
+        sprintf (buffer, "right: ");
       else if (real)
-	sprintf (buffer, "right: %g", fval);
+        sprintf (buffer, "right: %g", fval);
       else
-	sprintf (buffer, "right: %d", settings->value.typed_data.value);
+        sprintf (buffer, "right: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRBottom:
       if (unit == VALUE_AUTO)
-	sprintf (buffer, "bottom: ");
+        sprintf (buffer, "bottom: ");
       else if (real)
-	sprintf (buffer, "bottom: %g", fval);
+        sprintf (buffer, "bottom: %g", fval);
       else
-	sprintf (buffer, "bottom: %d", settings->value.typed_data.value);
+        sprintf (buffer, "bottom: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLeft:
       if (unit == VALUE_AUTO)
-	sprintf (buffer, "left: ");
+        sprintf (buffer, "left: ");
       else if (real)
-	sprintf (buffer, "left: %g", fval);
+        sprintf (buffer, "left: %g", fval);
       else
-	sprintf (buffer, "left: %d", settings->value.typed_data.value);
+        sprintf (buffer, "left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRFloat:
       switch (settings->value.typed_data.value)
-	{
-	case FloatNone:
-	  strcpy (buffer, "float: none");
-	  break;
-	case FloatLeft:
-	  strcpy (buffer, "float: left");
-	  break;
-	case FloatRight:
-	  strcpy (buffer, "float: right");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case FloatNone:
+          strcpy (buffer, "float: none");
+          break;
+        case FloatLeft:
+          strcpy (buffer, "float: left");
+          break;
+        case FloatRight:
+          strcpy (buffer, "float: right");
+          break;
+        default:
+          break;
+        }
       break;
     case PRClear:
       switch (settings->value.typed_data.value)
-	{
-	case ClearNone:
-	  strcpy (buffer, "clear: none");
-	  break;
-	case ClearLeft:
-	  strcpy (buffer, "clear: left");
-	  break;
-	case ClearRight:
-	  strcpy (buffer, "clear: right");
-	  break;
-	case ClearBoth:
-	  strcpy (buffer, "clear: both");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case ClearNone:
+          strcpy (buffer, "clear: none");
+          break;
+        case ClearLeft:
+          strcpy (buffer, "clear: left");
+          break;
+        case ClearRight:
+          strcpy (buffer, "clear: right");
+          break;
+        case ClearBoth:
+          strcpy (buffer, "clear: both");
+          break;
+        default:
+          break;
+        }
       break;
     case PRDisplay:
       switch (settings->value.typed_data.value)
-	{
-	case Inline:
-	  strcpy (buffer, "display: inline");
-	  break;
-	case Block:
-	  strcpy (buffer, "display: block");
-	  break;
-	case ListItem:
-	  strcpy (buffer, "display: list-item");
-	  break;
-	case RunIn:
-	  strcpy (buffer, "display: runin");
-	  break;
-	case InlineBlock:
-	  strcpy (buffer, "display: inlineblock");
-	  break;
-	default:
-	  break;
-	}
+        {
+        case Inline:
+          strcpy (buffer, "display: inline");
+          break;
+        case Block:
+          strcpy (buffer, "display: block");
+          break;
+        case ListItem:
+          strcpy (buffer, "display: list-item");
+          break;
+        case RunIn:
+          strcpy (buffer, "display: runin");
+          break;
+        case InlineBlock:
+          strcpy (buffer, "display: inlineblock");
+          break;
+        default:
+          break;
+        }
       break;
       /*
-    case PRBreak1:
-    case PRBreak2:
-    case PRCreateEnclosing:
-    case PRShowBox:
-      break;
+        case PRBreak1:
+        case PRBreak2:
+        case PRCreateEnclosing:
+        case PRShowBox:
+        break;
       */
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	sprintf (buffer, "background-image: url(%s)",
-		  (char*)(settings->value.pointer));
+        sprintf (buffer, "background-image: url(%s)",
+                 (char*)(settings->value.pointer));
       else
-	sprintf (buffer, "background-image: none");
+        sprintf (buffer, "background-image: none");
       break;
     case PRPictureMode:
       switch (settings->value.typed_data.value)
-	{
-	case REALSIZE:
-	  sprintf (buffer, "background-repeat: no-repeat");
-	  break;
-	case REPEAT:
-	  sprintf (buffer, "background-repeat: repeat");
-	  break;
-	case YREPEAT:
-	  sprintf (buffer, "background-repeat: repeat-y");
-	  break;
-	case XREPEAT:
-	  sprintf (buffer, "background-repeat: repeat-x");
-	  break;
-	}
+        {
+        case REALSIZE:
+          sprintf (buffer, "background-repeat: no-repeat");
+          break;
+        case REPEAT:
+          sprintf (buffer, "background-repeat: repeat");
+          break;
+        case YREPEAT:
+          sprintf (buffer, "background-repeat: repeat-y");
+          break;
+        case XREPEAT:
+          sprintf (buffer, "background-repeat: repeat-x");
+          break;
+        }
       break;
     case PRNotInLine:
     case PRNone:
@@ -4115,21 +4115,21 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
   if (add_unit)
     {
       if (unit == VALUE_AUTO)
-	strcat (buffer, "auto");
+        strcat (buffer, "auto");
       else
-	{
-	  /* add the unit string to the CSS string */
-	  i = 0;
-	  while (CSSUnitNames[i].sign)
-	    {
-	      if (CSSUnitNames[i].unit == unit)
-		{
-		  strcat (buffer, CSSUnitNames[i].sign);
-		  break;
-		}
-	      else
-		i++;
-	    }
-	}
+        {
+          /* add the unit string to the CSS string */
+          i = 0;
+          while (CSSUnitNames[i].sign)
+            {
+              if (CSSUnitNames[i].unit == unit)
+                {
+                  strcat (buffer, CSSUnitNames[i].sign);
+                  break;
+                }
+              else
+                i++;
+            }
+        }
     }
 }

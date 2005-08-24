@@ -1939,7 +1939,9 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
           /* Change the Display Mode to take into account the new
              presentation */
           dispMode = TtaGetDisplayMode (doc);
-printf ("ParseCSSImageCallback Show BGimages\n");
+#ifdef AMAYA_DEBUG
+          //printf ("ParseCSSImageCallback Show BGimages\n");
+#endif /* AMAYA_DEBUG */
           /* force the redisplay of this box */
           TtaSetDisplayMode (doc, NoComputedDisplay);
           TtaSetDisplayMode (doc, dispMode);
@@ -4431,8 +4433,6 @@ static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
                                           char *cssRule, CSSInfoPtr css,
                                           ThotBool isHTML)
 {
-  PresentationValue     repeat;
-  char                 *ptr;
   ThotBool              ok;
 
   cssRule = SkipBlanksAndComments (cssRule);
@@ -4458,16 +4458,8 @@ static char *ParseACSSBackgroundPosition (Element element, PSchema tsch,
 
   if (ok && DoApply)
     {
-      /* force no-repeat for that background image */
-      ptr = "no-repeat";
-      ParseACSSBackgroundRepeat (element, tsch, ctxt, ptr, css, isHTML);
-      /* force realsize for the background image */
-      repeat.typed_data.value = REALSIZE;
-      repeat.typed_data.unit = UNIT_REL;
-      repeat.typed_data.real = FALSE;
       /* check if it's an important rule */
       cssRule = CheckImportantRule (cssRule, ctxt);
-      /*TtaSetStylePresentation (PRPictureMode, element, tsch, ctxt, repeat);*/
     }
   cssRule = SkipBlanksAndComments (cssRule);
   return (cssRule);

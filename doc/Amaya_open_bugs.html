@@ -50,19 +50,41 @@ h2         {  font-size: 12; }
         B. Bos</td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>In some cases, a background-image with the option 'no-repeat' is
         repeated the first time the document is loaded</td>
-      <td>2004-07-21</td>
+      <td>2005-07-21</td>
       <td>A. Kotok</td>
+      <td>2005-08-24</td>
+    </tr>
+    <tr>
+      <td>The problem with CSS 'width' and positioning in
+        http://homepage.mac.com/d3n15/attributes or similar.</td>
+      <td>2005-08-17</td>
+      <td>Deins Combs</td>
       <td></td>
     </tr>
     <tr>
-      <td>The problem appears to be to supporting the CSS 'width' and
-        positioning in http://homepage.mac.com/d3n15/attributes or
-      similar.</td>
+      <td>The 'background-position' doesn't work at all, but seems like it is
+        recognized.
+
+        <p>Works:<br />
+        background: url(bkg_img.png) left top repeat-y;<br />
+        Doesn't work:<br />
+        background: url(bkg_img.png) repeat-y left top;</p>
+
+        <p>Works:<br />
+        background-image: url(bkg_img.png); <br />
+        background-position: left top;<br />
+        background-repeat: repeat-y;<br />
+        Doesn't work:<br />
+        background-image: url(bkg_img.png);<br />
+        background-repeat: repeat-y;<br />
+        background-position: left top;</p>
+      </td>
       <td>2005-08-17</td>
-      <td>Deins Combs</td>
+      <td><p>Stanimir Stamenkov</p>
+      </td>
       <td></td>
     </tr>
   </tbody>

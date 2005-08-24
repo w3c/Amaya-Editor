@@ -718,8 +718,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             {
               /* draw the background image the default presentation is repeat */
               pres = imageDesc->PicPresent;
-              if (pres == DefaultPres)
-                pres = FillFrame;
+              //if (pres == DefaultPres)
+              // pres = FillFrame;
               if (pres == YRepeat || pres == FillFrame || !pFrom->AbTruncatedHead)
                 DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
                              wbg, hbg, t, l);
