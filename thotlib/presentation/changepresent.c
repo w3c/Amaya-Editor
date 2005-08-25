@@ -161,7 +161,7 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
 
 /*----------------------------------------------------------------------
   ApplyInherit 
-  The ruleType presentation rule has been applied, check if sibling
+  The ruleType presentation rule has been applied, check if siblings
   or children inherit from this rule.
   The parameter display is TRUE when boxes should be redisplayed after
   any change.
@@ -1262,7 +1262,7 @@ void  ApplyAGenericStyleRule (Document doc, PtrSSchema pSS, int elType,
         while (pAb != NULL)
           {
             /* there is probably a problem with visibility rules: pAb doesn't
-               exists */
+               exist */
             found = FALSE;
             pAbRedisp = NULL;
             if (elType > 0)

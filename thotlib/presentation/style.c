@@ -2891,7 +2891,7 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
   if (c->destroy)
     return;
   cst = -1;
-  if (type == PRContentString)
+  if (type == PRContentString || type == PRContentAttr)
     cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
   else if (type == PRContentURL)
     cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
@@ -2900,9 +2900,13 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
       pVar = &(((PtrPSchema)tsch)->PsVariable[ctxt->var - 1]);
       if (pVar->PvNItems < MAX_PRES_VAR_ITEM)
         {
-          if (type == PRContentString || type == PRContentURL)
+          if (type == PRContentString || type == PRContentURL ||
+	      type == PRContentAttr)
             {
-              pVar->PvItem[pVar->PvNItems].ViType = VarText;
+	      if (type == PRContentAttr)
+		pVar->PvItem[pVar->PvNItems].ViType = VarNamedAttrValue;
+	      else
+		pVar->PvItem[pVar->PvNItems].ViType = VarText;
               pVar->PvItem[pVar->PvNItems].ViConstant = cst;
             }
           pVar->PvNItems ++;
@@ -2959,7 +2963,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   int                doc = c->doc;
   ThotBool           absolute, generic, minValue;
 
-  if (type == PRContentString || type == PRContentURL)
+  if (type == PRContentString || type == PRContentURL || type == PRContentAttr)
     /* it is a value in a CSS content rule. Generate the corresponding
        Thot presentation variable item */
     SetVariableItem (type, tsch, c, v);
@@ -4104,6 +4108,7 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRContentString:
     case PRContentURL:
+    case PRContentAttr:
       break;
     case PRContent:
       sprintf (buffer, "content:");

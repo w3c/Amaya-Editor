@@ -271,7 +271,7 @@ typedef enum
 typedef enum
 {
   VarText, VarCounter, VarDate, VarFDate, VarDirName, VarDocName, VarElemName,
-  VarAttrName, VarAttrValue, VarPageNumber
+  VarAttrName, VarAttrValue, VarNamedAttrValue, VarPageNumber
 } VariableType;
 
 /* to indicate the nature of the counter value */

@@ -475,7 +475,9 @@ typedef struct _AbstractBox
 				      created presentation abstract box */
   PtrDelayedPRule AbDelayedPRule;  /* Used by the editor */
   int             AbVolume;	   /* Equivalent characters number */
-  int	          AbTypeNum;	   /* Type number/presentation box */
+  int	          AbTypeNum;	   /* Type number/presentation box number */
+  int             AbVarNum;        /* number of the variable that defines the
+				      content of this box (pres. boxes only) */
   int	          AbNum;	   /* Abstract box number for debug */
   AbPosition      AbVertRef;	   /* Vertical reference mark position */
   AbPosition      AbHorizRef;	   /* Horizontal reference mark position */

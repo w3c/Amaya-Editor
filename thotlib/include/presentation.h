@@ -94,7 +94,8 @@ typedef int        *PRule;
 #define PRContent 78
 #define PRContentString 79
 #define PRContentURL 80
-#define LAST_PRES_RULE_TYPE 80
+#define PRContentAttr 81
+#define LAST_PRES_RULE_TYPE 81
 
 /*
  * A bunch of constants describing the most common values for presentation

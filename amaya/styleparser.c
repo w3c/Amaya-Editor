@@ -4171,7 +4171,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                               CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   value;
-  char                *p, quoteChar;
+  char                *p, *last, *start, quoteChar;
   ThotBool            repeat;
 
   value.typed_data.unit = UNIT_REL;
@@ -4188,6 +4188,13 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         {
           /* @@@@@@ */
           cssRule += 6;
+          repeat = FALSE;
+        }
+      else if (!strncasecmp (cssRule, "none", 4))
+        /* The pseudo-element is not generated */
+        {
+          /* @@@@@@ */
+          cssRule += 4;
           repeat = FALSE;
         }
       else if (*cssRule == '"' || *cssRule == '\'')
@@ -4233,9 +4240,43 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         }
       else if (!strncasecmp (cssRule, "attr", 4))
         {
+	  value.pointer = NULL;
           cssRule += 4;
-          /* @@@@@@ */
-          cssRule = SkipProperty (cssRule, FALSE);
+	  cssRule = SkipBlanksAndComments (cssRule);
+	  if (*cssRule == '(')
+	    {
+	      cssRule++;
+	      cssRule = SkipBlanksAndComments (cssRule);
+	      start = cssRule;
+	      while (*cssRule != EOS && *cssRule != ')')
+		cssRule++;
+	      if (*cssRule != ')')
+		cssRule = start;
+	      else
+		{
+		  last = cssRule;
+		  /* remove extra spaces */
+		  if (last[-1] == SPACE)
+		    {
+		      *last = SPACE;
+		      last--;
+		      while (last[-1] == SPACE)
+			last--;
+		    }
+		  *last = EOS;
+		  value.typed_data.unit = UNIT_REL;
+		  value.typed_data.real = FALSE;
+		  value.pointer = start;
+		  TtaSetStylePresentation (PRContentAttr, element, tsch, ctxt,
+					   value);
+		}
+	    }
+	  if (value.pointer == NULL)
+	    {
+	      CSSParseError ("Invalid content value", p, cssRule);
+	      cssRule = SkipProperty (cssRule, FALSE);
+	    }
+	  cssRule++;
         }
       else if (!strncasecmp (cssRule, "open-quote", 10))
         {

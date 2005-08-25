@@ -283,7 +283,7 @@ PtrAttribute AttachAttrByExceptNum (int ExceptNum, PtrElement pEl,
 /*----------------------------------------------------------------------
    On reaffiche un pave modifie                                    
   ----------------------------------------------------------------------*/
-static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
+static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int varNum,
 			     PtrPSchema pPSchema, int frame, PtrElement pEl,
 			     PtrDocument pDoc, PtrAttribute pAttr)
 {
@@ -293,11 +293,12 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
   if (pAbsBox->AbPresentationBox)
     {
       /* c'est un pave de presentation */
-      if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
+      if (pAbsBox->AbPSchema == pPSchema &&
+	  pAbsBox->AbVarNum == varNum)
 	/* c'est bien un pave du type cherche' */
 	/* recalcule la valeur de la variable de presentation */
-	if (NewVariable (pPSchema->PsPresentBox->PresBox[boxNum - 1]->PbContVariable,
-			 pAttr->AeAttrSSchema, pPSchema, pAbsBox, pAttr, pDoc))
+	if (NewVariable (varNum, pAttr->AeAttrSSchema, pPSchema, pAbsBox,
+			 pAttr, pDoc))
 	  {
 	    /* la variable de presentation a change' de valeur */
 	    pAbsBox->AbChange = TRUE;
@@ -313,7 +314,7 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
       pAbChild = pAbsBox->AbFirstEnclosed;
       while (pAbChild != NULL)
 	{
-	  RedisplayAbsBox (pAbChild, boxNum, pPSchema, frame, pEl, pDoc, pAttr);
+	  RedisplayAbsBox (pAbChild, varNum, pPSchema, frame, pEl,pDoc, pAttr);
 	  /* next child abstract box */
 	  pAbChild = pAbChild->AbNext;
 	}
@@ -323,8 +324,8 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
 /*----------------------------------------------------------------------
    L'attribut pointe' par pAttr portant sur l'element              
    pointe' par pEl, dans le document pDoc, a change' de valeur.    
-   Reafficher toutes les boites de presentation qui utilisent      
-   la valeur de cet attribut.					
+   Reafficher toutes les boites de presentation de cet element
+   qui utilisent la valeur de cet attribut.
   ----------------------------------------------------------------------*/
 void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
 {
@@ -332,15 +333,19 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
    ThotBool            found;
    PtrAbstractBox      pAbsBox;
    PresVariable       *pPresVar;
-   int                 varNum, item, presBox;
+   PresVarItem        *pItem;
+   PtrHandlePSchema    pHd;
+   int                 varNum, item;
    int                 frame, view, doc = 0;
 
    /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
    /* variable de presentation ? */
    /* schema de presentation de l'attribut */
    pPSchema = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+   pHd = NULL;
 
-   if (pPSchema != NULL)
+   while (pPSchema != NULL)
+     {
       /* parcourt les variables de presentation du schema */
       for (varNum = 0; varNum < pPSchema->PsNVariables; varNum++)
 	{
@@ -348,48 +353,67 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
 	   found = FALSE;
 	   /* examine les items de la variable */
 	   for (item = 0; item < pPresVar->PvNItems && !found; item++)
-	      if (pPresVar->PvItem[item].ViType == VarAttrValue)
-		 if (pPresVar->PvItem[item].ViAttr == pAttr->AeAttrNum)
-		    found = TRUE;
+	     {
+	       pItem = &pPresVar->PvItem[item];
+	       if (pItem->ViType == VarAttrValue)
+		 {
+		   if (pItem->ViAttr == pAttr->AeAttrNum)
+		     found = TRUE;
+		 }
+	       else if (pItem->ViType == VarNamedAttrValue)
+		 {
+		   if (!strcmp (pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName,
+				pPSchema->PsConstant[pItem->ViConstant - 1].PdString))
+		     found = TRUE;
+		 }
+	     }
 	   if (found)
 	      /* l'attribut est utilise' dans la variable */
-	      /* cherche les boites du schema de presentation qui utilisent */
-	      /* cette variable comme contenu */
+	      /* cherche dans toutes les vues du document les paves de
+		 presentation de l'element qui utilisent cette variable comme
+		 contenu */
 	     {
-		for (presBox = 0; presBox < pPSchema->PsNPresentBoxes; presBox++)
-		   if (pPSchema->PsPresentBox->PresBox[presBox]->PbContent == ContVariable
-		       && pPSchema->PsPresentBox->PresBox[presBox]->PbContVariable == varNum + 1)
-		      /* cette boite a la variable comme contenu */
-		      /* cherche dans toutes les vues du document les paves */
-		      /* de l'element auquel correspond l'attribut qui sont */
-		      /* des instannces de cette boite de presentation */
-		      for (view = 0; view < MAX_VIEW_DOC; view++)
-			{
-			   pAbsBox = pEl->ElAbstractBox[view];
-			   frame = pDoc->DocViewFrame[view];
-			   if (frame > 0)
-			     {
-			       if (doc == 0)
-				 doc = FrameTable[frame].FrDoc;
-			       /* parcourt les paves de l'element */
-			       while (pAbsBox != NULL)
-				 if (pAbsBox->AbElement != pEl)
-				   /* on a traite' tous les paves de l'element */
-				   pAbsBox = NULL;
-				 else
-				   /* c'est un pave' de l'element */
-				   {
-				     RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, frame, pEl, pDoc, pAttr);
-				     pAbsBox = pAbsBox->AbNext;
-				   }
-			       /* on ne reaffiche pas si on est en train de calculer les pages */
-			       if (PageHeight == 0 &&
-				   documentDisplayMode[doc - 1] == DisplayImmediately)
-				 DisplayFrame (frame);
-			     }
-			}
+	       for (view = 0; view < MAX_VIEW_DOC; view++)
+		 {
+		   pAbsBox = pEl->ElAbstractBox[view];
+		   frame = pDoc->DocViewFrame[view];
+		   if (frame > 0)
+		     {
+		       if (doc == 0)
+			 doc = FrameTable[frame].FrDoc;
+		       /* parcourt les paves de l'element */
+		       while (pAbsBox != NULL)
+			 if (pAbsBox->AbElement != pEl)
+			   /* on a traite' tous les paves de l'element */
+			   pAbsBox = NULL;
+			 else
+			   /* c'est un pave' de l'element */
+			   {
+			     RedisplayAbsBox (pAbsBox, varNum+1, pPSchema,
+					      frame, pEl, pDoc, pAttr);
+			     pAbsBox = pAbsBox->AbNext;
+			   }
+		       /* on ne reaffiche pas si on est en train de calculer
+			  les pages */
+		       if (PageHeight == 0 &&
+			   documentDisplayMode[doc - 1] == DisplayImmediately)
+			 DisplayFrame (frame);
+		     }
+		 }
 	     }
 	}
+      /* next style sheet (P schema extension, aka CSS style sheet) */
+      if (pHd)
+        pHd = pHd->HdNextPSchema;
+      else
+        /* it was the main P schema, get the first schema extension */
+        pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
+      if (pHd)
+        pPSchema = pHd->HdPSchema;
+      else
+        /* no schema any more. stop */
+        pPSchema = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------

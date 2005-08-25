@@ -878,7 +878,8 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 		pPr = &pAb->AbPSchema->PsVariable[pBo->PbContVariable - 1];
 		if (pPr->PvNItems == 1)
 		   /* la variable n'a qu'un element */
-		   if (pPr->PvItem[0].ViType == VarAttrValue)
+		   if (pPr->PvItem[0].ViType == VarAttrValue ||
+		       pPr->PvItem[0].ViType == VarNamedAttrValue)
 		      /* cet element est la valeur d'un attribut */
 		      if (pAb->AbCreatorAttr != NULL)
 			 if (pAb->AbCreatorAttr->AeAttrType == AtNumAttr ||
@@ -1153,6 +1154,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    break;
 
 	  case VarAttrValue:
+	  case VarNamedAttrValue:
 	    /* valeur d'un attribut */
 	    found = FALSE;
 	    if (pVa1->ViAttr == 0)
@@ -1173,14 +1175,27 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 		  {
 		    pA = pEl->ElFirstAttr;	/* premier attribut */
 		    while (!found && pA != NULL)
-		      if (pA->AeAttrNum == pVa1->ViAttr &&
+		      if (pVa1->ViType == VarAttrValue &&
+			  pA->AeAttrNum == pVa1->ViAttr &&
 			  !strcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
+			found = TRUE;
+		      else if (pVa1->ViType == VarNamedAttrValue &&
+			       !strcmp (pA->AeAttrSSchema->SsAttribute->TtAttr[pA->AeAttrNum - 1]->AttrName,
+					pSchP->PsConstant[pVa1->ViConstant - 1].PdString) &&
+			      !strcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
 			found = TRUE;
 		      else
 			pA = pA->AeNext;
 		    if (!found)
-		      /* passe a l'element ascendant */
-		      pEl = pEl->ElParent;
+		      {
+			if (pVa1->ViType == VarAttrValue)
+			  /* passe a l'element ascendant */
+			  pEl = pEl->ElParent;
+			else
+			  /* for VarNamedAttrValue looks only at the element
+			     itself */
+			  pEl = NULL;
+		      }
 		  }
 	      }
 	    if (found)
@@ -1369,8 +1384,9 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  default:
 	    break;
 	  }
-	/* termine la mise a jour du pave */
      }
+   /* termine la mise a jour du pave */
+   pAb->AbVarNum = varNum;
    if (PresAbsBoxUserEditable (pAb))
      /* le contenu de ce pave de presentation est donc modifiable */
       pAb->AbCanBeModified = TRUE;

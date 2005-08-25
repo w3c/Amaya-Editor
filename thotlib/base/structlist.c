@@ -1033,6 +1033,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		       PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
 	  }
 	fprintf (fileDescriptor, " TypeNum:%d", pAb->AbTypeNum);
+	if (pAb->AbPresentationBox)
+	  fprintf (fileDescriptor, " VarNum:%d", pAb->AbVarNum);
 	fprintf (fileDescriptor, " El:%s", pAb->AbElement->ElLabel);
 	fprintf (fileDescriptor, " Vol:%d", pAb->AbVolume);
 
@@ -2379,6 +2381,7 @@ static void wrdistunit (TypeUnit u, FILE *fileDescriptor)
    switch (u)
 	 {
 	    case UnRelative:
+	    case UnUndefined:
 	       ;
 	       break;
 	    case UnXHeight:
@@ -3845,6 +3848,10 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				 fprintf (fileDescriptor, " Cste");
 				 wrnumber (pItem->ViConstant, fileDescriptor);
 				 break;
+			       case VarNamedAttrValue:
+				 fprintf (fileDescriptor, " {attr value}Cste");
+				 wrnumber (pItem->ViConstant, fileDescriptor);
+				 break;
 			       case VarCounter:
 			       case VarDate:
 			       case VarFDate:
@@ -4129,6 +4136,11 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
 	      break;
 	    case VarAttrValue:
 	      fprintf (fileDescriptor, " attr(%s)", pSchP->PsSSchema->SsAttribute->TtAttr[item->ViAttr - 1]->AttrName);
+	      break;
+	    case VarNamedAttrValue:
+	      fprintf (fileDescriptor, " attr(%s)", pSchP->PsConstant[item->ViConstant - 1].PdString);
+	      break;
+	    default:
 	      break;
 	    }
 	}

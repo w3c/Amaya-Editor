@@ -351,6 +351,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbDelayedPRule = NULL;
   pAb->AbVolume = 0;
   pAb->AbTypeNum = pEl->ElTypeNumber;
+  pAb->AbVarNum = 0;
   pAb->AbNum = 0;
   pAb->AbVertRef.PosEdge = VertRef;
   pAb->AbVertRef.PosRefEdge = VertRef;
@@ -1916,6 +1917,7 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
       pMarkerAb->AbDisplay = pAb->AbDisplay;
       pMarkerAb->AbPresentationBox = TRUE;
       pMarkerAb->AbTypeNum = 0;
+      pMarkerAb->AbVarNum = 0;
       pMarkerAb->AbCanBeModified = FALSE;
       
       pRule = SearchRuleListItemMarker (PtVisibility, pEl, pDoc);
@@ -2291,6 +2293,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
             pAb->AbTypeNum = 1;
           else
             pAb->AbTypeNum = pRCre->PrPresBox[0];
+	  pAb->AbVarNum = 0;
           pAb->AbCanBeModified = FALSE;
           pAb->AbPSchema = pSchP;
           pAbb1 = pEl->ElAbstractBox[viewIndex];
