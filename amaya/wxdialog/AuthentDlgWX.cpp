@@ -13,6 +13,7 @@
 #include "message_wx.h"
 
 static int      MyRef;
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -42,6 +43,8 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION) );
   SetTitle( wx_title );
   MyRef = ref;
+  // waiting for a return
+  Waiting = 1;
 
   ptr = TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM);
   label = (char *)TtaGetMemory (((auth_realm) ? strlen (auth_realm) : 0)
@@ -81,6 +84,10 @@ AuthentDlgWX::AuthentDlgWX( int ref,
   ---------------------------------------------------------------------------*/
 AuthentDlgWX::~AuthentDlgWX()
 {
+  /* when the dialog is destroyed, It's important to cleanup context */
+  if (Waiting)
+  // no return done
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
@@ -88,6 +95,8 @@ AuthentDlgWX::~AuthentDlgWX()
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
@@ -96,6 +105,8 @@ void AuthentDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AuthentDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 

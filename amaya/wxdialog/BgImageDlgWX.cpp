@@ -12,6 +12,9 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 
+static int      MyRef;
+static int      Waiting = 0;
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -43,6 +46,9 @@ BgImageDlgWX::BgImageDlgWX( int ref, wxWindow* parent, const wxString & urlToOpe
   ,m_RepeatMode(RepeatValue)
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("BgImageDlgWX"));
+  MyRef = ref;
+  // waiting for a return
+  Waiting = 1;
 
   // update dialog labels with given ones
   SetTitle( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BACKGROUND_IMAGE)) );
@@ -72,6 +78,10 @@ BgImageDlgWX::BgImageDlgWX( int ref, wxWindow* parent, const wxString & urlToOpe
   ----------------------------------------------------------------------*/
 BgImageDlgWX::~BgImageDlgWX()
 {
+  /* when the dialog is destroyed, It's important to cleanup context */
+  if (Waiting)
+  // no return done
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
@@ -88,11 +98,12 @@ void BgImageDlgWX::OnOpenButton( wxCommandEvent& event )
   char buffer[512];
   wxASSERT( url.Len() < 512 );
   strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
-
+  // return done
+  Waiting = 0;
   // call the thotlib callback
   ThotCallback (BaseImage + ImageURL, STRING_DATA, (char *)buffer);
   ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (char*)m_RepeatMode);
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*)1);
 }
 
 /*----------------------------------------------------------------------
@@ -104,7 +115,7 @@ void BgImageDlgWX::OnClearButton( wxCommandEvent& event )
 {
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(_T(""));
   ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (char*)m_RepeatMode);
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)2);
+  ThotCallback (MyRef, INTEGER_DATA, (char*)2);
 }
 
 /*----------------------------------------------------------------------
@@ -149,7 +160,9 @@ void BgImageDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void BgImageDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*)0);
+  // return done
+  Waiting = 0;
+  ThotCallback (MyRef, INTEGER_DATA, (char*)0);
 }
 
 /*----------------------------------------------------------------------

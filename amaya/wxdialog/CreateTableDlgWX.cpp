@@ -13,7 +13,7 @@
 #include "CreateTableDlgWX.h"
 
 static int      MyRef;
-
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -41,6 +41,8 @@ END_EVENT_TABLE()
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CreateTableDlgWX"));
   SetTitle( caption );
   MyRef = ref;
+  // waiting for a return
+  Waiting = 1;
 
   // update dialog labels
   XRCCTRL(*this, "wxID_NUMBER_COL_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_COLS) ));
@@ -78,7 +80,9 @@ END_EVENT_TABLE()
 CreateTableDlgWX::~CreateTableDlgWX()
 {
   /* when the dialog is destroyed, It's important to cleanup context */
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
+  if (Waiting)
+  // no return done
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0); 
 }
 
 /*----------------------------------------------------------------------
@@ -89,7 +93,8 @@ void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
   m_cols = XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->GetValue();
   m_rows = XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->GetValue();
   m_border = XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->GetValue();
-
+  // return done
+  Waiting = 0;
   ThotCallback (BaseDialog + TableCols, INTEGER_DATA, (char *) m_cols);
   ThotCallback (BaseDialog + TableRows, INTEGER_DATA, (char *) m_rows);
   ThotCallback (BaseDialog + TableBorder, INTEGER_DATA, (char *) m_border);
@@ -102,6 +107,8 @@ void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void CreateTableDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char *) 0);
 }
 
