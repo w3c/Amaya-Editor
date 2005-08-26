@@ -26,10 +26,10 @@
 <label define="AM_OPEN_URL">
 <message xml:lang="en">Open</message>
 <message xml:lang="fr">Ouvrir</message>
-<message xml:lang="de">Adresse:</message>
+<message xml:lang="de">Öffnen</message>
 <message xml:lang="it">Apri</message>
 <message xml:lang="tr">Aç</message>
-<message xml:lang="es">Dirección:</message>
+<message xml:lang="es">Abrir</message>
 <message xml:lang="pt">Abrir</message>
 <message xml:lang="fi">Avaa</message>
 <message xml:lang="ru">Открыть</message>
