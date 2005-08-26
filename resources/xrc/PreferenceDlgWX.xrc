@@ -200,7 +200,8 @@
                       <object class="wxRadioBox" name="wxID_RADIO_OPENLOC">
                         <label>*Ouvrir les nouveaux documents dans*</label>
                         <content>
-                          <item>*Nouvel onglet (pas encode disponible sous Mac*</item>
+                          <item>*A la place</item>
+                          <item>*Nouvel onglet (pas encode disponible sous Mac)</item>
                           <item>*Nouvelle fenetre*</item>
                         </content>
                         <style>wxRA_SPECIFY_COLS</style>

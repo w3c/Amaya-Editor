@@ -1901,7 +1901,7 @@ ThotBool SimpleRClick (NotifyElement *event)
   ThotBool done;
   
 #ifdef _WX
-  LoadDefaultOpeningLocation();
+  LoadDefaultOpeningLocation (TRUE); // in new frame
   done = ActivateElement (event->element, event->document);
 #else /* _WX */
   DontReplaceOldDoc = TRUE;
@@ -3256,7 +3256,7 @@ static ThotBool ShowTextLine (Element el, Document doc)
 		   if (css)
 		     {
 #ifdef _WX
-		       LoadDefaultOpeningLocation();
+		       LoadDefaultOpeningLocation (TRUE); // in new frame
 		       otherDoc = GetAmayaDoc (s, NULL, DocumentSource[doc], DocumentSource[doc], CE_CSS,
 					       FALSE, NULL, NULL);
 #else /* _WX */

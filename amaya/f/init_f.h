@@ -193,7 +193,7 @@ extern void AddDocInSaveList ( char *name,
 extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
-extern void LoadDefaultOpeningLocation ( void );
+extern void LoadDefaultOpeningLocation ( ThotBool noReplace );
 extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );
@@ -387,7 +387,7 @@ extern void AddDocInSaveList ( char *name,
 extern void InitAutoSave ( void );
 extern void SaveGeometryOnExit ( int document,
                                    const char * view_name );
-extern void LoadDefaultOpeningLocation ( void );
+extern void LoadDefaultOpeningLocation ( ThotBool noReplace );
 extern int GetMaxURLList ( void );
 extern void SetMaxURLList ( int max );
 extern void ClearURLList ( void );

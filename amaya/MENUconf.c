@@ -2787,7 +2787,7 @@ void PublishConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 void GetBrowseConf (void)
 {
-  TtaGetEnvInt ("OPENING_LOCATION", &(GProp_Browse.OpeningLocation));
+  TtaGetEnvInt ("NEW_LOCATION", &(GProp_Browse.OpeningLocation));
   TtaGetEnvBoolean ("LOAD_IMAGES", &(GProp_Browse.LoadImages));
   TtaGetEnvBoolean ("LOAD_OBJECTS", &(GProp_Browse.LoadObjects));
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &(GProp_Browse.BgImages));
@@ -2809,7 +2809,7 @@ void GetBrowseConf (void)
   ----------------------------------------------------------------------*/
 void SetBrowseConf (void)
 {
-  TtaSetEnvInt ("OPENING_LOCATION", GProp_Browse.OpeningLocation, TRUE);
+  TtaSetEnvInt ("NEW_LOCATION", GProp_Browse.OpeningLocation, TRUE);
   TtaSetEnvBoolean ("LOAD_IMAGES", GProp_Browse.LoadImages, TRUE);
   TtaSetEnvBoolean ("LOAD_OBJECTS", GProp_Browse.LoadObjects, TRUE);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", GProp_Browse.BgImages, TRUE);
@@ -2875,7 +2875,7 @@ void GetDefaultBrowseConf ()
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
   GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
   TtaGetDefEnvBoolean ("SHOW_CONFIRM_CLOSE_TAB", &(GProp_Browse.WarnCTab));
-  TtaGetDefEnvInt ("OPENING_LOCATION", &(GProp_Browse.OpeningLocation));
+  GProp_Browse.OpeningLocation = 1;
   TtaGetDefEnvInt ("MAX_URL_LIST", &(GProp_Browse.MaxURL));
 }
 

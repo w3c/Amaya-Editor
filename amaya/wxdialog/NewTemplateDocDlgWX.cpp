@@ -91,12 +91,9 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB,TMSG_CANCEL) ));
 
   // set the default WHERE_TO_OPEN value : in new tab
-  int where_to_open_doc = 1;
-  TtaSetEnvInt("WHERE_TO_OPEN_DOC", where_to_open_doc, FALSE);
-  TtaGetEnvInt("WHERE_TO_OPEN_DOC", &where_to_open_doc);
-  if (where_to_open_doc < 0 || where_to_open_doc > 2)
-    where_to_open_doc = 1;
-  //  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
+  int where_to_open_doc;
+  TtaGetEnvInt("NEW_LOCATION", &where_to_open_doc);
+  XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->SetSelection(where_to_open_doc);
 
   // dir separator
   wxChar dir_sep = DIR_SEP;

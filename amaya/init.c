@@ -6163,18 +6163,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
           SaveAsHTML = TRUE;
           SaveAsXML = FALSE;
           SaveAsText = FALSE;
-#if defined(_GTK)
           UpdateSaveAsButtons ();
-#endif /* _GTK */
           SetFileSuffix ();
           break;
         case 1:	/* "Save as XML" button */
           SaveAsXML = TRUE;
           SaveAsHTML = FALSE;
           SaveAsText = FALSE;
-#if defined(_GTK)
           UpdateSaveAsButtons ();
-#endif /* _GTK */
           SetFileSuffix ();
           /* Set the document charset */
           if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
@@ -7519,7 +7515,16 @@ void InitAmaya (NotifyEvent * event)
   UserCSS = TtaStrdup (ptr);
   InitUserStyleSheet (UserCSS);
   TtaFreeMemory (ptr);
-  ptr = NULL;
+  /* check if the new location is set */
+  ptr = TtaGetEnvString ("NEW_LOCATION");
+  if (ptr == NULL)
+    {
+      i = 0;
+      TtaGetEnvInt("OPENING_LOCATION", &i);
+      TtaSetEnvInt ("NEW_LOCATION", i+1, TRUE);/* new tab */
+    }
+  else
+    ptr = NULL;
 
   /* Initialize environment variables if they are not defined */
   TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
@@ -7732,7 +7737,7 @@ void OpenNewDocFromArgv( char * url )
   
 #ifdef _WX
   /* load the document in the default location */
-  LoadDefaultOpeningLocation();
+  LoadDefaultOpeningLocation (FALSE);
 #endif /* _WX */
 
   if (s == NULL || s[0] == EOS)
@@ -8597,15 +8602,17 @@ void SaveGeometryOnExit (int document, const char * view_name)
 }
 
 /*----------------------------------------------------------------------
-  LoadDefaultOpeningLocation()
+  LoadDefaultOpeningLocation controls where the new document is displayed
+  The parameter noReplace says the replace is not allowed
   ----------------------------------------------------------------------*/
-void LoadDefaultOpeningLocation()
+void LoadDefaultOpeningLocation (ThotBool noReplace)
 {
-  int where_id;
+  int where_id = 1;
 
   /* get the default location in thotrc */
-  TtaGetEnvInt ("OPENING_LOCATION", &where_id);
-  where_id++; /* zero based in the config file */
+  TtaGetEnvInt ("NEW_LOCATION", &where_id);
+  if (noReplace && where_id == 0)
+    where_id++; /* zero based in the config file */
 
   ThotCallback(BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
 }

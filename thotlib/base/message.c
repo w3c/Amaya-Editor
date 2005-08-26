@@ -30,14 +30,14 @@
 /* Description d'une table de messages */
 typedef struct _TabMsg *PtrTabMsg;
 typedef struct _TabMsg
-  {
-     PtrTabMsg           TabNext;
-     int                 TabLength;
-     char              **TabMessages;
-  }
+{
+  PtrTabMsg           TabNext;
+  int                 TabLength;
+  char              **TabMessages;
+}
 TabMsg;
 
- /* Identification des messages Thot */
+/* Identification des messages Thot */
 static PtrTabMsg       FirstTableMsg = NULL;
 static unsigned char * EmptyMsg = (unsigned char *)"";
 static unsigned char   result[MAX_TXT_LEN];
@@ -49,8 +49,8 @@ static unsigned char   result[MAX_TXT_LEN];
 
 
 /*----------------------------------------------------------------------
-   AsciiTranslate convertit les code d'accents du fichier de message 
-   en accents.                                             
+  AsciiTranslate convertit les code d'accents du fichier de message 
+  en accents.                                             
   ----------------------------------------------------------------------*/
 unsigned char *AsciiTranslate (char *pBuffer)
 {
@@ -135,11 +135,11 @@ unsigned char *AsciiTranslate (char *pBuffer)
 
 
 /*----------------------------------------------------------------------
-   TtaGetMessageTable alloue et initialise la table des            
-   messages a` partir du fichier indique' par la variable msgName  
-   pour l'application. Cet ensemble de messages va e^tre           
-   identifie' par la valeur origine rendue par la fonction.        
-   La fonction rend la valeur -1 si la table n'est pas alloue'e.   
+  TtaGetMessageTable alloue et initialise la table des            
+  messages a` partir du fichier indique' par la variable msgName  
+  pour l'application. Cet ensemble de messages va e^tre           
+  identifie' par la valeur origine rendue par la fonction.        
+  La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
 int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 {
@@ -182,79 +182,79 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
       currenttable->TabNext = NULL;
       currenttable->TabLength = msgNumber;
       for (num = 0; num < msgNumber; num++)
-	currenttable->TabMessages[num] = NULL;
+        currenttable->TabMessages[num] = NULL;
       origineid = 0;
       
       /* Chaine la table */
       if (FirstTableMsg == NULL)
-	FirstTableMsg = currenttable;
+        FirstTableMsg = currenttable;
       else
-	{
-	  previoustable = FirstTableMsg;
-	  origineid++;
-	  while (previoustable->TabNext != NULL)
-	    {
-	      previoustable = previoustable->TabNext;
-	      origineid++;
-	    }
-	  previoustable->TabNext = currenttable;
-	}
+        {
+          previoustable = FirstTableMsg;
+          origineid++;
+          while (previoustable->TabNext != NULL)
+            {
+              previoustable = previoustable->TabNext;
+              origineid++;
+            }
+          previoustable->TabNext = currenttable;
+        }
 
       pBuff[0] = EOS;
       fscanf (file, "# %500s\n]", pBuff);
       if (!strncasecmp ((const char *)pBuff, "encoding=", 9))
-	{
-	  fscanf (file, "%500s\n]", pBuff);
-	  if (!strncasecmp ((const char *)pBuff, "utf8", 4))
-	    encoding = UTF_8;
-	  else
-	    encoding = ISO_8859_1;
-	}
+        {
+          fscanf (file, "%500s\n]", pBuff);
+          if (!strncasecmp ((const char *)pBuff, "utf8", 4))
+            encoding = UTF_8;
+          else
+            encoding = ISO_8859_1;
+        }
       else
-	{
-	  fseek (file, 0L, 0);
-	  encoding = ISO_8859_1;
-	}
+        {
+          fseek (file, 0L, 0);
+          encoding = ISO_8859_1;
+        }
       DialogCharset = TtaGetDefaultCharset ();
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
-	     num < msgNumber)
-	{
-    	  s = (char *)TtaGetMemory (strlen ((const char *)pBuff) + 1);
-     	  strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
+             num < msgNumber)
+        {
+          s = (char *)TtaGetMemory (strlen ((const char *)pBuff) + 1);
+          strcpy (s, (const char *)AsciiTranslate ((char *)pBuff));
 #ifndef _WX
-	  if (encoding == UTF_8 && DialogCharset != UTF_8)
-	    {
-	      /* convert the string */
-	      ptr = (char *)TtaConvertMbsToByte ((unsigned char *)s, DialogCharset);
-	      currenttable->TabMessages[num] = ptr;
-	      TtaFreeMemory (s);
-	    }
-	  else
-	  {
-		  if (currenttable->TabMessages[num])
-        TtaFreeMemory (s);
-		  else
-	    currenttable->TabMessages[num] = s;
-	  }
+          if (encoding == UTF_8 && DialogCharset != UTF_8)
+            {
+              /* convert the string */
+              ptr = (char *)TtaConvertMbsToByte ((unsigned char *)s, DialogCharset);
+              currenttable->TabMessages[num] = ptr;
+              TtaFreeMemory (s);
+            }
+          else
+            {
+              if (currenttable->TabMessages[num])
+                TtaFreeMemory (s);
+              else
+                currenttable->TabMessages[num] = s;
+            }
 #endif /* _WX */
 #ifdef _WX
-	  /* now we convert every strings to UTF-8 (DialogCharset) */
-	  if (encoding == DialogCharset)
-	    {
-	      /* string source is allready in utf8 so no need to convert */
-	      currenttable->TabMessages[num] = s;
-	    }
-	  else
-	    {
-	      /* convert the string from Byte (ISO-LATIN-X) to Mbs (UTF-8) */
-	      ptr = (char *)TtaConvertByteToMbs ((unsigned char *)s, encoding);
-	      currenttable->TabMessages[num] = ptr;
-	      TtaFreeMemory (s);
-	    }
+          /* now we convert every strings to UTF-8 (DialogCharset) */
+          if (encoding == DialogCharset)
+            {
+              /* string source is allready in utf8 so no need to convert */
+              currenttable->TabMessages[num] = s;
+            }
+          else
+            {
+              /* convert the string from Byte (ISO-LATIN-X) to Mbs (UTF-8) */
+              ptr = (char *)TtaConvertByteToMbs ((unsigned char *)s, encoding);
+              currenttable->TabMessages[num] = ptr;
+              TtaFreeMemory (s);
+            }
 #endif /* _WX */
 
-	}
+        }
       TtaReadClose (file);
     }
   return (origineid);
@@ -266,128 +266,128 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   ----------------------------------------------------------------------*/
 void FreeAllMessages ()
 {
-   int                 i;
-   PtrTabMsg           currenttable;
+  int                 i;
+  PtrTabMsg           currenttable;
 
-   while (FirstTableMsg != NULL)
-     {
-       currenttable = FirstTableMsg;
-       FirstTableMsg = FirstTableMsg->TabNext;
-       for (i = 0; i < currenttable->TabLength; i++)
-	 TtaFreeMemory (currenttable->TabMessages[i]);
-       TtaFreeMemory (currenttable->TabMessages);
-       TtaFreeMemory (currenttable);
-     }
+  while (FirstTableMsg != NULL)
+    {
+      currenttable = FirstTableMsg;
+      FirstTableMsg = FirstTableMsg->TabNext;
+      for (i = 0; i < currenttable->TabLength; i++)
+        TtaFreeMemory (currenttable->TabMessages[i]);
+      TtaFreeMemory (currenttable->TabMessages);
+      TtaFreeMemory (currenttable);
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TtaGetMessage retourne le message correspondant a l'origine et 
-   l'indice 0 a N donne.                                 
+  TtaGetMessage retourne le message correspondant a l'origine et 
+  l'indice 0 a N donne.                                 
   ----------------------------------------------------------------------*/
 char *TtaGetMessage (int origin, int num)
 {
-   int                 i;
-   PtrTabMsg           currenttable;
+  int                 i;
+  PtrTabMsg           currenttable;
 
-   /* recherche la table de messages */
-   if (origin == -1)
-      /* la table de messages n'est pas chargee */
-      return ((char *)EmptyMsg);
-   i = 0;
-   currenttable = FirstTableMsg;
-   while (currenttable && i < origin)
-     {
-	currenttable = currenttable->TabNext;
-	i++;
-     }
+  /* recherche la table de messages */
+  if (origin == -1)
+    /* la table de messages n'est pas chargee */
+    return ((char *)EmptyMsg);
+  i = 0;
+  currenttable = FirstTableMsg;
+  while (currenttable && i < origin)
+    {
+      currenttable = currenttable->TabNext;
+      i++;
+    }
 
-   if (!currenttable)
-      /* on n'a pas trouve la table de messages */
-      return ((char *)EmptyMsg);
-   else if (num >= currenttable->TabLength || num < 0)
-      /* il n'y a pas de message */
-      return ((char *)EmptyMsg);
-   else if (!currenttable->TabMessages[num])
-      /* il n'y a pas de message */
-      return ((char *)EmptyMsg);
-   else
-      return ((char *)currenttable->TabMessages[num]);
+  if (!currenttable)
+    /* on n'a pas trouve la table de messages */
+    return ((char *)EmptyMsg);
+  else if (num >= currenttable->TabLength || num < 0)
+    /* il n'y a pas de message */
+    return ((char *)EmptyMsg);
+  else if (!currenttable->TabMessages[num])
+    /* il n'y a pas de message */
+    return ((char *)EmptyMsg);
+  else
+    return ((char *)currenttable->TabMessages[num]);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtaDisplayMessage (int msgType, char *fmt,...)
 {
-   va_list             pa;
-   int                 i, lg, vald;
-   char               *vals, *p;
-   char                pBuffer[MAX_PATH];
+  va_list             pa;
+  int                 i, lg, vald;
+  char               *vals, *p;
+  char                pBuffer[MAX_PATH];
 
-   if (fmt)
-     {
-       /* construct the final message */
+  if (fmt)
+    {
+      /* construct the final message */
 #ifdef STDC_HEADERS
-       va_start (pa, fmt);
+      va_start (pa, fmt);
 #else  /* STDC_HEADERS */
-       va_start (pa);
+      va_start (pa);
 #endif /* STDC_HEADERS */
-       i = 0;
-       for (p = fmt; *p && i + 1 < MAX_PATH; p++)
-	 {
-	   if (*p != '%') 
-             pBuffer[i++] = *p;
-	   else
-	     {
-               p++;
-               switch (*p)
-		 {
-		 case 'd':
-		   /* it is a value */
-		   vald = va_arg (pa, int);
-		   if (i + 10 < MAX_PATH)
-		     {
-		       sprintf (&pBuffer[i], "%d", vald);
-		       i += strlen (&pBuffer[i]);
-		     }
-		   else
-		     i = MAX_PATH;
-		   break;
-		 case 's':
-		   /* it is a string */
-		   /* vals = va_arg (pa, char*); */
-		   vals = va_arg (pa, char *);
-		   if (vals)
-		     {
-		       lg = strlen (vals);
-		       if (i + lg < MAX_PATH)
-			 {
-			   strcpy (&pBuffer[i], vals);
-			   i += lg;
-			 }
-		       else
-			 i = MAX_PATH;
-		     }
-		   break;
-		 default:
-		   /* other value not allowed */
-		   pBuffer[i++] = *p;
-		   break;
-		 } 
-	     } 
-	 } 
-       /* Display the final message */
-       pBuffer[i] = EOS;
-       if (msgType == CONFIRM || msgType == FATAL)
-	 DisplayConfirmMessage (pBuffer);
-       else
-	 DisplayMessage (pBuffer, msgType);
-     }
+      i = 0;
+      for (p = fmt; *p && i + 1 < MAX_PATH; p++)
+        {
+          if (*p != '%') 
+            pBuffer[i++] = *p;
+          else
+            {
+              p++;
+              switch (*p)
+                {
+                case 'd':
+                  /* it is a value */
+                  vald = va_arg (pa, int);
+                  if (i + 10 < MAX_PATH)
+                    {
+                      sprintf (&pBuffer[i], "%d", vald);
+                      i += strlen (&pBuffer[i]);
+                    }
+                  else
+                    i = MAX_PATH;
+                  break;
+                case 's':
+                  /* it is a string */
+                  /* vals = va_arg (pa, char*); */
+                  vals = va_arg (pa, char *);
+                  if (vals)
+                    {
+                      lg = strlen (vals);
+                      if (i + lg < MAX_PATH)
+                        {
+                          strcpy (&pBuffer[i], vals);
+                          i += lg;
+                        }
+                      else
+                        i = MAX_PATH;
+                    }
+                  break;
+                default:
+                  /* other value not allowed */
+                  pBuffer[i++] = *p;
+                  break;
+                } 
+            } 
+        } 
+      /* Display the final message */
+      pBuffer[i] = EOS;
+      if (msgType == CONFIRM || msgType == FATAL)
+        DisplayConfirmMessage (pBuffer);
+      else
+        DisplayMessage (pBuffer, msgType);
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TtaDisplaySimpleMessage construit un message simple.            
+  TtaDisplaySimpleMessage construit un message simple.            
   ----------------------------------------------------------------------*/
 void TtaDisplaySimpleMessage (int msgType, int origin, int number)
 {
@@ -400,6 +400,6 @@ void TtaDisplaySimpleMessage (int msgType, int origin, int number)
   else if (msgType == CONFIRM)
     MessageBox (NULL, ptr, "Error", MB_OK);
 #else  /* _WINGUI */
-   TtaDisplayMessage (msgType, ptr);   
+  TtaDisplayMessage (msgType, ptr);   
 #endif /* _WINGUI */
 }
