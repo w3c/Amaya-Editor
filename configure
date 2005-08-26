@@ -16433,9 +16433,9 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with templates support \(experimental\)
     fi
     if test "$with_generic_xml" = "yes" ; then
-	echo Amaya configured with generic XML suppport
+	echo Amaya configured with generic XML support
     fi
-    echo Amaya configured with internationalization suppport
+    echo Amaya configured with internationalization support
     if test "$with_gl" = "yes" ; then
 	echo Amaya configured with OpenGL Canvas Rendering \(System library\) \(experimental\)
     fi

@@ -614,6 +614,9 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
       ibox2->BxContentHeight = TRUE;
       ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
+      /* default position */
+      ibox2->BxXOrg = pBox->BxXOrg + width;
+      ibox2->BxYOrg = pBox->BxYOrg;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
       ibox2->BxThickness = pBox->BxThickness;
@@ -651,6 +654,9 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
           ibox1->BxFont = font;
           ibox1->BxH = pBox->BxH;
           ibox1->BxHeight = height;
+          /* default position */
+          ibox1->BxXOrg = pBox->BxXOrg;
+          ibox1->BxYOrg = pBox->BxYOrg;
           ibox1->BxHorizRef = baseline;
           ibox1->BxType = BoPiece;
           ibox1->BxBuffer = pBox->BxBuffer;
@@ -1330,6 +1336,9 @@ static ThotBool BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
       ibox2->BxContentHeight = TRUE;
       ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
+      /* default position */
+      ibox2->BxXOrg = pBox->BxXOrg + width;
+      ibox2->BxYOrg = pBox->BxYOrg;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
       ibox2->BxThickness = pBox->BxThickness;
@@ -1457,6 +1466,9 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
       ibox1->BxThickness = pBox->BxThickness;
       ibox1->BxH = pBox->BxH;
       ibox1->BxHeight = height;
+      /* default position */
+      ibox1->BxXOrg = pBox->BxXOrg;
+      ibox1->BxYOrg = pBox->BxYOrg;
       ibox1->BxHorizRef = baseline;
 
       /* transmit widths, margins, borders, and paddings */
@@ -1492,6 +1504,9 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
       ibox2->BxContentHeight = TRUE;
       ibox2->BxH = pBox->BxH;
       ibox2->BxHeight = height;
+      /* default position */
+      ibox2->BxXOrg = pBox->BxXOrg + width;
+      ibox2->BxYOrg = pBox->BxYOrg;
       ibox2->BxFont = font;
       ibox2->BxUnderline = pBox->BxUnderline;
       ibox2->BxThickness = pBox->BxThickness;
