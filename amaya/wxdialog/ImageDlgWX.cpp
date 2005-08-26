@@ -13,7 +13,7 @@
 #include "message_wx.h"
 
 static int      MyRef;
-
+static int      Waiting = 0;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -45,6 +45,8 @@ ImageDlgWX::ImageDlgWX( int ref,
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("ImageDlgWX"));
   MyRef = ref;
+  // waiting for a return
+  Waiting = 1;
 
   // update dialog labels with given ones
   SetTitle( title );
@@ -66,7 +68,9 @@ ImageDlgWX::ImageDlgWX( int ref,
   ----------------------------------------------------------------------*/
 ImageDlgWX::~ImageDlgWX()
 {
-  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+  if (Waiting)
+  // no return done
+    ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -96,8 +100,12 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
   if (Alt[0] == EOS)
     XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
   else
-    // load the image
-    ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+     {
+      // load the image
+      // return done
+      Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*)1);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -144,6 +152,8 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ImageDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  // return done
+  Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
