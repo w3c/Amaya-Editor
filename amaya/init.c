@@ -7737,7 +7737,7 @@ void OpenNewDocFromArgv( char * url )
   
 #ifdef _WX
   /* load the document in the default location */
-  LoadDefaultOpeningLocation (FALSE);
+  LoadDefaultOpeningLocation (TRUE);
 #endif /* _WX */
 
   if (s == NULL || s[0] == EOS)
