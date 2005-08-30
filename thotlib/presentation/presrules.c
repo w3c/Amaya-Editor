@@ -2513,6 +2513,7 @@ static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
               if (pDRule->DrValue < 0)
                 /* inverser cette valeur */
                 pdimAb->DimValue = -pdimAb->DimValue;
+
               if (pDRule->DrUnit == UnRelative ||
                   pDRule->DrUnit == UnXHeight)
                 /* convertit en 1/10 de caractere */

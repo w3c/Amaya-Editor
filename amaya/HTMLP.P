@@ -2779,6 +2779,8 @@ RULES
 	Width: auto{Enclosing . Width};
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
@@ -3198,7 +3200,7 @@ RULES
  Text_Area: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-        CreateBefore(NEW_LINE);
+  CreateBefore(NEW_LINE);
 	CreateAfter(NEW_LINE);
 	BorderTopWidth: 1 px;
 	BorderLeftWidth: 1 px;
@@ -3300,8 +3302,8 @@ RULES
 	Width: Enclosed . Width;
 	{VertPos: Top = Enclosing . Top - 0.6;}
 	HorizPos: Left = Enclosing . Left;
-        PaddingLeft: 0.3;
-        PaddingRight: 0.3;
+  PaddingLeft: 0.3;
+  PaddingRight: 0.3;
 	MarginTop: -0.5;
 	MarginBottom: 0.5;
 	Background: Enclosing =;
@@ -3313,16 +3315,16 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-        	PaddingLeft: 0;
-        	PaddingRight: 0;
+    PaddingLeft: 0;
+    PaddingRight: 0;
 		MarginTop: 0;
 		MarginBottom: 0;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		VertPos: Top = Enclosing . Top;
-       		PaddingLeft: 0;
-        	PaddingRight: 0;
+    PaddingLeft: 0;
+    PaddingRight: 0;
 		MarginTop: 0;
 		MarginBottom: 0.8;
 		END;
@@ -3342,8 +3344,9 @@ RULES
 	FillPattern: nopattern;
         Foreground: Black;
 	IN Structure_view BEGIN
-		HorizPos: Left = Enclosing . Left;
-		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		END;
 	IN Alternate_view BEGIN
 		IF within Text_Area
@@ -6253,14 +6256,14 @@ ATTRIBUTES
 	if Text_Area
 	   Width: Columns ex;
 	IN Structure_view
-	    BEGIN
-	    if Text_Area
-		BEGIN
-		VertPos: HRef = Previous . HRef;
-		HorizPos: Left = Previous . Right;
-		Width: Enclosed . Width;
-		END;
-	    END;
+	  BEGIN
+	  if Text_Area
+		   BEGIN
+		   {VertPos: HRef = Previous . HRef;
+		   HorizPos: Left = Previous . Right;}
+		   Width: Enclosed . Width;
+		   END;
+	  END;
 	END;
 
 { ---- Table ---- }
