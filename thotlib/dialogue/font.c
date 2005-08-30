@@ -95,17 +95,20 @@ static SpecFont   FirstFontSel = NULL;
 
 
 /*----------------------------------------------------------------------
-  GL_FontIInit: Use Freetype2 
+  GL_LoadFont uses point size font
   ----------------------------------------------------------------------*/
 static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 {
   char filename[2048];
+
+#ifdef IV
   if (size > MaxNumberOfSizes)
     size = LogicalPointsSizes[MaxNumberOfSizes];
   else if (size >= 0)
     size = LogicalPointsSizes[size];
   else
     size = 12;
+#endif
   if (GetFontFilename (alphabet, family, highlight, size, filename))
     return (gl_font_init (filename, alphabet, size)); 
   return NULL;
@@ -756,40 +759,14 @@ int FontAscent (ThotFont font)
   if (font == NULL)
     return (0);
 #ifdef _GL
-  else
-    return (gl_font_ascent(font));
-#else /*_GL*/
-  else
+  return (gl_font_ascent(font));
+#endif /*_GL*/
 #ifdef _WINGUI
-    return (font->FiAscent);
+  return (font->FiAscent);
 #endif /* _WINGUI */
 #ifdef _GTK
   return (font->ascent);
 #endif /* _GTK */
-#ifdef _WX
-  /* TODO : a faire si on desir porter la version non opengl de wxwindows */
-  return 0;
-#endif /* _WX */
-#endif /*_GL*/
-}
-
-/*----------------------------------------------------------------------
-  XFontAscent returns the x ascent in a font set.
-  ----------------------------------------------------------------------*/
-static int XFontAscent (SpecFont specfont)
-{
-  ThotFont        font;
-  unsigned char   car;
-
-  if (specfont->Font_1)
-    return FontHeight (specfont->Font_1);
-  else
-    {
-      car = GetFontAndIndexFromSpec (SPACE, specfont, &font);
-      if (font == NULL)
-        font = DialogFont;
-      return CharacterAscent ('x', font);
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -797,22 +774,17 @@ static int XFontAscent (SpecFont specfont)
   ----------------------------------------------------------------------*/
 int FontHeight (ThotFont font)
 {
-  int      h;
-
   if (font == NULL)
-    h = 0;
-  else
+    return (0);
 #ifdef _GL
-    h = gl_font_height (font);
-#else /* _GL */
+  return (gl_font_height (font));
+#endif /*_GL*/
 #ifdef _WINGUI
-  h = font->FiHeight;
+  return (font->FiHeight);
 #endif /* _WINGUI */
 #ifdef _GTK
-  h = font->ascent + font->descent;
+  return (font->ascent + font->descent);
 #endif /* _GTK */
-#endif /*_GL*/
-  return h;
 }
 
 /*----------------------------------------------------------------------
@@ -1072,27 +1044,6 @@ int ThotFontPointSize (int size)
 }
 
 /*----------------------------------------------------------------------
-  LoadFont load a given font designed by its name.
-  ----------------------------------------------------------------------*/
-ThotFont LoadFont (char *name)
-{
-#if defined(_GTK) || defined(_WX)
-#ifdef _GTK
-  GdkFont *result;
-
-  result = gdk_font_load ((gchar *)name);
-  return (result);
-#endif /* _GTK */
-#ifdef _WX
-  /* TODO : a faire si on desir porter la version non opengl de wxwindows */
-  return NULL;
-#endif /* _WX */
-#else /* #if defined(_GTK) || defined(_WX) */
-  return NULL;
-#endif /* #if defined(_GTK) || defined(_WX) */
-}
-
-/*----------------------------------------------------------------------
   GeneratePostscriptFont : 
   As Postscript name serves also for the font cache
   ----------------------------------------------------------------------*/
@@ -1130,9 +1081,6 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 {
   char        *wght, *slant, *ffamily;
   char        encoding[3];
-#if defined(_GTK) || defined(_WX)
-  ThotFont    ptfont;
-#endif /*#if defined(_GTK) || defined(_WX) */
 
   /* apply the current font zoom */
   if (unit == UnRelative)
@@ -1157,9 +1105,9 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
                ffamily, wght, slant, size);
       GeneratePostscriptFont (r_name, script, family, highlight, size);
-#if defined(_GTK) || defined(_WX)
-      ptfont = LoadFont (r_nameX);
-#endif /*#if defined(_GTK) || defined(_WX) */
+#ifdef _GTK
+      gdk_font_load ((gchar *)r_nameX);
+#endif /* _GTK */
     }
   else
     { 
@@ -1302,6 +1250,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 
 /*----------------------------------------------------------------------
   GetFontIdentifier computes the name of a Thot font.
+  The size is expressed in unit.
   ----------------------------------------------------------------------*/
 void GetFontIdentifier (char script, int family, int highlight, int size,
                         TypeUnit unit, char text[10], char textX[100])
@@ -1371,13 +1320,11 @@ ThotFont ReadFont (char script, int family, int highlight, int size,
   char             name[10], nameX[100];
 
   GetFontIdentifier (script, family, highlight, size, unit, name, nameX);
-
-#if defined(_GTK) || defined(_WX)
-  return LoadFont (nameX);
-#endif /* #if defined(_GTK) || defined(_WX) */
-#ifdef _WINGUI  
+#if _GTK
+  return ((ThotFont) gdk_font_load ((gchar *)nameX));
+#else /*_GTK */
   return NULL;
-#endif /* _WINGUI */
+#endif /*_GTK */
 }
  
 /*----------------------------------------------------------------------
@@ -1450,7 +1397,8 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
   LoadNearestFont load the nearest possible font given a set of attributes
   like script, family, the size and for a given frame.
   Parameters increase decrease are true when a new test is allowed.
-  The parameter requestedsize gives the initial requested size.
+  The parameter requestedsize gives the initial requested size expressed
+  in points.
   ----------------------------------------------------------------------*/
 ThotFont LoadNearestFont (char script, int family, int highlight,
                           int size, int requestedsize, int frame,
@@ -1458,9 +1406,8 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 {
   int                 i, j, deb;
   int                 val;
-  unsigned int		  mask;
+  unsigned int		    mask;
   char                text[10], PsName[10], textX[100];
-
 #ifdef _WINGUI
   SIZE                wsize;
   TEXTMETRIC          textMetric;
@@ -1470,7 +1417,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 #endif /* _WINGUI */
   ThotFont            ptfont;
   
-  GetFontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+  GetFontIdentifier (script, family, highlight, size, UnPoint, text, textX);
   /* initialize the PostScript font name */
   strcpy (PsName, text);   
   /* Font cache lookup */
@@ -1491,7 +1438,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
           deb += MAX_FONTNAME;
         }
     }   
-  
+
   if (ptfont == NULL)
     {
       /* Load a new font */
@@ -1499,16 +1446,22 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
         {
           /* No table overflow: load the new font */
 #ifdef _GL
-#ifdef _PCLDEBUGFONT
-          g_print ("\n XLFD selection : %s %s", textX, text);
-#endif /*_PCLDEBUG*/
+#ifdef IV
+          ptfont = (ThotFont)GL_LoadFont (script, family, highlight,
+                                          LogicalPointsSizes[size]);
+#else
           ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
+#endif
 #else /*_GL*/
 #ifdef _WINGUI
           /* Allocate the font structure */
+#ifdef IV
           val = LogicalPointsSizes[size];
-          
           ActiveFont = WIN_LoadFont (script, family, highlight, val);
+#else
+          ActiveFont = WIN_LoadFont (script, family, highlight, size);
+#endif
+          
           if (ActiveFont)
             {
               if (TtPrinterDC != NULL)
@@ -1525,82 +1478,38 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
               ptfont->FiScript = script;
               ptfont->FiFamily = family;
               ptfont->FiHighlight = highlight;
+#ifdef IV
               ptfont->FiSize = val;
-#ifdef VERYSLOW
-              if ((script != 'Z')&&(script != 'A'))
+#else
+              ptfont->FiSize = size;
+#endif
+              if (GetTextMetrics (display, &textMetric))
                 {
-#endif /* VERYSLOW */
-                  if (GetTextMetrics (display, &textMetric))
-                    {
-                      ptfont->FiAscent = textMetric.tmAscent;
-                      ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-                    }
-                  else
-                    {
-                      ptfont->FiAscent = 0;
-                      ptfont->FiHeight = 0;
-                    }
-                  ptfont->FiFirstChar = textMetric.tmFirstChar;
-                  ptfont->FiLastChar = textMetric.tmLastChar;
-                  val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
-                  ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
-                  ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
-                  c = textMetric.tmFirstChar;
-                  for (ind = 0; ind < val; ind ++)
-                    {
-                      GetTextExtentPoint (display, (LPCTSTR) (&c),
-                                          1, (LPSIZE) (&wsize));
-                      if (wsize.cx == 0)
-                        GetTextExtentPoint (display, (LPCTSTR) (&space),
-                                            1, (LPSIZE) (&wsize));
-                      ptfont->FiWidths[ind] = wsize.cx;
-                      ptfont->FiHeights[ind] = wsize.cy;
-                      c++;
-                    }
-#ifdef VERYSLOW
+                  ptfont->FiAscent = textMetric.tmAscent;
+                  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
                 }
-              /* this gives very good spacing, but is very slow for each
-                 new font (about 2 min for a Japanese press release on a 450mhz box */
-              else {
-                TEXTMETRICW textMetric;
-                int spacewidth, spaceheight;
-                GetTextExtentPointW (display, (LPWORD) (&space),
-                                     1, (LPSIZE) (&wsize));
-                spacewidth = wsize.cx;
-                spaceheight = wsize.cy;
-                /* insert code for GetTextMetricsW */
-                if (GetTextMetricsW (display, &textMetric))
-                  {
-                    ptfont->FiAscent = textMetric.tmAscent;
-                    ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-                  }
-                else
-                  {
-                    ptfont->FiAscent = 0;
-                    ptfont->FiHeight = 0;
-                  }
-                ptfont->FiFirstChar = textMetric.tmFirstChar;
-                ptfont->FiLastChar = textMetric.tmLastChar;
-                val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
-                ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
-                ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
-                c = textMetric.tmFirstChar;
-                for (ind = 0; ind < val; ind ++)
-                  {
-                    GetTextExtentPointW (display, (LPWORD) (&c),
-                                         1, (LPSIZE) (&wsize));
-                    if (wsize.cx == 0) {
-                      ptfont->FiWidths[ind] = spacewidth;
-                      ptfont->FiHeights[ind] = spaceheight;
-                    }
-                    else {
-                      ptfont->FiWidths[ind] = wsize.cx;
-                      ptfont->FiHeights[ind] = wsize.cy;
-                    }
-                    c++;
-                  }
-              }
-#endif /* VERYSLOW */
+              else
+                {
+                  ptfont->FiAscent = 0;
+                  ptfont->FiHeight = 0;
+                }
+              ptfont->FiFirstChar = textMetric.tmFirstChar;
+              ptfont->FiLastChar = textMetric.tmLastChar;
+              val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+              ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+              ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+              c = textMetric.tmFirstChar;
+              for (ind = 0; ind < val; ind ++)
+                {
+                  GetTextExtentPoint (display, (LPCTSTR) (&c),
+                                      1, (LPSIZE) (&wsize));
+                  if (wsize.cx == 0)
+                    GetTextExtentPoint (display, (LPCTSTR) (&space),
+                                        1, (LPSIZE) (&wsize));
+                  ptfont->FiWidths[ind] = wsize.cx;
+                  ptfont->FiHeights[ind] = wsize.cy;
+                  c++;
+                }
               DeleteObject (ActiveFont);
               ActiveFont = 0;
               if (TtPrinterDC == NULL && display)
@@ -1608,9 +1517,10 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
             }
           else
             ptfont = NULL;
+
 #endif  /* _WINGUI */
 #ifdef _GTK
-          ptfont = LoadFont (textX);
+          ptfont = (ThotFont) gdk_font_load ((gchar *)textX);
 #endif /* _GTK */
           
           /* Loading failed try to find another size */
@@ -1619,7 +1529,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
               /* Change size */
               if (increase)
                 {
+#ifdef IV
                   if (size >= MaxNumberOfSizes)
+#else
+                  if (size >= requestedsize + 10)
+#endif
                     increase = FALSE;
                   else
                     {
@@ -1631,7 +1545,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
                 }
               if (ptfont == NULL && decrease && !increase)
                 {
+#ifdef IV
                   if (size <= 0)
+#else
+                  if (size < 6)
+#endif
                     decrease = FALSE;
                   else
                     {
@@ -1709,15 +1627,18 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
           strcpy (&TtFontName[deb], text);
           strcpy (&TtPsFontName[i * 8], PsName);
           TtFonts[i] = ptfont;
-          TtFontMask[i] = 0;
-          
+          TtFontMask[i] = 0;       
 #if defined(_GTK) || defined(_WX)
+#ifdef IV
           val = LogicalPointsSizes[size];
+#else
+          val = size;
+#endif
           if (script == 'G' &&
               (val == 8 || val == 10 || val == 12 ||
                val == 14 || val == 24))
             TtPatchedFont[i] = val;
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _GTK || _WX */
         }
       /* rely to the current frame */
       mask = 1 << (frame - 1);
@@ -2204,8 +2125,9 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   unsigned int        mask;
   ThotBool            specificFont = (script == 'G');
 
-  /* use only standard sizes */
   index = 0;
+#ifdef IV
+  /* work with logical sizes */
   if (unit == UnRelative)
     index = size;
   else
@@ -2215,6 +2137,13 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
       while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
         index++;
     }
+#else
+  /* work with point sizes */
+  if (unit == UnRelative)
+    index = LogicalPointsSizes[size];
+  else
+    index = size;
+#endif
 
   /* look for the fontsel */
   fontset = FirstFontSel;
@@ -2339,16 +2268,16 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 void InitDialogueFonts (char *name)
 {
-#if defined(_GTK)
+#ifdef _GTK
   int              ndir, ncurrent;
   char            FONT_PATH[128];
   char            *fontpath;
   char           **dirlist = NULL;
   char           **currentlist = NULL;
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
   char            *value;
   char             script;
-  int              f3;
+  int              f_size;
   int              i, index;
 
   /* is there a predefined font family ? */
@@ -2381,7 +2310,7 @@ void InitDialogueFonts (char *name)
   value = TtaGetEnvString ("FontMenuSize");
   if (value != NULL)
     sscanf (value, "%d", &MenuSize);
-  f3 = MenuSize + 2;
+  f_size = MenuSize + 2;
 
 #if defined(_GTK)
   if (!Printing)
@@ -2454,7 +2383,6 @@ void InitDialogueFonts (char *name)
 #endif /* _WINGUI */
 
 #ifdef _WX
-  /* WX TODO : ecrire le code de LoadFont() pour charger une wxFont utilisable dans les dialogues */
   DialogFont = NULL;
   IDialogFont = NULL;
   LargeDialogFont = NULL;
@@ -2477,7 +2405,7 @@ void InitDialogueFonts (char *name)
         IDialogFont = DialogFont;
     }
   index = 0;
-  while (LogicalPointsSizes[index] < f3 && index <= MaxNumberOfSizes)
+  while (LogicalPointsSizes[index] < f_size && index <= MaxNumberOfSizes)
     index++;
   LargeDialogFont = ReadFont (script, 1, 1, index, UnRelative);
   if (LargeDialogFont == NULL)
@@ -2489,31 +2417,23 @@ void InitDialogueFonts (char *name)
 #endif /* _GTK */
   
 #ifdef _GL
-
-#if defined(_GTK) || defined(_WX)
   /* Need a default GL font because the format is different */
   DefaultGLFont = NULL;
   i = 1;
-  int font_size = 1;
   while (DefaultGLFont == NULL && i < 3)
     {
-      font_size = 3;
-      for (font_size = 3; !DefaultGLFont && font_size < MaxNumberOfSizes; font_size++)
-        {
-          DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, font_size);
-        }
+      DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, LogicalPointsSizes[3]);
       if (!DefaultGLFont)
-        DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 2);
+        DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, LogicalPointsSizes[4]);
       if (!DefaultGLFont)
-        DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, 1);
+        DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, LogicalPointsSizes[2]);
+      if (!DefaultGLFont)
+        DefaultGLFont = (ThotFont)GL_LoadFont ('L', i, 1, LogicalPointsSizes[1]);
       i++;
     }
   if (DefaultGLFont == NULL)
     printf ("Cannot load any GL fonts\n");
-#endif /* _GTK */
-
 #endif /* _GL */
-  
 }
 
 /*----------------------------------------------------------------------

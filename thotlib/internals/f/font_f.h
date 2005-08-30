@@ -37,7 +37,6 @@ extern int CharRelSize ( int height,
                          int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
-extern ThotFont LoadFont ( char *name );
 extern void GetFontIdentifier ( char script,
                                 int family,
                                 int highlight,
@@ -121,7 +120,6 @@ extern int CharRelSize ( int height,
                            int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
-extern ThotFont LoadFont ( char *name );
 extern void GetFontIdentifier ( char script,
                                   int family,
                                   int highlight,

@@ -683,7 +683,7 @@ void GraphicsLoadResources ()
 {
   KeyboardsLoadResources ();
 #ifdef _GTK
-  GraphicsIcons = LoadFont ("ivgraf");
+  GraphicsIcons = (ThotFont)gdk_font_load ((gchar *)"ivgraph");
 #endif /* _GTK */
   if (GraphicsIcons == NULL)
     GraphicsIcons = DialogFont;
