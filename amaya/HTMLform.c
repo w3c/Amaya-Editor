@@ -52,7 +52,7 @@ static char        *FormBuf;    /* temporary buffer used to build the query
 static int          FormLength;  /* size of the temporary buffer */
 static int          FormBufIndex; /* gives the index of the last char + 1 added to
 					 the buffer (only used in AddBufferWithEos) */
-static ThotBool     documentStatus;
+static ThotBool     Document_state;
 static Element      Option [MAX_OPTIONS];
 
 #ifdef _WINGUI 
@@ -66,7 +66,7 @@ Document            opDoc;
 ThotBool SaveDocumentStatus (NotifyOnTarget *event)
 {
   /* save the document status */
-  documentStatus = TtaIsDocumentModified (event->document);
+  Document_state = TtaIsDocumentModified (event->document);
   return FALSE; /* let Thot perform normal operation */
 }
  
@@ -75,11 +75,11 @@ ThotBool SaveDocumentStatus (NotifyOnTarget *event)
  -----------------------------------------------------------------------*/ 
 void RestoreDocumentStatus (NotifyOnTarget *event)
 {
-  if (!documentStatus)
+  if (!Document_state)
     {
       TtaSetDocumentUnmodified (event->document);
       /* switch Amaya buttons and menus */
-      DocStatusUpdate (event->document, documentStatus);
+      DocStatusUpdate (event->document, Document_state);
     }
 }
  
