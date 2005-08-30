@@ -100,6 +100,9 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode);
 static char* ExportElemNsPrefix (Document doc, PtrElement pNode);
 static char* ExportAttrNsPrefix (Document doc, PtrElement pNode,
 				 PtrAttribute pAttr);
+static void ExportXmlBuffer (Document doc, unsigned char *buffer);
+static void ExportXmlText (Document doc, PtrTextBuffer pBT,
+			   ThotBool translate, ThotBool entityName);
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, ThotBool *transChar,
 			ThotBool *lineBreak, ThotBool *removeEl,
@@ -2295,6 +2298,7 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
 {
    PtrElement          pAsc;
    PtrAttribute        pAttr, nextAttr;
+   PtrTtAttribute      pAttr1;
    PtrTSchema          pTSch;
    int                 att, nAttr = 0;
 #define MAX_ATTR_TABLE 50
@@ -2337,27 +2341,72 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
 	 /* passe a l'attribut suivant de l'element */
 	 nextAttr = pAttr->AeNext;
        /* process the current attribute */
+       pTSch = NULL;
        pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
        if (pTSch != NULL)
-	 if (pTSch->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1]->AtrElemType == 0)
-	   {
-	     if (pEl->ElStructSchema != pAttr->AeAttrSSchema)
-	       {
-		 ns_prefix = ExportAttrNsPrefix (doc, pEl, pAttr);
-		 if (ns_prefix != NULL)
-		   {
-		     buffer = (char *)TtaGetMemory (strlen (ns_prefix) + 2);
-		     strcpy (buffer, ns_prefix);
-		     strcat (buffer, ":");
-		     SetVariableBuffer (pTSch, "AttrPrefixBuffer", buffer);
-		     TtaFreeMemory (buffer);
-		   }
-	       }
-	     /* les regles de traduction de l'attribut s'appliquent a */
-	     /* n'importe quel type d'element, on les applique */
-	     ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
-				   transChar, lineBreak, doc, recordLineNb);
-	   }
+	 {
+	   if (pTSch->TsAttrTRule->TsAttrTransl[pAttr->AeAttrNum - 1]->AtrElemType == 0)
+	     {
+	       if (pEl->ElStructSchema != pAttr->AeAttrSSchema)
+		 {
+		   ns_prefix = ExportAttrNsPrefix (doc, pEl, pAttr);
+		   if (ns_prefix != NULL)
+		     {
+		       buffer = (char *)TtaGetMemory (strlen (ns_prefix) + 2);
+		       strcpy (buffer, ns_prefix);
+		       strcat (buffer, ":");
+		       SetVariableBuffer (pTSch, "AttrPrefixBuffer", buffer);
+		       TtaFreeMemory (buffer);
+		     }
+		 }
+	       /* les regles de traduction de l'attribut s'appliquent a */
+	       /* n'importe quel type d'element, on les applique */
+	       ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
+				     transChar, lineBreak, doc, recordLineNb);
+	     }
+	 }
+       else
+	 {
+	   /* translation of an attribute from an unknown namespace */
+	   if (position == TBefore)
+	     {
+	       ExportXmlBuffer (doc, (unsigned char *)" ");
+	       ns_prefix = ExportAttrNsPrefix (doc, pEl, pAttr);
+	       if (ns_prefix != NULL)
+		 {
+		   ExportXmlBuffer (doc, (unsigned char *)ns_prefix); 
+		   ExportXmlBuffer (doc, (unsigned char *)":");
+		 }
+	       /* Export the attribute name */
+	       pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
+	       ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName);
+	       ExportXmlBuffer (doc, (unsigned char *)"=");
+	       /* Export the attribute's value */
+	       switch (pAttr1->AttrType)
+		 {
+		 case AtNumAttr:
+		   ExportXmlBuffer (doc, (unsigned char*)pAttr->AeAttrValue);
+		   break;
+		 case AtTextAttr:
+		   if (pAttr->AeAttrText)
+		     {
+		       ExportXmlBuffer (doc, (unsigned char *)"\"");
+		       /* Export the text buffer content */
+		       ExportXmlText (doc, pAttr->AeAttrText, TRUE, FALSE);
+		       ExportXmlBuffer (doc, (unsigned char *)"\"");
+		     }
+		   break;
+		 case AtEnumAttr:
+		   ExportXmlBuffer (doc, (unsigned char *)"\"");
+		   ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+		   ExportXmlBuffer (doc, (unsigned char *)"\"");
+		   
+		   break;
+		 default:
+		   break;
+		 }
+	     }
+	 }
        /* next attribute to be processed */
        pAttr = nextAttr;
      }
@@ -3710,7 +3759,7 @@ static void TranslateTree (PtrElement pEl, Document doc,
 	   if (IsTranslateTag (pTSch, pSS) != 0)
 	     ExportNsDeclaration (doc, pEl);
 	   /* Parcourt les attributs de l'element et applique les regles
-	      des attributs qui doivent ^etre appliquees avant la
+	      des attributs qui doivent etre appliquees avant la
 	      traduction du contenu de l'element */
 	   ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
 			   &withBreak, doc, recordLineNb);
@@ -4348,7 +4397,10 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
 			  /* Export the attribute prefix if it exists */
 			  ns_prefix = ExportAttrNsPrefix (doc, pNode, pAttr);
 			  if (ns_prefix != NULL)
-			    ExportXmlBuffer (doc, (unsigned char *)ns_prefix); 
+			    {
+			      ExportXmlBuffer (doc, (unsigned char *)ns_prefix); 
+			      ExportXmlBuffer (doc, (unsigned char *)":");
+			    }
 			  /* Export the attribute name */
 			  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
 			  ExportXmlBuffer (doc, (unsigned char *)pAttr1->AttrName);
