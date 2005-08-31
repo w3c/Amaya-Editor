@@ -4171,7 +4171,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                               CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   value;
-  char                *p, *last, *start, quoteChar;
+  char                *p, *last, *start, quoteChar, savedChar;
   ThotBool            repeat;
 
   value.typed_data.unit = UNIT_REL;
@@ -4263,12 +4263,14 @@ static char *ParseCSSContent (Element element, PSchema tsch,
 		      while (last[-1] == SPACE)
 			last--;
 		    }
+		  savedChar = *last;
 		  *last = EOS;
 		  value.typed_data.unit = UNIT_REL;
 		  value.typed_data.real = FALSE;
 		  value.pointer = start;
 		  TtaSetStylePresentation (PRContentAttr, element, tsch, ctxt,
 					   value);
+		  *last = savedChar;
 		}
 	    }
 	  if (value.pointer == NULL)
