@@ -15,7 +15,7 @@
 #ifdef _GL
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -65,20 +65,20 @@
 #include "glprint.h"
 
 #if defined(_GTK)
-  #include <gtkgl/gtkglarea.h>
+#include <gtkgl/gtkglarea.h>
 #endif /* #if defined(_GTK) */
 
 #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
-  /* Unix timer */
-  #include <unistd.h>
+/* Unix timer */
+#include <unistd.h>
 #endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
 
 #if defined(_GTK) || defined(_WX)
-  #include <sys/timeb.h>
+#include <sys/timeb.h>
 #endif /* #if defined(_GTK) || defined(_WX)*/
 
 #ifdef _WX
-  #include "AmayaFrame.h"
+#include "AmayaFrame.h"
 #endif /* _WX */
 
 #if defined (_MACOS) && defined (_WX)
@@ -235,7 +235,7 @@ void ClearAll (int frame)
  * Make the window background the same as the OpenGL one.  This
  * is used to avoid flickers when the widget size changes.
  * This is fixed in GTK+-2.0 but doesn't hurt.
-  ----------------------------------------------------------------------*/
+ ----------------------------------------------------------------------*/
 void update_bg_colorGTK (int frame, int color)
 {
   GtkWidget *gl_widget;
@@ -302,7 +302,7 @@ void GL_SetClipping (int x, int y, int width, int height)
 }
 /*----------------------------------------------------------------------
   GL_UnsetClippingRestore : restore previous clipping or 
-free the drawing from it
+  free the drawing from it
   ----------------------------------------------------------------------*/
 void GL_UnsetClipping ()
 {  
@@ -365,43 +365,43 @@ void InitDrawing (int style, int thick, int fg)
     {
       /* solid */
       if (thick)
-	{
-	  S_thick = thick;
-	  glLineWidth ((GLfloat) thick); 
-	  glPointSize ((GLfloat) thick); 
-	}
+        {
+          S_thick = thick;
+          glLineWidth ((GLfloat) thick); 
+          glPointSize ((GLfloat) thick); 
+        }
       else
-	{
-	  glLineWidth ((GLfloat) 0.5); 
-	  glPointSize ((GLfloat) 0.5); 
-	}
+        {
+          glLineWidth ((GLfloat) 0.5); 
+          glPointSize ((GLfloat) 0.5); 
+        }
       glDisable (GL_LINE_STIPPLE);
     }
   else
     {
-      if (style == 3)
-	/* dotted */
-	{
-	  glEnable (GL_LINE_STIPPLE);
-	  glLineStipple (1, 0x1111); 
-	}
-      else
-	/* dashed */
-	{
-	  glEnable (GL_LINE_STIPPLE);
-	  glLineStipple (1, 0x0F0F); 
-	}
       if (thick)
-	{
-	  S_thick = thick;
-	  glLineWidth ((GLfloat) thick); 
-	  glPointSize ((GLfloat) thick); 
-	}
+        {
+          S_thick = thick;
+          if (style == 3)
+            /* dotted */
+            {
+              glLineStipple (thick, 0x5555);
+              glEnable (GL_LINE_STIPPLE);
+            }
+          else
+            /* dashed */
+            {
+              glLineStipple (thick, 0x1F1F);
+              glEnable (GL_LINE_STIPPLE);
+            }
+          glLineWidth ((GLfloat) thick); 
+          glPointSize ((GLfloat) thick); 
+        }
       else
-	{
-	  glLineWidth ((GLfloat) 0.5); 
-	  glPointSize ((GLfloat) 0.5); 
-	}
+        {
+          glLineWidth ((GLfloat) 0.5); 
+          glPointSize ((GLfloat) 0.5); 
+        }
      
     }
   Fill_style = FALSE;  
@@ -430,7 +430,7 @@ void GL_VideoInvert (int width, int height, int x, int y)
   GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
 void  GL_DrawEmptyRectangle (int fg, float x, float y, float width,
-			     float height, float thick)
+                             float height, float thick)
 { 
   GL_SetForeground (fg);
   if (IS_ZERO (thick - 1))
@@ -514,21 +514,21 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
     {
       glBegin (GL_POINTS); 
       for(i=0; i < npoints; i++) 
-	{
-	  glVertex2f ((point + i)->x1 , 
-		      (point + i)->y1);
-	  glVertex2f ((point + i)->x2 , 
-		      (point + i)->y2);
-	}
+        {
+          glVertex2f ((point + i)->x1 , 
+                      (point + i)->y1);
+          glVertex2f ((point + i)->x2 , 
+                      (point + i)->y2);
+        }
       glEnd ();
     }
   glBegin (GL_LINES) ;
   for(i=0; i < npoints; i++) 
     {
       glVertex2f ((point + i)->x1 , 
-		  (point + i)->y1);
+                  (point + i)->y1);
       glVertex2f ((point + i)->x2 , 
-		  (point + i)->y2);   	
+                  (point + i)->y2);   	
     }    
   glEnd ();
 }
@@ -537,7 +537,7 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
   GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
 void GL_DrawArc (float x, float y, float w, float h, int startAngle,
-		 int sweepAngle, ThotBool filled)
+                 int sweepAngle, ThotBool filled)
 {
   GLint     i, slices;
   PRECISION angleOffset;
@@ -590,20 +590,20 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
       /* The center */
       glVertex2d (fastx, fasty);
       for (i = 0; i <= slices; i++)
-	glVertex2d (x_cache[i], y_cache[i]);
+        glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
     }
 
   if (!filled)
     {
       if (w < 20 && h < 20)
-	glBegin(GL_POINTS);
+        glBegin(GL_POINTS);
       else
-	glBegin(GL_LINE_STRIP);
+        glBegin(GL_LINE_STRIP);
 
       slices--;
       for (i = 0; i <= slices; i++)
-	  glVertex2d (x_cache[i], y_cache[i]);
+        glVertex2d (x_cache[i], y_cache[i]);
       glEnd();
     }
 }
@@ -623,7 +623,7 @@ void GL_DrawLines (ThotPoint *point, int npoints)
       /* Joinning if a certain thickness ?*/
       glBegin (GL_POINTS); 
       for (i = 0; i<npoints; i++)
-	glVertex2dv ((double *) &point[i]);
+        glVertex2dv ((double *) &point[i]);
       glEnd (); 
     }
   glBegin (GL_LINE_STRIP);
@@ -688,7 +688,7 @@ static void SetPixelTransferBias (int fg)
   GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
 void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, 
-			 void *GL_font, int fg)
+                         void *GL_font, int fg)
 {
   CHAR_T symbols[2];
   
@@ -706,7 +706,7 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y,
   GL_DrawString: Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
 int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
-		   void *GL_font, int end)
+                   void *GL_font, int end)
 {
   int width;
 
@@ -719,8 +719,8 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
       GL_SetForeground (fg); 
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
-	/* draw the hyphen */
-	GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
+        /* draw the hyphen */
+        GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
       width = 0;
       TransText = FALSE;
     }
@@ -729,8 +729,8 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
       GL_SetForeground (fg); 
       width = UnicodeFontRender (GL_font, str, x, y, end);
       if (hyphen)
-	/* draw the hyphen */
-	GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
+        /* draw the hyphen */
+        GL_DrawUnicodeChar ((CHAR_T)'\255', x + width, y, GL_font, fg);
     }
   return width;
 }
@@ -746,14 +746,14 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
   while (Trans)
     {
       switch (Trans->TransType)
-	{
-	case  PtElBoxTranslate:
-	  *x = (int)Trans->XScale;
-	  *y = (int)Trans->YScale;
+        {
+        case  PtElBoxTranslate:
+          *x = (int)Trans->XScale;
+          *y = (int)Trans->YScale;
           return TRUE;
-	default:
-	  break;	  
-	}
+        default:
+          break;	  
+        }
       Trans = Trans->Next;
     }
   *x = 0;
@@ -771,16 +771,16 @@ ThotBool IsDeformed (void *v_trans)
   while (Trans)
     {
       switch (Trans->TransType)
-	{
-	case  PtElTranslate:
-	case  PtElBoxTranslate:
-	case  PtElAnimTranslate:	
+        {
+        case  PtElTranslate:
+        case  PtElBoxTranslate:
+        case  PtElAnimTranslate:	
           /*result = FALSE;*/	  
-	  break;
-	default:
-	  return TRUE;
-	  break;	  
-	}
+          break;
+        default:
+          return TRUE;
+          break;	  
+        }
       Trans = Trans->Next;
     }
   return FALSE;
@@ -797,8 +797,8 @@ ThotBool IsBoxDeformed (PtrBox box)
   while (pAb)
     {
       if (pAb->AbElement)
-	if (IsDeformed (pAb->AbElement->ElTransform))
-	  return TRUE;
+        if (IsDeformed (pAb->AbElement->ElTransform))
+          return TRUE;
       pAb = pAb->AbEnclosing;
     }
   return FALSE;
@@ -814,14 +814,14 @@ ThotBool IsTransformed (void *v_trans)
   while (Trans)
     {
       switch (Trans->TransType)
-	{
-	case  PtElBoxTranslate:
+        {
+        case  PtElBoxTranslate:
           /*result = FALSE;*/
-	  break;
-	default:
-	  return TRUE;
-	  break;	  
-	}
+          break;
+        default:
+          return TRUE;
+          break;	  
+        }
       Trans = Trans->Next;
     }
   return FALSE;
@@ -838,8 +838,8 @@ ThotBool IsBoxTransformed (PtrBox box)
   while (pAb)
     {
       if (pAb->AbElement)
-	if (IsTransformed (pAb->AbElement->ElTransform))
-	  return TRUE;
+        if (IsTransformed (pAb->AbElement->ElTransform))
+          return TRUE;
       pAb = pAb->AbEnclosing;
     }
   return FALSE;
@@ -857,15 +857,15 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
   while (Trans)
     {
       switch (Trans->TransType)
-	{
-	case  PtElBoxTranslate:
-	  glTranslatef (Trans->XScale - ((float) x), 
-			Trans->YScale - ((float) y), 
-			0);
-	  return;
-	default:
-	  break;	  
-	}
+        {
+        case  PtElBoxTranslate:
+          glTranslatef (Trans->XScale - ((float) x), 
+                        Trans->YScale - ((float) y), 
+                        0);
+          return;
+        default:
+          break;	  
+        }
       Trans = Trans->Next;
     }
   glTranslatef (- ((float) x), - ((float) y), 0);
@@ -885,20 +885,20 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   while (Trans)
     {
       switch (Trans->TransType)
-	{
-	case  PtElviewboxScale:
-	  w_scale = (double) (Width / Trans->XScale);  
- 	  h_scale = (double) (Height / Trans->YScale); 
-	  is_scaled = TRUE;
-	  break;
-	case PtElviewboxTranslate:
- 	  x_trans = Trans->XScale;  
- 	  y_trans = Trans->YScale; 
-	  is_translated = TRUE;
-	  break;
-	default:
-	  break;	  
-	}
+        {
+        case  PtElviewboxScale:
+          w_scale = (double) (Width / Trans->XScale);  
+          h_scale = (double) (Height / Trans->YScale); 
+          is_scaled = TRUE;
+          break;
+        case PtElviewboxTranslate:
+          x_trans = Trans->XScale;  
+          y_trans = Trans->YScale; 
+          is_translated = TRUE;
+          break;
+        default:
+          break;	  
+        }
       Trans = Trans->Next;
     }
   if (is_scaled)
@@ -914,11 +914,11 @@ static float ZoomedValue (float val, int zoom)
 {
   float dist;
 
-if (zoom != 0)
+  if (zoom != 0)
     {
       dist = val + (val * zoom / 10);
       if (IS_ZERO(dist) && val > 0)
-	dist = 1;
+        dist = 1;
     }
   else
     dist = val;
@@ -948,117 +948,117 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
     {
       DisplayViewBoxTransformation (Trans, Width, Height);
       while (Trans)
-	{
-	  switch (Trans->TransType)
-	    {
-	    case  PtElScale:
-	      glScalef (Trans->XScale, Trans->YScale, (GLfloat)1); 
-	      break;
-	    case PtElAnimTranslate:
-	    case PtElTranslate:
-	      glTranslatef (ZoomedValue (Trans->XScale,
-					 ViewFrameTable[frame - 1].FrMagnification),
-			    ZoomedValue (Trans->YScale, 
-					 ViewFrameTable[frame - 1].FrMagnification),
-			    0);
-	      break;
-	    case PtElAnimRotate:
-	    case PtElRotate:
-	      glTranslatef (Trans->XRotate, Trans->YRotate, 0);
-	      glRotatef (Trans->TrAngle, 0, 0, 1);
-	      glTranslatef (-Trans->XRotate, -Trans->YRotate, 0);
-	      break;
-	    case PtElMatrix:
-	      /* Matrix 
-		 GlMatrix is 4*4
-		 Svg is 3*3 but 
-		 only 2*3 is specified */
-	      trans_matrix[0] = Trans->AMatrix;
-	      trans_matrix[1] = Trans->BMatrix;
-	      trans_matrix[2] = 0;
-	      trans_matrix[3] = 0;
+        {
+          switch (Trans->TransType)
+            {
+            case  PtElScale:
+              glScalef (Trans->XScale, Trans->YScale, (GLfloat)1); 
+              break;
+            case PtElAnimTranslate:
+            case PtElTranslate:
+              glTranslatef (ZoomedValue (Trans->XScale,
+                                         ViewFrameTable[frame - 1].FrMagnification),
+                            ZoomedValue (Trans->YScale, 
+                                         ViewFrameTable[frame - 1].FrMagnification),
+                            0);
+              break;
+            case PtElAnimRotate:
+            case PtElRotate:
+              glTranslatef (Trans->XRotate, Trans->YRotate, 0);
+              glRotatef (Trans->TrAngle, 0, 0, 1);
+              glTranslatef (-Trans->XRotate, -Trans->YRotate, 0);
+              break;
+            case PtElMatrix:
+              /* Matrix 
+                 GlMatrix is 4*4
+                 Svg is 3*3 but 
+                 only 2*3 is specified */
+              trans_matrix[0] = Trans->AMatrix;
+              trans_matrix[1] = Trans->BMatrix;
+              trans_matrix[2] = 0;
+              trans_matrix[3] = 0;
 
-	      trans_matrix[4] = Trans->CMatrix;
-	      trans_matrix[5] = Trans->DMatrix;
-	      trans_matrix[6] = 0;
-	      trans_matrix[7] = 0;
+              trans_matrix[4] = Trans->CMatrix;
+              trans_matrix[5] = Trans->DMatrix;
+              trans_matrix[6] = 0;
+              trans_matrix[7] = 0;
 
-	      trans_matrix[8] = 0;
-	      trans_matrix[9] = 0;
-	      trans_matrix[10] = 1;
-	      trans_matrix[11] = 0;
+              trans_matrix[8] = 0;
+              trans_matrix[9] = 0;
+              trans_matrix[10] = 1;
+              trans_matrix[11] = 0;
 
-	      trans_matrix[12] = Trans->EMatrix;
-	      trans_matrix[13] = Trans->FMatrix;	  
-	      trans_matrix[14] = 0;
-	      trans_matrix[15] = 1;
+              trans_matrix[12] = Trans->EMatrix;
+              trans_matrix[13] = Trans->FMatrix;	  
+              trans_matrix[14] = 0;
+              trans_matrix[15] = 1;
 
-	      glMultMatrixd (trans_matrix);
-	      break;
-	    case PtElSkewX:
-	      /* SkewX */
-	      trans_matrix[0] = 1;
-	      trans_matrix[1] = 0;
-	      trans_matrix[2] = 0;
-	      trans_matrix[3] = 0;
+              glMultMatrixd (trans_matrix);
+              break;
+            case PtElSkewX:
+              /* SkewX */
+              trans_matrix[0] = 1;
+              trans_matrix[1] = 0;
+              trans_matrix[2] = 0;
+              trans_matrix[3] = 0;
 
-	      trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->TrFactor));
-	      trans_matrix[5] = 1;
-	      trans_matrix[6] = 0;
-	      trans_matrix[7] = 0;
+              trans_matrix[4] = DTAN (DEG_TO_RAD(Trans->TrFactor));
+              trans_matrix[5] = 1;
+              trans_matrix[6] = 0;
+              trans_matrix[7] = 0;
 
-	      trans_matrix[8] = 0;
-	      trans_matrix[9] = 0;
-	      trans_matrix[10] = 1;
-	      trans_matrix[11] = 0;
+              trans_matrix[8] = 0;
+              trans_matrix[9] = 0;
+              trans_matrix[10] = 1;
+              trans_matrix[11] = 0;
 
-	      trans_matrix[12] = 0;
-	      trans_matrix[13] = 0;
-	      trans_matrix[14] = 0;
-	      trans_matrix[15] = 1;
+              trans_matrix[12] = 0;
+              trans_matrix[13] = 0;
+              trans_matrix[14] = 0;
+              trans_matrix[15] = 1;
 
-	      glMultMatrixd (trans_matrix);
-	      break;
-	    case PtElSkewY:
-	      /* SkewY */
-	      trans_matrix[0] = 1;
-	      trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->TrFactor));
-	      trans_matrix[2] = 0;
-	      trans_matrix[3] = 0;
+              glMultMatrixd (trans_matrix);
+              break;
+            case PtElSkewY:
+              /* SkewY */
+              trans_matrix[0] = 1;
+              trans_matrix[1] = DTAN (DEG_TO_RAD(Trans->TrFactor));
+              trans_matrix[2] = 0;
+              trans_matrix[3] = 0;
 
-	      trans_matrix[4] = 0;
-	      trans_matrix[5] = 1;
-	      trans_matrix[6] = 0;
-	      trans_matrix[7] = 0;
+              trans_matrix[4] = 0;
+              trans_matrix[5] = 1;
+              trans_matrix[6] = 0;
+              trans_matrix[7] = 0;
 
-	      trans_matrix[8] = 0;
-	      trans_matrix[9] = 0;
-	      trans_matrix[10] = 1;
-	      trans_matrix[11] = 0;
+              trans_matrix[8] = 0;
+              trans_matrix[9] = 0;
+              trans_matrix[10] = 1;
+              trans_matrix[11] = 0;
 
-	      trans_matrix[12] = 0;
-	      trans_matrix[13] = 0;
-	      trans_matrix[14] = 0;
-	      trans_matrix[15] = 1;
+              trans_matrix[12] = 0;
+              trans_matrix[13] = 0;
+              trans_matrix[14] = 0;
+              trans_matrix[15] = 1;
 
-	      glMultMatrixd (trans_matrix);
-	      break;	  
-	    default:
-	      break;
-	    }
-	  Trans = Trans->Next;
-	}
+              glMultMatrixd (trans_matrix);
+              break;	  
+            default:
+              break;
+            }
+          Trans = Trans->Next;
+        }
     }
 #endif /* _GL */
 }
 
 
 /*----------------------------------------------------------------------
- print2DVertex: Write contents of one vertex to stdout
+  print2DVertex: Write contents of one vertex to stdout
   ----------------------------------------------------------------------*/
 void print2DVertex (GLint size,
-		    GLint *count, 
-		    GLfloat *buffer)
+                    GLint *count, 
+                    GLfloat *buffer)
 {
   int i;
   
@@ -1087,54 +1087,54 @@ void printBuffer (GLint size, GLfloat *buffer)
       token = (GLint) buffer[size-count]; 
       count--;
       /*
-	GL_POLYGON_TOKEN
-	GL_POINT_TOKEN
-	GL_LINE_TOKEN
-	*_RESET => stipple change
-	*/
+        GL_POLYGON_TOKEN
+        GL_POINT_TOKEN
+        GL_LINE_TOKEN
+        *_RESET => stipple change
+        */
       switch (token)
-	{
+        {
 	   
-	case GL_POINT_TOKEN:
-	  {
-	    /*pour les points*/
-	    printf ("GL_POINT_TOKEN\n");
-	    print2DVertex (size, &count, buffer);
-	    printf ("\n");
-	  }
-	  break;
+        case GL_POINT_TOKEN:
+          {
+            /*pour les points*/
+            printf ("GL_POINT_TOKEN\n");
+            print2DVertex (size, &count, buffer);
+            printf ("\n");
+          }
+          break;
        
-	case  GL_LINE_RESET_TOKEN:
-	case  GL_LINE_TOKEN:
-	  {
-	    /*pour les lignes*/
-	    printf ("GL_LINE_TOKEN\n");
-	    print2DVertex (size, &count, buffer);
-	    print2DVertex (size, &count, buffer);
-	    printf ("\n");
-	  }
-	  break;	   
+        case  GL_LINE_RESET_TOKEN:
+        case  GL_LINE_TOKEN:
+          {
+            /*pour les lignes*/
+            printf ("GL_LINE_TOKEN\n");
+            print2DVertex (size, &count, buffer);
+            print2DVertex (size, &count, buffer);
+            printf ("\n");
+          }
+          break;	   
 	   
-	case GL_POLYGON_TOKEN:
-	  {
-	    /*pour les lignes*/
-	    printf ("GL_POLYGON_TOKEN\n");
-	    vertex_count = (GLint) buffer[size - count];
-	    count--;	     
-	    while (vertex_count--)
-	      print2DVertex (size, &count, buffer);
-	    printf ("\n");
-	  }
-	  break;
+        case GL_POLYGON_TOKEN:
+          {
+            /*pour les lignes*/
+            printf ("GL_POLYGON_TOKEN\n");
+            vertex_count = (GLint) buffer[size - count];
+            count--;	     
+            while (vertex_count--)
+              print2DVertex (size, &count, buffer);
+            printf ("\n");
+          }
+          break;
 
-	default:
-	  break;
-	}
+        default:
+          break;
+        }
     }
 }
 
 /*----------------------------------------------------------------------
- computeisminmax : check if number is a new min or max
+  computeisminmax : check if number is a new min or max
   ----------------------------------------------------------------------*/
 static void computeisminmax (double number, double *min, double *max)
 {
@@ -1149,11 +1149,11 @@ static void computeisminmax (double number, double *min, double *max)
 }
 
 /*----------------------------------------------------------------------
- getboundingbox : Get bound values of the box
+  getboundingbox : Get bound values of the box
   ----------------------------------------------------------------------*/
 void getboundingbox (int size, float *buffer, int frame,
-			    int *xorig, int *yorig, 
-			    int *worig, int *horig)
+                     int *xorig, int *yorig, 
+                     int *worig, int *horig)
 {
   GLint  token, count, vertex_count;
   double x,y,w,h, TotalHeight;
@@ -1169,38 +1169,38 @@ void getboundingbox (int size, float *buffer, int frame,
       token = (GLint) buffer[size-count]; 
       count--;
       switch (token)
-	{
-	case GL_POINT_TOKEN:
-	  {
-	    computeisminmax (buffer[size-count], &x, &w);count--;
-	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	  }
-	  break;
-	case  GL_LINE_RESET_TOKEN:
-	case  GL_LINE_TOKEN:
-	  {
-	    computeisminmax (buffer[size-count], &x, &w);count--;
-	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+        {
+        case GL_POINT_TOKEN:
+          {
+            computeisminmax (buffer[size-count], &x, &w);count--;
+            computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+          }
+          break;
+        case  GL_LINE_RESET_TOKEN:
+        case  GL_LINE_TOKEN:
+          {
+            computeisminmax (buffer[size-count], &x, &w);count--;
+            computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
 
-	    computeisminmax (buffer[size-count], &x, &w);count--;
-	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	  }
-	  break;
-	case GL_POLYGON_TOKEN:
-	  {
-	    vertex_count = (GLint) buffer[size - count];
-	    count--;	     
-	    while (vertex_count--)
-	      {
-		computeisminmax (buffer[size-count], &x, &w);count--;
-		computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	      }
-	  }
-	  break;
+            computeisminmax (buffer[size-count], &x, &w);count--;
+            computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+          }
+          break;
+        case GL_POLYGON_TOKEN:
+          {
+            vertex_count = (GLint) buffer[size - count];
+            count--;	     
+            while (vertex_count--)
+              {
+                computeisminmax (buffer[size-count], &x, &w);count--;
+                computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+              }
+          }
+          break;
 
-/* 	default: */
-/* 	  break; */
-	}
+          /* 	default: */
+          /* 	  break; */
+        }
     }
   *xorig = (int) x;
   *yorig = (int) y;
@@ -1249,7 +1249,7 @@ void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time))
   while (i < i_func_index)
     {
       if (TimeFunc[i_func_index] == pfunc)
-	return;
+        return;
       i++;
     }
   TimeFunc[i_func_index++] = pfunc;
@@ -1289,18 +1289,18 @@ AnimTime ComputeThotCurrentTime (int frame)
 #endif /*_WINGUI*/	
 
       if (FrameTable[frame].BeginTime < 0.0001)
-	{
-	  FrameTable[frame].BeginTime = current_time;
-	  current_time += 0.001;
-	  FrameTable[frame].LastTime = 0.0;
-	}
+        {
+          FrameTable[frame].BeginTime = current_time;
+          current_time += 0.001;
+          FrameTable[frame].LastTime = 0.0;
+        }
       current_time -= FrameTable[frame].BeginTime; 
       if (current_time - FrameTable[frame].LastTime < INTERVAL)
-	current_time = -1;
+        current_time = -1;
 
       for (i = 0; i < i_func_index; i++)
-	if (TimeFunc[i])
-	  (*TimeFunc[i]) (FrameTable[frame].FrDoc, current_time); 
+        if (TimeFunc[i])
+          (*TimeFunc[i]) (FrameTable[frame].FrDoc, current_time); 
     }
   else
     current_time = FrameTable[frame].LastTime; 
@@ -1326,8 +1326,8 @@ void SetGlPipelineState ()
   SetSoftware_Mode( FALSE );
   if ( renderer &&
        ( strstr (renderer, "Mesa") ||
-	 strstr (renderer, "Microsoft") ||
-	 strstr (renderer, "Sgi")) )
+         strstr (renderer, "Microsoft") ||
+         strstr (renderer, "Sgi")) )
     if ( !strstr (renderer, "Mesa DRI") )
       SetSoftware_Mode( TRUE );
   
@@ -1335,7 +1335,7 @@ void SetGlPipelineState ()
    * 1.2 is needed for tesselate functions : gluNewTess, gluTessCallback ...*/
   if ( version &&
        ( strstr (version, "1.0") ||
-	 strstr (version, "1.1")) ) 
+         strstr (version, "1.1")) ) 
     {
 #ifdef _WINGUI
       WinErrorBox (NULL,  GLU_ERROR_MSG);
@@ -1344,7 +1344,7 @@ void SetGlPipelineState ()
       fprintf( stderr, GLU_ERROR_MSG);
 #endif /* #if defined(_GTK) */
 #ifdef _WX
-	  DisplayConfirmMessage ( GLU_ERROR_MSG );
+      DisplayConfirmMessage ( GLU_ERROR_MSG );
 #endif /* _WX */
       exit (1);
     }
@@ -1352,35 +1352,35 @@ void SetGlPipelineState ()
   if (!Software_Mode)
     {
       /* default value is true because I've seen performance
-	   * improvments on windows when badbuffer is true */
-	  TtaSetEnvBoolean("ENABLE_BAD_BUFFER", TRUE, FALSE);
+       * improvments on windows when badbuffer is true */
+      TtaSetEnvBoolean("ENABLE_BAD_BUFFER", TRUE, FALSE);
       TtaGetEnvBoolean ("ENABLE_BAD_BUFFER", &badbuffer);
       SetBadCard (!badbuffer);
     }
   
   if ( DisplayOpenGLStatus )
-  {
-    /* Print opengl status : usefull for debug on multiple plateformes */
-    printf ("\nOpenGL Status:");
-    printf ("\n  Software Mode = %s", Software_Mode ? "Soft" : "Hard" );
-    /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-    printf ("\n  VENDOR : %s\n  VERSION : %s\n  RENDERER : %s", 
-	    (char *)glGetString(GL_VENDOR), 
-	    (char *)glGetString(GL_VERSION), 
-	    (char *)glGetString(GL_RENDERER));
-    /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
-    printf ("\n  GLU Version : %s", 
-	    (char *)gluGetString (GLU_VERSION));
-    glGetIntegerv (GL_AUX_BUFFERS,      (GLint*) &auxnumBuffers);
-    glGetIntegerv (GL_ACCUM_RED_BITS,   (GLint*) &acred);
-    glGetIntegerv (GL_ACCUM_GREEN_BITS, (GLint*) &acgreen); 
-    glGetIntegerv (GL_ACCUM_BLUE_BITS,  (GLint*) &acblue); 
-    glGetIntegerv (GL_ACCUM_ALPHA_BITS, (GLint*)&acalpha);
-    printf ("\n  Aux buffers count %d", auxnumBuffers);
-    printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
-    printf ("\n");
-    DisplayOpenGLStatus = FALSE;
-  }
+    {
+      /* Print opengl status : usefull for debug on multiple plateformes */
+      printf ("\nOpenGL Status:");
+      printf ("\n  Software Mode = %s", Software_Mode ? "Soft" : "Hard" );
+      /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
+      printf ("\n  VENDOR : %s\n  VERSION : %s\n  RENDERER : %s", 
+              (char *)glGetString(GL_VENDOR), 
+              (char *)glGetString(GL_VERSION), 
+              (char *)glGetString(GL_RENDERER));
+      /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
+      printf ("\n  GLU Version : %s", 
+              (char *)gluGetString (GLU_VERSION));
+      glGetIntegerv (GL_AUX_BUFFERS,      (GLint*) &auxnumBuffers);
+      glGetIntegerv (GL_ACCUM_RED_BITS,   (GLint*) &acred);
+      glGetIntegerv (GL_ACCUM_GREEN_BITS, (GLint*) &acgreen); 
+      glGetIntegerv (GL_ACCUM_BLUE_BITS,  (GLint*) &acblue); 
+      glGetIntegerv (GL_ACCUM_ALPHA_BITS, (GLint*)&acalpha);
+      printf ("\n  Aux buffers count %d", auxnumBuffers);
+      printf ("\n  Acumm rgba : %d %d %d %d", acred, acgreen, acblue, acalpha);
+      printf ("\n");
+      DisplayOpenGLStatus = FALSE;
+    }
 
   /*  glClearColor (1, 0, 0, 0); */
   /* no fog*/
@@ -1416,15 +1416,15 @@ void SetGlPipelineState ()
     {
       glEnable (GL_LINE_SMOOTH); 
       glHint (GL_LINE_SMOOTH_HINT,  
-	      GL_NICEST);  
+              GL_NICEST);  
 
       glEnable (GL_POINT_SMOOTH); 
       glHint (GL_POINT_SMOOTH_HINT, 
-	      GL_NICEST);
+              GL_NICEST);
     }
   /* Fastest Texture Mapping*/
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
-	  GL_NICEST );    
+          GL_NICEST );    
 
   /* Bitmap font Text writing (even in texture font) */
   glPixelStorei( GL_UNPACK_LSB_FIRST, GL_FALSE);
@@ -1455,7 +1455,7 @@ void SetGlPipelineState ()
   /* For transparency and beautiful antialiasing*/
   glEnable (GL_BLEND); 
   glBlendFunc (GL_SRC_ALPHA, 
-	       GL_ONE_MINUS_SRC_ALPHA); 
+               GL_ONE_MINUS_SRC_ALPHA); 
   GL_SetOpacity (1000);
 
 #ifdef _GTK
@@ -1481,7 +1481,7 @@ void SetGlPipelineState ()
   (=> opengl region buffer swapping )
   ----------------------------------------------------------------------*/
 void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
-			  int width, int height)
+                          int width, int height)
 {
   if (GL_prepare (frame) == FALSE)
     return;  
@@ -1534,16 +1534,16 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
   if (width > 0 && height  > 0)
     {	  
       y_source = (FrameTable[frame].FrHeight) -
-	(y_source + height + 
-	 FrameTable[frame].FrTopMargin);
+        (y_source + height + 
+         FrameTable[frame].FrTopMargin);
 
       /*Hardware rendering faster than Reading pixel from buffer
-	(here glcopypixels)*/
+        (here glcopypixels)*/
       if (glMatroxBUG (frame, xf, yf, width, height))
-	{
-	  /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
-	  return;
-	}
+        {
+          /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
+          return;
+        }
 
       /* Copy from backbuffer to backbuffer */
       glFlush ();
@@ -1554,12 +1554,12 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
 
       glRasterPos2i (xf, yf+height);	  
       /*IF Rasterpos is outside canvas...
-	we must use a decaling 'feinte'*/
+        we must use a decaling 'feinte'*/
       if ((yf+height) == FrameTable[frame].FrHeight)
-	{
-	  glRasterPos2i (xf, yf+height-1);
-	  glBitmap(0, 0, 0, 0, 0, -1, NULL);
-	}
+        {
+          glRasterPos2i (xf, yf+height-1);
+          glBitmap(0, 0, 0, 0, 0, -1, NULL);
+        }
       glReadBuffer (GL_BACK);
       glCopyPixels (x_source, y_source, width, height, GL_COLOR); 
       glEnable (GL_BLEND);
@@ -1576,9 +1576,9 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
 void gl_synchronize ()
 {
 #ifdef _GTK
-/* gtk_main_iteration_do (FALSE); */
-/* 	while (gtk_events_pending ())  */
-/* 	  gtk_main_iteration (); */
+  /* gtk_main_iteration_do (FALSE); */
+  /* 	while (gtk_events_pending ())  */
+  /* 	  gtk_main_iteration (); */
 
   gdk_gl_wait_gdk ();
   gdk_gl_wait_gl ();
@@ -1650,12 +1650,12 @@ void saveBuffer (char *filename, int width, int height)
   /* glFinish (); */
   Data = (unsigned char *)TtaGetMemory (sizeof (unsigned char) * width * height * 4);
   glReadPixels (0, 0, width, height, 
-		GL_RGBA, 
-		GL_UNSIGNED_BYTE, Data);
+                GL_RGBA, 
+                GL_UNSIGNED_BYTE, Data);
   SavePng (filename, 
-	   Data,
-	   (unsigned int) width,
-	   (unsigned int) height);
+           Data,
+           (unsigned int) width,
+           (unsigned int) height);
   free (Data);
 }
 
@@ -1665,37 +1665,37 @@ void saveBuffer (char *filename, int width, int height)
   ----------------------------------------------------------------------*/
 void processHits2 (GLint hits, GLuint buffer[], int sw)
 {
-   GLint i, j, numberOfNames;
-   GLuint names, *ptr, minZ,*ptrNames;
+  GLint i, j, numberOfNames;
+  GLuint names, *ptr, minZ,*ptrNames;
 
-   ptr = (GLuint *) buffer;
-   printf ("\n\n");
-   for (i = 0; i < hits; i++) {	/*  for each hit  */
-      names = *ptr;
-      printf (" Nombre d'objet selectionnés :  %d\n", names); 
-      ptr++;// premier z
-      ptr++;// deuxieme z
-      ptr++;// positionné sur l'identifiant (enfin !)
-      for (j = 0; j < names; j++)
-	{
-	switch (*ptr){
-	 case SPLINE:
-	  printf ("SPLINE Est dans la zone ! ");
-	  break;
-	 case CARRE:
-	  printf ("CARRE Est dans la zone ! ");
-	  break; 
-	 case CERCLE:
-	  printf ("CERCLE Est dans la zone ! ");
-	  break;
-	 case POLYGONE:
-	  printf ("POLYGONE Est dans la zone ! ");
-	  break;
-	}
-	ptr++;
+  ptr = (GLuint *) buffer;
+  printf ("\n\n");
+  for (i = 0; i < hits; i++) {	/*  for each hit  */
+    names = *ptr;
+    printf (" Nombre d'objet selectionnés :  %d\n", names); 
+    ptr++;// premier z
+    ptr++;// deuxieme z
+    ptr++;// positionné sur l'identifiant (enfin !)
+    for (j = 0; j < names; j++)
+      {
+        switch (*ptr){
+        case SPLINE:
+          printf ("SPLINE Est dans la zone ! ");
+          break;
+        case CARRE:
+          printf ("CARRE Est dans la zone ! ");
+          break; 
+        case CERCLE:
+          printf ("CERCLE Est dans la zone ! ");
+          break;
+        case POLYGONE:
+          printf ("POLYGONE Est dans la zone ! ");
+          break;
+        }
+        ptr++;
       }
-      printf ("\n");
-   }
+    printf ("\n");
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -1720,9 +1720,9 @@ void PickObject (int frame, int x, int y)
   glPushMatrix ();
   glLoadIdentity (); 
   gluPickMatrix ((GLdouble) x, 
-		 (GLdouble) (viewport[3] - y), 
-		 5, 5, 
-		 viewport);
+                 (GLdouble) (viewport[3] - y), 
+                 5, 5, 
+                 viewport);
   glOrtho (0, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight, 0, -1, 1); 
   /* glOrtho (0,  WIN_WIDTH, 0, WIN_HEIGHT, 0,  WIN_WIDTH); */
   glMatrixMode (GL_MODELVIEW); 
@@ -1736,7 +1736,7 @@ void PickObject (int frame, int x, int y)
   hits = glRenderMode (GL_RENDER);
   printf ("%i hits\n", hits);
   if (hits != 0)
-      processHits2 (hits, selectBuf, 0);
+    processHits2 (hits, selectBuf, 0);
   glMatrixMode (GL_MODELVIEW);
   mode = RENDER;
 }
@@ -1777,17 +1777,17 @@ void DrawGrid (int width, int height)
   glColor3f(1.0, 0.0, 0.0);
   glEnable(GL_MAP2_VERTEX_3);  
   glMap2f(GL_MAP2_VERTEX_3,    
-	  0.0, 1.0,  /* U ranges 0..1 */    
-	  3,         /* U stride, 3 floats per coord */    
-	  2,         /* U is 2nd order, ie. linear */    
-	  0.0, 1.0,  /* V ranges 0..1 */    
-	  2 * 3,     /* V stride, row is 2 coords, 3 floats per coord */    
-	  2,         /* V is 2nd order, ie linear */    
-	  (GLfloat *) grid2x2);  /* control points */ 
+          0.0, 1.0,  /* U ranges 0..1 */    
+          3,         /* U stride, 3 floats per coord */    
+          2,         /* U is 2nd order, ie. linear */    
+          0.0, 1.0,  /* V ranges 0..1 */    
+          2 * 3,     /* V stride, row is 2 coords, 3 floats per coord */    
+          2,         /* V is 2nd order, ie linear */    
+          (GLfloat *) grid2x2);  /* control points */ 
   glMapGrid2f(    5, 0.0, 1.0,    6, 0.0, 1.0);
   glEvalMesh2(GL_LINE,    0, 5,   
-	      /* Starting at 0 mesh 5 steps (rows). */    
-	      0, 6);  /* Starting at 0 mesh 6 steps (columns). */
+              /* Starting at 0 mesh 5 steps (rows). */    
+              0, 6);  /* Starting at 0 mesh 6 steps (columns). */
 }
 
 /* stupid animation render testing
@@ -1824,7 +1824,7 @@ int make_carre ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int savetga (const char *filename, unsigned char *Data,
-	     unsigned int width, unsigned int height)
+             unsigned int width, unsigned int height)
 {
   FILE *screenFile;
   int length;
@@ -1846,10 +1846,10 @@ int savetga (const char *filename, unsigned char *Data,
   if (mode >= 3)
     for (i=0; i < width * height * mode ; i+= mode)
       {
-      aux = Data[i];
-      Data[i] = Data[i+2];
-      Data[i+2] = aux;
-      Data[i+3] = 255;
+        aux = Data[i];
+        Data[i] = Data[i+2];
+        Data[i+2] = aux;
+        Data[i+3] = 255;
       }
   /* write the header*/
   fwrite(&cGarbage, sizeof(unsigned char), 1,screenFile);

@@ -17,17 +17,17 @@
 #ifdef _GL
 
 #ifdef _GTK
-  #include <gtkgl/gtkglarea.h>
+#include <gtkgl/gtkglarea.h>
 #endif /* #ifdef _GTK */
 
 #ifdef _WINGUI
-  #include <windows.h>
+#include <windows.h>
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #else /* _WX */
-  #include <GL/gl.h>
+#include <GL/gl.h>
 #endif /* _WX */
 
 #include "ustring.h"
@@ -119,9 +119,9 @@
   ----------------------------------------------------------------------*/
 void FontOrig (ThotFont font, char firstchar, int *pX, int *pY)
 {
-   if (!font)
-      return;
-   /**pY += ((XFontStruct *) font)->ascent;*/
+  if (!font)
+    return;
+  /**pY += ((XFontStruct *) font)->ascent;*/
 }
 
 
@@ -131,7 +131,7 @@ void FontOrig (ThotFont font, char firstchar, int *pX, int *pY)
   ----------------------------------------------------------------------*/
 static void LoadColor (int fg)
 {
-    GL_SetForeground (fg);
+  GL_SetForeground (fg);
 }
 
 /*----------------------------------------------------------------------
@@ -177,8 +177,8 @@ void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
-		ThotFont font, int boxWidth, int bl, int hyphen,
-		int startABlock, int fg)
+                ThotFont font, int boxWidth, int bl, int hyphen,
+                int startABlock, int fg)
 {
   ThotWindow          w = None;
   int                 width;
@@ -196,11 +196,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
     {
       /* Dealing with BR tag for windows */
       if (Printing)
-	width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
-			  startABlock, fg);
+        width = GLString (buff, lg, frame, x, y, font, boxWidth, bl, hyphen, 
+                          startABlock, fg);
       else if (lg > 0)
-	width = GL_DrawString (fg, (CHAR_T *) buff, 
-			       (float) x, (float) y, hyphen, font, lg);
+        width = GL_DrawString (fg, (CHAR_T *) buff, 
+                               (float) x, (float) y, hyphen, font, lg);
     }
   return (width);
 }
@@ -219,15 +219,15 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
 int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
-		 ThotFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg)
+                 ThotFont font, int boxWidth, int bl, int hyphen,
+                 int startABlock, int fg)
 {
   if (lg < 0)
     return 0;
   
   y += FrameTable[frame].FrTopMargin;
   return (GL_DrawString (fg, buff, (float) x, (float) y, hyphen,
-			 (void *) font, lg));
+                         (void *) font, lg));
 }
 #endif /*_WIN_PRINT*/
 
@@ -241,74 +241,74 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   - 1 = underlined
   - 2 = overlined
   - 3 = cross-over
-                  (x,y)
-          _________________________________________________\_/__ top
-          /|\    I    I          /|\       /|\   /|\        
-           |     I\  /I           |         |     |       
-           |  ___I_\/_I_______    |ascent   |     |  
-   fheight |     I    I  I  \     |         |     |
-           |     I    I  I  |     |         |  __\|/ middle
-           |  ___I____I__I__/____\|/        | 
-           |             I                  |
-	       |             I                  |
-	      \|/____________I_________________\|/_ bottom
+  (x,y)
+  _________________________________________________\_/__ top
+  /|\    I    I          /|\       /|\   /|\        
+  |     I\  /I           |         |     |       
+  |  ___I_\/_I_______    |ascent   |     |  
+  fheight |     I    I  I  \     |         |     |
+  |     I    I  I  |     |         |  __\|/ middle
+  |  ___I____I__I__/____\|/        | 
+  |             I                  |
+  |             I                  |
+  \|/____________I_________________\|/_ bottom
   ----------------------------------------------------------------------*/
 void DisplayUnderline (int frame, int x, int y, int h, int type,
-		       int lg, int fg)
+                       int lg, int fg)
 {
-   ThotWindow          w = None;
-   int                 bottom;	/* underline position    */
-   int                 middle;	/* cross-over position   */
-   int                 thickness;	/* thickness of drawing */
+  ThotWindow          w = None;
+  int                 bottom;	/* underline position    */
+  int                 middle;	/* cross-over position   */
+  int                 thickness;	/* thickness of drawing */
 
-   if (fg < 0)
-     return;
-   if (lg > 0)
-     {
+  if (fg < 0)
+    return;
+  if (lg > 0)
+    {
 #ifdef _GTK
-	w = FrRef[frame];
+      w = FrRef[frame];
 #endif /* _GTK */
 #ifdef _WX
-	w = (ThotWindow)FrameTable[frame].WdFrame;
+      w = (ThotWindow)FrameTable[frame].WdFrame;
 #endif /* _WX */ 
 
-	if (w == None)
-	   return;
-	thickness = (h / 20) + 1;
-	y += FrameTable[frame].FrTopMargin;
-	bottom = y + h - thickness;
-	middle = y + h / 2;
+      if (w == None)
+        return;
+      thickness = (h / 20) + 1;
+      y += FrameTable[frame].FrTopMargin;
+      bottom = y + h - thickness;
+      middle = y + h / 2;
 
-	/*
-	 * for an underline independant of the font add
-	 * the following lines here :
-	 *         thickness = 1;
-	 *         top = y + 2 * thickness;
-	 *         bottom = y + ascent + 3;
-	 */
-	InitDrawing (5, thickness, fg);
-	switch (type)
-	  {
-	  case 1:
-	    /* underlined */
-	    DoDrawOneLine (frame, x - lg, bottom, x, bottom);
-	    break;
+      /*
+       * for an underline independant of the font add
+       * the following lines here :
+       *         thickness = 1;
+       *         top = y + 2 * thickness;
+       *         bottom = y + ascent + 3;
+       */
+      InitDrawing (5, thickness, fg);
+      switch (type)
+        {
+        case 1:
+          /* underlined */
+          DoDrawOneLine (frame, x - lg, bottom, x, bottom);
+          break;
 	    
-	  case 2:
-	    /* overlined */
-	    DoDrawOneLine (frame, x - lg, y, x, y);
-	    break;
+        case 2:
+          /* overlined */
+          DoDrawOneLine (frame, x - lg, y, x, y);
+          break;
 	    
-	  case 3:
-	    /* cross-over */
-	    DoDrawOneLine (frame, x - lg, middle, x, middle);
-	    break;
+        case 3:
+          /* cross-over */
+          DoDrawOneLine (frame, x - lg, middle, x, middle);
+          break;
 	    
-	  default:
-	    /* not underlined */
-	    break;
-	  }
-     }
+        default:
+          /* not underlined */
+          break;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -317,39 +317,39 @@ void DisplayUnderline (int frame, int x, int y, int h, int type,
   ----------------------------------------------------------------------*/
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
-   ThotWindow          w = None;
-   ThotFont            font;
-   SpecFont            spec;
-   char               *ptcar;
-   int                 xcour, width, nb;
+  ThotWindow          w = None;
+  ThotFont            font;
+  SpecFont            spec;
+  char               *ptcar;
+  int                 xcour, width, nb;
 
-   spec = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
-   GetFontAndIndexFromSpec (SPACE, spec, &font);
-   if (boxWidth > 0)
-     {
+  spec = ThotLoadFont ('L', 1, 0, 6, UnPoint, frame);
+  GetFontAndIndexFromSpec (SPACE, spec, &font);
+  if (boxWidth > 0)
+    {
 #ifdef _GTK
-	w = FrRef[frame];
+      w = FrRef[frame];
 #endif /* _GTK */
 #ifdef _WX
-	w = (ThotWindow)FrameTable[frame].WdFrame;
+      w = (ThotWindow)FrameTable[frame].WdFrame;
 #endif /* _WX */ 
-	ptcar = " . ";
+      ptcar = " . ";
 
-	/* compute lenght of the string " ." */
-	width = CharacterWidth (SPACE, font) + CharacterWidth (46, font);
-	/* compute the number of string to write */
-	nb = boxWidth / width;
-	xcour = x + (boxWidth % width);
-	y = y + FrameTable[frame].FrTopMargin;
-	/* draw the points */
-	FontOrig (font, *ptcar, &x, &y);
-	while (nb > 0)
-	  {
-	    xcour += GL_DrawString (fg, (CHAR_T *) ptcar, (float) xcour,
-				    (float) y, 0, font, 2);
-	    nb--;
-	  }
-     }
+      /* compute lenght of the string " ." */
+      width = CharacterWidth (SPACE, font) + CharacterWidth (46, font);
+      /* compute the number of string to write */
+      nb = boxWidth / width;
+      xcour = x + (boxWidth % width);
+      y = y + FrameTable[frame].FrTopMargin;
+      /* draw the points */
+      FontOrig (font, *ptcar, &x, &y);
+      while (nb > 0)
+        {
+          xcour += GL_DrawString (fg, (CHAR_T *) ptcar, (float) xcour,
+                                  (float) y, 0, font, 2);
+          nb--;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -357,31 +357,31 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
-		  ThotFont font, int fg)
+                  ThotFont font, int fg)
 {
   int                 xm, xp, fh;
 
-   if (fg < 0)
-     return;
+  if (fg < 0)
+    return;
 
-   fh = FontHeight (font);
+  fh = FontHeight (font);
 
-   xm = x + (fh / 2);
-   xp = x + (fh / 4);
-   y += FrameTable[frame].FrTopMargin;
+  xm = x + (fh / 2);
+  xp = x + (fh / 4);
+  y += FrameTable[frame].FrTopMargin;
 
-   if (fh > 14)
-     InitDrawing (5, 1, fg);
-   else
-     InitDrawing (5, 0, fg);
-   /* vertical part */
-   DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
+  if (fh > 14)
+    InitDrawing (5, 1, fg);
+  else
+    InitDrawing (5, 0, fg);
+  /* vertical part */
+  DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
-   InitDrawing (5, thick, fg);
-   /* Acending part */
-   DoDrawOneLine (frame, xp, y + h, xm, y);
-   /* Upper part */
-   DoDrawOneLine (frame, xm, y, x + l, y);
+  InitDrawing (5, thick, fg);
+  /* Acending part */
+  DoDrawOneLine (frame, xp, y + h, xm, y);
+  /* Upper part */
+  DoDrawOneLine (frame, xm, y, x + l, y);
 }
 
 
@@ -391,7 +391,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 static int DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
-			  int h, ThotFont font, int fg)
+                         int h, ThotFont font, int fg)
 {
   int xm, yf;
 
@@ -408,25 +408,25 @@ static int DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
   ----------------------------------------------------------------------*/
 void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
-   int                 xm, ym, fh;
+  int                 xm, ym, fh;
 
-   if (fg < 0)
-     return;
+  if (fg < 0)
+    return;
 
-   fh = FontHeight (font);
-   y += FrameTable[frame].FrTopMargin;
-   xm = x + (l / 3);
-   ym = y + (h / 2) - 1;
+  fh = FontHeight (font);
+  y += FrameTable[frame].FrTopMargin;
+  xm = x + (l / 3);
+  ym = y + (h / 2) - 1;
    
-   InitDrawing (5, 1, fg);
-   /* Center */
-   DoDrawOneLine (frame, x, y + 1, xm, ym);
-   DoDrawOneLine (frame, x, y + h - 2, xm, ym);
+  InitDrawing (5, 1, fg);
+  /* Center */
+  DoDrawOneLine (frame, x, y + 1, xm, ym);
+  DoDrawOneLine (frame, x, y + h - 2, xm, ym);
    
-   InitDrawing (5, 2, fg);
-   /* Borders */
-   DoDrawOneLine (frame, x, y, x + l, y);
-   DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
+  InitDrawing (5, 2, fg);
+  /* Borders */
+  DoDrawOneLine (frame, x, y, x + l, y);
+  DoDrawOneLine (frame, x, y + h - 2, x + l, y + h - 2);
 }
 
 /*----------------------------------------------------------------------
@@ -435,28 +435,28 @@ void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
   ----------------------------------------------------------------------*/
 void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
-   int                 fh;
+  int                 fh;
 
-   if (fg < 0)
-     return;
-   fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= CharacterWidth (213, font))
-     {
-	/* Only one glyph needed */
-	DrawMonoSymb ((CHAR_T)'\325', frame, x, y, l, h, font, fg);
-     }
-   else
-     {
-        y += FrameTable[frame].FrTopMargin;
-	InitDrawing (5, 0, fg);
-	/* Vertical part */
-	DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
-	DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
+  if (fg < 0)
+    return;
+  fh = FontHeight (font);
+  if (0 && h < fh * 2 && l <= CharacterWidth (213, font))
+    {
+      /* Only one glyph needed */
+      DrawMonoSymb ((CHAR_T)'\325', frame, x, y, l, h, font, fg);
+    }
+  else
+    {
+      y += FrameTable[frame].FrTopMargin;
+      InitDrawing (5, 0, fg);
+      /* Vertical part */
+      DoDrawOneLine (frame, x + 2, y + 1, x + 2, y + h);
+      DoDrawOneLine (frame, x + l - 3, y + 1, x + l - 3, y + h);
 
-	InitDrawing (5, 2, fg);
-	/* Upper part */
-	DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
-     }
+      InitDrawing (5, 2, fg);
+      /* Upper part */
+      DoDrawOneLine (frame, x + 1, y + 1, x + l, y);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -464,12 +464,12 @@ void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
-		       int fg)
+                       int fg)
 {
-   if (fg < 0)
-     return;
+  if (fg < 0)
+    return;
    
-   DrawCenteredStixChar (font, 88, x, y, l, h, fg, frame);
+  DrawCenteredStixChar (font, 88, x, y, l, h, fg, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -478,51 +478,51 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
   ----------------------------------------------------------------------*/
 void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
-   if (fg < 0)
-     return;
+  if (fg < 0)
+    return;
 
-   DrawCenteredStixChar (font, 87, x, y,  l, h, fg, frame);
+  DrawCenteredStixChar (font, 87, x, y,  l, h, fg, frame);
 }
 
 /*----------------------------------------------------------------------
   ArrowDrawing draw the end of an arrow.
   ----------------------------------------------------------------------*/
 static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
-			  int thick, int fg)
+                          int thick, int fg)
 {
-   double              x, y, xb, yb, dx, dy, l, sina, cosa;
-   int                 xc, yc, xd, yd;
-   double              width, height;
-   ThotPoint           point[3];
+  double              x, y, xb, yb, dx, dy, l, sina, cosa;
+  int                 xc, yc, xd, yd;
+  double              width, height;
+  ThotPoint           point[3];
 
-   width = (double) (5 + thick);
-   height = 10;
-   dx = (double) (x2 - x1);
-   dy = (double) (y1 - y2);
-   l = (double) sqrt ((double) (dx * dx + dy * dy));
-   if (IS_ZERO(l)) 
-      return;
-   sina = dy / l;
-   cosa = dx / l;
-   xb = x2 * cosa - y2 * sina;
-   yb = x2 * sina + y2 * cosa;
-   x = xb - height;
-   y = yb - width / 2;
-   xc = (int)(x * cosa + y * sina + .5);
-   yc = (int)(-x * sina + y * cosa + .5);
-   y = yb + width / 2;
-   xd = (int)(x * cosa + y * sina + .5);
-   yd = (int)(-x * sina + y * cosa + .5);
+  width = (double) (5 + thick);
+  height = 10;
+  dx = (double) (x2 - x1);
+  dy = (double) (y1 - y2);
+  l = (double) sqrt ((double) (dx * dx + dy * dy));
+  if (IS_ZERO(l)) 
+    return;
+  sina = dy / l;
+  cosa = dx / l;
+  xb = x2 * cosa - y2 * sina;
+  yb = x2 * sina + y2 * cosa;
+  x = xb - height;
+  y = yb - width / 2;
+  xc = (int)(x * cosa + y * sina + .5);
+  yc = (int)(-x * sina + y * cosa + .5);
+  y = yb + width / 2;
+  xd = (int)(x * cosa + y * sina + .5);
+  yd = (int)(-x * sina + y * cosa + .5);
 
-   /* draw */
-   point[0].x = x2;
-   point[0].y = y2;
-   point[1].x = xc;
-   point[1].y = yc;
-   point[2].x = xd;
-   point[2].y = yd;
+  /* draw */
+  point[0].x = x2;
+  point[0].y = y2;
+  point[1].x = xc;
+  point[1].y = yc;
+  point[2].x = xd;
+  point[2].y = yd;
 
-   GL_DrawPolygon (point, 3);
+  GL_DrawPolygon (point, 3);
     
 }
 
@@ -533,65 +533,65 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
-		int orientation, int fg)
+                int orientation, int fg)
 {
-   int                 xm, ym, xf, yf;
+  int                 xm, ym, xf, yf;
 
-   if (fg < 0)
-     return;
-   if (thick <= 0)
-      return;
-   y += FrameTable[frame].FrTopMargin;
-   xm = x + ((l - thick) / 2);
-   xf = x + l - 1;
-   ym = y + ((h - thick) / 2);
-   yf = y + h - 1;
+  if (fg < 0)
+    return;
+  if (thick <= 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  xm = x + ((l - thick) / 2);
+  xf = x + l - 1;
+  ym = y + ((h - thick) / 2);
+  yf = y + h - 1;
 
-   InitDrawing (style, thick, fg);
-   if (orientation == 0)
-     {
-	/* draw a right arrow */
-	DoDrawOneLine (frame, x, ym, xf, ym);
-	ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
-     }
-   else if (orientation == 45)
-     {
-	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, fg);
-     }
-   else if (orientation == 90)
-     {
-	/* draw a bottom-up arrow */
-	DoDrawOneLine (frame, xm, y, xm, yf);
-	ArrowDrawing (frame, xm, yf, xm, y, thick, fg);
-     }
-   else if (orientation == 135)
-     {
-	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, fg);
-     }
-   else if (orientation == 180)
-     {
-	/* draw a left arrow */
-	DoDrawOneLine (frame, x, ym, xf, ym);
-	ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
-     }
-   else if (orientation == 225)
-     {
-	DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
-	ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, fg);
-     }
-   else if (orientation == 270)
-     {
-	/* draw a top-down arrow */
-	DoDrawOneLine (frame, xm, y, xm, yf);
-	ArrowDrawing (frame, xm, y, xm, yf, thick, fg);
-     }
-   else if (orientation == 315)
-     {
-	DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
-	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
-     }
+  InitDrawing (style, thick, fg);
+  if (orientation == 0)
+    {
+      /* draw a right arrow */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      ArrowDrawing (frame, x, ym, xf, ym, thick, fg);
+    }
+  else if (orientation == 45)
+    {
+      DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+      ArrowDrawing (frame, x, yf, xf - thick + 1, y, thick, fg);
+    }
+  else if (orientation == 90)
+    {
+      /* draw a bottom-up arrow */
+      DoDrawOneLine (frame, xm, y, xm, yf);
+      ArrowDrawing (frame, xm, yf, xm, y, thick, fg);
+    }
+  else if (orientation == 135)
+    {
+      DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+      ArrowDrawing (frame, xf - thick + 1, yf, x, y, thick, fg);
+    }
+  else if (orientation == 180)
+    {
+      /* draw a left arrow */
+      DoDrawOneLine (frame, x, ym, xf, ym);
+      ArrowDrawing (frame, xf, ym, x, ym, thick, fg);
+    }
+  else if (orientation == 225)
+    {
+      DoDrawOneLine (frame, x, yf, xf - thick + 1, y);
+      ArrowDrawing (frame, xf - thick + 1, y, x, yf, thick, fg);
+    }
+  else if (orientation == 270)
+    {
+      /* draw a top-down arrow */
+      DoDrawOneLine (frame, xm, y, xm, yf);
+      ArrowDrawing (frame, xm, y, xm, yf, thick, fg);
+    }
+  else if (orientation == 315)
+    {
+      DoDrawOneLine (frame, x, y, xf - thick + 1, yf);
+      ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -602,48 +602,48 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
-		   int type, ThotFont font, int fg)
+                   int type, ThotFont font, int fg)
 {
   int                 yf;
   int                 yend, delta;
   int                 wd, asc, hd;
 
   if (FontHeight (font) *1.2 >= h)
-     /* display a single glyph */
-     {
-     yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
-     DrawChar ('\362', frame, x, yf, font, fg);
-     }
-   else
-     {
-     /* Need more than one glyph */
-     yf = y + CharacterAscent (243, font);
-     DrawChar ('\363', frame, x, yf, font, fg);
-     yend = y + h - CharacterHeight (245, font) 
-       + CharacterAscent (245, font) - 1;
-     DrawChar ('\365', frame, x, yend, font, fg);
-     asc = CharacterAscent (244, font);
-     hd = CharacterHeight (244, font);
-     delta = yend - yf - asc;
-     yf += asc;
-     wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
-     if (delta > 0 && hd > 0)
-       {
-	 while (yf < yend)
-	   {
-	     DrawChar ('\364', frame, x + wd, yf, font, fg);
-	     yf += hd;
-	   }
-       }
-     }
-   if (type == 2)		/* double integral */
-      DrawIntegral (frame, thick, x + (CharacterWidth (244, font) / 2),
-		    y, l, h, -1, font, fg);
+    /* display a single glyph */
+    {
+      yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
+      DrawChar ('\362', frame, x, yf, font, fg);
+    }
+  else
+    {
+      /* Need more than one glyph */
+      yf = y + CharacterAscent (243, font);
+      DrawChar ('\363', frame, x, yf, font, fg);
+      yend = y + h - CharacterHeight (245, font) 
+        + CharacterAscent (245, font) - 1;
+      DrawChar ('\365', frame, x, yend, font, fg);
+      asc = CharacterAscent (244, font);
+      hd = CharacterHeight (244, font);
+      delta = yend - yf - asc;
+      yf += asc;
+      wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
+      if (delta > 0 && hd > 0)
+        {
+          while (yf < yend)
+            {
+              DrawChar ('\364', frame, x + wd, yf, font, fg);
+              yf += hd;
+            }
+        }
+    }
+  if (type == 2)		/* double integral */
+    DrawIntegral (frame, thick, x + (CharacterWidth (244, font) / 2),
+                  y, l, h, -1, font, fg);
 
-   else if (type == 1)		/* contour integral */
-      DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
-		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-		font, fg);
+  else if (type == 1)		/* contour integral */
+    DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
+              y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+              font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -651,7 +651,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ThotFont font, int fg, int baseline)
+                  int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, yf, yend;
 
@@ -660,60 +660,60 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
     {
       /* With only one glyph */
       if (direction == 0)
-	{
-	  /* Draw a opening bracket */
-	  xm = x + ((l - CharacterWidth (91, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else
-	    yf = y + ((h - CharacterHeight (91, font)) / 2) +
-	         CharacterAscent (91, font);
-	  DrawChar ('[', frame, xm, yf, font, fg);
-	}
+        {
+          /* Draw a opening bracket */
+          xm = x + ((l - CharacterWidth (91, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else
+            yf = y + ((h - CharacterHeight (91, font)) / 2) +
+              CharacterAscent (91, font);
+          DrawChar ('[', frame, xm, yf, font, fg);
+        }
       else
-	{
-	  /* Draw a closing bracket */
-	  xm = x + ((l - CharacterWidth (93, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else
-	    yf = y + ((h - CharacterHeight (93, font)) / 2) +
-	         CharacterAscent (93, font);
-	  DrawChar (']', frame, xm, yf, font, fg);
-	}
-     }
-   else
-     {
-       /* Need more than one glyph */
-       if (direction == 0)
-	 {
-	   /* Draw a opening bracket */
-	   xm = x + ((l - CharacterWidth (233, font)) / 2);
-	   yf = y + CharacterAscent (233, font);
-	   DrawChar ('\351', frame, xm, yf, font, fg);
-	   yend = y + h - CharacterHeight (235, font) + CharacterAscent (235, font);
-	   DrawChar ('\353', frame, xm, yend, font, fg);
-	   if (CharacterHeight (234, font) > 0)
-	     for (yf = yf + CharacterHeight (233, font) + CharacterAscent (234, font);
-		  yf < yend;
-		  yf += CharacterHeight (234, font))
-	       DrawChar ('\352', frame, xm, yf, font, fg);
-	 }
-       else
-	 {
-	   /* Draw a closing bracket */
-	   xm = x + ((l - CharacterWidth (249, font)) / 2);
-	   yf = y + CharacterAscent (249, font);
-	   DrawChar ('\371', frame, xm, yf, font, fg);
-	   yend = y + h - CharacterHeight (251, font) + CharacterAscent (251, font);
-	   DrawChar ('\373', frame, xm, yend, font, fg);
-	   if (CharacterHeight (250, font) > 0)
-	     for (yf = yf + CharacterHeight (249, font) + CharacterAscent (250, font);
-		  yf < yend;
-		  yf += CharacterHeight (250, font))
-	       DrawChar ('\372', frame, xm, yf, font, fg);
-	 }
-     }
+        {
+          /* Draw a closing bracket */
+          xm = x + ((l - CharacterWidth (93, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else
+            yf = y + ((h - CharacterHeight (93, font)) / 2) +
+              CharacterAscent (93, font);
+          DrawChar (']', frame, xm, yf, font, fg);
+        }
+    }
+  else
+    {
+      /* Need more than one glyph */
+      if (direction == 0)
+        {
+          /* Draw a opening bracket */
+          xm = x + ((l - CharacterWidth (233, font)) / 2);
+          yf = y + CharacterAscent (233, font);
+          DrawChar ('\351', frame, xm, yf, font, fg);
+          yend = y + h - CharacterHeight (235, font) + CharacterAscent (235, font);
+          DrawChar ('\353', frame, xm, yend, font, fg);
+          if (CharacterHeight (234, font) > 0)
+            for (yf = yf + CharacterHeight (233, font) + CharacterAscent (234, font);
+                 yf < yend;
+                 yf += CharacterHeight (234, font))
+              DrawChar ('\352', frame, xm, yf, font, fg);
+        }
+      else
+        {
+          /* Draw a closing bracket */
+          xm = x + ((l - CharacterWidth (249, font)) / 2);
+          yf = y + CharacterAscent (249, font);
+          DrawChar ('\371', frame, xm, yf, font, fg);
+          yend = y + h - CharacterHeight (251, font) + CharacterAscent (251, font);
+          DrawChar ('\373', frame, xm, yend, font, fg);
+          if (CharacterHeight (250, font) > 0)
+            for (yf = yf + CharacterHeight (249, font) + CharacterAscent (250, font);
+                 yf < yend;
+                 yf += CharacterHeight (250, font))
+              DrawChar ('\372', frame, xm, yf, font, fg);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -722,7 +722,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			int direction, ThotFont font, int fg)
+                        int direction, ThotFont font, int fg)
 {
   int         xm, yf;
 
@@ -734,20 +734,20 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
     {
       /* With only one glyph */
       if (direction == 0)
-	{
-	  /* Draw a opening bracket */
-	  xm = x + ((l - CharacterWidth (225, font)) / 2);
-	  yf = y + ((h - CharacterHeight (225, font)) / 2) + CharacterAscent (225, font);
+        {
+          /* Draw a opening bracket */
+          xm = x + ((l - CharacterWidth (225, font)) / 2);
+          yf = y + ((h - CharacterHeight (225, font)) / 2) + CharacterAscent (225, font);
 
-	  DrawChar ('\341', frame, xm, yf, font, fg);
-	}
+          DrawChar ('\341', frame, xm, yf, font, fg);
+        }
       else
-	{
-	  /* Draw a closing bracket */
-	  xm = x + ((l - CharacterWidth (241, font)) / 2);
-	  yf = y + ((h - CharacterHeight (241, font)) / 2) + CharacterAscent (241, font);
-	  DrawChar ('\361', frame, xm, yf, font, fg);
-	}
+        {
+          /* Draw a closing bracket */
+          xm = x + ((l - CharacterWidth (241, font)) / 2);
+          yf = y + ((h - CharacterHeight (241, font)) / 2) + CharacterAscent (241, font);
+          DrawChar ('\361', frame, xm, yf, font, fg);
+        }
     }
   else
     {
@@ -755,17 +755,17 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
       y += FrameTable[frame].FrTopMargin;
       InitDrawing (5, 4, fg);
       if (direction == 0)
-	{
-	  /* Draw a opening bracket */
-	  DoDrawOneLine (frame, x + l, y, x, y + (h / 2));
-	  DoDrawOneLine (frame, x, y + (h / 2), x + l, y + h);
-	}
+        {
+          /* Draw a opening bracket */
+          DoDrawOneLine (frame, x + l, y, x, y + (h / 2));
+          DoDrawOneLine (frame, x, y + (h / 2), x + l, y + h);
+        }
       else
-	{
-	  /* Draw a closing bracket */
-	  DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
-	  DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
-	}
+        {
+          /* Draw a closing bracket */
+          DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
+          DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
+        }
     }
 }
 
@@ -774,84 +774,84 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ThotFont font, int fg, int baseline)
+                      int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, yf, yend, delta, asc, hd;
 
 
   /* Symbol */
-   if (h <= (int) (1.3 * FontHeight (font)) )
+  if (h <= (int) (1.3 * FontHeight (font)) )
     {
       /* With only one glyph */
       if (direction == 0)
-	{
-	  /* draw a opening parenthesis */
-	  xm = x + ((l - CharacterWidth (40, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else
-	    yf = y + ((h - CharacterHeight (40, font)) / 2) +
-	         CharacterAscent (40, font);
-	  DrawChar ('(', frame, xm, yf, font, fg);
-	}
+        {
+          /* draw a opening parenthesis */
+          xm = x + ((l - CharacterWidth (40, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else
+            yf = y + ((h - CharacterHeight (40, font)) / 2) +
+              CharacterAscent (40, font);
+          DrawChar ('(', frame, xm, yf, font, fg);
+        }
       else
-	{
-	  /* draw a closing parenthesis */
-	  xm = x + ((l - CharacterWidth (41, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else	    
-	    yf = y + ((h - CharacterHeight (41, font)) / 2) +
-                 CharacterAscent (41, font);
-	  DrawChar (')', frame, xm, yf, font, fg);
-	}
+        {
+          /* draw a closing parenthesis */
+          xm = x + ((l - CharacterWidth (41, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else	    
+            yf = y + ((h - CharacterHeight (41, font)) / 2) +
+              CharacterAscent (41, font);
+          DrawChar (')', frame, xm, yf, font, fg);
+        }
     }
   else
     {
       /* Need more than one glyph */
       if (direction == 0)
-	{
-	  /* draw a opening parenthesis */
-	  xm = x + ((l - CharacterWidth (230, font)) / 2);
-	  yf = y + CharacterAscent (230, font);
-	  DrawChar ('\346', frame, xm, yf, font, fg);
-	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
-	  DrawChar ('\350', frame, xm, yend, font, fg);
-	  asc = CharacterAscent (231, font);
-	  hd = CharacterHeight (231, font);
-	  delta = yend - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\347', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	}
+        {
+          /* draw a opening parenthesis */
+          xm = x + ((l - CharacterWidth (230, font)) / 2);
+          yf = y + CharacterAscent (230, font);
+          DrawChar ('\346', frame, xm, yf, font, fg);
+          yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
+          DrawChar ('\350', frame, xm, yend, font, fg);
+          asc = CharacterAscent (231, font);
+          hd = CharacterHeight (231, font);
+          delta = yend - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\347', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+        }
       else
-	{
-	  /* draw a closing parenthesis */
-	  xm = x + ((l - CharacterWidth (246, font)) / 2);
-	  yf = y + CharacterAscent (246, font);
-	  DrawChar ('\366', frame, xm, yf, font, fg);
-	  yend = y + h - CharacterHeight (248, font) 
-	    + CharacterAscent (248, font) - 1;
-	  DrawChar ('\370', frame, xm, yend, font, fg);
-	  asc = CharacterAscent (247, font);
-	  hd = CharacterHeight (247, font);
-	  delta = yend - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\367', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	}
+        {
+          /* draw a closing parenthesis */
+          xm = x + ((l - CharacterWidth (246, font)) / 2);
+          yf = y + CharacterAscent (246, font);
+          DrawChar ('\366', frame, xm, yf, font, fg);
+          yend = y + h - CharacterHeight (248, font) 
+            + CharacterAscent (248, font) - 1;
+          DrawChar ('\370', frame, xm, yend, font, fg);
+          asc = CharacterAscent (247, font);
+          hd = CharacterHeight (247, font);
+          delta = yend - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\367', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+        }
     }
 }
 
@@ -860,7 +860,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
-		int direction, ThotFont font, int fg, int baseline)
+                int direction, ThotFont font, int fg, int baseline)
 {
   int                 xm, ym, yf, yend, delta, hd, asc;
 
@@ -869,107 +869,107 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
     {
       /* need only one char */
       if (direction == 0)
-	{
-	  /* just use the opening brace glyph */
-	  xm = x + ((l - CharacterWidth (123, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else
-	    yf = y + ((h - CharacterHeight (123, font)) / 2) +
-	         CharacterAscent (123, font);
-	  DrawChar ('{', frame, xm, yf, font, fg);
-	}
+        {
+          /* just use the opening brace glyph */
+          xm = x + ((l - CharacterWidth (123, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else
+            yf = y + ((h - CharacterHeight (123, font)) / 2) +
+              CharacterAscent (123, font);
+          DrawChar ('{', frame, xm, yf, font, fg);
+        }
       else
-	{
-	  /* just use the closing brace glyph */
-	  xm = x + ((l - CharacterWidth (125, font)) / 2);
-	  if (baseline)
-	    yf = baseline;
-	  else
-	    yf = y + ((h - CharacterHeight (125, font)) / 2) +
-	         CharacterAscent (125, font);
-	  DrawChar ('}', frame, xm, yf, font, fg);
-	}
+        {
+          /* just use the closing brace glyph */
+          xm = x + ((l - CharacterWidth (125, font)) / 2);
+          if (baseline)
+            yf = baseline;
+          else
+            yf = y + ((h - CharacterHeight (125, font)) / 2) +
+              CharacterAscent (125, font);
+          DrawChar ('}', frame, xm, yf, font, fg);
+        }
     }
   else
     {
       /* Brace drawn with more than one glyph */
       if (direction == 0)
-	{
-	  /* top */
-	  xm = x + ((l - CharacterWidth (236, font)) / 2);
-	  yf = y + CharacterAscent (236, font);
-	  DrawChar ('\354', frame, xm, yf, font, fg);
-	  /* vertical line */
-	  ym = y + ((h - CharacterHeight (237, font)) / 2) + CharacterAscent (237, font);
-	  DrawChar ('\355', frame, xm, ym, font, fg);
-	  /* bottom */
-	  yend = y + h - CharacterHeight (238, font) + CharacterAscent (238, font);
-	  DrawChar ('\356', frame, xm, yend, font, fg);
-	  /* finish top */
-	  asc = CharacterAscent (239, font);
-	  hd = CharacterHeight (239, font);
-	  delta = ym - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\357', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	  /* finish bottom */
-	  yf = ym + CharacterHeight ('\355', font);
-	  delta = yend - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\357', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	}
+        {
+          /* top */
+          xm = x + ((l - CharacterWidth (236, font)) / 2);
+          yf = y + CharacterAscent (236, font);
+          DrawChar ('\354', frame, xm, yf, font, fg);
+          /* vertical line */
+          ym = y + ((h - CharacterHeight (237, font)) / 2) + CharacterAscent (237, font);
+          DrawChar ('\355', frame, xm, ym, font, fg);
+          /* bottom */
+          yend = y + h - CharacterHeight (238, font) + CharacterAscent (238, font);
+          DrawChar ('\356', frame, xm, yend, font, fg);
+          /* finish top */
+          asc = CharacterAscent (239, font);
+          hd = CharacterHeight (239, font);
+          delta = ym - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\357', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+          /* finish bottom */
+          yf = ym + CharacterHeight ('\355', font);
+          delta = yend - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\357', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+        }
       else
-	{
-	  /* top */
-	  xm = x + ((l - CharacterWidth (252, font)) / 2);
-	  yf = y + CharacterAscent (252, font);
-	  DrawChar ('\374', frame, xm, yf, font, fg);
-	  /* center */
-	  ym = y + ((h - CharacterHeight (253, font)) / 2) + CharacterAscent (253, font);
-	  DrawChar ('\375', frame, xm, ym, font, fg);
-	  /* bottom */
-	  yend = y + h - CharacterHeight (254, font) + CharacterAscent (254, font);
-	  DrawChar ('\376', frame, xm, yend, font, fg);
-	  /* finish top */
-	  asc = CharacterAscent (239, font);
-	  hd = CharacterHeight (239, font);
-	  delta = ym - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\357', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	  /* finish bottom */
-	  yf = ym + CharacterHeight ('\375', font);
-	  delta = yend - yf - hd;
-	  yf += asc;
-	  if (delta > 0 && hd > 0)
-	    {
-	      while (yf < yend)
-		{
-		  DrawChar ('\357', frame, xm, yf, font, fg);
-		  yf += hd;
-		}
-	    }
-	}
+        {
+          /* top */
+          xm = x + ((l - CharacterWidth (252, font)) / 2);
+          yf = y + CharacterAscent (252, font);
+          DrawChar ('\374', frame, xm, yf, font, fg);
+          /* center */
+          ym = y + ((h - CharacterHeight (253, font)) / 2) + CharacterAscent (253, font);
+          DrawChar ('\375', frame, xm, ym, font, fg);
+          /* bottom */
+          yend = y + h - CharacterHeight (254, font) + CharacterAscent (254, font);
+          DrawChar ('\376', frame, xm, yend, font, fg);
+          /* finish top */
+          asc = CharacterAscent (239, font);
+          hd = CharacterHeight (239, font);
+          delta = ym - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\357', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+          /* finish bottom */
+          yf = ym + CharacterHeight ('\375', font);
+          delta = yend - yf - hd;
+          yf += asc;
+          if (delta > 0 && hd > 0)
+            {
+              while (yf < yend)
+                {
+                  DrawChar ('\357', frame, xm, yf, font, fg);
+                  yf += hd;
+                }
+            }
+        }
     }
 }
 /*----------------------------------------------------------------------
@@ -980,7 +980,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
-		    int height, int fg, int bg, int pattern)
+                    int height, int fg, int bg, int pattern)
 {
   float        th;
   const GLubyte gPat1[] = {
@@ -1014,23 +1014,23 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       glEnable (GL_POLYGON_STIPPLE);   
       glPolygonStipple (gPat1);
       GL_DrawRectangle (fg, (float) x, (float) y,
-			(float) width, (float) height);
+                        (float) width, (float) height);
     }
   else if (pattern == 2)
-      GL_DrawRectangle (bg, (float) x + th, (float)y + th, 
-			(float)width - th, (float)height - th);
+    GL_DrawRectangle (bg, (float) x + th, (float)y + th, 
+                      (float)width - th, (float)height - th);
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
       if (width > thick)
-	width = width - thick;
+        width = width - thick;
       if (height > thick)
-	height = height - thick;
+        height = height - thick;
       InitDrawing (style, thick, fg); 
       GL_DrawEmptyRectangle (fg, (float) x + th, (float) y + th,
-			     (float) width, (float) height,
-			     (float) thick);
+                             (float) width, (float) height,
+                             (float) thick);
     }
 
   if (pattern == 4)
@@ -1043,7 +1043,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
-		  int height, int fg, int bg, int pattern)
+                  int height, int fg, int bg, int pattern)
 {
   ThotPoint           point[5];
 
@@ -1093,8 +1093,8 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
   - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
 void DrawSegments (int frame, int thick, int style, int x, int y,
-		   PtrTextBuffer buffer, int nb, int fg, int arrow, int bg,
-		   int pattern)
+                   PtrTextBuffer buffer, int nb, int fg, int arrow, int bg,
+                   int pattern)
 {
   int                 k;
   ThotPoint          *points;
@@ -1161,8 +1161,8 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 static void DoDrawLines (int frame, int thick, int style,
-			 ThotPoint *points, int npoints, int fg, int bg,
-			 int pattern)
+                         ThotPoint *points, int npoints, int fg, int bg,
+                         int pattern)
 {
 
   /* Fill in the polygon */
@@ -1190,7 +1190,7 @@ static void DoDrawLines (int frame, int thick, int style,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawPolygon (int frame, int thick, int style, int x, int y,
-		  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
 {
   ThotPoint          *points;
   int                 i, j;
@@ -1204,17 +1204,17 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   for (i = 1; i < nb; i++)
     {
       if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
-	{
-	  /* Next buffer */
-	  adbuff = adbuff->BuNext;
-	  j = 0;
-	}
+        {
+          /* Next buffer */
+          adbuff = adbuff->BuNext;
+          j = 0;
+        }
       points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+                                        UnPixel, NULL,
+                                        ViewFrameTable[frame - 1].FrMagnification);
       points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification);
+                                        UnPixel, NULL,
+                                        ViewFrameTable[frame - 1].FrMagnification);
       j++;
     }
   /* Close the polygon */
@@ -1239,8 +1239,8 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   Parameter control indicates the control points.
   ----------------------------------------------------------------------*/
 void DrawCurve (int frame, int thick, int style, int x, int y,
-		PtrTextBuffer buffer, int nb, int fg, int arrow,
-		C_points *controls)
+                PtrTextBuffer buffer, int nb, int fg, int arrow,
+                C_points *controls)
 {
   ThotPoint           *points;
   int                 npoints, maxpoints;
@@ -1261,69 +1261,69 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   y += FrameTable[frame].FrTopMargin;
   j = 1;
   x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   j++;
   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
   x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
     ArrowDrawing (frame,
-		  FloatToInt ((float)cx1), FloatToInt ((float)cy1),
-		  (int) x1, (int) y1,
-		  thick, fg);
+                  FloatToInt ((float)cx1), FloatToInt ((float)cy1),
+                  (int) x1, (int) y1,
+                  thick, fg);
   
   for (i = 2; i < nb; i++)
     {
       PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-		 &maxpoints);
+                 &maxpoints);
       /* skip to next points */
       x1 = x2;
       y1 = y2;
       cx1 = controls[i].rx + x;
       cy1 = controls[i].ry + y;
       if (i < nb - 1)
-	{
-	  /* not finished */
-	  j++;
-	  if (j >= adbuff->BuLength &&
-	      adbuff->BuNext != NULL)
-	    {
-	      /* Next buffer */
-	      adbuff = adbuff->BuNext;
-	      j = 0;
-	    }
-	  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  if (i == nb - 2)
-	    {
-	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
-	      cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
-	      cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
-	      cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
-	    }
-	  else
-	    {
-	      cx2 = controls[i + 1].lx + x;
-	      cy2 = controls[i + 1].ly + y;
-	    }
-	}
+        {
+          /* not finished */
+          j++;
+          if (j >= adbuff->BuLength &&
+              adbuff->BuNext != NULL)
+            {
+              /* Next buffer */
+              adbuff = adbuff->BuNext;
+              j = 0;
+            }
+          x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          if (i == nb - 2)
+            {
+              cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
+              cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
+              cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
+              cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
+            }
+          else
+            {
+              cx2 = controls[i + 1].lx + x;
+              cy2 = controls[i + 1].ly + y;
+            }
+        }
     }
   PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 
@@ -1333,9 +1333,9 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
     ArrowDrawing (frame,
-		  FloatToInt ((float)cx2), FloatToInt ((float)cy2),
-		  (int) x2, (int) y2,
-		  thick, fg);
+                  FloatToInt ((float)cx2), FloatToInt ((float)cy2),
+                  (int) x2, (int) y2,
+                  thick, fg);
 
   /* free the table of points */
   TtaFreeMemory (points);
@@ -1351,8 +1351,8 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   Parameter controls contains the list of control points.
   ----------------------------------------------------------------------*/
 void DrawSpline (int frame, int thick, int style, int x, int y,
-		 PtrTextBuffer buffer, int nb, int fg, int bg, int pattern,
-		 C_points *controls)
+                 PtrTextBuffer buffer, int nb, int fg, int bg, int pattern,
+                 C_points *controls)
 {
   ThotPoint           *points;
   int                  npoints, maxpoints;
@@ -1369,64 +1369,64 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   y += FrameTable[frame].FrTopMargin;
   j = 1;
   x1 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   y1 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   cx1 = controls[j].rx + x;
   cy1 = controls[j].ry + y;
   j++;
   x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+                                 UnPixel, NULL,
+                                 ViewFrameTable[frame - 1].FrMagnification));
   cx2 = controls[j].lx + x;
   cy2 = controls[j].ly + y;
 
   for (i = 2; i < nb; i++)
     {
       PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-		 &maxpoints);
+                 &maxpoints);
       /* next points */
       x1 = x2;
       y1 = y2;
       cx1 = controls[i].rx + x;
       cy1 = controls[i].ry + y;
       if (i < nb - 1)
-	{
-	  /* not the last loop */
-	  j++;
-	  if (j >= adbuff->BuLength &&
-	      adbuff->BuNext != NULL)
-	    {
-	      /* Next buffer */
-	      adbuff = adbuff->BuNext;
-	      j = 0;
-	    }
-	  x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  cx2 = controls[i + 1].lx + x;
-	  cy2 = controls[i + 1].ly + y;
-	}
+        {
+          /* not the last loop */
+          j++;
+          if (j >= adbuff->BuLength &&
+              adbuff->BuNext != NULL)
+            {
+              /* Next buffer */
+              adbuff = adbuff->BuNext;
+              j = 0;
+            }
+          x2 = (double) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          y2 = (double) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          cx2 = controls[i + 1].lx + x;
+          cy2 = controls[i + 1].ly + y;
+        }
       else
-	{
-	  /* loop around the origin point */
-	  x2 = (double) (x + PixelValue (buffer->BuPoints[1].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (double) (y + PixelValue (buffer->BuPoints[1].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  cx2 = controls[1].lx + x;
-	  cy2 = controls[1].ly + y;
-	}
+        {
+          /* loop around the origin point */
+          x2 = (double) (x + PixelValue (buffer->BuPoints[1].XCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          y2 = (double) (y + PixelValue (buffer->BuPoints[1].YCoord,
+                                         UnPixel, NULL,
+                                         ViewFrameTable[frame - 1].FrMagnification));
+          cx2 = controls[1].lx + x;
+          cy2 = controls[1].ly + y;
+        }
     }
 
   /* close the polyline */
@@ -1456,8 +1456,8 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   DoDrawMesh : Draw Path as lines or polygons
   ----------------------------------------------------------------------*/
 static void DoDrawMesh (int frame, int thick, int style,
-			void *mesh, int fg, int bg,
-			int pattern)
+                        void *mesh, int fg, int bg,
+                        int pattern)
 {
   /* Fill in the polygon */
   if (pattern == 2) 
@@ -1481,7 +1481,7 @@ static double PixelValueDble (int nb, int real_nb, int frame)
 {
   if (ViewFrameTable[frame - 1].FrMagnification)
     return (double) (nb + PixelValue (real_nb, UnPixel, NULL,
-				     ViewFrameTable[frame - 1].FrMagnification));
+                                      ViewFrameTable[frame - 1].FrMagnification));
   else
     return (double) (nb + real_nb);
 }
@@ -1492,7 +1492,7 @@ static double PixelValueDble (int nb, int real_nb, int frame)
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawPath (int frame, int thick, int style, int x, int y,
-	       PtrPathSeg path, int fg, int bg, int pattern)
+               PtrPathSeg path, int fg, int bg, int pattern)
 {
   PtrPathSeg   pPa;
   double       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
@@ -1504,63 +1504,63 @@ void DrawPath (int frame, int thick, int style, int x, int y,
       mesh = GetNewMesh ();
       pPa = path;
       while (pPa)
-	{
-	  if (pPa->PaNewSubpath)
-	    CountourCountAdd (mesh);
-	  switch (pPa->PaShape)
-	    {
-	    case PtLine:
-	      x1 = PixelValueDble (x, pPa->XStart, frame);	      
-	      y1 = PixelValueDble (y, pPa->YStart, frame);
-	      x2 = PixelValueDble (x, pPa->XEnd, frame);
-	      y2 = PixelValueDble (y, pPa->YEnd, frame);
-	      MeshNewPoint (x1, y1, mesh);
-	      MeshNewPoint (x2, y2, mesh);
-	      break;
+        {
+          if (pPa->PaNewSubpath)
+            CountourCountAdd (mesh);
+          switch (pPa->PaShape)
+            {
+            case PtLine:
+              x1 = PixelValueDble (x, pPa->XStart, frame);	      
+              y1 = PixelValueDble (y, pPa->YStart, frame);
+              x2 = PixelValueDble (x, pPa->XEnd, frame);
+              y2 = PixelValueDble (y, pPa->YEnd, frame);
+              MeshNewPoint (x1, y1, mesh);
+              MeshNewPoint (x2, y2, mesh);
+              break;
 
-	    case PtCubicBezier:
-	      x1 = PixelValueDble (x, pPa->XStart, frame);
-	      y1 = PixelValueDble (y, pPa->YStart, frame);
-	      x2 = PixelValueDble (x, pPa->XEnd, frame);
-	      y2 = PixelValueDble (y, pPa->YEnd, frame);
-	      cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
-	      cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
-	      cx2 = PixelValueDble (x, pPa->XCtrlEnd, frame);
-	      cy2 = PixelValueDble (y, pPa->YCtrlEnd, frame);
-	      PolySplit2 (x1, y1, cx1, cy1, cx2, cy2, x2, y2, mesh);
-	      MeshNewPoint (x2, y2, mesh);
-	      break;
+            case PtCubicBezier:
+              x1 = PixelValueDble (x, pPa->XStart, frame);
+              y1 = PixelValueDble (y, pPa->YStart, frame);
+              x2 = PixelValueDble (x, pPa->XEnd, frame);
+              y2 = PixelValueDble (y, pPa->YEnd, frame);
+              cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
+              cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
+              cx2 = PixelValueDble (x, pPa->XCtrlEnd, frame);
+              cy2 = PixelValueDble (y, pPa->YCtrlEnd, frame);
+              PolySplit2 (x1, y1, cx1, cy1, cx2, cy2, x2, y2, mesh);
+              MeshNewPoint (x2, y2, mesh);
+              break;
 
-	    case PtQuadraticBezier:
-	      x1 = PixelValueDble (x, pPa->XStart, frame);
-	      y1 = PixelValueDble (y, pPa->YStart, frame);
-	      x2 = PixelValueDble (x, pPa->XEnd, frame);
-	      y2 = PixelValueDble (y, pPa->YEnd, frame);
-	      cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
-	      cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
-	      QuadraticSplit2 (x1, y1, cx1, cy1, x2, y2, mesh);
-	      MeshNewPoint (x2, y2, mesh);
-	      break;
+            case PtQuadraticBezier:
+              x1 = PixelValueDble (x, pPa->XStart, frame);
+              y1 = PixelValueDble (y, pPa->YStart, frame);
+              x2 = PixelValueDble (x, pPa->XEnd, frame);
+              y2 = PixelValueDble (y, pPa->YEnd, frame);
+              cx1 = PixelValueDble (x, pPa->XCtrlStart, frame);
+              cy1 = PixelValueDble (y, pPa->YCtrlStart, frame);
+              QuadraticSplit2 (x1, y1, cx1, cy1, x2, y2, mesh);
+              MeshNewPoint (x2, y2, mesh);
+              break;
 
-	    case PtEllipticalArc:
-	      x1 = PixelValueDble (x, pPa->XStart, frame);
-	      y1 = PixelValueDble (y, pPa->YStart, frame);
-	      x2 = PixelValueDble (x, pPa->XEnd, frame);
-	      y2 = PixelValueDble (y, pPa->YEnd, frame);
-	      cx1 = (double) pPa->XRadius; 
-	      cy1 = (double) pPa->YRadius; 
-	      EllipticSplit2 (frame, x, y,
-			      x1, y1, 
-			      x2, y2, 
-			      cx1, cy1,
-			      fmod (pPa->XAxisRotation, 360), 
-			      pPa->LargeArc, pPa->Sweep,
-			      mesh);
-	      MeshNewPoint (x2, y2, mesh);
-	      break;
-	    }
-	  pPa = pPa->PaNext;
-	}
+            case PtEllipticalArc:
+              x1 = PixelValueDble (x, pPa->XStart, frame);
+              y1 = PixelValueDble (y, pPa->YStart, frame);
+              x2 = PixelValueDble (x, pPa->XEnd, frame);
+              y2 = PixelValueDble (y, pPa->YEnd, frame);
+              cx1 = (double) pPa->XRadius; 
+              cy1 = (double) pPa->YRadius; 
+              EllipticSplit2 (frame, x, y,
+                              x1, y1, 
+                              x2, y2, 
+                              cx1, cy1,
+                              fmod (pPa->XAxisRotation, 360), 
+                              pPa->LargeArc, pPa->Sweep,
+                              mesh);
+              MeshNewPoint (x2, y2, mesh);
+              break;
+            }
+          pPa = pPa->PaNext;
+        }
       CountourCountAdd (mesh);
       DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);     
       /* free the table of points */
@@ -1574,7 +1574,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
-	       int height, int rx, int ry, int fg, int bg, int pattern)
+               int height, int rx, int ry, int fg, int bg, int pattern)
 {
   int                 i;
   int                 arc, dx, dy;
@@ -1584,9 +1584,9 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   ThotPoint           point[13];
 
   /* width -= thick; */
-/*   height -= thick; */
-/*   x += thick / 2; */
-/*   y += thick / 2; */
+  /*   height -= thick; */
+  /*   x += thick / 2; */
+  /*   y += thick / 2; */
 
   y += FrameTable[frame].FrTopMargin;
 
@@ -1702,12 +1702,12 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
       GL_SetForeground (bg);
       GL_DrawPolygon (point, 13);
       for (i=0;i<4;i++)
-	{
-	  GL_DrawArc (xarc[i].x + thick/4, xarc[i].y + thick/4, 
-		      xarc[i].width - thick/4, xarc[i].height-thick/4, 
-		      xarc[i].angle1, xarc[i].angle2,
-		      TRUE); 
-	}
+        {
+          GL_DrawArc (xarc[i].x + thick/4, xarc[i].y + thick/4, 
+                      xarc[i].width - thick/4, xarc[i].height-thick/4, 
+                      xarc[i].angle1, xarc[i].angle2,
+                      TRUE); 
+        }
     }
 
   /* Draw the border */
@@ -1715,10 +1715,10 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
     {
       InitDrawing (style, thick, fg);
       for (i=0;i<4;i++)
-	GL_DrawArc (xarc[i].x, xarc[i].y, 
-		    xarc[i].width, xarc[i].height, 
-		    xarc[i].angle1, xarc[i].angle2,
-		    FALSE);
+        GL_DrawArc (xarc[i].x, xarc[i].y, 
+                    xarc[i].width, xarc[i].height, 
+                    xarc[i].angle1, xarc[i].angle2,
+                    FALSE);
       GL_DrawSegments (seg, 4);
     }
 }
@@ -1729,7 +1729,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
-		 int height, int fg, int bg, int pattern)
+                 int height, int fg, int bg, int pattern)
 {
    
  
@@ -1750,8 +1750,8 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
       /* InitDrawing (style, thick, bg); */
       GL_SetForeground (bg);
       GL_DrawArc (x + thick/2, y + thick/2, 
-		  width - thick/2, height - thick/2, 
-		  0, 360, TRUE);
+                  width - thick/2, height - thick/2, 
+                  0, 360, TRUE);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1769,7 +1769,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
-			 int l, int h, int align, int fg)
+                         int l, int h, int align, int fg)
 {
   int        Y;
 
@@ -1778,11 +1778,11 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
       y += FrameTable[frame].FrTopMargin;
 
       if (align == 1)
-	Y = y + (h - thick) / 2;
+        Y = y + (h - thick) / 2;
       else if (align == 2)
-	Y = y + h - (thick + 1) / 2;
+        Y = y + h - (thick + 1) / 2;
       else
-	Y = y + thick / 2;
+        Y = y + thick / 2;
 
       /* x += thick / 2; */
       /*       l -= thick; */
@@ -1797,18 +1797,18 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
-		       int l, int h, int align, int fg)
+                       int l, int h, int align, int fg)
 {
   int        X;
 
   if (thick > 0 && fg >= 0)
     {
       if (align == 1)
-	X = x + (l - thick) / 2;
+        X = x + (l - thick) / 2;
       else if (align == 2)
-	X = x + l - (thick + 1) / 2;
+        X = x + l - (thick + 1) / 2;
       else
-	X = x + thick / 2;
+        X = x + thick / 2;
       
       /* y += thick / 2; */
       /*       h -= thick; */
@@ -1825,18 +1825,18 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
-			     int l, int h, int align, int fg)
+                             int l, int h, int align, int fg)
 {
   int        X;
 
   if (thick > 0 && fg >= 0)
     {
       if (align == 1)
-	X = x + (l - thick) / 2;
+        X = x + (l - thick) / 2;
       else if (align == 2)
-	X = x + l - (thick + 1) / 2;
+        X = x + l - (thick + 1) / 2;
       else
-	X = x + thick / 2;
+        X = x + thick / 2;
       
       y += FrameTable[frame].FrTopMargin;
 
@@ -1855,7 +1855,7 @@ void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
 void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
-			  int l, int h, int align, int fg)
+                          int l, int h, int align, int fg)
 {
   int        Y;
 
@@ -1866,19 +1866,19 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
       InitDrawing (style, thick, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
       if (align == 0)
-	/* Over brace */
-	{
-	  DoDrawOneLine (frame, x, Y, x, y + h);
-	  DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y);
-	  DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
-	}
+        /* Over brace */
+        {
+          DoDrawOneLine (frame, x, Y, x, y + h);
+          DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
+        }
       else
-	/* Underbrace */
-	{
-	  DoDrawOneLine (frame, x, Y, x, y);
-	  DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
-	  DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
-	}
+        /* Underbrace */
+        {
+          DoDrawOneLine (frame, x, Y, x, y);
+          DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
+          DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
+        }
     }
 }
 
@@ -1889,7 +1889,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
   Le parame`tre indique la couleur du trace'.
   ----------------------------------------------------------------------*/
 void DrawSlash (int frame, int thick, int style, int x, int y, int l, int h,
-		int direction, int fg)
+                int direction, int fg)
 {
   int                 xf, yf;
 
@@ -1900,9 +1900,9 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l, int h,
     {
       InitDrawing (style, thick, fg);
       if (direction == 0)
-	DoDrawOneLine (frame, x, yf, xf, y);
+        DoDrawOneLine (frame, x, yf, xf, y);
       else
-	DoDrawOneLine (frame, x, y, xf, yf);
+        DoDrawOneLine (frame, x, y, xf, yf);
     }
 }
 
@@ -1911,7 +1911,7 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l, int h,
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void DrawCorner (int frame, int thick, int style, int x, int y, int l,
-		 int h, int corner, int fg)
+                 int h, int corner, int fg)
 {
   ThotPoint           point[3];
   int                 xf, yf;
@@ -1968,7 +1968,7 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
-			 int width, int height, int fg, int bg, int pattern)
+                         int width, int height, int fg, int bg, int pattern)
 {
   int                 i;
   int                 arc, arc2, xf, yf;
@@ -2094,12 +2094,12 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
       GL_SetForeground (bg);
       GL_DrawPolygon (point, 13);
       for (i = 0; i < 4; i++)
-	{  
-	  GL_DrawArc	(xarc[i].x, xarc[i].y, 
-			 xarc[i].width, xarc[i].height, 
-			 xarc[i].angle1, xarc[i].angle2,
-			 TRUE);
-	}
+        {  
+          GL_DrawArc	(xarc[i].x, xarc[i].y, 
+                       xarc[i].width, xarc[i].height, 
+                       xarc[i].angle1, xarc[i].angle2,
+                       TRUE);
+        }
     }
 
   /* Draw the border */
@@ -2107,17 +2107,17 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
     {
       InitDrawing (style, thick, fg);
       for (i = 0 ; i < 4; i++)
-	{  
-	  GL_DrawArc (xarc[i].x, xarc[i].y, 
-		      xarc[i].width, xarc[i].height, 
-		      xarc[i].angle1, xarc[i].angle2,
-		      FALSE); 
-	}
+        {  
+          GL_DrawArc (xarc[i].x, xarc[i].y, 
+                      xarc[i].width, xarc[i].height, 
+                      xarc[i].angle1, xarc[i].angle2,
+                      FALSE); 
+        }
       if (arc2 < height / 2)
-	GL_DrawSegments(seg, 5);
+        GL_DrawSegments(seg, 5);
       else
-	GL_DrawSegments(seg, 4);
-     }
+        GL_DrawSegments(seg, 4);
+    }
 }
 
 
@@ -2128,48 +2128,48 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
-		      int width, int height, int fg, int bg, int pattern)
+                      int width, int height, int fg, int bg, int pattern)
 {
-   int                 px7mm, shiftX;
-   double              A;
+  int                 px7mm, shiftX;
+  double              A;
 
-   width -= thick + 1;
-   height -= thick + 1;
-   x += thick / 2;
-   y += thick / 2;
-   y +=  FrameTable[frame].FrTopMargin;
+  width -= thick + 1;
+  height -= thick + 1;
+  x += thick / 2;
+  y += thick / 2;
+  y +=  FrameTable[frame].FrTopMargin;
 
-   /* Fill in the rectangle */
-   if (pattern == 2)
-     {
-	GL_SetForeground (bg);
-	GL_DrawArc (x, y, width, height, 0, 360, TRUE);
-     }
+  /* Fill in the rectangle */
+  if (pattern == 2)
+    {
+      GL_SetForeground (bg);
+      GL_DrawArc (x, y, width, height, 0, 360, TRUE);
+    }
 
-   /* Draw the border */
-   if (thick > 0 && fg >= 0)
-     {
-	InitDrawing (style, thick, fg);
-	GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
-	px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
-	if (height > 2 * px7mm)
-	  {
-	     A = ((double) height - 2 * px7mm) / height;
-	     A = 1.0 - sqrt (1 - A * A);
-	     shiftX = (int)(width * A * 0.5 + 0.5);
-	     GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
-	  }
-     }
+  /* Draw the border */
+  if (thick > 0 && fg >= 0)
+    {
+      InitDrawing (style, thick, fg);
+      GL_DrawArc(x, y, width, height, 0, 360, FALSE); 
+      px7mm = (int)((7 * DOT_PER_INCH) / 25.4 + 0.5);
+      if (height > 2 * px7mm)
+        {
+          A = ((double) height - 2 * px7mm) / height;
+          A = 1.0 - sqrt (1 - A * A);
+          shiftX = (int)(width * A * 0.5 + 0.5);
+          GL_DrawLine(x + shiftX, y + px7mm, x + width - shiftX, y + px7mm, TRUE);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
   ----------------------------------------------------------------------*/
 void WChaine (ThotWindow w, char *string, int x, int y, ThotFont font,
-	      ThotGC GClocal)
+              ThotGC GClocal)
 {
 
-/* GL_DRAWSTRING*/
+  /* GL_DRAWSTRING*/
 }
 
 
@@ -2179,7 +2179,7 @@ void WChaine (ThotWindow w, char *string, int x, int y, ThotFont font,
   ----------------------------------------------------------------------*/
 void VideoInvert (int frame, int width, int height, int x, int y)
 {
-   GL_VideoInvert(width, height, x, y + FrameTable[frame].FrTopMargin);
+  GL_VideoInvert(width, height, x, y + FrameTable[frame].FrTopMargin);
 }
 
 
@@ -2192,21 +2192,21 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 #ifndef _WX
   if (FrRef[frame] != None)
     GL_window_copy_area (frame,
-			 xf, 
-			 yf + FrameTable[frame].FrTopMargin,
-			 xd, 
-			 yd + FrameTable[frame].FrTopMargin,
-			 width, 
-			 height);
+                         xf, 
+                         yf + FrameTable[frame].FrTopMargin,
+                         xd, 
+                         yd + FrameTable[frame].FrTopMargin,
+                         width, 
+                         height);
 #else /* _WX */
   if (FrameTable[frame].WdFrame != None)
     GL_window_copy_area (frame,
-			 xf, 
-			 yf + FrameTable[frame].FrTopMargin,
-			 xd, 
-			 yd + FrameTable[frame].FrTopMargin,
-			 width, 
-			 height);
+                         xf, 
+                         yf + FrameTable[frame].FrTopMargin,
+                         xd, 
+                         yd + FrameTable[frame].FrTopMargin,
+                         width, 
+                         height);
 #endif /* _WX */
 }
 
@@ -2219,15 +2219,15 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
   and fill pattern.
   ----------------------------------------------------------------------*/
 void PaintWithPattern (int frame, int x, int y, int width, int height,
-		       ThotWindow w, int fg, int bg, int pattern)
+                       ThotWindow w, int fg, int bg, int pattern)
 {
   /* Fill the rectangle associated to the given frame */
   if (pattern == 2)
     {
       if (w == 0)
-	y += FrameTable[frame].FrTopMargin;
+        y += FrameTable[frame].FrTopMargin;
       GL_DrawRectangle (pattern, (float) x, (float) y,
-			(float) width, (float) height);
-   }
+                        (float) width, (float) height);
+    }
 }
 #endif /* _GL*/

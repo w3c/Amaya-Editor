@@ -969,7 +969,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               l = pRefBox->BxLMargin + pRefBox->BxLBorder;
               t =  pRefBox->BxTMargin + pRefBox->BxTBorder;
               w = pRefBox->BxLPadding + pRefBox->BxRPadding + pRefBox->BxW;
-              h = pRefBox->BxTPadding  + pRefBox->BxBPadding + pRefBox->BxH;
+              h = pRefBox->BxTPadding + pRefBox->BxBPadding + pRefBox->BxH;
               x = l + pRefBox->BxXOrg;
               y = t + pRefBox->BxYOrg;
             }
