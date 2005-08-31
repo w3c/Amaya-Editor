@@ -641,8 +641,7 @@ static PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
              (pAb->AbLeafType != LtCompound ||
               pAb->AbPositioning == NULL ||
               pAb->AbPositioning->PnAlgorithm == PnInherit ||
-              pAb->AbPositioning->PnAlgorithm == PnStatic ||
-              pAb->AbPositioning->PnAlgorithm == PnRelative))
+              pAb->AbPositioning->PnAlgorithm == PnStatic))
         pAb = pAb->AbEnclosing;
     }
   return pAb;
@@ -967,10 +966,12 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               // refer another box
               pRefBox = pRefAb->AbBox;
-              w = pRefBox->BxWidth;
-              h = pRefBox->BxHeight;
-              x = pRefBox->BxXOrg;
-              y = pRefBox->BxYOrg;
+              l = pRefBox->BxLMargin + pRefBox->BxLBorder;
+              t =  pRefBox->BxTMargin + pRefBox->BxTBorder;
+              w = pRefBox->BxLPadding + pRefBox->BxRPadding + pRefBox->BxW;
+              h = pRefBox->BxTPadding  + pRefBox->BxBPadding + pRefBox->BxH;
+              x = l + pRefBox->BxXOrg;
+              y = t + pRefBox->BxYOrg;
             }
           
           /* negative values don't apply */
@@ -1767,7 +1768,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   /* break down the temporary link of moved boxes */
   ClearBoxMoved (pBox);
 }
-
 
 
 /*----------------------------------------------------------------------
