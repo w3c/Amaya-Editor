@@ -15,7 +15,11 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.24  2005-08-18 10:26:00  cvs
+** Revision 1.25  2005-08-31 07:30:34  vatton
+** Fixing a warning.
+** Irene
+**
+** Revision 1.24  2005/08/18 10:26:00  cvs
 ** Replace "intptr_t" by "long int" as "intptr_t" is not accepted by
 ** Visual C++
 **
@@ -25,7 +29,7 @@
 ** Enable by default --with-templates with WX versions
 ** Display attributes of read-only elements
 **
-** PS: Don't forget to remove your old Options and amaya/*.o files.
+** PS: Don't forget to remove your old Options and amaya/ *.o files.
 ** Irene
 **
 ** Revision 1.22  2005/08/17 10:28:16  vatton
