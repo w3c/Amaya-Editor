@@ -101,14 +101,6 @@ static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 {
   char filename[2048];
 
-#ifdef IV
-  if (size > MaxNumberOfSizes)
-    size = LogicalPointsSizes[MaxNumberOfSizes];
-  else if (size >= 0)
-    size = LogicalPointsSizes[size];
-  else
-    size = 12;
-#endif
   if (GetFontFilename (alphabet, family, highlight, size, filename))
     return (gl_font_init (filename, alphabet, size)); 
   return NULL;
@@ -1446,22 +1438,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
         {
           /* No table overflow: load the new font */
 #ifdef _GL
-#ifdef IV
-          ptfont = (ThotFont)GL_LoadFont (script, family, highlight,
-                                          LogicalPointsSizes[size]);
-#else
           ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
-#endif
 #else /*_GL*/
 #ifdef _WINGUI
           /* Allocate the font structure */
-#ifdef IV
-          val = LogicalPointsSizes[size];
-          ActiveFont = WIN_LoadFont (script, family, highlight, val);
-#else
           ActiveFont = WIN_LoadFont (script, family, highlight, size);
-#endif
-          
           if (ActiveFont)
             {
               if (TtPrinterDC != NULL)
@@ -1478,11 +1459,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
               ptfont->FiScript = script;
               ptfont->FiFamily = family;
               ptfont->FiHighlight = highlight;
-#ifdef IV
-              ptfont->FiSize = val;
-#else
               ptfont->FiSize = size;
-#endif
               if (GetTextMetrics (display, &textMetric))
                 {
                   ptfont->FiAscent = textMetric.tmAscent;
@@ -1529,12 +1506,13 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
               /* Change size */
               if (increase)
                 {
-#ifdef IV
-                  if (size >= MaxNumberOfSizes)
-#else
                   if (size >= requestedsize + 10)
-#endif
-                    increase = FALSE;
+                    {
+                      /* check a smaller size */
+                      increase = FALSE;
+                      decrease = TRUE;
+                      size = requestedsize;
+                    }
                   else
                     {
                       val = size + 1;
@@ -1545,11 +1523,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
                 }
               if (ptfont == NULL && decrease && !increase)
                 {
-#ifdef IV
-                  if (size <= 0)
-#else
-                  if (size < 6)
-#endif
+                  if (size < 3)
                     decrease = FALSE;
                   else
                     {
@@ -1629,11 +1603,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
           TtFonts[i] = ptfont;
           TtFontMask[i] = 0;       
 #if defined(_GTK) || defined(_WX)
-#ifdef IV
-          val = LogicalPointsSizes[size];
-#else
           val = size;
-#endif
           if (script == 'G' &&
               (val == 8 || val == 10 || val == 12 ||
                val == 14 || val == 24))
@@ -2126,24 +2096,11 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
   ThotBool            specificFont = (script == 'G');
 
   index = 0;
-#ifdef IV
-  /* work with logical sizes */
-  if (unit == UnRelative)
-    index = size;
-  else
-    {
-      /* nearest standard size lookup */
-      index = 0;
-      while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
-        index++;
-    }
-#else
   /* work with point sizes */
   if (unit == UnRelative)
     index = LogicalPointsSizes[size];
   else
     index = size;
-#endif
 
   /* look for the fontsel */
   fontset = FirstFontSel;
