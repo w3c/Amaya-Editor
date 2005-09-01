@@ -119,14 +119,6 @@
             </object>
             <flag>wxEXPAND</flag>
           </object>
-          <object class="sizeritem">
-            <object class="wxButton">
-              <label>*Template's options*</label>
-              <size>250,-1</size>
-            </object>
-            <flag>wxALIGN_CENTRE|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL</flag>
-            <border>4</border>
-          </object>
         </object>
         <flag>wxALL|wxEXPAND</flag>
         <border>4</border>
