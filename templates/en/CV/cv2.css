@@ -1,0 +1,107 @@
+
+
+/************** En tête ***************/
+
+.etatcivil 
+{ 
+  margin-left: 20px;
+  float:left;
+  width:49%;
+  }
+
+.nom 
+{ 
+  font-family: Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 120%;  
+  }
+
+.adresse
+{ 
+  float:right;
+/*  width:49%; */
+  }
+
+/***************** Corps *****************/
+
+.rubrique
+{ 
+  clear: both;
+  padding: 10px;
+  margin: 10px;
+  }
+
+.date
+{ 
+  text-align: right;
+  float: left;
+  width: 14%;
+  margin-right: 1%
+  }
+
+.contenu
+{ 
+/*  float: right; */
+/*  width: 79%; */
+  margin-left: 1%}
+
+.libelle
+{ 
+  font-weight: bold;
+  }
+
+.libelle:after
+{
+  content: ", "
+}
+
+.commentaire:after
+{ 
+  content: ", "
+  }
+
+.lieu:after
+{ 
+  content: ". "
+  }
+
+/***************** Menu ******************/
+.menu 
+{ 
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  background-color: transparent;
+  font-size: 120%;
+  border-style:solid;
+  border-color: black;
+  width: 100%;
+  clear:both;
+  }
+
+h1 
+{
+  padding-left: 17px; /* Largeur de l'image de la puce (background-image) */
+  font-size : 130%;
+  font-family: Verdana, Arial, Helvetica, Geneva, sans-serif;
+  background-image : url(right.png);
+  background-repeat : no-repeat;
+  background-position: left center ;
+  }
+
+h2
+{ 
+  margin-left: 3%;
+  padding-left: 17px;
+  font-size : 120%;
+  font-family: Verdana, Arial, Helvetica, Geneva, sans-serif;
+  background-image : url(right.png);
+  background-repeat : no-repeat;
+  background-position: left center ;
+ }
+
+img
+{ 
+  border: none;
+  }
+

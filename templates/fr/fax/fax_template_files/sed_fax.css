@@ -1,0 +1,43 @@
+/*
+   Title:  Stylesheet for SED Fax
+   Modif.: 29/09/2003
+   Author: Roger Pissard-Gibollet
+*/
+
+
+/* 
+  standard text style
+*/
+
+BODY {
+  margin-left: 2%;
+  margin-right: 2%;
+  color: black;
+  background: white;
+  font-size: 13px;	
+  font-family:  Times;
+}
+
+
+/* 
+  Banner style
+*/
+.Banner {
+        text-align: center;
+	font-size: 22px;
+	font-weight: bold; 
+}
+
+/* 
+  Footer style
+*/     
+.Footer {
+	text-align: center;
+	font-weight: normal; 
+	font-size: 10px;
+}	
+	
+
+
+
+
