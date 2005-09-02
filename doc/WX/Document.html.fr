@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.2.2, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -50,6 +51,31 @@ Quatre types de documents sont disponibles :</p>
     correspondant au type choisi.</li>
 </ol>
 
-<p></p>
+<p>Par ailleurs, vous pouvez créer un document à partir d'un modèle
+pré-défini.</p>
+
+<p class="ProcedureCaption">Pour créer un document à partir d'un modèle :</p>
+<ol>
+  <li>Choisissez l'entrée <strong>Nouveau </strong>du menu
+    <strong>Fichier</strong> et selectionnez <strong>À partir du
+    modèle.</strong></li>
+  <li>Amaya vous demande de choisir un modèle. Vous pouvez choisir l'un des
+    modèles proposé dans la liste ou spécifier un autre répertoire où est
+    situé le modèle que vous désirez.</li>
+  <li>Le champ <strong>Enregistrez le document sous...</strong> vous propose
+    de choisir l'emplacement où votre document sera enregistré. Vous pouvez
+    utiliser le bouton parcourir pour naviguer parmi vos fichiers et
+    selectionner un chemin d'accès.</li>
+  <li>Choisissez l'emplacement où le nouveau document doit s'ouvrir : onglet
+    courant, nouvel onglet ou nouvelle fenêtre.</li>
+  <li>Confirmez avec le bouton <strong>Ouvrir</strong>. Amaya copie le modèle
+    et met à jour ses liens.</li>
+</ol>
+
+<p class="ProcedureCaption">Édition d'un document issu d'un modèle</p>
+
+<p>Lorsque vous éditez un document à partir d'un modèle, certaines zones sont
+protégées. Vous ne pourrez modifier que les zones identifiées par un cadre
+rouge pointillé.</p>
 </body>
 </html>
