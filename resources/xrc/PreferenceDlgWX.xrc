@@ -1051,7 +1051,7 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="spacer">
-            <size>0,0</size>
+            <size>450,0</size>
             <option>1</option>
           </object>
           <object class="sizeritem">
