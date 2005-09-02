@@ -120,7 +120,6 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 NewTemplateDocDlgWX::~NewTemplateDocDlgWX()
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 
@@ -242,12 +241,9 @@ void NewTemplateDocDlgWX::OnCreateButton( wxCommandEvent& event )
       // give the new url to amaya (to do url completion)
       ThotCallback (BaseDialog + URLName,  STRING_DATA, (char *)bufferInstance );
   
-      ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
-
-  
+      Close();      
       CreateInstanceOfTemplate (m_doc, bufferTemplate, bufferInstance,
                                 docHTML);
-      Close();
     }
   else
     {
