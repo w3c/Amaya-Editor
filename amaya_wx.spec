@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 9.1
+%define version 9.2.2
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -28,10 +28,11 @@ Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-%{version}.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
-Amaya is a complete web browsing and authoring environment and comes
-equipped with a WYSIWYG style of interface, similar to that of the
-most popular commercial browsers. With such an interface, users do not
-need to know the HTML or CSS languages.
+Amaya is a complete Web authoring tool with some browsing 
+funtionalities and comes equipped with a WYSIWYG style of
+interface, similar to that of the most popular commercial
+browsers. With such an interface, users do not need to 
+well know the HTML, MathML or CSS languages.
 
 Authors:
 --------
@@ -39,6 +40,9 @@ Authors:
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
+* Fri Sep 2 2005  Irene Vatton (Irene.Vatton@w3.org>
+  and Stephane Gully
+  Gnome/Kde integration
 * Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
   Possibility to install GTK and WX amaya versions
 * Tue Jul 06 2004 Irene Vatton (Irene.Vatton@w3.org>
@@ -88,12 +92,15 @@ if [ -e /usr/bin/amaya ] ; then
 fi
 cd linux
 make install prefix=$RPM_BUILD_ROOT/usr/share
-#cd ..
+# Gnome/Kde integration
+./script_install_gnomekde ./bin $RPM_BUILD_ROOT/usr/share /usr/share
 %files
 %doc README.amaya
-/usr/share/Amaya-%{version}.0/
+/usr/share/pixmaps/
+/usr/share/applications/
+/usr/share/Amaya-%{version}/
 %post
-/bin/ln -s /usr/share/Amaya-%{version}.0/wx/bin/amaya /usr/bin/amaya_wx
+/bin/ln -s /usr/share/Amaya-%{version}/wx/bin/amaya /usr/bin/amaya_wx
 /bin/ln -s /usr/bin/amaya_wx /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
