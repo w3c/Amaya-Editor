@@ -3344,7 +3344,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       if (pParent && pParent->AbBox &&
           pParent->AbBox->BxType != BoCell)
         {
-          if (pParent->AbBox->BxW <= 0)
+          if (pCell && pCell->AbBox)
+            /* the box width will be updated later */
+            maxWidth = pCell->AbBox->BxW - left - right;
+          else if (pParent->AbBox->BxW <= 0)
             {
               /* manage this box as an extensible box */
               maxWidth = 30 * DOT_PER_INCH;
