@@ -2047,7 +2047,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   if (event.ShiftDown())
     thotMask |= THOT_MOD_SHIFT;
   
-#ifdef _WINDOWS
+#if defined(_WINDOWS) || defined(_UNIX)
   /* on windows, +/= key generate '+' key code, but is should generates '=' value */
   if (thot_keysym == '+' && !event.ShiftDown())
     thot_keysym = '=';
@@ -2058,7 +2058,9 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
   if (( p_text_ctrl || p_combo_box || p_spinctrl )
-      && (event.CmdDown() && (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V')) )
+      && (event.CmdDown() &&
+          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' ||
+           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v')) )
     {
       event.Skip();
       return true;      
@@ -2078,12 +2080,13 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 #endif /* _MACOS */
   
   // on windows, CTRL+ALT is equivalent to ALTGR key
-  if ( ((event.CmdDown() && !event.AltDown()) || (event.AltDown() && !event.CmdDown()))
-       && !TtaIsSpecialKey(thot_keysym)
+  if (((event.CmdDown() && !event.AltDown()) ||
+       (event.AltDown() && !event.CmdDown())) &&
+       !TtaIsSpecialKey(thot_keysym) &&
        // this is for the Windows menu shortcuts, 
        // ALT+F => should open File menu
-       && !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.CmdDown())  
-       )
+       !(thot_keysym >= 'A' && thot_keysym <= 'Z' &&
+         event.AltDown() && !event.CmdDown()))
     {
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.

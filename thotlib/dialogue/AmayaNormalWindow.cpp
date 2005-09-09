@@ -354,6 +354,35 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   int action_id   = -1;
 
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
+  // Todo: tester si on fait ttcCopy ttcpaste ttccut sur un widget
+#ifdef IV
+#if defined(_WINDOWS) || defined(_UNIX)
+  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && (event.CmdDown() &&
+          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' ||
+           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v')) )
+    {
+      event.Skip();
+      return true;      
+    }
+#endif /* _WINDOWS */
+#ifdef _MACOS
+  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ))
+    {
+      event.Skip();
+      return true;      
+    }
+#endif /* _MACOS */
+#endif /* IV */
 
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
   
