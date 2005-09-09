@@ -2047,8 +2047,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   if (event.ShiftDown())
     thotMask |= THOT_MOD_SHIFT;
   
-#if defined(_WINDOWS) || defined(_UNIX)
-  /* on windows, +/= key generate '+' key code, but is should generates '=' value */
+  /* +/= key generate '+' key code, but is should generates '=' value */
   if (thot_keysym == '+' && !event.ShiftDown())
     thot_keysym = '=';
   
@@ -2065,19 +2064,6 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       event.Skip();
       return true;      
     }
-#endif /* _WINDOWS */
-#ifdef _MACOS
-  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
-  wxWindow *       p_win_focus         = wxWindow::FindFocus();
-  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
-  if (( p_text_ctrl || p_combo_box || p_spinctrl ))
-    {
-      event.Skip();
-      return true;      
-    }
-#endif /* _MACOS */
   
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if (((event.CmdDown() && !event.AltDown()) ||
