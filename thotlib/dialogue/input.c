@@ -1751,22 +1751,28 @@ void InitTranslations (char *appliname)
               ch[0] = EOS;
               fscanf (file, "%80s", ch);
 
-              /* Register the equiv string */
 #ifdef _WX
-              if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+              /* Register the equiv string */
+              if (no_sequence || ch[0] != ',')
                 {
-#ifdef _MACOS
-                  if (!(mod1 & THOT_MOD_CTRL) ||
-                      (transText[0] != 'c' && transText[0] != 'v'))
-#endif /* _MACOS */
-                    /* the shortcut is not a sequence */
+                  /* it's not a sequence */
+                  //if (!(mod1 & THOT_MOD_CTRL) ||
+                  //   (transText[0] != 'c' && transText[0] != 'v'))
+                    /* Ctrl C and Ctrl V cannot be connected by WX */
+                   /* the shortcut is not a sequence */
                     strcpy (equiv, "\t");
                 }
+#endif /* _WX */
+#ifdef _MACOS
               if ((mod1 & THOT_MOD_CTRL) && (mod1 & THOT_MOD_ALT))
                 /* specific to MacOS */
                 strcat (equiv, "Ctrl-Alt");
-              else
-#endif /* _WX */
+              //else if ((mod1 & THOT_MOD_CTRL) &&
+              //         (transText[0] == 'c' || transText[0] == 'v'))
+               /* Ctrl C and Ctrl V cannot be connected by WX */
+              //    strcat (equiv, "Cmd");
+               else
+#endif /* _MACOS */
                 if (mod1 & THOT_MOD_CTRL)
                   strcat (equiv, "Ctrl");
                 else if (mod1 & THOT_MOD_ALT)
@@ -1774,7 +1780,7 @@ void InitTranslations (char *appliname)
               if (mod1 & THOT_MOD_SHIFT)
                 {
 #ifdef _WX
-                  if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+                  if (no_sequence || ch[0] != ',')
                     strcat (equiv, "-");
                   else
 #endif /* _WX */
@@ -1783,7 +1789,7 @@ void InitTranslations (char *appliname)
                 }
               if (mod1 != THOT_NO_MOD)
 #ifdef _WX
-                if ((no_sequence || !(mod1 & THOT_MOD_CTRL)) && ch[0] != ',')
+                if (no_sequence || ch[0] != ',')
                   strcat (equiv, "-");
                 else
 #endif /* _WX */

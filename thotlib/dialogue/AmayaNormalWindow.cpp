@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/tglbtn.h"
 #include "wx/string.h"
+#include "wx/spinctrl.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -355,22 +356,37 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
 
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
   // Todo: tester si on fait ttcCopy ttcpaste ttccut sur un widget
-#ifdef IV
-#if defined(_WINDOWS) || defined(_UNIX)
+  //#if defined(_WINDOWS) || defined(_UNIX)
   /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
   wxWindow *       p_win_focus         = wxWindow::FindFocus();
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
   wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
-  if (( p_text_ctrl || p_combo_box || p_spinctrl ) && (event.CmdDown() &&
-          (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V' ||
-           thot_keysym == 'c' || thot_keysym == 'x' || thot_keysym == 'v')) )
-    {
-      event.Skip();
-      return true;      
+  if (( p_text_ctrl || p_combo_box || p_spinctrl ) &&
+      action_id >= 0 && action_id < MaxMenuAction && 
+      MenuActionList[action_id].ActionName)
+     {
+       if (p_text_ctrl)
+         {
+           if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
+             p_text_ctrl->Cut();
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
+             p_text_ctrl->Copy();
+           else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
+             p_text_ctrl->Paste();
+         }
+       else if (p_combo_box)
+         {
+           if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
+             p_combo_box->Cut();
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
+             p_combo_box->Copy();
+           else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
+             p_combo_box->Paste();
+         }
+      return;
     }
-#endif /* _WINDOWS */
-#endif /* IV */
+  //#endif /* _WINDOWS */
 
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
   

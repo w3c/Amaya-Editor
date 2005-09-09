@@ -1999,10 +1999,6 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
                 thotMask |= THOT_MOD_ALT;
               if (event.ShiftDown())
                 thotMask |= THOT_MOD_SHIFT; 
- #ifdef _MACOS
-             //if (event.ControlDown())
-              //  thotMask |= THOT_MOD_CTRL; 
-#endif /* _MACOS */
               
               if (ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keycode) == 3)
                 /* if a simple caractere has been entred, give focus to canvas
@@ -2212,10 +2208,6 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
             thotMask |= THOT_MOD_ALT;
           if (event.ShiftDown())
             thotMask |= THOT_MOD_SHIFT;
-#ifdef _MACOS
-          //if (event.ControlDown())
-          // thotMask |= THOT_MOD_CTRL;
-#endif /* _MACOS */
 
           TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
           
