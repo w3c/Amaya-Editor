@@ -369,22 +369,39 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
        if (p_text_ctrl)
          {
            if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
-             p_text_ctrl->Cut();
+             {
+               p_text_ctrl->Cut();
+               return;
+             }
            else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
-             p_text_ctrl->Copy();
+             {
+               p_text_ctrl->Copy();
+               return;
+             }
            else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
-             p_text_ctrl->Paste();
+             {
+               p_text_ctrl->Paste();
+               return;
+             }
          }
        else if (p_combo_box)
          {
            if (!strcmp (MenuActionList[action_id].ActionName, "TtcCutSelection"))
-             p_combo_box->Cut();
+             {
+               p_combo_box->Cut();
+               return;
+             }
            else if (!strcmp (MenuActionList[action_id].ActionName, "TtcCopySelection"))
-             p_combo_box->Copy();
+             {
+               p_combo_box->Copy();
+               return;
+             }
            else if (!strcmp (MenuActionList[action_id].ActionName, "PasteBuffer"))
-             p_combo_box->Paste();
+             {
+               p_combo_box->Paste();
+               return;
+             }
          }
-      return;
     }
   //#endif /* _WINDOWS */
 
