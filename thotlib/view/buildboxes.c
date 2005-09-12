@@ -1313,6 +1313,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
         {
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
+              pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               (isExtra || !ExtraFlow (pChildBox, frame)))
             {
               if ((hMin || pBox->BxContentWidth) &&
@@ -1362,6 +1363,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
         {
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
+              pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               (isExtra || !ExtraFlow (pChildBox, frame)))
             {
               if (pChildAb->AbHorizEnclosing &&
@@ -1407,7 +1409,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
         while (pChildAb != NULL)
           {
             pChildBox = pChildAb->AbBox;
-            if (!pChildAb->AbDead && pChildBox != NULL)
+            if (!pChildAb->AbDead && pChildBox &&
+                pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
               {
                 if (pBox->BxContentWidth &&
                     !IsXPosComplete (pBox) &&
@@ -1728,6 +1731,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 
 /*----------------------------------------------------------------------
   CheckMBP checks margins, borders and paddings of the current box.
+  The parameter evalAuto says if auto values are computed or not.
   Return TRUE when any value was updated.
   ----------------------------------------------------------------------*/
 ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto)
@@ -2141,9 +2145,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 {
   PtrSSchema          pSS;
   PtrAbstractBox      pChildAb, pParent;
+  PtrBox              box, pMainBox;
   PtrBox              pBox;
-  PtrBox              pMainBox;
-  PtrBox              pCurrentBox;
   TypeUnit            unit;
   SpecFont            font;
   ThotPictInfo       *picture;
@@ -2188,22 +2191,22 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                        height, unit, frame);
 
   /* Creation */
-  pCurrentBox = pAb->AbBox;
-  if (pCurrentBox == NULL)
+  pBox = pAb->AbBox;
+  if (pBox == NULL)
     {
-      pCurrentBox = GetBox (pAb);
-      pAb->AbBox = pCurrentBox;
+      pBox = GetBox (pAb);
+      pAb->AbBox = pBox;
     }
 
-  if (pCurrentBox)
+  if (pBox)
     {
       if (pAb->AbLeafType == LtCompound)
-        pCurrentBox->BxType = boxType;
+        pBox->BxType = boxType;
       /* pMainBox points to the root box of the view */
       pMainBox = ViewFrameTable[frame - 1].FrAbstractBox->AbBox;
-      pCurrentBox->BxFont = font;
-      pCurrentBox->BxUnderline = pAb->AbUnderline;
-      pCurrentBox->BxThickness = pAb->AbThickness;
+      pBox->BxFont = font;
+      pBox->BxUnderline = pAb->AbUnderline;
+      pBox->BxThickness = pAb->AbThickness;
 
       /* Dimensionnement de la boite par contraintes */
       /* Il faut initialiser le trace reel et l'indication */
@@ -2213,19 +2216,21 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       if (pAb->AbLeafType == LtGraphics)
         {
           pAb->AbRealShape = pAb->AbShape;
-          pCurrentBox->BxHorizInverted = FALSE;
-          pCurrentBox->BxVertInverted = FALSE;
+          pBox->BxHorizInverted = FALSE;
+          pBox->BxVertInverted = FALSE;
         }
       /* New values of margins, paddings and borders */
       pAb->AbMBPChange = FALSE;
+      //CheckMBP (pAb, pBox, frame, FALSE);
       ComputeMBP (pAb, frame, TRUE, FALSE);
       ComputeMBP (pAb, frame, FALSE, FALSE);
-      pCurrentBox->BxXToCompute = FALSE;
-      pCurrentBox->BxYToCompute = FALSE;
+
+      pBox->BxXToCompute = FALSE;
+      pBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
       if (boxType == BoRow || boxType == BoColumn || boxType == BoCell ||
-          ExtraFlow (pCurrentBox, frame))
+          ExtraFlow (pBox, frame))
         {
           /* float and inlines are not allowed for rows and cells */
           inLine = FALSE;
@@ -2242,7 +2247,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
             AddFloatingBox (pAb, FALSE);
           if (pAb->AbLeafType == LtCompound)
             {
-              if (pCurrentBox->BxType == BoFloatGhost)
+              if (pBox->BxType == BoFloatGhost)
                 {
                   /* skipped element */
                   inlineChildren = FALSE;
@@ -2268,14 +2273,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   !pAb->AbWidth.DimIsPosition &&
                   pAb->AbWidth.DimValue <= 0 &&
                   /* and not already registered as .... */
-                  pCurrentBox->BxType != BoFloatGhost &&
-                  pCurrentBox->BxType != BoFloatBlock)
+                  pBox->BxType != BoFloatGhost &&
+                  pBox->BxType != BoFloatBlock)
                 {
                   /* ignore this box if it's not empty */
                   if (inlineFloatC)
-                    pCurrentBox->BxType = BoFloatGhost;
+                    pBox->BxType = BoFloatGhost;
                   if (pAb->AbFirstEnclosed)
-                    pCurrentBox->BxType = BoGhost;
+                    pBox->BxType = BoGhost;
                   /* this element can be split */
                   inlineChildren = inLine;
                   inlineFloatC = inLineFloat;
@@ -2285,17 +2290,17 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
                   /* block of lines */
                   boxType = BoBlock;
                   inlineFloatC = FALSE;
-                  pCurrentBox->BxType = BoBlock;
-                  pCurrentBox->BxFirstLine = NULL;
-                  pCurrentBox->BxLastLine = NULL;
+                  pBox->BxType = BoBlock;
+                  pBox->BxFirstLine = NULL;
+                  pBox->BxLastLine = NULL;
                 }
               else if (inlineFloatC)
                 {
                   boxType = BoFloatBlock;
                   inlineChildren = FALSE;
-                  pCurrentBox->BxType = BoFloatBlock;
-                  pCurrentBox->BxFirstLine = NULL;
-                  pCurrentBox->BxLastLine = NULL;
+                  pBox->BxType = BoFloatBlock;
+                  pBox->BxFirstLine = NULL;
+                  pBox->BxLastLine = NULL;
                 }
               else
                 {
@@ -2314,23 +2319,23 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       if (pAb->AbLeafType != LtCompound)
         {
           /* Positionnement des axes de la boite construite */
-          ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+          ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
           /* On traite differemment la base d'un bloc de lignes  */
           /* s'il depend de la premiere boite englobee           */
-          ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+          ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
         }
       /* On construit le chainage des boites terminales pour affichage */
       /* et on calcule la position des paves dans le document.         */
       if (pAb->AbFirstEnclosed == NULL)
         {
           /* On note pour l'affichage que cette boite est nouvelle */
-          pCurrentBox->BxNew = TRUE;
+          pBox->BxNew = TRUE;
 	  
           /* Est-ce la boite racine ? */
-          if (pMainBox == pCurrentBox)
+          if (pMainBox == pBox)
             {
-              pCurrentBox->BxPrevious = NULL;
-              pCurrentBox->BxNext = NULL;
+              pBox->BxPrevious = NULL;
+              pBox->BxNext = NULL;
             }
           else
             {
@@ -2338,69 +2343,69 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
               /* The list is pointed from the root box */
               /* BxNext(Root) -> First displayed box              */
               /* BxPrevious(Root) -> Last displayed box           */
-              pBox = pMainBox->BxPrevious;
-              pCurrentBox->BxPrevious = pBox;
-              if (pBox)
+              box = pMainBox->BxPrevious;
+              pBox->BxPrevious = box;
+              if (box)
                 {
-                  pBox->BxNext = pCurrentBox;
-                  if (pBox->BxType == BoPiece || pBox->BxType == BoScript)
+                  box->BxNext = pBox;
+                  if (box->BxType == BoPiece || box->BxType == BoScript)
                     /* update also the split parent box */
-                    pBox->BxAbstractBox->AbBox->BxNext = pCurrentBox;
+                    box->BxAbstractBox->AbBox->BxNext = pBox;
                 }
-              pMainBox->BxPrevious = pCurrentBox;
+              pMainBox->BxPrevious = pBox;
               if (pMainBox->BxNext == NULL)
-                pMainBox->BxNext = pCurrentBox;
+                pMainBox->BxNext = pBox;
             }
-          pCurrentBox->BxIndChar = 0;
+          pBox->BxIndChar = 0;
           *carIndex += pAb->AbVolume;
         }
 
       /* manage shadow exception */
       if (pAb->AbPresentationBox)
-        pCurrentBox->BxShadow = FALSE;
+        pBox->BxShadow = FALSE;
       else if (TypeHasException (ExcShadow, pAb->AbElement->ElTypeNumber, pSS))
-        pCurrentBox->BxShadow = TRUE;
-      else if (pCurrentBox->BxAbstractBox->AbEnclosing &&
-               pCurrentBox->BxAbstractBox->AbEnclosing->AbBox &&
-               pCurrentBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
-        pCurrentBox->BxShadow = TRUE;
+        pBox->BxShadow = TRUE;
+      else if (pBox->BxAbstractBox->AbEnclosing &&
+               pBox->BxAbstractBox->AbEnclosing->AbBox &&
+               pBox->BxAbstractBox->AbEnclosing->AbBox->BxShadow)
+        pBox->BxShadow = TRUE;
       else
-        pCurrentBox->BxShadow = FALSE;
+        pBox->BxShadow = FALSE;
       /* Note if there is a border or a fill */
-      MarkDisplayedBox (pCurrentBox);
+      MarkDisplayedBox (pBox);
       pAb->AbNew = FALSE;	/* The box is now created */
       
       /* Evaluation du contenu de la boite */
       switch (pAb->AbLeafType)
         {
         case LtPageColBreak:
-          pCurrentBox->BxBuffer = NULL;
-          pCurrentBox->BxNChars = pAb->AbVolume;
+          pBox->BxBuffer = NULL;
+          pBox->BxNChars = pAb->AbVolume;
           width = 0;
           height = 0;
           break;
         case LtText:
-          pCurrentBox->BxBuffer = pAb->AbText;
-          pCurrentBox->BxNChars = pAb->AbVolume;
-          pCurrentBox->BxFirstChar = 1;
-          pCurrentBox->BxSpaceWidth = 0;
+          pBox->BxBuffer = pAb->AbText;
+          pBox->BxNChars = pAb->AbVolume;
+          pBox->BxFirstChar = 1;
+          pBox->BxSpaceWidth = 0;
           /* get the default script */
-          pCurrentBox->BxScript = script;
+          pBox->BxScript = script;
           GiveTextSize (pAb, frame, &width, &height, &i);
-          pCurrentBox->BxNSpaces = i;
+          pBox->BxNSpaces = i;
           break;
         case LtPicture:
-          pCurrentBox->BxType = BoPicture;
+          pBox->BxType = BoPicture;
           picture = (ThotPictInfo *) pAb->AbPictInfo;
-          pCurrentBox->BxPictInfo = pAb->AbPictInfo;
+          pBox->BxPictInfo = pAb->AbPictInfo;
           if (!pAb->AbPresentationBox && pAb->AbVolume &&
-              pCurrentBox->BxPictInfo)
+              pBox->BxPictInfo)
             {
               /* box size has to be positive */
-              if (pCurrentBox->BxW < 0)
-                pCurrentBox->BxW = 0;
-              if (pCurrentBox->BxH < 0)
-                pCurrentBox->BxH = 0;
+              if (pBox->BxW < 0)
+                pBox->BxW = 0;
+              if (pBox->BxH < 0)
+                pBox->BxH = 0;
             }
 	  
 #ifdef _GL
@@ -2408,21 +2413,21 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 #else /*_GL*/
             if (picture->PicPixmap == None)
 #endif /*_GL*/
-              LoadPicture (frame, pCurrentBox, picture);
+              LoadPicture (frame, pBox, picture);
           GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
                            &width, &height);
           break;
         case LtSymbol:
-          pCurrentBox->BxBuffer = NULL;
-          pCurrentBox->BxNChars = pAb->AbVolume;
+          pBox->BxBuffer = NULL;
+          pBox->BxNChars = pAb->AbVolume;
           /* Les reperes de la boite (elastique) ne sont pas inverses */
-          pCurrentBox->BxHorizInverted = FALSE;
-          pCurrentBox->BxVertInverted = FALSE;
+          pBox->BxHorizInverted = FALSE;
+          pBox->BxVertInverted = FALSE;
           GiveSymbolSize (pAb, &width, &height);
           break;
         case LtGraphics:
-          pCurrentBox->BxBuffer = NULL;
-          pCurrentBox->BxNChars = pAb->AbVolume;
+          pBox->BxBuffer = NULL;
+          pBox->BxNChars = pAb->AbVolume;
           GiveGraphicSize (pAb, &width, &height);
           if (pAb->AbShape == 'C')
             {
@@ -2433,20 +2438,20 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           break;
         case LtPolyLine:
           /* Prend une copie des points de controle */
-          pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
-          pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
-          pCurrentBox->BxPictInfo = NULL;
-          pCurrentBox->BxXRatio = 1;
-          pCurrentBox->BxYRatio = 1;
+          pBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
+          pBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
+          pBox->BxPictInfo = NULL;
+          pBox->BxXRatio = 1;
+          pBox->BxYRatio = 1;
           GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
                             &width, &height);
           break;
         case LtPath:
           /* Prend une copie du path */
-          pCurrentBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
-          pCurrentBox->BxNChars = pAb->AbVolume;
-          pCurrentBox->BxXRatio = 1;
-          pCurrentBox->BxYRatio = 1;
+          pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
+          pBox->BxNChars = pAb->AbVolume;
+          pBox->BxXRatio = 1;
+          pBox->BxYRatio = 1;
           if (pAb->AbEnclosing)
             {
               /* the direct parent is the SVG path element */
@@ -2472,31 +2477,31 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         case LtCompound:
           if (boxType == BoTable)
             {
-              pCurrentBox->BxColumns = NULL;
-              pCurrentBox->BxRows = NULL;
-              pCurrentBox->BxMaxWidth = 0;
-              pCurrentBox->BxMinWidth = 0;
+              pBox->BxColumns = NULL;
+              pBox->BxRows = NULL;
+              pBox->BxMaxWidth = 0;
+              pBox->BxMinWidth = 0;
             }
           else if (boxType == BoColumn)
             {
-              pCurrentBox->BxTable = NULL;
-              pCurrentBox->BxRows = NULL;
-              pCurrentBox->BxMaxWidth = 0;
-              pCurrentBox->BxMinWidth = 0;
+              pBox->BxTable = NULL;
+              pBox->BxRows = NULL;
+              pBox->BxMaxWidth = 0;
+              pBox->BxMinWidth = 0;
             }
           else if (boxType == BoRow)
             {
-              pCurrentBox->BxTable = NULL;
-              pCurrentBox->BxRows = NULL;
-              pCurrentBox->BxMaxWidth = 0;
-              pCurrentBox->BxMinWidth = 0;
+              pBox->BxTable = NULL;
+              pBox->BxRows = NULL;
+              pBox->BxMaxWidth = 0;
+              pBox->BxMinWidth = 0;
             }
           else if (boxType == BoCell)
             {
-              pCurrentBox->BxTable = NULL;
-              pCurrentBox->BxRows = NULL;
-              pCurrentBox->BxMaxWidth = 0;
-              pCurrentBox->BxMinWidth = 0;
+              pBox->BxTable = NULL;
+              pBox->BxRows = NULL;
+              pBox->BxMaxWidth = 0;
+              pBox->BxMinWidth = 0;
             }
 
           /* Is there a background image ? */
@@ -2507,10 +2512,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
               /* load the picture */
               picture = (ThotPictInfo *) pAb->AbPictBackground;
               if (picture->PicPixmap == None)
-                LoadPicture (frame, pCurrentBox, picture);
+                LoadPicture (frame, pBox, picture);
             }
 
-          if (pCurrentBox == pMainBox)
+          if (pBox == pMainBox)
             {
               /* Set the right document background */
               if (pAb->AbFillBox)
@@ -2522,37 +2527,37 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pChildAb = pAb->AbFirstEnclosed;
           while (pChildAb)
             {
-              pBox = CreateBox (pChildAb, frame, inlineChildren,
+              box = CreateBox (pChildAb, frame, inlineChildren,
                                 inlineFloatC, carIndex);
               pChildAb = pChildAb->AbNext;
             }
           GiveEnclosureSize (pAb, frame, &width, &height);
           /* Position of box axis */
-          ComputeAxisRelation (pAb->AbVertRef, pCurrentBox, frame, TRUE);
+          ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
           /* don't manage the baseline of blocks here */
-          if ((pCurrentBox->BxType != BoFloatBlock &&
-               pCurrentBox->BxType != BoBlock) ||
+          if ((pBox->BxType != BoFloatBlock &&
+               pBox->BxType != BoBlock) ||
               pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
-            ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+            ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
           break;
         default:
           break;
         }
 
       /* Dimensionnement de la boite par le contenu ? */
-      ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
+      ChangeDefaultWidth (pBox, pBox, width, 0, frame);
       /* Il est possible que le changement de largeur de la boite modifie */
       /* indirectement (parce que la boite contient un bloc de ligne) la  */
       /* hauteur du contenu de la boite.                                  */
       if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
         GiveEnclosureSize (pAb, frame, &width, &height);
-      ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
+      ChangeDefaultHeight (pBox, pBox, height, frame);
       /* recheck auto and % margins */
-      CheckMBP (pAb, pCurrentBox, frame, TRUE);
+      CheckMBP (pAb, pBox, frame, TRUE);
       
       /* Positioning of the created box */
       i = 0;
-      positioning = ComputePositioning (pCurrentBox, frame);
+      positioning = ComputePositioning (pBox, frame);
       if (positioning ||
           (pAb->AbLeafType == LtCompound &&
            pAb->AbPositioning &&
@@ -2561,29 +2566,29 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       if (!positioning)
         {
           if (!inLine && !inLineFloat &&
-              pCurrentBox->BxType != BoFloatGhost &&
-              pCurrentBox->BxType != BoGhost)
+              pBox->BxType != BoFloatGhost &&
+              pBox->BxType != BoGhost)
             {
-              ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-              ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
+              ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
+              ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
             }
           else
             {
               if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
                 /* the inline rule doesn't act on this box */
-                ComputePosRelation (&pAb->AbHorizPos, pCurrentBox, frame, TRUE);
+                ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
               else
                 /* the box position depends of its horizontal reference axis */
-                SetPositionConstraint (VertRef, pCurrentBox, &i);
+                SetPositionConstraint (VertRef, pBox, &i);
               if (!pAb->AbVertEnclosing)
                 /* the inline rule doesn't act on this box */
-                ComputePosRelation (&pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+                ComputePosRelation (&pAb->AbHorizRef, pBox, frame, FALSE);
               else if (pAb->AbNotInLine)
                 /* the inline rule doesn't act on this box */
-                ComputePosRelation (&pAb->AbVertPos, pCurrentBox, frame, FALSE);
+                ComputePosRelation (&pAb->AbVertPos, pBox, frame, FALSE);
               else
                 /* the box position depends of its horizontal reference axis */
-                SetPositionConstraint (HorizRef, pCurrentBox, &i);
+                SetPositionConstraint (HorizRef, pBox, &i);
             }
         }
      
@@ -2608,14 +2613,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         UpdateColumnWidth (pAb, NULL, frame);
     }
 #ifdef _GL
-  pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
-    + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
-  pCurrentBox->BxClipY = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin 
-    + pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
-  pCurrentBox->BxClipW = pCurrentBox->BxWidth;
-  pCurrentBox->BxClipH = pCurrentBox->BxHeight;
+  pBox->BxClipX = pBox->BxXOrg + pBox->BxLMargin 
+    + pBox->BxLBorder + pBox->BxLPadding;
+  pBox->BxClipY = pBox->BxYOrg + pBox->BxTMargin 
+    + pBox->BxTBorder + pBox->BxTPadding;
+  pBox->BxClipW = pBox->BxWidth;
+  pBox->BxClipH = pBox->BxHeight;
 #endif /* _GL */
-  return (pCurrentBox);
+  return (pBox);
 }
 
 /*----------------------------------------------------------------------
