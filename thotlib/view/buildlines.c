@@ -3303,7 +3303,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 top, left, right, bottom, spacing;
   ThotBool            toAdjust, breakLine;
   ThotBool            xAbs, yAbs, extensibleBox;
-  ThotBool            full, still, standard;
+  ThotBool            full, still, standard, isFloat;
 
   /* avoid any cycle */
   if (pBox->BxCycles > 0)
@@ -3327,6 +3327,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                    (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
   /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
+  isFloat = pAb->AbFloat != 'N';
   if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
       pParent)
     {
@@ -3338,21 +3339,24 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                    pParent->AbWidth.DimValue == -1) ||
                   pParent->AbBox->BxType == BoGhost ||
                   pParent->AbBox->BxType == BoFloatGhost))
-            pParent = pParent->AbEnclosing;
+            {
+              if (pParent->AbFloat != 'N')
+                isFloat = TRUE;
+              pParent = pParent->AbEnclosing;
+            }
         }
       pCell = GetParentCell (pBox);
-      if (pParent && pParent->AbBox &&
-          pParent->AbBox->BxType != BoCell)
+      if (pAb->AbWidth.DimUnit == UnAuto && isFloat)
         {
-          if (pCell && pCell->AbBox)
-            /* the box width will be updated later */
-            maxWidth = pCell->AbBox->BxW - left - right;
-          else if (pParent->AbBox->BxW <= 0)
-            {
-              /* manage this box as an extensible box */
-              maxWidth = 30 * DOT_PER_INCH;
-              extensibleBox = TRUE;
-            }
+          /* manage this box as an extensible box */
+          maxWidth = 30 * DOT_PER_INCH;
+          extensibleBox = TRUE;
+        }
+      else if (pParent && pParent->AbBox && pParent->AbBox->BxType != BoCell)
+        {
+           if (pParent->AbBox->BxW <= 0)
+             /* manage this box as an extensible box but it's not */
+             maxWidth = 30 * DOT_PER_INCH;
           else
             /* keep the box width */
             maxWidth = pParent->AbBox->BxW - left - right;
@@ -3363,11 +3367,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             /* keep the box width */
             maxWidth = pCell->AbBox->BxW - left - right;
           else
-            {
-              /* manage this box as an extensible box */
-              maxWidth = 30 * DOT_PER_INCH;
-              extensibleBox = TRUE;
-            }
+            /* manage this box as an extensible box but it's not*/
+            maxWidth = 30 * DOT_PER_INCH;
         }
       pBox->BxRuleWidth = maxWidth;
     }

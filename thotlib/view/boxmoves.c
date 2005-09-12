@@ -642,34 +642,34 @@ void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
     {
       minimumRule = (!pBox->BxAbstractBox->AbHeight.DimIsPosition
                      && pBox->BxAbstractBox->AbHeight.DimMinimum);
-      /* Regarde si la hauteur reelle actuelle depend du contenu */
+      /* check if the current height depends on the contents */
       if (pBox->BxContentHeight)
         {
-          /* La hauteur reelle est egale a la hauteur du contenu */
+          /* the current height equals the contents height */
           if (minimumRule && height < pBox->BxRuleHeight)
             {
-              /* Il faut echanger la hauteur reelle avec l'autre hauteur */
+             /* apply the minimum rule */
               delta = pBox->BxRuleHeight - pBox->BxH;
               pBox->BxRuleHeight = height;
               pBox->BxContentHeight = !pBox->BxContentHeight;
               ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
             }
           else
-            /* Mise a jour de la hauteur du contenu */
+            /* update the current content height */
             ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, 0, 0, frame);
         }
       else if (minimumRule)
         {
-          /* La hauteur reelle est egale au minimum */
+          /* the current height equals the minimum */
           if (height > pBox->BxH)
             {
-              /* Il faut echanger la hauteur reelle avec l'autre hauteur */
+              /* apply the content rule */
               pBox->BxRuleHeight = pBox->BxH;
               pBox->BxContentHeight = !pBox->BxContentHeight;
               ResizeHeight (pBox, pSourceBox, NULL, height - pBox->BxH, 0, 0, frame);
             }
           else
-            /* Mise a jour de la hauteur du contenu */
+            /* update the content height */
             pBox->BxRuleHeight = height;
         }
     }
@@ -684,41 +684,43 @@ void ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height,
 void ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width,
                          int spaceDelta, int frame)
 {
+  PtrAbstractBox      pAb;
   int                 delta;
   ThotBool            minimumRule;
 
-  if (pBox != NULL)
+  if (pBox && pBox->BxAbstractBox)
     {
-      minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition &&
-                     (pBox->BxAbstractBox->AbWidth.DimMinimum));
-      /* Regarde si la largeur reelle actuelle depend du contenu */
+      pAb = pBox->BxAbstractBox;
+      minimumRule = (!pAb->AbWidth.DimIsPosition &&
+                     (pAb->AbWidth.DimMinimum));
+      /* check if the current width depends on the contents */
       if (pBox->BxContentWidth)
         {
-          /* La largeur reelle est egale a la largeur du contenu */
+          /* the current width equals the contents width */
           if (minimumRule && width < pBox->BxRuleWidth)
             {
-              /* Il faut echanger la largeur reelle avec l'autre largeur */
+              /* apply the minimum rule */
               delta = pBox->BxRuleWidth - pBox->BxW;
               pBox->BxRuleWidth = width;
               pBox->BxContentWidth = !pBox->BxContentWidth;
               ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, 0, 0, frame);
             }
           else
-            /* Mise a jour de la largeur du contenu */
+            /* update the current content width */
             ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
         }
       else if (minimumRule)
         {
-          /* La largeur reelle est egale au minimum */
+          /* the current width equals the minimum */
           if (width > pBox->BxW)
             {
-              /* Il faut echanger la largeur reelle avec l'autre largeur */
+              /* apply the content rule */
               pBox->BxRuleWidth = pBox->BxW;
               pBox->BxContentWidth = !pBox->BxContentWidth;
               ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, spaceDelta, frame);
             }
           else
-            /* Mise a jour de la largeur du contenu */
+            /* update the content width */
             pBox->BxRuleWidth = width;
         }
     }
@@ -736,7 +738,7 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 width;
   ThotBool            minimumRule;
 
-  if (pBox != NULL)
+  if (pBox)
     {
       minimumRule = (!pBox->BxAbstractBox->AbWidth.DimIsPosition
                      && pBox->BxAbstractBox->AbWidth.DimMinimum);
@@ -748,10 +750,10 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
          */
         return;
 
-      /* check if the current width depends on the contents */
+      /* check if the current width depends on the content */
       if (pBox->BxContentWidth)
         {
-          /* the current width equals the contents width */
+          /* the current width equals the content width */
           width = pBox->BxRuleWidth + delta;
           if (width > pBox->BxW)
             {
@@ -762,7 +764,7 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                            0, 0, spaceDelta, frame);
             }
           else
-            /* update the current minimum */
+            /* update the minimum width */
             pBox->BxRuleWidth = width;
         }
       else if (minimumRule)
@@ -771,7 +773,7 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           width = pBox->BxW + delta;
           if (width < pBox->BxRuleWidth)
             {
-              /* apply the contents rule */
+              /* apply the content rule */
               width = pBox->BxRuleWidth;
               pBox->BxRuleWidth = pBox->BxW + delta;
               pBox->BxContentWidth = !pBox->BxContentWidth;
@@ -2308,11 +2310,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                * if pSourceBox is a child and the inclusion is not performed
                * by another sibling box, we need to propagate the change
                */
-              if ((Propagate == ToAll || externalRef) &&
-                  !IsSiblingBox (pBox, pFromBox) &&
-                  !IsSiblingBox (pBox, pSourceBox) &&
-                  /* doesn't check enclosing of a positioned box */
-                  !ExtraFlow (pBox, frame))
+              if (ExtraFlow (pBox, frame))
+                /* doesn't check enclosing of a positioned box */
+                ;
+              else if ((Propagate == ToAll || externalRef) &&
+                       !IsSiblingBox (pBox, pFromBox) &&
+                       !IsSiblingBox (pBox, pSourceBox))
                 {
                   /* Within a block of line */
                   if (pAb->AbBox != pSourceBox &&
@@ -2849,11 +2852,12 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                * if pSourceBox is a child and the inclusion is not performed
                * by another sibling box, we need to propagate the change
                */
-              if ((Propagate == ToAll || externalRef) &&
-                  !IsSiblingBox (pBox, pFromBox) &&
-                  !IsSiblingBox (pBox, pSourceBox) &&
+              if (ExtraFlow (pBox, frame))
                   /* doesn't check enclosing of a positioned box */
-                  !ExtraFlow (pBox, frame))
+                ;
+              else if ((Propagate == ToAll || externalRef) &&
+                  !IsSiblingBox (pBox, pFromBox) &&
+                  !IsSiblingBox (pBox, pSourceBox))
                 {
                   if (pAb->AbBox->BxType == BoBlock ||
                       pAb->AbBox->BxType == BoFloatBlock)
@@ -3453,6 +3457,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbHorizEnclosing &&
+              pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               (pChildAb->AbWidth.DimAbRef != pAb ||
                pChildBox->BxContentWidth ||
                /* Sometimes table width doesn't follow the rule */
@@ -3528,6 +3533,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           {
             pChildBox = pChildAb->AbBox;
             if (!pChildAb->AbDead && pChildBox &&
+                pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
                 pChildAb->AbHorizEnclosing)
               {
                 /* look for the box which relies the box to its enclosing */
@@ -3683,6 +3689,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbVertEnclosing &&
+              pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               (pChildAb->AbHeight.DimAbRef != pAb ||
                pChildBox->BxContentHeight))
             {
@@ -3763,6 +3770,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           {
             pChildBox = pChildAb->AbBox;
             if (!pChildAb->AbDead && pChildBox &&
+                pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
                 pChildAb->AbVertEnclosing)
               {
                 /* look for the box which relies the box to its enclosing */

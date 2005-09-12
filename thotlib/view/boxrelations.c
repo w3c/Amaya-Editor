@@ -1044,7 +1044,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   pRefBox->BxMoved = NULL;
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + w - r, frame, TRUE);
                 }
-	      
               XMoveAllEnclosed (pBox, x + l, frame);
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Left, Left);
@@ -2067,11 +2066,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbPositioning->PnRightUnit != UnUndefined)
                 {
                   /* inherit from an enclosing box */
-                  pAb->AbWidth.DimIsPosition = FALSE;
-                  pAb->AbWidth.DimAbRef = pParentAb;
-                  pAb->AbWidth.DimValue = 0;
-                  pAb->AbWidth.DimSameDimension = TRUE;
-                  pAb->AbWidth.DimUserSpecified = FALSE;
+                  pAb->AbWidth.DimIsPosition = TRUE;
+                  pAb->AbWidth.DimPosition.PosAbRef = pParentAb;
+                  pAb->AbWidth.DimPosition.PosDistance = pAb->AbPositioning->PnRightDistance;
+                  pAb->AbWidth.DimPosition.PosDistDelta = 0;
+                  pAb->AbWidth.DimPosition.PosEdge = Right;
+                  pAb->AbWidth.DimPosition.PosRefEdge = Right;
+                  pAb->AbWidth.DimPosition.PosUnit = pAb->AbPositioning->PnRightUnit;
                   return FALSE;
                 }
               else if (!pAb->AbWidth.DimIsPosition &&
@@ -3172,7 +3173,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
         {
           refEdge = HorizRef;
           localEdge = HorizRef;
-          if (rule.PosUnit == UnPercent)
+         if (rule.PosUnit == UnPercent)
             dist = PixelValue (rule.PosDistance, UnPercent,
                                (PtrAbstractBox) (pBox->BxH), 0);
           else
