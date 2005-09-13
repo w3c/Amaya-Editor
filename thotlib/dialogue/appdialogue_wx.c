@@ -2068,7 +2068,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
        // this is for the Windows menu shortcuts, 
        // ALT+F => should open File menu
        !(thot_keysym >= 'A' && thot_keysym <= 'Z' &&
-         event.AltDown() && !event.CmdDown()))
+         event.AltDown() && !event.CmdDown()) &&  (thot_keysym != '`') )
     {
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.

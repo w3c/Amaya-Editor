@@ -548,7 +548,6 @@ void AmayaWindow::ToggleFullScreen()
 void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
-
   if (!TtaHandleUnicodeKey(event))
     if (!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
@@ -879,11 +878,11 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-#ifndef _WINDOWS
+#if !defined (_WINDOWS) &&  !defined (_MACOS)
   EVT_CHAR_HOOK( AmayaWindow::OnChar )
-#else /* _WINDOWS */
+#else /* !_WINDOWS  && ! MACOS */
   //  EVT_CHAR( AmayaWindow::OnChar )
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS  && ! MACOS */
   EVT_COMMAND(-1, wxEVT_AMAYA_ACTION_EVENT, AmayaWindow::OnAmayaAction)
 END_EVENT_TABLE()
 
