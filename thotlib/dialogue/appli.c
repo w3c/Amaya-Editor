@@ -2649,11 +2649,8 @@ ThotBool FrameButtonDownCallback(
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameButtonUpCallback( 
-                               int frame,
-                               int thot_button_id,
-                               int thot_mod_mask,
-                               int x, int y )
+ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
+                               int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
   /* if a button release, we save the selection in the clipboard */
@@ -2714,11 +2711,8 @@ ThotBool FrameButtonUpCallback(
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameButtonDClickCallback( 
-                                   int frame,
-                                   int thot_button_id,
-                                   int thot_mod_mask,
-                                   int x, int y )
+ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
+                                   int thot_mod_mask, int x, int y )
 {
 #ifdef _WX
 #ifndef _WINDOWS

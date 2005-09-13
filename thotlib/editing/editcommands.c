@@ -3702,9 +3702,15 @@ void TtcCutSelection (Document doc, View view)
         ActiveFrame = frame;
     }
 
-#if defined(_WX) && (defined (_WINDOWS) || defined(_MACOS))
+#ifdef _WX
+#if !defined(_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (true);
+#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
   TtcCopyToClipboard (doc, view);
-#endif /*  defined(_WX) && (defined(_WINDOWS) || defined(_MACOS))*/
+#if !defined(_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (false);
+#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
+#endif /* _WX */
 #ifdef _WINGUI
   TtcCopyToClipboard (doc, view);
 
@@ -3934,7 +3940,6 @@ void TtcPasteFromClipboard (Document doc, View view)
     }
   
   wxTextDataObject data;
-  
   if (wxTheClipboard->IsSupported( data.GetFormat() ))
     {
       TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
@@ -3945,12 +3950,9 @@ void TtcPasteFromClipboard (Document doc, View view)
           TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Successfully retrieved data from the clipboard.") );
           TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Text pasted from the clipboard : ") + text );
           /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
-          if (Xbuffer && ClipboardLength == 0)
-            {
-              /* remove the old Xbuffer sent by the X server */
-              TtaFreeMemory (Xbuffer);
-              Xbuffer = NULL;
-            }
+          if (Xbuffer)
+            TtcClearClipboard ();
+
           if (Xbuffer == NULL)
             {
               int len = strlen((const char *)text.mb_str(wxConvUTF8));
@@ -3962,14 +3964,10 @@ void TtcPasteFromClipboard (Document doc, View view)
           PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
         }
       else
-        {
-          TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard.") );
-        }
-    }
+        TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard.") );
+     }
   else
-    {
-      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format.") );
-    }
+    TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format.") );
   
   wxTheClipboard->Close();
   TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
@@ -4046,9 +4044,15 @@ void TtcCopySelection (Document doc, View view)
         ActiveFrame = frame;
     }
 
-#if defined(_WX) && (defined(_WINDOWS) || defined(_MACOS))
+#ifdef _WX
+#if !defined(_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (true);
+#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
   TtcCopyToClipboard (doc, view);
-#endif /*  defined(_WX) && (defined(_WINDOWS) || defined(_MACOS))*/
+#if !defined(_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (false);
+#endif /* !defined(_WINDOWS) && !defined(_MACOS) */
+#endif /* _WX */
 #ifdef _WINGUI
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
@@ -4172,15 +4176,16 @@ void TtcPaste (Document doc, View view)
           CloseClipboard ();
 #endif /* _WINGUI */
 
-#if defined(_WX) && (defined (_WINDOWS) || defined(_MACOS))
+#ifdef _WX
+#if !defined (_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (true);
+#endif /* !defined (_WINDOWS) && !defined(_MACOS) */
           if (wxTheClipboard->Open())
             {
               wxTextDataObject data;
-  
               if (wxTheClipboard->IsSupported( data.GetFormat() ))
                 {
                   TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
-      
                   if (wxTheClipboard->GetData( data ))
                     {
                       wxString text = data.GetText();
@@ -4217,16 +4222,19 @@ void TtcPaste (Document doc, View view)
               TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
               ContentEditing (TEXT_PASTE);
             }
-#endif /* defined(_WX) && (defined (_WINDOWS) || defined(_MACOS)) */
+#if !defined (_WINDOWS) && !defined(_MACOS)
+  wxTheClipboard->UsePrimarySelection (true);
+#endif /* !defined (_WINDOWS) && !defined(_MACOS) */
+#endif /* _WX */
 
-#if defined(_UNIX) && !defined(_MACOS)
+#ifdef _GTK
           if (FirstSelectedElement == NULL && FirstSavedElement)
             {
               /* TODO: paste only the text */
             }
           else
             ContentEditing (TEXT_PASTE);
-#endif /* _UNIX && !_MACOS */
+#endif /*  _GTK*/
     
           if (!lock)
             /* unlock table formatting */

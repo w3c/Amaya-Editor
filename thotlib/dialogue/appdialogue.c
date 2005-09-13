@@ -11,7 +11,7 @@
  *
  */
 #ifdef _WX
-  #include "AmayaFrame.h"
+#include "AmayaFrame.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -25,8 +25,8 @@
 #include "wininclude.h"
 #endif /* _WINGUI */
 #ifdef _WX
-  #include "AmayaParams.h"
-  #include "appdialogue_wx_f.h"
+#include "AmayaParams.h"
+#include "appdialogue_wx_f.h"
 #endif /* _WX */
 #ifdef _GTK
 #include "logowindow.h"
@@ -69,6 +69,7 @@
 #include "displaybox_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"
+#include "textcommands_f.h"
 #include "font_f.h"
 #include "inites_f.h"
 
@@ -117,10 +118,10 @@ CallbackCTX;
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 #ifdef _GTK
-  static  ThotPixmap  wind_pixmap;
+static  ThotPixmap  wind_pixmap;
 #endif /* _GTK */
 #ifndef _WX
-  static  Proc 	    LastProcedure = NULL;
+static  Proc 	    LastProcedure = NULL;
 #endif /* _WX */
 static  ThotBool    ActivatedButton = FALSE;   
 static ThotBool     g_DoingAction = FALSE;
@@ -156,8 +157,8 @@ void WinErrorBox (HWND hWnd, char *source)
 }
 
 /*-----------------------------------------------------------------------
- WIN_SetDialogfont applies the dialog font to the widget wnd
- ------------------------------------------------------------------------*/
+  WIN_SetDialogfont applies the dialog font to the widget wnd
+  ------------------------------------------------------------------------*/
 void WIN_SetDialogfont (ThotWindow wnd)
 {
   if (DialogFont == NULL)
@@ -182,11 +183,11 @@ LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
     {
       LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam;
       if (ptbn->iItem > 0)
-	{
-	  strcpy (ptbn->pszText, FrameTable[frame].TbStrings[ptbn->iItem]);
-	  memcpy (&ptbn->tbButton, FrameTable[frame].Button[ptbn->iItem], sizeof (TBBUTTON));
-         return 1;
-	}
+        {
+          strcpy (ptbn->pszText, FrameTable[frame].TbStrings[ptbn->iItem]);
+          memcpy (&ptbn->tbButton, FrameTable[frame].Button[ptbn->iItem], sizeof (TBBUTTON));
+          return 1;
+        }
     }
   return 0;
 }
@@ -205,7 +206,7 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
   if (AutoCompleting == TRUE)
     {
       /*after I set selection on the auto completed part of the string, 
-	  I	get another key event without any sens... so I block It*/
+        I	get another key event without any sens... so I block It*/
       AutoCompleting = FALSE;
       return 0;
     }
@@ -214,60 +215,60 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
     {  
     case WM_KEYDOWN: 
       switch (wParam)
-	{ 
-	case VK_RETURN:
-	  if (GetParent (hwnd))
-	    if (GetParent (GetParent (hwnd)))
-	      {
-		SendMessage(GetParent (GetParent (hwnd)), WM_ENTER, 0, 0); 
-		return 0;
-	      }
-	  SendMessage (GetParent (hwnd), WM_ENTER, 0, 0); 
-	  return 0;
-	case VK_BACK:
-	case VK_DELETE:
-	case VK_SHIFT:
-	case VK_LEFT:
-	case VK_RIGHT:
-	  break;
-	case VK_DOWN:
-	case VK_UP:
-	  SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
-	  SendMessage (GetParent (hwnd), CB_SHOWDROPDOWN, 1, 0);
-	  SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
-	  break;
-	default:
-	  {
-	    key = GetKeyState (VK_CONTROL);		  
-	    /* is a control key pressed? */
-	    if (!HIBYTE (key))
-	      {
-		/*current pos*/	    
-		length = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
-		SendMessage(hwnd, EM_GETSEL, (WPARAM)&start,
-			    (LPARAM)&end);
-		/* if not already partially selected */
-		if (end >= length)
-		  { 
-		    GetWindowText(hwnd, text, sizeof(text));
-		    text[start++] = (char)wParam;
-		    text[start] = 0;
+        { 
+        case VK_RETURN:
+          if (GetParent (hwnd))
+            if (GetParent (GetParent (hwnd)))
+              {
+                SendMessage(GetParent (GetParent (hwnd)), WM_ENTER, 0, 0); 
+                return 0;
+              }
+          SendMessage (GetParent (hwnd), WM_ENTER, 0, 0); 
+          return 0;
+        case VK_BACK:
+        case VK_DELETE:
+        case VK_SHIFT:
+        case VK_LEFT:
+        case VK_RIGHT:
+          break;
+        case VK_DOWN:
+        case VK_UP:
+          SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
+          SendMessage (GetParent (hwnd), CB_SHOWDROPDOWN, 1, 0);
+          SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
+          break;
+        default:
+          {
+            key = GetKeyState (VK_CONTROL);		  
+            /* is a control key pressed? */
+            if (!HIBYTE (key))
+              {
+                /*current pos*/	    
+                length = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
+                SendMessage(hwnd, EM_GETSEL, (WPARAM)&start,
+                            (LPARAM)&end);
+                /* if not already partially selected */
+                if (end >= length)
+                  { 
+                    GetWindowText(hwnd, text, sizeof(text));
+                    text[start++] = (char)wParam;
+                    text[start] = 0;
 		    
-		    hwndcombo = GetParent(hwnd);
-		    /* if found, add the proposition */
-		    if ((index = SendMessage(hwndcombo, CB_FINDSTRING, -1,
-					     (LPARAM)text)) >= 0)
-		      {
-			SendMessage(hwndcombo, CB_SETCURSEL, index, 0);
-			SendMessage(hwnd, EM_SETSEL, start, -1);
-			AutoCompleting = TRUE;	
-			return 0;
-		      }
-		  }
-	      }
-	    break;
-	  } 
-	}
+                    hwndcombo = GetParent(hwnd);
+                    /* if found, add the proposition */
+                    if ((index = SendMessage(hwndcombo, CB_FINDSTRING, -1,
+                                             (LPARAM)text)) >= 0)
+                      {
+                        SendMessage(hwndcombo, CB_SETCURSEL, index, 0);
+                        SendMessage(hwnd, EM_SETSEL, start, -1);
+                        AutoCompleting = TRUE;	
+                        return 0;
+                      }
+                  }
+              }
+            break;
+          } 
+        }
       break; 
     }
   /* Call the original window procedure for default processing */ 
@@ -275,57 +276,57 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 }
 
 /*----------------------------------------------------------------------
-ComboBoxProc : handle user action on the combobox
+  ComboBoxProc : handle user action on the combobox
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-static ThotBool Selection_change_by_click = FALSE;
+  static ThotBool Selection_change_by_click = FALSE;
 
- switch (msg)
-   {   
-   case WM_COMMAND:
-     switch (HIWORD(wParam))
-       {
-       case CBN_SELENDCANCEL:
-	 Selection_change_by_click = FALSE;
-	 break;
-       case CBN_SELENDOK:
-       case CBN_KILLFOCUS:
-       case CBN_CLOSEUP: 
-	 {
-	   Selection_change_by_click = FALSE;
-	   break;
-	 }
-       case CBN_DROPDOWN:
-	 {
-	   Selection_change_by_click = TRUE;
-	   break;
-	 }
-       case CBN_SELCHANGE:
-	 {
-	   if (Selection_change_by_click)
-	     {
-				/*Load Url when Selection change after a click*/
-	       CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
-	       SendMessage (GetParent(hwnd), WM_ENTER, 0, 0);
-	       Selection_change_by_click = FALSE;
-	       return 0;
-	     }
-	   break;
-	 }
-       }
-     break;
-   case WM_ENTER:
-     /*Transmit the enter key press event to 
-       the Window containing the combo box */
-     SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-     return 0;	
-   case WM_KEYDOWN:
-     Selection_change_by_click = FALSE;
-     break;
-   }
- /* Call the original window procedure for default processing */ 
- return CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam); 
+  switch (msg)
+    {   
+    case WM_COMMAND:
+      switch (HIWORD(wParam))
+        {
+        case CBN_SELENDCANCEL:
+          Selection_change_by_click = FALSE;
+          break;
+        case CBN_SELENDOK:
+        case CBN_KILLFOCUS:
+        case CBN_CLOSEUP: 
+          {
+            Selection_change_by_click = FALSE;
+            break;
+          }
+        case CBN_DROPDOWN:
+          {
+            Selection_change_by_click = TRUE;
+            break;
+          }
+        case CBN_SELCHANGE:
+          {
+            if (Selection_change_by_click)
+              {
+                /*Load Url when Selection change after a click*/
+                CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
+                SendMessage (GetParent(hwnd), WM_ENTER, 0, 0);
+                Selection_change_by_click = FALSE;
+                return 0;
+              }
+            break;
+          }
+        }
+      break;
+    case WM_ENTER:
+      /*Transmit the enter key press event to 
+        the Window containing the combo box */
+      SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+      return 0;	
+    case WM_KEYDOWN:
+      Selection_change_by_click = FALSE;
+      break;
+    }
+  /* Call the original window procedure for default processing */ 
+  return CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam); 
 }
 
 
@@ -339,7 +340,7 @@ HWND GetCurrentWindow ()
 
 
 /*----------------------------------------------------------------------
-   TteInitMenuActions alloue la table des actions.                    
+  TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
 void TteInitMenus (char *name, int number)
 {
@@ -357,14 +358,14 @@ void TteInitMenus (char *name, int number)
     {
       i = 1;
       while (i < appArgc - 1)
-	if (!strcmp (appArgv[i], "-display"))
-	  /* the display name is the following argument */
-	  servername = appArgv[++i];
-	else if (!strcmp (appArgv[i], "-profile"))
-	  /* the profile name is the following argument */
-	  profile = appArgv[++i];
-	else
-	  i++;
+        if (!strcmp (appArgv[i], "-display"))
+          /* the display name is the following argument */
+          servername = appArgv[++i];
+        else if (!strcmp (appArgv[i], "-profile"))
+          /* the profile name is the following argument */
+          profile = appArgv[++i];
+        else
+          i++;
     }
   /* Init the profile table */
   Prof_InitTable (profile);
@@ -374,156 +375,156 @@ void TteInitMenus (char *name, int number)
   Dict_Init ();
   ThotInitDisplay (name, 0, 0);
    
-   /* reserve Thot entries */
-   TtaGetReferencesBase (MAX_ThotMenu);
+  /* reserve Thot entries */
+  TtaGetReferencesBase (MAX_ThotMenu);
 
-   /* Il faut ajouter les actions internes liees a la structure */
-   number += MAX_INTERNAL_CMD;
+  /* Il faut ajouter les actions internes liees a la structure */
+  number += MAX_INTERNAL_CMD;
 
-   MaxMenuAction = number;
-   MenuActionList = (Action_Ctl *) TtaGetMemory (number * sizeof (Action_Ctl));
-   /* initialisation des equilalents clavier et validation de l'action */
-   for (FreeMenuAction = 0; FreeMenuAction < MAX_INTERNAL_CMD; FreeMenuAction++)
-     {
-       MenuActionList[FreeMenuAction].ActionEquiv = NULL;
+  MaxMenuAction = number;
+  MenuActionList = (Action_Ctl *) TtaGetMemory (number * sizeof (Action_Ctl));
+  /* initialisation des equilalents clavier et validation de l'action */
+  for (FreeMenuAction = 0; FreeMenuAction < MAX_INTERNAL_CMD; FreeMenuAction++)
+    {
+      MenuActionList[FreeMenuAction].ActionEquiv = NULL;
 #ifdef _WX
-       for (i = 0; i < MAX_DOCUMENTS; i++)
-	 MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
+      for (i = 0; i < MAX_DOCUMENTS; i++)
+        MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
 #else /* _WX */
-       for (i = 0; i < MAX_FRAME; i++)
-	 MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
+      for (i = 0; i < MAX_FRAME; i++)
+        MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
 #endif /* _WX */
-     }
-   for (i = FreeMenuAction; i < MaxMenuAction; i++)
-     {
-	MenuActionList[i].ActionName = "";
-	MenuActionList[i].Call_Action = (Proc) NULL;
-	MenuActionList[i].ActionEquiv = NULL;
-     }
+    }
+  for (i = FreeMenuAction; i < MaxMenuAction; i++)
+    {
+      MenuActionList[i].ActionName = "";
+      MenuActionList[i].Call_Action = (Proc) NULL;
+      MenuActionList[i].ActionEquiv = NULL;
+    }
 
-   /* Initialisation des actions internes obligatoires */
-   MenuActionList[0].ActionName = "TtcInsertChar";	/* action InsertChar() */
-   MenuActionList[0].Call_Action = (Proc) NULL;
+  /* Initialisation des actions internes obligatoires */
+  MenuActionList[0].ActionName = "TtcInsertChar";	/* action InsertChar() */
+  MenuActionList[0].Call_Action = (Proc) NULL;
 
-   MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
-   MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_DeletePrevChar].ActionEquiv = TtaStrdup ("BackSpace");
+  MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
+  MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
+  MenuActionList[CMD_DeletePrevChar].ActionEquiv = TtaStrdup ("BackSpace");
 
-   MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
-   MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
-   MenuActionList[CMD_DeleteSelection].ActionEquiv = TtaStrdup ("Delete");
+  MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
+  MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
+  MenuActionList[CMD_DeleteSelection].ActionEquiv = TtaStrdup ("Delete");
 
-   MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
-   MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
+  MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
+  MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
 
-   MenuActionList[CMD_NextChar].ActionName = "TtcNextChar";
-   MenuActionList[CMD_NextChar].Call_Action = (Proc) TtcNextChar;
+  MenuActionList[CMD_NextChar].ActionName = "TtcNextChar";
+  MenuActionList[CMD_NextChar].Call_Action = (Proc) TtcNextChar;
 
-   MenuActionList[CMD_PreviousLine].ActionName = "TtcPreviousLine";
-   MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
+  MenuActionList[CMD_PreviousLine].ActionName = "TtcPreviousLine";
+  MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
 
-   MenuActionList[CMD_NextLine].ActionName = "TtcNextLine";
-   MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
+  MenuActionList[CMD_NextLine].ActionName = "TtcNextLine";
+  MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
 
-   MenuActionList[CMD_PreviousWord].ActionName = "TtcPreviousWord";
-   MenuActionList[CMD_PreviousWord].Call_Action = (Proc) TtcPreviousWord;
+  MenuActionList[CMD_PreviousWord].ActionName = "TtcPreviousWord";
+  MenuActionList[CMD_PreviousWord].Call_Action = (Proc) TtcPreviousWord;
 
-   MenuActionList[CMD_NextWord].ActionName = "TtcNextWord";
-   MenuActionList[CMD_NextWord].Call_Action = (Proc) TtcNextWord;
+  MenuActionList[CMD_NextWord].ActionName = "TtcNextWord";
+  MenuActionList[CMD_NextWord].Call_Action = (Proc) TtcNextWord;
 
-   MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
-   MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
+  MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
+  MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
 
-   MenuActionList[CMD_SelBeginningOfLine].ActionName = "TtcSelStartOfLine";
-   MenuActionList[CMD_SelBeginningOfLine].Call_Action = (Proc) TtcSelStartOfLine;
+  MenuActionList[CMD_SelBeginningOfLine].ActionName = "TtcSelStartOfLine";
+  MenuActionList[CMD_SelBeginningOfLine].Call_Action = (Proc) TtcSelStartOfLine;
 
-   MenuActionList[CMD_SelEndOfLine].ActionName = "TtcSelEndOfLine";
-   MenuActionList[CMD_SelEndOfLine].Call_Action = (Proc) TtcSelEndOfLine;
+  MenuActionList[CMD_SelEndOfLine].ActionName = "TtcSelEndOfLine";
+  MenuActionList[CMD_SelEndOfLine].Call_Action = (Proc) TtcSelEndOfLine;
 
 
-   MenuActionList[CMD_EndOfLine].ActionName = "TtcEndOfLine";
-   MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
+  MenuActionList[CMD_EndOfLine].ActionName = "TtcEndOfLine";
+  MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
 
-   MenuActionList[CMD_ParentElement].ActionName = "TtcParentElement";
-   MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
+  MenuActionList[CMD_ParentElement].ActionName = "TtcParentElement";
+  MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
 
-   MenuActionList[CMD_PreviousElement].ActionName = "TtcPreviousElement";
-   MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
+  MenuActionList[CMD_PreviousElement].ActionName = "TtcPreviousElement";
+  MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
 
-   MenuActionList[CMD_NextElement].ActionName = "TtcNextElement";
-   MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
+  MenuActionList[CMD_NextElement].ActionName = "TtcNextElement";
+  MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
 
-   MenuActionList[CMD_ChildElement].ActionName = "TtcChildElement";
-   MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
+  MenuActionList[CMD_ChildElement].ActionName = "TtcChildElement";
+  MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
 
-   MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
-   MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
-   MenuActionList[CMD_PageUp].ActionEquiv = TtaStrdup ("Prior");
+  MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
+  MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
+  MenuActionList[CMD_PageUp].ActionEquiv = TtaStrdup ("Prior");
 
-   MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
-   MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
-   MenuActionList[CMD_PageDown].ActionEquiv = TtaStrdup ("Next");
+  MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
+  MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
+  MenuActionList[CMD_PageDown].ActionEquiv = TtaStrdup ("Next");
 
-   MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
-   MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
-   MenuActionList[CMD_PageTop].ActionEquiv = TtaStrdup ("Home");
+  MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
+  MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
+  MenuActionList[CMD_PageTop].ActionEquiv = TtaStrdup ("Home");
 
-   MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
-   MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
-   MenuActionList[CMD_PageEnd].ActionEquiv = TtaStrdup ("End");
+  MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
+  MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
+  MenuActionList[CMD_PageEnd].ActionEquiv = TtaStrdup ("End");
 
-   MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
-   MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
-   MenuActionList[CMD_LineUp].ActionEquiv = TtaStrdup ("C Left");
+  MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
+  MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
+  MenuActionList[CMD_LineUp].ActionEquiv = TtaStrdup ("C Left");
 
-   MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
-   MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
-   MenuActionList[CMD_LineDown].ActionEquiv = TtaStrdup ("C Down");
+  MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
+  MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
+  MenuActionList[CMD_LineDown].ActionEquiv = TtaStrdup ("C Down");
 
-   MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
-   MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
-   MenuActionList[CMD_ScrollRight].ActionEquiv = TtaStrdup ("C Right");
+  MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
+  MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
+  MenuActionList[CMD_ScrollRight].ActionEquiv = TtaStrdup ("C Right");
 
-   MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
-   MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
-   MenuActionList[CMD_ScrollLeft].ActionEquiv = TtaStrdup ("C Left");
+  MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
+  MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
+  MenuActionList[CMD_ScrollLeft].ActionEquiv = TtaStrdup ("C Left");
 
-   MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
-   MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
+  MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
+  MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
 
-   MenuActionList[CMD_LineBreak].ActionName = "TtcInsertLineBreak";
-   MenuActionList[CMD_LineBreak].Call_Action = (Proc) TtcInsertLineBreak;
-   MenuActionList[CMD_LineBreak].ActionEquiv = TtaStrdup ("C Return");
+  MenuActionList[CMD_LineBreak].ActionName = "TtcInsertLineBreak";
+  MenuActionList[CMD_LineBreak].Call_Action = (Proc) TtcInsertLineBreak;
+  MenuActionList[CMD_LineBreak].ActionEquiv = TtaStrdup ("C Return");
 
-   MenuActionList[CMD_CopyToClipboard].ActionName = "TtcCopyToClipboard";
-   MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
+  MenuActionList[CMD_CopyToClipboard].ActionName = "TtcCopyToClipboard";
+  MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
 
-   MenuActionList[CMD_PasteFromClipboard].ActionName = "TtcPasteFromClipboard";
-   MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
+  MenuActionList[CMD_PasteFromClipboard].ActionName = "TtcPasteFromClipboard";
+  MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
 
-   MenuActionList[CMD_PreviousSelChar].ActionName = "TtcPreviousSelChar";
-   MenuActionList[CMD_PreviousSelChar].Call_Action = (Proc) TtcPreviousSelChar;
+  MenuActionList[CMD_PreviousSelChar].ActionName = "TtcPreviousSelChar";
+  MenuActionList[CMD_PreviousSelChar].Call_Action = (Proc) TtcPreviousSelChar;
 
-   MenuActionList[CMD_NextSelChar].ActionName = "TtcNextSelChar";
-   MenuActionList[CMD_NextSelChar].Call_Action = (Proc) TtcNextSelChar;
+  MenuActionList[CMD_NextSelChar].ActionName = "TtcNextSelChar";
+  MenuActionList[CMD_NextSelChar].Call_Action = (Proc) TtcNextSelChar;
 
-   MenuActionList[CMD_PreviousSelLine].ActionName = "TtcPreviousSelLine";
-   MenuActionList[CMD_PreviousSelLine].Call_Action = (Proc) TtcPreviousSelLine;
+  MenuActionList[CMD_PreviousSelLine].ActionName = "TtcPreviousSelLine";
+  MenuActionList[CMD_PreviousSelLine].Call_Action = (Proc) TtcPreviousSelLine;
 
-   MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
-   MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
+  MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
+  MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
 
-   MenuActionList[CMD_PreviousSelWord].ActionName = "TtcPreviousSelWord";
-   MenuActionList[CMD_PreviousSelWord].Call_Action = (Proc) TtcPreviousSelWord;
+  MenuActionList[CMD_PreviousSelWord].ActionName = "TtcPreviousSelWord";
+  MenuActionList[CMD_PreviousSelWord].Call_Action = (Proc) TtcPreviousSelWord;
 
-   MenuActionList[CMD_NextSelWord].ActionName = "TtcNextSelWord";
-   MenuActionList[CMD_NextSelWord].Call_Action = (Proc) TtcNextSelWord;
+  MenuActionList[CMD_NextSelWord].ActionName = "TtcNextSelWord";
+  MenuActionList[CMD_NextSelWord].Call_Action = (Proc) TtcNextSelWord;
 
-   MenuActionList[CMD_Copy].ActionName = "TtcCopySelection";
-   MenuActionList[CMD_Copy].Call_Action = (Proc) TtcCopySelection;
+  MenuActionList[CMD_Copy].ActionName = "TtcCopySelection";
+  MenuActionList[CMD_Copy].Call_Action = (Proc) TtcCopySelection;
 
-   MenuActionList[CMD_Paste].ActionName = "TtcPaste";
-   MenuActionList[CMD_Paste].Call_Action = (Proc) TtcPaste;
+  MenuActionList[CMD_Paste].ActionName = "TtcPaste";
+  MenuActionList[CMD_Paste].Call_Action = (Proc) TtcPaste;
 }
 
 /*----------------------------------------------------------------------
@@ -535,7 +536,7 @@ int TtaGetMenuActionNumber()
 }
 
 /*----------------------------------------------------------------------
-   FreeMenus frees all contextes allocated by the menu manager
+  FreeMenus frees all contextes allocated by the menu manager
   ----------------------------------------------------------------------*/
 void FreeMenus ()
 {
@@ -549,15 +550,15 @@ void FreeMenus ()
   if (MenuActionList)
     {
       for (i = 0; i < FreeMenuAction; i++)
-	{
-	  TtaFreeMemory (MenuActionList[i].ActionEquiv);
-	  MenuActionList[i].ActionEquiv = NULL;
-	}
+        {
+          TtaFreeMemory (MenuActionList[i].ActionEquiv);
+          MenuActionList[i].ActionEquiv = NULL;
+        }
       for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
-	{
-	  TtaFreeMemory (MenuActionList[i].ActionName);
-	  MenuActionList[i].ActionName = NULL;
-	}
+        {
+          TtaFreeMemory (MenuActionList[i].ActionName);
+          MenuActionList[i].ActionName = NULL;
+        }
       TtaFreeMemory (MenuActionList);
       MenuActionList = NULL;
     }
@@ -570,12 +571,12 @@ void FreeMenus ()
     {
       ptrItem = ptrmenu->ItemsList;
       for (i = 0; i < ptrmenu->ItemsNb; i++)
-	if (ptrItem[i].ItemType == 'M')
-	  {
-	    /* free a submenu */
-	    TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
-	    TtaFreeMemory (ptrItem[i].SubMenu);
-	  }
+        if (ptrItem[i].ItemType == 'M')
+          {
+            /* free a submenu */
+            TtaFreeMemory (ptrItem[i].SubMenu->ItemsList);
+            TtaFreeMemory (ptrItem[i].SubMenu);
+          }
 	  
       /* free the items list */
       TtaFreeMemory (ptrItem);
@@ -586,29 +587,29 @@ void FreeMenus ()
     }
     
   /* free actions */
-   pAction = ActionList;
-   ActionList = NULL;
-   while (pAction != NULL)
-     {
-       aNext = pAction->ActNext;
-       TtaFreeMemory (pAction);
-       pAction = aNext;
-     }
+  pAction = ActionList;
+  ActionList = NULL;
+  while (pAction != NULL)
+    {
+      aNext = pAction->ActNext;
+      TtaFreeMemory (pAction);
+      pAction = aNext;
+    }
 
   /* free callback contexts */
-   ctxCallback = FirstCallbackAPI;
-   while (ctxCallback)
-     {
-	   FirstCallbackAPI = ctxCallback->callbackNext;
-	   TtaFreeMemory (ctxCallback);
-	   ctxCallback = FirstCallbackAPI;
-     }
+  ctxCallback = FirstCallbackAPI;
+  while (ctxCallback)
+    {
+      FirstCallbackAPI = ctxCallback->callbackNext;
+      TtaFreeMemory (ctxCallback);
+      ctxCallback = FirstCallbackAPI;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TteAddMenuAction ajoute une nouvelle action dans la table des      
-   actions d'interface.                                            
+  TteAddMenuAction ajoute une nouvelle action dans la table des      
+  actions d'interface.                                            
   ----------------------------------------------------------------------*/
 void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
 {
@@ -631,10 +632,10 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
       /* Cette nouvelle action n'est active pour aucune frame */
 #ifdef _WX
       for (i = 0; i < MAX_DOCUMENTS; i++)
-	MenuActionList[FreeMenuAction].ActionActive[i] = state;
+        MenuActionList[FreeMenuAction].ActionActive[i] = state;
 #else /* _WX */
       for (i = 0; i < MAX_FRAME; i++)
-	MenuActionList[FreeMenuAction].ActionActive[i] = state;
+        MenuActionList[FreeMenuAction].ActionActive[i] = state;
 #endif /* _WX */
       FreeMenuAction++;
     }
@@ -646,14 +647,14 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
   ----------------------------------------------------------------------*/
 int FindMenuAction (const char *actionName)
 {
-   int                 i;
+  int                 i;
 
-   for (i = 0; i < MaxMenuAction; i++)
-     {
-	if (!strcmp (actionName, MenuActionList[i].ActionName))
-	   return (i);
-     }
-   return (i);
+  for (i = 0; i < MaxMenuAction; i++)
+    {
+      if (!strcmp (actionName, MenuActionList[i].ActionName))
+        return (i);
+    }
+  return (i);
 }
 
 /*----------------------------------------------------------------------
@@ -678,31 +679,31 @@ int FindMenuItemIDFromMenuAction (Menu_Ctl * ptrmenu, int action_id)
 
       /* loop on menu items */
       while ( (menu_id == -1) && (item_nb < ptrmenu->ItemsNb) )
-	{
-	  item_type = ptritem[item_nb].ItemType;
-	  switch (item_type)
-	    {
-	    case 'B':
-	    case 'T':
-	      if (ptritem[item_nb].ItemAction == action_id)
-		menu_id = ptritem[item_nb].ItemID;
-	      break;
+        {
+          item_type = ptritem[item_nb].ItemType;
+          switch (item_type)
+            {
+            case 'B':
+            case 'T':
+              if (ptritem[item_nb].ItemAction == action_id)
+                menu_id = ptritem[item_nb].ItemID;
+              break;
 
-	    case 'S':
-	      break;
+            case 'S':
+              break;
 
-	    case 'M':
-	      menu_id = FindMenuItemIDFromMenuAction(ptritem[item_nb].SubMenu, action_id);
-	      break;
+            case 'M':
+              menu_id = FindMenuItemIDFromMenuAction(ptritem[item_nb].SubMenu, action_id);
+              break;
 
-	    default:
+            default:
 #ifdef _WX
-	      wxASSERT_MSG(FALSE, _T("The menu item type is not supported."));
+              wxASSERT_MSG(FALSE, _T("The menu item type is not supported."));
 #endif /* _WX */
-	      break;
-	    }
-	  item_nb++;
-	}
+              break;
+            }
+          item_nb++;
+        }
       
       ptrmenu = ptrmenu->NextMenu;
     }
@@ -731,31 +732,31 @@ int FindMenuActionFromMenuItemID (Menu_Ctl * ptrmenu, int item_id)
 
       /* loop on menu items */
       while ( (action_id == -1) && (item_nb < ptrmenu->ItemsNb) )
-	{
-	  item_type = ptritem[item_nb].ItemType;
-	  switch (item_type)
-	    {
-	    case 'B':
-	    case 'T':
-	      if (ptritem[item_nb].ItemID == item_id)
-		action_id = ptritem[item_nb].ItemAction;
-	      break;
+        {
+          item_type = ptritem[item_nb].ItemType;
+          switch (item_type)
+            {
+            case 'B':
+            case 'T':
+              if (ptritem[item_nb].ItemID == item_id)
+                action_id = ptritem[item_nb].ItemAction;
+              break;
 
-	    case 'S':
-	      break;
+            case 'S':
+              break;
 
-	    case 'M':
-	      action_id = FindMenuActionFromMenuItemID(ptritem[item_nb].SubMenu, item_id);
-	      break;
+            case 'M':
+              action_id = FindMenuActionFromMenuItemID(ptritem[item_nb].SubMenu, item_id);
+              break;
 
-	    default:
+            default:
 #ifdef _WX
-	      wxASSERT_MSG(FALSE, _T("The menu item type is not supported."));
+              wxASSERT_MSG(FALSE, _T("The menu item type is not supported."));
 #endif /* _WX */
-	      break;
-	    }
-	  item_nb++;
-	}
+              break;
+            }
+          item_nb++;
+        }
       
       ptrmenu = ptrmenu->NextMenu;
     }
@@ -819,31 +820,31 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc, View view, T
   if (doc == 0 || view == 0 || action_id <= 0)
     TtaError (ERR_invalid_parameter);
   else
-  {
-    frame_id = GetWindowNumber (doc, view);
-    CloseTextInsertion ();
+    {
+      frame_id = GetWindowNumber (doc, view);
+      CloseTextInsertion ();
 #ifdef _WX
-    if (action_id > 0 && action_id < MaxMenuAction &&
-        (MenuActionList[action_id].ActionActive[doc] || force)&&
-        MenuActionList[action_id].Call_Action)
-      (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+      if (action_id > 0 && action_id < MaxMenuAction &&
+          (MenuActionList[action_id].ActionActive[doc] || force)&&
+          MenuActionList[action_id].Call_Action)
+        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
 
-    // redirect focus to the canvas because when an action is done 
-    // it's more probable that the user wants to type some characteres after executing the action
-    TtaRedirectFocus();
+      // redirect focus to the canvas because when an action is done 
+      // it's more probable that the user wants to type some characteres after executing the action
+      TtaRedirectFocus();
 #else /* _WX */
-    if (action_id > 0 && action_id < MaxMenuAction &&
-        (MenuActionList[action_id].ActionActive[frame_id] || force)&&
-        MenuActionList[action_id].Call_Action)
-      (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
+      if (action_id > 0 && action_id < MaxMenuAction &&
+          (MenuActionList[action_id].ActionActive[frame_id] || force)&&
+          MenuActionList[action_id].Call_Action)
+        (*(Proc2)MenuActionList[action_id].Call_Action) ((void *)doc, (void *)view);
 #endif /* _WX */
-  }
+    }
   g_DoingAction = FALSE;
 }
 
 /*----------------------------------------------------------------------
-   TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
-   fenentre.                                                       
+  TteZeroMenu signale qu'il n'y a pas de menu dans ce type de        
+  fenentre.                                                       
   ----------------------------------------------------------------------*/
 void TteZeroMenu ()
 {
@@ -851,126 +852,126 @@ void TteZeroMenu ()
 
 
 /*----------------------------------------------------------------------
-   TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
-   nom de schema est Null, il s'agit des menus pris par defaut.    
+  TteAddMenu ajoute un nouveau menu pour le schema donne. Si le      
+  nom de schema est Null, il s'agit des menus pris par defaut.    
   ----------------------------------------------------------------------*/
 void TteAddMenu (int view, int menuID, int itemsNumber, char *menuName)
 {
-   Menu_Ctl           *ptrmenu = NULL;
-   Menu_Ctl           *newmenu;
-   Item_Ctl           *ptr;
-   int                 i;
+  Menu_Ctl           *ptrmenu = NULL;
+  Menu_Ctl           *newmenu;
+  Item_Ctl           *ptr;
+  int                 i;
 
-   /* Creation du nouveau menu */
-   newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
-   newmenu->MenuID = menuID;
-   newmenu->MenuView = view;
-   newmenu->ItemsNb = itemsNumber;
-   /* Enregistre les menus actifs */
-   newmenu->MenuAttr = FALSE;
-   newmenu->MenuSelect = FALSE;
-   newmenu->MenuHelp = FALSE;
-   newmenu->MenuContext = FALSE;
-   if (!strcmp (menuName, "MenuAttribute"))
-      newmenu->MenuAttr = TRUE;
-   else if (!strcmp (menuName, "MenuSelection"))
-      newmenu->MenuSelect = TRUE;
-   else if (!strcmp (menuName, "MenuHelp"))
-      newmenu->MenuHelp = TRUE;
-   else if (!strcmp (menuName, "MenuContext"))
-      newmenu->MenuContext = TRUE;
+  /* Creation du nouveau menu */
+  newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
+  newmenu->MenuID = menuID;
+  newmenu->MenuView = view;
+  newmenu->ItemsNb = itemsNumber;
+  /* Enregistre les menus actifs */
+  newmenu->MenuAttr = FALSE;
+  newmenu->MenuSelect = FALSE;
+  newmenu->MenuHelp = FALSE;
+  newmenu->MenuContext = FALSE;
+  if (!strcmp (menuName, "MenuAttribute"))
+    newmenu->MenuAttr = TRUE;
+  else if (!strcmp (menuName, "MenuSelection"))
+    newmenu->MenuSelect = TRUE;
+  else if (!strcmp (menuName, "MenuHelp"))
+    newmenu->MenuHelp = TRUE;
+  else if (!strcmp (menuName, "MenuContext"))
+    newmenu->MenuContext = TRUE;
    
-   /* creation et initialisation de la table des items */
-   ptr = (Item_Ctl *)TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
-   for (i = 0; i < itemsNumber; i++)
-     {
-	ptr[i].ItemID = -1;
-	ptr[i].ItemAction = -1;
-	ptr[i].ItemType = SPACE;
-     }
-   newmenu->ItemsList = ptr;
-   newmenu->NextMenu = NULL;
+  /* creation et initialisation de la table des items */
+  ptr = (Item_Ctl *)TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
+  for (i = 0; i < itemsNumber; i++)
+    {
+      ptr[i].ItemID = -1;
+      ptr[i].ItemAction = -1;
+      ptr[i].ItemType = SPACE;
+    }
+  newmenu->ItemsList = ptr;
+  newmenu->NextMenu = NULL;
 
-   /* Chainage du nouveau menu aux autres menus existants */
-   /* il s'agit d'un des menus pris par defaut */
-   if (DocumentMenuList == NULL)
-     {
-       DocumentMenuList = newmenu;
-       ptrmenu = NULL;
-     }
-   else
-     ptrmenu = DocumentMenuList;	/* simple ajout du menu dans une liste */
+  /* Chainage du nouveau menu aux autres menus existants */
+  /* il s'agit d'un des menus pris par defaut */
+  if (DocumentMenuList == NULL)
+    {
+      DocumentMenuList = newmenu;
+      ptrmenu = NULL;
+    }
+  else
+    ptrmenu = DocumentMenuList;	/* simple ajout du menu dans une liste */
 
-   if (ptrmenu != NULL)
-     {
-	/* Ajout du nouveau menu en fin de liste */
-	while (ptrmenu->NextMenu != NULL)
-	   ptrmenu = ptrmenu->NextMenu;
-	ptrmenu->NextMenu = newmenu;
-     }
+  if (ptrmenu != NULL)
+    {
+      /* Ajout du nouveau menu en fin de liste */
+      while (ptrmenu->NextMenu != NULL)
+        ptrmenu = ptrmenu->NextMenu;
+      ptrmenu->NextMenu = newmenu;
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TteAddSubMenu ajoute un sous-menu pour le schema donne.            
+  TteAddSubMenu ajoute un sous-menu pour le schema donne.            
   ----------------------------------------------------------------------*/
 void TteAddSubMenu( int menuID,	int itemID, int itemsNumber )
 {
-   Menu_Ctl           *ptrmenu;
-   Menu_Ctl           *newmenu;
-   Item_Ctl           *ptr, *ptrItem;
-   int                 i, j;
+  Menu_Ctl           *ptrmenu;
+  Menu_Ctl           *newmenu;
+  Item_Ctl           *ptr, *ptrItem;
+  int                 i, j;
 
-   /* Recherche la bonne liste de menus */
-   ptrmenu = NULL;
-   /* il s'agit d'un des menus pris par defaut */
-   if (DocumentMenuList != NULL)
-     ptrmenu = DocumentMenuList;
+  /* Recherche la bonne liste de menus */
+  ptrmenu = NULL;
+  /* il s'agit d'un des menus pris par defaut */
+  if (DocumentMenuList != NULL)
+    ptrmenu = DocumentMenuList;
 
-   /* Recherche le bon menu */
-   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
-      ptrmenu = ptrmenu->NextMenu;
+  /* Recherche le bon menu */
+  while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+    ptrmenu = ptrmenu->NextMenu;
 
-   if (ptrmenu != NULL)
-     {
-	/* recherche l'item dans le menu */
-	ptrItem = ptrmenu->ItemsList;
-	j = 0;
-	while (j < ptrmenu->ItemsNb && ptrItem[j].ItemType != SPACE)
-	   j++;
-	if (j < ptrmenu->ItemsNb)
-	  {
-	     /* Creation du sous-menu */
-	     newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
-	     newmenu->MenuID = 0;
-	     newmenu->MenuView = 0;
-	     newmenu->ItemsNb = itemsNumber;
-	     newmenu->MenuAttr = FALSE;
-	     newmenu->MenuSelect = FALSE;
-	     newmenu->MenuHelp = FALSE;
-	     newmenu->MenuContext = FALSE;
+  if (ptrmenu != NULL)
+    {
+      /* recherche l'item dans le menu */
+      ptrItem = ptrmenu->ItemsList;
+      j = 0;
+      while (j < ptrmenu->ItemsNb && ptrItem[j].ItemType != SPACE)
+        j++;
+      if (j < ptrmenu->ItemsNb)
+        {
+          /* Creation du sous-menu */
+          newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
+          newmenu->MenuID = 0;
+          newmenu->MenuView = 0;
+          newmenu->ItemsNb = itemsNumber;
+          newmenu->MenuAttr = FALSE;
+          newmenu->MenuSelect = FALSE;
+          newmenu->MenuHelp = FALSE;
+          newmenu->MenuContext = FALSE;
 
-	     /* creation et initialisation de la table des items */
-	     ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
-	     for (i = 0; i < itemsNumber; i++)
-	       {
-		  ptr[i].ItemID = -1;
-		  ptr[i].ItemAction = -1;
-		  ptr[i].ItemType = SPACE;
-	       }
-	     newmenu->ItemsList = ptr;
-	     newmenu->NextMenu = NULL;
-	     /* relie le sous-menu a l'item */
-	     ptrItem[j].SubMenu = newmenu;
-	     ptrItem[j].ItemID = itemID;
-	     ptrItem[j].ItemType = 'M';
-	  }
-     }
+          /* creation et initialisation de la table des items */
+          ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
+          for (i = 0; i < itemsNumber; i++)
+            {
+              ptr[i].ItemID = -1;
+              ptr[i].ItemAction = -1;
+              ptr[i].ItemType = SPACE;
+            }
+          newmenu->ItemsList = ptr;
+          newmenu->NextMenu = NULL;
+          /* relie le sous-menu a l'item */
+          ptrItem[j].SubMenu = newmenu;
+          ptrItem[j].ItemID = itemID;
+          ptrItem[j].ItemType = 'M';
+        }
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TteAddMenuItem ajoute une nouvel item dans un menu.                
+  TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName, char itemType, const char * iconName)
 {
@@ -994,12 +995,12 @@ void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName
       i = 0;
       ptr = ptrmenu->ItemsList;
       while (i < ptrmenu->ItemsNb && (ptr[i].ItemID != subMenu))
-	i++;
+        i++;
       if (i < ptrmenu->ItemsNb)
-	ptrmenu = ptr[i].SubMenu;
+        ptrmenu = ptr[i].SubMenu;
       else
-	/* on n'a pas trouve le sous-menu */
-	return;
+        /* on n'a pas trouve le sous-menu */
+        return;
     }
  
 
@@ -1010,25 +1011,25 @@ void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName
       i = 0;
       ptr = ptrmenu->ItemsList;
       while (i < ptrmenu->ItemsNb && ptr[i].ItemType != SPACE)
-	i++;
+        i++;
       if (i < ptrmenu->ItemsNb)
-	{
-	  /* Remove the separaror if the previous element was one */
-	  if (! (itemType == 'S' && (i == 0 || ptr[i-1].ItemType == 'S')))
-	    {
-	      ptr[i].ItemID = itemID;
-	      ptr[i].ItemType = itemType;
-	      if (actionName != NULL)
-		ptr[i].ItemAction = FindMenuAction (actionName);
-	      if (iconName != NULL)
-		strcpy(ptr[i].ItemIconName, iconName);
-	      else
-		ptr[i].ItemIconName[0] = '\0';
-	    }
-	  else
-	    /* Remove separator */
-	    ptrmenu->ItemsNb--;
-	}
+        {
+          /* Remove the separaror if the previous element was one */
+          if (! (itemType == 'S' && (i == 0 || ptr[i-1].ItemType == 'S')))
+            {
+              ptr[i].ItemID = itemID;
+              ptr[i].ItemType = itemType;
+              if (actionName != NULL)
+                ptr[i].ItemAction = FindMenuAction (actionName);
+              if (iconName != NULL)
+                strcpy(ptr[i].ItemIconName, iconName);
+              else
+                ptr[i].ItemIconName[0] = '\0';
+            }
+          else
+            /* Remove separator */
+            ptrmenu->ItemsNb--;
+        }
     }
   else
     {
@@ -1091,84 +1092,84 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
       lg = strlen (ptr) + 1;
       /* get the larger entry */
       if (max_lg < lg)
-	max_lg = lg;
+        max_lg = lg;
       hidden = FALSE;
       action = ptritem[item].ItemAction;
       if (ptritem[item].ItemType == 'S' && i + 2 < MENU_VAL_LENGTH)
-	{
-	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
-	    {
-	      strcpy (&string[i], "S");
-	      i += 2;
-	    }
-	  else
-	    {
-	      hidden = TRUE;
-	      action = -1;
-	    }
-	}
+        {
+          if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
+            {
+              strcpy (&string[i], "S");
+              i += 2;
+            }
+          else
+            {
+              hidden = TRUE;
+              action = -1;
+            }
+        }
       else if (i + lg < 699)
-	{
-	  if (update)
-	    {
-	      /* this entry can be displayed */
-	      state = Prof_BelongDoctype (MenuActionList[action].ActionName,
-					  profile, RO);
-	      if (state == 0)
-		{
-		  /* desactivate the entry */
-		  TtaRedrawMenuEntry (sref, index, NULL, InactiveB_Color, 0);
-		  MenuActionList[action].ActionActive[frame] = FALSE;
-		  /* doesn't count this entry */
-		  hidden = TRUE;
-		  action = -1;
-		}
-	      else if (state == 1)
-		{
-		  /* activate the entry */
-		  TtaRedrawMenuEntry (sref, index, NULL, (ThotColor)-1, 1);
-		  MenuActionList[action].ActionActive[frame] = TRUE;
-		}
-	    }
-	  if (ptritem[item].ItemType == 'D')
-	    string[i] = 'B';
-	  else
-	    string[i] = ptritem[item].ItemType;
-	  strcpy (&string[i + 1], ptr);
-	  i += lg + 1;
-	}
+        {
+          if (update)
+            {
+              /* this entry can be displayed */
+              state = Prof_BelongDoctype (MenuActionList[action].ActionName,
+                                          profile, RO);
+              if (state == 0)
+                {
+                  /* desactivate the entry */
+                  TtaRedrawMenuEntry (sref, index, NULL, InactiveB_Color, 0);
+                  MenuActionList[action].ActionActive[frame] = FALSE;
+                  /* doesn't count this entry */
+                  hidden = TRUE;
+                  action = -1;
+                }
+              else if (state == 1)
+                {
+                  /* activate the entry */
+                  TtaRedrawMenuEntry (sref, index, NULL, (ThotColor)-1, 1);
+                  MenuActionList[action].ActionActive[frame] = TRUE;
+                }
+            }
+          if (ptritem[item].ItemType == 'D')
+            string[i] = 'B';
+          else
+            string[i] = ptritem[item].ItemType;
+          strcpy (&string[i + 1], ptr);
+          i += lg + 1;
+        }
       else
-	{
-	  /* sinon on reduit le nombre d'items */
-	  ptrmenu->ItemsNb = item - 1;
-	  hidden = TRUE;
-	  action = -1;
-	}
+        {
+          /* sinon on reduit le nombre d'items */
+          ptrmenu->ItemsNb = item - 1;
+          hidden = TRUE;
+          action = -1;
+        }
       
       /* traite le contenu de l'item de menu */
       if (!update && action != -1 && action < MaxMenuAction)
-	{
-	  /* a new entry is generated */
-	  if (MenuActionList[action].ActionEquiv != NULL)
-	    {
-	      withEquiv = TRUE;
-	      lg = strlen (MenuActionList[action].ActionEquiv);
-	      if (lg + j < MaxEquivLen)
-		{
-		  strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
-		  j += lg;
-		}
-	    }
-	  /* activate this entry */
-	  MenuActionList[action].ActionActive[frame] = TRUE;
-	}
+        {
+          /* a new entry is generated */
+          if (MenuActionList[action].ActionEquiv != NULL)
+            {
+              withEquiv = TRUE;
+              lg = strlen (MenuActionList[action].ActionEquiv);
+              if (lg + j < MaxEquivLen)
+                {
+                  strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+                  j += lg;
+                }
+            }
+          /* activate this entry */
+          MenuActionList[action].ActionActive[frame] = TRUE;
+        }
       if (!hidden)
-	{
-	  equiv[j++] = EOS;
-	  LastItemType = ptrmenu->ItemsList[item].ItemType;
-	  entries++;
-	}
-	  index++;
+        {
+          equiv[j++] = EOS;
+          LastItemType = ptrmenu->ItemsList[item].ItemType;
+          entries++;
+        }
+      index++;
       item++;
     }
 
@@ -1190,7 +1191,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
-		    int frame, int doc, ThotBool update, ThotBool RO)
+                    int frame, int doc, ThotBool update, ThotBool RO)
 {
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("Unused function"));
@@ -1241,115 +1242,115 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
       lg = strlen (ptr) + 1;
       /* get the larger entry */
       if (max_lg < lg)
-	max_lg = lg;
+        max_lg = lg;
       action = ptritem[item].ItemAction;
       if (ptritem[item].ItemType == 'S' && i + 2 < MENU_VAL_LENGTH)
-	{
-	  /* a separator */
-	  if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
-	    {
-	      strcpy (&string[i], "S");
-	      i += 2;
-	    }
-	  else
-	    removedsep = TRUE;
-	}
+        {
+          /* a separator */
+          if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
+            {
+              strcpy (&string[i], "S");
+              i += 2;
+            }
+          else
+            removedsep = TRUE;
+        }
       else if (i + lg < 699)
-	{
-	  if (ptritem[item].ItemType == 'M')
-	    {
-	      /* a sub-menu */
-	       if (ptritem[item].SubMenu->ItemsNb == 0)
-		 emptyMenu = TRUE;
-	       else
-		 {
-		   string[i] = 'M';
-		   strcpy (&string[i + 1], ptr);
-		   i += lg + 1;
-		 }
-	       action = -1;
-	    }
-	  else
-	    {
-	      if (update)
-		{
-		  state = Prof_BelongDoctype (MenuActionList[action].ActionName,
-					      profile, RO);
-		  if (state == 0)
-		    {
-		      /* desactivate the entry */
-		      TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
-		      MenuActionList[action].ActionActive[frame] = FALSE;
-		      action = -1;
-		    }
-		  else if (state == 1)
-		    {
-		      /* activate the entry */
-		      TtaRedrawMenuEntry (ref, entries, NULL, (ThotColor)-1, 1);
-		      MenuActionList[action].ActionActive[frame] = TRUE;
-		    }
-		}
-	      /* generate a button */
-	      if (ptritem[item].ItemType == 'D')
-		string[i] = 'B';
-	      else
-		string[i] = ptritem[item].ItemType;
-	      strcpy (&string[i + 1], ptr);
-	      i += lg + 1;
-	    }
-	}
+        {
+          if (ptritem[item].ItemType == 'M')
+            {
+              /* a sub-menu */
+              if (ptritem[item].SubMenu->ItemsNb == 0)
+                emptyMenu = TRUE;
+              else
+                {
+                  string[i] = 'M';
+                  strcpy (&string[i + 1], ptr);
+                  i += lg + 1;
+                }
+              action = -1;
+            }
+          else
+            {
+              if (update)
+                {
+                  state = Prof_BelongDoctype (MenuActionList[action].ActionName,
+                                              profile, RO);
+                  if (state == 0)
+                    {
+                      /* desactivate the entry */
+                      TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
+                      MenuActionList[action].ActionActive[frame] = FALSE;
+                      action = -1;
+                    }
+                  else if (state == 1)
+                    {
+                      /* activate the entry */
+                      TtaRedrawMenuEntry (ref, entries, NULL, (ThotColor)-1, 1);
+                      MenuActionList[action].ActionActive[frame] = TRUE;
+                    }
+                }
+              /* generate a button */
+              if (ptritem[item].ItemType == 'D')
+                string[i] = 'B';
+              else
+                string[i] = ptritem[item].ItemType;
+              strcpy (&string[i + 1], ptr);
+              i += lg + 1;
+            }
+        }
       else
-	{
-	  /* reduce the number of items */
-	  ptrmenu->ItemsNb = item - 1;
-	  action = -1;
-	}
+        {
+          /* reduce the number of items */
+          ptrmenu->ItemsNb = item - 1;
+          action = -1;
+        }
       
       if (!update && action != -1 && action < MaxMenuAction)
-	{
-	  /* a new entry is generated */
-	  if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
-	    {
-	      if (MenuActionList[action].ActionEquiv)
-		{
-		  withEquiv = TRUE;
-		  lg = strlen (MenuActionList[action].ActionEquiv);
-		  if (lg + j < MaxEquivLen)
-		    {
-		      strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
-		      j += lg;
-		    }
-		}
+        {
+          /* a new entry is generated */
+          if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
+            {
+              if (MenuActionList[action].ActionEquiv)
+                {
+                  withEquiv = TRUE;
+                  lg = strlen (MenuActionList[action].ActionEquiv);
+                  if (lg + j < MaxEquivLen)
+                    {
+                      strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+                      j += lg;
+                    }
+                }
 
-	      /* Is it the Paste command */
-	      if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
-		{
-		  FrameTable[frame].MenuPaste = ref;
-		  FrameTable[frame].EntryPaste = entries;
-		}
-	      /* Is it the Undo command */
-	      else if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
-		{
-		  FrameTable[frame].MenuUndo = ref;
-		  FrameTable[frame].EntryUndo = entries;
-		}
-	      /* Is it the Redo command */
-	      else if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
-		{
-		  FrameTable[frame].MenuRedo = ref;
-		  FrameTable[frame].EntryRedo = entries;
-		}
-	      /* activate this entry */
-	      MenuActionList[action].ActionActive[frame] = TRUE;
-	    }
-	}
+              /* Is it the Paste command */
+              if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
+                {
+                  FrameTable[frame].MenuPaste = ref;
+                  FrameTable[frame].EntryPaste = entries;
+                }
+              /* Is it the Undo command */
+              else if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
+                {
+                  FrameTable[frame].MenuUndo = ref;
+                  FrameTable[frame].EntryUndo = entries;
+                }
+              /* Is it the Redo command */
+              else if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
+                {
+                  FrameTable[frame].MenuRedo = ref;
+                  FrameTable[frame].EntryRedo = entries;
+                }
+              /* activate this entry */
+              MenuActionList[action].ActionActive[frame] = TRUE;
+            }
+        }
 
       if (!emptyMenu && !removedsep && !hidden)
-	{
-	  LastItemType = ptrmenu->ItemsList[item].ItemType;
-	  equiv[j++] = EOS;
-	  entries++;
-	}
+        {
+          LastItemType = ptrmenu->ItemsList[item].ItemType;
+          equiv[j++] = EOS;
+          entries++;
+        }
       item++;
     }
 
@@ -1357,9 +1358,9 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
     {
       /* Creation of the corresponding Pulldown with or without equiv */
       if (withEquiv)
-	TtaNewPulldown (ref, button, NULL, entries, string, equiv, max_lg);
+        TtaNewPulldown (ref, button, NULL, entries, string, equiv, max_lg);
       else
-	TtaNewPulldown (ref, button, NULL, entries, string, NULL, max_lg);
+        TtaNewPulldown (ref, button, NULL, entries, string, NULL, max_lg);
     }
 
   /* Create or update submenus */
@@ -1370,20 +1371,20 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
   while (j < entries)
     {
       if (string[i] == 'M')
-	{
-	  /* it's a submenu: look for the corresponding entrie */
-	  while (item < ptrmenu->ItemsNb &&
-		 (ptritem[item].ItemAction <= 0 ||
-		  ptritem[item].ItemType != 'M' ||
-		  /* skip empty menus */
-		  (ptritem[item].ItemType == 'M' &&
-		   !Prof_ShowSubMenu (ptritem[item].SubMenu))))
-	    item++;
-	  if (item < ptrmenu->ItemsNb)
-	      /* creation of the sub-menu */
-	      BuildSubMenu (ptritem[item].SubMenu, ref, j, frame, doc,
-			    update, RO);
-	}
+        {
+          /* it's a submenu: look for the corresponding entrie */
+          while (item < ptrmenu->ItemsNb &&
+                 (ptritem[item].ItemAction <= 0 ||
+                  ptritem[item].ItemType != 'M' ||
+                  /* skip empty menus */
+                  (ptritem[item].ItemType == 'M' &&
+                   !Prof_ShowSubMenu (ptritem[item].SubMenu))))
+            item++;
+          if (item < ptrmenu->ItemsNb)
+            /* creation of the sub-menu */
+            BuildSubMenu (ptritem[item].SubMenu, ref, j, frame, doc,
+                          update, RO);
+        }
       i = i + strlen (&string[i]) + 1;
       item++;
       j++;
@@ -1392,10 +1393,10 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 }
 
 /*----------------------------------------------------------------------
-   TteOpenMainWindow opens the application main window.
+  TteOpenMainWindow opens the application main window.
  
-   Parameters:
-   name: the name to be displayed as the title of the main window.
+  Parameters:
+  name: the name to be displayed as the title of the main window.
   ----------------------------------------------------------------------*/
 void TteOpenMainWindow (char *name)
 {
@@ -1407,31 +1408,31 @@ void TteOpenMainWindow (char *name)
   TteLoadApplications ();
   
 #ifdef _GTK
-   if (TtDisplay == 0)
-     {
-       /* Connexion au serveur X impossible */
-       TtaError (ERR_cannot_open_main_window);
-       gtk_exit (1);
-     }
-   else
-     {
-       /* icone des fenetres de documents */
-       wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
-					  (char *)logowindow_bits);
-     }
+  if (TtDisplay == 0)
+    {
+      /* Connexion au serveur X impossible */
+      TtaError (ERR_cannot_open_main_window);
+      gtk_exit (1);
+    }
+  else
+    {
+      /* icone des fenetres de documents */
+      wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
+                                         (char *)logowindow_bits);
+    }
 #endif /* _GTK */
 }
 
 #if defined(_WINGUI) || defined(_GTK)
 /*----------------------------------------------------------------------
-   Toolbar Action callback (GTK, WINDOWS)
-   this callback is activated when a toolbar button has been pressed
-   ----------------------------------------------------------------------*/
+  Toolbar Action callback (GTK, WINDOWS)
+  this callback is activated when a toolbar button has been pressed
+  ----------------------------------------------------------------------*/
 #if defined(_WINGUI)
 void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
 #endif     /* ----- #if defined(_WINGUI)  ----- */
 #ifdef  _GTK
-static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
+     static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 #endif     /* ----- #ifdef _GTK  ----- */
 {
   Document            document;
@@ -1444,15 +1445,15 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
   if (i < MAX_BUTTON)
     {
       if (!FrameTable[frame].EnabledButton[i])
-	{
-	  /* the button is not active */
+        {
+          /* the button is not active */
 #if defined(_WINGUI)
-    return;
+          return;
 #endif     /* ----- #if defined(_WINGUI)  ----- */
 #ifdef  _GTK
-    return FALSE;
+          return FALSE;
 #endif     /* ----- #ifdef _GTK  ----- */
-	}
+        }
       CloseTextInsertion ();
       FrameToView (frame, &document, &view);
       TtaSetButtonActivatedStatus (TRUE);
@@ -1462,8 +1463,8 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
       /* check the button status */
       if (FrameTable[frame].EnabledButton[i])
         SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
-		     (WPARAM) FrameTable[frame].ButtonId[i],
-		     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
+                     (WPARAM) FrameTable[frame].ButtonId[i],
+                     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
 #endif /* _WINGUI */
     }
 #ifdef _GTK
@@ -1473,25 +1474,25 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 #endif /* #if defined(_WINGUI) || defined(_GTK) */
 
 /*----------------------------------------------------------------------
-   TtaAddButton
+  TtaAddButton
 
-   Adds a new button entry in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   document: the concerned document.
-   view: the concerned view.
-   picture: the displayed pixmap. None (0) creates a space between buttons.
-   procedure: procedure to be executed when the new entry is
-   selected by the user. Null creates a cascade button.
-   functionName: internal name of the function used to connect shortcuts.
-   info: text to display when the cursor stays on the button (should be global).
-   type: button type, only used on Windows versions.
-   state: TRUE to enable the button, false to disable it.
-   Returns index
+  Adds a new button entry in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  document: the concerned document.
+  view: the concerned view.
+  picture: the displayed pixmap. None (0) creates a space between buttons.
+  procedure: procedure to be executed when the new entry is
+  selected by the user. Null creates a cascade button.
+  functionName: internal name of the function used to connect shortcuts.
+  info: text to display when the cursor stays on the button (should be global).
+  type: button type, only used on Windows versions.
+  state: TRUE to enable the button, false to disable it.
+  Returns index
   ----------------------------------------------------------------------*/
 int TtaAddButton (Document document, View view, ThotIcon picture,
-		  void (*procedure) (), char *functionName, char *info,
-		  unsigned char type, ThotBool state)
+                  void (*procedure) (), char *functionName, char *info,
+                  unsigned char type, ThotBool state)
 {
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("Unused function"));
@@ -1518,103 +1519,103 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
     {
       frame = GetWindowNumber (document, view);
       if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
-	{
-	  i = 1;
-	  while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
-	    i++;
-	  if (i < MAX_BUTTON)
-	    {
-	      /* Avoid to have two consecutive separators
-		 and test if the function is available in the current profile */
-	      if ((procedure == NULL && LastProcedure != NULL)  ||
-		  (procedure != NULL &&  Prof_ShowButton(functionName)))
-		{
-		  LastProcedure = procedure;
+        {
+          i = 1;
+          while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
+            i++;
+          if (i < MAX_BUTTON)
+            {
+              /* Avoid to have two consecutive separators
+                 and test if the function is available in the current profile */
+              if ((procedure == NULL && LastProcedure != NULL)  ||
+                  (procedure != NULL &&  Prof_ShowButton(functionName)))
+                {
+                  LastProcedure = procedure;
 
-      		  /* Insere le nouveau bouton */		  
+                  /* Insere le nouveau bouton */		  
 #ifdef _GTK
-		  toolbar = GTK_WIDGET (FrameTable[frame].Button[0]);
-		  if (picture == None)
-		    {
-		      row = gtk_vseparator_new ();
-		      gtk_widget_show (row);
-		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
-		    }
-		  else
-		    {
-		      /* Add a button widget to the toolbar and put a pixmap into */
-		      /* 2 widgets are created , and only the pixmap widget will be updated */
-		      row = gtk_button_new ();
-		      /* set the relief to none */
-		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
-		      /* insert the icon */
-		      w = gtk_pixmap_new (picture->pixmap, picture->mask);
-		      gtk_container_add (GTK_CONTAINER (row), w);
-		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
-		      tooltipstmp = gtk_tooltips_new ();
-		      gtk_tooltips_set_tip (tooltipstmp, row, info, "private");
-		      gtk_tooltips_enable (tooltipstmp);
+                  toolbar = GTK_WIDGET (FrameTable[frame].Button[0]);
+                  if (picture == None)
+                    {
+                      row = gtk_vseparator_new ();
+                      gtk_widget_show (row);
+                      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
+                    }
+                  else
+                    {
+                      /* Add a button widget to the toolbar and put a pixmap into */
+                      /* 2 widgets are created , and only the pixmap widget will be updated */
+                      row = gtk_button_new ();
+                      /* set the relief to none */
+                      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
+                      /* insert the icon */
+                      w = gtk_pixmap_new (picture->pixmap, picture->mask);
+                      gtk_container_add (GTK_CONTAINER (row), w);
+                      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
+                      tooltipstmp = gtk_tooltips_new ();
+                      gtk_tooltips_set_tip (tooltipstmp, row, info, "private");
+                      gtk_tooltips_enable (tooltipstmp);
 		      
-		      /* Connecte the clicked acton to the button */
-		      ConnectSignalGTK (GTK_OBJECT (row),
-					"clicked",
-					GTK_SIGNAL_FUNC(APP_ButtonCallbackGTK),
-					(gpointer)frame);
-		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
-		      gtk_widget_show_all (row);
-		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
-		    }
-		  FrameTable[frame].Button[i] = row;
+                      /* Connecte the clicked acton to the button */
+                      ConnectSignalGTK (GTK_OBJECT (row),
+                                        "clicked",
+                                        GTK_SIGNAL_FUNC(APP_ButtonCallbackGTK),
+                                        (gpointer)frame);
+                      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
+                      gtk_widget_show_all (row);
+                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
+                    }
+                  FrameTable[frame].Button[i] = row;
 #endif /* _GTK */
-		  FrameTable[frame].CheckedButton[i] = FALSE;
+                  FrameTable[frame].CheckedButton[i] = FALSE;
 #ifdef _WINGUI
-		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
-		  FrameTable[frame].Button[i] = w;
-		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
-		  FrameTable[frame].CheckedButton[i] = FALSE;
-		  if (!w)
-		    WinErrorBox (NULL, "TtaAddButton");
-		  else
-		    {
-		      w->fsState = TBSTATE_ENABLED;
-		      w->fsStyle = type;
-		      FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
-		      w->idCommand = FrameTable[frame].ButtonId[i]; 
-		      w->bReserved[0] = 0;
-		      w->bReserved[1] = 0;
-		      w->dwData = 0;
-		      if (procedure)
-			{
-			  w->iBitmap      = picture;
-			  w->iString      = -1;
-			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
-				      (WPARAM) FrameTable[frame].ButtonId[i], 
-				      (LPARAM)(LPTBBUTTON)w);
-			  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
-				       (WPARAM) FrameTable[frame].ButtonId[i],
-				       (LPARAM) MAKELONG (state, 0));
-			}
-		      else
-			{
-			  w->iBitmap = 3;
-			  w->iString = 0;
-			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
-				      (WPARAM) FrameTable[frame].ButtonId[i],
-				      (LPARAM)(LPTBBUTTON)w);
-			}
-		    }
+                  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
+                  FrameTable[frame].Button[i] = w;
+                  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+                  FrameTable[frame].CheckedButton[i] = FALSE;
+                  if (!w)
+                    WinErrorBox (NULL, "TtaAddButton");
+                  else
+                    {
+                      w->fsState = TBSTATE_ENABLED;
+                      w->fsStyle = type;
+                      FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
+                      w->idCommand = FrameTable[frame].ButtonId[i]; 
+                      w->bReserved[0] = 0;
+                      w->bReserved[1] = 0;
+                      w->dwData = 0;
+                      if (procedure)
+                        {
+                          w->iBitmap      = picture;
+                          w->iString      = -1;
+                          SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
+                                      (WPARAM) FrameTable[frame].ButtonId[i], 
+                                      (LPARAM)(LPTBBUTTON)w);
+                          SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
+                                       (WPARAM) FrameTable[frame].ButtonId[i],
+                                       (LPARAM) MAKELONG (state, 0));
+                        }
+                      else
+                        {
+                          w->iBitmap = 3;
+                          w->iString = 0;
+                          SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
+                                      (WPARAM) FrameTable[frame].ButtonId[i],
+                                      (LPARAM)(LPTBBUTTON)w);
+                        }
+                    }
 		  
-		  if (info != NULL && procedure != NULL)
-		    FrameTable[frame].TbStrings[i] = info;
+                  if (info != NULL && procedure != NULL)
+                    FrameTable[frame].TbStrings[i] = info;
 #endif /* _WINGUI */
 
-      FrameTable[frame].EnabledButton[i] = state;
-		  index = i;
-		}
-	    }
-	}
+                  FrameTable[frame].EnabledButton[i] = state;
+                  index = i;
+                }
+            }
+        }
     }  
   TtaHandlePendingEvents ();
   return (index);
@@ -1623,14 +1624,14 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 
 
 /*----------------------------------------------------------------------
-   TtaSwitchButton
+  TtaSwitchButton
 
-   Change the status of the button entry in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   document: the concerned document.
-   view: the concerned view.
-   index: the index.
+  Change the status of the button entry in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  document: the concerned document.
+  view: the concerned view.
+  index: the index.
   ----------------------------------------------------------------------*/
 void TtaSwitchButton (Document doc, View view, int index)
 {
@@ -1650,56 +1651,56 @@ void TtaSwitchButton (Document doc, View view, int index)
     {
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
-	{
-	  if (index < MAX_BUTTON && index > 0 &&
-	      FrameTable[frame].Button[index] != 0)
-	    {
-	      /* Change the button state */
-	      status = FrameTable[frame].CheckedButton[index];
-	      FrameTable[frame].CheckedButton[index] = !status;
+        {
+          if (index < MAX_BUTTON && index > 0 &&
+              FrameTable[frame].Button[index] != 0)
+            {
+              /* Change the button state */
+              status = FrameTable[frame].CheckedButton[index];
+              FrameTable[frame].CheckedButton[index] = !status;
 #ifdef _WINGUI
-	      status = SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED,
-				    (WPARAM) FrameTable[frame].ButtonId[index],
-				    (LPARAM) 0);
-	      if (status != FrameTable[frame].CheckedButton[index])
-		SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
-			     (WPARAM) FrameTable[frame].ButtonId[index],
-			     (LPARAM) MAKELONG (!status, 0));
+              status = SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED,
+                                    (WPARAM) FrameTable[frame].ButtonId[index],
+                                    (LPARAM) 0);
+              if (status != FrameTable[frame].CheckedButton[index])
+                SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
+                             (WPARAM) FrameTable[frame].ButtonId[index],
+                             (LPARAM) MAKELONG (!status, 0));
 #endif /* _WINGUI */
 #ifdef _GTK
-	      if (!status)
-		/* becomes checked */
-		gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
-				       GTK_RELIEF_HALF);
-	      else
-		/* becomes normal */
-		gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
-				       GTK_RELIEF_NONE);
-	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
+              if (!status)
+                /* becomes checked */
+                gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
+                                       GTK_RELIEF_HALF);
+              else
+                /* becomes normal */
+                gtk_button_set_relief (GTK_BUTTON (FrameTable[frame].Button[index]),
+                                       GTK_RELIEF_NONE);
+              gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* _GTK */  
-	    }
-	}
+            }
+        }
     }
 #endif /* _WX */
 }
 
 
 /*----------------------------------------------------------------------
-   TtaChangeButton
+  TtaChangeButton
 
-   Change the button entry in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   document: the concerned document.
-   view: the concerned view.
-   index: the index.
-   picture: the new icon.
-   state: TRUE to enable the button, false to disable it.
+  Change the button entry in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  document: the concerned document.
+  view: the concerned view.
+  index: the index.
+  picture: the new icon.
+  state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
 void TtaChangeButton (Document doc, View view, int index,
-		      ThotIcon picture, ThotBool state)
+                      ThotIcon picture, ThotBool state)
 {
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("Unused function"));
@@ -1716,127 +1717,127 @@ void TtaChangeButton (Document doc, View view, int index,
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
 #if defined(_GTK)
-   else if (picture == None)
-      TtaError (ERR_invalid_parameter);
+  else if (picture == None)
+    TtaError (ERR_invalid_parameter);
 #endif /* defined(_GTK) */
   else
     {
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
-	{
-	  if ( index < MAX_BUTTON && index > 0 &&
-	       FrameTable[frame].Button[index] != 0 )
-	      {
-		/* store the new state */
+        {
+          if ( index < MAX_BUTTON && index > 0 &&
+               FrameTable[frame].Button[index] != 0 )
+            {
+              /* store the new state */
 #ifdef _WINGUI
-		SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
-			     (WPARAM) FrameTable[frame].ButtonId[index],
-			     (LPARAM) MAKELONG (state, 0));
-		if (FrameTable[frame].Button[index]->iBitmap != picture)
-		  {
-		    /* store the new icone */
-		    FrameTable[frame].Button[index]->iBitmap = picture;
-		    TtaSwitchButton (doc, view, index);
-		  }
+              SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
+                           (WPARAM) FrameTable[frame].ButtonId[index],
+                           (LPARAM) MAKELONG (state, 0));
+              if (FrameTable[frame].Button[index]->iBitmap != picture)
+                {
+                  /* store the new icone */
+                  FrameTable[frame].Button[index]->iBitmap = picture;
+                  TtaSwitchButton (doc, view, index);
+                }
 #endif  /* _WINGUI */
-		/* Insert the new icone */
+              /* Insert the new icone */
 #ifdef _GTK     
-		/* Update the toolbar button stat: Replace the old picture by the new */
-		/* The old picture is linked to the button widget with gtk_object_set_data */
-		tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
-		if (tmpw)
-		  gtk_pixmap_set (GTK_PIXMAP(tmpw), picture->pixmap, picture->mask);
-		gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
+              /* Update the toolbar button stat: Replace the old picture by the new */
+              /* The old picture is linked to the button widget with gtk_object_set_data */
+              tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
+              if (tmpw)
+                gtk_pixmap_set (GTK_PIXMAP(tmpw), picture->pixmap, picture->mask);
+              gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* _GTK */
-		FrameTable[frame].EnabledButton[index] = state;
-	      }
-	}
+              FrameTable[frame].EnabledButton[index] = state;
+            }
+        }
     }
 #endif /* _WX */
 }
 
 
 /*----------------------------------------------------------------------
-   TtcSwitchButtonBar
+  TtcSwitchButtonBar
 
-   Shows the buttonbar in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   doc: identifier of the document.
-   view: identifier of the view.
+  Shows the buttonbar in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  doc: identifier of the document.
+  view: identifier of the view.
   ----------------------------------------------------------------------*/
 void TtcSwitchButtonBar (Document doc, View view)
 {
-   int                 frame;
+  int                 frame;
 #ifdef  _GTK
-   ThotWidget          row;
+  ThotWidget          row;
 #endif     /* ----- #ifdef _GTK  ----- */   
 #ifdef _WINGUI
-   RECT                r;
+  RECT                r;
 #endif /* ----- #ifdef _WINGUI  ----- */   
 
-   UserErrorCode = 0;
-   frame = 0;
-   /* verifie le parametre document */
-   if (doc == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (doc, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	  {
-	     TtaError (ERR_invalid_parameter);
-	     return;
-	  }
-	else if (FrameTable[frame].WdFrame == 0)
-	  return;
-     }
+  UserErrorCode = 0;
+  frame = 0;
+  /* verifie le parametre document */
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (doc, view);
+      if (frame == 0 || frame > MAX_FRAME)
+        {
+          TtaError (ERR_invalid_parameter);
+          return;
+        }
+      else if (FrameTable[frame].WdFrame == 0)
+        return;
+    }
 
 #ifdef _GTK
-   row = FrameTable[frame].Button[0];
-   if (row != 0)
-     {
-       if(GTK_WIDGET_VISIBLE(row))
-	 gtk_widget_hide (GTK_WIDGET(row));
-       else
-	 gtk_widget_show_all (GTK_WIDGET(row));
+  row = FrameTable[frame].Button[0];
+  if (row != 0)
+    {
+      if(GTK_WIDGET_VISIBLE(row))
+        gtk_widget_hide (GTK_WIDGET(row));
+      else
+        gtk_widget_show_all (GTK_WIDGET(row));
 
-     }
+    }
 #endif /* _GTK */   
 
 #ifdef _WINGUI
-   if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
-     {
-       hmenu = WIN_GetMenu (frame); 
-       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-       ShowWindow (WinToolBar[frame], SW_HIDE);
-     }
-   else
-     {
-       hmenu = WIN_GetMenu (frame); 
-       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-       ShowWindow (WinToolBar[frame], SW_SHOW);
-     }
-   /* Resize other windows */
-   GetClientRect (FrMainRef [frame], &r);
-   PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
+  if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
+    {
+      hmenu = WIN_GetMenu (frame); 
+      CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+      ShowWindow (WinToolBar[frame], SW_HIDE);
+    }
+  else
+    {
+      hmenu = WIN_GetMenu (frame); 
+      CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+      ShowWindow (WinToolBar[frame], SW_SHOW);
+    }
+  /* Resize other windows */
+  GetClientRect (FrMainRef [frame], &r);
+  PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINGUI */
 
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("TODO"));
 #endif /* _WX */
    
-   /* force la mise a jour de la fenetre */
-   TtaHandlePendingEvents ();
+  /* force la mise a jour de la fenetre */
+  TtaHandlePendingEvents ();
 }
 
 /*----------------------------------------------------------------------
-   TtaIsButtonActivated
+  TtaIsButtonActivated
 
-   Indicates if a callback function has been called from the menu 
-   or from a button
+  Indicates if a callback function has been called from the menu 
+  or from a button
   ----------------------------------------------------------------------*/
 ThotBool TtaIsButtonActivated (Document document, View view)
 {
@@ -1844,8 +1845,8 @@ ThotBool TtaIsButtonActivated (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtaSetButtonActivatedStatus
-   Used to setup the button activated status from outside
+  TtaSetButtonActivatedStatus
+  Used to setup the button activated status from outside
   ----------------------------------------------------------------------*/
 void TtaSetButtonActivatedStatus( ThotBool new_status )
 {
@@ -1853,7 +1854,7 @@ void TtaSetButtonActivatedStatus( ThotBool new_status )
 }
 
 /*----------------------------------------------------------------------
- ----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
 #ifdef _WINGUI
@@ -1869,17 +1870,17 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
       w = GetWindow (w, GW_CHILD);
       GetWindowText (w, text, sizeof (text) + 1);
       (*(Proc3)FrameTable[frame].Call_Text) (
-		(void*)doc,
-		(void*)view,
-		(void*)text);
+                                             (void*)doc,
+                                             (void*)view,
+                                             (void*)text);
     }
 #endif /* _WINGUI */
 }
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
-APP_TextCallbackGTK : :  Callback to set url in box when Enter key pressed
-----------------------------------------------------------------------*/
+  APP_TextCallbackGTK : :  Callback to set url in box when Enter key pressed
+  ----------------------------------------------------------------------*/
 gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
 {
   Document            doc;
@@ -1901,9 +1902,9 @@ gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
   return FALSE;
 }
 /*----------------------------------------------------------------------
-APP_PopWinSelect : Callback to set url in box when button release 
-over a selectable item (as activate does)
- ----------------------------------------------------------------------*/
+  APP_PopWinSelect : Callback to set url in box when button release 
+  over a selectable item (as activate does)
+  ----------------------------------------------------------------------*/
 gboolean APP_PopWinSelect (GtkWidget *w)
 {
   GtkWidget *entry;
@@ -1912,62 +1913,62 @@ gboolean APP_PopWinSelect (GtkWidget *w)
   char *text;
  	     
   gdk_window_get_pointer (w->window, 
-			 &x, 
-			 &y, 
-			 &mask);
+                          &x, 
+                          &y, 
+                          &mask);
   entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
-				 "entry");	     
+                                             "entry");	     
 
   if (x > 0 && x < w->allocation.width &&
       y > 0 && y < w->allocation.height)
     {				 
       gtk_signal_emit_by_name (GTK_OBJECT(entry),
-			       "activate");
+                               "activate");
       text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
-			   "PreviousSelect");
+                                          "PreviousSelect");
       TtaFreeMemory (text);
       gtk_object_set_data (GTK_OBJECT (w), 
-		       "PreviousSelect", 
-		       NULL);
+                           "PreviousSelect", 
+                           NULL);
       return TRUE;
     }
   else
     {
       text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
-			   "PreviousSelect");
+                                          "PreviousSelect");
       gtk_entry_set_text (GTK_ENTRY (entry), text);
       TtaFreeMemory (text);
       gtk_object_set_data (GTK_OBJECT (w), 
-		       "PreviousSelect", 
-		       NULL);
+                           "PreviousSelect", 
+                           NULL);
       return TRUE;
     }
   return FALSE;
 }
 /*----------------------------------------------------------------------
-APP_PopWinShow : 
- ----------------------------------------------------------------------*/
+  APP_PopWinShow : 
+  ----------------------------------------------------------------------*/
 gboolean APP_PopWinShow (GtkWidget *w)
 {
   GtkWidget *entry;
   char *text, *old;
  
   entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
-					     "entry");
+                                             "entry");
   text = gtk_entry_get_text (GTK_ENTRY (entry));
   old = (char *)TtaGetMemory (strlen (text) + 1);
   strcpy (old, text);
   gtk_object_set_data (GTK_OBJECT (w), 
-		       "PreviousSelect", 
-		       old);
+                       "PreviousSelect", 
+                       old);
   return FALSE;
 }
 /*----------------------------------------------------------------------
-APP_ComboEscape : Undo text modification and hide popup if needed.
- ----------------------------------------------------------------------*/
+  APP_ComboEscape : Undo text modification and hide popup if needed.
+  ----------------------------------------------------------------------*/
 gboolean APP_ComboEscape (GtkWidget *w,
-			  GdkEventKey *all_event,
-			  gpointer user_data)
+                          GdkEventKey *all_event,
+                          gpointer user_data)
 {
   GdkEventKey *event;
   GtkWidget *entry;
@@ -1978,40 +1979,40 @@ gboolean APP_ComboEscape (GtkWidget *w,
     {
       event = (GdkEventKey *) all_event;      
       if (event->keyval == GDK_Escape)
-	{
-	  frame = (long int) user_data;
-	  entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
-						     "entry");
-	  RemoveSignalGTK (GTK_OBJECT(entry), "activate");
-	  RemoveSignalGTK (GTK_OBJECT(w), "hide");
-	  gtk_widget_hide (w);
-	  ConnectSignalGTK  (GTK_OBJECT (w), 
-			     "hide",
-			     GTK_SIGNAL_FUNC (APP_PopWinSelect),
-			     (gpointer) NULL);
-	  ConnectSignalGTK  (GTK_OBJECT (entry), 
-			     "activate",
-			     GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
-			     (gpointer)frame);
-	  text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
-				      "PreviousSelect");
-	  gtk_entry_set_text (GTK_ENTRY (entry), text);
-	  TtaFreeMemory (text);
-	  gtk_object_set_data (GTK_OBJECT (w), 
-			       "PreviousSelect", 
-			       NULL);
-	  return TRUE;	  
-	}
+        {
+          frame = (long int) user_data;
+          entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), 
+                                                     "entry");
+          RemoveSignalGTK (GTK_OBJECT(entry), "activate");
+          RemoveSignalGTK (GTK_OBJECT(w), "hide");
+          gtk_widget_hide (w);
+          ConnectSignalGTK  (GTK_OBJECT (w), 
+                             "hide",
+                             GTK_SIGNAL_FUNC (APP_PopWinSelect),
+                             (gpointer) NULL);
+          ConnectSignalGTK  (GTK_OBJECT (entry), 
+                             "activate",
+                             GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
+                             (gpointer)frame);
+          text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
+                                              "PreviousSelect");
+          gtk_entry_set_text (GTK_ENTRY (entry), text);
+          TtaFreeMemory (text);
+          gtk_object_set_data (GTK_OBJECT (w), 
+                               "PreviousSelect", 
+                               NULL);
+          return TRUE;	  
+        }
       else if (event->keyval == GDK_Return)
-	{
-	  text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
-				      "PreviousSelect");
-	  TtaFreeMemory (text);
-	  gtk_object_set_data (GTK_OBJECT (w), 
-			       "PreviousSelect", 
-			       NULL);
-	  return TRUE;
-	}
+        {
+          text = (char *)gtk_object_get_data (GTK_OBJECT (w), 
+                                              "PreviousSelect");
+          TtaFreeMemory (text);
+          gtk_object_set_data (GTK_OBJECT (w), 
+                               "PreviousSelect", 
+                               NULL);
+          return TRUE;
+        }
       
     }
   return FALSE;
@@ -2032,18 +2033,18 @@ GList *InitComboBoxList (char *buffer)
   GList       *list_items = NULL;
   char        *ptr, *ptr1;
 
-   ptr = buffer;
+  ptr = buffer;
   /* function will stop on double EOS */
   if (buffer)
     {
       while (*ptr != EOS)
-	{
-	  ptr1 = ptr;
-	  while (*ptr1 != EOS)
-	      ptr1++;
-	  list_items = g_list_append (list_items, (gpointer) ptr);
-	  ptr = ptr1 + 1;
-	}
+        {
+          ptr1 = ptr;
+          while (*ptr1 != EOS)
+            ptr1++;
+          list_items = g_list_append (list_items, (gpointer) ptr);
+          ptr = ptr1 + 1;
+        }
     }
   return list_items;
 }
@@ -2058,41 +2059,41 @@ void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
   char        *ptr, *ptr1;
 
   /* remove previous entries */
-   SendMessage (hwnCB, CB_RESETCONTENT, 0, (LPARAM) NULL);
-   SetWindowText (hwnCB, buffer);
-   ptr = buffer;
+  SendMessage (hwnCB, CB_RESETCONTENT, 0, (LPARAM) NULL);
+  SetWindowText (hwnCB, buffer);
+  ptr = buffer;
   /*  function will stop on double EOS */
   if (buffer)
     {
       while (*ptr != EOS)
-	{
-	  ptr1 = ptr;
-	  while (*ptr1 != EOS)
-	      ptr1++;
-	  SendMessage (hwnCB, CB_INSERTSTRING, cpt, (LPARAM) ptr);
-	  cpt++;
-	  ptr = ptr1 + 1;
-	}
+        {
+          ptr1 = ptr;
+          while (*ptr1 != EOS)
+            ptr1++;
+          SendMessage (hwnCB, CB_INSERTSTRING, cpt, (LPARAM) ptr);
+          cpt++;
+          ptr = ptr1 + 1;
+        }
     }
 }
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
-   TtaAddTextZone
+  TtaAddTextZone
 
-   Adds a new textual command in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   doc: the concerned document.
-   view: the concerned view.
-   label: label of the new entry.
-   procedure: procedure to be executed when the new entry is changed by the
-   user.
-   listUrl gives URLs that will be displayed in the combobox.
+  Adds a new textual command in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  doc: the concerned document.
+  view: the concerned view.
+  label: label of the new entry.
+  procedure: procedure to be executed when the new entry is changed by the
+  user.
+  listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
 int TtaAddTextZone (Document doc, View view, char *label,
-		    ThotBool editable, void (*procedure) (), 
-		    char *listUrl)
+                    ThotBool editable, void (*procedure) (), 
+                    char *listUrl)
 {
   int            frame, ret;
   ThotWidget     w;
@@ -2117,153 +2118,153 @@ int TtaAddTextZone (Document doc, View view, char *label,
     {
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
 #ifdef _WX
       else if (FrameTable[frame].WdFrame)
 #else /* _WX */
-      else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
+        else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
 #endif /* _WX */
-	{
+          {
 
 #ifdef _WX
-	  TtaSetURLBar( frame, listUrl, procedure );
+            TtaSetURLBar( frame, listUrl, procedure );
 #endif /* _WX */
 
 #ifdef _GTK
-	  row = FrameTable[frame].Row_Zone;
-	  /* row est de type GTK_HBOX */
-	  /*gtk_widget_hide (row->parent->parent);*/
-	  /* Insert a label for the entry text */	      
-	  if (label)
-	    {
-	      w = gtk_label_new (label);
-              if (w->style->font == NULL ||
-		  w->style->font->type != GDK_FONT_FONTSET)
-		w->style->font = DefaultFont;
-	      gtk_misc_set_alignment (GTK_MISC (w), 0.5, 0.5);
-	      gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
-	    }
-	  combo = gtk_combo_new ();
-	  gtk_combo_set_case_sensitive (GTK_COMBO (combo), TRUE);
-	  FrameTable[frame].Combo = combo;
-	  gtk_widget_ref (combo);
-	  /* Initialize combobox list */
-	  if (listUrl)
-	    /* list of URL in normal mode or list of Title in library mode */
-	    {
-	      combo1_items = InitComboBoxList (listUrl);
-	      /* Put created list into into combo */
-	      gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
-	      /* handle arrow key in combobox */
-	      gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
-	      /* Free memory */
-	      g_list_free (combo1_items);
-	    }
-	  w = GTK_COMBO (combo)->entry;
-	  ComboList = GTK_COMBO (combo)->list;
-	  gtk_combo_disable_activate (GTK_COMBO (combo)); 
-	  if (editable)
-	    {/* Normal combobox in Amaya */
-	      if (procedure)
-		{
-		  /* execute APP_TextCallback GTK when pressing enter */
-		  ConnectSignalGTK (GTK_OBJECT (w), "activate",
-				    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
-				    (gpointer)frame);
-		  /*(combo)->popwin is the window appearing when dopping
-		    the list...*/
-		  gtk_object_set_data (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
-				       "entry", 
-				       (gpointer) w);
-		  ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
-				      "hide",
-				      GTK_SIGNAL_FUNC (APP_PopWinSelect),
-				      (gpointer) frame);
-		  ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
-				      "show",
-				      GTK_SIGNAL_FUNC (APP_PopWinShow),
-				      (gpointer) frame);
-		  gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
-				      "event",
-				      GTK_SIGNAL_FUNC (APP_ComboEscape),
-				      (gpointer) frame);
-		  FrameTable[frame].Call_Text = (Proc) procedure;
-		  gtk_widget_show_all (row);
-		}
-	      else
-		gtk_widget_show_all (row);
-	    } 
-	  else
-	    {/* Open SVG library in Amaya */
-	      /* Make the text zone non editable */
-	      gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
-	      gtk_entry_set_editable (GTK_ENTRY (w), FALSE);
-	      /* GTK_WIDGET_UNSET_FLAGS(GTK_ENTRY(w), GTK_CAN_FOCUS); */
-	     if (procedure)
-		{
-		  gtk_signal_connect (GTK_OBJECT (w), "changed",
-				    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
-				    (gpointer)frame);
-		  FrameTable[frame].Call_Text = (Proc) procedure;
-		  gtk_widget_show_all (row->parent->parent);
-		}
-	      else
-		gtk_widget_show_all (row->parent);
-	    }
-	  if (w->style->font == NULL ||
-	      w->style->font->type != GDK_FONT_FONTSET)
-	    w->style->font = DefaultFont;
-	  gtk_box_pack_start (GTK_BOX (row), combo, TRUE, TRUE, 20);
-	  FrameTable[frame].Text_Zone = w;
-	  gtk_widget_show (w);
-	  gtk_widget_show (combo);
-	  gtk_widget_show (row);
+            row = FrameTable[frame].Row_Zone;
+            /* row est de type GTK_HBOX */
+            /*gtk_widget_hide (row->parent->parent);*/
+            /* Insert a label for the entry text */	      
+            if (label)
+              {
+                w = gtk_label_new (label);
+                if (w->style->font == NULL ||
+                    w->style->font->type != GDK_FONT_FONTSET)
+                  w->style->font = DefaultFont;
+                gtk_misc_set_alignment (GTK_MISC (w), 0.5, 0.5);
+                gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
+              }
+            combo = gtk_combo_new ();
+            gtk_combo_set_case_sensitive (GTK_COMBO (combo), TRUE);
+            FrameTable[frame].Combo = combo;
+            gtk_widget_ref (combo);
+            /* Initialize combobox list */
+            if (listUrl)
+              /* list of URL in normal mode or list of Title in library mode */
+              {
+                combo1_items = InitComboBoxList (listUrl);
+                /* Put created list into into combo */
+                gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
+                /* handle arrow key in combobox */
+                gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
+                /* Free memory */
+                g_list_free (combo1_items);
+              }
+            w = GTK_COMBO (combo)->entry;
+            ComboList = GTK_COMBO (combo)->list;
+            gtk_combo_disable_activate (GTK_COMBO (combo)); 
+            if (editable)
+              {/* Normal combobox in Amaya */
+                if (procedure)
+                  {
+                    /* execute APP_TextCallback GTK when pressing enter */
+                    ConnectSignalGTK (GTK_OBJECT (w), "activate",
+                                      GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
+                                      (gpointer)frame);
+                    /*(combo)->popwin is the window appearing when dopping
+                      the list...*/
+                    gtk_object_set_data (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+                                         "entry", 
+                                         (gpointer) w);
+                    ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+                                      "hide",
+                                      GTK_SIGNAL_FUNC (APP_PopWinSelect),
+                                      (gpointer) frame);
+                    ConnectSignalGTK (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+                                      "show",
+                                      GTK_SIGNAL_FUNC (APP_PopWinShow),
+                                      (gpointer) frame);
+                    gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->popwin), 
+                                        "event",
+                                        GTK_SIGNAL_FUNC (APP_ComboEscape),
+                                        (gpointer) frame);
+                    FrameTable[frame].Call_Text = (Proc) procedure;
+                    gtk_widget_show_all (row);
+                  }
+                else
+                  gtk_widget_show_all (row);
+              } 
+            else
+              {/* Open SVG library in Amaya */
+                /* Make the text zone non editable */
+                gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
+                gtk_entry_set_editable (GTK_ENTRY (w), FALSE);
+                /* GTK_WIDGET_UNSET_FLAGS(GTK_ENTRY(w), GTK_CAN_FOCUS); */
+                if (procedure)
+                  {
+                    gtk_signal_connect (GTK_OBJECT (w), "changed",
+                                        GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
+                                        (gpointer)frame);
+                    FrameTable[frame].Call_Text = (Proc) procedure;
+                    gtk_widget_show_all (row->parent->parent);
+                  }
+                else
+                  gtk_widget_show_all (row->parent);
+              }
+            if (w->style->font == NULL ||
+                w->style->font->type != GDK_FONT_FONTSET)
+              w->style->font = DefaultFont;
+            gtk_box_pack_start (GTK_BOX (row), combo, TRUE, TRUE, 20);
+            FrameTable[frame].Text_Zone = w;
+            gtk_widget_show (w);
+            gtk_widget_show (combo);
+            gtk_widget_show (row);
 #endif /* _GTK */    
 
 #ifdef _WINGUI
-	  currentFrame = frame;
-	  GetClientRect (FrMainRef [frame], &rect);
-	  /* get the default GUI font */
-	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-				 5, 8, 0, 30, FrMainRef[frame], (HMENU) 1,
-				 hInstance, NULL);
-	  FrameTable[frame].Label = wLabel;
-	  /* set the font of the window */
-	  WIN_SetDialogfont (wLabel);
-	  if (editable)
-	    {
-	      /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
-		 CBS_SORT | WS_VSCROLL | WS_TABSTOP */
-	      /*w = CreateWindow ("COMBOBOX", "",
-				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
-				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) 2, hInstance, NULL);*/
-		  w = CreateWindow ("COMBOBOX", "",
-				WS_CHILD | WS_VISIBLE | WS_TABSTOP | 
-				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-				0, 0, 0, 300, FrMainRef[frame], (HMENU) 2, hInstance, NULL);
-	    }
-	  else
-	    {
-	      w = CreateWindow ("COMBOBOX", "",
-				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
-				CBS_AUTOHSCROLL| CBS_DROPDOWN | CBS_HASSTRINGS,
-				0, 0, 0, 300, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
-	    }
-	  /* set the font of the window */
-	  WIN_SetDialogfont (w);
-	  FrameTable[frame].Text_Zone = w;
-	  FrameTable[frame].Call_Text = (Proc) procedure;
+            currentFrame = frame;
+            GetClientRect (FrMainRef [frame], &rect);
+            /* get the default GUI font */
+            wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                                   5, 8, 0, 30, FrMainRef[frame], (HMENU) 1,
+                                   hInstance, NULL);
+            FrameTable[frame].Label = wLabel;
+            /* set the font of the window */
+            WIN_SetDialogfont (wLabel);
+            if (editable)
+              {
+                /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                   CBS_SORT | WS_VSCROLL | WS_TABSTOP */
+                /*w = CreateWindow ("COMBOBOX", "",
+                  WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
+                  CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
+                  0, 0, 0, 100, FrMainRef[frame], (HMENU) 2, hInstance, NULL);*/
+                w = CreateWindow ("COMBOBOX", "",
+                                  WS_CHILD | WS_VISIBLE | WS_TABSTOP | 
+                                  CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
+                                  0, 0, 0, 300, FrMainRef[frame], (HMENU) 2, hInstance, NULL);
+              }
+            else
+              {
+                w = CreateWindow ("COMBOBOX", "",
+                                  WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
+                                  CBS_AUTOHSCROLL| CBS_DROPDOWN | CBS_HASSTRINGS,
+                                  0, 0, 0, 300, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
+              }
+            /* set the font of the window */
+            WIN_SetDialogfont (w);
+            FrameTable[frame].Text_Zone = w;
+            FrameTable[frame].Call_Text = (Proc) procedure;
 	  
-	  lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
-							 GWL_WNDPROC, (DWORD) TextZoneProc);
-	  lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
-							 (DWORD) ComboBoxProc);
-	  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
+            lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
+                                                           GWL_WNDPROC, (DWORD) TextZoneProc);
+            lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
+                                                           (DWORD) ComboBoxProc);
+            PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINGUI */
 
-	  ret = 1;
-	}
+            ret = 1;
+          }
     }
   /* force la mise a jour de la fenetre */
   TtaHandlePendingEvents ();
@@ -2272,14 +2273,14 @@ int TtaAddTextZone (Document doc, View view, char *label,
 
 
 /*----------------------------------------------------------------------
-   TtaSetTextZone
+  TtaSetTextZone
 
-   Sets the text in text-zone in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   doc: identifier of the document.
-   view: identifier of the view.
-   listUrl gives URLs that will be displayed in the combobox.
+  Sets the text in text-zone in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  doc: identifier of the document.
+  view: identifier of the view.
+  listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
 void TtaSetTextZone (Document doc, View view, char *listUrl)
 {
@@ -2300,49 +2301,49 @@ void TtaSetTextZone (Document doc, View view, char *listUrl)
     {
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
-	TtaError (ERR_invalid_parameter);
+        TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame)
-	{
+        {
 #ifndef _WX /* WX doesn't use Text_Zone variable */
-	  w = FrameTable[frame].Text_Zone;
-	  if (w)
+          w = FrameTable[frame].Text_Zone;
+          if (w)
 #endif //#ifndef _WX // TODO	      
-	    {
+            {
 #ifdef _WINGUI
-	      /* Initialize listbox linked to combobox */
-	      InitWdComboBoxList (w, listUrl);
+              /* Initialize listbox linked to combobox */
+              InitWdComboBoxList (w, listUrl);
 #endif  /* _WINGUI */
 
 #ifdef _GTK
-	      /* list of URL OR Title OF librarIES */
-	      combo =  FrameTable[frame].Combo;
-	      combo1_items = InitComboBoxList (listUrl);
-	      /* Put created list into into combo */
-	      gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
-	      /* handle arrow key in combobox */
-	      gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
-	      /* Free memory */
-	      g_list_free (combo1_items);
+              /* list of URL OR Title OF librarIES */
+              combo =  FrameTable[frame].Combo;
+              combo1_items = InitComboBoxList (listUrl);
+              /* Put created list into into combo */
+              gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
+              /* handle arrow key in combobox */
+              gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
+              /* Free memory */
+              g_list_free (combo1_items);
 #endif /* _GTK */
 
 #ifdef _WX
-	      TtaSetURLBar( frame, listUrl, NULL );
+              TtaSetURLBar( frame, listUrl, NULL );
 #endif /* _WX */
 
-	    }
-	}
+            }
+        }
     }
 }
 
 
 /*----------------------------------------------------------------------
-   TtcSwitchCommands
+  TtcSwitchCommands
 
-   Shows or hides the commands part in a document view.
-   This function must specify a valid view of a valid document.
-   Parameters:
-   doc: identifier of the document.
-   view: identifier of the view.
+  Shows or hides the commands part in a document view.
+  This function must specify a valid view of a valid document.
+  Parameters:
+  doc: identifier of the document.
+  view: identifier of the view.
   ----------------------------------------------------------------------*/
 void TtcSwitchCommands (Document doc, View view)
 {
@@ -2351,77 +2352,77 @@ void TtcSwitchCommands (Document doc, View view)
 #endif /* _WX */
 
 #ifndef _WX
-   int                 frame;
+  int                 frame;
 #ifdef _WINGUI
-   int     nbZonesShown = 0;
-   ThotBool itemChecked = FALSE;
-   RECT    r;
+  int     nbZonesShown = 0;
+  ThotBool itemChecked = FALSE;
+  RECT    r;
 #endif /* _WINGUI */
 #ifdef _GTK
-   ThotWidget          row;
+  ThotWidget          row;
 #endif /* _GTK */
 
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (doc == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (doc, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (doc == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (doc, view);
+      if (frame == 0 || frame > MAX_FRAME)
+        TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+        {
 
 #ifdef _GTK 
-	     row = GTK_WIDGET (FrameTable[frame].Row_Zone)->parent;
-	     if (row != 0)
-	       {
-		 if (GTK_WIDGET_VISIBLE(row))
-		   gtk_widget_hide (row);
-		 else
-		   gtk_widget_show_all (row);
+          row = GTK_WIDGET (FrameTable[frame].Row_Zone)->parent;
+          if (row != 0)
+            {
+              if (GTK_WIDGET_VISIBLE(row))
+                gtk_widget_hide (row);
+              else
+                gtk_widget_show_all (row);
 
-	       }
+            }
 #endif /* _GTK */
 
 #ifdef _WINGUI
-	     if (FrameTable[frame].Text_Zone &&
-		 IsWindowVisible (FrameTable[frame].Text_Zone))
-	       {
-		 if (!itemChecked)
-		   {
-		     hmenu = WIN_GetMenu (frame); 
-		     CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-		     itemChecked = TRUE;
-		   }
-		 ShowWindow (FrameTable[frame].Label, SW_HIDE);
-		 ShowWindow (FrameTable[frame].Text_Zone, SW_HIDE);
-	       }
-	     else
-	       {
-		 if (!itemChecked)
-		   {
-		     hmenu = WIN_GetMenu (frame); 
-		     CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-		   }
-		 ShowWindow (FrameTable[frame].Label, SW_SHOW);
-		 ShowWindow (FrameTable[frame].Text_Zone, SW_SHOW);
-	       }
-             GetClientRect (FrMainRef[frame], &r);
-             PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
+          if (FrameTable[frame].Text_Zone &&
+              IsWindowVisible (FrameTable[frame].Text_Zone))
+            {
+              if (!itemChecked)
+                {
+                  hmenu = WIN_GetMenu (frame); 
+                  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+                  itemChecked = TRUE;
+                }
+              ShowWindow (FrameTable[frame].Label, SW_HIDE);
+              ShowWindow (FrameTable[frame].Text_Zone, SW_HIDE);
+            }
+          else
+            {
+              if (!itemChecked)
+                {
+                  hmenu = WIN_GetMenu (frame); 
+                  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+                }
+              ShowWindow (FrameTable[frame].Label, SW_SHOW);
+              ShowWindow (FrameTable[frame].Text_Zone, SW_SHOW);
+            }
+          GetClientRect (FrMainRef[frame], &r);
+          PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINGUI */
 	     
-	  }
-     }
-   /* force la mise a jour de la fenetre */
-   TtaHandlePendingEvents ();
+        }
+    }
+  /* force la mise a jour de la fenetre */
+  TtaHandlePendingEvents ();
 #endif /* _WX */
 }
 
 
 /*----------------------------------------------------------------------
-   Evenement sur une frame document.                              
+  Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
 void DrawingInput (int *w, int frame, int *infos)
 {
@@ -2433,13 +2434,13 @@ void DrawingInput (int *w, int frame, int *infos)
   Function used by GTK version to attach the callback function to the
   good event and to attache the signal connect ID to the widget in order
   to disconnect it further.
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void ConnectSignalGTK (GtkObject *w, gchar *signal_name,
-		       GtkSignalFunc callback, gpointer data)
+                       GtkSignalFunc callback, gpointer data)
 {
   guint id;
   id = gtk_signal_connect (GTK_OBJECT(w), signal_name,
-			   GTK_SIGNAL_FUNC(callback), data);
+                           GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
 
@@ -2449,13 +2450,13 @@ void ConnectSignalGTK (GtkObject *w, gchar *signal_name,
   good event and to attache the signal connect ID to the widget in order
   to disconnect it further. The signal  handler will be called after all
   the other handlers.
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void ConnectSignalAfterGTK (GtkObject *w, gchar *signal_name,
-			    GtkSignalFunc callback, gpointer data)
+                            GtkSignalFunc callback, gpointer data)
 {
   guint id;
   id = gtk_signal_connect_after (GTK_OBJECT(w), signal_name,
-				 GTK_SIGNAL_FUNC(callback), data);
+                                 GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
 /*-----------------------------------------------------------------------
@@ -2463,7 +2464,7 @@ void ConnectSignalAfterGTK (GtkObject *w, gchar *signal_name,
   Function used by GTK version to remove the callback function to the
   good event and to remove the signal connect ID to the widget that permits
   reconization of the signal
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   long int id;
@@ -2487,83 +2488,78 @@ void get_targets (GtkWidget *widget, gpointer data)
     {
       /* request by default a UTF-8 string */
       gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
-			     GDK_SELECTION_PRIMARY, 
-			     Utf8_Type,  
-			     GDK_CURRENT_TIME);
+                             GDK_SELECTION_PRIMARY, 
+                             Utf8_Type,  
+                             GDK_CURRENT_TIME);
     }
 }
 
 /*-----------------------------------------------------------------------
   When user begins a new selection
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void gtk_claim_selection()
 {
   if (FrameTable[ActiveFrame].WdFrame)
     /* but now we own the selection, so goodbye to the other app */
     gtk_selection_owner_set (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame),
-			     GDK_SELECTION_PRIMARY,
-			     GDK_CURRENT_TIME); 
+                             GDK_SELECTION_PRIMARY,
+                             GDK_CURRENT_TIME); 
 }
 
 /*-----------------------------------------------------------------------
   selection_received
   Signal handler called when the selections owner 
   (another application) returns the data 
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
-			 gpointer data)
+                         gpointer data)
 {
   if (sel_data->length > 0)
     {
       /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
-      if (Xbuffer && ClipboardLength == 0)
-	{
-	  /* remove the old Xbuffer sent by the X server */
-	  TtaFreeMemory (Xbuffer);
-	  Xbuffer = NULL;
-	}
+      if (Xbuffer /*&& ClipboardLength == 0*/)
+        /* remove the old Xbuffer sent by the X server */
+        TtcClearClipboard ();
+
       if (Xbuffer == NULL)
-	{
-	  Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
-	  strncpy ((char *)Xbuffer, (char *)sel_data->data, sel_data->length);
-	  Xbuffer[sel_data->length] = EOS;
-	}
+        {
+          Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
+          strncpy ((char *)Xbuffer, (char *)sel_data->data, sel_data->length);
+          Xbuffer[sel_data->length] = EOS;
+        }
       if (sel_data->type != Utf8_Type)
-	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), TtaGetDefaultCharset ());
+        PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), TtaGetDefaultCharset ());
       else
-	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
+        PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
     }
   else if (sel_data->target == Utf8_Type)
     gtk_selection_convert (widget, 
-			   GDK_SELECTION_PRIMARY, 
-			   String_Type,  
-			   GDK_CURRENT_TIME);
+                           GDK_SELECTION_PRIMARY, 
+                           String_Type,  
+                           GDK_CURRENT_TIME);
 } 
 
 
 /*-----------------------------------------------------------------------
- selection_clear
- Called when another application claims the selection 
--------------------------------------------------------------------------*/
+  selection_clear
+  Called when another application claims the selection 
+  -------------------------------------------------------------------------*/
 gint selection_clear (GtkWidget *widget, GdkEventSelection *event, gpointer data)
 {
-  if (Xbuffer)
-    free(Xbuffer);
-  Xbuffer = NULL;
-  ClipboardLength = 0;
+  TtcClearClipboard ();
   TtaClearViewSelections ();
   return TRUE;
 }
 
 /*-----------------------------------------------------------------------
- selection_handle
- Supplies the Xbuffer as the selection. 
--------------------------------------------------------------------------*/
+  selection_handle
+  Supplies the Xbuffer as the selection. 
+  -------------------------------------------------------------------------*/
 void selection_handle (GtkWidget        *widget,
-		       GtkSelectionData *selection_data,
-		       guint             info,
-		       guint             time_stamp,
-		       gpointer          data)
+                       GtkSelectionData *selection_data,
+                       guint             info,
+                       guint             time_stamp,
+                       gpointer          data)
 {
   unsigned char      *s;
 
@@ -2572,20 +2568,20 @@ void selection_handle (GtkWidget        *widget,
   if (Xbuffer)
     {
       if (info == 2)
-	{
-	  s = TtaConvertMbsToByte (Xbuffer, TtaGetDefaultCharset ());
-	  gtk_selection_data_set (selection_data,
-				  String_Type,
-				  8, 
-				  s, 
-				  strlen ((char *)s));
-	}
+        {
+          s = TtaConvertMbsToByte (Xbuffer, TtaGetDefaultCharset ());
+          gtk_selection_data_set (selection_data,
+                                  String_Type,
+                                  8, 
+                                  s, 
+                                  strlen ((char *)s));
+        }
       else
-	gtk_selection_data_set (selection_data,
-				Utf8_Type,
-				8, 
-				Xbuffer, 
-				strlen ((char *)Xbuffer));
+        gtk_selection_data_set (selection_data,
+                                Utf8_Type,
+                                8, 
+                                Xbuffer, 
+                                strlen ((char *)Xbuffer));
     }
 }
 
@@ -2609,36 +2605,36 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
       ptrmenu = FrameTable[frame].FrMenus;
       i = 0;
       while (ptrmenu)
-	{
-	  /* skip menus that concern another view */
-	  if ((ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
-		   Prof_ShowMenu (ptrmenu))
-	    {
-	      if (!ptrmenu->MenuAttr)
-		BuildPopdown (ptrmenu, ref,
-			      FrameTable[frame].WdMenus[i], frame, doc,
-			      TRUE, RO);
-	    }
-	  ptrmenu = ptrmenu->NextMenu;
-	  ref += MAX_ITEM;
-	  i++;
-	}
+        {
+          /* skip menus that concern another view */
+          if ((ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
+              Prof_ShowMenu (ptrmenu))
+            {
+              if (!ptrmenu->MenuAttr)
+                BuildPopdown (ptrmenu, ref,
+                              FrameTable[frame].WdMenus[i], frame, doc,
+                              TRUE, RO);
+            }
+          ptrmenu = ptrmenu->NextMenu;
+          ref += MAX_ITEM;
+          i++;
+        }
     }
 #endif //#ifndef _WX
 }
 
 #if defined(_GL) && defined(_GTK)
 static int          AttrList[] =
-{
-  GDK_GL_RGBA,
-  GDK_GL_RED_SIZE, 1,
-  GDK_GL_GREEN_SIZE, 1,
-  GDK_GL_BLUE_SIZE, 1,
-  GDK_GL_ALPHA_SIZE, 1, /* don't change the position of the entry (8) */
-  GDK_GL_STENCIL_SIZE, 1,
-  GDK_GL_DOUBLEBUFFER,
-  GDK_GL_NONE
-};
+  {
+    GDK_GL_RGBA,
+    GDK_GL_RED_SIZE, 1,
+    GDK_GL_GREEN_SIZE, 1,
+    GDK_GL_BLUE_SIZE, 1,
+    GDK_GL_ALPHA_SIZE, 1, /* don't change the position of the entry (8) */
+    GDK_GL_STENCIL_SIZE, 1,
+    GDK_GL_DOUBLEBUFFER,
+    GDK_GL_NONE
+  };
 
 /*----------------------------------------------------------------------
   GetGLArea:
@@ -2655,12 +2651,12 @@ static ThotWidget GetGLArea ()
      double buffering or not...
   */
   GtkWidget    *area = NULL;
-   /* 
-      Parameters of the opengl Buffers
-      More tweaks we have the less memory we use !!
-      => ie depth, stencil, shadow...
-      double buffering or not...
-   */
+  /* 
+     Parameters of the opengl Buffers
+     More tweaks we have the less memory we use !!
+     => ie depth, stencil, shadow...
+     double buffering or not...
+  */
   
   /* Is opengl working ? */
   if (gdk_gl_query () == FALSE) 
@@ -2693,13 +2689,13 @@ static ThotWidget GetGLArea ()
   - doc gives the document index.
   - withMenu is TRUE when menus are displayed
   - withButton is TRUE when buttons are displayed
-   Returns:
-   - volume: the number of characters that can be displayed in the window.
-   - the allocated window index or 0.
+  Returns:
+  - volume: the number of characters that can be displayed in the window.
+  - the allocated window index or 0.
   ----------------------------------------------------------------------*/
 int  MakeFrame (char *schema, int view, char *name, int X, int Y,
-		int width, int height, int *volume, int doc,
-		ThotBool withMenu, ThotBool withButton)
+                int width, int height, int *volume, int doc,
+                ThotBool withMenu, ThotBool withButton)
 {
 #ifdef _WX
   wxASSERT_MSG(FALSE, _T("Unused function"));
@@ -2707,668 +2703,668 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 #if defined(_GTK) || defined(_WINGUI)
 #ifdef _WINGUI
-   ThotMenu            menu_bar, w=0;
+  ThotMenu            menu_bar, w=0;
 #endif /* _WINGUI */
 #if defined(_GTK)
-   ThotMenuBar         menu_bar;
-   ThotWidget          w=0; /* menu button */
-   ThotWidget          drawing_area; 
-   ThotWidget          hbox1, hbox2;
-   ThotWidget          vbox1;
-   unsigned short      dx, dy;
+  ThotMenuBar         menu_bar;
+  ThotWidget          w=0; /* menu button */
+  ThotWidget          drawing_area; 
+  ThotWidget          hbox1, hbox2;
+  ThotWidget          vbox1;
+  unsigned short      dx, dy;
 #endif /* #if defined(_GTK) */
 #ifdef _GTK
-   ThotWidget          menu_item;
-   ThotWidget          logo_pixmap;
-   ThotWidget          table2;
-   ThotWidget          statusbar;
-   ThotWidget          toolbar;
-   GdkPixmap          *amaya_pixmap;
-   GdkBitmap          *amaya_mask;
-   GtkObject          *tmpw;
-   GtkAccelGroup      *accel_group;
-   GtkWidget          *wrap_text;
+  ThotWidget          menu_item;
+  ThotWidget          logo_pixmap;
+  ThotWidget          table2;
+  ThotWidget          statusbar;
+  ThotWidget          toolbar;
+  GdkPixmap          *amaya_pixmap;
+  GdkBitmap          *amaya_mask;
+  GtkObject          *tmpw;
+  GtkAccelGroup      *accel_group;
+  GtkWidget          *wrap_text;
 #endif /* _GTK */
-   ThotWidget          Main_Wd = 0;
-   ThotWidget          hscrl;
-   ThotWidget          vscrl;
-   Menu_Ctl           *ptrmenu;
-   char               *visiStr;
-   int                 i;
-   int                 ref;
-   int                 visiVal;
-   int                 frame;
-   ThotBool            found;
+  ThotWidget          Main_Wd = 0;
+  ThotWidget          hscrl;
+  ThotWidget          vscrl;
+  Menu_Ctl           *ptrmenu;
+  char               *visiStr;
+  int                 i;
+  int                 ref;
+  int                 visiVal;
+  int                 frame;
+  ThotBool            found;
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
 #ifdef _WINGUI
-   hwndClient = 0;
-   ToolBar = 0;
-   logoFrame = 0;
-   StatusBar = 0;
-   strcpy (wTitle, name);
+  hwndClient = 0;
+  ToolBar = 0;
+  logoFrame = 0;
+  StatusBar = 0;
+  strcpy (wTitle, name);
 #endif /* _WINGUI */
 
-   menu_bar = NULL;
-   frame = 0;
-   if (schema != NULL)
-     {
-       /* Allocation d'une entree dans la table des fenetres */
-       found = FALSE;
-       frame = 1;
-       while (frame <= MAX_FRAME && !found)
-	 {
-	   /* Recherche une frame ouverte vide */
-	   found = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
-	   if (!found)
-	     frame++;
-	 }
-       if (!found)
-	 {
-	   frame = 1;
-	   while (frame <= MAX_FRAME && !found)
-	     {
-	       /* Recherche une frame libre */
-	       found = (FrameTable[frame].WdFrame == 0);
-	       if (!found)
-		 frame++;
-	     }
-	 }
+  menu_bar = NULL;
+  frame = 0;
+  if (schema != NULL)
+    {
+      /* Allocation d'une entree dans la table des fenetres */
+      found = FALSE;
+      frame = 1;
+      while (frame <= MAX_FRAME && !found)
+        {
+          /* Recherche une frame ouverte vide */
+          found = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
+          if (!found)
+            frame++;
+        }
+      if (!found)
+        {
+          frame = 1;
+          while (frame <= MAX_FRAME && !found)
+            {
+              /* Recherche une frame libre */
+              found = (FrameTable[frame].WdFrame == 0);
+              if (!found)
+                frame++;
+            }
+        }
 
-       if (!found)
-	 frame = 0;
-       else if (FrameTable[frame].WdFrame == 0)
-	 {
-	   /* il faut creer effectivement la fenetre */
-	   FrameTable[frame].FrTopMargin = 0;
-	   /* Verification des dimensions */
-	   if (width == 0)
-	     width = 180;	/* largeur en mm */
-	   if (height == 0)
-	     height = 240;	/* hauteur en mm */
-	   height = height + FrameTable[frame].FrTopMargin;
+      if (!found)
+        frame = 0;
+      else if (FrameTable[frame].WdFrame == 0)
+        {
+          /* il faut creer effectivement la fenetre */
+          FrameTable[frame].FrTopMargin = 0;
+          /* Verification des dimensions */
+          if (width == 0)
+            width = 180;	/* largeur en mm */
+          if (height == 0)
+            height = 240;	/* hauteur en mm */
+          height = height + FrameTable[frame].FrTopMargin;
 	   
 #ifdef _WINGUI
-	   /*** Build the document window ***/
-	   if (X < 0)
-	     X = 2;
-	   if (Y < 0)
-	     Y = 2;
-	   Main_Wd = CreateWindowEx (WS_EX_ACCEPTFILES | WS_EX_APPWINDOW |
-		            WS_EX_WINDOWEDGE, 
-					"Amaya",    /* window class name */
-				     NULL,	/* window caption    */
-				     WS_OVERLAPPEDWINDOW |
-					 WS_CLIPSIBLINGS |
-					 WS_CLIPCHILDREN, /* window style */
-				     X,	    /* initial x pos           */
-				     Y,	    /* initial y pos           */
-				     width, /* initial x size          */
-				     height,  /* initial y size          */
-				     NULL,  /* parent window handle    */
-				     NULL,  /* window menu handle      */
-				     hInstance,	/* program instance handle */
-				     NULL);	/* creation parameters     */
+          /*** Build the document window ***/
+          if (X < 0)
+            X = 2;
+          if (Y < 0)
+            Y = 2;
+          Main_Wd = CreateWindowEx (WS_EX_ACCEPTFILES | WS_EX_APPWINDOW |
+                                    WS_EX_WINDOWEDGE, 
+                                    "Amaya",    /* window class name */
+                                    NULL,	/* window caption    */
+                                    WS_OVERLAPPEDWINDOW |
+                                    WS_CLIPSIBLINGS |
+                                    WS_CLIPCHILDREN, /* window style */
+                                    X,	    /* initial x pos           */
+                                    Y,	    /* initial y pos           */
+                                    width, /* initial x size          */
+                                    height,  /* initial y size          */
+                                    NULL,  /* parent window handle    */
+                                    NULL,  /* window menu handle      */
+                                    hInstance,	/* program instance handle */
+                                    NULL);	/* creation parameters     */
 
-	   if (Main_Wd == 0)
-	     WinErrorBox (WIN_Main_Wd, "MakeFrame");
-	   else 
-	     {
-	       /* store everything. */
-	       FrMainRef[frame] = Main_Wd;
-	       FrRef[frame] = hwndClient;
-	       WinToolBar[frame] = ToolBar;
-	       FrameTable[frame].WdStatus = StatusBar;
-	       /* and show it up. */
-	       if (withMenu)
-		 {
-		   menu_bar = CreateMenu ();
-		   if (!menu_bar) 
-		     WinErrorBox (Main_Wd, "MakeFrame");
-		   else 
-		     WinMenus[frame] = menu_bar;
-		 }
-	       else
-		 {
-		   menu_bar = NULL;
-		   WinMenus[frame] = NULL;
-		 }
-	     }
+          if (Main_Wd == 0)
+            WinErrorBox (WIN_Main_Wd, "MakeFrame");
+          else 
+            {
+              /* store everything. */
+              FrMainRef[frame] = Main_Wd;
+              FrRef[frame] = hwndClient;
+              WinToolBar[frame] = ToolBar;
+              FrameTable[frame].WdStatus = StatusBar;
+              /* and show it up. */
+              if (withMenu)
+                {
+                  menu_bar = CreateMenu ();
+                  if (!menu_bar) 
+                    WinErrorBox (Main_Wd, "MakeFrame");
+                  else 
+                    WinMenus[frame] = menu_bar;
+                }
+              else
+                {
+                  menu_bar = NULL;
+                  WinMenus[frame] = NULL;
+                }
+            }
 #endif /* _WINGUI */
 #ifdef _GTK
-     if (width < MIN_WIDTH)
-	     dx = MIN_WIDTH;
-	   else
-	     dx = width;
-	   if (height < MIN_HEIGHT)
-	     dy = MIN_HEIGHT;
-	   else
-	     dy = height;
-	   if (X < 0)
-	     X = 2;
-	   if (Y < 0)
-	     Y = 2;
-	   /*** Build the document window ***/
-	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	   /*	   gtk_widget_show_all (Main_Wd);*/
-	   gtk_quit_add_destroy(1, GTK_OBJECT(Main_Wd));
-	   if (Main_Wd->style->font == NULL ||
-	       Main_Wd->style->font->type != GDK_FONT_FONTSET)
-	     Main_Wd->style->font = DefaultFont;
-	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
-	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
-	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
-	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
+          if (width < MIN_WIDTH)
+            dx = MIN_WIDTH;
+          else
+            dx = width;
+          if (height < MIN_HEIGHT)
+            dy = MIN_HEIGHT;
+          else
+            dy = height;
+          if (X < 0)
+            X = 2;
+          if (Y < 0)
+            Y = 2;
+          /*** Build the document window ***/
+          Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+          /*	   gtk_widget_show_all (Main_Wd);*/
+          gtk_quit_add_destroy(1, GTK_OBJECT(Main_Wd));
+          if (Main_Wd->style->font == NULL ||
+              Main_Wd->style->font->type != GDK_FONT_FONTSET)
+            Main_Wd->style->font = DefaultFont;
+          gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
+          gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
+          gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
+          gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
 
-	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-			     "delete_event",
-			     GTK_SIGNAL_FUNC(KillFrameGTK),
-			     (gpointer)frame);
+          ConnectSignalGTK (GTK_OBJECT (Main_Wd),
+                            "delete_event",
+                            GTK_SIGNAL_FUNC(KillFrameGTK),
+                            (gpointer)frame);
 	   
-	   /* adding an accelerator group for menu shortcuts */
-	   /*accel_group = gtk_accel_group_new ();
-	     gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
-	   accel_group = NULL;
-	   /* Create the vbox which contain all the elements of the view */
+          /* adding an accelerator group for menu shortcuts */
+          /*accel_group = gtk_accel_group_new ();
+            gtk_window_add_accel_group (GTK_WINDOW (Main_Wd), accel_group);*/
+          accel_group = NULL;
+          /* Create the vbox which contain all the elements of the view */
 #endif /* _GTK */
 	   
-	   /* Look for the menu list to be built */
-	   ptrmenu = NULL;
-	   if (withMenu)
-	     {
-	       if (ptrmenu == NULL)
-		 /* the document uses standard menus */
-		 ptrmenu = DocumentMenuList;
-	     }
-	   /**** Build menus ****/
-	   FrameTable[frame].FrMenus = ptrmenu;
-	   /* reference du menu construit */
-	   ref = frame + MAX_LocalMenu;
-	   i = 0;
-	   /* Initialise les menus dynamiques */
-	   FrameTable[frame].MenuAttr = -1;
-	   FrameTable[frame].MenuSelect = -1;
-	   FrameTable[frame].MenuPaste = -1;
-	   FrameTable[frame].MenuUndo = -1;
-	   FrameTable[frame].MenuRedo = -1;
-	   FrameTable[frame].MenuContext = -1;
+          /* Look for the menu list to be built */
+          ptrmenu = NULL;
+          if (withMenu)
+            {
+              if (ptrmenu == NULL)
+                /* the document uses standard menus */
+                ptrmenu = DocumentMenuList;
+            }
+          /**** Build menus ****/
+          FrameTable[frame].FrMenus = ptrmenu;
+          /* reference du menu construit */
+          ref = frame + MAX_LocalMenu;
+          i = 0;
+          /* Initialise les menus dynamiques */
+          FrameTable[frame].MenuAttr = -1;
+          FrameTable[frame].MenuSelect = -1;
+          FrameTable[frame].MenuPaste = -1;
+          FrameTable[frame].MenuUndo = -1;
+          FrameTable[frame].MenuRedo = -1;
+          FrameTable[frame].MenuContext = -1;
 #ifdef _GL
-	   FrameTable[frame].DblBuffNeedSwap = TRUE;
-	   FrameTable[frame].BeginTime = 0;
-	   FrameTable[frame].Anim_play = FALSE;
-	   FrameTable[frame].Animated_Boxes = NULL;
+          FrameTable[frame].DblBuffNeedSwap = TRUE;
+          FrameTable[frame].BeginTime = 0;
+          FrameTable[frame].Anim_play = FALSE;
+          FrameTable[frame].Animated_Boxes = NULL;
 #endif /* _GL */
 
-	   while (ptrmenu)
-	     {
-	       /* skip menus that concern another view */
-	       if ((ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
-		   Prof_ShowMenu (ptrmenu))
-		 {
+          while (ptrmenu)
+            {
+              /* skip menus that concern another view */
+              if ((ptrmenu->MenuView == 0 || ptrmenu->MenuView == view) &&
+                  Prof_ShowMenu (ptrmenu))
+                {
 #ifdef _WINGUI
-		   w = CreateMenu ();
+                  w = CreateMenu ();
 #endif /* _WINGUI */
 #ifdef _GTK
-		   if (menu_bar == NULL)
-		     {
-		       /*** The menu bar ***/
-		       menu_bar = gtk_menu_bar_new ();
-		       gtk_widget_show (menu_bar);
-		     }
-		   menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
-		   gtk_widget_show (menu_item);
-		   GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
-		   if (ptrmenu->MenuHelp == TRUE)
-		       gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+                  if (menu_bar == NULL)
+                    {
+                      /*** The menu bar ***/
+                      menu_bar = gtk_menu_bar_new ();
+                      gtk_widget_show (menu_bar);
+                    }
+                  menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
+                  gtk_widget_show (menu_item);
+                  GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
+                  if (ptrmenu->MenuHelp == TRUE)
+                    gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 
-		   /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
-		   /* il sera affiche qd le boutton droit de la souris sera active */
-		   if (!ptrmenu->MenuContext)
-		     gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
+                  /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+                  /* il sera affiche qd le boutton droit de la souris sera active */
+                  if (!ptrmenu->MenuContext)
+                    gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
 
-		   gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
-		   w = menu_item;
+                  gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
+                  w = menu_item;
 #endif /* _GTK */
-		   FrameTable[frame].WdMenus[i] = w;
-		   FrameTable[frame].EnabledMenus[i] = TRUE;
+                  FrameTable[frame].WdMenus[i] = w;
+                  FrameTable[frame].EnabledMenus[i] = TRUE;
 
-		   /* On note l'id du menu contextuel pour notre frame courante,
-		    * c'est ce qui nous permettra de l'afficher plus tard */
-		   if (ptrmenu->MenuContext) 
-		     FrameTable[frame].MenuContext = ptrmenu->MenuID;
+                  /* On note l'id du menu contextuel pour notre frame courante,
+                   * c'est ce qui nous permettra de l'afficher plus tard */
+                  if (ptrmenu->MenuContext) 
+                    FrameTable[frame].MenuContext = ptrmenu->MenuID;
 
-		   /* Evite la construction des menus dynamiques */
-		   if (ptrmenu->MenuAttr)
-		     FrameTable[frame].MenuAttr = ptrmenu->MenuID;
-		   else if (ptrmenu->MenuSelect) 
-		     FrameTable[frame].MenuSelect = ptrmenu->MenuID;
-		   else 
-		     BuildPopdown (ptrmenu, ref, w, frame, doc,
-				   FALSE, FALSE);
+                  /* Evite la construction des menus dynamiques */
+                  if (ptrmenu->MenuAttr)
+                    FrameTable[frame].MenuAttr = ptrmenu->MenuID;
+                  else if (ptrmenu->MenuSelect) 
+                    FrameTable[frame].MenuSelect = ptrmenu->MenuID;
+                  else 
+                    BuildPopdown (ptrmenu, ref, w, frame, doc,
+                                  FALSE, FALSE);
 #ifdef _WINGUI
-           /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
-		   /* il sera affiche qd le boutton droit de la souris sera active */
-		   if (!ptrmenu->MenuContext)
-		     AppendMenu( menu_bar, MF_POPUP, (UINT) w,
-			             TtaGetMessage (THOT, ptrmenu->MenuID) );
+                  /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+                  /* il sera affiche qd le boutton droit de la souris sera active */
+                  if (!ptrmenu->MenuContext)
+                    AppendMenu( menu_bar, MF_POPUP, (UINT) w,
+                                TtaGetMessage (THOT, ptrmenu->MenuID) );
 #endif  /* _WINGUI */
-		   }
-	       ptrmenu = ptrmenu->NextMenu;
-	       ref += MAX_ITEM;
-	       i++;
-	     }
+                }
+              ptrmenu = ptrmenu->NextMenu;
+              ref += MAX_ITEM;
+              i++;
+            }
 
-	   /* enable other menu entries */
-	   while (i < MAX_MENU)
-	     {
-	       FrameTable[frame].EnabledMenus[i] = FALSE;
-	       i++;
-	     }
+          /* enable other menu entries */
+          while (i < MAX_MENU)
+            {
+              FrameTable[frame].EnabledMenus[i] = FALSE;
+              i++;
+            }
 
-	   for (i = 1; i < MAX_BUTTON; i++)
-	     FrameTable[frame].Button[i] = NULL;
+          for (i = 1; i < MAX_BUTTON; i++)
+            FrameTable[frame].Button[i] = NULL;
 
 #ifdef _GTK
-	   /* Creation of the toolbar 
-	      I dont use the toolbarwidget because
-	      it's difficulte to manipulate it */
-	   toolbar = gtk_hbox_new (FALSE, 0);
-	   gtk_widget_show (toolbar);
-	   if (withButton)
-	     {
-	       /* Put the logo */
-	       amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
-							    &amaya_mask,
-							    &DefaultWindow->style->bg[GTK_STATE_NORMAL],
-							    logo_xpm);
-	       logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
-	       gtk_widget_show (logo_pixmap);
-	       gdk_pixmap_unref (amaya_pixmap);
-	       gdk_bitmap_unref (amaya_mask);
-	     }
+          /* Creation of the toolbar 
+             I dont use the toolbarwidget because
+             it's difficulte to manipulate it */
+          toolbar = gtk_hbox_new (FALSE, 0);
+          gtk_widget_show (toolbar);
+          if (withButton)
+            {
+              /* Put the logo */
+              amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
+                                                           &amaya_mask,
+                                                           &DefaultWindow->style->bg[GTK_STATE_NORMAL],
+                                                           logo_xpm);
+              logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
+              gtk_widget_show (logo_pixmap);
+              gdk_pixmap_unref (amaya_pixmap);
+              gdk_bitmap_unref (amaya_mask);
+            }
 #ifdef _GL
 #ifndef _NOSHARELIST
-	   if (GetSharedContext () == -1)
-	     {
+          if (GetSharedContext () == -1)
+            {
 #endif /*_NOSHARELIST*/
-	       drawing_area = GetGLArea ();
+              drawing_area = GetGLArea ();
 #ifdef _NOSHARELIST
-	       g_print ("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n");
+              g_print ("Warning: upgrade your Opengl implementation (ie: Mesa) to get group opacity!\n");
 #else /*_NOSHARELIST*/
-	       SetSharedContext (frame);
-	     }
-	   else
-	     drawing_area = gtk_gl_area_share_new (AttrList, 
-						   GTK_GL_AREA (FrameTable[GetSharedContext ()].WdFrame)); 
+              SetSharedContext (frame);
+            }
+          else
+            drawing_area = gtk_gl_area_share_new (AttrList, 
+                                                  GTK_GL_AREA (FrameTable[GetSharedContext ()].WdFrame)); 
 #endif /*_NOSHARELIST*/
 #else /*  _GL */
 #ifdef _GTK
-	   drawing_area = gtk_drawing_area_new ();
+          drawing_area = gtk_drawing_area_new ();
 #endif /* _GTK */
 #endif /*  _GL */	  
-	   /* Attach input context to a drawing with a hidden 
-	      entry text catcher that will handle 
-	      advanced keyboard typing (ie : multikey)*/	   
-	   wrap_text = gtk_entry_new (); 
-	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
-	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
-	   gtk_widget_grab_focus (GTK_WIDGET(wrap_text));
-	   /* the hidden input catcher textbox is so small 
-	      that it won't be displayed.. */	
-	   gtk_widget_set_usize (GTK_WIDGET(wrap_text), 1, 1);
-	   /* A storage for a pointer on the text catcher 
-	      (so we can acess it in the future)  */
-	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
-				"Text_catcher", wrap_text); 
-	   gtk_object_set_data (GTK_OBJECT (wrap_text), 
-				"Drawing_area", drawing_area);
-	   /* Callback connection on events */
-	   /*   GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
-	   /*   GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
-	   /*   GDK_BUTTON_MOTION_MASK used to detect if the mouse is moving 
-	          and a button is pressed, it's for the text selection on the document */
-	   /*   GDK_EXPOSURE_MASK used to detect if the drawing zone must be repaint */
-	   gtk_widget_set_events (GTK_WIDGET (drawing_area),  
-				  GDK_BUTTON_PRESS_MASK
-				  | GDK_BUTTON_RELEASE_MASK
-				  | GDK_BUTTON_MOTION_MASK
-				  | GDK_KEY_PRESS_MASK
-				  | GDK_KEY_RELEASE_MASK
-				  /* | GDK_POINTER_MOTION_HINT_MASK  */
-/* 				  | GDK_POINTER_MOTION_MASK   */
-				  | GDK_EXPOSURE_MASK
-				  );
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "button_press_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "button_release_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "motion_notify_event",
-			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
-			     (gpointer)frame);
-	   /* On focus, we get the system (Xwindow) clipboard content*/
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "grab-focus",
-			     GTK_SIGNAL_FUNC(get_targets),
-			     NULL);
-	   ConnectSignalGTK (GTK_OBJECT(wrap_text),
-			     "grab-focus",
-			     GTK_SIGNAL_FUNC(get_targets),
-			     NULL);
-	   /* Then when the app that own the selection responds we store it*/
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area), 
-			     "selection_received", 
-			     GTK_SIGNAL_FUNC (selection_received), 
-			     NULL);
-	   /*
-	     When another app steal the clipboard handling
-	     recommanded by the GTK
-	     http://www.gtk.org/tutorial/sec-supplyingtheselection.html
-	     BUT it works better without. 
-	     I've posted in the gtk-devel-list in order to have clues...
-	    */
-	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
-			       "selection_clear_event", 
-			       GTK_SIGNAL_FUNC (selection_clear),  
-			       NULL);    
-	   /* register as a selection handler */
-	   String_Type = gdk_atom_intern ("STRING", FALSE);
-	   gtk_selection_add_target (GTK_WIDGET (drawing_area),
-				     GDK_SELECTION_PRIMARY,
-				     String_Type,
-				     2);
-	   Utf8_Type = gdk_atom_intern ("UTF8_STRING", FALSE);
-	   gtk_selection_add_target (GTK_WIDGET (drawing_area),
-				     GDK_SELECTION_PRIMARY,
-				     Utf8_Type,
-				     1);
-	   /* Callback called by other app to get the amaya selection*/
-	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
-			       "selection_get", 
-			       GTK_SIGNAL_FUNC (selection_handle), 
-			       NULL); 
-	   /* the key press event is intercepted by the main frame, 
-	      not by the drawing area.
-	      the result is analysed in the callback */
-	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-			     "key_press_event",
-			     GTK_SIGNAL_FUNC(CharTranslationGTK),
-			     (gpointer) frame);
-	   /* callbacks to know if it's necessary to redisplay */
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "expose_event",
-			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
-			     (gpointer)frame); 
+          /* Attach input context to a drawing with a hidden 
+             entry text catcher that will handle 
+             advanced keyboard typing (ie : multikey)*/	   
+          wrap_text = gtk_entry_new (); 
+          GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_FOCUS);
+          GTK_WIDGET_SET_FLAGS (GTK_WIDGET(wrap_text), GTK_CAN_DEFAULT);
+          gtk_widget_grab_focus (GTK_WIDGET(wrap_text));
+          /* the hidden input catcher textbox is so small 
+             that it won't be displayed.. */	
+          gtk_widget_set_usize (GTK_WIDGET(wrap_text), 1, 1);
+          /* A storage for a pointer on the text catcher 
+             (so we can acess it in the future)  */
+          gtk_object_set_data (GTK_OBJECT (drawing_area), 
+                               "Text_catcher", wrap_text); 
+          gtk_object_set_data (GTK_OBJECT (wrap_text), 
+                               "Drawing_area", drawing_area);
+          /* Callback connection on events */
+          /*   GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
+          /*   GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
+          /*   GDK_BUTTON_MOTION_MASK used to detect if the mouse is moving 
+               and a button is pressed, it's for the text selection on the document */
+          /*   GDK_EXPOSURE_MASK used to detect if the drawing zone must be repaint */
+          gtk_widget_set_events (GTK_WIDGET (drawing_area),  
+                                 GDK_BUTTON_PRESS_MASK
+                                 | GDK_BUTTON_RELEASE_MASK
+                                 | GDK_BUTTON_MOTION_MASK
+                                 | GDK_KEY_PRESS_MASK
+                                 | GDK_KEY_RELEASE_MASK
+                                 /* | GDK_POINTER_MOTION_HINT_MASK  */
+                                 /* 				  | GDK_POINTER_MOTION_MASK   */
+                                 | GDK_EXPOSURE_MASK
+                                 );
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "button_press_event",
+                            GTK_SIGNAL_FUNC(FrameCallbackGTK),
+                            (gpointer)frame);
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "button_release_event",
+                            GTK_SIGNAL_FUNC(FrameCallbackGTK),
+                            (gpointer)frame);
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "motion_notify_event",
+                            GTK_SIGNAL_FUNC(FrameCallbackGTK),
+                            (gpointer)frame);
+          /* On focus, we get the system (Xwindow) clipboard content*/
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "grab-focus",
+                            GTK_SIGNAL_FUNC(get_targets),
+                            NULL);
+          ConnectSignalGTK (GTK_OBJECT(wrap_text),
+                            "grab-focus",
+                            GTK_SIGNAL_FUNC(get_targets),
+                            NULL);
+          /* Then when the app that own the selection responds we store it*/
+          ConnectSignalGTK (GTK_OBJECT (drawing_area), 
+                            "selection_received", 
+                            GTK_SIGNAL_FUNC (selection_received), 
+                            NULL);
+          /*
+            When another app steal the clipboard handling
+            recommanded by the GTK
+            http://www.gtk.org/tutorial/sec-supplyingtheselection.html
+            BUT it works better without. 
+            I've posted in the gtk-devel-list in order to have clues...
+          */
+          gtk_signal_connect (GTK_OBJECT(drawing_area), 
+                              "selection_clear_event", 
+                              GTK_SIGNAL_FUNC (selection_clear),  
+                              NULL);    
+          /* register as a selection handler */
+          String_Type = gdk_atom_intern ("STRING", FALSE);
+          gtk_selection_add_target (GTK_WIDGET (drawing_area),
+                                    GDK_SELECTION_PRIMARY,
+                                    String_Type,
+                                    2);
+          Utf8_Type = gdk_atom_intern ("UTF8_STRING", FALSE);
+          gtk_selection_add_target (GTK_WIDGET (drawing_area),
+                                    GDK_SELECTION_PRIMARY,
+                                    Utf8_Type,
+                                    1);
+          /* Callback called by other app to get the amaya selection*/
+          gtk_signal_connect (GTK_OBJECT(drawing_area), 
+                              "selection_get", 
+                              GTK_SIGNAL_FUNC (selection_handle), 
+                              NULL); 
+          /* the key press event is intercepted by the main frame, 
+             not by the drawing area.
+             the result is analysed in the callback */
+          ConnectSignalGTK (GTK_OBJECT (Main_Wd),
+                            "key_press_event",
+                            GTK_SIGNAL_FUNC(CharTranslationGTK),
+                            (gpointer) frame);
+          /* callbacks to know if it's necessary to redisplay */
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "expose_event",
+                            GTK_SIGNAL_FUNC (ExposeCallbackGTK),
+                            (gpointer)frame); 
 #ifdef _GL	  
-	  /* when widget is initialized, 
-	      we define opengl pipeline state */
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "draw",
-			     GTK_SIGNAL_FUNC (GL_DrawCallback),
-			     (gpointer)frame); 
-	   /* when widget is initialized, 
-	      we define opengl pipeline state */
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "realize",
-			     GTK_SIGNAL_FUNC (GL_Init),
-			     (gpointer)frame); 
-	   /* When it is destroyed */
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "unrealize",
-			     GTK_SIGNAL_FUNC (GL_Destroy),
-			     (gpointer)frame);
+          /* when widget is initialized, 
+             we define opengl pipeline state */
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "draw",
+                            GTK_SIGNAL_FUNC (GL_DrawCallback),
+                            (gpointer)frame); 
+          /* when widget is initialized, 
+             we define opengl pipeline state */
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "realize",
+                            GTK_SIGNAL_FUNC (GL_Init),
+                            (gpointer)frame); 
+          /* When it is destroyed */
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "unrealize",
+                            GTK_SIGNAL_FUNC (GL_Destroy),
+                            (gpointer)frame);
 	   
-	   gtk_object_set_data (GTK_OBJECT (drawing_area),
-				"frame",
-				(gpointer) frame); 
-	   gtk_object_set_data (GTK_OBJECT (Main_Wd),
-				"Drawing_area",
-				(gpointer) drawing_area);
+          gtk_object_set_data (GTK_OBJECT (drawing_area),
+                               "frame",
+                               (gpointer) frame); 
+          gtk_object_set_data (GTK_OBJECT (Main_Wd),
+                               "Drawing_area",
+                               (gpointer) drawing_area);
 	   	
    
-	   /*InitDialogueFonts ("");*/
+          /*InitDialogueFonts ("");*/
 #endif /* _GL */
-	   gtk_object_set_data (GTK_OBJECT (drawing_area),
-				"Main_Wd",
-				(gpointer) Main_Wd);
-	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-			     "configure_event",
-			     GTK_SIGNAL_FUNC (FrameResizedGTK),
-			     (gpointer)frame);
-	   /* Put the scrollbars */
-	   tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
-	   ConnectSignalGTK (GTK_OBJECT (tmpw),
-			     "value_changed",
-			     GTK_SIGNAL_FUNC (FrameVScrolledGTK),
-			     (gpointer)frame);
-    	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
-	   /* ALL the signal connecting code permits to 
-	      override the Vertical scrollbar behaviour
-	      which is wrong in amaya case (bad callback handling, bad y...), 
-	      so now it's KeyScrolledGTK that  handle it (in dialogue/input.c)*/
-	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_FOCUS);
-	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_DEFAULT);
-	   gtk_widget_set_events (GTK_WIDGET (vscrl),  
-				  GDK_BUTTON_PRESS_MASK
-				  | GDK_BUTTON_RELEASE_MASK
-				  | GDK_KEY_PRESS_MASK
-				  | GDK_KEY_RELEASE_MASK
-				  | GDK_LEAVE_NOTIFY
-	                          | GDK_FOCUS_CHANGE_MASK
-				  );
-	   /* catch use of scrollbar */
-	   ConnectSignalGTK (GTK_OBJECT (vscrl),
-			     "key_press_event",
-			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
-			     (gpointer)frame);
-	   ConnectSignalGTK (GTK_OBJECT (vscrl),
-			     "button_press_event",
-			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
-			     (gpointer)frame);
-	   /* 
-	      those one permits use to stop the timer when user
-	      clicks and release a long time after 
-	      (outisde (leave_notify) or inside(button_release) 
-	      the scrollbar area)
-	    */
-	   ConnectSignalGTK (GTK_OBJECT (vscrl),
-			     "button_release_event",
-			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
-			     (gpointer)frame);
-	  ConnectSignalGTK (GTK_OBJECT (vscrl),
-			     "leave_notify_event",
-			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
-			     (gpointer)frame); 
-	   ConnectSignalGTK (GTK_OBJECT (vscrl),
-			     "key_release_event",
-			     GTK_SIGNAL_FUNC (KeyScrolledGTK),
-			     (gpointer)frame);
+          gtk_object_set_data (GTK_OBJECT (drawing_area),
+                               "Main_Wd",
+                               (gpointer) Main_Wd);
+          ConnectSignalGTK (GTK_OBJECT (drawing_area),
+                            "configure_event",
+                            GTK_SIGNAL_FUNC (FrameResizedGTK),
+                            (gpointer)frame);
+          /* Put the scrollbars */
+          tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
+          ConnectSignalGTK (GTK_OBJECT (tmpw),
+                            "value_changed",
+                            GTK_SIGNAL_FUNC (FrameVScrolledGTK),
+                            (gpointer)frame);
+          vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
+          /* ALL the signal connecting code permits to 
+             override the Vertical scrollbar behaviour
+             which is wrong in amaya case (bad callback handling, bad y...), 
+             so now it's KeyScrolledGTK that  handle it (in dialogue/input.c)*/
+          GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_FOCUS);
+          GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_DEFAULT);
+          gtk_widget_set_events (GTK_WIDGET (vscrl),  
+                                 GDK_BUTTON_PRESS_MASK
+                                 | GDK_BUTTON_RELEASE_MASK
+                                 | GDK_KEY_PRESS_MASK
+                                 | GDK_KEY_RELEASE_MASK
+                                 | GDK_LEAVE_NOTIFY
+                                 | GDK_FOCUS_CHANGE_MASK
+                                 );
+          /* catch use of scrollbar */
+          ConnectSignalGTK (GTK_OBJECT (vscrl),
+                            "key_press_event",
+                            GTK_SIGNAL_FUNC (KeyScrolledGTK),
+                            (gpointer)frame);
+          ConnectSignalGTK (GTK_OBJECT (vscrl),
+                            "button_press_event",
+                            GTK_SIGNAL_FUNC (KeyScrolledGTK),
+                            (gpointer)frame);
+          /* 
+             those one permits use to stop the timer when user
+             clicks and release a long time after 
+             (outisde (leave_notify) or inside(button_release) 
+             the scrollbar area)
+          */
+          ConnectSignalGTK (GTK_OBJECT (vscrl),
+                            "button_release_event",
+                            GTK_SIGNAL_FUNC (KeyScrolledGTK),
+                            (gpointer)frame);
+          ConnectSignalGTK (GTK_OBJECT (vscrl),
+                            "leave_notify_event",
+                            GTK_SIGNAL_FUNC (KeyScrolledGTK),
+                            (gpointer)frame); 
+          ConnectSignalGTK (GTK_OBJECT (vscrl),
+                            "key_release_event",
+                            GTK_SIGNAL_FUNC (KeyScrolledGTK),
+                            (gpointer)frame);
 
 	  
-	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
-	   ConnectSignalGTK (GTK_OBJECT (tmpw),
-			     "value_changed",
-			     GTK_SIGNAL_FUNC (FrameHScrolledGTK),
-			     (gpointer)frame);
-      	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (tmpw)); 
+          tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
+          ConnectSignalGTK (GTK_OBJECT (tmpw),
+                            "value_changed",
+                            GTK_SIGNAL_FUNC (FrameHScrolledGTK),
+                            (gpointer)frame);
+          hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (tmpw)); 
 	   
 #ifdef _GTKRULERS
-	   {
-	     ThotWidget button;
+          {
+            ThotWidget button;
 	     
-	     /* create rulers button */
-	     button = gtk_button_new_with_label ("/");
-	     /* when the button is clicked, we call the "callback" function
-	      * with a pointer to "button 1" as its argument */
-	     /*
-	       (	   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-	       GTK_SIGNAL_FUNC (callback), (gpointer) "button 1");
-	     */
-	     /* insert button into the upper left quadrant of the table */
-	     gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 1, 2,
-			       (GtkAttachOptions) (GTK_SHRINK),
-			       (GtkAttachOptions) (GTK_SHRINK), 0, 0);
-	     gtk_widget_show (button);
-	   }
+            /* create rulers button */
+            button = gtk_button_new_with_label ("/");
+            /* when the button is clicked, we call the "callback" function
+             * with a pointer to "button 1" as its argument */
+            /*
+              (	   gtk_signal_connect (GTK_OBJECT (button), "clicked",
+              GTK_SIGNAL_FUNC (callback), (gpointer) "button 1");
+            */
+            /* insert button into the upper left quadrant of the table */
+            gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 1, 2,
+                              (GtkAttachOptions) (GTK_SHRINK),
+                              (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+            gtk_widget_show (button);
+          }
 #endif /* _GTKRULERS */
-	   /* Put the statusbar */
-	   statusbar = gtk_statusbar_new ();
-	   gtk_widget_ref (statusbar);
-	   gtk_widget_show (statusbar);
-	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
-			       (gpointer)gtk_statusbar_get_context_id(GTK_STATUSBAR (statusbar), "MainSerie"));
-	   gtk_statusbar_push(GTK_STATUSBAR(statusbar),
-			      (long int)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
-			      "");
+          /* Put the statusbar */
+          statusbar = gtk_statusbar_new ();
+          gtk_widget_ref (statusbar);
+          gtk_widget_show (statusbar);
+          gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
+                              (gpointer)gtk_statusbar_get_context_id(GTK_STATUSBAR (statusbar), "MainSerie"));
+          gtk_statusbar_push(GTK_STATUSBAR(statusbar),
+                             (long int)gtk_object_get_data (GTK_OBJECT(statusbar), "MainSerie"),
+                             "");
 	   
-	   /* The hbox which includes the logo and Comboboxzone (URL) */
-	   hbox1 = gtk_hbox_new (FALSE, 5);
-	   if (withButton)
-	     {
-	       gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
-	       gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
-	     }
-	   /*box that will be used to put in combobox */
-	   hbox2 = gtk_hbox_new (FALSE, 0);
-	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
+          /* The hbox which includes the logo and Comboboxzone (URL) */
+          hbox1 = gtk_hbox_new (FALSE, 5);
+          if (withButton)
+            {
+              gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 5);
+              gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
+            }
+          /*box that will be used to put in combobox */
+          hbox2 = gtk_hbox_new (FALSE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
 
-	   /*if we want to get a shadowed frame ?*/
-	   /* drawing_frame = gtk_frame_new (NULL); */
-           /*gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);*/
+          /*if we want to get a shadowed frame ?*/
+          /* drawing_frame = gtk_frame_new (NULL); */
+          /*gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);*/
 	   
 
-	   /*Put the drawing frame  it's a 4*4 table (grid)
-	    that permits us to place scrollbars on the left 
-	    and the bottom of the  drawing zone*/
-	   table2 = gtk_table_new (2, 2, FALSE);
-	   gtk_table_attach (GTK_TABLE (table2), drawing_area, 0, 1, 0, 1,
-			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+          /*Put the drawing frame  it's a 4*4 table (grid)
+            that permits us to place scrollbars on the left 
+            and the bottom of the  drawing zone*/
+          table2 = gtk_table_new (2, 2, FALSE);
+          gtk_table_attach (GTK_TABLE (table2), drawing_area, 0, 1, 0, 1,
+                            (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                            (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
    	  
 
-	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
-	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+          gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
+                            (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+                            (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+          gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
+                            (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
+                            (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 	   
-	   /* main box of the windows : a Vertical One */
-	   vbox1 = gtk_vbox_new (FALSE, 0);
-	   /* compose the main Vertical Box */
-	   if (menu_bar)
-	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
-	   if (toolbar)
-	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(toolbar), FALSE, FALSE, 2);
+          /* main box of the windows : a Vertical One */
+          vbox1 = gtk_vbox_new (FALSE, 0);
+          /* compose the main Vertical Box */
+          if (menu_bar)
+            gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+          if (toolbar)
+            gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(toolbar), FALSE, FALSE, 2);
 	   
-	   gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(hbox1), FALSE, FALSE, 5);
-	   if (wrap_text)
-	     gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 0);
-	   gtk_box_pack_start (GTK_BOX(vbox1), GTK_WIDGET(table2), TRUE, TRUE, 0);
-	   if (statusbar)
-	     gtk_box_pack_end (GTK_BOX(vbox1), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
-	   /* add it to the window */
- 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1); 
+          gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(hbox1), FALSE, FALSE, 5);
+          if (wrap_text)
+            gtk_box_pack_start (GTK_BOX (vbox1), GTK_WIDGET(wrap_text), FALSE, FALSE, 0);
+          gtk_box_pack_start (GTK_BOX(vbox1), GTK_WIDGET(table2), TRUE, TRUE, 0);
+          if (statusbar)
+            gtk_box_pack_end (GTK_BOX(vbox1), GTK_WIDGET(statusbar), FALSE, FALSE, 0);
+          /* add it to the window */
+          gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1); 
 	  	   
-	   FrameTable[frame].Button[0] = toolbar;
-	   FrameTable[frame].Text_Zone = 0;
-	   FrameTable[frame].Row_Zone = hbox2;
-	   FrameTable[frame].WdStatus = statusbar;
-	   FrameTable[frame].WdScrollH = hscrl;
-	   FrameTable[frame].WdScrollV = vscrl;
-	   FrameTable[frame].WdFrame =  drawing_area;
-	   /* show the main window */
-	   gtk_widget_show_all (Main_Wd);
-	   /* Must be called after the show all
-	      (otherwise ->window is NULL)*/
-           FrRef[frame] = drawing_area->window;
-	   /* approximate the real size of the drawing area */
-	   FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
-	   FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
-	   FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
-	   /* Add App icone */
-	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
-	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
+          FrameTable[frame].Button[0] = toolbar;
+          FrameTable[frame].Text_Zone = 0;
+          FrameTable[frame].Row_Zone = hbox2;
+          FrameTable[frame].WdStatus = statusbar;
+          FrameTable[frame].WdScrollH = hscrl;
+          FrameTable[frame].WdScrollV = vscrl;
+          FrameTable[frame].WdFrame =  drawing_area;
+          /* show the main window */
+          gtk_widget_show_all (Main_Wd);
+          /* Must be called after the show all
+             (otherwise ->window is NULL)*/
+          FrRef[frame] = drawing_area->window;
+          /* approximate the real size of the drawing area */
+          FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
+          FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
+          FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
+          /* Add App icone */
+          gdk_window_set_icon_name (Main_Wd->window, "Amaya");
+          gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
 #endif /* _GTK */
 #ifdef _WINGUI
-	   /*** scrollbars ***/
-	   hscrl = CreateWindow ("scrollbar", 
-				 NULL,
-				 WS_CHILD | WS_VISIBLE | SBS_HORZ | SBS_BOTTOMALIGN,
-				 0, 0, 0, 0, 
-				 Main_Wd, 
-				 (HMENU) frame,
-				 hInstance, NULL);
-	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
-	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
+          /*** scrollbars ***/
+          hscrl = CreateWindow ("scrollbar", 
+                                NULL,
+                                WS_CHILD | WS_VISIBLE | SBS_HORZ | SBS_BOTTOMALIGN,
+                                0, 0, 0, 0, 
+                                Main_Wd, 
+                                (HMENU) frame,
+                                hInstance, NULL);
+          SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
+          SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 
-	   vscrl = CreateWindow ("scrollbar", 
-				 NULL,
-				 WS_CHILD | WS_VISIBLE | SBS_VERT | SBS_RIGHTALIGN,
-				 0, 0, 0, 0, 
-				 Main_Wd, 
-				 (HMENU) (frame + 1),
-				 hInstance, NULL);
-	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
-	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
+          vscrl = CreateWindow ("scrollbar", 
+                                NULL,
+                                WS_CHILD | WS_VISIBLE | SBS_VERT | SBS_RIGHTALIGN,
+                                0, 0, 0, 0, 
+                                Main_Wd, 
+                                (HMENU) (frame + 1),
+                                hInstance, NULL);
+          SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
+          SetScrollPos (vscrl, SB_CTL, 0, FALSE);
 
-	   FrameTable[frame].FrWidth  = (int) width;
-	   FrameTable[frame].FrScrollWidth  = (int) width;
-	   FrameTable[frame].FrHeight = (int) height;
-	   FrameTable[frame].WdScrollH = hscrl;
-	   FrameTable[frame].WdScrollV = vscrl;
-	   if (w == NULL)
-	     FrameTable[frame].WdFrame = (ThotMenu) hwndClient;
-	   else
-	     FrameTable[frame].WdFrame = (ThotMenu) w;
+          FrameTable[frame].FrWidth  = (int) width;
+          FrameTable[frame].FrScrollWidth  = (int) width;
+          FrameTable[frame].FrHeight = (int) height;
+          FrameTable[frame].WdScrollH = hscrl;
+          FrameTable[frame].WdScrollV = vscrl;
+          if (w == NULL)
+            FrameTable[frame].WdFrame = (ThotMenu) hwndClient;
+          else
+            FrameTable[frame].WdFrame = (ThotMenu) w;
 #endif /* _WINGUI */
-	   FrameTable[frame].FrScrollOrg = 0;
+          FrameTable[frame].FrScrollOrg = 0;
 
-	   /* get registry default values for visibility */
-	   visiStr = TtaGetEnvString ("VISIBILITY");
-	   if (visiStr == NULL)
-	     visiVal = 5;
-	   else
-	     {
-	       visiVal = atoi (visiStr);
-	       if (visiVal < 0 || visiVal > 10)
-		 visiVal = 5;
-	     }
-	   /* Initialise la visibilite et le zoom de la fenetre */
-	   InitializeFrameParams (frame, visiVal, 0);
-	   /* Initialise la couleur de fond */
-	   BackgroundColor[frame] = DefaultBColor;
-	 }
-       /* Update the frame title in any case */
-       ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
+          /* get registry default values for visibility */
+          visiStr = TtaGetEnvString ("VISIBILITY");
+          if (visiStr == NULL)
+            visiVal = 5;
+          else
+            {
+              visiVal = atoi (visiStr);
+              if (visiVal < 0 || visiVal > 10)
+                visiVal = 5;
+            }
+          /* Initialise la visibilite et le zoom de la fenetre */
+          InitializeFrameParams (frame, visiVal, 0);
+          /* Initialise la couleur de fond */
+          BackgroundColor[frame] = DefaultBColor;
+        }
+      /* Update the frame title in any case */
+      ChangeFrameTitle (frame, (unsigned char*)name, TtaGetDefaultCharset ());
 
-       /* Window volume in characters */
-       *volume = GetCharsCapacity (width * height, frame);
-       FrameTable[frame].FrDoc = doc;
-       FrameTable[frame].FrView = view;
+      /* Window volume in characters */
+      *volume = GetCharsCapacity (width * height, frame);
+      FrameTable[frame].FrDoc = doc;
+      FrameTable[frame].FrView = view;
 #ifdef _WINGUI
-       SetMenu (Main_Wd, menu_bar);
-       ShowWindow (Main_Wd, SW_SHOWNORMAL);
-       UpdateWindow (Main_Wd);
-       InitCommonControls ();
+      SetMenu (Main_Wd, menu_bar);
+      ShowWindow (Main_Wd, SW_SHOWNORMAL);
+      UpdateWindow (Main_Wd);
+      InitCommonControls ();
 #endif /* _WINGUI */
 #ifdef _GL
-       FrameTable[frame].Scroll_enabled = TRUE;
+      FrameTable[frame].Scroll_enabled = TRUE;
 #endif /* _GL */ 
-     }
-   return (frame);
+    }
+  return (frame);
 #else /* #if defined(_GTK) || defined(_WINGUI) */
-   /* this is for none gui compilation */
-   return 0;
+  /* this is for none gui compilation */
+  return 0;
 #endif /* #if defined(_GTK) || defined(_WINGUI) */
 }
 
 /*----------------------------------------------------------------------
- TtaDisableScrollbars  : Disable scrollbars for this view                 
+  TtaDisableScrollbars  : Disable scrollbars for this view                 
   ----------------------------------------------------------------------*/
 void TtaDisableScrollbars (Document doc, View view)
 {
@@ -3382,11 +3378,11 @@ void TtaDisableScrollbars (Document doc, View view)
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
-   Si l'entree existe :
-   WX: detruit seulement la AmayaFrame correspondante ainsi que son canvas opengl (AmayaCanvas),
-       mais ne detruit pas les menus car ils sont associes au document.                                             
-   Ferme la fenetre, detruit le fichier et libere l'entree.      
-   Libere toutes les boites allouees a la fenetre.
+  Si l'entree existe :
+  WX: detruit seulement la AmayaFrame correspondante ainsi que son canvas opengl (AmayaCanvas),
+  mais ne detruit pas les menus car ils sont associes au document.                                             
+  Ferme la fenetre, detruit le fichier et libere l'entree.      
+  Libere toutes les boites allouees a la fenetre.
   ----------------------------------------------------------------------*/
 void DestroyFrame (int frame)
 {
@@ -3425,28 +3421,28 @@ void DestroyFrame (int frame)
       i = 0;
       ref = frame + MAX_LocalMenu;	/* reference du menu construit */
       while (ptrmenu != NULL)
-	{
-	  /* saute les menus qui ne concernent pas cette vue */
-	  if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == FrameTable[frame].FrView)
-	    {
-	      FrameTable[frame].WdMenus[i] = 0;
-	      TtaDestroyDialogue (ref);
-	      item = 0;
-	      ptr = ptrmenu->ItemsList;
-	      while (item < ptrmenu->ItemsNb)
-		{
-		  action = ptr[item].ItemAction;
-		  if (action != -1 && action < MaxMenuAction &&
-		      (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
-		    /* Desactive l'action correspondante pour cette fenetre */
-		    MenuActionList[action].ActionActive[frame] = FALSE;
-		  item++;
-		}
-	    }
-	  ptrmenu = ptrmenu->NextMenu;
-	  ref += MAX_ITEM;
-	  i++;
-	}
+        {
+          /* saute les menus qui ne concernent pas cette vue */
+          if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == FrameTable[frame].FrView)
+            {
+              FrameTable[frame].WdMenus[i] = 0;
+              TtaDestroyDialogue (ref);
+              item = 0;
+              ptr = ptrmenu->ItemsList;
+              while (item < ptrmenu->ItemsNb)
+                {
+                  action = ptr[item].ItemAction;
+                  if (action != -1 && action < MaxMenuAction &&
+                      (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
+                    /* Desactive l'action correspondante pour cette fenetre */
+                    MenuActionList[action].ActionActive[frame] = FALSE;
+                  item++;
+                }
+            }
+          ptrmenu = ptrmenu->NextMenu;
+          ref += MAX_ITEM;
+          i++;
+        }
 #endif /* _WX */
 
 #ifdef _GTK
@@ -3455,10 +3451,10 @@ void DestroyFrame (int frame)
 #ifdef _WINGUI
       FrameTable[frame].Text_Zone = 0;
       if (hAccel[frame])
-	{
-	  DestroyAcceleratorTable (hAccel[frame]);
-	  hAccel[frame] = NULL;
-	}
+        {
+          DestroyAcceleratorTable (hAccel[frame]);
+          hAccel[frame] = NULL;
+        }
 #endif /* _WINGUI */
 
       /* with WX, never really delete the widgets */
@@ -3503,24 +3499,24 @@ void DestroyFrame (int frame)
 
 
 /*----------------------------------------------------------------------
-   GetMenu_Ctl returns the pointer to the right menu context. 
+  GetMenu_Ctl returns the pointer to the right menu context. 
   ----------------------------------------------------------------------*/
 static Menu_Ctl *GetMenu_Ctl (int frame, int menu)
 {  
-   int                 i;
-   Menu_Ctl           *ptrmenu;
+  int                 i;
+  Menu_Ctl           *ptrmenu;
 #ifdef _WX
-   ptrmenu = DocumentMenuList;
+  ptrmenu = DocumentMenuList;
 #else /* _WX */
-   ptrmenu = FrameTable[frame].FrMenus;
+  ptrmenu = FrameTable[frame].FrMenus;
 #endif /* _WX */
-   i = 0;
-   while (i != menu && ptrmenu != NULL)
-     {
-       ptrmenu = ptrmenu->NextMenu;
-       i++;
-     }
-   return (ptrmenu);
+  i = 0;
+  while (i != menu && ptrmenu != NULL)
+    {
+      ptrmenu = ptrmenu->NextMenu;
+      i++;
+    }
+  return (ptrmenu);
 }
 
 
@@ -3530,34 +3526,34 @@ static Menu_Ctl *GetMenu_Ctl (int frame, int menu)
   ----------------------------------------------------------------------*/
 int FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
 {
-   Menu_Ctl           *ptrmenu;
-   int                 m;
+  Menu_Ctl           *ptrmenu;
+  int                 m;
 
-   /* Look for the menu */
-   m = 1;			/* menu index */
-   /* look for that menu in the menu list */
+  /* Look for the menu */
+  m = 1;			/* menu index */
+  /* look for that menu in the menu list */
 #ifdef _WX
-   ptrmenu = DocumentMenuList;
+  ptrmenu = DocumentMenuList;
 #else /* _WX */
-   ptrmenu = FrameTable[frame].FrMenus;
+  ptrmenu = FrameTable[frame].FrMenus;
 #endif /* _WX */      
-   while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
-     {
-       m++;
-       ptrmenu = ptrmenu->NextMenu;
-     }
+  while (ptrmenu != NULL && menuID != ptrmenu->MenuID)
+    {
+      m++;
+      ptrmenu = ptrmenu->NextMenu;
+    }
    
-   *ctxmenu = ptrmenu;
-   if (ptrmenu == NULL)
-     /* menu not found */
-     return (-1);
-   else if (ptrmenu->MenuView != 0 &&
-	    ptrmenu->MenuView != FrameTable[frame].FrView)
-     /* menu found but that frame is not concerned */
-     return (-1);
-   else
-     /* ok */
-     return (m);
+  *ctxmenu = ptrmenu;
+  if (ptrmenu == NULL)
+    /* menu not found */
+    return (-1);
+  else if (ptrmenu->MenuView != 0 &&
+           ptrmenu->MenuView != FrameTable[frame].FrView)
+    /* menu found but that frame is not concerned */
+    return (-1);
+  else
+    /* ok */
+    return (m);
 }
 
 
@@ -3570,7 +3566,7 @@ int FindMenu (int frame, int menuID, Menu_Ctl ** ctxmenu)
   - action index or -1
   ----------------------------------------------------------------------*/
 static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
-			  int *submenu, int *item, int *action)
+                          int *submenu, int *item, int *action)
 {
   Menu_Ctl           *ptrmenu, *ptrsmenu;
   Item_Ctl           *ptr;
@@ -3595,63 +3591,63 @@ static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
       max = ptrmenu->ItemsNb;
       ptrsmenu = NULL;
       while (ptrmenu && !found)
-	{
-	  while (i < max && !found)
-	    {
-	      j = ptr[i].ItemAction;
-	      if (j == -1)
-		{
-		  i++;	/* separator */
-		  entry++;
-		}
-	      else if (ptr[i].ItemID == itemID)
-		{
-		  /* the entry is found */
-		  found = TRUE;
-		  if (ptr[i].ItemType == 'M')
-		    /* it doesn't match an action */
-		    j = -1;
-		}
-	      else if (ptr[i].ItemType == 'M')
-		{
-		  if (ptr[i].SubMenu->ItemsNb == 0)
-		    i++;
-		  else
-		    {
-		      /* search in that submenu */
-		      sm = i + 1;
-		      sentry = entry + 1;
-		      ptrsmenu = ptr[i].SubMenu;
-		      i = 0;
-		      entry = 0;
-		      ptr = ptrsmenu->ItemsList;
-		      max = ptrsmenu->ItemsNb;
-		    }
-		}
-	      else
-		{
-		  /* it's not that one */
-		  i++;
-		  entry++;
-		}
-	    }
+        {
+          while (i < max && !found)
+            {
+              j = ptr[i].ItemAction;
+              if (j == -1)
+                {
+                  i++;	/* separator */
+                  entry++;
+                }
+              else if (ptr[i].ItemID == itemID)
+                {
+                  /* the entry is found */
+                  found = TRUE;
+                  if (ptr[i].ItemType == 'M')
+                    /* it doesn't match an action */
+                    j = -1;
+                }
+              else if (ptr[i].ItemType == 'M')
+                {
+                  if (ptr[i].SubMenu->ItemsNb == 0)
+                    i++;
+                  else
+                    {
+                      /* search in that submenu */
+                      sm = i + 1;
+                      sentry = entry + 1;
+                      ptrsmenu = ptr[i].SubMenu;
+                      i = 0;
+                      entry = 0;
+                      ptr = ptrsmenu->ItemsList;
+                      max = ptrsmenu->ItemsNb;
+                    }
+                }
+              else
+                {
+                  /* it's not that one */
+                  i++;
+                  entry++;
+                }
+            }
 	   
-	  /* do we close the search in a submenu? */
-	  if (!found && ptrsmenu != NULL)
-	    {
-	      /* continue the search in the menu */
-	      i = sm;
-	      sm = 0;
-	      entry = sentry;
-	      sentry = 0;
-	      ptrsmenu = NULL;
-	      ptr = ptrmenu->ItemsList;
-	      max = ptrmenu->ItemsNb;
-	    }
-	  else
-	    /* we close the menu search and this itemID doesn't exist */
-	    ptrmenu = NULL;
-	}
+          /* do we close the search in a submenu? */
+          if (!found && ptrsmenu != NULL)
+            {
+              /* continue the search in the menu */
+              i = sm;
+              sm = 0;
+              entry = sentry;
+              sentry = 0;
+              ptrsmenu = NULL;
+              ptr = ptrmenu->ItemsList;
+              max = ptrmenu->ItemsNb;
+            }
+          else
+            /* we close the menu search and this itemID doesn't exist */
+            ptrmenu = NULL;
+        }
     }
 
   /* do we sucess? */
@@ -3688,11 +3684,11 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
   if (pDoc == NULL)
     {
       for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
-	{
-	  pDoc = LoadedDocument[doc_id-1];
-	  if (pDoc)
-	    SwitchUndo(pDoc, on);
-	}
+        {
+          pDoc = LoadedDocument[doc_id-1];
+          if (pDoc)
+            SwitchUndo(pDoc, on);
+        }
     }
   else
     { 
@@ -3701,18 +3697,18 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
 
       /* do nothing if the document doesn't have a window parent */
       if ( window_id <= 0 )
-	return;
+        return;
 
       int      item_id   = WindowTable[window_id].MenuItemUndo;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
       if ( action > 0 &&
-	   action < MaxMenuAction &&
-	   MenuActionList[action].ActionActive[document] != on)
-	{
-	  MenuActionList[action].ActionActive[document] = on;
-	  TtaRefreshMenuItemStats( document, NULL, item_id );
-	}
+           action < MaxMenuAction &&
+           MenuActionList[action].ActionActive[document] != on)
+        {
+          MenuActionList[action].ActionActive[document] = on;
+          TtaRefreshMenuItemStats( document, NULL, item_id );
+        }
     }
 #endif /* _WX */
 
@@ -3725,18 +3721,18 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
   for (view = 0; view < MAX_VIEW_DOC; view++)
     {
       if (pDoc->DocView[view].DvPSchemaView > 0)
-	{
-	  frame = pDoc->DocViewFrame[view];
-	  if (frame != 0 && FrameTable[frame].MenuUndo != -1)
-	    {
-	      ref = FrameTable[frame].MenuUndo;
-	      item = FrameTable[frame].EntryUndo;
-	      if (on)
-		TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
-	      else
-		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	    }  
-	}
+        {
+          frame = pDoc->DocViewFrame[view];
+          if (frame != 0 && FrameTable[frame].MenuUndo != -1)
+            {
+              ref = FrameTable[frame].MenuUndo;
+              item = FrameTable[frame].EntryUndo;
+              if (on)
+                TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
+              else
+                TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+            }  
+        }
     }
 #endif /* _WX */
 } 
@@ -3751,11 +3747,11 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
   if (pDoc == NULL)
     {
       for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
-	{
-	  pDoc = LoadedDocument[doc_id-1];
-	  if (pDoc)
-	    SwitchRedo(pDoc, on);
-	}
+        {
+          pDoc = LoadedDocument[doc_id-1];
+          if (pDoc)
+            SwitchRedo(pDoc, on);
+        }
     }
   else
     {
@@ -3764,18 +3760,18 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
 
       /* do nothing if the document doesn't have a window parent */
       if ( window_id <= 0 )
-	return;
+        return;
 
       int      item_id   = WindowTable[window_id].MenuItemRedo;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
       if ( action > 0 &&
-	   action < MaxMenuAction &&
-	   MenuActionList[action].ActionActive[document] != on)
-	{
-	  MenuActionList[action].ActionActive[document] = on;
-	  TtaRefreshMenuItemStats( document, NULL, item_id );
-	}
+           action < MaxMenuAction &&
+           MenuActionList[action].ActionActive[document] != on)
+        {
+          MenuActionList[action].ActionActive[document] = on;
+          TtaRefreshMenuItemStats( document, NULL, item_id );
+        }
     }
 #endif /* _WX */
 
@@ -3788,18 +3784,18 @@ void SwitchRedo (PtrDocument pDoc, ThotBool on)
   for (view = 0; view < MAX_VIEW_DOC; view++)
     {     
       if (pDoc->DocView[view].DvPSchemaView > 0)
-	{
-	  frame = pDoc->DocViewFrame[view];
-	  if (frame != 0 && FrameTable[frame].MenuRedo != -1)
-	    {
-	      ref = FrameTable[frame].MenuRedo;
-	      item = FrameTable[frame].EntryRedo;
-	      if (on)
-		TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
-	      else
-		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-	    }
-	}
+        {
+          frame = pDoc->DocViewFrame[view];
+          if (frame != 0 && FrameTable[frame].MenuRedo != -1)
+            {
+              ref = FrameTable[frame].MenuRedo;
+              item = FrameTable[frame].EntryRedo;
+              if (on)
+                TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
+              else
+                TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+            }
+        }
     }
 #endif /* _WX */
 }
@@ -3814,11 +3810,11 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
   if (pDoc == NULL)
     {
       for (int doc_id = 1; doc_id < MAX_DOCUMENTS; doc_id++)
-	{
-	  pDoc = LoadedDocument[doc_id-1];
-	  if (pDoc)
-	    SwitchPaste(pDoc, on);
-	}
+        {
+          pDoc = LoadedDocument[doc_id-1];
+          if (pDoc)
+            SwitchPaste(pDoc, on);
+        }
     }
   else
     {
@@ -3827,18 +3823,18 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
 
       /* do nothing if the document doesn't have a window parent */
       if ( window_id <= 0 )
-	return;
+        return;
 
       int      item_id   = WindowTable[window_id].MenuItemPaste;
       int      action    = FindMenuActionFromMenuItemID(NULL, item_id);
       
       if ( action > 0 &&
-	   action < MaxMenuAction &&
-	   MenuActionList[action].ActionActive[document] != on)
-	{
-	  MenuActionList[action].ActionActive[document] = on;
-	  TtaRefreshMenuItemStats( document, NULL, item_id );
-	}
+           action < MaxMenuAction &&
+           MenuActionList[action].ActionActive[document] != on)
+        {
+          MenuActionList[action].ActionActive[document] = on;
+          TtaRefreshMenuItemStats( document, NULL, item_id );
+        }
     }
 #endif /* _WX */
 
@@ -3850,22 +3846,22 @@ void SwitchPaste (PtrDocument pDoc, ThotBool on)
   while (frame <= MAX_FRAME)
     {
       if (FrameTable[frame].WdFrame != 0 && FrameTable[frame].FrDoc != 0)
-	{
-	  if (pDoc == NULL ||
-	      pDoc == LoadedDocument[FrameTable[frame].FrDoc - 1])
-	    {
-	      ref = FrameTable[frame].MenuPaste;
-	      item = FrameTable[frame].EntryPaste;
-	      if (ref != -1)
-		{
-		  if (on && !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
-		    TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
-		  else if (!on)
-		    /* active the paste command */
-		    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-		}
-	    }
-	}
+        {
+          if (pDoc == NULL ||
+              pDoc == LoadedDocument[FrameTable[frame].FrDoc - 1])
+            {
+              ref = FrameTable[frame].MenuPaste;
+              item = FrameTable[frame].EntryPaste;
+              if (ref != -1)
+                {
+                  if (on && !LoadedDocument[FrameTable[frame].FrDoc - 1]->DocReadOnly)
+                    TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
+                  else if (!on)
+                    /* active the paste command */
+                    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+                }
+            }
+        }
       frame++;
     }
 #endif /* _WX */         
@@ -3894,8 +3890,8 @@ void TtaEnableAction( Document document, const char * action_name, ThotBool enab
 }
 
 /*----------------------------------------------------------------------
-   TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
-   de la fenetre principale (document = 0, view = 0).                 
+  TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
+  de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
 void TtaSetMenuOff (Document document, View view, int menuID)
 {
@@ -3923,44 +3919,44 @@ void TtaSetMenuOff (Document document, View view, int menuID)
       menu--;
 #ifdef _WX
       if (pDoc->EnabledMenus[menu])
-	{
-	  pDoc->EnabledMenus[menu] = FALSE;
-	  TtaRefreshTopMenuStats( document, menu );
-	}
+        {
+          pDoc->EnabledMenus[menu] = FALSE;
+          TtaRefreshTopMenuStats( document, menu );
+        }
 #endif /* _WX */
       
 #ifndef _WX
 #ifdef _GTK
       if (FrameTable[frame].EnabledMenus[menu])
 #endif /* _GTK */
-	{
-	  /* Get the button widget */
-      ThotMenu            w;
-      int                 ref;
-	  w = FrameTable[frame].WdMenus[menu];
-	  if (w != 0)
-	    {
-	      FrameTable[frame].EnabledMenus[menu] = FALSE;
-	      ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	      /* Disable */
+        {
+          /* Get the button widget */
+          ThotMenu            w;
+          int                 ref;
+          w = FrameTable[frame].WdMenus[menu];
+          if (w != 0)
+            {
+              FrameTable[frame].EnabledMenus[menu] = FALSE;
+              ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+              /* Disable */
 #ifdef _WINGUI
-	      WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
+              WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
 #ifdef _GTK
-	      TtaSetPulldownOff (ref, w);
-	      TtaSetPulldownOff (ref, w);
-	      /* Set the button inactive */
-	      gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
+              TtaSetPulldownOff (ref, w);
+              TtaSetPulldownOff (ref, w);
+              /* Set the button inactive */
+              gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
 #endif /* _GTK */
-	    }
-	}
+            }
+        }
 #endif /* _WX */
     }	  
 }
 
 /*----------------------------------------------------------------------
-   TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     
-   de la fenetre principale (document = 0, view = 0).                 
+  TtaSetMenuOn reactive le menu (1 a n) de la vue du document ou     
+  de la fenetre principale (document = 0, view = 0).                 
   ----------------------------------------------------------------------*/
 void TtaSetMenuOn (Document document, View view, int menuID)
 {
@@ -3988,265 +3984,265 @@ void TtaSetMenuOn (Document document, View view, int menuID)
       
 #ifdef _WX
       if (!pDoc->EnabledMenus[menu])
-	{
-	  pDoc->EnabledMenus[menu] = TRUE;
-	  TtaRefreshTopMenuStats( document, menu );
-	}
+        {
+          pDoc->EnabledMenus[menu] = TRUE;
+          TtaRefreshTopMenuStats( document, menu );
+        }
 #endif /* _WX */
       
 #ifndef _WX
 #ifdef _GTK
       if (!FrameTable[frame].EnabledMenus[menu])
 #endif /* _GTK */
-	{
-	  /* Get the button widget */
-      ThotMenu            w;
-      int                 ref;
-	  w = FrameTable[frame].WdMenus[menu];
-	  if (w != 0)
-	    {
-	      FrameTable[frame].EnabledMenus[menu] = TRUE;
-	      ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	      /* Enaable */
+        {
+          /* Get the button widget */
+          ThotMenu            w;
+          int                 ref;
+          w = FrameTable[frame].WdMenus[menu];
+          if (w != 0)
+            {
+              FrameTable[frame].EnabledMenus[menu] = TRUE;
+              ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+              /* Enaable */
 #ifdef _WINGUI
-	      WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
+              WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
 #endif /* _WINGUI */
 #ifdef _GTK
-	      TtaSetPulldownOn (ref, w);
-	      gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
+              TtaSetPulldownOn (ref, w);
+              gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 #endif /* _GTK */
-	    }  	  
-	}
+            }  	  
+        }
 #endif /* _WX */
     }
 }
 
 
 /*----------------------------------------------------------------------
-   TtaSetToggleItem positionne l'item du menu de la vue du document   
-   ou de la fenetre principale (document = 0, view = 0).   
+  TtaSetToggleItem positionne l'item du menu de la vue du document   
+  ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 void TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on)
 {
-   int                 frame;
-   int                 menu, submenu;
-   int                 item, action;
+  int                 frame;
+  int                 menu, submenu;
+  int                 item, action;
 
-   /* Check parameters */
-   if (menuID == 0 || itemID == 0)
-      return;
-   if (document == 0 || view == 0)
-      frame = 0;
-   else
-      frame = GetWindowNumber (document, view);
+  /* Check parameters */
+  if (menuID == 0 || itemID == 0)
+    return;
+  if (document == 0 || view == 0)
+    frame = 0;
+  else
+    frame = GetWindowNumber (document, view);
 
-   if (frame > MAX_FRAME)
-      return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-      return;
+  if (frame > MAX_FRAME)
+    return;
+  else if ((FrameTable[frame].WdFrame) == 0)
+    return;
 
-   /* Search the menu, submenu and item */
-   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-   if (menu >= 0 && item >= 0)
-     {
+  /* Search the menu, submenu and item */
+  FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+  if (menu >= 0 && item >= 0)
+    {
 #ifdef _WX
-       menu--;
-       if ( action != -1 && MenuActionList[action].ActionToggle[document] != on )
-	 MenuActionList[action].ActionToggle[document] = on;
-       /* refresh the item even if the action state didn't change because when clicking on the menu item
-        * the WX toolkit will performe a toggle action and update automaticaly the menu item so
-	* to be sure just force the refresh */
-       TtaRefreshMenuItemStats( document, NULL, itemID );
+      menu--;
+      if ( action != -1 && MenuActionList[action].ActionToggle[document] != on )
+        MenuActionList[action].ActionToggle[document] = on;
+      /* refresh the item even if the action state didn't change because when clicking on the menu item
+       * the WX toolkit will performe a toggle action and update automaticaly the menu item so
+       * to be sure just force the refresh */
+      TtaRefreshMenuItemStats( document, NULL, itemID );
 #else /* _WX */
-    int                 ref;
-	/* entry found */
-	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-	if (submenu != 0)
-	   ref += submenu * MAX_MENU * MAX_ITEM;
-	/* enable the entry */
+      int                 ref;
+      /* entry found */
+      ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+      if (submenu != 0)
+        ref += submenu * MAX_MENU * MAX_ITEM;
+      /* enable the entry */
 #ifdef _WINGUI
-	WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
+      WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
 #endif /* _WINGUI */
 #if defined(_GTK)
-	TtaSetToggleMenu (ref, item, on);
+      TtaSetToggleMenu (ref, item, on);
 #endif /* #if defined(_GTK) */
 #endif /* _WX */
-     }
+    }
 }
 
 
 /*----------------------------------------------------------------------
-   TtaSetItemOff desactive l'item actionName de la vue du document  
-   ou de la fenetre principale (document = 0, view = 0).   
+  TtaSetItemOff desactive l'item actionName de la vue du document  
+  ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
 {
-   int                 frame;
-   int                 menu, submenu;
-   int                 item;
-   int                 action;
+  int                 frame;
+  int                 menu, submenu;
+  int                 item;
+  int                 action;
 #ifndef _WX
-   int                 ref;
+  int                 ref;
 #endif /* _WX */
 
-   /* Check parameters */
-   if (document == 0 || view == 0)
-     frame = 0;
-   else
-     frame = GetWindowNumber (document, view);
+  /* Check parameters */
+  if (document == 0 || view == 0)
+    frame = 0;
+  else
+    frame = GetWindowNumber (document, view);
    
-   if (frame > MAX_FRAME)
-     return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-     return;
-   /* Search the menu, submenu and item */
-   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+  if (frame > MAX_FRAME)
+    return;
+  else if ((FrameTable[frame].WdFrame) == 0)
+    return;
+  /* Search the menu, submenu and item */
+  FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
 #ifdef _WX
-   if (action > 0 && action < MaxMenuAction &&
-       MenuActionList[action].ActionActive[document])
-     /* the entry is found and is active */
-     MenuActionList[action].ActionActive[document] = FALSE;
-   if (menu > 0)
-     TtaRefreshMenuItemStats( document, NULL, itemID );
+  if (action > 0 && action < MaxMenuAction &&
+      MenuActionList[action].ActionActive[document])
+    /* the entry is found and is active */
+    MenuActionList[action].ActionActive[document] = FALSE;
+  if (menu > 0)
+    TtaRefreshMenuItemStats( document, NULL, itemID );
 #else /* _WX */
-   if (action > 0 && action < MaxMenuAction &&
-       MenuActionList[action].ActionActive[frame])
-     /* the entry is found and is active */
-     MenuActionList[action].ActionActive[frame] = FALSE;
-   if (menu > 0)
-     {
-       ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-       if (submenu != 0)
-	 ref += submenu * MAX_MENU * MAX_ITEM;
-       /* enable the entry */
-       TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
-     }
+  if (action > 0 && action < MaxMenuAction &&
+      MenuActionList[action].ActionActive[frame])
+    /* the entry is found and is active */
+    MenuActionList[action].ActionActive[frame] = FALSE;
+  if (menu > 0)
+    {
+      ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+      if (submenu != 0)
+        ref += submenu * MAX_MENU * MAX_ITEM;
+      /* enable the entry */
+      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
+    }
 #endif /* _WX */
 }
 
 
 /*----------------------------------------------------------------------
-   TtaSetItemOn active l'item actionName de la vue du document      
-   ou de la fenetre principale (document = 0, view = 0).   
+  TtaSetItemOn active l'item actionName de la vue du document      
+  ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
 {
-   int                 frame;
-   int                 menu, submenu;
-   int                 item;
-   int                 action;
+  int                 frame;
+  int                 menu, submenu;
+  int                 item;
+  int                 action;
 #ifndef _WX
-   int                 ref;
+  int                 ref;
 #endif /* _WX */
 
-   /* Si les parametres sont invalides */
-   if (document == 0 || view == 0)
-     frame = 0;
-   else
-     frame = GetWindowNumber (document, view);
-   if (frame > MAX_FRAME)
-     return;
-   else if ((FrameTable[frame].WdFrame) == 0)
-     return;
-   /* Recherche les bons indices de menu, sous-menu et item */
-   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
+  /* Si les parametres sont invalides */
+  if (document == 0 || view == 0)
+    frame = 0;
+  else
+    frame = GetWindowNumber (document, view);
+  if (frame > MAX_FRAME)
+    return;
+  else if ((FrameTable[frame].WdFrame) == 0)
+    return;
+  /* Recherche les bons indices de menu, sous-menu et item */
+  FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
 #ifdef _WX
-   if (action > 0 && action < MaxMenuAction &&
-       !MenuActionList[action].ActionActive[document])
-     {
-       /* the entry is found and is not active */
-       MenuActionList[action].ActionActive[document] = TRUE;
-       TtaRefreshMenuItemStats( document, NULL, itemID );
-     }
+  if (action > 0 && action < MaxMenuAction &&
+      !MenuActionList[action].ActionActive[document])
+    {
+      /* the entry is found and is not active */
+      MenuActionList[action].ActionActive[document] = TRUE;
+      TtaRefreshMenuItemStats( document, NULL, itemID );
+    }
 #endif /* _WX */
 
 #ifndef _WX
-   if (action > 0 && action < MaxMenuAction &&
-       !MenuActionList[action].ActionActive[frame])
-     /* the entry is found and is not active */
-     MenuActionList[action].ActionActive[frame] = TRUE;
-   if (menu > 0)
-     {
-       PtrDocument         pDoc;
-       /* enable the menu entry */
-       ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
-       if (submenu != 0)
-	 ref += submenu * MAX_MENU * MAX_ITEM;
+  if (action > 0 && action < MaxMenuAction &&
+      !MenuActionList[action].ActionActive[frame])
+    /* the entry is found and is not active */
+    MenuActionList[action].ActionActive[frame] = TRUE;
+  if (menu > 0)
+    {
+      PtrDocument         pDoc;
+      /* enable the menu entry */
+      ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
+      if (submenu != 0)
+        ref += submenu * MAX_MENU * MAX_ITEM;
        
-       pDoc = LoadedDocument [document - 1];
-       if (ref == FrameTable[frame].MenuRedo &&
-	   item == FrameTable[frame].EntryRedo &&
-	   (pDoc->DocReadOnly || pDoc->DocNbUndone == 0))
-	 return;
-       else if (ref == FrameTable[frame].MenuUndo &&
-		item == FrameTable[frame].EntryUndo &&
-		(pDoc->DocReadOnly || pDoc->DocNbEditsInHistory == 0))
-	 return;
-       else if (ref == FrameTable[frame].MenuPaste &&
-		item == FrameTable[frame].EntryPaste &&
-		(pDoc->DocReadOnly ||
-		 (FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
-	 return;
-       TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
-     }
+      pDoc = LoadedDocument [document - 1];
+      if (ref == FrameTable[frame].MenuRedo &&
+          item == FrameTable[frame].EntryRedo &&
+          (pDoc->DocReadOnly || pDoc->DocNbUndone == 0))
+        return;
+      else if (ref == FrameTable[frame].MenuUndo &&
+               item == FrameTable[frame].EntryUndo &&
+               (pDoc->DocReadOnly || pDoc->DocNbEditsInHistory == 0))
+        return;
+      else if (ref == FrameTable[frame].MenuPaste &&
+               item == FrameTable[frame].EntryPaste &&
+               (pDoc->DocReadOnly ||
+                (FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
+        return;
+      TtaRedrawMenuEntry (ref, item, NULL, (ThotColor)-1, 1);
+    }
 #endif /* _WX */
 
 }
 
 
 /*----------------------------------------------------------------------
-   TtaSetCallback
+  TtaSetCallback
 
-   Specifies the procedure that is called when the user activates a set of forms
-   and/or menus created by the application.
-   The parameter set gives the number of forms and/or menus created by the 
-   application managed by this porcedure.
-   This function must be called before processing any event, only if the
-   application uses the Dialogue tool kit for generating specific forms or menus.
-   This function replaces the DefineCallback function in the Dialogue tool kit.
-   This procedure is called with three parameters: the menu or form reference,
-   data type, and data value.
+  Specifies the procedure that is called when the user activates a set of forms
+  and/or menus created by the application.
+  The parameter set gives the number of forms and/or menus created by the 
+  application managed by this porcedure.
+  This function must be called before processing any event, only if the
+  application uses the Dialogue tool kit for generating specific forms or menus.
+  This function replaces the DefineCallback function in the Dialogue tool kit.
+  This procedure is called with three parameters: the menu or form reference,
+  data type, and data value.
 
-   void callbakProcedure(reference, datatype, data)
-   int reference;
-   int datatype;
-   char *data; 
+  void callbakProcedure(reference, datatype, data)
+  int reference;
+  int datatype;
+  char *data; 
 
-   Parameter:
-   callbakProcedure: the application callback procedure.
-   set: the number of forms and/or menus managed.
-   Return:
-   reference of the first form or menu.
+  Parameter:
+  callbakProcedure: the application callback procedure.
+  set: the number of forms and/or menus managed.
+  Return:
+  reference of the first form or menu.
   ----------------------------------------------------------------------*/
 int TtaSetCallback (void (*callbakProcedure) (), int set)
 {
-   PtrCallbackCTX      ctxCallback;
+  PtrCallbackCTX      ctxCallback;
 
-   UserErrorCode = 0;
-   if (FirstCallbackAPI == NULL)
-     {
-	/* le premier bloc de callback */
-	FirstCallbackAPI = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
-	ctxCallback = FirstCallbackAPI;
-     }
-   else
-     {
-	ctxCallback = FirstCallbackAPI;
-	while (ctxCallback->callbackNext != NULL)
-	   ctxCallback = ctxCallback->callbackNext;
-	ctxCallback->callbackNext = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
-	ctxCallback = ctxCallback->callbackNext;
-     }
+  UserErrorCode = 0;
+  if (FirstCallbackAPI == NULL)
+    {
+      /* le premier bloc de callback */
+      FirstCallbackAPI = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
+      ctxCallback = FirstCallbackAPI;
+    }
+  else
+    {
+      ctxCallback = FirstCallbackAPI;
+      while (ctxCallback->callbackNext != NULL)
+        ctxCallback = ctxCallback->callbackNext;
+      ctxCallback->callbackNext = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
+      ctxCallback = ctxCallback->callbackNext;
+    }
 
-   ctxCallback->callbackProc = callbakProcedure;
-   ctxCallback->callbackSet = set;
-   ctxCallback->callbackNext = NULL;
-   return (TtaGetReferencesBase (set));
+  ctxCallback->callbackProc = callbakProcedure;
+  ctxCallback->callbackSet = set;
+  ctxCallback->callbackNext = NULL;
+  return (TtaGetReferencesBase (set));
 }
 
 
 /*----------------------------------------------------------------------
-   ThotCallback ge`re tous les retours du dialogue de Thot.        
+  ThotCallback ge`re tous les retours du dialogue de Thot.        
   ----------------------------------------------------------------------*/
 void ThotCallback (int ref, int typedata, char *data)
 {
@@ -4268,96 +4264,96 @@ void ThotCallback (int ref, int typedata, char *data)
   if (ref >= MAX_ThotMenu)
     {
       if (FirstCallbackAPI == NULL)
-	return;		/* pas de callback definis */
+        return;		/* pas de callback definis */
       else
-	{
-	  /* recherche le bon callback */
-	  ctxCallback = FirstCallbackAPI;
-	  base = MAX_ThotMenu;
-	  while (ref >= base + ctxCallback->callbackSet)
-	    {
-	      if (ctxCallback->callbackNext == NULL)
-		return;
-	      else
-		{
-		  base = base + ctxCallback->callbackSet;
-		  ctxCallback = ctxCallback->callbackNext;
-		}
-	    }
-	  (*(Proc3)ctxCallback->callbackProc) ((void *)ref, (void *)typedata, (void *)data);
-	}
+        {
+          /* recherche le bon callback */
+          ctxCallback = FirstCallbackAPI;
+          base = MAX_ThotMenu;
+          while (ref >= base + ctxCallback->callbackSet)
+            {
+              if (ctxCallback->callbackNext == NULL)
+                return;
+              else
+                {
+                  base = base + ctxCallback->callbackSet;
+                  ctxCallback = ctxCallback->callbackNext;
+                }
+            }
+          (*(Proc3)ctxCallback->callbackProc) ((void *)ref, (void *)typedata, (void *)data);
+        }
     }
   else if (ref < MAX_LocalMenu)
     /*** Action interne et optionnelle de l''eur ***/
     switch (ref)
       {
       case NumMenuInsert:
-	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
-		(void *)TRUE,
-		(void *)FALSE,
-		(void *)((long int) data + 1) );
-	break;
+        (*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+                                                     (void *)TRUE,
+                                                     (void *)FALSE,
+                                                     (void *)((long int) data + 1) );
+        break;
       case NumMenuPaste:
-	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
-		(void *)FALSE,
-		(void *)TRUE,
-	       	(void *)((long int) data + 1));
-	break;
+        (*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+                                                     (void *)FALSE,
+                                                     (void *)TRUE,
+                                                     (void *)((long int) data + 1));
+        break;
       case NumMenuInclude:
-	(*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
-		(void *)FALSE,
-		(void *)FALSE,
-	       	(void *)((long int) data + 1));
-	break;
+        (*(Proc3)ThotLocalActions[T_rcinsertpaste]) (
+                                                     (void *)FALSE,
+                                                     (void *)FALSE,
+                                                     (void *)((long int) data + 1));
+        break;
       case NumMenuElChoice:
-	(*(Proc2)ThotLocalActions[T_rchoice]) (
-		(void *)((long int) data + 1),
-		(void *)NULL);
-	break;
+        (*(Proc2)ThotLocalActions[T_rchoice]) (
+                                               (void *)((long int) data + 1),
+                                               (void *)NULL);
+        break;
       case NumSelectNatureName:
-	(*(Proc2)ThotLocalActions[T_rchoice]) (
-		(void *)0,
-		(void *)data);
-	break;
+        (*(Proc2)ThotLocalActions[T_rchoice]) (
+                                               (void *)0,
+                                               (void *)data);
+        break;
 	
       case NumMenuAttrRequired:
       case NumMenuAttrNumNeeded:
       case NumMenuAttrTextNeeded:
       case NumMenuAttrEnumNeeded:
-	(*(Proc3)ThotLocalActions[T_rattrreq]) (
-		(void *)ref,
-		(void *)((long int) data),
-		(void *)data);
-	break;
+        (*(Proc3)ThotLocalActions[T_rattrreq]) (
+                                                (void *)ref,
+                                                (void *)((long int) data),
+                                                (void *)data);
+        break;
       case NumMenuAttr:
       case NumMenuAttrNumber:
       case NumMenuAttrText:
       case NumMenuAttrEnum:
-	(*(Proc3)ThotLocalActions[T_rattrval]) (
-		(void *)ref,
-		(void *)((long int) data),
-	       	(void *)data);
-	break;
+        (*(Proc3)ThotLocalActions[T_rattrval]) (
+                                                (void *)ref,
+                                                (void *)((long int) data),
+                                                (void *)data);
+        break;
 	
       case NumSelectLanguage:
-	(*(Proc3)ThotLocalActions[T_rattrlang]) (
-		(void *)ref,
-	       	(void *)0,
-		(void *)data);
-	break;
+        (*(Proc3)ThotLocalActions[T_rattrlang]) (
+                                                 (void *)ref,
+                                                 (void *)0,
+                                                 (void *)data);
+        break;
       case NumFormLanguage:
       case NumMenuAlphaLanguage:
-	(*(Proc3)ThotLocalActions[T_rattrlang]) (
-		(void *)ref,
-		(void *)((long int) data),
-		(void *)NULL);
-	break;
+        (*(Proc3)ThotLocalActions[T_rattrlang]) (
+                                                 (void *)ref,
+                                                 (void *)((long int) data),
+                                                 (void *)NULL);
+        break;
       case NumFormClose:
-	(*(Proc3)ThotLocalActions[T_rconfirmclose]) (
-		(void *)ref,
-		(void *)typedata,
-		(void *)data);
-	break;
+        (*(Proc3)ThotLocalActions[T_rconfirmclose]) (
+                                                     (void *)ref,
+                                                     (void *)typedata,
+                                                     (void *)data);
+        break;
 	
       case NumFormPresChar:
       case NumFormPresFormat:
@@ -4378,70 +4374,70 @@ void ThotCallback (int ref, int typedata, char *data)
       case NumZoneStrokeWeight:
       case NumToggleWidthUnchanged:
       case NumTogglePatternUnchanged:
-	(*(Proc3)ThotLocalActions[T_present]) (
-		(void *)ref,
-		(void *)(long int) data,
-		(void *)NULL);
-	break;
+        (*(Proc3)ThotLocalActions[T_present]) (
+                                               (void *)ref,
+                                               (void *)(long int) data,
+                                               (void *)NULL);
+        break;
       case NumSelectPattern:
       case NumSelectForegroundColor:
       case NumSelectBackgroundColor:
-	(*(Proc3)ThotLocalActions[T_present]) (
-		(void *)ref,
-		(void *)0,
-		(void *)data);
-	break;
+        (*(Proc3)ThotLocalActions[T_present]) (
+                                               (void *)ref,
+                                               (void *)0,
+                                               (void *)data);
+        break;
       case NumFormPresentStandard:
       case NumMenuPresentStandard:
-	(*(Proc2)ThotLocalActions[T_presentstd]) (
-		(void *)ref,
-		(void *)((long int) data));
-	break;
+        (*(Proc2)ThotLocalActions[T_presentstd]) (
+                                                  (void *)ref,
+                                                  (void *)((long int) data));
+        break;
       case NumFormSearchText:
       case NumMenuReplaceMode:
       case NumToggleUpperEqualLower:
       case NumMenuSearchNature:
-	/* sous-menu mode de remplacement */
-	(*(Proc3)ThotLocalActions[T_searchtext]) (
-		(void *)ref,
-		(void *)((long int) data),
-	       	(void *)NULL);
-	break;
+        /* sous-menu mode de remplacement */
+        (*(Proc3)ThotLocalActions[T_searchtext]) (
+                                                  (void *)ref,
+                                                  (void *)((long int) data),
+                                                  (void *)NULL);
+        break;
       case NumZoneTextSearch:
       case NumZoneTextReplace:
       case NumSelTypeToSearch:
       case NumSelAttributeToSearch:
-	/* zone de saisie du texte de remplacement */
-	(*(Proc3)ThotLocalActions[T_searchtext]) (
-		(void *)ref,
-	       	(void *)0,
-		(void *)data);
-	break;
+        /* zone de saisie du texte de remplacement */
+        (*(Proc3)ThotLocalActions[T_searchtext]) (
+                                                  (void *)ref,
+                                                  (void *)0,
+                                                  (void *)data);
+        break;
       case NumMenuOrSearchText:
-	(*(Proc2)ThotLocalActions[T_locatesearch]) (
-		(void *)ref,
-		(void *)((long int) data));
-	break;  
+        (*(Proc2)ThotLocalActions[T_locatesearch]) (
+                                                    (void *)ref,
+                                                    (void *)((long int) data));
+        break;  
       case NumFormElemToBeCreated:
-	CallbackElemToBeCreated (ref, (long int)data, NULL);
-	break;
+        CallbackElemToBeCreated (ref, (long int)data, NULL);
+        break;
       case NumSelectElemToBeCreated:
-	CallbackElemToBeCreated (ref, 0, data);
-	break;
+        CallbackElemToBeCreated (ref, 0, data);
+        break;
 
       default:
-	if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
-	  /* retour du menu des attributs */
-	  {
+        if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
+          /* retour du menu des attributs */
+          {
 #if defined(_GTK)
-	    TtaSetDialoguePosition ();
+            TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) */
-	    (*(Proc3)ThotLocalActions[T_rattr]) (
-		(void *)ref,
-		(void *)((long int) data),
-		(void *)ActiveFrame);
-	  }
-	break;
+            (*(Proc3)ThotLocalActions[T_rattr]) (
+                                                 (void *)ref,
+                                                 (void *)((long int) data),
+                                                 (void *)ActiveFrame);
+          }
+        break;
       }
   else
     {
@@ -4454,99 +4450,99 @@ void ThotCallback (int ref, int typedata, char *data)
       item = i / MAX_MENU;
       menu = i - (item * MAX_MENU);	/* reste de la division */
       if (frame == 0)
-	{
-	  document = 0;
-	  view = 0;
-	}
+        {
+          document = 0;
+          view = 0;
+        }
       else
-	{
-	  FrameToView (frame, &document, &view);
-	  if (document == 0)
-	    return;
+        {
+          FrameToView (frame, &document, &view);
+          if (document == 0)
+            return;
 #ifdef _WX
-	  int         window_id = TtaGetDocumentWindowId( document, -1 );
-	  menuThot = FindMenu (frame, WindowTable[window_id].MenuAttr, &ptrmenu) - 1;
+          int         window_id = TtaGetDocumentWindowId( document, -1 );
+          menuThot = FindMenu (frame, WindowTable[window_id].MenuAttr, &ptrmenu) - 1;
 #else /* _WX */
-	  menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
+          menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
 #endif /* _WX */
-	  if (menu == menuThot)
-	    {
-	      /* traitement du menu attribut */
+          if (menu == menuThot)
+            {
+              /* traitement du menu attribut */
 #if defined(_GTK)
-	      TtaSetDialoguePosition ();
+              TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) */
-	      (*(Proc3)ThotLocalActions[T_rattr]) (
-			(void *)ref,
-			(void *)((long int) data),
-			(void *)frame);
-	      return;
-	    }
+              (*(Proc3)ThotLocalActions[T_rattr]) (
+                                                   (void *)ref,
+                                                   (void *)((long int) data),
+                                                   (void *)frame);
+              return;
+            }
 #ifdef _WX
-	  menuThot = FindMenu (frame, WindowTable[window_id].MenuSelect, &ptrmenu) - 1;
+          menuThot = FindMenu (frame, WindowTable[window_id].MenuSelect, &ptrmenu) - 1;
 #else /* _WX */      
-	  menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
+          menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
 #endif /* _WX */
-	  if (menu == menuThot)
-	    {
-	      /* traitement du menu selection */
+          if (menu == menuThot)
+            {
+              /* traitement du menu selection */
 #if defined(_GTK)
-	      TtaSetDialoguePosition ();
+              TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) */
-	      (*(Proc3)ThotLocalActions[T_rselect]) ((void *)ref,
-						     (void *)((long int) data + 1),
-						     (void *)frame);
-	      return;
-	    }
-	}
+              (*(Proc3)ThotLocalActions[T_rselect]) ((void *)ref,
+                                                     (void *)((long int) data + 1),
+                                                     (void *)frame);
+              return;
+            }
+        }
 
       /* Call the right action */
       ptrmenu = GetMenu_Ctl (frame, menu);
       action = 0;
       if (ptrmenu)
-	{
-	  if (item != 0)
-	    {
-	      item--;
-	      if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList)
-		{
-		  for (i = 0; i <= item; i++)
-		    {
-		      action = ptrmenu->ItemsList[i].ItemAction;
-		      if (ptrmenu->ItemsList[i].ItemType == 'M' &&
-			  ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
-			item++;
-		    }
-		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
-		}
-	    }
-	}
+        {
+          if (item != 0)
+            {
+              item--;
+              if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList)
+                {
+                  for (i = 0; i <= item; i++)
+                    {
+                      action = ptrmenu->ItemsList[i].ItemAction;
+                      if (ptrmenu->ItemsList[i].ItemType == 'M' &&
+                          ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
+                        item++;
+                    }
+                  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
+                }
+            }
+        }
 
       if (ptrmenu)
-	{
-	  item = (long int) data;
-	  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
-	    {
-	      for (i = 0; i <= item; i++)
-		{
-		  action = ptrmenu->ItemsList[i].ItemAction;
-		  if (ptrmenu->ItemsList[i].ItemType == 'M' &&
-		      ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
-		    item++;
-		}
-	    }
-	  /*action = GetActionItem(frame, menu, (int)data); */
-	  if (action > 0 && action < MaxMenuAction)
-	    /* l'action existe et le menu est actif */
+        {
+          item = (long int) data;
+          if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+            {
+              for (i = 0; i <= item; i++)
+                {
+                  action = ptrmenu->ItemsList[i].ItemAction;
+                  if (ptrmenu->ItemsList[i].ItemType == 'M' &&
+                      ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
+                    item++;
+                }
+            }
+          /*action = GetActionItem(frame, menu, (int)data); */
+          if (action > 0 && action < MaxMenuAction)
+            /* l'action existe et le menu est actif */
 #ifdef _WX
-	    if (MenuActionList[action].ActionActive[document])
+            if (MenuActionList[action].ActionActive[document])
 #else /* _WX */
-	    if (MenuActionList[action].ActionActive[frame])
+              if (MenuActionList[action].ActionActive[frame])
 #endif /* _WX */
-	      {
-		if (MenuActionList[action].Call_Action)
-		  (*(Proc2)MenuActionList[action].Call_Action) ((void *)document, (void *)view);
-	      }
-	}
+                {
+                  if (MenuActionList[action].Call_Action)
+                    (*(Proc2)MenuActionList[action].Call_Action) ((void *)document, (void *)view);
+                }
+        }
     }
   
 #ifdef _WX
