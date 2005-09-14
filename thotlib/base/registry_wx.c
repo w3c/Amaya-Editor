@@ -25,63 +25,63 @@
   this function returns a amaya resource path.
   this path is independant of opearting system.
   differents resources types are:
-    - WX_RESOURCES_ICON
-    - WX_RESOURCES_XRC
+  - WX_RESOURCES_ICON
+  - WX_RESOURCES_XRC
   params:
-    + type : type of required resource path
-    + filename : the filename of the resource
+  + type : type of required resource path
+  + filename : the filename of the resource
   returns:
-    + wxString : a string containing the right path
+  + wxString : a string containing the right path
   ----------------------------------------------------------------------*/
 wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
 {
   wxString path;
   switch ( type )
     {
-      case WX_RESOURCES_ICON_16X16:
-	{
-	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+    case WX_RESOURCES_ICON_16X16:
+      {
+        wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 #ifdef _WINDOWS
-	  path = amaya_directory + _T("\\resources\\icons\\16x16\\") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("\\resources\\icons\\16x16\\") + wxString( filename, *wxConvCurrent );
 #endif /* _WINDOWS */
 #ifdef _UNIX
-	  path = amaya_directory + _T("/resources/icons/16x16/") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("/resources/icons/16x16/") + wxString( filename, *wxConvCurrent );
 #endif /* _UNIX */
-	}
-	break;
-      case WX_RESOURCES_ICON_22X22:
-	{
-	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+      }
+      break;
+    case WX_RESOURCES_ICON_22X22:
+      {
+        wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 #ifdef _WINDOWS
-	  path = amaya_directory + _T("\\resources\\icons\\22x22\\") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("\\resources\\icons\\22x22\\") + wxString( filename, *wxConvCurrent );
 #endif /* _WINDOWS */
 #ifdef _UNIX
-	  path = amaya_directory + _T("/resources/icons/22x22/") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("/resources/icons/22x22/") + wxString( filename, *wxConvCurrent );
 #endif /* _UNIX */
-	}
-	break;
-      case WX_RESOURCES_ICON_MISC:
-	{
-	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+      }
+      break;
+    case WX_RESOURCES_ICON_MISC:
+      {
+        wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 #ifdef _WINDOWS
-	  path = amaya_directory + _T("\\resources\\icons\\misc\\") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("\\resources\\icons\\misc\\") + wxString( filename, *wxConvCurrent );
 #endif /* _WINDOWS */
 #ifdef _UNIX
-	  path = amaya_directory + _T("/resources/icons/misc/") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("/resources/icons/misc/") + wxString( filename, *wxConvCurrent );
 #endif /* _UNIX */
-	}
-	break;
-      case WX_RESOURCES_XRC:
-	{
-	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+      }
+      break;
+    case WX_RESOURCES_XRC:
+      {
+        wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
 #ifdef _WINDOWS
-	  path = amaya_directory + _T("\\resources\\xrc\\") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("\\resources\\xrc\\") + wxString( filename, *wxConvCurrent );
 #endif /* _WINDOWS */
 #ifdef _UNIX
-	  path = amaya_directory + _T("/resources/xrc/") + wxString( filename, *wxConvCurrent );
+        path = amaya_directory + _T("/resources/xrc/") + wxString( filename, *wxConvCurrent );
 #endif /* _UNIX */
-	}
-	break;
+      }
+      break;
     }
   TTALOGDEBUG_0( TTA_LOG_INIT, _T("TtaGetResourcePathWX: path=")+path);
   return path;
@@ -99,39 +99,39 @@ wxString TtaGetHomeDir()
 	wxChar      buffer[2000];
 	DWORD       dwSize;
 
-   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
-				LPTSTR lpProfileDir,
-				LPDWORD lpcchSize
-		  );
-   HMODULE                  g_hUserEnvLib          = NULL;
-   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+  typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+                                                                   LPTSTR lpProfileDir,
+                                                                   LPDWORD lpcchSize
+                                                                   );
+  HMODULE                  g_hUserEnvLib          = NULL;
+  LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
 
-   buffer[0] = EOS;
+  buffer[0] = EOS;
 
-   g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
-   if (g_hUserEnvLib)
-	 {
-	   GetProfilesDirectory =
-	 (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
-                                             "GetProfilesDirectoryW");
-	   dwSize = MAX_PATH;
-	   GetProfilesDirectory (buffer, &dwSize);
-	 }
-   if (buffer[0] == EOS)
-	 GetWindowsDirectory (buffer, dwSize);
+  g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
+  if (g_hUserEnvLib)
+    {
+      GetProfilesDirectory =
+        (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                                   "GetProfilesDirectoryW");
+      dwSize = MAX_PATH;
+      GetProfilesDirectory (buffer, &dwSize);
+    }
+  if (buffer[0] == EOS)
+    GetWindowsDirectory (buffer, dwSize);
 
-   wxString wx_win_profiles_dir(buffer);
+  wxString wx_win_profiles_dir(buffer);
 
-   dwSize = MAX_PATH;
-   wxGetUserName(buffer, dwSize);
-   wxString wx_win_username(buffer);
+  dwSize = MAX_PATH;
+  wxGetUserName(buffer, dwSize);
+  wxString wx_win_username(buffer);
 
-   wxString wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;
-   return wx_win_homedir;
+  wxString wx_win_homedir = wx_win_profiles_dir + _T("\\") + wx_win_username;
+  return wx_win_homedir;
 #endif /* _WINDOWS */
 
 #ifdef _UNIX
-   return wxGetHomeDir();
+  return wxGetHomeDir();
 #endif /* _UNIX */
 }
 #endif /* _WX */
