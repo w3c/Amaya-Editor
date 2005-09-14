@@ -12,6 +12,10 @@
  *         I. Vatton (INRIA) test if referred files are available
  *
  */
+#if defined(_WX) && defined(_WINDOWS)
+#include "wx/wx.h"
+#include "wx/utils.h"
+#endif /* _WX && _WINDOWS */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -338,6 +342,29 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
                                         StixExist = TRUE;
                                     }
                                 }
+#if defined(_WX) && defined(_WINDOWS)
+                              else if (!strncmp (&word[2], "$OSDIR", 6))
+                                {
+                                  char     filename[MAX_TXT_LEN];
+                                  wxString wx_osdir = wxGetOSDirectory();
+
+                                  if (wx_osdir.mb_str(wxConvUTF8))
+                                    strcpy (filename, wx_osdir.mb_str(wxConvUTF8));
+                                  else
+                                    filename[0] = EOS;
+                                  strcat (filename, &word[8]);
+                                  if (!TtaFileExist (filename))
+                                    complete = FALSE;
+                                  else
+                                    {
+                                      fontface = TtaStrdup (filename);
+                                      fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+                                      /* note if STIX fonts are available */
+                                      if (script == 21 && !StixExist)
+                                        StixExist = TRUE;
+                                    }
+                                }
+#endif /* _WX && _WINDOWS */
                               else if (!TtaFileExist (&word[2]))
 #else /* _GL */
                                 if (!IsXLFDPatterneAFont (&word[2]))
