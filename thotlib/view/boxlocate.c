@@ -381,12 +381,12 @@ void LocateSelectionInView (int frame, int x, int y, int button)
                         /* the application asks Thot to do nothing */
                         return;
                     }
-#ifndef _WINDOWS
+#if defined(_UNIX) && !defined(_MACOS)
                   if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
                     (*(Proc2)MenuActionList[CMD_PasteFromClipboard].Call_Action) (
                                                                                   (void*)doc,
                                                                                   (void*)view);
-#endif /* _WINDOWS */
+#endif /* _UNIX && !_MACOS */
                   break;
                 case 6:
                   /* check if the curseur is within the box */

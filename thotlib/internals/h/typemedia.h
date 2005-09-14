@@ -124,13 +124,13 @@ typedef enum
 
 typedef struct _ViewSelection
 {
-  PtrLine        VsLine;	/* Line containing the selection */
-  PtrBox         VsBox;	        /* Number of the selection mark box */
+  PtrLine        VsLine;	  /* Line containing the selection */
+  PtrBox         VsBox;	    /* Number of the selection mark box */
   PtrTextBuffer  VsBuffer;	/* Selection mark buffer address */
   int            VsIndBox;	/* Selection mark character index */
   int            VsNSpaces;	/* Number of leading spaces */
-  int            VsXPos;	/* Selection box shift */
-  int 		 VsIndBuf;	/* Index of the character in the buffer */
+  int            VsXPos;	  /* Selection box shift */
+  int 		       VsIndBuf;	/* Index of the character in the buffer */
 } ViewSelection;
 
 /* Desription of a displayed line */
@@ -140,14 +140,14 @@ typedef struct _Line
   PtrLine         LiNext;
   int             LiXOrg;	/* X origin from the block */
   int             LiYOrg;	/* Y origin from the block */
-  int	          LiXMax;	/* Maximum X in pixels */
-  int	          LiRealLength;	/* Current width */
-  int	          LiMinLength;	/* Current compressed width */
-  int	          LiHeight;	/* Current height */
-  int	          LiHorizRef;	/* Current base */
-  int	          LiSpaceWidth; /* Size in pixels of the adjusted spaces */
-  int	          LiNSpaces;	/* Number of spaces in the line */
-  int	          LiNPixels;	/* Remaining pixels after adjustment */
+  int	            LiXMax;	/* Maximum X in pixels */
+  int	            LiRealLength;	/* Current width */
+  int	            LiMinLength;	/* Current compressed width */
+  int	            LiHeight;	/* Current height */
+  int	            LiHorizRef;	/* Current base */
+  int	            LiSpaceWidth; /* Size in pixels of the adjusted spaces */
+  int	            LiNSpaces;	/* Number of spaces in the line */
+  int	            LiNPixels;	/* Remaining pixels after adjustment */
   PtrBox          LiFirstBox;	/* Index of the first contained box */
   PtrBox          LiFirstPiece;	/* Index if split box */
   PtrBox          LiLastBox;	/* Index of last contained box */
@@ -216,108 +216,108 @@ typedef struct _TabUpdate
 
 typedef struct _Box
 {
-  PtrAbstractBox  BxAbstractBox;/* Pointer to the associated abstract box */
-  PtrBox          BxPrevious;	/* Previous displayable box */
-  PtrBox          BxNext;	/* Next displayable box */
-  int	          BxNChars;	/* Total number of characters in the box */
-  int             BxIndChar;	/* 0 or position of the split box */
-  int             BxXOrg;	/* X origin from the root */
-  int             BxYOrg;	/* Y origin from the root */
-  int             BxHeight;	        /* Box height including margins */
-  int             BxWidth;	        /* Box width including margins */
-  int             BxH;	        	/* Inner height */
-  int             BxW;	        	/* Inner Width including spaces */
-  int             BxTMargin;	        /* Top Margin */
-  int             BxLMargin;	        /* Left Margin */
-  int             BxBMargin;	        /* Bottom Margin */
-  int             BxRMargin;	        /* Right Margin */
-  int             BxTBorder;	        /* Top Border */
-  int             BxLBorder;	        /* Left Border */
-  int             BxBBorder;	        /* Bottom Border */
-  int             BxRBorder;	        /* Right Border */
+  PtrAbstractBox  BxAbstractBox;     /* Pointer to the associated abstract box */
+  PtrBox          BxPrevious;	       /* Previous displayable box */
+  PtrBox          BxNext;	           /* Next displayable box */
+  int	            BxNChars;	         /* Total number of characters in the box */
+  int             BxIndChar;	       /* 0 or position of the split box */
+  int             BxXOrg;	           /* X origin from the root */
+  int             BxYOrg;	           /* Y origin from the root */
+  int             BxHeight;	         /* Box height including margins */
+  int             BxWidth;	         /* Box width including margins */
+  int             BxH;	        	   /* Inner height */
+  int             BxW;	        	   /* Inner Width including spaces */
+  int             BxTMargin;	       /* Top Margin */
+  int             BxLMargin;	       /* Left Margin */
+  int             BxBMargin;	       /* Bottom Margin */
+  int             BxRMargin;	       /* Right Margin */
+  int             BxTBorder;	       /* Top Border */
+  int             BxLBorder;	       /* Left Border */
+  int             BxBBorder;	       /* Bottom Border */
+  int             BxRBorder;	       /* Right Border */
 
-  int             BxTPadding;	        /* Top Padding */
-  int             BxLPadding;	        /* Left Padding */
-  int             BxBPadding;	        /* Bottom Padding */
-  int             BxRPadding;	        /* Right Padding */
+  int             BxTPadding;	       /* Top Padding */
+  int             BxLPadding;	       /* Left Padding */
+  int             BxBPadding;	       /* Bottom Padding */
+  int             BxRPadding;	       /* Right Padding */
 #ifdef _GL
   int             BxClipX; 
   int             BxClipY; 
   int             BxClipW;
   int             BxClipH;
-  int             DisplayList;          /*Video Memory index of precomputed visual*/
-  void            *Pre_computed_Pic;    /*Pic of the rendered content, used
-					  for group, for example*/
-  void            *Post_computed_Pic;    /*Pic of the rendered content, used
-					  for group, for example*/
+  int             DisplayList;        /*Video Memory index of precomputed visual*/
+  void            *Pre_computed_Pic;  /*Pic of the rendered content, used
+                                        for group, for example*/
+  void            *Post_computed_Pic; /*Pic of the rendered content, used
+                                        for group, for example*/
 #endif /*_GL*/
   
   int             BxHorizRef;	        /* Current base */
   int             BxVertRef;	        /* Current vertical reference */
-  int             BxEndOfBloc;	        /* Fill length:
-					   >0 if last box of a line block
-					   AlignLeftDots. */
-  int		  BxUnderline;	        /* Underlining type */
-  int             BxThickness;	        /* Line thickness */
-  PtrPosRelations BxPosRelations;	/* Dependencies on positions */
-  PtrDimRelations BxWidthRelations;	/* Dependencies in width */
+  int             BxEndOfBloc;	      /* Fill length:
+                                         >0 if last box of a line block
+                                         AlignLeftDots. */
+  int		          BxUnderline;	      /* Underlining type */
+  int             BxThickness;	      /* Line thickness */
+  PtrPosRelations BxPosRelations;	    /* Dependencies on positions */
+  PtrDimRelations BxWidthRelations;	  /* Dependencies in width */
   PtrDimRelations BxHeightRelations;	/* Dependencies in height */
-  SpecFont        BxFont;	        /* Font bound to the box */
-  PtrBox          BxMoved;	        /* Linking of moved boxes */
+  SpecFont        BxFont;	            /* Font bound to the box */
+  PtrBox          BxMoved;	          /* Linking of moved boxes */
   PtrBox          BxHorizInc;	        /* Box linking to the enclosing one */
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */
-  BoxEdge         BxHorizEdge;		/* Position point fixed in X */
-  BoxEdge         BxVertEdge;		/* Position point fixed in Y */
-  ThotBool        BxXOutOfStruct;	/* Out of structure horizontal pos. */
-  ThotBool        BxYOutOfStruct;	/* Out of structure vertical pos. */
-  ThotBool        BxWOutOfStruct;	/* Out of structure width */
-  ThotBool        BxHOutOfStruct;	/* Out of structure height */
-  ThotBool        BxHorizInverted;	/* Inverted horizontal marks */
-  ThotBool        BxVertInverted;	/* Inverted vertical marks */
-  ThotBool        BxHorizFlex;          /* The box is elastic */
-  ThotBool        BxVertFlex;           /* The box is elastic */
-  ThotBool        BxXToCompute;         /* Box being placed in X */
-  ThotBool        BxYToCompute;         /* Box being placed in Y */
-  ThotBool	  BxNew;	        /* Newly displayed box */
-  ThotBool	  BxContentHeight;	/* Real height is the content height */
-  ThotBool	  BxContentWidth;	/* Real width is the content width */
-  ThotBool        BxShadow;		/* Characters are showed as '*' */
-  ThotBool        BxDisplay;	        /* The box has borders or
-					   background */
+  BoxEdge         BxHorizEdge;		    /* Position point fixed in X */
+  BoxEdge         BxVertEdge;		      /* Position point fixed in Y */
+  ThotBool        BxXOutOfStruct;	    /* Out of structure horizontal pos. */
+  ThotBool        BxYOutOfStruct;	    /* Out of structure vertical pos. */
+  ThotBool        BxWOutOfStruct;	    /* Out of structure width */
+  ThotBool        BxHOutOfStruct;	    /* Out of structure height */
+  ThotBool        BxHorizInverted;	  /* Inverted horizontal marks */
+  ThotBool        BxVertInverted;	    /* Inverted vertical marks */
+  ThotBool        BxHorizFlex;        /* The box is elastic */
+  ThotBool        BxVertFlex;         /* The box is elastic */
+  ThotBool        BxXToCompute;       /* Box being placed in X */
+  ThotBool        BxYToCompute;       /* Box being placed in Y */
+  ThotBool        BxShrink;           /* Box width should be shrunk */
+  ThotBool	      BxNew;	            /* Newly displayed box */
+  ThotBool	      BxContentHeight;	  /* Real height is the content height */
+  ThotBool	      BxContentWidth;	    /* Real width is the content width */
+  ThotBool        BxShadow;		        /* Characters are showed as '*' */
+  ThotBool        BxDisplay;	        /* The box has borders or background */
 #ifdef _GL
   ThotBool        BxBoundinBoxComputed;
   ThotBool        VisibleModification;    
 #endif /* _GL */
-  int		  BxRuleHeight;         /* Content height or minimum */
-  int		  BxRuleWidth;	        /* Rule width */
-  int        	  BxMaxWidth;           /* Inside width */
-  PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */
+  int		          BxRuleHeight;       /* Content height or minimum */
+  int		          BxRuleWidth;	      /* Rule width */
+  int        	    BxMaxWidth;         /* Inside width */
+  PtrTextBuffer   BxBuffer;	          /* Pointer on the buffer list */
   BoxType         BxType;
   union
   {
     struct /* BoPiece */
     {
-      PtrBox     _BxNexChild_;	/* Next split box */
-      int	 _BxNSpaces_;	/* Number of spaces in the text */
-      int	 _BxNPixels_;	/* Number of pixels to share out */
-      int	 _BxSpaceWidth_;/* >0 of the box is justified */
-      int	 _BxFirstChar_;	/* First character in buffer */
-      char       _BxScript_;    /* Script of the current text */
-      char       _BxFirstScript_;/*Script of the first element*/
-      char       _BxLastScript_;/*Script of the last element*/
+      PtrBox     _BxNexChild_;	      /* Next split box */
+      int	       _BxNSpaces_;	        /* Number of spaces in the text */
+      int	       _BxNPixels_;	        /* Number of pixels to share out */
+      int	       _BxSpaceWidth_;      /* >0 of the box is justified */
+      int	       _BxFirstChar_;	      /* First character in buffer */
+      char       _BxScript_;          /* Script of the current text */
+      char       _BxFirstScript_;     /*Script of the first element*/
+      char       _BxLastScript_;      /*Script of the last element*/
     } s0;
     struct /* BoPicture - used for pictures, polylines and paths */
     {
       union
         {
-        int	 *_BxPictInfo_;  /* Image pointer in memory
-				    List of control points for a spline
-				    + twisting ratio of the control
-			            points */
-	PtrPathSeg _BxFirstPathSeg_; /* pointer to the first path segment */
+        int	      *_BxPictInfo_;      /* Image pointer in memory
+                                         List of control points for a spline
+                                         + twisting ratio of the control
+                                         points */
+        PtrPathSeg _BxFirstPathSeg_;  /* pointer to the first path segment */
         } u;
-      float 	 _BxXRatio_;
-      float 	 _BxYRation_;
+      float 	     _BxXRatio_;
+      float 	     _BxYRation_;
     } s1;
     struct /* BoBlock*/
     {
@@ -332,11 +332,11 @@ typedef struct _Box
     struct /* BoTable BoColumn BoRow */
     {
       PtrTabRelations 	_BxColumns_;	/* list of columns or table box */
-      PtrTabRelations	_BxRows_;	/* list of rows within a table */
-      int        	_BxMinWidth_;   /* Mininmum width */
-      int               _BxCycles_;     /* count reformatting cycles */
-      int               _BxPacking_;     /* Packing */
-      PtrTabSpan        _BxSpans_;	/* list of spanned cells */
+      PtrTabRelations	  _BxRows_;	    /* list of rows within a table */
+      int             	_BxMinWidth_; /* Mininmum width */
+      int               _BxCycles_;   /* count reformatting cycles */
+      int               _BxPacking_;  /* Packing */
+      PtrTabSpan        _BxSpans_;	  /* list of spanned cells */
     } s3;
     struct /* BoComplete for Graphics = 'C' */
     {
@@ -382,14 +382,14 @@ typedef struct C_points_
 /* Description of the relative position of two abstract boxes */
 typedef struct _AbPosition
 {
-  PtrAbstractBox         PosAbRef;	/* Pointer of the reference abstract box */
+  PtrAbstractBox  PosAbRef;	/* Pointer of the reference abstract box */
   int             PosDistance;	/* Distance between the two of them */
   int             PosDistDelta; /* Distance increment */
   BoxEdge         PosEdge;	/* Positioned abstract box mark */
   BoxEdge         PosRefEdge;	/* Reference abstract box mark */
   TypeUnit        PosUnit;	/* Unit used for distance */
   TypeUnit        PosDeltaUnit; /* Unit used for the distance increment */
-  ThotBool	  PosUserSpecified;	/* User specified distance */
+  ThotBool	      PosUserSpecified;	/* User specified distance */
 } AbPosition;
 
 typedef struct _AbDimension
@@ -404,16 +404,14 @@ typedef struct _AbDimension
     struct
     {
       PtrAbstractBox _DimAbRef_;	/* Reference abstract box */
-      int 	     _DimValue_;	/* Abstract box mandatory dimension
-					   -1: content-defined dimension
-					    0: null size */
+      int 	         _DimValue_;	/* Abstract box mandatory dimension
+                                     -1: content-defined dimension
+                                     0: null size */
       TypeUnit	    _DimUnit_;		/* Dimension in %, picas, etc. */
       ThotBool	    _DimSameDimension_;	/* On the same dimension */
       ThotBool	    _DimUserSpecified_;	/* User-specified dimension */
-      ThotBool	    _DimMinimum_;	/* The given dimension is the minimum 
-				   value (only possible if DimAbRf = null and
-				   DimValue = -1) */
-    } s1;
+      ThotBool	    _DimMinimum_;	/* Given dimension is a minimum value */
+     } s1;
   } u;
 } AbDimension;
 
@@ -431,11 +429,11 @@ typedef struct _DelayedPRule
 {
   PtrPRule        DpPRule;	/* Pointer on the pending rule */
   PtrAbstractBox  DpAbsBox;	/* Pointer on the abstract box on which the
-				   rule is to be applied */
+                               rule is to be applied */
   PtrPSchema      DpPSchema;	/* Pointer on the presentation schema owning
-				   the rule */
+                                 the rule */
   PtrAttribute    DpAttribute;	/* Pointer on the attribute to which the rule
-				   corresponds, nil if not attribute rule */
+                                   corresponds, nil if not attribute rule */
   PtrDelayedPRule DpNext;	/* Next element */
 } DelayedPRule;
 
@@ -461,24 +459,24 @@ typedef struct _AbstractBox
   PtrAbstractBox  AbNext;	/* Linking towards the next sibling abstract box */
   PtrAbstractBox  AbPrevious;	/* Linking towards the previous abstract box */
   PtrAbstractBox  AbFirstEnclosed;  /* Linking towards the first child
-				       abstract box */
+                                       abstract box */
   PtrAbstractBox  AbNextRepeated;   /* Linking towards the next repeated
-				       abstract box (laid out??) */
+                                       abstract box (laid out??) */
   PtrAbstractBox  AbPreviousRepeated; /* Linking towards the previous
-					 repeated abstract box */
+                                         repeated abstract box */
   PtrPSchema      AbPSchema;	   /* Presentation schema of the abstract box*/
   int             AbDocView;	   /* Document view number */
   PtrCopyDescr	  AbCopyDescr;	   /* Descriptor of the copied element if the
-				      abstract box is produced by a Copy rule*/
+                                      abstract box is produced by a Copy rule*/
   PtrAttribute    AbCreatorAttr;   /* Pointer on the attribute that created the
-				      abstract box, if it is an attribute
-				      created presentation abstract box */
+                                      abstract box, if it is an attribute
+                                      created presentation abstract box */
   PtrDelayedPRule AbDelayedPRule;  /* Used by the editor */
   int             AbVolume;	   /* Equivalent characters number */
-  int	          AbTypeNum;	   /* Type number/presentation box number */
+  int	            AbTypeNum;	   /* Type number/presentation box number */
   int             AbVarNum;        /* number of the variable that defines the
-				      content of this box (pres. boxes only) */
-  int	          AbNum;	   /* Abstract box number for debug */
+                                      content of this box (pres. boxes only) */
+  int	            AbNum;	   /* Abstract box number for debug */
   AbPosition      AbVertRef;	   /* Vertical reference mark position */
   AbPosition      AbHorizRef;	   /* Horizontal reference mark position */
   AbPosition      AbVertPos;	   /* Vertical position in the box */
@@ -489,7 +487,7 @@ typedef struct _AbstractBox
   int             AbThickness;	   /* Underlining thickness */
   int             AbIndent;	   /* Indentation for line breaking */
   int             AbDepth;	   /* Abstract box display plane */
-  int	          AbVisibility;    /* Abstract box visibility degree */
+  int	            AbVisibility;    /* Abstract box visibility degree */
   int             AbFont;	   /* Font family: index in the family table */
   int             AbFontStyle;	   /* Font style: roman, italic, oblique */
   int             AbFontWeight;	   /* Font weight: normal, bold */
@@ -529,7 +527,7 @@ typedef struct _AbstractBox
   char            AbListStyleType;    /* type of the list item marker */
   char            AbListStylePosition;/* position of the list item marker */
   char            AbListStyleImage;   /* 'Y' = display an image instead of the
-					 list item marker */
+                                         list item marker */
   char            AbFloat;            /* Float mode */
   char            AbClear;            /* Clear mode */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
@@ -552,11 +550,11 @@ typedef struct _AbstractBox
   TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
 
   ThotBool        AbPseudoElBefore;   /* CSS pseudo-element generated by
-					 :before */
+                                         :before */
   ThotBool        AbPseudoElAfter;    /* CSS pseudo-element generated by
-					 :after */
+                                         :after */
   ThotBool        AbBuildAll;         /* All descendant abstract boxes must
-					 always be built */
+                                         always be built */
   ThotBool        AbAcceptLineBreak;  /* Can be split in lines */
   ThotBool        AbAcceptPageBreak;  /* Can be split by page breaks */
   ThotBool        AbHyphenate;	      /* Contents can be hyphenated */
@@ -608,17 +606,17 @@ typedef struct _AbstractBox
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {
-      char     _AbShape_;         /* Drawing code */
-      char     _AbGraphScript_; /* Script used*/
-      char     _AbRealShape_;     /* Effective drawing code */
-      int      _AbRx_;            /* Horizontal radius */
-      int      _AbRy_;            /* Vertical radius */     
-      TypeUnit _AbRxUnit_;        /* Unit for the horizontal radius */
-      TypeUnit _AbRyUnit_;        /* Unit for the vertical radius */
+      char          _AbShape_;         /* Drawing code */
+      char          _AbGraphScript_; /* Script used*/
+      char          _AbRealShape_;     /* Effective drawing code */
+      int           _AbRx_;            /* Horizontal radius */
+      int           _AbRy_;            /* Vertical radius */     
+      TypeUnit      _AbRxUnit_;        /* Unit for the horizontal radius */
+      TypeUnit      _AbRyUnit_;        /* Unit for the vertical radius */
     } s2;
     struct /* AbLeafType = LtPicture */
     {
-      int *_AbPictInfo_;
+      int          *_AbPictInfo_;
     } s3;
     struct /* AbLeafType = LtPolyline  */
     {
@@ -681,7 +679,7 @@ typedef struct _ViewFrame
   ThotBool        FrReady;	/* The window can be displayed */
   ThotBool        FrSelectOneBox;	/* Only one box is selected */
   ThotBool        FrSelectShown;	/* The selection is shown */
-  ThotBool	  FrSelectOnePosition;  /* The selection is limited */
+  ThotBool	      FrSelectOnePosition;  /* The selection is limited */
   ViewSelection   FrSelectionBegin;	/* Beginning mark of the selection */
   ViewSelection   FrSelectionEnd;	/* End mark of the selection */
   int             FrVisibility;		/* Window visibility threshold */
@@ -695,7 +693,7 @@ typedef struct _VueDeDoc
   Name            VdViewName;
   PtrSSchema      VdSSchema;
   ThotBool        VdOpen;
-  ThotBool	  VdExist;
+  ThotBool        VdExist;
   ThotBool        VdNature;
   ThotBool        VdPaginated;
 } DocumentView;
@@ -706,14 +704,14 @@ typedef DocumentView AvailableView[MAX_VIEW_OPEN];
 typedef struct _SearchContext
 {
   PtrDocument	SDocument;	/* Document where the search is on */
-  int		STree;		/* Number of the current tree for a
-				   document-wide search */
+  int		      STree;		/* Number of the current tree for a
+                           document-wide search */
   PtrElement	SStartElement;	/* Research starting element */
-  int		SStartChar;	/* Research starting character */
+  int		      SStartChar;	/* Research starting character */
   PtrElement	SEndElement;	/* Research ending element */
-  int           SEndChar;	/* Research ending character */
-  ThotBool	SStartToEnd;	/* Forward search */
-  ThotBool	SWholeDocument;	/* Document-wide search */
+  int         SEndChar;	/* Research ending character */
+  ThotBool    SStartToEnd;	/* Forward search */
+  ThotBool    SWholeDocument;	/* Document-wide search */
 } SearchContext;
 typedef SearchContext *PtrSearchContext;
 

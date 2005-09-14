@@ -2050,6 +2050,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
   pBox = pAb->AbBox;
   pParentAb = pAb->AbEnclosing;
+  if (pParentAb && pParentAb->AbBox &&
+      !pAb->AbWidth.DimIsPosition &&
+      (pAb->AbWidth.DimAbRef == pParentAb || pAb->AbWidth.DimUnit == UnAuto))
+    /* by default shrink is inherited */
+    pBox->BxShrink = pParentAb->AbBox->BxShrink;
+  else
+    pBox->BxShrink = FALSE;
+   
   /* Check the box visibility */
   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
     {
@@ -2065,7 +2073,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbPositioning->PnRightUnit != UnAuto &&
                   pAb->AbPositioning->PnRightUnit != UnUndefined)
                 {
-                  /* inherit from an enclosing box */
+                  /* width fixed by left and right position */
                   pAb->AbWidth.DimIsPosition = TRUE;
                   pAb->AbWidth.DimPosition.PosAbRef = pParentAb;
                   pAb->AbWidth.DimPosition.PosDistance = pAb->AbPositioning->PnRightDistance;
@@ -2073,6 +2081,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbWidth.DimPosition.PosEdge = Right;
                   pAb->AbWidth.DimPosition.PosRefEdge = Right;
                   pAb->AbWidth.DimPosition.PosUnit = pAb->AbPositioning->PnRightUnit;
+                  /* shrink doesn't apply */
+                  pBox->BxShrink = FALSE;
                   return FALSE;
                 }
               else if (!pAb->AbWidth.DimIsPosition &&
@@ -2082,13 +2092,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pParentAb = GetEnclosingViewport (pAb);
                   if (pParentAb == NULL)
                     pParentAb = ViewFrameTable[frame -1].FrAbstractBox;
+#ifdef IV
                   if (pAb->AbPositioning->PnLeftUnit != UnAuto &&
                       pAb->AbPositioning->PnLeftUnit != UnUndefined &&
                       pAb->AbPositioning->PnLeftDistance != 0)
                     {
-                      pAb->AbPositioning->PnRightUnit = UnPixel;
-                      pAb->AbPositioning->PnRightDistance = 0;
-                      /* inherit from an enclosing box */
                       pAb->AbWidth.DimIsPosition = FALSE;
                       pAb->AbWidth.DimAbRef = pParentAb;
                       pAb->AbWidth.DimValue = 0;
@@ -2097,11 +2105,15 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                       return FALSE;
                     }
                   else
+#endif
                     {
                       pAb->AbWidth.DimAbRef = pParentAb;
                       pAb->AbWidth.DimIsPosition = FALSE;
-                      //pAb->AbPositioning->PnLeftUnit = UnPixel;
-                      //pAb->AbPositioning->PnLeftDistance = 0;
+                      pAb->AbWidth.DimValue = 0;
+                      if (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+                          pAb->AbPositioning->PnAlgorithm == PnFixed)
+                        /* shrink does apply */
+                        pBox->BxShrink = TRUE;
                     }
                 }
             }
@@ -2131,6 +2143,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 }
             }
         }
+      else if (pAb->AbLeafType == LtCompound && pAb->AbPositioning &&
+               (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+                pAb->AbPositioning->PnAlgorithm == PnFixed))
+        /* no explicit left or right rule but shrink does apply */
+        pBox->BxShrink = TRUE;
       //#endif /* POSITIONING */
 
       /* Check validity of rules */
@@ -2426,7 +2443,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
               if (horizRef)
                 {
                   if (pBox->BxType == BoCell)
-                    {
+                    {                      
                       /* get the related column */
                       if (pDimAb->DimAbRef)
                         pColumn = pDimAb->DimAbRef;
@@ -2554,6 +2571,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                 GetSizesFrame (frame, &i, &val);
                               if (pDimAb->DimUnit == UnPercent)
                                 {
+                                  /* shrink doesn't apply */
+                                  pBox->BxShrink = FALSE;
                                   val = PixelValue (pDimAb->DimValue, UnPercent,
                                                     (PtrAbstractBox) i, 0);
                                   if (pDimAb->DimValue == 100)
@@ -2579,20 +2598,27 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                             }
                           else
                             {
+                              /* shrink doesn't apply to a cell */
+                              pBox->BxShrink = FALSE;
                               val = PixelValue (pDimAb->DimValue, UnPercent,
                                                 (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
                               val = val - dx;
                             }
                         }
                       else
-                        /* explicit value */
-                        val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
-                                          ViewFrameTable[frame - 1].FrMagnification);
-
+                        {
+                          /* shrink doesn't apply */
+                          pBox->BxShrink = FALSE;
+                          /* explicit value */
+                          val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
+                                            ViewFrameTable[frame - 1].FrMagnification);
+                        }
                       ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
                     }
                   else
                     {
+                      /* shrink doesn't apply toother explicit values*/
+                      pBox->BxShrink = FALSE;
                       pPosAb = &pAb->AbHorizPos;
                       if (pDimAb->DimAbRef == pParentAb &&
                           pDimAb->DimUnit != UnAuto &&
@@ -2705,6 +2731,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 }
               else
                 {
+                  // height rule
                   pDimAb = &pAb->AbHeight;
                   pEl = pAb->AbElement;
                   if ((inLine && pAb->AbLeafType == LtText) ||
