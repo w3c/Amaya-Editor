@@ -1956,6 +1956,7 @@ void TtaRedirectFocus ()
 {
 #ifdef _WX
   int active_frame_id = TtaGiveActiveFrame();
+
   AmayaFrame * p_frame = TtaGetFrameFromId( active_frame_id );
   if (p_frame)
     p_frame->GetCanvas()->SetFocus();

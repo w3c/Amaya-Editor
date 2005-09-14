@@ -793,7 +793,7 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view, Thot
       
       // redirect focus to the canvas because when an action is done 
       // it's more probable that the user wants to type some characteres after executing the action
-      TtaRedirectFocus();
+      //TtaRedirectFocus();
 #else /* _WX */
       if (i > 0 && i < MaxMenuAction &&
           (MenuActionList[i].ActionActive[frame] || force)&&
@@ -831,7 +831,7 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc, View view, T
 
       // redirect focus to the canvas because when an action is done 
       // it's more probable that the user wants to type some characteres after executing the action
-      TtaRedirectFocus();
+      //TtaRedirectFocus();
 #else /* _WX */
       if (action_id > 0 && action_id < MaxMenuAction &&
           (MenuActionList[action_id].ActionActive[frame_id] || force)&&

@@ -406,7 +406,8 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
       else
 	{
 	  TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
-	  TtaRedirectFocus();
+	  //TtaRedirectFocus();
+    TtaCheckLostFocus();
 	}
       m_MustCheckFocusIsNotLost = false;
     }
