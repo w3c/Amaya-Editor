@@ -491,14 +491,6 @@ Retirer la table:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         th2     > :div;
         }
 
-Transposer la table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
-	{
-	td > <table border=table.border>:tr.td;
-	th > table:tr.td;
-	td2 > <table border=table.border>.tr:td;
-	th2 > table.tr:td;
-	}
-
 Cellule titre:?(td|th)+,td,?(td|th)+;
 	{
 	$ChangeToHeadingCell;

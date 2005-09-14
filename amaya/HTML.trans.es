@@ -494,14 +494,6 @@ Eliminar tabla:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
         th2     > :div;
         }
 
-Transponer tabla:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
-	{
-	td > <table border=table.border>:tr.td;
-	th > table:tr.td;
-	td2 > <table border=table.border>.tr:td;
-	th2 > table.tr:td;
-	}
-
 Celdas de encabezado:?(td|th)+,td,?(td|th)+;
 	{
 	$ChangeToHeadingCell;
