@@ -383,6 +383,18 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
                p_text_ctrl->Paste();
                return;
              }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
+             {
+               p_text_ctrl->Undo();
+               return;
+             }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
+             {
+               p_text_ctrl->Redo();
+               return;
+             }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcDeleteSelection"))
+             return;
          }
        else if (p_combo_box)
          {
@@ -401,6 +413,18 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
                p_combo_box->Paste();
                return;
              }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcUndo"))
+             {
+               p_combo_box->Undo();
+               return;
+             }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcRedo"))
+             {
+               p_combo_box->Redo();
+               return;
+             }
+           else if (!strcmp (MenuActionList[action_id].ActionName, "TtcDeleteSelection"))
+             return;
          }
     }
   //#endif /* _WINDOWS */
