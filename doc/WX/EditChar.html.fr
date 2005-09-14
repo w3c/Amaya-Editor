@@ -54,7 +54,7 @@ certains caractères non disponibles au clavier comme :</p>
 </ul>
 
 <p>On donne une description de la méthode multi-touches standard des versions
-Unix.</p>
+Unix et celle du système Mac OS X</p>
 
 <h3><a name="Standard">Le support multi-touches standard des versions
 Unix</a></h3>
@@ -721,6 +721,22 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
 </table>
 
 <div id="Creating1">
+<h3><a>Saisie de caractères accentués sous Mac OS X</a></h3>
+
+<p>Avec un clavier US (qwerty), la saisie de caractères accentués sous la
+version Mac OS X se fait de la manière suivante:</p>
+<ul>
+  <li>Pour un accent aigu: <strong>alt-e</strong> puis la lettre (donc pour
+    é: alt-e et e)</li>
+  <li>Pour un accent grave: <strong>alt-`</strong> puis la lettre</li>
+  <li>Pour un accent circonflexe: <strong>alt-i</strong> puis la lettre</li>
+  <li>Pour un tréma: <strong>alt-u</strong> puis la lettre</li>
+  <li>Pour un ç: <strong>alt-c</strong></li>
+</ul>
+
+<p>La touche <strong>alt</strong> est également appelée touche
+<strong>option</strong>.</p>
+
 <h3><a>Traitement des espaces</a></h3>
 
 <p>Pour les documents XHTML, <a href="Math.html.fr#Math">MathML</a>, <a
