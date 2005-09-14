@@ -311,7 +311,7 @@ TtcSearchText
 [browsing_WX]
 +annot
 +bookmarks
-+views
++views_WX
 +print
 AmayaClose
 DocumentInfo
@@ -494,6 +494,18 @@ ShowLinks
 ShowSource
 ShowStructure
 ShowFormatted
+ShowToC
+# ShowTimeLineWindow
+TtcCloseView
+
+######### VIEWS_WX
+[views_WX]
+HelpViews
+ShowAlternate
+ShowLinks
+ShowSource
+ShowStructure
+#ShowFormatted
 ShowToC
 # ShowTimeLineWindow
 TtcCloseView
